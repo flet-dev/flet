@@ -191,7 +191,7 @@ categories:
     _icon: build
     _description: Gestures, drag/drop, screenshots
     BrowserContextMenu:
-    Clipboard: # Clipboard files gives 404 on https://flet.app/api/gallery/apps/services/clipboard/files/package.zip?v=0, warn about Safari and iOS
+    Clipboard: # Clipboard files gives 404 on https://studio.flet.dev/api/gallery/apps/services/clipboard/files/package.zip?v=0, warn about Safari and iOS
     Color pickers:
     Connectivity:
     Draggable:

@@ -83,7 +83,7 @@ function Studio() {
             <div className={styles.heroCtas}>
               <a
                 className={styles.primaryCta}
-                href="https://flet.app"
+                href="https://studio.flet.dev"
                 target="_blank"
                 rel="noopener noreferrer">
                 Try Flet Studio
@@ -116,7 +116,7 @@ function Studio() {
             <div className={styles.closingCtas}>
               <a
                 className={styles.primaryCta}
-                href="https://flet.app"
+                href="https://studio.flet.dev"
                 target="_blank"
                 rel="noopener noreferrer">
                 Try Flet Studio

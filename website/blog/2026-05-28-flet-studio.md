@@ -14,7 +14,7 @@ It started life as a playground for Flet apps, but turned out to be much
 more: a place to prototype, a gallery of editable examples, and a way to send someone a
 working app as just a link.
 
-<a href="https://flet.app" target="_blank" rel="noopener noreferrer">
+<a href="https://studio.flet.dev" target="_blank" rel="noopener noreferrer">
   <img src="/img/pages/studio/flet-studio-light.png" className="screenshot-100" style={{borderRadius: '7px'}} />
 </a>
 
@@ -23,7 +23,7 @@ working app as just a link.
 ## What you can do
 
 - **Run.** The simplest thing is to just run a Flet example. Open any of the
-  [500+ apps in the gallery](https://flet.app/gallery), hit run, and watch it work — no
+  [500+ apps in the gallery](https://studio.flet.dev/gallery), hit run, and watch it work — no
   setup, nothing to install.
 - **Create.** When you find one you like, fork it and make it your own. Or start from a
   blank cross-platform template if you'd rather build from scratch. Either way you get a
@@ -78,7 +78,7 @@ we're headed.
 
 ## Try it
 
-Open [flet.app](https://flet.app), build something, and share it. We'd love
+Open [flet.app](https://studio.flet.dev), build something, and share it. We'd love
 your feedback — drop it in [GitHub Discussions](https://github.com/flet-dev/flet/discussions)
 or on [Discord](https://discord.gg/dzWXP8SHG8).
 

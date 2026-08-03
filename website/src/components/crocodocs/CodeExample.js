@@ -3,7 +3,7 @@ import CodeBlock from "@theme/CodeBlock";
 
 import {getExampleSource, getExampleWebSupported} from "./utils";
 
-const FLET_STUDIO_BASE = "https://flet.app/gallery/example";
+const FLET_STUDIO_BASE = "https://studio.flet.dev/gallery/example";
 
 /**
  * Renders a syntax-highlighted code block for a bundled example file.

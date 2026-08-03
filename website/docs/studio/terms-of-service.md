@@ -128,7 +128,7 @@ Your use of AI features is subject to Section 4 (Acceptable Use); you may not us
 
 ### 7.1 Plans
 
-Flet Studio is offered under a free plan and one or more paid plans. The current plans, their features and limits, and their prices — together with the price of AI credit packs — are listed on our [pricing page](https://flet.app/pricing). We may change plan limits and pricing with reasonable advance notice; where we materially reduce a limit, we will provide notice through the Service or by email. A price change for a subscription takes effect at the start of a subsequent billing period.
+Flet Studio is offered under a free plan and one or more paid plans. The current plans, their features and limits, and their prices — together with the price of AI credit packs — are listed on our [pricing page](https://studio.flet.dev/pricing). We may change plan limits and pricing with reasonable advance notice; where we materially reduce a limit, we will provide notice through the Service or by email. A price change for a subscription takes effect at the start of a subsequent billing period.
 
 ### 7.2 AI credit packs
 
