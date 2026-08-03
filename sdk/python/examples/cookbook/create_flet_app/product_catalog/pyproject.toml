@@ -1,0 +1,26 @@
+[project]
+name = "product-catalog"
+version = "1.0.0"
+description = "A small product catalog demonstrating layout, styling, and event handling with AppBar, Container, Row/Column, and Stack."
+requires-python = ">=3.10"
+keywords = ["cookbook", "layout", "events", "container", "stack"]
+authors = [{ name = "Flet team", email = "hello@flet.dev" }]
+dependencies = ["flet"]
+
+[dependency-groups]
+dev = ["flet-cli", "flet-desktop", "flet-web"]
+
+[tool.flet.gallery]
+categories = ["Cookbook"]
+
+[tool.flet.metadata]
+title = "Product Catalog"
+controls = ["AppBar", "Container", "Row", "Column", "Stack", "Button"]
+layout_pattern = "card-list"
+complexity = "basic"
+features = ["event handlers", "SnackBar", "Stack badge overlay"]
+
+[tool.flet]
+org = "dev.flet"
+company = "Flet"
+copyright = "Copyright (C) 2023-2026 by Flet"
