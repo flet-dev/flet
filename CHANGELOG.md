@@ -7,6 +7,7 @@
 
 * **macOS code signing, notarization, and Mac App Store builds in `flet build macos`.** Select a distribution lane with `--macos-distribution` (or `[tool.flet.macos.signing].distribution`): `developer-id` signs every bundled binary with your Developer ID certificate — hardened runtime, entitlements, secure timestamp — then notarizes and staples the app for direct distribution, while `app-store` produces a sandboxed app with your provisioning profile embedded, packaged into an installer-signed `.pkg` ready for App Store Connect and TestFlight. Signing identities are auto-discovered from the keychain when not explicitly configured (via CLI options, `pyproject.toml` — including per-lane `[tool.flet.macos.signing.<lane>]` subtables — or environment variables), and the whole configuration is validated before the build starts, so a typo'd identity, expired certificate, or missing store prerequisite fails in seconds instead of after the full build. See the new [Code signing](https://flet.dev/docs/publish/macos#code-signing), [Notarization](https://flet.dev/docs/publish/macos#notarization), and [Mac App Store](https://flet.dev/docs/publish/macos#mac-app-store) docs ([#2347](https://github.com/flet-dev/flet/issues/2347), [#4543](https://github.com/flet-dev/flet/issues/4543), [#6702](https://github.com/flet-dev/flet/pull/6702)) by @ndonkoHenri.
 
+<<<<<<< HEAD
 ### Improvements
 
 * `flet run --web` no longer logs `assets_dir does not exist: ...` for an app that simply has no assets directory. `assets_dir` defaults to `"assets"` whether or not the app has one, so the resolved path was handed downstream regardless — the desktop view ignored it silently while the web server complained, which is why the same app warned only with `--web`, about a directory the user never asked for. A resolved path that does not exist is now dropped at the source, making both views behave the same. A path set explicitly through `FLET_ASSETS_DIR`, or passed straight to `FletStaticFiles` when mounting on FastAPI, is always deliberate and still reports a missing directory by @FeodorFitsner.
@@ -20,6 +21,11 @@
 * `flet_web.fastapi.app()` now honors the `FLET_ASSETS_DIR` environment variable, as it already did for `FLET_UPLOAD_DIR` and as `ft.run()` does for both, so a deployment can point a mounted app at a different assets directory without editing code ([#6792](https://github.com/flet-dev/flet/pull/6792)) by @ndonkoHenri.
 * Bumped `serious_python` to **4.6.0** and re-pinned the bundled python-build snapshot to [20260902](https://github.com/flet-dev/python-build/releases/tag/20260902), moving the bundled Python to **3.12.14 / 3.13.15 / 3.14.7** and Pyodide for 3.14 to **314.0.6**. All three CPython micros are security releases — they fix a quadratic-complexity denial of service in incremental `html.parser.HTMLParser` parsing and the same in `xml.etree.ElementTree` XPath index predicates; 3.12.14 additionally bundles libexpat 2.8.3 for `CVE-2026-72522`, which 3.13.15 and 3.14.7 shipped a week too early to carry. `serious_python` 4.6.0 tracks the same python-build release, keeping `PYTHON_BUILD_RELEASE_DATE` in sync with its `pythonReleaseDate` as the pin requires ([#6810](https://github.com/flet-dev/flet/pull/6810)) by @FeodorFitsner.
 * Android host apps now use `FlutterFragmentActivity` and an AppCompat `LaunchTheme` so biometric authentication dialogs work on API 24–27. A `biometric` cross-platform permission bundle adds `NSFaceIDUsageDescription` for iOS and macOS builds.
+=======
+### New features
+
+* Add `flet-local-auth` extension with a `LocalAuthentication` service for on-device biometric and credential authentication on Android, iOS, macOS, and Windows via the [`local_auth`](https://pub.dev/packages/local_auth) Flutter plugin. Linux and Web are not supported.
+>>>>>>> 1b0425d2 (feat: add flet-local-auth extension)
 
 ### Breaking changes
 
