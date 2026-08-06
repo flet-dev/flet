@@ -11,6 +11,7 @@ class BiometricType(Enum):
 
     FACE = "face"
     FINGERPRINT = "fingerprint"
+    IRIS = "iris"
     WEAK = "weak"
     STRONG = "strong"
 
