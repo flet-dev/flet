@@ -1,3 +1,11 @@
+## 0.86.7
+
+### Bug fixes
+
+* Fix `flet build web --no-cdn` still loading Pyodide from jsdelivr. The web template chose between the bundled runtime and the CDN with `{% if cookiecutter.no_cdn == "True" %}`, but `flet build` passes `no_cdn` through cookiecutter's `extra_context` as a Python `bool`, which Jinja never renders to a string before comparing — `True == "True"` is `False`, so the CDN branch was taken in *both* modes and `--no-cdn` builds downloaded, cached and shipped ~15 MB of Pyodide that the browser then ignored. Only `pyodideUrl` was affected: `flet.noCdn` itself is derived separately, via `"{{ cookiecutter.no_cdn }}".toLowerCase() == "true"`, which does render correctly — which is why CanvasKit and the fallback fonts loaded locally as expected while Pyodide alone went to the CDN, making the failure look like a Pyodide-specific quirk rather than a template bug. The template's other `no_cdn` test (`assets/FontManifest.json`) already used plain truthiness; all conditions now do, and no string comparisons against `"True"` remain by @FeodorFitsner.
+
+* Fix the bundled Pyodide URL being origin-absolute in `--no-cdn` builds, so a sub-path deployment (`flet build web --base-url myapp`) requested `/pyodide/pyodide.mjs` and got a 404 while the file sat at `/myapp/pyodide/pyodide.mjs`. It now renders relative to the configured base URL, as `canvasKitBaseUrl` does. Builds without `--base-url` render exactly the same URL as before by @FeodorFitsner.
+
 ## 0.86.6
 
 ### Bug fixes
