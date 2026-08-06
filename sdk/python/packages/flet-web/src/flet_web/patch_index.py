@@ -81,6 +81,13 @@ def patch_index_html(
             )
         app_config.append(f'flet.pyodideUrl="{pyodide_url}";')
 
+    # Only pinned when bundling: left unset, `flutter_bootstrap.js` lets
+    # Flutter resolve CanvasKit from gstatic and the Noto fallback fonts from
+    # Google Fonts, and `flet build`/`flet publish` skip shipping local copies.
+    if no_cdn:
+        app_config.append(f'flet.canvasKitBaseUrl="{base_url}canvaskit/";')
+        app_config.append('flet.fontFallbackBaseUrl="assets/fonts/";')
+
     app_config.append(f"flet.noCdn={str(no_cdn).lower()};")
     app_config.append(f'flet.webRenderer="{web_renderer.value}";')
     app_config.append(f'flet.routeUrlStrategy="{route_url_strategy.value}";')

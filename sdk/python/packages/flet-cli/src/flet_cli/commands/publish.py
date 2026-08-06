@@ -199,6 +199,10 @@ class Command(BaseCommand):
             sys.exit(2)
         print(f"Using Python {python_release.short} (Pyodide {python_release.pyodide})")
 
+        # Resolved here rather than at first use: it decides which runtime
+        # assets get copied into `dist`, not just how index.html is patched.
+        no_cdn = options.no_cdn or get_pyproject("tool.flet.web.cdn") == False  # noqa: E712
+
         if get_pyproject("tool.flet.app.path"):
             script_dir = script_dir.joinpath(get_pyproject("tool.flet.app.path"))
             script_path = script_dir.joinpath(
@@ -225,10 +229,18 @@ class Command(BaseCommand):
             sys.exit(1)
         copy_tree(web_path, dist_dir)
 
-        # Drop in the Pyodide runtime that matches the resolved Python version
-        # (cached under ~/.flet/pyodide/<version>/).
-        print(f"Preparing Pyodide {python_release.pyodide} runtime...")
-        ensure_pyodide(python_release.pyodide, Path(dist_dir) / "pyodide")
+        if no_cdn:
+            # Drop in the Pyodide runtime that matches the resolved Python
+            # version (cached under ~/.flet/pyodide/<version>/).
+            print(f"Preparing Pyodide {python_release.pyodide} runtime...")
+            ensure_pyodide(python_release.pyodide, Path(dist_dir) / "pyodide")
+        else:
+            # CDN mode: `patch_index_html` points `flet.pyodideUrl` at
+            # jsdelivr and `flutter_bootstrap.js` loads CanvasKit from
+            # gstatic, so neither copy the `web` package ships is ever
+            # requested. Dropping them takes ~52 MB off `dist`.
+            for cdn_asset in ("pyodide", "canvaskit"):
+                shutil.rmtree(Path(dist_dir) / cdn_asset, ignore_errors=True)
 
         # copy assets
         assets_dir = options.assets_dir
@@ -342,8 +354,6 @@ class Command(BaseCommand):
         pwa_theme_color = options.pwa_theme_color or get_pyproject(
             "tool.flet.web.pwa_theme_color"
         )
-
-        no_cdn = options.no_cdn or get_pyproject("tool.flet.web.cdn") == False  # noqa: E712
 
         print("Patching index.html")
         patch_index_html(
