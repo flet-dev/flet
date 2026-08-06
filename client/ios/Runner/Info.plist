@@ -37,6 +37,8 @@
 	</dict>
 	<key>NSCameraUsageDescription</key>
 	<string>This app uses the camera to capture photos and video.</string>
+	<key>NSFaceIDUsageDescription</key>
+	<string>This app uses biometrics to authenticate you.</string>
 	<key>NSLocationWhenInUseUsageDescription</key>
 	<string>This app needs access to location.</string>
 	<key>NSMicrophoneUsageDescription</key>

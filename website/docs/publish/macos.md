@@ -57,6 +57,14 @@ macOS permissions are declared through [`Info.plist`](#infoplist) privacy usage 
 app [entitlements](#entitlements). You can also use the [cross-platform permission bundles](index.md#predefined-cross-platform-permission-bundles)
 to inject common entries, then override or extend them with platform-specific values.
 
+:::note Touch ID and Face ID
+`LocalAuthentication` (via the [`flet-local-auth`](../../services/localauthentication/index.md) extension) uses Apple's `LocalAuthentication` framework. No sandbox entitlement is required — `LAContext.evaluatePolicy` works inside a sandboxed app with the stock Flet entitlements. The `NSFaceIDUsageDescription` key is required on iOS and recommended on macOS; use the [`biometric` permission bundle](index.md#predefined-cross-platform-permission-bundles) or `[tool.flet.macos.info]`.
+
+Touch ID prompts require a **signed** app. Ad-hoc signing (the Flet build template's default `CODE_SIGN_IDENTITY = "-"`) is sufficient for local development.
+
+If you bind secrets to biometrics through [`SecureStorage`](../../services/securestorage/index.md) keychain access controls instead of a simple authentication prompt, you may need `keychain-access-groups` entitlements when sharing items across targets.
+:::
+
 ### Info.plist
 
 Add or override `Info.plist` entries for macOS builds.

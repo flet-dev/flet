@@ -1,5 +1,5 @@
 package {{ cookiecutter.org_name_2 }}.{{ cookiecutter.package_name }}
 
-import io.flutter.embedding.android.FlutterActivity
+import io.flutter.embedding.android.FlutterFragmentActivity
 
-class MainActivity : FlutterActivity()
+class MainActivity : FlutterFragmentActivity()
