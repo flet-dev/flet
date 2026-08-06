@@ -1,3 +1,7 @@
+## 0.86.6
+
+* Fix `Container` applying its `padding` twice, and confining ink/hover effects to the size of its content, when `ink` is enabled together with `animate`. `padding` and `alignment` were passed both to the outer `AnimatedContainer` and to the inner `Container` under the `InkWell`, so the effective padding doubled; the duplicated `alignment` also made the `Material`/`InkWell` shrink-wrap to the content, so splashes and the hover overlay no longer reached the container's edges even though `bgcolor` filled it. Both properties now live only on the inner container - an `AnimatedContainer` when `animate` is set, so they still animate - matching the non-animated ink path.
+
 ## 0.86.5
 
 _No changes in the `flet` Dart package; version bumped for release coordination with configurable Android `gradle.properties` on the Python side ([#6733](https://github.com/flet-dev/flet/pull/6733))._
