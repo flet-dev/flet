@@ -1,3 +1,7 @@
+## 0.86.7
+
+* `FletJS.canvasKitBaseUrl` is now `String?`. `flutter_bootstrap.js` applies `flet.canvasKitBaseUrl` and `flet.fontFallbackBaseUrl` whenever they are set rather than only when `flet.noCdn` is true, and both default to `null` in CDN mode — so a host serving its own copy of the runtime can point them anywhere without also claiming a no-CDN build. The getter has no readers in this package; the annotation now matches the value it can carry.
+
 ## 0.86.6
 
 * Fix `Container` applying its `padding` twice, and confining ink/hover effects to the size of its content, when `ink` is enabled together with `animate`. `padding` and `alignment` were passed both to the outer `AnimatedContainer` and to the inner `Container` under the `InkWell`, so the effective padding doubled; the duplicated `alignment` also made the `Material`/`InkWell` shrink-wrap to the content, so splashes and the hover overlay no longer reached the container's edges even though `bgcolor` filled it. Both properties now live only on the inner container - an `AnimatedContainer` when `animate` is set, so they still animate - matching the non-animated ink path.
