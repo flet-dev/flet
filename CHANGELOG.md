@@ -1,3 +1,17 @@
+## 0.86.7
+
+### Bug fixes
+
+* Fix `flet build web --no-cdn` still loading Pyodide from jsdelivr. The web template chose between the bundled runtime and the CDN with `{% if cookiecutter.no_cdn == "True" %}`, but `flet build` passes `no_cdn` through cookiecutter's `extra_context` as a Python `bool`, which Jinja never renders to a string before comparing — `True == "True"` is `False`, so the CDN branch was taken in *both* modes and `--no-cdn` builds downloaded, cached and shipped ~15 MB of Pyodide that the browser then ignored. Only `pyodideUrl` was affected: `flet.noCdn` itself is derived separately, via `"{{ cookiecutter.no_cdn }}".toLowerCase() == "true"`, which does render correctly — which is why CanvasKit and the fallback fonts loaded locally as expected while Pyodide alone went to the CDN, making the failure look like a Pyodide-specific quirk rather than a template bug. The template's other `no_cdn` test (`assets/FontManifest.json`) already used plain truthiness; all conditions now do, and no string comparisons against `"True"` remain by @FeodorFitsner.
+
+* Fix the bundled Pyodide URL being origin-absolute in `--no-cdn` builds, so a sub-path deployment (`flet build web --base-url myapp`) requested `/pyodide/pyodide.mjs` and got a 404 while the file sat at `/myapp/pyodide/pyodide.mjs`. It now renders relative to the configured base URL, as `canvasKitBaseUrl` does. Builds without `--base-url` render exactly the same URL as before by @FeodorFitsner.
+
+### Improvements
+
+* `flet build web` and `flet publish` no longer bundle CanvasKit and Pyodide when CDN mode is on (the default), taking a minimal web build from **71 MB to 19 MB**. In CDN mode Flutter loads CanvasKit from `gstatic.com` and Flet points `pyodideUrl` at jsdelivr, so both copies were dead weight the browser never requested — yet `flutter build web` always emits `canvaskit/` (~37 MB), and `ensure_pyodide()` ran unconditionally in both commands, downloading and copying a further ~15 MB. Neither is fetched, so nothing about how a CDN-mode app loads changes; verified with a network log showing the built app pulling `chromium/canvaskit.{js,wasm}` from gstatic and the full Pyodide runtime from jsdelivr, with no request to a local `canvaskit/` or `pyodide/` path. `--no-cdn` (or `[tool.flet.web] cdn = false`) still bundles everything and is unchanged. `flet build` also clears a `pyodide/` left in the reused Flutter project by an earlier `--no-cdn` build, so switching modes doesn't silently keep shipping it by @FeodorFitsner.
+
+* `flet.canvasKitBaseUrl` and `flet.fontFallbackBaseUrl` are now honored whenever they are set, instead of only when `flet.noCdn` is true. Previously `flutter_bootstrap.js` applied both inside `if (flet.noCdn)`, so a host serving its own copy of the runtime — a CDN-restricted network, an air-gapped deployment, or a platform that mirrors the runtime on its own origin — had to also set `noCdn` for the assignment to take effect at all, and assigning the URL alone failed silently by booting off gstatic anyway. Where a runtime asset is fetched from is now independent of what the build bundled: both values default to `null` in CDN mode and are pinned by `flet build`/`patch_index.py` only when bundling by @FeodorFitsner.
+
 ## 0.86.6
 
 ### Bug fixes
