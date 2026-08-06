@@ -3,7 +3,6 @@ from typing import Optional
 import flet as ft
 from flet.controls.base_control import control
 from flet.controls.services.service import Service
-
 from flet_local_auth.types import (
     AndroidAuthMessages,
     BiometricType,
