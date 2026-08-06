@@ -8,17 +8,9 @@ AndroidAuthMessages? parseAndroidAuthMessages(Map? value) {
     return null;
   }
   return AndroidAuthMessages(
-    signInTitle: value["sign_in_title"],
+    signInHint: value["sign_in_hint"],
     cancelButton: value["cancel_button"],
-    deviceCredentialsRequiredTitle: value["device_credentials_required_title"],
-    deviceCredentialsSetupDescription:
-        value["device_credentials_setup_description"],
-    goToSettingsButton: value["go_to_settings_button"],
-    goToSettingsDescription: value["go_to_settings_description"],
-    biometricHint: value["biometric_hint"],
-    biometricNotRecognized: value["biometric_not_recognized"],
-    biometricSuccess: value["biometric_success"],
-    biometricRequiredTitle: value["biometric_required_title"],
+    signInTitle: value["sign_in_title"],
   );
 }
 
@@ -28,9 +20,6 @@ IOSAuthMessages? parseIosAuthMessages(Map? value) {
   }
   return IOSAuthMessages(
     cancelButton: value["cancel_button"],
-    goToSettingsButton: value["go_to_settings_button"],
-    goToSettingsDescription: value["go_to_settings_description"],
-    lockOut: value["lock_out"],
     localizedFallbackTitle: value["localized_fallback_title"],
   );
 }
@@ -39,10 +28,7 @@ WindowsAuthMessages? parseWindowsAuthMessages(Map? value) {
   if (value == null) {
     return null;
   }
-  return WindowsAuthMessages(
-    signInTitle: value["sign_in_title"],
-    cancelButton: value["cancel_button"],
-  );
+  return const WindowsAuthMessages();
 }
 
 List<AuthMessages> parseAuthMessages(

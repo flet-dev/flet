@@ -44,16 +44,9 @@ class AndroidAuthMessages:
     Customizable Android authentication dialog strings.
     """
 
-    sign_in_title: Optional[str] = None
+    sign_in_hint: Optional[str] = None
     cancel_button: Optional[str] = None
-    device_credentials_required_title: Optional[str] = None
-    device_credentials_setup_description: Optional[str] = None
-    go_to_settings_button: Optional[str] = None
-    go_to_settings_description: Optional[str] = None
-    biometric_hint: Optional[str] = None
-    biometric_not_recognized: Optional[str] = None
-    biometric_success: Optional[str] = None
-    biometric_required_title: Optional[str] = None
+    sign_in_title: Optional[str] = None
 
 
 @ft.value
@@ -63,20 +56,16 @@ class IOSAuthMessages:
     """
 
     cancel_button: Optional[str] = None
-    go_to_settings_button: Optional[str] = None
-    go_to_settings_description: Optional[str] = None
-    lock_out: Optional[str] = None
     localized_fallback_title: Optional[str] = None
 
 
 @ft.value
 class WindowsAuthMessages:
     """
-    Customizable Windows authentication dialog strings.
-    """
+    Placeholder for Windows authentication messages.
 
-    sign_in_title: Optional[str] = None
-    cancel_button: Optional[str] = None
+    `local_auth` 3.x does not currently expose customizable Windows dialog strings.
+    """
 
 
 class LocalAuthException(ft.FletException):
