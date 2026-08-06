@@ -21,6 +21,7 @@ dependencies = [
     "flet-flashlight",
     "flet-geolocator",
     "flet-lottie",
+    "flet-local-auth",
     "flet-map",
     "flet-mcp",
     "flet-permission-handler",
@@ -47,6 +48,7 @@ flet-datatable2 = { workspace = true }
 flet-flashlight = { workspace = true }
 flet-geolocator = { workspace = true }
 flet-lottie = { workspace = true }
+flet-local-auth = { workspace = true }
 flet-map = { workspace = true }
 flet-mcp = { workspace = true }
 flet-permission-handler = { workspace = true }
@@ -121,6 +123,7 @@ isort = { known-first-party = [
     "flet_flashlight",
     "flet_geolocator",
     "flet_lottie",
+    "flet_local_auth",
     "flet_map",
     "flet_mcp",
     "flet_permission_handler",

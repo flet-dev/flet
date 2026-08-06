@@ -357,6 +357,7 @@ docs:
       Geolocator: services/geolocator/index.md
       Gyroscope: services/gyroscope.md
       HapticFeedback: services/hapticfeedback.md
+      LocalAuthentication: services/localauthentication/index.md
       Magnetometer: services/magnetometer.md
       PermissionHandler: services/permissionhandler/index.md
       ScreenBrightness: services/screenbrightness.md
@@ -532,6 +533,13 @@ docs:
       - types/locale.md
       - types/localeconfiguration.md
       - types/locationinfo.md
+      - LocalAuthentication:
+        - services/localauthentication/types/androidauthmessages.md
+        - services/localauthentication/types/biometrictype.md
+        - services/localauthentication/types/iosauthmessages.md
+        - services/localauthentication/types/localautherrorcode.md
+        - services/localauthentication/types/localauthexception.md
+        - services/localauthentication/types/windowsauthmessages.md
       - Map:
         - controls/map/types/attributionalignment.md
         - controls/map/types/camera.md
@@ -872,6 +880,7 @@ docs:
         FletPageDisconnectedException: types/fletpagedisconnectedexception.md
         FletUnimplementedPlatformException: types/fletunimplementedplatformexception.md
         FletUnsupportedPlatformException: types/fletunsupportedplatformexception.md
+        LocalAuthException: services/localauthentication/types/localauthexception.md
       FastAPI:
       - fastapi/app.md
       - fastapi/app_manager.md

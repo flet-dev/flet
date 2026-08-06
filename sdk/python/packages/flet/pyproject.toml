@@ -62,6 +62,7 @@ extensions = [
     "flet-flashlight",
     "flet-geolocator",
     "flet-lottie",
+    "flet-local-auth",
     "flet-map",
     "flet-permission-handler",
     "flet-rive",
