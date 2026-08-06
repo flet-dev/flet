@@ -716,6 +716,7 @@ jobs:
             flet-flashlight
             flet-geolocator
             flet-lottie
+            flet-local-auth
             flet-map
             flet-permission-handler
             flet-rive
@@ -995,6 +996,7 @@ jobs:
             flet_flashlight \
             flet_geolocator \
             flet_lottie \
+            flet_local_auth \
             flet_map \
             flet_permission_handler \
             flet_rive \

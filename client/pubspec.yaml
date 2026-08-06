@@ -73,6 +73,9 @@ dependencies:
   flet_lottie:
     path: ../sdk/python/packages/flet-lottie/src/flutter/flet_lottie
 
+  flet_local_auth:
+    path: ../sdk/python/packages/flet-local-auth/src/flutter/flet_local_auth
+
   flet_map:
     path: ../sdk/python/packages/flet-map/src/flutter/flet_map
 

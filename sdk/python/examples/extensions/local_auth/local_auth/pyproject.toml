@@ -1,0 +1,27 @@
+[project]
+name = "local_auth"
+version = "1.0.0"
+description = "Prompts for on-device biometric or credential authentication."
+requires-python = ">=3.10"
+keywords = ["local auth", "biometric", "example", "services", "async"]
+authors = [{ name = "Flet team", email = "hello@flet.dev" }]
+dependencies = ["flet", "flet-local-auth"]
+
+[dependency-groups]
+dev = ["flet-cli", "flet-desktop", "flet-web"]
+
+[tool.flet.gallery]
+categories = ["Utility/LocalAuthentication"]
+
+[tool.flet.metadata]
+title = "Local authentication"
+controls = ["SafeArea", "Column", "Page", "LocalAuthentication", "Button", "Text"]
+layout_pattern = "inline-actions"
+complexity = "basic"
+features = ["biometric authentication", "device capability checks"]
+
+[tool.flet]
+org = "dev.flet"
+company = "Flet"
+copyright = "Copyright (C) 2023-2026 by Flet"
+platforms = ["ios", "android", "windows", "macos"]

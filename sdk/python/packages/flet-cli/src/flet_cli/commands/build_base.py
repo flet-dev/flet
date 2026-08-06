@@ -234,6 +234,17 @@ class BaseBuildCommand(BaseFlutterCommand):
                 },
                 "android_features": {},
             },
+            "biometric": {
+                "ios_info_plist": {
+                    "NSFaceIDUsageDescription": "This app uses biometrics to authenticate you."  # noqa: E501
+                },
+                "macos_info_plist": {
+                    "NSFaceIDUsageDescription": "This app uses biometrics to authenticate you."  # noqa: E501
+                },
+                "macos_entitlements": {},
+                "android_permissions": {},
+                "android_features": {},
+            },
         }
 
         # create and display build-platform-matrix table
