@@ -1,3 +1,9 @@
+## Unreleased
+
+### Improvements
+
+* Android host apps now use `FlutterFragmentActivity` and an AppCompat `LaunchTheme` so biometric authentication dialogs work on API 24–27. A `biometric` cross-platform permission bundle adds `NSFaceIDUsageDescription` for iOS and macOS builds.
+
 ## 0.86.3
 
 ### Bug fixes
