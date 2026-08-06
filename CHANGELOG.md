@@ -1,3 +1,9 @@
+## 0.86.6
+
+### Bug fixes
+
+* Fix ink ripples and hover highlights not covering the whole `Container` when both `ink=True` and `animate` are set, and its `padding` being applied twice. In that combination `padding` and `alignment` were passed to the outer `AnimatedContainer` *and* to the inner `Container` that wraps the content inside the `InkWell`, so a `padding=10` container was laid out with 20 on each side. The duplicated `alignment` was the more visible half: it made the `Material`/`InkWell` shrink-wrap to the content, so splashes and the hover overlay stopped short of the container's edges while `bgcolor` on the same container still filled it - the two disagreed on where the control ended. Both properties now live only on the inner container, which becomes an `AnimatedContainer` when `animate` is set so that padding and alignment changes still animate; this is what the non-animated ink path already did. Inked, animated containers with padding will render tighter than before - by the padding they declare, instead of double by @FeodorFitsner.
+
 ## 0.86.5
 
 ### Bug fixes
