@@ -1,6 +1,7 @@
 import 'dart:math' as math;
 
 import 'package:flutter/foundation.dart' show clampDouble;
+import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:vector_math/vector_math_64.dart' show Matrix4, Quad, Vector3;
 
@@ -125,7 +126,7 @@ class _InteractiveViewerControlState extends State<InteractiveViewerControl>
           "InteractiveViewer.content must be provided and visible");
     }
 
-    var interactiveViewer = InteractiveViewer(
+    Widget interactiveViewer = InteractiveViewer(
       key: _viewerKey,
       transformationController: _transformationController,
       panEnabled: widget.control.getBool("pan_enabled", true)!,
@@ -169,7 +170,34 @@ class _InteractiveViewerControlState extends State<InteractiveViewerControl>
       child: KeyedSubtree(key: _childKey, child: content),
     );
 
+    interactiveViewer = Listener(
+      onPointerSignal: _resolveHandledPointerSignal,
+      child: interactiveViewer,
+    );
+
     return LayoutControl(control: widget.control, child: interactiveViewer);
+  }
+
+  void _resolveHandledPointerSignal(PointerSignalEvent event) {
+    if (!_handlesPointerSignal(event)) {
+      return;
+    }
+    GestureBinding.instance.pointerSignalResolver.register(event, (_) {});
+  }
+
+  bool _handlesPointerSignal(PointerSignalEvent event) {
+    if (event is PointerScaleEvent) {
+      return widget.control.getBool("scale_enabled", true)!;
+    }
+    if (event is! PointerScrollEvent) {
+      return false;
+    }
+    if (event.kind == PointerDeviceKind.trackpad &&
+        !widget.control.getBool("trackpad_scroll_causes_scale", false)!) {
+      return widget.control.getBool("pan_enabled", true)!;
+    }
+    return event.scrollDelta.dy != 0.0 &&
+        widget.control.getBool("scale_enabled", true)!;
   }
 
   /// Returns a copy of [matrix] scaled by [scale] while honoring the viewer's
