@@ -314,11 +314,19 @@ class FletTestApp:
                         f"--dart-define=FLET_TEST_ASSETS_DIR={self.__assets_dir}"
                     ]
 
+        # Do not leak host-Python configuration into Flutter's embedded Python
+        # IDEs such as PyCharm add debugger/sitecustomize modules through
+        # PYTHONPATH, which can break the packaged integration-test app.
+        flutter_env = os.environ.copy()
+        flutter_env.pop("PYTHONPATH", None)
+        flutter_env.pop("PYTHONHOME", None)
+
         self.__flutter_process = await asyncio.create_subprocess_exec(
             *flutter_args,
             cwd=str(self.__flutter_app_dir),
             stdout=stdout,
             stderr=stderr,
+            env=flutter_env,
         )
 
         if self.__flutter_process.stdout is not None:
