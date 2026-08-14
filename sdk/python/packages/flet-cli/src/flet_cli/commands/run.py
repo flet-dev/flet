@@ -48,6 +48,16 @@ class Command(BaseCommand):
             help="Path to the Python script that starts your Flet app",
         )
         parser.add_argument(
+            "script_args",
+            type=str,
+            nargs="*",
+            default=[],
+            metavar="args",
+            help="Arguments to pass to your app script, available there as "
+            "`sys.argv[1:]`. Separate them from Flet's own options with `--`, "
+            "e.g. `flet run --web app.py -- --verbose`",
+        )
+        parser.add_argument(
             "-p",
             "--port",
             dest="port",
@@ -287,7 +297,8 @@ class Command(BaseCommand):
         my_event_handler = Handler(
             args=[sys.executable, "-u"]
             + ["-m"] * options.module
-            + [options.script if options.module else script_path],
+            + [options.script if options.module else script_path]
+            + list(options.script_args),
             watch_directory=options.directory or options.recursive,
             script_path=str(script_path),
             port=port,

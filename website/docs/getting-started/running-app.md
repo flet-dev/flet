@@ -82,6 +82,55 @@ A new browser window/tab will be opened and the app will be using a random TCP p
 
 <Image src="assets/getting-started/counter-app/safari.png" alt="Web" width="45%" caption="Running Flet app as a web app" />
 
+## Passing arguments to your app
+
+Anything after a `--` separator is passed through to your app script instead of being
+interpreted by Flet, and shows up there as `sys.argv[1:]`:
+
+<Tabs groupId="uv--pip">
+<TabItem value="uv" label="uv">
+```bash
+uv run flet run --web [script] -- --dataset big.csv --verbose
+```
+</TabItem>
+<TabItem value="pip" label="pip">
+```bash
+flet run --web [script] -- --dataset big.csv --verbose
+```
+</TabItem>
+</Tabs>
+
+Your app reads them as it would when started with `python`:
+
+```python title="main.py"
+import argparse
+import sys
+
+import flet as ft
+
+parser = argparse.ArgumentParser()
+parser.add_argument("--dataset", default="small.csv")
+parser.add_argument("--verbose", action="store_true")
+options = parser.parse_args(sys.argv[1:])
+
+
+def main(page: ft.Page):
+    page.add(ft.Text(f"Dataset: {options.dataset}"))
+
+
+ft.run(main)
+```
+
+The `--` separator is what keeps your app's arguments from being read as Flet's own -
+without it, `flet run main.py --verbose` fails because `--verbose` is not a
+[`flet run`](../cli/flet-run.md) option. Arguments that don't start with a `-` can be
+passed without a separator, e.g. `flet run main.py big.csv`.
+
+:::note
+The same arguments are re-applied every time the app is hot reloaded, and they are
+passed through in all run modes: desktop, `--web`, `--ios` and `--android`.
+:::
+
 ## Watching for changes
 
 By default, Flet will watch the script file that was run and reload the app whenever the contents

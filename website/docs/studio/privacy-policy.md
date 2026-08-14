@@ -8,7 +8,7 @@ title: "Privacy Policy"
 
 This Privacy Policy explains how **Appveyor Systems Inc.** ("AppVeyor", "we", "us", or "our") collects, uses, shares, and protects personal information in connection with the Flet Studio service ("Flet Studio", "the Service"). Flet Studio is a hosted development environment and runtime for building applications with the Flet framework.
 
-This policy applies to information we collect from users of Flet Studio at https://flet.app (and any related domains we operate for the Service) and through the Flet Studio web application.
+This policy applies to information we collect from users of Flet Studio at https://studio.flet.dev (and any related domains we operate for the Service) and through the Flet Studio web application.
 
 ---
 

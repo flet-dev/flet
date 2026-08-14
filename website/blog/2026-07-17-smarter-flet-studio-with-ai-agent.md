@@ -5,7 +5,7 @@ authors: feodor
 tags: ["releases", "flet studio"]
 ---
 
-In case you missed it, we have [Flet Studio](https://flet.app) - an online tool for
+In case you missed it, we have [Flet Studio](https://studio.flet.dev) - an online tool for
 building Flet apps and sharing them with other users. What started as a quick "FletPad"
 experiment has already grown into a solid app - an online Flet IDE, if you will - with
 user accounts, a forkable gallery of examples, multiple apps per account, and version
@@ -19,15 +19,15 @@ your apps with other users.
 
 Today we are introducing a new member of the family - the AI agent!
 
-Go to https://flet.app and ask something like:
+Go to https://studio.flet.dev and ask something like:
 
-<a href="https://flet.app" target="_blank" rel="noopener noreferrer">
+<a href="https://studio.flet.dev" target="_blank" rel="noopener noreferrer">
   <img src="/img/blog/flet-studio-ai/flet-studio-ai-prompt.png" className="screenshot-100" />
 </a>
 
 ...and in a few moments you get code you can start working with:
 
-<a href="https://flet.app" target="_blank" rel="noopener noreferrer">
+<a href="https://studio.flet.dev" target="_blank" rel="noopener noreferrer">
   <img src="/img/blog/flet-studio-ai/flet-studio-ai-result-preview.png" className="screenshot-100" />
 </a>
 
@@ -38,7 +38,7 @@ Python developer. Maintainable code is an explicit goal for us, and we are build
 tools for the agent to achieve exactly that. It helps that Flet itself, with its minimal
 boilerplate, is a framework equally friendly to humans and AI.
 
-<a href="https://flet.app" target="_blank" rel="noopener noreferrer">
+<a href="https://studio.flet.dev" target="_blank" rel="noopener noreferrer">
   <img src="/img/blog/flet-studio-ai/flet-studio-ai-result-code.png" className="screenshot-100" />
 </a>
 
@@ -104,7 +104,7 @@ in some areas like routing/navigation or declarative apps.
 
 ## Try it
 
-Open [flet.app](https://flet.app), sign in, and ask the agent to build something - your
+Open [flet.app](https://studio.flet.dev), sign in, and ask the agent to build something - your
 free monthly credits are already waiting. If you'd rather stay with your local agent,
 plug in the [Flet MCP server](/docs/cookbook/flet-mcp/) and enjoy hallucination-free
 Flet coding right away.

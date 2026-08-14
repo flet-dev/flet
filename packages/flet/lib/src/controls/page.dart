@@ -62,6 +62,7 @@ class _PageControlState extends State<PageControl> with WidgetsBindingObserver {
   late final AppLifecycleListener _appLifecycleListener;
   ServiceRegistry? _services;
   String? _servicesUid;
+  Control? _servicesControl;
   ServiceBinding? _windowService;
   Control? _windowControl;
   bool? _prevOnKeyboardEvent;
@@ -74,6 +75,19 @@ class _PageControlState extends State<PageControl> with WidgetsBindingObserver {
   final Map<int, MultiView> _multiViews = <int, MultiView>{};
   bool _registeredFromMultiViews = false;
 
+  // True when this page is a nested/embedded app (hosted inside another Flet
+  // app via FletApp, so its backend has a controlId). Embedded pages chain
+  // their system back handling to the host through [_childBackButtonDispatcher].
+  bool _isEmbedded = false;
+
+  // For an embedded page, a child of the host Router's back button dispatcher.
+  // Without it, MaterialApp.router/CupertinoApp.router would install their own
+  // RootBackButtonDispatcher, and a system/edge-swipe back that the embedded
+  // app can't handle (e.g. it has a single view) would call SystemNavigator.pop()
+  // and exit the whole host app instead of propagating to the host, which would
+  // pop the view embedding this app.
+  ChildBackButtonDispatcher? _childBackButtonDispatcher;
+
   @override
   void initState() {
     debugPrint("Page.initState: ${widget.control.id}");
@@ -84,7 +98,8 @@ class _PageControlState extends State<PageControl> with WidgetsBindingObserver {
 
     _routeParser = RouteParser();
     final backend = FletBackend.of(context);
-    final isEmbedded = backend.controlId != null;
+    _isEmbedded = backend.controlId != null;
+    final isEmbedded = _isEmbedded;
     final defaultRouteName =
         WidgetsBinding.instance.platformDispatcher.defaultRouteName;
     final pendingInitial = isEmbedded
@@ -136,6 +151,18 @@ class _PageControlState extends State<PageControl> with WidgetsBindingObserver {
     super.didChangeDependencies();
     _ensureServiceRegistries();
     _loadFontsIfNeeded(FletBackend.of(context));
+
+    // When embedded inside another Flet app, hook this page's system back
+    // handling into the host Router so an unhandled back propagates to the host
+    // (which pops the embedding view) instead of exiting the whole app.
+    if (_isEmbedded && _childBackButtonDispatcher == null) {
+      final parentBackButtonDispatcher =
+          Router.maybeOf(context)?.backButtonDispatcher;
+      if (parentBackButtonDispatcher != null) {
+        _childBackButtonDispatcher =
+            parentBackButtonDispatcher.createChildBackButtonDispatcher();
+      }
+    }
   }
 
   @override
@@ -201,18 +228,31 @@ class _PageControlState extends State<PageControl> with WidgetsBindingObserver {
     var servicesControl = widget.control.child("_services");
     if (servicesControl != null) {
       var uid = servicesControl.internals?["uid"];
-      if (_services == null || _servicesUid != uid) {
+      // Rebuild the registry when the uid changes OR when the Control instance
+      // itself is replaced. The uid identifies the Python-side ServiceRegistry,
+      // which outlives individual patches, so it stays the same when a REPLACE
+      // swaps in a fresh Control object — and ServiceRegistry listens to the
+      // object it was handed. Keying on uid alone left the registry subscribed
+      // to a detached Control: services registered afterwards were never built,
+      // and invoking one timed out with "Timeout waiting for invoke method
+      // listener for <Service>(id).<method>". Matches how `window` below tracks
+      // its control by identity.
+      if (_services == null ||
+          _servicesUid != uid ||
+          !identical(servicesControl, _servicesControl)) {
         _services?.dispose();
         _services = ServiceRegistry(
             control: servicesControl,
             propertyName: "_services",
             backend: backend);
         _servicesUid = uid;
+        _servicesControl = servicesControl;
       }
     } else if (_services != null) {
       _services?.dispose();
       _services = null;
       _servicesUid = null;
+      _servicesControl = null;
     }
 
     var windowControl = widget.control.child("window", visibleOnly: false);
@@ -583,11 +623,26 @@ class _PageControlState extends State<PageControl> with WidgetsBindingObserver {
     var showSemanticsDebugger =
         control.getBool("show_semantics_debugger", false)!;
 
+    // Claim back-button priority for the embedded page so its Router (and, on a
+    // fall-through, the host Router) receives system back events. Re-asserted on
+    // every build, matching Flutter's nested-Router guidance.
+    _childBackButtonDispatcher?.takePriority();
+
+    // For an embedded page, do NOT let WidgetsApp's default NavigationNotification
+    // handler run: it would call SystemNavigator.setFrameworkHandlesBack(false)
+    // (this nested app's single view can't pop) and stop the notification, so the
+    // OS finishes the whole activity on a system/edge-swipe back. Returning false
+    // lets the notification bubble to the host app, whose Navigator re-reports
+    // canHandlePop=true when the host can pop the view embedding this app.
+    final NotificationListenerCallback<NavigationNotification>?
+        onNavigationNotification = _isEmbedded ? (_) => false : null;
+
     Widget? app = widgetsDesign == PageDesign.cupertino
         ? home != null
             ? CupertinoApp(
                 debugShowCheckedModeBanner: false,
                 showSemanticsDebugger: showSemanticsDebugger,
+                onNavigationNotification: onNavigationNotification,
                 title: windowTitle,
                 theme: cupertinoTheme,
                 builder: scaffoldMessengerBuilder,
@@ -599,9 +654,11 @@ class _PageControlState extends State<PageControl> with WidgetsBindingObserver {
             : CupertinoApp.router(
                 debugShowCheckedModeBanner: false,
                 showSemanticsDebugger: showSemanticsDebugger,
+                onNavigationNotification: onNavigationNotification,
                 routerDelegate: _routerDelegate,
                 routeInformationParser: _routeParser,
                 routeInformationProvider: _routeInformationProvider,
+                backButtonDispatcher: _childBackButtonDispatcher,
                 title: windowTitle,
                 theme: cupertinoTheme,
                 builder: scaffoldMessengerBuilder,
@@ -613,6 +670,7 @@ class _PageControlState extends State<PageControl> with WidgetsBindingObserver {
             ? MaterialApp(
                 debugShowCheckedModeBanner: false,
                 showSemanticsDebugger: showSemanticsDebugger,
+                onNavigationNotification: onNavigationNotification,
                 title: windowTitle,
                 theme: lightTheme,
                 darkTheme: darkTheme,
@@ -626,9 +684,11 @@ class _PageControlState extends State<PageControl> with WidgetsBindingObserver {
             : MaterialApp.router(
                 debugShowCheckedModeBanner: false,
                 showSemanticsDebugger: showSemanticsDebugger,
+                onNavigationNotification: onNavigationNotification,
                 routerDelegate: _routerDelegate,
                 routeInformationParser: _routeParser,
                 routeInformationProvider: _routeInformationProvider,
+                backButtonDispatcher: _childBackButtonDispatcher,
                 title: windowTitle,
                 theme: lightTheme,
                 darkTheme: darkTheme,

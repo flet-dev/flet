@@ -741,6 +741,22 @@ the example above will be translated accordingly into this:
 Use cross-platform permissions from [Permissions](index.md#permissions) when possible,
 and add Android-specific permissions or features here.
 
+:::danger[Declare only what you use]
+Google Play rejects apps that request broad media or storage access they do not need.
+In particular, its [Photo and Video Permissions policy](https://support.google.com/googleplay/android-developer/answer/14115180)
+rejects apps targeting Android 13 (API 33) or higher that declare
+`READ_MEDIA_IMAGES` or `READ_MEDIA_VIDEO` when the system pickers are sufficient —
+and a single active version code carrying them, including on internal and closed
+testing tracks, is enough to block a release.
+
+[`FilePicker`](../services/filepicker.md) uses the storage access framework and needs
+no permission at all, and the app's own directories
+(see [`StoragePaths`](../services/storagepaths.md)) are always writable. Reach for
+`READ_MEDIA_*` or the legacy `*_EXTERNAL_STORAGE` permissions only when your app truly
+needs library-wide access, and bound the legacy ones with
+`{ maxSdkVersion = "32" }` so they are not requested on Android 13 or higher.
+:::
+
 See also:
 
 - [`Manifest.permission` constants](https://developer.android.com/reference/android/Manifest.permission)
@@ -761,11 +777,13 @@ Its value is determined in the following order of precedence:
 <TabItem value="flet-build" label="flet build">
 Accepts repeated `<name>=<enabled>` entries.
 The `<enabled>` value can be `true` or `false` (case-insensitive).
-Permissions with `false` are omitted from the generated manifest.
+Permissions with `false` are actively removed from the merged manifest.
 </TabItem>
 <TabItem value="pyproject-toml" label="pyproject.toml">
 Use boolean values. TOML booleans must be lowercase: `true` or `false`.
-Permissions set to `false` are omitted from the generated manifest.
+Permissions set to `false` are emitted with `tools:node="remove"`, which strips
+them from the merged manifest even when a Flutter plugin declares them — see
+[Removing a permission a plugin adds](#removing-a-permission-a-plugin-adds).
 
 A value can also be a TOML inline table whose entries become extra
 `android:<key>="<value>"` attributes on the generated `<uses-permission>`
@@ -779,15 +797,15 @@ A non-empty table is always emitted; an empty table `{}` is treated as `false`.
 <TabItem value="flet-build" label="flet build">
 ```bash
 flet build apk \
-  --android-permissions android.permission.READ_EXTERNAL_STORAGE=true \
-  --android-permissions android.permission.WRITE_EXTERNAL_STORAGE=true
+  --android-permissions android.permission.CAMERA=true \
+  --android-permissions android.permission.RECORD_AUDIO=true
 ```
 </TabItem>
 <TabItem value="pyproject-toml" label="pyproject.toml">
 ```toml
 [tool.flet.android.permission]
-"android.permission.READ_EXTERNAL_STORAGE" = true
-"android.permission.WRITE_EXTERNAL_STORAGE" = true
+"android.permission.CAMERA" = true
+"android.permission.RECORD_AUDIO" = true
 "android.permission.ACCESS_FINE_LOCATION" = { maxSdkVersion = "30" }
 "android.permission.BLUETOOTH_SCAN" = { usesPermissionFlags = "neverForLocation" }
 ```
@@ -801,13 +819,64 @@ the `pyproject.toml` example above will be translated accordingly into this:
 
 ```xml
 <manifest>
-    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
-    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.CAMERA" />
+    <uses-permission android:name="android.permission.RECORD_AUDIO" />
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" android:maxSdkVersion="30" />
     <uses-permission android:name="android.permission.BLUETOOTH_SCAN" android:usesPermissionFlags="neverForLocation" />
 </manifest>
 ```
 </details>
+
+#### Removing a permission a plugin adds
+
+Not every permission in your app comes from your own configuration. Gradle's manifest
+merger folds in the manifest of every Flutter plugin you depend on, and it can also
+*synthesize* permissions you never asked for.
+
+A real example: `flet-camera` pulls in `camera_android_camerax`, whose manifest declares
+`WRITE_EXTERNAL_STORAGE` bounded to `maxSdkVersion="28"`. The merger then implies an
+**unbounded** `READ_EXTERNAL_STORAGE` from it, because on very old Android versions write
+access implied read access:
+
+```
+uses-permission#android.permission.READ_EXTERNAL_STORAGE
+IMPLIED from .../AndroidManifest.xml reason: io.flutter.plugins.camerax requested WRITE_EXTERNAL_STORAGE
+```
+
+Neither permission appears anywhere in your `pyproject.toml`, and both show up in the
+Play Console. Setting them to `false` removes them:
+
+```toml
+[tool.flet.android.permission]
+"android.permission.READ_EXTERNAL_STORAGE" = false
+"android.permission.WRITE_EXTERNAL_STORAGE" = false
+```
+
+which generates:
+
+```xml
+<uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" tools:node="remove" />
+<uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" tools:node="remove" />
+```
+
+Removing a permission that nothing declares is harmless — `tools:node="remove"` on an
+absent element is a no-op.
+
+:::tip[Finding where a permission came from]
+Gradle writes a report naming the source of every merged manifest element:
+
+```
+build/flutter/build/app/outputs/logs/manifest-merger-release-report.txt
+```
+
+Search it for the permission name. Each entry is marked `ADDED from [:some_plugin]`,
+`MERGED from [some.aar]`, or `IMPLIED from ... reason: ...`, which tells you whether to
+remove it, drop the dependency, or bound it with `maxSdkVersion`.
+:::
+
+Only remove a permission the app genuinely does not need. If a plugin declares one because
+a code path it owns requires it, removing the permission makes that path fail at runtime
+rather than at build time.
 
 ### Minimum SDK version
 
@@ -918,6 +987,99 @@ adaptive_icon_background = "#0B6BFF"
 ```
 </TabItem>
 </Tabs>
+
+## ProGuard / R8 rules
+
+Release builds run [R8](https://developer.android.com/build/shrink-code), which removes unused
+classes and renames the ones that remain. Anything looked up by name at runtime — through
+reflection or JNI — has to be exempted with a *keep rule*, or the lookup fails against a class that
+no longer has the name it is being asked for.
+
+Flet generates `android/app/proguard-rules.pro` with these defaults:
+
+```
+-keep class com.flet.serious_python_android.** { *; }
+-keepnames class * { *; }
+```
+
+There are two knobs, because adding and removing rules are different problems:
+
+- **`[tool.flet.android].proguard_rules`** — a list of rules *appended* to the defaults. R8 has no
+  directive that undoes a keep, so a rule you add can only ever widen what is kept.
+- **`[tool.flet.android].proguard_default_rules`** — set to `false` to drop the defaults entirely.
+  This is the only way to get rid of `-keepnames class * { *; }`.
+
+Appending is kept separate from replacing on purpose. If the only option were to replace, you would
+paste today's defaults into your `pyproject.toml` and silently keep them after Flet changes them.
+
+### Dropping the defaults
+
+`-keepnames class * { *; }` keeps every class *and member* name in your app, which switches off
+obfuscation app-wide and blocks the R8 passes that rely on renaming. It costs real size — on Flet
+Studio, removing it takes `classes.dex` from 5.9 MB to 3.4 MB (**-43%**).
+
+Dropping the defaults does **not** break Pyjnius's access to the app activity:
+`serious_python_android` 4.1.0+ ships `-keep class com.flet.serious_python_android.** { *; }` in its
+own `consumer-rules.pro`, so that rule applies whether or not the template repeats it.
+
+```toml
+[tool.flet.android]
+proguard_default_rules = false
+proguard_rules = [
+  # add back names your own code looks up reflectively
+  "-keepnames class com.example.myapp.** { *; }",
+]
+```
+
+Test a release build on a device before shipping this — see the warning below.
+
+### When you need this
+
+The common case is [Pyjnius](https://flet.dev/blog/tap-into-native-android-and-ios-apis-with-Pyjnius-and-pyobjus).
+`autoclass()` resolves Java classes by their fully-qualified name at runtime, so a class R8 renamed
+can no longer be found:
+
+- **Android framework classes** (`android.os.Build`, `android.bluetooth.BluetoothAdapter`, …) need
+  no rule. They live in the Android runtime, not in your APK, so R8 never touches them.
+- **Classes bundled by a Flutter plugin or your own Java/Kotlin** are in your APK and *are* renamed.
+  These need a keep rule.
+
+:::warning A failed lookup crashes the process
+`autoclass()` on a renamed class does not raise a Python exception you can catch. JNI `FindClass`
+returns null and the process aborts. On a debuggable build the log shows:
+
+```
+JNI DETECTED ERROR IN APPLICATION: obj == null in call to CallObjectMethodA
+Fatal signal 6 (SIGABRT)
+```
+
+On a production build there is usually no message at all — just a crash. Because R8 only runs in
+release builds, this never reproduces in debug.
+:::
+
+### Example
+
+```toml
+[tool.flet.android]
+proguard_rules = [
+  "-keep class io.flutter.embedding.android.FlutterActivity { *; }",
+  "-keep class com.example.mylib.** { *; }",
+]
+```
+
+<details>
+<summary>Template translation</summary>
+
+In [`android/app/proguard-rules.pro`](index.md#build-template), the `pyproject.toml` example above
+will be translated accordingly into this:
+
+```
+-keep class com.flet.serious_python_android.** { *; }
+-keepnames class * { *; }
+-keep class io.flutter.embedding.android.FlutterActivity { *; }
+-keep class com.example.mylib.** { *; }
+```
+</details>
 
 ## Extract packages
 

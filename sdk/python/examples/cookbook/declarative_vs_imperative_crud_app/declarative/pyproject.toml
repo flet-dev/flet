@@ -1,0 +1,26 @@
+[project]
+name = "crud-app-declarative"
+version = "1.0.0"
+description = "Declarative CRUD 'User Manager' built with observable state, components, and hooks."
+requires-python = ">=3.10"
+keywords = ["cookbook", "crud", "declarative", "observable", "component", "hooks"]
+authors = [{ name = "Flet team", email = "hello@flet.dev" }]
+dependencies = ["flet"]
+
+[dependency-groups]
+dev = ["flet-cli", "flet-desktop", "flet-web"]
+
+[tool.flet.gallery]
+categories = ["Cookbook", "Declarative"]
+
+[tool.flet.metadata]
+title = "Declarative"
+controls = ["Row", "TextField", "Text", "Button"]
+layout_pattern = "inline-actions"
+complexity = "intermediate"
+features = ["observable state", "declarative components", "use_state hooks", "UI = f(state)"]
+
+[tool.flet]
+org = "dev.flet"
+company = "Flet"
+copyright = "Copyright (C) 2023-2026 by Flet"

@@ -26,8 +26,18 @@ class ServiceRegistry {
     // newly added services
     for (var serviceControl in serviceControls) {
       if (!_services.containsKey(serviceControl.id)) {
-        _services[serviceControl.id] =
-            ServiceBinding(control: serviceControl, backend: backend);
+        // Isolate failures per service. ServiceBinding throws for a control
+        // type no extension can build ("Unknown service"), and letting that
+        // escape aborts this loop, so every service *after* the offending one
+        // is silently never bound — later invokeMethod calls on them then hang
+        // until they time out. Skip the bad entry and keep going instead.
+        try {
+          _services[serviceControl.id] =
+              ServiceBinding(control: serviceControl, backend: backend);
+        } catch (e) {
+          debugPrint(
+              "Error creating service ${serviceControl.type}(${serviceControl.id}): $e");
+        }
       }
     }
 

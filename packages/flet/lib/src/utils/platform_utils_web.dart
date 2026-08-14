@@ -54,7 +54,7 @@ extension FletJSExtension on FletJS {
   external bool get noCdn;
   external String get webSocketEndpoint;
   external String get routeUrlStrategy;
-  external String get canvasKitBaseUrl;
+  external String? get canvasKitBaseUrl;
   external String get pyodideUrl;
   external String get webRenderer;
   external String? get appPackageUrl;
