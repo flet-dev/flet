@@ -1381,9 +1381,7 @@ class BaseBuildCommand(BaseFlutterCommand):
                 self.options.no_wasm
                 or self.get_pyproject("tool.flet.web.wasm") == False  # noqa: E712
             ),
-            "no_cdn": (
-                self.options.no_cdn or self.get_pyproject("tool.flet.web.cdn") == False  # noqa: E712
-            ),
+            "no_cdn": self.resolve_no_cdn(),
             # Surface the resolved Pyodide release to the cookiecutter
             # context so the web template's index.html can wire the
             # correct jsdelivr URL when CDN mode is on.
@@ -2530,16 +2528,37 @@ class BaseBuildCommand(BaseFlutterCommand):
         # directory so it ships in `flutter build web` output. Cached
         # per-version under ~/.flet/pyodide/<version>/ so subsequent builds
         # are no-ops.
+        #
+        # Skipped in CDN mode: `patch_index.py` then points `flet.pyodideUrl`
+        # at jsdelivr, so a bundled copy would add ~15 MB to the build that
+        # the browser never requests.
         if self.package_platform == "Emscripten":
-            from flet_cli.utils.pyodide import ensure_pyodide
-
-            self.update_status("[bold blue]Preparing Pyodide runtime...")
             pyodide_dest = self.flutter_dir / "web" / "pyodide"
-            ensure_pyodide(self.python_release.pyodide, pyodide_dest)
-            console.log(
-                f"Pyodide {self.python_release.pyodide} ready "
-                f"{self.emojis['checkmark']}"
-            )
+            if self.resolve_no_cdn():
+                from flet_cli.utils.pyodide import ensure_pyodide
+
+                self.update_status("[bold blue]Preparing Pyodide runtime...")
+                ensure_pyodide(self.python_release.pyodide, pyodide_dest)
+                console.log(
+                    f"Pyodide {self.python_release.pyodide} ready "
+                    f"{self.emojis['checkmark']}"
+                )
+            elif pyodide_dest.exists():
+                # The Flutter project is reused across builds, so a copy left
+                # by an earlier `--no-cdn` build would otherwise still ship.
+                shutil.rmtree(pyodide_dest, ignore_errors=True)
+
+    def resolve_no_cdn(self) -> bool:
+        """
+        Whether CanvasKit, Pyodide and fallback fonts should be bundled with
+        the app instead of loaded from their CDNs.
+
+        Returns:
+            True when `--no-cdn` was passed or `tool.flet.web.cdn` is `false`.
+        """
+        return bool(
+            self.options.no_cdn or self.get_pyproject("tool.flet.web.cdn") == False  # noqa: E712
+        )
 
     def get_bool_setting(self, cli_option, pyproj_setting, default_value):
         """
@@ -2834,9 +2853,11 @@ class BaseBuildCommand(BaseFlutterCommand):
                 ignore=make_ignore_fn(build_output_dir, build_output_glob),
             )
 
-        if self.target_platform == "web" and self.assets_path.exists():
-            # copy `assets` directory contents to the output directory
-            copy_tree(str(self.assets_path), str(self.out_dir))
+        if self.target_platform == "web":
+            self.prune_cdn_assets()
+            if self.assets_path.exists():
+                # copy `assets` directory contents to the output directory
+                copy_tree(str(self.assets_path), str(self.out_dir))
         elif self.target_platform in {"apk", "aab"}:
             self.rename_android_build_outputs()
 
@@ -2844,6 +2865,28 @@ class BaseBuildCommand(BaseFlutterCommand):
             f"Copied build to [cyan]{self.rel_out_dir}[/cyan] "
             f"directory {self.emojis['checkmark']}"
         )
+
+    def prune_cdn_assets(self):
+        """
+        Remove `canvaskit/` from a CDN-mode web build.
+
+        `flutter build web` always emits CanvasKit, but in CDN mode the web
+        template leaves `flet.canvasKitBaseUrl` unset, so Flutter loads it
+        from gstatic and these ~37 MB are never requested.
+        """
+        if self.resolve_no_cdn():
+            return
+
+        canvaskit_dir = self.out_dir / "canvaskit"
+        if not canvaskit_dir.exists():
+            return
+
+        shutil.rmtree(canvaskit_dir, ignore_errors=True)
+        if self.verbose > 0:
+            console.log(
+                "Removed canvaskit/ from build output (loaded from CDN)",
+                style=verbose1_style,
+            )
 
     def rename_android_build_outputs(self):
         """
