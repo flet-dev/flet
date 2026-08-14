@@ -27,6 +27,32 @@ if TYPE_CHECKING:
 __all__ = ["FletTestApp"]
 
 
+def _flutter_subprocess_env() -> dict[str, str]:
+    """
+    Build the environment for the `flutter test` child process.
+
+    Host-Python configuration must not reach the interpreter embedded in the
+    app under test. It reads `PYTHONPATH`/`PYTHONHOME` at initialization, so
+    the debugger and `sitecustomize` paths an IDE injects (PyCharm does) land
+    on the packaged app's `sys.path` and kill it at startup - which surfaces
+    as Flutter exiting with code 79 and "No tests were found", before the app
+    ever connects to `RemoteTester`.
+
+    `PYTHONNOUSERSITE` is *set* rather than removed: user site-packages is
+    opt-out, so leaving it unset lets a version-matched host
+    `~/.local/lib/pythonX.Y/site-packages` leak in the same way.
+
+    Everything else is preserved - `flutter test` needs `PATH`, and its native
+    build phase needs the `FLET_*` and `SERIOUS_PYTHON_*` variables that
+    `flet test` sets (see `_flutter_path_env` in `flet_cli.commands.test`).
+    """
+    env = os.environ.copy()
+    for name in ("PYTHONPATH", "PYTHONHOME", "PYTHONEXECUTABLE"):
+        env.pop(name, None)
+    env["PYTHONNOUSERSITE"] = "1"
+    return env
+
+
 class DisposalMode(Enum):
     """
     Indicates the way in which a frame is treated after being displayed.
@@ -314,19 +340,12 @@ class FletTestApp:
                         f"--dart-define=FLET_TEST_ASSETS_DIR={self.__assets_dir}"
                     ]
 
-        # Do not leak host-Python configuration into Flutter's embedded Python
-        # IDEs such as PyCharm add debugger/sitecustomize modules through
-        # PYTHONPATH, which can break the packaged integration-test app.
-        flutter_env = os.environ.copy()
-        flutter_env.pop("PYTHONPATH", None)
-        flutter_env.pop("PYTHONHOME", None)
-
         self.__flutter_process = await asyncio.create_subprocess_exec(
             *flutter_args,
             cwd=str(self.__flutter_app_dir),
             stdout=stdout,
             stderr=stderr,
-            env=flutter_env,
+            env=_flutter_subprocess_env(),
         )
 
         if self.__flutter_process.stdout is not None:
