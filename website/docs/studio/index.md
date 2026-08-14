@@ -4,7 +4,7 @@ title: "Introduction"
 
 # Flet Studio
 
-[Flet Studio](https://flet.app) is a browser-based editor for writing, running, saving and
+[Flet Studio](https://studio.flet.dev) is a browser-based editor for writing, running, saving and
 sharing Flet apps. Your Python code runs entirely in the browser via
 [Pyodide](https://pyodide.org/) — there is no Flet account required to try it, and no
 local install required to run something someone else built and shared with you.

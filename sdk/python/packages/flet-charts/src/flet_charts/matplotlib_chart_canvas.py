@@ -1,5 +1,6 @@
 import asyncio
 import contextlib
+import logging
 from collections import deque
 from dataclasses import dataclass, field
 from typing import Callable, Optional
@@ -7,6 +8,16 @@ from typing import Callable, Optional
 import flet as ft
 
 __all__ = ["MatplotlibChartCanvas", "MatplotlibChartCanvasResizeEvent"]
+
+logger = logging.getLogger("flet-charts.matplotlib")
+
+# A frame ack normally lands within milliseconds (the round trip is one frame
+# decode on the client); an ack this overdue is never coming — most likely the
+# frame was in flight when the platform view (and its DataChannel) was
+# disposed, e.g. by switching to another tab. `DataChannel.send` on a disposed
+# channel is a silent no-op, so without a bound the producer awaiting the ack
+# would park forever.
+FRAME_ACK_TIMEOUT: float = 5.0
 
 
 @dataclass
@@ -91,6 +102,24 @@ class MatplotlibChartCanvas(ft.LayoutControl):
         # Single-channel widget; no need to dispatch on e.channel_name.
         self._channel = self.get_data_channel(e.channel_id)
         self._channel.on_bytes(self._on_dart_message)
+        # Dart opens a fresh channel every time the platform view is
+        # (re)mounted, so any ack still pending here was sent on the previous
+        # — now disposed — channel and will never arrive. Resolve those
+        # futures so a producer parked in `_send_and_wait` resumes
+        # immediately and repaints on the channel just captured, instead of
+        # waiting out FRAME_ACK_TIMEOUT (or, before that bound existed,
+        # forever).
+        stale = 0
+        while self._pending_acks:
+            fut = self._pending_acks.popleft()
+            if not fut.done():
+                fut.set_result(None)
+                stale += 1
+        if stale:
+            logger.debug(
+                "new frame data channel captured; resolved %d stale frame ack(s)",
+                stale,
+            )
 
     def _on_dart_message(self, payload: bytes) -> None:
         # Wire format on the reverse direction (Dart → Python):
@@ -121,6 +150,18 @@ class MatplotlibChartCanvas(ft.LayoutControl):
         """
         self._on_frame_applied = cb
 
+    async def _wait_until_visible(self) -> None:
+        # Park while the tab/window is hidden: the client can't paint, so
+        # streaming frames would only build a backlog that floods it on
+        # resume. The Dart side also defends against this, but parking the
+        # producer saves the wasted CPU/bandwidth of rendering to a hidden
+        # client. No-op when the control isn't attached to a page yet.
+        try:
+            page = self.page
+        except RuntimeError:
+            return
+        await page.wait_until_visible()
+
     async def _send_and_wait(self, packet: bytes) -> None:
         """Send a channel packet and await Dart's ack.
 
@@ -129,14 +170,36 @@ class MatplotlibChartCanvas(ft.LayoutControl):
         events that arrive in the producer's queue during the wait stay
         queued (instead of being processed eagerly against a stale
         `_waiting` flag).
+
+        The wait is bounded by `FRAME_ACK_TIMEOUT`: a frame in flight when
+        the platform view is disposed loses its ack silently, and an
+        unbounded await would park the producer (the sole frame consumer)
+        for the rest of the session. On timeout the frame is dropped —
+        the channel it was sent on is dead, so the client never displayed
+        it either, and the producer repaints in full on remount.
         """
+        await self._wait_until_visible()
         if self._channel is None:
             return
         loop = asyncio.get_running_loop()
         fut: asyncio.Future = loop.create_future()
         self._pending_acks.append(fut)
         self._channel.send(packet)
-        await fut
+        try:
+            await asyncio.wait_for(fut, FRAME_ACK_TIMEOUT)
+        except asyncio.TimeoutError:
+            # `wait_for` has cancelled `fut`; un-queue it so later acks keep
+            # resolving the right entries — `_on_dart_message` pops the FIFO
+            # head per ack, so a cancelled future left in place would shift
+            # every subsequent ack onto the wrong frame.
+            with contextlib.suppress(ValueError):
+                self._pending_acks.remove(fut)
+            logger.warning(
+                "frame ack not received within %.0fs; dropping frame "
+                "(pending acks: %d)",
+                FRAME_ACK_TIMEOUT,
+                len(self._pending_acks),
+            )
 
     async def apply_full(self, image_bytes: bytes) -> None:
         """

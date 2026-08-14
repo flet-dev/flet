@@ -14,7 +14,24 @@ class Context:
     """
 
     def __init__(self) -> None:
-        self.__components_mode = False
+        pass
+
+    def __current_session(self):
+        """Return the Session bound to the current context, or None.
+
+        Components mode is tracked per-session rather than on this global
+        singleton so that multiple concurrently running apps in one process
+        (e.g. an embedded `FletApp` inside a host app) don't clobber each
+        other's mode. Resolved via the same page context var used by
+        :attr:`page`.
+        """
+        page = _context_page.get()
+        if page is None:
+            return None
+        try:
+            return page.session
+        except RuntimeError:
+            return None
 
     @property
     def page(self) -> "Page":
@@ -99,13 +116,15 @@ class Context:
         """
         Enables components mode in the current context.
         """
-        self.__components_mode = True
+        if (session := self.__current_session()) is not None:
+            session.components_mode = True
 
     def disable_components_mode(self):
         """
         Disables components mode in the current context.
         """
-        self.__components_mode = False
+        if (session := self.__current_session()) is not None:
+            session.components_mode = False
 
     def is_components_mode(self) -> bool:
         """
@@ -114,7 +133,8 @@ class Context:
         Returns:
             `True` if in components mode, `False` otherwise.
         """
-        return self.__components_mode
+        session = self.__current_session()
+        return session.components_mode if session is not None else False
 
     def mark_update_called(self):
         """
@@ -145,7 +165,7 @@ class Context:
             `True` if auto-update is enabled, `False` otherwise.
         """
         return (
-            not self.__components_mode
+            not self.is_components_mode()
             and _update_behavior_context_var.get()._auto_update_enabled
         )
 

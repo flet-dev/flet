@@ -89,6 +89,17 @@ class FletApp(LayoutControl):
     Called when a connection or any unhandled error occurs.
     """
 
+    on_connect: Optional[ControlEventHandler["FletApp"]] = None
+    """
+    Fires when the client allocates an in-process `dart_bridge` channel for this
+    embedded app (`url="dartbridge://"`). The event `data` is the Dart native
+    port the host must serve with a `FletDartBridgeServer` so the embedded app
+    connects over it instead of a socket.
+
+    Advanced / embedder use — hosts that run another Flet program in-process
+    (e.g. a gallery or preview) start their server on this port in the handler.
+    """
+
     on_python_output: Optional[EventHandler[FletAppOutputEvent]] = None
     """
     Fires once per stdout/stderr write inside the embedded Pyodide app.

@@ -108,8 +108,8 @@ startup_message = "Starting up..."
 fade_out_duration = 200
 
 [tool.flet.android.permission]
-"android.permission.READ_EXTERNAL_STORAGE" = true
-"android.permission.WRITE_EXTERNAL_STORAGE" = true
+"android.permission.CAMERA" = true
+"android.permission.RECORD_AUDIO" = true
 "android.permission.ACCESS_FINE_LOCATION" = { maxSdkVersion = "30" }
 "android.permission.BLUETOOTH_SCAN" = { usesPermissionFlags = "neverForLocation" }
 

@@ -77,7 +77,7 @@ module.exports = {
           position: 'left',
         },
         {
-          to: 'https://flet.app/gallery',
+          to: 'https://studio.flet.dev/gallery',
           label: 'Gallery',
           position: 'left',
         },
@@ -132,7 +132,7 @@ module.exports = {
           items: [
             {
               label: 'Flet Studio app',
-              href: 'https://flet.app',
+              href: 'https://studio.flet.dev',
             },
             {
               label: 'Docs',

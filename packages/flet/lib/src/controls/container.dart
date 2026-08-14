@@ -71,6 +71,24 @@ class ContainerControl extends StatelessWidget with FletStoreMixin {
     if ((onClick || url != null || onLongPress || onHover || onTapDown) &&
         ink &&
         !control.disabled) {
+      // `padding` and `alignment` are applied inside the `InkWell` only, so that
+      // ink effects cover the entire area of this container.
+      var inkContent = animation == null
+          ? Container(
+              padding: padding,
+              alignment: alignment,
+              clipBehavior: Clip.none,
+              child: content,
+            )
+          : AnimatedContainer(
+              duration: animation.duration,
+              curve: animation.curve,
+              padding: padding,
+              alignment: alignment,
+              clipBehavior: Clip.none,
+              child: content,
+            );
+
       var ink = Material(
           color: Colors.transparent,
           borderRadius: boxDecoration!.borderRadius,
@@ -100,12 +118,7 @@ class ContainerControl extends StatelessWidget with FletStoreMixin {
                 : null,
             borderRadius: borderRadius,
             splashColor: control.getColor("ink_color", context),
-            child: Container(
-              padding: padding,
-              alignment: alignment,
-              clipBehavior: Clip.none,
-              child: content,
-            ),
+            child: inkContent,
           ));
 
       container = animation == null
@@ -124,8 +137,6 @@ class ContainerControl extends StatelessWidget with FletStoreMixin {
               width: width,
               height: height,
               margin: margin,
-              alignment: alignment,
-              padding: padding,
               decoration: boxDecoration,
               foregroundDecoration: boxForegroundDecoration,
               clipBehavior: clipBehavior,

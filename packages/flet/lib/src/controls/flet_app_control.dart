@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+import '../embedded_dart_bridge.dart';
 import '../flet_app.dart';
 import '../flet_app_errors_handler.dart';
 import '../flet_backend.dart';
@@ -19,6 +20,31 @@ class FletAppControl extends StatefulWidget {
 
 class _FletAppControlState extends State<FletAppControl> {
   final _errorsHandler = FletAppErrorsHandler();
+  EmbeddedDartBridge? _dartBridge;
+
+  @override
+  void initState() {
+    super.initState();
+    // When this embedded app is addressed as `dartbridge://`, run it over an
+    // in-process dart_bridge channel instead of a socket. The native port is
+    // Dart-allocated, so we allocate it here and hand it to the host's Python
+    // via a `connect` control event — the host then serves that port with a
+    // FletDartBridgeServer. The embedded backend's send-retry loop covers the
+    // window until the server registers. Falls back to the URL transport when
+    // dart_bridge isn't available (web / desktop dev): _dartBridge stays null.
+    final url = widget.control.getString("url", "")!;
+    if (url.startsWith("dartbridge://") && embeddedDartBridgeConnector != null) {
+      final bridge = embeddedDartBridgeConnector!();
+      _dartBridge = bridge;
+      widget.control.triggerEvent("connect", bridge.port);
+    }
+  }
+
+  @override
+  void dispose() {
+    _dartBridge?.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -54,6 +80,10 @@ class _FletAppControlState extends State<FletAppControl> {
         assetsDir: widget.control.getString("assets_dir", "")!,
         errorsHandler: _errorsHandler,
         extensions: FletBackend.of(context).extensions,
+        // In-process dart_bridge transport for `dartbridge://` embedded apps;
+        // null otherwise, so FletApp uses its URL-scheme channel factory.
+        channelBuilder: _dartBridge?.channelBuilder,
+        dataChannelFactory: _dartBridge?.dataChannelFactory,
         args: widget.control.get("args") != null
             ? Map<String, dynamic>.from(widget.control.get("args"))
             : null,

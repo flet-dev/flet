@@ -22,4 +22,4 @@ def App():
 
 
 if __name__ == "__main__":
-    ft.run(lambda page: page.render(App))
+    ft.run(lambda page: page.render_views(App))

@@ -58,6 +58,12 @@ For Play Store deployment, it’s recommended to:
 - Use an [**Android App Bundle (AAB)**](#flet-build-aab) for more efficient delivery and smaller install size
 - Or [**split the APK by ABI**](#split-apk-per-abi) to reduce the APK size
 
+:::tip[APK looks large?]
+If the generated `.apk` file seems surprisingly big, that's expected — see
+[Native library packaging](#native-library-packaging-modern-vs-legacy) for why, and when
+legacy packaging produces a smaller file for side-loading.
+:::
+
 ### Split APK per ABI
 
 Android devices use different CPUs, so APKs can target different
@@ -134,6 +140,143 @@ Google Play Store due to its optimized app size.
 If you need to limit the ABIs included in the bundle, use
 [`--arch`](index.md#target-architecture) / `[tool.flet.android].target_arch`
 while `split_per_abi` is `false`.
+
+## Native library packaging (modern vs legacy)
+
+Flet apps bundle a native Python runtime and native extension modules (`.so` files) for each
+[ABI](#split-apk-per-abi). How those `.so` files are stored in the APK — and whether they are
+copied to disk when the app is installed — is controlled by Android's
+[`useLegacyPackaging`](https://developer.android.com/build/releases/agp-4-2-0-release-notes#compress-native-libs-dsl)
+setting (the `android:extractNativeLibs` manifest attribute).
+
+### How each mode works
+
+- **Modern packaging (default, `useLegacyPackaging = false`).** Native `.so` files are stored
+  **uncompressed and page-aligned** inside the APK, and the OS maps them **directly from the
+  installed APK** at runtime — no second copy of the native libraries on disk. Pure Python code
+  ships in stored (uncompressed) zip assets; on first launch, the runtime copies the standard
+  library and site-packages zips to app-private storage and imports from those copied zips. The
+  application payload and explicitly extracted packages are unpacked there. Modern native-library
+  packaging is the default since Flet re-designed Android packaging in v0.86.
+- **Legacy packaging (opt-in, `useLegacyPackaging = true`).** Native `.so` files are stored
+  **compressed** inside the APK, and the installer **extracts a second copy** to the app's
+  `nativeLibraryDir` on install. The linker then loads the libraries from that extracted
+  directory.
+
+### "Why did my APK get bigger?"
+
+A common surprise is that the raw `.apk` **file** looks larger with modern packaging — sometimes
+roughly double. The contents are almost identical; the file is only bigger because the native
+libraries are stored **uncompressed** (so they can be memory-mapped). Uncompressed libraries are
+actually the recommended, more efficient choice for your users. From the Android Gradle Plugin
+release notes:
+
+> When you build your app, the plugin now sets `extractNativeLibs` to `"false"` by default. That
+> is, your native libraries are page aligned and packaged uncompressed. While this results in a
+> larger upload size, your users benefit from the following:
+> - **Smaller app install size** because the platform can access the native libraries directly
+>   from the installed APK, without creating a copy of the libraries.
+> - **Smaller download size** because Play Store compression is typically better when you include
+>   uncompressed native libraries in your APK or Android App Bundle.
+>
+> — [AGP 3.6.0 release notes](https://developer.android.com/build/releases/agp-3-6-0-release-notes#extractNativeLibs)
+
+In other words: when you publish to Google Play, the store applies additional download
+compression, which is typically more effective when native libraries are stored uncompressed.
+Users therefore typically get a **smaller** download and a **smaller** install than they would
+with legacy packaging — even though the uncompressed `.apk` you upload is larger. The raw file
+size primarily matters when you hand the `.apk` to users directly (side-loading).
+
+### Trade-offs
+
+| Aspect | Modern (default) | Legacy (`--android-legacy-packaging`) |
+|---|---|---|
+| Raw `.apk` file size | Larger (uncompressed `.so`) | Smaller (compressed `.so`) |
+| Play Store download size | **Typically smaller** | Typically larger |
+| On-device install size | **Smaller** (no extra copy) | Larger (extracted 2nd copy) |
+| App load / startup | Faster (mmap) | Slightly slower |
+
+### When to use which
+
+- **Publishing to Google Play** (recommended via [AAB](#flet-build-aab)): **keep the default
+  (modern)**. Play serves an optimized, compressed download regardless of the upload size.
+- **Distributing a raw `.apk` for side-loading** and you want the smallest file: use **legacy**
+  packaging. Alternatively, compress the modern `.apk` before sharing it; recipients must unpack
+  it before installation.
+
+Legacy packaging can also be useful as a diagnostic fallback for packaging-related native-library
+loading or installation failures. It is not a substitute for using
+[16 KB-compatible native libraries](https://developer.android.com/guide/practices/page-sizes).
+
+### Accessing a custom native library by file path
+
+Serious Python exposes `ANDROID_NATIVE_LIBRARY_DIR` to the embedded Python process. Its value is
+Android's app-specific native-library directory.
+
+With modern packaging, the variable is still available, but the `.so` files are not extracted
+into that directory; they remain inside the installed APK. Code that can load a packaged library
+through Android's linker should use its name, for example `ctypes.CDLL("libxxx.so")`.
+
+With legacy packaging, Android extracts every packaged `.so` for the device's ABI into
+`ANDROID_NATIVE_LIBRARY_DIR`. This makes the option useful for code that requires a real
+filesystem path to a library, including custom `ctypes` loaders or `ctypes.util.find_library`
+patches:
+
+```python
+import ctypes
+import os
+
+native_library_dir = os.environ["ANDROID_NATIVE_LIBRARY_DIR"]
+ctypes.CDLL(os.path.join(native_library_dir, "libxxx.so"))
+```
+
+The library must already be packaged under `lib/<abi>/` for the device's ABI, and all of its
+native dependencies must also be available. Legacy packaging changes only how those libraries are
+stored and loaded; it does not make an incompatible library usable.
+
+### Resolution order
+
+Its value is determined in the following order of precedence:
+
+1. [`--android-legacy-packaging`](../cli/flet-build.md#--android-legacy-packaging) /
+   `--no-android-legacy-packaging`
+2. `[tool.flet.android].legacy_packaging`
+3. `false` (modern packaging)
+
+### Example
+
+<Tabs groupId="flet-build--pyproject-toml">
+<TabItem value="flet-build" label="flet build">
+```bash
+flet build apk --android-legacy-packaging
+```
+</TabItem>
+<TabItem value="pyproject-toml" label="pyproject.toml">
+```toml
+[tool.flet.android]
+legacy_packaging = true
+```
+</TabItem>
+</Tabs>
+<details>
+<summary>Template translation</summary>
+
+In the [`android/app/build.gradle.kts`](index.md#build-template), enabling the option adds
+`useLegacyPackaging = true` to the native-library packaging block:
+
+```kotlin
+android {
+    packaging {
+        jniLibs {
+            useLegacyPackaging = true
+        }
+    }
+}
+```
+
+The Android Gradle Plugin translates this into `android:extractNativeLibs="true"` on the
+`<application>` element of the merged `AndroidManifest.xml`.
+</details>
 
 ## Signing an Android bundle
 
@@ -598,6 +741,22 @@ the example above will be translated accordingly into this:
 Use cross-platform permissions from [Permissions](index.md#permissions) when possible,
 and add Android-specific permissions or features here.
 
+:::danger[Declare only what you use]
+Google Play rejects apps that request broad media or storage access they do not need.
+In particular, its [Photo and Video Permissions policy](https://support.google.com/googleplay/android-developer/answer/14115180)
+rejects apps targeting Android 13 (API 33) or higher that declare
+`READ_MEDIA_IMAGES` or `READ_MEDIA_VIDEO` when the system pickers are sufficient —
+and a single active version code carrying them, including on internal and closed
+testing tracks, is enough to block a release.
+
+[`FilePicker`](../services/filepicker.md) uses the storage access framework and needs
+no permission at all, and the app's own directories
+(see [`StoragePaths`](../services/storagepaths.md)) are always writable. Reach for
+`READ_MEDIA_*` or the legacy `*_EXTERNAL_STORAGE` permissions only when your app truly
+needs library-wide access, and bound the legacy ones with
+`{ maxSdkVersion = "32" }` so they are not requested on Android 13 or higher.
+:::
+
 See also:
 
 - [`Manifest.permission` constants](https://developer.android.com/reference/android/Manifest.permission)
@@ -618,11 +777,13 @@ Its value is determined in the following order of precedence:
 <TabItem value="flet-build" label="flet build">
 Accepts repeated `<name>=<enabled>` entries.
 The `<enabled>` value can be `true` or `false` (case-insensitive).
-Permissions with `false` are omitted from the generated manifest.
+Permissions with `false` are actively removed from the merged manifest.
 </TabItem>
 <TabItem value="pyproject-toml" label="pyproject.toml">
 Use boolean values. TOML booleans must be lowercase: `true` or `false`.
-Permissions set to `false` are omitted from the generated manifest.
+Permissions set to `false` are emitted with `tools:node="remove"`, which strips
+them from the merged manifest even when a Flutter plugin declares them — see
+[Removing a permission a plugin adds](#removing-a-permission-a-plugin-adds).
 
 A value can also be a TOML inline table whose entries become extra
 `android:<key>="<value>"` attributes on the generated `<uses-permission>`
@@ -636,15 +797,15 @@ A non-empty table is always emitted; an empty table `{}` is treated as `false`.
 <TabItem value="flet-build" label="flet build">
 ```bash
 flet build apk \
-  --android-permissions android.permission.READ_EXTERNAL_STORAGE=true \
-  --android-permissions android.permission.WRITE_EXTERNAL_STORAGE=true
+  --android-permissions android.permission.CAMERA=true \
+  --android-permissions android.permission.RECORD_AUDIO=true
 ```
 </TabItem>
 <TabItem value="pyproject-toml" label="pyproject.toml">
 ```toml
 [tool.flet.android.permission]
-"android.permission.READ_EXTERNAL_STORAGE" = true
-"android.permission.WRITE_EXTERNAL_STORAGE" = true
+"android.permission.CAMERA" = true
+"android.permission.RECORD_AUDIO" = true
 "android.permission.ACCESS_FINE_LOCATION" = { maxSdkVersion = "30" }
 "android.permission.BLUETOOTH_SCAN" = { usesPermissionFlags = "neverForLocation" }
 ```
@@ -658,13 +819,64 @@ the `pyproject.toml` example above will be translated accordingly into this:
 
 ```xml
 <manifest>
-    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
-    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.CAMERA" />
+    <uses-permission android:name="android.permission.RECORD_AUDIO" />
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" android:maxSdkVersion="30" />
     <uses-permission android:name="android.permission.BLUETOOTH_SCAN" android:usesPermissionFlags="neverForLocation" />
 </manifest>
 ```
 </details>
+
+#### Removing a permission a plugin adds
+
+Not every permission in your app comes from your own configuration. Gradle's manifest
+merger folds in the manifest of every Flutter plugin you depend on, and it can also
+*synthesize* permissions you never asked for.
+
+A real example: `flet-camera` pulls in `camera_android_camerax`, whose manifest declares
+`WRITE_EXTERNAL_STORAGE` bounded to `maxSdkVersion="28"`. The merger then implies an
+**unbounded** `READ_EXTERNAL_STORAGE` from it, because on very old Android versions write
+access implied read access:
+
+```
+uses-permission#android.permission.READ_EXTERNAL_STORAGE
+IMPLIED from .../AndroidManifest.xml reason: io.flutter.plugins.camerax requested WRITE_EXTERNAL_STORAGE
+```
+
+Neither permission appears anywhere in your `pyproject.toml`, and both show up in the
+Play Console. Setting them to `false` removes them:
+
+```toml
+[tool.flet.android.permission]
+"android.permission.READ_EXTERNAL_STORAGE" = false
+"android.permission.WRITE_EXTERNAL_STORAGE" = false
+```
+
+which generates:
+
+```xml
+<uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" tools:node="remove" />
+<uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" tools:node="remove" />
+```
+
+Removing a permission that nothing declares is harmless — `tools:node="remove"` on an
+absent element is a no-op.
+
+:::tip[Finding where a permission came from]
+Gradle writes a report naming the source of every merged manifest element:
+
+```
+build/flutter/build/app/outputs/logs/manifest-merger-release-report.txt
+```
+
+Search it for the permission name. Each entry is marked `ADDED from [:some_plugin]`,
+`MERGED from [some.aar]`, or `IMPLIED from ... reason: ...`, which tells you whether to
+remove it, drop the dependency, or bound it with `maxSdkVersion`.
+:::
+
+Only remove a permission the app genuinely does not need. If a plugin declares one because
+a code path it owns requires it, removing the permission makes that path fail at runtime
+rather than at build time.
 
 ### Minimum SDK version
 
@@ -776,12 +988,106 @@ adaptive_icon_background = "#0B6BFF"
 </TabItem>
 </Tabs>
 
+## ProGuard / R8 rules
+
+Release builds run [R8](https://developer.android.com/build/shrink-code), which removes unused
+classes and renames the ones that remain. Anything looked up by name at runtime — through
+reflection or JNI — has to be exempted with a *keep rule*, or the lookup fails against a class that
+no longer has the name it is being asked for.
+
+Flet generates `android/app/proguard-rules.pro` with these defaults:
+
+```
+-keep class com.flet.serious_python_android.** { *; }
+-keepnames class * { *; }
+```
+
+There are two knobs, because adding and removing rules are different problems:
+
+- **`[tool.flet.android].proguard_rules`** — a list of rules *appended* to the defaults. R8 has no
+  directive that undoes a keep, so a rule you add can only ever widen what is kept.
+- **`[tool.flet.android].proguard_default_rules`** — set to `false` to drop the defaults entirely.
+  This is the only way to get rid of `-keepnames class * { *; }`.
+
+Appending is kept separate from replacing on purpose. If the only option were to replace, you would
+paste today's defaults into your `pyproject.toml` and silently keep them after Flet changes them.
+
+### Dropping the defaults
+
+`-keepnames class * { *; }` keeps every class *and member* name in your app, which switches off
+obfuscation app-wide and blocks the R8 passes that rely on renaming. It costs real size — on Flet
+Studio, removing it takes `classes.dex` from 5.9 MB to 3.4 MB (**-43%**).
+
+Dropping the defaults does **not** break Pyjnius's access to the app activity:
+`serious_python_android` 4.1.0+ ships `-keep class com.flet.serious_python_android.** { *; }` in its
+own `consumer-rules.pro`, so that rule applies whether or not the template repeats it.
+
+```toml
+[tool.flet.android]
+proguard_default_rules = false
+proguard_rules = [
+  # add back names your own code looks up reflectively
+  "-keepnames class com.example.myapp.** { *; }",
+]
+```
+
+Test a release build on a device before shipping this — see the warning below.
+
+### When you need this
+
+The common case is [Pyjnius](https://flet.dev/blog/tap-into-native-android-and-ios-apis-with-Pyjnius-and-pyobjus).
+`autoclass()` resolves Java classes by their fully-qualified name at runtime, so a class R8 renamed
+can no longer be found:
+
+- **Android framework classes** (`android.os.Build`, `android.bluetooth.BluetoothAdapter`, …) need
+  no rule. They live in the Android runtime, not in your APK, so R8 never touches them.
+- **Classes bundled by a Flutter plugin or your own Java/Kotlin** are in your APK and *are* renamed.
+  These need a keep rule.
+
+:::warning A failed lookup crashes the process
+`autoclass()` on a renamed class does not raise a Python exception you can catch. JNI `FindClass`
+returns null and the process aborts. On a debuggable build the log shows:
+
+```
+JNI DETECTED ERROR IN APPLICATION: obj == null in call to CallObjectMethodA
+Fatal signal 6 (SIGABRT)
+```
+
+On a production build there is usually no message at all — just a crash. Because R8 only runs in
+release builds, this never reproduces in debug.
+:::
+
+### Example
+
+```toml
+[tool.flet.android]
+proguard_rules = [
+  "-keep class io.flutter.embedding.android.FlutterActivity { *; }",
+  "-keep class com.example.mylib.** { *; }",
+]
+```
+
+<details>
+<summary>Template translation</summary>
+
+In [`android/app/proguard-rules.pro`](index.md#build-template), the `pyproject.toml` example above
+will be translated accordingly into this:
+
+```
+-keep class com.flet.serious_python_android.** { *; }
+-keepnames class * { *; }
+-keep class io.flutter.embedding.android.FlutterActivity { *; }
+-keep class com.example.mylib.** { *; }
+```
+</details>
+
 ## Extract packages
 
-On Android, pure Python code is packaged into stored zip assets and imported in place with
-[`zipimport`](https://docs.python.org/3/library/zipimport.html). Native extension modules are
-loaded memory-mapped directly from the APK. This keeps APKs smaller and avoids unpacking all
-site-packages on first launch.
+On Android, pure Python code is packaged into stored zip assets. On first launch, Flet copies the
+standard-library and site-packages zips to app-private storage and imports from those copied zips
+with [`zipimport`](https://docs.python.org/3/library/zipimport.html). Native extension modules are
+loaded memory-mapped directly from the APK. This avoids unpacking all site-packages on first
+launch.
 
 Most packages work from inside the zip. But packages that read bundled **data files** through a real
 filesystem path — for example with `__file__` or `pkg_resources`, instead of the zip-safe

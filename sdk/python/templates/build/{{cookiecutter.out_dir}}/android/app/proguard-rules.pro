@@ -1,2 +1,2 @@
--keep class com.flet.serious_python_android.** { *; }
--keepnames class * { *; }
+{% for rule in cookiecutter.options.android_proguard_rules %}{{ rule }}
+{% endfor %}

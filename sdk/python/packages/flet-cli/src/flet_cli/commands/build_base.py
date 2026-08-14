@@ -211,11 +211,13 @@ class BaseBuildCommand(BaseFlutterCommand):
                     "NSMicrophoneUsageDescription": "This app uses microphone to record sounds.",  # noqa: E501
                 },
                 "macos_entitlements": {"com.apple.security.device.audio-input": True},
-                "android_permissions": {
-                    "android.permission.RECORD_AUDIO": True,
-                    "android.permission.WRITE_EXTERNAL_STORAGE": True,
-                    "android.permission.READ_EXTERNAL_STORAGE": True,
-                },
+                # Recording itself only needs RECORD_AUDIO: recordings are written
+                # to app-scoped storage, which requires no permission. Do not add
+                # READ/WRITE_EXTERNAL_STORAGE here — Google Play's Photo and Video
+                # Permissions policy rejects apps that request broad media/storage
+                # access without a qualifying use case, and this group is opt-in
+                # for the microphone, not for the user's media library.
+                "android_permissions": {"android.permission.RECORD_AUDIO": True},
                 "android_features": {},
             },
             "photo_library": {
@@ -464,6 +466,17 @@ class BaseBuildCommand(BaseFlutterCommand):
             action="store_true",
             default=None,
             help="Split the APKs per ABIs (Android only)",
+        )
+        parser.add_argument(
+            "--android-legacy-packaging",
+            dest="android_legacy_packaging",
+            action=argparse.BooleanOptionalAction,
+            default=None,
+            help="Use legacy Android native-library packaging: extract `.so` to disk "
+            "at install time instead of memory-mapping them directly from the APK. Off "
+            "by default (modern packaging). Enabling it makes the raw `.apk` file "
+            "smaller for side-loading, at the cost of a larger on-device install size "
+            "and slower native-library loading (Android only)",
         )
         parser.add_argument(
             "--compile-app",
@@ -896,6 +909,16 @@ class BaseBuildCommand(BaseFlutterCommand):
             )
         )
 
+        android_legacy_packaging = (
+            self.options.android_legacy_packaging
+            if self.options.android_legacy_packaging is not None
+            else (
+                self.get_pyproject("tool.flet.android.legacy_packaging")
+                if self.get_pyproject("tool.flet.android.legacy_packaging") is not None
+                else False
+            )
+        )
+
         info_plist = {}
         macos_entitlements = {
             "com.apple.security.app-sandbox": False,
@@ -911,6 +934,42 @@ class BaseBuildCommand(BaseFlutterCommand):
         }
         android_meta_data = {}
         android_providers = {}
+        # Gradle properties for the generated Android project. These were
+        # hardcoded in the template; the defaults below reproduce them exactly,
+        # and `[tool.flet.android.gradle_properties]` can override any entry or
+        # add new ones. The memory settings in particular are too large for some
+        # CI runners (a standard GitHub-hosted runner has ~7 GB of RAM, less
+        # than -Xmx8G alone), which previously could not be changed at all.
+        android_gradle_properties = {
+            "org.gradle.jvmargs": (
+                "-Xmx8G -XX:MaxMetaspaceSize=4G "
+                "-XX:ReservedCodeCacheSize=512m -XX:+HeapDumpOnOutOfMemoryError"
+            ),
+            "android.useAndroidX": "true",
+        }
+        # ProGuard/R8 rules for the generated Android project. Like
+        # gradle_properties above, these were a fixed template file and the
+        # defaults reproduce it exactly. R8 renames classes in release builds
+        # while pyjnius resolves them by name, so an app that reaches into a
+        # bundled AAR needs a keep rule and had no way to add one.
+        #
+        # `proguard_rules` appends, since R8 has no directive that undoes a
+        # keep. Removing a default therefore needs its own switch:
+        # `proguard_default_rules = false` drops them, which is the only way to
+        # shed `-keepnames class * { *; }`. Keeping the two separate stops
+        # users pasting today's defaults into pyproject.toml and silently
+        # holding them after the defaults change.
+        keep_defaults = (
+            self.get_pyproject("tool.flet.android.proguard_default_rules") is not False
+        )
+        android_proguard_rules = (
+            [
+                "-keep class com.flet.serious_python_android.** { *; }",
+                "-keepnames class * { *; }",
+            ]
+            if keep_defaults
+            else []
+        )
 
         # merge values from "--permissions" arg:
         for p in (
@@ -991,6 +1050,16 @@ class BaseBuildCommand(BaseFlutterCommand):
             android_permissions,
             self.get_pyproject("tool.flet.android.permission") or {},
         )
+
+        android_gradle_properties = merge_dict(
+            android_gradle_properties,
+            self.get_pyproject("tool.flet.android.gradle_properties") or {},
+        )
+
+        android_proguard_rules = android_proguard_rules + [
+            str(rule)
+            for rule in (self.get_pyproject("tool.flet.android.proguard_rules") or [])
+        ]
 
         # parse --android-permissions
         for p in self.options.android_permissions:
@@ -1288,9 +1357,7 @@ class BaseBuildCommand(BaseFlutterCommand):
                 self.options.no_wasm
                 or self.get_pyproject("tool.flet.web.wasm") == False  # noqa: E712
             ),
-            "no_cdn": (
-                self.options.no_cdn or self.get_pyproject("tool.flet.web.cdn") == False  # noqa: E712
-            ),
+            "no_cdn": self.resolve_no_cdn(),
             # Surface the resolved Pyodide release to the cookiecutter
             # context so the web template's index.html can wire the
             # correct jsdelivr URL when CDN mode is on.
@@ -1341,6 +1408,8 @@ class BaseBuildCommand(BaseFlutterCommand):
                 "android_permissions": android_permissions,
                 "android_features": android_features,
                 "android_meta_data": android_meta_data,
+                "android_gradle_properties": android_gradle_properties,
+                "android_proguard_rules": android_proguard_rules,
                 "android_providers": android_providers,
                 "deep_linking": {
                     "scheme": deep_linking_scheme,
@@ -1351,6 +1420,7 @@ class BaseBuildCommand(BaseFlutterCommand):
                     or self.get_pyproject("tool.flet.android.signing.key_store")
                     or os.getenv("FLET_ANDROID_SIGNING_KEY_STORE")
                 ),
+                "android_legacy_packaging": bool(android_legacy_packaging),
             },
             "flutter": {"dependencies": list(self.flutter_dependencies.keys())},
             "boot_screen": self._resolve_boot_screen(),
@@ -2212,6 +2282,13 @@ class BaseBuildCommand(BaseFlutterCommand):
             # app here (no app.zip on native); the platform native build copies
             # it into the bundle (Android zips it as a stored asset).
             package_env["SERIOUS_PYTHON_APP"] = str(self.build_dir / "python-app")
+            # app bundle id: serious_python (>= 4.4.2) namespaces the generated
+            # iOS framework bundle identifiers under it. Without it they keep a
+            # shared `org.python.*` default that is byte-identical in every Flet
+            # app — see flet-dev/flet#6724.
+            bundle_id = (self.template_data or {}).get("bundle_id")
+            if bundle_id:
+                package_env["SERIOUS_PYTHON_BUNDLE_ID"] = bundle_id
 
         # Swift Package Manager (darwin): tell serious_python's package command to
         # do the host-side SPM staging (the podspec prepare_command doesn't run
@@ -2395,16 +2472,37 @@ class BaseBuildCommand(BaseFlutterCommand):
         # directory so it ships in `flutter build web` output. Cached
         # per-version under ~/.flet/pyodide/<version>/ so subsequent builds
         # are no-ops.
+        #
+        # Skipped in CDN mode: `patch_index.py` then points `flet.pyodideUrl`
+        # at jsdelivr, so a bundled copy would add ~15 MB to the build that
+        # the browser never requests.
         if self.package_platform == "Emscripten":
-            from flet_cli.utils.pyodide import ensure_pyodide
-
-            self.update_status("[bold blue]Preparing Pyodide runtime...")
             pyodide_dest = self.flutter_dir / "web" / "pyodide"
-            ensure_pyodide(self.python_release.pyodide, pyodide_dest)
-            console.log(
-                f"Pyodide {self.python_release.pyodide} ready "
-                f"{self.emojis['checkmark']}"
-            )
+            if self.resolve_no_cdn():
+                from flet_cli.utils.pyodide import ensure_pyodide
+
+                self.update_status("[bold blue]Preparing Pyodide runtime...")
+                ensure_pyodide(self.python_release.pyodide, pyodide_dest)
+                console.log(
+                    f"Pyodide {self.python_release.pyodide} ready "
+                    f"{self.emojis['checkmark']}"
+                )
+            elif pyodide_dest.exists():
+                # The Flutter project is reused across builds, so a copy left
+                # by an earlier `--no-cdn` build would otherwise still ship.
+                shutil.rmtree(pyodide_dest, ignore_errors=True)
+
+    def resolve_no_cdn(self) -> bool:
+        """
+        Whether CanvasKit, Pyodide and fallback fonts should be bundled with
+        the app instead of loaded from their CDNs.
+
+        Returns:
+            True when `--no-cdn` was passed or `tool.flet.web.cdn` is `false`.
+        """
+        return bool(
+            self.options.no_cdn or self.get_pyproject("tool.flet.web.cdn") == False  # noqa: E712
+        )
 
     def get_bool_setting(self, cli_option, pyproj_setting, default_value):
         """
@@ -2486,6 +2584,15 @@ class BaseBuildCommand(BaseFlutterCommand):
             # / Android Gradle) at `flutter build` time to place the unpacked app
             # into the bundle.
             env["SERIOUS_PYTHON_APP"] = str(build_dir / "python-app")
+
+        # app bundle id: the CocoaPods `prepare_command` re-runs the darwin sync
+        # at `flutter build` time, so it needs the same value the package step
+        # got or the framework identifiers fall back to `org.python.*`. Read
+        # defensively — this method is documented as safe to call before the
+        # pipeline has populated every attribute.
+        bundle_id = (getattr(self, "template_data", None) or {}).get("bundle_id")
+        if bundle_id:
+            env["SERIOUS_PYTHON_BUNDLE_ID"] = bundle_id
 
         # Swift Package Manager (darwin): export the cache-bust key the package
         # step computed so the plugin's Package.swift re-resolves when the staged
@@ -2690,9 +2797,11 @@ class BaseBuildCommand(BaseFlutterCommand):
                 ignore=make_ignore_fn(build_output_dir, build_output_glob),
             )
 
-        if self.target_platform == "web" and self.assets_path.exists():
-            # copy `assets` directory contents to the output directory
-            copy_tree(str(self.assets_path), str(self.out_dir))
+        if self.target_platform == "web":
+            self.prune_cdn_assets()
+            if self.assets_path.exists():
+                # copy `assets` directory contents to the output directory
+                copy_tree(str(self.assets_path), str(self.out_dir))
         elif self.target_platform in {"apk", "aab"}:
             self.rename_android_build_outputs()
 
@@ -2700,6 +2809,28 @@ class BaseBuildCommand(BaseFlutterCommand):
             f"Copied build to [cyan]{self.rel_out_dir}[/cyan] "
             f"directory {self.emojis['checkmark']}"
         )
+
+    def prune_cdn_assets(self):
+        """
+        Remove `canvaskit/` from a CDN-mode web build.
+
+        `flutter build web` always emits CanvasKit, but in CDN mode the web
+        template leaves `flet.canvasKitBaseUrl` unset, so Flutter loads it
+        from gstatic and these ~37 MB are never requested.
+        """
+        if self.resolve_no_cdn():
+            return
+
+        canvaskit_dir = self.out_dir / "canvaskit"
+        if not canvaskit_dir.exists():
+            return
+
+        shutil.rmtree(canvaskit_dir, ignore_errors=True)
+        if self.verbose > 0:
+            console.log(
+                "Removed canvaskit/ from build output (loaded from CDN)",
+                style=verbose1_style,
+            )
 
     def rename_android_build_outputs(self):
         """
@@ -2776,11 +2907,14 @@ class BaseBuildCommand(BaseFlutterCommand):
         """
         Find the best matching image file for the current target platform.
 
-        When multiple files share the same base name (e.g. `icon.icns`,
-        `icon.ico`, `icon.png`), the method filters out formats that are
-        incompatible with the build target before selecting the first match.
-        For example, `.icns` is skipped on Windows builds because
-        `flutter_launcher_icons` cannot decode it.
+        When multiple files share the same base name (e.g. `icon.png` and
+        `icon.svg`), incompatible formats are filtered out and the rest are
+        ranked so a raster image (`.png` first) always wins, making the
+        choice deterministic regardless of filesystem ordering. Formats the
+        icon/splash generators cannot decode are dropped: `.svg` (vector,
+        never supported), `.icns` (macOS-only) and `.ico` (Windows-only). If
+        the only candidate is a vector image, a warning is logged and `None`
+        is returned so the default icon is used.
 
         Args:
             src_path: Source assets directory.
@@ -2793,21 +2927,54 @@ class BaseBuildCommand(BaseFlutterCommand):
             File name of matched image, or `None` if not found.
         """
 
-        # .icns is macOS-only and .ico is Windows-only; filter out
-        # incompatible formats so flutter_launcher_icons gets a decodable file.
-        images = list(
-            filter(
-                lambda p: not (
-                    (ext := Path(p).suffix.lower()) == ".icns"
-                    and self.target_platform != "macos"
-                    or ext == ".ico"
-                    and self.target_platform != "windows"
-                ),
-                glob.glob(str(src_path.joinpath(f"{image_name}.*"))),
+        # flutter_launcher_icons / flutter_native_splash decode raster images
+        # only, so drop any candidate they can't read: .svg is vector (never
+        # supported), .icns is macOS-only and .ico is Windows-only.
+        def _incompatible(p: str) -> bool:
+            ext = Path(p).suffix.lower()
+            return (
+                ext == ".svg"
+                or (ext == ".icns" and self.target_platform != "macos")
+                or (ext == ".ico" and self.target_platform != "windows")
             )
+
+        # glob order is filesystem-dependent — sort so the choice is
+        # deterministic across machines, then rank by format so a raster
+        # icon (.png first) always wins when several candidates share a base
+        # name (e.g. both icon.png and icon.svg present).
+        ext_priority = {
+            ".png": 0,
+            ".webp": 1,
+            ".jpg": 2,
+            ".jpeg": 2,
+            ".gif": 3,
+            ".bmp": 4,
+            ".tif": 5,
+            ".tiff": 5,
+            ".ico": 6,
+            ".icns": 6,
+        }
+        candidates = sorted(glob.glob(str(src_path.joinpath(f"{image_name}.*"))))
+        images = sorted(
+            (p for p in candidates if not _incompatible(p)),
+            key=lambda p: (ext_priority.get(Path(p).suffix.lower(), 99), p),
         )
 
         if not images:
+            # Nothing usable. If the only candidate was a vector image (e.g.
+            # an icon.svg with no raster sibling), say why it's ignored
+            # instead of silently falling back to the default icon.
+            svg = next(
+                (p for p in candidates if Path(p).suffix.lower() == ".svg"), None
+            )
+            if svg:
+                console.log(
+                    f'Warning: "{Path(svg).name}" is a vector (SVG) image and '
+                    f'cannot be used for "{image_name}". Provide a raster '
+                    f'"{image_name}.png" to customize it — using the default '
+                    f"for now.",
+                    style=warning_style,
+                )
             return None
 
         best = images[0]

@@ -83,11 +83,13 @@ class _RadioControlState extends State<RadioControl> {
         widget.control.getLabelPosition("label_position", LabelPosition.right)!;
     var labelStyle =
         widget.control.getTextStyle("label_style", Theme.of(context));
-    if (widget.control.disabled && labelStyle != null) {
-      labelStyle = labelStyle.apply(color: Theme.of(context).disabledColor);
+    if (widget.control.disabled) {
+      labelStyle = (labelStyle ?? const TextStyle())
+          .apply(color: Theme.of(context).disabledColor);
     }
 
     var radio = Radio<String>(
+      enabled: !widget.control.disabled,
       autofocus: widget.control.getBool("autofocus", false)!,
       focusNode: _focusNode,
       mouseCursor: widget.control.getMouseCursor("mouse_cursor"),

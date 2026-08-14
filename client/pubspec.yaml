@@ -98,13 +98,13 @@ dependency_overrides:
   flet:
     path: ../packages/flet
   screen_retriever: 0.2.1 # this one migrated to SPM, but 0.2.0 is used by some other packages
-
-  screen_brightness: 2.1.7
-  # screen_brightness_macos 2.1.3 ("Fix: swift package manager warning") ships a
-  # Package.swift declaring macOS 10.11, below FlutterFramework's 10.15 floor,
-  # which breaks Swift Package Manager resolution. Pin the last good impl until
-  # upstream fixes it: https://github.com/aaassseee/screen_brightness/issues/99
-  screen_brightness_macos: 2.1.2
+  # jni arrives transitively (path_provider -> path_provider_android ->
+  # jni_flutter -> jni). 1.0.1 added global_jni_env.c, which passes a `va_list`
+  # where a `void *` is expected: fine on x86_64, where va_list is an array type
+  # that decays to a pointer, but a hard error on aarch64, where it's a struct.
+  # That breaks `flutter build linux` on ARM64 hosts. Tracked upstream at
+  # dart-lang/native#3498 — drop once a fixed jni is released.
+  jni: 1.0.0
 
 dev_dependencies:
   flutter_test:

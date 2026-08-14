@@ -48,7 +48,6 @@ The below sections show the required configurations for each platform.
 Configuration to be made to access the microphone:
 
 - [`android.permission.RECORD_AUDIO`](https://developer.android.com/reference/android/Manifest.permission#RECORD_AUDIO): Allows audio recording.
-- [`android.permission.WRITE_EXTERNAL_STORAGE`](https://developer.android.com/reference/android/Manifest.permission#WRITE_EXTERNAL_STORAGE) (optional): Allows saving your recordings in public folders.
 - [`android.permission.MODIFY_AUDIO_SETTINGS`](https://developer.android.com/reference/android/Manifest.permission#MODIFY_AUDIO_SETTINGS) (optional): Allows using bluetooth telephony device like headset/earbuds.
 
 <Tabs groupId="flet-build--pyproject-toml">
@@ -56,7 +55,6 @@ Configuration to be made to access the microphone:
 ```bash
 flet build apk \
   --android-permissions android.permission.RECORD_AUDIO=true \
-  --android-permissions android.permission.WRITE_EXTERNAL_STORAGE=true \
   --android-permissions android.permission.MODIFY_AUDIO_SETTINGS=true
 ```
 </TabItem>
@@ -64,11 +62,17 @@ flet build apk \
 ```toml
 [tool.flet.android.permission]
 "android.permission.RECORD_AUDIO" = true
-"android.permission.WRITE_EXTERNAL_STORAGE" = true
 "android.permission.MODIFY_AUDIO_SETTINGS" = true
 ```
 </TabItem>
 </Tabs>
+:::note
+No storage permission is needed to save recordings: writing to the app's own
+directories (see [`StoragePaths`](../storagepaths.md)) is always allowed, and
+saving elsewhere should go through [`FilePicker.save_file()`](../filepicker.md),
+which uses the system picker. Requesting `WRITE_EXTERNAL_STORAGE` or
+`READ_EXTERNAL_STORAGE` instead can get your app rejected from Google Play.
+:::
 See also:
 
 - [setting Android permissions](../../publish/android.md#permissions)

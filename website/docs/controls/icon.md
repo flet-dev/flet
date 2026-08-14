@@ -13,7 +13,7 @@ import {ClassMembers, ClassSummary, CodeExample, Image} from '@site/src/componen
 ## Examples
 
 To browse and visualize all available icons,
-visit our [icons browser](https://flet.app/gallery/run/apps/icons_browser/)
+visit our [icons browser](https://studio.flet.dev/gallery/run/apps/icons_browser/)
 
 <CodeExample path={frontMatter.examples + '/icon/main.py'} language="python" />
 

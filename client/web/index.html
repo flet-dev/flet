@@ -29,14 +29,18 @@
       entrypointBaseUrl: "/",
       assetBase: "/",
       routeUrlStrategy: "path",
-      canvasKitBaseUrl: "/canvaskit/",
+      // Left unset so Flutter resolves CanvasKit and the Noto fallback fonts
+      // from their CDNs. `patch_index.py` fills both in with local paths when
+      // building with `--no-cdn`, and a host serving its own copy of the
+      // runtime can assign them without also claiming a no-CDN build.
+      canvasKitBaseUrl: null,
       // Default fallback only — `patch_index.py` overrides this with the
       // resolved per-build URL (CDN or local) at deploy time. The `.mjs`
       // suffix is required because python-worker.js is a module worker
       // that loads the runtime via dynamic `import()`. See client/web/python.js.
       pyodideUrl: "/pyodide/pyodide.mjs",
       webRenderer: "auto",
-      fontFallbackBaseUrl: "assets/fonts/", // for Noto Emoji, use Google CDN
+      fontFallbackBaseUrl: null,
       appPackageUrl: "app.tar.gz"
     }
 

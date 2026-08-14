@@ -234,3 +234,25 @@ extension MiscParsers on Control {
     return parseFloatingLabelBehavior(get(propertyName), defaultValue);
   }
 }
+
+/// Closes a modal [route] that a control pushed (bottom sheets, dialogs),
+/// targeting exactly that route rather than the topmost one.
+///
+/// Call this from a post-frame callback, never during `build` — popping a
+/// route during build throws "setState()/markNeedsBuild() called during build"
+/// if the same frame also opens another route or overlay (e.g. a SnackBar).
+///
+/// When the route is still the current (topmost) route it is popped with the
+/// normal exit animation (passing [result], if any); otherwise it is removed
+/// directly, so a route pushed on top of it (or a concurrent `Navigator.pop`
+/// targeting the topmost route) can't dismiss the wrong route.
+void closeModalRoute(ModalRoute route, [dynamic result]) {
+  if (!route.isActive) return;
+  final navigator = route.navigator;
+  if (navigator == null) return;
+  if (route.isCurrent) {
+    navigator.pop(result);
+  } else {
+    navigator.removeRoute(route);
+  }
+}

@@ -11,6 +11,11 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 - `Video.show_controls` (deprecated in 0.85.0); set `Video.controls` to `None` to hide controls ([#6693](https://github.com/flet-dev/flet/pull/6693)) by @ndonkoHenri.
 - `Video.playlist_add()` and `Video.playlist_remove()` (deprecated in 0.85.0); mutate `Video.playlist` directly with list methods such as `append()` and `pop()` ([#6693](https://github.com/flet-dev/flet/pull/6693)) by @ndonkoHenri.
+## 0.86.2
+
+### Fixed
+
+- `Video.volume` (and `pitch`, `playback_rate`, `shuffle_playlist`, `playlist_mode`, `subtitle_track`) resetting to the player's defaults after toggling `visible` off then on. Showing a hidden `Video` recreates its native player at default settings; the "last-applied" tracking now lives with the player and resets on recreation, so these settings are re-applied ([#6683](https://github.com/flet-dev/flet/issues/6683), [#6694](https://github.com/flet-dev/flet/pull/6694)) by @ndonkoHenri.
 
 ## 0.85.0
 

@@ -128,7 +128,7 @@ flet run --web counter.py
 * [Website](https://flet.dev)
 * [Documentation](https://flet.dev/docs/)
 * [Roadmap](https://flet.dev/roadmap)
-* [Apps Gallery](https://flet.dev/gallery)
+* [Apps Gallery](https://studio.flet.dev/gallery)
 
 ## Community
 
@@ -140,4 +140,4 @@ flet run --web counter.py
 
 ## Contributing
 
-Want to help improve Flet? Check out the [contribution guide](https://flet.dev/docs/contributing).
+Want to help improve Flet? Check out the [contribution guide](CONTRIBUTING.md).
