@@ -18,6 +18,7 @@ import flet as ft
 from flet.controls.control import Control
 from flet.testing.remote_tester import RemoteTester
 from flet.testing.tester import Tester
+from flet.utils.environment import without_host_python_config
 from flet.utils.network import get_free_tcp_port
 from flet.utils.platform_utils import get_bool_env_var
 
@@ -25,32 +26,6 @@ if TYPE_CHECKING:
     from flet.app import AppCallable
 
 __all__ = ["FletTestApp"]
-
-
-def _flutter_subprocess_env() -> dict[str, str]:
-    """
-    Build the environment for the `flutter test` child process.
-
-    Host-Python configuration must not reach the interpreter embedded in the
-    app under test. It reads `PYTHONPATH`/`PYTHONHOME` at initialization, so
-    the debugger and `sitecustomize` paths an IDE injects (PyCharm does) land
-    on the packaged app's `sys.path` and kill it at startup - which surfaces
-    as Flutter exiting with code 79 and "No tests were found", before the app
-    ever connects to `RemoteTester`.
-
-    `PYTHONNOUSERSITE` is *set* rather than removed: user site-packages is
-    opt-out, so leaving it unset lets a version-matched host
-    `~/.local/lib/pythonX.Y/site-packages` leak in the same way.
-
-    Everything else is preserved - `flutter test` needs `PATH`, and its native
-    build phase needs the `FLET_*` and `SERIOUS_PYTHON_*` variables that
-    `flet test` sets (see `_flutter_path_env` in `flet_cli.commands.test`).
-    """
-    env = os.environ.copy()
-    for name in ("PYTHONPATH", "PYTHONHOME", "PYTHONEXECUTABLE"):
-        env.pop(name, None)
-    env["PYTHONNOUSERSITE"] = "1"
-    return env
 
 
 class DisposalMode(Enum):
@@ -345,7 +320,11 @@ class FletTestApp:
             cwd=str(self.__flutter_app_dir),
             stdout=stdout,
             stderr=stderr,
-            env=_flutter_subprocess_env(),
+            # `flutter test` builds and runs the app under test, which embeds
+            # its own interpreter - the host's Python configuration must not
+            # reach it. PATH and the FLET_*/SERIOUS_PYTHON_* variables that
+            # `flet test` sets for the native build phase are preserved.
+            env=without_host_python_config(),
         )
 
         if self.__flutter_process.stdout is not None:

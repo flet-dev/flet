@@ -1,7 +1,7 @@
 import os
 from unittest.mock import patch
 
-from flet.testing.flet_test_app import _flutter_subprocess_env
+from flet.utils.environment import without_host_python_config
 
 # A host environment as an IDE-launched pytest run sees it: PyCharm's debugger
 # and sitecustomize helpers on PYTHONPATH, a Homebrew interpreter's PYTHONHOME,
@@ -19,8 +19,7 @@ HOST_ENV = {
 
 
 def test_host_python_config_is_stripped():
-    with patch.dict(os.environ, HOST_ENV, clear=True):
-        env = _flutter_subprocess_env()
+    env = without_host_python_config(HOST_ENV)
 
     assert "PYTHONPATH" not in env
     assert "PYTHONHOME" not in env
@@ -30,13 +29,11 @@ def test_host_python_config_is_stripped():
 def test_user_site_packages_is_disabled():
     # Opt-out, so it must be set rather than removed - a host user site dir
     # matching the embedded interpreter's version leaks in otherwise.
-    with patch.dict(os.environ, HOST_ENV, clear=True):
-        assert _flutter_subprocess_env()["PYTHONNOUSERSITE"] == "1"
+    assert without_host_python_config(HOST_ENV)["PYTHONNOUSERSITE"] == "1"
 
 
 def test_build_env_is_preserved():
-    with patch.dict(os.environ, HOST_ENV, clear=True):
-        env = _flutter_subprocess_env()
+    env = without_host_python_config(HOST_ENV)
 
     for name in (
         "PATH",
@@ -49,16 +46,25 @@ def test_build_env_is_preserved():
 
 
 def test_missing_vars_are_not_an_error():
-    with patch.dict(os.environ, {"PATH": "/usr/bin"}, clear=True):
-        env = _flutter_subprocess_env()
+    assert without_host_python_config({"PATH": "/usr/bin"}) == {
+        "PATH": "/usr/bin",
+        "PYTHONNOUSERSITE": "1",
+    }
 
-    assert env == {"PATH": "/usr/bin", "PYTHONNOUSERSITE": "1"}
+
+def test_source_mapping_is_not_mutated():
+    source = dict(HOST_ENV)
+    without_host_python_config(source)
+
+    assert source == HOST_ENV
 
 
-def test_host_environ_is_not_mutated():
+def test_defaults_to_os_environ():
     with patch.dict(os.environ, HOST_ENV, clear=True):
-        _flutter_subprocess_env()
+        env = without_host_python_config()
 
+        assert "PYTHONPATH" not in env
+        assert env["PATH"] == HOST_ENV["PATH"]
+        # The live environment of the *host* process is left alone.
         assert os.environ["PYTHONPATH"] == HOST_ENV["PYTHONPATH"]
-        assert os.environ["PYTHONHOME"] == HOST_ENV["PYTHONHOME"]
         assert "PYTHONNOUSERSITE" not in os.environ
