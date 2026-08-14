@@ -55,6 +55,7 @@ class _CupertinoRadioControlState extends State<CupertinoRadioControl>
     var value = widget.control.getString("value", "")!;
 
     var cupertinoRadio = CupertinoRadio<String>(
+      enabled: !widget.control.disabled,
       autofocus: widget.control.getBool("autofocus", false)!,
       focusNode: _focusNode,
       value: value,
