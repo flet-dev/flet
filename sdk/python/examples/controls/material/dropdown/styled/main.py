@@ -13,10 +13,18 @@ def main(page: ft.Page):
                         color=ft.Colors.PURPLE_200,
                         bgcolor=ft.Colors.BLUE_200,
                         filled=True,
-                        border_radius=30,
-                        border_color=ft.Colors.GREEN_800,
-                        focused_border_color=ft.Colors.GREEN_ACCENT_400,
-                        focused_border_width=5,
+                        border={
+                            ft.ControlState.DEFAULT: ft.OutlineInputBorder(
+                                border_radius=30,
+                                side=ft.BorderSide(color=ft.Colors.GREEN_800),
+                            ),
+                            ft.ControlState.FOCUSED: ft.OutlineInputBorder(
+                                border_radius=30,
+                                side=ft.BorderSide(
+                                    width=5, color=ft.Colors.GREEN_ACCENT_400
+                                ),
+                            ),
+                        },
                         options=[
                             ft.DropdownOption("a", "Style 1A"),
                             ft.DropdownOption("b", "Style 1B"),
@@ -25,14 +33,20 @@ def main(page: ft.Page):
                     ),
                     ft.Dropdown(
                         key="styled_dropdown_2",
-                        border_radius=30,
+                        border={
+                            ft.ControlState.DEFAULT: ft.OutlineInputBorder(
+                                border_radius=30,
+                                side=ft.BorderSide(color=ft.Colors.TRANSPARENT),
+                            ),
+                            ft.ControlState.FOCUSED: ft.OutlineInputBorder(
+                                border_radius=30,
+                                side=ft.BorderSide(width=20, color=ft.Colors.PINK_300),
+                            ),
+                        },
                         filled=True,
                         fill_color=ft.Colors.RED_400,
-                        border_color=ft.Colors.TRANSPARENT,
                         bgcolor=ft.Colors.RED_200,
                         color=ft.Colors.CYAN_400,
-                        focused_border_color=ft.Colors.PINK_300,
-                        focused_border_width=20,
                         options=[
                             ft.DropdownOption("a", "Style 2A"),
                             ft.DropdownOption("b", "Style 2B"),
@@ -41,12 +55,21 @@ def main(page: ft.Page):
                     ),
                     ft.Dropdown(
                         key="styled_dropdown_3",
-                        border_color=ft.Colors.PINK_ACCENT,
-                        focused_border_color=ft.Colors.GREEN_ACCENT_400,
-                        focused_border_width=25,
-                        border_radius=30,
+                        border={
+                            ft.ControlState.DEFAULT: ft.OutlineInputBorder(
+                                border_radius=30,
+                                side=ft.BorderSide(
+                                    width=5, color=ft.Colors.PINK_ACCENT
+                                ),
+                            ),
+                            ft.ControlState.FOCUSED: ft.OutlineInputBorder(
+                                border_radius=30,
+                                side=ft.BorderSide(
+                                    width=25, color=ft.Colors.GREEN_ACCENT_400
+                                ),
+                            ),
+                        },
                         width=150,
-                        border_width=5,
                         options=[
                             ft.DropdownOption("a", "Style 3A"),
                             ft.DropdownOption("b", "Style 3B"),
@@ -59,12 +82,20 @@ def main(page: ft.Page):
                             key="styled_dropdown_4",
                             text_size=30,
                             color=ft.Colors.ORANGE_ACCENT,
-                            border_radius=20,
+                            border={
+                                ft.ControlState.DEFAULT: ft.OutlineInputBorder(
+                                    border_radius=20,
+                                    side=ft.BorderSide.none(),
+                                ),
+                                ft.ControlState.FOCUSED: ft.OutlineInputBorder(
+                                    border_radius=20,
+                                    side=ft.BorderSide(
+                                        width=10, color=ft.Colors.GREEN_100
+                                    ),
+                                ),
+                            },
                             filled=True,
-                            border_width=0,
                             autofocus=True,
-                            focused_border_color=ft.Colors.GREEN_100,
-                            focused_border_width=10,
                             width=200,
                             height=50,
                             options=[
@@ -77,11 +108,17 @@ def main(page: ft.Page):
                     ft.Dropdown(
                         key="styled_dropdown_5",
                         text_size=30,
-                        border_radius=20,
+                        border={
+                            ft.ControlState.DEFAULT: ft.OutlineInputBorder(
+                                border_radius=20,
+                                side=ft.BorderSide.none(),
+                            ),
+                            ft.ControlState.FOCUSED: ft.OutlineInputBorder(
+                                border_radius=20,
+                                side=ft.BorderSide(width=10, color=ft.Colors.GREEN_100),
+                            ),
+                        },
                         filled=True,
-                        border_width=0,
-                        focused_border_color=ft.Colors.GREEN_100,
-                        focused_border_width=10,
                         content_padding=20,
                         width=200,
                         options=[

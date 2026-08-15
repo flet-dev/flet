@@ -43,7 +43,7 @@ def main(page: ft.Page):
                                     width=120,
                                     text_align=ft.TextAlign.RIGHT,
                                     bgcolor=ft.Colors.SURFACE,
-                                    border_radius=14,
+                                    border=ft.OutlineInputBorder(border_radius=14),
                                 ),
                                 ft.FilledButton(
                                     "Increment",
