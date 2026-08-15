@@ -69,8 +69,7 @@ Windows [AppUserModelID](https://learn.microsoft.com/en-us/windows/win32/shell/a
 used by the desktop client process for taskbar grouping and pinning.
 
 For apps packaged with [`flet pack`](../cli/flet-pack.md), this value is set automatically
-(the packaged executable's path, or a stable hashed ID when the path is longer than
-128 characters or contains spaces) so the taskbar associates the client window with
+to the packaged executable's path, so the taskbar associates the client window with
 the packaged app instead of the cached Flet client executable. It is also stamped on
 the client window together with the relaunch properties below, which make the taskbar
 name, icon and pins resolve to the packaged app.
