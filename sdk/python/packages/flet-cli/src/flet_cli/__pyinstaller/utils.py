@@ -1,4 +1,5 @@
 import os
+import tarfile
 import tempfile
 import uuid
 from pathlib import Path
@@ -33,10 +34,16 @@ def get_flet_bin_path():
     return None
 
 
-def normalize_tar_entry(tarinfo):
+def normalize_tar_entry(tarinfo: tarfile.TarInfo) -> tarfile.TarInfo:
     """
     Normalize a tar entry's metadata (mtime, owner) so that archives built
     from identical content are byte-identical across builds.
+
+    Args:
+        tarinfo: Entry to normalize, as passed by `tarfile.TarFile.add`.
+
+    Returns:
+        The same entry, with mtime and ownership zeroed.
     """
 
     tarinfo.mtime = 0

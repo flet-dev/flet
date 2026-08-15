@@ -207,6 +207,9 @@ class Command(BaseCommand):
         collide with the vanilla client or other apps' patched clients. The
         size lets the runtime detect a stale sidecar next to a replaced
         archive and re-hash instead of trusting it.
+
+        Args:
+            archive_path: Path of the client archive to fingerprint.
         """
         h = hashlib.sha256()
         with open(archive_path, "rb") as f:

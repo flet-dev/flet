@@ -166,7 +166,7 @@ def get_artifact_filename():
     return f"flet-linux-{distro}-{arch}.tar.gz"
 
 
-def __get_client_storage_dir(fingerprint=None):
+def __get_client_storage_dir(fingerprint: str | None = None) -> Path:
     """
     Return a versioned local directory used to store unpacked desktop client files.
 
@@ -175,6 +175,12 @@ def __get_client_storage_dir(fingerprint=None):
     Fingerprinting keeps clients patched by `flet pack` (custom icon/metadata)
     from being shadowed by — or shadowing — the vanilla client or another
     app's patched client of the same Flet version.
+
+    Args:
+        fingerprint: Optional content fingerprint of the bundled client archive.
+
+    Returns:
+        Path of the cache directory for this client.
     """
 
     flavor = __get_desktop_flavor()
@@ -184,7 +190,7 @@ def __get_client_storage_dir(fingerprint=None):
     return Path.home().joinpath(".flet", "client", name)
 
 
-def __get_archive_fingerprint(archive_path):
+def __get_archive_fingerprint(archive_path: str) -> str:
     """
     Return a short content fingerprint for a client archive.
 
@@ -193,6 +199,12 @@ def __get_archive_fingerprint(archive_path):
     the archive, so a replaced archive next to a stale sidecar is re-hashed
     instead of silently mapping to the old client's cache. Falls back to
     hashing the archive, caching the result next to it when possible.
+
+    Args:
+        archive_path: Path of the client archive to fingerprint.
+
+    Returns:
+        First 12 hex digits of the archive's SHA-256.
     """
 
     size = os.path.getsize(archive_path)
@@ -215,7 +227,7 @@ def __get_archive_fingerprint(archive_path):
     return fp[:12]
 
 
-def __gc_stale_client_dirs(cache_dir, max_age_days=30):
+def __gc_stale_client_dirs(cache_dir: Path, max_age_days: int = 30) -> None:
     """
     Best-effort eviction of superseded fingerprinted cache siblings.
 
@@ -224,6 +236,11 @@ def __gc_stale_client_dirs(cache_dir, max_age_days=30):
     renamed before deletion, so a dir whose files are in use by a running app
     fails the rename on Windows and is left untouched. Leftovers of
     interrupted deletions are swept too.
+
+    Args:
+        cache_dir: Cache directory of the client in use; its siblings with the
+            same `flet-desktop-{flavor}-{version}-` prefix are candidates.
+        max_age_days: Days a sibling must have been unused before eviction.
     """
 
     parent = cache_dir.parent
@@ -413,11 +430,14 @@ async def open_flet_view_async(page_url, assets_dir, hidden):
     return p, pid_file
 
 
-def __apply_taskbar_props(pid):
+def __apply_taskbar_props(pid: int) -> None:
     """
     Stamp Windows taskbar identity properties on the client window, so packed
     apps (which set `FLET_APP_USER_MODEL_ID` via the PyInstaller runtime hook)
     get their own taskbar name/icon and working pins. No-op elsewhere.
+
+    Args:
+        pid: Process ID of the started desktop client.
     """
 
     if not is_windows() or not os.environ.get("FLET_APP_USER_MODEL_ID"):
