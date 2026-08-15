@@ -33,6 +33,18 @@ def get_flet_bin_path():
     return None
 
 
+def normalize_tar_entry(tarinfo):
+    """
+    Normalize a tar entry's metadata (mtime, owner) so that archives built
+    from identical content are byte-identical across builds.
+    """
+
+    tarinfo.mtime = 0
+    tarinfo.uid = tarinfo.gid = 0
+    tarinfo.uname = tarinfo.gname = ""
+    return tarinfo
+
+
 def copy_flet_bin():
     """
     Copy packaged Flet desktop binaries into a temporary directory.

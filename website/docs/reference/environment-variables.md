@@ -82,7 +82,7 @@ before the app starts or at the very top of your `main.py` — to get the same b
 Command Windows uses to relaunch the app from a pinned taskbar icon
 ([System.AppUserModel.RelaunchCommand](https://learn.microsoft.com/en-us/windows/win32/properties/props-system-appusermodel-relaunchcommand)),
 stamped on the desktop client window. Defaults to the quoted path from
-[`FLET_APP_USER_MODEL_ID`](#flet_app_user_model_id) when that is an existing executable.
+[`FLET_APP_USER_MODEL_ID`](#flet_app_user_model_id) when that is the path of an existing file.
 
 ### `FLET_APP_RELAUNCH_DISPLAY_NAME`
 

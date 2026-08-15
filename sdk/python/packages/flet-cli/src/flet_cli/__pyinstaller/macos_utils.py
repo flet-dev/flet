@@ -1,3 +1,4 @@
+import gzip
 import os
 import plistlib
 import shutil
@@ -8,6 +9,7 @@ from pathlib import Path
 from PyInstaller.building.icon import normalize_icon_type
 
 from flet.utils import safe_tar_extractall
+from flet_cli.__pyinstaller.utils import normalize_tar_entry
 
 
 def unpack_app_bundle(tar_path):
@@ -143,9 +145,18 @@ def assemble_app_bundle(app_path, tar_path):
             f"error code {p.returncode}!\noutput: {p.stdout}"
         )
 
-    # pack tar
-    with tarfile.open(tar_path, "w:gz") as tar:
-        tar.add(app_path, arcname=os.path.basename(app_path))
+    # pack tar with fixed timestamps, so archives of identical content are
+    # byte-identical and the runtime cache fingerprint stays stable
+    with (
+        open(tar_path, "wb") as raw,
+        gzip.GzipFile(fileobj=raw, mode="wb", mtime=0) as gz,
+        tarfile.open(fileobj=gz, mode="w") as tar,
+    ):
+        tar.add(
+            app_path,
+            arcname=os.path.basename(app_path),
+            filter=normalize_tar_entry,
+        )
 
     # cleanup
     shutil.rmtree(app_path, ignore_errors=True)

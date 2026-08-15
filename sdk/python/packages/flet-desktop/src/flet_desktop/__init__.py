@@ -1,4 +1,5 @@
 import asyncio
+import contextlib
 import ctypes
 import ctypes.util
 import hashlib
@@ -11,6 +12,7 @@ import subprocess
 import sys
 import tarfile
 import tempfile
+import time
 import urllib.request
 import zipfile
 from pathlib import Path
@@ -186,18 +188,21 @@ def __get_archive_fingerprint(archive_path):
     """
     Return a short content fingerprint for a client archive.
 
-    Prefers a pre-computed `<archive>.sha256` file (written by `flet pack` at
-    build time); otherwise hashes the archive and caches the result next to it
-    when possible.
+    Prefers a pre-computed `<archive>.sha256` sidecar (written by `flet pack`
+    at build time) holding `<hash> <size>`; the recorded size must still match
+    the archive, so a replaced archive next to a stale sidecar is re-hashed
+    instead of silently mapping to the old client's cache. Falls back to
+    hashing the archive, caching the result next to it when possible.
     """
 
+    size = os.path.getsize(archive_path)
     fp_file = archive_path + ".sha256"
     try:
         if os.path.exists(fp_file):
             with open(fp_file) as f:
-                fp = f.read().strip()
-            if fp:
-                return fp[:12]
+                parts = f.read().split()
+            if len(parts) == 2 and parts[1] == str(size):
+                return parts[0][:12]
     except OSError:
         pass
     h = hashlib.sha256()
@@ -205,12 +210,55 @@ def __get_archive_fingerprint(archive_path):
         while chunk := f.read(1024 * 1024):
             h.update(chunk)
     fp = h.hexdigest()
-    try:
-        with open(fp_file, "w") as f:
-            f.write(fp)
-    except OSError:
-        pass
+    with contextlib.suppress(OSError), open(fp_file, "w") as f:
+        f.write(f"{fp} {size}")
     return fp[:12]
+
+
+def __gc_stale_client_dirs(cache_dir, max_age_days=30):
+    """
+    Best-effort eviction of superseded fingerprinted cache siblings.
+
+    Removes sibling `flet-desktop-{flavor}-{version}-{fingerprint}` dirs not
+    used for `max_age_days` (tracked via a `.last-used` marker). Dirs are
+    renamed before deletion, so a dir whose files are in use by a running app
+    fails the rename on Windows and is left untouched. Leftovers of
+    interrupted deletions are swept too.
+    """
+
+    parent = cache_dir.parent
+    prefix = cache_dir.name.rpartition("-")[0] + "-"
+    now = time.time()
+    try:
+        entries = list(parent.iterdir())
+    except OSError:
+        return
+    for entry in entries:
+        name = entry.name
+        if name.startswith(".trash-"):
+            shutil.rmtree(entry, ignore_errors=True)
+            continue
+        suffix = name[len(prefix) :]
+        if (
+            not name.startswith(prefix)
+            or name == cache_dir.name
+            or len(suffix) != 12
+            or not all(c in "0123456789abcdef" for c in suffix)
+        ):
+            continue
+        try:
+            marker = entry / ".last-used"
+            last_used = max(
+                marker.stat().st_mtime if marker.exists() else 0,
+                entry.stat().st_mtime,
+            )
+            if now - last_used < max_age_days * 86400:
+                continue
+            trash = parent / f".trash-{random_string(8)}"
+            entry.rename(trash)
+            shutil.rmtree(trash, ignore_errors=True)
+        except OSError:
+            continue
 
 
 def __download_with_progress(url, dest_path, description):
@@ -275,6 +323,8 @@ def ensure_client_cached():
     cache_dir = __get_client_storage_dir(fingerprint)
     if cache_dir.exists():
         logger.info(f"Flet client found in cache: {cache_dir}")
+        with contextlib.suppress(OSError):
+            (cache_dir / ".last-used").touch()
         return cache_dir
 
     if archive_path is None:
@@ -297,11 +347,23 @@ def ensure_client_cached():
             with tarfile.open(archive_path, "r:gz") as tar_arch:
                 safe_tar_extractall(tar_arch, str(temp_extract))
 
-        temp_extract.rename(cache_dir)
+        try:
+            temp_extract.rename(cache_dir)
+        except OSError:
+            # Lost a race against a concurrent extraction of the same
+            # archive; the winner's cache dir is equivalent.
+            if not cache_dir.exists():
+                raise
+            logger.info(f"Using concurrently extracted cache: {cache_dir}")
+            shutil.rmtree(temp_extract, ignore_errors=True)
     except Exception:
         shutil.rmtree(temp_extract, ignore_errors=True)
         raise
 
+    with contextlib.suppress(OSError):
+        (cache_dir / ".last-used").touch()
+    if fingerprint:
+        __gc_stale_client_dirs(cache_dir)
     return cache_dir
 
 

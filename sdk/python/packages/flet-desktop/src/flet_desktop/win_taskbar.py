@@ -120,18 +120,38 @@ _user32.GetWindowThreadProcessId.argtypes = [
     wintypes.HWND,
     ctypes.POINTER(wintypes.DWORD),
 ]
+_user32.GetClassNameW.argtypes = [wintypes.HWND, ctypes.c_wchar_p, ctypes.c_int]
 _GW_OWNER = 4
 _EnumWindowsProc = ctypes.WINFUNCTYPE(wintypes.BOOL, wintypes.HWND, wintypes.LPARAM)
 
+_kernel32 = ctypes.WinDLL("kernel32", use_last_error=True)
+_kernel32.OpenProcess.restype = wintypes.HANDLE
+_kernel32.OpenProcess.argtypes = [wintypes.DWORD, wintypes.BOOL, wintypes.DWORD]
+_kernel32.WaitForSingleObject.restype = wintypes.DWORD
+_kernel32.WaitForSingleObject.argtypes = [wintypes.HANDLE, wintypes.DWORD]
+_kernel32.CloseHandle.argtypes = [wintypes.HANDLE]
+_SYNCHRONIZE = 0x00100000
+_WAIT_TIMEOUT = 0x00000102
+
+# Window class registered by the Flet client's runner (win32_window.cpp).
+_FLUTTER_WINDOW_CLASS = "FLUTTER_RUNNER_WIN32_WINDOW"
+
 
 def _find_top_window(pid):
+    # Match by window class rather than visibility: the client window is
+    # created hidden and only shown on the first frame - or arbitrarily late
+    # for FLET_HIDE_WINDOW_ON_START apps - and property stamping works on
+    # hidden windows. The class check also keeps an unrelated window of a
+    # recycled PID from ever being stamped.
     found = []
 
     def cb(hwnd, lparam):
-        if _user32.IsWindowVisible(hwnd):
-            wpid = wintypes.DWORD()
-            _user32.GetWindowThreadProcessId(hwnd, ctypes.byref(wpid))
-            if wpid.value == pid and not _user32.GetWindow(hwnd, _GW_OWNER):
+        wpid = wintypes.DWORD()
+        _user32.GetWindowThreadProcessId(hwnd, ctypes.byref(wpid))
+        if wpid.value == pid and not _user32.GetWindow(hwnd, _GW_OWNER):
+            buf = ctypes.create_unicode_buffer(64)
+            _user32.GetClassNameW(hwnd, buf, 64)
+            if buf.value == _FLUTTER_WINDOW_CLASS:
                 found.append(hwnd)
         return True
 
@@ -179,7 +199,7 @@ def apply_relaunch_props_async(pid):
     aumid = os.environ.get("FLET_APP_USER_MODEL_ID")
     if os.name != "nt" or not aumid:
         return
-    is_path = os.path.exists(aumid)
+    is_path = os.path.isfile(aumid)
     relaunch = os.environ.get("FLET_APP_RELAUNCH_COMMAND") or (
         f'"{aumid}"' if is_path else None
     )
@@ -202,17 +222,29 @@ def apply_relaunch_props_async(pid):
     def worker():
         with contextlib.suppress(OSError):
             _ole32.CoInitialize(None)
-        deadline = time.monotonic() + 30
-        while time.monotonic() < deadline:
-            hwnd = _find_top_window(pid)
-            if hwnd:
-                try:
-                    _set_props(hwnd, props)
-                    logger.debug(f"Applied taskbar relaunch properties to {hwnd}")
-                except OSError as e:
-                    logger.warning(f"Failed to apply taskbar properties: {e}")
-                return
-            time.sleep(0.2)
-        logger.debug("Timed out waiting for client window to apply taskbar props")
+        # Hold a SYNCHRONIZE handle to the client for the whole poll: it
+        # detects exit (stop polling) and keeps Windows from recycling the
+        # PID under us, so a foreign process can never be stamped.
+        hproc = _kernel32.OpenProcess(_SYNCHRONIZE, False, pid)
+        try:
+            while True:
+                hwnd = _find_top_window(pid)
+                if hwnd:
+                    try:
+                        _set_props(hwnd, props)
+                        logger.debug(f"Applied taskbar relaunch properties to {hwnd}")
+                    except OSError as e:
+                        logger.warning(f"Failed to apply taskbar properties: {e}")
+                    return
+                if (
+                    not hproc
+                    or _kernel32.WaitForSingleObject(hproc, 0) != _WAIT_TIMEOUT
+                ):
+                    logger.debug("Client exited before its window appeared")
+                    return
+                time.sleep(0.2)
+        finally:
+            if hproc:
+                _kernel32.CloseHandle(hproc)
 
     threading.Thread(target=worker, daemon=True).start()
