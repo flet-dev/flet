@@ -1,6 +1,7 @@
 import asyncio
 import ctypes
 import ctypes.util
+import hashlib
 import logging
 import os
 import shutil
@@ -163,17 +164,53 @@ def get_artifact_filename():
     return f"flet-linux-{distro}-{arch}.tar.gz"
 
 
-def __get_client_storage_dir():
+def __get_client_storage_dir(fingerprint=None):
     """
     Return a versioned local directory used to store unpacked desktop client files.
 
-    The path format is: `~/.flet/client/flet-desktop-{flavor}-{version}`.
+    The path format is: `~/.flet/client/flet-desktop-{flavor}-{version}`, with a
+    `-{fingerprint}` suffix when the client comes from a bundled archive.
+    Fingerprinting keeps clients patched by `flet pack` (custom icon/metadata)
+    from being shadowed by — or shadowing — the vanilla client or another
+    app's patched client of the same Flet version.
     """
 
     flavor = __get_desktop_flavor()
-    return Path.home().joinpath(
-        ".flet", "client", f"flet-desktop-{flavor}-{flet_desktop.version.version}"
-    )
+    name = f"flet-desktop-{flavor}-{flet_desktop.version.version}"
+    if fingerprint:
+        name += f"-{fingerprint}"
+    return Path.home().joinpath(".flet", "client", name)
+
+
+def __get_archive_fingerprint(archive_path):
+    """
+    Return a short content fingerprint for a client archive.
+
+    Prefers a pre-computed `<archive>.sha256` file (written by `flet pack` at
+    build time); otherwise hashes the archive and caches the result next to it
+    when possible.
+    """
+
+    fp_file = archive_path + ".sha256"
+    try:
+        if os.path.exists(fp_file):
+            with open(fp_file) as f:
+                fp = f.read().strip()
+            if fp:
+                return fp[:12]
+    except OSError:
+        pass
+    h = hashlib.sha256()
+    with open(archive_path, "rb") as f:
+        while chunk := f.read(1024 * 1024):
+            h.update(chunk)
+    fp = h.hexdigest()
+    try:
+        with open(fp_file, "w") as f:
+            f.write(fp)
+    except OSError:
+        pass
+    return fp[:12]
 
 
 def __download_with_progress(url, dest_path, description):
@@ -226,18 +263,21 @@ def ensure_client_cached():
         :class:`Path` to the cache directory containing the unpacked client.
     """
 
-    cache_dir = __get_client_storage_dir()
+    artifact = get_artifact_filename()
+
+    # Check for a bundled archive (PyInstaller or legacy wheel). Bundled
+    # archives are content-fingerprinted so that a client patched by
+    # `flet pack` gets its own cache directory.
+    bundled = os.path.join(get_package_bin_dir(), artifact)
+    archive_path = bundled if os.path.exists(bundled) else None
+    fingerprint = __get_archive_fingerprint(archive_path) if archive_path else None
+
+    cache_dir = __get_client_storage_dir(fingerprint)
     if cache_dir.exists():
         logger.info(f"Flet client found in cache: {cache_dir}")
         return cache_dir
 
-    artifact = get_artifact_filename()
-
-    # Check for a bundled archive (PyInstaller or legacy wheel).
-    bundled = os.path.join(get_package_bin_dir(), artifact)
-    if os.path.exists(bundled):
-        archive_path = bundled
-    else:
+    if archive_path is None:
         archive_path = __download_flet_client(artifact)
 
     # Extract to a temp directory first, then atomically rename to the cache
@@ -283,7 +323,9 @@ def open_flet_view(page_url, assets_dir, hidden):
     args, flet_env, pid_file = __locate_and_unpack_flet_view(
         page_url, assets_dir, hidden
     )
-    return subprocess.Popen(args, env=flet_env), pid_file
+    p = subprocess.Popen(args, env=flet_env)
+    __apply_taskbar_props(p.pid)
+    return p, pid_file
 
 
 async def open_flet_view_async(page_url, assets_dir, hidden):
@@ -304,10 +346,26 @@ async def open_flet_view_async(page_url, assets_dir, hidden):
     args, flet_env, pid_file = __locate_and_unpack_flet_view(
         page_url, assets_dir, hidden
     )
-    return (
-        await asyncio.create_subprocess_exec(args[0], *args[1:], env=flet_env),
-        pid_file,
-    )
+    p = await asyncio.create_subprocess_exec(args[0], *args[1:], env=flet_env)
+    __apply_taskbar_props(p.pid)
+    return p, pid_file
+
+
+def __apply_taskbar_props(pid):
+    """
+    Stamp Windows taskbar identity properties on the client window, so packed
+    apps (which set `FLET_APP_USER_MODEL_ID` via the PyInstaller runtime hook)
+    get their own taskbar name/icon and working pins. No-op elsewhere.
+    """
+
+    if not is_windows() or not os.environ.get("FLET_APP_USER_MODEL_ID"):
+        return
+    try:
+        from flet_desktop.win_taskbar import apply_relaunch_props_async
+
+        apply_relaunch_props_async(pid)
+    except Exception as e:
+        logger.warning(f"Failed to apply taskbar relaunch properties: {e}")
 
 
 def close_flet_view(pid_file):

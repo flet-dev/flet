@@ -69,7 +69,34 @@ Windows [AppUserModelID](https://learn.microsoft.com/en-us/windows/win32/shell/a
 used by the desktop client process for taskbar grouping and pinning.
 
 For apps packaged with [`flet pack`](../cli/flet-pack.md), this value is set automatically
-so taskbar pins point to the packaged app executable instead of the cached Flet client executable.
+(the packaged executable's path, or a stable hashed ID when the path is longer than
+128 characters or contains spaces) so the taskbar associates the client window with
+the packaged app instead of the cached Flet client executable. It is also stamped on
+the client window together with the relaunch properties below, which make the taskbar
+name, icon and pins resolve to the packaged app.
+
+When packaging by other means (for example Nuitka), set this variable yourself —
+before the app starts or at the very top of your `main.py` — to get the same behavior.
+
+### `FLET_APP_RELAUNCH_COMMAND`
+
+Command Windows uses to relaunch the app from a pinned taskbar icon
+([System.AppUserModel.RelaunchCommand](https://learn.microsoft.com/en-us/windows/win32/properties/props-system-appusermodel-relaunchcommand)),
+stamped on the desktop client window. Defaults to the quoted path from
+[`FLET_APP_USER_MODEL_ID`](#flet_app_user_model_id) when that is an existing executable.
+
+### `FLET_APP_RELAUNCH_DISPLAY_NAME`
+
+Display name Windows shows for the app in the taskbar context menu and for pins
+([System.AppUserModel.RelaunchDisplayNameResource](https://learn.microsoft.com/en-us/windows/win32/properties/props-system-appusermodel-relaunchdisplaynameresource)).
+Defaults to the executable name from [`FLET_APP_USER_MODEL_ID`](#flet_app_user_model_id).
+
+### `FLET_APP_RELAUNCH_ICON`
+
+Icon resource Windows uses for the taskbar button and pins
+([System.AppUserModel.RelaunchIconResource](https://learn.microsoft.com/en-us/windows/win32/properties/props-system-appusermodel-relaunchiconresource)),
+e.g. `C:\path\to\app.exe,0`. Defaults to the first icon of the executable from
+[`FLET_APP_USER_MODEL_ID`](#flet_app_user_model_id).
 
 ### `FLET_ASSETS_DIR`
 

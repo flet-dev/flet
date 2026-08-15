@@ -1,4 +1,5 @@
 import argparse
+import hashlib
 import os
 import shutil
 import sys
@@ -178,6 +179,21 @@ class Command(BaseCommand):
             with tarfile.open(archive_path, "w:gz") as tar:
                 tar.add(flet_dir, arcname="flet")
         shutil.rmtree(flet_dir)
+        self.write_archive_fingerprint(archive_path)
+
+    def write_archive_fingerprint(self, archive_path: str) -> None:
+        """Write a `<archive>.sha256` fingerprint file next to the archive.
+
+        `flet_desktop.ensure_client_cached()` uses it at runtime to key the
+        client cache directory by content, so this patched client doesn't
+        collide with the vanilla client or other apps' patched clients.
+        """
+        h = hashlib.sha256()
+        with open(archive_path, "rb") as f:
+            while chunk := f.read(1024 * 1024):
+                h.update(chunk)
+        with open(archive_path + ".sha256", "w") as f:
+            f.write(h.hexdigest())
 
     def handle(self, options: argparse.Namespace) -> None:
         """
@@ -377,12 +393,13 @@ class Command(BaseCommand):
                     # Compress the patched .app bundle back into flet-macos.tar.gz so
                     # ensure_client_cached() finds it at runtime.
                     assemble_app_bundle(app_path, tar_path)
+                    self.write_archive_fingerprint(tar_path)
 
-                    # Remove everything except the tar.gz so PyInstaller doesn't try
-                    # to process loose framework binaries.
+                    # Remove everything except the tar.gz and its fingerprint so
+                    # PyInstaller doesn't try to process loose framework binaries.
                     for entry in os.listdir(hook_config.temp_bin_dir):
                         entry_path = os.path.join(hook_config.temp_bin_dir, entry)
-                        if entry_path == tar_path:
+                        if entry_path in (tar_path, tar_path + ".sha256"):
                             continue
                         if os.path.isdir(entry_path):
                             shutil.rmtree(entry_path, ignore_errors=True)

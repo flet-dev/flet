@@ -29,6 +29,11 @@ Documentation = "https://flet.dev/docs"
 [project.entry-points."pyinstaller40"]
 hook-dirs = "flet_cli.__pyinstaller:get_hook_dirs"
 
+[tool.setuptools.package-data]
+# rthooks.dat tells PyInstaller which runtime hooks to bundle; without it the
+# hooks in __pyinstaller/rthooks/ silently never run in packed apps.
+"flet_cli.__pyinstaller" = ["rthooks.dat", "rthooks/*.py"]
+
 [build-system]
 requires = ["setuptools"]
 build-backend = "setuptools.build_meta"
