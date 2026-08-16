@@ -204,8 +204,6 @@ class FormFieldControl(LayoutControl):
     In the dictionary form, the `DEFAULT` entry behaves like the single form,
     and each state entry without an explicit `side` falls back to the `DEFAULT`
     entry's `side`, if set.
-
-    Defaults to `OutlineInputBorder()`.
     """
 
     color: Optional[ColorValue] = None
