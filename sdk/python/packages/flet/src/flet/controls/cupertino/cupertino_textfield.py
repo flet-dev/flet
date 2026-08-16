@@ -53,6 +53,12 @@ class CupertinoTextField(TextField):
     ```python
     ft.CupertinoTextField(placeholder_text="Search")
     ```
+
+    Note:
+        This control draws its :attr:`~flet.FormFieldControl.border` as a
+        static box decoration. In the :class:`~flet.ControlState` dictionary
+        form, only the `DEFAULT` entry is used — there are no focused, error,
+        or disabled border variants.
     """
 
     placeholder_text: Optional[str] = None

@@ -217,29 +217,45 @@ class _CupertinoTextFieldControlState extends State<CupertinoTextFieldControl> {
       _selection = selection;
     }
 
-    var borderRadius = widget.control.getBorderRadius("border_radius");
+    // CupertinoTextField takes a BoxDecoration, not an InputDecoration, so the
+    // InputBorder value is translated to a BoxBorder. Only the default-state
+    // entry of a state map is used.
+    var borderValue = widget.control.get("border");
+    if (borderValue is Map && !borderValue.containsKey("_type")) {
+      borderValue = borderValue["default"];
+    }
+    var explicitSide = borderValue is Map ? borderValue["side"] : null;
+    var borderSide = parseBorderSide(explicitSide, Theme.of(context),
+        defaultValue: const BorderSide())!;
 
     BoxBorder? border;
-    var borderWidth = widget.control.getDouble("border_width", 1.0)!;
-    var borderColor = widget.control.getColor("border_color", context) ??
-        const Color(0xFF000000);
-
-    try {
-      border = widget.control.getBorder("border", Theme.of(context));
-      // adaptive TextField is being created
-    } catch (e) {
-      FormFieldInputBorder inputBorder = parseFormFieldInputBorder(
-        widget.control.getString("border"),
-        FormFieldInputBorder.outline,
-      )!;
-
-      if (inputBorder == FormFieldInputBorder.outline) {
-        border = Border.all(color: borderColor, width: borderWidth);
-      } else if (inputBorder == FormFieldInputBorder.underline) {
-        border =
-            Border(bottom: BorderSide(color: borderColor, width: borderWidth));
-        borderRadius = BorderRadius.zero;
-      }
+    BorderRadius? borderRadius;
+    switch (borderValue is Map ? borderValue["_type"] : "outline") {
+      case "underline":
+        border = Border(bottom: borderSide);
+        // The underline's default top-corner radius is treated as
+        // unconfigured, and a non-zero radius cannot be painted together
+        // with a hairline solid side.
+        var radius = parseBorderRadius(borderValue["border_radius"]);
+        borderRadius = radius == null ||
+                radius == kUnderlineInputBorderDefaultRadius ||
+                (borderSide.width == 0.0 &&
+                    borderSide.style == BorderStyle.solid)
+            ? BorderRadius.zero
+            : radius;
+      case "none":
+        // A nothing-painting border: copyWith() below cannot clear the default
+        // decoration's border, so replace it instead.
+        border = const Border.fromBorderSide(BorderSide.none);
+      default:
+        // Outline: without an explicit side, keep CupertinoTextField's native
+        // hairline border; an explicit radius still applies to it.
+        if (explicitSide != null) {
+          border = Border.fromBorderSide(borderSide);
+        }
+        borderRadius = borderValue is Map
+            ? parseBorderRadius(borderValue["border_radius"])
+            : null;
     }
 
     var canRevealPassword =

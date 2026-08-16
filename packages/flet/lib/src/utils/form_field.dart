@@ -1,6 +1,5 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'enums.dart';
 
 import '../extensions/control.dart';
 import '../models/control.dart';
@@ -8,15 +7,101 @@ import '../utils/colors.dart';
 import 'borders.dart';
 import 'box.dart';
 import 'edge_insets.dart';
+import 'enums.dart';
 import 'numbers.dart';
 import 'text.dart';
 import 'time.dart';
 
-enum FormFieldInputBorder { outline, underline, none }
+/// [UnderlineInputBorder]'s default corner radius, mirroring both Flutter's
+/// and the Python-side default.
+const BorderRadius kUnderlineInputBorderDefaultRadius = BorderRadius.only(
+    topLeft: Radius.circular(4.0), topRight: Radius.circular(4.0));
 
-FormFieldInputBorder? parseFormFieldInputBorder(String? value,
-    [FormFieldInputBorder? defaultValue]) {
-  return parseEnum(FormFieldInputBorder.values, value, defaultValue);
+InputBorder? parseInputBorder(dynamic value, ThemeData? theme,
+    {BorderSide? defaultSide, InputBorder? defaultValue}) {
+  if (value is! Map) return defaultValue;
+  var side = parseBorderSide(value["side"], theme, defaultValue: defaultSide);
+  switch (value["_type"]) {
+    case "underline":
+      return UnderlineInputBorder(
+          borderSide: side ?? const BorderSide(),
+          borderRadius: parseBorderRadius(
+              value["border_radius"], kUnderlineInputBorderDefaultRadius)!);
+    case "outline":
+      return OutlineInputBorder(
+          borderSide: side ?? const BorderSide(),
+          borderRadius: parseBorderRadius(value["border_radius"],
+              const BorderRadius.all(Radius.circular(4.0)))!,
+          gapPadding: parseDouble(value["gap_padding"], 4.0)!);
+    case "none":
+      return InputBorder.none;
+    default:
+      return defaultValue;
+  }
+}
+
+/// Per-state input borders parsed from a control's "border" property, mapped
+/// onto the [InputDecoration]/[InputDecorationTheme] border slots.
+class FormFieldBorders {
+  InputBorder? border;
+  InputBorder? enabledBorder;
+  InputBorder? focusedBorder;
+  InputBorder? errorBorder;
+  InputBorder? focusedErrorBorder;
+  InputBorder? disabledBorder;
+}
+
+/// Parses the "border" property of [control] — either a single border or a
+/// map of control states ("default", "focused", "error", "disabled") to
+/// borders — into [FormFieldBorders].
+///
+/// The default/single border defines the shape for all states. When its side
+/// is unset, only [FormFieldBorders.border] is populated with it, so the
+/// Material theme keeps resolving the border side per state; an explicit side
+/// additionally populates [FormFieldBorders.enabledBorder]. A state entry
+/// without a side falls back to the default entry's side, then to a themed
+/// side for that state.
+FormFieldBorders parseFormFieldBorders(Control control, ThemeData theme) {
+  var borders = FormFieldBorders();
+  var value = control.get("border");
+
+  Map<dynamic, dynamic>? stateMap;
+  dynamic defaultEntry = value;
+  if (value is Map && !value.containsKey("_type")) {
+    stateMap = value;
+    defaultEntry = value["default"];
+  }
+
+  var defaultSide =
+      defaultEntry is Map ? parseBorderSide(defaultEntry["side"], theme) : null;
+  var defaultBorder = parseInputBorder(defaultEntry, theme,
+      defaultValue: const OutlineInputBorder())!;
+  borders.border = defaultBorder;
+  if (defaultSide != null || defaultBorder == InputBorder.none) {
+    borders.enabledBorder = defaultBorder;
+  }
+
+  if (stateMap != null) {
+    InputBorder? stateBorder(String stateName, BorderSide themedSide) {
+      return parseInputBorder(stateMap![stateName], theme,
+          defaultSide: defaultSide ?? themedSide);
+    }
+
+    borders.focusedBorder = stateBorder(
+        "focused", BorderSide(color: theme.colorScheme.primary, width: 2.0));
+    borders.errorBorder = stateBorder(
+        "error", BorderSide(color: theme.colorScheme.error, width: 1.0));
+    // The "error" entry also covers the focused-error state, at Material's
+    // focused weight when no side is configured.
+    borders.focusedErrorBorder = stateBorder(
+        "error", BorderSide(color: theme.colorScheme.error, width: 2.0));
+    borders.disabledBorder = stateBorder(
+        "disabled",
+        BorderSide(
+            color: theme.colorScheme.onSurface.withValues(alpha: 0.12),
+            width: 1.0));
+  }
+  return borders;
 }
 
 TextInputType? parseTextInputType(String? value,
@@ -47,19 +132,11 @@ InputDecoration buildInputDecoration(
   int? maxLength,
   bool focused = false,
 }) {
-  FormFieldInputBorder inputBorder = parseFormFieldInputBorder(
-    control.getString("border"),
-    FormFieldInputBorder.outline,
-  )!;
+  var borders = parseFormFieldBorders(control, Theme.of(context));
   var bgcolor = control.getColor("bgcolor", context);
   var focusedBgcolor = control.getColor("focused_bgcolor", context);
   var fillColor = control.getColor("fill_color", context);
   var hoverColor = control.getColor("hover_color", context);
-  var borderColor = control.getColor("border_color", context);
-  var borderRadius = control.getBorderRadius("border_radius");
-  var focusedBorderColor = control.getColor("focused_border_color", context);
-  var borderWidth = control.getDouble("border_width");
-  var focusedBorderWidth = control.getDouble("focused_border_width");
 
   //counter
   String? counterText;
@@ -115,64 +192,18 @@ InputDecoration buildInputDecoration(
     suffixText = control.getString("suffix");
   }
 
-  InputBorder? border;
-  if (inputBorder == FormFieldInputBorder.underline) {
-    border = UnderlineInputBorder(
-        borderSide: BorderSide(
-            color: borderColor ?? const Color(0xFF000000),
-            width: borderWidth ?? 1.0));
-  } else if (inputBorder == FormFieldInputBorder.none) {
-    border = InputBorder.none;
-  } else if (inputBorder == FormFieldInputBorder.outline ||
-      borderRadius != null ||
-      borderColor != null ||
-      borderWidth != null) {
-    border = OutlineInputBorder(
-        borderSide: BorderSide(
-            color: borderColor ?? const Color(0xFF000000),
-            width: borderWidth ?? 1.0));
-    if (borderRadius != null) {
-      border =
-          (border as OutlineInputBorder).copyWith(borderRadius: borderRadius);
-    }
-    if (borderColor != null || borderWidth != null) {
-      border = (border as OutlineInputBorder).copyWith(
-          borderSide: borderWidth == 0
-              ? BorderSide.none
-              : BorderSide(
-                  color: borderColor ??
-                      Theme.of(context)
-                          .colorScheme
-                          .onSurface
-                          .withAlpha((255.0 * 0.38).round()),
-                  width: borderWidth ?? 1.0));
-    }
-  }
-
-  InputBorder? focusedBorder;
-  if (borderColor != null ||
-      borderWidth != null ||
-      focusedBorderColor != null ||
-      focusedBorderWidth != null) {
-    focusedBorder = border?.copyWith(
-        borderSide: borderWidth == 0
-            ? BorderSide.none
-            : BorderSide(
-                color: focusedBorderColor ??
-                    borderColor ??
-                    Theme.of(context).colorScheme.primary,
-                width: focusedBorderWidth ?? borderWidth ?? 2.0));
-  }
-
   return InputDecoration(
       enabled: !control.disabled,
       contentPadding: control.getEdgeInsets("content_padding"),
       isDense: control.getBool("dense"),
       label: control.buildTextOrWidget("label"),
       labelStyle: control.getTextStyle("label_style", Theme.of(context)),
-      border: border,
-      enabledBorder: border,
-      focusedBorder: focusedBorder,
+      border: borders.border,
+      enabledBorder: borders.enabledBorder,
+      focusedBorder: borders.focusedBorder,
+      errorBorder: borders.errorBorder,
+      focusedErrorBorder: borders.focusedErrorBorder,
+      disabledBorder: borders.disabledBorder,
       hoverColor: hoverColor,
       icon: control.buildIconOrWidget("icon"),
       filled: control.getBool("filled", false)!,
@@ -236,11 +267,6 @@ StrutStyle? parseStrutStyle(dynamic value, [StrutStyle? defaultValue]) {
 }
 
 extension FormFieldParsers on Control {
-  FormFieldInputBorder? getFormFieldInputBorder(String propertyName,
-      [FormFieldInputBorder? defaultValue]) {
-    return parseFormFieldInputBorder(get(propertyName), defaultValue);
-  }
-
   TextInputType? getTextInputType(String propertyName,
       [TextInputType? defaultValue]) {
     return parseTextInputType(get(propertyName), defaultValue);

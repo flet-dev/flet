@@ -2,6 +2,7 @@ from typing import Optional
 
 from flet.controls.alignment import Alignment
 from flet.controls.base_control import control
+from flet.controls.border_radius import BorderRadiusValue
 from flet.controls.control import Control
 from flet.controls.control_event import ControlEventHandler
 from flet.controls.material.form_field_control import FormFieldControl
@@ -140,6 +141,17 @@ class DropdownM2(FormFieldControl):
     elevation: Number = 8
     """
     The dropdown's elevation.
+    """
+
+    menu_border_radius: Optional[BorderRadiusValue] = None
+    """
+    The radii of the open dropdown menu's rounded rectangle shape.
+
+    If `None` (the default), the menu uses its default shape.
+
+    Note:
+        This shapes the menu only; the input field's border is configured
+        through :attr:`border`.
     """
 
     item_height: Optional[Number] = None

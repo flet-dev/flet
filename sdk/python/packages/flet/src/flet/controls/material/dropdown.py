@@ -2,13 +2,12 @@ from dataclasses import field
 from typing import Optional
 
 from flet.controls.base_control import control
-from flet.controls.border_radius import BorderRadiusValue
 from flet.controls.buttons import ButtonStyle
 from flet.controls.control import Control
 from flet.controls.control_event import ControlEventHandler
 from flet.controls.control_state import ControlStateValue
 from flet.controls.layout_control import LayoutControl
-from flet.controls.material.form_field_control import InputBorder
+from flet.controls.material.form_field_control import InputBorder, OutlineInputBorder
 from flet.controls.material.menu_bar import MenuStyle
 from flet.controls.material.textfield import InputFilter, TextCapitalization
 from flet.controls.padding import PaddingValue
@@ -284,49 +283,32 @@ class Dropdown(LayoutControl):
     The :attr:`label`'s text style.
     """
 
-    border: Optional[InputBorder] = None
+    border: ControlStateValue[InputBorder] = field(default_factory=OutlineInputBorder)
     """
-    Border around input.
+    The border drawn around the decorated input area.
 
-    Defaults to `InputBorder.OUTLINE`.
+    Accepts a single :class:`~flet.InputBorder` or a dictionary mapping
+    :class:`~flet.ControlState`s to :class:`~flet.InputBorder`s. Supported
+    state keys are :attr:`flet.ControlState.DEFAULT`,
+    :attr:`flet.ControlState.FOCUSED`, :attr:`flet.ControlState.ERROR`,
+    and :attr:`flet.ControlState.DISABLED`.
+
+    A single border defines the shape for all states. If its `side` is unset,
+    the Material theme resolves the border color and weight per state (for
+    example, the focused border uses the theme's primary color); an explicit
+    `side` applies to the enabled state while the other states remain
+    theme-resolved.
+
+    In the dictionary form, the `DEFAULT` entry behaves like the single form,
+    and each state entry without an explicit `side` falls back to the `DEFAULT`
+    entry's `side`, if set.
+
+    Defaults to `OutlineInputBorder()`.
     """
 
     color: Optional[ColorValue] = None
     """
     Text color.
-    """
-
-    border_width: Number = 1
-    """
-    The width of the border in virtual pixels.
-
-    Tip:
-        Set to `0` to completely remove the border.
-    """
-
-    border_color: Optional[ColorValue] = None
-    """
-    Border color.
-
-    Tip:
-        Set to :attr:`flet.Colors.TRANSPARENT` to hide the border.
-    """
-
-    border_radius: Optional[BorderRadiusValue] = None
-    """
-    The border radius applied to the corners of the dropdown input field.
-    Accepts a value in virtual pixels or a `BorderRadiusValue` object.
-    If set to `None`, the default border radius defined by the theme or system is used.
-    """
-
-    focused_border_width: Optional[Number] = None
-    """
-    Border width in focused state.
-    """
-
-    focused_border_color: Optional[ColorValue] = None
-    """
-    Border color in focused state.
     """
 
     content_padding: Optional[PaddingValue] = None

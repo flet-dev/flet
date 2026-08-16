@@ -412,6 +412,8 @@ if TYPE_CHECKING:
     from flet.controls.material.form_field_control import (
         FormFieldControl,
         InputBorder,
+        OutlineInputBorder,
+        UnderlineInputBorder,
     )
     from flet.controls.material.icon_button import (
         FilledIconButton,
@@ -1031,6 +1033,7 @@ __all__ = [
     "OnReorderEvent",
     "OnScrollEvent",
     "Orientation",
+    "OutlineInputBorder",
     "OutlinedBorder",
     "OutlinedButton",
     "OutlinedButtonTheme",
@@ -1195,6 +1198,7 @@ __all__ = [
     "TooltipValue",
     "Transform",
     "TransparentPointer",
+    "UnderlineInputBorder",
     "UnderlineTabIndicator",
     "Url",
     "UrlLauncher",
@@ -1565,6 +1569,7 @@ _LAZY = {
     "OnReorderEvent": "flet.controls.material.reorderable_list_view",
     "OnScrollEvent": "flet.controls.scrollable_control",
     "Orientation": "flet.controls.types",
+    "OutlineInputBorder": "flet.controls.material.form_field_control",
     "OutlinedBorder": "flet.controls.buttons",
     "OutlinedButton": "flet.controls.material.outlined_button",
     "OutlinedButtonTheme": "flet.controls.theme",
@@ -1729,6 +1734,7 @@ _LAZY = {
     "TooltipValue": "flet.controls.material.tooltip",
     "Transform": "flet.controls.transform",
     "TransparentPointer": "flet.controls.core.transparent_pointer",
+    "UnderlineInputBorder": "flet.controls.material.form_field_control",
     "UnderlineTabIndicator": "flet.controls.material.tabs",
     "Url": "flet.controls.types",
     "UrlLauncher": "flet.controls.services.url_launcher",
