@@ -89,9 +89,11 @@ class RoundedRectangleBorder(OutlinedBorder):
     A border with rounded rectangle corners.
     """
 
-    radius: Optional[BorderRadiusValue] = None
+    radius: BorderRadiusValue = 0
     """
     The radius for each corner.
+
+    Defaults to `0` — square corners.
     """
 
     def __post_init__(self):
