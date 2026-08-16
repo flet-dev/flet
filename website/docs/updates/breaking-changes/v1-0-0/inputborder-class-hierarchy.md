@@ -240,4 +240,5 @@ border.
   [`UnderlineInputBorder`][flet.UnderlineInputBorder],
   [`ControlState`][flet.ControlState]
 - [Flutter `InputBorder` API](https://api.flutter.dev/flutter/material/InputBorder-class.html)
+- Issues and PRs: [#6773](https://github.com/flet-dev/flet/pull/6773)
 - Release notes: [Flet 1.0.0](../../release-notes.md#10x)

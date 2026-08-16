@@ -1,3 +1,10 @@
+## 1.0.0
+
+### Breaking changes
+
+* **`InputBorder` is now a class hierarchy instead of an enum.** `OutlineInputBorder`, `UnderlineInputBorder` and `InputBorder.none()` mirror Flutter's classes and their defaults, and `border` accepts either a single border or a `ControlState` dictionary, so the focused, error and disabled borders are stylable for the first time. The `border_radius`, `border_width`, `border_color`, `focused_border_width` and `focused_border_color` properties are removed from `TextField`, `Dropdown`, `DropdownM2` and `CupertinoTextField`, and `DropdownM2` gains `menu_border_radius` for the open menu that the shared `border_radius` used to shape. A border with no explicit `side` now takes its color and weight from the Material theme per state instead of always painting black, so dark mode and custom themes work; on `CupertinoTextField`, `InputBorder.none()` now actually removes the border and an outline without a `side` keeps the native iOS one. See the [InputBorder class hierarchy](/docs/updates/breaking-changes/v1-0-0/inputborder-class-hierarchy) guide ([#6773](https://github.com/flet-dev/flet/pull/6773)) by @ndonkoHenri.
+* Properties whose Flutter default is a fixed constant now declare that constant rather than `Optional[...] = None`, so reading one returns the value the control actually applies instead of `None`: the eight `Paint` style properties, `RoundedRectangleBorder.radius`, `Button.autofocus`, `Text.no_wrap`, `GridView.clip_behavior`, `Semantics.container`, `ExpansionPanelList.spacing`, `TextField.fit_parent_size`, `Page.show_semantics_debugger`, the three `CupertinoAppBar.automatic*` flags, `Path.Rect.border_radius` and `canvas.Text.max_width`. Rendering is unchanged, and properties a widget resolves at runtime from the theme, the platform or its own state keep `None` ([#6773](https://github.com/flet-dev/flet/pull/6773)) by @ndonkoHenri.
+
 ## 0.86.7
 
 ### Bug fixes

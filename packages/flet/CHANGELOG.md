@@ -1,3 +1,7 @@
+## 1.0.0
+
+* Replace the `FormFieldInputBorder` enum and its `parseFormFieldInputBorder()` / `Control.getFormFieldInputBorder()` helpers with `parseInputBorder()`, which builds an `InputBorder` from a serialized border object. `parseFormFieldBorders()` maps a control's `border` property — a single border or a map of control states — onto the `InputDecoration` border slots, including `errorBorder`, `focusedErrorBorder` and `disabledBorder`, and `parseFormFieldBoxBorder()` translates the same property for controls decorated with a `BoxDecoration` instead ([#6773](https://github.com/flet-dev/flet/pull/6773)) by @ndonkoHenri.
+
 ## 0.86.7
 
 * `FletJS.canvasKitBaseUrl` is now `String?`. `flutter_bootstrap.js` applies `flet.canvasKitBaseUrl` and `flet.fontFallbackBaseUrl` whenever they are set rather than only when `flet.noCdn` is true, and both default to `null` in CDN mode — so a host serving its own copy of the runtime can point them anywhere without also claiming a no-CDN build. The getter has no readers in this package; the annotation now matches the value it can carry.
