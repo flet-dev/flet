@@ -55,10 +55,12 @@ class CupertinoTextField(TextField):
     ```
 
     Note:
-        This control draws its :attr:`~flet.FormFieldControl.border` as a
-        static box decoration. In the :class:`~flet.ControlState` dictionary
-        form, only the `DEFAULT` entry is used — there are no focused, error,
-        or disabled border variants.
+        This control draws its :attr:`~flet.FormFieldControl.border` as a box
+        decoration. In the :class:`~flet.ControlState` dictionary form, the
+        :attr:`flet.ControlState.DEFAULT`, :attr:`flet.ControlState.FOCUSED`
+        and :attr:`flet.ControlState.DISABLED` entries apply;
+        :attr:`flet.ControlState.ERROR` is ignored, as this control does not
+        render an error state.
     """
 
     placeholder_text: Optional[str] = None

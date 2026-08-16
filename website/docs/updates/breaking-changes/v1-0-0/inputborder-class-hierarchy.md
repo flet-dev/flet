@@ -225,8 +225,9 @@ border.
   draws the bottom side only, now honoring a non-default `border_radius` for
   the fill. A `border_radius` equal to the outline default (`4`) is
   indistinguishable from unset and keeps the native radius of `5`. In the
-  `ControlState` dictionary form, only the `DEFAULT` entry is used — the box
-  decoration has no focused, error, or disabled variants.
+  `ControlState` dictionary form, the `DEFAULT`, `FOCUSED` and `DISABLED`
+  entries apply; `ERROR` is ignored, as this control does not render an error
+  state.
 
 ## Timeline
 

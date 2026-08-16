@@ -104,6 +104,71 @@ FormFieldBorders parseFormFieldBorders(Control control, ThemeData theme) {
   return borders;
 }
 
+/// A [BoxDecoration]'s border values, translated from an input border.
+class FormFieldBoxBorder {
+  final BoxBorder? border;
+  final BorderRadius? borderRadius;
+
+  const FormFieldBoxBorder({this.border, this.borderRadius});
+}
+
+/// Translates the "border" property of [control] into [BoxDecoration] values,
+/// for controls decorated with a [BoxDecoration] rather than an
+/// [InputDecoration].
+///
+/// A [BoxDecoration] holds one static border, so the entry matching the
+/// control's current state is resolved here instead of by the framework;
+/// "error" has no counterpart on this side and is ignored. A null
+/// [FormFieldBoxBorder.border] means "keep the widget's own default border",
+/// since [BoxDecoration.copyWith] leaves null arguments unchanged.
+FormFieldBoxBorder parseFormFieldBoxBorder(Control control, ThemeData theme,
+    {bool focused = false}) {
+  var value = control.get("border");
+
+  dynamic defaultEntry = value;
+  dynamic entry = value;
+  if (value is Map && !value.containsKey("_type")) {
+    defaultEntry = value["default"];
+    entry = (control.disabled ? value["disabled"] : null) ??
+        (focused ? value["focused"] : null) ??
+        defaultEntry;
+  }
+
+  // A state entry without a side inherits the default entry's side, as on the
+  // Material side.
+  var explicitSide = (entry is Map ? entry["side"] : null) ??
+      (defaultEntry is Map ? defaultEntry["side"] : null);
+  var borderSide =
+      parseBorderSide(explicitSide, theme, defaultValue: const BorderSide())!;
+
+  switch (entry is Map ? entry["_type"] : "outline") {
+    case "underline":
+      // The underline's default top-corner radius is treated as unconfigured,
+      // and a non-zero radius cannot be painted with a hairline solid side.
+      var radius = parseBorderRadius(entry["border_radius"]);
+      return FormFieldBoxBorder(
+          border: Border(bottom: borderSide),
+          borderRadius: radius == null ||
+                  radius == kUnderlineInputBorderDefaultRadius ||
+                  (borderSide.width == 0.0 &&
+                      borderSide.style == BorderStyle.solid)
+              ? BorderRadius.zero
+              : radius);
+    case "none":
+      // A nothing-painting border: copyWith cannot clear an existing border,
+      // so it must be replaced instead.
+      return const FormFieldBoxBorder(
+          border: Border.fromBorderSide(BorderSide.none));
+    default:
+      // Outline: without an explicit side, keep the widget's native border.
+      return FormFieldBoxBorder(
+          border:
+              explicitSide != null ? Border.fromBorderSide(borderSide) : null,
+          borderRadius:
+              entry is Map ? parseBorderRadius(entry["border_radius"]) : null);
+  }
+}
+
 TextInputType? parseTextInputType(String? value,
     [TextInputType? defaultValue]) {
   const typeMap = {

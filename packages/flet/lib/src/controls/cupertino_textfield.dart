@@ -217,46 +217,8 @@ class _CupertinoTextFieldControlState extends State<CupertinoTextFieldControl> {
       _selection = selection;
     }
 
-    // CupertinoTextField takes a BoxDecoration, not an InputDecoration, so the
-    // InputBorder value is translated to a BoxBorder. Only the default-state
-    // entry of a state map is used.
-    var borderValue = widget.control.get("border");
-    if (borderValue is Map && !borderValue.containsKey("_type")) {
-      borderValue = borderValue["default"];
-    }
-    var explicitSide = borderValue is Map ? borderValue["side"] : null;
-    var borderSide = parseBorderSide(explicitSide, Theme.of(context),
-        defaultValue: const BorderSide())!;
-
-    BoxBorder? border;
-    BorderRadius? borderRadius;
-    switch (borderValue is Map ? borderValue["_type"] : "outline") {
-      case "underline":
-        border = Border(bottom: borderSide);
-        // The underline's default top-corner radius is treated as
-        // unconfigured, and a non-zero radius cannot be painted together
-        // with a hairline solid side.
-        var radius = parseBorderRadius(borderValue["border_radius"]);
-        borderRadius = radius == null ||
-                radius == kUnderlineInputBorderDefaultRadius ||
-                (borderSide.width == 0.0 &&
-                    borderSide.style == BorderStyle.solid)
-            ? BorderRadius.zero
-            : radius;
-      case "none":
-        // A nothing-painting border: copyWith() below cannot clear the default
-        // decoration's border, so replace it instead.
-        border = const Border.fromBorderSide(BorderSide.none);
-      default:
-        // Outline: without an explicit side, keep CupertinoTextField's native
-        // hairline border; an explicit radius still applies to it.
-        if (explicitSide != null) {
-          border = Border.fromBorderSide(borderSide);
-        }
-        borderRadius = borderValue is Map
-            ? parseBorderRadius(borderValue["border_radius"])
-            : null;
-    }
+    var boxBorder = parseFormFieldBoxBorder(widget.control, Theme.of(context),
+        focused: _focused);
 
     var canRevealPassword =
         widget.control.getBool("can_reveal_password", false)!;
@@ -310,8 +272,8 @@ class _CupertinoTextFieldControlState extends State<CupertinoTextFieldControl> {
             image: widget.control.getDecorationImage("image", context),
             backgroundBlendMode:
                 bgcolor != null || gradient != null ? blendMode : null,
-            border: border,
-            borderRadius: borderRadius,
+            border: boxBorder.border,
+            borderRadius: boxBorder.borderRadius,
             boxShadow:
                 widget.control.getBoxShadows("shadows", Theme.of(context))),
         cursorHeight: widget.control.getDouble("cursor_height"),
