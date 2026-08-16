@@ -92,8 +92,6 @@ class RoundedRectangleBorder(OutlinedBorder):
     radius: BorderRadiusValue = 0
     """
     The radius for each corner.
-
-    Defaults to `0` — square corners.
     """
 
     def __post_init__(self):

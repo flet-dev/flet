@@ -107,8 +107,6 @@ class OutlineInputBorder(InputBorder):
     border_radius: BorderRadiusValue = 4
     """
     The radii of the border's rounded rectangle corners.
-
-    Defaults to `4` — all corners rounded.
     """
 
     gap_padding: Number = 4.0
@@ -116,7 +114,7 @@ class OutlineInputBorder(InputBorder):
     Horizontal padding on either side of the border's gap cut out for the
     floating :attr:`flet.FormFieldControl.label`.
 
-    Must be non-negative. Defaults to `4.0`.
+    Must be non-negative.
     """
 
     def __post_init__(self):

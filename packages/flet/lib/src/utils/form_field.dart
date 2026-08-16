@@ -104,7 +104,7 @@ FormFieldBorders parseFormFieldBorders(Control control, ThemeData theme) {
   return borders;
 }
 
-/// A [BoxDecoration]'s border values, translated from an input border.
+/// A [BoxDecoration]'s border values, translated from an [InputBorder].
 class FormFieldBoxBorder {
   final BoxBorder? border;
   final BorderRadius? borderRadius;
