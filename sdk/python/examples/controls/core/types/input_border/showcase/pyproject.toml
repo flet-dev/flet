@@ -1,0 +1,26 @@
+[project]
+name = "types-input-border-showcase"
+version = "1.0.0"
+description = "Compares the InputBorder styles by applying them to TextFields."
+requires-python = ">=3.10"
+keywords = ["input border", "types", "text field", "showcase"]
+authors = [{ name = "Flet team", email = "hello@flet.dev" }]
+dependencies = ["flet"]
+
+[dependency-groups]
+dev = ["flet-cli", "flet-desktop", "flet-web"]
+
+[tool.flet.gallery]
+categories = ["Input/TextField"]
+
+[tool.flet.metadata]
+title = "Input border showcase"
+controls = ["SafeArea", "Column", "TextField"]
+layout_pattern = "gallery"
+complexity = "basic"
+features = ["outline border", "underline border", "borderless"]
+
+[tool.flet]
+org = "dev.flet"
+company = "Flet"
+copyright = "Copyright (C) 2023-2026 by Flet"

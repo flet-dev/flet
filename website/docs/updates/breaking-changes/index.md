@@ -22,6 +22,12 @@ This page lists the guides created for each release.
 The following guides are available. They're sorted by release, with the most recent release first.
 Each guide explains the change, the reason for it, and how to migrate your code.
 
+### Released in Flet 1.0.0
+
+#### Breaking changes
+
+- [`InputBorder` is now a class hierarchy; loose border props removed](/docs/updates/breaking-changes/v1-0-0/inputborder-class-hierarchy)
+
 ### Released in Flet 0.86.0
 
 #### Breaking changes

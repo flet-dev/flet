@@ -1,0 +1,26 @@
+[project]
+name = "types-input-border-styling"
+version = "1.0.0"
+description = "Styles input borders with custom sides, corner radii, and per-state borders."
+requires-python = ">=3.10"
+keywords = ["input border", "types", "text field", "border side", "control state"]
+authors = [{ name = "Flet team", email = "hello@flet.dev" }]
+dependencies = ["flet"]
+
+[dependency-groups]
+dev = ["flet-cli", "flet-desktop", "flet-web"]
+
+[tool.flet.gallery]
+categories = ["Input/TextField"]
+
+[tool.flet.metadata]
+title = "Input border styling"
+controls = ["SafeArea", "Column", "TextField"]
+layout_pattern = "gallery"
+complexity = "basic"
+features = ["custom border side", "corner radius", "per-state borders"]
+
+[tool.flet]
+org = "dev.flet"
+company = "Flet"
+copyright = "Copyright (C) 2023-2026 by Flet"
