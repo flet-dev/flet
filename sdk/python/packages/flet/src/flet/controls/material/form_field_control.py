@@ -441,7 +441,7 @@ class FormFieldControl(LayoutControl):
         :attr:`counter`, :attr:`icon`, :attr:`prefix`, or :attr:`suffix`.
     """
 
-    fit_parent_size: Optional[bool] = None
+    fit_parent_size: bool = False
     """
     Whether the editable area should expand to fill the height of its parent.
 

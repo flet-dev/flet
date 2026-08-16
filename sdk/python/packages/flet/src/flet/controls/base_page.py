@@ -199,7 +199,7 @@ class BasePage(AdaptiveControl):
     Configures supported locales and the current locale.
     """
 
-    show_semantics_debugger: Optional[bool] = None
+    show_semantics_debugger: bool = False
     """
     Whether to turn on an overlay that shows the accessibility information reported by \
     the framework.
