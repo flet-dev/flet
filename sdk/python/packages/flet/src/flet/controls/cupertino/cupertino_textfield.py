@@ -4,7 +4,9 @@ from typing import Optional
 
 from flet.controls.base_control import control
 from flet.controls.box import BoxShadowValue, DecorationImage
+from flet.controls.control_state import ControlStateValue
 from flet.controls.gradients import Gradient
+from flet.controls.material.form_field_control import InputBorder, OutlineInputBorder
 from flet.controls.material.textfield import TextField
 from flet.controls.padding import Padding, PaddingValue
 from flet.controls.text_style import TextStyle
@@ -50,17 +52,10 @@ class CupertinoTextField(TextField):
     """
     An iOS-style text field.
 
+    Example:
     ```python
     ft.CupertinoTextField(placeholder_text="Search")
     ```
-
-    Note:
-        This control draws its :attr:`~flet.FormFieldControl.border` as a box
-        decoration. In the :class:`~flet.ControlState` dictionary form, the
-        :attr:`flet.ControlState.DEFAULT`, :attr:`flet.ControlState.FOCUSED`
-        and :attr:`flet.ControlState.DISABLED` entries apply;
-        :attr:`flet.ControlState.ERROR` is ignored, as this control does not
-        render an error state.
     """
 
     placeholder_text: Optional[str] = None
@@ -141,4 +136,23 @@ class CupertinoTextField(TextField):
     and :attr:`flet.FormFieldControl.suffix`
     or the clear button when :attr:`clear_button_visibility_mode`
     is not :attr:`flet.OverlayVisibilityMode.NEVER`.
+    """
+
+    border: ControlStateValue[InputBorder] = field(
+        default_factory=OutlineInputBorder, kw_only=True
+    )
+    """
+    The border drawn around this text field.
+
+    Accepts a single :class:`~flet.InputBorder` or a dictionary mapping
+    :class:`~flet.ControlState`s to :class:`~flet.InputBorder`s. The
+    :attr:`flet.ControlState.DEFAULT`, :attr:`flet.ControlState.FOCUSED` and
+    :attr:`flet.ControlState.DISABLED` entries apply;
+    :attr:`flet.ControlState.ERROR` is ignored, as this control does not
+    render an error state.
+
+    An :class:`~flet.OutlineInputBorder` without a `side` keeps the native iOS
+    border; give it a `side` to draw your own on all four edges. An
+    :class:`~flet.UnderlineInputBorder` draws the bottom edge only, and
+    :meth:`flet.InputBorder.none` removes the border entirely.
     """
