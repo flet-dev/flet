@@ -7,7 +7,9 @@ if TYPE_CHECKING:
     pass
 
 
-@dataclass()
+# eq=False: hooks are stored per render slot and compared by identity; a
+# field-based __eq__ would make distinct hooks compare equal (see #6776).
+@dataclass(eq=False)
 class Hook(ComponentOwned):
     """
     Base class for component hook state objects.

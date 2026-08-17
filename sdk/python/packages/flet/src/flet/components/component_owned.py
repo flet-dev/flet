@@ -6,7 +6,11 @@ if TYPE_CHECKING:
     from flet.components.component import Component
 
 
-@dataclass()
+# Identity equality (eq=False) is required: these are lifecycle objects tracked
+# in lists and matched with `in`/`list.remove`. The dataclass fields are all
+# InitVars, so a generated __eq__ would compare no fields and make every
+# instance equal, matching/removing the wrong subscription (see #6776).
+@dataclass(eq=False)
 class ComponentOwned:
     """
     Base mixin for objects owned by a component via weak reference.

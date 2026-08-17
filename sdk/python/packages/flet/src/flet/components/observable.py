@@ -49,7 +49,10 @@ def observable(cls):
     return Mixed
 
 
-@dataclass
+# eq=False: subscriptions are matched by identity in _detach_observable_subscription
+# (`subscription in ...`, `list.remove`); a field-based __eq__ collides across
+# distinct subscriptions and detaches the wrong one, leaking the other (see #6776).
+@dataclass(eq=False)
 class ObservableSubscription(ComponentOwned):
     """
     Lifecycle helper that binds an observable object to a component update cycle.
