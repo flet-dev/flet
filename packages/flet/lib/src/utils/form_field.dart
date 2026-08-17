@@ -129,9 +129,11 @@ FormFieldBoxBorder parseFormFieldBoxBorder(Control control, ThemeData theme,
   dynamic entry = value;
   if (value is Map && !value.containsKey("_type")) {
     defaultEntry = value["default"];
-    entry = (control.disabled ? value["disabled"] : null) ??
-        (focused ? value["focused"] : null) ??
-        defaultEntry;
+    // Disabled wins outright, as in InputDecorator: a disabled control never
+    // shows the focused border, even while its focus node reports focus.
+    entry = control.disabled
+        ? (value["disabled"] ?? defaultEntry)
+        : ((focused ? value["focused"] : null) ?? defaultEntry);
   }
 
   // A state entry without a side inherits the default entry's side, as on the
