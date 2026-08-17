@@ -42,7 +42,7 @@ copyright = "Copyright (C) 2026 by MyCompany"
 path = "src"
 
 [tool.flet.dev_packages]
-{{cookiecutter.project_name}} = "..{{cookiecutter.sep}}.." # relative path
+{{cookiecutter.project_name}} = "../.." # relative path
 
 [tool.uv.sources]
-{{cookiecutter.project_name}} = { path = "..{{cookiecutter.sep}}..{{cookiecutter.sep}}", editable = true }
+{{cookiecutter.project_name}} = { path = "../../", editable = true }
