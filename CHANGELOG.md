@@ -2,7 +2,7 @@
 
 ### Bug fixes
 
-* Fix `flet create --template extension` generating an example app whose `pyproject.toml` cannot be parsed on Windows. The `[tool.flet.dev_packages]` and `[tool.uv.sources]` entries that point back at the extension package interpolated the host's `os.sep` into a TOML basic string, so on Windows they rendered as `"..\.."` and `"..\..\"`: the first is an invalid escape sequence, and in the second the trailing `\"` escapes the closing quote and leaves the string unterminated — the "unbalanced quotes" error reporters hit before they could build or run the generated example. Both paths are now written with forward slashes, which need no escaping in TOML and which `pathlib` and `uv` accept on Windows just as they do elsewhere ([#5507](https://github.com/flet-dev/flet/issues/5507)) by @ndonkoHenri.
+* Fix `flet create --template extension` generating an example app whose `pyproject.toml` cannot be parsed on Windows. The `[tool.flet.dev_packages]` and `[tool.uv.sources]` entries that point back at the extension package interpolated the host's `os.sep` into a TOML basic string, so on Windows they rendered as `"..\.."` and `"..\..\"`: the first is an invalid escape sequence, and in the second the trailing `\"` escapes the closing quote and leaves the string unterminated — the "unbalanced quotes" error reporters hit before they could build or run the generated example. Both paths are now written with forward slashes, which need no escaping in TOML and which `pathlib` and `uv` accept on Windows just as they do elsewhere ([#5507](https://github.com/flet-dev/flet/issues/5507), [#6775](https://github.com/flet-dev/flet/pulls/6775)) by @ndonkoHenri.
 
 ## 0.86.7
 
