@@ -26,11 +26,17 @@ Command Windows uses to relaunch the app from a pinned taskbar icon
 stamped on the desktop client window. Defaults to the quoted path from
 [`FLET_APP_USER_MODEL_ID`](#flet_app_user_model_id) when that is the path of an existing file.
 
+Windows desktop apps only; set automatically by [`flet pack`](../cli/flet-pack.md) —
+see [`FLET_APP_USER_MODEL_ID`](#flet_app_user_model_id).
+
 ### `FLET_APP_RELAUNCH_DISPLAY_NAME`
 
 Display name Windows shows for the app in the taskbar context menu and for pins
 ([System.AppUserModel.RelaunchDisplayNameResource](https://learn.microsoft.com/en-us/windows/win32/properties/props-system-appusermodel-relaunchdisplaynameresource)).
 Defaults to the executable name from [`FLET_APP_USER_MODEL_ID`](#flet_app_user_model_id).
+
+Windows desktop apps only; set automatically by [`flet pack`](../cli/flet-pack.md) —
+see [`FLET_APP_USER_MODEL_ID`](#flet_app_user_model_id).
 
 ### `FLET_APP_RELAUNCH_ICON`
 
@@ -38,6 +44,9 @@ Icon resource Windows uses for the taskbar button and pins
 ([System.AppUserModel.RelaunchIconResource](https://learn.microsoft.com/en-us/windows/win32/properties/props-system-appusermodel-relaunchiconresource)),
 e.g. `C:\path\to\app.exe,0`. Defaults to the first icon of the executable from
 [`FLET_APP_USER_MODEL_ID`](#flet_app_user_model_id).
+
+Windows desktop apps only; set automatically by [`flet pack`](../cli/flet-pack.md) —
+see [`FLET_APP_USER_MODEL_ID`](#flet_app_user_model_id).
 
 ### `FLET_APP_STORAGE_DATA`
 
@@ -87,6 +96,9 @@ In a running Flet app, the equivalent of this environment variable is
 
 Windows [AppUserModelID](https://learn.microsoft.com/en-us/windows/win32/shell/appids)
 used by the desktop client process for taskbar grouping and pinning.
+
+Windows desktop apps only — read by the desktop client launcher (`flet-desktop`);
+it has no effect on web or mobile apps.
 
 For apps packaged with [`flet pack`](../cli/flet-pack.md), this value is set automatically
 to the packaged executable's path, so the taskbar associates the client window with

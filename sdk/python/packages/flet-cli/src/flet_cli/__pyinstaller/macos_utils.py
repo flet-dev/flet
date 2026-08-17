@@ -145,7 +145,7 @@ def assemble_app_bundle(app_path, tar_path):
             f"error code {p.returncode}!\noutput: {p.stdout}"
         )
 
-    # pack tar with fixed timestamps, so archives of identical content are
+    # Pack tar with fixed timestamps, so archives of identical content are
     # byte-identical and the runtime cache fingerprint stays stable
     with (
         open(tar_path, "wb") as raw,
