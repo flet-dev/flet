@@ -24,6 +24,9 @@ dev = [
 [tool.pytest.ini_options]
 asyncio_mode = "auto"
 testpaths = ["tests"]
+# Puts the app directory (`tool.flet.app.path`) on `sys.path` so tests can
+# import your app modules, without installing the project.
+pythonpath = ["src"]
 
 [tool.flet]
 {%- if cookiecutter.platform == "linux" %}
