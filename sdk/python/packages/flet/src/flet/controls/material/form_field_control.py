@@ -1,5 +1,5 @@
 from dataclasses import field
-from typing import Optional, Union
+from typing import Annotated, Optional, Union
 
 from flet.controls.base_control import control, value
 from flet.controls.border import BorderSide
@@ -17,6 +17,8 @@ from flet.controls.types import (
     StrOrControl,
     VerticalAlignment,
 )
+from flet.utils.deprecated import deprecated_warning
+from flet.utils.validation import V
 
 __all__ = [
     "FormFieldControl",
@@ -26,8 +28,41 @@ __all__ = [
 ]
 
 
+class _InputBorderMeta(type):
+    """
+    Serves the legacy `InputBorder.OUTLINE` / `UNDERLINE` / `NONE` members.
+
+    They were enum members before 1.0. Resolving them here returns the
+    equivalent class instance so existing code keeps working, with a
+    deprecation warning, until they are removed in 1.3.0.
+    """
+
+    _LEGACY_MEMBERS = ("OUTLINE", "UNDERLINE", "NONE")
+
+    def __getattr__(cls, name: str):
+        if name in _InputBorderMeta._LEGACY_MEMBERS:
+            replacement = {
+                "OUTLINE": "OutlineInputBorder()",
+                "UNDERLINE": "UnderlineInputBorder()",
+                "NONE": "InputBorder.none()",
+            }[name]
+            deprecated_warning(
+                name=f"InputBorder.{name}",
+                reason=f"Use {replacement} instead.",
+                version="1.0.0",
+                delete_version="1.3.0",
+                type="property",
+            )
+            return {
+                "OUTLINE": OutlineInputBorder,
+                "UNDERLINE": UnderlineInputBorder,
+                "NONE": _NoInputBorder,
+            }[name]()
+        raise AttributeError(name)
+
+
 @value
-class InputBorder:
+class InputBorder(metaclass=_InputBorderMeta):
     """
     Base class for borders drawn around the decorated input area of
     :class:`~flet.FormFieldControl`s. Not intended to be used directly.
@@ -183,7 +218,7 @@ class FormFieldControl(LayoutControl):
     The icon to show before the input field and outside of the decoration's container.
     """
 
-    border: ControlStateValue[InputBorder] = field(default_factory=OutlineInputBorder)
+    border: Optional[ControlStateValue[InputBorder]] = None
     """
     The border drawn around the decorated input area.
 
@@ -202,6 +237,81 @@ class FormFieldControl(LayoutControl):
     In the dictionary form, the `DEFAULT` entry behaves like the single form,
     and each state entry without an explicit `side` falls back to the `DEFAULT`
     entry's `side`, if set.
+    """
+
+    border_radius: Annotated[
+        Optional[BorderRadiusValue],
+        V.deprecated(
+            "border",
+            version="1.0.0",
+            delete_version="1.3.0",
+            reason="Use border=OutlineInputBorder(border_radius=...) instead.",
+            docs_reason="Use :attr:`border` with an "
+            ":class:`~flet.OutlineInputBorder` instead.",
+        ),
+    ] = None
+    """
+    Rounds the corners of an outlined border.
+    """
+
+    border_width: Annotated[
+        Optional[Number],
+        V.deprecated(
+            "border",
+            version="1.0.0",
+            delete_version="1.3.0",
+            reason="Use border=OutlineInputBorder(side=BorderSide(width=...)) instead.",
+            docs_reason="Use :attr:`border` with a :class:`~flet.BorderSide` instead.",
+        ),
+    ] = None
+    """
+    The width of the border in virtual pixels.
+    """
+
+    border_color: Annotated[
+        Optional[ColorValue],
+        V.deprecated(
+            "border",
+            version="1.0.0",
+            delete_version="1.3.0",
+            reason="Use border=OutlineInputBorder(side=BorderSide(color=...)) instead.",
+            docs_reason="Use :attr:`border` with a :class:`~flet.BorderSide` instead.",
+        ),
+    ] = None
+    """
+    The border color.
+    """
+
+    focused_border_width: Annotated[
+        Optional[Number],
+        V.deprecated(
+            "border",
+            version="1.0.0",
+            delete_version="1.3.0",
+            reason="Use border={ControlState.FOCUSED: OutlineInputBorder(...)} "
+            "instead.",
+            docs_reason="Use :attr:`border` with a "
+            ":attr:`flet.ControlState.FOCUSED` entry instead.",
+        ),
+    ] = None
+    """
+    Border width in focused state.
+    """
+
+    focused_border_color: Annotated[
+        Optional[ColorValue],
+        V.deprecated(
+            "border",
+            version="1.0.0",
+            delete_version="1.3.0",
+            reason="Use border={ControlState.FOCUSED: OutlineInputBorder(...)} "
+            "instead.",
+            docs_reason="Use :attr:`border` with a "
+            ":attr:`flet.ControlState.FOCUSED` entry instead.",
+        ),
+    ] = None
+    """
+    Border color in focused state.
     """
 
     color: Optional[ColorValue] = None

@@ -6,7 +6,7 @@ from flet.controls.base_control import control
 from flet.controls.box import BoxShadowValue, DecorationImage
 from flet.controls.control_state import ControlStateValue
 from flet.controls.gradients import Gradient
-from flet.controls.material.form_field_control import InputBorder, OutlineInputBorder
+from flet.controls.material.form_field_control import InputBorder
 from flet.controls.material.textfield import TextField
 from flet.controls.padding import Padding, PaddingValue
 from flet.controls.text_style import TextStyle
@@ -138,9 +138,7 @@ class CupertinoTextField(TextField):
     is not :attr:`flet.OverlayVisibilityMode.NEVER`.
     """
 
-    border: ControlStateValue[InputBorder] = field(
-        default_factory=OutlineInputBorder, kw_only=True
-    )
+    border: Optional[ControlStateValue[InputBorder]] = field(default=None, kw_only=True)
     """
     The border drawn around this text field.
 

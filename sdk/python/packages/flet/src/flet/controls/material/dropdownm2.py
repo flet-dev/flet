@@ -1,4 +1,4 @@
-from typing import Optional
+from typing import Annotated, Optional
 
 from flet.controls.alignment import Alignment
 from flet.controls.base_control import control
@@ -152,6 +152,21 @@ class DropdownM2(FormFieldControl):
     Note:
         This shapes the menu only; the input field's border is configured
         through :attr:`border`.
+    """
+
+    border_radius: Annotated[
+        Optional[BorderRadiusValue],
+        V.deprecated(
+            "menu_border_radius",
+            version="1.0.0",
+            delete_version="1.3.0",
+            reason="Use menu_border_radius for the menu, or border for the field.",
+            docs_reason="Use :attr:`menu_border_radius` to shape the menu, or "
+            ":attr:`border` to shape the input field.",
+        ),
+    ] = None
+    """
+    The radii of the open dropdown menu's rounded rectangle shape.
     """
 
     item_height: Optional[Number] = None

@@ -1,8 +1,8 @@
 ---
-title: "InputBorder is now a class hierarchy; loose border props removed"
+title: "InputBorder is now a class hierarchy instead of an enum"
 ---
 
-# `InputBorder` is now a class hierarchy; loose border props removed
+# `InputBorder` is now a class hierarchy instead of an enum
 
 :::note
 This guide is accurate as of Flet 1.0.0. Later releases might add new APIs or
@@ -23,12 +23,13 @@ mirrors Flutter's
   bottom edge (`side`, `border_radius`)
 - [`ft.InputBorder.none()`][flet.InputBorder.none] — draws nothing
 
-At the same time, the loose border properties on `TextField`, `Dropdown`,
-`DropdownM2`, and `CupertinoTextField` were **removed**: `border_radius`,
-`border_width`, `border_color`, `focused_border_width`, and
-`focused_border_color`. Everything they expressed (and more) now lives on the
-`border` property, which accepts a single `InputBorder` or a dictionary mapping
+Everything the old API expressed — and more — now lives on the `border`
+property, which accepts a single `InputBorder` or a dictionary mapping
 [`ControlState`][flet.ControlState]s to `InputBorder`s.
+
+Where old and new are combined, the new API wins: a `border` that specifies a
+side or per-state entries ignores the deprecated properties entirely, while a
+bare `border=ft.InputBorder.UNDERLINE` still picks up a legacy `border_color`.
 
 ## Background
 
@@ -231,7 +232,8 @@ border.
 
 ## Timeline
 
-- Changed in: `1.0.0`
+- Deprecated in: `1.0.0`
+- Removal in: `1.3.0`
 
 ## References
 

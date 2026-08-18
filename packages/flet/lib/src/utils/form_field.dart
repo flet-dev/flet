@@ -40,6 +40,61 @@ InputBorder? parseInputBorder(dynamic value, ThemeData? theme,
   }
 }
 
+/// The loose border properties deprecated in 1.0.0 and removed in 1.3.0:
+/// `border_radius`, `border_width`, `border_color`, `focused_border_width`
+/// and `focused_border_color`.
+///
+/// They fill in only what the `border` property left unspecified, so a control
+/// written against the new API is never affected by a stray legacy value.
+class _LegacyBorderProps {
+  final BorderRadius? radius;
+  final double? width;
+  final Color? color;
+  final double? focusedWidth;
+  final Color? focusedColor;
+
+  const _LegacyBorderProps(this.radius, this.width, this.color,
+      this.focusedWidth, this.focusedColor);
+
+  factory _LegacyBorderProps.of(Control control, ThemeData theme) =>
+      _LegacyBorderProps(
+        control.getBorderRadius("border_radius"),
+        control.getDouble("border_width"),
+        parseColor(control.getString("border_color"), theme),
+        control.getDouble("focused_border_width"),
+        parseColor(control.getString("focused_border_color"), theme),
+      );
+
+  bool get isEmpty =>
+      radius == null &&
+      width == null &&
+      color == null &&
+      focusedWidth == null &&
+      focusedColor == null;
+
+  /// Whether a border line was configured. A radius on its own is not one, so
+  /// it must not conjure a border where the widget had none.
+  bool get hasSide =>
+      width != null ||
+      color != null ||
+      focusedWidth != null ||
+      focusedColor != null;
+
+  BorderSide get side => width == 0
+      ? BorderSide.none
+      : BorderSide(
+          color: color ?? const Color(0xFF000000), width: width ?? 1.0);
+
+  BorderSide focusedSideOr(bool focused, ThemeData theme) =>
+      focused ? focusedSide(theme) : side;
+
+  BorderSide focusedSide(ThemeData theme) => width == 0
+      ? BorderSide.none
+      : BorderSide(
+          color: focusedColor ?? color ?? theme.colorScheme.primary,
+          width: focusedWidth ?? width ?? 2.0);
+}
+
 /// Per-state input borders parsed from a control's "border" property, mapped
 /// onto the [InputDecoration]/[InputDecorationTheme] border slots.
 class FormFieldBorders {
@@ -101,6 +156,19 @@ FormFieldBorders parseFormFieldBorders(Control control, ThemeData theme) {
             color: theme.colorScheme.onSurface.withValues(alpha: 0.12),
             width: 1.0));
   }
+
+  // Deprecated fallback: only fills what the new API left unspecified.
+  var legacy = _LegacyBorderProps.of(control, theme);
+  if (!legacy.isEmpty && stateMap == null && defaultSide == null) {
+    var border = borders.border!;
+    if (legacy.radius != null && border is OutlineInputBorder) {
+      border = border.copyWith(borderRadius: legacy.radius);
+    }
+    borders.border = border.copyWith(borderSide: legacy.side);
+    borders.enabledBorder = borders.border;
+    borders.focusedBorder =
+        borders.border!.copyWith(borderSide: legacy.focusedSide(theme));
+  }
   return borders;
 }
 
@@ -138,10 +206,18 @@ FormFieldBoxBorder parseFormFieldBoxBorder(Control control, ThemeData theme,
 
   // A state entry without a side inherits the default entry's side, as on the
   // Material side.
-  var explicitSide = (entry is Map ? entry["side"] : null) ??
+  dynamic explicitSide = (entry is Map ? entry["side"] : null) ??
       (defaultEntry is Map ? defaultEntry["side"] : null);
   var borderSide =
       parseBorderSide(explicitSide, theme, defaultValue: const BorderSide())!;
+
+  // Deprecated fallback: only fills what the new API left unspecified.
+  var legacy = _LegacyBorderProps.of(control, theme);
+  if (explicitSide == null && legacy.hasSide) {
+    borderSide =
+        control.disabled ? legacy.side : legacy.focusedSideOr(focused, theme);
+    explicitSide = true;
+  }
 
   switch (entry is Map ? entry["_type"] : "outline") {
     case "underline":
@@ -166,8 +242,10 @@ FormFieldBoxBorder parseFormFieldBoxBorder(Control control, ThemeData theme,
       return FormFieldBoxBorder(
           border:
               explicitSide != null ? Border.fromBorderSide(borderSide) : null,
-          borderRadius:
-              entry is Map ? parseBorderRadius(entry["border_radius"]) : null);
+          borderRadius: (entry is Map
+                  ? parseBorderRadius(entry["border_radius"])
+                  : null) ??
+              legacy.radius);
   }
 }
 
