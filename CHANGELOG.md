@@ -1,3 +1,9 @@
+## 1.0.0
+
+### Bug fixes
+
+* Fix `CupertinoBottomSheet` painting an opaque rectangular background behind custom content, which obscured rounded corners and transparent padding. Its `Material` wrapper is now transparent while preserving normal text styling ([#4761](https://github.com/flet-dev/flet/issues/4761)) by @ndonkoHenri.
+
 ## 0.86.7
 
 ### Bug fixes
