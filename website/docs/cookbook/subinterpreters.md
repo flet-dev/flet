@@ -29,8 +29,9 @@ to stay in one process — especially on **mobile**, where `multiprocessing`
 cannot spawn child processes at all.
 
 :::important[Platform and version support]
-Subinterpreters require **Python >=3.14** — select it with `requires-python =
-">=3.14"` in your `pyproject.toml` (or `flet build --python-version 3.14`).
+Subinterpreters require **Python 3.14 or later**. When packaging your app using [`flet build`](../cli/flet-build.md),
+ensure that the [bundled Python version](../publish/index.md#choosing-a-python-version) meets this requirement.
+In development (e.g., when using [`flet run`](../cli/flet-run.md)), the Python interpreter in your virtual environment must also meet this requirement.
 
 They work in Flet apps on **macOS, Windows, Linux, iOS, and Android**.
 

@@ -24,6 +24,11 @@ def count_primes(limit: int) -> int:
 
 
 def main(page: ft.Page):
+    def start():
+        button.disabled = True  # block a second run while this one is in flight
+        page.update()
+        page.run_thread(run)
+
     def run():
         """Time the same work sequentially and across a pool, then report the
         speedup. Runs on a background thread so the UI stays responsive."""
@@ -59,15 +64,16 @@ def main(page: ft.Page):
             f"{primes} primes · sequential {seq_time:.1f}s · "
             f"parallel {par_time:.1f}s · {seq_time / par_time:.1f}× faster"
         )
+        button.disabled = False
         page.update()
 
     page.add(
         ft.SafeArea(
             content=ft.Column(
                 controls=[
-                    ft.Button(
+                    button := ft.Button(
                         "Count primes: sequential vs parallel",
-                        on_click=lambda: page.run_thread(run),
+                        on_click=start,
                     ),
                     progress := ft.ProgressBar(value=0, width=300),
                     status := ft.Text(),
