@@ -1,3 +1,9 @@
+## 1.0.0
+
+### Bug fixes
+
+* Fix `flet create <dir>` printing `flet test <dir>` as a next step — a command that does not run. `flet test` takes the target platform as its first positional and the app path as its second, so argparse rejected the directory with `invalid choice: '<dir>'`; the hint had been copied from the `flet run <dir>` line just above it, which works only because `flet run` has a single leading positional. The next steps now `cd` into the new project and run `flet run` and `flet test` bare — which is also the only place `flet test` finds `pytest`, since that comes from the generated app's own `flet[test]` dev dependency rather than from `flet-cli`. Paths in commands the CLI suggests are shell-quoted as well, so `flet create '$demo'` no longer prints `cd $demo`, and the `--` separator hint `flet run` offers for an unrecognized argument no longer suggests `flet run my app.py -- --wev`, which would run `my`. `flet test` now also checks that `pytest` is importable up front, instead of after spending minutes provisioning a Flutter test host by @ndonkoHenri.
+
 ## 0.86.7
 
 ### Bug fixes
