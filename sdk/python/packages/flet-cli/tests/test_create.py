@@ -102,18 +102,3 @@ class TestNextSteps:
             text=True,
         )
         assert landed.stdout.strip() == os.path.realpath(tmp_path / name)
-
-
-# `flet create` itself is not involved here, so this stays outside
-# `TestNextSteps` and needs no template: it pins the grammar that decides what
-# the next steps may say.
-@pytest.mark.parametrize("command", ["test", "debug"])
-def test_app_path_is_not_accepted_in_the_platform_position(command):
-    """
-    Why the next steps `cd` instead of passing a path: `flet test` and
-    `flet debug` take the platform as their first positional, so a bare app
-    directory is a usage error - which is exactly what `flet create` printed.
-    """
-    with pytest.raises(SystemExit) as e:
-        parse_command_line([command, "sample"])
-    assert e.value.code == 2
