@@ -395,6 +395,8 @@ class WebView(ft.LayoutControl):
             - Works only on the following platforms: iOS, Android, and macOS.
             - Disabling the JavaScript execution on the page may result to
                 unexpected web page behaviour.
+            - Defaults to :attr:`flet_webview.JavaScriptMode.UNRESTRICTED`,
+                which is applied before the first page load.
 
         Args:
             mode: The JavaScript mode to set.

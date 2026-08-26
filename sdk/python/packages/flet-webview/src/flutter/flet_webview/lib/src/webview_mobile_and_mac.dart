@@ -132,10 +132,14 @@ class _WebviewMobileAndMacState extends State<WebviewMobileAndMac> {
       ),
     );
 
-    _load(
+    // Android's WebSettings.javaScriptEnabled defaults to false, unlike
+    // WKWebView and the web platform, so a page would silently run no script
+    // there. Enable it before the first load; `set_javascript_mode` can turn
+    // it back off afterwards.
+    controller.setJavaScriptMode(JavaScriptMode.unrestricted).then((_) => _load(
         widget.control.getString("url", "https://flet.dev")!,
         parseLoadRequestMethod(
-            widget.control.getString("method"), LoadRequestMethod.get)!);
+            widget.control.getString("method"), LoadRequestMethod.get)!));
 
     _setOptionalEventHandlers();
   }
