@@ -1,3 +1,9 @@
+## 1.0.0
+
+### Bug fixes
+
+* Fix `WebView` failing to open a local page on Android with `net::ERR_ACCESS_DENIED`, so that `WebView(url="file:///…/index.html")` and `load_request("file://…")` now work as they already did on iOS and macOS. Every URL went through `webview_flutter`'s `loadRequest()`, a bare `WebView.loadUrl()` on Android; `loadFile()` is the only entry point that calls `WebSettings.setAllowFileAccess(true)`, which defaults to **false** whenever the app targets API 30 or above — as Flet builds do (`targetSdk 36`). Chromium rendered its "Webpage not available" error page for a file the app had just written itself, making a permissions problem look like a broken path. `file:` URLs are now routed to `loadFile()` via `Uri.toFilePath()`, so percent-encoded paths such as iOS's `Application%20Support` decode correctly and sibling assets (`<script src="lib.js">`, stylesheets, images) resolve. `load_html(base_url="file://…")` maps to `loadDataWithBaseURL`, which does not enable file access either, so it now grants it explicitly first — through `webview_flutter_android`, imported behind a `dart.library.io` conditional so web builds are unaffected. Remote URLs are unchanged ([#4627](https://github.com/flet-dev/flet/issues/4627)) by @ndonkoHenri.
+
 ## 0.86.7
 
 ### Bug fixes

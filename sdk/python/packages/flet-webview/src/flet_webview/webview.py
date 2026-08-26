@@ -30,7 +30,16 @@ class WebView(ft.LayoutControl):
     """
 
     url: Optional[str] = None
-    """The URL of the web page to load."""
+    """
+    The URL of the web page to load.
+
+    Note:
+        A `file://` URL pointing to a local file is supported on the following
+        platforms only: iOS, Android, and macOS. It loads that file's sibling
+        assets (scripts, stylesheets, images) as well, and is equivalent to
+        calling :meth:`load_file` with the same file once this control is
+        mounted. On web, only URLs the browser can load in an iframe work.
+    """
 
     prevent_links: Optional[list[str]] = None
     """List of url-prefixes that should not be followed/loaded/downloaded."""
@@ -296,8 +305,9 @@ class WebView(ft.LayoutControl):
         Makes an HTTP request and loads the response in the webview.
 
         Args:
-            url: The URL to load.
-            method: The HTTP method to use.
+            url: The URL to load. A `file://` URL is loaded as a local file,
+                the same way :meth:`load_file` does.
+            method: The HTTP method to use. Ignored for `file://` URLs.
 
         Note:
             Works only on the following platforms: iOS, Android, and macOS.
@@ -333,6 +343,8 @@ class WebView(ft.LayoutControl):
         Args:
             value: The HTML string to load.
             base_url: The base URL to use when resolving relative URLs within the value.
+                May be a `file://` URL, in which case the referenced local files are
+                made readable to the webview.
         """
         self._check_mobile_or_mac_platform()
         await self._invoke_method(
