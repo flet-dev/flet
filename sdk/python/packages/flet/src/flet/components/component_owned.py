@@ -6,10 +6,13 @@ if TYPE_CHECKING:
     from flet.components.component import Component
 
 
-# Identity equality (eq=False) is required: these are lifecycle objects tracked
-# in lists and matched with `in`/`list.remove`. The dataclass fields are all
-# InitVars, so a generated __eq__ would compare no fields and make every
-# instance equal, matching/removing the wrong subscription (see #6776).
+# `eq=False` keeps identity-based `__eq__`/`__hash__` from `object`. These are
+# lifecycle objects tracked in lists and matched with `in`/`list.remove`, so two
+# distinct instances must never compare equal - a generated `__eq__` compares
+# fields and would match (and remove) the wrong instance. See #6776.
+#
+# `@dataclass` regenerates `__eq__` on every subclass, so each subclass of
+# `ComponentOwned` must repeat `eq=False`; inheriting it is not enough.
 @dataclass(eq=False)
 class ComponentOwned:
     """
@@ -17,6 +20,8 @@ class ComponentOwned:
 
     Used by hook/subscription state objects that must reference their owning
     component without creating strong-reference cycles.
+
+    Subclasses are compared by identity, not by field values.
     """
 
     owner: InitVar["Component"]
