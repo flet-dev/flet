@@ -1,3 +1,4 @@
+import asyncio
 import inspect
 import logging
 import sys
@@ -504,20 +505,30 @@ class BaseControl:
                     await event_handler(e)
 
             elif inspect.isasyncgenfunction(event_handler):
-                if get_param_count(event_handler) == 0:
-                    async for _ in event_handler():
-                        await session.after_event(session.index.get(self._i))
-                else:
-                    async for _ in event_handler(e):
-                        await session.after_event(session.index.get(self._i))
+                agen = (
+                    event_handler()
+                    if get_param_count(event_handler) == 0
+                    else event_handler(e)
+                )
+                async for _ in agen:
+                    await session.after_event(session.index.get(self._i))
+                    # A `yield` asks for an intermediate UI update, so give the
+                    # connection's send loop a turn to flush the patch before the
+                    # handler resumes. Without it a handler that blocks right after
+                    # the `yield` (e.g. `time.sleep()`) keeps the queued patch from
+                    # reaching the client until the whole handler is done.
+                    await asyncio.sleep(0)
 
             elif inspect.isgeneratorfunction(event_handler):
-                if get_param_count(event_handler) == 0:
-                    for _ in event_handler():
-                        await session.after_event(session.index.get(self._i))
-                else:
-                    for _ in event_handler(e):
-                        await session.after_event(session.index.get(self._i))
+                gen = (
+                    event_handler()
+                    if get_param_count(event_handler) == 0
+                    else event_handler(e)
+                )
+                for _ in gen:
+                    await session.after_event(session.index.get(self._i))
+                    # See the note in the async generator branch above.
+                    await asyncio.sleep(0)
 
             elif callable(event_handler):
                 if get_param_count(event_handler) == 0:
