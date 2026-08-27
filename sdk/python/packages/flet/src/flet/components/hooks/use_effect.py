@@ -7,7 +7,8 @@ from flet.components.hooks.hook import Hook
 from flet.components.utils import current_component
 
 
-@dataclass
+# eq=False: see ComponentOwned - lifecycle objects compare by identity.
+@dataclass(eq=False)
 class EffectHook(Hook):
     """
     Hook state container backing :func:`~flet.use_effect`.

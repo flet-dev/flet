@@ -19,3 +19,5 @@ UDID = "UDID"
 udid = "udid"
 # Python package name (Mozilla CA bundle)
 certifi = "certifi"
+# Apple App Store Connect error-code prefix (e.g. ITMS-90889)
+ITMS = "ITMS"

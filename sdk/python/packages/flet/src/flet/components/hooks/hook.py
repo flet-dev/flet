@@ -7,7 +7,8 @@ if TYPE_CHECKING:
     pass
 
 
-@dataclass()
+# eq=False: see ComponentOwned. Must be repeated on every Hook subclass.
+@dataclass(eq=False)
 class Hook(ComponentOwned):
     """
     Base class for component hook state objects.

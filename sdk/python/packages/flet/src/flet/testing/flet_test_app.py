@@ -18,6 +18,7 @@ import flet as ft
 from flet.controls.control import Control
 from flet.testing.remote_tester import RemoteTester
 from flet.testing.tester import Tester
+from flet.utils.environment import without_host_python_config
 from flet.utils.network import get_free_tcp_port
 from flet.utils.platform_utils import get_bool_env_var
 
@@ -314,19 +315,16 @@ class FletTestApp:
                         f"--dart-define=FLET_TEST_ASSETS_DIR={self.__assets_dir}"
                     ]
 
-        # Do not leak host-Python configuration into Flutter's embedded Python
-        # IDEs such as PyCharm add debugger/sitecustomize modules through
-        # PYTHONPATH, which can break the packaged integration-test app.
-        flutter_env = os.environ.copy()
-        flutter_env.pop("PYTHONPATH", None)
-        flutter_env.pop("PYTHONHOME", None)
-
         self.__flutter_process = await asyncio.create_subprocess_exec(
             *flutter_args,
             cwd=str(self.__flutter_app_dir),
             stdout=stdout,
             stderr=stderr,
-            env=flutter_env,
+            # `flutter test` builds and runs the app under test, which embeds
+            # its own interpreter - the host's Python configuration must not
+            # reach it. PATH and the FLET_*/SERIOUS_PYTHON_* variables that
+            # `flet test` sets for the native build phase are preserved.
+            env=without_host_python_config(),
         )
 
         if self.__flutter_process.stdout is not None:

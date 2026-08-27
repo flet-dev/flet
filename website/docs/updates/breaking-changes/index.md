@@ -27,6 +27,7 @@ Each guide explains the change, the reason for it, and how to migrate your code.
 #### Breaking changes
 
 - [All deprecated APIs removed](/docs/updates/breaking-changes/v1-0-0/removed-deprecated-apis)
+- [iOS: per-method signing settings now override top-level ones](/docs/updates/breaking-changes/v1-0-0/ios-per-method-signing-precedence)
 
 ### Released in Flet 0.86.0
 
