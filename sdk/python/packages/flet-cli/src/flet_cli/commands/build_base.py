@@ -274,7 +274,7 @@ class BaseBuildCommand(BaseFlutterCommand):
             default=[],
             help="Build for specific CPU architectures "
             "(used in macOS and Android builds only). "
-            "Android: arm64-v8a, armeabi-v7a, x86_64; macOS: arm64, x64. "
+            "Android: arm64-v8a, armeabi-v7a, x86_64; macOS: arm64, x86_64. "
             "Example: `--arch arm64-v8a`",
         )
         parser.add_argument(
