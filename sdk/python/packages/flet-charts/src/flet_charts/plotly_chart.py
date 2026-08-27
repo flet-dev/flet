@@ -5,11 +5,12 @@ from typing import Any, Optional
 
 import flet as ft
 
-_PLOTLY_IMPORT_ERROR: Optional[ImportError] = None
+_PLOTLY_IMPORT_ERROR: Optional[Exception] = None
 
 try:
     from plotly.graph_objects import Figure
-except ImportError as e:  # pragma: no cover - depends on optional dependency
+except Exception as e:  # pragma: no cover - depends on optional dependency
+    # Broader than ImportError on purpose -- see the note in `matplotlib_chart`.
     Figure = Any  # type: ignore[assignment]
     _PLOTLY_IMPORT_ERROR = e
 
@@ -21,12 +22,14 @@ def _require_plotly() -> None:
     Ensure plotly dependency is available.
 
     Raises:
-        ModuleNotFoundError: If `plotly` is not installed.
+        ModuleNotFoundError: If `plotly` is not installed, or is installed but
+            could not be imported.
     """
 
     if _PLOTLY_IMPORT_ERROR is not None:
         raise ModuleNotFoundError(
-            'Install "plotly" Python package to use PlotlyChart control.'
+            'PlotlyChart requires the "plotly" Python package, which could not '
+            f"be imported: {_PLOTLY_IMPORT_ERROR!r}"
         ) from _PLOTLY_IMPORT_ERROR
 
 

@@ -1214,6 +1214,23 @@ help installing and using adb on different platforms.
     adb devices
     ```
 
+5. To read your app's Python output — everything it `print()`s, plus any traceback:
+    ```bash
+    adb logcat -s flet.python
+    ```
+
+    Flet redirects the app's `stdout` and `stderr` to logcat under the `flet.python` tag
+    (`stdout` at priority `I`, `stderr` at `E`), so this is the quickest way to see why an
+    app crashed on launch. It needs no root, unlike reading the app's private `console.log`.
+
+    Add `-d` to dump what is already buffered and exit, instead of following the log:
+    ```bash
+    adb logcat -d -s flet.python
+    ```
+
+    Clear the buffer with `adb logcat -c` before launching the app, so you only see output
+    from this run.
+
 ## Troubleshooting
 
 | Symptom                                                                                                                         | Cause and fix                                                                                                                                                             |

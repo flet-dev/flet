@@ -10,17 +10,25 @@ from flet_charts.matplotlib_chart_canvas import (
     MatplotlibChartCanvasResizeEvent,
 )
 
-_MATPLOTLIB_IMPORT_ERROR: Optional[ImportError] = None
+_MATPLOTLIB_IMPORT_ERROR: Optional[Exception] = None
 
 try:
     import matplotlib  # type: ignore[import]
     from matplotlib.figure import Figure  # type: ignore[import]
-except ImportError as e:  # pragma: no cover - depends on optional dependency
+
+    # Inside the guard: selecting the backend imports it and touches
+    # matplotlib's config, so it can fail even when the import above did not.
+    matplotlib.use("module://flet_charts.matplotlib_backends.backend_flet_agg")
+except Exception as e:  # pragma: no cover - depends on optional dependency
+    # Deliberately broader than ImportError: an optional dependency can be
+    # installed yet fail to import. On Flet's Android runtime site-packages ship
+    # inside a zip, so matplotlib reading `mpl-data/matplotlibrc` through a real
+    # `__file__` path raises NotADirectoryError -- which used to take the whole
+    # `flet_charts` import down with it. An optional dependency that cannot be
+    # imported must degrade to "unavailable", never break the package.
     matplotlib = None  # type: ignore[assignment]
     Figure = Any  # type: ignore[assignment]
     _MATPLOTLIB_IMPORT_ERROR = e
-else:
-    matplotlib.use("module://flet_charts.matplotlib_backends.backend_flet_agg")
 
 __all__ = [
     "MatplotlibChart",
@@ -46,12 +54,14 @@ def _require_matplotlib() -> None:
     Ensure optional matplotlib dependency is available.
 
     Raises:
-        ModuleNotFoundError: If `matplotlib` is not installed.
+        ModuleNotFoundError: If `matplotlib` is not installed, or is installed
+            but could not be imported.
     """
 
     if matplotlib is None:
         raise ModuleNotFoundError(
-            'Install "matplotlib" Python package to use MatplotlibChart control.'
+            'MatplotlibChart requires the "matplotlib" Python package, which '
+            f"could not be imported: {_MATPLOTLIB_IMPORT_ERROR!r}"
         ) from _MATPLOTLIB_IMPORT_ERROR
 
 
