@@ -727,7 +727,7 @@ The same lines are in `console.log`, which is easier to grep for a crash that ha
 you can attach:
 
 ```bash
-DATA=$(xcrun simctl get_app_container booted <your.bundle.id> data)
+DATA=$(xcrun simctl get_app_container booted <bundleId> data)
 cat "$DATA/Library/Caches/console.log"
 ```
 
