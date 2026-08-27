@@ -531,6 +531,7 @@ docs:
           SweepGradient: types/sweepgradient.md
       - InputBorder:
           _index: types/inputborder/index.md
+          NoInputBorder: types/noinputborder.md
           OutlineInputBorder: types/outlineinputborder.md
           UnderlineInputBorder: types/underlineinputborder.md
       - types/inputfilter.md

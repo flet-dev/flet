@@ -152,5 +152,5 @@ class CupertinoTextField(TextField):
     An :class:`~flet.OutlineInputBorder` without a `side` keeps the native iOS
     border; give it a `side` to draw your own on all four edges. An
     :class:`~flet.UnderlineInputBorder` draws the bottom edge only, and
-    :meth:`flet.InputBorder.none` removes the border entirely.
+    :class:`~flet.NoInputBorder` removes the border entirely.
     """

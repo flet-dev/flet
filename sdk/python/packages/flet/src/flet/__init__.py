@@ -408,6 +408,7 @@ if TYPE_CHECKING:
     from flet.controls.material.form_field_control import (
         FormFieldControl,
         InputBorder,
+        NoInputBorder,
         OutlineInputBorder,
         UnderlineInputBorder,
     )
@@ -1018,6 +1019,7 @@ __all__ = [
     "NavigationRailDestination",
     "NavigationRailLabelType",
     "NavigationRailTheme",
+    "NoInputBorder",
     "NotchShape",
     "Number",
     "NumbersOnlyInputFilter",
@@ -1550,6 +1552,7 @@ _LAZY = {
     "NavigationRailDestination": "flet.controls.material.navigation_rail",
     "NavigationRailLabelType": "flet.controls.material.navigation_rail",
     "NavigationRailTheme": "flet.controls.theme",
+    "NoInputBorder": "flet.controls.material.form_field_control",
     "NotchShape": "flet.controls.types",
     "Number": "flet.controls.types",
     "NumbersOnlyInputFilter": "flet.controls.material.textfield",

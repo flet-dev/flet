@@ -22,13 +22,13 @@ def main(page: ft.Page):
                     ft.TextField(
                         key="borderless_field",
                         label="Borderless",
-                        border=ft.InputBorder.none(),
+                        border=ft.NoInputBorder(),
                         hint_text="Enter text here",
                     ),
                     ft.TextField(
                         key="borderless_filled_field",
                         label="Borderless filled",
-                        border=ft.InputBorder.none(),
+                        border=ft.NoInputBorder(),
                         filled=True,
                         hint_text="Enter text here",
                     ),

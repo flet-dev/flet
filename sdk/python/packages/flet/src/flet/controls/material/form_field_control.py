@@ -23,6 +23,7 @@ from flet.utils.validation import V
 __all__ = [
     "FormFieldControl",
     "InputBorder",
+    "NoInputBorder",
     "OutlineInputBorder",
     "UnderlineInputBorder",
 ]
@@ -44,7 +45,7 @@ class _InputBorderMeta(type):
             replacement = {
                 "OUTLINE": "OutlineInputBorder()",
                 "UNDERLINE": "UnderlineInputBorder()",
-                "NONE": "InputBorder.none()",
+                "NONE": "NoInputBorder()",
             }[name]
             deprecated_warning(
                 name=f"InputBorder.{name}",
@@ -56,9 +57,9 @@ class _InputBorderMeta(type):
             return {
                 "OUTLINE": OutlineInputBorder,
                 "UNDERLINE": UnderlineInputBorder,
-                "NONE": _NoInputBorder,
+                "NONE": NoInputBorder,
             }[name]()
-        raise AttributeError(name)
+        raise AttributeError(f"type object {cls.__name__!r} has no attribute {name!r}")
 
 
 @value
@@ -67,11 +68,11 @@ class InputBorder(metaclass=_InputBorderMeta):
     Base class for borders drawn around the decorated input area of
     :class:`~flet.FormFieldControl`s. Not intended to be used directly.
 
-    See subclasses/implementations:
+    See subclasses:
 
     - :class:`~flet.OutlineInputBorder`
     - :class:`~flet.UnderlineInputBorder`
-    - :meth:`flet.InputBorder.none`
+    - :class:`~flet.NoInputBorder`
     """
 
     _type: Optional[str] = field(init=False, repr=False, compare=False, default=None)
@@ -79,16 +80,8 @@ class InputBorder(metaclass=_InputBorderMeta):
     def __post_init__(self):
         raise TypeError(
             "InputBorder is not intended to be instantiated directly; use "
-            "OutlineInputBorder, UnderlineInputBorder, or InputBorder.none()."
+            "OutlineInputBorder, UnderlineInputBorder, or NoInputBorder."
         )
-
-    @staticmethod
-    def none() -> "InputBorder":
-        """
-        A border that draws nothing around the decoration's container,
-        mirroring Flutter's `InputBorder.none`.
-        """
-        return _NoInputBorder()
 
 
 @value
@@ -157,11 +150,10 @@ class OutlineInputBorder(InputBorder):
 
 
 @value
-class _NoInputBorder(InputBorder):
+class NoInputBorder(InputBorder):
     """
-    Draws no border around the decoration's container.
-
-    Use :meth:`flet.InputBorder.none` to obtain an instance.
+    Draws no border around the decoration's container,
+    mirroring Flutter's `InputBorder.none`.
     """
 
     def __post_init__(self):

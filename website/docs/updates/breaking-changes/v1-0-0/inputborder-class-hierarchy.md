@@ -21,7 +21,7 @@ mirrors Flutter's
   around all sides (`side`, `border_radius`, `gap_padding`)
 - [`UnderlineInputBorder`][flet.UnderlineInputBorder] — a line along the
   bottom edge (`side`, `border_radius`)
-- [`ft.InputBorder.none()`][flet.InputBorder.none] — draws nothing
+- [`NoInputBorder`][flet.NoInputBorder] — draws nothing
 
 Everything the old API expressed — and more — now lives on the `border`
 property, which accepts a single `InputBorder` or a dictionary mapping
@@ -58,7 +58,7 @@ Code after migration:
 ```python
 ft.TextField(border=ft.OutlineInputBorder())  # the default; can be omitted
 ft.TextField(border=ft.UnderlineInputBorder())
-ft.TextField(border=ft.InputBorder.none())
+ft.TextField(border=ft.NoInputBorder())
 ```
 
 ### Corner radius, color, and width
@@ -85,7 +85,7 @@ ft.TextField(
 ```
 
 To fully remove the border (previously `border_width=0` or
-`border_color=ft.Colors.TRANSPARENT`), use `border=ft.InputBorder.none()`, or
+`border_color=ft.Colors.TRANSPARENT`), use `border=ft.NoInputBorder()`, or
 `side=ft.BorderSide.none()` to keep the outline's shape for the fill.
 
 Unlike the old `border_color`, an explicit `side` on a single border applies
@@ -177,12 +177,12 @@ for style in ft.InputBorder:
 Code after migration:
 
 ```python
-if field.border == ft.InputBorder.none():
+if field.border == ft.NoInputBorder():
     ...
 for style in (
     ft.OutlineInputBorder(),
     ft.UnderlineInputBorder(),
-    ft.InputBorder.none(),
+    ft.NoInputBorder(),
 ):
     ...
 ```
@@ -220,7 +220,7 @@ border.
   keeps the native iOS hairline, exactly as before. Two explicit values change
   appearance: `ft.OutlineInputBorder()` without a `side` now also keeps that
   native hairline, where `InputBorder.OUTLINE` used to paint a solid black
-  1px box (pass a `side` to draw your own); and `ft.InputBorder.none()` now
+  1px box (pass a `side` to draw your own); and `ft.NoInputBorder()` now
   actually removes the border, where `InputBorder.NONE` was silently ignored.
   An outline with an explicit `side` draws on all sides, and an underline
   draws the bottom side only, now honoring a non-default `border_radius` for
@@ -240,6 +240,7 @@ border.
 - API documentation: [`InputBorder`][flet.InputBorder],
   [`OutlineInputBorder`][flet.OutlineInputBorder],
   [`UnderlineInputBorder`][flet.UnderlineInputBorder],
+  [`NoInputBorder`][flet.NoInputBorder],
   [`ControlState`][flet.ControlState]
 - [Flutter `InputBorder` API](https://api.flutter.dev/flutter/material/InputBorder-class.html)
 - Issues and PRs: [#6773](https://github.com/flet-dev/flet/pull/6773)

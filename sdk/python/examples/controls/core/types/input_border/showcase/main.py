@@ -24,7 +24,7 @@ def main(page: ft.Page):
                     ),
                     ft.TextField(
                         label="None",
-                        border=ft.InputBorder.none(),
+                        border=ft.NoInputBorder(),
                         filled=True,
                         hint_text="Draws no border at all",
                     ),
