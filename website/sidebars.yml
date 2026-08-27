@@ -700,6 +700,7 @@ docs:
       - WebView:
         - controls/webview/types/requestmethod.md
         - controls/webview/types/loglevelseverity.md
+        - controls/webview/types/javascriptmode.md
         - controls/webview/types/webviewconsolemessageevent.md
         - controls/webview/types/webviewjavascriptevent.md
         - controls/webview/types/webviewscrollevent.md
