@@ -12,7 +12,8 @@ StateT = TypeVar("StateT")
 Updater = Callable[[StateT], StateT]
 
 
-@dataclass
+# eq=False: see ComponentOwned - lifecycle objects compare by identity.
+@dataclass(eq=False)
 class StateHook(Hook):
     """
     Hook state container backing :func:`flet.use_state`.

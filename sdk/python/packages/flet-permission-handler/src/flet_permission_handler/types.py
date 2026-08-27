@@ -78,7 +78,7 @@ class Permission(Enum):
     user's shared collection.
 
     Note:
-        Only supported on Android 10+ (API 29+) only.
+        Only supported on Android 10+ (API 29+).
     """
 
     ACCESS_NOTIFICATION_POLICY = "accessNotificationPolicy"
@@ -89,7 +89,7 @@ class Permission(Enum):
     Example: Allows app to turn on and off do-not-disturb.
 
     Note:
-        Only supported on Android Marshmallow+ (API 23+) only.
+        Only supported on Android Marshmallow+ (API 23+).
     """
 
     ACTIVITY_RECOGNITION = "activityRecognition"
@@ -97,7 +97,7 @@ class Permission(Enum):
     Permission for accessing the activity recognition.
 
     Note:
-        Only supported on Android 10+ (API 29+) only.
+        Only supported on Android 10+ (API 29+).
     """
 
     APP_TRACKING_TRANSPARENCY = "appTrackingTransparency"
@@ -108,7 +108,7 @@ class Permission(Enum):
     websites.
 
     Note:
-        Only supported on iOS only.
+        Only supported on iOS.
     """
 
     ASSISTANT = "assistant"
@@ -123,7 +123,7 @@ class Permission(Enum):
     Permission for accessing the device's audio files from external storage.
 
     Note:
-        Only supported on Android 13+ (API 33+) only.
+        Only supported on Android 13+ (API 33+).
     """
 
     BACKGROUND_REFRESH = "backgroundRefresh"
@@ -131,7 +131,7 @@ class Permission(Enum):
     Permission for reading the current background refresh status.
 
     Note:
-        Only supported on iOS only.
+        Only supported on iOS.
     """
 
     BLUETOOTH = "bluetooth"
@@ -153,7 +153,7 @@ class Permission(Enum):
     Allows the user to make this device discoverable to other Bluetooth devices.
 
     Note:
-        Only supported on Android 12+ (API 31+) only.
+        Only supported on Android 12+ (API 31+).
     """
 
     BLUETOOTH_CONNECT = "bluetoothConnect"
@@ -162,7 +162,7 @@ class Permission(Enum):
     Allows the user to connect with already paired Bluetooth devices.
 
     Note:
-        Only supported on Android 12+ (API 31+) only.
+        Only supported on Android 12+ (API 31+).
     """
 
     BLUETOOTH_SCAN = "bluetoothScan"
@@ -170,7 +170,7 @@ class Permission(Enum):
     Permission for scanning for Bluetooth devices.
 
     Note:
-        Only supported on Android 12+ (API 31+) only.
+        Only supported on Android 12+ (API 31+).
     """
 
     CALENDAR_FULL_ACCESS = "calendarFullAccess"
@@ -210,7 +210,7 @@ class Permission(Enum):
     Allow for sending notifications that override the ringer.
 
     Note:
-        Only supported on iOS only.
+        Only supported on iOS.
     """
 
     IGNORE_BATTERY_OPTIMIZATIONS = "ignoreBatteryOptimizations"
@@ -218,7 +218,7 @@ class Permission(Enum):
     Permission for accessing ignore battery optimizations.
 
     Note:
-        Only supported on Android only.
+        Only supported on Android.
     """
 
     LOCATION = "location"
@@ -269,7 +269,7 @@ class Permission(Enum):
         https://support.google.com/googleplay/android-developer/answer/9214102#zippy=
 
     Note:
-        Only supported on Android 11+ (API 30+) only.
+        Only supported on Android 11+ (API 30+).
     """  # noqa: E501
 
     MEDIA_LIBRARY = "mediaLibrary"
@@ -290,7 +290,7 @@ class Permission(Enum):
     Permission for connecting to nearby devices via Wi-Fi.
 
     Note:
-        Only supported on Android 13+ (API 33+) only.
+        Only supported on Android 13+ (API 33+).
     """
 
     NOTIFICATION = "notification"
@@ -303,7 +303,7 @@ class Permission(Enum):
     Permission for accessing the device's phone state.
 
     Note:
-        Only supported on Android only.
+        Only supported on Android.
     """
 
     PHOTOS = "photos"
@@ -329,7 +329,7 @@ class Permission(Enum):
     Permission for accessing the device's reminders.
 
     Note:
-        Only supported on iOS only.
+        Only supported on iOS.
     """
 
     REQUEST_INSTALL_PACKAGES = "requestInstallPackages"
@@ -337,7 +337,7 @@ class Permission(Enum):
     Permission for requesting installing packages.
 
     Note:
-        Only supported on Android Marshmallow+ (API 23+) only.
+        Only supported on Android Marshmallow+ (API 23+).
     """
 
     SCHEDULE_EXACT_ALARM = "scheduleExactAlarm"
@@ -345,7 +345,7 @@ class Permission(Enum):
     Permission for scheduling exact alarms.
 
     Note:
-        Only supported on Android 12+ (API 31+) only.
+        Only supported on Android 12+ (API 31+).
     """
 
     SENSORS = "sensors"
@@ -362,7 +362,7 @@ class Permission(Enum):
     Permission for accessing the device's sensors in background.
 
     Note:
-        Only supported on Android 13+ (API 33+) only.
+        Only supported on Android 13+ (API 33+).
     """
 
     SMS = "sms"
@@ -408,7 +408,7 @@ class Permission(Enum):
     Allows an app to create windows shown on top of all other apps.
 
     Note:
-        Only supported on Android only.
+        Only supported on Android.
     """
 
     UNKNOWN = "unknown"
@@ -421,5 +421,5 @@ class Permission(Enum):
     Permission for accessing the device's video files from external storage.
 
     Note:
-        Only supported on Android 13+ (API 33+) only.
+        Only supported on Android 13+ (API 33+).
     """

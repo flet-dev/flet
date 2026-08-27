@@ -1,6 +1,7 @@
 import pytest
 
 from flet_cli.cli import parse_command_line
+from flet_cli.utils.cli import quote_for_shell
 
 
 def _parse(*argv):
@@ -93,6 +94,34 @@ def test_unknown_flet_option_is_rejected(capsys):
     assert "unrecognized arguments: --wev" in err
     # ...and the error suggests the `--` separator
     assert "flet run app.py -- --wev" in err
+
+
+def test_suggested_separator_command_quotes_the_script(capsys):
+    """
+    The suggestion is meant to be pasted, so a script path needing quoting
+    gets it - `flet run my app -- --wev` would run the wrong thing.
+    """
+    with pytest.raises(SystemExit):
+        _parse("run", "my app.py", "--wev")
+
+    expected = f"flet run {quote_for_shell('my app.py')} -- --wev"
+    assert expected in capsys.readouterr().err
+
+
+def test_suggested_separator_command_quotes_forwarded_args(capsys):
+    """
+    The forwarded arguments are quoted too, not just the script path. Only
+    option-shaped tokens reach `unrecognized` - anything containing a space is
+    read as a positional and collected into `script_args` instead - but those
+    can still carry shell metacharacters.
+    """
+    with pytest.raises(SystemExit):
+        _parse("run", "app.py", "--wev;rm")
+
+    err = capsys.readouterr().err
+    assert f"flet run app.py -- {quote_for_shell('--wev;rm')}" in err
+    # The plain listing above it still shows the arguments verbatim.
+    assert "unrecognized arguments: --wev;rm" in err
 
 
 def test_separator_rejected_for_other_commands(capsys):

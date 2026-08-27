@@ -4,7 +4,7 @@ import flet as ft
 async def main(page: ft.Page):
     # on web, disable default browser context menu
     if page.web:
-        await page.browser_context_menu.disable()
+        await ft.BrowserContextMenu().disable()
 
     def handle_item_click(e: ft.Event[ft.PopupMenuItem]):
         action = e.control.content

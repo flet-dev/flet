@@ -13,7 +13,6 @@ from flet.controls.types import (
     IconDataOrControl,
     Number,
 )
-from flet.utils.deprecated import deprecated_class
 from flet.utils.validation import V, ValidationRules
 
 __all__ = ["DropdownM2", "Option"]
@@ -76,12 +75,6 @@ class Option(Control):
     )
 
 
-@deprecated_class(
-    reason="Use Dropdown instead.",
-    docs_reason="Use [`Dropdown`][flet.Dropdown] instead.",
-    version="0.84.0",
-    delete_version="1.0",
-)
 @control("DropdownM2")
 class DropdownM2(FormFieldControl):
     """

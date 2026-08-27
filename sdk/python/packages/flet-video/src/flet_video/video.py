@@ -3,11 +3,9 @@ Video control definition for the flet-video package.
 """
 
 from dataclasses import field
-from typing import Annotated, Optional, Union
+from typing import Optional, Union
 
 import flet as ft
-from flet.utils.deprecated import deprecated
-from flet.utils.validation import V
 from flet_video.types import (
     AdaptiveVideoControls,
     PlaylistMode,
@@ -61,19 +59,6 @@ class Video(ft.LayoutControl):
     Whether the video should start playing automatically.
     """
 
-    show_controls: Annotated[
-        Optional[bool],
-        V.deprecated(
-            version="0.85.0",
-            delete_version="0.88.0",
-            reason="Use controls=None to hide controls.",
-            docs_reason="To hide controls, instead set :attr:`controls` to `None`.",
-        ),
-    ] = None
-    """
-    Whether to show the video player :attr:`controls`.
-    """
-
     controls: Optional[
         Union[
             VideoControls,
@@ -96,10 +81,6 @@ class Video(ft.LayoutControl):
     :attr:`VideoControlsMode.NORMAL` controls are reused before
     falling back to :attr:`VideoControlsMode.DEFAULT`. A mode value of
     `None` hides controls for that mode only.
-
-    Note:
-        During the :attr:`show_controls` deprecation period, `show_controls=False`
-        hides controls even when this property is set.
     """
 
     fullscreen: bool = False
@@ -296,35 +277,6 @@ class Video(ft.LayoutControl):
             method_name="jump_to",
             arguments={"media_index": media_index},
         )
-
-    @deprecated(
-        reason="Use playlist.append(media) instead.",
-        docs_reason="Use :attr:`playlist` directly, for example `video.playlist.append(media)`.",  # noqa: E501
-        version="0.85.0",
-        delete_version="0.88.0",
-        show_parentheses=True,
-    )
-    async def playlist_add(self, media: VideoMedia):
-        """Appends/Adds the provided `media` to the `playlist`."""
-        if not media.resource:
-            raise ValueError("media has no resource")
-        self.playlist.append(media)
-
-    @deprecated(
-        reason="Use playlist.pop(media_index) instead.",
-        docs_reason="Use :attr:`playlist` directly, for example `video.playlist.pop(media_index)`.",  # noqa: E501
-        version="0.85.0",
-        delete_version="0.88.0",
-        show_parentheses=True,
-    )
-    async def playlist_remove(self, media_index: int):
-        """Removes the provided `media` from the `playlist`."""
-        playlist_length = len(self.playlist)
-        if not (-playlist_length <= media_index < playlist_length):
-            raise IndexError("media_index is out of range")
-        if media_index < 0:
-            media_index = playlist_length + media_index
-        self.playlist.pop(media_index)
 
     async def is_playing(self) -> bool:
         """
