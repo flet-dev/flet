@@ -158,6 +158,7 @@ if TYPE_CHECKING:
     from flet.controls.core.flet_app import (
         FletApp,
         FletAppOutputEvent,
+        FletAppWindowEvent,
     )
     from flet.controls.core.gesture_detector import GestureDetector
     from flet.controls.core.grid_view import GridView
@@ -927,6 +928,7 @@ __all__ = [
     "FilterQuality",
     "FletApp",
     "FletAppOutputEvent",
+    "FletAppWindowEvent",
     "FletException",
     "FletPageDisconnectedException",
     "FletUnimplementedPlatformException",
@@ -1461,6 +1463,7 @@ _LAZY = {
     "FilterQuality": "flet.controls.box",
     "FletApp": "flet.controls.core.flet_app",
     "FletAppOutputEvent": "flet.controls.core.flet_app",
+    "FletAppWindowEvent": "flet.controls.core.flet_app",
     "FletException": "flet.controls.exceptions",
     "FletPageDisconnectedException": "flet.controls.exceptions",
     "FletUnimplementedPlatformException": "flet.controls.exceptions",

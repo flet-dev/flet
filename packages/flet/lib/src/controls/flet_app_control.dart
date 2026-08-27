@@ -5,7 +5,9 @@ import '../flet_app.dart';
 import '../flet_app_errors_handler.dart';
 import '../flet_backend.dart';
 import '../models/control.dart';
+import '../utils/edge_insets.dart';
 import '../utils/numbers.dart';
+import '../widgets/embedded_app_scope.dart';
 import 'base_controls.dart';
 
 class FletAppControl extends StatefulWidget {
@@ -67,9 +69,7 @@ class _FletAppControlState extends State<FletAppControl> {
         : <String, dynamic>{};
     var appErrorMessage = widget.control.getString("app_error_message");
 
-    return LayoutControl(
-      control: widget.control,
-      child: FletApp(
+    Widget app = FletApp(
         controlId: widget.control.id,
         reconnectIntervalMs: reconnectIntervalMs,
         reconnectTimeoutMs: reconnectTimeoutMs,
@@ -88,6 +88,60 @@ class _FletAppControlState extends State<FletAppControl> {
             ? Map<String, dynamic>.from(widget.control.get("args"))
             : null,
         forcePyodide: widget.control.getBool("force_pyodide"),
+    );
+
+    // Scope the embedded app's MediaQuery to *this widget's* box.
+    //
+    // Without this the guest inherits the host window's MediaQuery, so
+    // `PageMedia` reports the host's size as the guest's `page.width`/`height`
+    // and fires `on_resize` with it - a 393x852 phone preview believes it is
+    // as big as the window around it. `size` also decides
+    // `MediaQuery.orientation`, so portrait/landscape follows from it.
+    //
+    // `media_padding`, when set, additionally overrides what the guest sees as
+    // its safe-area insets: `padding` is what SafeArea and `page.media.padding`
+    // read, and `viewPadding` is the same thing ignoring viewInsets, so the two
+    // are kept consistent.
+    var mediaPadding = widget.control.getPadding("media_padding");
+    final inner = app;
+    app = LayoutBuilder(
+      builder: (ctx, constraints) {
+        var media = MediaQuery.of(ctx);
+        // Unbounded constraints would make a nonsense size; leave the
+        // inherited one alone in that case.
+        if (constraints.biggest.isFinite) {
+          media = media.copyWith(size: constraints.biggest);
+        }
+        if (mediaPadding != null) {
+          media = media.copyWith(
+              padding: mediaPadding, viewPadding: mediaPadding);
+        }
+        return MediaQuery(data: media, child: inner);
+      },
+    );
+
+    return LayoutControl(
+      control: widget.control,
+      child: EmbeddedAppScope(
+        route: widget.control.getString("route"),
+        window: widget.control.get("window_state") is Map
+            ? Map<String, dynamic>.from(widget.control.get("window_state"))
+            : null,
+        onWindowAction: (name, args) => widget.control
+            .triggerEvent("window_event", {"action": name, "data": args}),
+        onRouteChanged: (r) {
+          // Guarded so the write-back does not bounce straight back down as a
+          // push; EmbeddedAppScope compares routes on the way in too.
+          if (r == widget.control.getString("route")) return;
+          widget.control.updateProperties({"route": r});
+          widget.control.triggerEvent("route_change", r);
+        },
+        onTitleChanged: (t) {
+          if (t == widget.control.getString("title")) return;
+          widget.control.updateProperties({"title": t});
+          widget.control.triggerEvent("title_change", t);
+        },
+        child: app,
       ),
     );
   }

@@ -291,6 +291,9 @@ class FletBackend extends ChangeNotifier {
                   "width": page.get("width"),
                   "height": page.get("height"),
                   "platform": page.get("platform"),
+                  // Explicit key list: a value set on the Dart page control
+                  // reaches Python only if it is named here.
+                  "embedded": controlId != null,
                   "window": page.child("window", visibleOnly: false)!.toMap(),
                   "media": page.get("media"),
                 }).toMap()),
@@ -348,7 +351,15 @@ class FletBackend extends ChangeNotifier {
         }
 
         // update page details
-        page.update({"route": newRoute, "platform": platform},
+        // `embedded` lets the app's own code know it is running as a guest
+        // inside another Flet app, so it can skip things the host owns -
+        // window management above all. The framework keys off it too.
+        page.update(
+            {
+              "route": newRoute,
+              "platform": platform,
+              "embedded": controlId != null
+            },
             shouldNotify: false);
 
         // connect to the server
@@ -417,7 +428,13 @@ class FletBackend extends ChangeNotifier {
       triggerControlEventById(ctrl.id, "resize", newProps);
     }
 
-    if (isDesktopPlatform()) {
+    // Only a root app owns the OS window. For a guest (`controlId != null`)
+    // this would read the *host's* real window and stamp it over the window
+    // state the host is simulating - reporting the host's geometry as the
+    // guest's, undoing maximize/restore on the next resize, and firing a
+    // `resized` event for a window the app is not in. Its window is driven by
+    // EmbeddedWindowService instead.
+    if (isDesktopPlatform() && controlId == null) {
       var windowState = await getWindowState();
       debugPrint("Window state updated: $windowState");
       var window = page.child("window", visibleOnly: false)!;

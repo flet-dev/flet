@@ -425,6 +425,17 @@ class Page(BasePage):
         This property is read-only.
     """
 
+    embedded: bool = False
+    """
+    Whether this app is running as a guest inside another Flet app, embedded
+    with [`FletApp`][flet.FletApp].
+
+    An embedded app does not own the real OS window: `page.window` is not
+    applied, and `page.title` is reported to the host rather than renaming the
+    window around it. Check this to skip anything that assumes the app owns its
+    window.
+    """
+
     web: bool = False
     """
     `True` if the application is running in the web browser.

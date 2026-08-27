@@ -1,12 +1,13 @@
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 from typing import Any, Optional
 
 from flet.controls.base_control import control
 from flet.controls.control_event import ControlEventHandler, Event, EventHandler
 from flet.controls.layout_control import LayoutControl
+from flet.controls.padding import PaddingValue
 from flet.utils.deprecated import deprecated
 
-__all__ = ["FletApp", "FletAppOutputEvent"]
+__all__ = ["FletApp", "FletAppOutputEvent", "FletAppWindowEvent"]
 
 
 @dataclass
@@ -20,6 +21,21 @@ class FletAppOutputEvent(Event["FletApp"]):
 
     is_stderr: bool = False
     """True for stderr writes; False for stdout."""
+
+
+@dataclass
+class FletAppWindowEvent(Event["FletApp"]):
+    """The embedded app asked its window to do something."""
+
+    action: str
+    """Either a `Window` method name (`close`, `maximize`, `minimize`,
+    `center`, `destroy`, ...) or `"set"` when the app wrote window properties
+    directly."""
+
+    # Not `data`: that name is already the base Event's payload, and shadowing
+    # it with a default reorders the base's own non-default fields.
+    args: dict[str, Any] = field(default_factory=dict, metadata={"data_field": "data"})
+    """Method arguments, or the properties written when `action` is `"set"`."""
 
 
 @control("FletApp")
@@ -36,6 +52,59 @@ class FletApp(LayoutControl):
     args: Optional[dict[str, Any]] = None
     """
     Optional dictionary of arguments to pass to the Flet app.
+    """
+
+    route: Optional[str] = None
+    """
+    The embedded app's current route.
+
+    Two-way: setting it navigates the embedded app, and when the embedded app
+    navigates itself this property is updated to match and
+    [`on_route_change`][(c).] fires. Leave it `None` to let the embedded app
+    own its own routing.
+
+    Note:
+        The embedded app routes locally - it never touches the browser address
+        bar or the platform's deep links, both of which belong to the host app.
+    """
+
+    title: Optional[str] = None
+    """
+    The embedded app's `page.title`.
+
+    Written by the client whenever the embedded app sets its title, together
+    with [`on_title_change`][(c).]. A guest's title belongs to whatever window
+    its host draws around it - it does not touch the real OS window, because
+    the window service is suppressed for embedded apps.
+    """
+
+    window_state: Optional[dict[str, Any]] = None
+    """
+    The simulated window the embedded app should believe it lives in.
+
+    Keys are [`Window`][flet.Window] property names - `width`, `height`,
+    `top`, `left`, `maximized`, `minimized`, `full_screen`, `focused`. What
+    you set here is what the embedded app reads back from `page.window`, and
+    changing it raises the matching `page.window.on_event` inside the app
+    (`resize`, `maximize`, `focus`, ...) exactly as a real window would.
+
+    An embedded app never drives the real OS window, so without this its
+    `page.window` is inert.
+    """
+
+    media_padding: Optional[PaddingValue] = None
+    """
+    Overrides the safe-area insets the embedded app sees.
+
+    The embedded app normally inherits the host window's `MediaQuery`, so on a
+    desktop window its insets are zero regardless of what the app is being
+    previewed as. Setting this makes the embedded app lay out as though it had
+    those insets: `page.media.padding` reports them, and
+    [`SafeArea`][flet.SafeArea] avoids them.
+
+    Intended for previewing a phone layout inside a desktop window - a device
+    frame in a designer, say - where the chrome drawn around the app is not
+    something the platform knows about.
     """
 
     assets_dir: Optional[str] = None
@@ -88,6 +157,31 @@ class FletApp(LayoutControl):
     on_error: Optional[ControlEventHandler["FletApp"]] = None
     """
     Called when a connection or any unhandled error occurs.
+    """
+
+    on_title_change: Optional[ControlEventHandler["FletApp"]] = None
+    """
+    Called when the embedded app sets `page.title`. The event `data` is the new
+    title, which is also written back to [`title`][(c).].
+    """
+
+    on_window_event: Optional[EventHandler[FletAppWindowEvent]] = None
+    """
+    Called when the embedded app asks its window to do something - a method
+    call like `page.window.close()`, or a property write like
+    `page.window.maximized = True`.
+
+    A request, not a command: nothing happens unless the host acts on it, which
+    is how a host that does not simulate, say, minimizing simply ignores it.
+    """
+
+    on_route_change: Optional[ControlEventHandler["FletApp"]] = None
+    """
+    Called when the embedded app navigates itself. The event `data` is the new
+    route, which is also written back to [`route`][(c).].
+
+    Does not fire for navigation the host itself caused by setting
+    [`route`][(c).].
     """
 
     on_connect: Optional[ControlEventHandler["FletApp"]] = None
