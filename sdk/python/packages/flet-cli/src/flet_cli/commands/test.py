@@ -1,4 +1,5 @@
 import argparse
+import importlib.util
 import os
 import platform
 import subprocess
@@ -8,6 +9,7 @@ from typing import Optional
 
 from rich.console import Group
 from rich.live import Live
+from rich.markup import escape
 
 from flet_cli.commands.build_base import BaseBuildCommand, console
 
@@ -186,6 +188,20 @@ class Command(BaseBuildCommand):
         self.pytest_args = []
         if options.pytest_keyword:
             self.pytest_args += ["-k", options.pytest_keyword]
+
+        # Check for pytest availability before provisioning, since `flet test` runs
+        # `sys.executable -m pytest` and pytest comes from the app’s `flet[test]`
+        # dependencies. Failing early avoids spending minutes provisioning a
+        # host that cannot run tests.
+        if importlib.util.find_spec("pytest") is None:
+            console.print(
+                "[red]pytest is not installed in the environment running "
+                f"`flet test` ({escape(sys.executable)}).\n"
+                "Install it with the `test` extra - `pip install 'flet\\[test]'` "
+                "- or run `flet test` from inside the app directory so the "
+                "app's own dependencies are used, e.g. `uv run flet test`.[/red]"
+            )
+            sys.exit(1)
 
         if self.test_platform_name in ("android", "ios") and not self.device_id:
             console.print(
