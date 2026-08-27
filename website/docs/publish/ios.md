@@ -735,6 +735,9 @@ On a **physical device**, open **Console.app**, select the device in the sidebar
 on your app's process — or download the app container from Xcode's **Window → Devices and
 Simulators → Download Container** and read `console.log` inside it.
 
+To read the same output from *inside* your app — or to show it on screen — see
+[Console output](index.md#console-output).
+
 ## Troubleshooting
 
 | Symptom                                                        | Cause and fix                                                                                                                                                                                                                                                                                                                                  |

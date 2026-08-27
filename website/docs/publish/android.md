@@ -1206,6 +1206,9 @@ adb pull /data/user/0/<applicationId>/cache/console.log
 
 Prefer logcat — it needs no root and works on physical devices unchanged.
 
+To read the same output from *inside* your app — or to show it on screen — see
+[Console output](index.md#console-output).
+
 ## ADB Tips
 
 [Android Debug Bridge (adb)](https://developer.android.com/tools/adb) is a
