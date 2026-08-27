@@ -16,16 +16,8 @@ try:
     import matplotlib  # type: ignore[import]
     from matplotlib.figure import Figure  # type: ignore[import]
 
-    # Inside the guard: selecting the backend imports it and touches
-    # matplotlib's config, so it can fail even when the import above did not.
     matplotlib.use("module://flet_charts.matplotlib_backends.backend_flet_agg")
 except Exception as e:  # pragma: no cover - depends on optional dependency
-    # Deliberately broader than ImportError: an optional dependency can be
-    # installed yet fail to import. On Flet's Android runtime site-packages ship
-    # inside a zip, so matplotlib reading `mpl-data/matplotlibrc` through a real
-    # `__file__` path raises NotADirectoryError -- which used to take the whole
-    # `flet_charts` import down with it. An optional dependency that cannot be
-    # imported must degrade to "unavailable", never break the package.
     matplotlib = None  # type: ignore[assignment]
     Figure = Any  # type: ignore[assignment]
     _MATPLOTLIB_IMPORT_ERROR = e

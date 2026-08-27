@@ -9,7 +9,6 @@ _MATPLOTLIB_IMPORT_ERROR: Optional[Exception] = None
 try:
     from matplotlib.figure import Figure  # type: ignore
 except Exception as e:  # pragma: no cover - depends on optional dependency
-    # Broader than ImportError on purpose -- see the note in `matplotlib_chart`.
     Figure = Any  # type: ignore[assignment]
     _MATPLOTLIB_IMPORT_ERROR = e
 
