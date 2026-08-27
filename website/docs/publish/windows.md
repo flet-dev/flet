@@ -9,6 +9,11 @@ This guide provides detailed Windows-specific information.
 Complementary and more general information is available [here](index.md).
 :::
 
+:::info[Alternative: flet pack]
+For a PyInstaller-based way to package desktop apps — no Visual
+Studio or Flutter toolchain required — see [`flet pack`](using-pyinstaller.md).
+:::
+
 ## Prerequisites
 
 ### Visual Studio
@@ -31,17 +36,7 @@ Builds a Windows application.
 
 ## Troubleshooting
 
-### Developer mode
-
-If you get the below error:
-
-```
-Building with plugins requires symlink support.
-
-Please enable Developer Mode in your system settings. Run
-  start ms-settings:developers
-to open settings.
-```
-
-Then, you need to enable Developer Mode as it indicates.
-Follow this [guide](https://stackoverflow.com/a/70994092/1435891) on how to do that.
+| Symptom                                           | Cause and fix                                                                                                                                                    |
+|---------------------------------------------------|------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| `Building with plugins requires symlink support`  | Windows **Developer Mode** is off — run `start ms-settings:developers`, enable it (see [this guide](https://stackoverflow.com/a/70994092/1435891)), and rebuild. |
+| `Unable to find suitable Visual Studio toolchain` | The **Desktop development with C++** workload is missing — install it with the Visual Studio Installer (see [Prerequisites](#visual-studio)).                    |

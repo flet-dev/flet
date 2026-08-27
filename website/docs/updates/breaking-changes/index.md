@@ -22,6 +22,13 @@ This page lists the guides created for each release.
 The following guides are available. They're sorted by release, with the most recent release first.
 Each guide explains the change, the reason for it, and how to migrate your code.
 
+### Released in Flet 1.0.0
+
+#### Breaking changes
+
+- [All deprecated APIs removed](/docs/updates/breaking-changes/v1-0-0/removed-deprecated-apis)
+- [iOS: per-method signing settings now override top-level ones](/docs/updates/breaking-changes/v1-0-0/ios-per-method-signing-precedence)
+
 ### Released in Flet 0.86.0
 
 #### Breaking changes

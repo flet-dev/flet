@@ -17,7 +17,6 @@ from rich.table import Column, Table
 import flet.version
 import flet_cli.utils.processes as processes
 from flet.utils import copy_tree, slugify
-from flet.utils.deprecated import deprecated_warning
 from flet_cli.commands.flutter_base import (
     BaseFlutterCommand,
     console,
@@ -286,14 +285,6 @@ class BaseBuildCommand(BaseFlutterCommand):
             default=[],
             help="Files and/or directories to exclude from the package"
             "; can be used multiple times",
-        )
-        parser.add_argument(
-            "--clear-cache",
-            dest="clear_cache",
-            action="store_true",
-            default=None,
-            help="Remove any existing build cache before starting the build process. "
-            "Deprecated: use the `flet clean` command instead",
         )
         parser.add_argument(
             "--project",
@@ -669,6 +660,55 @@ class BaseBuildCommand(BaseFlutterCommand):
             help="Android signing key alias [env: FLET_ANDROID_SIGNING_KEY_ALIAS=]",
         )
         parser.add_argument(
+            "--macos-signing-identity",
+            dest="macos_signing_identity",
+            help='"Developer ID Application" (direct distribution) or '
+            '"Apple Distribution" (App Store) certificate name, its SHA-1 '
+            'fingerprint, or "-" for ad-hoc, used to code-sign the app bundle; '
+            "when not configured (CLI, pyproject.toml, or env), developer-id "
+            "and app-store distribution builds auto-discover the only "
+            "certificate of the required type "
+            "(macos only) [env: FLET_MACOS_SIGNING_IDENTITY=]",
+        )
+        parser.add_argument(
+            "--macos-distribution",
+            dest="macos_distribution",
+            type=str.lower,
+            choices=["none", "developer-id", "app-store"],
+            help="Distribution channel to sign and package for: 'developer-id' "
+            "signs with the hardened runtime, notarizes and staples for direct "
+            "distribution; 'app-store' produces a sandboxed build with an "
+            "embedded provisioning profile and a signed installer .pkg for "
+            "App Store Connect / TestFlight; 'none' (default) signs only when "
+            "a signing identity is configured (macos only)",
+        )
+        parser.add_argument(
+            "--macos-notary-profile",
+            dest="macos_notary_profile",
+            help="Keychain profile name created with `xcrun notarytool "
+            "store-credentials` to authenticate with the Apple notary service; "
+            "alternatively set the APPLE_API_KEY, APPLE_API_KEY_ID and "
+            "APPLE_API_ISSUER environment variables (macos only) "
+            "[env: FLET_MACOS_NOTARY_PROFILE=]",
+        )
+        parser.add_argument(
+            "--macos-provisioning-profile",
+            dest="macos_provisioning_profile",
+            help="Path to a Mac App Store provisioning profile "
+            "(.provisionprofile) to embed at Contents/embedded.provisionprofile; "
+            "required for App Store builds (macos only) "
+            "[env: FLET_MACOS_PROVISIONING_PROFILE=]",
+        )
+        parser.add_argument(
+            "--macos-installer-identity",
+            dest="macos_installer_identity",
+            help='"3rd Party Mac Developer Installer" / "Mac Installer '
+            'Distribution" certificate name or SHA-1 fingerprint used to sign '
+            "the App Store installer package; when not configured, the only "
+            "installer certificate in the keychain is auto-discovered "
+            "(macos only) [env: FLET_MACOS_INSTALLER_IDENTITY=]",
+        )
+        parser.add_argument(
             "--build-number",
             dest="build_number",
             type=int,
@@ -722,21 +762,6 @@ class BaseBuildCommand(BaseFlutterCommand):
         """
 
         super().handle(options)
-
-        if getattr(self.options, "clear_cache", None):
-            deprecated_warning(
-                name="--clear-cache",
-                reason="Use the `flet clean` command instead.",
-                version="0.86.0",
-                delete_version="0.89.0",
-                type="flag",
-            )
-            console.print(
-                "Warning: the `--clear-cache` flag is deprecated since version "
-                "0.86.0 and will be removed in version 0.89.0. "
-                "Use the `flet clean` command instead.",
-                style=warning_style,
-            )
 
         if "target_platform" in self.options:
             self.target_platform = self.options.target_platform
@@ -947,6 +972,7 @@ class BaseBuildCommand(BaseFlutterCommand):
         macos_entitlements = {
             "com.apple.security.app-sandbox": False,
             "com.apple.security.cs.allow-jit": True,
+            "com.apple.security.cs.allow-unsigned-executable-memory": True,
             "com.apple.security.network.client": True,
             "com.apple.security.network.server": True,
             "com.apple.security.files.user-selected.read-write": True,
@@ -1312,26 +1338,26 @@ class BaseBuildCommand(BaseFlutterCommand):
 
         ios_provisioning_profile = (
             self.options.ios_provisioning_profile
-            or self.get_pyproject("tool.flet.ios.provisioning_profile")
             or ios_export_method_opts.get("provisioning_profile")
+            or self.get_pyproject("tool.flet.ios.provisioning_profile")
         )
 
         ios_signing_certificate = (
             self.options.ios_signing_certificate
-            or self.get_pyproject("tool.flet.ios.signing_certificate")
             or ios_export_method_opts.get("signing_certificate")
+            or self.get_pyproject("tool.flet.ios.signing_certificate")
         )
 
         ios_export_options = (
-            self.get_pyproject("tool.flet.ios.export_options")
-            or ios_export_method_opts.get("export_options")
+            ios_export_method_opts.get("export_options")
+            or self.get_pyproject("tool.flet.ios.export_options")
             or {}
         )
 
         ios_team_id = (
             self.options.ios_team_id
-            or self.get_pyproject("tool.flet.ios.team_id")
             or ios_export_method_opts.get("team_id")
+            or self.get_pyproject("tool.flet.ios.team_id")
         )
 
         if (
@@ -1357,8 +1383,9 @@ class BaseBuildCommand(BaseFlutterCommand):
             "route_url_strategy": (
                 self.options.route_url_strategy
                 or self.get_pyproject("tool.flet.web.route_url_strategy")
+                or os.getenv("FLET_WEB_ROUTE_URL_STRATEGY")
                 or "path"
-            ),
+            ).lower(),
             # "canvaskit" (dart2js), not "auto": with "auto" Chromium browsers
             # select the dart2wasm/skwasm build, where every JS <-> Dart byte
             # buffer crossing pays a WasmGC boundary conversion instead of a
@@ -1367,8 +1394,9 @@ class BaseBuildCommand(BaseFlutterCommand):
             "web_renderer": (
                 self.options.web_renderer
                 or self.get_pyproject("tool.flet.web.renderer")
+                or os.getenv("FLET_WEB_RENDERER")
                 or "canvaskit"
-            ),
+            ).lower(),
             "pwa_background_color": (
                 self.options.pwa_background_color
                 or self.get_pyproject("tool.flet.web.pwa_background_color")
@@ -1487,29 +1515,8 @@ class BaseBuildCommand(BaseFlutterCommand):
             name = boot_screen.get("name", "flet")
             options = boot_screen.get(name) or {}
         else:
-            # backward compatibility with the legacy app.boot_screen /
-            # app.startup_screen settings
             name = "flet"
             options = {}
-            legacy_boot = merged("app.boot_screen")
-            legacy_startup = merged("app.startup_screen")
-            if legacy_boot or legacy_startup:
-                console.log(
-                    "[tool.flet.app.boot_screen] and "
-                    "[tool.flet.app.startup_screen] are deprecated; use "
-                    "[tool.flet.boot_screen] with a named screen instead.",
-                    style=warning_style,
-                )
-                if legacy_boot.get("show"):
-                    options["spinner_size"] = 30
-                    message = legacy_boot.get("message")
-                    if message:
-                        options["prepare_message"] = message
-                if legacy_startup.get("show"):
-                    options["spinner_size"] = 30
-                    message = legacy_startup.get("message")
-                    if message:
-                        options["startup_message"] = message
 
         return {
             "name": name,
@@ -1587,17 +1594,6 @@ class BaseBuildCommand(BaseFlutterCommand):
         hash_changed = hash.has_changed()
 
         if hash_changed:
-            # if options.clear_cache is set, delete any existing Flutter bootstrap
-            # project directory
-            if (
-                self.options.clear_cache
-                and self.flutter_dir.exists()
-                and not second_pass
-            ):
-                if self.verbose > 1:
-                    console.log(f"Deleting {self.flutter_dir}", style=verbose2_style)
-                shutil.rmtree(self.flutter_dir, ignore_errors=True)
-
             # create a new Flutter bootstrap project directory, if non-existent
             if not second_pass:
                 self.flutter_dir.mkdir(parents=True, exist_ok=True)

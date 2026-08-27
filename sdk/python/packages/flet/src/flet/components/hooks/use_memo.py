@@ -8,7 +8,8 @@ from flet.components.utils import current_component, shallow_compare_args
 MemoValueT = TypeVar("MemoValueT")
 
 
-@dataclass
+# eq=False: see ComponentOwned - lifecycle objects compare by identity.
+@dataclass(eq=False)
 class MemoHook(Hook, Generic[MemoValueT]):
     """
     Hook state container used by :func:`~flet.use_memo`.

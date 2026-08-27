@@ -6,7 +6,6 @@ from flet.controls.control import Control
 from flet.controls.control_event import Event, EventHandler
 from flet.controls.core.draggable import Draggable
 from flet.controls.transform import Offset
-from flet.utils.deprecated import deprecated
 from flet.utils.validation import V
 
 __all__ = [
@@ -72,54 +71,6 @@ class DragTargetEvent(Event["DragTarget"]):
     def __post_init__(self):
         if self.src_id is not None:
             self.src = cast(Draggable, self.page.get_control(self.src_id))
-
-    @property
-    @deprecated(
-        reason="Use `local_position.x` for target-relative coordinates or "
-        "`global_position.x` for global coordinates instead.",
-        docs_reason="Use [`local_position.x`][flet.DragTargetEvent.local_position] for target-relative coordinates or "  # noqa: E501
-        "[`global_position.x`][flet.DragTargetEvent.global_position] for global coordinates instead.",  # noqa: E501
-        version="0.85.0",
-        delete_version="0.88.0",
-    )
-    def x(self) -> float:
-        """
-        Horizontal pointer position in the global coordinate space.
-        """
-
-        return self.global_position.x
-
-    @property
-    @deprecated(
-        reason="Use `local_position.y` for target-relative coordinates or "
-        "`global_position.y` for global coordinates instead.",
-        docs_reason="Use [`local_position.y`][flet.DragTargetEvent.local_position] for target-relative coordinates or "  # noqa: E501
-        "[`global_position.y`][flet.DragTargetEvent.global_position] for global coordinates instead.",  # noqa: E501
-        version="0.85.0",
-        delete_version="0.88.0",
-    )
-    def y(self) -> float:
-        """
-        Vertical pointer position in the global coordinate space.
-        """
-
-        return self.global_position.y
-
-    @property
-    @deprecated(
-        reason="Use `local_position` for target-relative coordinates or "
-        "`global_position` for global coordinates instead.",
-        docs_reason="Use [`local_position`][flet.DragTargetEvent.local_position] for target-relative coordinates or "  # noqa: E501
-        "[`global_position`][flet.DragTargetEvent.global_position] for global coordinates instead.",  # noqa: E501
-        version="0.85.0",
-        delete_version="0.88.0",
-    )
-    def offset(self) -> Offset:
-        """
-        Pointer position in global coordinates.
-        """
-
-        return self.global_position
 
 
 @dataclass
