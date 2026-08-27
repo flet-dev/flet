@@ -1469,11 +1469,11 @@ In packaged apps (`flet build` output), all output from your Python code such as
 Note: `FLET_APP_CONSOLE` is only set in production builds;
 in development runs, output stays in your terminal.
 
-On Android and iOS the same output also goes to the platform log, which is usually the
-easier way to read it from your development machine — see
-[Reading your app's output](android.md#reading-your-apps-output) for Android and
-[the iOS equivalent](ios.md#reading-your-apps-output). This section is about reaching it
-from *inside* your app instead.
+On Android, iOS and macOS the same output also goes to the platform log, which is usually
+the easier way to read it from your development machine — see "Reading your app's output"
+for [Android](android.md#reading-your-apps-output), [iOS](ios.md#reading-your-apps-output)
+and [macOS](macos.md#reading-your-apps-output). This section is about reaching it from
+*inside* your app instead.
 
 The log file is written in an unbuffered manner, allowing you to read
 it at any point in your Python program using:

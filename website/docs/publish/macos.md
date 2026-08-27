@@ -373,6 +373,45 @@ will be translated accordingly into this:
 ```
 </details>
 
+## Reading your app's output
+
+Flet redirects the app's `stdout` and `stderr` — everything it `print()`s, plus any
+traceback — to Apple's unified log, and also writes them to a `console.log` file in the
+app's cache directory.
+
+**Running the app from a terminal does not show this output**: the redirection is active in
+packaged builds however they are launched, so the terminal only shows Flutter's own
+messages. Use one of the two routes below instead.
+
+Stream the unified log while the app runs:
+
+```bash
+log stream --style compact --predicate 'sender == "dart_bridge"'
+```
+
+`sender == "dart_bridge"` narrows the log to the Python output alone — filtering by process
+instead buries it under system chatter. `stdout` is logged at the default level and `stderr`
+as an error, so both are included. Use `log show --last 5m` in place of `log stream` to read
+output the app has already produced:
+
+```bash
+log show --style compact --last 5m --predicate 'sender == "dart_bridge"'
+```
+
+The same lines are in `console.log`, which is easier to grep for a crash that happens before
+you can attach:
+
+```bash
+cat ~/Library/Caches/<bundleId>/console.log
+```
+
+That path is for an unsandboxed build; a sandboxed one (see [Mac App Store](#mac-app-store))
+keeps its cache inside the app container. Either way the app itself can report the exact
+path — it is in the `FLET_APP_CONSOLE` environment variable.
+
+To read the same output from *inside* your app — or to show it on screen — see
+[Console output](index.md#console-output).
+
 ## Code signing
 
 By default, the built app bundle is **ad-hoc signed**: it runs fine on the Mac
