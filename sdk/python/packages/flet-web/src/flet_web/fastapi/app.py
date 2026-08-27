@@ -65,6 +65,10 @@ def app(
             redirecting to OAuth callback URL.
     """
 
+    env_assets_dir = os.getenv("FLET_ASSETS_DIR")
+    if env_assets_dir:
+        assets_dir = env_assets_dir
+
     env_upload_dir = os.getenv("FLET_UPLOAD_DIR")
     if env_upload_dir:
         upload_dir = env_upload_dir
