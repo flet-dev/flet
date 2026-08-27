@@ -46,6 +46,17 @@ class _InteractiveViewerControlState extends State<InteractiveViewerControl>
   int _interactionUpdateTimestamp = DateTime.now().millisecondsSinceEpoch;
   final double _currentRotation = 0.0;
 
+  /// Gesture settings the viewer was last built with, mirrored here so the
+  /// pointer signal handlers can tell what the viewer does with an event.
+  bool _panEnabled = true;
+  bool _scaleEnabled = true;
+  bool _trackpadScrollCausesScale = false;
+
+  /// The transform as it was just before the pointer signal identified by
+  /// [_signalTransformKey] reached [InteractiveViewer].
+  Object? _signalTransformKey;
+  Matrix4? _transformBeforeSignal;
+
   @override
   void initState() {
     super.initState();
@@ -126,13 +137,19 @@ class _InteractiveViewerControlState extends State<InteractiveViewerControl>
           "InteractiveViewer.content must be provided and visible");
     }
 
+    // Also read by the pointer signal handlers below, which must agree with
+    // what the viewer was actually built with.
+    _panEnabled = widget.control.getBool("pan_enabled", true)!;
+    _scaleEnabled = widget.control.getBool("scale_enabled", true)!;
+    _trackpadScrollCausesScale =
+        widget.control.getBool("trackpad_scroll_causes_scale", false)!;
+
     Widget interactiveViewer = InteractiveViewer(
       key: _viewerKey,
       transformationController: _transformationController,
-      panEnabled: widget.control.getBool("pan_enabled", true)!,
-      scaleEnabled: widget.control.getBool("scale_enabled", true)!,
-      trackpadScrollCausesScale:
-          widget.control.getBool("trackpad_scroll_causes_scale", false)!,
+      panEnabled: _panEnabled,
+      scaleEnabled: _scaleEnabled,
+      trackpadScrollCausesScale: _trackpadScrollCausesScale,
       constrained: widget.control.getBool("constrained", true)!,
       maxScale: widget.control.getDouble("max_scale", 2.5)!,
       minScale: widget.control.getDouble("min_scale", 0.8)!,
@@ -167,37 +184,72 @@ class _InteractiveViewerControlState extends State<InteractiveViewerControl>
               }
             }
           : null,
-      child: KeyedSubtree(key: _childKey, child: content),
+      // Sits below InteractiveViewer's own Listener, so it is dispatched
+      // first and can record the transform before the viewer changes it.
+      child: Listener(
+        onPointerSignal: _recordTransformBeforePointerSignal,
+        child: KeyedSubtree(key: _childKey, child: content),
+      ),
     );
 
+    // Flutter's InteractiveViewer applies pointer signals (mouse wheel,
+    // trackpad scroll) straight from its own Listener and never claims them
+    // through the PointerSignalResolver, while Scrollable does claim them.
+    // With no one claiming first, an enclosing scrollable handled the same
+    // event, so a wheel tick over the viewer zoomed *and* scrolled the page.
+    // Registering a no-op first wins the resolver - the first registration
+    // for an event wins - which leaves the ancestor scrollable out of it.
     interactiveViewer = Listener(
-      onPointerSignal: _resolveHandledPointerSignal,
+      onPointerSignal: _claimHandledPointerSignal,
       child: interactiveViewer,
     );
 
     return LayoutControl(control: widget.control, child: interactiveViewer);
   }
 
-  void _resolveHandledPointerSignal(PointerSignalEvent event) {
-    if (!_handlesPointerSignal(event)) {
+  /// Snapshots the transform before [InteractiveViewer] reacts to [event],
+  /// keyed by the event so [_claimHandledPointerSignal] only trusts a
+  /// snapshot taken for the very signal it is resolving.
+  void _recordTransformBeforePointerSignal(PointerSignalEvent event) {
+    _signalTransformKey = event.original ?? event;
+    _transformBeforeSignal = _transformationController.value.clone();
+  }
+
+  /// Claims [event] so that scrollables above this control ignore it.
+  void _claimHandledPointerSignal(PointerSignalEvent event) {
+    if (!_handlesPointerSignal(event)) return;
+
+    // Runs after the viewer has already transformed itself. When the
+    // transform came out unchanged - a zoom that is already at min/max
+    // scale, or a trackpad pan clamped at the boundary - the viewer did
+    // nothing with the event, so let it through to the enclosing scrollable
+    // instead of swallowing it into a dead zone. The snapshot is missing
+    // when the pointer is over a part of the viewport the content does not
+    // cover; the event is then claimed, as it is the viewer's to handle.
+    if (identical(_signalTransformKey, event.original ?? event) &&
+        _transformBeforeSignal == _transformationController.value) {
       return;
     }
+
     GestureBinding.instance.pointerSignalResolver.register(event, (_) {});
   }
 
+  /// Whether [InteractiveViewer] acts on [event], mirroring the branches of
+  /// its private `_receivedPointerSignal`.
   bool _handlesPointerSignal(PointerSignalEvent event) {
     if (event is PointerScaleEvent) {
-      return widget.control.getBool("scale_enabled", true)!;
+      return _scaleEnabled;
     }
     if (event is! PointerScrollEvent) {
       return false;
     }
+    // A trackpad scroll pans instead of scaling, unless configured otherwise.
     if (event.kind == PointerDeviceKind.trackpad &&
-        !widget.control.getBool("trackpad_scroll_causes_scale", false)!) {
-      return widget.control.getBool("pan_enabled", true)!;
+        !_trackpadScrollCausesScale) {
+      return _panEnabled;
     }
-    return event.scrollDelta.dy != 0.0 &&
-        widget.control.getBool("scale_enabled", true)!;
+    // Horizontal-only wheel scroll is ignored by the viewer.
+    return event.scrollDelta.dy != 0.0 && _scaleEnabled;
   }
 
   /// Returns a copy of [matrix] scaled by [scale] while honoring the viewer's
