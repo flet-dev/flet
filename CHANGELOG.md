@@ -1,3 +1,9 @@
+## 1.0.0
+
+### Documentation
+
+* Add a [**Subinterpreters** cookbook page](https://docs.flet.dev/cookbook/subinterpreters) on using Python 3.14's [`concurrent.interpreters`](https://docs.python.org/3/library/concurrent.interpreters.html) and [`InterpreterPoolExecutor`](https://docs.python.org/3/library/concurrent.futures.html#interpreterpoolexecutor) for true multi-core CPU parallelism inside a single Flet process — the in-process, mobile-capable counterpart to [Multiprocessing](https://docs.flet.dev/cookbook/multiprocessing), which can't spawn child processes on iOS/Android. Walks through three runnable examples — a parallel pool map, streaming progress over a shared cross-interpreter `Queue`, and a reused long-lived interpreter — with the rules and gotchas for each. Works on desktop and mobile with the bundled Python 3.14; not in static (Pyodide) web builds ([#6782](https://github.com/flet-dev/flet/pull/6782)) by @ndonkoHenri.
+
 ## 0.86.7
 
 ### Bug fixes
