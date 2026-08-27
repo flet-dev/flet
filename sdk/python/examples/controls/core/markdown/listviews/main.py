@@ -121,7 +121,7 @@ line 3
 
 def main(page: ft.Page):
     async def navigate_md_link(e: ft.Event[ft.Markdown]):
-        await page.launch_url(e.data)
+        await ft.UrlLauncher().launch_url(e.data)
 
     page.add(
         ft.SafeArea(

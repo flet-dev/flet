@@ -17,7 +17,6 @@ from rich.table import Column, Table
 import flet.version
 import flet_cli.utils.processes as processes
 from flet.utils import copy_tree, slugify
-from flet.utils.deprecated import deprecated_warning
 from flet_cli.commands.flutter_base import (
     BaseFlutterCommand,
     console,
@@ -286,14 +285,6 @@ class BaseBuildCommand(BaseFlutterCommand):
             default=[],
             help="Files and/or directories to exclude from the package"
             "; can be used multiple times",
-        )
-        parser.add_argument(
-            "--clear-cache",
-            dest="clear_cache",
-            action="store_true",
-            default=None,
-            help="Remove any existing build cache before starting the build process. "
-            "Deprecated: use the `flet clean` command instead",
         )
         parser.add_argument(
             "--project",
@@ -771,21 +762,6 @@ class BaseBuildCommand(BaseFlutterCommand):
         """
 
         super().handle(options)
-
-        if getattr(self.options, "clear_cache", None):
-            deprecated_warning(
-                name="--clear-cache",
-                reason="Use the `flet clean` command instead.",
-                version="0.86.0",
-                delete_version="0.89.0",
-                type="flag",
-            )
-            console.print(
-                "Warning: the `--clear-cache` flag is deprecated since version "
-                "0.86.0 and will be removed in version 0.89.0. "
-                "Use the `flet clean` command instead.",
-                style=warning_style,
-            )
 
         if "target_platform" in self.options:
             self.target_platform = self.options.target_platform
@@ -1539,29 +1515,8 @@ class BaseBuildCommand(BaseFlutterCommand):
             name = boot_screen.get("name", "flet")
             options = boot_screen.get(name) or {}
         else:
-            # backward compatibility with the legacy app.boot_screen /
-            # app.startup_screen settings
             name = "flet"
             options = {}
-            legacy_boot = merged("app.boot_screen")
-            legacy_startup = merged("app.startup_screen")
-            if legacy_boot or legacy_startup:
-                console.log(
-                    "[tool.flet.app.boot_screen] and "
-                    "[tool.flet.app.startup_screen] are deprecated; use "
-                    "[tool.flet.boot_screen] with a named screen instead.",
-                    style=warning_style,
-                )
-                if legacy_boot.get("show"):
-                    options["spinner_size"] = 30
-                    message = legacy_boot.get("message")
-                    if message:
-                        options["prepare_message"] = message
-                if legacy_startup.get("show"):
-                    options["spinner_size"] = 30
-                    message = legacy_startup.get("message")
-                    if message:
-                        options["startup_message"] = message
 
         return {
             "name": name,
@@ -1639,17 +1594,6 @@ class BaseBuildCommand(BaseFlutterCommand):
         hash_changed = hash.has_changed()
 
         if hash_changed:
-            # if options.clear_cache is set, delete any existing Flutter bootstrap
-            # project directory
-            if (
-                self.options.clear_cache
-                and self.flutter_dir.exists()
-                and not second_pass
-            ):
-                if self.verbose > 1:
-                    console.log(f"Deleting {self.flutter_dir}", style=verbose2_style)
-                shutil.rmtree(self.flutter_dir, ignore_errors=True)
-
             # create a new Flutter bootstrap project directory, if non-existent
             if not second_pass:
                 self.flutter_dir.mkdir(parents=True, exist_ok=True)

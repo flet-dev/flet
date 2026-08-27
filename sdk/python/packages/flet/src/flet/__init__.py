@@ -9,8 +9,6 @@ from flet.version import flet_version as __version__
 if TYPE_CHECKING:
     from flet.app import (
         AppCallable,
-        app,
-        app_async,
         run,
         run_async,
     )
@@ -334,7 +332,6 @@ if TYPE_CHECKING:
         ValueKey,
     )
     from flet.controls.layout_control import (
-        ConstrainedControl,
         LayoutControl,
         LayoutSizeChangeEvent,
     )
@@ -396,7 +393,6 @@ if TYPE_CHECKING:
         DropdownOption,
     )
     from flet.controls.material.dropdownm2 import DropdownM2
-    from flet.controls.material.elevated_button import ElevatedButton
     from flet.controls.material.expansion_panel import (
         ExpansionPanel,
         ExpansionPanelList,
@@ -819,7 +815,6 @@ __all__ = [
     "Connectivity",
     "ConnectivityChangeEvent",
     "ConnectivityType",
-    "ConstrainedControl",
     "Container",
     "Context",
     "ContextMenu",
@@ -905,7 +900,6 @@ __all__ = [
     "DropdownTheme",
     "Duration",
     "DurationValue",
-    "ElevatedButton",
     "Event",
     "EventControlType",
     "EventHandler",
@@ -1222,8 +1216,6 @@ __all__ = [
     "WindowsDeviceInfo",
     "__version__",
     "alignment",
-    "app",
-    "app_async",
     "border",
     "border_radius",
     "component",
@@ -1353,7 +1345,6 @@ _LAZY = {
     "Connectivity": "flet.controls.services.connectivity",
     "ConnectivityChangeEvent": "flet.controls.services.connectivity",
     "ConnectivityType": "flet.controls.services.connectivity",
-    "ConstrainedControl": "flet.controls.layout_control",
     "Container": "flet.controls.material.container",
     "Context": "flet.controls.context",
     "ContextMenu": "flet.controls.material.context_menu",
@@ -1439,7 +1430,6 @@ _LAZY = {
     "DropdownTheme": "flet.controls.theme",
     "Duration": "flet.controls.duration",
     "DurationValue": "flet.controls.duration",
-    "ElevatedButton": "flet.controls.material.elevated_button",
     "Event": "flet.controls.control_event",
     "EventControlType": "flet.controls.control_event",
     "EventHandler": "flet.controls.control_event",
@@ -1755,8 +1745,6 @@ _LAZY = {
     "WindowResizeEdge": "flet.controls.core.window",
     "WindowsDeviceInfo": "flet.controls.device_info",
     "alignment": "flet.controls",
-    "app": "flet.app",
-    "app_async": "flet.app",
     "border": "flet.controls",
     "border_radius": "flet.controls",
     "component": "flet.components.component_decorator",
