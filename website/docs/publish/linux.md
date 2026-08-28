@@ -2,6 +2,9 @@
 title: "Packaging app for Linux"
 ---
 
+import TabItem from '@theme/TabItem';
+import Tabs from '@theme/Tabs';
+
 Instructions for packaging a Flet app into a Linux executable.
 
 :::tip[Note]
@@ -138,14 +141,19 @@ Its value is determined in the following order of precedence:
 2. `[tool.flet.linux].categories`
 3. `Utility`
 
+<Tabs groupId="flet-build--pyproject-toml">
+<TabItem value="flet-build" label="flet build">
 ```bash
 flet build linux --linux-categories Game Education
 ```
-
+</TabItem>
+<TabItem value="pyproject-toml" label="pyproject.toml">
 ```toml
 [tool.flet.linux]
 categories = ["Game", "Education"]
 ```
+</TabItem>
+</Tabs>
 
 ## Window positioning on Wayland
 
