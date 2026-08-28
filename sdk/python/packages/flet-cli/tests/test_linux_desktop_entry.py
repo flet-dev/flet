@@ -2,15 +2,17 @@
 
 The build template ships `linux/{{cookiecutter.bundle_id}}.desktop`, installed
 into the bundle at `share/applications/` so Wayland desktops can resolve the
-app's launcher name and icon. These tests render that single template file
-with jinja the way cookiecutter would (including the `get_pyproject` global
-registered by the template's `FletExtension`).
+app's launcher name and icon. `Exec` and `Categories` have escaping rules of
+their own and are prepared by `flet build` (see `escape_desktop_exec` and
+`escape_desktop_categories`); the rest is escaped in the template.
 """
 
 from pathlib import Path
-from typing import Any, Optional
 
+import pytest
 from jinja2 import Environment
+
+from flet_cli.commands.build_base import BaseBuildCommand
 
 TEMPLATE_PATH = (
     Path(__file__).resolve().parents[3]
@@ -22,13 +24,11 @@ TEMPLATE_PATH = (
 )
 
 
-def _render(pyproject: Optional[dict] = None, **overrides: str) -> str:
+def _render(**overrides: str) -> str:
     """
     Render the desktop entry template with a cookiecutter-like context.
 
     Args:
-        pyproject: fake parsed pyproject.toml served through the
-            `get_pyproject` jinja global.
         overrides: cookiecutter context values to override.
 
     Returns:
@@ -37,21 +37,12 @@ def _render(pyproject: Optional[dict] = None, **overrides: str) -> str:
     context = {
         "product_name": "My App",
         "project_description": "",
-        "artifact_name": "my_app",
+        "desktop_exec": "my_app",
+        "linux_categories": "Utility;",
         "bundle_id": "com.example.my_app",
         **overrides,
     }
-
-    def get_pyproject(setting: str) -> Any:
-        d: Any = pyproject or {}
-        for key in setting.split("."):
-            d = d.get(key)
-            if d is None:
-                return None
-        return d
-
     env = Environment(keep_trailing_newline=True)
-    env.globals["get_pyproject"] = get_pyproject
     return env.from_string(TEMPLATE_PATH.read_text()).render(cookiecutter=context)
 
 
@@ -102,20 +93,46 @@ def test_backslashes_escaped():
     assert r"Comment=Uses C:\\path\\now" in content
 
 
-def test_exec_quotes_artifact_with_spaces():
-    content = _render(artifact_name="My App")
-    assert 'Exec="My App" %U' in content
+def test_prepared_values_are_interpolated_verbatim():
+    # Exec and Categories arrive already escaped; the template must not
+    # escape them a second time.
+    content = _render(desktop_exec=r"weird\\\"name", linux_categories="Game;Fun;")
+    assert 'Exec="weird\\\\\\"name" %U' in content
+    assert "Categories=Game;Fun;" in content
 
 
-def test_categories_from_pyproject_list():
-    content = _render(
-        pyproject={"tool": {"flet": {"linux": {"categories": ["Game", "Education"]}}}}
-    )
-    assert "Categories=Game;Education;" in content
+@pytest.mark.parametrize(
+    ("raw", "expected"),
+    [
+        ("my_app", "my_app"),
+        ("my app", "my app"),
+        # " ` $ \ are reserved inside the quoted Exec value; each gets a
+        # backslash, and every backslash is then doubled for the entry file.
+        ('mid"dle', 'mid\\\\"dle'),
+        ("my$app", "my\\\\$app"),
+        ("a\\b", "a\\\\\\\\b"),
+        ("tick`s", "tick\\\\`s"),
+    ],
+)
+def test_escape_desktop_exec(raw, expected):
+    assert BaseBuildCommand.escape_desktop_exec(raw) == expected
 
 
-def test_categories_from_pyproject_string():
-    content = _render(
-        pyproject={"tool": {"flet": {"linux": {"categories": "Development"}}}}
-    )
-    assert "Categories=Development;" in content
+def test_escape_desktop_categories():
+    escape = BaseBuildCommand.escape_desktop_categories
+    assert escape(["Game", "Education"]) == "Game;Education;"
+    assert escape("Development") == "Development;"
+    # A literal semicolon would split one category into two.
+    assert escape(["Ut;ility"]) == "Ut\\;ility;"
+    assert escape(["back\\slash"]) == "back\\\\slash;"
+    # Blanks are dropped, and an all-blank list keeps the default.
+    assert escape(["Game", "  ", ""]) == "Game;"
+    assert escape([]) == "Utility;"
+
+
+@pytest.mark.parametrize("bad", [5, None, ["ok", 7], {"a": 1}])
+def test_escape_desktop_categories_rejects_non_strings(bad):
+    # A bad pyproject value must surface as a clear error rather than a
+    # jinja TypeError that wipes the build directory.
+    with pytest.raises(ValueError):
+        BaseBuildCommand.escape_desktop_categories(bad)

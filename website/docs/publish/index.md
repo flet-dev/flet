@@ -716,7 +716,7 @@ For the iOS platform, transparency (alpha channel) will be automatically removed
 | Web      | `icon_web.png`                           | ≥ 512×512 px     |                                                                                             |
 | Windows  | `icon_windows.ico` or `icon_windows.png` | 256×256 px       | `.png` file will be internally converted to a 256×256 px `.ico` icon.                       |
 | macOS    | `icon_macos.png`                         | ≥ 1024×1024 px   |                                                                                             |
-| Linux    | `icon_linux.png`                         | 256×256 px       | Sets the window icon on X11. See [Linux](linux.md#app-icon) for Wayland desktop integration. |
+| Linux    | `icon_linux.png`                         | 256×256 px       | Square PNG. Sets the window icon on X11; see [Linux](linux.md#app-icon) for Wayland desktop integration. |
 
 ### Splash screen
 

@@ -90,25 +90,35 @@ session), the bundle ships a ready-to-install desktop entry and icon under
 
 ```
 share/applications/<bundle_id>.desktop
-share/icons/hicolor/256x256/apps/<bundle_id>.png
+share/icons/hicolor/<size>/apps/<bundle_id>.png
 ```
+
+`<size>` matches the icon's own pixel size when the icon theme declares it
+(`16x16`, `22x22`, `24x24`, `32x32`, `36x36`, `48x48`, `64x64`, `72x72`,
+`96x96`, `128x128`, `192x192`, `256x256`, `512x512`), and is `256x256` for any
+other size — desktop environments scale from it either way, though some
+packaging linters expect the file to match its directory.
 
 To register the app for the current user, copy them into `~/.local/share` and
 point `Exec=` at the absolute path of the executable:
 
 ```bash
 cp -r share/. ~/.local/share/
-sed -i "s|^Exec=.*|Exec=$PWD/<executable> %U|" ~/.local/share/applications/<bundle_id>.desktop
+sed -i "s|^Exec=.*|Exec=\"$PWD/<executable>\" %U|" \
+  ~/.local/share/applications/<bundle_id>.desktop
+update-desktop-database ~/.local/share/applications
 ```
 
 (run from the bundle directory, replacing `<executable>` and `<bundle_id>`; a
-system-wide install to `/usr/share` works the same way). Linux packaging tools
+system-wide install to `/usr/share` works the same way). Keep the quotes around
+`Exec=` — without them a path containing spaces is split into separate
+arguments and the launcher fails. Linux packaging tools
 (`.deb`/`.rpm`/AppImage builders) can pick up the same two files.
 
 The desktop entry's name comes from `--product` and its comment from
 `--description` (or the corresponding `pyproject.toml` settings); the app id is
 the [bundle ID](index.md#bundle-id) — `<org_name>.<project_name>` by default.
-Its [application categories](https://specifications.freedesktop.org/menu-spec/latest/apa.html)
+Its [application categories](https://specifications.freedesktop.org/menu/latest/category-registry.html)
 default to `Utility` and can be changed in `pyproject.toml`:
 
 ```toml

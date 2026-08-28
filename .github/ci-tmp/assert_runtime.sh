@@ -29,6 +29,12 @@ DEADLINE_SECS=60
 
 x() { timeout 5s "$@" 2>/dev/null; }
 
+# _NET_WM_ICON holds width, height and then one CARDINAL per pixel: a 256x256
+# icon is 65538 of them, and asking xprop to format ~700 KB of decimals takes
+# longer than any sane timeout. -len caps the read at the first few values,
+# which is all the width and height we need.
+read_icon() { x xprop -id "$1" -len 16 _NET_WM_ICON; }
+
 dump_tree() {
   echo "-- window tree:"
   x xwininfo -root -children | head -30
@@ -69,7 +75,7 @@ while [ "$SECONDS" -lt "$END" ]; do
   for id in $(x xwininfo -root -children | grep -oE '0x[0-9a-f]+'); do
     if x xprop -id "$id" WM_CLASS | grep -q "\"${EXPECTED_CLASS}\""; then
       WIN="$id"
-      if x xprop -id "$id" _NET_WM_ICON | grep -qv "not found"; then
+      if ! read_icon "$id" | grep -q "not found"; then
         ICON_WIN="$id"
         break
       fi
@@ -91,7 +97,8 @@ echo "== matched window $WIN (icon-bearing: ${ICON_WIN:-none})"
 echo "  PASS  WM_CLASS is the bundle id (g_set_prgname took effect)"
 
 TARGET="${ICON_WIN:-$WIN}"
-ICON_RAW="$(x xprop -id "$TARGET" _NET_WM_ICON || true)"
+ICON_RAW="$(read_icon "$TARGET" || true)"
+echo "   $ICON_RAW"
 if [ -z "$ICON_RAW" ] || echo "$ICON_RAW" | grep -q "not found"; then
   echo "  FAIL  _NET_WM_ICON is absent -- GDK dropped the icon (too large?)"
   status=1

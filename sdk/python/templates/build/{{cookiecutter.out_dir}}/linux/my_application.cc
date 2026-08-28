@@ -60,10 +60,15 @@ static void my_application_activate(GApplication* application) {
     g_autoptr(GError) icon_error = nullptr;
     g_autoptr(GdkPixbuf) icon = gdk_pixbuf_new_from_file(icon_path, &icon_error);
     if (icon == nullptr) {
-      // A missing or undecodable icon is a broken bundle worth logging, not
-      // a case to skip silently.
-      g_warning("Failed to load app icon %s: %s", icon_path,
-                icon_error != nullptr ? icon_error->message : "unknown error");
+      // A bundle may legitimately ship without an icon (a plain
+      // `flutter build`, or a custom build template that has none), so only
+      // an icon that is present but will not decode is worth a warning.
+      if (g_error_matches(icon_error, G_FILE_ERROR, G_FILE_ERROR_NOENT)) {
+        g_debug("No app icon at %s", icon_path);
+      } else {
+        g_warning("Failed to load app icon %s: %s", icon_path,
+                  icon_error != nullptr ? icon_error->message : "unknown error");
+      }
     } else {
       // _NET_WM_ICON is capped at 256 KiB of pixel data, and GDK silently
       // drops any icon that does not fit — anything from 512x512 up — which
@@ -72,11 +77,18 @@ static void my_application_activate(GApplication* application) {
       gint height = gdk_pixbuf_get_height(icon);
       gint largest_side = MAX(width, height);
       if (largest_side > 256) {
+        // 64-bit intermediates: width * 256 overflows gint for very wide
+        // images, and -O3 is free to do anything at all with that.
+        gint scaled_width =
+            MAX(1, (gint)((gint64)width * 256 / largest_side));
+        gint scaled_height =
+            MAX(1, (gint)((gint64)height * 256 / largest_side));
         g_autoptr(GdkPixbuf) scaled = gdk_pixbuf_scale_simple(
-            icon, MAX(1, width * 256 / largest_side),
-            MAX(1, height * 256 / largest_side), GDK_INTERP_BILINEAR);
+            icon, scaled_width, scaled_height, GDK_INTERP_BILINEAR);
         if (scaled != nullptr) {
           gtk_window_set_default_icon(scaled);
+        } else {
+          g_warning("Failed to scale app icon %s", icon_path);
         }
       } else {
         gtk_window_set_default_icon(icon);

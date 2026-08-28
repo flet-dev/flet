@@ -209,6 +209,10 @@ def test_resolve_icon_theme_size():
     assert resolve((500, 500)) == "256x256"
     assert resolve((1024, 1024)) == "256x256"
     assert resolve((512, 256)) == "256x256"
+    # Not declared by hicolor's index.theme: an icon installed into one of
+    # these directories is never scanned, so it must fall back.
+    for undeclared in (28, 42, 160, 384):
+        assert resolve((undeclared, undeclared)) == "256x256"
 
 
 def test_restaged_when_user_icon_changes(tmp_path):

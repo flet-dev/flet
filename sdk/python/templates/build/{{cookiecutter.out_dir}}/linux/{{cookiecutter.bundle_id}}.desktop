@@ -7,20 +7,19 @@
 # is only known at install time. On Wayland an installed entry is required for
 # the taskbar icon; on X11 the window icon works without it.
 {#- Desktop entry values are a single line and use backslash escapes, so
-    escape backslashes first, then flatten every control character. -#}
+    escape backslashes first, then flatten every control character. Exec and
+    Categories have stricter rules and are escaped by `flet build` instead. -#}
 {%- macro entry_value(value) -%}
 {{ value | replace("\\", "\\\\") | replace("\r", " ") | replace("\n", " ") | replace("\t", " ") }}
 {%- endmacro -%}
-{%- set categories = get_pyproject("tool.flet.linux.categories") or ["Utility"] %}
-{%- if categories is string %}{% set categories = [categories] %}{% endif %}
 [Desktop Entry]
 Type=Application
 Name={{ entry_value(cookiecutter.product_name) }}
 {%- if cookiecutter.project_description %}
 Comment={{ entry_value(cookiecutter.project_description) }}
 {%- endif %}
-Exec="{{ cookiecutter.artifact_name }}" %U
+Exec="{{ cookiecutter.desktop_exec }}" %U
 Icon={{ cookiecutter.bundle_id }}
 Terminal=false
-Categories={{ categories | join(";") }};
+Categories={{ cookiecutter.linux_categories }}
 StartupWMClass={{ cookiecutter.bundle_id }}
