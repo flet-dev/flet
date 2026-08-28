@@ -4,6 +4,7 @@ title: "Packaging app for Linux"
 
 import TabItem from '@theme/TabItem';
 import Tabs from '@theme/Tabs';
+import LinuxDependencies from '@site/.crocodocs/linux-dependencies.mdx';
 
 Instructions for packaging a Flet app into a Linux executable.
 
@@ -25,19 +26,30 @@ these must be installed before running `flet build linux`.
 
 On Debian/Ubuntu-based distributions, install the required packages with `apt`:
 
+<Tabs groupId="linux-deps">
+<TabItem value="packages" label="Package list">
+<LinuxDependencies />
+</TabItem>
+<TabItem value="cli" label="From the CLI">
+
+`flet --version` reports the same list, so a setup script never goes stale:
+
 ```bash
 sudo apt update
-sudo apt install -y \
-  binutils clang cmake llvm lld ninja-build pkg-config \
-  libgtk-3-dev libsecret-1-0 libsecret-1-dev libunwind-dev \
-  gstreamer1.0-alsa gstreamer1.0-gl gstreamer1.0-gtk3 gstreamer1.0-libav \
-  gstreamer1.0-plugins-bad gstreamer1.0-plugins-base gstreamer1.0-plugins-good \
-  gstreamer1.0-plugins-ugly gstreamer1.0-pulseaudio gstreamer1.0-qt5 \
-  gstreamer1.0-tools gstreamer1.0-x \
-  libasound2-dev libgstreamer1.0-dev \
-  libgstreamer-plugins-base1.0-dev libgstreamer-plugins-bad1.0-dev \
-  libmpv-dev mpv
+sudo apt install -y $(flet --version --json | jq -r '.linux_dependencies | join(" ")')
 ```
+</TabItem>
+<TabItem value="cli-no-jq" label="From the CLI (without jq)">
+
+Same thing where [`jq`](https://jqlang.org) is not installed:
+
+```bash
+sudo apt update
+sudo apt install -y $(flet --version --json \
+  | python3 -c "import json,sys; print(' '.join(json.load(sys.stdin)['linux_dependencies']))")
+```
+</TabItem>
+</Tabs>
 
 This is the same set of packages Flet uses in its own build environment. A few
 notes on what they are for:

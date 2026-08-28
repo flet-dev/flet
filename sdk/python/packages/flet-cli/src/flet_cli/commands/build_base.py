@@ -1382,10 +1382,10 @@ class BaseBuildCommand(BaseFlutterCommand):
             or self.get_pyproject("project.description")
             or self.get_pyproject("tool.poetry.description")
         )
-        # Desktop entry values are escaped here rather than in the template:
-        # the rules differ per key and getting them wrong yields an entry the
-        # desktop environment silently discards.
         try:
+            # Desktop entry values are escaped here rather than in the template:
+            # the rules differ per key and getting them wrong yields an entry the
+            # desktop environment silently discards.
             linux_categories = self.escape_desktop_categories(
                 self.get_pyproject("tool.flet.linux.categories")
                 or self.get_pyproject("tool.flet.categories")
