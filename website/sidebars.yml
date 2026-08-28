@@ -43,6 +43,7 @@ docs:
     Authentication: cookbook/authentication.md
     Encrypting sensitive data: cookbook/encrypting-sensitive-data.md
     Declarative dialogs: cookbook/declarative-dialogs.md
+    Client actions: cookbook/client-actions.md
     Flet MCP server: cookbook/flet-mcp.md
   Publishing Flet app:
     _index: publish/index.md
@@ -665,6 +666,8 @@ docs:
           TimePickerTheme: types/timepickertheme.md
           TooltipTheme: types/tooltiptheme.md
       - types/browserconfiguration.md
+      - types/clientaction.md
+      - types/openurl.md
       - types/tooltip.md
       - types/url.md
       - types/webviewconfiguration.md

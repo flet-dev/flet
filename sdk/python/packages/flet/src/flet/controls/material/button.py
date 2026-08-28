@@ -4,6 +4,7 @@ from typing import Optional, Union
 from flet.controls.adaptive_control import AdaptiveControl
 from flet.controls.base_control import control
 from flet.controls.buttons import ButtonStyle
+from flet.controls.client_action import ClientAction
 from flet.controls.control import Control
 from flet.controls.control_event import ControlEventHandler
 from flet.controls.icon_data import IconData
@@ -94,6 +95,17 @@ class Button(LayoutControl, AdaptiveControl):
     clip_behavior: Optional[ClipBehavior] = None
     """
     The button's clip behavior.
+    """
+
+    action: Optional[Union[ClientAction, list[ClientAction]]] = None
+    """
+    Action(s) performed by the client when this control is activated, without a
+    round trip to your Python code.
+
+    Use this for operations a browser only permits while it is handling the
+    user's click, such as opening a file picker, writing to the clipboard,
+    showing a share sheet or opening a new tab.
+    See :class:`~flet.ClientAction`.
     """
 
     url: Optional[Union[str, Url]] = None

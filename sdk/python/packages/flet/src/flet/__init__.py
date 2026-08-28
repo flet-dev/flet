@@ -114,6 +114,10 @@ if TYPE_CHECKING:
         ShapeBorder,
         StadiumBorder,
     )
+    from flet.controls.client_action import (
+        ClientAction,
+        OpenUrl,
+    )
     from flet.controls.colors import Colors
     from flet.controls.context import (
         Context,
@@ -804,6 +808,7 @@ __all__ = [
     "CircleAvatar",
     "CircleBorder",
     "CircularRectangleNotchShape",
+    "ClientAction",
     "ClipBehavior",
     "Clipboard",
     "ColorFilter",
@@ -1024,6 +1029,7 @@ __all__ = [
     "OffsetValue",
     "OnReorderEvent",
     "OnScrollEvent",
+    "OpenUrl",
     "Orientation",
     "OutlinedBorder",
     "OutlinedButton",
@@ -1334,6 +1340,7 @@ _LAZY = {
     "CircleAvatar": "flet.controls.material.circle_avatar",
     "CircleBorder": "flet.controls.buttons",
     "CircularRectangleNotchShape": "flet.controls.types",
+    "ClientAction": "flet.controls.client_action",
     "ClipBehavior": "flet.controls.types",
     "Clipboard": "flet.controls.services.clipboard",
     "ColorFilter": "flet.controls.box",
@@ -1554,6 +1561,7 @@ _LAZY = {
     "OffsetValue": "flet.controls.transform",
     "OnReorderEvent": "flet.controls.material.reorderable_list_view",
     "OnScrollEvent": "flet.controls.scrollable_control",
+    "OpenUrl": "flet.controls.client_action",
     "Orientation": "flet.controls.types",
     "OutlinedBorder": "flet.controls.buttons",
     "OutlinedButton": "flet.controls.material.outlined_button",

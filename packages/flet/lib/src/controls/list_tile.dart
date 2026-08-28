@@ -3,9 +3,9 @@ import 'package:flutter/material.dart';
 import '../extensions/control.dart';
 import '../models/control.dart';
 import '../utils/borders.dart';
+import '../utils/client_actions.dart';
 import '../utils/colors.dart';
 import '../utils/edge_insets.dart';
-import '../utils/launch_url.dart';
 import '../utils/misc.dart';
 import '../utils/mouse.dart';
 import '../utils/numbers.dart';
@@ -47,17 +47,14 @@ class ListTileControl extends StatelessWidget with FletStoreMixin {
     var trailing = control.buildIconOrWidget("trailing");
     var onClick = control.hasEventHandler("click");
     var toggleInputs = control.getBool("toggle_inputs", false)!;
-    var url = control.getUrl("url");
-
     Function()? onPressed =
-        (onClick || toggleInputs || url != null) && !control.disabled
+        (onClick || toggleInputs || control.hasControlActions) &&
+                !control.disabled
             ? () {
                 if (toggleInputs) {
                   _clickNotifier.onClick();
                 }
-                if (url != null) {
-                  openWebBrowser(url);
-                }
+                runControlActions(context, control);
                 if (onClick) {
                   control.triggerEvent("click");
                 }

@@ -32,6 +32,7 @@ class TextControl extends StatelessWidget {
       (Control control, String eventName, [dynamic eventData]) {
         control.triggerEvent(eventName, eventData);
       },
+      context,
     );
     var semanticsLabel = control.getString("semantics_label");
     var noWrap = control.getBool("no_wrap", false)!;
