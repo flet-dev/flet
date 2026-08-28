@@ -11,7 +11,11 @@ Usage: write_pyproject.py <artifact_name> <description_file> <repo_root>
 """
 
 import sys
-import tomllib
+
+try:
+    import tomllib
+except ModuleNotFoundError:  # system python is older than 3.11 (Ubuntu 22.04)
+    tomllib = None
 
 
 def main() -> int:
@@ -59,10 +63,15 @@ flet-cli = {{ path = "{packages}/flet-cli", editable = true }}
     with open("pyproject.toml", "w", encoding="utf-8") as f:
         f.write(pyproject)
 
-    # Fail here rather than deep inside the build.
-    with open("pyproject.toml", "rb") as f:
-        parsed = tomllib.load(f)
-    assert parsed["project"]["description"] == description, "description round-trip"
+    # Fail here rather than deep inside the build. assert_bundle.py checks the
+    # description end to end regardless, so skipping this on an older
+    # interpreter costs nothing.
+    if tomllib is not None:
+        with open("pyproject.toml", "rb") as f:
+            parsed = tomllib.load(f)
+        assert parsed["project"]["description"] == description, "description round-trip"
+    else:
+        print("note: no tomllib on this interpreter, skipping the round-trip check")
     print(f"fixture pyproject.toml written (artifact={artifact!r})")
     return 0
 
