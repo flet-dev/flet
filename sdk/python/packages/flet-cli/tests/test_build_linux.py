@@ -38,13 +38,33 @@ TEMPLATE_DESKTOP_ENTRY = (
 
 
 def _render_template(path: Path, **context: Any) -> str:
-    """Render a build-template file the way cookiecutter would."""
+    """
+    Render a build-template file the way cookiecutter would.
+
+    Args:
+        path: Template file to render.
+        context: Values exposed to the template as `cookiecutter.*`.
+
+    Returns:
+        The rendered file content.
+    """
+
     env = Environment(keep_trailing_newline=True)
     return env.from_string(path.read_text()).render(cookiecutter=context)
 
 
 def _png_bytes(width: int = 256, height: int = 256) -> bytes:
-    """Build the PNG signature + IHDR header `get_png_size` reads."""
+    """
+    Build the PNG signature and IHDR header that `get_png_size` reads.
+
+    Args:
+        width: Pixel width to encode.
+        height: Pixel height to encode.
+
+    Returns:
+        Just enough of a PNG for the size reader; not a decodable image.
+    """
+
     return (
         b"\x89PNG\r\n\x1a\n"
         + (13).to_bytes(4, "big")
@@ -69,12 +89,13 @@ def _run_customize_icons(
         assets: mapping of file name to content for the user's `assets` dir,
             or `None` for an app without an assets dir.
         target_platform: `flet build` target platform.
-        template_default_icon: whether the (rendered) Flutter project ships
+        template_default_icon: whether the rendered Flutter project ships
             the template's default `images/icon.png`.
 
     Returns:
-        The faked command object (with `flutter_dir` etc. set).
+        The faked command object, with `flutter_dir` and friends set.
     """
+
     app_path = tmp_path / "app"
     app_path.mkdir(parents=True, exist_ok=True)
     if assets is not None:
@@ -119,17 +140,27 @@ def _run_customize_icons(
 
 
 def _staged_icon(cmd: BaseBuildCommand) -> Path:
+    """The path `customize_icons` stages the Linux icon to."""
+
     return cmd.flutter_dir / "linux" / "app_icon.png"
 
 
 class TestLinuxIconStaging:
-    """Which icon `customize_icons` stages for a Linux build, and when."""
+    """
+    Which icon `customize_icons` stages for a Linux build, and when.
+
+    The bundle must always end up with an icon it can show, whether the app
+    supplies a Linux-specific one, a generic one, or none at all — and a
+    non-Linux build must not pay for any of it.
+    """
 
     def test_user_icon_staged_for_linux(self, tmp_path):
+        """A generic `icon.png` is staged when no Linux-specific icon exists."""
         cmd = _run_customize_icons(tmp_path, assets={"icon.png": b"user-icon"})
         assert _staged_icon(cmd).read_bytes() == b"user-icon"
 
     def test_icon_linux_beats_default_icon(self, tmp_path):
+        """`icon_linux.png` wins over the generic `icon.png`."""
         cmd = _run_customize_icons(
             tmp_path,
             assets={"icon.png": b"generic", "icon_linux.png": b"linux-specific"},
@@ -137,31 +168,39 @@ class TestLinuxIconStaging:
         assert _staged_icon(cmd).read_bytes() == b"linux-specific"
 
     def test_template_default_staged_without_assets(self, tmp_path):
-        # No assets dir at all: the template's default icon must still be
-        # staged so the Linux bundle always ships a window icon.
+        """
+        An app with no `assets` dir still gets the template's default icon,
+        so a Linux bundle is never built without a window icon.
+        """
         cmd = _run_customize_icons(tmp_path, assets=None)
         assert _staged_icon(cmd).read_bytes() == _png_bytes()
 
     def test_template_default_staged_when_no_usable_icon(self, tmp_path):
-        # An assets dir exists, but its only icon is an undecodable vector.
+        """An assets dir holding only an undecodable vector falls back too."""
         cmd = _run_customize_icons(tmp_path, assets={"icon.svg": b"<svg/>"})
         assert _staged_icon(cmd).read_bytes() == _png_bytes()
 
     def test_missing_template_default_degrades_gracefully(self, tmp_path):
-        # A custom build template without images/icon.png must not crash the
-        # build; the bundle simply ships without an icon.
+        """
+        A custom build template that ships no `images/icon.png` produces an
+        icon-less bundle rather than failing the build on the copy.
+        """
         cmd = _run_customize_icons(tmp_path, assets=None, template_default_icon=False)
         assert not _staged_icon(cmd).exists()
 
     def test_not_staged_for_other_targets(self, tmp_path):
+        """Non-Linux targets stage nothing; only their own generators run."""
         cmd = _run_customize_icons(
             tmp_path, assets={"icon.png": b"user-icon"}, target_platform="windows"
         )
         assert not _staged_icon(cmd).exists()
 
     def test_icon_linux_ignored_for_other_targets(self, tmp_path):
-        # The icon_linux lookup must not run (copy files, feed the hash) on
-        # non-linux builds — it has no consumer there.
+        """
+        The `icon_linux` lookup is skipped entirely off Linux. It has no
+        consumer there, and letting it run would copy a dead file and churn
+        the icons hash, re-running the icon generator for nothing.
+        """
         cmd = _run_customize_icons(
             tmp_path,
             assets={"icon_linux.png": b"linux-only"},
@@ -170,26 +209,30 @@ class TestLinuxIconStaging:
         assert not (cmd.flutter_dir / "images" / "icon_linux.png").exists()
 
     def test_restaged_when_user_icon_changes(self, tmp_path):
-        # HashStamp change detection: a re-run with a modified user icon must
-        # overwrite the previously staged copy.
+        """Editing the source icon restages it rather than keeping the copy."""
         cmd = _run_customize_icons(tmp_path, assets={"icon.png": b"first"})
         assert _staged_icon(cmd).read_bytes() == b"first"
         icon = cmd.package_app_path / "assets" / "icon.png"
         icon.write_bytes(b"second")
-        # Change detection keys on mtime; bump it explicitly so the test
-        # doesn't depend on filesystem timestamp granularity.
+        # Change detection keys on mtime; bump it explicitly so the test does
+        # not depend on filesystem timestamp granularity.
         stat = icon.stat()
         os.utime(icon, (stat.st_atime, stat.st_mtime + 10))
         cmd.customize_icons()
         assert _staged_icon(cmd).read_bytes() == b"second"
 
     def test_non_png_icon_warns_but_stages(self, tmp_path, capsys):
+        """
+        A non-PNG icon is still staged, but warns: it is bundled as-is, and a
+        format with no GDK loader on the target system shows no icon at all.
+        """
         cmd = _run_customize_icons(tmp_path, assets={"icon_linux.webp": b"webp-icon"})
         assert _staged_icon(cmd).read_bytes() == b"webp-icon"
         combined = capsys.readouterr()
         assert "icon_linux.webp" in (combined.out + combined.err)
 
     def test_256_png_stages_without_warning(self, tmp_path, capsys):
+        """The recommended 256x256 PNG stages silently."""
         cmd = _run_customize_icons(tmp_path, assets={"icon_linux.png": _png_bytes()})
         assert _staged_icon(cmd).exists()
         combined = capsys.readouterr()
@@ -197,22 +240,28 @@ class TestLinuxIconStaging:
 
 
 class TestIconThemeSize:
-    """The hicolor directory the themed icon is installed into."""
+    """
+    The hicolor directory the themed icon is installed into.
+
+    Only sizes hicolor's `index.theme` declares are ever scanned, so naming a
+    directory hicolor does not know is worse than falling back: the icon is
+    installed and then never found.
+    """
 
     @staticmethod
     def _theme_size(cmd: BaseBuildCommand) -> str:
+        """The generated CMake fragment that carries the resolved size."""
         return (cmd.flutter_dir / "linux" / "app_icon.cmake").read_text()
 
     def test_theme_size_matches_icon(self, tmp_path):
-        # A standard hicolor size must be declared as itself, not as 256x256.
+        """A size hicolor declares is used as-is, not flattened to 256x256."""
         cmd = _run_customize_icons(
             tmp_path, assets={"icon_linux.png": _png_bytes(512, 512)}
         )
         assert 'set(FLET_APP_ICON_THEME_SIZE "512x512")' in self._theme_size(cmd)
 
     def test_theme_size_falls_back_for_unusual_icons(self, tmp_path):
-        # 1024x1024 is not a hicolor theme directory, and neither is a
-        # non-square icon — both fall back to the scalable-from 256x256 dir.
+        """A non-hicolor size and a non-square icon both fall back."""
         cmd = _run_customize_icons(
             tmp_path, assets={"icon_linux.png": _png_bytes(1024, 1024)}
         )
@@ -223,21 +272,22 @@ class TestIconThemeSize:
         assert 'set(FLET_APP_ICON_THEME_SIZE "256x256")' in self._theme_size(cmd)
 
     def test_resolve_icon_theme_size(self):
+        """Only sizes declared by hicolor's `index.theme` are used directly."""
         resolve = BaseBuildCommand.resolve_icon_theme_size
         assert resolve((48, 48)) == "48x48"
         assert resolve((256, 256)) == "256x256"
         assert resolve((512, 512)) == "512x512"
-        # Unknown size (unreadable/non-PNG), non-square, and non-hicolor sizes.
+        # Unknown size (unreadable or non-PNG), non-square, and sizes outside
+        # the theme's set.
         assert resolve(None) == "256x256"
         assert resolve((500, 500)) == "256x256"
         assert resolve((1024, 1024)) == "256x256"
         assert resolve((512, 256)) == "256x256"
-        # Not declared by hicolor's index.theme: an icon installed into one of
-        # these directories is never scanned, so it must fall back.
         for undeclared in (28, 42, 160, 384):
             assert resolve((undeclared, undeclared)) == "256x256"
 
     def test_png_size_reads_ihdr(self, tmp_path):
+        """Sizes come from the PNG header; anything unreadable is `None`."""
         icon = tmp_path / "icon.png"
         icon.write_bytes(_png_bytes(width=512, height=384))
         assert BaseBuildCommand.get_png_size(icon) == (512, 384)
@@ -248,15 +298,19 @@ class TestIconThemeSize:
 
 
 class TestDesktopEntryEscaping:
-    """`Exec` and `Categories`, which `flet build` escapes before rendering."""
+    """
+    `Exec` and `Categories`, which `flet build` escapes before rendering.
+
+    Both pass through two layers — the entry file, where backslash is the
+    escape character, and `Exec`'s shell-like parsing — and getting either
+    wrong yields an entry the desktop environment silently discards.
+    """
 
     @pytest.mark.parametrize(
         ("raw", "expected"),
         [
             ("my_app", "my_app"),
             ("my app", "my app"),
-            # " ` $ \ are reserved inside the quoted Exec value; each gets a
-            # backslash, and every backslash is then doubled for the entry file.
             ('mid"dle', 'mid\\\\"dle'),
             ("my$app", "my\\\\$app"),
             ("a\\b", "a\\\\\\\\b"),
@@ -264,23 +318,27 @@ class TestDesktopEntryEscaping:
         ],
     )
     def test_escape_desktop_exec(self, raw, expected):
+        """Reserved characters get a backslash, then every one is doubled."""
         assert BaseBuildCommand.escape_desktop_exec(raw) == expected
 
     def test_escape_desktop_categories(self):
+        """Categories are semicolon-terminated, with separators escaped."""
         escape = BaseBuildCommand.escape_desktop_categories
         assert escape(["Game", "Education"]) == "Game;Education;"
         assert escape("Development") == "Development;"
-        # A literal semicolon would split one category into two.
+        # A literal ";" would otherwise split one category into two.
         assert escape(["Ut;ility"]) == "Ut\\;ility;"
         assert escape(["back\\slash"]) == "back\\\\slash;"
-        # Blanks are dropped, and an all-blank list keeps the default.
         assert escape(["Game", "  ", ""]) == "Game;"
         assert escape([]) == "Utility;"
 
     @pytest.mark.parametrize("bad", [5, None, ["ok", 7], {"a": 1}])
     def test_escape_desktop_categories_rejects_non_strings(self, bad):
-        # A bad pyproject value must surface as a clear error rather than a
-        # jinja TypeError that wipes the build directory.
+        """
+        A malformed `pyproject.toml` value fails with a clear error instead of
+        a jinja `TypeError`, which the build turns into a wiped build dir and
+        a message that never mentions `pyproject.toml`.
+        """
         with pytest.raises(ValueError):
             BaseBuildCommand.escape_desktop_categories(bad)
 
@@ -290,6 +348,7 @@ class TestDesktopEntryTemplate:
 
     @staticmethod
     def _render(**overrides: str) -> str:
+        """Render the entry with a cookiecutter-like context."""
         context = {
             "product_name": "My App",
             "project_description": "",
@@ -307,8 +366,8 @@ class TestDesktopEntryTemplate:
 
         Substring assertions cannot see whitespace-control mistakes: a group
         header glued onto the end of the preceding comment line still contains
-        "[Desktop Entry]" but leaves every key outside any group, and the whole
-        file is then ignored.
+        "[Desktop Entry]", but leaves every key outside any group and the whole
+        file is ignored.
         """
         entry = {}
         in_section = False
@@ -322,36 +381,47 @@ class TestDesktopEntryTemplate:
         return entry
 
     def test_group_header_starts_its_own_line(self):
+        """The group header is not glued to the preceding comment block."""
         content = self._render()
         assert "\n[Desktop Entry]\n" in content, content[:400]
 
     def test_desktop_entry_fields(self):
+        """Every key carries the value the build resolved for it."""
         entry = self._parse(self._render(project_description="Does great things."))
         assert entry["Type"] == "Application"
         assert entry["Name"] == "My App"
         assert entry["Comment"] == "Does great things."
+        # Quoted, so an artifact name containing spaces stays one argument.
         assert entry["Exec"] == '"my_app" %U'
+        # Icon and StartupWMClass are the bundle id: the runner sets its
+        # program name to it, and that is how X11 and Wayland match a window
+        # to this entry and its themed icon.
         assert entry["Icon"] == "com.example.my_app"
         assert entry["StartupWMClass"] == "com.example.my_app"
         assert entry["Categories"] == "Utility;"
 
     def test_no_unrendered_jinja(self):
+        """No template syntax survives into the installed entry."""
         content = self._render(project_description="Does great things.")
         assert "{{" not in content and "{%" not in content
 
     def test_comment_omitted_without_description(self):
+        """An app with no description gets no empty `Comment` key."""
         content = self._render(project_description="")
         assert "Comment=" not in content
-        # The conditional must not leave a blank line behind.
+        # The conditional must not leave a blank line behind either.
         assert 'Name=My App\nExec="my_app" %U' in content
 
     def test_multiline_description_flattened(self):
-        # A newline inside Comment= would make the entry fail
-        # desktop-file-validate and get ignored by the desktop environment.
+        """
+        Newlines are flattened: one inside `Comment` fails
+        `desktop-file-validate` and the entry is ignored.
+        """
         content = self._render(project_description="Line one.\nLine two.")
         assert "Comment=Line one. Line two." in content
 
     def test_control_characters_flattened_in_name_and_comment(self):
+        """Tabs and newlines are flattened in both localestring keys."""
         content = self._render(
             product_name="My\tApp\nName", project_description="Tabbed\tdescription"
         )
@@ -359,14 +429,12 @@ class TestDesktopEntryTemplate:
         assert "Comment=Tabbed description" in content
 
     def test_backslashes_escaped(self):
-        # Desktop entry values use backslash escape sequences, so a literal
-        # backslash must be doubled.
+        """A literal backslash is doubled, as entry values use escapes."""
         content = self._render(project_description=r"Uses C:\path\now")
         assert r"Comment=Uses C:\\path\\now" in content
 
     def test_prepared_values_are_interpolated_verbatim(self):
-        # Exec and Categories arrive already escaped; the template must not
-        # escape them a second time.
+        """`Exec` and `Categories` arrive escaped and are not escaped twice."""
         content = self._render(
             desktop_exec=r"weird\\\"name", linux_categories="Game;Fun;"
         )
