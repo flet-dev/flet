@@ -32,6 +32,8 @@ permissions:
 
 env:
   ROOT: "${{ github.workspace }}"
+  # patch_python_package_versions (common.sh) cd's into this.
+  SDK_PYTHON: "${{ github.workspace }}/sdk/python"
   SCRIPTS: "${{ github.workspace }}/.github/scripts"
   UV_PYTHON: 3.12
   PYTHONUTF8: 1
