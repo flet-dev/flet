@@ -166,6 +166,13 @@ install(CODE "
 install(DIRECTORY "${PROJECT_BUILD_DIR}/${FLUTTER_ASSET_DIR_NAME}"
   DESTINATION "${INSTALL_BUNDLE_DATA_DIR}" COMPONENT Runtime)
 
+# Install the app icon staged by `flet build` next to this file, so the runner
+# can set the X11/XWayland window icon at startup (see my_application.cc).
+if(EXISTS "${CMAKE_CURRENT_SOURCE_DIR}/app_icon.png")
+  install(FILES "${CMAKE_CURRENT_SOURCE_DIR}/app_icon.png"
+    DESTINATION "${INSTALL_BUNDLE_DATA_DIR}" COMPONENT Runtime)
+endif()
+
 # Install the AOT library on non-Debug builds only.
 if(NOT CMAKE_BUILD_TYPE MATCHES "Debug")
   install(FILES "${AOT_LIBRARY}" DESTINATION "${INSTALL_BUNDLE_LIB_DIR}"

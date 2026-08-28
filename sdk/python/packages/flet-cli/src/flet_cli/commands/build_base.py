@@ -1801,6 +1801,8 @@ class BaseBuildCommand(BaseFlutterCommand):
         pubspec = self.load_yaml(pubspec_origin_path)
 
         copy_ops = []
+        default_icon = None
+        linux_icon = None
         self.assets_path = self.package_app_path.joinpath("assets")
         if self.assets_path.exists():
             images_dir = "images"
@@ -1825,6 +1827,9 @@ class BaseBuildCommand(BaseFlutterCommand):
             )
             macos_icon = self.find_platform_image(
                 self.assets_path, images_path, "icon_macos", copy_ops, hash
+            )
+            linux_icon = self.find_platform_image(
+                self.assets_path, images_path, "icon_linux", copy_ops, hash
             )
 
             self.fallback_image(
@@ -1866,6 +1871,30 @@ class BaseBuildCommand(BaseFlutterCommand):
                 [macos_icon, default_icon],
                 images_dir,
             )
+
+        if self.target_platform == "linux":
+            # flutter_launcher_icons has no Linux generator, so the resolved
+            # icon is staged at a fixed path instead: the Linux runner's CMake
+            # installs it into the bundle as data/app_icon.png and
+            # my_application.cc points GTK at it on startup.
+            user_icon = linux_icon or default_icon
+            linux_icon_src = (
+                self.assets_path.joinpath(user_icon)
+                if user_icon
+                else self.flutter_dir.joinpath("images", "icon.png")
+            )
+            if linux_icon_src.suffix.lower() not in (".png", ".jpg", ".jpeg"):
+                console.log(
+                    f'Warning: "{linux_icon_src.name}" is used as the Linux app '
+                    "icon, but may not be displayable if the GDK image loader "
+                    "for its format is missing on the target system. A PNG "
+                    "image is recommended.",
+                    style=warning_style,
+                )
+            copy_ops.append(
+                (linux_icon_src, self.flutter_dir.joinpath("linux", "app_icon.png"))
+            )
+            hash.update(str(linux_icon_src))
 
         adaptive_icon_background = (
             self.options.android_adaptive_icon_background
