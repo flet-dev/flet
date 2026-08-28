@@ -35,8 +35,8 @@ for _ in $(seq 1 90); do
     tail -40 "$LOG" >&2
     exit 1
   fi
-  for candidate in $(xwininfo -root -children -all 2>/dev/null \
-      | grep -oE '^\s+0x[0-9a-f]+' | tr -d ' '); do
+  for candidate in $(xwininfo -root -children 2>/dev/null \
+      | grep -oE '0x[0-9a-f]+'); do
     if xwininfo -id "$candidate" 2>/dev/null | grep -q "Class: InputOnly"; then
       continue
     fi
@@ -51,7 +51,7 @@ done
 if [ -z "$WIN" ]; then
   echo "!! no window with WM_CLASS containing '$EXPECTED_CLASS' appeared" >&2
   echo "-- window tree:" >&2
-  xwininfo -root -children -all 2>&1 | head -40 >&2
+  xwininfo -root -children 2>&1 | head -40 >&2
   echo "-- app log:" >&2
   tail -40 "$LOG" >&2
   exit 1

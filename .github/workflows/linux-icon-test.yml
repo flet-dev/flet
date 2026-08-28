@@ -138,8 +138,17 @@ jobs:
         env:
           LEG: ${{ matrix.leg }}
         run: |
-          desktop-file-validate \
-            "${RUNNER_TEMP}/app-${LEG}/build/linux/share/applications/com.flet.flet-icon-test.desktop"
+          ENTRY="${RUNNER_TEMP}/app-${LEG}/build/linux/share/applications/com.flet.flet-icon-test.desktop"
+          echo "--- $ENTRY"
+          cat "$ENTRY"
+          # Warnings (deprecated keys, hints) are informational; only spec
+          # errors should fail the job.
+          OUT="$(desktop-file-validate "$ENTRY" 2>&1 || true)"
+          echo "$OUT"
+          if echo "$OUT" | grep -q "error:"; then
+            echo "!! desktop entry has spec errors" >&2
+            exit 1
+          fi
 
       - name: Assert runtime X11 properties (Xvfb)
         # The runtime leg depends on Flutter getting a software GL context
