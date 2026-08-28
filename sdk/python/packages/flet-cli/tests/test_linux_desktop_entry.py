@@ -87,6 +87,21 @@ def test_multiline_description_flattened():
     assert "Comment=Line one. Line two." in content
 
 
+def test_control_characters_flattened_in_name_and_comment():
+    content = _render(
+        product_name="My\tApp\nName", project_description="Tabbed\tdescription"
+    )
+    assert "Name=My App Name" in content
+    assert "Comment=Tabbed description" in content
+
+
+def test_backslashes_escaped():
+    # Desktop entry values use backslash escape sequences, so a literal
+    # backslash must be doubled.
+    content = _render(project_description=r"Uses C:\path\now")
+    assert r"Comment=Uses C:\\path\\now" in content
+
+
 def test_exec_quotes_artifact_with_spaces():
     content = _render(artifact_name="My App")
     assert 'Exec="My App" %U' in content

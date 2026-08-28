@@ -58,11 +58,29 @@ static void my_application_activate(GApplication* application) {
     g_autofree gchar* icon_path =
         g_build_filename(exe_dir, "data", "app_icon.png", nullptr);
     g_autoptr(GError) icon_error = nullptr;
-    if (!gtk_window_set_default_icon_from_file(icon_path, &icon_error)) {
+    g_autoptr(GdkPixbuf) icon = gdk_pixbuf_new_from_file(icon_path, &icon_error);
+    if (icon == nullptr) {
       // A missing or undecodable icon is a broken bundle worth logging, not
       // a case to skip silently.
       g_warning("Failed to load app icon %s: %s", icon_path,
-                icon_error->message);
+                icon_error != nullptr ? icon_error->message : "unknown error");
+    } else {
+      // _NET_WM_ICON is capped at 256 KiB of pixel data, and GDK silently
+      // drops any icon that does not fit — anything from 512x512 up — which
+      // would leave the window with no icon at all. Scale bigger icons down.
+      gint width = gdk_pixbuf_get_width(icon);
+      gint height = gdk_pixbuf_get_height(icon);
+      gint largest_side = MAX(width, height);
+      if (largest_side > 256) {
+        g_autoptr(GdkPixbuf) scaled = gdk_pixbuf_scale_simple(
+            icon, MAX(1, width * 256 / largest_side),
+            MAX(1, height * 256 / largest_side), GDK_INTERP_BILINEAR);
+        if (scaled != nullptr) {
+          gtk_window_set_default_icon(scaled);
+        }
+      } else {
+        gtk_window_set_default_icon(icon);
+      }
     }
   }
 

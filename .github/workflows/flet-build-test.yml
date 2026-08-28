@@ -12,6 +12,7 @@ on:
       - '.fvmrc'
       - 'client/**'
       - 'sdk/python/packages/**'
+      - 'sdk/python/templates/build/**'
       - 'packages/flet/**'
       - 'sdk/python/examples/apps/flet_build_test/**'
   pull_request:
@@ -21,6 +22,7 @@ on:
       - '.fvmrc'
       - 'client/**'
       - 'sdk/python/packages/**'
+      - 'sdk/python/templates/build/**'
       - 'packages/flet/**'
       - 'sdk/python/examples/apps/flet_build_test/**'
   workflow_dispatch:

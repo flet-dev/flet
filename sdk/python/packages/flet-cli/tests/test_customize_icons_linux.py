@@ -69,7 +69,7 @@ def _run_customize_icons(
         The faked command object (with `flutter_dir` etc. set).
     """
     app_path = tmp_path / "app"
-    app_path.mkdir(exist_ok=True)
+    app_path.mkdir(parents=True, exist_ok=True)
     if assets is not None:
         assets_dir = app_path / "assets"
         assets_dir.mkdir(exist_ok=True)
@@ -167,21 +167,48 @@ def test_non_png_icon_warns_but_stages(tmp_path, capsys):
     assert "icon_linux.webp" in (combined.out + combined.err)
 
 
-def test_wrong_size_png_warns_but_stages(tmp_path, capsys):
-    # The icon lands in the 256x256 hicolor directory, so other sizes get a
-    # build-time warning.
-    icon = _png_bytes(width=1024, height=1024)
-    cmd = _run_customize_icons(tmp_path, assets={"icon_linux.png": icon})
-    assert _staged_icon(cmd).read_bytes() == icon
-    combined = capsys.readouterr()
-    assert "1024" in (combined.out + combined.err)
-
-
 def test_256_png_stages_without_warning(tmp_path, capsys):
     cmd = _run_customize_icons(tmp_path, assets={"icon_linux.png": _png_bytes()})
     assert _staged_icon(cmd).exists()
     combined = capsys.readouterr()
     assert "Warning" not in (combined.out + combined.err)
+
+
+def _theme_size(cmd: BaseBuildCommand) -> str:
+    return (cmd.flutter_dir / "linux" / "app_icon.cmake").read_text()
+
+
+def test_theme_size_matches_icon(tmp_path):
+    # A standard hicolor size must be declared as itself, not as 256x256.
+    cmd = _run_customize_icons(
+        tmp_path, assets={"icon_linux.png": _png_bytes(512, 512)}
+    )
+    assert 'set(FLET_APP_ICON_THEME_SIZE "512x512")' in _theme_size(cmd)
+
+
+def test_theme_size_falls_back_for_unusual_icons(tmp_path):
+    # 1024x1024 is not a hicolor theme directory, and neither is a
+    # non-square icon — both fall back to the scalable-from 256x256 dir.
+    cmd = _run_customize_icons(
+        tmp_path, assets={"icon_linux.png": _png_bytes(1024, 1024)}
+    )
+    assert 'set(FLET_APP_ICON_THEME_SIZE "256x256")' in _theme_size(cmd)
+    cmd = _run_customize_icons(
+        tmp_path / "b", assets={"icon_linux.png": _png_bytes(256, 128)}
+    )
+    assert 'set(FLET_APP_ICON_THEME_SIZE "256x256")' in _theme_size(cmd)
+
+
+def test_resolve_icon_theme_size():
+    resolve = BaseBuildCommand.resolve_icon_theme_size
+    assert resolve((48, 48)) == "48x48"
+    assert resolve((256, 256)) == "256x256"
+    assert resolve((512, 512)) == "512x512"
+    # Unknown size (unreadable/non-PNG), non-square, and non-hicolor sizes.
+    assert resolve(None) == "256x256"
+    assert resolve((500, 500)) == "256x256"
+    assert resolve((1024, 1024)) == "256x256"
+    assert resolve((512, 256)) == "256x256"
 
 
 def test_restaged_when_user_icon_changes(tmp_path):
