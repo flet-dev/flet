@@ -136,6 +136,17 @@ jobs:
             git config --global --add safe.directory "$FLUTTER_ROOT"
           fi
 
+      - name: Precache Flutter artifacts
+        # The arm64 SDK comes from a git clone with no engine artifacts, and
+        # `flet build` runs `dart run serious_python:main package` before any
+        # flutter command would fetch them — pub then fails to resolve
+        # sky_engine. The stable x64 download already carries them.
+        if: matrix.arch == 'arm'
+        shell: bash
+        run: |
+          flutter --version
+          flutter precache --linux
+
       - name: Generate fixture app
         shell: bash
         env:
