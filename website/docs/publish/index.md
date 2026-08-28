@@ -460,6 +460,42 @@ bundle_id = "com.mycompany.my_app"
 </TabItem>
 </Tabs>
 
+### Description
+
+:::note[Platform support]
+[Web](web/static-website/index.md#flet-build-web) and [Linux](linux.md) only.
+:::
+
+A short description of the application. On web builds it becomes the
+`<meta name="description">` tag and the PWA manifest's `description`; on Linux
+it becomes the `Comment` of the generated [desktop entry](linux.md#app-icon),
+shown as a tooltip in application menus. Other platforms have no equivalent
+field and ignore it.
+
+#### Resolution order
+
+Its value is determined in the following order of precedence:
+
+1. [`--description`](../cli/flet-build.md#--description)
+2. `[project].description`
+3. `[tool.poetry].description`
+
+#### Example
+
+<Tabs groupId="flet-build--pyproject-toml">
+<TabItem value="flet-build" label="flet build">
+```bash
+flet build <target_platform> --description "Tracks your daily habits."
+```
+</TabItem>
+<TabItem value="pyproject-toml" label="pyproject.toml">
+```toml
+[project]
+description = "Tracks your daily habits."
+```
+</TabItem>
+</Tabs>
+
 ### Company Name
 
 :::note[Platform support]

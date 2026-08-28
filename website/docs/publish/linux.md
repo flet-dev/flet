@@ -104,8 +104,7 @@ point `Exec=` at the absolute path of the executable:
 
 ```bash
 cp -r share/. ~/.local/share/
-sed -i "s|^Exec=.*|Exec=\"$PWD/<executable>\" %U|" \
-  ~/.local/share/applications/<bundle_id>.desktop
+sed -i "s|^Exec=.*|Exec=\"$PWD/<executable>\" %U|" ~/.local/share/applications/<bundle_id>.desktop
 update-desktop-database ~/.local/share/applications
 ```
 
@@ -144,8 +143,8 @@ between X11 and Wayland:
 As a result, on a Wayland session the following have **no effect** (window
 *sizing* still works — only positioning is restricted):
 
-- [`Page.window.center()`](../types/window.md)
-- setting [`Page.window.left`](../types/window.md) / `Page.window.top`
+- [`Page.window.center()`][flet.Window.center]
+- setting [`Page.window.left`][flet.Window.left] / [`Page.window.top`][flet.Window.top]
 - moving the window programmatically
 
 This is a Wayland protocol limitation, not a Flet bug. The same code works as

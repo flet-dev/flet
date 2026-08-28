@@ -1850,7 +1850,7 @@ class BaseBuildCommand(BaseFlutterCommand):
             macos_icon = self.find_platform_image(
                 self.assets_path, images_path, "icon_macos", copy_ops, hash
             )
-            # Unlike the lookups above, this one has no flutter_launcher_icons
+            # Unlike the lookups above, Linux has no flutter_launcher_icons
             # consumer, so run it only when the result is actually used.
             linux_icon = (
                 self.find_platform_image(
@@ -1904,8 +1904,7 @@ class BaseBuildCommand(BaseFlutterCommand):
             # flutter_launcher_icons has no Linux generator, so the resolved
             # icon is staged at a fixed path instead: the Linux runner's CMake
             # installs it into the bundle (data/app_icon.png plus the hicolor
-            # icon-theme tree) and my_application.cc points GTK at it on
-            # startup.
+            # icon-theme tree) and my_application.cc points GTK at it on startup.
             user_icon = linux_icon or default_icon
             linux_icon_src = (
                 self.assets_path.joinpath(user_icon)
@@ -1980,9 +1979,7 @@ class BaseBuildCommand(BaseFlutterCommand):
             ]
             self.save_yaml(self.pubspec_path, updated_pubspec)
 
-            # flutter_launcher_icons has no Linux generator — on a linux
-            # target it would only regenerate the other platforms' icons,
-            # which the Linux bundle never ships.
+            # Skip Linux, for which flutter_launcher_icons has no generator.
             if self.target_platform != "linux":
                 self.update_status("[bold blue]Generating app icons...")
 
