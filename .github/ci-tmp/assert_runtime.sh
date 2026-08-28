@@ -11,6 +11,11 @@
 # Both properties are set during gtk_widget_realize(), which the runner does
 # before the window is ever shown, so no window manager is needed.
 #
+# Every X call is individually bounded and the whole search runs against a
+# wall-clock deadline: a headless runner is exactly where these hang, and a
+# hang here used to stall the job for minutes with nothing to show for it.
+# Whatever happens, the window tree is dumped before exiting.
+#
 # Usage: assert_runtime.sh <expected_wm_class> <expected_icon_size> <app_binary>
 #        expected_icon_size is "WxH", e.g. "256x256"
 set -uo pipefail
@@ -20,6 +25,16 @@ EXPECTED_ICON="$2"
 APP_BIN="$3"
 
 LOG="${RUNNER_TEMP:-/tmp}/app-runtime.log"
+DEADLINE_SECS=60
+
+x() { timeout 5s "$@" 2>/dev/null; }
+
+dump_tree() {
+  echo "-- window tree:"
+  x xwininfo -root -children | head -30
+  echo "-- app log (tail):"
+  tail -25 "$LOG" 2>/dev/null || echo "   (no log)"
+}
 
 echo "== launching $APP_BIN under ${DISPLAY:-<no DISPLAY>}"
 # setsid puts the app in its own process group: a Flet app forks a bundled
@@ -39,53 +54,45 @@ cleanup() {
 }
 trap cleanup EXIT
 
-# Wait for a mapped-or-unmapped toplevel carrying our class. GDK also creates
-# an InputOnly group-leader window with the same class, so those are skipped.
+# Collect every window whose WM_CLASS matches, then prefer one that actually
+# carries an icon: GDK also creates an InputOnly group-leader window with the
+# same class, and that one never has _NET_WM_ICON.
 WIN=""
-for _ in $(seq 1 90); do
+ICON_WIN=""
+END=$((SECONDS + DEADLINE_SECS))
+while [ "$SECONDS" -lt "$END" ]; do
   if ! kill -0 "$APP_PID" 2>/dev/null; then
-    echo "!! app exited early; last 40 log lines:" >&2
-    tail -40 "$LOG" >&2
+    echo "!! app exited early" >&2
+    dump_tree >&2
     exit 1
   fi
-  for candidate in $(xwininfo -root -children 2>/dev/null \
-      | grep -oE '0x[0-9a-f]+'); do
-    if xwininfo -id "$candidate" 2>/dev/null | grep -q "Class: InputOnly"; then
-      continue
-    fi
-    if xprop -id "$candidate" WM_CLASS 2>/dev/null | grep -q "$EXPECTED_CLASS"; then
-      WIN="$candidate"
-      break 2
+  for id in $(x xwininfo -root -children | grep -oE '0x[0-9a-f]+'); do
+    if x xprop -id "$id" WM_CLASS | grep -q "\"${EXPECTED_CLASS}\""; then
+      WIN="$id"
+      if x xprop -id "$id" _NET_WM_ICON | grep -qv "not found"; then
+        ICON_WIN="$id"
+        break
+      fi
     fi
   done
-  sleep 1
+  [ -n "$ICON_WIN" ] && break
+  sleep 2
 done
 
+status=0
+
 if [ -z "$WIN" ]; then
-  echo "!! no window with WM_CLASS containing '$EXPECTED_CLASS' appeared" >&2
-  echo "-- window tree:" >&2
-  xwininfo -root -children 2>&1 | head -40 >&2
-  echo "-- app log:" >&2
-  tail -40 "$LOG" >&2
+  echo "  FAIL  no window with WM_CLASS \"$EXPECTED_CLASS\" appeared within ${DEADLINE_SECS}s"
+  dump_tree
   exit 1
 fi
 
-echo "== found window $WIN"
-WM_CLASS="$(xprop -id "$WIN" WM_CLASS 2>/dev/null)"
-echo "   $WM_CLASS"
+echo "== matched window $WIN (icon-bearing: ${ICON_WIN:-none})"
+echo "  PASS  WM_CLASS is the bundle id (g_set_prgname took effect)"
 
-status=0
-if echo "$WM_CLASS" | grep -q "\"$EXPECTED_CLASS\""; then
-  echo "  PASS  WM_CLASS is the bundle id (g_set_prgname took effect)"
-else
-  echo "  FAIL  WM_CLASS is not '$EXPECTED_CLASS'"
-  status=1
-fi
-
-# xprop prints _NET_WM_ICON as a CARDINAL list whose first two values are the
-# width and height of the first icon.
-ICON_RAW="$(xprop -id "$WIN" _NET_WM_ICON 2>/dev/null || true)"
-if echo "$ICON_RAW" | grep -q "not found"; then
+TARGET="${ICON_WIN:-$WIN}"
+ICON_RAW="$(x xprop -id "$TARGET" _NET_WM_ICON || true)"
+if [ -z "$ICON_RAW" ] || echo "$ICON_RAW" | grep -q "not found"; then
   echo "  FAIL  _NET_WM_ICON is absent -- GDK dropped the icon (too large?)"
   status=1
 else
@@ -98,4 +105,5 @@ else
   fi
 fi
 
+[ "$status" -ne 0 ] && dump_tree
 exit "$status"

@@ -42,7 +42,10 @@ env:
 jobs:
   linux_icon:
     name: Linux icon (${{ matrix.leg }})
-    runs-on: ubuntu-latest
+    # 22.04 (glibc 2.35), not ubuntu-latest: the bundles are downloaded and
+    # run on a real desktop, and a binary linked against 24.04's glibc 2.39
+    # will not start on anything older.
+    runs-on: ubuntu-22.04
     timeout-minutes: 45
     permissions:
       contents: read
