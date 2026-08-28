@@ -12,6 +12,10 @@ from rich.live import Live
 from flet_cli.commands.build_base import BaseBuildCommand, console
 from flet_cli.commands.flutter_base import verbose1_style
 from flet_cli.utils.android import flutter_target_platforms
+from flet_cli.utils.ios_sign import (
+    find_provisioning_profile,
+    installed_provisioning_profiles,
+)
 from flet_cli.utils.macos_sign import (
     APP_STORE_CERTIFICATE_TYPES,
     APP_STORE_HELPER_ENTITLEMENTS,
@@ -99,6 +103,8 @@ class Command(BaseBuildCommand):
             self.setup_template_data()
             if self.target_platform == "macos":
                 self.preflight_macos_signing()
+            elif self.target_platform == "ipa":
+                self.preflight_ios_signing()
             self.create_flutter_project()
             self.package_python_app()
             self.register_flutter_extensions()
@@ -233,6 +239,94 @@ class Command(BaseBuildCommand):
             f"Built [cyan]{self.platforms[self.target_platform]['status_text']}"
             f"[/cyan] {self.emojis['checkmark']}",
         )
+
+    def preflight_ios_signing(self) -> None:
+        """
+        Validate the configured provisioning profile before any build work.
+
+        Xcode resolves `PROVISIONING_PROFILE_SPECIFIER` only when it
+        archives, minutes into the build, and reports a miss without naming
+        the profiles it did find. Resolving the same specifier here — by
+        name or UUID, as Xcode does — reports the alternatives instead, and
+        additionally checks expiry, team match, and bundle-id coverage,
+        which Xcode only surfaces later at signing.
+
+        A build with no profile configured is left alone: it is signed with
+        `--no-codesign` and produces an `.xcarchive`.
+
+        Exits via `cleanup(1, ...)` when the profile cannot be used.
+        """
+
+        assert self.template_data
+
+        specifier = self.template_data.get("ios_provisioning_profile")
+        if not specifier:
+            # Unsigned build: Flutter is passed --no-codesign and produces an
+            # .xcarchive only, which is a supported outcome.
+            return
+
+        profiles = installed_provisioning_profiles()
+        profile = find_provisioning_profile(specifier, profiles)
+        if profile is None:
+            usable = [p for p in profiles if not p.expired]
+            if usable:
+                listing = "\n".join(
+                    f"  - {p.name!r} (team {p.team_id}, UUID {p.uuid})" for p in usable
+                )
+                hint = f"Installed profiles:\n{listing}"
+            else:
+                hint = (
+                    "No unexpired profiles are installed. Download the "
+                    "profile from the Apple Developer portal and double-click "
+                    "it, or copy it into "
+                    "~/Library/MobileDevice/Provisioning Profiles."
+                )
+            self.cleanup(
+                1,
+                f"Provisioning profile {specifier!r} is not installed — Xcode "
+                f"would fail once the build reaches signing. Configure the "
+                f"profile's name or UUID exactly as the portal shows it.\n"
+                f"{hint}",
+            )
+            return
+
+        if profile.expired:
+            self.cleanup(
+                1,
+                f"Provisioning profile {profile.name!r} expired on "
+                f"{profile.expires:%Y-%m-%d}. Regenerate it in the Apple "
+                f"Developer portal and install the new one.",
+            )
+
+        team_id = self.template_data.get("ios_team_id")
+        if team_id and profile.team_id and profile.team_id != team_id:
+            self.cleanup(
+                1,
+                f"Provisioning profile {profile.name!r} belongs to team "
+                f"{profile.team_id}, but the build is configured for team "
+                f"{team_id}. Xcode matches the profile within the team, so "
+                f"these must agree.",
+            )
+
+        bundle_id = self.template_data.get("bundle_id")
+        app_id = profile.application_identifier
+        if bundle_id and app_id:
+            # application-identifier is "<TEAM>.<bundle id>", explicit or
+            # wildcard; compare only the bundle-id part.
+            authorized = app_id.split(".", 1)[-1]
+            covers = (
+                authorized == bundle_id
+                if not authorized.endswith("*")
+                else bundle_id.startswith(authorized[:-1])
+            )
+            if not covers:
+                self.cleanup(
+                    1,
+                    f"Provisioning profile {profile.name!r} authorizes "
+                    f"{authorized!r}, which does not cover the app's bundle "
+                    f"id {bundle_id!r}. Use a profile registered for this "
+                    f"App ID.",
+                )
 
     # Valid values of the macOS distribution lane selector. A single enum —
     # instead of per-lane booleans — makes conflicting lanes inexpressible
