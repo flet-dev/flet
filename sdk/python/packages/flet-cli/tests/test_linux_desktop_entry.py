@@ -46,12 +46,42 @@ def _render(**overrides: str) -> str:
     return env.from_string(TEMPLATE_PATH.read_text()).render(cookiecutter=context)
 
 
+def _parse(content: str) -> dict:
+    """
+    Parse the entry the way a desktop environment does.
+
+    Substring assertions cannot see whitespace-control mistakes: a group
+    header glued onto the end of the preceding comment line still contains
+    "[Desktop Entry]" but leaves every key outside any group, and the whole
+    file is then ignored.
+    """
+    entry = {}
+    in_section = False
+    for line in content.splitlines():
+        if line.startswith("[") and line.endswith("]"):
+            in_section = line == "[Desktop Entry]"
+            continue
+        if in_section and "=" in line and not line.startswith("#"):
+            key, _, value = line.partition("=")
+            entry[key] = value
+    return entry
+
+
+def test_group_header_starts_its_own_line():
+    content = _render()
+    assert "\n[Desktop Entry]\n" in content, content[:400]
+
+
 def test_desktop_entry_fields():
     content = _render(project_description="Does great things.")
-    assert "[Desktop Entry]" in content
-    assert "Type=Application" in content
-    assert "Name=My App" in content
-    assert "Comment=Does great things." in content
+    entry = _parse(content)
+    assert entry["Type"] == "Application"
+    assert entry["Name"] == "My App"
+    assert entry["Comment"] == "Does great things."
+    assert entry["Exec"] == '"my_app" %U'
+    assert entry["Icon"] == "com.example.my_app"
+    assert entry["StartupWMClass"] == "com.example.my_app"
+    assert entry["Categories"] == "Utility;"
     # Exec is quoted: artifact names may contain spaces, and an unquoted
     # value would word-split into the wrong program.
     assert 'Exec="my_app" %U' in content

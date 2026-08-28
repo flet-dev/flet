@@ -11,7 +11,7 @@
     Categories have stricter rules and are escaped by `flet build` instead. -#}
 {%- macro entry_value(value) -%}
 {{ value | replace("\\", "\\\\") | replace("\r", " ") | replace("\n", " ") | replace("\t", " ") }}
-{%- endmacro -%}
+{%- endmacro %}
 [Desktop Entry]
 Type=Application
 Name={{ entry_value(cookiecutter.product_name) }}
