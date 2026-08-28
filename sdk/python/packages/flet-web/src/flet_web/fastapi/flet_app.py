@@ -18,9 +18,9 @@ from flet.controls.context import _context_page, context
 from flet.controls.exceptions import FletPageDisconnectedException
 from flet.messaging.connection import Connection
 from flet.messaging.protocol import (
-    ClientMessage,
     ControlEventBody,
     InvokeMethodResponseBody,
+    Message,
     MessageAction,
     RegisterClientRequestBody,
     RegisterClientResponseBody,
@@ -335,7 +335,7 @@ class FletApp(Connection):
 
             # register response
             self.send_message(
-                ClientMessage(
+                Message(
                     MessageAction.REGISTER_CLIENT,
                     RegisterClientResponseBody(
                         session_id=self.__session.id,
@@ -403,7 +403,7 @@ class FletApp(Connection):
             self.__running_tasks.add(task)
             task.add_done_callback(self.__running_tasks.discard)
 
-    def send_message(self, message: ClientMessage):
+    def send_message(self, message: Message):
         """
         Serialize and enqueue a server message for transport to the client.
 

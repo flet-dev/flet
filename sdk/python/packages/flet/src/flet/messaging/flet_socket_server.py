@@ -15,9 +15,9 @@ import msgpack
 from flet.controls.base_control import BaseControl
 from flet.messaging.connection import Connection
 from flet.messaging.protocol import (
-    ClientMessage,
     ControlEventBody,
     InvokeMethodResponseBody,
+    Message,
     MessageAction,
     RegisterClientRequestBody,
     RegisterClientResponseBody,
@@ -383,7 +383,7 @@ class FletSocketServer(Connection):
 
             # register response
             self.send_message(
-                ClientMessage(
+                Message(
                     MessageAction.REGISTER_CLIENT,
                     RegisterClientResponseBody(
                         session_id=self.session.id,
@@ -422,7 +422,7 @@ class FletSocketServer(Connection):
             self.__running_tasks.add(task)
             task.add_done_callback(self.__running_tasks.discard)
 
-    def send_message(self, message: ClientMessage):
+    def send_message(self, message: Message):
         """
         Encodes and queues an outbound message for the active connection.
 

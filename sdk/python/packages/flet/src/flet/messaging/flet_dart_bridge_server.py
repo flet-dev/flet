@@ -35,9 +35,9 @@ import msgpack
 from flet.controls.base_control import BaseControl
 from flet.messaging.connection import Connection
 from flet.messaging.protocol import (
-    ClientMessage,
     ControlEventBody,
     InvokeMethodResponseBody,
+    Message,
     MessageAction,
     RegisterClientRequestBody,
     RegisterClientResponseBody,
@@ -180,7 +180,7 @@ class FletDartBridgeServer(Connection):
 
             # register response
             self.send_message(
-                ClientMessage(
+                Message(
                     MessageAction.REGISTER_CLIENT,
                     RegisterClientResponseBody(
                         session_id=self.session.id,
@@ -218,7 +218,7 @@ class FletDartBridgeServer(Connection):
             self.__running_tasks.add(task)
             task.add_done_callback(self.__running_tasks.discard)
 
-    def send_message(self, message: ClientMessage):
+    def send_message(self, message: Message):
         """
         Encodes a protocol message and posts it to the Dart side via
         `dart_bridge.send_bytes`. Non-blocking; ordering is preserved by the

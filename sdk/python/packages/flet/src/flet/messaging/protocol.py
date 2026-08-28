@@ -270,11 +270,12 @@ class MessageAction(Enum):
 
 
 @dataclass
-class ClientMessage:
+class Message:
     """
-    Top-level protocol frame with action and payload.
+    Top-level protocol frame, mirroring the Dart class of the same name
+    (`protocol/message.dart`).
 
-    Messages are serialized as a two-item sequence: `[action_code, body]`.
+    Serialized as a two-item sequence: `[action_code, body]`.
     """
 
     action: MessageAction
