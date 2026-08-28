@@ -7,6 +7,8 @@ import '../flet_service.dart';
 import '../utils/file_picker.dart';
 import '../utils/numbers.dart';
 import '../utils/platform.dart';
+import '../utils/platform_utils_web.dart'
+    if (dart.library.io) '../utils/platform_utils_non_web.dart';
 
 class FilePickerService extends FletService {
   FilePickerService({required super.control});
@@ -51,6 +53,25 @@ class FilePickerService extends FletService {
           uploadFiles(files, control.backend.pageUri);
         }
       case "pick_files":
+        var fromGesture = args["_from_gesture"] == true;
+
+        // Not reached from a gesture and the browser has already told us it
+        // will not open the dialog: fail now with something actionable, rather
+        // than leaving the caller waiting out its timeout on nothing.
+        if (!fromGesture && isGestureGatedDialogBlocked()) {
+          throw Exception(
+              "This browser only opens a file picker while it is handling a "
+              "user's click, so pick_files() cannot open one - by the time it "
+              "reaches your Python code the click is over. Attach "
+              "ft.PickFiles(...) to the control's `action` property instead "
+              "and handle FilePicker.on_result. "
+              "See https://flet.dev/docs/cookbook/client-actions");
+        }
+
+        // Note for future edits: nothing may be awaited between entering this
+        // method and the FilePicker.pickFiles() call below. On the gesture
+        // path an async gap discards the browser's user activation and the
+        // dialog silently never opens. See flet-dev/flet#3710.
         _files = (await FilePicker.pickFiles(
                 dialogTitle: dialogTitle,
                 initialDirectory: initialDirectory,
@@ -63,7 +84,7 @@ class FilePickerService extends FletService {
                 withReadStream: !withData,
                 cancelUploadOnWindowBlur: cancelUploadOnWindowBlur))
             ?.files;
-        return _files != null
+        var pickedFiles = _files != null
             ? _files!.asMap().entries.map((file) {
                 return FilePickerFile(
                         id: file.key, // use entry's index as id
@@ -74,6 +95,11 @@ class FilePickerService extends FletService {
                     .toMap();
               }).toList()
             : [];
+        if (fromGesture) {
+          // A gesture-triggered pick has no caller to return to.
+          control.triggerEvent("result", {"files": pickedFiles});
+        }
+        return pickedFiles;
       case "save_file":
         if ((kIsWeb || isAndroidMobile() || isIOSMobile()) &&
             srcBytes == null) {

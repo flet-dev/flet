@@ -11,6 +11,7 @@ __all__ = [
     "FilePicker",
     "FilePickerFile",
     "FilePickerFileType",
+    "FilePickerResultEvent",
     "FilePickerUploadEvent",
     "FilePickerUploadFile",
 ]
@@ -141,6 +142,22 @@ class FilePickerFile:
 
 
 @dataclass
+class FilePickerResultEvent(Event["FilePicker"]):
+    """
+    Event emitted when files are selected through a
+    :class:`~flet.PickFiles` action.
+
+    Not emitted by :meth:`flet.FilePicker.pick_files`, which returns the
+    selected files directly.
+    """
+
+    files: list[FilePickerFile]
+    """
+    The selected files, or an empty list if the user cancelled.
+    """
+
+
+@dataclass
 class FilePickerUploadEvent(Event["FilePicker"]):
     """
     Event emitted when a file is uploaded via \
@@ -178,6 +195,18 @@ class FilePicker(Service):
         ```bash
         sudo apt-get install zenity
         ```
+    """
+
+    on_result: Optional[EventHandler[FilePickerResultEvent]] = None
+    """
+    Called when files are selected through a :class:`~flet.PickFiles` action.
+
+    A `PickFiles` action opens the dialog on the client before your code sees
+    the click, so the selection cannot be returned to the caller the way
+    :meth:`pick_files` returns it - it arrives here instead.
+
+    The picked files stay associated with this `FilePicker`, so they can be
+    passed straight to :meth:`upload`.
     """
 
     on_upload: Optional[EventHandler[FilePickerUploadEvent]] = None

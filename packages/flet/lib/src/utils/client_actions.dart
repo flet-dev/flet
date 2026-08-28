@@ -39,15 +39,14 @@ void runClientActions(BuildContext context, dynamic actions) {
       continue;
     }
 
+    // Services distinguish the two entry points: reaching them from a gesture
+    // is what makes gesture-gated APIs work, and a result cannot be returned
+    // to a caller that does not exist, so services report it as an event.
+    var args = {...?(action["args"] as Map?), "_from_gesture": true};
+
     service
-        .invokeMethod(method, action["args"], _kClientActionTimeout)
-        .then((result) {
-      if (result != null) {
-        service.triggerEvent("result", result);
-      }
-    }).catchError((e) {
-      debugPrint("Client action $method failed: $e");
-    });
+        .invokeMethod(method, args, _kClientActionTimeout)
+        .catchError((e) => debugPrint("Client action $method failed: $e"));
   }
 }
 

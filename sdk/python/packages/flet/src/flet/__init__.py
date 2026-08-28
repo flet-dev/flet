@@ -116,7 +116,10 @@ if TYPE_CHECKING:
     )
     from flet.controls.client_action import (
         ClientAction,
+        CopyToClipboard,
         OpenUrl,
+        PickFiles,
+        ShareText,
     )
     from flet.controls.colors import Colors
     from flet.controls.context import (
@@ -569,6 +572,7 @@ if TYPE_CHECKING:
         FilePicker,
         FilePickerFile,
         FilePickerFileType,
+        FilePickerResultEvent,
         FilePickerUploadEvent,
         FilePickerUploadFile,
     )
@@ -833,6 +837,7 @@ __all__ = [
     "ControlEventHandler",
     "ControlState",
     "ControlStateValue",
+    "CopyToClipboard",
     "CrossAxisAlignment",
     "CupertinoActionSheet",
     "CupertinoActionSheetAction",
@@ -916,6 +921,7 @@ __all__ = [
     "FilePicker",
     "FilePickerFile",
     "FilePickerFileType",
+    "FilePickerResultEvent",
     "FilePickerUploadEvent",
     "FilePickerUploadFile",
     "FilledButton",
@@ -1052,6 +1058,7 @@ __all__ = [
     "PaintRadialGradient",
     "PaintSweepGradient",
     "PaintingStyle",
+    "PickFiles",
     "Placeholder",
     "PlatformBrightnessChangeEvent",
     "PointerDeviceType",
@@ -1125,6 +1132,7 @@ __all__ = [
     "ShareFile",
     "ShareResult",
     "ShareResultStatus",
+    "ShareText",
     "SharedPreferences",
     "Shimmer",
     "ShimmerDirection",
@@ -1365,6 +1373,7 @@ _LAZY = {
     "ControlEventHandler": "flet.controls.control_event",
     "ControlState": "flet.controls.control_state",
     "ControlStateValue": "flet.controls.control_state",
+    "CopyToClipboard": "flet.controls.client_action",
     "CrossAxisAlignment": "flet.controls.types",
     "CupertinoActionSheet": "flet.controls.cupertino.cupertino_action_sheet",
     "CupertinoActionSheetAction": "flet.controls.cupertino.cupertino_action_sheet_action",  # noqa: E501
@@ -1448,6 +1457,7 @@ _LAZY = {
     "FilePicker": "flet.controls.services.file_picker",
     "FilePickerFile": "flet.controls.services.file_picker",
     "FilePickerFileType": "flet.controls.services.file_picker",
+    "FilePickerResultEvent": "flet.controls.services.file_picker",
     "FilePickerUploadEvent": "flet.controls.services.file_picker",
     "FilePickerUploadFile": "flet.controls.services.file_picker",
     "FilledButton": "flet.controls.material.filled_button",
@@ -1584,6 +1594,7 @@ _LAZY = {
     "PaintRadialGradient": "flet.controls.painting",
     "PaintSweepGradient": "flet.controls.painting",
     "PaintingStyle": "flet.controls.painting",
+    "PickFiles": "flet.controls.client_action",
     "Placeholder": "flet.controls.core.placeholder",
     "PlatformBrightnessChangeEvent": "flet.controls.page",
     "PointerDeviceType": "flet.controls.types",
@@ -1657,6 +1668,7 @@ _LAZY = {
     "ShareFile": "flet.controls.services.share",
     "ShareResult": "flet.controls.services.share",
     "ShareResultStatus": "flet.controls.services.share",
+    "ShareText": "flet.controls.client_action",
     "SharedPreferences": "flet.controls.services.shared_preferences",
     "Shimmer": "flet.controls.core.shimmer",
     "ShimmerDirection": "flet.controls.core.shimmer",
