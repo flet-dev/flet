@@ -49,12 +49,8 @@ Make sure all non-pure (binary) packages used in your Flet app have
 This command can be run on **macOS only**.
 :::
 
-Builds an iOS app archive (`.xcarchive`) and, when signing is configured,
+Builds an iOS app archive (`.xcarchive`) and, when [signing](#provisioning-profile) is configured,
 exports an `.ipa` for testing or distribution.
-
-Xcode exports an `.ipa` only for a **signed** app, so a build without a
-[provisioning profile](#provisioning-profile) stops at the `.xcarchive` — the
-command says which of the two it produced.
 
 To generate an `.ipa` for testing on your device or uploading to App Store Connect
 for distribution, you will need the following:
@@ -719,8 +715,8 @@ you'll need to manually trust the developer:
 
 | Symptom                                                        | Cause and fix                                                                                                                                                                                                                                                                                                                                  |
 |----------------------------------------------------------------|------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| The build succeeds but there is no `.ipa`, only an `.xcarchive` | The app was built unsigned, which is all Xcode can export without signing. Configure a [provisioning profile](#provisioning-profile) and a [signing certificate](#signing-certificate) to get an uploadable bundle.                                                                                                                        |
 | Build hangs at `Running Xcode build...` (`codesign` at 0% CPU) | macOS is waiting on a keychain prompt — possibly hidden behind other windows — for permission to use the signing key, common after importing a key from the terminal. Click **Always Allow** on the prompt, or pre-authorize `codesign` with `security set-key-partition-list -S apple-tool:,apple: -s -k <login-password> login.keychain-db`. |
 | `No valid code signing certificates were found`                | No signing certificate and matching profile are installed for the selected team — walk through [Signing Certificate](#signing-certificate) and [Provisioning Profile](#provisioning-profile).                                                                                                                                                  |
 | A manually copied provisioning profile keeps disappearing      | A running Xcode process removes profiles copied into `~/Library/MobileDevice/Provisioning Profiles` — quit Xcode before [installing the profile](#provisioning-profile).                                                                                                                                                                       |
 | `Provisioning profile '<name>' is not installed`               | The configured name or UUID matches nothing installed. Compare it with the profiles the message lists — the portal's name is often not what it is assumed to be — and [install the profile](#installing-provisioning-profile) if it is missing.                                                                                             |
-| The build succeeds but there is no `.ipa`, only an `.xcarchive` | The app was built unsigned, which is all Xcode can export without signing. Configure a [provisioning profile](#provisioning-profile) and a [signing certificate](#signing-certificate) to get an uploadable bundle.                                                                                                                        |
