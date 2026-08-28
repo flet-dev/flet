@@ -28,6 +28,13 @@ _user32 = ctypes.WinDLL("user32", use_last_error=True)
 
 
 class GUID(ctypes.Structure):
+    """
+    ctypes mapping of the Windows `GUID` structure.
+
+    Can be initialized from a `{xxxxxxxx-xxxx-...}` string, parsed via
+    `CLSIDFromString`.
+    """
+
     _fields_ = [
         ("Data1", ctypes.c_uint32),
         ("Data2", ctypes.c_uint16),
@@ -45,10 +52,23 @@ _ole32.CLSIDFromString.argtypes = [ctypes.c_wchar_p, ctypes.c_void_p]
 
 
 class PROPERTYKEY(ctypes.Structure):
+    """
+    ctypes mapping of `PROPERTYKEY`: a property-set GUID (`fmtid`) plus a
+    property id (`pid`) identifying one property within that set.
+    """
+
     _fields_ = [("fmtid", GUID), ("pid", ctypes.c_uint32)]
 
 
 class PROPVARIANT(ctypes.Structure):
+    """
+    Minimal ctypes mapping of `PROPVARIANT` (16-byte header + value union).
+
+    Only what this module needs: the `vt` type tag, three reserved words, and
+    the value union collapsed to two pointer-sized fields (`data` holds the
+    `VT_LPWSTR` string pointer).
+    """
+
     _fields_ = [
         ("vt", ctypes.c_uint16),
         ("r1", ctypes.c_uint16),
@@ -97,6 +117,14 @@ _PS_Release = ctypes.WINFUNCTYPE(ctypes.c_ulong, ctypes.c_void_p)
 
 
 class IPropertyStoreVtbl(ctypes.Structure):
+    """
+    `IPropertyStore` COM vtable layout, in declaration order.
+
+    Only the methods this module calls (`Release`, `SetValue`, `Commit`) are
+    given real function prototypes; the rest are placeholder pointers that
+    keep the vtable slots aligned.
+    """
+
     _fields_ = [
         ("QueryInterface", ctypes.c_void_p),
         ("AddRef", ctypes.c_void_p),
@@ -110,6 +138,10 @@ class IPropertyStoreVtbl(ctypes.Structure):
 
 
 class IPropertyStore(ctypes.Structure):
+    """
+    `IPropertyStore` COM interface pointer layout: a single vtable pointer.
+    """
+
     _fields_ = [("lpVtbl", ctypes.POINTER(IPropertyStoreVtbl))]
 
 
