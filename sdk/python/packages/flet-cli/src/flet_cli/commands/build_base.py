@@ -1424,7 +1424,9 @@ class BaseBuildCommand(BaseFlutterCommand):
             "project_name_slug": project_name_slug,
             "artifact_name": artifact_name,
             "product_name": product_name,
-            "description": (
+            # Templates consume this as cookiecutter.project_description
+            # (pubspec description, web manifest, Linux .desktop entry).
+            "project_description": (
                 self.options.description
                 or self.get_pyproject("project.description")
                 or self.get_pyproject("tool.poetry.description")

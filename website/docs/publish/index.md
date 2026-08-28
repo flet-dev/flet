@@ -702,12 +702,7 @@ source_packages = ["package1", "package2"]
 
 ### Icons
 
-:::note[Platform support]
-[Android](android.md), [iOS](ios.md), [macOS](macos.md), [Windows](windows.md)
-and [Web](web/static-website/index.md#flet-build-web) only.
-:::
-
-You can customize app icons for all platforms (except Linux) using image files placed in
+You can customize app icons for all platforms using image files placed in
 the `assets` directory of your Flet app.
 
 If a platform-specific icon (as in the table below) is not provided, `icon.png`
@@ -721,6 +716,7 @@ For the iOS platform, transparency (alpha channel) will be automatically removed
 | Web      | `icon_web.png`                           | ≥ 512×512 px     |                                                                                             |
 | Windows  | `icon_windows.ico` or `icon_windows.png` | 256×256 px       | `.png` file will be internally converted to a 256×256 px `.ico` icon.                       |
 | macOS    | `icon_macos.png`                         | ≥ 1024×1024 px   |                                                                                             |
+| Linux    | `icon_linux.png`                         | 256×256 px       | Sets the window icon on X11. See [Linux](linux.md#app-icon) for Wayland desktop integration. |
 
 ### Splash screen
 

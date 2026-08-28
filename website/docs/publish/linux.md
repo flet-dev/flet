@@ -66,6 +66,49 @@ This command can be run on **Linux only** (or [WSL](https://docs.microsoft.com/e
 
 Builds a Linux executable.
 
+## App icon
+
+The app icon is taken from `icon_linux.png` (falling back to `icon.png`, or the
+default Flet icon) in the `assets` directory of your Flet app — see
+[Icons](index.md#icons). `flet build linux` copies it into the bundle as
+`data/app_icon.png`, and the app sets it as its window icon on startup.
+
+How the icon shows up depends on the display server (see
+[Window positioning on Wayland](#window-positioning-on-wayland) for checking
+the session type):
+
+- **X11** (and XWayland): taskbars and window switchers read the window icon
+  directly — it works out of the box, no installation needed.
+- **Wayland** (the default session on modern GNOME/Ubuntu): the protocol has no
+  window-icon concept. The desktop environment resolves the app's name and icon
+  from an installed `.desktop` entry matching the app id, and shows a generic
+  icon until one is installed.
+
+For Wayland (and for listing the app in the application launcher on any
+session), the bundle ships a ready-to-install desktop entry and icon under
+`share/`:
+
+```
+share/applications/<bundle_id>.desktop
+share/icons/hicolor/256x256/apps/<bundle_id>.png
+```
+
+To register the app for the current user, copy them into `~/.local/share` and
+point `Exec=` at the absolute path of the executable:
+
+```bash
+cp -r share/. ~/.local/share/
+sed -i "s|^Exec=.*|Exec=$PWD/<executable> %U|" ~/.local/share/applications/<bundle_id>.desktop
+```
+
+(run from the bundle directory, replacing `<executable>` and `<bundle_id>`; a
+system-wide install to `/usr/share` works the same way). Linux packaging tools
+(`.deb`/`.rpm`/AppImage builders) can pick up the same two files.
+
+The desktop entry's name comes from `--product` and its comment from
+`--description` (or the corresponding `pyproject.toml` settings); the app id is
+the [bundle ID](index.md#bundle-id) — `<org_name>.<project_name>` by default.
+
 ## Window positioning on Wayland
 
 On Linux the **display server** controls window placement, and this differs
@@ -109,3 +152,4 @@ echo $XDG_SESSION_TYPE   # "wayland" or "x11"
 | CMake can't find `gtk+-3.0` or other packages                                                                       | One or more `-dev` [prerequisites](#prerequisites) are missing — install the full list (package names differ on non-Debian distributions).                                                                                                                        |
 | The built app won't start on users' machines: `error while loading shared libraries: libmpv…` (or GStreamer errors) | The [`Audio`](../services/audio/index.md#usage) service and [`Video`](../controls/video/index.md#linux) control link against system libraries — `mpv`/`libmpv` and GStreamer must also be installed on the machine *running* the app, not only the build machine. |
 | Window positioning or centering has no effect                                                                       | The app is running in a Wayland session — see [Window positioning on Wayland](#window-positioning-on-wayland).                                                                                                                                                    |
+| The taskbar/dock shows a generic icon on Wayland                                                                    | Wayland resolves icons from an installed desktop entry, not from the window — install the bundle's `share/` files as described in [App icon](#app-icon).                                                                                                          |

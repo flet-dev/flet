@@ -171,6 +171,18 @@ install(DIRECTORY "${PROJECT_BUILD_DIR}/${FLUTTER_ASSET_DIR_NAME}"
 if(EXISTS "${CMAKE_CURRENT_SOURCE_DIR}/app_icon.png")
   install(FILES "${CMAKE_CURRENT_SOURCE_DIR}/app_icon.png"
     DESTINATION "${INSTALL_BUNDLE_DATA_DIR}" COMPONENT Runtime)
+
+  # Ready-to-install freedesktop integration: the .desktop entry plus the icon
+  # in the hicolor theme layout. Wayland desktops (e.g. GNOME) resolve the
+  # taskbar icon only from an installed desktop entry matching the app id, so
+  # users can register the app with:  cp -r share/. ~/.local/share/
+  install(FILES "${CMAKE_CURRENT_SOURCE_DIR}/app_icon.png"
+    DESTINATION "${CMAKE_INSTALL_PREFIX}/share/icons/hicolor/256x256/apps"
+    RENAME "${APPLICATION_ID}.png" COMPONENT Runtime)
+endif()
+if(EXISTS "${CMAKE_CURRENT_SOURCE_DIR}/${APPLICATION_ID}.desktop")
+  install(FILES "${CMAKE_CURRENT_SOURCE_DIR}/${APPLICATION_ID}.desktop"
+    DESTINATION "${CMAKE_INSTALL_PREFIX}/share/applications" COMPONENT Runtime)
 endif()
 
 # Install the AOT library on non-Debug builds only.
