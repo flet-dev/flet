@@ -121,7 +121,7 @@ class Command(BaseBuildCommand):
                 0,
                 message=(
                     f"Successfully built your [cyan]"
-                    f"{self.platforms[self.target_platform]['status_text']}"
+                    f"{self.describe_build_output()}"
                     f"[/cyan]! {self.emojis['success']} "
                     f"Find it in [cyan]{self.rel_out_dir}[/cyan] directory. "
                     f"{self.emojis['directory']}"
@@ -129,6 +129,15 @@ class Command(BaseBuildCommand):
                         "\nRun [cyan]flet serve[/cyan] command to "
                         "start a web server with your app. "
                         if self.target_platform == "web"
+                        else ""
+                    )
+                    + (
+                        "\nNo [cyan].ipa[/cyan] was produced: Xcode exports one "
+                        "only for a signed app. Configure a "
+                        "[cyan]provisioning profile[/cyan] and a "
+                        "[cyan]signing certificate[/cyan] to get an uploadable "
+                        "bundle: https://flet.dev/docs/publish/ios"
+                        if self.target_platform == "ipa" and not self.built_ipa()
                         else ""
                     )
                 ),
@@ -236,9 +245,46 @@ class Command(BaseBuildCommand):
         self._run_flutter_command()
 
         console.log(
-            f"Built [cyan]{self.platforms[self.target_platform]['status_text']}"
+            f"Built [cyan]{self.describe_build_output()}"
             f"[/cyan] {self.emojis['checkmark']}",
         )
+
+    def built_ipa(self) -> bool:
+        """
+        Check whether the build produced an `.ipa`.
+
+        Both locations are searched, so this answers the same question
+        before and after the build outputs are copied.
+
+        Returns:
+            True when an `.ipa` exists in the output directory or in the
+                Flutter project's build directory.
+        """
+
+        assert self.out_dir
+        assert self.flutter_dir
+
+        return any(self.out_dir.glob("*.ipa")) or any(
+            self.flutter_dir.glob("build/ios/ipa/*.ipa")
+        )
+
+    def describe_build_output(self) -> str:
+        """
+        Name the artifact the build actually produced.
+
+        `flet build ipa` yields only an `.xcarchive` when the app is built
+        unsigned, so the platform's status text would promise an `.ipa`
+        that was never written.
+
+        Returns:
+            The artifact description for status messages.
+        """
+
+        assert self.target_platform
+
+        if self.target_platform == "ipa" and not self.built_ipa():
+            return ".xcarchive (Xcode archive) for iOS"
+        return str(self.platforms[self.target_platform]["status_text"])
 
     def preflight_ios_signing(self) -> None:
         """
