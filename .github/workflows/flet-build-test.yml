@@ -6,8 +6,6 @@ on:
       - '**'
     branches-ignore:
       - main
-      # TEMP (issue #2269): the Linux icon harness covers this branch.
-      - fix/build-linux-icon
     paths:
       - '.github/workflows/flet-build-test.yml'
       - '.github/workflows/flet-build-test-matrix.yml'
