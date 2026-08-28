@@ -667,7 +667,10 @@ docs:
           TooltipTheme: types/tooltiptheme.md
       - types/browserconfiguration.md
       - types/clientaction.md
+      - types/copytoclipboard.md
       - types/openurl.md
+      - types/pickfiles.md
+      - types/sharetext.md
       - types/tooltip.md
       - types/url.md
       - types/webviewconfiguration.md
@@ -836,6 +839,7 @@ docs:
       - types/dragwillacceptevent.md
       - types/event.md
       - types/expansionpanellistchangeevent.md
+      - types/filepickerresultevent.md
       - types/filepickeruploadevent.md
       - types/gyroscopereadingevent.md
       - types/hoverevent.md
