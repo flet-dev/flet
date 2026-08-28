@@ -111,11 +111,30 @@ jobs:
             $LINUX_DEPS x11-utils xvfb desktop-file-utils libgl1-mesa-dri
           sudo apt-get clean
 
-      - name: Setup Flutter
-        uses: kuhnroyal/flutter-fvm-config-action/setup@c378498f1d1962d33039c3989411093ef8a17b2c # v3.3
+      - name: Get Flutter version from ".fvmrc"
+        uses: kuhnroyal/flutter-fvm-config-action/config@c378498f1d1962d33039c3989411093ef8a17b2c # v3.3
+        id: fvm-config-action
         with:
           path: '.fvmrc'
+
+      - name: Setup Flutter
+        uses: subosito/flutter-action@1a449444c387b1966244ae4d4f8c696479add0b2 # v2.23.0
+        with:
+          flutter-version: ${{ steps.fvm-config-action.outputs.FLUTTER_VERSION }}
+          # Flutter publishes no linux-arm64 archive on stable, so the action
+          # cannot resolve a version there; ci.yml's build_linux job takes the
+          # same escape hatch.
+          # https://github.com/subosito/flutter-action/issues/345#issuecomment-2657332687
+          channel: ${{ matrix.arch == 'arm' && 'master' || 'stable' }}
           cache: true
+
+      - name: Mark git safe directories
+        shell: bash
+        run: |
+          git config --global --add safe.directory "$GITHUB_WORKSPACE"
+          if [[ -n "${FLUTTER_ROOT:-}" ]]; then
+            git config --global --add safe.directory "$FLUTTER_ROOT"
+          fi
 
       - name: Generate fixture app
         shell: bash
