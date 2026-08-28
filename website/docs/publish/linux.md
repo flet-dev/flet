@@ -122,8 +122,21 @@ and falls back to that id, so the dock tooltip reads `com.example.my_app`
 rather than your product name; installing the entry fixes the name and the
 Wayland icon together, since both are resolved from it.
 
-Its [application categories](index.md#application-categories) default to
-`Utility` and can be set from the CLI or `pyproject.toml`:
+Its [application categories](#application-categories) decide where the app is
+filed in application menus.
+
+## Application categories
+
+The [`Categories`](https://specifications.freedesktop.org/desktop-entry/latest/recognized-keys.html#key-categories) key of the generated desktop entry
+determines which menu sections the app appears under. Values must be taken from
+the [freedesktop category registry](https://specifications.freedesktop.org/menu/latest/category-registry.html); desktop environments ignore
+unregistered ones.
+
+Its value is determined in the following order of precedence:
+
+1. [`--linux-categories`](../cli/flet-build.md#--linux-categories)
+2. `[tool.flet.linux].categories`
+3. `Utility`
 
 ```bash
 flet build linux --linux-categories Game Education

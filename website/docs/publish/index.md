@@ -496,42 +496,6 @@ description = "Tracks your daily habits."
 </TabItem>
 </Tabs>
 
-### Application categories
-
-:::note[Platform support]
-[Linux](linux.md) only.
-:::
-
-The [freedesktop categories](https://specifications.freedesktop.org/menu/latest/category-registry.html)
-written to the [`Categories`](https://specifications.freedesktop.org/desktop-entry/latest/recognized-keys.html#key-categories) key of the generated
-[desktop entry](linux.md#app-icon), which decide where the app is filed in
-application menus. Values must come from the registry above; unregistered ones
-are ignored by desktop environments.
-
-#### Resolution order
-
-Its value is determined in the following order of precedence:
-
-1. [`--linux-categories`](../cli/flet-build.md#--linux-categories)
-2. `[tool.flet.linux].categories`
-3. `Utility`
-
-#### Example
-
-<Tabs groupId="flet-build--pyproject-toml">
-<TabItem value="flet-build" label="flet build">
-```bash
-flet build linux --linux-categories Game Education
-```
-</TabItem>
-<TabItem value="pyproject-toml" label="pyproject.toml">
-```toml
-[tool.flet.linux]
-categories = ["Game", "Education"]
-```
-</TabItem>
-</Tabs>
-
 ### Company Name
 
 :::note[Platform support]
