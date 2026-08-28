@@ -20,9 +20,8 @@ from flet.controls.transform import (
     Transform,
 )
 from flet.controls.types import Number
-from flet.utils import deprecated_class
 
-__all__ = ["ConstrainedControl", "LayoutControl", "LayoutSizeChangeEvent"]
+__all__ = ["LayoutControl", "LayoutSizeChangeEvent"]
 
 
 @dataclass
@@ -319,12 +318,3 @@ class LayoutControl(Control):
 
     More information [here](https://flet.dev/docs/cookbook/animations).
     """
-
-
-@deprecated_class(
-    reason="Inherit from LayoutControl instead.",
-    version="0.80.0",
-    delete_version="1.0",
-)
-class ConstrainedControl(LayoutControl):
-    pass

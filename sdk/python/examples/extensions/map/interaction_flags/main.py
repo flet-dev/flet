@@ -16,6 +16,9 @@ FLAG_OPTIONS: list[tuple[str, ftm.InteractionFlag]] = [
 def main(page: ft.Page):
     page.padding = 16
 
+    async def open_attribution(e: ft.Event[ftm.SimpleAttribution]):
+        await ft.UrlLauncher().launch_url("https://www.openstreetmap.org/copyright")
+
     def get_selected_flags() -> ftm.InteractionFlag:
         flags = ftm.InteractionFlag.NONE
         for checkbox in checkboxes:
@@ -62,9 +65,7 @@ def main(page: ft.Page):
             ),
             ftm.SimpleAttribution(
                 text="OpenStreetMap contributors",
-                on_click=lambda e: e.page.launch_url(
-                    "https://www.openstreetmap.org/copyright"
-                ),
+                on_click=open_attribution,
             ),
         ],
     )

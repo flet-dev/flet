@@ -17,6 +17,8 @@ class Command(BaseCommand):
     """
     Package a Flet application into a standalone desktop executable or app bundle
     using PyInstaller.
+
+    Detailed usage guide: https://flet.dev/docs/publish/using-pyinstaller
     """
 
     def add_arguments(self, parser: argparse.ArgumentParser) -> None:

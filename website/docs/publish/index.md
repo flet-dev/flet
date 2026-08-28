@@ -11,6 +11,11 @@ import Tabs from '@theme/Tabs';
 Flet CLI provides the [`flet build`](../cli/flet-build.md) command to package a
 Flet app into a standalone executable or installable package for distribution.
 
+:::info[Alternative: flet pack]
+For desktop targets, a PyInstaller-based route is also supported —
+see [`flet pack`](using-pyinstaller.md).
+:::
+
 ## Prerequisites
 
 ### Platform matrix
@@ -562,7 +567,7 @@ Increment this for each new release to differentiate it from previous versions.
 
 Its value is determined in the following order of precedence:
 
-1. `--build-version`
+1. [`--build-version`](../cli/flet-build.md#--build-version)
 2. `[project].version`
 3. `[tool.poetry].version`
 4. Otherwise, the build version from the generated `pubspec.yaml`
@@ -1503,6 +1508,96 @@ the build and release process of your Flet apps.
 You can use [GitHub Actions](https://docs.github.com/en/actions) to build your
 Flet app automatically on every push, pull request, or manual run.
 
+The recommended option is the [official Flet build action](https://github.com/flet-dev/flet-build-action),
+which wraps `flet build`, sets up the required tools, installs Linux build dependencies when needed, and
+creates a platform-aware archive for upload. If you need full control over every
+step, you can run `flet build` **manually** in the workflow instead.
+
+<Tabs groupId="github-actions">
+<TabItem value="flet-build-action" label="Flet build action">
+
+```yaml
+name: Build Flet App # (1)!
+
+on: # (2)!
+  push: # (3)!
+  pull_request: # (4)!
+  workflow_dispatch: # (5)!
+
+jobs:
+  build:
+    name: Build ${{ matrix.target }}
+    runs-on: ${{ matrix.runner }}
+    strategy: # (6)!
+      fail-fast: false
+      matrix:
+        include:
+          - target: apk
+            runner: ubuntu-latest
+
+          - target: aab
+            runner: ubuntu-latest
+
+          - target: web
+            runner: ubuntu-latest
+
+          - target: linux
+            runner: ubuntu-latest
+
+          - target: windows
+            runner: windows-latest
+
+          - target: macos
+            runner: macos-latest
+
+          - target: ipa
+            runner: macos-latest
+
+          - target: ios-simulator
+            runner: macos-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v6 # (7)!
+
+      - name: Build app
+        id: build
+        uses: flet-dev/flet-build-action@v1 # (8)!
+        with:
+          target: ${{ matrix.target }} # (9)!
+          runner-python-version: "3.14" # (10)!
+          bundled-python-version: "3.14" # (11)!
+          build-number: ${{ github.run_number }} # (12)!
+
+      - name: Upload build archive
+        uses: actions/upload-artifact@v7 # (13)!
+        with:
+          path: ${{ steps.build.outputs.archive-path }} # (14)!
+          archive: false # (15)!
+          if-no-files-found: error # (16)!
+          overwrite: false
+```
+
+1. Workflow display name shown in the **Actions** tab.
+2. Trigger block for automatic and manual workflow runs.
+3. Runs this workflow on every push (unless you restrict branches).
+4. Runs this workflow when pull requests are opened/updated.
+5. Enables manual runs from GitHub UI (**Actions** → **Run workflow**).
+6. Matrix strategy: each `include` item becomes a parallel build job.
+7. Checks out your repository so this workflow can access project files. View its docs [here](https://github.com/actions/checkout).
+8. Builds the selected target using the official Flet build action. View its docs [here](https://github.com/flet-dev/flet-build-action).
+9. Passes the current matrix target to the action.
+10. Python version used by `uv` on the GitHub Actions runner.
+11. Python version bundled into the built Flet app. See [Choosing a Python version](#choosing-a-python-version).
+12. Uses the GitHub run number as the app build number. See [Build Number](#build-number).
+13. Uploads the archive created by the Flet build action. View its docs [here](https://github.com/actions/upload-artifact).
+14. Uploads the action's platform-aware archive output.
+15. Disables `upload-artifact`'s own archive wrapper because the Flet build action already created an archive.
+16. If no archive was found to upload, the workflow fails, indicating something went wrong during the build.
+
+</TabItem>
+<TabItem value="manual-flet-build" label="Manual flet build">
+
 ```yaml
 name: Build Flet App # (1)!
 
@@ -1512,7 +1607,7 @@ on: # (2)!
   workflow_dispatch: # (5)!
 
 env: # (6)!
-  UV_PYTHON: 3.12 # (7)!
+  UV_PYTHON: 3.14 # (7)!
   PYTHONUTF8: 1 # (8)!
 
   # https://flet.dev/docs/reference/environment-variables
@@ -1580,7 +1675,7 @@ jobs:
 
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v4 # (11)!
+        uses: actions/checkout@v6 # (11)!
 
       - name: Setup uv
         uses: astral-sh/setup-uv@v6 # (12)!
@@ -1600,7 +1695,7 @@ jobs:
           uv run ${{ matrix.build_cmd }} --yes --verbose
 
       - name: Upload Artifact
-        uses: actions/upload-artifact@v5.0.0 # (16)!
+        uses: actions/upload-artifact@v7 # (16)!
         with:
           name: ${{ matrix.name }}-build-artifact
           path: ${{ matrix.artifact_path }} # (17)!
@@ -1627,11 +1722,13 @@ jobs:
 17. Artifact path expected from each build target.
 18. If no files were found to upload, the workflow fails, indicating something went wrong during the build.
 
-The workflow file above builds for all major targets and uploads each build output as an artifact.
-You can further customize the workflow for your specific needs, for example,
-restricting the build targets or adding additional steps.
+</TabItem>
+</Tabs>
 
-See it in action [here](https://github.com/ndonkoHenri/flet-github-action-workflows).
+Both workflow variants build for all major targets and upload each build output
+as an artifact. You can further customize the workflow for your specific needs,
+for example, restricting the build targets or adding signing, notarization,
+store upload, or deployment steps.
 
 ## Troubleshooting
 

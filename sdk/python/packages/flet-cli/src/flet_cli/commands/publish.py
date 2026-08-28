@@ -7,7 +7,11 @@ import tempfile
 from pathlib import Path
 
 from flet.controls.types import RouteUrlStrategy, WebRenderer
-from flet.utils import copy_tree, is_within_directory, random_string
+from flet.utils import (
+    copy_tree,
+    is_within_directory,
+    random_string,
+)
 from flet_cli.commands.base import BaseCommand
 from flet_cli.utils.project_dependencies import (
     get_poetry_dependencies,
@@ -122,9 +126,9 @@ class Command(BaseCommand):
             dest="route_url_strategy",
             type=str.lower,
             choices=["path", "hash"],
-            default="path",
+            default=None,
             help="Controls how routes are handled in the browser "
-            "[env: FLET_WEB_ROUTE_URL_STRATEGY=]",
+            "(default: path) [env: FLET_WEB_ROUTE_URL_STRATEGY=]",
         )
         parser.add_argument(
             "--pwa-background-color",
@@ -146,7 +150,8 @@ class Command(BaseCommand):
             action="store_true",
             default=False,
             help="Disable loading of CanvasKit, Pyodide, and fonts from CDNs. "
-            "Use this for full offline deployments or air-gapped environments",
+            "Use this for full offline deployments or air-gapped environments "
+            "[env: FLET_WEB_NO_CDN=]",
         )
 
     def handle(self, options: argparse.Namespace) -> None:
@@ -370,14 +375,20 @@ class Command(BaseCommand):
             # typed-data boundary costs are a large per-frame tax for
             # byte-streaming Pyodide apps.
             web_renderer=WebRenderer(
-                options.web_renderer
-                or get_pyproject("tool.flet.web.renderer")
-                or "canvaskit"
+                (
+                    options.web_renderer
+                    or get_pyproject("tool.flet.web.renderer")
+                    or os.getenv("FLET_WEB_RENDERER")
+                    or "canvaskit"
+                ).lower()
             ),
             route_url_strategy=RouteUrlStrategy(
-                options.route_url_strategy
-                or get_pyproject("tool.flet.web.route_url_strategy")
-                or "path"
+                (
+                    options.route_url_strategy
+                    or get_pyproject("tool.flet.web.route_url_strategy")
+                    or os.getenv("FLET_WEB_ROUTE_URL_STRATEGY")
+                    or "path"
+                ).lower()
             ),
             no_cdn=no_cdn,
         )

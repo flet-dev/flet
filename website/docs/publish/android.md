@@ -357,8 +357,8 @@ An alias name for the key within the keystore.
 Its value is determined in the following order of precedence:
 
 1. [`--android-signing-key-alias`](../cli/flet-build.md#--android-signing-key-alias)
-2. `FLET_ANDROID_SIGNING_KEY_ALIAS`
-3. `[tool.flet.android.signing].key_alias`
+2. `[tool.flet.android.signing].key_alias`
+3. [`FLET_ANDROID_SIGNING_KEY_ALIAS`](../reference/environment-variables.md#flet_android_signing_key_alias)
 4. `"upload"`
 
 #### Example
@@ -375,7 +375,7 @@ flet build aab --android-signing-key-alias value
 key_alias = "value"
 ```
 </TabItem>
-<TabItem value="env" label=".env">
+<TabItem value="env" label="env var">
 ```dotenv
 FLET_ANDROID_SIGNING_KEY_ALIAS="value"
 ```
@@ -395,7 +395,7 @@ Its value is determined in the following order of precedence:
 
 1. [`--android-signing-key-store`](../cli/flet-build.md#--android-signing-key-store)
 2. `[tool.flet.android.signing].key_store`
-3. `FLET_ANDROID_SIGNING_KEY_STORE`
+3. [`FLET_ANDROID_SIGNING_KEY_STORE`](../reference/environment-variables.md#flet_android_signing_key_store)
 
 #### Example
 
@@ -411,7 +411,7 @@ flet build aab --android-signing-key-store path/to/store.jks
 key_store = "path/to/store.jks"
 ```
 </TabItem>
-<TabItem value="env" label=".env">
+<TabItem value="env" label="env var">
 ```dotenv
 FLET_ANDROID_SIGNING_KEY_STORE="path/to/store.jks"
 ```
@@ -426,7 +426,7 @@ A password to unlock the keystore file (can contain multiple key entries).
 Its value is determined in the following order of precedence:
 
 1. [`--android-signing-key-store-password`](../cli/flet-build.md#--android-signing-key-store-password)
-2. `FLET_ANDROID_SIGNING_KEY_STORE_PASSWORD`
+2. [`FLET_ANDROID_SIGNING_KEY_STORE_PASSWORD`](../reference/environment-variables.md#flet_android_signing_key_store_password)
 3. [key password](#key-password)
 
 #### Example
@@ -441,7 +441,7 @@ flet build aab --android-signing-key-store-password value
 For security reasons, the keystore password is not read from `pyproject.toml` to
 prevent accidental exposure in source control. See the other tabs for supported alternatives.
 </TabItem>
-<TabItem value="env" label=".env">
+<TabItem value="env" label="env var">
 ```dotenv
 FLET_ANDROID_SIGNING_KEY_STORE_PASSWORD="value"
 ```
@@ -456,7 +456,7 @@ A password used to access the private key inside the keystore.
 Its value is determined in the following order of precedence:
 
 1. [`--android-signing-key-password`](../cli/flet-build.md#--android-signing-key-password)
-2. `FLET_ANDROID_SIGNING_KEY_PASSWORD`
+2. [`FLET_ANDROID_SIGNING_KEY_PASSWORD`](../reference/environment-variables.md#flet_android_signing_key_password)
 3. [key store password](#key-store-password)
 
 #### Example
@@ -471,7 +471,7 @@ flet build aab --android-signing-key-password value
 For security reasons, the keystore password is not read from `pyproject.toml` to
 prevent accidental exposure in source control. See the other tabs for supported alternatives.
 </TabItem>
-<TabItem value="env" label=".env">
+<TabItem value="env" label="env var">
 ```dotenv
 FLET_ANDROID_SIGNING_KEY_PASSWORD="value"
 ```
@@ -1213,3 +1213,11 @@ help installing and using adb on different platforms.
     ```bash
     adb devices
     ```
+
+## Troubleshooting
+
+| Symptom                                                                                                                         | Cause and fix                                                                                                                                                             |
+|---------------------------------------------------------------------------------------------------------------------------------|---------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| Build succeeds but the app crashes on launch; `adb logcat` shows `FileNotFoundError`/`OSError` with a `sitepackages.zip/…` path | The package reads bundled data through `__file__`-relative paths — add it to [Extract packages](#extract-packages). Capture the traceback with the [ADB tips](#adb-tips). |
+| `keytool: command not found` when creating the upload keystore                                                                  | `keytool` ships with the Java JDK (installed with the [Android SDK](#android-sdk) prerequisite) — call it by its full path or add the JDK's `bin` directory to `PATH`.    |
+| Android manifest merger fails after adding a provider                                                                           | The `authorities` value clashes with the built-in `${applicationId}.provider` — pick a different one (see [Providers](#providers)).                                       |

@@ -4,7 +4,6 @@ from typing import Any, Optional
 from flet.controls.base_control import control
 from flet.controls.control_event import ControlEventHandler, Event, EventHandler
 from flet.controls.layout_control import LayoutControl
-from flet.utils.deprecated import deprecated
 
 __all__ = ["FletApp", "FletAppOutputEvent"]
 
@@ -109,59 +108,3 @@ class FletApp(LayoutControl):
     `force_pyodide=True`; root-level Pyodide pages have nowhere to
     bubble the event.
     """
-
-    @property
-    @deprecated(
-        reason="Use `boot_screen_options` instead, e.g. "
-        "boot_screen_options={'spinner_size': 30}.",
-        version="0.86.0",
-        delete_version="0.89.0",
-    )
-    def show_app_startup_screen(self) -> bool:
-        """
-        Whether to show the app startup screen.
-        """
-        return bool((self.boot_screen_options or {}).get("spinner_size", 0))
-
-    @show_app_startup_screen.setter
-    @deprecated(
-        reason="Use `boot_screen_options` instead, e.g. "
-        "boot_screen_options={'spinner_size': 30}.",
-        version="0.86.0",
-        delete_version="0.89.0",
-    )
-    def show_app_startup_screen(self, value: bool) -> None:
-        options = dict(self.boot_screen_options or {})
-        if value:
-            options.setdefault("spinner_size", 30)
-        else:
-            options.pop("spinner_size", None)
-        self.boot_screen_options = options
-
-    @property
-    @deprecated(
-        reason="Use `boot_screen_options` instead, e.g. "
-        "boot_screen_options={'startup_message': '...'}.",
-        version="0.86.0",
-        delete_version="0.89.0",
-    )
-    def app_startup_screen_message(self) -> Optional[str]:
-        """
-        Message to display on the app startup screen.
-        """
-        return (self.boot_screen_options or {}).get("startup_message")
-
-    @app_startup_screen_message.setter
-    @deprecated(
-        reason="Use `boot_screen_options` instead, e.g. "
-        "boot_screen_options={'startup_message': '...'}.",
-        version="0.86.0",
-        delete_version="0.89.0",
-    )
-    def app_startup_screen_message(self, value: Optional[str]) -> None:
-        options = dict(self.boot_screen_options or {})
-        if value is not None:
-            options["startup_message"] = value
-        else:
-            options.pop("startup_message", None)
-        self.boot_screen_options = options
