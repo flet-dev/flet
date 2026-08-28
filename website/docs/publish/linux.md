@@ -118,6 +118,11 @@ arguments and the launcher fails. Linux packaging tools
 The desktop entry's name comes from `--product` and its comment from
 `--description` (or the corresponding `pyproject.toml` settings); the app id is
 the [bundle ID](index.md#bundle-id) — `<org_name>.<project_name>` by default.
+Until the entry is installed the desktop environment has no name for the app
+and falls back to that id, so the dock tooltip reads `com.example.my_app`
+rather than your product name; installing the entry fixes the name and the
+Wayland icon together, since both are resolved from it.
+
 Its [application categories](https://specifications.freedesktop.org/menu/latest/category-registry.html)
 default to `Utility` and can be changed in `pyproject.toml`:
 
@@ -170,3 +175,4 @@ echo $XDG_SESSION_TYPE   # "wayland" or "x11"
 | The built app won't start on users' machines: `error while loading shared libraries: libmpv…` (or GStreamer errors) | The [`Audio`](../services/audio/index.md#usage) service and [`Video`](../controls/video/index.md#linux) control link against system libraries — `mpv`/`libmpv` and GStreamer must also be installed on the machine *running* the app, not only the build machine. |
 | Window positioning or centering has no effect                                                                       | The app is running in a Wayland session — see [Window positioning on Wayland](#window-positioning-on-wayland).                                                                                                                                                    |
 | The taskbar/dock shows a generic icon on Wayland                                                                    | Wayland resolves icons from an installed desktop entry, not from the window — install the bundle's `share/` files as described in [App icon](#app-icon).                                                                                                          |
+| The dock tooltip or app switcher shows the bundle ID instead of the app name                                        | The desktop entry is not installed, so the desktop environment has no name for the app and falls back to the app id — install the bundle's `share/` files as described in [App icon](#app-icon). |
