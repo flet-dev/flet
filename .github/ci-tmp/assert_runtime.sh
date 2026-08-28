@@ -22,9 +22,22 @@ APP_BIN="$3"
 LOG="${RUNNER_TEMP:-/tmp}/app-runtime.log"
 
 echo "== launching $APP_BIN under ${DISPLAY:-<no DISPLAY>}"
-"$APP_BIN" > "$LOG" 2>&1 &
+# setsid puts the app in its own process group: a Flet app forks a bundled
+# Python child, and killing only the parent leaves that child alive holding
+# the display, which keeps xvfb-run (and therefore the CI step) from ever
+# returning.
+setsid "$APP_BIN" > "$LOG" 2>&1 &
 APP_PID=$!
-trap 'kill "$APP_PID" 2>/dev/null || true' EXIT
+
+cleanup() {
+  kill -TERM -- "-${APP_PID}" 2>/dev/null || kill -TERM "${APP_PID}" 2>/dev/null || true
+  for _ in 1 2 3; do
+    kill -0 "${APP_PID}" 2>/dev/null || return 0
+    sleep 1
+  done
+  kill -KILL -- "-${APP_PID}" 2>/dev/null || kill -KILL "${APP_PID}" 2>/dev/null || true
+}
+trap cleanup EXIT
 
 # Wait for a mapped-or-unmapped toplevel carrying our class. GDK also creates
 # an InputOnly group-leader window with the same class, so those are skipped.
@@ -85,5 +98,4 @@ else
   fi
 fi
 
-kill "$APP_PID" 2>/dev/null || true
 exit "$status"

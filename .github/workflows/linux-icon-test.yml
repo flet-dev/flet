@@ -152,10 +152,53 @@ jobs:
             exit 1
           fi
 
+      - name: Package the bundle for download
+        if: always()
+        shell: bash
+        working-directory: ${{ runner.temp }}/app-${{ matrix.leg }}
+        env:
+          LEG: ${{ matrix.leg }}
+          ARTIFACT: ${{ matrix.artifact }}
+        run: |
+          if [ ! -d build/linux ]; then
+            echo "no bundle to package (build did not produce build/linux)"
+            exit 0
+          fi
+          # tar, not the artifact zip: zip loses the executable bit and
+          # mangles symlinks, so a downloaded bundle would not run.
+          cat > build/linux/RUN_ME.txt <<EOF
+          Flet Linux icon test bundle -- leg: ${LEG}
+
+          Run it:
+              ./${ARTIFACT}
+
+          Check the X11 window icon (click the window when the cursor
+          becomes a crosshair):
+              xprop | grep -E "WM_CLASS|_NET_WM_ICON"
+          Expect  WM_CLASS = "com.flet.flet-icon-test"
+          and     _NET_WM_ICON = 256, 256, ...
+          (256 even on the 'large' and 'default' legs -- that is the
+          downscale working; before the fix an oversized icon was dropped
+          entirely and _NET_WM_ICON was absent.)
+
+          On Wayland the taskbar icon only appears once the desktop entry
+          is installed:
+              cp -r share/. ~/.local/share/
+              sed -i "s|^Exec=.*|Exec=\$PWD/${ARTIFACT} %U|" \\
+                ~/.local/share/applications/com.flet.flet-icon-test.desktop
+              update-desktop-database ~/.local/share/applications
+          Then relaunch, and look for "Flet Icon Test" in the app grid.
+          EOF
+          tar -czf "${RUNNER_TEMP}/bundle-${LEG}.tar.gz" -C build linux
+          ls -lh "${RUNNER_TEMP}/bundle-${LEG}.tar.gz"
+
       - name: Assert runtime X11 properties (Xvfb)
-        # The runtime leg depends on Flutter getting a software GL context
-        # under Xvfb; a dispatch can soften it while that is being shaken out.
-        continue-on-error: ${{ github.event_name == 'workflow_dispatch' && inputs.strict_runtime == false }}
+        # Informational: it depends on Flutter obtaining a software GL
+        # context under Xvfb, which is not guaranteed on a headless runner.
+        # Never let it block the bundle upload, and never let it hang — the
+        # script's own worst case is ~90s.
+        continue-on-error: true
+        timeout-minutes: 6
         shell: bash
         working-directory: ${{ runner.temp }}/app-${{ matrix.leg }}
         env:
@@ -164,7 +207,8 @@ jobs:
           ICON_SIZE: ${{ matrix.icon_size }}
           ARTIFACT: ${{ matrix.artifact }}
         run: |
-          xvfb-run -a --server-args="-screen 0 1280x1024x24" \
+          timeout --kill-after=20s 240s \
+            xvfb-run -a --server-args="-screen 0 1280x1024x24" \
             "${ROOT}/.github/ci-tmp/assert_runtime.sh" \
             "com.flet.flet-icon-test" "${ICON_SIZE}" "./build/linux/${ARTIFACT}"
 
@@ -174,8 +218,7 @@ jobs:
         with:
           name: linux-icon-${{ matrix.leg }}
           path: |
-            ${{ runner.temp }}/app-${{ matrix.leg }}/build/linux/share/**
-            ${{ runner.temp }}/app-${{ matrix.leg }}/build/linux/data/app_icon.png
+            ${{ runner.temp }}/bundle-${{ matrix.leg }}.tar.gz
             ${{ runner.temp }}/app-${{ matrix.leg }}/build/flutter/pubspec.yaml
             ${{ runner.temp }}/app-${{ matrix.leg }}/build/flutter/linux/app_icon.cmake
             ${{ runner.temp }}/app-${{ matrix.leg }}/build/flutter/web/manifest.json
