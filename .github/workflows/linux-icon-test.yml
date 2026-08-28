@@ -1,0 +1,175 @@
+# TEMPORARY -- verification harness for issue #2269 (Linux app icon).
+# Remove this file, and .github/ci-tmp/, before opening the PR.
+name: TEMP Linux icon test
+
+on:
+  push:
+    branches:
+      - fix/build-linux-icon
+  workflow_dispatch:
+    inputs:
+      python_version:
+        description: "Bundled Python version to test"
+        type: choice
+        required: true
+        default: "3.13"
+        options:
+          - "3.12"
+          - "3.13"
+          - "3.14"
+      strict_runtime:
+        description: "Fail the job when the Xvfb runtime checks fail"
+        type: boolean
+        required: false
+        default: true
+
+concurrency:
+  group: ci-${{ github.workflow }}-${{ github.ref_name }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+
+env:
+  ROOT: "${{ github.workspace }}"
+  SCRIPTS: "${{ github.workspace }}/.github/scripts"
+  UV_PYTHON: 3.12
+  PYTHONUTF8: 1
+  FLET_CLI_NO_RICH_OUTPUT: 1
+
+jobs:
+  linux_icon:
+    name: Linux icon (${{ matrix.leg }})
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    permissions:
+      contents: read
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          # No icon in assets: the template's 1024x1024 default is used, so
+          # this leg proves the runner downscales it instead of letting GDK
+          # drop it for exceeding the _NET_WM_ICON size cap.
+          - leg: default
+            artifact: flet-icon-test
+            icon_size: 256x256
+          - leg: themed
+            artifact: flet-icon-test
+            icon_size: 256x256
+          # 512x512 must land in hicolor/512x512 and still be downscaled to
+          # 256x256 for the window icon.
+          - leg: large
+            artifact: flet-icon-test
+            icon_size: 256x256
+          # Quotes/newlines/tabs in the description, space in the artifact.
+          - leg: hostile
+            artifact: flet icon test
+            icon_size: 256x256
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@df4cb1c069e1874edd31b4311f1884172cec0e10 # v6.0.3
+        with:
+          fetch-depth: 0
+          fetch-tags: true
+          persist-credentials: false
+
+      - name: Setup uv
+        uses: astral-sh/setup-uv@fac544c07dec837d0ccb6301d7b5580bf5edae39 # v8.2.0
+        with:
+          enable-cache: true
+
+      - name: Patch versions
+        shell: bash
+        run: |
+          source "${SCRIPTS}/update_build_version.sh"
+          source "${SCRIPTS}/common.sh"
+          patch_python_package_versions
+
+      - name: Install Linux dependencies
+        shell: bash
+        run: |
+          sudo apt update --allow-releaseinfo-change
+          LINUX_DEPS="$(uv run --project sdk/python/packages/flet-cli flet --version --json | jq -r '.linux_dependencies | join(" ")')"
+          # xvfb and dbus ship with the runner image; xprop/xwininfo
+          # (x11-utils), desktop-file-validate and the software GL driver do not.
+          sudo apt-get install -y --no-install-recommends \
+            $LINUX_DEPS x11-utils xvfb desktop-file-utils libgl1-mesa-dri
+          sudo apt-get clean
+
+      - name: Setup Flutter
+        uses: kuhnroyal/flutter-fvm-config-action/setup@c378498f1d1962d33039c3989411093ef8a17b2c # v3.3
+        with:
+          path: '.fvmrc'
+          cache: true
+
+      - name: Generate fixture app
+        shell: bash
+        env:
+          LEG: ${{ matrix.leg }}
+        run: |
+          chmod +x .github/ci-tmp/*.sh
+          .github/ci-tmp/make_fixture.sh "${LEG}" "${RUNNER_TEMP}/app-${LEG}" "${ROOT}"
+
+      - name: Build Linux app
+        shell: bash
+        working-directory: ${{ runner.temp }}/app-${{ matrix.leg }}
+        env:
+          PYTHON_VERSION: ${{ inputs.python_version || '3.13' }}
+          LEG: ${{ matrix.leg }}
+        run: |
+          set -o pipefail
+          uv run flet build linux --python-version "${PYTHON_VERSION}" \
+            --yes --verbose --build-number "${GITHUB_RUN_NUMBER}" \
+            2>&1 | tee "${RUNNER_TEMP}/build-${LEG}.log"
+
+      - name: Assert bundle contents
+        shell: bash
+        env:
+          LEG: ${{ matrix.leg }}
+        run: |
+          uv run --project sdk/python/packages/flet-cli --with pyyaml \
+            python .github/ci-tmp/assert_bundle.py \
+            "${LEG}" "${RUNNER_TEMP}/app-${LEG}" "${ROOT}"
+
+      - name: Validate desktop entry
+        shell: bash
+        env:
+          LEG: ${{ matrix.leg }}
+        run: |
+          desktop-file-validate \
+            "${RUNNER_TEMP}/app-${LEG}/build/linux/share/applications/com.flet.flet-icon-test.desktop"
+
+      - name: Assert runtime X11 properties (Xvfb)
+        # The runtime leg depends on Flutter getting a software GL context
+        # under Xvfb; a dispatch can soften it while that is being shaken out.
+        continue-on-error: ${{ github.event_name == 'workflow_dispatch' && inputs.strict_runtime == false }}
+        shell: bash
+        working-directory: ${{ runner.temp }}/app-${{ matrix.leg }}
+        env:
+          LIBGL_ALWAYS_SOFTWARE: 1
+          GDK_BACKEND: x11
+          ICON_SIZE: ${{ matrix.icon_size }}
+          ARTIFACT: ${{ matrix.artifact }}
+        run: |
+          xvfb-run -a --server-args="-screen 0 1280x1024x24" \
+            "${ROOT}/.github/ci-tmp/assert_runtime.sh" \
+            "com.flet.flet-icon-test" "${ICON_SIZE}" "./build/linux/${ARTIFACT}"
+
+      - name: Upload bundle for inspection
+        if: always()
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
+        with:
+          name: linux-icon-${{ matrix.leg }}
+          path: |
+            ${{ runner.temp }}/app-${{ matrix.leg }}/build/linux/share/**
+            ${{ runner.temp }}/app-${{ matrix.leg }}/build/linux/data/app_icon.png
+            ${{ runner.temp }}/app-${{ matrix.leg }}/build/flutter/pubspec.yaml
+            ${{ runner.temp }}/app-${{ matrix.leg }}/build/flutter/linux/app_icon.cmake
+            ${{ runner.temp }}/app-${{ matrix.leg }}/build/flutter/web/manifest.json
+            ${{ runner.temp }}/app-${{ matrix.leg }}/build/flutter/web/index.html
+            ${{ runner.temp }}/build-${{ matrix.leg }}.log
+            ${{ runner.temp }}/app-runtime.log
+          if-no-files-found: warn
+          retention-days: 5
