@@ -41,18 +41,26 @@ env:
 
 jobs:
   linux_icon:
-    name: Linux icon (${{ matrix.leg }})
+    name: Linux icon (${{ matrix.leg }}, ${{ matrix.arch }})
     # 22.04 (glibc 2.35), not ubuntu-latest: the bundles are downloaded and
     # run on a real desktop, and a binary linked against 24.04's glibc 2.39
-    # will not start on anything older.
-    runs-on: ubuntu-22.04
+    # will not start on anything older. Both architectures are built because
+    # a Linux VM on an Apple Silicon host is arm64, where an x64 bundle only
+    # produces "Exec format error".
+    runs-on: ${{ matrix.runner }}
     timeout-minutes: 45
     permissions:
       contents: read
     strategy:
       fail-fast: false
       matrix:
+        arch: [x64, arm]
+        leg: [default, themed, large, hostile]
         include:
+          - arch: x64
+            runner: ubuntu-22.04
+          - arch: arm
+            runner: ubuntu-22.04-arm
           # No icon in assets: the template's 1024x1024 default is used, so
           # this leg proves the runner downscales it instead of letting GDK
           # drop it for exceeding the _NET_WM_ICON size cap.
@@ -161,6 +169,7 @@ jobs:
         working-directory: ${{ runner.temp }}/app-${{ matrix.leg }}
         env:
           LEG: ${{ matrix.leg }}
+          ARCH: ${{ matrix.arch }}
           ARTIFACT: ${{ matrix.artifact }}
         run: |
           if [ ! -d build/linux ]; then
@@ -187,13 +196,13 @@ jobs:
           On Wayland the taskbar icon only appears once the desktop entry
           is installed:
               cp -r share/. ~/.local/share/
-              sed -i "s|^Exec=.*|Exec=\$PWD/${ARTIFACT} %U|" \\
+              sed -i "s|^Exec=.*|Exec=\\"\$PWD/${ARTIFACT}\\" %U|" \\
                 ~/.local/share/applications/com.flet.flet-icon-test.desktop
               update-desktop-database ~/.local/share/applications
           Then relaunch, and look for "Flet Icon Test" in the app grid.
           EOF
-          tar -czf "${RUNNER_TEMP}/bundle-${LEG}.tar.gz" -C build linux
-          ls -lh "${RUNNER_TEMP}/bundle-${LEG}.tar.gz"
+          tar -czf "${RUNNER_TEMP}/bundle-${LEG}-${ARCH}.tar.gz" -C build linux
+          ls -lh "${RUNNER_TEMP}/bundle-${LEG}-${ARCH}.tar.gz"
 
       - name: Assert runtime X11 properties (Xvfb)
         # Informational: it depends on Flutter obtaining a software GL
@@ -219,9 +228,9 @@ jobs:
         if: always()
         uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
         with:
-          name: linux-icon-${{ matrix.leg }}
+          name: linux-icon-${{ matrix.leg }}-${{ matrix.arch }}
           path: |
-            ${{ runner.temp }}/bundle-${{ matrix.leg }}.tar.gz
+            ${{ runner.temp }}/bundle-${{ matrix.leg }}-${{ matrix.arch }}.tar.gz
             ${{ runner.temp }}/app-${{ matrix.leg }}/build/flutter/pubspec.yaml
             ${{ runner.temp }}/app-${{ matrix.leg }}/build/flutter/linux/app_icon.cmake
             ${{ runner.temp }}/app-${{ matrix.leg }}/build/flutter/web/manifest.json
