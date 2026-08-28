@@ -108,6 +108,13 @@ system-wide install to `/usr/share` works the same way). Linux packaging tools
 The desktop entry's name comes from `--product` and its comment from
 `--description` (or the corresponding `pyproject.toml` settings); the app id is
 the [bundle ID](index.md#bundle-id) — `<org_name>.<project_name>` by default.
+Its [application categories](https://specifications.freedesktop.org/menu-spec/latest/apa.html)
+default to `Utility` and can be changed in `pyproject.toml`:
+
+```toml
+[tool.flet.linux]
+categories = ["Game", "Education"]
+```
 
 ## Window positioning on Wayland
 

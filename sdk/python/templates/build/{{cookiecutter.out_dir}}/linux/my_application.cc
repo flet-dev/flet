@@ -57,12 +57,12 @@ static void my_application_activate(GApplication* application) {
     g_autofree gchar* exe_dir = g_path_get_dirname(exe_path);
     g_autofree gchar* icon_path =
         g_build_filename(exe_dir, "data", "app_icon.png", nullptr);
-    if (g_file_test(icon_path, G_FILE_TEST_EXISTS)) {
-      g_autoptr(GError) icon_error = nullptr;
-      if (!gtk_window_set_default_icon_from_file(icon_path, &icon_error)) {
-        g_warning("Failed to load app icon %s: %s", icon_path,
-                  icon_error->message);
-      }
+    g_autoptr(GError) icon_error = nullptr;
+    if (!gtk_window_set_default_icon_from_file(icon_path, &icon_error)) {
+      // A missing or undecodable icon is a broken bundle worth logging, not
+      // a case to skip silently.
+      g_warning("Failed to load app icon %s: %s", icon_path,
+                icon_error->message);
     }
   }
 

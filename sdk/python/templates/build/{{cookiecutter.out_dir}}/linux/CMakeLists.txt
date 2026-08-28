@@ -167,7 +167,8 @@ install(DIRECTORY "${PROJECT_BUILD_DIR}/${FLUTTER_ASSET_DIR_NAME}"
   DESTINATION "${INSTALL_BUNDLE_DATA_DIR}" COMPONENT Runtime)
 
 # Install the app icon staged by `flet build` next to this file, so the runner
-# can set the X11/XWayland window icon at startup (see my_application.cc).
+# can set the X11/XWayland window icon at startup (see my_application.cc). The
+# guard keeps plain `flutter build` (no flet staging step) working.
 if(EXISTS "${CMAKE_CURRENT_SOURCE_DIR}/app_icon.png")
   install(FILES "${CMAKE_CURRENT_SOURCE_DIR}/app_icon.png"
     DESTINATION "${INSTALL_BUNDLE_DATA_DIR}" COMPONENT Runtime)
@@ -176,11 +177,11 @@ if(EXISTS "${CMAKE_CURRENT_SOURCE_DIR}/app_icon.png")
   # in the hicolor theme layout. Wayland desktops (e.g. GNOME) resolve the
   # taskbar icon only from an installed desktop entry matching the app id, so
   # users can register the app with:  cp -r share/. ~/.local/share/
+  # Both files install together — a desktop entry whose Icon= has no matching
+  # themed icon is worse than none.
   install(FILES "${CMAKE_CURRENT_SOURCE_DIR}/app_icon.png"
     DESTINATION "${CMAKE_INSTALL_PREFIX}/share/icons/hicolor/256x256/apps"
     RENAME "${APPLICATION_ID}.png" COMPONENT Runtime)
-endif()
-if(EXISTS "${CMAKE_CURRENT_SOURCE_DIR}/${APPLICATION_ID}.desktop")
   install(FILES "${CMAKE_CURRENT_SOURCE_DIR}/${APPLICATION_ID}.desktop"
     DESTINATION "${CMAKE_INSTALL_PREFIX}/share/applications" COMPONENT Runtime)
 endif()

@@ -2,16 +2,20 @@
 # Desktop environments resolve the app's launcher name and icon from this file
 # once it is installed together with the icon theme tree, e.g.:
 #   cp -r share/. ~/.local/share/
-# then point Exec= at the absolute path of the executable. On Wayland this is
+# then point Exec= at the absolute path of the executable. Exec= cannot be
+# absolute out of the box because the bundle is relocatable — its final
+# location is only known at install time. On Wayland an installed entry is
 # required for the taskbar icon; on X11 the window icon works without it.
+{%- set categories = get_pyproject("tool.flet.linux.categories") or ["Utility"] %}
+{%- if categories is string %}{% set categories = [categories] %}{% endif %}
 [Desktop Entry]
 Type=Application
 Name={{ cookiecutter.product_name }}
 {%- if cookiecutter.project_description %}
-Comment={{ cookiecutter.project_description }}
+Comment={{ cookiecutter.project_description | replace("\r", " ") | replace("\n", " ") }}
 {%- endif %}
-Exec={{ cookiecutter.artifact_name }} %U
+Exec="{{ cookiecutter.artifact_name }}" %U
 Icon={{ cookiecutter.bundle_id }}
 Terminal=false
-Categories=Utility;
+Categories={{ categories | join(";") }};
 StartupWMClass={{ cookiecutter.bundle_id }}

@@ -1376,6 +1376,11 @@ class BaseBuildCommand(BaseFlutterCommand):
             )
 
         assert self.flutter_dir
+        project_description = (
+            self.options.description
+            or self.get_pyproject("project.description")
+            or self.get_pyproject("tool.poetry.description")
+        )
         self.template_data = {
             "out_dir": self.flutter_dir.name,
             "sep": os.sep,
@@ -1426,11 +1431,10 @@ class BaseBuildCommand(BaseFlutterCommand):
             "product_name": product_name,
             # Templates consume this as cookiecutter.project_description
             # (pubspec description, web manifest, Linux .desktop entry).
-            "project_description": (
-                self.options.description
-                or self.get_pyproject("project.description")
-                or self.get_pyproject("tool.poetry.description")
-            ),
+            "project_description": project_description,
+            # Kept for custom build templates whose own cookiecutter.json
+            # declared and consumed a `description` context key.
+            "description": project_description,
             "org_name": self.options.org_name
             or self.get_pyproject(f"tool.flet.{self.config_platform}.org")
             or self.get_pyproject("tool.flet.org"),
@@ -1830,8 +1834,14 @@ class BaseBuildCommand(BaseFlutterCommand):
             macos_icon = self.find_platform_image(
                 self.assets_path, images_path, "icon_macos", copy_ops, hash
             )
-            linux_icon = self.find_platform_image(
-                self.assets_path, images_path, "icon_linux", copy_ops, hash
+            # Unlike the lookups above, this one has no flutter_launcher_icons
+            # consumer, so run it only when the result is actually used.
+            linux_icon = (
+                self.find_platform_image(
+                    self.assets_path, images_path, "icon_linux", copy_ops, hash
+                )
+                if self.target_platform == "linux"
+                else None
             )
 
             self.fallback_image(
@@ -1877,26 +1887,46 @@ class BaseBuildCommand(BaseFlutterCommand):
         if self.target_platform == "linux":
             # flutter_launcher_icons has no Linux generator, so the resolved
             # icon is staged at a fixed path instead: the Linux runner's CMake
-            # installs it into the bundle as data/app_icon.png and
-            # my_application.cc points GTK at it on startup.
+            # installs it into the bundle (data/app_icon.png plus the hicolor
+            # icon-theme tree) and my_application.cc points GTK at it on
+            # startup.
             user_icon = linux_icon or default_icon
             linux_icon_src = (
                 self.assets_path.joinpath(user_icon)
                 if user_icon
                 else self.flutter_dir.joinpath("images", "icon.png")
             )
-            if linux_icon_src.suffix.lower() not in (".png", ".jpg", ".jpeg"):
-                console.log(
-                    f'Warning: "{linux_icon_src.name}" is used as the Linux app '
-                    "icon, but may not be displayable if the GDK image loader "
-                    "for its format is missing on the target system. A PNG "
-                    "image is recommended.",
-                    style=warning_style,
+            # A custom build template may ship no default images/icon.png;
+            # degrade to an icon-less bundle instead of failing the copy.
+            if linux_icon_src.is_file():
+                if linux_icon_src.suffix.lower() != ".png":
+                    console.log(
+                        f'Warning: "{linux_icon_src.name}" is used as the '
+                        "Linux app icon; a 256×256 PNG is recommended — other "
+                        "formats may not display correctly in launchers and "
+                        "docks.",
+                        style=warning_style,
+                    )
+                else:
+                    png_size = self.get_png_size(linux_icon_src)
+                    if png_size is not None and png_size != (256, 256):
+                        console.log(
+                            f'Warning: "{linux_icon_src.name}" is '
+                            f"{png_size[0]}×{png_size[1]} px, but the Linux "
+                            "app icon is installed into the 256×256 icon-theme "
+                            "directory — a 256×256 px icon_linux.png is "
+                            "recommended.",
+                            style=warning_style,
+                        )
+                copy_ops.append(
+                    (
+                        linux_icon_src,
+                        self.flutter_dir.joinpath("linux", "app_icon.png"),
+                    )
                 )
-            copy_ops.append(
-                (linux_icon_src, self.flutter_dir.joinpath("linux", "app_icon.png"))
-            )
+                hash.update(linux_icon_src.stat().st_mtime)
             hash.update(str(linux_icon_src))
+            hash.update(linux_icon_src.is_file())
 
         adaptive_icon_background = (
             self.options.android_adaptive_icon_background
@@ -1929,26 +1959,30 @@ class BaseBuildCommand(BaseFlutterCommand):
             ]
             self.save_yaml(self.pubspec_path, updated_pubspec)
 
-            self.update_status("[bold blue]Generating app icons...")
+            # flutter_launcher_icons has no Linux generator — on a linux
+            # target it would only regenerate the other platforms' icons,
+            # which the Linux bundle never ships.
+            if self.target_platform != "linux":
+                self.update_status("[bold blue]Generating app icons...")
 
-            # icons
-            icons_result = self.run(
-                [
-                    self.dart_exe,
-                    "run",
-                    "--suppress-analytics",
-                    "flutter_launcher_icons",
-                ],
-                cwd=str(self.flutter_dir),
-                capture_output=self.verbose < 1,
-            )
-            if icons_result.returncode != 0:
-                if isinstance(icons_result.stdout, str):
-                    console.log(icons_result.stdout, style=verbose1_style)
-                if isinstance(icons_result.stderr, str):
-                    console.log(icons_result.stderr, style=error_style)
-                self.cleanup(icons_result.returncode)
-            console.log(f"Generated app icons {self.emojis['checkmark']}")
+                # icons
+                icons_result = self.run(
+                    [
+                        self.dart_exe,
+                        "run",
+                        "--suppress-analytics",
+                        "flutter_launcher_icons",
+                    ],
+                    cwd=str(self.flutter_dir),
+                    capture_output=self.verbose < 1,
+                )
+                if icons_result.returncode != 0:
+                    if isinstance(icons_result.stdout, str):
+                        console.log(icons_result.stdout, style=verbose1_style)
+                    if isinstance(icons_result.stderr, str):
+                        console.log(icons_result.stderr, style=error_style)
+                    self.cleanup(icons_result.returncode)
+                console.log(f"Generated app icons {self.emojis['checkmark']}")
 
         hash.commit()
 
@@ -2978,6 +3012,31 @@ class BaseBuildCommand(BaseFlutterCommand):
                     f"[cyan]{renamed}[/cyan].",
                     style=verbose1_style,
                 )
+
+    @staticmethod
+    def get_png_size(path: Path) -> Optional[tuple[int, int]]:
+        """
+        Read the pixel dimensions of a PNG file from its IHDR header.
+
+        Args:
+            path: Path to the image file.
+
+        Returns:
+            `(width, height)` in pixels, or `None` if the file cannot be read
+            or is not a PNG.
+        """
+
+        try:
+            with open(path, "rb") as f:
+                header = f.read(24)
+        except OSError:
+            return None
+        if header[:8] != b"\x89PNG\r\n\x1a\n" or header[12:16] != b"IHDR":
+            return None
+        return (
+            int.from_bytes(header[16:20], "big"),
+            int.from_bytes(header[20:24], "big"),
+        )
 
     def find_platform_image(
         self,
