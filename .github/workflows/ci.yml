@@ -4,6 +4,8 @@ on:
   push:
     branches:
       - '**'
+      # TEMP (issue #2269): the Linux icon harness covers this branch.
+      - '!fix/build-linux-icon'
     tags:
       - 'v[0-9]+.[0-9]+.[0-9]+'
       - 'v[0-9]+.[0-9]+.[0-9]+.dev[0-9]+'
