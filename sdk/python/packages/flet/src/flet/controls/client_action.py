@@ -1,5 +1,6 @@
 from dataclasses import MISSING, dataclass, field
 from typing import TYPE_CHECKING, Any, Optional, TypeVar, Union
+from weakref import WeakKeyDictionary
 
 from flet.controls.context import context
 from flet.controls.services.service import Service
@@ -19,6 +20,17 @@ __all__ = [
 S = TypeVar("S", bound=Service)
 
 
+_shared_services: "WeakKeyDictionary[Any, dict[type, Service]]" = WeakKeyDictionary()
+"""
+Per-page cache of the services client actions target, keyed weakly so it does
+not keep a finished page alive.
+
+Deliberately not stored on the page itself: `BaseControl._internals` is sent to
+the client (it is how `Button` ships its resolved style), and a cache keyed by
+class would put a class object on the wire.
+"""
+
+
 def _shared_service(service_type: type[S]) -> S:
     """
     Returns the page's single instance of `service_type`, creating it on first use.
@@ -29,7 +41,7 @@ def _shared_service(service_type: type[S]) -> S:
     state.
     """
     page = context.page
-    services = page._internals.setdefault("client_action_services", {})
+    services = _shared_services.setdefault(page, {})
     service = services.get(service_type)
     if service is None:
         service = service_type()
