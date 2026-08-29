@@ -94,10 +94,55 @@ Set the icon with [`--icon`](../cli/flet-pack.md#--icon):
 flet pack your_program.py --icon your-icon.ico
 ```
 
-Provide the icon in the target platform's native format: `.ico` on Windows,
-`.icns` on macOS, and `.png` on Linux. It is applied both to the outer
-executable and to the embedded Flet viewer, so the app window, Dock/taskbar
-entries, and the executable itself all match.
+Provide the icon in the target platform's native format: `.ico` on Windows and
+`.icns` on macOS. It is applied both to the outer executable and to the embedded
+Flet viewer, so the app window, Dock/taskbar entries, and the executable itself
+all match.
+
+:::warning[`--icon` does nothing on Linux]
+Linux has nowhere to put an icon inside an executable. The desktop reads it
+from an installed [desktop entry](#linux-taskbar-identity) instead, so passing
+`--icon` on Linux has no effect on either the executable or the taskbar.
+:::
+
+## Linux taskbar identity
+
+`flet pack` launches the shared, prebuilt Flet client, so without help every
+packed app reaches the taskbar under that binary's name — grouped together and
+labelled `flet`. To avoid that, the app is relaunched under its own identity
+(see [`FLET_APP_ID`](../reference/environment-variables.md#flet_app_id)),
+which defaults to the executable's name.
+
+That gives the app its own taskbar group and label. To also give it a **name of
+your choosing and an icon**, install a desktop entry — the desktop takes both
+from there, and matches it to the window through `StartupWMClass`:
+
+```ini title="~/.local/share/applications/my-app.desktop"
+[Desktop Entry]
+Type=Application
+Name=My App
+Exec=/opt/my-app/my-app
+Icon=my-app
+Terminal=false
+Categories=Utility;
+StartupWMClass=my-app
+```
+
+`StartupWMClass` must match the executable's name, and `Icon=` names a PNG
+installed into the icon theme, for example
+`~/.local/share/icons/hicolor/256x256/apps/my-app.png`. Refresh the caches
+afterwards:
+
+```bash
+update-desktop-database ~/.local/share/applications
+gtk-update-icon-cache -f -t ~/.local/share/icons/hicolor
+```
+
+:::note[Or let `flet build` package it]
+[`flet build linux`](linux.md) compiles a runner per app, so the identity is
+built in rather than applied at launch. Reach for it if you would rather have
+packaging handled than assemble it yourself.
+:::
 
 ## Including assets
 

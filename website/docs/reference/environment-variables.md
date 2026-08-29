@@ -64,6 +64,20 @@ In a running Flet app, the equivalent of this environment variable is
 [`StoragePaths.get_console_log_filename()`][flet.StoragePaths.get_console_log_filename].
 :::
 
+### `FLET_APP_ID`
+
+Identity the Linux desktop uses to group and label the app's window: the X11
+`WM_CLASS` and the Wayland `app_id`. Without it every packed app inherits the
+shared client binary's name and appears as `flet`.
+
+Set it to the same string as the `StartupWMClass` key of the app's desktop
+entry so the desktop can match the window to the entry and take the app's name
+and icon from it — see
+[Linux taskbar identity](../publish/using-pyinstaller.md#linux-taskbar-identity).
+
+Linux desktop apps only; set automatically by [`flet pack`](../cli/flet-pack.md)
+to the executable's name.
+
 ### `FLET_APP_RELAUNCH_COMMAND`
 
 Command Windows uses to relaunch the app from a pinned taskbar icon

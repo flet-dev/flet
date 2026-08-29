@@ -39,7 +39,9 @@ class Command(BaseCommand):
             "--icon",
             dest="icon",
             help="Path to an icon file for your executable or app bundle. "
-            "Supported formats: `.ico` (Windows), `.png` (Linux) and `.icns` (macOS)",
+            "Supported formats: `.ico` (Windows) and `.icns` (macOS). Linux "
+            "takes its icon from an installed desktop entry instead, so this "
+            "option has no effect there.",
         )
         parser.add_argument(
             "-n",

@@ -399,6 +399,50 @@ def ensure_client_cached():
     return cache_dir
 
 
+def __linux_identity_args(args: list) -> tuple:
+    """
+    Give the client window a per-app identity on Linux, without touching it.
+
+    The shipped client is one prebuilt binary called `flet`, so every packed
+    app arrives at the taskbar as "flet" -- grouped together, labelled wrong
+    and unable to match a desktop entry of its own.
+
+    It does not have to be rebuilt to fix that. GLib takes `prgname` from
+    `basename(argv[0])` inside `g_application_run`, and GTK derives the X11
+    `WM_CLASS` and the Wayland `app_id` from `prgname` -- so launching the
+    same binary under a different `argv[0]` is enough, with `executable`
+    still pointing at the real file.
+
+    Args:
+        args: Launch argv, whose first element is the client binary path.
+
+    Returns:
+        A tuple of the argv to launch and the extra keyword arguments to
+        pass to `Popen`. Both are unchanged on every other platform, and
+        whenever `FLET_APP_ID` is unset or unusable.
+    """
+
+    app_id = os.environ.get("FLET_APP_ID", "").strip()
+    if not is_linux() or not app_id or not args:
+        return args, {}
+
+    # GLib basenames argv[0], so a path would silently become its last
+    # segment; mutter replaces an app id that is not valid UTF-8 with an
+    # empty string. Neither is worth guessing about -- keep "flet".
+    if "/" in app_id:
+        logger.warning(f"Ignoring FLET_APP_ID with a path separator: {app_id!r}")
+        return args, {}
+    try:
+        app_id.encode("utf-8")
+    except UnicodeEncodeError:
+        logger.warning(f"Ignoring FLET_APP_ID that is not valid UTF-8: {app_id!r}")
+        return args, {}
+
+    executable = str(args[0])
+    logger.info(f"Launching the Flet client as {app_id!r} (binary: {executable})")
+    return [app_id, *args[1:]], {"executable": executable}
+
+
 def open_flet_view(page_url, assets_dir, hidden):
     """
     Start a desktop view process and return the process object and PID file path.
@@ -417,7 +461,8 @@ def open_flet_view(page_url, assets_dir, hidden):
     args, flet_env, pid_file = __locate_and_unpack_flet_view(
         page_url, assets_dir, hidden
     )
-    p = subprocess.Popen(args, env=flet_env)
+    args, extra = __linux_identity_args(args)
+    p = subprocess.Popen(args, env=flet_env, **extra)
     __apply_taskbar_props(p.pid)
     return p, pid_file
 
@@ -440,7 +485,10 @@ async def open_flet_view_async(page_url, assets_dir, hidden):
     args, flet_env, pid_file = __locate_and_unpack_flet_view(
         page_url, assets_dir, hidden
     )
-    p = await asyncio.create_subprocess_exec(args[0], *args[1:], env=flet_env)
+    args, extra = __linux_identity_args(args)
+    p = await asyncio.create_subprocess_exec(
+        args[0], *args[1:], env=flet_env, **extra
+    )
     __apply_taskbar_props(p.pid)
     return p, pid_file
 
