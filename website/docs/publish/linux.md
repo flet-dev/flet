@@ -379,18 +379,6 @@ ln -sfn /opt/%{name}/my-app %{buildroot}/usr/bin/%{name}
 </TabItem>
 </Tabs>
 
-:::info[Why not `fastforge`?]
-[`fastforge`](https://pub.dev/packages/fastforge) (formerly
-`flutter_distributor`) packages Flutter Linux apps, but it always runs
-`flutter build linux` itself before packaging. A Flet app's Python payload is
-staged by a separate step and is only installed when `flet build` sets its
-environment, so a rebuild driven from outside produces a bundle with no `app/`
-or `site-packages/` — one that installs cleanly and then fails to start. It
-also writes its own desktop entry rather than reusing the one in the bundle,
-which drops the `StartupWMClass` that Wayland needs to match the window to its
-icon.
-:::
-
 ## Window positioning on Wayland
 
 On Linux the **display server** controls window placement, and this differs

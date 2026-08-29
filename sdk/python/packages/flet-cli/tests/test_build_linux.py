@@ -466,11 +466,6 @@ class TestDesktopEntryTemplate:
 class TestBuildTemplateContract:
     """
     Invariants of the build template itself, independent of any one platform.
-
-    Both bugs these cover shipped at least once: a context key the templates
-    read but `cookiecutter.json` never declared (cookiecutter drops it, so the
-    value silently vanished), and a template that stopped being parseable
-    while unrendered, which breaks the CI step that patches it in place.
     """
 
     @staticmethod
@@ -501,8 +496,7 @@ class TestBuildTemplateContract:
     def test_every_referenced_key_is_declared(self):
         """
         A key a template reads but `cookiecutter.json` omits is dropped from
-        the context, so the template silently renders it empty — which is how
-        `--description` reached nothing for as long as it did.
+        the context, so the template silently renders it empty.
         """
         declared = self._declared_keys()
         undeclared = {
