@@ -198,10 +198,15 @@ Two rules apply to every format:
 A single executable file that runs without installation — the closest
 equivalent to a macOS `.dmg`.
 
-Get the tool for your architecture from
-[AppImage/appimagetool](https://github.com/AppImage/appimagetool/releases)
-(`appimagetool-x86_64.AppImage` or `appimagetool-aarch64.AppImage`) and make it
-executable.
+Get [appimagetool](https://github.com/AppImage/appimagetool/releases) for the
+architecture you are building on — `uname -m` reports `x86_64` or `aarch64` —
+and make it executable:
+
+```bash
+ARCH=$(uname -m)
+wget "https://github.com/AppImage/appimagetool/releases/download/continuous/appimagetool-$ARCH.AppImage"
+chmod +x "appimagetool-$ARCH.AppImage"
+```
 
 `appimagetool` is itself an AppImage, so running it needs
 [FUSE 2](https://docs.appimage.org/user-guide/troubleshooting/fuse.html).
@@ -216,7 +221,7 @@ If that prints nothing, either install it (`sudo apt install libfuse2`, or
 `libfuse2t64` on Ubuntu 24.04 and later) or skip FUSE entirely:
 
 ```bash
-APPIMAGE_EXTRACT_AND_RUN=1 ./appimagetool-x86_64.AppImage --no-appstream MyApp.AppDir
+APPIMAGE_EXTRACT_AND_RUN=1 "./appimagetool-$(uname -m).AppImage" --no-appstream MyApp.AppDir
 ```
 
 The same applies to the AppImage you produce: your users need FUSE 2, or must
@@ -230,6 +235,7 @@ BUNDLE=build/linux            # output of `flet build linux`
 APP=my_app                    # the executable in $BUNDLE (your artifact name)
 ID=com.example.my_app         # your bundle ID
 APPDIR=MyApp.AppDir
+ARCH=$(uname -m)
 
 ICON_SRC=$(find "$BUNDLE/share/icons/hicolor" -type f -name "$ID.png" | head -n1)
 ICON_SIZE=$(basename "$(dirname "$(dirname "$ICON_SRC")")")
@@ -261,7 +267,7 @@ exec "\$HERE/usr/bin/$APP" "\$@"
 EOF
 chmod +x "$APPDIR/AppRun"
 
-VERSION=1.0.0 ./appimagetool-x86_64.AppImage --no-appstream "$APPDIR"
+VERSION=1.0.0 "./appimagetool-$ARCH.AppImage" --no-appstream "$APPDIR"
 ```
 
 :::warning[Do not set `LD_LIBRARY_PATH` in `AppRun`]
