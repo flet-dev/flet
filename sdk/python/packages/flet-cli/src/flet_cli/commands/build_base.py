@@ -1454,7 +1454,7 @@ class BaseBuildCommand(BaseFlutterCommand):
             "product_name": product_name,
             "project_description": project_description,
             # Pre-escaped Linux desktop entry values.
-            "desktop_exec": self.escape_desktop_exec(str(artifact_name)),
+            "linux_desktop_exec": self.escape_desktop_exec(str(artifact_name)),
             "linux_categories": linux_categories,
             "org_name": self.options.org_name
             or self.get_pyproject(f"tool.flet.{self.config_platform}.org")

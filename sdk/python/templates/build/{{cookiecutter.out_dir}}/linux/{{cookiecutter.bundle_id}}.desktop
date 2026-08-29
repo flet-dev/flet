@@ -18,7 +18,7 @@ Name={{ entry_value(cookiecutter.product_name) }}
 {%- if cookiecutter.project_description %}
 Comment={{ entry_value(cookiecutter.project_description) }}
 {%- endif %}
-Exec="{{ cookiecutter.desktop_exec }}" %U
+Exec="{{ cookiecutter.linux_desktop_exec }}" %U
 Icon={{ cookiecutter.bundle_id }}
 Terminal=false
 Categories={{ cookiecutter.linux_categories }}

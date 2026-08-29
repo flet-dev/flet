@@ -169,10 +169,8 @@ class TestLinuxIconStaging:
         assert _staged_icon(cmd).read_bytes() == b"linux-specific"
 
     def test_template_default_staged_without_assets(self, tmp_path):
-        """
-        An app with no `assets` dir still gets the template's default icon,
-        so a Linux bundle is never built without a window icon.
-        """
+        """An app with no `assets` dir still gets the template's default icon,
+        so a Linux bundle is never built without a window icon."""
         cmd = _run_customize_icons(tmp_path, assets=None)
         assert _staged_icon(cmd).read_bytes() == _png_bytes()
 
@@ -182,10 +180,8 @@ class TestLinuxIconStaging:
         assert _staged_icon(cmd).read_bytes() == _png_bytes()
 
     def test_missing_template_default_degrades_gracefully(self, tmp_path):
-        """
-        A custom build template that ships no `images/icon.png` produces an
-        icon-less bundle rather than failing the build on the copy.
-        """
+        """A custom build template that ships no `images/icon.png` produces an
+        icon-less bundle rather than failing the build on the copy."""
         cmd = _run_customize_icons(tmp_path, assets=None, template_default_icon=False)
         assert not _staged_icon(cmd).exists()
 
@@ -197,11 +193,9 @@ class TestLinuxIconStaging:
         assert not _staged_icon(cmd).exists()
 
     def test_icon_linux_ignored_for_other_targets(self, tmp_path):
-        """
-        The `icon_linux` lookup is skipped entirely off Linux. It has no
+        """The `icon_linux` lookup is skipped entirely off Linux. It has no
         consumer there, and letting it run would copy a dead file and churn
-        the icons hash, re-running the icon generator for nothing.
-        """
+        the icons hash, re-running the icon generator for nothing."""
         cmd = _run_customize_icons(
             tmp_path,
             assets={"icon_linux.png": b"linux-only"},
@@ -223,10 +217,8 @@ class TestLinuxIconStaging:
         assert _staged_icon(cmd).read_bytes() == b"second"
 
     def test_non_png_icon_warns_but_stages(self, tmp_path, capsys):
-        """
-        A non-PNG icon is still staged, but warns: it is bundled as-is, and a
-        format with no GDK loader on the target system shows no icon at all.
-        """
+        """A non-PNG icon is still staged, but warns: it is bundled as-is, and a
+        format with no GDK loader on the target system shows no icon at all."""
         cmd = _run_customize_icons(tmp_path, assets={"icon_linux.webp": b"webp-icon"})
         assert _staged_icon(cmd).read_bytes() == b"webp-icon"
         combined = capsys.readouterr()
@@ -335,11 +327,9 @@ class TestDesktopEntryEscaping:
 
     @pytest.mark.parametrize("bad", [5, None, ["ok", 7], {"a": 1}])
     def test_escape_desktop_categories_rejects_non_strings(self, bad):
-        """
-        A malformed `pyproject.toml` value fails with a clear error instead of
+        """A malformed `pyproject.toml` value fails with a clear error instead of
         a jinja `TypeError`, which the build turns into a wiped build dir and
-        a message that never mentions `pyproject.toml`.
-        """
+        a message that never mentions `pyproject.toml`."""
         with pytest.raises(ValueError):
             BaseBuildCommand.escape_desktop_categories(bad)
 
