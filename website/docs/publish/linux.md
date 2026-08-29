@@ -228,9 +228,9 @@ APPIMAGE_EXTRACT_AND_RUN=1 "./appimagetool-$(uname -m).AppImage" --no-appstream 
 The same applies to the AppImage you produce: your users need FUSE 2, or must
 run it with the same variable set.
 
-Save this as `build-appimage.sh`, edit the three variables at the top, and run
-it with `bash build-appimage.sh` — pasting it straight into a terminal is
-fragile, and you will re-run it each time you rebuild.
+Save the below script as `build-appimage.sh` (pasting it straight into a terminal is
+fragile, and you will re-run it each time you rebuild), then edit the three variables at the top, and run
+it with `bash build-appimage.sh`.
 
 ```bash
 #!/usr/bin/env bash
@@ -275,30 +275,41 @@ VERSION=1.0.0 "$APPIMAGETOOL" --no-appstream "$APPDIR" # (20)!
 1. Stops at the first failing command. Without it a failed copy leaves a
    half-built AppDir, and the error you finally see is `appimagetool`
    complaining about a missing icon several steps later.
-2. **Edit this.** The bundle produced by `flet build linux`.
-3. **Edit this.** The executable inside the bundle — your
-   [artifact name](index.md#artifact-name).
+2. **Edit this.** Path to the directory `flet build linux` produced — by
+   default `build/linux` inside your project. It holds the executable next to
+   `data/`, `lib/`, `python3.x/`, `site-packages/` and `app/`. A relative path
+   is resolved from wherever you run the script, so prefer an absolute one.
+3. **Edit this.** The executable's *filename* inside that directory — a name,
+   not a path. This is your [artifact name](index.md#artifact-name), which
+   defaults to your project name. `ls "$BUNDLE"` will show it.
 4. **Edit this.** Your [bundle ID](index.md#bundle-id). It must match what the
    app was built with, because it is also the desktop entry's filename and the
    name the window reports; a mismatch means the icon silently never resolves.
-5. Scratch directory this script builds. Anything already there is replaced.
+5. Path to the staging directory this script creates — an **AppDir**, the
+   layout `appimagetool` expects: your app, plus a desktop entry, an icon and
+   an `AppRun` launcher at its top level. It is deleted and rebuilt on every
+   run, so point it somewhere disposable.
 6. `x86_64` or `aarch64` — used only to pick the matching `appimagetool`.
-7. Where you saved `appimagetool`. It can live anywhere.
+7. Path to the `appimagetool` file you downloaded above, filename included.
+   It is one self-contained executable, so it can live anywhere.
 8. Fails early with a clear message if the bundle predates desktop entry
    support, rather than failing obscurely further down.
 9. The icon `flet build` installed. Its directory encodes the size, which the
    next line reads, so the AppDir mirrors whatever size your icon is.
-10. e.g. `256x256` — the parent-of-parent of `.../256x256/apps/<id>.png`.
+10. The size taken from that icon's own path — `256x256` in
+    `.../hicolor/256x256/apps/<id>.png` — so the AppDir mirrors whatever size
+    your icon actually is, rather than assuming one.
 11. Start from scratch, so a rename or size change cannot leave stale files
     behind.
 12. The entire bundle, verbatim. `-a` preserves the executable bit and
     symlinks; the app resolves its libraries and Python runtime relative to its
     own location, so these files must stay together.
-13. Drop the bundle's own copy of `share/`, since the FHS copies below replace
-    it.
-14. The desktop entry and icon in their conventional locations. Desktop
-    integration exports icons from `usr/share/icons` when a user installs the
-    AppImage.
+13. Removes the `share/` that travelled inside the bundle: the next lines put
+    those same two files where AppImage expects them instead, and keeping both
+    would ship the desktop entry twice.
+14. Places the desktop entry and icon at the paths a Linux system normally
+    keeps them. If a user later installs the AppImage into their menus, the
+    integration step copies icons out of `usr/share/icons`.
 15. A bare name is enough here: inside an AppImage the entry never launches
     the app — the runtime executes `AppRun`. Edit the real file, not the
     symlink created next; GNU `sed -i` would replace a symlink with a regular
@@ -307,7 +318,8 @@ VERSION=1.0.0 "$APPIMAGETOOL" --no-appstream "$APPDIR" # (20)!
     `appimagetool` aborts without it.
 17. The icon named by the entry's `Icon=` key, at the root. `appimagetool`
     checks for it by that exact name.
-18. `.DirIcon` is the icon file managers and the AppImage itself use.
+18. `.DirIcon` is the AppImage's own icon — the image a file manager shows
+    for the `.AppImage` file itself.
 19. `AppRun` is the entry point the runtime executes. It only has to `exec`
     the binary — no `cd`, and deliberately no `LD_LIBRARY_PATH`.
 20. `VERSION` becomes part of the output filename. `--no-appstream` skips
