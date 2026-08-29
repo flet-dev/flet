@@ -141,9 +141,11 @@ caches:
 
 ```bash
 cp dist/com.example.my_app.desktop ~/.local/share/applications/
+update-desktop-database ~/.local/share/applications
+
+# only if you passed --icon with a .png
 mkdir -p ~/.local/share/icons/hicolor/256x256/apps
 cp dist/com.example.my_app.png ~/.local/share/icons/hicolor/256x256/apps/
-update-desktop-database ~/.local/share/applications
 gtk-update-icon-cache -f -t ~/.local/share/icons/hicolor
 ```
 

@@ -66,7 +66,7 @@ In a running Flet app, the equivalent of this environment variable is
 
 ### `FLET_APP_ID`
 
-Identity the Linux desktop uses to group and label the app's window: the X11
+The identity that the Linux desktop uses to group and label the app's window: the X11
 `WM_CLASS` and the Wayland `app_id`. Without it every packed app inherits the
 shared client binary's name and appears as `flet`.
 

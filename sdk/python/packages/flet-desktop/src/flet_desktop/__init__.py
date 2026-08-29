@@ -429,8 +429,11 @@ def __linux_identity_args(args: list) -> tuple:
     # GLib basenames argv[0], so a path would silently become its last
     # segment; mutter replaces an app id that is not valid UTF-8 with an
     # empty string. Neither is worth guessing about -- keep "flet".
-    if "/" in app_id:
-        logger.warning(f"Ignoring FLET_APP_ID with a path separator: {app_id!r}")
+    if "/" in app_id or any(ord(c) < 32 for c in app_id):
+        logger.warning(
+            f"Ignoring FLET_APP_ID with a path separator or control "
+            f"character: {app_id!r}"
+        )
         return args, {}
     try:
         app_id.encode("utf-8")

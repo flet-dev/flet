@@ -318,10 +318,14 @@ class Command(BaseCommand):
         # would silently reduce it to its last segment. Refuse it here too,
         # rather than crash writing an entry into a directory that does not
         # exist and would not have matched anything anyway.
-        if "/" in app_id:
+        # A path separator would make the filename a directory that does not
+        # exist, and a control character would break the line it is written
+        # on -- Icon= and StartupWMClass= interpolate this value raw.
+        if not app_id or "/" in app_id or re.search(r"[\x00-\x1f]", app_id):
             print(
-                f"Skipping the desktop entry: {app_id!r} contains a path "
-                "separator, which cannot be an app identity."
+                f"Skipping the desktop entry: {app_id!r} is empty, or contains "
+                "a path separator or a control character, none of which can be "
+                "an app identity."
             )
             return
 
@@ -617,7 +621,13 @@ class Command(BaseCommand):
                     options, dist_dir, self.resolve_linux_app_id(options)
                 )
 
-            # cleanup
+        except ImportError as e:
+            print("Please install PyInstaller module to use flet pack command:", e)
+            sys.exit(1)
+        finally:
+            # In `finally` because a failed build leaks these otherwise: the
+            # only handler above catches ImportError, so anything PyInstaller
+            # raises would skip the cleanup entirely.
             if hook_config.temp_bin_dir is not None and os.path.exists(
                 hook_config.temp_bin_dir
             ):
@@ -625,6 +635,3 @@ class Command(BaseCommand):
                 shutil.rmtree(hook_config.temp_bin_dir, ignore_errors=True)
             if identity_dir is not None:
                 shutil.rmtree(identity_dir, ignore_errors=True)
-        except ImportError as e:
-            print("Please install PyInstaller module to use flet pack command:", e)
-            sys.exit(1)
