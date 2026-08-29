@@ -210,16 +210,12 @@ Two rules apply to every format:
 A single executable file that runs without installation — the closest
 equivalent to a macOS `.dmg`.
 
-Get [appimagetool](https://github.com/AppImage/appimagetool/releases) for the
-architecture you are building on — `uname -m` reports `x86_64` or `aarch64` —
-and make it executable. It is a single self-contained file, so it can live
-anywhere; the recipe below takes its location as a variable:
-
-```bash
-ARCH=$(uname -m)
-wget "https://github.com/AppImage/appimagetool/releases/download/continuous/appimagetool-$ARCH.AppImage"
-chmod +x "appimagetool-$ARCH.AppImage"
-```
+The script below fetches
+[appimagetool](https://github.com/AppImage/appimagetool/releases) for you, so
+there is nothing to download by hand and no path to keep in step. It picks the
+build matching the machine you are on — `uname -m` reports `x86_64` or
+`aarch64` — and only downloads when the file is not already there, so it costs
+nothing on a rebuild and leaves a copy you placed yourself alone.
 
 `appimagetool` is itself an AppImage, so running it needs
 [FUSE 2](https://docs.appimage.org/user-guide/troubleshooting/fuse.html).
@@ -231,10 +227,11 @@ ldconfig -p | grep libfuse.so.2
 ```
 
 If that prints nothing, either install it (`sudo apt install libfuse2`, or
-`libfuse2t64` on Ubuntu 24.04 and later) or skip FUSE entirely:
+`libfuse2t64` on Ubuntu 24.04 and later) or skip FUSE entirely, by setting the
+variable when you run the script below:
 
 ```bash
-APPIMAGE_EXTRACT_AND_RUN=1 "./appimagetool-$(uname -m).AppImage" --no-appstream MyApp.AppDir
+APPIMAGE_EXTRACT_AND_RUN=1 bash build-appimage.sh
 ```
 
 The same applies to the AppImage you produce: your users need FUSE 2, or must
@@ -256,34 +253,39 @@ APPDIR=MyApp.AppDir # (5)!
 ARCH=$(uname -m) # (6)!
 APPIMAGETOOL=$PWD/appimagetool-$ARCH.AppImage # (7)!
 
-test -d "$BUNDLE/share/applications" || { echo "no desktop entry in $BUNDLE"; exit 1; } # (8)!
+if [ ! -x "$APPIMAGETOOL" ]; then # (8)!
+  wget -O "$APPIMAGETOOL" \
+    "https://github.com/AppImage/appimagetool/releases/download/1.9.1/appimagetool-$ARCH.AppImage"
+  chmod +x "$APPIMAGETOOL"
+fi
 
-ICON_SRC=$(find "$BUNDLE/share/icons/hicolor" -type f -name "$ID.png" | head -n1) # (9)!
-ICON_SIZE=$(basename "$(dirname "$(dirname "$ICON_SRC")")") # (10)!
+test -d "$BUNDLE/share/applications" || { echo "no desktop entry in $BUNDLE"; exit 1; } # (9)!
 
-rm -rf "$APPDIR" # (11)!
+ICON_SRC=$(find "$BUNDLE/share/icons/hicolor" -type f -name "$ID.png" | head -n1) # (10)!
+ICON_SIZE=$(basename "$(dirname "$(dirname "$ICON_SRC")")") # (11)!
+
+rm -rf "$APPDIR" # (12)!
 mkdir -p "$APPDIR/usr/bin"
 mkdir -p "$APPDIR/usr/share/applications"
 mkdir -p "$APPDIR/usr/share/icons/hicolor/$ICON_SIZE/apps"
 
-cp -a "$BUNDLE"/. "$APPDIR/usr/bin/" # (12)!
-rm -rf "$APPDIR/usr/bin/share" # (13)!
+cp -a "$BUNDLE"/. "$APPDIR/usr/bin/" # (13)!
+rm -rf "$APPDIR/usr/bin/share" # (14)!
 
-cp "$BUNDLE/share/applications/$ID.desktop" "$APPDIR/usr/share/applications/" # (14)!
+cp "$BUNDLE/share/applications/$ID.desktop" "$APPDIR/usr/share/applications/" # (15)!
 cp "$ICON_SRC" "$APPDIR/usr/share/icons/hicolor/$ICON_SIZE/apps/"
 
-sed -i "s|^Exec=.*|Exec=$APP|" "$APPDIR/usr/share/applications/$ID.desktop" # (15)!
+sed -i "s|^Exec=.*|Exec=$APP|" "$APPDIR/usr/share/applications/$ID.desktop" # (16)!
 
-ln -s "usr/share/applications/$ID.desktop" "$APPDIR/$ID.desktop" # (16)!
-ln -s "usr/share/icons/hicolor/$ICON_SIZE/apps/$ID.png" "$APPDIR/$ID.png" # (17)!
-ln -s "usr/share/icons/hicolor/$ICON_SIZE/apps/$ID.png" "$APPDIR/.DirIcon" # (18)!
+ln -s "usr/share/applications/$ID.desktop" "$APPDIR/$ID.desktop" # (17)!
+ln -s "usr/share/icons/hicolor/$ICON_SIZE/apps/$ID.png" "$APPDIR/$ID.png" # (18)!
+ln -s "usr/share/icons/hicolor/$ICON_SIZE/apps/$ID.png" "$APPDIR/.DirIcon" # (19)!
 
-printf '#!/bin/sh\nHERE=$(dirname "$(readlink -f "$0")")\nexec "$HERE/usr/bin/%s" "$@"\n' "$APP" > "$APPDIR/AppRun" # (19)!
+printf '#!/bin/sh\nHERE=$(dirname "$(readlink -f "$0")")\nexec "$HERE/usr/bin/%s" "$@"\n' "$APP" > "$APPDIR/AppRun" # (20)!
 chmod +x "$APPDIR/AppRun"
 
-VERSION=1.0.0 "$APPIMAGETOOL" --no-appstream "$APPDIR" # (20)!
+VERSION=1.0.0 "$APPIMAGETOOL" --no-appstream "$APPDIR" # (21)!
 ```
-
 1. Stops at the first failing command. Without it a failed copy leaves a
    half-built AppDir, and the error you finally see is `appimagetool`
    complaining about a missing icon several steps later.
@@ -302,39 +304,45 @@ VERSION=1.0.0 "$APPIMAGETOOL" --no-appstream "$APPDIR" # (20)!
    an `AppRun` launcher at its top level. It is deleted and rebuilt on every
    run, so point it somewhere disposable.
 6. `x86_64` or `aarch64` — used only to pick the matching `appimagetool`.
-7. Path to the `appimagetool` file you downloaded above, filename included.
-   It is one self-contained executable, so it can live anywhere.
-8. Fails early with a clear message if the bundle predates desktop entry
+7. Where the tool will live, next to wherever you run this script. Nothing
+   to edit — the next block puts it there.
+8. Fetches `appimagetool` if it is not already present, pinned to a release
+   rather than the rolling `continuous` tag so a rebuild cannot silently
+   pick up a different tool. An existing file is left untouched, so a copy
+   you placed yourself — from a mirror, or on a machine with no network —
+   is used as-is. `wget -O` writes it straight to `APPIMAGETOOL`, so the
+   two can never disagree.
+9. Fails early with a clear message if the bundle predates desktop entry
    support, rather than failing obscurely further down.
-9. The icon `flet build` installed. Its directory encodes the size, which the
-   next line reads, so the AppDir mirrors whatever size your icon is.
-10. The size read out of the icon path found on the previous line —
+10. The icon `flet build` installed. Its directory encodes the size, which the
+    next line reads, so the AppDir mirrors whatever size your icon is.
+11. The size read out of the icon path found on the previous line —
     `256x256` in `.../hicolor/256x256/apps/<id>.png` — so the AppDir mirrors
     whatever size your icon actually is, rather than assuming one.
-11. Start from scratch, so a rename or size change cannot leave stale files
+12. Start from scratch, so a rename or size change cannot leave stale files
     behind.
-12. The entire bundle, verbatim. `-a` preserves the executable bit and
+13. The entire bundle, verbatim. `-a` preserves the executable bit and
     symlinks; the app resolves its libraries and Python runtime relative to its
     own location, so these files must stay together.
-13. Removes the `share/` that travelled inside the bundle: the next lines put
+14. Removes the `share/` that travelled inside the bundle: the next lines put
     those same two files where AppImage expects them instead, and keeping both
     would ship the desktop entry twice.
-14. Places the desktop entry and icon at the paths a Linux system normally
+15. Places the desktop entry and icon at the paths a Linux system normally
     keeps them. If a user later installs the AppImage into their menus, the
     integration step copies icons out of `usr/share/icons`.
-15. A bare name is enough here: inside an AppImage the entry never launches
+16. A bare name is enough here: inside an AppImage the entry never launches
     the app — the runtime executes `AppRun`. Edit the real file, not the
     symlink created next; GNU `sed -i` would replace a symlink with a regular
     file.
-16. AppImage requires exactly one `.desktop` at the AppDir root, and
+17. AppImage requires exactly one `.desktop` at the AppDir root, and
     `appimagetool` aborts without it.
-17. The icon named by the entry's `Icon=` key, at the root. `appimagetool`
+18. The icon named by the entry's `Icon=` key, at the root. `appimagetool`
     checks for it by that exact name.
-18. `.DirIcon` is the AppImage's own icon — the image a file manager shows
+19. `.DirIcon` is the AppImage's own icon — the image a file manager shows
     for the `.AppImage` file itself.
-19. `AppRun` is the entry point the runtime executes. It only has to `exec`
+20. `AppRun` is the entry point the runtime executes. It only has to `exec`
     the binary — no `cd`, and deliberately no `LD_LIBRARY_PATH`.
-20. `VERSION` becomes part of the output filename. `--no-appstream` skips
+21. `VERSION` becomes part of the output filename. `--no-appstream` skips
     AppStream metadata validation, which a minimal app does not ship.
 
 :::warning[Do not set `LD_LIBRARY_PATH` in `AppRun`]
