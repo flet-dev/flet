@@ -37,7 +37,17 @@ def _render_template(path: Path, **context: Any) -> str:
 
 
 class TestBuildTemplateContract:
-    """Invariants of the build template itself, independent of any one platform."""
+    """
+    Invariants of the build template itself, independent of any platform.
+
+    Both bugs covered here shipped at least once:
+
+    * a context key the templates read but `cookiecutter.json` never declared
+      — cookiecutter drops such keys, so the value silently rendered empty,
+      which is why `--description` reached nothing for as long as it did;
+    * a template that stopped parsing while *unrendered*, which breaks the CI
+      step that patches its dependency versions in place before any build.
+    """
 
     @staticmethod
     def _declared_keys() -> set:

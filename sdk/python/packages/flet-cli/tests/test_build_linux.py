@@ -1,17 +1,7 @@
 """Linux packaging in `flet build` (issue #2269).
 
-Two halves, both driven against the real in-repo build template:
-
-* **Icon staging** — `flutter_launcher_icons` has no Linux generator, so
-  `customize_icons` stages the resolved icon at
-  `<flutter_dir>/linux/app_icon.png` (installed by the runner's CMake as
-  `data/app_icon.png`) and records the hicolor theme directory in
-  `app_icon.cmake`. The `dart run flutter_launcher_icons` invocation is
-  stubbed out.
-* **The desktop entry** — `linux/{{cookiecutter.bundle_id}}.desktop`,
-  installed into `share/applications/` so desktop environments resolve the
-  launcher name and icon from it. `Exec` and `Categories` are escaped by
-  `flet build`; every other value by the template.
+Every test here renders the real in-repo build template rather than a
+fixture, so a template change that would break the shipped app fails here.
 """
 
 import argparse
@@ -150,6 +140,11 @@ class TestLinuxIconStaging:
     """
     Which icon `customize_icons` stages for a Linux build, and when.
 
+    `flutter_launcher_icons` has no Linux generator, so the resolved icon is
+    staged at `<flutter_dir>/linux/app_icon.png` instead, which the runner's
+    CMake installs into the bundle as `data/app_icon.png`. The
+    `dart run flutter_launcher_icons` invocation is stubbed out.
+
     The bundle must always end up with an icon it can show, whether the app
     supplies a Linux-specific one, a generic one, or none at all — and a
     non-Linux build must not pay for any of it.
@@ -235,6 +230,9 @@ class TestLinuxIconStaging:
 class TestIconThemeSize:
     """
     The hicolor directory the themed icon is installed into.
+
+    CMake cannot measure the image, so `customize_icons` resolves the size
+    and records it in `app_icon.cmake` for the install rule to read.
 
     Only sizes hicolor's `index.theme` declares are ever scanned, so naming a
     directory hicolor does not know is worse than falling back: the icon is
@@ -368,7 +366,15 @@ class TestCategoriesResolution:
 
 
 class TestDesktopEntryTemplate:
-    """Rendering of `linux/{{cookiecutter.bundle_id}}.desktop`."""
+    """
+    Rendering of `linux/{{cookiecutter.bundle_id}}.desktop`, which is
+    installed into `share/applications/` so desktop environments resolve the
+    launcher name and icon from it.
+
+    The template escapes every value it interpolates except `Exec` and
+    `Categories`, which arrive pre-escaped from `flet build` — see
+    `TestDesktopEntryEscaping`.
+    """
 
     @staticmethod
     def _render(**overrides: str) -> str:
