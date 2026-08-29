@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# TEMPORARY -- part of the issue #2269 Linux icon verification harness.
+# Demo branch only.
 #
 # Launch the built app under Xvfb and read back the two X11 properties the
 # fix is supposed to set:

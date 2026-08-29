@@ -1,0 +1,282 @@
+# Demo branch only (test/fix-build-linux-icon). Never merged.
+#
+# Builds .github/demo/app with the Linux app icon work from #2269 and wraps it
+# in the two formats a reviewer can actually open -- a .deb and an AppImage --
+# so checking the fix is "download this, install it, look at your dock" rather
+# than a page of commands.
+#
+# The packaging steps do not carry their own copies of those recipes: they run
+# the ones published in website/docs/publish/linux.md, with only the variables
+# the docs tell a reader to edit. So a green run also means the documented
+# recipes work, and the artifacts are what a reader following them would get.
+name: Linux icon demo (#2269)
+
+on:
+  push:
+    branches:
+      - test/fix-build-linux-icon
+  workflow_dispatch:
+    inputs:
+      python_version:
+        description: "Bundled Python version to build with"
+        type: choice
+        required: true
+        default: "3.13"
+        options:
+          - "3.12"
+          - "3.13"
+          - "3.14"
+
+concurrency:
+  group: ci-${{ github.workflow }}-${{ github.ref_name }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+
+env:
+  ROOT: "${{ github.workspace }}"
+  # patch_python_package_versions (common.sh) cd's into this.
+  SDK_PYTHON: "${{ github.workspace }}/sdk/python"
+  SCRIPTS: "${{ github.workspace }}/.github/scripts"
+  DEMO: "${{ github.workspace }}/.github/demo"
+  APP_DIR: "${{ github.workspace }}/.github/demo/app"
+  DOCS: "${{ github.workspace }}/website/docs/publish/linux.md"
+  # Must match [tool.flet] in .github/demo/app/pyproject.toml.
+  BUNDLE_ID: com.flet.flet_icon_demo
+  ARTIFACT: flet-icon-demo
+  VERSION: "1.0.0"
+  UV_PYTHON: 3.12
+  PYTHONUTF8: 1
+  FLET_CLI_NO_RICH_OUTPUT: 1
+
+jobs:
+  demo:
+    name: ${{ matrix.arch }}
+    # 22.04 (glibc 2.35), not ubuntu-latest: these packages are downloaded and
+    # installed on a real desktop, and a binary linked against 24.04's glibc
+    # 2.39 will not start on anything older. Both architectures are built
+    # because a Linux VM on an Apple Silicon host is arm64, where an x64
+    # bundle only produces "Exec format error".
+    runs-on: ${{ matrix.runner }}
+    timeout-minutes: 45
+    permissions:
+      contents: read
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - arch: x64
+            runner: ubuntu-22.04
+          - arch: arm64
+            runner: ubuntu-22.04-arm
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@df4cb1c069e1874edd31b4311f1884172cec0e10 # v6.0.3
+        with:
+          fetch-depth: 0
+          fetch-tags: true
+          persist-credentials: false
+
+      - name: Setup uv
+        uses: astral-sh/setup-uv@fac544c07dec837d0ccb6301d7b5580bf5edae39 # v8.2.0
+        with:
+          enable-cache: true
+
+      - name: Patch versions
+        shell: bash
+        run: |
+          source "${SCRIPTS}/update_build_version.sh"
+          source "${SCRIPTS}/common.sh"
+          patch_python_package_versions
+
+      - name: Install Linux dependencies
+        shell: bash
+        run: |
+          sudo apt update --allow-releaseinfo-change
+          LINUX_DEPS="$(uv run --project sdk/python/packages/flet-cli flet --version --json | jq -r '.linux_dependencies | join(" ")')"
+          # xvfb and dbus ship with the runner image; xprop/xwininfo
+          # (x11-utils), desktop-file-validate and the software GL driver do
+          # not.
+          sudo apt-get install -y --no-install-recommends \
+            $LINUX_DEPS x11-utils xvfb desktop-file-utils libgl1-mesa-dri
+          sudo apt-get clean
+
+      - name: Get Flutter version from ".fvmrc"
+        uses: kuhnroyal/flutter-fvm-config-action/config@c378498f1d1962d33039c3989411093ef8a17b2c # v3.3
+        id: fvm-config-action
+        with:
+          path: '.fvmrc'
+
+      - name: Setup Flutter
+        uses: subosito/flutter-action@1a449444c387b1966244ae4d4f8c696479add0b2 # v2.23.0
+        with:
+          flutter-version: ${{ steps.fvm-config-action.outputs.FLUTTER_VERSION }}
+          # Flutter publishes no linux-arm64 archive on stable, so the action
+          # cannot resolve a version there; ci.yml's build_linux job takes the
+          # same escape hatch.
+          # https://github.com/subosito/flutter-action/issues/345#issuecomment-2657332687
+          channel: ${{ matrix.arch == 'arm64' && 'master' || 'stable' }}
+          cache: true
+
+      - name: Mark git safe directories
+        shell: bash
+        run: |
+          git config --global --add safe.directory "$GITHUB_WORKSPACE"
+          if [[ -n "${FLUTTER_ROOT:-}" ]]; then
+            git config --global --add safe.directory "$FLUTTER_ROOT"
+          fi
+
+      - name: Precache Flutter artifacts
+        # The arm64 SDK comes from a git clone with no engine artifacts, and
+        # `flet build` runs `dart run serious_python:main package` before any
+        # flutter command would fetch them -- pub then fails to resolve
+        # sky_engine. The stable x64 download already carries them.
+        if: matrix.arch == 'arm64'
+        shell: bash
+        run: |
+          flutter --version
+          flutter precache --linux
+
+      - name: Build the demo app
+        shell: bash
+        working-directory: .github/demo/app
+        env:
+          PYTHON_VERSION: ${{ inputs.python_version || '3.13' }}
+        run: |
+          set -o pipefail
+          uv run flet build linux --python-version "${PYTHON_VERSION}" \
+            --yes --verbose --build-number "${GITHUB_RUN_NUMBER}" \
+            2>&1 | tee "${RUNNER_TEMP}/build.log"
+
+      - name: Assert bundle contents
+        shell: bash
+        run: python3 "${DEMO}/assert_bundle.py" "${APP_DIR}"
+
+      - name: Validate the desktop entry
+        shell: bash
+        run: |
+          ENTRY="${APP_DIR}/build/linux/share/applications/${BUNDLE_ID}.desktop"
+          echo "--- $ENTRY"
+          cat "$ENTRY"
+          # Warnings (deprecated keys, hints) are informational; only spec
+          # errors should fail the job.
+          OUT="$(desktop-file-validate "$ENTRY" 2>&1 || true)"
+          echo "$OUT"
+          if echo "$OUT" | grep -q "error:"; then
+            echo "!! desktop entry has spec errors" >&2
+            exit 1
+          fi
+
+      - name: Get appimagetool
+        shell: bash
+        run: |
+          mkdir -p "${RUNNER_TEMP}/pkg"
+          cd "${RUNNER_TEMP}/pkg"
+          # The docs point at the rolling `continuous` tag, so this downloads
+          # whatever a reader following them today would get.
+          wget -q "https://github.com/AppImage/appimagetool/releases/download/continuous/appimagetool-$(uname -m).AppImage"
+          chmod +x "appimagetool-$(uname -m).AppImage"
+
+      - name: Build the AppImage (recipe from the docs)
+        shell: bash
+        working-directory: ${{ runner.temp }}/pkg
+        env:
+          # The runner image has no libfuse2, which appimagetool needs to run
+          # itself. This is the escape hatch the docs give for exactly that.
+          APPIMAGE_EXTRACT_AND_RUN: 1
+        run: |
+          set -o pipefail
+          python3 "${DEMO}/extract_recipe.py" "${DOCS}" appimage \
+            "BUNDLE=${APP_DIR}/build/linux" \
+            "APP=${ARTIFACT}" \
+            "ID=${BUNDLE_ID}" | tee build-appimage.sh
+          bash build-appimage.sh
+          ls -lh ./*.AppImage
+
+      - name: Build the .deb (recipe from the docs)
+        shell: bash
+        working-directory: ${{ runner.temp }}/pkg
+        run: |
+          set -o pipefail
+          python3 "${DEMO}/extract_recipe.py" "${DOCS}" deb \
+            "BUNDLE=${APP_DIR}/build/linux" \
+            "PKG=${ARTIFACT}" \
+            "BIN=${ARTIFACT}" \
+            "APPID=${BUNDLE_ID}" \
+            "VER=${VERSION}" | tee build-deb.sh
+          bash build-deb.sh
+          ls -lh build/*.deb
+
+      - name: Assert package contents
+        shell: bash
+        working-directory: ${{ runner.temp }}/pkg
+        run: |
+          DEB="$(ls build/*.deb)"
+          APPIMAGE="$(ls ./*.AppImage | grep -v appimagetool)"
+          python3 "${DEMO}/assert_packages.py" "$DEB" "$APPIMAGE"
+
+      - name: Install the .deb
+        # Not just a packaging check: this is the path a reviewer takes, and
+        # the postinst hooks that refresh the desktop and icon caches only run
+        # here.
+        shell: bash
+        working-directory: ${{ runner.temp }}/pkg
+        run: |
+          sudo apt-get install -y "$PWD/$(ls build/*.deb)"
+          echo "--- installed desktop entry"
+          cat "/usr/share/applications/${BUNDLE_ID}.desktop"
+          test -f "/usr/share/icons/hicolor/256x256/apps/${BUNDLE_ID}.png"
+          test -x "/usr/bin/${ARTIFACT}"
+          # The desktop resolves the entry's Icon= key against the icon theme
+          # by filename, so read the key back rather than assuming it, and
+          # confirm the installed tree answers it.
+          ICON_KEY="$(sed -n 's/^Icon=//p' "/usr/share/applications/${BUNDLE_ID}.desktop")"
+          FOUND="$(find /usr/share/icons/hicolor -name "${ICON_KEY}.png")"
+          echo "--- Icon=${ICON_KEY} resolves to: ${FOUND:-<nothing>}"
+          test -n "$FOUND"
+
+      - name: Check the installed app under Xvfb
+        # Informational: it depends on Flutter obtaining a software GL context
+        # under Xvfb, which is not guaranteed on a headless runner. Never let
+        # it block the upload, and never let it hang -- the script's own worst
+        # case is ~90s.
+        continue-on-error: true
+        timeout-minutes: 6
+        shell: bash
+        env:
+          LIBGL_ALWAYS_SOFTWARE: 1
+          GDK_BACKEND: x11
+        run: |
+          timeout --kill-after=20s 240s \
+            xvfb-run -a --server-args="-screen 0 1280x1024x24" \
+            "${DEMO}/assert_runtime.sh" "${BUNDLE_ID}" 256x256 "/usr/bin/${ARTIFACT}"
+
+      - name: Collect the downloads
+        if: always()
+        shell: bash
+        run: |
+          OUT="${RUNNER_TEMP}/out"
+          mkdir -p "$OUT"
+          cp "${RUNNER_TEMP}"/pkg/build/*.deb "$OUT/" 2>/dev/null || true
+          cp "${RUNNER_TEMP}"/pkg/*.AppImage "$OUT/" 2>/dev/null || true
+          rm -f "$OUT"/appimagetool-*.AppImage
+          cp "${RUNNER_TEMP}"/pkg/build-*.sh "$OUT/" 2>/dev/null || true
+          cp "${RUNNER_TEMP}/build.log" "$OUT/" 2>/dev/null || true
+          cp "${APP_DIR}/build/linux/share/applications/${BUNDLE_ID}.desktop" \
+            "$OUT/" 2>/dev/null || true
+          sed \
+            -e "s|@ARCH@|${{ matrix.arch }}|g" \
+            -e "s|@ARTIFACT@|${ARTIFACT}|g" \
+            -e "s|@BUNDLE_ID@|${BUNDLE_ID}|g" \
+            "${DEMO}/HOW-TO.md" > "$OUT/HOW-TO.md"
+          ls -lh "$OUT"
+
+      - name: Upload the demo packages
+        if: always()
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
+        with:
+          name: flet-icon-demo-${{ matrix.arch }}
+          path: ${{ runner.temp }}/out
+          if-no-files-found: warn
