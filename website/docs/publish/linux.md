@@ -230,7 +230,7 @@ run it with the same variable set.
 
 **Save** the below script as `build-appimage.sh` (pasting it straight into a terminal is
 fragile, and you will re-run it each time you rebuild), then **edit** the three variables
-at the top, and **run** it with `bash build-appimage.sh`.
+at the top (`BUNDLE`, `APP` & `ID`), and **run** it with `bash build-appimage.sh`.
 
 ```bash
 #!/usr/bin/env bash
