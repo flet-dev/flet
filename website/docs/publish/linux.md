@@ -437,6 +437,10 @@ dpkg-deb --build --root-owner-group "$STAGE" "build/${PKG}_${VER}_${ARCH}.deb" #
 14. Puts the app on `PATH`. It must be a **symlink, not a wrapper script**:
     the app locates its Python runtime from the path of the running
     executable, and a wrapper would resolve to `/usr/bin` instead of `/opt`.
+    The target is absolute because [Debian Policy
+    §10.5](https://www.debian.org/doc/debian-policy/ch-files.html#symbolic-links)
+    asks for absolute links between top-level directories — the opposite of
+    what the `.rpm` recipe uses, where `rpmlint` prefers relative.
 15. The package metadata `dpkg` reads. `Section` and `Priority` affect how
     package managers classify it; neither changes behaviour.
 16. Maintainer scripts have to be executable, and `dpkg` refuses the package
