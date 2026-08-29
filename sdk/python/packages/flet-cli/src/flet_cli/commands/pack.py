@@ -244,7 +244,8 @@ class Command(BaseCommand):
             The app id, for both `StartupWMClass` and `Icon`.
         """
 
-        return options.bundle_id or (options.name or Path(options.script).stem)
+        app_id = options.bundle_id or (options.name or Path(options.script).stem)
+        return app_id.strip()
 
     @staticmethod
     def escape_desktop_exec(value: str) -> str:
@@ -266,7 +267,10 @@ class Command(BaseCommand):
 
         value = re.sub(r"[\x00-\x1f]", " ", value)
         shell_escaped = re.sub(r'(["`$\\])', r"\\\1", value)
-        return shell_escaped.replace("\\", "\\\\")
+        entry_escaped = shell_escaped.replace("\\", "\\\\")
+        # `%` introduces a field code, so a literal one has to be doubled or
+        # the desktop silently drops it along with the character after it.
+        return entry_escaped.replace("%", "%%")
 
     @staticmethod
     def escape_desktop_value(value: str) -> str:
@@ -310,8 +314,24 @@ class Command(BaseCommand):
             app_id: The identity the app reports to the desktop.
         """
 
+        # The runtime refuses an id containing a path separator, because GLib
+        # would silently reduce it to its last segment. Refuse it here too,
+        # rather than crash writing an entry into a directory that does not
+        # exist and would not have matched anything anyway.
+        if "/" in app_id:
+            print(
+                f"Skipping the desktop entry: {app_id!r} contains a path "
+                "separator, which cannot be an app identity."
+            )
+            return
+
         exe_name = options.name or Path(options.script).stem
+        # PyInstaller's COLLECT step puts a one-folder build's executable
+        # inside a directory named after it, so `dist/<name>` is the folder
+        # and `dist/<name>/<name>` is the thing to launch.
         exe_path = Path(dist_dir).joinpath(exe_name)
+        if options.onedir:
+            exe_path = exe_path.joinpath(exe_name)
         name = options.product_name or exe_name
 
         lines = [

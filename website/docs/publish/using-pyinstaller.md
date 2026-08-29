@@ -115,9 +115,10 @@ labelled `flet`. To avoid that, the app is relaunched under its own identity
 [`--bundle-id`](../cli/flet-pack.md#--bundle-id) when you pass one, and
 otherwise the executable's name.
 
-Pass `--bundle-id` if you also publish the app with
-[`flet build linux`](linux.md), so both give the window the same identity and
-one desktop entry matches either.
+`--bundle-id` also lets you choose that identity rather than inherit it from
+the executable's name, which is worth doing if the executable is named
+something a desktop entry should not be keyed on — a versioned `my-app-1.2.3`,
+say.
 
 That gives the app its own taskbar group and label. Its **display name and
 icon** come from somewhere else: a desktop entry, which the desktop matches to

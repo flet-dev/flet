@@ -44,6 +44,9 @@ if sys.platform.startswith("linux") and "FLET_APP_ID" not in os.environ:
                 app_id = f.read().strip()
         except OSError:
             pass
-    os.environ["FLET_APP_ID"] = app_id or os.path.splitext(
-        os.path.basename(os.path.abspath(sys.executable))
-    )[0]
+    # No splitext here: a Linux executable has no extension, so it would eat
+    # whatever follows the last dot in the app's own name -- turning
+    # `myapp-1.2.3` into `myapp-1.2`, which then matches no desktop entry.
+    os.environ["FLET_APP_ID"] = (
+        app_id or os.path.basename(os.path.abspath(sys.executable)).strip()
+    )
