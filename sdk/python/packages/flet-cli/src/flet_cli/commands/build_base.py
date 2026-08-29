@@ -1396,7 +1396,7 @@ class BaseBuildCommand(BaseFlutterCommand):
             # Desktop entry values are escaped here rather than in the template:
             # the rules differ per key and getting them wrong yields an entry the
             # desktop environment silently discards.
-            linux_categories = self.escape_desktop_categories(
+            linux_categories = self.escape_linux_desktop_categories(
                 self.options.linux_categories
                 or self.get_pyproject("tool.flet.linux.categories")
                 or ["Utility"]
@@ -1454,7 +1454,7 @@ class BaseBuildCommand(BaseFlutterCommand):
             "product_name": product_name,
             "project_description": project_description,
             # Pre-escaped Linux desktop entry values.
-            "linux_desktop_exec": self.escape_desktop_exec(str(artifact_name)),
+            "linux_desktop_exec": self.escape_linux_desktop_exec(str(artifact_name)),
             "linux_categories": linux_categories,
             "org_name": self.options.org_name
             or self.get_pyproject(f"tool.flet.{self.config_platform}.org")
@@ -3037,7 +3037,7 @@ class BaseBuildCommand(BaseFlutterCommand):
                 )
 
     @staticmethod
-    def escape_desktop_exec(value: str) -> str:
+    def escape_linux_desktop_exec(value: str) -> str:
         """
         Escape a program name for the quoted `Exec` key of a desktop entry.
 
@@ -3058,7 +3058,7 @@ class BaseBuildCommand(BaseFlutterCommand):
         return shell_escaped.replace("\\", "\\\\")
 
     @staticmethod
-    def escape_desktop_categories(categories) -> str:
+    def escape_linux_desktop_categories(categories) -> str:
         """
         Build the `Categories` value of a desktop entry.
 

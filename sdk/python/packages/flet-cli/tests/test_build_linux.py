@@ -310,13 +310,13 @@ class TestDesktopEntryEscaping:
             ("tick`s", "tick\\\\`s"),
         ],
     )
-    def test_escape_desktop_exec(self, raw, expected):
+    def test_escape_linux_desktop_exec(self, raw, expected):
         """Reserved characters get a backslash, then every one is doubled."""
-        assert BaseBuildCommand.escape_desktop_exec(raw) == expected
+        assert BaseBuildCommand.escape_linux_desktop_exec(raw) == expected
 
-    def test_escape_desktop_categories(self):
+    def test_escape_linux_desktop_categories(self):
         """Categories are semicolon-terminated, with separators escaped."""
-        escape = BaseBuildCommand.escape_desktop_categories
+        escape = BaseBuildCommand.escape_linux_desktop_categories
         assert escape(["Game", "Education"]) == "Game;Education;"
         assert escape("Development") == "Development;"
         # A literal ";" would otherwise split one category into two.
@@ -326,12 +326,12 @@ class TestDesktopEntryEscaping:
         assert escape([]) == "Utility;"
 
     @pytest.mark.parametrize("bad", [5, None, ["ok", 7], {"a": 1}])
-    def test_escape_desktop_categories_rejects_non_strings(self, bad):
+    def test_escape_linux_desktop_categories_rejects_non_strings(self, bad):
         """A malformed `pyproject.toml` value fails with a clear error instead of
         a jinja `TypeError`, which the build turns into a wiped build dir and
         a message that never mentions `pyproject.toml`."""
         with pytest.raises(ValueError):
-            BaseBuildCommand.escape_desktop_categories(bad)
+            BaseBuildCommand.escape_linux_desktop_categories(bad)
 
 
 class TestCategoriesResolution:
@@ -339,7 +339,7 @@ class TestCategoriesResolution:
     How `--linux-categories` and `[tool.flet.linux].categories` combine.
 
     The CLI option and the escaping are wired together in `setup_template_data`,
-    so a test that only calls `escape_desktop_categories` would pass even if the
+    so a test that only calls `escape_linux_desktop_categories` would pass even if the
     option were never added to the parser or never consulted.
     """
 
@@ -376,7 +376,7 @@ class TestDesktopEntryTemplate:
         context = {
             "product_name": "My App",
             "project_description": "",
-            "desktop_exec": "my_app",
+            "linux_desktop_exec": "my_app",
             "linux_categories": "Utility;",
             "bundle_id": "com.example.my_app",
             **overrides,
@@ -460,7 +460,7 @@ class TestDesktopEntryTemplate:
     def test_prepared_values_are_interpolated_verbatim(self):
         """`Exec` and `Categories` arrive escaped and are not escaped twice."""
         content = self._render(
-            desktop_exec=r"weird\\\"name", linux_categories="Game;Fun;"
+            linux_desktop_exec=r"weird\\\"name", linux_categories="Game;Fun;"
         )
         assert 'Exec="weird\\\\\\"name" %U' in content
         assert "Categories=Game;Fun;" in content
