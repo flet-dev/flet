@@ -3083,7 +3083,10 @@ class BaseBuildCommand(BaseFlutterCommand):
         # entry across lines and void the key.
         value = re.sub(r"[\x00-\x1f]", " ", value)
         shell_escaped = re.sub(r'(["`$\\])', r"\\\1", value)
-        return shell_escaped.replace("\\", "\\\\")
+        entry_escaped = shell_escaped.replace("\\", "\\\\")
+        # `%` introduces a field code, so a literal one must be doubled or the
+        # desktop drops it along with the character after it.
+        return entry_escaped.replace("%", "%%")
 
     @staticmethod
     def escape_linux_desktop_categories(categories) -> str:

@@ -302,6 +302,10 @@ class TestDesktopEntryEscaping:
             ("my$app", "my\\\\$app"),
             ("a\\b", "a\\\\\\\\b"),
             ("tick`s", "tick\\\\`s"),
+            # `%` starts a field code, so a literal one must be doubled or
+            # the desktop drops it and the character after it.
+            ("save 50% now", "save 50%% now"),
+            ("100%", "100%%"),
         ],
     )
     def test_escape_linux_desktop_exec(self, raw, expected):
