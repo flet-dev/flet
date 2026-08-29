@@ -1392,18 +1392,21 @@ class BaseBuildCommand(BaseFlutterCommand):
             or self.get_pyproject("project.description")
             or self.get_pyproject("tool.poetry.description")
         )
-        try:
-            # Desktop entry values are escaped here rather than in the template:
-            # the rules differ per key and getting them wrong yields an entry the
-            # desktop environment silently discards.
-            linux_categories = self.escape_linux_desktop_categories(
-                self.options.linux_categories
-                or self.get_pyproject("tool.flet.linux.categories")
-                or ["Utility"]
-            )
-        except ValueError as e:
-            self.cleanup(1, f"Invalid tool.flet.linux.categories: {e}")
-            raise
+        # Desktop entry values are escaped here rather than in the template:
+        # the rules differ per key and getting them wrong yields an entry the
+        # desktop environment silently discards. Only resolved for Linux, so a
+        # malformed value cannot fail a build that would never read it.
+        linux_categories = None
+        if self.target_platform == "linux":
+            try:
+                linux_categories = self.escape_linux_desktop_categories(
+                    self.options.linux_categories
+                    or self.get_pyproject("tool.flet.linux.categories")
+                    or ["Utility"]
+                )
+            except ValueError as e:
+                self.cleanup(1, f"Invalid tool.flet.linux.categories: {e}")
+                raise
         self.template_data = {
             "out_dir": self.flutter_dir.name,
             "sep": os.sep,
@@ -1452,7 +1455,13 @@ class BaseBuildCommand(BaseFlutterCommand):
             "project_name_slug": project_name_slug,
             "artifact_name": artifact_name,
             "product_name": product_name,
+            # Consumed by the web manifest and meta description, and by the
+            # Linux desktop entry's Comment.
             "project_description": project_description,
+            # pubspec.yaml is read as YAML while still unrendered, so its
+            # description is escaped for the single quotes the template
+            # provides rather than carrying quotes of its own.
+            "pubspec_description": self.escape_single_quoted_yaml(project_description),
             # Pre-escaped Linux desktop entry values.
             "linux_desktop_exec": self.escape_linux_desktop_exec(str(artifact_name)),
             "linux_categories": linux_categories,
@@ -3037,6 +3046,25 @@ class BaseBuildCommand(BaseFlutterCommand):
                 )
 
     @staticmethod
+    def escape_single_quoted_yaml(value: Optional[str]) -> str:
+        """
+        Escape a value for a single-quoted YAML scalar.
+
+        The build template's `pubspec.yaml` is read as YAML while still
+        unrendered — CI patches its dependency versions in place — so the
+        value must not carry quotes of its own, and is escaped for the
+        quoting the template already provides.
+
+        Args:
+            value: Raw value, or `None`.
+
+        Returns:
+            The value with control characters flattened and quotes doubled.
+        """
+
+        return re.sub(r"[\x00-\x1f]", " ", value or "").replace("'", "''")
+
+    @staticmethod
     def escape_linux_desktop_exec(value: str) -> str:
         """
         Escape a program name for the quoted `Exec` key of a desktop entry.
@@ -3054,6 +3082,9 @@ class BaseBuildCommand(BaseFlutterCommand):
             The value ready to be interpolated between double quotes.
         """
 
+        # Flatten control characters first: a newline would split the
+        # entry across lines and void the key.
+        value = re.sub(r"[\x00-\x1f]", " ", value)
         shell_escaped = re.sub(r'(["`$\\])', r"\\\1", value)
         return shell_escaped.replace("\\", "\\\\")
 
@@ -3080,10 +3111,14 @@ class BaseBuildCommand(BaseFlutterCommand):
             raise ValueError(
                 f"categories must be a string or a list of strings, got {categories!r}"
             )
-        # A literal ";" would split one category into two, and a backslash
-        # would start an escape sequence that voids the whole key.
+        # A literal ";" would split one category into two, a backslash would
+        # start an escape sequence that voids the whole key, and a newline
+        # would leave a second line with no "=" in it, voiding the entry.
         escaped = [
-            c.strip().replace("\\", "\\\\").replace(";", "\\;")
+            re.sub(r"[\x00-\x1f]", " ", c)
+            .strip()
+            .replace("\\", "\\\\")
+            .replace(";", "\\;")
             for c in categories
             if c.strip()
         ]

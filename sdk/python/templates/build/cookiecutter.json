@@ -4,6 +4,7 @@
     "project_name": "",
     "project_name_slug": "",
     "project_description": "",
+    "pubspec_description": "",
     "artifact_name": "{{ cookiecutter.project_name }}",
     "linux_desktop_exec": "{{ cookiecutter.artifact_name }}",
     "linux_categories": "Utility;",

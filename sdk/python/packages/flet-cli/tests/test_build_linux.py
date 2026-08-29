@@ -15,14 +15,16 @@ Two halves, both driven against the real in-repo build template:
 """
 
 import argparse
+import json
 import os
+import re
 from pathlib import Path
 from types import SimpleNamespace
 from typing import Any, Optional
 
 import pytest
 import yaml
-from jinja2 import Environment
+from jinja2 import Environment, StrictUndefined
 
 from flet_cli.commands.build_base import BaseBuildCommand
 
@@ -50,7 +52,7 @@ def _render_template(path: Path, **context: Any) -> str:
         The rendered file content.
     """
 
-    env = Environment(keep_trailing_newline=True)
+    env = Environment(keep_trailing_newline=True, undefined=StrictUndefined)
     return env.from_string(path.read_text()).render(cookiecutter=context)
 
 
@@ -117,7 +119,7 @@ def _run_customize_icons(
     pubspec_path = flutter_dir / "pubspec.yaml"
     pubspec = yaml.safe_load(
         _render_template(
-            TEMPLATE_PUBSPEC, project_name="test_app", project_description=""
+            TEMPLATE_PUBSPEC, project_name="test_app", pubspec_description=""
         )
     )
     pubspec_path.write_text(yaml.safe_dump(pubspec))
@@ -424,11 +426,6 @@ class TestDesktopEntryTemplate:
         assert entry["StartupWMClass"] == "com.example.my_app"
         assert entry["Categories"] == "Utility;"
 
-    def test_no_unrendered_jinja(self):
-        """No template syntax survives into the installed entry."""
-        content = self._render(project_description="Does great things.")
-        assert "{{" not in content and "{%" not in content
-
     def test_comment_omitted_without_description(self):
         """An app with no description gets no empty `Comment` key."""
         content = self._render(project_description="")
@@ -464,3 +461,76 @@ class TestDesktopEntryTemplate:
         )
         assert 'Exec="weird\\\\\\"name" %U' in content
         assert "Categories=Game;Fun;" in content
+
+
+class TestBuildTemplateContract:
+    """
+    Invariants of the build template itself, independent of any one platform.
+
+    Both bugs these cover shipped at least once: a context key the templates
+    read but `cookiecutter.json` never declared (cookiecutter drops it, so the
+    value silently vanished), and a template that stopped being parseable
+    while unrendered, which breaks the CI step that patches it in place.
+    """
+
+    @staticmethod
+    def _declared_keys() -> set:
+        """The context keys `cookiecutter.json` declares."""
+        with open(BUILD_TEMPLATE_DIR.parent / "cookiecutter.json") as f:
+            return set(json.load(f))
+
+    @staticmethod
+    def _referenced_keys() -> dict:
+        """Every `cookiecutter.<key>` referenced by a template, by file."""
+        found = {}
+        for path in BUILD_TEMPLATE_DIR.rglob("*"):
+            if not path.is_file():
+                continue
+            try:
+                text = path.read_text()
+            except UnicodeDecodeError:
+                continue  # binary asset, e.g. images/icon.png
+            # The negative lookahead skips method calls such as
+            # `cookiecutter.items()` in .vars, which are not context keys.
+            for key in re.findall(
+                r"cookiecutter\.([a-zA-Z_][a-zA-Z0-9_]*)\b(?!\s*\()", text
+            ):
+                found.setdefault(key, set()).add(path.name)
+        return found
+
+    def test_every_referenced_key_is_declared(self):
+        """
+        A key a template reads but `cookiecutter.json` omits is dropped from
+        the context, so the template silently renders it empty — which is how
+        `--description` reached nothing for as long as it did.
+        """
+        declared = self._declared_keys()
+        undeclared = {
+            key: sorted(files)
+            for key, files in self._referenced_keys().items()
+            if key not in declared
+        }
+        assert not undeclared, f"referenced but not declared: {undeclared}"
+
+    def test_pubspec_parses_while_unrendered(self):
+        """
+        `.github/scripts/patch_pubspec_version.py` loads this file as YAML
+        before cookiecutter ever runs, so an unquoted `{{` — which YAML reads
+        as a flow mapping — fails the release build.
+        """
+        with open(TEMPLATE_PUBSPEC) as f:
+            assert yaml.safe_load(f), "template pubspec.yaml must parse as YAML"
+
+    @pytest.mark.parametrize(
+        "description",
+        ["plain", "Bob's tool", 'has "quotes"', "back\\slash", "multi\nline\ttab"],
+    )
+    def test_rendered_pubspec_is_valid_yaml(self, description):
+        """A description of any shape must still render a parseable pubspec."""
+        rendered = _render_template(
+            TEMPLATE_PUBSPEC,
+            project_name="test_app",
+            pubspec_description=BaseBuildCommand.escape_single_quoted_yaml(description),
+        )
+        parsed = yaml.safe_load(rendered)
+        assert parsed["description"] == re.sub(r"[\x00-\x1f]", " ", description)
