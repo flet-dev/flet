@@ -163,7 +163,7 @@ Its value is determined in the following order of precedence:
 
 1. [`--linux-categories`](../cli/flet-build.md#--linux-categories)
 2. `[tool.flet.linux].categories`
-3. `Utility`
+4. `Utility`
 
 <Tabs groupId="flet-build--pyproject-toml">
 <TabItem value="flet-build" label="flet build">
@@ -294,39 +294,39 @@ VERSION=1.0.0 "$APPIMAGETOOL" --no-appstream "$APPDIR" # (20)!
 3. **Edit this.** The executable's *filename* inside `BUNDLE` — a name, not a
    path. This is your [artifact name](index.md#artifact-name), which defaults
    to your project name. `ls "$BUNDLE"` will show it.
-4. **Edit this.** Your [bundle ID](index.md#bundle-id). It must match what the
+5. **Edit this.** Your [bundle ID](index.md#bundle-id). It must match what the
    app was built with, because it is also the desktop entry's filename and the
    name the window reports; a mismatch means the icon silently never resolves.
-5. Path to the staging directory this script creates — an **AppDir**, the
+6. Path to the staging directory this script creates — an **AppDir**, the
    layout `appimagetool` expects: your app, plus a desktop entry, an icon and
    an `AppRun` launcher at its top level. It is deleted and rebuilt on every
    run, so point it somewhere disposable.
-6. `x86_64` or `aarch64` — used only to pick the matching `appimagetool`.
-7. Path to the `appimagetool` file you downloaded above, filename included.
+7. `x86_64` or `aarch64` — used only to pick the matching `appimagetool`.
+8. Path to the `appimagetool` file you downloaded above, filename included.
    It is one self-contained executable, so it can live anywhere.
-8. Fails early with a clear message if the bundle predates desktop entry
+9. Fails early with a clear message if the bundle predates desktop entry
    support, rather than failing obscurely further down.
-9. The icon `flet build` installed. Its directory encodes the size, which the
+10. The icon `flet build` installed. Its directory encodes the size, which the
    next line reads, so the AppDir mirrors whatever size your icon is.
-10. The size read out of the icon path found on the previous line —
+11. The size read out of the icon path found on the previous line —
     `256x256` in `.../hicolor/256x256/apps/<id>.png` — so the AppDir mirrors
     whatever size your icon actually is, rather than assuming one.
-11. Start from scratch, so a rename or size change cannot leave stale files
+12. Start from scratch, so a rename or size change cannot leave stale files
     behind.
-12. The entire bundle, verbatim. `-a` preserves the executable bit and
+13. The entire bundle, verbatim. `-a` preserves the executable bit and
     symlinks; the app resolves its libraries and Python runtime relative to its
     own location, so these files must stay together.
-13. Removes the `share/` that travelled inside the bundle: the next lines put
+14. Removes the `share/` that travelled inside the bundle: the next lines put
     those same two files where AppImage expects them instead, and keeping both
     would ship the desktop entry twice.
-14. Places the desktop entry and icon at the paths a Linux system normally
+15. Places the desktop entry and icon at the paths a Linux system normally
     keeps them. If a user later installs the AppImage into their menus, the
     integration step copies icons out of `usr/share/icons`.
-15. A bare name is enough here: inside an AppImage the entry never launches
+16. A bare name is enough here: inside an AppImage the entry never launches
     the app — the runtime executes `AppRun`. Edit the real file, not the
     symlink created next; GNU `sed -i` would replace a symlink with a regular
     file.
-16. AppImage requires exactly one `.desktop` at the AppDir root, and
+17. AppImage requires exactly one `.desktop` at the AppDir root, and
     `appimagetool` aborts without it.
 17. The icon named by the entry's `Icon=` key, at the root. `appimagetool`
     checks for it by that exact name.
@@ -351,35 +351,37 @@ the generated entry.
 </TabItem>
 <TabItem value="deb" label=".deb">
 
-Save this as `build-deb.sh`, edit the four variables at the top (`PKG`, `BIN`,
-`APPID` and `VER`), and run it with `bash build-deb.sh` on a machine that has
+Save this as `build-deb.sh`, edit the five variables at the top (`BUNDLE`,
+`PKG`, `BIN`, `APPID` and `VER`), and run it with `bash build-deb.sh` on a
+machine that has
 `dpkg-deb` — that means Linux, not WSL-less Windows or macOS.
 
 ```bash
 #!/usr/bin/env bash
 set -euo pipefail # (1)!
 
-PKG=my-app # (2)!
-BIN=my-app # (3)!
-APPID=com.example.my_app # (4)!
-VER=1.0.0 # (5)!
+BUNDLE=build/linux # (2)!
+PKG=my-app # (3)!
+BIN=my-app # (4)!
+APPID=com.example.my_app # (5)!
+VER=1.0.0 # (6)!
 
-ARCH=$(dpkg --print-architecture) # (6)!
-STAGE="build/deb/${PKG}_${VER}_${ARCH}" # (7)!
+ARCH=$(dpkg --print-architecture) # (7)!
+STAGE="build/deb/${PKG}_${VER}_${ARCH}" # (8)!
 
-rm -rf "$STAGE" # (8)!
+rm -rf "$STAGE" # (9)!
 install -d "$STAGE/DEBIAN" "$STAGE/opt/$PKG" "$STAGE/usr/bin" "$STAGE/usr/share"
 
-cp -a build/linux/. "$STAGE/opt/$PKG/" # (9)!
+cp -a "$BUNDLE"/. "$STAGE/opt/$PKG/" # (10)!
 
-cp -a "$STAGE/opt/$PKG/share/." "$STAGE/usr/share/" # (10)!
-rm -rf "$STAGE/opt/$PKG/share" # (11)!
+cp -a "$STAGE/opt/$PKG/share/." "$STAGE/usr/share/" # (11)!
+rm -rf "$STAGE/opt/$PKG/share" # (12)!
 
-sed -i "s|^Exec=.*|Exec=/opt/$PKG/$BIN %U|" "$STAGE/usr/share/applications/$APPID.desktop" # (12)!
+sed -i "s|^Exec=.*|Exec=/opt/$PKG/$BIN %U|" "$STAGE/usr/share/applications/$APPID.desktop" # (13)!
 
-ln -sfn "/opt/$PKG/$BIN" "$STAGE/usr/bin/$PKG" # (13)!
+ln -sfn "/opt/$PKG/$BIN" "$STAGE/usr/bin/$PKG" # (14)!
 
-cat > "$STAGE/DEBIAN/control" <<EOF # (14)!
+cat > "$STAGE/DEBIAN/control" <<EOF # (15)!
 Package: $PKG
 Version: $VER
 Architecture: $ARCH
@@ -399,46 +401,48 @@ if [ "$1" = configure ]; then
   gtk-update-icon-cache -q -t -f /usr/share/icons/hicolor 2>/dev/null || true
 fi
 EOF
-chmod 0755 "$STAGE/DEBIAN/postinst" # (15)!
+chmod 0755 "$STAGE/DEBIAN/postinst" # (16)!
 
-dpkg-deb --build --root-owner-group "$STAGE" "build/${PKG}_${VER}_${ARCH}.deb" # (16)!
+dpkg-deb --build --root-owner-group "$STAGE" "build/${PKG}_${VER}_${ARCH}.deb" # (17)!
 ```
 
 1. Stops at the first failing command, so a failed copy cannot produce a
    package that installs and then does not run.
-2. **Edit this.** The Debian package name — lowercase letters, digits and
+2. **Edit this.** Path to the directory `flet build linux` produced — by
+   default `build/linux` inside your project.
+3. **Edit this.** The Debian package name — lowercase letters, digits and
    `+ - .` only. It is what users type after `apt install`, and the directory
    name under `/opt`.
-3. **Edit this.** The executable's *filename* inside `build/linux` — a name,
-   not a path. This is your [artifact name](index.md#artifact-name).
-4. **Edit this.** Your [bundle ID](index.md#bundle-id), which is also the
+4. **Edit this.** The executable's *filename* inside `BUNDLE` — a name, not a
+   path. This is your [artifact name](index.md#artifact-name).
+5. **Edit this.** Your [bundle ID](index.md#bundle-id), which is also the
    desktop entry's filename inside the bundle.
-5. **Edit this.** The package version. Debian compares these when deciding
+6. **Edit this.** The package version. Debian compares these when deciding
    whether an upgrade applies, so it must increase between releases.
-6. `amd64` or `arm64` — Debian's own architecture names, which differ from
+7. `amd64` or `arm64` — Debian's own architecture names, which differ from
    `uname -m` (`x86_64`/`aarch64`), so ask `dpkg` rather than guessing.
-7. Staging tree: a directory laid out exactly like the installed system, which
+8. Staging tree: a directory laid out exactly like the installed system, which
    `dpkg-deb` turns into a package at the end.
-8. Rebuild the staging tree from scratch, then create the four directories the
+9. Rebuild the staging tree from scratch, then create the four directories the
    package installs into.
-9. The bundle goes to `/opt/<pkg>` as one piece. `-a` preserves the executable
-   bit and symlinks, and the app resolves its libraries and Python runtime
-   relative to its own location, so these files must stay together.
-10. Copies the bundle's desktop entry and icon to `/usr/share`, which is where
+10. The bundle goes to `/opt/<pkg>` as one piece. `-a` preserves the executable
+    bit and symlinks, and the app resolves its libraries and Python runtime
+    relative to its own location, so these files must stay together.
+11. Copies the bundle's desktop entry and icon to `/usr/share`, which is where
     the desktop looks for installed applications — nothing under `/opt` is
     scanned.
-11. Removes the `/opt` copy afterwards, so the entry is not shipped twice.
-12. Points `Exec=` at the real install path. The entry ships with a bare name
+12. Removes the `/opt` copy afterwards, so the entry is not shipped twice.
+13. Points `Exec=` at the real install path. The entry ships with a bare name
     because the bundle is relocatable, and nothing on `PATH` would match it.
-13. Puts the app on `PATH`. It must be a **symlink, not a wrapper script**:
+14. Puts the app on `PATH`. It must be a **symlink, not a wrapper script**:
     the app locates its Python runtime from the path of the running
     executable, and a wrapper would resolve to `/usr/bin` instead of `/opt`.
-14. The package metadata `dpkg` reads. `Section` and `Priority` affect how
+15. The package metadata `dpkg` reads. `Section` and `Priority` affect how
     package managers classify it; neither changes behaviour.
-15. Maintainer scripts have to be executable, and `dpkg` refuses the package
+16. Maintainer scripts have to be executable, and `dpkg` refuses the package
     otherwise. `postinst` refreshes the desktop and icon caches so the app
     appears in menus without a re-login.
-16. `--root-owner-group` records every file as owned by `root` rather than by
+17. `--root-owner-group` records every file as owned by `root` rather than by
     whoever built the package, which is what `lintian` and users expect.
 
 Check the result before publishing it:
