@@ -14,6 +14,7 @@ Two halves, both driven against the real in-repo build template:
   `flet build`; every other value by the template.
 """
 
+import argparse
 import os
 from pathlib import Path
 from types import SimpleNamespace
@@ -341,6 +342,39 @@ class TestDesktopEntryEscaping:
         """
         with pytest.raises(ValueError):
             BaseBuildCommand.escape_desktop_categories(bad)
+
+
+class TestCategoriesResolution:
+    """
+    How `--linux-categories` and `[tool.flet.linux].categories` combine.
+
+    The CLI option and the escaping are wired together in `setup_template_data`,
+    so a test that only calls `escape_desktop_categories` would pass even if the
+    option were never added to the parser or never consulted.
+    """
+
+    @staticmethod
+    def _parse(argv: list[str]) -> argparse.Namespace:
+        """Build the real `flet build` parser and parse `argv` with it."""
+        parser = argparse.ArgumentParser(add_help=False)
+        BaseBuildCommand(parser)
+        return parser.parse_args(argv)
+
+    def test_option_is_registered(self):
+        """The parser accepts the option and collects several values."""
+        options = self._parse(["--linux-categories", "Game", "Education"])
+        assert options.linux_categories == ["Game", "Education"]
+
+    def test_option_repeats(self):
+        """Repeating the flag extends rather than replaces, as its siblings do."""
+        options = self._parse(
+            ["--linux-categories", "Game", "--linux-categories", "Education"]
+        )
+        assert options.linux_categories == ["Game", "Education"]
+
+    def test_option_defaults_to_empty(self):
+        """Omitting it leaves an empty list, so pyproject is consulted next."""
+        assert self._parse([]).linux_categories == []
 
 
 class TestDesktopEntryTemplate:

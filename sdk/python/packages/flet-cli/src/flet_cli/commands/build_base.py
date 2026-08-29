@@ -348,6 +348,16 @@ class BaseBuildCommand(BaseFlutterCommand):
             "Android adaptive icons",
         )
         parser.add_argument(
+            "--linux-categories",
+            dest="linux_categories",
+            action="extend",
+            nargs="+",
+            default=[],
+            help="The list of freedesktop application categories for the "
+            "generated desktop entry, e.g. `--linux-categories Game Education` "
+            "(linux only); can be used multiple times",
+        )
+        parser.add_argument(
             "--splash-color",
             dest="splash_color",
             required=False,
@@ -1387,8 +1397,8 @@ class BaseBuildCommand(BaseFlutterCommand):
             # the rules differ per key and getting them wrong yields an entry the
             # desktop environment silently discards.
             linux_categories = self.escape_desktop_categories(
-                self.get_pyproject("tool.flet.linux.categories")
-                or self.get_pyproject("tool.flet.categories")
+                self.options.linux_categories
+                or self.get_pyproject("tool.flet.linux.categories")
                 or ["Utility"]
             )
         except ValueError as e:
