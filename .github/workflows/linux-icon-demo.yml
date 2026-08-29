@@ -241,11 +241,24 @@ jobs:
           cp "${RUNNER_TEMP}/build.log" "$OUT/" 2>/dev/null || true
           cp "${APP_DIR}/build/linux/share/applications/${BUNDLE_ID}.desktop" \
             "$OUT/" 2>/dev/null || true
-          sed \
-            -e "s|@ARCH@|${{ matrix.arch }}|g" \
-            -e "s|@ARTIFACT@|${ARTIFACT}|g" \
-            -e "s|@BUNDLE_ID@|${BUNDLE_ID}|g" \
-            "${DEMO}/HOW-TO.md" > "$OUT/HOW-TO.md"
+          # The HOW-TO is entirely instructions for installing the two
+          # packages, so shipping it when neither exists hands a reviewer
+          # steps that cannot work. Say what happened instead.
+          shopt -s nullglob
+          PACKAGES=("$OUT"/*.deb "$OUT"/*.AppImage)
+          if [ ${#PACKAGES[@]} -gt 0 ]; then
+            # GDK capitalises the WM_CLASS class field; see the HOW-TO.
+            WM_CLASS="$(echo "${BUNDLE_ID:0:1}" | tr '[:lower:]' '[:upper:]')${BUNDLE_ID:1}"
+            sed \
+              -e "s|@ARCH@|${{ matrix.arch }}|g" \
+              -e "s|@ARTIFACT@|${ARTIFACT}|g" \
+              -e "s|@BUNDLE_ID@|${BUNDLE_ID}|g" \
+              -e "s|@WM_CLASS@|${WM_CLASS}|g" \
+              "${DEMO}/HOW-TO.md" > "$OUT/HOW-TO.md"
+          else
+            echo "This build produced no packages. See build.log." \
+              > "$OUT/NO-PACKAGES.txt"
+          fi
           ls -lh "$OUT"
 
       - name: Upload the demo packages
@@ -261,12 +274,22 @@ jobs:
         shell: bash
         working-directory: ${{ runner.temp }}/pkg
         run: |
-          DEB="$(ls build/*.deb 2>/dev/null | head -n1)"
-          APPIMAGE="$(ls ./*.AppImage 2>/dev/null | grep -v appimagetool | head -n1)"
-          # Passed through even when empty: assert_packages.py reports a
-          # missing package as a failed check, which reads better than the
-          # shell dying while working out its path.
-          python3 "${DEMO}/assert_packages.py" "${DEB:-build/none.deb}" "${APPIMAGE:-none.AppImage}"
+          # Globs, not `ls | head`: under `-e -o pipefail` a substitution
+          # whose pipeline fails -- `ls` on no match, or `grep -v` selecting
+          # nothing -- takes the whole step down before the next line, which
+          # is exactly the case these fallbacks exist to survive.
+          shopt -s nullglob
+          DEBS=(build/*.deb)
+          IMAGES=()
+          for f in *.AppImage; do
+            case "$f" in appimagetool-*) ;; *) IMAGES+=("$f") ;; esac
+          done
+          # A missing package is passed through as a path that does not
+          # exist: assert_packages.py reports that as a failed check, which
+          # names the problem instead of leaving an empty log behind.
+          python3 "${DEMO}/assert_packages.py" \
+            "${DEBS[0]:-build/<none produced>.deb}" \
+            "${IMAGES[0]:-<none produced>.AppImage}"
 
       - name: Install the .deb
         if: ${{ !cancelled() && steps.deb.outcome == 'success' }}

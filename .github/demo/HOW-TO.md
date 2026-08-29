@@ -53,10 +53,16 @@ window when the cursor becomes a crosshair:
 xprop | grep -E "WM_CLASS|_NET_WM_ICON"
 ```
 
-Expect `WM_CLASS(STRING) = "@BUNDLE_ID@", "@BUNDLE_ID@"` and an
-`_NET_WM_ICON` beginning `256, 256`. Before this change `_NET_WM_ICON` was
-absent altogether: the icon exceeded GDK's property size cap and was dropped
-without a word.
+Expect `WM_CLASS(STRING) = "@BUNDLE_ID@", "@WM_CLASS@"`. GDK capitalises the
+second field — that one is the class, the first is the instance, and the
+desktop entry's `StartupWMClass` matches the instance. Expect `_NET_WM_ICON`
+to begin `256, 256`; before this change there was no window-icon code at all,
+so the property was simply absent.
+
+The `256` is also the fix working twice over: an icon larger than GDK's
+property size cap is dropped silently rather than truncated, so the runner
+scales anything bigger down to 256x256 before handing it over. That is what
+would otherwise happen to the 1024x1024 icon `flet build` uses by default.
 
 ## Also in this artifact
 
