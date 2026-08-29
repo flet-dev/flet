@@ -54,6 +54,7 @@ if TYPE_CHECKING:
         margin,
         padding,
     )
+    from flet.controls.action_control import ActionControl
     from flet.controls.adaptive_control import AdaptiveControl
     from flet.controls.alignment import (
         Alignment,
@@ -735,6 +736,7 @@ if TYPE_CHECKING:
 __all__ = [
     "Accelerometer",
     "AccelerometerReadingEvent",
+    "ActionControl",
     "AdaptiveControl",
     "AlertDialog",
     "Alignment",
@@ -1271,6 +1273,7 @@ __all__ = [
 _LAZY = {
     "Accelerometer": "flet.controls.services.accelerometer",
     "AccelerometerReadingEvent": "flet.controls.services.accelerometer",
+    "ActionControl": "flet.controls.action_control",
     "AdaptiveControl": "flet.controls.adaptive_control",
     "AlertDialog": "flet.controls.material.alert_dialog",
     "Alignment": "flet.controls.alignment",

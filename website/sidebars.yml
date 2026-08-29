@@ -397,6 +397,7 @@ docs:
       - types/testing/finder.md
       - types/testing/disposalmode.md
       Base Controls:
+      - controls/actioncontrol.md
       - controls/adaptivecontrol.md
       - controls/basecontrol.md
       - controls/basepage.md
