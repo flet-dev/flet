@@ -228,9 +228,9 @@ APPIMAGE_EXTRACT_AND_RUN=1 "./appimagetool-$(uname -m).AppImage" --no-appstream 
 The same applies to the AppImage you produce: your users need FUSE 2, or must
 run it with the same variable set.
 
-Save the below script as `build-appimage.sh` (pasting it straight into a terminal is
-fragile, and you will re-run it each time you rebuild), then edit the three variables at the top, and run
-it with `bash build-appimage.sh`.
+**Save** the below script as `build-appimage.sh` (pasting it straight into a terminal is
+fragile, and you will re-run it each time you rebuild), then **edit** the three variables
+at the top, and **run** it with `bash build-appimage.sh`.
 
 ```bash
 #!/usr/bin/env bash
@@ -279,9 +279,9 @@ VERSION=1.0.0 "$APPIMAGETOOL" --no-appstream "$APPDIR" # (20)!
    default `build/linux` inside your project. It holds the executable next to
    `data/`, `lib/`, `python3.x/`, `site-packages/` and `app/`. A relative path
    is resolved from wherever you run the script, so prefer an absolute one.
-3. **Edit this.** The executable's *filename* inside that directory — a name,
-   not a path. This is your [artifact name](index.md#artifact-name), which
-   defaults to your project name. `ls "$BUNDLE"` will show it.
+3. **Edit this.** The executable's *filename* inside `BUNDLE` — a name, not a
+   path. This is your [artifact name](index.md#artifact-name), which defaults
+   to your project name. `ls "$BUNDLE"` will show it.
 4. **Edit this.** Your [bundle ID](index.md#bundle-id). It must match what the
    app was built with, because it is also the desktop entry's filename and the
    name the window reports; a mismatch means the icon silently never resolves.
@@ -296,9 +296,9 @@ VERSION=1.0.0 "$APPIMAGETOOL" --no-appstream "$APPDIR" # (20)!
    support, rather than failing obscurely further down.
 9. The icon `flet build` installed. Its directory encodes the size, which the
    next line reads, so the AppDir mirrors whatever size your icon is.
-10. The size taken from that icon's own path — `256x256` in
-    `.../hicolor/256x256/apps/<id>.png` — so the AppDir mirrors whatever size
-    your icon actually is, rather than assuming one.
+10. The size read out of the icon path found on the previous line —
+    `256x256` in `.../hicolor/256x256/apps/<id>.png` — so the AppDir mirrors
+    whatever size your icon actually is, rather than assuming one.
 11. Start from scratch, so a rename or size change cannot leave stale files
     behind.
 12. The entire bundle, verbatim. `-a` preserves the executable bit and
