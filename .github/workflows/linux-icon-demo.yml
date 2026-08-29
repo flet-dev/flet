@@ -44,6 +44,10 @@ env:
   DOCS: "${{ github.workspace }}/website/docs/publish/linux.md"
   # Must match [tool.flet] in .github/demo/app/pyproject.toml.
   BUNDLE_ID: com.flet.flet_icon_demo
+  # WM_CLASS's second field, which GDK derives from the app id by
+  # capitalising it. Spelled out rather than computed: it is a constant, and
+  # the shell that would compute it runs under `-e -o pipefail`.
+  WM_CLASS: Com.flet.flet_icon_demo
   ARTIFACT: flet-icon-demo
   VERSION: "1.0.0"
   UV_PYTHON: 3.12
@@ -247,8 +251,6 @@ jobs:
           shopt -s nullglob
           PACKAGES=("$OUT"/*.deb "$OUT"/*.AppImage)
           if [ ${#PACKAGES[@]} -gt 0 ]; then
-            # GDK capitalises the WM_CLASS class field; see the HOW-TO.
-            WM_CLASS="$(echo "${BUNDLE_ID:0:1}" | tr '[:lower:]' '[:upper:]')${BUNDLE_ID:1}"
             sed \
               -e "s|@ARCH@|${{ matrix.arch }}|g" \
               -e "s|@ARTIFACT@|${ARTIFACT}|g" \
