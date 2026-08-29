@@ -163,7 +163,7 @@ Its value is determined in the following order of precedence:
 
 1. [`--linux-categories`](../cli/flet-build.md#--linux-categories)
 2. `[tool.flet.linux].categories`
-4. `Utility`
+3. `Utility`
 
 <Tabs groupId="flet-build--pyproject-toml">
 <TabItem value="flet-build" label="flet build">
@@ -294,39 +294,39 @@ VERSION=1.0.0 "$APPIMAGETOOL" --no-appstream "$APPDIR" # (20)!
 3. **Edit this.** The executable's *filename* inside `BUNDLE` — a name, not a
    path. This is your [artifact name](index.md#artifact-name), which defaults
    to your project name. `ls "$BUNDLE"` will show it.
-5. **Edit this.** Your [bundle ID](index.md#bundle-id). It must match what the
+4. **Edit this.** Your [bundle ID](index.md#bundle-id). It must match what the
    app was built with, because it is also the desktop entry's filename and the
    name the window reports; a mismatch means the icon silently never resolves.
-6. Path to the staging directory this script creates — an **AppDir**, the
+5. Path to the staging directory this script creates — an **AppDir**, the
    layout `appimagetool` expects: your app, plus a desktop entry, an icon and
    an `AppRun` launcher at its top level. It is deleted and rebuilt on every
    run, so point it somewhere disposable.
-7. `x86_64` or `aarch64` — used only to pick the matching `appimagetool`.
-8. Path to the `appimagetool` file you downloaded above, filename included.
+6. `x86_64` or `aarch64` — used only to pick the matching `appimagetool`.
+7. Path to the `appimagetool` file you downloaded above, filename included.
    It is one self-contained executable, so it can live anywhere.
-9. Fails early with a clear message if the bundle predates desktop entry
+8. Fails early with a clear message if the bundle predates desktop entry
    support, rather than failing obscurely further down.
-10. The icon `flet build` installed. Its directory encodes the size, which the
+9. The icon `flet build` installed. Its directory encodes the size, which the
    next line reads, so the AppDir mirrors whatever size your icon is.
-11. The size read out of the icon path found on the previous line —
+10. The size read out of the icon path found on the previous line —
     `256x256` in `.../hicolor/256x256/apps/<id>.png` — so the AppDir mirrors
     whatever size your icon actually is, rather than assuming one.
-12. Start from scratch, so a rename or size change cannot leave stale files
+11. Start from scratch, so a rename or size change cannot leave stale files
     behind.
-13. The entire bundle, verbatim. `-a` preserves the executable bit and
+12. The entire bundle, verbatim. `-a` preserves the executable bit and
     symlinks; the app resolves its libraries and Python runtime relative to its
     own location, so these files must stay together.
-14. Removes the `share/` that travelled inside the bundle: the next lines put
+13. Removes the `share/` that travelled inside the bundle: the next lines put
     those same two files where AppImage expects them instead, and keeping both
     would ship the desktop entry twice.
-15. Places the desktop entry and icon at the paths a Linux system normally
+14. Places the desktop entry and icon at the paths a Linux system normally
     keeps them. If a user later installs the AppImage into their menus, the
     integration step copies icons out of `usr/share/icons`.
-16. A bare name is enough here: inside an AppImage the entry never launches
+15. A bare name is enough here: inside an AppImage the entry never launches
     the app — the runtime executes `AppRun`. Edit the real file, not the
     symlink created next; GNU `sed -i` would replace a symlink with a regular
     file.
-17. AppImage requires exactly one `.desktop` at the AppDir root, and
+16. AppImage requires exactly one `.desktop` at the AppDir root, and
     `appimagetool` aborts without it.
 17. The icon named by the entry's `Icon=` key, at the root. `appimagetool`
     checks for it by that exact name.
