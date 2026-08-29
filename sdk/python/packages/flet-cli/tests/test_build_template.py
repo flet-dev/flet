@@ -1,12 +1,4 @@
-"""Invariants of the `flet build` cookiecutter template itself.
-
-Both bugs covered here shipped at least once:
-
-* a context key the templates read but `cookiecutter.json` never declared —
-  cookiecutter drops such keys, so the value silently rendered empty;
-* a template that stopped parsing while *unrendered*, which breaks the CI
-  step that patches its dependency versions in place before any build.
-"""
+"""Invariants of the `flet build` cookiecutter template itself."""
 
 import json
 import re
@@ -45,9 +37,7 @@ def _render_template(path: Path, **context: Any) -> str:
 
 
 class TestBuildTemplateContract:
-    """
-    Invariants of the build template itself, independent of any one platform.
-    """
+    """Invariants of the build template itself, independent of any one platform."""
 
     @staticmethod
     def _declared_keys() -> set:
@@ -75,10 +65,8 @@ class TestBuildTemplateContract:
         return found
 
     def test_every_referenced_key_is_declared(self):
-        """
-        A key a template reads but `cookiecutter.json` omits is dropped from
-        the context, so the template silently renders it empty.
-        """
+        """A key a template reads but `cookiecutter.json` omits is dropped from
+        the context, so the template silently renders it empty."""
         declared = self._declared_keys()
         undeclared = {
             key: sorted(files)
@@ -88,11 +76,9 @@ class TestBuildTemplateContract:
         assert not undeclared, f"referenced but not declared: {undeclared}"
 
     def test_pubspec_parses_while_unrendered(self):
-        """
-        `.github/scripts/patch_pubspec_version.py` loads this file as YAML
+        """`.github/scripts/patch_pubspec_version.py` loads this file as YAML
         before cookiecutter ever runs, so an unquoted `{{` — which YAML reads
-        as a flow mapping — fails the release build.
-        """
+        as a flow mapping — fails the release build."""
         with open(TEMPLATE_PUBSPEC) as f:
             assert yaml.safe_load(f), "template pubspec.yaml must parse as YAML"
 

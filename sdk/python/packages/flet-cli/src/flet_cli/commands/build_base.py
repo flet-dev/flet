@@ -1394,8 +1394,7 @@ class BaseBuildCommand(BaseFlutterCommand):
         )
         # Desktop entry values are escaped here rather than in the template:
         # the rules differ per key and getting them wrong yields an entry the
-        # desktop environment silently discards. Only resolved for Linux, so a
-        # malformed value cannot fail a build that would never read it.
+        # desktop environment silently discards.
         linux_categories = None
         if self.target_platform == "linux":
             try:
@@ -1456,7 +1455,11 @@ class BaseBuildCommand(BaseFlutterCommand):
             "artifact_name": artifact_name,
             "product_name": product_name,
             "project_description": project_description,
+            # pubspec.yaml is read as YAML while still unrendered, so its
+            # description is escaped for the single quotes the template
+            # provides rather than carrying quotes of its own.
             "pubspec_description": self.escape_single_quoted_yaml(project_description),
+            # Pre-escaped Linux desktop entry values.
             "linux_desktop_exec": self.escape_linux_desktop_exec(str(artifact_name)),
             "linux_categories": linux_categories,
             "org_name": self.options.org_name
