@@ -351,35 +351,35 @@ the generated entry.
 </TabItem>
 <TabItem value="deb" label=".deb">
 
+Save this as `build-deb.sh`, edit the four variables at the top (`PKG`, `BIN`,
+`APPID` and `VER`), and run it with `bash build-deb.sh` on a machine that has
+`dpkg-deb` — that means Linux, not WSL-less Windows or macOS.
+
 ```bash
 #!/usr/bin/env bash
-set -euo pipefail
+set -euo pipefail # (1)!
 
-PKG=my-app                    # package name: lowercase, digits, + - .
-BIN=my-app                    # the executable in build/linux
-APPID=com.example.my_app      # your bundle ID
-VER=1.0.0
-ARCH=$(dpkg --print-architecture)
-STAGE="build/deb/${PKG}_${VER}_${ARCH}"
+PKG=my-app # (2)!
+BIN=my-app # (3)!
+APPID=com.example.my_app # (4)!
+VER=1.0.0 # (5)!
 
-rm -rf "$STAGE"
+ARCH=$(dpkg --print-architecture) # (6)!
+STAGE="build/deb/${PKG}_${VER}_${ARCH}" # (7)!
+
+rm -rf "$STAGE" # (8)!
 install -d "$STAGE/DEBIAN" "$STAGE/opt/$PKG" "$STAGE/usr/bin" "$STAGE/usr/share"
 
-# The bundle stays intact under /opt.
-cp -a build/linux/. "$STAGE/opt/$PKG/"
+cp -a build/linux/. "$STAGE/opt/$PKG/" # (9)!
 
-# Its XDG tree moves to /usr/share, where the desktop looks for it.
-cp -a "$STAGE/opt/$PKG/share/." "$STAGE/usr/share/"
-rm -rf "$STAGE/opt/$PKG/share"
+cp -a "$STAGE/opt/$PKG/share/." "$STAGE/usr/share/" # (10)!
+rm -rf "$STAGE/opt/$PKG/share" # (11)!
 
-sed -i "s|^Exec=.*|Exec=/opt/$PKG/$BIN %U|" \
-  "$STAGE/usr/share/applications/$APPID.desktop"
+sed -i "s|^Exec=.*|Exec=/opt/$PKG/$BIN %U|" "$STAGE/usr/share/applications/$APPID.desktop" # (12)!
 
-# A symlink, not a wrapper script: the app resolves its own path to find its
-# Python runtime, so it must be started as /opt/<pkg>/<bin>.
-ln -sfn "/opt/$PKG/$BIN" "$STAGE/usr/bin/$PKG"
+ln -sfn "/opt/$PKG/$BIN" "$STAGE/usr/bin/$PKG" # (13)!
 
-cat > "$STAGE/DEBIAN/control" <<EOF
+cat > "$STAGE/DEBIAN/control" <<EOF # (14)!
 Package: $PKG
 Version: $VER
 Architecture: $ARCH
@@ -399,16 +399,62 @@ if [ "$1" = configure ]; then
   gtk-update-icon-cache -q -t -f /usr/share/icons/hicolor 2>/dev/null || true
 fi
 EOF
-chmod 0755 "$STAGE/DEBIAN/postinst"
+chmod 0755 "$STAGE/DEBIAN/postinst" # (15)!
 
-dpkg-deb --build --root-owner-group "$STAGE" "build/${PKG}_${VER}_${ARCH}.deb"
+dpkg-deb --build --root-owner-group "$STAGE" "build/${PKG}_${VER}_${ARCH}.deb" # (16)!
+```
+
+1. Stops at the first failing command, so a failed copy cannot produce a
+   package that installs and then does not run.
+2. **Edit this.** The Debian package name — lowercase letters, digits and
+   `+ - .` only. It is what users type after `apt install`, and the directory
+   name under `/opt`.
+3. **Edit this.** The executable's *filename* inside `build/linux` — a name,
+   not a path. This is your [artifact name](index.md#artifact-name).
+4. **Edit this.** Your [bundle ID](index.md#bundle-id), which is also the
+   desktop entry's filename inside the bundle.
+5. **Edit this.** The package version. Debian compares these when deciding
+   whether an upgrade applies, so it must increase between releases.
+6. `amd64` or `arm64` — Debian's own architecture names, which differ from
+   `uname -m` (`x86_64`/`aarch64`), so ask `dpkg` rather than guessing.
+7. Staging tree: a directory laid out exactly like the installed system, which
+   `dpkg-deb` turns into a package at the end.
+8. Rebuild the staging tree from scratch, then create the four directories the
+   package installs into.
+9. The bundle goes to `/opt/<pkg>` as one piece. `-a` preserves the executable
+   bit and symlinks, and the app resolves its libraries and Python runtime
+   relative to its own location, so these files must stay together.
+10. Copies the bundle's desktop entry and icon to `/usr/share`, which is where
+    the desktop looks for installed applications — nothing under `/opt` is
+    scanned.
+11. Removes the `/opt` copy afterwards, so the entry is not shipped twice.
+12. Points `Exec=` at the real install path. The entry ships with a bare name
+    because the bundle is relocatable, and nothing on `PATH` would match it.
+13. Puts the app on `PATH`. It must be a **symlink, not a wrapper script**:
+    the app locates its Python runtime from the path of the running
+    executable, and a wrapper would resolve to `/usr/bin` instead of `/opt`.
+14. The package metadata `dpkg` reads. `Section` and `Priority` affect how
+    package managers classify it; neither changes behaviour.
+15. Maintainer scripts have to be executable, and `dpkg` refuses the package
+    otherwise. `postinst` refreshes the desktop and icon caches so the app
+    appears in menus without a re-login.
+16. `--root-owner-group` records every file as owned by `root` rather than by
+    whoever built the package, which is what `lintian` and users expect.
+
+Check the result before publishing it:
+
+```bash
+dpkg -c build/my-app_1.0.0_arm64.deb
+sudo apt install ./build/my-app_1.0.0_arm64.deb
+my-app
 ```
 
 :::note[Runtime dependencies, not build ones]
 `Depends:` lists the shared libraries the app loads at runtime. These are not
 the `-dev` packages from [Prerequisites](#prerequisites), which are only needed
-on the machine doing the building. Add `libmpv2` and the GStreamer runtime
-packages if your app uses the
+on the machine doing the building. The `a | b` alternatives cover Ubuntu 24.04's
+rename of several libraries to `…t64`, so one package works on both. Add
+`libmpv2` and the GStreamer runtime packages if your app uses the
 [`Audio`](../services/audio/index.md#usage) service or the
 [`Video`](../controls/video/index.md#linux) control.
 :::
@@ -416,38 +462,68 @@ packages if your app uses the
 </TabItem>
 <TabItem value="rpm" label=".rpm">
 
-The same shape as the `.deb`, expressed as a spec file. Copy `build/linux` to
-`rpmbuild/SOURCES/bundle`, then:
+The same shape as the `.deb`: the bundle installs to `/opt`, its desktop entry
+and icon move to `/usr/share`, and `/usr/bin` gets a symlink.
+
+```bash
+mkdir -p ~/rpmbuild/{BUILD,BUILDROOT,RPMS,SOURCES,SPECS,SRPMS}
+cp -a build/linux ~/rpmbuild/SOURCES/bundle
+```
+
+Save the following as `~/rpmbuild/SPECS/my-app.spec` and build it with
+`rpmbuild -bb ~/rpmbuild/SPECS/my-app.spec`:
 
 ```spec
-# rpmbuild would otherwise byte-compile the bundled site-packages with the
-# system Python and rewrite shebangs inside the bundle.
-%global __os_install_post %{nil}
-%global debug_package     %{nil}
-AutoReqProv: no
+%global __os_install_post %{nil} # (1)!
+%global debug_package %{nil} # (2)!
+AutoReqProv: no # (3)!
 
-Name:      my-app
+Name:      my-app # (4)!
 Version:   1.0.0
 Release:   1%{?dist}
 Summary:   One-line summary of My App
 License:   Apache-2.0
-Requires:  gtk3, glib2, gdk-pixbuf2
+BuildArch: x86_64 # (5)!
+Requires:  gtk3, glib2, gdk-pixbuf2 # (6)!
+
+%description
+A longer description of My App.
 
 %install
 mkdir -p %{buildroot}/opt/%{name} %{buildroot}/usr/bin %{buildroot}/usr/share
-cp -a %{_sourcedir}/bundle/. %{buildroot}/opt/%{name}/
-cp -a %{buildroot}/opt/%{name}/share/. %{buildroot}/usr/share/
+cp -a %{_sourcedir}/bundle/. %{buildroot}/opt/%{name}/ # (7)!
+cp -a %{buildroot}/opt/%{name}/share/. %{buildroot}/usr/share/ # (8)!
 rm -rf %{buildroot}/opt/%{name}/share
-sed -i "s|^Exec=.*|Exec=/opt/%{name}/my-app %U|" \
-  %{buildroot}/usr/share/applications/com.example.my_app.desktop
-ln -sfn /opt/%{name}/my-app %{buildroot}/usr/bin/%{name}
+sed -i "s|^Exec=.*|Exec=/opt/%{name}/my-app %U|" %{buildroot}/usr/share/applications/com.example.my_app.desktop # (9)!
+ln -sfn /opt/%{name}/my-app %{buildroot}/usr/bin/%{name} # (10)!
 
-%files
+%files # (11)!
 /opt/%{name}
 /usr/bin/%{name}
 /usr/share/applications/*
 /usr/share/icons/hicolor/*/apps/*
 ```
+
+1. Disables rpmbuild's post-processing. Left on, it byte-compiles the bundled
+   `site-packages` with the *system* Python and rewrites shebangs inside the
+   bundle — both of which corrupt an app that ships its own interpreter.
+2. Skips generating a debuginfo package, which has nothing useful to extract
+   from a prebuilt bundle.
+3. Stops rpm scanning the bundled `.so` files to auto-generate dependencies.
+   Without it the package would demand libraries it already carries.
+4. `Name`, `Version` and `Release` together form the package filename, and rpm
+   compares them when deciding whether an upgrade applies.
+5. Set to the architecture you built on — `x86_64` or `aarch64`. The bundle
+   contains a compiled binary, so it is not portable across architectures.
+6. Runtime libraries, under their Fedora/RHEL names — the `.deb` names differ.
+7. The bundle in one piece, exactly as in the `.deb`.
+8. The desktop entry and icon where the desktop scans for them, then the `/opt`
+   copy is removed so nothing ships twice.
+9. Rewrites the relocatable `Exec=` to the real install path.
+10. A symlink rather than a wrapper, so the running executable's path stays
+    inside `/opt` and the app can still find its Python runtime.
+11. Everything listed here is packaged; anything created in `%install` but not
+    listed makes the build fail, which is rpm's way of catching stray files.
 
 </TabItem>
 </Tabs>
