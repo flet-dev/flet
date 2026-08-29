@@ -89,12 +89,21 @@ def check_appimage(appimage: Path) -> None:
     # Absolute, because a bare filename with no slash in it sends
     # subprocess looking on PATH instead of in cwd.
     out = appimage.parent / "squashfs-root"
-    subprocess.run(
+    extract = subprocess.run(
         [str(appimage), "--appimage-extract"],
         cwd=appimage.parent,
-        check=True,
         capture_output=True,
+        text=True,
     )
+    # Not check=True: the CalledProcessError it raises does not carry the
+    # captured stderr, so the step would end on a traceback that never says
+    # why extraction failed.
+    if not check(extract.returncode == 0, "the AppImage extracts"):
+        print(f"    exit={extract.returncode}")
+        for stream, label in ((extract.stdout, "stdout"), (extract.stderr, "stderr")):
+            if stream.strip():
+                print(f"    {label}: {stream.strip()[:500]}")
+        return
     check((out / "AppRun").is_file(), "AppRun is the entry point")
     check((out / f"{BUNDLE_ID}.desktop").is_file(),
           "a desktop entry sits at the AppDir root")
