@@ -204,9 +204,9 @@ Get the tool for your architecture from
 executable.
 
 `appimagetool` is itself an AppImage, so running it needs
-[FUSE 2](https://docs.appimage.org/user-guide/troubleshooting/fuse.html) —
-which Ubuntu 22.04 and later no longer install by default, having moved to
-FUSE 3. Check with:
+[FUSE 2](https://docs.appimage.org/user-guide/troubleshooting/fuse.html).
+Distributions that have moved to FUSE 3 may not have it, so check before
+assuming either way:
 
 ```bash
 ldconfig -p | grep libfuse.so.2

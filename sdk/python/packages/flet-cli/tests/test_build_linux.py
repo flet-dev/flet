@@ -1,8 +1,4 @@
-"""Linux packaging in `flet build` (issue #2269).
-
-Every test here renders the real in-repo build template rather than a
-fixture, so a template change that would break the shipped app fails here.
-"""
+"""Tests concerning Linux `flet build` packaging."""
 
 import argparse
 import os
