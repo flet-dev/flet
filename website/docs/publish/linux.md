@@ -348,6 +348,22 @@ executable's own path, so `AppRun` only has to `exec` it.
 `desktop-file-validate` over it, failing on any error. Both are satisfied by
 the generated entry.
 
+:::note[An AppImage registers nothing with the desktop]
+The desktop entry travels *inside* the image, where nothing scans it. So the
+app grid has no entry for the app, and hovering its icon shows the app id
+rather than the name — the shell has no `Name=` to read and falls back to what
+the window calls itself.
+
+The window and dock icons still work on X11, because those come from the
+window's own `_NET_WM_ICON` rather than from an entry. On Wayland, where the
+icon is resolved through the entry too, an unregistered AppImage gets neither.
+
+Users can register it themselves with a tool like
+[AppImageLauncher](https://github.com/TheAssassin/AppImageLauncher). If you
+would rather not ask them to, ship a `.deb` or `.rpm` as well — those install
+the entry as part of the package.
+:::
+
 </TabItem>
 <TabItem value="deb" label=".deb">
 
