@@ -5,6 +5,7 @@ import os
 import shutil
 import sys
 import tarfile
+import tempfile
 import zipfile
 from pathlib import Path
 
@@ -128,7 +129,10 @@ class Command(BaseCommand):
         parser.add_argument(
             "--bundle-id",
             dest="bundle_id",
-            help="Bundle identifier used for macOS app packaging",
+            help="Bundle identifier for the app. Used for macOS app "
+            "packaging, and on Linux as the app's taskbar identity — match it "
+            "with the `StartupWMClass` key of your desktop entry. Defaults on "
+            "Linux to the executable's name.",
         )
         parser.add_argument(
             "--debug-console",
@@ -293,6 +297,18 @@ class Command(BaseCommand):
                 for add_data_arr in options.add_data:
                     for add_data_item in add_data_arr:
                         pyi_args.extend(["--add-data", add_data_item])
+
+            # The Linux taskbar identity is chosen here but applied at launch,
+            # so carry it into the bundle for the runtime hook to read. Only
+            # when asked for: without it the hook falls back to the
+            # executable's name, which needs nothing bundled.
+            if is_linux() and options.bundle_id:
+                identity_dir = Path(tempfile.mkdtemp())
+                identity_file = identity_dir.joinpath("flet_app_id")
+                identity_file.write_text(options.bundle_id, encoding="utf-8")
+                pyi_args.extend(
+                    ["--add-data", f"{identity_file}{os.pathsep}."]
+                )
             if options.add_binary:
                 for add_binary_arr in options.add_binary:
                     for add_binary_item in add_binary_arr:

@@ -110,8 +110,13 @@ from an installed [desktop entry](#linux-taskbar-identity) instead, so passing
 `flet pack` launches the shared, prebuilt Flet client, so without help every
 packed app reaches the taskbar under that binary's name — grouped together and
 labelled `flet`. To avoid that, the app is relaunched under its own identity
-(see [`FLET_APP_ID`](../reference/environment-variables.md#flet_app_id)),
-which defaults to the executable's name.
+(see [`FLET_APP_ID`](../reference/environment-variables.md#flet_app_id)):
+[`--bundle-id`](../cli/flet-pack.md#--bundle-id) when you pass one, and
+otherwise the executable's name.
+
+Pass `--bundle-id` if you also publish the app with
+[`flet build linux`](linux.md), so both give the window the same identity and
+one desktop entry matches either.
 
 That gives the app its own taskbar group and label. To also give it a **name of
 your choosing and an icon**, install a desktop entry — the desktop takes both
@@ -128,7 +133,8 @@ Categories=Utility;
 StartupWMClass=my-app
 ```
 
-`StartupWMClass` must match the executable's name, and `Icon=` names a PNG
+`StartupWMClass` must match the app's identity — the `--bundle-id` you passed,
+or the executable's name if you did not — and `Icon=` names a PNG
 installed into the icon theme, for example
 `~/.local/share/icons/hicolor/256x256/apps/my-app.png`. Refresh the caches
 afterwards:
@@ -138,7 +144,7 @@ update-desktop-database ~/.local/share/applications
 gtk-update-icon-cache -f -t ~/.local/share/icons/hicolor
 ```
 
-:::note[Or let `flet build` package it]
+:::tip[Or let `flet build` package it]
 [`flet build linux`](linux.md) compiles a runner per app, so the identity is
 built in rather than applied at launch. Reach for it if you would rather have
 packaging handled than assemble it yourself.

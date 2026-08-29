@@ -32,6 +32,18 @@ if sys.platform == "win32" and "FLET_APP_USER_MODEL_ID" not in os.environ:
 # own name -- so the app groups and labels as itself, and can be matched by
 # a desktop entry carrying StartupWMClass.
 if sys.platform.startswith("linux") and "FLET_APP_ID" not in os.environ:
-    os.environ["FLET_APP_ID"] = os.path.splitext(
+    # --bundle-id when it was given, so the identity matches what `flet build`
+    # uses and what a desktop entry's StartupWMClass would name. Otherwise the
+    # executable's own name, which reads better bare than a reverse-DNS id and
+    # follows the binary if it is renamed.
+    app_id = ""
+    meipass = getattr(sys, "_MEIPASS", None)
+    if meipass:
+        try:
+            with open(os.path.join(meipass, "flet_app_id"), encoding="utf-8") as f:
+                app_id = f.read().strip()
+        except OSError:
+            pass
+    os.environ["FLET_APP_ID"] = app_id or os.path.splitext(
         os.path.basename(os.path.abspath(sys.executable))
     )[0]

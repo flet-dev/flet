@@ -76,7 +76,8 @@ and icon from it — see
 [Linux taskbar identity](../publish/using-pyinstaller.md#linux-taskbar-identity).
 
 Linux desktop apps only; set automatically by [`flet pack`](../cli/flet-pack.md)
-to the executable's name.
+to [`--bundle-id`](../cli/flet-pack.md#--bundle-id) when given, and otherwise to
+the executable's name.
 
 ### `FLET_APP_RELAUNCH_COMMAND`
 
