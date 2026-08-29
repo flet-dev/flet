@@ -142,10 +142,22 @@ filed in application menus.
 
 ## Application categories
 
-The [`Categories`](https://specifications.freedesktop.org/desktop-entry/latest/recognized-keys.html#key-categories) key of the generated desktop entry
-determines which menu sections the app appears under. Values must be taken from
-the [freedesktop category registry](https://specifications.freedesktop.org/menu/latest/category-registry.html); desktop environments ignore
-unregistered ones.
+The [`Categories`](https://specifications.freedesktop.org/desktop-entry/latest/recognized-keys.html#key-categories)
+key of the generated desktop entry determines which menu sections the app
+appears under. Values come from the
+[freedesktop category registry](https://specifications.freedesktop.org/menu/latest/category-registry.html),
+which splits them in two:
+
+- **Main categories** — the fourteen every desktop environment must support:
+  `AudioVideo`, `Audio`, `Video`, `Development`, `Education`, `HealthFitness`,
+  `Game`, `Graphics`, `Network`, `Office`, `Science`, `Settings`, `System` and
+  `Utility`. Normally give exactly one: the spec allows several, but then "the
+  entry may appear more than once in the menu".
+- **Additional categories** — finer-grained values such as `TextEditor` or
+  `ArcadeGame`, listed alongside a main category to refine placement.
+
+A value outside the registry is not an error, but no menu rule matches it, so
+it has no effect on where the app appears.
 
 Its value is determined in the following order of precedence:
 
@@ -156,13 +168,13 @@ Its value is determined in the following order of precedence:
 <Tabs groupId="flet-build--pyproject-toml">
 <TabItem value="flet-build" label="flet build">
 ```bash
-flet build linux --linux-categories Game Education
+flet build linux --linux-categories Game ArcadeGame
 ```
 </TabItem>
 <TabItem value="pyproject-toml" label="pyproject.toml">
 ```toml
 [tool.flet.linux]
-categories = ["Game", "Education"]
+categories = ["Game", "ArcadeGame"]
 ```
 </TabItem>
 </Tabs>
