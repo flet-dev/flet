@@ -228,49 +228,90 @@ APPIMAGE_EXTRACT_AND_RUN=1 "./appimagetool-$(uname -m).AppImage" --no-appstream 
 The same applies to the AppImage you produce: your users need FUSE 2, or must
 run it with the same variable set.
 
+Save this as `build-appimage.sh`, edit the three variables at the top, and run
+it with `bash build-appimage.sh` — pasting it straight into a terminal is
+fragile, and you will re-run it each time you rebuild.
+
 ```bash
 #!/usr/bin/env bash
-set -euo pipefail
+set -euo pipefail # (1)!
 
-BUNDLE=build/linux            # output of `flet build linux`
-APP=my_app                    # the executable in $BUNDLE (your artifact name)
-ID=com.example.my_app         # your bundle ID
-APPDIR=MyApp.AppDir
-ARCH=$(uname -m)
-APPIMAGETOOL=$PWD/appimagetool-$ARCH.AppImage   # wherever you saved it
+BUNDLE=build/linux # (2)!
+APP=my_app # (3)!
+ID=com.example.my_app # (4)!
 
-ICON_SRC=$(find "$BUNDLE/share/icons/hicolor" -type f -name "$ID.png" | head -n1)
-ICON_SIZE=$(basename "$(dirname "$(dirname "$ICON_SRC")")")
+APPDIR=MyApp.AppDir # (5)!
+ARCH=$(uname -m) # (6)!
+APPIMAGETOOL=$PWD/appimagetool-$ARCH.AppImage # (7)!
 
-rm -rf "$APPDIR"
-mkdir -p "$APPDIR/usr/bin" "$APPDIR/usr/share/applications" \
-         "$APPDIR/usr/share/icons/hicolor/$ICON_SIZE/apps"
+test -d "$BUNDLE/share/applications" || { echo "no desktop entry in $BUNDLE"; exit 1; } # (8)!
 
-# The whole bundle, verbatim — -a preserves modes and symlinks.
-cp -a "$BUNDLE"/. "$APPDIR/usr/bin/"
-rm -rf "$APPDIR/usr/bin/share"
+ICON_SRC=$(find "$BUNDLE/share/icons/hicolor" -type f -name "$ID.png" | head -n1) # (9)!
+ICON_SIZE=$(basename "$(dirname "$(dirname "$ICON_SRC")")") # (10)!
 
-cp "$BUNDLE/share/applications/$ID.desktop" "$APPDIR/usr/share/applications/"
+rm -rf "$APPDIR" # (11)!
+mkdir -p "$APPDIR/usr/bin"
+mkdir -p "$APPDIR/usr/share/applications"
+mkdir -p "$APPDIR/usr/share/icons/hicolor/$ICON_SIZE/apps"
+
+cp -a "$BUNDLE"/. "$APPDIR/usr/bin/" # (12)!
+rm -rf "$APPDIR/usr/bin/share" # (13)!
+
+cp "$BUNDLE/share/applications/$ID.desktop" "$APPDIR/usr/share/applications/" # (14)!
 cp "$ICON_SRC" "$APPDIR/usr/share/icons/hicolor/$ICON_SIZE/apps/"
 
-# Inside an AppImage the entry is not what launches the app, so a bare name
-# is enough. Edit the real file, not the symlink created below.
-sed -i "s|^Exec=.*|Exec=$APP|" "$APPDIR/usr/share/applications/$ID.desktop"
+sed -i "s|^Exec=.*|Exec=$APP|" "$APPDIR/usr/share/applications/$ID.desktop" # (15)!
 
-# AppImage requires all four of these at the AppDir root.
-ln -s "usr/share/applications/$ID.desktop"              "$APPDIR/$ID.desktop"
-ln -s "usr/share/icons/hicolor/$ICON_SIZE/apps/$ID.png" "$APPDIR/$ID.png"
-ln -s "usr/share/icons/hicolor/$ICON_SIZE/apps/$ID.png" "$APPDIR/.DirIcon"
+ln -s "usr/share/applications/$ID.desktop" "$APPDIR/$ID.desktop" # (16)!
+ln -s "usr/share/icons/hicolor/$ICON_SIZE/apps/$ID.png" "$APPDIR/$ID.png" # (17)!
+ln -s "usr/share/icons/hicolor/$ICON_SIZE/apps/$ID.png" "$APPDIR/.DirIcon" # (18)!
 
-cat > "$APPDIR/AppRun" <<EOF
-#!/bin/sh
-HERE=\$(dirname "\$(readlink -f "\$0")")
-exec "\$HERE/usr/bin/$APP" "\$@"
-EOF
+printf '#!/bin/sh\nHERE=$(dirname "$(readlink -f "$0")")\nexec "$HERE/usr/bin/%s" "$@"\n' "$APP" > "$APPDIR/AppRun" # (19)!
 chmod +x "$APPDIR/AppRun"
 
-VERSION=1.0.0 "$APPIMAGETOOL" --no-appstream "$APPDIR"
+VERSION=1.0.0 "$APPIMAGETOOL" --no-appstream "$APPDIR" # (20)!
 ```
+
+1. Stops at the first failing command. Without it a failed copy leaves a
+   half-built AppDir, and the error you finally see is `appimagetool`
+   complaining about a missing icon several steps later.
+2. **Edit this.** The bundle produced by `flet build linux`.
+3. **Edit this.** The executable inside the bundle — your
+   [artifact name](index.md#artifact-name).
+4. **Edit this.** Your [bundle ID](index.md#bundle-id). It must match what the
+   app was built with, because it is also the desktop entry's filename and the
+   name the window reports; a mismatch means the icon silently never resolves.
+5. Scratch directory this script builds. Anything already there is replaced.
+6. `x86_64` or `aarch64` — used only to pick the matching `appimagetool`.
+7. Where you saved `appimagetool`. It can live anywhere.
+8. Fails early with a clear message if the bundle predates desktop entry
+   support, rather than failing obscurely further down.
+9. The icon `flet build` installed. Its directory encodes the size, which the
+   next line reads, so the AppDir mirrors whatever size your icon is.
+10. e.g. `256x256` — the parent-of-parent of `.../256x256/apps/<id>.png`.
+11. Start from scratch, so a rename or size change cannot leave stale files
+    behind.
+12. The entire bundle, verbatim. `-a` preserves the executable bit and
+    symlinks; the app resolves its libraries and Python runtime relative to its
+    own location, so these files must stay together.
+13. Drop the bundle's own copy of `share/`, since the FHS copies below replace
+    it.
+14. The desktop entry and icon in their conventional locations. Desktop
+    integration exports icons from `usr/share/icons` when a user installs the
+    AppImage.
+15. A bare name is enough here: inside an AppImage the entry never launches
+    the app — the runtime executes `AppRun`. Edit the real file, not the
+    symlink created next; GNU `sed -i` would replace a symlink with a regular
+    file.
+16. AppImage requires exactly one `.desktop` at the AppDir root, and
+    `appimagetool` aborts without it.
+17. The icon named by the entry's `Icon=` key, at the root. `appimagetool`
+    checks for it by that exact name.
+18. `.DirIcon` is the icon file managers and the AppImage itself use.
+19. `AppRun` is the entry point the runtime executes. It only has to `exec`
+    the binary — no `cd`, and deliberately no `LD_LIBRARY_PATH`.
+20. `VERSION` becomes part of the output filename. `--no-appstream` skips
+    AppStream metadata validation, which a minimal app does not ship.
 
 :::warning[Do not set `LD_LIBRARY_PATH` in `AppRun`]
 Many `AppRun` examples export it. `LD_LIBRARY_PATH` takes precedence over the
