@@ -167,6 +167,212 @@ categories = ["Game", "Education"]
 </TabItem>
 </Tabs>
 
+## Distributing
+
+`flet build linux` leaves a **relocatable bundle directory** — an executable
+alongside `data/`, `lib/`, `python3.x/`, `site-packages/` and `app/` — not
+something an end user can download and double-click. To ship it, wrap it in one
+of the formats below.
+
+Packaging is mostly relocation, because the bundle already contains the two
+files every Linux format wants:
+
+```
+share/applications/<bundle_id>.desktop
+share/icons/hicolor/<size>/apps/<bundle_id>.png
+```
+
+Two rules apply to every format:
+
+- **Keep the bundle together.** The executable finds its libraries through
+  `RPATH $ORIGIN/lib` and its Python runtime through its own path, so `data/`,
+  `lib/`, `python3.x/`, `site-packages/` and `app/` must stay siblings of the
+  executable. Do not scatter them into `/usr/bin` and `/usr/lib`.
+- **Rewrite `Exec=`.** The shipped entry names the executable without a path,
+  since the bundle does not know where it will be installed. Every recipe below
+  replaces that line with the real location.
+
+<Tabs groupId="linux-packaging">
+<TabItem value="appimage" label="AppImage">
+
+A single executable file that runs without installation — the closest
+equivalent to a macOS `.dmg`.
+
+Get the tool for your architecture from
+[AppImage/appimagetool](https://github.com/AppImage/appimagetool/releases)
+(`appimagetool-x86_64.AppImage` or `appimagetool-aarch64.AppImage`) and make it
+executable. On systems without FUSE 2, run it with
+`APPIMAGE_EXTRACT_AND_RUN=1`.
+
+```bash
+#!/usr/bin/env bash
+set -euo pipefail
+
+BUNDLE=build/linux            # output of `flet build linux`
+APP=my_app                    # the executable in $BUNDLE (your artifact name)
+ID=com.example.my_app         # your bundle ID
+APPDIR=MyApp.AppDir
+
+ICON_SRC=$(find "$BUNDLE/share/icons/hicolor" -type f -name "$ID.png" | head -n1)
+ICON_SIZE=$(basename "$(dirname "$(dirname "$ICON_SRC")")")
+
+rm -rf "$APPDIR"
+mkdir -p "$APPDIR/usr/bin" "$APPDIR/usr/share/applications" \
+         "$APPDIR/usr/share/icons/hicolor/$ICON_SIZE/apps"
+
+# The whole bundle, verbatim — -a preserves modes and symlinks.
+cp -a "$BUNDLE"/. "$APPDIR/usr/bin/"
+rm -rf "$APPDIR/usr/bin/share"
+
+cp "$BUNDLE/share/applications/$ID.desktop" "$APPDIR/usr/share/applications/"
+cp "$ICON_SRC" "$APPDIR/usr/share/icons/hicolor/$ICON_SIZE/apps/"
+
+# Inside an AppImage the entry is not what launches the app, so a bare name
+# is enough. Edit the real file, not the symlink created below.
+sed -i "s|^Exec=.*|Exec=$APP|" "$APPDIR/usr/share/applications/$ID.desktop"
+
+# AppImage requires all four of these at the AppDir root.
+ln -s "usr/share/applications/$ID.desktop"              "$APPDIR/$ID.desktop"
+ln -s "usr/share/icons/hicolor/$ICON_SIZE/apps/$ID.png" "$APPDIR/$ID.png"
+ln -s "usr/share/icons/hicolor/$ICON_SIZE/apps/$ID.png" "$APPDIR/.DirIcon"
+
+cat > "$APPDIR/AppRun" <<EOF
+#!/bin/sh
+HERE=\$(dirname "\$(readlink -f "\$0")")
+exec "\$HERE/usr/bin/$APP" "\$@"
+EOF
+chmod +x "$APPDIR/AppRun"
+
+VERSION=1.0.0 ./appimagetool-x86_64.AppImage --no-appstream "$APPDIR"
+```
+
+:::warning Do not set `LD_LIBRARY_PATH` in `AppRun`
+Many `AppRun` examples export it. `LD_LIBRARY_PATH` takes precedence over the
+binary's `RUNPATH`, so setting it lets system libraries shadow the bundled
+ones. The bundle needs no environment at all — `$ORIGIN` resolves against the
+executable's own path, so `AppRun` only has to `exec` it.
+:::
+
+`appimagetool` requires a `Categories=` key in the desktop entry and runs
+`desktop-file-validate` over it, failing on any error. Both are satisfied by
+the generated entry.
+
+</TabItem>
+<TabItem value="deb" label=".deb">
+
+```bash
+#!/usr/bin/env bash
+set -euo pipefail
+
+PKG=my-app                    # package name: lowercase, digits, + - .
+BIN=my-app                    # the executable in build/linux
+APPID=com.example.my_app      # your bundle ID
+VER=1.0.0
+ARCH=$(dpkg --print-architecture)
+STAGE="build/deb/${PKG}_${VER}_${ARCH}"
+
+rm -rf "$STAGE"
+install -d "$STAGE/DEBIAN" "$STAGE/opt/$PKG" "$STAGE/usr/bin" "$STAGE/usr/share"
+
+# The bundle stays intact under /opt.
+cp -a build/linux/. "$STAGE/opt/$PKG/"
+
+# Its XDG tree moves to /usr/share, where the desktop looks for it.
+cp -a "$STAGE/opt/$PKG/share/." "$STAGE/usr/share/"
+rm -rf "$STAGE/opt/$PKG/share"
+
+sed -i "s|^Exec=.*|Exec=/opt/$PKG/$BIN %U|" \
+  "$STAGE/usr/share/applications/$APPID.desktop"
+
+# A symlink, not a wrapper script: the app resolves its own path to find its
+# Python runtime, so it must be started as /opt/<pkg>/<bin>.
+ln -sfn "/opt/$PKG/$BIN" "$STAGE/usr/bin/$PKG"
+
+cat > "$STAGE/DEBIAN/control" <<EOF
+Package: $PKG
+Version: $VER
+Architecture: $ARCH
+Maintainer: Your Name <you@example.com>
+Section: utils
+Priority: optional
+Depends: libgtk-3-0 | libgtk-3-0t64, libglib2.0-0 | libglib2.0-0t64, libgdk-pixbuf-2.0-0, libstdc++6, libgcc-s1, libc6
+Description: One-line summary of My App
+ A longer description, with every line indented by one space.
+EOF
+
+cat > "$STAGE/DEBIAN/postinst" <<'EOF'
+#!/bin/sh
+set -e
+if [ "$1" = configure ]; then
+  update-desktop-database -q /usr/share/applications 2>/dev/null || true
+  gtk-update-icon-cache -q -t -f /usr/share/icons/hicolor 2>/dev/null || true
+fi
+EOF
+chmod 0755 "$STAGE/DEBIAN/postinst"
+
+dpkg-deb --build --root-owner-group "$STAGE" "build/${PKG}_${VER}_${ARCH}.deb"
+```
+
+:::note Runtime dependencies, not build ones
+`Depends:` lists the shared libraries the app loads at runtime. These are not
+the `-dev` packages from [Prerequisites](#prerequisites), which are only needed
+on the machine doing the building. Add `libmpv2` and the GStreamer runtime
+packages if your app uses the
+[`Audio`](../services/audio/index.md#usage) service or the
+[`Video`](../controls/video/index.md#linux) control.
+:::
+
+</TabItem>
+<TabItem value="rpm" label=".rpm">
+
+The same shape as the `.deb`, expressed as a spec file. Copy `build/linux` to
+`rpmbuild/SOURCES/bundle`, then:
+
+```spec
+# rpmbuild would otherwise byte-compile the bundled site-packages with the
+# system Python and rewrite shebangs inside the bundle.
+%global __os_install_post %{nil}
+%global debug_package     %{nil}
+AutoReqProv: no
+
+Name:      my-app
+Version:   1.0.0
+Release:   1%{?dist}
+Summary:   One-line summary of My App
+License:   Apache-2.0
+Requires:  gtk3, glib2, gdk-pixbuf2
+
+%install
+mkdir -p %{buildroot}/opt/%{name} %{buildroot}/usr/bin %{buildroot}/usr/share
+cp -a %{_sourcedir}/bundle/. %{buildroot}/opt/%{name}/
+cp -a %{buildroot}/opt/%{name}/share/. %{buildroot}/usr/share/
+rm -rf %{buildroot}/opt/%{name}/share
+sed -i "s|^Exec=.*|Exec=/opt/%{name}/my-app %U|" \
+  %{buildroot}/usr/share/applications/com.example.my_app.desktop
+ln -sfn /opt/%{name}/my-app %{buildroot}/usr/bin/%{name}
+
+%files
+/opt/%{name}
+/usr/bin/%{name}
+/usr/share/applications/*
+/usr/share/icons/hicolor/*/apps/*
+```
+
+</TabItem>
+</Tabs>
+
+:::info Why not `fastforge`?
+[`fastforge`](https://pub.dev/packages/fastforge) (formerly
+`flutter_distributor`) packages Flutter Linux apps, but it always runs
+`flutter build linux` itself before packaging. A Flet app's Python payload is
+staged by a separate step and is only installed when `flet build` sets its
+environment, so a rebuild driven from outside produces a bundle with no `app/`
+or `site-packages/` — one that installs cleanly and then fails to start. It
+also writes its own desktop entry rather than reusing the one in the bundle,
+which drops the `StartupWMClass` that Wayland needs to match the window to its
+icon.
+:::
+
 ## Window positioning on Wayland
 
 On Linux the **display server** controls window placement, and this differs
