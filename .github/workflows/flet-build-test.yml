@@ -6,6 +6,9 @@ on:
       - '**'
     branches-ignore:
       - main
+      # Demo branch: it only exists to publish downloadable packages
+      # from the linux-icon-demo workflow, so nothing else runs on it.
+      - test/fix-build-linux-icon
     paths:
       - '.github/workflows/flet-build-test.yml'
       - '.github/workflows/flet-build-test-matrix.yml'

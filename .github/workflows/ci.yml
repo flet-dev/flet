@@ -4,6 +4,9 @@ on:
   push:
     branches:
       - '**'
+      # Demo branch: it only exists to publish downloadable packages
+      # from the linux-icon-demo workflow, so nothing else runs on it.
+      - '!test/fix-build-linux-icon'
     tags:
       - 'v[0-9]+.[0-9]+.[0-9]+'
       - 'v[0-9]+.[0-9]+.[0-9]+.dev[0-9]+'
