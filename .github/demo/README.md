@@ -32,6 +32,18 @@ about it.
 Renaming a variable in the docs fails the run rather than silently packaging
 `my_app`, because an override key that no longer matches is an error.
 
+## Only the build can stop the upload
+
+`flet build linux` is the job's one hard gate: without a bundle there is
+nothing to ship. Everything after it either produces an artifact or reports on
+one, and the upload sits between the two — so a failed assertion, a bad day at
+the `appimagetool` CDN or a headless-GL problem still leaves a reviewer both
+packages to download.
+
+The reporting steps are `continue-on-error`, which also means none of them can
+turn the job red on their own; the last step in the job reads their outcomes
+back and does that.
+
 ## The other workflows
 
 `ci.yml`, `flet-test.yml`, `flet-build-test.yml` and

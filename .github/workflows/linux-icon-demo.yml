@@ -140,6 +140,10 @@ jobs:
           flutter precache --linux
 
       - name: Build the demo app
+        # The one hard gate in this job. Every step between here and the
+        # upload is either producing an artifact or reporting on one, and
+        # none of them may stop the upload -- see "Report soft failures".
+        id: build
         shell: bash
         working-directory: .github/demo/app
         env:
@@ -151,10 +155,14 @@ jobs:
             2>&1 | tee "${RUNNER_TEMP}/build.log"
 
       - name: Assert bundle contents
+        id: assert_bundle
+        continue-on-error: true
         shell: bash
         run: python3 "${DEMO}/assert_bundle.py" "${APP_DIR}"
 
       - name: Validate the desktop entry
+        id: validate_entry
+        continue-on-error: true
         shell: bash
         run: |
           ENTRY="${APP_DIR}/build/linux/share/applications/${BUNDLE_ID}.desktop"
@@ -170,6 +178,8 @@ jobs:
           fi
 
       - name: Get appimagetool
+        id: appimagetool
+        continue-on-error: true
         shell: bash
         run: |
           mkdir -p "${RUNNER_TEMP}/pkg"
@@ -180,6 +190,8 @@ jobs:
           chmod +x "appimagetool-$(uname -m).AppImage"
 
       - name: Build the AppImage (recipe from the docs)
+        id: appimage
+        continue-on-error: true
         shell: bash
         working-directory: ${{ runner.temp }}/pkg
         env:
@@ -196,6 +208,9 @@ jobs:
           ls -lh ./*.AppImage
 
       - name: Build the .deb (recipe from the docs)
+        # Only the bundle is required here, not the AppImage above.
+        if: ${{ !cancelled() && steps.build.outcome == 'success' }}
+        id: deb
         shell: bash
         working-directory: ${{ runner.temp }}/pkg
         run: |
@@ -209,51 +224,11 @@ jobs:
           bash build-deb.sh
           ls -lh build/*.deb
 
-      - name: Assert package contents
-        shell: bash
-        working-directory: ${{ runner.temp }}/pkg
-        run: |
-          DEB="$(ls build/*.deb)"
-          APPIMAGE="$(ls ./*.AppImage | grep -v appimagetool)"
-          python3 "${DEMO}/assert_packages.py" "$DEB" "$APPIMAGE"
-
-      - name: Install the .deb
-        # Not just a packaging check: this is the path a reviewer takes, and
-        # the postinst hooks that refresh the desktop and icon caches only run
-        # here.
-        shell: bash
-        working-directory: ${{ runner.temp }}/pkg
-        run: |
-          sudo apt-get install -y "$PWD/$(ls build/*.deb)"
-          echo "--- installed desktop entry"
-          cat "/usr/share/applications/${BUNDLE_ID}.desktop"
-          test -f "/usr/share/icons/hicolor/256x256/apps/${BUNDLE_ID}.png"
-          test -x "/usr/bin/${ARTIFACT}"
-          # The desktop resolves the entry's Icon= key against the icon theme
-          # by filename, so read the key back rather than assuming it, and
-          # confirm the installed tree answers it.
-          ICON_KEY="$(sed -n 's/^Icon=//p' "/usr/share/applications/${BUNDLE_ID}.desktop")"
-          FOUND="$(find /usr/share/icons/hicolor -name "${ICON_KEY}.png")"
-          echo "--- Icon=${ICON_KEY} resolves to: ${FOUND:-<nothing>}"
-          test -n "$FOUND"
-
-      - name: Check the installed app under Xvfb
-        # Informational: it depends on Flutter obtaining a software GL context
-        # under Xvfb, which is not guaranteed on a headless runner. Never let
-        # it block the upload, and never let it hang -- the script's own worst
-        # case is ~90s.
-        continue-on-error: true
-        timeout-minutes: 6
-        shell: bash
-        env:
-          LIBGL_ALWAYS_SOFTWARE: 1
-          GDK_BACKEND: x11
-        run: |
-          timeout --kill-after=20s 240s \
-            xvfb-run -a --server-args="-screen 0 1280x1024x24" \
-            "${DEMO}/assert_runtime.sh" "${BUNDLE_ID}" 256x256 "/usr/bin/${ARTIFACT}"
-
       - name: Collect the downloads
+        # Deliberately ahead of every check below. The packages are what a
+        # reviewer came for; the checks are our own diligence about them, and
+        # a failing one should still leave something to download. `always()`
+        # covers the packaging steps above failing too.
         if: always()
         shell: bash
         run: |
@@ -280,3 +255,75 @@ jobs:
           name: flet-icon-demo-${{ matrix.arch }}
           path: ${{ runner.temp }}/out
           if-no-files-found: warn
+
+      - name: Assert package contents
+        if: ${{ !cancelled() && steps.build.outcome == 'success' }}
+        shell: bash
+        working-directory: ${{ runner.temp }}/pkg
+        run: |
+          DEB="$(ls build/*.deb 2>/dev/null | head -n1)"
+          APPIMAGE="$(ls ./*.AppImage 2>/dev/null | grep -v appimagetool | head -n1)"
+          # Passed through even when empty: assert_packages.py reports a
+          # missing package as a failed check, which reads better than the
+          # shell dying while working out its path.
+          python3 "${DEMO}/assert_packages.py" "${DEB:-build/none.deb}" "${APPIMAGE:-none.AppImage}"
+
+      - name: Install the .deb
+        if: ${{ !cancelled() && steps.deb.outcome == 'success' }}
+        # Not just a packaging check: this is the path a reviewer takes, and
+        # the postinst hooks that refresh the desktop and icon caches only run
+        # here.
+        shell: bash
+        working-directory: ${{ runner.temp }}/pkg
+        run: |
+          sudo apt-get install -y "$PWD/$(ls build/*.deb)"
+          echo "--- installed desktop entry"
+          cat "/usr/share/applications/${BUNDLE_ID}.desktop"
+          test -f "/usr/share/icons/hicolor/256x256/apps/${BUNDLE_ID}.png"
+          test -x "/usr/bin/${ARTIFACT}"
+          # The desktop resolves the entry's Icon= key against the icon theme
+          # by filename, so read the key back rather than assuming it, and
+          # confirm the installed tree answers it.
+          ICON_KEY="$(sed -n 's/^Icon=//p' "/usr/share/applications/${BUNDLE_ID}.desktop")"
+          FOUND="$(find /usr/share/icons/hicolor -name "${ICON_KEY}.png")"
+          echo "--- Icon=${ICON_KEY} resolves to: ${FOUND:-<nothing>}"
+          test -n "$FOUND"
+
+      - name: Check the installed app under Xvfb
+        if: ${{ !cancelled() && steps.deb.outcome == 'success' }}
+        # Informational: it depends on Flutter obtaining a software GL context
+        # under Xvfb, which is not guaranteed on a headless runner. Never let
+        # it block the upload, and never let it hang -- the script's own worst
+        # case is ~90s.
+        continue-on-error: true
+        timeout-minutes: 6
+        shell: bash
+        env:
+          LIBGL_ALWAYS_SOFTWARE: 1
+          GDK_BACKEND: x11
+        run: |
+          timeout --kill-after=20s 240s \
+            xvfb-run -a --server-args="-screen 0 1280x1024x24" \
+            "${DEMO}/assert_runtime.sh" "${BUNDLE_ID}" 256x256 "/usr/bin/${ARTIFACT}"
+
+      - name: Report soft failures
+        # The steps above are allowed to fail without stopping the upload,
+        # which also means none of them can turn the job red on their own.
+        # This is where they do. The Xvfb check is left out on purpose: it
+        # depends on a software GL context a headless runner need not give.
+        if: always()
+        shell: bash
+        env:
+          OUTCOMES: >-
+            assert_bundle=${{ steps.assert_bundle.outcome }}
+            validate_entry=${{ steps.validate_entry.outcome }}
+            appimagetool=${{ steps.appimagetool.outcome }}
+            appimage=${{ steps.appimage.outcome }}
+        run: |
+          echo "$OUTCOMES" | tr ' ' '\n'
+          case "$OUTCOMES" in
+            *=failure*)
+              echo "!! a step above failed; the upload was not affected" >&2
+              exit 1
+              ;;
+          esac

@@ -86,6 +86,8 @@ def check_appimage(appimage: Path) -> None:
         return
     check(appimage.stat().st_mode & 0o111 != 0, "the AppImage is executable")
 
+    # Absolute, because a bare filename with no slash in it sends
+    # subprocess looking on PATH instead of in cwd.
     out = appimage.parent / "squashfs-root"
     subprocess.run(
         [str(appimage), "--appimage-extract"],
@@ -107,8 +109,10 @@ def check_appimage(appimage: Path) -> None:
 
 
 def main() -> int:
-    check_deb(Path(sys.argv[1]))
-    check_appimage(Path(sys.argv[2]))
+    # Resolved, so `./x.AppImage` can be executed by path rather than looked
+    # up on PATH, and so cwd changes below cannot move the targets.
+    check_deb(Path(sys.argv[1]).resolve())
+    check_appimage(Path(sys.argv[2]).resolve())
     print(f"\n{checks - len(failures)}/{checks} checks passed")
     if failures:
         print("FAILED:")
