@@ -1,0 +1,36 @@
+[project]
+name = "flet-icon-demo"
+version = "1.0.0"
+description = "Demo app for the Linux app icon work in flet-dev/flet#2269."
+requires-python = ">=3.10"
+dependencies = ["flet"]
+
+[tool.flet]
+product = "Flet Icon Demo"
+company = "Flet"
+org = "com.flet"
+# Also the desktop entry's filename, the icon's name in the hicolor tree, and
+# the app id the window reports -- so the packaging recipes need it too.
+bundle_id = "com.flet.flet_icon_demo"
+# The executable's filename inside the bundle. Kept hyphenated so it doubles
+# as the Debian package name, which cannot contain underscores.
+artifact = "flet-icon-demo"
+
+[tool.flet.app]
+path = "src"
+
+[tool.flet.linux]
+# One main category plus one additional category, which is the combination the
+# freedesktop spec expects. Renders as "Categories=Graphics;Viewer;".
+categories = ["Graphics", "Viewer"]
+
+[dependency-groups]
+dev = ["flet-cli"]
+
+# Load-bearing: `flet build` only uses the in-repo build template -- rather
+# than downloading the released flet-build-template.zip -- when flet-cli is
+# imported from this source tree. Without these the demo would package the
+# released template and prove nothing about this branch.
+[tool.uv.sources]
+flet = { path = "../../../sdk/python/packages/flet", editable = true }
+flet-cli = { path = "../../../sdk/python/packages/flet-cli", editable = true }
