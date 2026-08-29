@@ -499,7 +499,7 @@ cp -a %{_sourcedir}/bundle/. %{buildroot}/opt/%{name}/ # (7)!
 cp -a %{buildroot}/opt/%{name}/share/. %{buildroot}/usr/share/ # (8)!
 rm -rf %{buildroot}/opt/%{name}/share
 sed -i "s|^Exec=.*|Exec=/opt/%{name}/my-app %U|" %{buildroot}/usr/share/applications/com.example.my_app.desktop # (9)!
-ln -sfn /opt/%{name}/my-app %{buildroot}/usr/bin/%{name} # (10)!
+ln -sfn ../../opt/%{name}/my-app %{buildroot}/usr/bin/%{name} # (10)!
 
 %files # (11)!
 /opt/%{name}
@@ -525,7 +525,10 @@ ln -sfn /opt/%{name}/my-app %{buildroot}/usr/bin/%{name} # (10)!
    copy is removed so nothing ships twice.
 9. Rewrites the relocatable `Exec=` to the real install path.
 10. A symlink rather than a wrapper, so the running executable's path stays
-    inside `/opt` and the app can still find its Python runtime.
+    inside `/opt` and the app can still find its Python runtime. It is written
+    relative — from `/usr/bin` that resolves to the same `/opt` path — because
+    both rpm and `rpmlint` flag absolute link targets, which break inside a
+    chroot.
 11. Everything listed here is packaged; anything created in `%install` but not
     listed makes the build fail, which is rpm's way of catching stray files.
 
@@ -577,3 +580,4 @@ echo $XDG_SESSION_TYPE   # "wayland" or "x11"
 | Window positioning or centering has no effect                                                                       | The app is running in a Wayland session — see [Window positioning on Wayland](#window-positioning-on-wayland).                                                                                                                                                    |
 | The taskbar/dock shows a generic icon on Wayland                                                                    | Wayland resolves icons from an installed desktop entry, not from the window — install the bundle's `share/` files as described in [App icon](#app-icon).                                                                                                          |
 | The dock tooltip or app switcher shows the bundle ID instead of the app name                                        | The desktop entry is not installed, so the desktop environment has no name for the app and falls back to the app id — install the bundle's `share/` files as described in [App icon](#app-icon). |
+| `rpmbuild` fails at `%mkbuilddir`, reporting `Bad file descriptor`                                                  | An earlier build left `~/rpmbuild/BUILD/<name>-<version>-build` behind and rpm cannot clear it before rebuilding. The errno is unrelated to the real cause — delete that directory and build again. |
