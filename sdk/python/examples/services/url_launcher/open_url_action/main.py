@@ -13,7 +13,7 @@ def main(page: ft.Page):
                     ft.Text("Both buttons open the same page:"),
                     ft.Button(
                         "Open in this tab",
-                        action=ft.OpenUrl("https://flet.dev"),
+                        action=ft.OpenUrl("https://flet.dev", target=ft.UrlTarget.SELF),
                     ),
                     ft.Button(
                         "Open in a new tab",
