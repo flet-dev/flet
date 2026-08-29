@@ -200,7 +200,8 @@ equivalent to a macOS `.dmg`.
 
 Get [appimagetool](https://github.com/AppImage/appimagetool/releases) for the
 architecture you are building on — `uname -m` reports `x86_64` or `aarch64` —
-and make it executable:
+and make it executable. It is a single self-contained file, so it can live
+anywhere; the recipe below takes its location as a variable:
 
 ```bash
 ARCH=$(uname -m)
@@ -236,6 +237,7 @@ APP=my_app                    # the executable in $BUNDLE (your artifact name)
 ID=com.example.my_app         # your bundle ID
 APPDIR=MyApp.AppDir
 ARCH=$(uname -m)
+APPIMAGETOOL=$PWD/appimagetool-$ARCH.AppImage   # wherever you saved it
 
 ICON_SRC=$(find "$BUNDLE/share/icons/hicolor" -type f -name "$ID.png" | head -n1)
 ICON_SIZE=$(basename "$(dirname "$(dirname "$ICON_SRC")")")
@@ -267,7 +269,7 @@ exec "\$HERE/usr/bin/$APP" "\$@"
 EOF
 chmod +x "$APPDIR/AppRun"
 
-VERSION=1.0.0 "./appimagetool-$ARCH.AppImage" --no-appstream "$APPDIR"
+VERSION=1.0.0 "$APPIMAGETOOL" --no-appstream "$APPDIR"
 ```
 
 :::warning[Do not set `LD_LIBRARY_PATH` in `AppRun`]
