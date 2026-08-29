@@ -310,9 +310,7 @@ class Command(BaseCommand):
                 identity_dir = tempfile.mkdtemp()
                 identity_file = Path(identity_dir).joinpath("flet_app_id")
                 identity_file.write_text(options.bundle_id, encoding="utf-8")
-                pyi_args.extend(
-                    ["--add-data", f"{identity_file}{os.pathsep}."]
-                )
+                pyi_args.extend(["--add-data", f"{identity_file}{os.pathsep}."])
             if options.add_binary:
                 for add_binary_arr in options.add_binary:
                     for add_binary_item in add_binary_arr:
@@ -323,7 +321,7 @@ class Command(BaseCommand):
                         pyi_args.extend(["--hidden-import", hidden_import_item])
             if options.codesign_identity:
                 pyi_args.extend(["--codesign-identity", options.codesign_identity])
-            if options.bundle_id:
+            if is_macos() and options.bundle_id:
                 pyi_args.extend(["--osx-bundle-identifier", options.bundle_id])
             if options.uac_admin:
                 if is_macos():
