@@ -99,10 +99,11 @@ Provide the icon in the target platform's native format: `.ico` on Windows and
 Flet viewer, so the app window, Dock/taskbar entries, and the executable itself
 all match.
 
-:::warning[`--icon` does nothing on Linux]
-Linux has nowhere to put an icon inside an executable. The desktop reads it
-from an installed [desktop entry](#linux-taskbar-identity) instead, so passing
-`--icon` on Linux has no effect on either the executable or the taskbar.
+:::note[Linux works differently]
+Linux has nowhere to put an icon inside an executable — the desktop reads it
+from an installed desktop entry. Pass a `.png` and `flet pack` writes both the
+entry and the icon for you to install; see
+[Linux taskbar identity](#linux-taskbar-identity).
 :::
 
 ## Linux taskbar identity
@@ -118,31 +119,42 @@ Pass `--bundle-id` if you also publish the app with
 [`flet build linux`](linux.md), so both give the window the same identity and
 one desktop entry matches either.
 
-That gives the app its own taskbar group and label. To also give it a **name of
-your choosing and an icon**, install a desktop entry — the desktop takes both
-from there, and matches it to the window through `StartupWMClass`:
+That gives the app its own taskbar group and label. Its **display name and
+icon** come from somewhere else: a desktop entry, which the desktop matches to
+the window through `StartupWMClass`. `flet pack` writes one next to the
+executable — along with the icon, if you passed a `.png` to `--icon`:
 
-```ini title="~/.local/share/applications/my-app.desktop"
-[Desktop Entry]
-Type=Application
-Name=My App
-Exec=/opt/my-app/my-app
-Icon=my-app
-Terminal=false
-Categories=Utility;
-StartupWMClass=my-app
+```
+dist/
+  my-app                    the executable
+  com.example.my_app.desktop
+  com.example.my_app.png    only when --icon is a .png
 ```
 
-`StartupWMClass` must match the app's identity — the `--bundle-id` you passed,
-or the executable's name if you did not — and `Icon=` names a PNG
-installed into the icon theme, for example
-`~/.local/share/icons/hicolor/256x256/apps/my-app.png`. Refresh the caches
-afterwards:
+`Name=` comes from [`--product-name`](../cli/flet-pack.md#--product-name)
+(falling back to the executable's name) and `Comment=` from
+[`--file-description`](../cli/flet-pack.md#--file-description). Nothing is
+installed for you, because installing would change your application menu as a
+side effect of building. Copy the two files into place yourself and refresh the
+caches:
 
 ```bash
+cp dist/com.example.my_app.desktop ~/.local/share/applications/
+mkdir -p ~/.local/share/icons/hicolor/256x256/apps
+cp dist/com.example.my_app.png ~/.local/share/icons/hicolor/256x256/apps/
 update-desktop-database ~/.local/share/applications
 gtk-update-icon-cache -f -t ~/.local/share/icons/hicolor
 ```
+
+:::warning[Moving the executable breaks `Exec=`]
+The entry points at wherever `flet pack` built the binary, since that is the
+only location known when it is written. If you install the executable
+somewhere else — `/opt`, `~/.local/bin` — edit `Exec=` to match:
+
+```bash
+sed -i 's|^Exec=.*|Exec="/opt/my-app/my-app"|' ~/.local/share/applications/com.example.my_app.desktop
+```
+:::
 
 :::tip[Or let `flet build` package it]
 [`flet build linux`](linux.md) compiles a runner per app, so the identity is

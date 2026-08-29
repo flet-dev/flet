@@ -2,6 +2,7 @@ import argparse
 import gzip
 import hashlib
 import os
+import re
 import shutil
 import sys
 import tarfile
@@ -40,9 +41,9 @@ class Command(BaseCommand):
             "--icon",
             dest="icon",
             help="Path to an icon file for your executable or app bundle. "
-            "Supported formats: `.ico` (Windows) and `.icns` (macOS). Linux "
-            "takes its icon from an installed desktop entry instead, so this "
-            "option has no effect there.",
+            "Supported formats: `.ico` (Windows), `.icns` (macOS) and `.png` "
+            "(Linux, where it is written alongside the generated desktop "
+            "entry rather than embedded in the executable)",
         )
         parser.add_argument(
             "-n",
@@ -225,6 +226,131 @@ class Command(BaseCommand):
                 h.update(chunk)
         with open(archive_path + ".sha256", "w") as f:
             f.write(f"{h.hexdigest()} {os.path.getsize(archive_path)}")
+
+    @staticmethod
+    def resolve_linux_app_id(options) -> str:
+        """
+        The identity the packed app will report to the desktop.
+
+        Must stay in step with the PyInstaller runtime hook, which reads a
+        bundled `--bundle-id` when there is one and otherwise falls back to
+        the executable's own name. The entry written here is useless if the
+        two disagree, since `StartupWMClass` would then match nothing.
+
+        Args:
+            options: Parsed command-line options.
+
+        Returns:
+            The app id, for both `StartupWMClass` and `Icon`.
+        """
+
+        return options.bundle_id or (options.name or Path(options.script).stem)
+
+    @staticmethod
+    def escape_desktop_exec(value: str) -> str:
+        """
+        Escape a path for the quoted `Exec` key of a desktop entry.
+
+        The value crosses two layers: the entry file, where backslash is the
+        escape character, and the shell-like parsing of `Exec`, where `"`,
+        `` ` ``, `$` and `\\` are reserved inside double quotes. Escape for
+        the inner layer first, then the outer one, so a path containing any
+        of them still launches.
+
+        Args:
+            value: Absolute path to the executable.
+
+        Returns:
+            The value, ready to sit between double quotes.
+        """
+
+        value = re.sub(r"[\x00-\x1f]", " ", value)
+        shell_escaped = re.sub(r'(["`$\\])', r"\\\1", value)
+        return shell_escaped.replace("\\", "\\\\")
+
+    @staticmethod
+    def escape_desktop_value(value: str) -> str:
+        """
+        Escape a string for a desktop entry value.
+
+        Desktop entry values are a single line, and backslash is the escape
+        character, so escape it first and then flatten every control
+        character that would end the line early.
+
+        Args:
+            value: Raw value, such as a product name or description.
+
+        Returns:
+            The value, safe to write after `Key=`.
+        """
+
+        value = value.replace("\\", "\\\\")
+        for ch in ("\r", "\n", "\t"):
+            value = value.replace(ch, " ")
+        return value.strip()
+
+    def write_linux_desktop_entry(self, options, dist_dir: str, app_id: str) -> None:
+        """
+        Write a desktop entry, and the icon it names, next to the executable.
+
+        The Linux desktop takes an app's launcher name and icon from an
+        installed desktop entry, which it matches to the window through
+        `StartupWMClass`. Getting that key to equal the app's identity is the
+        part that is easy to get wrong and impossible to guess, so `flet pack`
+        writes the file rather than describing it.
+
+        Nothing is installed: the entry sits in the dist directory until the
+        user copies it into place. Installing it here would change the user's
+        application menu as a side effect of building, and leave an entry
+        behind pointing at a binary that may since have moved.
+
+        Args:
+            options: Parsed command-line options.
+            dist_dir: Directory PyInstaller wrote the executable into.
+            app_id: The identity the app reports to the desktop.
+        """
+
+        exe_name = options.name or Path(options.script).stem
+        exe_path = Path(dist_dir).joinpath(exe_name)
+        name = options.product_name or exe_name
+
+        lines = [
+            "[Desktop Entry]",
+            "Type=Application",
+            f"Name={self.escape_desktop_value(name)}",
+        ]
+        if options.file_description:
+            lines.append(
+                f"Comment={self.escape_desktop_value(options.file_description)}"
+            )
+        lines += [
+            # Absolute, because the desktop resolves nothing against $PATH,
+            # and quoted so a path containing spaces stays one argument.
+            f'Exec="{self.escape_desktop_exec(str(exe_path))}"',
+            f"Icon={app_id}",
+            "Terminal=false",
+            "Categories=Utility;",
+            # The whole point: this is what ties the window to this entry.
+            f"StartupWMClass={app_id}",
+            "",
+        ]
+        entry_path = Path(dist_dir).joinpath(f"{app_id}.desktop")
+        entry_path.write_text("\n".join(lines), encoding="utf-8")
+        print(f"Wrote desktop entry: {entry_path}")
+
+        if options.icon:
+            icon_src = Path(options.icon)
+            if not icon_src.is_absolute():
+                icon_src = Path(os.getcwd()).joinpath(icon_src)
+            if icon_src.suffix.lower() != ".png":
+                print(
+                    f"Note: {icon_src.name} is not a PNG, so it was not copied "
+                    "for the desktop entry. Linux icon themes want a .png."
+                )
+            elif icon_src.is_file():
+                icon_dst = Path(dist_dir).joinpath(f"{app_id}.png")
+                shutil.copyfile(icon_src, icon_dst)
+                print(f"Wrote desktop entry icon: {icon_dst}")
 
     def handle(self, options: argparse.Namespace) -> None:
         """
@@ -463,6 +589,13 @@ class Command(BaseCommand):
             # run PyInstaller
             print("Running PyInstaller:", pyi_args)
             PyInstaller.__main__.run(pyi_args)
+
+            # Written after the build, because the entry's Exec= needs the
+            # path PyInstaller just produced.
+            if is_linux():
+                self.write_linux_desktop_entry(
+                    options, dist_dir, self.resolve_linux_app_id(options)
+                )
 
             # cleanup
             if hook_config.temp_bin_dir is not None and os.path.exists(
