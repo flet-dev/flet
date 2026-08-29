@@ -201,8 +201,26 @@ equivalent to a macOS `.dmg`.
 Get the tool for your architecture from
 [AppImage/appimagetool](https://github.com/AppImage/appimagetool/releases)
 (`appimagetool-x86_64.AppImage` or `appimagetool-aarch64.AppImage`) and make it
-executable. On systems without FUSE 2, run it with
-`APPIMAGE_EXTRACT_AND_RUN=1`.
+executable.
+
+`appimagetool` is itself an AppImage, so running it needs
+[FUSE 2](https://docs.appimage.org/user-guide/troubleshooting/fuse.html) —
+which Ubuntu 22.04 and later no longer install by default, having moved to
+FUSE 3. Check with:
+
+```bash
+ldconfig -p | grep libfuse.so.2
+```
+
+If that prints nothing, either install it (`sudo apt install libfuse2`, or
+`libfuse2t64` on Ubuntu 24.04 and later) or skip FUSE entirely:
+
+```bash
+APPIMAGE_EXTRACT_AND_RUN=1 ./appimagetool-x86_64.AppImage --no-appstream MyApp.AppDir
+```
+
+The same applies to the AppImage you produce: your users need FUSE 2, or must
+run it with the same variable set.
 
 ```bash
 #!/usr/bin/env bash
@@ -246,7 +264,7 @@ chmod +x "$APPDIR/AppRun"
 VERSION=1.0.0 ./appimagetool-x86_64.AppImage --no-appstream "$APPDIR"
 ```
 
-:::warning Do not set `LD_LIBRARY_PATH` in `AppRun`
+:::warning[Do not set `LD_LIBRARY_PATH` in `AppRun`]
 Many `AppRun` examples export it. `LD_LIBRARY_PATH` takes precedence over the
 binary's `RUNPATH`, so setting it lets system libraries shadow the bundled
 ones. The bundle needs no environment at all — `$ORIGIN` resolves against the
@@ -313,7 +331,7 @@ chmod 0755 "$STAGE/DEBIAN/postinst"
 dpkg-deb --build --root-owner-group "$STAGE" "build/${PKG}_${VER}_${ARCH}.deb"
 ```
 
-:::note Runtime dependencies, not build ones
+:::note[Runtime dependencies, not build ones]
 `Depends:` lists the shared libraries the app loads at runtime. These are not
 the `-dev` packages from [Prerequisites](#prerequisites), which are only needed
 on the machine doing the building. Add `libmpv2` and the GStreamer runtime
@@ -361,7 +379,7 @@ ln -sfn /opt/%{name}/my-app %{buildroot}/usr/bin/%{name}
 </TabItem>
 </Tabs>
 
-:::info Why not `fastforge`?
+:::info[Why not `fastforge`?]
 [`fastforge`](https://pub.dev/packages/fastforge) (formerly
 `flutter_distributor`) packages Flutter Linux apps, but it always runs
 `flutter build linux` itself before packaging. A Flet app's Python payload is
