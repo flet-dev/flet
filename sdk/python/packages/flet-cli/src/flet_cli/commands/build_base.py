@@ -354,7 +354,7 @@ class BaseBuildCommand(BaseFlutterCommand):
             nargs="+",
             default=[],
             help="The list of freedesktop application categories for the "
-            "generated desktop entry, e.g. `--linux-categories Game Education` "
+            "generated desktop entry, e.g. `Education` or `Game` "
             "(linux only); can be used multiple times",
         )
         parser.add_argument(
@@ -1452,15 +1452,10 @@ class BaseBuildCommand(BaseFlutterCommand):
             "project_name_slug": project_name_slug,
             "artifact_name": artifact_name,
             "product_name": product_name,
-            # Templates consume this as cookiecutter.project_description
-            # (pubspec description, web manifest, Linux .desktop entry).
             "project_description": project_description,
             # Pre-escaped Linux desktop entry values.
             "desktop_exec": self.escape_desktop_exec(str(artifact_name)),
             "linux_categories": linux_categories,
-            # Kept for custom build templates whose own cookiecutter.json
-            # declared and consumed a `description` context key.
-            "description": project_description,
             "org_name": self.options.org_name
             or self.get_pyproject(f"tool.flet.{self.config_platform}.org")
             or self.get_pyproject("tool.flet.org"),
@@ -3135,7 +3130,7 @@ class BaseBuildCommand(BaseFlutterCommand):
 
         Returns:
             `(width, height)` in pixels, or `None` if the file cannot be read
-            or is not a PNG.
+                or is not a PNG.
         """
 
         try:
