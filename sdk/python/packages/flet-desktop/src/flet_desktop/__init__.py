@@ -190,6 +190,17 @@ def __get_client_storage_dir(fingerprint: str | None = None) -> Path:
     return Path.home().joinpath(".flet", "client", name)
 
 
+def __is_hex(value: str) -> bool:
+    """
+    Return whether `value` is a non-empty lowercase hexadecimal string.
+
+    Args:
+        value: String to check.
+    """
+
+    return bool(value) and all(c in "0123456789abcdef" for c in value)
+
+
 def __get_archive_fingerprint(archive_path: str) -> str:
     """
     Return a short content fingerprint for a client archive.
@@ -213,8 +224,12 @@ def __get_archive_fingerprint(archive_path: str) -> str:
         if os.path.exists(fp_file):
             with open(fp_file) as f:
                 parts = f.read().split()
+            # The hash must be well-formed as well as current: it becomes part
+            # of a directory name, and the GC below only recognizes hex ones.
             if len(parts) == 2 and parts[1] == str(size):
-                return parts[0][:12]
+                fp = parts[0].lower()
+                if len(fp) == 64 and __is_hex(fp):
+                    return fp[:12]
     except OSError:
         pass
     h = hashlib.sha256()
@@ -260,7 +275,7 @@ def __gc_stale_client_dirs(cache_dir: Path, max_age_days: int = 30) -> None:
             not name.startswith(prefix)
             or name == cache_dir.name
             or len(suffix) != 12
-            or not all(c in "0123456789abcdef" for c in suffix)
+            or not __is_hex(suffix)
         ):
             continue
         try:

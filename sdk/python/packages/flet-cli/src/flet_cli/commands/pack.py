@@ -189,8 +189,8 @@ class Command(BaseCommand):
                         )
                         zi.compress_type = zipfile.ZIP_DEFLATED
                         zi.external_attr = (os.stat(full).st_mode & 0xFFFF) << 16
-                        with open(full, "rb") as src:
-                            zf.writestr(zi, src.read())
+                        with open(full, "rb") as src, zf.open(zi, "w") as dest:
+                            shutil.copyfileobj(src, dest)
         else:
             with (
                 open(archive_path, "wb") as raw,

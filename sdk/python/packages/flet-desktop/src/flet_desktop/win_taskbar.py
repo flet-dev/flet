@@ -21,6 +21,10 @@ from ctypes import wintypes
 
 logger = logging.getLogger("flet")
 
+# OleDLL defaults every function's restype to ctypes.HRESULT, which checks the
+# returned HRESULT and raises OSError on failure; the COM method prototypes
+# below declare ctypes.HRESULT explicitly for the same behavior. So failures
+# surface as OSError rather than needing manual HRESULT inspection.
 _ole32 = ctypes.OleDLL("ole32")
 _shell32 = ctypes.OleDLL("shell32")
 _shlwapi = ctypes.OleDLL("shlwapi")
