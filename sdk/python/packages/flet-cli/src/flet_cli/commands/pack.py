@@ -279,6 +279,10 @@ class Command(BaseCommand):
                     )
                     exit(1)
 
+        # Set only on Linux with --bundle-id; the cleanup below reads it
+        # either way, so it has to exist before anything can fail.
+        identity_dir = None
+
         try:
             import PyInstaller.__main__
 
@@ -303,8 +307,8 @@ class Command(BaseCommand):
             # when asked for: without it the hook falls back to the
             # executable's name, which needs nothing bundled.
             if is_linux() and options.bundle_id:
-                identity_dir = Path(tempfile.mkdtemp())
-                identity_file = identity_dir.joinpath("flet_app_id")
+                identity_dir = tempfile.mkdtemp()
+                identity_file = Path(identity_dir).joinpath("flet_app_id")
                 identity_file.write_text(options.bundle_id, encoding="utf-8")
                 pyi_args.extend(
                     ["--add-data", f"{identity_file}{os.pathsep}."]
@@ -468,6 +472,8 @@ class Command(BaseCommand):
             ):
                 print("Deleting temp directory:", hook_config.temp_bin_dir)
                 shutil.rmtree(hook_config.temp_bin_dir, ignore_errors=True)
+            if identity_dir is not None:
+                shutil.rmtree(identity_dir, ignore_errors=True)
         except ImportError as e:
             print("Please install PyInstaller module to use flet pack command:", e)
             sys.exit(1)
