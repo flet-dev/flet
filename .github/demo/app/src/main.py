@@ -6,10 +6,23 @@ name in the window list. So the app just restates the identity it was built
 with, next to the icon it should be wearing.
 """
 
+import os
+from pathlib import Path
+
 import flet as ft
 
 BUNDLE_ID = "com.flet.flet_icon_demo"
 ARTIFACT = "flet-icon-demo"
+
+# `flet build` points FLET_ASSETS_DIR at the bundled assets; the fallback is
+# for running this from a checkout. Read as bytes rather than handed to Image
+# as an asset path, because that path resolves differently per run mode and a
+# broken image is the one thing this demo cannot afford to show.
+ASSETS = Path(os.getenv("FLET_ASSETS_DIR") or Path(__file__).parent / "assets")
+try:
+    ICON = (ASSETS / "icon_linux.png").read_bytes()
+except OSError:
+    ICON = None
 
 CHECKS = [
     ("Window icon", "The icon in the title bar / window list, on X11."),
@@ -39,15 +52,11 @@ def main(page: ft.Page):
     page.add(
         ft.Row(
             controls=[
-                ft.Image(
-                    # Served from src/assets, the same file `flet build` used
-                    # as the Linux icon -- so the window shows exactly what the
-                    # dock is meant to show.
-                    src="/icon_linux.png",
-                    width=96,
-                    height=96,
-                    error_content=ft.Text("(icon failed to load)"),
-                ),
+                # The very file `flet build` used as the Linux icon, so the
+                # window shows exactly what the dock is meant to show.
+                ft.Image(src=ICON, width=96, height=96)
+                if ICON
+                else ft.Container(width=96, height=96),
                 ft.Column(
                     controls=[
                         ft.Text("Flet Icon Demo", size=26, weight=ft.FontWeight.BOLD),
