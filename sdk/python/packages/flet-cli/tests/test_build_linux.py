@@ -1,6 +1,7 @@
 """Tests concerning Linux `flet build` packaging."""
 
 import argparse
+import json
 import os
 from pathlib import Path
 from types import SimpleNamespace
@@ -347,6 +348,20 @@ class TestCategoriesResolution:
         parser = argparse.ArgumentParser(add_help=False)
         BaseBuildCommand(parser)
         return parser.parse_args(argv)
+
+    def test_fallback_matches_the_declared_default(self):
+        """A non-Linux target still renders the desktop entry, so the fallback
+        must equal `cookiecutter.json`'s default rather than override it with
+        `None` — which rendered as the literal `Categories=None`."""
+        declared = json.loads(
+            (
+                Path(__file__).resolve().parents[3]
+                / "templates"
+                / "build"
+                / "cookiecutter.json"
+            ).read_text()
+        )["linux_categories"]
+        assert BaseBuildCommand.escape_linux_desktop_categories(["Utility"]) == declared
 
     def test_option_is_registered(self):
         """The parser accepts the option and collects several values."""

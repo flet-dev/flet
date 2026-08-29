@@ -1391,13 +1391,14 @@ class BaseBuildCommand(BaseFlutterCommand):
             self.options.description
             or self.get_pyproject("project.description")
             or self.get_pyproject("tool.poetry.description")
+            or ""
         )
-        # Desktop entry values are escaped here rather than in the template:
-        # the rules differ per key and getting them wrong yields an entry the
-        # desktop environment silently discards.
-        linux_categories = None
+        linux_categories = self.escape_linux_desktop_categories(["Utility"])
         if self.target_platform == "linux":
             try:
+                # Desktop entry values are escaped here rather than in the template:
+                # the rules differ per key and getting them wrong yields an entry the
+                # desktop environment silently discards.
                 linux_categories = self.escape_linux_desktop_categories(
                     self.options.linux_categories
                     or self.get_pyproject("tool.flet.linux.categories")
@@ -1405,7 +1406,6 @@ class BaseBuildCommand(BaseFlutterCommand):
                 )
             except ValueError as e:
                 self.cleanup(1, f"Invalid tool.flet.linux.categories: {e}")
-                raise
         self.template_data = {
             "out_dir": self.flutter_dir.name,
             "sep": os.sep,
