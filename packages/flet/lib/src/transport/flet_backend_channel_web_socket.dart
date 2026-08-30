@@ -14,7 +14,7 @@ class FletWebSocketBackendChannel implements FletBackendChannel {
   FletBackendChannelOnDisconnectCallback onDisconnect;
   WebSocketChannel? _channel;
 
-  /// Whether this channel serves an embedded app ([FletApp] control) rather
+  /// Whether this channel serves an embedded app (a `FletApp` control) rather
   /// than the root app of the page.
   final bool embedded;
 

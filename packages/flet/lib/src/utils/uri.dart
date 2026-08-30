@@ -14,10 +14,11 @@ String getWebPageName(Uri uri) {
 /// Derives the WebSocket endpoint path of a Flet app from its own URL path:
 /// `""` → `"ws"`, `"/sub1"` → `"sub1/ws"`.
 ///
-/// Mirrors the io implementation of `getWebsocketEndpointPath`. Used for
-/// embedded apps ([FletApp]) on web, whose endpoint cannot come from the host
-/// document's configuration: that configuration describes the host app and is
-/// the same for every app embedded on the page.
+/// This is the io implementation of `getWebsocketEndpointPath`, which delegates
+/// here. On web it is used for embedded apps (the `FletApp` control), whose
+/// endpoint cannot come from the host document's configuration: that
+/// configuration describes the host app and is the same for every app embedded
+/// on the page.
 String getWebSocketEndpointPathFromUriPath(String uriPath) {
   var pagePath = uriPath.trimSymbol("/");
   return pagePath == "" ? "ws" : "$pagePath/ws";
