@@ -1,62 +1,69 @@
+import 'package:flutter/foundation.dart';
+
 import 'package:flet/src/transport/flet_backend_channel.dart';
 import 'package:flet/src/transport/flet_backend_channel_web_socket.dart';
 import 'package:flutter_test/flutter_test.dart';
 
+/// Endpoint composition for the embedded branch, plus the factory plumbing
+/// that selects it. These hold on every platform.
+///
+/// The embedded-vs-root *difference* is only observable on web — on io both
+/// branches derive the path from the URL — so the regression test for the fix
+/// itself lives in `web_socket_endpoint_web_test.dart`, which runs under
+/// `flutter test --platform chrome`.
 void main() {
-  FletWebSocketBackendChannel channel({required bool embedded}) =>
+  String endpoint(String url, {required bool embedded}) =>
       FletWebSocketBackendChannel(
-          address: "https://gateway/device1/",
-          embedded: embedded,
-          onDisconnect: () {},
-          onPacket: (_) {});
+              address: url,
+              embedded: embedded,
+              onDisconnect: () {},
+              onPacket: (_) {})
+          .getWebSocketEndpoint(Uri.parse(url));
 
   group("getWebSocketEndpoint (embedded)", () {
     // An embedded app derives its WebSocket path from its own URL, so a
     // path-prefixed URL (e.g. behind a reverse proxy on a gateway host)
     // keeps its prefix instead of inheriting the host document's endpoint.
     test("path-prefixed URL keeps its prefix", () {
-      expect(
-          channel(embedded: true)
-              .getWebSocketEndpoint(Uri.parse("https://gateway/device1/")),
+      expect(endpoint("https://gateway/device1/", embedded: true),
           "wss://gateway/device1/ws");
     });
 
     test("root URL on a dedicated port resolves to /ws", () {
       expect(
-          channel(embedded: true)
-              .getWebSocketEndpoint(Uri.parse("http://host:9001/")),
-          "ws://host:9001/ws");
+          endpoint("http://host:9001/", embedded: true), "ws://host:9001/ws");
     });
 
     test("http maps to ws, https maps to wss", () {
-      final c = channel(embedded: true);
-      expect(c.getWebSocketEndpoint(Uri.parse("http://gateway/device1/")),
+      expect(endpoint("http://gateway/device1/", embedded: true),
           startsWith("ws://"));
-      expect(c.getWebSocketEndpoint(Uri.parse("https://gateway/device1/")),
+      expect(endpoint("https://gateway/device1/", embedded: true),
           startsWith("wss://"));
     });
 
     test("URL without trailing slash and nested paths keep their prefix", () {
-      final c = channel(embedded: true);
-      expect(c.getWebSocketEndpoint(Uri.parse("https://gateway/device1")),
+      expect(endpoint("https://gateway/device1", embedded: true),
           "wss://gateway/device1/ws");
-      expect(c.getWebSocketEndpoint(Uri.parse("https://gateway/a/b/")),
+      expect(endpoint("https://gateway/a/b/", embedded: true),
           "wss://gateway/a/b/ws");
     });
   });
 
-  group("getWebSocketEndpoint (root)", () {
-    // On io the platform implementation already derives the path from the
-    // URL, so both branches must agree there — this guards the claim that
-    // the root branch is unchanged by the embedded fix.
-    test("root branch is unchanged (io derives from the URL path)", () {
-      final c = channel(embedded: false);
-      expect(c.getWebSocketEndpoint(Uri.parse("https://gateway/device1/")),
+  group("getWebSocketEndpoint (root, io)", () {
+    // On io the platform implementation derives the path from the URL too, so
+    // desktop and mobile are unaffected by the embedded flag either way. This
+    // is a VM-only claim: on web the root branch reads the host document's
+    // configuration instead (see web_socket_endpoint_web_test.dart).
+    test("root branch derives from the URL path", () {
+      expect(endpoint("https://gateway/device1/", embedded: false),
           "wss://gateway/device1/ws");
-      expect(c.getWebSocketEndpoint(Uri.parse("http://host:9001/")),
-          "ws://host:9001/ws");
+      expect(
+          endpoint("http://host:9001/", embedded: false), "ws://host:9001/ws");
     });
-  });
+  },
+      skip: kIsWeb
+          ? "io-only: on web the root branch reads the host config"
+          : null);
 
   group("FletBackendChannel factory", () {
     test("forwards the embedded flag to the WebSocket channel", () {
