@@ -55,6 +55,7 @@ class FletBackend extends ChangeNotifier {
   final Map<String, dynamic> bootScreenOptions;
   final String? appErrorMessage;
   final int? controlId;
+
   /// Notifies the boot screen of the current [BootStatus] (stage, any startup
   /// error, and whether boot is done). Kept in sync with [isLoading]/[error].
   ///
@@ -217,8 +218,8 @@ class FletBackend extends ChangeNotifier {
         // Embedder-supplied transport (e.g. serious_python's in-process FFI
         // bridge). The builder is responsible for the entire transport
         // lifecycle; we just wire its callbacks to ours.
-        _backendChannel = builder(
-            onDisconnect: _onDisconnect, onPacket: _onPacket);
+        _backendChannel =
+            builder(onDisconnect: _onDisconnect, onPacket: _onPacket);
       } else {
         _backendChannel = FletBackendChannel(
             address: pageUri.toString(),
@@ -506,13 +507,13 @@ class FletBackend extends ChangeNotifier {
     final type = packet[0];
     if (type == 0x00) {
       // Decode the MsgPack body and dispatch as a Flet protocol message.
-      final body = msgpack.deserialize(
-          Uint8List.sublistView(packet, 1),
+      final body = msgpack.deserialize(Uint8List.sublistView(packet, 1),
           extDecoder: FletMsgpackDecoder());
       _onMessage(Message.fromList(body));
     } else if (type == 0x01) {
       if (packet.length < 5) {
-        debugPrint("Dropping malformed data channel frame (len=${packet.length})");
+        debugPrint(
+            "Dropping malformed data channel frame (len=${packet.length})");
         return;
       }
       final channelId =
@@ -524,7 +525,8 @@ class FletBackend extends ChangeNotifier {
       }
       channel.deliver(Uint8List.sublistView(packet, 5));
     } else {
-      debugPrint("Dropping packet with unknown type byte 0x${type.toRadixString(16)}");
+      debugPrint(
+          "Dropping packet with unknown type byte 0x${type.toRadixString(16)}");
     }
   }
 
@@ -585,6 +587,18 @@ class FletBackend extends ChangeNotifier {
       control.applyPatch(req.patch, this);
       //debugPrint("patched control: $control");
       //debugPrint("_controlsIndex.length: ${_controlsIndex.length}");
+    } else {
+      // The server sent an update for a control this client cannot resolve, so
+      // the two have diverged and this screen is now silently stale. Report it
+      // rather than dropping it: from the user's side the app simply stops
+      // responding, with nothing logged anywhere to explain why.
+      //
+      // Use `print` rather than `debugPrint` - main.dart nulls debugPrint in
+      // release builds, which is exactly where this needs to be visible.
+      //
+      // ignore: avoid_print
+      print("Flet: dropped a patch for unknown control ${req.id} - "
+          "the client is out of sync with the server and needs a reload.");
     }
   }
 
@@ -694,8 +708,8 @@ class FletBackend extends ChangeNotifier {
   _send(Message message, {bool unbuffered = false}) {
     if (unbuffered || !isLoading) {
       debugPrint("_send: ${message.action} ${message.payload}");
-      final encoded = msgpack.serialize(message.toList(),
-          extEncoder: FletMsgpackEncoder());
+      final encoded =
+          msgpack.serialize(message.toList(), extEncoder: FletMsgpackEncoder());
       final packet = Uint8List(1 + encoded.length);
       packet[0] = 0x00;
       packet.setRange(1, packet.length, encoded);
