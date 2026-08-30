@@ -21,6 +21,28 @@
   <link rel="manifest" href="manifest.json">
 
   <script>
+    // Reload when WebKit restores the page from the back/forward cache instead
+    // of resuming it. WebKit restores a Flutter app with its frame scheduling
+    // broken: pointer events, the websocket, and patch application all keep
+    // working, but scheduled frames never render, so the app silently freezes
+    // at its last painted state. A restore can paint one synchronous catch-up
+    // frame, so even re-registering with the server is not enough - the very
+    // next update wedges again. Only a fresh engine recovers reliably.
+    //
+    // For a hosted app the Flet session lives on the server and survives the
+    // reload, so state is preserved. Gated to WebKit (every browser on iOS,
+    // Safari on macOS) because other engines restore correctly - and for a
+    // published Pyodide app, where state lives in the page, an unnecessary
+    // reload would destroy it.
+    window.addEventListener('pageshow', (event) => {
+      if (event.persisted &&
+        navigator.vendor && navigator.vendor.startsWith('Apple')) {
+        window.location.reload();
+      }
+    });
+  </script>
+
+  <script>
     var flet = {
       pyodide: false,
       multiView: false,
