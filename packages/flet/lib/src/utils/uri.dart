@@ -19,7 +19,7 @@ String getWebPageName(Uri uri) {
 /// endpoint cannot come from the host document's configuration: that
 /// configuration describes the host app and is the same for every app embedded
 /// on the page.
-String getWebSocketEndpointPathFromUriPath(String uriPath) {
+String getWebsocketEndpointPathFromUriPath(String uriPath) {
   var pagePath = uriPath.trimSymbol("/");
   return pagePath == "" ? "ws" : "$pagePath/ws";
 }

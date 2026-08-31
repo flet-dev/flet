@@ -90,7 +90,7 @@ class FletWebSocketBackendChannel implements FletBackendChannel {
     // branches are equivalent (the io implementation already derives the
     // path from the URL).
     final wsPath = embedded
-        ? getWebSocketEndpointPathFromUriPath(uri.path)
+        ? getWebsocketEndpointPathFromUriPath(uri.path)
         : getWebsocketEndpointPath(uri.path);
     if (wsPath == "") {
       throw Exception("WebSocket endpoint path cannot be empty.");

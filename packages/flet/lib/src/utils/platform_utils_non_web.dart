@@ -5,7 +5,7 @@ bool isProgressiveWebApp() {
 }
 
 String getWebsocketEndpointPath(String uriPath) {
-  return getWebSocketEndpointPathFromUriPath(uriPath);
+  return getWebsocketEndpointPathFromUriPath(uriPath);
 }
 
 String getFletRouteUrlStrategy() {
