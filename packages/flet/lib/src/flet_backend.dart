@@ -225,6 +225,7 @@ class FletBackend extends ChangeNotifier {
             address: pageUri.toString(),
             args: args ?? {},
             forcePyodide: forcePyodide == true,
+            embedded: controlId != null,
             onDisconnect: _onDisconnect,
             onPacket: _onPacket);
       }

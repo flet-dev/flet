@@ -169,6 +169,14 @@ jobs:
         working-directory: packages/flet
         run: flutter test
 
+      # Tests marked `@TestOn("browser")` are skipped by the VM run above and
+      # only exercise code paths that differ on web (e.g. the embedded app
+      # WebSocket endpoint, which reads the host document's configuration).
+      - name: Run web tests
+        shell: bash
+        working-directory: packages/flet
+        run: flutter test --platform chrome test/transport/web_socket_endpoint_web_test.dart
+
       - name: Publish to pub.dev (Dry Run)
         shell: bash
         working-directory: packages/flet

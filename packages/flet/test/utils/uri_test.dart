@@ -153,4 +153,13 @@ void main() {
           "http://localhost:8550/src/main.py/images%5C113.png");
     });
   });
+
+  test("getWebsocketEndpointPathFromUriPath derives path from URL path", () {
+    expect(getWebsocketEndpointPathFromUriPath(""), "ws");
+    expect(getWebsocketEndpointPathFromUriPath("/"), "ws");
+    expect(getWebsocketEndpointPathFromUriPath("/sub1"), "sub1/ws");
+    expect(getWebsocketEndpointPathFromUriPath("/sub1/"), "sub1/ws");
+    expect(getWebsocketEndpointPathFromUriPath("sub1"), "sub1/ws");
+    expect(getWebsocketEndpointPathFromUriPath("/a/b/"), "a/b/ws");
+  });
 }

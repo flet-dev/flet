@@ -5,6 +5,7 @@ import glob
 import json
 import os
 import platform
+import re
 import shutil
 from pathlib import Path
 from typing import Optional, cast
@@ -345,6 +346,16 @@ class BaseBuildCommand(BaseFlutterCommand):
             required=False,
             help="The color to be used to fill out the background of "
             "Android adaptive icons",
+        )
+        parser.add_argument(
+            "--linux-categories",
+            dest="linux_categories",
+            action="extend",
+            nargs="+",
+            default=[],
+            help="The list of freedesktop application categories for the "
+            "generated desktop entry, e.g. `Education` or `Game` "
+            "(linux only); can be used multiple times",
         )
         parser.add_argument(
             "--splash-color",
@@ -1376,6 +1387,25 @@ class BaseBuildCommand(BaseFlutterCommand):
             )
 
         assert self.flutter_dir
+        project_description = (
+            self.options.description
+            or self.get_pyproject("project.description")
+            or self.get_pyproject("tool.poetry.description")
+            or ""
+        )
+        linux_categories = self.escape_linux_desktop_categories(["Utility"])
+        if self.target_platform == "linux":
+            try:
+                # Desktop entry values are escaped here rather than in the template:
+                # the rules differ per key and getting them wrong yields an entry the
+                # desktop environment silently discards.
+                linux_categories = self.escape_linux_desktop_categories(
+                    self.options.linux_categories
+                    or self.get_pyproject("tool.flet.linux.categories")
+                    or ["Utility"]
+                )
+            except ValueError as e:
+                self.cleanup(1, f"Invalid tool.flet.linux.categories: {e}")
         self.template_data = {
             "out_dir": self.flutter_dir.name,
             "sep": os.sep,
@@ -1424,11 +1454,14 @@ class BaseBuildCommand(BaseFlutterCommand):
             "project_name_slug": project_name_slug,
             "artifact_name": artifact_name,
             "product_name": product_name,
-            "description": (
-                self.options.description
-                or self.get_pyproject("project.description")
-                or self.get_pyproject("tool.poetry.description")
-            ),
+            "project_description": project_description,
+            # pubspec.yaml is read as YAML while still unrendered, so its
+            # description is escaped for the single quotes the template
+            # provides rather than carrying quotes of its own.
+            "pubspec_description": self.escape_single_quoted_yaml(project_description),
+            # Pre-escaped Linux desktop entry values.
+            "linux_desktop_exec": self.escape_linux_desktop_exec(str(artifact_name)),
+            "linux_categories": linux_categories,
             "org_name": self.options.org_name
             or self.get_pyproject(f"tool.flet.{self.config_platform}.org")
             or self.get_pyproject("tool.flet.org"),
@@ -1801,6 +1834,8 @@ class BaseBuildCommand(BaseFlutterCommand):
         pubspec = self.load_yaml(pubspec_origin_path)
 
         copy_ops = []
+        default_icon = None
+        linux_icon = None
         self.assets_path = self.package_app_path.joinpath("assets")
         if self.assets_path.exists():
             images_dir = "images"
@@ -1825,6 +1860,15 @@ class BaseBuildCommand(BaseFlutterCommand):
             )
             macos_icon = self.find_platform_image(
                 self.assets_path, images_path, "icon_macos", copy_ops, hash
+            )
+            # Unlike the lookups above, Linux has no flutter_launcher_icons
+            # consumer, so run it only when the result is actually used.
+            linux_icon = (
+                self.find_platform_image(
+                    self.assets_path, images_path, "icon_linux", copy_ops, hash
+                )
+                if self.target_platform == "linux"
+                else None
             )
 
             self.fallback_image(
@@ -1867,6 +1911,54 @@ class BaseBuildCommand(BaseFlutterCommand):
                 images_dir,
             )
 
+        if self.target_platform == "linux":
+            # flutter_launcher_icons has no Linux generator, so the resolved
+            # icon is staged at a fixed path instead: the Linux runner's CMake
+            # installs it into the bundle (data/app_icon.png plus the hicolor
+            # icon-theme tree) and my_application.cc points GTK at it on startup.
+            user_icon = linux_icon or default_icon
+            linux_icon_src = (
+                self.assets_path.joinpath(user_icon)
+                if user_icon
+                else self.flutter_dir.joinpath("images", "icon.png")
+            )
+            # A custom build template may ship no default images/icon.png;
+            # degrade to an icon-less bundle instead of failing the copy.
+            if linux_icon_src.is_file():
+                if linux_icon_src.suffix.lower() != ".png":
+                    console.log(
+                        f'Warning: "{linux_icon_src.name}" is used as the '
+                        "Linux app icon. Provide a square PNG instead — the "
+                        "image is bundled as-is, and a format without a GDK "
+                        "loader on the target system (e.g. WebP) shows no "
+                        "icon at all.",
+                        style=warning_style,
+                    )
+                theme_size = self.resolve_icon_theme_size(
+                    self.get_png_size(linux_icon_src)
+                )
+                copy_ops.append(
+                    (
+                        linux_icon_src,
+                        self.flutter_dir.joinpath("linux", "app_icon.png"),
+                    )
+                )
+                # CMake cannot measure the image, so the icon-theme directory
+                # is resolved here and read from this generated fragment.
+                self.flutter_dir.joinpath("linux", "app_icon.cmake").write_text(
+                    "# Generated by `flet build`.\n"
+                    f'set(FLET_APP_ICON_THEME_SIZE "{theme_size}")\n'
+                )
+                hash.update(linux_icon_src.stat().st_mtime)
+                hash.update(theme_size)
+            else:
+                # Nothing to stage: drop anything a previous build left, or
+                # CMake would keep installing the stale icon and its entry.
+                for stale in ("app_icon.png", "app_icon.cmake"):
+                    self.flutter_dir.joinpath("linux", stale).unlink(missing_ok=True)
+            hash.update(str(linux_icon_src))
+            hash.update(linux_icon_src.is_file())
+
         adaptive_icon_background = (
             self.options.android_adaptive_icon_background
             or self.get_pyproject("tool.flet.android.adaptive_icon_background")
@@ -1898,26 +1990,28 @@ class BaseBuildCommand(BaseFlutterCommand):
             ]
             self.save_yaml(self.pubspec_path, updated_pubspec)
 
-            self.update_status("[bold blue]Generating app icons...")
+            # Skip Linux, for which flutter_launcher_icons has no generator.
+            if self.target_platform != "linux":
+                self.update_status("[bold blue]Generating app icons...")
 
-            # icons
-            icons_result = self.run(
-                [
-                    self.dart_exe,
-                    "run",
-                    "--suppress-analytics",
-                    "flutter_launcher_icons",
-                ],
-                cwd=str(self.flutter_dir),
-                capture_output=self.verbose < 1,
-            )
-            if icons_result.returncode != 0:
-                if isinstance(icons_result.stdout, str):
-                    console.log(icons_result.stdout, style=verbose1_style)
-                if isinstance(icons_result.stderr, str):
-                    console.log(icons_result.stderr, style=error_style)
-                self.cleanup(icons_result.returncode)
-            console.log(f"Generated app icons {self.emojis['checkmark']}")
+                # icons
+                icons_result = self.run(
+                    [
+                        self.dart_exe,
+                        "run",
+                        "--suppress-analytics",
+                        "flutter_launcher_icons",
+                    ],
+                    cwd=str(self.flutter_dir),
+                    capture_output=self.verbose < 1,
+                )
+                if icons_result.returncode != 0:
+                    if isinstance(icons_result.stdout, str):
+                        console.log(icons_result.stdout, style=verbose1_style)
+                    if isinstance(icons_result.stderr, str):
+                        console.log(icons_result.stderr, style=error_style)
+                    self.cleanup(icons_result.returncode)
+                console.log(f"Generated app icons {self.emojis['checkmark']}")
 
         hash.commit()
 
@@ -2756,14 +2850,32 @@ class BaseBuildCommand(BaseFlutterCommand):
             capture_output=self.verbose < 1,
         )
 
+        # `flutter build ipa` exits 0 even when Xcode's export step fails, so
+        # a failed export is detected from the artifacts: signing was asked
+        # for, therefore an .ipa must exist. The message check below cannot
+        # see it — output is streamed, not captured, whenever -v is used.
+        assert self.flutter_dir
+        ipa_export_failed = self.target_platform == "ipa" and bool(
+            (self.template_data or {}).get("ios_provisioning_profile")
+            and not any(self.flutter_dir.glob("build/ios/ipa/*.ipa"))
+        )
+
         if (
             build_result.returncode != 0
+            or ipa_export_failed
             or "Encountered error while creating the IPA" in str(build_result.stderr)
         ):
             if isinstance(build_result.stdout, str):
                 console.log(build_result.stdout, style=verbose1_style)
             if isinstance(build_result.stderr, str):
                 console.log(build_result.stderr, style=error_style)
+            if ipa_export_failed and build_result.returncode == 0:
+                self.cleanup(
+                    1,
+                    "Xcode could not export an .ipa from the archive. Its error "
+                    "is in the build output above — re-run with -v if the output "
+                    "was suppressed.",
+                )
             self.cleanup(build_result.returncode if build_result.returncode else 1)
 
     def resolve_output_path(self, build_output: str) -> str:
@@ -2947,6 +3059,144 @@ class BaseBuildCommand(BaseFlutterCommand):
                     f"[cyan]{renamed}[/cyan].",
                     style=verbose1_style,
                 )
+
+    @staticmethod
+    def escape_single_quoted_yaml(value: Optional[str]) -> str:
+        """
+        Escape a value for a single-quoted YAML scalar.
+
+        The build template's `pubspec.yaml` is read as YAML while still
+        unrendered — CI patches its dependency versions in place — so the
+        value must not carry quotes of its own, and is escaped for the
+        quoting the template already provides.
+
+        Args:
+            value: Raw value, or `None`.
+
+        Returns:
+            The value with control characters flattened and quotes doubled.
+        """
+
+        return re.sub(r"[\x00-\x1f]", " ", value or "").replace("'", "''")
+
+    @staticmethod
+    def escape_linux_desktop_exec(value: str) -> str:
+        """
+        Escape a program name for the quoted `Exec` key of a desktop entry.
+
+        The value passes through two layers: the desktop entry file itself,
+        where backslash is the escape character, and the shell-like parsing
+        of `Exec`, where `"`, `` ` ``, `$` and `\\` are reserved inside
+        double quotes. Escape for the inner layer first, then for the outer
+        one, so an artifact name containing a quote still launches.
+
+        Args:
+            value: Raw artifact name.
+
+        Returns:
+            The value ready to be interpolated between double quotes.
+        """
+
+        # Flatten control characters first: a newline would split the
+        # entry across lines and void the key.
+        value = re.sub(r"[\x00-\x1f]", " ", value)
+        shell_escaped = re.sub(r'(["`$\\])', r"\\\1", value)
+        entry_escaped = shell_escaped.replace("\\", "\\\\")
+        # `%` introduces a field code, so a literal one must be doubled or the
+        # desktop drops it along with the character after it.
+        return entry_escaped.replace("%", "%%")
+
+    @staticmethod
+    def escape_linux_desktop_categories(categories) -> str:
+        """
+        Build the `Categories` value of a desktop entry.
+
+        Args:
+            categories: A category string or list of category strings.
+
+        Returns:
+            Semicolon-separated categories, each terminated by a semicolon.
+
+        Raises:
+            ValueError: If `categories` is not a string or list of strings.
+        """
+
+        if isinstance(categories, str):
+            categories = [categories]
+        if not isinstance(categories, (list, tuple)) or not all(
+            isinstance(c, str) for c in categories
+        ):
+            raise ValueError(
+                f"categories must be a string or a list of strings, got {categories!r}"
+            )
+        # A literal ";" would split one category into two, a backslash would
+        # start an escape sequence that voids the whole key, and a newline
+        # would leave a second line with no "=" in it, voiding the entry.
+        escaped = [
+            re.sub(r"[\x00-\x1f]", " ", c)
+            .strip()
+            .replace("\\", "\\\\")
+            .replace(";", "\\;")
+            for c in categories
+            if c.strip()
+        ]
+        return ";".join(escaped or ["Utility"]) + ";"
+
+    @staticmethod
+    def resolve_icon_theme_size(png_size: Optional[tuple[int, int]]) -> str:
+        """
+        Pick the hicolor icon-theme directory an app icon should install into.
+
+        Only the square sizes declared by the hicolor theme index are usable
+        as directory names; anything else (a non-square icon, an unusual
+        size, or an image whose size could not be read) falls back to
+        `256x256`, which desktop environments scale from.
+
+        Args:
+            png_size: `(width, height)` of the icon, or `None` if unknown.
+
+        Returns:
+            The icon-theme directory name, e.g. `"512x512"`.
+        """
+
+        # Square sizes declared by hicolor-icon-theme's index.theme. Only
+        # these are scanned: an icon installed into an undeclared directory
+        # is never found, which is worse than the 256x256 fallback.
+        hicolor_sizes = {
+            16, 22, 24, 32, 36, 48, 64, 72, 96, 128, 192, 256, 512,
+        }  # fmt: skip
+        if (
+            png_size is not None
+            and png_size[0] == png_size[1]
+            and png_size[0] in hicolor_sizes
+        ):
+            return f"{png_size[0]}x{png_size[0]}"
+        return "256x256"
+
+    @staticmethod
+    def get_png_size(path: Path) -> Optional[tuple[int, int]]:
+        """
+        Read the pixel dimensions of a PNG file from its IHDR header.
+
+        Args:
+            path: Path to the image file.
+
+        Returns:
+            `(width, height)` in pixels, or `None` if the file cannot be read
+                or is not a PNG.
+        """
+
+        try:
+            with open(path, "rb") as f:
+                header = f.read(24)
+        except OSError:
+            return None
+        if header[:8] != b"\x89PNG\r\n\x1a\n" or header[12:16] != b"IHDR":
+            return None
+        return (
+            int.from_bytes(header[16:20], "big"),
+            int.from_bytes(header[20:24], "big"),
+        )
 
     def find_platform_image(
         self,

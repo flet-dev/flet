@@ -1,6 +1,8 @@
 import asyncio
+import contextlib
 import ctypes
 import ctypes.util
+import hashlib
 import logging
 import os
 import shutil
@@ -10,6 +12,7 @@ import subprocess
 import sys
 import tarfile
 import tempfile
+import time
 import urllib.request
 import zipfile
 from pathlib import Path
@@ -163,17 +166,131 @@ def get_artifact_filename():
     return f"flet-linux-{distro}-{arch}.tar.gz"
 
 
-def __get_client_storage_dir():
+def __get_client_storage_dir(fingerprint: str | None = None) -> Path:
     """
     Return a versioned local directory used to store unpacked desktop client files.
 
-    The path format is: `~/.flet/client/flet-desktop-{flavor}-{version}`.
+    The path format is: `~/.flet/client/flet-desktop-{flavor}-{version}`, with a
+    `-{fingerprint}` suffix when the client comes from a bundled archive.
+    Fingerprinting keeps clients patched by `flet pack` (custom icon/metadata)
+    from being shadowed by — or shadowing — the vanilla client or another
+    app's patched client of the same Flet version.
+
+    Args:
+        fingerprint: Optional content fingerprint of the bundled client archive.
+
+    Returns:
+        Path of the cache directory for this client.
     """
 
     flavor = __get_desktop_flavor()
-    return Path.home().joinpath(
-        ".flet", "client", f"flet-desktop-{flavor}-{flet_desktop.version.version}"
-    )
+    name = f"flet-desktop-{flavor}-{flet_desktop.version.version}"
+    if fingerprint:
+        name += f"-{fingerprint}"
+    return Path.home().joinpath(".flet", "client", name)
+
+
+def __is_hex(value: str) -> bool:
+    """
+    Return whether `value` is a non-empty lowercase hexadecimal string.
+
+    Args:
+        value: String to check.
+    """
+
+    return bool(value) and all(c in "0123456789abcdef" for c in value)
+
+
+def __get_archive_fingerprint(archive_path: str) -> str:
+    """
+    Return a short content fingerprint for a client archive.
+
+    Prefers a pre-computed `<archive>.sha256` sidecar (written by `flet pack`
+    at build time) holding `<hash> <size>`; the recorded size must still match
+    the archive, so a replaced archive next to a stale sidecar is re-hashed
+    instead of silently mapping to the old client's cache. Falls back to
+    hashing the archive, caching the result next to it when possible.
+
+    Args:
+        archive_path: Path of the client archive to fingerprint.
+
+    Returns:
+        First 12 hex digits of the archive's SHA-256.
+    """
+
+    size = os.path.getsize(archive_path)
+    fp_file = archive_path + ".sha256"
+    try:
+        if os.path.exists(fp_file):
+            with open(fp_file) as f:
+                parts = f.read().split()
+            # The hash must be well-formed as well as current: it becomes part
+            # of a directory name, and the GC below only recognizes hex ones.
+            if len(parts) == 2 and parts[1] == str(size):
+                fp = parts[0].lower()
+                if len(fp) == 64 and __is_hex(fp):
+                    return fp[:12]
+    except OSError:
+        pass
+    h = hashlib.sha256()
+    with open(archive_path, "rb") as f:
+        while chunk := f.read(1024 * 1024):
+            h.update(chunk)
+    fp = h.hexdigest()
+    with contextlib.suppress(OSError), open(fp_file, "w") as f:
+        f.write(f"{fp} {size}")
+    return fp[:12]
+
+
+def __gc_stale_client_dirs(cache_dir: Path, max_age_days: int = 30) -> None:
+    """
+    Best-effort eviction of superseded fingerprinted cache siblings.
+
+    Removes sibling `flet-desktop-{flavor}-{version}-{fingerprint}` dirs not
+    used for `max_age_days` (tracked via a `.last-used` marker). Dirs are
+    renamed before deletion, so a dir whose files are in use by a running app
+    fails the rename on Windows and is left untouched. Leftovers of
+    interrupted deletions are swept too.
+
+    Args:
+        cache_dir: Cache directory of the client in use; its siblings with the
+            same `flet-desktop-{flavor}-{version}-` prefix are candidates.
+        max_age_days: Days a sibling must have been unused before eviction.
+    """
+
+    parent = cache_dir.parent
+    prefix = cache_dir.name.rpartition("-")[0] + "-"
+    now = time.time()
+    try:
+        entries = list(parent.iterdir())
+    except OSError:
+        return
+    for entry in entries:
+        name = entry.name
+        if name.startswith(".trash-"):
+            shutil.rmtree(entry, ignore_errors=True)
+            continue
+        suffix = name[len(prefix) :]
+        if (
+            not name.startswith(prefix)
+            or name == cache_dir.name
+            or len(suffix) != 12
+            or not __is_hex(suffix)
+        ):
+            continue
+        try:
+            marker = entry / ".last-used"
+            last_used = max(
+                marker.stat().st_mtime if marker.exists() else 0,
+                entry.stat().st_mtime,
+            )
+            if now - last_used < max_age_days * 86400:
+                continue
+            trash = parent / f".trash-{random_string(8)}"
+            entry.rename(trash)
+            shutil.rmtree(trash, ignore_errors=True)
+        except OSError:
+            continue
 
 
 def __download_with_progress(url, dest_path, description):
@@ -226,18 +343,23 @@ def ensure_client_cached():
         :class:`Path` to the cache directory containing the unpacked client.
     """
 
-    cache_dir = __get_client_storage_dir()
-    if cache_dir.exists():
-        logger.info(f"Flet client found in cache: {cache_dir}")
-        return cache_dir
-
     artifact = get_artifact_filename()
 
-    # Check for a bundled archive (PyInstaller or legacy wheel).
+    # Check for a bundled archive (PyInstaller or legacy wheel). Bundled
+    # archives are content-fingerprinted so that a client patched by
+    # `flet pack` gets its own cache directory.
     bundled = os.path.join(get_package_bin_dir(), artifact)
-    if os.path.exists(bundled):
-        archive_path = bundled
-    else:
+    archive_path = bundled if os.path.exists(bundled) else None
+    fingerprint = __get_archive_fingerprint(archive_path) if archive_path else None
+
+    cache_dir = __get_client_storage_dir(fingerprint)
+    if cache_dir.exists():
+        logger.info(f"Flet client found in cache: {cache_dir}")
+        with contextlib.suppress(OSError):
+            (cache_dir / ".last-used").touch()
+        return cache_dir
+
+    if archive_path is None:
         archive_path = __download_flet_client(artifact)
 
     # Extract to a temp directory first, then atomically rename to the cache
@@ -257,12 +379,71 @@ def ensure_client_cached():
             with tarfile.open(archive_path, "r:gz") as tar_arch:
                 safe_tar_extractall(tar_arch, str(temp_extract))
 
-        temp_extract.rename(cache_dir)
+        try:
+            temp_extract.rename(cache_dir)
+        except OSError:
+            # Lost a race against a concurrent extraction of the same
+            # archive; the winner's cache dir is equivalent.
+            if not cache_dir.exists():
+                raise
+            logger.info(f"Using concurrently extracted cache: {cache_dir}")
+            shutil.rmtree(temp_extract, ignore_errors=True)
     except Exception:
         shutil.rmtree(temp_extract, ignore_errors=True)
         raise
 
+    with contextlib.suppress(OSError):
+        (cache_dir / ".last-used").touch()
+    if fingerprint:
+        __gc_stale_client_dirs(cache_dir)
     return cache_dir
+
+
+def __linux_identity_args(args: list) -> tuple:
+    """
+    Give the client window a per-app identity on Linux, without touching it.
+
+    The shipped client is one prebuilt binary called `flet`, so every packed
+    app arrives at the taskbar as "flet" -- grouped together, labelled wrong
+    and unable to match a desktop entry of its own.
+
+    It does not have to be rebuilt to fix that. GLib takes `prgname` from
+    `basename(argv[0])` inside `g_application_run`, and GTK derives the X11
+    `WM_CLASS` and the Wayland `app_id` from `prgname` -- so launching the
+    same binary under a different `argv[0]` is enough, with `executable`
+    still pointing at the real file.
+
+    Args:
+        args: Launch argv, whose first element is the client binary path.
+
+    Returns:
+        A tuple of the argv to launch and the extra keyword arguments to
+        pass to `Popen`. Both are unchanged on every other platform, and
+        whenever `FLET_APP_ID` is unset or unusable.
+    """
+
+    app_id = os.environ.get("FLET_APP_ID", "").strip()
+    if not is_linux() or not app_id or not args:
+        return args, {}
+
+    # GLib basenames argv[0], so a path would silently become its last
+    # segment; mutter replaces an app id that is not valid UTF-8 with an
+    # empty string. Neither is worth guessing about -- keep "flet".
+    if "/" in app_id or any(ord(c) < 32 for c in app_id):
+        logger.warning(
+            f"Ignoring FLET_APP_ID with a path separator or control "
+            f"character: {app_id!r}"
+        )
+        return args, {}
+    try:
+        app_id.encode("utf-8")
+    except UnicodeEncodeError:
+        logger.warning(f"Ignoring FLET_APP_ID that is not valid UTF-8: {app_id!r}")
+        return args, {}
+
+    executable = str(args[0])
+    logger.info(f"Launching the Flet client as {app_id!r} (binary: {executable})")
+    return [app_id, *args[1:]], {"executable": executable}
 
 
 def open_flet_view(page_url, assets_dir, hidden):
@@ -283,7 +464,10 @@ def open_flet_view(page_url, assets_dir, hidden):
     args, flet_env, pid_file = __locate_and_unpack_flet_view(
         page_url, assets_dir, hidden
     )
-    return subprocess.Popen(args, env=flet_env), pid_file
+    args, extra = __linux_identity_args(args)
+    p = subprocess.Popen(args, env=flet_env, **extra)
+    __apply_taskbar_props(p.pid)
+    return p, pid_file
 
 
 async def open_flet_view_async(page_url, assets_dir, hidden):
@@ -304,10 +488,32 @@ async def open_flet_view_async(page_url, assets_dir, hidden):
     args, flet_env, pid_file = __locate_and_unpack_flet_view(
         page_url, assets_dir, hidden
     )
-    return (
-        await asyncio.create_subprocess_exec(args[0], *args[1:], env=flet_env),
-        pid_file,
+    args, extra = __linux_identity_args(args)
+    p = await asyncio.create_subprocess_exec(
+        args[0], *args[1:], env=flet_env, **extra
     )
+    __apply_taskbar_props(p.pid)
+    return p, pid_file
+
+
+def __apply_taskbar_props(pid: int) -> None:
+    """
+    Stamp Windows taskbar identity properties on the client window, so packed
+    apps (which set `FLET_APP_USER_MODEL_ID` via the PyInstaller runtime hook)
+    get their own taskbar name/icon and working pins. No-op elsewhere.
+
+    Args:
+        pid: Process ID of the started desktop client.
+    """
+
+    if not is_windows() or not os.environ.get("FLET_APP_USER_MODEL_ID"):
+        return
+    try:
+        from flet_desktop.win_taskbar import apply_relaunch_props_async
+
+        apply_relaunch_props_async(pid)
+    except Exception as e:
+        logger.warning(f"Failed to apply taskbar relaunch properties: {e}")
 
 
 def close_flet_view(pid_file):

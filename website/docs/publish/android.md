@@ -1044,7 +1044,7 @@ can no longer be found:
 - **Classes bundled by a Flutter plugin or your own Java/Kotlin** are in your APK and *are* renamed.
   These need a keep rule.
 
-:::warning A failed lookup crashes the process
+:::warning[A failed lookup crashes the process]
 `autoclass()` on a renamed class does not raise a Python exception you can catch. JNI `FindClass`
 returns null and the process aborts. On a debuggable build the log shows:
 

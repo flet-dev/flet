@@ -64,6 +64,50 @@ In a running Flet app, the equivalent of this environment variable is
 [`StoragePaths.get_console_log_filename()`][flet.StoragePaths.get_console_log_filename].
 :::
 
+### `FLET_APP_ID`
+
+The identity that the Linux desktop uses to group and label the app's window: the X11
+`WM_CLASS` and the Wayland `app_id`. Without it every packed app inherits the
+shared client binary's name and appears as `flet`.
+
+Set it to the same string as the `StartupWMClass` key of the app's desktop
+entry so the desktop can match the window to the entry and take the app's name
+and icon from it — see
+[Linux taskbar identity](../publish/using-pyinstaller.md#linux-taskbar-identity).
+
+Linux desktop apps only; set automatically by [`flet pack`](../cli/flet-pack.md)
+to [`--bundle-id`](../cli/flet-pack.md#--bundle-id) when given, and otherwise to
+the executable's name.
+
+### `FLET_APP_RELAUNCH_COMMAND`
+
+Command Windows uses to relaunch the app from a pinned taskbar icon
+([System.AppUserModel.RelaunchCommand](https://learn.microsoft.com/en-us/windows/win32/properties/props-system-appusermodel-relaunchcommand)),
+stamped on the desktop client window. Defaults to the quoted path from
+[`FLET_APP_USER_MODEL_ID`](#flet_app_user_model_id) when that is the path of an existing file.
+
+Windows desktop apps only; set automatically by [`flet pack`](../cli/flet-pack.md) —
+see [`FLET_APP_USER_MODEL_ID`](#flet_app_user_model_id).
+
+### `FLET_APP_RELAUNCH_DISPLAY_NAME`
+
+Display name Windows shows for the app in the taskbar context menu and for pins
+([System.AppUserModel.RelaunchDisplayNameResource](https://learn.microsoft.com/en-us/windows/win32/properties/props-system-appusermodel-relaunchdisplaynameresource)).
+Defaults to the executable name from [`FLET_APP_USER_MODEL_ID`](#flet_app_user_model_id).
+
+Windows desktop apps only; set automatically by [`flet pack`](../cli/flet-pack.md) —
+see [`FLET_APP_USER_MODEL_ID`](#flet_app_user_model_id).
+
+### `FLET_APP_RELAUNCH_ICON`
+
+Icon resource Windows uses for the taskbar button and pins
+([System.AppUserModel.RelaunchIconResource](https://learn.microsoft.com/en-us/windows/win32/properties/props-system-appusermodel-relaunchiconresource)),
+e.g. `C:\path\to\app.exe,0`. Defaults to the first icon of the executable from
+[`FLET_APP_USER_MODEL_ID`](#flet_app_user_model_id).
+
+Windows desktop apps only; set automatically by [`flet pack`](../cli/flet-pack.md) —
+see [`FLET_APP_USER_MODEL_ID`](#flet_app_user_model_id).
+
 ### `FLET_APP_STORAGE_CACHE`
 
 A directory for **regenerable** cached data. The OS may purge it under storage pressure (and the
@@ -113,8 +157,17 @@ In a running Flet app, the equivalent of this environment variable is
 Windows [AppUserModelID](https://learn.microsoft.com/en-us/windows/win32/shell/appids)
 used by the desktop client process for taskbar grouping and pinning.
 
+Windows desktop apps only — read by the desktop client launcher (`flet-desktop`);
+it has no effect on web or mobile apps.
+
 For apps packaged with [`flet pack`](../cli/flet-pack.md), this value is set automatically
-so taskbar pins point to the packaged app executable instead of the cached Flet client executable.
+to the packaged executable's path, so the taskbar associates the client window with
+the packaged app instead of the cached Flet client executable. It is also stamped on
+the client window together with the [`FLET_APP_RELAUNCH_*`](#flet_app_relaunch_command)
+properties, which make the taskbar name, icon and pins resolve to the packaged app.
+
+When packaging by other means (for example Nuitka), set this variable yourself —
+before the app starts or at the very top of your `main.py` — to get the same behavior.
 
 ### `FLET_ASSETS_DIR`
 
