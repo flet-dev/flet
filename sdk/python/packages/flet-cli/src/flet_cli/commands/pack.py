@@ -1,4 +1,6 @@
 import argparse
+import gzip
+import hashlib
 import os
 import shutil
 import sys
@@ -165,21 +167,58 @@ class Command(BaseCommand):
             archive_name: Target archive filename. Uses zip for `.zip`
                 extensions and gzipped tar for everything else.
         """
+        from flet_cli.__pyinstaller.utils import normalize_tar_entry
+
         flet_dir = os.path.join(temp_bin_dir, "flet")
         if not os.path.isdir(flet_dir):
             return
         archive_path = os.path.join(temp_bin_dir, archive_name)
+        # Fixed timestamps and sorted entries make the archive deterministic
+        # for identical inputs, so the runtime cache fingerprint (and thus the
+        # client cache directory) only changes when content actually changes.
         if archive_name.endswith(".zip"):  # windows
             with zipfile.ZipFile(archive_path, "w", zipfile.ZIP_DEFLATED) as zf:
-                for root, _dirs, files in os.walk(flet_dir):
-                    for f in files:
+                for root, dirs, files in os.walk(flet_dir):
+                    dirs.sort()
+                    for f in sorted(files):
                         full = os.path.join(root, f)
                         arcname = os.path.relpath(full, temp_bin_dir)
-                        zf.write(full, arcname)
+                        zi = zipfile.ZipInfo(
+                            arcname.replace(os.sep, "/"),
+                            date_time=(1980, 1, 1, 0, 0, 0),
+                        )
+                        zi.compress_type = zipfile.ZIP_DEFLATED
+                        zi.external_attr = (os.stat(full).st_mode & 0xFFFF) << 16
+                        with open(full, "rb") as src, zf.open(zi, "w") as dest:
+                            shutil.copyfileobj(src, dest)
         else:
-            with tarfile.open(archive_path, "w:gz") as tar:
-                tar.add(flet_dir, arcname="flet")
+            with (
+                open(archive_path, "wb") as raw,
+                gzip.GzipFile(fileobj=raw, mode="wb", mtime=0) as gz,
+                tarfile.open(fileobj=gz, mode="w") as tar,
+            ):
+                tar.add(flet_dir, arcname="flet", filter=normalize_tar_entry)
         shutil.rmtree(flet_dir)
+        self.write_archive_fingerprint(archive_path)
+
+    def write_archive_fingerprint(self, archive_path: str) -> None:
+        """Write a `<archive>.sha256` sidecar holding `<hash> <size>`.
+
+        `flet_desktop.ensure_client_cached()` uses it at runtime to key the
+        client cache directory by content, so this patched client doesn't
+        collide with the vanilla client or other apps' patched clients. The
+        size lets the runtime detect a stale sidecar next to a replaced
+        archive and re-hash instead of trusting it.
+
+        Args:
+            archive_path: Path of the client archive to fingerprint.
+        """
+        h = hashlib.sha256()
+        with open(archive_path, "rb") as f:
+            while chunk := f.read(1024 * 1024):
+                h.update(chunk)
+        with open(archive_path + ".sha256", "w") as f:
+            f.write(f"{h.hexdigest()} {os.path.getsize(archive_path)}")
 
     def handle(self, options: argparse.Namespace) -> None:
         """
@@ -379,12 +418,13 @@ class Command(BaseCommand):
                     # Compress the patched .app bundle back into flet-macos.tar.gz so
                     # ensure_client_cached() finds it at runtime.
                     assemble_app_bundle(app_path, tar_path)
+                    self.write_archive_fingerprint(tar_path)
 
-                    # Remove everything except the tar.gz so PyInstaller doesn't try
-                    # to process loose framework binaries.
+                    # Remove everything except the tar.gz and its fingerprint so
+                    # PyInstaller doesn't try to process loose framework binaries.
                     for entry in os.listdir(hook_config.temp_bin_dir):
                         entry_path = os.path.join(hook_config.temp_bin_dir, entry)
-                        if entry_path == tar_path:
+                        if entry_path in (tar_path, tar_path + ".sha256"):
                             continue
                         if os.path.isdir(entry_path):
                             shutil.rmtree(entry_path, ignore_errors=True)
