@@ -20,6 +20,25 @@
   <link rel="manifest" href="manifest.json">
 
   <script>
+    // Reload when WebKit restores the page from the back/forward cache instead
+    // of resuming it. WebKit restores a Flutter app with its frame scheduling
+    // broken: input and script keep running, but scheduled frames never
+    // render, so the app silently freezes at its last painted state.
+    //
+    // In a packaged (Pyodide) app, Python state lives in the page and is lost
+    // on reload - but WebKit's alternative is an app frozen at its last
+    // painted frame, so a fresh start is still strictly better. Gated to
+    // WebKit (every browser on iOS, Safari on macOS) because other engines
+    // restore correctly and get to keep their state.
+    window.addEventListener('pageshow', (event) => {
+      if (event.persisted &&
+        navigator.vendor && navigator.vendor.startsWith('Apple')) {
+        window.location.reload();
+      }
+    });
+  </script>
+
+  <script>
     var flet = {
       pyodide: true,
       multiView: false,

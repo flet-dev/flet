@@ -39,6 +39,7 @@ abstract class FletBackendChannel {
       {required String address,
       required Map<String, dynamic> args,
       required bool forcePyodide,
+      bool embedded = false,
       required FletBackendChannelOnDisconnectCallback onDisconnect,
       required FletBackendChannelOnPacketCallback onPacket}) {
     if (isPyodideMode() || forcePyodide) {
@@ -52,7 +53,10 @@ abstract class FletBackendChannel {
         address.startsWith("https://")) {
       // WebSocket
       return FletWebSocketBackendChannel(
-          address: address, onDisconnect: onDisconnect, onPacket: onPacket);
+          address: address,
+          embedded: embedded,
+          onDisconnect: onDisconnect,
+          onPacket: onPacket);
     } else if (address == "mock") {
       // Mock
       return FletMockBackendChannel(
