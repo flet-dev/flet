@@ -28,12 +28,44 @@ mimetypes.add_type("text/javascript", ".mjs")
 mimetypes.add_type("application/wasm", ".wasm")
 
 
+def resolve_assets_dir(assets_dir: Optional[str]) -> Optional[str]:
+    """
+    Resolve an app's assets directory to an existing absolute path.
+
+    A relative path is resolved against the current working directory, which
+    matches `ft.run(export_asgi_app=True)` - the other way a Flet app is served
+    from a server process started externally (e.g. by `uvicorn`).
+
+    Args:
+        assets_dir: Path to the app's assets directory, absolute or relative.
+
+    Returns:
+        The resolved absolute path, or `None` if `assets_dir` was not set or
+            does not exist.
+    """
+
+    if not assets_dir:
+        return None
+
+    path = Path(assets_dir)
+    if not path.is_absolute():
+        path = Path.cwd().joinpath(path)
+    resolved = str(path.resolve())
+
+    if not os.path.exists(resolved):
+        logger.warning(f"assets_dir does not exist: {resolved}")
+        return None
+
+    return resolved
+
+
 class FletStaticFiles(StaticFiles):
     """
     Serve Flet app static files.
 
     Args:
-        assets_dir: An absolute path to app's assets directory.
+        assets_dir: Path to app's assets directory. A relative path is resolved
+            against the current working directory.
         app_name: PWA application name.
         app_short_name: PWA application short name.
         app_description: PWA application description.
@@ -151,13 +183,7 @@ class FletStaticFiles(StaticFiles):
             raise RuntimeError(f"Web root path not found: {web_dir}")
 
         # user-defined assets
-        if self.__assets_dir:
-            if not Path(self.__assets_dir).is_absolute():
-                logger.warning("assets_dir must be absolute path.")
-                self.__assets_dir = None
-            elif not os.path.exists(self.__assets_dir):
-                logger.info(f"assets_dir does not exist: {self.__assets_dir}")
-                self.__assets_dir = None
+        self.__assets_dir = resolve_assets_dir(self.__assets_dir)
 
         logger.info(f"Assets dir: {self.__assets_dir}")
 

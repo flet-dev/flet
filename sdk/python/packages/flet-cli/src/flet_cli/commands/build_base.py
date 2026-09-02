@@ -2850,14 +2850,32 @@ class BaseBuildCommand(BaseFlutterCommand):
             capture_output=self.verbose < 1,
         )
 
+        # `flutter build ipa` exits 0 even when Xcode's export step fails, so
+        # a failed export is detected from the artifacts: signing was asked
+        # for, therefore an .ipa must exist. The message check below cannot
+        # see it — output is streamed, not captured, whenever -v is used.
+        assert self.flutter_dir
+        ipa_export_failed = self.target_platform == "ipa" and bool(
+            (self.template_data or {}).get("ios_provisioning_profile")
+            and not any(self.flutter_dir.glob("build/ios/ipa/*.ipa"))
+        )
+
         if (
             build_result.returncode != 0
+            or ipa_export_failed
             or "Encountered error while creating the IPA" in str(build_result.stderr)
         ):
             if isinstance(build_result.stdout, str):
                 console.log(build_result.stdout, style=verbose1_style)
             if isinstance(build_result.stderr, str):
                 console.log(build_result.stderr, style=error_style)
+            if ipa_export_failed and build_result.returncode == 0:
+                self.cleanup(
+                    1,
+                    "Xcode could not export an .ipa from the archive. Its error "
+                    "is in the build output above — re-run with -v if the output "
+                    "was suppressed.",
+                )
             self.cleanup(build_result.returncode if build_result.returncode else 1)
 
     def resolve_output_path(self, build_output: str) -> str:

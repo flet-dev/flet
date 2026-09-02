@@ -25,4 +25,13 @@ void main() {
     expect(getWebPageName(Uri.parse('http://localhost:8550/')), "");
     expect(getWebPageName(Uri.parse('http://localhost:8550/#/')), "");
   });
+
+  test("getWebsocketEndpointPathFromUriPath derives path from URL path", () {
+    expect(getWebsocketEndpointPathFromUriPath(""), "ws");
+    expect(getWebsocketEndpointPathFromUriPath("/"), "ws");
+    expect(getWebsocketEndpointPathFromUriPath("/sub1"), "sub1/ws");
+    expect(getWebsocketEndpointPathFromUriPath("/sub1/"), "sub1/ws");
+    expect(getWebsocketEndpointPathFromUriPath("sub1"), "sub1/ws");
+    expect(getWebsocketEndpointPathFromUriPath("/a/b/"), "a/b/ws");
+  });
 }
