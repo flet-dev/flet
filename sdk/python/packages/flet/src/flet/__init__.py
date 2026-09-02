@@ -115,13 +115,7 @@ if TYPE_CHECKING:
         ShapeBorder,
         StadiumBorder,
     )
-    from flet.controls.client_action import (
-        ClientAction,
-        CopyToClipboard,
-        OpenUrl,
-        PickFiles,
-        ShareText,
-    )
+    from flet.controls.client_action import ClientAction
     from flet.controls.colors import Colors
     from flet.controls.context import (
         Context,
@@ -563,7 +557,7 @@ if TYPE_CHECKING:
         BatteryStateChangeEvent,
     )
     from flet.controls.services.browser_context_menu import BrowserContextMenu
-    from flet.controls.services.clipboard import Clipboard
+    from flet.controls.services.clipboard import Clipboard, CopyToClipboard
     from flet.controls.services.connectivity import (
         Connectivity,
         ConnectivityChangeEvent,
@@ -576,6 +570,7 @@ if TYPE_CHECKING:
         FilePickerResultEvent,
         FilePickerUploadEvent,
         FilePickerUploadFile,
+        PickFiles,
     )
     from flet.controls.services.gyroscope import (
         Gyroscope,
@@ -603,12 +598,14 @@ if TYPE_CHECKING:
         ShareFile,
         ShareResult,
         ShareResultStatus,
+        ShareText,
     )
     from flet.controls.services.shared_preferences import SharedPreferences
     from flet.controls.services.storage_paths import StoragePaths
     from flet.controls.services.url_launcher import (
         BrowserConfiguration,
         LaunchMode,
+        OpenUrl,
         UrlLauncher,
         WebViewConfiguration,
     )
@@ -1376,7 +1373,7 @@ _LAZY = {
     "ControlEventHandler": "flet.controls.control_event",
     "ControlState": "flet.controls.control_state",
     "ControlStateValue": "flet.controls.control_state",
-    "CopyToClipboard": "flet.controls.client_action",
+    "CopyToClipboard": "flet.controls.services.clipboard",
     "CrossAxisAlignment": "flet.controls.types",
     "CupertinoActionSheet": "flet.controls.cupertino.cupertino_action_sheet",
     "CupertinoActionSheetAction": "flet.controls.cupertino.cupertino_action_sheet_action",  # noqa: E501
@@ -1574,7 +1571,7 @@ _LAZY = {
     "OffsetValue": "flet.controls.transform",
     "OnReorderEvent": "flet.controls.material.reorderable_list_view",
     "OnScrollEvent": "flet.controls.scrollable_control",
-    "OpenUrl": "flet.controls.client_action",
+    "OpenUrl": "flet.controls.services.url_launcher",
     "Orientation": "flet.controls.types",
     "OutlinedBorder": "flet.controls.buttons",
     "OutlinedButton": "flet.controls.material.outlined_button",
@@ -1597,7 +1594,7 @@ _LAZY = {
     "PaintRadialGradient": "flet.controls.painting",
     "PaintSweepGradient": "flet.controls.painting",
     "PaintingStyle": "flet.controls.painting",
-    "PickFiles": "flet.controls.client_action",
+    "PickFiles": "flet.controls.services.file_picker",
     "Placeholder": "flet.controls.core.placeholder",
     "PlatformBrightnessChangeEvent": "flet.controls.page",
     "PointerDeviceType": "flet.controls.types",
@@ -1671,7 +1668,7 @@ _LAZY = {
     "ShareFile": "flet.controls.services.share",
     "ShareResult": "flet.controls.services.share",
     "ShareResultStatus": "flet.controls.services.share",
-    "ShareText": "flet.controls.client_action",
+    "ShareText": "flet.controls.services.share",
     "SharedPreferences": "flet.controls.services.shared_preferences",
     "Shimmer": "flet.controls.core.shimmer",
     "ShimmerDirection": "flet.controls.core.shimmer",

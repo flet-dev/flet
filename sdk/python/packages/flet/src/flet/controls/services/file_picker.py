@@ -3,6 +3,7 @@ from enum import Enum
 from typing import Any, Optional
 
 from flet.controls.base_control import control
+from flet.controls.client_action import ClientAction, action_field
 from flet.controls.control_event import Event, EventHandler
 from flet.controls.exceptions import FletUnsupportedPlatformException
 from flet.controls.services.service import Service
@@ -14,6 +15,7 @@ __all__ = [
     "FilePickerResultEvent",
     "FilePickerUploadEvent",
     "FilePickerUploadFile",
+    "PickFiles",
 ]
 
 
@@ -394,3 +396,90 @@ class FilePicker(Service):
         if isinstance(value, list):
             file["bytes"] = bytes(value)
         return file
+
+
+@dataclass
+class PickFiles(ClientAction):
+    """
+    Opens a file picker dialog when the control is activated.
+
+    Equivalent to :meth:`flet.FilePicker.pick_files`, but performed by the
+    client inside the user's gesture, which is the only time a browser opens a
+    file picker. This is what makes file picking work in a web app on iOS.
+
+    Unlike `pick_files()`, the selection is not returned to the caller - it
+    arrives at :attr:`flet.FilePicker.on_result`. The files stay associated with
+    `file_picker`, so they can be passed straight to
+    :meth:`flet.FilePicker.upload`.
+
+    Example:
+        ```python
+        picker = ft.FilePicker(on_result=handle_result)
+        page.services.append(picker)
+
+        ft.Button("Upload", action=ft.PickFiles(picker, allow_multiple=True))
+        ```
+    """
+
+    file_picker: FilePicker = action_field()
+    """
+    The :class:`~flet.FilePicker` that opens the dialog and reports the result
+    through its :attr:`~flet.FilePicker.on_result` event.
+    """
+
+    dialog_title: Optional[str] = action_field(None)
+    """
+    The title of the dialog window.
+    """
+
+    initial_directory: Optional[str] = action_field(None)
+    """
+    The initial directory where the dialog should open.
+    """
+
+    file_type: Optional[FilePickerFileType] = action_field(None)
+    """
+    The file types allowed to be selected.
+    """
+
+    allowed_extensions: Optional[list[str]] = action_field(None)
+    """
+    The allowed file extensions. Has effect only if :attr:`file_type` is
+    :attr:`flet.FilePickerFileType.CUSTOM`.
+    """
+
+    allow_multiple: bool = action_field(False)
+    """
+    Allow the selection of multiple files at once.
+    """
+
+    with_data: bool = action_field(False)
+    """
+    Read selected file contents into :attr:`flet.FilePickerFile.bytes`.
+    """
+
+    compression_quality: int = action_field(0)
+    """
+    Image compression quality from `0` to `100`. `0` disables compression.
+    """
+
+    cancel_upload_on_window_blur: bool = action_field(True)
+    """
+    Web-only. Whether to treat browser window blur as a cancelled selection.
+    """
+
+    def __post_init__(self) -> None:
+        self._bind(
+            self.file_picker,
+            "pick_files",
+            {
+                "dialog_title": self.dialog_title,
+                "initial_directory": self.initial_directory,
+                "file_type": self.file_type or FilePickerFileType.ANY,
+                "allowed_extensions": self.allowed_extensions,
+                "allow_multiple": self.allow_multiple,
+                "with_data": self.with_data,
+                "compression_quality": self.compression_quality,
+                "cancel_upload_on_window_blur": self.cancel_upload_on_window_blur,
+            },
+        )

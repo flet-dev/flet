@@ -4,6 +4,7 @@ from enum import Enum
 from typing import Optional
 
 from flet.controls.base_control import control
+from flet.controls.client_action import ClientAction, action_field, shared_service
 from flet.controls.services.service import Service
 from flet.controls.transform import Offset
 from flet.utils.from_dict import from_dict
@@ -14,6 +15,7 @@ __all__ = [
     "ShareFile",
     "ShareResult",
     "ShareResultStatus",
+    "ShareText",
 ]
 
 
@@ -323,3 +325,48 @@ def _share_args(
         ]
 
     return args
+
+
+@dataclass
+class ShareText(ClientAction):
+    """
+    Opens the platform share sheet with text when the control is activated.
+
+    Equivalent to :meth:`flet.Share.share_text`, but performed by the client
+    inside the user's gesture, which is the only time a browser permits
+    `navigator.share`.
+
+    The share result is not reported back - use
+    :meth:`flet.Share.share_text` if you need it, keeping in mind that it does
+    not work on the web on iOS.
+
+    Example:
+        ```python
+        ft.Button(
+            "Share",
+            action=ft.ShareText("Check out Flet", subject="Flet"),
+        )
+        ```
+    """
+
+    text: str = action_field()
+    """
+    The text to share.
+    """
+
+    title: Optional[str] = action_field(None)
+    """
+    Title shown in the share sheet.
+    """
+
+    subject: Optional[str] = action_field(None)
+    """
+    Subject used by targets that support one, such as email.
+    """
+
+    def __post_init__(self) -> None:
+        self._bind(
+            shared_service(Share),
+            "share_text",
+            _share_args(text=self.text, title=self.title, subject=self.subject),
+        )
