@@ -38,6 +38,7 @@
 * Remove `Page.launch_url()`, `Page.can_launch_url()`, and `Page.close_in_app_web_view()` (deprecated in `0.80.0`). Use `UrlLauncher().launch_url()` / `.can_launch_url()` / `.close_in_app_web_view()` instead ([#6693](https://github.com/flet-dev/flet/pull/6693)) by @ndonkoHenri.
 * Remove the legacy `[tool.flet.app.boot_screen]` / `[tool.flet.app.startup_screen]` build-config fallback. Use `[tool.flet.boot_screen]` with a named screen instead ([#6693](https://github.com/flet-dev/flet/pull/6693)) by @ndonkoHenri.
 * Remove the Dart empty-string (`""`) widget-state key back-compat mapping. Use `"default"` (or `ControlState.DEFAULT`) instead ([#6693](https://github.com/flet-dev/flet/pull/6693)) by @ndonkoHenri.
+* Remove `flet.utils.cleanup_path()`. It existed only to strip rival `flutter`/`dart` directories out of the `PATH` given to Flutter subprocesses, which is the cause of [#5118](https://github.com/flet-dev/flet/issues/5118) and no longer done; it has no remaining callers by @ndonkoHenri.
 
 ### Deprecations
 

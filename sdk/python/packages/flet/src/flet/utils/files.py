@@ -123,33 +123,6 @@ def which(program, exclude_exe=None):
     return None
 
 
-def cleanup_path(path: str, executable: str):
-    """
-    Removes directories containing a given executable from a PATH-like string.
-
-    The check also removes directories containing Windows launcher variants:
-    `<executable>.bat` and `<executable>.cmd`.
-
-    Args:
-        path: PATH-like string separated by `os.pathsep`.
-        executable: Executable name to filter out.
-
-    Returns:
-        Filtered PATH-like string.
-    """
-    cleaned_dirs = []
-    for path_dir in path.split(os.pathsep):
-        found = False
-        for file_name in [executable, f"{executable}.bat", f"{executable}.cmd"]:
-            if os.path.isfile(os.path.join(path_dir, file_name)):
-                found = True
-                break
-        if not found:
-            cleaned_dirs.append(path_dir)
-
-    return os.pathsep.join(cleaned_dirs)
-
-
 def get_current_script_dir():
     """
     Returns the absolute directory of the current script entry point.

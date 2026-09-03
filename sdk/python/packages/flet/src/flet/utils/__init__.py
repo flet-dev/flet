@@ -3,7 +3,6 @@ from flet.utils.classproperty import classproperty
 from flet.utils.deprecated import deprecated, deprecated_class, deprecated_warning
 from flet.utils.deprecated_enum import DeprecatedEnumMeta
 from flet.utils.files import (
-    cleanup_path,
     copy_tree,
     get_current_script_dir,
     is_within_directory,
@@ -42,7 +41,6 @@ __all__ = [
     "Vector",
     "calculate_file_hash",
     "classproperty",
-    "cleanup_path",
     "copy_tree",
     "deprecated",
     "deprecated_class",
