@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <svg
-   viewBox="0 0 396.46747 509.99994"
+   viewBox="0 0 1921.5813 510"
    role="img"
    aria-label="Flet"
    version="1.1"
    id="svg4"
-   width="396.46747"
-   height="509.99994"
+   width="1921.5813"
+   height="510"
    xml:space="preserve"
    xmlns="http://www.w3.org/2000/svg"
    xmlns:svg="http://www.w3.org/2000/svg"
@@ -17,6 +17,20 @@
      id="title1">Flet</title><metadata
      id="metadata8"><rdf:RDF><cc:Work
          rdf:about=""><dc:title>Flet</dc:title></cc:Work></rdf:RDF></metadata><g
+     id="g6"
+     transform="translate(226.46747,-460.00002)"><path
+       d="m 1380,574.80769 h 310.0001 v 60 h -120 v 220 h -70 v -220 H 1380 Z"
+       id="path4-3"
+       style="fill:#f2f2f2;fill-opacity:1;stroke:#f2f2f2;stroke-width:10.2275;stroke-linecap:round;stroke-linejoin:round;stroke-dasharray:none;stroke-opacity:1" /><path
+       d="m 1040,664.80769 c 0,-50 40,-90 90,-90 h 220 v 60 h -200 c -40,0 -50,20 -50,50 h 250 v 60 h -250 c 0,30 10,50 50,50 h 200 v 60 h -220 c -50,0 -90,-40 -90,-90 z"
+       id="path3-7"
+       style="fill:#f2f2f2;fill-opacity:1;stroke:#f2f2f2;stroke-width:10.2275;stroke-linecap:round;stroke-linejoin:round;stroke-dasharray:none;stroke-opacity:1" /><path
+       d="m 730,574.80769 h 60 v 170 c 0,30 10,50 50,50 50,0 100,0 170,0 0,20 20,50 35,60 H 820 c -50,0 -90,-40 -90,-90 z"
+       id="path2-9"
+       style="fill:#f2f2f2;fill-opacity:1;stroke:#f2f2f2;stroke-width:10.2275;stroke-linecap:round;stroke-linejoin:round;stroke-dasharray:none;stroke-opacity:1" /><path
+       d="M 480,574.80769 H 700 V 633.2416 L 499.73426,632.73558 C 460,632.63517 450,654.80768 450,684.80768 h 250 v 60 H 450 V 855.19231 L 390,855 V 664.80769 c 0,-50 40,-90 90,-90 z"
+       id="path1-0-0"
+       style="fill:#f2f2f2;fill-opacity:1;stroke:#f2f2f2;stroke-width:10.2275;stroke-linecap:round;stroke-linejoin:round;stroke-dasharray:none;stroke-opacity:1" /></g><g
      id="g4"
      transform="matrix(1.7561529,0,0,1.7561529,-123.64424,-1000.5225)"><g
        id="g3-7-5-9"
