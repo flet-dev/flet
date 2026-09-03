@@ -7,6 +7,11 @@ from unittest.mock import patch
 from flet_cli.commands.flutter_base import BaseFlutterCommand
 from flet_cli.commands.test import _flutter_path_env
 
+# Built with the native separator so `Path(...).parent` round-trips on Windows
+# too - `flet test` derives the bin dir from the executable path.
+FLUTTER_BIN = os.path.join(os.sep + "opt", "flutter", "3.32.0", "bin")
+FLUTTER_EXE = os.path.join(FLUTTER_BIN, "flutter")
+
 
 def _install_flutter(monkeypatch, path_env, flutter_dir="/opt/flutter/3.32.0"):
     """
@@ -40,9 +45,7 @@ def _install_flutter(monkeypatch, path_env, flutter_dir="/opt/flutter/3.32.0"):
     return cmd.env["PATH"]
 
 
-def _test_command_path(
-    monkeypatch, path_env, flutter_exe="/opt/flutter/3.32.0/bin/flutter"
-):
+def _test_command_path(monkeypatch, path_env, flutter_exe=FLUTTER_EXE):
     """
     Run `flet test`'s `_flutter_path_env()` against a given inherited `PATH`.
 
@@ -141,7 +144,7 @@ class TestFletTestPathEnv:
     def test_managed_sdk_is_first(self, monkeypatch):
         """The provisioned SDK outranks any other Flutter on `PATH`."""
         result = _test_command_path(monkeypatch, "/usr/bin")
-        assert result.split(os.pathsep)[0] == "/opt/flutter/3.32.0/bin"
+        assert result.split(os.pathsep)[0] == FLUTTER_BIN
 
     def test_path_is_never_reduced(self, monkeypatch):
         """Every inherited entry survives, in its original order."""
@@ -152,7 +155,7 @@ class TestFletTestPathEnv:
     def test_empty_path_does_not_add_the_current_directory(self, monkeypatch):
         """A trailing separator means "current directory" - never emit one."""
         result = _test_command_path(monkeypatch, "")
-        assert result == "/opt/flutter/3.32.0/bin"
+        assert result == FLUTTER_BIN
         assert "" not in result.split(os.pathsep)
 
     def test_path_untouched_when_flutter_was_not_resolved(self, monkeypatch):
