@@ -50,7 +50,7 @@ full matrix and resolution rules. In short:
 
 | Python | Pyodide   |
 | ------ | --------- |
-| 3.14   | 314.0.0   |
+| 3.14   | 314.0.6   |
 | 3.13   | 0.29.4    |
 | 3.12   | 0.27.7    |
 
