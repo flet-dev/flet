@@ -425,6 +425,87 @@ def test_use_dialog_rerender_preserves_dialogs_prev_lists_snapshot():
     assert prev_snapshot[0] is swapped
 
 
+def test_use_dialog_rerender_before_dialogs_update_is_flushed():
+    """Regression: a component can render twice within the same scheduler
+    batch — the first render appends the dialog and queues a `_dialogs`
+    update, the second (triggered by a parent's diff calling
+    `before_update`) re-enters the hook before that update is flushed.
+
+    The snapshot in `_dialogs.__prev_lists['controls']` then still reflects
+    the pre-append list, so it is *shorter* than the live list. Indexing it
+    with the live index raised `IndexError: list assignment index out of
+    range`. And since the client has not seen the appended dialog yet, a
+    frozen patch against it would be dropped client-side as a patch for an
+    unknown control — the queued list update must carry the fresh instance
+    instead.
+    """
+    page, session = create_page()
+
+    counter = 0
+
+    def body():
+        ft.use_dialog(ft.AlertDialog(title=ft.Text(f"dialog #{counter}")))
+
+    component = Component(fn=body, args=(), kwargs={})
+
+    # `_dialogs` was serialized while empty (initial page render).
+    object.__setattr__(page._dialogs, "__prev_lists", {"controls": []})
+
+    render_component(component, page)
+    appended = page._dialogs.controls[0]
+    assert session.scheduled_updates == [page._dialogs]
+    session.patch_calls.clear()
+    session.scheduled_updates.clear()
+
+    # Second render in the same batch — the `_dialogs` update is still queued.
+    counter += 1
+    render_component(component, page)
+
+    swapped = page._dialogs.controls[0]
+    assert swapped is not appended
+    assert len(page._dialogs.controls) == 1
+    assert swapped.open is True
+    # No frozen patch: `appended._i` is unknown to the client.
+    assert session.patch_calls == []
+    # The list update is (re-)queued so the fresh instance gets added.
+    assert session.scheduled_updates == [page._dialogs]
+    # Snapshot untouched — the pending diff will refresh it.
+    assert getattr(page._dialogs, "__prev_lists")["controls"] == []
+
+
+def test_use_dialog_rerender_realigns_snapshot_by_identity():
+    """Regression: the snapshot index of a dialog is not its live index —
+    entries appended or removed since the last flush shift one relative to
+    the other. The frozen-diff swap must locate `prev` in the snapshot by
+    identity rather than reusing the live index.
+    """
+    page, _ = create_page()
+
+    counter = 0
+
+    def body():
+        ft.use_dialog(ft.AlertDialog(title=ft.Text(f"dialog #{counter}")))
+
+    component = Component(fn=body, args=(), kwargs={})
+    render_component(component, page)
+    mounted = page._dialogs.controls[0]
+
+    # The client's view has an extra leading entry (e.g. a `page.show_dialog`
+    # SnackBar) that was since removed from the live list, so the live index
+    # of `mounted` (0) and its snapshot index (1) differ.
+    stale = ft.SnackBar(content=ft.Text("toast"))
+    object.__setattr__(page._dialogs, "__prev_lists", {"controls": [stale, mounted]})
+
+    counter += 1
+    render_component(component, page)
+
+    swapped = page._dialogs.controls[0]
+    assert swapped is not mounted
+    snapshot = getattr(page._dialogs, "__prev_lists")["controls"]
+    assert snapshot == [stale, swapped]
+    assert snapshot[1] is swapped
+
+
 @pytest.mark.asyncio
 async def test_use_dialog_dispatch_event_survives_reopen_after_sibling_rerender():
     @ft.observable
