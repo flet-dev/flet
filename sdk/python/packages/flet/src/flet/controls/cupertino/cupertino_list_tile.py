@@ -1,5 +1,6 @@
 from typing import Annotated, Optional, Union
 
+from flet.controls.action_control import ActionControl
 from flet.controls.base_control import control
 from flet.controls.control_event import ControlEventHandler
 from flet.controls.layout_control import LayoutControl
@@ -17,7 +18,7 @@ __all__ = ["CupertinoListTile"]
 
 
 @control("CupertinoListTile")
-class CupertinoListTile(LayoutControl):
+class CupertinoListTile(LayoutControl, ActionControl):
     """
     An iOS-style list tile.
 

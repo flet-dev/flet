@@ -1,0 +1,26 @@
+[project]
+name = "share-text-action"
+version = "1.0.0"
+description = "Opens the platform share sheet from a button using a client action."
+requires-python = ">=3.10"
+keywords = ["share", "clientaction", "basic", "services"]
+authors = [{ name = "Flet team", email = "hello@flet.dev" }]
+dependencies = ["flet"]
+
+[dependency-groups]
+dev = ["flet-cli", "flet-desktop", "flet-web"]
+
+[tool.flet.gallery]
+categories = ["Utility/Share"]
+
+[tool.flet.metadata]
+title = "Share text action"
+controls = ["SafeArea", "Column", "Page", "Button", "Text", "ShareText"]
+layout_pattern = "inline-actions"
+complexity = "basic"
+features = ["client actions", "share sheet"]
+
+[tool.flet]
+org = "dev.flet"
+company = "Flet"
+copyright = "Copyright (C) 2023-2026 by Flet"

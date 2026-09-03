@@ -1,6 +1,7 @@
 from enum import Enum
 from typing import Optional, Union
 
+from flet.controls.action_control import ActionControl
 from flet.controls.adaptive_control import AdaptiveControl
 from flet.controls.base_control import control
 from flet.controls.buttons import OutlinedBorder
@@ -90,7 +91,7 @@ class ListTileStyle(Enum):
 
 
 @control("ListTile")
-class ListTile(LayoutControl, AdaptiveControl):
+class ListTile(LayoutControl, AdaptiveControl, ActionControl):
     """
     A single fixed-height row that typically contains some text as well as a leading \
     or trailing icon.

@@ -13,9 +13,9 @@ from flet.controls.object_patch import ObjectPatch
 from flet.controls.page import Page
 from flet.messaging.connection import Connection
 from flet.messaging.protocol import (
-    ClientAction,
-    ClientMessage,
     InvokeMethodRequestBody,
+    Message,
+    MessageAction,
     PatchControlBody,
     SessionCrashedBody,
 )
@@ -46,7 +46,7 @@ class Session:
 
     def __init__(self, conn: Connection):
         self.__conn = conn
-        self.__send_buffer: list[ClientMessage] = []
+        self.__send_buffer: list[Message] = []
         self.__id = random_string(16)
         self.__expires_at = None
         self.__index: weakref.WeakValueDictionary[int, BaseControl] = (
@@ -275,8 +275,8 @@ class Session:
 
         if len(patch) > 1:
             self.__send_message(
-                ClientMessage(
-                    ClientAction.PATCH_CONTROL,
+                Message(
+                    MessageAction.PATCH_CONTROL,
                     PatchControlBody(parent._i if parent else control._i, patch),
                 )
             )
@@ -485,8 +485,8 @@ class Session:
 
         # call method
         self.__send_message(
-            ClientMessage(
-                ClientAction.INVOKE_METHOD,
+            Message(
+                MessageAction.INVOKE_METHOD,
                 InvokeMethodRequestBody(
                     control_id=control_id, call_id=call_id, name=method_name, args=args
                 ),
@@ -588,10 +588,10 @@ class Session:
             message: Error message to report.
         """
         self.__send_message(
-            ClientMessage(ClientAction.SESSION_CRASHED, SessionCrashedBody(message))
+            Message(MessageAction.SESSION_CRASHED, SessionCrashedBody(message))
         )
 
-    def __send_message(self, message: ClientMessage):
+    def __send_message(self, message: Message):
         """
         Sends a message immediately or buffers it until reconnection.
 

@@ -30,3 +30,7 @@ Map<dynamic, dynamic> getViewInitialData(int viewId) {
 
 void openPopupBrowserWindow(
     String url, String windowName, int minWidth, int minHeight) {}
+
+bool isGestureGatedDialogBlocked() {
+  return false;
+}

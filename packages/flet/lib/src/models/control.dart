@@ -481,6 +481,15 @@ class Control extends ChangeNotifier {
     _invokeMethodListeners.remove(listener);
   }
 
+  /// Whether a listener is already registered, i.e. whether [invokeMethod]
+  /// will dispatch synchronously instead of awaiting one.
+  ///
+  /// Callers that must not lose the browser's user activation - see
+  /// `runClientActions` in `utils/client_actions.dart` - check this first,
+  /// because the wait in [invokeMethod] is an async gap that silently discards
+  /// the gesture.
+  bool get hasInvokeMethodListeners => _invokeMethodListeners.isNotEmpty;
+
   Future<dynamic> invokeMethod(
       String name, dynamic args, Duration timeout) async {
     debugPrint("$type($id).$name($args)");

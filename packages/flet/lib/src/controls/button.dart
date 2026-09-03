@@ -4,7 +4,7 @@ import '../extensions/control.dart';
 import '../models/control.dart';
 import '../utils/buttons.dart';
 import '../utils/colors.dart';
-import '../utils/launch_url.dart';
+import '../utils/client_actions.dart';
 import '../utils/misc.dart';
 import '../utils/numbers.dart';
 import '../widgets/error.dart';
@@ -63,7 +63,6 @@ class _ButtonControlState extends State<ButtonControl> with FletStoreMixin {
     bool isTextButton = widget.control.type == "TextButton";
     bool isOutlinedButton = widget.control.type == "OutlinedButton";
 
-    var url = widget.control.getUrl("url");
     var iconColor = widget.control.getColor("icon_color", context);
     var clipBehavior =
         widget.control.getClipBehavior("clip_behavior", Clip.none)!;
@@ -74,9 +73,7 @@ class _ButtonControlState extends State<ButtonControl> with FletStoreMixin {
 
     Function()? onPressed = !widget.control.disabled
         ? () {
-            if (url != null) {
-              openWebBrowser(url);
-            }
+            runControlActions(context, widget.control);
             widget.control.triggerEvent("click");
           }
         : null;

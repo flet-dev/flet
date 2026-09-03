@@ -3,7 +3,7 @@ from asyncio import AbstractEventLoop
 from concurrent.futures import ThreadPoolExecutor
 from typing import Any, Optional
 
-from flet.messaging.protocol import ClientMessage
+from flet.messaging.protocol import Message
 from flet.pubsub.pubsub_hub import PubSubHub
 
 logger = logging.getLogger("flet")
@@ -87,7 +87,7 @@ class Connection:
     def pubsubhub(self, value: PubSubHub):
         self.__pubsubhub = value
 
-    def send_message(self, message: ClientMessage):
+    def send_message(self, message: Message):
         """
         Sends a message to the connected Flet client.
 

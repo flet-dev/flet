@@ -228,12 +228,13 @@ def decode_ext_from_msgpack(code, data):
     return msgpack.ExtType(code, data)
 
 
-class ClientAction(Enum):
+class MessageAction(Enum):
     """
     Wire-level action codes exchanged between Python and Dart clients.
 
-    Integer values must stay in sync with Dart `MessageAction` values because
-    protocol frames are encoded as `[action_code, body]`.
+    Integer values must stay in sync with the Dart enum of the same name
+    (`protocol/message.dart`) because protocol frames are encoded as
+    `[action_code, body]`.
     """
 
     REGISTER_CLIENT = 1
@@ -275,14 +276,15 @@ class ClientAction(Enum):
 
 
 @dataclass
-class ClientMessage:
+class Message:
     """
-    Top-level protocol frame with action and payload.
+    Top-level protocol frame, mirroring the Dart class of the same name
+    (`protocol/message.dart`).
 
-    Messages are serialized as a two-item sequence: `[action_code, body]`.
+    Serialized as a two-item sequence: `[action_code, body]`.
     """
 
-    action: ClientAction
+    action: MessageAction
     """
     Action discriminator for this message.
     """

@@ -27,10 +27,31 @@ In most cases you can use a lambda function for that:
 
 ```python
 ft.Button(
-    content="Pick files,
-    on_click=lambda _: file_picker.pick_files(allow_multiple=True)
+    content="Pick files",
+    on_click=lambda e: file_picker.pick_files(allow_multiple=True)
 )
 ```
+
+:::warning[Picking files in a web app]
+A browser only opens a file picker while it is handling a click or key press.
+Calling `pick_files()` from an `on_click` handler is already too late - the click
+has travelled to your Python code and the instruction has travelled back, and by
+then the permission is gone. Safari refuses silently, while Chrome and Firefox
+allow it, so the same app often works everywhere except on iPhone and iPad.
+
+Attach a [`PickFiles`](../types/pickfiles.md) action to the control instead, so
+the dialog opens inside the original gesture, and handle the selection in
+[`on_result`](filepicker.md#flet.FilePicker.on_result).
+See [Client actions](../cookbook/client-actions.md).
+:::
+
+## Picking files with a client action
+
+The picked files stay associated with the `FilePicker`, so
+[`upload()`](filepicker.md#flet.FilePicker.upload) works exactly as it does
+after `pick_files()`.
+
+<CodeExample path={frontMatter.examples + '/pick_files_action/main.py'} language="python" />
 
 ### Uploading files
 

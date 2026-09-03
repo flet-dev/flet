@@ -1,6 +1,7 @@
 from dataclasses import field
 from typing import Optional, Union
 
+from flet.controls.action_control import ActionControl
 from flet.controls.adaptive_control import AdaptiveControl
 from flet.controls.base_control import control
 from flet.controls.buttons import ButtonStyle
@@ -22,7 +23,7 @@ __all__ = ["Button"]
 
 
 @control("Button")
-class Button(LayoutControl, AdaptiveControl):
+class Button(LayoutControl, AdaptiveControl, ActionControl):
     """
     A material button.
 

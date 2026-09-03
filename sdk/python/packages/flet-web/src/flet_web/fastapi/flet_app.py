@@ -18,10 +18,10 @@ from flet.controls.context import _context_page, context
 from flet.controls.exceptions import FletPageDisconnectedException
 from flet.messaging.connection import Connection
 from flet.messaging.protocol import (
-    ClientAction,
-    ClientMessage,
     ControlEventBody,
     InvokeMethodResponseBody,
+    Message,
+    MessageAction,
     RegisterClientRequestBody,
     RegisterClientResponseBody,
     UpdateControlPropsBody,
@@ -259,7 +259,7 @@ class FletApp(Connection):
     async def __on_message(self, data: Any):
         """
         Handle one decoded client message and dispatch
-        by `ClientAction`.
+        by `MessageAction`.
 
         Args:
             data: Decoded message payload from msgpack transport.
@@ -268,11 +268,11 @@ class FletApp(Connection):
             RuntimeError: If message action is unknown.
         """
 
-        action = ClientAction(data[0])
+        action = MessageAction(data[0])
         body = data[1]
         transport_log.debug(f"_on_message: {action} {body}")
         task = None
-        if action == ClientAction.REGISTER_CLIENT:
+        if action == MessageAction.REGISTER_CLIENT:
             req = RegisterClientRequestBody(**body)
 
             new_session = False
@@ -335,8 +335,8 @@ class FletApp(Connection):
 
             # register response
             self.send_message(
-                ClientMessage(
-                    ClientAction.REGISTER_CLIENT,
+                Message(
+                    MessageAction.REGISTER_CLIENT,
                     RegisterClientResponseBody(
                         session_id=self.__session.id,
                         page_patch=self.__session.get_page_patch()
@@ -379,17 +379,17 @@ class FletApp(Connection):
                         }
                     )
 
-        elif action == ClientAction.CONTROL_EVENT:
+        elif action == MessageAction.CONTROL_EVENT:
             req = ControlEventBody(**body)
             task = asyncio.create_task(
                 self.__session.dispatch_event(req.target, req.name, req.data)
             )
 
-        elif action == ClientAction.UPDATE_CONTROL_PROPS:
+        elif action == MessageAction.UPDATE_CONTROL_PROPS:
             req = UpdateControlPropsBody(**body)
             self.__session.apply_patch(req.id, req.props)
 
-        elif action == ClientAction.INVOKE_METHOD:
+        elif action == MessageAction.INVOKE_METHOD:
             req = InvokeMethodResponseBody(**body)
             self.__session.handle_invoke_method_results(
                 req.control_id, req.call_id, req.result, req.error
@@ -403,7 +403,7 @@ class FletApp(Connection):
             self.__running_tasks.add(task)
             task.add_done_callback(self.__running_tasks.discard)
 
-    def send_message(self, message: ClientMessage):
+    def send_message(self, message: Message):
         """
         Serialize and enqueue a server message for transport to the client.
 

@@ -10,7 +10,7 @@ from flet.controls.base_control import BaseControl
 from flet.controls.context import _context_page
 from flet.controls.control_event import ControlEvent
 from flet.messaging.connection import Connection
-from flet.messaging.protocol import ClientAction, configure_encode_object_for_msgpack
+from flet.messaging.protocol import MessageAction, configure_encode_object_for_msgpack
 from flet.messaging.session import Session
 from flet.pubsub.pubsub_hub import PubSubHub
 
@@ -70,7 +70,7 @@ async def flush_async(turns: int = 5) -> None:
 
 
 def crash_messages(conn: _RecordingConnection):
-    return [m for m in conn.messages if m.action == ClientAction.SESSION_CRASHED]
+    return [m for m in conn.messages if m.action == MessageAction.SESSION_CRASHED]
 
 
 def find_filled_button(session: Session, label: str) -> ft.FilledButton:

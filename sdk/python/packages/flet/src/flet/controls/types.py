@@ -124,7 +124,7 @@ class UrlTarget(Enum):
     Specifies where to open a URL.
     """
 
-    BLANK = "blank"
+    BLANK = "_blank"
     """
     Opens the URL in a new browser tab or window.
     """
