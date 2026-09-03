@@ -2,7 +2,10 @@
 # Flet
 
 <p align="center">
-    <img src="https://raw.githubusercontent.com/flet-dev/flet/main/media/logo/flet-logo.svg" width="50%"/>
+    <picture>
+        <source media="(prefers-color-scheme: dark)" srcset="https://raw.githubusercontent.com/flet-dev/flet/refs/heads/main/media/logo/flet-logo-dark.svg">
+        <img src="https://raw.githubusercontent.com/flet-dev/flet/refs/heads/main/media/logo/flet-logo.svg" width="50%" alt="Flet logo"/>
+    </picture>
 </p>
 
 <p align="center">

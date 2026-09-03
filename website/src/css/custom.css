@@ -41,8 +41,9 @@
 
 
 .navbar__logo {
-  /* width: 42px; */
-  height: 30px;
+  /* Sizes the whole logo lockup (symbol + wordmark), not just the symbol -
+     the navbar has no separate `title` text. */
+  height: 26px;
 }
 
 .flet-hero h1 {
