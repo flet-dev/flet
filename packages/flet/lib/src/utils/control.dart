@@ -5,12 +5,13 @@ import '../models/control.dart';
 
 /// Converts a protocol value containing a Flet control into a Flutter widget.
 ///
-/// Returns `null` when [value] is not a control, or when [visibleOnly] is `true`
-/// and the control is not visible.
+/// Returns `null` when [value] is not a control, when it is a component with no
+/// body yet, or when [visibleOnly] is `true` and the control is not visible.
 Widget? parseControlWidget(dynamic value, {bool visibleOnly = true}) {
   if (value is! Control) return null;
 
   final control = value.unwrapComponent();
+  if (control == null) return null;
   if (visibleOnly && !control.visible) return null;
 
   return ControlWidget(control: control);

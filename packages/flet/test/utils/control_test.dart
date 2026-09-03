@@ -96,4 +96,38 @@ void main() {
     });
     expect(changed, true);
   });
+
+  test("unwrapComponent resolves nested component bodies", () {
+    var button = Control(
+        id: 3, type: "Button", properties: {"text": "ok"}, backend: backend);
+    var inner =
+        Control(id: 2, type: "C", properties: {"_b": button}, backend: backend);
+    var outer =
+        Control(id: 1, type: "C", properties: {"_b": inner}, backend: backend);
+    expect(outer.unwrapComponent(), button);
+  });
+
+  test("unwrapComponent returns null for a component with no body", () {
+    // A re-rendering component is patched to a null body first and receives
+    // its new body in a follow-up message; a frame drawn in between must not
+    // crash.
+    var c =
+        Control(id: 1, type: "C", properties: {"_b": null}, backend: backend);
+    expect(c.unwrapComponent(), isNull);
+  });
+
+  test("children skips components with no body", () {
+    var text = Control(
+        id: 2, type: "Text", properties: {"value": "hi"}, backend: backend);
+    var pending =
+        Control(id: 3, type: "C", properties: {"_b": null}, backend: backend);
+    var column = Control(
+        id: 1,
+        type: "Column",
+        properties: {
+          "controls": [text, pending]
+        },
+        backend: backend);
+    expect(column.children("controls"), [text]);
+  });
 }
