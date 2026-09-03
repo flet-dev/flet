@@ -105,12 +105,19 @@ class Control extends ChangeNotifier {
     return defaultValue;
   }
 
-  Control unwrapComponent() {
+  /// Resolves this control to the control it ultimately renders, following the
+  /// body of nested components.
+  ///
+  /// Returns `null` when a component in the chain has no body yet. That state is
+  /// transient: a re-rendering component is patched to a null body first and
+  /// receives its new body in a follow-up message, so a frame drawn in between
+  /// must render nothing rather than crash.
+  Control? unwrapComponent() {
     dynamic v = this;
     while (v is Control && v.type == componentType) {
       v = v.get(componentBodyProp);
     }
-    return v;
+    return v is Control ? v : null;
   }
 
   /// Returns the [Control] for the given [propertyName], or `null` if not found, not a [Control],
@@ -126,6 +133,8 @@ class Control extends ChangeNotifier {
   /// If [visibleOnly] is `true` (default), only includes visible controls.
   ///
   /// Returns an empty list if the property is missing or null.
+  ///
+  /// Components that have no body yet are skipped - see [unwrapComponent].
   List<Control> children(String propertyName, {bool visibleOnly = true}) {
     var elems = get(propertyName);
     return List<Control>.from(elems is List
@@ -134,6 +143,7 @@ class Control extends ChangeNotifier {
                 ? [elems]
                 : [])
         .map((c) => c.unwrapComponent())
+        .nonNulls
         .where((c) => !visibleOnly || c.visible)
         .toList();
   }
