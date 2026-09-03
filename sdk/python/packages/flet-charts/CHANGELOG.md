@@ -5,6 +5,12 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
+## 1.0.0
+
+### Fixed
+
+- Fixed `import flet_charts` crashing when `matplotlib` (or `plotly`) is installed but fails to import. The optional-dependency guards caught only `ImportError`, so any other failure propagated and took the whole package down — notably on Android, where Flet ships site-packages inside a zip and matplotlib reading `mpl-data/matplotlibrc` through a real `__file__` path raises `NotADirectoryError`. Apps that merely imported `flet_charts` crashed at startup even if they never drew a matplotlib chart. The guards now degrade to "unavailable" for any import-time failure, and the deferred `ModuleNotFoundError` names the underlying cause by @ndonkoHenri.
+
 ## 0.85.0
 
 ### Fixed

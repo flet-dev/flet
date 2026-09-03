@@ -313,7 +313,7 @@ class Text(LayoutControl):
     Defaults to `False`.
     """
 
-    no_wrap: Optional[bool] = None
+    no_wrap: bool = False
     """
     If `False` (default) the text should break at soft line breaks.
 

@@ -170,7 +170,7 @@ class Semantics(Control):
     A hint describing what happens when the user activates :attr:`on_long_press`.
     """
 
-    container: Optional[bool] = None
+    container: bool = False
     """
     Whether this semantics node should introduce its own semantic container.
 

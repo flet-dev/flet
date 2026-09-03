@@ -1,5 +1,5 @@
 from dataclasses import field
-from typing import Optional
+from typing import Annotated, Optional
 
 from flet.controls.base_control import control
 from flet.controls.border_radius import BorderRadiusValue
@@ -284,49 +284,105 @@ class Dropdown(LayoutControl):
     The :attr:`label`'s text style.
     """
 
-    border: Optional[InputBorder] = None
+    border: Optional[ControlStateValue[InputBorder]] = None
     """
-    Border around input.
+    The border drawn around the decorated input area.
 
-    Defaults to `InputBorder.OUTLINE`.
+    Accepts a single :class:`~flet.InputBorder` or a dictionary mapping
+    :class:`~flet.ControlState`s to :class:`~flet.InputBorder`s. Supported
+    state keys are :attr:`flet.ControlState.DEFAULT`,
+    :attr:`flet.ControlState.FOCUSED`, :attr:`flet.ControlState.ERROR`,
+    and :attr:`flet.ControlState.DISABLED`.
+
+    A single border defines the shape for all states. If its `side` is unset,
+    the Material theme resolves the border color and weight per state (for
+    example, the focused border uses the theme's primary color); an explicit
+    `side` applies to the enabled state while the other states remain
+    theme-resolved.
+
+    In the dictionary form, the `DEFAULT` entry behaves like the single form,
+    and each state entry without an explicit `side` falls back to the `DEFAULT`
+    entry's `side`, if set.
+    """
+
+    border_radius: Annotated[
+        Optional[BorderRadiusValue],
+        V.deprecated(
+            "border",
+            version="1.0.0",
+            delete_version="1.3.0",
+            reason="Use border=OutlineInputBorder(border_radius=...) instead.",
+            docs_reason="Use :attr:`border` with an "
+            ":class:`~flet.OutlineInputBorder` instead.",
+        ),
+    ] = None
+    """
+    Rounds the corners of an outlined border.
+    """
+
+    border_width: Annotated[
+        Optional[Number],
+        V.deprecated(
+            "border",
+            version="1.0.0",
+            delete_version="1.3.0",
+            reason="Use border=OutlineInputBorder(side=BorderSide(width=...)) instead.",
+            docs_reason="Use :attr:`border` with a :class:`~flet.BorderSide` instead.",
+        ),
+    ] = None
+    """
+    The width of the border in virtual pixels.
+    """
+
+    border_color: Annotated[
+        Optional[ColorValue],
+        V.deprecated(
+            "border",
+            version="1.0.0",
+            delete_version="1.3.0",
+            reason="Use border=OutlineInputBorder(side=BorderSide(color=...)) instead.",
+            docs_reason="Use :attr:`border` with a :class:`~flet.BorderSide` instead.",
+        ),
+    ] = None
+    """
+    The border color.
+    """
+
+    focused_border_width: Annotated[
+        Optional[Number],
+        V.deprecated(
+            "border",
+            version="1.0.0",
+            delete_version="1.3.0",
+            reason="Use border={ControlState.FOCUSED: OutlineInputBorder(...)} "
+            "instead.",
+            docs_reason="Use :attr:`border` with a "
+            ":attr:`flet.ControlState.FOCUSED` entry instead.",
+        ),
+    ] = None
+    """
+    Border width in focused state.
+    """
+
+    focused_border_color: Annotated[
+        Optional[ColorValue],
+        V.deprecated(
+            "border",
+            version="1.0.0",
+            delete_version="1.3.0",
+            reason="Use border={ControlState.FOCUSED: OutlineInputBorder(...)} "
+            "instead.",
+            docs_reason="Use :attr:`border` with a "
+            ":attr:`flet.ControlState.FOCUSED` entry instead.",
+        ),
+    ] = None
+    """
+    Border color in focused state.
     """
 
     color: Optional[ColorValue] = None
     """
     Text color.
-    """
-
-    border_width: Number = 1
-    """
-    The width of the border in virtual pixels.
-
-    Tip:
-        Set to `0` to completely remove the border.
-    """
-
-    border_color: Optional[ColorValue] = None
-    """
-    Border color.
-
-    Tip:
-        Set to :attr:`flet.Colors.TRANSPARENT` to hide the border.
-    """
-
-    border_radius: Optional[BorderRadiusValue] = None
-    """
-    The border radius applied to the corners of the dropdown input field.
-    Accepts a value in virtual pixels or a `BorderRadiusValue` object.
-    If set to `None`, the default border radius defined by the theme or system is used.
-    """
-
-    focused_border_width: Optional[Number] = None
-    """
-    Border width in focused state.
-    """
-
-    focused_border_color: Optional[ColorValue] = None
-    """
-    Border color in focused state.
     """
 
     content_padding: Optional[PaddingValue] = None

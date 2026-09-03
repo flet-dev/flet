@@ -711,6 +711,41 @@ you'll need to manually trust the developer:
 - Your newly uploaded build will initially appear under **Processing** (processing typically takes a few minutes to an hour).
 - Once processing completes, your build will become available for submission. You can now **submit the app for review**.
 
+## Reading your app's output
+
+Flet redirects the app's `stdout` and `stderr` — everything it `print()`s, plus any
+traceback — to Apple's unified log, and also writes them to a `console.log` file inside
+the app's container.
+
+On a **simulator**, stream the unified log while the app runs:
+
+```bash
+xcrun simctl spawn booted log stream --style compact --predicate 'sender == "dart_bridge"'
+```
+
+`sender == "dart_bridge"` narrows the log to the Python output alone — filtering by process
+instead buries it under UIKit chatter. Use `log show --last 5m` in place of `log stream` to
+read output the app has already produced:
+
+```bash
+xcrun simctl spawn booted log show --style compact --last 5m --predicate 'sender == "dart_bridge"'
+```
+
+The same lines are in `console.log`, which is easier to grep for a crash that happens before
+you can attach:
+
+```bash
+DATA=$(xcrun simctl get_app_container booted <bundleId> data)
+cat "$DATA/Library/Caches/console.log"
+```
+
+On a **physical device**, open **Console.app**, select the device in the sidebar, and filter
+on your app's process — or download the app container from Xcode's **Window → Devices and
+Simulators → Download Container** and read `console.log` inside it.
+
+To read the same output from *inside* your app — or to show it on screen — see
+[Console output](index.md#console-output).
+
 ## Building and signing in CI
 
 A CI runner has neither a signing certificate nor a provisioning profile, so

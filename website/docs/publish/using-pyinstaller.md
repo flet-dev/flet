@@ -21,6 +21,7 @@ speed-vs-control curve:
 | Targets          | Desktop only: Windows, macOS, Linux                         | Desktop, mobile (Android/iOS), and [web](web/index.md)                                                                     |
 | Toolchain        | [PyInstaller](https://pyinstaller.org/en/stable/)           | [Flutter SDK](index.md#flutter-sdk) (auto-installed)                                                                       |
 | How the app runs | Your Python code alongside the prebuilt Flet desktop client | Flutter-compiled app with Python embedded, running in-process                                                              |
+| Python dependencies | Discovered by PyInstaller's static analysis of your imports | Installed in full from your declared [app dependencies](index.md#app-dependencies)                                          |
 | Build time       | Fast — no native compilation                                | Slower — a full Flutter build                                                                                              |
 | Customization    | Icon and executable/bundle metadata                         | Everything: icons, splash, [build template](index.md#build-template), [signing and store packaging](macos.md#code-signing) |
 

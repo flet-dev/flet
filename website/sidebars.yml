@@ -77,6 +77,7 @@ docs:
       v1.0.0:
         All deprecated APIs removed: updates/breaking-changes/v1-0-0/removed-deprecated-apis.md
         "iOS: per-method signing settings now override top-level ones": updates/breaking-changes/v1-0-0/ios-per-method-signing-precedence.md
+        "InputBorder is now a class hierarchy instead of an enum": updates/breaking-changes/v1-0-0/inputborder-class-hierarchy.md
       v0.86.0:
         App files ship unpacked in a read-only bundle; storage dirs reworked: updates/breaking-changes/v0-86-0/app-files-unpacked-read-only-bundle.md
         "Android: site-packages ship zipped; some packages need extract_packages": updates/breaking-changes/v0-86-0/android-extract-packages.md
@@ -528,7 +529,11 @@ docs:
           LinearGradient: types/lineargradient.md
           RadialGradient: types/radialgradient.md
           SweepGradient: types/sweepgradient.md
-      - types/inputborder.md
+      - InputBorder:
+          _index: types/inputborder/index.md
+          NoInputBorder: types/noinputborder.md
+          OutlineInputBorder: types/outlineinputborder.md
+          UnderlineInputBorder: types/underlineinputborder.md
       - types/inputfilter.md
       - types/iosutsname.md
       - Key:

@@ -86,7 +86,7 @@ class Button(LayoutControl, AdaptiveControl):
     The button's style.
     """
 
-    autofocus: Optional[bool] = None
+    autofocus: bool = False
     """
     Whether this button should be focused initially.
     """

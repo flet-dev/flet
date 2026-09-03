@@ -272,7 +272,7 @@ class Path(Shape):
         Height of the rectangle.
         """
 
-        border_radius: Optional[BorderRadiusValue] = None
+        border_radius: BorderRadiusValue = 0
         """
         Optional border radius to round rectangle corners.
         """
