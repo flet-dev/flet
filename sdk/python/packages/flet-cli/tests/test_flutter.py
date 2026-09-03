@@ -5,6 +5,7 @@ from types import SimpleNamespace
 from unittest.mock import patch
 
 from flet_cli.commands.flutter_base import BaseFlutterCommand
+from flet_cli.commands.test import _flutter_path_env
 
 
 def _install_flutter(monkeypatch, path_env, flutter_dir="/opt/flutter/3.32.0"):
@@ -37,6 +38,31 @@ def _install_flutter(monkeypatch, path_env, flutter_dir="/opt/flutter/3.32.0"):
     ):
         BaseFlutterCommand.install_flutter(cmd)
     return cmd.env["PATH"]
+
+
+def _test_command_path(
+    monkeypatch, path_env, flutter_exe="/opt/flutter/3.32.0/bin/flutter"
+):
+    """
+    Run `flet test`'s `_flutter_path_env()` against a given inherited `PATH`.
+
+    Args:
+        monkeypatch: pytest fixture used to set the inherited `PATH`.
+        path_env: Value to expose as the process `PATH`.
+        flutter_exe: Flutter executable the command resolved during provisioning.
+
+    Returns:
+        The `PATH` the command would hand to the pytest subprocess.
+    """
+
+    monkeypatch.setenv("PATH", path_env)
+    cmd = SimpleNamespace(
+        env={},
+        flutter_exe=flutter_exe,
+        flutter_packages_temp_dir=None,
+        _serious_python_build_env=lambda: {},
+    )
+    return _flutter_path_env(cmd)["PATH"]
 
 
 # ---------------------------------------------------------------------------
@@ -97,3 +123,39 @@ class TestFlutterPathEnv:
         result = _install_flutter(monkeypatch, "")
         assert result == os.path.join("/opt/flutter/3.32.0", "bin")
         assert "" not in result.split(os.pathsep)
+
+
+# ---------------------------------------------------------------------------
+# PATH handed to the `flet test` subprocess
+# ---------------------------------------------------------------------------
+
+
+class TestFletTestPathEnv:
+    """How `flet test` builds the `PATH` for the pytest subprocess it spawns.
+
+    `_flutter_path_env()` prepends the provisioned SDK so the on-device run
+    (`flutter test integration_test`) uses the same Flutter the build did. The
+    prepend-only rule of `TestFlutterPathEnv` applies here for the same reason.
+    """
+
+    def test_managed_sdk_is_first(self, monkeypatch):
+        """The provisioned SDK outranks any other Flutter on `PATH`."""
+        result = _test_command_path(monkeypatch, "/usr/bin")
+        assert result.split(os.pathsep)[0] == "/opt/flutter/3.32.0/bin"
+
+    def test_path_is_never_reduced(self, monkeypatch):
+        """Every inherited entry survives, in its original order."""
+        dirs = ["/usr/local/bin", "/usr/bin", "/bin"]
+        result = _test_command_path(monkeypatch, os.pathsep.join(dirs))
+        assert result.split(os.pathsep)[1:] == dirs
+
+    def test_empty_path_does_not_add_the_current_directory(self, monkeypatch):
+        """A trailing separator means "current directory" - never emit one."""
+        result = _test_command_path(monkeypatch, "")
+        assert result == "/opt/flutter/3.32.0/bin"
+        assert "" not in result.split(os.pathsep)
+
+    def test_path_untouched_when_flutter_was_not_resolved(self, monkeypatch):
+        """No provisioned SDK means nothing to prepend - leave `PATH` alone."""
+        result = _test_command_path(monkeypatch, "/usr/bin", flutter_exe=None)
+        assert result == "/usr/bin"
