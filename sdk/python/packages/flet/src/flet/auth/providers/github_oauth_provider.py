@@ -38,7 +38,10 @@ class GitHubOAuthProvider(OAuthProvider):
         Returns:
             A list of :class:`~flet.auth.Group` mapped from `/user/teams`.
         """
-        import httpx
+        try:
+            import httpx2 as httpx
+        except ImportError:
+            import httpx
 
         async with httpx.AsyncClient(follow_redirects=True) as client:
             teams_resp = await client.send(
@@ -71,7 +74,10 @@ class GitHubOAuthProvider(OAuthProvider):
             A :class:`~flet.auth.User` built from `/user`; its `email` is populated
                 from the primary address in `/user/emails` when available.
         """
-        import httpx
+        try:
+            import httpx2 as httpx
+        except ImportError:
+            import httpx
 
         async with httpx.AsyncClient(follow_redirects=True) as client:
             user_resp = await client.send(

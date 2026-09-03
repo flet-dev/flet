@@ -116,7 +116,10 @@ class AuthorizationService(Authorization):
         Raises:
             httpx.HTTPStatusError: If token endpoint returns a non-success status.
         """
-        import httpx
+        try:
+            import httpx2 as httpx
+        except ImportError:
+            import httpx
         from oauthlib.oauth2 import WebApplicationClient
 
         client = WebApplicationClient(self.provider.client_id)
@@ -204,7 +207,10 @@ class AuthorizationService(Authorization):
         ):
             return None
 
-        import httpx
+        try:
+            import httpx2 as httpx
+        except ImportError:
+            import httpx
         from oauthlib.oauth2 import WebApplicationClient
 
         assert self.__token is not None
@@ -242,7 +248,10 @@ class AuthorizationService(Authorization):
         Raises:
             httpx.HTTPStatusError: If user endpoint request fails.
         """
-        import httpx
+        try:
+            import httpx2 as httpx
+        except ImportError:
+            import httpx
 
         assert self.__token is not None
         assert self.provider.user_endpoint is not None
