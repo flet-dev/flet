@@ -24,3 +24,4 @@ features = ["nested themes", "theme mode override"]
 org = "dev.flet"
 company = "Flet"
 copyright = "Copyright (C) 2023-2026 by Flet"
+platforms = ["web", "macos", "windows", "linux"]
