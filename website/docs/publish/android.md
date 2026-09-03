@@ -1044,7 +1044,7 @@ can no longer be found:
 - **Classes bundled by a Flutter plugin or your own Java/Kotlin** are in your APK and *are* renamed.
   These need a keep rule.
 
-:::warning A failed lookup crashes the process
+:::warning[A failed lookup crashes the process]
 `autoclass()` on a renamed class does not raise a Python exception you can catch. JNI `FindClass`
 returns null and the process aborts. On a debuggable build the log shows:
 
@@ -1172,6 +1172,43 @@ Below are known packages that need to be extracted to work on Android:
 | `thinc`         | `"thinc"`          | reads `thinc/backends/_custom_kernels.cu` via `__file__` at import                     |
 | `spacy`         | `"spacy", "thinc"` | imports `thinc` at load and reads its own language data via `__file__`; list both      |
 
+## Reading your app's output
+
+Flet redirects the app's `stdout` and `stderr` — everything it `print()`s, plus any
+traceback — to logcat under the `flet.python` tag, and also writes them to a `console.log`
+file inside the app's private storage.
+
+Stream logcat while the app runs:
+
+```bash
+adb logcat -s flet.python
+```
+
+`-s flet.python` narrows the log to the Python output alone — an unfiltered `adb logcat`
+buries it under system chatter. `stdout` arrives at priority `I` and `stderr` at `E`, so
+both are included. Add `-d` to dump what is already buffered and exit instead of following
+the log:
+
+```bash
+adb logcat -d -s flet.python
+```
+
+Clear the buffer with `adb logcat -c` before launching the app, so you only see output from
+this run.
+
+The same lines are in `console.log`, but that file lives in the app's private storage, so
+reading it needs a rooted device or emulator image (`adb root` fails on Play Store images):
+
+```bash
+adb root
+adb pull /data/user/0/<applicationId>/cache/console.log
+```
+
+Prefer logcat — it needs no root and works on physical devices unchanged.
+
+To read the same output from *inside* your app — or to show it on screen — see
+[Console output](index.md#console-output).
+
 ## ADB Tips
 
 [Android Debug Bridge (adb)](https://developer.android.com/tools/adb) is a
@@ -1218,6 +1255,6 @@ help installing and using adb on different platforms.
 
 | Symptom                                                                                                                         | Cause and fix                                                                                                                                                             |
 |---------------------------------------------------------------------------------------------------------------------------------|---------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
-| Build succeeds but the app crashes on launch; `adb logcat` shows `FileNotFoundError`/`OSError` with a `sitepackages.zip/…` path | The package reads bundled data through `__file__`-relative paths — add it to [Extract packages](#extract-packages). Capture the traceback with the [ADB tips](#adb-tips). |
+| Build succeeds but the app crashes on launch; `adb logcat` shows `FileNotFoundError`/`OSError` with a `sitepackages.zip/…` path | The package reads bundled data through `__file__`-relative paths — add it to [Extract packages](#extract-packages). Capture the traceback with [Reading your app's output](#reading-your-apps-output). |
 | `keytool: command not found` when creating the upload keystore                                                                  | `keytool` ships with the Java JDK (installed with the [Android SDK](#android-sdk) prerequisite) — call it by its full path or add the JDK's `bin` directory to `PATH`.    |
 | Android manifest merger fails after adding a provider                                                                           | The `authorities` value clashes with the built-in `${applicationId}.provider` — pick a different one (see [Providers](#providers)).                                       |

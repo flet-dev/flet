@@ -4,11 +4,11 @@ from typing import Any, Optional
 import flet as ft
 import flet_charts
 
-_MATPLOTLIB_IMPORT_ERROR: Optional[ImportError] = None
+_MATPLOTLIB_IMPORT_ERROR: Optional[Exception] = None
 
 try:
     from matplotlib.figure import Figure  # type: ignore
-except ImportError as e:  # pragma: no cover - depends on optional dependency
+except Exception as e:  # pragma: no cover - depends on optional dependency
     Figure = Any  # type: ignore[assignment]
     _MATPLOTLIB_IMPORT_ERROR = e
 
@@ -31,12 +31,14 @@ def _require_matplotlib() -> None:
     Ensure matplotlib dependency is available.
 
     Raises:
-        ModuleNotFoundError: If `matplotlib` is not installed.
+        ModuleNotFoundError: If `matplotlib` is not installed, or is installed
+            but could not be imported.
     """
 
     if _MATPLOTLIB_IMPORT_ERROR is not None:
         raise ModuleNotFoundError(
-            'Install "matplotlib" Python package to use MatplotlibChart control.'
+            'MatplotlibChartWithToolbar requires the "matplotlib" Python package, '
+            f"which could not be imported: {_MATPLOTLIB_IMPORT_ERROR!r}"
         ) from _MATPLOTLIB_IMPORT_ERROR
 
 

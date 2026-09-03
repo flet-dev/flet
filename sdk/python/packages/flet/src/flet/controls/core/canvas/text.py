@@ -61,11 +61,11 @@ class Text(Shape):
     that overflows the width constraints are dropped.
     """
 
-    max_width: Optional[Number] = None
+    max_width: Number = float("inf")
     """
     The maximum width of the painted text.
 
-    Defaults to `None` - infinity.
+    An infinite width leaves the text unconstrained.
     """
 
     ellipsis: Optional[str] = None

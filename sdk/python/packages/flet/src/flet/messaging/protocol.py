@@ -126,6 +126,12 @@ def configure_encode_object_for_msgpack(control_cls):
                             r[fname] = v
                         prev_dicts[fname] = v
                     elif is_dataclass(v):
+                        # Emitted unconditionally, even when equal to the
+                        # field's default_factory product: the differ patches
+                        # nested fields in place with nested-path ops, which
+                        # requires the client to already hold the parent key.
+                        # Pruning here would only be safe together with a differ
+                        # that emits whole-value replaces for pruned fields.
                         r[fname] = v
                         prev_classes[fname] = v
                     elif v is not None:

@@ -1,19 +1,6 @@
 name: Flet Build Test
 
 on:
-  push:
-    tags-ignore:
-      - '**'
-    branches-ignore:
-      - main
-    paths:
-      - '.github/workflows/flet-build-test.yml'
-      - '.github/workflows/flet-build-test-matrix.yml'
-      - '.fvmrc'
-      - 'client/**'
-      - 'sdk/python/packages/**'
-      - 'packages/flet/**'
-      - 'sdk/python/examples/apps/flet_build_test/**'
   pull_request:
     paths:
       - '.github/workflows/flet-build-test.yml'
@@ -21,6 +8,7 @@ on:
       - '.fvmrc'
       - 'client/**'
       - 'sdk/python/packages/**'
+      - 'sdk/python/templates/**'
       - 'packages/flet/**'
       - 'sdk/python/examples/apps/flet_build_test/**'
   workflow_dispatch:
@@ -47,7 +35,7 @@ on:
         default: ""
 
 concurrency:
-  group: ci-${{ github.workflow }}-${{ github.event.pull_request.head.ref || github.ref_name }}
+  group: ci-${{ github.workflow }}-${{ github.ref }}
   cancel-in-progress: true
 
 permissions:

@@ -460,6 +460,42 @@ bundle_id = "com.mycompany.my_app"
 </TabItem>
 </Tabs>
 
+### Description
+
+:::note[Platform support]
+[Web](web/static-website/index.md#flet-build-web) and [Linux](linux.md) only.
+:::
+
+A short description of the application. On web builds it becomes the
+`<meta name="description">` tag and the PWA manifest's `description`; on Linux
+it becomes the [`Comment`](https://specifications.freedesktop.org/desktop-entry/latest/recognized-keys.html#key-comment) of the generated
+[desktop entry](linux.md#app-icon), shown as a tooltip in application menus. Other platforms have no equivalent
+field and ignore it.
+
+#### Resolution order
+
+Its value is determined in the following order of precedence:
+
+1. [`--description`](../cli/flet-build.md#--description)
+2. `[project].description`
+3. `[tool.poetry].description`
+
+#### Example
+
+<Tabs groupId="flet-build--pyproject-toml">
+<TabItem value="flet-build" label="flet build">
+```bash
+flet build <target_platform> --description "Tracks your daily habits."
+```
+</TabItem>
+<TabItem value="pyproject-toml" label="pyproject.toml">
+```toml
+[project]
+description = "Tracks your daily habits."
+```
+</TabItem>
+</Tabs>
+
 ### Company Name
 
 :::note[Platform support]
@@ -702,12 +738,7 @@ source_packages = ["package1", "package2"]
 
 ### Icons
 
-:::note[Platform support]
-[Android](android.md), [iOS](ios.md), [macOS](macos.md), [Windows](windows.md)
-and [Web](web/static-website/index.md#flet-build-web) only.
-:::
-
-You can customize app icons for all platforms (except Linux) using image files placed in
+You can customize app icons for all platforms using image files placed in
 the `assets` directory of your Flet app.
 
 If a platform-specific icon (as in the table below) is not provided, `icon.png`
@@ -721,6 +752,7 @@ For the iOS platform, transparency (alpha channel) will be automatically removed
 | Web      | `icon_web.png`                           | ≥ 512×512 px     |                                                                                             |
 | Windows  | `icon_windows.ico` or `icon_windows.png` | 256×256 px       | `.png` file will be internally converted to a 256×256 px `.ico` icon.                       |
 | macOS    | `icon_macos.png`                         | ≥ 1024×1024 px   |                                                                                             |
+| Linux    | `icon_linux.png`                         | 256×256 px       | Square PNG. Sets the window icon on X11; see [Linux](linux.md#app-icon) for Wayland desktop integration. |
 
 ### Splash screen
 
@@ -1468,6 +1500,12 @@ In packaged apps (`flet build` output), all output from your Python code such as
 
 Note: `FLET_APP_CONSOLE` is only set in production builds;
 in development runs, output stays in your terminal.
+
+On Android, iOS and macOS the same output also goes to the platform log, which is usually
+the easier way to read it from your development machine — see "Reading your app's output"
+for [Android](android.md#reading-your-apps-output), [iOS](ios.md#reading-your-apps-output)
+and [macOS](macos.md#reading-your-apps-output). This section is about reaching it from
+*inside* your app instead.
 
 The log file is written in an unbuffered manner, allowing you to read
 it at any point in your Python program using:

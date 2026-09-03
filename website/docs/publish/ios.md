@@ -43,13 +43,22 @@ Example packages are `numpy`, `cryptography`, or `pydantic-core`.
 Make sure all non-pure (binary) packages used in your Flet app have
 [pre-built wheels for iOS](../reference/binary-packages-android-ios.md).
 
+## `flet build ios-simulator`
+
+:::caution[Supported host platforms]
+This command can be run on **macOS only**.
+:::
+
+Builds an (unsigned) iOS Simulator `.app` bundle, intended for testing on iOS Simulator
+and does **not** require a signing certificate, provisioning profile, or Apple Developer Program setup.
+
 ## `flet build ipa`
 
 :::caution[Supported host platforms]
 This command can be run on **macOS only**.
 :::
 
-Builds an iOS app archive (`.xcarchive`) and, when signing is configured,
+Builds an iOS app archive (`.xcarchive`) and, when [signing](#provisioning-profile) is configured,
 exports an `.ipa` for testing or distribution.
 
 To generate an `.ipa` for testing on your device or uploading to App Store Connect
@@ -61,15 +70,6 @@ for distribution, you will need the following:
 - [Bundle ID](index.md#bundle-id) configured in your Flet project (must match the App ID)
 - [Signing Certificate](#signing-certificate)
 - [Provisioning Profile](#provisioning-profile)
-
-## `flet build ios-simulator`
-
-:::caution[Supported host platforms]
-This command can be run on **macOS only**.
-:::
-
-Builds an (unsigned) iOS Simulator `.app` bundle, intended for testing on iOS Simulator
-and does **not** require a signing certificate, provisioning profile, or Apple Developer Program setup.
 
 ## Configuration options
 
@@ -259,7 +259,9 @@ Follow these steps to create a provisioning profile via the Apple Developer Port
 
 #### Installing Provisioning Profile
 
-Provisioning profiles are stored in `~/Library/MobileDevice/Provisioning Profiles` directory.
+Provisioning profiles are stored in `~/Library/MobileDevice/Provisioning Profiles`, with
+Xcode 16 and later keeping the ones they manage themselves in
+`~/Library/Developer/Xcode/UserData/Provisioning Profiles` — `flet build ipa` reads both.
 
 To install a downloaded provisioning profile, copy it to `~/Library/MobileDevice/Provisioning\ Profiles`
 directory with a new `{UUID}.mobileprovision` name.
@@ -297,6 +299,12 @@ Its value is determined in the following order of precedence:
 3. `[tool.flet.ios].provisioning_profile`
 
 The profile must match your [Bundle ID](index.md#bundle-id).
+
+Give the profile's **name** — exactly as the Apple Developer portal shows it —
+or its **UUID**; Xcode accepts either form. The value is resolved before the
+build starts, so a profile that is not installed, has expired, belongs to
+another team, or does not cover the app's Bundle ID fails in seconds, listing
+the installed profiles instead of failing later inside Xcode.
 
 #### Example
 
@@ -703,10 +711,110 @@ you'll need to manually trust the developer:
 - Your newly uploaded build will initially appear under **Processing** (processing typically takes a few minutes to an hour).
 - Once processing completes, your build will become available for submission. You can now **submit the app for review**.
 
+## Reading your app's output
+
+Flet redirects the app's `stdout` and `stderr` — everything it `print()`s, plus any
+traceback — to Apple's unified log, and also writes them to a `console.log` file inside
+the app's container.
+
+On a **simulator**, stream the unified log while the app runs:
+
+```bash
+xcrun simctl spawn booted log stream --style compact --predicate 'sender == "dart_bridge"'
+```
+
+`sender == "dart_bridge"` narrows the log to the Python output alone — filtering by process
+instead buries it under UIKit chatter. Use `log show --last 5m` in place of `log stream` to
+read output the app has already produced:
+
+```bash
+xcrun simctl spawn booted log show --style compact --last 5m --predicate 'sender == "dart_bridge"'
+```
+
+The same lines are in `console.log`, which is easier to grep for a crash that happens before
+you can attach:
+
+```bash
+DATA=$(xcrun simctl get_app_container booted <bundleId> data)
+cat "$DATA/Library/Caches/console.log"
+```
+
+On a **physical device**, open **Console.app**, select the device in the sidebar, and filter
+on your app's process — or download the app container from Xcode's **Window → Devices and
+Simulators → Download Container** and read `console.log` inside it.
+
+To read the same output from *inside* your app — or to show it on screen — see
+[Console output](index.md#console-output).
+
+## Building and signing in CI
+
+A CI runner has neither a signing certificate nor a provisioning profile, so
+both must be installed before `flet build ipa` runs.
+
+:::note
+The steps below cover only signing — graft them onto a complete build workflow
+such as the one in the [CI/CD guide](index.md#github-actions).
+:::
+
+Export the [signing certificate](#signing-certificate) together with its private
+key as a `.p12` and store it, base64-encoded, as a repository secret — the same
+one-time procedure as for [macOS](macos.md#github-actions). The provisioning
+profile needs no secret of its own: it is downloaded from the Apple Developer
+portal on every run with the same [App Store Connect API
+key](macos.md#creating-a-credential) used to upload the build, so a regenerated
+profile never leaves a stale copy behind.
+
+```yaml
+- name: Import signing certificate
+  uses: apple-actions/import-codesign-certs@v7
+  with:
+    p12-file-base64: ${{ secrets.IOS_CERTIFICATE_P12 }}
+    p12-password: ${{ secrets.IOS_CERTIFICATE_PASSWORD }}
+
+- name: Install provisioning profile
+  uses: apple-actions/download-provisioning-profiles@v6 # (1)!
+  with:
+    bundle-id: com.mycompany.example-app
+    profile-type: IOS_APP_STORE # (2)!
+    issuer-id: ${{ secrets.APPLE_API_ISSUER }}
+    api-key-id: ${{ secrets.APPLE_API_KEY_ID }}
+    api-private-key: ${{ secrets.APPLE_API_KEY_P8 }}
+
+- name: Build
+  run: uv run flet build ipa --build-number ${{ github.run_number }} # (3)!
+
+- name: Upload to App Store Connect
+  run: |
+    mkdir -p ~/.appstoreconnect/private_keys # (4)!
+    printf '%s' "${{ secrets.APPLE_API_KEY_P8 }}" \
+      > ~/.appstoreconnect/private_keys/AuthKey_${{ secrets.APPLE_API_KEY_ID }}.p8
+    xcrun altool --upload-package build/ipa/*.ipa -t ios \
+      --apiKey ${{ secrets.APPLE_API_KEY_ID }} \
+      --apiIssuer ${{ secrets.APPLE_API_ISSUER }} \
+      --apple-id ${{ secrets.APPSTORE_APP_ID }} # (5)!
+```
+
+1. Downloads the profiles matching the bundle id into the directory Xcode reads,
+   so nothing about them is stored in a secret. View its docs
+   [here](https://github.com/apple-actions/download-provisioning-profiles).
+2. Match the [export method](#export-method) the build uses:
+   `IOS_APP_STORE` for `app-store-connect`, `IOS_APP_ADHOC` for
+   `release-testing`, `IOS_APP_DEVELOPMENT` for `debugging`.
+3. The [profile](#provisioning-profile) and [certificate](#signing-certificate)
+   come from `pyproject.toml` as usual. If the profile step above did not
+   install what the project asks for, the build stops immediately and lists the
+   profiles that *are* installed, instead of failing later inside Xcode.
+4. `altool` reads the API key from this directory, by the
+   `AuthKey_<KEY_ID>.p8` name.
+5. The app record's numeric Apple ID, from **App Information → General
+   Information** in App Store Connect.
+
 ## Troubleshooting
 
 | Symptom                                                        | Cause and fix                                                                                                                                                                                                                                                                                                                                  |
 |----------------------------------------------------------------|------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| The build succeeds but there is no `.ipa`, only an `.xcarchive` | The app was built unsigned, which is all Xcode can export without signing. Configure a [provisioning profile](#provisioning-profile) and a [signing certificate](#signing-certificate) to get an uploadable bundle.                                                                                                                        |
 | Build hangs at `Running Xcode build...` (`codesign` at 0% CPU) | macOS is waiting on a keychain prompt — possibly hidden behind other windows — for permission to use the signing key, common after importing a key from the terminal. Click **Always Allow** on the prompt, or pre-authorize `codesign` with `security set-key-partition-list -S apple-tool:,apple: -s -k <login-password> login.keychain-db`. |
 | `No valid code signing certificates were found`                | No signing certificate and matching profile are installed for the selected team — walk through [Signing Certificate](#signing-certificate) and [Provisioning Profile](#provisioning-profile).                                                                                                                                                  |
 | A manually copied provisioning profile keeps disappearing      | A running Xcode process removes profiles copied into `~/Library/MobileDevice/Provisioning Profiles` — quit Xcode before [installing the profile](#provisioning-profile).                                                                                                                                                                       |
+| `Provisioning profile '<name>' is not installed`               | The configured name or UUID matches nothing installed. Compare it with the profiles the message lists — the portal's name is often not what it is assumed to be — and [install the profile](#installing-provisioning-profile) if it is missing.                                                                                             |

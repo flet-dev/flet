@@ -28,6 +28,11 @@ Each guide explains the change, the reason for it, and how to migrate your code.
 
 - [All deprecated APIs removed](/docs/updates/breaking-changes/v1-0-0/removed-deprecated-apis)
 - [iOS: per-method signing settings now override top-level ones](/docs/updates/breaking-changes/v1-0-0/ios-per-method-signing-precedence)
+- [`InputBorder` is now a class hierarchy instead of an enum](/docs/updates/breaking-changes/v1-0-0/inputborder-class-hierarchy)
+
+#### Deprecations
+
+- [`InputBorder` enum members and the loose border properties deprecated](/docs/updates/breaking-changes/v1-0-0/inputborder-class-hierarchy)
 
 ### Released in Flet 0.86.0
 

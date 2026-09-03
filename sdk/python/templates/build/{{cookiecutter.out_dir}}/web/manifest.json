@@ -5,7 +5,7 @@
     "display": "standalone",
     "background_color": "{{ cookiecutter.pwa_background_color }}",
     "theme_color": "{{ cookiecutter.pwa_theme_color }}",
-    "description": "{{ cookiecutter.project_description }}",
+    "description": {{ cookiecutter.project_description | tojson }},
     "orientation": "portrait-primary",
     "prefer_related_applications": false,
     "icons": [
