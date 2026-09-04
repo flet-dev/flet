@@ -46,6 +46,12 @@
   height: 26px;
 }
 
+/* Docusaurus renders a separate logo at the top of the docs sidebar when the
+   hide-on-scroll navbar is hidden. */
+.theme-doc-sidebar-container [class*='sidebarLogo_'] img {
+  height: 26px;
+}
+
 .flet-hero h1 {
   color: rgb(14, 165, 230);
   font-size: 60px;
