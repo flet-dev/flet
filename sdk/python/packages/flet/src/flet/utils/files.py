@@ -159,3 +159,30 @@ def get_current_script_dir():
     """
     pathname = os.path.dirname(sys.argv[0])
     return os.path.abspath(pathname)
+
+
+def rmtree(path, ignore_errors=False):
+    """
+    Recursively deletes a directory tree, safely handling read-only files on Windows.
+
+    Args:
+        path: Directory path to remove.
+        ignore_errors: Whether to ignore errors during deletion.
+    """
+    import stat
+
+    p = str(path)
+    if not os.path.exists(p):
+        return
+
+    def _remove_readonly(func, file_path, _):
+        try:
+            os.chmod(file_path, stat.S_IWRITE)
+            func(file_path)
+        except Exception:
+            pass
+
+    if sys.version_info >= (3, 12):
+        shutil.rmtree(p, ignore_errors=ignore_errors, onexc=_remove_readonly)
+    else:
+        shutil.rmtree(p, ignore_errors=ignore_errors, onerror=_remove_readonly)

@@ -17,7 +17,7 @@ from rich.table import Column, Table
 
 import flet.version
 import flet_cli.utils.processes as processes
-from flet.utils import copy_tree, slugify
+from flet.utils import copy_tree, rmtree, slugify
 from flet_cli.commands.flutter_base import (
     BaseFlutterCommand,
     console,
@@ -1651,7 +1651,7 @@ class BaseBuildCommand(BaseFlutterCommand):
                     },
                 )
             except Exception as e:
-                shutil.rmtree(self.flutter_dir)
+                rmtree(self.flutter_dir)
                 self.cleanup(1, f"{e}")
 
             # For local development, override flet dependency with path
@@ -2451,7 +2451,7 @@ class BaseBuildCommand(BaseFlutterCommand):
 
         # flutter-packages variable
         if self.flutter_packages_temp_dir.exists():
-            shutil.rmtree(self.flutter_packages_temp_dir)
+            rmtree(self.flutter_packages_temp_dir)
 
         package_env["SERIOUS_PYTHON_FLUTTER_PACKAGES"] = str(
             self.flutter_packages_temp_dir
@@ -2951,7 +2951,7 @@ class BaseBuildCommand(BaseFlutterCommand):
                 continue
 
             if self.out_dir.exists():
-                shutil.rmtree(str(self.out_dir))
+                rmtree(str(self.out_dir))
             self.out_dir.mkdir(parents=True, exist_ok=True)
 
             # copy build result to out_dir
