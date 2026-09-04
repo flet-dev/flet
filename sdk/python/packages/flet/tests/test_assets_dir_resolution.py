@@ -7,6 +7,7 @@ desktop view ignores it silently while the web server logged
 `--web`, about a directory the user never asked for.
 """
 
+import logging
 import os
 
 import pytest
@@ -38,6 +39,36 @@ class TestMissingDirectoryIsDropped:
         f = tmp_path / "assets"
         f.write_text("not a directory")
         assert get_assets_dir_path(str(f)) is None
+
+
+class TestOnlyADeliberateValueWarns:
+    """The default is quiet when missing; anything else is a typo worth saying.
+
+    `assets_dir` defaults to "assets" whether or not the app has one, so a
+    missing default is unremarkable. `ft.run(main, assets_dir="typo")` is not.
+    """
+
+    def test_default_is_silent(self, tmp_path, monkeypatch, caplog):
+        monkeypatch.chdir(tmp_path)
+        with caplog.at_level(logging.WARNING, logger="flet"):
+            assert get_assets_dir_path("assets", relative_to_cwd=True) is None
+        assert caplog.records == []
+
+    def test_explicit_value_warns(self, tmp_path, monkeypatch, caplog):
+        monkeypatch.chdir(tmp_path)
+        with caplog.at_level(logging.WARNING, logger="flet"):
+            assert get_assets_dir_path("typo", relative_to_cwd=True) is None
+        assert any("assets_dir does not exist" in r.message for r in caplog.records)
+        assert any("typo" in r.message for r in caplog.records)
+
+    def test_explicit_value_that_exists_does_not_warn(
+        self, tmp_path, monkeypatch, caplog
+    ):
+        (tmp_path / "media").mkdir()
+        monkeypatch.chdir(tmp_path)
+        with caplog.at_level(logging.WARNING, logger="flet"):
+            assert get_assets_dir_path("media", relative_to_cwd=True) is not None
+        assert caplog.records == []
 
 
 class TestExistingDirectoryIsResolved:

@@ -52,6 +52,25 @@ class TestExistingDirectoryIsResolved:
         assert resolve_assets_dir(app, str(outside)) == str(outside)
 
 
+class TestOnlyADeliberateValueWarns:
+    """The default is quiet when missing; anything else the user typed is not."""
+
+    def test_default_is_silent(self, tmp_path, capsys):
+        assert resolve_assets_dir(tmp_path, "assets") is None
+        assert capsys.readouterr().out == ""
+
+    def test_explicit_value_warns(self, tmp_path, capsys):
+        assert resolve_assets_dir(tmp_path, "typo") is None
+        out = capsys.readouterr().out
+        assert "assets_dir does not exist" in out
+        assert "typo" in out
+
+    def test_explicit_value_that_exists_does_not_warn(self, tmp_path, capsys):
+        (tmp_path / "media").mkdir()
+        assert resolve_assets_dir(tmp_path, "media") is not None
+        assert capsys.readouterr().out == ""
+
+
 class TestUnset:
     """`None` and empty stay `None` without touching the filesystem."""
 
