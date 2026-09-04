@@ -649,13 +649,25 @@ def __get_assets_dir_path(assets_dir: Optional[str], relative_to_cwd=False):
     """
     Resolve assets directory to an absolute path and apply env override.
 
+    A resolved directory that does not exist is dropped rather than passed on.
+    `assets_dir` defaults to `"assets"` whether or not the app has such a
+    directory, so most apps resolve it to a path that is simply not there -
+    and a caller receiving that path can only either ignore it silently (what
+    the desktop view does) or complain about a directory the user never asked
+    for (what the web server did).
+
+    The env override is applied afterwards and is *not* dropped when missing:
+    `FLET_ASSETS_DIR` is always set deliberately, so a bad value there is worth
+    surfacing downstream.
+
     Args:
         assets_dir: Input assets directory path.
         relative_to_cwd: Resolve relative paths from current working directory
             instead of current script directory.
 
     Returns:
-        Resolved assets directory path or `None`.
+        Resolved assets directory path, or `None` if it was not set or does not
+            exist.
     """
 
     if assets_dir:
@@ -671,7 +683,11 @@ def __get_assets_dir_path(assets_dir: Optional[str], relative_to_cwd=False):
                     .joinpath(assets_dir)
                     .resolve()
                 )
-        logger.info("Assets path configured: %s", assets_dir)
+        if os.path.isdir(assets_dir):
+            logger.info("Assets path configured: %s", assets_dir)
+        else:
+            logger.debug("No assets directory at %s", assets_dir)
+            assets_dir = None
 
     env_assets_dir = os.getenv("FLET_ASSETS_DIR")
     if env_assets_dir:
