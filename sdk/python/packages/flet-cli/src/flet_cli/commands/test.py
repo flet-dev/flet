@@ -83,7 +83,10 @@ def _flutter_path_env(cmd: "BaseBuildCommand") -> dict:
     env = {**os.environ, **cmd.env}
     if cmd.flutter_exe:
         flutter_bin = str(Path(cmd.flutter_exe).parent)
-        env["PATH"] = os.pathsep.join([flutter_bin, env.get("PATH", "")])
+        path_env = env.get("PATH", "")
+        env["PATH"] = (
+            os.pathsep.join([flutter_bin, path_env]) if path_env else flutter_bin
+        )
         # Hand the resolved Flutter executable (e.g. `flutter.bat` on Windows) to
         # FletTestApp: it spawns `flutter test` with create_subprocess_exec, which
         # on Windows can't resolve a bare "flutter" (no PATHEXT lookup).
