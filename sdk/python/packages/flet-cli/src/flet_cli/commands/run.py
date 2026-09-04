@@ -8,6 +8,7 @@ import tempfile
 import threading
 import time
 from pathlib import Path
+from typing import Optional
 from urllib.parse import quote, urlparse, urlunparse
 
 import qrcode
@@ -23,6 +24,33 @@ from flet.utils import (
 )
 from flet_cli.commands.base import BaseCommand
 from flet_cli.utils.pyproject_toml import load_pyproject_toml
+
+
+def resolve_assets_dir(script_dir: Path, assets_dir: Optional[str]) -> Optional[str]:
+    """
+    Resolve `--assets` to an existing absolute path.
+
+    A relative path is resolved against the app's script directory. A directory
+    that does not exist is dropped rather than passed on: `--assets` defaults to
+    `"assets"` whether or not the app has one, so most apps resolve it to a path
+    that is simply not there. Passing it on would export `FLET_ASSETS_DIR` to
+    the app process, which treats an explicitly set variable as deliberate and
+    warns about the missing directory - for a path the user never chose.
+
+    Args:
+        script_dir: Directory of the app being run.
+        assets_dir: The `--assets` value, absolute or relative.
+
+    Returns:
+        The resolved absolute path, or `None` if it was not set or does not
+            exist.
+    """
+
+    if not assets_dir:
+        return None
+    if not Path(assets_dir).is_absolute():
+        assets_dir = str(script_dir.joinpath(assets_dir).resolve())
+    return assets_dir if Path(assets_dir).is_dir() else None
 
 
 class Command(BaseCommand):
@@ -219,9 +247,7 @@ class Command(BaseCommand):
         if port is None and not is_windows():
             uds_path = str(Path(tempfile.gettempdir()).joinpath(random_string(10)))
 
-        assets_dir = options.assets_dir
-        if assets_dir and not Path(assets_dir).is_absolute():
-            assets_dir = str(script_dir.joinpath(assets_dir).resolve())
+        assets_dir = resolve_assets_dir(script_dir, options.assets_dir)
 
         ignore_dirs = (
             [
