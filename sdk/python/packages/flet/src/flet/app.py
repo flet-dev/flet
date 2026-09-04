@@ -30,6 +30,11 @@ from flet.utils.pip import (
 
 logger = logging.getLogger("flet")
 
+#: Conventional assets directory name, used as the default for `assets_dir`.
+#: A missing directory of this name is unremarkable; any other value was
+#: chosen deliberately, so a missing one is reported.
+DEFAULT_ASSETS_DIR = "assets"
+
 AppCallable = Callable[[Page], Union[Any, Awaitable[Any]]]
 """Type alias for Flet app lifecycle callbacks.
 
@@ -47,7 +52,7 @@ def run(
     host: Optional[str] = None,
     port: int = 0,
     view: Optional[AppView] = AppView.FLET_APP,
-    assets_dir: Optional[str] = "assets",
+    assets_dir: Optional[str] = DEFAULT_ASSETS_DIR,
     upload_dir: Optional[str] = None,
     web_renderer: WebRenderer = WebRenderer.AUTO,
     route_url_strategy: RouteUrlStrategy = RouteUrlStrategy.PATH,
@@ -127,7 +132,7 @@ async def run_async(
     host: Optional[str] = None,
     port: int = 0,
     view: Optional[AppView] = AppView.FLET_APP,
-    assets_dir: Optional[str] = "assets",
+    assets_dir: Optional[str] = DEFAULT_ASSETS_DIR,
     upload_dir: Optional[str] = None,
     web_renderer: WebRenderer = WebRenderer.AUTO,
     route_url_strategy: RouteUrlStrategy = RouteUrlStrategy.PATH,
@@ -649,16 +654,32 @@ def __get_assets_dir_path(assets_dir: Optional[str], relative_to_cwd=False):
     """
     Resolve assets directory to an absolute path and apply env override.
 
+    A resolved directory that does not exist is dropped rather than passed on,
+    because a caller receiving it can only either ignore it silently (what the
+    desktop view does) or complain (what the web server does) - and the two
+    disagreeing is why the same app warned only under `--web`.
+
+    Whether that is worth reporting depends on where the value came from.
+    `assets_dir` defaults to `DEFAULT_ASSETS_DIR` whether or not the app has
+    such a directory, so a missing one is unremarkable; any other value was
+    chosen deliberately, so a missing one is a mistake worth a warning.
+
+    The env override is applied afterwards and is never dropped:
+    `FLET_ASSETS_DIR` is always set on purpose, so a bad value there is left
+    for downstream to report.
+
     Args:
         assets_dir: Input assets directory path.
         relative_to_cwd: Resolve relative paths from current working directory
             instead of current script directory.
 
     Returns:
-        Resolved assets directory path or `None`.
+        Resolved assets directory path, or `None` if it was not set or does not
+            exist.
     """
 
     if assets_dir:
+        requested = assets_dir
         if not Path(assets_dir).is_absolute():
             if "_MEI" in __file__:
                 # support for "onefile" PyInstaller
@@ -671,7 +692,14 @@ def __get_assets_dir_path(assets_dir: Optional[str], relative_to_cwd=False):
                     .joinpath(assets_dir)
                     .resolve()
                 )
-        logger.info("Assets path configured: %s", assets_dir)
+        if os.path.isdir(assets_dir):
+            logger.info("Assets path configured: %s", assets_dir)
+        else:
+            if requested == DEFAULT_ASSETS_DIR:
+                logger.debug("No assets directory at %s", assets_dir)
+            else:
+                logger.warning("assets_dir does not exist: %s", assets_dir)
+            assets_dir = None
 
     env_assets_dir = os.getenv("FLET_ASSETS_DIR")
     if env_assets_dir:
