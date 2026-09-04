@@ -297,7 +297,7 @@ For each setting:
 
 1. [`--pwa-background-color`](../../../cli/flet-build.md#--pwa-background-color) / [`--pwa-theme-color`](../../../cli/flet-build.md#--pwa-theme-color)
 2. `[tool.flet.web].pwa_background_color` / `[tool.flet.web].pwa_theme_color`
-3. `#FFFFFF` / `#0175C2`
+3. `#FFFFFF` / `#FF005F`
 
 #### Example
 

@@ -28,7 +28,7 @@
     "web_renderer": "canvaskit",
     "use_color_emoji": false,
     "pwa_background_color": "#FFFFFF",
-    "pwa_theme_color": "#0175C2",
+    "pwa_theme_color": "#FF005F",
     "split_per_abi": false,
     "test_mode": false,
     "no_cdn": false,

@@ -3,7 +3,7 @@ import flet as ft
 sample = """
 # Flet
 
-<img src="https://raw.githubusercontent.com/flet-dev/flet/flet-widget/media/logo/flet-logo.svg" width="50%"/>
+<img src="https://raw.githubusercontent.com/flet-dev/flet/refs/heads/main/media/logo/flet-logo.svg" width="50%"/>
 
 Flet is a framework for adding server-driven UI (SDUI) experiences to existing Flutter
 apps or building standalone web, mobile and desktop apps with Flutter UI.

@@ -4,7 +4,7 @@
   "start_url": ".",
   "display": "standalone",
   "background_color": "#FFFFFF",
-  "theme_color": "#0175C2",
+  "theme_color": "#FF005F",
   "description": "Flet - the fastest way to build Flutter apps in Python",
   "orientation": "natural",
   "prefer_related_applications": false,

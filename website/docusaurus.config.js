@@ -63,11 +63,12 @@ module.exports = {
     },
     navbar: {
       hideOnScroll: true,
-      title: 'Flet',
+      // No `title`: the wordmark is part of the logo lockup below, so setting
+      // one would render "Flet" twice.
       logo: {
-        alt: 'Flet Logo',
-        src: 'img/logo.svg',
-        srcDark: 'img/logo.svg',
+        alt: 'Flet',
+        src: 'img/flet-logo.svg',
+        srcDark: 'img/flet-logo-dark.svg',
       },
       items: [
         {
