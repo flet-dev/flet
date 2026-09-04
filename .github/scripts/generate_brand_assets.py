@@ -2,7 +2,6 @@
 # requires-python = ">=3.10"
 # dependencies = [
 #   "pillow==12.1.1",
-#   "numpy",
 # ]
 # ///
 """Derive every Flet brand raster from the masters in `media/logo/`.
@@ -36,10 +35,23 @@ import shutil
 import sys
 from pathlib import Path
 
-import numpy as np
-from PIL import Image, ImageFilter
+from PIL import Image
 
 REPO = Path(__file__).resolve().parents[2]
+
+# The compositing primitives are the ones `flet build` ships, so the brand
+# assets and a user's generated icons can never drift apart. Imported by path
+# rather than as a dependency: the package needs nothing but Pillow, so there
+# is nothing to resolve.
+sys.path.insert(0, str(REPO / "sdk/python/packages/flet-platform-assets/src"))
+from flet_platform_assets._imaging import (  # noqa: E402
+    apple_grid,
+    place,
+    save_ico,
+    save_png,
+    scale_to_height,
+)
+
 LOGO_DIR = REPO / "media" / "logo"
 MASTER = LOGO_DIR / "flet-icon-1024.png"
 SYMBOL_SVG = LOGO_DIR / "logo-symbol.svg"
@@ -144,19 +156,7 @@ MARK: Image.Image = load_mark()
 
 def _scaled(height: int) -> Image.Image:
     """The mark at a given pixel height, resampled from the master in one step."""
-    width = max(1, round(MARK.width * height / MARK.height))
-    return MARK.resize((width, max(1, height)), Image.LANCZOS)
-
-
-def _superellipse(size: int, n: float, supersample: int = 4) -> Image.Image:
-    """An `L`-mode mask of a superellipse, antialiased by rendering large."""
-    t = size * supersample
-    yy, xx = np.mgrid[0:t, 0:t]
-    u = (2 * xx - (t - 1)) / (t - 1)
-    v = (2 * yy - (t - 1)) / (t - 1)
-    inside = (np.abs(u) ** n + np.abs(v) ** n) <= 1.0
-    mask = Image.fromarray((inside * 255).astype(np.uint8), mode="L")
-    return mask.resize((size, size), Image.LANCZOS)
+    return scale_to_height(MARK, height)
 
 
 def compose(
@@ -168,88 +168,32 @@ def compose(
     tile_n: float = WEB_TILE_N,
     offset: tuple[int, int] = (0, 0),
 ) -> Image.Image:
-    """Place the mark on a canvas at an explicit height fraction.
-
-    `bg` flattens onto a solid full-bleed colour and returns mode RGB.
-    `tile` draws a white superellipse tile at that fraction of the canvas,
-    leaving the area outside it transparent.
-    """
-    glyph = _scaled(max(1, round(canvas * h_frac)))
-
-    if bg is not None:
-        out = Image.new("RGB", (canvas, canvas), bg)
-    else:
-        out = Image.new("RGBA", (canvas, canvas), (0, 0, 0, 0))
-        if tile is not None:
-            side = round(canvas * tile)
-            mask = _superellipse(side, tile_n)
-            plate = Image.new("RGBA", (side, side), (*BRAND_BG, 255))
-            plate.putalpha(mask)
-            pos = ((canvas - side) // 2, (canvas - side) // 2)
-            out.alpha_composite(plate, pos)
-
-    x = (canvas - glyph.width) // 2 + offset[0]
-    y = (canvas - glyph.height) // 2 + offset[1]
-    if bg is not None:
-        out.paste(glyph, (x, y), glyph)
-    else:
-        out.alpha_composite(glyph, (x, y))
-    return out
+    """Place the mark on a canvas at an explicit height fraction."""
+    return place(
+        _scaled(max(1, round(canvas * h_frac))),
+        canvas,
+        bg=bg,
+        tile=tile,
+        tile_n=tile_n,
+        tile_color=BRAND_BG,
+        offset=offset,
+    )
 
 
 def compose_macos(canvas: int = 1024) -> Image.Image:
-    """The macOS squircle tile with a drop shadow, composed once at 1024.
-
-    This is the one place chained downscaling is correct: the tile, glyph and
-    shadow must scale together, so smaller sizes are reductions of this
-    composition rather than independent compositions.
-    """
-    side = round(canvas * MACOS_TILE)
-    mask = _superellipse(side, SQUIRCLE_N)
-
-    tile = Image.new("RGBA", (side, side), (*BRAND_BG, 255))
-    glyph = _scaled(round(canvas * MACOS_GLYPH_FRAC))
-    tile.alpha_composite(glyph, ((side - glyph.width) // 2, (side - glyph.height) // 2))
-    tile.putalpha(mask)
-
-    pos = ((canvas - side) // 2, (canvas - side) // 2)
-
-    # Shadow: the tile silhouette, blurred, offset down, at ~25% black.
-    # blur=11/dy=8 reproduces the spread of the previous hand-made asset
-    # (alpha bbox 874 vs 870, L75/T83/B67 vs L77/T87/B67).
-    shadow = Image.new("RGBA", (canvas, canvas), (0, 0, 0, 0))
-    silhouette = Image.new("RGBA", (side, side), (0, 0, 0, 64))
-    silhouette.putalpha(mask.point(lambda v: v * 64 // 255))
-    shadow.alpha_composite(silhouette, (pos[0], pos[1] + 8))
-    shadow = shadow.filter(ImageFilter.GaussianBlur(11))
-
-    out = Image.new("RGBA", (canvas, canvas), (0, 0, 0, 0))
-    out.alpha_composite(shadow)
-    out.alpha_composite(tile, pos)
-    return out
-
-
-def save_png(img: Image.Image, path: Path) -> None:
-    path.parent.mkdir(parents=True, exist_ok=True)
-    img.save(path, format="PNG", optimize=True)
-
-
-def save_ico(path: Path, sizes: list[int]) -> None:
-    """Write a multi-size ICO with an explicit image for every entry.
-
-    Pillow's ICO writer silently drops any requested size larger than the base
-    image, and its fallback path reuses a leaked loop variable when a size has
-    no exact match. Supplying every size explicitly avoids both.
-    """
-    images = {s: compose(s, h_frac=TIGHT_FRAC) for s in sizes}
-    base = images[max(sizes)]
-    path.parent.mkdir(parents=True, exist_ok=True)
-    base.save(
-        path,
-        format="ICO",
-        sizes=[(s, s) for s in sizes],
-        append_images=[images[s] for s in sorted(sizes) if s != max(sizes)],
+    """The macOS squircle tile with a drop shadow, composed once at 1024."""
+    return apple_grid(
+        _scaled(round(canvas * MACOS_GLYPH_FRAC)),
+        canvas,
+        tile_ratio=MACOS_TILE,
+        n=SQUIRCLE_N,
+        tile_color=BRAND_BG,
     )
+
+
+def _write_ico(path: Path, sizes: list[int]) -> None:
+    """Render each entry independently, then delegate the ICO writing."""
+    save_ico(path, {s: compose(s, h_frac=TIGHT_FRAC) for s in sizes})
 
 
 # --------------------------------------------------------------------------
@@ -531,7 +475,7 @@ def generate() -> int:
     count = 0
     for variant, dest, kwargs in build_manifest():
         if variant == "ico":
-            save_ico(dest, kwargs["sizes"])
+            _write_ico(dest, kwargs["sizes"])
         else:
             save_png(render(variant, kwargs), dest)
         count += 1

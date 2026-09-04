@@ -9,6 +9,7 @@ dependencies = [
     "flet",
     "flet-cli",
     "flet-desktop",
+    "flet-platform-assets",
     "flet-web",
     "flet-ads",
     "flet-audio",
@@ -35,6 +36,7 @@ dependencies = [
 flet = { workspace = true }
 flet-cli = { workspace = true }
 flet-desktop = { workspace = true }
+flet-platform-assets = { workspace = true }
 flet-web = { workspace = true }
 flet-ads = { workspace = true }
 flet-audio = { workspace = true }
