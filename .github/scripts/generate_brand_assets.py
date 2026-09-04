@@ -229,30 +229,6 @@ def compose_macos(canvas: int = 1024) -> Image.Image:
     return out
 
 
-def compose_splash(canvas: int = 1152, circle: int = 768) -> Image.Image:
-    """Android 12 splash: content fitted inside a centred circle.
-
-    The circumscribed radius is measured from the alpha mask rather than the
-    bounding-box diagonal, which over-shrinks a non-rectangular mark.
-    """
-    alpha = np.array(MARK.getchannel("A")) > 0
-    ys, xs = np.nonzero(alpha)
-    cx = (xs.min() + xs.max()) / 2
-    cy = (ys.min() + ys.max()) / 2
-    radius = float(np.hypot(xs - cx, ys - cy).max())
-
-    scale = (circle / 2) * 0.95 / radius
-    height = max(1, round(MARK.height * scale))
-    glyph = _scaled(height)
-
-    # Paste so the mark's bbox centre lands on the canvas centre.
-    gx = (xs.min() + xs.max() + 1) / 2 * (glyph.width / MARK.width)
-    gy = (ys.min() + ys.max() + 1) / 2 * (glyph.height / MARK.height)
-    out = Image.new("RGBA", (canvas, canvas), (0, 0, 0, 0))
-    out.alpha_composite(glyph, (round(canvas / 2 - gx), round(canvas / 2 - gy)))
-    return out
-
-
 def save_png(img: Image.Image, path: Path) -> None:
     path.parent.mkdir(parents=True, exist_ok=True)
     img.save(path, format="PNG", optimize=True)
@@ -409,10 +385,12 @@ def build_manifest() -> list[tuple[str, Path, dict]]:
     )
     m.append(("ico", WEB_STATIC / "favicon.ico", {"sizes": [16, 32, 48]}))
 
-    # --- Android 12 splash ------------------------------------------------
-    m.append(
-        ("splash", TEMPLATE_APP / "src/assets/splash_android.png", {"canvas": 1152})
-    )
+    # No `splash_android.png` is shipped. `flet create` used to include one, but
+    # `icon.png` is framed at GLYPH_FRAC and so already fits the Android 12
+    # splash circle, making it redundant - and worse, a user who replaced only
+    # `icon.png` kept the stock splash, because `splash_android` wins the
+    # fallback chain in `customize_splash_images`. Omitting it lets the splash
+    # follow whatever icon the user supplies.
 
     # --- examples and test fixtures --------------------------------------
     glyph(
@@ -546,8 +524,6 @@ def render(variant: str, kwargs: dict) -> Image.Image:
         size = kwargs["canvas"]
         full = compose_macos(1024)
         return full if size == 1024 else full.resize((size, size), Image.LANCZOS)
-    if variant == "splash":
-        return compose_splash(kwargs["canvas"])
     return compose(**kwargs)
 
 
