@@ -1,0 +1,334 @@
+"""Splash wiring in `flet build`: the static template files and the config.
+
+Every risk here is silent when it goes wrong - the build succeeds and the app
+simply launches wrong - and none of it had test coverage before the Dart
+generators were replaced.
+"""
+
+import json
+import xml.etree.ElementTree as ET
+from pathlib import Path
+from types import SimpleNamespace
+from typing import Any
+
+import pytest
+from jinja2 import Environment, FileSystemLoader, StrictUndefined
+
+from flet_cli.commands.build_base import BaseBuildCommand
+
+BUILD_TEMPLATE_DIR = (
+    Path(__file__).resolve().parents[3]
+    / "templates"
+    / "build"
+    / "{{cookiecutter.out_dir}}"
+)
+ANDROID_RES = "android/app/src/main/res"
+
+SPLASH_TEMPLATES = [
+    f"{ANDROID_RES}/values/colors.xml",
+    f"{ANDROID_RES}/values-night/colors.xml",
+    f"{ANDROID_RES}/values-v31/styles.xml",
+    f"{ANDROID_RES}/values-night-v31/styles.xml",
+    f"{ANDROID_RES}/values/styles.xml",
+    f"{ANDROID_RES}/values-night/styles.xml",
+    f"{ANDROID_RES}/drawable/launch_background.xml",
+    f"{ANDROID_RES}/drawable-v21/launch_background.xml",
+    "ios/Runner/Base.lproj/LaunchScreen.storyboard",
+    "web/index.html",
+]
+
+
+def _context(**overrides: Any) -> dict:
+    """The declared cookiecutter defaults, with nested templates resolved."""
+
+    env = Environment(undefined=StrictUndefined)
+    ctx = {
+        k: v
+        for k, v in json.loads(
+            (BUILD_TEMPLATE_DIR.parent / "cookiecutter.json").read_text()
+        ).items()
+        if not k.startswith("_")
+    }
+    # cookiecutter resolves values that are themselves templates.
+    for key, value in list(ctx.items()):
+        if isinstance(value, str) and "{{" in value:
+            ctx[key] = env.from_string(value).render(cookiecutter=ctx)
+    ctx.update(overrides)
+    return ctx
+
+
+def _render(path: str, **overrides: Any) -> str:
+    env = Environment(
+        loader=FileSystemLoader(str(BUILD_TEMPLATE_DIR)),
+        undefined=StrictUndefined,
+        keep_trailing_newline=True,
+    )
+    return env.get_template(path).render(cookiecutter=_context(**overrides))
+
+
+def _splash(enabled: bool, **extra: Any) -> dict:
+    base = _context()["splash"]
+    return {**base, "android": enabled, "ios": enabled, "web": enabled, **extra}
+
+
+class TestSplashTemplatesRender:
+    """Both branches must render, and the disabled branch must stay stock."""
+
+    @pytest.mark.parametrize("enabled", [True, False])
+    @pytest.mark.parametrize("path", SPLASH_TEMPLATES)
+    def test_renders_without_leftover_jinja(self, path, enabled):
+        out = _render(path, splash=_splash(enabled))
+        assert "{%" not in out and "{{" not in out
+
+    @pytest.mark.parametrize("enabled", [True, False])
+    @pytest.mark.parametrize(
+        "path", [p for p in SPLASH_TEMPLATES if p != "web/index.html"]
+    )
+    def test_renders_parseable_xml(self, path, enabled):
+        """A storyboard or resource file that fails to compile breaks the
+        whole platform build, which is the hardest thing here to catch in
+        CI."""
+        ET.fromstring(_render(path, splash=_splash(enabled)))
+
+
+class TestViewportMeta:
+    """R1: flutter_native_splash was the only source of this tag.
+
+    Without it a mobile browser lays the page out at a 980px viewport and
+    scales it down, so the whole app renders tiny. It has to survive the
+    splash being turned off, which is why it lives outside the splash block.
+    """
+
+    @pytest.mark.parametrize("enabled", [True, False])
+    def test_present_in_both_branches(self, enabled):
+        out = _render("web/index.html", splash=_splash(enabled))
+        assert 'name="viewport"' in out
+        assert "width=device-width" in out
+
+
+class TestAndroid12Splash:
+    """R2: without values-v31 the splash disappears on Android 12 and later.
+
+    These files existed only because flutter_native_splash created them, and
+    nothing in the template shipped them.
+    """
+
+    def test_v31_styles_reference_the_splash_icon(self):
+        out = _render(f"{ANDROID_RES}/values-v31/styles.xml", splash=_splash(True))
+        assert "windowSplashScreenAnimatedIcon" in out
+        assert "@drawable/android12splash" in out
+        assert "@color/flet_splash_background" in out
+
+    def test_v31_styles_fall_back_to_stock_when_disabled(self):
+        out = _render(f"{ANDROID_RES}/values-v31/styles.xml", splash=_splash(False))
+        assert "windowSplashScreenAnimatedIcon" not in out
+        assert "@drawable/launch_background" in out
+
+    def test_night_variant_uses_the_dark_parent(self):
+        out = _render(
+            f"{ANDROID_RES}/values-night-v31/styles.xml", splash=_splash(True)
+        )
+        assert "Theme.Black.NoTitleBar" in out
+
+
+class TestLaunchBackground:
+    """What Android below 12 actually reads."""
+
+    @pytest.mark.parametrize(
+        "path",
+        [
+            f"{ANDROID_RES}/drawable/launch_background.xml",
+            f"{ANDROID_RES}/drawable-v21/launch_background.xml",
+        ],
+    )
+    def test_references_the_splash_bitmap_and_colour(self, path):
+        """Both variants must agree: cookiecutter never deletes, and a stale
+        `-v21` wins on API 21 and up."""
+        out = _render(path, splash=_splash(True))
+        assert "@drawable/splash" in out
+        assert "@color/flet_splash_background" in out
+
+    def test_disabled_branch_is_the_stock_flutter_content(self):
+        out = _render(
+            f"{ANDROID_RES}/drawable/launch_background.xml", splash=_splash(False)
+        )
+        assert "@android:color/white" in out
+        assert "@drawable/splash" not in out
+
+
+class TestSplashColors:
+    """The colour reaches the XML and the pixels from one place."""
+
+    def test_colors_xml_carries_the_configured_colour(self):
+        out = _render(
+            f"{ANDROID_RES}/values/colors.xml", splash=_splash(True, color="#ff0055")
+        )
+        assert '<color name="flet_splash_background">#ff0055</color>' in out
+
+    def test_night_colors_xml_carries_the_dark_colour(self):
+        out = _render(
+            f"{ANDROID_RES}/values-night/colors.xml",
+            splash=_splash(True, dark_color="#001122"),
+        )
+        assert "#001122" in out
+
+
+class TestIOSStoryboard:
+    """The launch screen light and dark both come through the asset catalog."""
+
+    def test_background_layer_is_added_when_enabled(self):
+        out = _render(
+            "ios/Runner/Base.lproj/LaunchScreen.storyboard", splash=_splash(True)
+        )
+        assert 'image="LaunchBackground"' in out
+        assert 'contentMode="center"' in out
+
+    def test_disabled_branch_has_no_background_layer(self):
+        out = _render(
+            "ios/Runner/Base.lproj/LaunchScreen.storyboard", splash=_splash(False)
+        )
+        assert "LaunchBackground" not in out
+
+    def test_asset_catalog_declares_all_six_launch_images(self):
+        """The catalog is static, so a re-render can no longer revert it to a
+        light-only three-entry version while the dark files sit orphaned."""
+        contents = json.loads(
+            (
+                BUILD_TEMPLATE_DIR
+                / "ios/Runner/Assets.xcassets/LaunchImage.imageset/Contents.json"
+            ).read_text()
+        )
+        names = [i["filename"] for i in contents["images"]]
+        assert names == [
+            "LaunchImage.png",
+            "LaunchImageDark.png",
+            "LaunchImage@2x.png",
+            "LaunchImageDark@2x.png",
+            "LaunchImage@3x.png",
+            "LaunchImageDark@3x.png",
+        ]
+        for name in names:
+            assert (
+                BUILD_TEMPLATE_DIR
+                / "ios/Runner/Assets.xcassets/LaunchImage.imageset"
+                / name
+            ).is_file(), f"{name} is declared but not shipped"
+
+    def test_launch_background_image_set_is_shipped(self):
+        base = (
+            BUILD_TEMPLATE_DIR / "ios/Runner/Assets.xcassets/LaunchBackground.imageset"
+        )
+        assert (base / "Contents.json").is_file()
+        assert (base / "background.png").is_file()
+        assert (base / "darkbackground.png").is_file()
+
+
+class TestPubspecHasNoAssetGenerators:
+    """Both Dart tools are gone, config blocks and dev_dependencies alike."""
+
+    def test_no_generator_config_or_dependency(self):
+        text = (BUILD_TEMPLATE_DIR / "pubspec.yaml").read_text()
+        assert "flutter_launcher_icons" not in text
+        assert "flutter_native_splash" not in text
+
+
+class TestResolveSplash:
+    """Colours and toggles are resolved once, for the template and the pixels.
+
+    `create_flutter_project` filters `None` out of the context, so a `None`
+    here would leave the template referencing an undefined key.
+    """
+
+    @staticmethod
+    def _command(pyproject=None, **options):
+        cmd = BaseBuildCommand.__new__(BaseBuildCommand)
+        cmd.config_platform = "android"
+        defaults = {
+            "no_android_splash": None,
+            "no_ios_splash": None,
+            "no_web_splash": None,
+            "splash_color": None,
+            "splash_dark_color": None,
+        }
+        cmd.options = SimpleNamespace(**{**defaults, **options})
+        values = pyproject or {}
+        cmd.get_pyproject = lambda key=None: values.get(key)
+        return cmd
+
+    def test_defaults_are_enabled_and_never_none(self):
+        resolved = self._command()._resolve_splash()
+        assert resolved == {
+            "android": True,
+            "ios": True,
+            "web": True,
+            "color": "#ffffff",
+            "dark_color": "#222222",
+        }
+        assert None not in resolved.values()
+
+    def test_cli_flag_disables_one_platform(self):
+        resolved = self._command(no_web_splash=True)._resolve_splash()
+        assert resolved["web"] is False
+        assert resolved["android"] is True
+
+    def test_pyproject_disables_one_platform(self):
+        resolved = self._command({"tool.flet.splash.android": False})._resolve_splash()
+        assert resolved["android"] is False
+
+    def test_cli_flag_wins_over_pyproject(self):
+        cmd = self._command({"tool.flet.splash.web": False}, no_web_splash=False)
+        assert cmd._resolve_splash()["web"] is True
+
+    def test_platform_colour_wins_over_the_global_one(self):
+        cmd = self._command(
+            {
+                "tool.flet.splash.color": "#111111",
+                "tool.flet.android.splash.color": "#222222",
+            }
+        )
+        assert cmd._resolve_splash()["color"] == "#222222"
+
+    def test_cli_colour_wins_over_everything(self):
+        cmd = self._command({"tool.flet.splash.color": "#111111"}, splash_color="#abc")
+        assert cmd._resolve_splash()["color"] == "#abc"
+
+
+class TestWebRuntimeJsLiterals:
+    """`index.html` had three `{% if no_cdn %}` blocks on the same condition
+    interleaved into a JavaScript object literal. Deciding in Python puts the
+    quoting in one testable place and leaves the template flat."""
+
+    def test_cdn_mode_emits_nulls(self):
+        js = BaseBuildCommand._resolve_web_runtime_js(False, "/", "0.28.0")
+        assert js["no_cdn_js"] == "false"
+        assert js["canvas_kit_base_url_js"] == "null"
+        assert js["font_fallback_base_url_js"] == "null"
+        assert "cdn.jsdelivr.net" in js["pyodide_url_js"]
+        assert "0.28.0" in js["pyodide_url_js"]
+
+    def test_no_cdn_mode_pins_local_copies(self):
+        js = BaseBuildCommand._resolve_web_runtime_js(True, "/app/", "0.28.0")
+        assert js["no_cdn_js"] == "true"
+        assert js["canvas_kit_base_url_js"] == '"/app/canvaskit/"'
+        assert js["pyodide_url_js"] == '"/app/pyodide/pyodide.mjs"'
+        assert js["font_fallback_base_url_js"] == '"assets/fonts/"'
+
+    @pytest.mark.parametrize("no_cdn", [True, False])
+    def test_every_value_is_a_valid_js_literal(self, no_cdn):
+        """json.dumps output is valid JavaScript for these shapes, which is
+        the whole reason quoting moved out of the template."""
+        for value in BaseBuildCommand._resolve_web_runtime_js(
+            no_cdn, "/", "0.28.0"
+        ).values():
+            json.loads(value)  # null / true / false / "string" all round-trip
+
+    @pytest.mark.parametrize("no_cdn", [True, False])
+    def test_template_renders_them_without_conditionals(self, no_cdn):
+        out = _render(
+            "web/index.html",
+            no_cdn=no_cdn,
+            **BaseBuildCommand._resolve_web_runtime_js(no_cdn, "/", "0.28.0"),
+        )
+        literal = out[out.index("var flet = {") : out.index("flet.flutterAppLoaded")]
+        assert "toLowerCase" not in literal
+        assert f"noCdn: {str(no_cdn).lower()}," in literal
