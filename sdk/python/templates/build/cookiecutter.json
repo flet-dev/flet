@@ -40,6 +40,7 @@
   "pyodide_version": "",
   "options": null,
   "pyproject": null,
+  "adaptive_icon_background": "#ffffff",
   "splash": {
     "android": true,
     "ios": true,

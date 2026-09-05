@@ -1565,6 +1565,13 @@ class BaseBuildCommand(BaseFlutterCommand):
             "flutter": {"dependencies": list(self.flutter_dependencies.keys())},
             "boot_screen": self._resolve_boot_screen(),
             "splash": self._resolve_splash(),
+            # The adaptive-icon background is a colour resource, not pixels, so
+            # it is authored by the template like the splash colours are.
+            "adaptive_icon_background": (
+                self.options.android_adaptive_icon_background
+                or self.get_pyproject("tool.flet.android.adaptive_icon_background")
+                or "#ffffff"
+            ),
             "pyproject": self.get_pyproject(),
         }
 
@@ -1996,9 +2003,6 @@ class BaseBuildCommand(BaseFlutterCommand):
             )
 
         options = IconOptions(
-            adaptive_background=self.options.android_adaptive_icon_background
-            or self.get_pyproject("tool.flet.android.adaptive_icon_background")
-            or "#ffffff",
             macos_style=self.get_pyproject("tool.flet.macos.icon_style") or "auto",
             application_id=self.template_data["bundle_id"],
         )

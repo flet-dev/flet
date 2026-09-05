@@ -61,7 +61,6 @@ class IconOptions:
 
     Args:
         background: Flatten colour for surfaces that reject alpha.
-        adaptive_background: Android adaptive-icon background, as `#rrggbb`.
         macos_style: `"auto"` composes Apple's inset squircle and drop shadow
             unless the source already looks shaped; `"grid"` always composes
             it; `"raw"` places the artwork full-bleed, for a source that has
@@ -71,7 +70,6 @@ class IconOptions:
     """
 
     background: tuple[int, int, int] = WHITE
-    adaptive_background: str = "#ffffff"
     macos_style: str = "auto"
     application_id: str = "com.example.app"
 

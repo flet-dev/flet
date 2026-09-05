@@ -223,6 +223,47 @@ class TestIOSStoryboard:
         assert (base / "darkbackground.png").is_file()
 
 
+class TestAndroidAdaptiveIcon:
+    """The adaptive icon has to be *declared*, not just generated.
+
+    flutter_launcher_icons wrote `mipmap-anydpi-v26/ic_launcher.xml` from the
+    `adaptive_icon_*` pubspec keys. Dropping the tool without replacing that
+    file left the foreground layers on disk with nothing pointing at them, so
+    `android:icon="@mipmap/ic_launcher"` resolved to the legacy square mipmap
+    instead - and a launcher wraps a legacy icon in its own circle and scales
+    it to roughly 70%, which makes a correctly sized icon look small.
+    """
+
+    def test_adaptive_icon_xml_is_shipped(self):
+        xml = BUILD_TEMPLATE_DIR / ANDROID_RES / "mipmap-anydpi-v26" / "ic_launcher.xml"
+        assert xml.is_file(), "without this the launcher falls back to the legacy icon"
+        root = ET.fromstring(xml.read_text())
+        assert root.tag == "adaptive-icon"
+        drawables = {child.tag: list(child.attrib.values())[0] for child in root}
+        assert drawables["foreground"] == "@drawable/ic_launcher_foreground"
+        assert drawables["background"] == "@color/ic_launcher_background"
+
+    def test_background_colour_resource_is_declared(self):
+        """A dedicated file, not colors.xml, which a plugin could collide with."""
+        out = _render(
+            f"{ANDROID_RES}/values/ic_launcher_background.xml",
+            adaptive_icon_background="#ff0055",
+        )
+        root = ET.fromstring(out)
+        colour = root.find("color")
+        assert colour.get("name") == "ic_launcher_background"
+        assert colour.text == "#ff0055"
+
+    def test_foreground_layers_the_xml_references_are_generated(self):
+        """The drawable the XML names must be one render_icons produces."""
+        from flet_platform_assets import DEFAULT_SPECS
+
+        produced = {t.relative_path for t in DEFAULT_SPECS["android"].targets}
+        assert any(p.endswith("/ic_launcher_foreground.png") for p in produced), (
+            "the XML references a drawable nothing generates"
+        )
+
+
 class TestPubspecHasNoAssetGenerators:
     """Both Dart tools are gone, config blocks and dev_dependencies alike."""
 
