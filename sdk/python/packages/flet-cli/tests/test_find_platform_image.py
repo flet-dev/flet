@@ -2,8 +2,8 @@
 
 `find_platform_image` must pick a *decodable* image deterministically when
 several files share a base name — otherwise the choice depends on filesystem
-glob order and an `icon.svg` can slip through to `flutter_launcher_icons`,
-which crashes with `NoDecoderForImageFormatException`.
+glob order and an `icon.svg` can slip through to the generator, which cannot
+decode it and would fall back to no icon at all.
 """
 
 from types import SimpleNamespace

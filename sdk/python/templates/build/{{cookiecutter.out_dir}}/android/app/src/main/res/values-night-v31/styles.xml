@@ -2,14 +2,17 @@
 <resources>
     <!-- Theme applied to the Android Window while the process is starting when the OS's Dark Mode setting is on -->
     <style name="LaunchTheme" parent="@android:style/Theme.Black.NoTitleBar">
+{%- if cookiecutter.splash.android %}
+        <item name="android:forceDarkAllowed">false</item>
+        <item name="android:windowFullscreen">false</item>
+        <item name="android:windowDrawsSystemBarBackgrounds">false</item>
+        <item name="android:windowLayoutInDisplayCutoutMode">shortEdges</item>
+        <item name="android:windowSplashScreenBackground">@color/flet_splash_background</item>
+        <item name="android:windowSplashScreenAnimatedIcon">@drawable/android12splash</item>
+{%- else %}
         <!-- Show a splash screen on the activity. Automatically removed when
              the Flutter engine draws its first frame -->
         <item name="android:windowBackground">@drawable/launch_background</item>
-{%- if cookiecutter.splash.android %}
-        <!-- The splash must not be tinted by the system's force-dark pass,
-             which would recolour the user's artwork. -->
-        <item name="android:forceDarkAllowed">false</item>
-        <item name="android:windowLayoutInDisplayCutoutMode">shortEdges</item>
 {%- endif %}
     </style>
     <!-- Theme applied to the Android Window as soon as the process has started.

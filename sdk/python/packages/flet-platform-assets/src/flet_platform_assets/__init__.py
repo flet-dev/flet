@@ -22,9 +22,11 @@ from ._icons import (
     DEFAULT_SPECS,
     LINUX_HICOLOR_SIZES,
     WINDOWS_ICO_SIZES,
+    linux_targets,
     render_icons,
     web_targets_from_manifest,
 )
+from ._imaging import density_size
 from ._models import (
     AssetSpec,
     IconOptions,
@@ -60,6 +62,8 @@ __all__ = [
     "Target",
     "WEB_SCALES",
     "WINDOWS_ICO_SIZES",
+    "density_size",
+    "linux_targets",
     "load_source",
     "render_icons",
     "render_splash",

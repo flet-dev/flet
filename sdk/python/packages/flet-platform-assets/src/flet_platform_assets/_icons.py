@@ -30,6 +30,7 @@ __all__ = [
     "DEFAULT_SPECS",
     "LINUX_HICOLOR_SIZES",
     "WINDOWS_ICO_SIZES",
+    "linux_targets",
     "render_icons",
 ]
 
@@ -260,17 +261,9 @@ def _render_linux(
     downscaled from it every time.
     """
 
-    targets = spec.targets or [
-        Target(
-            f"linux/icons/hicolor/{s}x{s}/apps/{options.application_id}.png",
-            s,
-        )
-        for s in LINUX_HICOLOR_SIZES
-    ]
+    targets = spec.targets or linux_targets(options.application_id).targets
     for target in targets:
         result.add(target.relative_path, _plain(source, target, options))
-    # The GTK runner loads this one directly to set the window icon.
-    result.add("linux/app_icon.png", _plain(source, Target("", 256), options))
 
 
 def _warn_adaptive_safe_zone(source: Image.Image, result: RenderResult) -> None:
@@ -289,6 +282,32 @@ def _warn_adaptive_safe_zone(source: Image.Image, result: RenderResult) -> None:
         f"guarantees the central {ADAPTIVE_SAFE_FRACTION:.0%} of an adaptive "
         "icon is visible. Add padding around the artwork, or a circular "
         "launcher mask will clip it."
+    )
+
+
+def linux_targets(application_id: str) -> AssetSpec:
+    """Build the Linux target list for one application id.
+
+    The hicolor tree is named after the desktop entry id, so unlike every
+    other platform the file names are not fixed and cannot live in
+    :data:`DEFAULT_SPECS`. Callers that need the list up front - to check
+    whether a previous build's output is still present, say - build it here
+    rather than re-deriving the naming rule.
+
+    Args:
+        application_id: The desktop entry id, e.g. `com.example.app`.
+
+    Returns:
+        A spec covering every hicolor size plus the runner's window icon.
+    """
+
+    return AssetSpec(
+        targets=[
+            Target(f"linux/icons/hicolor/{s}x{s}/apps/{application_id}.png", s)
+            for s in LINUX_HICOLOR_SIZES
+        ]
+        # The GTK runner loads this one directly to set the window icon.
+        + [Target("linux/app_icon.png", 256)]
     )
 
 
