@@ -1,8 +1,10 @@
 {{ '{{flutter_js}}' }}
 {{ '{{flutter_build_config}}' }}
 
+// Multi-view is a Flet feature, but `flet build web` has no way to turn it
+// on, so the flag and the config key it fed are both gone rather than left
+// reading an undefined value. Flutter defaults multiViewEnabled to false.
 var flutterConfig = {
-    multiViewEnabled: flet.multiView,
     assetBase: flet.assetBase
 };
 if (flet.webRenderer != "auto") {

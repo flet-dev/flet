@@ -1495,6 +1495,11 @@ class BaseBuildCommand(BaseFlutterCommand):
             # correct jsdelivr URL when CDN mode is on.
             "pyodide_version": self.python_release.pyodide,
             "base_url": f"/{base_url}/" if base_url else "/",
+            **self._resolve_web_runtime_js(
+                self.resolve_no_cdn(),
+                f"/{base_url}/" if base_url else "/",
+                self.python_release.pyodide,
+            ),
             "split_per_abi": split_per_abi,
             # Enabled by `flet test` to scaffold integration-test wiring
             # (integration_test/ + flutter_test dev deps). Default False so
@@ -1561,6 +1566,44 @@ class BaseBuildCommand(BaseFlutterCommand):
             "boot_screen": self._resolve_boot_screen(),
             "splash": self._resolve_splash(),
             "pyproject": self.get_pyproject(),
+        }
+
+    @staticmethod
+    def _resolve_web_runtime_js(
+        no_cdn: bool, base_url: str, pyodide_version: str
+    ) -> dict:
+        """
+        Build the runtime URLs the web template emits as JS literals.
+
+        `index.html` used to carry three separate `{% if no_cdn %}` blocks on
+        the same condition, interleaved into a JavaScript object literal, plus
+        a `"{{ no_cdn }}".toLowerCase() == "true"` round-trip through a string.
+        Deciding here instead leaves the template flat substitution, and puts
+        the quoting and escaping in one place that can be tested.
+
+        Args:
+            no_cdn: Whether the build bundles its own runtime copies.
+            base_url: The app's base URL, with leading and trailing slashes.
+            pyodide_version: Resolved Pyodide release, for the jsdelivr URL.
+
+        Returns:
+            Ready-to-emit JavaScript literals - `null`, `true`/`false`, or a
+                quoted string - keyed by their cookiecutter name.
+        """
+
+        return {
+            "no_cdn_js": json.dumps(bool(no_cdn)),
+            "canvas_kit_base_url_js": json.dumps(
+                f"{base_url}canvaskit/" if no_cdn else None
+            ),
+            "pyodide_url_js": json.dumps(
+                f"{base_url}pyodide/pyodide.mjs"
+                if no_cdn
+                else f"https://cdn.jsdelivr.net/pyodide/v{pyodide_version}/full/pyodide.mjs"
+            ),
+            "font_fallback_base_url_js": json.dumps(
+                "assets/fonts/" if no_cdn else None
+            ),
         }
 
     def _resolve_splash(self) -> dict:

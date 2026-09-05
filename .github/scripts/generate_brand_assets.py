@@ -83,7 +83,6 @@ CLIENT_ANDROID_FRAC = 0.88
 TIGHT_FRAC = 0.94
 # apple-touch-icon is composited by iOS onto a rounded tile with its own inset.
 APPLE_TOUCH_FRAC = 0.729
-LOADING_FRAC = 0.88
 
 # macOS icon grid: an 824x824 tile inset in a 1024 canvas, plus a drop shadow.
 MACOS_TILE = 824 / 1024
@@ -303,15 +302,6 @@ def build_manifest() -> list[tuple[str, Path, dict]]:
                 {"canvas": 192, "h_frac": APPLE_TOUCH_FRAC, "bg": BRAND_BG},
             )
         )
-
-    # Shown while the Flutter engine boots, inside a CSS zoom/pulse animation.
-    # Must stay transparent (no background is set behind it) and centred (the
-    # animation scales about the element centre, so off-centre art drifts).
-    for dest in (
-        CLIENT / "web/icons/loading-animation.png",
-        TEMPLATE_BUILD / "web/icons/loading-animation.png",
-    ):
-        m.append(("loading", dest, {"canvas": 512, "h_frac": LOADING_FRAC}))
 
     # --- Linux ------------------------------------------------------------
     # `flet run` on Linux had a generic window icon: client/linux shipped no

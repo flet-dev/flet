@@ -172,10 +172,16 @@ ft.run(main, assets_dir="assets")
 To override favicon with your own put `favicon.png` file into the root of assets directory.
 It should be a PNG image with the size of at least 32x32 pixels.
 
-#### Loading animation
+#### Loading screen
 
-To override the Flet animation image, put `icons/loading-animation.png` with your own app logo
-in the root of the assets directory.
+The HTML loading animation has been removed. It ran before Flutter's first
+frame, which made web startup a three-stage sequence - HTML animation, then
+the Flutter boot screen, then the app - and only the boot screen is
+configurable.
+
+Dropping in your own `icons/loading-animation.png` no longer has any effect.
+Use [`[tool.flet.boot_screen]`](../../index.md) instead, which controls the
+screen shown while the app starts.
 
 #### PWA
 

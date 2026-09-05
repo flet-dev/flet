@@ -1,8 +1,6 @@
 {{flutter_js}}
 {{flutter_build_config}}
 
-var loading = document.querySelector('#loading');
-
 var flutterConfig = {
     multiViewEnabled: flet.multiView,
     entrypointBaseUrl: flet.entrypointBaseUrl,
@@ -28,15 +26,9 @@ _flutter.loader.load({
         serviceWorkerVersion: {{flutter_service_worker_version}},
     },
     onEntrypointLoaded: async function (engineInitializer) {
-        loading.classList.add('main_done');
         const engine = await engineInitializer.initializeEngine(flutterConfig);
 
-        loading.classList.add('init_done');
         flet.flutterApp = await engine.runApp();
         flet.flutterAppResolve(flet.flutterApp);
-
-        window.setTimeout(function () {
-            loading.remove();
-        }, 200);
     }
 });
