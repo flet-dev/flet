@@ -130,11 +130,17 @@ class RenderResult:
         ico: Windows `.ico` entries, keyed by destination then pixel size.
             Kept apart from `assets` because an `.ico` is many images in one
             file.
+        stale: Files a previous generator left behind that this render
+            replaces. Cookiecutter overwrites but never deletes, so an asset
+            that stops being generated - a dark splash after dark mode is
+            turned off, a `.webp` after the source changes - would otherwise
+            keep being served.
     """
 
     assets: list[RenderedAsset] = field(default_factory=list)
     warnings: list[str] = field(default_factory=list)
     ico: dict[str, dict[int, Image.Image]] = field(default_factory=dict)
+    stale: list[str] = field(default_factory=list)
 
     def add(self, relative_path: str, image: Image.Image) -> None:
         """Append a rendered asset."""

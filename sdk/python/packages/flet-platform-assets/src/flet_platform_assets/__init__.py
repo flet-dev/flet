@@ -34,13 +34,23 @@ from ._models import (
     Target,
 )
 from ._source import SourceError, load_source, square
+from ._splash import (
+    ANDROID_12_VISIBLE_FRACTION,
+    ANDROID_DENSITIES,
+    IOS_SCALES,
+    WEB_SCALES,
+    render_splash,
+)
 from ._write import write
 
 __all__ = [
+    "ANDROID_12_VISIBLE_FRACTION",
     "ANDROID_ADAPTIVE_SIZES",
+    "ANDROID_DENSITIES",
     "ANDROID_MIPMAP_SIZES",
     "AssetSpec",
     "DEFAULT_SPECS",
+    "IOS_SCALES",
     "IconOptions",
     "LINUX_HICOLOR_SIZES",
     "RenderResult",
@@ -48,9 +58,11 @@ __all__ = [
     "SourceError",
     "SplashOptions",
     "Target",
+    "WEB_SCALES",
     "WINDOWS_ICO_SIZES",
     "load_source",
     "render_icons",
+    "render_splash",
     "square",
     "web_targets_from_manifest",
     "write",

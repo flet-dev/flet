@@ -28,11 +28,17 @@ def write(
             expected to gain, such as Android's adaptive layers.
 
     Returns:
-        The paths written, in the order they were produced.
+        The paths written, in the order they were produced. Files removed
+            because they were stale are not included.
     """
 
     root = Path(project_dir)
     written: list[Path] = []
+
+    for relative in result.stale:
+        stale = root / relative
+        if stale.is_file():
+            stale.unlink()
 
     for asset in result.assets:
         path = root / asset.relative_path
