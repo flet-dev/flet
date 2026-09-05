@@ -263,6 +263,53 @@ class TestAndroidAdaptiveIcon:
             "the XML references a drawable nothing generates"
         )
 
+    @pytest.mark.parametrize("density", ["mdpi", "hdpi", "xhdpi", "xxhdpi", "xxxhdpi"])
+    def test_template_ships_the_foreground_for_apps_with_no_icon(self, density):
+        """An app with no icon of its own generates nothing, by design, so the
+        template has to ship these. Without them
+        `@drawable/ic_launcher_foreground` is unresolved and Android resource
+        linking fails the build outright - a hard error, not a cosmetic one."""
+        layer = (
+            BUILD_TEMPLATE_DIR
+            / ANDROID_RES
+            / f"drawable-{density}"
+            / "ic_launcher_foreground.png"
+        )
+        assert layer.is_file(), f"missing {density} foreground breaks `flet build apk`"
+
+    def test_shipped_foreground_fits_the_circular_mask(self):
+        """The mask is a circle, so what matters is how far the artwork's
+        furthest point sits from the centre, not its extent on either axis.
+        Framed at GLYPH_FRAC the mark reached 97% of the mask radius -
+        uncut, but filling the circle edge to edge."""
+        import math
+
+        from PIL import Image
+
+        path = (
+            BUILD_TEMPLATE_DIR
+            / ANDROID_RES
+            / "drawable-xxxhdpi"
+            / "ic_launcher_foreground.png"
+        )
+        with Image.open(path) as opened:
+            image = opened.convert("RGBA")
+        visible = round(image.width * 72 / 108)
+        offset = (image.width - visible) // 2
+        alpha = image.crop(
+            (offset, offset, offset + visible, offset + visible)
+        ).getchannel("A")
+        pixels = alpha.load()
+        centre = (visible - 1) / 2
+        radius = visible / 2
+        furthest = max(
+            math.hypot(x - centre, y - centre)
+            for y in range(visible)
+            for x in range(visible)
+            if pixels[x, y] > 8
+        )
+        assert furthest / radius < 0.90, "artwork fills the mask with no margin"
+
 
 class TestPubspecHasNoAssetGenerators:
     """Both Dart tools are gone, config blocks and dev_dependencies alike."""

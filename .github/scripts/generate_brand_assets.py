@@ -44,7 +44,10 @@ REPO = Path(__file__).resolve().parents[2]
 # rather than as a dependency: the package needs nothing but Pillow, so there
 # is nothing to resolve.
 sys.path.insert(0, str(REPO / "sdk/python/packages/flet-platform-assets/src"))
-from flet_platform_assets import LINUX_HICOLOR_SIZES  # noqa: E402
+from flet_platform_assets import (  # noqa: E402
+    ANDROID_ADAPTIVE_SIZES,
+    LINUX_HICOLOR_SIZES,
+)
 from flet_platform_assets._imaging import (  # noqa: E402
     apple_grid,
     place,
@@ -79,6 +82,12 @@ GLYPH_FRAC = 0.60
 # to it and GLYPH_FRAC would render visibly smaller than neighbouring apps.
 # This preserves the framing the hand-made client icons used.
 CLIENT_ANDROID_FRAC = 0.88
+# The adaptive-icon foreground is masked to a *circle*, so what matters is the
+# distance of the artwork's furthest point from the centre, not its extent on
+# either axis. At GLYPH_FRAC the mark's off-axis extremes reach 97% of the mask
+# radius - nothing is clipped, but it fills the circle edge to edge, which no
+# other launcher icon does. This lands them at about 85%.
+ADAPTIVE_FRAC = 0.52
 # Favicons and .ico entries are tiny; padding there just wastes pixels.
 TIGHT_FRAC = 0.94
 # apple-touch-icon is composited by iOS onto a rounded tile with its own inset.
@@ -248,6 +257,20 @@ def build_manifest() -> list[tuple[str, Path, dict]]:
         )
         glyph(
             size, TEMPLATE_BUILD / f"android/app/src/main/res/{folder}/ic_launcher.png"
+        )
+
+    # The adaptive-icon foreground layer, referenced by
+    # mipmap-anydpi-v26/ic_launcher.xml. The template has to ship these: an app
+    # with no icon of its own generates nothing, and an unresolved
+    # @drawable/ic_launcher_foreground fails Android resource linking outright.
+    for folder, size in ANDROID_ADAPTIVE_SIZES.items():
+        m.append(
+            (
+                "glyph",
+                TEMPLATE_BUILD
+                / f"android/app/src/main/res/{folder}/ic_launcher_foreground.png",
+                {"canvas": size, "h_frac": ADAPTIVE_FRAC},
+            )
         )
 
     # --- iOS: no alpha, flattened onto the brand background ---------------
