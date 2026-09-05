@@ -44,6 +44,7 @@ REPO = Path(__file__).resolve().parents[2]
 # rather than as a dependency: the package needs nothing but Pillow, so there
 # is nothing to resolve.
 sys.path.insert(0, str(REPO / "sdk/python/packages/flet-platform-assets/src"))
+from flet_platform_assets import LINUX_HICOLOR_SIZES  # noqa: E402
 from flet_platform_assets._imaging import (  # noqa: E402
     apple_grid,
     place,
@@ -311,6 +312,19 @@ def build_manifest() -> list[tuple[str, Path, dict]]:
         TEMPLATE_BUILD / "web/icons/loading-animation.png",
     ):
         m.append(("loading", dest, {"canvas": 512, "h_frac": LOADING_FRAC}))
+
+    # --- Linux ------------------------------------------------------------
+    # `flet run` on Linux had a generic window icon: client/linux shipped no
+    # icon at all and its runner had no `icon` reference. The runner loads
+    # app_icon.png directly for the X11 window icon; the hicolor tree is what
+    # a Wayland session resolves from the desktop entry, and each file is
+    # already the size its directory claims.
+    glyph(256, CLIENT / "linux/app_icon.png")
+    for size in LINUX_HICOLOR_SIZES:
+        glyph(
+            size,
+            CLIENT / f"linux/icons/hicolor/{size}x{size}/apps/com.appveyor.flet.png",
+        )
 
     # --- Windows ----------------------------------------------------------
     m.append(
