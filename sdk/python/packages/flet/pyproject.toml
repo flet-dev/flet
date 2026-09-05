@@ -10,7 +10,8 @@ dependencies = [
     "flet-cli; extra == 'cli'",
     "flet-web; extra == 'web'",
     "oauthlib >=3.2.2; platform_system != 'Emscripten'",
-    "httpx >=0.28.1; platform_system != 'Emscripten'",
+    "httpx >=0.28.1; python_version < '3.10' and platform_system != 'Emscripten'",
+    "httpx2 >=2.12.0; platform_system != 'Emscripten'",
     "repath >=0.9.0",
     "msgpack >=1.1.0",
     "typing-extensions; python_version < '3.11'"
