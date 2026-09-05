@@ -1,0 +1,145 @@
+"""Options, specs and results shared by the icon and splash renderers."""
+
+from __future__ import annotations
+
+from collections.abc import Sequence
+from dataclasses import dataclass, field
+from pathlib import Path
+
+from PIL import Image
+
+from ._imaging import WHITE
+
+__all__ = [
+    "AssetSpec",
+    "IconOptions",
+    "RenderResult",
+    "RenderedAsset",
+    "SplashOptions",
+    "Target",
+]
+
+
+@dataclass(frozen=True)
+class Target:
+    """One file to produce.
+
+    Args:
+        relative_path: Destination, relative to the Flutter project root.
+        size: Side length in pixels.
+        opaque: Flatten onto the options' background and emit mode `RGB`.
+            Used where a platform rejects an alpha channel.
+    """
+
+    relative_path: str
+    size: int
+    opaque: bool = False
+
+
+@dataclass(frozen=True)
+class AssetSpec:
+    """Which files a platform wants, and at what sizes.
+
+    Defaults describe a stock Flutter project, so a caller with no project on
+    disk - a settings screen previewing icons, for instance - gets sensible
+    output. `flet build` overrides them with the list the rendered project
+    actually declares, so it never writes a file the project does not
+    reference.
+
+    Args:
+        targets: Files to produce for this platform.
+        ico_sizes: Entry sizes for a Windows `.ico`, if any.
+    """
+
+    targets: Sequence[Target] = ()
+    ico_sizes: Sequence[int] = ()
+
+
+@dataclass(frozen=True)
+class IconOptions:
+    """How to render app icons.
+
+    Args:
+        background: Flatten colour for surfaces that reject alpha.
+        adaptive_background: Android adaptive-icon background, as `#rrggbb`.
+        macos_style: `"auto"` composes Apple's inset squircle and drop shadow
+            unless the source already looks shaped; `"grid"` always composes
+            it; `"raw"` places the artwork full-bleed, for a source that has
+            its own shape baked in.
+        application_id: Linux desktop entry id, used to name the hicolor
+            icons.
+    """
+
+    background: tuple[int, int, int] = WHITE
+    adaptive_background: str = "#ffffff"
+    macos_style: str = "auto"
+    application_id: str = "com.example.app"
+
+
+@dataclass(frozen=True)
+class SplashOptions:
+    """How to render splash screens.
+
+    Args:
+        color: Light-mode background, as `#rrggbb`.
+        dark_color: Dark-mode background.
+        icon_bgcolor: Android 12 splash icon background. Setting it changes
+            the icon canvas from 1152 to 960, per the platform spec.
+        icon_dark_bgcolor: Dark-mode variant of `icon_bgcolor`.
+        android_12_fit: `"contain"` fits the artwork inside the circle
+            Android guarantees is visible; `"none"` passes it through
+            untouched, which is what flutter_native_splash did.
+    """
+
+    color: str = "#ffffff"
+    dark_color: str = "#222222"
+    icon_bgcolor: str | None = None
+    icon_dark_bgcolor: str | None = None
+    android_12_fit: str = "contain"
+
+
+@dataclass(frozen=True)
+class RenderedAsset:
+    """One produced image, not yet written anywhere.
+
+    Args:
+        relative_path: Destination, relative to the Flutter project root.
+        image: The rendered image.
+    """
+
+    relative_path: str
+    image: Image.Image
+
+    @property
+    def path(self) -> Path:
+        """`relative_path` as a `Path`."""
+        return Path(self.relative_path)
+
+
+@dataclass
+class RenderResult:
+    """Everything a render produced, including anything worth reporting.
+
+    Diagnostics are returned rather than printed so the caller decides how to
+    surface them - a build logs them, a settings screen shows them next to
+    the offending icon.
+
+    Args:
+        assets: The rendered images.
+        warnings: Human-readable notes about the source or the result.
+        ico: Windows `.ico` entries, keyed by destination then pixel size.
+            Kept apart from `assets` because an `.ico` is many images in one
+            file.
+    """
+
+    assets: list[RenderedAsset] = field(default_factory=list)
+    warnings: list[str] = field(default_factory=list)
+    ico: dict[str, dict[int, Image.Image]] = field(default_factory=dict)
+
+    def add(self, relative_path: str, image: Image.Image) -> None:
+        """Append a rendered asset."""
+        self.assets.append(RenderedAsset(relative_path, image))
+
+    def warn(self, message: str) -> None:
+        """Record a diagnostic."""
+        self.warnings.append(message)

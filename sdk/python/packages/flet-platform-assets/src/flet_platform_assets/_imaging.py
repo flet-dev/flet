@@ -133,10 +133,18 @@ def _resample(art: Image.Image, size: tuple[int, int]) -> Image.Image:
     transparent pixels. `Image.resize` is used rather than `Image.thumbnail`,
     whose default `reducing_gap=2.0` does a two-step reduce that softens small
     sizes.
+
+    A resample to the image's existing size is skipped rather than performed:
+    the premultiply round-trip is lossy where alpha is near zero, since the
+    colour cannot be recovered once it has been scaled into the noise, so an
+    identity resize would quietly rewrite the soft edge of an icon that was
+    already the right size.
     """
 
     if art.mode != "RGBA":
         art = art.convert("RGBA")
+    if art.size == size:
+        return art
     return art.convert("RGBa").resize(size, Image.LANCZOS).convert("RGBA")
 
 
@@ -333,13 +341,61 @@ def alpha_extent(img: Image.Image) -> float | None:
     return 2 * reach / max(img.width, img.height)
 
 
+def looks_pre_shaped(
+    img: Image.Image, *, min_fill: float = 0.70, aspect_tolerance: float = 0.08
+) -> bool:
+    """Whether the artwork already has a platform icon shape baked into it.
+
+    Used to avoid rounding an icon a second time. Transparent corners alone
+    are not enough to tell: almost every logo with an alpha channel has them.
+    A shaped icon is specifically a *filled, near-square tile* with its
+    corners cut away, which separates cleanly from a logo in practice:
+
+    ================================  ========  =============
+    source                            aspect    fill in bbox
+    ================================  ========  =============
+    Flet brand mark                       0.77           0.56
+    a generated macOS app icon            1.00           0.84
+    GitHub Desktop's `electron.icns`      1.00           0.80
+    ================================  ========  =============
+
+    The corner check still matters, because a plain opaque square logo also
+    scores 1.00 aspect and 1.00 fill, and that one does want a shape applied.
+
+    Args:
+        img: The image to inspect.
+        min_fill: How much of its own bounding box the opaque content must
+            cover.
+        aspect_tolerance: How far from square the bounding box may be.
+
+    Returns:
+        `True` when the artwork looks like an already-shaped icon.
+    """
+
+    if img.mode != "RGBA":
+        img = img.convert("RGBA")
+    if not has_transparent_corners(img):
+        return False
+    box = img.getchannel("A").getbbox()
+    if box is None:
+        return False
+    left, top, right, bottom = box
+    width, height = right - left, bottom - top
+    if not width or not height:
+        return False
+    if abs(width / height - 1.0) > aspect_tolerance:
+        return False
+    opaque = img.getchannel("A").crop(box).histogram()[255]
+    return opaque / (width * height) >= min_fill
+
+
 def has_transparent_corners(
     img: Image.Image, *, probe: float = 0.06, threshold: int = 8
 ) -> bool:
-    """Whether all four corners are transparent, i.e. the artwork is shaped.
+    """Whether all four corners are effectively transparent.
 
-    Used to leave an icon alone that has already had a platform shape applied,
-    rather than rounding it a second time.
+    A building block for :func:`looks_pre_shaped`; on its own it says only
+    that the artwork is not a full-bleed rectangle.
 
     Args:
         img: The image to inspect.
