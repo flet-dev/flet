@@ -1571,6 +1571,10 @@ class BaseBuildCommand(BaseFlutterCommand):
             "adaptive_icon_background": (
                 self.options.android_adaptive_icon_background
                 or self.get_pyproject("tool.flet.android.adaptive_icon_background")
+                # Falls through to the shared key, so one colour covers every
+                # platform. Without this, setting `icon_background` alone gave
+                # a dark iOS and macOS and left Android stubbornly white.
+                or self.icon_background_value("android")
                 or "#ffffff"
             ),
             "pyproject": self.get_pyproject(),
@@ -2062,6 +2066,27 @@ class BaseBuildCommand(BaseFlutterCommand):
 
         hash.commit()
 
+    def icon_background_value(self, platform: str) -> Optional[str]:
+        """
+        The configured colour behind a transparent icon, as written.
+
+        Kept separate from :meth:`_resolve_icon_background` because Android
+        needs the string: its background is a colour *resource* rather than
+        pixels, so it reaches the icon through the template.
+
+        Args:
+            platform: Platform whose key overrides the global one.
+
+        Returns:
+            The colour string, or `None` when nothing is configured.
+        """
+
+        assert self.get_pyproject
+
+        return self.get_pyproject(
+            f"tool.flet.{platform}.icon_background"
+        ) or self.get_pyproject("tool.flet.icon_background")
+
     def _resolve_icon_background(self) -> tuple[int, int, int]:
         """
         Resolve the colour that sits behind artwork where alpha cannot survive.
@@ -2082,9 +2107,7 @@ class BaseBuildCommand(BaseFlutterCommand):
 
         assert self.get_pyproject
 
-        value = self.get_pyproject(
-            f"tool.flet.{self.config_platform}.icon_background"
-        ) or self.get_pyproject("tool.flet.icon_background")
+        value = self.icon_background_value(self.config_platform)
         if not value:
             return (255, 255, 255)
         try:

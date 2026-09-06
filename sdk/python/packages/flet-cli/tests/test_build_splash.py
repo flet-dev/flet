@@ -392,6 +392,29 @@ class TestIconBackground:
         assert cmd._resolve_icon_background() == (255, 255, 255)
         assert "octarine" in "".join(capsys.readouterr())
 
+    def test_android_falls_back_to_the_same_key(self):
+        """Android's background is a colour resource rather than pixels, so it
+        travels through the template on its own key. Without the fallback,
+        setting `icon_background` alone gave a dark iOS and macOS and left
+        Android stubbornly white."""
+        cmd = self._command(
+            {"tool.flet.icon_background": "#1a1a2e"}, platform="android"
+        )
+        assert cmd.icon_background_value("android") == "#1a1a2e"
+
+    def test_android_specific_key_still_wins(self):
+        cmd = self._command(
+            {
+                "tool.flet.icon_background": "#1a1a2e",
+                "tool.flet.android.icon_background": "#003366",
+            },
+            platform="android",
+        )
+        assert cmd.icon_background_value("android") == "#003366"
+
+    def test_unset_returns_none_so_the_caller_picks_the_default(self):
+        assert self._command().icon_background_value("android") is None
+
     def test_it_reaches_every_surface_that_rejects_alpha(self):
         """One colour covers the iOS flatten, the macOS tile and the opaque
         web icons - the three places a transparent source cannot survive."""
