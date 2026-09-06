@@ -27,7 +27,7 @@ import argparse
 import sys
 from pathlib import Path
 
-from PIL import Image, ImageDraw
+from PIL import Image, ImageChops, ImageDraw
 
 REPO = Path(__file__).resolve().parents[2]
 sys.path.insert(0, str(REPO / "sdk/python/packages/flet-platform-assets/src"))
@@ -53,6 +53,11 @@ TILE = 256  # every illustration is square and this wide
 CHECKER_LIGHT = (245, 243, 244)
 CHECKER_DARK = (226, 221, 225)
 CHECKER_SQUARE = 16
+
+# Compared pixel by pixel rather than byte by byte, because PNG bytes depend on
+# the zlib build inside whichever Pillow wheel is installed. The tolerance
+# absorbs last-bit resampling differences between architectures.
+PIXEL_TOLERANCE = 2
 
 
 def mark() -> Image.Image:
@@ -373,8 +378,16 @@ def main() -> int:
                 failures += 1
                 continue
             with Image.open(path) as existing:
-                if existing.convert("RGBA").tobytes() != image.convert("RGBA").tobytes():
-                    print(f"stale: {name}")
+                got, want = existing.convert("RGBA"), image.convert("RGBA")
+                if got.size != want.size:
+                    print(f"stale: {name} ({got.size} != {want.size})")
+                    failures += 1
+                    continue
+                worst = max(
+                    hi for _, hi in ImageChops.difference(got, want).getextrema()
+                )
+                if worst > PIXEL_TOLERANCE:
+                    print(f"stale: {name} (max channel difference {worst})")
                     failures += 1
         else:
             image.save(path, format="PNG", optimize=True)

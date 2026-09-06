@@ -68,15 +68,18 @@ jobs:
           uv run --no-dev --group test pytest packages/*/tests
 
       # The brand assets are generated from one master by the same compositing
-      # primitives `flet build` uses. Regenerating must be a no-op: a diff here
-      # means a change to those primitives silently altered every shipped icon.
+      # primitives `flet build` uses, so a change to those primitives must not
+      # silently alter every shipped icon. `--verify` re-renders each asset and
+      # compares it to the committed one pixel by pixel. Deliberately not a
+      # `git diff`: PNG bytes depend on the zlib build inside whichever Pillow
+      # wheel is installed, so identical images encode differently on Linux and
+      # macOS and the diff would fail for everyone who did not generate on the
+      # runner's platform.
       - name: Check brand assets are up to date
         if: matrix.python-version == '3.12'
         shell: bash
         run: |
-          uv run .github/scripts/generate_brand_assets.py
           uv run .github/scripts/generate_brand_assets.py --verify
-          git diff --exit-code
 
       # The icon documentation shows what the generator actually produces, so
       # the illustrations are rendered by it rather than drawn. A diff here

@@ -35,7 +35,7 @@ import shutil
 import sys
 from pathlib import Path
 
-from PIL import Image
+from PIL import Image, ImageChops
 
 REPO = Path(__file__).resolve().parents[2]
 
@@ -541,6 +541,27 @@ def generate() -> int:
 # --------------------------------------------------------------------------
 
 
+# Committed assets are compared to a fresh render pixel by pixel, not byte by
+# byte: PNG bytes depend on the zlib build inside whichever Pillow wheel is
+# installed, so the same image encodes differently on Linux and macOS. A small
+# tolerance absorbs last-bit resampling differences between architectures,
+# which is far below anything visible and far above nothing at all.
+PIXEL_TOLERANCE = 2
+
+
+def _check_pixels(check, label: str, got: Image.Image, want: Image.Image) -> None:
+    """Compare a committed asset with a freshly rendered one."""
+    got, want = got.convert("RGBA"), want.convert("RGBA")
+    if got.size != want.size:
+        check(False, f"{label}: size {got.size} != {want.size}")
+        return
+    worst = max(hi for _, hi in ImageChops.difference(got, want).getextrema())
+    check(
+        worst <= PIXEL_TOLERANCE,
+        f"{label}: differs from a fresh render (max channel difference {worst})",
+    )
+
+
 def verify() -> int:
     failures: list[str] = []
 
@@ -555,14 +576,24 @@ def verify() -> int:
             continue
 
         if variant == "ico":
-            got = sorted(w for w, _ in Image.open(dest).ico.sizes())
-            want = sorted(kwargs["sizes"])
-            check(got == want, f"{rel}: ico sizes {got} != {want}")
+            with Image.open(dest) as ico:
+                got = sorted(w for w, _ in ico.ico.sizes())
+                want = sorted(kwargs["sizes"])
+                check(got == want, f"{rel}: ico sizes {got} != {want}")
+                for size in set(got) & set(want):
+                    _check_pixels(
+                        check,
+                        f"{rel} [{size}px]",
+                        ico.ico.getimage((size, size)),
+                        compose(size, h_frac=TIGHT_FRAC),
+                    )
             continue
 
         img = Image.open(dest)
         size = kwargs["canvas"]
         check(img.size == (size, size), f"{rel}: size {img.size} != {(size, size)}")
+        if img.size == (size, size):
+            _check_pixels(check, str(rel), img, render(variant, kwargs))
 
         if variant in ("tile-safe", "tile-large"):
             check(
