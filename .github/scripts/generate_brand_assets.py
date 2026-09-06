@@ -90,6 +90,11 @@ CLIENT_ANDROID_FRAC = 0.88
 ADAPTIVE_FRAC = 0.52
 # Favicons and .ico entries are tiny; padding there just wastes pixels.
 TIGHT_FRAC = 0.94
+# What a user's `assets/icon.png` is documented to be: artwork filling the
+# canvas. The flat surfaces (web, Windows, Linux) then get every pixel, and
+# `flet build` computes the margin iOS, macOS and Android each need. Anything
+# less here is padding that cannot be recovered later.
+FULL_BLEED_FRAC = 1.0
 # apple-touch-icon is composited by iOS onto a rounded tile with its own inset.
 APPLE_TOUCH_FRAC = 0.729
 
@@ -237,12 +242,17 @@ def build_manifest() -> list[tuple[str, Path, dict]]:
             {"canvas": 192, "h_frac": CLIENT_ANDROID_FRAC},
         )
     )
-    glyph(
-        1024,
-        TEMPLATE_BUILD / "images/icon.png",
+    # The splash's last-resort source, not an icon source: `flet build`
+    # generates no icons at all when the app supplies none. A splash is drawn
+    # at its natural size on a full screen, so this stays framed.
+    glyph(1024, TEMPLATE_BUILD / "images/icon.png")
+
+    # Icon sources a user edits or replaces. Full-bleed by contract.
+    for dest in (
         TEMPLATE_APP / "src/assets/icon.png",
         EXAMPLES / "apps/counter_test_ios/assets/icon.png",
-    )
+    ):
+        m.append(("glyph", dest, {"canvas": 1024, "h_frac": FULL_BLEED_FRAC}))
 
     # --- Android launcher icons ------------------------------------------
     for folder, size in MIPMAP_SIZES.items():
@@ -332,11 +342,25 @@ def build_manifest() -> list[tuple[str, Path, dict]]:
     # app_icon.png directly for the X11 window icon; the hicolor tree is what
     # a Wayland session resolves from the desktop entry, and each file is
     # already the size its directory claims.
-    glyph(256, CLIENT / "linux/app_icon.png")
+    # Tight, not the 0.60 glyph framing: nothing masks a Linux icon, so a
+    # margin here is just empty pixels - the same reason the favicon is tight.
+    tight(256, CLIENT / "linux/app_icon.png")
     for size in LINUX_HICOLOR_SIZES:
-        glyph(
+        tight(
             size,
             CLIENT / f"linux/icons/hicolor/{size}x{size}/apps/com.appveyor.flet.png",
+        )
+
+    # The build template ships Linux icons for the same reason it ships them
+    # for every other platform: an app that supplies no icon of its own still
+    # gets the Flet one. Without these, `flet build linux` produced a bundle
+    # with no icon while iOS, macOS, Windows and web all had theirs.
+    bundle = "{{cookiecutter.bundle_id}}"
+    tight(256, TEMPLATE_BUILD / "linux/app_icon.png")
+    for size in LINUX_HICOLOR_SIZES:
+        tight(
+            size,
+            TEMPLATE_BUILD / f"linux/icons/hicolor/{size}x{size}/apps/{bundle}.png",
         )
 
     # --- Windows ----------------------------------------------------------
