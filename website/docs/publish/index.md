@@ -817,13 +817,16 @@ way to decide the framing rather than inherit it.
 
 From the recommended source above, unchanged:
 
-| Web favicon | iOS | macOS | Android | Maskable |
+| Web, Windows, Linux | iOS | macOS | Android | Maskable web icon |
 |:--:|:--:|:--:|:--:|:--:|
-| ![Favicon](/img/docs/icons/result-favicon.png) | ![iOS icon](/img/docs/icons/result-ios.png) | ![macOS icon](/img/docs/icons/result-macos.png) | ![Android icon](/img/docs/icons/result-android.png) | ![Maskable icon](/img/docs/icons/result-maskable.png) |
+| ![Artwork kept edge to edge](/img/docs/icons/result-unmasked.png) | ![iOS icon](/img/docs/icons/result-ios.png) | ![macOS icon](/img/docs/icons/result-macos.png) | ![Android icon](/img/docs/icons/result-android.png) | ![Maskable icon](/img/docs/icons/result-maskable.png) |
 | every pixel | inset, flattened | Apple's tile and shadow | fitted to the circle | fitted to the safe zone |
 
-Nothing masks a favicon, a Windows `.ico` or a Linux icon, so those keep the
-artwork edge to edge. The other three each crop, and each crops differently.
+The first cell covers three platforms because none of them masks anything: a
+favicon, a Windows `.ico` and a Linux icon all get the artwork untouched, so
+they are one picture rather than three identical ones. The other four each
+crop, and each crops differently — which is the whole reason a single source
+cannot be framed once and used everywhere.
 
 #### Framing
 

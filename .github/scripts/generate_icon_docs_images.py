@@ -293,7 +293,12 @@ def build() -> dict[str, Image.Image]:
         "source-padded.png": on_checkerboard(padded),
         "source-opaque.png": on_checkerboard(opaque),
         # What one full-bleed source becomes on each platform.
-        "result-favicon.png": on_checkerboard(web(full_bleed, "favicon.png", True)),
+        # Stands for web, Windows and Linux at once: none of them masks
+        # anything, so all three get the artwork untouched and one picture is
+        # the honest illustration. Rendered from Icon-512 rather than the 32px
+        # favicon, which blown up eightfold would look like a blurry result
+        # rather than the unmodified one it is.
+        "result-unmasked.png": on_checkerboard(web(full_bleed, "Icon-512.png", True)),
         "result-ios.png": rounded(
             platform_icon(full_bleed, "ios", "1024x1024", True)
         ),
