@@ -2268,8 +2268,12 @@ class BaseBuildCommand(BaseFlutterCommand):
             else self.flutter_dir.joinpath("images", "icon.png")
         )
         if not light_path.is_file():
-            # A custom template may ship no default icon; an app with no
-            # splash artwork at all is better than a failed build.
+            # A custom build template may ship no `images/icon.png`, leaving
+            # nothing to derive a splash from. The template ships 1x1
+            # transparent `drawable/splash.png` and `drawable/android12splash.png`
+            # so `@drawable/splash` and the Android 12 theme still resolve;
+            # without them this path fails resource linking outright rather
+            # than degrading to a plain background.
             hash.commit()
             return
 

@@ -311,6 +311,39 @@ class TestAndroidAdaptiveIcon:
         assert furthest / radius < 0.90, "artwork fills the mask with no margin"
 
 
+class TestSplashPlaceholders:
+    """`@drawable/splash` must always resolve, even when nothing is generated.
+
+    A custom build template may ship no `images/icon.png`, leaving no source
+    to derive a splash from. The generator returns early there, which used to
+    leave `launch_background.xml` and `values-v31/styles.xml` pointing at
+    drawables that did not exist - Android resource linking fails outright,
+    which is not the graceful degradation the code claimed.
+    """
+
+    @pytest.mark.parametrize("name", ["splash.png", "android12splash.png"])
+    def test_base_density_placeholder_is_shipped(self, name):
+        placeholder = BUILD_TEMPLATE_DIR / ANDROID_RES / "drawable" / name
+        assert placeholder.is_file(), f"{name} missing: @drawable would dangle"
+
+    @pytest.mark.parametrize("name", ["splash.png", "android12splash.png"])
+    def test_placeholder_is_invisible(self, name):
+        """It backstops linking only. A device with generated density
+        variants uses those; one without shows the splash background alone."""
+        from PIL import Image
+
+        with Image.open(BUILD_TEMPLATE_DIR / ANDROID_RES / "drawable" / name) as im:
+            assert im.size == (1, 1)
+            assert im.convert("RGBA").getpixel((0, 0))[3] == 0
+
+    def test_generated_densities_do_not_collide_with_it(self):
+        """The generator writes density-qualified names, which Android
+        prefers, so the placeholder is never what a real device shows."""
+        from flet_platform_assets import ANDROID_DENSITIES
+
+        assert "drawable" not in {f"drawable-{d}" for d in ANDROID_DENSITIES}
+
+
 class TestIconBackground:
     """The colour behind artwork wherever alpha cannot survive.
 
