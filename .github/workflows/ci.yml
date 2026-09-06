@@ -78,6 +78,15 @@ jobs:
           uv run .github/scripts/generate_brand_assets.py --verify
           git diff --exit-code
 
+      # The icon documentation shows what the generator actually produces, so
+      # the illustrations are rendered by it rather than drawn. A diff here
+      # means the docs now show behaviour the code no longer has.
+      - name: Check icon documentation images are up to date
+        if: matrix.python-version == '3.12'
+        shell: bash
+        run: |
+          uv run .github/scripts/generate_icon_docs_images.py --verify
+
       - name: Run docs-coverage
         if: matrix.python-version == '3.12'
         shell: bash
