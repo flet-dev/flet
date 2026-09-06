@@ -762,11 +762,38 @@ adds the margin where it is actually required.
 Other raster formats work too — `.webp`, `.jpg`, `.gif`, `.bmp`, `.tif` — and
 when several files share a base name the highest-quality one wins, `.png`
 first. `.svg` is never used: it is a vector, and it is skipped with a warning
-rather than silently ignored. A non-square image is padded to a square, with a
-warning; supply a square one to control the framing yourself.
+rather than silently ignored.
 
 If you supply no icon at all, Flet generates nothing and the default Flet icons
 are used.
+
+#### If your icon is not square
+
+Nothing is ever cropped — your artwork is centred on each square icon and the
+remaining space is filled. **What fills it is decided by the icon being made,
+not by your image:**
+
+| Your 1024×600 source | On iOS, a maskable, the macOS tile | On a favicon, `Icon-*`, Windows, Linux, Android |
+|:--:|:--:|:--:|
+| ![A wide source image](/img/docs/icons/rect-source.png) | ![Filled with the background colour](/img/docs/icons/rect-opaque-target.png) | ![Filled with transparency](/img/docs/icons/rect-alpha-target.png) |
+| | filled with `icon_background` | left transparent |
+
+Those platforms cannot keep an alpha channel, so the space becomes
+`icon_background` — shown dark above so it is visible; it is white by default.
+Everywhere else transparency is fine and the space is simply left empty.
+
+An opaque source is treated no differently here: it too gets transparent space
+on a favicon or a Linux icon. What your source's transparency *does* decide is
+[framing](#framing) — opaque artwork is never resized, a transparent glyph is.
+
+On Android this works out well without any help: the empty space is in the
+foreground layer, so the background colour shows through it and the icon reads
+as your artwork on a coloured field.
+
+Since the fill differs between platforms, a non-square icon will not look
+identical everywhere unless `icon_background` happens to match your artwork.
+`flet build` warns when it sees one. Squaring the image yourself is the only
+way to decide the framing rather than inherit it.
 
 #### What each platform makes of it
 

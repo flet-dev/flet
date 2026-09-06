@@ -84,6 +84,33 @@ def source(height_frac: float, *, opaque: bool = False) -> Image.Image:
     return canvas
 
 
+def rectangular() -> Image.Image:
+    """A wide source, to show what happens to artwork that is not square."""
+
+    art = mark()
+    white = Image.new("RGBA", art.size, (255, 255, 255, 255))
+    white.putalpha(art.getchannel("A"))
+    canvas = Image.new("RGBA", (1024, 600), (*BRAND, 255))
+    scaled = scale_to_height(white, 420)
+    canvas.alpha_composite(
+        scaled, ((1024 - scaled.width) // 2, (600 - scaled.height) // 2)
+    )
+    return canvas
+
+
+def letterboxed(img: Image.Image) -> Image.Image:
+    """Fit a non-square image inside the illustration tile, centred."""
+
+    scaled = img.copy()
+    scaled.thumbnail((TILE, TILE), Image.LANCZOS)
+    board = checkerboard(TILE)
+    board.alpha_composite(
+        scaled.convert("RGBA"),
+        ((TILE - scaled.width) // 2, (TILE - scaled.height) // 2),
+    )
+    return board
+
+
 def checkerboard(size: int) -> Image.Image:
     """A square of alternating light squares, to sit behind transparency."""
 
@@ -156,13 +183,22 @@ def web(src: Image.Image, name: str, derived: bool) -> Image.Image:
     )
 
 
-def platform_icon(src: Image.Image, platform: str, name: str, derived: bool):
+def platform_icon(
+    src: Image.Image,
+    platform: str,
+    name: str,
+    derived: bool,
+    background: tuple[int, int, int] = (255, 255, 255),
+):
     """One rendered icon for a native platform, by file name fragment."""
 
     return next(
         a.image
         for a in render_icons(
-            src, IconOptions(), platform=platform, derived=derived
+            src,
+            IconOptions(background=background),
+            platform=platform,
+            derived=derived,
         ).assets
         if name in a.relative_path
     )
@@ -237,6 +273,17 @@ def build() -> dict[str, Image.Image]:
             android_foreground(opaque, True), (255, 255, 255)
         ),
         "opaque-ios.png": rounded(platform_icon(opaque, "ios", "1024x1024", True)),
+        # A source that is not square: what fills the rest is decided by the
+        # target, not by the source.
+        "rect-source.png": letterboxed(rectangular()),
+        # A dark icon_background here only so the fill is visible; the
+        # default is white, which would be invisible against the tile.
+        "rect-opaque-target.png": on_checkerboard(
+            platform_icon(rectangular(), "ios", "1024x1024", True, (26, 26, 46))
+        ),
+        "rect-alpha-target.png": on_checkerboard(
+            web(rectangular(), "Icon-512.png", True)
+        ),
         # The maskable safe zone, with the crop made visible.
         "maskable-fitted.png": safe_zone_overlay(
             web(full_bleed, "Icon-maskable-512.png", True), FRAMING["maskable"][0]
