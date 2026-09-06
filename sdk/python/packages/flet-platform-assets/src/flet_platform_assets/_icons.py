@@ -137,11 +137,26 @@ def _default_specs() -> dict[str, AssetSpec]:
                 # Maskable icons are cropped to an arbitrary shape by the
                 # launcher and must be opaque; a transparent one renders with
                 # black corners on some Android launchers.
-                Target("web/icons/Icon-maskable-192.png", 192, opaque=True),
-                Target("web/icons/Icon-maskable-512.png", 512, opaque=True),
+                Target(
+                    "web/icons/Icon-maskable-192.png",
+                    192,
+                    opaque=True,
+                    frame="maskable",
+                ),
+                Target(
+                    "web/icons/Icon-maskable-512.png",
+                    512,
+                    opaque=True,
+                    frame="maskable",
+                ),
                 # flutter_launcher_icons never generated this, yet the
                 # template's index.html links to it.
-                Target("web/icons/apple-touch-icon-192.png", 192, opaque=True),
+                Target(
+                    "web/icons/apple-touch-icon-192.png",
+                    192,
+                    opaque=True,
+                    frame="apple-touch",
+                ),
             ]
         ),
         "linux": AssetSpec(),
@@ -163,6 +178,13 @@ FRAMING = {
     "ios": (0.60, alpha_extent),
     "macos": (0.68, alpha_extent),
     "android": (0.567, radial_extent),
+    # Per-target rules, for files whose mask differs from their platform's.
+    # A maskable icon's safe zone is defined by spec as a circle 80% of the
+    # icon's width, so the artwork's furthest point may reach 0.80 of half the
+    # canvas. An apple-touch icon becomes an iOS home-screen icon, so it is
+    # framed exactly like the native one.
+    "maskable": (0.80, radial_extent),
+    "apple-touch": (0.60, alpha_extent),
 }
 
 # Resampling lands the measured extent a hair either side of the target, so an
@@ -216,10 +238,10 @@ def render_icons(
     if platform == "macos":
         _render_macos(source, options, spec, result, pre_rendered)
     elif platform == "linux":
-        _render_linux(source, options, spec, result)
+        _render_linux(source, options, spec, result, derived)
     else:
         for target in spec.targets:
-            result.add(target.relative_path, _plain(source, target, options))
+            result.add(target.relative_path, _plain(source, target, options, derived))
 
     if platform == "android":
         _warn_adaptive_safe_zone(source, result)
@@ -231,7 +253,7 @@ def render_icons(
     return result
 
 
-def _frame(source: Image.Image, platform: str) -> Image.Image:
+def _frame(source: Image.Image, rule: str) -> Image.Image:
     """Shrink artwork to the margin a platform's mask needs, never enlarging.
 
     Only shrinking makes this idempotent and safe to apply to anything: a
@@ -245,7 +267,7 @@ def _frame(source: Image.Image, platform: str) -> Image.Image:
     ring a complete composition with a border of background colour.
     """
 
-    framing = FRAMING.get(platform)
+    framing = FRAMING.get(rule)
     if framing is None:
         return source
     target, measure = framing
@@ -256,9 +278,16 @@ def _frame(source: Image.Image, platform: str) -> Image.Image:
     return place(art, source.width)
 
 
-def _plain(source: Image.Image, target: Target, options: IconOptions) -> Image.Image:
+def _plain(
+    source: Image.Image,
+    target: Target,
+    options: IconOptions,
+    derived: bool = False,
+) -> Image.Image:
     """Full-bleed placement, flattened when the target rejects alpha."""
 
+    if derived and target.frame:
+        source = _frame(source, target.frame)
     art = scale_to_fit(source, target.size)
     return place(
         art,
@@ -295,6 +324,8 @@ def _render_macos(
                 "as-is instead of having the icon grid applied on top. Set "
                 'macos.icon_style = "grid" to apply it anyway.'
             )
+        # No `derived` here: macOS targets declare no per-target framing, and
+        # the source was already framed for the platform before dispatch.
         for target in spec.targets:
             result.add(target.relative_path, _plain(source, target, options))
         return
@@ -316,6 +347,7 @@ def _render_linux(
     options: IconOptions,
     spec: AssetSpec,
     result: RenderResult,
+    derived: bool = False,
 ) -> None:
     """Produce the freedesktop hicolor tree plus the runner's window icon.
 
@@ -328,7 +360,7 @@ def _render_linux(
 
     targets = spec.targets or linux_targets(options.application_id).targets
     for target in targets:
-        result.add(target.relative_path, _plain(source, target, options))
+        result.add(target.relative_path, _plain(source, target, options, derived))
 
 
 def _warn_adaptive_safe_zone(source: Image.Image, result: RenderResult) -> None:
@@ -403,6 +435,20 @@ def web_targets_from_manifest(manifest: dict, favicon_size: int = 32) -> AssetSp
         except ValueError:
             continue
         maskable = "maskable" in entry.get("purpose", "")
-        targets.append(Target(f"web/{src}", size, opaque=maskable))
-    targets.append(Target("web/icons/apple-touch-icon-192.png", 192, opaque=True))
+        targets.append(
+            Target(
+                f"web/{src}",
+                size,
+                opaque=maskable,
+                frame="maskable" if maskable else None,
+            )
+        )
+    targets.append(
+        Target(
+            "web/icons/apple-touch-icon-192.png",
+            192,
+            opaque=True,
+            frame="apple-touch",
+        )
+    )
     return AssetSpec(targets=targets)

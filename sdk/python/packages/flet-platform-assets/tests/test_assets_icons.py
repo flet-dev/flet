@@ -20,7 +20,7 @@ from flet_platform_assets import (
     web_targets_from_manifest,
     write,
 )
-from flet_platform_assets._icons import _frame
+from flet_platform_assets._icons import FRAMING_TOLERANCE, _frame
 from flet_platform_assets._imaging import (
     alpha_extent,
     radial_extent,
@@ -380,3 +380,83 @@ class TestFraming:
                 "ios/Runner/Assets.xcassets/AppIcon.appiconset/Icon-App-1024x1024@1x.png"
             ].tobytes()
         )
+
+
+class TestWebFraming:
+    """The web needs three different framings at once.
+
+    A favicon is never masked and wants every pixel. A maskable icon is
+    cropped by the installing platform, and its safe zone is defined by spec
+    as a circle 80% of the icon's width. An apple-touch icon becomes an iOS
+    home-screen icon, so it wants the same margin as the native one. Framing
+    per platform cannot express that, so these three carry their own rule.
+    """
+
+    @pytest.fixture
+    def full_bleed(self):
+        img = Image.new("RGBA", (512, 512), (0, 0, 0, 0))
+        img.paste(Image.new("RGBA", (396, 512), (255, 0, 85, 255)), (58, 0))
+        return img
+
+    @staticmethod
+    def _ink(image):
+        """Alpha of the non-white ink, for icons that were flattened."""
+        from PIL import ImageChops
+
+        diff = ImageChops.difference(
+            image.convert("RGB"), Image.new("RGB", image.size, (255, 255, 255))
+        )
+        mask = diff.convert("L").point(lambda v: 255 if v > 24 else 0)
+        out = Image.new("RGBA", image.size, (0, 0, 0, 0))
+        out.putalpha(mask)
+        return out
+
+    def test_unmasked_icons_keep_every_pixel(self, full_bleed):
+        images = by_path(render_icons(full_bleed, platform="web", derived=True))
+        for name in ("web/favicon.png", "web/icons/Icon-192.png"):
+            assert alpha_extent(images[name]) == pytest.approx(1.0, abs=0.02)
+
+    @pytest.mark.parametrize("size", [192, 512])
+    def test_maskable_fits_the_spec_safe_zone(self, full_bleed, size):
+        """Artwork outside a circle 80% of the width can be cropped away."""
+        images = by_path(render_icons(full_bleed, platform="web", derived=True))
+        icon = images[f"web/icons/Icon-maskable-{size}.png"]
+        assert radial_extent(self._ink(icon)) <= 0.80 * FRAMING_TOLERANCE
+
+    def test_apple_touch_matches_the_native_ios_icon(self, full_bleed):
+        """It becomes an iOS home-screen icon, so it gets the iOS margin."""
+        web = by_path(render_icons(full_bleed, platform="web", derived=True))
+        ios = by_path(render_icons(full_bleed, platform="ios", derived=True))
+        touch = alpha_extent(self._ink(web["web/icons/apple-touch-icon-192.png"]))
+        native = alpha_extent(
+            self._ink(
+                ios[
+                    "ios/Runner/Assets.xcassets/AppIcon.appiconset/Icon-App-1024x1024@1x.png"
+                ]
+            )
+        )
+        assert touch == pytest.approx(native, abs=0.03)
+
+    def test_explicit_icon_web_is_left_alone(self, full_bleed):
+        """`icon_web.png` is a finished composition; nothing is reframed."""
+        images = by_path(render_icons(full_bleed, platform="web"))
+        icon = images["web/icons/Icon-maskable-192.png"]
+        assert radial_extent(self._ink(icon)) > 0.80
+
+    def test_manifest_driven_targets_carry_the_same_rules(self):
+        spec = web_targets_from_manifest(
+            {
+                "icons": [
+                    {"src": "icons/Icon-192.png", "sizes": "192x192"},
+                    {
+                        "src": "icons/Icon-maskable-192.png",
+                        "sizes": "192x192",
+                        "purpose": "maskable",
+                    },
+                ]
+            }
+        )
+        frames = {t.relative_path: t.frame for t in spec.targets}
+        assert frames["web/icons/Icon-192.png"] is None
+        assert frames["web/icons/Icon-maskable-192.png"] == "maskable"
+        assert frames["web/icons/apple-touch-icon-192.png"] == "apple-touch"

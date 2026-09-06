@@ -29,11 +29,17 @@ class Target:
         size: Side length in pixels.
         opaque: Flatten onto the options' background and emit mode `RGB`.
             Used where a platform rejects an alpha channel.
+        frame: Name of a rule in `FRAMING` to apply to this file alone, for a
+            target whose mask differs from the rest of its platform. The web
+            needs all three cases at once: a favicon is never masked, a
+            maskable icon is cropped to a circle, and an apple-touch icon
+            becomes an iOS home-screen icon.
     """
 
     relative_path: str
     size: int
     opaque: bool = False
+    frame: str | None = None
 
 
 @dataclass(frozen=True)
