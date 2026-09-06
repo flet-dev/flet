@@ -759,6 +759,24 @@ Windows and Linux mask nothing and show the artwork as-is, so a source padded
 to survive Android spends roughly 40% of every favicon on empty space. Flet
 adds the margin where it is actually required.
 
+**1024×1024 is the size to supply**, because that is the largest icon any
+platform asks for. Each needs a different maximum, and anything above it is
+downscaled — which is what you want — while anything below is enlarged and
+looks soft:
+
+| Platform | Largest icon | A 512px source |
+|---|---|---|
+| iOS | 1024px, the App Store marketing icon | enlarged ×2 |
+| macOS | 1024px | enlarged ×2 |
+| Web | 512px | fine |
+| Linux | 512px | fine |
+| Android | 432px | fine |
+| Windows | 256px | fine |
+
+`flet build` warns when your source is smaller than the largest icon it is
+about to make, naming that platform's own maximum. A source larger than 1024
+is fine and costs nothing; it is reduced once before anything is generated.
+
 Other raster formats work too — `.webp`, `.jpg`, `.gif`, `.bmp`, `.tif` — and
 when several files share a base name the highest-quality one wins, `.png`
 first. `.svg` is never used: it is a vector, and it is skipped with a warning

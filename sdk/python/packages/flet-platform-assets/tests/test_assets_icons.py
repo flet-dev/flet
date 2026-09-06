@@ -16,6 +16,7 @@ from flet_platform_assets import (
     IconOptions,
     RenderResult,
     Target,
+    linux_targets,
     render_icons,
     web_targets_from_manifest,
     write,
@@ -535,3 +536,60 @@ class TestMaskableSafeZoneWarning:
         assert measured > 0.80, "the fixture must actually exceed the safe zone"
         assert f"{measured:.0%} of its width" in warning
         assert "80% of that" in warning
+
+
+class TestLowResolutionWarning:
+    """A source smaller than the largest icon is enlarged, and looks soft.
+
+    Each platform's largest differs, so a source that is perfectly adequate
+    for one is stretched for another. iOS is where it matters most: the 1024px
+    marketing icon is what an App Store listing shows.
+    """
+
+    @staticmethod
+    def _low(result):
+        return [w for w in result.warnings if "look" in w and "soft" in w]
+
+    def _render(self, side, platform):
+        img = Image.new("RGBA", (side, side), (0, 0, 0, 0))
+        inset = side // 8
+        img.paste(
+            Image.new("RGBA", (side - 2 * inset, side - 2 * inset), (255, 0, 85, 255)),
+            (inset, inset),
+        )
+        spec = linux_targets("com.example.app") if platform == "linux" else None
+        return render_icons(img, spec=spec, platform=platform, derived=True)
+
+    @pytest.mark.parametrize(
+        "platform", ["ios", "macos", "android", "web", "windows", "linux"]
+    )
+    def test_a_1024_source_never_warns(self, platform):
+        assert not self._low(self._render(1024, platform))
+
+    @pytest.mark.parametrize(("platform", "needs"), [("ios", 1024), ("macos", 1024)])
+    def test_512_warns_where_1024_is_needed(self, platform, needs):
+        warning = self._low(self._render(512, platform))
+        assert warning, f"{platform} needs {needs}px and got 512"
+        assert f"up to {needs}px" in warning[0]
+        assert "512px" in warning[0]
+
+    @pytest.mark.parametrize("platform", ["android", "web", "windows", "linux"])
+    def test_512_is_enough_for_the_rest(self, platform):
+        """None of these asks for more than 512, so there is nothing to say."""
+        assert not self._low(self._render(512, platform))
+
+    @pytest.mark.parametrize(
+        ("platform", "needs"),
+        [
+            ("ios", 1024),
+            ("macos", 1024),
+            ("web", 512),
+            ("linux", 512),
+            ("android", 432),
+            ("windows", 256),
+        ],
+    )
+    def test_the_size_named_is_the_platform_s_own_largest(self, platform, needs):
+        """Not a fixed number: it is measured from what was produced."""
+        warning = self._low(self._render(128, platform))
+        assert warning and f"up to {needs}px" in warning[0]

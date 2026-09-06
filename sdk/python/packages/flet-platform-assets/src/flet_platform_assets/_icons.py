@@ -232,6 +232,7 @@ def render_icons(
         raise ValueError(f"unknown platform: {platform!r}")
     spec = spec if spec is not None else DEFAULT_SPECS[platform]
     result = RenderResult()
+    supplied = max(source.size)
     if derived:
         source = _frame(source, platform)
 
@@ -252,7 +253,38 @@ def render_icons(
             size: _plain(source, Target("", size), options) for size in spec.ico_sizes
         }
 
+    _warn_low_resolution(supplied, result)
     return result
+
+
+def _warn_low_resolution(supplied: int, result: RenderResult) -> None:
+    """Warn when the source is smaller than the largest icon being made.
+
+    Measured against what was actually produced rather than a fixed number,
+    because each platform's largest differs - 1024 for iOS and macOS, 512 for
+    the web, 256 for a Windows `.ico`. A source that is perfectly adequate for
+    one is enlarged for another, and an enlarged icon is soft in exactly the
+    place it is looked at most: Apple's 1024px marketing icon is what the App
+    Store listing shows.
+
+    Args:
+        supplied: Longest side of the source, before any framing.
+        result: The render to attach the warning to, and to measure.
+    """
+
+    produced = max(
+        (asset.image.width for asset in result.assets),
+        default=0,
+    )
+    for sizes in result.ico.values():
+        produced = max(produced, max(sizes, default=0))
+    if not produced or supplied >= produced:
+        return
+    result.warn(
+        f"icon source is {supplied}px, but this platform needs one up to "
+        f"{produced}px. The larger sizes are enlarged from it and will look "
+        f"soft. Supply at least {produced}x{produced}."
+    )
 
 
 def _frame(source: Image.Image, rule: str) -> Image.Image:
