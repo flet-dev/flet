@@ -1,6 +1,7 @@
 """Tests concerning the low-level compositing primitives."""
 
 import hashlib
+import math
 
 import pytest
 from flet_platform_assets._imaging import (
@@ -10,6 +11,7 @@ from flet_platform_assets._imaging import (
     looks_pre_shaped,
     parse_hex_color,
     place,
+    radial_extent,
     save_ico,
     scale_to_fit,
     superellipse_mask,
@@ -96,6 +98,49 @@ class TestLooksPreShaped:
 
     def test_fully_transparent_is_not_detected(self):
         assert looks_pre_shaped(Image.new("RGBA", (64, 64), (0, 0, 0, 0))) is False
+
+
+class TestRadialExtent:
+    """Distance from the centre, for the masks that are circles.
+
+    Measured on a downscaled copy for speed, which has to keep the aspect
+    ratio: squashing a non-square source into a square first reports a
+    distance the artwork never had, and the framing built on it lands short.
+    """
+
+    def test_matches_a_known_geometry(self):
+        """A centred square of side s has its corners at s/2 * sqrt(2)."""
+        img = Image.new("RGBA", (400, 400), (0, 0, 0, 0))
+        img.paste(Image.new("RGBA", (200, 200), (0, 0, 0, 255)), (100, 100))
+        assert radial_extent(img) == pytest.approx(math.sqrt(2) / 2, abs=0.02)
+
+    def test_is_unchanged_by_the_downscale(self):
+        """Same artwork, above and below the sampling threshold."""
+        small = Image.new("RGBA", (200, 200), (0, 0, 0, 0))
+        small.paste(Image.new("RGBA", (100, 100), (0, 0, 0, 255)), (50, 50))
+        large = small.resize((1024, 1024), Image.NEAREST)
+        assert radial_extent(large) == pytest.approx(radial_extent(small), abs=0.02)
+
+    @pytest.mark.parametrize(("width", "height"), [(600, 1024), (1024, 600)])
+    def test_a_non_square_source_is_not_squashed(self, width, height):
+        """The measurement must not depend on which side is longer."""
+        portrait = Image.new("RGBA", (width, height), (0, 0, 0, 0))
+        side = min(width, height) // 2
+        portrait.paste(
+            Image.new("RGBA", (side, side), (0, 0, 0, 255)),
+            ((width - side) // 2, (height - side) // 2),
+        )
+        # The same artwork on a square canvas of the longer side.
+        longest = max(width, height)
+        square = Image.new("RGBA", (longest, longest), (0, 0, 0, 0))
+        square.paste(
+            Image.new("RGBA", (side, side), (0, 0, 0, 255)),
+            ((longest - side) // 2, (longest - side) // 2),
+        )
+        assert radial_extent(portrait) == pytest.approx(radial_extent(square), abs=0.03)
+
+    def test_fully_opaque_has_no_meaningful_extent(self):
+        assert radial_extent(Image.new("RGBA", (64, 64), (0, 0, 0, 255))) is None
 
 
 class TestPlace:

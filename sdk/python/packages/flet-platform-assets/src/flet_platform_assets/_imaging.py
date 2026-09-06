@@ -496,7 +496,14 @@ def radial_extent(img: Image.Image, *, sample: int = 256) -> float | None:
     if alpha.getextrema()[0] == 255:
         return None
     if max(alpha.size) > sample:
-        alpha = alpha.resize((sample, sample), Image.BILINEAR)
+        # Preserve the aspect ratio. Resizing to a flat (sample, sample) would
+        # squash a non-square source into a square before measuring it, and
+        # report a distance the artwork never had.
+        scale = sample / max(alpha.size)
+        alpha = alpha.resize(
+            (max(1, round(alpha.width * scale)), max(1, round(alpha.height * scale))),
+            Image.BILINEAR,
+        )
     width, height = alpha.size
     cx, cy = (width - 1) / 2, (height - 1) / 2
     half = max(cx, cy) or 1.0

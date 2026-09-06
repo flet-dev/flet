@@ -363,6 +363,31 @@ class TestFraming:
         for platform in ("ios", "macos", "android"):
             assert _frame(finished, platform) is finished
 
+    @pytest.mark.parametrize(
+        ("width", "height"),
+        [(1024, 1024), (600, 1024), (1024, 600)],
+    )
+    @pytest.mark.parametrize("rule", ["ios", "android", "maskable"])
+    def test_framing_hits_its_target_whatever_the_aspect(self, width, height, rule):
+        """A non-square source must not land short. Framing scales and
+        re-centres against the longest side, because that is what both extent
+        measures normalise by."""
+        from flet_platform_assets._icons import FRAMING
+
+        source = Image.new("RGBA", (width, height), (0, 0, 0, 0))
+        # Inset, so the source always has transparency to measure - a square
+        # filling its canvas would be opaque, which framing skips by design.
+        side = min(width, height) * 3 // 4
+        source.paste(
+            Image.new("RGBA", (side, side), (255, 0, 85, 255)),
+            ((width - side) // 2, (height - side) // 2),
+        )
+        target, measure = FRAMING[rule]
+        framed = _frame(source, rule)
+        # Never over target, and never enlarged past what was there before.
+        assert measure(framed) <= target * FRAMING_TOLERANCE
+        assert measure(framed) <= measure(source) * FRAMING_TOLERANCE
+
     def test_render_icons_honours_derived(self, full_bleed):
         loose = render_icons(full_bleed, platform="ios", derived=True)
         asis = render_icons(full_bleed, platform="ios")

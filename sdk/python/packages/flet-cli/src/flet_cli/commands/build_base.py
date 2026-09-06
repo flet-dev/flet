@@ -2043,9 +2043,20 @@ class BaseBuildCommand(BaseFlutterCommand):
             hash.commit()
             return
 
-        source, warning = square(source)
-        if warning:
-            console.log(f"Warning: {warning}", style=warning_style)
+        # Deliberately not squared first. Every icon is composed by centring
+        # the artwork on a square canvas anyway, so padding here would be
+        # redundant - and worse, it replaces the empty space with transparency,
+        # which makes finished opaque artwork look like a glyph and gets it
+        # reframed on top of being letterboxed.
+        if source.width != source.height:
+            console.log(
+                f"Warning: icon source is {source.width}x{source.height}, not "
+                "square. It is centred on each icon, with the remaining space "
+                "filled by icon_background where a platform needs an opaque "
+                "icon and left transparent elsewhere. Supply a square image to "
+                "frame it yourself.",
+                style=warning_style,
+            )
 
         result = render_icons(
             source,

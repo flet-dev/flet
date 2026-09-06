@@ -276,8 +276,12 @@ def _frame(source: Image.Image, rule: str) -> Image.Image:
     current = measure(source)
     if current is None or current <= target * FRAMING_TOLERANCE:
         return source
-    art = scale_to_fit(source, max(1, round(source.width * target / current)))
-    return place(art, source.width)
+    # Measured against the longest side, so scaled and re-centred against it
+    # too. Using the width would square a portrait source to its short edge
+    # and land the radial rules short of their target.
+    side = max(source.size)
+    art = scale_to_fit(source, max(1, round(side * target / current)))
+    return place(art, side)
 
 
 def _plain(
