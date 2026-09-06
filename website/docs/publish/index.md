@@ -747,11 +747,15 @@ should not have to.
 A square PNG, **1024×1024**, with a **transparent** background and the artwork
 **filling the canvas**:
 
+<div className="icon-grid">
+
 | | | |
 |:--:|:--:|:--:|
-| <img src="/img/docs/icons/source-full-bleed.png" alt="Full-bleed transparent artwork" width="170" /> | <img src="/img/docs/icons/source-padded.png" alt="Artwork padded inside its canvas" width="170" /> | <img src="/img/docs/icons/source-opaque.png" alt="Opaque artwork with its own background" width="170" /> |
+| <img src="/img/docs/icons/source-full-bleed.png" alt="Full-bleed transparent artwork" /> | <img src="/img/docs/icons/source-padded.png" alt="Artwork padded inside its canvas" /> | <img src="/img/docs/icons/source-opaque.png" alt="Opaque artwork with its own background" /> |
 | **Recommended** — fills the canvas | Padded | Opaque artwork |
 | Every platform gets its best result | Wastes pixels where nothing is masked | Used exactly as drawn, never reframed |
+
+</div>
 
 The reason to fill the canvas is that padding you bake in **cannot be
 recovered**, while padding a platform needs **can always be computed**. Web,
@@ -791,10 +795,14 @@ Nothing is ever cropped — your artwork is centred on each square icon and the
 remaining space is filled. **What fills it is decided by the icon being made,
 not by your image:**
 
+<div className="icon-grid">
+
 | Your 1024×600 source | On iOS, a maskable, the macOS tile | On a favicon, `Icon-*`, Windows, Linux, Android |
 |:--:|:--:|:--:|
-| <img src="/img/docs/icons/rect-source.png" alt="A wide source image" width="170" /> | <img src="/img/docs/icons/rect-opaque-target.png" alt="Filled with the background colour" width="170" /> | <img src="/img/docs/icons/rect-alpha-target.png" alt="Filled with transparency" width="170" /> |
+| <img src="/img/docs/icons/rect-source.png" alt="A wide source image" /> | <img src="/img/docs/icons/rect-opaque-target.png" alt="Filled with the background colour" /> | <img src="/img/docs/icons/rect-alpha-target.png" alt="Filled with transparency" /> |
 | | filled with `icon_background` | left transparent |
+
+</div>
 
 Those platforms cannot keep an alpha channel, so the space becomes
 `icon_background` — shown dark above so it is visible; it is white by default.
@@ -817,10 +825,14 @@ way to decide the framing rather than inherit it.
 
 From the recommended source above, unchanged:
 
+<div className="icon-grid">
+
 | Web, Windows, Linux | iOS | macOS | Android | Maskable web icon |
 |:--:|:--:|:--:|:--:|:--:|
-| <img src="/img/docs/icons/result-unmasked.png" alt="Artwork kept edge to edge" width="120" /> | <img src="/img/docs/icons/result-ios.png" alt="iOS icon" width="120" /> | <img src="/img/docs/icons/result-macos.png" alt="macOS icon" width="120" /> | <img src="/img/docs/icons/result-android.png" alt="Android icon" width="120" /> | <img src="/img/docs/icons/result-maskable.png" alt="Maskable icon" width="120" /> |
+| <img src="/img/docs/icons/result-unmasked.png" alt="Artwork kept edge to edge" /> | <img src="/img/docs/icons/result-ios.png" alt="iOS icon" /> | <img src="/img/docs/icons/result-macos.png" alt="macOS icon" /> | <img src="/img/docs/icons/result-android.png" alt="Android icon" /> | <img src="/img/docs/icons/result-maskable.png" alt="Maskable icon" /> |
 | every pixel | inset, flattened | Apple's tile and shadow | fitted to the circle | fitted to the safe zone |
+
+</div>
 
 The first cell covers three platforms because none of them masks anything: a
 favicon, a Windows `.ico` and a Linux icon all get the artwork untouched, so
@@ -833,11 +845,15 @@ cannot be framed once and used everywhere.
 Read along a row, from what you supplied to what each platform gets. The first
 column masks nothing, the second masks lightly, the third masks hardest:
 
+<div className="icon-grid">
+
 | | Your source | Web, Windows, Linux | iOS | Android |
 |---|:--:|:--:|:--:|:--:|
-| **Full‑bleed** | <img src="/img/docs/icons/source-full-bleed.png" alt="Full-bleed source" width="120" /> | <img src="/img/docs/icons/result-unmasked.png" alt="Kept edge to edge" width="120" /> | <img src="/img/docs/icons/result-ios.png" alt="Brought in for iOS" width="120" /> | <img src="/img/docs/icons/result-android.png" alt="Brought in for the circle" width="120" /> |
-| **Padded** | <img src="/img/docs/icons/source-padded.png" alt="Padded source" width="120" /> | <img src="/img/docs/icons/padded-web.png" alt="Padding kept" width="120" /> | <img src="/img/docs/icons/padded-ios.png" alt="Brought in for iOS" width="120" /> | <img src="/img/docs/icons/padded-android.png" alt="Brought in for the circle" width="120" /> |
-| **Opaque** | <img src="/img/docs/icons/source-opaque.png" alt="Opaque source" width="120" /> | <img src="/img/docs/icons/opaque-web.png" alt="Unchanged" width="120" /> | <img src="/img/docs/icons/opaque-ios.png" alt="Unchanged" width="120" /> | <img src="/img/docs/icons/opaque-android.png" alt="Unchanged, cut to a circle" width="120" /> |
+| **Full‑bleed** | <img src="/img/docs/icons/source-full-bleed.png" alt="Full-bleed source" /> | <img src="/img/docs/icons/result-unmasked.png" alt="Kept edge to edge" /> | <img src="/img/docs/icons/result-ios.png" alt="Brought in for iOS" /> | <img src="/img/docs/icons/result-android.png" alt="Brought in for the circle" /> |
+| **Padded** | <img src="/img/docs/icons/source-padded.png" alt="Padded source" /> | <img src="/img/docs/icons/padded-web.png" alt="Padding kept" /> | <img src="/img/docs/icons/padded-ios.png" alt="Brought in for iOS" /> | <img src="/img/docs/icons/padded-android.png" alt="Brought in for the circle" /> |
+| **Opaque** | <img src="/img/docs/icons/source-opaque.png" alt="Opaque source" /> | <img src="/img/docs/icons/opaque-web.png" alt="Unchanged" /> | <img src="/img/docs/icons/opaque-ios.png" alt="Unchanged" /> | <img src="/img/docs/icons/opaque-android.png" alt="Unchanged, cut to a circle" /> |
+
+</div>
 
 In the first two rows the artwork arrives smaller than you drew it on iOS and
 Android, and at exactly the size you drew it on web, Windows and Linux. In the
@@ -875,9 +891,13 @@ A generic `icon.png` is **shrunk to fit** each platform's mask. A
 platform-specific `icon_<platform>.png` is your finished composition and is
 used **exactly as supplied**:
 
+<div className="icon-grid">
+
 | `icon.png` — Flet fits it | `icon_macos.png` — used as-is |
 |:--:|:--:|
-| <img src="/img/docs/icons/framing-derived.png" alt="Fitted to the macOS tile" width="200" /> | <img src="/img/docs/icons/framing-explicit.png" alt="Filling the macOS tile" width="200" /> |
+| <img src="/img/docs/icons/framing-derived.png" alt="Fitted to the macOS tile" /> | <img src="/img/docs/icons/framing-explicit.png" alt="Filling the macOS tile" /> |
+
+</div>
 
 The targets, should you want to match them by hand:
 
@@ -898,9 +918,13 @@ you already padded is left alone and a second build changes nothing. And it is
 skipped entirely for **opaque** artwork, which is a finished icon rather than a
 glyph on a canvas — shrinking it would ring your design with background colour:
 
+<div className="icon-grid">
+
 | Opaque artwork on Android | …and on iOS |
 |:--:|:--:|
-| <img src="/img/docs/icons/opaque-android.png" alt="Opaque artwork filling the Android circle" width="200" /> | <img src="/img/docs/icons/opaque-ios.png" alt="Opaque artwork on iOS" width="200" /> |
+| <img src="/img/docs/icons/opaque-android.png" alt="Opaque artwork filling the Android circle" /> | <img src="/img/docs/icons/opaque-ios.png" alt="Opaque artwork on iOS" /> |
+
+</div>
 
 That is how to build an icon like Chrome's, where the colour reaches the edge
 of the circle. Let the background bleed past all four edges, and keep anything
@@ -979,9 +1003,13 @@ there — a file of the same name and path wins outright, with no configuration:
 
 A file you drop in is not fitted, so a maskable one is yours to get right:
 
+<div className="icon-grid">
+
 | Fitted by Flet | Supplied as-is |
 |:--:|:--:|
-| <img src="/img/docs/icons/maskable-fitted.png" alt="Artwork inside the maskable safe zone" width="200" /> | <img src="/img/docs/icons/maskable-cropped.png" alt="Artwork crossing the maskable safe zone" width="200" /> |
+| <img src="/img/docs/icons/maskable-fitted.png" alt="Artwork inside the maskable safe zone" /> | <img src="/img/docs/icons/maskable-cropped.png" alt="Artwork crossing the maskable safe zone" /> |
+
+</div>
 
 The circle is the safe zone; everything faded outside it is discarded by the
 installing platform. `flet build web` warns when it can see this coming.
@@ -1019,10 +1047,14 @@ the page background behind a `<picture>` — but Android is where it is most
 visible, because Android 12 replaced the whole mechanism with a masked icon
 over the same colour:
 
+<div className="icon-grid">
+
 | Background only | Before Android 12 | Android 12+ | …with `icon_background` |
 |:--:|:--:|:--:|:--:|
-| <img src="/img/docs/icons/splash-background.png" alt="The splash colour alone" width="150" /> | <img src="/img/docs/icons/splash-legacy.png" alt="Artwork centred on the colour" width="150" /> | <img src="/img/docs/icons/splash-android12.png" alt="A masked icon over the colour" width="150" /> | <img src="/img/docs/icons/splash-android12-bg.png" alt="The icon circle made visible" width="150" /> |
+| <img src="/img/docs/icons/splash-background.png" alt="The splash colour alone" /> | <img src="/img/docs/icons/splash-legacy.png" alt="Artwork centred on the colour" /> | <img src="/img/docs/icons/splash-android12.png" alt="A masked icon over the colour" /> | <img src="/img/docs/icons/splash-android12-bg.png" alt="The icon circle made visible" /> |
 | `color` / `dark_color` | your image, at its own size | cropped to a circle | the circle becomes visible |
+
+</div>
 
 The last one is what `icon_background` is for. Android 12 always crops the
 splash icon to a circle, but with nothing behind it the circle is invisible
