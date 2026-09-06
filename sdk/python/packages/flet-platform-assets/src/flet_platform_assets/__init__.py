@@ -26,7 +26,7 @@ from ._icons import (
     render_icons,
     web_targets_from_manifest,
 )
-from ._imaging import density_size
+from ._imaging import density_size, parse_hex_color
 from ._models import (
     AssetSpec,
     IconOptions,
@@ -65,6 +65,7 @@ __all__ = [
     "density_size",
     "linux_targets",
     "load_source",
+    "parse_hex_color",
     "render_icons",
     "render_splash",
     "square",

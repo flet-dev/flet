@@ -60,7 +60,12 @@ class IconOptions:
     """How to render app icons.
 
     Args:
-        background: Flatten colour for surfaces that reject alpha.
+        background: Colour behind artwork wherever alpha cannot survive. It
+            fills three places: the iOS flatten, which is not optional because
+            the App Store rejects an alpha channel; the macOS tile; and the
+            opaque web icons - the two maskables and apple-touch. A
+            transparent source is expected, so this is the colour the user
+            actually sees on Apple platforms.
         macos_style: `"auto"` composes Apple's inset squircle and drop shadow
             unless the source already looks shaped; `"grid"` always composes
             it; `"raw"` places the artwork full-bleed, for a source that has

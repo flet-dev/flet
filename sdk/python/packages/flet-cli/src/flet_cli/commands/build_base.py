@@ -20,6 +20,7 @@ from flet_platform_assets import (
     density_size,
     linux_targets,
     load_source,
+    parse_hex_color,
     render_icons,
     render_splash,
     square,
@@ -2003,6 +2004,7 @@ class BaseBuildCommand(BaseFlutterCommand):
             )
 
         options = IconOptions(
+            background=self._resolve_icon_background(),
             macos_style=self.get_pyproject("tool.flet.macos.icon_style") or "auto",
             application_id=self.template_data["bundle_id"],
         )
@@ -2058,6 +2060,43 @@ class BaseBuildCommand(BaseFlutterCommand):
         console.log(f"Generated app icons {self.emojis['checkmark']}")
 
         hash.commit()
+
+    def _resolve_icon_background(self) -> tuple[int, int, int]:
+        """
+        Resolve the colour that sits behind artwork where alpha cannot survive.
+
+        `assets/icon.png` is expected to be transparent, so this is what the
+        user actually sees on Apple platforms: iOS has to be flattened because
+        the App Store rejects an alpha channel, and the macOS tile has to be
+        opaque to read as a tile at all. Until now both were hardcoded white
+        while Android's equivalent was configurable, so a dark-brand app had
+        no way to avoid a white square.
+
+        Resolves platform-specific over global, matching how the splash
+        colours already resolve.
+
+        Returns:
+            The colour as an RGB triple, defaulting to white.
+        """
+
+        assert self.get_pyproject
+
+        value = self.get_pyproject(
+            f"tool.flet.{self.config_platform}.icon_background"
+        ) or self.get_pyproject("tool.flet.icon_background")
+        if not value:
+            return (255, 255, 255)
+        try:
+            return parse_hex_color(value)
+        except ValueError:
+            # A typo in a colour must not stop a build that would otherwise
+            # succeed; say what was ignored and carry on with the default.
+            console.log(
+                f'Warning: icon_background "{value}" is not a valid colour '
+                "(expected #rrggbb); using white.",
+                style=warning_style,
+            )
+            return (255, 255, 255)
 
     def _icon_spec(self, platform: str):
         """

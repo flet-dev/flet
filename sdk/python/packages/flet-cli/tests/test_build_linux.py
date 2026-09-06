@@ -120,6 +120,9 @@ def _run_customize_icons(
     cmd.build_dir = build_dir
     cmd.pubspec_path = str(pubspec_path)
     cmd.target_platform = target_platform
+    cmd.config_platform = {"apk": "android", "aab": "android", "ipa": "ios"}.get(
+        target_platform, target_platform
+    )
     cmd.verbose = 0
     cmd.dart_exe = "dart"
     cmd.emojis = {"checkmark": "", "loading": ""}

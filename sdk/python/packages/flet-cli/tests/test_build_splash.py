@@ -311,6 +311,89 @@ class TestAndroidAdaptiveIcon:
         assert furthest / radius < 0.90, "artwork fills the mask with no margin"
 
 
+class TestIconBackground:
+    """The colour behind artwork wherever alpha cannot survive.
+
+    `assets/icon.png` is expected to be transparent, so this is what a user
+    actually sees on Apple platforms: iOS must be flattened because the App
+    Store rejects an alpha channel, and the macOS tile must be opaque to read
+    as a tile. Both were hardcoded white while Android's equivalent was
+    configurable, so a dark-brand app had no way out of a white square.
+    """
+
+    @staticmethod
+    def _command(pyproject=None, platform="macos"):
+        cmd = BaseBuildCommand.__new__(BaseBuildCommand)
+        cmd.config_platform = platform
+        values = pyproject or {}
+        cmd.get_pyproject = lambda key=None: values.get(key)
+        return cmd
+
+    def test_defaults_to_white(self):
+        assert self._command()._resolve_icon_background() == (255, 255, 255)
+
+    def test_global_key_is_used(self):
+        cmd = self._command({"tool.flet.icon_background": "#1a1a1a"})
+        assert cmd._resolve_icon_background() == (26, 26, 26)
+
+    def test_platform_key_overrides_the_global_one(self):
+        """Same precedence the splash colours already use."""
+        cmd = self._command(
+            {
+                "tool.flet.icon_background": "#ffffff",
+                "tool.flet.macos.icon_background": "#ff0055",
+            }
+        )
+        assert cmd._resolve_icon_background() == (255, 0, 85)
+
+    def test_another_platform_key_is_ignored(self):
+        cmd = self._command(
+            {"tool.flet.ios.icon_background": "#ff0055"}, platform="macos"
+        )
+        assert cmd._resolve_icon_background() == (255, 255, 255)
+
+    def test_invalid_colour_warns_and_falls_back(self, capsys):
+        """A typo in a colour must not stop a build that would otherwise
+        succeed."""
+        cmd = self._command({"tool.flet.icon_background": "octarine"})
+        assert cmd._resolve_icon_background() == (255, 255, 255)
+        assert "octarine" in "".join(capsys.readouterr())
+
+    def test_it_reaches_every_surface_that_rejects_alpha(self):
+        """One colour covers the iOS flatten, the macOS tile and the opaque
+        web icons - the three places a transparent source cannot survive."""
+        from flet_platform_assets import IconOptions, render_icons
+        from PIL import Image
+
+        # Deliberately not square: a filled square with transparent margins is
+        # what `looks_pre_shaped` treats as an already-shaped icon, which would
+        # bypass the macOS grid and take the tile colour out of the picture.
+        glyph = Image.new("RGBA", (1024, 1024), (0, 0, 0, 0))
+        glyph.paste(Image.new("RGBA", (300, 420), (0, 0, 0, 255)), (362, 302))
+        options = IconOptions(background=(255, 0, 85))
+
+        ios = next(
+            a.image
+            for a in render_icons(glyph, options, platform="ios").assets
+            if "1024x1024" in a.relative_path
+        )
+        assert ios.getpixel((5, 5)) == (255, 0, 85)
+
+        macos = next(
+            a.image
+            for a in render_icons(glyph, options, platform="macos").assets
+            if a.image.size == (1024, 1024)
+        )
+        assert macos.getpixel((512, 130))[:3] == (255, 0, 85), "the tile"
+
+        web = {
+            a.relative_path: a.image
+            for a in render_icons(glyph, options, platform="web").assets
+        }
+        assert web["web/icons/Icon-maskable-192.png"].getpixel((2, 2)) == (255, 0, 85)
+        assert web["web/icons/Icon-192.png"].getpixel((2, 2))[3] == 0, "keeps alpha"
+
+
 class TestPubspecHasNoAssetGenerators:
     """Both Dart tools are gone, config blocks and dev_dependencies alike."""
 
