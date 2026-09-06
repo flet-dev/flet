@@ -953,13 +953,16 @@ If that is also missing, it will use `icon.png` or any supported format such as 
 | Android  | `splash_dark_android.png` → `splash_dark.png` → `splash_android.png` → `splash.png` → `icon.png` | `splash_android.png` → `splash.png` → `icon.png` |
 | Web      | `splash_dark_web.png` → `splash_dark.png` → `splash_web.png` → `splash.png` → `icon.png`         | `splash_web.png` → `splash.png` → `icon.png`     |
 
-#### How the splash is composed
+#### How the Android splash is composed
 
-A splash is not one image. A colour fills the window and your artwork is drawn
-centred on top of it, so the two are chosen independently — and on Android 12
-and later the system replaced that with a masked icon over the same colour:
+A splash is never one image. A colour fills the window and your artwork is
+drawn on top of it, which is why the two are configured separately. Every
+platform works that way — iOS through its launch storyboard, the web through
+the page background behind a `<picture>` — but Android is where it is most
+visible, because Android 12 replaced the whole mechanism with a masked icon
+over the same colour:
 
-| Background only | Before Android 12 | Android 12+ | Android 12+ with `icon_background` |
+| Background only | Before Android 12 | Android 12+ | …with `icon_background` |
 |:--:|:--:|:--:|:--:|
 | ![The splash colour alone](/img/docs/icons/splash-background.png) | ![Artwork centred on the colour](/img/docs/icons/splash-legacy.png) | ![A masked icon over the colour](/img/docs/icons/splash-android12.png) | ![The icon circle made visible](/img/docs/icons/splash-android12-bg.png) |
 | `color` / `dark_color` | your image, at its own size | cropped to a circle | the circle becomes visible |
@@ -973,9 +976,11 @@ a visible disc.
 
 None of these compositions exists as a file in your build. Flet writes the
 colour into Android resources and the artwork into `drawable-*/splash.png` and
-`drawable-*/android12splash.png`; the system puts them together at launch. iOS
-works the same way through its storyboard, and on the web the colour is the
-page background behind a `<picture>`.
+`drawable-*/android12splash.png`; the system puts them together at launch.
+
+Pick an `icon_background` that contrasts with your artwork. Filling the circle
+with a colour your logo already uses hides the logo in it — which is easy to do
+by reaching for your brand colour, since that is often the logo's colour too.
 
 #### Sizing and framing
 

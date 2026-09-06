@@ -334,7 +334,9 @@ def build() -> dict[str, Image.Image]:
         "splash-background.png": splash_layer("background"),
         "splash-legacy.png": splash_layer("legacy"),
         "splash-android12.png": splash_layer("android12"),
-        "splash-android12-bg.png": splash_layer("android12", icon_background="#ff0055"),
+        # White, not the brand colour: the mark is magenta, so filling the
+        # circle with magenta hides the very thing the picture is about.
+        "splash-android12-bg.png": splash_layer("android12", icon_background="#ffffff"),
         # The maskable safe zone, with the crop made visible.
         "maskable-fitted.png": safe_zone_overlay(
             web(full_bleed, "Icon-maskable-512.png", True), FRAMING["maskable"][0]
