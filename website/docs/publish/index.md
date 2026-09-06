@@ -839,11 +839,27 @@ one that masks lightly, and the one that masks hardest:
 | **Padded** | ![Padding shows as empty space](/img/docs/icons/padded-web.png) | ![Identical to full-bleed](/img/docs/icons/padded-ios.png) | ![Identical to full-bleed](/img/docs/icons/padded-android.png) |
 | **Opaque** | ![Fills the frame](/img/docs/icons/opaque-web.png) | ![Fills the rounded square](/img/docs/icons/opaque-ios.png) | ![Fills the circle](/img/docs/icons/opaque-android.png) |
 
-Read the first two rows across and only one cell differs. **Padding costs you
-nothing where a platform masks** — framing only ever shrinks, so artwork that
-already clears the mask is left alone and lands in exactly the same place as a
-full-bleed source would. It costs you on web, Windows and Linux, which mask
-nothing and show your padding as empty space around a smaller logo.
+Read the first two rows across and only one cell differs — the unmasked one.
+**Framing is a ceiling, not an offset.** It shrinks artwork *to* the target and
+never past it, so two sources that both start at or above the target land on
+exactly the same size, however different they looked going in:
+
+| | starts at | ends at |
+|---|---|---|
+| iOS, target 60% | full-bleed 100% → shrunk | 60% |
+| | padded 60% → already there | 60% |
+| Android, target 57% | full-bleed 108% → shrunk | 57% |
+| | padded 65% → shrunk | 57% |
+
+The Android row is the one worth reading twice. A source padded to 60% *looks*
+like it has margin to spare, but the measurement that matters there is distance
+from the centre, not width — and the corners of that artwork reach 65%, past
+the 57% a circular mask allows. So it is still brought in.
+
+Padding therefore costs you nothing wherever a platform masks: the framing
+would have taken you to the same place. It costs you on web, Windows and
+Linux, which mask nothing and show your padding as empty space around a
+smaller logo.
 
 The third row is a different thing entirely. Opaque artwork is a finished
 composition, so it is never resized on any platform: it fills every frame, its
