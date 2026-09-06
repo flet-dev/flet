@@ -104,6 +104,15 @@ ICON_PLATFORMS = {
 # does not reference would only leave litter in the bundle.
 ICONS_CREATED_FRESH = frozenset({"android", "linux"})
 
+# Splash keys renamed in 1.0.0, read under their former names as well so
+# existing pyproject.toml files keep working. The new names all say that the
+# setting describes the Android 12 splash *icon*, which the old ones did not.
+SPLASH_KEY_ALIASES = {
+    "icon_background": "icon_bgcolor",
+    "icon_dark_background": "icon_dark_bgcolor",
+    "icon_fit": "android_12_fit",
+}
+
 SPLASH_PLATFORMS = {
     "apk": "android",
     "aab": "android",
@@ -1633,7 +1642,8 @@ class BaseBuildCommand(BaseFlutterCommand):
 
         The same precedence the splash colours use, so every key under
         `[tool.flet.splash]` can be overridden per platform without each one
-        spelling the lookup out again.
+        spelling the lookup out again. A key that was renamed is read under
+        its former name too, so existing configuration keeps working.
 
         Args:
             key: Setting name below the `splash` table.
@@ -1644,9 +1654,15 @@ class BaseBuildCommand(BaseFlutterCommand):
 
         assert self.get_pyproject
 
-        return self.get_pyproject(
-            f"tool.flet.{self.config_platform}.splash.{key}"
-        ) or self.get_pyproject(f"tool.flet.splash.{key}")
+        for name in (key, SPLASH_KEY_ALIASES.get(key)):
+            if name is None:
+                continue
+            value = self.get_pyproject(
+                f"tool.flet.{self.config_platform}.splash.{name}"
+            ) or self.get_pyproject(f"tool.flet.splash.{name}")
+            if value is not None:
+                return value
+        return None
 
     def _resolve_splash(self) -> dict:
         """

@@ -189,7 +189,11 @@ def _android_12(
     canvas = round(dp * density)
 
     extent = alpha_extent(art)
-    already_fits = extent is not None and extent <= ANDROID_12_VISIBLE_FRACTION
+    # `None` means the artwork is opaque, which is a finished composition
+    # rather than a glyph on a canvas - the same reading the icon generator
+    # takes. Its colour is meant to bleed past the mask, so it is placed
+    # whole and left to be cropped, not shrunk into the middle of the circle.
+    already_fits = extent is None or extent <= ANDROID_12_VISIBLE_FRACTION
     if options.icon_fit == "none" or already_fits:
         scaled = scale_to_fit(art, canvas)
     else:
@@ -206,7 +210,7 @@ def _warn_android_12_crop(
     if options.icon_fit != "none":
         return
     extent = alpha_extent(art)
-    if extent is None or extent > ANDROID_12_VISIBLE_FRACTION:
+    if extent is not None and extent > ANDROID_12_VISIBLE_FRACTION:
         result.warn(
             'splash icon_fit is "none", so the icon is not fitted to the '
             f"circle Android 12 crops it to. Artwork outside the central "

@@ -215,3 +215,93 @@ class TestWriteRemovesStale:
     def test_missing_stale_file_is_not_an_error(self, art, tmp_path):
         write(render_splash(art, platform="web"), tmp_path, declared_only=False)
         assert (tmp_path / "web/splash/img/light-1x.png").exists()
+
+
+class TestOpaqueArtwork:
+    """Opaque artwork is a finished composition, on splash as on icons.
+
+    The extent measures return `None` for it, which is the answer rather than
+    a missing measurement: there is no glyph floating on a canvas to reframe,
+    and its colour is meant to reach the edges.
+    """
+
+    @pytest.fixture
+    def finished(self):
+        img = Image.new("RGBA", (1024, 1024), (66, 133, 244, 255))
+        img.paste(Image.new("RGBA", (600, 600), (255, 255, 255, 255)), (212, 212))
+        return img
+
+    def test_not_framed_even_when_derived_from_an_icon(self, finished):
+        images = by_path(render_splash(finished, platform="web", derived=True))
+        assert images["web/splash/img/light-4x.png"].size == (1024, 1024)
+        assert alpha_extent(images["web/splash/img/light-4x.png"]) is None
+
+    def test_placed_whole_on_the_android_12_canvas(self, finished):
+        """Shrinking it into the middle of the circle would ring a finished
+        design with background colour; letting it bleed is the intent."""
+        images = by_path(render_splash(finished, platform="android", derived=True))
+        icon = images[f"{ANDROID_RES}/drawable-mdpi/android12splash.png"]
+        assert icon.size == (288, 288)
+        assert icon.convert("RGBA").getpixel((4, 144))[:3] == (66, 133, 244)
+
+    def test_no_warning(self, finished):
+        """Filling the frame is what opaque artwork is for."""
+        assert not render_splash(finished, platform="android", derived=True).warnings
+
+    def test_a_transparent_glyph_is_still_fitted(self):
+        glyph = Image.new("RGBA", (1024, 1024), (0, 0, 0, 0))
+        glyph.paste(Image.new("RGBA", (1024, 1024), (255, 0, 85, 255)), (0, 0))
+        glyph.putalpha(
+            Image.new("L", (1024, 1024), 0)
+        )  # fully transparent -> nothing to place
+        solid = Image.new("RGBA", (1024, 1024), (0, 0, 0, 0))
+        solid.paste(Image.new("RGBA", (900, 900), (255, 0, 85, 255)), (62, 62))
+        images = by_path(render_splash(solid, platform="android", derived=True))
+        icon = images[f"{ANDROID_RES}/drawable-mdpi/android12splash.png"]
+        assert alpha_extent(icon) <= ANDROID_12_VISIBLE_FRACTION + 0.02
+
+
+class TestRenamedKeysStillWork:
+    """`icon_bgcolor` and friends were renamed; the old spellings still read."""
+
+    @staticmethod
+    def _command(pyproject):
+        from types import SimpleNamespace
+
+        from flet_cli.commands.build_base import BaseBuildCommand
+
+        cmd = BaseBuildCommand.__new__(BaseBuildCommand)
+        cmd.config_platform = "android"
+        cmd.get_pyproject = lambda key=None: pyproject.get(key)
+        cmd.options = SimpleNamespace()
+        return cmd
+
+    @pytest.mark.parametrize(
+        ("old", "new"),
+        [
+            ("icon_bgcolor", "icon_background"),
+            ("icon_dark_bgcolor", "icon_dark_background"),
+            ("android_12_fit", "icon_fit"),
+        ],
+    )
+    def test_the_former_name_is_read(self, old, new):
+        cmd = self._command({f"tool.flet.splash.{old}": "#abcdef"})
+        assert cmd.splash_setting(new) == "#abcdef"
+
+    def test_the_current_name_wins(self):
+        cmd = self._command(
+            {
+                "tool.flet.splash.icon_bgcolor": "#111111",
+                "tool.flet.splash.icon_background": "#222222",
+            }
+        )
+        assert cmd.splash_setting("icon_background") == "#222222"
+
+    def test_a_platform_override_applies_to_the_former_name_too(self):
+        cmd = self._command(
+            {
+                "tool.flet.splash.icon_bgcolor": "#111111",
+                "tool.flet.android.splash.icon_bgcolor": "#333333",
+            }
+        )
+        assert cmd.splash_setting("icon_background") == "#333333"

@@ -953,6 +953,61 @@ If that is also missing, it will use `icon.png` or any supported format such as 
 | Android  | `splash_dark_android.png` → `splash_dark.png` → `splash_android.png` → `splash.png` → `icon.png` | `splash_android.png` → `splash.png` → `icon.png` |
 | Web      | `splash_dark_web.png` → `splash_dark.png` → `splash_web.png` → `splash.png` → `icon.png`         | `splash_web.png` → `splash.png` → `icon.png`     |
 
+#### How the splash is composed
+
+A splash is not one image. A colour fills the window and your artwork is drawn
+centred on top of it, so the two are chosen independently — and on Android 12
+and later the system replaced that with a masked icon over the same colour:
+
+| Background only | Before Android 12 | Android 12+ | Android 12+ with `icon_background` |
+|:--:|:--:|:--:|:--:|
+| ![The splash colour alone](/img/docs/icons/splash-background.png) | ![Artwork centred on the colour](/img/docs/icons/splash-legacy.png) | ![A masked icon over the colour](/img/docs/icons/splash-android12.png) | ![The icon circle made visible](/img/docs/icons/splash-android12-bg.png) |
+| `color` / `dark_color` | your image, at its own size | cropped to a circle | the circle becomes visible |
+
+The last one is what `icon_background` is for. Android 12 always crops the
+splash icon to a circle, but with nothing behind it the circle is invisible
+against the splash colour — the artwork simply appears. Setting
+`icon_background` fills that circle, which also shrinks its canvas from 1152 to
+960 as the platform specifies, so the artwork sits proportionally larger inside
+a visible disc.
+
+None of these compositions exists as a file in your build. Flet writes the
+colour into Android resources and the artwork into `drawable-*/splash.png` and
+`drawable-*/android12splash.png`; the system puts them together at launch. iOS
+works the same way through its storyboard, and on the web the colour is the
+page background behind a `<picture>`.
+
+#### Sizing and framing
+
+Your artwork is drawn at a quarter of its pixel size — a 1024px image renders
+at 256 dp, pt or CSS px — so it looks the same on every density.
+
+When no splash image is supplied the chain ends at `icon.png`, and an app icon
+fills its canvas by design. Drawn at splash size that reads as an oversized
+logo, so an icon used as a splash is **framed to 60%** of the canvas first. An
+image you supply *as* a splash is used exactly as it is:
+
+| Source | Framed |
+|---|---|
+| `splash.png`, `splash_<platform>.png` | no — your composition |
+| falling back to `icon.png` | yes, to 60% |
+
+On Android 12 the icon is fitted to the circle the platform crops to,
+separately from the above. `icon_fit = "none"` turns that off and warns that
+the edges will be cut.
+
+#### Opaque artwork
+
+Artwork with its own background is treated as a finished composition and is
+never resized — the same rule the [icons](#framing) follow. It is drawn at full
+size, its colour reaches the edges, and on Android 12 it is placed whole and
+allowed to bleed past the circle rather than being shrunk into the middle of
+it.
+
+That is the way to make a splash whose artwork meets the edge of the circle.
+Keep anything meaningful within the central two thirds, because that is what
+survives the crop.
+
 #### Splash Background Colors
 
 You can customize splash background colors using the following options:
@@ -985,6 +1040,28 @@ dark_color = "#333333"
 ```
 </TabItem>
 </Tabs>
+
+#### Android 12 splash icon
+
+Three settings apply to the icon Android 12 and later show, and each can be
+overridden per platform at `[tool.flet.<platform>.splash]`:
+
+| Key | Default | Effect |
+|---|---|---|
+| `icon_background` | none | Fills the circle behind the icon, making it visible. Also changes the icon canvas from 1152 to 960, per the platform spec |
+| `icon_dark_background` | `icon_background` | Its dark-mode counterpart |
+| `icon_fit` | `contain` | `contain` fits the artwork inside the circle; `none` leaves it and warns that the edges will be cropped |
+
+```toml
+[tool.flet.splash]
+color = "#112233"
+icon_background = "#ff0055"
+```
+
+:::note[Renamed in 1.0.0]
+These were `icon_bgcolor`, `icon_dark_bgcolor` and `android_12_fit`. The former
+names are still read, so existing configuration keeps working.
+:::
 
 #### Disabling Splash Screens
 

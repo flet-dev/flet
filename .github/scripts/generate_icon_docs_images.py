@@ -34,7 +34,9 @@ sys.path.insert(0, str(REPO / "sdk/python/packages/flet-platform-assets/src"))
 from flet_platform_assets import (  # noqa: E402
     FRAMING,
     IconOptions,
+    SplashOptions,
     render_icons,
+    render_splash,
 )
 from flet_platform_assets._imaging import (  # noqa: E402
     scale_to_height,
@@ -204,6 +206,49 @@ def platform_icon(
     )
 
 
+def splash_layer(name: str, *, icon_background: str | None = None) -> Image.Image:
+    """One layer of the Android splash, as the system composes it.
+
+    The splash is not a single image: a colour fills the window, and a bitmap
+    is drawn centred on top of it. Android 12 replaced that with a masked icon
+    over the same colour. Neither composition is visible in any single file
+    the build produces, which is why it is drawn here.
+    """
+
+    src = source(1.0)
+    options = SplashOptions(color="#112233", icon_background=icon_background)
+    rendered = {
+        asset.relative_path: asset.image
+        for asset in render_splash(src, options=options, platform="android", derived=True).assets
+    }
+    background = Image.new("RGBA", (TILE, TILE), (17, 34, 51, 255))
+
+    if name == "background":
+        return background
+    if name == "legacy":
+        bitmap = rendered[
+            "android/app/src/main/res/drawable-xxxhdpi/splash.png"
+        ].convert("RGBA")
+        bitmap.thumbnail((round(TILE * 0.6), round(TILE * 0.6)), Image.LANCZOS)
+        out = background.copy()
+        out.alpha_composite(
+            bitmap, ((TILE - bitmap.width) // 2, (TILE - bitmap.height) // 2)
+        )
+        return out
+    # Android 12: the icon canvas, masked to a circle, over the same colour.
+    icon = rendered[
+        "android/app/src/main/res/drawable-xxxhdpi/android12splash.png"
+    ].convert("RGBA")
+    icon = icon.resize((round(TILE * 0.55),) * 2, Image.LANCZOS)
+    circle = Image.new("L", icon.size, 0)
+    ImageDraw.Draw(circle).ellipse((0, 0, icon.width - 1, icon.height - 1), fill=255)
+    masked = Image.new("RGBA", icon.size, (0, 0, 0, 0))
+    masked.paste(icon, (0, 0), circle)
+    out = background.copy()
+    out.alpha_composite(masked, ((TILE - icon.width) // 2, (TILE - icon.height) // 2))
+    return out
+
+
 def safe_zone_overlay(src: Image.Image, fraction: float) -> Image.Image:
     """Show what a circular mask keeps and what it removes.
 
@@ -284,6 +329,12 @@ def build() -> dict[str, Image.Image]:
         "rect-alpha-target.png": on_checkerboard(
             web(rectangular(), "Icon-512.png", True)
         ),
+        # How the Android splash is put together, which no single output
+        # file shows.
+        "splash-background.png": splash_layer("background"),
+        "splash-legacy.png": splash_layer("legacy"),
+        "splash-android12.png": splash_layer("android12"),
+        "splash-android12-bg.png": splash_layer("android12", icon_background="#ff0055"),
         # The maskable safe zone, with the crop made visible.
         "maskable-fitted.png": safe_zone_overlay(
             web(full_bleed, "Icon-maskable-512.png", True), FRAMING["maskable"][0]
