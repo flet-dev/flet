@@ -833,11 +833,11 @@ cannot be framed once and used everywhere.
 Read along a row, from what you supplied to what each platform gets. The first
 column masks nothing, the second masks lightly, the third masks hardest:
 
-| Your source | Web, Windows, Linux | iOS | Android |
-|:--:|:--:|:--:|:--:|
-| ![Full-bleed source](/img/docs/icons/source-full-bleed.png)<br />**Full-bleed** | ![Kept edge to edge](/img/docs/icons/result-unmasked.png) | ![Brought in for iOS](/img/docs/icons/result-ios.png) | ![Brought in for the circle](/img/docs/icons/result-android.png) |
-| ![Padded source](/img/docs/icons/source-padded.png)<br />**Padded** | ![Padding kept](/img/docs/icons/padded-web.png) | ![Brought in for iOS](/img/docs/icons/padded-ios.png) | ![Brought in for the circle](/img/docs/icons/padded-android.png) |
-| ![Opaque source](/img/docs/icons/source-opaque.png)<br />**Opaque** | ![Unchanged](/img/docs/icons/opaque-web.png) | ![Unchanged](/img/docs/icons/opaque-ios.png) | ![Unchanged](/img/docs/icons/opaque-android.png) |
+| | Your source | Web, Windows, Linux | iOS | Android |
+|---|:--:|:--:|:--:|:--:|
+| **Full-bleed** | ![Full-bleed source](/img/docs/icons/source-full-bleed.png) | ![Kept edge to edge](/img/docs/icons/result-unmasked.png) | ![Brought in for iOS](/img/docs/icons/result-ios.png) | ![Brought in for the circle](/img/docs/icons/result-android.png) |
+| **Padded** | ![Padded source](/img/docs/icons/source-padded.png) | ![Padding kept](/img/docs/icons/padded-web.png) | ![Brought in for iOS](/img/docs/icons/padded-ios.png) | ![Brought in for the circle](/img/docs/icons/padded-android.png) |
+| **Opaque** | ![Opaque source](/img/docs/icons/source-opaque.png) | ![Unchanged](/img/docs/icons/opaque-web.png) | ![Unchanged](/img/docs/icons/opaque-ios.png) | ![Unchanged, cut to a circle](/img/docs/icons/opaque-android.png) |
 
 In the first two rows the artwork arrives smaller than you drew it on iOS and
 Android, and at exactly the size you drew it on web, Windows and Linux. In the
@@ -863,7 +863,9 @@ each platform's target, which is the largest it is allowed to be.
 The third row is a different thing rather than a worse one. Opaque artwork is
 never resized on any platform: it fills every frame, its colour reaches every
 edge, and each mask cuts it to shape — which is how you get a coloured tile or
-a solid circle. Your logo stays exactly where you drew it inside your artwork,
+a solid circle. Follow the wedges along that row to see how much each mask
+takes: iOS rounds off the corners, and Android's circle removes a good deal
+more. Your logo stays exactly where you drew it inside your artwork,
 so **you** own the margin. Keep anything meaningful inside the central two
 thirds, because that is what survives the tightest mask.
 

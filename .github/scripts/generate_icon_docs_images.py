@@ -46,7 +46,11 @@ from flet_platform_assets._imaging import (  # noqa: E402
 OUT = REPO / "website/static/img/docs/icons"
 MASTER = REPO / "media/logo/flet-icon-1024.png"
 
-BRAND = (255, 0, 85)
+BRAND = (255, 0, 95)
+# The other two colours the mark itself is drawn in, so the opaque example
+# stays on-brand rather than inventing a palette.
+BRAND_CYAN = (39, 176, 245)
+BRAND_PLUM = (140, 0, 117)
 TILE = 256  # every illustration is square and this wide
 
 # A soft checkerboard, so "transparent" reads as transparent rather than white.
@@ -87,6 +91,40 @@ def source(height_frac: float, *, opaque: bool = False) -> Image.Image:
     scaled = scale_to_height(art, round(1024 * height_frac))
     canvas.alpha_composite(
         scaled, ((1024 - scaled.width) // 2, (1024 - scaled.height) // 2)
+    )
+    return canvas
+
+
+def opaque_artwork() -> Image.Image:
+    """Finished artwork whose design reaches every edge.
+
+    Deliberately not a flat field with a logo on it: the point of this example
+    is that a mask *cuts* opaque artwork, and nothing is visibly cut out of a
+    plain rectangle of colour. Wedges meeting the edge make the crop legible -
+    the corners iOS rounds away and the far more that Android's circle takes.
+    """
+
+    size = 1024
+    canvas = Image.new("RGBA", (size, size), (*BRAND, 255))
+    draw = ImageDraw.Draw(canvas)
+    centre = size / 2
+    reach = size * 1.5  # past the corners, so every wedge meets an edge
+    for start, end, colour in (
+        (-30, 90, BRAND_CYAN),
+        (90, 210, BRAND_PLUM),
+    ):
+        draw.pieslice(
+            (centre - reach, centre - reach, centre + reach, centre + reach),
+            start,
+            end,
+            fill=(*colour, 255),
+        )
+    art = mark()
+    white = Image.new("RGBA", art.size, (255, 255, 255, 255))
+    white.putalpha(art.getchannel("A"))
+    scaled = scale_to_height(white, round(size * 0.52))
+    canvas.alpha_composite(
+        scaled, ((size - scaled.width) // 2, (size - scaled.height) // 2)
     )
     return canvas
 
@@ -294,7 +332,7 @@ def build() -> dict[str, Image.Image]:
     # from the source in the first cell to the result - which is why the
     # source is shown rather than merely named.
     padded = source(0.78)
-    opaque = source(0.58, opaque=True)
+    opaque = opaque_artwork()
 
     images = {
         # The three shapes a source can take.
