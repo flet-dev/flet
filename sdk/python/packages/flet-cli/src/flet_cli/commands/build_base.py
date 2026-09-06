@@ -1988,7 +1988,6 @@ class BaseBuildCommand(BaseFlutterCommand):
         hash.update(ICONS_GENERATOR_VERSION)
         hash.update(self.template_digest)
 
-        copy_ops: list = []
         self.assets_path = self.package_app_path.joinpath("assets")
 
         source_name = None
@@ -1998,17 +1997,13 @@ class BaseBuildCommand(BaseFlutterCommand):
         # composition and is used exactly as supplied.
         derived = False
         if self.assets_path.exists():
-            images_path = self.flutter_dir.joinpath("images")
-            images_path.mkdir(exist_ok=True)
             # Only the target platform's chain is resolved; the other five
             # lookups produced nothing this build could use.
             source_name = self.find_platform_image(
-                self.assets_path, images_path, f"icon_{platform}", copy_ops, hash
+                self.assets_path, f"icon_{platform}", hash
             )
             if source_name is None:
-                source_name = self.find_platform_image(
-                    self.assets_path, images_path, "icon", copy_ops, hash
-                )
+                source_name = self.find_platform_image(self.assets_path, "icon", hash)
                 derived = source_name is not None
         hash.update(derived)
 
@@ -2036,10 +2031,6 @@ class BaseBuildCommand(BaseFlutterCommand):
             return
 
         self.update_status("[bold blue]Generating app icons...")
-        for src, dst in copy_ops:
-            if self.verbose > 0:
-                console.log(f"Copying image {src} to {dst}", style=verbose1_style)
-            shutil.copy(src, dst)
 
         try:
             source, pre_rendered = load_source(source_path)
@@ -2237,19 +2228,14 @@ class BaseBuildCommand(BaseFlutterCommand):
         hash.update(self.template_digest)
         hash.update(splash)
 
-        copy_ops: list = []
         self.assets_path = self.package_app_path.joinpath("assets")
 
         light_name = dark_name = None
         if self.assets_path.exists():
-            images_path = self.flutter_dir.joinpath("images")
-            images_path.mkdir(exist_ok=True)
 
             def resolve(*names):
                 for name in names:
-                    found = self.find_platform_image(
-                        self.assets_path, images_path, name, copy_ops, hash
-                    )
+                    found = self.find_platform_image(self.assets_path, name, hash)
                     if found:
                         return found
                 return None
@@ -2298,10 +2284,6 @@ class BaseBuildCommand(BaseFlutterCommand):
             return
 
         self.update_status("[bold blue]Generating splash screens...")
-        for src, dst in copy_ops:
-            if self.verbose > 0:
-                console.log(f"Copying image {src} to {dst}", style=verbose1_style)
-            shutil.copy(src, dst)
 
         try:
             light, _ = load_source(light_path)
@@ -3261,9 +3243,7 @@ class BaseBuildCommand(BaseFlutterCommand):
     def find_platform_image(
         self,
         src_path: Path,
-        dest_path: Path,
         image_name: str,
-        copy_ops: list,
         hash: HashStamp,
     ):
         """
@@ -3280,9 +3260,7 @@ class BaseBuildCommand(BaseFlutterCommand):
 
         Args:
             src_path: Source assets directory.
-            dest_path: Destination image directory.
             image_name: Base image name (without extension).
-            copy_ops: Mutable copy operation list to append to.
             hash: Hash accumulator used for change detection.
 
         Returns:
@@ -3345,7 +3323,6 @@ class BaseBuildCommand(BaseFlutterCommand):
         best = images[0]
         if self.verbose > 0:
             console.log(f'Found "{image_name}" image at {best}', style=verbose1_style)
-        copy_ops.append((best, dest_path))
         hash.update(best)
         hash.update(Path(best).stat().st_mtime)
         return Path(best).name
