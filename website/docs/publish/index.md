@@ -899,6 +899,17 @@ used **exactly as supplied**:
 
 </div>
 
+:::warning[A platform-specific icon is never touched]
+The moment you add `icon_ios.png`, `icon_macos.png`, `icon_android.png` or
+`icon_web.png`, Flet stops framing that platform. Your file is used exactly as
+it is — so the margin, and everything the platform's mask would have taken, is
+now yours to get right.
+
+That is the point of those files, but it catches people out: an icon that fills
+its canvas is fine as `icon.png` and gets cropped as `icon_android.png`. Match
+the targets below, or go back to a single `icon.png` and let Flet size it.
+:::
+
 The targets, should you want to match them by hand:
 
 | Platform | Artwork may occupy | Measured |
@@ -957,10 +968,10 @@ transparency — nothing composites them onto anything.
 Any of these takes over a single platform. Only the platform being built is
 looked up, so an `icon_ios.png` costs nothing on an Android build.
 
-**A platform-specific file is never framed.** That is the point of it — the
-file is your finished composition — but it means the margin becomes your job.
-These are the numbers Flet would have applied, so match them unless you want
-something different:
+As with [framing](#framing), **a platform-specific file is never resized**: it
+is your finished composition, which means the margin becomes your job. These
+are the numbers Flet would have applied, so match them unless you deliberately
+want something else:
 
 | File | Size | Transparency | Keep artwork within |
 |---|---|---|---|
