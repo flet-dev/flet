@@ -460,3 +460,53 @@ class TestWebFraming:
         assert frames["web/icons/Icon-192.png"] is None
         assert frames["web/icons/Icon-maskable-192.png"] == "maskable"
         assert frames["web/icons/apple-touch-icon-192.png"] == "apple-touch"
+
+
+class TestMaskableSafeZoneWarning:
+    """An explicit `icon_web.png` is used as supplied, so it can be cropped.
+
+    Framing an author's finished composition would overrule a deliberate
+    choice, but staying silent is wrong too: unlike the other web icons, a
+    maskable one is cropped for certain rather than possibly. Android's
+    adaptive icon already works this way - fit when derived, warn when not.
+    """
+
+    @pytest.fixture
+    def full_bleed(self):
+        img = Image.new("RGBA", (512, 512), (0, 0, 0, 0))
+        img.paste(Image.new("RGBA", (396, 512), (255, 0, 85, 255)), (58, 0))
+        return img
+
+    def test_explicit_oversized_artwork_warns(self, full_bleed):
+        result = render_icons(full_bleed, platform="web")
+        assert any("maskable" in w for w in result.warnings)
+        assert any("cut off" in w for w in result.warnings)
+
+    def test_derived_artwork_is_fitted_so_it_does_not_warn(self, full_bleed):
+        assert not render_icons(full_bleed, platform="web", derived=True).warnings
+
+    def test_opaque_artwork_does_not_warn(self):
+        """Filling the frame is what a maskable icon is for: the colour bleeds
+        past the mask on purpose."""
+        finished = Image.new("RGBA", (512, 512), (255, 0, 85, 255))
+        finished.paste(Image.new("RGBA", (200, 200), (255, 255, 255, 255)), (156, 156))
+        assert not render_icons(finished, platform="web").warnings
+
+    def test_padded_artwork_does_not_warn(self):
+        padded = Image.new("RGBA", (512, 512), (0, 0, 0, 0))
+        padded.paste(Image.new("RGBA", (150, 150), (255, 0, 85, 255)), (181, 181))
+        assert not render_icons(padded, platform="web").warnings
+
+    def test_the_two_figures_are_comparable(self, full_bleed):
+        """Both are diameters over the icon width, so a reader can compare
+        them directly; an earlier draft printed a radius against a diameter,
+        which made the artwork look half the size it is."""
+        warning = next(
+            w
+            for w in render_icons(full_bleed, platform="web").warnings
+            if "maskable" in w
+        )
+        measured = radial_extent(full_bleed)
+        assert measured > 0.80, "the fixture must actually exceed the safe zone"
+        assert f"{measured:.0%} of its width" in warning
+        assert "80% of that" in warning

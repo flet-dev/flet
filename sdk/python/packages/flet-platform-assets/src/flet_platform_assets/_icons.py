@@ -245,6 +245,8 @@ def render_icons(
 
     if platform == "android":
         _warn_adaptive_safe_zone(source, result)
+    if platform == "web":
+        _warn_maskable_safe_zone(source, spec, result, derived)
     if spec.ico_sizes:
         result.ico["windows/runner/resources/app_icon.ico"] = {
             size: _plain(source, Target("", size), options) for size in spec.ico_sizes
@@ -405,6 +407,41 @@ def linux_targets(application_id: str) -> AssetSpec:
         ]
         # The GTK runner loads this one directly to set the window icon.
         + [Target("linux/app_icon.png", 256)]
+    )
+
+
+def _warn_maskable_safe_zone(
+    source: Image.Image,
+    spec: AssetSpec,
+    result: RenderResult,
+    derived: bool,
+) -> None:
+    """Warn when a maskable icon's artwork will be cropped by the installer.
+
+    Only for artwork supplied as `icon_web.png`: a generic source has already
+    been fitted, and framing an explicit one would overrule a composition the
+    author made deliberately. Silence is the wrong answer either way, because
+    unlike the other web icons this cropping is certain rather than possible.
+
+    Opaque artwork is not warned about. Filling the frame is what a maskable
+    icon is supposed to do - the colour bleeds past the mask on purpose, and
+    keeping the glyph inside the safe zone is then the author's business.
+    """
+
+    if derived or not any(t.frame == "maskable" for t in spec.targets):
+        return
+    limit, measure = FRAMING["maskable"]
+    extent = measure(source)
+    if extent is None or extent <= limit * FRAMING_TOLERANCE:
+        return
+    # Both figures are diameters as a fraction of the icon's width, so they
+    # compare directly: `radial_extent` is already normalised to half the
+    # canvas, which makes it the enclosing circle's diameter over the width.
+    result.warn(
+        f"icon artwork spans {extent:.0%} of its width, but a maskable web "
+        f"icon is cropped to a circle {limit:.0%} of that. The edges will be "
+        "cut off. Pad the artwork, or supply it as icon.png rather than "
+        "icon_web.png and Flet will fit it for you."
     )
 
 
