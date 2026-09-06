@@ -13,7 +13,14 @@ from __future__ import annotations
 
 from PIL import Image
 
-from ._imaging import alpha_extent, density_size, parse_hex_color, place, scale_to_fit
+from ._icons import _frame
+from ._imaging import (
+    alpha_extent,
+    density_size,
+    parse_hex_color,
+    place,
+    scale_to_fit,
+)
 from ._models import RenderResult, SplashOptions
 
 __all__ = [
@@ -59,6 +66,7 @@ def render_splash(
     options: SplashOptions | None = None,
     *,
     platform: str,
+    derived: bool = False,
 ) -> RenderResult:
     """Render every splash asset for one platform.
 
@@ -76,19 +84,27 @@ def render_splash(
         options: Colours and fitting behaviour; defaults are used when
             omitted.
         platform: One of `android`, `ios`, `web`.
+        derived: The artwork came from `icon.png` rather than a splash image,
+            so it is framed - an app icon fills its canvas by design, and a
+            splash drawn at that size reads as an oversized logo.
 
     Returns:
         The rendered assets, any diagnostics, and the stale files a previous
             generator left behind.
 
     Raises:
-        ValueError: If `platform` is not recognised, or `android_12_fit` is
+        ValueError: If `platform` is not recognised, or `icon_fit` is
             not a known mode.
     """
 
     options = options or SplashOptions()
-    if options.android_12_fit not in ("contain", "none"):
-        raise ValueError(f"unknown android_12_fit: {options.android_12_fit!r}")
+    if options.icon_fit not in ("contain", "none"):
+        raise ValueError(f"unknown splash icon_fit: {options.icon_fit!r}")
+
+    if derived:
+        light = _frame(light, "splash")
+        if dark is not None:
+            dark = _frame(dark, "splash")
 
     result = RenderResult()
     if platform == "android":
@@ -128,7 +144,7 @@ def _render_android(
         )
         result.add(
             f"{_ANDROID_RES}/drawable-{directory}/android12splash.png",
-            _android_12(light, density, options.icon_bgcolor, options),
+            _android_12(light, density, options.icon_background, options),
         )
 
     for directory, density in ANDROID_DENSITIES.items():
@@ -142,7 +158,7 @@ def _render_android(
             _android_12(
                 dark,
                 density,
-                options.icon_dark_bgcolor or options.icon_bgcolor,
+                options.icon_dark_background or options.icon_background,
                 options,
             ),
         )
@@ -174,7 +190,7 @@ def _android_12(
 
     extent = alpha_extent(art)
     already_fits = extent is not None and extent <= ANDROID_12_VISIBLE_FRACTION
-    if options.android_12_fit == "none" or already_fits:
+    if options.icon_fit == "none" or already_fits:
         scaled = scale_to_fit(art, canvas)
     else:
         scaled = scale_to_fit(art, round(canvas * ANDROID_12_VISIBLE_FRACTION))
@@ -187,12 +203,12 @@ def _warn_android_12_crop(
 ) -> None:
     """Warn when passing artwork through will let the launcher crop it."""
 
-    if options.android_12_fit != "none":
+    if options.icon_fit != "none":
         return
     extent = alpha_extent(art)
     if extent is None or extent > ANDROID_12_VISIBLE_FRACTION:
         result.warn(
-            'android_12_fit is "none", so the splash icon is not fitted to the '
+            'splash icon_fit is "none", so the icon is not fitted to the '
             f"circle Android 12 crops it to. Artwork outside the central "
             f"{ANDROID_12_VISIBLE_FRACTION:.0%} will be cut off."
         )

@@ -1457,6 +1457,10 @@ class BaseBuildCommand(BaseFlutterCommand):
                 )
             except ValueError as e:
                 self.cleanup(1, f"Invalid tool.flet.linux.categories: {e}")
+        # Resolved before the context, because the PWA background falls
+        # through to it.
+        splash = self._resolve_splash()
+
         self.template_data = {
             "out_dir": self.flutter_dir.name,
             "sep": os.sep,
@@ -1481,6 +1485,11 @@ class BaseBuildCommand(BaseFlutterCommand):
             "pwa_background_color": (
                 self.options.pwa_background_color
                 or self.get_pyproject("tool.flet.web.pwa_background_color")
+                # Falls through to the splash colour. An installed PWA paints
+                # its launch screen from the manifest rather than from the
+                # page, so leaving this on its own default gave a white flash
+                # in front of a splash the user had already coloured.
+                or splash["color"]
             ),
             "pwa_theme_color": (
                 self.options.pwa_theme_color
@@ -1565,7 +1574,7 @@ class BaseBuildCommand(BaseFlutterCommand):
             },
             "flutter": {"dependencies": list(self.flutter_dependencies.keys())},
             "boot_screen": self._resolve_boot_screen(),
-            "splash": self._resolve_splash(),
+            "splash": splash,
             # The adaptive-icon background is a colour resource, not pixels, so
             # it is authored by the template like the splash colours are.
             "adaptive_icon_background": (
@@ -1618,6 +1627,27 @@ class BaseBuildCommand(BaseFlutterCommand):
             ),
         }
 
+    def splash_setting(self, key: str):
+        """
+        One splash setting, platform-specific over global.
+
+        The same precedence the splash colours use, so every key under
+        `[tool.flet.splash]` can be overridden per platform without each one
+        spelling the lookup out again.
+
+        Args:
+            key: Setting name below the `splash` table.
+
+        Returns:
+            The configured value, or `None`.
+        """
+
+        assert self.get_pyproject
+
+        return self.get_pyproject(
+            f"tool.flet.{self.config_platform}.splash.{key}"
+        ) or self.get_pyproject(f"tool.flet.splash.{key}")
+
     def _resolve_splash(self) -> dict:
         """
         Resolve splash colours and per-platform toggles from the options.
@@ -1644,12 +1674,7 @@ class BaseBuildCommand(BaseFlutterCommand):
             return True if configured is None else bool(configured)
 
         def color(option, key: str, default: str) -> str:
-            return (
-                option
-                or self.get_pyproject(f"tool.flet.{self.config_platform}.splash.{key}")
-                or self.get_pyproject(f"tool.flet.splash.{key}")
-                or default
-            )
+            return option or self.splash_setting(key) or default
 
         return {
             "android": enabled(self.options.no_android_splash, "android"),
@@ -2265,6 +2290,7 @@ class BaseBuildCommand(BaseFlutterCommand):
         self.assets_path = self.package_app_path.joinpath("assets")
 
         light_name = dark_name = None
+        derived = False
         if self.assets_path.exists():
 
             def resolve(*names):
@@ -2277,30 +2303,32 @@ class BaseBuildCommand(BaseFlutterCommand):
             # The documented fallback chain, resolved for this platform only.
             # Unlike icons, splash terminates at the icon, so every app gets a
             # splash even with no splash asset of its own.
-            light_name = resolve(f"splash_{platform}", "splash", "icon")
+            light_name = resolve(f"splash_{platform}", "splash")
+            if light_name is None:
+                # Fell through to the app icon. An icon fills its canvas by
+                # design, so it is framed rather than drawn at splash size.
+                light_name = resolve("icon")
+                derived = light_name is not None
             dark_name = resolve(f"splash_dark_{platform}", "splash_dark")
 
         options = SplashOptions(
             color=splash["color"],
             dark_color=splash["dark_color"],
-            icon_bgcolor=self.get_pyproject(
-                f"tool.flet.{self.config_platform}.splash.icon_bgcolor"
-            )
-            or self.get_pyproject("tool.flet.splash.icon_bgcolor"),
-            icon_dark_bgcolor=self.get_pyproject(
-                f"tool.flet.{self.config_platform}.splash.icon_dark_bgcolor"
-            )
-            or self.get_pyproject("tool.flet.splash.icon_dark_bgcolor"),
-            android_12_fit=self.get_pyproject("tool.flet.splash.android_12_fit")
-            or "contain",
+            icon_background=self.splash_setting("icon_background"),
+            icon_dark_background=self.splash_setting("icon_dark_background"),
+            icon_fit=self.splash_setting("icon_fit") or "contain",
         )
         hash.update(options)
+        hash.update(derived)
 
         light_path = (
             self.assets_path.joinpath(light_name)
             if light_name
             else self.flutter_dir.joinpath("images", "icon.png")
         )
+        if light_name is None:
+            # The template's own icon, which is an icon like any other.
+            derived = True
         if not light_path.is_file():
             # A custom build template may ship no `images/icon.png`, leaving
             # nothing to derive a splash from. The template ships 1x1
@@ -2337,7 +2365,7 @@ class BaseBuildCommand(BaseFlutterCommand):
         if dark is not None:
             dark = square(dark)[0]
 
-        result = render_splash(light, dark, options, platform=platform)
+        result = render_splash(light, dark, options, platform=platform, derived=derived)
         for message in result.warnings:
             console.log(f"Warning: {message}", style=warning_style)
 

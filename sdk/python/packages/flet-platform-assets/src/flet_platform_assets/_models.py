@@ -92,19 +92,21 @@ class SplashOptions:
     Args:
         color: Light-mode background, as `#rrggbb`.
         dark_color: Dark-mode background.
-        icon_bgcolor: Android 12 splash icon background. Setting it changes
-            the icon canvas from 1152 to 960, per the platform spec.
-        icon_dark_bgcolor: Dark-mode variant of `icon_bgcolor`.
-        android_12_fit: `"contain"` fits the artwork inside the circle
-            Android guarantees is visible; `"none"` passes it through
-            untouched, which is what flutter_native_splash did.
+        icon_background: Background behind the Android 12 splash icon.
+            Setting it changes that icon's canvas from 1152 to 960, per the
+            platform spec.
+        icon_dark_background: Dark-mode variant of `icon_background`.
+        icon_fit: How the Android 12 splash icon is placed. `"contain"` fits
+            the artwork inside the circle Android guarantees is visible;
+            `"none"` passes it through untouched, which is what
+            flutter_native_splash did.
     """
 
     color: str = "#ffffff"
     dark_color: str = "#222222"
-    icon_bgcolor: str | None = None
-    icon_dark_bgcolor: str | None = None
-    android_12_fit: str = "contain"
+    icon_background: str | None = None
+    icon_dark_background: str | None = None
+    icon_fit: str = "contain"
 
 
 @dataclass(frozen=True)

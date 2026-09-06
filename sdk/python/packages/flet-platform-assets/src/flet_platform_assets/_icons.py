@@ -185,6 +185,11 @@ FRAMING = {
     # framed exactly like the native one.
     "maskable": (0.80, radial_extent),
     "apple-touch": (0.60, alpha_extent),
+    # A splash is drawn at its natural size on a whole screen, so a source
+    # that fills its canvas reads as an oversized logo rather than a mark.
+    # Only applied when the splash falls back to `icon.png`, which is not a
+    # splash composition.
+    "splash": (0.60, alpha_extent),
 }
 
 # Resampling lands the measured extent a hair either side of the target, so an

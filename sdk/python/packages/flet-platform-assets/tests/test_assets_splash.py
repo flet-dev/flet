@@ -95,7 +95,9 @@ class TestAndroid12Splash:
     def test_icon_background_switches_to_the_smaller_canvas(self, art):
         images = by_path(
             render_splash(
-                art, options=SplashOptions(icon_bgcolor="#ff0055"), platform="android"
+                art,
+                options=SplashOptions(icon_background="#ff0055"),
+                platform="android",
             )
         )
         path = f"{ANDROID_RES}/drawable-xxxhdpi/android12splash.png"
@@ -120,16 +122,16 @@ class TestAndroid12Splash:
 
     def test_fit_none_passes_through_and_warns(self, art):
         result = render_splash(
-            art, options=SplashOptions(android_12_fit="none"), platform="android"
+            art, options=SplashOptions(icon_fit="none"), platform="android"
         )
         big = by_path(result)[f"{ANDROID_RES}/drawable-xxxhdpi/android12splash.png"]
         assert alpha_extent(big) > ANDROID_12_VISIBLE_FRACTION
         assert any("will be cut off" in w for w in result.warnings)
 
     def test_unknown_fit_is_rejected(self, art):
-        with pytest.raises(ValueError, match="android_12_fit"):
+        with pytest.raises(ValueError, match="icon_fit"):
             render_splash(
-                art, options=SplashOptions(android_12_fit="cover"), platform="android"
+                art, options=SplashOptions(icon_fit="cover"), platform="android"
             )
 
 
