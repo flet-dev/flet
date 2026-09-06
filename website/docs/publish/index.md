@@ -3,6 +3,7 @@ title: "Publishing a Flet app"
 ---
 
 import CrossPlatformPermissions from '@site/.crocodocs/cross-platform-permissions.mdx';
+import {Image} from '@site/src/components/crocodocs';
 import TabItem from '@theme/TabItem';
 import Tabs from '@theme/Tabs';
 
@@ -738,292 +739,182 @@ source_packages = ["package1", "package2"]
 
 ### Icons
 
-Put a single `icon.png` in your app's `assets` directory and `flet build`
-produces every icon each platform needs. You can override any of them, but you
-should not have to.
+For most apps, you only need one image. Save it as `icon.png` in your app's
+`assets` directory (`src/assets/icon.png` in the [project structure](#project-structure)
+above). When you run `flet build`, Flet generates the icons needed for your target
+platform.
 
-#### What to supply
+For the best results, use:
 
-A square PNG, **1024×1024**, with a **transparent** background and the artwork
-**filling the canvas**:
+- A **1024 × 1024 pixel PNG**, large enough for every supported platform.
+- A **transparent background**, so Flet can add the background each platform needs.
+- Artwork that **fills the canvas**, without extra margins. Flet adds space around
+  it where needed; margins in the source can make small icons look too small.
 
-<div className="icon-grid">
-
-| | | |
-|:--:|:--:|:--:|
-| <img src="/img/docs/icons/source-full-bleed.png" alt="Full-bleed transparent artwork" /> | <img src="/img/docs/icons/source-padded.png" alt="Artwork padded inside its canvas" /> | <img src="/img/docs/icons/source-opaque.png" alt="Opaque artwork with its own background" /> |
-| **Recommended** — fills the canvas | Padded | Opaque artwork |
-| Every platform gets its best result | Wastes pixels where nothing is masked | Used exactly as drawn, never reframed |
-
-</div>
-
-The reason to fill the canvas is that padding you bake in **cannot be
-recovered**, while padding a platform needs **can always be computed**. Web,
-Windows and Linux mask nothing and show the artwork as-is, so a source padded
-to survive Android spends roughly 40% of every favicon on empty space. Flet
-adds the margin where it is actually required.
-
-**1024×1024 is the size to supply**, because that is the largest icon any
-platform asks for. Each needs a different maximum, and anything above it is
-downscaled — which is what you want — while anything below is enlarged and
-looks soft:
-
-| Platform | Largest icon | A 512px source |
-|---|---|---|
-| iOS | 1024px, the App Store marketing icon | enlarged ×2 |
-| macOS | 1024px | enlarged ×2 |
-| Web | 512px | fine |
-| Linux | 512px | fine |
-| Android | 432px | fine |
-| Windows | 256px | fine |
-
-`flet build` warns when your source is smaller than the largest icon it is
-about to make, naming that platform's own maximum. A source larger than 1024
-is fine and costs nothing; it is reduced once before anything is generated.
-
-Other raster formats work too — `.webp`, `.jpg`, `.gif`, `.bmp`, `.tif` — and
-when several files share a base name the highest-quality one wins, `.png`
-first. `.svg` is never used: it is a vector, and it is skipped with a warning
-rather than silently ignored.
-
-If you supply no icon at all, Flet generates nothing and the default Flet icons
-are used.
-
-#### If your icon is not square
-
-Nothing is ever cropped — your artwork is centred on each square icon and the
-remaining space is filled. **What fills it is decided by the icon being made,
-not by your image:**
-
-<div className="icon-grid">
-
-| Your 1024×600 source | On iOS, a maskable, the macOS tile | On a favicon, `Icon-*`, Windows, Linux, Android |
-|:--:|:--:|:--:|
-| <img src="/img/docs/icons/rect-source.png" alt="A wide source image" /> | <img src="/img/docs/icons/rect-opaque-target.png" alt="Filled with the background colour" /> | <img src="/img/docs/icons/rect-alpha-target.png" alt="Filled with transparency" /> |
-| | filled with `icon_background` | left transparent |
-
-</div>
-
-Those platforms cannot keep an alpha channel, so the space becomes
-`icon_background` — shown dark above so it is visible; it is white by default.
-Everywhere else transparency is fine and the space is simply left empty.
-
-An opaque source is treated no differently here: it too gets transparent space
-on a favicon or a Linux icon. What your source's transparency *does* decide is
-[framing](#framing) — opaque artwork is never resized, a transparent glyph is.
-
-On Android this works out well without any help: the empty space is in the
-foreground layer, so the background colour shows through it and the icon reads
-as your artwork on a coloured field.
-
-Since the fill differs between platforms, a non-square icon will not look
-identical everywhere unless `icon_background` happens to match your artwork.
-`flet build` warns when it sees one. Squaring the image yourself is the only
-way to decide the framing rather than inherit it.
-
-#### What each platform makes of it
-
-From the recommended source above, unchanged:
+Here is how the same transparent image looks across platforms:
 
 <div className="icon-grid">
 
 | Web, Windows, Linux | iOS | macOS | Android | Maskable web icon |
 |:--:|:--:|:--:|:--:|:--:|
-| <img src="/img/docs/icons/result-unmasked.png" alt="Artwork kept edge to edge" /> | <img src="/img/docs/icons/result-ios.png" alt="iOS icon" /> | <img src="/img/docs/icons/result-macos.png" alt="macOS icon" /> | <img src="/img/docs/icons/result-android.png" alt="Android icon" /> | <img src="/img/docs/icons/result-maskable.png" alt="Maskable icon" /> |
-| every pixel | inset, flattened | Apple's tile and shadow | fitted to the circle | fitted to the safe zone |
+| <Image src="/img/docs/icons/result-unmasked.png" alt="Artwork filling the icon" /> | <Image src="/img/docs/icons/result-ios.png" alt="Artwork inset on an iOS icon" /> | <Image src="/img/docs/icons/result-macos.png" alt="Artwork on a macOS tile with a shadow" /> | <Image src="/img/docs/icons/result-android.png" alt="Artwork inside a circular Android icon" /> | <Image src="/img/docs/icons/result-maskable.png" alt="Artwork inside a maskable web icon's safe area" /> |
+| Original margins | Added margins and background | Rounded tile and shadow | Space for the launcher's shape | Space for the launcher's shape |
 
 </div>
 
-The first cell covers three platforms because none of them masks anything: a
-favicon, a Windows `.ico` and a Linux icon all get the artwork untouched, so
-they are one picture rather than three identical ones. The other four each
-crop, and each crops differently — which is the whole reason a single source
-cannot be framed once and used everywhere.
+A *maskable* web icon is used when a browser installs your app and the launcher
+applies its own icon shape, such as a circle or rounded square.
+
+If you do not supply an icon, Flet uses the default Flet icons.
+
+#### Background colour
+
+To put your transparent artwork on a colour other than white, set
+`icon_background` in `pyproject.toml`:
+
+```toml
+[tool.flet]
+icon_background = "#1a1a2e"
+```
+
+Flet uses this colour for iOS icons, the macOS tile, Android's adaptive icon
+background, and the web's maskable and Apple touch icons. Favicons, regular web
+icons, Windows icons, and Linux icons keep their transparency.
+
+You can override the colour for one platform:
+
+```toml
+[tool.flet.macos]
+icon_background = "#000000"
+```
+
+On Android, an explicit
+[`adaptive_icon_background`](android.md#adaptive-icon-background) takes precedence
+over `icon_background`. To show the background colour, keep your source artwork
+transparent; a fully opaque image covers it.
 
 #### What a padded or opaque source does
 
-Read along a row, from what you supplied to what each platform gets. The first
-column masks nothing, the second masks lightly, the third masks hardest:
+Flet adjusts the space around transparent artwork in `icon.png` to suit each
+platform. This is called *framing*. It can shrink the artwork within its canvas,
+but does not enlarge it to remove existing margins.
+
+The examples below show why a transparent image without extra padding is a good
+starting point:
 
 <div className="icon-grid">
 
 | | Your source | Web, Windows, Linux | iOS | Android |
 |---|:--:|:--:|:--:|:--:|
-| **Full‑bleed** | <img src="/img/docs/icons/source-full-bleed.png" alt="Full-bleed source" /> | <img src="/img/docs/icons/result-unmasked.png" alt="Kept edge to edge" /> | <img src="/img/docs/icons/result-ios.png" alt="Brought in for iOS" /> | <img src="/img/docs/icons/result-android.png" alt="Brought in for the circle" /> |
-| **Padded** | <img src="/img/docs/icons/source-padded.png" alt="Padded source" /> | <img src="/img/docs/icons/padded-web.png" alt="Padding kept" /> | <img src="/img/docs/icons/padded-ios.png" alt="Brought in for iOS" /> | <img src="/img/docs/icons/padded-android.png" alt="Brought in for the circle" /> |
-| **Opaque** | <img src="/img/docs/icons/source-opaque.png" alt="Opaque source" /> | <img src="/img/docs/icons/opaque-web.png" alt="Unchanged" /> | <img src="/img/docs/icons/opaque-ios.png" alt="Unchanged" /> | <img src="/img/docs/icons/opaque-android.png" alt="Unchanged, cut to a circle" /> |
+| **No extra padding** | <Image src="/img/docs/icons/source-full-bleed.png" alt="Transparent source with artwork filling the canvas" /> | <Image src="/img/docs/icons/result-unmasked.png" alt="Artwork filling the icon" /> | <Image src="/img/docs/icons/result-ios.png" alt="Artwork fitted for iOS" /> | <Image src="/img/docs/icons/result-android.png" alt="Artwork fitted for Android" /> |
+| **Padded** | <Image src="/img/docs/icons/source-padded.png" alt="Source with extra transparent margins" /> | <Image src="/img/docs/icons/padded-web.png" alt="Small icon retaining the source margins" /> | <Image src="/img/docs/icons/padded-ios.png" alt="Padded artwork fitted for iOS" /> | <Image src="/img/docs/icons/padded-android.png" alt="Padded artwork fitted for Android" /> |
+| **Opaque** | <Image src="/img/docs/icons/source-opaque.png" alt="Source with its own solid background" /> | <Image src="/img/docs/icons/opaque-web.png" alt="Artwork and background filling a square icon" /> | <Image src="/img/docs/icons/opaque-ios.png" alt="Artwork and background with rounded iOS corners" /> | <Image src="/img/docs/icons/opaque-android.png" alt="Artwork and background cropped to an Android circle" /> |
 
 </div>
 
-In the first two rows the artwork arrives smaller than you drew it on iOS and
-Android, and at exactly the size you drew it on web, Windows and Linux. In the
-third nothing changes size anywhere.
+With **padded artwork**, the existing margins remain on web, Windows, and Linux.
+Flet adds more space on other platforms only if needed. If your artwork is
+already smaller than the target framing, it stays that small.
 
-That is the whole rule: **Flet measures your artwork, shrinks it if it exceeds
-a platform's target, and otherwise leaves it alone.** It never enlarges, and it
-skips opaque artwork entirely, because a finished composition has no glyph to
-reframe.
+With **opaque artwork** (an image with no transparency), Flet preserves your
+composition, including its background. The platform can still hide the edges
+when it applies its icon shape, so keep logos and text near the centre. Use this
+approach when you want your design's own background to reach the edges.
 
-Both masked columns land on the same size whatever you started from — a
-full-bleed source and a padded one are brought to the same place — so padding
-buys you nothing there. On the unmasked platforms it is kept, which is why the
-web cells differ down the column: that is your padding, rendered as empty space
-around a smaller logo.
+#### Image sizes and formats
 
-Padding *less* than a target is the case worth avoiding. It clears the mask
-already, so it is left alone, and the icon ships smaller than the platform
-would have made it — a source inset to 45% stays at 45% on iOS where the target
-is 60%. Filling the canvas sidesteps all of it: Flet then sizes the icon to
-each platform's target, which is the largest it is allowed to be.
+A 1024 × 1024 image covers the largest icons Flet generates. Larger images work
+too. Smaller images may look blurry when enlarged; `flet build` warns if your
+source is smaller than the largest icon needed for the target platform.
 
-The third row is a different thing rather than a worse one. Opaque artwork is
-never resized on any platform: it fills every frame, its colour reaches every
-edge, and each mask cuts it to shape — which is how you get a coloured tile or
-a solid circle. Follow the wedges along that row to see how much each mask
-takes: iOS rounds off the corners, and Android's circle removes a good deal
-more. Your logo stays exactly where you drew it inside your artwork,
-so **you** own the margin. Keep anything meaningful inside the central two
-thirds, because that is what survives the tightest mask.
+PNG is preferred. Flet also accepts `.webp`, `.jpg`, `.jpeg`, `.gif`, `.bmp`,
+`.tif`, and `.tiff`. If several files have the same base name, Flet prefers PNG.
+SVG is not supported; export it to PNG before building.
 
-#### Framing
+A non-square image is centred on a square canvas without stretching or cropping
+the source. The extra space is filled with `icon_background` for opaque outputs
+and left transparent elsewhere:
 
-A generic `icon.png` is **shrunk to fit** each platform's mask. A
-platform-specific `icon_<platform>.png` is your finished composition and is
-used **exactly as supplied**:
+<div className="icon-grid">
 
-<div className="icon-grid icon-grid--pair">
-
-| `icon.png` — Flet fits it | `icon_macos.png` — used as-is |
-|:--:|:--:|
-| <img src="/img/docs/icons/framing-derived.png" alt="Fitted to the macOS tile" /> | <img src="/img/docs/icons/framing-explicit.png" alt="Filling the macOS tile" /> |
+| Your 1024 × 600 source | iOS, opaque web icons, macOS tile | Favicon, regular web icons, Windows, Linux, Android foreground |
+|:--:|:--:|:--:|
+| <Image src="/img/docs/icons/rect-source.png" alt="A wide source image" /> | <Image src="/img/docs/icons/rect-opaque-target.png" alt="Extra space filled with the background colour" /> | <Image src="/img/docs/icons/rect-alpha-target.png" alt="Extra space left transparent" /> |
 
 </div>
 
-:::warning[A platform-specific icon is never touched]
-The moment you add `icon_ios.png`, `icon_macos.png`, `icon_android.png` or
-`icon_web.png`, Flet stops framing that platform. Your file is used exactly as
-it is — so the margin, and everything the platform's mask would have taken, is
-now yours to get right.
-
-That is the point of those files, but it catches people out: an icon that fills
-its canvas is fine as `icon.png` and gets cropped as `icon_android.png`. Match
-the targets below, or go back to a single `icon.png` and let Flet size it.
-:::
-
-The targets, should you want to match them by hand:
-
-| Platform | Artwork may occupy | Measured |
-|---|---|---|
-| iOS, and `apple-touch-icon` | 60% of the canvas | across the widest axis |
-| macOS | 68% of the canvas, which the icon grid then insets into its tile | across the widest axis |
-| Android adaptive icon | a centred circle 57% of the width, putting the furthest point at 85% of the launcher's mask radius | as a distance from the centre |
-| Maskable web icons | a centred circle 80% of the width, per the maskable spec | as a distance from the centre |
-| Web, Windows, Linux | the whole canvas | not masked |
-
-Android and maskable icons are measured as a distance from the centre because
-their masks are circles: artwork whose corners stick out passes a
-width-and-height test and is cropped anyway.
-
-Two rules make this safe to rely on. Framing only ever **shrinks**, so artwork
-you already padded is left alone and a second build changes nothing. And it is
-skipped entirely for **opaque** artwork, which is a finished icon rather than a
-glyph on a canvas — shrinking it would ring your design with background colour:
-
-<div className="icon-grid icon-grid--pair">
-
-| Opaque artwork on Android | …and on iOS |
-|:--:|:--:|
-| <img src="/img/docs/icons/opaque-android.png" alt="Opaque artwork filling the Android circle" /> | <img src="/img/docs/icons/opaque-ios.png" alt="Opaque artwork on iOS" /> |
-
-</div>
-
-That is how to build an icon like Chrome's, where the colour reaches the edge
-of the circle. Let the background bleed past all four edges, and keep anything
-meaningful inside the central two thirds.
-
-#### Background colour
-
-Three surfaces cannot keep an alpha channel: iOS, because the App Store rejects
-one; the macOS tile, which has to be opaque to read as a tile; and the maskable
-web icons, which show black corners on some Android launchers otherwise. Your
-transparent artwork is flattened onto `icon_background`, white by default:
-
-```toml
-[tool.flet]
-icon_background = "#1a1a2e"
-
-[tool.flet.macos]
-icon_background = "#000000"    # overrides the shared value
-```
-
-Android's adaptive icon uses this as its background layer as well, so one
-colour covers every platform. `[tool.flet.android] adaptive_icon_background`
-still overrides it if Android should differ.
-
-The favicon, the plain `Icon-*.png` and the Windows and Linux icons keep their
-transparency — nothing composites them onto anything.
+The background is shown dark here to make the fill visible. On Android, the
+separate background layer shows through the transparent space. Flet warns about
+non-square sources; use a square image if you want to choose the margins yourself.
 
 #### Making an icon for one platform
 
-Any of these takes over a single platform. Only the platform being built is
-looked up, so an `icon_ios.png` costs nothing on an Android build.
+To use different artwork or control the margins for one platform, add a file
+with that platform's name to `assets`, such as `icon_macos.png`. It takes
+precedence over `icon.png` for that platform; other platforms still use `icon.png`.
 
-As with [framing](#framing), **a platform-specific file is never resized**: it
-is your finished composition, which means the margin becomes your job. These
-are the numbers Flet would have applied, so match them unless you deliberately
-want something else:
-
-| File | Size | Transparency | Keep artwork within |
-|---|---|---|---|
-| `icon_ios.png` | 1024×1024 | removed — flattened onto `icon_background`, because the App Store rejects alpha | **60%** of the canvas, or fill it if your artwork has its own background |
-| `icon_macos.png` | 1024×1024 | kept; Flet still composes Apple's tile around it | **68%** of the canvas — the tile then insets it to ~55% |
-| `icon_android.png` | 1024×1024 | **must stay transparent** — it is the foreground layer, and an opaque file hides `adaptive_icon_background` behind it | a centred circle **57%** of the width |
-| `icon_web.png` | 1024×1024 | kept, except the maskables and apple-touch, flattened onto `icon_background` | a centred circle **80%** of the width, so the maskables survive their mask |
-| `icon_windows.ico` or `.png` | 256×256 or larger | kept | the whole canvas — nothing masks it. A `.png` becomes a `.ico` with 16, 32, 48 and 256px entries; an existing `.ico` keeps its own sizes |
-| `icon_linux.png` | 512×512 or larger | kept | the whole canvas — nothing masks it. Rendered at every size the hicolor theme declares, 16 through 512 |
-
-Two of these bite if you skip them. `icon_web.png` regenerates all six web
-icons including the maskables, and those are cropped to a circle by whatever
-installs your app — `flet build` warns when it can see artwork crossing that
-line. And an opaque `icon_android.png` replaces both adaptive layers at once,
-which is a valid choice for a Chrome-style icon but means
-`adaptive_icon_background` no longer does anything.
-
-If you only want to change the *colour* behind a transparent icon, set
-[`icon_background`](#background-colour) instead — that is almost always what
-"the icon looks wrong on iOS" turns out to need.
-
-:::note[Android needs two layers]
-An adaptive icon is a transparent glyph over a solid colour. For an icon like
-Android's Camera — a white glyph on blue — keep `icon.png` transparent and set
-`icon_background`. Supplying an *opaque* `icon_android.png` replaces both
-layers at once, which is the Chrome-style icon above.
-:::
-
-#### Replacing a web icon directly
-
-The assets directory is copied over the built site, so on the web — and only
-there — a file of the same name and path wins outright, with no configuration:
-
-| File | Used for | Masked |
-|---|---|---|
-| `favicon.png` | browser tab | no |
-| `icons/Icon-192.png`, `icons/Icon-512.png` | installed app, splash, task switcher | no |
-| `icons/Icon-maskable-192.png`, `icons/Icon-maskable-512.png` | Android install | yes, to a circle |
-| `icons/apple-touch-icon-192.png` | iOS "Add to Home Screen" | yes, rounded corners |
-
-A file you drop in is not fitted, so a maskable one is yours to get right:
+**Platform-specific files keep the margins you supply.** Flet still generates the
+required image sizes and applies platform treatments, such as removing
+transparency on iOS or adding the macOS tile, but it does not automatically fit
+your artwork inside the platform's visible area.
 
 <div className="icon-grid icon-grid--pair">
 
-| Fitted by Flet | Supplied as-is |
+| `icon.png`: Flet adds margins | `icon_macos.png`: you choose the margins |
 |:--:|:--:|
-| <img src="/img/docs/icons/maskable-fitted.png" alt="Artwork inside the maskable safe zone" /> | <img src="/img/docs/icons/maskable-cropped.png" alt="Artwork crossing the maskable safe zone" /> |
+| <Image src="/img/docs/icons/framing-derived.png" alt="Shared artwork fitted inside the macOS tile" /> | <Image src="/img/docs/icons/framing-explicit.png" alt="Platform-specific artwork filling the macOS tile" /> |
 
 </div>
 
-The circle is the safe zone; everything faded outside it is discarded by the
-installing platform. `flet build web` warns when it can see this coming.
+Use these sizes and framing guidelines when preparing your own files. The
+percentages match Flet's automatic framing for transparent artwork:
+
+| File | Recommended size | Artwork placement |
+|---|---|---|
+| `icon_ios.png` | 1024 × 1024 | Within the central **60%** of the canvas width and height. |
+| `icon_macos.png` | 1024 × 1024 | Within the central **68%** of the canvas width and height, before Flet places it on the tile. |
+| `icon_android.png` | 1024 × 1024 | Inside a centred circle with a diameter of about **57%** of the canvas width. |
+| `icon_web.png` | 1024 × 1024 | Inside a centred circle with a diameter of **80%** of the canvas width for maskable icons. |
+| `icon_windows.png` or `icon_windows.ico` | 256 × 256 or larger | Can fill the canvas. |
+| `icon_linux.png` | 512 × 512 or larger | Can fill the canvas. |
+
+For the circular areas, keep the entire logo inside the circle, including its
+corners. A logo that fits a square of the same width can still extend outside it.
+
+On Android, use transparency to let `icon_background` show through. An opaque
+`icon_android.png` is also supported, but its own background covers that colour.
+
+On web, `icon_web.png` supplies all six icons, including maskable and Apple touch
+icons. Flet warns if transparent artwork extends outside the maskable safe area.
+To give these icons different margins, [replace them individually](#replacing-a-web-icon-directly).
+
+#### Replacing a web icon directly
+
+To replace just one web icon, put a PNG at the matching path inside `assets`.
+For example, `assets/favicon.png` changes the browser tab icon. These files
+replace the generated icons as-is, without resizing or adding margins.
+
+| Path inside `assets` | Used for | Display shape |
+|---|---|---|
+| `favicon.png` | Browser tab | No mask |
+| `icons/Icon-192.png`, `icons/Icon-512.png` | Installed app, splash, task switcher | No mask |
+| `icons/Icon-maskable-192.png`, `icons/Icon-maskable-512.png` | Launchers that use maskable icons | Chosen by the launcher |
+| `icons/apple-touch-icon-192.png` | iOS "Add to Home Screen" | Rounded corners |
+
+Use the pixel size in the filename where one is given. For maskable icons, use
+an opaque background and keep important artwork inside the
+[safe area](https://www.w3.org/TR/appmanifest/#icon-masks): a centred circle with
+a diameter of **80%** of the image width.
+
+<div className="icon-grid icon-grid--pair">
+
+| Artwork inside the safe area | Artwork at risk of being cropped |
+|:--:|:--:|
+| <Image src="/img/docs/icons/maskable-fitted.png" alt="Artwork inside the maskable safe area" /> | <Image src="/img/docs/icons/maskable-cropped.png" alt="Artwork extending outside the maskable safe area" /> |
+
+</div>
+
+The faded area outside the circle may be hidden by the launcher's shape.
 
 ### Splash screen
 
@@ -1104,7 +995,7 @@ the edges will be cut.
 #### Opaque artwork
 
 Artwork with its own background is treated as a finished composition and is
-never resized — the same rule the [icons](#framing) follow. It is drawn at full
+never resized — the same rule the [icons](#icons) follow. It is drawn at full
 size, its colour reaches the edges, and on Android 12 it is placed whole and
 allowed to bleed past the circle rather than being shrunk into the middle of
 it.
