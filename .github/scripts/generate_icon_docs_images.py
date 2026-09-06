@@ -289,7 +289,11 @@ def build() -> dict[str, Image.Image]:
     """Every illustration, keyed by file name."""
 
     full_bleed = source(1.0)
-    padded = source(0.60)
+    # 78%: comfortably above every framing target, so each masked platform
+    # visibly brings it in. The comparison that matters runs along the row,
+    # from the source in the first cell to the result - which is why the
+    # source is shown rather than merely named.
+    padded = source(0.78)
     opaque = source(0.58, opaque=True)
 
     images = {

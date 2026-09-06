@@ -830,44 +830,42 @@ cannot be framed once and used everywhere.
 
 #### What a padded or opaque source does
 
-The same three shapes from above, each through a platform that masks nothing,
-one that masks lightly, and the one that masks hardest:
+Read along a row, from what you supplied to what each platform gets. The first
+column masks nothing, the second masks lightly, the third masks hardest:
 
 | Your source | Web, Windows, Linux | iOS | Android |
-|---|:--:|:--:|:--:|
-| **Full-bleed** | ![Kept edge to edge](/img/docs/icons/result-unmasked.png) | ![Inset for iOS](/img/docs/icons/result-ios.png) | ![Fitted to the circle](/img/docs/icons/result-android.png) |
-| **Padded** | ![Padding shows as empty space](/img/docs/icons/padded-web.png) | ![Identical to full-bleed](/img/docs/icons/padded-ios.png) | ![Identical to full-bleed](/img/docs/icons/padded-android.png) |
-| **Opaque** | ![Fills the frame](/img/docs/icons/opaque-web.png) | ![Fills the rounded square](/img/docs/icons/opaque-ios.png) | ![Fills the circle](/img/docs/icons/opaque-android.png) |
+|:--:|:--:|:--:|:--:|
+| ![Full-bleed source](/img/docs/icons/source-full-bleed.png)<br />**Full-bleed** | ![Kept edge to edge](/img/docs/icons/result-unmasked.png) | ![Brought in for iOS](/img/docs/icons/result-ios.png) | ![Brought in for the circle](/img/docs/icons/result-android.png) |
+| ![Padded source](/img/docs/icons/source-padded.png)<br />**Padded** | ![Padding kept](/img/docs/icons/padded-web.png) | ![Brought in for iOS](/img/docs/icons/padded-ios.png) | ![Brought in for the circle](/img/docs/icons/padded-android.png) |
+| ![Opaque source](/img/docs/icons/source-opaque.png)<br />**Opaque** | ![Unchanged](/img/docs/icons/opaque-web.png) | ![Unchanged](/img/docs/icons/opaque-ios.png) | ![Unchanged](/img/docs/icons/opaque-android.png) |
 
-Read the first two rows across and only one cell differs — the unmasked one.
-**Framing is a ceiling, not an offset.** It shrinks artwork *to* the target and
-never past it, so two sources that both start at or above the target land on
-exactly the same size, however different they looked going in:
+In the first two rows the artwork arrives smaller than you drew it on iOS and
+Android, and at exactly the size you drew it on web, Windows and Linux. In the
+third nothing changes size anywhere.
 
-| | starts at | ends at |
-|---|---|---|
-| iOS, target 60% | full-bleed 100% → shrunk | 60% |
-| | padded 60% → already there | 60% |
-| Android, target 57% | full-bleed 108% → shrunk | 57% |
-| | padded 65% → shrunk | 57% |
+That is the whole rule: **Flet measures your artwork, shrinks it if it exceeds
+a platform's target, and otherwise leaves it alone.** It never enlarges, and it
+skips opaque artwork entirely, because a finished composition has no glyph to
+reframe.
 
-The Android row is the one worth reading twice. A source padded to 60% *looks*
-like it has margin to spare, but the measurement that matters there is distance
-from the centre, not width — and the corners of that artwork reach 65%, past
-the 57% a circular mask allows. So it is still brought in.
+Both masked columns land on the same size whatever you started from — a
+full-bleed source and a padded one are brought to the same place — so padding
+buys you nothing there. On the unmasked platforms it is kept, which is why the
+web cells differ down the column: that is your padding, rendered as empty space
+around a smaller logo.
 
-Padding therefore costs you nothing wherever a platform masks: the framing
-would have taken you to the same place. It costs you on web, Windows and
-Linux, which mask nothing and show your padding as empty space around a
-smaller logo.
+Padding *less* than a target is the case worth avoiding. It clears the mask
+already, so it is left alone, and the icon ships smaller than the platform
+would have made it — a source inset to 45% stays at 45% on iOS where the target
+is 60%. Filling the canvas sidesteps all of it: Flet then sizes the icon to
+each platform's target, which is the largest it is allowed to be.
 
-The third row is a different thing entirely. Opaque artwork is a finished
-composition, so it is never resized on any platform: it fills every frame, its
-colour reaches every edge, and each platform's mask cuts it to shape. That is
-how you get a coloured tile or a solid circle. Your logo stays exactly where
-you drew it inside your artwork, which means **you** own the margin — keep
-anything meaningful inside the central two thirds, because that is what
-survives the tightest mask.
+The third row is a different thing rather than a worse one. Opaque artwork is
+never resized on any platform: it fills every frame, its colour reaches every
+edge, and each mask cuts it to shape — which is how you get a coloured tile or
+a solid circle. Your logo stays exactly where you drew it inside your artwork,
+so **you** own the margin. Keep anything meaningful inside the central two
+thirds, because that is what survives the tightest mask.
 
 #### Framing
 
