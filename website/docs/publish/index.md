@@ -919,175 +919,172 @@ The faded area outside the circle may be hidden by the launcher's shape.
 ### Splash screen
 
 :::note[Platform support]
-[Android](android.md), [iOS](ios.md),
-and [Web](web/static-website/index.md#flet-build-web) only.
+[Android](android.md), [iOS](ios.md), and
+[Web](web/static-website/index.md#flet-build-web) only.
 :::
 
-A splash screen is a visual element displayed when an app is launching,
-typically showing a logo or image while the app loads.
+The splash screen shows your app's artwork on a background colour while the app
+starts. By default, Flet uses `icon.png` from your app's `assets` directory, or
+the default Flet icon if you have not supplied one.
 
-You can customize splash screens for iOS, Android, and Web platforms by
-placing image files in the `assets` directory of your Flet app.
+To use different artwork, save it as `splash.png` in `assets`
+(`src/assets/splash.png` in the [project structure](#project-structure) above).
+A square PNG with a transparent background is a good starting point. Flet centres
+the artwork on the screen and generates the image sizes needed for your target
+platform when you run `flet build`.
 
-If platform-specific splash images are not provided, Flet will fall back to `splash.png`.
-If that is also missing, it will use `icon.png` or any supported format such as `.bmp`, `.jpg`, or `.webp`.
+#### Splash background colors
 
-#### Splash images
-
-| Platform | Dark Fallback Order                                                                              | Light Fallback Order                             |
-|----------|--------------------------------------------------------------------------------------------------|--------------------------------------------------|
-| iOS      | `splash_dark_ios.png` → `splash_dark.png` → `splash_ios.png` → `splash.png` → `icon.png`         | `splash_ios.png` → `splash.png` → `icon.png`     |
-| Android  | `splash_dark_android.png` → `splash_dark.png` → `splash_android.png` → `splash.png` → `icon.png` | `splash_android.png` → `splash.png` → `icon.png` |
-| Web      | `splash_dark_web.png` → `splash_dark.png` → `splash_web.png` → `splash.png` → `icon.png`         | `splash_web.png` → `splash.png` → `icon.png`     |
-
-#### How the Android splash is composed
-
-A splash is never one image. A colour fills the window and your artwork is
-drawn on top of it, which is why the two are configured separately. Every
-platform works that way — iOS through its launch storyboard, the web through
-the page background behind a `<picture>` — but Android is where it is most
-visible, because Android 12 replaced the whole mechanism with a masked icon
-over the same colour:
-
-<div className="icon-grid">
-
-| Background only | Before Android 12 | Android 12+ | …with `icon_background` |
-|:--:|:--:|:--:|:--:|
-| <img src="/img/docs/icons/splash-background.png" alt="The splash colour alone" /> | <img src="/img/docs/icons/splash-legacy.png" alt="Artwork centred on the colour" /> | <img src="/img/docs/icons/splash-android12.png" alt="A masked icon over the colour" /> | <img src="/img/docs/icons/splash-android12-bg.png" alt="The icon circle made visible" /> |
-| `color` / `dark_color` | your image, at its own size | cropped to a circle | the circle becomes visible |
-
-</div>
-
-The last one is what `icon_background` is for. Android 12 always crops the
-splash icon to a circle, but with nothing behind it the circle is invisible
-against the splash colour — the artwork simply appears. Setting
-`icon_background` fills that circle, which also shrinks its canvas from 1152 to
-960 as the platform specifies, so the artwork sits proportionally larger inside
-a visible disc.
-
-None of these compositions exists as a file in your build. Flet writes the
-colour into Android resources and the artwork into `drawable-*/splash.png` and
-`drawable-*/android12splash.png`; the system puts them together at launch.
-
-Pick an `icon_background` that contrasts with your artwork. Filling the circle
-with a colour your logo already uses hides the logo in it — which is easy to do
-by reaching for your brand colour, since that is often the logo's colour too.
-
-#### Sizing and framing
-
-Your artwork is drawn at a quarter of its pixel size — a 1024px image renders
-at 256 dp, pt or CSS px — so it looks the same on every density.
-
-When no splash image is supplied the chain ends at `icon.png`, and an app icon
-fills its canvas by design. Drawn at splash size that reads as an oversized
-logo, so an icon used as a splash is **framed to 60%** of the canvas first. An
-image you supply *as* a splash is used exactly as it is:
-
-| Source | Framed |
-|---|---|
-| `splash.png`, `splash_<platform>.png` | no — your composition |
-| falling back to `icon.png` | yes, to 60% |
-
-On Android 12 the icon is fitted to the circle the platform crops to,
-separately from the above. `icon_fit = "none"` turns that off and warns that
-the edges will be cut.
-
-#### Opaque artwork
-
-Artwork with its own background is treated as a finished composition and is
-never resized — the same rule the [icons](#icons) follow. It is drawn at full
-size, its colour reaches the edges, and on Android 12 it is placed whole and
-allowed to bleed past the circle rather than being shrunk into the middle of
-it.
-
-That is the way to make a splash whose artwork meets the edge of the circle.
-Keep anything meaningful within the central two thirds, because that is what
-survives the crop.
-
-#### Splash Background Colors
-
-You can customize splash background colors using the following options:
-
-- **Splash Color**: Background color for light mode splash screens.
-- **Splash Dark Color**: Background color for dark mode splash screens.
-
-##### Resolution order
-
-Their values are respectively determined in the following order of precedence:
-
-1. [`--splash-color`](../cli/flet-build.md#--splash-color) / [`--splash-dark-color`](../cli/flet-build.md#--splash-dark-color)
-2. `[tool.flet.<PLATFORM>.splash].color` / `[tool.flet.<PLATFORM>.splash].dark_color`
-3. `[tool.flet.splash].color` / `[tool.flet.splash].dark_color`
-4. [Build template](#build-template) defaults
-
-##### Example
+Set the colour that fills the screen in `pyproject.toml`. Use `color` for light
+mode and `dark_color` for dark mode:
 
 <Tabs groupId="flet-build--pyproject-toml">
-<TabItem value="flet-build" label="flet build">
-```
-flet build <target_platform> --splash-color #ffffff --splash-dark-color #333333
-```
-</TabItem>
 <TabItem value="pyproject-toml" label="pyproject.toml">
 ```toml
 [tool.flet.splash]
 color = "#ffffff"
-dark_color = "#333333"
+dark_color = "#222222"
+```
+</TabItem>
+<TabItem value="flet-build" label="flet build">
+```bash
+flet build <target_platform> --splash-color "#ffffff" --splash-dark-color "#222222"
 ```
 </TabItem>
 </Tabs>
 
-#### Android 12 splash icon
-
-Three settings apply to the icon Android 12 and later show, and each can be
-overridden per platform at `[tool.flet.<platform>.splash]`:
-
-| Key | Default | Effect |
-|---|---|---|
-| `icon_background` | none | Fills the circle behind the icon, making it visible. Also changes the icon canvas from 1152 to 960, per the platform spec |
-| `icon_dark_background` | `icon_background` | Its dark-mode counterpart |
-| `icon_fit` | `contain` | `contain` fits the artwork inside the circle; `none` leaves it and warns that the edges will be cropped |
+These are also the default colours. To give one platform a different background,
+use its own splash section:
 
 ```toml
-[tool.flet.splash]
+[tool.flet.android.splash]
 color = "#112233"
-icon_background = "#ff0055"
+dark_color = "#080f17"
 ```
 
-:::note[Renamed in 1.0.0]
-These were `icon_bgcolor`, `icon_dark_bgcolor` and `android_12_fit`. The former
-names are still read, so existing configuration keeps working.
+Command-line options
+[`--splash-color`](../cli/flet-build.md#--splash-color) and
+[`--splash-dark-color`](../cli/flet-build.md#--splash-dark-color) take precedence
+over platform settings, followed by shared settings, then the defaults.
+
+For dark mode, also supply a [dark splash image](#splash-images), as described
+below.
+
+#### Splash images
+
+Use `splash.png` for shared artwork and `splash_dark.png` for a dark-mode version.
+You can override either for one platform by adding its name, such as
+`splash_android.png` or `splash_dark_android.png`.
+
+Flet selects the first available image in this order. Replace `<platform>` with
+`android`, `ios`, or `web`:
+
+| Mode | First choice | Second choice | Fallback |
+|---|---|---|---|
+| Light | `splash_<platform>.png` | `splash.png` | `icon.png`, then the default Flet icon |
+| Dark | `splash_dark_<platform>.png` | `splash_dark.png` | The selected light-mode image |
+
+The same [image formats as app icons](#image-sizes-and-formats) are supported;
+PNG is preferred. A non-square image is centred on a square canvas with
+transparent padding, without stretching or cropping the source.
+
+:::note[Using the same artwork in both themes]
+If you only want to change the background in dark mode, save the same artwork
+as `splash_dark.png`. iOS needs a dark splash image to apply `dark_color`, and
+Android 12 needs one to apply `icon_dark_background`.
 :::
 
-#### Disabling Splash Screens
+#### Sizing and framing
 
-Splash screens are enabled by default but can be disabled.
+On iOS, web, and Android versions before 12, the image is displayed at a quarter
+of its source dimensions: a **1024 × 1024** image occupies **256 × 256** logical
+pixels on screen. Use a smaller image or add transparent margins to make the
+logo appear smaller.
 
-##### Resolution order
+Flet treats a supplied splash image and a fallback app icon differently:
 
-Its value is determined in the following order of precedence:
+| Source | How Flet places the artwork |
+|---|---|
+| `splash.png` or `splash_<platform>.png` | Preserves the margins you supply. |
+| Fallback `icon.png` | Shrinks transparent artwork, if needed, to fit within the central **60%** of the canvas width and height. |
 
-- on Android:
-    - [`--no-android-splash`](../cli/flet-build.md#--no-android-splash)
-    - `[tool.flet.splash].android`
-- on iOS:
-    - [`--no-ios-splash`](../cli/flet-build.md#--no-ios-splash)
-    - `[tool.flet.splash].ios`
-- on Web:
-    - [`--no-web-splash`](../cli/flet-build.md#--no-web-splash)
-    - `[tool.flet.splash].web`
+Existing margins are preserved; small artwork is not enlarged to fill that 60%
+area. Android 12 and later use a fixed icon area with
+[additional fitting](#android-12-splash-icon), so source dimensions do not directly
+control the displayed size there.
 
-##### Example
+#### Opaque artwork
+
+An image with no transparency keeps its own background and composition. It is
+still resized to generate the required image sizes, but Flet does not add the
+margins it would add to a transparent logo.
+
+On Android 12, the system's circular crop can hide the edges of this artwork.
+Keep important details inside a centred circle with a diameter of **two thirds**
+of the canvas width. Use a transparent image when you want the configured splash
+background to show around your logo.
+
+#### How the Android splash is composed
+
+The screen background and the artwork are separate layers. Before Android 12,
+the artwork appears centred over the background. Android 12 and later display
+it in a circular area, with an optional colour behind the icon:
+
+<div className="icon-grid">
+
+| Screen background | Before Android 12 | Android 12+ | Android 12+ with icon background |
+|:--:|:--:|:--:|:--:|
+| <Image src="/img/docs/icons/splash-background.png" alt="The splash screen background colour" /> | <Image src="/img/docs/icons/splash-legacy.png" alt="Artwork centred over the screen background" /> | <Image src="/img/docs/icons/splash-android12.png" alt="Artwork in Android 12's circular icon area" /> | <Image src="/img/docs/icons/splash-android12-bg.png" alt="Artwork on a coloured disc over the screen background" /> |
+| `color` or `dark_color` | Artwork at its splash size | Artwork fitted for the circular crop | `icon_background` fills the disc |
+
+</div>
+
+Use `color` to change the whole screen, and `icon_background` to add the coloured
+disc shown in the last example. Choose a disc colour that contrasts with your
+artwork so the logo remains visible.
+
+#### Android 12 splash icon
+
+These settings control the splash icon on Android 12 and later. Put them under
+`[tool.flet.android.splash]`, or under `[tool.flet.splash]` as shared defaults:
+
+| Setting | Default | Effect |
+|---|---|---|
+| `icon_background` | No fill | Adds a background colour behind the splash icon. |
+| `icon_dark_background` | Same as `icon_background` | Sets the icon background for dark mode; requires a dark splash image. |
+| `icon_fit` | `"contain"` | Reduces transparent artwork when needed to leave room for the circular crop. Use `"none"` to control the margins yourself. |
+
+```toml
+[tool.flet.android.splash]
+color = "#112233"
+icon_background = "#ffffff"
+icon_fit = "contain"
+```
+
+Here, `color` fills the screen and `icon_background` adds a white disc behind the
+logo. This splash setting is separate from the
+[`icon_background` used for app icons](#background-colour).
+
+Android uses a smaller icon area when an icon background is set. Flet generates
+the appropriate canvas automatically; see
+[Android's splash screen dimensions](https://developer.android.com/develop/ui/views/launch/splash-screen)
+if you are preparing artwork to fit it manually.
+
+With `icon_fit = "none"`, Flet preserves your artwork's margins and warns when it
+detects transparent artwork extending beyond the central area. Keep important
+details inside the central circle; the system can crop anything outside it.
+
+:::note[Renamed in 1.0.0]
+`icon_background`, `icon_dark_background`, and `icon_fit` replace `icon_bgcolor`,
+`icon_dark_bgcolor`, and `android_12_fit`, respectively. The old names are still
+accepted.
+:::
+
+#### Disabling splash screens
+
+To turn off Flet's splash customization for a platform, set its value to `false`:
 
 <Tabs groupId="flet-build--pyproject-toml">
-<TabItem value="flet-build" label="flet build">
-```bash
-flet build apk --no-android-splash
-flet build ipa --no-ios-splash
-flet build ios-simulator --no-ios-splash
-flet build web --no-web-splash
-```
-</TabItem>
 <TabItem value="pyproject-toml" label="pyproject.toml">
 ```toml
 [tool.flet.splash]
@@ -1096,7 +1093,25 @@ ios = false
 web = false
 ```
 </TabItem>
+<TabItem value="flet-build" label="flet build">
+```bash
+flet build apk --no-android-splash
+flet build ipa --no-ios-splash
+flet build ios-simulator --no-ios-splash
+flet build web --no-web-splash
+```
+</TabItem>
 </Tabs>
+
+Set only the platforms you want to disable; the others remain enabled. The
+command-line flags
+[`--no-android-splash`](../cli/flet-build.md#--no-android-splash),
+[`--no-ios-splash`](../cli/flet-build.md#--no-ios-splash), and
+[`--no-web-splash`](../cli/flet-build.md#--no-web-splash) take precedence over the
+corresponding settings in `pyproject.toml`.
+
+To customize what appears after Flutter starts while your Python app loads,
+see [Boot screen](#boot-screen).
 
 ### Boot screen
 
