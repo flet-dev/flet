@@ -622,3 +622,10 @@ html[data-theme='dark'] .docusaurus-highlight-code-line {
   height: auto;
   margin: 0 auto;
 }
+
+/* Two-column comparisons are a pair, not a grid. Left full width each picture
+   renders around 440px from a 256px file - a visible upscale, and far larger
+   than it needs to be to be compared with the one beside it. */
+.icon-grid--pair table {
+  max-width: 34rem;
+}

@@ -891,7 +891,7 @@ A generic `icon.png` is **shrunk to fit** each platform's mask. A
 platform-specific `icon_<platform>.png` is your finished composition and is
 used **exactly as supplied**:
 
-<div className="icon-grid">
+<div className="icon-grid icon-grid--pair">
 
 | `icon.png` — Flet fits it | `icon_macos.png` — used as-is |
 |:--:|:--:|
@@ -918,7 +918,7 @@ you already padded is left alone and a second build changes nothing. And it is
 skipped entirely for **opaque** artwork, which is a finished icon rather than a
 glyph on a canvas — shrinking it would ring your design with background colour:
 
-<div className="icon-grid">
+<div className="icon-grid icon-grid--pair">
 
 | Opaque artwork on Android | …and on iOS |
 |:--:|:--:|
@@ -1003,7 +1003,7 @@ there — a file of the same name and path wins outright, with no configuration:
 
 A file you drop in is not fitted, so a maskable one is yours to get right:
 
-<div className="icon-grid">
+<div className="icon-grid icon-grid--pair">
 
 | Fitted by Flet | Supplied as-is |
 |:--:|:--:|
