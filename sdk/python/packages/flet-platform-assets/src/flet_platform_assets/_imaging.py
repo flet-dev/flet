@@ -466,3 +466,47 @@ def save_ico(path: Path, images: Mapping[int, Image.Image]) -> None:
         sizes=[(s, s) for s in sizes],
         append_images=[images[s] for s in sizes[:-1]],
     )
+
+
+def radial_extent(img: Image.Image, *, sample: int = 256) -> float | None:
+    """How far opaque content reaches from the centre, as a fraction of half the canvas.
+
+    The circular counterpart to :func:`alpha_extent`. A round mask cares about
+    distance from the centre, not reach along either axis, so artwork whose
+    extremes sit off-axis is measured correctly here and underestimated there:
+    Flet's own mark reads 0.60 by axis and 0.97 against Android's mask radius.
+
+    Only the leftmost and rightmost opaque pixel of each row can be furthest
+    from the centre, so the scan is per row rather than per pixel, on a
+    downscaled copy.
+
+    Args:
+        img: The image to measure.
+        sample: Side length to measure at. Larger is slower and no more
+            accurate than the artwork's own antialiasing.
+
+    Returns:
+        The fraction, or `None` when the image is fully opaque and so has no
+            meaningful extent.
+    """
+
+    if img.mode != "RGBA":
+        img = img.convert("RGBA")
+    alpha = img.getchannel("A")
+    if alpha.getextrema()[0] == 255:
+        return None
+    if max(alpha.size) > sample:
+        alpha = alpha.resize((sample, sample), Image.BILINEAR)
+    width, height = alpha.size
+    cx, cy = (width - 1) / 2, (height - 1) / 2
+    half = max(cx, cy) or 1.0
+    furthest = 0.0
+    for y in range(height):
+        row = alpha.crop((0, y, width, y + 1)).point(lambda v: 255 if v > 8 else 0)
+        box = row.getbbox()
+        if box is None:
+            continue
+        dy = y - cy
+        for x in (box[0], box[2] - 1):
+            furthest = max(furthest, math.hypot(x - cx, dy))
+    return furthest / half

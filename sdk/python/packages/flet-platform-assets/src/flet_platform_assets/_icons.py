@@ -3,11 +3,20 @@
 Pure: takes an image, returns images. Nothing here reads or writes the
 filesystem, so the same code serves a build and a live preview.
 
-The governing rule is that a user's icon is placed **full-bleed**. Its
-internal padding is a design decision, and re-framing it would silently
-change their artwork. Only transforms a platform actually requires are
-applied - flattening where alpha is rejected, the macOS icon grid, a
-multi-size `.ico`, opaque maskable icons.
+Artwork the author framed for a platform is placed **full-bleed** and left
+alone: its padding is a design decision, and re-framing it would silently
+change their icon. Only transforms a platform actually requires are applied -
+flattening where alpha is rejected, the macOS icon grid, a multi-size `.ico`,
+opaque maskable icons.
+
+A *generic* `icon.png` is different, because no single framing can satisfy
+every platform: web, Windows and Linux apply no mask and want every pixel,
+while iOS, macOS and Android each mask the edges away and need margin.
+Rather than make the user choose which platform to serve, a generic source is
+shrunk to each platform's margin - never enlarged, and never when the source
+is opaque, since an opaque image is a finished icon rather than a glyph on a
+canvas. See :data:`FRAMING` and the `derived` argument to
+:func:`render_icons`.
 """
 
 from __future__ import annotations
@@ -20,6 +29,7 @@ from ._imaging import (
     apple_grid,
     looks_pre_shaped,
     place,
+    radial_extent,
     scale_to_fit,
 )
 from ._models import AssetSpec, IconOptions, RenderResult, Target
@@ -28,6 +38,8 @@ __all__ = [
     "ANDROID_ADAPTIVE_SIZES",
     "ANDROID_MIPMAP_SIZES",
     "DEFAULT_SPECS",
+    "FRAMING",
+    "FRAMING_TOLERANCE",
     "LINUX_HICOLOR_SIZES",
     "WINDOWS_ICO_SIZES",
     "linux_targets",
@@ -139,6 +151,26 @@ def _default_specs() -> dict[str, AssetSpec]:
 DEFAULT_SPECS = _default_specs()
 """Per-platform defaults, matching a stock Flutter project."""
 
+# How much of its canvas the artwork may occupy when a generic `icon.png` is
+# derived for a platform that frames its icons. A single source cannot satisfy
+# all of them - the flat surfaces want every pixel, and these three want
+# margin - so the margin is computed here rather than demanded of the user.
+#
+# Android is measured radially because its mask is a circle: artwork whose
+# extremes sit off-axis clears the axis test and is still clipped. 0.567 puts
+# the furthest point at 85% of the mask radius.
+FRAMING = {
+    "ios": (0.60, alpha_extent),
+    "macos": (0.68, alpha_extent),
+    "android": (0.567, radial_extent),
+}
+
+# Resampling lands the measured extent a hair either side of the target, so an
+# exact comparison would shrink an already-framed icon a second time on every
+# pass. The slack makes framing idempotent, and skips a resample - which is
+# lossy at the soft edge - for artwork that is already close enough.
+FRAMING_TOLERANCE = 1.02
+
 
 def render_icons(
     source: Image.Image,
@@ -147,6 +179,7 @@ def render_icons(
     *,
     platform: str,
     pre_rendered: bool = False,
+    derived: bool = False,
 ) -> RenderResult:
     """Render every app icon for one platform.
 
@@ -159,6 +192,11 @@ def render_icons(
         platform: One of `ios`, `macos`, `android`, `windows`, `web`, `linux`.
         pre_rendered: The source already carries platform shaping, so the
             macOS grid is skipped rather than applied a second time.
+        derived: The source is a generic `icon.png` rather than artwork
+            authored for this platform, so it may be framed to suit the
+            platform's mask - see :data:`FRAMING`. An icon supplied *as*
+            `icon_<platform>.png` is the author's finished composition and is
+            never reframed.
 
     Returns:
         The rendered assets and any diagnostics.
@@ -172,6 +210,8 @@ def render_icons(
         raise ValueError(f"unknown platform: {platform!r}")
     spec = spec if spec is not None else DEFAULT_SPECS[platform]
     result = RenderResult()
+    if derived:
+        source = _frame(source, platform)
 
     if platform == "macos":
         _render_macos(source, options, spec, result, pre_rendered)
@@ -189,6 +229,31 @@ def render_icons(
         }
 
     return result
+
+
+def _frame(source: Image.Image, platform: str) -> Image.Image:
+    """Shrink artwork to the margin a platform's mask needs, never enlarging.
+
+    Only shrinking makes this idempotent and safe to apply to anything: a
+    full-bleed source is brought in, artwork that already clears the mask is
+    untouched, and running it twice changes nothing.
+
+    A fully opaque source is left alone. `alpha_extent` and
+    :func:`~._imaging.radial_extent` both return `None` for one, which is the
+    right answer rather than a missing measurement: an opaque image is a
+    finished icon, not a glyph floating on a canvas, and shrinking it would
+    ring a complete composition with a border of background colour.
+    """
+
+    framing = FRAMING.get(platform)
+    if framing is None:
+        return source
+    target, measure = framing
+    current = measure(source)
+    if current is None or current <= target * FRAMING_TOLERANCE:
+        return source
+    art = scale_to_fit(source, max(1, round(source.width * target / current)))
+    return place(art, source.width)
 
 
 def _plain(source: Image.Image, target: Target, options: IconOptions) -> Image.Image:

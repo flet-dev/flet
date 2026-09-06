@@ -20,7 +20,12 @@ from flet_platform_assets import (
     web_targets_from_manifest,
     write,
 )
-from flet_platform_assets._imaging import alpha_extent, superellipse_mask
+from flet_platform_assets._icons import _frame
+from flet_platform_assets._imaging import (
+    alpha_extent,
+    radial_extent,
+    superellipse_mask,
+)
 from PIL import Image
 
 
@@ -300,3 +305,78 @@ class TestWrite:
         assert [p.name for p in written] == ["app_icon.ico"]
         with Image.open(written[0]) as ico:
             assert sorted(w for w, _ in ico.ico.sizes()) == sorted(WINDOWS_ICO_SIZES)
+
+
+class TestFraming:
+    """A generic `icon.png` is framed for the platform; a platform-specific
+    one is not.
+
+    A single source cannot satisfy every platform at once - web, Windows and
+    Linux apply no mask and want every pixel, while iOS, macOS and Android
+    each need margin - so the margin is computed rather than demanded of the
+    user. Supplying `icon_<platform>.png` opts out entirely.
+    """
+
+    @pytest.fixture
+    def full_bleed(self):
+        """A bare glyph touching the canvas edge, as the guidance asks for."""
+        img = Image.new("RGBA", (512, 512), (0, 0, 0, 0))
+        img.paste(Image.new("RGBA", (396, 512), (255, 0, 85, 255)), (58, 0))
+        return img
+
+    def test_ios_is_framed_when_derived(self, full_bleed):
+        framed = _frame(full_bleed, "ios")
+        assert alpha_extent(framed) == pytest.approx(0.60, abs=0.02)
+
+    def test_macos_is_framed_when_derived(self, full_bleed):
+        """0.68 here, because the macOS grid then insets it into the tile."""
+        framed = _frame(full_bleed, "macos")
+        assert alpha_extent(framed) == pytest.approx(0.68, abs=0.02)
+
+    def test_android_is_framed_radially(self, full_bleed):
+        """Android's mask is a circle, so the axis measure is not enough."""
+        framed = _frame(full_bleed, "android")
+        assert radial_extent(framed) == pytest.approx(0.567, abs=0.02)
+
+    def test_unmasked_platforms_are_never_framed(self, full_bleed):
+        for platform in ("web", "windows", "linux"):
+            assert _frame(full_bleed, platform) is full_bleed
+
+    def test_framing_only_shrinks(self):
+        """Artwork that already clears the mask is left exactly as it is, so
+        an icon someone padded carefully is never enlarged into the margin."""
+        padded = Image.new("RGBA", (512, 512), (0, 0, 0, 0))
+        padded.paste(Image.new("RGBA", (150, 150), (255, 0, 85, 255)), (181, 181))
+        assert _frame(padded, "ios") is padded
+        assert _frame(padded, "android") is padded
+
+    def test_framing_is_idempotent(self, full_bleed):
+        once = _frame(full_bleed, "android")
+        assert _frame(once, "android") is once
+
+    def test_opaque_artwork_is_never_framed(self):
+        """An opaque source is a finished icon, not a glyph on a canvas.
+        Shrinking it would ring a complete composition with a border of
+        background colour."""
+        finished = Image.new("RGBA", (512, 512), (255, 0, 85, 255))
+        finished.paste(Image.new("RGBA", (200, 200), (255, 255, 255, 255)), (156, 156))
+        for platform in ("ios", "macos", "android"):
+            assert _frame(finished, platform) is finished
+
+    def test_render_icons_honours_derived(self, full_bleed):
+        loose = render_icons(full_bleed, platform="ios", derived=True)
+        asis = render_icons(full_bleed, platform="ios")
+        big = "ios/Runner/Assets.xcassets/AppIcon.appiconset/Icon-App-1024x1024@1x.png"
+        assert by_path(loose)[big].tobytes() != by_path(asis)[big].tobytes()
+
+    def test_derived_defaults_to_false(self, full_bleed):
+        """Rendering must not reframe unless a caller asks, so a preview of a
+        finished icon shows the finished icon."""
+        assert (
+            by_path(render_icons(full_bleed, platform="ios"))[
+                "ios/Runner/Assets.xcassets/AppIcon.appiconset/Icon-App-1024x1024@1x.png"
+            ].tobytes()
+            == by_path(render_icons(full_bleed, platform="ios", derived=False))[
+                "ios/Runner/Assets.xcassets/AppIcon.appiconset/Icon-App-1024x1024@1x.png"
+            ].tobytes()
+        )

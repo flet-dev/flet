@@ -1992,6 +1992,11 @@ class BaseBuildCommand(BaseFlutterCommand):
         self.assets_path = self.package_app_path.joinpath("assets")
 
         source_name = None
+        # Whether the source is a generic `icon.png` rather than artwork the
+        # author framed for this platform. A generic icon gets the platform's
+        # margin computed for it; `icon_<platform>.png` is a finished
+        # composition and is used exactly as supplied.
+        derived = False
         if self.assets_path.exists():
             images_path = self.flutter_dir.joinpath("images")
             images_path.mkdir(exist_ok=True)
@@ -1999,9 +2004,13 @@ class BaseBuildCommand(BaseFlutterCommand):
             # lookups produced nothing this build could use.
             source_name = self.find_platform_image(
                 self.assets_path, images_path, f"icon_{platform}", copy_ops, hash
-            ) or self.find_platform_image(
-                self.assets_path, images_path, "icon", copy_ops, hash
             )
+            if source_name is None:
+                source_name = self.find_platform_image(
+                    self.assets_path, images_path, "icon", copy_ops, hash
+                )
+                derived = source_name is not None
+        hash.update(derived)
 
         options = IconOptions(
             background=self._resolve_icon_background(),
@@ -2049,6 +2058,7 @@ class BaseBuildCommand(BaseFlutterCommand):
             self._icon_spec(platform),
             platform=platform,
             pre_rendered=pre_rendered,
+            derived=derived,
         )
         for message in result.warnings:
             console.log(f"Warning: {message}", style=warning_style)
