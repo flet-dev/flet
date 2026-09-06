@@ -316,6 +316,16 @@ def build() -> dict[str, Image.Image]:
         "result-maskable.png": on_checkerboard(
             web(full_bleed, "Icon-maskable-512.png", True)
         ),
+        # The same three source shapes, each through an unmasked platform, a
+        # mildly masked one and the most aggressive one. This is what makes
+        # the cost of padding visible: it changes nothing where a platform
+        # masks, because framing only ever shrinks.
+        "padded-web.png": on_checkerboard(web(padded, "Icon-512.png", True)),
+        "padded-ios.png": rounded(platform_icon(padded, "ios", "1024x1024", True)),
+        "padded-android.png": circle_masked(
+            android_foreground(padded, True), (255, 255, 255)
+        ),
+        "opaque-web.png": on_checkerboard(web(opaque, "Icon-512.png", True)),
         # Framed versus used as supplied.
         "framing-derived.png": on_checkerboard(
             platform_icon(full_bleed, "macos", "app_icon_1024", True)

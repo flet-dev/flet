@@ -828,6 +828,31 @@ they are one picture rather than three identical ones. The other four each
 crop, and each crops differently — which is the whole reason a single source
 cannot be framed once and used everywhere.
 
+#### What a padded or opaque source does
+
+The same three shapes from above, each through a platform that masks nothing,
+one that masks lightly, and the one that masks hardest:
+
+| Your source | Web, Windows, Linux | iOS | Android |
+|---|:--:|:--:|:--:|
+| **Full-bleed** | ![Kept edge to edge](/img/docs/icons/result-unmasked.png) | ![Inset for iOS](/img/docs/icons/result-ios.png) | ![Fitted to the circle](/img/docs/icons/result-android.png) |
+| **Padded** | ![Padding shows as empty space](/img/docs/icons/padded-web.png) | ![Identical to full-bleed](/img/docs/icons/padded-ios.png) | ![Identical to full-bleed](/img/docs/icons/padded-android.png) |
+| **Opaque** | ![Fills the frame](/img/docs/icons/opaque-web.png) | ![Fills the rounded square](/img/docs/icons/opaque-ios.png) | ![Fills the circle](/img/docs/icons/opaque-android.png) |
+
+Read the first two rows across and only one cell differs. **Padding costs you
+nothing where a platform masks** — framing only ever shrinks, so artwork that
+already clears the mask is left alone and lands in exactly the same place as a
+full-bleed source would. It costs you on web, Windows and Linux, which mask
+nothing and show your padding as empty space around a smaller logo.
+
+The third row is a different thing entirely. Opaque artwork is a finished
+composition, so it is never resized on any platform: it fills every frame, its
+colour reaches every edge, and each platform's mask cuts it to shape. That is
+how you get a coloured tile or a solid circle. Your logo stays exactly where
+you drew it inside your artwork, which means **you** own the margin — keep
+anything meaningful inside the central two thirds, because that is what
+survives the tightest mask.
+
 #### Framing
 
 A generic `icon.png` is **shrunk to fit** each platform's mask. A
@@ -887,22 +912,35 @@ still overrides it if Android should differ.
 The favicon, the plain `Icon-*.png` and the Windows and Linux icons keep their
 transparency — nothing composites them onto anything.
 
-#### Platform-specific icons
+#### Making an icon for one platform
 
-Supply any of these to take over one platform completely. Each is used as
-supplied, with no framing:
+Any of these takes over a single platform. Only the platform being built is
+looked up, so an `icon_ios.png` costs nothing on an Android build.
 
-| Platform | File name | Notes |
-|---|---|---|
-| iOS | `icon_ios.png` | Alpha is removed; the App Store rejects it |
-| Android | `icon_android.png` | The adaptive icon's foreground layer — keep it transparent, or it hides the background layer |
-| Web | `icon_web.png` | Regenerates all six web icons |
-| Windows | `icon_windows.ico` or `.png` | A `.png` becomes a `.ico` with 16, 32, 48 and 256px entries. An existing `.ico` keeps its own sizes |
-| macOS | `icon_macos.png` | Composed into Apple's tile unless it already looks shaped |
-| Linux | `icon_linux.png` | Rendered at every size the hicolor theme declares, 16 through 512 |
+**A platform-specific file is never framed.** That is the point of it — the
+file is your finished composition — but it means the margin becomes your job.
+These are the numbers Flet would have applied, so match them unless you want
+something different:
 
-Only the platform being built is looked up, so an `icon_ios.png` costs nothing
-on an Android build.
+| File | Size | Transparency | Keep artwork within |
+|---|---|---|---|
+| `icon_ios.png` | 1024×1024 | removed — flattened onto `icon_background`, because the App Store rejects alpha | **60%** of the canvas, or fill it if your artwork has its own background |
+| `icon_macos.png` | 1024×1024 | kept; Flet still composes Apple's tile around it | **68%** of the canvas — the tile then insets it to ~55% |
+| `icon_android.png` | 1024×1024 | **must stay transparent** — it is the foreground layer, and an opaque file hides `adaptive_icon_background` behind it | a centred circle **57%** of the width |
+| `icon_web.png` | 1024×1024 | kept, except the maskables and apple-touch, flattened onto `icon_background` | a centred circle **80%** of the width, so the maskables survive their mask |
+| `icon_windows.ico` or `.png` | 256×256 or larger | kept | the whole canvas — nothing masks it. A `.png` becomes a `.ico` with 16, 32, 48 and 256px entries; an existing `.ico` keeps its own sizes |
+| `icon_linux.png` | 512×512 or larger | kept | the whole canvas — nothing masks it. Rendered at every size the hicolor theme declares, 16 through 512 |
+
+Two of these bite if you skip them. `icon_web.png` regenerates all six web
+icons including the maskables, and those are cropped to a circle by whatever
+installs your app — `flet build` warns when it can see artwork crossing that
+line. And an opaque `icon_android.png` replaces both adaptive layers at once,
+which is a valid choice for a Chrome-style icon but means
+`adaptive_icon_background` no longer does anything.
+
+If you only want to change the *colour* behind a transparent icon, set
+[`icon_background`](#background-colour) instead — that is almost always what
+"the icon looks wrong on iOS" turns out to need.
 
 :::note[Android needs two layers]
 An adaptive icon is a transparent glyph over a solid colour. For an icon like
