@@ -212,11 +212,12 @@ class Command(BaseCommand):
             ensure_flet_web_package_installed,
         )
 
-        if options.web:
+        # `--web`, `--ios` and `--android` all serve the app over the web server
+        # (and none of them opens a native window), so need only `flet-web`.
+        if options.web or options.ios or options.android:
             ensure_flet_web_package_installed()
         else:
             ensure_flet_desktop_package_installed()
-        from flet_desktop import close_flet_view
 
         if options.module:
             script_path = Path(options.script.replace(".", "/"))
@@ -362,7 +363,13 @@ class Command(BaseCommand):
         except KeyboardInterrupt:
             pass
 
-        close_flet_view(my_event_handler.pid_file)
+        # `pid_file` is set only by `Handler.open_flet_view_and_wait`, so it is
+        # `None` unless there is a window to close.
+        if my_event_handler.pid_file is not None:
+            from flet_desktop import close_flet_view
+
+            close_flet_view(my_event_handler.pid_file)
+
         my_observer.stop()
         my_observer.join()
 
@@ -561,18 +568,20 @@ class Handler(FileSystemEventHandler):
         terminated and the handler termination event is set.
         """
 
-        from flet_desktop import open_flet_view
-
-        self.fvp, self.pid_file = open_flet_view(
-            self.page_url, self.assets_dir, self.hidden
-        )
-        self.fvp.wait()
-        self.p.send_signal(signal.SIGTERM)
         try:
-            self.p.wait(2)
-        except subprocess.TimeoutExpired:
-            self.p.kill()
-        self.terminate.set()
+            from flet_desktop import open_flet_view
+
+            self.fvp, self.pid_file = open_flet_view(
+                self.page_url, self.assets_dir, self.hidden
+            )
+            self.fvp.wait()
+            self.p.send_signal(signal.SIGTERM)
+            try:
+                self.p.wait(2)
+            except subprocess.TimeoutExpired:
+                self.p.kill()
+        finally:
+            self.terminate.set()
 
     def restart_program(self):
         """
