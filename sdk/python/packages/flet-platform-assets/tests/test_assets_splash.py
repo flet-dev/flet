@@ -104,6 +104,36 @@ class TestAndroid12Splash:
         assert images[path].size == (960, 960)
         assert images[path].mode == "RGB", "an icon background must be opaque"
 
+    @pytest.mark.parametrize("light_background", [None, "#ffffff"])
+    def test_dark_background_reuses_light_artwork(
+        self, art, tmp_path, light_background
+    ):
+        result = render_splash(
+            art,
+            options=SplashOptions(
+                icon_background=light_background,
+                icon_dark_background="#112233",
+            ),
+            platform="android",
+        )
+        write(result, tmp_path, declared_only=False)
+        for density, multiplier in ANDROID_DENSITIES.items():
+            night = f"{ANDROID_RES}/drawable-night-{density}"
+            path = tmp_path / night / "android12splash.png"
+            with Image.open(path) as image:
+                assert image.size == (round(240 * multiplier),) * 2
+                assert image.getpixel((0, 0)) == (17, 34, 51)
+                assert image.getpixel((image.width // 2, image.height // 2)) == (
+                    255,
+                    0,
+                    85,
+                )
+            assert not (tmp_path / night / "splash.png").exists()
+
+        # Removing the override must remove the generated night icons too.
+        write(render_splash(art, platform="android"), tmp_path, declared_only=False)
+        assert not list(tmp_path.glob(f"{ANDROID_RES}/drawable-night-*/*.png"))
+
     def test_artwork_is_fitted_inside_the_visible_circle(self, art):
         images = by_path(render_splash(art, platform="android"))
         big = images[f"{ANDROID_RES}/drawable-xxxhdpi/android12splash.png"]
@@ -161,11 +191,14 @@ class TestIOSSplash:
             != images[f"{IOS_LAUNCH}/LaunchImageDark@2x.png"].tobytes()
         )
 
-    def test_background_swatches_are_1x1_solids(self, art, dark_art):
+    @pytest.mark.parametrize("separate_dark_artwork", [False, True])
+    def test_background_swatches_are_1x1_solids(
+        self, art, dark_art, separate_dark_artwork
+    ):
         images = by_path(
             render_splash(
                 art,
-                dark_art,
+                dark_art if separate_dark_artwork else None,
                 SplashOptions(color="#ff0055", dark_color="#001122"),
                 platform="ios",
             )

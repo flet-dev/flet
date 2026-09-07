@@ -132,10 +132,10 @@ def _render_android(
 ) -> None:
     """Splash bitmaps per density, plus the Android 12 icon canvas.
 
-    The `-night` variants are written only when a distinct dark image was
-    supplied. When one is not, they are listed as stale so a build that used
-    to have dark artwork does not keep serving it - cookiecutter overwrites
-    but never deletes.
+    The `-night` variants are written when dark artwork or an Android 12
+    dark icon background was supplied. Unneeded variants are listed as stale
+    so a build does not keep serving old artwork or colours - cookiecutter
+    overwrites but never deletes.
     """
 
     for directory, density in ANDROID_DENSITIES.items():
@@ -150,13 +150,16 @@ def _render_android(
     for directory, density in ANDROID_DENSITIES.items():
         night = f"{_ANDROID_RES}/drawable-night-{directory}"
         if dark is None:
-            result.stale.extend((f"{night}/splash.png", f"{night}/android12splash.png"))
+            result.stale.append(f"{night}/splash.png")
+        else:
+            result.add(f"{night}/splash.png", _scaled(dark, density))
+        if dark is None and not options.icon_dark_background:
+            result.stale.append(f"{night}/android12splash.png")
             continue
-        result.add(f"{night}/splash.png", _scaled(dark, density))
         result.add(
             f"{night}/android12splash.png",
             _android_12(
-                dark,
+                dark if dark is not None else light,
                 density,
                 options.icon_dark_background or options.icon_background,
                 options,
@@ -245,7 +248,7 @@ def _render_ios(
     result.add(f"{_IOS_BACKGROUND}/background.png", _swatch(options.color))
     result.add(
         f"{_IOS_BACKGROUND}/darkbackground.png",
-        _swatch(options.dark_color if dark is not None else options.color),
+        _swatch(options.dark_color),
     )
 
 

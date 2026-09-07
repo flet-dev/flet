@@ -82,7 +82,7 @@ ANDROID_DEFAULT_EXTRACT_PACKAGES: list[str] = []
 # than leaving a user with output from the previous implementation. Nothing
 # else encodes the generator's identity now that the pubspec no longer does.
 ICONS_GENERATOR_VERSION = 1
-SPLASH_GENERATOR_VERSION = 1
+SPLASH_GENERATOR_VERSION = 2
 
 # `flet build` target platform -> the platform name flet-platform-assets uses.
 # A target absent here generates no icons at all.
@@ -2250,9 +2250,10 @@ class BaseBuildCommand(BaseFlutterCommand):
         assert self.flutter_dir
 
         backup_dir = self.build_dir / ".icons-orig"
-        for asset in result.assets:
-            target = self.flutter_dir / asset.relative_path
-            saved = backup_dir / asset.relative_path
+        paths = [asset.relative_path for asset in result.assets] + list(result.ico)
+        for relative_path in paths:
+            target = self.flutter_dir / relative_path
+            saved = backup_dir / relative_path
             if target.is_file() and not saved.exists():
                 saved.parent.mkdir(parents=True, exist_ok=True)
                 shutil.copy(target, saved)
