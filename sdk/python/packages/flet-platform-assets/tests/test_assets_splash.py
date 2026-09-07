@@ -13,7 +13,7 @@ from flet_platform_assets import (
     render_splash,
     write,
 )
-from flet_platform_assets._imaging import alpha_extent
+from flet_platform_assets._imaging import alpha_extent, radial_extent
 from PIL import Image
 
 ANDROID_RES = "android/app/src/main/res"
@@ -142,13 +142,34 @@ class TestAndroid12Splash:
     def test_pre_padded_artwork_is_not_shrunk_twice(self):
         """A user who followed the platform guidance already fits the circle."""
         padded = Image.new("RGBA", (1024, 1024), (0, 0, 0, 0))
-        padded.paste(Image.new("RGBA", (600, 600), (255, 0, 85, 255)), (212, 212))
+        padded.paste(Image.new("RGBA", (440, 440), (255, 0, 85, 255)), (292, 292))
         before = alpha_extent(padded)
 
         images = by_path(render_splash(padded, platform="android"))
         big = images[f"{ANDROID_RES}/drawable-xxxhdpi/android12splash.png"]
 
         assert alpha_extent(big) == pytest.approx(before, abs=0.02)
+
+    @pytest.mark.parametrize("side", [614, 900])
+    @pytest.mark.parametrize("background", [None, "#ffffff"])
+    def test_square_corners_fit_the_circular_mask(self, side, background):
+        art = Image.new("RGBA", (1024, 1024))
+        offset = (1024 - side) // 2
+        art.paste(Image.new("RGBA", (side, side), "red"), (offset, offset))
+        result = render_splash(
+            art, options=SplashOptions(icon_background=background), platform="android"
+        )
+        for asset in result.assets:
+            if not asset.relative_path.endswith("android12splash.png"):
+                continue
+            # Measure the red artwork independently of the opaque background.
+            image = asset.image.convert("RGBA")
+            image.putalpha(
+                image.getchannel("G").point(lambda v: 255 if v < 128 else 0)
+                if background
+                else image.getchannel("A")
+            )
+            assert radial_extent(image) <= ANDROID_12_VISIBLE_FRACTION + 0.025
 
     def test_fit_none_passes_through_and_warns(self, art):
         result = render_splash(
@@ -248,6 +269,20 @@ class TestWriteRemovesStale:
     def test_missing_stale_file_is_not_an_error(self, art, tmp_path):
         write(render_splash(art, platform="web"), tmp_path, declared_only=False)
         assert (tmp_path / "web/splash/img/light-1x.png").exists()
+
+    def test_legacy_night_xml_is_removed_with_its_background(self, art, tmp_path):
+        for directory in ("drawable-night", "drawable-night-v21"):
+            path = tmp_path / ANDROID_RES / directory
+            path.mkdir(parents=True)
+            (path / "launch_background.xml").write_text(
+                '<bitmap android:src="@drawable/background" />'
+            )
+            Image.new("RGB", (1, 1)).save(path / "background.png")
+        write(render_splash(art, platform="android"), tmp_path, declared_only=False)
+        for directory in ("drawable-night", "drawable-night-v21"):
+            path = tmp_path / ANDROID_RES / directory
+            assert not (path / "launch_background.xml").exists()
+            assert not (path / "background.png").exists()
 
 
 class TestOpaqueArtwork:

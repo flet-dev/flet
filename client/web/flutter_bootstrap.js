@@ -1,6 +1,10 @@
 {{flutter_js}}
 {{flutter_build_config}}
 
+window.addEventListener('flutter-first-frame', () => {
+    document.getElementById('loading')?.remove();
+}, { once: true });
+
 var flutterConfig = {
     multiViewEnabled: flet.multiView,
     entrypointBaseUrl: flet.entrypointBaseUrl,

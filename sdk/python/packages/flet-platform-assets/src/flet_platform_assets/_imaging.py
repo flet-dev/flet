@@ -505,11 +505,12 @@ def radial_extent(img: Image.Image, *, sample: int = 256) -> float | None:
             Image.BILINEAR,
         )
     width, height = alpha.size
+    alpha = alpha.point(lambda v: 255 if v > 8 else 0)
     cx, cy = (width - 1) / 2, (height - 1) / 2
     half = max(cx, cy) or 1.0
     furthest = 0.0
     for y in range(height):
-        row = alpha.crop((0, y, width, y + 1)).point(lambda v: 255 if v > 8 else 0)
+        row = alpha.crop((0, y, width, y + 1))
         box = row.getbbox()
         if box is None:
             continue

@@ -81,6 +81,32 @@
 </head>
 
 <body>
+  <div id="loading" role="status" aria-label="Loading">
+    <style>
+      #loading {
+        position: fixed;
+        inset: 0;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background: #ffffff;
+      }
+
+      #loading img {
+        width: 200px;
+        max-width: 50vw;
+        max-height: 50vh;
+        object-fit: contain;
+      }
+
+      @media (prefers-color-scheme: dark) {
+        #loading {
+          background: #222222;
+        }
+      }
+    </style>
+    <img src="icons/loading-animation.png" alt="" />
+  </div>
   <script src="flutter_bootstrap.js" async></script>
 </body>
 </html>

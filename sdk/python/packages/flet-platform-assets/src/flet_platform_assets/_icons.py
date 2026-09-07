@@ -246,8 +246,16 @@ def render_icons(
     elif platform == "linux":
         _render_linux(source, options, spec, result, derived)
     else:
+        framed = {}
+        rendered = {}
         for target in spec.targets:
-            result.add(target.relative_path, _plain(source, target, options, derived))
+            rule = target.frame if derived else None
+            if rule not in framed:
+                framed[rule] = _frame(source, rule) if rule else source
+            key = (rule, target.size, target.opaque)
+            if key not in rendered:
+                rendered[key] = _plain(framed[rule], target, options)
+            result.add(target.relative_path, rendered[key])
 
     if platform == "android":
         _warn_adaptive_safe_zone(source, result)

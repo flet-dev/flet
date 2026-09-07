@@ -189,14 +189,15 @@ the web alone) and Flet regenerates the whole set, fitting each one to its mask.
 
 #### Loading screen
 
-The HTML loading animation has been removed. It ran before Flutter's first
-frame, which made web startup a three-stage sequence - HTML animation, then
-the Flutter boot screen, then the app - and only the boot screen is
-configurable.
+Dynamic websites show a static Flet logo until Flutter draws its first frame.
+To replace it, put your image at `icons/loading-animation.png` inside your
+app's assets directory. The filename is preserved for compatibility; the
+image no longer uses the breathing or zoom animation.
 
-Dropping in your own `icons/loading-animation.png` no longer has any effect.
-Use [`[tool.flet.boot_screen]`](../../index.md) instead, which controls the
-screen shown while the app starts.
+The subsequent Flutter boot screen is configured separately with
+[`[tool.flet.boot_screen]`](../../index.md). This override applies to dynamic
+websites only; `flet build web` uses the configured
+[splash screen](../../index.md#splash-screen).
 
 #### PWA
 

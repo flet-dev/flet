@@ -15,10 +15,10 @@ from PIL import Image
 
 from ._icons import _frame
 from ._imaging import (
-    alpha_extent,
     density_size,
     parse_hex_color,
     place,
+    radial_extent,
     scale_to_fit,
 )
 from ._models import RenderResult, SplashOptions
@@ -58,6 +58,10 @@ _ANDROID_STALE = [
         "drawable-night-v21",
     )
 ]
+_ANDROID_STALE.extend(
+    f"{_ANDROID_RES}/{directory}/launch_background.xml"
+    for directory in ("drawable-night", "drawable-night-v21")
+)
 
 
 def render_splash(
@@ -191,7 +195,7 @@ def _android_12(
     dp = ANDROID_12_CANVAS_DP_WITH_BACKGROUND if background else ANDROID_12_CANVAS_DP
     canvas = round(dp * density)
 
-    extent = alpha_extent(art)
+    extent = radial_extent(art)
     # `None` means the artwork is opaque, which is a finished composition
     # rather than a glyph on a canvas - the same reading the icon generator
     # takes. Its colour is meant to bleed past the mask, so it is placed
@@ -200,7 +204,7 @@ def _android_12(
     if options.icon_fit == "none" or already_fits:
         scaled = scale_to_fit(art, canvas)
     else:
-        scaled = scale_to_fit(art, round(canvas * ANDROID_12_VISIBLE_FRACTION))
+        scaled = scale_to_fit(art, round(canvas * ANDROID_12_VISIBLE_FRACTION / extent))
 
     return place(scaled, canvas, bg=parse_hex_color(background) if background else None)
 
@@ -212,7 +216,7 @@ def _warn_android_12_crop(
 
     if options.icon_fit != "none":
         return
-    extent = alpha_extent(art)
+    extent = radial_extent(art)
     if extent is not None and extent > ANDROID_12_VISIBLE_FRACTION:
         result.warn(
             'splash icon_fit is "none", so the icon is not fitted to the '
@@ -235,10 +239,11 @@ def _render_ios(
     """
 
     for suffix, density in IOS_SCALES.items():
-        result.add(f"{_IOS_LAUNCH}/LaunchImage{suffix}.png", _scaled(light, density))
+        light_image = _scaled(light, density)
+        result.add(f"{_IOS_LAUNCH}/LaunchImage{suffix}.png", light_image)
         result.add(
             f"{_IOS_LAUNCH}/LaunchImageDark{suffix}.png",
-            _scaled(dark if dark is not None else light, density),
+            _scaled(dark, density) if dark is not None else light_image,
         )
 
     # A 1x1 PNG stretched by the storyboard. Kept in preference to a
@@ -269,10 +274,11 @@ def _render_web(
     """
 
     for name, density in WEB_SCALES.items():
-        result.add(f"web/splash/img/light-{name}.png", _scaled(light, density))
+        light_image = _scaled(light, density)
+        result.add(f"web/splash/img/light-{name}.png", light_image)
         result.add(
             f"web/splash/img/dark-{name}.png",
-            _scaled(dark if dark is not None else light, density),
+            _scaled(dark, density) if dark is not None else light_image,
         )
         # A previous build with a .webp source left these behind, and the
         # generated <picture> would still resolve them ahead of the .png.

@@ -301,6 +301,7 @@ def build_manifest() -> list[tuple[str, Path, dict]]:
 
     # --- web --------------------------------------------------------------
     tight(32, CLIENT / "web/favicon.png", TEMPLATE_BUILD / "web/favicon.png")
+    tight(512, CLIENT / "web/icons/loading-animation.png")
     tight(48, EXAMPLES / "apps/counter_test_ios/assets/favicon.png")
 
     for size in (192, 512):
