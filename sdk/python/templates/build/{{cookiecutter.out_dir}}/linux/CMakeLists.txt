@@ -179,15 +179,16 @@ if(EXISTS "${CMAKE_CURRENT_SOURCE_DIR}/app_icon.png")
   # users can register the app with:  cp -r share/. ~/.local/share/
   # Both files install together — a desktop entry whose Icon= has no matching
   # themed icon is worse than none.
-  # `flet build` measures the icon and writes the matching icon-theme
-  # directory name here; fall back to 256x256, which desktops scale from.
-  set(FLET_APP_ICON_THEME_SIZE "256x256")
-  include("${CMAKE_CURRENT_SOURCE_DIR}/app_icon.cmake" OPTIONAL)
-
-  install(FILES "${CMAKE_CURRENT_SOURCE_DIR}/app_icon.png"
-    DESTINATION
-      "${CMAKE_INSTALL_PREFIX}/share/icons/hicolor/${FLET_APP_ICON_THEME_SIZE}/apps"
-    RENAME "${APPLICATION_ID}.png" COMPONENT Runtime)
+  #
+  # `flet build` renders one icon per hicolor size, each already matching the
+  # directory it sits in, so the whole tree installs in one step. A single
+  # file dropped into 256x256/ regardless of its real size — which is what
+  # this did before — is rescaled wrongly by the icon cache, and every small
+  # panel size was downscaled from it on the fly.
+  if(EXISTS "${CMAKE_CURRENT_SOURCE_DIR}/icons")
+    install(DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}/icons"
+      DESTINATION "${CMAKE_INSTALL_PREFIX}/share" COMPONENT Runtime)
+  endif()
   install(FILES "${CMAKE_CURRENT_SOURCE_DIR}/${APPLICATION_ID}.desktop"
     DESTINATION "${CMAKE_INSTALL_PREFIX}/share/applications" COMPONENT Runtime)
 endif()

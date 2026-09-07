@@ -21,3 +21,7 @@ udid = "udid"
 certifi = "certifi"
 # Apple App Store Connect error-code prefix (e.g. ITMS-90889)
 ITMS = "ITMS"
+# Pillow's premultiplied-alpha mode is spelled "RGBa" with a lowercase "a" to
+# distinguish it from "RGBA" (`Image.convert("RGBa")`). typos splits that on
+# the case boundary and reads the trailing "Ba" as a misspelling of "By".
+Ba = "Ba"

@@ -1,16 +1,21 @@
 """Tests concerning Linux `flet build` packaging."""
 
 import argparse
+import io
 import json
 import os
 from pathlib import Path
 from types import SimpleNamespace
 from typing import Any, Optional
+from unittest import mock
 
 import pytest
 import yaml
+from flet_platform_assets import LINUX_HICOLOR_SIZES
 from jinja2 import Environment, StrictUndefined
+from PIL import Image
 
+from flet_cli.commands import build_base
 from flet_cli.commands.build_base import BaseBuildCommand
 
 BUILD_TEMPLATE_DIR = (
@@ -43,23 +48,22 @@ def _render_template(path: Path, **context: Any) -> str:
 
 def _png_bytes(width: int = 256, height: int = 256) -> bytes:
     """
-    Build the PNG signature and IHDR header that `get_png_size` reads.
+    Build a real, decodable PNG.
+
+    A signature-plus-IHDR stub was enough while Linux only copied its icon,
+    but generation now decodes every source, including for Linux.
 
     Args:
-        width: Pixel width to encode.
-        height: Pixel height to encode.
+        width: Pixel width.
+        height: Pixel height.
 
     Returns:
-        Just enough of a PNG for the size reader; not a decodable image.
+        The bytes of an encoded PNG.
     """
 
-    return (
-        b"\x89PNG\r\n\x1a\n"
-        + (13).to_bytes(4, "big")
-        + b"IHDR"
-        + width.to_bytes(4, "big")
-        + height.to_bytes(4, "big")
-    )
+    buffer = io.BytesIO()
+    Image.new("RGBA", (width, height), (255, 0, 85, 255)).save(buffer, format="PNG")
+    return buffer.getvalue()
 
 
 def _run_customize_icons(
@@ -116,10 +120,15 @@ def _run_customize_icons(
     cmd.build_dir = build_dir
     cmd.pubspec_path = str(pubspec_path)
     cmd.target_platform = target_platform
+    cmd.config_platform = {"apk": "android", "aab": "android", "ipa": "ios"}.get(
+        target_platform, target_platform
+    )
     cmd.verbose = 0
     cmd.dart_exe = "dart"
     cmd.emojis = {"checkmark": "", "loading": ""}
     cmd.options = SimpleNamespace(android_adaptive_icon_background=None)
+    cmd.template_data = {"bundle_id": "com.example.test_app"}
+    cmd.template_digest = "test-template-digest"
     cmd.get_pyproject = lambda *_: None
     cmd.update_status = lambda *_: None
     cmd.run = lambda *a, **k: SimpleNamespace(returncode=0, stdout="", stderr="")
@@ -127,162 +136,152 @@ def _run_customize_icons(
     return cmd
 
 
-def _staged_icon(cmd: BaseBuildCommand) -> Path:
-    """The path `customize_icons` stages the Linux icon to."""
+def _hicolor(cmd: BaseBuildCommand, size: int) -> Path:
+    """One entry of the hicolor tree `customize_icons` renders."""
 
-    return cmd.flutter_dir / "linux" / "app_icon.png"
+    return (
+        cmd.flutter_dir
+        / "linux"
+        / "icons"
+        / "hicolor"
+        / f"{size}x{size}"
+        / "apps"
+        / "com.example.test_app.png"
+    )
 
 
-class TestLinuxIconStaging:
+def _png_size(path: Path) -> tuple[int, int]:
+    with Image.open(path) as img:
+        return img.size
+
+
+class TestLinuxIconGeneration:
     """
-    Which icon `customize_icons` stages for a Linux build, and when.
+    The hicolor icon tree `customize_icons` renders for a Linux build.
 
-    `flutter_launcher_icons` has no Linux generator, so the resolved icon is
-    staged at `<flutter_dir>/linux/app_icon.png` instead, which the runner's
-    CMake installs into the bundle as `data/app_icon.png`. The
-    `dart run flutter_launcher_icons` invocation is stubbed out.
-
-    The bundle must always end up with an icon it can show, whether the app
-    supplies a Linux-specific one, a generic one, or none at all — and a
-    non-Linux build must not pay for any of it.
+    flutter_launcher_icons never had a Linux generator, so `flet build` used
+    to install one file - often a 1024px image - into `hicolor/256x256/`. A
+    directory that claims one size while holding another is rescaled wrongly
+    by the icon cache, and every small panel size was downscaled from it on
+    the fly.
     """
 
-    def test_user_icon_staged_for_linux(self, tmp_path):
-        """A generic `icon.png` is staged when no Linux-specific icon exists."""
-        cmd = _run_customize_icons(tmp_path, assets={"icon.png": b"user-icon"})
-        assert _staged_icon(cmd).read_bytes() == b"user-icon"
+    def test_every_hicolor_size_matches_its_directory(self, tmp_path):
+        cmd = _run_customize_icons(
+            tmp_path, assets={"icon.png": _png_bytes(1024, 1024)}
+        )
+        for size in LINUX_HICOLOR_SIZES:
+            assert _png_size(_hicolor(cmd, size)) == (size, size)
 
-    def test_icon_linux_beats_default_icon(self, tmp_path):
-        """`icon_linux.png` wins over the generic `icon.png`."""
+    def test_runner_window_icon_is_rendered(self, tmp_path):
+        """my_application.cc loads this one directly at startup."""
+        cmd = _run_customize_icons(tmp_path, assets={"icon.png": _png_bytes()})
+        assert _png_size(cmd.flutter_dir / "linux" / "app_icon.png") == (256, 256)
+
+    def test_icon_linux_beats_the_generic_icon(self, tmp_path):
+        """The platform-specific name wins, and only its chain is resolved."""
         cmd = _run_customize_icons(
             tmp_path,
-            assets={"icon.png": b"generic", "icon_linux.png": b"linux-specific"},
+            assets={
+                "icon.png": _png_bytes(64, 64),
+                "icon_linux.png": _png_bytes(512, 512),
+            },
         )
-        assert _staged_icon(cmd).read_bytes() == b"linux-specific"
+        # Rendered from the 512 source, so the 512 entry is not an upscale of
+        # the 64px generic one.
+        assert _png_size(_hicolor(cmd, 512)) == (512, 512)
 
-    def test_template_default_staged_without_assets(self, tmp_path):
-        """An app with no `assets` dir still gets the template's default icon,
-        so a Linux bundle is never built without a window icon."""
+    def test_no_user_icon_generates_nothing(self, tmp_path):
+        """Rule 2: the template's committed icons are better than anything
+        derivable from a finished images/icon.png, and are left alone."""
         cmd = _run_customize_icons(tmp_path, assets=None)
-        assert _staged_icon(cmd).read_bytes() == _png_bytes()
+        assert not (cmd.flutter_dir / "linux" / "icons").exists()
 
-    def test_template_default_staged_when_no_usable_icon(self, tmp_path):
-        """An assets dir holding only an undecodable vector falls back too."""
+    def test_vector_only_assets_generate_nothing(self, tmp_path):
+        """An SVG cannot be decoded, so there is no usable user icon."""
         cmd = _run_customize_icons(tmp_path, assets={"icon.svg": b"<svg/>"})
-        assert _staged_icon(cmd).read_bytes() == _png_bytes()
+        assert not (cmd.flutter_dir / "linux" / "icons").exists()
 
-    def test_missing_template_default_degrades_gracefully(self, tmp_path):
-        """A custom build template that ships no `images/icon.png` produces an
-        icon-less bundle rather than failing the build on the copy."""
-        cmd = _run_customize_icons(tmp_path, assets=None, template_default_icon=False)
-        assert not _staged_icon(cmd).exists()
-
-    def test_not_staged_for_other_targets(self, tmp_path):
-        """Non-Linux targets stage nothing; only their own generators run."""
+    def test_other_targets_do_not_render_linux_icons(self, tmp_path):
         cmd = _run_customize_icons(
-            tmp_path, assets={"icon.png": b"user-icon"}, target_platform="windows"
+            tmp_path, assets={"icon.png": _png_bytes()}, target_platform="windows"
         )
-        assert not _staged_icon(cmd).exists()
+        assert not (cmd.flutter_dir / "linux" / "icons").exists()
 
-    def test_icon_linux_ignored_for_other_targets(self, tmp_path):
-        """The `icon_linux` lookup is skipped entirely off Linux. It has no
-        consumer there, and letting it run would copy a dead file and churn
-        the icons hash, re-running the icon generator for nothing."""
-        cmd = _run_customize_icons(
-            tmp_path,
-            assets={"icon_linux.png": b"linux-only"},
-            target_platform="windows",
-        )
-        assert not (cmd.flutter_dir / "images" / "icon_linux.png").exists()
+    def test_regenerated_when_the_source_changes(self, tmp_path):
+        cmd = _run_customize_icons(tmp_path, assets={"icon.png": _png_bytes(256, 256)})
+        assert _png_size(_hicolor(cmd, 512)) == (512, 512)
 
-    def test_restaged_when_user_icon_changes(self, tmp_path):
-        """Editing the source icon restages it rather than keeping the copy."""
-        cmd = _run_customize_icons(tmp_path, assets={"icon.png": b"first"})
-        assert _staged_icon(cmd).read_bytes() == b"first"
         icon = cmd.package_app_path / "assets" / "icon.png"
-        icon.write_bytes(b"second")
+        icon.write_bytes(_png_bytes(64, 64))
         # Change detection keys on mtime; bump it explicitly so the test does
         # not depend on filesystem timestamp granularity.
         stat = icon.stat()
         os.utime(icon, (stat.st_atime, stat.st_mtime + 10))
         cmd.customize_icons()
-        assert _staged_icon(cmd).read_bytes() == b"second"
 
-    def test_non_png_icon_warns_but_stages(self, tmp_path, capsys):
-        """A non-PNG icon is still staged, but warns: it is bundled as-is, and a
-        format with no GDK loader on the target system shows no icon at all."""
-        cmd = _run_customize_icons(tmp_path, assets={"icon_linux.webp": b"webp-icon"})
-        assert _staged_icon(cmd).read_bytes() == b"webp-icon"
+        # Still the declared size, now upscaled from the smaller source.
+        assert _png_size(_hicolor(cmd, 512)) == (512, 512)
+
+    def test_unreadable_source_warns_without_failing(self, tmp_path, capsys):
+        """A Pillow-vs-Dart decode divergence must never fail a build."""
+        cmd = _run_customize_icons(tmp_path, assets={"icon.png": b"not-actually-a-png"})
+        assert not (cmd.flutter_dir / "linux" / "icons").exists()
         combined = capsys.readouterr()
-        assert "icon_linux.webp" in (combined.out + combined.err)
-
-    def test_256_png_stages_without_warning(self, tmp_path, capsys):
-        """The recommended 256x256 PNG stages silently."""
-        cmd = _run_customize_icons(tmp_path, assets={"icon_linux.png": _png_bytes()})
-        assert _staged_icon(cmd).exists()
-        combined = capsys.readouterr()
-        assert "Warning" not in (combined.out + combined.err)
+        assert "could not read" in (combined.out + combined.err)
 
 
-class TestIconThemeSize:
+SENTINEL = b"stale-output-marker"
+
+
+class TestGeneratorStamps:
     """
-    The hicolor directory the themed icon is installed into.
+    What forces regeneration.
 
-    CMake cannot measure the image, so `customize_icons` resolves the size
-    and records it in `app_icon.cmake` for the install rule to read.
-
-    Only sizes hicolor's `index.theme` declares are ever scanned, so naming a
-    directory hicolor does not know is worse than falling back: the icon is
-    installed and then never found.
+    Both are silent when wrong: the user keeps stale output and nothing
+    reports it.
     """
 
-    @staticmethod
-    def _theme_size(cmd: BaseBuildCommand) -> str:
-        """The generated CMake fragment that carries the resolved size."""
-        return (cmd.flutter_dir / "linux" / "app_icon.cmake").read_text()
+    def test_template_rerender_forces_regeneration(self, tmp_path):
+        """`create_flutter_project` re-renders with overwrite_if_exists=True,
+        restoring the template's placeholder over generated output. Without
+        the template digest in this stamp, generation is skipped and the
+        artifacts silently stay reverted."""
+        cmd = _run_customize_icons(tmp_path, assets={"icon.png": _png_bytes()})
+        generated = _hicolor(cmd, 256)
+        generated.write_bytes(SENTINEL)  # stands in for the reverted file
 
-    def test_theme_size_matches_icon(self, tmp_path):
-        """A size hicolor declares is used as-is, not flattened to 256x256."""
-        cmd = _run_customize_icons(
-            tmp_path, assets={"icon_linux.png": _png_bytes(512, 512)}
-        )
-        assert 'set(FLET_APP_ICON_THEME_SIZE "512x512")' in self._theme_size(cmd)
+        cmd.customize_icons()
+        assert generated.read_bytes() == SENTINEL, "unchanged inputs should skip"
 
-    def test_theme_size_falls_back_for_unusual_icons(self, tmp_path):
-        """A non-hicolor size and a non-square icon both fall back."""
-        cmd = _run_customize_icons(
-            tmp_path, assets={"icon_linux.png": _png_bytes(1024, 1024)}
-        )
-        assert 'set(FLET_APP_ICON_THEME_SIZE "256x256")' in self._theme_size(cmd)
-        cmd = _run_customize_icons(
-            tmp_path / "b", assets={"icon_linux.png": _png_bytes(256, 128)}
-        )
-        assert 'set(FLET_APP_ICON_THEME_SIZE "256x256")' in self._theme_size(cmd)
+        cmd.template_digest = "a-different-template-digest"
+        cmd.customize_icons()
 
-    def test_resolve_icon_theme_size(self):
-        """Only sizes declared by hicolor's `index.theme` are used directly."""
-        resolve = BaseBuildCommand.resolve_icon_theme_size
-        assert resolve((48, 48)) == "48x48"
-        assert resolve((256, 256)) == "256x256"
-        assert resolve((512, 512)) == "512x512"
-        # Unknown size (unreadable or non-PNG), non-square, and sizes outside
-        # the theme's set.
-        assert resolve(None) == "256x256"
-        assert resolve((500, 500)) == "256x256"
-        assert resolve((1024, 1024)) == "256x256"
-        assert resolve((512, 256)) == "256x256"
-        for undeclared in (28, 42, 160, 384):
-            assert resolve((undeclared, undeclared)) == "256x256"
+        assert generated.read_bytes() != SENTINEL
 
-    def test_png_size_reads_ihdr(self, tmp_path):
-        """Sizes come from the PNG header; anything unreadable is `None`."""
-        icon = tmp_path / "icon.png"
-        icon.write_bytes(_png_bytes(width=512, height=384))
-        assert BaseBuildCommand.get_png_size(icon) == (512, 384)
-        not_png = tmp_path / "not_png.png"
-        not_png.write_bytes(b"actually-jpeg-bytes")
-        assert BaseBuildCommand.get_png_size(not_png) is None
-        assert BaseBuildCommand.get_png_size(tmp_path / "missing.png") is None
+    def test_generator_version_bump_forces_regeneration(self, tmp_path):
+        """Nothing else encodes the generator's identity now that the pubspec
+        does not, so upgrading flet-cli would otherwise keep stale pixels."""
+        cmd = _run_customize_icons(tmp_path, assets={"icon.png": _png_bytes()})
+        generated = _hicolor(cmd, 256)
+        generated.write_bytes(SENTINEL)
+
+        cmd.customize_icons()
+        assert generated.read_bytes() == SENTINEL, "unchanged inputs should skip"
+
+        with mock.patch.object(build_base, "ICONS_GENERATOR_VERSION", 99):
+            cmd.customize_icons()
+        assert generated.read_bytes() != SENTINEL
+
+    def test_missing_output_forces_regeneration(self, tmp_path):
+        """An existence check catches output removed behind the stamp's back."""
+        cmd = _run_customize_icons(tmp_path, assets={"icon.png": _png_bytes()})
+        for size in LINUX_HICOLOR_SIZES:
+            _hicolor(cmd, size).unlink()
+
+        cmd.customize_icons()
+
+        assert _hicolor(cmd, 256).is_file()
 
 
 class TestDesktopEntryEscaping:

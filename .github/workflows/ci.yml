@@ -67,6 +67,29 @@ jobs:
         run: |
           uv run --no-dev --group test pytest packages/*/tests
 
+      # The brand assets are generated from one master by the same compositing
+      # primitives `flet build` uses, so a change to those primitives must not
+      # silently alter every shipped icon. `--verify` re-renders each asset and
+      # compares it to the committed one pixel by pixel. Deliberately not a
+      # `git diff`: PNG bytes depend on the zlib build inside whichever Pillow
+      # wheel is installed, so identical images encode differently on Linux and
+      # macOS and the diff would fail for everyone who did not generate on the
+      # runner's platform.
+      - name: Check brand assets are up to date
+        if: matrix.python-version == '3.12'
+        shell: bash
+        run: |
+          uv run .github/scripts/generate_brand_assets.py --verify
+
+      # The icon documentation shows what the generator actually produces, so
+      # the illustrations are rendered by it rather than drawn. A diff here
+      # means the docs now show behaviour the code no longer has.
+      - name: Check icon documentation images are up to date
+        if: matrix.python-version == '3.12'
+        shell: bash
+        run: |
+          uv run .github/scripts/generate_icon_docs_images.py --verify
+
       - name: Run docs-coverage
         if: matrix.python-version == '3.12'
         shell: bash
@@ -792,6 +815,7 @@ jobs:
           uv build --package flet-cli
           uv build --package flet
           uv build --package flet-desktop
+          uv build --package flet-platform-assets
 
       - name: Upload artifacts
         uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
@@ -991,6 +1015,7 @@ jobs:
             flet \
             flet_cli \
             flet_desktop \
+            flet_platform_assets \
             flet_web \
             flet_ads \
             flet_audio \

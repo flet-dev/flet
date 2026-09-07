@@ -964,13 +964,19 @@ The background color used for the Android adaptive launcher icon.
 
 This value is applied when app icons are generated for Android.
 
+Most apps do not need this key: [`icon_background`](index.md#background-colour)
+sets the colour behind the icon on every platform, Android included. Use this one
+only when Android should differ from the rest.
+
 #### Resolution order
 
 Its value is determined in the following order of precedence:
 
 1. [`--android-adaptive-icon-background`](../cli/flet-build.md#--android-adaptive-icon-background)
 2. `[tool.flet.android].adaptive_icon_background`
-3. [Build template](index.md#build-template) default: `#ffffff`
+3. `[tool.flet.android].icon_background`
+4. `[tool.flet].icon_background`
+5. [Build template](index.md#build-template) default: `#ffffff`
 
 #### Example
 

@@ -2,7 +2,6 @@
 # requires-python = ">=3.10"
 # dependencies = [
 #   "pillow==12.1.1",
-#   "numpy",
 # ]
 # ///
 """Derive every Flet brand raster from the masters in `media/logo/`.
@@ -36,10 +35,27 @@ import shutil
 import sys
 from pathlib import Path
 
-import numpy as np
-from PIL import Image, ImageFilter
+from PIL import Image, ImageChops
 
 REPO = Path(__file__).resolve().parents[2]
+
+# The compositing primitives are the ones `flet build` ships, so the brand
+# assets and a user's generated icons can never drift apart. Imported by path
+# rather than as a dependency: the package needs nothing but Pillow, so there
+# is nothing to resolve.
+sys.path.insert(0, str(REPO / "sdk/python/packages/flet-platform-assets/src"))
+from flet_platform_assets import (  # noqa: E402
+    ANDROID_ADAPTIVE_SIZES,
+    LINUX_HICOLOR_SIZES,
+)
+from flet_platform_assets._imaging import (  # noqa: E402
+    apple_grid,
+    place,
+    save_ico,
+    save_png,
+    scale_to_height,
+)
+
 LOGO_DIR = REPO / "media" / "logo"
 MASTER = LOGO_DIR / "flet-icon-1024.png"
 SYMBOL_SVG = LOGO_DIR / "logo-symbol.svg"
@@ -66,11 +82,21 @@ GLYPH_FRAC = 0.60
 # to it and GLYPH_FRAC would render visibly smaller than neighbouring apps.
 # This preserves the framing the hand-made client icons used.
 CLIENT_ANDROID_FRAC = 0.88
+# The adaptive-icon foreground is masked to a *circle*, so what matters is the
+# distance of the artwork's furthest point from the centre, not its extent on
+# either axis. At GLYPH_FRAC the mark's off-axis extremes reach 97% of the mask
+# radius - nothing is clipped, but it fills the circle edge to edge, which no
+# other launcher icon does. This lands them at about 85%.
+ADAPTIVE_FRAC = 0.52
 # Favicons and .ico entries are tiny; padding there just wastes pixels.
 TIGHT_FRAC = 0.94
+# What a user's `assets/icon.png` is documented to be: artwork filling the
+# canvas. The flat surfaces (web, Windows, Linux) then get every pixel, and
+# `flet build` computes the margin iOS, macOS and Android each need. Anything
+# less here is padding that cannot be recovered later.
+FULL_BLEED_FRAC = 1.0
 # apple-touch-icon is composited by iOS onto a rounded tile with its own inset.
 APPLE_TOUCH_FRAC = 0.729
-LOADING_FRAC = 0.88
 
 # macOS icon grid: an 824x824 tile inset in a 1024 canvas, plus a drop shadow.
 MACOS_TILE = 824 / 1024
@@ -144,19 +170,7 @@ MARK: Image.Image = load_mark()
 
 def _scaled(height: int) -> Image.Image:
     """The mark at a given pixel height, resampled from the master in one step."""
-    width = max(1, round(MARK.width * height / MARK.height))
-    return MARK.resize((width, max(1, height)), Image.LANCZOS)
-
-
-def _superellipse(size: int, n: float, supersample: int = 4) -> Image.Image:
-    """An `L`-mode mask of a superellipse, antialiased by rendering large."""
-    t = size * supersample
-    yy, xx = np.mgrid[0:t, 0:t]
-    u = (2 * xx - (t - 1)) / (t - 1)
-    v = (2 * yy - (t - 1)) / (t - 1)
-    inside = (np.abs(u) ** n + np.abs(v) ** n) <= 1.0
-    mask = Image.fromarray((inside * 255).astype(np.uint8), mode="L")
-    return mask.resize((size, size), Image.LANCZOS)
+    return scale_to_height(MARK, height)
 
 
 def compose(
@@ -168,88 +182,32 @@ def compose(
     tile_n: float = WEB_TILE_N,
     offset: tuple[int, int] = (0, 0),
 ) -> Image.Image:
-    """Place the mark on a canvas at an explicit height fraction.
-
-    `bg` flattens onto a solid full-bleed colour and returns mode RGB.
-    `tile` draws a white superellipse tile at that fraction of the canvas,
-    leaving the area outside it transparent.
-    """
-    glyph = _scaled(max(1, round(canvas * h_frac)))
-
-    if bg is not None:
-        out = Image.new("RGB", (canvas, canvas), bg)
-    else:
-        out = Image.new("RGBA", (canvas, canvas), (0, 0, 0, 0))
-        if tile is not None:
-            side = round(canvas * tile)
-            mask = _superellipse(side, tile_n)
-            plate = Image.new("RGBA", (side, side), (*BRAND_BG, 255))
-            plate.putalpha(mask)
-            pos = ((canvas - side) // 2, (canvas - side) // 2)
-            out.alpha_composite(plate, pos)
-
-    x = (canvas - glyph.width) // 2 + offset[0]
-    y = (canvas - glyph.height) // 2 + offset[1]
-    if bg is not None:
-        out.paste(glyph, (x, y), glyph)
-    else:
-        out.alpha_composite(glyph, (x, y))
-    return out
+    """Place the mark on a canvas at an explicit height fraction."""
+    return place(
+        _scaled(max(1, round(canvas * h_frac))),
+        canvas,
+        bg=bg,
+        tile=tile,
+        tile_n=tile_n,
+        tile_color=BRAND_BG,
+        offset=offset,
+    )
 
 
 def compose_macos(canvas: int = 1024) -> Image.Image:
-    """The macOS squircle tile with a drop shadow, composed once at 1024.
-
-    This is the one place chained downscaling is correct: the tile, glyph and
-    shadow must scale together, so smaller sizes are reductions of this
-    composition rather than independent compositions.
-    """
-    side = round(canvas * MACOS_TILE)
-    mask = _superellipse(side, SQUIRCLE_N)
-
-    tile = Image.new("RGBA", (side, side), (*BRAND_BG, 255))
-    glyph = _scaled(round(canvas * MACOS_GLYPH_FRAC))
-    tile.alpha_composite(glyph, ((side - glyph.width) // 2, (side - glyph.height) // 2))
-    tile.putalpha(mask)
-
-    pos = ((canvas - side) // 2, (canvas - side) // 2)
-
-    # Shadow: the tile silhouette, blurred, offset down, at ~25% black.
-    # blur=11/dy=8 reproduces the spread of the previous hand-made asset
-    # (alpha bbox 874 vs 870, L75/T83/B67 vs L77/T87/B67).
-    shadow = Image.new("RGBA", (canvas, canvas), (0, 0, 0, 0))
-    silhouette = Image.new("RGBA", (side, side), (0, 0, 0, 64))
-    silhouette.putalpha(mask.point(lambda v: v * 64 // 255))
-    shadow.alpha_composite(silhouette, (pos[0], pos[1] + 8))
-    shadow = shadow.filter(ImageFilter.GaussianBlur(11))
-
-    out = Image.new("RGBA", (canvas, canvas), (0, 0, 0, 0))
-    out.alpha_composite(shadow)
-    out.alpha_composite(tile, pos)
-    return out
-
-
-def save_png(img: Image.Image, path: Path) -> None:
-    path.parent.mkdir(parents=True, exist_ok=True)
-    img.save(path, format="PNG", optimize=True)
-
-
-def save_ico(path: Path, sizes: list[int]) -> None:
-    """Write a multi-size ICO with an explicit image for every entry.
-
-    Pillow's ICO writer silently drops any requested size larger than the base
-    image, and its fallback path reuses a leaked loop variable when a size has
-    no exact match. Supplying every size explicitly avoids both.
-    """
-    images = {s: compose(s, h_frac=TIGHT_FRAC) for s in sizes}
-    base = images[max(sizes)]
-    path.parent.mkdir(parents=True, exist_ok=True)
-    base.save(
-        path,
-        format="ICO",
-        sizes=[(s, s) for s in sizes],
-        append_images=[images[s] for s in sorted(sizes) if s != max(sizes)],
+    """The macOS squircle tile with a drop shadow, composed once at 1024."""
+    return apple_grid(
+        _scaled(round(canvas * MACOS_GLYPH_FRAC)),
+        canvas,
+        tile_ratio=MACOS_TILE,
+        n=SQUIRCLE_N,
+        tile_color=BRAND_BG,
     )
+
+
+def _write_ico(path: Path, sizes: list[int]) -> None:
+    """Render each entry independently, then delegate the ICO writing."""
+    save_ico(path, {s: compose(s, h_frac=TIGHT_FRAC) for s in sizes})
 
 
 # --------------------------------------------------------------------------
@@ -284,12 +242,17 @@ def build_manifest() -> list[tuple[str, Path, dict]]:
             {"canvas": 192, "h_frac": CLIENT_ANDROID_FRAC},
         )
     )
-    glyph(
-        1024,
-        TEMPLATE_BUILD / "images/icon.png",
+    # The splash's last-resort source, not an icon source: `flet build`
+    # generates no icons at all when the app supplies none. A splash is drawn
+    # at its natural size on a full screen, so this stays framed.
+    glyph(1024, TEMPLATE_BUILD / "images/icon.png")
+
+    # Icon sources a user edits or replaces. Full-bleed by contract.
+    for dest in (
         TEMPLATE_APP / "src/assets/icon.png",
         EXAMPLES / "apps/counter_test_ios/assets/icon.png",
-    )
+    ):
+        m.append(("glyph", dest, {"canvas": 1024, "h_frac": FULL_BLEED_FRAC}))
 
     # --- Android launcher icons ------------------------------------------
     for folder, size in MIPMAP_SIZES.items():
@@ -304,6 +267,20 @@ def build_manifest() -> list[tuple[str, Path, dict]]:
         )
         glyph(
             size, TEMPLATE_BUILD / f"android/app/src/main/res/{folder}/ic_launcher.png"
+        )
+
+    # The adaptive-icon foreground layer, referenced by
+    # mipmap-anydpi-v26/ic_launcher.xml. The template has to ship these: an app
+    # with no icon of its own generates nothing, and an unresolved
+    # @drawable/ic_launcher_foreground fails Android resource linking outright.
+    for folder, size in ANDROID_ADAPTIVE_SIZES.items():
+        m.append(
+            (
+                "glyph",
+                TEMPLATE_BUILD
+                / f"android/app/src/main/res/{folder}/ic_launcher_foreground.png",
+                {"canvas": size, "h_frac": ADAPTIVE_FRAC},
+            )
         )
 
     # --- iOS: no alpha, flattened onto the brand background ---------------
@@ -324,7 +301,7 @@ def build_manifest() -> list[tuple[str, Path, dict]]:
 
     # --- web --------------------------------------------------------------
     tight(32, CLIENT / "web/favicon.png", TEMPLATE_BUILD / "web/favicon.png")
-    tight(48, TEMPLATE_BUILD / "images/favicon.png")
+    tight(512, CLIENT / "web/icons/loading-animation.png")
     tight(48, EXAMPLES / "apps/counter_test_ios/assets/favicon.png")
 
     for size in (192, 512):
@@ -359,14 +336,32 @@ def build_manifest() -> list[tuple[str, Path, dict]]:
             )
         )
 
-    # Shown while the Flutter engine boots, inside a CSS zoom/pulse animation.
-    # Must stay transparent (no background is set behind it) and centred (the
-    # animation scales about the element centre, so off-centre art drifts).
-    for dest in (
-        CLIENT / "web/icons/loading-animation.png",
-        TEMPLATE_BUILD / "web/icons/loading-animation.png",
-    ):
-        m.append(("loading", dest, {"canvas": 512, "h_frac": LOADING_FRAC}))
+    # --- Linux ------------------------------------------------------------
+    # `flet run` on Linux had a generic window icon: client/linux shipped no
+    # icon at all and its runner had no `icon` reference. The runner loads
+    # app_icon.png directly for the X11 window icon; the hicolor tree is what
+    # a Wayland session resolves from the desktop entry, and each file is
+    # already the size its directory claims.
+    # Tight, not the 0.60 glyph framing: nothing masks a Linux icon, so a
+    # margin here is just empty pixels - the same reason the favicon is tight.
+    tight(256, CLIENT / "linux/app_icon.png")
+    for size in LINUX_HICOLOR_SIZES:
+        tight(
+            size,
+            CLIENT / f"linux/icons/hicolor/{size}x{size}/apps/com.appveyor.flet.png",
+        )
+
+    # The build template ships Linux icons for the same reason it ships them
+    # for every other platform: an app that supplies no icon of its own still
+    # gets the Flet one. Without these, `flet build linux` produced a bundle
+    # with no icon while iOS, macOS, Windows and web all had theirs.
+    bundle = "{{cookiecutter.bundle_id}}"
+    tight(256, TEMPLATE_BUILD / "linux/app_icon.png")
+    for size in LINUX_HICOLOR_SIZES:
+        tight(
+            size,
+            TEMPLATE_BUILD / f"linux/icons/hicolor/{size}x{size}/apps/{bundle}.png",
+        )
 
     # --- Windows ----------------------------------------------------------
     m.append(
@@ -531,7 +526,7 @@ def generate() -> int:
     count = 0
     for variant, dest, kwargs in build_manifest():
         if variant == "ico":
-            save_ico(dest, kwargs["sizes"])
+            _write_ico(dest, kwargs["sizes"])
         else:
             save_png(render(variant, kwargs), dest)
         count += 1
@@ -545,6 +540,27 @@ def generate() -> int:
 # --------------------------------------------------------------------------
 # verification
 # --------------------------------------------------------------------------
+
+
+# Committed assets are compared to a fresh render pixel by pixel, not byte by
+# byte: PNG bytes depend on the zlib build inside whichever Pillow wheel is
+# installed, so the same image encodes differently on Linux and macOS. A small
+# tolerance absorbs last-bit resampling differences between architectures,
+# which is far below anything visible and far above nothing at all.
+PIXEL_TOLERANCE = 2
+
+
+def _check_pixels(check, label: str, got: Image.Image, want: Image.Image) -> None:
+    """Compare a committed asset with a freshly rendered one."""
+    got, want = got.convert("RGBA"), want.convert("RGBA")
+    if got.size != want.size:
+        check(False, f"{label}: size {got.size} != {want.size}")
+        return
+    worst = max(hi for _, hi in ImageChops.difference(got, want).getextrema())
+    check(
+        worst <= PIXEL_TOLERANCE,
+        f"{label}: differs from a fresh render (max channel difference {worst})",
+    )
 
 
 def verify() -> int:
@@ -561,14 +577,24 @@ def verify() -> int:
             continue
 
         if variant == "ico":
-            got = sorted(w for w, _ in Image.open(dest).ico.sizes())
-            want = sorted(kwargs["sizes"])
-            check(got == want, f"{rel}: ico sizes {got} != {want}")
+            with Image.open(dest) as ico:
+                got = sorted(w for w, _ in ico.ico.sizes())
+                want = sorted(kwargs["sizes"])
+                check(got == want, f"{rel}: ico sizes {got} != {want}")
+                for size in set(got) & set(want):
+                    _check_pixels(
+                        check,
+                        f"{rel} [{size}px]",
+                        ico.ico.getimage((size, size)),
+                        compose(size, h_frac=TIGHT_FRAC),
+                    )
             continue
 
         img = Image.open(dest)
         size = kwargs["canvas"]
         check(img.size == (size, size), f"{rel}: size {img.size} != {(size, size)}")
+        if img.size == (size, size):
+            _check_pixels(check, str(rel), img, render(variant, kwargs))
 
         if variant in ("tile-safe", "tile-large"):
             check(
