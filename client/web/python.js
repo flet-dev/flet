@@ -56,7 +56,8 @@ globalThis.jsConnect = async function (appId, args, dartOnMessage) {
     await pythonInitialized;
 
     if (error) {
-        console.log("Python worker init error:", error);
+        console.error("Python worker init error:", error);
+        await jsDisconnect(appId);
         throw error;
     } else {
         console.log(`Python worker initialized: ${appId}`);

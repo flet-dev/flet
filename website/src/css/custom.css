@@ -41,8 +41,15 @@
 
 
 .navbar__logo {
-  /* width: 42px; */
-  height: 30px;
+  /* Sizes the whole logo lockup (symbol + wordmark), not just the symbol -
+     the navbar has no separate `title` text. */
+  height: 26px;
+}
+
+/* Docusaurus renders a separate logo at the top of the docs sidebar when the
+   hide-on-scroll navbar is hidden. */
+.theme-doc-sidebar-container [class*='sidebarLogo_'] img {
+  height: 26px;
 }
 
 .flet-hero h1 {
@@ -585,4 +592,40 @@ html[data-theme='dark'] .docusaurus-highlight-code-line {
   [class*="generatedIndexPage"] .col--6 {
     --ifm-col-width: 100%;
   }
+}
+
+/* Icon and splash comparison tables.
+ *
+ * These are read across a row, so every picture in one has to render at the
+ * same size. A table column is otherwise sized by its content, which made
+ * "Web, Windows, Linux" wide and "iOS" narrow and drew identical 256px
+ * images at different sizes. `table-layout: fixed` gives every column an
+ * equal share, and the pictures then fill their cell.
+ *
+ * Docusaurus sets tables to `display: block` so wide ones can scroll; that
+ * also stops `width: 100%` doing anything, hence `display: table` here, with
+ * the scrolling moved out to the wrapper. */
+.icon-grid {
+  overflow-x: auto;
+}
+
+.icon-grid table {
+  display: table;
+  width: 100%;
+  table-layout: fixed;
+  min-width: 30rem;
+}
+
+.icon-grid table img {
+  display: block;
+  width: 100%;
+  height: auto;
+  margin: 0 auto;
+}
+
+/* Two-column comparisons are a pair, not a grid. Left full width each picture
+   renders around 440px from a 256px file - a visible upscale, and far larger
+   than it needs to be to be compared with the one beside it. */
+.icon-grid--pair table {
+  max-width: 34rem;
 }
