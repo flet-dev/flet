@@ -2808,6 +2808,24 @@ class BaseBuildCommand(BaseFlutterCommand):
             self.options.no_cdn or self.get_pyproject("tool.flet.web.cdn") == False  # noqa: E712
         )
 
+    def build_wasm(self) -> bool:
+        """
+        Whether to add Flutter's `--wasm` target to the web build.
+
+        Flutter emits the dart2wasm output for the `skwasm` renderer only, and
+        the generated `flutter_bootstrap.js` pins `flutterConfig.renderer` to
+        whatever `web_renderer` resolved to. Under the default `canvaskit` the
+        loader therefore skips that build every time, leaving ~7 MB of files in
+        the output that the page can never request.
+
+        Returns:
+            True when the resolved renderer can select a dart2wasm build and
+                `--wasm` was not turned off.
+        """
+        return not self.template_data["no_wasm"] and self.template_data[
+            "web_renderer"
+        ] in ("auto", "skwasm")
+
     def get_bool_setting(self, cli_option, pyproj_setting, default_value):
         """
         Resolve a boolean setting with precedence: CLI option, pyproject, default.
@@ -2946,7 +2964,7 @@ class BaseBuildCommand(BaseFlutterCommand):
         # app — see `_serious_python_build_env`.
         build_env = self._serious_python_build_env()
 
-        if self.package_platform == "Emscripten" and not self.template_data["no_wasm"]:
+        if self.package_platform == "Emscripten" and self.build_wasm():
             build_args.append("--wasm")
 
         android_signing_key_store = (
