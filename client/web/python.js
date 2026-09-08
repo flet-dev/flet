@@ -56,9 +56,6 @@ globalThis.jsConnect = async function (appId, args, dartOnMessage) {
     await pythonInitialized;
 
     if (error) {
-        // console.error, not console.log: this is the only report of a fatal
-        // startup failure, and a dev tools console filtered to Errors — a
-        // normal way to look for a cause — hides a log line completely.
         console.error("Python worker init error:", error);
         throw error;
     } else {

@@ -263,10 +263,6 @@ self.onmessage = async (event) => {
         // message
         flet_js.send(event.data);
     } else {
-        // `flet_js.send` is registered by `PyodideConnection.connect()`, so it
-        // is missing only when startup already failed. Reporting the real
-        // cause beats the "flet_js.send is not a function" TypeError that
-        // would otherwise be the only thing in the console.
         console.error(
             "Flet: dropped a message for a Python app that never started."
         );

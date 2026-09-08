@@ -18,7 +18,7 @@ typedef FletBackendChannelOnDisconnectCallback = void Function();
 /// when the app has already run and thrown. A Pyodide app that dies during
 /// startup fails identically on every retry, so without this the user watches
 /// an empty boot screen forever while a fresh Python worker re-downloads the
-/// runtime every 10 seconds.
+/// runtime every few seconds.
 class FletAppStartupException implements Exception {
   final String message;
 

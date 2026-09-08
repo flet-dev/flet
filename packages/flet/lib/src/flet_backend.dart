@@ -232,9 +232,6 @@ class FletBackend extends ChangeNotifier {
       await _backendChannel!.connect();
       _registerClient();
     } on FletAppStartupException catch (e) {
-      // The app ran and failed to start. Retrying would re-run the same
-      // failure, so settle on the error and let the boot screen show it
-      // instead of spinning behind a blank page.
       debugPrint("Flet app failed to start: $e");
       isLoading = false;
       error = e.toString();
