@@ -1369,7 +1369,19 @@ class DiffBuilder:
                     default = prop_defaults.get(fname)
                     old = src_vals.get(fname, default)
                     new = dst_vals.get(fname, default)
-                    if old is new or old == new:
+                    if old is new:
+                        continue
+                    # A child control that compares equal to its predecessor
+                    # is still a *different instance* that must be reconciled:
+                    # adopt the old _i, get its _parent stamped and replace the
+                    # old instance in the session index. Skipping it leaves an
+                    # orphan in the new tree (fresh _i, no _parent) while the
+                    # index keeps the old instance whose parent chain dies
+                    # with the old tree — the next event dispatched to it
+                    # fails with "Control must be added to the page first".
+                    # Reconciling an equal subtree emits no operations, so the
+                    # equality check is only worth it for non-control values.
+                    if not self._holds_control(new) and old == new:
                         continue
                     if fname in event_fields:
                         old = old is not None
@@ -1504,6 +1516,19 @@ class DiffBuilder:
                     self._update_dict_snapshot(prev_dicts, key, dst)
                 if dataclasses.is_dataclass(dst) and key is not None:
                     prev_classes[key] = dst
+
+    def _holds_control(self, value: Any) -> bool:
+        """Return whether `value` is a control or a list/dict holding controls."""
+        control_cls = self.control_cls
+        if control_cls is None:
+            return False
+        if isinstance(value, control_cls):
+            return True
+        if isinstance(value, (list, tuple)):
+            return any(isinstance(v, control_cls) for v in value)
+        if isinstance(value, dict):
+            return any(isinstance(v, control_cls) for v in value.values())
+        return False
 
     def _dataclass_added(self, item: Any, parent: Any, frozen: bool) -> None:
         """Register dataclasses contained in a newly added value."""
