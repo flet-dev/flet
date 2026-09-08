@@ -259,8 +259,12 @@ self.onmessage = async (event) => {
         self.micropipIncludePre = event.data.micropipIncludePre;
         self.pythonModuleName = event.data.pythonModuleName;
         await self.initPyodide();
-    } else {
+    } else if (typeof flet_js.send === "function") {
         // message
         flet_js.send(event.data);
+    } else {
+        console.error(
+            "Flet: dropped a message for a Python app that never started."
+        );
     }
 };
