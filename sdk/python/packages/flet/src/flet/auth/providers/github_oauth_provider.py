@@ -38,14 +38,11 @@ class GitHubOAuthProvider(OAuthProvider):
         Returns:
             A list of :class:`~flet.auth.Group` mapped from `/user/teams`.
         """
-        try:
-            import httpx2 as httpx
-        except ImportError:
-            import httpx
+        import httpx2
 
-        async with httpx.AsyncClient(follow_redirects=True) as client:
+        async with httpx2.AsyncClient(follow_redirects=True) as client:
             teams_resp = await client.send(
-                httpx.Request(
+                httpx2.Request(
                     "GET",
                     "https://api.github.com/user/teams",
                     headers=self.__get_client_headers(access_token),
@@ -74,14 +71,11 @@ class GitHubOAuthProvider(OAuthProvider):
             A :class:`~flet.auth.User` built from `/user`; its `email` is populated
                 from the primary address in `/user/emails` when available.
         """
-        try:
-            import httpx2 as httpx
-        except ImportError:
-            import httpx
+        import httpx2
 
-        async with httpx.AsyncClient(follow_redirects=True) as client:
+        async with httpx2.AsyncClient(follow_redirects=True) as client:
             user_resp = await client.send(
-                httpx.Request(
+                httpx2.Request(
                     "GET",
                     "https://api.github.com/user",
                     headers=self.__get_client_headers(access_token),
@@ -91,7 +85,7 @@ class GitHubOAuthProvider(OAuthProvider):
             uj = json.loads(user_resp.text)
 
             emails_resp = await client.send(
-                httpx.Request(
+                httpx2.Request(
                     "GET",
                     "https://api.github.com/user/emails",
                     headers=self.__get_client_headers(access_token),
