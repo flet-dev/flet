@@ -231,6 +231,15 @@ class FletBackend extends ChangeNotifier {
       }
       await _backendChannel!.connect();
       _registerClient();
+    } on FletAppStartupException catch (e) {
+      // The app ran and failed to start. Retrying would re-run the same
+      // failure, so settle on the error and let the boot screen show it
+      // instead of spinning behind a blank page.
+      debugPrint("Flet app failed to start: $e");
+      isLoading = false;
+      error = e.toString();
+      notifyListeners();
+      errorsHandler?.onError(error);
     } catch (e) {
       debugPrint("Error connecting to Flet backend: $e");
       error = e.toString();
@@ -665,9 +674,8 @@ class FletBackend extends ChangeNotifier {
     return template.trimRight();
   }
 
-  _reconnect(String message, int reconnectDelayMs) {
+  _reconnect(int reconnectDelayMs) {
     isLoading = true;
-    error = message;
     _reconnectDelayMs = reconnectDelayMs;
     notifyListeners();
   }
@@ -691,8 +699,9 @@ class FletBackend extends ChangeNotifier {
     if (_reconnectTimeoutMs == null ||
         (DateTime.now().millisecondsSinceEpoch - _reconnectStarted) <
             _reconnectTimeoutMs!) {
-      // re-connect
-      _reconnect(isUdsPath(pageUri) ? "" : "Loading...", nextReconnectDelayMs);
+      // re-connect, keeping any error we captured: the boot screen hides it
+      // while loading, but it is what we report if the retries run out.
+      _reconnect(nextReconnectDelayMs);
 
       debugPrint("Reconnect in $nextReconnectDelayMs milliseconds");
       Future.delayed(Duration(milliseconds: nextReconnectDelayMs))

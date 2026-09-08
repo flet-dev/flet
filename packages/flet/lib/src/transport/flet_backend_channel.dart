@@ -10,6 +10,24 @@ import 'flet_backend_channel_web_socket.dart';
 
 typedef FletBackendChannelOnDisconnectCallback = void Function();
 
+/// Thrown from [FletBackendChannel.connect] when the app itself failed to
+/// start, as opposed to the transport not being reachable yet.
+///
+/// The distinction matters because [FletBackend] answers a plain connect
+/// failure by reconnecting: correct when a server is still coming up, useless
+/// when the app has already run and thrown. A Pyodide app that dies during
+/// startup fails identically on every retry, so without this the user watches
+/// an empty boot screen forever while a fresh Python worker re-downloads the
+/// runtime every 10 seconds.
+class FletAppStartupException implements Exception {
+  final String message;
+
+  const FletAppStartupException(this.message);
+
+  @override
+  String toString() => message;
+}
+
 /// Called when the transport receives one complete packet from the peer.
 /// The packet is the **full** byte sequence including the 1-byte type
 /// discriminator at offset 0:
