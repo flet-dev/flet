@@ -1,5 +1,6 @@
 import os
 import shutil
+import stat
 import sys
 
 
@@ -169,18 +170,13 @@ def rmtree(path, ignore_errors=False):
         path: Directory path to remove.
         ignore_errors: Whether to ignore errors during deletion.
     """
-    import stat
-
     p = str(path)
     if not os.path.exists(p):
         return
 
     def _remove_readonly(func, file_path, _):
-        try:
-            os.chmod(file_path, stat.S_IWRITE)
-            func(file_path)
-        except Exception:
-            pass
+        os.chmod(file_path, stat.S_IWRITE)
+        func(file_path)
 
     if sys.version_info >= (3, 12):
         shutil.rmtree(p, ignore_errors=ignore_errors, onexc=_remove_readonly)
