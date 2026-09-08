@@ -25,3 +25,4 @@ org = "dev.flet"
 company = "Flet"
 copyright = "Copyright (C) 2023-2026 by Flet"
 platforms = ["ios", "android", "windows", "macos"]
+permissions = ["biometric"]

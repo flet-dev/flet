@@ -33,7 +33,7 @@ permissions = ["biometric"]
 
 ### Android
 
-`USE_BIOMETRIC` is declared by the `local_auth` plugin and merged automatically. Flet apps use `FlutterFragmentActivity` and an AppCompat `LaunchTheme` by default.
+`USE_BIOMETRIC` is declared by the `local_auth` plugin and merged automatically. Flet apps use `FlutterFragmentActivity` and AppCompat `LaunchTheme` / `NormalTheme` by default.
 
 ## Usage
 
