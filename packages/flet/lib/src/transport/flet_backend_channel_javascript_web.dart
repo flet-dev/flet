@@ -25,6 +25,12 @@ external void jsDisconnect(String appId);
 /// is stripped before the message reaches the boot screen.
 const _noUiSentinel = "__flet_no_ui__:";
 
+/// Returns [error] with a leading [_noUiSentinel] marker removed, or unchanged
+/// if it carries none.
+///
+/// Searches rather than matching a prefix: the worker's string reaches us
+/// through a rejected JS promise, so the marker is not guaranteed to survive at
+/// offset 0.
 String _stripNoUiSentinel(String error) {
   final start = error.indexOf(_noUiSentinel);
   return start == -1
