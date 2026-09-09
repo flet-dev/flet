@@ -208,13 +208,37 @@ be executing inside one of them. The result was a segfault on exit, reported as 
 the operating system even though the app had finished its work. Skipping the teardown
 removes the failure entirely, at the cost of the guarantees above.
 
-If you need cleanup to run, do it explicitly before exiting:
+If you need cleanup to run, do it explicitly before exiting. When your own code ends the
+app, finish your work first:
 
 ```python
 async def quit(e):
     await save_my_state()   # finish your own work first
     sys.exit(0)
 ```
+
+On desktop the user can also close the window, which the operating system initiates - your
+code is never asked. To get a chance to run first, intercept the close signal with
+[`Window.prevent_close`][flet.Window.prevent_close] and destroy the window yourself once
+you are done:
+
+```python
+import flet as ft
+
+
+async def main(page: ft.Page):
+    async def handle_window_event(e: ft.WindowEvent):
+        if e.type == ft.WindowEventType.CLOSE:
+            await save_my_state()          # runs before the process goes away
+            await page.window.destroy()
+
+    page.window.prevent_close = True
+    page.window.on_event = handle_window_event
+```
+
+Without `prevent_close`, the window close goes straight through to process termination and
+nothing of yours runs. Keep the handler quick: it holds up the app's exit, and the OS may
+lose patience with an app that takes too long to quit.
 
 ## Configuration options
 
