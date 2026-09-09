@@ -2812,15 +2812,15 @@ class BaseBuildCommand(BaseFlutterCommand):
         """
         Whether to add Flutter's `--wasm` target to the web build.
 
-        Flutter emits the dart2wasm output for the `skwasm` renderer only, and
-        the generated `flutter_bootstrap.js` pins `flutterConfig.renderer` to
-        whatever `web_renderer` resolved to. Under the default `canvaskit` the
-        loader therefore skips that build every time, leaving ~7 MB of files in
-        the output that the page can never request.
+        Flutter emits the dart2wasm output for the `skwasm` renderer, and the
+        generated `flutter_bootstrap.js` pins `flutterConfig.renderer` to the
+        resolved `web_renderer`. Pinning `canvaskit` makes Flutter's loader
+        skip the dart2wasm build, so it is worth compiling only when the
+        renderer leaves it selectable.
 
         Returns:
-            True when the resolved renderer can select a dart2wasm build and
-                `--wasm` was not turned off.
+            True when the resolved renderer is `auto` or `skwasm` and the wasm
+                target was not turned off.
         """
         return not self.template_data["no_wasm"] and self.template_data[
             "web_renderer"
