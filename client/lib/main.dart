@@ -14,6 +14,7 @@ import 'package:flet_datatable2/flet_datatable2.dart' as flet_datatable2;
 import "package:flet_flashlight/flet_flashlight.dart" as flet_flashlight;
 import 'package:flet_geolocator/flet_geolocator.dart' as flet_geolocator;
 import 'package:flet_lottie/flet_lottie.dart' as flet_lottie;
+import 'package:flet_local_auth/flet_local_auth.dart' as flet_local_auth;
 import 'package:flet_map/flet_map.dart' as flet_map;
 import 'package:flet_permission_handler/flet_permission_handler.dart'
     as flet_permission_handler;
@@ -57,6 +58,7 @@ void main([List<String>? args]) async {
     flet_flashlight.Extension(),
     flet_geolocator.Extension(),
     flet_lottie.Extension(),
+    flet_local_auth.Extension(),
     flet_map.Extension(),
     flet_permission_handler.Extension(),
     flet_secure_storage.Extension(),

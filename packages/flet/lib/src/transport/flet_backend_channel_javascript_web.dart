@@ -19,6 +19,25 @@ external void jsSend(String appId, JSUint8Array data, JSArray<JSObject>? transfe
 @JS()
 external void jsDisconnect(String appId);
 
+/// Marks the worker's "your script never started a UI" report, so a host page
+/// embedding the app can render something friendlier than a crash panel.
+/// It is addressed to that host, not to the person looking at the page, so it
+/// is stripped before the message reaches the boot screen.
+const _noUiSentinel = "__flet_no_ui__:";
+
+/// Returns [error] with a leading [_noUiSentinel] marker removed, or unchanged
+/// if it carries none.
+///
+/// Searches rather than matching a prefix: the worker's string reaches us
+/// through a rejected JS promise, so the marker is not guaranteed to survive at
+/// offset 0.
+String _stripNoUiSentinel(String error) {
+  final start = error.indexOf(_noUiSentinel);
+  return start == -1
+      ? error
+      : error.substring(start + _noUiSentinel.length).trimLeft();
+}
+
 class FletJavaScriptBackendChannel implements FletBackendChannel {
   final String address;
   final Map<String, dynamic> args;
@@ -34,7 +53,16 @@ class FletJavaScriptBackendChannel implements FletBackendChannel {
   @override
   connect() async {
     debugPrint("Connecting to Flet JavaScript channel $address...");
-    await jsConnect(address, args.jsify()!, _onMessage.toJS).toDart;
+    try {
+      await jsConnect(address, args.jsify()!, _onMessage.toJS).toDart;
+    } catch (e) {
+      // `jsConnect` resolves as soon as the worker reports back, and rejects
+      // only when that report is an error — meaning Python already ran and
+      // failed (a bad import, a missing dependency, an app archive that would
+      // not download). There is no server here to come up later, so this is
+      // final rather than something to retry.
+      throw FletAppStartupException(_stripNoUiSentinel(e.toString()));
+    }
   }
 
   void _onMessage(JSUint8Array data) {

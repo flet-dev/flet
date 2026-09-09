@@ -38,5 +38,9 @@
 		<!-- Needed by `flet-geolocator` -->
 		<key>NSLocationWhenInUseUsageDescription</key>
         <string>This app needs access to location.</string>
+
+		<!-- Needed by `flet-local-auth` -->
+		<key>NSFaceIDUsageDescription</key>
+		<string>This app uses biometrics to authenticate you.</string>
 	</dict>
 </plist>

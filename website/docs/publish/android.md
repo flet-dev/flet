@@ -1008,6 +1008,13 @@ Flet generates `android/app/proguard-rules.pro` with these defaults:
 -keepnames class * { *; }
 ```
 
+Flet Android apps use `FlutterFragmentActivity` (required for biometric dialogs). If you replace
+the default rules, keep that class:
+
+```
+-keep class io.flutter.embedding.android.FlutterFragmentActivity { *; }
+```
+
 There are two knobs, because adding and removing rules are different problems:
 
 - **`[tool.flet.android].proguard_rules`** — a list of rules *appended* to the defaults. R8 has no
@@ -1068,7 +1075,7 @@ release builds, this never reproduces in debug.
 ```toml
 [tool.flet.android]
 proguard_rules = [
-  "-keep class io.flutter.embedding.android.FlutterActivity { *; }",
+  "-keep class io.flutter.embedding.android.FlutterFragmentActivity { *; }",
   "-keep class com.example.mylib.** { *; }",
 ]
 ```
@@ -1082,7 +1089,7 @@ will be translated accordingly into this:
 ```
 -keep class com.flet.serious_python_android.** { *; }
 -keepnames class * { *; }
--keep class io.flutter.embedding.android.FlutterActivity { *; }
+-keep class io.flutter.embedding.android.FlutterFragmentActivity { *; }
 -keep class com.example.mylib.** { *; }
 ```
 </details>

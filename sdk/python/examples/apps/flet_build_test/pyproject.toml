@@ -20,6 +20,7 @@ dependencies = [
     "flet-flashlight",
     "flet-geolocator",
     "flet-lottie",
+    "flet-local-auth",
     "flet-map",
     "flet-permission-handler",
     "flet-rive",
@@ -52,6 +53,7 @@ flet-datatable2 = { path = "../../../packages/flet-datatable2", editable = true 
 flet-flashlight = { path = "../../../packages/flet-flashlight", editable = true }
 flet-geolocator = { path = "../../../packages/flet-geolocator", editable = true }
 flet-lottie = { path = "../../../packages/flet-lottie", editable = true }
+flet-local-auth = { path = "../../../packages/flet-local-auth", editable = true }
 flet-map = { path = "../../../packages/flet-map", editable = true }
 flet-permission-handler = { path = "../../../packages/flet-permission-handler", editable = true }
 flet-rive = { path = "../../../packages/flet-rive", editable = true }
@@ -73,6 +75,7 @@ flet-datatable2 = "../../../packages/flet-datatable2"
 flet-flashlight = "../../../packages/flet-flashlight"
 flet-geolocator = "../../../packages/flet-geolocator"
 flet-lottie = "../../../packages/flet-lottie"
+flet-local-auth = "../../../packages/flet-local-auth"
 flet-map = "../../../packages/flet-map"
 flet-permission-handler = "../../../packages/flet-permission-handler"
 flet-rive = "../../../packages/flet-rive"

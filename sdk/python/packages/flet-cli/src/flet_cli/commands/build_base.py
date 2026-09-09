@@ -33,7 +33,7 @@ from rich.table import Column, Table
 
 import flet.version
 import flet_cli.utils.processes as processes
-from flet.utils import copy_tree, slugify
+from flet.utils import copy_tree, rmtree, slugify
 from flet_cli.commands.flutter_base import (
     BaseFlutterCommand,
     console,
@@ -294,6 +294,17 @@ class BaseBuildCommand(BaseFlutterCommand):
                 "android_permissions": {
                     "android.permission.READ_MEDIA_VISUAL_USER_SELECTED": True
                 },
+                "android_features": {},
+            },
+            "biometric": {
+                "ios_info_plist": {
+                    "NSFaceIDUsageDescription": "This app uses biometrics to authenticate you."  # noqa: E501
+                },
+                "macos_info_plist": {
+                    "NSFaceIDUsageDescription": "This app uses biometrics to authenticate you."  # noqa: E501
+                },
+                "macos_entitlements": {},
+                "android_permissions": {},
                 "android_features": {},
             },
         }
@@ -1848,7 +1859,7 @@ class BaseBuildCommand(BaseFlutterCommand):
                     },
                 )
             except Exception as e:
-                shutil.rmtree(self.flutter_dir)
+                rmtree(self.flutter_dir)
                 self.cleanup(1, f"{e}")
 
             # For local development, override flet dependency with path
@@ -2598,7 +2609,7 @@ class BaseBuildCommand(BaseFlutterCommand):
 
         # flutter-packages variable
         if self.flutter_packages_temp_dir.exists():
-            shutil.rmtree(self.flutter_packages_temp_dir)
+            rmtree(self.flutter_packages_temp_dir)
 
         package_env["SERIOUS_PYTHON_FLUTTER_PACKAGES"] = str(
             self.flutter_packages_temp_dir
@@ -2797,6 +2808,24 @@ class BaseBuildCommand(BaseFlutterCommand):
             self.options.no_cdn or self.get_pyproject("tool.flet.web.cdn") == False  # noqa: E712
         )
 
+    def build_wasm(self) -> bool:
+        """
+        Whether to add Flutter's `--wasm` target to the web build.
+
+        Flutter emits the dart2wasm output for the `skwasm` renderer, and the
+        generated `flutter_bootstrap.js` pins `flutterConfig.renderer` to the
+        resolved `web_renderer`. Pinning `canvaskit` makes Flutter's loader
+        skip the dart2wasm build, so it is worth compiling only when the
+        renderer leaves it selectable.
+
+        Returns:
+            True when the resolved renderer is `auto` or `skwasm` and the wasm
+                target was not turned off.
+        """
+        return not self.template_data["no_wasm"] and self.template_data[
+            "web_renderer"
+        ] in ("auto", "skwasm")
+
     def get_bool_setting(self, cli_option, pyproj_setting, default_value):
         """
         Resolve a boolean setting with precedence: CLI option, pyproject, default.
@@ -2935,7 +2964,7 @@ class BaseBuildCommand(BaseFlutterCommand):
         # app — see `_serious_python_build_env`.
         build_env = self._serious_python_build_env()
 
-        if self.package_platform == "Emscripten" and not self.template_data["no_wasm"]:
+        if self.package_platform == "Emscripten" and self.build_wasm():
             build_args.append("--wasm")
 
         android_signing_key_store = (
@@ -3098,7 +3127,7 @@ class BaseBuildCommand(BaseFlutterCommand):
                 continue
 
             if self.out_dir.exists():
-                shutil.rmtree(str(self.out_dir))
+                rmtree(str(self.out_dir))
             self.out_dir.mkdir(parents=True, exist_ok=True)
 
             # copy build result to out_dir
