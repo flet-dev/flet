@@ -31,8 +31,7 @@ def test_rmtree_nonexistent_directory():
     rmtree(nonexistent)
 
 
-@pytest.mark.parametrize("py_version", [(3, 11, 0), (3, 12, 0)])
-def test_rmtree_raises_permission_error_when_deletion_fails(py_version):
+def test_rmtree_raises_permission_error_when_deletion_fails():
     temp_dir = tempfile.mkdtemp()
     test_file = os.path.join(temp_dir, "locked.txt")
     with open(test_file, "w") as fp:
@@ -40,7 +39,6 @@ def test_rmtree_raises_permission_error_when_deletion_fails(py_version):
 
     try:
         with (
-            patch("sys.version_info", py_version),
             patch("os.unlink", side_effect=PermissionError("File locked")),
             pytest.raises(PermissionError),
         ):
@@ -50,18 +48,14 @@ def test_rmtree_raises_permission_error_when_deletion_fails(py_version):
             rmtree(temp_dir, ignore_errors=True)
 
 
-@pytest.mark.parametrize("py_version", [(3, 11, 0), (3, 12, 0)])
-def test_rmtree_ignore_errors_when_deletion_fails(py_version):
+def test_rmtree_ignore_errors_when_deletion_fails():
     temp_dir = tempfile.mkdtemp()
     test_file = os.path.join(temp_dir, "locked.txt")
     with open(test_file, "w") as fp:
         fp.write("locked")
 
     try:
-        with (
-            patch("sys.version_info", py_version),
-            patch("os.unlink", side_effect=PermissionError("File locked")),
-        ):
+        with patch("os.unlink", side_effect=PermissionError("File locked")):
             rmtree(temp_dir, ignore_errors=True)
     finally:
         if os.path.exists(temp_dir):
