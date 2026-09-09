@@ -1,0 +1,20 @@
+[project]
+name = "flet-platform-assets"
+version = "0.1.0"
+description = "Generate app icons and splash screens for every platform Flet builds for"
+authors = [{ name = "Appveyor Systems Inc.", email = "hello@flet.dev" }]
+license = "Apache-2.0"
+readme = "README.md"
+requires-python = ">=3.10"
+dependencies = [
+    "pillow >=11.3.0",
+]
+
+[project.urls]
+Homepage = "https://flet.dev"
+Repository = "https://github.com/flet-dev/flet"
+Documentation = "https://flet.dev/docs"
+
+[build-system]
+requires = ["setuptools"]
+build-backend = "setuptools.build_meta"

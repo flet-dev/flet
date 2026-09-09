@@ -9,15 +9,29 @@ from flet.controls.context import context
 from flet.controls.dialog_control import DialogControl
 
 
-def _find_dialog_index(dialogs, target):
+def _index_of(controls, target):
     # Identity (`is`) comparison — dialog controls are dataclasses and two
     # dialogs built from the same field values compare equal with `==`,
     # so `in` / `.index()` would match the wrong entry when two sibling
     # hosts each manage a similarly-shaped dialog.
-    for i, c in enumerate(dialogs.controls):
+    for i, c in enumerate(controls):
         if c is target:
             return i
     return -1
+
+
+def _find_dialog_index(dialogs, target):
+    return _index_of(dialogs.controls, target)
+
+
+def _dialogs_snapshot(dialogs):
+    """`_dialogs.controls` as the client last saw it.
+
+    Returns `None` when `_dialogs` has never been serialized or diffed, i.e.
+    there is no client-side view to keep in sync yet.
+    """
+    prev_lists = getattr(dialogs, "__prev_lists", None)
+    return prev_lists.get("controls") if prev_lists is not None else None
 
 
 def _bind_dialog_subtree(value, parent):
@@ -62,40 +76,62 @@ def use_dialog(dialog: DialogControl | None = None):
 
     if dialog is not None:
         prev_idx = _find_dialog_index(page._dialogs, prev) if prev is not None else -1
+        snapshot = _dialogs_snapshot(page._dialogs)
+        # Where `prev` sits in the client's view of the list. This is NOT
+        # `prev_idx`: the live list can have entries appended or removed since
+        # the last flush, so the two indices drift apart. `-1` with a snapshot
+        # present means the client has never seen `prev` — it was appended by
+        # an earlier render in this same scheduler batch and the queued
+        # `_dialogs` update hasn't been flushed yet.
+        snapshot_idx = (
+            _index_of(snapshot, prev)
+            if snapshot is not None and prev is not None
+            else -1
+        )
         if (
             prev is not None
             and prev_idx >= 0
             and prev.open
             and type(prev) is type(dialog)
         ):
-            # Frozen diff: compares prev and dialog field-by-field, migrates
-            # `_i` onto the new instance via `_migrate_state`, and emits only
-            # actual field deltas. This is what preserves Flutter widget
-            # identity for nested controls — notably the TextField inside an
-            # AlertDialog keeps its cursor/focus across re-renders.
             dialog.open = True
             page._prepare_dialog(dialog)
-            page.session.patch_control(control=dialog, prev_control=prev, frozen=True)
-            # Strip the `_frozen` marker set by _dataclass_added during the
-            # frozen diff so we can later set open=False for dismissal.
-            if hasattr(dialog, "_frozen"):
-                del dialog._frozen
+            if snapshot is None or snapshot_idx >= 0:
+                # Frozen diff: compares prev and dialog field-by-field,
+                # migrates `_i` onto the new instance via `_migrate_state`,
+                # and emits only actual field deltas. This is what preserves
+                # Flutter widget identity for nested controls — notably the
+                # TextField inside an AlertDialog keeps its cursor/focus
+                # across re-renders.
+                page.session.patch_control(
+                    control=dialog, prev_control=prev, frozen=True
+                )
+                # Strip the `_frozen` marker set by _dataclass_added during
+                # the frozen diff so we can later set open=False for dismissal.
+                if hasattr(dialog, "_frozen"):
+                    del dialog._frozen
             # Replace the old instance with the new one in the overlay list
             # — at the SAME index, so sibling hosts' entries aren't disturbed.
             _bind_dialog_subtree(dialog, page._dialogs)
             page._dialogs.controls[prev_idx] = dialog
-            # Keep `_dialogs.__prev_lists['controls']` aligned with the new
-            # instance. Without this, a later `_dialogs.update()` triggered
-            # by an unrelated operation (e.g. `page.show_dialog(SnackBar)`)
-            # would diff the fresh `controls` list against a snapshot
-            # pointing at the old Python object — different `id()`, so the
-            # diff emits a full REPLACE of the dialog. On Dart, REPLACE
-            # creates a new Control with `_open` unset, and the next build
-            # re-enters the show branch and pushes a second DialogRoute on
-            # top of the existing one. The dialog then refuses to close.
-            prev_lists = getattr(page._dialogs, "__prev_lists", None)
-            if prev_lists is not None and "controls" in prev_lists:
-                prev_lists["controls"][prev_idx] = dialog
+            if snapshot_idx >= 0:
+                # Keep `_dialogs.__prev_lists['controls']` aligned with the new
+                # instance. Without this, a later `_dialogs.update()` triggered
+                # by an unrelated operation (e.g. `page.show_dialog(SnackBar)`)
+                # would diff the fresh `controls` list against a snapshot
+                # pointing at the old Python object — different `id()`, so the
+                # diff emits a full REPLACE of the dialog. On Dart, REPLACE
+                # creates a new Control with `_open` unset, and the next build
+                # re-enters the show branch and pushes a second DialogRoute on
+                # top of the existing one. The dialog then refuses to close.
+                snapshot[snapshot_idx] = dialog
+            elif snapshot is not None:
+                # `prev` never reached the client, so there is nothing to
+                # patch against — a PATCH_CONTROL for its `_i` would be
+                # dropped client-side as an out-of-sync control. The queued
+                # `_dialogs` update carries the fresh instance instead;
+                # re-arm it in case it was already drained this batch.
+                page.session.schedule_update(page._dialogs)
             ref.current = dialog
         else:
             dialog.open = True

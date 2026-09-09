@@ -1,0 +1,26 @@
+[project]
+name = "flet-local-auth"
+version = "0.1.0"
+description = "Local authentication service for Flet"
+authors = [{name = "Appveyor Systems Inc.", email = "hello@flet.dev"}]
+readme = "README.md"
+requires-python = ">=3.10"
+dependencies = [
+    "flet",
+]
+
+[project.urls]
+Homepage = "https://flet.dev"
+Documentation = "https://flet.dev/docs/services/localauthentication"
+Repository = "https://github.com/flet-dev/flet/tree/main/sdk/python/packages/flet-local-auth"
+Issues = "https://github.com/flet-dev/flet/issues"
+
+[tool.setuptools.package-data]
+"flutter.flet_local_auth" = [
+    "pubspec.yaml",
+    "lib/**",
+]
+
+[build-system]
+requires = ["setuptools"]
+build-backend = "setuptools.build_meta"

@@ -1329,3 +1329,89 @@ def test_fields_start_with_on_update():
 
     assert isinstance(u_msg, list)
     assert u_msg == expected
+
+
+def _stable_handler(e):
+    pass
+
+
+@ft.control("PropListHolder")
+class PropListHolder(ft.BaseControl):
+    # required list field, no default_factory → Prop-managed (like
+    # DataTable.columns), not a structural field like Column.controls
+    items: list[MyText]
+
+
+def test_frozen_value_equal_content_child_is_reconciled():
+    # A re-rendered component rebuilds its output. A child in a Prop-managed
+    # field that compares equal to the previous render's is still a different
+    # instance: it must adopt the old _i, get its parent stamped and be
+    # reported as added so the session index swaps to it — otherwise the new
+    # tree holds an orphan and the next event on it raises
+    # "Control must be added to the page first".
+    old_child = MyText("a", on_select=_stable_handler)
+    new_child = MyText("a", on_select=_stable_handler)
+    assert old_child == new_child
+    assert old_child is not new_child
+    old = ft.Container(content=old_child)
+    new = ft.Container(content=new_child)
+    old._frozen = True
+
+    patch, _, added_controls, _ = make_diff(new, old)
+
+    assert patch == []
+    assert new_child._i == old_child._i
+    assert new_child.parent is new
+    assert new_child in added_controls
+
+
+def test_frozen_value_equal_list_prop_children_are_reconciled():
+    assert "items" in PropListHolder._prop_defaults
+    old_items = [
+        MyText("a", on_select=_stable_handler),
+        MyText("b", on_select=_stable_handler),
+    ]
+    new_items = [
+        MyText("a", on_select=_stable_handler),
+        MyText("b", on_select=_stable_handler),
+    ]
+    assert old_items == new_items
+    old = PropListHolder(items=old_items)
+    new = PropListHolder(items=new_items)
+    old._frozen = True
+
+    patch, _, added_controls, _ = make_diff(new, old)
+
+    assert patch == []
+    for old_item, new_item in zip(old_items, new_items):
+        assert new_item._i == old_item._i
+        assert new_item.parent is new
+        assert new_item in added_controls
+
+
+def test_frozen_identical_content_child_is_skipped():
+    # the same instance on both sides needs no reconciliation at all
+    child = MyText("a", on_select=_stable_handler)
+    old = ft.Container(content=child)
+    new = ft.Container(content=child)
+    old._frozen = True
+
+    patch, _, added_controls, _ = make_diff(new, old)
+
+    assert patch == []
+    assert child not in added_controls
+
+
+def test_frozen_changed_content_child_still_patches():
+    old = ft.Container(content=MyText("a", on_select=_stable_handler))
+    new_child = MyText("b", on_select=_stable_handler)
+    new = ft.Container(content=new_child)
+    old._frozen = True
+
+    patch, _, added_controls, _ = make_diff(new, old)
+
+    assert cmp_ops(
+        patch, [{"op": "replace", "path": ["content", "value"], "value": "b"}]
+    )
+    assert new_child.parent is new
+    assert new_child in added_controls

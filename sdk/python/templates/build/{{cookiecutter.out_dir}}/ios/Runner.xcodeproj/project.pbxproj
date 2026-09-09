@@ -379,6 +379,12 @@
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = {{ cookiecutter.bundle_id }};
 				PRODUCT_NAME = "{{ cookiecutter.artifact_name }}";
+				/* Plugins that statically link their FFI entry points and resolve them
+				   with dlsym(RTLD_DEFAULT, ...) - rive_native, for example - need those
+				   symbols to survive the archive strip step. The default "all" removes
+				   every non-weak global symbol from the executable, so the lookups fail
+				   at runtime in release builds only. */
+				STRIP_STYLE = "non-global";
 				SWIFT_OBJC_BRIDGING_HEADER = "Runner/Runner-Bridging-Header.h";
 				SWIFT_VERSION = 5.0;
 				VERSIONING_SYSTEM = "apple-generic";
@@ -599,6 +605,12 @@
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = {{ cookiecutter.bundle_id }};
 				PRODUCT_NAME = "{{ cookiecutter.artifact_name }}";
+				/* Plugins that statically link their FFI entry points and resolve them
+				   with dlsym(RTLD_DEFAULT, ...) - rive_native, for example - need those
+				   symbols to survive the archive strip step. The default "all" removes
+				   every non-weak global symbol from the executable, so the lookups fail
+				   at runtime in release builds only. */
+				STRIP_STYLE = "non-global";
 				SWIFT_OBJC_BRIDGING_HEADER = "Runner/Runner-Bridging-Header.h";
 				SWIFT_VERSION = 5.0;
 				VERSIONING_SYSTEM = "apple-generic";
