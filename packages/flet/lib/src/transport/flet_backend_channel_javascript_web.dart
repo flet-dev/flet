@@ -8,11 +8,11 @@ import 'flet_backend_channel.dart';
 external JSPromise jsConnect(
     String appId, JSAny args, JSExportedDartFunction onMessage);
 
-/// The optional `transferList` argument names ArrayBuffers (in `data`'s
-/// underlying buffer) whose ownership should transfer to the receiver —
-/// `postMessage` then avoids the structured-clone copy. We pass the
-/// packet's `.buffer` here so bulk DataChannel frames are zero-copy across
-/// the Worker boundary.
+/// `transferList` names ArrayBuffers whose ownership moves to the worker, so
+/// `postMessage` hands them over instead of structured-cloning them. Callers
+/// pass the packet's own `.buffer`, which keeps bulk DataChannel frames
+/// zero-copy across the Worker boundary and detaches the caller's view — safe
+/// because every packet is freshly allocated per send and never read back.
 @JS()
 external void jsSend(String appId, JSUint8Array data, JSArray<JSObject>? transferList);
 
@@ -80,10 +80,6 @@ class FletJavaScriptBackendChannel implements FletBackendChannel {
   @override
   void send(Uint8List packet) {
     final jsBytes = packet.toJS;
-    // Transfer the underlying ArrayBuffer to the receiver — zero copy
-    // across the Worker boundary. Safe because the sender does not access
-    // `packet` after this call (FletBackend always builds a fresh buffer
-    // per send).
     final jsBuffer = packet.buffer.toJS;
     final transferList = <JSObject>[jsBuffer as JSObject].toJS;
     jsSend(address, jsBytes, transferList);

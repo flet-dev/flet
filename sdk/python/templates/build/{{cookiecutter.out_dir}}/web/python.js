@@ -63,10 +63,10 @@ globalThis.jsConnect = async function(appId, args, dartOnMessage) {
 
 // Called from Dart on backend.send
 // data is a message serialized to JSUint8Array
-globalThis.jsSend = async function(appId, data) {
+globalThis.jsSend = async function(appId, data, transferList) {
     if (appId in _apps) {
         const app = _apps[appId];
-        app.worker.postMessage(data);
+        app.worker.postMessage(data, transferList ?? []);
     }
 }
 
