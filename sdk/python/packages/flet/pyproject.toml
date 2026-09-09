@@ -11,6 +11,10 @@ dependencies = [
     "flet-web; extra == 'web'",
     "oauthlib >=3.2.2; platform_system != 'Emscripten'",
     "httpx2 >=2.12.0; platform_system != 'Emscripten'",
+    # Required by the packaged-app bootstrap (templates/build/*/lib/python.dart),
+    # which imports certifi unconditionally to configure the CA bundle. It used
+    # to arrive transitively via httpx; httpx2 no longer depends on it.
+    "certifi >=2024.2.2; platform_system != 'Emscripten'",
     "repath >=0.9.0",
     "msgpack >=1.1.0",
     "typing-extensions; python_version < '3.11'"
