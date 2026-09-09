@@ -33,7 +33,10 @@ def patch_index_html(
         websocket_endpoint_path: Optional websocket endpoint path.
         app_name: Optional app name used for page title and iOS web-app title meta.
         app_description: Optional app description meta content.
-        pyodide: Whether to enable Pyodide mode in injected runtime config.
+        pyodide: Whether the page should run Python in the browser. Written to
+            the injected config either way, because a page carries whichever
+            mode it was generated for — `flet build web` bakes Pyodide in — and
+            serving that client from a Flet server has to turn it back off.
         pyodide_pre: Whether pre-release micropip packages are allowed.
         pyodide_script_path: Path to Python entry script for Pyodide apps.
         web_renderer: Web renderer mode for the frontend runtime.
@@ -56,9 +59,11 @@ def patch_index_html(
 
     app_config = []
 
-    if pyodide and pyodide_script_path:
+    run_in_browser = bool(pyodide and pyodide_script_path)
+    app_config.append(f"flet.pyodide = {str(run_in_browser).lower()};")
+
+    if run_in_browser:
         module_name = Path(pyodide_script_path).stem
-        app_config.append("flet.pyodide = true;")
         app_config.append(f"flet.micropipIncludePre = {str(pyodide_pre).lower()};")
         app_config.append(f'flet.pythonModuleName = "{module_name}";')
 
