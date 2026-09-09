@@ -44,45 +44,52 @@ def main(page: ft.Page):
                         size=16,
                         weight=ft.FontWeight.W_500,
                     ),
-                    ft.Column(
-                        spacing=16,
+                    ft.Row(
+                        scroll=ft.ScrollMode.AUTO,
                         controls=[
-                            _lane(
-                                "Normal controls",
-                                [
-                                    _demo_control(ft.Text("Text", size=26)),
-                                    _demo_control(
-                                        ft.ProgressBar(
-                                            width=170, value=0.65, color=ft.Colors.GREEN
-                                        )
-                                    ),
-                                    _demo_control(ft.Button("Button")),
-                                ],
-                            ),
-                            _lane(
-                                "RotatedBox quarter_turns=1",
-                                [
-                                    _demo_control(
-                                        ft.RotatedBox(
-                                            quarter_turns=1,
-                                            content=ft.Text("Text", size=26),
-                                        )
-                                    ),
-                                    _demo_control(
-                                        ft.RotatedBox(
-                                            quarter_turns=1,
-                                            content=ft.ProgressBar(
-                                                width=170,
-                                                value=0.65,
-                                                color=ft.Colors.GREEN,
+                            ft.Column(
+                                spacing=16,
+                                controls=[
+                                    _lane(
+                                        "Normal controls",
+                                        [
+                                            _demo_control(ft.Text("Text", size=26)),
+                                            _demo_control(
+                                                ft.ProgressBar(
+                                                    width=170,
+                                                    value=0.65,
+                                                    color=ft.Colors.GREEN,
+                                                )
                                             ),
-                                        )
+                                            _demo_control(ft.Button("Button")),
+                                        ],
                                     ),
-                                    _demo_control(
-                                        ft.RotatedBox(
-                                            quarter_turns=1,
-                                            content=ft.Button("Button"),
-                                        )
+                                    _lane(
+                                        "RotatedBox quarter_turns=1",
+                                        [
+                                            _demo_control(
+                                                ft.RotatedBox(
+                                                    quarter_turns=1,
+                                                    content=ft.Text("Text", size=26),
+                                                )
+                                            ),
+                                            _demo_control(
+                                                ft.RotatedBox(
+                                                    quarter_turns=1,
+                                                    content=ft.ProgressBar(
+                                                        width=170,
+                                                        value=0.65,
+                                                        color=ft.Colors.GREEN,
+                                                    ),
+                                                )
+                                            ),
+                                            _demo_control(
+                                                ft.RotatedBox(
+                                                    quarter_turns=1,
+                                                    content=ft.Button("Button"),
+                                                )
+                                            ),
+                                        ],
                                     ),
                                 ],
                             ),
