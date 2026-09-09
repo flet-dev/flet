@@ -191,6 +191,31 @@ When you run `flet build <target_platform>`, the pipeline is:
    executable or installable package.
 5. Copy build outputs from Step 4 into the [output directory](#output-directory).
 
+## How a built app terminates
+
+A built Flet app terminates **immediately**. Python `atexit` handlers, `__del__` finalizers,
+C++ static destructors, and buffered writes that have not yet reached the operating system
+are **not** guaranteed to run. Persist anything that matters before you exit, rather than
+relying on cleanup at shutdown.
+
+This applies both when the user closes the app (desktop) and when your code calls
+`sys.exit()` (every platform).
+
+The reason is that your Python code runs on its own thread alongside Flutter. A normal
+process exit runs the teardown of every loaded library - including the C extension modules
+imported by packages like `matplotlib`, `numpy` and `Pillow` - while that thread may still
+be executing inside one of them. The result was a segfault on exit, reported as a crash by
+the operating system even though the app had finished its work. Skipping the teardown
+removes the failure entirely, at the cost of the guarantees above.
+
+If you need cleanup to run, do it explicitly before exiting:
+
+```python
+async def quit(e):
+    await save_my_state()   # finish your own work first
+    sys.exit(0)
+```
+
 ## Configuration options
 
 :::note[Placeholders]

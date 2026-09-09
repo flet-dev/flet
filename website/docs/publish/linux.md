@@ -179,6 +179,12 @@ categories = ["Game", "ArcadeGame"]
 </TabItem>
 </Tabs>
 
+## App termination
+
+Closing the window terminates the app immediately, without running Python `atexit`
+handlers, C++ static destructors, or flushing writes that have not yet reached the
+operating system. See [How a built app terminates](index.md#how-a-built-app-terminates).
+
 ## Distributing
 
 `flet build linux` leaves a **relocatable bundle directory** — an executable

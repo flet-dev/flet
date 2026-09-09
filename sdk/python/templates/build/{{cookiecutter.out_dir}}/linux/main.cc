@@ -1,6 +1,7 @@
 #include "my_application.h"
 
 #include <dlfcn.h>
+#include <unistd.h>
 
 // Python's multiprocessing spawn/forkserver paths, including the resource
 // tracker, create child processes by re-executing sys.executable with a
@@ -48,5 +49,12 @@ int main(int argc, char** argv) {
   }
 
   g_autoptr(MyApplication) app = my_application_new();
-  return g_application_run(G_APPLICATION(app), argc, argv);
+  int status = g_application_run(G_APPLICATION(app), argc, argv);
+
+  // Returning from main() runs __cxa_finalize, which destroys the C++ statics
+  // inside every loaded CPython extension module. The embedded interpreter
+  // runs on a detached thread that is very likely still executing, and faults
+  // on whichever destroyed static it touches next. _exit skips the teardown;
+  // see the termination contract in docs/publish/linux.md.
+  _exit(status);
 }
