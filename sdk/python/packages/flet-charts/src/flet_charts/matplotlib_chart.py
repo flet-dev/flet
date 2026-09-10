@@ -433,79 +433,103 @@ class MatplotlibChart(ft.GestureDetector):
         """
         Consume backend messages and apply canvas/state updates.
 
-        The loop handles both binary image frames and JSON control messages
-        (cursor updates, draw requests, rubber-band overlays, status text, and
-        toolbar history state).
+        Message handling is guarded: applying a frame, and Matplotlib's own
+        rendering (which `send_message` runs synchronously, in this task),
+        can both raise. Letting that escape would end the loop - nothing
+        would drain `_receive_queue` again, so the chart would freeze
+        silently and the traceback would only surface later, as an
+        unretrieved task exception when the task is garbage-collected.
         """
 
         while True:
             is_binary, content = await self._receive_queue.get()
-
-            if is_binary:
-                # Hand the frame to the client widget — a raw RGBA frame
-                # (pre-encoded 0x04 packet) or full PNG replaces the
-                # backbuffer, diff PNG composites onto it. `await`
-                # here serialises this receive loop on the Dart-side
-                # frame-applied ack: matplotlib "draw" notifications that
-                # arrive during the round-trip stay queued in
-                # `_receive_queue` and are processed after the ack returns,
-                # instead of being eagerly dropped against a stale
-                # `_waiting=True` gate. This is the same backpressure shape
-                # the 0.85 `_invoke_method` round-trip used to provide.
-                if isinstance(content, tuple) and content[0] == "raw":
-                    logger.debug(f"receive_binary(raw, {len(content[1])})")
-                    await self.mpl_canvas.apply_raw_packet(content[1])
-                elif self.__image_mode == "full":
-                    logger.debug(f"receive_binary(full, {len(content)})")
-                    await self.mpl_canvas.apply_full(bytes(content))
-                else:
-                    logger.debug(f"receive_binary(diff, {len(content)})")
-                    await self.mpl_canvas.apply_diff(bytes(content))
-                self.img_count += 1
+            try:
+                await self._handle_message(is_binary, content)
+            except asyncio.CancelledError:
+                raise
+            except Exception:
+                logger.exception("Error handling Matplotlib backend message")
+                # A draw that raised never produces the frame that clears
+                # this gate, so clear it here or no further draw is ever
+                # requested.
                 self._waiting = False
+
+    async def _handle_message(self, is_binary: bool, content: Any) -> None:
+        """
+        Apply a single message from the Matplotlib backend.
+
+        Handles both binary image frames and JSON control messages (cursor
+        updates, draw requests, rubber-band overlays, status text, and
+        toolbar history state).
+
+        Args:
+            is_binary: Whether `content` is an image frame rather than JSON.
+            content: Frame payload or JSON control message.
+        """
+
+        if is_binary:
+            # Hand the frame to the client widget — a raw RGBA frame
+            # (pre-encoded 0x04 packet) or full PNG replaces the
+            # backbuffer, diff PNG composites onto it. `await`
+            # here serialises this receive loop on the Dart-side
+            # frame-applied ack: matplotlib "draw" notifications that
+            # arrive during the round-trip stay queued in
+            # `_receive_queue` and are processed after the ack returns,
+            # instead of being eagerly dropped against a stale
+            # `_waiting=True` gate. This is the same backpressure shape
+            # the 0.85 `_invoke_method` round-trip used to provide.
+            if isinstance(content, tuple) and content[0] == "raw":
+                logger.debug(f"receive_binary(raw, {len(content[1])})")
+                await self.mpl_canvas.apply_raw_packet(content[1])
+            elif self.__image_mode == "full":
+                logger.debug(f"receive_binary(full, {len(content)})")
+                await self.mpl_canvas.apply_full(bytes(content))
             else:
-                logger.debug(f"receive_json({content})")
-                if content["type"] == "image_mode":
-                    self.__image_mode = content["mode"]
-                elif content["type"] == "cursor":
-                    self.mouse_cursor = figure_cursors[content["cursor"]]
-                    self.update()
-                elif content["type"] == "draw" and not self._waiting:
-                    self._waiting = True
-                    self.send_message({"type": "draw"})
-                elif content["type"] == "rubberband":
-                    if (
-                        content["x0"] != -1
-                        and content["y0"] != -1
-                        and content["x1"] != -1
-                        and content["y1"] != -1
-                    ):
-                        x0 = content["x0"] / self.__dpr
-                        y0 = self._height - content["y0"] / self.__dpr
-                        x1 = content["x1"] / self.__dpr
-                        y1 = self._height - content["y1"] / self.__dpr
-                        self._rubberband.left = min(x0, x1)
-                        self._rubberband.top = min(y0, y1)
-                        self._rubberband.width = abs(x1 - x0)
-                        self._rubberband.height = abs(y1 - y0)
-                        self._rubberband.visible = True
-                    else:
-                        self._rubberband.visible = False
-                    self._rubberband.update()
-                elif content["type"] == "resize":
-                    self.send_message({"type": "refresh"})
-                elif content["type"] == "message":
-                    await self._trigger_event(
-                        "message", {"message": content["message"]}
-                    )
-                elif content["type"] == "history_buttons":
-                    await self._trigger_event(
-                        "toolbar_buttons_update",
-                        {
-                            "back_enabled": content["Back"],
-                            "forward_enabled": content["Forward"],
-                        },
-                    )
+                logger.debug(f"receive_binary(diff, {len(content)})")
+                await self.mpl_canvas.apply_diff(bytes(content))
+            self.img_count += 1
+            self._waiting = False
+        else:
+            logger.debug(f"receive_json({content})")
+            if content["type"] == "image_mode":
+                self.__image_mode = content["mode"]
+            elif content["type"] == "cursor":
+                self.mouse_cursor = figure_cursors[content["cursor"]]
+                self.update()
+            elif content["type"] == "draw" and not self._waiting:
+                self._waiting = True
+                self.send_message({"type": "draw"})
+            elif content["type"] == "rubberband":
+                if (
+                    content["x0"] != -1
+                    and content["y0"] != -1
+                    and content["x1"] != -1
+                    and content["y1"] != -1
+                ):
+                    x0 = content["x0"] / self.__dpr
+                    y0 = self._height - content["y0"] / self.__dpr
+                    x1 = content["x1"] / self.__dpr
+                    y1 = self._height - content["y1"] / self.__dpr
+                    self._rubberband.left = min(x0, x1)
+                    self._rubberband.top = min(y0, y1)
+                    self._rubberband.width = abs(x1 - x0)
+                    self._rubberband.height = abs(y1 - y0)
+                    self._rubberband.visible = True
+                else:
+                    self._rubberband.visible = False
+                self._rubberband.update()
+            elif content["type"] == "resize":
+                self.send_message({"type": "refresh"})
+            elif content["type"] == "message":
+                await self._trigger_event("message", {"message": content["message"]})
+            elif content["type"] == "history_buttons":
+                await self._trigger_event(
+                    "toolbar_buttons_update",
+                    {
+                        "back_enabled": content["Back"],
+                        "forward_enabled": content["Forward"],
+                    },
+                )
 
     def send_message(self, message):
         """Sends a message to the figure's canvas manager."""
