@@ -8,13 +8,12 @@ import 'flet_backend_channel.dart';
 external JSPromise jsConnect(
     String appId, JSAny args, JSExportedDartFunction onMessage);
 
-/// The optional `transferList` argument names ArrayBuffers (in `data`'s
-/// underlying buffer) whose ownership should transfer to the receiver —
-/// `postMessage` then avoids the structured-clone copy. We pass the
-/// packet's `.buffer` here so bulk DataChannel frames are zero-copy across
-/// the Worker boundary.
+/// Transfers `data`'s JavaScript buffer to the Python worker without copying it
+/// across the worker boundary. Callers must not access the packet after sending:
+/// JavaScript builds share its buffer with `data`, which becomes detached.
+/// Wasm builds copy Dart-allocated packets once when converting them to JS.
 @JS()
-external void jsSend(String appId, JSUint8Array data, JSArray<JSObject>? transferList);
+external void jsSend(String appId, JSUint8Array data);
 
 @JS()
 external void jsDisconnect(String appId);
@@ -79,14 +78,9 @@ class FletJavaScriptBackendChannel implements FletBackendChannel {
 
   @override
   void send(Uint8List packet) {
-    final jsBytes = packet.toJS;
-    // Transfer the underlying ArrayBuffer to the receiver — zero copy
-    // across the Worker boundary. Safe because the sender does not access
-    // `packet` after this call (FletBackend always builds a fresh buffer
-    // per send).
-    final jsBuffer = packet.buffer.toJS;
-    final transferList = <JSObject>[jsBuffer as JSObject].toJS;
-    jsSend(address, jsBytes, transferList);
+    // JavaScript selects the converted array's own buffer for transfer.
+    // Converting packet.buffer separately would create another copy on Wasm.
+    jsSend(address, packet.toJS);
   }
 
   @override

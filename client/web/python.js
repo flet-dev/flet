@@ -69,7 +69,10 @@ globalThis.jsConnect = async function (appId, args, dartOnMessage) {
 globalThis.jsSend = async function (appId, data) {
     if (appId in _apps) {
         const app = _apps[appId];
-        app.worker.postMessage(data);
+        // Transfer the converted array's actual buffer. On Wasm, converting
+        // the Dart packet's buffer separately would produce a different copy.
+        // The sender must not access data after this call.
+        app.worker.postMessage(data, [data.buffer]);
     }
 }
 
