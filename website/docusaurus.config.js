@@ -9,7 +9,7 @@ module.exports = {
     faster: false, // turns Docusaurus Faster on globally
   },
   title: 'Flet',
-  tagline: 'Build multi-platform apps in Python',
+  tagline: 'Build cross-platform apps in Python',
   url: 'https://flet.dev',
   baseUrl: '/',
   favicon: 'img/favicon.ico',
