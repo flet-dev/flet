@@ -6,42 +6,32 @@ import TabItem from '@theme/TabItem';
 import Tabs from '@theme/Tabs';
 import {CodeExample, Image} from '@site/src/components/crocodocs';
 
-Flet is a framework that allows building web, desktop and mobile applications in Python without prior experience in frontend development.
+Flet is a Python framework for building web, desktop, and mobile apps without prior experience in frontend development. Use ready-made controls to create your interface, connect your Python libraries and application logic, and handle user interactions without writing HTML, CSS, or JavaScript.
 
-Some features
+Start with a UI for a script or build a complete application with multiple screens. Develop with hot reload, try your app on your phone, and package it for Windows, macOS, Linux, iOS, or Android, or publish it to the web.
 
-What Flet can do what can't...
+## Try Flet in your browser
 
-## Try Flet online
+[Flet Studio](/studio) lets you write, run, and edit Flet apps in your browser without installing anything. Open a gallery example and change the code to see how it works.
 
-Before installing Flet on your computer you can try it online in your browser!
-
-[Flet Studio](/studio) is ...
-
-Below is a simple "Counter" app, with a text field and two buttons to increment and decrement the counter value:
+This small counter app displays a number and increments it when you press **+**:
 
 <CodeExample path="apps/templates/basic_counter/main.py" language="python" title="src/main.py" />
 
 ## Try Flet on your phone
 
-If you like to feel how Flet apps work/feel on a mobile device you can install Flet mobile app ([App Store](../), [Google Play](../)) and browse
-its built-in Gallery.
+Install the Flet app from the [App Store](https://apps.apple.com/app/flet/id1624979699) or [Google Play](https://play.google.com/store/apps/details?id=com.appveyor.flet) and explore its built-in **Gallery** to try controls and example apps on your device.
 
-[screenshot]
+When you're ready to try your own code, [connect your phone to your development app](getting-started/testing-on-mobile.md) and see it refresh as you make changes.
 
 ## Try Flet on your desktop
 
-To run Flet app on your computer, [install](getting-started/installation.md) Flet, [create](/docs/getting-started/create-flet-app) a new project
-and [run](/docs/getting-started/running-app) it.
+To develop locally, [install Flet](getting-started/installation.md), [create a project](getting-started/create-flet-app.md), and [run it](getting-started/running-app.md). Your app opens in a desktop window and reloads when you save changes.
 
-This will open the app in a native OS window - what a nice alternative to Electron! 🙂
+<Image src="assets/getting-started/counter-app/macos.png" alt="Counter app running on macOS" width="60%" />
 
-<p align="center">
-    <img src="/docs/assets/getting-started/counter-app/macos.png" width="60%" />
-</p>
-
-:::note[Flet run one-liner]
-If you have [`uv`](https://docs.astral.sh/uv/#installation) installed you can run this command to quickly try Flet on your desktop:
+:::tip[Quick desktop preview]
+Already have [`uv`](https://docs.astral.sh/uv/#installation)? Run this in your terminal to open a minimal Flet app without creating a project:
 
 <Tabs>
 <TabItem value="bash" label="Bash">
@@ -73,8 +63,4 @@ ft.run(main)
 
 </TabItem>
 </Tabs>
-
-
-
-
 :::
