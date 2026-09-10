@@ -2,52 +2,37 @@
 title: "Introduction"
 ---
 
+import TabItem from '@theme/TabItem';
+import Tabs from '@theme/Tabs';
+import {CodeExample, Image} from '@site/src/components/crocodocs';
+
 Flet is a framework that allows building web, desktop and mobile applications in Python without prior experience in frontend development.
 
-## Flet app example
+Some features
+
+What Flet can do what can't...
+
+## Try Flet online
+
+Before installing Flet on your computer you can try it online in your browser!
+
+[Flet Studio](/studio) is ...
 
 Below is a simple "Counter" app, with a text field and two buttons to increment and decrement the counter value:
 
-```python title="counter.py"
-import flet as ft
+<CodeExample path="apps/templates/basic_counter/main.py" language="python" title="src/main.py" />
 
-def main(page: ft.Page):
-    page.title = "Flet counter example"
-    page.vertical_alignment = ft.MainAxisAlignment.CENTER
+## Try Flet on your phone
 
-    input = ft.TextField(value="0", text_align=ft.TextAlign.RIGHT, width=100)
+If you like to feel how Flet apps work/feel on a mobile device you can install Flet mobile app ([App Store](../), [Google Play](../)) and browse
+its built-in Gallery.
 
-    def minus_click(e):
-        input.value = str(int(input.value) - 1)
+[screenshot]
 
-    def plus_click(e):
-        input.value = str(int(input.value) + 1)
+## Try Flet on your desktop
 
-    page.add(
-        ft.Row(
-            alignment=ft.MainAxisAlignment.CENTER,
-            controls=[
-                ft.IconButton(ft.Icons.REMOVE, on_click=minus_click),
-                input,
-                ft.IconButton(ft.Icons.ADD, on_click=plus_click),
-            ],
-        )
-    )
-
-ft.run(main)
-```
-
-To run the app, [install `flet`](getting-started/installation.md):
-
-```bash
-pip install 'flet[all]'
-```
-
-then launch the app:
-
-```bash
-flet run counter.py
-```
+To run Flet app on your computer, [install](getting-started/installation.md) Flet, [create](/docs/getting-started/create-flet-app) a new project
+and [run](/docs/getting-started/running-app) it.
 
 This will open the app in a native OS window - what a nice alternative to Electron! 🙂
 
@@ -55,12 +40,41 @@ This will open the app in a native OS window - what a nice alternative to Electr
     <img src="/docs/assets/getting-started/counter-app/macos.png" width="60%" />
 </p>
 
-To run the same app as a web app use `--web` option with `flet run` command:
+:::note[Flet run one-liner]
+If you have [`uv`](https://docs.astral.sh/uv/#installation) installed you can run this command to quickly try Flet on your desktop:
+
+<Tabs>
+<TabItem value="bash" label="Bash">
 
 ```bash
-flet run --web counter.py
+uvx --with flet-desktop -- python <<'PY'
+import flet as ft
+
+def main(page: ft.Page):
+    page.add(ft.Text("Hello from Flet!"))
+
+ft.run(main)
+PY
 ```
 
-<p align="center">
-    <img src="/docs/assets/getting-started/counter-app/safari.png" width="60%" />
-</p>
+</TabItem>
+<TabItem value="powershell" label="PowerShell">
+
+```powershell
+@'
+import flet as ft
+
+def main(page: ft.Page):
+    page.add(ft.Text("Hello from Flet!"))
+
+ft.run(main)
+'@ | uvx --with flet-desktop -- python -
+```
+
+</TabItem>
+</Tabs>
+
+
+
+
+:::
