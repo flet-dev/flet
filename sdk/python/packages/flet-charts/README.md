@@ -6,11 +6,11 @@
 [![docstring coverage](https://flet.dev/docs/assets/badges/docs-coverage/flet-charts.svg)](https://flet.dev/docs/assets/badges/docs-coverage/flet-charts.svg)
 [![license](https://img.shields.io/badge/License-Apache_2.0-green.svg)](https://github.com/flet-dev/flet/blob/main/sdk/python/packages/flet-charts/LICENSE)
 
+A [Flet](https://flet.dev) extension for creating interactive charts and graphs.
+
 > **[Try flet-charts in Flet Studio](https://studio.flet.dev/gallery/charts/barchart/example/extensions/charts/bar_chart/interactive_bar_chart)**
 >
 > Write, run, and share Python apps in your browser. Start from an example, write your own code, or get help from the AI agent. No installation required.
-
-A [Flet](https://flet.dev) extension for creating interactive charts and graphs.
 
 It is based on the [fl_chart](https://pub.dev/packages/fl_chart) Flutter package.
 

@@ -6,11 +6,11 @@
 [![docstring coverage](https://flet.dev/docs/assets/badges/docs-coverage/flet-audio-recorder.svg)](https://flet.dev/docs/assets/badges/docs-coverage/flet-audio-recorder.svg)
 [![license](https://img.shields.io/badge/License-Apache_2.0-green.svg)](https://github.com/flet-dev/flet/blob/main/sdk/python/packages/flet-audio-recorder/LICENSE)
 
+Adds audio recording support to [Flet](https://flet.dev) apps.
+
 > **[Try flet-audio-recorder in Flet Studio](https://studio.flet.dev/gallery/media/audiorecorder/example/extensions/audio_recorder/audio_recorder)**
 >
 > Write, run, and share Python apps in your browser. Start from an example, write your own code, or get help from the AI agent. No installation required.
-
-Adds audio recording support to [Flet](https://flet.dev) apps.
 
 It is based on the [record](https://pub.dev/packages/record) Flutter package.
 

@@ -6,11 +6,11 @@
 [![docstring coverage](https://flet.dev/docs/assets/badges/docs-coverage/flet-secure-storage.svg)](https://flet.dev/docs/assets/badges/docs-coverage/flet-secure-storage.svg)
 [![license](https://img.shields.io/badge/License-Apache_2.0-green.svg)](https://github.com/flet-dev/flet/blob/main/sdk/python/packages/flet-secure-storage/LICENSE)
 
+A service for safely storing sensitive key–value data using the platform’s native secure storage mechanisms—Keychain on iOS/macOS, Windows Credential Manager, libsecret on Linux, and Keystore on Android.
+
 > **[Try flet-secure-storage in Flet Studio](https://studio.flet.dev/gallery/utility/securestorage/example/extensions/secure_storage/secure_storage)**
 >
 > Prototype your Flet app interface in the browser, then integrate secure storage in your local project. Write your own Python code or get help from the AI agent.
-
-A service for safely storing sensitive key–value data using the platform’s native secure storage mechanisms—Keychain on iOS/macOS, Windows Credential Manager, libsecret on Linux, and Keystore on Android.
 
 Powered by Flutter's [`flutter_secure_storage`](https://pub.dev/packages/flutter_secure_storage) package.
 

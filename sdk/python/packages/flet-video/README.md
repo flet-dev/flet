@@ -6,11 +6,11 @@
 [![docstring coverage](https://flet.dev/docs/assets/badges/docs-coverage/flet-video.svg)](https://flet.dev/docs/assets/badges/docs-coverage/flet-video.svg)
 [![license](https://img.shields.io/badge/License-Apache_2.0-green.svg)](https://github.com/flet-dev/flet/blob/main/sdk/python/packages/flet-video/LICENSE)
 
+A cross-platform video player for [Flet](https://flet.dev) apps.
+
 > **[Try flet-video in Flet Studio](https://studio.flet.dev/gallery/media/video/example/extensions/video/video)**
 >
 > Write, run, and share Python apps in your browser. Start from an example, write your own code, or get help from the AI agent. No installation required.
-
-A cross-platform video player for [Flet](https://flet.dev) apps.
 
 It is based on the [media_kit](https://pub.dev/packages/media_kit) Flutter package.
 

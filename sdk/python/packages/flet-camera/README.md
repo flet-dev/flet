@@ -6,11 +6,11 @@
 [![docstring coverage](https://flet.dev/docs/assets/badges/docs-coverage/flet-camera.svg)](https://flet.dev/docs/assets/badges/docs-coverage/flet-camera.svg)
 [![license](https://img.shields.io/badge/License-Apache_2.0-green.svg)](https://github.com/flet-dev/flet/blob/main/sdk/python/packages/flet-camera/LICENSE)
 
+A camera control for [Flet](https://flet.dev) apps.
+
 > **[Try flet-camera in Flet Studio](https://studio.flet.dev/gallery/media/camera/example/extensions/camera/camera_playground)**
 >
 > Write, run, and share Python apps in your browser. Start from an example, write your own code, or get help from the AI agent. No installation required.
-
-A camera control for [Flet](https://flet.dev) apps.
 
 It is powered by the [camera](https://pub.dev/packages/camera) Flutter package.
 

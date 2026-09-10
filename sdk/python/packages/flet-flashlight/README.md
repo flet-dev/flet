@@ -6,11 +6,11 @@
 [![docstring coverage](https://flet.dev/docs/assets/badges/docs-coverage/flet-flashlight.svg)](https://flet.dev/docs/assets/badges/docs-coverage/flet-flashlight.svg)
 [![license](https://img.shields.io/badge/License-Apache_2.0-green.svg)](https://github.com/flet-dev/flet/blob/main/sdk/python/packages/flet-flashlight/LICENSE)
 
+A [Flet](https://flet.dev) extension to manage the device torch/flashlight.
+
 > **[Try Flet online in Flet Studio](https://studio.flet.dev)**
 >
 > Prototype your Flet app interface in the browser, then add flashlight control and test on your device. Write your own Python code or get help from the AI agent.
-
-A [Flet](https://flet.dev) extension to manage the device torch/flashlight.
 
 It is based on the [flashlight](https://pub.dev/packages/flashlight) Flutter package.
 

@@ -6,11 +6,11 @@
 [![docstring coverage](https://flet.dev/docs/assets/badges/docs-coverage/flet-webview.svg)](https://flet.dev/docs/assets/badges/docs-coverage/flet-webview.svg)
 [![license](https://img.shields.io/badge/License-Apache_2.0-green.svg)](https://github.com/flet-dev/flet/blob/main/sdk/python/packages/flet-webview/LICENSE)
 
+A [Flet](https://flet.dev) extension for displaying web content in a WebView.
+
 > **[Try Flet online in Flet Studio](https://studio.flet.dev)**
 >
 > Write, run, and share Python apps in your browser. Start from an example, write your own code, or get help from the AI agent. No installation required.
-
-A [Flet](https://flet.dev) extension for displaying web content in a WebView.
 
 It is based on the [webview_flutter](https://pub.dev/packages/webview_flutter)
 and [webview_flutter_web](https://pub.dev/packages/webview_flutter_web) Flutter packages.
