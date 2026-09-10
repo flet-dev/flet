@@ -1038,5 +1038,5 @@ jobs:
             flet_video \
             flet_webview \
             flet_mcp; do
-            uv publish dist/**/${pkg}-*
+            uv publish --check-url https://pypi.org/simple dist/**/${pkg}-*
           done
