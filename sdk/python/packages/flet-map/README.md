@@ -10,7 +10,7 @@ A [Flet](https://flet.dev) extension for displaying interactive maps.
 
 > **[Try flet-map in Flet Studio](https://studio.flet.dev/gallery/displays/map/example/extensions/map/map)**
 >
-> Write, run, and share Python apps in your browser. Start from an example, write your own code, or get help from the AI agent. No installation required.
+> Create, run, and share Python apps in your browser. Start from an example, write your own code, or get help from the AI agent. No installation required.
 
 It is based on the [flutter_map](https://pub.dev/packages/flutter_map) Flutter package.
 

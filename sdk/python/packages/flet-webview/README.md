@@ -10,7 +10,7 @@ A [Flet](https://flet.dev) extension for displaying web content in a WebView.
 
 > **[Try Flet online in Flet Studio](https://studio.flet.dev)**
 >
-> Write, run, and share Python apps in your browser. Start from an example, write your own code, or get help from the AI agent. No installation required.
+> Create, run, and share Python apps in your browser. Start from an example, write your own code, or get help from the AI agent. No installation required.
 
 It is based on the [webview_flutter](https://pub.dev/packages/webview_flutter)
 and [webview_flutter_web](https://pub.dev/packages/webview_flutter_web) Flutter packages.

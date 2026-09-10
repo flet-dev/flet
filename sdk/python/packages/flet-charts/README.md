@@ -10,7 +10,7 @@ A [Flet](https://flet.dev) extension for creating interactive charts and graphs.
 
 > **[Try flet-charts in Flet Studio](https://studio.flet.dev/gallery/charts/barchart/example/extensions/charts/bar_chart/interactive_bar_chart)**
 >
-> Write, run, and share Python apps in your browser. Start from an example, write your own code, or get help from the AI agent. No installation required.
+> Create, run, and share Python apps in your browser. Start from an example, write your own code, or get help from the AI agent. No installation required.
 
 It is based on the [fl_chart](https://pub.dev/packages/fl_chart) Flutter package.
 

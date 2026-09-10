@@ -10,7 +10,7 @@ A [Flet](https://flet.dev) extension package for displaying Lottie animations.
 
 > **[Try flet-lottie in Flet Studio](https://studio.flet.dev/gallery/media/lottie/example/extensions/lottie/lottie_animations)**
 >
-> Write, run, and share Python apps in your browser. Start from an example, write your own code, or get help from the AI agent. No installation required.
+> Create, run, and share Python apps in your browser. Start from an example, write your own code, or get help from the AI agent. No installation required.
 
 It is based on the [lottie](https://pub.dev/packages/lottie) Flutter package.
 

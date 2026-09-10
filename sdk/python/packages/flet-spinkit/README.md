@@ -10,7 +10,7 @@ A [Flet](https://flet.dev) extension package with 30 animated loading spinner co
 
 > **[Try Flet online in Flet Studio](https://studio.flet.dev)**
 >
-> Write, run, and share Python apps in your browser. Start from an example, write your own code, or get help from the AI agent. No installation required.
+> Create, run, and share Python apps in your browser. Start from an example, write your own code, or get help from the AI agent. No installation required.
 
 It is based on the [flutter_spinkit](https://pub.dev/packages/flutter_spinkit) Flutter package.
 

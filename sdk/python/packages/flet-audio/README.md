@@ -10,7 +10,7 @@ A [Flet](https://flet.dev) extension package for playing audio.
 
 > **[Try flet-audio in Flet Studio](https://studio.flet.dev/gallery/media/audio/example/extensions/audio/audio_playback_controls)**
 >
-> Write, run, and share Python apps in your browser. Start from an example, write your own code, or get help from the AI agent. No installation required.
+> Create, run, and share Python apps in your browser. Start from an example, write your own code, or get help from the AI agent. No installation required.
 
 It is based on the [audioplayers](https://pub.dev/packages/audioplayers) Flutter package.
 

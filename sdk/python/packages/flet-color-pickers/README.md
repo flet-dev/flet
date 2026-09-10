@@ -10,7 +10,7 @@ A [Flet](https://flet.dev) extension package for picking colors.
 
 > **[Try flet-color-pickers in Flet Studio](https://studio.flet.dev/gallery/utility/color-pickers/example/extensions/color_pickers/color_picker)**
 >
-> Write, run, and share Python apps in your browser. Start from an example, write your own code, or get help from the AI agent. No installation required.
+> Create, run, and share Python apps in your browser. Start from an example, write your own code, or get help from the AI agent. No installation required.
 
 It is based on the [flutter_colorpicker](https://pub.dev/packages/flutter_colorpicker) Flutter package.
 

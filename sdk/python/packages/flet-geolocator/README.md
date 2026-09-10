@@ -10,7 +10,7 @@ Adds geolocation capabilities to your [Flet](https://flet.dev) apps.
 
 > **[Try flet-geolocator in Flet Studio](https://studio.flet.dev/gallery/sensors/geolocator/example/extensions/geolocator/geolocator)**
 >
-> Write, run, and share Python apps in your browser. Start from an example, write your own code, or get help from the AI agent. No installation required.
+> Create, run, and share Python apps in your browser. Start from an example, write your own code, or get help from the AI agent. No installation required.
 
 Features include:
 - Get the last known location;
