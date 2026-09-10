@@ -22,6 +22,8 @@ This small counter app displays a number and increments it when you press **+**:
 
 Install the Flet app from the [App Store](https://apps.apple.com/app/flet/id1624979699) or [Google Play](https://play.google.com/store/apps/details?id=com.appveyor.flet) and explore its built-in **Gallery** to try controls and example apps on your device.
 
+<Image src="assets/getting-started/testing-on-mobile/ios/gallery.png" alt="Flet Gallery on iPhone, showing featured apps and example categories" width="250px" />
+
 When you're ready to try your own code, [connect your phone to your development app](getting-started/testing-on-mobile.md) and see it refresh as you make changes.
 
 ## Try Flet on your desktop
