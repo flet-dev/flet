@@ -6,6 +6,10 @@
 [![docstring coverage](https://flet.dev/docs/assets/badges/docs-coverage/flet-audio.svg)](https://flet.dev/docs/assets/badges/docs-coverage/flet-audio.svg)
 [![license](https://img.shields.io/badge/License-Apache_2.0-green.svg)](https://github.com/flet-dev/flet/blob/main/sdk/python/packages/flet-audio/LICENSE)
 
+| **[Try flet-audio in Flet Studio](https://studio.flet.dev/gallery/media/audio/example/extensions/audio/audio_playback_controls)** |
+| :--- |
+| Write, run, and share Python apps in your browser. Start from an example, write your own code, or get help from the AI agent. No installation required. |
+
 A [Flet](https://flet.dev) extension package for playing audio.
 
 It is based on the [audioplayers](https://pub.dev/packages/audioplayers) Flutter package.

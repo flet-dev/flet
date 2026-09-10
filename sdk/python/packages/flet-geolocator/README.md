@@ -6,6 +6,10 @@
 [![docstring coverage](https://flet.dev/docs/assets/badges/docs-coverage/flet-geolocator.svg)](https://flet.dev/docs/assets/badges/docs-coverage/flet-geolocator.svg)
 [![license](https://img.shields.io/badge/License-Apache_2.0-green.svg)](https://github.com/flet-dev/flet/blob/main/sdk/python/packages/flet-geolocator/LICENSE)
 
+| **[Try flet-geolocator in Flet Studio](https://studio.flet.dev/gallery/sensors/geolocator/example/extensions/geolocator/geolocator)** |
+| :--- |
+| Write, run, and share Python apps in your browser. Start from an example, write your own code, or get help from the AI agent. No installation required. |
+
 Adds geolocation capabilities to your [Flet](https://flet.dev) apps.
 
 Features include:

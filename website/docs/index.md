@@ -12,7 +12,7 @@ Start with a UI for a script or build a complete application with multiple scree
 
 ## Try Flet in your browser
 
-[Flet Studio](/studio) lets you write, run, and edit Flet apps in your browser without installing anything. Open a gallery example and change the code to see how it works.
+[Flet Studio](/studio) lets you create and run Flet apps in your browser without installing anything. Write Python, customize a gallery example, or describe your idea to the AI agent and build from there.
 
 This small counter app displays a number and increments it when you press **+**:
 

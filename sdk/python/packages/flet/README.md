@@ -24,6 +24,10 @@
         <img src="https://flet.dev/docs/assets/badges/docs-coverage/flet.svg" alt="Docstring coverage" /></a>
 </p>
 
+| **[Try Flet online in Flet Studio](https://studio.flet.dev)** |
+| :--- |
+| Write, run, and share Python apps in your browser. Start from an example, write your own code, or get help from the AI agent. No installation required. |
+
 ---
 
 Flet is a Python framework for building web, desktop, and mobile apps without prior experience in frontend development.

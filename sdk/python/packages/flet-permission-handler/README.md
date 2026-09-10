@@ -6,6 +6,10 @@
 [![docstring coverage](https://flet.dev/docs/assets/badges/docs-coverage/flet-permission-handler.svg)](https://flet.dev/docs/assets/badges/docs-coverage/flet-permission-handler.svg)
 [![license](https://img.shields.io/badge/License-Apache_2.0-green.svg)](https://github.com/flet-dev/flet/blob/main/sdk/python/packages/flet-permission-handler/LICENSE)
 
+| **[Try flet-permission-handler in Flet Studio](https://studio.flet.dev/gallery/utility/permissionhandler/example/extensions/permission_handler/permission_handler)** |
+| :--- |
+| Prototype your Flet app interface in the browser, then configure and test device permissions in your local project. Write your own Python code or get help from the AI agent. |
+
 A [Flet](https://flet.dev) extension that simplifies working with device permissions.
 
 It is based on the [permission_handler](https://pub.dev/packages/permission_handler) Flutter package

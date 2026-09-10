@@ -6,6 +6,10 @@
 [![docstring coverage](https://flet.dev/docs/assets/badges/docs-coverage/flet-ads.svg)](https://flet.dev/docs/assets/badges/docs-coverage/flet-ads.svg)
 [![license](https://img.shields.io/badge/License-Apache_2.0-green.svg)](https://github.com/flet-dev/flet/blob/main/sdk/python/packages/flet-ads/LICENSE)
 
+| **[Try Flet online in Flet Studio](https://studio.flet.dev)** |
+| :--- |
+| Prototype your Flet app interface in the browser, then add mobile ads in your local project. Write your own Python code or get help from the AI agent. |
+
 Display Google Ads in [Flet](https://flet.dev) apps.
 
 It is based on the [google_mobile_ads](https://pub.dev/packages/google_mobile_ads) Flutter package.
