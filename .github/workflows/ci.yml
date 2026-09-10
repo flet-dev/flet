@@ -178,9 +178,6 @@ jobs:
         id: versions
         run: source "${SCRIPTS}/update_build_version.sh"
 
-      - name: Setup Dart (OIDC for pub.dev)
-        uses: dart-lang/setup-dart@65eb853c7ba17dde3be364c3d2858773e7144260 # v1.7.2
-
       - name: Setup Flutter
         uses: kuhnroyal/flutter-fvm-config-action/setup@c378498f1d1962d33039c3989411093ef8a17b2c # v3.3
         with:
@@ -205,11 +202,18 @@ jobs:
         working-directory: packages/flet
         run: dart pub publish --dry-run
 
+      # Register publishing credentials only after dependency resolution and tests.
+      # Branch and PR builds must access public pub.dev packages anonymously.
+      - name: Setup Dart (OIDC for pub.dev)
+        if: ${{ github.ref_type == 'tag' && !contains(github.ref_name, '.dev') }}
+        uses: dart-lang/setup-dart@65eb853c7ba17dde3be364c3d2858773e7144260 # v1.7.2
+
       - name: Publish to pub.dev
         if: ${{ github.ref_type == 'tag' && !contains(github.ref_name, '.dev') }}
         shell: bash
         working-directory: packages/flet
-        run: dart pub publish -f
+        # setup-dart changes PATH; keep publishing with Flutter's bundled Dart SDK.
+        run: '"${FLUTTER_ROOT}/bin/dart" pub publish -f'
 
   # ==================
   # Package templates
