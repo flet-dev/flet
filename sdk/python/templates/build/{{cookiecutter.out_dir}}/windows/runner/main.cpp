@@ -94,6 +94,17 @@ int APIENTRY wWinMain(_In_ HINSTANCE instance, _In_opt_ HINSTANCE prev,
     ::DispatchMessage(&msg);
   }
 
-  ::CoUninitialize();
-  return EXIT_SUCCESS;
+  // Returning from wWinMain hands control to the CRT's exit path, which runs
+  // DLL_PROCESS_DETACH for every loaded DLL - and that is where the CRT's
+  // DllMain runs each DLL's C++ static destructors, including those inside the
+  // CPython extension modules. The embedded interpreter runs on a detached
+  // thread that is very likely still executing, and faults on whichever
+  // destroyed static it touches next.
+  //
+  // _exit() and ExitProcess() both still run DLL_PROCESS_DETACH, so neither
+  // helps; TerminateProcess is the only primitive that skips it. COM
+  // uninitialization is skipped along with everything else - the process is
+  // going away, and see the termination contract in docs/publish/windows.md.
+  ::TerminateProcess(::GetCurrentProcess(), 0);
+  return EXIT_SUCCESS;  // not reached
 }

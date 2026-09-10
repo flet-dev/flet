@@ -191,6 +191,55 @@ When you run `flet build <target_platform>`, the pipeline is:
    executable or installable package.
 5. Copy build outputs from Step 4 into the [output directory](#output-directory).
 
+## How a built app terminates
+
+A built Flet app terminates **immediately**. Python `atexit` handlers, `__del__` finalizers,
+C++ static destructors, and buffered writes that have not yet reached the operating system
+are **not** guaranteed to run. Persist anything that matters before you exit, rather than
+relying on cleanup at shutdown.
+
+This applies both when the user closes the app (desktop) and when your code calls
+`sys.exit()` (every platform).
+
+The reason is that your Python code runs on its own thread alongside Flutter. A normal
+process exit runs the teardown of every loaded library - including the C extension modules
+imported by packages like `matplotlib`, `numpy` and `Pillow` - while that thread may still
+be executing inside one of them. The result was a segfault on exit, reported as a crash by
+the operating system even though the app had finished its work. Skipping the teardown
+removes the failure entirely, at the cost of the guarantees above.
+
+If you need cleanup to run, do it explicitly before exiting. When your own code ends the
+app, finish your work first:
+
+```python
+async def quit(e):
+    await save_my_state()   # finish your own work first
+    sys.exit(0)
+```
+
+On desktop the user can also close the window, which the operating system initiates - your
+code is never asked. To get a chance to run first, intercept the close signal with
+[`Window.prevent_close`][flet.Window.prevent_close] and destroy the window yourself once
+you are done:
+
+```python
+import flet as ft
+
+
+async def main(page: ft.Page):
+    async def handle_window_event(e: ft.WindowEvent):
+        if e.type == ft.WindowEventType.CLOSE:
+            await save_my_state()          # runs before the process goes away
+            await page.window.destroy()
+
+    page.window.prevent_close = True
+    page.window.on_event = handle_window_event
+```
+
+Without `prevent_close`, the window close goes straight through to process termination and
+nothing of yours runs. Keep the handler quick: it holds up the app's exit, and the OS may
+lose patience with an app that takes too long to quit.
+
 ## Configuration options
 
 :::note[Placeholders]
