@@ -128,9 +128,15 @@ function Home() {
                 <p className="hero__subtitle">{siteConfig.customFields.heroSubTitle}</p>
                 <div className={styles.buttons}>
                   <Link
-                    className={styles.indexCtasGetStartedButton}
-                    to={useBaseUrl('https://flet.dev/docs/')}>
-                    Get Started
+                    className={clsx(styles.heroButton, styles.heroButtonPrimary)}
+                    to="https://studio.flet.dev"
+                    target="_self">
+                    Try online
+                  </Link>
+                  <Link
+                    className={clsx(styles.heroButton, styles.heroButtonSecondary)}
+                    to="/docs/">
+                    Read the docs
                   </Link>
                 </div>
               </div>

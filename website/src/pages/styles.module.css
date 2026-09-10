@@ -42,8 +42,9 @@ html[data-theme='dark'] .bkg {
 
 .buttons {
   display: flex;
-  align-items: flex-start;
+  align-items: stretch;
   justify-content: center;
+  gap: 1rem;
   margin-top: 2rem;
 }
 
@@ -90,21 +91,49 @@ html[data-theme='dark'] .feature p {
   width: 50px;
 }
 
-.indexCtasGetStartedButton {
-  background-color: #f81d5b;
-  display: inline-block;
+.heroButton {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
   line-height: 1.2em;
   text-decoration: none !important;
-  transition: background 0.6s;
+  text-align: center;
+  transition: background-color 0.2s, border-color 0.2s;
   border-radius: 8px;
-  border-width: 2px;
-  color: #fff;
+  border: 2px solid transparent;
   font-size: 22px;
   font-weight: 500;
   padding: 14px 25px;
 }
 
-.indexCtasGetStartedButton:hover {
+.heroButtonPrimary {
+  background-color: #f81d5b;
+  color: #fff;
+}
+
+.heroButtonPrimary:hover {
   color: #fff;
   background-color: #db0f49;
+}
+
+.heroButtonSecondary {
+  border-color: #f81d5b;
+  color: var(--ifm-font-color-base);
+}
+
+.heroButtonSecondary:hover {
+  color: var(--ifm-font-color-base);
+  background-color: rgba(248, 29, 91, 0.08);
+  border-color: #db0f49;
+}
+
+.heroButton:focus-visible {
+  outline: 2px solid var(--ifm-font-color-base);
+  outline-offset: 4px;
+}
+
+@media screen and (max-width: 576px) {
+  .buttons {
+    flex-direction: column;
+  }
 }
