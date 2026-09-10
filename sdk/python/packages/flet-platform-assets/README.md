@@ -3,9 +3,9 @@
 [![python](https://img.shields.io/badge/python-%3E%3D3.10-%2334D058)](https://pypi.org/project/flet-platform-assets)
 [![docstring coverage](https://flet.dev/docs/assets/badges/docs-coverage/flet-platform-assets.svg)](https://flet.dev/docs/assets/badges/docs-coverage/flet-platform-assets.svg)
 
-| **[Try Flet online in Flet Studio](https://studio.flet.dev)** |
-| :--- |
-| Start your next Flet app in the browser, then use this package locally to prepare its icons and splash screens. Write your own Python code or get help from the AI agent. |
+> **[Try Flet online in Flet Studio](https://studio.flet.dev)**
+>
+> Start your next Flet app in the browser, then use this package locally to prepare its icons and splash screens. Write your own Python code or get help from the AI agent.
 
 Turns one source image into every app icon and splash screen a platform expects —
 iOS and macOS asset catalogs, Android mipmaps and adaptive layers, a multi-size

@@ -6,9 +6,9 @@
 [![docstring coverage](https://flet.dev/docs/assets/badges/docs-coverage/flet-datatable2.svg)](https://flet.dev/docs/assets/badges/docs-coverage/flet-datatable2.svg)
 [![license](https://img.shields.io/badge/License-Apache_2.0-green.svg)](https://github.com/flet-dev/flet/blob/main/sdk/python/packages/flet-datatable2/LICENSE)
 
-| **[Try flet-datatable2 in Flet Studio](https://studio.flet.dev/gallery/layout/datatable2/example/extensions/datatable2/sortable_and_selectable)** |
-| :--- |
-| Write, run, and share Python apps in your browser. Start from an example, write your own code, or get help from the AI agent. No installation required. |
+> **[Try flet-datatable2 in Flet Studio](https://studio.flet.dev/gallery/layout/datatable2/example/extensions/datatable2/sortable_and_selectable)**
+>
+> Write, run, and share Python apps in your browser. Start from an example, write your own code, or get help from the AI agent. No installation required.
 
 An enhanced data table for [Flet](https://flet.dev) apps that builds on the built-in component by adding sticky headers,
 fixed top rows, and fixed left columns while preserving all core features.
