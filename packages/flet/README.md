@@ -12,8 +12,7 @@
     <em>Build multi-platform apps in Python. No frontend experience required.</em>
 </p>
 
-Flet is a framework that allows building mobile, desktop and web applications
-in Python only without prior experience in frontend development.
+Flet is a Python framework for building web, desktop, and mobile apps without prior experience in frontend development.
 
 ### <img src="https://flet.dev/img/pages/home/single-code-base.svg" width="25" align="top" />&nbsp;&nbsp;&nbsp;Single code base for any device
 
