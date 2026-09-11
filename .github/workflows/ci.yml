@@ -755,6 +755,7 @@ jobs:
             flet-spinkit
             flet-video
             flet-webview
+            flet-webview-all
           )
 
           source "$SCRIPTS/common.sh"
@@ -1037,6 +1038,7 @@ jobs:
             flet_spinkit \
             flet_video \
             flet_webview \
+            flet_webview_all \
             flet_mcp; do
             uv publish --check-url https://pypi.org/simple dist/**/${pkg}-*
           done
