@@ -1,0 +1,12 @@
+[project]
+name = "webview-all-example"
+version = "0.1.0"
+description = "Displays a web page with the cross-platform WebViewAll control."
+requires-python = ">=3.10"
+dependencies = ["flet", "flet-webview-all"]
+
+[tool.flet.gallery]
+author = "Flet contributors"
+categories = ["Display/WebView"]
+title = "WebViewAll"
+controls = ["WebViewAll"]
