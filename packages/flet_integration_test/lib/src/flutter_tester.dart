@@ -3,6 +3,7 @@ import 'dart:async';
 
 import 'package:flutter/foundation.dart';
 import 'package:flutter/gestures.dart';
+import 'package:flutter/semantics.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:integration_test/integration_test.dart';
@@ -16,6 +17,7 @@ class FlutterWidgetTester implements Tester {
   final lock = Lock();
   final Completer _teardown = Completer();
   TestGesture? _gesture;
+  SemanticsHandle? _semanticsHandle;
 
   FlutterWidgetTester(this._tester, this._binding);
 
@@ -62,6 +64,14 @@ class FlutterWidgetTester implements Tester {
 
   @override
   TestFinder findByIcon(IconData icon) => FlutterTestFinder(find.byIcon(icon));
+
+  @override
+  TestFinder findBySemanticsIdentifier(String identifier) {
+    // find.bySemanticsIdentifier reads the semantics tree, which is off
+    // until a handle is held — keep it for the life of the tester.
+    _semanticsHandle ??= _tester.ensureSemantics();
+    return FlutterTestFinder(find.bySemanticsIdentifier(identifier));
+  }
 
   @override
   Future<Uint8List> takeScreenshot(String name) async {
@@ -192,6 +202,8 @@ class FlutterWidgetTester implements Tester {
 
   @override
   void teardown() {
+    _semanticsHandle?.dispose();
+    _semanticsHandle = null;
     if (!_teardown.isCompleted) {
       _teardown.complete();
     }

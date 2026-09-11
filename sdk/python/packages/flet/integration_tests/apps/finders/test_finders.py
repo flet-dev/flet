@@ -53,3 +53,13 @@ class TestFinders:
 
         finder = await flet_app.tester.find_by_key(ft.ScrollKey("scroll_key_1"))
         assert finder.count == 1
+
+    async def test_find_by_semantics_identifier(self, flet_app: ftt.FletTestApp):
+        finder = await flet_app.tester.find_by_semantics_identifier("item-1")
+        assert finder.count == 1
+
+        finder = await flet_app.tester.find_by_semantics_identifier("item-2")
+        assert finder.count == 1
+
+        finder = await flet_app.tester.find_by_semantics_identifier("missing")
+        assert finder.count == 0

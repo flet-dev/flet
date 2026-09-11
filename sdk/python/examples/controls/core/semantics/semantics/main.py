@@ -13,6 +13,7 @@ def main(page: ft.Page):
             content=ft.Column(
                 controls=[
                     ft.Semantics(
+                        identifier="occupation_field",
                         label="Input your occupation",
                         on_did_gain_accessibility_focus=handle_gain_accessibility_focus,
                         on_did_lose_accessibility_focus=handle_lose_accessibility_focus,
