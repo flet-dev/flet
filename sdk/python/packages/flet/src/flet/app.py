@@ -45,6 +45,26 @@ Used for both `main` and `before_main` handlers.
 """
 
 
+def __configure_logging_from_env() -> None:
+    """
+    Applies the log level named by the `FLET_LOG_LEVEL` environment variable.
+
+    `flet run -v` sets this so the framework's own logging reaches the console
+    without the app having to configure it. `basicConfig` does nothing once the
+    root logger has a handler, so an app that configures logging itself keeps
+    the setup it chose.
+    """
+    level = os.getenv("FLET_LOG_LEVEL")
+    if not level:
+        return
+
+    resolved = logging.getLevelName(level.strip().upper())
+    if isinstance(resolved, int):
+        logging.basicConfig(level=resolved)
+    else:
+        logger.warning("Unknown FLET_LOG_LEVEL: %s", level)
+
+
 def run(
     main: AppCallable,
     before_main: Optional[AppCallable] = None,
@@ -83,6 +103,8 @@ def run(
         A FastAPI ASGI app when `export_asgi_app=True`.
             Otherwise, runs the app and returns `None`.
     """
+    __configure_logging_from_env()
+
     if is_pyodide():
         __run_pyodide(main=main, before_main=before_main)
         return

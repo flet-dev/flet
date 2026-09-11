@@ -217,6 +217,15 @@ Set to `true` to start app with the main window hidden.
 
 Defaults to `False`.
 
+### `FLET_LOG_LEVEL`
+
+Log level to apply when the app starts, e.g. `"info"` or `"debug"`. See
+[Logging](../cookbook/logging.md).
+
+[`flet run`](../cli/flet-run.md) sets it for the app it starts: `-v` for `"info"`,
+`-vv` for `"debug"`. An app that configures logging itself keeps the setup it chose,
+so this only takes effect when the app leaves logging alone.
+
 ### `FLET_MACOS_INSTALLER_IDENTITY`
 
 Installer certificate ("3rd Party Mac Developer Installer" /
@@ -314,6 +323,16 @@ Custom path for upload handler.
 
 Defaults to `"/upload"`.
 
+### `FLET_VIEW_PATH`
+
+Path to a directory holding a Flet desktop client to use instead of the one Flet
+downloads: `Flet.app` on macOS, `flet.exe` on Windows, `flet` on Linux.
+
+[`flet run`](../cli/flet-run.md) looks for a client from a previous
+[`flet build`](../cli/flet-build.md) in `build/<platform>` first, falls back to this
+variable, and uses the cached client last. [`flet pack`](../cli/flet-pack.md) reads it
+to choose the client it bundles.
+
 ### `FLET_WEB_APP_PATH`
 
 A URL path after domain name to host web app under, e.g. `"/apps/myapp"`.
@@ -323,6 +342,18 @@ Defaults to `"/"` - host app in the root.
 ### `FLET_WEB_NO_CDN`
 
 Set to `true` to avoid loading CanvasKit, Pyodide, and fonts from CDNs.
+
+### `FLET_WEB_PATH`
+
+Path to a directory holding a Flet web client to serve instead of the one bundled with
+the `flet-web` package. Read by [`flet run --web`](../cli/flet-run.md),
+[`flet publish`](../cli/flet-publish.md), and an app started with
+`ft.run(export_asgi_app=True)`.
+
+Point it at a [`flet build web`](../cli/flet-build.md) output to serve a client that
+includes your app's extensions. Extension Dart code is compiled into the client at build
+time, so the bundled client — built when Flet is released — renders a third-party control
+as `Unknown control: <Type>` no matter how the app was built.
 
 ### `FLET_WEB_RENDERER`
 
