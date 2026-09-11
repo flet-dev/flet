@@ -5,32 +5,31 @@ slug: roadmap
 
 # Roadmap
 
-## 2026
+## 2026-2027
 
-### Flet 1.0
+### Flet Framework
 
-* **Long-term maintainability:** Controls are implemented using Python **dataclasses**, while the Flutter client adopts the built-in state management approach, eliminating the need for Redux. Ensures symmetric data structures in Python and Dart.
-* **Enhanced Developer Experience (DX):** Control documentation is generated directly from source code, preventing discrepancies between docs, comments, and examples. Provides accurate IDE assistance.
-* **Optimized Communication:** A binary protocol between Python and Dart eliminates unnecessary base64-to-bytes conversions, reducing CPU overhead and improving memory efficiency.
+* Flutter 3.47 (Impeller for desktop, material_ui, cupertino_ui)
+* UI libraries: [shadcn_ui](https://pub.dev/packages/shadcn_ui), [fluent_ui](https://pub.dev/packages/fluent_ui), [macos_ui](https://pub.dev/packages/macos_ui),
+  [yaru](https://pub.dev/packages/yaru)
+* Bluetooth Low Energy (BLE), Near Field Communication (NFC), sensors examples.
+* Flet CLI for Studio (cloud builds, stores management, Fletbase, etc.)
+* Documentation improvements.
 
-### Website
+### Flet Studio
 
-* **Ecosystem:** Community gallery for apps, extensions and educational materials (videos, tutorials, talks, etc.).
-* FletPad for playground and sharing Flet apps.
+* MCP for Flet Studio.
+* Integration with GitHub.
+* Flet Studio for desktop.
+* Gallery improvements.
 
-### Testing
+### Fletbase
 
-* End-to-end UI tests for Flet apps.
-* Test suite for binary Python packages.
+Backend service for Flet apps:
 
-### AI
-
-* MCP server for Flet.
-
-### Community
-
-* Attending [PyCon US 2026](https://us.pycon.org/2026/).
-
-### Packaging
-
-* Flet Packaging and Publishing Service (FPS).
+* Packaging for web, desktop and mobile platforms.
+* Publishing to App Store, Google Play and Microsoft Store.
+* Hosting for Flet static web apps.
+* Database.
+* Files.
+* Authentication.
