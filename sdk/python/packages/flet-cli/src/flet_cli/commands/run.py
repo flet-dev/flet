@@ -1,4 +1,5 @@
 import argparse
+import logging
 import os
 import platform
 import signal
@@ -206,6 +207,11 @@ class Command(BaseCommand):
         Args:
             options: Parsed command options produced by :meth:`add_arguments`.
         """
+
+        if options.verbose > 0:
+            logging.basicConfig(
+                level=logging.DEBUG if options.verbose > 1 else logging.INFO
+            )
 
         from flet.utils.pip import (
             ensure_flet_desktop_package_installed,

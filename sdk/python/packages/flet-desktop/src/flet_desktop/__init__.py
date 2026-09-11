@@ -399,6 +399,28 @@ def ensure_client_cached():
     return cache_dir
 
 
+def find_macos_app_bundle(directory) -> Path | None:
+    """
+    Returns the first `.app` bundle directly inside `directory`.
+
+    Args:
+        directory: Directory to look in. It need not exist.
+
+    Returns:
+        Path to the bundle, or `None` when the directory is missing or holds
+            no `.app` — which lets a caller fall through to the next client
+            source instead of raising from a directory listing.
+    """
+    path = Path(directory)
+    if not path.is_dir():
+        return None
+
+    for name in sorted(os.listdir(path)):
+        if name.endswith(".app"):
+            return path.joinpath(name)
+    return None
+
+
 def __linux_identity_args(args: list) -> tuple:
     """
     Give the client window a per-app identity on Linux, without touching it.
@@ -489,9 +511,7 @@ async def open_flet_view_async(page_url, assets_dir, hidden):
         page_url, assets_dir, hidden
     )
     args, extra = __linux_identity_args(args)
-    p = await asyncio.create_subprocess_exec(
-        args[0], *args[1:], env=flet_env, **extra
-    )
+    p = await asyncio.create_subprocess_exec(args[0], *args[1:], env=flet_env, **extra)
     __apply_taskbar_props(p.pid)
     return p, pid_file
 
@@ -607,33 +627,33 @@ def __locate_and_unpack_flet_view(page_url, assets_dir, hidden):
         args = [flet_path, page_url, pid_file]
 
     elif is_macos():
-        app_path = None
         # 1. Try loading Flet client built with the latest run of `flet build`
         build_macos = os.path.join(os.getcwd(), "build", "macos")
-        if os.path.exists(build_macos):
-            for f in os.listdir(build_macos):
-                if f.endswith(".app"):
-                    app_path = os.path.join(build_macos, f)
+        app_path = find_macos_app_bundle(build_macos)
+        if app_path:
+            logger.info(f"Flet.app found in {build_macos}")
 
         # 2. Check FLET_VIEW_PATH (developer mode)
         if not app_path:
             flet_view_path = os.environ.get("FLET_VIEW_PATH")
             if flet_view_path:
-                logger.info(f"Flet.app is set via FLET_VIEW_PATH: {flet_view_path}")
-                temp_flet_dir = Path(flet_view_path)
-            else:
-                # 3. Use cached or downloaded client
-                temp_flet_dir = ensure_client_cached()
+                app_path = find_macos_app_bundle(flet_view_path)
+                if app_path:
+                    logger.info(f"Flet.app is set via FLET_VIEW_PATH: {flet_view_path}")
+                else:
+                    logger.warning(
+                        f"FLET_VIEW_PATH set to {flet_view_path} "
+                        f"but no .app bundle found there"
+                    )
 
-            app_name = None
-            for f in os.listdir(temp_flet_dir):
-                if f.endswith(".app"):
-                    app_name = f
-            if app_name is None:
+        # 3. Use cached or downloaded client
+        if not app_path:
+            temp_flet_dir = ensure_client_cached()
+            app_path = find_macos_app_bundle(temp_flet_dir)
+            if not app_path:
                 raise FileNotFoundError(
                     f"Application bundle not found in {temp_flet_dir}"
                 )
-            app_path = temp_flet_dir.joinpath(app_name)
 
         logger.info(f"page_url: {page_url}")
         logger.info(f"pid_file: {pid_file}")
