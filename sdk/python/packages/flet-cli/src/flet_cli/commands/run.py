@@ -462,6 +462,13 @@ class Handler(FileSystemEventHandler):
             p_env["FLET_SERVER_UDS_PATH"] = self.uds_path
         if self.assets_dir is not None:
             p_env["FLET_ASSETS_DIR"] = self.assets_dir
+        # The app runs with its cwd set to the storage directory below, so a
+        # relative path the user typed in their shell has to be resolved here
+        # while that meaning still holds.
+        web_path = p_env.get("FLET_WEB_PATH")
+        if web_path and not Path(web_path).is_absolute():
+            p_env["FLET_WEB_PATH"] = str(Path(web_path).resolve())
+
         p_env["FLET_DISPLAY_URL_PREFIX"] = self.page_url_prefix
         if self.verbose > 0:
             p_env["FLET_LOG_LEVEL"] = "debug" if self.verbose > 1 else "info"
