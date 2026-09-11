@@ -217,6 +217,15 @@ Set to `true` to start app with the main window hidden.
 
 Defaults to `False`.
 
+### `FLET_LOG_LEVEL`
+
+Log level to apply when the app starts, e.g. `"info"` or `"debug"`. See
+[Logging](../cookbook/logging.md).
+
+[`flet run`](../cli/flet-run.md) sets it for the app it starts: `-v` for `"info"`,
+`-vv` for `"debug"`. An app that configures logging itself keeps the setup it chose,
+so this only takes effect when the app leaves logging alone.
+
 ### `FLET_MACOS_INSTALLER_IDENTITY`
 
 Installer certificate ("3rd Party Mac Developer Installer" /

@@ -350,6 +350,7 @@ class Command(BaseCommand):
             flet_app_data_dir=str(flet_app_data_dir),
             flet_app_cache_dir=str(flet_app_cache_dir),
             flet_app_temp_dir=str(flet_app_temp_dir),
+            verbose=options.verbose,
         )
 
         my_observer = Observer()
@@ -401,6 +402,7 @@ class Handler(FileSystemEventHandler):
         flet_app_data_dir,
         flet_app_cache_dir,
         flet_app_temp_dir,
+        verbose,
     ) -> None:
         super().__init__()
         self.args = args
@@ -425,6 +427,7 @@ class Handler(FileSystemEventHandler):
         self.flet_app_data_dir = flet_app_data_dir
         self.flet_app_cache_dir = flet_app_cache_dir
         self.flet_app_temp_dir = flet_app_temp_dir
+        self.verbose = verbose
         self.terminate = threading.Event()
         self.start_process()
 
@@ -454,6 +457,8 @@ class Handler(FileSystemEventHandler):
         if self.assets_dir is not None:
             p_env["FLET_ASSETS_DIR"] = self.assets_dir
         p_env["FLET_DISPLAY_URL_PREFIX"] = self.page_url_prefix
+        if self.verbose > 0:
+            p_env["FLET_LOG_LEVEL"] = "debug" if self.verbose > 1 else "info"
 
         p_env["FLET_APP_STORAGE_DATA"] = self.flet_app_data_dir
         p_env["FLET_APP_STORAGE_CACHE"] = self.flet_app_cache_dir
