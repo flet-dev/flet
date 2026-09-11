@@ -30,6 +30,19 @@ class Semantics(Control):
     A textual description of the :attr:`content`.
     """
 
+    identifier: Optional[str] = None
+    """
+    A stable identifier for this node in the native accessibility hierarchy.
+
+    Unlike :attr:`label`, this value is not announced to users. Native testing
+    tools use it as Android ``resource-id``, iOS ``accessibilityIdentifier``,
+    and the web ``flt-semantics-identifier`` DOM attribute. Widget tests can
+    match it with :meth:`flet.testing.Tester.find_by_semantics_identifier`.
+
+    Setting this property forces a dedicated semantics node, equivalent to
+    setting :attr:`container` to ``True``.
+    """
+
     expanded: Optional[bool] = None
     """
     Whether this subtree represents something that can be in an "expanded" or \

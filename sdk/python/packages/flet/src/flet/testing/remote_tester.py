@@ -211,6 +211,12 @@ class RemoteTester:
         finder = await self._invoke("find_by_icon", {"icon": _serialize_icon(icon)})
         return Finder(**finder)
 
+    async def find_by_semantics_identifier(self, identifier: str) -> Finder:
+        finder = await self._invoke(
+            "find_by_semantics_identifier", {"identifier": identifier}
+        )
+        return Finder(**finder)
+
     async def take_screenshot(self, name: str) -> bytes:
         data = await self._invoke("take_screenshot", {"name": name})
         return base64.b64decode(data)
