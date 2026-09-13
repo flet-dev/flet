@@ -97,7 +97,7 @@ def main(page: ft.Page):
     page.on_login = on_login
     page.add(ft.Button("Login with GitHub", on_click=login_click))
 
-ft.run(main, port=8550, view=ft.WEB_BROWSER)
+ft.run(main, port=8550, view=ft.AppView.WEB_BROWSER)
 ```
 
 :::danger[Caution]
@@ -148,7 +148,7 @@ page.login(
 * `fetch_user` (bool) - whether to fetch user details into `page.auth.user`. Default is `True`.
 * `fetch_groups` (bool) - whether to fetch user groups into `page.auth.user.groups`. Default is `False`.
 * `scope` - a list of scopes to request.
-* `saved_token` - a JSON snapshot of `page.auth.token` to restore authorization from. Token can be serialized with `page.auth.token.to_json()`, encrypted and saved in [`page.client_storage`](../cookbook/client-storage.md). See below.
+* `saved_token` - a JSON snapshot of `page.auth.token` to restore authorization from. Token can be serialized with `page.auth.token.to_json()`, encrypted and saved in [client storage](../cookbook/client-storage.md). See below.
 * `on_open_authorization_url` - a callback to open a browser with authorization URL. See below.
 * `complete_page_html` - a custom HTML contents of "You've been successfully authenticated. Close this page now" page.
 * `redirect_to_page` (bool) - used with Flet web app only when authorization page is opened in the same browser tab.
@@ -326,14 +326,16 @@ $ export MY_APP_SECRET_KEY="<secret>"
 Now, encrypted value can be stored in a client storage:
 
 ```python
-await page.shared_preferences.set("myapp.auth_token", ejt)
+prefs = ft.SharedPreferences()
+
+await prefs.set("myapp.auth_token", ejt)
 ```
 
 Next time a user opens the app you can read encrypted token from a client storage and, if it exists,
 decrypt it and use in `page.login()` method:
 
 ```python
-ejt = await page.shared_preferences.get("myapp.auth_token")
+ejt = await prefs.get("myapp.auth_token")
 if ejt:
     jt = decrypt(ejt, secret_key)
     page.login(provider, saved_token=jt)
@@ -349,7 +351,7 @@ You can remove saved token in logout method, for example:
 
 ```python
 async def logout_button_click(e):
-    await page.shared_preferences.remove(AUTH_TOKEN_KEY)
+    await prefs.remove(AUTH_TOKEN_KEY)
     page.logout()
 ```
 

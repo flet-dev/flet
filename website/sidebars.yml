@@ -73,6 +73,7 @@ docs:
   Stay up to date:
     _index: updates/index.md
     Release notes: updates/release-notes.md
+    Migrating from 0.28 to 1.0: updates/migrate-to-1-0.md
     Breaking changes and deprecations:
       _index: updates/breaking-changes/index.md
       v1.0.0:

@@ -22,6 +22,45 @@ ft.run(main)
 If your event handler already calls `.update()` explicitly (e.g. code written for Flet 0.x), the automatic update is skipped to avoid a redundant double update.
 :::
 
+## Updating part-way through a handler
+
+Because the update is sent when the handler finishes, a handler that loops shows
+nothing until it returns. To push an update mid-handler, make it a generator - each
+`yield` flushes the pending update and lets the event loop run:
+
+```python
+import flet as ft
+
+def main(page: ft.Page):
+    progress = ft.ProgressBar(value=0)
+
+    def process(e):
+        for i in range(10):
+            do_chunk(i)
+            progress.value = (i + 1) / 10
+            yield  # the bar advances here
+
+    page.add(progress, ft.Button(content="Process", on_click=process))
+
+ft.run(main)
+```
+
+Async handlers can yield too, and `await` has the same effect - anything the
+handler awaits gives the loop an opportunity to send queued updates:
+
+```python
+async def process(e):
+    for i in range(10):
+        await asyncio.to_thread(do_chunk, i)
+        progress.value = (i + 1) / 10
+```
+
+:::note[Keep each chunk short]
+A generator handler still runs on the event loop, so the UI is blocked between
+yields. If a chunk takes long enough to notice, move it off the loop - see
+[Async apps](async-apps.md#threading).
+:::
+
 ## Disabling auto-update
 
 You can disable auto-update for fine-grained control over when updates are sent to the client. Use `ft.context.disable_auto_update()` and `ft.context.enable_auto_update()` to toggle the behavior.
