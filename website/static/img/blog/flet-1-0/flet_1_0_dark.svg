@@ -25,22 +25,6 @@
       </cc:Work>
     </rdf:RDF>
   </metadata>
-  <path
-     d="m 1499.9096,115 h 310 v 60 h -120 v 220 h -70 V 175 h -120 z"
-     id="path4-9"
-     style="fill:#f2f2f2;fill-opacity:1;stroke:#f2f2f2;stroke-width:10.2275;stroke-linecap:round;stroke-linejoin:round;stroke-dasharray:none;stroke-opacity:1" />
-  <path
-     d="m 1159.9096,205 c 0,-50 40,-90 90,-90 h 220 v 60 h -200 c -40,0 -50,20 -50,50 h 250 v 60 h -250 c 0,30 10,50 50,50 h 200 v 60 h -220 c -50,0 -90,-40 -90,-90 z"
-     id="path3-1"
-     style="fill:#f2f2f2;fill-opacity:1;stroke:#f2f2f2;stroke-width:10.2275;stroke-linecap:round;stroke-linejoin:round;stroke-dasharray:none;stroke-opacity:1" />
-  <path
-     d="m 849.90964,115 h 60 v 170 c 0,30 10,50 50,50 49.99996,0 99.99996,0 169.99996,0 0,20 20,50 35,60 H 939.90964 c -50,0 -90,-40 -90,-90 z"
-     id="path2-7"
-     style="fill:#f2f2f2;fill-opacity:1;stroke:#f2f2f2;stroke-width:10.2275;stroke-linecap:round;stroke-linejoin:round;stroke-dasharray:none;stroke-opacity:1" />
-  <path
-     d="m 599.90964,115 h 220 v 58.43391 L 619.6439,172.92789 C 579.90964,172.82749 569.90964,195 569.90964,225 h 250 v 60 h -250 v 110 h -60 V 205 c 0,-50 40,-90 90,-90 z"
-     id="path1-0-5"
-     style="fill:#f2f2f2;fill-opacity:1;stroke:#f2f2f2;stroke-width:10.2275;stroke-linecap:round;stroke-linejoin:round;stroke-dasharray:none;stroke-opacity:1" />
   <g
      id="g18-6-8"
      transform="matrix(1.2685136,0,0,1.2685136,-42.903266,771.8591)">
@@ -72,4 +56,25 @@
      d="m 2224.9096,115 h 130 c 50,0 90,40 90,90 v 100 c 0,50 -40,90 -90,90 h -130 c -50,0 -90,-40 -90,-90 V 205 c 0,-50 40,-90 90,-90 z m 0,40 c -25,0 -50,25 -50,50 v 100 c 0,25 25,50 50,50 h 130 c 25,0 50,-25 50,-50 V 205 c 0,-25 -25,-50 -50,-50 z"
      id="path-o-4-7"
      style="fill:#b3b3b3;fill-opacity:1;stroke:#b3b3b3;stroke-width:10.2275;stroke-linecap:round;stroke-linejoin:round;stroke-dasharray:none;stroke-opacity:1" />
+  <g
+     id="g5-3-3"
+     transform="matrix(1.0031894,0,0,1.0031894,134.27372,53.9156)"
+     style="fill:#f2f2f2;stroke:#f2f2f2">
+    <path
+       d="m 1390,60 h 310 v 51 h -125.25 v 229 h -59.5 V 111 H 1390 Z"
+       id="path4-9-5-0"
+       style="fill:#f2f2f2;fill-opacity:1;stroke:#f2f2f2;stroke-width:8.69338;stroke-linecap:round;stroke-linejoin:round;stroke-dasharray:none;stroke-opacity:1" />
+    <path
+       d="m 1140,60 h 220 v 51 h -200 c -40,0 -59,19 -59,59 v 4.5 h 259 v 51 h -259 v 4.5 c 0,40 19,59 59,59 h 200 v 51 h -220 c -50,0 -90,-40 -90,-90 V 150 c 0,-50 40,-90 90,-90 z"
+       id="path3-9-4"
+       style="fill:#f2f2f2;fill-opacity:1;stroke:#f2f2f2;stroke-width:8.69338;stroke-linecap:round;stroke-linejoin:round;stroke-dasharray:none;stroke-opacity:1" />
+    <path
+       d="m 740,60 h 51 v 170 c 0,39.5 19.5,59 59,59 h 170 c 3.5,18.5 20,41.5 35,51 H 830 c -50,0 -90,-40 -90,-90 z"
+       id="path2-7-3-8"
+       style="fill:#f2f2f2;fill-opacity:1;stroke:#f2f2f2;stroke-width:8.69338;stroke-linecap:round;stroke-linejoin:round;stroke-dasharray:none;stroke-opacity:1" />
+    <path
+       d="m 490,60 h 220 v 51 L 510,110.5192 C 470,110.4246 451,130 451,170 v 4.5 h 259 v 51 H 451 V 340.38463 H 400 V 150 c 0,-50 40,-90 90,-90 z"
+       id="path1-0-03-7"
+       style="fill:#f2f2f2;fill-opacity:1;stroke:#f2f2f2;stroke-width:8.69338;stroke-linecap:round;stroke-linejoin:round;stroke-dasharray:none;stroke-opacity:1" />
+  </g>
 </svg>
