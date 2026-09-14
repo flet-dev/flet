@@ -47,36 +47,67 @@ from pathlib import Path
 from fontTools.ttLib import TTFont
 
 REPO = Path(__file__).resolve().parents[2]
-OUT = REPO / "website/static/fonts"
+# The fonts live under `src/` so webpack fingerprints them into
+# `/assets/fonts/`; anything in `static/` is copied verbatim and would be a
+# second, unreferenced 430 KB in the build output. The licences do belong in
+# `static/`, because attribution should be served, not just committed.
+OUT = REPO / "website/src/fonts"
+LICENCES = REPO / "website/static/fonts"
 
 # Layout tables the gallery cannot reach: it positions nothing and substitutes
 # nothing, it just asks for one codepoint at a time.
 DROP_TABLES = ("GSUB", "GPOS")
 
 
+def sdk_version(root: Path) -> str:
+    """Return the framework version of the Flutter SDK at `root`."""
+    out = subprocess.run(
+        [str(root / "bin/flutter"), "--version", "--machine"],
+        capture_output=True,
+        text=True,
+        check=True,
+    ).stdout
+    return json.loads(out).get("frameworkVersion", "")
+
+
 def flutter_root() -> Path:
-    """Return the root of the Flutter SDK on PATH, which `.fvmrc` should pin."""
-    if env := os.environ.get("FLUTTER_ROOT"):
-        return Path(env)
+    """Return the root of the Flutter SDK pinned by `.fvmrc`.
+
+    A mismatch is fatal rather than a warning. The codepoint map is downloaded
+    from the pinned tag while the font comes from whatever SDK is here, and
+    `--verify` only checks that the map's codepoints exist in the font's cmap -
+    it cannot see that a codepoint now points at a different drawing. Shipping
+    those two from different Flutter versions is exactly the silent skew this
+    generator exists to prevent.
+    """
+    pinned = json.loads((REPO / ".fvmrc").read_text(encoding="utf-8"))[
+        "flutter"
+    ].strip()
+
     try:
-        out = subprocess.run(
-            ["flutter", "--version", "--machine"],
-            capture_output=True,
-            text=True,
-            check=True,
-        ).stdout
-    except (OSError, subprocess.CalledProcessError) as e:
+        if env := os.environ.get("FLUTTER_ROOT"):
+            root, found = Path(env), sdk_version(Path(env))
+        else:
+            out = subprocess.run(
+                ["flutter", "--version", "--machine"],
+                capture_output=True,
+                text=True,
+                check=True,
+            ).stdout
+            info = json.loads(out)
+            root, found = Path(info["flutterRoot"]), info.get("frameworkVersion", "")
+    except (OSError, subprocess.CalledProcessError, json.JSONDecodeError) as e:
         raise SystemExit(
             "cannot locate a Flutter SDK: set FLUTTER_ROOT or put `flutter` on PATH"
         ) from e
-    info = json.loads(out)
-    pinned = json.loads((REPO / ".fvmrc").read_text(encoding="utf-8"))["flutter"].strip()
-    if info.get("frameworkVersion") != pinned:
-        print(
-            f"warning: Flutter on PATH is {info.get('frameworkVersion')}, "
-            f".fvmrc pins {pinned} - the glyphs may not match the shipped client"
+
+    if found != pinned:
+        raise SystemExit(
+            f"Flutter SDK at {root} is {found or 'unknown'}, but .fvmrc pins {pinned}. "
+            f"The glyphs would not match the client this repo ships. "
+            f"Switch to {pinned} (e.g. `fvm use {pinned}`) or point FLUTTER_ROOT at it."
         )
-    return Path(info["flutterRoot"])
+    return root
 
 
 def pub_cache() -> Path:
@@ -137,7 +168,9 @@ def check(font_path: Path, name: str) -> int:
     covered = set(font.getBestCmap())
     if missing := codepoints(name) - covered:
         sample = ", ".join(hex(c) for c in sorted(missing)[:5])
-        print(f"stale: {font_path.name} is missing {len(missing)} codepoints ({sample})")
+        print(
+            f"stale: {font_path.name} is missing {len(missing)} codepoints ({sample})"
+        )
         failures += 1
 
     if not failures:
@@ -194,7 +227,10 @@ def main() -> int:
         # pre-commit hook rewrites a licence that ends without a newline, which
         # would show up as a spurious diff every time this script is re-run.
         licence = (source_dir() / licence_rel).read_text(encoding="utf-8")
-        (OUT / licence_out).write_text(licence.rstrip("\n") + "\n", encoding="utf-8")
+        LICENCES.mkdir(parents=True, exist_ok=True)
+        (LICENCES / licence_out).write_text(
+            licence.rstrip("\n") + "\n", encoding="utf-8"
+        )
         print(
             f"✅ {out_name}: {source.stat().st_size:,} -> {out_path.stat().st_size:,} "
             f"bytes ({len(codepoints(name)):,} codepoints)"

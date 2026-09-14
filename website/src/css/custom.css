@@ -648,7 +648,7 @@ html[data-theme='dark'] .docusaurus-highlight-code-line {
   font-style: normal;
   font-weight: 400;
   font-display: block;
-  src: url("/fonts/MaterialIcons-Regular.woff2") format("woff2");
+  src: url("../fonts/MaterialIcons-Regular.woff2") format("woff2");
 }
 
 @font-face {
@@ -656,5 +656,5 @@ html[data-theme='dark'] .docusaurus-highlight-code-line {
   font-style: normal;
   font-weight: 400;
   font-display: block;
-  src: url("/fonts/CupertinoIcons.woff2") format("woff2");
+  src: url("../fonts/CupertinoIcons.woff2") format("woff2");
 }

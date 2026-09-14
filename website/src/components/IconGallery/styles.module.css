@@ -101,19 +101,12 @@
   overflow: hidden;
   transition: background 0.15s, border-color 0.15s;
 
-  /* The grid holds every icon in the set at once, so tiles that are scrolled
-     out of view skip layout and paint. `contain-intrinsic-size` is what keeps
-     the scrollbar stable while they do - without it each skipped tile
-     collapses to zero height and the page jumps as you scroll. */
+  /* The window grows as the reader scrolls, so tiles left behind above the
+     viewport skip layout and paint. `contain-intrinsic-size` keeps the
+     scrollbar stable while they do - without it each skipped tile collapses to
+     zero height and the page jumps. */
   content-visibility: auto;
   contain-intrinsic-size: auto 92px;
-}
-
-/* Filtering sets the `hidden` attribute on tiles. The UA stylesheet backs that
-   with `display: none`, but the author-level `display: flex` above outranks it,
-   so it has to be restated here or filtering silently does nothing. */
-.tile[hidden] {
-  display: none;
 }
 
 .tile:hover {
@@ -192,4 +185,36 @@
 
 .toastError {
   background: var(--ifm-color-warning-dark);
+}
+
+.empty {
+  margin: 1rem 0;
+  color: var(--ifm-color-emphasis-600);
+}
+
+/* Both the "load more" trigger and the honest statement of what is on screen -
+   an infinite list that silently stops at 300 reads as "that is all there is". */
+.sentinel {
+  display: block;
+  width: 100%;
+  margin-top: 0.5rem;
+  padding: 1.25rem 0;
+  text-align: center;
+  font-size: 0.8125rem;
+  font-family: inherit;
+  color: var(--ifm-color-emphasis-600);
+  background: none;
+  border: 1px solid transparent;
+  border-radius: var(--ifm-global-radius);
+  cursor: pointer;
+}
+
+.sentinel:hover {
+  color: var(--ifm-color-primary);
+  border-color: var(--ifm-color-emphasis-300);
+}
+
+.sentinel:focus-visible {
+  outline: 2px solid var(--ifm-color-primary);
+  outline-offset: 2px;
 }
