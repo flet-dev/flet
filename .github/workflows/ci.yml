@@ -1,29 +1,31 @@
 name: Build & Publish
 
 on:
-  push:
-    branches:
-      - '**'
-    tags:
-      - 'v[0-9]+.[0-9]+.[0-9]+'
-      - 'v[0-9]+.[0-9]+.[0-9]+.dev[0-9]+'
-    paths:
-      - '.github/workflows/ci.yml'
-      - '.github/scripts/**'
-      - 'client/**'
-      - 'sdk/python/packages/**'
-      - 'sdk/python/templates/**'
-      - 'packages/flet/**'
-      - '.fvmrc'
-  pull_request:
-    paths:
-      - '.github/workflows/ci.yml'
-      - '.github/scripts/**'
-      - 'client/**'
-      - 'sdk/python/packages/**'
-      - 'sdk/python/templates/**'
-      - 'packages/flet/**'
-      - '.fvmrc'
+# TEMP(webview): automatic triggers disabled on this branch while iterating on
+# Windows/Linux WebView VM testing. `workflow_dispatch` still works. RESTORE BEFORE MERGE.
+#   push:
+#     branches:
+#       - '**'
+#     tags:
+#       - 'v[0-9]+.[0-9]+.[0-9]+'
+#       - 'v[0-9]+.[0-9]+.[0-9]+.dev[0-9]+'
+#     paths:
+#       - '.github/workflows/ci.yml'
+#       - '.github/scripts/**'
+#       - 'client/**'
+#       - 'sdk/python/packages/**'
+#       - 'sdk/python/templates/**'
+#       - 'packages/flet/**'
+#       - '.fvmrc'
+#   pull_request:
+#     paths:
+#       - '.github/workflows/ci.yml'
+#       - '.github/scripts/**'
+#       - 'client/**'
+#       - 'sdk/python/packages/**'
+#       - 'sdk/python/templates/**'
+#       - 'packages/flet/**'
+#       - '.fvmrc'
   workflow_dispatch:
 
 concurrency:

@@ -1,14 +1,16 @@
 name: macOS Integration Tests
 
 on:
-  pull_request:
-    paths:
-      - '.github/workflows/macos-integration-tests.yml'
-      - 'sdk/python/packages/flet/src/**'
-      - 'sdk/python/packages/flet/integration_tests/**'
-      - 'packages/flet/**'
-      - 'client/**'
-      - '.fvmrc'
+# TEMP(webview): automatic triggers disabled on this branch while iterating on
+# Windows/Linux WebView VM testing. `workflow_dispatch` still works. RESTORE BEFORE MERGE.
+#   pull_request:
+#     paths:
+#       - '.github/workflows/macos-integration-tests.yml'
+#       - 'sdk/python/packages/flet/src/**'
+#       - 'sdk/python/packages/flet/integration_tests/**'
+#       - 'packages/flet/**'
+#       - 'client/**'
+#       - '.fvmrc'
   workflow_dispatch:
 
 # Ensure only one run per ref (pull request or manual dispatch), cancel older ones

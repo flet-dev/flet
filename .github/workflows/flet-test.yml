@@ -7,17 +7,19 @@ name: Flet Test (on-device)
 # (compile only), this actually runs the app on the device/emulator/simulator.
 
 on:
-  pull_request:
-    paths:
-      - '.github/workflows/flet-test.yml'
-      - '.fvmrc'
-      - 'packages/flet/**'
-      - 'packages/flet_integration_test/**'
-      - 'sdk/python/packages/flet/**'
-      - 'sdk/python/packages/flet-cli/**'
-      - 'sdk/python/packages/flet-desktop/**'
-      - 'sdk/python/templates/**'
-      - 'sdk/python/examples/apps/flet_test_counter/**'
+# TEMP(webview): automatic triggers disabled on this branch while iterating on
+# Windows/Linux WebView VM testing. `workflow_dispatch` still works. RESTORE BEFORE MERGE.
+#   pull_request:
+#     paths:
+#       - '.github/workflows/flet-test.yml'
+#       - '.fvmrc'
+#       - 'packages/flet/**'
+#       - 'packages/flet_integration_test/**'
+#       - 'sdk/python/packages/flet/**'
+#       - 'sdk/python/packages/flet-cli/**'
+#       - 'sdk/python/packages/flet-desktop/**'
+#       - 'sdk/python/templates/**'
+#       - 'sdk/python/examples/apps/flet_test_counter/**'
   workflow_dispatch:
 
 # Ensure only one run per ref (pull request or manual dispatch), cancel older ones
