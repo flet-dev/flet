@@ -57,9 +57,12 @@ def patch_index_html(
         base_url = base_href.strip("/").strip()
         base_url = "/" if base_url == "" else f"/{base_url}/"
 
-    index = index.replace(
-        '<base href="/">',
-        f'<base href="{base_url}">',
+    index = re.sub(
+        r"(<base\b[^>]*\bhref\s*=\s*)([\"'])[^\"']*\2",
+        lambda match: f"{match[1]}{match[2]}{base_url}{match[2]}",
+        index,
+        count=1,
+        flags=re.IGNORECASE,
     )
 
     app_config = []

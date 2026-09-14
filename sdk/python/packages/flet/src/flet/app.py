@@ -178,6 +178,8 @@ async def run_async(
         no_cdn: Whether to avoid loading CanvasKit, Pyodide, and fonts from CDN.
     """
 
+    __configure_logging_from_env()
+
     if is_pyodide():
         __run_pyodide(main=main, before_main=before_main)
         return
