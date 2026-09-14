@@ -31,15 +31,35 @@ ft.run(main)
 
 
 def main(page: ft.Page):
+    async def handle_hide_keyboard_click(e: ft.Event[ft.IconButton]):
+        # moving focus off the code editor dismisses the on-screen keyboard
+        await hide_keyboard_button.focus()
+
+    hide_keyboard_button = ft.IconButton(
+        icon=ft.Icons.KEYBOARD_HIDE,
+        tooltip="Hide keyboard",
+        on_click=handle_hide_keyboard_click,
+        visible=page.platform.is_mobile(),
+    )
+
     page.add(
         ft.SafeArea(
             expand=True,
-            content=fce.CodeEditor(
-                language=fce.CodeLanguage.PYTHON,
-                code_theme=fce.CodeTheme.ATOM_ONE_LIGHT,
-                value=CODE,
+            content=ft.Column(
                 expand=True,
-                on_change=lambda e: print("Changed:", e.data),
+                controls=[
+                    ft.Row(
+                        alignment=ft.MainAxisAlignment.END,
+                        controls=[hide_keyboard_button],
+                    ),
+                    fce.CodeEditor(
+                        language=fce.CodeLanguage.PYTHON,
+                        code_theme=fce.CodeTheme.ATOM_ONE_LIGHT,
+                        value=CODE,
+                        expand=True,
+                        on_change=lambda e: print("Changed:", e.data),
+                    ),
+                ],
             ),
         )
     )
