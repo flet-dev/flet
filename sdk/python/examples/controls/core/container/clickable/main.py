@@ -11,6 +11,7 @@ def main(page: ft.Page):
         ft.SafeArea(
             content=ft.Row(
                 alignment=ft.MainAxisAlignment.CENTER,
+                scroll=ft.ScrollMode.AUTO,
                 controls=[
                     ft.Container(
                         margin=10,
