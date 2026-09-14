@@ -192,7 +192,11 @@ export default function Home() {
               <div><h3>Choose how you build</h3><p>Change controls directly with imperative code, or use declarative components that update when your state changes.</p></div>
             </div>
             <Link className={styles.textLink} to="/docs/cookbook/declarative-vs-imperative">Get to know both approaches <Arrow /></Link>
-            <div className={styles.install}><span>START LOCALLY</span><code>pip install 'flet[all]'</code></div>
+            <div className={styles.install}>
+              <span>START LOCALLY</span>
+              <p>Set up your environment with uv or pip.</p>
+              <Link className={styles.textLink} to="/docs/getting-started/installation">Follow the installation guide <Arrow /></Link>
+            </div>
           </div>
           <CodeExample />
         </section>

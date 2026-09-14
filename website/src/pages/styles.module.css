@@ -320,9 +320,11 @@
   margin-bottom: 10px;
 }
 
-.install code {
+.install p {
+  color: var(--home-muted);
   font-size: 15px;
-  padding: 7px 10px;
+  line-height: 1.6;
+  margin: 0 0 12px;
 }
 
 .codeWindow {
