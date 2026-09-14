@@ -11,7 +11,7 @@ Start building awesome mobile apps in Python using just your computer and mobile
 :::note[Important]
 - Make sure your computer fulfills [these requirements](installation.md#prerequisites).
 - Your device and computer must be connected to the same Wi-Fi or local network.
-- We recommend starting with the [creation of a new virtual environment](installation.md#creating-a-virtual-environment-venv).
+- We recommend starting from an app scaffolded with [`flet create`](create-flet-app.md), so that its dependencies are already set up.
 :::
 
 <Tabs groupId="ios--android">

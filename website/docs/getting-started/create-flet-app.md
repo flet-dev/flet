@@ -14,28 +14,37 @@ tying them together into a small example app.
 
 ## Your first app
 
-Create a new directory (or directory with `pyproject.toml` already exists if initialized with a project manager) and switch into it.
-
-To create a new "minimal" Flet app run the following command:
+[`flet create`](../cli/flet-create.md) scaffolds a new "minimal" Flet app, and
+[`flet run`](running-app.md) starts it:
 
 <Tabs groupId="uv--pip">
 <TabItem value="uv" label="uv">
 ```bash
-uv run flet create
+uvx --with flet-cli flet create my-app
+cd my-app
+uv run flet run
 ```
+
+There is no install step: `uvx` runs the Flet CLI in a throwaway environment, and the first
+`uv run` installs the new app's dependencies from its generated `pyproject.toml`. If you haven't
+installed `uv` yet, see [Installation](installation.md).
 </TabItem>
 <TabItem value="pip" label="pip">
+With your virtual environment created and activated and Flet installed
+(see [Installation](installation.md)), run the following from your app's directory:
+
 ```bash
-flet create
+flet create .
+flet run
 ```
 </TabItem>
 </Tabs>
-:::danger[Important]
-Any existing `README.md` or `pyproject.toml` (for example, created by `uv init`)
-will be replaced by the one created by [`flet create`](../cli/flet-create.md) command.
+:::note
+`flet create` writes `README.md` and `pyproject.toml` into the target directory, replacing any
+existing ones. Run it in a new or empty directory.
 :::
 
-The command will create the following directory structure:
+The command creates the following directory structure:
 
 ```tree
 README.md
