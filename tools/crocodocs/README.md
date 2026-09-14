@@ -248,6 +248,14 @@ Website components in [website/src/components/crocodocs/](../../website/src/comp
 | `Image.js`        | Doc image with `/docs/` prefix for root-relative paths  |
 | `utils.js`        | Markdown rendering, xref resolution, admonition support |
 
+Gallery components render a class's members themselves rather than asking crocodocs to lay
+them out, but are still registered in `COMPONENT_TAG_RE` — that registration is what keeps
+the symbol in the xref map:
+
+| Component                                                                      | Purpose                                     |
+|--------------------------------------------------------------------------------|---------------------------------------------|
+| [`IconGallery/`](../../website/src/components/IconGallery/) (outside `crocodocs/`) | Searchable icon grid for `Icons`/`CupertinoIcons` |
+
 ### Key rendering features
 
 - Griffe-based class/function/alias rendering with Google-style docstring sections

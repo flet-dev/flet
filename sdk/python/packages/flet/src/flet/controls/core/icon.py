@@ -27,8 +27,11 @@ class Icon(LayoutControl):
     """
     The icon to display, selected from a predefined icon set.
 
-    You can explore available icons using the
-    [Flet Icons Browser](https://studio.flet.dev/gallery/run/apps/icons_browser/).
+    Browse every available icon on the
+    [Icons](https://flet.dev/docs/types/icons) and
+    [CupertinoIcons](https://flet.dev/docs/types/cupertinoicons) pages, or run the
+    [icons browser](https://studio.flet.dev/gallery/run/apps/icons_browser/) as a
+    live Flet app.
     """
 
     color: Optional[ColorValue] = None
