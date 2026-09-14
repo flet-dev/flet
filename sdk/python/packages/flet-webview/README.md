@@ -9,7 +9,10 @@
 A [Flet](https://flet.dev) extension for displaying web content in a WebView.
 
 It is based on the [webview_flutter](https://pub.dev/packages/webview_flutter)
-and [webview_flutter_web](https://pub.dev/packages/webview_flutter_web) Flutter packages.
+and [webview_flutter_web](https://pub.dev/packages/webview_flutter_web) Flutter packages
+on Android, iOS, macOS and web, and on
+[webview_all_windows](https://pub.dev/packages/webview_all_windows) and
+[webview_all_linux](https://pub.dev/packages/webview_all_linux) on Windows and Linux.
 
 ## Documentation
 
@@ -19,7 +22,14 @@ Detailed documentation to this package can be found [here](https://flet.dev/docs
 
 | Platform  | Windows | macOS | Linux | iOS | Android | Web |
 |-----------|---------|-------|-------|-----|---------|-----|
-| Supported | ❌       | ✅     | ❌     | ✅   | ✅       | ✅   |
+| Supported | ✅       | ✅     | ✅     | ✅   | ✅       | ✅   |
+
+> **Platform prerequisites**
+>
+> - **Linux** requires `libwebkit2gtk-4.1-0`, available from Debian 12 and Ubuntu 22.04 onward.
+>   The prebuilt `light` desktop client does not bundle the WebView — use the `full` flavor.
+> - **Windows** requires the Edge WebView2 runtime, which ships with Windows 11 and is present on
+>   most, but not all, Windows 10 (1809+) installations.
 
 ## Usage
 

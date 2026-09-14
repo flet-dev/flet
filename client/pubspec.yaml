@@ -88,8 +88,10 @@ dependencies:
   flet_spinkit:
     path: ../sdk/python/packages/flet-spinkit/src/flutter/flet_spinkit
 
+  # --WEBVIEW_CLIENT_START--
   flet_webview:
     path: ../sdk/python/packages/flet-webview/src/flutter/flet_webview
+  # --WEBVIEW_CLIENT_END--
 
   flet_code_editor:
     path: ../sdk/python/packages/flet-code-editor/src/flutter/flet_code_editor

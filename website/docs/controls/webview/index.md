@@ -11,13 +11,23 @@ import {ClassAll, CodeExample} from '@site/src/components/crocodocs';
 Display web content in a WebView to be shown in your [Flet](https://flet.dev) apps.
 
 It is powered by the [webview_flutter](https://pub.dev/packages/webview_flutter)
-and [webview_flutter_web](https://pub.dev/packages/webview_flutter_web) Flutter packages.
+and [webview_flutter_web](https://pub.dev/packages/webview_flutter_web) Flutter packages
+on Android, iOS, macOS and web, and by
+[webview_all_windows](https://pub.dev/packages/webview_all_windows) and
+[webview_all_linux](https://pub.dev/packages/webview_all_linux) on Windows and Linux.
 
 ## Platform Support
 
 | Platform  | Windows | macOS | Linux | iOS | Android | Web |
 |-----------|---------|-------|-------|-----|---------|-----|
-| Supported | ❌       | ✅     | ❌     | ✅   | ✅       | ✅   |
+| Supported | ✅       | ✅     | ✅     | ✅   | ✅       | ✅   |
+
+:::note Platform prerequisites
+- **Linux** requires `libwebkit2gtk-4.1-0`, available from Debian 12 and Ubuntu 22.04 onward.
+  The prebuilt `light` desktop client does not bundle the WebView — use the `full` flavor.
+- **Windows** requires the Edge WebView2 runtime, which ships with Windows 11 and is present on
+  most, but not all, Windows 10 (1809+) installations.
+:::
 
 ## Usage
 

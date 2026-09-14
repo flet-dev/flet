@@ -4,8 +4,8 @@ version: 0.1.0
 publish_to: none
 
 environment:
-  sdk: '>=3.2.3 <4.0.0'
-  flutter: ">=1.17.0"
+  sdk: '>=3.9.0 <4.0.0'
+  flutter: ">=3.35.0"
 
 dependencies:
   flutter:
@@ -14,10 +14,34 @@ dependencies:
     sdk: flutter
 
   collection: ^1.16.0
+
+  # Android, iOS, macOS and Web.
   webview_flutter: ^4.13.1
   webview_flutter_android: ^4.7.0
   webview_flutter_web: 0.2.3+4
   webview_flutter_platform_interface: 2.14.0
+
+  # Windows (WebView2) and Linux (WebKitGTK).
+  #
+  # The app-facing `webview_all` umbrella is deliberately not used: it
+  # hard-depends on webview_all_android, webview_all_wkwebview, webview_all_web
+  # and webview_all_ohos, which would register a second native WebView stack
+  # next to webview_flutter on every mobile and web build. These two
+  # implementation packages each declare a single platform, so nothing of
+  # theirs is registered anywhere else.
+  #
+  # `webview_platform_interface` is not the Flutter team's
+  # `webview_flutter_platform_interface` — it is a separate fork that exports
+  # identically named symbols, so the two must never be imported into the same
+  # Dart library. It is a direct dependency because the desktop implementation
+  # imports it directly.
+  #
+  # Versions are pinned exactly rather than with carets: isolation from
+  # webview_flutter is a naming convention upstream maintains by hand, so every
+  # bump needs the Windows and Linux builds re-tested.
+  webview_all_windows: 1.4.1
+  webview_all_linux: 1.4.1
+  webview_platform_interface: 1.4.1
 
   flet:
     path: ../../../../../../../packages/flet
