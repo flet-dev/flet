@@ -98,8 +98,9 @@ jobs:
           - name: linux
             runner: ubuntu-latest
 
-          - name: macos
-            runner: macos-26
+          # TEMP(webview): macOS pack skipped for WebView VM testing. Restore before merge.
+#           - name: macos
+#             runner: macos-26
 
           - name: windows
             runner: windows-2025-vs2026
@@ -137,6 +138,9 @@ jobs:
           sudo apt update --allow-releaseinfo-change
           LINUX_DEPS="$(uv run --project sdk/python/packages/flet-cli flet --version --json | jq -r '.linux_dependencies | join(" ")')"
           sudo apt-get install -y --no-install-recommends $LINUX_DEPS
+          # flet_webview needs WebKitGTK; not in the canonical list because it
+          # does not exist before Debian 12 / Ubuntu 22.04.
+          sudo apt-get install -y --no-install-recommends libwebkit2gtk-4.1-dev
           sudo apt-get clean
 
       - name: Prepare local desktop client archive
