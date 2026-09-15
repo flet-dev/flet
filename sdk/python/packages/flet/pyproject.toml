@@ -70,6 +70,7 @@ extensions = [
     "flet-spinkit",
     "flet-video",
     "flet-webview",
+    "flet-webview-all",
 ]
 test = [
     "pytest >=7.2.0",
