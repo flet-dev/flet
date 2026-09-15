@@ -94,24 +94,11 @@ jobs:
         run: |
           uv run .github/scripts/generate_icon_docs_images.py --verify
 
-      # Icon names, the packed values the protocol sends, and the codepoints the
-      # docs draw with all come from one parse of Flutter's `icons.dart`. This
-      # re-runs that parse and diffs it against what is committed, so the three
-      # cannot drift apart between Flutter bumps.
-      - name: Check icon definitions are up to date
+      - name: Check icons are up to date
         if: matrix.python-version == '3.12'
         shell: bash
         run: |
           uv run .github/scripts/generate_icons.py --verify
-
-      # Structural rather than byte-exact: WOFF2 encoding is not reproducible,
-      # so two runs of the same input give two different files. What matters is
-      # that the shipped font can still draw every icon the codepoint map
-      # claims - a font missing a glyph renders a blank tile, not an error.
-      - name: Check icon webfonts cover every icon
-        if: matrix.python-version == '3.12'
-        shell: bash
-        run: |
           uv run .github/scripts/generate_icon_fonts.py --verify
 
       - name: Run docs-coverage
