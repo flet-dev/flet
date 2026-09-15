@@ -2,65 +2,67 @@
 title: "Introduction"
 ---
 
-Flet is a framework that allows building web, desktop and mobile applications in Python without prior experience in frontend development.
+import TabItem from '@theme/TabItem';
+import Tabs from '@theme/Tabs';
+import {CodeExample, Image} from '@site/src/components/crocodocs';
 
-## Flet app example
+Flet is a Python framework for building web, desktop, and mobile apps without prior experience in frontend development. Use ready-made controls to create your interface, connect your Python libraries and application logic, and handle user interactions without writing HTML, CSS, or JavaScript.
 
-Below is a simple "Counter" app, with a text field and two buttons to increment and decrement the counter value:
+Start with a UI for a script or build a complete application with multiple screens. Develop with hot reload, try your app on your phone, and package it for Windows, macOS, Linux, iOS, or Android, or publish it to the web.
 
-```python title="counter.py"
+## Try Flet in your browser
+
+[Flet Studio](/studio) lets you create and run Flet apps in your browser without installing anything. Write Python, customize a gallery example, or describe your idea to the AI agent and build from there.
+
+This small counter app displays a number and increments it when you press **+**:
+
+<CodeExample path="apps/templates/basic_counter/main.py" language="python" title="src/main.py" />
+
+## Try Flet on your phone
+
+Install the Flet app from the [App Store](https://apps.apple.com/app/flet/id1624979699) or [Google Play](https://play.google.com/store/apps/details?id=com.appveyor.flet) and explore its built-in **Gallery** to try controls and example apps on your device.
+
+<Image src="assets/getting-started/testing-on-mobile/ios/gallery.png" alt="Flet Gallery on iPhone, showing featured apps and example categories" width="250px" />
+
+When you're ready to try your own code, [connect your phone to your development app](getting-started/testing-on-mobile.md) and see it refresh as you make changes.
+
+## Try Flet on your desktop
+
+To develop locally, [install Flet](getting-started/installation.md), [create a project](getting-started/create-flet-app.md), and [run it](getting-started/running-app.md). Your app opens in a desktop window and reloads when you save changes.
+
+<Image src="assets/getting-started/counter-app/macos.png" alt="Counter app running on macOS" width="60%" />
+
+:::tip[Quick desktop preview]
+Already have [`uv`](https://docs.astral.sh/uv/#installation)? Run this in your terminal to open a minimal Flet app without creating a project:
+
+<Tabs>
+<TabItem value="bash" label="Bash">
+
+```bash
+uvx --with flet-desktop -- python <<'PY'
 import flet as ft
 
 def main(page: ft.Page):
-    page.title = "Flet counter example"
-    page.vertical_alignment = ft.MainAxisAlignment.CENTER
-
-    input = ft.TextField(value="0", text_align=ft.TextAlign.RIGHT, width=100)
-
-    def minus_click(e):
-        input.value = str(int(input.value) - 1)
-
-    def plus_click(e):
-        input.value = str(int(input.value) + 1)
-
-    page.add(
-        ft.Row(
-            alignment=ft.MainAxisAlignment.CENTER,
-            controls=[
-                ft.IconButton(ft.Icons.REMOVE, on_click=minus_click),
-                input,
-                ft.IconButton(ft.Icons.ADD, on_click=plus_click),
-            ],
-        )
-    )
+    page.add(ft.Text("Hello from Flet!"))
 
 ft.run(main)
+PY
 ```
 
-To run the app, [install `flet`](getting-started/installation.md):
+</TabItem>
+<TabItem value="powershell" label="PowerShell">
 
-```bash
-pip install 'flet[all]'
+```powershell
+@'
+import flet as ft
+
+def main(page: ft.Page):
+    page.add(ft.Text("Hello from Flet!"))
+
+ft.run(main)
+'@ | uvx --with flet-desktop -- python -
 ```
 
-then launch the app:
-
-```bash
-flet run counter.py
-```
-
-This will open the app in a native OS window - what a nice alternative to Electron! 🙂
-
-<p align="center">
-    <img src="/docs/assets/getting-started/counter-app/macos.png" width="60%" />
-</p>
-
-To run the same app as a web app use `--web` option with `flet run` command:
-
-```bash
-flet run --web counter.py
-```
-
-<p align="center">
-    <img src="/docs/assets/getting-started/counter-app/safari.png" width="60%" />
-</p>
+</TabItem>
+</Tabs>
+:::

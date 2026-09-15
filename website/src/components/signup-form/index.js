@@ -1,9 +1,10 @@
-import React, { useEffect, useRef, useState } from "react";
+import React, { useEffect, useId, useRef, useState } from "react";
 import BrowserOnly from '@docusaurus/BrowserOnly';
 import HCaptcha from "@hcaptcha/react-hcaptcha";
 import styles from './styles.module.css';
 
 export default function SignupForm() {
+    const emailId = useId();
     const [token, setToken] = useState(null);
     const [email, setEmail] = useState("");
     const captchaRef = useRef(null);
@@ -55,22 +56,35 @@ export default function SignupForm() {
                     } else {
                         // signup form
                         return <form onSubmit={onSubmit}>
-                            <h3>Subscribe to Flet newsletter for project updates and tutorials!</h3>
-                            <input
-                                type="email"
-                                value={email}
-                                placeholder="Your email address"
-                                onChange={(evt) => setEmail(evt.target.value)}
-                            />
-                            <input type="submit" value="Submit" />
-                            <HCaptcha
-                                sitekey="db49a301-288d-491b-9746-ebd3354dc5ff"
-                                size="invisible"
-                                onVerify={setToken}
-                                onError={onError}
-                                onExpire={onExpire}
-                                ref={captchaRef}
-                            />
+                            <div className={styles.intro}>
+                                <span className={styles.eyebrow}>THE FLET NEWSLETTER</span>
+                                <h3>A little Flet in your inbox.</h3>
+                                <p>Project updates and tutorials, delivered to you.</p>
+                            </div>
+                            <div className={styles.fields}>
+                                <label htmlFor={emailId}>Your email address</label>
+                                <div className={styles.inputRow}>
+                                <input
+                                    id={emailId}
+                                    name="email"
+                                    autoComplete="email"
+                                    required
+                                    type="email"
+                                    value={email}
+                                    placeholder="Your email address"
+                                    onChange={(evt) => setEmail(evt.target.value)}
+                                />
+                                <button type="submit">Subscribe <span aria-hidden="true">↗</span></button>
+                                </div>
+                                <HCaptcha
+                                    sitekey="db49a301-288d-491b-9746-ebd3354dc5ff"
+                                    size="invisible"
+                                    onVerify={setToken}
+                                    onError={onError}
+                                    onExpire={onExpire}
+                                    ref={captchaRef}
+                                />
+                            </div>
                         </form>
                     }
                 }}

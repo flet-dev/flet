@@ -31,12 +31,12 @@ Flet authentication features:
 ## Login process overview
 
 * Configure OAuth provider (built-in or generic) with Client ID, Client secret, Redirect URL.
-* Call `page.login(provider)` to initiate OAuth web flow.
+* Call `await page.login(provider)` to initiate OAuth web flow.
 * User is being redirected to OAuth provider website.
 * On provider website user signs in and gives consent to access service API with requested scopes.
 * Provider website redirects to Flet's OAuth callback URL with authorization code.
 * Flet exchanges authorization code for a token and calls `page.on_login` event handler.
-* Flet app can retrieve API token from `page.auth.token` property and user details from `page.auth.user`.
+* Flet app can retrieve API token with `await page.auth.get_token()` and user details from `page.auth.user`.
 
 ## Configuring OAuth provider
 
@@ -68,6 +68,9 @@ Copy "Client ID" and "Client secret" values to a safe place - you'll need them i
 
 ## Sign in with OAuth provider
 
+Authentication calls are asynchronous. Use them in `async def` event handlers or
+an async `main()`; the shorter snippets below assume this async context.
+
 ```python
 import os
 
@@ -86,18 +89,21 @@ def main(page: ft.Page):
         redirect_url="http://localhost:8550/oauth_callback",
     )
 
-    def login_click(e):
-        page.login(provider)
+    async def login_click(e):
+        await page.login(provider)
 
-    def on_login(e):
-        print("Login error:", e.error)
-        print("Access token:", page.auth.token.access_token)
+    async def on_login(e):
+        if e.error:
+            print("Login error:", e.error)
+            return
+        token = await page.auth.get_token()
+        print("Access token:", token.access_token)
         print("User ID:", page.auth.user.id)
 
     page.on_login = on_login
     page.add(ft.Button("Login with GitHub", on_click=login_click))
 
-ft.run(main, port=8550, view=ft.WEB_BROWSER)
+ft.run(main, port=8550, view=ft.AppView.WEB_BROWSER)
 ```
 
 :::danger[Caution]
@@ -123,7 +129,7 @@ Run the program and click "Login with GitHub" button. GitHub authorize app page 
 ### Redirect URL
 
 We used `http://localhost:8550/oauth_callback` as a redirect URL while registering GitHub OAuth app.
-Notice it has a fixed port `8550`. To run your Flet app on a fixed port use `port` argument in `flet.app` call:
+Notice it has a fixed port `8550`. To run your Flet app on a fixed port use `port` argument in the `ft.run()` call:
 
 ```python
 ft.run(main, port=8550)
@@ -137,7 +143,7 @@ user's account.
 Built-in Flet providers, by default, request scopes to access user profile, but you can request additional scopes in login method, like `public_repo` in the example above:
 
 ```python
-page.login(
+await page.login(
     provider,
     scope=["public_repo"]
 )
@@ -148,14 +154,14 @@ page.login(
 * `fetch_user` (bool) - whether to fetch user details into `page.auth.user`. Default is `True`.
 * `fetch_groups` (bool) - whether to fetch user groups into `page.auth.user.groups`. Default is `False`.
 * `scope` - a list of scopes to request.
-* `saved_token` - a JSON snapshot of `page.auth.token` to restore authorization from. Token can be serialized with `page.auth.token.to_json()`, encrypted and saved in [`page.client_storage`](../cookbook/client-storage.md). See below.
+* `saved_token` - a JSON snapshot of the OAuth token to restore authorization from. Retrieve the token with `await page.auth.get_token()`, serialize it with `token.to_json()`, then encrypt and save it in [client storage](../cookbook/client-storage.md). See below.
 * `on_open_authorization_url` - a callback to open a browser with authorization URL. See below.
 * `complete_page_html` - a custom HTML contents of "You've been successfully authenticated. Close this page now" page.
 * `redirect_to_page` (bool) - used with Flet web app only when authorization page is opened in the same browser tab.
 
-The result of `page.login()` call is an instance of `Authorization` class with the following fields:
+Awaiting `page.login()` returns an authorization object. The default implementation provides:
 
-* **`token`** - OAuth token used to access provider's API. See below.
+* **`get_token()`** - an async method that returns the OAuth token, refreshing it when needed. See below.
 * **`user`** - user details with a mandatory `id` field and other fields specific to OAuth provider.
 * **`provider`** - an instance of OAuth provider used for authorization.
 
@@ -165,8 +171,8 @@ If your app allows authorizations with multiple OAuth providers you can save aut
 for example:
 
 ```python
-page.session["github_auth"] = page.login(github_provider)
-page.session["google_auth"] = page.login(google_provider)
+page.session["github_auth"] = await page.login(github_provider)
+page.session["google_auth"] = await page.login(google_provider)
 ```
 
 ### Checking authentication results
@@ -195,8 +201,8 @@ def main(page: ft.Page):
         redirect_url="http://localhost:8550/oauth_callback",
     )
 
-    def login_button_click(e):
-        page.login(provider, scope=["public_repo"])
+    async def login_button_click(e):
+        await page.login(provider, scope=["public_repo"])
 
     def on_login(e: ft.LoginEvent):
         if not e.error:
@@ -244,45 +250,38 @@ print("Email:", page.auth.user["email"])
 
 ## Using OAuth token
 
-Upon successful authorization `page.auth.token` will contain OAuth token that can be used to access providers's API. Token object has the following properties:
+After successful authorization, retrieve the OAuth token with
+`token = await page.auth.get_token()`. The token has the following properties:
 
-* `access_token` - access token used as an authorization token in API request header.
+* `access_token` - access token used as an authorization token in API request headers.
 * `scope` - token's scope.
 * `token_type` - access token type, e.g. `Bearer`.
-* `expires_in` - optional number of seconds when access token expires.
-* `expires_at` - optional time (`time.time()` + `expires_in`) when access token expires.
-* `refresh_token` - optional refresh token which is used to get a new access token, when the old one expires.
+* `expires_in` - optional number of seconds until the token expires.
+* `expires_at` - optional time (`time.time()` + `expires_in`) when the token expires.
+* `refresh_token` - optional refresh token used to obtain a new access token.
 
-Usually, only `page.auth.token.access_token` is needed to call provider's API,
-for example to list user's GitHub repositories:
+Use `token.access_token` to call the provider's API. For example, this async
+handler lists the user's GitHub repositories without blocking the app's event loop:
 
 ```python
+import asyncio
 import requests
-headers = {"Authorization": "Bearer {}".format(page.auth.token.access_token)}
-repos_resp = requests.get("https://api.github.com/user/repos", headers=headers)
-user_repos = json.loads(repos_resp.text)
-for repo in user_repos:
-    print(repo["full_name"])
+
+async def list_repositories(e):
+    token = await page.auth.get_token()
+    headers = {"Authorization": f"Bearer {token.access_token}"}
+    response = await asyncio.to_thread(
+        requests.get, "https://api.github.com/user/repos", headers=headers, timeout=30
+    )
+    response.raise_for_status()
+    for repo in response.json():
+        print(repo["full_name"])
 ```
 
 :::note
-Do not save a reference to `page.auth.token` somewhere in your code, but rather call `page.auth.token`
-every time you need to grab access token. `page.auth.token` is a property which automatically refreshes
-OAuth token if/when it expires.
-
-Correct code:
-
-```python
-access_token = page.auth.token.access_token
-```
-
-Wrong code:
-
-```python
-token = page.auth.token
-# some other code
-access_token = token.access_token # token could expire by this moment
-```
+Call `await page.auth.get_token()` before each API operation so Flet can refresh
+an expired token. Keeping a token from an earlier operation and reusing its
+`access_token` later bypasses that refresh check.
 :::
 
 ## Saving and restoring an auth token
@@ -292,7 +291,8 @@ To implement persistent login ("Remember me" checkbox on login page) you can sav
 To serialize auth token to JSON:
 
 ```python
-jt = page.auth.token.to_json()
+token = await page.auth.get_token()
+jt = token.to_json()
 ```
 
 :::caution
@@ -326,17 +326,19 @@ $ export MY_APP_SECRET_KEY="<secret>"
 Now, encrypted value can be stored in a client storage:
 
 ```python
-await page.shared_preferences.set("myapp.auth_token", ejt)
+prefs = ft.SharedPreferences()
+
+await prefs.set("myapp.auth_token", ejt)
 ```
 
 Next time a user opens the app you can read encrypted token from a client storage and, if it exists,
 decrypt it and use in `page.login()` method:
 
 ```python
-ejt = await page.shared_preferences.get("myapp.auth_token")
+ejt = await prefs.get("myapp.auth_token")
 if ejt:
     jt = decrypt(ejt, secret_key)
-    page.login(provider, saved_token=jt)
+    await page.login(provider, saved_token=jt)
 ```
 
 [See complete app example](https://github.com/flet-dev/flet/blob/main/sdk/python/examples/apps/authentication/github_repos_browser/main.py).
@@ -349,7 +351,7 @@ You can remove saved token in logout method, for example:
 
 ```python
 async def logout_button_click(e):
-    await page.shared_preferences.remove(AUTH_TOKEN_KEY)
+    await prefs.remove(AUTH_TOKEN_KEY)
     page.logout()
 ```
 
@@ -381,7 +383,7 @@ complete_page_html = """
 </html>
 """
 
-page.login(
+await page.login(
     provider,
     complete_page_html=complete_page_html,
 )
@@ -390,9 +392,9 @@ page.login(
 You can also change web app to open provider's authorization page in the same tab which might be more familiar to your users and save them from dealing with popup blockers:
 
 ```python
-page.login(
+await page.login(
     provider,
-    on_open_authorization_url=lambda url: asyncio.create_task(ft.UrlLauncher().launch_url(url, web_only_window_name="_self")),
+    on_open_authorization_url=lambda url: ft.UrlLauncher().launch_url(url, web_only_window_name="_self"),
     redirect_to_page=True
 )
 ```
@@ -400,9 +402,9 @@ page.login(
 To open flow in a new tab (notice `_self` replaced with `_blank`):
 
 ```python
-page.login(
+await page.login(
     provider,
-    on_open_authorization_url=lambda url: asyncio.create_task(ft.UrlLauncher().launch_url(url, web_only_window_name="_blank"))
+    on_open_authorization_url=lambda url: ft.UrlLauncher().launch_url(url, web_only_window_name="_blank")
 )
 ```
 
@@ -433,19 +435,20 @@ def main(page: Page):
         redirect_url="http://localhost:8550/oauth_callback",
     )
 
-    def login_click(e):
-        page.login(provider)
+    async def login_click(e):
+        await page.login(provider)
 
-    def on_login(e):
+    async def on_login(e):
         if e.error:
             raise RuntimeError(e.error)
         print("User ID:", page.auth.user.id)
-        print("Access token:", page.auth.token.access_token)
+        token = await page.auth.get_token()
+        print("Access token:", token.access_token)
 
     page.on_login = on_login
     page.add(Button("Login with LinkedIn", on_click=login_click))
 
-flet.app(main, port=8550, view=flet.WEB_BROWSER)
+flet.run(main, port=8550, view=flet.AppView.WEB_BROWSER)
 ```
 
 Mandatory provider settings:

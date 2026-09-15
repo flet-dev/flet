@@ -76,7 +76,7 @@ def main(page: ft.Page):
             content=ft.Column(
                 controls=[
                     ft.Text(
-                        value="Flet is a framework that allows building web, desktop "
+                        value="Flet is a Python framework for building web, desktop "
                         "and mobile applications in Python without prior experience "
                         "in frontend development.You can build a UI for your program "
                         "with Flet controls which are based on Flutter by Google. "

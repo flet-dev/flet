@@ -6,7 +6,7 @@
 </p>
 
 <p align="center">
-    <em>Build multi-platform apps in Python. No frontend experience required.</em>
+    <em>Build cross-platform apps in Python. No frontend experience required.</em>
 </p>
 
 <p align="center">
@@ -24,76 +24,80 @@
         <img src="https://flet.dev/docs/assets/badges/docs-coverage/flet.svg" alt="Docstring coverage" /></a>
 </p>
 
----
+Flet is a Python framework for building web, desktop, and mobile apps without prior experience in frontend development.
 
-Flet is a framework that allows building mobile, desktop and web applications
-in Python only without prior experience in frontend development.
+> **[Try Flet online in Flet Studio](https://studio.flet.dev)**
+>
+> Create, run, and share Python apps in your browser. Start from an example, write your own code, or get help from the AI agent. No installation required.
 
-### <img src="https://flet.dev/img/pages/home/single-code-base.svg" width="25" align="top" />&nbsp;&nbsp;&nbsp;Single code base for any device
+### <img src="website/static/img/pages/home/single-code-base.svg" width="25" align="top" />&nbsp;&nbsp;&nbsp;One Python codebase, six platforms
 
-Your app will equally look great on iOS, Android, Windows, Linux, macOS and web.
+Build your interface and application logic in Python, and run your app on iOS, Android, Windows, macOS, Linux, and web. No Dart, Swift, Kotlin, HTML, or JavaScript required.
 
-### <img src="https://flet.dev/img/pages/home/python.svg" width="25" align="top" />&nbsp;&nbsp;&nbsp;Build an entire app in Python
+### <img src="website/static/img/pages/home/controls.svg" width="25" align="top" />&nbsp;&nbsp;&nbsp;150+ built-in controls and services
 
-Build a cross-platform app without knowledge of Dart, Swift, Kotlin, HTML or JavaScript - only Python!
+Create your interface with ready-made layouts, buttons, forms, navigation, and dialogs. Customize colors, typography, and themes, with Material and Cupertino controls to suit your app.
 
-### <img src="https://flet.dev/img/pages/home/controls.svg" width="25" align="top" />&nbsp;&nbsp;&nbsp;150+ built-in controls and services
+### <img src="website/static/img/pages/home/declarative-ui.svg" width="25" align="top" />&nbsp;&nbsp;&nbsp;Declarative UI for growing apps
 
-Beautiful UI widgets with Material and Cupertino design: layout, navigation, dialogs, charts - Flet uses Flutter to render UI.
+Organize your app into reusable components and let the UI update when application state changes. Prefer changing controls directly? The imperative style is supported too. [Compare the approaches](https://flet.dev/docs/cookbook/declarative-vs-imperative).
 
-### <img src="https://flet.dev/img/pages/home/python-packages.svg" width="25" align="top" />&nbsp;&nbsp;&nbsp;50+ Python packages for iOS and Android
+### <img src="website/static/img/pages/home/python-packages.svg" width="25" align="top" />&nbsp;&nbsp;&nbsp;Your Python libraries, on mobile
 
-Numpy, pandas, pydantic, cryptography, opencv, pillow and other popular libraries.
+Use libraries such as NumPy, pandas, Pillow, and cryptography in your mobile apps. Flet provides [prebuilt binary packages](https://pypi.flet.dev) for iOS and Android, so you don't have to compile native dependencies yourself.
 
-### <img src="https://flet.dev/img/pages/home/web-support.svg" width="25" align="top" />&nbsp;&nbsp;&nbsp;Full web support
+### <img src="website/static/img/pages/home/web-support.svg" width="25" align="top" />&nbsp;&nbsp;&nbsp;Run in the browser or on your server
 
-Flet apps run natively in modern browsers using WebAssembly and Pyodide, with no server required. Prefer server-side? Deploy as a Python web app with real-time UI updates.
+Run Python directly in the browser with Pyodide and WebAssembly, with no Python server required. Or keep your Python code on a server and deliver real-time UI updates to the browser.
 
-### <img src="https://flet.dev/img/pages/home/packaging.svg" width="25" align="top" />&nbsp;&nbsp;&nbsp;Built-in packaging
+### <img src="website/static/img/pages/home/packaging.svg" width="25" align="top" />&nbsp;&nbsp;&nbsp;Built-in packaging
 
-Build standalone executables or bundles for iOS, Android, Windows, Linux, macOS and web. Instantly deploy to App Store and Google Play.
+Use `flet build` to package your app for desktop, mobile, or web distribution, including the App Store and Google Play. Configure dependencies, icons, and platform settings in your project's `pyproject.toml`.
 
-### <img src="https://flet.dev/img/pages/home/test-on-ios-android.svg" width="25" align="top" />&nbsp;&nbsp;&nbsp;Test on iOS and Android
+### <img src="website/static/img/pages/home/app-testing.svg" width="25" align="top" />&nbsp;&nbsp;&nbsp;Test your app on desktop and mobile
 
-Test your project on your own mobile device with Flet App. See your app updates as you make changes.
+Write [integration tests with pytest](https://flet.dev/docs/getting-started/integration-testing) and run them against your packaged app with `flet test`. Tap buttons, enter text, and verify user flows on desktop and mobile, with screenshot comparisons on Android and iOS.
 
-### <img src="https://flet.dev/img/pages/home/extensible.svg" width="25" align="top" />&nbsp;&nbsp;&nbsp;Extensible
+### <img src="website/static/img/pages/home/ai-assistance.svg" width="25" align="top" />&nbsp;&nbsp;&nbsp;Build with help from AI
 
-Easily wrap any of thousands of Flutter packages to use with Flet or build new controls in pure Python using built-in UI primitives.
+Explore and create apps with the AI agent in [Flet Studio](https://studio.flet.dev), or connect your coding assistant to the [Flet MCP server](https://flet.dev/docs/cookbook/flet-mcp) for version-specific API information and tools to find examples and icons.
 
-### <img src="https://flet.dev/img/pages/home/accessible.svg" width="25" align="top" />&nbsp;&nbsp;&nbsp;Accessible
+### <img src="website/static/img/pages/home/extensible.svg" width="25" align="top" />&nbsp;&nbsp;&nbsp;Extensible
 
-Flet is built with Flutter which has solid accessibility foundations on Android, iOS, web, and desktop.
+Build custom controls in Python by composing existing controls, or create extensions that wrap Flutter packages to add new UI components and platform integrations.
+
+### <img src="website/static/img/pages/home/accessible.svg" width="25" align="top" />&nbsp;&nbsp;&nbsp;Accessible
+
+Add screen-reader labels, tooltips, keyboard shortcuts, and custom semantics to help more people use your app. Inspect the accessibility information your UI exposes with the [semantics debugger](https://flet.dev/docs/cookbook/accessibility#debugging-semantics).
 
 ## Flet app example
 
-Below is a simple "Counter" app, with a text field and two buttons to increment and decrement the counter value:
+This simple counter app displays a number in the center of the screen. Press the **+** button to increment it:
 
-```python title="counter.py"
+```python
 import flet as ft
 
+
 def main(page: ft.Page):
-    page.title = "Flet counter example"
-    page.vertical_alignment = ft.MainAxisAlignment.CENTER
+    counter = ft.Text("0", size=50, data=0)
 
-    input = ft.TextField(value="0", text_align=ft.TextAlign.RIGHT, width=100)
+    def increment_click(e):
+        counter.data += 1
+        counter.value = str(counter.data)
 
-    def minus_click(e):
-        input.value = str(int(input.value) - 1)
-
-    def plus_click(e):
-        input.value = str(int(input.value) + 1)
-
+    page.floating_action_button = ft.FloatingActionButton(
+        icon=ft.Icons.ADD, on_click=increment_click
+    )
     page.add(
-        ft.Row(
-            alignment=ft.MainAxisAlignment.CENTER,
-            controls=[
-                ft.IconButton(ft.Icons.REMOVE, on_click=minus_click),
-                input,
-                ft.IconButton(ft.Icons.ADD, on_click=plus_click),
-            ],
+        ft.SafeArea(
+            expand=True,
+            content=ft.Container(
+                content=counter,
+                alignment=ft.Alignment.CENTER,
+            ),
         )
     )
+
 
 ft.run(main)
 ```
@@ -104,19 +108,19 @@ To run the app, install `flet`:
 pip install 'flet[all]'
 ```
 
-then launch the app:
+Save the code as `counter.py`, then launch the app:
 
 ```bash
 flet run counter.py
 ```
 
-This will open the app in a native OS window - what a nice alternative to Electron! 🙂
+This opens the app in a native desktop window. The screenshot below shows it after pressing **+** three times:
 
 <p align="center">
     <img src="https://flet.dev/docs/assets/getting-started/counter-app/macos.png" width="45%" />
 </p>
 
-To run the same app as a web app use `--web` option with `flet run` command:
+To run the same app in your browser, add `--web`:
 
 ```bash
 flet run --web counter.py

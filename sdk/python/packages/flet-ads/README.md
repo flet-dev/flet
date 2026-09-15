@@ -8,6 +8,10 @@
 
 Display Google Ads in [Flet](https://flet.dev) apps.
 
+> **[Try Flet online in Flet Studio](https://studio.flet.dev)**
+>
+> Prototype your Flet app interface in the browser, then add mobile ads in your local project. Write your own Python code or get help from the AI agent.
+
 It is based on the [google_mobile_ads](https://pub.dev/packages/google_mobile_ads) Flutter package.
 
 ## Documentation

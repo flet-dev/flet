@@ -9,7 +9,7 @@ module.exports = {
     faster: false, // turns Docusaurus Faster on globally
   },
   title: 'Flet',
-  tagline: 'Build multi-platform apps in Python',
+  tagline: 'Build cross-platform apps in Python',
   url: 'https://flet.dev',
   baseUrl: '/',
   favicon: 'img/favicon.ico',
@@ -17,7 +17,7 @@ module.exports = {
   projectName: 'flet', // Usually your repo name.
   customFields: {
     heroTitle: 'Build cross-platform apps in Python',
-    heroSubTitle: 'Easily build realtime web, mobile and desktop apps in pure Python. No frontend experience required.',
+    heroSubTitle: 'The Python framework for building web, desktop, and mobile apps. No frontend experience required.',
   },
   themes: [
     'docusaurus-theme-github-codeblock',
@@ -100,6 +100,7 @@ module.exports = {
           position: 'left'
         },
         {
+          type: 'custom-githubStars',
           href: 'https://github.com/flet-dev/flet',
           position: 'right',
           className: 'header-github-link',

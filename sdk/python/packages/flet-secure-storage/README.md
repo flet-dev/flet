@@ -8,6 +8,10 @@
 
 A service for safely storing sensitive key–value data using the platform’s native secure storage mechanisms—Keychain on iOS/macOS, Windows Credential Manager, libsecret on Linux, and Keystore on Android.
 
+> **[Try flet-secure-storage in Flet Studio](https://studio.flet.dev/gallery/utility/securestorage/example/extensions/secure_storage/secure_storage)**
+>
+> Prototype your Flet app interface in the browser, then integrate secure storage in your local project. Write your own Python code or get help from the AI agent.
+
 Powered by Flutter's [`flutter_secure_storage`](https://pub.dev/packages/flutter_secure_storage) package.
 
 You need `libsecret-1-dev` on your machine to build the project, and `libsecret-1-0` to run the application (add it as a dependency after packaging your app). If you using snapcraft to build the project use the following.

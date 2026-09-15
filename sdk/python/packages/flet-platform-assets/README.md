@@ -8,6 +8,10 @@ iOS and macOS asset catalogs, Android mipmaps and adaptive layers, a multi-size
 Windows `.ico`, the Linux hicolor tree, and web favicons, maskable icons and
 splash images.
 
+> **[Try Flet online in Flet Studio](https://studio.flet.dev)**
+>
+> Start your next Flet app in the browser, then use this package locally to prepare its icons and splash screens. Write your own Python code or get help from the AI agent.
+
 Used by `flet build`, and importable on its own. Pillow is the only dependency;
 nothing here imports `flet` or `flet-cli`.
 

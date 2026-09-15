@@ -8,6 +8,8 @@ Use this section to track Flet releases, breaking changes, deprecations, and
 compatibility policy.
 
 - [Release notes](release-notes.md) - release announcements and changelog links.
+- [Migrating from 0.28 to 1.0](migrate-to-1-0.md) - a step-by-step guide for
+  upgrading an app written for Flet 0.28.x.
 - [Breaking changes and deprecations](breaking-changes/index.md) - migration
   guides for changes that can require code or configuration updates.
 - [Compatibility policy](compatibility-policy.md) - how Flet handles breaking
