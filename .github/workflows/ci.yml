@@ -14,6 +14,8 @@ on:
       - 'sdk/python/packages/**'
       - 'sdk/python/templates/**'
       - 'packages/flet/**'
+      - 'tools/crocodocs/**'
+      - 'website/**'
       - '.fvmrc'
   pull_request:
     paths:
@@ -23,6 +25,8 @@ on:
       - 'sdk/python/packages/**'
       - 'sdk/python/templates/**'
       - 'packages/flet/**'
+      - 'tools/crocodocs/**'
+      - 'website/**'
       - '.fvmrc'
   workflow_dispatch:
 
@@ -89,6 +93,13 @@ jobs:
         shell: bash
         run: |
           uv run .github/scripts/generate_icon_docs_images.py --verify
+
+      - name: Check icons are up to date
+        if: matrix.python-version == '3.12'
+        shell: bash
+        run: |
+          uv run .github/scripts/generate_icons.py --verify
+          uv run .github/scripts/generate_icon_fonts.py --verify
 
       - name: Run docs-coverage
         if: matrix.python-version == '3.12'

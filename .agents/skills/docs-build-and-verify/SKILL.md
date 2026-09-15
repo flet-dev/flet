@@ -7,10 +7,10 @@ description: Use when asked to build, preview, or verify the Flet documentation 
 
 ## Prerequisites
 
-Node.js 20 is required:
+Node.js 24 is required, matching what CI runs:
 
 ```bash
-nvm use 20
+nvm use 24
 ```
 
 ## Build
@@ -35,7 +35,10 @@ cd website && yarn crocodocs:generate
 
 ## Check Broken Links
 
-`yarn build` automatically reports broken links and anchors. The build fails if any are found.
+`yarn build` reports both, but only broken *links* fail the build. Docusaurus defaults
+`onBrokenAnchors` to `warn` and `docusaurus.config.js` does not override it, so a broken
+anchor scrolls past in the log and still ships - grep the build output for `Broken anchor`
+rather than trusting the exit code.
 
 ## Check Broken Images
 

@@ -9,7 +9,16 @@ from typing import Any
 
 from .frontmatter import FrontMatterDocument, parse_front_matter
 
-COMPONENT_TAG_RE = re.compile(r"<(ClassSummary|ClassMembers|ClassAll)\b([^>]*)/>")
+COMPONENT_TAG_RE = re.compile(
+    r"<(ClassSummary|ClassMembers|ClassAll|IconGallery)\b([^>]*)/>"
+)
+
+# A gallery renders a class's members itself instead of asking crocodocs to lay
+# them out, but it still has to be listed here: this is what registers the
+# symbol, and an unregistered symbol drops out of the xref map, which turns
+# every `:class:`~flet.Icons`` in a docstring into literal reST and fails the
+# docs build. Future galleries (colours, for one) belong in the same alternation.
+GALLERY_COMPONENTS = {"IconGallery"}
 IMPORT_PARTIAL_RE = re.compile(r"@site/\.crocodocs/([a-z0-9._-]+\.mdx)")
 
 
@@ -32,7 +41,7 @@ def iter_markdown_files(root: Path) -> list[Path]:
 def extract_symbol_blocks_from_mdx(
     text: str, front_matter: dict[str, Any]
 ) -> list[SymbolBlock]:
-    """Scan MDX body for ClassSummary/ClassMembers/ClassAll JSX tags and return SymbolBlock entries.
+    """Scan MDX body for API component JSX tags and return SymbolBlock entries.
 
     Symbol names may be literal (name="Foo") or resolved from front matter
     (name={frontMatter.key}).
@@ -58,6 +67,7 @@ def extract_symbol_blocks_from_mdx(
             "ClassSummary": "class_summary",
             "ClassMembers": "class_members",
             "ClassAll": "class_all_options",
+            "IconGallery": "gallery",
         }[component]
         blocks.append(SymbolBlock(kind=kind, symbol=symbol, options=options))
     return blocks
