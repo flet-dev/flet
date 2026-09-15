@@ -160,7 +160,7 @@ export default function Home() {
           <div className={styles.heroCopy}>
             <Link className={styles.releaseLink} to="/blog/flet-1-0"><span className={styles.releaseDot} /> Meet Flet 1.0 <Arrow /></Link>
             <h1 id="hero-title">Your next app.<br />Built in <span>Python.</span></h1>
-            <p className={styles.heroDescription}>Turn what you know into something people can use. Build beautiful web, desktop, and mobile apps from one Python codebase.</p>
+            <p className={styles.heroDescription}>Build beautiful web, desktop, and mobile apps from one Python codebase.</p>
             <div className={styles.actions}>
               <Link className={styles.primaryButton} to="https://studio.flet.dev">Start building <Arrow /></Link>
               <Link className={styles.secondaryButton} to="/docs">Read the docs <span aria-hidden="true">→</span></Link>
