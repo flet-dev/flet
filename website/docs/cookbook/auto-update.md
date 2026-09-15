@@ -45,15 +45,20 @@ def main(page: ft.Page):
 ft.run(main)
 ```
 
-Async handlers can yield too, and `await` has the same effect - anything the
-handler awaits gives the loop an opportunity to send queued updates:
+Async handlers can yield too. An `await` lets other tasks run, but does not
+trigger Flet's auto-update by itself. Yield after changing the control to publish
+intermediate progress:
 
 ```python
 async def process(e):
     for i in range(10):
         await asyncio.to_thread(do_chunk, i)
         progress.value = (i + 1) / 10
+        yield
 ```
+
+Alternatively, keep a regular async handler and call `progress.update()` after
+each assignment. The next `await` gives the connection a chance to send the update.
 
 :::note[Keep each chunk short]
 A generator handler still runs on the event loop, so the UI is blocked between

@@ -262,6 +262,7 @@ async def handle_click(e):
             await future
             done += 1
             progress.value = done / 100
+            progress.update()
 ```
 
 Worker functions must be defined at module top level. See

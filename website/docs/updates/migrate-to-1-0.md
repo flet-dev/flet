@@ -153,7 +153,7 @@ ft.Button(content="Add", on_click=handle_click)
 | HTTP request | `requests.get(url)` | async client, or offload |
 | Database query | `sqlite3`, `psycopg2` | async driver, or offload |
 | Reading a large file | `open(path).read()` | `aiofiles`, or offload |
-| CPU-bound work | ran it inline | offload (see below) |
+| CPU-bound work | inside the sync handler on a pool thread | offload (see below) |
 | Background loop | `threading.Thread` | `page.run_task()` |
 | Shelling out | `subprocess.run()` | `asyncio.create_subprocess_exec()` |
 
@@ -271,13 +271,15 @@ def process(e):
 This is the smallest change that works, but the work still runs on the event
 loop, so keep each chunk to a few milliseconds.
 
-**If the chunks are heavy**, offload them and update between chunks:
+**If the chunks are heavy**, offload them and yield between chunks to trigger
+an intermediate update. An `await` alone does not trigger auto-update:
 
 ```python
 async def process(e):
     for i in range(100):
         await asyncio.to_thread(do_chunk, i)
         progress.value = (i + 1) / 100
+        yield
 ```
 
 **If you need real parallelism**, hand the whole job to an executor and report
@@ -292,6 +294,7 @@ async def process(e):
             await future
             done += 1
             progress.value = done / 100
+            progress.update()
 ```
 
 `do_chunk` must be defined at module top level for this to work - see
@@ -392,13 +395,14 @@ def main(page: ft.Page):
 # 1.0
 def main(page: ft.Page):
     file_picker = ft.FilePicker()
+    selection = ft.Text()
 
     async def pick_files(e):
         files = await file_picker.pick_files(allow_multiple=True)
         if files:
             selection.value = ", ".join(f.name for f in files)
 
-    page.add(ft.Button(content="Pick files", on_click=pick_files))
+    page.add(selection, ft.Button(content="Pick files", on_click=pick_files))
 ```
 
 Two things changed at once. The service registers itself when you construct it,
@@ -410,23 +414,26 @@ The pre-release series required `page.services.append(service)`. That still work
 for explicit lifecycle control, but is no longer necessary.
 :::
 
-:::warning[Keep a reference to your services]
-A service is unregistered once no live Python reference to it remains, so assign
-it to something that outlives the call - a module-level name, a field on a
-control, or a variable in `main()`. A bare temporary like
-`await ft.SharedPreferences().get("key")` may be collected before it is useful.
+:::note[Keep a reference when reusing a service]
+Keep a service in a control field or a variable captured by your event handlers
+when you need to reuse it. Flet unregisters services that no longer have live
+Python references.
+
+A temporary service is fine for a single awaited call, such as
+`await ft.SharedPreferences().get("key")`: the call keeps the service alive until
+it finishes.
 :::
 
 These page members were replaced by services, and were removed in 1.0:
 
 | 0.28 | 1.0 |
 |---|---|
-| `page.client_storage.set(k, v)` | `ft.SharedPreferences().set(k, v)` |
-| `page.set_clipboard(v)` | `ft.Clipboard().set(v)` |
-| `page.get_clipboard()` | `ft.Clipboard().get()` |
-| `page.launch_url(url)` | `ft.UrlLauncher().launch_url(url)` |
-| `page.can_launch_url(url)` | `ft.UrlLauncher().can_launch_url(url)` |
-| `page.close_in_app_web_view()` | `ft.UrlLauncher().close_in_app_web_view()` |
+| `page.client_storage.set(k, v)` | `await ft.SharedPreferences().set(k, v)` |
+| `page.set_clipboard(v)` | `await ft.Clipboard().set(v)` |
+| `page.get_clipboard()` | `await ft.Clipboard().get()` |
+| `page.launch_url(url)` | `await ft.UrlLauncher().launch_url(url)` |
+| `page.can_launch_url(url)` | `await ft.UrlLauncher().can_launch_url(url)` |
+| `page.close_in_app_web_view()` | `await ft.UrlLauncher().close_in_app_web_view()` |
 | `page.browser_context_menu` | `ft.BrowserContextMenu()` |
 | `page.storage_paths` | `ft.StoragePaths()` |
 

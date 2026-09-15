@@ -72,14 +72,15 @@ A QR code with encoded project URL will be displayed in the terminal:
 
 <Image src="assets/getting-started/testing-on-mobile/ios/app-qr-code.png" alt="app-qr-code" width="300px" />
 
-Open **Camera** app on your Android device, point to QR code you got and click URL to open it in Flet app.
+On iOS, open the **Camera** app and scan the QR code. On Android, use the
+**Camera** app or a QR code scanner. Tap the link to open your project in the Flet app.
 
-Try updating your `[script]` - the app will be instantly refreshed on your Android device.
+Try updating your `[script]` - the app will be instantly refreshed on your device.
 
 To return to "Home" tab either:
 
 * Long-press anywhere on the screen with 3 fingers or
-* Shake your Android device.
+* Shake your device.
 
 You can also "manually" add a new project by clicking **"+"** floating action button in the app and typing in its URL.
 
