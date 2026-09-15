@@ -439,10 +439,6 @@
 }
 
 .sectionHeading {
-  display: flex;
-  justify-content: space-between;
-  align-items: flex-end;
-  gap: 50px;
   margin-bottom: 38px;
 }
 
@@ -452,9 +448,8 @@
 }
 
 .sectionHeading > p {
-  max-width: 340px;
   color: var(--home-muted);
-  margin: 0;
+  margin: 20px 0 0;
   font-size: 16px;
 }
 
@@ -688,13 +683,6 @@
     grid-template-columns: 1fr;
     gap: 30px;
     padding-block: 65px;
-  }
-  .sectionHeading {
-    display: block;
-  }
-  .sectionHeading > p {
-    margin-top: 20px;
-    max-width: none;
   }
   .feature {
     padding: 25px 20px;

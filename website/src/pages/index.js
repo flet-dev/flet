@@ -7,9 +7,9 @@ import CodeBlock from '@theme/CodeBlock';
 import SignupForm from '@site/src/components/signup-form';
 import styles from './styles.module.css';
 const features = [{
-  title: 'An interface that feels like yours',
+  title: 'Good-looking Python GUIs',
   icon: 'controls',
-  text: '150+ controls and services. Layouts, navigation, forms, and dialogs, with colors, typography, and themes you can make your own.',
+  text: '150+ controls and services. Layouts, navigation, forms, and dialogs, with customizable colors, typography, and themes.',
   href: '/docs/controls',
   label: 'Explore the controls'
 }, {
@@ -19,19 +19,19 @@ const features = [{
   href: '/docs/reference/binary-packages-android-ios',
   label: 'Browse Python packages'
 }, {
+  title: 'Ready to ship',
+  icon: 'packaging',
+  text: 'Package your app for desktop, mobile, and web with flet build. Prepare it for distribution, including the App Store and Google Play.',
+  href: '/docs/publish',
+  label: 'Build and publish'
+}, {
   title: 'The web, your way',
   icon: 'web-support',
   text: 'Run Python in the browser with Pyodide and WebAssembly, or keep your code on a server and send real-time UI updates.',
   href: '/docs/publish/web',
   label: 'Explore web deployment'
 }, {
-  title: 'Ready to leave your laptop',
-  icon: 'packaging',
-  text: 'Package your app for desktop, mobile, and web with flet build. Prepare it for distribution, including the App Store and Google Play.',
-  href: '/docs/publish',
-  label: 'Build and publish'
-}, {
-  title: 'Test the app your users get',
+  title: 'Test your app',
   icon: 'app-testing',
   text: 'Write pytest tests that tap buttons, enter text, and check user flows in your packaged app. Catch visual changes with screenshots on iOS and Android.',
   href: '/docs/getting-started/integration-testing',
