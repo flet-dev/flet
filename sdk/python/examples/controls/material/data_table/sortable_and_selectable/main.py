@@ -108,7 +108,10 @@ def main(page: ft.Page):
 
     page.add(
         ft.SafeArea(
-            content=table,
+            content=ft.Row(
+                scroll=ft.ScrollMode.AUTO,
+                controls=[table],
+            ),
         )
     )
 

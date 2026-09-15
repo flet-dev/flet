@@ -23,7 +23,7 @@ def main(page: ft.Page):
         wrap=True,
         spacing=10,
         run_spacing=10,
-        width=page.window.width,
+        width=page.width,
         controls=generate_items(30),
     )
 
@@ -39,9 +39,9 @@ def main(page: ft.Page):
                             ),
                             ft.Slider(
                                 min=0,
-                                max=page.window.width,
+                                max=page.width,
                                 divisions=20,
-                                value=page.window.width,
+                                value=page.width,
                                 label="{value}",
                                 on_change=handle_slider_change,
                             ),
