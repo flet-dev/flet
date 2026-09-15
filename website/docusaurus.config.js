@@ -100,6 +100,7 @@ module.exports = {
           position: 'left'
         },
         {
+          type: 'custom-githubStars',
           href: 'https://github.com/flet-dev/flet',
           position: 'right',
           className: 'header-github-link',

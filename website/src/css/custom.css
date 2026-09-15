@@ -106,6 +106,36 @@
   opacity: 0.6;
 }
 
+.header-github-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.header-github-stars {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  min-width: 58px;
+  font-size: 13px;
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+}
+
+.header-github-stars > span {
+  font-size: 17px;
+}
+
+.header-github-link > svg {
+  display: none;
+}
+
+@media (max-width: 996px) {
+  .navbar__item.header-github-link {
+    display: none;
+  }
+}
+
 .header-github-link::before {
   content: '';
   width: 24px;

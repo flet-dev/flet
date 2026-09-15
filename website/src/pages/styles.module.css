@@ -274,23 +274,36 @@
   line-height: 1.75;
 }
 
-.declarativeNote {
-  display: flex;
-  align-items: flex-start;
-  gap: 18px;
-  margin: 30px 0 20px;
+.exampleSteps {
+  list-style: none;
+  counter-reset: example-step;
+  padding: 0;
+  margin: 28px 0 0;
 }
 
-.declarativeNote img {
-  flex-shrink: 0;
+.exampleSteps li {
+  counter-increment: example-step;
+  position: relative;
+  padding-left: 44px;
+  margin-bottom: 24px;
 }
 
-.declarativeNote h3 {
+.exampleSteps li::before {
+  content: "0" counter(example-step);
+  position: absolute;
+  left: 0;
+  top: 2px;
+  color: var(--home-pink);
+  font-family: var(--ifm-font-family-monospace);
+  font-size: 13px;
+}
+
+.exampleSteps h3 {
   font-size: 17px;
   margin-bottom: 8px;
 }
 
-.declarativeNote p {
+.exampleSteps p {
   font-size: 15px;
   color: var(--home-muted);
   margin: 0;
@@ -324,7 +337,14 @@
   color: var(--home-muted);
   font-size: 15px;
   line-height: 1.6;
-  margin: 0 0 12px;
+  margin: 8px 0 0;
+}
+
+.tryOptions {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 24px;
+  margin-top: 16px;
 }
 
 .codeWindow {
@@ -369,6 +389,23 @@
 
 .codeModes button[aria-pressed='true'] {
   background: var(--home-soft);
+  color: var(--home-ink);
+  font-weight: 600;
+}
+
+.codeExplanation {
+  padding: 14px 20px;
+  border-bottom: 1px solid var(--home-line);
+  font-size: 13px;
+  line-height: 1.6;
+}
+
+.codeExplanation p {
+  margin: 0 0 6px;
+  color: var(--home-muted);
+}
+
+.codeExplanation a {
   color: var(--home-ink);
   font-weight: 600;
 }

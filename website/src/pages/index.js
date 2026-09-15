@@ -149,6 +149,12 @@ function CodeExample() {
             </button>)}
         </div>
       </div>
+      <div className={styles.codeExplanation}>
+        <p aria-live="polite">{mode === 'imperative'
+          ? 'Imperative: update the controls directly when the button is clicked.'
+          : 'Declarative: update the count, and Flet rebuilds the interface to match.'}</p>
+        <Link to="/docs/cookbook/declarative-vs-imperative">Compare the two styles <Arrow /></Link>
+      </div>
       <CodeBlock language="python">{examples[mode]}</CodeBlock>
       <div className={styles.runCommand}><span aria-hidden="true">$</span> flet run counter.py</div>
     </div>;
@@ -162,7 +168,7 @@ export default function Home() {
             <h1 id="hero-title">Your next app.<br />Built in <span>Python.</span></h1>
             <p className={styles.heroDescription}>Build beautiful web, desktop, and mobile apps from one Python codebase.</p>
             <div className={styles.actions}>
-              <Link className={styles.primaryButton} to="https://studio.flet.dev">Start building <Arrow /></Link>
+              <Link className={styles.primaryButton} to="https://studio.flet.dev">Try online <Arrow /></Link>
               <Link className={styles.secondaryButton} to="/docs">Read the docs <span aria-hidden="true">→</span></Link>
             </div>
             <p className={styles.heroNote}>No frontend experience required. Just Python.</p>
@@ -184,18 +190,25 @@ export default function Home() {
 
         <section className={clsx(styles.shell, styles.buildSection)} aria-labelledby="build-title">
           <div className={styles.buildCopy}>
-            <span className={styles.eyebrow}>FROM YOUR FIRST BUTTON TO YOUR BIG IDEA</span>
-            <h2 id="build-title">Small start.<br />Room to grow.</h2>
-            <p>Write a few lines, run your app, and see it come to life. Ready-made controls let you focus on what your app does.</p>
-            <div className={styles.declarativeNote}>
-              <img src={useBaseUrl('/img/pages/home/declarative-ui.svg')} width="36" height="36" alt="" loading="lazy" />
-              <div><h3>Choose how you build</h3><p>Change controls directly with imperative code, or use declarative components that update when your state changes.</p></div>
-            </div>
-            <Link className={styles.textLink} to="/docs/cookbook/declarative-vs-imperative">Get to know both approaches <Arrow /></Link>
+            <span className={styles.eyebrow}>A SIMPLE EXAMPLE</span>
+            <h2 id="build-title">Your first Flet app.</h2>
+            <p>Start with a simple counter to see how Flet turns Python code into an interactive app.</p>
+            <ol className={styles.exampleSteps}>
+              <li><h3>Build the interface</h3><p>Use ready-made controls for the text and button. Arrange them with Python.</p></li>
+              <li><h3>Add the behavior</h3><p>Connect the button to a Python function that increases the count.</p></li>
+            </ol>
             <div className={styles.install}>
-              <span>START LOCALLY</span>
-              <p>Set up your environment with uv or pip.</p>
-              <Link className={styles.textLink} to="/docs/getting-started/installation">Follow the installation guide <Arrow /></Link>
+              <span>TRY IT YOURSELF</span>
+              <div className={styles.tryOptions}>
+                <div>
+                  <Link className={styles.textLink} to="https://studio.flet.dev/gallery/getting-started/example/apps/templates/basic_counter">Try online <Arrow /></Link>
+                  <p>Open Flet Studio.<br />No installation needed.</p>
+                </div>
+                <div>
+                  <Link className={styles.textLink} to="/docs/getting-started/installation">Try locally <Arrow /></Link>
+                  <p>Follow the installation guide for uv or pip.</p>
+                </div>
+              </div>
             </div>
           </div>
           <CodeExample />
