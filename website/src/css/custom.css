@@ -629,3 +629,32 @@ html[data-theme='dark'] .docusaurus-highlight-code-line {
 .icon-grid--pair table {
   max-width: 34rem;
 }
+
+/* The icon gallery draws with the fonts the Flet client itself renders with -
+   Flutter's MaterialIcons and the cupertino_icons package - so the docs cannot
+   show a glyph the app does not draw. Both are built by
+   `.github/scripts/generate_icon_fonts.py`.
+
+   Deliberately not folded into `.material-symbols-outlined` above: that rule
+   enables `liga`, and these fonts carry a ligature table keyed by the SDK's own
+   icon spelling rather than the Dart member names. Rendering by name through it
+   resolves only 6,412 of 8,825 icons and leaves the rest blank with no error,
+   so the gallery addresses glyphs by codepoint instead.
+
+   `font-display: block` rather than `swap`: there is no meaningful fallback for
+   a Private Use Area codepoint, and swap would flash a grid of tofu. */
+@font-face {
+  font-family: "Flet Material Icons";
+  font-style: normal;
+  font-weight: 400;
+  font-display: block;
+  src: url("../fonts/MaterialIcons-Regular.woff2") format("woff2");
+}
+
+@font-face {
+  font-family: "Flet Cupertino Icons";
+  font-style: normal;
+  font-weight: 400;
+  font-display: block;
+  src: url("../fonts/CupertinoIcons.woff2") format("woff2");
+}

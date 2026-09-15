@@ -1,0 +1,7 @@
+# Cloudflare Pages serves everything on flet.dev with a 4-hour revalidating
+# cache, content-hashed build output included. Everything Docusaurus emits here
+# is fingerprinted, so a changed file is a changed URL and the old one can be
+# cached for good - which is what makes the ~430 KB of icon webfonts a one-time
+# cost rather than a revalidation twice a day.
+/assets/*
+  Cache-Control: public, max-age=31536000, immutable
