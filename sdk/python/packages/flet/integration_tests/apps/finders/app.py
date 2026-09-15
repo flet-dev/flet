@@ -23,6 +23,20 @@ async def main(page: ft.Page):
     page.add(ft.Checkbox(label="Hello", key=ft.ValueKey("value_key_1")))
     page.add(ft.TextField(label="Full name", key=ft.ScrollKey("scroll_key_1")))
     page.add(ft.Button("Click me", tooltip="Tooltip1"))
+    page.add(
+        ft.Semantics(
+            identifier="item-1",
+            label="List item",
+            content=ft.Text("Alpha"),
+        )
+    )
+    page.add(
+        ft.Semantics(
+            identifier="item-2",
+            label="List item",
+            content=ft.Text("Beta"),
+        )
+    )
 
 
 if __name__ == "__main__":

@@ -12,6 +12,7 @@ abstract class Tester {
   TestFinder findByKey(Key key);
   TestFinder findByTooltip(String value);
   TestFinder findByIcon(IconData icon);
+  TestFinder findBySemanticsIdentifier(String identifier);
   Future<Uint8List> takeScreenshot(String name);
   Future<void> tapAt(Offset offset);
   Future<void> tap(TestFinder finder, int finderIndex);
