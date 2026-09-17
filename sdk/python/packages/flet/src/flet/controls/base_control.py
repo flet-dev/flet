@@ -328,6 +328,10 @@ class BaseControl:
 
         Override this hook to perform lightweight setup that depends on initialized
         fields. Do not call `update()` here.
+
+        A :class:`~flet.Service` registers with the page after this hook returns,
+        so every field set here, before or after `super().init()`, is part of the
+        message that adds the service to the client.
         """
         pass
 
@@ -396,15 +400,21 @@ class BaseControl:
     def get_data_channel(self, channel_id: int):
         """
         Resolve the [DataChannel] allocated on the Dart side for this
-        widget. Pattern:
+        control or service.
 
-            on_data_channel_open: Optional[ft.EventHandler[DataChannelOpenEvent]] = None
+        Example:
+            ```python
+            on_data_channel_open: Optional[EventHandler[DataChannelOpenEvent]] = None
+
 
             def init(self):
+                super().init()
                 self.on_data_channel_open = self._on_open
 
-            def _on_open(self, e):
+
+            def _on_open(self, e: DataChannelOpenEvent):
                 self._channel = self.get_data_channel(e.channel_id)
+            ```
 
         Idempotent — the underlying Connection caches DataChannels by id,
         so repeated calls return the same instance. No error path: the id

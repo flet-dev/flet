@@ -12,6 +12,7 @@ from typing import (
     TYPE_CHECKING,
     Any,
     Callable,
+    ClassVar,
     Optional,
     ParamSpec,
     TypeVar,
@@ -103,27 +104,37 @@ class ServiceRegistry(Service):
     Tracked service instances currently attached to this page.
     """
 
+    _auto_register: ClassVar[bool] = False
+    """
+    Disabled: a registry is the container for services, not a service itself.
+
+    Self-registering would leak across pages: when a second Page is constructed
+    while another page is still the current context - an embedded `FletApp` inside
+    a host app - the new page's registry would be registered inside the host's
+    registry. The client has no service binding for type "ServiceRegistry", so
+    building it throws "Unknown service" inside the host's service loop, and every
+    service registered after it is never built: invoking one then fails with
+    "Timeout waiting for invoke method listener".
+    """
+
     def __post_init__(self, ref: Optional[Ref[Any]]):
         super().__post_init__(ref)
         self._internals["uid"] = random_string(10)
         self._lock: threading.Lock = threading.Lock()
 
-    def init(self):
-        # Deliberately skips Service.init(), which registers the instance into
-        # `context.page._services`. A registry is the *container* for services,
-        # not a service itself, and self-registering leaks across pages: when a
-        # second Page is constructed while another page is still the current
-        # context — an embedded `FletApp` inside a host app — the new page's
-        # registry is registered inside the HOST's registry. The client has no
-        # service binding for type "ServiceRegistry", so building it throws
-        # "Unknown service" inside the host's service loop, and every service
-        # registered after it is never built: invoking one then fails with
-        # "Timeout waiting for invoke method listener".
-        BaseControl.init(self)
-
     def register_service(self, service: Service):
         """
         Registers a service in this registry and pushes an update.
+
+        If the page hasn't been sent to the client yet, the service is only added
+        to the registry and goes out with the page.
+
+        If the update fails before the client received the service, the
+        registration is undone before the error is re-raised, so the service list
+        the next diff compares against matches what the client has. Otherwise every
+        later registration would be sent relative to a list the client doesn't have.
+        A failure after the client received the service - in `did_mount()`, for
+        example - leaves it registered, because the client keeps it.
 
         Args:
             service: Service instance to register.
@@ -133,7 +144,38 @@ class ServiceRegistry(Service):
                 f"Registering service {service._c}({service._i}) to registry {self._i}"
             )
             self._services.append(service)
-            self.__internal_update()
+            if self.parent is None:
+                return
+            prev_lists = getattr(self, "__prev_lists", None)
+            saved_prev_lists = (
+                {k: list(v) for k, v in prev_lists.items()}
+                if prev_lists is not None
+                else None
+            )
+            try:
+                self.__internal_update()
+            except BaseException:
+                if not self.__is_mounted(service):
+                    for i in range(len(self._services) - 1, -1, -1):
+                        if self._services[i] is service:
+                            del self._services[i]
+                            break
+                    if prev_lists is not None:
+                        prev_lists.clear()
+                        prev_lists.update(saved_prev_lists)
+                raise
+
+    def __is_mounted(self, service: Service) -> bool:
+        """
+        Whether the session has mounted `service`.
+
+        The session mounts added controls right after the patch that adds them is
+        sent, so a mounted service is one the client has received.
+        """
+        try:
+            return self.page.session.index.get(service._i) is service
+        except RuntimeError:
+            return False
 
     def unregister_services(self):
         """
