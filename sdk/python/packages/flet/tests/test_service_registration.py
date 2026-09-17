@@ -252,6 +252,23 @@ class DidMountRaisesService(ft.Service):
         raise ValueError("did_mount failed")
 
 
+@ft.control("FailingMountControl")
+class FailingMountControl(ft.Control):
+    """Fails in `did_mount()`, which runs after the client received the control."""
+
+    def did_mount(self):
+        """Raise after the control has been sent and mounted."""
+        super().did_mount()
+        raise ValueError("child did_mount failed")
+
+
+@ft.control("HolderService")
+class HolderService(ft.Service):
+    """Holds a control, so a change to it rides along with the next registration."""
+
+    content: Optional[ft.Control] = None
+
+
 @ft.control("PageInInitService")
 class PageInInitService(ft.Service):
     """Reads the page in `init()`, through `ft.context.page` and `self.page`."""
@@ -514,6 +531,31 @@ def test_service_whose_did_mount_raises_stays_registered(session):
 
     [svc] = session.page._services._services
     assert _snapshots(session, svc)
+
+
+def test_service_sent_alongside_a_failing_control_stays_registered(session):
+    """A service stays registered when another control in its patch fails to mount.
+
+    The holder's pending child goes out in the same patch as the new service, and
+    its `did_mount()` raises before the new service mounts. The client already has
+    both, so the next registration must be added after the new service.
+    """
+    holder = HolderService()
+    holder.content = FailingMountControl()
+
+    with pytest.raises(ValueError, match="child did_mount failed"):
+        ft.Clipboard()
+
+    [_, clipboard] = session.page._services._services
+    assert isinstance(clipboard, ft.Clipboard)
+    assert _snapshots(session, clipboard)
+
+    launcher = ft.UrlLauncher()
+
+    assert _registered(session) == _ids(holder, clipboard, launcher)
+    ops = _registry_add_ops(session)[-1]
+    assert [op[0] for op in ops] == [Operation.Add.value]
+    assert ops[0][2:] == [2, _snapshots(session, launcher)[0]]
 
 
 def test_unsupported_service_does_not_break_later_registrations(session):

@@ -248,6 +248,9 @@ class Session:
         and then applied to the local session index by unmounting removed controls and
         mounting added controls.
 
+        Every added control is indexed before any of them runs `did_mount()`, so the
+        index matches what the client received even when a `did_mount()` raises.
+
         Args:
             control: Current control state to patch from.
             prev_control: Previous control snapshot. If `None`, `control` is used.
@@ -285,9 +288,11 @@ class Session:
         for ac in added_controls:
             patch_logger.debug("   %s", ac)
 
-        removed_ids = {removed_control._i for removed_control in removed_controls}
         for added_control in added_controls:
             self.__index[added_control._i] = added_control
+
+        removed_ids = {removed_control._i for removed_control in removed_controls}
+        for added_control in added_controls:
             if added_control._i not in removed_ids:
                 added_control.did_mount()
 

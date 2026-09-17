@@ -155,7 +155,7 @@ class ServiceRegistry(Service):
             try:
                 self.__internal_update()
             except BaseException:
-                if not self.__is_mounted(service):
+                if not self.__was_sent(service):
                     for i in range(len(self._services) - 1, -1, -1):
                         if self._services[i] is service:
                             del self._services[i]
@@ -165,12 +165,14 @@ class ServiceRegistry(Service):
                         prev_lists.update(saved_prev_lists)
                 raise
 
-    def __is_mounted(self, service: Service) -> bool:
+    def __was_sent(self, service: Service) -> bool:
         """
-        Whether the session has mounted `service`.
+        Whether the patch adding `service` was sent to the client.
 
-        The session mounts added controls right after the patch that adds them is
-        sent, so a mounted service is one the client has received.
+        The session indexes every control a patch adds right after sending it,
+        before any of them runs `did_mount()`, so an indexed service is one the
+        client received - even if a control sent in the same patch failed in
+        `did_mount()`.
         """
         try:
             return self.page.session.index.get(service._i) is service
