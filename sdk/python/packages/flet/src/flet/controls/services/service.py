@@ -13,18 +13,20 @@ class Service(BaseControl):
     """
     Base class for user services.
 
-    A service registers itself with the current page when it is constructed, right
-    after its `init()` returns, so everything set in `init()` - before or after
-    `super().init()` - is part of the message that adds the service to the client.
+    By default, construction registers the service with the current page after
+    `init()` returns, whether or not the override calls `super().init()`. Set client
+    properties and event handlers in `init()` so they are included in registration
+    and available when the Dart service initializes. Without a current page context,
+    the service is constructed but not registered.
 
-    Inside `init()` the service isn't attached to the page yet: `self.page` and
-    `self.update()` raise, so use `ft.context.page` there. A service constructed
-    outside a Flet app callback (for example, at module level or in a plain
-    `threading.Thread`) has no current page and is not registered.
+    Note:
+        Inside `init()`, the service isn't attached to the page yet: `self.page`
+        and `self.update()` raise. Use `ft.context.page` to access the current page.
 
-    Every field declared on a service, public or private, is sent to the client, so
-    its value must be serializable. Keep Python-only state (callables, clients,
-    handles) in attributes assigned in `init()` without declaring them as fields.
+    Declared fields participate in serialization unless excluded with
+    `metadata={"skip": True}`; a leading underscore does not exclude a field.
+    Keep Python-only state, such as clients or handles, in excluded fields or
+    attributes assigned in `init()` without declaring them as fields.
     """
 
     _auto_register: ClassVar[bool] = True
@@ -38,16 +40,9 @@ class Service(BaseControl):
         """
         Finalize the service and register it with the current page.
 
-        The client creates the service's Dart `FletService` and calls its `init()`
-        as soon as the message that adds the service arrives, using only the
-        properties in that message. Registration therefore waits until `init()` has
-        returned, which also means an `init()` override is registered whether or not
-        it calls `super().init()`.
-
-        A subclass that overrides this method is registered inside its
-        `super().__post_init__(ref)` call, so fields it sets after that call reach
-        the client with the next update instead of the first message. Set such
-        fields in `init()`.
+        Prefer overriding `init()` for setup. If this method is overridden,
+        registration occurs inside `super().__post_init__(ref)`: fields assigned
+        after that call require a later update to reach the client.
         """
         super().__post_init__(ref)
         if not self._auto_register:

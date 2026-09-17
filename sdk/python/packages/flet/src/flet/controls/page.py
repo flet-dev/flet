@@ -106,15 +106,10 @@ class ServiceRegistry(Service):
 
     _auto_register: ClassVar[bool] = False
     """
-    Disabled: a registry is the container for services, not a service itself.
-
-    Self-registering would leak across pages: when a second Page is constructed
-    while another page is still the current context - an embedded `FletApp` inside
-    a host app - the new page's registry would be registered inside the host's
-    registry. The client has no service binding for type "ServiceRegistry", so
-    building it throws "Unknown service" inside the host's service loop, and every
-    service registered after it is never built: invoking one then fails with
-    "Timeout waiting for invoke method listener".
+    Disabled so each registry belongs only to its own page. An embedded `FletApp`
+    can construct a page while the host page is the current context; automatic
+    registration would incorrectly add the new registry to the host's services.
+    The client has no service binding for type "ServiceRegistry".
     """
 
     def __post_init__(self, ref: Optional[Ref[Any]]):
@@ -129,12 +124,10 @@ class ServiceRegistry(Service):
         If the page hasn't been sent to the client yet, the service is only added
         to the registry and goes out with the page.
 
-        If the update fails before the client received the service, the
-        registration is undone before the error is re-raised, so the service list
-        the next diff compares against matches what the client has. Otherwise every
-        later registration would be sent relative to a list the client doesn't have.
-        A failure after the client received the service - in `did_mount()`, for
-        example - leaves it registered, because the client keeps it.
+        If the update fails before sending, remove the service and restore the
+        registry's list snapshots before re-raising. A failure after sending, such
+        as a `did_mount()` exception, leaves the service registered so later patches
+        account for the addition already sent.
 
         Args:
             service: Service instance to register.
@@ -167,12 +160,11 @@ class ServiceRegistry(Service):
 
     def __was_sent(self, service: Service) -> bool:
         """
-        Whether the patch adding `service` was sent to the client.
+        Returns whether the patch adding `service` was sent to the client.
 
-        The session indexes every control a patch adds right after sending it,
-        before any of them runs `did_mount()`, so an indexed service is one the
-        client received - even if a control sent in the same patch failed in
-        `did_mount()`.
+        The session indexes all additions after submitting the patch to the
+        connection, before calling `did_mount()`. This remains true if another
+        control's `did_mount()` raises; it does not confirm delivery to the client.
         """
         try:
             return self.page.session.index.get(service._i) is service

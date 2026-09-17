@@ -2,7 +2,9 @@
 
 ### Bug fixes
 
-* Fix fields and event handlers that a `Service` subclass sets in `init()` after `super().init()` never reaching the client. The service was sent from inside `super().init()` and no later `update()` sent what was set after it, so a subclass of a built-in service such as `Connectivity` never subscribed to changes, and an event an extension raises from its Dart `init()` - such as `data_channel_open` - was dropped. Services now register after `init()` returns, so everything set there is part of the message that adds them. As a result, an `init()` that doesn't call `super().init()` is registered too; `self.page` and `self.update()` are not available in a service's `init()`, as for every other control (use `ft.context.page`); every declared field set in `init()` is now sent, so one holding a Python-only value such as a callable raises from the constructor (keep such state in attributes that aren't declared as fields); and a registration that fails - for example, constructing a sensor on an unsupported platform - no longer breaks every service created after it ([#6736](https://github.com/flet-dev/flet/discussions/6736)) by @ndonkoHenri.
+* Fix service properties and event handlers set in `init()` after `super().init()` being omitted from registration. Services now register after `init()` returns, so handlers are available for events raised during client initialization. Failed registrations also no longer leave invalid entries that break later registrations ([#6736](https://github.com/flet-dev/flet/discussions/6736)) by @ndonkoHenri.
+
+  **Compatibility:** `init()` overrides now register even without calling `super().init()`. Use `ft.context.page` inside `init()`; `self.page` and `self.update()` are only available after attachment. Fields set in `init()` now participate in serialization, so keep Python-only state in undeclared attributes or fields with `metadata={"skip": True}`.
 
 ## 1.0.0
 

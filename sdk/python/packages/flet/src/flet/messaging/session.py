@@ -249,7 +249,7 @@ class Session:
         mounting added controls.
 
         Every added control is indexed before any of them runs `did_mount()`, so the
-        index matches what the client received even when a `did_mount()` raises.
+        index includes all additions in the submitted patch even if a callback raises.
 
         Args:
             control: Current control state to patch from.

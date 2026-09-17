@@ -329,9 +329,8 @@ class BaseControl:
         Override this hook to perform lightweight setup that depends on initialized
         fields. Do not call `update()` here.
 
-        A :class:`~flet.Service` registers with the page after this hook returns,
-        so every field set here, before or after `super().init()`, is part of the
-        message that adds the service to the client.
+        See :class:`~flet.Service` for service registration timing and page access
+        during this hook.
         """
         pass
 
@@ -399,7 +398,7 @@ class BaseControl:
 
     def get_data_channel(self, channel_id: int):
         """
-        Resolve the [DataChannel] allocated on the Dart side for this
+        Resolve the :class:`~flet.DataChannel` allocated on the Dart side for this
         control or service.
 
         Example:
