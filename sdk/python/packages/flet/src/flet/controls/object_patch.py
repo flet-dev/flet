@@ -1138,6 +1138,14 @@ class DiffBuilder:
         """
         logger.debug("\n_compare_dataclasses: %s\n\n%s\n%s\n", path, src, dst)
 
+        if frozen and src is dst:
+            # Retained immutable children have no new description to reconcile.
+            # In particular, a Component must not migrate state to itself or
+            # render over its old body before that body can be diffed.
+            if parent is not None and parent is not dst:
+                dst._parent = weakref.ref(parent)
+            return
+
         if (
             self.control_cls
             and isinstance(parent, self.control_cls)
