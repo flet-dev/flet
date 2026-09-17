@@ -2,7 +2,7 @@
 
 ### Bug fixes
 
-* Fix service properties and event handlers set in `init()` after `super().init()` being omitted from registration. Services now register after `init()` returns, so handlers are available for events raised during client initialization. Failed registrations also no longer leave invalid entries that break later registrations ([#6736](https://github.com/flet-dev/flet/discussions/6736)) by @ndonkoHenri.
+* Fix service properties and event handlers set in `init()` after `super().init()` being omitted from registration. Services now register after `init()` returns, so handlers are available for events raised during client initialization. Failed registrations also no longer leave invalid entries that break later registrations ([#6736](https://github.com/flet-dev/flet/discussions/6736), [#6858](https://github.com/flet-dev/flet/pull/6858)) by @ndonkoHenri.
 
   **Compatibility:** `init()` overrides now register even without calling `super().init()`. Use `ft.context.page` inside `init()`; `self.page` and `self.update()` are only available after attachment. Fields set in `init()` now participate in serialization, so keep Python-only state in undeclared attributes or fields with `metadata={"skip": True}`.
 
