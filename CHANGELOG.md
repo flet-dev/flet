@@ -2,7 +2,7 @@
 
 ### Bug fixes
 
-* Fix child components losing click events when passed as control arguments to a component that re-renders ([#6857](https://github.com/flet-dev/flet/issues/6857)) by @FeodorFitsner.
+* Fix child components losing click events when passed as control arguments to a component that re-renders ([#6857](https://github.com/flet-dev/flet/issues/6857), [#6859](https://github.com/flet-dev/flet/pull/6859)) by @FeodorFitsner.
 
 ## 1.0.0
 
