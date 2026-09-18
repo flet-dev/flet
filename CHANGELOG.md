@@ -1,3 +1,9 @@
+## 1.0.1
+
+### Bug fixes
+
+* Fix `ListTile` layout and click events inside a `Row` with unbounded width ([#6854](https://github.com/flet-dev/flet/issues/6854), [#6861](https://github.com/flet-dev/flet/pull/6861)) by @FeodorFitsner.
+
 ## 1.0.0
 
 ### New features
