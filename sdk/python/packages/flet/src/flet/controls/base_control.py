@@ -402,24 +402,30 @@ class BaseControl:
         control or service.
 
         Example:
+            A custom service whose Dart implementation opens a data channel and
+            raises `data_channel_open` can capture it during initialization:
+
             ```python
-            on_data_channel_open: Optional[EventHandler[DataChannelOpenEvent]] = None
+            import flet as ft
 
 
-            def init(self):
-                super().init()
-                self.on_data_channel_open = self._on_open
+            @ft.control("MyService")
+            class MyService(ft.Service):
+                on_data_channel_open: ft.EventHandler[ft.DataChannelOpenEvent] | None = None
 
+                def init(self):
+                    super().init()
+                    self.on_data_channel_open = self._on_open
 
-            def _on_open(self, e: DataChannelOpenEvent):
-                self._channel = self.get_data_channel(e.channel_id)
+                def _on_open(self, e: ft.DataChannelOpenEvent):
+                    self._channel = self.get_data_channel(e.channel_id)
             ```
 
         Idempotent — the underlying Connection caches DataChannels by id,
         so repeated calls return the same instance. No error path: the id
         always comes from a framework-fired event, so by the time this
         runs the channel exists on both sides.
-        """
+        """  # noqa: E501
         return self.page.session.connection.data_channel_for(channel_id)
 
     # public methods

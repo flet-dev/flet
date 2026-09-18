@@ -1,6 +1,5 @@
 """Tests for skipping auto-update when .update() was already called."""
 
-import weakref
 from unittest.mock import AsyncMock, MagicMock, patch
 
 import pytest
@@ -154,10 +153,9 @@ def _fake_service():
 
 
 def _attached_registry(session):
-    """The registry only pushes updates once the page has been sent."""
-    registry = session.page._services
-    registry._parent = weakref.ref(session.page)
-    return registry
+    """Attach the registry while preparing the initial page patch."""
+    session.get_page_patch()
+    return session.page._services
 
 
 def test_register_service_preserves_unset_flag():
