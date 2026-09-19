@@ -17,9 +17,11 @@ def main(page: ft.Page):
             interactive=str_as_bool(interactive.value),
             thickness=thickness_value.value if use_thickness.value else None,
             radius=radius_value.value if use_radius.value else None,
-            orientation=None
-            if orientation.value == "none"
-            else ft.ScrollbarOrientation(orientation.value),
+            orientation=(
+                None
+                if orientation.value == "none"
+                else ft.ScrollbarOrientation(orientation.value)
+            ),
         )
 
     def get_preview_content(scrollbar: ft.Scrollbar) -> tuple[str, ft.Control]:
@@ -70,7 +72,9 @@ def main(page: ft.Page):
 
     page.add(
         ft.SafeArea(
+            expand=True,
             content=ft.Column(
+                scroll=ft.ScrollMode.AUTO,
                 controls=[
                     ft.Text(
                         "Interactive playground for the Scrollbar dataclass. "

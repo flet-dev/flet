@@ -32,6 +32,7 @@ def main(page: ft.Page):
     page.appbar = ft.AppBar(title="ThemeMode Showcase")
     page.add(
         ft.SafeArea(
+            expand=True,
             content=ft.Column(
                 controls=[
                     ft.Text("Switch the app theme mode and inspect the preview below."),

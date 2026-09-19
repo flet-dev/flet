@@ -49,6 +49,7 @@ def main(page: ft.Page):
     page.appbar = ft.AppBar(title="FloatingActionButtonLocation Showcase")
     page.add(
         ft.SafeArea(
+            expand=True,
             content=ft.Column(
                 controls=[
                     ft.Text("Compare FloatingActionButton placement presets."),
