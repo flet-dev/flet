@@ -1,5 +1,6 @@
-import flet as ft
 import flet.canvas as cv
+
+import flet as ft
 
 
 def showcase_card(stroke_join: ft.StrokeJoin) -> ft.Container:
@@ -44,6 +45,7 @@ def main(page: ft.Page):
     page.appbar = ft.AppBar(title="StrokeJoin Showcase")
     page.add(
         ft.SafeArea(
+            expand=True,
             content=ft.Column(
                 controls=[
                     ft.Text("Compare corner rendering for each StrokeJoin value."),
