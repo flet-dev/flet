@@ -1,5 +1,6 @@
-import flet as ft
 import flet.canvas as cv
+
+import flet as ft
 
 
 def showcase_card(stroke_cap: ft.StrokeCap) -> ft.Container:
@@ -55,6 +56,7 @@ def main(page: ft.Page):
     page.appbar = ft.AppBar(title="StrokeCap Showcase")
     page.add(
         ft.SafeArea(
+            expand=True,
             content=ft.Column(
                 controls=[
                     ft.Text("Compare line endings for each StrokeCap value."),

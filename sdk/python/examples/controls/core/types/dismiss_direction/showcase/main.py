@@ -75,6 +75,7 @@ def main(page: ft.Page):
     page.appbar = ft.AppBar(title="DismissDirection Showcase")
     page.add(
         ft.SafeArea(
+            expand=True,
             content=ft.Column(
                 controls=[
                     ft.Text("Try swipe directions to see which ones are allowed."),
