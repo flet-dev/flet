@@ -21,6 +21,7 @@ complexity = "basic"
 features = ["layout routes", "use_route_outlet", "shared layout"]
 
 [tool.flet]
+platforms = ["web"]
 org = "dev.flet"
 company = "Flet"
 copyright = "Copyright (C) 2023-2026 by Flet"
