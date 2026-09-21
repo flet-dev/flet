@@ -54,6 +54,7 @@ def main(page: ft.Page):
     page.add(
         ft.SafeArea(
             content=ft.Column(
+                scroll=ft.ScrollMode.AUTO,
                 controls=[
                     ft.Text(
                         "Click 'Load next photo' to switch both images to a new URL.\n"
