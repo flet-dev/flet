@@ -154,7 +154,13 @@ class RawImage(LayoutControl):
     def _capture_channel(self, e: DataChannelOpenEvent) -> None:
         # Single-channel widget; no need to dispatch on e.channel_name.
         self._channel = self.get_data_channel(e.channel_id)
-        self._channel.on_bytes(self._on_dart_message)
+        loop = asyncio.get_running_loop()
+        # Embedded DataChannel callbacks arrive on a native bridge thread.
+        # Resolve acknowledgements on the event loop so Future callbacks wake
+        # the renderer immediately and the pending-ack queue stays on one thread.
+        self._channel.on_bytes(
+            lambda payload: loop.call_soon_threadsafe(self._on_dart_message, payload)
+        )
         # Acks pending on a previous channel will never arrive; resolve
         # them so old `render` awaits return instead of hanging.
         while self._pending_acks:

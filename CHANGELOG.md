@@ -1,3 +1,9 @@
+## 1.0.1
+
+### Bug fixes
+
+* Fix `RawImage.render()` stalling until the acknowledgement timeout in packaged Windows apps by waking the Python event loop when frame acknowledgements arrive ([#6847](https://github.com/flet-dev/flet/issues/6847), [#6860](https://github.com/flet-dev/flet/pull/6860)) by @FeodorFitsner.
+
 ## 1.0.0
 
 ### New features
