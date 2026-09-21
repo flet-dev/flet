@@ -1015,12 +1015,8 @@ class DiffBuilder:
                         new_item, "fn", None
                     )
 
-                if (not frozen_local and old_item is new_item) or (
-                    frozen_local
-                    and old_item is not new_item
-                    and same_type
-                    and same_component_fn
-                    and _keys_match()
+                if old_item is new_item or (
+                    frozen_local and same_type and same_component_fn and _keys_match()
                 ):
                     self._compare_dataclasses(
                         parent, _path_join(path, idx), old_item, new_item, frozen_local

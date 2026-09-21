@@ -153,7 +153,10 @@ def test_diff_same_key_on_scalar_field_reconciles_in_place():
 
 @pytest.mark.asyncio
 @pytest.mark.parametrize("key", [None, "child"])
-async def test_component_passed_as_control_prop_survives_wrapper_updates(key):
+@pytest.mark.parametrize("sibling_mode", ["none", "insert", "remove"])
+async def test_component_passed_as_control_prop_survives_wrapper_updates(
+    key, sibling_mode
+):
     """A retained child must keep its client IDs, events, and independent state."""
     from flet.components.component import Renderer
 
@@ -175,7 +178,11 @@ async def test_component_passed_as_control_prop_survives_wrapper_updates(key):
     def Wrapper(controls):
         count, set_count = ft.use_state(0)
         setters["wrapper"] = set_count
-        return ft.Column([ft.Text(str(count)), *controls])
+        show_sibling = (sibling_mode == "insert" and count % 2 == 1) or (
+            sibling_mode == "remove" and count % 2 == 0
+        )
+        siblings = [ft.Text("Sibling", key="sibling")] if show_sibling else []
+        return ft.Column([ft.Text(str(count)), *siblings, *controls])
 
     conn = Connection()
     conn.pubsubhub = PubSubHub()
@@ -197,6 +204,12 @@ async def test_component_passed_as_control_prop_survives_wrapper_updates(key):
             for _ in range(5):
                 await asyncio.sleep(0)
             gc.collect()
+
+            # Event dispatch can repair stale parent links, so check them first.
+            assert child.parent is wrapper._b
+            assert child.page is session.page
+            assert direct.parent is wrapper._b
+            assert direct.page is session.page
 
             await session.dispatch_event(client_id, "click", None)
             await session.dispatch_event(direct._i, "click", None)
