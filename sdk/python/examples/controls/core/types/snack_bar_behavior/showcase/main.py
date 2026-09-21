@@ -37,6 +37,7 @@ def main(page: ft.Page):
     page.appbar = ft.AppBar(title="SnackBarBehavior Showcase")
     page.add(
         ft.SafeArea(
+            expand=True,
             content=ft.Column(
                 controls=[
                     ft.Text("Compare snack bar placement: fixed vs floating."),

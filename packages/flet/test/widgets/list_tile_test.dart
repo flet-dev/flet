@@ -31,10 +31,14 @@ void main() {
     for (final disabled in [false, true]) {
       testWidgets('ListTile gestures in $layout, disabled=$disabled',
           (tester) async {
+        const surfaceSize = Size(800, 600);
+        addTearDown(() => tester.binding.setSurfaceSize(null));
+        await tester.binding.setSurfaceSize(surfaceSize);
+
         final backend = _EventBackend();
         final parent = Control(
             id: 1,
-            type: 'Row',
+            type: layout == 'column' ? 'Column' : 'Row',
             properties: {
               '_internals': {'host_expanded': true}
             },
@@ -70,7 +74,7 @@ void main() {
         if (layout == 'width') {
           expect(size.width, 300);
         } else if (layout == 'expanded' || layout == 'column') {
-          expect(size.width, 800);
+          expect(size.width, surfaceSize.width);
         }
 
         backend.events.clear();

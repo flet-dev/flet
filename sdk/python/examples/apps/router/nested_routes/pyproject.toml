@@ -22,6 +22,7 @@ complexity = "basic"
 features = ["nested routes", "dynamic segments", "use_route_params"]
 
 [tool.flet]
+platforms = ["web"]
 org = "dev.flet"
 company = "Flet"
 copyright = "Copyright (C) 2023-2026 by Flet"

@@ -99,7 +99,6 @@ def main(page: ft.Page):
         icon=ft.Icons.KEYBOARD_HIDE,
         tooltip="Hide keyboard",
         on_click=handle_hide_keyboard_click,
-        visible=page.platform.is_mobile(),
     )
 
     page.padding = 0
@@ -112,6 +111,9 @@ def main(page: ft.Page):
                 expand=True,
                 controls=[
                     ft.Row(
+                        # the on-screen keyboard only exists on mobile; hiding the
+                        # whole row keeps it from taking column spacing elsewhere
+                        visible=page.platform.is_mobile(),
                         alignment=ft.MainAxisAlignment.END,
                         controls=[hide_keyboard_button],
                     ),
