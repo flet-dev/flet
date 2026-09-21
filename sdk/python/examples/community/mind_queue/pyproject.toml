@@ -10,9 +10,6 @@ dependencies = ["flet"]
 [dependency-groups]
 dev = ["flet-cli", "flet-desktop", "flet-web"]
 
-[tool.flet.gallery]
-categories = ["Community"]
-
 [tool.flet.metadata]
 title = "Mind Queue"
 controls = ["SafeArea", "Column", "Row", "Text", "TextField", "Checkbox", "FilledButton", "IconButton", "AlertDialog", "AppBar"]

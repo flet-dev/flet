@@ -22,6 +22,7 @@ complexity = "advanced"
 features = ["nested routes", "layout outlet", "auth guard", "route loaders", "active links", "dynamic segments", "context", "observable state"]
 
 [tool.flet]
+platforms = ["web"]
 org = "dev.flet"
 company = "Flet"
 copyright = "Copyright (C) 2023-2026 by Flet"

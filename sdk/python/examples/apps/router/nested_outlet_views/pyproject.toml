@@ -22,6 +22,7 @@ complexity = "intermediate"
 features = ["nested routes", "outlet", "manage_views", "view stack", "back navigation"]
 
 [tool.flet]
+platforms = ["web"]
 org = "dev.flet"
 company = "Flet"
 copyright = "Copyright (C) 2023-2026 by Flet"

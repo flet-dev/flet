@@ -83,23 +83,48 @@ async def main(page: ft.Page):
     fps_text = ft.Text("fps: —", size=12)
 
     page.add(
-        ft.Row(
-            [
-                play_button,
-                ft.Text("speed:"),
-                speed_slider,
-                ft.OutlinedButton("Randomize", on_click=randomize),
-                ft.OutlinedButton("Clear", on_click=clear),
-                fps_text,
-            ],
-            spacing=10,
-        ),
-        ft.GestureDetector(
-            content=raw_image,
-            on_tap_down=lambda e: paint_cell(e.local_position),
-            on_pan_update=lambda e: paint_cell(e.local_position),
-            drag_interval=10,
-        ),
+        ft.SafeArea(
+            expand=True,
+            content=ft.Column(
+                expand=True,
+                controls=[
+                    ft.Row(
+                        [
+                            play_button,
+                            ft.Text("speed:"),
+                            speed_slider,
+                            ft.OutlinedButton("Randomize", on_click=randomize),
+                            ft.OutlinedButton("Clear", on_click=clear),
+                            fps_text,
+                        ],
+                        spacing=10,
+                        run_spacing=10,
+                        wrap=True,
+                    ),
+                    ft.Row(
+                        expand=True,
+                        scroll=ft.ScrollMode.AUTO,
+                        controls=[
+                            ft.Column(
+                                scroll=ft.ScrollMode.AUTO,
+                                controls=[
+                                    ft.GestureDetector(
+                                        content=raw_image,
+                                        on_tap_down=lambda e: paint_cell(
+                                            e.local_position
+                                        ),
+                                        on_pan_update=lambda e: paint_cell(
+                                            e.local_position
+                                        ),
+                                        drag_interval=10,
+                                    ),
+                                ],
+                            ),
+                        ],
+                    ),
+                ],
+            ),
+        )
     )
 
     async def run_loop():

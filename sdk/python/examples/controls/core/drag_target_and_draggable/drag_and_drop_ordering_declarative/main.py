@@ -68,7 +68,7 @@ def ItemView(item: Item, **kwargs):
         horizontal_alignment=ft.CrossAxisAlignment.CENTER,
         controls=[
             ft.Divider(
-                color=ft.Colors.BLACK38,
+                color=ft.Colors.BLACK_38,
                 thickness=2,
                 height=2,
                 radius=2,
@@ -155,9 +155,9 @@ def GroupView(group: Group, move_group, **kwargs):
                         on_leave=lambda _: set_is_group_over(False),
                         content=ft.Container(
                             border=(
-                                ft.Border.all(2, ft.Colors.BLACK12)
+                                ft.Border.all(2, ft.Colors.BLACK_12)
                                 if not is_group_over
-                                else ft.Border.all(2, ft.Colors.BLACK38)
+                                else ft.Border.all(2, ft.Colors.BLACK_38)
                             ),
                             border_radius=ft.BorderRadius.all(15),
                             bgcolor=group.color,
@@ -193,7 +193,7 @@ def GroupView(group: Group, move_group, **kwargs):
                                                 for item in group.items
                                             ],
                                             ft.Divider(
-                                                color=ft.Colors.BLACK38,
+                                                color=ft.Colors.BLACK_38,
                                                 thickness=2,
                                                 height=2,
                                                 radius=2,
