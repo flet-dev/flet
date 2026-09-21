@@ -76,6 +76,7 @@ def main(page: ft.Page):
     page.appbar = ft.AppBar(title="CrossAxisAlignment Showcase")
     page.add(
         ft.SafeArea(
+            expand=True,
             content=ft.Column(
                 controls=[
                     ft.Text(

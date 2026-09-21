@@ -481,13 +481,20 @@ class FletTestApp:
         Wraps provided controls in a Screenshot control.
         """
         controls = list(self.page.controls)
-        self.page.controls = [
-            self.__scrollable_screenshot_host(
-                scr := ft.Screenshot(
-                    ft.Column(controls, margin=margin, intrinsic_width=True)
-                )
-            )
-        ]  # type: ignore
+        # Controls that expand need a bounded host to expand into: shrink-wrapping
+        # them (intrinsic width, scrollable height) is flex-in-unbounded and fails
+        # layout. Give those the whole page instead.
+        expand = True if any(c.expand for c in controls) else None
+        scr = ft.Screenshot(
+            ft.Column(
+                controls,
+                margin=margin,
+                intrinsic_width=expand is None,
+                expand=expand,
+            ),
+            expand=expand,
+        )
+        self.page.controls = [scr if expand else self.__scrollable_screenshot_host(scr)]  # type: ignore
         self.page.update()
         await self.__pump_and_settle_with_timeout("wrap_page_controls_in_screenshot")
         for _ in range(0, pump_times):

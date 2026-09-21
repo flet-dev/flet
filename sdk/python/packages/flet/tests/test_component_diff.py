@@ -1,8 +1,18 @@
 """Regression tests for ObjectPatch diff behaviour around Component reconciliation."""
 
+import asyncio
+import gc
+import weakref
+
+import pytest
+
 import flet as ft
 from flet.controls.base_control import BaseControl
+from flet.controls.context import _context_page
 from flet.controls.object_patch import ObjectPatch
+from flet.messaging.connection import Connection
+from flet.messaging.session import Session
+from flet.pubsub.pubsub_hub import PubSubHub
 
 
 @ft.component
@@ -139,3 +149,86 @@ def test_diff_same_key_on_scalar_field_reconciles_in_place():
     ObjectPatch.from_diff(old_root, new_root, control_cls=BaseControl, frozen=True)
 
     assert new_root.content._i == old_content_i
+
+
+@pytest.mark.asyncio
+@pytest.mark.parametrize("key", [None, "child"])
+@pytest.mark.parametrize("sibling_mode", ["none", "insert", "remove"])
+async def test_component_passed_as_control_prop_survives_wrapper_updates(
+    key, sibling_mode
+):
+    """A retained child must keep its client IDs, events, and independent state."""
+    from flet.components.component import Renderer
+
+    clicks = []
+    setters = {}
+    renders = []
+
+    @ft.component
+    def Child():
+        count, set_count = ft.use_state(0)
+        setters["child"] = set_count
+        renders.append(count)
+        return ft.Container(
+            content=ft.Text(str(count)),
+            on_click=lambda e: clicks.append("child"),
+        )
+
+    @ft.component
+    def Wrapper(controls):
+        count, set_count = ft.use_state(0)
+        setters["wrapper"] = set_count
+        show_sibling = (sibling_mode == "insert" and count % 2 == 1) or (
+            sibling_mode == "remove" and count % 2 == 0
+        )
+        siblings = [ft.Text("Sibling", key="sibling")] if show_sibling else []
+        return ft.Column([ft.Text(str(count)), *siblings, *controls])
+
+    conn = Connection()
+    conn.pubsubhub = PubSubHub()
+    conn.send_message = lambda message: None
+    session = Session(conn)
+    token = _context_page.set(session.page)
+    try:
+        with Renderer().with_context():
+            child = Child(key=key)
+            direct = ft.Button("Direct", on_click=lambda e: clicks.append("direct"))
+            wrapper = Wrapper([direct, child])
+        session.page.render(lambda: wrapper)
+        session.get_page_patch()
+        clickable_ref = weakref.ref(child._b)
+        client_id = child._b._i
+
+        for count in (1, 2):
+            setters["wrapper"](count)
+            for _ in range(5):
+                await asyncio.sleep(0)
+            gc.collect()
+
+            # Event dispatch can repair stale parent links, so check them first.
+            assert child.parent is wrapper._b
+            assert child.page is session.page
+            assert direct.parent is wrapper._b
+            assert direct.page is session.page
+
+            await session.dispatch_event(client_id, "click", None)
+            await session.dispatch_event(direct._i, "click", None)
+            assert clicks == ["child", "direct"] * count
+            assert child._b is clickable_ref()
+            assert session.index[client_id] is child._b
+            assert child.parent is wrapper._b
+            assert child.page is session.page
+            assert not child._stale
+            assert renders == [0]
+
+        setters["child"](1)
+        for _ in range(5):
+            await asyncio.sleep(0)
+        assert child._b.content.value == "1"
+        assert child._b._i == client_id
+        assert renders == [0, 1]
+    finally:
+        session.close()
+        for _ in range(5):
+            await asyncio.sleep(0)
+        _context_page.reset(token)

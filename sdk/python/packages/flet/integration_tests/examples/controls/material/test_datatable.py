@@ -71,7 +71,9 @@ async def test_basic(flet_app_function: ftt.FletTestApp):
 @pytest.mark.asyncio(loop_scope="function")
 async def test_sortable_and_selectable(flet_app_function: ftt.FletTestApp):
     flet_app_function.page.enable_screenshots = True
-    flet_app_function.resize_page(500, 620)
+    # wide enough for the table's full 700px: it no longer shrinks to fit, it
+    # scrolls horizontally instead
+    flet_app_function.resize_page(760, 620)
     flet_app_function.page.update()
 
     await flet_app_function.tester.pump_and_settle()

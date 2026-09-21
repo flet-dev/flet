@@ -21,6 +21,7 @@ complexity = "intermediate"
 features = ["auth guard", "route redirect", "context", "observable state"]
 
 [tool.flet]
+platforms = ["web"]
 org = "dev.flet"
 company = "Flet"
 copyright = "Copyright (C) 2023-2026 by Flet"

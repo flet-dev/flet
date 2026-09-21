@@ -45,6 +45,7 @@ def main(page: ft.Page):
     page.appbar = ft.AppBar(title="LabelPosition Showcase")
     page.add(
         ft.SafeArea(
+            expand=True,
             content=ft.Column(
                 controls=[
                     ft.Text("Compare left/right label placement for form controls."),
