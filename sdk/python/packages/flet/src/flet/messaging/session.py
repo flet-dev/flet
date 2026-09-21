@@ -270,12 +270,6 @@ class Session:
         for c in removed_controls:
             patch_logger.debug("   %s", c)
 
-        added_ids = {added_control._i for added_control in added_controls}
-        for removed_control in removed_controls:
-            if removed_control._i not in added_ids:
-                removed_control.will_unmount()
-            self.__index.pop(removed_control._i, None)
-
         if len(patch) > 1:
             self.__send_message(
                 Message(
@@ -288,8 +282,18 @@ class Session:
         for ac in added_controls:
             patch_logger.debug("   %s", ac)
 
+        # Commit the entire index before lifecycle callbacks. A failed send must
+        # neither unmount existing controls nor remove them from the index, and
+        # a failed callback must not roll back an already-submitted service.
+        for removed_control in removed_controls:
+            self.__index.pop(removed_control._i, None)
         for added_control in added_controls:
             self.__index[added_control._i] = added_control
+
+        added_ids = {added_control._i for added_control in added_controls}
+        for removed_control in removed_controls:
+            if removed_control._i not in added_ids:
+                removed_control.will_unmount()
 
         removed_ids = {removed_control._i for removed_control in removed_controls}
         for added_control in added_controls:

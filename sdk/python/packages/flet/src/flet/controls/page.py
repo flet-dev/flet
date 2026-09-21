@@ -6,7 +6,7 @@ import threading
 import weakref
 from collections.abc import Awaitable, Coroutine
 from concurrent.futures import CancelledError, Future, ThreadPoolExecutor
-from dataclasses import InitVar, dataclass, field
+from dataclasses import InitVar, dataclass, field, fields, is_dataclass
 from functools import partial
 from typing import (
     TYPE_CHECKING,
@@ -125,7 +125,7 @@ class ServiceRegistry(Service):
         to the registry and goes out with the page.
 
         If the update fails before sending, remove the service and restore the
-        registry's list snapshots before re-raising. A failure after sending, such
+        subtree's update tracking before re-raising. A failure after sending, such
         as a `did_mount()` exception, leaves the service registered so later patches
         account for the addition already sent.
 
@@ -139,12 +139,7 @@ class ServiceRegistry(Service):
             self._services.append(service)
             if self.parent is None:
                 return
-            prev_lists = getattr(self, "__prev_lists", None)
-            saved_prev_lists = (
-                {k: list(v) for k, v in prev_lists.items()}
-                if prev_lists is not None
-                else None
-            )
+            restore = self.__snapshot_update_state()
             try:
                 self.__internal_update()
             except BaseException:
@@ -153,10 +148,69 @@ class ServiceRegistry(Service):
                         if self._services[i] is service:
                             del self._services[i]
                             break
-                    if prev_lists is not None:
-                        prev_lists.clear()
-                        prev_lists.update(saved_prev_lists)
+                    restore()
                 raise
+
+    def __snapshot_update_state(self) -> Callable[[], None]:
+        """Save diff bookkeeping without copying controls or application state.
+
+        Both current fields and previous snapshots can contain controls: a child
+        pending removal is only reachable through the previous snapshot. Restore
+        missing attributes too, since configuring new children attaches parents
+        and creates snapshots before serialization can fail.
+        """
+        attributes = (
+            "_dirty",
+            "__changes",
+            "__prev_lists",
+            "__prev_dicts",
+            "__prev_classes",
+            "_parent",
+            "_initialized",
+            "_frozen",
+        )
+        saved = []
+        visited = set()
+
+        def capture(value):
+            if id(value) in visited:
+                return
+            visited.add(id(value))
+            if is_dataclass(value) and not isinstance(value, type):
+                state = {}
+                for name in attributes:
+                    if not hasattr(value, name):
+                        continue
+                    attr = getattr(value, name)
+                    if isinstance(attr, dict):
+                        attr = attr.copy()
+                        if name in ("__prev_lists", "__prev_dicts"):
+                            attr = {k: v.copy() for k, v in attr.items()}
+                    state[name] = attr
+                saved.append((value, state))
+                for name in ("__prev_lists", "__prev_dicts", "__prev_classes"):
+                    capture(state.get(name))
+                for f in fields(value):
+                    if not f.metadata.get("skip", False):
+                        capture(getattr(value, f.name))
+            elif isinstance(value, dict):
+                for item in value.values():
+                    capture(item)
+            elif isinstance(value, (list, tuple)):
+                for item in value:
+                    capture(item)
+
+        capture(self)
+
+        def restore():
+            for value, state in saved:
+                for name in attributes:
+                    if name in state:
+                        object.__setattr__(value, name, state[name])
+                    elif hasattr(value, name):
+                        object.__delattr__(value, name)
+
+        return restore
 
     def __was_sent(self, service: Service) -> bool:
         """
@@ -201,9 +255,11 @@ class ServiceRegistry(Service):
         based solely on whether the user called `.update()` themselves.
         """
         was_called = context.was_update_called()
-        self.update()
-        if not was_called:
-            context.reset_update_called()
+        try:
+            self.update()
+        finally:
+            if not was_called:
+                context.reset_update_called()
 
 
 @dataclass

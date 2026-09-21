@@ -598,3 +598,108 @@ def test_registration_does_not_mark_update_called(session):
 
     assert _sent(session)
     assert context.was_update_called() is False
+
+
+@pytest.mark.parametrize("failure", ["serialization", "send"])
+def test_failed_registration_preserves_pending_subtree_changes(session, failure):
+    """Retry all pending changes when a registration patch cannot be sent."""
+    old = ft.Text("old")
+    label = ft.Text("before")
+    column = ft.Column([label])
+    holder = HolderService(content=ft.Row([old, column]))
+    replacement = ft.Text("replacement")
+    appended = ft.Text("appended")
+    holder.content.controls[0] = replacement
+    column.controls.append(appended)
+    label.value = "after"
+    unmounted = []
+    old.will_unmount = lambda: unmounted.append(old._i)
+
+    if failure == "send":
+        session.connection.fail_next_send = RuntimeError("connection lost")
+    with pytest.raises(RuntimeError):
+        if failure == "serialization":
+            CallableFieldService()
+        else:
+            ft.Clipboard()
+
+    assert session.index[old._i] is old
+    assert unmounted == []
+    assert replacement.parent is None
+    assert appended.parent is None
+
+    # Capture the retry itself: it must contain all changes from the failed patch.
+    session.connection.messages.clear()
+    holder.update()
+    assert _snapshots(session, replacement)
+    assert _snapshots(session, appended)
+    assert any(
+        op[-2:] == ["value", "after"]
+        for _, body in _sent(session)
+        for op in body["patch"][1:]
+    )
+    assert session.index[replacement._i] is replacement
+    assert session.index[appended._i] is appended
+    assert old._i not in session.index
+    assert unmounted == [old._i]
+
+
+@pytest.mark.parametrize("failure", ["serialization", "send"])
+def test_failed_registration_preserves_child_replacement(session, failure):
+    """A single-child snapshot must still point to the client-side child."""
+    old = ft.Text("old")
+    holder = HolderService(content=old)
+    replacement = ft.Text("new")
+    holder.content = replacement
+    if failure == "send":
+        session.connection.fail_next_send = RuntimeError("connection lost")
+    with pytest.raises(RuntimeError):
+        if failure == "serialization":
+            CallableFieldService()
+        else:
+            ft.Clipboard()
+
+    assert session.index[old._i] is old
+    session.connection.messages.clear()
+    clipboard = ft.Clipboard()
+    assert _snapshots(session, replacement)
+    assert session.index[replacement._i] is replacement
+    assert old._i not in session.index
+    assert _registered(session) == _ids(holder, clipboard)
+
+
+def test_service_sent_alongside_failing_unmount_stays_registered(session):
+    """An unmount callback failure happens after committing the entire patch."""
+    old = ft.Text("old")
+    holder = HolderService(content=old)
+    replacement = ft.Text("new")
+    holder.content = replacement
+
+    def fail_unmount():
+        raise ValueError("unmount failed")
+
+    old.will_unmount = fail_unmount
+    with pytest.raises(ValueError, match="unmount failed"):
+        ft.Clipboard()
+
+    assert old._i not in session.index
+    assert session.index[replacement._i] is replacement
+    clipboard = session.page._services._services[-1]
+    assert isinstance(clipboard, ft.Clipboard)
+    assert session.index[clipboard._i] is clipboard
+    launcher = ft.UrlLauncher()
+    assert _registered(session) == _ids(holder, clipboard, launcher)
+    ops = _registry_add_ops(session)[-1]
+    assert [op[0] for op in ops] == [Operation.Add.value]
+    assert ops[0][2:] == [2, _snapshots(session, launcher)[0]]
+
+
+@pytest.mark.parametrize("was_called", [False, True])
+def test_failed_registration_preserves_update_called_flag(session, was_called):
+    """Failed internal updates must not suppress the handler's auto-update."""
+    context.reset_update_called()
+    if was_called:
+        context.mark_update_called()
+    with pytest.raises(RuntimeError, match="Cannot serialize method"):
+        CallableFieldService()
+    assert context.was_update_called() is was_called
