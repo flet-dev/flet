@@ -1,7 +1,12 @@
 ## 1.0.1
 
+### Improvements
+
+* Update python-build to `20260921` and serious_python to `4.7.1`, bringing Pyodide `0.27.8`, `0.29.5`, and `314.0.7` for Python 3.12, 3.13, and 3.14, respectively. CPython versions and wheel platform tags are unchanged ([python-build#42](https://github.com/flet-dev/python-build/pull/42), [serious-python#249](https://github.com/flet-dev/serious-python/pull/249)) by @FeodorFitsner.
+
 ### Bug fixes
 
+* Fix macOS crashes during native scientific imports and NumPy operations by increasing the embedded Python worker stack to at least 8 MiB, via serious_python `4.7.1` and dart_bridge `1.10.0` ([serious-python#85](https://github.com/flet-dev/serious-python/issues/85), [dart-bridge#21](https://github.com/flet-dev/dart-bridge/pull/21)) by @AeneasTews.
 * Fix service properties and event handlers set in `init()` after `super().init()` being omitted from registration. Services now register after `init()` returns, so handlers are available for events raised during client initialization. Failed registrations also no longer leave invalid entries that break later registrations ([#6736](https://github.com/flet-dev/flet/discussions/6736), [#6858](https://github.com/flet-dev/flet/pull/6858)) by @ndonkoHenri.
 
   **Compatibility:** `init()` overrides now register even without calling `super().init()`. Use `ft.context.page` inside `init()`; `self.page` and `self.update()` are only available after attachment. Fields set in `init()` now participate in serialization, so keep Python-only state in undeclared attributes or fields with `metadata={"skip": True}`.
