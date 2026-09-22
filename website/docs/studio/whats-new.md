@@ -8,6 +8,19 @@ New features, improvements, and bug fixes in Flet Studio, listed in
 reverse-chronological order. Flet Studio ships independently of the Flet SDK — see
 [Flet release notes](../updates/release-notes.md) for SDK changes.
 
+## September 15, 2026
+
+* Flet Studio now uses **Flet 1.0.0**, including the updated API reference available
+  to its AI agent. See the [Flet 1.0 announcement](/blog/flet-1-0) for what's new
+  in the SDK.
+* Refreshed Flet and Flet Studio logos for light and dark themes.
+* The agent creates app icons at **1024 × 1024** or larger and has updated guidance
+  for Flet 1.0's icon generation: one source image for all platforms, transparent
+  backgrounds, and platform-appropriate framing and background colors.
+* Fixed an extra blank app being created when the app-creation action replayed
+  after signing in. Also fixed a race that could lose that action when the
+  sign-in dialog closed.
+
 ## August 26, 2026
 
 * The agent's activity list is much quieter. Lookups — API references, icon searches,
