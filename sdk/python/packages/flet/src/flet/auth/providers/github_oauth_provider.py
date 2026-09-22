@@ -1,6 +1,5 @@
 from typing import Optional
 
-import httpx
 from flet.auth.group import Group
 from flet.auth.oauth_provider import OAuthProvider
 from flet.auth.user import User
@@ -41,6 +40,8 @@ class GitHubOAuthProvider(OAuthProvider):
             A list of :class:`~flet.auth.Group` mapped from `/user/teams`.
         """
 
+        import httpx
+
         async with httpx.AsyncClient(
             base_url=GITHUB_API_BASE_URL, follow_redirects=True
         ) as client:
@@ -71,6 +72,8 @@ class GitHubOAuthProvider(OAuthProvider):
             A :class:`~flet.auth.User` built from `/user`; its `email` is populated
                 from the primary address in `/user/emails` when available.
         """
+
+        import httpx
 
         async with httpx.AsyncClient(
             base_url=GITHUB_API_BASE_URL, follow_redirects=True
