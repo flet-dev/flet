@@ -60,6 +60,7 @@ def main(page: ft.Page):
     page.appbar = ft.AppBar(title="TabIndicatorAnimation Showcase")
     page.add(
         ft.SafeArea(
+            expand=True,
             content=ft.Column(
                 controls=[
                     ft.Text("Click tabs to compare indicator movement animation."),

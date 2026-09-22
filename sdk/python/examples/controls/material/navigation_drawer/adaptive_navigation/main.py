@@ -90,7 +90,19 @@ def main(page: ft.Page):
             content=ft.Container(
                 expand=True,
                 alignment=ft.Alignment.CENTER,
-                content=build_page_index_text(),
+                content=ft.Column(
+                    alignment=ft.MainAxisAlignment.CENTER,
+                    horizontal_alignment=ft.CrossAxisAlignment.CENTER,
+                    controls=[
+                        build_page_index_text(),
+                        ft.Text(
+                            "Rotate your device to landscape to see the "
+                            "NavigationRail and NavigationDrawer layout.",
+                            text_align=ft.TextAlign.CENTER,
+                            visible=page.platform.is_mobile(),
+                        ),
+                    ],
+                ),
             ),
         )
 

@@ -1,3 +1,5 @@
+from dataclasses import field
+
 import flet as ft
 
 
@@ -5,7 +7,7 @@ import flet as ft
 class MyContainer(ft.Container):
     text: str = ""
     height: int = 100
-    alignment: ft.Alignment = ft.Alignment.CENTER
+    alignment: ft.Alignment = field(default_factory=lambda: ft.Alignment.CENTER)
 
     def init(self):
         self.bgcolor = ft.Colors.random()

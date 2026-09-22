@@ -8,6 +8,10 @@
 
 A [Flet](https://flet.dev) extension to manage the device torch/flashlight.
 
+> **[Try Flet online in Flet Studio](https://studio.flet.dev)**
+>
+> Prototype your Flet app interface in the browser, then add flashlight control and test on your device. Write your own Python code or get help from the AI agent.
+
 It is based on the [flashlight](https://pub.dev/packages/flashlight) Flutter package.
 
 > **Important:** Add `Flashlight` instances to `page.services` before calling toggle or other methods.

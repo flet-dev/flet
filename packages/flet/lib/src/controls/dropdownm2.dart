@@ -138,7 +138,9 @@ class _DropdownM2ControlState extends State<DropdownM2Control> {
       iconDisabledColor:
           widget.control.getColor("select_icon_disabled_color", context),
       iconSize: widget.control.getDouble("select_icon_size", 24.0)!,
-      borderRadius: widget.control.getBorderRadius("border_radius"),
+      // border_radius is deprecated in 1.0.0 and removed in 1.3.0.
+      borderRadius: widget.control.getBorderRadius("menu_border_radius") ??
+          widget.control.getBorderRadius("border_radius"),
       alignment: widget.control.getAlignment("alignment") ??
           AlignmentDirectional.centerStart,
       isExpanded: widget.control.getBool("options_fill_horizontally", true)!,

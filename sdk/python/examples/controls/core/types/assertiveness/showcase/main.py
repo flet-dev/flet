@@ -47,6 +47,7 @@ def main(page: ft.Page):
     page.appbar = ft.AppBar(title="Assertiveness Showcase")
     page.add(
         ft.SafeArea(
+            expand=True,
             content=ft.Column(
                 controls=[
                     ft.Text(
@@ -65,7 +66,7 @@ def main(page: ft.Page):
                         ],
                     ),
                 ]
-            )
+            ),
         )
     )
 

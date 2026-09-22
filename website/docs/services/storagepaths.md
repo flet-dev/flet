@@ -8,7 +8,7 @@ import {ClassMembers, ClassSummary, CodeExample} from '@site/src/components/croc
 
 <ClassSummary name={frontMatter.class_name} />
 
-:::note Relationship to the `FLET_APP_STORAGE_*` environment variables
+:::note[Relationship to the `FLET_APP_STORAGE_*` environment variables]
 `StoragePaths` exposes the raw platform directories. The pre-created
 [`FLET_APP_STORAGE_*`](../reference/environment-variables.md#flet_app_storage_data) env vars map onto
 them: `FLET_APP_STORAGE_CACHE` = `get_application_cache_directory()`, `FLET_APP_STORAGE_TEMP` =

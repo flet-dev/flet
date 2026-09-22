@@ -6,7 +6,7 @@
 		{% if value is string -%}
 		<string>{{ value }}</string>
 		{% elif value is boolean -%}
-		<{{ "true" if value else "false" }} />
+		<{{ "true" if value else "false" }}/>
 		{% elif value is integer -%}
 		<integer>{{ value }}</integer>
 		{% elif value is float -%}

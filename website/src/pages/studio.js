@@ -62,7 +62,7 @@ function HeroScreenshot() {
       src={colorMode === 'dark' ? heroImageDark : heroImageLight}
       alt="Flet Studio editor with file browser, code area, and live preview panel"
       loading="eager"
-      fetchpriority="high"
+      fetchPriority="high"
     />
   );
 }
@@ -70,13 +70,13 @@ function HeroScreenshot() {
 function Studio() {
   return (
     <Layout
-      title="Flet Studio — Build cross-platform Python apps in your browser"
+      title="Flet Studio | Build cross-platform Python apps in your browser"
       description="A full-featured Python IDE in the browser. No install. No setup.">
       <main>
         <section className={styles.heroBand}>
           <div className={styles.heroInner}>
             <span className={styles.heroSupertitle}>Flet Studio</span>
-            <h1 className={styles.heroTitle}>Build cross-platform Python apps in your browser</h1>
+            <h1 className={styles.heroTitle}>Build cross-platform Python apps <span>in your browser.</span></h1>
             <p className={styles.heroSubtitle}>
               A full-featured Python IDE in the browser. No install. No setup.
             </p>
@@ -86,10 +86,10 @@ function Studio() {
                 href="https://studio.flet.dev"
                 target="_blank"
                 rel="noopener noreferrer">
-                Try Flet Studio
+                Try Flet Studio <span aria-hidden="true">↗</span>
               </a>
               <Link className={styles.secondaryCta} to="/docs/studio">
-                Read the docs
+                Read the docs <span aria-hidden="true">→</span>
               </Link>
             </div>
             <HeroScreenshot />
@@ -119,10 +119,10 @@ function Studio() {
                 href="https://studio.flet.dev"
                 target="_blank"
                 rel="noopener noreferrer">
-                Try Flet Studio
+                Try Flet Studio <span aria-hidden="true">↗</span>
               </a>
               <Link className={styles.secondaryCta} to="/docs/studio">
-                Read the docs
+                Read the docs <span aria-hidden="true">→</span>
               </Link>
             </div>
           </div>

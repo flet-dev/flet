@@ -5,6 +5,7 @@ from typing import Optional
 
 from flet.controls.base_control import value
 from flet.controls.blur import BlurValue
+from flet.controls.colors import Colors
 from flet.controls.gradients import GradientTileMode
 from flet.controls.transform import OffsetValue
 from flet.controls.types import (
@@ -317,18 +318,14 @@ class Paint:
     A description of the style to use when drawing a shape on the canvas.
     """
 
-    color: Optional[ColorValue] = None
+    color: ColorValue = Colors.BLACK
     """
     The color to use when stroking or filling a shape.
-
-    Defaults to opaque black.
     """
 
-    blend_mode: Optional[BlendMode] = None
+    blend_mode: BlendMode = BlendMode.SRC_OVER
     """
     A blend mode to apply when a shape is drawn or a layer is composited.
-
-    Defaults to :attr:`flet.BlendMode.SRC_OVER`.
     """
 
     blur_image: Optional[BlurValue] = None
@@ -336,11 +333,9 @@ class Paint:
     Blur image when drawing it on a canvas.
     """
 
-    anti_alias: Optional[bool] = None
+    anti_alias: bool = True
     """
     Whether to apply anti-aliasing to lines and images drawn on the canvas.
-
-    Defaults to `True`.
     """
 
     gradient: Optional[PaintGradient] = None
@@ -348,42 +343,38 @@ class Paint:
     Configures gradient paint.
     """
 
-    stroke_cap: Optional[StrokeCap] = None
+    stroke_cap: StrokeCap = StrokeCap.BUTT
     """
     The kind of finish to place on the ends of stroked lines.
 
     This applies when :attr:`style` is :attr:`flet.PaintingStyle.STROKE`.
-    If not set, the effective default is :attr:`flet.StrokeCap.BUTT`.
     """
 
-    stroke_join: Optional[StrokeJoin] = None
+    stroke_join: StrokeJoin = StrokeJoin.MITER
     """
     The kind of finish to place on joins between stroked segments.
 
-    This applies when :attr:`style` is
-    :attr:`flet.PaintingStyle.STROKE`. If not set, the effective default is
-    :attr:`flet.StrokeJoin.MITER`.
+    This applies when :attr:`style` is :attr:`flet.PaintingStyle.STROKE`.
 
     See also:
         :attr:`stroke_miter_limit`
     """
 
-    stroke_miter_limit: Optional[Number] = None
+    stroke_miter_limit: Number = 4.0
     """
     The limit for drawing miter joins when :attr:`stroke_join` is
     :attr:`flet.StrokeJoin.MITER` and :attr:`style` is
     :attr:`flet.PaintingStyle.STROKE`.
 
-    If this limit is exceeded, a bevel join is used instead. If not set, the effective
-    default is `4.0`.
+    If this limit is exceeded, a bevel join is used instead.
     """
 
-    stroke_width: Optional[Number] = None
+    stroke_width: Number = 0.0
     """
     How wide stroked edges should be, in logical pixels.
 
-    This applies when :attr:`style` is :attr:`flet.PaintingStyle.STROKE`. If not set,
-    the effective default is `0.0`, which corresponds to a hairline width.
+    This applies when :attr:`style` is :attr:`flet.PaintingStyle.STROKE`.
+    A width of `0.0` corresponds to a hairline.
     """
 
     stroke_dash_pattern: Optional[list[Number]] = None
@@ -398,11 +389,9 @@ class Paint:
         This applies only when :attr:`style` is :attr:`flet.PaintingStyle.STROKE`.
     """
 
-    style: Optional[PaintingStyle] = None
+    style: PaintingStyle = PaintingStyle.FILL
     """
     Whether to paint filled interiors or only stroked outlines.
-
-    If not set, the effective default is :attr:`flet.PaintingStyle.FILL`.
     """
 
     def copy(

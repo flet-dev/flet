@@ -3,7 +3,7 @@ from datetime import datetime, timezone
 from flet.components.component import Component
 from flet.components.hooks.use_effect import EffectHook
 from flet.messaging.connection import Connection
-from flet.messaging.protocol import ClientAction, ClientMessage, SessionCrashedBody
+from flet.messaging.protocol import Message, MessageAction, SessionCrashedBody
 from flet.messaging.session import Session
 from flet.pubsub.pubsub_hub import PubSubHub
 
@@ -25,7 +25,7 @@ def test_disconnected_session_drops_incremental_messages():
     session._Session__expires_at = datetime.now(timezone.utc)
 
     session._Session__send_message(  # type: ignore[attr-defined]
-        ClientMessage(ClientAction.SESSION_CRASHED, SessionCrashedBody("x"))
+        Message(MessageAction.SESSION_CRASHED, SessionCrashedBody("x"))
     )
 
     assert session._Session__send_buffer == []
@@ -54,8 +54,8 @@ def test_attach_connection_restores_state_and_flushes_buffer():
     initial_conn.pubsubhub = PubSubHub()
     session = Session(initial_conn)
 
-    buffered_message = ClientMessage(
-        ClientAction.SESSION_CRASHED, SessionCrashedBody("buffered")
+    buffered_message = Message(
+        MessageAction.SESSION_CRASHED, SessionCrashedBody("buffered")
     )
     session._Session__conn = None
     session._Session__expires_at = datetime.now(timezone.utc)

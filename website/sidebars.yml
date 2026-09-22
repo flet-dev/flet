@@ -38,10 +38,12 @@ docs:
     PubSub: cookbook/pub-sub.md
     Subprocess: cookbook/subprocess.md
     Multiprocessing: cookbook/multiprocessing.md
+    Subinterpreters: cookbook/subinterpreters.md
     Logging: cookbook/logging.md
     Authentication: cookbook/authentication.md
     Encrypting sensitive data: cookbook/encrypting-sensitive-data.md
     Declarative dialogs: cookbook/declarative-dialogs.md
+    Client actions: cookbook/client-actions.md
     Flet MCP server: cookbook/flet-mcp.md
   Publishing Flet app:
     _index: publish/index.md
@@ -64,14 +66,20 @@ docs:
         Hosting:
         - Cloudflare: publish/web/static-website/hosting/cloudflare.md
         - GitHub Pages: publish/web/static-website/hosting/github-pages.md
+    Using PyInstaller: publish/using-pyinstaller.md
   Extending Flet:
   - extend/user-extensions.md
   - extend/built-in-extensions.md
   Stay up to date:
     _index: updates/index.md
     Release notes: updates/release-notes.md
+    Migrating from 0.28 to 1.0: updates/migrate-to-1-0.md
     Breaking changes and deprecations:
       _index: updates/breaking-changes/index.md
+      v1.0.0:
+        All deprecated APIs removed: updates/breaking-changes/v1-0-0/removed-deprecated-apis.md
+        "iOS: per-method signing settings now override top-level ones": updates/breaking-changes/v1-0-0/ios-per-method-signing-precedence.md
+        "InputBorder is now a class hierarchy instead of an enum": updates/breaking-changes/v1-0-0/inputborder-class-hierarchy.md
       v0.86.0:
         App files ship unpacked in a read-only bundle; storage dirs reworked: updates/breaking-changes/v0-86-0/app-files-unpacked-read-only-bundle.md
         "Android: site-packages ship zipped; some packages need extract_packages": updates/breaking-changes/v0-86-0/android-extract-packages.md
@@ -358,6 +366,7 @@ docs:
       Geolocator: services/geolocator/index.md
       Gyroscope: services/gyroscope.md
       HapticFeedback: services/hapticfeedback.md
+      LocalAuthentication: services/localauthentication/index.md
       Magnetometer: services/magnetometer.md
       PermissionHandler: services/permissionhandler/index.md
       ScreenBrightness: services/screenbrightness.md
@@ -391,6 +400,7 @@ docs:
       - types/testing/finder.md
       - types/testing/disposalmode.md
       Base Controls:
+      - controls/actioncontrol.md
       - controls/adaptivecontrol.md
       - controls/basecontrol.md
       - controls/basepage.md
@@ -523,7 +533,11 @@ docs:
           LinearGradient: types/lineargradient.md
           RadialGradient: types/radialgradient.md
           SweepGradient: types/sweepgradient.md
-      - types/inputborder.md
+      - InputBorder:
+          _index: types/inputborder/index.md
+          NoInputBorder: types/noinputborder.md
+          OutlineInputBorder: types/outlineinputborder.md
+          UnderlineInputBorder: types/underlineinputborder.md
       - types/inputfilter.md
       - types/iosutsname.md
       - Key:
@@ -533,6 +547,13 @@ docs:
       - types/locale.md
       - types/localeconfiguration.md
       - types/locationinfo.md
+      - LocalAuthentication:
+        - services/localauthentication/types/androidauthmessages.md
+        - services/localauthentication/types/biometrictype.md
+        - services/localauthentication/types/iosauthmessages.md
+        - services/localauthentication/types/localautherrorcode.md
+        - services/localauthentication/types/localauthexception.md
+        - services/localauthentication/types/windowsauthmessages.md
       - Map:
         - controls/map/types/attributionalignment.md
         - controls/map/types/camera.md
@@ -660,6 +681,11 @@ docs:
           TimePickerTheme: types/timepickertheme.md
           TooltipTheme: types/tooltiptheme.md
       - types/browserconfiguration.md
+      - types/clientaction.md
+      - types/copytoclipboard.md
+      - types/openurl.md
+      - types/pickfiles.md
+      - types/sharetext.md
       - types/tooltip.md
       - types/url.md
       - types/webviewconfiguration.md
@@ -691,6 +717,7 @@ docs:
       - WebView:
         - controls/webview/types/requestmethod.md
         - controls/webview/types/loglevelseverity.md
+        - controls/webview/types/javascriptmode.md
         - controls/webview/types/webviewconsolemessageevent.md
         - controls/webview/types/webviewjavascriptevent.md
         - controls/webview/types/webviewscrollevent.md
@@ -828,6 +855,7 @@ docs:
       - types/dragwillacceptevent.md
       - types/event.md
       - types/expansionpanellistchangeevent.md
+      - types/filepickerresultevent.md
       - types/filepickeruploadevent.md
       - types/gyroscopereadingevent.md
       - types/hoverevent.md
@@ -873,6 +901,7 @@ docs:
         FletPageDisconnectedException: types/fletpagedisconnectedexception.md
         FletUnimplementedPlatformException: types/fletunimplementedplatformexception.md
         FletUnsupportedPlatformException: types/fletunsupportedplatformexception.md
+        LocalAuthException: services/localauthentication/types/localauthexception.md
       FastAPI:
       - fastapi/app.md
       - fastapi/app_manager.md

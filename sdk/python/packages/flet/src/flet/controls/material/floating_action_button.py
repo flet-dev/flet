@@ -1,5 +1,6 @@
 from typing import Annotated, Optional, Union
 
+from flet.controls.action_control import ActionControl
 from flet.controls.base_control import control
 from flet.controls.buttons import OutlinedBorder
 from flet.controls.control import Control
@@ -21,7 +22,7 @@ __all__ = ["FloatingActionButton"]
 
 
 @control("FloatingActionButton")
-class FloatingActionButton(LayoutControl):
+class FloatingActionButton(LayoutControl, ActionControl):
     """
     A floating action button is a circular icon button that hovers over content to \
     promote a primary action in the application. Floating action button is usually set \

@@ -5,7 +5,6 @@ import 'package:flutter/services.dart';
 
 import '../extensions/control.dart';
 import '../models/control.dart';
-import '../utils/borders.dart';
 import '../utils/buttons.dart';
 import '../utils/colors.dart';
 import '../utils/edge_insets.dart';
@@ -104,66 +103,11 @@ class _DropdownControlState extends State<DropdownControl> {
     var textAlign = widget.control.getTextAlign("text_align", TextAlign.start)!;
 
     var fillColor = widget.control.getColor("fill_color", context);
-    var borderColor = widget.control.getColor("border_color", context);
-
-    var borderRadius = widget.control.getBorderRadius("border_radius");
-    var focusedBorderColor =
-        widget.control.getColor("focused_border_color", context);
-    var borderWidth = widget.control.getDouble("border_width");
-    var focusedBorderWidth = widget.control.getDouble("focused_border_width");
     var menuWidth = widget.control.getDouble("menu_width");
     var bgColor = widget.control.getWidgetStateColor("bgcolor", theme);
     var elevation = widget.control.getWidgetStateDouble("elevation");
 
-    var inputBorder = widget.control
-        .getFormFieldInputBorder("border", FormFieldInputBorder.outline)!;
-
-    InputBorder? border;
-
-    if (inputBorder == FormFieldInputBorder.underline) {
-      border = UnderlineInputBorder(
-          borderSide: BorderSide(
-              color: borderColor ?? const Color(0xFF000000),
-              width: borderWidth ?? 1.0));
-    } else if (inputBorder == FormFieldInputBorder.none) {
-      border = InputBorder.none;
-    } else if (inputBorder == FormFieldInputBorder.outline ||
-        borderRadius != null ||
-        borderColor != null ||
-        borderWidth != null) {
-      border = OutlineInputBorder(
-          borderSide: BorderSide(
-              color: borderColor ?? const Color(0xFF000000),
-              width: borderWidth ?? 1.0));
-      if (borderRadius != null) {
-        border =
-            (border as OutlineInputBorder).copyWith(borderRadius: borderRadius);
-      }
-      if (borderColor != null || borderWidth != null) {
-        border = (border as OutlineInputBorder).copyWith(
-            borderSide: borderWidth == 0
-                ? BorderSide.none
-                : BorderSide(
-                    color: borderColor ??
-                        theme.colorScheme.onSurface.withValues(alpha: 0.38),
-                    width: borderWidth ?? 1.0));
-      }
-    }
-
-    InputBorder? focusedBorder;
-    if (borderColor != null ||
-        borderWidth != null ||
-        focusedBorderColor != null ||
-        focusedBorderWidth != null) {
-      focusedBorder = border?.copyWith(
-          borderSide: borderWidth == 0
-              ? BorderSide.none
-              : BorderSide(
-                  color: focusedBorderColor ??
-                      borderColor ??
-                      theme.colorScheme.primary,
-                  width: focusedBorderWidth ?? borderWidth ?? 2.0));
-    }
+    var borders = parseFormFieldBorders(widget.control, theme);
 
     InputDecorationTheme inputDecorationTheme = InputDecorationTheme(
       filled: widget.control.getBool("filled", false)!,
@@ -171,9 +115,12 @@ class _DropdownControlState extends State<DropdownControl> {
       hintStyle: widget.control.getTextStyle("hint_style", theme),
       errorStyle: widget.control.getTextStyle("error_style", theme),
       helperStyle: widget.control.getTextStyle("helper_style", theme),
-      border: border,
-      enabledBorder: border,
-      focusedBorder: focusedBorder,
+      border: borders.border,
+      enabledBorder: borders.enabledBorder,
+      focusedBorder: borders.focusedBorder,
+      errorBorder: borders.errorBorder,
+      focusedErrorBorder: borders.focusedErrorBorder,
+      disabledBorder: borders.disabledBorder,
       isDense: widget.control.getBool("dense", false)!,
       contentPadding: widget.control.getPadding("content_padding"),
     );

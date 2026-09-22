@@ -25,6 +25,20 @@ class HashStamp:
         if data is not None:
             self._hash.update(str(data).encode())
 
+    def digest(self):
+        """
+        Return the current digest as a hex string, without persisting it.
+
+        Used to chain one stamp into another: a step whose output a later step
+        overwrites can hand its identity downstream, so the later step knows
+        to run again.
+
+        Returns:
+            The hex digest of everything added so far.
+        """
+
+        return self._hash.hexdigest()
+
     def has_changed(self):
         """
         Check whether the current digest differs from the stored stamp.

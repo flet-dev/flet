@@ -1,4 +1,5 @@
 import argparse
+import logging
 import os
 import platform
 import signal
@@ -8,12 +9,14 @@ import tempfile
 import threading
 import time
 from pathlib import Path
+from typing import Optional
 from urllib.parse import quote, urlparse, urlunparse
 
 import qrcode
 from watchdog.events import FileSystemEventHandler
 from watchdog.observers import Observer
 
+from flet.app import DEFAULT_ASSETS_DIR
 from flet.utils import (
     get_free_tcp_port,
     get_local_ip,
@@ -23,6 +26,41 @@ from flet.utils import (
 )
 from flet_cli.commands.base import BaseCommand
 from flet_cli.utils.pyproject_toml import load_pyproject_toml
+
+
+def resolve_assets_dir(script_dir: Path, assets_dir: Optional[str]) -> Optional[str]:
+    """
+    Resolve `--assets` to an existing absolute path.
+
+    A relative path is resolved against the app's script directory. A directory
+    that does not exist is dropped rather than passed on, because the resolved
+    path is exported to the app process as `FLET_ASSETS_DIR`, which is treated
+    downstream as deliberate.
+
+    Whether that is worth reporting depends on where the value came from.
+    `--assets` defaults to `DEFAULT_ASSETS_DIR` whether or not the app has such
+    a directory, so a missing one is unremarkable; any other value was typed by
+    the user, so a missing one is a mistake worth a warning.
+
+    Args:
+        script_dir: Directory of the app being run.
+        assets_dir: The `--assets` value, absolute or relative.
+
+    Returns:
+        The resolved absolute path, or `None` if it was not set or does not
+            exist.
+    """
+
+    if not assets_dir:
+        return None
+    requested = assets_dir
+    if not Path(assets_dir).is_absolute():
+        assets_dir = str(script_dir.joinpath(assets_dir).resolve())
+    if Path(assets_dir).is_dir():
+        return assets_dir
+    if requested != DEFAULT_ASSETS_DIR:
+        print(f"Warning: assets_dir does not exist: {assets_dir}")
+    return None
 
 
 class Command(BaseCommand):
@@ -144,7 +182,7 @@ class Command(BaseCommand):
             "--assets",
             dest="assets_dir",
             type=str,
-            default="assets",
+            default=DEFAULT_ASSETS_DIR,
             help="Path to a directory containing static assets "
             "used by the app (e.g. images, fonts)",
         )
@@ -170,16 +208,22 @@ class Command(BaseCommand):
             options: Parsed command options produced by :meth:`add_arguments`.
         """
 
+        if options.verbose > 0:
+            logging.basicConfig(
+                level=logging.DEBUG if options.verbose > 1 else logging.INFO
+            )
+
         from flet.utils.pip import (
             ensure_flet_desktop_package_installed,
             ensure_flet_web_package_installed,
         )
 
-        if options.web:
+        # `--web`, `--ios` and `--android` all serve the app over the web server
+        # (and none of them opens a native window), so need only `flet-web`.
+        if options.web or options.ios or options.android:
             ensure_flet_web_package_installed()
         else:
             ensure_flet_desktop_package_installed()
-        from flet_desktop import close_flet_view
 
         if options.module:
             script_path = Path(options.script.replace(".", "/"))
@@ -219,9 +263,7 @@ class Command(BaseCommand):
         if port is None and not is_windows():
             uds_path = str(Path(tempfile.gettempdir()).joinpath(random_string(10)))
 
-        assets_dir = options.assets_dir
-        if assets_dir and not Path(assets_dir).is_absolute():
-            assets_dir = str(script_dir.joinpath(assets_dir).resolve())
+        assets_dir = resolve_assets_dir(script_dir, options.assets_dir)
 
         ignore_dirs = (
             [
@@ -314,6 +356,7 @@ class Command(BaseCommand):
             flet_app_data_dir=str(flet_app_data_dir),
             flet_app_cache_dir=str(flet_app_cache_dir),
             flet_app_temp_dir=str(flet_app_temp_dir),
+            verbose=options.verbose,
         )
 
         my_observer = Observer()
@@ -327,7 +370,13 @@ class Command(BaseCommand):
         except KeyboardInterrupt:
             pass
 
-        close_flet_view(my_event_handler.pid_file)
+        # `pid_file` is set only by `Handler.open_flet_view_and_wait`, so it is
+        # `None` unless there is a window to close.
+        if my_event_handler.pid_file is not None:
+            from flet_desktop import close_flet_view
+
+            close_flet_view(my_event_handler.pid_file)
+
         my_observer.stop()
         my_observer.join()
 
@@ -359,6 +408,7 @@ class Handler(FileSystemEventHandler):
         flet_app_data_dir,
         flet_app_cache_dir,
         flet_app_temp_dir,
+        verbose,
     ) -> None:
         super().__init__()
         self.args = args
@@ -383,6 +433,7 @@ class Handler(FileSystemEventHandler):
         self.flet_app_data_dir = flet_app_data_dir
         self.flet_app_cache_dir = flet_app_cache_dir
         self.flet_app_temp_dir = flet_app_temp_dir
+        self.verbose = verbose
         self.terminate = threading.Event()
         self.start_process()
 
@@ -411,7 +462,16 @@ class Handler(FileSystemEventHandler):
             p_env["FLET_SERVER_UDS_PATH"] = self.uds_path
         if self.assets_dir is not None:
             p_env["FLET_ASSETS_DIR"] = self.assets_dir
+        # The app runs with its cwd set to the storage directory below, so a
+        # relative path the user typed in their shell has to be resolved here
+        # while that meaning still holds.
+        web_path = p_env.get("FLET_WEB_PATH")
+        if web_path and not Path(web_path).is_absolute():
+            p_env["FLET_WEB_PATH"] = str(Path(web_path).resolve())
+
         p_env["FLET_DISPLAY_URL_PREFIX"] = self.page_url_prefix
+        if self.verbose > 0:
+            p_env["FLET_LOG_LEVEL"] = "debug" if self.verbose > 1 else "info"
 
         p_env["FLET_APP_STORAGE_DATA"] = self.flet_app_data_dir
         p_env["FLET_APP_STORAGE_CACHE"] = self.flet_app_cache_dir
@@ -526,18 +586,20 @@ class Handler(FileSystemEventHandler):
         terminated and the handler termination event is set.
         """
 
-        from flet_desktop import open_flet_view
-
-        self.fvp, self.pid_file = open_flet_view(
-            self.page_url, self.assets_dir, self.hidden
-        )
-        self.fvp.wait()
-        self.p.send_signal(signal.SIGTERM)
         try:
-            self.p.wait(2)
-        except subprocess.TimeoutExpired:
-            self.p.kill()
-        self.terminate.set()
+            from flet_desktop import open_flet_view
+
+            self.fvp, self.pid_file = open_flet_view(
+                self.page_url, self.assets_dir, self.hidden
+            )
+            self.fvp.wait()
+            self.p.send_signal(signal.SIGTERM)
+            try:
+                self.p.wait(2)
+            except subprocess.TimeoutExpired:
+                self.p.kill()
+        finally:
+            self.terminate.set()
 
     def restart_program(self):
         """

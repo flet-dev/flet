@@ -8,6 +8,35 @@ New features, improvements, and bug fixes in Flet Studio, listed in
 reverse-chronological order. Flet Studio ships independently of the Flet SDK — see
 [Flet release notes](../updates/release-notes.md) for SDK changes.
 
+## September 15, 2026
+
+* Flet Studio now uses **Flet 1.0.0**, including the updated API reference available
+  to its AI agent. See the [Flet 1.0 announcement](/blog/flet-1-0) for what's new
+  in the SDK.
+* Refreshed Flet and Flet Studio logos for light and dark themes.
+* The agent creates app icons at **1024 × 1024** or larger and has updated guidance
+  for Flet 1.0's icon generation: one source image for all platforms, transparent
+  backgrounds, and platform-appropriate framing and background colors.
+* Fixed an extra blank app being created when the app-creation action replayed
+  after signing in. Also fixed a race that could lose that action when the
+  sign-in dialog closed.
+
+## August 26, 2026
+
+* The agent's activity list is much quieter. Lookups — API references, icon searches,
+  file reads — now fold into a single expandable row, so what the agent *changed* stands
+  out from what it merely read along the way. Expand any row to see every call it made.
+* File edits show an inline diff with added and removed line counts, so you can see
+  exactly what changed without opening the file.
+* File names in the activity list are links — click one to open it in the editor.
+* Clearer wording and a distinct icon for every tool the agent uses.
+* Fixed an error that could stop a run when you sent a follow-up message in a long
+  conversation.
+* Your unsaved edits are no longer overwritten when the agent changes the same file
+  you're typing in.
+
+<img src="/img/docs/studio/agent-tool-activity.png" className="screenshot-60" style={{borderRadius: '7px'}} alt="Agent activity list with a grouped lookup row, an inline diff, and clickable file links" />
+
 ## July 14, 2026
 
 * New AI agent that helps you build and modify Flet apps with natural-language instructions.

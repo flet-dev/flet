@@ -49,6 +49,7 @@ def main(page: ft.Page):
     page.appbar = ft.AppBar(title="BoxShape Showcase")
     page.add(
         ft.SafeArea(
+            expand=True,
             content=ft.Column(
                 controls=[
                     ft.Text("Compare rectangular and circular box decoration shapes."),
@@ -61,7 +62,7 @@ def main(page: ft.Page):
                         controls=[showcase_card(shape) for shape in ft.BoxShape],
                     ),
                 ]
-            )
+            ),
         )
     )
 

@@ -1,5 +1,6 @@
 from typing import TYPE_CHECKING, Optional, Union
 
+from flet.controls.action_control import ActionControl
 from flet.controls.adaptive_control import AdaptiveControl
 from flet.controls.alignment import Alignment
 from flet.controls.animation import AnimationValue
@@ -35,7 +36,7 @@ if TYPE_CHECKING:
 
 
 @control("Container")
-class Container(LayoutControl, AdaptiveControl):
+class Container(LayoutControl, AdaptiveControl, ActionControl):
     """
     Allows to decorate a control with background color and border and position it with \
     padding, margin and alignment.

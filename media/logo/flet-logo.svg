@@ -1,17 +1,67 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
-<!-- Creator: CorelDRAW 2017 -->
-<svg xmlns="http://www.w3.org/2000/svg" xml:space="preserve" width="759px" height="266px" version="1.1" shape-rendering="geometricPrecision" text-rendering="geometricPrecision" image-rendering="optimizeQuality" fill-rule="evenodd" clip-rule="evenodd"
-viewBox="0 0 446.47 156.41"
- xmlns:xlink="http://www.w3.org/1999/xlink">
- <g id="Layer_x0020_1">
-  <metadata id="CorelCorpID_0Corel-Layer"/>
-  <path fill="#EE3167" d="M0.35 78.6c-0.54,-0.96 -0.41,-1.65 0.07,-2.62 19.9,-36.97 49.93,-59.65 87.77,-75.86 1.29,-0.55 3.19,0.96 2.73,2.31 -5.64,16.41 -9.62,32.39 -11.93,49.56 -2.1,15.82 -2.68,32.18 -0.55,49.27 2.26,19.39 6.89,35.48 12.47,52.82 0.62,1.93 -1.35,2.81 -2.86,2.07 -39.4,-19.4 -69.26,-44.76 -87.7,-77.55z"/>
-  <path fill="#0098DA" fill-opacity="0.639216" d="M117.72 112.72c-21.78,-6.83 -41.27,-18.41 -58.54,-33.71 -1.15,-1.02 -1.02,-2.45 0.02,-3.44 17.15,-16.4 36.61,-29.27 58.13,-38.37 1.89,-0.81 3.45,0.76 2.89,2.92 -6.1,23.39 -7.44,46.5 0.08,69.67 0.62,1.93 -0.94,3.44 -2.58,2.93z"/>
-  <path fill="#5ABAE7" d="M117.72 112.72c-14.34,-4.5 -27.69,-11.06 -40.06,-19.37 -0.86,-13.25 -0.93,-19.14 0.46,-33.75 12.16,-9.01 25.25,-16.5 39.21,-22.4 1.89,-0.81 3.45,0.76 2.89,2.92 -6.1,23.39 -7.44,46.5 0.08,69.67 0.62,1.93 -0.94,3.44 -2.58,2.93z"/>
-  <polygon fill="#4B4B4D" fill-rule="nonzero" points="188.97,143.43 173.38,143.43 173.38,19.56 249.15,19.56 249.15,33.12 188.97,33.12 188.97,72.3 238.75,72.3 238.75,84.74 188.97,84.74 "/>
-  <polygon id="1" fill="#4B4B4D" fill-rule="nonzero" points="280.5,143.43 266.39,143.43 266.39,19.56 280.5,19.56 "/>
-  <path id="2" fill="#4B4B4D" fill-rule="nonzero" d="M369.64 116.31l13.19 2.73c-2.42,7.8 -7.15,14.24 -14.15,19.34 -7.02,5.11 -15.29,7.65 -24.79,7.65 -12.54,0 -22.66,-4.4 -30.42,-13.22 -7.74,-8.82 -11.61,-20.36 -11.61,-34.66 0,-14.58 4.02,-26.41 12.07,-35.38 8.05,-9.01 18.14,-13.5 30.3,-13.5 11.95,0 21.61,4.15 28.88,12.48 7.27,8.29 11.02,20.73 11.2,37.29l-66.67 0c0,13.84 2.91,23.19 8.73,28.05 5.85,4.83 12.01,7.24 18.51,7.24 11.7,0 19.97,-6.01 24.76,-18.02zm-0.93 -27.85c-0.12,-5.17 -0.95,-9.75 -2.53,-13.74 -1.58,-4.03 -4.27,-7.43 -8.02,-10.25 -3.78,-2.82 -8.3,-4.24 -13.56,-4.24 -7.12,0 -13.12,2.54 -18.07,7.64 -4.96,5.11 -7.71,11.95 -8.33,20.59l50.51 0z"/>
-  <path id="3" fill="#4B4B4D" fill-rule="nonzero" d="M446.47 133.77l0 11.33c-5.05,0.62 -9.41,0.93 -13.1,0.93 -17.76,0 -26.65,-9.26 -26.65,-27.8l0 -55.21 -16.15 0 0 -11.15 16.15 0 0.56 -23.06 13.56 -1.27 0 24.33 20.43 0 0 11.15 -20.43 0 0 57.54c0,9.44 4.86,14.14 14.61,14.14 3.25,0 6.93,-0.31 11.02,-0.93z"/>
- </g>
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<svg
+   viewBox="0 0 1844.0653 510"
+   role="img"
+   aria-label="FLET"
+   version="1.1"
+   id="svg4"
+   width="1844.0653"
+   height="510"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:svg="http://www.w3.org/2000/svg"
+   xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+   xmlns:cc="http://creativecommons.org/ns#"
+   xmlns:dc="http://purl.org/dc/elements/1.1/">
+  <defs
+     id="defs4" />
+  <title
+     id="title1">FLET</title>
+  <g
+     id="g18-6"
+     transform="matrix(1.2685136,0,0,1.2685136,-42.903264,771.8591)">
+    <path
+       fill="#0098da"
+       fill-opacity="0.639"
+       d="m 200.63848,-393.81653 c -9.17235,-9.55307 -9.17235,-17.71898 0,-27.27205 C 226.84523,-448.38309 266,-482 330,-502 c 9.96506,-3.11408 15.90008,4.63778 14,14 -6.54846,32.26605 -10.418,56.47549 -10.68635,80.54744 0.26835,24.07196 4.13789,48.2814 10.68635,80.54745 1.90008,9.36222 -4.03494,17.11408 -14,14 -64,-20 -103.15477,-53.61691 -129.36152,-80.91142 z"
+       id="path2-6-5-3-0-5-8-10-7"
+       style="display:inline;mix-blend-mode:normal;fill:#27b0f5;fill-opacity:1;stroke-width:2.62015;stroke-dasharray:none" />
+    <path
+       fill="#ee3167"
+       d="m 45.577922,-378.88272 c -15.674995,-21.42738 -15.674995,-35.71229 0,-57.13967 C 61.25304,-457.44974 120,-537.41553 252,-605 c 20.9287,-10.71557 32.80454,5.54729 28,19 -22.76937,63.75424 -34.01776,120.85191 -33.74516,178.54744 -0.2726,57.69554 10.97579,114.79321 33.74516,178.54745 4.80454,13.45271 -7.0713,29.71557 -28,19 C 120,-277.48958 61.25304,-357.45537 45.577922,-378.88272 Z"
+       id="path1-7-1-7-9-5-9-6-8"
+       style="fill:#ff005f;fill-opacity:1;stroke-width:0;stroke-dasharray:none" />
+    <path
+       id="path5-7-0-3-8-3-0-0"
+       style="display:inline;mix-blend-mode:normal;fill:#8c0075;fill-opacity:1;stroke-width:2.23817;stroke-dasharray:none"
+       d="m 199.45908,-395.44598 c -7.59976,-8.41314 -7.59976,-15.60001 0,-24.01315 12.56302,-13.90733 50.05781,-43.72203 50.05781,-43.72203 -2.1637,18.27023 -3.20379,37.0672 -3.13658,55.7286 -0.0672,18.66141 0.97288,37.45838 3.13658,55.72861 0,0 -37.49479,-29.8147 -50.05781,-43.72203 z" />
+  </g>
+  <metadata
+     id="metadata8">
+    <rdf:RDF>
+      <cc:Work
+         rdf:about="">
+        <dc:title>FLET</dc:title>
+      </cc:Work>
+    </rdf:RDF>
+  </metadata>
+  <g
+     id="g5-3"
+     transform="matrix(1.0031894,0,0,1.0031894,134.28275,54.169186)">
+    <path
+       d="m 1390,60 h 310 v 51 h -125.25 v 229 h -59.5 V 111 H 1390 Z"
+       id="path4-9-5"
+       style="fill:#333333;fill-opacity:1;stroke:#333333;stroke-width:8.69338;stroke-linecap:round;stroke-linejoin:round;stroke-dasharray:none;stroke-opacity:1" />
+    <path
+       d="m 1140,60 h 220 v 51 h -200 c -40,0 -59,19 -59,59 v 4.5 h 259 v 51 h -259 v 4.5 c 0,40 19,59 59,59 h 200 v 51 h -220 c -50,0 -90,-40 -90,-90 V 150 c 0,-50 40,-90 90,-90 z"
+       id="path3-9"
+       style="fill:#333333;fill-opacity:1;stroke:#333333;stroke-width:8.69338;stroke-linecap:round;stroke-linejoin:round;stroke-dasharray:none;stroke-opacity:1" />
+    <path
+       d="m 740,60 h 51 v 170 c 0,39.5 19.5,59 59,59 h 170 c 3.5,18.5 20,41.5 35,51 H 830 c -50,0 -90,-40 -90,-90 z"
+       id="path2-7-3"
+       style="fill:#333333;fill-opacity:1;stroke:#333333;stroke-width:8.69338;stroke-linecap:round;stroke-linejoin:round;stroke-dasharray:none;stroke-opacity:1" />
+    <path
+       d="m 490,60 h 220 v 51 L 510,110.5192 C 470,110.4246 451,130 451,170 v 4.5 h 259 v 51 H 451 V 340.38463 H 400 V 150 c 0,-50 40,-90 90,-90 z"
+       id="path1-0-03"
+       style="fill:#333333;fill-opacity:1;stroke:#333333;stroke-width:8.69338;stroke-linecap:round;stroke-linejoin:round;stroke-dasharray:none;stroke-opacity:1" />
+  </g>
 </svg>

@@ -167,15 +167,37 @@ ft.run(main, assets_dir="assets")
 
 ### Customizing web app
 
-#### Favicon
+#### Icons
 
-To override favicon with your own put `favicon.png` file into the root of assets directory.
-It should be a PNG image with the size of at least 32x32 pixels.
+Everything in the assets directory is copied over the built site, so any generated
+icon can be replaced by putting a file of the same name and path in it:
 
-#### Loading animation
+| file | where it is used | masked by the platform |
+|---|---|---|
+| `favicon.png` | browser tab | no |
+| `icons/Icon-192.png`, `icons/Icon-512.png` | installed app, splash, task switcher | no |
+| `icons/Icon-maskable-192.png`, `icons/Icon-maskable-512.png` | Android install | yes, to a circle |
+| `icons/apple-touch-icon-192.png` | iOS "Add to Home Screen" | yes, rounded corners |
 
-To override the Flet animation image, put `icons/loading-animation.png` with your own app logo
-in the root of the assets directory.
+A file you drop in wins as-is, so the two masked kinds are yours to get right.
+Keep a maskable icon opaque and its artwork inside a circle covering 80% of the
+width — the rest is cropped, and a transparent one shows black corners on some
+Android launchers.
+
+To change every icon at once instead, replace `icon.png` (or `icon_web.png` for
+the web alone) and Flet regenerates the whole set, fitting each one to its mask.
+
+#### Loading screen
+
+Dynamic websites show a static Flet logo until Flutter draws its first frame.
+To replace it, put your image at `icons/loading-animation.png` inside your
+app's assets directory. The filename is preserved for compatibility; the
+image no longer uses the breathing or zoom animation.
+
+The subsequent Flutter boot screen is configured separately with
+[`[tool.flet.boot_screen]`](../../index.md). This override applies to dynamic
+websites only; `flet build web` uses the configured
+[splash screen](../../index.md#splash-screen).
 
 #### PWA
 

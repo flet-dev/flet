@@ -9,8 +9,6 @@ from flet.version import flet_version as __version__
 if TYPE_CHECKING:
     from flet.app import (
         AppCallable,
-        app,
-        app_async,
         run,
         run_async,
     )
@@ -56,6 +54,7 @@ if TYPE_CHECKING:
         margin,
         padding,
     )
+    from flet.controls.action_control import ActionControl
     from flet.controls.adaptive_control import AdaptiveControl
     from flet.controls.alignment import (
         Alignment,
@@ -116,6 +115,7 @@ if TYPE_CHECKING:
         ShapeBorder,
         StadiumBorder,
     )
+    from flet.controls.client_action import ClientAction
     from flet.controls.colors import Colors
     from flet.controls.context import (
         Context,
@@ -335,7 +335,6 @@ if TYPE_CHECKING:
         ValueKey,
     )
     from flet.controls.layout_control import (
-        ConstrainedControl,
         LayoutControl,
         LayoutSizeChangeEvent,
     )
@@ -397,7 +396,6 @@ if TYPE_CHECKING:
         DropdownOption,
     )
     from flet.controls.material.dropdownm2 import DropdownM2
-    from flet.controls.material.elevated_button import ElevatedButton
     from flet.controls.material.expansion_panel import (
         ExpansionPanel,
         ExpansionPanelList,
@@ -413,6 +411,9 @@ if TYPE_CHECKING:
     from flet.controls.material.form_field_control import (
         FormFieldControl,
         InputBorder,
+        NoInputBorder,
+        OutlineInputBorder,
+        UnderlineInputBorder,
     )
     from flet.controls.material.icon_button import (
         FilledIconButton,
@@ -560,7 +561,7 @@ if TYPE_CHECKING:
         BatteryStateChangeEvent,
     )
     from flet.controls.services.browser_context_menu import BrowserContextMenu
-    from flet.controls.services.clipboard import Clipboard
+    from flet.controls.services.clipboard import Clipboard, CopyToClipboard
     from flet.controls.services.connectivity import (
         Connectivity,
         ConnectivityChangeEvent,
@@ -570,8 +571,10 @@ if TYPE_CHECKING:
         FilePicker,
         FilePickerFile,
         FilePickerFileType,
+        FilePickerResultEvent,
         FilePickerUploadEvent,
         FilePickerUploadFile,
+        PickFiles,
     )
     from flet.controls.services.gyroscope import (
         Gyroscope,
@@ -599,12 +602,14 @@ if TYPE_CHECKING:
         ShareFile,
         ShareResult,
         ShareResultStatus,
+        ShareText,
     )
     from flet.controls.services.shared_preferences import SharedPreferences
     from flet.controls.services.storage_paths import StoragePaths
     from flet.controls.services.url_launcher import (
         BrowserConfiguration,
         LaunchMode,
+        OpenUrl,
         UrlLauncher,
         WebViewConfiguration,
     )
@@ -732,6 +737,7 @@ if TYPE_CHECKING:
 __all__ = [
     "Accelerometer",
     "AccelerometerReadingEvent",
+    "ActionControl",
     "AdaptiveControl",
     "AlertDialog",
     "Alignment",
@@ -809,6 +815,7 @@ __all__ = [
     "CircleAvatar",
     "CircleBorder",
     "CircularRectangleNotchShape",
+    "ClientAction",
     "ClipBehavior",
     "Clipboard",
     "ColorFilter",
@@ -820,7 +827,6 @@ __all__ = [
     "Connectivity",
     "ConnectivityChangeEvent",
     "ConnectivityType",
-    "ConstrainedControl",
     "Container",
     "Context",
     "ContextMenu",
@@ -834,6 +840,7 @@ __all__ = [
     "ControlEventHandler",
     "ControlState",
     "ControlStateValue",
+    "CopyToClipboard",
     "CrossAxisAlignment",
     "CupertinoActionSheet",
     "CupertinoActionSheetAction",
@@ -906,7 +913,6 @@ __all__ = [
     "DropdownTheme",
     "Duration",
     "DurationValue",
-    "ElevatedButton",
     "Event",
     "EventControlType",
     "EventHandler",
@@ -918,6 +924,7 @@ __all__ = [
     "FilePicker",
     "FilePickerFile",
     "FilePickerFileType",
+    "FilePickerResultEvent",
     "FilePickerUploadEvent",
     "FilePickerUploadFile",
     "FilledButton",
@@ -1024,6 +1031,7 @@ __all__ = [
     "NavigationRailDestination",
     "NavigationRailLabelType",
     "NavigationRailTheme",
+    "NoInputBorder",
     "NotchShape",
     "Number",
     "NumbersOnlyInputFilter",
@@ -1032,7 +1040,9 @@ __all__ = [
     "OffsetValue",
     "OnReorderEvent",
     "OnScrollEvent",
+    "OpenUrl",
     "Orientation",
+    "OutlineInputBorder",
     "OutlinedBorder",
     "OutlinedButton",
     "OutlinedButtonTheme",
@@ -1054,6 +1064,7 @@ __all__ = [
     "PaintRadialGradient",
     "PaintSweepGradient",
     "PaintingStyle",
+    "PickFiles",
     "Placeholder",
     "PlatformBrightnessChangeEvent",
     "PointerDeviceType",
@@ -1127,6 +1138,7 @@ __all__ = [
     "ShareFile",
     "ShareResult",
     "ShareResultStatus",
+    "ShareText",
     "SharedPreferences",
     "Shimmer",
     "ShimmerDirection",
@@ -1197,6 +1209,7 @@ __all__ = [
     "TooltipValue",
     "Transform",
     "TransparentPointer",
+    "UnderlineInputBorder",
     "UnderlineTabIndicator",
     "Url",
     "UrlLauncher",
@@ -1224,8 +1237,6 @@ __all__ = [
     "WindowsDeviceInfo",
     "__version__",
     "alignment",
-    "app",
-    "app_async",
     "border",
     "border_radius",
     "component",
@@ -1267,6 +1278,7 @@ __all__ = [
 _LAZY = {
     "Accelerometer": "flet.controls.services.accelerometer",
     "AccelerometerReadingEvent": "flet.controls.services.accelerometer",
+    "ActionControl": "flet.controls.action_control",
     "AdaptiveControl": "flet.controls.adaptive_control",
     "AlertDialog": "flet.controls.material.alert_dialog",
     "Alignment": "flet.controls.alignment",
@@ -1344,6 +1356,7 @@ _LAZY = {
     "CircleAvatar": "flet.controls.material.circle_avatar",
     "CircleBorder": "flet.controls.buttons",
     "CircularRectangleNotchShape": "flet.controls.types",
+    "ClientAction": "flet.controls.client_action",
     "ClipBehavior": "flet.controls.types",
     "Clipboard": "flet.controls.services.clipboard",
     "ColorFilter": "flet.controls.box",
@@ -1355,7 +1368,6 @@ _LAZY = {
     "Connectivity": "flet.controls.services.connectivity",
     "ConnectivityChangeEvent": "flet.controls.services.connectivity",
     "ConnectivityType": "flet.controls.services.connectivity",
-    "ConstrainedControl": "flet.controls.layout_control",
     "Container": "flet.controls.material.container",
     "Context": "flet.controls.context",
     "ContextMenu": "flet.controls.material.context_menu",
@@ -1369,6 +1381,7 @@ _LAZY = {
     "ControlEventHandler": "flet.controls.control_event",
     "ControlState": "flet.controls.control_state",
     "ControlStateValue": "flet.controls.control_state",
+    "CopyToClipboard": "flet.controls.services.clipboard",
     "CrossAxisAlignment": "flet.controls.types",
     "CupertinoActionSheet": "flet.controls.cupertino.cupertino_action_sheet",
     "CupertinoActionSheetAction": "flet.controls.cupertino.cupertino_action_sheet_action",  # noqa: E501
@@ -1441,7 +1454,6 @@ _LAZY = {
     "DropdownTheme": "flet.controls.theme",
     "Duration": "flet.controls.duration",
     "DurationValue": "flet.controls.duration",
-    "ElevatedButton": "flet.controls.material.elevated_button",
     "Event": "flet.controls.control_event",
     "EventControlType": "flet.controls.control_event",
     "EventHandler": "flet.controls.control_event",
@@ -1453,6 +1465,7 @@ _LAZY = {
     "FilePicker": "flet.controls.services.file_picker",
     "FilePickerFile": "flet.controls.services.file_picker",
     "FilePickerFileType": "flet.controls.services.file_picker",
+    "FilePickerResultEvent": "flet.controls.services.file_picker",
     "FilePickerUploadEvent": "flet.controls.services.file_picker",
     "FilePickerUploadFile": "flet.controls.services.file_picker",
     "FilledButton": "flet.controls.material.filled_button",
@@ -1559,6 +1572,7 @@ _LAZY = {
     "NavigationRailDestination": "flet.controls.material.navigation_rail",
     "NavigationRailLabelType": "flet.controls.material.navigation_rail",
     "NavigationRailTheme": "flet.controls.theme",
+    "NoInputBorder": "flet.controls.material.form_field_control",
     "NotchShape": "flet.controls.types",
     "Number": "flet.controls.types",
     "NumbersOnlyInputFilter": "flet.controls.material.textfield",
@@ -1567,7 +1581,9 @@ _LAZY = {
     "OffsetValue": "flet.controls.transform",
     "OnReorderEvent": "flet.controls.material.reorderable_list_view",
     "OnScrollEvent": "flet.controls.scrollable_control",
+    "OpenUrl": "flet.controls.services.url_launcher",
     "Orientation": "flet.controls.types",
+    "OutlineInputBorder": "flet.controls.material.form_field_control",
     "OutlinedBorder": "flet.controls.buttons",
     "OutlinedButton": "flet.controls.material.outlined_button",
     "OutlinedButtonTheme": "flet.controls.theme",
@@ -1589,6 +1605,7 @@ _LAZY = {
     "PaintRadialGradient": "flet.controls.painting",
     "PaintSweepGradient": "flet.controls.painting",
     "PaintingStyle": "flet.controls.painting",
+    "PickFiles": "flet.controls.services.file_picker",
     "Placeholder": "flet.controls.core.placeholder",
     "PlatformBrightnessChangeEvent": "flet.controls.page",
     "PointerDeviceType": "flet.controls.types",
@@ -1662,6 +1679,7 @@ _LAZY = {
     "ShareFile": "flet.controls.services.share",
     "ShareResult": "flet.controls.services.share",
     "ShareResultStatus": "flet.controls.services.share",
+    "ShareText": "flet.controls.services.share",
     "SharedPreferences": "flet.controls.services.shared_preferences",
     "Shimmer": "flet.controls.core.shimmer",
     "ShimmerDirection": "flet.controls.core.shimmer",
@@ -1732,6 +1750,7 @@ _LAZY = {
     "TooltipValue": "flet.controls.material.tooltip",
     "Transform": "flet.controls.transform",
     "TransparentPointer": "flet.controls.core.transparent_pointer",
+    "UnderlineInputBorder": "flet.controls.material.form_field_control",
     "UnderlineTabIndicator": "flet.controls.material.tabs",
     "Url": "flet.controls.types",
     "UrlLauncher": "flet.controls.services.url_launcher",
@@ -1758,8 +1777,6 @@ _LAZY = {
     "WindowResizeEdge": "flet.controls.core.window",
     "WindowsDeviceInfo": "flet.controls.device_info",
     "alignment": "flet.controls",
-    "app": "flet.app",
-    "app_async": "flet.app",
     "border": "flet.controls",
     "border_radius": "flet.controls",
     "component": "flet.components.component_decorator",

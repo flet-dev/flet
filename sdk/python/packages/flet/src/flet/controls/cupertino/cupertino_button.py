@@ -2,6 +2,7 @@ from dataclasses import field
 from enum import Enum
 from typing import Annotated, Optional, Union
 
+from flet.controls.action_control import ActionControl
 from flet.controls.alignment import Alignment
 from flet.controls.base_control import control
 from flet.controls.border_radius import BorderRadius, BorderRadiusValue
@@ -46,7 +47,7 @@ class CupertinoButtonSize(Enum):
 
 
 @control("CupertinoButton")
-class CupertinoButton(LayoutControl):
+class CupertinoButton(LayoutControl, ActionControl):
     """
     An iOS-style button.
 

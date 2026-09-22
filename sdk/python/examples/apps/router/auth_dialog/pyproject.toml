@@ -21,6 +21,7 @@ complexity = "intermediate"
 features = ["auth guard", "modal dialog", "context", "observable state", "use_effect"]
 
 [tool.flet]
+platforms = ["web"]
 org = "dev.flet"
 company = "Flet"
 copyright = "Copyright (C) 2023-2026 by Flet"

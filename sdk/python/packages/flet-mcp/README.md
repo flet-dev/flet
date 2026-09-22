@@ -2,6 +2,10 @@
 
 MCP (Model Context Protocol) server that gives LLM agents access to Flet examples, documentation, and API reference.
 
+> **[Try Flet online in Flet Studio](https://studio.flet.dev)**
+>
+> Explore runnable Flet examples and edit their Python code in your browser. No installation required. Write your own Python code or get help from the AI agent.
+
 ## Installation
 
 ```bash

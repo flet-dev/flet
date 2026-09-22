@@ -77,3 +77,20 @@ void openPopupBrowserWindow(
   web.window.open(url, windowName,
       "top=$top,left=$left,width=$width,height=$height,scrollbars=yes");
 }
+
+/// Whether the browser will refuse to open a gesture-gated dialog, such as a
+/// file picker, right now.
+///
+/// Only reports `true` when that is certain: an Apple (WebKit) browser that
+/// says no user activation is live. Chrome and Firefox let a page click a file
+/// input outside a gesture, so they are never reported as blocked - guessing
+/// there would break apps that work today.
+bool isGestureGatedDialogBlocked() {
+  try {
+    if (!web.window.navigator.vendor.startsWith("Apple")) return false;
+    return !web.window.navigator.userActivation.isActive;
+  } catch (_) {
+    // userActivation is unsupported on older browsers - never guess.
+    return false;
+  }
+}

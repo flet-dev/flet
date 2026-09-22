@@ -7,6 +7,7 @@ import '../models/control.dart';
 import '../utils/box.dart';
 import '../utils/drawing.dart';
 import '../utils/numbers.dart';
+import 'client_actions.dart';
 import 'colors.dart';
 import 'enums.dart';
 import 'launch_url.dart';
@@ -53,15 +54,17 @@ FontWeight? parseFontWeight(String? weightName, [FontWeight? defaultWeight]) {
 }
 
 List<TextSpan> parseTextSpans(List<Control> spans, ThemeData theme,
-    [void Function(Control, String, [dynamic eventData])? sendControlEvent]) {
+    [void Function(Control, String, [dynamic eventData])? sendControlEvent,
+    BuildContext? context]) {
   return spans
-      .map((span) => parseInlineSpan(span, theme, sendControlEvent))
+      .map((span) => parseInlineSpan(span, theme, sendControlEvent, context))
       .nonNulls
       .toList();
 }
 
 TextSpan? parseInlineSpan(Control span, ThemeData theme,
-    [void Function(Control, String, [dynamic eventData])? sendControlEvent]) {
+    [void Function(Control, String, [dynamic eventData])? sendControlEvent,
+    BuildContext? context]) {
   span.notifyParent = true;
   var onClick = span.hasEventHandler("click");
   var url = span.getUrl("url");
@@ -71,18 +74,25 @@ TextSpan? parseInlineSpan(Control span, ThemeData theme,
     style: span.getTextStyle("style", theme),
     spellOut: span.getBool("spell_out"),
     semanticsLabel: span.getString("semantics_label"),
-    children: parseTextSpans(span.children("spans"), theme, sendControlEvent),
+    children: parseTextSpans(
+        span.children("spans"), theme, sendControlEvent, context),
     mouseCursor: onClick && !span.disabled && sendControlEvent != null
         ? SystemMouseCursors.click
         : null,
-    recognizer:
-        (onClick || url != null) && !span.disabled && sendControlEvent != null
-            ? (TapGestureRecognizer()
-              ..onTap = () {
-                if (url != null) openWebBrowser(url);
-                if (onClick) sendControlEvent(span, "click");
-              })
-            : null,
+    recognizer: (onClick || span.hasControlActions) &&
+            !span.disabled &&
+            sendControlEvent != null
+        ? (TapGestureRecognizer()
+          ..onTap = () {
+            if (url != null) openWebBrowser(url);
+            // Spans rendered outside a widget tree (e.g. on a Canvas) have no
+            // context to resolve the target service from; only `url` works there.
+            if (context != null) {
+              runClientActions(context, span.get("action"));
+            }
+            if (onClick) sendControlEvent(span, "click");
+          })
+        : null,
     onEnter: span.hasEventHandler("enter") &&
             !span.disabled &&
             sendControlEvent != null

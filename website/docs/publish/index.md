@@ -3,6 +3,7 @@ title: "Publishing a Flet app"
 ---
 
 import CrossPlatformPermissions from '@site/.crocodocs/cross-platform-permissions.mdx';
+import {Image} from '@site/src/components/crocodocs';
 import TabItem from '@theme/TabItem';
 import Tabs from '@theme/Tabs';
 
@@ -10,6 +11,11 @@ import Tabs from '@theme/Tabs';
 
 Flet CLI provides the [`flet build`](../cli/flet-build.md) command to package a
 Flet app into a standalone executable or installable package for distribution.
+
+:::info[Alternative: flet pack]
+For desktop targets, a PyInstaller-based route is also supported —
+see [`flet pack`](using-pyinstaller.md).
+:::
 
 ## Prerequisites
 
@@ -130,9 +136,9 @@ Supported versions and the matching CPython / Pyodide artifacts:
 
 | Short | CPython runtime | Pyodide (web) | Status   |
 | ----- | --------------- | ------------- | -------- |
-| 3.14  | 3.14.6          | 314.0.0       | default  |
-| 3.13  | 3.13.14         | 0.29.4        | stable   |
-| 3.12  | 3.12.13         | 0.27.7        | stable   |
+| 3.14  | 3.14.7          | 314.0.6       | default  |
+| 3.13  | 3.13.15         | 0.29.4        | stable   |
+| 3.12  | 3.12.14         | 0.27.7        | stable   |
 
 The version is resolved in this order:
 
@@ -184,6 +190,55 @@ When you run `flet build <target_platform>`, the pipeline is:
 4. Run [`flutter build`](https://docs.flutter.dev/deployment) to produce the
    executable or installable package.
 5. Copy build outputs from Step 4 into the [output directory](#output-directory).
+
+## How a built app terminates
+
+A built Flet app terminates **immediately**. Python `atexit` handlers, `__del__` finalizers,
+C++ static destructors, and buffered writes that have not yet reached the operating system
+are **not** guaranteed to run. Persist anything that matters before you exit, rather than
+relying on cleanup at shutdown.
+
+This applies both when the user closes the app (desktop) and when your code calls
+`sys.exit()` (every platform).
+
+The reason is that your Python code runs on its own thread alongside Flutter. A normal
+process exit runs the teardown of every loaded library - including the C extension modules
+imported by packages like `matplotlib`, `numpy` and `Pillow` - while that thread may still
+be executing inside one of them. The result was a segfault on exit, reported as a crash by
+the operating system even though the app had finished its work. Skipping the teardown
+removes the failure entirely, at the cost of the guarantees above.
+
+If you need cleanup to run, do it explicitly before exiting. When your own code ends the
+app, finish your work first:
+
+```python
+async def quit(e):
+    await save_my_state()   # finish your own work first
+    sys.exit(0)
+```
+
+On desktop the user can also close the window, which the operating system initiates - your
+code is never asked. To get a chance to run first, intercept the close signal with
+[`Window.prevent_close`][flet.Window.prevent_close] and destroy the window yourself once
+you are done:
+
+```python
+import flet as ft
+
+
+async def main(page: ft.Page):
+    async def handle_window_event(e: ft.WindowEvent):
+        if e.type == ft.WindowEventType.CLOSE:
+            await save_my_state()          # runs before the process goes away
+            await page.window.destroy()
+
+    page.window.prevent_close = True
+    page.window.on_event = handle_window_event
+```
+
+Without `prevent_close`, the window close goes straight through to process termination and
+nothing of yours runs. Keep the handler quick: it holds up the app's exit, and the OS may
+lose patience with an app that takes too long to quit.
 
 ## Configuration options
 
@@ -455,6 +510,42 @@ bundle_id = "com.mycompany.my_app"
 </TabItem>
 </Tabs>
 
+### Description
+
+:::note[Platform support]
+[Web](web/static-website/index.md#flet-build-web) and [Linux](linux.md) only.
+:::
+
+A short description of the application. On web builds it becomes the
+`<meta name="description">` tag and the PWA manifest's `description`; on Linux
+it becomes the [`Comment`](https://specifications.freedesktop.org/desktop-entry/latest/recognized-keys.html#key-comment) of the generated
+[desktop entry](linux.md#app-icon), shown as a tooltip in application menus. Other platforms have no equivalent
+field and ignore it.
+
+#### Resolution order
+
+Its value is determined in the following order of precedence:
+
+1. [`--description`](../cli/flet-build.md#--description)
+2. `[project].description`
+3. `[tool.poetry].description`
+
+#### Example
+
+<Tabs groupId="flet-build--pyproject-toml">
+<TabItem value="flet-build" label="flet build">
+```bash
+flet build <target_platform> --description "Tracks your daily habits."
+```
+</TabItem>
+<TabItem value="pyproject-toml" label="pyproject.toml">
+```toml
+[project]
+description = "Tracks your daily habits."
+```
+</TabItem>
+</Tabs>
+
 ### Company Name
 
 :::note[Platform support]
@@ -562,7 +653,7 @@ Increment this for each new release to differentiate it from previous versions.
 
 Its value is determined in the following order of precedence:
 
-1. `--build-version`
+1. [`--build-version`](../cli/flet-build.md#--build-version)
 2. `[project].version`
 3. `[tool.poetry].version`
 4. Otherwise, the build version from the generated `pubspec.yaml`
@@ -697,112 +788,352 @@ source_packages = ["package1", "package2"]
 
 ### Icons
 
-:::note[Platform support]
-[Android](android.md), [iOS](ios.md), [macOS](macos.md), [Windows](windows.md)
-and [Web](web/static-website/index.md#flet-build-web) only.
-:::
+For most apps, you only need one image. Save it as `icon.png` in your app's
+`assets` directory (`src/assets/icon.png` in the [project structure](#project-structure)
+above). When you run `flet build`, Flet generates the icons needed for your target
+platform.
 
-You can customize app icons for all platforms (except Linux) using image files placed in
-the `assets` directory of your Flet app.
+For the best results, use:
 
-If a platform-specific icon (as in the table below) is not provided, `icon.png`
-(or any supported format like `.bmp`, `.jpg`, or `.webp`) will be used as fallback.
-For the iOS platform, transparency (alpha channel) will be automatically removed, if present.
+- A **1024 × 1024 pixel PNG**, large enough for every supported platform.
+- A **transparent background**, so Flet can add the background each platform needs.
+- Artwork that **fills the canvas**, without extra margins. Flet adds space around
+  it where needed; margins in the source can make small icons look too small.
 
-| Platform | File Name                                | Recommended Size | Notes                                                                                       |
-|----------|------------------------------------------|------------------|---------------------------------------------------------------------------------------------|
-| iOS      | `icon_ios.png`                           | ≥ 1024×1024 px   | Transparency (alpha channel) is not supported and will be automatically removed if present. |
-| Android  | `icon_android.png`                       | ≥ 192×192 px     |                                                                                             |
-| Web      | `icon_web.png`                           | ≥ 512×512 px     |                                                                                             |
-| Windows  | `icon_windows.ico` or `icon_windows.png` | 256×256 px       | `.png` file will be internally converted to a 256×256 px `.ico` icon.                       |
-| macOS    | `icon_macos.png`                         | ≥ 1024×1024 px   |                                                                                             |
+Here is how the same transparent image looks across platforms:
+
+<div className="icon-grid">
+
+| Web, Windows, Linux | iOS | macOS | Android | Maskable web icon |
+|:--:|:--:|:--:|:--:|:--:|
+| <Image src="/img/docs/icons/result-unmasked.png" alt="Artwork filling the icon" /> | <Image src="/img/docs/icons/result-ios.png" alt="Artwork inset on an iOS icon" /> | <Image src="/img/docs/icons/result-macos.png" alt="Artwork on a macOS tile with a shadow" /> | <Image src="/img/docs/icons/result-android.png" alt="Artwork inside a circular Android icon" /> | <Image src="/img/docs/icons/result-maskable.png" alt="Artwork inside a maskable web icon's safe area" /> |
+| Original margins | Added margins and background | Rounded tile and shadow | Space for the launcher's shape | Space for the launcher's shape |
+
+</div>
+
+A *maskable* web icon is used when a browser installs your app and the launcher
+applies its own icon shape, such as a circle or rounded square.
+
+If you do not supply an icon, Flet uses the default Flet icons.
+
+#### Background colour
+
+To put your transparent artwork on a colour other than white, set
+`icon_background` in `pyproject.toml`:
+
+```toml
+[tool.flet]
+icon_background = "#1a1a2e"
+```
+
+Flet uses this colour for iOS icons, the macOS tile, Android's adaptive icon
+background, and the web's maskable and Apple touch icons. Favicons, regular web
+icons, Windows icons, and Linux icons keep their transparency.
+
+You can override the colour for one platform:
+
+```toml
+[tool.flet.macos]
+icon_background = "#000000"
+```
+
+On Android, an explicit
+[`adaptive_icon_background`](android.md#adaptive-icon-background) takes precedence
+over `icon_background`. To show the background colour, keep your source artwork
+transparent; a fully opaque image covers it.
+
+#### What a padded or opaque source does
+
+Flet adjusts the space around transparent artwork in `icon.png` to suit each
+platform. This is called *framing*. It can shrink the artwork within its canvas,
+but does not enlarge it to remove existing margins.
+
+The examples below show why a transparent image without extra padding is a good
+starting point:
+
+<div className="icon-grid">
+
+| | Your source | Web, Windows, Linux | iOS | Android |
+|---|:--:|:--:|:--:|:--:|
+| **No extra padding** | <Image src="/img/docs/icons/source-full-bleed.png" alt="Transparent source with artwork filling the canvas" /> | <Image src="/img/docs/icons/result-unmasked.png" alt="Artwork filling the icon" /> | <Image src="/img/docs/icons/result-ios.png" alt="Artwork fitted for iOS" /> | <Image src="/img/docs/icons/result-android.png" alt="Artwork fitted for Android" /> |
+| **Padded** | <Image src="/img/docs/icons/source-padded.png" alt="Source with extra transparent margins" /> | <Image src="/img/docs/icons/padded-web.png" alt="Small icon retaining the source margins" /> | <Image src="/img/docs/icons/padded-ios.png" alt="Padded artwork fitted for iOS" /> | <Image src="/img/docs/icons/padded-android.png" alt="Padded artwork fitted for Android" /> |
+| **Opaque** | <Image src="/img/docs/icons/source-opaque.png" alt="Source with its own solid background" /> | <Image src="/img/docs/icons/opaque-web.png" alt="Artwork and background filling a square icon" /> | <Image src="/img/docs/icons/opaque-ios.png" alt="Artwork and background with rounded iOS corners" /> | <Image src="/img/docs/icons/opaque-android.png" alt="Artwork and background cropped to an Android circle" /> |
+
+</div>
+
+With **padded artwork**, the existing margins remain on web, Windows, and Linux.
+Flet adds more space on other platforms only if needed. If your artwork is
+already smaller than the target framing, it stays that small.
+
+With **opaque artwork** (an image with no transparency), Flet preserves your
+composition, including its background. The platform can still hide the edges
+when it applies its icon shape, so keep logos and text near the centre. Use this
+approach when you want your design's own background to reach the edges.
+
+#### Image sizes and formats
+
+A 1024 × 1024 image covers the largest icons Flet generates. Larger images work
+too. Smaller images may look blurry when enlarged; `flet build` warns if your
+source is smaller than the largest icon needed for the target platform.
+
+PNG is preferred. Flet also accepts `.webp`, `.jpg`, `.jpeg`, `.gif`, `.bmp`,
+`.tif`, and `.tiff`. If several files have the same base name, Flet prefers PNG.
+SVG is not supported; export it to PNG before building.
+
+A non-square image is centred on a square canvas without stretching or cropping
+the source. The extra space is filled with `icon_background` for opaque outputs
+and left transparent elsewhere:
+
+<div className="icon-grid">
+
+| Your 1024 × 600 source | iOS, opaque web icons, macOS tile | Favicon, regular web icons, Windows, Linux, Android foreground |
+|:--:|:--:|:--:|
+| <Image src="/img/docs/icons/rect-source.png" alt="A wide source image" /> | <Image src="/img/docs/icons/rect-opaque-target.png" alt="Extra space filled with the background colour" /> | <Image src="/img/docs/icons/rect-alpha-target.png" alt="Extra space left transparent" /> |
+
+</div>
+
+The background is shown dark here to make the fill visible. On Android, the
+separate background layer shows through the transparent space. Flet warns about
+non-square sources; use a square image if you want to choose the margins yourself.
+
+#### Making an icon for one platform
+
+To use different artwork or control the margins for one platform, add a file
+with that platform's name to `assets`, such as `icon_macos.png`. It takes
+precedence over `icon.png` for that platform; other platforms still use `icon.png`.
+
+**Platform-specific files keep the margins you supply.** Flet still generates the
+required image sizes and applies platform treatments, such as removing
+transparency on iOS or adding the macOS tile, but it does not automatically fit
+your artwork inside the platform's visible area.
+
+<div className="icon-grid icon-grid--pair">
+
+| `icon.png`: Flet adds margins | `icon_macos.png`: you choose the margins |
+|:--:|:--:|
+| <Image src="/img/docs/icons/framing-derived.png" alt="Shared artwork fitted inside the macOS tile" /> | <Image src="/img/docs/icons/framing-explicit.png" alt="Platform-specific artwork filling the macOS tile" /> |
+
+</div>
+
+Use these sizes and framing guidelines when preparing your own files. The
+percentages match Flet's automatic framing for transparent artwork:
+
+| File | Recommended size | Artwork placement |
+|---|---|---|
+| `icon_ios.png` | 1024 × 1024 | Within the central **60%** of the canvas width and height. |
+| `icon_macos.png` | 1024 × 1024 | Within the central **68%** of the canvas width and height, before Flet places it on the tile. |
+| `icon_android.png` | 1024 × 1024 | Inside a centred circle with a diameter of about **57%** of the canvas width. |
+| `icon_web.png` | 1024 × 1024 | Inside a centred circle with a diameter of **80%** of the canvas width for maskable icons. |
+| `icon_windows.png` or `icon_windows.ico` | 256 × 256 or larger | Can fill the canvas. |
+| `icon_linux.png` | 512 × 512 or larger | Can fill the canvas. |
+
+For the circular areas, keep the entire logo inside the circle, including its
+corners. A logo that fits a square of the same width can still extend outside it.
+
+On Android, use transparency to let `icon_background` show through. An opaque
+`icon_android.png` is also supported, but its own background covers that colour.
+
+On web, `icon_web.png` supplies all six icons, including maskable and Apple touch
+icons. Flet warns if transparent artwork extends outside the maskable safe area.
+To give these icons different margins, [replace them individually](#replacing-a-web-icon-directly).
+
+#### Replacing a web icon directly
+
+To replace just one web icon, put a PNG at the matching path inside `assets`.
+For example, `assets/favicon.png` changes the browser tab icon. These files
+replace the generated icons as-is, without resizing or adding margins.
+
+| Path inside `assets` | Used for | Display shape |
+|---|---|---|
+| `favicon.png` | Browser tab | No mask |
+| `icons/Icon-192.png`, `icons/Icon-512.png` | Installed app, splash, task switcher | No mask |
+| `icons/Icon-maskable-192.png`, `icons/Icon-maskable-512.png` | Launchers that use maskable icons | Chosen by the launcher |
+| `icons/apple-touch-icon-192.png` | iOS "Add to Home Screen" | Rounded corners |
+
+Use the pixel size in the filename where one is given. For maskable icons, use
+an opaque background and keep important artwork inside the
+[safe area](https://www.w3.org/TR/appmanifest/#icon-masks): a centred circle with
+a diameter of **80%** of the image width.
+
+<div className="icon-grid icon-grid--pair">
+
+| Artwork inside the safe area | Artwork at risk of being cropped |
+|:--:|:--:|
+| <Image src="/img/docs/icons/maskable-fitted.png" alt="Artwork inside the maskable safe area" /> | <Image src="/img/docs/icons/maskable-cropped.png" alt="Artwork extending outside the maskable safe area" /> |
+
+</div>
+
+The faded area outside the circle may be hidden by the launcher's shape.
 
 ### Splash screen
 
 :::note[Platform support]
-[Android](android.md), [iOS](ios.md),
-and [Web](web/static-website/index.md#flet-build-web) only.
+[Android](android.md), [iOS](ios.md), and
+[Web](web/static-website/index.md#flet-build-web) only.
 :::
 
-A splash screen is a visual element displayed when an app is launching,
-typically showing a logo or image while the app loads.
+The splash screen shows your app's artwork on a background colour while the app
+starts. By default, Flet uses `icon.png` from your app's `assets` directory, or
+the default Flet icon if you have not supplied one.
 
-You can customize splash screens for iOS, Android, and Web platforms by
-placing image files in the `assets` directory of your Flet app.
+To use different artwork, save it as `splash.png` in `assets`
+(`src/assets/splash.png` in the [project structure](#project-structure) above).
+A square PNG with a transparent background is a good starting point. Flet centres
+the artwork on the screen and generates the image sizes needed for your target
+platform when you run `flet build`.
 
-If platform-specific splash images are not provided, Flet will fall back to `splash.png`.
-If that is also missing, it will use `icon.png` or any supported format such as `.bmp`, `.jpg`, or `.webp`.
+#### Splash background colors
 
-#### Splash images
-
-| Platform | Dark Fallback Order                                                                              | Light Fallback Order                             |
-|----------|--------------------------------------------------------------------------------------------------|--------------------------------------------------|
-| iOS      | `splash_dark_ios.png` → `splash_dark.png` → `splash_ios.png` → `splash.png` → `icon.png`         | `splash_ios.png` → `splash.png` → `icon.png`     |
-| Android  | `splash_dark_android.png` → `splash_dark.png` → `splash_android.png` → `splash.png` → `icon.png` | `splash_android.png` → `splash.png` → `icon.png` |
-| Web      | `splash_dark_web.png` → `splash_dark.png` → `splash_web.png` → `splash.png` → `icon.png`         | `splash_web.png` → `splash.png` → `icon.png`     |
-
-#### Splash Background Colors
-
-You can customize splash background colors using the following options:
-
-- **Splash Color**: Background color for light mode splash screens.
-- **Splash Dark Color**: Background color for dark mode splash screens.
-
-##### Resolution order
-
-Their values are respectively determined in the following order of precedence:
-
-1. [`--splash-color`](../cli/flet-build.md#--splash-color) / [`--splash-dark-color`](../cli/flet-build.md#--splash-dark-color)
-2. `[tool.flet.<PLATFORM>.splash].color` / `[tool.flet.<PLATFORM>.splash].dark_color`
-3. `[tool.flet.splash].color` / `[tool.flet.splash].dark_color`
-4. [Build template](#build-template) defaults
-
-##### Example
+Set the colour that fills the screen in `pyproject.toml`. Use `color` for light
+mode and `dark_color` for dark mode:
 
 <Tabs groupId="flet-build--pyproject-toml">
-<TabItem value="flet-build" label="flet build">
-```
-flet build <target_platform> --splash-color #ffffff --splash-dark-color #333333
-```
-</TabItem>
 <TabItem value="pyproject-toml" label="pyproject.toml">
 ```toml
 [tool.flet.splash]
 color = "#ffffff"
-dark_color = "#333333"
+dark_color = "#222222"
+```
+</TabItem>
+<TabItem value="flet-build" label="flet build">
+```bash
+flet build <target_platform> --splash-color "#ffffff" --splash-dark-color "#222222"
 ```
 </TabItem>
 </Tabs>
 
-#### Disabling Splash Screens
+These are also the default colours. To give one platform a different background,
+use its own splash section:
 
-Splash screens are enabled by default but can be disabled.
+```toml
+[tool.flet.android.splash]
+color = "#112233"
+dark_color = "#080f17"
+```
 
-##### Resolution order
+Command-line options
+[`--splash-color`](../cli/flet-build.md#--splash-color) and
+[`--splash-dark-color`](../cli/flet-build.md#--splash-dark-color) take precedence
+over platform settings, followed by shared settings, then the defaults.
 
-Its value is determined in the following order of precedence:
+For dark mode, also supply a [dark splash image](#splash-images), as described
+below.
 
-- on Android:
-    - [`--no-android-splash`](../cli/flet-build.md#--no-android-splash)
-    - `[tool.flet.splash].android`
-- on iOS:
-    - [`--no-ios-splash`](../cli/flet-build.md#--no-ios-splash)
-    - `[tool.flet.splash].ios`
-- on Web:
-    - [`--no-web-splash`](../cli/flet-build.md#--no-web-splash)
-    - `[tool.flet.splash].web`
+#### Splash images
 
-##### Example
+Use `splash.png` for shared artwork and `splash_dark.png` for a dark-mode version.
+You can override either for one platform by adding its name, such as
+`splash_android.png` or `splash_dark_android.png`.
+
+Flet selects the first available image in this order. Replace `<platform>` with
+`android`, `ios`, or `web`:
+
+| Mode | First choice | Second choice | Fallback |
+|---|---|---|---|
+| Light | `splash_<platform>.png` | `splash.png` | `icon.png`, then the default Flet icon |
+| Dark | `splash_dark_<platform>.png` | `splash_dark.png` | The selected light-mode image |
+
+The same [image formats as app icons](#image-sizes-and-formats) are supported;
+PNG is preferred. A non-square image is centred on a square canvas with
+transparent padding, without stretching or cropping the source.
+
+:::note[Using the same artwork in both themes]
+If you only want to change the background in dark mode, save the same artwork
+as `splash_dark.png`. iOS needs a dark splash image to apply `dark_color`, and
+Android 12 needs one to apply `icon_dark_background`.
+:::
+
+#### Sizing and framing
+
+On iOS, web, and Android versions before 12, the image is displayed at a quarter
+of its source dimensions: a **1024 × 1024** image occupies **256 × 256** logical
+pixels on screen. Use a smaller image or add transparent margins to make the
+logo appear smaller.
+
+Flet treats a supplied splash image and a fallback app icon differently:
+
+| Source | How Flet places the artwork |
+|---|---|
+| `splash.png` or `splash_<platform>.png` | Preserves the margins you supply. |
+| Fallback `icon.png` | Shrinks transparent artwork, if needed, to fit within the central **60%** of the canvas width and height. |
+
+Existing margins are preserved; small artwork is not enlarged to fill that 60%
+area. Android 12 and later use a fixed icon area with
+[additional fitting](#android-12-splash-icon), so source dimensions do not directly
+control the displayed size there.
+
+#### Opaque artwork
+
+An image with no transparency keeps its own background and composition. It is
+still resized to generate the required image sizes, but Flet does not add the
+margins it would add to a transparent logo.
+
+On Android 12, the system's circular crop can hide the edges of this artwork.
+Keep important details inside a centred circle with a diameter of **two thirds**
+of the canvas width. Use a transparent image when you want the configured splash
+background to show around your logo.
+
+#### How the Android splash is composed
+
+The screen background and the artwork are separate layers. Before Android 12,
+the artwork appears centred over the background. Android 12 and later display
+it in a circular area, with an optional colour behind the icon:
+
+<div className="icon-grid">
+
+| Screen background | Before Android 12 | Android 12+ | Android 12+ with icon background |
+|:--:|:--:|:--:|:--:|
+| <Image src="/img/docs/icons/splash-background.png" alt="The splash screen background colour" /> | <Image src="/img/docs/icons/splash-legacy.png" alt="Artwork centred over the screen background" /> | <Image src="/img/docs/icons/splash-android12.png" alt="Artwork in Android 12's circular icon area" /> | <Image src="/img/docs/icons/splash-android12-bg.png" alt="Artwork on a coloured disc over the screen background" /> |
+| `color` or `dark_color` | Artwork at its splash size | Artwork fitted for the circular crop | `icon_background` fills the disc |
+
+</div>
+
+Use `color` to change the whole screen, and `icon_background` to add the coloured
+disc shown in the last example. Choose a disc colour that contrasts with your
+artwork so the logo remains visible.
+
+#### Android 12 splash icon
+
+These settings control the splash icon on Android 12 and later. Put them under
+`[tool.flet.android.splash]`, or under `[tool.flet.splash]` as shared defaults:
+
+| Setting | Default | Effect |
+|---|---|---|
+| `icon_background` | No fill | Adds a background colour behind the splash icon. |
+| `icon_dark_background` | Same as `icon_background` | Sets the icon background for dark mode; requires a dark splash image. |
+| `icon_fit` | `"contain"` | Reduces transparent artwork when needed to leave room for the circular crop. Use `"none"` to control the margins yourself. |
+
+```toml
+[tool.flet.android.splash]
+color = "#112233"
+icon_background = "#ffffff"
+icon_fit = "contain"
+```
+
+Here, `color` fills the screen and `icon_background` adds a white disc behind the
+logo. This splash setting is separate from the
+[`icon_background` used for app icons](#background-colour).
+
+Android uses a smaller icon area when an icon background is set. Flet generates
+the appropriate canvas automatically; see
+[Android's splash screen dimensions](https://developer.android.com/develop/ui/views/launch/splash-screen)
+if you are preparing artwork to fit it manually.
+
+With `icon_fit = "none"`, Flet preserves your artwork's margins and warns when it
+detects transparent artwork extending beyond the central area. Keep important
+details inside the central circle; the system can crop anything outside it.
+
+:::note[Renamed in 1.0.0]
+`icon_background`, `icon_dark_background`, and `icon_fit` replace `icon_bgcolor`,
+`icon_dark_bgcolor`, and `android_12_fit`, respectively. The old names are still
+accepted.
+:::
+
+#### Disabling splash screens
+
+To turn off Flet's splash customization for a platform, set its value to `false`:
 
 <Tabs groupId="flet-build--pyproject-toml">
-<TabItem value="flet-build" label="flet build">
-```bash
-flet build apk --no-android-splash
-flet build ipa --no-ios-splash
-flet build ios-simulator --no-ios-splash
-flet build web --no-web-splash
-```
-</TabItem>
 <TabItem value="pyproject-toml" label="pyproject.toml">
 ```toml
 [tool.flet.splash]
@@ -811,7 +1142,25 @@ ios = false
 web = false
 ```
 </TabItem>
+<TabItem value="flet-build" label="flet build">
+```bash
+flet build apk --no-android-splash
+flet build ipa --no-ios-splash
+flet build ios-simulator --no-ios-splash
+flet build web --no-web-splash
+```
+</TabItem>
 </Tabs>
+
+Set only the platforms you want to disable; the others remain enabled. The
+command-line flags
+[`--no-android-splash`](../cli/flet-build.md#--no-android-splash),
+[`--no-ios-splash`](../cli/flet-build.md#--no-ios-splash), and
+[`--no-web-splash`](../cli/flet-build.md#--no-web-splash) take precedence over the
+corresponding settings in `pyproject.toml`.
+
+To customize what appears after Flutter starts while your Python app loads,
+see [Boot screen](#boot-screen).
 
 ### Boot screen
 
@@ -1464,6 +1813,12 @@ In packaged apps (`flet build` output), all output from your Python code such as
 Note: `FLET_APP_CONSOLE` is only set in production builds;
 in development runs, output stays in your terminal.
 
+On Android, iOS and macOS the same output also goes to the platform log, which is usually
+the easier way to read it from your development machine — see "Reading your app's output"
+for [Android](android.md#reading-your-apps-output), [iOS](ios.md#reading-your-apps-output)
+and [macOS](macos.md#reading-your-apps-output). This section is about reaching it from
+*inside* your app instead.
+
 The log file is written in an unbuffered manner, allowing you to read
 it at any point in your Python program using:
 
@@ -1503,6 +1858,96 @@ the build and release process of your Flet apps.
 You can use [GitHub Actions](https://docs.github.com/en/actions) to build your
 Flet app automatically on every push, pull request, or manual run.
 
+The recommended option is the [official Flet build action](https://github.com/flet-dev/flet-build-action),
+which wraps `flet build`, sets up the required tools, installs Linux build dependencies when needed, and
+creates a platform-aware archive for upload. If you need full control over every
+step, you can run `flet build` **manually** in the workflow instead.
+
+<Tabs groupId="github-actions">
+<TabItem value="flet-build-action" label="Flet build action">
+
+```yaml
+name: Build Flet App # (1)!
+
+on: # (2)!
+  push: # (3)!
+  pull_request: # (4)!
+  workflow_dispatch: # (5)!
+
+jobs:
+  build:
+    name: Build ${{ matrix.target }}
+    runs-on: ${{ matrix.runner }}
+    strategy: # (6)!
+      fail-fast: false
+      matrix:
+        include:
+          - target: apk
+            runner: ubuntu-latest
+
+          - target: aab
+            runner: ubuntu-latest
+
+          - target: web
+            runner: ubuntu-latest
+
+          - target: linux
+            runner: ubuntu-latest
+
+          - target: windows
+            runner: windows-latest
+
+          - target: macos
+            runner: macos-latest
+
+          - target: ipa
+            runner: macos-latest
+
+          - target: ios-simulator
+            runner: macos-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v6 # (7)!
+
+      - name: Build app
+        id: build
+        uses: flet-dev/flet-build-action@v1 # (8)!
+        with:
+          target: ${{ matrix.target }} # (9)!
+          runner-python-version: "3.14" # (10)!
+          bundled-python-version: "3.14" # (11)!
+          build-number: ${{ github.run_number }} # (12)!
+
+      - name: Upload build archive
+        uses: actions/upload-artifact@v7 # (13)!
+        with:
+          path: ${{ steps.build.outputs.archive-path }} # (14)!
+          archive: false # (15)!
+          if-no-files-found: error # (16)!
+          overwrite: false
+```
+
+1. Workflow display name shown in the **Actions** tab.
+2. Trigger block for automatic and manual workflow runs.
+3. Runs this workflow on every push (unless you restrict branches).
+4. Runs this workflow when pull requests are opened/updated.
+5. Enables manual runs from GitHub UI (**Actions** → **Run workflow**).
+6. Matrix strategy: each `include` item becomes a parallel build job.
+7. Checks out your repository so this workflow can access project files. View its docs [here](https://github.com/actions/checkout).
+8. Builds the selected target using the official Flet build action. View its docs [here](https://github.com/flet-dev/flet-build-action).
+9. Passes the current matrix target to the action.
+10. Python version used by `uv` on the GitHub Actions runner.
+11. Python version bundled into the built Flet app. See [Choosing a Python version](#choosing-a-python-version).
+12. Uses the GitHub run number as the app build number. See [Build Number](#build-number).
+13. Uploads the archive created by the Flet build action. View its docs [here](https://github.com/actions/upload-artifact).
+14. Uploads the action's platform-aware archive output.
+15. Disables `upload-artifact`'s own archive wrapper because the Flet build action already created an archive.
+16. If no archive was found to upload, the workflow fails, indicating something went wrong during the build.
+
+</TabItem>
+<TabItem value="manual-flet-build" label="Manual flet build">
+
 ```yaml
 name: Build Flet App # (1)!
 
@@ -1512,7 +1957,7 @@ on: # (2)!
   workflow_dispatch: # (5)!
 
 env: # (6)!
-  UV_PYTHON: 3.12 # (7)!
+  UV_PYTHON: 3.14 # (7)!
   PYTHONUTF8: 1 # (8)!
 
   # https://flet.dev/docs/reference/environment-variables
@@ -1580,7 +2025,7 @@ jobs:
 
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v4 # (11)!
+        uses: actions/checkout@v6 # (11)!
 
       - name: Setup uv
         uses: astral-sh/setup-uv@v6 # (12)!
@@ -1600,7 +2045,7 @@ jobs:
           uv run ${{ matrix.build_cmd }} --yes --verbose
 
       - name: Upload Artifact
-        uses: actions/upload-artifact@v5.0.0 # (16)!
+        uses: actions/upload-artifact@v7 # (16)!
         with:
           name: ${{ matrix.name }}-build-artifact
           path: ${{ matrix.artifact_path }} # (17)!
@@ -1627,11 +2072,13 @@ jobs:
 17. Artifact path expected from each build target.
 18. If no files were found to upload, the workflow fails, indicating something went wrong during the build.
 
-The workflow file above builds for all major targets and uploads each build output as an artifact.
-You can further customize the workflow for your specific needs, for example,
-restricting the build targets or adding additional steps.
+</TabItem>
+</Tabs>
 
-See it in action [here](https://github.com/ndonkoHenri/flet-github-action-workflows).
+Both workflow variants build for all major targets and upload each build output
+as an artifact. You can further customize the workflow for your specific needs,
+for example, restricting the build targets or adding signing, notarization,
+store upload, or deployment steps.
 
 ## Troubleshooting
 

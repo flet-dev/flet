@@ -81,7 +81,7 @@ class _ChipControlState extends State<ChipControl> {
       selected: _selected,
       showCheckmark: widget.control.getBool("show_checkmark", true)!,
       deleteButtonTooltipMessage:
-          widget.control.getString("delete_button_tooltip"),
+          widget.control.getString("delete_icon_tooltip"),
       deleteIcon: widget.control.buildWidget("delete_icon"),
       deleteIconColor: widget.control.getColor("delete_icon_color", context),
       disabledColor: widget.control.getColor("disabled_color", context),

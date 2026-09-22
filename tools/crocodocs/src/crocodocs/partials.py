@@ -88,6 +88,7 @@ def _run_flet_cli_partials(
     """
     cli_script = _FLET_CLI_SCRIPT_DIR / "cli_to_md.py"
     permissions_script = _FLET_CLI_SCRIPT_DIR / "cross_platform_permissions.py"
+    linux_deps_script = _FLET_CLI_SCRIPT_DIR / "linux_dependencies.py"
     script = f"""
 import importlib.util, json, sys
 
@@ -99,6 +100,7 @@ def _load(name, path):
 
 cli_mod = _load("cli_to_md", {str(cli_script)!r})
 perm_mod = _load("cross_platform_permissions", {str(permissions_script)!r})
+linux_deps_mod = _load("linux_dependencies", {str(linux_deps_script)!r})
 
 requests = json.loads({json.dumps(requests)!r})
 results = {{}}
@@ -109,6 +111,8 @@ for key, params in requests.items():
         )
     elif params.get("type") == "permissions":
         results[key] = perm_mod.cross_platform_permissions_list()
+    elif params.get("type") == "linux_deps":
+        results[key] = linux_deps_mod.linux_dependencies_block()
 print(json.dumps(results))
 """
     repo_root = config.project_root.parent.parent
@@ -228,6 +232,8 @@ def render_partials(config: CrocoDocsConfig, filenames: set[str]) -> dict[str, s
             pypi_filenames.append(filename)
         elif filename == "cross-platform-permissions.mdx":
             flet_cli_requests[filename] = {"type": "permissions"}
+        elif filename == "linux-dependencies.mdx":
+            flet_cli_requests[filename] = {"type": "linux_deps"}
         elif filename.startswith("cli-") and filename.endswith(".mdx"):
             command = (
                 filename.removesuffix(".mdx").removeprefix("cli-").replace("-", " ")

@@ -26,6 +26,7 @@ def main(page: ft.Page):
     page.appbar = ft.AppBar(title="FontWeight Showcase")
     page.add(
         ft.SafeArea(
+            expand=True,
             content=ft.Column(
                 controls=[
                     ft.Text("Compare text thickness across all FontWeight values."),

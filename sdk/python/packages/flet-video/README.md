@@ -8,6 +8,10 @@
 
 A cross-platform video player for [Flet](https://flet.dev) apps.
 
+> **[Try flet-video in Flet Studio](https://studio.flet.dev/gallery/media/video/example/extensions/video/video)**
+>
+> Create, run, and share Python apps in your browser. Start from an example, write your own code, or get help from the AI agent. No installation required.
+
 It is based on the [media_kit](https://pub.dev/packages/media_kit) Flutter package.
 
 ## Documentation

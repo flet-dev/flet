@@ -1,9 +1,12 @@
 <p align="center">
-  <a href="https://flet.dev"><img src="https://raw.githubusercontent.com/flet-dev/flet/refs/heads/main/media/logo/flet-logo.svg" height="150" alt="Flet logo"></a>
+  <a href="https://flet.dev"><picture>
+    <source media="(prefers-color-scheme: dark)" srcset="https://raw.githubusercontent.com/flet-dev/flet/refs/heads/main/media/logo/flet-logo-dark.svg">
+    <img src="https://raw.githubusercontent.com/flet-dev/flet/refs/heads/main/media/logo/flet-logo.svg" height="150" alt="Flet logo">
+  </picture></a>
 </p>
 
 <p align="center">
-    <em>Build multi-platform apps in Python. No frontend experience required.</em>
+    <em>Build cross-platform apps in Python. No frontend experience required.</em>
 </p>
 
 <p align="center">
@@ -21,10 +24,11 @@
         <img src="https://flet.dev/docs/assets/badges/docs-coverage/flet.svg" alt="Docstring coverage" /></a>
 </p>
 
----
+Flet is a Python framework for building web, desktop, and mobile apps without prior experience in frontend development.
 
-Flet is a framework that allows building mobile, desktop and web applications
-in Python only without prior experience in frontend development.
+> **[Try Flet online in Flet Studio](https://studio.flet.dev)**
+>
+> Create, run, and share Python apps in your browser. Start from an example, write your own code, or get help from the AI agent. No installation required.
 
 ### <img src="https://flet.dev/img/pages/home/single-code-base.svg" width="25" align="top" />&nbsp;&nbsp;&nbsp;Single code base for any device
 

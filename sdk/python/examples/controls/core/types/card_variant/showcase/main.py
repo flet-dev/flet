@@ -42,6 +42,7 @@ def main(page: ft.Page):
     page.appbar = ft.AppBar(title="CardVariant Showcase")
     page.add(
         ft.SafeArea(
+            expand=True,
             content=ft.Column(
                 controls=[
                     ft.Text("Compare Material card visual variants."),
@@ -54,7 +55,7 @@ def main(page: ft.Page):
                         controls=[showcase_card(variant) for variant in ft.CardVariant],
                     ),
                 ]
-            )
+            ),
         )
     )
 

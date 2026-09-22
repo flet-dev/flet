@@ -12,9 +12,6 @@ WidgetStateProperty<T?>? getWidgetStateProperty<T>(
   if (j is! Map<dynamic, dynamic> || j.isEmpty) {
     j = {"default": j};
   }
-  if (j.containsKey("")) {
-    j["default"] = j.remove("");
-  }
   if (!j.keys.every(
       (k) => k == "default" || WidgetState.values.any((v) => v.name == k))) {
     // wrap into another dict
@@ -35,8 +32,6 @@ class WidgetStateFromJSON<T> extends WidgetStateProperty<T?> {
     _states = LinkedHashMap<String, T>.from(
       jsonDictValue?.map((k, v) {
             var key = k.trim().toLowerCase();
-            // "" is deprecated and renamed to "default"
-            if (key == "") key = "default";
             return MapEntry(key, converterFromJson(v));
           }) ??
           {},

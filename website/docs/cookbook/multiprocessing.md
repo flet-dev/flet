@@ -14,6 +14,9 @@ For I/O-bound work, or work that just needs to stay off the UI thread, prefer
 Reach for `multiprocessing` when you need multiple CPU cores doing Python work
 at the same time (number crunching, batch processing, ML inference, etc.), or
 when you need process isolation for work that may fail or need to be stopped.
+For multi-core Python **in a single process** — including on mobile, where
+`multiprocessing` cannot run — see [subinterpreters](subinterpreters.md)
+(Python 3.14+).
 
 :::important[Platform and Flet version support]
 `multiprocessing` works in Flet desktop apps during development ([`flet run`](../cli/flet-run.md)) and
@@ -22,7 +25,10 @@ or [`flet debug {macos,windows,linux}`](../cli/flet-debug.md) when using [Flet v
 
 It is **not supported on iOS and Android** (mobile operating systems don't
 allow apps to spawn arbitrary child processes) or **in the browser**. On those
-platforms, prefer threads or `asyncio` instead.
+platforms, use threads or [`asyncio`](https://docs.python.org/3/library/asyncio.html)
+for I/O-bound work, and [subinterpreters](subinterpreters.md) (Python 3.14+) for
+CPU-bound work — they run in-process, so they parallelize Python across cores on
+mobile, where `multiprocessing` cannot.
 :::
 
 ## How does it work?
@@ -53,8 +59,9 @@ if __name__ == "__main__":
     ft.run(main)
 ```
 
-With the `spawn` and `forkserver` start methods, worker/helper processes need
-to safely import your main module. `spawn` is the default on macOS and Windows;
+With the `spawn` and `forkserver`
+[start methods](https://docs.python.org/3/library/multiprocessing.html#contexts-and-start-methods),
+worker/helper processes need to safely import your main module. `spawn` is the default on macOS and Windows;
 `forkserver` is the default on Linux starting with Python 3.14. Without the
 guard, a child process can try to start your whole app again.
 

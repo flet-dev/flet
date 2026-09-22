@@ -8,6 +8,7 @@ readme = "README.md"
 requires-python = ">=3.10"
 dependencies = [
     "flet",
+    "flet-platform-assets",
     "watchdog >=4.0.0",
     "packaging >=25.0",
     "qrcode >=7.4.2",
@@ -28,6 +29,9 @@ Documentation = "https://flet.dev/docs"
 
 [project.entry-points."pyinstaller40"]
 hook-dirs = "flet_cli.__pyinstaller:get_hook_dirs"
+
+[tool.setuptools.package-data]
+"flet_cli.__pyinstaller" = ["rthooks.dat", "rthooks/*.py"]
 
 [build-system]
 requires = ["setuptools"]

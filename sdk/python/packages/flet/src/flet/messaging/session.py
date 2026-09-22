@@ -13,9 +13,9 @@ from flet.controls.object_patch import ObjectPatch
 from flet.controls.page import Page
 from flet.messaging.connection import Connection
 from flet.messaging.protocol import (
-    ClientAction,
-    ClientMessage,
     InvokeMethodRequestBody,
+    Message,
+    MessageAction,
     PatchControlBody,
     SessionCrashedBody,
 )
@@ -46,7 +46,7 @@ class Session:
 
     def __init__(self, conn: Connection):
         self.__conn = conn
-        self.__send_buffer: list[ClientMessage] = []
+        self.__send_buffer: list[Message] = []
         self.__id = random_string(16)
         self.__expires_at = None
         self.__index: weakref.WeakValueDictionary[int, BaseControl] = (
@@ -248,6 +248,9 @@ class Session:
         and then applied to the local session index by unmounting removed controls and
         mounting added controls.
 
+        Every added control is indexed before any of them runs `did_mount()`, so the
+        index includes all additions in the submitted patch even if a callback raises.
+
         Args:
             control: Current control state to patch from.
             prev_control: Previous control snapshot. If `None`, `control` is used.
@@ -267,16 +270,10 @@ class Session:
         for c in removed_controls:
             patch_logger.debug("   %s", c)
 
-        added_ids = {added_control._i for added_control in added_controls}
-        for removed_control in removed_controls:
-            if removed_control._i not in added_ids:
-                removed_control.will_unmount()
-            self.__index.pop(removed_control._i, None)
-
         if len(patch) > 1:
             self.__send_message(
-                ClientMessage(
-                    ClientAction.PATCH_CONTROL,
+                Message(
+                    MessageAction.PATCH_CONTROL,
                     PatchControlBody(parent._i if parent else control._i, patch),
                 )
             )
@@ -285,9 +282,21 @@ class Session:
         for ac in added_controls:
             patch_logger.debug("   %s", ac)
 
-        removed_ids = {removed_control._i for removed_control in removed_controls}
+        # Commit the entire index before lifecycle callbacks. A failed send must
+        # neither unmount existing controls nor remove them from the index, and
+        # a failed callback must not roll back an already-submitted service.
+        for removed_control in removed_controls:
+            self.__index.pop(removed_control._i, None)
         for added_control in added_controls:
             self.__index[added_control._i] = added_control
+
+        added_ids = {added_control._i for added_control in added_controls}
+        for removed_control in removed_controls:
+            if removed_control._i not in added_ids:
+                removed_control.will_unmount()
+
+        removed_ids = {removed_control._i for removed_control in removed_controls}
+        for added_control in added_controls:
             if added_control._i not in removed_ids:
                 added_control.did_mount()
 
@@ -485,8 +494,8 @@ class Session:
 
         # call method
         self.__send_message(
-            ClientMessage(
-                ClientAction.INVOKE_METHOD,
+            Message(
+                MessageAction.INVOKE_METHOD,
                 InvokeMethodRequestBody(
                     control_id=control_id, call_id=call_id, name=method_name, args=args
                 ),
@@ -588,10 +597,10 @@ class Session:
             message: Error message to report.
         """
         self.__send_message(
-            ClientMessage(ClientAction.SESSION_CRASHED, SessionCrashedBody(message))
+            Message(MessageAction.SESSION_CRASHED, SessionCrashedBody(message))
         )
 
-    def __send_message(self, message: ClientMessage):
+    def __send_message(self, message: Message):
         """
         Sends a message immediately or buffers it until reconnection.
 

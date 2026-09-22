@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- A dedicated file rather than an entry in colors.xml: resource files merge
+     across the app and every plugin, so a plugin shipping its own colors.xml
+     with the same name would collide. -->
+<resources>
+    <color name="ic_launcher_background">{{ cookiecutter.adaptive_icon_background }}</color>
+</resources>

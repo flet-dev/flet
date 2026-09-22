@@ -5,6 +5,9 @@ import flet_map as ftm
 
 
 def main(page: ft.Page):
+    async def open_attribution(e: ft.Event[ftm.SimpleAttribution]):
+        await ft.UrlLauncher().launch_url("https://www.openstreetmap.org/copyright")
+
     def handle_tap(e: ftm.MapTapEvent):
         if e.name == "tap":
             marker_layer.markers.append(
@@ -15,7 +18,7 @@ def main(page: ft.Page):
                     coordinates=e.coordinates,
                 )
             )
-        elif e.name == "secondary_tap":
+        elif e.name in ("secondary_tap", "long_press"):
             circle_layer.circles.append(
                 ftm.CircleMarker(
                     radius=random.randint(5, 10),
@@ -35,8 +38,8 @@ def main(page: ft.Page):
                 expand=True,
                 controls=[
                     ft.Text(
-                        "Click anywhere to add a Marker, right-click to add a "
-                        "CircleMarker."
+                        "Click anywhere to add a Marker, right-click (or long-press "
+                        "on mobile) to add a CircleMarker."
                     ),
                     ftm.Map(
                         expand=True,
@@ -47,6 +50,7 @@ def main(page: ft.Page):
                         ),
                         on_tap=handle_tap,
                         on_secondary_tap=handle_tap,
+                        on_long_press=handle_tap,
                         on_event=print,
                         layers=[
                             ftm.TileLayer(
@@ -56,9 +60,7 @@ def main(page: ft.Page):
                             ),
                             ftm.SimpleAttribution(
                                 text="OpenStreetMap contributors",
-                                on_click=lambda e: e.page.launch_url(
-                                    "https://www.openstreetmap.org/copyright"
-                                ),
+                                on_click=open_attribution,
                             ),
                             marker_layer := ftm.MarkerLayer(
                                 markers=[

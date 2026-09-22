@@ -1,0 +1,26 @@
+[project]
+name = "pick-files-action"
+version = "1.0.0"
+description = "Picks and uploads files using a client action, so the dialog also opens in a web app on iOS."
+requires-python = ">=3.10"
+keywords = ["filepicker", "clientaction", "upload", "services"]
+authors = [{ name = "Flet team", email = "hello@flet.dev" }]
+dependencies = ["flet"]
+
+[dependency-groups]
+dev = ["flet-cli", "flet-desktop", "flet-web"]
+
+[tool.flet.gallery]
+categories = ["Utility/FilePicker"]
+
+[tool.flet.metadata]
+title = "Pick files action"
+controls = ["SafeArea", "Column", "Row", "Page", "Button", "Text", "ProgressRing", "FilePicker", "PickFiles", "FilePickerUploadFile"]
+layout_pattern = "inline-actions"
+complexity = "intermediate"
+features = ["client actions", "file picking", "file upload"]
+
+[tool.flet]
+org = "dev.flet"
+company = "Flet"
+copyright = "Copyright (C) 2023-2026 by Flet"

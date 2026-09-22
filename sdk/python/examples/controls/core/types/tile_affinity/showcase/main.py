@@ -35,6 +35,7 @@ def main(page: ft.Page):
     page.appbar = ft.AppBar(title="TileAffinity Showcase")
     page.add(
         ft.SafeArea(
+            expand=True,
             content=ft.Column(
                 controls=[
                     ft.Text("Compare expand-arrow placement in ExpansionTile."),

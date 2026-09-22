@@ -2,10 +2,15 @@
 # Generated Xcode project files contain random hex UUIDs that typos
 # misreads as misspelled words. flet-mcp's icons.json vendors Google's
 # icon search metadata, whose tags deliberately include common
-# misspellings for typo-tolerant search.
+# misspellings for typo-tolerant search. The icon name lists are generated
+# from Flutter's own `icons.dart` and carry its spelling, including a handful
+# of upstream misspellings we cannot correct without breaking the API.
 extend-exclude = [
     "*.pbxproj",
     "sdk/python/packages/flet-mcp/src/flet_mcp/data/icons.json",
+    "*icon-codepoints.json",
+    "*/controls/material/icons.json",
+    "*/controls/cupertino/cupertino_icons.json",
 ]
 
 [default.extend-words]
@@ -19,3 +24,9 @@ UDID = "UDID"
 udid = "udid"
 # Python package name (Mozilla CA bundle)
 certifi = "certifi"
+# Apple App Store Connect error-code prefix (e.g. ITMS-90889)
+ITMS = "ITMS"
+# Pillow's premultiplied-alpha mode is spelled "RGBa" with a lowercase "a" to
+# distinguish it from "RGBA" (`Image.convert("RGBa")`). typos splits that on
+# the case boundary and reads the trailing "Ba" as a misspelling of "By".
+Ba = "Ba"

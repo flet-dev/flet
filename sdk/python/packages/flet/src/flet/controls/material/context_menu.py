@@ -97,9 +97,9 @@ class ContextMenu(LayoutControl):
     Wraps its :attr:`content` and displays contextual menus for specific mouse events.
 
     Tip:
-        On web, call :meth:`flet.BrowserContextMenu.disable` method of
-        :attr:`flet.Page.browser_context_menu` to suppress the default browser
-        context menu before relying on custom menus.
+        On web, call [`BrowserContextMenu.disable()`][flet.BrowserContextMenu.disable]
+        method to suppress the default browser context menu before relying
+        on custom menus.
     """
 
     content: Annotated[

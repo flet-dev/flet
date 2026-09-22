@@ -364,9 +364,7 @@ class _VideoControlState extends State<VideoControl> with FletStoreMixin {
     var playbackRate = widget.control.getDouble("playback_rate");
     var playlist = widget.control.get("playlist");
     var shufflePlaylist = widget.control.getBool("shuffle_playlist");
-    var controls = widget.control.getBool("show_controls", true)!
-        ? widget.control.get("controls")
-        : null;
+    var controls = widget.control.get("controls");
     var playlistMode =
         parsePlaylistMode(widget.control.getString("playlist_mode"));
     var fullscreen = widget.control.getBool("fullscreen", false)!;

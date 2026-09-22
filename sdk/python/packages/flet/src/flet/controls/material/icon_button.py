@@ -1,6 +1,7 @@
 from dataclasses import field
 from typing import Annotated, Optional, Union
 
+from flet.controls.action_control import ActionControl
 from flet.controls.adaptive_control import AdaptiveControl
 from flet.controls.alignment import Alignment
 from flet.controls.base_control import control
@@ -28,7 +29,7 @@ __all__ = [
 
 
 @control("IconButton")
-class IconButton(LayoutControl, AdaptiveControl):
+class IconButton(LayoutControl, AdaptiveControl, ActionControl):
     """
     An icon button is a round button with an icon in the middle that reacts to touches \
     by filling with color (ink).

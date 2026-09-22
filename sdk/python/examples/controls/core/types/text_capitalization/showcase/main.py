@@ -6,7 +6,7 @@ def showcase_card(cap: ft.TextCapitalization) -> ft.Container:
         width=260,
         label="Type here",
         capitalization=cap,
-        border=ft.InputBorder.OUTLINE,
+        border=ft.OutlineInputBorder(),
     )
 
     return ft.Container(
@@ -31,6 +31,7 @@ def main(page: ft.Page):
     page.appbar = ft.AppBar(title="TextCapitalization Showcase")
     page.add(
         ft.SafeArea(
+            expand=True,
             content=ft.Column(
                 controls=[
                     ft.Text(

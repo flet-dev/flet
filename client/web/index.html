@@ -21,6 +21,28 @@
   <link rel="manifest" href="manifest.json">
 
   <script>
+    // Reload when WebKit restores the page from the back/forward cache instead
+    // of resuming it. WebKit restores a Flutter app with its frame scheduling
+    // broken: pointer events, the websocket, and patch application all keep
+    // working, but scheduled frames never render, so the app silently freezes
+    // at its last painted state. A restore can paint one synchronous catch-up
+    // frame, so even re-registering with the server is not enough - the very
+    // next update wedges again. Only a fresh engine recovers reliably.
+    //
+    // For a hosted app the Flet session lives on the server and survives the
+    // reload, so state is preserved. Gated to WebKit (every browser on iOS,
+    // Safari on macOS) because other engines restore correctly - and for a
+    // published Pyodide app, where state lives in the page, an unnecessary
+    // reload would destroy it.
+    window.addEventListener('pageshow', (event) => {
+      if (event.persisted &&
+        navigator.vendor && navigator.vendor.startsWith('Apple')) {
+        window.location.reload();
+      }
+    });
+  </script>
+
+  <script>
     var flet = {
       pyodide: false,
       multiView: false,
@@ -50,34 +72,6 @@
 
     flet.flutterAppLoaded.then((flutterApp) => {
       console.log("Flutter app loaded");
-      if (flet.multiView) {
-        console.log(flutterApp.addView({
-          hostElement: document.querySelector('#view-1'),
-          initialData: {
-            script: 'print("Hello from view 1")',
-            randomValue: Math.floor(Math.random() * 100),
-          },
-          viewConstraints: {
-            //maxWidth: Infinity,
-            maxHeight: Infinity,
-            minHeight: 300,
-            minWidth: 620
-          }
-        }));
-        console.log(flutterApp.addView({
-          hostElement: document.querySelector('#view-2'),
-          initialData: {
-            script: 'print("Hello from view 2")',
-            bar: "baz"
-          },
-          viewConstraints: {
-            minWidth: 620,
-            //maxWidth: 320,
-            //minHeight: 400,
-            maxHeight: 400,
-          }
-        }));
-      }
     });
   </script>
 
@@ -87,68 +81,32 @@
 </head>
 
 <body>
-  <div id="loading">
+  <div id="loading" role="status" aria-label="Loading">
     <style>
-      body {
-        inset: 0;
-        overflow: hidden;
-        margin: 0;
-        padding: 0;
-        position: fixed;
-      }
-
       #loading {
-        align-items: center;
+        position: fixed;
+        inset: 0;
         display: flex;
-        height: 100%;
+        align-items: center;
         justify-content: center;
-        width: 100%;
+        background: #ffffff;
       }
 
       #loading img {
-        animation: 1s ease-in-out 0s infinite alternate breathe;
-        opacity: .66;
-        transition: opacity .4s;
+        width: 200px;
+        max-width: 50vw;
+        max-height: 50vh;
+        object-fit: contain;
       }
 
-      #loading.main_done img {
-        opacity: 1;
-      }
-
-      #loading.init_done img {
-        animation: .33s ease-in-out 0s 1 forwards zooooom;
-        opacity: .05;
-      }
-
-      @keyframes breathe {
-        from {
-          transform: scale(0.4);
-          opacity: 1.0;
-        }
-
-        to {
-          transform: scale(0.35);
-          opacity: .7;
-        }
-      }
-
-      @keyframes zooooom {
-        from {
-          transform: scale(0.4)
-        }
-
-        to {
-          transform: scale(10)
+      @media (prefers-color-scheme: dark) {
+        #loading {
+          background: #222222;
         }
       }
     </style>
-    <img src="icons/loading-animation.png" alt="Loading..." />
+    <img src="icons/loading-animation.png" alt="" />
   </div>
   <script src="flutter_bootstrap.js" async></script>
-
-  <!-- <h1>View 1</h1>
-  <div id="view-1" style="display: flex; justify-content: center;"></div>
-  <h1>View 2</h1>
-  <div id="view-2"></div> -->
 </body>
 </html>

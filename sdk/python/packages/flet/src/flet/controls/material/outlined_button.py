@@ -1,5 +1,6 @@
 from typing import Optional, Union
 
+from flet.controls.action_control import ActionControl
 from flet.controls.adaptive_control import AdaptiveControl
 from flet.controls.base_control import control
 from flet.controls.buttons import ButtonStyle
@@ -20,7 +21,7 @@ __all__ = ["OutlinedButton"]
 
 
 @control("OutlinedButton")
-class OutlinedButton(LayoutControl, AdaptiveControl):
+class OutlinedButton(LayoutControl, AdaptiveControl, ActionControl):
     """
     Outlined buttons are medium-emphasis buttons. They contain actions that are \
     important, but aren't the primary action in an app. Outlined buttons pair well \

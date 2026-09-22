@@ -5,7 +5,7 @@ def showcase_card(interaction: ft.SliderInteraction) -> ft.Container:
     value_text = ft.Text("Value: 50")
 
     def on_change(e: ft.Event[ft.Slider]):
-        value_text.value = f"Value: {round(e.control.value)}"
+        value_text.value = f"Value: {round(e.control.value or 0)}"
         value_text.update()
 
     return ft.Container(
@@ -46,6 +46,7 @@ def main(page: ft.Page):
     page.appbar = ft.AppBar(title="SliderInteraction Showcase")
     page.add(
         ft.SafeArea(
+            expand=True,
             content=ft.Column(
                 controls=[
                     ft.Text("Compare which gestures are accepted by each slider mode."),

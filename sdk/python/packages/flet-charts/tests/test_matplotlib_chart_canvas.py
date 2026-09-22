@@ -70,6 +70,7 @@ def _make_chart_standin():
     chart._waiting = False
     chart.img_count = 0
     chart._MatplotlibChart__image_mode = "full"
+    chart._handle_message = types.MethodType(MatplotlibChart._handle_message, chart)
     return chart, canvas
 
 

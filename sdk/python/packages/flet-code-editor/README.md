@@ -6,6 +6,10 @@
 
 A [Flet](https://flet.dev) extension for editing and highlighting source code.
 
+> **[Try flet-code-editor in Flet Studio](https://studio.flet.dev/gallery/input/codeeditor/example/extensions/code_editor/code_editor)**
+>
+> Create, run, and share Python apps in your browser. Start from an example, write your own code, or get help from the AI agent. No installation required.
+
 It is based on the [flutter_code_editor](https://pub.dev/packages/flutter_code_editor) Flutter package.
 
 ## Documentation

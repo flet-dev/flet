@@ -38,6 +38,7 @@ def main(page: ft.Page):
     page.appbar = ft.AppBar(title="OverlayVisibilityMode Showcase")
     page.add(
         ft.SafeArea(
+            expand=True,
             content=ft.Column(
                 controls=[
                     ft.Text("Compare when Cupertino text field overlays appear."),

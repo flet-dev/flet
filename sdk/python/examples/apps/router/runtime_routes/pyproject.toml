@@ -21,6 +21,7 @@ complexity = "intermediate"
 features = ["dynamic routes", "use_state", "add routes", "remove routes"]
 
 [tool.flet]
+platforms = ["web"]
 org = "dev.flet"
 company = "Flet"
 copyright = "Copyright (C) 2023-2026 by Flet"

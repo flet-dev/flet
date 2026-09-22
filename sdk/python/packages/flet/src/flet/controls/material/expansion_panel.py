@@ -194,7 +194,7 @@ class ExpansionPanelList(LayoutControl, ScrollableControl):
     :attr:`flet.Colors.WHITE_60` in dark theme mode.
     """
 
-    spacing: Optional[Number] = None
+    spacing: Number = 16.0
     """
     The size of the gap between the :attr:`controls`s when expanded.
     """

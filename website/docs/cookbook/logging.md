@@ -13,6 +13,14 @@ Flet Python uses the following named loggers:
 - `flet_object_patch` - detailed control tree diff/patch logging.
 - `flet_components` - declarative component lifecycle logging.
 
+During development, [`flet run`](../cli/flet-run.md) can turn logging on for you:
+`-v` for `INFO`, `-vv` for `DEBUG`. It passes the level to your app through
+[`FLET_LOG_LEVEL`](../reference/environment-variables.md#flet_log_level), which is
+useful for reporting an issue without editing the app.
+
+Configuring logging in the app always wins over that variable, so the rest of this
+article applies unchanged.
+
 For normal use, configure logging before calling `ft.run()`:
 
 ```python

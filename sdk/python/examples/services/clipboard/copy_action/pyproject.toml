@@ -1,0 +1,26 @@
+[project]
+name = "copy-action"
+version = "1.0.0"
+description = "Copies text to the clipboard using a client action, which is the only form that works on iOS Safari."
+requires-python = ">=3.10"
+keywords = ["clipboard", "clientaction", "basic", "services"]
+authors = [{ name = "Flet team", email = "hello@flet.dev" }]
+dependencies = ["flet"]
+
+[dependency-groups]
+dev = ["flet-cli", "flet-desktop", "flet-web"]
+
+[tool.flet.gallery]
+categories = ["Utility/Clipboard"]
+
+[tool.flet.metadata]
+title = "Copy to clipboard action"
+controls = ["SafeArea", "Column", "Page", "Button", "Text", "TextField", "CopyToClipboard", "SnackBar", "Divider"]
+layout_pattern = "inline-actions"
+complexity = "basic"
+features = ["client actions", "clipboard"]
+
+[tool.flet]
+org = "dev.flet"
+company = "Flet"
+copyright = "Copyright (C) 2023-2026 by Flet"

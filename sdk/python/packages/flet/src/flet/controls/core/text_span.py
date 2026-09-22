@@ -1,7 +1,7 @@
 from typing import Optional, Union
 
+from flet.controls.action_control import ActionControl
 from flet.controls.base_control import control
-from flet.controls.control import Control
 from flet.controls.control_event import ControlEventHandler
 from flet.controls.text_style import TextStyle
 from flet.controls.types import Url
@@ -11,7 +11,7 @@ __all__ = ["TextSpan"]
 
 
 @control("TextSpan")
-class TextSpan(Control):
+class TextSpan(ActionControl):
     """
     A text span.
 

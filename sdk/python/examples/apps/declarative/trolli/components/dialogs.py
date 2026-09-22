@@ -45,7 +45,7 @@ def show_login_dialog(app: TrolliState) -> None:
             error_text.value = "Please provide username and password"
             ft.context.page.update()
             return
-        await ft.context.page.shared_preferences.set("current_user", user)
+        await ft.SharedPreferences().set("current_user", user)
         app.user = user
         ft.context.page.pop_dialog()
 

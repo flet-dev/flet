@@ -14,8 +14,13 @@ class FletWebSocketBackendChannel implements FletBackendChannel {
   FletBackendChannelOnDisconnectCallback onDisconnect;
   WebSocketChannel? _channel;
 
+  /// Whether this channel serves an embedded app (a `FletApp` control) rather
+  /// than the root app of the page.
+  final bool embedded;
+
   FletWebSocketBackendChannel(
       {required String address,
+      this.embedded = false,
       required this.onDisconnect,
       required this.onPacket}) {
     _wsUrl = getWebSocketEndpoint(Uri.parse(address));
@@ -75,7 +80,18 @@ class FletWebSocketBackendChannel implements FletBackendChannel {
 
   String getWebSocketEndpoint(Uri uri) {
     final wsScheme = uri.scheme == "https" ? "wss" : "ws";
-    final wsPath = getWebsocketEndpointPath(uri.path);
+    // An embedded app must derive its WebSocket path from its own URL — the
+    // host document's endpoint configuration describes the host app, not the
+    // embedded one, and is the same for every app embedded on the page (so a
+    // path-prefixed embedded URL would lose its prefix and never connect).
+    // The root app keeps reading the host configuration: on web its URL path
+    // may contain the app *route* rather than the mount point, which is why
+    // the endpoint is configured by the server in the first place. On io both
+    // branches are equivalent (the io implementation already derives the
+    // path from the URL).
+    final wsPath = embedded
+        ? getWebsocketEndpointPathFromUriPath(uri.path)
+        : getWebsocketEndpointPath(uri.path);
     if (wsPath == "") {
       throw Exception("WebSocket endpoint path cannot be empty.");
     }

@@ -12,8 +12,9 @@ import {ClassMembers, ClassSummary, CodeExample, Image} from '@site/src/componen
 
 ## Examples
 
-To browse and visualize all available icons,
-visit our [icons browser](https://studio.flet.dev/gallery/run/apps/icons_browser/)
+To browse and visualize every available icon, see [Icons](../types/icons.md) and
+[CupertinoIcons](../types/cupertinoicons.md) - or run the
+[icons browser](https://studio.flet.dev/gallery/run/apps/icons_browser/) as a live Flet app.
 
 <CodeExample path={frontMatter.examples + '/icon/main.py'} language="python" />
 

@@ -4,11 +4,13 @@ import platform
 from pathlib import Path
 
 from rich.console import Console
+from rich.markup import escape
 from rich.style import Style
 
 import flet.version
 from flet.utils import slugify
 from flet_cli.commands.base import BaseCommand
+from flet_cli.utils.cli import quote_for_shell
 
 error_style = Style(color="red1", bold=True)
 console = Console(log_path=False)
@@ -157,14 +159,19 @@ class Command(BaseCommand):
             console.print("")
 
         # print next steps
-        console.print("[cyan]Run the app:[/cyan]\n")
         app_dir = (
             os.path.relpath(out_dir, os.getcwd())
             if options.output_directory != "."
             else ""
         )
-        console.print(f"flet run {app_dir}\n")
+        if app_dir:
+            # The `cd` is meant to be pasted, so quote the path for the shell, then
+            # escape rich markup so a directory named `[beta]` survives rendering.
+            console.print(f"cd {escape(quote_for_shell(app_dir))}\n")
+
+        console.print("[cyan]Run the app:[/cyan]\n")
+        console.print("flet run\n")
 
         # print testing step
         console.print("[cyan]Run the integration tests:[/cyan]\n")
-        console.print(f"flet test {app_dir}\n")
+        console.print("flet test\n")

@@ -1,11 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/rendering.dart';
 
 import '../extensions/control.dart';
 import '../models/control.dart';
 import '../utils/borders.dart';
+import '../utils/client_actions.dart';
 import '../utils/colors.dart';
 import '../utils/edge_insets.dart';
-import '../utils/launch_url.dart';
 import '../utils/misc.dart';
 import '../utils/mouse.dart';
 import '../utils/numbers.dart';
@@ -47,17 +48,14 @@ class ListTileControl extends StatelessWidget with FletStoreMixin {
     var trailing = control.buildIconOrWidget("trailing");
     var onClick = control.hasEventHandler("click");
     var toggleInputs = control.getBool("toggle_inputs", false)!;
-    var url = control.getUrl("url");
-
     Function()? onPressed =
-        (onClick || toggleInputs || url != null) && !control.disabled
+        (onClick || toggleInputs || control.hasControlActions) &&
+                !control.disabled
             ? () {
                 if (toggleInputs) {
                   _clickNotifier.onClick();
                 }
-                if (url != null) {
-                  openWebBrowser(url);
-                }
+                runControlActions(context, control);
                 if (onClick) {
                   control.triggerEvent("click");
                 }
@@ -119,7 +117,45 @@ class ListTileControl extends StatelessWidget with FletStoreMixin {
 
     tile = Material(type: MaterialType.transparency, child: tile);
 
-    return LayoutControl(control: control, child: tile);
+    return LayoutControl(control: control, child: _ListTileWidth(child: tile));
+  }
+}
+
+// ListTile fills the available width, which is infinite for non-flex children
+// of a Row. Use its intrinsic width only in that case, preserving bounded
+// layouts and supporting parents that measure intrinsic sizes.
+class _ListTileWidth extends SingleChildRenderObjectWidget {
+  const _ListTileWidth({required super.child});
+
+  @override
+  RenderObject createRenderObject(BuildContext context) =>
+      _RenderListTileWidth();
+}
+
+class _RenderListTileWidth extends RenderIntrinsicWidth {
+  @override
+  Size computeDryLayout(BoxConstraints constraints) {
+    return constraints.hasBoundedWidth
+        ? child!.getDryLayout(constraints)
+        : super.computeDryLayout(constraints);
+  }
+
+  @override
+  double? computeDryBaseline(
+      BoxConstraints constraints, TextBaseline baseline) {
+    return constraints.hasBoundedWidth
+        ? child!.getDryBaseline(constraints, baseline)
+        : super.computeDryBaseline(constraints, baseline);
+  }
+
+  @override
+  void performLayout() {
+    if (constraints.hasBoundedWidth) {
+      child!.layout(constraints, parentUsesSize: true);
+      size = child!.size;
+    } else {
+      super.performLayout();
+    }
   }
 }
 

@@ -1,5 +1,6 @@
 from typing import Optional, Union
 
+from flet.controls.action_control import ActionControl
 from flet.controls.adaptive_control import AdaptiveControl
 from flet.controls.base_control import control
 from flet.controls.buttons import ButtonStyle
@@ -17,7 +18,7 @@ __all__ = ["TextButton"]
 
 
 @control("TextButton")
-class TextButton(LayoutControl, AdaptiveControl):
+class TextButton(LayoutControl, AdaptiveControl, ActionControl):
     """
     Text buttons are used for the lowest priority actions, especially when presenting \
     multiple options. Text buttons can be placed on a variety of backgrounds. Until \

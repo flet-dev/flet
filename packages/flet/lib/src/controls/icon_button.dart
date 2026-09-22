@@ -6,10 +6,10 @@ import '../models/control.dart';
 import '../utils/alignment.dart';
 import '../utils/box.dart';
 import '../utils/buttons.dart';
+import '../utils/client_actions.dart';
 import '../utils/colors.dart';
 import '../utils/edge_insets.dart';
 import '../utils/icons.dart';
-import '../utils/launch_url.dart';
 import '../utils/mouse.dart';
 import '../utils/numbers.dart';
 import '../widgets/error.dart';
@@ -96,13 +96,10 @@ class _IconButtonControlState extends State<IconButtonControl>
       var enableFeedback = widget.control.getBool("enable_feedback", true)!;
       var selected = widget.control.getBool("selected");
       var mouseCursor = widget.control.getMouseCursor("mouse_cursor");
-      var url = widget.control.getUrl("url");
 
       Function()? onPressed = !widget.control.disabled
           ? () {
-              if (url != null) {
-                openWebBrowser(url);
-              }
+              runControlActions(context, widget.control);
               widget.control.triggerEvent("click");
             }
           : null;

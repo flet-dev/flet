@@ -4,3 +4,7 @@
 [![docstring coverage](https://flet.dev/docs/assets/badges/docs-coverage/flet-web.svg)](https://flet.dev/docs/assets/badges/docs-coverage/flet-web.svg)
 
 This package contains a compiled Flutter Flet web client.
+
+> **[Try Flet online in Flet Studio](https://studio.flet.dev)**
+>
+> Write, run, and share Flet web apps right in your browser. No local setup required. Write your own Python code or get help from the AI agent.

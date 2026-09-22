@@ -44,6 +44,9 @@ def main(page: ft.Page):
                 controls=[
                     ft.Row(
                         alignment=ft.MainAxisAlignment.CENTER,
+                        wrap=True,
+                        spacing=10,
+                        run_spacing=10,
                         controls=[
                             format_dropdown := ft.Dropdown(
                                 label="Hour format",

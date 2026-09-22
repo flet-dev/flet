@@ -47,6 +47,55 @@ static void my_application_activate(GApplication* application) {
     gtk_window_set_title(window, "{{ cookiecutter.product_name }}");
   }
 
+  // Use the bundled app icon as the default window icon. On X11 (and
+  // XWayland) it is exported as the _NET_WM_ICON property read by taskbars
+  // and window switchers. Native Wayland sessions have no window-icon
+  // protocol GTK 3 can use; there the desktop environment resolves the icon
+  // from an installed APPLICATION_ID.desktop entry instead.
+  g_autofree gchar* exe_path = g_file_read_link("/proc/self/exe", nullptr);
+  if (exe_path != nullptr) {
+    g_autofree gchar* exe_dir = g_path_get_dirname(exe_path);
+    g_autofree gchar* icon_path =
+        g_build_filename(exe_dir, "data", "app_icon.png", nullptr);
+    g_autoptr(GError) icon_error = nullptr;
+    g_autoptr(GdkPixbuf) icon = gdk_pixbuf_new_from_file(icon_path, &icon_error);
+    if (icon == nullptr) {
+      // A bundle may legitimately ship without an icon (a plain
+      // `flutter build`, or a custom build template that has none), so only
+      // an icon that is present but will not decode is worth a warning.
+      if (g_error_matches(icon_error, G_FILE_ERROR, G_FILE_ERROR_NOENT)) {
+        g_debug("No app icon at %s", icon_path);
+      } else {
+        g_warning("Failed to load app icon %s: %s", icon_path,
+                  icon_error != nullptr ? icon_error->message : "unknown error");
+      }
+    } else {
+      // _NET_WM_ICON is capped at 256 KiB of pixel data, and GDK silently
+      // drops any icon that does not fit — anything from 512x512 up — which
+      // would leave the window with no icon at all. Scale bigger icons down.
+      gint width = gdk_pixbuf_get_width(icon);
+      gint height = gdk_pixbuf_get_height(icon);
+      gint largest_side = MAX(width, height);
+      if (largest_side > 256) {
+        // 64-bit intermediates: width * 256 overflows gint for very wide
+        // images, and -O3 is free to do anything at all with that.
+        gint scaled_width =
+            MAX(1, (gint)((gint64)width * 256 / largest_side));
+        gint scaled_height =
+            MAX(1, (gint)((gint64)height * 256 / largest_side));
+        g_autoptr(GdkPixbuf) scaled = gdk_pixbuf_scale_simple(
+            icon, scaled_width, scaled_height, GDK_INTERP_BILINEAR);
+        if (scaled != nullptr) {
+          gtk_window_set_default_icon(scaled);
+        } else {
+          g_warning("Failed to scale app icon %s", icon_path);
+        }
+      } else {
+        gtk_window_set_default_icon(icon);
+      }
+    }
+  }
+
   gtk_window_set_default_size(window, 1280, 720);
   gtk_widget_realize(GTK_WIDGET(window));
 
@@ -122,6 +171,12 @@ static void my_application_class_init(MyApplicationClass* klass) {
 static void my_application_init(MyApplication* self) {}
 
 MyApplication* my_application_new() {
+  // Set the program name to the application ID, which helps various systems
+  // like GTK and desktop environments map this running application to its
+  // corresponding .desktop file. This ensures better integration by allowing
+  // the application to be recognized beyond its binary name.
+  g_set_prgname(APPLICATION_ID);
+
   return MY_APPLICATION(g_object_new(my_application_get_type(),
                                      "application-id", APPLICATION_ID,
                                      "flags", G_APPLICATION_NON_UNIQUE,

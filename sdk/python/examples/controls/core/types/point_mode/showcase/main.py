@@ -1,5 +1,6 @@
-import flet as ft
 import flet.canvas as cv
+
+import flet as ft
 
 POINTS = [
     (25, 75),
@@ -47,6 +48,7 @@ def main(page: ft.Page):
     page.appbar = ft.AppBar(title="PointMode Showcase")
     page.add(
         ft.SafeArea(
+            expand=True,
             content=ft.Column(
                 controls=[
                     ft.Text(

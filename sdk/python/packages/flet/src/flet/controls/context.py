@@ -1,5 +1,5 @@
 from contextvars import ContextVar
-from typing import TYPE_CHECKING
+from typing import TYPE_CHECKING, Optional
 
 if TYPE_CHECKING:
     from flet.controls.page import Page
@@ -32,6 +32,15 @@ class Context:
             return page.session
         except RuntimeError:
             return None
+
+    def __update_behavior(self) -> "UpdateBehavior":
+        """Return the `UpdateBehavior` writes and reads should act on.
+
+        Falls back to the process-wide default when the current context has
+        none of its own - which is the case at module scope, before any app
+        session has started.
+        """
+        return _update_behavior_context_var.get() or _app_update_behavior
 
     @property
     def page(self) -> "Page":
@@ -82,7 +91,7 @@ class Context:
             ft.run(main)
             ```
         """
-        _update_behavior_context_var.get()._auto_update_enabled = True
+        self.__update_behavior()._auto_update_enabled = True
 
     def disable_auto_update(self):
         """
@@ -110,7 +119,7 @@ class Context:
             ft.run(main)
         ```
         """
-        _update_behavior_context_var.get()._auto_update_enabled = False
+        self.__update_behavior()._auto_update_enabled = False
 
     def enable_components_mode(self):
         """
@@ -140,7 +149,7 @@ class Context:
         """
         Marks that `.update()` was explicitly called during the current handler.
         """
-        _update_behavior_context_var.get()._update_called = True
+        self.__update_behavior()._update_called = True
 
     def was_update_called(self) -> bool:
         """
@@ -149,13 +158,13 @@ class Context:
         Returns:
             `True` if `.update()` was called, `False` otherwise.
         """
-        return _update_behavior_context_var.get()._update_called
+        return self.__update_behavior()._update_called
 
     def reset_update_called(self):
         """
         Resets the update-called flag for the current context.
         """
-        _update_behavior_context_var.get()._update_called = False
+        self.__update_behavior()._update_called = False
 
     def auto_update_enabled(self) -> bool:
         """
@@ -166,16 +175,23 @@ class Context:
         """
         return (
             not self.is_components_mode()
-            and _update_behavior_context_var.get()._auto_update_enabled
+            and self.__update_behavior()._auto_update_enabled
         )
 
     def reset_auto_update(self):
         """
-        Copies the parent auto-update state into the current context.
+        Starts a fresh auto-update state for the current context.
+
+        The new state inherits the enclosing context's auto-update setting, or
+        the app-wide default when the context has none of its own - which is
+        the case for a session starting up, or for an event handler, since each
+        event is dispatched in its own task.
+
+        The `_update_called` flag is deliberately not inherited: it records
+        whether `.update()` was called during *this* handler.
         """
-        current = _update_behavior_context_var.get()
         new = UpdateBehavior()
-        new._auto_update_enabled = current._auto_update_enabled
+        new._auto_update_enabled = self.__update_behavior()._auto_update_enabled
         _update_behavior_context_var.set(new)
 
 
@@ -195,7 +211,30 @@ class UpdateBehavior:
 
 _context_page = ContextVar("flet_session_page", default=None)
 
-_update_behavior_context_var = ContextVar("update_behavior", default=UpdateBehavior())  # noqa: B039
+_app_update_behavior = UpdateBehavior()
+"""
+Process-wide default `UpdateBehavior`.
+
+Calling `ft.context.disable_auto_update()` at module scope - a documented way to
+turn auto-update off for a whole app - happens before any session exists, so
+there is no context to write to. Those calls land here, and every context-scoped
+`UpdateBehavior` is rooted at this value.
+
+This is deliberately a separate object from the `_update_behavior_context_var`
+default: when the ContextVar itself defaulted to a shared mutable instance, a
+contextless call mutated the very object every unrelated context observed, so
+one app could silently turn auto-update off for every other app in the process.
+"""
+
+_update_behavior_context_var: ContextVar[Optional[UpdateBehavior]] = ContextVar(
+    "update_behavior", default=None
+)
+"""
+Context-scoped `UpdateBehavior`, or `None` to fall back to `_app_update_behavior`.
+
+The `None` default is what keeps contextless calls from mutating state that
+other contexts can see - see `_app_update_behavior`.
+"""
 
 context = Context()
 """Global context object for the running Flet app.

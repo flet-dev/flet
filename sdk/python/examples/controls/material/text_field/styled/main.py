@@ -14,9 +14,16 @@ async def main(page: ft.Page):
         filled=True,
         focused_color=ft.Colors.GREEN,
         focused_bgcolor=ft.Colors.CYAN_200,
-        border_radius=30,
-        border_color=ft.Colors.GREEN_800,
-        focused_border_color=ft.Colors.GREEN_ACCENT_400,
+        border={
+            ft.ControlState.DEFAULT: ft.OutlineInputBorder(
+                border_radius=30,
+                side=ft.BorderSide(color=ft.Colors.GREEN_800),
+            ),
+            ft.ControlState.FOCUSED: ft.OutlineInputBorder(
+                border_radius=30,
+                side=ft.BorderSide(width=2, color=ft.Colors.GREEN_ACCENT_400),
+            ),
+        },
         max_length=20,
         capitalization=ft.TextCapitalization.CHARACTERS,
     )

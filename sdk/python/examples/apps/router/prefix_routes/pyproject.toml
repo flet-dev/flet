@@ -21,6 +21,7 @@ complexity = "basic"
 features = ["pathless layouts", "path-only grouping", "use_route_outlet"]
 
 [tool.flet]
+platforms = ["web"]
 org = "dev.flet"
 company = "Flet"
 copyright = "Copyright (C) 2023-2026 by Flet"

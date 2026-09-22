@@ -34,6 +34,7 @@ def main(page: ft.Page):
     page.appbar = ft.AppBar(title="NavigationBarLabelBehavior Showcase")
     page.add(
         ft.SafeArea(
+            expand=True,
             content=ft.Column(
                 controls=[
                     ft.Text("Compare destination label visibility strategies."),

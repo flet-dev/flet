@@ -40,6 +40,7 @@ def main(page: ft.Page):
             content=ft.Row(
                 spacing=30,
                 alignment=ft.MainAxisAlignment.START,
+                scroll=ft.ScrollMode.AUTO,
                 controls=[
                     ColumnFromHorizontalAlignment(
                         alignment=ft.CrossAxisAlignment.START

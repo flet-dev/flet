@@ -1,11 +1,13 @@
+from dataclasses import dataclass
 from typing import Optional
 
 from flet.controls.base_control import control
+from flet.controls.client_action import ClientAction, action_field, shared_service
 from flet.controls.exceptions import FletUnsupportedPlatformException
 from flet.controls.services.service import Service
 from flet.controls.types import PagePlatform
 
-__all__ = ["Clipboard"]
+__all__ = ["Clipboard", "CopyToClipboard"]
 
 
 @control("Clipboard")
@@ -100,3 +102,30 @@ class Clipboard(Service):
                 "get_files is supported on desktop and Android platforms only"
             )
         return await self._invoke_method("get_files")
+
+
+@dataclass
+class CopyToClipboard(ClientAction):
+    """
+    Copies text to the clipboard when the control is activated.
+
+    Equivalent to :meth:`flet.Clipboard.set`, but performed by the client inside
+    the user's gesture, which is the only time Safari permits a page to write to
+    the clipboard.
+
+    Example:
+        ```python
+        ft.Button("Copy token", action=ft.CopyToClipboard(token))
+        ```
+    """
+
+    data: str = action_field()
+    """
+    The text to copy.
+
+    Must be known before the control is activated. To copy something computed at
+    click time, assign it to this action ahead of the click.
+    """
+
+    def __post_init__(self) -> None:
+        self._bind(shared_service(Clipboard), "set", {"data": self.data})

@@ -57,7 +57,7 @@ class _CupertinoBottomSheetControlState
       );
     }
 
-    return Material(child: child);
+    return Material(type: MaterialType.transparency, child: child);
   }
 
   @override

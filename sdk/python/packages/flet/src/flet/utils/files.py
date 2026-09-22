@@ -1,5 +1,6 @@
 import os
 import shutil
+import stat
 import sys
 
 
@@ -123,33 +124,6 @@ def which(program, exclude_exe=None):
     return None
 
 
-def cleanup_path(path: str, executable: str):
-    """
-    Removes directories containing a given executable from a PATH-like string.
-
-    The check also removes directories containing Windows launcher variants:
-    `<executable>.bat` and `<executable>.cmd`.
-
-    Args:
-        path: PATH-like string separated by `os.pathsep`.
-        executable: Executable name to filter out.
-
-    Returns:
-        Filtered PATH-like string.
-    """
-    cleaned_dirs = []
-    for path_dir in path.split(os.pathsep):
-        found = False
-        for file_name in [executable, f"{executable}.bat", f"{executable}.cmd"]:
-            if os.path.isfile(os.path.join(path_dir, file_name)):
-                found = True
-                break
-        if not found:
-            cleaned_dirs.append(path_dir)
-
-    return os.pathsep.join(cleaned_dirs)
-
-
 def get_current_script_dir():
     """
     Returns the absolute directory of the current script entry point.
@@ -159,3 +133,25 @@ def get_current_script_dir():
     """
     pathname = os.path.dirname(sys.argv[0])
     return os.path.abspath(pathname)
+
+
+def rmtree(path, ignore_errors=False):
+    """
+    Recursively deletes a directory tree, safely handling read-only files on Windows.
+
+    Args:
+        path: Directory path to remove.
+        ignore_errors: Whether to ignore errors during deletion.
+    """
+    p = str(path)
+    if not os.path.exists(p):
+        return
+
+    def _remove_readonly(func, file_path, _):
+        os.chmod(file_path, stat.S_IWRITE)
+        func(file_path)
+
+    if sys.version_info >= (3, 12):
+        shutil.rmtree(p, ignore_errors=ignore_errors, onexc=_remove_readonly)
+    else:
+        shutil.rmtree(p, ignore_errors=ignore_errors, onerror=_remove_readonly)

@@ -59,6 +59,44 @@ The app will be started in a native OS window:
 
 </div>
 
+<details>
+<summary>How the desktop client is selected</summary>
+
+A desktop Flet app has two parts: your Python code and a Flutter client that
+displays the UI. When you run `flet run` or start a script with `python main.py`
+that calls `ft.run(main)`, Flet looks for a desktop client in this order:
+
+1. A client from a previous [`flet build`](../cli/flet-build.md) in
+   `build/<platform>` under the current working directory, such as
+   `build/windows`, `build/macos`, or `build/linux`.
+2. A client in the directory specified by
+   [`FLET_VIEW_PATH`](../reference/environment-variables.md#flet_view_path).
+3. The standard pre-built Flet client cached in `~/.flet/client/`, downloading it
+   if needed.
+
+Reusing a locally built client lets you run an app with custom Flutter extensions.
+Your current Python source still runs: Flet launches the client and connects it
+to that Python process. For example, after `flet build windows`, you can edit
+`main.py` and run `flet run main.py` without rebuilding. The executable in
+`build/windows` supplies the UI client; the Python code bundled during the build
+is not used in this mode.
+
+Rebuild when you add or change Flutter extensions. Python-only changes do not
+require rebuilding the client. See
+[Creating an Extension](../extend/user-extensions.md#change-python-files) for an
+example of this workflow.
+
+To use the standard client again, move or rename the corresponding
+`build/<platform>` directory and unset `FLET_VIEW_PATH` if it is set. Setting
+`FLET_VIEW_PATH` alone does not override a client found in `build/<platform>`.
+
+:::note
+Opening the built executable directly runs the packaged app, including the Python
+code from the build. Rebuild to include Python changes in that packaged app.
+:::
+
+</details>
+
 ## Web app
 
 To run Flet app as a web app, use the `--web` (or `-w`) option:

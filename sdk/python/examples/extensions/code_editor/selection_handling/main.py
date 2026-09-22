@@ -91,6 +91,16 @@ def main(page: ft.Page):
         await editor.focus()
         editor.selection = ft.TextSelection(base_offset=0, extent_offset=0)
 
+    async def handle_hide_keyboard_click(e: ft.Event[ft.IconButton]):
+        # moving focus off the code editor dismisses the on-screen keyboard
+        await hide_keyboard_button.focus()
+
+    hide_keyboard_button = ft.IconButton(
+        icon=ft.Icons.KEYBOARD_HIDE,
+        tooltip="Hide keyboard",
+        on_click=handle_hide_keyboard_click,
+    )
+
     page.padding = 0
     page.spacing = 0
     page.add(
@@ -100,6 +110,13 @@ def main(page: ft.Page):
                 spacing=10,
                 expand=True,
                 controls=[
+                    ft.Row(
+                        # the on-screen keyboard only exists on mobile; hiding the
+                        # whole row keeps it from taking column spacing elsewhere
+                        visible=page.platform.is_mobile(),
+                        alignment=ft.MainAxisAlignment.END,
+                        controls=[hide_keyboard_button],
+                    ),
                     editor := fce.CodeEditor(
                         language=fce.CodeLanguage.PYTHON,
                         code_theme=theme,

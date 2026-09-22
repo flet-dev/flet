@@ -16,6 +16,7 @@ import flet_cli.commands.publish
 import flet_cli.commands.run
 import flet_cli.commands.serve
 import flet_cli.commands.test
+from flet_cli.utils.cli import quote_for_shell
 from flet_cli.utils.linux_deps import linux_dependencies
 
 
@@ -184,10 +185,13 @@ def parse_command_line(argv: list) -> argparse.Namespace:
     if unrecognized:
         message = f"unrecognized arguments: {' '.join(unrecognized)}"
         if getattr(args, "command", None) == "run":
+            # The example is meant to be pasted, so both the script path and
+            # the arguments being forwarded have to survive the shell.
+            forwarded = " ".join(quote_for_shell(arg) for arg in unrecognized)
             message += (
                 "\nIf these are arguments for your app script, put them after "
                 "a `--` separator, e.g. "
-                f"`flet run {args.script} -- {' '.join(unrecognized)}`"
+                f"`flet run {quote_for_shell(args.script)} -- {forwarded}`"
             )
         parser.error(message)
 

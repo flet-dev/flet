@@ -166,6 +166,33 @@ install(CODE "
 install(DIRECTORY "${PROJECT_BUILD_DIR}/${FLUTTER_ASSET_DIR_NAME}"
   DESTINATION "${INSTALL_BUNDLE_DATA_DIR}" COMPONENT Runtime)
 
+# Install the app icon staged by `flet build` next to this file, so the runner
+# can set the X11/XWayland window icon at startup (see my_application.cc). The
+# guard keeps plain `flutter build` (no flet staging step) working.
+if(EXISTS "${CMAKE_CURRENT_SOURCE_DIR}/app_icon.png")
+  install(FILES "${CMAKE_CURRENT_SOURCE_DIR}/app_icon.png"
+    DESTINATION "${INSTALL_BUNDLE_DATA_DIR}" COMPONENT Runtime)
+
+  # Ready-to-install freedesktop integration: the .desktop entry plus the icon
+  # in the hicolor theme layout. Wayland desktops (e.g. GNOME) resolve the
+  # taskbar icon only from an installed desktop entry matching the app id, so
+  # users can register the app with:  cp -r share/. ~/.local/share/
+  # Both files install together — a desktop entry whose Icon= has no matching
+  # themed icon is worse than none.
+  #
+  # `flet build` renders one icon per hicolor size, each already matching the
+  # directory it sits in, so the whole tree installs in one step. A single
+  # file dropped into 256x256/ regardless of its real size — which is what
+  # this did before — is rescaled wrongly by the icon cache, and every small
+  # panel size was downscaled from it on the fly.
+  if(EXISTS "${CMAKE_CURRENT_SOURCE_DIR}/icons")
+    install(DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}/icons"
+      DESTINATION "${CMAKE_INSTALL_PREFIX}/share" COMPONENT Runtime)
+  endif()
+  install(FILES "${CMAKE_CURRENT_SOURCE_DIR}/${APPLICATION_ID}.desktop"
+    DESTINATION "${CMAKE_INSTALL_PREFIX}/share/applications" COMPONENT Runtime)
+endif()
+
 # Install the AOT library on non-Debug builds only.
 if(NOT CMAKE_BUILD_TYPE MATCHES "Debug")
   install(FILES "${AOT_LIBRARY}" DESTINATION "${INSTALL_BUNDLE_LIB_DIR}"

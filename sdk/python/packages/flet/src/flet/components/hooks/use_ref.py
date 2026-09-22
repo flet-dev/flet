@@ -21,7 +21,8 @@ class MutableRef(Generic[RefValueT]):
         self.current = initial_value
 
 
-@dataclass
+# eq=False: see ComponentOwned - lifecycle objects compare by identity.
+@dataclass(eq=False)
 class RefHook(Hook, Generic[RefValueT]):
     """
     Hook state container backing :func:`~flet.use_ref`.

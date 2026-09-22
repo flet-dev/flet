@@ -32,6 +32,7 @@ def main(page: ft.Page):
     page.appbar = ft.AppBar(title="BlendMode Showcase")
     page.add(
         ft.SafeArea(
+            expand=True,
             content=ft.Column(
                 controls=[
                     ft.Text("Compare color blending results for each BlendMode value."),
@@ -46,7 +47,7 @@ def main(page: ft.Page):
                         ],
                     ),
                 ]
-            )
+            ),
         )
     )
 

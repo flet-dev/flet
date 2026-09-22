@@ -16,7 +16,7 @@ from rich.theme import Theme
 
 import flet.version
 import flet_cli.utils.processes as processes
-from flet.utils import cleanup_path, is_windows
+from flet.utils import is_windows
 from flet.utils.platform_utils import get_bool_env_var
 from flet_cli.commands.base import BaseCommand
 from flet_cli.utils.flutter import get_flutter_dir, install_flutter
@@ -246,10 +246,11 @@ class BaseFlutterCommand(BaseCommand):
         ext = ".bat" if platform.system() == "Windows" else ""
         self.flutter_exe = os.path.join(flutter_dir, "bin", f"flutter{ext}")
         self.dart_exe = os.path.join(flutter_dir, "bin", f"dart{ext}")
-        path_env = cleanup_path(
-            cleanup_path(os.environ.get("PATH", ""), "flutter"), "dart"
+        path_env = os.environ.get("PATH", "")
+        flutter_bin = os.path.join(flutter_dir, "bin")
+        self.env["PATH"] = (
+            os.pathsep.join([flutter_bin, path_env]) if path_env else flutter_bin
         )
-        self.env["PATH"] = os.pathsep.join([os.path.join(flutter_dir, "bin"), path_env])
 
         # desktop mode
         desktop_platform = platform.system().lower()

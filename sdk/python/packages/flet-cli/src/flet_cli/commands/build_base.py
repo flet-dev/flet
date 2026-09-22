@@ -5,19 +5,35 @@ import glob
 import json
 import os
 import platform
+import re
 import shutil
 from pathlib import Path
 from typing import Optional, cast
 
 import yaml
+from flet_platform_assets import (
+    DEFAULT_SPECS,
+    AssetSpec,
+    IconOptions,
+    SourceError,
+    SplashOptions,
+    density_size,
+    linux_targets,
+    load_source,
+    parse_hex_color,
+    render_icons,
+    render_splash,
+    square,
+    web_targets_from_manifest,
+    write,
+)
 from packaging.requirements import Requirement
 from rich.panel import Panel
 from rich.table import Column, Table
 
 import flet.version
 import flet_cli.utils.processes as processes
-from flet.utils import copy_tree, slugify
-from flet.utils.deprecated import deprecated_warning
+from flet.utils import copy_tree, rmtree, slugify
 from flet_cli.commands.flutter_base import (
     BaseFlutterCommand,
     console,
@@ -60,6 +76,50 @@ DEFAULT_TEMPLATE_URL = (
 # importlib.resources.as_file() extracts cacert.pem to a temp file on demand). Add
 # real offenders here as they are found.
 ANDROID_DEFAULT_EXTRACT_PACKAGES: list[str] = []
+
+# Bumped whenever a change to flet-platform-assets alters the pixels it
+# produces. Both stamps hash it, so upgrading flet-cli regenerates rather
+# than leaving a user with output from the previous implementation. Nothing
+# else encodes the generator's identity now that the pubspec no longer does.
+ICONS_GENERATOR_VERSION = 1
+SPLASH_GENERATOR_VERSION = 3
+
+# `flet build` target platform -> the platform name flet-platform-assets uses.
+# A target absent here generates no icons at all.
+ICON_PLATFORMS = {
+    "apk": "android",
+    "aab": "android",
+    "ipa": "ios",
+    "ios-simulator": "ios",
+    "macos": "macos",
+    "windows": "windows",
+    "linux": "linux",
+    "web": "web",
+}
+
+# Platforms whose icons are output the stock Flutter template does not ship,
+# so they are created rather than only overwritten: Android's adaptive layers
+# and the whole Linux hicolor tree. Everywhere else the project declares its
+# icons - through an asset catalog or the web manifest - and writing a file it
+# does not reference would only leave litter in the bundle.
+ICONS_CREATED_FRESH = frozenset({"android", "linux"})
+
+# Splash keys renamed in 1.0.0, read under their former names as well so
+# existing pyproject.toml files keep working. The new names all say that the
+# setting describes the Android 12 splash *icon*, which the old ones did not.
+SPLASH_KEY_ALIASES = {
+    "icon_background": "icon_bgcolor",
+    "icon_dark_background": "icon_dark_bgcolor",
+    "icon_fit": "android_12_fit",
+}
+
+SPLASH_PLATFORMS = {
+    "apk": "android",
+    "aab": "android",
+    "ipa": "ios",
+    "ios-simulator": "ios",
+    "web": "web",
+}
 
 
 class BaseBuildCommand(BaseFlutterCommand):
@@ -236,6 +296,17 @@ class BaseBuildCommand(BaseFlutterCommand):
                 },
                 "android_features": {},
             },
+            "biometric": {
+                "ios_info_plist": {
+                    "NSFaceIDUsageDescription": "This app uses biometrics to authenticate you."  # noqa: E501
+                },
+                "macos_info_plist": {
+                    "NSFaceIDUsageDescription": "This app uses biometrics to authenticate you."  # noqa: E501
+                },
+                "macos_entitlements": {},
+                "android_permissions": {},
+                "android_features": {},
+            },
         }
 
         # create and display build-platform-matrix table
@@ -275,7 +346,7 @@ class BaseBuildCommand(BaseFlutterCommand):
             default=[],
             help="Build for specific CPU architectures "
             "(used in macOS and Android builds only). "
-            "Android: arm64-v8a, armeabi-v7a, x86_64; macOS: arm64, x64. "
+            "Android: arm64-v8a, armeabi-v7a, x86_64; macOS: arm64, x86_64. "
             "Example: `--arch arm64-v8a`",
         )
         parser.add_argument(
@@ -286,14 +357,6 @@ class BaseBuildCommand(BaseFlutterCommand):
             default=[],
             help="Files and/or directories to exclude from the package"
             "; can be used multiple times",
-        )
-        parser.add_argument(
-            "--clear-cache",
-            dest="clear_cache",
-            action="store_true",
-            default=None,
-            help="Remove any existing build cache before starting the build process. "
-            "Deprecated: use the `flet clean` command instead",
         )
         parser.add_argument(
             "--project",
@@ -354,6 +417,16 @@ class BaseBuildCommand(BaseFlutterCommand):
             required=False,
             help="The color to be used to fill out the background of "
             "Android adaptive icons",
+        )
+        parser.add_argument(
+            "--linux-categories",
+            dest="linux_categories",
+            action="extend",
+            nargs="+",
+            default=[],
+            help="The list of freedesktop application categories for the "
+            "generated desktop entry, e.g. `Education` or `Game` "
+            "(linux only); can be used multiple times",
         )
         parser.add_argument(
             "--splash-color",
@@ -669,6 +742,55 @@ class BaseBuildCommand(BaseFlutterCommand):
             help="Android signing key alias [env: FLET_ANDROID_SIGNING_KEY_ALIAS=]",
         )
         parser.add_argument(
+            "--macos-signing-identity",
+            dest="macos_signing_identity",
+            help='"Developer ID Application" (direct distribution) or '
+            '"Apple Distribution" (App Store) certificate name, its SHA-1 '
+            'fingerprint, or "-" for ad-hoc, used to code-sign the app bundle; '
+            "when not configured (CLI, pyproject.toml, or env), developer-id "
+            "and app-store distribution builds auto-discover the only "
+            "certificate of the required type "
+            "(macos only) [env: FLET_MACOS_SIGNING_IDENTITY=]",
+        )
+        parser.add_argument(
+            "--macos-distribution",
+            dest="macos_distribution",
+            type=str.lower,
+            choices=["none", "developer-id", "app-store"],
+            help="Distribution channel to sign and package for: 'developer-id' "
+            "signs with the hardened runtime, notarizes and staples for direct "
+            "distribution; 'app-store' produces a sandboxed build with an "
+            "embedded provisioning profile and a signed installer .pkg for "
+            "App Store Connect / TestFlight; 'none' (default) signs only when "
+            "a signing identity is configured (macos only)",
+        )
+        parser.add_argument(
+            "--macos-notary-profile",
+            dest="macos_notary_profile",
+            help="Keychain profile name created with `xcrun notarytool "
+            "store-credentials` to authenticate with the Apple notary service; "
+            "alternatively set the APPLE_API_KEY, APPLE_API_KEY_ID and "
+            "APPLE_API_ISSUER environment variables (macos only) "
+            "[env: FLET_MACOS_NOTARY_PROFILE=]",
+        )
+        parser.add_argument(
+            "--macos-provisioning-profile",
+            dest="macos_provisioning_profile",
+            help="Path to a Mac App Store provisioning profile "
+            "(.provisionprofile) to embed at Contents/embedded.provisionprofile; "
+            "required for App Store builds (macos only) "
+            "[env: FLET_MACOS_PROVISIONING_PROFILE=]",
+        )
+        parser.add_argument(
+            "--macos-installer-identity",
+            dest="macos_installer_identity",
+            help='"3rd Party Mac Developer Installer" / "Mac Installer '
+            'Distribution" certificate name or SHA-1 fingerprint used to sign '
+            "the App Store installer package; when not configured, the only "
+            "installer certificate in the keychain is auto-discovered "
+            "(macos only) [env: FLET_MACOS_INSTALLER_IDENTITY=]",
+        )
+        parser.add_argument(
             "--build-number",
             dest="build_number",
             type=int,
@@ -722,21 +844,6 @@ class BaseBuildCommand(BaseFlutterCommand):
         """
 
         super().handle(options)
-
-        if getattr(self.options, "clear_cache", None):
-            deprecated_warning(
-                name="--clear-cache",
-                reason="Use the `flet clean` command instead.",
-                version="0.86.0",
-                delete_version="0.89.0",
-                type="flag",
-            )
-            console.print(
-                "Warning: the `--clear-cache` flag is deprecated since version "
-                "0.86.0 and will be removed in version 0.89.0. "
-                "Use the `flet clean` command instead.",
-                style=warning_style,
-            )
 
         if "target_platform" in self.options:
             self.target_platform = self.options.target_platform
@@ -947,6 +1054,7 @@ class BaseBuildCommand(BaseFlutterCommand):
         macos_entitlements = {
             "com.apple.security.app-sandbox": False,
             "com.apple.security.cs.allow-jit": True,
+            "com.apple.security.cs.allow-unsigned-executable-memory": True,
             "com.apple.security.network.client": True,
             "com.apple.security.network.server": True,
             "com.apple.security.files.user-selected.read-write": True,
@@ -1312,26 +1420,26 @@ class BaseBuildCommand(BaseFlutterCommand):
 
         ios_provisioning_profile = (
             self.options.ios_provisioning_profile
-            or self.get_pyproject("tool.flet.ios.provisioning_profile")
             or ios_export_method_opts.get("provisioning_profile")
+            or self.get_pyproject("tool.flet.ios.provisioning_profile")
         )
 
         ios_signing_certificate = (
             self.options.ios_signing_certificate
-            or self.get_pyproject("tool.flet.ios.signing_certificate")
             or ios_export_method_opts.get("signing_certificate")
+            or self.get_pyproject("tool.flet.ios.signing_certificate")
         )
 
         ios_export_options = (
-            self.get_pyproject("tool.flet.ios.export_options")
-            or ios_export_method_opts.get("export_options")
+            ios_export_method_opts.get("export_options")
+            or self.get_pyproject("tool.flet.ios.export_options")
             or {}
         )
 
         ios_team_id = (
             self.options.ios_team_id
-            or self.get_pyproject("tool.flet.ios.team_id")
             or ios_export_method_opts.get("team_id")
+            or self.get_pyproject("tool.flet.ios.team_id")
         )
 
         if (
@@ -1350,6 +1458,29 @@ class BaseBuildCommand(BaseFlutterCommand):
             )
 
         assert self.flutter_dir
+        project_description = (
+            self.options.description
+            or self.get_pyproject("project.description")
+            or self.get_pyproject("tool.poetry.description")
+            or ""
+        )
+        linux_categories = self.escape_linux_desktop_categories(["Utility"])
+        if self.target_platform == "linux":
+            try:
+                # Desktop entry values are escaped here rather than in the template:
+                # the rules differ per key and getting them wrong yields an entry the
+                # desktop environment silently discards.
+                linux_categories = self.escape_linux_desktop_categories(
+                    self.options.linux_categories
+                    or self.get_pyproject("tool.flet.linux.categories")
+                    or ["Utility"]
+                )
+            except ValueError as e:
+                self.cleanup(1, f"Invalid tool.flet.linux.categories: {e}")
+        # Resolved before the context, because the PWA background falls
+        # through to it.
+        splash = self._resolve_splash()
+
         self.template_data = {
             "out_dir": self.flutter_dir.name,
             "sep": os.sep,
@@ -1357,8 +1488,9 @@ class BaseBuildCommand(BaseFlutterCommand):
             "route_url_strategy": (
                 self.options.route_url_strategy
                 or self.get_pyproject("tool.flet.web.route_url_strategy")
+                or os.getenv("FLET_WEB_ROUTE_URL_STRATEGY")
                 or "path"
-            ),
+            ).lower(),
             # "canvaskit" (dart2js), not "auto": with "auto" Chromium browsers
             # select the dart2wasm/skwasm build, where every JS <-> Dart byte
             # buffer crossing pays a WasmGC boundary conversion instead of a
@@ -1367,11 +1499,17 @@ class BaseBuildCommand(BaseFlutterCommand):
             "web_renderer": (
                 self.options.web_renderer
                 or self.get_pyproject("tool.flet.web.renderer")
+                or os.getenv("FLET_WEB_RENDERER")
                 or "canvaskit"
-            ),
+            ).lower(),
             "pwa_background_color": (
                 self.options.pwa_background_color
                 or self.get_pyproject("tool.flet.web.pwa_background_color")
+                # Falls through to the splash colour. An installed PWA paints
+                # its launch screen from the manifest rather than from the
+                # page, so leaving this on its own default gave a white flash
+                # in front of a splash the user had already coloured.
+                or splash["color"]
             ),
             "pwa_theme_color": (
                 self.options.pwa_theme_color
@@ -1387,6 +1525,11 @@ class BaseBuildCommand(BaseFlutterCommand):
             # correct jsdelivr URL when CDN mode is on.
             "pyodide_version": self.python_release.pyodide,
             "base_url": f"/{base_url}/" if base_url else "/",
+            **self._resolve_web_runtime_js(
+                self.resolve_no_cdn(),
+                f"/{base_url}/" if base_url else "/",
+                self.python_release.pyodide,
+            ),
             "split_per_abi": split_per_abi,
             # Enabled by `flet test` to scaffold integration-test wiring
             # (integration_test/ + flutter_test dev deps). Default False so
@@ -1396,11 +1539,14 @@ class BaseBuildCommand(BaseFlutterCommand):
             "project_name_slug": project_name_slug,
             "artifact_name": artifact_name,
             "product_name": product_name,
-            "description": (
-                self.options.description
-                or self.get_pyproject("project.description")
-                or self.get_pyproject("tool.poetry.description")
-            ),
+            "project_description": project_description,
+            # pubspec.yaml is read as YAML while still unrendered, so its
+            # description is escaped for the single quotes the template
+            # provides rather than carrying quotes of its own.
+            "pubspec_description": self.escape_single_quoted_yaml(project_description),
+            # Pre-escaped Linux desktop entry values.
+            "linux_desktop_exec": self.escape_linux_desktop_exec(str(artifact_name)),
+            "linux_categories": linux_categories,
             "org_name": self.options.org_name
             or self.get_pyproject(f"tool.flet.{self.config_platform}.org")
             or self.get_pyproject("tool.flet.org"),
@@ -1448,7 +1594,123 @@ class BaseBuildCommand(BaseFlutterCommand):
             },
             "flutter": {"dependencies": list(self.flutter_dependencies.keys())},
             "boot_screen": self._resolve_boot_screen(),
+            "splash": splash,
+            # The adaptive-icon background is a colour resource, not pixels, so
+            # it is authored by the template like the splash colours are.
+            "adaptive_icon_background": (
+                self.options.android_adaptive_icon_background
+                or self.get_pyproject("tool.flet.android.adaptive_icon_background")
+                # Falls through to the shared key, so one colour covers every
+                # platform. Without this, setting `icon_background` alone gave
+                # a dark iOS and macOS and left Android stubbornly white.
+                or self.icon_background_value("android")
+                or "#ffffff"
+            ),
             "pyproject": self.get_pyproject(),
+        }
+
+    @staticmethod
+    def _resolve_web_runtime_js(
+        no_cdn: bool, base_url: str, pyodide_version: str
+    ) -> dict:
+        """
+        Build the runtime URLs the web template emits as JS literals.
+
+        `index.html` used to carry three separate `{% if no_cdn %}` blocks on
+        the same condition, interleaved into a JavaScript object literal, plus
+        a `"{{ no_cdn }}".toLowerCase() == "true"` round-trip through a string.
+        Deciding here instead leaves the template flat substitution, and puts
+        the quoting and escaping in one place that can be tested.
+
+        Args:
+            no_cdn: Whether the build bundles its own runtime copies.
+            base_url: The app's base URL, with leading and trailing slashes.
+            pyodide_version: Resolved Pyodide release, for the jsdelivr URL.
+
+        Returns:
+            Ready-to-emit JavaScript literals - `null`, `true`/`false`, or a
+                quoted string - keyed by their cookiecutter name.
+        """
+
+        return {
+            "no_cdn_js": json.dumps(bool(no_cdn)),
+            "canvas_kit_base_url_js": json.dumps(
+                f"{base_url}canvaskit/" if no_cdn else None
+            ),
+            "pyodide_url_js": json.dumps(
+                f"{base_url}pyodide/pyodide.mjs"
+                if no_cdn
+                else f"https://cdn.jsdelivr.net/pyodide/v{pyodide_version}/full/pyodide.mjs"
+            ),
+            "font_fallback_base_url_js": json.dumps(
+                "assets/fonts/" if no_cdn else None
+            ),
+        }
+
+    def splash_setting(self, key: str):
+        """
+        One splash setting, platform-specific over global.
+
+        The same precedence the splash colours use, so every key under
+        `[tool.flet.splash]` can be overridden per platform without each one
+        spelling the lookup out again. A key that was renamed is read under
+        its former name too, so existing configuration keeps working.
+
+        Args:
+            key: Setting name below the `splash` table.
+
+        Returns:
+            The configured value, or `None`.
+        """
+
+        assert self.get_pyproject
+
+        for name in (key, SPLASH_KEY_ALIASES.get(key)):
+            if name is None:
+                continue
+            value = self.get_pyproject(
+                f"tool.flet.{self.config_platform}.splash.{name}"
+            ) or self.get_pyproject(f"tool.flet.splash.{name}")
+            if value is not None:
+                return value
+        return None
+
+    def _resolve_splash(self) -> dict:
+        """
+        Resolve splash colours and per-platform toggles from the options.
+
+        The colours and toggles reach the *template* from here, and the same
+        dict drives pixel generation later, so the XML that names a colour and
+        the PNG rendered beside it cannot disagree. `create_flutter_project`
+        hashes `template_data`, so changing a colour correctly re-renders.
+
+        Returns:
+            A dict with `android`, `ios`, `web`, `color` and `dark_color`.
+            Never `None` and never containing `None`: `create_flutter_project`
+            filters `None` values out of the context, which would leave the
+            template referencing an undefined key.
+        """
+
+        assert self.options
+        assert self.get_pyproject
+
+        def enabled(no_option, key: str) -> bool:
+            if no_option is not None:
+                return not no_option
+            configured = self.get_pyproject(f"tool.flet.splash.{key}")
+            return True if configured is None else bool(configured)
+
+        def color(option, key: str, default: str) -> str:
+            return option or self.splash_setting(key) or default
+
+        return {
+            "android": enabled(self.options.no_android_splash, "android"),
+            "ios": enabled(self.options.no_ios_splash, "ios"),
+            "web": enabled(self.options.no_web_splash, "web"),
+            "color": color(self.options.splash_color, "color", "#ffffff"),
+            "dark_color": color(
+                self.options.splash_dark_color, "dark_color", "#222222"
+            ),
         }
 
     def _resolve_boot_screen(self):
@@ -1487,29 +1749,8 @@ class BaseBuildCommand(BaseFlutterCommand):
             name = boot_screen.get("name", "flet")
             options = boot_screen.get(name) or {}
         else:
-            # backward compatibility with the legacy app.boot_screen /
-            # app.startup_screen settings
             name = "flet"
             options = {}
-            legacy_boot = merged("app.boot_screen")
-            legacy_startup = merged("app.startup_screen")
-            if legacy_boot or legacy_startup:
-                console.log(
-                    "[tool.flet.app.boot_screen] and "
-                    "[tool.flet.app.startup_screen] are deprecated; use "
-                    "[tool.flet.boot_screen] with a named screen instead.",
-                    style=warning_style,
-                )
-                if legacy_boot.get("show"):
-                    options["spinner_size"] = 30
-                    message = legacy_boot.get("message")
-                    if message:
-                        options["prepare_message"] = message
-                if legacy_startup.get("show"):
-                    options["spinner_size"] = 30
-                    message = legacy_startup.get("message")
-                    if message:
-                        options["startup_message"] = message
 
         return {
             "name": name,
@@ -1584,20 +1825,16 @@ class BaseBuildCommand(BaseFlutterCommand):
         hash.update(template_dir)
         hash.update(self.template_data)
 
+        # Handed to the icon and splash stamps. Cookiecutter re-renders with
+        # `overwrite_if_exists=True`, so a re-render restores the template's
+        # placeholder assets over generated ones; without this the downstream
+        # stamps would be unchanged, generation would be skipped, and the
+        # artifacts would silently stay reverted.
+        self.template_digest = hash.digest()
+
         hash_changed = hash.has_changed()
 
         if hash_changed:
-            # if options.clear_cache is set, delete any existing Flutter bootstrap
-            # project directory
-            if (
-                self.options.clear_cache
-                and self.flutter_dir.exists()
-                and not second_pass
-            ):
-                if self.verbose > 1:
-                    console.log(f"Deleting {self.flutter_dir}", style=verbose2_style)
-                shutil.rmtree(self.flutter_dir, ignore_errors=True)
-
             # create a new Flutter bootstrap project directory, if non-existent
             if not second_pass:
                 self.flutter_dir.mkdir(parents=True, exist_ok=True)
@@ -1622,7 +1859,7 @@ class BaseBuildCommand(BaseFlutterCommand):
                     },
                 )
             except Exception as e:
-                shutil.rmtree(self.flutter_dir)
+                rmtree(self.flutter_dir)
                 self.cleanup(1, f"{e}")
 
             # For local development, override flet dependency with path
@@ -1789,415 +2026,426 @@ class BaseBuildCommand(BaseFlutterCommand):
 
     def customize_icons(self):
         """
-        Resolve platform icon assets, patch pubspec icon config, and generate icons.
+        Resolve the app icon for the target platform and generate every size.
         """
 
         assert self.package_app_path
         assert self.flutter_dir
         assert self.options
         assert self.get_pyproject
-        assert self.pubspec_path
-        assert self.build_dir
-
-        hash = HashStamp(self.build_dir / ".hash" / "icons")
-
-        pubspec_origin_path = f"{self.pubspec_path}.orig"
-        pubspec = self.load_yaml(pubspec_origin_path)
-
-        copy_ops = []
-        self.assets_path = self.package_app_path.joinpath("assets")
-        if self.assets_path.exists():
-            images_dir = "images"
-            images_path = self.flutter_dir.joinpath(images_dir)
-            images_path.mkdir(exist_ok=True)
-
-            # copy icons
-            default_icon = self.find_platform_image(
-                self.assets_path, images_path, "icon", copy_ops, hash
-            )
-            ios_icon = self.find_platform_image(
-                self.assets_path, images_path, "icon_ios", copy_ops, hash
-            )
-            android_icon = self.find_platform_image(
-                self.assets_path, images_path, "icon_android", copy_ops, hash
-            )
-            web_icon = self.find_platform_image(
-                self.assets_path, images_path, "icon_web", copy_ops, hash
-            )
-            windows_icon = self.find_platform_image(
-                self.assets_path, images_path, "icon_windows", copy_ops, hash
-            )
-            macos_icon = self.find_platform_image(
-                self.assets_path, images_path, "icon_macos", copy_ops, hash
-            )
-
-            self.fallback_image(
-                pubspec, "flutter_launcher_icons.image_path", [default_icon], images_dir
-            )
-            self.fallback_image(
-                pubspec,
-                "flutter_launcher_icons.image_path_ios",
-                [ios_icon, default_icon],
-                images_dir,
-            )
-            self.fallback_image(
-                pubspec,
-                "flutter_launcher_icons.image_path_android",
-                [android_icon, default_icon],
-                images_dir,
-            )
-            self.fallback_image(
-                pubspec,
-                "flutter_launcher_icons.adaptive_icon_foreground",
-                [android_icon, default_icon],
-                images_dir,
-            )
-            self.fallback_image(
-                pubspec,
-                "flutter_launcher_icons.web.image_path",
-                [web_icon, default_icon],
-                images_dir,
-            )
-            self.fallback_image(
-                pubspec,
-                "flutter_launcher_icons.windows.image_path",
-                [windows_icon, default_icon],
-                images_dir,
-            )
-            self.fallback_image(
-                pubspec,
-                "flutter_launcher_icons.macos.image_path",
-                [macos_icon, default_icon],
-                images_dir,
-            )
-
-        adaptive_icon_background = (
-            self.options.android_adaptive_icon_background
-            or self.get_pyproject("tool.flet.android.adaptive_icon_background")
-        )
-        if adaptive_icon_background:
-            pubspec["flutter_launcher_icons"]["adaptive_icon_background"] = (
-                adaptive_icon_background
-            )
-
-        # check if pubspec changed
-        hash.update(Path(pubspec_origin_path).stat().st_mtime)
-        hash.update(pubspec["flutter_launcher_icons"])
-
-        # save pubspec.yaml
-        if hash.has_changed():
-            if copy_ops:
-                self.update_status("[bold blue]Customizing app icons...")
-                for op in copy_ops:
-                    if self.verbose > 0:
-                        console.log(
-                            f"Copying image {op[0]} to {op[1]}", style=verbose1_style
-                        )
-                    shutil.copy(op[0], op[1])
-                console.log(f"Customized app icons {self.emojis['checkmark']}")
-
-            updated_pubspec = self.load_yaml(self.pubspec_path)
-            updated_pubspec["flutter_launcher_icons"] = pubspec[
-                "flutter_launcher_icons"
-            ]
-            self.save_yaml(self.pubspec_path, updated_pubspec)
-
-            self.update_status("[bold blue]Generating app icons...")
-
-            # icons
-            icons_result = self.run(
-                [
-                    self.dart_exe,
-                    "run",
-                    "--suppress-analytics",
-                    "flutter_launcher_icons",
-                ],
-                cwd=str(self.flutter_dir),
-                capture_output=self.verbose < 1,
-            )
-            if icons_result.returncode != 0:
-                if isinstance(icons_result.stdout, str):
-                    console.log(icons_result.stdout, style=verbose1_style)
-                if isinstance(icons_result.stderr, str):
-                    console.log(icons_result.stderr, style=error_style)
-                self.cleanup(icons_result.returncode)
-            console.log(f"Generated app icons {self.emojis['checkmark']}")
-
-        hash.commit()
-
-    def customize_splash_images(self):
-        """
-        Resolve splash assets/colors, patch splash config, and generate splash files.
-        """
-
-        assert self.package_app_path
-        assert self.flutter_dir
-        assert self.options
-        assert self.get_pyproject
-        assert self.pubspec_path
         assert self.build_dir
         assert self.target_platform
 
-        if self.target_platform not in ["web", "ipa", "ios-simulator", "apk", "aab"]:
+        platform = ICON_PLATFORMS.get(self.target_platform)
+        if platform is None:
             return
 
-        hash = HashStamp(self.build_dir / ".hash" / "splashes")
+        hash = HashStamp(self.build_dir / ".hash" / "icons")
+        hash.update(ICONS_GENERATOR_VERSION)
+        hash.update(self.template_digest)
 
-        pubspec_origin_path = f"{self.pubspec_path}.orig"
-
-        pubspec = self.load_yaml(pubspec_origin_path)
-
-        copy_ops = []
         self.assets_path = self.package_app_path.joinpath("assets")
+
+        source_name = None
+        # Whether the source is a generic `icon.png` rather than artwork the
+        # author framed for this platform. A generic icon gets the platform's
+        # margin computed for it; `icon_<platform>.png` is a finished
+        # composition and is used exactly as supplied.
+        derived = False
         if self.assets_path.exists():
-            images_dir = "images"
-            images_path = self.flutter_dir.joinpath(images_dir)
-            images_path.mkdir(exist_ok=True)
+            # Only the target platform's chain is resolved; the other five
+            # lookups produced nothing this build could use.
+            source_name = self.find_platform_image(
+                self.assets_path, f"icon_{platform}", hash
+            )
+            if source_name is None:
+                source_name = self.find_platform_image(self.assets_path, "icon", hash)
+                derived = source_name is not None
+        hash.update(derived)
 
-            # copy icons
-            default_icon = self.find_platform_image(
-                self.assets_path, images_path, "icon", copy_ops, hash
-            )
-
-            # copy splash images
-            default_splash = self.find_platform_image(
-                self.assets_path, images_path, "splash", copy_ops, hash
-            )
-            default_dark_splash = self.find_platform_image(
-                self.assets_path, images_path, "splash_dark", copy_ops, hash
-            )
-            ios_splash = self.find_platform_image(
-                self.assets_path, images_path, "splash_ios", copy_ops, hash
-            )
-            ios_dark_splash = self.find_platform_image(
-                self.assets_path, images_path, "splash_dark_ios", copy_ops, hash
-            )
-            android_splash = self.find_platform_image(
-                self.assets_path, images_path, "splash_android", copy_ops, hash
-            )
-            android_dark_splash = self.find_platform_image(
-                self.assets_path, images_path, "splash_dark_android", copy_ops, hash
-            )
-            web_splash = self.find_platform_image(
-                self.assets_path, images_path, "splash_web", copy_ops, hash
-            )
-            web_dark_splash = self.find_platform_image(
-                self.assets_path, images_path, "splash_dark_web", copy_ops, hash
-            )
-            self.fallback_image(
-                pubspec,
-                "flutter_native_splash.image",
-                [default_splash, default_icon],
-                images_dir,
-            )
-            self.fallback_image(
-                pubspec,
-                "flutter_native_splash.image_dark",
-                [default_dark_splash, default_splash, default_icon],
-                images_dir,
-            )
-            self.fallback_image(
-                pubspec,
-                "flutter_native_splash.image_ios",
-                [ios_splash, default_splash, default_icon],
-                images_dir,
-            )
-            self.fallback_image(
-                pubspec,
-                "flutter_native_splash.image_dark_ios",
-                [
-                    ios_dark_splash,
-                    default_dark_splash,
-                    ios_splash,
-                    default_splash,
-                    default_icon,
-                ],
-                images_dir,
-            )
-            self.fallback_image(
-                pubspec,
-                "flutter_native_splash.image_android",
-                [android_splash, default_splash, default_icon],
-                images_dir,
-            )
-            self.fallback_image(
-                pubspec,
-                "flutter_native_splash.android_12.image",
-                [android_splash, default_splash, default_icon],
-                images_dir,
-            )
-            self.fallback_image(
-                pubspec,
-                "flutter_native_splash.image_dark_android",
-                [
-                    android_dark_splash,
-                    default_dark_splash,
-                    android_splash,
-                    default_splash,
-                    default_icon,
-                ],
-                images_dir,
-            )
-            self.fallback_image(
-                pubspec,
-                "flutter_native_splash.android_12.image_dark",
-                [
-                    android_dark_splash,
-                    default_dark_splash,
-                    android_splash,
-                    default_splash,
-                    default_icon,
-                ],
-                images_dir,
-            )
-            self.fallback_image(
-                pubspec,
-                "flutter_native_splash.image_web",
-                [web_splash, default_splash, default_icon],
-                images_dir,
-            )
-            self.fallback_image(
-                pubspec,
-                "flutter_native_splash.image_dark_web",
-                [
-                    web_dark_splash,
-                    default_dark_splash,
-                    web_splash,
-                    default_splash,
-                    default_icon,
-                ],
-                images_dir,
-            )
-
-        # splash colors
-        splash_color = (
-            self.options.splash_color
-            or self.get_pyproject(f"tool.flet.{self.config_platform}.splash.color")
-            or self.get_pyproject("tool.flet.splash.color")
+        options = IconOptions(
+            background=self._resolve_icon_background(),
+            macos_style=self.get_pyproject("tool.flet.macos.icon_style") or "auto",
+            application_id=self.template_data["bundle_id"],
         )
-        if splash_color:
-            pubspec["flutter_native_splash"]["color"] = splash_color
-            pubspec["flutter_native_splash"]["android_12"]["color"] = splash_color
+        hash.update(options)
 
-        splash_dark_color = (
-            self.options.splash_dark_color
-            or self.get_pyproject(f"tool.flet.{self.config_platform}.splash.dark_color")
-            or self.get_pyproject("tool.flet.splash.dark_color")
+        if source_name is None:
+            # Rule 2: with no user icon there is nothing to improve on. The
+            # template's committed icons are better than anything derivable
+            # from a finished `images/icon.png`, and flutter_launcher_icons
+            # overwrote them on every build.
+            self._restore_generated_icons()
+            hash.commit()
+            return
+
+        source_path = self.assets_path.joinpath(source_name)
+        hash.update(source_path.stat().st_mtime)
+
+        if not hash.has_changed() and not self._icons_missing(platform):
+            hash.commit()
+            return
+
+        self.update_status("[bold blue]Generating app icons...")
+
+        try:
+            source, pre_rendered = load_source(source_path)
+        except SourceError as e:
+            console.log(f"Warning: {e}", style=warning_style)
+            hash.commit()
+            return
+
+        # Deliberately not squared first. Every icon is composed by centring
+        # the artwork on a square canvas anyway, so padding here would be
+        # redundant - and worse, it replaces the empty space with transparency,
+        # which makes finished opaque artwork look like a glyph and gets it
+        # reframed on top of being letterboxed.
+        if source.width != source.height:
+            console.log(
+                f"Warning: icon source is {source.width}x{source.height}, not "
+                "square. It is centred on each icon, with the remaining space "
+                "filled by icon_background where a platform needs an opaque "
+                "icon and left transparent elsewhere. Supply a square image to "
+                "frame it yourself.",
+                style=warning_style,
+            )
+
+        result = render_icons(
+            source,
+            options,
+            self._icon_spec(platform),
+            platform=platform,
+            pre_rendered=pre_rendered,
+            derived=derived,
         )
-        if splash_dark_color:
-            pubspec["flutter_native_splash"]["color_dark"] = splash_dark_color
-            pubspec["flutter_native_splash"]["android_12"]["color_dark"] = (
-                splash_dark_color
-            )
+        for message in result.warnings:
+            console.log(f"Warning: {message}", style=warning_style)
 
-        splash_icon_bgcolor = self.get_pyproject(
-            f"tool.flet.{self.config_platform}.splash.icon_bgcolor"
-        ) or self.get_pyproject("tool.flet.splash.icon_bgcolor")
-
-        if splash_icon_bgcolor:
-            pubspec["flutter_native_splash"]["android_12"]["icon_background_color"] = (
-                splash_icon_bgcolor
-            )
-
-        splash_icon_dark_bgcolor = self.get_pyproject(
-            f"tool.flet.{self.config_platform}.splash.icon_dark_bgcolor"
-        ) or self.get_pyproject("tool.flet.splash.icon_dark_bgcolor")
-
-        if splash_icon_dark_bgcolor:
-            pubspec["flutter_native_splash"]["android_12"][
-                "icon_background_color_dark"
-            ] = splash_icon_dark_bgcolor
-
-        # enable/disable splashes
-        pubspec["flutter_native_splash"]["web"] = (
-            not self.options.no_web_splash
-            if self.options.no_web_splash is not None
-            else (
-                self.get_pyproject("tool.flet.splash.web")
-                if self.get_pyproject("tool.flet.splash.web") is not None
-                else True
-            )
+        self._backup_generated_icons(result)
+        write(
+            result, self.flutter_dir, declared_only=platform not in ICONS_CREATED_FRESH
         )
-        pubspec["flutter_native_splash"]["ios"] = (
-            not self.options.no_ios_splash
-            if self.options.no_ios_splash is not None
-            else (
-                self.get_pyproject("tool.flet.splash.ios")
-                if self.get_pyproject("tool.flet.splash.ios") is not None
-                else True
-            )
-        )
-        pubspec["flutter_native_splash"]["android"] = (
-            not self.options.no_android_splash
-            if self.options.no_android_splash is not None
-            else (
-                self.get_pyproject("tool.flet.splash.android")
-                if self.get_pyproject("tool.flet.splash.android") is not None
-                else True
-            )
-        )
-
-        # check if pubspec changed
-        hash.update(Path(pubspec_origin_path).stat().st_mtime)
-        hash.update(pubspec["flutter_native_splash"])
-
-        # save pubspec.yaml
-        if hash.has_changed():
-            if copy_ops:
-                self.update_status("[bold blue]Customizing app splash images...")
-                for op in copy_ops:
-                    if self.verbose > 0:
-                        console.log(
-                            f"Copying image {op[0]} to {op[1]}", style=verbose1_style
-                        )
-                    shutil.copy(op[0], op[1])
-                console.log(f"Customized app splash images {self.emojis['checkmark']}")
-
-            updated_pubspec = self.load_yaml(self.pubspec_path)
-            updated_pubspec["flutter_native_splash"] = pubspec["flutter_native_splash"]
-            self.save_yaml(self.pubspec_path, updated_pubspec)
-
-            # splash screens
-            self.update_status("[bold blue]Generating splash screens...")
-            splash_result = self.run(
-                [
-                    self.dart_exe,
-                    "run",
-                    "--suppress-analytics",
-                    "flutter_native_splash:create",
-                ],
-                cwd=str(self.flutter_dir),
-                capture_output=self.verbose < 1,
-            )
-            if splash_result.returncode != 0:
-                if isinstance(splash_result.stdout, str):
-                    console.log(splash_result.stdout, style=verbose1_style)
-                if isinstance(splash_result.stderr, str):
-                    console.log(splash_result.stderr, style=error_style)
-                self.cleanup(splash_result.returncode)
-            console.log(f"Generated splash screens {self.emojis['checkmark']}")
+        console.log(f"Generated app icons {self.emojis['checkmark']}")
 
         hash.commit()
 
-    def fallback_image(self, pubspec, yaml_path: str, images: list, images_dir: str):
+    def icon_background_value(self, platform: str) -> Optional[str]:
         """
-        Assign first available image from candidates to a nested pubspec key path.
+        The configured colour behind a transparent icon, as written.
+
+        Kept separate from :meth:`_resolve_icon_background` because Android
+        needs the string: its background is a colour *resource* rather than
+        pixels, so it reaches the icon through the template.
 
         Args:
-            pubspec: Parsed pubspec document.
-            yaml_path: Dot-separated key path to image setting.
-            images: Candidate image file names in fallback order.
-            images_dir: Relative image directory prefix.
+            platform: Platform whose key overrides the global one.
+
+        Returns:
+            The colour string, or `None` when nothing is configured.
         """
 
-        d = pubspec
-        pp = yaml_path.split(".")
-        for p in pp[:-1]:
-            d = d[p]
-        for image in images:
-            if image:
-                d[pp[-1]] = f"{images_dir}/{image}"
-                return
+        assert self.get_pyproject
+
+        return self.get_pyproject(
+            f"tool.flet.{platform}.icon_background"
+        ) or self.get_pyproject("tool.flet.icon_background")
+
+    def _resolve_icon_background(self) -> tuple[int, int, int]:
+        """
+        Resolve the colour that sits behind artwork where alpha cannot survive.
+
+        `assets/icon.png` is expected to be transparent, so this is what the
+        user actually sees on Apple platforms: iOS has to be flattened because
+        the App Store rejects an alpha channel, and the macOS tile has to be
+        opaque to read as a tile at all. Until now both were hardcoded white
+        while Android's equivalent was configurable, so a dark-brand app had
+        no way to avoid a white square.
+
+        Resolves platform-specific over global, matching how the splash
+        colours already resolve.
+
+        Returns:
+            The colour as an RGB triple, defaulting to white.
+        """
+
+        assert self.get_pyproject
+
+        value = self.icon_background_value(self.config_platform)
+        if not value:
+            return (255, 255, 255)
+        try:
+            return parse_hex_color(value)
+        except ValueError:
+            # A typo in a colour must not stop a build that would otherwise
+            # succeed; say what was ignored and carry on with the default.
+            console.log(
+                f'Warning: icon_background "{value}" is not a valid colour '
+                "(expected #rrggbb); using white.",
+                style=warning_style,
+            )
+            return (255, 255, 255)
+
+    def _icon_spec(self, platform: str):
+        """
+        Build the icon target list from what the rendered project declares.
+
+        A project states which icons it uses in its asset catalogs and web
+        manifest. Following that is what keeps generation from inventing
+        files nothing references.
+
+        Args:
+            platform: The `flet_platform_assets` platform name.
+
+        Returns:
+            An `AssetSpec`, or `None` to use the package defaults.
+        """
+
+        assert self.flutter_dir
+
+        if platform == "web":
+            manifest = self.flutter_dir / "web" / "manifest.json"
+            if manifest.is_file():
+                try:
+                    return web_targets_from_manifest(
+                        json.loads(manifest.read_text(encoding="utf-8"))
+                    )
+                except (json.JSONDecodeError, OSError):
+                    pass
+        if platform == "linux":
+            # Named after the desktop entry id, so the list is per-app.
+            return linux_targets(self.template_data["bundle_id"])
+        if platform == "windows":
+            existing = (
+                self.flutter_dir / "windows" / "runner" / "resources" / "app_icon.ico"
+            )
+            sizes = self.get_ico_sizes(existing)
+            if sizes:
+                return AssetSpec(ico_sizes=sizes)
+        return None
+
+    def _icons_missing(self, platform: str) -> bool:
+        """
+        Whether any icon this build should have produced is absent.
+
+        Guards the case where an unchanged stamp would skip generation but a
+        template re-render has already removed the output.
+
+        Args:
+            platform: The `flet_platform_assets` platform name.
+
+        Returns:
+            `True` when at least one expected file is missing.
+        """
+
+        assert self.flutter_dir
+
+        spec = self._icon_spec(platform) or DEFAULT_SPECS[platform]
+        for target in spec.targets:
+            if not (self.flutter_dir / target.relative_path).is_file():
+                return True
+        return False
+
+    def _backup_generated_icons(self, result) -> None:
+        """
+        Keep the template's own icon under `.icons-orig` before overwriting it.
+
+        A user who deletes their `assets/icon.png` should get the template's
+        icon back, not keep the one generated from an asset that no longer
+        exists.
+
+        Args:
+            result: The render whose targets are about to be written.
+        """
+
+        assert self.build_dir
+        assert self.flutter_dir
+
+        backup_dir = self.build_dir / ".icons-orig"
+        paths = [asset.relative_path for asset in result.assets] + list(result.ico)
+        for relative_path in paths:
+            target = self.flutter_dir / relative_path
+            saved = backup_dir / relative_path
+            if target.is_file() and not saved.exists():
+                saved.parent.mkdir(parents=True, exist_ok=True)
+                shutil.copy(target, saved)
+
+    def _restore_generated_icons(self) -> None:
+        """
+        Put back every icon a previous build overwrote.
+
+        Called when no user icon resolves, so that removing `assets/icon.png`
+        returns the app to the template's committed icons.
+        """
+
+        assert self.build_dir
+        assert self.flutter_dir
+
+        backup_dir = self.build_dir / ".icons-orig"
+        if not backup_dir.is_dir():
+            return
+        for saved in backup_dir.rglob("*"):
+            if saved.is_file():
+                target = self.flutter_dir / saved.relative_to(backup_dir)
+                target.parent.mkdir(parents=True, exist_ok=True)
+                shutil.copy(saved, target)
+
+    def customize_splash_images(self):
+        """
+        Resolve splash artwork for the target platform and generate every size.
+        """
+
+        assert self.package_app_path
+        assert self.flutter_dir
+        assert self.options
+        assert self.get_pyproject
+        assert self.build_dir
+        assert self.target_platform
+        assert self.template_data
+
+        platform = SPLASH_PLATFORMS.get(self.target_platform)
+        if platform is None:
+            return
+
+        splash = self.template_data["splash"]
+        if not splash[platform]:
+            return
+
+        hash = HashStamp(self.build_dir / ".hash" / "splashes")
+        hash.update(SPLASH_GENERATOR_VERSION)
+        hash.update(self.template_digest)
+        hash.update(splash)
+
+        self.assets_path = self.package_app_path.joinpath("assets")
+
+        light_name = dark_name = None
+        derived = False
+        if self.assets_path.exists():
+
+            def resolve(*names):
+                for name in names:
+                    found = self.find_platform_image(self.assets_path, name, hash)
+                    if found:
+                        return found
+                return None
+
+            # The documented fallback chain, resolved for this platform only.
+            # Unlike icons, splash terminates at the icon, so every app gets a
+            # splash even with no splash asset of its own.
+            light_name = resolve(f"splash_{platform}", "splash")
+            if light_name is None:
+                # Fell through to the app icon. An icon fills its canvas by
+                # design, so it is framed rather than drawn at splash size.
+                light_name = resolve("icon")
+                derived = light_name is not None
+            dark_name = resolve(f"splash_dark_{platform}", "splash_dark")
+
+        options = SplashOptions(
+            color=splash["color"],
+            dark_color=splash["dark_color"],
+            icon_background=self.splash_setting("icon_background"),
+            icon_dark_background=self.splash_setting("icon_dark_background"),
+            icon_fit=self.splash_setting("icon_fit") or "contain",
+        )
+        hash.update(options)
+        hash.update(derived)
+
+        light_path = (
+            self.assets_path.joinpath(light_name)
+            if light_name
+            else self.flutter_dir.joinpath("images", "icon.png")
+        )
+        if light_name is None:
+            # The template's own icon, which is an icon like any other.
+            derived = True
+        if not light_path.is_file():
+            # A custom build template may ship no `images/icon.png`, leaving
+            # nothing to derive a splash from. The template ships 1x1
+            # transparent `drawable/splash.png` and `drawable/android12splash.png`
+            # so `@drawable/splash` and the Android 12 theme still resolve;
+            # without them this path fails resource linking outright rather
+            # than degrading to a plain background.
+            hash.commit()
+            return
+
+        dark_path = self.assets_path.joinpath(dark_name) if dark_name else None
+        for path in (light_path, dark_path):
+            if path is not None:
+                hash.update(str(path))
+                hash.update(path.stat().st_mtime)
+
+        if not hash.has_changed():
+            hash.commit()
+            return
+
+        self.update_status("[bold blue]Generating splash screens...")
+
+        try:
+            light, _ = load_source(light_path)
+            dark = load_source(dark_path)[0] if dark_path is not None else None
+        except SourceError as e:
+            console.log(f"Warning: {e}", style=warning_style)
+            hash.commit()
+            return
+
+        light, warning = square(light)
+        if warning:
+            console.log(f"Warning: {warning}", style=warning_style)
+        if dark is not None:
+            dark = square(dark)[0]
+
+        result = render_splash(light, dark, options, platform=platform, derived=derived)
+        for message in result.warnings:
+            console.log(f"Warning: {message}", style=warning_style)
+
+        write(result, self.flutter_dir, declared_only=False)
+        if platform == "ios":
+            self.patch_launch_storyboard(light)
+        console.log(f"Generated splash screens {self.emojis['checkmark']}")
+
+        hash.commit()
+
+    def patch_launch_storyboard(self, image) -> None:
+        """
+        Correct the launch storyboard's size hint for the 1x launch image.
+
+        Interface Builder records the natural size of each referenced image.
+        Left at the template's placeholder value, Xcode warns on every build
+        that the asset does not match.
+
+        `ElementTree` is deliberately not used: it would reserialise the whole
+        document and mangle a declaration Xcode is particular about.
+
+        Args:
+            image: The light-mode artwork, at its full source size.
+        """
+
+        assert self.flutter_dir
+
+        storyboard = (
+            self.flutter_dir
+            / "ios"
+            / "Runner"
+            / "Base.lproj"
+            / "LaunchScreen.storyboard"
+        )
+        if not storyboard.is_file():
+            return
+
+        width, height = density_size(image.width, image.height, 1)
+        text = storyboard.read_text(encoding="utf-8")
+        patched, count = re.subn(
+            r'<image name="LaunchImage" width="\d+" height="\d+"/>',
+            f'<image name="LaunchImage" width="{width}" height="{height}"/>',
+            text,
+        )
+        if count != 1:
+            console.log(
+                "Warning: could not update the launch storyboard's image size "
+                f"({count} matches). The splash still renders; Xcode may warn.",
+                style=warning_style,
+            )
+            return
+        storyboard.write_text(patched, encoding="utf-8")
 
     def _darwin_spm_active(self) -> bool:
         """Whether to stage serious_python for Swift Package Manager (vs CocoaPods).
@@ -2361,7 +2609,7 @@ class BaseBuildCommand(BaseFlutterCommand):
 
         # flutter-packages variable
         if self.flutter_packages_temp_dir.exists():
-            shutil.rmtree(self.flutter_packages_temp_dir)
+            rmtree(self.flutter_packages_temp_dir)
 
         package_env["SERIOUS_PYTHON_FLUTTER_PACKAGES"] = str(
             self.flutter_packages_temp_dir
@@ -2560,6 +2808,24 @@ class BaseBuildCommand(BaseFlutterCommand):
             self.options.no_cdn or self.get_pyproject("tool.flet.web.cdn") == False  # noqa: E712
         )
 
+    def build_wasm(self) -> bool:
+        """
+        Whether to add Flutter's `--wasm` target to the web build.
+
+        Flutter emits the dart2wasm output for the `skwasm` renderer, and the
+        generated `flutter_bootstrap.js` pins `flutterConfig.renderer` to the
+        resolved `web_renderer`. Pinning `canvaskit` makes Flutter's loader
+        skip the dart2wasm build, so it is worth compiling only when the
+        renderer leaves it selectable.
+
+        Returns:
+            True when the resolved renderer is `auto` or `skwasm` and the wasm
+                target was not turned off.
+        """
+        return not self.template_data["no_wasm"] and self.template_data[
+            "web_renderer"
+        ] in ("auto", "skwasm")
+
     def get_bool_setting(self, cli_option, pyproj_setting, default_value):
         """
         Resolve a boolean setting with precedence: CLI option, pyproject, default.
@@ -2698,7 +2964,7 @@ class BaseBuildCommand(BaseFlutterCommand):
         # app — see `_serious_python_build_env`.
         build_env = self._serious_python_build_env()
 
-        if self.package_platform == "Emscripten" and not self.template_data["no_wasm"]:
+        if self.package_platform == "Emscripten" and self.build_wasm():
             build_args.append("--wasm")
 
         android_signing_key_store = (
@@ -2760,14 +3026,32 @@ class BaseBuildCommand(BaseFlutterCommand):
             capture_output=self.verbose < 1,
         )
 
+        # `flutter build ipa` exits 0 even when Xcode's export step fails, so
+        # a failed export is detected from the artifacts: signing was asked
+        # for, therefore an .ipa must exist. The message check below cannot
+        # see it — output is streamed, not captured, whenever -v is used.
+        assert self.flutter_dir
+        ipa_export_failed = self.target_platform == "ipa" and bool(
+            (self.template_data or {}).get("ios_provisioning_profile")
+            and not any(self.flutter_dir.glob("build/ios/ipa/*.ipa"))
+        )
+
         if (
             build_result.returncode != 0
+            or ipa_export_failed
             or "Encountered error while creating the IPA" in str(build_result.stderr)
         ):
             if isinstance(build_result.stdout, str):
                 console.log(build_result.stdout, style=verbose1_style)
             if isinstance(build_result.stderr, str):
                 console.log(build_result.stderr, style=error_style)
+            if ipa_export_failed and build_result.returncode == 0:
+                self.cleanup(
+                    1,
+                    "Xcode could not export an .ipa from the archive. Its error "
+                    "is in the build output above — re-run with -v if the output "
+                    "was suppressed.",
+                )
             self.cleanup(build_result.returncode if build_result.returncode else 1)
 
     def resolve_output_path(self, build_output: str) -> str:
@@ -2843,7 +3127,7 @@ class BaseBuildCommand(BaseFlutterCommand):
                 continue
 
             if self.out_dir.exists():
-                shutil.rmtree(str(self.out_dir))
+                rmtree(str(self.out_dir))
             self.out_dir.mkdir(parents=True, exist_ok=True)
 
             # copy build result to out_dir
@@ -2952,12 +3236,126 @@ class BaseBuildCommand(BaseFlutterCommand):
                     style=verbose1_style,
                 )
 
+    @staticmethod
+    def escape_single_quoted_yaml(value: Optional[str]) -> str:
+        """
+        Escape a value for a single-quoted YAML scalar.
+
+        The build template's `pubspec.yaml` is read as YAML while still
+        unrendered — CI patches its dependency versions in place — so the
+        value must not carry quotes of its own, and is escaped for the
+        quoting the template already provides.
+
+        Args:
+            value: Raw value, or `None`.
+
+        Returns:
+            The value with control characters flattened and quotes doubled.
+        """
+
+        return re.sub(r"[\x00-\x1f]", " ", value or "").replace("'", "''")
+
+    @staticmethod
+    def escape_linux_desktop_exec(value: str) -> str:
+        """
+        Escape a program name for the quoted `Exec` key of a desktop entry.
+
+        The value passes through two layers: the desktop entry file itself,
+        where backslash is the escape character, and the shell-like parsing
+        of `Exec`, where `"`, `` ` ``, `$` and `\\` are reserved inside
+        double quotes. Escape for the inner layer first, then for the outer
+        one, so an artifact name containing a quote still launches.
+
+        Args:
+            value: Raw artifact name.
+
+        Returns:
+            The value ready to be interpolated between double quotes.
+        """
+
+        # Flatten control characters first: a newline would split the
+        # entry across lines and void the key.
+        value = re.sub(r"[\x00-\x1f]", " ", value)
+        shell_escaped = re.sub(r'(["`$\\])', r"\\\1", value)
+        entry_escaped = shell_escaped.replace("\\", "\\\\")
+        # `%` introduces a field code, so a literal one must be doubled or the
+        # desktop drops it along with the character after it.
+        return entry_escaped.replace("%", "%%")
+
+    @staticmethod
+    def escape_linux_desktop_categories(categories) -> str:
+        """
+        Build the `Categories` value of a desktop entry.
+
+        Args:
+            categories: A category string or list of category strings.
+
+        Returns:
+            Semicolon-separated categories, each terminated by a semicolon.
+
+        Raises:
+            ValueError: If `categories` is not a string or list of strings.
+        """
+
+        if isinstance(categories, str):
+            categories = [categories]
+        if not isinstance(categories, (list, tuple)) or not all(
+            isinstance(c, str) for c in categories
+        ):
+            raise ValueError(
+                f"categories must be a string or a list of strings, got {categories!r}"
+            )
+        # A literal ";" would split one category into two, a backslash would
+        # start an escape sequence that voids the whole key, and a newline
+        # would leave a second line with no "=" in it, voiding the entry.
+        escaped = [
+            re.sub(r"[\x00-\x1f]", " ", c)
+            .strip()
+            .replace("\\", "\\\\")
+            .replace(";", "\\;")
+            for c in categories
+            if c.strip()
+        ]
+        return ";".join(escaped or ["Utility"]) + ";"
+
+    @staticmethod
+    def get_ico_sizes(path: Path) -> tuple[int, ...]:
+        """
+        Read the entry sizes of an existing Windows `.ico`.
+
+        A project that ships its own icon states which sizes it wants by
+        which entries it contains, so a regenerated file keeps them rather
+        than imposing a fixed list.
+
+        Args:
+            path: Path to the `.ico` file.
+
+        Returns:
+            The square entry sizes, or an empty tuple when the file cannot be
+                read. Windows stores 256 as 0 in the directory entry.
+        """
+
+        try:
+            with open(path, "rb") as f:
+                header = f.read(6)
+                if header[:4] != b"\x00\x00\x01\x00":
+                    return ()
+                count = int.from_bytes(header[4:6], "little")
+                entries = f.read(16 * count)
+        except OSError:
+            return ()
+        sizes = []
+        for i in range(count):
+            width = entries[i * 16] or 256
+            height = entries[i * 16 + 1] or 256
+            if width == height:
+                sizes.append(width)
+        return tuple(sorted(set(sizes)))
+
     def find_platform_image(
         self,
         src_path: Path,
-        dest_path: Path,
         image_name: str,
-        copy_ops: list,
         hash: HashStamp,
     ):
         """
@@ -2967,25 +3365,26 @@ class BaseBuildCommand(BaseFlutterCommand):
         `icon.svg`), incompatible formats are filtered out and the rest are
         ranked so a raster image (`.png` first) always wins, making the
         choice deterministic regardless of filesystem ordering. Formats the
-        icon/splash generators cannot decode are dropped: `.svg` (vector,
-        never supported), `.icns` (macOS-only) and `.ico` (Windows-only). If
+        generator cannot use are dropped: `.svg` (vector, never decoded),
+        `.icns` (macOS-only) and `.ico` (Windows-only). If
         the only candidate is a vector image, a warning is logged and `None`
         is returned so the default icon is used.
 
         Args:
             src_path: Source assets directory.
-            dest_path: Destination image directory.
             image_name: Base image name (without extension).
-            copy_ops: Mutable copy operation list to append to.
             hash: Hash accumulator used for change detection.
 
         Returns:
             File name of matched image, or `None` if not found.
         """
 
-        # flutter_launcher_icons / flutter_native_splash decode raster images
-        # only, so drop any candidate they can't read: .svg is vector (never
-        # supported), .icns is macOS-only and .ico is Windows-only.
+        # Drop candidates that cannot serve this target: .svg is vector and
+        # is never decoded, while .icns and .ico are container formats that
+        # only make sense for the platform that defines them. Pillow reads
+        # both, and `load_source` takes their largest frame, but using a
+        # macOS icon set as an Android launcher icon is not what the file
+        # name asked for.
         def _incompatible(p: str) -> bool:
             ext = Path(p).suffix.lower()
             return (
@@ -3036,7 +3435,6 @@ class BaseBuildCommand(BaseFlutterCommand):
         best = images[0]
         if self.verbose > 0:
             console.log(f'Found "{image_name}" image at {best}', style=verbose1_style)
-        copy_ops.append((best, dest_path))
         hash.update(best)
         hash.update(Path(best).stat().st_mtime)
         return Path(best).name

@@ -7,19 +7,6 @@ name: Flet Test (on-device)
 # (compile only), this actually runs the app on the device/emulator/simulator.
 
 on:
-  push:
-    tags-ignore:
-      - '**'
-    branches-ignore:
-      - main
-    paths:
-      - '.github/workflows/flet-test.yml'
-      - '.fvmrc'
-      - 'packages/flet/**'
-      - 'packages/flet_integration_test/**'
-      - 'sdk/python/packages/flet/**'
-      - 'sdk/python/packages/flet-cli/**'
-      - 'sdk/python/examples/apps/flet_test_counter/**'
   pull_request:
     paths:
       - '.github/workflows/flet-test.yml'
@@ -28,12 +15,14 @@ on:
       - 'packages/flet_integration_test/**'
       - 'sdk/python/packages/flet/**'
       - 'sdk/python/packages/flet-cli/**'
+      - 'sdk/python/packages/flet-desktop/**'
+      - 'sdk/python/templates/**'
       - 'sdk/python/examples/apps/flet_test_counter/**'
   workflow_dispatch:
 
-# Ensure only one run per branch (PR or push), cancel older ones
+# Ensure only one run per ref (pull request or manual dispatch), cancel older ones
 concurrency:
-  group: flet-test-${{ github.workflow }}-${{ github.event.pull_request.head.ref || github.ref_name }}
+  group: flet-test-${{ github.workflow }}-${{ github.ref }}
   cancel-in-progress: true
 
 env:

@@ -6,16 +6,16 @@ import threading
 import weakref
 from collections.abc import Awaitable, Coroutine
 from concurrent.futures import CancelledError, Future, ThreadPoolExecutor
-from dataclasses import InitVar, dataclass, field
+from dataclasses import InitVar, dataclass, field, fields, is_dataclass
 from functools import partial
 from typing import (
     TYPE_CHECKING,
     Any,
     Callable,
+    ClassVar,
     Optional,
     ParamSpec,
     TypeVar,
-    Union,
 )
 from urllib.parse import urlparse
 
@@ -53,12 +53,9 @@ from flet.controls.types import (
     DeviceOrientation,
     Locale,
     PagePlatform,
-    Url,
-    UrlTarget,
     Wrapper,
 )
 from flet.utils import is_pyodide
-from flet.utils.deprecated import deprecated
 from flet.utils.from_dict import from_dict
 from flet.utils.strings import random_string
 
@@ -107,27 +104,30 @@ class ServiceRegistry(Service):
     Tracked service instances currently attached to this page.
     """
 
+    _auto_register: ClassVar[bool] = False
+    """
+    Disabled so each registry belongs only to its own page. An embedded `FletApp`
+    can construct a page while the host page is the current context; automatic
+    registration would incorrectly add the new registry to the host's services.
+    The client has no service binding for type "ServiceRegistry".
+    """
+
     def __post_init__(self, ref: Optional[Ref[Any]]):
         super().__post_init__(ref)
         self._internals["uid"] = random_string(10)
         self._lock: threading.Lock = threading.Lock()
 
-    def init(self):
-        # Deliberately skips Service.init(), which registers the instance into
-        # `context.page._services`. A registry is the *container* for services,
-        # not a service itself, and self-registering leaks across pages: when a
-        # second Page is constructed while another page is still the current
-        # context — an embedded `FletApp` inside a host app — the new page's
-        # registry is registered inside the HOST's registry. The client has no
-        # service binding for type "ServiceRegistry", so building it throws
-        # "Unknown service" inside the host's service loop, and every service
-        # registered after it is never built: invoking one then fails with
-        # "Timeout waiting for invoke method listener".
-        BaseControl.init(self)
-
     def register_service(self, service: Service):
         """
         Registers a service in this registry and pushes an update.
+
+        If the page hasn't been sent to the client yet, the service is only added
+        to the registry and goes out with the page.
+
+        If the update fails before sending, remove the service and restore the
+        subtree's update tracking before re-raising. A failure after sending, such
+        as a `did_mount()` exception, leaves the service registered so later patches
+        account for the addition already sent.
 
         Args:
             service: Service instance to register.
@@ -137,7 +137,93 @@ class ServiceRegistry(Service):
                 f"Registering service {service._c}({service._i}) to registry {self._i}"
             )
             self._services.append(service)
-            self.__internal_update()
+            if self.parent is None:
+                return
+            restore = self.__snapshot_update_state()
+            try:
+                self.__internal_update()
+            except BaseException:
+                if not self.__was_sent(service):
+                    for i in range(len(self._services) - 1, -1, -1):
+                        if self._services[i] is service:
+                            del self._services[i]
+                            break
+                    restore()
+                raise
+
+    def __snapshot_update_state(self) -> Callable[[], None]:
+        """Save diff bookkeeping without copying controls or application state.
+
+        Both current fields and previous snapshots can contain controls: a child
+        pending removal is only reachable through the previous snapshot. Restore
+        missing attributes too, since configuring new children attaches parents
+        and creates snapshots before serialization can fail.
+        """
+        attributes = (
+            "_dirty",
+            "__changes",
+            "__prev_lists",
+            "__prev_dicts",
+            "__prev_classes",
+            "_parent",
+            "_initialized",
+            "_frozen",
+        )
+        saved = []
+        visited = set()
+
+        def capture(value):
+            if id(value) in visited:
+                return
+            visited.add(id(value))
+            if is_dataclass(value) and not isinstance(value, type):
+                state = {}
+                for name in attributes:
+                    if not hasattr(value, name):
+                        continue
+                    attr = getattr(value, name)
+                    if isinstance(attr, dict):
+                        attr = attr.copy()
+                        if name in ("__prev_lists", "__prev_dicts"):
+                            attr = {k: v.copy() for k, v in attr.items()}
+                    state[name] = attr
+                saved.append((value, state))
+                for name in ("__prev_lists", "__prev_dicts", "__prev_classes"):
+                    capture(state.get(name))
+                for f in fields(value):
+                    if not f.metadata.get("skip", False):
+                        capture(getattr(value, f.name))
+            elif isinstance(value, dict):
+                for item in value.values():
+                    capture(item)
+            elif isinstance(value, (list, tuple)):
+                for item in value:
+                    capture(item)
+
+        capture(self)
+
+        def restore():
+            for value, state in saved:
+                for name in attributes:
+                    if name in state:
+                        object.__setattr__(value, name, state[name])
+                    elif hasattr(value, name):
+                        object.__delattr__(value, name)
+
+        return restore
+
+    def __was_sent(self, service: Service) -> bool:
+        """
+        Returns whether the patch adding `service` was sent to the client.
+
+        The session indexes all additions after submitting the patch to the
+        connection, before calling `did_mount()`. This remains true if another
+        control's `did_mount()` raises; it does not confirm delivery to the client.
+        """
+        try:
+            return self.page.session.index.get(service._i) is service
+        except RuntimeError:
+            return False
 
     def unregister_services(self):
         """
@@ -169,9 +255,11 @@ class ServiceRegistry(Service):
         based solely on whether the user called `.update()` themselves.
         """
         was_called = context.was_update_called()
-        self.update()
-        if not was_called:
-            context.reset_update_called()
+        try:
+            self.update()
+        finally:
+            if not was_called:
+                context.reset_update_called()
 
 
 @dataclass
@@ -932,23 +1020,6 @@ class Page(BasePage):
                 partial(handler_with_context, *args, **kwargs),
             )
 
-    @deprecated(
-        "Use push_route() instead.",
-        version="0.80.0",
-        delete_version="0.90.0",
-        show_parentheses=True,
-    )
-    def go(
-        self, route: str, skip_route_change_event: bool = False, **kwargs: Any
-    ) -> None:
-        """
-        A helper method that updates [`page.route`](#route), calls \
-        [`page.on_route_change`](#on_route_change) event handler to update views and \
-        finally calls `page.update()`.
-        """
-
-        asyncio.create_task(self.push_route(route, **kwargs))
-
     async def push_route(self, route: str, **kwargs: Any) -> None:
         """
         Pushes a new navigation route to the browser history stack.
@@ -1240,83 +1311,6 @@ class Page(BasePage):
         if self.on_logout:
             asyncio.create_task(self._trigger_event("logout", event_data=None, e=e))
 
-    @deprecated(
-        "Use UrlLauncher().launch_url() instead.",
-        version="0.90.0",
-        show_parentheses=True,
-    )
-    async def launch_url(
-        self,
-        url: Union[str, Url],
-        *,
-        web_popup_window_name: Optional[Union[str, UrlTarget]] = None,
-        web_popup_window: bool = False,
-        web_popup_window_width: Optional[int] = None,
-        web_popup_window_height: Optional[int] = None,
-    ) -> None:
-        """
-        Opens a web browser or popup window to a given `url`.
-
-        Args:
-            url: The URL to open.
-            web_popup_window_name: Window tab/name to open URL in. Use
-                :attr:`flet.UrlTarget.SELF` for the same browser tab,
-                :attr:`flet.UrlTarget.BLANK` for a new browser tab (or in external
-                application on a mobile device), or a custom name for a named tab.
-            web_popup_window: Display the URL in a browser popup window.
-            web_popup_window_width: Popup window width.
-            web_popup_window_height: Popup window height.
-        """
-        if web_popup_window:
-            await UrlLauncher().open_window(
-                url,
-                title=web_popup_window_name,
-                width=web_popup_window_width,
-                height=web_popup_window_height,
-            )
-        else:
-            await UrlLauncher().launch_url(url)
-
-    @deprecated(
-        "Use UrlLauncher().can_launch_url() instead.",
-        version="0.90.0",
-        show_parentheses=True,
-    )
-    async def can_launch_url(self, url: str) -> bool:
-        """
-        Checks whether the specified URL can be handled by some app installed on the \
-        device.
-
-        Args:
-            url: The URL to check.
-
-        Returns:
-            `True` if it is possible to verify that there is a handler available.
-                `False` if there is no handler available, or the application does not
-                have permission to check. For example:
-
-                - On recent versions of Android and iOS, this will always return `False`
-                    unless the application has been configuration to allow querying the
-                    system for launch support.
-                - In web mode, this will always return `False` except for a few specific
-                    schemes that are always assumed to be supported (such as http(s)),
-                    as web pages are never allowed to query installed applications.
-        """
-        return await UrlLauncher().can_launch_url(url)
-
-    @deprecated(
-        "Use UrlLauncher().close_in_app_web_view() instead.",
-        version="0.90.0",
-        show_parentheses=True,
-    )
-    async def close_in_app_web_view(self) -> None:
-        """
-        Closes in-app web view opened with `launch_url()`.
-
-        📱 Mobile only.
-        """
-        await UrlLauncher().close_in_app_web_view()
-
     @property
     def session(self) -> "Session":
         """
@@ -1374,79 +1368,6 @@ class Page(BasePage):
         The PubSub client for the current page.
         """
         return self.session.pubsub_client
-
-    @property
-    @deprecated(
-        reason="Use UrlLauncher() instead.",
-        docs_reason="Use :class:`~flet.UrlLauncher` instead.",
-        version="0.80.0",
-        delete_version="0.90.0",
-    )
-    def url_launcher(self) -> UrlLauncher:
-        """
-        The UrlLauncher service for the current page.
-        """
-        return UrlLauncher()
-
-    @property
-    @deprecated(
-        reason="Use BrowserContextMenu() instead.",
-        docs_reason="Use :class:`~flet.BrowserContextMenu` instead.",
-        version="0.80.0",
-        delete_version="0.90.0",
-    )
-    def browser_context_menu(self):
-        """
-        The BrowserContextMenu service for the current page.
-        """
-        from flet.controls.services.browser_context_menu import BrowserContextMenu
-
-        return BrowserContextMenu()
-
-    @property
-    @deprecated(
-        reason="Use SharedPreferences() instead.",
-        docs_reason="Use :class:`~flet.SharedPreferences` instead.",
-        version="0.80.0",
-        delete_version="0.90.0",
-    )
-    def shared_preferences(self):
-        """
-        The SharedPreferences service for the current page.
-        """
-        from flet.controls.services.shared_preferences import SharedPreferences
-
-        return SharedPreferences()
-
-    @property
-    @deprecated(
-        reason="Use Clipboard() instead.",
-        docs_reason="Use :class:`~flet.Clipboard` instead.",
-        version="0.80.0",
-        delete_version="0.90.0",
-    )
-    def clipboard(self):
-        """
-        The Clipboard service for the current page.
-        """
-        from flet.controls.services.clipboard import Clipboard
-
-        return Clipboard()
-
-    @property
-    @deprecated(
-        reason="Use StoragePaths() instead.",
-        docs_reason="Use :class:`~flet.StoragePaths` instead.",
-        version="0.80.0",
-        delete_version="0.90.0",
-    )
-    def storage_paths(self):
-        """
-        The StoragePaths service for the current page.
-        """
-        from flet.controls.services.storage_paths import StoragePaths
-
-        return StoragePaths()
 
     async def get_device_info(self) -> Optional[DeviceInfo]:
         """

@@ -132,6 +132,7 @@ def main(page: ft.Page):
     page.appbar = ft.AppBar(title="AnimationCurve Showcase")
     page.add(
         ft.SafeArea(
+            expand=True,
             content=ft.Column(
                 controls=[
                     ft.Text(
@@ -164,8 +165,8 @@ def main(page: ft.Page):
                         alignment=ft.MainAxisAlignment.CENTER,
                         controls=[showcase_card(curve) for curve in ft.AnimationCurve],
                     ),
-                ]
-            )
+                ],
+            ),
         )
     )
 

@@ -46,7 +46,8 @@ def app(
             instance :class:`~flet.Page`.
         before_main: Called after `Page` was created, but before calling `main`.
         proxy_path: URL prefix when the app is mounted under a proxy.
-        assets_dir: an absolute path to app's assets directory.
+        assets_dir: path to app's assets directory. A relative path is resolved
+            against the current working directory.
         app_name: PWA application name.
         app_short_name: PWA application short name.
         app_description: PWA application description.
@@ -63,6 +64,10 @@ def app(
             which is the maximum allowed time between starting OAuth flow and
             redirecting to OAuth callback URL.
     """
+
+    env_assets_dir = os.getenv("FLET_ASSETS_DIR")
+    if env_assets_dir:
+        assets_dir = env_assets_dir
 
     env_upload_dir = os.getenv("FLET_UPLOAD_DIR")
     if env_upload_dir:

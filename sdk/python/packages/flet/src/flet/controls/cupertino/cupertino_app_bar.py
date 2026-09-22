@@ -53,7 +53,7 @@ class CupertinoAppBar(Control):
     Default color is defined by current theme.
     """
 
-    automatically_imply_leading: Optional[bool] = None
+    automatically_imply_leading: bool = True
     """
     Whether we should try to imply the :attr:`leading` control if `None`.
 
@@ -64,7 +64,7 @@ class CupertinoAppBar(Control):
     - If a :attr:`leading` control is provided, this parameter has no effect.
     """
 
-    automatically_imply_title: Optional[bool] = None
+    automatically_imply_title: bool = True
     """
     Whether we should try to imply the `title` control if `None`.
 
@@ -135,7 +135,7 @@ class CupertinoAppBar(Control):
     the :attr:`bgcolor`.
     """
 
-    automatic_background_visibility: Optional[bool] = None
+    automatic_background_visibility: bool = True
     """
     Whether the navigation bar should appear transparent when content is scrolled \
     under it.

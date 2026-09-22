@@ -54,6 +54,7 @@ def main(page: ft.Page):
     page.appbar = ft.AppBar(title="TabAlignment Showcase")
     page.add(
         ft.SafeArea(
+            expand=True,
             content=ft.Column(
                 controls=[
                     ft.Text("Compare how tabs are positioned within the tab bar."),

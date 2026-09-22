@@ -7,7 +7,8 @@ from flet.components.observable import Observable
 from flet.components.utils import current_component, current_renderer
 
 
-@dataclass
+# eq=False: see ComponentOwned - lifecycle objects compare by identity.
+@dataclass(eq=False)
 class ContextHook(Hook):
     """
     Marker hook for `use_context` subscription ordering.

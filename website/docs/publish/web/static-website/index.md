@@ -50,7 +50,7 @@ full matrix and resolution rules. In short:
 
 | Python | Pyodide   |
 | ------ | --------- |
-| 3.14   | 314.0.0   |
+| 3.14   | 314.0.6   |
 | 3.13   | 0.29.4    |
 | 3.12   | 0.27.7    |
 
@@ -185,11 +185,12 @@ Its value is determined in the following order of precedence:
 
 1. [`--route-url-strategy`](../../../cli/flet-build.md#--route-url-strategy)
 2. `[tool.flet.web].route_url_strategy`
-3. `"path"`
+3. [`FLET_WEB_ROUTE_URL_STRATEGY`](../../../reference/environment-variables.md#flet_web_route_url_strategy)
+4. `"path"`
 
 #### Example
 
-<Tabs groupId="flet-build--pyproject-toml">
+<Tabs groupId="flet-build--pyproject-toml--env">
 <TabItem value="flet-build" label="flet build">
 ```bash
 flet build web --route-url-strategy hash
@@ -199,6 +200,11 @@ flet build web --route-url-strategy hash
 ```toml
 [tool.flet.web]
 route_url_strategy = "hash"
+```
+</TabItem>
+<TabItem value="env" label="env var">
+```dotenv
+FLET_WEB_ROUTE_URL_STRATEGY="hash"
 ```
 </TabItem>
 </Tabs>
@@ -224,11 +230,12 @@ Its value is determined in the following order of precedence:
 
 1. [`--web-renderer`](../../../cli/flet-build.md#--web-renderer)
 2. `[tool.flet.web].renderer`
-3. `"canvaskit"`
+3. [`FLET_WEB_RENDERER`](../../../reference/environment-variables.md#flet_web_renderer)
+4. `"canvaskit"`
 
 #### Example
 
-<Tabs groupId="flet-build--pyproject-toml">
+<Tabs groupId="flet-build--pyproject-toml--env">
 <TabItem value="flet-build" label="flet build">
 ```bash
 flet build web --web-renderer skwasm
@@ -238,6 +245,11 @@ flet build web --web-renderer skwasm
 ```toml
 [tool.flet.web]
 renderer = "skwasm"
+```
+</TabItem>
+<TabItem value="env" label="env var">
+```dotenv
+FLET_WEB_RENDERER="skwasm"
 ```
 </TabItem>
 </Tabs>
@@ -252,11 +264,12 @@ CDN loading is disabled in the following order of precedence:
 
 1. [`--no-cdn`](../../../cli/flet-build.md#--no-cdn)
 2. `[tool.flet.web].cdn = false`
-3. default: CDN enabled
+3. [`FLET_WEB_NO_CDN`](../../../reference/environment-variables.md#flet_web_no_cdn)
+4. default: CDN enabled
 
 #### Example
 
-<Tabs groupId="flet-build--pyproject-toml">
+<Tabs groupId="flet-build--pyproject-toml--env">
 <TabItem value="flet-build" label="flet build">
 ```bash
 flet build web --no-cdn
@@ -266,6 +279,11 @@ flet build web --no-cdn
 ```toml
 [tool.flet.web]
 cdn = false
+```
+</TabItem>
+<TabItem value="env" label="env var">
+```dotenv
+FLET_WEB_NO_CDN="true"
 ```
 </TabItem>
 </Tabs>
@@ -279,7 +297,7 @@ For each setting:
 
 1. [`--pwa-background-color`](../../../cli/flet-build.md#--pwa-background-color) / [`--pwa-theme-color`](../../../cli/flet-build.md#--pwa-theme-color)
 2. `[tool.flet.web].pwa_background_color` / `[tool.flet.web].pwa_theme_color`
-3. `#FFFFFF` / `#0175C2`
+3. `#FFFFFF` / `#FF005F`
 
 #### Example
 

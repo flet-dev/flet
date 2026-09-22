@@ -3,6 +3,9 @@ import 'package:flet_webview/src/utils/webview.dart';
 import 'package:flutter/material.dart';
 import 'package:webview_flutter/webview_flutter.dart';
 
+import 'utils/file_access_vain.dart'
+    if (dart.library.io) 'utils/file_access.dart';
+
 class WebviewMobileAndMac extends StatefulWidget {
   final Control control;
 
@@ -22,6 +25,28 @@ class _WebviewMobileAndMacState extends State<WebviewMobileAndMac> {
     final links = widget.control.get<List>("prevent_links");
     if (links == null || links.isEmpty) return false;
     return links.any((link) => link is String && url.startsWith(link));
+  }
+
+  /// Loads [url], routing `file:` URLs through [WebViewController.loadFile].
+  ///
+  /// `loadFile` is the only entry point that grants the platform webview
+  /// access to the local filesystem: on Android it flips
+  /// `WebSettings.allowFileAccess`, which defaults to `false` when targeting
+  /// API 30+, and on iOS/macOS it uses `loadFileURL:allowingReadAccessToURL:`
+  /// so that sibling assets (scripts, stylesheets, images) resolve too.
+  /// A plain `loadRequest` of a `file:` URL fails with
+  /// `net::ERR_ACCESS_DENIED` on Android.
+  Future<void> _load(String url, LoadRequestMethod method) async {
+    var uri = Uri.parse(url);
+    if (uri.scheme == "file") {
+      try {
+        await controller.loadFile(uri.toFilePath());
+        return;
+      } on UnsupportedError catch (e) {
+        debugPrint("WebView: $url is not a valid local file path: $e");
+      }
+    }
+    await controller.loadRequest(uri, method: method);
   }
 
   void _setOptionalEventHandlers() {
@@ -107,11 +132,14 @@ class _WebviewMobileAndMacState extends State<WebviewMobileAndMac> {
       ),
     );
 
-    // request
-    controller.loadRequest(
-        Uri.parse(widget.control.getString("url", "https://flet.dev")!),
-        method: parseLoadRequestMethod(
-            widget.control.getString("method"), LoadRequestMethod.get)!);
+    // Android's WebSettings.javaScriptEnabled defaults to false, unlike
+    // WKWebView and the web platform, so a page would silently run no script
+    // there. Enable it before the first load; `set_javascript_mode` can turn
+    // it back off afterwards.
+    controller.setJavaScriptMode(JavaScriptMode.unrestricted).then((_) => _load(
+        widget.control.getString("url", "https://flet.dev")!,
+        parseLoadRequestMethod(
+            widget.control.getString("method"), LoadRequestMethod.get)!));
 
     _setOptionalEventHandlers();
   }
@@ -158,15 +186,19 @@ class _WebviewMobileAndMacState extends State<WebviewMobileAndMac> {
         await controller.loadFile(args["path"]);
         break;
       case "load_html":
-        await controller.loadHtmlString(args["value"],
-            baseUrl: args["base_url"]);
+        var baseUrl = args["base_url"];
+        if (baseUrl != null && Uri.tryParse(baseUrl)?.scheme == "file") {
+          // Android's loadDataWithBaseURL does not grant file access on its
+          // own, so local sub-resources would be denied.
+          await allowFileAccess(controller);
+        }
+        await controller.loadHtmlString(args["value"], baseUrl: baseUrl);
         break;
       case "load_request":
         var url = args["url"];
         if (url != null) {
-          await controller.loadRequest(Uri.parse(url),
-              method: parseLoadRequestMethod(
-                  args["method"], LoadRequestMethod.get)!);
+          await _load(url,
+              parseLoadRequestMethod(args["method"], LoadRequestMethod.get)!);
         }
         break;
       case "run_javascript":

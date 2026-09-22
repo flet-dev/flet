@@ -17,10 +17,28 @@ paths.
 This page lists the guides created for each release.
 :::
 
+:::tip[Upgrading from 0.28.x?]
+The guides below cover one release each. Moving from **0.28.x** to 1.0 spans the
+whole 0.70 - 0.86 pre-release series, so start with
+[Migrating from Flet 0.28 to 1.0](../migrate-to-1-0.md) instead.
+:::
+
 ## By release
 
 The following guides are available. They're sorted by release, with the most recent release first.
 Each guide explains the change, the reason for it, and how to migrate your code.
+
+### Released in Flet 1.0.0
+
+#### Breaking changes
+
+- [All deprecated APIs removed](/docs/updates/breaking-changes/v1-0-0/removed-deprecated-apis)
+- [iOS: per-method signing settings now override top-level ones](/docs/updates/breaking-changes/v1-0-0/ios-per-method-signing-precedence)
+- [`InputBorder` is now a class hierarchy instead of an enum](/docs/updates/breaking-changes/v1-0-0/inputborder-class-hierarchy)
+
+#### Deprecations
+
+- [`InputBorder` enum members and the loose border properties deprecated](/docs/updates/breaking-changes/v1-0-0/inputborder-class-hierarchy)
 
 ### Released in Flet 0.86.0
 

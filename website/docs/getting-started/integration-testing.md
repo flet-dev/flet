@@ -255,7 +255,7 @@ different screen sizes and densities produce different pixels.
 
 ### On desktop
 
-From your app directory, run [`flet test`](../cli/flet-test.md). With no
+From your **app directory**, run [`flet test`](../cli/flet-test.md). With no
 arguments it targets the **current desktop** platform:
 
 <Tabs groupId="uv--pip">

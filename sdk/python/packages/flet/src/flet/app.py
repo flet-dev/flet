@@ -23,13 +23,17 @@ from flet.utils import (
     is_pyodide,
     open_in_browser,
 )
-from flet.utils.deprecated import deprecated
 from flet.utils.pip import (
     ensure_flet_desktop_package_installed,
     ensure_flet_web_package_installed,
 )
 
 logger = logging.getLogger("flet")
+
+#: Conventional assets directory name, used as the default for `assets_dir`.
+#: A missing directory of this name is unremarkable; any other value was
+#: chosen deliberately, so a missing one is reported.
+DEFAULT_ASSETS_DIR = "assets"
 
 AppCallable = Callable[[Page], Union[Any, Awaitable[Any]]]
 """Type alias for Flet app lifecycle callbacks.
@@ -41,30 +45,24 @@ Used for both `main` and `before_main` handlers.
 """
 
 
-@deprecated(
-    "Use run() instead.",
-    docs_reason="Use [`run()`][flet.run] instead.",
-    version="0.80.0",
-    show_parentheses=True,
-)
-def app(*args, **kwargs):
-    new_args = list(args)
-    if "target" in kwargs:
-        new_args.insert(0, kwargs["target"])
-    return run(*new_args, **kwargs)
+def __configure_logging_from_env() -> None:
+    """
+    Applies the log level named by the `FLET_LOG_LEVEL` environment variable.
 
+    `flet run -v` sets this so the framework's own logging reaches the console
+    without the app having to configure it. `basicConfig` does nothing once the
+    root logger has a handler, so an app that configures logging itself keeps
+    the setup it chose.
+    """
+    level = os.getenv("FLET_LOG_LEVEL")
+    if not level:
+        return
 
-@deprecated(
-    "Use run_async() instead.",
-    docs_reason="Use [`run_async()`][flet.run_async] instead.",
-    version="0.80.0",
-    show_parentheses=True,
-)
-def app_async(*args, **kwargs):
-    new_args = list(args)
-    if "target" in kwargs:
-        new_args.insert(0, kwargs["target"])
-    return run_async(*new_args, **kwargs)
+    resolved = logging.getLevelName(level.strip().upper())
+    if isinstance(resolved, int):
+        logging.basicConfig(level=resolved)
+    else:
+        logger.warning("Unknown FLET_LOG_LEVEL: %s", level)
 
 
 def run(
@@ -74,13 +72,12 @@ def run(
     host: Optional[str] = None,
     port: int = 0,
     view: Optional[AppView] = AppView.FLET_APP,
-    assets_dir: Optional[str] = "assets",
+    assets_dir: Optional[str] = DEFAULT_ASSETS_DIR,
     upload_dir: Optional[str] = None,
     web_renderer: WebRenderer = WebRenderer.AUTO,
     route_url_strategy: RouteUrlStrategy = RouteUrlStrategy.PATH,
     no_cdn: Optional[bool] = False,
     export_asgi_app: Optional[bool] = False,
-    target=None,
 ):
     """
     Runs the Flet app.
@@ -101,14 +98,15 @@ def run(
         no_cdn: Whether not load CanvasKit, Pyodide, or fonts from CDN.
         export_asgi_app: If `True`, returns a configured ASGI app instead of
             running an event loop.
-        target: Deprecated alias for `main`.
 
     Returns:
         A FastAPI ASGI app when `export_asgi_app=True`.
             Otherwise, runs the app and returns `None`.
     """
+    __configure_logging_from_env()
+
     if is_pyodide():
-        __run_pyodide(main=main or target, before_main=before_main)
+        __run_pyodide(main=main, before_main=before_main)
         return
 
     if export_asgi_app:
@@ -116,7 +114,7 @@ def run(
         from flet_web.fastapi.serve_fastapi_web_app import get_fastapi_web_app
 
         return get_fastapi_web_app(
-            main=main or target,
+            main=main,
             before_main=before_main,
             page_name=__get_page_name(name),
             assets_dir=__get_assets_dir_path(assets_dir, relative_to_cwd=True),
@@ -134,7 +132,7 @@ def run(
 
     return asyncio.run(
         run_async(
-            main=main or target,
+            main=main,
             before_main=before_main,
             name=name,
             host=host,
@@ -156,12 +154,11 @@ async def run_async(
     host: Optional[str] = None,
     port: int = 0,
     view: Optional[AppView] = AppView.FLET_APP,
-    assets_dir: Optional[str] = "assets",
+    assets_dir: Optional[str] = DEFAULT_ASSETS_DIR,
     upload_dir: Optional[str] = None,
     web_renderer: WebRenderer = WebRenderer.AUTO,
     route_url_strategy: RouteUrlStrategy = RouteUrlStrategy.PATH,
     no_cdn: Optional[bool] = False,
-    target=None,
 ):
     """
     Asynchronously run a Flet app using socket or web server transport.
@@ -179,11 +176,12 @@ async def run_async(
         web_renderer: Web renderer type for web-hosted mode.
         route_url_strategy: Route URL strategy (`path` or `hash`).
         no_cdn: Whether to avoid loading CanvasKit, Pyodide, and fonts from CDN.
-        target: Deprecated alias for `main`.
     """
 
+    __configure_logging_from_env()
+
     if is_pyodide():
-        __run_pyodide(main=main or target, before_main=before_main)
+        __run_pyodide(main=main, before_main=before_main)
         return
 
     if isinstance(view, str):
@@ -270,19 +268,19 @@ async def run_async(
     if is_embedded() and bridge_port_env:
         conn = await __run_dart_bridge_server(
             port=int(bridge_port_env),
-            main=main or target,
+            main=main,
             before_main=before_main,
         )
     elif is_socket_server:
         conn = await __run_socket_server(
             port=port,
-            main=main or target,
+            main=main,
             before_main=before_main,
             blocking=is_embedded(),
         )
     else:
         conn = await __run_web_server(
-            main=main or target,
+            main=main,
             before_main=before_main,
             host=host,
             port=port,
@@ -680,16 +678,32 @@ def __get_assets_dir_path(assets_dir: Optional[str], relative_to_cwd=False):
     """
     Resolve assets directory to an absolute path and apply env override.
 
+    A resolved directory that does not exist is dropped rather than passed on,
+    because a caller receiving it can only either ignore it silently (what the
+    desktop view does) or complain (what the web server does) - and the two
+    disagreeing is why the same app warned only under `--web`.
+
+    Whether that is worth reporting depends on where the value came from.
+    `assets_dir` defaults to `DEFAULT_ASSETS_DIR` whether or not the app has
+    such a directory, so a missing one is unremarkable; any other value was
+    chosen deliberately, so a missing one is a mistake worth a warning.
+
+    The env override is applied afterwards and is never dropped:
+    `FLET_ASSETS_DIR` is always set on purpose, so a bad value there is left
+    for downstream to report.
+
     Args:
         assets_dir: Input assets directory path.
         relative_to_cwd: Resolve relative paths from current working directory
             instead of current script directory.
 
     Returns:
-        Resolved assets directory path or `None`.
+        Resolved assets directory path, or `None` if it was not set or does not
+            exist.
     """
 
     if assets_dir:
+        requested = assets_dir
         if not Path(assets_dir).is_absolute():
             if "_MEI" in __file__:
                 # support for "onefile" PyInstaller
@@ -702,7 +716,14 @@ def __get_assets_dir_path(assets_dir: Optional[str], relative_to_cwd=False):
                     .joinpath(assets_dir)
                     .resolve()
                 )
-        logger.info("Assets path configured: %s", assets_dir)
+        if os.path.isdir(assets_dir):
+            logger.info("Assets path configured: %s", assets_dir)
+        else:
+            if requested == DEFAULT_ASSETS_DIR:
+                logger.debug("No assets directory at %s", assets_dir)
+            else:
+                logger.warning("assets_dir does not exist: %s", assets_dir)
+            assets_dir = None
 
     env_assets_dir = os.getenv("FLET_ASSETS_DIR")
     if env_assets_dir:

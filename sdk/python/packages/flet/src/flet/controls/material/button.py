@@ -1,6 +1,7 @@
 from dataclasses import field
 from typing import Optional, Union
 
+from flet.controls.action_control import ActionControl
 from flet.controls.adaptive_control import AdaptiveControl
 from flet.controls.base_control import control
 from flet.controls.buttons import ButtonStyle
@@ -22,7 +23,7 @@ __all__ = ["Button"]
 
 
 @control("Button")
-class Button(LayoutControl, AdaptiveControl):
+class Button(LayoutControl, AdaptiveControl, ActionControl):
     """
     A material button.
 
@@ -86,7 +87,7 @@ class Button(LayoutControl, AdaptiveControl):
     The button's style.
     """
 
-    autofocus: Optional[bool] = None
+    autofocus: bool = False
     """
     Whether this button should be focused initially.
     """

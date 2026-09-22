@@ -1,4 +1,7 @@
 import asyncio
+import sys
+import threading
+from types import SimpleNamespace
 
 import pytest
 
@@ -131,3 +134,56 @@ def test_render_times_out_without_ack():
         assert len(ri._channel.sent) == 1
 
     asyncio.run(run())
+
+
+@pytest.mark.parametrize("debug", [False, True])
+def test_render_wakes_event_loop_for_native_thread_ack(monkeypatch, debug):
+    from flet.data_channel import DataChannelOpenEvent, _DartBridgeDataChannel
+
+    handlers = {}
+    workers = []
+    errors = []
+
+    def send_bytes(port, payload):
+        def acknowledge():
+            try:
+                handlers[port](b"\xff")
+            except Exception as exc:
+                errors.append(exc)
+
+        worker = threading.Timer(0.02, acknowledge)
+        workers.append(worker)
+        worker.start()
+
+    monkeypatch.setitem(
+        sys.modules,
+        "dart_bridge",
+        SimpleNamespace(
+            set_enqueue_handler_func=lambda port, handler: handlers.update(
+                {port: handler}
+            ),
+            send_bytes=send_bytes,
+        ),
+    )
+    channel = _DartBridgeDataChannel(123)
+    monkeypatch.setattr(RawImage, "get_data_channel", lambda self, channel_id: channel)
+    ri = ft.RawImage(ack_timeout=1.0)
+
+    async def run():
+        ri._capture_channel(
+            DataChannelOpenEvent(control=ri, name="data_channel_open", channel_id=123)
+        )
+        loop = asyncio.get_running_loop()
+        started = loop.time()
+        await ri.render_rgba(1, 1, b"\x00\x00\x00\xff")
+        elapsed = loop.time() - started
+        assert not errors
+        assert elapsed < 0.5, f"ACK only resumed rendering after {elapsed:.3f}s"
+        assert not ri._pending_acks
+
+    try:
+        asyncio.run(run(), debug=debug)
+    finally:
+        for worker in workers:
+            worker.join()
+        channel.close()

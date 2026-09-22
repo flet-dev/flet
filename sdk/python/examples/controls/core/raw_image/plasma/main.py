@@ -38,8 +38,8 @@ async def main(page: ft.Page):
 
     raw_image = ft.RawImage(expand=True, fit=ft.BoxFit.FILL)
 
-    fps_text = ft.Text("fps: —", size=12)
-    resolution_text = ft.Text("res: —", size=12)
+    fps_text = ft.Text("fps: —", size=12, width=60)
+    resolution_text = ft.Text("res: —", size=12, width=90)
     detail_slider = ft.Slider(
         min=1,
         max=8,
@@ -53,6 +53,8 @@ async def main(page: ft.Page):
         content=ft.Row(
             [fps_text, resolution_text, ft.Text("detail:", size=12), detail_slider],
             spacing=20,
+            run_spacing=10,
+            wrap=True,
         ),
         padding=ft.Padding.symmetric(horizontal=12, vertical=2),
         bgcolor=ft.Colors.SURFACE_CONTAINER_HIGH,
@@ -60,7 +62,12 @@ async def main(page: ft.Page):
 
     page.add(
         ft.SafeArea(
-            content=ft.Column([raw_image, status_bar], expand=True, spacing=0),
+            content=ft.Column(
+                [raw_image, status_bar],
+                expand=True,
+                spacing=0,
+                horizontal_alignment=ft.CrossAxisAlignment.STRETCH,
+            ),
             expand=True,
         )
     )

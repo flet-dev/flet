@@ -1015,12 +1015,8 @@ class DiffBuilder:
                         new_item, "fn", None
                     )
 
-                if (not frozen_local and old_item is new_item) or (
-                    frozen_local
-                    and old_item is not new_item
-                    and same_type
-                    and same_component_fn
-                    and _keys_match()
+                if old_item is new_item or (
+                    frozen_local and same_type and same_component_fn and _keys_match()
                 ):
                     self._compare_dataclasses(
                         parent, _path_join(path, idx), old_item, new_item, frozen_local
@@ -1137,6 +1133,14 @@ class DiffBuilder:
                 of relying on dirty/change tracking.
         """
         logger.debug("\n_compare_dataclasses: %s\n\n%s\n%s\n", path, src, dst)
+
+        if frozen and src is dst:
+            # Retained immutable children have no new description to reconcile.
+            # In particular, a Component must not migrate state to itself or
+            # render over its old body before that body can be diffed.
+            if parent is not None and parent is not dst:
+                dst._parent = weakref.ref(parent)
+            return
 
         if (
             self.control_cls
@@ -1369,7 +1373,19 @@ class DiffBuilder:
                     default = prop_defaults.get(fname)
                     old = src_vals.get(fname, default)
                     new = dst_vals.get(fname, default)
-                    if old is new or old == new:
+                    if old is new:
+                        continue
+                    # A child control that compares equal to its predecessor
+                    # is still a *different instance* that must be reconciled:
+                    # adopt the old _i, get its _parent stamped and replace the
+                    # old instance in the session index. Skipping it leaves an
+                    # orphan in the new tree (fresh _i, no _parent) while the
+                    # index keeps the old instance whose parent chain dies
+                    # with the old tree — the next event dispatched to it
+                    # fails with "Control must be added to the page first".
+                    # Reconciling an equal subtree emits no operations, so the
+                    # equality check is only worth it for non-control values.
+                    if not self._holds_control(new) and old == new:
                         continue
                     if fname in event_fields:
                         old = old is not None
@@ -1504,6 +1520,19 @@ class DiffBuilder:
                     self._update_dict_snapshot(prev_dicts, key, dst)
                 if dataclasses.is_dataclass(dst) and key is not None:
                     prev_classes[key] = dst
+
+    def _holds_control(self, value: Any) -> bool:
+        """Return whether `value` is a control or a list/dict holding controls."""
+        control_cls = self.control_cls
+        if control_cls is None:
+            return False
+        if isinstance(value, control_cls):
+            return True
+        if isinstance(value, (list, tuple)):
+            return any(isinstance(v, control_cls) for v in value)
+        if isinstance(value, dict):
+            return any(isinstance(v, control_cls) for v in value.values())
+        return False
 
     def _dataclass_added(self, item: Any, parent: Any, frozen: bool) -> None:
         """Register dataclasses contained in a newly added value."""

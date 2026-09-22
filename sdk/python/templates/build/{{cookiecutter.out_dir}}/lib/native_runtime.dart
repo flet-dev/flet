@@ -141,7 +141,12 @@ Future<String?> runPython({
   // (in python.dart) to encode `code` as raw UTF-8 bytes and post them via
   // `dart_bridge.send_bytes(FLET_DART_BRIDGE_EXIT_PORT, ...)`. We don't need
   // a streaming codec here — the channel only ever carries a single short
-  // payload, then Python tears down.
+  // payload.
+  //
+  // Note the patched `flet_exit` posts the code and *returns* - it does not
+  // raise SystemExit. So the interpreter is still very much alive when this
+  // fires, running on into `sp_run_target`'s return and `Py_Finalize()`. That
+  // is why the exit below must not run the normal C teardown; see onExitSignal.
   StringBuffer pythonExitBuf = StringBuffer();
   StreamSubscription<Uint8List>? exitSub;
 
@@ -155,6 +160,14 @@ Future<String?> runPython({
       }
       completer.complete(out);
     } else {
+      // `dart:io`'s exit() runs the normal C teardown, destroying the C++
+      // statics inside every loaded CPython extension module while the
+      // interpreter thread is still running (see the note above) - the same
+      // crash the native runners avoid on window close. hardExit skips it.
+      //
+      // Falls through to exit() against a pre-1.9.0 libdart_bridge, which does
+      // not export the symbol; that is the pre-existing behaviour, race and all.
+      DartBridge.instance.hardExit(exitCode);
       exit(exitCode);
     }
   }
