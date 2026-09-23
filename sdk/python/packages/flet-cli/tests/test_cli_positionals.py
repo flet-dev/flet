@@ -81,6 +81,7 @@ class TestPositionalAfterOption:
         ],
     )
     def test_is_parsed(self, argv, expected):
+        """The command line parses to the expected positionals and options."""
         args = vars(parse_command_line(argv))
 
         assert {key: args[key] for key in expected} == expected
@@ -93,12 +94,14 @@ class TestOtherPositionals:
     """
 
     def test_omitted_positionals_keep_their_defaults(self):
+        """Positionals that are not given keep their defaults."""
         args = parse_command_line(["debug", "--show-devices"])
 
         assert args.platform is None
         assert args.python_app_path == "."
 
     def test_only_the_surplus_positional_is_reported(self, capsys):
+        """Only the surplus positional is reported, not the app path before it."""
         with pytest.raises(SystemExit):
             parse_command_line(["debug", "ios", "--device-id", "X", APP, "extra"])
 
@@ -132,6 +135,7 @@ class TestBackportedParser:
         ],
     )
     def test_parse(self, parser, argv, expected):
+        """The optional positionals are filled from those around the option."""
         args = parser.parse_args(argv)
 
         assert (args.first, args.x, args.second) == expected

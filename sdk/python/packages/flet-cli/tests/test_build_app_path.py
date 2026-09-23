@@ -66,6 +66,7 @@ class TestAcceptedPath:
     """A directory passes validation and goes on to provisioning."""
 
     def test_directory(self, make_command, tmp_path):
+        """A directory goes on to the toolchain provisioning."""
         cmd = make_command("build", "web", str(tmp_path))
 
         with pytest.raises(Provisioned):
@@ -84,6 +85,7 @@ class TestRejectedPath:
         ids=["build", "debug", "test"],
     )
     def test_script_file(self, make_command, tmp_path, command):
+        """A script file is rejected as not being a directory."""
         script = tmp_path / "main.py"
         script.write_text("")
 
@@ -94,6 +96,7 @@ class TestRejectedPath:
         )
 
     def test_missing_path(self, make_command, tmp_path):
+        """A path that does not exist is rejected."""
         missing = tmp_path / "does-not-exist"
 
         message = _rejection_message(make_command("build", "web", str(missing)))
@@ -104,6 +107,7 @@ class TestRejectedPath:
         )
 
     def test_path_is_escaped_for_rich_markup(self, make_command, tmp_path):
+        """A path named like a rich markup tag is shown as it is."""
         script = tmp_path / "[beta]" / "main.py"
         script.parent.mkdir()
         script.write_text("")

@@ -27,6 +27,7 @@ class TestRepeatedListOption:
         "action", _list_options(), ids=lambda action: action.option_strings[0]
     )
     def test_keeps_every_value(self, action):
+        """The values of both occurrences are kept, in order."""
         first, second = list(action.choices or ["first", "second"])[:2]
         option = action.option_strings[0]
         parser = argparse.ArgumentParser(add_help=False)
