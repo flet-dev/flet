@@ -63,6 +63,7 @@ class TestFlutterBuildArgs:
         ids=["flet-option", "flutter-option", "no-value", "debug-flet-option"],
     )
     def test_occurrence_without_values_is_rejected(self, argv, capsys):
+        """An occurrence without values fails with a hint to attach it using `=`."""
         with pytest.raises(SystemExit):
             parse_command_line(argv)
 
@@ -71,6 +72,7 @@ class TestFlutterBuildArgs:
         assert "`--flutter-build-args=--obfuscate`" in err
 
     def test_attached_values_are_collected(self):
+        """Values attached with `=` are collected, not read as Flet options."""
         args = parse_command_line(
             [
                 "build",
@@ -87,4 +89,5 @@ class TestFlutterBuildArgs:
         assert args.verbose == 0
 
     def test_is_unset_when_omitted(self):
+        """Without the option nothing is collected, so `pyproject.toml` is consulted."""
         assert parse_command_line(["build", "apk"]).flutter_build_args is None

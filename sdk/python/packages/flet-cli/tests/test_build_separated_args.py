@@ -19,11 +19,13 @@ class TestSeparatedArgs:
         "command", [["build", "apk"], ["debug", "macos"]], ids=["build", "debug"]
     )
     def test_are_collected(self, command):
+        """The arguments after `--` are collected for Flutter."""
         args = parse_command_line([*command, "--", *FLUTTER_ARGS])
 
         assert args.flutter_build_args == [FLUTTER_ARGS]
 
     def test_follow_the_values_of_the_option(self):
+        """The arguments after `--` follow those of `--flutter-build-args`."""
         args = parse_command_line(
             ["build", "apk", "--flutter-build-args=--no-pub", "--", *FLUTTER_ARGS]
         )
@@ -31,12 +33,14 @@ class TestSeparatedArgs:
         assert args.flutter_build_args == [["--no-pub"], FLUTTER_ARGS]
 
     def test_flet_options_before_the_separator_stay_with_flet(self):
+        """An option before `--` is Flet's; the same one after it is Flutter's."""
         args = parse_command_line(["build", "apk", "-v", "--", "--verbose"])
 
         assert args.verbose == 1
         assert args.flutter_build_args == [["--verbose"]]
 
     def test_empty_separator_adds_nothing(self):
+        """A `--` with nothing after it leaves `pyproject.toml` in effect."""
         assert parse_command_line(["build", "apk", "--"]).flutter_build_args is None
 
 
@@ -54,6 +58,7 @@ class TestFlutterCommand:
     def test_ends_with_separated_args(
         self, command, flutter_command, tmp_path, monkeypatch
     ):
+        """The Flutter command of `flet build` and `flet debug` ends with them."""
         options = parse_command_line([*command, "--", *FLUTTER_ARGS])
         cmd = options.handler.__self__
         cmd.options = options

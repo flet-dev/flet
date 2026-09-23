@@ -12,14 +12,17 @@ class TestSeparatedArgs:
     """The arguments after `--` are passed to pytest, after the `-k` expression."""
 
     def test_are_collected(self):
+        """The arguments after `--` are collected for pytest."""
         args = parse_command_line(["test", "macos", "--", "-x", "--maxfail=1"])
 
         assert args.pytest_args == ["-x", "--maxfail=1"]
 
     def test_are_empty_without_a_separator(self):
+        """Without a `--` separator, no arguments are collected for pytest."""
         assert parse_command_line(["test", "macos"]).pytest_args == []
 
     def test_reach_pytest(self, monkeypatch, tmp_path):
+        """The collected arguments are passed to pytest after the `-k` expression."""
         options = parse_command_line(
             ["test", "macos", str(tmp_path), "-k", "smoke", "--", "-x"]
         )
@@ -36,6 +39,7 @@ class TestSeparatedArgs:
         assert pytest_args == ["-k", "smoke", "-x"]
 
     def test_are_rejected_by_other_commands(self, capsys):
+        """A command that runs no other program rejects a `--` separator."""
         with pytest.raises(SystemExit):
             parse_command_line(["clean", "--", "-x"])
 
