@@ -635,6 +635,7 @@ class BaseBuildCommand(BaseFlutterCommand):
         parser.add_argument(
             "--android-extract-packages",
             dest="android_extract_packages",
+            action="extend",
             nargs="+",
             default=[],
             help="Android only: Python packages (relative paths) to ship extracted "

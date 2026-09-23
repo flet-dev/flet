@@ -123,9 +123,8 @@ class Command(BaseBuildCommand):
         self.flutter_test_host: Optional[str] = None
 
     def add_arguments(self, parser: argparse.ArgumentParser) -> None:
-        # `platform` is a positional, like `flet debug`. Register it first, then
-        # the inherited build args (which add the `python_app_path` positional),
-        # then our trailing `pytest_args` REMAINDER positional.
+        # register `platform` before the inherited build args, so that it precedes
+        # the `python_app_path` positional they add
         parser.add_argument(
             "platform",
             type=str.lower,
