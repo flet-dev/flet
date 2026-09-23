@@ -37,6 +37,6 @@ class TestSeparatedArgs:
 
     def test_are_rejected_by_other_commands(self, capsys):
         with pytest.raises(SystemExit):
-            parse_command_line(["build", "apk", "--", "-x"])
+            parse_command_line(["clean", "--", "-x"])
 
-        assert "and by `flet test`, to pass them to pytest" in capsys.readouterr().err
+        assert "`--` separator is only supported by" in capsys.readouterr().err

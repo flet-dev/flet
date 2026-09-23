@@ -138,7 +138,8 @@ class _FlutterBuildArgsAction(argparse.Action):
             raise argparse.ArgumentError(
                 self,
                 "expected at least one argument - attach one that starts with "
-                "`-` using `=`, e.g. `--flutter-build-args=--obfuscate`",
+                "`-` using `=`, e.g. `--flutter-build-args=--obfuscate`, or pass "
+                "it after `--`",
             )
         collected = getattr(namespace, self.dest, None) or []
         setattr(namespace, self.dest, [*collected, values])
@@ -645,7 +646,7 @@ class BaseBuildCommand(BaseFlutterCommand):
             nargs="*",
             help="Additional arguments for flutter build command. Attach an "
             "argument that starts with `-` using `=`, e.g. "
-            "`--flutter-build-args=--obfuscate`",
+            "`--flutter-build-args=--obfuscate`, or pass the arguments after `--`",
         )
         parser.add_argument(
             "--source-packages",

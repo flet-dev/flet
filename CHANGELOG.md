@@ -2,6 +2,7 @@
 
 ### Improvements
 
+* `flet build` and `flet debug` pass the arguments that follow a `--` separator to Flutter, e.g. `flet build apk -- --obfuscate --split-debug-info=build/symbols`, as an alternative to repeating `--flutter-build-args` by @ndonkoHenri.
 * `flet test` passes the arguments that follow a `--` separator to pytest, e.g. `flet test -k screenshot -- -x --maxfail=1` by @ndonkoHenri.
 
 ### Bug fixes

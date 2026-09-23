@@ -125,8 +125,8 @@ def test_suggested_separator_command_quotes_forwarded_args(capsys):
 
 
 def test_separator_rejected_for_other_commands(capsys):
-    """Only `flet run` accepts a `--` separator."""
+    """A command that runs no program to pass them to rejects a `--` separator."""
     with pytest.raises(SystemExit):
-        _parse("build", "apk", "--", "--manual")
+        _parse("clean", "--", "--manual")
 
     assert "only supported by `flet run`" in capsys.readouterr().err
