@@ -1,3 +1,9 @@
+## 1.0.2
+
+### Bug fixes
+
+* Fix `flet debug`, `flet build`, `flet test`, `flet emulators` and `flet run` rejecting a positional argument typed after an option on Python 3.10, 3.11, 3.12.0-3.12.6 and 3.13.0 - `flet debug ios --device-id X my_app` failed with `unrecognized arguments: my_app` - by backporting the upstream `argparse` fix (CPython gh-59317). Also, an app path pointing to a file such as `main.py` is now rejected with the directory to pass instead, rather than crashing on `main.py/build`, and a bad app path fails before the Flutter toolchain is set up ([#6840](https://github.com/flet-dev/flet/issues/6840)) by @ndonkoHenri.
+
 ## 1.0.1
 
 ### Improvements

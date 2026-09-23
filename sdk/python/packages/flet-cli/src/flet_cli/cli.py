@@ -41,6 +41,35 @@ def _render_version(as_json: bool) -> str:
     return f"Flet: {flet.version.flet_version}\nFlutter: {flet.version.flutter_version}"
 
 
+class _PositionalsFixArgumentParser(argparse.ArgumentParser):
+    """
+    An `argparse.ArgumentParser` with the fix for CPython gh-59317 backported.
+
+    Before Python 3.12.7 and 3.13.1, `argparse` gave an optional positional its
+    default as soon as the positionals typed before an option ran out, so one
+    typed after the option was rejected: `flet debug ios --device-id 123 app`
+    failed with `unrecognized arguments: app`, and so did
+    `flet build apk --yes app`. `get_parser()` uses it only on those
+    interpreters, and subparsers inherit it through `add_subparsers()`.
+    """
+
+    def _match_arguments_partial(self, actions, arg_strings_pattern):
+        """
+        Match positionals like Python 3.12.7 and 3.13.1+: when the positionals
+        end at an option, leave the trailing ones that matched nothing for later.
+
+        The matched counts add up to the length of the matched pattern, which
+        makes this idempotent on interpreters that already trim.
+        """
+
+        result = super()._match_arguments_partial(actions, arg_strings_pattern)
+        matched = sum(result)
+        if matched < len(arg_strings_pattern) and arg_strings_pattern[matched] == "O":
+            while result and not result[-1]:
+                result.pop()
+        return result
+
+
 # Source https://stackoverflow.com/a/26379693
 def set_default_subparser(
     parser: argparse.ArgumentParser, name: str, args: list
@@ -88,9 +117,11 @@ def set_default_subparser(
 
 def get_parser() -> argparse.ArgumentParser:
     """Construct and return the CLI argument parser."""
-    parser = argparse.ArgumentParser(
-        formatter_class=argparse.RawDescriptionHelpFormatter
-    )
+    parser = (
+        _PositionalsFixArgumentParser
+        if sys.version_info < (3, 12, 7) or sys.version_info[:3] == (3, 13, 0)
+        else argparse.ArgumentParser
+    )(formatter_class=argparse.RawDescriptionHelpFormatter)
 
     # add version flags
     parser.add_argument(

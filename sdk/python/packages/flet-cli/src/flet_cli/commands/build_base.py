@@ -1,5 +1,6 @@
 import argparse
 import base64
+import contextlib
 import copy
 import glob
 import json
@@ -28,6 +29,7 @@ from flet_platform_assets import (
     write,
 )
 from packaging.requirements import Requirement
+from rich.markup import escape
 from rich.panel import Panel
 from rich.table import Column, Table
 
@@ -46,7 +48,7 @@ from flet_cli.utils.android import (
     ANDROID_ARCH_TO_FLUTTER_TARGET_PLATFORM,
     excluded_android_abis,
 )
-from flet_cli.utils.cli import parse_cli_bool_value
+from flet_cli.utils.cli import parse_cli_bool_value, quote_for_shell
 from flet_cli.utils.hash_stamp import HashStamp
 from flet_cli.utils.merge import merge_dict
 from flet_cli.utils.plist import is_supported_plist_value, parse_cli_plist_value
@@ -848,6 +850,43 @@ class BaseBuildCommand(BaseFlutterCommand):
         if "target_platform" in self.options:
             self.target_platform = self.options.target_platform
 
+    def _suggest_app_dir(self, script: Path) -> str:
+        """
+        Build the app path to suggest when a script file was given instead.
+
+        The app directory is the one whose `pyproject.toml` configures the
+        script's directory as the app: the nearest ancestor with a
+        `pyproject.toml`, if its `tool.flet.app.path` points at the script's
+        directory (the `src/` layout of `flet create`), otherwise the script's
+        own directory.
+
+        Args:
+            script: Resolved path of the script file.
+
+        Returns:
+            The directory, shell-quoted and relative to the working directory
+                unless an absolute path was given, followed by `--module-name`
+                when the script is not `main.py`.
+        """
+
+        app_dir = script.parent
+        for candidate in (script.parent, *script.parent.parents):
+            if candidate.joinpath("pyproject.toml").is_file():
+                with contextlib.suppress(ValueError):
+                    app_path = load_pyproject_toml(candidate)("tool.flet.app.path")
+                    if candidate.joinpath(app_path or ".").resolve() == script.parent:
+                        app_dir = candidate
+                break
+
+        suggestion = quote_for_shell(
+            str(app_dir)
+            if Path(self.options.python_app_path).is_absolute()
+            else os.path.relpath(app_dir)
+        )
+        if script.suffix == ".py" and script.stem != "main":
+            suggestion += f" --module-name {quote_for_shell(script.stem)}"
+        return suggestion
+
     def initialize_command(self):
         """
         Initialize build paths, target metadata, and shared Flutter prerequisites.
@@ -860,18 +899,26 @@ class BaseBuildCommand(BaseFlutterCommand):
         self.config_platform = self.platforms[self.target_platform]["config_platform"]
         self.require_android_sdk = self.package_platform == "Android"
 
-        super().initialize_command()
-
         self.python_app_path = Path(self.options.python_app_path).resolve()
 
-        if not (
-            os.path.exists(self.python_app_path) or os.path.isdir(self.python_app_path)
-        ):
+        # validate that the app path exists and is a directory, not a file
+        if not os.path.isdir(self.python_app_path):
+            self.skip_flutter_doctor = True
+            if os.path.isfile(self.python_app_path):
+                self.cleanup(
+                    1,
+                    f"Path to Flet app must be a directory, not a file: "
+                    f"{escape(str(self.python_app_path))}\n"
+                    f"Pass the app's directory instead: "
+                    f"{escape(self._suggest_app_dir(self.python_app_path))}",
+                )
             self.cleanup(
                 1,
                 f"Path to Flet app does not exist or is not a directory: "
-                f"{self.python_app_path}",
+                f"{escape(str(self.python_app_path))}",
             )
+
+        super().initialize_command()
 
         self.rel_out_dir = self.options.output_dir or os.path.join(
             "build", self.platforms[self.target_platform]["dist"]
