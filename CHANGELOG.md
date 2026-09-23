@@ -3,6 +3,7 @@
 ### Improvements
 
 * `flet build` and `flet debug` pass the arguments that follow a `--` separator to Flutter, e.g. `flet build apk -- --obfuscate --split-debug-info=build/symbols`, as an alternative to repeating `--flutter-build-args` by @ndonkoHenri.
+* `flet pack` passes the arguments that follow a `--` separator to PyInstaller, e.g. `flet pack main.py -- --clean`, as an alternative to repeating `--pyinstaller-build-args` by @ndonkoHenri.
 * `flet test` passes the arguments that follow a `--` separator to pytest, e.g. `flet test -k screenshot -- -x --maxfail=1` by @ndonkoHenri.
 
 ### Bug fixes
@@ -10,6 +11,7 @@
 * Fix `flet debug`, `flet build`, `flet test`, `flet emulators` and `flet run` rejecting a positional argument typed after an option on Python 3.10, 3.11, 3.12.0-3.12.6 and 3.13.0 - `flet debug ios --device-id X my_app` failed with `unrecognized arguments: my_app` - by backporting the upstream `argparse` fix (CPython gh-59317). Also, an app path pointing to a file such as `main.py` is now rejected with a clear error instead of crashing on `main.py/build`, and a bad app path fails before the Flutter toolchain is set up ([#6840](https://github.com/flet-dev/flet/issues/6840), [#6875](https://github.com/flet-dev/flet/pull/6875)) by @ndonkoHenri.
 * Fix `--android-extract-packages` keeping only the values of its last occurrence when repeated. Like the other list options of `flet build`, repeating it now adds to the list ([#6875](https://github.com/flet-dev/flet/pull/6875)) by @ndonkoHenri.
 * Fix `--flutter-build-args` handing a value that starts with `-` to Flet instead of Flutter - `--flutter-build-args --verbose` turned on Flet's own verbose output - and overriding `build_args` from `pyproject.toml` with an empty list. Such an occurrence now fails with a hint to attach the value using `=`, e.g. `--flutter-build-args=--obfuscate` by @ndonkoHenri.
+* Fix `--pyinstaller-build-args` handing a value that starts with `-` to Flet instead of PyInstaller - `--pyinstaller-build-args -y` turned on Flet's own `-y` - or rejecting it as unrecognized. Such an occurrence now fails with a hint to attach the value using `=` or to pass it after `--` by @ndonkoHenri.
 
 ## 1.0.1
 

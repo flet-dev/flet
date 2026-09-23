@@ -43,6 +43,7 @@ from flet_cli.commands.flutter_base import (
     verbose2_style,
     warning_style,
 )
+from flet_cli.commands.options import PassThroughArgsAction
 from flet_cli.utils.android import (
     ANDROID_ARCH_TO_FLUTTER_TARGET_PLATFORM,
     excluded_android_abis,
@@ -121,28 +122,6 @@ SPLASH_PLATFORMS = {
     "ios-simulator": "ios",
     "web": "web",
 }
-
-
-class _FlutterBuildArgsAction(argparse.Action):
-    """
-    Collect the values of each `--flutter-build-args` occurrence as a list.
-
-    A value that starts with `-` is read as an option of its own unless it is
-    attached with `=`, which leaves the occurrence without values and hands the
-    value to whichever Flet option it names. An occurrence without values is
-    therefore rejected, with a hint to attach the value.
-    """
-
-    def __call__(self, parser, namespace, values, option_string=None):
-        if not values:
-            raise argparse.ArgumentError(
-                self,
-                "expected at least one argument - attach one that starts with "
-                "`-` using `=`, e.g. `--flutter-build-args=--obfuscate`, or pass "
-                "it after `--`",
-            )
-        collected = getattr(namespace, self.dest, None) or []
-        setattr(namespace, self.dest, [*collected, values])
 
 
 class BaseBuildCommand(BaseFlutterCommand):
@@ -642,7 +621,8 @@ class BaseBuildCommand(BaseFlutterCommand):
         parser.add_argument(
             "--flutter-build-args",
             dest="flutter_build_args",
-            action=_FlutterBuildArgsAction,
+            action=PassThroughArgsAction,
+            example="--obfuscate",
             nargs="*",
             help="Additional arguments for flutter build command. Attach an "
             "argument that starts with `-` using `=`, e.g. "

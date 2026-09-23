@@ -169,11 +169,12 @@ def split_script_args(argv: list) -> tuple[list, Optional[list]]:
     Split a command line at the first bare `--` separator.
 
     Everything after the separator is meant for the program the command runs -
-    the app script of `flet run`, pytest for `flet test`, or Flutter for
-    `flet build` and `flet debug` - not for Flet itself, so it must be removed
-    before the parser (and `set_default_subparser`) sees it. Otherwise
-    `flet run app.py -- --web` would be read as Flet's own `--web` option, and
-    `flet app.py -- build` would suppress the default `run` subcommand.
+    the app script of `flet run`, pytest for `flet test`, Flutter for
+    `flet build` and `flet debug`, or PyInstaller for `flet pack` - not for Flet
+    itself, so it must be removed before the parser (and `set_default_subparser`)
+    sees it. Otherwise `flet run app.py -- --web` would be read as Flet's own
+    `--web` option, and `flet app.py -- build` would suppress the default `run`
+    subcommand.
 
     Args:
         argv: Command-line arguments, without the program name.
@@ -201,8 +202,10 @@ def parse_command_line(argv: list) -> argparse.Namespace:
     Returns:
         The parsed arguments. For `flet run`, `script_args` holds the arguments
         to forward to the app script, for `flet test`, `pytest_args` holds the
-        arguments to pass to pytest, and for `flet build` and `flet debug`,
-        `flutter_build_args` holds the arguments to pass to Flutter.
+        arguments to pass to pytest, for `flet build` and `flet debug`,
+        `flutter_build_args` holds the arguments to pass to Flutter, and for
+        `flet pack`, `pyinstaller_build_args` holds the arguments to pass to
+        PyInstaller.
     """
 
     # pull off arguments meant for the program the command runs before parser sees them
@@ -241,11 +244,18 @@ def parse_command_line(argv: list) -> argparse.Namespace:
                     *(args.flutter_build_args or []),
                     script_args,
                 ]
+        elif command == "pack":
+            if script_args:
+                args.pyinstaller_build_args = [
+                    *(args.pyinstaller_build_args or []),
+                    script_args,
+                ]
         else:
             parser.error(
-                "the `--` separator is only supported by `flet run`, `flet test`, "
-                "`flet build` and `flet debug`, which pass the arguments that "
-                "follow it to the app script, pytest and Flutter, respectively"
+                "the `--` separator is only supported by commands that run "
+                "another program, which receives the arguments that follow it: "
+                "`flet run` (the app script), `flet test` (pytest), `flet build` "
+                "and `flet debug` (Flutter), and `flet pack` (PyInstaller)"
             )
 
     return args

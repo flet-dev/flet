@@ -129,4 +129,4 @@ def test_separator_rejected_for_other_commands(capsys):
     with pytest.raises(SystemExit):
         _parse("clean", "--", "--manual")
 
-    assert "only supported by `flet run`" in capsys.readouterr().err
+    assert "`--` separator is only supported by" in capsys.readouterr().err
