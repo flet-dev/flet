@@ -168,11 +168,11 @@ def split_script_args(argv: list) -> tuple[list, Optional[list]]:
     """
     Split a command line at the first bare `--` separator.
 
-    Everything after the separator is meant for the app script, not for Flet
-    itself, so it must be removed before the parser (and `set_default_subparser`)
-    sees it - otherwise `flet run app.py -- --web` would be read as Flet's own
-    `--web` option, and `flet app.py -- build` would suppress the default `run`
-    subcommand.
+    Everything after the separator is meant for the app script of `flet run` or
+    for the pytest run of `flet test`, not for Flet itself, so it must be removed
+    before the parser (and `set_default_subparser`) sees it - otherwise
+    `flet run app.py -- --web` would be read as Flet's own `--web` option, and
+    `flet app.py -- build` would suppress the default `run` subcommand.
 
     Args:
         argv: Command-line arguments, without the program name.
@@ -199,10 +199,12 @@ def parse_command_line(argv: list) -> argparse.Namespace:
 
     Returns:
         The parsed arguments. For `flet run`, `script_args` holds the arguments
-        to forward to the app script.
+        to forward to the app script, and for `flet test`, `pytest_args` holds
+        the arguments to pass to pytest.
     """
 
-    # pull off the arguments meant for the app script before the parser sees them
+    # pull off the arguments meant for the app script or pytest before the parser
+    # sees them
     argv, script_args = split_script_args(argv)
 
     parser = get_parser()
@@ -225,14 +227,19 @@ def parse_command_line(argv: list) -> argparse.Namespace:
             )
         parser.error(message)
 
-    # forward the arguments that followed `--` to the app script
+    # forward the arguments that followed `--` to the app script or to pytest
     if script_args is not None:
-        if getattr(args, "command", None) != "run":
+        command = getattr(args, "command", None)
+        if command == "run":
+            args.script_args = list(args.script_args) + script_args
+        elif command == "test":
+            args.pytest_args = script_args
+        else:
             parser.error(
                 "the `--` separator is only supported by `flet run`, to pass "
-                "the arguments that follow it to your app script"
+                "the arguments that follow it to your app script, and by "
+                "`flet test`, to pass them to pytest"
             )
-        args.script_args = list(args.script_args) + script_args
 
     return args
 

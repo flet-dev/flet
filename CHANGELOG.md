@@ -1,5 +1,9 @@
 ## 1.0.2
 
+### Improvements
+
+* `flet test` passes the arguments that follow a `--` separator to pytest, e.g. `flet test -k screenshot -- -x --maxfail=1` by @ndonkoHenri.
+
 ### Bug fixes
 
 * Fix `flet debug`, `flet build`, `flet test`, `flet emulators` and `flet run` rejecting a positional argument typed after an option on Python 3.10, 3.11, 3.12.0-3.12.6 and 3.13.0 - `flet debug ios --device-id X my_app` failed with `unrecognized arguments: my_app` - by backporting the upstream `argparse` fix (CPython gh-59317). Also, an app path pointing to a file such as `main.py` is now rejected with a clear error instead of crashing on `main.py/build`, and a bad app path fails before the Flutter toolchain is set up ([#6840](https://github.com/flet-dev/flet/issues/6840), [#6875](https://github.com/flet-dev/flet/pull/6875)) by @ndonkoHenri.
