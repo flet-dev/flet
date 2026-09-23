@@ -123,6 +123,27 @@ SPLASH_PLATFORMS = {
 }
 
 
+class _FlutterBuildArgsAction(argparse.Action):
+    """
+    Collect the values of each `--flutter-build-args` occurrence as a list.
+
+    A value that starts with `-` is read as an option of its own unless it is
+    attached with `=`, which leaves the occurrence without values and hands the
+    value to whichever Flet option it names. An occurrence without values is
+    therefore rejected, with a hint to attach the value.
+    """
+
+    def __call__(self, parser, namespace, values, option_string=None):
+        if not values:
+            raise argparse.ArgumentError(
+                self,
+                "expected at least one argument - attach one that starts with "
+                "`-` using `=`, e.g. `--flutter-build-args=--obfuscate`",
+            )
+        collected = getattr(namespace, self.dest, None) or []
+        setattr(namespace, self.dest, [*collected, values])
+
+
 class BaseBuildCommand(BaseFlutterCommand):
     """
     A base build-related CLI command.
@@ -620,9 +641,11 @@ class BaseBuildCommand(BaseFlutterCommand):
         parser.add_argument(
             "--flutter-build-args",
             dest="flutter_build_args",
-            action="append",
+            action=_FlutterBuildArgsAction,
             nargs="*",
-            help="Additional arguments for flutter build command",
+            help="Additional arguments for flutter build command. Attach an "
+            "argument that starts with `-` using `=`, e.g. "
+            "`--flutter-build-args=--obfuscate`",
         )
         parser.add_argument(
             "--source-packages",
