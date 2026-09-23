@@ -14,105 +14,121 @@ from flet_cli.cli import _PositionalsFixArgumentParser, parse_command_line
 APP = "examples/app"
 
 
-@pytest.mark.parametrize(
-    ("argv", "expected"),
-    [
-        pytest.param(
-            ["debug", "ios", "--device-id", "X", APP, "-v"],
-            {"platform": "ios", "device_id": "X", "python_app_path": APP, "verbose": 1},
-            id="debug-path-after-option",
-        ),
-        pytest.param(
-            ["debug", "ios", APP, "--device-id", "X"],
-            {"platform": "ios", "device_id": "X", "python_app_path": APP},
-            id="debug-path-before-option",
-        ),
-        pytest.param(
-            ["debug", "--device-id", "X", "ios", APP],
-            {"platform": "ios", "device_id": "X", "python_app_path": APP},
-            id="debug-options-first",
-        ),
-        pytest.param(
-            ["debug", "web", "--route", "/settings", APP],
-            {"platform": "web", "route": "/settings", "python_app_path": APP},
-            id="debug-path-after-route",
-        ),
-        pytest.param(
-            ["build", "apk", "--org", "com.example", APP],
-            {
-                "target_platform": "apk",
-                "org_name": "com.example",
-                "python_app_path": APP,
-            },
-            id="build-path-after-option",
-        ),
-        pytest.param(
-            ["build", "ipa", "-v", APP],
-            {"target_platform": "ipa", "verbose": 1, "python_app_path": APP},
-            id="build-path-after-flag",
-        ),
-        pytest.param(
-            ["test", "macos", "-k", "smoke", APP],
-            {"platform": "macos", "pytest_keyword": "smoke", "python_app_path": APP},
-            id="test-path-after-option",
-        ),
-        pytest.param(
-            ["emulators", "start", "--cold", "pixel"],
-            {"action": "start", "emulator": "pixel", "cold": True},
-            id="emulators-name-after-option",
-        ),
-        pytest.param(
-            ["run", "app.py", "--web", "foo"],
-            {"script": "app.py", "web": True, "script_args": ["foo"]},
-            id="run-script-arg-after-option",
-        ),
-    ],
-)
-def test_positional_after_option(argv, expected):
-    """A positional that follows an option still fills its slot."""
-    args = vars(parse_command_line(argv))
+class TestPositionalAfterOption:
+    """A positional typed after an option still fills its slot."""
 
-    assert {key: args[key] for key in expected} == expected
+    @pytest.mark.parametrize(
+        ("argv", "expected"),
+        [
+            pytest.param(
+                ["debug", "ios", "--device-id", "X", APP, "-v"],
+                {
+                    "platform": "ios",
+                    "device_id": "X",
+                    "python_app_path": APP,
+                    "verbose": 1,
+                },
+                id="debug-path-after-option",
+            ),
+            pytest.param(
+                ["debug", "ios", APP, "--device-id", "X"],
+                {"platform": "ios", "device_id": "X", "python_app_path": APP},
+                id="debug-path-before-option",
+            ),
+            pytest.param(
+                ["debug", "--device-id", "X", "ios", APP],
+                {"platform": "ios", "device_id": "X", "python_app_path": APP},
+                id="debug-options-first",
+            ),
+            pytest.param(
+                ["debug", "web", "--route", "/settings", APP],
+                {"platform": "web", "route": "/settings", "python_app_path": APP},
+                id="debug-path-after-route",
+            ),
+            pytest.param(
+                ["build", "apk", "--org", "com.example", APP],
+                {
+                    "target_platform": "apk",
+                    "org_name": "com.example",
+                    "python_app_path": APP,
+                },
+                id="build-path-after-option",
+            ),
+            pytest.param(
+                ["build", "ipa", "-v", APP],
+                {"target_platform": "ipa", "verbose": 1, "python_app_path": APP},
+                id="build-path-after-flag",
+            ),
+            pytest.param(
+                ["test", "macos", "-k", "smoke", APP],
+                {
+                    "platform": "macos",
+                    "pytest_keyword": "smoke",
+                    "python_app_path": APP,
+                },
+                id="test-path-after-option",
+            ),
+            pytest.param(
+                ["emulators", "start", "--cold", "pixel"],
+                {"action": "start", "emulator": "pixel", "cold": True},
+                id="emulators-name-after-option",
+            ),
+            pytest.param(
+                ["run", "app.py", "--web", "foo"],
+                {"script": "app.py", "web": True, "script_args": ["foo"]},
+                id="run-script-arg-after-option",
+            ),
+        ],
+    )
+    def test_is_parsed(self, argv, expected):
+        args = vars(parse_command_line(argv))
 
-
-def test_optional_positionals_keep_their_defaults():
-    """Omitted optional positionals still get their defaults."""
-    args = parse_command_line(["debug", "--show-devices"])
-
-    assert args.platform is None
-    assert args.python_app_path == "."
-
-
-def test_surplus_positional_is_still_rejected(capsys):
-    """Only the surplus argument is reported, not the app path before it."""
-    with pytest.raises(SystemExit):
-        parse_command_line(["debug", "ios", "--device-id", "X", APP, "extra"])
-
-    err = capsys.readouterr().err
-    assert "unrecognized arguments: extra" in err
-    assert APP not in err
+        assert {key: args[key] for key in expected} == expected
 
 
-@pytest.mark.parametrize(
-    ("argv", "expected"),
-    [
-        pytest.param(["1", "-x", "2", "3"], ("1", "2", "3"), id="interleaved"),
-        pytest.param(["1", "3", "-x", "2"], ("1", "2", "3"), id="adjacent"),
-        pytest.param(["-x", "2", "1", "3"], ("1", "2", "3"), id="option-first"),
-        pytest.param(["1", "-x", "2"], ("1", "2", None), id="second-omitted"),
-        pytest.param(["-x", "2"], (None, "2", None), id="both-omitted"),
-    ],
-)
-def test_backported_parser(argv, expected):
+class TestOtherPositionals:
+    """Omitted and surplus positionals are handled as before."""
+
+    def test_omitted_positionals_keep_their_defaults(self):
+        args = parse_command_line(["debug", "--show-devices"])
+
+        assert args.platform is None
+        assert args.python_app_path == "."
+
+    def test_only_the_surplus_positional_is_reported(self, capsys):
+        with pytest.raises(SystemExit):
+            parse_command_line(["debug", "ios", "--device-id", "X", APP, "extra"])
+
+        err = capsys.readouterr().err
+        assert "unrecognized arguments: extra" in err
+        assert APP not in err
+
+
+class TestBackportedParser:
     """
     The backport fills a later optional positional after an option, and is a
     no-op on interpreters that already carry the upstream fix.
     """
-    parser = _PositionalsFixArgumentParser()
-    parser.add_argument("first", nargs="?")
-    parser.add_argument("-x")
-    parser.add_argument("second", nargs="?")
 
-    args = parser.parse_args(argv)
+    @pytest.fixture
+    def parser(self):
+        parser = _PositionalsFixArgumentParser()
+        parser.add_argument("first", nargs="?")
+        parser.add_argument("-x")
+        parser.add_argument("second", nargs="?")
+        return parser
 
-    assert (args.first, args.x, args.second) == expected
+    @pytest.mark.parametrize(
+        ("argv", "expected"),
+        [
+            pytest.param(["1", "-x", "2", "3"], ("1", "2", "3"), id="interleaved"),
+            pytest.param(["1", "3", "-x", "2"], ("1", "2", "3"), id="adjacent"),
+            pytest.param(["-x", "2", "1", "3"], ("1", "2", "3"), id="option-first"),
+            pytest.param(["1", "-x", "2"], ("1", "2", None), id="second-omitted"),
+            pytest.param(["-x", "2"], (None, "2", None), id="both-omitted"),
+        ],
+    )
+    def test_parse(self, parser, argv, expected):
+        args = parser.parse_args(argv)
+
+        assert (args.first, args.x, args.second) == expected

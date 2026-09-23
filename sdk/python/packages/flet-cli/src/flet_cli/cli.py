@@ -47,9 +47,7 @@ class _PositionalsFixArgumentParser(argparse.ArgumentParser):
 
     Before Python 3.12.7 and 3.13.1, `argparse` gave an optional positional its
     default as soon as the positionals typed before an option ran out, so one
-    typed after the option was rejected: `flet debug ios --device-id 123 app`
-    failed with `unrecognized arguments: app`, and so did
-    `flet build apk --yes app`. `get_parser()` uses it only on those
+    typed after the option was rejected. `get_parser()` uses it only on those
     interpreters, and subparsers inherit it through `add_subparsers()`.
     """
 
