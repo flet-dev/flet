@@ -2,8 +2,8 @@
 Validation of the app path given to `flet build`, `flet debug` and `flet test`.
 
 The path must be a directory. It is checked before the Flutter toolchain is
-provisioned, so a mistyped path or a script file fails fast with a clear
-message instead of crashing on `<file>/build` (#6840).
+provisioned, so an invalid path, such as a missing directory or a script file,
+fails fast with a clear message.
 """
 
 import io

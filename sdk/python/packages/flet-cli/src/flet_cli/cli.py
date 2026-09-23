@@ -45,19 +45,20 @@ class _PositionalsFixArgumentParser(argparse.ArgumentParser):
     """
     An `argparse.ArgumentParser` with the fix for CPython gh-59317 backported.
 
-    Before Python 3.12.7 and 3.13.1, `argparse` gave an optional positional its
-    default as soon as the positionals typed before an option ran out, so one
-    typed after the option was rejected. `get_parser()` uses it only on those
-    interpreters, and subparsers inherit it through `add_subparsers()`.
+    Before Python 3.12.7 and 3.13.1, `argparse` gives an optional positional its
+    default as soon as the positionals typed before an option run out, so one
+    typed after the option is rejected. `get_parser()` uses this class only on
+    those interpreters, and subparsers inherit it through `add_subparsers()`.
     """
 
     def _match_arguments_partial(self, actions, arg_strings_pattern):
         """
-        Match positionals like Python 3.12.7 and 3.13.1+: when the positionals
-        end at an option, leave the trailing ones that matched nothing for later.
+        Match positionals as Python 3.12.7+ and 3.13.1+ do: when the typed
+        positionals end at an option, the trailing positionals that matched
+        nothing are left unfilled, so positionals after the option can fill them.
 
-        The matched counts add up to the length of the matched pattern, which
-        makes this idempotent on interpreters that already trim.
+        The matched counts add up to the length of the matched pattern, so the
+        result is unchanged on interpreters whose `argparse` already does this.
         """
 
         result = super()._match_arguments_partial(actions, arg_strings_pattern)

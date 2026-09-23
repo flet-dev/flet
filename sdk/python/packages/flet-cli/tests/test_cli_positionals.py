@@ -1,10 +1,10 @@
 """
 Positionals and options may be interleaved on every supported Python.
 
-Before Python 3.12.7 and 3.13.1 (CPython gh-59317), `argparse` gave an optional
-positional its default as soon as the positionals typed before an option ran
-out. `flet debug ios --device-id 123 app` then failed with
-`unrecognized arguments: app` (#6840), and so did `flet build apk --org X app`.
+Before Python 3.12.7 and 3.13.1, `argparse` gives an optional positional its
+default as soon as the positionals typed before an option run out, so one
+typed after the option is rejected as unrecognized (CPython gh-59317). The
+CLI parser backports the fix to those interpreters.
 """
 
 import pytest
@@ -15,7 +15,7 @@ APP = "examples/app"
 
 
 class TestPositionalAfterOption:
-    """A positional typed after an option still fills its slot."""
+    """A positional typed after an option fills its slot."""
 
     @pytest.mark.parametrize(
         ("argv", "expected"),
@@ -87,7 +87,10 @@ class TestPositionalAfterOption:
 
 
 class TestOtherPositionals:
-    """Omitted and surplus positionals are handled as before."""
+    """
+    An omitted positional gets its default, and a surplus one is reported as
+    unrecognized.
+    """
 
     def test_omitted_positionals_keep_their_defaults(self):
         args = parse_command_line(["debug", "--show-devices"])
@@ -106,8 +109,8 @@ class TestOtherPositionals:
 
 class TestBackportedParser:
     """
-    The backport fills a later optional positional after an option, and is a
-    no-op on interpreters that already carry the upstream fix.
+    The backported parser fills an optional positional typed after an option,
+    with the same results on interpreters whose `argparse` already does this.
     """
 
     @pytest.fixture
