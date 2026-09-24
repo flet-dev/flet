@@ -1,3 +1,9 @@
+## 1.0.2
+
+### Bug fixes
+
+* Fix `InteractiveViewer` failing to render when `alignment` is set ([#6744](https://github.com/flet-dev/flet/issues/6744)) by @ndonkoHenri.
+
 ## 1.0.1
 
 ### Improvements
