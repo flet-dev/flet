@@ -129,7 +129,7 @@ export default function Pricing() {
                 </table>
               </div>
               <p className={styles.estimateNote}>These are worked examples, not measured averages or quotes. They assume, respectively, {creditExamples.map((example) => `${example.input} input / ${example.output} output`).join('; ')} tokens across the agent’s work, with no cached input or long-context surcharge, using September 2026 default rates. Tokens are the small pieces of text the AI processes. Larger projects, longer conversations, and extra steps can increase the cost; reused context can reduce it. Check Studio for current rates and your actual usage.</p>
-              <p>Monthly plan credits reset each month and do not roll over. Need more? You can buy additional credits in Studio. Purchased credits do not expire while your account remains active.</p>
+              <p>Monthly plan credits reset each month and do not roll over. Need more? You can buy additional credits in Studio. Purchased AI credits expire 12 months after purchase.</p>
             </div>
           </details>
           <details className={styles.question} open>
