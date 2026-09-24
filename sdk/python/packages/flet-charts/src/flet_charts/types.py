@@ -441,11 +441,11 @@ class ChartErrorRange:
     """
 
     def __post_init__(self):
-        if self.lower_by < 0:
+        if not self.lower_by >= 0:
             raise ValueError(
                 f"lower_by must be greater than or equal to 0, got {self.lower_by}"
             )
-        if self.upper_by < 0:
+        if not self.upper_by >= 0:
             raise ValueError(
                 f"upper_by must be greater than or equal to 0, got {self.upper_by}"
             )
