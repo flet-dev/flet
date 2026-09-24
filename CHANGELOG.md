@@ -2,7 +2,7 @@
 
 ### Bug fixes
 
-* Fix `Button(icon=...)` and other material buttons rendering an error box when `content` is not set. Icon-only buttons now render the icon centered ([#6886](https://github.com/flet-dev/flet/issues/6886)) by @FeodorFitsner.
+* Fix `Button(icon=...)` and other material buttons rendering an error box when `content` is not set. Icon-only buttons now render the icon centered ([#6886](https://github.com/flet-dev/flet/issues/6886), [#6889](https://github.com/flet-dev/flet/pull/6889)) by @FeodorFitsner.
 
 ## 1.0.1
 
