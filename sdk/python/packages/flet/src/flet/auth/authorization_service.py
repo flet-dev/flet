@@ -136,7 +136,7 @@ class AuthorizationService(Authorization):
             )
             resp.raise_for_status()
             client = WebApplicationClient(self.provider.client_id)
-            t = client.parse_request_body_response(resp.json())
+            t = client.parse_request_body_response(resp.text)
             self.__token = self.__convert_token(t)
             await self.__fetch_user_and_groups()
 
@@ -226,7 +226,7 @@ class AuthorizationService(Authorization):
             assert self.__token is not None
 
             client = WebApplicationClient(self.provider.client_id)
-            t = client.parse_request_body_response(refresh_resp.json())
+            t = client.parse_request_body_response(refresh_resp.text)
 
             if t.get("refresh_token") is None:
                 t["refresh_token"] = self.__token.refresh_token
