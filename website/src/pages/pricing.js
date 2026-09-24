@@ -17,6 +17,7 @@ const plans = [
       'Community support',
     ],
     action: 'Start building',
+    href: 'https://studio.flet.dev',
   },
   {
     name: 'Creator',
@@ -32,6 +33,7 @@ const plans = [
       'Flet support',
     ],
     action: 'Start building',
+    href: 'https://studio.flet.dev/pricing',
     featured: true,
   },
   {
@@ -71,7 +73,7 @@ function PlanCard({plan}) {
       {plan.upcoming ? (
         <p className={styles.teaser}>Built for creating together. Stay tuned.</p>
       ) : (
-        <Link className={`${styles.cta} ${plan.featured ? styles.primaryCta : ''}`} to="https://studio.flet.dev">
+        <Link className={`${styles.cta} ${plan.featured ? styles.primaryCta : ''}`} to={plan.href}>
           {plan.action}<span aria-hidden="true">↗</span>
         </Link>
       )}
