@@ -71,7 +71,7 @@
 }
 
 .billingToggle button:hover { color: var(--flet-ink); }
-.billingToggle .badge { border: none; }
+.billingToggle .badge { border: none; font-size: inherit; }
 .billingToggle button[aria-pressed='true'] {
   background: var(--ifm-background-color);
   border-color: var(--flet-accent-line);
