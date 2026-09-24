@@ -328,6 +328,9 @@ class BaseControl:
 
         Override this hook to perform lightweight setup that depends on initialized
         fields. Do not call `update()` here.
+
+        See :class:`~flet.Service` for service registration timing and page access
+        during this hook.
         """
         pass
 
@@ -395,22 +398,34 @@ class BaseControl:
 
     def get_data_channel(self, channel_id: int):
         """
-        Resolve the [DataChannel] allocated on the Dart side for this
-        widget. Pattern:
+        Resolve the :class:`~flet.DataChannel` allocated on the Dart side for this
+        control or service.
 
-            on_data_channel_open: Optional[ft.EventHandler[DataChannelOpenEvent]] = None
+        Example:
+            A custom service whose Dart implementation opens a data channel and
+            raises `data_channel_open` can capture it during initialization:
 
-            def init(self):
-                self.on_data_channel_open = self._on_open
+            ```python
+            import flet as ft
 
-            def _on_open(self, e):
-                self._channel = self.get_data_channel(e.channel_id)
+
+            @ft.control("MyService")
+            class MyService(ft.Service):
+                on_data_channel_open: ft.EventHandler[ft.DataChannelOpenEvent] | None = None
+
+                def init(self):
+                    super().init()
+                    self.on_data_channel_open = self._on_open
+
+                def _on_open(self, e: ft.DataChannelOpenEvent):
+                    self._channel = self.get_data_channel(e.channel_id)
+            ```
 
         Idempotent — the underlying Connection caches DataChannels by id,
         so repeated calls return the same instance. No error path: the id
         always comes from a framework-fired event, so by the time this
         runs the channel exists on both sides.
-        """
+        """  # noqa: E501
         return self.page.session.connection.data_channel_for(channel_id)
 
     # public methods
