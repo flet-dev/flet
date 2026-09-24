@@ -1,0 +1,137 @@
+.page {
+  width: min(1180px, calc(100% - 64px));
+  margin: 0 auto;
+  padding-bottom: 88px;
+}
+
+.hero {
+  max-width: 820px;
+  margin: 0 auto;
+  padding: 75px 0 52px;
+  text-align: center;
+}
+
+.eyebrow {
+  display: block;
+  margin-bottom: 22px;
+  color: var(--flet-accent);
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 1.6px;
+  text-transform: uppercase;
+}
+
+.hero h1 {
+  font-size: clamp(42px, 5.5vw, 68px);
+  line-height: 1.08;
+  letter-spacing: -.05em;
+  margin-bottom: 24px;
+}
+
+.hero h1 span { color: var(--flet-accent); }
+
+.hero p {
+  max-width: 650px;
+  margin: 0 auto;
+  font-size: 19px;
+  line-height: 1.7;
+  color: var(--flet-muted);
+}
+
+.plans {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 20px;
+}
+
+.card {
+  display: flex;
+  flex-direction: column;
+  padding: 30px;
+  border: 1px solid var(--flet-line);
+  border-radius: 16px;
+}
+
+.featured {
+  border-color: var(--flet-accent);
+  background: var(--flet-accent-soft);
+}
+
+.cardHeader { min-height: 188px; }
+.card h2 { font-size: 26px; margin-bottom: 8px; }
+.planDescription { min-height: 48px; font-size: 15px; color: var(--flet-muted); }
+.price { margin: 22px 0 4px; font-size: 42px; font-weight: 750; line-height: 1.2; letter-spacing: -.04em; }
+.price span { font-size: 16px; font-weight: 400; letter-spacing: 0; color: var(--flet-muted); }
+.upcomingPrice { font-size: 30px; line-height: 1.68; }
+.priceNote { font-size: 13px; color: var(--flet-muted); margin-bottom: 0; }
+
+.features {
+  list-style: none;
+  padding: 24px 0 28px;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  font-size: 15px;
+}
+
+.features li { display: flex; align-items: baseline; gap: 12px; }
+.features li::before { content: '✓'; color: var(--flet-accent); font-weight: 600; }
+.features a { color: inherit; text-decoration: underline; text-underline-offset: 3px; }
+.badge { display: inline-block; padding: 2px 7px; border: 1px solid var(--flet-accent-line); border-radius: 20px; font-size: 10px; color: var(--flet-accent); white-space: nowrap; }
+
+.cta {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 16px;
+  margin-top: auto;
+  padding: 13px 18px;
+  border: 1px solid var(--flet-line);
+  border-radius: 9px;
+  color: var(--flet-ink);
+  font-weight: 650;
+  text-decoration: none !important;
+}
+
+.cta:hover { background: var(--flet-soft); color: var(--flet-ink); }
+.primaryCta { background: var(--flet-button); border-color: var(--flet-button); color: white; }
+.primaryCta:hover { background: var(--flet-button-hover); border-color: var(--flet-button-hover); color: white; }
+.cta:focus-visible, .question summary:focus-visible, .tableWrapper:focus-visible { outline: 2px solid var(--flet-accent); outline-offset: 4px; }
+.teaser { margin: auto 0 0; padding: 14px 0; font-size: 14px; color: var(--flet-muted); }
+
+.frameworkNote { margin: 28px 0 88px; padding: 26px 30px; border-radius: 12px; background: var(--flet-soft); }
+.frameworkNote strong { font-size: 18px; }
+.frameworkNote p { margin: 8px 0; color: var(--flet-muted); }
+.frameworkNote a { font-size: 14px; font-weight: 600; }
+.faq { max-width: 880px; margin: 0 auto; }
+.faq h2 { font-size: clamp(30px, 3.5vw, 42px); line-height: 1.15; margin-bottom: 36px; }
+.question { border-top: 1px solid var(--flet-line); padding: 24px 0; }
+.question:last-child { border-bottom: 1px solid var(--flet-line); }
+.question summary { cursor: pointer; font-size: 19px; font-weight: 650; }
+.answer { padding-top: 20px; line-height: 1.75; color: var(--flet-muted); }
+.answer p:last-child { margin-bottom: 0; }
+.tableWrapper { overflow-x: auto; margin-bottom: 18px; }
+.creditTable { display: table; width: 100%; margin: 0; font-size: 14px; color: var(--flet-ink); }
+.creditTable caption { text-align: left; padding-bottom: 12px; font-size: 13px; color: var(--flet-muted); }
+.creditTable th, .creditTable td { padding: 14px; border-color: var(--flet-line); }
+.creditTable th { text-align: left; }
+.creditTable tbody th { font-weight: 400; }
+.creditTable td { white-space: nowrap; }
+.estimateNote { font-size: 13px; }
+
+@media (max-width: 1050px) and (min-width: 761px) {
+  .card { padding: 22px; }
+  .plans { gap: 12px; }
+  .upcomingPrice { font-size: 25px; line-height: 2; }
+}
+
+@media (max-width: 760px) {
+  .page { width: calc(100% - 40px); padding-bottom: 60px; }
+  .hero { padding: 45px 0 36px; }
+  .hero p { font-size: 17px; }
+  .plans { grid-template-columns: 1fr; }
+  .cardHeader { min-height: 0; }
+  .planDescription { min-height: 0; }
+  .frameworkNote { margin-bottom: 60px; padding: 24px; }
+}
