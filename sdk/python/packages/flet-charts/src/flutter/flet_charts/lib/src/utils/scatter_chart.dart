@@ -24,6 +24,14 @@ class ScatterChartEventData extends Equatable {
   List<Object?> get props => [eventType, spotIndex];
 }
 
+/// Draws the error bars of a spot in the color of that spot.
+///
+/// The default painter of fl_chart draws them in white, which is invisible on
+/// light backgrounds.
+FlSpotErrorRangePainter getScatterSpotErrorPainter(
+        ScatterChartSpotErrorRangeCallbackInput input) =>
+    FlSimpleErrorPainter(lineColor: input.spot.dotPainter.mainColor);
+
 ScatterTouchTooltipData parseScatterTouchTooltipData(
     BuildContext context, Control control, List<ScatterSpot> spots) {
   var tooltip = control.get("tooltip") ?? {};

@@ -167,6 +167,15 @@ AxisTitles parseAxisTitles(Control? control) {
       ));
 }
 
+/// Parses a `ChartErrorRange` into an [FlErrorRange].
+FlErrorRange? parseFlErrorRange(dynamic value, [FlErrorRange? defaultValue]) {
+  if (value == null) return defaultValue;
+  return FlErrorRange(
+    lowerBy: parseDouble(value["lower_by"], 0)!,
+    upperBy: parseDouble(value["upper_by"], 0)!,
+  );
+}
+
 FLHorizontalAlignment? parseFLHorizontalAlignment(String? value,
     [FLHorizontalAlignment? defaultValue]) {
   if (value == null) return defaultValue;

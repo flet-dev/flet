@@ -1,3 +1,9 @@
+## 1.0.2
+
+### Bug fixes
+
+* flet-charts: Fix `ScatterChart` failing to render when a `ScatterChartSpot` has `x_error` or `y_error` set. Error ranges are now set with the new `ChartErrorRange` type and drawn as error bars in the color of their spot by @ndonkoHenri.
+
 ## 1.0.1
 
 ### Improvements
