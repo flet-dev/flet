@@ -38,6 +38,46 @@
   color: var(--flet-muted);
 }
 
+.billingControls {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 32px;
+}
+
+.billingToggle {
+  display: inline-flex;
+  gap: 4px;
+  padding: 5px;
+  border: 1px solid var(--flet-line);
+  border-radius: 12px;
+  background: var(--flet-soft);
+}
+
+.billingToggle button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 8px;
+  padding: 10px 16px;
+  border: 1px solid transparent;
+  border-radius: 8px;
+  background: transparent;
+  color: var(--flet-muted);
+  font: inherit;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.billingToggle button:hover { color: var(--flet-ink); }
+.billingToggle button[aria-pressed='true'] {
+  background: var(--ifm-background-color);
+  border-color: var(--flet-accent-line);
+  color: var(--flet-ink);
+}
+.billingToggle button:focus-visible { outline: 2px solid var(--flet-accent); outline-offset: 2px; }
+
 .plans {
   display: grid;
   grid-template-columns: repeat(3, minmax(0, 1fr));

@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useState} from 'react';
 import Layout from '@theme/Layout';
 import Link from '@docusaurus/Link';
 import styles from './pricing.module.css';
@@ -22,7 +22,10 @@ const plans = [
   {
     name: 'Creator',
     description: 'More space for your next big idea.',
-    price: '$30',
+    billing: {
+      annual: {price: '$25', note: 'USD · $300 billed annually'},
+      monthly: {price: '$30', note: 'USD · billed monthly'},
+    },
     features: [
       'Unlimited public apps',
       'Unlimited private apps',
@@ -56,16 +59,19 @@ const creditExamples = [
   {prompt: 'Build a task tracker with filters and local storage.', input: '100,000', output: '15,000', pro: 35, expert: 350},
 ];
 
-function PlanCard({plan}) {
+function PlanCard({plan, billingPeriod}) {
+  const billing = plan.billing?.[billingPeriod];
   return (
     <article className={`${styles.card} ${plan.featured ? styles.featured : ''}`} aria-labelledby={`plan-${plan.name.toLowerCase()}`}>
       <div className={styles.cardHeader}>
         <h2 id={`plan-${plan.name.toLowerCase()}`}>{plan.name}</h2>
         <p className={styles.planDescription}>{plan.description}</p>
-        <p className={`${styles.price} ${plan.upcoming ? styles.upcomingPrice : ''}`}>
-          {plan.price}{plan.featured && <span> / month</span>}
-        </p>
-        <p className={styles.priceNote}>{plan.upcoming ? 'Pricing and full details to be announced.' : plan.featured ? 'USD · billed monthly' : 'Build at your own pace.'}</p>
+        <div aria-live={plan.billing ? 'polite' : undefined} aria-atomic="true">
+          <p className={`${styles.price} ${plan.upcoming ? styles.upcomingPrice : ''}`}>
+            {billing?.price ?? plan.price}{billing && <span> / month</span>}
+          </p>
+          <p className={styles.priceNote}>{billing?.note ?? (plan.upcoming ? 'Pricing and full details to be announced.' : 'Build at your own pace.')}</p>
+        </div>
       </div>
       <ul className={styles.features}>
         {plan.features.map((feature) => <li key={feature}>{feature}</li>)}
@@ -83,6 +89,8 @@ function PlanCard({plan}) {
 }
 
 export default function Pricing() {
+  const [billingPeriod, setBillingPeriod] = useState('annual');
+
   return (
     <Layout title="Pricing" description="Explore Flet Studio plans: start free with Explorer, grow with Creator, and discover the upcoming Studio plan for teams. The Flet framework is free, forever.">
       <main className={styles.page}>
@@ -92,8 +100,19 @@ export default function Pricing() {
           <p>The Flet framework is free, forever. Choose a Flet Studio plan for building in your browser, with AI by your side.</p>
         </header>
 
+        <div className={styles.billingControls}>
+          <div className={styles.billingToggle} role="group" aria-label="Billing period">
+            <button type="button" aria-pressed={billingPeriod === 'monthly'} onClick={() => setBillingPeriod('monthly')}>
+              Monthly
+            </button>
+            <button type="button" aria-pressed={billingPeriod === 'annual'} onClick={() => setBillingPeriod('annual')}>
+              Annually <span className={styles.badge}>2 months free</span>
+            </button>
+          </div>
+        </div>
+
         <section className={styles.plans} aria-label="Flet Studio plans">
-          {plans.map((plan) => <PlanCard key={plan.name} plan={plan} />)}
+          {plans.map((plan) => <PlanCard key={plan.name} plan={plan} billingPeriod={billingPeriod} />)}
         </section>
 
         <aside className={styles.frameworkNote}>
