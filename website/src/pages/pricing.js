@@ -133,12 +133,6 @@ export default function Pricing() {
             </div>
           </details>
           <details className={styles.question} open>
-            <summary>Can I get a refund for AI credits?</summary>
-            <div className={styles.answer}>
-              <p>AI credit purchases are final, except where a refund is required by law. Credits can only be used for AI features in Flet Studio and cannot be exchanged for cash or anything else of value.</p>
-            </div>
-          </details>
-          <details className={styles.question} open>
             <summary>What does Flet support include?</summary>
             <div className={styles.answer}>
               <p>Every plan gives you access to Flet’s documentation and community support. Ask questions, share ideas, and get help from other developers through our <Link to="/support">community channels</Link>.</p>
