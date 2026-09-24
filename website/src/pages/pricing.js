@@ -29,6 +29,7 @@ const plans = [
       '1 user',
       '100 MB storage',
       '10,000 AI credits / month',
+      'On-demand AI credit top-ups',
       'Pro & Expert AI agents',
       'Flet support',
     ],
