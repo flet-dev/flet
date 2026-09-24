@@ -167,7 +167,6 @@ AxisTitles parseAxisTitles(Control? control) {
       ));
 }
 
-/// Parses a `ChartErrorRange` into an [FlErrorRange].
 FlErrorRange? parseFlErrorRange(dynamic value, [FlErrorRange? defaultValue]) {
   if (value == null) return defaultValue;
   return FlErrorRange(

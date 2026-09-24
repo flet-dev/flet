@@ -92,8 +92,8 @@ class ScatterChartSpot(ft.BaseControl):
     in the color of this spot.
 
     Automatic axis bounds cover spot positions only, so set
-    :attr:`~flet_charts.ScatterChart.min_x` and
-    :attr:`~flet_charts.ScatterChart.max_x` to keep the error bar inside the chart.
+    :attr:`flet_charts.ScatterChart.min_x` and
+    :attr:`flet_charts.ScatterChart.max_x` to keep the error bar inside the chart.
     """
 
     y_error: Optional[ChartErrorRange] = None
@@ -102,8 +102,8 @@ class ScatterChartSpot(ft.BaseControl):
     in the color of this spot.
 
     Automatic axis bounds cover spot positions only, so set
-    :attr:`~flet_charts.ScatterChart.min_y` and
-    :attr:`~flet_charts.ScatterChart.max_y` to keep the error bar inside the chart.
+    :attr:`flet_charts.ScatterChart.min_y` and
+    :attr:`flet_charts.ScatterChart.max_y` to keep the error bar inside the chart.
     """
 
     selected: bool = False
