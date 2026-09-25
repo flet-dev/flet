@@ -13,8 +13,7 @@ installation is required.
 
 - **AI-assisted development.** Describe an app, ask for a feature, or get help
   fixing a bug. The agent can read and edit project files, and its activity list
-  shows code changes as inline diffs. Choose between Pro and Expert agents based
-  on the access available to your account.
+  shows code changes as inline diffs.
 - **A browser IDE.** Edit Python, manage files in multi-file projects, and restore
   previous versions. Sign in to save your projects and access them across devices.
 - **Live preview.** Run your app next to the editor and try out changes as you
@@ -23,13 +22,8 @@ installation is required.
   [gallery](https://studio.flet.dev/gallery) of 500+ examples, templates, and apps.
   Open an example, fork it, and adapt it to your idea.
 - **Sharing.** Share public apps with a link so others can run them and explore
-  the code. Creator includes unlimited public apps.
-- **Private projects.** Creator includes unlimited private apps; existing private
-  apps on Explorer remain available.
-- **Plans that fit your work.** Start with Explorer for free, or choose Creator
-  for more monthly AI credits, Expert agent access, credit top-ups, and direct
-  Flet support. Creator offers monthly and annual billing. See [pricing](/pricing)
-  for plan details and how AI credits work.
+  the code.
+- **Private projects.** Keep your apps and source code private while you work.
 - **Cloud packaging and publishing — coming soon.** Build app packages and
   publish them from Studio without a local build environment.
 
