@@ -2,7 +2,7 @@
 
 ### Bug fixes
 
-* Fix the Android SDK auto-installation failing on Windows ([#6522](https://github.com/flet-dev/flet/issues/6522)) by @ndonkoHenri.
+* Fix the Android SDK auto-installation failing on Windows ([#6522](https://github.com/flet-dev/flet/issues/6522), [#6892](https://github.com/flet-dev/flet/pull/6892)) by @ndonkoHenri.
 
 ## 1.0.1
 
