@@ -1,5 +1,9 @@
 ## 1.0.2
 
+### Improvements
+
+* `flet run` and `ft.run()` now print a warning with the desktop client's path when they use one from a previous `flet build` in `build/<platform>`, so an outdated client that lacks an extension is easy to spot ([#6821](https://github.com/flet-dev/flet/issues/6821)) by @ndonkoHenri.
+
 ### Bug fixes
 
 * Fix `InteractiveViewer` failing to render when `alignment` is set ([#6744](https://github.com/flet-dev/flet/issues/6744), [#6887](https://github.com/flet-dev/flet/pull/6887)) by @ndonkoHenri.
