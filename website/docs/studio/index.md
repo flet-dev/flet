@@ -4,7 +4,7 @@ title: "Introduction"
 
 # Flet Studio
 
-[Flet Studio](https://studio.flet.dev/) is an agentic browser-based workspace for
+[Flet Studio](https://studio.flet.dev/) is an agentic workspace for
 building cross-platform apps in Python. Write code yourself or work with an AI
 agent, run your app alongside the editor, and share it with a link. No local
 installation is required.
