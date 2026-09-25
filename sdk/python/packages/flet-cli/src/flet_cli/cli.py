@@ -41,6 +41,34 @@ def _render_version(as_json: bool) -> str:
     return f"Flet: {flet.version.flet_version}\nFlutter: {flet.version.flutter_version}"
 
 
+class _PositionalsFixArgumentParser(argparse.ArgumentParser):
+    """
+    An `argparse.ArgumentParser` with the fix for CPython gh-59317 backported.
+
+    Before Python 3.12.7 and 3.13.1, `argparse` gives an optional positional its
+    default as soon as the positionals typed before an option run out, so one
+    typed after the option is rejected. `get_parser()` uses this class only on
+    those interpreters, and subparsers inherit it through `add_subparsers()`.
+    """
+
+    def _match_arguments_partial(self, actions, arg_strings_pattern):
+        """
+        Match positionals as Python 3.12.7+ and 3.13.1+ do: when the typed
+        positionals end at an option, the trailing positionals that matched
+        nothing are left unfilled, so positionals after the option can fill them.
+
+        The matched counts add up to the length of the matched pattern, so the
+        result is unchanged on interpreters whose `argparse` already does this.
+        """
+
+        result = super()._match_arguments_partial(actions, arg_strings_pattern)
+        matched = sum(result)
+        if matched < len(arg_strings_pattern) and arg_strings_pattern[matched] == "O":
+            while result and not result[-1]:
+                result.pop()
+        return result
+
+
 # Source https://stackoverflow.com/a/26379693
 def set_default_subparser(
     parser: argparse.ArgumentParser, name: str, args: list
@@ -88,9 +116,11 @@ def set_default_subparser(
 
 def get_parser() -> argparse.ArgumentParser:
     """Construct and return the CLI argument parser."""
-    parser = argparse.ArgumentParser(
-        formatter_class=argparse.RawDescriptionHelpFormatter
-    )
+    parser = (
+        _PositionalsFixArgumentParser
+        if sys.version_info < (3, 12, 7) or sys.version_info[:3] == (3, 13, 0)
+        else argparse.ArgumentParser
+    )(formatter_class=argparse.RawDescriptionHelpFormatter)
 
     # add version flags
     parser.add_argument(

@@ -28,6 +28,7 @@ from flet_platform_assets import (
     write,
 )
 from packaging.requirements import Requirement
+from rich.markup import escape
 from rich.panel import Panel
 from rich.table import Column, Table
 
@@ -634,6 +635,7 @@ class BaseBuildCommand(BaseFlutterCommand):
         parser.add_argument(
             "--android-extract-packages",
             dest="android_extract_packages",
+            action="extend",
             nargs="+",
             default=[],
             help="Android only: Python packages (relative paths) to ship extracted "
@@ -860,18 +862,24 @@ class BaseBuildCommand(BaseFlutterCommand):
         self.config_platform = self.platforms[self.target_platform]["config_platform"]
         self.require_android_sdk = self.package_platform == "Android"
 
-        super().initialize_command()
-
         self.python_app_path = Path(self.options.python_app_path).resolve()
 
-        if not (
-            os.path.exists(self.python_app_path) or os.path.isdir(self.python_app_path)
-        ):
+        # validate that the app path exists and is a directory, not a file
+        if not os.path.isdir(self.python_app_path):
+            self.skip_flutter_doctor = True
+            if os.path.isfile(self.python_app_path):
+                self.cleanup(
+                    1,
+                    f"Path to Flet app must be a directory, not a file: "
+                    f"{escape(str(self.python_app_path))}",
+                )
             self.cleanup(
                 1,
                 f"Path to Flet app does not exist or is not a directory: "
-                f"{self.python_app_path}",
+                f"{escape(str(self.python_app_path))}",
             )
+
+        super().initialize_command()
 
         self.rel_out_dir = self.options.output_dir or os.path.join(
             "build", self.platforms[self.target_platform]["dist"]
