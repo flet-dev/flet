@@ -18,7 +18,7 @@ installation is required.
 - **A browser IDE.** Edit Python, manage files in multi-file projects, and restore
   previous versions. Sign in to save your projects and access them across devices.
 - **Live preview.** Run your app next to the editor and try out changes as you
-  build, without setting up Python or Flutter on your machine.
+  build, without setting up Flet on your machine.
 - **Examples you can make your own.** Browse the
   [gallery](https://studio.flet.dev/gallery) of 500+ examples, templates, and apps.
   Open an example, fork it, and adapt it to your idea.
