@@ -43,6 +43,8 @@ class Command(BaseBuildCommand):
     Android (APK/AAB), and iOS (IPA and simulator .app), with a wide range of
     customization options for metadata, assets, splash screens, and signing.
 
+    Arguments after `--` are passed down to the underlying `flutter build`.
+
     Detailed usage guide: https://flet.dev/docs/publish
     """
 
