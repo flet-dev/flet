@@ -46,6 +46,7 @@ from flet_cli.utils.android import (
     ANDROID_ARCH_TO_FLUTTER_TARGET_PLATFORM,
     excluded_android_abis,
 )
+from flet_cli.utils.app_excludes import find_default_excludes
 from flet_cli.utils.cli import parse_cli_bool_value
 from flet_cli.utils.hash_stamp import HashStamp
 from flet_cli.utils.merge import merge_dict
@@ -357,6 +358,23 @@ class BaseBuildCommand(BaseFlutterCommand):
             default=[],
             help="Files and/or directories to exclude from the package"
             "; can be used multiple times",
+        )
+        parser.add_argument(
+            "--include",
+            dest="include",
+            action="extend",
+            nargs="+",
+            default=[],
+            help="Files and/or directories excluded by default to package anyway "
+            "(e.g. `.env`); can be used multiple times",
+        )
+        parser.add_argument(
+            "--no-default-excludes",
+            dest="default_excludes",
+            action="store_false",
+            default=None,
+            help="Package hidden top-level files and directories, virtual "
+            "environments and `__pycache__` directories instead of excluding them",
         )
         parser.add_argument(
             "--project",
@@ -2616,19 +2634,57 @@ class BaseBuildCommand(BaseFlutterCommand):
         )
 
         # exclude
-        exclude_list = ["build"]
-
         app_exclude = (
             self.options.exclude
             or self.get_pyproject(f"tool.flet.{self.config_platform}.app.exclude")
             or self.get_pyproject("tool.flet.app.exclude")
+            or []
         )
-        if app_exclude:
-            exclude_list.extend(app_exclude)
+        explicit_excludes = [
+            "build",
+            *app_exclude,
+            *(["assets"] if self.target_platform == "web" else []),
+        ]
 
-        if self.target_platform == "web":
-            exclude_list.append("assets")
+        default_excludes: list[str] = []
+        if self.get_bool_setting(
+            self.options.default_excludes, "app.default_excludes", True
+        ):
+            app_include = (
+                self.options.include
+                or self.get_pyproject(f"tool.flet.{self.config_platform}.app.include")
+                or self.get_pyproject("tool.flet.app.include")
+                or []
+            )
+            default_excludes = find_default_excludes(
+                self.package_app_path, app_include, explicit_excludes
+            )
+
+        exclude_list = list(dict.fromkeys(explicit_excludes + default_excludes))
         package_args.extend(["--exclude", ",".join(exclude_list)])
+
+        if default_excludes:
+            console.log(
+                "Excluded from app package by default: "
+                f"{', '.join(default_excludes)} "
+                "(use --include <path> or --no-default-excludes to package them)"
+            )
+            env_files = [
+                p for p in default_excludes if p == ".env" or p.startswith(".env.")
+            ]
+            if env_files:
+                console.log(
+                    f"Warning: {', '.join(env_files)} not packaged. If the app "
+                    "loads it at runtime (e.g. with python-dotenv), package it "
+                    'with `--include .env` or `include = [".env"]` under '
+                    "[tool.flet.app] in pyproject.toml.",
+                    style=warning_style,
+                    markup=False,
+                )
+        if self.verbose > 0:
+            console.log(
+                f"App package exclude list: {exclude_list}", style=verbose1_style
+            )
 
         # source-packages
         source_packages = (
@@ -2721,6 +2777,15 @@ class BaseBuildCommand(BaseFlutterCommand):
 
         if cleanup_packages:
             package_args.append("--cleanup-packages")
+
+        if self.verbose > 0:
+            console.log(
+                f"Compile app: {'--compile-app' in package_args}, "
+                f"cleanup app: {cleanup_app}, cleanup packages: {cleanup_packages} "
+                "(cleanup removes serious_python's default junk globs plus any "
+                "--cleanup-app-files/--cleanup-package-files)",
+                style=verbose1_style,
+            )
 
         if self.verbose > 1:
             package_args.append("--verbose")
