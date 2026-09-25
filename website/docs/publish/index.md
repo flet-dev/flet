@@ -253,6 +253,22 @@ Throughout this documentation, the following placeholders are used:
   `uv run python -c "import flet; print(flet.__version__)"`.
 :::
 
+:::note[Platform-specific overrides]
+When a setting can be set both under `[tool.flet]` and under `[tool.flet.<PLATFORM>]`,
+the platform value wins whenever it is present. For list and table settings (such as
+`app.exclude`, `app.include`, `source_packages`, `dev_packages`, `target_arch`,
+`cleanup.app_files`, `cleanup.package_files` and `flutter.build_args`), an empty value
+clears the global one for that platform:
+
+```toml
+[tool.flet]
+source_packages = ["numpy"]
+
+[tool.flet.ios]
+source_packages = []    # no source builds on iOS
+```
+:::
+
 :::note[Understanding `pyproject.toml` structure]
 Flet loads `pyproject.toml` as a nested dictionary and looks up settings using
 dot-separated paths (for example, `tool.flet.web.base_url`).
