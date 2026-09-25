@@ -10,6 +10,9 @@ reverse-chronological order. Flet Studio ships independently of the Flet SDK —
 
 ## September 25, 2026
 
+* **Get more done with your AI credits.** Recent model releases and lower model
+  pricing let you do roughly **5–10 times more AI work with the same credits**
+  than before, depending on the task and agent tier.
 * Choose between **Pro** and **Expert** AI agents in the message composer. Pro is
   available to everyone; Expert is available with a paid plan or an existing
   wallet credit balance. Studio remembers your selection.
