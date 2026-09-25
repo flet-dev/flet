@@ -173,7 +173,7 @@ same change. These pages are the canonical upgrade path, not a separate
 `Deprecations` page.
 
 1. Create or update a migration guide under
-   `website/docs/release/breaking-changes/`.
+   `website/docs/updates/breaking-changes/vX-Y-Z/`.
    - Group closely related deprecations into one page, especially APIs from the
      same class/control or the same PR. For example, `DragTargetEvent.x`,
      `DragTargetEvent.y`, and `DragTargetEvent.offset` belong in one
@@ -185,13 +185,13 @@ same change. These pages are the canonical upgrade path, not a separate
    - In `References`, link relevant API docs, relevant GitHub issue/PR links,
      and release notes entry for that release.
 2. Add the guide to
-   `website/docs/release/breaking-changes/index.md` under the release's
+   `website/docs/updates/breaking-changes/index.md` under the release's
    `Deprecations` subsection.
 3. Add the guide to `website/sidebars.yml` under:
    `Stay up to date` -> `Breaking changes and deprecations` -> `vX.Y.Z`.
    This keeps individual guide pages in the docs sidebar while grouping them by
    release.
-4. Update `website/docs/release/release-notes.md` so the release links to the
+4. Update `website/docs/updates/release-notes.md` so the release links to the
    combined `Breaking changes and deprecations` section.
 5. Run `cd website && yarn crocodocs:generate` after sidebar
    edits, then run `cd website && yarn build`.
