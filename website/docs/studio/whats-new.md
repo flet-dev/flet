@@ -8,6 +8,30 @@ New features, improvements, and bug fixes in Flet Studio, listed in
 reverse-chronological order. Flet Studio ships independently of the Flet SDK — see
 [Flet release notes](../updates/release-notes.md) for SDK changes.
 
+## September 25, 2026
+
+* Choose between **Pro** and **Expert** AI agents in the message composer. Pro is
+  available to everyone; Expert is available with a paid plan or an existing
+  wallet credit balance. Studio remembers your selection.
+* Creator now offers **annual billing at $300/year** — equivalent to $25/month,
+  with two months free compared with monthly billing at $30/month. Plan AI credits
+  still reset monthly when you pay annually.
+* Manage your billing interval in the billing portal. Switching from monthly to
+  annual billing is prorated; switching from annual to monthly billing takes
+  effect at the end of your paid year.
+* Creating private apps and making public apps private now requires the
+  **Creator plan**. Existing private apps on Explorer keep working.
+* On-demand AI credit top-ups are now available only on paid plans. Explorer
+  users can continue spending wallet credits they already hold.
+* Newly added wallet AI credits expire **12 months after they are added**.
+  Existing wallet credits remain non-expiring. Credits with the earliest expiry
+  are spent first, and account settings show how many credits expire next and
+  when.
+* Credit-pack purchases now appear in the billing portal's invoice history.
+
+Release details: [Flet Studio 1.7.0](https://github.com/flet-dev/flet-app/pull/81)
+by @FeodorFitsner.
+
 ## September 15, 2026
 
 * Flet Studio now uses **Flet 1.0.0**, including the updated API reference available
