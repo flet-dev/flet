@@ -29,9 +29,6 @@ reverse-chronological order. Flet Studio ships independently of the Flet SDK —
   when.
 * Credit-pack purchases now appear in the billing portal's invoice history.
 
-Release details: [Flet Studio 1.7.0](https://github.com/flet-dev/flet-app/pull/81)
-by @FeodorFitsner.
-
 ## September 15, 2026
 
 * Flet Studio now uses **Flet 1.0.0**, including the updated API reference available
