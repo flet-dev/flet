@@ -13,7 +13,6 @@ ANDROID_CMDLINE_TOOLS_DOWNLOAD_VERSION = "11076708"
 ANDROID_CMDLINE_TOOLS_VERSION = "12.0"
 
 MINIMAL_PACKAGES = [
-    "cmdline-tools;latest",
     "platform-tools",
     "platforms;android-35",
     "build-tools;34.0.0",
@@ -107,6 +106,11 @@ class AndroidSDK:
         """
         Return the `cmdline-tools` binary directory in an SDK installation.
 
+        The version installed by this CLI is preferred over `latest`, because
+        from version 23.0, `sdkmanager` is a wrapper around the Android CLI,
+        which ignores `--licenses`, collects usage metrics by default and fails
+        on Windows.
+
         Args:
             home_dir: Android SDK home directory.
 
@@ -115,8 +119,8 @@ class AndroidSDK:
         """
 
         for d in [
-            home_dir / "cmdline-tools" / "latest" / "bin",
             home_dir / "cmdline-tools" / ANDROID_CMDLINE_TOOLS_VERSION / "bin",
+            home_dir / "cmdline-tools" / "latest" / "bin",
         ]:
             if d.exists():
                 return d
