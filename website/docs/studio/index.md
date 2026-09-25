@@ -4,9 +4,10 @@ title: "Introduction"
 
 # Flet Studio
 
-[Flet Studio](https://studio.flet.dev) is a browser-based workspace for building
-Flet apps in Python. Write code yourself or work with an AI agent, run your app
-alongside the editor, and share it with a link. No local installation is required.
+[Flet Studio](https://studio.flet.dev/) is an agentic browser-based workspace for
+building cross-platform apps in Python. Write code yourself or work with an AI
+agent, run your app alongside the editor, and share it with a link. No local
+installation is required.
 
 ## Highlights
 
