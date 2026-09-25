@@ -22,9 +22,10 @@ installation is required.
 - **Examples you can make your own.** Browse the
   [gallery](https://studio.flet.dev/gallery) of 500+ examples, templates, and apps.
   Open an example, fork it, and adapt it to your idea.
-- **Sharing and private projects.** Share public apps with a link so others can
-  run them and explore the code. Creator includes unlimited public and private
-  apps; existing private apps on Explorer remain available.
+- **Sharing.** Share public apps with a link so others can run them and explore
+  the code. Creator includes unlimited public apps.
+- **Private projects.** Creator includes unlimited private apps; existing private
+  apps on Explorer remain available.
 - **Plans that fit your work.** Start with Explorer for free, or choose Creator
   for more monthly AI credits, Expert agent access, credit top-ups, and direct
   Flet support. Creator offers monthly and annual billing. See [pricing](/pricing)
