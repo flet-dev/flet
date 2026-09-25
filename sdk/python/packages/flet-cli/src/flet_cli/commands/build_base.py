@@ -43,6 +43,7 @@ from flet_cli.commands.flutter_base import (
     verbose2_style,
     warning_style,
 )
+from flet_cli.commands.options import PassThroughArgsAction
 from flet_cli.utils.android import (
     ANDROID_ARCH_TO_FLUTTER_TARGET_PLATFORM,
     excluded_android_abis,
@@ -620,9 +621,12 @@ class BaseBuildCommand(BaseFlutterCommand):
         parser.add_argument(
             "--flutter-build-args",
             dest="flutter_build_args",
-            action="append",
+            action=PassThroughArgsAction,
+            example="--obfuscate",
             nargs="*",
-            help="Additional arguments for flutter build command",
+            help="Additional arguments for flutter build command. Attach an "
+            "argument that starts with `-` using `=`, e.g. "
+            "`--flutter-build-args=--obfuscate`, or pass the arguments after `--`",
         )
         parser.add_argument(
             "--source-packages",
