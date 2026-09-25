@@ -2,7 +2,7 @@
 
 ### Bug fixes
 
-* Fix `flet build` packaging virtual environments, `.git`, `.flet` and other development files into the app. Hidden entries in the app root (a leading `.`, or the hidden attribute on Windows), virtual environments detected by `pyvenv.cfg`, and `__pycache__` directories are now excluded by default, and the build prints what was excluded ([#6839](https://github.com/flet-dev/flet/issues/6839)) by @FeodorFitsner.
+* Fix `flet build` packaging virtual environments, `.git`, `.flet` and other development files into the app. Hidden entries in the app root (a leading `.`, or the hidden attribute on Windows), virtual environments detected by `pyvenv.cfg`, and `__pycache__` directories are now excluded by default, and the build prints what was excluded ([#6839](https://github.com/flet-dev/flet/issues/6839), [#6890](https://github.com/flet-dev/flet/pull/6890)) by @FeodorFitsner.
 
   **Compatibility:** `.env` and other dot-prefixed files in the app root are no longer packaged. Keep them with `--include .env` or `include = [".env"]` under `[tool.flet.app]`, or turn default exclusions off with `--no-default-excludes` / `default_excludes = false`. Apps built with earlier versions may already contain `.venv` or `.flet`.
 
