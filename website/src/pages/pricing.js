@@ -155,7 +155,7 @@ export default function Pricing() {
             <summary>What does Flet support include?</summary>
             <div className={styles.answer}>
               <p>Every plan gives you access to Flet’s documentation and community support. Ask questions, share ideas, and get help from other developers through our <Link to="/support">community channels</Link>.</p>
-              <p>Creator also includes direct support from the Flet team. Email <a href="mailto:hello@flet.dev">hello@flet.dev</a> for help with Flet and Flet Studio, including account and billing questions. When reporting a problem, include the steps to reproduce it and any relevant error messages so we can help you more effectively.</p>
+              <p>Creator also includes direct support from the Flet team. Email <a href="mailto:hello@flet.dev">hello@flet.dev</a> for help with Flet and Flet Studio, including account and billing questions.</p>
             </div>
           </details>
         </section>
