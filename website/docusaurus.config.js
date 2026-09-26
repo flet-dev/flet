@@ -89,6 +89,11 @@ module.exports = {
           position: 'left',
         },
         {
+          to: 'pricing',
+          label: 'Pricing',
+          position: 'left',
+        },
+        {
           to: 'roadmap',
           activeBasePath: 'roadmap',
           label: 'Roadmap',
@@ -135,6 +140,10 @@ module.exports = {
             {
               label: 'Flet Studio app',
               href: 'https://studio.flet.dev',
+            },
+            {
+              label: 'Pricing',
+              to: '/pricing',
             },
             {
               label: 'Docs',
@@ -207,7 +216,7 @@ module.exports = {
           beforeDefaultRemarkPlugins: [require('./plugins/remark-inject-example-headings')],
           remarkPlugins: [require('./plugins/remark-api-links'), require('./plugins/remark-code-annotations')],
           editUrl:
-            'https://github.com/flet-dev/flet/website/edit/main/',
+            'https://github.com/flet-dev/flet/edit/main/website/',
         },
         blog: {
           blogSidebarTitle: 'All posts',
@@ -215,7 +224,7 @@ module.exports = {
           postsPerPage: 5,
           showReadingTime: true,
           editUrl:
-            'https://github.com/flet-dev/flet/website/edit/main/',
+            'https://github.com/flet-dev/flet/edit/main/website/',
         },
         theme: {
           customCss: require.resolve('./src/css/custom.css'),

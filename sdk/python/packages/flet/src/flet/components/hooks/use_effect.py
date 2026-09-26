@@ -50,8 +50,10 @@ def use_effect(
     Args:
         setup: A function that performs the side effect. It may optionally return
             a cleanup function.
-        dependencies: If present, the effect is only re-run when one of the dependencies
-            has changed. If absent, the effect is only run on initial render.
+        dependencies: Values the effect depends on. The effect always runs after the
+            component mounts. If absent, it also re-runs after every render. If
+            empty, it runs only on mount. Otherwise, it re-runs only when one of the
+            dependencies has changed.
         cleanup: An optional function that cleans up after the effect. It is run
             before the effect is re-run, and when the component unmounts.
     """

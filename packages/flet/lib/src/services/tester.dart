@@ -86,6 +86,12 @@ class TesterService extends FletService {
         _finders[finder.id] = finder;
         return finder.toMap();
 
+      case "find_by_semantics_identifier":
+        var finder = control.backend.tester!
+            .findBySemanticsIdentifier(args["identifier"]);
+        _finders[finder.id] = finder;
+        return finder.toMap();
+
       case "take_screenshot":
         return await control.backend.tester!.takeScreenshot(args["name"]);
 

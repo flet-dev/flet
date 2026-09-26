@@ -1,4 +1,3 @@
-import json
 import secrets
 import time
 from collections.abc import Mapping
@@ -116,6 +115,7 @@ class AuthorizationService(Authorization):
         Raises:
             httpx.HTTPStatusError: If token endpoint returns a non-success status.
         """
+
         import httpx
         from oauthlib.oauth2 import WebApplicationClient
 
@@ -129,11 +129,11 @@ class AuthorizationService(Authorization):
         )
         headers = self.__get_default_headers()
         headers["content-type"] = "application/x-www-form-urlencoded"
-        req = httpx.Request(
-            "POST", self.provider.token_endpoint, content=data, headers=headers
-        )
+
         async with httpx.AsyncClient(follow_redirects=True) as client:
-            resp = await client.send(req)
+            resp = await client.post(
+                self.provider.token_endpoint, content=data, headers=headers
+            )
             resp.raise_for_status()
             client = WebApplicationClient(self.provider.client_id)
             t = client.parse_request_body_response(resp.text)
@@ -217,19 +217,21 @@ class AuthorizationService(Authorization):
         )
         headers = self.__get_default_headers()
         headers["content-type"] = "application/x-www-form-urlencoded"
-        refresh_req = httpx.Request(
-            "POST", url=self.provider.token_endpoint, content=data, headers=headers
-        )
-        if refresh_req:
-            async with httpx.AsyncClient(follow_redirects=True) as client:
-                refresh_resp = await client.send(refresh_req)
-                refresh_resp.raise_for_status()
-                assert self.__token is not None
-                client = WebApplicationClient(self.provider.client_id)
-                t = client.parse_request_body_response(refresh_resp.text)
-                if t.get("refresh_token") is None:
-                    t["refresh_token"] = self.__token.refresh_token
-                self.__token = self.__convert_token(t)
+
+        async with httpx.AsyncClient(follow_redirects=True) as client:
+            refresh_resp = await client.post(
+                self.provider.token_endpoint, content=data, headers=headers
+            )
+            refresh_resp.raise_for_status()
+            assert self.__token is not None
+
+            client = WebApplicationClient(self.provider.client_id)
+            t = client.parse_request_body_response(refresh_resp.text)
+
+            if t.get("refresh_token") is None:
+                t["refresh_token"] = self.__token.refresh_token
+
+            self.__token = self.__convert_token(t)
 
     async def __get_user(self) -> User:
         """
@@ -242,18 +244,20 @@ class AuthorizationService(Authorization):
         Raises:
             httpx.HTTPStatusError: If user endpoint request fails.
         """
+
         import httpx
 
         assert self.__token is not None
         assert self.provider.user_endpoint is not None
+
         headers = self.__get_default_headers()
         headers["Authorization"] = f"Bearer {self.__token.access_token}"
-        user_req = httpx.Request("GET", self.provider.user_endpoint, headers=headers)
+
         async with httpx.AsyncClient(follow_redirects=True) as client:
-            user_resp = await client.send(user_req)
+            user_resp = await client.get(self.provider.user_endpoint, headers=headers)
             user_resp.raise_for_status()
             assert self.provider.user_id_fn is not None
-            uj = json.loads(user_resp.text)
+            uj = user_resp.json()
             return User(uj, str(self.provider.user_id_fn(uj)))
 
     def __get_default_headers(self) -> dict[str, str]:

@@ -68,6 +68,8 @@ tasks:
     desc: "Start Docusaurus dev server for the documentation website with hot reload."
     aliases:
       - docs
+    env:
+      YARN_ENABLE_TELEMETRY: "0"
     cmds:
       - cd ../../website && yarn install --immutable
       - cd ../../website && yarn start
@@ -78,6 +80,7 @@ tasks:
       - docs-fast
     env:
       FLET_DOCS_FAST: "1"
+      YARN_ENABLE_TELEMETRY: "0"
     cmds:
       - cd ../../website && yarn install --immutable
       - cd ../../website && yarn start

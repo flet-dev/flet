@@ -3,6 +3,7 @@ title: "Publishing a Flet app"
 ---
 
 import CrossPlatformPermissions from '@site/.crocodocs/cross-platform-permissions.mdx';
+import PythonVersions from '@site/.crocodocs/python-versions.mdx';
 import {Image} from '@site/src/components/crocodocs';
 import TabItem from '@theme/TabItem';
 import Tabs from '@theme/Tabs';
@@ -134,11 +135,7 @@ In this case, two things to keep in mind:
 `flet build` and `flet publish` bundle a specific Python release into your app.
 Supported versions and the matching CPython / Pyodide artifacts:
 
-| Short | CPython runtime | Pyodide (web) | Status   |
-| ----- | --------------- | ------------- | -------- |
-| 3.14  | 3.14.7          | 314.0.6       | default  |
-| 3.13  | 3.13.15         | 0.29.4        | stable   |
-| 3.12  | 3.12.14         | 0.27.7        | stable   |
+<PythonVersions />
 
 The version is resolved in this order:
 
@@ -148,7 +145,7 @@ The version is resolved in this order:
    specifier; the **highest** supported short version that satisfies it wins.
    `requires-python = ">=3.13,<3.14"` resolves to 3.13;
    `requires-python = ">=3.13"` resolves to 3.14.
-3. **Default** — the latest supported version (currently `3.14`).
+3. **Default** — the version marked `default` in the table above.
 
 If neither the CLI flag nor `requires-python` selects a supported version
 (e.g. `requires-python = ">=3.20"`), the build fails with a clear error
@@ -1711,7 +1708,7 @@ Use at your own risk, and only if you fully know what you're doing!
 
 Its value is determined in the following order of precedence:
 
-1. `--flutter-build-args` (can be used multiple times)
+1. [`--flutter-build-args`](../cli/flet-build.md#--flutter-build-args) (can be used multiple times) or the arguments after a `--` separator, combined if both are given
 2. `[tool.flet.<PLATFORM>.flutter].build_args`
 3. `[tool.flet.flutter].build_args`
 
@@ -1720,18 +1717,30 @@ Its value is determined in the following order of precedence:
 <Tabs groupId="flet-build--pyproject-toml">
 <TabItem value="flet-build" label="flet build">
 ```bash
+flet build apk -- \
+  --obfuscate \
+  --split-debug-info=build/symbols \
+  --dart-define=API_URL=https://api.example.com
+
+# or, one argument at a time
 flet build apk \
   --flutter-build-args=--obfuscate \
-  --flutter-build-args=--export-method=development \
+  --flutter-build-args=--split-debug-info=build/symbols \
   --flutter-build-args=--dart-define=API_URL=https://api.example.com
 ```
+
+- Everything after a `--` separator goes to `flutter build` as it is.
+- `--flutter-build-args` passes one argument at a time. Attach a value that starts
+  with `-` using `=`, e.g. `--flutter-build-args=--obfuscate`.
+- [`flet debug`](../cli/flet-debug.md) passes them to `flutter run` the same way.
+
 </TabItem>
 <TabItem value="pyproject-toml" label="pyproject.toml">
 ```toml
 [tool.flet.flutter]     # or [tool.flet.<PLATFORM>.flutter]
 build_args = [
   "--obfuscate",
-  "--export-method=development",
+  "--split-debug-info=build/symbols",
   "--dart-define=API_URL=https://api.example.com",
 ]
 ```
