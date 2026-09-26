@@ -477,6 +477,7 @@ docs:
         - controls/charts/types/chartcirclepoint.md
         - controls/charts/types/chartcrosspoint.md
         - controls/charts/types/chartdatapointtooltip.md
+        - controls/charts/types/charterrorrange.md
         - controls/charts/types/charteventtype.md
         - controls/charts/types/chartgridlines.md
         - controls/charts/types/chartpointline.md

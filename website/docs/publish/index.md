@@ -3,6 +3,7 @@ title: "Publishing a Flet app"
 ---
 
 import CrossPlatformPermissions from '@site/.crocodocs/cross-platform-permissions.mdx';
+import PythonVersions from '@site/.crocodocs/python-versions.mdx';
 import {Image} from '@site/src/components/crocodocs';
 import TabItem from '@theme/TabItem';
 import Tabs from '@theme/Tabs';
@@ -134,11 +135,7 @@ In this case, two things to keep in mind:
 `flet build` and `flet publish` bundle a specific Python release into your app.
 Supported versions and the matching CPython / Pyodide artifacts:
 
-| Short | CPython runtime | Pyodide (web) | Status   |
-| ----- | --------------- | ------------- | -------- |
-| 3.14  | 3.14.7          | 314.0.6       | default  |
-| 3.13  | 3.13.15         | 0.29.4        | stable   |
-| 3.12  | 3.12.14         | 0.27.7        | stable   |
+<PythonVersions />
 
 The version is resolved in this order:
 
@@ -148,7 +145,7 @@ The version is resolved in this order:
    specifier; the **highest** supported short version that satisfies it wins.
    `requires-python = ">=3.13,<3.14"` resolves to 3.13;
    `requires-python = ">=3.13"` resolves to 3.14.
-3. **Default** — the latest supported version (currently `3.14`).
+3. **Default** — the version marked `default` in the table above.
 
 If neither the CLI flag nor `requires-python` selects a supported version
 (e.g. `requires-python = ">=3.20"`), the build fails with a clear error

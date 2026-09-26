@@ -1,7 +1,7 @@
 [project]
 name = "audio-playback-controls"
 version = "1.0.0"
-description = "Controls audio playback, seek position, volume, and balance for a remote track."
+description = "Controls audio playback, seek position, volume, and balance for a local track."
 requires-python = ">=3.10"
 keywords = ["services", "audio", "playback", "seek", "volume", "balance", "async"]
 authors = [{ name = "Flet team", email = "hello@flet.dev" }]
@@ -15,6 +15,7 @@ categories = ["Media/Audio"]
 
 [tool.flet.metadata]
 title = "Audio playback controls"
+docs_intro = "Plays `viper.mp3` from the example's [`assets`](https://github.com/flet-dev/flet/tree/main/sdk/python/examples/extensions/audio/audio_playback_controls/assets) folder. To run the code on its own, put that file in an `assets` folder next to your script, or set [`src`][flet_audio.Audio.src] to the URL of an audio file."
 controls = ["SafeArea", "Column", "Row", "Button", "Audio"]
 layout_pattern = "inline-actions"
 complexity = "basic"

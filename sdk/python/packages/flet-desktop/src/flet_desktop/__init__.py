@@ -421,6 +421,25 @@ def find_macos_app_bundle(directory) -> Path | None:
     return None
 
 
+def __log_build_client(build_dir: str, client_path: str | Path) -> None:
+    """
+    Reports that a client from a previous `flet build` is used instead of the
+    standard one.
+
+    Logged as a warning, so it is shown even without `flet run -v`: a client
+    built before an extension was added lacks that extension, and the app's
+    calls to it then time out without pointing at the client.
+
+    Args:
+        build_dir: The `build/<platform>` directory the client was found in.
+        client_path: The client executable or `.app` bundle that is launched.
+    """
+    logger.warning(
+        f"Using the Flet client from a previous `flet build`: {client_path}. "
+        f"Move, rename or delete {build_dir} to use the standard client."
+    )
+
+
 def __linux_identity_args(args: list) -> tuple:
     """
     Give the client window a per-app identity on Linux, without touching it.
@@ -604,6 +623,8 @@ def __locate_and_unpack_flet_view(page_url, assets_dir, hidden):
             for f in os.listdir(build_windows):
                 if f.endswith(".exe"):
                     flet_path = os.path.join(build_windows, f)
+            if flet_path:
+                __log_build_client(build_windows, flet_path)
 
         # 2. Check FLET_VIEW_PATH (developer mode)
         if not flet_path:
@@ -631,7 +652,7 @@ def __locate_and_unpack_flet_view(page_url, assets_dir, hidden):
         build_macos = os.path.join(os.getcwd(), "build", "macos")
         app_path = find_macos_app_bundle(build_macos)
         if app_path:
-            logger.info(f"Flet.app found in {build_macos}")
+            __log_build_client(build_macos, app_path)
 
         # 2. Check FLET_VIEW_PATH (developer mode)
         if not app_path:
@@ -668,6 +689,8 @@ def __locate_and_unpack_flet_view(page_url, assets_dir, hidden):
                 ef = os.path.join(build_linux, f)
                 if os.path.isfile(ef) and stat.S_IXUSR & os.stat(ef)[stat.ST_MODE]:
                     app_path = ef
+            if app_path:
+                __log_build_client(build_linux, app_path)
 
         # 2. Check FLET_VIEW_PATH (developer mode)
         if not app_path:

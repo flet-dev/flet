@@ -132,6 +132,12 @@ class RemoteWidgetTester extends FlutterWidgetTester {
         return _ok(_storeFinder(findByTooltip(params["value"] as String)));
       case "find_by_icon":
         return _ok(_storeFinder(findByIcon(_parseIcon(params["icon"]))));
+      case "find_by_semantics_identifier":
+        return _ok(
+          _storeFinder(
+            findBySemanticsIdentifier(params["identifier"] as String),
+          ),
+        );
       case "take_screenshot":
         final bytes = await takeScreenshot(params["name"] as String);
         return _ok(base64Encode(bytes));

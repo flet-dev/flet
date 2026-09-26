@@ -1,5 +1,6 @@
 ## 1.0.2
 
+* Pass `Semantics.identifier` through to Flutter's `Semantics` widget and add `Tester.findBySemanticsIdentifier()` so tests can match nodes by native accessibility identifier ([#6832](https://github.com/flet-dev/flet/pull/6832)) by @mccre110.
 * Fix `Button`, `FilledButton`, `FilledTonalButton`, `OutlinedButton` and `TextButton` rendering an error box when `icon` is set without `content`. `ButtonControl` now uses the `.icon(...)` constructors only when both `icon` and `content` are provided; otherwise it builds the plain button with whichever one is set as its child, so icon-only buttons render the icon centered ([#6886](https://github.com/flet-dev/flet/issues/6886), [#6889](https://github.com/flet-dev/flet/pull/6889)) by @FeodorFitsner.
 
 ## 1.0.1

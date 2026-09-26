@@ -30,12 +30,14 @@ def use_memo(
 
     Args:
         calculate_value: A function that computes the value to be memoized.
-        dependencies: If present, the value is only recomputed when one of
-            the dependencies has changed. If absent, the value is only computed
-            on the initial render.
+        dependencies: Values the computation depends on. If absent, the value is
+            recomputed on every render. If empty, it is computed only on the first
+            render. Otherwise, it is recomputed only when one of the dependencies
+            has changed.
 
     Returns:
-        A memoized value whose identity is stable between renders.
+        The memoized value. The same object is returned on every render until the
+            value is recomputed.
     """
     component = current_component()
 

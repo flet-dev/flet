@@ -135,7 +135,19 @@ class InteractiveViewer(LayoutControl):
 
     alignment: Optional[Alignment] = None
     """
-    The alignment of the :attr:`content` within this viewer.
+    The origin of the transformation applied to the :attr:`content` when it is
+    zoomed or panned, relative to the content's size.
+
+    :meth:`zoom` scales the content around this point. It does not change where the
+    content is placed in this viewer; to position the content, wrap it in a control
+    that aligns its child, such as a :class:`~flet.Container` with
+    :attr:`~flet.Container.alignment` set.
+
+    Note:
+        Gestures and the limits of :meth:`pan` treat the top-left corner as the
+        origin. With any other value, the content drifts away from the pointer while
+        zooming with a gesture, and once zoomed in, panning stops short of one edge
+        of the content and goes past the opposite one, leaving empty space.
     """
 
     boundary_margin: MarginValue = field(default_factory=lambda: Margin.all(0))

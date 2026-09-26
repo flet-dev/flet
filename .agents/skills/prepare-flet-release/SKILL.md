@@ -35,8 +35,8 @@ That skill is the source of truth for item wording, scope selection, and what sh
   * When selecting candidates for `packages/flet/CHANGELOG.md`, prefer items with meaningful Flutter-side impact.
   * When selecting candidates for `sdk/python/packages/*/CHANGELOG.md`, prefer published Python-facing changes; do not include extension-internal Flutter implementation work unless it materially changes user-visible Python behavior.
 * If the release includes breaking changes, API removals, or deprecations,
-  update `website/docs/release/release-notes.md` and
-  `website/docs/release/breaking-changes/index.md`.
+  update `website/docs/updates/release-notes.md` and
+  `website/docs/updates/breaking-changes/index.md`.
   * Use [`flet-deprecation`](../flet-deprecation/SKILL.md) for deprecation
     guide requirements and sidebar placement.
   * Group related deprecations into one migration guide page where possible,

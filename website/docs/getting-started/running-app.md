@@ -86,9 +86,11 @@ require rebuilding the client. See
 [Creating an Extension](../extend/user-extensions.md#change-python-files) for an
 example of this workflow.
 
-To use the standard client again, move or rename the corresponding
-`build/<platform>` directory and unset `FLET_VIEW_PATH` if it is set. Setting
-`FLET_VIEW_PATH` alone does not override a client found in `build/<platform>`.
+When Flet uses a client from `build/<platform>`, it prints a warning with the
+client's path. To use the standard client again, move, rename or delete the
+corresponding `build/<platform>` directory and unset `FLET_VIEW_PATH` if it is
+set. Setting `FLET_VIEW_PATH` alone does not override a client found in
+`build/<platform>`.
 
 :::note
 Opening the built executable directly runs the packaged app, including the Python
