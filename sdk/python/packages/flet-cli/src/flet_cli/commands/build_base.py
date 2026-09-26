@@ -2662,11 +2662,13 @@ class BaseBuildCommand(BaseFlutterCommand):
                 p for p in default_excludes if p == ".env" or p.startswith(".env.")
             ]
             if env_files:
+                it = "it" if len(env_files) == 1 else "them"
                 console.log(
                     f"Warning: {', '.join(env_files)} not packaged. If the app "
-                    "loads it at runtime (e.g. with python-dotenv), package it "
-                    'with `--include .env` or `include = [".env"]` under '
-                    "[tool.flet.app] in pyproject.toml.",
+                    f"loads {it} at runtime (e.g. with python-dotenv), package "
+                    f"{it} with `--include {' '.join(env_files)}` or "
+                    f"`include = {json.dumps(env_files)}` under [tool.flet.app] "
+                    "in pyproject.toml.",
                     style=warning_style,
                     markup=False,
                 )
