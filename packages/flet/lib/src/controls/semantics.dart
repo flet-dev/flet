@@ -19,6 +19,7 @@ class SemanticsControl extends StatelessWidget {
       child: content ??
           const ErrorControl("Semantics.content must be provided and visible"),
       label: control.getString("label"),
+      identifier: control.getString("identifier"),
       enabled: !control.disabled,
       expanded: control.getBool("expanded"),
       hidden: control.getBool("hidden"),
