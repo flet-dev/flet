@@ -28,6 +28,7 @@ dependencies = [
     "flet-spinkit",
     "flet-video",
     "flet-webview",
+    "flet-webview-all",
 ]
 
 [dependency-groups]
@@ -61,6 +62,7 @@ flet-secure-storage = { path = "../../../packages/flet-secure-storage", editable
 flet-spinkit = { path = "../../../packages/flet-spinkit", editable = true }
 flet-video = { path = "../../../packages/flet-video", editable = true }
 flet-webview = { path = "../../../packages/flet-webview", editable = true }
+flet-webview-all = { path = "../../../packages/flet-webview-all", editable = true }
 
 [tool.flet.dev_packages]
 flet = "../../../packages/flet"
@@ -83,6 +85,7 @@ flet-secure-storage = "../../../packages/flet-secure-storage"
 flet-spinkit = "../../../packages/flet-spinkit"
 flet-video = "../../../packages/flet-video"
 flet-webview = "../../../packages/flet-webview"
+flet-webview-all = "../../../packages/flet-webview-all"
 
 # Docs: https://flet.dev/docs/publish/
 [tool.flet]
