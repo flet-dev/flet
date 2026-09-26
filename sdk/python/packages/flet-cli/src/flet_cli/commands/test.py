@@ -109,6 +109,7 @@ class Command(BaseBuildCommand):
     `flet build`, in test mode) so the app runs on-device with embedded Python,
     then runs pytest. Tests in the `tests/` directory drive the app through the
     `flet_app` fixture (find controls by key, tap, take/assert screenshots).
+    Arguments after `--` are passed to pytest, e.g. `flet test -- -x`.
 
     Detailed usage guide: https://flet.dev/docs/getting-started/integration-testing
     """
@@ -123,9 +124,8 @@ class Command(BaseBuildCommand):
         self.flutter_test_host: Optional[str] = None
 
     def add_arguments(self, parser: argparse.ArgumentParser) -> None:
-        # `platform` is a positional, like `flet debug`. Register it first, then
-        # the inherited build args (which add the `python_app_path` positional),
-        # then our trailing `pytest_args` REMAINDER positional.
+        # register `platform` before the inherited build args, so that it precedes
+        # the `python_app_path` positional they add
         parser.add_argument(
             "platform",
             type=str.lower,
@@ -170,6 +170,7 @@ class Command(BaseBuildCommand):
             help="Only run tests matching the given pytest keyword expression "
             "(passed through to pytest -k).",
         )
+        parser.set_defaults(pytest_args=[])
 
     def handle(self, options: argparse.Namespace) -> None:
         super().handle(options)
@@ -191,6 +192,7 @@ class Command(BaseBuildCommand):
         self.pytest_args = []
         if options.pytest_keyword:
             self.pytest_args += ["-k", options.pytest_keyword]
+        self.pytest_args += options.pytest_args
 
         # Check for pytest availability before provisioning, since `flet test` runs
         # `sys.executable -m pytest` and pytest comes from the app’s `flet[test]`

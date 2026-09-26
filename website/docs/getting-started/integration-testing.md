@@ -322,6 +322,7 @@ flet test ios --device-id <simulator-id>
 | `-k <expr>` | Only run tests matching a pytest keyword expression |
 | `--tests-dir <dir>` | Directory containing the tests (default: `tests`) |
 | `-v` | Verbose — stream the underlying Flutter build/launch output |
+| `-- <args>` | Pass the arguments that follow `--` to pytest, e.g. `-- -x --maxfail=1` |
 
 ### Running specific tests
 
@@ -343,6 +344,22 @@ flet test -k test_screenshot
 
 `-k` accepts the full pytest expression syntax, e.g. `-k screenshot`,
 `-k "increment or screenshot"`, or `-k "not slow"`.
+
+Any other pytest option goes after a `--` separator, which passes everything that
+follows it to pytest:
+
+<Tabs groupId="uv--pip">
+<TabItem value="uv" label="uv">
+```bash
+uv run flet test -k screenshot -- -x --maxfail=1
+```
+</TabItem>
+<TabItem value="pip" label="pip">
+```bash
+flet test -k screenshot -- -x --maxfail=1
+```
+</TabItem>
+</Tabs>
 
 When [running with pytest directly](#running-with-pytest-directly) you can also
 select a test by its node id:

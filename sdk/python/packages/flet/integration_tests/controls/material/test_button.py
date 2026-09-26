@@ -72,3 +72,17 @@ async def test_style_conflicts(flet_app: ftt.FletTestApp, request):
             ),
         ),
     )
+
+
+@pytest.mark.asyncio(loop_scope="module")
+async def test_icon_only(flet_app: ftt.FletTestApp, request):
+    flet_app.page.theme_mode = ft.ThemeMode.LIGHT
+    await flet_app.assert_control_screenshot(
+        request.node.name,
+        ft.Row(
+            controls=[
+                ft.Button(icon=ft.Icons.PAUSE),
+                ft.Button(icon=ft.Icons.PAUSE, icon_color=ft.Colors.RED),
+            ],
+        ),
+    )

@@ -28,6 +28,7 @@ from flet_platform_assets import (
     write,
 )
 from packaging.requirements import Requirement
+from rich.markup import escape
 from rich.panel import Panel
 from rich.table import Column, Table
 
@@ -42,6 +43,7 @@ from flet_cli.commands.flutter_base import (
     verbose2_style,
     warning_style,
 )
+from flet_cli.commands.options import PassThroughArgsAction
 from flet_cli.utils.android import (
     ANDROID_ARCH_TO_FLUTTER_TARGET_PLATFORM,
     excluded_android_abis,
@@ -637,9 +639,12 @@ class BaseBuildCommand(BaseFlutterCommand):
         parser.add_argument(
             "--flutter-build-args",
             dest="flutter_build_args",
-            action="append",
+            action=PassThroughArgsAction,
+            example="--obfuscate",
             nargs="*",
-            help="Additional arguments for flutter build command",
+            help="Additional arguments for flutter build command. Attach an "
+            "argument that starts with `-` using `=`, e.g. "
+            "`--flutter-build-args=--obfuscate`, or pass the arguments after `--`",
         )
         parser.add_argument(
             "--source-packages",
@@ -652,6 +657,7 @@ class BaseBuildCommand(BaseFlutterCommand):
         parser.add_argument(
             "--android-extract-packages",
             dest="android_extract_packages",
+            action="extend",
             nargs="+",
             default=[],
             help="Android only: Python packages (relative paths) to ship extracted "
@@ -878,18 +884,24 @@ class BaseBuildCommand(BaseFlutterCommand):
         self.config_platform = self.platforms[self.target_platform]["config_platform"]
         self.require_android_sdk = self.package_platform == "Android"
 
-        super().initialize_command()
-
         self.python_app_path = Path(self.options.python_app_path).resolve()
 
-        if not (
-            os.path.exists(self.python_app_path) or os.path.isdir(self.python_app_path)
-        ):
+        # validate that the app path exists and is a directory, not a file
+        if not os.path.isdir(self.python_app_path):
+            self.skip_flutter_doctor = True
+            if os.path.isfile(self.python_app_path):
+                self.cleanup(
+                    1,
+                    f"Path to Flet app must be a directory, not a file: "
+                    f"{escape(str(self.python_app_path))}",
+                )
             self.cleanup(
                 1,
                 f"Path to Flet app does not exist or is not a directory: "
-                f"{self.python_app_path}",
+                f"{escape(str(self.python_app_path))}",
             )
+
+        super().initialize_command()
 
         self.rel_out_dir = self.options.output_dir or os.path.join(
             "build", self.platforms[self.target_platform]["dist"]

@@ -1776,7 +1776,7 @@ Use at your own risk, and only if you fully know what you're doing!
 
 Its value is determined in the following order of precedence:
 
-1. `--flutter-build-args` (can be used multiple times)
+1. [`--flutter-build-args`](../cli/flet-build.md#--flutter-build-args) (can be used multiple times) or the arguments after a `--` separator, combined if both are given
 2. `[tool.flet.<PLATFORM>.flutter].build_args`
 3. `[tool.flet.flutter].build_args`
 
@@ -1785,18 +1785,30 @@ Its value is determined in the following order of precedence:
 <Tabs groupId="flet-build--pyproject-toml">
 <TabItem value="flet-build" label="flet build">
 ```bash
+flet build apk -- \
+  --obfuscate \
+  --split-debug-info=build/symbols \
+  --dart-define=API_URL=https://api.example.com
+
+# or, one argument at a time
 flet build apk \
   --flutter-build-args=--obfuscate \
-  --flutter-build-args=--export-method=development \
+  --flutter-build-args=--split-debug-info=build/symbols \
   --flutter-build-args=--dart-define=API_URL=https://api.example.com
 ```
+
+- Everything after a `--` separator goes to `flutter build` as it is.
+- `--flutter-build-args` passes one argument at a time. Attach a value that starts
+  with `-` using `=`, e.g. `--flutter-build-args=--obfuscate`.
+- [`flet debug`](../cli/flet-debug.md) passes them to `flutter run` the same way.
+
 </TabItem>
 <TabItem value="pyproject-toml" label="pyproject.toml">
 ```toml
 [tool.flet.flutter]     # or [tool.flet.<PLATFORM>.flutter]
 build_args = [
   "--obfuscate",
-  "--export-method=development",
+  "--split-debug-info=build/symbols",
   "--dart-define=API_URL=https://api.example.com",
 ]
 ```
