@@ -34,3 +34,4 @@ Backend service for Flet apps:
 * Database.
 * Files.
 * Authentication.
+* AI as a service for user apps.

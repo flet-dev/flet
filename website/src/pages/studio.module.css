@@ -108,7 +108,6 @@
 }
 
 .featuresHeading {
-  max-width: 650px;
   margin: 0 0 38px;
   font-size: clamp(32px, 3.5vw, 46px);
   line-height: 1.15;

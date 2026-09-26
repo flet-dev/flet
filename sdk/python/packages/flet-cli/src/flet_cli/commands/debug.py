@@ -13,6 +13,8 @@ class Command(BaseBuildCommand):
     """
     Run a Flet Python app in debug mode on a specified platform (desktop, web, mobile).
 
+    Arguments after `--` are passed down to the underlying `flutter run`.
+
     Detailed usage guide: https://flet.dev/blog/flet-debug-the-new-cli-for-testing-flet-apps-on-mobile-devices
     """
 
