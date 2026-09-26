@@ -89,6 +89,11 @@ module.exports = {
           position: 'left',
         },
         {
+          to: 'pricing',
+          label: 'Pricing',
+          position: 'left',
+        },
+        {
           to: 'roadmap',
           activeBasePath: 'roadmap',
           label: 'Roadmap',
@@ -135,6 +140,10 @@ module.exports = {
             {
               label: 'Flet Studio app',
               href: 'https://studio.flet.dev',
+            },
+            {
+              label: 'Pricing',
+              to: '/pricing',
             },
             {
               label: 'Docs',
