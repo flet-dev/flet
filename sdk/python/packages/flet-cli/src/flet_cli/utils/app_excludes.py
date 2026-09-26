@@ -54,6 +54,10 @@ def find_default_excludes(
     - virtual environments (directories containing `pyvenv.cfg`) at any depth;
     - `__pycache__` directories at any depth.
 
+    Directory symlinks are followed to match the packager. Links back to an
+    ancestor are always excluded, even if included explicitly, to prevent
+    recursive copying.
+
     Args:
         app_path: Root directory of the Python app being packaged.
         include: Relative paths to keep even if matched by the rules above.
@@ -84,13 +88,25 @@ def find_default_excludes(
                 continue
             if _is_hidden(entry) and add(entry.name):
                 continue
-            if entry.is_dir(follow_symlinks=False):
+            if entry.is_dir(follow_symlinks=True):
                 subdirs.append(entry.name)
 
     # virtual environments and __pycache__ at any depth
     for subdir in subdirs:
-        for dirpath, dirnames, _ in os.walk(app_path / subdir):
+        ancestors = [app_path.resolve()]
+        for dirpath, dirnames, _ in os.walk(app_path / subdir, followlinks=True):
             rel_dir = os.path.relpath(dirpath, app_path)
+            # Keep only this path's ancestors, not a global visited set: the
+            # packager follows symlinks and copies each alias independently.
+            del ancestors[len(Path(rel_dir).parts) :]
+            resolved = Path(dirpath).resolve()
+            if resolved in ancestors:
+                # Even an included cycle must be excluded from the copy, or
+                # serious_python would recurse into it indefinitely.
+                excludes.append(rel_dir)
+                dirnames.clear()
+                continue
+            ancestors.append(resolved)
             if (os.path.basename(dirpath) == PYCACHE_DIR or _is_venv(dirpath)) and add(
                 rel_dir
             ):

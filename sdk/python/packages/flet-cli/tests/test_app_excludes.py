@@ -129,3 +129,69 @@ def test_already_excluded_paths_are_not_scanned(app: Path):
     _touch(app / "src" / "vendor" / "__pycache__" / "b.pyc")
 
     assert find_default_excludes(app, exclude=["build", ".tox", "src/vendor"]) == []
+
+
+def _symlink(link: Path, target: Path):
+    link.parent.mkdir(parents=True, exist_ok=True)
+    try:
+        link.symlink_to(target, target_is_directory=True)
+    except OSError as exc:
+        if sys.platform == "win32" and exc.winerror == 1314:
+            pytest.skip(
+                "Creating symlinks requires Windows developer mode or privilege"
+            )
+        raise
+
+
+@pytest.mark.parametrize("relative", ["venv", "src/venv"])
+def test_symlinked_venv_excluded(app: Path, relative: str):
+    _venv(app / ".external")
+    _symlink(app / relative, app / ".external")
+
+    assert find_default_excludes(app) == [".external", os.path.normpath(relative)]
+
+
+def test_each_symlinked_source_alias_is_scanned(app: Path):
+    _venv(app / ".external" / "env")
+    _touch(app / ".external" / "pkg" / "__pycache__" / "a.pyc")
+    _symlink(app / "src", app / ".external")
+    _symlink(app / "vendor" / "alias", app / ".external")
+
+    assert find_default_excludes(app) == sorted(
+        [".external"]
+        + [
+            os.path.join(alias, child)
+            for alias in ["src", os.path.join("vendor", "alias")]
+            for child in ["env", os.path.join("pkg", "__pycache__")]
+        ]
+    )
+
+
+@pytest.mark.parametrize("include", [[], ["src/back"]])
+def test_symlink_cycle_excluded_even_when_included(app: Path, include: list[str]):
+    _symlink(app / "src" / "back", app)
+
+    assert find_default_excludes(app, include=include) == [os.path.join("src", "back")]
+
+
+def test_symlink_to_nested_ancestor_excluded(app: Path):
+    _symlink(app / "src" / "pkg" / "back", app / "src")
+
+    assert find_default_excludes(app) == [os.path.join("src", "pkg", "back")]
+
+
+def test_explicit_excludes_prune_symlinked_sources(app: Path):
+    _venv(app / ".external" / "env")
+    _symlink(app / "src", app / ".external")
+
+    assert find_default_excludes(app, exclude=["src"]) == [".external"]
+
+
+def test_include_keeps_symlinked_venv(app: Path):
+    _venv(app / ".external")
+    _symlink(app / "venv", app / ".external")
+
+    assert find_default_excludes(app, include=["venv"]) == [
+        ".external",
+        os.path.join("venv", "lib", "site-packages", "pkg", "__pycache__"),
+    ]
