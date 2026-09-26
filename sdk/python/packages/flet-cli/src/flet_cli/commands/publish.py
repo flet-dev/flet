@@ -370,6 +370,7 @@ class Command(BaseCommand):
             pyodide_pre=options.pre,
             pyodide_script_path=str(script_path),
             pyodide_version=python_release.pyodide,
+            app_package_url=app_tar_gz_filename,
             # "canvaskit" default for the same reason as `flet build web`:
             # "auto" puts Chromium on dart2wasm/skwasm, whose JS <-> Dart
             # typed-data boundary costs are a large per-frame tax for

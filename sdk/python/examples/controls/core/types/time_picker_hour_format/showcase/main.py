@@ -38,6 +38,7 @@ def main(page: ft.Page):
     page.appbar = ft.AppBar(title="TimePickerHourFormat Showcase")
     page.add(
         ft.SafeArea(
+            expand=True,
             content=ft.Column(
                 controls=[
                     ft.Text("Open the picker to compare 12h, 24h, and system modes."),

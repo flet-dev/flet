@@ -97,6 +97,7 @@ class MatplotlibChartWithToolbar(ft.Column):
         self.msg = ft.Text()
         self.controls = [
             ft.Row(
+                wrap=True,
                 controls=[
                     self.home_btn,
                     self.back_btn,
@@ -106,7 +107,7 @@ class MatplotlibChartWithToolbar(ft.Column):
                     self.download_btn,
                     self.download_fmt,
                     self.msg,
-                ]
+                ],
             ),
             self.mpl,
         ]

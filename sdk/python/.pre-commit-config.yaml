@@ -31,5 +31,7 @@ repos:
         # Generated *.pbxproj files contain random hex UUIDs that typos
         # misreads as misspelled words; flet-mcp's icons.json vendors
         # Google's icon search tags, which deliberately include common
-        # misspellings for typo-tolerant search.
-        exclude: (/templates/|\.pbxproj$|flet_mcp/data/icons\.json$)
+        # misspellings for typo-tolerant search; and the generated icon
+        # name lists carry Flutter's own spelling, including a handful of
+        # upstream misspellings we cannot correct without breaking the API.
+        exclude: (/templates/|\.pbxproj$|flet_mcp/data/icons\.json$|icon-codepoints\.json$|controls/material/icons\.json$|controls/cupertino/cupertino_icons\.json$)

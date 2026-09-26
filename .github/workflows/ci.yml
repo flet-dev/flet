@@ -14,6 +14,8 @@ on:
       - 'sdk/python/packages/**'
       - 'sdk/python/templates/**'
       - 'packages/flet/**'
+      - 'tools/crocodocs/**'
+      - 'website/**'
       - '.fvmrc'
   pull_request:
     paths:
@@ -23,6 +25,8 @@ on:
       - 'sdk/python/packages/**'
       - 'sdk/python/templates/**'
       - 'packages/flet/**'
+      - 'tools/crocodocs/**'
+      - 'website/**'
       - '.fvmrc'
   workflow_dispatch:
 
@@ -90,6 +94,13 @@ jobs:
         run: |
           uv run .github/scripts/generate_icon_docs_images.py --verify
 
+      - name: Check icons are up to date
+        if: matrix.python-version == '3.12'
+        shell: bash
+        run: |
+          uv run .github/scripts/generate_icons.py --verify
+          uv run .github/scripts/generate_icon_fonts.py --verify
+
       - name: Run docs-coverage
         if: matrix.python-version == '3.12'
         shell: bash
@@ -156,7 +167,6 @@ jobs:
     runs-on: ubuntu-latest
     permissions:
       contents: read
-      id-token: write # Required for authentication using OIDC
     outputs:
       PKG_VER: ${{ steps.versions.outputs.PKG_VER }}
       BUILD_NUM: ${{ steps.versions.outputs.BUILD_NUM }}
@@ -177,9 +187,6 @@ jobs:
       - name: Compute versions
         id: versions
         run: source "${SCRIPTS}/update_build_version.sh"
-
-      - name: Setup Dart (OIDC for pub.dev)
-        uses: dart-lang/setup-dart@65eb853c7ba17dde3be364c3d2858773e7144260 # v1.7.2
 
       - name: Setup Flutter
         uses: kuhnroyal/flutter-fvm-config-action/setup@c378498f1d1962d33039c3989411093ef8a17b2c # v3.3
@@ -205,11 +212,41 @@ jobs:
         working-directory: packages/flet
         run: dart pub publish --dry-run
 
+  # Only release-tag runs can request publishing credentials. Tests and dry runs
+  # stay in the read-only build job above.
+  publish_flet_package:
+    name: Publish Flet Flutter package
+    needs: build_flet_package
+    if: ${{ github.event_name == 'push' && github.ref_type == 'tag' && !contains(github.ref_name, '.dev') }}
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      id-token: write
+    steps:
+      - name: Checkout release
+        uses: actions/checkout@df4cb1c069e1874edd31b4311f1884172cec0e10 # v6.0.3
+        with:
+          ref: ${{ github.sha }}
+          persist-credentials: false
+
+      - name: Setup Flutter
+        uses: kuhnroyal/flutter-fvm-config-action/setup@c378498f1d1962d33039c3989411093ef8a17b2c # v3.3
+        with:
+          path: '.fvmrc'
+          cache: false
+
+      - name: Resolve dependencies
+        working-directory: packages/flet
+        run: flutter pub get
+
+      - name: Setup Dart (OIDC for pub.dev)
+        uses: dart-lang/setup-dart@65eb853c7ba17dde3be364c3d2858773e7144260 # v1.7.2
+
       - name: Publish to pub.dev
-        if: ${{ github.ref_type == 'tag' && !contains(github.ref_name, '.dev') }}
         shell: bash
         working-directory: packages/flet
-        run: dart pub publish -f
+        # setup-dart changes PATH; keep publishing with Flutter's bundled Dart SDK.
+        run: '"${FLUTTER_ROOT}/bin/dart" pub publish -f'
 
   # ==================
   # Package templates

@@ -33,6 +33,7 @@ def main(page: ft.Page):
     page.appbar = ft.AppBar(title="Axis Showcase")
     page.add(
         ft.SafeArea(
+            expand=True,
             content=ft.Column(
                 controls=[
                     ft.Text("Compare horizontal vs vertical segment layout."),
@@ -45,7 +46,7 @@ def main(page: ft.Page):
                         controls=[showcase_card(axis) for axis in ft.Axis],
                     ),
                 ]
-            )
+            ),
         )
     )
 

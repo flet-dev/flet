@@ -177,7 +177,10 @@ class FletStaticFiles(StaticFiles):
 
         # "standard" web files
         web_dir = get_package_web_dir()
-        logger.info(f"Web root: {web_dir}")
+        if os.getenv("FLET_WEB_PATH"):
+            logger.info(f"Web root set via FLET_WEB_PATH: {web_dir}")
+        else:
+            logger.info(f"Web root: {web_dir}")
 
         if not os.path.exists(web_dir):
             raise RuntimeError(f"Web root path not found: {web_dir}")

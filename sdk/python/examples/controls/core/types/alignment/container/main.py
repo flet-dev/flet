@@ -6,7 +6,9 @@ def main(page: ft.Page):
 
     page.add(
         ft.SafeArea(
+            expand=True,
             content=ft.Column(
+                scroll=ft.ScrollMode.AUTO,
                 controls=[
                     ft.Row(
                         controls=[
@@ -37,8 +39,8 @@ def main(page: ft.Page):
                         ],
                         wrap=True,
                     )
-                ]
-            )
+                ],
+            ),
         )
     )
 

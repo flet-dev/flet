@@ -1015,12 +1015,8 @@ class DiffBuilder:
                         new_item, "fn", None
                     )
 
-                if (not frozen_local and old_item is new_item) or (
-                    frozen_local
-                    and old_item is not new_item
-                    and same_type
-                    and same_component_fn
-                    and _keys_match()
+                if old_item is new_item or (
+                    frozen_local and same_type and same_component_fn and _keys_match()
                 ):
                     self._compare_dataclasses(
                         parent, _path_join(path, idx), old_item, new_item, frozen_local
@@ -1137,6 +1133,14 @@ class DiffBuilder:
                 of relying on dirty/change tracking.
         """
         logger.debug("\n_compare_dataclasses: %s\n\n%s\n%s\n", path, src, dst)
+
+        if frozen and src is dst:
+            # Retained immutable children have no new description to reconcile.
+            # In particular, a Component must not migrate state to itself or
+            # render over its old body before that body can be diffed.
+            if parent is not None and parent is not dst:
+                dst._parent = weakref.ref(parent)
+            return
 
         if (
             self.control_cls

@@ -21,6 +21,7 @@ complexity = "intermediate"
 features = ["routing", "view stack", "pop views until", "result passing", "async"]
 
 [tool.flet]
+platforms = ["web"]
 org = "dev.flet"
 company = "Flet"
 copyright = "Copyright (C) 2023-2026 by Flet"

@@ -1,9 +1,8 @@
 ---
-hide:
-  - "toc"
+hide_table_of_contents: true
 title: "Icons"
 ---
 
-import {ClassAll} from '@site/src/components/crocodocs';
+import IconGallery from '@site/src/components/IconGallery';
 
-<ClassAll name="flet.Icons" separateSignature={false} membersOrder="source" groupByCategory={false} summary={{ attributes: false, functions: false }} />
+<IconGallery name="flet.Icons" set="material" />

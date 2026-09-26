@@ -1,5 +1,6 @@
-import flet as ft
 import flet.canvas as cv
+
+import flet as ft
 
 
 def showcase_card(style: ft.PaintingStyle) -> ft.Container:

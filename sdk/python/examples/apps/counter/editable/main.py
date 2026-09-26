@@ -5,14 +5,19 @@ ft.context.disable_auto_update()
 
 def main(page: ft.Page):
     page.title = "Counter"
-    txt_number = ft.TextField(value="0", text_align=ft.TextAlign.RIGHT, width=100)
+    txt_number = ft.TextField(
+        value="0",
+        text_align=ft.TextAlign.RIGHT,
+        width=100,
+        input_filter=ft.NumbersOnlyInputFilter(),
+    )
 
     def minus_click(e):
-        txt_number.value = str(int(txt_number.value) - 1)
+        txt_number.value = str(int(txt_number.value or 0) - 1)
         page.update()
 
     def plus_click(e):
-        txt_number.value = str(int(txt_number.value) + 1)
+        txt_number.value = str(int(txt_number.value or 0) + 1)
         page.update()
 
     page.add(

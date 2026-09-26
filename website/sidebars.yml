@@ -73,6 +73,7 @@ docs:
   Stay up to date:
     _index: updates/index.md
     Release notes: updates/release-notes.md
+    Migrating from 0.28 to 1.0: updates/migrate-to-1-0.md
     Breaking changes and deprecations:
       _index: updates/breaking-changes/index.md
       v1.0.0:
@@ -476,6 +477,7 @@ docs:
         - controls/charts/types/chartcirclepoint.md
         - controls/charts/types/chartcrosspoint.md
         - controls/charts/types/chartdatapointtooltip.md
+        - controls/charts/types/charterrorrange.md
         - controls/charts/types/charteventtype.md
         - controls/charts/types/chartgridlines.md
         - controls/charts/types/chartpointline.md

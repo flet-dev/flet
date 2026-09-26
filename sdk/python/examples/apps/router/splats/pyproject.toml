@@ -21,6 +21,7 @@ complexity = "basic"
 features = ["catch-all routes", "splat segments", "use_route_params"]
 
 [tool.flet]
+platforms = ["web"]
 org = "dev.flet"
 company = "Flet"
 copyright = "Copyright (C) 2023-2026 by Flet"

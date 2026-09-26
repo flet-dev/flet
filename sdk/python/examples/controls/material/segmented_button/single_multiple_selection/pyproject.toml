@@ -11,7 +11,7 @@ dependencies = ["flet"]
 dev = ["flet-cli", "flet-desktop", "flet-web"]
 
 [tool.flet.gallery]
-categories = ["Input/SegmentedButton"]
+categories = ["Buttons/SegmentedButton"]
 
 [tool.flet.metadata]
 title = "SegmentedButton single and multiple selection"

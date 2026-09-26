@@ -18,7 +18,7 @@ def main(page: ft.Page):
                     coordinates=e.coordinates,
                 )
             )
-        elif e.name == "secondary_tap":
+        elif e.name in ("secondary_tap", "long_press"):
             circle_layer.circles.append(
                 ftm.CircleMarker(
                     radius=random.randint(5, 10),
@@ -38,8 +38,8 @@ def main(page: ft.Page):
                 expand=True,
                 controls=[
                     ft.Text(
-                        "Click anywhere to add a Marker, right-click to add a "
-                        "CircleMarker."
+                        "Click anywhere to add a Marker, right-click (or long-press "
+                        "on mobile) to add a CircleMarker."
                     ),
                     ftm.Map(
                         expand=True,
@@ -50,6 +50,7 @@ def main(page: ft.Page):
                         ),
                         on_tap=handle_tap,
                         on_secondary_tap=handle_tap,
+                        on_long_press=handle_tap,
                         on_event=print,
                         layers=[
                             ftm.TileLayer(

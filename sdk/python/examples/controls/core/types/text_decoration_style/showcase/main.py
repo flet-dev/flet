@@ -41,6 +41,7 @@ def main(page: ft.Page):
     page.appbar = ft.AppBar(title="TextDecorationStyle Showcase")
     page.add(
         ft.SafeArea(
+            expand=True,
             content=ft.Column(
                 controls=[
                     ft.Text("Compare underline rendering for each decoration style."),

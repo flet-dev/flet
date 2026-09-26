@@ -72,7 +72,9 @@ def main(page: ft.Page):
     page.appbar = ft.AppBar(title="ScrollbarOrientation Showcase")
     page.add(
         ft.SafeArea(
+            expand=True,
             content=ft.Column(
+                scroll=ft.ScrollMode.AUTO,
                 controls=[
                     ft.Text(
                         "LEFT/RIGHT apply to vertical scrollables, TOP/BOTTOM apply to "

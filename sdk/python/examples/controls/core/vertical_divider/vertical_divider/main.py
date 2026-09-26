@@ -4,9 +4,9 @@ import flet as ft
 def main(page: ft.Page):
     page.add(
         ft.SafeArea(
+            expand=True,
             content=ft.Row(
-                width=180,
-                height=100,
+                expand=True,
                 spacing=0,
                 controls=[
                     ft.Container(

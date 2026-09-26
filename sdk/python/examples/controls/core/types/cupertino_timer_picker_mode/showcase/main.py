@@ -27,6 +27,7 @@ def main(page: ft.Page):
     page.appbar = ft.AppBar(title="CupertinoTimerPickerMode Showcase")
     page.add(
         ft.SafeArea(
+            expand=True,
             content=ft.Column(
                 controls=[
                     ft.Text("Compare timer picker layouts."),

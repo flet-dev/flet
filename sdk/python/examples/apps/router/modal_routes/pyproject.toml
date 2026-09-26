@@ -23,6 +23,7 @@ complexity = "intermediate"
 features = ["modal routes", "fullscreen_dialog", "manage_views", "global modal", "local modal"]
 
 [tool.flet]
+platforms = ["web"]
 org = "dev.flet"
 company = "Flet"
 copyright = "Copyright (C) 2023-2026 by Flet"

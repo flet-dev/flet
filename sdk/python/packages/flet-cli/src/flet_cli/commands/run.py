@@ -1,4 +1,5 @@
 import argparse
+import logging
 import os
 import platform
 import signal
@@ -207,6 +208,11 @@ class Command(BaseCommand):
             options: Parsed command options produced by :meth:`add_arguments`.
         """
 
+        if options.verbose > 0:
+            logging.basicConfig(
+                level=logging.DEBUG if options.verbose > 1 else logging.INFO
+            )
+
         from flet.utils.pip import (
             ensure_flet_desktop_package_installed,
             ensure_flet_web_package_installed,
@@ -350,6 +356,7 @@ class Command(BaseCommand):
             flet_app_data_dir=str(flet_app_data_dir),
             flet_app_cache_dir=str(flet_app_cache_dir),
             flet_app_temp_dir=str(flet_app_temp_dir),
+            verbose=options.verbose,
         )
 
         my_observer = Observer()
@@ -401,6 +408,7 @@ class Handler(FileSystemEventHandler):
         flet_app_data_dir,
         flet_app_cache_dir,
         flet_app_temp_dir,
+        verbose,
     ) -> None:
         super().__init__()
         self.args = args
@@ -425,6 +433,7 @@ class Handler(FileSystemEventHandler):
         self.flet_app_data_dir = flet_app_data_dir
         self.flet_app_cache_dir = flet_app_cache_dir
         self.flet_app_temp_dir = flet_app_temp_dir
+        self.verbose = verbose
         self.terminate = threading.Event()
         self.start_process()
 
@@ -453,7 +462,16 @@ class Handler(FileSystemEventHandler):
             p_env["FLET_SERVER_UDS_PATH"] = self.uds_path
         if self.assets_dir is not None:
             p_env["FLET_ASSETS_DIR"] = self.assets_dir
+        # The app runs with its cwd set to the storage directory below, so a
+        # relative path the user typed in their shell has to be resolved here
+        # while that meaning still holds.
+        web_path = p_env.get("FLET_WEB_PATH")
+        if web_path and not Path(web_path).is_absolute():
+            p_env["FLET_WEB_PATH"] = str(Path(web_path).resolve())
+
         p_env["FLET_DISPLAY_URL_PREFIX"] = self.page_url_prefix
+        if self.verbose > 0:
+            p_env["FLET_LOG_LEVEL"] = "debug" if self.verbose > 1 else "info"
 
         p_env["FLET_APP_STORAGE_DATA"] = self.flet_app_data_dir
         p_env["FLET_APP_STORAGE_CACHE"] = self.flet_app_cache_dir

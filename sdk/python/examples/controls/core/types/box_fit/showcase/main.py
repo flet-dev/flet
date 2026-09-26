@@ -37,6 +37,7 @@ def main(page: ft.Page):
     page.appbar = ft.AppBar(title="BoxFit Showcase")
     page.add(
         ft.SafeArea(
+            expand=True,
             content=ft.Column(
                 controls=[
                     ft.Text(
@@ -51,7 +52,7 @@ def main(page: ft.Page):
                         controls=[showcase_card(fit) for fit in ft.BoxFit],
                     ),
                 ]
-            )
+            ),
         )
     )
 

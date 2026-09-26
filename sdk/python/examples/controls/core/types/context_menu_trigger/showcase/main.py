@@ -65,6 +65,7 @@ async def main(page: ft.Page):
     page.appbar = ft.AppBar(title="ContextMenuTrigger Showcase")
     page.add(
         ft.SafeArea(
+            expand=True,
             content=ft.Column(
                 controls=[
                     ft.Text(

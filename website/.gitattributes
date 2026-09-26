@@ -1,2 +1,6 @@
 # Auto detect text files and perform LF normalization
 * text=auto
+
+# Generated icon webfonts. Without this the `text=auto` heuristic can decide a
+# WOFF2 is text and corrupt it with line-ending normalisation.
+*.woff2 binary

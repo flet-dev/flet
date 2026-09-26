@@ -17,6 +17,12 @@ paths.
 This page lists the guides created for each release.
 :::
 
+:::tip[Upgrading from 0.28.x?]
+The guides below cover one release each. Moving from **0.28.x** to 1.0 spans the
+whole 0.70 - 0.86 pre-release series, so start with
+[Migrating from Flet 0.28 to 1.0](../migrate-to-1-0.md) instead.
+:::
+
 ## By release
 
 The following guides are available. They're sorted by release, with the most recent release first.

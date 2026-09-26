@@ -71,6 +71,7 @@ def main(page: ft.Page):
                         controls=[
                             ft.Text("Scroll to:"),
                             ft.Row(
+                                scroll=ft.ScrollMode.AUTO,
                                 controls=[
                                     ft.Button(
                                         content="Section A",
@@ -88,7 +89,7 @@ def main(page: ft.Page):
                                         content="Section D",
                                         on_click=scroll_d,
                                     ),
-                                ]
+                                ],
                             ),
                         ]
                     ),

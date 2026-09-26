@@ -120,7 +120,7 @@ def main(page: ft.Page):
                         },
                         filled=True,
                         content_padding=20,
-                        width=200,
+                        width=240,
                         options=[
                             ft.DropdownOption(
                                 key="a",

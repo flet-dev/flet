@@ -43,6 +43,7 @@ def main(page: ft.Page):
     page.appbar = ft.AppBar(title="CupertinoDatePickerDateOrder Showcase")
     page.add(
         ft.SafeArea(
+            expand=True,
             content=ft.Column(
                 controls=[
                     ft.Text("Open each variant in CupertinoBottomSheet."),

@@ -11,13 +11,7 @@ Common examples include `numpy`, `cryptography`, and `pydantic`.
 Flet provides an alternative package index, [pypi.flet.dev](https://pypi.flet.dev),
 which hosts prebuilt Python binary wheels (`.whl` files used by `pip`) for iOS and Android platforms.
 
-:::danger[Work in progress]
-New packages are created by adding a recipe to the
-[Mobile Forge](https://github.com/flet-dev/mobile-forge) project.
-Currently, we author these recipes for you; once the build process
-is fully automated, you'll be able to submit a PR and test the
-compiled package immediately.
-
+:::tip[Need another package?]
 If a package is not available on [pypi.flet.dev](https://pypi.flet.dev),
 you can request it in [Flet discussions - Packages](https://github.com/flet-dev/flet/discussions/categories/packages).
 Please do not request "pure" Python packages. Check out this

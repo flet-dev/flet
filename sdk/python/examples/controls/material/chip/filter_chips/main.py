@@ -18,6 +18,9 @@ def main(page: ft.Page):
                         ]
                     ),
                     ft.Row(
+                        wrap=True,
+                        spacing=8,
+                        run_spacing=8,
                         controls=[
                             ft.Chip(
                                 label=ft.Text(amenity),
@@ -27,7 +30,7 @@ def main(page: ft.Page):
                                 on_select=handle_amenity_selection,
                             )
                             for amenity in amenities
-                        ]
+                        ],
                     ),
                 ]
             )

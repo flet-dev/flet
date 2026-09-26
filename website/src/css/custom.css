@@ -9,20 +9,42 @@
 
 /* You can override the default Infima variables here. */
 :root {
-  --ifm-color-primary: #0098da;
-  --ifm-color-primary-dark: #0089c4;
-  --ifm-color-primary-darker: #0081b9;
-  --ifm-color-primary-darkest: #006a99;
-  --ifm-color-primary-light: #00a7f0;
-  --ifm-color-primary-lighter: #00affb;
-  --ifm-color-primary-lightest: #1cbaff;
+  --flet-ink: #20212a;
+  --flet-muted: #62636f;
+  --flet-line: #e4e4eb;
+  --flet-soft: #f6f5f8;
+  --flet-accent: #e00050;
+  --flet-accent-soft: #fff0f6;
+  --flet-accent-line: #f0c9d9;
+  --flet-button: #e00050;
+  --flet-button-hover: #b80040;
 
-  --ifm-color-secondary: #f8f8f8;
+  --ifm-color-primary: #e00050;
+  --ifm-color-primary-dark: #ca0048;
+  --ifm-color-primary-darker: #be0044;
+  --ifm-color-primary-darkest: #9d0038;
+  --ifm-color-primary-light: #f60058;
+  --ifm-color-primary-lighter: #ff025c;
+  --ifm-color-primary-lightest: #ff2472;
+  --ifm-color-secondary: var(--flet-soft);
+  --ifm-font-color-base: var(--flet-ink);
+  --ifm-heading-color: var(--flet-ink);
+  --ifm-heading-font-weight: 700;
+  --flet-page-title-size: clamp(2.25rem, 1.5rem + 2vw, 3rem);
+  --ifm-background-color: #fff;
+  --ifm-background-surface-color: var(--flet-soft);
+  --ifm-footer-background-color: var(--flet-soft);
+  --ifm-footer-color: var(--flet-muted);
+  --ifm-footer-link-color: var(--flet-muted);
+  --ifm-footer-title-color: var(--flet-ink);
+  --ifm-toc-border-color: var(--flet-line);
+  --ifm-hr-background-color: var(--flet-line);
+  --ifm-global-radius: 8px;
 
   --ifm-code-font-size: 95%;
   --ifm-h4-font-size: 1.1rem;
 
-  --flet-link-color: #008dfb;
+  --flet-link-color: var(--flet-accent);
   --ifm-link-color: var(--flet-link-color);
   --ifm-navbar-link-hover-color: var(--flet-link-color);
 
@@ -53,7 +75,7 @@
 }
 
 .flet-hero h1 {
-  color: rgb(14, 165, 230);
+  color: var(--flet-accent);
   font-size: 60px;
   font-weight: 600;
   margin-top: 2rem;
@@ -82,6 +104,36 @@
 
 .header-github-link:hover {
   opacity: 0.6;
+}
+
+.header-github-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.header-github-stars {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  min-width: 58px;
+  font-size: 13px;
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+}
+
+.header-github-stars > span {
+  font-size: 17px;
+}
+
+.header-github-link > svg {
+  display: none;
+}
+
+@media (max-width: 996px) {
+  .navbar__item.header-github-link {
+    display: none;
+  }
 }
 
 .header-github-link::before {
@@ -473,11 +525,24 @@ h6 {
 
 /* Dark theme */
 html[data-theme='dark']:root {
-  --flet-link-color: #02aaf2;
-  --ifm-background-color: #181A21;
-  --ifm-navbar-background-color: #181A21;
-  --ifm-footer-background-color: #1f2127;
-  --ifm-color-secondary: #2f2f2f;
+  --flet-ink: #f0eef4;
+  --flet-muted: #aaa8b7;
+  --flet-line: #34323e;
+  --flet-soft: #282630;
+  --flet-accent: #ff4d91;
+  --flet-accent-soft: #301d2b;
+  --flet-accent-line: #613048;
+  --ifm-color-primary: #ff4d91;
+  --ifm-color-primary-dark: #ff2c7d;
+  --ifm-color-primary-darker: #ff1c73;
+  --ifm-color-primary-darkest: #e90059;
+  --ifm-color-primary-light: #ff6ea5;
+  --ifm-color-primary-lighter: #ff7eaf;
+  --ifm-color-primary-lightest: #ffafcd;
+  --ifm-background-color: #181a21;
+  --ifm-navbar-background-color: #181a21;
+  --ifm-footer-background-color: var(--flet-soft);
+  --ifm-color-secondary: var(--flet-soft);
   --docusaurus-highlighted-code-line-bg: rgb(76, 81, 90);
 }
 
@@ -486,7 +551,7 @@ html[data-theme='dark'] .navbar__title {
 }
 
 html[data-theme='dark'] .flet-hero h1 {
-  color: #3ba9fd;
+  color: var(--flet-accent);
 }
 
 html[data-theme='dark'] .hero__subtitle {
@@ -628,4 +693,141 @@ html[data-theme='dark'] .docusaurus-highlight-code-line {
    than it needs to be to be compared with the one beside it. */
 .icon-grid--pair table {
   max-width: 34rem;
+}
+
+/* Shared site chrome follows the same palette as the landing pages. */
+.navbar {
+  border-bottom: 1px solid var(--flet-line);
+  box-shadow: none;
+}
+
+.navbar__link {
+  font-size: 15px;
+  font-weight: 550;
+}
+
+h1, h2 {
+  letter-spacing: -.035em;
+}
+
+.button--primary,
+.control-demo,
+.code-example-try-online {
+  --ifm-button-background-color: var(--flet-button);
+  --ifm-button-border-color: var(--flet-button);
+  background-color: var(--flet-button);
+  color: #fff;
+}
+
+.button--primary:hover,
+.control-demo:hover,
+.code-example-try-online:hover {
+  --ifm-button-border-color: var(--flet-button-hover);
+  background-color: var(--flet-button-hover);
+  color: #fff;
+}
+
+.footer {
+  padding: 32px 0 24px;
+  border-top: 1px solid var(--flet-line);
+}
+
+.footer > .container {
+  width: min(1180px, calc(100% - 64px));
+  max-width: none;
+  padding: 0;
+}
+
+.footer__links {
+  display: grid;
+  grid-template-columns: repeat(5, minmax(0, 1fr));
+  gap: 32px;
+  margin: 0 0 24px;
+}
+
+.footer__col {
+  padding: 0;
+  margin: 0;
+  max-width: none;
+}
+
+.footer__title {
+  margin-bottom: 12px;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 1.6px;
+  text-transform: uppercase;
+}
+
+.footer__item {
+  font-size: 14px;
+  line-height: 1.6;
+  margin-bottom: 4px;
+}
+
+.footer__link-item:hover {
+  color: var(--flet-accent);
+}
+
+.footer__bottom {
+  padding-top: 18px;
+  border-top: 1px solid var(--flet-line);
+  text-align: left;
+  font-size: 12px;
+  color: var(--flet-muted);
+}
+
+@media (max-width: 760px) {
+  .footer {
+    padding-top: 28px;
+  }
+  .footer > .container {
+    width: calc(100% - 40px);
+  }
+  .footer__links {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 24px;
+    margin-bottom: 24px;
+  }
+}
+
+/* Use one title scale for content pages, independent of hero typography. */
+.mdx-page main h1,
+.theme-doc-markdown h1,
+.blog-post-page main h1,
+[class*='generatedIndexPage'] h1 {
+  font-size: var(--flet-page-title-size);
+  font-weight: 700;
+  line-height: 1.15;
+  letter-spacing: -.035em;
+  margin-bottom: 1.5rem;
+}
+
+/* The icon gallery draws with the fonts the Flet client itself renders with -
+   Flutter's MaterialIcons and the cupertino_icons package - so the docs cannot
+   show a glyph the app does not draw. Both are built by
+   `.github/scripts/generate_icon_fonts.py`.
+
+   Deliberately not folded into `.material-symbols-outlined` above: that rule
+   enables `liga`, and these fonts carry a ligature table keyed by the SDK's own
+   icon spelling rather than the Dart member names. Rendering by name through it
+   resolves only 6,412 of 8,825 icons and leaves the rest blank with no error,
+   so the gallery addresses glyphs by codepoint instead.
+
+   `font-display: block` rather than `swap`: there is no meaningful fallback for
+   a Private Use Area codepoint, and swap would flash a grid of tofu. */
+@font-face {
+  font-family: "Flet Material Icons";
+  font-style: normal;
+  font-weight: 400;
+  font-display: block;
+  src: url("../fonts/MaterialIcons-Regular.woff2") format("woff2");
+}
+
+@font-face {
+  font-family: "Flet Cupertino Icons";
+  font-style: normal;
+  font-weight: 400;
+  font-display: block;
+  src: url("../fonts/CupertinoIcons.woff2") format("woff2");
 }

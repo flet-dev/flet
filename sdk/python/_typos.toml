@@ -2,10 +2,15 @@
 # Generated Xcode project files contain random hex UUIDs that typos
 # misreads as misspelled words. flet-mcp's icons.json vendors Google's
 # icon search metadata, whose tags deliberately include common
-# misspellings for typo-tolerant search.
+# misspellings for typo-tolerant search. The icon name lists are generated
+# from Flutter's own `icons.dart` and carry its spelling, including a handful
+# of upstream misspellings we cannot correct without breaking the API.
 extend-exclude = [
     "*.pbxproj",
     "sdk/python/packages/flet-mcp/src/flet_mcp/data/icons.json",
+    "*icon-codepoints.json",
+    "*/controls/material/icons.json",
+    "*/controls/cupertino/cupertino_icons.json",
 ]
 
 [default.extend-words]

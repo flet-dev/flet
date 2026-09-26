@@ -152,24 +152,32 @@ def _fake_service():
     return svc
 
 
+def _attached_registry(session):
+    """Attach the registry while preparing the initial page patch."""
+    session.get_page_patch()
+    return session.page._services
+
+
 def test_register_service_preserves_unset_flag():
     session = _make_session()
-    registry = session.page._services
+    registry = _attached_registry(session)
 
-    with patch.object(registry, "update"):
+    with patch.object(registry, "update") as update:
         assert context.was_update_called() is False
         registry.register_service(_fake_service())
         assert context.was_update_called() is False
+    update.assert_called_once()
 
 
 def test_register_service_preserves_set_flag():
     session = _make_session()
-    registry = session.page._services
+    registry = _attached_registry(session)
 
-    with patch.object(registry, "update"):
+    with patch.object(registry, "update") as update:
         context.mark_update_called()
         registry.register_service(_fake_service())
         assert context.was_update_called() is True
+    update.assert_called_once()
 
 
 def test_unregister_services_preserves_unset_flag():

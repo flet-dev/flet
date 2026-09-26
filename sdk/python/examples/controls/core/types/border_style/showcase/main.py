@@ -35,6 +35,7 @@ def main(page: ft.Page):
     page.appbar = ft.AppBar(title="BorderStyle Showcase")
     page.add(
         ft.SafeArea(
+            expand=True,
             content=ft.Column(
                 controls=[
                     ft.Text(
@@ -49,7 +50,7 @@ def main(page: ft.Page):
                         controls=[showcase_card(style) for style in ft.BorderStyle],
                     ),
                 ]
-            )
+            ),
         )
     )
 

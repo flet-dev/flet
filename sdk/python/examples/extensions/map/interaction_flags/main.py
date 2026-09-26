@@ -86,7 +86,7 @@ def main(page: ft.Page):
                     ),
                     ft.ResponsiveRow(
                         controls=[
-                            ft.Container(col={"sm": 6, "md": 4}, content=c)
+                            ft.Container(col={"xs": 6, "sm": 6, "md": 4}, content=c)
                             for c in checkboxes
                         ]
                     ),

@@ -21,6 +21,7 @@ complexity = "intermediate"
 features = ["route loaders", "use_route_loader_data", "use_route_params"]
 
 [tool.flet]
+platforms = ["web"]
 org = "dev.flet"
 company = "Flet"
 copyright = "Copyright (C) 2023-2026 by Flet"

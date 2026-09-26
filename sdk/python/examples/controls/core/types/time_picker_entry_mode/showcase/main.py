@@ -35,6 +35,7 @@ def main(page: ft.Page):
     page.appbar = ft.AppBar(title="TimePickerEntryMode Showcase")
     page.add(
         ft.SafeArea(
+            expand=True,
             content=ft.Column(
                 controls=[
                     ft.Text("Open the picker to compare dial/input entry modes."),

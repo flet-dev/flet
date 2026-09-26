@@ -68,6 +68,7 @@ def main(page: ft.Page):
     page.appbar = ft.AppBar(title="BlurTileMode Showcase")
     page.add(
         ft.SafeArea(
+            expand=True,
             content=ft.Column(
                 controls=[
                     ft.Text("Compare blur edge sampling outside source bounds."),
@@ -80,7 +81,7 @@ def main(page: ft.Page):
                         controls=[showcase_card(mode) for mode in ft.BlurTileMode],
                     ),
                 ]
-            )
+            ),
         )
     )
 

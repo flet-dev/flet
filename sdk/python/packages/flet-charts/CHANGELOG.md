@@ -5,10 +5,17 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
+## 1.0.2
+
+### Fixed
+
+- Fixed `ScatterChart` failing to render when a `ScatterChartSpot` has `x_error` or `y_error` set. Error ranges are now set with the new `ChartErrorRange` type and drawn as error bars in the color of their spot ([#6885](https://github.com/flet-dev/flet/pull/6885)) by @ndonkoHenri.
+
 ## 1.0.0
 
 ### Fixed
 
+- Fixed `MatplotlibChartWithToolbar` controls being cropped on narrow screens by allowing the toolbar to wrap onto additional rows ([#6845](https://github.com/flet-dev/flet/pull/6845)) by @FeodorFitsner.
 - Fixed `import flet_charts` crashing when `matplotlib` (or `plotly`) is installed but fails to import. The optional-dependency guards caught only `ImportError`, so any other failure propagated and took the whole package down — notably on Android, where Flet ships site-packages inside a zip and matplotlib reading `mpl-data/matplotlibrc` through a real `__file__` path raises `NotADirectoryError`. Apps that merely imported `flet_charts` crashed at startup even if they never drew a matplotlib chart. The guards now degrade to "unavailable" for any import-time failure, and the deferred `ModuleNotFoundError` names the underlying cause by @ndonkoHenri.
 
 ## 0.85.0
