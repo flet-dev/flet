@@ -253,6 +253,22 @@ Throughout this documentation, the following placeholders are used:
   `uv run python -c "import flet; print(flet.__version__)"`.
 :::
 
+:::note[Platform-specific overrides]
+When a setting can be set both under `[tool.flet]` and under `[tool.flet.<PLATFORM>]`,
+the platform value wins whenever it is present. For list and table settings (such as
+`app.exclude`, `app.include`, `source_packages`, `dev_packages`, `target_arch`,
+`cleanup.app_files`, `cleanup.package_files` and `flutter.build_args`), an empty value
+clears the global one for that platform:
+
+```toml
+[tool.flet]
+source_packages = ["numpy"]
+
+[tool.flet.ios]
+source_packages = []    # no source builds on iOS
+```
+:::
+
 :::note[Understanding `pyproject.toml` structure]
 Flet loads `pyproject.toml` as a nested dictionary and looks up settings using
 dot-separated paths (for example, `tool.flet.web.base_url`).
@@ -1441,7 +1457,7 @@ The files and/or directories specified should be provided as relative
 paths to the [app path](#app-path) directory. Paths are matched exactly (no globs), and
 directories are excluded recursively.
 
-By default, the `build` directory is always excluded.
+The `build` directory is always excluded.
 Additionally, when the target_platform is web, the `assets`
 directory is always excluded.
 
@@ -1450,13 +1466,62 @@ directory is always excluded.
 <Tabs groupId="flet-build--pyproject-toml">
 <TabItem value="flet-build" label="flet build">
 ```bash
-flet build <target_platform> --exclude .git .venv
+flet build <target_platform> --exclude tests docs
 ```
 </TabItem>
 <TabItem value="pyproject-toml" label="pyproject.toml">
 ```toml
 [tool.flet.app]    # or [tool.flet.<PLATFORM>.app]
-exclude = [".git", ".venv"]
+exclude = ["tests", "docs"]
+```
+</TabItem>
+</Tabs>
+
+#### Default exclusions
+
+The following are also excluded by default, so development files are not shipped
+to end users:
+
+- Hidden files and directories directly in the [app path](#app-path): names
+  starting with `.` on all platforms (for example `.venv`, `.git`, `.flet`,
+  `.idea`, `.vscode`, `.env`), plus entries with the hidden attribute on Windows.
+  Hidden entries in subdirectories are packaged.
+- Virtual environments at any depth, detected by the `pyvenv.cfg` file that
+  `python -m venv`, `uv venv` and `virtualenv` create, whatever the directory
+  is named (for example `venv` or `env`).
+- `__pycache__` directories at any depth.
+
+`flet build` prints the default exclusions that matched something in your app.
+
+:::warning
+A `.env` file in the app path is not packaged by default. If your app loads it at
+runtime (for example with python-dotenv), keep it with `include`.
+:::
+
+To package some of these anyway, list them in `include`. Its value is determined
+in the following order of precedence:
+
+1. [`--include`](../cli/flet-build.md#--include) (can be used multiple times)
+2. `[tool.flet.<PLATFORM>.app].include` (type: list of strings)
+3. `[tool.flet.app].include` (type: list of strings)
+
+`include` only applies to default exclusions. It does not override `build`,
+`assets` on web, or anything listed in `exclude`.
+
+To turn default exclusions off entirely, use
+[`--no-default-excludes`](../cli/flet-build.md#--no-default-excludes) or set
+`default_excludes = false` under `[tool.flet.app]` (or `[tool.flet.<PLATFORM>.app]`).
+
+<Tabs groupId="flet-build--pyproject-toml">
+<TabItem value="flet-build" label="flet build">
+```bash
+flet build <target_platform> --include .env
+```
+</TabItem>
+<TabItem value="pyproject-toml" label="pyproject.toml">
+```toml
+[tool.flet.app]    # or [tool.flet.<PLATFORM>.app]
+include = [".env"]
 ```
 </TabItem>
 </Tabs>
