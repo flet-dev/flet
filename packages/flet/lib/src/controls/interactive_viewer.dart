@@ -7,6 +7,7 @@ import 'package:vector_math/vector_math_64.dart' show Matrix4, Quad, Vector3;
 
 import '../extensions/control.dart';
 import '../models/control.dart';
+import '../utils/alignment.dart';
 import '../utils/edge_insets.dart';
 import '../utils/events.dart';
 import '../utils/misc.dart';
@@ -158,7 +159,7 @@ class _InteractiveViewerControlState extends State<InteractiveViewerControl>
       scaleFactor: widget.control.getDouble("scale_factor", 200)!,
       clipBehavior:
           widget.control.getClipBehavior("clip_behavior", Clip.hardEdge)!,
-      alignment: widget.control.get("alignment"),
+      alignment: widget.control.getAlignment("alignment"),
       boundaryMargin:
           widget.control.getMargin("boundary_margin", EdgeInsets.zero)!,
       onInteractionStart: !widget.control.disabled
