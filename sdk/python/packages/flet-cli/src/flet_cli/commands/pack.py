@@ -13,12 +13,15 @@ from pathlib import Path
 import flet_cli.__pyinstaller.config as hook_config
 from flet.utils import is_linux, is_macos, is_windows
 from flet_cli.commands.base import BaseCommand
+from flet_cli.commands.options import PassThroughArgsAction
 
 
 class Command(BaseCommand):
     """
     Package a Flet application into a standalone desktop executable or app bundle
     using PyInstaller.
+
+    Arguments after `--` are passed down to PyInstaller.
 
     Detailed usage guide: https://flet.dev/docs/publish/using-pyinstaller
     """
@@ -152,9 +155,12 @@ class Command(BaseCommand):
         parser.add_argument(
             "--pyinstaller-build-args",
             dest="pyinstaller_build_args",
-            action="append",
+            action=PassThroughArgsAction,
+            example="--clean",
             nargs="*",
-            help="Additional raw arguments to the underlying pyinstaller build command",
+            help="Additional raw arguments to the underlying pyinstaller build "
+            "command. Attach an argument that starts with `-` using `=`, e.g. "
+            "`--pyinstaller-build-args=--clean`, or pass the arguments after `--`",
         )
         parser.add_argument(
             "-y",

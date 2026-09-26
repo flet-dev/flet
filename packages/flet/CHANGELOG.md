@@ -1,3 +1,7 @@
+## 1.0.2
+
+* Fix `Button`, `FilledButton`, `FilledTonalButton`, `OutlinedButton` and `TextButton` rendering an error box when `icon` is set without `content`. `ButtonControl` now uses the `.icon(...)` constructors only when both `icon` and `content` are provided; otherwise it builds the plain button with whichever one is set as its child, so icon-only buttons render the icon centered ([#6886](https://github.com/flet-dev/flet/issues/6886), [#6889](https://github.com/flet-dev/flet/pull/6889)) by @FeodorFitsner.
+
 ## 1.0.1
 
 _No changes in the `flet` Dart package; version bumped for release coordination with the Python-side fix for child components losing click events after wrapper re-renders ([#6857](https://github.com/flet-dev/flet/issues/6857), [#6859](https://github.com/flet-dev/flet/pull/6859))._
