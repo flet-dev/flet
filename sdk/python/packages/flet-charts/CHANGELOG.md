@@ -5,6 +5,12 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
+## 1.0.2
+
+### Fixed
+
+- Fixed `ScatterChart` failing to render when a `ScatterChartSpot` has `x_error` or `y_error` set. Error ranges are now set with the new `ChartErrorRange` type and drawn as error bars in the color of their spot ([#6885](https://github.com/flet-dev/flet/pull/6885)) by @ndonkoHenri.
+
 ## 1.0.0
 
 ### Fixed

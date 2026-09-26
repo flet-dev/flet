@@ -41,6 +41,34 @@ def _render_version(as_json: bool) -> str:
     return f"Flet: {flet.version.flet_version}\nFlutter: {flet.version.flutter_version}"
 
 
+class _PositionalsFixArgumentParser(argparse.ArgumentParser):
+    """
+    An `argparse.ArgumentParser` with the fix for CPython gh-59317 backported.
+
+    Before Python 3.12.7 and 3.13.1, `argparse` gives an optional positional its
+    default as soon as the positionals typed before an option run out, so one
+    typed after the option is rejected. `get_parser()` uses this class only on
+    those interpreters, and subparsers inherit it through `add_subparsers()`.
+    """
+
+    def _match_arguments_partial(self, actions, arg_strings_pattern):
+        """
+        Match positionals as Python 3.12.7+ and 3.13.1+ do: when the typed
+        positionals end at an option, the trailing positionals that matched
+        nothing are left unfilled, so positionals after the option can fill them.
+
+        The matched counts add up to the length of the matched pattern, so the
+        result is unchanged on interpreters whose `argparse` already does this.
+        """
+
+        result = super()._match_arguments_partial(actions, arg_strings_pattern)
+        matched = sum(result)
+        if matched < len(arg_strings_pattern) and arg_strings_pattern[matched] == "O":
+            while result and not result[-1]:
+                result.pop()
+        return result
+
+
 # Source https://stackoverflow.com/a/26379693
 def set_default_subparser(
     parser: argparse.ArgumentParser, name: str, args: list
@@ -88,9 +116,11 @@ def set_default_subparser(
 
 def get_parser() -> argparse.ArgumentParser:
     """Construct and return the CLI argument parser."""
-    parser = argparse.ArgumentParser(
-        formatter_class=argparse.RawDescriptionHelpFormatter
-    )
+    parser = (
+        _PositionalsFixArgumentParser
+        if sys.version_info < (3, 12, 7) or sys.version_info[:3] == (3, 13, 0)
+        else argparse.ArgumentParser
+    )(formatter_class=argparse.RawDescriptionHelpFormatter)
 
     # add version flags
     parser.add_argument(
@@ -138,9 +168,11 @@ def split_script_args(argv: list) -> tuple[list, Optional[list]]:
     """
     Split a command line at the first bare `--` separator.
 
-    Everything after the separator is meant for the app script, not for Flet
+    Everything after the separator is meant for the program the command runs -
+    the app script of `flet run`, pytest for `flet test`, Flutter for
+    `flet build` and `flet debug`, or PyInstaller for `flet pack` - not for Flet
     itself, so it must be removed before the parser (and `set_default_subparser`)
-    sees it - otherwise `flet run app.py -- --web` would be read as Flet's own
+    sees it. Otherwise `flet run app.py -- --web` would be read as Flet's own
     `--web` option, and `flet app.py -- build` would suppress the default `run`
     subcommand.
 
@@ -169,10 +201,14 @@ def parse_command_line(argv: list) -> argparse.Namespace:
 
     Returns:
         The parsed arguments. For `flet run`, `script_args` holds the arguments
-        to forward to the app script.
+        to forward to the app script, for `flet test`, `pytest_args` holds the
+        arguments to pass to pytest, for `flet build` and `flet debug`,
+        `flutter_build_args` holds the arguments to pass to Flutter, and for
+        `flet pack`, `pyinstaller_build_args` holds the arguments to pass to
+        PyInstaller.
     """
 
-    # pull off the arguments meant for the app script before the parser sees them
+    # pull off arguments meant for the program the command runs before parser sees them
     argv, script_args = split_script_args(argv)
 
     parser = get_parser()
@@ -195,14 +231,32 @@ def parse_command_line(argv: list) -> argparse.Namespace:
             )
         parser.error(message)
 
-    # forward the arguments that followed `--` to the app script
+    # forward the arguments that followed `--` to the program the command runs
     if script_args is not None:
-        if getattr(args, "command", None) != "run":
+        command = getattr(args, "command", None)
+        if command == "run":
+            args.script_args = list(args.script_args) + script_args
+        elif command == "test":
+            args.pytest_args = script_args
+        elif command in ("build", "debug"):
+            if script_args:
+                args.flutter_build_args = [
+                    *(args.flutter_build_args or []),
+                    script_args,
+                ]
+        elif command == "pack":
+            if script_args:
+                args.pyinstaller_build_args = [
+                    *(args.pyinstaller_build_args or []),
+                    script_args,
+                ]
+        else:
             parser.error(
-                "the `--` separator is only supported by `flet run`, to pass "
-                "the arguments that follow it to your app script"
+                "the `--` separator is only supported by commands that run "
+                "another program, which receives the arguments that follow it: "
+                "`flet run` (the app script), `flet test` (pytest), `flet build` "
+                "and `flet debug` (Flutter), and `flet pack` (PyInstaller)"
             )
-        args.script_args = list(args.script_args) + script_args
 
     return args
 

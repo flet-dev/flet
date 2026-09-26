@@ -4,67 +4,107 @@ title: "Introduction"
 
 # Flet Studio
 
-[Flet Studio](https://studio.flet.dev) is a browser-based editor for writing, running, saving and
-sharing Flet apps. Your Python code runs entirely in the browser via
-[Pyodide](https://pyodide.org/) — there is no Flet account required to try it, and no
-local install required to run something someone else built and shared with you.
+[Flet Studio](https://studio.flet.dev/) is an agentic workspace for
+building cross-platform apps in Python. Write code yourself or work with an AI
+agent, run your app alongside the editor, and share it with a link. No local
+installation is required.
 
-## Why it exists
+## Highlights
 
-Flet Studio started as a tool we wanted for ourselves and kept being useful for things
-we hadn't planned. In rough order:
+- **AI-assisted development.** Describe an app, ask for a feature, or get help
+  fixing a bug. The agent can read and edit project files, and its activity list
+  shows code changes as inline diffs.
+- **A browser IDE.** Edit Python, manage files in multi-file projects, and restore
+  previous versions. Sign in to save your projects and access them across devices.
+- **Live preview.** Run your app next to the editor and try out changes as you
+  build, without setting up Flet on your machine.
+- **Examples you can make your own.** Browse the
+  [gallery](https://studio.flet.dev/gallery) of 500+ examples, templates, and apps.
+  Open an example, fork it, and adapt it to your idea.
+- **Sharing.** Share public apps with a link so others can run them and explore
+  the code.
+- **Private projects.** Keep your apps and source code private while you work.
+- **Cloud packaging and publishing — coming soon.** Build app packages and
+  publish them from Studio without a local build environment.
 
-- **A playground that saves your work.** Unlike a transient REPL or a paste-and-run
-  sandbox, projects in Studio persist across sessions and across devices once you sign in.
-- **A way to share small apps via a link.** Send a colleague or someone on the Flet team a
-  URL and they can open, run, and read the code without setting anything up. Handy for
-  bug reports, design sketches, and "look at this control".
-- **A gallery of Flet examples that you can actually edit.** Browse examples, open one,
-  tweak it, fork it into your own project — same editor, same runtime.
-- **A zero-commitment way to try Flet.** Before `pip install flet`, before reading the
-  getting-started docs, you can write a few lines and see them run.
-- **A dogfooding project.** Studio's UI is itself a Flet app. Building it surfaces gaps
-  in Flet and ideas for improvements, which feed back into the framework.
-- **The base UI for future Flet services.** Cloud packaging and publishing are on the
-  roadmap — Studio is the surface those will plug into. (Today: editor only.)
+See [what's new](whats-new.md) for the latest improvements.
 
 ## How it works
 
-- **Your code runs in the browser.** Flet Studio uses [Pyodide](https://pyodide.org/) —
-  CPython compiled to WebAssembly — to execute your Python directly in the browser tab.
-  Nothing you write is sent to a server to be run.
-- **There is a Flet Studio backend, but it's only for the IDE itself** — file storage,
-  authentication, accounts, project metadata. Your app's Python code never executes on
-  our servers; it executes client-side, in your browser, in Pyodide.
-- **The rendering engine is the same one `flet publish` and `flet build web` produce.**
-  What you see in Studio is what you'd get from a published Flet static site — same
-  controls, same layout, same web runtime.
+1. **Start with an idea or an example.** Open Studio to try Flet, or browse the
+   gallery and open an app. Sign in to save your own work and use AI assistance.
+2. **Write code or ask the agent.** Edit project files directly, or describe what
+   you want the AI agent to build or change. Review its edits and iterate with
+   follow-up instructions.
+3. **Run and check your app.** The preview runs your Python code in the browser
+   using [Pyodide](https://pyodide.org/), a version of CPython compiled to
+   WebAssembly. Test the result alongside your code and make further changes.
+4. **Save, revisit, and share.** Keep working on your saved project, restore an
+   earlier version when needed, or share a public app's link with others.
 
-## Limitations
+### Where your code runs
 
-Studio inherits the constraints of running Python in the browser. Most of these are
-covered in more detail in the
-[static website publishing docs](../publish/web/static-website/index.md):
+Your app's Python code executes in the browser, not on Flet Studio's servers.
+It uses the same browser-based Flet runtime as a
+[published static Flet website](../publish/web/static-website/index.md).
 
-- **Pure-Python packages and Pyodide-built wheels only.** Most of the Python ecosystem
-  works, but packages with C/Rust extensions need a Pyodide build. See the
-  [Pyodide built-in packages list](https://pyodide.org/en/stable/usage/packages-in-pyodide.html).
-  Source-only sdists (no wheel) cannot be installed.
-- **Single browser thread.** No real threads. Long blocking work freezes the UI — prefer
-  async I/O.
-- **Browser sandbox.** No access to your local filesystem, no shell, no access to local
-  hardware that isn't exposed by the browser.
-- **Performance.** Pyodide is roughly 3×–5× slower than CPython for CPU-bound code.
-- **Cold start.** The first load fetches the Python runtime and any wheels you import,
-  so initial load is slower than a native install. Subsequent loads are cached.
+Studio's hosted services handle accounts, project files, version history, billing,
+and AI assistance. When you use the AI agent, your prompts, conversation history,
+and relevant project context are sent to AI model providers to generate a
+response. Running an app preview and using the AI agent are separate operations;
+browser-based execution does not mean all project data stays on your device.
+See the [Privacy Policy](privacy-policy.md) for details.
 
-## Does it replace local Flet development?
+## Frequently asked questions
 
-No.
+### Do I need an account or a paid plan?
 
-Studio is for trying Flet, prototyping small apps, sharing snippets, learning, and
-showing off ideas. For everything else — desktop and mobile builds, native packages,
-real multi-file projects, your favorite IDE and debugger, the full Python ecosystem
-without the Pyodide constraints above — install Flet locally and use `flet run` and
-`flet build`. See [installation](../getting-started/installation.md) when you're ready
-to make the jump.
+You can try Studio and run shared public apps without an account. Sign in to save
+projects and use the AI agent. Explorer is free and includes monthly AI credits
+and access to the Pro agent. Creator adds private apps, more credits, Expert agent
+access, and on-demand credit top-ups. Accounts with an existing wallet credit
+balance can also access Expert. See [pricing](/pricing) for current allowances.
+
+### Do I have to use AI?
+
+No. You can write and edit Python yourself, run your app, and use Studio's project
+and sharing tools without asking the AI agent. AI credits are used when you run
+the agent, not when you manually edit code or run an app preview.
+
+<a id="limitations"></a>
+
+### What are the limitations?
+
+Studio's app preview inherits the constraints of running Python in the browser:
+
+- **Package compatibility.** Pure-Python wheels and packages built for Pyodide
+  are supported. Packages with C or Rust extensions need a compatible Pyodide
+  build; source-only packages without a wheel cannot be installed in the browser.
+  See the [Pyodide package list](https://pyodide.org/en/stable/usage/packages-in-pyodide.html).
+- **Single-threaded execution.** Long-running CPU work and blocking calls can
+  freeze the UI. Prefer async I/O, or run heavy work on a server and call it
+  through an API.
+- **Browser sandbox.** Apps do not have unrestricted access to your local
+  filesystem, a shell, or hardware. Access depends on the APIs and permissions
+  available in the browser.
+- **Performance and startup.** CPU-heavy work can be slower than local Python.
+  The first load downloads the Python runtime and app dependencies; browser
+  caching can speed up later loads.
+
+See the [static website publishing guide](../publish/web/static-website/index.md)
+for more on the browser runtime and package compatibility.
+
+### Does it replace local Flet development?
+
+Studio and local development complement each other. Studio provides an accessible
+workspace for learning, prototyping, and building apps with multiple files,
+AI assistance, and shareable previews.
+
+Use local development when you need a native desktop or mobile runtime, packages
+that do not work with Pyodide, local tools and hardware, or your preferred IDE and
+debugger. Cloud packaging and publishing in Studio are still coming soon; for
+now, use `flet run` and `flet build` locally for those workflows. See
+[installation](../getting-started/installation.md) to get started.
+
+The Flet framework is free and open source. You do not need a paid Studio plan to
+develop or package Flet apps locally.
