@@ -16,6 +16,10 @@
 * Fix `--flutter-build-args` handing a value that starts with `-` to Flet instead of Flutter - `--flutter-build-args --verbose` turned on Flet's own verbose output - and overriding `build_args` from `pyproject.toml` with an empty list. Such an occurrence now fails with a hint to attach the value using `=`, e.g. `--flutter-build-args=--obfuscate` ([#6879](https://github.com/flet-dev/flet/pull/6879)) by @ndonkoHenri.
 * Fix `--pyinstaller-build-args` handing a value that starts with `-` to Flet instead of PyInstaller - `--pyinstaller-build-args -y` turned on Flet's own `-y` - or rejecting it as unrecognized. Such an occurrence now fails with a hint to attach the value using `=` or to pass it after `--` ([#6879](https://github.com/flet-dev/flet/pull/6879)) by @ndonkoHenri.
 
+### Other changes
+
+* Simplify HTTP request handling in `AuthorizationService` and `GitHubOAuthProvider` using HTTPX client methods and built-in JSON parsing ([#6870](https://github.com/flet-dev/flet/pull/6870)) by @osamalzabidi.
+
 ## 1.0.1
 
 ### Improvements
