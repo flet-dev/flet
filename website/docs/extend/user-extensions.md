@@ -24,7 +24,7 @@ Flet now makes it easy to create and build projects with your custom controls ba
 flet create --template extension --project-name flet-spinkit
 ```
 
-A project with new FletSpinkit control will be created. The control is just a Flutter Text widget with text property, which we will customize later.
+A project with new FletSpinkit control will be created. The control is just a Flutter Text widget with a `value` property, which we will customize later.
 
 **Step 3.** Build example app.
 
@@ -149,9 +149,10 @@ class FletSpinkitControl extends StatelessWidget {
 
 **Step 3.** Rebuild example app
 
-Go to `examples/flet_spinkit_example`, clear cache and rebuild your app:
+Go to `examples/flet_spinkit_example`, delete the previous build with [`flet clean`](../cli/flet-clean.md) and rebuild your app:
 
 ```
+flet clean
 flet build macos -v
 ```
 
@@ -168,7 +169,7 @@ After creating new Flet project from extension template, you will see the follow
 ├── mkdocs.yml
 ├── README.md
 ├── docs
-│   └── index.md
+│   ├── index.md
 │   └── FletSpinkit.md
 ├── examples
 │   └── flet_spinkit_example
@@ -183,20 +184,17 @@ After creating new Flet project from extension template, you will see the follow
     │   └── flet_spinkit.py
     └── flutter
         └── flet_spinkit
-            ├── CHANGELOG.md
-            ├── LICENSE
-            ├── README.md
             ├── lib
             │   ├── flet_spinkit.dart
             │   └── src
-            │       ├── create_control.dart
+            │       ├── extension.dart
             │       └── flet_spinkit.dart
             └── pubspec.yaml
 ```
 
 Flet extension consists of:
 * **package**, located in `src` folder
-* **example app**, located in `examples/flet-spinkit_example` folder
+* **example app**, located in `examples/flet_spinkit_example` folder
 * **docs**, located in `docs` folder
 
 ### Package
@@ -207,7 +205,7 @@ Package is the component that will be used in your app. It consists of two parts
 
 ##### flet_spinkit.py
 
-Defines the Python-side Flet control. `FletSpinkit` is registered with `@ft.control("flet_spinkit")` and inherits from `ft.LayoutControl`, which ties it to the Flutter `Control.type` handled in the extension. The class currently includes a value: str property and a placeholder docstring.
+Defines the Python-side Flet control. `FletSpinkit` is registered with `@ft.control("FletSpinkit")` and inherits from `ft.LayoutControl`, which ties it to the Flutter `Control.type` handled in the extension. The class currently includes a value: str property and a placeholder docstring.
 
 #### Flutter
 
@@ -224,7 +222,7 @@ Library entrypoint. Exports the public `Extension` class from `extension.dart`.
 
 ##### src/extension.dart
 
-Registers the extension with Flet. `Extension.createWidget` maps `Control.type` to the Flutter widget; currently maps "flet_spinkit" to FletSpinkitControl.
+Registers the extension with Flet. `Extension.createWidget` maps `Control.type` to the Flutter widget; currently maps "FletSpinkit" to FletSpinkitControl.
 
 ##### src/flet_spinkit.dart
 
@@ -247,7 +245,7 @@ Absolute path to your Flet extension folder, for example:
 ```
 dependencies = [
   "flet-spinkit @ file:///Users/user-name/projects/flet-spinkit",
-  "flet>=0.80.2",
+  "flet>=1.0.0",
 ]
 ```
 
@@ -257,8 +255,8 @@ Link to git repository, for example:
 
 ```
 dependencies = [
-  "flet-ads @ git+https://github.com/flet-dev/flet-ads.git",
-  "flet>=0.80.2",
+  "flet-spinkit @ git+https://github.com/flet-dev/flet-spinkit.git",
+  "flet>=1.0.0",
 ]
 ```
 
@@ -269,7 +267,7 @@ Name of the package published on pypi.org, for example:
 ```
 dependencies = [
   "flet-ads",
-  "flet>=0.80.2",
+  "flet>=1.0.0",
 ]
 ```
 
@@ -307,15 +305,15 @@ Generally, there are three types of controls in Flet:
 
 1. Visual controls that are added to the app/page surface, such as FletSpinkit.
 
-2. Dialog and other popup controls (dialogs, pickers, panels, etc.) that are opened from the page (for example, `page.open(dlg)`).
+2. Dialog and other popup controls (dialogs, pickers, panels, etc.) that are opened from the page (for example, `page.show_dialog(dlg)`).
 
-3. Services (Clipboard, Battery, Video, Audio, etc.) that are created as standalone instances and automatically registered with the page.
+3. Services (Clipboard, Battery, Audio, etc.) that are created as standalone instances and automatically registered with the page.
 
 When creating a visual control that should participate in layout (size, position, transforms, margin, etc.), define a dataclass-based control annotated with `@ft.control("control_name")` and inherit from [`LayoutControl`](../controls/layoutcontrol.md). In its Dart counterpart (`src/flet_spinkit.dart`), wrap your Flutter widget with `LayoutControl(...)`.
 
-When creating a dialog or other popup control (opened with `page.open(...)`), define a dataclass-based control annotated with `@ft.control("control_name")` and inherit from [`DialogControl`](../controls/dialogcontrol.md). In its Dart counterpart, show the dialog/popup (for example, `showDialog` or `showModalBottomSheet`) and return a placeholder widget like `SizedBox.shrink()` instead of wrapping with `LayoutControl(...)` or `BaseControl(...)`.
+When creating a dialog or other popup control (opened with `page.show_dialog(...)`), define a dataclass-based control annotated with `@ft.control("control_name")` and inherit from [`DialogControl`](../controls/dialogcontrol.md). In its Dart counterpart, show the dialog/popup (for example, `showDialog` or `showModalBottomSheet`) and return a placeholder widget like `SizedBox.shrink()` instead of wrapping with `LayoutControl(...)` or `BaseControl(...)`.
 
-When creating a service control (Clipboard, Battery, Video, Audio, etc.), define a dataclass-based control annotated with `@ft.control("control_name")` and inherit from [`Service`](../controls/service.md). In its Dart counterpart, implement `FletService` and register it via `FletExtension.createService` (no widget wrapper).
+When creating a service control (Clipboard, Battery, Audio, etc.), define a dataclass-based control annotated with `@ft.control("control_name")` and inherit from [`Service`](../controls/service.md). In its Dart counterpart, implement `FletService` and register it via `FletExtension.createService` (no widget wrapper).
 
 You can use all `LayoutControl`, `DialogControl`, and `Service` properties inherited by your dataclass-based control without re-declaring them as fields (unless you want to override defaults or metadata).
 
@@ -334,7 +332,13 @@ def main(page: ft.Page):
         ft.Stack(
             [
                 ft.Container(height=200, width=200, bgcolor=ft.Colors.BLUE_100),
-                FletSpinkit(opacity=0.5, tooltip="Spinkit tooltip", top=0, left=0),
+                FletSpinkit(
+                    value="FletSpinkit",
+                    opacity=0.5,
+                    tooltip="Spinkit tooltip",
+                    top=0,
+                    left=0,
+                ),
             ]
         )
     )
@@ -357,7 +361,7 @@ from typing import Optional
 
 import flet as ft
 
-@ft.control("flet_spinkit")
+@ft.control("FletSpinkit")
 class FletSpinkit(ft.LayoutControl):
     """
     FletSpinkit Control description.
@@ -509,6 +513,11 @@ class MyImageChart(ft.LayoutControl):
         # Optional: subscribe to bytes flowing Dart → Python.
         self._frames.on_bytes(self._on_frame_from_dart)
 
+    def will_unmount(self) -> None:
+        if self._frames is not None:
+            self._frames.close()
+        super().will_unmount()
+
     def push_frame(self, rgba_bytes: bytes) -> None:
         """Python → Dart — fire-and-forget byte send."""
         if self._frames is not None:
@@ -525,7 +534,7 @@ class MyImageChart(ft.LayoutControl):
 
 - `send(payload: bytes)` — Python → Dart, fire-and-forget
 - `on_bytes(callback: Callable[[bytes], None] | None)` — register a handler for bytes pushed from Dart; pass `None` to clear
-- `close()` — release the channel (idempotent; the framework auto-closes on control unmount, you rarely need to call it explicitly)
+- `close()` — release the channel (idempotent). It isn't closed automatically when the control unmounts, so close it in the control's `will_unmount()`
 
 The `ft.DataChannelOpenEvent` fields are `channel_name: str` and `channel_id: int`. The field is `channel_name`, not `name`, because `name` is reserved on the base `Event` class for the event's own name (`"data_channel_open"`).
 
@@ -575,7 +584,7 @@ class MyImageChartState extends State<MyImageChartWidget> {
 - `bool send(Uint8List bytes)` — Dart → Python, fire-and-forget
 - `void close()` — release the channel (idempotent)
 
-**Allocate the channel in `didChangeDependencies`, not `initState`** — `FletBackend.of(context)` needs an active `BuildContext` and that's the first lifecycle hook where it's safely available.
+`FletBackend.of(context)` doesn't subscribe the widget to changes, so the channel can be allocated in `initState` or, as above, in `didChangeDependencies` guarded to run once.
 
 Neither side imports `serious_python` or `dart_bridge`. The DataChannel API surface lives entirely in `package:flet` / `flet`, so your extension's dependencies stay the same.
 

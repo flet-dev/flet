@@ -6,7 +6,7 @@ import {Image} from '@site/src/components/crocodocs';
 
 The mechanics of drag-and-drop in Flet is pretty simple - a user starts dragging [`Draggable`](../controls/draggable.md)
 control and "drops" it on [`DragTarget`](../controls/dragtarget.md). If both draggable and drag target has the same `group` a
-drag target will call `on_accept` event handler and pass draggable control ID as event data. In this case draggable serves as a source "data" for drag-and-drop operation.
+drag target will call `on_accept` event handler and pass the draggable control as `e.src` (and its ID as `e.src_id`). In this case draggable serves as a source "data" for drag-and-drop operation.
 
 Let's take a look at the following example. In the program below you can drag left control displaying "1" on top of
 the right control displaying "0" and when drag operation completes left control is replaced with "0" and the right control becomes "1":
@@ -85,7 +85,7 @@ just "1" under cursor while dragging:
                         bgcolor=ft.Colors.CYAN_200,
                         border_radius=5,
                         content=ft.Text("1", size=20),
-                        alignment=ft.alignment.center,
+                        alignment=ft.Alignment.CENTER,
                     ),
                     content_when_dragging=ft.Container(
                         width=50,
@@ -124,7 +124,7 @@ def main(page: ft.Page):
     def drag_will_accept(e):
         # black border when it's allowed to drop and red when it's not
         e.control.content.border = ft.Border.all(
-            2, ft.Colors.BLACK_45 if e.data == "true" else ft.Colors.RED
+            2, ft.Colors.BLACK_45 if e.accept else ft.Colors.RED
         )
         e.control.update()
 
