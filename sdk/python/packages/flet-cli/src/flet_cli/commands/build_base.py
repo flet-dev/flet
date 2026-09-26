@@ -2661,7 +2661,10 @@ class BaseBuildCommand(BaseFlutterCommand):
             )
 
         exclude_list = list(dict.fromkeys(explicit_excludes + default_excludes))
-        package_args.extend(["--exclude", ",".join(exclude_list)])
+        # one flag per path: serious_python (>= 5.0.0) doesn't split values on
+        # commas, so paths containing `,` survive
+        for path in exclude_list:
+            package_args.extend(["--exclude", path])
 
         if default_excludes:
             console.log(
@@ -2740,12 +2743,11 @@ class BaseBuildCommand(BaseFlutterCommand):
                     value.strip() for value in cleanup_app_files.split(",")
                 ]
             if isinstance(cleanup_app_files, list):
-                package_args.extend(
-                    [
-                        "--cleanup-app-files",
-                        ",".join([v.strip() for v in cleanup_app_files if v.strip()]),
-                    ]
-                )
+                for glob_pattern in cleanup_app_files:
+                    if glob_pattern.strip():
+                        package_args.extend(
+                            ["--cleanup-app-files", glob_pattern.strip()]
+                        )
                 cleanup_app = True
 
         if cleanup_package_files := (
@@ -2757,14 +2759,11 @@ class BaseBuildCommand(BaseFlutterCommand):
                     value for value in cleanup_package_files.split(",")
                 ]
             if isinstance(cleanup_package_files, list):
-                package_args.extend(
-                    [
-                        "--cleanup-package-files",
-                        ",".join(
-                            [v.strip() for v in cleanup_package_files if v.strip()]
-                        ),
-                    ]
-                )
+                for glob_pattern in cleanup_package_files:
+                    if glob_pattern.strip():
+                        package_args.extend(
+                            ["--cleanup-package-files", glob_pattern.strip()]
+                        )
                 cleanup_packages = True
 
         if cleanup_app:
