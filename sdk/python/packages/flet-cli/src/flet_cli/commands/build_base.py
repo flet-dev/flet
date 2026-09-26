@@ -2655,7 +2655,8 @@ class BaseBuildCommand(BaseFlutterCommand):
             console.log(
                 "Excluded from app package by default: "
                 f"{', '.join(default_excludes)} "
-                "(use --include <path> or --no-default-excludes to package them)"
+                "(use --include <path> or --no-default-excludes to package them)",
+                markup=False,
             )
             env_files = [
                 p for p in default_excludes if p == ".env" or p.startswith(".env.")
@@ -2671,7 +2672,9 @@ class BaseBuildCommand(BaseFlutterCommand):
                 )
         if self.verbose > 0:
             console.log(
-                f"App package exclude list: {exclude_list}", style=verbose1_style
+                f"App package exclude list: {exclude_list}",
+                style=verbose1_style,
+                markup=False,
             )
 
         # source-packages
