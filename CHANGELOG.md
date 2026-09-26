@@ -92,6 +92,10 @@
 * Add `text_input_action` to `TextField` and `CupertinoTextField`, with the `TextInputAction` enum, to choose the action button of the onscreen keyboard: `TextInputAction.NEXT` moves focus to the next focusable control, keeping the keyboard open when that is another text field ([#6962](https://github.com/flet-dev/flet/issues/6962), [#7021](https://github.com/flet-dev/flet/pull/7021)) by @ndonkoHenri.
 * flet-audio: Add `Audio.context` (`AudioContext`, `AudioFocus`) to configure mobile audio focus and silent mode ([#7034](https://github.com/flet-dev/flet/issues/7034), [#7041](https://github.com/flet-dev/flet/pull/7041), [#7043](https://github.com/flet-dev/flet/pull/7043)) by @BartoszKog and @ndonkoHenri.
 
+* **`WebView` on Windows and Linux, and on every platform through `webview_all`.** `flet-webview` is now built on the [`webview_all`](https://pub.dev/packages/webview_all) Flutter package instead of `webview_flutter`, which adds Windows (Edge WebView2) and Linux (WebKitGTK) support. On web, its methods and events now work for same-origin pages and HTML loaded with `load_html()`, instead of only showing the initial `url`. Linux requires `libwebkit2gtk-4.1-0` (Debian 12, Ubuntu 22.04 and newer), so the prebuilt Linux desktop client includes `WebView` only in its `full` flavor ([#6530](https://github.com/flet-dev/flet/issues/6530), [#5934](https://github.com/flet-dev/flet/issues/5934)) by @ndonkoHenri.
+
+  **Compatibility:** on Debian 12, Ubuntu 22.04 and newer, the `full` Linux desktop client does not start unless `libwebkit2gtk-4.1-0` is installed, even for apps that do not use `WebView`. `flet build linux` of an app using `flet-webview` needs `libwebkit2gtk-4.1-dev` on the build machine.
+
 ### Improvements
 
 * Bump the bundled Flutter to [3.47.8](https://github.com/flutter/flutter/blob/stable/CHANGELOG.md#3478) (from 3.44.8). Android builds use Gradle 9.3.1, Android Gradle Plugin 8.13.2 and Kotlin 2.3.21 ([#6916](https://github.com/flet-dev/flet/pull/6916), [#7023](https://github.com/flet-dev/flet/pull/7023)) by @ndonkoHenri.

@@ -66,11 +66,17 @@ notes on what they are for:
   [`Video`](../controls/video/index.md#linux) control. You can omit them if your
   app does not play media, but installing the full set above avoids surprises.
   See those pages for control-specific details.
+- **WebView** — the [`WebView`](../controls/webview/index.md#linux) control also
+  needs `libwebkit2gtk-4.1-dev`, which is not in the list above because it is
+  unavailable before Debian 12 and Ubuntu 22.04. Install it with
+  `sudo apt install libwebkit2gtk-4.1-dev` if your app uses that control.
 
 :::note[Other distributions]
 Package names differ on non-Debian distributions (e.g. Fedora, Arch). Install
 the equivalent GTK 3, GStreamer, `mpv`/`libmpv`, `libsecret`, `clang`/`llvm`,
-`lld`, `cmake` and `ninja` development packages for your distribution.
+`lld`, `cmake` and `ninja` development packages for your distribution, and
+WebKitGTK 4.1 if your app uses the [`WebView`](../controls/webview/index.md#linux)
+control.
 :::
 
 ## `flet build linux`
@@ -519,7 +525,8 @@ on the machine doing the building. The `a | b` alternatives cover Ubuntu 24.04's
 rename of several libraries to `…t64`, so one package works on both. Add
 `libmpv2` and the GStreamer runtime packages if your app uses the
 [`Audio`](../services/audio/index.md#usage) service or the
-[`Video`](../controls/video/index.md#linux) control.
+[`Video`](../controls/video/index.md#linux) control, and `libwebkit2gtk-4.1-0` if
+it uses the [`WebView`](../controls/webview/index.md#linux) control.
 :::
 
 </TabItem>
@@ -636,6 +643,7 @@ echo $XDG_SESSION_TYPE   # "wayland" or "x11"
 | Build fails with a linker error                                                                                     | The `lld` linker is missing — it is part of the [prerequisites](#prerequisites): `sudo apt install lld` (or your distribution's equivalent) and rebuild.                                                                                                          |
 | CMake can't find `gtk+-3.0` or other packages                                                                       | One or more `-dev` [prerequisites](#prerequisites) are missing — install the full list (package names differ on non-Debian distributions).                                                                                                                        |
 | The built app won't start on users' machines: `error while loading shared libraries: libmpv…` (or GStreamer errors) | The [`Audio`](../services/audio/index.md#usage) service and [`Video`](../controls/video/index.md#linux) control link against system libraries — `mpv`/`libmpv` and GStreamer must also be installed on the machine *running* the app, not only the build machine. |
+| The built app won't start on users' machines: `error while loading shared libraries: libwebkit2gtk-4.1.so.0`        | The [`WebView`](../controls/webview/index.md#linux) control links against WebKitGTK, which must also be installed on the machine *running* the app: `sudo apt install libwebkit2gtk-4.1-0`. It is unavailable before Debian 12 and Ubuntu 22.04. |
 | Window positioning or centering has no effect                                                                       | The app is running in a Wayland session — see [Window positioning on Wayland](#window-positioning-on-wayland).                                                                                                                                                    |
 | The taskbar/dock shows a generic icon on Wayland                                                                    | Wayland resolves icons from an installed desktop entry, not from the window — install the bundle's `share/` files as described in [App icon](#app-icon).                                                                                                          |
 | The dock tooltip or app switcher shows the bundle ID instead of the app name                                        | The desktop entry is not installed, so the desktop environment has no name for the app and falls back to the app id — install the bundle's `share/` files as described in [App icon](#app-icon). |

@@ -36,13 +36,20 @@ on, has no Windows on ARM wheels for them.
 Flet supports Debian 10, 11 and 12 and Ubuntu 20.04, 22.04 and 24.04 LTS. On ARM64, Debian 10 isn't supported: the oldest supported release there is Debian 11 or Ubuntu 20.04.
 
 <details>
-<summary>Desktop flavor (audio & video support)</summary>
+<summary>Desktop flavor (audio, video and WebView support)</summary>
 
 On Linux, the Flet desktop client is available in two flavors: **full** and **light**.
 
-The **light** flavor (default on Linux) does not include the audio, video and Rive extensions,
-resulting in a smaller download. The **full** flavor bundles audio and video support out
-of the box, and Rive on Ubuntu 24.04 x86-64.
+The **light** flavor (default on Linux) does not include the audio, video, Rive and WebView
+extensions, resulting in a smaller download. The **full** flavor bundles audio and video support
+out of the box, Rive on Ubuntu 24.04 x86-64, and on Debian 12, Ubuntu 22.04 and newer also the
+[WebView](../controls/webview/index.md) control.
+
+On those distributions the **full** flavor does not start unless `libwebkit2gtk-4.1-0` is installed, even for apps that do not use `WebView`:
+
+```bash
+sudo apt install libwebkit2gtk-4.1-0
+```
 
 To select the flavor, either set the
 [`FLET_DESKTOP_FLAVOR`](../reference/environment-variables.md#flet_desktop_flavor)

@@ -12,7 +12,7 @@ dev = ["flet-cli", "flet-desktop", "flet-web"]
 
 [tool.flet.gallery]
 categories = ["Display/WebView"]
-platforms = ["macos", "ios", "android"]
+platforms = ["macos", "windows", "linux", "ios", "android"]
 
 [tool.flet.metadata]
 title = "WebView"

@@ -145,6 +145,8 @@ jobs:
           sudo apt update --allow-releaseinfo-change
           LINUX_DEPS="$(uv run --project sdk/python/packages/flet-cli flet --version --json | jq -r '.linux_dependencies | join(" ")')"
           sudo apt-get install -y --no-install-recommends $LINUX_DEPS
+          # For flet_webview; webkit2gtk-4.1 is absent before Debian 12 / Ubuntu 22.04
+          sudo apt-get install -y --no-install-recommends libwebkit2gtk-4.1-dev
           sudo apt-get clean
 
       # The released Windows client is signed, and `flet pack` must patch a

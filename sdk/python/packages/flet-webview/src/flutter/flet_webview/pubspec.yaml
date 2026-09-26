@@ -4,20 +4,28 @@ version: 0.1.0
 publish_to: none
 
 environment:
-  sdk: '>=3.2.3 <4.0.0'
-  flutter: ">=1.17.0"
+  sdk: '>=3.9.0 <4.0.0'
+  flutter: ">=3.35.0"
 
 dependencies:
   flutter:
     sdk: flutter
-  flutter_web_plugins:
-    sdk: flutter
 
   collection: ^1.16.0
-  webview_flutter: ^4.13.1
-  webview_flutter_android: ^4.7.0
-  webview_flutter_web: 0.2.3+4
-  webview_flutter_platform_interface: 2.14.0
+
+  # The webview_all packages depend on each other with caret constraints, so
+  # every one of them is pinned here to keep the whole set on a tested
+  # release. 1.4.0 is the oldest release that can share an app with
+  # webview_flutter (pulled in by google_mobile_ads via flet_ads): earlier
+  # releases register the same platform view type and channel names.
+  webview_all: 1.4.4
+  webview_all_android: 1.4.4
+  webview_all_linux: 1.4.4
+  webview_all_ohos: 1.4.4
+  webview_all_web: 1.4.4
+  webview_all_windows: 1.4.4
+  webview_all_wkwebview: 1.4.4
+  webview_platform_interface: 1.4.4
 
   flet:
     path: ../../../../../../../packages/flet

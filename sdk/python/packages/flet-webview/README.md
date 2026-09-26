@@ -12,8 +12,7 @@ A [Flet](https://flet.dev) extension for displaying web content in a WebView.
 >
 > Create, run, and share Python apps in your browser. Start from an example, write your own code, or get help from the AI agent. No installation required.
 
-It is based on the [webview_flutter](https://pub.dev/packages/webview_flutter)
-and [webview_flutter_web](https://pub.dev/packages/webview_flutter_web) Flutter packages.
+It is based on the [webview_all](https://pub.dev/packages/webview_all) Flutter package.
 
 ## Documentation
 
@@ -23,7 +22,11 @@ Detailed documentation to this package can be found [here](https://flet.dev/docs
 
 | Platform  | Windows | macOS | Linux | iOS | Android | Web |
 |-----------|---------|-------|-------|-----|---------|-----|
-| Supported | ❌       | ✅     | ❌     | ✅   | ✅       | ✅   |
+| Supported | ✅       | ✅     | ✅     | ✅   | ✅       | ✅   |
+
+Windows requires the Microsoft Edge WebView2 Runtime, and Linux requires `libwebkit2gtk-4.1-0`
+(Debian 12, Ubuntu 22.04 and newer). See the [documentation](https://flet.dev/docs/controls/webview/#requirements)
+for details.
 
 ## Usage
 
@@ -44,4 +47,4 @@ To install the `flet-webview` package and add it to your project dependencies:
 
 ### Examples
 
-For examples, see [these](https://github.com/flet-dev/flet/tree/main/sdk/python/examples/extensions/webview).
+For examples, see [these](https://github.com/flet-dev/flet/tree/main/sdk/python/examples/extensions/web_view).

@@ -32,7 +32,9 @@ import 'package:flet_spinkit/flet_spinkit.dart' as flet_spinkit;
 // --FAT_CLIENT_START--
 import 'package:flet_video/flet_video.dart' as flet_video;
 // --FAT_CLIENT_END--
+// --WEBVIEW_IMPORT_START--
 import 'package:flet_webview/flet_webview.dart' as flet_webview;
+// --WEBVIEW_IMPORT_END--
 import 'package:flutter/foundation.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_web_plugins/url_strategy.dart';
@@ -68,7 +70,9 @@ void main([List<String>? args]) async {
     flet_secure_storage.Extension(),
     flet_shadcn_ui.Extension(),
     flet_spinkit.Extension(),
+    // --WEBVIEW_EXTENSION_START--
     flet_webview.Extension(),
+    // --WEBVIEW_EXTENSION_END--
 
     // --FAT_CLIENT_START--
     // --RIVE_EXTENSION_START--

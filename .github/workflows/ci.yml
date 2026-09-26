@@ -469,6 +469,7 @@ jobs:
             build_arch: x64
             platform_arch: x86_64
             rive_enabled: false
+            webview_enabled: false
             title: Debian 10 AMD64
           - distro_id: debian12
             container: debian:12
@@ -478,6 +479,7 @@ jobs:
             build_arch: x64
             platform_arch: x86_64
             rive_enabled: false
+            webview_enabled: true
             title: Debian 12 AMD64
           - distro_id: debian12
             container: debian:12
@@ -487,6 +489,7 @@ jobs:
             build_arch: arm64
             platform_arch: aarch64
             rive_enabled: false
+            webview_enabled: true
             title: Debian 12 ARM64
           - distro_id: ubuntu20.04
             container: ubuntu:20.04
@@ -496,6 +499,7 @@ jobs:
             build_arch: x64
             platform_arch: x86_64
             rive_enabled: false
+            webview_enabled: false
             title: Ubuntu 20.04 AMD64
           - distro_id: ubuntu20.04
             container: ubuntu:20.04
@@ -505,6 +509,7 @@ jobs:
             build_arch: arm64
             platform_arch: aarch64
             rive_enabled: false
+            webview_enabled: false
             title: Ubuntu 20.04 ARM64
           - distro_id: ubuntu22.04
             container: ubuntu:22.04
@@ -514,6 +519,7 @@ jobs:
             build_arch: x64
             platform_arch: x86_64
             rive_enabled: false
+            webview_enabled: true
             title: Ubuntu 22.04 AMD64
           - distro_id: ubuntu22.04
             container: ubuntu:22.04
@@ -523,6 +529,7 @@ jobs:
             build_arch: arm64
             platform_arch: aarch64
             rive_enabled: false
+            webview_enabled: true
             title: Ubuntu 22.04 ARM64
           - distro_id: ubuntu24.04
             container: ubuntu:24.04
@@ -532,6 +539,7 @@ jobs:
             build_arch: x64
             platform_arch: x86_64
             rive_enabled: true
+            webview_enabled: true
             title: Ubuntu 24.04 AMD64
           - distro_id: ubuntu24.04
             container: ubuntu:24.04
@@ -541,6 +549,7 @@ jobs:
             build_arch: arm64
             platform_arch: aarch64
             rive_enabled: false
+            webview_enabled: true
             title: Ubuntu 24.04 ARM64
     env:
       PKG_VER: ${{ needs.build_flet_package.outputs.PKG_VER }}
@@ -552,6 +561,7 @@ jobs:
       DISTRO_ID: ${{ matrix.distro_id }}
       MANYLINUX_TAG: ${{ matrix.manylinux_tag }}
       RIVE_ENABLED: ${{ matrix.rive_enabled }}
+      WEBVIEW_ENABLED: ${{ matrix.webview_enabled }}
     steps:
       - name: Install base packages
         timeout-minutes: 15
@@ -620,6 +630,10 @@ jobs:
           fi
           apt-get update --allow-releaseinfo-change
           LINUX_DEPS="$(uv run --project sdk/python/packages/flet-cli flet --version --json | jq -r '.linux_dependencies | join(" ")')"
+          if [[ "$WEBVIEW_ENABLED" == "true" ]]; then
+            # For flet_webview; webkit2gtk-4.1 is absent before Debian 12 / Ubuntu 22.04
+            LINUX_DEPS="$LINUX_DEPS libwebkit2gtk-4.1-dev"
+          fi
           read -r -a linux_deps <<< "$LINUX_DEPS"
           apt-get install -y "${linux_deps[@]}"
 
@@ -656,6 +670,13 @@ jobs:
               sed -i '/--RIVE_CLIENT_START--/,/--RIVE_CLIENT_END--/d' pubspec.yaml
               sed -i '/--RIVE_IMPORT_START--/,/--RIVE_IMPORT_END--/d' lib/main.dart
               sed -i '/--RIVE_EXTENSION_START--/,/--RIVE_EXTENSION_END--/d' lib/main.dart
+            fi
+
+            if [[ "$WEBVIEW_ENABLED" != "true" || "$FLAVOR" == "light" ]]; then
+              # flet_webview links webkit2gtk-4.1 into the whole client, so it is kept out of light builds
+              sed -i '/--WEBVIEW_CLIENT_START--/,/--WEBVIEW_CLIENT_END--/d' pubspec.yaml
+              sed -i '/--WEBVIEW_IMPORT_START--/,/--WEBVIEW_IMPORT_END--/d' lib/main.dart
+              sed -i '/--WEBVIEW_EXTENSION_START--/,/--WEBVIEW_EXTENSION_END--/d' lib/main.dart
             fi
             echo "::endgroup::"
 
