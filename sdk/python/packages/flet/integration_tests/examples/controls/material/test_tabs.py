@@ -23,7 +23,7 @@ async def test_image_for_docs(flet_app_function: ftt.FletTestApp, request):
                             ft.Tab(label="Tab 2", icon=ft.Icons.SETTINGS),
                             ft.Tab(
                                 label=ft.CircleAvatar(
-                                    foreground_image_src="https://avatars.githubusercontent.com/u/102273996?s=200&amp;v=4",
+                                    foreground_image_src="https://raw.githubusercontent.com/flet-dev/media/98b6df65ba919f2afef284ba04feb2d78f28e1d1/pictures/avatar-flet.png",
                                 ),
                             ),
                         ]

@@ -2,6 +2,7 @@
 
 ### Improvements
 
+* Update serious_python to `5.0.0`. `flet build` now passes each exclude path and cleanup glob to it as a separate option, so paths containing commas are excluded correctly and brace globs such as `**/{tests,docs}` in a `cleanup.app_files` or `cleanup.package_files` list work ([serious-python#253](https://github.com/flet-dev/serious-python/pull/253), [#6890](https://github.com/flet-dev/flet/pull/6890)) by @FeodorFitsner.
 * Add `identifier` to `Semantics` so native accessibility tools and widget tests can match a stable ID (Android `resource-id`, iOS `accessibilityIdentifier`, web `flt-semantics-identifier`) instead of visible labels, plus `Tester.find_by_semantics_identifier()` ([#6832](https://github.com/flet-dev/flet/pull/6832)) by @mccre110.
 * `flet run` and `ft.run()` now print a warning with the desktop client's path when they use one from a previous `flet build` in `build/<platform>`, so an outdated client that lacks an extension is easy to spot ([#6821](https://github.com/flet-dev/flet/issues/6821)) by @ndonkoHenri.
 * `flet build` and `flet debug` pass the arguments that follow a `--` separator to Flutter, e.g. `flet build apk -- --obfuscate --split-debug-info=build/symbols`, as an alternative to repeating `--flutter-build-args` ([#6879](https://github.com/flet-dev/flet/pull/6879)) by @ndonkoHenri.
@@ -19,6 +20,10 @@
 * Fix `--android-extract-packages` keeping only the values of its last occurrence when repeated. Like the other list options of `flet build`, repeating it now adds to the list ([#6875](https://github.com/flet-dev/flet/pull/6875)) by @ndonkoHenri.
 * Fix `--flutter-build-args` handing a value that starts with `-` to Flet instead of Flutter - `--flutter-build-args --verbose` turned on Flet's own verbose output - and overriding `build_args` from `pyproject.toml` with an empty list. Such an occurrence now fails with a hint to attach the value using `=`, e.g. `--flutter-build-args=--obfuscate` ([#6879](https://github.com/flet-dev/flet/pull/6879)) by @ndonkoHenri.
 * Fix `--pyinstaller-build-args` handing a value that starts with `-` to Flet instead of PyInstaller - `--pyinstaller-build-args -y` turned on Flet's own `-y` - or rejecting it as unrecognized. Such an occurrence now fails with a hint to attach the value using `=` or to pass it after `--` ([#6879](https://github.com/flet-dev/flet/pull/6879)) by @ndonkoHenri.
+* Fix `flet build` packaging virtual environments, `.git`, `.flet` and other development files into the app. Hidden entries in the app root (a leading `.`, or the hidden attribute on Windows), virtual environments detected by `pyvenv.cfg`, and `__pycache__` directories are now excluded by default, and the build prints what was excluded ([#6839](https://github.com/flet-dev/flet/issues/6839), [#6890](https://github.com/flet-dev/flet/pull/6890)) by @FeodorFitsner.
+
+  **Compatibility:** `.env` and other dot-prefixed files in the app root are no longer packaged. Keep them with `--include .env` or `include = [".env"]` under `[tool.flet.app]`, or turn default exclusions off with `--no-default-excludes` / `default_excludes = false`. Apps built with earlier versions may already contain `.venv` or `.flet`.
+* Fix an empty list or table under `[tool.flet.<PLATFORM>]` falling back to the global `[tool.flet]` value. `app.exclude`, `source_packages`, `dev_packages`, `target_arch`, `extract_packages`, `cleanup.app_files`, `cleanup.package_files` and `flutter.build_args` now treat `[]` or `{}` in a platform section as "none for this platform" ([#6890](https://github.com/flet-dev/flet/pull/6890)) by @FeodorFitsner.
 
 ### Other changes
 

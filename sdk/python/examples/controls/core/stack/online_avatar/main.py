@@ -9,7 +9,7 @@ def main(page: ft.Page):
                 height=40,
                 controls=[
                     ft.CircleAvatar(
-                        foreground_image_src="https://avatars.githubusercontent.com/u/5041459?s=88&v=4"
+                        foreground_image_src="https://raw.githubusercontent.com/flet-dev/media/98b6df65ba919f2afef284ba04feb2d78f28e1d1/pictures/avatar-user.png"
                     ),
                     ft.Container(
                         alignment=ft.Alignment.BOTTOM_LEFT,

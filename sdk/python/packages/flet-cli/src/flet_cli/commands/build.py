@@ -208,11 +208,7 @@ class Command(BaseBuildCommand):
         if build_version:
             args.extend(["--build-name", build_version])
 
-        for arg in (
-            self.get_pyproject(f"tool.flet.{self.config_platform}.flutter.build_args")
-            or self.get_pyproject("tool.flet.flutter.build_args")
-            or []
-        ):
+        for arg in self.get_platform_setting("flutter.build_args", []):
             args.append(arg)
 
     def run_flutter(self):

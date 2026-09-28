@@ -37,7 +37,7 @@ async def test_foreground_image_src(flet_app: ftt.FletTestApp, request):
                 ft.CircleAvatar(foreground_image_src=base64_image),
                 ft.CircleAvatar(foreground_image_src=base64.b64decode(base64_image)),
                 ft.CircleAvatar(
-                    foreground_image_src="https://avatars.githubusercontent.com/u/5041459?s=88&v=4"  # noqa: E501
+                    foreground_image_src="https://raw.githubusercontent.com/flet-dev/media/98b6df65ba919f2afef284ba04feb2d78f28e1d1/pictures/avatar-user.png"  # noqa: E501
                 ),
             ],
         ),
@@ -57,7 +57,7 @@ async def test_background_image_src(flet_app: ftt.FletTestApp, request):
                 ft.CircleAvatar(background_image_src=base64_image),
                 ft.CircleAvatar(background_image_src=base64.b64decode(base64_image)),
                 ft.CircleAvatar(
-                    background_image_src="https://avatars.githubusercontent.com/u/5041459?s=88&v=4"  # noqa: E501
+                    background_image_src="https://raw.githubusercontent.com/flet-dev/media/98b6df65ba919f2afef284ba04feb2d78f28e1d1/pictures/avatar-user.png"  # noqa: E501
                 ),
             ],
         ),
