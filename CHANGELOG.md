@@ -1,3 +1,13 @@
+## 1.0.3
+
+### Improvements
+
+* Add `FletApp.wait_idle(idle_ms, timeout_ms)`: a host app can wait until an embedded app has rendered its UI and gone quiet - for example before taking a screenshot of it or reading its output after a restart. It returns `idle`, `error` (the app failed to start or crashed) or `timeout`, and costs nothing unless a call is pending by @FeodorFitsner.
+
+### Bug fixes
+
+* Fix `FletApp.on_error` not firing when the embedded app crashes in `main()` or in an event handler - the error only showed inside the embedded app. The host is now notified, as `on_error` documents by @FeodorFitsner.
+
 ## 1.0.2
 
 ### Improvements
