@@ -3,6 +3,7 @@
 ### Improvements
 
 * Add `FletApp.wait_idle(idle_ms, timeout_ms)`: a host app can wait until an embedded app has rendered its UI and gone quiet - for example before taking a screenshot of it or reading its output after a restart. It returns `idle`, `error` (the app failed to start or crashed) or `timeout`, and costs nothing unless a call is pending by @FeodorFitsner.
+* Add `TextField.on_paste_files`: pasted files (a screenshot, an image copied from a web page, files copied in the OS file manager) arrive as `name`, `mime_type` and `bytes`, e.g. to attach them to a chat message. On the web it uses the browser's paste event, so it works in every browser, Safari included, with no clipboard permission prompt; on desktop, `Ctrl`/`Cmd`+`V` reports a clipboard image by @FeodorFitsner.
 
 ### Bug fixes
 

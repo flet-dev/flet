@@ -1,9 +1,10 @@
+from dataclasses import dataclass
 from enum import Enum
 from typing import Annotated, Optional, Union
 
 from flet.controls.adaptive_control import AdaptiveControl
 from flet.controls.base_control import BaseControl, control, value
-from flet.controls.control_event import ControlEventHandler, EventHandler
+from flet.controls.control_event import ControlEventHandler, Event, EventHandler
 from flet.controls.core.autofill_group import AutofillHint
 from flet.controls.core.text import TextSelection, TextSelectionChangeEvent
 from flet.controls.material.form_field_control import FormFieldControl
@@ -23,10 +24,46 @@ __all__ = [
     "InputFilter",
     "KeyboardType",
     "NumbersOnlyInputFilter",
+    "PastedFile",
     "TextCapitalization",
     "TextField",
+    "TextFieldPasteFilesEvent",
     "TextOnlyInputFilter",
 ]
+
+
+@dataclass
+class PastedFile:
+    """
+    A file pasted into a :class:`~flet.TextField`.
+    """
+
+    name: str
+    """
+    File name, e.g. `"image.png"`. A pasted screenshot gets a generic name.
+    """
+
+    mime_type: str
+    """
+    MIME type reported by the platform, e.g. `"image/png"`; can be empty.
+    """
+
+    bytes: bytes
+    """
+    File contents.
+    """
+
+
+@dataclass
+class TextFieldPasteFilesEvent(Event["TextField"]):
+    """
+    Event emitted when files are pasted into a :class:`~flet.TextField`.
+    """
+
+    files: list[PastedFile]
+    """
+    The pasted files.
+    """
 
 
 class KeyboardType(Enum):
@@ -617,6 +654,20 @@ class TextField(FormFieldControl, AdaptiveControl):
 
     This can be triggered either by user interaction (selecting text or moving
     the caret) or programmatically (through the :attr:`selection` property).
+    """
+
+    on_paste_files: Optional[EventHandler[TextFieldPasteFilesEvent]] = None
+    """
+    Called when the user pastes files into the field, such as a screenshot or
+    an image copied from a web page or the OS file manager.
+
+    - Web: works in every browser, with no clipboard permission prompt. A
+      paste that carries files doesn't also insert text into the field.
+    - Desktop: `Ctrl`/`Cmd`+`V` reports an image on the clipboard; text is
+      pasted as usual.
+
+    Useful for attaching images to a chat message. Only the focused field
+    receives pasted files.
     """
 
     on_click: Optional[ControlEventHandler["TextField"]] = None
