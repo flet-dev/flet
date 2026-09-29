@@ -8,7 +8,7 @@ New features, improvements, and bug fixes in Flet Studio, listed in
 reverse-chronological order. Flet Studio ships independently of the Flet SDK — see
 [Flet release notes](../updates/release-notes.md) for SDK changes.
 
-## October 1, 2026
+## September 29, 2026
 
 * **The agent sees the app it builds.** While working on your request it can run
   the app in the Preview, read its Console and take a screenshot, so it catches and
