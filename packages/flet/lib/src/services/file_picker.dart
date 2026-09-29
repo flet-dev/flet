@@ -1,4 +1,3 @@
-import 'package:collection/collection.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/foundation.dart';
 import 'package:http/http.dart' as http;
@@ -141,24 +140,23 @@ class FilePickerService extends FletService {
         uploadUrl: u["upload_url"],
         method: u["method"]));
 
-    for (var uf in uploadFiles) {
-      var file = ((uf.id != null && uf.id! >= 0 && uf.id! < _files!.length)
-              ? _files![uf.id!]
-              : null) // by id
-          ??
-          _files!.firstWhereOrNull((f) => f.name == uf.name); // by name
+    final targets = resolveUploadTargets(uploadFiles.toList(), _files!);
 
+    for (var (uf, file) in targets) {
       if (file != null) {
         try {
           await uploadFile(
               file, getFullUploadUrl(pageUri, uf.uploadUrl), uf.method);
-          _files!.remove(file); // Remove the uploaded file
+          _files?.remove(file); // A picked file's stream is read only once.
         } catch (e) {
           sendProgress(file.name, null, e.toString());
         }
       } else {
         debugPrint(
             "FilePicker Error: File '${uf.name}' (id: ${uf.id}) not found.");
+        // Report it, or the caller waits forever for this file's upload.
+        sendProgress(
+            uf.name ?? "", null, "File not found among the picked files.");
       }
     }
   }

@@ -1,5 +1,6 @@
 import 'dart:typed_data';
 
+import 'package:collection/collection.dart';
 import 'package:file_picker/file_picker.dart';
 import 'enums.dart';
 
@@ -76,4 +77,23 @@ extension FilePickerParsers on Control {
   FileType? getFileType(String propertyName, [FileType? defaultValue]) {
     return parseFileType(get(propertyName), defaultValue);
   }
+}
+
+/// Pairs each requested upload with its picked file: by `id` (the file's
+/// index in the picked list), falling back to its name. Resolve all of them
+/// before uploading any - uploaded files are removed from the picked list,
+/// and removing while resolving shifted the ids: the second upload got the
+/// third file and the last one never uploaded.
+List<(FilePickerUploadFile, PlatformFile?)> resolveUploadTargets(
+    List<FilePickerUploadFile> uploads, List<PlatformFile> picked) {
+  return [
+    for (var uf in uploads)
+      (
+        uf,
+        ((uf.id != null && uf.id! >= 0 && uf.id! < picked.length)
+                ? picked[uf.id!]
+                : null) ??
+            picked.firstWhereOrNull((f) => f.name == uf.name)
+      )
+  ];
 }
