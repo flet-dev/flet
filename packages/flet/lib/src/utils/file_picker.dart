@@ -79,21 +79,20 @@ extension FilePickerParsers on Control {
   }
 }
 
-/// Pairs each requested upload with its picked file: by `id` (the file's
-/// index in the picked list), falling back to its name. Resolve all of them
-/// before uploading any - uploaded files are removed from the picked list,
-/// and removing while resolving shifted the ids: the second upload got the
-/// third file and the last one never uploaded.
-List<(FilePickerUploadFile, PlatformFile?)> resolveUploadTargets(
-    List<FilePickerUploadFile> uploads, List<PlatformFile> picked) {
+/// Reserves picked files for upload using their original selection IDs, falling
+/// back to names. Removes each target before any asynchronous upload starts:
+/// streams can only be consumed once, including after a failed upload, and must
+/// not be shared by duplicate requests or overlapping upload calls.
+List<(FilePickerUploadFile, PlatformFile?)> takeUploadTargets(
+    List<FilePickerUploadFile> uploads, Map<int, PlatformFile> picked) {
   return [
     for (var uf in uploads)
       (
         uf,
-        ((uf.id != null && uf.id! >= 0 && uf.id! < picked.length)
-                ? picked[uf.id!]
-                : null) ??
-            picked.firstWhereOrNull((f) => f.name == uf.name)
+        picked.remove(uf.id) ??
+            picked.remove(picked.entries
+                .firstWhereOrNull((entry) => entry.value.name == uf.name)
+                ?.key)
       )
   ];
 }
