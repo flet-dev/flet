@@ -1,0 +1,25 @@
+name: flet_shadcn_ui
+description: Flet shadcn/ui controls
+version: 0.1.0
+publish_to: none
+
+environment:
+  sdk: '>=3.11.0 <4.0.0'
+  flutter: ">=3.41.0"
+
+dependencies:
+  flutter:
+    sdk: flutter
+
+  shadcn_ui: ^0.57.1
+  # Exact pin: lib/src/utils/lucide_icons.dart is generated from this release
+  # by .github/scripts/generate_icons.py.
+  lucide_icons_flutter: 3.1.20
+
+  flet:
+    path: ../../../../../../../packages/flet
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  flutter_lints: ^3.0.0

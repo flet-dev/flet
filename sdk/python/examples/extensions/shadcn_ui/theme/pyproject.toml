@@ -1,0 +1,26 @@
+[project]
+name = "shadcn-ui-theme"
+version = "1.0.0"
+description = "Live color scheme switching for shadcn/ui controls via Theme."
+requires-python = ">=3.10"
+keywords = ["shadcn", "theme", "color scheme", "dropdown", "styling"]
+authors = [{ name = "Flet team", email = "hello@flet.dev" }]
+dependencies = ["flet", "flet-shadcn-ui"]
+
+[dependency-groups]
+dev = ["flet-cli", "flet-desktop", "flet-web"]
+
+[tool.flet.gallery]
+categories = ["Extensions/shadcn/ui"]
+
+[tool.flet.metadata]
+title = "shadcn/ui Theme"
+controls = ["SafeArea", "Column", "Row", "Dropdown", "Theme", "Button", "Checkbox", "Switch"]
+layout_pattern = "sections"
+complexity = "basic"
+features = ["theming", "color scheme switching"]
+
+[tool.flet]
+org = "dev.flet"
+company = "Flet"
+copyright = "Copyright (C) 2023-2026 by Flet"

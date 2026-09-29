@@ -1,0 +1,26 @@
+[project]
+name = "shadcn-ui-checkbox"
+version = "1.0.0"
+description = "Terms checkbox with label, sublabel and change callback."
+requires-python = ">=3.10"
+keywords = ["shadcn", "checkbox", "label", "sublabel", "toggle"]
+authors = [{ name = "Flet team", email = "hello@flet.dev" }]
+dependencies = ["flet", "flet-shadcn-ui"]
+
+[dependency-groups]
+dev = ["flet-cli", "flet-desktop", "flet-web"]
+
+[tool.flet.gallery]
+categories = ["Extensions/shadcn/ui"]
+
+[tool.flet.metadata]
+title = "shadcn/ui Checkbox"
+controls = ["SafeArea", "Column", "Text", "Checkbox"]
+layout_pattern = "form"
+complexity = "basic"
+features = ["change handling", "sublabel", "disabled state"]
+
+[tool.flet]
+org = "dev.flet"
+company = "Flet"
+copyright = "Copyright (C) 2023-2026 by Flet"

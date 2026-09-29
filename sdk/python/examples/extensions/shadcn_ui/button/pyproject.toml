@@ -1,0 +1,26 @@
+[project]
+name = "shadcn-ui-button"
+version = "1.0.0"
+description = "Button variants, sizes and Lucide icon buttons with click feedback."
+requires-python = ">=3.10"
+keywords = ["shadcn", "button", "variant", "size", "lucide", "icon"]
+authors = [{ name = "Flet team", email = "hello@flet.dev" }]
+dependencies = ["flet", "flet-shadcn-ui"]
+
+[dependency-groups]
+dev = ["flet-cli", "flet-desktop", "flet-web"]
+
+[tool.flet.gallery]
+categories = ["Extensions/shadcn/ui"]
+
+[tool.flet.metadata]
+title = "shadcn/ui Button"
+controls = ["SafeArea", "Column", "Row", "Text", "Button"]
+layout_pattern = "inline-actions"
+complexity = "basic"
+features = ["click handling", "variants", "sizes", "leading/trailing icons", "disabled state"]
+
+[tool.flet]
+org = "dev.flet"
+company = "Flet"
+copyright = "Copyright (C) 2023-2026 by Flet"

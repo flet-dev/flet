@@ -293,6 +293,14 @@ docs:
       SelectionArea: controls/selectionarea.md
       Semantics: controls/semantics.md
       Screenshot: controls/screenshot.md
+      shadcn/ui:
+        _index: controls/shadcnui/index.md
+        Theme: controls/shadcnui/theme.md
+        Button: controls/shadcnui/button.md
+        Card: controls/shadcnui/card.md
+        Checkbox: controls/shadcnui/checkbox.md
+        Input: controls/shadcnui/input.md
+        Switch: controls/shadcnui/switch.md
       ShaderMask: controls/shadermask.md
       Shimmer: controls/shimmer.md
       SpinKit:
@@ -626,6 +634,11 @@ docs:
         - services/securestorage/types/macosoptions.md
         - services/securestorage/types/iosoptions.md
         - services/securestorage/types/weboptions.md
+      - shadcn/ui:
+        - controls/shadcnui/types/buttonsize.md
+        - controls/shadcnui/types/buttonvariant.md
+        - controls/shadcnui/types/colorscheme.md
+        - controls/shadcnui/types/lucideicons.md
       - types/shapeborder.md
       - types/size.md
       - types/strutstyle.md

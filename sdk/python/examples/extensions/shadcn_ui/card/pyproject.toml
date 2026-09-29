@@ -1,0 +1,26 @@
+[project]
+name = "shadcn-ui-card"
+version = "1.0.0"
+description = "Create-project card with a name input and footer actions."
+requires-python = ">=3.10"
+keywords = ["shadcn", "card", "form", "input", "footer"]
+authors = [{ name = "Flet team", email = "hello@flet.dev" }]
+dependencies = ["flet", "flet-shadcn-ui"]
+
+[dependency-groups]
+dev = ["flet-cli", "flet-desktop", "flet-web"]
+
+[tool.flet.gallery]
+categories = ["Extensions/shadcn/ui"]
+
+[tool.flet.metadata]
+title = "shadcn/ui Card"
+controls = ["SafeArea", "Column", "Row", "Container", "Text", "Card", "Input", "Button"]
+layout_pattern = "form"
+complexity = "basic"
+features = ["card header", "footer actions", "form input"]
+
+[tool.flet]
+org = "dev.flet"
+company = "Flet"
+copyright = "Copyright (C) 2023-2026 by Flet"
