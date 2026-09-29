@@ -59,19 +59,16 @@ class _TabsControlState extends State<TabsControl>
     // Clamp the index to ensure it's within [0, length - 1]
     final selectedIndex = resolvedIndex.clamp(0, newLength - 1);
 
-    // If the number of tabs has changed, we must recreate the controller
+    // If the number of tabs has changed, we must recreate the controller.
+    // Start it at the incoming selected_index, not the old controller's
+    // index: user taps already sync selected_index, so it only differs when
+    // the app changed the selection in the same update - e.g. inserting a tab
+    // before the selected one and moving selected_index to follow it. Keeping
+    // the old index there selected the inserted tab instead.
     if (newLength != _tabController.length) {
-      // Save the current index before disposing the controller
-      int currentIndex = _tabController.index;
-
-      // Dispose of the old controller
       _tabController.dispose();
-
-      // Update selected_index so we can preserve the current selection
-      widget.control.updateProperties({"selected_index": currentIndex});
-
-      // Re-initialize the TabController with the new length
-      _initTabController(currentIndex);
+      widget.control.updateProperties({"selected_index": selectedIndex});
+      _initTabController(selectedIndex);
     }
 
     // If the selected tab has changed, animate to the new tab
