@@ -1,10 +1,10 @@
 ## 1.0.3
 
-* Add `FletBackend.waitIdle()` for embedded backends: completes with `idle` once the app has rendered and gone quiet, `error` if it crashes or fails to start, or `timeout`. `FletApp` gains `onBackendCreated` to reach the embedded backend, and the `FletApp` control answers a `wait_idle` method call. A crash in an embedded backend is now also reported to the host's `errorsHandler` by @FeodorFitsner.
-* Add a `paste_files` event to `TextField`: while a field with a handler is focused, files pasted into it are read from the browser's `paste` event on the web (`listenPastedFiles()`), or from the clipboard image on `Ctrl`/`Cmd`+`V` on desktop, and sent as `name`, `mime_type` and `bytes` by @FeodorFitsner.
-* Key each child `ControlWidget` built by `Control.buildWidgets()` with a new `ControlIdKey(control.id)`, so Flutter matches children by identity instead of position: a sibling inserted before a control, or one whose visibility changes, no longer rebuilds it and resets its state by @FeodorFitsner.
-* Fix `TabsControl` recreating its `TabController` at the old index when `length` and `selected_index` change in the same update by @FeodorFitsner.
-* Fix `FilePickerService` uploading picked files to the wrong URLs: picked files are kept by their selection id across `upload` calls, and each file is claimed before any upload starts (`takeUploadTargets()`). A file that can't be found reports an upload error by @FeodorFitsner.
+* Add `FletBackend.waitIdle()` for embedded backends: completes with `idle` once the app has rendered and gone quiet, `error` if it crashes or fails to start, or `timeout`. `FletApp` gains `onBackendCreated` to reach the embedded backend, and the `FletApp` control answers a `wait_idle` method call. A crash in an embedded backend is now also reported to the host's `errorsHandler` ([#6901](https://github.com/flet-dev/flet/pull/6901)) by @FeodorFitsner.
+* Add a `paste_files` event to `TextField`: while a field with a handler is focused, files pasted into it are read from the browser's `paste` event on the web (`listenPastedFiles()`), or from the clipboard image on `Ctrl`/`Cmd`+`V` on desktop, and sent as `name`, `mime_type` and `bytes` ([#6901](https://github.com/flet-dev/flet/pull/6901)) by @FeodorFitsner.
+* Key each child `ControlWidget` built by `Control.buildWidgets()` with a new `ControlIdKey(control.id)`, so Flutter matches children by identity instead of position: a sibling inserted before a control, or one whose visibility changes, no longer rebuilds it and resets its state ([#6901](https://github.com/flet-dev/flet/pull/6901)) by @FeodorFitsner.
+* Fix `TabsControl` recreating its `TabController` at the old index when `length` and `selected_index` change in the same update ([#6901](https://github.com/flet-dev/flet/pull/6901)) by @FeodorFitsner.
+* Fix `FilePickerService` uploading picked files to the wrong URLs: picked files are kept by their selection id across `upload` calls, and each file is claimed before any upload starts (`takeUploadTargets()`). A file that can't be found reports an upload error ([#6901](https://github.com/flet-dev/flet/pull/6901)) by @FeodorFitsner.
 
 ## 1.0.2
 
