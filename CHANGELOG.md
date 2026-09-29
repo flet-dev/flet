@@ -9,7 +9,7 @@
 
 * Fix `Tabs` ignoring a new `selected_index` set together with a new `length` - e.g. inserting a tab before the selected one and moving `selected_index` to follow it selected the inserted tab instead by @FeodorFitsner.
 * Fix controls losing their state (a `TextField` its focus and cursor, a list its scroll position) when a sibling before them in a `Column`, `Row` or other multi-child control became visible or hidden: children were matched by position, so the shift rebuilt them. Children are now matched by control id by @FeodorFitsner.
-* Fix `FilePicker.upload()` with several files uploading the wrong file to each URL: after the first upload, each file's `id` pointed at the next picked file, so a file's bytes went to another file's URL and the last file never uploaded (its caller waited forever). Files that can't be found now report an upload error by @FeodorFitsner.
+* Fix `FilePicker.upload()` with several files uploading the wrong file to each URL: after the first upload, each file's `id` pointed at the next picked file, so a file's bytes went to another file's URL and the last file never uploaded (its caller waited forever). Picked files now keep their `id` across `upload()` calls, and files that can't be found report an upload error by @FeodorFitsner.
 * Fix `FletApp.on_error` not firing when the embedded app crashes in `main()` or in an event handler - the error only showed inside the embedded app. The host is now notified, as `on_error` documents by @FeodorFitsner.
 
 ## 1.0.2
