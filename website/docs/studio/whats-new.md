@@ -34,10 +34,6 @@ reverse-chronological order. Flet Studio ships independently of the Flet SDK —
 * Fixed conversations that failed with an error on every message after a run
   was interrupted. Affected conversations recover on their own.
 * Long tasks no longer stop partway because the agent made too many steps.
-* The Preview no longer restarts twice at the end of an agent run that already ran
-  the app.
-* Removing an attachment before sending, or starting a new chat, deletes the
-  uploaded files.
 
 ## September 25, 2026
 
