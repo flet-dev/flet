@@ -11,10 +11,10 @@ dependencies = ["flet", "flet-shadcn-ui"]
 dev = ["flet-cli", "flet-desktop", "flet-web"]
 
 [tool.flet.gallery]
-categories = ["Extensions/shadcn/ui"]
+categories = ["Extensions/shadcn"]
 
 [tool.flet.metadata]
-title = "shadcn/ui Button"
+title = "shadcn Button"
 controls = ["SafeArea", "Column", "Row", "Text", "Button"]
 layout_pattern = "inline-actions"
 complexity = "basic"

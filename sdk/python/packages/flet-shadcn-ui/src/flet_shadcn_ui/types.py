@@ -5,7 +5,7 @@ __all__ = ["ButtonSize", "ButtonVariant", "ColorScheme"]
 
 class ColorScheme(Enum):
     """
-    Built-in shadcn/ui color schemes.
+    Built-in shadcn color schemes.
 
     Each scheme has a light and a dark variant; the variant is picked from
     :attr:`flet_shadcn_ui.Theme.brightness` or the page theme.

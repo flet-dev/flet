@@ -8,7 +8,7 @@ __all__ = ["Input"]
 @ft.control("ShadInput")
 class Input(ft.LayoutControl):
     """
-    A shadcn/ui text input.
+    A shadcn text input.
 
     Example:
     ```python

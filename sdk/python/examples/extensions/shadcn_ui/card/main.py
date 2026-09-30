@@ -4,12 +4,12 @@ import flet as ft
 
 
 def main(page: ft.Page):
-    page.title = "shadcn/ui Card"
+    page.title = "shadcn Card"
 
     def handle_create(e: ft.Event[shad.Button]):
         status.value = f"Created project '{name.value}'"
 
-    name = shad.Input(placeholder="Name of your project")
+    name = shad.Input(key="name", placeholder="Name of your project")
     status = ft.Text()
 
     page.add(

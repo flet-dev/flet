@@ -8,7 +8,7 @@ __all__ = ["Checkbox"]
 @ft.control("ShadCheckbox")
 class Checkbox(ft.LayoutControl):
     """
-    A shadcn/ui checkbox.
+    A shadcn checkbox.
 
     Example:
     ```python

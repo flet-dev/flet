@@ -293,7 +293,7 @@ docs:
       SelectionArea: controls/selectionarea.md
       Semantics: controls/semantics.md
       Screenshot: controls/screenshot.md
-      shadcn/ui:
+      shadcn:
         _index: controls/shadcnui/index.md
         Theme: controls/shadcnui/theme.md
         Button: controls/shadcnui/button.md
@@ -634,7 +634,7 @@ docs:
         - services/securestorage/types/macosoptions.md
         - services/securestorage/types/iosoptions.md
         - services/securestorage/types/weboptions.md
-      - shadcn/ui:
+      - shadcn:
         - controls/shadcnui/types/buttonsize.md
         - controls/shadcnui/types/buttonvariant.md
         - controls/shadcnui/types/colorscheme.md

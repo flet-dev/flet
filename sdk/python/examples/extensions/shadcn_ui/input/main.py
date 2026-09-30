@@ -4,7 +4,7 @@ import flet as ft
 
 
 def main(page: ft.Page):
-    page.title = "shadcn/ui Input"
+    page.title = "shadcn Input"
 
     def handle_change(e: ft.Event[shad.Input]):
         echo.value = f"Email: {e.control.value}"
@@ -20,6 +20,7 @@ def main(page: ft.Page):
                 width=320,
                 controls=[
                     shad.Input(
+                        key="email",
                         placeholder="Email",
                         keyboard_type=ft.KeyboardType.EMAIL,
                         leading=shad.LucideIcons.MAIL,

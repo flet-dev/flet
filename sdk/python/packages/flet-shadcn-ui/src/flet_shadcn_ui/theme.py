@@ -9,7 +9,7 @@ __all__ = ["Theme"]
 @ft.control("ShadTheme")
 class Theme(ft.LayoutControl):
     """
-    Applies a shadcn/ui theme to its :attr:`content`.
+    Applies a shadcn theme to its :attr:`content`.
 
     All `flet_shadcn_ui` controls inside :attr:`content` use this theme.
 

@@ -11,10 +11,10 @@ dependencies = ["flet", "flet-shadcn-ui"]
 dev = ["flet-cli", "flet-desktop", "flet-web"]
 
 [tool.flet.gallery]
-categories = ["Extensions/shadcn/ui"]
+categories = ["Extensions/shadcn"]
 
 [tool.flet.metadata]
-title = "shadcn/ui Switch"
+title = "shadcn Switch"
 controls = ["SafeArea", "Column", "Text", "Switch"]
 layout_pattern = "form"
 complexity = "basic"

@@ -11,10 +11,10 @@ dependencies = ["flet", "flet-shadcn-ui"]
 dev = ["flet-cli", "flet-desktop", "flet-web"]
 
 [tool.flet.gallery]
-categories = ["Extensions/shadcn/ui"]
+categories = ["Extensions/shadcn"]
 
 [tool.flet.metadata]
-title = "shadcn/ui Checkbox"
+title = "shadcn Checkbox"
 controls = ["SafeArea", "Column", "Text", "Checkbox"]
 layout_pattern = "form"
 complexity = "basic"

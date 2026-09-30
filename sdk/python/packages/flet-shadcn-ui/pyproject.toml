@@ -1,7 +1,7 @@
 [project]
 name = "flet-shadcn-ui"
 version = "0.1.0"
-description = "shadcn/ui components for Flet apps."
+description = "shadcn components for Flet apps."
 readme = "README.md"
 authors = [{ name = "Flet contributors", email = "hello@flet.dev" }]
 license = "Apache-2.0"
