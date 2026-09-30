@@ -21,10 +21,12 @@ class FletAppControl extends StatefulWidget {
 class _FletAppControlState extends State<FletAppControl> {
   final _errorsHandler = FletAppErrorsHandler();
   EmbeddedDartBridge? _dartBridge;
+  FletBackend? _backend;
 
   @override
   void initState() {
     super.initState();
+    widget.control.addInvokeMethodListener(_invokeMethod);
     // When this embedded app is addressed as `dartbridge://`, run it over an
     // in-process dart_bridge channel instead of a socket. The native port is
     // Dart-allocated, so we allocate it here and hand it to the host's Python
@@ -42,8 +44,24 @@ class _FletAppControlState extends State<FletAppControl> {
 
   @override
   void dispose() {
+    widget.control.removeInvokeMethodListener(_invokeMethod);
     _dartBridge?.dispose();
     super.dispose();
+  }
+
+  Future<dynamic> _invokeMethod(String name, dynamic args) async {
+    switch (name) {
+      case "wait_idle":
+        final backend = _backend;
+        if (backend == null) {
+          return {"status": "error", "error": "The embedded app isn't running."};
+        }
+        return backend.waitIdle(
+            idleMs: parseInt(args["idle_ms"], 300)!,
+            timeoutMs: parseInt(args["timeout_ms"], 30000)!);
+      default:
+        throw Exception("Unknown FletApp method: $name");
+    }
   }
 
   @override
@@ -88,6 +106,7 @@ class _FletAppControlState extends State<FletAppControl> {
             ? Map<String, dynamic>.from(widget.control.get("args"))
             : null,
         forcePyodide: widget.control.getBool("force_pyodide"),
+        onBackendCreated: (backend) => _backend = backend,
       ),
     );
   }

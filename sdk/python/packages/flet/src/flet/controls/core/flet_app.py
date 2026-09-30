@@ -108,3 +108,33 @@ class FletApp(LayoutControl):
     `force_pyodide=True`; root-level Pyodide pages have nowhere to
     bubble the event.
     """
+
+    async def wait_idle(
+        self, idle_ms: int = 300, timeout_ms: int = 30000
+    ) -> dict[str, Any]:
+        """
+        Waits until the embedded app has rendered its UI and gone quiet.
+
+        Useful for a host that needs to know when the embedded app is ready,
+        e.g. before taking a screenshot of it or reading its output after a
+        restart.
+
+        Args:
+            idle_ms: How long, in milliseconds, the embedded app must send no
+                UI updates after its first one to count as idle.
+            timeout_ms: Give up after this many milliseconds.
+
+        Returns:
+            A dict with `status` and `error`. `status` is `"idle"` once the
+            app sent at least one UI update, then none for `idle_ms`, and
+            that update is on screen; `"error"` if the app failed to start
+            or crashed (`error` holds the message; `on_error` fires as
+            well); `"timeout"` if it didn't settle within `timeout_ms`, for
+            example an app that updates continuously. A new call supersedes
+            a pending one, which returns `"timeout"`.
+        """
+        return await self._invoke_method(
+            "wait_idle",
+            arguments={"idle_ms": idle_ms, "timeout_ms": timeout_ms},
+            timeout=timeout_ms / 1000 + 5,
+        )
