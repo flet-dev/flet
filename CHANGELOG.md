@@ -7,6 +7,7 @@
 
 ### Bug fixes
 
+* Fix `Dropdown.expanded_insets` having no effect when `expand` is set ([#6895](https://github.com/flet-dev/flet/issues/6895), [#6896](https://github.com/flet-dev/flet/pull/6896)) by @xsalaices.
 * Fix `Tabs` ignoring a new `selected_index` set together with a new `length` - e.g. inserting a tab before the selected one and moving `selected_index` to follow it selected the inserted tab instead ([#6901](https://github.com/flet-dev/flet/pull/6901)) by @FeodorFitsner.
 * Fix controls losing their state (a `TextField` its focus and cursor, a list its scroll position) when a sibling before them in a `Column`, `Row` or other multi-child control became visible or hidden: children were matched by position, so the shift rebuilt them. Children are now matched by control id ([#6901](https://github.com/flet-dev/flet/pull/6901)) by @FeodorFitsner.
 * Fix `FilePicker.upload()` with several files uploading the wrong file to each URL: after the first upload, each file's `id` pointed at the next picked file, so a file's bytes went to another file's URL and the last file never uploaded (its caller waited forever). Picked files now keep their `id` across `upload()` calls, and files that can't be found report an upload error ([#6901](https://github.com/flet-dev/flet/pull/6901)) by @FeodorFitsner.
