@@ -46,6 +46,10 @@ class FletApp extends StatefulWidget {
   /// protocol channel.
   final DataChannelFactory? dataChannelFactory;
 
+  /// Called with the backend this widget creates, so an embedding control
+  /// can call into it (e.g. [FletBackend.waitIdle]).
+  final void Function(FletBackend backend)? onBackendCreated;
+
   const FletApp(
       {super.key,
       required this.pageUrl,
@@ -65,7 +69,8 @@ class FletApp extends StatefulWidget {
       this.tester,
       this.multiView = false,
       this.channelBuilder,
-      this.dataChannelFactory});
+      this.dataChannelFactory,
+      this.onBackendCreated});
 
   @override
   State<FletApp> createState() => _FletAppState();
@@ -84,7 +89,7 @@ class _FletAppState extends State<FletApp> {
   Widget build(BuildContext context) {
     return ChangeNotifierProvider<FletBackend>(
       create: (context) {
-        return FletBackend(
+        final created = FletBackend(
             bootScreenName: widget.bootScreenName ?? "flet",
             bootScreenOptions: widget.bootScreenOptions ?? const {},
             bootStatus: widget.bootStatus,
@@ -104,6 +109,8 @@ class _FletAppState extends State<FletApp> {
             dataChannelFactory: widget.dataChannelFactory,
             parentFletBackend:
                 Provider.of<FletBackend?>(context, listen: false));
+        widget.onBackendCreated?.call(created);
+        return created;
       },
       child: Selector<FletBackend, Control>(
         selector: (_, backend) => backend.page,

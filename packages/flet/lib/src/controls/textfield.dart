@@ -1,5 +1,7 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:pasteboard/pasteboard.dart';
 
 import '../models/control.dart';
 import '../utils/autofill.dart';
@@ -11,6 +13,8 @@ import '../utils/layout.dart';
 import '../utils/misc.dart';
 import '../utils/mouse.dart';
 import '../utils/numbers.dart';
+import '../utils/paste_files_web.dart'
+    if (dart.library.io) '../utils/paste_files_non_web.dart';
 import '../utils/platform.dart';
 import '../utils/text.dart';
 import '../utils/textfield.dart';
@@ -37,6 +41,7 @@ class _TextFieldControlState extends State<TextFieldControl> {
   String? _lastFocusValue;
   String? _lastBlurValue;
   TextSelection? _selection;
+  void Function()? _stopPasteListener;
 
   KeyEventResult _handleTextFieldKeyEvent(KeyEvent event,
       {required bool submitOnEnter}) {
@@ -46,6 +51,18 @@ class _TextFieldControlState extends State<TextFieldControl> {
         (event.logicalKey == LogicalKeyboardKey.arrowUp ||
             event.logicalKey == LogicalKeyboardKey.arrowDown)) {
       return KeyEventResult.handled;
+    }
+
+    // Ctrl/Cmd+V: report a clipboard image to `on_paste_files` (native;
+    // the web gets pasted files from the browser's paste event instead).
+    // The key still pastes text as usual.
+    if (!kIsWeb &&
+        event is KeyDownEvent &&
+        event.logicalKey == LogicalKeyboardKey.keyV &&
+        (HardwareKeyboard.instance.isMetaPressed ||
+            HardwareKeyboard.instance.isControlPressed) &&
+        widget.control.hasEventHandler("paste_files")) {
+      _pasteClipboardImage();
     }
 
     // submit on Enter if flag is set and shift is not pressed
@@ -87,6 +104,7 @@ class _TextFieldControlState extends State<TextFieldControl> {
     _shiftEnterfocusNode.removeListener(_onShiftEnterFocusChange);
     _shiftEnterfocusNode.dispose();
     _focusNode.removeListener(_onFocusChange);
+    _stopPasteListener?.call();
     widget.control.removeInvokeMethodListener(_invokeMethod);
     _focusNode.dispose();
     super.dispose();
@@ -102,14 +120,50 @@ class _TextFieldControlState extends State<TextFieldControl> {
     }
   }
 
+  void _sendPastedFiles(List<PastedFile> files) {
+    if (files.isEmpty || !widget.control.hasEventHandler("paste_files")) {
+      return;
+    }
+    widget.control.triggerEvent("paste_files", {
+      "files": files
+          .map((f) =>
+              {"name": f.name, "mime_type": f.mimeType, "bytes": f.bytes})
+          .toList()
+    });
+  }
+
+  Future<void> _pasteClipboardImage() async {
+    try {
+      final image = await Pasteboard.image;
+      if (image != null && image.isNotEmpty) {
+        _sendPastedFiles(
+            [(name: "image.png", mimeType: "image/png", bytes: image)]);
+      }
+    } catch (e) {
+      debugPrint("TextField: can't read a clipboard image: $e");
+    }
+  }
+
+  /// Web: listen to paste events only while focused and handled, so other
+  /// fields (and the rest of the page) keep the browser's default paste.
+  void _updatePasteListener(bool focused) {
+    _stopPasteListener?.call();
+    _stopPasteListener = null;
+    if (kIsWeb && focused && widget.control.hasEventHandler("paste_files")) {
+      _stopPasteListener = listenPastedFiles(_sendPastedFiles);
+    }
+  }
+
   void _onShiftEnterFocusChange() {
     _focused = _shiftEnterfocusNode.hasFocus;
+    _updatePasteListener(_focused);
     widget.control
         .triggerEvent(_shiftEnterfocusNode.hasFocus ? "focus" : "blur");
   }
 
   void _onFocusChange() {
     _focused = _focusNode.hasFocus;
+    _updatePasteListener(_focused);
     widget.control.triggerEvent(_focusNode.hasFocus ? "focus" : "blur");
   }
 
