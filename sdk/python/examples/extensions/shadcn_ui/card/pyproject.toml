@@ -11,10 +11,10 @@ dependencies = ["flet", "flet-shadcn-ui"]
 dev = ["flet-cli", "flet-desktop", "flet-web"]
 
 [tool.flet.gallery]
-categories = ["Extensions/shadcn"]
+categories = ["Extensions/Shadcn"]
 
 [tool.flet.metadata]
-title = "shadcn Card"
+title = "Shadcn Card"
 controls = ["SafeArea", "Column", "Row", "Container", "Text", "Card", "Input", "Button"]
 layout_pattern = "form"
 complexity = "basic"

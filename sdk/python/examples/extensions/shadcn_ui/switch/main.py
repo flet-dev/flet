@@ -4,7 +4,7 @@ import flet as ft
 
 
 def main(page: ft.Page):
-    page.title = "shadcn Switch"
+    page.title = "Shadcn Switch"
 
     def handle_change(e: ft.Event[shad.Switch]):
         status.value = f"Airplane mode is {'on' if e.control.value else 'off'}"

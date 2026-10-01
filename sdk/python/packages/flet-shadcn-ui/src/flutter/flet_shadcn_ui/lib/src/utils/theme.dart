@@ -20,7 +20,7 @@ ShadThemeData parseShadThemeData(Control control, BuildContext context) {
 
 /// Wraps [child] in a default [ShadTheme] if [context] has none.
 ///
-/// Every shadcn widget looks up [ShadTheme.of] and throws without one, and
+/// Every Shadcn widget looks up [ShadTheme.of] and throws without one, and
 /// Flet has no way to put a [ShadTheme] above the page, so each control
 /// provides a slate theme matching the page brightness as a fallback.
 Widget withShadTheme(BuildContext context, Widget child) {

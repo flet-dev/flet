@@ -1,14 +1,14 @@
 ---
 examples: "extensions/shadcn_ui"
-title: "shadcn"
+title: "Shadcn"
 ---
 
 import TabItem from '@theme/TabItem';
 import Tabs from '@theme/Tabs';
 
-# shadcn
+# Shadcn
 
-Controls styled after [shadcn](https://ui.shadcn.com), built on the Flutter
+Controls styled after [Shadcn](https://ui.shadcn.com), built on the Flutter
 [`shadcn_ui`](https://pub.dev/packages/shadcn_ui) package, plus the
 [Lucide](https://lucide.dev) icon set.
 

@@ -9,7 +9,7 @@ __all__ = ["Button"]
 @ft.control("ShadButton")
 class Button(ft.LayoutControl):
     """
-    A shadcn button.
+    A Shadcn button.
 
     Example:
     ```python

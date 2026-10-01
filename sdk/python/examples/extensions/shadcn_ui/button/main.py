@@ -4,7 +4,7 @@ import flet as ft
 
 
 def main(page: ft.Page):
-    page.title = "shadcn Button"
+    page.title = "Shadcn Button"
 
     def handle_click(e: ft.Event[shad.Button]):
         message.value = f"Clicked: {e.control.content}"

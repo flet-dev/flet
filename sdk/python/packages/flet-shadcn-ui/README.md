@@ -6,7 +6,7 @@
 [![docstring coverage](https://flet.dev/docs/assets/badges/docs-coverage/flet-shadcn-ui.svg)](https://flet.dev/docs/assets/badges/docs-coverage/flet-shadcn-ui.svg)
 [![license](https://img.shields.io/badge/License-Apache_2.0-green.svg)](https://github.com/flet-dev/flet/blob/main/sdk/python/packages/flet-shadcn-ui/LICENSE)
 
-A [Flet](https://flet.dev) extension package with [shadcn](https://ui.shadcn.com)-styled
+A [Flet](https://flet.dev) extension package with [Shadcn](https://ui.shadcn.com)-styled
 controls and [Lucide](https://lucide.dev) icons.
 
 It is based on the [shadcn_ui](https://pub.dev/packages/shadcn_ui) Flutter package.

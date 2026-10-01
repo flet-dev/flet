@@ -85,7 +85,7 @@ Without matching defaults, Dart receives `null` and either crashes or silently u
 - Use `<ClassSummary name="pkg.ClassName" />` and `<ClassMembers name="pkg.ClassName" />` JSX from `@site/src/components/crocodocs` to render API docs.
 - Include screenshots in the docs for every visual control (see "Example Tests and Docs Images" below). Only omit `image=`/`imageCaption=`/`imageWidth=` on `<ClassSummary>` for non-visual services or controls that cannot be screenshotted (continuously animating ones).
 - In the `## Examples` section, do NOT add `###` subtitles above `<CodeExample>` blocks — titles are injected automatically from the example file itself.
-- Add all custom enums/types docs and update `website/sidebars.yml` navigation.
+- Add all custom enums/types docs and update `website/sidebars.yml` navigation. List new extension controls under `Reference → Controls → Extensions` (alphabetically). Only an extension that brings its own design system gets its own folder next to Core/Material/Cupertino/Extensions, like `Shadcn`. See the "Sidebar Navigation" section of `.agents/skills/docs-conventions/SKILL.md`.
 - Use markdown filenames without underscores (`codeeditor.md`, not `code_editor.md`).
 - Add examples under `sdk/python/examples/extensions/<name>/` for extension controls.
 - Use `import flet_<ext> as <short_alias>` in examples (e.g., `import flet_spinkit as spins`). Keep alias short but readable.

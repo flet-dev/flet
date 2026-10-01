@@ -8,7 +8,7 @@ __all__ = ["Switch"]
 @ft.control("ShadSwitch")
 class Switch(ft.LayoutControl):
     """
-    A shadcn switch.
+    A Shadcn switch.
 
     Example:
     ```python

@@ -1,10 +1,10 @@
 import 'package:flet/flet.dart';
 import 'package:flutter/widgets.dart';
 
-/// Builds an icon or control property for a shadcn widget.
+/// Builds an icon or control property for a Shadcn widget.
 ///
 /// Icons given as `IconData` are rendered at 16 logical pixels, the size
-/// shadcn is designed around (`ShadApp` sets it through the Material icon
+/// Shadcn is designed around (`ShadApp` sets it through the Material icon
 /// theme, which Flet apps do not get).
 Widget? buildShadIconOrWidget(Control control, String propertyName) {
   final value = control.get(propertyName);

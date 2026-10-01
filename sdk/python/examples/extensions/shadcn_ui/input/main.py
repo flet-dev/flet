@@ -4,7 +4,7 @@ import flet as ft
 
 
 def main(page: ft.Page):
-    page.title = "shadcn Input"
+    page.title = "Shadcn Input"
 
     def handle_change(e: ft.Event[shad.Input]):
         echo.value = f"Email: {e.control.value}"

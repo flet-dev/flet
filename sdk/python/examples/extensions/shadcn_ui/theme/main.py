@@ -4,7 +4,7 @@ import flet as ft
 
 
 def main(page: ft.Page):
-    page.title = "shadcn Theme"
+    page.title = "Shadcn Theme"
 
     def handle_scheme_change(e: ft.Event[ft.Dropdown]):
         theme.color_scheme = shad.ColorScheme(e.control.value)

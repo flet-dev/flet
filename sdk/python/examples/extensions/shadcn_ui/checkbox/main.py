@@ -4,7 +4,7 @@ import flet as ft
 
 
 def main(page: ft.Page):
-    page.title = "shadcn Checkbox"
+    page.title = "Shadcn Checkbox"
 
     def handle_change(e: ft.Event[shad.Checkbox]):
         status.value = "Accepted" if e.control.value else "Not accepted"

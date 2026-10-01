@@ -4,7 +4,7 @@ import flet as ft
 
 
 def main(page: ft.Page):
-    page.title = "shadcn Card"
+    page.title = "Shadcn Card"
 
     def handle_create(e: ft.Event[shad.Button]):
         status.value = f"Created project '{name.value}'"

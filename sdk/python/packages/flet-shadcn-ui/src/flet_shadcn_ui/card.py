@@ -8,7 +8,7 @@ __all__ = ["Card"]
 @ft.control("ShadCard")
 class Card(ft.LayoutControl):
     """
-    A shadcn card with an optional header, content and footer.
+    A Shadcn card with an optional header, content and footer.
 
     Example:
     ```python
