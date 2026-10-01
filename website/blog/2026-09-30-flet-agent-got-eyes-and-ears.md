@@ -8,11 +8,10 @@ toc_max_heading_level: 2
 
 Building an AI agent is exciting. Seeing people actually use it and get the results they wanted
 is even more exciting. And seeing early adopters go beyond the free plan and subscribe to the
-Creator plan - that's the best part. Thank you for your support!
+Creator plan is the best part! Thank you for your support! :)
 
-Today's release of [Flet Studio](https://studio.flet.dev) makes the agent a lot less blind:
-it can now **run your app, take a screenshot of it and read its console** - all in the middle
-of its work, without asking you. You can also attach pictures, PDFs and code files to your
+Today's release of [Flet Studio](https://studio.flet.dev) gives the agent eyes and ears:
+it can now **run your app, take a screenshot of it and read its console** while it's working. You can also attach pictures, PDFs and code files to your
 messages, or just paste a screenshot.
 
 {/* truncate */}
