@@ -22,6 +22,7 @@ slug: roadmap
 * MCP for Flet Studio.
 * Integration with GitHub.
 * Flet Studio for desktop.
+* Drag-n-Drop UI editor.
 * Gallery improvements.
 
 ### Fletbase
