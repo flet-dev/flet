@@ -43,6 +43,8 @@ class Command(BaseBuildCommand):
     Android (APK/AAB), and iOS (IPA and simulator .app), with a wide range of
     customization options for metadata, assets, splash screens, and signing.
 
+    Arguments after `--` are passed down to the underlying `flutter build`.
+
     Detailed usage guide: https://flet.dev/docs/publish
     """
 
@@ -206,11 +208,7 @@ class Command(BaseBuildCommand):
         if build_version:
             args.extend(["--build-name", build_version])
 
-        for arg in (
-            self.get_pyproject(f"tool.flet.{self.config_platform}.flutter.build_args")
-            or self.get_pyproject("tool.flet.flutter.build_args")
-            or []
-        ):
+        for arg in self.get_platform_setting("flutter.build_args", []):
             args.append(arg)
 
     def run_flutter(self):

@@ -4,7 +4,7 @@ title: "Terms of Service"
 
 # Flet Studio Terms of Service
 
-**Effective date:** July 14, 2026
+**Effective date:** September 24, 2026
 
 These Terms of Service ("Terms") form a binding agreement between you and **Appveyor Systems Inc.** ("AppVeyor", "we", "us", or "our") and govern your access to and use of the Flet Studio service ("Flet Studio" or the "Service"). Flet Studio is a hosted development environment and runtime for building applications with the Flet framework.
 
@@ -118,7 +118,7 @@ Flet Studio includes an AI agent that can read, generate, and modify your app co
 
 **AI output.** AI output is generated automatically. It **may be inaccurate or incomplete, and generated code may not work or may contain security issues**. You are responsible for reviewing and testing AI output before relying on it. AI output stored in your apps is treated as your User Content under Section 5.
 
-**AI credits.** AI usage consumes AI credits, metered by model token usage at the rates displayed within the Service. Your plan includes a monthly credit allowance, and additional credits can be purchased (see Section 7).
+**AI credits.** AI usage consumes AI credits, metered by model token usage at the rates displayed within the Service. Your plan includes a monthly credit allowance, and on paid plans additional credits can be purchased (see Section 7).
 
 Your use of AI features is subject to Section 4 (Acceptable Use); you may not use them to generate unlawful or malicious content or attempt to circumvent usage metering.
 
@@ -128,15 +128,15 @@ Your use of AI features is subject to Section 4 (Acceptable Use); you may not us
 
 ### 7.1 Plans
 
-Flet Studio is offered under a free plan and one or more paid plans. The current plans, their features and limits, and their prices — together with the price of AI credit packs — are listed on our [pricing page](https://studio.flet.dev/pricing). We may change plan limits and pricing with reasonable advance notice; where we materially reduce a limit, we will provide notice through the Service or by email. A price change for a subscription takes effect at the start of a subsequent billing period.
+Flet Studio is offered under a free plan and one or more paid plans. Paid plans can be billed monthly or annually. The current plans, their features and limits, and their prices — together with the price of AI credit packs — are listed on our [pricing page](https://studio.flet.dev/pricing). We may change plan limits and pricing with reasonable advance notice; where we materially reduce a limit, we will provide notice through the Service or by email. A price change for a subscription takes effect at the start of a subsequent billing period.
 
 ### 7.2 AI credit packs
 
-AI credit packs are one-time purchases. Purchased credits do not expire while your account remains active. Monthly plan credits reset each billing cycle and do not roll over. AI credits have no cash value and are not transferable.
+AI credit packs are one-time purchases available on paid plans. AI credits purchased or granted on or after September 24, 2026 expire 12 months after they are added to your account; credits added before that date do not expire while your account remains active. When you use AI credits, those closest to expiry are used first. Monthly plan credits reset each month, including on annual billing, and do not roll over. AI credits have no cash value and are not transferable.
 
 ### 7.3 Payment processing
 
-Payments are processed by our third-party payment processor, **Stripe**. By making a purchase you agree to Stripe's terms applicable to the payment. Your card details are collected by Stripe directly and are not received or stored by AppVeyor. Paid plans are billed in advance and **renew automatically each month until cancelled**. You can manage or cancel your subscription at any time through the billing portal in your account settings; cancellation takes effect at the end of the current billing period, and you retain paid-plan features until then. When a subscription ends, your account reverts to the free plan and its limits.
+Payments are processed by our third-party payment processor, **Stripe**. By making a purchase you agree to Stripe's terms applicable to the payment. Your card details are collected by Stripe directly and are not received or stored by AppVeyor. Paid plans are billed in advance and **renew automatically at the end of each billing period (monthly or annual) until cancelled**. You can manage or cancel your subscription at any time through the billing portal in your account settings; cancellation takes effect at the end of the current billing period, and you retain paid-plan features until then. Switching from monthly to annual billing takes effect immediately, with the unused part of your current month credited toward the annual charge; switching from annual to monthly billing takes effect at the end of the paid annual period. When a subscription ends, your account reverts to the free plan and its limits.
 
 ### 7.4 Taxes
 
@@ -144,7 +144,7 @@ Prices shown do not include taxes. Applicable sales tax will be calculated based
 
 ### 7.5 Refunds
 
-All fees and credit purchases are **non-refundable except where required by applicable law**. We do not provide credits or prorated refunds for partial billing periods, and unused AI credits are not redeemable for cash.
+**We do not refund monthly or annual subscription payments.** This applies when you cancel, downgrade, or switch billing periods before the end of a paid period: no money is returned, and you keep paid-plan features until that period ends. AI credit packs are likewise non-refundable. We do not provide credits or prorated refunds for partial billing periods, and unused or expired AI credits are not redeemable for cash. The only exception is where applicable law requires a refund.
 
 ### 7.6 Non-payment
 

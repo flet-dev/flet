@@ -7,34 +7,34 @@ import styles from './studio.module.css';
 
 const FEATURES = [
   {
+    icon: 'img/pages/home/ai-assistance.svg',
+    title: 'AI Coding Agent',
+    description: 'Describe your idea, add features, or fix bugs with the Pro and Expert AI agents. Review their code changes as you build.',
+  },
+  {
     icon: 'img/pages/studio/file-browser.svg',
-    title: 'File Browser',
-    description: 'Manage project files directly in the browser.',
+    title: 'Browser IDE',
+    description: 'Write Python, manage project files, and restore previous versions — all in your browser, with no setup.',
   },
   {
     icon: 'img/pages/studio/gallery.svg',
     title: 'Gallery & Templates',
-    description: '500+ examples, templates and apps to start from.',
+    description: 'Start with 500+ examples, templates, and apps. Open one in Studio and make it your own.',
   },
   {
     icon: 'img/pages/studio/fork-edit-share.svg',
     title: 'Fork. Edit. Share.',
-    description: 'Collaborate and remix projects effortlessly.',
-  },
-  {
-    icon: 'img/pages/studio/versions.svg',
-    title: 'Versions',
-    description: 'Restore previous versions anytime.',
+    description: 'Fork an app, change the code, and share what you build with a public link.',
   },
   {
     icon: 'img/pages/studio/live-preview.svg',
     title: 'Live Preview',
-    description: 'Share apps instantly with a public link.',
+    description: 'Run your app alongside the editor to try out changes as you build.',
   },
   {
     icon: 'img/pages/studio/package-deploy.svg',
     title: 'Package. Deploy.',
-    description: 'Cloud builds & publishing.',
+    description: 'Build app packages in the cloud and publish them from Studio.',
     comingSoon: true,
   },
 ];

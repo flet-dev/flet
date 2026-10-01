@@ -97,6 +97,21 @@ class Tester(Service):
         finder = await self._invoke_method("find_by_icon", {"icon": icon})
         return Finder(**finder)
 
+    async def find_by_semantics_identifier(self, identifier: str) -> Finder:
+        """
+        Finds controls by their :attr:`~flet.Semantics.identifier`.
+
+        The identifier is independent of visible text, so tests stay stable
+        when labels are translated or copy changes.
+
+        Args:
+            identifier: Exact semantics identifier to match.
+        """
+        finder = await self._invoke_method(
+            "find_by_semantics_identifier", {"identifier": identifier}
+        )
+        return Finder(**finder)
+
     async def take_screenshot(self, name: str) -> bytes:
         """
         Takes a screenshot of the entire application window.

@@ -3,6 +3,7 @@ title: "Publishing a Flet app"
 ---
 
 import CrossPlatformPermissions from '@site/.crocodocs/cross-platform-permissions.mdx';
+import PythonVersions from '@site/.crocodocs/python-versions.mdx';
 import {Image} from '@site/src/components/crocodocs';
 import TabItem from '@theme/TabItem';
 import Tabs from '@theme/Tabs';
@@ -134,11 +135,7 @@ In this case, two things to keep in mind:
 `flet build` and `flet publish` bundle a specific Python release into your app.
 Supported versions and the matching CPython / Pyodide artifacts:
 
-| Short | CPython runtime | Pyodide (web) | Status   |
-| ----- | --------------- | ------------- | -------- |
-| 3.14  | 3.14.7          | 314.0.6       | default  |
-| 3.13  | 3.13.15         | 0.29.4        | stable   |
-| 3.12  | 3.12.14         | 0.27.7        | stable   |
+<PythonVersions />
 
 The version is resolved in this order:
 
@@ -148,7 +145,7 @@ The version is resolved in this order:
    specifier; the **highest** supported short version that satisfies it wins.
    `requires-python = ">=3.13,<3.14"` resolves to 3.13;
    `requires-python = ">=3.13"` resolves to 3.14.
-3. **Default** — the latest supported version (currently `3.14`).
+3. **Default** — the version marked `default` in the table above.
 
 If neither the CLI flag nor `requires-python` selects a supported version
 (e.g. `requires-python = ">=3.20"`), the build fails with a clear error
@@ -251,6 +248,22 @@ Throughout this documentation, the following placeholders are used:
 - `<flet_app_directory>` - the resolved project root for `<python_app_path>`; `pyproject.toml` and `requirements.txt` are read from here.
 - `<flet_version>` - the version of Flet in use. You can check with `flet --version` or
   `uv run python -c "import flet; print(flet.__version__)"`.
+:::
+
+:::note[Platform-specific overrides]
+When a setting can be set both under `[tool.flet]` and under `[tool.flet.<PLATFORM>]`,
+the platform value wins whenever it is present. For list and table settings (such as
+`app.exclude`, `app.include`, `source_packages`, `dev_packages`, `target_arch`,
+`cleanup.app_files`, `cleanup.package_files` and `flutter.build_args`), an empty value
+clears the global one for that platform:
+
+```toml
+[tool.flet]
+source_packages = ["numpy"]
+
+[tool.flet.ios]
+source_packages = []    # no source builds on iOS
+```
 :::
 
 :::note[Understanding `pyproject.toml` structure]
@@ -1441,7 +1454,7 @@ The files and/or directories specified should be provided as relative
 paths to the [app path](#app-path) directory. Paths are matched exactly (no globs), and
 directories are excluded recursively.
 
-By default, the `build` directory is always excluded.
+The `build` directory is always excluded.
 Additionally, when the target_platform is web, the `assets`
 directory is always excluded.
 
@@ -1450,13 +1463,62 @@ directory is always excluded.
 <Tabs groupId="flet-build--pyproject-toml">
 <TabItem value="flet-build" label="flet build">
 ```bash
-flet build <target_platform> --exclude .git .venv
+flet build <target_platform> --exclude tests docs
 ```
 </TabItem>
 <TabItem value="pyproject-toml" label="pyproject.toml">
 ```toml
 [tool.flet.app]    # or [tool.flet.<PLATFORM>.app]
-exclude = [".git", ".venv"]
+exclude = ["tests", "docs"]
+```
+</TabItem>
+</Tabs>
+
+#### Default exclusions
+
+The following are also excluded by default, so development files are not shipped
+to end users:
+
+- Hidden files and directories directly in the [app path](#app-path): names
+  starting with `.` on all platforms (for example `.venv`, `.git`, `.flet`,
+  `.idea`, `.vscode`, `.env`), plus entries with the hidden attribute on Windows.
+  Hidden entries in subdirectories are packaged.
+- Virtual environments at any depth, detected by the `pyvenv.cfg` file that
+  `python -m venv`, `uv venv` and `virtualenv` create, whatever the directory
+  is named (for example `venv` or `env`).
+- `__pycache__` directories at any depth.
+
+`flet build` prints the default exclusions that matched something in your app.
+
+:::warning
+A `.env` file in the app path is not packaged by default. If your app loads it at
+runtime (for example with python-dotenv), keep it with `include`.
+:::
+
+To package some of these anyway, list them in `include`. Its value is determined
+in the following order of precedence:
+
+1. [`--include`](../cli/flet-build.md#--include) (can be used multiple times)
+2. `[tool.flet.<PLATFORM>.app].include` (type: list of strings)
+3. `[tool.flet.app].include` (type: list of strings)
+
+`include` only applies to default exclusions. It does not override `build`,
+`assets` on web, or anything listed in `exclude`.
+
+To turn default exclusions off entirely, use
+[`--no-default-excludes`](../cli/flet-build.md#--no-default-excludes) or set
+`default_excludes = false` under `[tool.flet.app]` (or `[tool.flet.<PLATFORM>.app]`).
+
+<Tabs groupId="flet-build--pyproject-toml">
+<TabItem value="flet-build" label="flet build">
+```bash
+flet build <target_platform> --include .env
+```
+</TabItem>
+<TabItem value="pyproject-toml" label="pyproject.toml">
+```toml
+[tool.flet.app]    # or [tool.flet.<PLATFORM>.app]
+include = [".env"]
 ```
 </TabItem>
 </Tabs>
@@ -1711,7 +1773,7 @@ Use at your own risk, and only if you fully know what you're doing!
 
 Its value is determined in the following order of precedence:
 
-1. `--flutter-build-args` (can be used multiple times)
+1. [`--flutter-build-args`](../cli/flet-build.md#--flutter-build-args) (can be used multiple times) or the arguments after a `--` separator, combined if both are given
 2. `[tool.flet.<PLATFORM>.flutter].build_args`
 3. `[tool.flet.flutter].build_args`
 
@@ -1720,18 +1782,30 @@ Its value is determined in the following order of precedence:
 <Tabs groupId="flet-build--pyproject-toml">
 <TabItem value="flet-build" label="flet build">
 ```bash
+flet build apk -- \
+  --obfuscate \
+  --split-debug-info=build/symbols \
+  --dart-define=API_URL=https://api.example.com
+
+# or, one argument at a time
 flet build apk \
   --flutter-build-args=--obfuscate \
-  --flutter-build-args=--export-method=development \
+  --flutter-build-args=--split-debug-info=build/symbols \
   --flutter-build-args=--dart-define=API_URL=https://api.example.com
 ```
+
+- Everything after a `--` separator goes to `flutter build` as it is.
+- `--flutter-build-args` passes one argument at a time. Attach a value that starts
+  with `-` using `=`, e.g. `--flutter-build-args=--obfuscate`.
+- [`flet debug`](../cli/flet-debug.md) passes them to `flutter run` the same way.
+
 </TabItem>
 <TabItem value="pyproject-toml" label="pyproject.toml">
 ```toml
 [tool.flet.flutter]     # or [tool.flet.<PLATFORM>.flutter]
 build_args = [
   "--obfuscate",
-  "--export-method=development",
+  "--split-debug-info=build/symbols",
   "--dart-define=API_URL=https://api.example.com",
 ]
 ```

@@ -1,3 +1,49 @@
+## 1.0.3
+
+### Improvements
+
+* Add `FletApp.wait_idle(idle_ms, timeout_ms)`: a host app can wait until an embedded app has rendered its UI and gone quiet - for example before taking a screenshot of it or reading its output after a restart. It returns `idle`, `error` (the app failed to start or crashed) or `timeout`, and costs nothing unless a call is pending ([#6901](https://github.com/flet-dev/flet/pull/6901)) by @FeodorFitsner.
+* Add `TextField.on_paste_files`: pasted files (a screenshot, an image copied from a web page, files copied in the OS file manager) arrive as `name`, `mime_type` and `bytes`, e.g. to attach them to a chat message. On the web it uses the browser's paste event, so it works in every browser, Safari included, with no clipboard permission prompt; on desktop, `Ctrl`/`Cmd`+`V` reports a clipboard image ([#6901](https://github.com/flet-dev/flet/pull/6901)) by @FeodorFitsner.
+
+### Bug fixes
+
+* Fix `Dropdown.expanded_insets` having no effect when `expand` is set ([#6895](https://github.com/flet-dev/flet/issues/6895), [#6896](https://github.com/flet-dev/flet/pull/6896)) by @xsalaices.
+* Fix `Tabs` ignoring a new `selected_index` set together with a new `length` - e.g. inserting a tab before the selected one and moving `selected_index` to follow it selected the inserted tab instead ([#6901](https://github.com/flet-dev/flet/pull/6901)) by @FeodorFitsner.
+* Fix controls losing their state (a `TextField` its focus and cursor, a list its scroll position) when a sibling before them in a `Column`, `Row` or other multi-child control became visible or hidden: children were matched by position, so the shift rebuilt them. Children are now matched by control id ([#6901](https://github.com/flet-dev/flet/pull/6901)) by @FeodorFitsner.
+* Fix `FilePicker.upload()` with several files uploading the wrong file to each URL: after the first upload, each file's `id` pointed at the next picked file, so a file's bytes went to another file's URL and the last file never uploaded (its caller waited forever). Picked files now keep their `id` across `upload()` calls, and files that can't be found report an upload error ([#6901](https://github.com/flet-dev/flet/pull/6901)) by @FeodorFitsner.
+* Fix `FletApp.on_error` not firing when the embedded app crashes in `main()` or in an event handler - the error only showed inside the embedded app. The host is now notified, as `on_error` documents ([#6901](https://github.com/flet-dev/flet/pull/6901)) by @FeodorFitsner.
+
+## 1.0.2
+
+### Improvements
+
+* Update serious_python to `5.0.0`. `flet build` now passes each exclude path and cleanup glob to it as a separate option, so paths containing commas are excluded correctly and brace globs such as `**/{tests,docs}` in a `cleanup.app_files` or `cleanup.package_files` list work ([serious-python#253](https://github.com/flet-dev/serious-python/pull/253), [#6890](https://github.com/flet-dev/flet/pull/6890)) by @FeodorFitsner.
+* Add `identifier` to `Semantics` so native accessibility tools and widget tests can match a stable ID (Android `resource-id`, iOS `accessibilityIdentifier`, web `flt-semantics-identifier`) instead of visible labels, plus `Tester.find_by_semantics_identifier()` ([#6832](https://github.com/flet-dev/flet/pull/6832)) by @mccre110.
+* `flet run` and `ft.run()` now print a warning with the desktop client's path when they use one from a previous `flet build` in `build/<platform>`, so an outdated client that lacks an extension is easy to spot ([#6821](https://github.com/flet-dev/flet/issues/6821)) by @ndonkoHenri.
+* `flet build` and `flet debug` pass the arguments that follow a `--` separator to Flutter, e.g. `flet build apk -- --obfuscate --split-debug-info=build/symbols`, as an alternative to repeating `--flutter-build-args` ([#6879](https://github.com/flet-dev/flet/pull/6879)) by @ndonkoHenri.
+* `flet pack` passes the arguments that follow a `--` separator to PyInstaller, e.g. `flet pack main.py -- --clean`, as an alternative to repeating `--pyinstaller-build-args` ([#6879](https://github.com/flet-dev/flet/pull/6879)) by @ndonkoHenri.
+* `flet test` passes the arguments that follow a `--` separator to pytest, e.g. `flet test -k screenshot -- -x --maxfail=1` ([#6879](https://github.com/flet-dev/flet/pull/6879)) by @ndonkoHenri.
+
+### Bug fixes
+
+* Fix the Android SDK auto-installation failing on Windows ([#6522](https://github.com/flet-dev/flet/issues/6522), [#6892](https://github.com/flet-dev/flet/pull/6892)) by @ndonkoHenri.
+* Fix `InteractiveViewer` failing to render when `alignment` is set ([#6744](https://github.com/flet-dev/flet/issues/6744), [#6887](https://github.com/flet-dev/flet/pull/6887)) by @ndonkoHenri.
+* flet-charts: Fix `ScatterChart` failing to render when a `ScatterChartSpot` has `x_error` or `y_error` set. Error ranges are now set with the new `ChartErrorRange` type and drawn as error bars in the color of their spot ([#6885](https://github.com/flet-dev/flet/pull/6885)) by @ndonkoHenri.
+* Fix iOS apps that use `sqlite3` stopping with `Assertion failed: (0), function isBulkReadStatement` when run from Xcode on iOS 18 and later, by turning off Xcode's Thread Performance Checker in the scheme generated by `flet build` ([#5480](https://github.com/flet-dev/flet/issues/5480), [#6882](https://github.com/flet-dev/flet/pull/6882)) by @ndonkoHenri.
+* Fix `Button(icon=...)` and other material buttons rendering an error box when `content` is not set. Icon-only buttons now render the icon centered ([#6886](https://github.com/flet-dev/flet/issues/6886), [#6889](https://github.com/flet-dev/flet/pull/6889)) by @FeodorFitsner.
+* Fix `flet debug`, `flet build`, `flet test`, `flet emulators` and `flet run` rejecting a positional argument typed after an option on Python 3.10, 3.11, 3.12.0-3.12.6 and 3.13.0 - `flet debug ios --device-id X my_app` failed with `unrecognized arguments: my_app` - by backporting the upstream `argparse` fix (CPython gh-59317). Also, an app path pointing to a file such as `main.py` is now rejected with a clear error instead of crashing on `main.py/build`, and a bad app path fails before the Flutter toolchain is set up ([#6840](https://github.com/flet-dev/flet/issues/6840), [#6875](https://github.com/flet-dev/flet/pull/6875)) by @ndonkoHenri.
+* Fix `--android-extract-packages` keeping only the values of its last occurrence when repeated. Like the other list options of `flet build`, repeating it now adds to the list ([#6875](https://github.com/flet-dev/flet/pull/6875)) by @ndonkoHenri.
+* Fix `--flutter-build-args` handing a value that starts with `-` to Flet instead of Flutter - `--flutter-build-args --verbose` turned on Flet's own verbose output - and overriding `build_args` from `pyproject.toml` with an empty list. Such an occurrence now fails with a hint to attach the value using `=`, e.g. `--flutter-build-args=--obfuscate` ([#6879](https://github.com/flet-dev/flet/pull/6879)) by @ndonkoHenri.
+* Fix `--pyinstaller-build-args` handing a value that starts with `-` to Flet instead of PyInstaller - `--pyinstaller-build-args -y` turned on Flet's own `-y` - or rejecting it as unrecognized. Such an occurrence now fails with a hint to attach the value using `=` or to pass it after `--` ([#6879](https://github.com/flet-dev/flet/pull/6879)) by @ndonkoHenri.
+* Fix `flet build` packaging virtual environments, `.git`, `.flet` and other development files into the app. Hidden entries in the app root (a leading `.`, or the hidden attribute on Windows), virtual environments detected by `pyvenv.cfg`, and `__pycache__` directories are now excluded by default, and the build prints what was excluded ([#6839](https://github.com/flet-dev/flet/issues/6839), [#6890](https://github.com/flet-dev/flet/pull/6890)) by @FeodorFitsner.
+
+  **Compatibility:** `.env` and other dot-prefixed files in the app root are no longer packaged. Keep them with `--include .env` or `include = [".env"]` under `[tool.flet.app]`, or turn default exclusions off with `--no-default-excludes` / `default_excludes = false`. Apps built with earlier versions may already contain `.venv` or `.flet`.
+* Fix an empty list or table under `[tool.flet.<PLATFORM>]` falling back to the global `[tool.flet]` value. `app.exclude`, `source_packages`, `dev_packages`, `target_arch`, `extract_packages`, `cleanup.app_files`, `cleanup.package_files` and `flutter.build_args` now treat `[]` or `{}` in a platform section as "none for this platform" ([#6890](https://github.com/flet-dev/flet/pull/6890)) by @FeodorFitsner.
+
+### Other changes
+
+* Simplify HTTP request handling in `AuthorizationService` and `GitHubOAuthProvider` using HTTPX client methods and built-in JSON parsing ([#6870](https://github.com/flet-dev/flet/pull/6870)) by @osamalzabidi.
+
 ## 1.0.1
 
 ### Improvements

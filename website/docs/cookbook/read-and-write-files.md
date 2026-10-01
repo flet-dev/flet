@@ -143,7 +143,7 @@ def main(page: ft.Page):
                     content=ft.Text(f.read()),
                     scrollable=True,
                 )
-                page.open(dlg)
+                page.show_dialog(dlg)
 
     counter = Counter()
     page.appbar = ft.AppBar(
@@ -163,7 +163,7 @@ def main(page: ft.Page):
     )
     page.floating_action_button = ft.FloatingActionButton(
         icon=ft.Icons.ADD,
-        text="Increment Counter",
+        content="Increment Counter",
         foreground_color=ft.Colors.WHITE,
         bgcolor=ft.Colors.BLUE,
         on_click=lambda e: counter.increment(),

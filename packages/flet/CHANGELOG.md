@@ -1,3 +1,16 @@
+## 1.0.3
+
+* Add `FletBackend.waitIdle()` for embedded backends: completes with `idle` once the app has rendered and gone quiet, `error` if it crashes or fails to start, or `timeout`. `FletApp` gains `onBackendCreated` to reach the embedded backend, and the `FletApp` control answers a `wait_idle` method call. A crash in an embedded backend is now also reported to the host's `errorsHandler` ([#6901](https://github.com/flet-dev/flet/pull/6901)) by @FeodorFitsner.
+* Add a `paste_files` event to `TextField`: while a field with a handler is focused, files pasted into it are read from the browser's `paste` event on the web (`listenPastedFiles()`), or from the clipboard image on `Ctrl`/`Cmd`+`V` on desktop, and sent as `name`, `mime_type` and `bytes` ([#6901](https://github.com/flet-dev/flet/pull/6901)) by @FeodorFitsner.
+* Key each child `ControlWidget` built by `Control.buildWidgets()` with a new `ControlIdKey(control.id)`, so Flutter matches children by identity instead of position: a sibling inserted before a control, or one whose visibility changes, no longer rebuilds it and resets its state ([#6901](https://github.com/flet-dev/flet/pull/6901)) by @FeodorFitsner.
+* Fix `TabsControl` recreating its `TabController` at the old index when `length` and `selected_index` change in the same update ([#6901](https://github.com/flet-dev/flet/pull/6901)) by @FeodorFitsner.
+* Fix `FilePickerService` uploading picked files to the wrong URLs: picked files are kept by their selection id across `upload` calls, and each file is claimed before any upload starts (`takeUploadTargets()`). A file that can't be found reports an upload error ([#6901](https://github.com/flet-dev/flet/pull/6901)) by @FeodorFitsner.
+
+## 1.0.2
+
+* Pass `Semantics.identifier` through to Flutter's `Semantics` widget and add `Tester.findBySemanticsIdentifier()` so tests can match nodes by native accessibility identifier ([#6832](https://github.com/flet-dev/flet/pull/6832)) by @mccre110.
+* Fix `Button`, `FilledButton`, `FilledTonalButton`, `OutlinedButton` and `TextButton` rendering an error box when `icon` is set without `content`. `ButtonControl` now uses the `.icon(...)` constructors only when both `icon` and `content` are provided; otherwise it builds the plain button with whichever one is set as its child, so icon-only buttons render the icon centered ([#6886](https://github.com/flet-dev/flet/issues/6886), [#6889](https://github.com/flet-dev/flet/pull/6889)) by @FeodorFitsner.
+
 ## 1.0.1
 
 _No changes in the `flet` Dart package; version bumped for release coordination with the Python-side fix for child components losing click events after wrapper re-renders ([#6857](https://github.com/flet-dev/flet/issues/6857), [#6859](https://github.com/flet-dev/flet/pull/6859))._

@@ -139,7 +139,7 @@ class Container(LayoutControl, AdaptiveControl, ActionControl):
             controls=[
                 ft.Container(
                     content=ft.Text("Hello"),
-                    image_src="https://picsum.photos/100/100",
+                    image=ft.DecorationImage(src="https://picsum.photos/100/100"),
                     width=100,
                     height=100,
                 ),

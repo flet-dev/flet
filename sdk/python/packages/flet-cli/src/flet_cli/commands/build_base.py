@@ -28,6 +28,7 @@ from flet_platform_assets import (
     write,
 )
 from packaging.requirements import Requirement
+from rich.markup import escape
 from rich.panel import Panel
 from rich.table import Column, Table
 
@@ -42,10 +43,12 @@ from flet_cli.commands.flutter_base import (
     verbose2_style,
     warning_style,
 )
+from flet_cli.commands.options import PassThroughArgsAction
 from flet_cli.utils.android import (
     ANDROID_ARCH_TO_FLUTTER_TARGET_PLATFORM,
     excluded_android_abis,
 )
+from flet_cli.utils.app_excludes import find_default_excludes
 from flet_cli.utils.cli import parse_cli_bool_value
 from flet_cli.utils.hash_stamp import HashStamp
 from flet_cli.utils.merge import merge_dict
@@ -359,6 +362,23 @@ class BaseBuildCommand(BaseFlutterCommand):
             "; can be used multiple times",
         )
         parser.add_argument(
+            "--include",
+            dest="include",
+            action="extend",
+            nargs="+",
+            default=[],
+            help="Files and/or directories excluded by default to package anyway "
+            "(e.g. `.env`); can be used multiple times",
+        )
+        parser.add_argument(
+            "--no-default-excludes",
+            dest="default_excludes",
+            action="store_false",
+            default=None,
+            help="Package hidden top-level files and directories, virtual "
+            "environments and `__pycache__` directories instead of excluding them",
+        )
+        parser.add_argument(
             "--project",
             dest="project_name",
             required=False,
@@ -619,9 +639,12 @@ class BaseBuildCommand(BaseFlutterCommand):
         parser.add_argument(
             "--flutter-build-args",
             dest="flutter_build_args",
-            action="append",
+            action=PassThroughArgsAction,
+            example="--obfuscate",
             nargs="*",
-            help="Additional arguments for flutter build command",
+            help="Additional arguments for flutter build command. Attach an "
+            "argument that starts with `-` using `=`, e.g. "
+            "`--flutter-build-args=--obfuscate`, or pass the arguments after `--`",
         )
         parser.add_argument(
             "--source-packages",
@@ -634,6 +657,7 @@ class BaseBuildCommand(BaseFlutterCommand):
         parser.add_argument(
             "--android-extract-packages",
             dest="android_extract_packages",
+            action="extend",
             nargs="+",
             default=[],
             help="Android only: Python packages (relative paths) to ship extracted "
@@ -860,18 +884,24 @@ class BaseBuildCommand(BaseFlutterCommand):
         self.config_platform = self.platforms[self.target_platform]["config_platform"]
         self.require_android_sdk = self.package_platform == "Android"
 
-        super().initialize_command()
-
         self.python_app_path = Path(self.options.python_app_path).resolve()
 
-        if not (
-            os.path.exists(self.python_app_path) or os.path.isdir(self.python_app_path)
-        ):
+        # validate that the app path exists and is a directory, not a file
+        if not os.path.isdir(self.python_app_path):
+            self.skip_flutter_doctor = True
+            if os.path.isfile(self.python_app_path):
+                self.cleanup(
+                    1,
+                    f"Path to Flet app must be a directory, not a file: "
+                    f"{escape(str(self.python_app_path))}",
+                )
             self.cleanup(
                 1,
                 f"Path to Flet app does not exist or is not a directory: "
-                f"{self.python_app_path}",
+                f"{escape(str(self.python_app_path))}",
             )
+
+        super().initialize_command()
 
         self.rel_out_dir = self.options.output_dir or os.path.join(
             "build", self.platforms[self.target_platform]["dist"]
@@ -1366,10 +1396,8 @@ class BaseBuildCommand(BaseFlutterCommand):
             deep_linking_scheme = self.options.deep_linking_scheme
             deep_linking_host = self.options.deep_linking_host
 
-        target_arch = (
-            self.options.target_arch
-            or self.get_pyproject(f"tool.flet.{self.config_platform}.target_arch")
-            or self.get_pyproject("tool.flet.target_arch")
+        target_arch = self.options.target_arch or self.get_platform_setting(
+            "target_arch"
         )
         target_arch = (
             target_arch
@@ -2532,11 +2560,7 @@ class BaseBuildCommand(BaseFlutterCommand):
 
         dev_packages_configured = False
         if len(toml_dependencies) > 0:
-            dev_packages = (
-                self.get_pyproject(f"tool.flet.{self.config_platform}.dev_packages")
-                or self.get_pyproject("tool.flet.dev_packages")
-                or []
-            )
+            dev_packages = self.get_platform_setting("dev_packages", {})
             if len(dev_packages) > 0:
                 for i in range(0, len(toml_dependencies)):
                     package_name = Requirement(toml_dependencies[i]).name
@@ -2616,25 +2640,63 @@ class BaseBuildCommand(BaseFlutterCommand):
         )
 
         # exclude
-        exclude_list = ["build"]
-
-        app_exclude = (
-            self.options.exclude
-            or self.get_pyproject(f"tool.flet.{self.config_platform}.app.exclude")
-            or self.get_pyproject("tool.flet.app.exclude")
+        app_exclude = self.options.exclude or self.get_platform_setting(
+            "app.exclude", []
         )
-        if app_exclude:
-            exclude_list.extend(app_exclude)
+        explicit_excludes = [
+            "build",
+            *app_exclude,
+            *(["assets"] if self.target_platform == "web" else []),
+        ]
 
-        if self.target_platform == "web":
-            exclude_list.append("assets")
-        package_args.extend(["--exclude", ",".join(exclude_list)])
+        default_excludes: list[str] = []
+        if self.get_bool_setting(
+            self.options.default_excludes, "app.default_excludes", True
+        ):
+            app_include = self.options.include or self.get_platform_setting(
+                "app.include", []
+            )
+            default_excludes = find_default_excludes(
+                self.package_app_path, app_include, explicit_excludes
+            )
+
+        exclude_list = list(dict.fromkeys(explicit_excludes + default_excludes))
+        # one flag per path: serious_python (>= 5.0.0) doesn't split values on
+        # commas, so paths containing `,` survive
+        for path in exclude_list:
+            package_args.extend(["--exclude", path])
+
+        if default_excludes:
+            console.log(
+                "Excluded from app package by default: "
+                f"{', '.join(default_excludes)} "
+                "(use --include <path> or --no-default-excludes to package them)",
+                markup=False,
+            )
+            env_files = [
+                p for p in default_excludes if p == ".env" or p.startswith(".env.")
+            ]
+            if env_files:
+                it = "it" if len(env_files) == 1 else "them"
+                console.log(
+                    f"Warning: {', '.join(env_files)} not packaged. If the app "
+                    f"loads {it} at runtime (e.g. with python-dotenv), package "
+                    f"{it} with `--include {' '.join(env_files)}` or "
+                    f"`include = {json.dumps(env_files)}` under [tool.flet.app] "
+                    "in pyproject.toml.",
+                    style=warning_style,
+                    markup=False,
+                )
+        if self.verbose > 0:
+            console.log(
+                f"App package exclude list: {exclude_list}",
+                style=verbose1_style,
+                markup=False,
+            )
 
         # source-packages
-        source_packages = (
-            self.options.source_packages
-            or self.get_pyproject(f"tool.flet.{self.config_platform}.source_packages")
-            or self.get_pyproject("tool.flet.source_packages")
+        source_packages = self.options.source_packages or self.get_platform_setting(
+            "source_packages"
         )
         if source_packages:
             package_env["SERIOUS_PYTHON_ALLOW_SOURCE_DISTRIBUTIONS"] = ",".join(
@@ -2651,11 +2713,7 @@ class BaseBuildCommand(BaseFlutterCommand):
         if self.package_platform == "Android":
             user_extract_packages = (
                 self.options.android_extract_packages
-                or self.get_pyproject(
-                    f"tool.flet.{self.config_platform}.extract_packages"
-                )
-                or self.get_pyproject("tool.flet.extract_packages")
-                or []
+                or self.get_platform_setting("extract_packages", [])
             )
             self.android_extract_packages = list(
                 dict.fromkeys(ANDROID_DEFAULT_EXTRACT_PACKAGES + user_extract_packages)
@@ -2678,42 +2736,34 @@ class BaseBuildCommand(BaseFlutterCommand):
 
         if cleanup_app_files := (
             self.options.cleanup_app_files
-            or self.get_pyproject(f"tool.flet.{self.config_platform}.cleanup.app_files")
-            or self.get_pyproject("tool.flet.cleanup.app_files")
+            or self.get_platform_setting("cleanup.app_files")
         ):
             if isinstance(cleanup_app_files, str):
                 cleanup_app_files = [
                     value.strip() for value in cleanup_app_files.split(",")
                 ]
             if isinstance(cleanup_app_files, list):
-                package_args.extend(
-                    [
-                        "--cleanup-app-files",
-                        ",".join([v.strip() for v in cleanup_app_files if v.strip()]),
-                    ]
-                )
+                for glob_pattern in cleanup_app_files:
+                    if glob_pattern.strip():
+                        package_args.extend(
+                            ["--cleanup-app-files", glob_pattern.strip()]
+                        )
                 cleanup_app = True
 
         if cleanup_package_files := (
             self.options.cleanup_package_files
-            or self.get_pyproject(
-                f"tool.flet.{self.config_platform}.cleanup.package_files"
-            )
-            or self.get_pyproject("tool.flet.cleanup.package_files")
+            or self.get_platform_setting("cleanup.package_files")
         ):
             if isinstance(cleanup_package_files, str):
                 cleanup_package_files = [
                     value for value in cleanup_package_files.split(",")
                 ]
             if isinstance(cleanup_package_files, list):
-                package_args.extend(
-                    [
-                        "--cleanup-package-files",
-                        ",".join(
-                            [v.strip() for v in cleanup_package_files if v.strip()]
-                        ),
-                    ]
-                )
+                for glob_pattern in cleanup_package_files:
+                    if glob_pattern.strip():
+                        package_args.extend(
+                            ["--cleanup-package-files", glob_pattern.strip()]
+                        )
                 cleanup_packages = True
 
         if cleanup_app:
@@ -2721,6 +2771,15 @@ class BaseBuildCommand(BaseFlutterCommand):
 
         if cleanup_packages:
             package_args.append("--cleanup-packages")
+
+        if self.verbose > 0:
+            console.log(
+                f"Compile app: {'--compile-app' in package_args}, "
+                f"cleanup app: {cleanup_app}, cleanup packages: {cleanup_packages} "
+                "(cleanup removes serious_python's default junk globs plus any "
+                "--cleanup-app-files/--cleanup-package-files)",
+                style=verbose1_style,
+            )
 
         if self.verbose > 1:
             package_args.append("--verbose")
@@ -2840,23 +2899,38 @@ class BaseBuildCommand(BaseFlutterCommand):
             Resolved boolean-like setting value.
         """
 
-        assert self.get_pyproject
         return (
             cli_option
             if cli_option is not None
-            else (
-                self.get_pyproject(f"tool.flet.{self.config_platform}.{pyproj_setting}")
-                if self.get_pyproject(
-                    f"tool.flet.{self.config_platform}.{pyproj_setting}"
-                )
-                is not None
-                else (
-                    self.get_pyproject(f"tool.flet.{pyproj_setting}")
-                    if self.get_pyproject(f"tool.flet.{pyproj_setting}") is not None
-                    else default_value
-                )
-            )
+            else self.get_platform_setting(pyproj_setting, default_value)
         )
+
+    def get_platform_setting(self, pyproj_setting, default_value=None):
+        """
+        Resolve a pyproject setting with precedence: platform, global, default.
+
+        The platform value wins whenever it is set, even when it is empty, so
+        `[]` or `{}` under `tool.flet.<platform>.` clears a global list or table
+        for that platform.
+
+        Args:
+            pyproj_setting: Relative key under `tool.flet.<platform>.` and
+                `tool.flet.`.
+            default_value: Fallback value when neither key is defined.
+
+        Returns:
+            Resolved setting value.
+        """
+
+        assert self.get_pyproject
+        for key in (
+            f"tool.flet.{self.config_platform}.{pyproj_setting}",
+            f"tool.flet.{pyproj_setting}",
+        ):
+            value = self.get_pyproject(key)
+            if value is not None:
+                return value
+        return default_value
 
     def add_flutter_command_args(self, args: list[str]):
         """
@@ -3001,10 +3075,7 @@ class BaseBuildCommand(BaseFlutterCommand):
 
         flutter_build_args = (
             self.options.flutter_build_args
-            or self.get_pyproject(
-                f"tool.flet.{self.config_platform}.flutter.build_args"
-            )
-            or self.get_pyproject("tool.flet.flutter.build_args")
+            or self.get_platform_setting("flutter.build_args")
         )
         if flutter_build_args:
             if isinstance(flutter_build_args, (list, tuple)):

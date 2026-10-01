@@ -8,6 +8,57 @@ New features, improvements, and bug fixes in Flet Studio, listed in
 reverse-chronological order. Flet Studio ships independently of the Flet SDK — see
 [Flet release notes](../updates/release-notes.md) for SDK changes.
 
+## September 29, 2026
+
+* **The agent sees the app it builds.** While working on your request it can run
+  the app in the Preview, read its Console and take a screenshot, so it catches and
+  fixes errors in the same turn instead of waiting for you to report them. You see
+  the Preview restart when it runs the app.
+* **Attach files to your messages.** Add screenshots, images, PDFs, and text or
+  code files with the paperclip, or paste a screenshot with Cmd+V (Ctrl+V on
+  Windows and Linux). Images show as thumbnails, in the composer and in the
+  conversation. Attachments work on the New app page too, so you can start an app
+  from a mockup.
+* The agent can **put an attached file into your app** — for example, "use this
+  image as the logo" — and can save a screenshot of your app as a project file.
+* **Better-organized apps.** New apps keep their code in a `src` folder, Flet's
+  standard layout, and split it into files by what they do instead of putting
+  everything in one `models.py`. Small apps stay in a single file. New apps also
+  come with logging set up, which the agent uses to debug.
+* The agent is better at **layout**, such as centering content or keeping a footer
+  at the bottom of the page.
+* When your app **calls a web API**, the agent writes code that works both in the
+  Preview and in the app you build with `flet build`.
+* The **Expert** agent now runs on a newer model.
+* Flet Studio now uses **Flet 1.0.3**.
+* Fixed conversations that failed with an error on every message after a run
+  was interrupted. Affected conversations recover on their own.
+* Long tasks no longer stop partway because the agent made too many steps.
+
+## September 25, 2026
+
+* **Get more done with your AI credits.** Recent model releases and lower model
+  pricing let you do roughly **5–10 times more AI work with the same credits**
+  than before, depending on the task and agent tier.
+* Choose between **Pro** and **Expert** AI agents in the message composer. Pro is
+  available to everyone; Expert is available with a paid plan or an existing
+  wallet credit balance. Studio remembers your selection.
+* Creator now offers **annual billing at $300/year** — equivalent to $25/month,
+  with two months free compared with monthly billing at $30/month. Plan AI credits
+  still reset monthly when you pay annually.
+* Manage your billing interval in the billing portal. Switching from monthly to
+  annual billing is prorated; switching from annual to monthly billing takes
+  effect at the end of your paid year.
+* Creating private apps and making public apps private now requires the
+  **Creator plan**. Existing private apps on Explorer keep working.
+* On-demand AI credit top-ups are now available only on paid plans. Explorer
+  users can continue spending wallet credits they already hold.
+* Newly added wallet AI credits expire **12 months after they are added**.
+  Existing wallet credits remain non-expiring. Credits with the earliest expiry
+  are spent first, and account settings show how many credits expire next and
+  when.
+* Credit-pack purchases now appear in the billing portal's invoice history.
+
 ## September 15, 2026
 
 * Flet Studio now uses **Flet 1.0.0**, including the updated API reference available

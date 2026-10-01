@@ -13,11 +13,14 @@ ANDROID_CMDLINE_TOOLS_DOWNLOAD_VERSION = "11076708"
 ANDROID_CMDLINE_TOOLS_VERSION = "12.0"
 
 MINIMAL_PACKAGES = [
-    "cmdline-tools;latest",
     "platform-tools",
     "platforms;android-35",
     "build-tools;34.0.0",
 ]
+
+# Written to the standard input of `sdkmanager`, which reads one answer line per
+# license prompt; `--licenses` also asks once before showing the licenses.
+SDKMANAGER_ANSWERS = "y\n" * 50
 
 
 class AndroidSDK:
@@ -103,6 +106,11 @@ class AndroidSDK:
         """
         Return the `cmdline-tools` binary directory in an SDK installation.
 
+        The version installed by this CLI is preferred over `latest`, because
+        from version 23.0, `sdkmanager` is a wrapper around the Android CLI,
+        which ignores `--licenses`, collects usage metrics by default and fails
+        on Windows.
+
         Args:
             home_dir: Android SDK home directory.
 
@@ -111,8 +119,8 @@ class AndroidSDK:
         """
 
         for d in [
-            home_dir / "cmdline-tools" / "latest" / "bin",
             home_dir / "cmdline-tools" / ANDROID_CMDLINE_TOOLS_VERSION / "bin",
+            home_dir / "cmdline-tools" / "latest" / "bin",
         ]:
             if d.exists():
                 return d
@@ -322,36 +330,23 @@ class AndroidSDK:
             RuntimeError: If package installation fails.
         """
 
-        if home_dir.joinpath(*package_name.split(";")).exists():
+        package_dir = home_dir.joinpath(*package_name.split(";"))
+        if package_dir.exists():
             self.log(f'Android SDK package "{package_name}" is already installed')
             return 0
 
         self.log(f'Installing Android SDK package "{package_name}"')
 
         p = self.run(
-            (
-                [
-                    "sh",
-                    "-c",
-                    f'yes | "{self.sdkmanager_exe(home_dir)}" "{package_name}"',
-                ]
-                if platform.system() != "Windows"
-                else [
-                    "cmd.exe",
-                    "/C",
-                    "echo",
-                    "y",
-                    "|",
-                    self.sdkmanager_exe(home_dir),
-                    package_name,
-                ]
-            ),
+            [self.sdkmanager_exe(home_dir), package_name],
             env={"ANDROID_HOME": str(home_dir)},
             capture_output=False,
+            input=SDKMANAGER_ANSWERS,
         )
-        if p.returncode != 0:
+        # sdkmanager exits with 0 when it skips a package whose license is declined
+        if p.returncode != 0 or not package_dir.exists():
             self.log(p.stderr)
-            raise RuntimeError("Error installing Android SDK tools")
+            raise RuntimeError(f'Error installing Android SDK package "{package_name}"')
         return 1
 
     def _accept_licenses(self, home_dir: Path):
@@ -368,23 +363,14 @@ class AndroidSDK:
         self.log("Accepting Android SDK licenses")
 
         p = self.run(
-            (
-                ["sh", "-c", f'yes | "{self.sdkmanager_exe(home_dir)}" --licenses']
-                if platform.system() != "Windows"
-                else [
-                    "cmd.exe",
-                    "/C",
-                    "echo",
-                    "y",
-                    "|",
-                    self.sdkmanager_exe(home_dir),
-                    "--licenses",
-                ]
-            ),
+            [self.sdkmanager_exe(home_dir), "--licenses"],
             env={"ANDROID_HOME": str(home_dir)},
             capture_output=False,
+            input=SDKMANAGER_ANSWERS,
         )
-        if p.returncode != 0:
+        # sdkmanager exits with 0 when licenses are declined
+        license_file = home_dir / "licenses" / "android-sdk-license"
+        if p.returncode != 0 or not license_file.exists():
             self.log(p.stderr)
             raise RuntimeError("Error accepting Android SDK licenses")
 
@@ -415,7 +401,7 @@ class AndroidSDK:
             )
         return p.stdout
 
-    def run(self, args, env=None, cwd=None, capture_output=True):
+    def run(self, args, env=None, cwd=None, capture_output=True, input=None):
         """
         Run a subprocess configured for Android SDK tooling.
 
@@ -427,6 +413,8 @@ class AndroidSDK:
             env: Optional additional environment variables.
             cwd: Optional working directory. Defaults to current directory.
             capture_output: Forwarded to subprocess helper.
+            input: Optional text for the subprocess's standard input. Forwarded
+                to subprocess helper.
 
         Returns:
             Subprocess result object returned by `flet_cli.utils.processes.run`.
@@ -447,4 +435,5 @@ class AndroidSDK:
             env=cmd_env,
             capture_output=capture_output,
             log=self.log,
+            input=input,
         )

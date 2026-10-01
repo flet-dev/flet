@@ -1,4 +1,3 @@
-import 'package:collection/collection.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/foundation.dart';
 import 'package:http/http.dart' as http;
@@ -13,7 +12,7 @@ import '../utils/platform_utils_web.dart'
 class FilePickerService extends FletService {
   FilePickerService({required super.control});
 
-  List<PlatformFile>? _files;
+  Map<int, PlatformFile> _files = {};
 
   @override
   void init() {
@@ -49,7 +48,7 @@ class FilePickerService extends FletService {
     switch (name) {
       case "upload":
         var files = args["files"];
-        if (files != null && _files != null) {
+        if (files != null) {
           uploadFiles(files, control.backend.pageUri);
         }
       case "pick_files":
@@ -72,29 +71,27 @@ class FilePickerService extends FletService {
         // method and the FilePicker.pickFiles() call below. On the gesture
         // path an async gap discards the browser's user activation and the
         // dialog silently never opens. See flet-dev/flet#3710.
-        _files = (await FilePicker.pickFiles(
-                dialogTitle: dialogTitle,
-                initialDirectory: initialDirectory,
-                lockParentWindow: true,
-                type: fileType,
-                allowedExtensions: allowedExtensions,
-                compressionQuality: compressionQuality,
-                allowMultiple: args["allow_multiple"],
-                withData: withData,
-                withReadStream: !withData,
-                cancelUploadOnWindowBlur: cancelUploadOnWindowBlur))
-            ?.files;
-        var pickedFiles = _files != null
-            ? _files!.asMap().entries.map((file) {
-                return FilePickerFile(
-                        id: file.key, // use entry's index as id
-                        name: file.value.name,
-                        path: kIsWeb ? null : file.value.path,
-                        size: file.value.size,
-                        bytes: withData ? file.value.bytes : null)
-                    .toMap();
-              }).toList()
-            : [];
+        final result = await FilePicker.pickFiles(
+            dialogTitle: dialogTitle,
+            initialDirectory: initialDirectory,
+            lockParentWindow: true,
+            type: fileType,
+            allowedExtensions: allowedExtensions,
+            compressionQuality: compressionQuality,
+            allowMultiple: args["allow_multiple"],
+            withData: withData,
+            withReadStream: !withData,
+            cancelUploadOnWindowBlur: cancelUploadOnWindowBlur);
+        _files = Map.of(result?.files.asMap() ?? {});
+        var pickedFiles = _files.entries.map((file) {
+          return FilePickerFile(
+                  id: file.key, // use entry's index as id
+                  name: file.value.name,
+                  path: kIsWeb ? null : file.value.path,
+                  size: file.value.size,
+                  bytes: withData ? file.value.bytes : null)
+              .toMap();
+        }).toList();
         if (fromGesture) {
           // A gesture-triggered pick has no caller to return to.
           control.triggerEvent("result", {"files": pickedFiles});
@@ -141,24 +138,22 @@ class FilePickerService extends FletService {
         uploadUrl: u["upload_url"],
         method: u["method"]));
 
-    for (var uf in uploadFiles) {
-      var file = ((uf.id != null && uf.id! >= 0 && uf.id! < _files!.length)
-              ? _files![uf.id!]
-              : null) // by id
-          ??
-          _files!.firstWhereOrNull((f) => f.name == uf.name); // by name
+    final targets = takeUploadTargets(uploadFiles.toList(), _files);
 
+    for (var (uf, file) in targets) {
       if (file != null) {
         try {
           await uploadFile(
               file, getFullUploadUrl(pageUri, uf.uploadUrl), uf.method);
-          _files!.remove(file); // Remove the uploaded file
         } catch (e) {
           sendProgress(file.name, null, e.toString());
         }
       } else {
         debugPrint(
             "FilePicker Error: File '${uf.name}' (id: ${uf.id}) not found.");
+        // Report it, or the caller waits forever for this file's upload.
+        sendProgress(
+            uf.name ?? "", null, "File not found among the picked files.");
       }
     }
   }

@@ -214,7 +214,10 @@ the Flet viewer inside it.
 - [`--uac-admin`](../cli/flet-pack.md#--uac-admin) — request elevated permissions on start (Windows).
 - [`--codesign-identity`](../cli/flet-pack.md#--codesign-identity) — sign the app bundle (macOS).
 - [`--pyinstaller-build-args`](../cli/flet-pack.md#--pyinstaller-build-args) — pass any other argument straight through to
-  the underlying `pyinstaller` command.
+  the underlying `pyinstaller` command, one at a time. Attach a value that starts with `-`
+  using `=`, e.g. `--pyinstaller-build-args=--clean`.
+- `--` — pass everything that follows it straight through to `pyinstaller`, e.g.
+  `flet pack main.py -- --clean --log-level=WARN`.
 
 The full option list is in the [`flet pack` reference](../cli/flet-pack.md).
 

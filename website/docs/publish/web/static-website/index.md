@@ -2,6 +2,7 @@
 title: "Publish web app as static website"
 ---
 
+import PythonVersionsWeb from '@site/.crocodocs/python-versions-web.mdx';
 import TabItem from '@theme/TabItem';
 import Tabs from '@theme/Tabs';
 
@@ -48,11 +49,7 @@ specific Pyodide release — see
 [Choosing a Python version](../../index.md#choosing-a-python-version) for the
 full matrix and resolution rules. In short:
 
-| Python | Pyodide   |
-| ------ | --------- |
-| 3.14   | 314.0.6   |
-| 3.13   | 0.29.4    |
-| 3.12   | 0.27.7    |
+<PythonVersionsWeb />
 
 The matching Pyodide runtime is downloaded into the build output and cached
 under `~/.flet/pyodide/<version>/` on first use. The older `0.27.5` bundle

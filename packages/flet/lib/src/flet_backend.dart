@@ -43,6 +43,16 @@ import 'utils/uri.dart';
 import 'utils/weak_value_map.dart';
 
 /// FletBackend - Handles business logic, provides data, and acts as ChangeNotifier
+/// A pending [FletBackend.waitIdle] call. Embedded backends only.
+class _IdleWaiter {
+  _IdleWaiter(this.idleMs);
+
+  final int idleMs;
+  final completer = Completer<Map<String, dynamic>>();
+  Timer? quietTimer;
+  Timer? timeoutTimer;
+}
+
 class FletBackend extends ChangeNotifier {
   static const String defaultAppErrorMessageTemplate =
       "The application encountered an error: {message}\n\n{details}";
@@ -88,6 +98,10 @@ class FletBackend extends ChangeNotifier {
   final List<Message> _sendQueue = [];
   String route = "";
   bool isLoading = true;
+
+  // At most one pending waitIdle() call. Null almost always: the patch path
+  // then does a single null check and no timer, frame or message work.
+  _IdleWaiter? _idleWaiter;
   final Completer<void> pageSizeUpdated = Completer<void>();
   String error = "";
   Size pageSize = Size.zero;
@@ -197,9 +211,77 @@ class FletBackend extends ChangeNotifier {
     }
   }
 
+  bool get _isEmbedded => controlId != null && _parentFletBackend != null;
+
+  /// Waits until this embedded app has rendered its UI and stayed quiet.
+  ///
+  /// Resolves `{"status": "idle"}` once at least one page update arrived and
+  /// no further updates came for [idleMs] (after the next frame, so the UI is
+  /// on screen); `{"status": "error", "error": ...}` when the app fails to
+  /// start or crashes; `{"status": "timeout"}` after [timeoutMs] — e.g. an
+  /// app that keeps updating continuously. A new call supersedes a pending
+  /// one, which resolves with `timeout`.
+  ///
+  /// Only for embedded apps (a [FletApp] control inside another Flet app):
+  /// it lets the host know when the embedded app is ready, e.g. before a
+  /// screenshot. Costs nothing unless a call is pending.
+  Future<Map<String, dynamic>> waitIdle(
+      {int idleMs = 300, int timeoutMs = 30000}) {
+    if (!_isEmbedded) {
+      return Future.value({
+        "status": "error",
+        "error": "wait_idle is only available for embedded apps."
+      });
+    }
+    final previous = _idleWaiter;
+    if (previous != null) {
+      _completeIdle(previous, "timeout");
+    }
+    final waiter = _IdleWaiter(idleMs);
+    _idleWaiter = waiter;
+    waiter.timeoutTimer = Timer(
+        Duration(milliseconds: timeoutMs), () => _completeIdle(waiter, "timeout"));
+    if (!isLoading && error.isNotEmpty) {
+      _completeIdle(waiter, "error", error);
+    }
+    return waiter.completer.future;
+  }
+
+  void _restartIdleTimer(_IdleWaiter waiter) {
+    waiter.quietTimer?.cancel();
+    waiter.quietTimer = Timer(Duration(milliseconds: waiter.idleMs), () {
+      if (_idleWaiter != waiter) {
+        return;
+      }
+      // Complete after the next frame, so the last update is on screen.
+      WidgetsBinding.instance
+          .addPostFrameCallback((_) => _completeIdle(waiter, "idle"));
+      WidgetsBinding.instance.scheduleFrame();
+    });
+  }
+
+  void _completeIdle(_IdleWaiter waiter, String status, [String? message]) {
+    waiter.quietTimer?.cancel();
+    waiter.timeoutTimer?.cancel();
+    if (_idleWaiter == waiter) {
+      _idleWaiter = null;
+    }
+    if (!waiter.completer.isCompleted) {
+      waiter.completer.complete({"status": status, "error": message});
+    }
+  }
+
+  void _failIdle(String message) {
+    final waiter = _idleWaiter;
+    if (waiter != null) {
+      _completeIdle(waiter, "error", message);
+    }
+  }
+
   @override
   void dispose() {
     debugPrint("Disposing Flet backend.");
+    _failIdle("The embedded app was closed.");
     _disposed = true;
     _page.removeListener(_onPageUpdated);
     _page.dispose();
@@ -237,6 +319,7 @@ class FletBackend extends ChangeNotifier {
       error = e.toString();
       notifyListeners();
       errorsHandler?.onError(error);
+      _failIdle(error);
     } catch (e) {
       debugPrint("Error connecting to Flet backend: $e");
       error = e.toString();
@@ -607,6 +690,10 @@ class FletBackend extends ChangeNotifier {
 
   _onPatchControl(PatchControlRequestBody req) {
     var control = controlsIndex.get(req.id);
+    final idleWaiter = _idleWaiter;
+    if (idleWaiter != null) {
+      _restartIdleTimer(idleWaiter);
+    }
     if (control != null) {
       control.applyPatch(req.patch, this);
       //debugPrint("patched control: $control");
@@ -654,6 +741,13 @@ class FletBackend extends ChangeNotifier {
   _onSessionCrashed(SessionCrashedBody body) {
     error = body.message;
     notifyListeners();
+    if (_isEmbedded) {
+      // Let the host know too (FletApp.on_error): an exception in the
+      // embedded app's main() or an event handler otherwise only shows in
+      // the embedded app's own error screen.
+      errorsHandler?.onError(body.message);
+      _failIdle(body.message);
+    }
   }
 
   @override
@@ -723,9 +817,11 @@ class FletBackend extends ChangeNotifier {
         await connect();
       });
     } else {
-      errorsHandler?.onError(error != ""
+      final message = error != ""
           ? error
-          : "Error connecting to a Flet service in a timely manner.");
+          : "Error connecting to a Flet service in a timely manner.";
+      errorsHandler?.onError(message);
+      _failIdle(message);
     }
   }
 

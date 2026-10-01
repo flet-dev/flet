@@ -1,3 +1,4 @@
+import contextlib
 import os
 import subprocess
 from typing import Optional
@@ -8,7 +9,14 @@ if is_windows():
     from ctypes import windll
 
 
-def run(args, cwd, env: Optional[dict] = None, capture_output=True, log=None):
+def run(
+    args,
+    cwd,
+    env: Optional[dict] = None,
+    capture_output=True,
+    log=None,
+    input: Optional[str] = None,
+):
     """
     Execute a subprocess command with optional streamed logging.
 
@@ -22,6 +30,9 @@ def run(args, cwd, env: Optional[dict] = None, capture_output=True, log=None):
         capture_output: If `True`, run with `subprocess.run` and
             capture output in memory. If `False`, stream combined output line by line.
         log: Optional callback receiving each output line when `capture_output=False`.
+        input: Optional text written to the command's standard input, which is
+            then closed. When `capture_output=False`, it is written before any
+            output is read, so it must fit in the OS pipe buffer.
 
     Returns:
         A completed `subprocess.CompletedProcess`
@@ -49,6 +60,7 @@ def run(args, cwd, env: Optional[dict] = None, capture_output=True, log=None):
         process = subprocess.run(
             args,
             cwd=cwd,
+            input=input,
             capture_output=True,
             text=True,
             encoding="utf-8",
@@ -67,6 +79,12 @@ def run(args, cwd, env: Optional[dict] = None, capture_output=True, log=None):
             env=cmd_env,
             errors="replace",
         )
+
+        if input is not None:
+            # The process may exit or close its standard input before reading it all
+            with contextlib.suppress(OSError):
+                process.stdin.write(input)
+                process.stdin.close()
 
         try:
             while True:

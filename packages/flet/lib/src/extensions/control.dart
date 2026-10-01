@@ -18,7 +18,12 @@ extension WidgetFromControl on Control {
       {bool visibleOnly = true, bool notifyParent = false}) {
     return children(propertyName, visibleOnly: visibleOnly).map((child) {
       child.notifyParent = notifyParent;
-      return ControlWidget(control: child);
+      // Keyed by control id so Flutter matches children by identity, not
+      // position. Unkeyed, a sibling inserted or made visible before a
+      // control shifted it, and Flutter rebuilt it from scratch: a
+      // TextField lost focus when a row appeared above it, a list its
+      // scroll position.
+      return ControlWidget(key: ControlIdKey(child.id), control: child);
     }).toList();
   }
 

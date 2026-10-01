@@ -22,6 +22,7 @@ slug: roadmap
 * MCP for Flet Studio.
 * Integration with GitHub.
 * Flet Studio for desktop.
+* Drag-n-Drop UI editor.
 * Gallery improvements.
 
 ### Fletbase
@@ -34,3 +35,4 @@ Backend service for Flet apps:
 * Database.
 * Files.
 * Authentication.
+* AI as a service for user apps.
