@@ -1,10 +1,17 @@
 import 'package:flet/flet.dart';
 import 'package:flutter/widgets.dart';
 
+import 'alert.dart';
+import 'avatar.dart';
+import 'badge.dart';
+import 'breadcrumb.dart';
 import 'button.dart';
 import 'card.dart';
 import 'checkbox.dart';
+import 'icon_button.dart';
 import 'input.dart';
+import 'progress.dart';
+import 'separator.dart';
 import 'switch.dart';
 import 'theme.dart';
 import 'utils/lucide_icons.dart';
@@ -18,14 +25,32 @@ class Extension extends FletExtension {
     switch (control.type) {
       case "ShadTheme":
         return ShadThemeControl(key: key, control: control);
+      case "ShadAlert":
+        return ShadAlertControl(key: key, control: control);
+      case "ShadAvatar":
+        return ShadAvatarControl(key: key, control: control);
+      case "ShadBadge":
+        return ShadBadgeControl(key: key, control: control);
+      case "ShadBreadcrumb":
+        return ShadBreadcrumbControl(key: key, control: control);
+      case "ShadBreadcrumbItem":
+        return ShadBreadcrumbItemControl(key: key, control: control);
+      case "ShadBreadcrumbEllipsis":
+        return const ShadBreadcrumbEllipsisControl();
       case "ShadButton":
         return ShadButtonControl(key: key, control: control);
       case "ShadCard":
         return ShadCardControl(key: key, control: control);
+      case "ShadIconButton":
+        return ShadIconButtonControl(key: key, control: control);
       case "ShadInput":
         return ShadInputControl(key: key, control: control);
       case "ShadCheckbox":
         return ShadCheckboxControl(key: key, control: control);
+      case "ShadProgress":
+        return ShadProgressControl(key: key, control: control);
+      case "ShadSeparator":
+        return ShadSeparatorControl(key: key, control: control);
       case "ShadSwitch":
         return ShadSwitchControl(key: key, control: control);
       default:

@@ -272,10 +272,17 @@ docs:
       Shadcn:
         _index: controls/shadcnui/index.md
         Theme: controls/shadcnui/theme.md
+        Alert: controls/shadcnui/alert.md
+        Avatar: controls/shadcnui/avatar.md
+        Badge: controls/shadcnui/badge.md
+        Breadcrumb: controls/shadcnui/breadcrumb.md
         Button: controls/shadcnui/button.md
         Card: controls/shadcnui/card.md
         Checkbox: controls/shadcnui/checkbox.md
+        IconButton: controls/shadcnui/iconbutton.md
         Input: controls/shadcnui/input.md
+        Progress: controls/shadcnui/progress.md
+        Separator: controls/shadcnui/separator.md
         Switch: controls/shadcnui/switch.md
       Extensions:
         _generated_index:
@@ -655,6 +662,8 @@ docs:
         - services/securestorage/types/iosoptions.md
         - services/securestorage/types/weboptions.md
       - Shadcn:
+        - controls/shadcnui/types/alertvariant.md
+        - controls/shadcnui/types/badgevariant.md
         - controls/shadcnui/types/buttonsize.md
         - controls/shadcnui/types/buttonvariant.md
         - controls/shadcnui/types/colorscheme.md

@@ -144,3 +144,122 @@ async def test_follows_page_dark_mode(flet_app: ftt.FletTestApp, request):
             content=ft.Row([shad.Button("Primary"), shad.Switch(value=True)]),
         ),
     )
+
+
+@pytest.mark.asyncio(loop_scope="module")
+async def test_alert_variants(flet_app: ftt.FletTestApp, request):
+    flet_app.page.theme_mode = ft.ThemeMode.LIGHT
+    await flet_app.assert_control_screenshot(
+        request.node.name,
+        ft.Column(
+            width=360,
+            controls=[
+                shad.Alert(
+                    icon=shad.LucideIcons.TERMINAL,
+                    title="Heads up!",
+                    description="Primary alert.",
+                ),
+                shad.Alert(
+                    icon=shad.LucideIcons.CIRCLE_ALERT,
+                    title="Error",
+                    description="Destructive alert.",
+                    variant=shad.AlertVariant.DESTRUCTIVE,
+                ),
+            ],
+        ),
+    )
+
+
+@pytest.mark.asyncio(loop_scope="module")
+async def test_avatar_placeholders(flet_app: ftt.FletTestApp, request):
+    flet_app.page.theme_mode = ft.ThemeMode.LIGHT
+    await flet_app.assert_control_screenshot(
+        request.node.name,
+        ft.Row(
+            [
+                shad.Avatar(placeholder="CN"),
+                shad.Avatar(placeholder="JD", size=56, bgcolor=ft.Colors.AMBER_100),
+            ]
+        ),
+    )
+
+
+@pytest.mark.asyncio(loop_scope="module")
+async def test_badge_variants(flet_app: ftt.FletTestApp, request):
+    flet_app.page.theme_mode = ft.ThemeMode.LIGHT
+    await flet_app.assert_control_screenshot(
+        request.node.name,
+        ft.Row([shad.Badge(v.name.title(), variant=v) for v in shad.BadgeVariant]),
+    )
+
+
+@pytest.mark.asyncio(loop_scope="module")
+async def test_breadcrumb(flet_app: ftt.FletTestApp, request):
+    flet_app.page.theme_mode = ft.ThemeMode.LIGHT
+    await flet_app.assert_control_screenshot(
+        request.node.name,
+        shad.Breadcrumb(
+            items=[
+                shad.BreadcrumbItem("Home", on_click=lambda e: None),
+                shad.BreadcrumbEllipsis(),
+                shad.BreadcrumbItem("Current"),
+            ]
+        ),
+    )
+
+
+@pytest.mark.asyncio(loop_scope="module")
+async def test_icon_button_variants(flet_app: ftt.FletTestApp, request):
+    flet_app.page.theme_mode = ft.ThemeMode.LIGHT
+    await flet_app.assert_control_screenshot(
+        request.node.name,
+        ft.Row(
+            [
+                shad.IconButton(icon=shad.LucideIcons.ROCKET, variant=v)
+                for v in shad.ButtonVariant
+                if v != shad.ButtonVariant.LINK
+            ]
+        ),
+    )
+
+
+@pytest.mark.asyncio(loop_scope="module")
+async def test_progress_values(flet_app: ftt.FletTestApp, request):
+    flet_app.page.theme_mode = ft.ThemeMode.LIGHT
+    await flet_app.assert_control_screenshot(
+        request.node.name,
+        ft.Column(
+            width=300,
+            controls=[
+                shad.Progress(value=0),
+                shad.Progress(value=0.5),
+                shad.Progress(value=1, color=ft.Colors.GREEN, bar_height=8),
+            ],
+        ),
+    )
+
+
+@pytest.mark.asyncio(loop_scope="module")
+async def test_separators(flet_app: ftt.FletTestApp, request):
+    flet_app.page.theme_mode = ft.ThemeMode.LIGHT
+    await flet_app.assert_control_screenshot(
+        request.node.name,
+        ft.Column(
+            width=240,
+            spacing=0,
+            controls=[
+                ft.Text("Above"),
+                shad.Separator(),
+                ft.Text("Below"),
+                shad.Separator(thickness=3, color=ft.Colors.RED, margin=4),
+                ft.Row(
+                    height=24,
+                    controls=[
+                        ft.Text("Left"),
+                        shad.Separator(vertical=True),
+                        ft.Text("Right"),
+                    ],
+                ),
+            ],
+        ),
+    )

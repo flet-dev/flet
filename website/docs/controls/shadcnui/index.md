@@ -71,8 +71,15 @@ anywhere Flet accepts an icon, including core controls such as
 ## Available controls
 
 - [Theme](theme.md)
+- [Alert](alert.md)
+- [Avatar](avatar.md)
+- [Badge](badge.md)
+- [Breadcrumb](breadcrumb.md)
 - [Button](button.md)
 - [Card](card.md)
 - [Checkbox](checkbox.md)
+- [IconButton](iconbutton.md)
 - [Input](input.md)
+- [Progress](progress.md)
+- [Separator](separator.md)
 - [Switch](switch.md)

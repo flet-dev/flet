@@ -1,6 +1,12 @@
 from enum import Enum
 
-__all__ = ["ButtonSize", "ButtonVariant", "ColorScheme"]
+__all__ = [
+    "AlertVariant",
+    "BadgeVariant",
+    "ButtonSize",
+    "ButtonVariant",
+    "ColorScheme",
+]
 
 
 class ColorScheme(Enum):
@@ -85,3 +91,33 @@ class ButtonSize(Enum):
 
     LG = "lg"
     """Large size."""
+
+
+class AlertVariant(Enum):
+    """
+    Visual variants of an :class:`~flet_shadcn_ui.Alert`.
+    """
+
+    PRIMARY = "primary"
+    """Neutral alert. This is the default."""
+
+    DESTRUCTIVE = "destructive"
+    """Alert for errors and other destructive situations."""
+
+
+class BadgeVariant(Enum):
+    """
+    Visual variants of a :class:`~flet_shadcn_ui.Badge`.
+    """
+
+    PRIMARY = "primary"
+    """Solid badge using the primary color. This is the default."""
+
+    SECONDARY = "secondary"
+    """Solid badge using the secondary color."""
+
+    OUTLINE = "outline"
+    """Transparent badge with a border."""
+
+    DESTRUCTIVE = "destructive"
+    """Solid badge for errors and other destructive states."""
