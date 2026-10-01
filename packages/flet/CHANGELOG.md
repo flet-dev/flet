@@ -1,3 +1,7 @@
+## 1.0.4
+
+_No changes in the `flet` Dart package; version bumped for release coordination with the `flet build web` fix that sets the PWA manifest's `short_name` to the product name, and the new `--pwa-short-name` option._
+
 ## 1.0.3
 
 * Add `FletBackend.waitIdle()` for embedded backends: completes with `idle` once the app has rendered and gone quiet, `error` if it crashes or fails to start, or `timeout`. `FletApp` gains `onBackendCreated` to reach the embedded backend, and the `FletApp` control answers a `wait_idle` method call. A crash in an embedded backend is now also reported to the host's `errorsHandler` ([#6901](https://github.com/flet-dev/flet/pull/6901)) by @FeodorFitsner.
