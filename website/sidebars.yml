@@ -281,9 +281,15 @@ docs:
         Checkbox: controls/shadcnui/checkbox.md
         IconButton: controls/shadcnui/iconbutton.md
         Input: controls/shadcnui/input.md
+        InputOTP: controls/shadcnui/inputotp.md
         Progress: controls/shadcnui/progress.md
+        RadioGroup: controls/shadcnui/radiogroup.md
+        Select: controls/shadcnui/select.md
         Separator: controls/shadcnui/separator.md
+        Slider: controls/shadcnui/slider.md
         Switch: controls/shadcnui/switch.md
+        Tabs: controls/shadcnui/tabs.md
+        Textarea: controls/shadcnui/textarea.md
       Extensions:
         _generated_index:
           title: Extension controls

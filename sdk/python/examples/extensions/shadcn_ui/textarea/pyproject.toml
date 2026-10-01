@@ -1,0 +1,26 @@
+[project]
+name = "shadcn-ui-textarea"
+version = "1.0.0"
+description = "Message textarea with a live character counter."
+requires-python = ">=3.10"
+keywords = ["shadcn", "textarea", "multiline", "text input", "counter"]
+authors = [{ name = "Flet team", email = "hello@flet.dev" }]
+dependencies = ["flet", "flet-shadcn-ui"]
+
+[dependency-groups]
+dev = ["flet-cli", "flet-desktop", "flet-web"]
+
+[tool.flet.gallery]
+categories = ["Extensions/Shadcn"]
+
+[tool.flet.metadata]
+title = "Shadcn Textarea"
+controls = ["SafeArea", "Column", "Text", "Textarea"]
+layout_pattern = "form"
+complexity = "basic"
+features = ["change handling", "max length"]
+
+[tool.flet]
+org = "dev.flet"
+company = "Flet"
+copyright = "Copyright (C) 2023-2026 by Flet"

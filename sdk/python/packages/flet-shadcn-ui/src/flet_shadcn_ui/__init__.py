@@ -7,10 +7,16 @@ from flet_shadcn_ui.card import Card
 from flet_shadcn_ui.checkbox import Checkbox
 from flet_shadcn_ui.icon_button import IconButton
 from flet_shadcn_ui.input import Input
+from flet_shadcn_ui.input_otp import InputOTP
 from flet_shadcn_ui.lucide_icons import LucideIcons
 from flet_shadcn_ui.progress import Progress
+from flet_shadcn_ui.radio_group import Radio, RadioGroup
+from flet_shadcn_ui.select import Select, SelectOption
 from flet_shadcn_ui.separator import Separator
+from flet_shadcn_ui.slider import Slider
 from flet_shadcn_ui.switch import Switch
+from flet_shadcn_ui.tabs import Tab, Tabs
+from flet_shadcn_ui.textarea import Textarea
 from flet_shadcn_ui.theme import Theme
 from flet_shadcn_ui.types import (
     AlertVariant,
@@ -37,9 +43,18 @@ __all__ = [
     "ColorScheme",
     "IconButton",
     "Input",
+    "InputOTP",
     "LucideIcons",
     "Progress",
+    "Radio",
+    "RadioGroup",
+    "Select",
+    "SelectOption",
     "Separator",
+    "Slider",
     "Switch",
+    "Tab",
+    "Tabs",
+    "Textarea",
     "Theme",
 ]

@@ -263,3 +263,111 @@ async def test_separators(flet_app: ftt.FletTestApp, request):
             ],
         ),
     )
+
+
+@pytest.mark.asyncio(loop_scope="module")
+async def test_textarea(flet_app: ftt.FletTestApp, request):
+    flet_app.page.theme_mode = ft.ThemeMode.LIGHT
+    await flet_app.assert_control_screenshot(
+        request.node.name,
+        ft.Column(
+            width=300,
+            controls=[
+                shad.Textarea(placeholder="Placeholder", min_height=60),
+                shad.Textarea(value="Line 1\nLine 2", resizable=False),
+            ],
+        ),
+    )
+
+
+@pytest.mark.asyncio(loop_scope="module")
+async def test_slider(flet_app: ftt.FletTestApp, request):
+    flet_app.page.theme_mode = ft.ThemeMode.LIGHT
+    await flet_app.assert_control_screenshot(
+        request.node.name,
+        ft.Column(
+            width=300,
+            controls=[
+                shad.Slider(value=0.25),
+                shad.Slider(value=7, min=0, max=10, divisions=10),
+                shad.Slider(
+                    value=0.5,
+                    active_track_color=ft.Colors.GREEN,
+                    thumb_color=ft.Colors.GREEN_100,
+                ),
+            ],
+        ),
+    )
+
+
+@pytest.mark.asyncio(loop_scope="module")
+async def test_radio_group(flet_app: ftt.FletTestApp, request):
+    flet_app.page.theme_mode = ft.ThemeMode.LIGHT
+    await flet_app.assert_control_screenshot(
+        request.node.name,
+        shad.RadioGroup(
+            value="b",
+            horizontal=True,
+            spacing=16,
+            items=[
+                shad.Radio(value="a", label="A"),
+                shad.Radio(value="b", label="B"),
+                shad.Radio(value="c", label="C", disabled=True),
+            ],
+        ),
+    )
+
+
+@pytest.mark.asyncio(loop_scope="module")
+async def test_select(flet_app: ftt.FletTestApp, request):
+    flet_app.page.theme_mode = ft.ThemeMode.LIGHT
+    await flet_app.assert_control_screenshot(
+        request.node.name,
+        ft.Row(
+            [
+                shad.Select(
+                    placeholder="Pick one",
+                    options=[shad.SelectOption(value="x", text="X")],
+                ),
+                shad.Select(
+                    value="x",
+                    options=[shad.SelectOption(value="x", text="Chosen")],
+                ),
+            ]
+        ),
+    )
+
+
+@pytest.mark.asyncio(loop_scope="module")
+async def test_input_otp(flet_app: ftt.FletTestApp, request):
+    flet_app.page.theme_mode = ft.ThemeMode.LIGHT
+    await flet_app.assert_control_screenshot(
+        request.node.name,
+        ft.Column(
+            [
+                shad.InputOTP(value="12", length=4),
+                shad.InputOTP(value="123456", groups=[2, 2, 2], separator=ft.Text("-")),
+            ]
+        ),
+    )
+
+
+@pytest.mark.asyncio(loop_scope="module")
+async def test_tabs(flet_app: ftt.FletTestApp, request):
+    flet_app.page.theme_mode = ft.ThemeMode.LIGHT
+    await flet_app.assert_control_screenshot(
+        request.node.name,
+        shad.Tabs(
+            width=320,
+            value="two",
+            tabs=[
+                shad.Tab(value="one", label="One", content=ft.Text("First")),
+                shad.Tab(
+                    value="two",
+                    label="Two",
+                    icon=shad.LucideIcons.STAR,
+                    content=ft.Text("Second"),
+                ),
+            ],
+        ),
+    )

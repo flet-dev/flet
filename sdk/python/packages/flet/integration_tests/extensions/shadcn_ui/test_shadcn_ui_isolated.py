@@ -195,3 +195,145 @@ async def test_avatar_falls_back_to_placeholder(flet_app_function: ftt.FletTestA
 
     finder = await flet_app_function.tester.find_by_text("FB")
     assert finder.count == 1
+
+
+@pytest.mark.asyncio(loop_scope="function")
+async def test_textarea_change(flet_app_function: ftt.FletTestApp):
+    changes = []
+    textarea = shad.Textarea(key="ta", on_change=lambda e: changes.append(e.data))
+    flet_app_function.page.add(textarea)
+    await flet_app_function.tester.pump_and_settle()
+
+    await flet_app_function.tester.enter_text(
+        await flet_app_function.tester.find_by_key("ta"), "hello"
+    )
+    await flet_app_function.tester.pump_and_settle()
+
+    assert textarea.value == "hello"
+    assert changes[-1] == "hello"
+
+
+@pytest.mark.asyncio(loop_scope="function")
+async def test_slider_drag_changes_value(flet_app_function: ftt.FletTestApp):
+    ends = []
+    slider = shad.Slider(
+        key="s",
+        width=200,
+        value=0.5,
+        on_change_end=lambda e: ends.append(e.data),
+    )
+    flet_app_function.page.add(slider)
+    await flet_app_function.tester.pump_and_settle()
+
+    await flet_app_function.tester.drag(
+        await flet_app_function.tester.find_by_key("s"), ft.Offset(50, 0)
+    )
+    await flet_app_function.tester.pump_and_settle()
+
+    assert slider.value > 0.5
+    assert len(ends) == 1
+
+
+@pytest.mark.asyncio(loop_scope="function")
+async def test_radio_group_select_and_set(flet_app_function: ftt.FletTestApp):
+    changes = []
+    group = shad.RadioGroup(
+        value="a",
+        on_change=lambda e: changes.append(e.data),
+        items=[shad.Radio(value="a", label="A"), shad.Radio(value="b", label="B")],
+    )
+    flet_app_function.page.add(group)
+    await flet_app_function.tester.pump_and_settle()
+
+    await flet_app_function.tester.tap(await flet_app_function.tester.find_by_text("B"))
+    await flet_app_function.tester.pump_and_settle()
+    assert group.value == "b"
+    assert changes == ["b"]
+
+    # Setting the value from Python must not be reported back as a change.
+    group.value = "a"
+    group.update()
+    await flet_app_function.tester.pump_and_settle()
+    assert changes == ["b"]
+
+
+@pytest.mark.asyncio(loop_scope="function")
+async def test_select_choose_option(flet_app_function: ftt.FletTestApp):
+    changes = []
+    select = shad.Select(
+        placeholder="Pick",
+        on_change=lambda e: changes.append(e.data),
+        options=[
+            shad.SelectOption(value="x", text="Option X"),
+            shad.SelectOption(value="y", text="Option Y"),
+        ],
+    )
+    flet_app_function.page.add(select)
+    await flet_app_function.tester.pump_and_settle()
+
+    await flet_app_function.tester.tap(
+        await flet_app_function.tester.find_by_text("Pick")
+    )
+    await flet_app_function.tester.pump_and_settle()
+    await flet_app_function.tester.tap(
+        await flet_app_function.tester.find_by_text("Option Y")
+    )
+    await flet_app_function.tester.pump_and_settle()
+
+    assert select.value == "y"
+    assert changes == ["y"]
+    assert (await flet_app_function.tester.find_by_text("Option Y")).count == 1
+
+
+@pytest.mark.asyncio(loop_scope="function")
+async def test_input_otp_set_value(flet_app_function: ftt.FletTestApp):
+    otp = shad.InputOTP(length=4)
+    flet_app_function.page.add(otp)
+    await flet_app_function.tester.pump_and_settle()
+
+    otp.value = "4321"
+    otp.update()
+    await flet_app_function.tester.pump_and_settle()
+
+    for digit in "4321":
+        assert (await flet_app_function.tester.find_by_text(digit)).count == 1
+
+
+@pytest.mark.asyncio(loop_scope="function")
+async def test_tabs_switch(flet_app_function: ftt.FletTestApp):
+    changes = []
+    tabs = shad.Tabs(
+        on_change=lambda e: changes.append(e.data),
+        tabs=[
+            shad.Tab(value="one", label="One", content=ft.Text("First content")),
+            shad.Tab(value="two", label="Two", content=ft.Text("Second content")),
+        ],
+    )
+    flet_app_function.page.add(tabs)
+    await flet_app_function.tester.pump_and_settle()
+    assert (await flet_app_function.tester.find_by_text("First content")).count == 1
+
+    await flet_app_function.tester.tap(
+        await flet_app_function.tester.find_by_text("Two")
+    )
+    await flet_app_function.tester.pump_and_settle()
+
+    assert tabs.value == "two"
+    assert changes == ["two"]
+    assert (await flet_app_function.tester.find_by_text("Second content")).count == 1
+
+
+@pytest.mark.asyncio(loop_scope="function")
+async def test_slider_in_intrinsic_width_column(flet_app_function: ftt.FletTestApp):
+    # ShadSlider lays out with a LayoutBuilder, which throws on intrinsic size
+    # queries; the wrapper must answer them instead.
+    flet_app_function.page.add(
+        ft.Column(
+            intrinsic_width=True,
+            controls=[ft.Text("Intrinsic slider"), shad.Slider(value=0.5)],
+        )
+    )
+    await flet_app_function.tester.pump_and_settle()
+
+    finder = await flet_app_function.tester.find_by_text("Intrinsic slider")
+    assert finder.count == 1

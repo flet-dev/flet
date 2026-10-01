@@ -1,0 +1,26 @@
+[project]
+name = "shadcn-ui-slider"
+version = "1.0.0"
+description = "Volume slider with steps and a live value label, plus a disabled slider."
+requires-python = ">=3.10"
+keywords = ["shadcn", "slider", "range", "volume", "divisions"]
+authors = [{ name = "Flet team", email = "hello@flet.dev" }]
+dependencies = ["flet", "flet-shadcn-ui"]
+
+[dependency-groups]
+dev = ["flet-cli", "flet-desktop", "flet-web"]
+
+[tool.flet.gallery]
+categories = ["Extensions/Shadcn"]
+
+[tool.flet.metadata]
+title = "Shadcn Slider"
+controls = ["SafeArea", "Column", "Text", "Slider"]
+layout_pattern = "form"
+complexity = "basic"
+features = ["change handling", "divisions", "disabled state"]
+
+[tool.flet]
+org = "dev.flet"
+company = "Flet"
+copyright = "Copyright (C) 2023-2026 by Flet"

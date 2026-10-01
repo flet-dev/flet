@@ -10,9 +10,15 @@ import 'card.dart';
 import 'checkbox.dart';
 import 'icon_button.dart';
 import 'input.dart';
+import 'input_otp.dart';
 import 'progress.dart';
+import 'radio_group.dart';
+import 'select.dart';
 import 'separator.dart';
+import 'slider.dart';
 import 'switch.dart';
+import 'tabs.dart';
+import 'textarea.dart';
 import 'theme.dart';
 import 'utils/lucide_icons.dart';
 
@@ -47,12 +53,26 @@ class Extension extends FletExtension {
         return ShadInputControl(key: key, control: control);
       case "ShadCheckbox":
         return ShadCheckboxControl(key: key, control: control);
+      case "ShadInputOTP":
+        return ShadInputOTPControl(key: key, control: control);
       case "ShadProgress":
         return ShadProgressControl(key: key, control: control);
+      case "ShadRadioGroup":
+        return ShadRadioGroupControl(key: key, control: control);
+      case "ShadRadio":
+        return ShadRadioControl(key: key, control: control);
+      case "ShadSelect":
+        return ShadSelectControl(key: key, control: control);
       case "ShadSeparator":
         return ShadSeparatorControl(key: key, control: control);
+      case "ShadSlider":
+        return ShadSliderControl(key: key, control: control);
       case "ShadSwitch":
         return ShadSwitchControl(key: key, control: control);
+      case "ShadTabs":
+        return ShadTabsControl(key: key, control: control);
+      case "ShadTextarea":
+        return ShadTextareaControl(key: key, control: control);
       default:
         return null;
     }
