@@ -272,6 +272,7 @@ docs:
       Shadcn:
         _index: controls/shadcnui/index.md
         Theme: controls/shadcnui/theme.md
+        Accordion: controls/shadcnui/accordion.md
         Alert: controls/shadcnui/alert.md
         Avatar: controls/shadcnui/avatar.md
         Badge: controls/shadcnui/badge.md
@@ -282,14 +283,17 @@ docs:
         IconButton: controls/shadcnui/iconbutton.md
         Input: controls/shadcnui/input.md
         InputOTP: controls/shadcnui/inputotp.md
+        Popover: controls/shadcnui/popover.md
         Progress: controls/shadcnui/progress.md
         RadioGroup: controls/shadcnui/radiogroup.md
+        ResizablePanelGroup: controls/shadcnui/resizable.md
         Select: controls/shadcnui/select.md
         Separator: controls/shadcnui/separator.md
         Slider: controls/shadcnui/slider.md
         Switch: controls/shadcnui/switch.md
         Tabs: controls/shadcnui/tabs.md
         Textarea: controls/shadcnui/textarea.md
+        Tooltip: controls/shadcnui/tooltip.md
       Extensions:
         _generated_index:
           title: Extension controls

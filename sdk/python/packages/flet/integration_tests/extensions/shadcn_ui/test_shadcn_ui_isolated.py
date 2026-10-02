@@ -337,3 +337,96 @@ async def test_slider_in_intrinsic_width_column(flet_app_function: ftt.FletTestA
 
     finder = await flet_app_function.tester.find_by_text("Intrinsic slider")
     assert finder.count == 1
+
+
+@pytest.mark.asyncio(loop_scope="function")
+async def test_accordion_expand_and_set(flet_app_function: ftt.FletTestApp):
+    changes = []
+    accordion = shad.Accordion(
+        on_change=lambda e: changes.append(e.data),
+        items=[
+            shad.AccordionItem(value="a", title="Item A", content=ft.Text("Body A")),
+            shad.AccordionItem(value="b", title="Item B", content=ft.Text("Body B")),
+        ],
+    )
+    flet_app_function.page.add(accordion)
+    await flet_app_function.tester.pump_and_settle()
+
+    await flet_app_function.tester.tap(
+        await flet_app_function.tester.find_by_text("Item B")
+    )
+    await flet_app_function.tester.pump_and_settle()
+    assert accordion.value == ["b"]
+    assert changes == [["b"]]
+    assert (await flet_app_function.tester.find_by_text("Body B")).count == 1
+
+    # Setting the value from Python must not be reported back as a change.
+    accordion.value = ["a"]
+    accordion.update()
+    await flet_app_function.tester.pump_and_settle()
+    assert changes == [["b"]]
+    assert (await flet_app_function.tester.find_by_text("Body A")).count == 1
+
+
+@pytest.mark.asyncio(loop_scope="function")
+async def test_popover_open_and_dismiss(flet_app_function: ftt.FletTestApp):
+    dismissed = []
+    flet_app_function.resize_page(400, 300)
+    popover = shad.Popover(
+        on_dismiss=lambda e: dismissed.append(e),
+        content=ft.Text("Anchor"),
+        popover=ft.Text("Popover body"),
+    )
+    flet_app_function.page.add(popover)
+    await flet_app_function.tester.pump_and_settle()
+    assert (await flet_app_function.tester.find_by_text("Popover body")).count == 0
+
+    popover.open = True
+    popover.update()
+    await flet_app_function.tester.pump_and_settle()
+    assert (await flet_app_function.tester.find_by_text("Popover body")).count == 1
+    assert dismissed == []
+
+    await flet_app_function.tester.tap_at(ft.Offset(380, 280))
+    await flet_app_function.tester.pump_and_settle()
+    assert (await flet_app_function.tester.find_by_text("Popover body")).count == 0
+    assert popover.open is False
+    assert len(dismissed) == 1
+
+
+@pytest.mark.asyncio(loop_scope="function")
+async def test_tooltip_shows_on_hover(flet_app_function: ftt.FletTestApp):
+    flet_app_function.page.add(
+        shad.Tooltip(message="Tip text", content=ft.Text("Target"))
+    )
+    await flet_app_function.tester.pump_and_settle()
+    assert (await flet_app_function.tester.find_by_text("Tip text")).count == 0
+
+    await flet_app_function.tester.mouse_hover(
+        await flet_app_function.tester.find_by_text("Target")
+    )
+    await flet_app_function.tester.pump_and_settle()
+    assert (await flet_app_function.tester.find_by_text("Tip text")).count == 1
+
+
+@pytest.mark.asyncio(loop_scope="function")
+async def test_resizable_in_intrinsic_width_column(flet_app_function: ftt.FletTestApp):
+    flet_app_function.page.add(
+        ft.Column(
+            intrinsic_width=True,
+            controls=[
+                ft.Text("Intrinsic resizable"),
+                shad.ResizablePanelGroup(
+                    width=200,
+                    height=80,
+                    panels=[
+                        shad.ResizablePanel(default_size=0.5, content=ft.Text("L")),
+                        shad.ResizablePanel(default_size=0.5, content=ft.Text("R")),
+                    ],
+                ),
+            ],
+        )
+    )
+    await flet_app_function.tester.pump_and_settle()
+
+    assert (await flet_app_function.tester.find_by_text("R")).count == 1

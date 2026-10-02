@@ -371,3 +371,39 @@ async def test_tabs(flet_app: ftt.FletTestApp, request):
             ],
         ),
     )
+
+
+@pytest.mark.asyncio(loop_scope="module")
+async def test_accordion_multiple(flet_app: ftt.FletTestApp, request):
+    flet_app.page.theme_mode = ft.ThemeMode.LIGHT
+    await flet_app.assert_control_screenshot(
+        request.node.name,
+        shad.Accordion(
+            width=320,
+            multiple=True,
+            value=["one", "three"],
+            items=[
+                shad.AccordionItem(value=v, title=v.title(), content=ft.Text(v * 3))
+                for v in ["one", "two", "three"]
+            ],
+        ),
+    )
+
+
+@pytest.mark.asyncio(loop_scope="module")
+async def test_resizable_vertical(flet_app: ftt.FletTestApp, request):
+    flet_app.page.theme_mode = ft.ThemeMode.LIGHT
+    await flet_app.assert_control_screenshot(
+        request.node.name,
+        shad.ResizablePanelGroup(
+            width=200,
+            height=160,
+            vertical=True,
+            show_handle=True,
+            divider_color=ft.Colors.RED,
+            panels=[
+                shad.ResizablePanel(default_size=0.25, content=ft.Text("Top")),
+                shad.ResizablePanel(default_size=0.75, content=ft.Text("Bottom")),
+            ],
+        ),
+    )

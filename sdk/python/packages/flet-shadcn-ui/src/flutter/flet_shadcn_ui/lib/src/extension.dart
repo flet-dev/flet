@@ -1,6 +1,7 @@
 import 'package:flet/flet.dart';
 import 'package:flutter/widgets.dart';
 
+import 'accordion.dart';
 import 'alert.dart';
 import 'avatar.dart';
 import 'badge.dart';
@@ -11,8 +12,10 @@ import 'checkbox.dart';
 import 'icon_button.dart';
 import 'input.dart';
 import 'input_otp.dart';
+import 'popover.dart';
 import 'progress.dart';
 import 'radio_group.dart';
+import 'resizable.dart';
 import 'select.dart';
 import 'separator.dart';
 import 'slider.dart';
@@ -20,6 +23,7 @@ import 'switch.dart';
 import 'tabs.dart';
 import 'textarea.dart';
 import 'theme.dart';
+import 'tooltip.dart';
 import 'utils/lucide_icons.dart';
 
 /// Icon set ID of Lucide icons, see `flet_shadcn_ui.LucideIcons`.
@@ -29,8 +33,14 @@ class Extension extends FletExtension {
   @override
   Widget? createWidget(Key? key, Control control) {
     switch (control.type) {
+      case "ShadTooltip":
+        return ShadTooltipControl(key: key, control: control);
       case "ShadTheme":
         return ShadThemeControl(key: key, control: control);
+      case "ShadAccordion":
+        return ShadAccordionControl(key: key, control: control);
+      case "ShadAccordionItem":
+        return ShadAccordionItemControl(key: key, control: control);
       case "ShadAlert":
         return ShadAlertControl(key: key, control: control);
       case "ShadAvatar":
@@ -55,12 +65,16 @@ class Extension extends FletExtension {
         return ShadCheckboxControl(key: key, control: control);
       case "ShadInputOTP":
         return ShadInputOTPControl(key: key, control: control);
+      case "ShadPopover":
+        return ShadPopoverControl(key: key, control: control);
       case "ShadProgress":
         return ShadProgressControl(key: key, control: control);
       case "ShadRadioGroup":
         return ShadRadioGroupControl(key: key, control: control);
       case "ShadRadio":
         return ShadRadioControl(key: key, control: control);
+      case "ShadResizablePanelGroup":
+        return ShadResizablePanelGroupControl(key: key, control: control);
       case "ShadSelect":
         return ShadSelectControl(key: key, control: control);
       case "ShadSeparator":

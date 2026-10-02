@@ -71,6 +71,7 @@ anywhere Flet accepts an icon, including core controls such as
 ## Available controls
 
 - [Theme](theme.md)
+- [Accordion](accordion.md)
 - [Alert](alert.md)
 - [Avatar](avatar.md)
 - [Badge](badge.md)
@@ -81,11 +82,14 @@ anywhere Flet accepts an icon, including core controls such as
 - [IconButton](iconbutton.md)
 - [Input](input.md)
 - [InputOTP](inputotp.md)
+- [Popover](popover.md)
 - [Progress](progress.md)
 - [RadioGroup](radiogroup.md)
+- [ResizablePanelGroup](resizable.md)
 - [Select](select.md)
 - [Separator](separator.md)
 - [Slider](slider.md)
 - [Switch](switch.md)
 - [Tabs](tabs.md)
 - [Textarea](textarea.md)
+- [Tooltip](tooltip.md)
