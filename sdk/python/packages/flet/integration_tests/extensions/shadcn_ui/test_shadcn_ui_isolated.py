@@ -430,3 +430,138 @@ async def test_resizable_in_intrinsic_width_column(flet_app_function: ftt.FletTe
     await flet_app_function.tester.pump_and_settle()
 
     assert (await flet_app_function.tester.find_by_text("R")).count == 1
+
+
+@pytest.mark.asyncio(loop_scope="function")
+async def test_calendar_pick_and_clear(flet_app_function: ftt.FletTestApp):
+    import datetime
+
+    changes = []
+    calendar = shad.Calendar(
+        value=datetime.date(2025, 6, 12), on_change=lambda e: changes.append(e)
+    )
+    flet_app_function.page.add(calendar)
+    await flet_app_function.tester.pump_and_settle()
+
+    await flet_app_function.tester.tap(
+        await flet_app_function.tester.find_by_text("20")
+    )
+    await flet_app_function.tester.pump_and_settle()
+    assert len(changes) == 1
+    # A picked day arrives as midnight UTC of that day.
+    assert calendar.value.date() == datetime.date(2025, 6, 20)
+    assert calendar.value.utcoffset() == datetime.timedelta(0)
+
+    # Clearing from Python must deselect the day without reporting a change.
+    calendar.value = None
+    calendar.update()
+    await flet_app_function.tester.pump_and_settle()
+    assert len(changes) == 1
+
+
+@pytest.mark.asyncio(loop_scope="function")
+async def test_calendar_min_max_date(flet_app_function: ftt.FletTestApp):
+    import datetime
+
+    changes = []
+    calendar = shad.Calendar(
+        value=datetime.date(2025, 6, 12),
+        min_date=datetime.date(2025, 6, 10),
+        max_date=datetime.date(2025, 6, 15),
+        on_change=lambda e: changes.append(e),
+    )
+    flet_app_function.page.add(calendar)
+    await flet_app_function.tester.pump_and_settle()
+
+    # The 20th is outside the allowed range, so tapping it does nothing.
+    await flet_app_function.tester.tap(
+        await flet_app_function.tester.find_by_text("20")
+    )
+    await flet_app_function.tester.pump_and_settle()
+    assert changes == []
+    assert calendar.value == datetime.date(2025, 6, 12)
+
+
+@pytest.mark.asyncio(loop_scope="function")
+async def test_time_picker_set_from_python(flet_app_function: ftt.FletTestApp):
+    import datetime
+
+    changes = []
+    picker = shad.TimePicker(
+        value=datetime.time(9, 5), on_change=lambda e: changes.append(e)
+    )
+    flet_app_function.page.add(picker)
+    await flet_app_function.tester.pump_and_settle()
+    assert (await flet_app_function.tester.find_by_text("09")).count == 1
+    assert (await flet_app_function.tester.find_by_text("05")).count == 1
+
+    picker.value = datetime.time(17, 45)
+    picker.update()
+    await flet_app_function.tester.pump_and_settle()
+    assert (await flet_app_function.tester.find_by_text("17")).count == 1
+    assert (await flet_app_function.tester.find_by_text("45")).count == 1
+    assert changes == []
+
+
+@pytest.mark.asyncio(loop_scope="function")
+async def test_pickers_in_intrinsic_width_column(flet_app_function: ftt.FletTestApp):
+    # ShadCalendar and ShadTimePicker can't compute a dry layout; the wrapper
+    # must answer intrinsic queries (e.g. inside AlertDialog content) instead.
+    import datetime
+
+    flet_app_function.page.add(
+        ft.Column(
+            intrinsic_width=True,
+            controls=[
+                ft.Text("Intrinsic pickers"),
+                shad.Calendar(value=datetime.date(2025, 6, 12)),
+                shad.TimePicker(value=datetime.time(8, 15)),
+            ],
+        )
+    )
+    await flet_app_function.tester.pump_and_settle()
+
+    assert (await flet_app_function.tester.find_by_text("Intrinsic pickers")).count == 1
+    assert (await flet_app_function.tester.find_by_text("08")).count == 1
+
+
+@pytest.mark.asyncio(loop_scope="function")
+async def test_date_range_picker_new_range(flet_app_function: ftt.FletTestApp):
+    import datetime
+
+    flet_app_function.resize_page(700, 500)
+    picker = shad.DateRangePicker(
+        key="range",
+        start_value=datetime.date(2025, 6, 9),
+        end_value=datetime.date(2025, 6, 13),
+    )
+    flet_app_function.page.add(picker)
+    await flet_app_function.tester.pump_and_settle()
+    await flet_app_function.tester.tap(
+        await flet_app_function.tester.find_by_key("range")
+    )
+    await flet_app_function.tester.pump_and_settle()
+
+    # A click after a complete range starts a new one...
+    await flet_app_function.tester.tap(
+        (await flet_app_function.tester.find_by_text("16")).first
+    )
+    await flet_app_function.tester.pump_and_settle()
+    assert picker.start_value.date() == datetime.date(2025, 6, 16)
+    assert picker.end_value is None
+
+    # ...a click before the start moves the start...
+    await flet_app_function.tester.tap(
+        (await flet_app_function.tester.find_by_text("11")).first
+    )
+    await flet_app_function.tester.pump_and_settle()
+    assert picker.start_value.date() == datetime.date(2025, 6, 11)
+    assert picker.end_value is None
+
+    # ...and a click after the start sets the end.
+    await flet_app_function.tester.tap(
+        (await flet_app_function.tester.find_by_text("20")).first
+    )
+    await flet_app_function.tester.pump_and_settle()
+    assert picker.start_value.date() == datetime.date(2025, 6, 11)
+    assert picker.end_value.date() == datetime.date(2025, 6, 20)

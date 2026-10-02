@@ -4,8 +4,10 @@ from flet_shadcn_ui.avatar import Avatar
 from flet_shadcn_ui.badge import Badge
 from flet_shadcn_ui.breadcrumb import Breadcrumb, BreadcrumbEllipsis, BreadcrumbItem
 from flet_shadcn_ui.button import Button
+from flet_shadcn_ui.calendar import Calendar
 from flet_shadcn_ui.card import Card
 from flet_shadcn_ui.checkbox import Checkbox
+from flet_shadcn_ui.date_picker import DatePicker, DateRangePicker
 from flet_shadcn_ui.icon_button import IconButton
 from flet_shadcn_ui.input import Input
 from flet_shadcn_ui.input_otp import InputOTP
@@ -21,6 +23,7 @@ from flet_shadcn_ui.switch import Switch
 from flet_shadcn_ui.tabs import Tab, Tabs
 from flet_shadcn_ui.textarea import Textarea
 from flet_shadcn_ui.theme import Theme
+from flet_shadcn_ui.time_picker import TimePicker
 from flet_shadcn_ui.tooltip import Tooltip
 from flet_shadcn_ui.types import (
     AlertVariant,
@@ -44,9 +47,12 @@ __all__ = [
     "Button",
     "ButtonSize",
     "ButtonVariant",
+    "Calendar",
     "Card",
     "Checkbox",
     "ColorScheme",
+    "DatePicker",
+    "DateRangePicker",
     "IconButton",
     "Input",
     "InputOTP",
@@ -66,5 +72,6 @@ __all__ = [
     "Tabs",
     "Textarea",
     "Theme",
+    "TimePicker",
     "Tooltip",
 ]

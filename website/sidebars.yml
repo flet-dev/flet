@@ -278,8 +278,11 @@ docs:
         Badge: controls/shadcnui/badge.md
         Breadcrumb: controls/shadcnui/breadcrumb.md
         Button: controls/shadcnui/button.md
+        Calendar: controls/shadcnui/calendar.md
         Card: controls/shadcnui/card.md
         Checkbox: controls/shadcnui/checkbox.md
+        DatePicker: controls/shadcnui/datepicker.md
+        DateRangePicker: controls/shadcnui/daterangepicker.md
         IconButton: controls/shadcnui/iconbutton.md
         Input: controls/shadcnui/input.md
         InputOTP: controls/shadcnui/inputotp.md
@@ -293,6 +296,7 @@ docs:
         Switch: controls/shadcnui/switch.md
         Tabs: controls/shadcnui/tabs.md
         Textarea: controls/shadcnui/textarea.md
+        TimePicker: controls/shadcnui/timepicker.md
         Tooltip: controls/shadcnui/tooltip.md
       Extensions:
         _generated_index:

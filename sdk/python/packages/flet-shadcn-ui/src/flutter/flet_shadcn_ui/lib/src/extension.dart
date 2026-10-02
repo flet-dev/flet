@@ -7,8 +7,10 @@ import 'avatar.dart';
 import 'badge.dart';
 import 'breadcrumb.dart';
 import 'button.dart';
+import 'calendar.dart';
 import 'card.dart';
 import 'checkbox.dart';
+import 'date_picker.dart';
 import 'icon_button.dart';
 import 'input.dart';
 import 'input_otp.dart';
@@ -23,6 +25,7 @@ import 'switch.dart';
 import 'tabs.dart';
 import 'textarea.dart';
 import 'theme.dart';
+import 'time_picker.dart';
 import 'tooltip.dart';
 import 'utils/lucide_icons.dart';
 
@@ -33,6 +36,8 @@ class Extension extends FletExtension {
   @override
   Widget? createWidget(Key? key, Control control) {
     switch (control.type) {
+      case "ShadTimePicker":
+        return ShadTimePickerControl(key: key, control: control);
       case "ShadTooltip":
         return ShadTooltipControl(key: key, control: control);
       case "ShadTheme":
@@ -55,8 +60,14 @@ class Extension extends FletExtension {
         return const ShadBreadcrumbEllipsisControl();
       case "ShadButton":
         return ShadButtonControl(key: key, control: control);
+      case "ShadCalendar":
+        return ShadCalendarControl(key: key, control: control);
       case "ShadCard":
         return ShadCardControl(key: key, control: control);
+      case "ShadDatePicker":
+        return ShadDatePickerControl(key: key, control: control);
+      case "ShadDateRangePicker":
+        return ShadDateRangePickerControl(key: key, control: control);
       case "ShadIconButton":
         return ShadIconButtonControl(key: key, control: control);
       case "ShadInput":

@@ -1,3 +1,5 @@
+import datetime
+
 import flet_shadcn_ui as shad
 import pytest
 
@@ -405,5 +407,39 @@ async def test_resizable_vertical(flet_app: ftt.FletTestApp, request):
                 shad.ResizablePanel(default_size=0.25, content=ft.Text("Top")),
                 shad.ResizablePanel(default_size=0.75, content=ft.Text("Bottom")),
             ],
+        ),
+    )
+
+
+@pytest.mark.asyncio(loop_scope="module")
+async def test_calendar_limits_two_months(flet_app: ftt.FletTestApp, request):
+    flet_app.page.theme_mode = ft.ThemeMode.LIGHT
+    await flet_app.assert_control_screenshot(
+        request.node.name,
+        shad.Calendar(
+            value=datetime.date(2025, 6, 12),
+            min_date=datetime.date(2025, 6, 5),
+            max_date=datetime.date(2025, 7, 10),
+            number_of_months=2,
+            show_week_numbers=True,
+        ),
+    )
+
+
+@pytest.mark.asyncio(loop_scope="module")
+async def test_time_picker_period(flet_app: ftt.FletTestApp, request):
+    flet_app.page.theme_mode = ft.ThemeMode.LIGHT
+    await flet_app.assert_control_screenshot(
+        request.node.name,
+        ft.Column(
+            [
+                shad.TimePicker(value=datetime.time(0, 5), period=True),
+                shad.TimePicker(
+                    value=datetime.time(23, 59),
+                    hour_label="H",
+                    minute_label="M",
+                ),
+                shad.TimePicker(),
+            ]
         ),
     )
