@@ -42,6 +42,8 @@ class PopupMenuButtonControl extends StatelessWidget {
           Theme.of(context),
         ),
         constraints: control.getBoxConstraints("size_constraints"),
+        // Rounds the InkWell highlight around custom `content`.
+        borderRadius: control.getBorderRadius("border_radius"),
         style: control.getButtonStyle("style", Theme.of(context)),
         popUpAnimationStyle: control.getAnimationStyle("popup_animation_style"),
         menuPadding: control.getPadding("menu_padding"),

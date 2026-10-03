@@ -112,6 +112,8 @@ ThemeData parseTheme(
     },
     visualDensity:
         parseVisualDensity(value?["visual_density"], theme.visualDensity)!,
+    materialTapTargetSize: parseMaterialTapTargetSize(
+        value?["material_tap_target_size"], theme.materialTapTargetSize),
     pageTransitionsTheme: parsePageTransitions(
         value?["page_transitions"], theme.pageTransitionsTheme)!,
     colorScheme: colorScheme,

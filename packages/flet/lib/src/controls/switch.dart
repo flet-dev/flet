@@ -105,6 +105,8 @@ class _SwitchControlState extends State<SwitchControl> {
             widget.control.getColor("inactive_track_color", context),
         thumbColor: widget.control.getWidgetStateColor("thumb_color", theme),
         thumbIcon: widget.control.getWidgetStateIcon("thumb_icon", theme),
+        materialTapTargetSize: parseMaterialTapTargetSize(
+            widget.control.getString("material_tap_target_size")),
         trackColor: widget.control.getWidgetStateColor("track_color", theme),
         focusColor: widget.control.getColor("focus_color", context),
         value: _value,

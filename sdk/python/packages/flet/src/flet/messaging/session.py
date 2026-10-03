@@ -421,7 +421,16 @@ class Session:
             self.__index[control_id] = live_control
             return live_control
 
-        return control
+        if control is not None:
+            # The control was removed from the page after the client queued
+            # the event (e.g. a size_change from a widget that was just torn
+            # down). There is no page to run the handler against, so drop it
+            # rather than failing with "Control must be added to the page
+            # first".
+            logger.debug(
+                "Dropping event for detached control %s (%s)", control, control_id
+            )
+        return None
 
     # optimizations:
     # - disable auto-update

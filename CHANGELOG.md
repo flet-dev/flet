@@ -3,10 +3,17 @@
 ### Improvements
 
 * Add `--pwa-short-name` and `[tool.flet.web].pwa_short_name` to `flet build web` to set the `short_name` of the web app manifest: the label shown under the app icon when the PWA is installed, e.g. on the iOS Home Screen. It defaults to the product name ([#6911](https://github.com/flet-dev/flet/pull/6911)) by @FeodorFitsner.
+* Add `min_width`, `max_width`, `min_height` and `max_height` to every layout control. They are applied by the client on every layout pass, so a capped, centered column (e.g. `Container(max_width=760)` in a `Column(horizontal_alignment=CENTER)`) stays correct while the window resizes - no more computing widths in Python from `page.width` or `on_size_change`, which always lagged a frame or more behind by @FeodorFitsner.
+* Add `ft.MaterialTapTargetSize` with `Switch.material_tap_target_size` and `Theme.material_tap_target_size`: `SHRINK_WRAP` drops Material's 48px minimum tappable area for dense, pointer-driven layouts by @FeodorFitsner.
+* `Dropdown.height` now sizes the field itself, down to compact heights such as 32 or 40: the leading icon and trailing arrow no longer force a 48px minimum by @FeodorFitsner.
+* Add `PopupMenuButton.border_radius` to round the hover/splash highlight around custom `content` by @FeodorFitsner.
 
 ### Bug fixes
 
 * Fix a web app built with `flet build web` getting its project name, e.g. `my_app`, as its label when installed as a PWA on iOS instead of its product name. The manifest's `short_name`, which iOS shows on the Home Screen, was set to the project name; it now defaults to the product name, like the page title. Product names containing quotes no longer break `manifest.json` ([#6911](https://github.com/flet-dev/flet/pull/6911)) by @FeodorFitsner.
+* Fix the session crashing with "Control must be added to the page first" when the client sends an event (e.g. `size_change`) for a control that was just removed from the page; such events are now dropped by @FeodorFitsner.
+* Fix `on_size_change` never reporting when Flutter reuses the widget for a different control at the same size (e.g. a new page swapped into the same slot) by @FeodorFitsner.
+* Fix `InteractiveViewer` swallowing taps meant for its content when `pan_enabled` and `scale_enabled` are both off: it no longer installs gesture recognizers it can't use; programmatic zoom/pan still works by @FeodorFitsner.
 
 ## 1.0.3
 

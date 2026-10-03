@@ -330,3 +330,9 @@ class ListTile(LayoutControl, AdaptiveControl, ActionControl):
     """
     Called when the user long-presses on this list tile.
     """
+
+    def init(self):
+        super().init()
+        # `min_height` is this control's own property (applied by the control),
+        # not the generic LayoutControl constraint - don't apply it twice.
+        self._internals["skip_properties"] = ["min_height"]

@@ -109,7 +109,33 @@ class _DropdownControlState extends State<DropdownControl> {
 
     var borders = parseFormFieldBorders(widget.control, theme);
 
+    // `height` sizes the field itself. Wrapping it in a SizedBox (what
+    // `height` does for other controls) can't make it shorter than ~48px:
+    // the leading icon sits in an InputDecoration prefix slot with a 48x48
+    // minimum, and the trailing arrow is an IconButton with the same
+    // minimum. Constrain the decoration and both icon slots to the height.
+    var fieldHeight = widget.control.getDouble("height");
+    BoxConstraints? iconConstraints = fieldHeight == null
+        ? null
+        : BoxConstraints(
+            minWidth: fieldHeight,
+            maxWidth: fieldHeight,
+            minHeight: 0,
+            maxHeight: fieldHeight,
+          );
+
     InputDecorationTheme inputDecorationTheme = InputDecorationTheme(
+      constraints: fieldHeight == null
+          ? null
+          : BoxConstraints.tightFor(height: fieldHeight),
+      prefixIconConstraints: iconConstraints,
+      // The trailing IconButton sits inside 4px of padding on each side.
+      suffixIconConstraints: fieldHeight == null
+          ? null
+          : BoxConstraints.tightFor(
+              width: fieldHeight - 8 > 0 ? fieldHeight - 8 : fieldHeight,
+              height: fieldHeight - 8 > 0 ? fieldHeight - 8 : fieldHeight,
+            ),
       filled: widget.control.getBool("filled", false)!,
       fillColor: fillColor,
       hintStyle: widget.control.getTextStyle("hint_style", theme),

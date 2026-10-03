@@ -38,6 +38,7 @@ from flet.controls.types import (
     ColorValue,
     IconData,
     MainAxisAlignment,
+    MaterialTapTargetSize,
     MouseCursor,
     NotchShape,
     Number,
@@ -3593,6 +3594,13 @@ class Theme:
     tooltip_theme: Optional[TooltipTheme] = None
     """
     Customizes the appearance of descendant tooltips.
+    """
+
+    material_tap_target_size: Optional[MaterialTapTargetSize] = None
+    """
+    The size of the tappable area of descendant Material controls (switches,
+    checkboxes, radios, buttons, ...). `SHRINK_WRAP` drops the 48px minimum
+    for dense, pointer-driven layouts. See :class:`~flet.MaterialTapTargetSize`.
     """
 
     visual_density: Optional[VisualDensity] = None

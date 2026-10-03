@@ -1,6 +1,12 @@
 ## 1.0.4
 
-_No changes in the `flet` Dart package; version bumped for release coordination with the `flet build web` fix that sets the PWA manifest's `short_name` to the product name, and the new `--pwa-short-name` option ([#6911](https://github.com/flet-dev/flet/pull/6911))._
+* Apply `min_width`/`max_width`/`min_height`/`max_height` to every `LayoutControl` as a `ConstrainedBox` around the control (outside any fixed size). A control that implements one of these names itself lists it in `skip_properties` (`ListTile.min_height`, `NavigationRail.min_width`) by @FeodorFitsner.
+* Pass `material_tap_target_size` to `Switch` and `ThemeData` (`parseMaterialTapTargetSize()`) by @FeodorFitsner.
+* Map `Dropdown` `height` to the `DropdownMenu`'s `InputDecorationTheme`: field `constraints` plus `prefixIconConstraints`/`suffixIconConstraints`, so the field can be shorter than 48px by @FeodorFitsner.
+* Pass `PopupMenuButton` `border_radius` to the `InkWell` around custom `content` by @FeodorFitsner.
+* `SizeChangeObserver` reports the current size once when its widget is reused for a different control (`didUpdateWidget`); previously it only reported size changes, so the new control never heard its size by @FeodorFitsner.
+* `InteractiveViewer` with `pan_enabled`, `scale_enabled` and `trackpad_scroll_causes_scale` all off builds the same clip/transform/unbounded layout without the `InteractiveViewer` widget, whose scale recognizer swallowed taps on the content by @FeodorFitsner.
+* Fix `View` throwing `Bad state: No element` when it rebuilds while the page's `views` list is empty (e.g. the route matches no view); it is treated as the root and top view instead by @FeodorFitsner.
 
 ## 1.0.3
 

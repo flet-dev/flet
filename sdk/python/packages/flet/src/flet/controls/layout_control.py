@@ -73,6 +73,35 @@ class LayoutControl(Control):
     Imposed Control height in virtual pixels.
     """
 
+    min_width: Optional[Number] = None
+    """
+    The minimum width this control can be laid out at, in virtual pixels.
+
+    Applied by the client on every layout pass, so it holds while the window
+    resizes. A fixed :attr:`width` is clamped into
+    [`min_width`, `max_width`].
+    """
+
+    max_width: Optional[Number] = None
+    """
+    The maximum width this control can be laid out at, in virtual pixels.
+
+    Combine with an alignment on the parent to center a capped-width column,
+    e.g. a `Column(horizontal_alignment=CENTER)` holding a
+    `Container(max_width=760, content=...)` - the content fills the available
+    width up to 760 and stays centered as the window resizes.
+    """
+
+    min_height: Optional[Number] = None
+    """
+    The minimum height this control can be laid out at, in virtual pixels.
+    """
+
+    max_height: Optional[Number] = None
+    """
+    The maximum height this control can be laid out at, in virtual pixels.
+    """
+
     left: Optional[Number] = None
     """
     The distance that the child's left edge is inset from the left of the stack.

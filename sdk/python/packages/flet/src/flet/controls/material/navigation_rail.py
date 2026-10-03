@@ -316,3 +316,9 @@ class NavigationRail(LayoutControl):
     """
     Called when selected destination changed.
     """
+
+    def init(self):
+        super().init()
+        # `min_width` is this control's own property (applied by the control),
+        # not the generic LayoutControl constraint - don't apply it twice.
+        self._internals["skip_properties"] = ["min_width"]
