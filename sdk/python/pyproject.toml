@@ -31,6 +31,7 @@ dependencies = [
     "flet-spinkit",
     "flet-video",
     "flet-webview",
+    "flet-webview-all",
 ]
 
 [tool.uv.sources]
@@ -59,6 +60,7 @@ flet-secure-storage = { workspace = true }
 flet-spinkit = { workspace = true }
 flet-video = { workspace = true }
 flet-webview = { workspace = true }
+flet-webview-all = { workspace = true }
 
 [tool.uv.workspace]
 members = ["packages/*"]
@@ -133,6 +135,7 @@ isort = { known-first-party = [
     "flet_secure_storage",
     "flet_video",
     "flet_webview",
+    "flet_webview_all",
 ] }
 preview = true
 select = [
