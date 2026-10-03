@@ -1,6 +1,6 @@
 {
-    "name": "{{ cookiecutter.product_name }}",
-    "short_name": "{{ cookiecutter.project_name }}",
+    "name": {{ cookiecutter.product_name | tojson }},
+    "short_name": {{ cookiecutter.pwa_short_name | tojson }},
     "start_url": ".",
     "display": "standalone",
     "background_color": "{{ cookiecutter.pwa_background_color }}",

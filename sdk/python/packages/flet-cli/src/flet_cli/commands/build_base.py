@@ -548,6 +548,14 @@ class BaseBuildCommand(BaseFlutterCommand):
             help="Default color for your web app's user interface (web only)",
         )
         parser.add_argument(
+            "--pwa-short-name",
+            dest="pwa_short_name",
+            required=False,
+            help="Short name of your web app, shown under its icon when "
+            "installed, e.g. on the iOS Home Screen. Defaults to the product "
+            "name (web only)",
+        )
+        parser.add_argument(
             "--no-wasm",
             dest="no_wasm",
             action="store_true",
@@ -1542,6 +1550,14 @@ class BaseBuildCommand(BaseFlutterCommand):
             "pwa_theme_color": (
                 self.options.pwa_theme_color
                 or self.get_pyproject("tool.flet.web.pwa_theme_color")
+            ),
+            # The label an installed PWA gets under its icon. It used to be
+            # the project name, a slug such as `my_app`, and iOS shows it on
+            # the Home Screen instead of the `apple-mobile-web-app-title` meta.
+            "pwa_short_name": (
+                self.options.pwa_short_name
+                or self.get_pyproject("tool.flet.web.pwa_short_name")
+                or product_name
             ),
             "no_wasm": (
                 self.options.no_wasm
