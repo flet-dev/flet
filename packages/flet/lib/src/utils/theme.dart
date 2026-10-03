@@ -15,6 +15,7 @@ import 'colors.dart';
 import 'dismissible.dart';
 import 'edge_insets.dart';
 import 'enums.dart';
+import 'form_field.dart';
 import 'geometry.dart';
 import 'icons.dart';
 import 'menu.dart';
@@ -48,12 +49,36 @@ class SystemUiOverlayStyleTheme
 
   @override
   bool operator ==(Object other) {
-    return systemUiOverlayStyle ==
-        (other as SystemUiOverlayStyleTheme).systemUiOverlayStyle;
+    return other is SystemUiOverlayStyleTheme &&
+        systemUiOverlayStyle == other.systemUiOverlayStyle;
   }
 
   @override
   int get hashCode => systemUiOverlayStyle.hashCode;
+}
+
+class TextFieldTheme extends ThemeExtension<TextFieldTheme> {
+  /// Default style of the text being edited in a `TextField`; Flutter's
+  /// [ThemeData] has no slot for it.
+  final TextStyle? textStyle;
+  const TextFieldTheme(this.textStyle);
+
+  @override
+  TextFieldTheme copyWith({TextStyle? textStyle}) =>
+      TextFieldTheme(textStyle ?? this.textStyle);
+
+  @override
+  TextFieldTheme lerp(covariant TextFieldTheme? other, double t) =>
+      other is TextFieldTheme
+          ? TextFieldTheme(TextStyle.lerp(textStyle, other.textStyle, t))
+          : this;
+
+  @override
+  bool operator ==(Object other) =>
+      other is TextFieldTheme && other.textStyle == textStyle;
+
+  @override
+  int get hashCode => textStyle.hashCode;
 }
 
 CupertinoThemeData parseCupertinoTheme(
@@ -108,7 +133,10 @@ ThemeData parseTheme(
       SystemUiOverlayStyleTheme(value?["system_overlay_style"] != null
           ? parseSystemUiOverlayStyle(
               value?["system_overlay_style"], theme, brightness)
-          : null)
+          : null),
+      TextFieldTheme(value?["text_field_theme"] != null
+          ? parseTextStyle(value?["text_field_theme"]["text_style"], theme)
+          : null),
     },
     visualDensity:
         parseVisualDensity(value?["visual_density"], theme.visualDensity)!,
@@ -184,6 +212,12 @@ ThemeData parseTheme(
     iconTheme: parseIconTheme(value?["icon_theme"], theme),
     timePickerTheme: parseTimePickerTheme(value?["time_picker_theme"], theme),
   );
+
+  // Parsed against the finished theme, so its default state colors come from
+  // the final color scheme.
+  theme = theme.copyWith(
+      inputDecorationTheme: parseInputDecorationTheme(
+          value?["input_decoration_theme"], theme));
 
   return theme.copyWith(
       cupertinoOverrideTheme: fixCupertinoTheme(
@@ -803,6 +837,35 @@ TimePickerThemeData? parseTimePickerTheme(
         parseWidgetStateColor(value["time_selector_separator_color"], theme),
     timeSelectorSeparatorTextStyle: parseWidgetStateTextStyle(
         value["time_selector_separator_text_style"], theme),
+  );
+}
+
+InputDecorationThemeData? parseInputDecorationTheme(
+    Map<dynamic, dynamic>? value, ThemeData theme,
+    [InputDecorationThemeData? defaultValue]) {
+  if (value == null) return defaultValue;
+
+  return theme.inputDecorationTheme.copyWith(
+    border: parseInputDecorationThemeBorder(value["border"], theme),
+    labelStyle: parseTextStyle(value["label_style"], theme),
+    floatingLabelStyle: parseTextStyle(value["floating_label_style"], theme),
+    hintStyle: parseTextStyle(value["hint_style"], theme),
+    helperStyle: parseTextStyle(value["helper_style"], theme),
+    errorStyle: parseTextStyle(value["error_style"], theme),
+    counterStyle: parseTextStyle(value["counter_style"], theme),
+    prefixStyle: parseTextStyle(value["prefix_style"], theme),
+    suffixStyle: parseTextStyle(value["suffix_style"], theme),
+    contentPadding: parsePadding(value["content_padding"]),
+    isDense: parseBool(value["dense"]),
+    filled: parseBool(value["filled"]),
+    fillColor: parseColor(value["fill_color"], theme),
+    hoverColor: parseColor(value["hover_color"], theme),
+    focusColor: parseColor(value["focus_color"], theme),
+    iconColor: parseColor(value["icon_color"], theme),
+    prefixIconColor: parseColor(value["prefix_icon_color"], theme),
+    suffixIconColor: parseColor(value["suffix_icon_color"], theme),
+    alignLabelWithHint: parseBool(value["align_label_with_hint"]),
+    constraints: parseBoxConstraints(value["size_constraints"]),
   );
 }
 

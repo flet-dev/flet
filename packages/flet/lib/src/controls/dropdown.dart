@@ -124,7 +124,11 @@ class _DropdownControlState extends State<DropdownControl> {
             maxHeight: fieldHeight,
           );
 
-    InputDecorationTheme inputDecorationTheme = InputDecorationTheme(
+    // Start from the app's input decoration theme: DropdownMenu uses the
+    // theme it is given in place of the app's, so unset values must keep the
+    // app's (`Theme.input_decoration_theme`) rather than Material's.
+    InputDecorationThemeData inputDecorationTheme =
+        theme.inputDecorationTheme.copyWith(
       constraints: fieldHeight == null
           ? null
           : BoxConstraints.tightFor(height: fieldHeight),
@@ -136,7 +140,7 @@ class _DropdownControlState extends State<DropdownControl> {
               width: fieldHeight - 8 > 0 ? fieldHeight - 8 : fieldHeight,
               height: fieldHeight - 8 > 0 ? fieldHeight - 8 : fieldHeight,
             ),
-      filled: widget.control.getBool("filled", false)!,
+      filled: widget.control.getBool("filled"),
       fillColor: fillColor,
       hintStyle: widget.control.getTextStyle("hint_style", theme),
       errorStyle: widget.control.getTextStyle("error_style", theme),
@@ -147,7 +151,7 @@ class _DropdownControlState extends State<DropdownControl> {
       errorBorder: borders.errorBorder,
       focusedErrorBorder: borders.focusedErrorBorder,
       disabledBorder: borders.disabledBorder,
-      isDense: widget.control.getBool("dense", false)!,
+      isDense: widget.control.getBool("dense"),
       contentPadding: widget.control.getPadding("content_padding"),
     );
 

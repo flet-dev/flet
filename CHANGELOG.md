@@ -7,6 +7,8 @@
 * Add `ft.MaterialTapTargetSize` with `Switch.material_tap_target_size` and `Theme.material_tap_target_size`: `SHRINK_WRAP` drops Material's 48px minimum tappable area for dense, pointer-driven layouts by @FeodorFitsner.
 * `Dropdown.height` now sizes the field itself, down to compact heights such as 32 or 40: the leading icon and trailing arrow no longer force a 48px minimum by @FeodorFitsner.
 * Add `PopupMenuButton.border_radius` to round the hover/splash highlight around custom `content` by @FeodorFitsner.
+* Add `Theme.input_decoration_theme` (`ft.InputDecorationTheme`) to style every `TextField` and `Dropdown` at once: border, label/hint/helper/error styles, content padding, density and fill. Its `border` takes per-state entries (`DEFAULT`, `HOVERED`, `FOCUSED`, `ERROR`, `DISABLED`); unset states keep the Material default, so a softer resting border still darkens on hover and turns primary on focus. Controls without their own `border` use the theme's by @FeodorFitsner.
+* Add `Theme.text_field_theme` (`ft.TextFieldTheme`) with `text_style` for the text being edited in every `TextField` by @FeodorFitsner.
 
 ### Bug fixes
 

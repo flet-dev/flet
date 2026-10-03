@@ -6,6 +6,9 @@
 * Pass `PopupMenuButton` `border_radius` to the `InkWell` around custom `content` by @FeodorFitsner.
 * `SizeChangeObserver` reports the current size once when its widget is reused for a different control (`didUpdateWidget`); previously it only reported size changes, so the new control never heard its size by @FeodorFitsner.
 * `InteractiveViewer` with `pan_enabled`, `scale_enabled` and `trackpad_scroll_causes_scale` all off builds the same clip/transform/unbounded layout without the `InteractiveViewer` widget, whose scale recognizer swallowed taps on the content by @FeodorFitsner.
+* Parse `input_decoration_theme` into `ThemeData.inputDecorationTheme`; its `border` becomes a `WidgetStateInputBorder` that falls back to the Material 3 side for each unset state. `parseFormFieldBorders()` leaves the border slots empty when a control has no `border` and the theme has one, and `filled`/`dense` stay unset unless given, so the theme applies. `Dropdown` derives its `inputDecorationTheme` from the app's instead of replacing it by @FeodorFitsner.
+* Add a `TextFieldTheme` theme extension (`text_field_theme.text_style`), merged under a `TextField`'s own style by @FeodorFitsner.
+* Fix `SystemUiOverlayStyleTheme.==` throwing a type error when compared with another theme extension by @FeodorFitsner.
 * Fix `View` throwing `Bad state: No element` when it rebuilds while the page's `views` list is empty (e.g. the route matches no view); it is treated as the root and top view instead by @FeodorFitsner.
 
 ## 1.0.3
