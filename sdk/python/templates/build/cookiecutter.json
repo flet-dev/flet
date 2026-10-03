@@ -29,6 +29,7 @@
   "use_color_emoji": false,
   "pwa_background_color": "#FFFFFF",
   "pwa_theme_color": "#FF005F",
+  "pwa_short_name": "{{ cookiecutter.product_name }}",
   "split_per_abi": false,
   "test_mode": false,
   "no_cdn": false,

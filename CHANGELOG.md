@@ -1,3 +1,13 @@
+## 1.0.4
+
+### Improvements
+
+* Add `--pwa-short-name` and `[tool.flet.web].pwa_short_name` to `flet build web` to set the `short_name` of the web app manifest: the label shown under the app icon when the PWA is installed, e.g. on the iOS Home Screen. It defaults to the product name ([#6911](https://github.com/flet-dev/flet/pull/6911)) by @FeodorFitsner.
+
+### Bug fixes
+
+* Fix a web app built with `flet build web` getting its project name, e.g. `my_app`, as its label when installed as a PWA on iOS instead of its product name. The manifest's `short_name`, which iOS shows on the Home Screen, was set to the project name; it now defaults to the product name, like the page title. Product names containing quotes no longer break `manifest.json` ([#6911](https://github.com/flet-dev/flet/pull/6911)) by @FeodorFitsner.
+
 ## 1.0.3
 
 ### Improvements

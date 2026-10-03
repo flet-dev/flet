@@ -105,3 +105,38 @@ class TestBuildTemplateContract:
         )
         parsed = yaml.safe_load(rendered)
         assert parsed["description"] == re.sub(r"[\x00-\x1f]", " ", description)
+
+    @pytest.mark.parametrize("product", ["Flet Studio", 'My "App"', "back\\slash"])
+    def test_manifest_names_come_from_product(self, product):
+        """iOS labels an installed PWA with the manifest's `short_name`, which
+        was the project name slug (`client`) instead of the product name."""
+        with open(BUILD_TEMPLATE_DIR.parent / "cookiecutter.json") as f:
+            default_short_name = json.load(f)["pwa_short_name"]
+        context = {
+            "project_name": "client",
+            "product_name": product,
+            "pwa_background_color": "#FFFFFF",
+            "pwa_theme_color": "#FF005F",
+            "project_description": "",
+        }
+        context["pwa_short_name"] = (
+            Environment().from_string(default_short_name).render(cookiecutter=context)
+        )
+        manifest = json.loads(
+            _render_template(BUILD_TEMPLATE_DIR / "web" / "manifest.json", **context)
+        )
+        assert manifest["name"] == product
+        assert manifest["short_name"] == product
+
+    def test_manifest_short_name_override(self):
+        rendered = _render_template(
+            BUILD_TEMPLATE_DIR / "web" / "manifest.json",
+            product_name="Flet Studio",
+            pwa_short_name="Studio",
+            pwa_background_color="#FFFFFF",
+            pwa_theme_color="#FF005F",
+            project_description="",
+        )
+        manifest = json.loads(rendered)
+        assert manifest["name"] == "Flet Studio"
+        assert manifest["short_name"] == "Studio"
