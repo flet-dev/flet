@@ -1,5 +1,11 @@
 ## 1.1.0
 
+### Improvements
+
+* Bump the bundled Flutter to [3.47.5](https://github.com/flutter/flutter/blob/stable/CHANGELOG.md#3475) (from 3.44.8). Android builds use Gradle 9.3.1, Android Gradle Plugin 8.13.2 and Kotlin 2.3.21 by @ndonkoHenri.
+
+  **Compatibility:** Desktop apps and the desktop clients keep rendering with Skia, although Flutter 3.47 makes Impeller the desktop default; set `FLTEnableImpeller = true` under `[tool.flet.macos.info]` to try Impeller in a macOS app. Android plugins that still use `jcenter()` or other APIs removed in Gradle 9 no longer build. `flet build` downloads Flutter 3.47.5 on first use.
+
 ### Bug fixes
 
 * Fix `flet build`, `flet debug` and `flet test` failing for macOS and iOS on Xcode 27, which rejects deployment targets below macOS 12 and iOS 15 ([#6874](https://github.com/flet-dev/flet/issues/6874)) by @ndonkoHenri.
