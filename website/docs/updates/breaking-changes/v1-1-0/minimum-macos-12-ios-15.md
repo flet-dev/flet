@@ -5,7 +5,7 @@ title: "macOS and iOS: built apps now require macOS 12 and iOS 15"
 # macOS and iOS: built apps now require macOS 12 and iOS 15
 
 :::note
-This guide is accurate as of Flet 1.0.4. Later releases might add new APIs or
+This guide is accurate as of Flet 1.1.0. Later releases might add new APIs or
 additional migration paths.
 
 The [breaking changes and deprecations index](../index.md) lists the guides created for each release.
@@ -13,7 +13,7 @@ The [breaking changes and deprecations index](../index.md) lists the guides crea
 
 ## Summary
 
-Starting with Flet 1.0.4, apps built with `flet build macos` require **macOS 12
+Starting with Flet 1.1.0, apps built with `flet build macos` require **macOS 12
 (Monterey) or later**, and apps built with `flet build ipa` or
 `flet build ios-simulator` require **iOS 15 or later**. Previously the
 [build template](../../../publish/index.md#build-template) targeted macOS 11 and
@@ -35,7 +35,7 @@ Xcode 27 ([#6874](https://github.com/flet-dev/flet/issues/6874)):
 The macOS deployment target 'MACOSX_DEPLOYMENT_TARGET' is set to 11.0, but the range of supported deployment target versions is 12.0 to 27.0.x.
 ```
 
-Flet 1.0.4 raises the deployment targets in the build template and the desktop
+Flet 1.1.0 raises the deployment targets in the build template and the desktop
 client to these minimums. They are also the minimums of Flutter 3.47 and later.
 
 ## Who is affected
@@ -52,7 +52,7 @@ client to these minimums. They are also the minimums of Flutter 3.47 and later.
 
 ## Migration guide
 
-Most projects need no changes: rebuild your app with Flet 1.0.4 or later. After
+Most projects need no changes: rebuild your app with Flet 1.1.0 or later. After
 the upgrade, the next build regenerates the project in your `build` directory
 from the new template.
 
@@ -120,7 +120,7 @@ Flutter 3.47 and later handle this themselves.
 
 ### Supporting macOS 11 or iOS 13-14
 
-Builds for these versions need Xcode 26 or earlier, together with Flet 1.0.3 or
+Builds for these versions need Xcode 26 or earlier, together with Flet 1.0.4 or
 a custom template that keeps the old deployment targets. For iOS this is a
 short-term option: starting April 2027, App Store Connect only accepts iOS apps
 built with the iOS 27 SDK, which comes with Xcode 27
@@ -132,7 +132,7 @@ built with the iOS 27 SDK, which comes with Xcode 27
 
 ## Timeline
 
-- Changed in: `1.0.4`
+- Changed in: `1.1.0`
 
 ## References
 
@@ -141,4 +141,4 @@ built with the iOS 27 SDK, which comes with Xcode 27
 - Issue: [#6874](https://github.com/flet-dev/flet/issues/6874)
 - Pull request: [#6914](https://github.com/flet-dev/flet/pull/6914)
 - [Flutter supported platforms](https://docs.flutter.dev/reference/supported-platforms)
-- Release notes: [Flet 1.0.4](../../release-notes.md)
+- Release notes: [Flet 1.1.0](../../release-notes.md)

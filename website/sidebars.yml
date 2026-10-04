@@ -76,8 +76,8 @@ docs:
     Migrating from 0.28 to 1.0: updates/migrate-to-1-0.md
     Breaking changes and deprecations:
       _index: updates/breaking-changes/index.md
-      v1.0.4:
-        "macOS and iOS: built apps now require macOS 12 and iOS 15": updates/breaking-changes/v1-0-4/minimum-macos-12-ios-15.md
+      v1.1.0:
+        "macOS and iOS: built apps now require macOS 12 and iOS 15": updates/breaking-changes/v1-1-0/minimum-macos-12-ios-15.md
       v1.0.0:
         All deprecated APIs removed: updates/breaking-changes/v1-0-0/removed-deprecated-apis.md
         "iOS: per-method signing settings now override top-level ones": updates/breaking-changes/v1-0-0/ios-per-method-signing-precedence.md

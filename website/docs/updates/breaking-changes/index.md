@@ -28,11 +28,11 @@ whole 0.70 - 0.86 pre-release series, so start with
 The following guides are available. They're sorted by release, with the most recent release first.
 Each guide explains the change, the reason for it, and how to migrate your code.
 
-### Released in Flet 1.0.4
+### Released in Flet 1.1.0
 
 #### Breaking changes
 
-- [macOS and iOS: built apps now require macOS 12 and iOS 15](/docs/updates/breaking-changes/v1-0-4/minimum-macos-12-ios-15)
+- [macOS and iOS: built apps now require macOS 12 and iOS 15](/docs/updates/breaking-changes/v1-1-0/minimum-macos-12-ios-15)
 
 ### Released in Flet 1.0.0
 
