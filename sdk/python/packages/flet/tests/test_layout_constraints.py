@@ -121,3 +121,15 @@ async def test_event_for_a_removed_control_is_dropped_not_crashed():
     finally:
         session.close()
         _context_page.reset(token)
+
+
+# --- FletApp.platform_brightness ---------------------------------------------
+
+
+def test_flet_app_platform_brightness_is_encoded():
+    encoded = encode(ft.FletApp(platform_brightness=ft.Brightness.DARK))
+    assert encoded["platform_brightness"] == ft.Brightness.DARK
+
+
+def test_flet_app_platform_brightness_unset_is_not_sent():
+    assert "platform_brightness" not in encode(ft.FletApp())

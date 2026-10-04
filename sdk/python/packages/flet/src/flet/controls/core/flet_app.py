@@ -5,6 +5,7 @@ from flet.controls.base_control import control
 from flet.controls.control_event import ControlEventHandler, Event, EventHandler
 from flet.controls.layout_control import LayoutControl
 from flet.controls.padding import PaddingValue
+from flet.controls.types import Brightness
 
 __all__ = ["FletApp", "FletAppOutputEvent", "FletAppWindowEvent"]
 
@@ -104,6 +105,22 @@ class FletApp(LayoutControl):
     Intended for previewing a phone layout inside a desktop window - a device
     frame in a designer, say - where the chrome drawn around the app is not
     something the platform knows about.
+    """
+
+    platform_brightness: Optional[Brightness] = None
+    """
+    Overrides the system light/dark appearance the embedded app sees.
+
+    By default the embedded app follows the host's platform brightness. Set
+    this to preview it as though its device were in light or dark mode: an app
+    whose [`theme_mode`][flet.Page.theme_mode] is `SYSTEM` switches to its dark
+    or light theme, [`page.platform_brightness`][flet.Page.platform_brightness]
+    reports the value, and
+    [`on_platform_brightness_change`][flet.Page.on_platform_brightness_change]
+    fires when it changes. An app that forces `LIGHT` or `DARK` keeps it, as
+    on a real device.
+
+    `None` follows the host.
     """
 
     assets_dir: Optional[str] = None

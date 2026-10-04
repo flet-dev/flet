@@ -10,6 +10,8 @@
 * Add a `TextFieldTheme` theme extension (`text_field_theme.text_style`), merged under a `TextField`'s own style by @FeodorFitsner.
 * Fix `SystemUiOverlayStyleTheme.==` throwing a type error when compared with another theme extension by @FeodorFitsner.
 * An embedded page passes `title: null` to its `MaterialApp`/`CupertinoApp`, so on the web `WidgetsApp` doesn't install a `Title` widget that overwrote the host page's `document.title`; the title still goes to the host through `EmbeddedAppScope.onTitleChanged` by @FeodorFitsner.
+* `FletApp` applies `platform_brightness` to the embedded app's `MediaQuery`, which its `PageMedia` reports as the platform brightness by @FeodorFitsner.
+* An embedded page no longer inherits its host's theme mode through `PageContext`; an unset `theme_mode` means system by @FeodorFitsner.
 * Fix `View` throwing `Bad state: No element` when it rebuilds while the page's `views` list is empty (e.g. the route matches no view); it is treated as the root and top view instead by @FeodorFitsner.
 
 ## 1.0.3

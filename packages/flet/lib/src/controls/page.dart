@@ -622,8 +622,12 @@ class _PageControlState extends State<PageControl> with WidgetsBindingObserver {
         : PageDesign.material;
 
     // theme
+    // An embedded page does not inherit its host's theme mode: it is a
+    // separate app, and an unset `theme_mode` means SYSTEM - following the
+    // platform brightness its host gives it (`FletApp.platform_brightness`),
+    // not whatever theme the host app itself is in.
     var themeMode = control.getThemeMode("theme_mode") ??
-        PageContext.of(context)?.themeMode;
+        (_isEmbedded ? null : PageContext.of(context)?.themeMode);
 
     var themeAnimationStyle =
         control.getAnimationStyle("theme_animation_style");

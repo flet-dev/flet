@@ -7,6 +7,7 @@ import '../flet_backend.dart';
 import '../models/control.dart';
 import '../utils/edge_insets.dart';
 import '../utils/numbers.dart';
+import '../utils/theme.dart';
 import '../widgets/embedded_app_scope.dart';
 import 'base_controls.dart';
 
@@ -122,6 +123,11 @@ class _FletAppControlState extends State<FletAppControl> {
     // read, and `viewPadding` is the same thing ignoring viewInsets, so the two
     // are kept consistent.
     var mediaPadding = widget.control.getPadding("media_padding");
+    // `platform_brightness`, when set, is the light/dark appearance of the
+    // device the guest is previewed as. The guest's `PageMedia` reads it from
+    // here into `page.platform_brightness`, and a `SYSTEM` theme follows it.
+    var platformBrightness =
+        parseBrightness(widget.control.getString("platform_brightness"));
     final inner = app;
     app = LayoutBuilder(
       builder: (ctx, constraints) {
@@ -134,6 +140,9 @@ class _FletAppControlState extends State<FletAppControl> {
         if (mediaPadding != null) {
           media = media.copyWith(
               padding: mediaPadding, viewPadding: mediaPadding);
+        }
+        if (platformBrightness != null) {
+          media = media.copyWith(platformBrightness: platformBrightness);
         }
         return MediaQuery(data: media, child: inner);
       },
