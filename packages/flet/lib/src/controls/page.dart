@@ -640,7 +640,13 @@ class _PageControlState extends State<PageControl> with WidgetsBindingObserver {
     var brightness = context.select<FletBackend, Brightness>(
         (backend) => backend.platformBrightness);
 
-    var windowTitle = control.getString("title", "")!;
+    // An embedded page leaves the real window/tab title alone: its title
+    // goes to the host (`EmbeddedAppScope.onTitleChanged`), which shows it in
+    // the window it draws - or nowhere. `null` makes WidgetsApp skip its
+    // `Title` widget on the web, which would otherwise overwrite the host
+    // page's browser tab title.
+    String? windowTitle =
+        _isEmbedded ? null : control.getString("title", "")!;
 
     var newLightTheme = control.getTheme("theme", context, Brightness.light);
     var newDarkTheme = control.getString("dark_theme") == null

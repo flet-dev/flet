@@ -9,6 +9,7 @@
 * Parse `input_decoration_theme` into `ThemeData.inputDecorationTheme`; its `border` becomes a `WidgetStateInputBorder` that falls back to the Material 3 side for each unset state. `parseFormFieldBorders()` leaves the border slots empty when a control has no `border` and the theme has one, and `filled`/`dense` stay unset unless given, so the theme applies. `Dropdown` derives its `inputDecorationTheme` from the app's instead of replacing it by @FeodorFitsner.
 * Add a `TextFieldTheme` theme extension (`text_field_theme.text_style`), merged under a `TextField`'s own style by @FeodorFitsner.
 * Fix `SystemUiOverlayStyleTheme.==` throwing a type error when compared with another theme extension by @FeodorFitsner.
+* An embedded page passes `title: null` to its `MaterialApp`/`CupertinoApp`, so on the web `WidgetsApp` doesn't install a `Title` widget that overwrote the host page's `document.title`; the title still goes to the host through `EmbeddedAppScope.onTitleChanged` by @FeodorFitsner.
 * Fix `View` throwing `Bad state: No element` when it rebuilds while the page's `views` list is empty (e.g. the route matches no view); it is treated as the root and top view instead by @FeodorFitsner.
 
 ## 1.0.3
