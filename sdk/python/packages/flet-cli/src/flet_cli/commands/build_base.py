@@ -1088,7 +1088,13 @@ class BaseBuildCommand(BaseFlutterCommand):
             )
         )
 
-        info_plist = {}
+        # macOS apps render with Skia, like the Flet desktop client: Impeller is
+        # Flutter's default macOS renderer but isn't verified for Flet yet.
+        # `[tool.flet.macos.info]` or `--info-plist FLTEnableImpeller=true`
+        # switches a built app to Impeller.
+        info_plist = (
+            {"FLTEnableImpeller": False} if self.package_platform == "Darwin" else {}
+        )
         macos_entitlements = {
             "com.apple.security.app-sandbox": False,
             "com.apple.security.cs.allow-jit": True,
