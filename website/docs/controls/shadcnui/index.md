@@ -1,6 +1,6 @@
 ---
 examples: "extensions/shadcn_ui"
-example_images: "test-images/examples/extensions/shadcn_ui/golden/macos/form"
+example_images: "test-images/examples/extensions/shadcn_ui/golden/macos"
 title: "Shadcn"
 ---
 
@@ -48,6 +48,8 @@ def main(page: ft.Page):
 ft.run(main)
 ```
 
+<Image src={frontMatter.example_images + '/overview/usage.png'} alt="usage" width="20%" caption="A Shadcn button" />
+
 ## Theming
 
 The controls work without any setup. A control that is not inside a
@@ -64,11 +66,27 @@ shad.Theme(
 )
 ```
 
+<Image src={frontMatter.example_images + '/overview/theming.png'} alt="theming" width="20%" caption="The VIOLET color scheme" />
+
 ## Icons
 
 [`LucideIcons`](types/lucideicons.md) contains the Lucide icons. It can be used
 anywhere Flet accepts an icon, including core controls such as
 [`Icon`][flet.Icon] and [`IconButton`][flet.IconButton].
+
+```python
+ft.Row(
+    tight=True,
+    controls=[
+        ft.Icon(shad.LucideIcons.HOUSE),
+        ft.Icon(shad.LucideIcons.BELL, color=ft.Colors.AMBER),
+        ft.IconButton(shad.LucideIcons.SETTINGS),
+        shad.IconButton(icon=shad.LucideIcons.HEART),
+    ],
+)
+```
+
+<Image src={frontMatter.example_images + '/overview/icons.png'} alt="icons" width="25%" caption="Lucide icons in core and Shadcn controls" />
 
 ## Forms
 
@@ -88,7 +106,7 @@ is a column of fields validated in your Python code.
 [Checkbox](checkbox.md) and [Switch](switch.md) already have a `label` and a
 `sublabel` next to them, so they only add `error_text`.
 
-<Image src={frontMatter.example_images + '/image_for_docs.png'} alt="form fields" width="35%" caption="Label, description and error" />
+<Image src={frontMatter.example_images + '/form/image_for_docs.png'} alt="form fields" width="35%" caption="Label, description and error" />
 
 To validate, check the values in an event handler and set `error_text` on each
 invalid field. Set it back to `None` once the value is valid. This sign-up form
@@ -97,7 +115,7 @@ again as it changes:
 
 <CodeExample path={frontMatter.examples + '/form/main.py'} language="python" />
 
-<Image src={frontMatter.example_images + '/form_flow.gif'} alt="form" width="40%" caption="Submitting and correcting the form" />
+<Image src={frontMatter.example_images + '/form/form_flow.gif'} alt="form" width="40%" caption="Submitting and correcting the form" />
 
 ## Available controls
 
