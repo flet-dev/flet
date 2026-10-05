@@ -1,3 +1,4 @@
+import 'package:collection/collection.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -81,6 +82,56 @@ class TextFieldTheme extends ThemeExtension<TextFieldTheme> {
   int get hashCode => textStyle.hashCode;
 }
 
+/// App-wide default for `Markdown.md_style_sheet` (`Theme.markdown_theme`):
+/// kept as the raw property map so a control's own sheet can be layered over
+/// it key by key before parsing. Flutter has no Markdown theme.
+class MarkdownTheme extends ThemeExtension<MarkdownTheme> {
+  final Map<String, dynamic>? styleSheet;
+  const MarkdownTheme(this.styleSheet);
+
+  @override
+  MarkdownTheme copyWith({Map<String, dynamic>? styleSheet}) =>
+      MarkdownTheme(styleSheet ?? this.styleSheet);
+
+  @override
+  MarkdownTheme lerp(covariant MarkdownTheme? other, double t) =>
+      other is MarkdownTheme ? other : this;
+
+  @override
+  bool operator ==(Object other) =>
+      other is MarkdownTheme &&
+      const DeepCollectionEquality().equals(other.styleSheet, styleSheet);
+
+  @override
+  int get hashCode => const DeepCollectionEquality().hash(styleSheet);
+}
+
+/// `Theme.popup_menu_theme.border_radius`: the default corner radius of a
+/// `PopupMenuButton`'s hover/splash highlight. Flutter's PopupMenuThemeData
+/// has no such setting.
+class PopupMenuButtonTheme extends ThemeExtension<PopupMenuButtonTheme> {
+  final BorderRadius? borderRadius;
+  const PopupMenuButtonTheme(this.borderRadius);
+
+  @override
+  PopupMenuButtonTheme copyWith({BorderRadius? borderRadius}) =>
+      PopupMenuButtonTheme(borderRadius ?? this.borderRadius);
+
+  @override
+  PopupMenuButtonTheme lerp(covariant PopupMenuButtonTheme? other, double t) =>
+      other is PopupMenuButtonTheme
+          ? PopupMenuButtonTheme(
+              BorderRadius.lerp(borderRadius, other.borderRadius, t))
+          : this;
+
+  @override
+  bool operator ==(Object other) =>
+      other is PopupMenuButtonTheme && other.borderRadius == borderRadius;
+
+  @override
+  int get hashCode => borderRadius.hashCode;
+}
+
 CupertinoThemeData parseCupertinoTheme(
     dynamic value, BuildContext context, Brightness? brightness,
     {ThemeData? parentTheme}) {
@@ -136,6 +187,12 @@ ThemeData parseTheme(
           : null),
       TextFieldTheme(value?["text_field_theme"] != null
           ? parseTextStyle(value?["text_field_theme"]["text_style"], theme)
+          : null),
+      MarkdownTheme(value?["markdown_theme"] is Map
+          ? Map<String, dynamic>.from(value?["markdown_theme"])
+          : null),
+      PopupMenuButtonTheme(value?["popup_menu_theme"] != null
+          ? parseBorderRadius(value?["popup_menu_theme"]["border_radius"])
           : null),
     },
     visualDensity:

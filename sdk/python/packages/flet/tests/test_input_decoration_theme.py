@@ -70,3 +70,21 @@ def test_unset_themes_are_not_sent():
     theme = _encoded_theme(ft.Theme())
     assert "input_decoration_theme" not in theme
     assert "text_field_theme" not in theme
+
+
+def test_markdown_theme_is_encoded():
+    theme = _encoded_theme(
+        ft.Theme(
+            markdown_theme=ft.MarkdownStyleSheet(
+                a_text_style=ft.TextStyle(color=ft.Colors.RED)
+            )
+        )
+    )
+    assert theme["markdown_theme"]["a_text_style"]["color"] == ft.Colors.RED
+
+
+def test_popup_menu_theme_border_radius_is_encoded():
+    theme = _encoded_theme(
+        ft.Theme(popup_menu_theme=ft.PopupMenuTheme(border_radius=8))
+    )
+    assert theme["popup_menu_theme"]["border_radius"] == 8

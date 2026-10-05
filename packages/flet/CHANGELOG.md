@@ -12,7 +12,11 @@
 * An embedded page passes `title: null` to its `MaterialApp`/`CupertinoApp`, so on the web `WidgetsApp` doesn't install a `Title` widget that overwrote the host page's `document.title`; the title still goes to the host through `EmbeddedAppScope.onTitleChanged` by @FeodorFitsner.
 * `FletApp` applies `platform_brightness` to the embedded app's `MediaQuery`, which its `PageMedia` reports as the platform brightness by @FeodorFitsner.
 * An embedded page no longer inherits its host's theme mode through `PageContext`; an unset `theme_mode` means system by @FeodorFitsner.
+* `Markdown` always builds its style sheet from the theme: a `MarkdownTheme` extension (`markdown_theme`) underneath the control's `md_style_sheet`; link and blockquote defaults use the color scheme instead of `Colors.blue` by @FeodorFitsner.
+* `PopupMenuButton` falls back to a `PopupMenuButtonTheme` extension (`popup_menu_theme.border_radius`) for its ink radius by @FeodorFitsner.
+* `Control.invokeMethod` iterates a snapshot of its listeners, so a listener added or removed while an awaited call is in progress no longer throws `ConcurrentModificationError` by @FeodorFitsner.
 * Fix `View` throwing `Bad state: No element` when it rebuilds while the page's `views` list is empty (e.g. the route matches no view); it is treated as the root and top view instead by @FeodorFitsner.
+* Controls are always wrapped in `Opacity` (`1.0` when unset) and `Container` always in `IgnorePointer`, so toggling `opacity` or `ignore_interactions` no longer changes the widget tree's shape and remounts the subtree by @FeodorFitsner.
 
 ## 1.0.3
 

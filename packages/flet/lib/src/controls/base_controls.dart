@@ -125,13 +125,16 @@ Widget _opacity(BuildContext context, Widget widget, Control control) {
           : null,
       child: widget,
     );
-  } else if (opacity != null) {
-    return Opacity(
-      opacity: opacity,
-      child: widget,
-    );
   }
-  return widget;
+  // Always wrapped, also at the default 1.0 (not sent from Python): adding
+  // or removing the wrapper when opacity flips between 1 and something else
+  // changed the tree's shape, and Flutter rebuilt the whole subtree - an
+  // embedded app restarted, a text field lost its focus. Opacity at 1.0
+  // paints its child directly, without a layer.
+  return Opacity(
+    opacity: opacity ?? 1.0,
+    child: widget,
+  );
 }
 
 Widget _rotatedControl(BuildContext context, Widget widget, Control control) {

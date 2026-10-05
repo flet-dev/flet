@@ -133,3 +133,32 @@ def test_flet_app_platform_brightness_is_encoded():
 
 def test_flet_app_platform_brightness_unset_is_not_sent():
     assert "platform_brightness" not in encode(ft.FletApp())
+
+
+# --- invoke-method results for removed controls ----------------------------
+
+
+@pytest.mark.asyncio
+async def test_invoke_result_for_a_removed_control_is_delivered_not_raised():
+    # An embedded app replaced while its wait_idle() was pending answers for a
+    # control the session no longer knows. Raising there killed the
+    # connection's receive loop and froze the whole app.
+    conn = _RecordingConnection()
+    conn.pubsubhub = PubSubHub()
+    conn.loop = asyncio.get_running_loop()
+    session = Session(conn)
+    try:
+        missing_id = 987654
+        call = asyncio.create_task(
+            session.invoke_method(missing_id, "wait_idle", {}, timeout=5)
+        )
+        await asyncio.sleep(0)
+        call_id = conn.messages[-1].body.call_id
+
+        session.handle_invoke_method_results(missing_id, call_id, "idle", None)
+        assert await call == "idle"
+
+        # A result nobody waits for is dropped quietly.
+        session.handle_invoke_method_results(missing_id, "nobody", "x", None)
+    finally:
+        session.close()

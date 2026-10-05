@@ -10,14 +10,20 @@
 * Add `Theme.input_decoration_theme` (`ft.InputDecorationTheme`) to style every `TextField` and `Dropdown` at once: border, label/hint/helper/error styles, content padding, density and fill. Its `border` takes per-state entries (`DEFAULT`, `HOVERED`, `FOCUSED`, `ERROR`, `DISABLED`); unset states keep the Material default, so a softer resting border still darkens on hover and turns primary on focus. Controls without their own `border` use the theme's by @FeodorFitsner.
 * Add `Theme.text_field_theme` (`ft.TextFieldTheme`) with `text_style` for the text being edited in every `TextField` by @FeodorFitsner.
 * Add `FletApp.platform_brightness` to preview an embedded app as though its device were in light or dark mode: an app on the `SYSTEM` theme follows it, `page.platform_brightness` reports it and `on_platform_brightness_change` fires by @FeodorFitsner.
+* Add `Theme.markdown_theme`: a default `MarkdownStyleSheet` for every `Markdown`, with a control's own `md_style_sheet` applied on top property by property by @FeodorFitsner.
+* Add `PopupMenuTheme.border_radius` to set the default hover/splash corner radius of every `PopupMenuButton` by @FeodorFitsner.
 
 ### Bug fixes
 
+* Fix a client method call (e.g. `FletApp.wait_idle()`) failing with "Concurrent modification during iteration" when the control's widget was rebuilt while the call was in progress by @FeodorFitsner.
+* Fix an app freezing - no more events or updates processed - when a client method result (e.g. an embedded `FletApp`'s `wait_idle()`) arrived after its control had been removed: the session raised on it, which ended the connection's receive loop. The result now reaches its caller, and every transport (Pyodide, socket, FastAPI) logs a failing message and keeps receiving instead of stopping by @FeodorFitsner.
+* Fix `Markdown` links always being blue and blockquotes light blue regardless of the theme: their defaults now come from the color scheme (`primary` for links, a surface container color for blockquotes) by @FeodorFitsner.
 * Fix an embedded `FletApp` without its own `theme_mode` taking the host page's theme mode instead of following the system (now: its platform brightness) by @FeodorFitsner.
 * Fix an embedded `FletApp` overwriting the host page's browser tab title on the web whenever the embedded app set `page.title`. An embedded app's title now only reaches the host, through `FletApp.on_title_change` by @FeodorFitsner.
 * Fix a web app built with `flet build web` getting its project name, e.g. `my_app`, as its label when installed as a PWA on iOS instead of its product name. The manifest's `short_name`, which iOS shows on the Home Screen, was set to the project name; it now defaults to the product name, like the page title. Product names containing quotes no longer break `manifest.json` ([#6911](https://github.com/flet-dev/flet/pull/6911)) by @FeodorFitsner.
 * Fix the session crashing with "Control must be added to the page first" when the client sends an event (e.g. `size_change`) for a control that was just removed from the page; such events are now dropped by @FeodorFitsner.
 * Fix `on_size_change` never reporting when Flutter reuses the widget for a different control at the same size (e.g. a new page swapped into the same slot) by @FeodorFitsner.
+* Fix a control's subtree (e.g. an embedded `FletApp`, which restarted its app) being rebuilt from scratch when its `opacity` changed between `1.0` and another value, or a `Container`'s `ignore_interactions` was toggled: the wrapping widget was added and removed, changing the widget tree's shape. It is now always present by @FeodorFitsner.
 * Fix `InteractiveViewer` swallowing taps meant for its content when `pan_enabled` and `scale_enabled` are both off: it no longer installs gesture recognizers it can't use; programmatic zoom/pan still works by @FeodorFitsner.
 
 ## 1.0.3

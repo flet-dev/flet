@@ -54,8 +54,8 @@ MarkdownStyleSheet? parseMarkdownStyleSheet(dynamic value, BuildContext context,
   if (value == null) return null;
   var theme = Theme.of(context);
   return MarkdownStyleSheet.fromTheme(theme).copyWith(
-    a: parseTextStyle(
-        value["a_text_style"], theme, const TextStyle(color: Colors.blue))!,
+    a: parseTextStyle(value["a_text_style"], theme,
+        TextStyle(color: theme.colorScheme.primary))!,
     p: parseTextStyle(value["p_text_style"], theme, theme.textTheme.bodyMedium),
     pPadding: parsePadding(value["p_padding"], EdgeInsets.zero)!,
     code: parseTextStyle(value["code_text_style"], theme,
@@ -116,8 +116,8 @@ MarkdownStyleSheet? parseMarkdownStyleSheet(dynamic value, BuildContext context,
         value["blockquote_decoration"],
         context,
         BoxDecoration(
-            color: Colors.blue.shade100,
-            borderRadius: BorderRadius.circular(2.0)))!,
+            color: theme.colorScheme.surfaceContainerHigh,
+            borderRadius: BorderRadius.circular(4.0)))!,
     codeblockPadding:
         parsePadding(value["codeblock_padding"], const EdgeInsets.all(8.0))!,
     codeblockDecoration: parseBoxDecoration(

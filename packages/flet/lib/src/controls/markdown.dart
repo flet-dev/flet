@@ -10,6 +10,7 @@ import '../utils/launch_url.dart';
 import '../utils/markdown.dart';
 import '../utils/numbers.dart';
 import '../utils/text.dart';
+import '../utils/theme.dart';
 import '../utils/uri.dart';
 import 'base_controls.dart';
 import 'highlight_view.dart';
@@ -37,7 +38,15 @@ class MarkdownControl extends StatelessWidget {
         MarkdownStyleSheet.fromTheme(theme).copyWith(
             code:
                 theme.textTheme.bodyMedium!.copyWith(fontFamily: "monospace"));
-    var mdStyleSheet = control.getMarkdownStyleSheet("md_style_sheet", context);
+    // `Theme.markdown_theme` underneath, the control's own sheet on top.
+    // Always parsed - even with neither set - so the defaults come from the
+    // theme (links in `primary`) rather than flutter_markdown's fixed blue.
+    var themeSheet = theme.extension<MarkdownTheme>()?.styleSheet;
+    var ownSheet = control.get("md_style_sheet");
+    var mdStyleSheet = parseMarkdownStyleSheet({
+      ...?themeSheet,
+      if (ownSheet is Map) ...Map<String, dynamic>.from(ownSheet),
+    }, context);
     var codeTheme = control.getMarkdownCodeTheme("code_theme", theme);
     var latexStyle = control.getTextStyle("latex_style", theme);
     var latexScaleFactor = control.getDouble("latex_scale_factor");

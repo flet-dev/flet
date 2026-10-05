@@ -10,6 +10,7 @@ from flet.controls.border_radius import BorderRadiusValue
 from flet.controls.box import BoxConstraints, BoxDecoration, BoxShadowValue
 from flet.controls.buttons import ButtonStyle, OutlinedBorder
 from flet.controls.control_state import ControlStateValue
+from flet.controls.core.markdown import MarkdownStyleSheet
 from flet.controls.duration import DurationValue
 from flet.controls.geometry import Size
 from flet.controls.margin import MarginValue
@@ -3007,6 +3008,13 @@ class PopupMenuTheme:
     descendant :class:`~flet.PopupMenuButton` controls.
     """
 
+    border_radius: Optional[BorderRadiusValue] = None
+    """
+    Overrides the default value of :attr:`flet.PopupMenuButton.border_radius` in \
+    all descendant :class:`~flet.PopupMenuButton` controls: the corner radius of
+    the hover/splash highlight around a button with custom `content`.
+    """
+
 
 @value
 class SearchBarTheme:
@@ -3551,6 +3559,15 @@ class Theme:
     text_field_theme: Optional[TextFieldTheme] = None
     """
     Customizes descendant :class:`~flet.TextField` controls.
+    """
+
+    markdown_theme: Optional[MarkdownStyleSheet] = None
+    """
+    The default style sheet of descendant :class:`~flet.Markdown` controls.
+
+    A control's own :attr:`~flet.Markdown.md_style_sheet` is applied on top of
+    it, property by property. Unset properties fall back to defaults derived
+    from the theme - links in the color scheme's `primary`, for example.
     """
 
     button_theme: Optional[ButtonTheme] = None
