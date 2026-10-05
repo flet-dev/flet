@@ -80,6 +80,26 @@ class Textarea(ft.LayoutControl):
     Whether this textarea should be focused on initial display.
     """
 
+    label: Optional[ft.StrOrControl] = None
+    """
+    The label shown above this textarea.
+
+    It turns red while :attr:`error_text` is set.
+    """
+
+    description: Optional[ft.StrOrControl] = None
+    """
+    Helper text shown below this textarea.
+    """
+
+    error_text: Optional[str] = None
+    """
+    An error message shown in red below this textarea. The border turns red too.
+
+    Set it after validating the value, and set it back to `None` (or an empty
+    string) to clear the error.
+    """
+
     on_change: Optional[ft.ControlEventHandler["Textarea"]] = None
     """
     Called when the text changes.

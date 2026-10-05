@@ -2,8 +2,8 @@ import 'package:flet/flet.dart';
 import 'package:flutter/widgets.dart';
 import 'package:shadcn_ui/shadcn_ui.dart';
 
+import 'utils/field.dart';
 import 'utils/dates.dart';
-import 'utils/theme.dart';
 
 class ShadDatePickerControl extends StatelessWidget {
   final Control control;
@@ -16,7 +16,8 @@ class ShadDatePickerControl extends StatelessWidget {
 
     final value = getDay(control, "value");
     final bounds = DayBounds(control);
-    final picker = ShadDatePicker(
+    Widget picker(ShadDecoration? decoration) => ShadDatePicker(
+      buttonDecoration: decoration,
       selected: value,
       initialMonth: value != null ? DateTime(value.year, value.month) : null,
       placeholder: control.buildTextOrWidget("placeholder"),
@@ -33,7 +34,7 @@ class ShadDatePickerControl extends StatelessWidget {
 
     return LayoutControl(
       control: control,
-      child: withShadTheme(context, picker),
+      child: buildShadField(context, control, picker),
     );
   }
 }
@@ -50,7 +51,8 @@ class ShadDateRangePickerControl extends StatelessWidget {
     final start = getDay(control, "start_value");
     final end = getDay(control, "end_value");
     final bounds = DayBounds(control);
-    final picker = ShadDatePicker.range(
+    Widget picker(ShadDecoration? decoration) => ShadDatePicker.range(
+      buttonDecoration: decoration,
       selected: start == null && end == null
           ? null
           : ShadDateTimeRange(start: start, end: end),
@@ -86,7 +88,7 @@ class ShadDateRangePickerControl extends StatelessWidget {
 
     return LayoutControl(
       control: control,
-      child: withShadTheme(context, picker),
+      child: buildShadField(context, control, picker),
     );
   }
 }

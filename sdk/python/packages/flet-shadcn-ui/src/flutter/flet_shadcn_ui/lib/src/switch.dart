@@ -2,7 +2,7 @@ import 'package:flet/flet.dart';
 import 'package:flutter/widgets.dart';
 import 'package:shadcn_ui/shadcn_ui.dart';
 
-import 'utils/theme.dart';
+import 'utils/field.dart';
 
 class ShadSwitchControl extends StatelessWidget {
   final Control control;
@@ -20,9 +20,11 @@ class ShadSwitchControl extends StatelessWidget {
 
     return LayoutControl(
       control: control,
-      child: withShadTheme(
+      child: buildShadField(
         context,
-        ShadSwitch(
+        control,
+        decorated: false,
+        (_) => ShadSwitch(
           value: control.getBool("value", false)!,
           enabled: !control.disabled,
           onChanged: _onChanged,
@@ -30,8 +32,10 @@ class ShadSwitchControl extends StatelessWidget {
           sublabel: control.buildTextOrWidget("sublabel"),
           thumbColor: control.getColor("thumb_color", context),
           checkedTrackColor: control.getColor("track_color", context),
-          uncheckedTrackColor:
-              control.getColor("inactive_track_color", context),
+          uncheckedTrackColor: control.getColor(
+            "inactive_track_color",
+            context,
+          ),
         ),
       ),
     );

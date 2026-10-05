@@ -2,6 +2,7 @@ import 'package:flet/flet.dart';
 import 'package:flutter/widgets.dart';
 import 'package:shadcn_ui/shadcn_ui.dart';
 
+import 'utils/field.dart';
 import 'utils/theme.dart';
 
 class ShadRadioGroupControl extends StatefulWidget {
@@ -66,7 +67,7 @@ class _ShadRadioGroupControlState extends State<ShadRadioGroupControl> {
 
     return LayoutControl(
       control: control,
-      child: withShadTheme(context, group),
+      child: buildShadField(context, control, (_) => group),
     );
   }
 }

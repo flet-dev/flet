@@ -877,3 +877,49 @@ async def test_sonner_stacks_and_closes_one(flet_app_function: ftt.FletTestApp):
     await tester.pump_and_settle()
     assert dismissed == ["One"]
     assert (await tester.find_by_text("Two")).count == 1
+
+
+@pytest.mark.asyncio(loop_scope="function")
+async def test_field_error_shows_and_clears(flet_app_function: ftt.FletTestApp):
+    input = shad.Input(label="Email", error_text="Enter a valid email.")
+    flet_app_function.page.add(input)
+    await flet_app_function.tester.pump_and_settle()
+
+    tester = flet_app_function.tester
+    assert (await tester.find_by_text("Email")).count == 1
+    assert (await tester.find_by_text("Enter a valid email.")).count == 1
+
+    input.error_text = None
+    input.update()
+    await tester.pump_and_settle()
+    assert (await tester.find_by_text("Enter a valid email.")).count == 0
+    assert (await tester.find_by_text("Email")).count == 1
+
+
+@pytest.mark.asyncio(loop_scope="function")
+async def test_input_keeps_focus_when_error_appears(
+    flet_app_function: ftt.FletTestApp,
+):
+    # Validating on change adds the error below the field; the field must not
+    # be rebuilt (which would drop focus) when that happens.
+    blurs = []
+
+    def validate(e: ft.Event[shad.Input]):
+        e.control.error_text = "Too short" if len(e.control.value) < 5 else None
+
+    input = shad.Input(
+        key="input", on_change=validate, on_blur=lambda e: blurs.append(e)
+    )
+    flet_app_function.page.add(input)
+    await flet_app_function.tester.pump_and_settle()
+
+    tester = flet_app_function.tester
+    await tester.enter_text(await tester.find_by_key("input"), "abc")
+    await tester.pump_and_settle()
+    assert (await tester.find_by_text("Too short")).count == 1
+
+    await tester.enter_text(await tester.find_by_key("input"), "abcdef")
+    await tester.pump_and_settle()
+    assert (await tester.find_by_text("Too short")).count == 0
+    assert input.value == "abcdef"
+    assert blurs == []

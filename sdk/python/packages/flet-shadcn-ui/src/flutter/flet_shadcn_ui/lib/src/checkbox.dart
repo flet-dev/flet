@@ -2,7 +2,7 @@ import 'package:flet/flet.dart';
 import 'package:flutter/widgets.dart';
 import 'package:shadcn_ui/shadcn_ui.dart';
 
-import 'utils/theme.dart';
+import 'utils/field.dart';
 
 class ShadCheckboxControl extends StatelessWidget {
   final Control control;
@@ -20,9 +20,12 @@ class ShadCheckboxControl extends StatelessWidget {
 
     return LayoutControl(
       control: control,
-      child: withShadTheme(
+      child: buildShadField(
         context,
-        ShadCheckbox(
+        control,
+        decorated: false,
+        (decoration) => ShadCheckbox(
+          decoration: decoration,
           value: control.getBool("value", false)!,
           enabled: !control.disabled,
           onChanged: _onChanged,

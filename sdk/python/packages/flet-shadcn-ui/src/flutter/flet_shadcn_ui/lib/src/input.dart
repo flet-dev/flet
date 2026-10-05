@@ -2,8 +2,8 @@ import 'package:flet/flet.dart';
 import 'package:flutter/widgets.dart';
 import 'package:shadcn_ui/shadcn_ui.dart';
 
+import 'utils/field.dart';
 import 'utils/icons.dart';
-import 'utils/theme.dart';
 
 class ShadInputControl extends StatefulWidget {
   final Control control;
@@ -72,7 +72,8 @@ class _ShadInputControlState extends State<ShadInputControl> {
       );
     }
 
-    final input = ShadInput(
+    Widget input(ShadDecoration? decoration) => ShadInput(
+      decoration: decoration,
       controller: _controller,
       focusNode: _focusNode,
       enabled: !control.disabled,
@@ -83,8 +84,10 @@ class _ShadInputControlState extends State<ShadInputControl> {
       maxLength: control.getInt("max_length"),
       minLines: control.getInt("min_lines"),
       maxLines: control.getInt("max_lines", 1),
-      keyboardType:
-          control.getTextInputType("keyboard_type", TextInputType.text)!,
+      keyboardType: control.getTextInputType(
+        "keyboard_type",
+        TextInputType.text,
+      )!,
       textAlign: control.getTextAlign("text_align", TextAlign.start)!,
       leading: buildShadIconOrWidget(control, "leading"),
       trailing: buildShadIconOrWidget(control, "trailing"),
@@ -96,6 +99,9 @@ class _ShadInputControlState extends State<ShadInputControl> {
           : null,
     );
 
-    return LayoutControl(control: control, child: withShadTheme(context, input));
+    return LayoutControl(
+      control: control,
+      child: buildShadField(context, control, input),
+    );
   }
 }

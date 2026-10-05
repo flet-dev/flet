@@ -2,7 +2,8 @@ import 'package:flet/flet.dart';
 import 'package:flutter/widgets.dart';
 import 'package:shadcn_ui/shadcn_ui.dart';
 
-import 'utils/theme.dart';
+import 'utils/field.dart';
+import 'utils/intrinsics.dart';
 
 class ShadSelectControl extends StatefulWidget {
   final Control control;
@@ -58,30 +59,39 @@ class _ShadSelectControlState extends State<ShadSelectControl> {
             option.getString("text") ?? option.getString("value", "")!,
     };
 
-    final select = ShadSelect<String>(
-      controller: _controller,
-      enabled: !control.disabled,
-      placeholder: control.buildTextOrWidget("placeholder"),
-      allowDeselection: control.getBool("allow_deselection", false)!,
-      minWidth: control.getDouble("min_width"),
-      maxHeight: control.getDouble("max_height"),
-      onChanged: _onChanged,
-      selectedOptionBuilder: (context, value) =>
-          Text(textByValue[value] ?? value),
-      options: [
-        for (final option in options)
-          ShadOption<String>(
-            value: option.getString("value", "")!,
-            child:
-                option.buildWidget("content") ??
-                Text(textByValue[option.getString("value", "")!]!),
-          ),
-      ],
+    final minWidth = control.getDouble("min_width") ?? kDefaultSelectMinWidth;
+    // ShadSelect lays out with a LayoutBuilder, which throws on intrinsic
+    // queries, e.g. inside `Column(intrinsic_width=True)`.
+    Widget select(ShadDecoration? decoration) => FixedIntrinsics(
+      minWidth: minWidth,
+      maxWidth: minWidth,
+      height: 40,
+      child: ShadSelect<String>(
+        decoration: decoration,
+        controller: _controller,
+        enabled: !control.disabled,
+        placeholder: control.buildTextOrWidget("placeholder"),
+        allowDeselection: control.getBool("allow_deselection", false)!,
+        minWidth: control.getDouble("min_width"),
+        maxHeight: control.getDouble("max_height"),
+        onChanged: _onChanged,
+        selectedOptionBuilder: (context, value) =>
+            Text(textByValue[value] ?? value),
+        options: [
+          for (final option in options)
+            ShadOption<String>(
+              value: option.getString("value", "")!,
+              child:
+                  option.buildWidget("content") ??
+                  Text(textByValue[option.getString("value", "")!]!),
+            ),
+        ],
+      ),
     );
 
     return LayoutControl(
       control: control,
-      child: withShadTheme(context, select),
+      child: buildShadField(context, control, select),
     );
   }
 }

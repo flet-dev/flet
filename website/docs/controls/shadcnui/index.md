@@ -1,8 +1,10 @@
 ---
 examples: "extensions/shadcn_ui"
+example_images: "test-images/examples/extensions/shadcn_ui/golden/macos/form"
 title: "Shadcn"
 ---
 
+import {CodeExample, Image} from '@site/src/components/crocodocs';
 import TabItem from '@theme/TabItem';
 import Tabs from '@theme/Tabs';
 
@@ -67,6 +69,35 @@ shad.Theme(
 [`LucideIcons`](types/lucideicons.md) contains the Lucide icons. It can be used
 anywhere Flet accepts an icon, including core controls such as
 [`Icon`][flet.Icon] and [`IconButton`][flet.IconButton].
+
+## Forms
+
+Value controls can show a label, helper text and a validation error, so a form
+is a column of fields validated in your Python code.
+
+[Input](input.md), [Textarea](textarea.md), [Select](select.md),
+[InputOTP](inputotp.md), [DatePicker](datepicker.md),
+[DateRangePicker](daterangepicker.md), [TimePicker](timepicker.md) and
+[RadioGroup](radiogroup.md) have these properties:
+
+- `label` is shown above the field.
+- `description` is helper text shown below the field.
+- `error_text` is an error message shown in red below the field. While it is
+  set, the label and the field's border turn red too.
+
+[Checkbox](checkbox.md) and [Switch](switch.md) already have a `label` and a
+`sublabel` next to them, so they only add `error_text`.
+
+<Image src={frontMatter.example_images + '/image_for_docs.png'} alt="form fields" width="35%" caption="Label, description and error" />
+
+To validate, check the values in an event handler and set `error_text` on each
+invalid field. Set it back to `None` once the value is valid. This sign-up form
+shows errors when it is submitted, and after that each field checks itself
+again as it changes:
+
+<CodeExample path={frontMatter.examples + '/form/main.py'} language="python" />
+
+<Image src={frontMatter.example_images + '/form_flow.gif'} alt="form" width="40%" caption="Submitting and correcting the form" />
 
 ## Available controls
 

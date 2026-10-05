@@ -2,8 +2,8 @@ import 'package:flet/flet.dart';
 import 'package:flutter/widgets.dart';
 import 'package:shadcn_ui/shadcn_ui.dart';
 
+import 'utils/field.dart';
 import 'utils/icons.dart';
-import 'utils/theme.dart';
 
 class ShadInputOTPControl extends StatefulWidget {
   final Control control;
@@ -47,40 +47,93 @@ class _ShadInputOTPControlState extends State<ShadInputOTPControl> {
 
     final groups =
         control.get<List>("groups")?.map((g) => g as int).toList() ?? [length];
-    final children = <Widget>[];
-    for (final (index, size) in groups.indexed) {
-      if (index > 0) {
+    List<Widget> slots(BuildContext context, ShadDecoration? decoration) {
+      final children = <Widget>[];
+      var slot = 0;
+      for (final (index, size) in groups.indexed) {
+        if (index > 0) {
+          children.add(
+            buildShadIconOrWidget(control, "separator") ??
+                const Padding(
+                  padding: EdgeInsets.symmetric(horizontal: 4),
+                  child: Icon(LucideIcons.dot, size: 16),
+                ),
+          );
+        }
         children.add(
-          buildShadIconOrWidget(control, "separator") ??
-              const Padding(
-                padding: EdgeInsets.symmetric(horizontal: 4),
-                child: Icon(LucideIcons.dot, size: 16),
+          ShadInputOTPGroup(
+            children: List.generate(
+              size,
+              (_) => ShadInputOTPSlot(
+                decoration: _slotErrorDecoration(
+                  context,
+                  decoration,
+                  slot++,
+                  length / groups.length,
+                ),
               ),
+            ),
+          ),
         );
       }
-      children.add(
-        ShadInputOTPGroup(
-          children: List.generate(size, (_) => const ShadInputOTPSlot()),
-        ),
-      );
+
+      return children;
     }
 
-    final input = ShadInputOTP(
-      key: ValueKey(_generation),
-      maxLength: length,
-      initialValue: value,
-      enabled: !control.disabled,
-      keyboardType: control.getTextInputType(
-        "keyboard_type",
-        TextInputType.number,
+    Widget input(ShadDecoration? decoration) => Builder(
+      builder: (context) => ShadInputOTP(
+        key: ValueKey(_generation),
+        maxLength: length,
+        initialValue: value,
+        enabled: !control.disabled,
+        keyboardType: control.getTextInputType(
+          "keyboard_type",
+          TextInputType.number,
+        ),
+        onChanged: _onChanged,
+        children: slots(context, decoration),
       ),
-      onChanged: _onChanged,
-      children: children,
     );
 
     return LayoutControl(
       control: control,
-      child: withShadTheme(context, input),
+      child: buildShadField(context, control, input),
     );
   }
+}
+
+/// The error decoration for the slot at [index].
+///
+/// ShadInputOTPSlot merges its own `border` (with a grey left side on the
+/// first slot of a group) over the given decoration, so a red `border` would
+/// leave sides of mixed colors. The error goes into `errorBorder` instead,
+/// with the sides and corners shadcn_ui gives the slot.
+ShadDecoration? _slotErrorDecoration(
+  BuildContext context,
+  ShadDecoration? decoration,
+  int index,
+  double groupSize,
+) {
+  final color = decoration?.border?.top?.color;
+  if (color == null) return null;
+  final radius = ShadTheme.of(context).radius;
+  final first = index % groupSize == 0;
+  final last = (index + 1) % groupSize == 0;
+  final side = ShadBorderSide(color: color, width: 1);
+  return ShadDecoration(
+    hasError: true,
+    errorBorder: ShadBorder(
+      top: side,
+      bottom: side,
+      right: side,
+      left: first ? side : ShadBorderSide.none,
+      padding: const EdgeInsets.all(1),
+      radius: BorderRadius.only(
+        topLeft: first ? radius.topLeft : Radius.zero,
+        bottomLeft: first ? radius.bottomLeft : Radius.zero,
+        topRight: last ? radius.topRight : Radius.zero,
+        bottomRight: last ? radius.bottomRight : Radius.zero,
+      ),
+    ),
+  );
 }

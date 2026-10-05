@@ -45,6 +45,26 @@ class TimePicker(ft.LayoutControl):
     If `None`, "Minutes" is shown.
     """
 
+    label: Optional[ft.StrOrControl] = None
+    """
+    The label shown above this picker.
+
+    It turns red while :attr:`error_text` is set.
+    """
+
+    description: Optional[ft.StrOrControl] = None
+    """
+    Helper text shown below this picker.
+    """
+
+    error_text: Optional[str] = None
+    """
+    An error message shown in red below this picker. The field borders turn red too.
+
+    Set it after validating the value, and set it back to `None` (or an empty
+    string) to clear the error.
+    """
+
     on_change: Optional[ft.ControlEventHandler["TimePicker"]] = None
     """
     Called when the user changes the time.

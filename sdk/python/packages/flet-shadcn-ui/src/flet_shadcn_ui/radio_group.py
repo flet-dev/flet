@@ -77,6 +77,26 @@ class RadioGroup(ft.LayoutControl):
     If `None`, defaults to `4`.
     """
 
+    label: Optional[ft.StrOrControl] = None
+    """
+    The label shown above this group.
+
+    It turns red while :attr:`error_text` is set.
+    """
+
+    description: Optional[ft.StrOrControl] = None
+    """
+    Helper text shown below this group.
+    """
+
+    error_text: Optional[str] = None
+    """
+    An error message shown in red below this group.
+
+    Set it after validating the value, and set it back to `None` (or an empty
+    string) to clear the error.
+    """
+
     on_change: Optional[ft.ControlEventHandler["RadioGroup"]] = None
     """
     Called when the selected option changes.

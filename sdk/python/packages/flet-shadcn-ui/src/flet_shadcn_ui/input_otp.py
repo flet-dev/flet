@@ -63,6 +63,26 @@ class InputOTP(ft.LayoutControl):
     The type of on-screen keyboard to show.
     """
 
+    label: Optional[ft.StrOrControl] = None
+    """
+    The label shown above this input.
+
+    It turns red while :attr:`error_text` is set.
+    """
+
+    description: Optional[ft.StrOrControl] = None
+    """
+    Helper text shown below this input.
+    """
+
+    error_text: Optional[str] = None
+    """
+    An error message shown in red below this input. The slot borders turn red too.
+
+    Set it after validating the value, and set it back to `None` (or an empty
+    string) to clear the error.
+    """
+
     on_change: Optional[ft.ControlEventHandler["InputOTP"]] = None
     """
     Called when the characters change.

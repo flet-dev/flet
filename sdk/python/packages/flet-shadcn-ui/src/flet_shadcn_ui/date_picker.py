@@ -64,6 +64,26 @@ class DatePicker(ft.LayoutControl):
     Whether the calendar closes as soon as a day is picked.
     """
 
+    label: Optional[ft.StrOrControl] = None
+    """
+    The label shown above this picker.
+
+    It turns red while :attr:`error_text` is set.
+    """
+
+    description: Optional[ft.StrOrControl] = None
+    """
+    Helper text shown below this picker.
+    """
+
+    error_text: Optional[str] = None
+    """
+    An error message shown in red below this picker. The button border turns red too.
+
+    Set it after validating the value, and set it back to `None` (or an empty
+    string) to clear the error.
+    """
+
     on_change: Optional[ft.ControlEventHandler["DatePicker"]] = None
     """
     Called when the user picks or clears a day.
@@ -134,6 +154,26 @@ class DateRangePicker(ft.LayoutControl):
     Raises:
         ValueError: If it is not greater than or equal to :attr:`min_date`,
             when :attr:`min_date` is set.
+    """
+
+    label: Optional[ft.StrOrControl] = None
+    """
+    The label shown above this picker.
+
+    It turns red while :attr:`error_text` is set.
+    """
+
+    description: Optional[ft.StrOrControl] = None
+    """
+    Helper text shown below this picker.
+    """
+
+    error_text: Optional[str] = None
+    """
+    An error message shown in red below this picker. The button border turns red too.
+
+    Set it after validating the value, and set it back to `None` (or an empty
+    string) to clear the error.
     """
 
     on_change: Optional[ft.ControlEventHandler["DateRangePicker"]] = None

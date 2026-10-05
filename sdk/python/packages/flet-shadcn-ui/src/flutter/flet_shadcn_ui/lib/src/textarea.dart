@@ -2,7 +2,7 @@ import 'package:flet/flet.dart';
 import 'package:flutter/widgets.dart';
 import 'package:shadcn_ui/shadcn_ui.dart';
 
-import 'utils/theme.dart';
+import 'utils/field.dart';
 
 class ShadTextareaControl extends StatefulWidget {
   final Control control;
@@ -71,7 +71,8 @@ class _ShadTextareaControlState extends State<ShadTextareaControl> {
       );
     }
 
-    final textarea = ShadTextarea(
+    Widget textarea(ShadDecoration? decoration) => ShadTextarea(
+      decoration: decoration,
       controller: _controller,
       focusNode: _focusNode,
       enabled: !control.disabled,
@@ -87,7 +88,7 @@ class _ShadTextareaControlState extends State<ShadTextareaControl> {
 
     return LayoutControl(
       control: control,
-      child: withShadTheme(context, textarea),
+      child: buildShadField(context, control, textarea),
     );
   }
 }

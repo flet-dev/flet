@@ -52,6 +52,14 @@ class Switch(ft.LayoutControl):
     If `None`, the input color of the theme is used.
     """
 
+    error_text: Optional[str] = None
+    """
+    An error message shown in red below this switch.
+
+    Set it after validating the value, and set it back to `None` (or an empty
+    string) to clear the error.
+    """
+
     on_change: Optional[ft.ControlEventHandler["Switch"]] = None
     """
     Called when :attr:`value` changes.

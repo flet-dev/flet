@@ -84,6 +84,26 @@ class Input(ft.LayoutControl):
     Whether this input should be focused on initial display.
     """
 
+    label: Optional[ft.StrOrControl] = None
+    """
+    The label shown above this input.
+
+    It turns red while :attr:`error_text` is set.
+    """
+
+    description: Optional[ft.StrOrControl] = None
+    """
+    Helper text shown below this input.
+    """
+
+    error_text: Optional[str] = None
+    """
+    An error message shown in red below this input. The border turns red too.
+
+    Set it after validating the value, and set it back to `None` (or an empty
+    string) to clear the error.
+    """
+
     on_change: Optional[ft.ControlEventHandler["Input"]] = None
     """
     Called when the text changes.

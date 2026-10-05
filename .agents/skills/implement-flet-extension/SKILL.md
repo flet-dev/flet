@@ -51,6 +51,7 @@ Implement a Flet extension around an external Flutter package using existing `fl
 - Put control-specific helpers in `utils/<control>.dart`; shared helpers in `utils/<topic>.dart`.
 - Prefer `parse`-prefixed helper names when converting input to Flutter structures.
 - Avoid single-use local variables.
+- When wrapping a widget in conditional decoration (a label or error text that appears and disappears), keep the widget tree the same shape (always wrap, key the children). Otherwise toggling the decoration rebuilds the inner widget and drops its state, for example focus while typing. Don't decorate by putting the widget in a `Column`: it loosens a fixed `width`, which shrinks button-like widgets.
 
 ### Default Value Matching (Critical)
 

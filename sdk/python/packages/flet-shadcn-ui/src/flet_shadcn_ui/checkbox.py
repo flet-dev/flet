@@ -53,6 +53,14 @@ class Checkbox(ft.LayoutControl):
     If `None`, defaults to `16`.
     """
 
+    error_text: Optional[str] = None
+    """
+    An error message shown in red below this checkbox. The box border turns red too.
+
+    Set it after validating the value, and set it back to `None` (or an empty
+    string) to clear the error.
+    """
+
     on_change: Optional[ft.ControlEventHandler["Checkbox"]] = None
     """
     Called when :attr:`value` changes.

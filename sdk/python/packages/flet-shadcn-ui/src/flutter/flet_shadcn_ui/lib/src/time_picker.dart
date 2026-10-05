@@ -3,8 +3,8 @@ import 'package:flutter/material.dart' show TimeOfDay;
 import 'package:flutter/widgets.dart';
 import 'package:shadcn_ui/shadcn_ui.dart';
 
+import 'utils/field.dart';
 import 'utils/intrinsics.dart';
-import 'utils/theme.dart';
 
 class ShadTimePickerControl extends StatefulWidget {
   final Control control;
@@ -94,7 +94,7 @@ class _ShadTimePickerControlState extends State<ShadTimePickerControl> {
 
     final hourLabel = control.buildTextOrWidget("hour_label");
     final minuteLabel = control.buildTextOrWidget("minute_label");
-    final picker = period
+    Widget picker(ShadDecoration? decoration) => period
         ? ShadTimePicker.period(
             key: ValueKey(_generation),
             controller: _controller,
@@ -102,6 +102,7 @@ class _ShadTimePickerControlState extends State<ShadTimePickerControl> {
             showSeconds: false,
             hourLabel: hourLabel,
             minuteLabel: minuteLabel,
+            fieldDecoration: decoration,
             onChanged: _onChanged,
           )
         : ShadTimePicker(
@@ -111,14 +112,15 @@ class _ShadTimePickerControlState extends State<ShadTimePickerControl> {
             showSeconds: false,
             hourLabel: hourLabel,
             minuteLabel: minuteLabel,
+            fieldDecoration: decoration,
             onChanged: _onChanged,
           );
 
     return LayoutControl(
       control: control,
-      child: withShadTheme(
-        context,
-        MeasuredIntrinsics(estimate: const Size(220, 70), child: picker),
+      child: MeasuredIntrinsics(
+        estimate: const Size(220, 70),
+        child: buildShadField(context, control, picker),
       ),
     );
   }

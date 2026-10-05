@@ -510,3 +510,42 @@ async def test_table_fill_column_in_middle(flet_app: ftt.FletTestApp, request):
             ],
         ),
     )
+
+
+@pytest.mark.asyncio(loop_scope="module")
+async def test_field_errors(flet_app: ftt.FletTestApp, request):
+    # Every value control with a label, description and error. The fixed
+    # width keeps button-like fields (Select, DatePicker) at full width.
+    flet_app.page.theme_mode = ft.ThemeMode.LIGHT
+    await flet_app.assert_control_screenshot(
+        request.node.name,
+        ft.Column(
+            width=300,
+            spacing=12,
+            controls=[
+                shad.Input(
+                    label="Input",
+                    description="Description",
+                    error_text="Input error",
+                ),
+                shad.Textarea(label="Textarea", error_text="Textarea error"),
+                shad.Select(
+                    width=300,
+                    label="Select",
+                    placeholder="Pick one",
+                    error_text="Select error",
+                    options=[shad.SelectOption(value="a", text="A")],
+                ),
+                shad.InputOTP(length=4, label="InputOTP", error_text="OTP error"),
+                shad.DatePicker(width=300, label="DatePicker", error_text="Date error"),
+                shad.TimePicker(label="TimePicker", error_text="Time error"),
+                shad.RadioGroup(
+                    label="RadioGroup",
+                    error_text="Radio error",
+                    items=[shad.Radio(value="a", label="A")],
+                ),
+                shad.Checkbox(label="Checkbox", error_text="Checkbox error"),
+                shad.Switch(label="Switch", error_text="Switch error"),
+            ],
+        ),
+    )
