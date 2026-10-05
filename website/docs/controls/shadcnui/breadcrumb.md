@@ -16,13 +16,3 @@ import {ClassMembers, ClassSummary, CodeExample, Image} from '@site/src/componen
 <Image src={frontMatter.example_images + '/breadcrumb.png'} alt="breadcrumb" width="40%" caption="After clicking Components" />
 
 <ClassMembers name={frontMatter.class_name} />
-
-## BreadcrumbItem
-
-<ClassSummary name="flet_shadcn_ui.BreadcrumbItem" />
-
-<ClassMembers name="flet_shadcn_ui.BreadcrumbItem" />
-
-## BreadcrumbEllipsis
-
-<ClassSummary name="flet_shadcn_ui.BreadcrumbEllipsis" />

@@ -95,6 +95,7 @@ anywhere Flet accepts an icon, including core controls such as
 - [Separator](separator.md)
 - [Slider](slider.md)
 - [Switch](switch.md)
+- [Table](table.md)
 - [Tabs](tabs.md)
 - [Textarea](textarea.md)
 - [TimePicker](timepicker.md)

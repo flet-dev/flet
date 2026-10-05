@@ -686,3 +686,49 @@ async def test_context_menu_open_on_tap_and_long_press(
     await tester.long_press(await tester.find_by_key("long"))
     await tester.pump_and_settle()
     assert (await tester.find_by_text("long item")).count == 1
+
+
+@pytest.mark.asyncio(loop_scope="function")
+async def test_table_row_click_index(flet_app_function: ftt.FletTestApp):
+    clicks = []
+    flet_app_function.page.add(
+        shad.Table(
+            on_row_click=lambda e: clicks.append(e.data),
+            columns=[shad.TableColumn("Header A"), shad.TableColumn("Header B")],
+            rows=[
+                shad.TableRow(cells=[shad.TableCell("r0"), shad.TableCell("x")]),
+                shad.TableRow(cells=[shad.TableCell("r1"), shad.TableCell("y")]),
+            ],
+            footer=[shad.TableCell("Footer"), shad.TableCell("")],
+        )
+    )
+    await flet_app_function.tester.pump_and_settle()
+    tester = flet_app_function.tester
+
+    for text in ["Header A", "r1", "r0", "Footer"]:
+        await tester.tap(await tester.find_by_text(text))
+        await tester.pump_and_settle()
+
+    # Header and footer clicks are ignored; data rows report their index.
+    assert clicks == [1, 0]
+
+
+@pytest.mark.asyncio(loop_scope="function")
+async def test_table_in_intrinsic_width_column(flet_app_function: ftt.FletTestApp):
+    flet_app_function.page.add(
+        ft.Column(
+            intrinsic_width=True,
+            controls=[
+                ft.Text("Intrinsic table"),
+                shad.Table(
+                    columns=[shad.TableColumn("A"), shad.TableColumn("B", fill=True)],
+                    rows=[
+                        shad.TableRow(cells=[shad.TableCell("1"), shad.TableCell("2")])
+                    ],
+                ),
+            ],
+        )
+    )
+    await flet_app_function.tester.pump_and_settle()
+    assert (await flet_app_function.tester.find_by_text("Intrinsic table")).count == 1
+    assert (await flet_app_function.tester.find_by_text("2")).count == 1

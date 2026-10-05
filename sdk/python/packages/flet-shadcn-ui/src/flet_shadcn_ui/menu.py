@@ -102,14 +102,20 @@ class ContextMenu(ft.LayoutControl):
     """
     Whether a long-press on :attr:`content` opens the menu.
 
-    If `None`, it does on Android and iOS only.
+    If `None`, uses the platform default: a long-press opens the menu on
+    Android and iOS (including the web on phones), and does nothing on
+    desktop and desktop web. `True` or `False` applies on every platform.
     """
 
     open_on_tap: Optional[bool] = None
     """
     Whether a tap (or left-click) on :attr:`content` opens the menu.
 
-    If `None`, it does on Android and iOS only.
+    If `None`, uses the platform default: a tap opens the menu on Android and
+    iOS (including the web on phones), where there is no right-click, and a
+    left-click does nothing on desktop and desktop web. `True` or `False`
+    applies on every platform; for example, set `False` so that buttons inside
+    :attr:`content` don't open the menu on phones.
     """
 
 
@@ -135,6 +141,9 @@ class MenubarItem(ft.Control):
 class Menubar(ft.LayoutControl):
     """
     A Shadcn menu bar: a row of menu buttons, like the menus of a desktop app.
+
+    Each :class:`~flet_shadcn_ui.MenubarItem` opens a menu of
+    :class:`~flet_shadcn_ui.MenuItem` controls.
 
     Example:
     ```python

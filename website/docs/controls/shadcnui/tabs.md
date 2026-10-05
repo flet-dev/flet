@@ -16,9 +16,3 @@ import {ClassMembers, ClassSummary, CodeExample, Image} from '@site/src/componen
 <Image src={frontMatter.example_images + '/tabs_flow.gif'} alt="tabs" width="50%" caption="Switching to the Password tab" />
 
 <ClassMembers name={frontMatter.class_name} />
-
-## Tab
-
-<ClassSummary name="flet_shadcn_ui.Tab" />
-
-<ClassMembers name="flet_shadcn_ui.Tab" />

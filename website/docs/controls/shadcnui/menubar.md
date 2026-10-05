@@ -16,15 +16,3 @@ import {ClassMembers, ClassSummary, CodeExample, Image} from '@site/src/componen
 <Image src={frontMatter.example_images + '/menubar_flow.gif'} alt="menubar" width="55%" caption="Opening File, then Share, and clicking Messages" />
 
 <ClassMembers name={frontMatter.class_name} />
-
-## MenubarItem
-
-<ClassSummary name="flet_shadcn_ui.MenubarItem" />
-
-<ClassMembers name="flet_shadcn_ui.MenubarItem" />
-
-## MenuItem
-
-<ClassSummary name="flet_shadcn_ui.MenuItem" />
-
-<ClassMembers name="flet_shadcn_ui.MenuItem" />

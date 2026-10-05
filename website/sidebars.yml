@@ -272,31 +272,53 @@ docs:
       Shadcn:
         _index: controls/shadcnui/index.md
         Theme: controls/shadcnui/theme.md
-        Accordion: controls/shadcnui/accordion.md
+        Accordion:
+          _index: controls/shadcnui/accordion.md
+          AccordionItem: controls/shadcnui/accordionitem.md
         Alert: controls/shadcnui/alert.md
         Avatar: controls/shadcnui/avatar.md
         Badge: controls/shadcnui/badge.md
-        Breadcrumb: controls/shadcnui/breadcrumb.md
+        Breadcrumb:
+          _index: controls/shadcnui/breadcrumb.md
+          BreadcrumbItem: controls/shadcnui/breadcrumbitem.md
+          BreadcrumbEllipsis: controls/shadcnui/breadcrumbellipsis.md
         Button: controls/shadcnui/button.md
         Calendar: controls/shadcnui/calendar.md
         Card: controls/shadcnui/card.md
         Checkbox: controls/shadcnui/checkbox.md
-        ContextMenu: controls/shadcnui/contextmenu.md
+        ContextMenu:
+          _index: controls/shadcnui/contextmenu.md
+          MenuItem: controls/shadcnui/menuitem.md
         DatePicker: controls/shadcnui/datepicker.md
         DateRangePicker: controls/shadcnui/daterangepicker.md
         IconButton: controls/shadcnui/iconbutton.md
         Input: controls/shadcnui/input.md
         InputOTP: controls/shadcnui/inputotp.md
-        Menubar: controls/shadcnui/menubar.md
+        Menubar:
+          _index: controls/shadcnui/menubar.md
+          MenubarItem: controls/shadcnui/menubaritem.md
         Popover: controls/shadcnui/popover.md
         Progress: controls/shadcnui/progress.md
-        RadioGroup: controls/shadcnui/radiogroup.md
-        ResizablePanelGroup: controls/shadcnui/resizable.md
-        Select: controls/shadcnui/select.md
+        RadioGroup:
+          _index: controls/shadcnui/radiogroup.md
+          Radio: controls/shadcnui/radio.md
+        ResizablePanelGroup:
+          _index: controls/shadcnui/resizable.md
+          ResizablePanel: controls/shadcnui/resizablepanel.md
+        Select:
+          _index: controls/shadcnui/select.md
+          SelectOption: controls/shadcnui/selectoption.md
         Separator: controls/shadcnui/separator.md
         Slider: controls/shadcnui/slider.md
         Switch: controls/shadcnui/switch.md
-        Tabs: controls/shadcnui/tabs.md
+        Table:
+          _index: controls/shadcnui/table.md
+          TableColumn: controls/shadcnui/tablecolumn.md
+          TableRow: controls/shadcnui/tablerow.md
+          TableCell: controls/shadcnui/tablecell.md
+        Tabs:
+          _index: controls/shadcnui/tabs.md
+          Tab: controls/shadcnui/tab.md
         Textarea: controls/shadcnui/textarea.md
         TimePicker: controls/shadcnui/timepicker.md
         Tooltip: controls/shadcnui/tooltip.md

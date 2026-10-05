@@ -16,9 +16,3 @@ import {ClassMembers, ClassSummary, CodeExample, Image} from '@site/src/componen
 <Image src={frontMatter.example_images + '/resizable_flow.gif'} alt="resizable" width="55%" caption="Dragging the handle to the left" />
 
 <ClassMembers name={frontMatter.class_name} />
-
-## ResizablePanel
-
-<ClassSummary name="flet_shadcn_ui.ResizablePanel" />
-
-<ClassMembers name="flet_shadcn_ui.ResizablePanel" />

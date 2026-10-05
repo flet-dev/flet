@@ -443,3 +443,70 @@ async def test_time_picker_period(flet_app: ftt.FletTestApp, request):
             ]
         ),
     )
+
+
+def _table_rows(count: int) -> list[shad.TableRow]:
+    return [
+        shad.TableRow(cells=[shad.TableCell(f"Row {i}"), shad.TableCell(str(i * 10))])
+        for i in range(1, count + 1)
+    ]
+
+
+@pytest.mark.asyncio(loop_scope="module")
+async def test_table_scrolls_with_pinned_header(flet_app: ftt.FletTestApp, request):
+    flet_app.page.theme_mode = ft.ThemeMode.LIGHT
+    await flet_app.assert_control_screenshot(
+        request.node.name,
+        shad.Table(
+            height=150,
+            row_height=36,
+            pinned_row_count=1,
+            columns=[
+                shad.TableColumn("Name", width=120),
+                shad.TableColumn(
+                    "Value", width=80, alignment=ft.Alignment.CENTER_RIGHT
+                ),
+            ],
+            rows=_table_rows(10),
+        ),
+    )
+
+
+@pytest.mark.asyncio(loop_scope="module")
+async def test_table_without_header(flet_app: ftt.FletTestApp, request):
+    flet_app.page.theme_mode = ft.ThemeMode.LIGHT
+    await flet_app.assert_control_screenshot(
+        request.node.name,
+        shad.Table(
+            columns=[shad.TableColumn(), shad.TableColumn()],
+            rows=_table_rows(3),
+        ),
+    )
+
+
+@pytest.mark.asyncio(loop_scope="module")
+async def test_table_fill_column_in_middle(flet_app: ftt.FletTestApp, request):
+    # A filling column must leave room for the fixed columns after it.
+    flet_app.page.theme_mode = ft.ThemeMode.LIGHT
+    await flet_app.assert_control_screenshot(
+        request.node.name,
+        shad.Table(
+            width=360,
+            columns=[
+                shad.TableColumn("Left", width=80),
+                shad.TableColumn("Middle fills", fill=True),
+                shad.TableColumn(
+                    "Right", width=80, alignment=ft.Alignment.CENTER_RIGHT
+                ),
+            ],
+            rows=[
+                shad.TableRow(
+                    cells=[
+                        shad.TableCell("a"),
+                        shad.TableCell("b"),
+                        shad.TableCell("c"),
+                    ]
+                )
+            ],
+        ),
+    )

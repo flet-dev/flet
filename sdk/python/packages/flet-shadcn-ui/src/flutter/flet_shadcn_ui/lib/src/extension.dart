@@ -23,6 +23,7 @@ import 'select.dart';
 import 'separator.dart';
 import 'slider.dart';
 import 'switch.dart';
+import 'table.dart';
 import 'tabs.dart';
 import 'textarea.dart';
 import 'theme.dart';
@@ -103,6 +104,8 @@ class Extension extends FletExtension {
         return ShadSliderControl(key: key, control: control);
       case "ShadSwitch":
         return ShadSwitchControl(key: key, control: control);
+      case "ShadTable":
+        return ShadTableControl(key: key, control: control);
       case "ShadTabs":
         return ShadTabsControl(key: key, control: control);
       case "ShadTextarea":

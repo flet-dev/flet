@@ -16,9 +16,3 @@ import {ClassMembers, ClassSummary, CodeExample, Image} from '@site/src/componen
 <Image src={frontMatter.example_images + '/select_flow.gif'} alt="select" width="40%" caption="Opening the select and choosing Banana" />
 
 <ClassMembers name={frontMatter.class_name} />
-
-## SelectOption
-
-<ClassSummary name="flet_shadcn_ui.SelectOption" />
-
-<ClassMembers name="flet_shadcn_ui.SelectOption" />

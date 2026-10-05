@@ -16,9 +16,3 @@ import {ClassMembers, ClassSummary, CodeExample, Image} from '@site/src/componen
 <Image src={frontMatter.example_images + '/radio_group_flow.gif'} alt="radio_group" width="40%" caption="Choosing Compact" />
 
 <ClassMembers name={frontMatter.class_name} />
-
-## Radio
-
-<ClassSummary name="flet_shadcn_ui.Radio" />
-
-<ClassMembers name="flet_shadcn_ui.Radio" />

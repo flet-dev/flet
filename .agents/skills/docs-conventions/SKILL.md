@@ -221,6 +221,8 @@ Reference → Controls has five folders, in this order: **Core**, **Material**, 
 - `flet-shadcn-ui` controls → **Shadcn** (label is capitalized "Shadcn").
 - Exception: `Container` lives in `flet/controls/material` but is listed under **Core**.
 
+Sub-controls (controls that can only be used inside a specific parent control, e.g. `DataCell`, `TableColumn`, `MenuItem`) get their own page, nested under the parent's entry with `_index` pointing at the parent page. One page documents exactly one class; never add a second class's `ClassSummary`/`ClassMembers` to a page.
+
 Sidebar folders only affect navigation: doc URLs come from file paths, so a page stays at `/docs/controls/<name>` whichever folder lists it. Do not move doc files into `core/`, `material/` or `cupertino/` subdirectories.
 
 After editing, regenerate `sidebars.js`:

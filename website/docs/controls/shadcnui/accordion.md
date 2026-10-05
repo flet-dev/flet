@@ -16,9 +16,3 @@ import {ClassMembers, ClassSummary, CodeExample, Image} from '@site/src/componen
 <Image src={frontMatter.example_images + '/accordion_flow.gif'} alt="accordion" width="50%" caption="Expanding Is it styled?" />
 
 <ClassMembers name={frontMatter.class_name} />
-
-## AccordionItem
-
-<ClassSummary name="flet_shadcn_ui.AccordionItem" />
-
-<ClassMembers name="flet_shadcn_ui.AccordionItem" />

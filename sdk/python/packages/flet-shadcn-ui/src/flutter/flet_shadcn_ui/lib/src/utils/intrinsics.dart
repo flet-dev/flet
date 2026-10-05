@@ -4,8 +4,9 @@ import 'package:flutter/widgets.dart';
 
 /// Answers intrinsic size queries with fixed values instead of asking [child].
 ///
-/// Some shadcn widgets (ShadSlider, ShadResizablePanelGroup) lay out with a
-/// LayoutBuilder, which throws when asked for its intrinsic size, e.g. inside
+/// Some shadcn widgets (ShadSlider, ShadResizablePanelGroup, ShadTable) lay
+/// out with a LayoutBuilder or a scroll viewport, which throw when asked for
+/// their intrinsic or dry size, e.g. inside
 /// `Column(intrinsic_width=True)` or a Row with `intrinsic_height`. The sizes
 /// given here are only used for those queries; actual layout still goes to
 /// [child].
@@ -73,6 +74,10 @@ class RenderFixedIntrinsics extends RenderProxyBox {
 
   @override
   double computeMaxIntrinsicHeight(double width) => _height;
+
+  @override
+  Size computeDryLayout(BoxConstraints constraints) =>
+      constraints.constrain(Size(_maxWidth, _height));
 }
 
 /// Answers intrinsic and dry layout queries for a widget that has a natural

@@ -21,6 +21,7 @@ from flet_shadcn_ui.select import Select, SelectOption
 from flet_shadcn_ui.separator import Separator
 from flet_shadcn_ui.slider import Slider
 from flet_shadcn_ui.switch import Switch
+from flet_shadcn_ui.table import Table, TableCell, TableColumn, TableRow
 from flet_shadcn_ui.tabs import Tab, Tabs
 from flet_shadcn_ui.textarea import Textarea
 from flet_shadcn_ui.theme import Theme
@@ -74,6 +75,10 @@ __all__ = [
     "Slider",
     "Switch",
     "Tab",
+    "Table",
+    "TableCell",
+    "TableColumn",
+    "TableRow",
     "Tabs",
     "Textarea",
     "Theme",

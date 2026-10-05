@@ -16,9 +16,3 @@ import {ClassMembers, ClassSummary, CodeExample, Image} from '@site/src/componen
 <Image src={frontMatter.example_images + '/context_menu_flow.gif'} alt="context_menu" width="55%" caption="Right-clicking, opening More Tools and clicking Developer Tools" />
 
 <ClassMembers name={frontMatter.class_name} />
-
-## MenuItem
-
-<ClassSummary name="flet_shadcn_ui.MenuItem" />
-
-<ClassMembers name="flet_shadcn_ui.MenuItem" />
