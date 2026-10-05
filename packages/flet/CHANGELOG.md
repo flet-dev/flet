@@ -18,6 +18,7 @@
 * Fix `View` throwing `Bad state: No element` when it rebuilds while the page's `views` list is empty (e.g. the route matches no view); it is treated as the root and top view instead by @FeodorFitsner.
 * Controls are always wrapped in `Opacity` (`1.0` when unset) and `Container` always in `IgnorePointer`, so toggling `opacity` or `ignore_interactions` no longer changes the widget tree's shape and remounts the subtree by @FeodorFitsner.
 * Auto-scroll treats a position within its threshold of the end as pinned before checking whether pixels decreased, so a position clamped by content shrinking at the end no longer unpins it by @FeodorFitsner.
+* An embedded page builds its `Navigator` with `requestFocus: false`, so pushing its routes doesn't move the focus out of the host app by @FeodorFitsner.
 
 ## 1.0.3
 

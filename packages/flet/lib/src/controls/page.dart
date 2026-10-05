@@ -847,6 +847,12 @@ class _PageControlState extends State<PageControl> with WidgetsBindingObserver {
     return Navigator(
       key: navigatorKey,
       pages: pages,
+      // A route pushed onto a Navigator takes the focus by default. An
+      // embedded app pushes one when it starts (its boot screen, then its
+      // views) and on every restart, which pulled the focus out of whatever
+      // the host app had focused - e.g. a text field being typed in. It
+      // gets the focus when the user clicks or taps into it instead.
+      requestFocus: !_isEmbedded,
       onDidRemovePage: (page) {
         if (pages.length <= 1) {
           return;
