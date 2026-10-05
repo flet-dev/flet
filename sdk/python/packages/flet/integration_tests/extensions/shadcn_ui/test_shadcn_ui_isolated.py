@@ -732,3 +732,148 @@ async def test_table_in_intrinsic_width_column(flet_app_function: ftt.FletTestAp
     await flet_app_function.tester.pump_and_settle()
     assert (await flet_app_function.tester.find_by_text("Intrinsic table")).count == 1
     assert (await flet_app_function.tester.find_by_text("2")).count == 1
+
+
+@pytest.mark.asyncio(loop_scope="function")
+async def test_dialog_show_pop_and_modal(flet_app_function: ftt.FletTestApp):
+    page = flet_app_function.page
+    tester = flet_app_function.tester
+    page.window.width = 600
+    page.window.height = 500
+    dismissed = []
+    dialog = shad.Dialog(
+        title="Dialog title",
+        content=ft.Text("Dialog body"),
+        on_dismiss=lambda e: dismissed.append("dialog"),
+    )
+    page.add(ft.Text("Page"))
+    await tester.pump_and_settle()
+
+    page.show_dialog(dialog)
+    await tester.pump_and_settle()
+    assert (await tester.find_by_text("Dialog body")).count == 1
+
+    page.pop_dialog()
+    await tester.pump_and_settle()
+    assert (await tester.find_by_text("Dialog body")).count == 0
+    assert dismissed == ["dialog"]
+    assert dialog.open is False
+
+    # A non-modal dialog closes when the barrier is tapped...
+    page.show_dialog(dialog)
+    await tester.pump_and_settle()
+    await tester.tap_at(ft.Offset(10, 10))
+    await tester.pump_and_settle()
+    assert (await tester.find_by_text("Dialog body")).count == 0
+    assert dismissed == ["dialog", "dialog"]
+
+    # ...a modal one does not.
+    modal = shad.Dialog(title="Modal", content=ft.Text("Modal body"), modal=True)
+    page.show_dialog(modal)
+    await tester.pump_and_settle()
+    await tester.tap_at(ft.Offset(10, 10))
+    await tester.pump_and_settle()
+    assert (await tester.find_by_text("Modal body")).count == 1
+    page.pop_dialog()
+    await tester.pump_and_settle()
+
+
+@pytest.mark.asyncio(loop_scope="function")
+async def test_sheet_show_and_close(flet_app_function: ftt.FletTestApp):
+    page = flet_app_function.page
+    tester = flet_app_function.tester
+    dismissed = []
+    sheet = shad.Sheet(
+        side=shad.SheetSide.RIGHT,
+        title="Sheet title",
+        content=ft.Text("Sheet body"),
+        on_dismiss=lambda e: dismissed.append(e),
+    )
+    page.add(ft.Text("Page"))
+    await tester.pump_and_settle()
+
+    page.show_dialog(sheet)
+    await tester.pump_and_settle()
+    assert (await tester.find_by_text("Sheet body")).count == 1
+
+    sheet.open = False
+    sheet.update()
+    await tester.pump_and_settle()
+    assert (await tester.find_by_text("Sheet body")).count == 0
+    assert len(dismissed) == 1
+
+
+@pytest.mark.asyncio(loop_scope="function")
+async def test_toast_timeout_close_and_replace(flet_app_function: ftt.FletTestApp):
+    import asyncio
+
+    page = flet_app_function.page
+    tester = flet_app_function.tester
+    dismissed = []
+
+    def toast(name: str, seconds: float) -> shad.Toast:
+        return shad.Toast(
+            title=name,
+            duration=ft.Duration(milliseconds=int(seconds * 1000)),
+            on_dismiss=lambda e: dismissed.append(name),
+        )
+
+    page.add(ft.Text("Page"))
+    await tester.pump_and_settle()
+
+    # Times out.
+    page.show_dialog(toast("Short", 1))
+    await tester.pump_and_settle()
+    assert (await tester.find_by_text("Short")).count == 1
+    await asyncio.sleep(1.5)
+    await tester.pump_and_settle()
+    assert dismissed == ["Short"]
+    assert (await tester.find_by_text("Short")).count == 0
+
+    # Closed with the close button.
+    page.show_dialog(toast("Closable", 30))
+    await tester.pump_and_settle()
+    await tester.tap(await tester.find_by_icon(shad.LucideIcons.X))
+    await tester.pump_and_settle()
+    assert dismissed == ["Short", "Closable"]
+
+    # Replaced by a newer toast.
+    page.show_dialog(toast("First", 30))
+    await tester.pump_and_settle()
+    page.show_dialog(toast("Second", 30))
+    await tester.pump_and_settle()
+    assert dismissed == ["Short", "Closable", "First"]
+    assert (await tester.find_by_text("Second")).count == 1
+    page.pop_dialog()
+    await tester.pump_and_settle()
+
+
+@pytest.mark.asyncio(loop_scope="function")
+async def test_sonner_stacks_and_closes_one(flet_app_function: ftt.FletTestApp):
+    page = flet_app_function.page
+    tester = flet_app_function.tester
+    dismissed = []
+
+    def sonner(name: str) -> shad.Sonner:
+        return shad.Sonner(
+            title=name,
+            duration=ft.Duration(seconds=30),
+            on_dismiss=lambda e: dismissed.append(name),
+        )
+
+    page.add(ft.Text("Page"))
+    await tester.pump_and_settle()
+    first = sonner("One")
+    page.show_dialog(first)
+    await tester.pump_and_settle()
+    page.show_dialog(sonner("Two"))
+    await tester.pump_and_settle()
+    assert (await tester.find_by_text("One")).count == 1
+    assert (await tester.find_by_text("Two")).count == 1
+    assert dismissed == []
+
+    first.open = False
+    first.update()
+    await tester.pump_and_settle()
+    assert dismissed == ["One"]
+    assert (await tester.find_by_text("Two")).count == 1

@@ -6,6 +6,9 @@ __all__ = [
     "ButtonSize",
     "ButtonVariant",
     "ColorScheme",
+    "DialogVariant",
+    "SheetSide",
+    "ToastVariant",
 ]
 
 
@@ -121,3 +124,47 @@ class BadgeVariant(Enum):
 
     DESTRUCTIVE = "destructive"
     """Solid badge for errors and other destructive states."""
+
+
+class DialogVariant(Enum):
+    """
+    Visual variants of a :class:`~flet_shadcn_ui.Dialog`.
+    """
+
+    PRIMARY = "primary"
+    """Regular dialog with a close button. This is the default."""
+
+    ALERT = "alert"
+    """Alert dialog for confirmations: no close button, the user must pick one
+    of the actions."""
+
+
+class SheetSide(Enum):
+    """
+    The edge of the screen a :class:`~flet_shadcn_ui.Sheet` slides in from.
+    """
+
+    TOP = "top"
+    """Slides in from the top edge."""
+
+    RIGHT = "right"
+    """Slides in from the right edge."""
+
+    BOTTOM = "bottom"
+    """Slides in from the bottom edge. This is the default."""
+
+    LEFT = "left"
+    """Slides in from the left edge."""
+
+
+class ToastVariant(Enum):
+    """
+    Visual variants of a :class:`~flet_shadcn_ui.Toast` and a
+    :class:`~flet_shadcn_ui.Sonner`.
+    """
+
+    PRIMARY = "primary"
+    """Neutral notification. This is the default."""
+
+    DESTRUCTIVE = "destructive"
+    """Notification for errors and other destructive outcomes."""

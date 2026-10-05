@@ -15,6 +15,7 @@ import 'icon_button.dart';
 import 'input.dart';
 import 'input_otp.dart';
 import 'menu.dart';
+import 'overlays.dart';
 import 'popover.dart';
 import 'progress.dart';
 import 'radio_group.dart';
@@ -72,6 +73,18 @@ class Extension extends FletExtension {
         return ShadDatePickerControl(key: key, control: control);
       case "ShadDateRangePicker":
         return ShadDateRangePickerControl(key: key, control: control);
+      case "ShadDialog":
+        return ShadRouteOverlayControl(
+          key: key,
+          control: control,
+          sheet: false,
+        );
+      case "ShadSheet":
+        return ShadRouteOverlayControl(key: key, control: control, sheet: true);
+      case "ShadToast":
+        return ShadToastControl(key: key, control: control, sonner: false);
+      case "ShadSonner":
+        return ShadToastControl(key: key, control: control, sonner: true);
       case "ShadIconButton":
         return ShadIconButtonControl(key: key, control: control);
       case "ShadInput":

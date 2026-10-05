@@ -291,6 +291,7 @@ docs:
           MenuItem: controls/shadcnui/menuitem.md
         DatePicker: controls/shadcnui/datepicker.md
         DateRangePicker: controls/shadcnui/daterangepicker.md
+        Dialog: controls/shadcnui/dialog.md
         IconButton: controls/shadcnui/iconbutton.md
         Input: controls/shadcnui/input.md
         InputOTP: controls/shadcnui/inputotp.md
@@ -309,7 +310,9 @@ docs:
           _index: controls/shadcnui/select.md
           SelectOption: controls/shadcnui/selectoption.md
         Separator: controls/shadcnui/separator.md
+        Sheet: controls/shadcnui/sheet.md
         Slider: controls/shadcnui/slider.md
+        Sonner: controls/shadcnui/sonner.md
         Switch: controls/shadcnui/switch.md
         Table:
           _index: controls/shadcnui/table.md
@@ -321,6 +324,7 @@ docs:
           Tab: controls/shadcnui/tab.md
         Textarea: controls/shadcnui/textarea.md
         TimePicker: controls/shadcnui/timepicker.md
+        Toast: controls/shadcnui/toast.md
         Tooltip: controls/shadcnui/tooltip.md
       Extensions:
         _generated_index:
@@ -705,6 +709,9 @@ docs:
         - controls/shadcnui/types/buttonsize.md
         - controls/shadcnui/types/buttonvariant.md
         - controls/shadcnui/types/colorscheme.md
+        - controls/shadcnui/types/dialogvariant.md
+        - controls/shadcnui/types/sheetside.md
+        - controls/shadcnui/types/toastvariant.md
         - controls/shadcnui/types/lucideicons.md
       - types/shapeborder.md
       - types/size.md

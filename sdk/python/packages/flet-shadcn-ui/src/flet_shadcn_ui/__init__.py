@@ -13,6 +13,7 @@ from flet_shadcn_ui.input import Input
 from flet_shadcn_ui.input_otp import InputOTP
 from flet_shadcn_ui.lucide_icons import LucideIcons
 from flet_shadcn_ui.menu import ContextMenu, Menubar, MenubarItem, MenuItem
+from flet_shadcn_ui.overlays import Dialog, Sheet, Sonner, Toast
 from flet_shadcn_ui.popover import Popover
 from flet_shadcn_ui.progress import Progress
 from flet_shadcn_ui.radio_group import Radio, RadioGroup
@@ -33,6 +34,9 @@ from flet_shadcn_ui.types import (
     ButtonSize,
     ButtonVariant,
     ColorScheme,
+    DialogVariant,
+    SheetSide,
+    ToastVariant,
 )
 
 __all__ = [
@@ -56,6 +60,8 @@ __all__ = [
     "ContextMenu",
     "DatePicker",
     "DateRangePicker",
+    "Dialog",
+    "DialogVariant",
     "IconButton",
     "Input",
     "InputOTP",
@@ -72,7 +78,10 @@ __all__ = [
     "Select",
     "SelectOption",
     "Separator",
+    "Sheet",
+    "SheetSide",
     "Slider",
+    "Sonner",
     "Switch",
     "Tab",
     "Table",
@@ -83,5 +92,7 @@ __all__ = [
     "Textarea",
     "Theme",
     "TimePicker",
+    "Toast",
+    "ToastVariant",
     "Tooltip",
 ]
