@@ -12,8 +12,9 @@ ShadThemeData parseShadThemeData(Control control, BuildContext context) {
   return ShadThemeData(
     brightness: brightness,
     colorScheme: ShadColorScheme.fromName(
-        control.getString("color_scheme", "slate")!,
-        brightness: brightness),
+      control.getString("color_scheme", "slate")!,
+      brightness: brightness,
+    ),
     radius: control.getBorderRadius("radius"),
   );
 }
@@ -31,6 +32,19 @@ Widget withShadTheme(BuildContext context, Widget child) {
       brightness: brightness,
       colorScheme: ShadColorScheme.fromName("slate", brightness: brightness),
     ),
+    child: child,
+  );
+}
+
+/// Gives [child] the theme's muted foreground color.
+///
+/// shadcn_ui's `muted` text style has no color; most widgets add one, but
+/// some (the ShadRadio sublabel, ShadContextMenuItem trailing text) use it as
+/// is, and Flutter paints color-less text white. Wrap those children with this.
+Widget? withMutedColor(BuildContext context, Widget? child) {
+  if (child == null) return null;
+  return DefaultTextStyle.merge(
+    style: TextStyle(color: ShadTheme.of(context).colorScheme.mutedForeground),
     child: child,
   );
 }

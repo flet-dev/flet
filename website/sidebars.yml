@@ -281,11 +281,13 @@ docs:
         Calendar: controls/shadcnui/calendar.md
         Card: controls/shadcnui/card.md
         Checkbox: controls/shadcnui/checkbox.md
+        ContextMenu: controls/shadcnui/contextmenu.md
         DatePicker: controls/shadcnui/datepicker.md
         DateRangePicker: controls/shadcnui/daterangepicker.md
         IconButton: controls/shadcnui/iconbutton.md
         Input: controls/shadcnui/input.md
         InputOTP: controls/shadcnui/inputotp.md
+        Menubar: controls/shadcnui/menubar.md
         Popover: controls/shadcnui/popover.md
         Progress: controls/shadcnui/progress.md
         RadioGroup: controls/shadcnui/radiogroup.md

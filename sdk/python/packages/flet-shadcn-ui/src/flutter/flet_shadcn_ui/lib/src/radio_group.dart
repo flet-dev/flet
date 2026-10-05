@@ -83,19 +83,9 @@ class ShadRadioControl extends StatelessWidget {
       value: control.getString("value", "")!,
       enabled: !control.disabled,
       label: control.buildTextOrWidget("label"),
-      // ShadRadio styles the sublabel with the theme's `muted` text style,
-      // which has no color in shadcn_ui (other widgets add one), so it would
-      // render white. Add the muted foreground color like ShadCheckbox does.
-      sublabel: _withMutedColor(context, control.buildTextOrWidget("sublabel")),
+      // ShadRadio styles the sublabel with the colorless `muted` text style.
+      sublabel: withMutedColor(context, control.buildTextOrWidget("sublabel")),
       color: control.getColor("color", context),
     );
   }
-}
-
-Widget? _withMutedColor(BuildContext context, Widget? child) {
-  if (child == null) return null;
-  return DefaultTextStyle.merge(
-    style: TextStyle(color: ShadTheme.of(context).colorScheme.mutedForeground),
-    child: child,
-  );
 }

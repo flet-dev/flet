@@ -565,3 +565,124 @@ async def test_date_range_picker_new_range(flet_app_function: ftt.FletTestApp):
     await flet_app_function.tester.pump_and_settle()
     assert picker.start_value.date() == datetime.date(2025, 6, 11)
     assert picker.end_value.date() == datetime.date(2025, 6, 20)
+
+
+@pytest.mark.asyncio(loop_scope="function")
+async def test_context_menu_click_and_disabled(flet_app_function: ftt.FletTestApp):
+    clicks = []
+    flet_app_function.resize_page(500, 400)
+    flet_app_function.page.add(
+        shad.ContextMenu(
+            content=ft.Container(
+                key="area", width=200, height=100, content=ft.Text("Area")
+            ),
+            items=[
+                shad.MenuItem("Enabled", on_click=lambda e: clicks.append("enabled")),
+                shad.MenuItem(
+                    "Off", disabled=True, on_click=lambda e: clicks.append("off")
+                ),
+            ],
+        )
+    )
+    await flet_app_function.tester.pump_and_settle()
+
+    await flet_app_function.tester.right_mouse_click(
+        await flet_app_function.tester.find_by_key("area")
+    )
+    await flet_app_function.tester.pump_and_settle()
+    await flet_app_function.tester.tap(
+        await flet_app_function.tester.find_by_text("Off")
+    )
+    await flet_app_function.tester.pump_and_settle()
+    assert clicks == []
+
+    await flet_app_function.tester.tap(
+        await flet_app_function.tester.find_by_text("Enabled")
+    )
+    await flet_app_function.tester.pump_and_settle()
+    assert clicks == ["enabled"]
+    assert (await flet_app_function.tester.find_by_text("Enabled")).count == 0
+
+
+@pytest.mark.asyncio(loop_scope="function")
+async def test_menubar_submenu_click(flet_app_function: ftt.FletTestApp):
+    clicks = []
+    flet_app_function.resize_page(500, 400)
+    flet_app_function.page.add(
+        shad.Menubar(
+            items=[
+                shad.MenubarItem(
+                    "Menu",
+                    items=[
+                        shad.MenuItem(
+                            "Sub",
+                            items=[
+                                shad.MenuItem(
+                                    "Deep", on_click=lambda e: clicks.append("deep")
+                                )
+                            ],
+                        )
+                    ],
+                )
+            ]
+        )
+    )
+    await flet_app_function.tester.pump_and_settle()
+
+    await flet_app_function.tester.tap(
+        await flet_app_function.tester.find_by_text("Menu")
+    )
+    await flet_app_function.tester.pump_and_settle()
+    await flet_app_function.tester.mouse_hover(
+        await flet_app_function.tester.find_by_text("Sub")
+    )
+    await flet_app_function.tester.pump_and_settle()
+    await flet_app_function.tester.tap(
+        await flet_app_function.tester.find_by_text("Deep")
+    )
+    await flet_app_function.tester.pump_and_settle()
+    assert clicks == ["deep"]
+
+
+@pytest.mark.asyncio(loop_scope="function")
+async def test_context_menu_open_on_tap_and_long_press(
+    flet_app_function: ftt.FletTestApp,
+):
+    # Tests run on desktop, where only right-click opens the menu by default.
+    flet_app_function.resize_page(600, 400)
+
+    def menu(key: str, **kwargs) -> shad.ContextMenu:
+        return shad.ContextMenu(
+            content=ft.Container(key=key, width=150, height=60, content=ft.Text(key)),
+            items=[shad.MenuItem(f"{key} item")],
+            **kwargs,
+        )
+
+    flet_app_function.page.add(
+        ft.Row(
+            [
+                menu("default"),
+                menu("tap", open_on_tap=True),
+                menu("long", open_on_long_press=True),
+            ]
+        )
+    )
+    await flet_app_function.tester.pump_and_settle()
+    tester = flet_app_function.tester
+
+    await tester.tap(await tester.find_by_key("default"))
+    await tester.pump_and_settle()
+    assert (await tester.find_by_text("default item")).count == 0
+
+    await tester.tap(await tester.find_by_key("tap"))
+    await tester.pump_and_settle()
+    assert (await tester.find_by_text("tap item")).count == 1
+
+    # Tapping outside closes it.
+    await tester.tap_at(ft.Offset(580, 380))
+    await tester.pump_and_settle()
+    assert (await tester.find_by_text("tap item")).count == 0
+
+    await tester.long_press(await tester.find_by_key("long"))
+    await tester.pump_and_settle()
+    assert (await tester.find_by_text("long item")).count == 1

@@ -12,6 +12,7 @@ from flet_shadcn_ui.icon_button import IconButton
 from flet_shadcn_ui.input import Input
 from flet_shadcn_ui.input_otp import InputOTP
 from flet_shadcn_ui.lucide_icons import LucideIcons
+from flet_shadcn_ui.menu import ContextMenu, Menubar, MenubarItem, MenuItem
 from flet_shadcn_ui.popover import Popover
 from flet_shadcn_ui.progress import Progress
 from flet_shadcn_ui.radio_group import Radio, RadioGroup
@@ -51,12 +52,16 @@ __all__ = [
     "Card",
     "Checkbox",
     "ColorScheme",
+    "ContextMenu",
     "DatePicker",
     "DateRangePicker",
     "IconButton",
     "Input",
     "InputOTP",
     "LucideIcons",
+    "MenuItem",
+    "Menubar",
+    "MenubarItem",
     "Popover",
     "Progress",
     "Radio",

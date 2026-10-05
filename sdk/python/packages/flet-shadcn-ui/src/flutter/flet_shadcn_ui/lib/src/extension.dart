@@ -14,6 +14,7 @@ import 'date_picker.dart';
 import 'icon_button.dart';
 import 'input.dart';
 import 'input_otp.dart';
+import 'menu.dart';
 import 'popover.dart';
 import 'progress.dart';
 import 'radio_group.dart';
@@ -64,6 +65,8 @@ class Extension extends FletExtension {
         return ShadCalendarControl(key: key, control: control);
       case "ShadCard":
         return ShadCardControl(key: key, control: control);
+      case "ShadContextMenu":
+        return ShadContextMenuControl(key: key, control: control);
       case "ShadDatePicker":
         return ShadDatePickerControl(key: key, control: control);
       case "ShadDateRangePicker":
@@ -76,6 +79,12 @@ class Extension extends FletExtension {
         return ShadCheckboxControl(key: key, control: control);
       case "ShadInputOTP":
         return ShadInputOTPControl(key: key, control: control);
+      case "ShadMenuItem":
+        return ShadMenuItemControl(key: key, control: control);
+      case "ShadMenubar":
+        return ShadMenubarControl(key: key, control: control);
+      case "ShadMenubarItem":
+        return ShadMenubarItemControl(key: key, control: control);
       case "ShadPopover":
         return ShadPopoverControl(key: key, control: control);
       case "ShadProgress":
