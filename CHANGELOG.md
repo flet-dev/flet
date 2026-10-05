@@ -24,6 +24,7 @@
 * Fix the session crashing with "Control must be added to the page first" when the client sends an event (e.g. `size_change`) for a control that was just removed from the page; such events are now dropped by @FeodorFitsner.
 * Fix `on_size_change` never reporting when Flutter reuses the widget for a different control at the same size (e.g. a new page swapped into the same slot) by @FeodorFitsner.
 * Fix a control's subtree (e.g. an embedded `FletApp`, which restarted its app) being rebuilt from scratch when its `opacity` changed between `1.0` and another value, or a `Container`'s `ignore_interactions` was toggled: the wrapping widget was added and removed, changing the widget tree's shape. It is now always present by @FeodorFitsner.
+* Fix `auto_scroll` losing the end when content at the end shrank (e.g. a placeholder replaced by something shorter): the position clamping up to the new end counted as the user scrolling up, so the view stopped following what was added next by @FeodorFitsner.
 * Fix `InteractiveViewer` swallowing taps meant for its content when `pan_enabled` and `scale_enabled` are both off: it no longer installs gesture recognizers it can't use; programmatic zoom/pan still works by @FeodorFitsner.
 
 ## 1.0.3
