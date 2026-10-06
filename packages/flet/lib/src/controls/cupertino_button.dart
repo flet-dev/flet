@@ -1,4 +1,5 @@
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart' show Theme;
 
 import '../extensions/control.dart';
 import '../models/control.dart';
@@ -96,6 +97,19 @@ class _CupertinoButtonControlState extends State<CupertinoButtonControl> {
     bool isTintedButton = {"CupertinoTintedButton", "FilledTonalButton"}
         .contains(widget.control.type);
 
+    // An adaptive Material button (`Button(adaptive=True)` on iOS/macOS)
+    // sends no `bgcolor`/`color`/`padding` of its own: it folds them into a
+    // `ButtonStyle` (see Button.before_update), which only the Material
+    // control read - so `bgcolor=...` was lost here. Take them from the
+    // style's default state when the Cupertino properties are absent.
+    var style = parseButtonStyle(
+        widget.control.internals?["style"] ?? widget.control.get("style"),
+        Theme.of(context));
+    if (style != null) {
+      bgColor ??= style.backgroundColor?.resolve({});
+      padding ??= style.padding?.resolve({})?.resolve(TextDirection.ltr);
+    }
+
     // var style = widget.control.getButtonStyle("style", Theme.of(context),
     //     defaultForegroundColor: theme.colorScheme.primary,
     //     defaultBackgroundColor: Colors.transparent,
@@ -125,7 +139,8 @@ class _CupertinoButtonControlState extends State<CupertinoButtonControl> {
     //   bgColor = style.backgroundColor?.resolve(widgetStates);
     //   padding = style.padding?.resolve({}) as EdgeInsets?;
     // }
-    var color = widget.control.getColor("color", context);
+    var color = widget.control.getColor("color", context) ??
+        style?.foregroundColor?.resolve({});
     var disabledColor = widget.control.getColor(
         "disabled_bgcolor", context, CupertinoColors.tertiarySystemFill)!;
     if (color != null) {

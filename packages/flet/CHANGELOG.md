@@ -19,6 +19,8 @@
 * Controls are always wrapped in `Opacity` (`1.0` when unset) and `Container` always in `IgnorePointer`, so toggling `opacity` or `ignore_interactions` no longer changes the widget tree's shape and remounts the subtree by @FeodorFitsner.
 * Auto-scroll treats a position within its threshold of the end as pinned before checking whether pixels decreased, so a position clamped by content shrinking at the end no longer unpins it by @FeodorFitsner.
 * An embedded page builds its `Navigator` with `requestFocus: false`, so pushing its routes doesn't move the focus out of the host app by @FeodorFitsner.
+* `PageControl` wraps an embedded page's app in a `CupertinoTheme` derived from the page's own Material theme (top-level pages are unchanged). Flutter's `Theme` reuses an ambient `CupertinoTheme` when one exists above it instead of deriving one from its `ThemeData`, so an embedded page's Cupertino widgets took the host app's colors by @FeodorFitsner.
+* `CupertinoButtonControl` falls back to the `ButtonStyle` in `internals["style"]` - what an adaptive Material `Button` sends - for background, foreground and padding when `bgcolor`/`color`/`padding` are absent by @FeodorFitsner.
 
 ## 1.0.3
 

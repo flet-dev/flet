@@ -768,6 +768,18 @@ class _PageControlState extends State<PageControl> with WidgetsBindingObserver {
                 locale: localeConfiguration.locale,
               );
 
+    // An embedded page's own Cupertino theme, placed above its app. Flutter's
+    // `Theme` (which MaterialApp applies) reuses an ambient CupertinoTheme if
+    // one exists above it and only derives one from its ThemeData otherwise -
+    // so an embedded page's Cupertino widgets took their colors from the host
+    // app's theme. The theme here derives from this page's Material theme,
+    // which is what a top-level app gets on its own. Top-level pages are left
+    // alone: there their Cupertino colors also animate with MaterialApp's
+    // theme changes, which an ambient theme would cut short.
+    if (_isEmbedded && cupertinoTheme != null) {
+      app = CupertinoTheme(data: cupertinoTheme, child: app);
+    }
+
     if (control.getBool("enable_screenshots") == true) {
       app = RepaintBoundary(key: _rootKey, child: app);
     }

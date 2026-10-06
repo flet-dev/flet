@@ -27,6 +27,8 @@
 * Fix `auto_scroll` losing the end when content at the end shrank (e.g. a placeholder replaced by something shorter): the position clamping up to the new end counted as the user scrolling up, so the view stopped following what was added next by @FeodorFitsner.
 * Fix an embedded `FletApp` taking the keyboard focus away from the host app when it starts or restarts (e.g. out of a text field being typed in); it gets the focus when the user clicks or taps into it by @FeodorFitsner.
 * Fix `InteractiveViewer` swallowing taps meant for its content when `pan_enabled` and `scale_enabled` are both off: it no longer installs gesture recognizers it can't use; programmatic zoom/pan still works by @FeodorFitsner.
+* An embedded app (`FletApp`) no longer takes its host's Cupertino colors: `CupertinoFilledButton`, `CupertinoButton` and adaptive buttons on iOS/macOS painted with the host app's primary color instead of the embedded app's own. An embedded page now carries a Cupertino theme derived from its own Material theme, as a top-level app does; top-level apps are unchanged by @FeodorFitsner.
+* `Button(adaptive=True)` on iOS/macOS now honors `bgcolor`, `color` and the padding of `style`: the Cupertino button it turns into ignored them and painted the theme's primary color by @FeodorFitsner.
 
 ## 1.0.3
 
