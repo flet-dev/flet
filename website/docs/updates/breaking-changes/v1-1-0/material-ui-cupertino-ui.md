@@ -29,12 +29,13 @@ too, or it fails to compile or to render under Flet 1.1.0.
 
 ## Background
 
-Flutter 3.47, which Flet 1.1.0 is built with, froze the Material and Cupertino
-libraries in the SDK and publishes them as the standalone
+The Material and Cupertino libraries in the Flutter SDK stopped receiving
+changes in Flutter 3.44. Flutter 3.47, which Flet 1.1.0 is built with, is the
+first release with version 1.0 of the standalone
 [`material_ui`](https://pub.dev/packages/material_ui) and
-[`cupertino_ui`](https://pub.dev/packages/cupertino_ui) packages. The SDK
-libraries no longer receive changes and will be deprecated in a future Flutter
-release. See Flutter's
+[`cupertino_ui`](https://pub.dev/packages/cupertino_ui) packages, where
+development continues. The SDK libraries are scheduled for deprecation in an
+upcoming stable release. See Flutter's
 [migration guide](https://docs.flutter.dev/release/breaking-changes/material-ui-and-cupertino-ui).
 
 Both packages re-export `package:flutter/widgets.dart`, so everything at the
@@ -118,11 +119,13 @@ library. What that means depends on how the package uses it:
   release built on `material_ui` (`data_table_2` 3.x, `shimmer` 4.x), or keep
   Material values out of the calls.
 - **It renders SDK Material widgets** such as `TextField`, `InkWell`,
-  `ListTile`, `Checkbox` or `DropdownButton`: they fail at runtime inside a Flet
-  app, because the `Material`, `MaterialLocalizations` and `ScaffoldMessenger`
-  ancestors they look for come from `material_ui` now. Upgrade it, or fork or
-  vendor it and run the same `dart fix` on the copy. A git dependency on a fork
-  only works for extensions that aren't published to pub.dev.
+  `ListTile`, `Checkbox` or `DropdownButton`: these widgets look for SDK
+  `Material`, `MaterialLocalizations` and `ScaffoldMessenger` ancestors, and a
+  Flet app only provides the `material_ui` ones. A widget the package wraps in
+  its own SDK `Material` keeps working; the others fail at runtime. Upgrade
+  the package, or fork or vendor it and run the same `dart fix` on the copy. A
+  git dependency on a fork only works for extensions that aren't published to
+  pub.dev.
 - **It only reads `Theme.of(context)`**: it renders with Flutter's default light
   theme instead of your app's theme and dark mode. Pass explicit colors or
   widgets where the package allows it.
@@ -132,9 +135,13 @@ Flet 1.1.0 doesn't install Flutter's `MaterialUiCompatibilityBridge`.
 
 ### 4. Test
 
-Run your extension in a dark theme, in a non-English locale and in a release
-build. In debug builds, leftover SDK Material widgets fail with the errors
-below. In release builds they show up as grey error boxes instead.
+Run your extension in a dark theme, in a non-English locale, and in both a
+debug and a release build. In debug builds, a leftover SDK widget that misses
+an ancestor fails with one of the errors below. Release builds skip most of
+those checks, so the same widget can render with no ink effects or with
+Flutter's default theme instead. A missing localization still throws in
+release builds; when that happens while building a widget, it shows up as a
+grey error box.
 
 ### 5. Publish a new major version
 
