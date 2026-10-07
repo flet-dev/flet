@@ -15,10 +15,11 @@ Implement a Flet extension around an external Flutter package using existing `fl
 
 1. Confirm package health: maintenance activity, null-safety, platform support, and open issue risk.
 2. Confirm license is compatible with Flet distribution.
-3. Select a conservative version strategy:
+3. Confirm the package doesn't build widgets from the Flutter SDK's `package:flutter/material.dart` or `package:flutter/cupertino.dart`, or expose their types in its API. Flet renders with the `material_ui` and `cupertino_ui` packages, so SDK `TextField`, `InkWell`, `ListTile` and similar widgets fail at runtime ("No Material widget found"), and SDK `ThemeData`/`ButtonStyle` values don't type-check against Flet's helpers. Prefer a release built on `material_ui`/`cupertino_ui` or on `widgets.dart` only.
+4. Select a conservative version strategy:
 - Pin exact version when behavior stability is critical.
 - Use bounded ranges when required by ecosystem constraints.
-4. Record key constraints and reasons in PR notes/commit message.
+5. Record key constraints and reasons in PR notes/commit message.
 
 ## Control/Service Classification
 
@@ -44,6 +45,7 @@ Implement a Flet extension around an external Flutter package using existing `fl
 
 ## Flutter-side Rules
 
+- Import `package:material_ui/material_ui.dart` (and `package:cupertino_ui/cupertino_ui.dart` for Cupertino), never `package:flutter/material.dart` or `package:flutter/cupertino.dart`. Files that use no Material or Cupertino API import `package:flutter/widgets.dart`. Add `material_ui` (and `cupertino_ui` if used) to the extension's `pubspec.yaml` with the same constraints as `packages/flet/pubspec.yaml`.
 - Use `parseEnum()` for enums — it's exported from `package:flet/flet.dart`. Call it as `parseEnum(MyEnum.values, widget.control.getString("attr"), MyEnum.defaultVal)!`. Do NOT write a custom `_parseXxx()` switch helper.
 - For control attributes, prefer `widget.control.getBool()/getDouble()/...` accessors.
 - For non-control parsing, use shared `parseSomething()` helpers.
