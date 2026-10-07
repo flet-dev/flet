@@ -20,6 +20,12 @@ The source is pinned to the Flutter version in `.fvmrc` rather than tracking
 `stable`. The client renders with the font shipped inside that exact SDK, so an
 icon taken from a newer `stable` would have a name and a packed value here and
 no glyph there - which renders as an empty box with no error anywhere.
+
+The generated Dart lists refer to `Icons` and `CupertinoIcons` from the
+`material_ui` and `cupertino_ui` packages, which Flet's Dart code uses instead
+of the SDK's Material and Cupertino libraries. Their icon sets match the SDK's,
+but the glyphs still come from the SDK's font, so the names are taken from the
+SDK's sources.
 """
 
 import argparse
