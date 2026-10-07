@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:flutter_markdown_plus/flutter_markdown_plus.dart';
 import 'package:flutter_markdown_plus_latex/flutter_markdown_plus_latex.dart';
 import 'package:markdown/markdown.dart' as md;
@@ -34,10 +34,12 @@ class MarkdownControl extends StatelessWidget {
 
     var codeStyleSheet = control.getMarkdownStyleSheet(
             "code_style_sheet", context) ??
-        MarkdownStyleSheet.fromTheme(theme).copyWith(
+        markdownStyleSheetFromTheme(theme).copyWith(
             code:
                 theme.textTheme.bodyMedium!.copyWith(fontFamily: "monospace"));
-    var mdStyleSheet = control.getMarkdownStyleSheet("md_style_sheet", context);
+    var mdStyleSheet =
+        control.getMarkdownStyleSheet("md_style_sheet", context) ??
+            markdownStyleSheetFromTheme(theme);
     var codeTheme = control.getMarkdownCodeTheme("code_theme", theme);
     var latexStyle = control.getTextStyle("latex_style", theme);
     var latexScaleFactor = control.getDouble("latex_scale_factor");
