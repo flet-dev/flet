@@ -11,7 +11,14 @@ extend-exclude = [
     "*icon-codepoints.json",
     "*/controls/material/icons.json",
     "*/controls/cupertino/cupertino_icons.json",
+    "packages/flet/lib/src/utils/material_icons.dart",
+    "packages/flet/lib/src/utils/cupertino_icons.dart",
 ]
+
+[default.extend-identifiers]
+# Public Dart extension name in packages/flet; renaming it would break
+# extensions that refer to it.
+LocaleExtention = "LocaleExtention"
 
 [default.extend-words]
 # AAC High Efficiency audio codec enum member name
