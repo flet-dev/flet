@@ -51,6 +51,17 @@ def test_controls_with_their_own_min_size_skip_the_generic_constraint():
     assert rail._internals["skip_properties"] == ["min_width"]
 
 
+def test_overridden_size_constraints_stay_keyword_only():
+    # Redeclaring an inherited dataclass field keeps the base class's slot, so
+    # without kw_only it would become the first positional argument.
+    assert ft.ListTile("title").title == "title"
+    assert ft.ListTile("title").min_height is None
+    dest = ft.NavigationRailDestination(icon=ft.Icons.HOME, label="a")
+    rail = ft.NavigationRail([dest])
+    assert rail.destinations == [dest]
+    assert rail.min_width is None
+
+
 # --- tap target size --------------------------------------------------------
 
 

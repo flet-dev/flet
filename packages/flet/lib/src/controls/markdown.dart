@@ -39,14 +39,20 @@ class MarkdownControl extends StatelessWidget {
             code:
                 theme.textTheme.bodyMedium!.copyWith(fontFamily: "monospace"));
     // `Theme.markdown_theme` underneath, the control's own sheet on top.
-    // Always parsed - even with neither set - so the defaults come from the
-    // theme (links in `primary`) rather than flutter_markdown's fixed blue.
+    // With neither set, keep flutter_markdown's defaults but take link and
+    // blockquote colors from the theme rather than its fixed blue.
     var themeSheet = theme.extension<MarkdownTheme>()?.styleSheet;
     var ownSheet = control.get("md_style_sheet");
-    var mdStyleSheet = parseMarkdownStyleSheet({
-      ...?themeSheet,
-      if (ownSheet is Map) ...Map<String, dynamic>.from(ownSheet),
-    }, context);
+    var mdStyleSheet = themeSheet == null && ownSheet is! Map
+        ? MarkdownStyleSheet.fromTheme(theme).copyWith(
+            a: TextStyle(color: theme.colorScheme.primary),
+            blockquoteDecoration: BoxDecoration(
+                color: theme.colorScheme.surfaceContainerHigh,
+                borderRadius: BorderRadius.circular(4.0)))
+        : parseMarkdownStyleSheet({
+            ...?themeSheet,
+            if (ownSheet is Map) ...Map<String, dynamic>.from(ownSheet),
+          }, context);
     var codeTheme = control.getMarkdownCodeTheme("code_theme", theme);
     var latexStyle = control.getTextStyle("latex_style", theme);
     var latexScaleFactor = control.getDouble("latex_scale_factor");

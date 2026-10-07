@@ -237,7 +237,7 @@ class NavigationRail(LayoutControl):
     min_width: Annotated[
         Optional[Number],
         V.ge(0),
-    ] = None
+    ] = field(default=None, kw_only=True)
     """
     The smallest possible width for the rail regardless of the destination's icon or \
     label size.
