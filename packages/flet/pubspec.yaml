@@ -31,6 +31,7 @@ dependencies:
   flutter_highlight: ^0.7.0
   flutter_markdown_plus: ^1.0.7
   flutter_markdown_plus_latex: ^1.0.5
+  flutter_math_fork: ^0.7.4
   flutter_svg: ^2.2.1
   highlight: ^0.7.0
   http: ^1.5.0
