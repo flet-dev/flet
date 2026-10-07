@@ -13,6 +13,8 @@ extend-exclude = [
     "*/controls/cupertino/cupertino_icons.json",
     "packages/flet/lib/src/utils/material_icons.dart",
     "packages/flet/lib/src/utils/cupertino_icons.dart",
+    # Vendored third-party code, kept as published.
+    "*/third_party/*",
 ]
 
 [default.extend-identifiers]

@@ -1,6 +1,6 @@
 import 'package:flet/flet.dart';
-import 'package:flutter/material.dart';
-import 'package:flutter_colorpicker/flutter_colorpicker.dart';
+import 'package:material_ui/material_ui.dart';
+import 'third_party/flutter_colorpicker/flutter_colorpicker.dart';
 
 import 'utils/color_pickers.dart';
 
