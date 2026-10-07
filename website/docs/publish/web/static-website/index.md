@@ -312,6 +312,32 @@ pwa_theme_color = "#FF0000"
 ```
 </TabItem>
 </Tabs>
+### PWA short name
+
+The `short_name` in `manifest.json` is the label shown under the app icon
+when the PWA is installed, for example on the iOS Home Screen.
+
+#### Resolution order
+
+1. [`--pwa-short-name`](../../../cli/flet-build.md#--pwa-short-name)
+2. `[tool.flet.web].pwa_short_name`
+3. the product name ([`--product`](../../../cli/flet-build.md#--product) / `[tool.flet].product`)
+
+#### Example
+
+<Tabs groupId="flet-build--pyproject-toml">
+<TabItem value="flet-build" label="flet build">
+```bash
+flet build web --pwa-short-name "Studio"
+```
+</TabItem>
+<TabItem value="pyproject-toml" label="pyproject.toml">
+```toml
+[tool.flet.web]
+pwa_short_name = "Studio"
+```
+</TabItem>
+</Tabs>
 ### WASM output
 
 By default, [`flet build web`](#flet-build-web) enables Flutter's WASM output.

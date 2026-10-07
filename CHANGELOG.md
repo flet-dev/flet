@@ -1,3 +1,29 @@
+## 1.0.4
+
+### Improvements
+
+* Add `--pwa-short-name` and `[tool.flet.web].pwa_short_name` to `flet build web` to set the `short_name` of the web app manifest: the label shown under the app icon when the PWA is installed, e.g. on the iOS Home Screen. It defaults to the product name ([#6911](https://github.com/flet-dev/flet/pull/6911)) by @FeodorFitsner.
+
+### Bug fixes
+
+* Fix a web app built with `flet build web` getting its project name, e.g. `my_app`, as its label when installed as a PWA on iOS instead of its product name. The manifest's `short_name`, which iOS shows on the Home Screen, was set to the project name; it now defaults to the product name, like the page title. Product names containing quotes no longer break `manifest.json` ([#6911](https://github.com/flet-dev/flet/pull/6911)) by @FeodorFitsner.
+* Fix `flet build`, `flet test` and `flet debug` failing on new projects with a `jni_flutter` "Constant evaluation error" ([#6919](https://github.com/flet-dev/flet/issues/6919), [#6920](https://github.com/flet-dev/flet/pull/6920)) by @ndonkoHenri.
+
+## 1.0.3
+
+### Improvements
+
+* Add `FletApp.wait_idle(idle_ms, timeout_ms)`: a host app can wait until an embedded app has rendered its UI and gone quiet - for example before taking a screenshot of it or reading its output after a restart. It returns `idle`, `error` (the app failed to start or crashed) or `timeout`, and costs nothing unless a call is pending ([#6901](https://github.com/flet-dev/flet/pull/6901)) by @FeodorFitsner.
+* Add `TextField.on_paste_files`: pasted files (a screenshot, an image copied from a web page, files copied in the OS file manager) arrive as `name`, `mime_type` and `bytes`, e.g. to attach them to a chat message. On the web it uses the browser's paste event, so it works in every browser, Safari included, with no clipboard permission prompt; on desktop, `Ctrl`/`Cmd`+`V` reports a clipboard image ([#6901](https://github.com/flet-dev/flet/pull/6901)) by @FeodorFitsner.
+
+### Bug fixes
+
+* Fix `Dropdown.expanded_insets` having no effect when `expand` is set ([#6895](https://github.com/flet-dev/flet/issues/6895), [#6896](https://github.com/flet-dev/flet/pull/6896)) by @xsalaices.
+* Fix `Tabs` ignoring a new `selected_index` set together with a new `length` - e.g. inserting a tab before the selected one and moving `selected_index` to follow it selected the inserted tab instead ([#6901](https://github.com/flet-dev/flet/pull/6901)) by @FeodorFitsner.
+* Fix controls losing their state (a `TextField` its focus and cursor, a list its scroll position) when a sibling before them in a `Column`, `Row` or other multi-child control became visible or hidden: children were matched by position, so the shift rebuilt them. Children are now matched by control id ([#6901](https://github.com/flet-dev/flet/pull/6901)) by @FeodorFitsner.
+* Fix `FilePicker.upload()` with several files uploading the wrong file to each URL: after the first upload, each file's `id` pointed at the next picked file, so a file's bytes went to another file's URL and the last file never uploaded (its caller waited forever). Picked files now keep their `id` across `upload()` calls, and files that can't be found report an upload error ([#6901](https://github.com/flet-dev/flet/pull/6901)) by @FeodorFitsner.
+* Fix `FletApp.on_error` not firing when the embedded app crashes in `main()` or in an event handler - the error only showed inside the embedded app. The host is now notified, as `on_error` documents ([#6901](https://github.com/flet-dev/flet/pull/6901)) by @FeodorFitsner.
+
 ## 1.0.2
 
 ### Improvements

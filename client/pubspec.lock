@@ -383,7 +383,7 @@ packages:
       path: "../packages/flet"
       relative: true
     source: path
-    version: "1.0.2"
+    version: "1.0.4"
   flet_ads:
     dependency: "direct main"
     description:
@@ -888,7 +888,7 @@ packages:
     source: hosted
     version: "0.20.2"
   jni:
-    dependency: "direct overridden"
+    dependency: transitive
     description:
       name: jni
       sha256: c2230682d5bc2362c1c9e8d3c7f406d9cbba23ab3f2e203a025dd47e0fb2e68f
@@ -1544,13 +1544,13 @@ packages:
     source: hosted
     version: "2.1.2"
   screen_retriever:
-    dependency: "direct overridden"
+    dependency: transitive
     description:
       name: screen_retriever
-      sha256: "42cc3b402a0f67d2455a0d067553d0f13453f6a008d98eababf8b63958d506bd"
+      sha256: ace919117a7520c13a50a6259e60c4a0d4cbe98809468792a91b5c5adada2aa6
       url: "https://pub.dev"
     source: hosted
-    version: "0.2.1"
+    version: "0.2.2"
   screen_retriever_linux:
     dependency: transitive
     description:
