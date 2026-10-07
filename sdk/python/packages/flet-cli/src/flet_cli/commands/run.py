@@ -371,8 +371,8 @@ class Command(BaseCommand):
             my_observer.start()
         except OSError as e:
             hint = (
-                " To enable it, raise the inotify limits: https://flet.dev/docs/"
-                "getting-started/running-app#linux-inotify-limits"
+                " To enable it, raise the inotify limits: "
+                "https://flet.dev/docs/getting-started/running-app#linux-inotify-limits"
                 if is_linux() and e.errno in (errno.ENOSPC, errno.EMFILE)
                 else ""
             )
