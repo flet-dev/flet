@@ -7,6 +7,7 @@
 ### Bug fixes
 
 * Fix a web app built with `flet build web` getting its project name, e.g. `my_app`, as its label when installed as a PWA on iOS instead of its product name. The manifest's `short_name`, which iOS shows on the Home Screen, was set to the project name; it now defaults to the product name, like the page title. Product names containing quotes no longer break `manifest.json` ([#6911](https://github.com/flet-dev/flet/pull/6911)) by @FeodorFitsner.
+* Fix Flet apps on Windows turning off HDR, or dimming and blanking external monitors, while running; the unused desktop plugins of `screen_brightness` are no longer bundled ([#6629](https://github.com/flet-dev/flet/issues/6629), [#6493](https://github.com/flet-dev/flet/issues/6493)) by @ndonkoHenri.
 
 ## 1.0.3
 
