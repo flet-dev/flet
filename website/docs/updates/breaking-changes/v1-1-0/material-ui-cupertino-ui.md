@@ -121,10 +121,12 @@ library. What that means depends on how the package uses it:
 - **It renders SDK Material widgets** such as `TextField`, `InkWell`,
   `ListTile`, `Checkbox` or `DropdownButton`: these widgets look for SDK
   `Material`, `MaterialLocalizations` and `ScaffoldMessenger` ancestors, and a
-  Flet app only provides the `material_ui` ones. A widget the package wraps in
-  its own SDK `Material` keeps working; the others fail at runtime. Upgrade
-  the package, or fork or vendor it and run the same `dart fix` on the copy. A
-  git dependency on a fork only works for extensions that aren't published to
+  Flet app only provides the `material_ui` ones, so the widgets fail at
+  runtime. A package that wraps its widgets in its own SDK `Material` covers
+  the `Material` lookup, but widgets that also need SDK localizations or a
+  `ScaffoldMessenger`, such as `TextField`, still fail. Upgrade the package,
+  or fork or vendor it and run the same `dart fix` on the copy. A git
+  dependency on a fork only works for extensions that aren't published to
   pub.dev.
 - **It only reads `Theme.of(context)`**: it renders with Flutter's default light
   theme instead of your app's theme and dark mode. Pass explicit colors or
