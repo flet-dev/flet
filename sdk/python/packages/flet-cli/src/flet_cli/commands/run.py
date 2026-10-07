@@ -1,4 +1,5 @@
 import argparse
+import errno
 import logging
 import os
 import platform
@@ -20,6 +21,7 @@ from flet.app import DEFAULT_ASSETS_DIR
 from flet.utils import (
     get_free_tcp_port,
     get_local_ip,
+    is_linux,
     is_windows,
     open_in_browser,
     random_string,
@@ -204,11 +206,9 @@ class Command(BaseCommand):
         starts file watching, then starts the child app process through
         `Handler`, and keeps the observer running until termination.
 
-        If file watching can't start, for example because the Linux inotify
-        watch or instance limit is reached, a warning is printed and the app
-        runs without reloading on changes. The app process is started only
-        after that, so a watcher failure never leaves it running with no one
-        reading its output.
+        If starting the observer raises `OSError`, for example because the
+        Linux inotify watch or instance limit is reached, a warning is printed
+        and the app runs without reloading on changes.
 
         Args:
             options: Parsed command options produced by :meth:`add_arguments`.
@@ -370,11 +370,15 @@ class Command(BaseCommand):
         try:
             my_observer.start()
         except OSError as e:
+            hint = (
+                " Raise fs.inotify.max_user_watches or "
+                "fs.inotify.max_user_instances to enable it."
+                if is_linux() and e.errno in (errno.ENOSPC, errno.EMFILE)
+                else ""
+            )
             print(
                 f"Warning: file watching is unavailable ({e.strerror or e}), "
-                "so the app won't reload on changes. On Linux, raise "
-                "fs.inotify.max_user_watches or fs.inotify.max_user_instances "
-                "to enable it."
+                f"so the app won't reload on changes.{hint}"
             )
             my_observer = None
 

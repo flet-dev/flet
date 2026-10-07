@@ -7,7 +7,7 @@
 ### Bug fixes
 
 * Fix a web app built with `flet build web` getting its project name, e.g. `my_app`, as its label when installed as a PWA on iOS instead of its product name. The manifest's `short_name`, which iOS shows on the Home Screen, was set to the project name; it now defaults to the product name, like the page title. Product names containing quotes no longer break `manifest.json` ([#6911](https://github.com/flet-dev/flet/pull/6911)) by @FeodorFitsner.
-* Fix `flet run` crashing with `inotify watch limit reached` on Linux and leaving the app running with a broken pipe; it now warns that the app won't reload on changes and keeps running ([#6711](https://github.com/flet-dev/flet/issues/6711)) by @ndonkoHenri.
+* Fix `flet run` crashing with `inotify watch limit reached` on Linux; it now warns that the app won't reload on changes and runs it anyway ([#6711](https://github.com/flet-dev/flet/issues/6711)) by @ndonkoHenri.
 
 ## 1.0.3
 
