@@ -6,6 +6,10 @@
 
   **Compatibility:** Desktop apps and the desktop app that `flet run` opens now render with Impeller, Flutter 3.47's default desktop renderer, instead of Skia. Use `flet build --no-impeller` (or `impeller = false` under `[tool.flet]`), `flet run --no-impeller` or the `FLET_NO_IMPELLER` environment variable to render with Skia; see [Renderer](/docs/publish#renderer). Android plugins that still use `jcenter()` or other APIs removed in Gradle 9 no longer build. `flet build` downloads Flutter 3.47.6 on first use.
 
+### Breaking changes
+
+* Flet's Dart code now takes Material and Cupertino from the `material_ui` and `cupertino_ui` packages instead of the Flutter SDK's `package:flutter/material.dart` and `package:flutter/cupertino.dart`. The Dart code of extensions that uses Material or Cupertino must migrate. See the [Material and Cupertino now come from material_ui and cupertino_ui](/docs/updates/breaking-changes/v1-1-0/material-ui-cupertino-ui) guide by @ndonkoHenri.
+
 ### Bug fixes
 
 * Fix `flet build`, `flet debug` and `flet test` failing for macOS and iOS on Xcode 27, which rejects deployment targets below macOS 12 and iOS 15 ([#6874](https://github.com/flet-dev/flet/issues/6874)) by @ndonkoHenri.
