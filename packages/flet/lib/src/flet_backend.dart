@@ -3,7 +3,7 @@ import 'dart:convert';
 
 import 'package:device_info_plus/device_info_plus.dart';
 import 'package:flutter/foundation.dart';
-import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 import 'package:msgpack_dart/msgpack_dart.dart' as msgpack;
 import 'package:provider/provider.dart';
 
