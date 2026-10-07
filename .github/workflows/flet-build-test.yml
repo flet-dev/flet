@@ -79,7 +79,7 @@ jobs:
       extra_build_args: ${{ github.event_name == 'workflow_dispatch' && inputs.extra_build_args || '' }}
 
   build-3-14:
-    if: github.event_name != 'workflow_dispatch' || inputs.python_version == 'all' || inputs.python_version == '3.14'
+    if: false  # ubuntu-26.04 canary round 2: done in run 37574205371
     name: Python 3.14
     uses: ./.github/workflows/flet-build-test-matrix.yml
     with:
@@ -87,6 +87,7 @@ jobs:
       extra_build_args: ${{ github.event_name == 'workflow_dispatch' && inputs.extra_build_args || '' }}
 
   pack:
+    if: false  # ubuntu-26.04 canary round 2: done in run 37574205371
     name: Pack (${{ matrix.name }}, ${{ matrix.runner }})
     runs-on: ${{ matrix.runner }}
     permissions:
@@ -222,17 +223,21 @@ jobs:
   # ubuntu-26.04 canary: does an app packed on 26.04 still start on 24.04?
   pack-cross-run:
     name: Run 26.04-packed app on ubuntu-24.04
-    needs: pack
-    if: ${{ !cancelled() }}
     runs-on: ubuntu-24.04
     permissions:
       contents: read
+      actions: read
+    env:
+      # The packed app bundles the full client; without this the runtime looks for the light one.
+      FLET_DESKTOP_FLAVOR: full
     steps:
       - name: Download 26.04 pack artifact
         uses: actions/download-artifact@3e5f45b2cfb9172054b4087a40e8e0b5a5461e7c # v8.0.1
         with:
           name: linux-ubuntu-26.04-pack-artifact
           path: dist
+          run-id: 37574205371
+          github-token: ${{ github.token }}
 
       - name: Install runtime deps
         run: |
@@ -263,7 +268,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        runner: [ubuntu-26.04, ubuntu-24.04]
+        runner: [ubuntu-24.04]  # 26.04 leg done in run 37574205371 (EDQUOT)
     steps:
       - name: Checkout repository
         uses: actions/checkout@df4cb1c069e1874edd31b4311f1884172cec0e10 # v6.0.3
@@ -305,7 +310,7 @@ jobs:
           uv sync --quiet
           sed -i 's/^    "numpy",$/    "numpy",\n    "torch",/' pyproject.toml
           grep -n torch pyproject.toml
-          findmnt -no FSTYPE,SIZE,OPTIONS /tmp; df -h /tmp /
+          findmnt -no FSTYPE,SIZE,OPTIONS /tmp || echo "/tmp is not a separate mount"; df -h /tmp /
           ( while sleep 3; do echo "$(date +%T) $(du -sxm /tmp 2>/dev/null | cut -f1)"; done ) > "$RUNNER_TEMP/tmp-usage.log" &
           SAMPLER=$!
           set +e

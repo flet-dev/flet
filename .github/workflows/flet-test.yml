@@ -8,7 +8,7 @@ name: Flet Test (on-device)
 
 on:
   push:
-    branches: ['test/ubuntu-26.04']
+    branches: ['test/ubuntu-26.04-flet-test-done']  # round 2: don't re-run
   pull_request:
     paths:
       - '.github/workflows/flet-test.yml'
