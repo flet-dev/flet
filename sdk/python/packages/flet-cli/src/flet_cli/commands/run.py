@@ -201,8 +201,14 @@ class Command(BaseCommand):
 
         This method prepares the script/module path, selects transport
         configuration (port or UDS), resolves assets and ignore directories,
-        starts the child app process through `Handler`, and keeps the
-        observer running until termination.
+        starts file watching, then starts the child app process through
+        `Handler`, and keeps the observer running until termination.
+
+        If file watching can't start, for example because the Linux inotify
+        watch or instance limit is reached, a warning is printed and the app
+        runs without reloading on changes. The app process is started only
+        after that, so a watcher failure never leaves it running with no one
+        reading its output.
 
         Args:
             options: Parsed command options produced by :meth:`add_arguments`.
@@ -361,7 +367,18 @@ class Command(BaseCommand):
 
         my_observer = Observer()
         my_observer.schedule(my_event_handler, script_dir, recursive=options.recursive)
-        my_observer.start()
+        try:
+            my_observer.start()
+        except OSError as e:
+            print(
+                f"Warning: file watching is unavailable ({e.strerror or e}), "
+                "so the app won't reload on changes. On Linux, raise "
+                "fs.inotify.max_user_watches or fs.inotify.max_user_instances "
+                "to enable it."
+            )
+            my_observer = None
+
+        my_event_handler.start_process()
 
         try:
             while True:
@@ -377,8 +394,9 @@ class Command(BaseCommand):
 
             close_flet_view(my_event_handler.pid_file)
 
-        my_observer.stop()
-        my_observer.join()
+        if my_observer is not None:
+            my_observer.stop()
+            my_observer.join()
 
 
 class Handler(FileSystemEventHandler):
@@ -435,7 +453,6 @@ class Handler(FileSystemEventHandler):
         self.flet_app_temp_dir = flet_app_temp_dir
         self.verbose = verbose
         self.terminate = threading.Event()
-        self.start_process()
 
     def start_process(self):
         """
