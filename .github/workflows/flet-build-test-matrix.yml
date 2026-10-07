@@ -38,105 +38,31 @@ jobs:
       fail-fast: false
       matrix:
         include:
-          # -------- Desktop --------
           - name: linux
-            runner: ubuntu-latest
+            runner: ubuntu-26.04
             build_cmd: "flet build linux"
             artifact_name: linux-build-artifact
             artifact_path: build/linux
             needs_linux_deps: true
 
-          - name: macos
-            runner: macos-26
-            build_cmd: "flet build macos"
-            artifact_name: macos-build-artifact
-            artifact_path: build/macos
-            needs_linux_deps: false
-
-          - name: windows
-            runner: windows-2025-vs2026
-            build_cmd: "flet build windows"
-            artifact_name: windows-build-artifact
-            artifact_path: build/windows
-            needs_linux_deps: false
-
-          # -------- Android --------
           - name: aab-ubuntu
-            runner: ubuntu-latest
+            runner: ubuntu-26.04
             build_cmd: "flet build aab"
             artifact_name: aab-build-ubuntu-artifact
             artifact_path: build/aab
             needs_linux_deps: false
 
-          - name: aab-macos
-            runner: macos-26
-            build_cmd: "flet build aab"
-            artifact_name: aab-build-macos-artifact
-            artifact_path: build/aab
-            needs_linux_deps: false
-
-          - name: aab-windows
-            runner: windows-2025-vs2026
-            build_cmd: "flet build aab"
-            artifact_name: aab-build-windows-artifact
-            artifact_path: build/aab
-            needs_linux_deps: false
-
           - name: apk-ubuntu
-            runner: ubuntu-latest
+            runner: ubuntu-26.04
             build_cmd: "flet build apk"
             artifact_name: apk-build-ubuntu-artifact
             artifact_path: build/apk
             needs_linux_deps: false
 
-          - name: apk-macos
-            runner: macos-26
-            build_cmd: "flet build apk"
-            artifact_name: apk-build-macos-artifact
-            artifact_path: build/apk
-            needs_linux_deps: false
-
-          - name: apk-windows
-            runner: windows-2025-vs2026
-            build_cmd: "flet build apk"
-            artifact_name: apk-build-windows-artifact
-            artifact_path: build/apk
-            needs_linux_deps: false
-
-          # -------- iOS --------
-          - name: ipa
-            runner: macos-26
-            build_cmd: "flet build ipa"
-            artifact_name: ipa-build-artifact
-            artifact_path: build/ipa
-            needs_linux_deps: false
-
-          - name: ios-simulator
-            runner: macos-26
-            build_cmd: "flet build ios-simulator"
-            artifact_name: ios-simulator-build-artifact
-            artifact_path: build/ios-simulator
-            needs_linux_deps: false
-
-          # -------- Web --------
           - name: web-ubuntu
-            runner: ubuntu-latest
+            runner: ubuntu-26.04
             build_cmd: "flet build web"
             artifact_name: web-build-ubuntu-artifact
-            artifact_path: build/web
-            needs_linux_deps: false
-
-          - name: web-macos
-            runner: macos-26
-            build_cmd: "flet build web"
-            artifact_name: web-build-macos-artifact
-            artifact_path: build/web
-            needs_linux_deps: false
-
-          - name: web-windows
-            runner: windows-2025-vs2026
-            build_cmd: "flet build web"
-            artifact_name: web-build-windows-artifact
             artifact_path: build/web
             needs_linux_deps: false
 
@@ -175,6 +101,16 @@ jobs:
           path: '.fvmrc'
           cache: ${{ !startsWith(github.ref, 'refs/tags/') }}
 
+      - name: Runner diagnostics
+        shell: bash
+        run: |
+          set +e
+          grep -E '^(VERSION|VERSION_CODENAME)=' /etc/os-release
+          echo "ImageOS=$ImageOS ImageVersion=$ImageVersion"
+          echo "JAVA_HOME=$JAVA_HOME"; java -version 2>&1 | head -1
+          clang --version | head -1; cmake --version | head -1; ldd --version | head -1
+          findmnt -no FSTYPE,SIZE,OPTIONS /tmp; df -h /tmp /
+
       - name: Build app
         shell: bash
         working-directory: sdk/python/examples/apps/flet_build_test
@@ -183,6 +119,19 @@ jobs:
         run: |
           echo "FLET_BUILD_EXTRA_ARGS='${FLET_BUILD_EXTRA_ARGS}'"
           uv run ${{ matrix.build_cmd }} --python-version "$PYTHON_VERSION" --yes --verbose --build-number ${{ github.run_number }} $FLET_BUILD_EXTRA_ARGS
+
+      - name: GLIBC floor of compiled Linux bundle
+        if: matrix.name == 'linux'
+        shell: bash
+        working-directory: sdk/python/examples/apps/flet_build_test
+        run: |
+          set +e
+          find build/linux -type f \( -perm -u+x -o -name '*.so*' \) -print0 \
+            | while IFS= read -r -d '' f; do
+                file -b "$f" | grep -q '^ELF' || continue
+                v=$(objdump -T "$f" 2>/dev/null | grep -o 'GLIBC_[0-9.]*' | sort -uV | tail -1)
+                echo "${v:-none} $f"
+              done | sort -V | tail -25
 
       - name: Upload Artifact
         uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1

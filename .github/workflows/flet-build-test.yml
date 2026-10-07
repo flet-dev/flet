@@ -1,6 +1,8 @@
 name: Flet Build Test
 
 on:
+  push:
+    branches: ['test/ubuntu-26.04']
   pull_request:
     paths:
       - '.github/workflows/flet-build-test.yml'
@@ -61,7 +63,7 @@ jobs:
   # `workflow_dispatch` target a single version via the `python_version`
   # input. push/pull_request runs always fire all three.
   build-3-12:
-    if: github.event_name != 'workflow_dispatch' || inputs.python_version == 'all' || inputs.python_version == '3.12'
+    if: false  # ubuntu-26.04 canary: one Python is enough
     name: Python 3.12
     uses: ./.github/workflows/flet-build-test-matrix.yml
     with:
@@ -69,7 +71,7 @@ jobs:
       extra_build_args: ${{ github.event_name == 'workflow_dispatch' && inputs.extra_build_args || '' }}
 
   build-3-13:
-    if: github.event_name != 'workflow_dispatch' || inputs.python_version == 'all' || inputs.python_version == '3.13'
+    if: false  # ubuntu-26.04 canary: one Python is enough
     name: Python 3.13
     uses: ./.github/workflows/flet-build-test-matrix.yml
     with:
@@ -85,7 +87,7 @@ jobs:
       extra_build_args: ${{ github.event_name == 'workflow_dispatch' && inputs.extra_build_args || '' }}
 
   pack:
-    name: Pack (${{ matrix.name }})
+    name: Pack (${{ matrix.name }}, ${{ matrix.runner }})
     runs-on: ${{ matrix.runner }}
     permissions:
       contents: read
@@ -96,13 +98,10 @@ jobs:
       matrix:
         include:
           - name: linux
-            runner: ubuntu-latest
+            runner: ubuntu-26.04
 
-          - name: macos
-            runner: macos-26
-
-          - name: windows
-            runner: windows-2025-vs2026
+          - name: linux
+            runner: ubuntu-24.04
 
     steps:
       - name: Checkout repository
@@ -182,10 +181,149 @@ jobs:
           echo "FLET_PACK_EXTRA_ARGS='${FLET_PACK_EXTRA_ARGS}'"
           uv run --with pyinstaller flet pack src/main.py --yes --name flet-pack-test --distpath dist $FLET_PACK_EXTRA_ARGS
 
+      - name: GLIBC floor of packed app
+        shell: bash
+        working-directory: sdk/python/examples/apps/flet_build_test
+        run: |
+          set +e
+          ldd --version | head -1
+          ls -la dist
+          scan() {
+            find "$1" -type f -print0 2>/dev/null | while IFS= read -r -d '' f; do
+              file -b "$f" | grep -q '^ELF' || continue
+              v=$(objdump -T "$f" 2>/dev/null | grep -o 'GLIBC_[0-9.]*' | sort -uV | tail -1)
+              echo "${v:-none} ${f#$1/}"
+            done | sort -V | tail -15
+          }
+          echo "--- PyInstaller output (dist)"; scan dist
+          echo "--- desktop client archive"
+          mkdir -p "$RUNNER_TEMP/client"
+          tar -xzf "${SDK_PYTHON}"/packages/flet-desktop/src/flet_desktop/app/flet-linux-*.tar.gz -C "$RUNNER_TEMP/client"
+          scan "$RUNNER_TEMP/client"
+          # onefile: libs are only visible once the bootloader extracts them
+          sudo apt-get install -y --no-install-recommends xvfb libgl1-mesa-dri >/dev/null
+          export TMPDIR="$RUNNER_TEMP/pyi" && mkdir -p "$TMPDIR"
+          exe=$(find dist -maxdepth 2 -type f -name 'flet-pack-test*' | head -1)
+          echo "--- launching $exe under xvfb for 30s"
+          xvfb-run -a timeout 30 "$exe" > "$RUNNER_TEMP/pack-run.log" 2>&1 &
+          sleep 25
+          echo "--- extracted onefile libs"; scan "$TMPDIR"
+          wait
+          echo "--- app output (exit 124 = still running at timeout = OK)"; tail -20 "$RUNNER_TEMP/pack-run.log"
+
       - name: Upload Artifact
         uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
         with:
-          name: ${{ matrix.name }}-pack-artifact
+          name: ${{ matrix.name }}-${{ matrix.runner }}-pack-artifact
           path: sdk/python/examples/apps/flet_build_test/dist
           if-no-files-found: error
           overwrite: false
+
+  # ubuntu-26.04 canary: does an app packed on 26.04 still start on 24.04?
+  pack-cross-run:
+    name: Run 26.04-packed app on ubuntu-24.04
+    needs: pack
+    if: ${{ !cancelled() }}
+    runs-on: ubuntu-24.04
+    permissions:
+      contents: read
+    steps:
+      - name: Download 26.04 pack artifact
+        uses: actions/download-artifact@3e5f45b2cfb9172054b4087a40e8e0b5a5461e7c # v8.0.1
+        with:
+          name: linux-ubuntu-26.04-pack-artifact
+          path: dist
+
+      - name: Install runtime deps
+        run: |
+          sudo apt-get update --allow-releaseinfo-change
+          sudo apt-get install -y --no-install-recommends xvfb libgl1-mesa-dri libgtk-3-0t64 libmpv2 libsecret-1-0 \
+            gstreamer1.0-plugins-base gstreamer1.0-plugins-good libgstreamer-plugins-base1.0-0
+
+      - name: Launch under xvfb for 30s
+        run: |
+          set +e
+          ls -la dist
+          exe=$(find dist -maxdepth 2 -type f -name 'flet-pack-test*' | head -1)
+          chmod +x "$exe"
+          xvfb-run -a timeout 30 "$exe" > run.log 2>&1
+          rc=$?
+          tail -40 run.log
+          echo "exit=$rc (124 = still running at timeout = started fine)"
+          if grep -q "GLIBC_.* not found" run.log; then echo "::error::GLIBC too new for 24.04"; exit 1; fi
+          [ "$rc" = 124 ]
+
+  # ubuntu-26.04 canary: /tmp is a ~6.3G RAM-backed tmpfs on 26.04 (actions/runner-images#14777).
+  # Build an app with a multi-GB dependency (torch + CUDA wheels) on both images.
+  tmp-probe:
+    name: /tmp probe, torch app (${{ matrix.runner }})
+    runs-on: ${{ matrix.runner }}
+    permissions:
+      contents: read
+    strategy:
+      fail-fast: false
+      matrix:
+        runner: [ubuntu-26.04, ubuntu-24.04]
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@df4cb1c069e1874edd31b4311f1884172cec0e10 # v6.0.3
+        with:
+          fetch-depth: 0
+          fetch-tags: true
+          persist-credentials: false
+
+      - name: Setup uv
+        uses: astral-sh/setup-uv@fac544c07dec837d0ccb6301d7b5580bf5edae39 # v8.2.0
+        with:
+          enable-cache: false
+
+      - name: Patch versions
+        shell: bash
+        run: |
+          source "${SCRIPTS}/update_build_version.sh"
+          source "${SCRIPTS}/common.sh"
+          patch_python_package_versions
+
+      - name: Install Linux dependencies
+        shell: bash
+        run: |
+          sudo apt update --allow-releaseinfo-change
+          LINUX_DEPS="$(uv run --project sdk/python/packages/flet-cli flet --version --json | jq -r '.linux_dependencies | join(" ")')"
+          sudo apt-get install -y --no-install-recommends $LINUX_DEPS
+          sudo apt-get clean
+
+      - name: Setup Flutter
+        uses: kuhnroyal/flutter-fvm-config-action/setup@c378498f1d1962d33039c3989411093ef8a17b2c # v3.3
+        with:
+          path: '.fvmrc'
+          cache: true
+
+      - name: Build app with torch, sampling /tmp
+        shell: bash
+        working-directory: sdk/python/examples/apps/flet_build_test
+        run: |
+          uv sync --quiet
+          sed -i 's/^    "numpy",$/    "numpy",\n    "torch",/' pyproject.toml
+          grep -n torch pyproject.toml
+          findmnt -no FSTYPE,SIZE,OPTIONS /tmp; df -h /tmp /
+          ( while sleep 3; do echo "$(date +%T) $(du -sxm /tmp 2>/dev/null | cut -f1)"; done ) > "$RUNNER_TEMP/tmp-usage.log" &
+          SAMPLER=$!
+          set +e
+          uv run --no-sync flet build linux --python-version 3.13 --yes --verbose > "$RUNNER_TEMP/build.log" 2>&1
+          rc=$?
+          kill $SAMPLER
+          echo "flet build exit code: $rc"
+          echo "peak /tmp usage (MiB): $(awk '{print $2}' "$RUNNER_TEMP/tmp-usage.log" | sort -n | tail -1)"
+          grep -n -i -E 'quota|No space left|EDQUOT|Errno 122|Errno 28' "$RUNNER_TEMP/build.log" | head -20
+          tail -60 "$RUNNER_TEMP/build.log"
+          du -sh build/site-packages 2>/dev/null
+          exit $rc
+
+      - name: Upload logs
+        if: always()
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
+        with:
+          name: tmp-probe-${{ matrix.runner }}
+          path: |
+            ${{ runner.temp }}/tmp-usage.log
+            ${{ runner.temp }}/build.log

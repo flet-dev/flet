@@ -7,6 +7,8 @@ name: Flet Test (on-device)
 # (compile only), this actually runs the app on the device/emulator/simulator.
 
 on:
+  push:
+    branches: ['test/ubuntu-26.04']
   pull_request:
     paths:
       - '.github/workflows/flet-test.yml'
@@ -57,8 +59,8 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        python_version: ["3.12", "3.13", "3.14"]
-        platform: [macos, ios, windows, linux, linux-arm64, android]
+        python_version: ["3.14"]
+        platform: [linux, android]
         include:
           - platform: macos
             runner: macos-26
@@ -73,7 +75,7 @@ jobs:
             test_cmd: uv run flet test windows --python-version ${PYTHON_VERSION} --yes -v
 
           - platform: linux
-            runner: ubuntu-latest
+            runner: ubuntu-26.04
             test_cmd: xvfb-run -a uv run flet test linux --python-version ${PYTHON_VERSION} --yes -v
 
           # arm64 Linux: no kuhnroyal/Flutter action (Flutter ships no prebuilt
@@ -84,7 +86,7 @@ jobs:
             test_cmd: xvfb-run -a uv run flet test linux --python-version ${PYTHON_VERSION} --yes -v
 
           - platform: android
-            runner: ubuntu-latest
+            runner: ubuntu-26.04
             # Run command lives in the emulator-runner step below.
             test_cmd: ""
 
