@@ -383,7 +383,7 @@ packages:
       path: "../packages/flet"
       relative: true
     source: path
-    version: "1.0.4"
+    version: "1.1.0"
   flet_ads:
     dependency: "direct main"
     description:

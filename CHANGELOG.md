@@ -1,3 +1,17 @@
+## 1.1.0
+
+### New features
+
+* Add the `flet-shadcn-ui` extension: controls styled after [shadcn/ui](https://ui.shadcn.com), built on the Flutter [`shadcn_ui`](https://pub.dev/packages/shadcn_ui) package, with `Theme` color schemes and the [Lucide](https://lucide.dev) icon set (`LucideIcons`). It includes `Button`, `IconButton`, `Badge`, `Alert`, `Avatar`, `Card`, `Breadcrumb`, `Separator`, `Progress`, `Input`, `Textarea`, `Checkbox`, `Switch`, `Slider`, `RadioGroup`, `Select`, `InputOTP`, `Calendar`, `DatePicker`, `DateRangePicker`, `TimePicker`, `Tabs`, `Accordion`, `ResizablePanelGroup`, `Tooltip`, `Popover`, `ContextMenu`, `Menubar`, `Table`, `Dialog`, `Sheet`, `Toast` and `Sonner`; value controls support `label`, `description` and `error_text` ([#6918](https://github.com/flet-dev/flet/pull/6918)) by @InesaFitsner.
+
+### Improvements
+
+* Add `bgcolor` to `FletTestApp.take_page_controls_screenshot()`, `assert_control_screenshot()` and `wrap_page_controls_in_screenshot()` to paint an opaque background behind the captured controls instead of a transparent one ([#6918](https://github.com/flet-dev/flet/pull/6918)) by @InesaFitsner.
+
+### Documentation
+
+* Group the Reference > Controls section of the docs into Core, Material, Cupertino, Shadcn and Extensions ([#6918](https://github.com/flet-dev/flet/pull/6918)) by @InesaFitsner.
+
 ## 1.0.4
 
 ### Improvements

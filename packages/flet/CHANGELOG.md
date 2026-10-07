@@ -1,3 +1,7 @@
+## 1.1.0
+
+_No changes in the `flet` Dart package; version bumped for release coordination with the new `flet-shadcn-ui` extension ([#6918](https://github.com/flet-dev/flet/pull/6918))._
+
 ## 1.0.4
 
 _No changes in the `flet` Dart package; version bumped for release coordination with the `flet build web` fix that sets the PWA manifest's `short_name` to the product name, and the new `--pwa-short-name` option ([#6911](https://github.com/flet-dev/flet/pull/6911))._
