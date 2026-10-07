@@ -7,7 +7,7 @@
 ### Bug fixes
 
 * Fix a web app built with `flet build web` getting its project name, e.g. `my_app`, as its label when installed as a PWA on iOS instead of its product name. The manifest's `short_name`, which iOS shows on the Home Screen, was set to the project name; it now defaults to the product name, like the page title. Product names containing quotes no longer break `manifest.json` ([#6911](https://github.com/flet-dev/flet/pull/6911)) by @FeodorFitsner.
-* Fix `pip install "flet[all]"` failing without a C++ compiler on Windows on ARM: `flet-web` now depends on `uvicorn` and `websockets` instead of `uvicorn[standard]`, whose `httptools` has no wheels there; the speedups stay available as `flet-web[standard]` by @ndonkoHenri.
+* Fix `pip install "flet[all]"` failing without a C++ compiler on Windows on ARM: `flet-web` now depends on `uvicorn` and `websockets` instead of `uvicorn[standard]`, whose `httptools` has no wheels there; the speedups stay available as `flet-web[standard]` ([#6927](https://github.com/flet-dev/flet/pull/6927)) by @ndonkoHenri.
 
 ## 1.0.3
 
