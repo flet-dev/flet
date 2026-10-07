@@ -9,8 +9,8 @@ requires-python = ">=3.10"
 dependencies = [
     "flet",
     "fastapi >=0.115.12",
-    "uvicorn >=0.35.0",
     "websockets >=13.0",
+    "uvicorn >=0.35.0",
     # httptools, one of uvicorn's standard extras, has no wheels for Windows on ARM,
     # where installing it needs a C++ compiler. uvicorn falls back to h11 without it.
     "uvicorn[standard] >=0.35.0; sys_platform != 'win32' or platform_machine != 'ARM64'"
