@@ -1122,6 +1122,10 @@ class BaseBuildCommand(BaseFlutterCommand):
                 "-XX:ReservedCodeCacheSize=512m -XX:+HeapDumpOnOutOfMemoryError"
             ),
             "android.useAndroidX": "true",
+            # Kotlin's incremental compiler stores plugin sources relative to
+            # the Android project and fails the build when they sit on another
+            # Windows drive, e.g. the pub cache on C: and the app on D:.
+            "kotlin.incremental": "false",
         }
         # ProGuard/R8 rules for the generated Android project. Like
         # gradle_properties above, these were a fixed template file and the
