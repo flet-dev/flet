@@ -438,8 +438,16 @@ dynamic _resolveVideoControlsMode(dynamic value, bool fullscreen) {
   return null;
 }
 
+/// Builds custom video controls from a Flet control.
+///
+/// The controls get their own transparent [Material]: in fullscreen, media_kit
+/// shows them in a route wrapped only in the Flutter SDK's `Material`, which
+/// `material_ui` widgets such as buttons don't recognize.
 Widget Function(VideoState) _customVideoControls(dynamic value) {
-  return (_) => parseControlWidget(value) ?? const SizedBox.shrink();
+  return (_) => Material(
+        type: MaterialType.transparency,
+        child: parseControlWidget(value) ?? const SizedBox.shrink(),
+      );
 }
 
 /// Selects the controls builder requested by the serialized controls value.
