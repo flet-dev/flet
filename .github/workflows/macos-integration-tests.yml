@@ -31,19 +31,18 @@ jobs:
       fail-fast: false
       matrix:
         suite:
-        # - apps
-        # - examples/apps
-        # - examples/controls/core
-        # - examples/controls/cupertino
-        # - examples/controls/material
-        # - examples/extensions
-        # - controls/core
-        # - controls/cupertino
-        # - controls/material
-        # - controls/services
-        # - controls/theme
-        # - extensions
-        - examples/extensions/shadcn_ui
+        - apps
+        - examples/apps
+        - examples/controls/core
+        - examples/controls/cupertino
+        - examples/controls/material
+        - examples/extensions
+        - controls/core
+        - controls/cupertino
+        - controls/material
+        - controls/services
+        - controls/theme
+        - extensions
 
     name: ${{ matrix.suite }} Integration Tests
     steps:
