@@ -3261,7 +3261,9 @@ class BaseBuildCommand(BaseFlutterCommand):
 
             build_output_glob = os.path.basename(build_output_dir)
             build_output_dir = os.path.dirname(build_output_dir)
-            if not os.path.exists(build_output_dir):
+            if not os.path.isdir(build_output_dir) or not any(
+                build_output_glob in ("*", f) for f in os.listdir(build_output_dir)
+            ):
                 continue
             copied = True
 
