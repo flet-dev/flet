@@ -156,17 +156,16 @@ class BaseFlutterCommand(BaseCommand):
         self.flutter_exe = self.find_flutter_batch("flutter")
         self.dart_exe = self.find_flutter_batch("dart")
 
-        if (
-            not self.flutter_exe
-            or not self.dart_exe
-            or not self.flutter_version_valid()
-            or not self.flutter_sdk_supported()
-        ):
+        sdk_found = bool(
+            self.flutter_exe and self.dart_exe and self.flutter_version_valid()
+        )
+        if not sdk_found or not self.flutter_sdk_supported():
             if not self.assume_yes:
-                console.log(
-                    "Flutter SDK not found or invalid version installed.",
-                    style=warning_style,
-                )
+                if not sdk_found:
+                    console.log(
+                        "Flutter SDK not found or invalid version installed.",
+                        style=warning_style,
+                    )
                 prompt = (
                     f"Flutter SDK {self.required_flutter_version} is required. "
                     f"It will be installed now. Proceed? [y/n] "
@@ -235,7 +234,7 @@ class BaseFlutterCommand(BaseCommand):
 
         Returns:
             `True` when the SDK can be used, otherwise `False`, in which case the
-            required Flutter SDK is installed and used instead.
+                required Flutter SDK is installed and used instead.
         """
 
         return True
@@ -243,11 +242,11 @@ class BaseFlutterCommand(BaseCommand):
     def flutter_arch(self) -> Optional[str]:
         """
         Return the CPU architecture of the Flutter SDK's Dart, such as `x64` or
-        `arm64`, which is also the architecture Flutter builds desktop apps for.
+        `arm64`. On Windows, Flutter builds desktop apps for this architecture.
 
         Returns:
             The architecture reported by `dart --version`, or `None` when it can't
-            be determined.
+                be determined.
         """
 
         if not self.dart_exe:

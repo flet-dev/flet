@@ -7,7 +7,7 @@
 ### Bug fixes
 
 * Fix a web app built with `flet build web` getting its project name, e.g. `my_app`, as its label when installed as a PWA on iOS instead of its product name. The manifest's `short_name`, which iOS shows on the Home Screen, was set to the project name; it now defaults to the product name, like the page title. Product names containing quotes no longer break `manifest.json` ([#6911](https://github.com/flet-dev/flet/pull/6911)) by @FeodorFitsner.
-* Fix `flet build windows` on Windows on ARM reporting success with an empty `build/windows` directory and building an ARM64 app that can't load Flet's x64 Python runtime: it now builds an x64 app with Flet's own Flutter SDK, and fails when no build output is found by @ndonkoHenri.
+* Fix `flet build windows` on Windows on ARM with an ARM64 Flutter SDK on `PATH` reporting success without copying the app to `build/windows`, and building an ARM64 app that can't load Flet's x64 Python runtime by @ndonkoHenri.
 
 ## 1.0.3
 

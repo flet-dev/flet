@@ -50,6 +50,7 @@ from flet_cli.utils.android import (
 )
 from flet_cli.utils.app_excludes import find_default_excludes
 from flet_cli.utils.cli import parse_cli_bool_value
+from flet_cli.utils.flutter import get_flutter_dir
 from flet_cli.utils.hash_stamp import HashStamp
 from flet_cli.utils.merge import merge_dict
 from flet_cli.utils.plist import is_supported_plist_value, parse_cli_plist_value
@@ -3151,12 +3152,29 @@ class BaseBuildCommand(BaseFlutterCommand):
         emulation there, and builds an x64 app that runs on Windows on ARM.
 
         Returns:
-            `False` for an ARM64 Flutter SDK when building for Windows, otherwise
-            `True`.
+            `False` for an ARM64 Flutter SDK when building for Windows,
+                otherwise `True`.
         """
 
-        if self.package_platform != "Windows" or self.flutter_arch() != "arm64":
+        if (
+            self.current_platform != "Windows"
+            or self.package_platform != "Windows"
+            or self.flutter_arch() != "arm64"
+        ):
             return True
+
+        flet_flutter_dir = get_flutter_dir(str(self.required_flutter_version))
+        if os.path.normcase(str(self.flutter_exe)).startswith(
+            os.path.normcase(flet_flutter_dir) + os.sep
+        ):
+            self.skip_flutter_doctor = True
+            self.cleanup(
+                1,
+                f"Flet's Flutter SDK at {escape(flet_flutter_dir)} builds ARM64 "
+                "Windows apps, but Flet's Python runtime for Windows is x64-only. "
+                "Delete that directory and run the build again to install the x64 "
+                "Flutter SDK.",
+            )
 
         console.log(
             f"The Flutter SDK at {escape(str(self.flutter_exe))} builds ARM64 "
@@ -3180,7 +3198,9 @@ class BaseBuildCommand(BaseFlutterCommand):
         assert self.template_data
 
         arch = (
-            "{arch}" in build_output and self.flutter_arch()
+            self.package_platform == "Windows"
+            and "{arch}" in build_output
+            and self.flutter_arch()
         ) or platform.machine().lower()
         if arch in {"x86_64", "amd64"}:
             arch = "x64"
