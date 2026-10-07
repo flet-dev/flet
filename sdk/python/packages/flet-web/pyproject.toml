@@ -9,8 +9,15 @@ requires-python = ">=3.10"
 dependencies = [
     "flet",
     "fastapi >=0.115.12",
-    "uvicorn[standard] >=0.35.0"
+    "uvicorn >=0.35.0",
+    "websockets >=13.0"
 ]
+
+[project.optional-dependencies]
+# uvloop/httptools speedups. Not required: Flet serves with `ws="websockets-sansio"`,
+# and httptools has no wheels for some platforms, such as Windows on ARM, where
+# installing it needs a C++ compiler.
+standard = ["uvicorn[standard] >=0.35.0"]
 
 [project.urls]
 Homepage = "https://flet.dev"
