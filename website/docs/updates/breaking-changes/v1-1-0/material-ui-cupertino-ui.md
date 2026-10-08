@@ -22,7 +22,8 @@ The new packages redeclare every Material and Cupertino type, so the Dart
 compiler treats, for example, `material_ui`'s `ThemeData` and the Flutter SDK's
 `ThemeData` as unrelated types. Flet's Dart helpers that take or return Material
 or Cupertino types now use the `material_ui` and `cupertino_ui` ones, and every
-Flet app renders inside `material_ui`'s `MaterialApp`.
+Flet app renders inside `material_ui`'s `MaterialApp`, or `cupertino_ui`'s
+`CupertinoApp` when the page uses the Cupertino design.
 
 The Dart code of an extension that uses Material or Cupertino has to migrate
 too, or it fails to compile or to render under Flet 1.1.0.
