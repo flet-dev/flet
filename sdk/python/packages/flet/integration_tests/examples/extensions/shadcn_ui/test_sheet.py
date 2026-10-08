@@ -1,3 +1,5 @@
+import asyncio
+
 import flet_shadcn_ui as shad
 import pytest
 
@@ -51,6 +53,9 @@ async def test_sheet(flet_app_function: ftt.FletTestApp):
     await _capture(flet_app_function, "sheet_open")
 
     await tester.tap(await tester.find_by_text("Save changes"))
+    await tester.pump_and_settle()
+    # Give the dismiss animation + on_dismiss round-trip one more settle pass.
+    await asyncio.sleep(0.5)
     await tester.pump_and_settle()
     assert (await tester.find_by_text("Closed the right sheet")).count == 1
     await _capture(flet_app_function, "sheet")
