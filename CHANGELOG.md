@@ -1,8 +1,7 @@
-## 1.0.4
+## 1.1.0
 
 ### Improvements
 
-* Add `--pwa-short-name` and `[tool.flet.web].pwa_short_name` to `flet build web` to set the `short_name` of the web app manifest: the label shown under the app icon when the PWA is installed, e.g. on the iOS Home Screen. It defaults to the product name ([#6911](https://github.com/flet-dev/flet/pull/6911)) by @FeodorFitsner.
 * Add `min_width`, `max_width`, `min_height` and `max_height` to every layout control. They are applied by the client on every layout pass, so a capped, centered column (e.g. `Container(max_width=760)` in a `Column(horizontal_alignment=CENTER)`) stays correct while the window resizes - no more computing widths in Python from `page.width` or `on_size_change`, which always lagged a frame or more behind by @FeodorFitsner.
 * Add `ft.MaterialTapTargetSize` with `Switch.material_tap_target_size` and `Theme.material_tap_target_size`: `SHRINK_WRAP` drops Material's 48px minimum tappable area for dense, pointer-driven layouts by @FeodorFitsner.
 * `Dropdown.height` now sizes the field itself, down to compact heights such as 32 or 40: the leading icon and trailing arrow no longer force a 48px minimum by @FeodorFitsner.
@@ -20,7 +19,6 @@
 * Fix `Markdown` links always being blue and blockquotes light blue regardless of the theme: their defaults now come from the color scheme (`primary` for links, a surface container color for blockquotes) by @FeodorFitsner.
 * Fix an embedded `FletApp` without its own `theme_mode` taking the host page's theme mode instead of following the system (now: its platform brightness) by @FeodorFitsner.
 * Fix an embedded `FletApp` overwriting the host page's browser tab title on the web whenever the embedded app set `page.title`. An embedded app's title now only reaches the host, through `FletApp.on_title_change` by @FeodorFitsner.
-* Fix a web app built with `flet build web` getting its project name, e.g. `my_app`, as its label when installed as a PWA on iOS instead of its product name. The manifest's `short_name`, which iOS shows on the Home Screen, was set to the project name; it now defaults to the product name, like the page title. Product names containing quotes no longer break `manifest.json` ([#6911](https://github.com/flet-dev/flet/pull/6911)) by @FeodorFitsner.
 * Fix the session crashing with "Control must be added to the page first" when the client sends an event (e.g. `size_change`) for a control that was just removed from the page; such events are now dropped by @FeodorFitsner.
 * Fix `on_size_change` never reporting when Flutter reuses the widget for a different control at the same size (e.g. a new page swapped into the same slot) by @FeodorFitsner.
 * Fix a control's subtree (e.g. an embedded `FletApp`, which restarted its app) being rebuilt from scratch when its `opacity` changed between `1.0` and another value, or a `Container`'s `ignore_interactions` was toggled: the wrapping widget was added and removed, changing the widget tree's shape. It is now always present by @FeodorFitsner.
@@ -29,6 +27,17 @@
 * Fix `InteractiveViewer` swallowing taps meant for its content when `pan_enabled` and `scale_enabled` are both off: it no longer installs gesture recognizers it can't use; programmatic zoom/pan still works by @FeodorFitsner.
 * An embedded app (`FletApp`) no longer takes its host's Cupertino colors: `CupertinoFilledButton`, `CupertinoButton` and adaptive buttons on iOS/macOS painted with the host app's primary color instead of the embedded app's own. An embedded page now carries a Cupertino theme derived from its own Material theme, as a top-level app does; top-level apps are unchanged by @FeodorFitsner.
 * `Button(adaptive=True)` on iOS/macOS now honors `bgcolor`, `color` and the padding of `style`: the Cupertino button it turns into ignored them and painted the theme's primary color by @FeodorFitsner.
+
+## 1.0.4
+
+### Improvements
+
+* Add `--pwa-short-name` and `[tool.flet.web].pwa_short_name` to `flet build web` to set the `short_name` of the web app manifest: the label shown under the app icon when the PWA is installed, e.g. on the iOS Home Screen. It defaults to the product name ([#6911](https://github.com/flet-dev/flet/pull/6911)) by @FeodorFitsner.
+
+### Bug fixes
+
+* Fix a web app built with `flet build web` getting its project name, e.g. `my_app`, as its label when installed as a PWA on iOS instead of its product name. The manifest's `short_name`, which iOS shows on the Home Screen, was set to the project name; it now defaults to the product name, like the page title. Product names containing quotes no longer break `manifest.json` ([#6911](https://github.com/flet-dev/flet/pull/6911)) by @FeodorFitsner.
+* Fix `flet build`, `flet test` and `flet debug` failing on new projects with a `jni_flutter` "Constant evaluation error" ([#6919](https://github.com/flet-dev/flet/issues/6919), [#6920](https://github.com/flet-dev/flet/pull/6920)) by @ndonkoHenri.
 
 ## 1.0.3
 

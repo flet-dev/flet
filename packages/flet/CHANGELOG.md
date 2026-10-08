@@ -1,4 +1,4 @@
-## 1.0.4
+## 1.1.0
 
 * Apply `min_width`/`max_width`/`min_height`/`max_height` to every `LayoutControl` as a `ConstrainedBox` around the control (outside any fixed size). A control that implements one of these names itself lists it in `skip_properties` (`ListTile.min_height`, `NavigationRail.min_width`) by @FeodorFitsner.
 * Pass `material_tap_target_size` to `Switch` and `ThemeData` (`parseMaterialTapTargetSize()`) by @FeodorFitsner.
@@ -21,6 +21,10 @@
 * An embedded page builds its `Navigator` with `requestFocus: false`, so pushing its routes doesn't move the focus out of the host app by @FeodorFitsner.
 * `PageControl` wraps an embedded page's app in a `CupertinoTheme` derived from the page's own Material theme (top-level pages are unchanged). Flutter's `Theme` reuses an ambient `CupertinoTheme` when one exists above it instead of deriving one from its `ThemeData`, so an embedded page's Cupertino widgets took the host app's colors by @FeodorFitsner.
 * `CupertinoButtonControl` falls back to the `ButtonStyle` in `internals["style"]` - what an adaptive Material `Button` sends - for background, foreground and padding when `bgcolor`/`color`/`padding` are absent by @FeodorFitsner.
+
+## 1.0.4
+
+_No changes in the `flet` Dart package; version bumped for release coordination with the `flet build web` fix that sets the PWA manifest's `short_name` to the product name, and the new `--pwa-short-name` option ([#6911](https://github.com/flet-dev/flet/pull/6911))._
 
 ## 1.0.3
 
