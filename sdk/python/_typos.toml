@@ -11,6 +11,11 @@ extend-exclude = [
     "*icon-codepoints.json",
     "*/controls/material/icons.json",
     "*/controls/cupertino/cupertino_icons.json",
+    # Generated from lucide_icons_flutter; keeps Lucide's legacy aliases such
+    # as `astroid` and `sendHorizonal`.
+    "*/flet_shadcn_ui/lucide_icons.json",
+    "*/flet_shadcn_ui/lucide_icons.pyi",
+    "*/flet_shadcn_ui/lib/src/utils/lucide_icons.dart",
 ]
 
 [default.extend-words]

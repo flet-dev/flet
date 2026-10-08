@@ -85,6 +85,9 @@ dependencies:
   flet_secure_storage:
     path: ../sdk/python/packages/flet-secure-storage/src/flutter/flet_secure_storage
 
+  flet_shadcn_ui:
+    path: ../sdk/python/packages/flet-shadcn-ui/src/flutter/flet_shadcn_ui
+
   flet_spinkit:
     path: ../sdk/python/packages/flet-spinkit/src/flutter/flet_spinkit
 
