@@ -1,0 +1,26 @@
+[project]
+name = "shadcn-ui-select"
+version = "1.0.0"
+description = "Fruit select with a live selection label."
+requires-python = ">=3.10"
+keywords = ["shadcn", "select", "dropdown", "options", "choice"]
+authors = [{ name = "Flet team", email = "hello@flet.dev" }]
+dependencies = ["flet", "flet-shadcn-ui"]
+
+[dependency-groups]
+dev = ["flet-cli", "flet-desktop", "flet-web"]
+
+[tool.flet.gallery]
+categories = ["Extensions/Shadcn"]
+
+[tool.flet.metadata]
+title = "Shadcn Select"
+controls = ["SafeArea", "Column", "Text", "Select", "SelectOption"]
+layout_pattern = "form"
+complexity = "basic"
+features = ["change handling", "placeholder"]
+
+[tool.flet]
+org = "dev.flet"
+company = "Flet"
+copyright = "Copyright (C) 2023-2026 by Flet"

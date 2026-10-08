@@ -1,0 +1,26 @@
+[project]
+name = "shadcn-ui-accordion"
+version = "1.0.0"
+description = "FAQ accordion that reports which item is expanded."
+requires-python = ">=3.10"
+keywords = ["shadcn", "accordion", "collapsible", "faq", "expand"]
+authors = [{ name = "Flet team", email = "hello@flet.dev" }]
+dependencies = ["flet", "flet-shadcn-ui"]
+
+[dependency-groups]
+dev = ["flet-cli", "flet-desktop", "flet-web"]
+
+[tool.flet.gallery]
+categories = ["Extensions/Shadcn"]
+
+[tool.flet.metadata]
+title = "Shadcn Accordion"
+controls = ["SafeArea", "Column", "Text", "Accordion", "AccordionItem"]
+layout_pattern = "list-detail"
+complexity = "basic"
+features = ["expand and collapse", "change handling"]
+
+[tool.flet]
+org = "dev.flet"
+company = "Flet"
+copyright = "Copyright (C) 2023-2026 by Flet"

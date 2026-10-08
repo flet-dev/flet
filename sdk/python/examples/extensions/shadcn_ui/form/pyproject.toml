@@ -1,0 +1,26 @@
+[project]
+name = "shadcn-ui-form"
+version = "1.0.0"
+description = "Sign-up form with labels, descriptions and Python-side validation that shows and clears field errors."
+requires-python = ">=3.10"
+keywords = ["shadcn", "form", "validation", "error", "sign up"]
+authors = [{ name = "Flet team", email = "hello@flet.dev" }]
+dependencies = ["flet", "flet-shadcn-ui"]
+
+[dependency-groups]
+dev = ["flet-cli", "flet-desktop", "flet-web"]
+
+[tool.flet.gallery]
+categories = ["Extensions/Shadcn"]
+
+[tool.flet.metadata]
+title = "Shadcn form"
+controls = ["SafeArea", "Column", "Text", "Input", "Select", "SelectOption", "Checkbox", "Button"]
+layout_pattern = "form"
+complexity = "intermediate"
+features = ["validation", "error messages", "labels", "descriptions", "submit handling"]
+
+[tool.flet]
+org = "dev.flet"
+company = "Flet"
+copyright = "Copyright (C) 2023-2026 by Flet"

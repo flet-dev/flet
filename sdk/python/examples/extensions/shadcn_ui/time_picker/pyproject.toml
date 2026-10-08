@@ -1,0 +1,26 @@
+[project]
+name = "shadcn-ui-time-picker"
+version = "1.0.0"
+description = "24-hour meeting time and 12-hour AM/PM alarm pickers, each with a live label; a button sets the meeting time from code."
+requires-python = ">=3.10"
+keywords = ["shadcn", "time picker", "time", "clock", "am pm"]
+authors = [{ name = "Flet team", email = "hello@flet.dev" }]
+dependencies = ["flet", "flet-shadcn-ui"]
+
+[dependency-groups]
+dev = ["flet-cli", "flet-desktop", "flet-web"]
+
+[tool.flet.gallery]
+categories = ["Extensions/Shadcn"]
+
+[tool.flet.metadata]
+title = "Shadcn TimePicker"
+controls = ["SafeArea", "Column", "Text", "TimePicker", "Button", "Separator"]
+layout_pattern = "form"
+complexity = "basic"
+features = ["change handling", "12-hour clock", "set value from code"]
+
+[tool.flet]
+org = "dev.flet"
+company = "Flet"
+copyright = "Copyright (C) 2023-2026 by Flet"

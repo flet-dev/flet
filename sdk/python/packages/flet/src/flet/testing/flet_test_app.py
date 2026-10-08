@@ -482,24 +482,32 @@ class FletTestApp:
         margin=10,
         pump_times: int = 0,
         pump_duration: Optional[ft.DurationValue] = None,
+        bgcolor: Optional[ft.ColorValue] = None,
     ) -> ft.Screenshot:
         """
         Wraps provided controls in a Screenshot control.
+
+        Args:
+            margin: Space around the controls included in the screenshot.
+            bgcolor: Background color painted behind the controls and margin.
+                If `None`, the screenshot background is transparent.
         """
         controls = list(self.page.controls)
         # Controls that expand need a bounded host to expand into: shrink-wrapping
         # them (intrinsic width, scrollable height) is flex-in-unbounded and fails
         # layout. Give those the whole page instead.
         expand = True if any(c.expand for c in controls) else None
-        scr = ft.Screenshot(
-            ft.Column(
-                controls,
-                margin=margin,
-                intrinsic_width=expand is None,
-                expand=expand,
-            ),
+        content = ft.Column(
+            controls,
+            margin=margin if bgcolor is None else None,
+            intrinsic_width=expand is None,
             expand=expand,
         )
+        if bgcolor is not None:
+            content = ft.Container(
+                content, bgcolor=bgcolor, padding=margin, expand=expand
+            )
+        scr = ft.Screenshot(content, expand=expand)
         self.page.controls = [scr if expand else self.__scrollable_screenshot_host(scr)]  # type: ignore
         self.page.update()
         await self.__pump_and_settle_with_timeout("wrap_page_controls_in_screenshot")
@@ -512,12 +520,17 @@ class FletTestApp:
         pixel_ratio: Optional[float] = None,
         pump_times: int = 0,
         pump_duration: Optional[ft.DurationValue] = None,
+        bgcolor: Optional[ft.ColorValue] = None,
     ) -> bytes:
         """
         Takes a screenshot of all controls on the current page.
+
+        Args:
+            bgcolor: Background color of the screenshot. If `None`, it is
+                transparent.
         """
         scr = await self.wrap_page_controls_in_screenshot(
-            pump_times=pump_times, pump_duration=pump_duration
+            pump_times=pump_times, pump_duration=pump_duration, bgcolor=bgcolor
         )
         return await scr.capture(
             pixel_ratio=pixel_ratio or self.screenshots_pixel_ratio
@@ -531,6 +544,7 @@ class FletTestApp:
         pump_duration: Optional[ft.DurationValue] = None,
         expand_screenshot: bool = False,
         similarity_threshold: float = 0,
+        bgcolor: Optional[ft.ColorValue] = None,
     ):
         """
         Adds control to a clean page, takes a screenshot and compares it with a golden \
@@ -540,12 +554,20 @@ class FletTestApp:
         Args:
             name: Screenshot name - will be used as a base for a screenshot filename.
             control: Control to take a screenshot of.
+            bgcolor: Background color painted behind `control`, with a 10 pixel
+                margin. If `None`, the screenshot background is transparent.
+                Pass a light color such as `ft.Colors.SURFACE` (with a light
+                `theme_mode`) for images used in the docs.
         """
         # clean page
         self.page.clean()
         await self.__pump_and_settle_with_timeout("assert_control_screenshot-clean")
 
         # add control and take screenshot
+        if bgcolor is not None:
+            control = ft.Container(
+                control, bgcolor=bgcolor, padding=10, expand=expand_screenshot
+            )
         screenshot = ft.Screenshot(control, expand=expand_screenshot)
         self.page.add(
             screenshot

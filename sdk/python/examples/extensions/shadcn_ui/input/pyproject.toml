@@ -1,0 +1,26 @@
+[project]
+name = "shadcn-ui-input"
+version = "1.0.0"
+description = "Email and password inputs with live change and submit echo."
+requires-python = ">=3.10"
+keywords = ["shadcn", "input", "text field", "password", "email"]
+authors = [{ name = "Flet team", email = "hello@flet.dev" }]
+dependencies = ["flet", "flet-shadcn-ui"]
+
+[dependency-groups]
+dev = ["flet-cli", "flet-desktop", "flet-web"]
+
+[tool.flet.gallery]
+categories = ["Extensions/Shadcn"]
+
+[tool.flet.metadata]
+title = "Shadcn Input"
+controls = ["SafeArea", "Column", "Text", "Input"]
+layout_pattern = "form"
+complexity = "basic"
+features = ["change handling", "submit handling", "password input", "leading icons"]
+
+[tool.flet]
+org = "dev.flet"
+company = "Flet"
+copyright = "Copyright (C) 2023-2026 by Flet"
