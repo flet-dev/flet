@@ -1,4 +1,5 @@
 import argparse
+import errno
 import logging
 import os
 import platform
@@ -20,6 +21,7 @@ from flet.app import DEFAULT_ASSETS_DIR
 from flet.utils import (
     get_free_tcp_port,
     get_local_ip,
+    is_linux,
     is_windows,
     open_in_browser,
     random_string,
@@ -201,8 +203,12 @@ class Command(BaseCommand):
 
         This method prepares the script/module path, selects transport
         configuration (port or UDS), resolves assets and ignore directories,
-        starts the child app process through `Handler`, and keeps the
-        observer running until termination.
+        starts file watching, then starts the child app process through
+        `Handler`, and keeps the observer running until termination.
+
+        If starting the observer raises `OSError`, for example because the
+        Linux inotify watch or instance limit is reached, a warning is printed
+        and the app runs without reloading on changes.
 
         Args:
             options: Parsed command options produced by :meth:`add_arguments`.
@@ -361,7 +367,22 @@ class Command(BaseCommand):
 
         my_observer = Observer()
         my_observer.schedule(my_event_handler, script_dir, recursive=options.recursive)
-        my_observer.start()
+        try:
+            my_observer.start()
+        except OSError as e:
+            hint = (
+                " To enable it, raise the inotify limits: "
+                "https://flet.dev/docs/getting-started/running-app#linux-inotify-limits"
+                if is_linux() and e.errno in (errno.ENOSPC, errno.EMFILE)
+                else ""
+            )
+            print(
+                f"Warning: file watching is unavailable ({e.strerror or e}), "
+                f"so the app won't reload on changes.{hint}"
+            )
+            my_observer = None
+
+        my_event_handler.start_process()
 
         try:
             while True:
@@ -377,8 +398,9 @@ class Command(BaseCommand):
 
             close_flet_view(my_event_handler.pid_file)
 
-        my_observer.stop()
-        my_observer.join()
+        if my_observer is not None:
+            my_observer.stop()
+            my_observer.join()
 
 
 class Handler(FileSystemEventHandler):
@@ -435,7 +457,6 @@ class Handler(FileSystemEventHandler):
         self.flet_app_temp_dir = flet_app_temp_dir
         self.verbose = verbose
         self.terminate = threading.Event()
-        self.start_process()
 
     def start_process(self):
         """
