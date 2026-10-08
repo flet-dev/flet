@@ -1,14 +1,15 @@
 import 'dart:async';
 
 import 'package:flutter/foundation.dart';
-import 'package:screen_brightness/screen_brightness.dart';
+import 'package:screen_brightness_platform_interface/screen_brightness_platform_interface.dart';
 
 import '../flet_service.dart';
 import '../utils/numbers.dart';
 import '../utils/platform.dart';
 
 class ScreenBrightnessService extends FletService {
-  final ScreenBrightness _screenBrightness = ScreenBrightness();
+  final ScreenBrightnessPlatform _screenBrightness =
+      ScreenBrightnessPlatform.instance;
   StreamSubscription<double>? _systemSubscription;
   StreamSubscription<double>? _applicationSubscription;
 
