@@ -2,9 +2,9 @@
 
 ### Improvements
 
-* Bump the bundled Flutter to [3.47.5](https://github.com/flutter/flutter/blob/stable/CHANGELOG.md#3475) (from 3.44.8). Android builds use Gradle 9.3.1, Android Gradle Plugin 8.13.2 and Kotlin 2.3.21 by @ndonkoHenri.
+* Bump the bundled Flutter to [3.47.6](https://github.com/flutter/flutter/blob/stable/CHANGELOG.md#3476) (from 3.44.8). Android builds use Gradle 9.3.1, Android Gradle Plugin 8.13.2 and Kotlin 2.3.21 by @ndonkoHenri.
 
-  **Compatibility:** Desktop apps and the desktop app that `flet run` opens now render with Impeller, Flutter 3.47's default desktop renderer, instead of Skia. Use `flet build --no-impeller` (or `impeller = false` under `[tool.flet]`), `flet run --no-impeller` or the `FLET_NO_IMPELLER` environment variable to render with Skia; see [Renderer](/docs/publish#renderer). Android plugins that still use `jcenter()` or other APIs removed in Gradle 9 no longer build. `flet build` downloads Flutter 3.47.5 on first use.
+  **Compatibility:** Desktop apps and the desktop app that `flet run` opens now render with Impeller, Flutter 3.47's default desktop renderer, instead of Skia. Use `flet build --no-impeller` (or `impeller = false` under `[tool.flet]`), `flet run --no-impeller` or the `FLET_NO_IMPELLER` environment variable to render with Skia; see [Renderer](/docs/publish#renderer). Android plugins that still use `jcenter()` or other APIs removed in Gradle 9 no longer build. `flet build` downloads Flutter 3.47.6 on first use.
 
 ### Bug fixes
 

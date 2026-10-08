@@ -1,6 +1,6 @@
 ## 1.1.0
 
-* Flutter updated to [3.47.5](https://github.com/flutter/flutter/blob/stable/CHANGELOG.md#3475).
+* Flutter updated to [3.47.6](https://github.com/flutter/flutter/blob/stable/CHANGELOG.md#3476).
 
 ## 1.0.4
 
