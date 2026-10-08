@@ -8,6 +8,10 @@
 
 * Add `bgcolor` to `FletTestApp.take_page_controls_screenshot()`, `assert_control_screenshot()` and `wrap_page_controls_in_screenshot()` to paint an opaque background behind the captured controls instead of a transparent one ([#6918](https://github.com/flet-dev/flet/pull/6918)) by @InesaFitsner.
 
+### Bug fixes
+
+* Fix `flet run` ignoring the `FLET_ASSETS_DIR` environment variable ([#5631](https://github.com/flet-dev/flet/issues/5631)) by @ndonkoHenri.
+
 ### Documentation
 
 * Group the Reference > Controls section of the docs into Core, Material, Cupertino, Shadcn and Extensions ([#6918](https://github.com/flet-dev/flet/pull/6918)) by @InesaFitsner.

@@ -30,7 +30,7 @@ from flet_cli.utils.pyproject_toml import load_pyproject_toml
 
 def resolve_assets_dir(script_dir: Path, assets_dir: Optional[str]) -> Optional[str]:
     """
-    Resolve `--assets` to an existing absolute path.
+    Resolve the assets directory to an existing absolute path.
 
     A relative path is resolved against the app's script directory. A directory
     that does not exist is dropped rather than passed on, because the resolved
@@ -38,13 +38,15 @@ def resolve_assets_dir(script_dir: Path, assets_dir: Optional[str]) -> Optional[
     downstream as deliberate.
 
     Whether that is worth reporting depends on where the value came from.
-    `--assets` defaults to `DEFAULT_ASSETS_DIR` whether or not the app has such
-    a directory, so a missing one is unremarkable; any other value was typed by
-    the user, so a missing one is a mistake worth a warning.
+    The value falls back to `DEFAULT_ASSETS_DIR` when neither `--assets` nor
+    `FLET_ASSETS_DIR` is set, whether or not the app has such a directory, so a
+    missing one is unremarkable; any other value was set by the user, so a
+    missing one is a mistake worth a warning.
 
     Args:
         script_dir: Directory of the app being run.
-        assets_dir: The `--assets` value, absolute or relative.
+        assets_dir: The `--assets` or `FLET_ASSETS_DIR` value, or
+            `DEFAULT_ASSETS_DIR`, absolute or relative.
 
     Returns:
         The resolved absolute path, or `None` if it was not set or does not
@@ -182,9 +184,10 @@ class Command(BaseCommand):
             "--assets",
             dest="assets_dir",
             type=str,
-            default=DEFAULT_ASSETS_DIR,
+            default=None,
             help="Path to a directory containing static assets "
-            "used by the app (e.g. images, fonts)",
+            f"used by the app (e.g. images, fonts) (default: {DEFAULT_ASSETS_DIR}) "
+            "[env: FLET_ASSETS_DIR=]",
         )
         parser.add_argument(
             "--ignore-dirs",
@@ -263,7 +266,10 @@ class Command(BaseCommand):
         if port is None and not is_windows():
             uds_path = str(Path(tempfile.gettempdir()).joinpath(random_string(10)))
 
-        assets_dir = resolve_assets_dir(script_dir, options.assets_dir)
+        assets_dir = resolve_assets_dir(
+            script_dir,
+            options.assets_dir or os.getenv("FLET_ASSETS_DIR") or DEFAULT_ASSETS_DIR,
+        )
 
         ignore_dirs = (
             [
