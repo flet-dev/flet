@@ -3,8 +3,6 @@ include: package:flutter_lints/flutter.yaml
 analyzer:
   exclude:
     - build/**
-    # Vendored third-party code, see lib/src/third_party/flutter_colorpicker/README.md.
-    - lib/src/third_party/**
 
 # Additional information about this file can be found at
 # https://dart.dev/guides/language/analysis-options

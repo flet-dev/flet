@@ -11,8 +11,12 @@ dependencies:
   flutter:
     sdk: flutter
 
-
+  flutter_colorpicker:
+    git:
+      url: https://github.com/flet-dev/flutter_colorpicker
+      ref: material-ui
   material_ui: ^1.6.0
+
   flet:
     path: ../../../../../../../packages/flet
 

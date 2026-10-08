@@ -1,6 +1,6 @@
 import 'package:flet/flet.dart';
 import 'package:flutter/widgets.dart';
-import '../third_party/flutter_colorpicker/flutter_colorpicker.dart';
+import 'package:flutter_colorpicker/flutter_colorpicker.dart';
 
 HSVColor? parseHsvColor(dynamic value) {
   if (value is Map) {

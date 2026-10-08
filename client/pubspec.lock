@@ -522,6 +522,15 @@ packages:
       url: "https://github.com/flet-dev/flutter-code-editor"
     source: git
     version: "0.3.5"
+  flutter_colorpicker:
+    dependency: transitive
+    description:
+      path: "."
+      ref: material-ui
+      resolved-ref: "2696164b1c96048754d6c26741f8d897525a09c1"
+      url: "https://github.com/flet-dev/flutter_colorpicker"
+    source: git
+    version: "1.1.0"
   flutter_driver:
     dependency: transitive
     description: flutter
