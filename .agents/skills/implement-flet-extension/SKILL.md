@@ -15,7 +15,7 @@ Implement a Flet extension around an external Flutter package using existing `fl
 
 1. Confirm package health: maintenance activity, null-safety, platform support, and open issue risk.
 2. Confirm license is compatible with Flet distribution.
-3. Confirm the package doesn't build widgets from the Flutter SDK's `package:flutter/material.dart` or `package:flutter/cupertino.dart`, or expose their types in its API. Flet renders with the `material_ui` and `cupertino_ui` packages, so SDK `TextField`, `InkWell`, `ListTile` and similar widgets fail at runtime ("No Material widget found"), and SDK `ThemeData`/`ButtonStyle` values don't type-check against Flet's helpers. Prefer a release built on `material_ui`/`cupertino_ui` or on `widgets.dart` only.
+3. Confirm that the parts of the package the extension uses don't build widgets from the Flutter SDK's `package:flutter/material.dart` or `package:flutter/cupertino.dart`, or take or return their types. Parts it doesn't use don't matter: `shadcn_ui`'s `ShadApp` is built on the SDK `MaterialApp`, but flet-shadcn-ui never uses it. Flet renders with the `material_ui` and `cupertino_ui` packages, so SDK `TextField`, `InkWell`, `ListTile` and similar widgets fail at runtime ("No Material widget found"), and SDK `ThemeData`/`ButtonStyle` values don't type-check against Flet's helpers. Prefer a release built on `material_ui`/`cupertino_ui` or on `widgets.dart` only.
 4. Select a conservative version strategy:
 - Pin exact version when behavior stability is critical.
 - Use bounded ranges when required by ecosystem constraints.
