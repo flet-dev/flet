@@ -1,8 +1,35 @@
 import Cocoa
 import FlutterMacOS
 
+/// Renders with Skia instead of Flutter's default, Impeller, when
+/// FLET_NO_IMPELLER is "1", "true" or "yes" (any case); `flet run
+/// --no-impeller` sets it.
+///
+/// The macOS engine takes the renderer only from the FLTEnableImpeller
+/// Info.plist key, and release builds ignore engine switches from the
+/// environment. So this replaces the engine's internal
+/// `-[FlutterDartProject enableImpeller]` getter, which reads that key, before
+/// the first engine starts. Subclassing `FlutterDartProject` instead would move
+/// its ICU data lookup to the app bundle and break text segmentation.
+private func disableImpellerIfRequested() {
+  guard
+    let value = ProcessInfo.processInfo.environment["FLET_NO_IMPELLER"],
+    ["1", "true", "yes"].contains(value.lowercased())
+  else { return }
+  guard
+    let method = class_getInstanceMethod(
+      FlutterDartProject.self, NSSelectorFromString("enableImpeller"))
+  else {
+    NSLog("FLET_NO_IMPELLER is set, but this Flutter engine can't be switched to Skia.")
+    return
+  }
+  let skia: @convention(block) (AnyObject) -> Bool = { _ in false }
+  method_setImplementation(method, imp_implementationWithBlock(skia))
+}
+
 class MainFlutterWindow: NSWindow {
   override func awakeFromNib() {
+    disableImpellerIfRequested()
     let flutterViewController = FlutterViewController.init()
     flutterViewController.backgroundColor = .clear
     let windowFrame = self.frame

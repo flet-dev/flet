@@ -14,6 +14,20 @@ struct _MyApplication {
 
 G_DEFINE_TYPE(MyApplication, my_application, GTK_TYPE_APPLICATION)
 
+// Returns TRUE when the app should render with Skia instead of Flutter's
+// default, Impeller: FLET_NO_IMPELLER is "1", "true" or "yes" (any case), or
+// FLUTTER_LINUX_RENDERER picks the software renderer, which can't draw
+// Impeller's text.
+static gboolean no_impeller_requested() {
+  const gchar* no_impeller = g_getenv("FLET_NO_IMPELLER");
+  if (no_impeller != nullptr && (g_strcmp0(no_impeller, "1") == 0 ||
+                                 g_ascii_strcasecmp(no_impeller, "true") == 0 ||
+                                 g_ascii_strcasecmp(no_impeller, "yes") == 0)) {
+    return TRUE;
+  }
+  return g_strcmp0(g_getenv("FLUTTER_LINUX_RENDERER"), "software") == 0;
+}
+
 // Implements GApplication::activate.
 static void my_application_activate(GApplication* application) {
   MyApplication* self = MY_APPLICATION(application);
@@ -100,9 +114,10 @@ static void my_application_activate(GApplication* application) {
 
   g_autoptr(FlDartProject) project = fl_dart_project_new();
   fl_dart_project_set_dart_entrypoint_arguments(project, self->dart_entrypoint_arguments);
-  // Render with Skia: Impeller is Flutter's default on Linux but isn't verified
-  // for Flet yet.
-  fl_dart_project_set_enable_impeller(project, FALSE);
+  // `flet run --no-impeller` sets FLET_NO_IMPELLER.
+  if (no_impeller_requested()) {
+    fl_dart_project_set_enable_impeller(project, FALSE);
+  }
 
   FlView* view = fl_view_new(project);
   gtk_widget_show(GTK_WIDGET(view));

@@ -73,10 +73,15 @@ int APIENTRY wWinMain(_In_ HINSTANCE instance, _In_opt_ HINSTANCE prev,
   // plugins.
   ::CoInitializeEx(nullptr, COINIT_APARTMENTTHREADED);
 
+  // `flet build --no-impeller` renders with Skia instead of Flutter's default,
+  // Impeller; FLET_NO_IMPELLER does the same when the app starts.
   flutter::DartProject project(L"data");
-  // Render with Skia: Impeller is Flutter's default on Windows but isn't
-  // verified for Flet yet.
-  project.set_impeller_switch(flutter::ImpellerSwitch::Disabled);
+  const bool no_impeller =
+      {{ "false" if cookiecutter.options.impeller else "true" }} ||
+      IsEnvironmentVariableTrue(L"FLET_NO_IMPELLER");
+  if (no_impeller) {
+    project.set_impeller_switch(flutter::ImpellerSwitch::Disabled);
+  }
 
   std::vector<std::string> command_line_arguments =
       GetCommandLineArguments();

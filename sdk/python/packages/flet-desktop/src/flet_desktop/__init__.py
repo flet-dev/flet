@@ -487,7 +487,7 @@ def __linux_identity_args(args: list) -> tuple:
     return [app_id, *args[1:]], {"executable": executable}
 
 
-def open_flet_view(page_url, assets_dir, hidden):
+def open_flet_view(page_url, assets_dir, hidden, *, no_impeller=False):
     """
     Start a desktop view process and return the process object and PID file path.
 
@@ -495,6 +495,7 @@ def open_flet_view(page_url, assets_dir, hidden):
         page_url: Page endpoint the desktop client should open.
         assets_dir: Optional assets directory passed to the client process.
         hidden: Whether the window should start hidden.
+        no_impeller: Whether the client renders with Skia instead of Impeller.
 
     Returns:
         A tuple containing:
@@ -503,7 +504,7 @@ def open_flet_view(page_url, assets_dir, hidden):
     """
 
     args, flet_env, pid_file = __locate_and_unpack_flet_view(
-        page_url, assets_dir, hidden
+        page_url, assets_dir, hidden, no_impeller
     )
     args, extra = __linux_identity_args(args)
     p = subprocess.Popen(args, env=flet_env, **extra)
@@ -511,7 +512,7 @@ def open_flet_view(page_url, assets_dir, hidden):
     return p, pid_file
 
 
-async def open_flet_view_async(page_url, assets_dir, hidden):
+async def open_flet_view_async(page_url, assets_dir, hidden, *, no_impeller=False):
     """
     Asynchronously start a desktop view process.
 
@@ -519,6 +520,7 @@ async def open_flet_view_async(page_url, assets_dir, hidden):
         page_url: Page endpoint the desktop client should open.
         assets_dir: Optional assets directory passed to the client process.
         hidden: Whether the window should start hidden.
+        no_impeller: Whether the client renders with Skia instead of Impeller.
 
     Returns:
         A tuple containing:
@@ -527,7 +529,7 @@ async def open_flet_view_async(page_url, assets_dir, hidden):
     """
 
     args, flet_env, pid_file = __locate_and_unpack_flet_view(
-        page_url, assets_dir, hidden
+        page_url, assets_dir, hidden, no_impeller
     )
     args, extra = __linux_identity_args(args)
     p = await asyncio.create_subprocess_exec(args[0], *args[1:], env=flet_env, **extra)
@@ -580,7 +582,7 @@ def close_flet_view(pid_file):
             os.remove(pid_file)
 
 
-def __locate_and_unpack_flet_view(page_url, assets_dir, hidden):
+def __locate_and_unpack_flet_view(page_url, assets_dir, hidden, no_impeller=False):
     """
     Resolve desktop client executable, prepare launch arguments, and environment.
 
@@ -596,6 +598,7 @@ def __locate_and_unpack_flet_view(page_url, assets_dir, hidden):
         page_url: Page endpoint the desktop client should open.
         assets_dir: Optional assets directory passed to the client process.
         hidden: Whether to set `FLET_HIDE_WINDOW_ON_START=true` in process env.
+        no_impeller: Whether to set `FLET_NO_IMPELLER=true` in process env.
 
     Returns:
         A tuple containing:
@@ -721,5 +724,8 @@ def __locate_and_unpack_flet_view(page_url, assets_dir, hidden):
 
     if hidden:
         flet_env["FLET_HIDE_WINDOW_ON_START"] = "true"
+
+    if no_impeller:
+        flet_env["FLET_NO_IMPELLER"] = "true"
 
     return args, flet_env, pid_file
