@@ -6,6 +6,7 @@ import 'package:sensors_plus/sensors_plus.dart';
 
 import '../flet_service.dart';
 import '../utils/numbers.dart';
+import '../utils/platform.dart';
 
 class ShakeDetectorService extends FletService {
   ShakeDetectorService({required super.control});
@@ -66,9 +67,15 @@ class ShakeDetectorService extends FletService {
   /// The peaks of a shake are short, so the default rate of `sensors_plus`
   /// (every 200 ms) often misses them and the threshold is never passed.
   ///
-  /// The platform gives every reader of the accelerometer one sampling rate,
-  /// so the service that subscribes last decides it.
+  /// `sensors_plus` has an accelerometer on Android, iOS and web only, so on
+  /// any other platform this does nothing.
+  ///
+  /// All readers of the accelerometer share one sampling rate. On Android and
+  /// iOS the last stream request sets it; on web the first one does and later
+  /// ones are ignored.
   void _startListening() {
+    if (!isWebPlatform() && !isMobilePlatform()) return;
+
     _subscription =
         accelerometerEventStream(samplingPeriod: SensorInterval.gameInterval)
             .listen((event) {

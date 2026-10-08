@@ -16,9 +16,10 @@ class ShakeDetector(Service):
     Note:
         * Supported platforms: Android, iOS and web.
         * The detector asks for an accelerometer reading every 20 ms. All readers of
-          the accelerometer share one rate, set by the one that subscribed last: an
-          :class:`~flet.Accelerometer` added after the detector slows it down to its
-          own `interval`, and one added before it receives a reading every 20 ms.
+          the accelerometer share one rate. On Android and iOS the last request sets
+          it: an :class:`~flet.Accelerometer` added after the detector changes the rate
+          to its own `interval`, and the detector changes the rate of one added before
+          it to 20 ms. On web the first request sets it and later ones are ignored.
     """
 
     minimum_shake_count: int = 1
