@@ -22,6 +22,7 @@ import '../widgets/boot_screen.dart';
 import '../widgets/page_context.dart';
 import '../widgets/page_media.dart';
 import 'app_bar.dart';
+import 'base_controls.dart';
 import 'cupertino_app_bar.dart';
 import 'scroll_notification_control.dart';
 import 'scrollable_control.dart';
@@ -332,6 +333,6 @@ class _ViewControlState extends State<ViewControl> {
           }).onError((e, st) {/* do nothing */});
         },
         child: result);
-    return result;
+    return LayoutControl(control: control, child: result);
   }
 }
