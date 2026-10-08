@@ -1,0 +1,26 @@
+[project]
+name = "shadcn-ui-tabs"
+version = "1.0.0"
+description = "Account and password tabs, each with a card form."
+requires-python = ">=3.10"
+keywords = ["shadcn", "tabs", "tab bar", "navigation", "settings"]
+authors = [{ name = "Flet team", email = "hello@flet.dev" }]
+dependencies = ["flet", "flet-shadcn-ui"]
+
+[dependency-groups]
+dev = ["flet-cli", "flet-desktop", "flet-web"]
+
+[tool.flet.gallery]
+categories = ["Extensions/Shadcn"]
+
+[tool.flet.metadata]
+title = "Shadcn Tabs"
+controls = ["SafeArea", "Tabs", "Tab", "Card", "Column", "Text", "Input", "Button"]
+layout_pattern = "tabs"
+complexity = "basic"
+features = ["tab switching", "card content"]
+
+[tool.flet]
+org = "dev.flet"
+company = "Flet"
+copyright = "Copyright (C) 2023-2026 by Flet"

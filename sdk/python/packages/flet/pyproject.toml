@@ -67,6 +67,7 @@ extensions = [
     "flet-permission-handler",
     "flet-rive",
     "flet-secure-storage",
+    "flet-shadcn-ui",
     "flet-spinkit",
     "flet-video",
     "flet-webview",

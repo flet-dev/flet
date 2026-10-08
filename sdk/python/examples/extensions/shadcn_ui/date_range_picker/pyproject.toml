@@ -1,0 +1,26 @@
+[project]
+name = "shadcn-ui-date-range-picker"
+version = "1.0.0"
+description = "Date range picker for a trip, with a live range label."
+requires-python = ">=3.10"
+keywords = ["shadcn", "date range", "date picker", "calendar", "trip"]
+authors = [{ name = "Flet team", email = "hello@flet.dev" }]
+dependencies = ["flet", "flet-shadcn-ui"]
+
+[dependency-groups]
+dev = ["flet-cli", "flet-desktop", "flet-web"]
+
+[tool.flet.gallery]
+categories = ["Extensions/Shadcn"]
+
+[tool.flet.metadata]
+title = "Shadcn DateRangePicker"
+controls = ["SafeArea", "Column", "Text", "DateRangePicker"]
+layout_pattern = "form"
+complexity = "basic"
+features = ["change handling", "date range"]
+
+[tool.flet]
+org = "dev.flet"
+company = "Flet"
+copyright = "Copyright (C) 2023-2026 by Flet"
