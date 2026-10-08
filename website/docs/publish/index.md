@@ -1313,8 +1313,9 @@ hide_window_on_start = true
 iOS apps always render with Impeller, and web apps with Skia.
 :::
 
-Flet apps render with Impeller, Flutter's default renderer. Build with
-`--no-impeller` to render with Skia instead, for example when Impeller shows a
+Flet apps render with [Impeller](https://docs.flutter.dev/perf/impeller),
+Flutter's default renderer. Build with `--no-impeller` to render with
+[Skia](https://skia.org/) instead, for example when Impeller shows a
 blank or flickering window, or renders slowly, on some GPUs, drivers or virtual
 machines.
 
