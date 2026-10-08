@@ -12,6 +12,13 @@ __all__ = ["ShakeDetector"]
 class ShakeDetector(Service):
     """
     Detects phone shakes.
+
+    Note:
+        * Supported platforms: Android, iOS and web.
+        * The detector asks for an accelerometer reading every 20 ms. All readers of
+          the accelerometer share one rate, set by the one that subscribed last: an
+          :class:`~flet.Accelerometer` added after the detector slows it down to its
+          own `interval`, and one added before it receives a reading every 20 ms.
     """
 
     minimum_shake_count: int = 1
