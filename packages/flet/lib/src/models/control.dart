@@ -459,6 +459,8 @@ class Control extends ChangeNotifier {
             toNode.control.notify();
           }
         }
+        fromNode.notifyParentIfPropertyChanged(fromIndex);
+        toNode.notifyParentIfPropertyChanged(toIndex);
       } else {
         throw Exception("Unknown patch operation: ${op[0]}");
       }
