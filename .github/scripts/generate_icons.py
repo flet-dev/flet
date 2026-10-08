@@ -23,9 +23,11 @@ no glyph there - which renders as an empty box with no error anywhere.
 """
 
 import argparse
+import io
 import json
 import re
 import sys
+import tarfile
 from pathlib import Path
 
 import requests
@@ -40,6 +42,19 @@ REPO = Path(__file__).resolve().parents[2]
 ICON_VAR_PATTERN = re.compile(
     r"""^\s*static const IconData\s+(\w+)\s*=\s*IconData\(\s*(0x[0-9a-fA-F]+)""",
     re.MULTILINE,
+)
+
+# Lucide declares every icon in several weights (`Lucide100`..`Lucide600`) and
+# with a `Dir` twin that mirrors in RTL. Only the regular-weight, non-mirrored
+# declaration is exposed, which is the one sitting in the plain `Lucide` family.
+LUCIDE_ICON_PATTERN = re.compile(
+    r"""static const IconData\s+(\w+)\s*=\s*const IconData\(\s*(\d+),\s*"""
+    r"""fontFamily:\s*'Lucide'\s*,\s*fontPackage:\s*'lucide_icons_flutter'\s*\)""",
+)
+
+LUCIDE_SET_ID = 3
+LUCIDE_PUBSPEC = (
+    "sdk/python/packages/flet-shadcn-ui/src/flutter/flet_shadcn_ui/pubspec.yaml"
 )
 
 file_loader = FileSystemLoader(Path(__file__).parent / "templates")
@@ -154,6 +169,69 @@ ICON_SETS = (
 )
 
 
+def lucide_version() -> str:
+    """Return the exact `lucide_icons_flutter` version pinned by flet-shadcn-ui.
+
+    The generated Dart list names every icon, so the list has to be built from
+    the same release the client compiles against.
+    """
+    pubspec = (REPO / LUCIDE_PUBSPEC).read_text(encoding="utf-8")
+    match = re.search(r"^\s*lucide_icons_flutter:\s*([0-9.]+)\s*$", pubspec, re.M)
+    if not match:
+        raise SystemExit(f"exact lucide_icons_flutter version not found in {LUCIDE_PUBSPEC}")
+    return match.group(1)
+
+
+def download_lucide_icons() -> str:
+    """Return `lib/lucide_icons.dart` from the pinned pub.dev archive."""
+    url = (
+        "https://pub.dev/api/archives/"
+        f"lucide_icons_flutter-{lucide_version()}.tar.gz"
+    )
+    print(f"Downloading Lucide icons from: {url}")
+    response = requests.get(url)
+    response.raise_for_status()
+    with tarfile.open(fileobj=io.BytesIO(response.content), mode="r:gz") as archive:
+        member = archive.extractfile("lib/lucide_icons.dart")
+        if member is None:
+            raise SystemExit("lib/lucide_icons.dart not found in the archive")
+        return member.read().decode("utf-8")
+
+
+def lucide_python_name(dart_name: str) -> str:
+    """Convert a Lucide member name to an upper snake case Python name.
+
+    `aArrowDown` becomes `A_ARROW_DOWN` and `arrowDown01` becomes
+    `ARROW_DOWN_01`.
+    """
+    name = re.sub(r"(?<=[a-z0-9])(?=[A-Z])", "_", dart_name)
+    name = re.sub(r"(?<=[A-Za-z])(?=[0-9])", "_", name)
+    return name.upper()
+
+
+def parse_lucide_icons(dart_content: str):
+    """Return `(icons, python_names)` for the Lucide set.
+
+    Like `parse_dart_icons`, the packed value is the alphabetical index of the
+    Dart member name. Lucide keeps some aliases that differ only in case
+    (`arrowDownAZ` / `arrowDownAz`); they share a glyph, so only the first one
+    in sort order is kept.
+    """
+    codepoints = dict(LUCIDE_ICON_PATTERN.findall(dart_content))
+    by_python_name = {}
+    for name in sorted(codepoints):
+        python_name = lucide_python_name(name)
+        kept = by_python_name.setdefault(python_name, name)
+        if codepoints[kept] != codepoints[name]:
+            raise SystemExit(f"{kept} and {name} map to {python_name}")
+
+    names = sorted(by_python_name.values())
+    icons = [(name, (LUCIDE_SET_ID << 16) | i) for i, name in enumerate(names)]
+    python_names = [lucide_python_name(name) for name in names]
+    print(f"🔍 Found {len(icons)} icons for set ID {LUCIDE_SET_ID} (sorted).")
+    return icons, python_names
+
+
 def main() -> int:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument(
@@ -183,6 +261,26 @@ def main() -> int:
             args.verify,
         )
         failures += emit(render_json(codepoints), codepoints_out, args.verify)
+
+    lucide_icons, lucide_names = parse_lucide_icons(download_lucide_icons())
+    lucide_dir = "sdk/python/packages/flet-shadcn-ui/src"
+    failures += emit(
+        render_file(lucide_icons, "lucide_icons.dart"),
+        f"{lucide_dir}/flutter/flet_shadcn_ui/lib/src/utils/lucide_icons.dart",
+        args.verify,
+    )
+    failures += emit(
+        render_file(lucide_names, "lucide_icons.pyi"),
+        f"{lucide_dir}/flet_shadcn_ui/lucide_icons.pyi",
+        args.verify,
+    )
+    failures += emit(
+        render_json(
+            {py: value for py, (_, value) in zip(lucide_names, lucide_icons)}
+        ),
+        f"{lucide_dir}/flet_shadcn_ui/lucide_icons.json",
+        args.verify,
+    )
 
     if args.verify:
         print(f"{failures} failure(s)")

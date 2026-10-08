@@ -789,6 +789,7 @@ jobs:
             flet-permission-handler
             flet-rive
             flet-secure-storage
+            flet-shadcn-ui
             flet-spinkit
             flet-video
             flet-webview
@@ -1071,6 +1072,7 @@ jobs:
             flet_permission_handler \
             flet_rive \
             flet_secure_storage \
+            flet_shadcn_ui \
             flet_spinkit \
             flet_video \
             flet_webview \
