@@ -102,7 +102,9 @@ def __get_configured_desktop_flavor() -> str | None:
     3. `[tool.flet].desktop_flavor` in the nearest `pyproject.toml` at or
        above the directory of the started script, `sys.argv[0]`, so an app
        started from another directory reads its own project's setting. It is
-       skipped when `sys.argv[0]` is not a file, as with `python -c`.
+       skipped when `sys.argv[0]` is not a file, as with `python -c`, and in a
+       frozen app such as one made with `flet pack`, whose bundled client must
+       not be swapped for one picked by a `pyproject.toml` near the executable.
 
     Invalid values are ignored.
     """
@@ -114,7 +116,7 @@ def __get_configured_desktop_flavor() -> str | None:
     candidates = [Path(os.getcwd()) / "pyproject.toml"]
     script = Path(sys.argv[0] if sys.argv else "")
     with contextlib.suppress(OSError):
-        if script.is_file():
+        if not getattr(sys, "frozen", False) and script.is_file():
             for directory in script.resolve().parents:
                 pyproject_path = directory / "pyproject.toml"
                 if pyproject_path.is_file():
