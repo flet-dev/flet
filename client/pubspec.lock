@@ -518,7 +518,7 @@ packages:
     description:
       path: "."
       ref: material-ui
-      resolved-ref: e5a6dcb2202523b415bd1aeb2fee87c7f3fef783
+      resolved-ref: "789ce786a7fd64ffd5d180d5dceb78166e2178d8"
       url: "https://github.com/flet-dev/flutter-code-editor"
     source: git
     version: "0.3.5"
