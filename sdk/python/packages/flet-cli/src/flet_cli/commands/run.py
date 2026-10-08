@@ -237,8 +237,8 @@ class Command(BaseCommand):
 
         The desktop client is opened from this process, whose working directory
         is where `flet run` was started, so `[tool.flet].desktop_flavor` of the
-        app's `pyproject.toml` is exported as `FLET_DESKTOP_FLAVOR` when that
-        variable is not set.
+        nearest `pyproject.toml` at or above the app's script is exported as
+        `FLET_DESKTOP_FLAVOR` when that variable is not set.
 
         Args:
             options: Parsed command options produced by :meth:`add_arguments`.
@@ -289,7 +289,17 @@ class Command(BaseCommand):
         if options.no_impeller and (options.web or options.ios or options.android):
             print("Warning: --no-impeller applies only to the desktop app.")
 
-        desktop_flavor = get_pyproject("tool.flet.desktop_flavor")
+        flavor_dir = next(
+            (
+                d
+                for d in [script_dir.resolve(), *script_dir.resolve().parents]
+                if d.joinpath("pyproject.toml").is_file()
+            ),
+            None,
+        )
+        desktop_flavor = flavor_dir and load_pyproject_toml(flavor_dir)(
+            "tool.flet.desktop_flavor"
+        )
         if desktop_flavor and not os.environ.get("FLET_DESKTOP_FLAVOR"):
             os.environ["FLET_DESKTOP_FLAVOR"] = str(desktop_flavor)
 
