@@ -34,6 +34,14 @@ This command can be run on **Windows only**.
 
 Builds a Windows application.
 
+### Windows on ARM
+
+On an ARM64 PC, such as a Snapdragon laptop, `flet build windows` builds an x64
+app, which runs there through Windows' built-in x64 emulation. Flet's Python
+runtime for Windows is x64-only, so Flet builds with its own Flutter SDK, which
+is x64 as well, even when an ARM64 Flutter SDK is on `PATH`. The first start of
+the app takes noticeably longer under emulation.
+
 ## App termination
 
 Closing the window terminates the app immediately, without running Python `atexit`

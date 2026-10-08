@@ -50,6 +50,7 @@ from flet_cli.utils.android import (
 )
 from flet_cli.utils.app_excludes import find_default_excludes
 from flet_cli.utils.cli import parse_cli_bool_value
+from flet_cli.utils.flutter import get_flutter_dir
 from flet_cli.utils.hash_stamp import HashStamp
 from flet_cli.utils.merge import merge_dict
 from flet_cli.utils.plist import is_supported_plist_value, parse_cli_plist_value
@@ -159,7 +160,7 @@ class BaseBuildCommand(BaseFlutterCommand):
                 "config_platform": "windows",
                 "flutter_build_command": "windows",
                 "status_text": "Windows app",
-                "outputs": ["build/windows/x64/runner/Release/*"],
+                "outputs": ["build/windows/{arch}/runner/Release/*"],
                 "dist": "windows",
                 "can_be_run_on": ["Windows"],
             },
@@ -3141,6 +3142,49 @@ class BaseBuildCommand(BaseFlutterCommand):
                 )
             self.cleanup(build_result.returncode if build_result.returncode else 1)
 
+    def flutter_sdk_supported(self) -> bool:
+        """
+        Check whether the Flutter SDK found can build for the target platform.
+
+        Flet's Python runtime for Windows is x64-only, so an ARM64 Flutter SDK,
+        as installed natively on Windows on ARM, would build an ARM64 app that
+        can't load it. The Flutter SDK that Flet installs is x64, runs under
+        emulation there, and builds an x64 app that runs on Windows on ARM.
+
+        Returns:
+            `False` for an ARM64 Flutter SDK when building for Windows,
+                otherwise `True`.
+        """
+
+        if (
+            self.current_platform != "Windows"
+            or self.package_platform != "Windows"
+            or self.flutter_arch() != "arm64"
+        ):
+            return True
+
+        flet_flutter_dir = get_flutter_dir(str(self.required_flutter_version))
+        if os.path.normcase(str(self.flutter_exe)).startswith(
+            os.path.normcase(flet_flutter_dir) + os.sep
+        ):
+            self.skip_flutter_doctor = True
+            self.cleanup(
+                1,
+                f"Flet's Flutter SDK at {escape(flet_flutter_dir)} builds ARM64 "
+                "Windows apps, but Flet's Python runtime for Windows is x64-only. "
+                "Delete that directory and run the build again to install the x64 "
+                "Flutter SDK.",
+            )
+
+        console.log(
+            f"The Flutter SDK at {escape(str(self.flutter_exe))} builds ARM64 "
+            "Windows apps, but Flet's Python runtime for Windows is x64-only. "
+            f"Flet will use its own Flutter {self.required_flutter_version} (x64) "
+            "to build an x64 app, which runs on Windows on ARM.",
+            style=warning_style,
+        )
+        return False
+
     def resolve_output_path(self, build_output: str) -> str:
         """
         Resolve a platform `outputs` glob to an absolute path inside the
@@ -3153,7 +3197,11 @@ class BaseBuildCommand(BaseFlutterCommand):
         assert self.flutter_dir
         assert self.template_data
 
-        arch = platform.machine().lower()
+        arch = (
+            self.package_platform == "Windows"
+            and "{arch}" in build_output
+            and self.flutter_arch()
+        ) or platform.machine().lower()
         if arch in {"x86_64", "amd64"}:
             arch = "x64"
         elif arch in {"arm64", "aarch64"}:
@@ -3199,8 +3247,11 @@ class BaseBuildCommand(BaseFlutterCommand):
 
             return ignore
 
+        searched_outputs = []
+        copied = False
         for build_output in self.platforms[self.target_platform]["outputs"]:
             build_output_dir = self.resolve_output_path(build_output)
+            searched_outputs.append(build_output_dir)
 
             if self.verbose > 0:
                 console.log(
@@ -3210,8 +3261,11 @@ class BaseBuildCommand(BaseFlutterCommand):
 
             build_output_glob = os.path.basename(build_output_dir)
             build_output_dir = os.path.dirname(build_output_dir)
-            if not os.path.exists(build_output_dir):
+            if not os.path.isdir(build_output_dir) or not any(
+                build_output_glob in ("*", f) for f in os.listdir(build_output_dir)
+            ):
                 continue
+            copied = True
 
             if self.out_dir.exists():
                 rmtree(str(self.out_dir))
@@ -3222,6 +3276,13 @@ class BaseBuildCommand(BaseFlutterCommand):
                 build_output_dir,
                 str(self.out_dir),
                 ignore=make_ignore_fn(build_output_dir, build_output_glob),
+            )
+
+        if not copied:
+            self.cleanup(
+                1,
+                "Build output not found in "
+                + ", ".join(escape(path) for path in searched_outputs),
             )
 
         if self.target_platform == "web":
