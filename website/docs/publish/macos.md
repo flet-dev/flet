@@ -91,6 +91,7 @@ Its value is determined in the following order of precedence:
 1. [`--info-plist`](../cli/flet-build.md#--info-plist)
 2. `[tool.flet.macos.info]`
 3. Values injected by [cross-platform permission bundles](index.md#permissions), if any.
+4. `FLTEnableImpeller = false`, when the app is built with [`--no-impeller`](index.md#renderer).
 
 #### Supported value forms
 
