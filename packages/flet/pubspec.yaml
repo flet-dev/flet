@@ -42,7 +42,13 @@ dependencies:
   pasteboard: ^0.5.0
   provider: ^6.1.2
   screenshot: ^3.0.0
-  screen_brightness: ^2.1.11
+  # ScreenBrightness is Android/iOS-only. Depending on the platform interface and
+  # the two mobile implementations, instead of `screen_brightness`, keeps its
+  # Windows/macOS natives out of desktop apps: the Windows one reads and writes
+  # monitor brightness over DDC/CI while the app runs, even when unused.
+  screen_brightness_android: ^2.1.6
+  screen_brightness_ios: ^2.1.4
+  screen_brightness_platform_interface: ^2.1.2
   sensors_plus: ^7.0.0
   shared_preferences: ^2.5.3
   share_plus: ^12.0.1

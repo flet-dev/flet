@@ -9,6 +9,7 @@
 * Fix a web app built with `flet build web` getting its project name, e.g. `my_app`, as its label when installed as a PWA on iOS instead of its product name. The manifest's `short_name`, which iOS shows on the Home Screen, was set to the project name; it now defaults to the product name, like the page title. Product names containing quotes no longer break `manifest.json` ([#6911](https://github.com/flet-dev/flet/pull/6911)) by @FeodorFitsner.
 * Fix `flet build`, `flet test` and `flet debug` failing on new projects with a `jni_flutter` "Constant evaluation error" ([#6919](https://github.com/flet-dev/flet/issues/6919), [#6920](https://github.com/flet-dev/flet/pull/6920)) by @ndonkoHenri.
 * Fix `flet run` crashing with `inotify watch limit reached` on Linux; it now warns that the app won't reload on changes and runs it anyway ([#6711](https://github.com/flet-dev/flet/issues/6711), [#6924](https://github.com/flet-dev/flet/pull/6924)) by @ndonkoHenri.
+* Fix Flet apps on Windows turning off HDR, or dimming and blanking external monitors, while running; the unused desktop plugins of `screen_brightness` are no longer bundled ([#6629](https://github.com/flet-dev/flet/issues/6629), [#6493](https://github.com/flet-dev/flet/issues/6493), [#6925](https://github.com/flet-dev/flet/pull/6925)) by @ndonkoHenri.
 
 ## 1.0.3
 
