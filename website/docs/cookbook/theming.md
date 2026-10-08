@@ -2,6 +2,8 @@
 title: "Theming"
 ---
 
+import {Image} from '@site/src/components/crocodocs';
+
 It is possible to configure your application and/or the containing controls to follow a particular themes.
 
 ### App-wide themes
@@ -38,10 +40,81 @@ page.theme = ft.Theme(
 Colors set explicitly in [`Theme.color_scheme`](../types/theme/index.md#flet.Theme.color_scheme)
 always win over both neutral and tonal surfaces.
 
+Neutral surface colors:
+
+| Color scheme role | Light | Dark |
+|---|---|---|
+| `surface` | `#ffffff` | `#121212` |
+| `surface_dim` | `#dddddd` | `#121212` |
+| `surface_bright` | `#ffffff` | `#3b3b3b` |
+| `surface_container_lowest` | `#ffffff` | `#0d0d0d` |
+| `surface_container_low` | `#f7f7f7` | `#1b1b1b` |
+| `surface_container` | `#f2f2f2` | `#202020` |
+| `surface_container_high` | `#ededed` | `#292929` |
+| `surface_container_highest` | `#e7e7e7` | `#313131` |
+| `on_surface` | `#1b1b1b` | `#e7e7e7` |
+| `on_surface_variant` | `#5e5e5e` | `#ababab` |
+| `outline` | `#7a7a7a` | `#8d8d8d` |
+| `outline_variant` | `#d5d5d5` | `#3b3b3b` |
+| `inverse_surface` | `#303030` | `#e7e7e7` |
+| `on_inverse_surface` | `#f2f2f2` | `#1b1b1b` |
+
+All other roles (`primary`, `secondary`, `tertiary`, `error`, their containers and
+"on" colors, `surface_tint` and so on) come from the seed in both modes.
+
+Neutral (light and dark):
+
+<Image src="test-images/controls/theme/golden/macos/theme_surfaces/neutral_light.png" width="45%" />
+<Image src="test-images/controls/theme/golden/macos/theme_surfaces/neutral_dark.png" width="45%" />
+
+Tonal (light and dark):
+
+<Image src="test-images/controls/theme/golden/macos/theme_surfaces/tonal_light.png" width="45%" />
+<Image src="test-images/controls/theme/golden/macos/theme_surfaces/tonal_dark.png" width="45%" />
+
 :::note
 Before Flet 1.1.0, surfaces were always tinted with the seed hue. See
 [Default theme surfaces are now neutral](../updates/breaking-changes/v1-1-0/neutral-default-surfaces.md).
 :::
+
+### Seed color with overrides
+
+`color_scheme_seed` and `color_scheme` can be combined: the seed generates the
+whole scheme, then any color set in `color_scheme` replaces just that role. This
+is handy for matching brand colors exactly while keeping everything else
+derived from the seed:
+
+```python
+import flet as ft
+
+def main(page: ft.Page):
+    page.theme = ft.Theme(
+        color_scheme_seed=ft.Colors.INDIGO,
+        color_scheme=ft.ColorScheme(
+            primary="#3f51b5",         # exact brand primary
+            secondary=ft.Colors.AMBER, # accent not derived from the seed
+            surface="#fafafa",         # off-white page background
+        ),
+    )
+    page.dark_theme = ft.Theme(
+        color_scheme_seed=ft.Colors.INDIGO,
+        color_scheme=ft.ColorScheme(
+            primary="#9fa8da",
+            secondary=ft.Colors.AMBER_200,
+        ),
+    )
+
+    page.add(
+        ft.FilledButton("Primary"),
+        ft.FilledTonalButton("Secondary container (from seed)"),
+        ft.Chip(label=ft.Text("Secondary"), bgcolor=ft.Colors.SECONDARY),
+    )
+
+ft.run(main)
+```
+
+The overrides are applied on top of the surfaces mode, so with
+`surfaces=ft.ThemeSurfaces.TONAL` the roles you don't override stay tinted.
 
 ### Nested themes
 

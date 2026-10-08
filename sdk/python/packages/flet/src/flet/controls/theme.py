@@ -3288,6 +3288,9 @@ class ThemeSurfaces(Enum):
     Surfaces use a neutral grey ramp with no hue: white in light mode and
     near-black (`#121212`) in dark mode. Accent colors (primary, secondary,
     tertiary and their containers) still come from the seed.
+
+    The full list of neutral colors is in the
+    [Theming](https://flet.dev/docs/cookbook/theming#surfaces) guide.
     """
 
     TONAL = "tonal"
