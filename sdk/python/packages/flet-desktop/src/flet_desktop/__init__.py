@@ -2,7 +2,9 @@ import asyncio
 import contextlib
 import ctypes
 import ctypes.util
+import functools
 import hashlib
+import importlib.util
 import logging
 import os
 import shutil
@@ -58,42 +60,111 @@ def get_package_bin_dir():
     return str(Path(__file__).parent.joinpath("app"))
 
 
-def __get_desktop_flavor():
+def __read_pyproject_flavor(pyproject_path: Path) -> str | None:
     """
-    Return the desktop client flavor to use: `"full"` or `"light"`.
+    Return `[tool.flet].desktop_flavor` from a `pyproject.toml`, if valid.
 
-    Resolution order:
+    Args:
+        pyproject_path: Path of the `pyproject.toml` to read.
 
-    1. `FLET_DESKTOP_FLAVOR` environment variable.
-    2. `[tool.flet].desktop_flavor` in the project's `pyproject.toml`.
-    3. Default: `"light"` on Linux, `"full"` elsewhere.
+    Returns:
+        `"full"` or `"light"`, or `None` when the file is missing, unreadable
+            or has no valid setting.
     """
 
-    env_flavor = os.environ.get("FLET_DESKTOP_FLAVOR", "").strip().lower()
-    if env_flavor in ("full", "light"):
-        return env_flavor
-
-    # Try reading from pyproject.toml in the current working directory.
     try:
         if sys.version_info >= (3, 11):
             import tomllib
         else:
             import tomli as tomllib  # type: ignore[no-redef]
 
-        pyproject_path = Path(os.getcwd()) / "pyproject.toml"
-        if pyproject_path.is_file():
-            with pyproject_path.open("rb") as f:
-                data = tomllib.load(f)
-            flavor = data.get("tool", {}).get("flet", {}).get("desktop_flavor", "")
-            if isinstance(flavor, str) and flavor.strip().lower() in (
-                "full",
-                "light",
-            ):
-                return flavor.strip().lower()
+        if not pyproject_path.is_file():
+            return None
+        with pyproject_path.open("rb") as f:
+            data = tomllib.load(f)
+        flavor = data.get("tool", {}).get("flet", {}).get("desktop_flavor", "")
+        if isinstance(flavor, str) and flavor.strip().lower() in ("full", "light"):
+            return flavor.strip().lower()
     except Exception:
         pass
+    return None
 
-    return "light" if is_linux() else "full"
+
+def __get_configured_desktop_flavor() -> str | None:
+    """
+    Return the desktop client flavor the user configured, or `None`.
+
+    Resolution order:
+
+    1. `FLET_DESKTOP_FLAVOR` environment variable.
+    2. `[tool.flet].desktop_flavor` in the `pyproject.toml` of the current
+       working directory.
+    3. `[tool.flet].desktop_flavor` in the nearest `pyproject.toml` at or
+       above the directory of the started script, `sys.argv[0]`, so an app
+       started from another directory reads its own project's setting. It is
+       skipped when `sys.argv[0]` is not a file, as with `python -c`.
+
+    Invalid values are ignored.
+    """
+
+    env_flavor = os.environ.get("FLET_DESKTOP_FLAVOR", "").strip().lower()
+    if env_flavor in ("full", "light"):
+        return env_flavor
+
+    candidates = [Path(os.getcwd()) / "pyproject.toml"]
+    script = Path(sys.argv[0] if sys.argv else "")
+    with contextlib.suppress(OSError):
+        if script.is_file():
+            for directory in script.resolve().parents:
+                pyproject_path = directory / "pyproject.toml"
+                if pyproject_path.is_file():
+                    if pyproject_path != candidates[0]:
+                        candidates.append(pyproject_path)
+                    break
+    for pyproject_path in candidates:
+        flavor = __read_pyproject_flavor(pyproject_path)
+        if flavor:
+            return flavor
+    return None
+
+
+def __get_desktop_flavor():
+    """
+    Return the desktop client flavor to use: `"full"` or `"light"`.
+
+    The configured flavor (see `__get_configured_desktop_flavor()`) wins;
+    otherwise `"light"` on Linux and `"full"` elsewhere.
+    """
+
+    return __get_configured_desktop_flavor() or ("light" if is_linux() else "full")
+
+
+def __warn_light_flavor_without_media() -> None:
+    """
+    Warn when the Linux default light client is used with Audio or Video installed.
+
+    The light client does not contain those extensions, so a `Video` renders
+    as "Unknown control: Video" and `Audio` method calls time out, without
+    either pointing at the client flavor. Configuring a flavor explicitly,
+    `"light"` included, silences the warning.
+    """
+
+    if __get_configured_desktop_flavor() is not None:
+        return
+    installed = [
+        name.replace("_", "-")
+        for name in ("flet_audio", "flet_video")
+        if importlib.util.find_spec(name) is not None
+    ]
+    if installed:
+        verb = "is" if len(installed) == 1 else "are"
+        logger.warning(
+            "Using the light Flet desktop client, the Linux default, which does "
+            f"not include Audio and Video, although {' and '.join(installed)} "
+            f"{verb} installed. To use them, set FLET_DESKTOP_FLAVOR=full or "
+            'desktop_flavor = "full" under [tool.flet] in pyproject.toml; set '
+            'it to "light" to hide this warning.'
+        )
 
 
 def __get_system_glibc_version():
@@ -132,6 +203,18 @@ def __get_linux_distro_id(arch: str):
     override = os.environ.get("FLET_LINUX_DISTRO", "").strip()
     if override:
         return override
+    return __get_glibc_distro_id(arch)
+
+
+@functools.cache
+def __get_glibc_distro_id(arch: str):
+    """
+    Return the distro id of the newest build target the system glibc supports.
+
+    The result is cached for the process, since the system glibc can't change
+    while it runs: detecting it may spawn `ldconfig`, and a failed detection is
+    reported once.
+    """
 
     targets = [
         (required_glibc, distro_id)
@@ -193,6 +276,10 @@ def __get_client_storage_dir(fingerprint: str | None = None) -> Path:
     from being shadowed by — or shadowing — the vanilla client or another
     app's patched client of the same Flet version.
 
+    On Linux the name is `flet-desktop-{flavor}-{distro}-{version}`. Each distro
+    build links the `libmpv` soname of that distro, so a client extracted before
+    an OS upgrade or a `FLET_LINUX_DISTRO` change is never reused.
+
     Args:
         fingerprint: Optional content fingerprint of the bundled client archive.
 
@@ -201,7 +288,13 @@ def __get_client_storage_dir(fingerprint: str | None = None) -> Path:
     """
 
     flavor = __get_desktop_flavor()
-    name = f"flet-desktop-{flavor}-{flet_desktop.version.version}"
+    if is_linux():
+        name = (
+            f"flet-desktop-{flavor}-{__get_linux_distro_id(get_arch())}-"
+            f"{flet_desktop.version.version}"
+        )
+    else:
+        name = f"flet-desktop-{flavor}-{flet_desktop.version.version}"
     if fingerprint:
         name += f"-{fingerprint}"
     return Path.home().joinpath(".flet", "client", name)
@@ -263,15 +356,15 @@ def __gc_stale_client_dirs(cache_dir: Path, max_age_days: int = 30) -> None:
     """
     Best-effort eviction of superseded fingerprinted cache siblings.
 
-    Removes sibling `flet-desktop-{flavor}-{version}-{fingerprint}` dirs not
-    used for `max_age_days` (tracked via a `.last-used` marker). Dirs are
-    renamed before deletion, so a dir whose files are in use by a running app
-    fails the rename on Windows and is left untouched. Leftovers of
-    interrupted deletions are swept too.
+    Removes sibling dirs whose name differs from `cache_dir` only in the
+    `-{fingerprint}` suffix and that were not used for `max_age_days` (tracked
+    via a `.last-used` marker). Dirs are renamed before deletion, so a dir whose
+    files are in use by a running app fails the rename on Windows and is left
+    untouched. Leftovers of interrupted deletions are swept too.
 
     Args:
         cache_dir: Cache directory of the client in use; its siblings with the
-            same `flet-desktop-{flavor}-{version}-` prefix are candidates.
+            same name up to the fingerprint are candidates.
         max_age_days: Days a sibling must have been unused before eviction.
     """
 
@@ -554,6 +647,33 @@ async def open_flet_view_async(page_url, assets_dir, hidden, *, no_impeller=Fals
     return p, pid_file
 
 
+def explain_client_exit(returncode: int | None) -> None:
+    """
+    Log a hint when the dynamic loader could not start the desktop client.
+
+    On Linux the dynamic loader exits with status 127 when a shared library the
+    client links against is missing or too old, and prints a one-line error that
+    names only the library. The full client links `libmpv` and GStreamer, which
+    are the usual cause.
+
+    Args:
+        returncode: Exit status of the client process, or `None` if it is
+            still running.
+    """
+
+    if returncode != 127 or not is_linux():
+        return
+    logger.error(
+        "The Flet desktop client could not start because a library it needs "
+        "could not be loaded (see the loader error above). The full client, "
+        "which includes Audio and Video, needs libmpv and GStreamer: on Debian "
+        "12+ and Ubuntu 24.04+ run `sudo apt install libmpv2 "
+        "libgstreamer-plugins-base1.0-0` (libmpv1 on older releases). Apps "
+        "without Audio or Video can use the light client by setting "
+        "FLET_DESKTOP_FLAVOR=light. See https://flet.dev/docs/controls/video#linux"
+    )
+
+
 def __apply_taskbar_props(pid: int) -> None:
     """
     Stamp Windows taskbar identity properties on the client window, so packed
@@ -729,6 +849,7 @@ def __locate_and_unpack_flet_view(page_url, assets_dir, hidden, no_impeller=Fals
                     )
             if not app_path:
                 # 3. Use cached or downloaded client
+                __warn_light_flavor_without_media()
                 cache_dir = ensure_client_cached()
                 app_path = str(cache_dir.joinpath("flet", "flet"))
 

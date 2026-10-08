@@ -318,7 +318,11 @@ async def run_async(
             and url_prefix is None
         ):
             ensure_flet_desktop_package_installed()
-            from flet_desktop import close_flet_view, open_flet_view_async
+            from flet_desktop import (
+                close_flet_view,
+                explain_client_exit,
+                open_flet_view_async,
+            )
 
             on_app_startup(conn.page_url)
 
@@ -329,6 +333,7 @@ async def run_async(
             )
             with contextlib.suppress(Exception):
                 await fvp.wait()
+            explain_client_exit(fvp.returncode)
 
             close_flet_view(pid_file)
 
