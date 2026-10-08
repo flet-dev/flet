@@ -1,4 +1,5 @@
 import argparse
+import contextlib
 import errno
 import logging
 import os
@@ -238,7 +239,9 @@ class Command(BaseCommand):
         The desktop client is opened from this process, whose working directory
         is where `flet run` was started, so `[tool.flet].desktop_flavor` of the
         nearest `pyproject.toml` at or above the app's script is exported as
-        `FLET_DESKTOP_FLAVOR` when that variable is not set.
+        `FLET_DESKTOP_FLAVOR` when that variable is not set. That file may belong
+        to an enclosing project rather than the app, so if it can't be read or
+        parsed it is ignored instead of stopping the app.
 
         Args:
             options: Parsed command options produced by :meth:`add_arguments`.
@@ -297,9 +300,12 @@ class Command(BaseCommand):
             ),
             None,
         )
-        desktop_flavor = flavor_dir and load_pyproject_toml(flavor_dir)(
-            "tool.flet.desktop_flavor"
-        )
+        desktop_flavor = None
+        if flavor_dir:
+            with contextlib.suppress(OSError, ValueError, AttributeError, TypeError):
+                desktop_flavor = load_pyproject_toml(flavor_dir)(
+                    "tool.flet.desktop_flavor"
+                )
         if desktop_flavor and not os.environ.get("FLET_DESKTOP_FLAVOR"):
             os.environ["FLET_DESKTOP_FLAVOR"] = str(desktop_flavor)
 
