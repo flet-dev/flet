@@ -1,3 +1,7 @@
+## 1.1.0
+
+* **Breaking:** `parseTheme()` now builds themes from a seed with neutral surfaces by default (`#ffffff` / `#121212` and a neutral grey ramp for surface containers, `onSurface`, `outline` and inverse surfaces); the seed still drives accent colors. A theme's `surfaces: "tonal"` restores the seed-tinted Material 3 surfaces. Adds the `ThemeSurfaces` enum, `parseThemeSurfaces()` and `neutralizeSurfaces()` ([#6921](https://github.com/flet-dev/flet/issues/6921)) by @FeodorFitsner.
+
 ## 1.0.4
 
 _No changes in the `flet` Dart package; version bumped for release coordination with the `flet build web` fix that sets the PWA manifest's `short_name` to the product name, and the new `--pwa-short-name` option ([#6911](https://github.com/flet-dev/flet/pull/6911))._

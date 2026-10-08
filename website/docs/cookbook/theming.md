@@ -18,6 +18,31 @@ page.theme = ft.Theme(color_scheme_seed=ft.Colors.GREEN)
 page.dark_theme = ft.Theme(color_scheme_seed=ft.Colors.BLUE)
 ```
 
+### Surfaces
+
+The seed color drives accent colors (primary, secondary, tertiary and their containers).
+Surfaces - page background, cards, dialogs, menus, text fields - use a neutral grey ramp:
+white in light mode and near-black (`#121212`) in dark mode.
+
+To tint surfaces with the seed hue, as in the Material 3 default color scheme, set
+[`Theme.surfaces`](../types/theme/index.md#flet.Theme.surfaces) to
+[`ThemeSurfaces.TONAL`](../types/themesurfaces.md):
+
+```python
+page.theme = ft.Theme(
+    color_scheme_seed=ft.Colors.GREEN,
+    surfaces=ft.ThemeSurfaces.TONAL,
+)
+```
+
+Colors set explicitly in [`Theme.color_scheme`](../types/theme/index.md#flet.Theme.color_scheme)
+always win over both neutral and tonal surfaces.
+
+:::note
+Before Flet 1.1.0, surfaces were always tinted with the seed hue. See
+[Default theme surfaces are now neutral](../updates/breaking-changes/v1-1-0/neutral-default-surfaces.md).
+:::
+
 ### Nested themes
 
 You can have a part of your app to use a different theme or override some theme styles for specific controls.

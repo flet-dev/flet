@@ -96,6 +96,9 @@ class FletTestApp:
         capture_golden_screenshots:
             If `True`, screenshots taken during tests are stored as golden
             reference images. Env override: `FLET_TEST_GOLDEN=1`.
+            Set `FLET_TEST_GOLDEN=failed` to compare as usual and overwrite
+            only goldens that are missing, below the similarity threshold or
+            changed in color.
 
         screenshots_pixel_ratio:
             Device pixel ratio to use when capturing screenshots.
@@ -156,6 +159,9 @@ class FletTestApp:
         self.test_device = os.getenv("FLET_TEST_DEVICE", test_device)
         self.__golden = (
             get_bool_env_var("FLET_TEST_GOLDEN") or capture_golden_screenshots
+        )
+        self.__golden_failed = (
+            os.getenv("FLET_TEST_GOLDEN", "").strip().lower() == "failed"
         )
         self.screenshots_pixel_ratio = float(
             os.getenv("FLET_TEST_SCREENSHOTS_PIXEL_RATIO", screenshots_pixel_ratio)
@@ -616,6 +622,11 @@ class FletTestApp:
                 f.write(screenshot)
         else:
             if not golden_image_path.exists():
+                if self.__golden_failed:
+                    print(f"Creating missing golden for {name}")
+                    golden_image_path.parent.mkdir(parents=True, exist_ok=True)
+                    golden_image_path.write_bytes(screenshot)
+                    return
                 raise RuntimeError(
                     f"Golden image for {name} not found: {golden_image_path}"
                 )
@@ -625,6 +636,13 @@ class FletTestApp:
             print(f"Similarity for {name}: {similarity}%")
             if similarity_threshold == 0:
                 similarity_threshold = self.screenshots_similarity_threshold
+            if self.__golden_failed and (
+                similarity <= similarity_threshold
+                or self._pixels_differ(golden_img, img)
+            ):
+                print(f"Updating failed golden for {name}")
+                golden_image_path.write_bytes(screenshot)
+                return
             if similarity <= similarity_threshold:
                 actual_image_path = (
                     golden_image_path.parent
@@ -660,6 +678,39 @@ class FletTestApp:
             Loaded Pillow image object.
         """
         return Image.open(BytesIO(data))
+
+    def _pixels_differ(
+        self,
+        img1: Image.Image,
+        img2: Image.Image,
+        channel_tolerance: int = 2,
+        max_changed_ratio: float = 0.001,
+    ) -> bool:
+        """
+        Checks whether two images differ in color, not just in structure.
+
+        Structural similarity barely reacts to a uniform color shift (e.g. a
+        tinted background becoming white), so `FLET_TEST_GOLDEN=failed` uses
+        this check on top of it to find goldens that need updating.
+
+        Args:
+            img1: Reference image.
+            img2: Image to compare.
+            channel_tolerance: Per-channel difference (0-255) a pixel may have
+                and still count as unchanged, to ignore anti-aliasing noise.
+            max_changed_ratio: Fraction of pixels allowed to change before the
+                images are considered different.
+
+        Returns:
+            `True` if sizes differ or more than `max_changed_ratio` of pixels
+            differ by more than `channel_tolerance` in any channel.
+        """
+        if img1.size != img2.size:
+            return True
+        arr1 = np.asarray(img1.convert("RGB"), dtype=np.int16)
+        arr2 = np.asarray(img2.convert("RGB"), dtype=np.int16)
+        changed = (np.abs(arr1 - arr2) > channel_tolerance).any(axis=-1)
+        return changed.mean() > max_changed_ratio
 
     def _compare_images_rgb(self, img1: Image.Image, img2: Image.Image) -> float:
         """
@@ -861,9 +912,11 @@ class FletTestApp:
 
         Builds the GIF in memory from the provided frames. If the
         `FLET_TEST_GOLDEN=1` environment variable is set, writes the GIF as
-        the golden reference. Otherwise loads the existing golden GIF from
-        disk and compares frame-by-frame via structural similarity, saving
-        an `<name>_actual.gif` next to the golden on mismatch.
+        the golden reference. With `FLET_TEST_GOLDEN=failed`, the golden is
+        overwritten only when it is missing or doesn't match. Otherwise loads
+        the existing golden GIF from disk and compares frame-by-frame via
+        structural similarity, saving an `<name>_actual.gif` next to the
+        golden on mismatch.
 
         Args:
             name: GIF name - will be used as a base for the GIF file name.
@@ -893,6 +946,11 @@ class FletTestApp:
             return
 
         if not golden_gif_path.exists():
+            if self.__golden_failed:
+                print(f"Creating missing golden GIF for {name}")
+                golden_gif_path.parent.mkdir(parents=True, exist_ok=True)
+                golden_gif_path.write_bytes(gif_bytes)
+                return
             raise RuntimeError(f"Golden GIF for {name} not found: {golden_gif_path}")
 
         similarity, frame_count_mismatch = self._compare_gifs(
@@ -901,6 +959,15 @@ class FletTestApp:
         print(f"Similarity for {name}: {similarity}%")
         if similarity_threshold == 0:
             similarity_threshold = self.screenshots_similarity_threshold
+
+        if self.__golden_failed and (
+            frame_count_mismatch
+            or similarity <= similarity_threshold
+            or self._gif_pixels_differ(golden_gif_path, gif_bytes)
+        ):
+            print(f"Updating failed golden GIF for {name}")
+            golden_gif_path.write_bytes(gif_bytes)
+            return
 
         if frame_count_mismatch or similarity <= similarity_threshold:
             actual_gif_path = (
@@ -915,6 +982,19 @@ class FletTestApp:
             f"{name} GIFs are not identical "
             f"(similarity: {similarity}% <= {similarity_threshold}%)"
         )
+
+    def _gif_pixels_differ(self, golden_path: Path, current_bytes: bytes) -> bool:
+        """Returns `True` if any frame of two same-length GIFs differs in color."""
+        with (
+            Image.open(golden_path) as golden,
+            Image.open(BytesIO(current_bytes)) as current,
+        ):
+            for i in range(golden.n_frames):
+                golden.seek(i)
+                current.seek(i)
+                if self._pixels_differ(golden.convert("RGB"), current.convert("RGB")):
+                    return True
+        return False
 
     def _compare_gifs(
         self, golden_path: Path, current_bytes: bytes

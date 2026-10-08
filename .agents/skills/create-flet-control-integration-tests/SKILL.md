@@ -56,7 +56,7 @@ Use fixtures from `integration_tests/conftest.py`:
 5. Use screenshot assertion for UI behavior, functional assertion for non-visual behavior.
 6. Name test so `request.node.name` can be used as screenshot key.
 7. Run target test file.
-8. If expected visuals changed, regenerate goldens with `FLET_TEST_GOLDEN=1` and re-run without golden mode.
+8. If expected visuals changed, regenerate goldens with `FLET_TEST_GOLDEN=1` (or `FLET_TEST_GOLDEN=failed` to overwrite only mismatching ones) and re-run without golden mode.
 
 ## Assertion patterns
 
