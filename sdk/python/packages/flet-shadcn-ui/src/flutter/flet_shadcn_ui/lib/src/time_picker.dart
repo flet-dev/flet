@@ -5,6 +5,7 @@ import 'package:shadcn_ui/shadcn_ui.dart';
 
 import 'utils/field.dart';
 import 'utils/intrinsics.dart';
+import 'utils/theme.dart';
 
 class ShadTimePickerControl extends StatefulWidget {
   final Control control;
@@ -94,27 +95,29 @@ class _ShadTimePickerControlState extends State<ShadTimePickerControl> {
 
     final hourLabel = control.buildTextOrWidget("hour_label");
     final minuteLabel = control.buildTextOrWidget("minute_label");
-    Widget picker(ShadDecoration? decoration) => period
-        ? ShadTimePicker.period(
-            key: ValueKey(_generation),
-            controller: _controller,
-            enabled: !control.disabled,
-            showSeconds: false,
-            hourLabel: hourLabel,
-            minuteLabel: minuteLabel,
-            fieldDecoration: decoration,
-            onChanged: _onChanged,
-          )
-        : ShadTimePicker(
-            key: ValueKey(_generation),
-            controller: _controller,
-            enabled: !control.disabled,
-            showSeconds: false,
-            hourLabel: hourLabel,
-            minuteLabel: minuteLabel,
-            fieldDecoration: decoration,
-            onChanged: _onChanged,
-          );
+    Widget picker(ShadDecoration? decoration) => withoutShadContextMenu(
+      period
+          ? ShadTimePicker.period(
+              key: ValueKey(_generation),
+              controller: _controller,
+              enabled: !control.disabled,
+              showSeconds: false,
+              hourLabel: hourLabel,
+              minuteLabel: minuteLabel,
+              fieldDecoration: decoration,
+              onChanged: _onChanged,
+            )
+          : ShadTimePicker(
+              key: ValueKey(_generation),
+              controller: _controller,
+              enabled: !control.disabled,
+              showSeconds: false,
+              hourLabel: hourLabel,
+              minuteLabel: minuteLabel,
+              fieldDecoration: decoration,
+              onChanged: _onChanged,
+            ),
+    );
 
     return LayoutControl(
       control: control,
