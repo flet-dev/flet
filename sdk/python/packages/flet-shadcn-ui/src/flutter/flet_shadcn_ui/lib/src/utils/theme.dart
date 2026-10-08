@@ -36,6 +36,37 @@ Widget withShadTheme(BuildContext context, Widget child) {
   );
 }
 
+/// Builds shadcn_ui's text field context menu inside the field's [ShadTheme].
+///
+/// Flutter shows the menu in the root overlay, which doesn't inherit themes
+/// from the field's context, and Flet has no [ShadTheme] above the root
+/// overlay, so shadcn_ui's default menu would throw looking for one.
+Widget shadContextMenuBuilder(BuildContext context, EditableTextState state) {
+  return ShadTheme(
+    data: ShadTheme.of(state.context, listen: false),
+    child: ShadInputState.defaultContextMenuBuilder(context, state),
+  );
+}
+
+/// Turns off the native context menu of the text fields inside [child].
+///
+/// For Shadcn widgets that don't take a `contextMenuBuilder` (InputOTP,
+/// TimePicker): their default menu would throw for the reason described in
+/// [shadContextMenuBuilder].
+Widget withoutShadContextMenu(Widget child) {
+  return Builder(
+    builder: (context) {
+      final theme = ShadTheme.of(context);
+      return ShadTheme(
+        data: theme.copyWith(
+          inputTheme: theme.inputTheme.copyWith(useBrowserContextMenu: true),
+        ),
+        child: child,
+      );
+    },
+  );
+}
+
 /// Gives [child] the theme's muted foreground color.
 ///
 /// shadcn_ui's `muted` text style has no color; most widgets add one, but

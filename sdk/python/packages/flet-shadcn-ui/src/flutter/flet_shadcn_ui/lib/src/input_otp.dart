@@ -4,6 +4,7 @@ import 'package:shadcn_ui/shadcn_ui.dart';
 
 import 'utils/field.dart';
 import 'utils/icons.dart';
+import 'utils/theme.dart';
 
 class ShadInputOTPControl extends StatefulWidget {
   final Control control;
@@ -80,18 +81,20 @@ class _ShadInputOTPControlState extends State<ShadInputOTPControl> {
       return children;
     }
 
-    Widget input(ShadDecoration? decoration) => Builder(
-      builder: (context) => ShadInputOTP(
-        key: ValueKey(_generation),
-        maxLength: length,
-        initialValue: value,
-        enabled: !control.disabled,
-        keyboardType: control.getTextInputType(
-          "keyboard_type",
-          TextInputType.number,
+    Widget input(ShadDecoration? decoration) => withoutShadContextMenu(
+      Builder(
+        builder: (context) => ShadInputOTP(
+          key: ValueKey(_generation),
+          maxLength: length,
+          initialValue: value,
+          enabled: !control.disabled,
+          keyboardType: control.getTextInputType(
+            "keyboard_type",
+            TextInputType.number,
+          ),
+          onChanged: _onChanged,
+          children: slots(context, decoration),
         ),
-        onChanged: _onChanged,
-        children: slots(context, decoration),
       ),
     );
 
