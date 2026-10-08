@@ -34,4 +34,4 @@ repos:
         # misspellings for typo-tolerant search; and the generated icon
         # name lists carry Flutter's own spelling, including a handful of
         # upstream misspellings we cannot correct without breaking the API.
-        exclude: (/templates/|\.pbxproj$|flet_mcp/data/icons\.json$|icon-codepoints\.json$|controls/material/icons\.json$|controls/cupertino/cupertino_icons\.json$|lib/src/utils/(material|cupertino)_icons\.dart$)
+        exclude: (/templates/|\.pbxproj$|flet_mcp/data/icons\.json$|icon-codepoints\.json$|controls/material/icons\.json$|controls/cupertino/cupertino_icons\.json$|flet_shadcn_ui/lucide_icons\.(json|pyi)$|flet_shadcn_ui/lib/src/utils/lucide_icons\.dart$|lib/src/utils/(material|cupertino)_icons\.dart$)

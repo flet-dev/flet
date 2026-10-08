@@ -20,6 +20,7 @@ Flet controls based on 3rd-party Flutter packages are published on PyPI as separ
 * [flet-permission-handler](https://pypi.org/project/flet-permission-handler/)
 * [flet-rive](https://pypi.org/project/flet-rive/)
 * [flet-secure-storage](https://pypi.org/project/flet-secure-storage/)
+* [flet-shadcn-ui](https://pypi.org/project/flet-shadcn-ui/)
 * [flet-spinkit](https://pypi.org/project/flet-spinkit/)
 * [flet-video](https://pypi.org/project/flet-video/)
 * [flet-webview](https://pypi.org/project/flet-webview/)

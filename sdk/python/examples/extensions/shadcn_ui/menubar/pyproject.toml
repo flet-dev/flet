@@ -1,0 +1,26 @@
+[project]
+name = "shadcn-ui-menubar"
+version = "1.0.0"
+description = "File, Edit and View menus with shortcuts, a submenu and a click status line."
+requires-python = ">=3.10"
+keywords = ["shadcn", "menubar", "menu", "menu bar", "shortcut"]
+authors = [{ name = "Flet team", email = "hello@flet.dev" }]
+dependencies = ["flet", "flet-shadcn-ui"]
+
+[dependency-groups]
+dev = ["flet-cli", "flet-desktop", "flet-web"]
+
+[tool.flet.gallery]
+categories = ["Extensions/Shadcn"]
+
+[tool.flet.metadata]
+title = "Shadcn Menubar"
+controls = ["SafeArea", "Column", "Text", "Menubar", "MenubarItem", "MenuItem", "Separator"]
+layout_pattern = "toolbar"
+complexity = "basic"
+features = ["menus", "submenu", "click handling"]
+
+[tool.flet]
+org = "dev.flet"
+company = "Flet"
+copyright = "Copyright (C) 2023-2026 by Flet"

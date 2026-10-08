@@ -1,0 +1,26 @@
+[project]
+name = "shadcn-ui-date-picker"
+version = "1.0.0"
+description = "Date picker limited to one month, with a live due-date label."
+requires-python = ">=3.10"
+keywords = ["shadcn", "date picker", "date", "calendar", "popover"]
+authors = [{ name = "Flet team", email = "hello@flet.dev" }]
+dependencies = ["flet", "flet-shadcn-ui"]
+
+[dependency-groups]
+dev = ["flet-cli", "flet-desktop", "flet-web"]
+
+[tool.flet.gallery]
+categories = ["Extensions/Shadcn"]
+
+[tool.flet.metadata]
+title = "Shadcn DatePicker"
+controls = ["SafeArea", "Column", "Text", "DatePicker"]
+layout_pattern = "form"
+complexity = "basic"
+features = ["change handling", "min and max date"]
+
+[tool.flet]
+org = "dev.flet"
+company = "Flet"
+copyright = "Copyright (C) 2023-2026 by Flet"

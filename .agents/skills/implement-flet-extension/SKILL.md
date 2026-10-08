@@ -53,6 +53,7 @@ Implement a Flet extension around an external Flutter package using existing `fl
 - Put control-specific helpers in `utils/<control>.dart`; shared helpers in `utils/<topic>.dart`.
 - Prefer `parse`-prefixed helper names when converting input to Flutter structures.
 - Avoid single-use local variables.
+- When wrapping a widget in conditional decoration (a label or error text that appears and disappears), keep the widget tree the same shape (always wrap, key the children). Otherwise toggling the decoration rebuilds the inner widget and drops its state, for example focus while typing. Don't decorate by putting the widget in a `Column`: it loosens a fixed `width`, which shrinks button-like widgets.
 
 ### Default Value Matching (Critical)
 
@@ -84,9 +85,14 @@ Without matching defaults, Dart receives `null` and either crashes or silently u
 
 - Add control/service docs under `website/docs/controls/<name>` for controls and `website/docs/services/<name>` for services.
 - Always create one doc page per control, even for extensions with many similar controls. Use `index.md` for the overview (install instructions, examples, list of links) and individual `<controlname>.md` files for each control — consistent with `flet-color-pickers` and other extensions.
-- Use `<ClassSummary name="pkg.ClassName" />` and `<ClassMembers name="pkg.ClassName" />` JSX from `@site/src/components/crocodocs` to render API docs. Do NOT add `image=`, `imageCaption=`, or `imageWidth=` props to `<ClassSummary>` when no screenshots exist yet.
+- Use `<ClassSummary name="pkg.ClassName" />` and `<ClassMembers name="pkg.ClassName" />` JSX from `@site/src/components/crocodocs` to render API docs.
+- Give sub-controls their own page too. A **sub-control** is a control that can only be used inside a specific parent control (e.g. `TableColumn`/`TableRow`/`TableCell` in `Table`, `MenuItem` in `ContextMenu`/`Menubar`, `Radio` in `RadioGroup`, `Tab` in `Tabs`, `AccordionItem` in `Accordion`), not any control placed in another's `controls`/`content`. Never render a second class's `<ClassSummary>`/`<ClassMembers>` on the parent's page: each page must document exactly one class, otherwise it gets two "Properties"/"Events" headings with the same anchor and the table of contents breaks.
+  - Sub-control page: front matter `class_name` and `title`, then `<ClassSummary name={frontMatter.class_name} />` and `<ClassMembers name={frontMatter.class_name} />` (no example/images needed); file name is the lowercased class name (`tablecolumn.md`).
+  - Nest sub-control pages under their parent in `website/sidebars.yml` (`Table: {_index: .../table.md, TableColumn: .../tablecolumn.md, ...}`), like core `DataTable → DataCell`. A sub-control shared by several parents (e.g. `MenuItem` for `ContextMenu` and `Menubar`) is listed once, under one parent.
+  - Make sure each parent page links to its sub-controls: reference them with `:class:` roles in the parent's docstrings (class description or the property that holds them, e.g. `items`), which render as links to the sub-control page.
+- Include screenshots in the docs for every visual control (see "Example Tests and Docs Images" below). Only omit `image=`/`imageCaption=`/`imageWidth=` on `<ClassSummary>` for non-visual services or controls that cannot be screenshotted (continuously animating ones).
 - In the `## Examples` section, do NOT add `###` subtitles above `<CodeExample>` blocks — titles are injected automatically from the example file itself.
-- Add all custom enums/types docs and update `website/sidebars.yml` navigation.
+- Add all custom enums/types docs and update `website/sidebars.yml` navigation. List new extension controls under `Reference → Controls → Extensions` (alphabetically). Only an extension that brings its own design system gets its own folder next to Core/Material/Cupertino/Extensions, like `Shadcn`. See the "Sidebar Navigation" section of `.agents/skills/docs-conventions/SKILL.md`.
 - Use markdown filenames without underscores (`codeeditor.md`, not `code_editor.md`).
 - Add examples under `sdk/python/examples/extensions/<name>/` for extension controls.
 - Use `import flet_<ext> as <short_alias>` in examples (e.g., `import flet_spinkit as spins`). Keep alias short but readable.
@@ -95,6 +101,32 @@ Without matching defaults, Dart receives `null` and either crashes or silently u
 - Add integration tests under `packages/flet/integration_tests/extensions/<name>/` — **not** inside the extension package's own directory (no `tests/` folder in the package itself, matching the pattern of `flet-code-editor`, `flet-color-pickers`, etc.).
 - For controls with continuously-running animations, do NOT use `assert_control_screenshot` or `pump_and_settle` — they will timeout waiting for animations to settle. Instead use `await flet_app.tester.pump(duration=ft.Duration(milliseconds=500))` which advances the clock by a fixed amount. This still runs real Flutter rendering and catches crashes, without screenshot comparison.
 - Ensure generated screenshots are suitable for docs usage when visual examples are added.
+
+## Example Tests and Docs Images
+
+Every example gets an integration test, and the goldens it produces are the docs images. Follow `sdk/python/packages/flet/integration_tests/examples/controls/material/test_checkbox.py`.
+
+**Every docs image must be light and opaque.** Screenshots are transparent by default: on the website's dark mode dark text becomes unreadable, and `create_gif` flattens transparency to **black**, so flow GIFs come out dark. For every screenshot used in docs:
+
+- set `page.theme_mode = ft.ThemeMode.LIGHT` (and `page.update()` after launching an example);
+- pass `bgcolor=ft.Colors.SURFACE` to `assert_control_screenshot`, `wrap_page_controls_in_screenshot` and `take_page_controls_screenshot`;
+- after generating, confirm the images (including every frame of each GIF) have a light background, not black or transparent.
+
+1. Create **one test file per control** in `sdk/python/packages/flet/integration_tests/examples/extensions/<name>/test_<control>.py`. The file stem picks the golden folder (`golden/macos/<control>/`), so each control's images stay together.
+2. In each file:
+   - `test_image_for_docs` (uses `flet_app_function`): set `page.theme_mode = ft.ThemeMode.LIGHT` and call `assert_control_screenshot(request.node.name, bgcolor=ft.Colors.SURFACE, control=...)` with a compact showcase of the control (a few states/variants). Wrap rows in `ft.Column(intrinsic_width=True, ...)` so the image is not stretched to the page width.
+   - One test per example, parametrized with `{"flet_app_main": example.main}` and `indirect=True`:
+     - set `page.theme_mode = ft.ThemeMode.LIGHT` and `page.update()` (examples do not set a theme);
+     - **interact like a user** (`tap`, `enter_text`, `mouse_hover`) and assert the example's visible result (`find_by_text(...).count == 1`);
+     - screenshot only the page controls: `take_page_controls_screenshot(bgcolor=ft.Colors.SURFACE)` for a single image, or `scr = await wrap_page_controls_in_screenshot(bgcolor=ft.Colors.SURFACE)` + `scr.capture(pixel_ratio=...)` for several states;
+     - for multi-step flows, save each state (`<example>_initial`, `<example>`, ...) and combine them with `create_gif([...], "<example>_flow", duration=1000)`.
+   - `enter_text` needs a finder on the input itself, so give example inputs (and other controls the test must target) a `key=` and use `find_by_key`.
+3. Generate goldens from `sdk/python`: `FLET_TEST_GOLDEN=1 uv run pytest -s packages/flet/integration_tests/examples/extensions/<name>`. **Open and review every PNG and GIF** (dark or transparent background, stretched rows, cramped spacing, oversized icons, clipping), fix the test or example, regenerate, then re-run without `FLET_TEST_GOLDEN` to confirm the comparisons pass. Commit the `golden/macos/<control>/*` files.
+4. Reference the images in each control page:
+   - front matter: `example_images: "test-images/examples/extensions/<name>/golden/macos/<control>"` (crocodocs' `test-images` mapping already serves `integration_tests`);
+   - `<ClassSummary name={frontMatter.class_name} image={frontMatter.example_images + '/image_for_docs.png'} imageCaption="<ClassName>" imageWidth="30%"/>`, with the width tuned to the image;
+   - under each `<CodeExample>`: `<Image src={frontMatter.example_images + '/<example>.png'} alt="<example>" width="45%" caption="<what the user did>" />`, pointing to the `_flow.gif` for flows; import `Image` from `@site/src/components/crocodocs`.
+5. Run `uv --directory ./tools/crocodocs run crocodocs generate` from the repo root and check that the images appear under `website/static/docs/test-images/...` (generated, not committed).
 
 ## Upgrade and Compatibility Guardrails
 
@@ -107,3 +139,9 @@ Without matching defaults, Dart receives `null` and either crashes or silently u
 - Run relevant Python and integration tests for touched areas.
 - Verify Python import paths, client runtime registration, and docs navigation.
 - Verify dependency resolution and lockfile updates are intentional.
+
+### Temporary CI narrowing on the feature branch
+
+- While developing an extension, the maintainer may narrow `.github/workflows/macos-integration-tests.yml` on purpose so CI runs only the new extension's suites: every entry of the `suite:` matrix is commented out and only the extension's suites are added (for example `- examples/extensions/<name>` and `- extensions/<name>`).
+- This is intentional. Do NOT revert, "fix", or restore that matrix while working on the branch, and keep it when committing unless told otherwise.
+- Before the branch is merged (when the user says the work is done), restore the original matrix: uncomment every suite and remove the extension-specific entries. The regular `examples/extensions` and `extensions` suites already include the new tests.
