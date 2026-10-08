@@ -136,8 +136,8 @@
 }
 
 .cta:hover { background: var(--flet-soft); color: var(--flet-ink); }
-.primaryCta { background: var(--flet-button); border-color: var(--flet-button); color: white; }
-.primaryCta:hover { background: var(--flet-button-hover); border-color: var(--flet-button-hover); color: white; }
+.cta.primaryCta { background: var(--flet-button); border-color: var(--flet-button); color: white; }
+.cta.primaryCta:hover { background: var(--flet-button-hover); border-color: var(--flet-button-hover); color: white; }
 .cta:focus-visible, .question summary:focus-visible, .tableWrapper:focus-visible { outline: 2px solid var(--flet-accent); outline-offset: 4px; }
 .teaser { margin: auto 0 0; padding: 14px 0; font-size: 14px; color: var(--flet-muted); }
 
