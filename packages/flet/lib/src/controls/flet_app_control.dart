@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 
 import '../embedded_dart_bridge.dart';
 import '../flet_app.dart';

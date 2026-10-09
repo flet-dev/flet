@@ -1,7 +1,7 @@
 import 'dart:async';
 
 import 'package:flutter/gestures.dart';
-import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 
 import '../extensions/control.dart';
 import '../models/control.dart';
@@ -295,7 +295,7 @@ class _GestureDetectorControlState extends State<GestureDetectorControl> {
             trackpadScrollCausesScale:
                 widget.control.getBool("trackpad_scroll_causes_scale", false)!,
             supportedDevices: () {
-              var supportedDevices = 
+              var supportedDevices =
                   widget.control.get<List<dynamic>>("allowed_devices");
               return supportedDevices
                   ?.map((d) => parsePointerDeviceKind(d?.toString()))

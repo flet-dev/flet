@@ -3,12 +3,11 @@ import 'dart:ui' as ui;
 import 'dart:ui';
 
 import 'package:collection/collection.dart';
-import 'package:flutter/cupertino.dart';
+import 'package:cupertino_ui/cupertino_ui.dart';
 import 'package:flutter/foundation.dart';
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:provider/provider.dart';
 
 import '../extensions/control.dart';
@@ -635,11 +634,7 @@ class _PageControlState extends State<PageControl> with WidgetsBindingObserver {
     var localeConfiguration =
         control.getLocaleConfiguration("locale_configuration");
 
-    var localizationsDelegates = const [
-      GlobalMaterialLocalizations.delegate,
-      GlobalWidgetsLocalizations.delegate,
-      GlobalCupertinoLocalizations.delegate,
-    ];
+    var localizationsDelegates = GlobalMaterialLocalizations.delegates;
 
     var brightness = context.select<FletBackend, Brightness>(
         (backend) => backend.platformBrightness);

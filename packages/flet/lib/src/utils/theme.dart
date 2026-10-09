@@ -1,6 +1,6 @@
 import 'package:collection/collection.dart';
-import 'package:flutter/cupertino.dart';
-import 'package:flutter/material.dart';
+import 'package:cupertino_ui/cupertino_ui.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:flutter/services.dart';
 
 import '../flet_backend.dart';
@@ -159,6 +159,59 @@ ThemeMode? parseThemeMode(String? value, [ThemeMode? defaultValue]) {
   return parseEnum(ThemeMode.values, value, defaultValue);
 }
 
+/// How surface colors of a theme built from a seed color are derived.
+enum ThemeSurfaces {
+  /// Surfaces use a neutral, hue-free grey ramp: white-based in light mode
+  /// and near-black in dark mode. Accent colors still come from the seed.
+  neutral,
+
+  /// Surfaces are tinted with the seed hue (the Material 3 default).
+  tonal
+}
+
+ThemeSurfaces? parseThemeSurfaces(String? value,
+    [ThemeSurfaces? defaultValue]) {
+  return parseEnum(ThemeSurfaces.values, value, defaultValue);
+}
+
+/// Replaces seed-tinted surface roles of [scheme] with a neutral grey ramp.
+ColorScheme neutralizeSurfaces(ColorScheme scheme) {
+  if (scheme.brightness == Brightness.dark) {
+    return scheme.copyWith(
+      surface: const Color(0xFF121212),
+      surfaceBright: const Color(0xFF3B3B3B),
+      surfaceDim: const Color(0xFF121212),
+      surfaceContainerLowest: const Color(0xFF0D0D0D),
+      surfaceContainerLow: const Color(0xFF1B1B1B),
+      surfaceContainer: const Color(0xFF202020),
+      surfaceContainerHigh: const Color(0xFF292929),
+      surfaceContainerHighest: const Color(0xFF313131),
+      onSurface: const Color(0xFFE7E7E7),
+      onSurfaceVariant: const Color(0xFFABABAB),
+      outline: const Color(0xFF8D8D8D),
+      outlineVariant: const Color(0xFF3B3B3B),
+      inverseSurface: const Color(0xFFE7E7E7),
+      onInverseSurface: const Color(0xFF1B1B1B),
+    );
+  }
+  return scheme.copyWith(
+    surface: const Color(0xFFFFFFFF),
+    surfaceBright: const Color(0xFFFFFFFF),
+    surfaceDim: const Color(0xFFDDDDDD),
+    surfaceContainerLowest: const Color(0xFFFFFFFF),
+    surfaceContainerLow: const Color(0xFFF7F7F7),
+    surfaceContainer: const Color(0xFFF2F2F2),
+    surfaceContainerHigh: const Color(0xFFEDEDED),
+    surfaceContainerHighest: const Color(0xFFE7E7E7),
+    onSurface: const Color(0xFF1B1B1B),
+    onSurfaceVariant: const Color(0xFF5E5E5E),
+    outline: const Color(0xFF7A7A7A),
+    outlineVariant: const Color(0xFFD5D5D5),
+    inverseSurface: const Color(0xFF303030),
+    onInverseSurface: const Color(0xFFF2F2F2),
+  );
+}
+
 ThemeData parseTheme(
     dynamic value, BuildContext context, Brightness? brightness,
     {ThemeData? parentTheme}) {
@@ -168,12 +221,20 @@ ThemeData parseTheme(
       parseColor(value?["color_scheme_seed"], theme) ?? Colors.blue;
 
   // create new theme
-  theme ??= ThemeData(
-    colorSchemeSeed: colorSchemeSeed,
-    fontFamily: value?["font_family"],
-    brightness: brightness,
-    useMaterial3: value?["use_material3"],
-  );
+  if (theme == null) {
+    var tonal = parseThemeSurfaces(value?["surfaces"]) == ThemeSurfaces.tonal;
+    theme = ThemeData(
+      colorSchemeSeed: tonal ? colorSchemeSeed : null,
+      colorScheme: tonal
+          ? null
+          : neutralizeSurfaces(ColorScheme.fromSeed(
+              seedColor: colorSchemeSeed,
+              brightness: brightness ?? Brightness.light)),
+      fontFamily: value?["font_family"],
+      brightness: brightness,
+      useMaterial3: value?["use_material3"],
+    );
+  }
 
   ColorScheme? colorScheme = parseColorScheme(value?["color_scheme"], theme);
   DividerThemeData? dividerTheme =

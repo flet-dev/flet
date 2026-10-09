@@ -758,6 +758,7 @@ def test_fields_start_with_on():
     page.controls = [Div(cls="div_1", some_value="Text")]
     page.on_login = lambda e: print("on login")
     page.theme = ft.Theme(
+        surfaces=ft.ThemeSurfaces.TONAL,
         color_scheme=ft.ColorScheme(on_surface_variant=ft.Colors.RED),
     )
 
@@ -771,6 +772,7 @@ def test_fields_start_with_on():
     # print("\n\n", p)
     assert p["on_login"]
     assert p["theme"]["color_scheme"]["on_surface_variant"] == "red"
+    assert p["theme"]["surfaces"] == "tonal"
 
     # update
     page.on_login = None

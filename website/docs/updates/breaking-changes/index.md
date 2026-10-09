@@ -28,6 +28,14 @@ whole 0.70 - 0.86 pre-release series, so start with
 The following guides are available. They're sorted by release, with the most recent release first.
 Each guide explains the change, the reason for it, and how to migrate your code.
 
+### Released in Flet 1.1.0
+
+#### Breaking changes
+
+- [Extensions: Material and Cupertino now come from `material_ui` and `cupertino_ui`](/docs/updates/breaking-changes/v1-1-0/material-ui-cupertino-ui)
+- [macOS and iOS: built apps now require macOS 12 and iOS 15](/docs/updates/breaking-changes/v1-1-0/minimum-macos-12-ios-15)
+- [Default theme surfaces are now neutral (white / near-black)](/docs/updates/breaking-changes/v1-1-0/neutral-default-surfaces)
+
 ### Released in Flet 1.0.0
 
 #### Breaking changes

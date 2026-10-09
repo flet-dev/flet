@@ -269,6 +269,16 @@ Maximum allowed size (in bytes) of uploaded files.
 
 Default is unlimited.
 
+### `FLET_NO_IMPELLER`
+
+Set to `true` to render a desktop app (macOS, Windows or Linux) with Skia
+instead of Impeller, Flutter's default renderer. It is read when the app
+starts, by the desktop app that [`flet run`](../cli/flet-run.md) opens and by
+apps built with [`flet build`](../publish/index.md#renderer).
+[`flet run --no-impeller`](../cli/flet-run.md#--no-impeller) sets it.
+
+Defaults to `False`.
+
 ### `FLET_OAUTH_CALLBACK_HANDLER_ENDPOINT`
 
 Custom path for OAuth handler.

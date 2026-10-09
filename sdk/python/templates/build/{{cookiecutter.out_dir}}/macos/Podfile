@@ -1,4 +1,4 @@
-platform :osx, '11.0'
+platform :osx, '12.0'
 
 # CocoaPods analytics sends network stats synchronously affecting flutter build latency.
 ENV['COCOAPODS_DISABLE_STATS'] = 'true'
@@ -37,9 +37,10 @@ target 'Runner' do
 end
 
 post_install do |installer|
-  # Ensure rive_native's setup script runs from the project root so pubspec.yaml is found in CI.
   installer.pods_project.targets.each do |target|
     flutter_additional_macos_build_settings(target)
+
+    # Ensure rive_native's setup script runs from the project root so pubspec.yaml is found in CI.
     next unless target.name == 'rive_native'
 
     target.shell_script_build_phases.each do |phase|

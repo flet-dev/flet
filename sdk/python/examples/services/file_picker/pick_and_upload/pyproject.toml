@@ -15,6 +15,7 @@ categories = ["Utility/FilePicker"]
 
 [tool.flet.metadata]
 title = "Pick and upload files"
+docs_intro = "Pick multiple files with [`pick_files()`][flet.FilePicker.pick_files] and upload them with [`upload()`][flet.FilePicker.upload]."
 controls = ["SafeArea", "Column", "FilePicker", "FilePickerFile", "Page", "Text", "ProgressRing", "FilePickerUploadEvent"]
 layout_pattern = "inline-actions"
 complexity = "basic"

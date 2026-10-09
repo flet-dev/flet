@@ -1,6 +1,8 @@
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:flutter_markdown_plus/flutter_markdown_plus.dart';
-import 'package:flutter_markdown_plus_latex/flutter_markdown_plus_latex.dart';
+import 'package:flutter_markdown_plus_latex/flutter_markdown_plus_latex.dart'
+    show LatexBlockSyntax, LatexInlineSyntax;
+import 'package:flutter_math_fork/flutter_math.dart' show Math, MathStyle;
 import 'package:markdown/markdown.dart' as md;
 
 import '../extensions/control.dart';
@@ -35,7 +37,7 @@ class MarkdownControl extends StatelessWidget {
 
     var codeStyleSheet = control.getMarkdownStyleSheet(
             "code_style_sheet", context) ??
-        MarkdownStyleSheet.fromTheme(theme).copyWith(
+        markdownStyleSheetFromTheme(theme).copyWith(
             code:
                 theme.textTheme.bodyMedium!.copyWith(fontFamily: "monospace"));
     // `Theme.markdown_theme` underneath, the control's own sheet on top.
@@ -44,11 +46,7 @@ class MarkdownControl extends StatelessWidget {
     var themeSheet = theme.extension<MarkdownTheme>()?.styleSheet;
     var ownSheet = control.get("md_style_sheet");
     var mdStyleSheet = themeSheet == null && ownSheet is! Map
-        ? MarkdownStyleSheet.fromTheme(theme).copyWith(
-            a: TextStyle(color: theme.colorScheme.primary),
-            blockquoteDecoration: BoxDecoration(
-                color: theme.colorScheme.surfaceContainerHigh,
-                borderRadius: BorderRadius.circular(4.0)))
+        ? markdownStyleSheetFromTheme(theme)
         : parseMarkdownStyleSheet({
             ...?themeSheet,
             if (ownSheet is Map) ...Map<String, dynamic>.from(ownSheet),
@@ -68,7 +66,7 @@ class MarkdownControl extends StatelessWidget {
         ),
         builders: {
           'code': CodeElementBuilder(codeTheme, codeStyleSheet),
-          'latex': LatexElementBuilder(
+          'latex': _LatexElementBuilder(
               textStyle: latexStyle, textScaleFactor: latexScaleFactor),
         },
         styleSheet: mdStyleSheet,
@@ -156,5 +154,40 @@ class CodeElementBuilder extends MarkdownElementBuilder {
         ),
       );
     });
+  }
+}
+
+/// Renders `latex` elements with `flutter_math_fork`.
+///
+/// Adapted from `LatexElementBuilder` of `flutter_markdown_plus_latex`
+/// (Apache-2.0). Unlike the original, invalid TeX falls back to a
+/// `material_ui` [SelectableText]: `flutter_math_fork`'s default fallback is
+/// the Flutter SDK's `SelectableText`, whose context menu can't find the
+/// localizations Flet provides.
+class _LatexElementBuilder extends MarkdownElementBuilder {
+  _LatexElementBuilder({this.textStyle, this.textScaleFactor});
+
+  final TextStyle? textStyle;
+  final double? textScaleFactor;
+
+  @override
+  Widget visitElementAfterWithContext(BuildContext context, md.Element element,
+      TextStyle? preferredStyle, TextStyle? parentStyle) {
+    final text = element.textContent;
+    if (text.isEmpty) return const SizedBox();
+
+    return SingleChildScrollView(
+      scrollDirection: Axis.horizontal,
+      clipBehavior: Clip.antiAlias,
+      child: Math.tex(
+        text,
+        textStyle: textStyle,
+        mathStyle: element.attributes['MathStyle'] == 'display'
+            ? MathStyle.display
+            : MathStyle.text,
+        textScaleFactor: textScaleFactor,
+        onErrorFallback: (error) => SelectableText(error.messageWithType),
+      ),
+    );
   }
 }

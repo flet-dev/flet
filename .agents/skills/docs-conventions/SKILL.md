@@ -187,15 +187,43 @@ Edit `website/sidebars.yml` to change navigation structure:
 
 ```yaml
 docs:
-  Getting started:
-  - getting-started/installation.md
-  Controls:
-    _generated_index:
-      title: Controls
-      slug: /controls
-      description: Browse the complete catalog of controls.
-    AlertDialog: controls/alertdialog.md
+  Reference:
+    Controls:
+      _generated_index:
+        title: Controls
+        slug: /controls
+        description: Browse the complete catalog of controls available in Flet.
+      Core:
+        _generated_index:
+          title: Core controls
+          slug: /controls/core
+          description: ...
+        Column: controls/column.md
+      Material:
+        _generated_index: ...
+        AlertDialog: controls/alertdialog.md
+      Cupertino:
+        _generated_index: ...
+        CupertinoButton: controls/cupertinobutton.md
+      Shadcn:
+        _index: controls/shadcnui/index.md
+        Button: controls/shadcnui/button.md
+      Extensions:
+        _generated_index: ...
+        Charts: ...
 ```
+
+Reference → Controls has five folders, in this order: **Core**, **Material**, **Cupertino**, **Shadcn** and **Extensions** (Extensions always last). Core, Material, Cupertino and Extensions use `_generated_index` (a card grid); Shadcn has its own overview page via `_index`. When adding a control, keep entries alphabetical inside the folder and pick the folder from where the control's Python class lives:
+
+- `flet/controls/core` → **Core**; `flet/controls/material` → **Material**; `flet/controls/cupertino` → **Cupertino**.
+- Built-in controls outside those packages (`Page`, `MultiView`, `Router`) → **Core**.
+- Controls from extension packages (`flet-charts`, `flet-map`, `flet-datatable2`, ...) → **Extensions**, even when they look Material (for example DataTable2).
+- `flet-shadcn-ui` controls → **Shadcn** (label is capitalized "Shadcn").
+- Exception: `Container` lives in `flet/controls/material` but is listed under **Core**.
+
+Sub-controls (controls that can only be used inside a specific parent control, e.g. `DataCell`, `TableColumn`, `MenuItem`) get their own page, nested under the parent's entry with `_index` pointing at the parent page. One page documents exactly one class; never add a second class's `ClassSummary`/`ClassMembers` to a page.
+
+Sidebar folders only affect navigation: doc URLs come from file paths, so a page stays at `/docs/controls/<name>` whichever folder lists it. Do not move doc files into `core/`, `material/` or `cupertino/` subdirectories.
 
 After editing, regenerate `sidebars.js`:
 

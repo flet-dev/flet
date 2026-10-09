@@ -56,6 +56,15 @@ To limit packaging to a specific architecture, see [this](index.md#target-archit
 This affects which Python wheels are bundled and, in turn, which CPU architectures the app will run on.
 You will then have to provide your users with the correct build for their Macs.
 
+## Minimum macOS version
+
+Apps built with `flet build macos` run on macOS 12 (Monterey) or later. This is
+the lowest version that Xcode 27 can build for.
+
+The [build template](index.md#build-template) sets it with
+`MACOSX_DEPLOYMENT_TARGET` in the Xcode project and `platform :osx` in the
+`Podfile`. It can't be configured in `pyproject.toml`.
+
 ## Permissions
 
 macOS permissions are declared through [`Info.plist`](#infoplist) privacy usage strings and
@@ -82,6 +91,7 @@ Its value is determined in the following order of precedence:
 1. [`--info-plist`](../cli/flet-build.md#--info-plist)
 2. `[tool.flet.macos.info]`
 3. Values injected by [cross-platform permission bundles](index.md#permissions), if any.
+4. `FLTEnableImpeller = false`, when the app is built with [`--no-impeller`](index.md#renderer).
 
 #### Supported value forms
 
