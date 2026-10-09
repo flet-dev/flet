@@ -18,8 +18,10 @@ import '../widgets/error.dart';
 import 'base_controls.dart';
 
 /// Delivers `transform_changed` at most once per interval, plus one trailing
-/// event for the matrix that remains. An immediate delivery cancels the
-/// trailing timer, and the timer does not repeat a matrix already delivered.
+/// event. The trailing timer reads the matrix when it fires, so the event
+/// after updates stop is the matrix still applied, not the one from when the
+/// timer was scheduled. An immediate delivery cancels that timer, and the
+/// timer does not repeat a matrix already delivered.
 @visibleForTesting
 class InteractiveViewerTransformGate {
   Timer? _timer;

@@ -46,6 +46,7 @@ Future<Control> _pumpViewer(
         'min_scale': 0.5,
         'max_scale': 4.0,
         'boundary_margin': 100.0,
+        'interaction_end_friction_coefficient': 0.05,
         'content': content,
         'interaction_update_interval': interval,
         'on_transform_changed': true,
@@ -65,6 +66,20 @@ Future<dynamic> _call(Control control, String name, Map<String, dynamic> args) {
 }
 
 double _scale(Map<String, dynamic> payload) => (payload['s'] as num).toDouble();
+
+/// Lets inertial animation finish, then the trailing transform event.
+Future<void> _finishTransform(WidgetTester tester) async {
+  await tester.pumpAndSettle();
+  await tester.pump(const Duration(seconds: 1));
+}
+
+void _expectLastMatches(Map<String, dynamic> payload, dynamic transform) {
+  expect(payload['s'], transform['s']);
+  expect(payload['tx'], transform['tx']);
+  expect(payload['ty'], transform['ty']);
+  expect(payload['tz'], transform['tz']);
+  expect(payload['m'], transform['m']);
+}
 
 void main() {
   testWidgets('get_scale and get_transform report the identity transform',
@@ -238,5 +253,80 @@ void main() {
 
     expect(tester.takeException(), isNull);
     expect(backend.payloads, hasLength(1));
+  });
+
+  testWidgets(
+      'throttled zoom burst reports the scale still applied when it stops',
+      (tester) async {
+    final backend = _TransformEvents();
+    final control = await _pumpViewer(tester, backend, interval: 1000);
+
+    await _call(control, 'zoom', {'factor': 2.0});
+    await _call(control, 'zoom', {'factor': 1.5});
+    await _call(control, 'zoom', {'factor': 0.5});
+    await _call(control, 'zoom', {'factor': 1.2});
+    expect(backend.payloads, hasLength(1));
+    expect(_scale(backend.payloads.single), closeTo(2.0, 1e-9));
+
+    await _finishTransform(tester);
+
+    final transform = await _call(control, 'get_transform', {});
+    expect(transform['s'], closeTo(1.8, 1e-9));
+    expect(backend.payloads, hasLength(2));
+    _expectLastMatches(backend.payloads.last, transform);
+  });
+
+  testWidgets('a wheel burst reports the scale still applied when it stops',
+      (tester) async {
+    final backend = _TransformEvents();
+    final control = await _pumpViewer(tester, backend, interval: 1000);
+    final Offset center = tester.getCenter(find.byType(InteractiveViewer));
+
+    for (int i = 0; i < 4; i++) {
+      await tester.sendEventToBinding(PointerScrollEvent(
+        position: center,
+        scrollDelta: const Offset(0, -40),
+      ));
+      await tester.pump();
+    }
+    expect(_scale(backend.payloads.first), greaterThan(1.0));
+
+    await _finishTransform(tester);
+
+    final transform = await _call(control, 'get_transform', {});
+    expect(transform['s'], greaterThan(_scale(backend.payloads.first)));
+    _expectLastMatches(backend.payloads.last, transform);
+  });
+
+  testWidgets('an inertial pan reports the translation still applied',
+      (tester) async {
+    final backend = _TransformEvents();
+    final control = await _pumpViewer(tester, backend, interval: 1000);
+
+    await tester.fling(
+        find.byType(InteractiveViewer), const Offset(-120, -40), 2000);
+    await _finishTransform(tester);
+
+    final transform = await _call(control, 'get_transform', {});
+    expect((transform['tx'] as num).abs() + (transform['ty'] as num).abs(),
+        greaterThan(1.0));
+    expect(backend.payloads, isNotEmpty);
+    _expectLastMatches(backend.payloads.last, transform);
+  });
+
+  testWidgets('an animated reset reports the identity transform it ends on',
+      (tester) async {
+    final backend = _TransformEvents();
+    final control = await _pumpViewer(tester, backend, interval: 1000);
+
+    await _call(control, 'zoom', {'factor': 2.0});
+    await _call(control, 'reset', {'animation_duration': 300});
+    await _finishTransform(tester);
+
+    final transform = await _call(control, 'get_transform', {});
+    expect(transform['s'], closeTo(1.0, 1e-9));
+    expect(transform['tx'], closeTo(0.0, 1e-6));
+    expect(transform['ty'], closeTo(0.0, 1e-6));
+    _expectLastMatches(backend.payloads.last, transform);
   });
 }

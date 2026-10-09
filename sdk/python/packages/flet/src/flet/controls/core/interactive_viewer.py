@@ -33,6 +33,11 @@ class InteractiveViewerTransform:
     order as Flutter's ``Matrix4.storage``. The translation component is also
     available as :attr:`translation_x`, :attr:`translation_y` and
     :attr:`translation_z` (storage indexes 12, 13 and 14).
+
+    This does not by itself give a physical length. That also depends on the
+    laid-out size of the content and on a separate mapping from that content
+    to the real world. If either changes, the same transform describes a
+    different physical size.
     """
 
     scale: float
@@ -258,11 +263,15 @@ class InteractiveViewer(LayoutControl):
     :meth:`zoom`, :meth:`pan`, :meth:`reset` and :meth:`restore_state`.
     :meth:`save_state` only stores a snapshot, so it does not fire this event.
     Intermediate updates are limited to :attr:`interaction_update_interval`
-    milliseconds, and the transform in effect when changes stop is still
-    delivered.
+    milliseconds. When changes stop, including the end of a wheel burst, an
+    inertial pan, :meth:`zoom` and an animated :meth:`reset`, one further
+    event is delivered if needed. That event matches :meth:`get_transform`.
 
     ``on_interaction_update`` reports the gesture's relative scale, not this
-    absolute transform.
+    absolute transform. Neither event is a physical length: the content's
+    laid-out size and any mapping from that content to the real world are
+    separate. If those change, this transform alone does not keep a
+    real-world measurement correct.
     """
 
     async def reset(self, animation_duration: Optional[DurationValue] = None):
@@ -339,7 +348,7 @@ class InteractiveViewer(LayoutControl):
         Returns:
             ``1.0`` for identity, after min/max scale and boundary clamping.
             This is the scale of the laid-out content, not a ratio against
-            the content's original pixel size.
+            the content's original pixel size, and not a physical length.
 
         Raises:
             RuntimeError: If this control is not on a page.
@@ -352,7 +361,8 @@ class InteractiveViewer(LayoutControl):
 
         Returns:
             Scale, translation and the column-major 4x4 matrix, after
-            clamping.
+            clamping. A physical length also needs the content's laid-out
+            size and a mapping from that content to the real world.
 
         Raises:
             RuntimeError: If this control is not on a page.
