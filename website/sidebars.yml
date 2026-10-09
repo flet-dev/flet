@@ -76,6 +76,8 @@ docs:
     Migrating from 0.28 to 1.0: updates/migrate-to-1-0.md
     Breaking changes and deprecations:
       _index: updates/breaking-changes/index.md
+      v1.1.0:
+        Neutral default surfaces: updates/breaking-changes/v1-1-0/neutral-default-surfaces.md
       v1.0.0:
         All deprecated APIs removed: updates/breaking-changes/v1-0-0/removed-deprecated-apis.md
         "iOS: per-method signing settings now override top-level ones": updates/breaking-changes/v1-0-0/ios-per-method-signing-precedence.md
@@ -766,6 +768,7 @@ docs:
           TabBarTheme: types/tabbartheme.md
           TextButtonTheme: types/textbuttontheme.md
           TextTheme: types/texttheme.md
+          ThemeSurfaces: types/themesurfaces.md
           TimePickerTheme: types/timepickertheme.md
           TooltipTheme: types/tooltiptheme.md
       - types/browserconfiguration.md

@@ -1753,7 +1753,7 @@ class BaseBuildCommand(BaseFlutterCommand):
             "web": enabled(self.options.no_web_splash, "web"),
             "color": color(self.options.splash_color, "color", "#ffffff"),
             "dark_color": color(
-                self.options.splash_dark_color, "dark_color", "#222222"
+                self.options.splash_dark_color, "dark_color", "#121212"
             ),
         }
 
