@@ -1,5 +1,5 @@
 import 'package:flet/flet.dart';
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:media_kit/media_kit.dart';
 import 'package:media_kit_video/media_kit_video.dart';
 
@@ -165,7 +165,7 @@ List<int> parseVideoControlsIntList(dynamic value, List<int> defaultValue) {
 Widget? parseVideoControlsBarItem(
     dynamic value, ThemeData theme, bool materialDesktop) {
   final controlWidget = parseControlWidget(value);
-  if (controlWidget != null) return controlWidget;
+  if (controlWidget != null) return _fletControlsMaterial(controlWidget);
   if (value is! Map) return null;
 
   final icon = parseControlWidget(value["icon"]);
@@ -438,8 +438,18 @@ dynamic _resolveVideoControlsMode(dynamic value, bool fullscreen) {
   return null;
 }
 
+/// Gives Flet controls shown in the video controls a transparent [Material].
+///
+/// In fullscreen, media_kit shows the controls in a route wrapped only in the
+/// Flutter SDK's `Material`, which `material_ui` widgets such as buttons and
+/// text fields don't recognize.
+Widget _fletControlsMaterial(Widget child) =>
+    Material(type: MaterialType.transparency, child: child);
+
+/// Builds custom video controls from a Flet control.
 Widget Function(VideoState) _customVideoControls(dynamic value) {
-  return (_) => parseControlWidget(value) ?? const SizedBox.shrink();
+  return (_) => _fletControlsMaterial(
+      parseControlWidget(value) ?? const SizedBox.shrink());
 }
 
 /// Selects the controls builder requested by the serialized controls value.

@@ -2,6 +2,8 @@
 
 * Flutter updated to [3.47.7](https://github.com/flutter/flutter/blob/stable/CHANGELOG.md#3477).
 * **Breaking:** `parseTheme()` now builds themes from a seed with neutral surfaces by default (`#ffffff` / `#121212` and a neutral grey ramp for surface containers, `onSurface`, `outline` and inverse surfaces); the seed still drives accent colors. A theme's `surfaces: "tonal"` restores the seed-tinted Material 3 surfaces. Adds the `ThemeSurfaces` enum, `parseThemeSurfaces()` and `neutralizeSurfaces()` ([#6921](https://github.com/flet-dev/flet/issues/6921)) by @FeodorFitsner.
+* Import Material and Cupertino from the `material_ui` and `cupertino_ui` packages instead of `package:flutter/material.dart` and `package:flutter/cupertino.dart`. Helpers that take or return Material or Cupertino types, such as `parseColor()`, `parseTextStyle()` and `parseButtonStyle()`, now use those packages' types, and `flet.dart` no longer re-exports `Icons` and `CupertinoIcons`. Requires Flutter 3.47 or later.
+* Add `markdownStyleSheetFromTheme()`, which builds the default `MarkdownStyleSheet` from a `material_ui` theme. `MarkdownStyleSheet.fromTheme()` from `flutter_markdown_plus` only accepts the Flutter SDK's `ThemeData`.
 
 ## 1.0.4
 

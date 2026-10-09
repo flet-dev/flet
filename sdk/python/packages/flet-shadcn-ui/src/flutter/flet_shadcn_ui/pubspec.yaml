@@ -5,7 +5,7 @@ publish_to: none
 
 environment:
   sdk: '>=3.11.0 <4.0.0'
-  flutter: ">=3.41.0"
+  flutter: ">=3.47.0"
 
 dependencies:
   flutter:
@@ -15,6 +15,7 @@ dependencies:
   # Exact pin: lib/src/utils/lucide_icons.dart is generated from this release
   # by .github/scripts/generate_icons.py.
   lucide_icons_flutter: 3.1.20
+  material_ui: ^1.6.0
 
   flet:
     path: ../../../../../../../packages/flet

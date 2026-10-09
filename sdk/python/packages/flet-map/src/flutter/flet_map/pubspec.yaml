@@ -5,7 +5,7 @@ publish_to: none
 
 environment:
   sdk: '>=3.2.3 <4.0.0'
-  flutter: ">=1.17.0"
+  flutter: ">=3.47.0"
 
 dependencies:
   flutter:
@@ -16,6 +16,7 @@ dependencies:
   flutter_map_animations: 0.10.0
   latlong2: 0.9.1
 
+  material_ui: ^1.6.0
   flet:
     path: ../../../../../../../packages/flet
 

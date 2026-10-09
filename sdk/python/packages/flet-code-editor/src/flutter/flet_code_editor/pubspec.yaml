@@ -5,7 +5,7 @@ publish_to: none
 
 environment:
   sdk: '>=3.2.3 <4.0.0'
-  flutter: ">=1.17.0"
+  flutter: ">=3.47.0"
 
 dependencies:
   flutter:
@@ -14,11 +14,12 @@ dependencies:
   flutter_code_editor:
     git:
       url: https://github.com/flet-dev/flutter-code-editor
-      ref: pinyin-fix
+      ref: material-ui
 
   flutter_highlight: ^0.7.0
   highlight: ^0.7.0
 
+  material_ui: ^1.6.0
   flet:
     path: ../../../../../../../packages/flet
 

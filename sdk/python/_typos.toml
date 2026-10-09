@@ -11,12 +11,19 @@ extend-exclude = [
     "*icon-codepoints.json",
     "*/controls/material/icons.json",
     "*/controls/cupertino/cupertino_icons.json",
+    "packages/flet/lib/src/utils/material_icons.dart",
+    "packages/flet/lib/src/utils/cupertino_icons.dart",
     # Generated from lucide_icons_flutter; keeps Lucide's legacy aliases such
     # as `astroid` and `sendHorizonal`.
     "*/flet_shadcn_ui/lucide_icons.json",
     "*/flet_shadcn_ui/lucide_icons.pyi",
     "*/flet_shadcn_ui/lib/src/utils/lucide_icons.dart",
 ]
+
+[default.extend-identifiers]
+# Public Dart extension name in packages/flet; renaming it would break
+# extensions that refer to it.
+LocaleExtention = "LocaleExtention"
 
 [default.extend-words]
 # AAC High Efficiency audio codec enum member name

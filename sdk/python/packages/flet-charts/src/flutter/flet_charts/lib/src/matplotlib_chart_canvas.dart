@@ -4,7 +4,7 @@ import 'dart:ui' as ui;
 
 import 'package:flet/flet.dart';
 import 'package:flutter/foundation.dart' show kIsWeb;
-import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 
 /// Display widget for matplotlib WebAgg-style image streams.
 ///

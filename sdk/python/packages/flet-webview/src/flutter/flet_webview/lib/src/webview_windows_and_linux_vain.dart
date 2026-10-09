@@ -1,5 +1,5 @@
 import 'package:flet/flet.dart';
-import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 
 class WebviewDesktop extends StatefulWidget {
   const WebviewDesktop({Key? key}) : super(key: key);

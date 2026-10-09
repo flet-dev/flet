@@ -77,6 +77,7 @@ docs:
     Breaking changes and deprecations:
       _index: updates/breaking-changes/index.md
       v1.1.0:
+        "Extensions: Material and Cupertino now come from material_ui and cupertino_ui": updates/breaking-changes/v1-1-0/material-ui-cupertino-ui.md
         "macOS and iOS: built apps now require macOS 12 and iOS 15": updates/breaking-changes/v1-1-0/minimum-macos-12-ios-15.md
         Neutral default surfaces: updates/breaking-changes/v1-1-0/neutral-default-surfaces.md
       v1.0.0:

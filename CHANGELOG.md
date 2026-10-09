@@ -2,6 +2,7 @@
 
 ### Breaking changes
 
+* Flet's Dart code now takes Material and Cupertino from the `material_ui` and `cupertino_ui` packages instead of the Flutter SDK's `package:flutter/material.dart` and `package:flutter/cupertino.dart`. The Dart code of extensions that uses Material or Cupertino must migrate. See the [Material and Cupertino now come from material_ui and cupertino_ui](/docs/updates/breaking-changes/v1-1-0/material-ui-cupertino-ui) guide by @ndonkoHenri.
 * Themes built from a seed color, including the default theme, now have neutral surfaces: white in light mode and near-black (`#121212`) in dark mode, with neutral greys for containers, outlines and text on surfaces. The seed still drives accent colors. To keep the seed-tinted Material 3 look, set `page.theme = ft.Theme(surfaces=ft.ThemeSurfaces.TONAL)` (and the same for `page.dark_theme`). See [Default theme surfaces are now neutral](https://flet.dev/docs/updates/breaking-changes/v1-1-0/neutral-default-surfaces) ([#6921](https://github.com/flet-dev/flet/issues/6921)) by @FeodorFitsner.
 * The default dark splash and loading screen color of web apps is now `#121212` (was `#222222`), to match the new dark theme surface ([#6921](https://github.com/flet-dev/flet/issues/6921)) by @FeodorFitsner.
 

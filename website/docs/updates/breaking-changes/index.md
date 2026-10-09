@@ -32,6 +32,7 @@ Each guide explains the change, the reason for it, and how to migrate your code.
 
 #### Breaking changes
 
+- [Extensions: Material and Cupertino now come from `material_ui` and `cupertino_ui`](/docs/updates/breaking-changes/v1-1-0/material-ui-cupertino-ui)
 - [macOS and iOS: built apps now require macOS 12 and iOS 15](/docs/updates/breaking-changes/v1-1-0/minimum-macos-12-ios-15)
 - [Default theme surfaces are now neutral (white / near-black)](/docs/updates/breaking-changes/v1-1-0/neutral-default-surfaces)
 

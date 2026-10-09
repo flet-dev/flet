@@ -1,6 +1,6 @@
 import 'package:flet/flet.dart';
 import 'package:flet_webview/src/utils/webview.dart';
-import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 import 'package:webview_flutter/webview_flutter.dart';
 
 import 'utils/file_access_vain.dart'

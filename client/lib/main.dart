@@ -32,7 +32,7 @@ import 'package:flet_video/flet_video.dart' as flet_video;
 // --FAT_CLIENT_END--
 import 'package:flet_webview/flet_webview.dart' as flet_webview;
 import 'package:flutter/foundation.dart';
-import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 import 'package:flutter_web_plugins/url_strategy.dart';
 
 const bool isProduction = bool.fromEnvironment('dart.vm.product');
