@@ -868,7 +868,6 @@ class Page(BasePage):
             if self.__last_route == e.route:
                 return False
             self.__last_route = e.route
-            self.query()
 
         elif isinstance(e, ViewPopEvent | ViewsPopUntilEvent):
             for v in unwrap_component(self.views):

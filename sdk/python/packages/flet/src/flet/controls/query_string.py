@@ -1,4 +1,3 @@
-import re
 import urllib.parse
 import weakref
 
@@ -22,28 +21,6 @@ class UrlComponents:
         Function decodes querystring part of URL\n Ex. q=dom+%26+dogs -> q=dom & dogs
         """
         return urllib.parse.unquote(url)
-
-    def _is_encoded(self) -> bool:
-        """
-        Function returns True if URL is already encoded
-        """
-        if "?" in self.url:
-            q_result = self._querystring_part()
-            return (
-                self._decode_url_component(
-                    self.url[q_result.start() + 1 : q_result.end()]
-                )
-                != self.url[q_result.start() + 1 : q_result.end()]
-            )
-
-    def _querystring_part(self, url_string: bool = False):
-        """
-        Function sliced url part and returns querystring part.\n Use case: checking \
-        querystring part for encode, assigning decoded value
-        """
-        pattern = re.compile(r"\?[\w\D]+")
-        data = pattern.search(self.url)
-        return data if url_string is False else self.url[data.start() + 1 : data.end()]
 
 
 class QueryString(UrlComponents):
@@ -69,11 +46,10 @@ class QueryString(UrlComponents):
 
     def __init__(self, page):
         self.__page = weakref.ref(page)
-        self.url = None
 
     def get(self, key: str) -> str:
         """
-        Return the query parameter value for `key` from the current URL.
+        Return the query parameter value for `key` from the current page route.
 
         Raises:
             KeyError: If `key` does not exist in the parsed query parameters.
@@ -93,34 +69,26 @@ class QueryString(UrlComponents):
     @property
     def to_dict(self) -> dict:
         """
-        Parse the current URL query component into a dictionary.
+        Parse the query component of the current page route into a dictionary.
+
+        The route is read on every access, so the result always matches
+        :attr:`flet.Page.route`. Keys and values are percent-decoded, with `+`
+        decoded as a space. When a key appears more than once, its last value is
+        returned.
         """
-        self._data = urllib.parse.urlparse(self.url).query
-        return dict(urllib.parse.parse_qsl(self._data))
+        return dict(urllib.parse.parse_qsl(self._split_route().query))
 
     # Path
     @property
     def path(self):
         """
-        Return the URL path, normalizing hash-style routes when present.
+        Return the path component of the current page route.
         """
-        self._updated_url = self.url.replace("#/", "") if "#" in self.url else self.url
-        return urllib.parse.urlparse(self._updated_url).path
+        return self._split_route().path
 
-    def __call__(self):
+    def _split_route(self) -> urllib.parse.SplitResult:
         """
-        Call dunder method updates url after updating `Page`
+        Split the current page route into its URL components.
         """
-        if page := self.__page():
-            self.url = page.url + page.route
-
-            # Checking if self.url is encoded and decoding it accordingly
-            if self._is_encoded():
-                self.url = (
-                    page.url
-                    + urllib.parse.urlparse(self.url).path
-                    + "?"
-                    + self._decode_url_component(
-                        self._querystring_part(url_string=True)
-                    )
-                )
+        page = self.__page()
+        return urllib.parse.urlsplit((page.route if page else None) or "")
