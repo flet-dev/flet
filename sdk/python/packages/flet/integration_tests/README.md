@@ -60,13 +60,19 @@ Running test to create golden images:
 FLET_TEST_GOLDEN=1 uv run pytest -s -o log_cli=true -o log_cli_level=INFO packages/flet/integration_tests/controls/material/test_button.py
 ```
 
+Running tests to update only golden images that don't match (or are missing) - unchanged goldens stay byte-identical, which keeps diffs small after an intentional visual change:
+
+```bash
+FLET_TEST_GOLDEN=failed uv run pytest -s -o log_cli=true -o log_cli_level=INFO packages/flet/integration_tests/controls/material
+```
+
 ## Environment variables
 
 `FLET_TEST_PLATFORM` - The platform on which tests are running: `macos`, `windows`, `linux`, `android` or `ios`. Desktop platforms are detected automatically if not specified.
 
 `FLET_TEST_DEVICE` - The device to run tests on. For running tests on desktop: `macos`, `windows` or `linux` - detected automatically if not specified. To run on iOS, Android or a real device a device ID must be specified that can be obtained with `flutter devices` command.
 
-`FLET_TEST_GOLDEN` - Run tests to take "golden" (expected) screenshots and writing them to a file system.
+`FLET_TEST_GOLDEN` - Run tests to take "golden" (expected) screenshots and writing them to a file system. Set to `failed` to compare as usual and overwrite only goldens that are missing, below the similarity threshold or changed in color (SSIM alone barely reacts to a uniform color shift, so pixels are compared too).
 
 `FLET_TEST_SCREENSHOTS_PIXEL_RATIO` - device pixel ration to use to take screenshots. Default is 2.0.
 

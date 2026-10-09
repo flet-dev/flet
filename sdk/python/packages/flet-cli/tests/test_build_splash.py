@@ -489,7 +489,7 @@ class TestResolveSplash:
             "ios": True,
             "web": True,
             "color": "#ffffff",
-            "dark_color": "#222222",
+            "dark_color": "#121212",
         }
         assert None not in resolved.values()
 
