@@ -155,6 +155,15 @@ class Command(BaseCommand):
             help="Start the application with the window hidden",
         )
         parser.add_argument(
+            "--no-impeller",
+            dest="no_impeller",
+            action="store_true",
+            default=False,
+            help="Render the desktop app with Skia instead of Impeller, Flutter's "
+            "default renderer (or set `impeller = false` under [tool.flet]) "
+            "[env: FLET_NO_IMPELLER=]",
+        )
+        parser.add_argument(
             "-w",
             "--web",
             dest="web",
@@ -242,6 +251,16 @@ class Command(BaseCommand):
         project_dir = Path(script_dir)
 
         get_pyproject = load_pyproject_toml(project_dir)
+
+        config_platform = {"Darwin": "macos", "Windows": "windows"}.get(
+            platform.system(), "linux"
+        )
+        impeller = get_pyproject(f"tool.flet.{config_platform}.impeller")
+        if impeller is None:
+            impeller = get_pyproject("tool.flet.impeller")
+        no_impeller = options.no_impeller or impeller is False
+        if options.no_impeller and (options.web or options.ios or options.android):
+            print("Warning: --no-impeller applies only to the desktop app.")
 
         if get_pyproject("tool.flet.app.path"):
             script_dir = script_dir.joinpath(get_pyproject("tool.flet.app.path"))
@@ -351,6 +370,7 @@ class Command(BaseCommand):
             ios=options.ios,
             android=options.android,
             hidden=options.hidden,
+            no_impeller=no_impeller,
             assets_dir=assets_dir,
             ignore_dirs=ignore_dirs,
             flet_app_data_dir=str(flet_app_data_dir),
@@ -403,6 +423,7 @@ class Handler(FileSystemEventHandler):
         ios,
         android,
         hidden,
+        no_impeller,
         assets_dir,
         ignore_dirs,
         flet_app_data_dir,
@@ -422,6 +443,7 @@ class Handler(FileSystemEventHandler):
         self.ios = ios
         self.android = android
         self.hidden = hidden
+        self.no_impeller = no_impeller
         self.assets_dir = assets_dir
         self.ignore_dirs = ignore_dirs
         self.last_time = time.time()
@@ -590,7 +612,10 @@ class Handler(FileSystemEventHandler):
             from flet_desktop import open_flet_view
 
             self.fvp, self.pid_file = open_flet_view(
-                self.page_url, self.assets_dir, self.hidden
+                self.page_url,
+                self.assets_dir,
+                self.hidden,
+                no_impeller=self.no_impeller,
             )
             self.fvp.wait()
             self.p.send_signal(signal.SIGTERM)

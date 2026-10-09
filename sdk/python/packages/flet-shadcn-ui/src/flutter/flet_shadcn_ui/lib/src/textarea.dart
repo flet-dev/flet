@@ -3,6 +3,7 @@ import 'package:flutter/widgets.dart';
 import 'package:shadcn_ui/shadcn_ui.dart';
 
 import 'utils/field.dart';
+import 'utils/theme.dart';
 
 class ShadTextareaControl extends StatefulWidget {
   final Control control;
@@ -83,6 +84,7 @@ class _ShadTextareaControlState extends State<ShadTextareaControl> {
       readOnly: control.getBool("read_only", false)!,
       maxLength: control.getInt("max_length"),
       autofocus: control.getBool("autofocus", false)!,
+      contextMenuBuilder: shadContextMenuBuilder,
       onChanged: _onChanged,
     );
 

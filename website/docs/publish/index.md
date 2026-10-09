@@ -1306,6 +1306,62 @@ hide_window_on_start = true
 </TabItem>
 </Tabs>
 
+### Renderer
+
+:::note[Platform support]
+[macOS](macos.md), [Windows](windows.md), [Linux](linux.md) and [Android](android.md).
+iOS apps always render with Impeller, and web apps with Skia.
+:::
+
+Flet apps render with [Impeller](https://docs.flutter.dev/perf/impeller),
+Flutter's default renderer. Build with `--no-impeller` to render with
+[Skia](https://skia.org/) instead, for example when Impeller shows a
+blank or flickering window, or renders slowly, on some GPUs, drivers or virtual
+machines.
+
+A desktop app also renders with Skia when the
+[`FLET_NO_IMPELLER`](../reference/environment-variables.md#flet_no_impeller)
+environment variable is set when it starts, so users can switch without a new
+build. [`flet run --no-impeller`](../cli/flet-run.md#--no-impeller) sets it for
+the app window it opens.
+
+Flutter plans to remove the Skia option in a future release.
+
+#### Resolution order
+
+Its value is determined in the following order of precedence:
+
+1. [`--impeller` / `--no-impeller`](../cli/flet-build.md#--impeller)
+2. `[tool.flet.<PLATFORM>].impeller`, where `<PLATFORM>` can be `macos`, `windows`, `linux` or `android`
+3. `[tool.flet].impeller`
+4. `true`
+
+On macOS, `--no-impeller` sets `FLTEnableImpeller` to `false` in the app's
+[Info.plist](macos.md#infoplist), and on Android it adds the
+`io.flutter.embedding.android.EnableImpeller` [meta-data](android.md#meta-data)
+with the value `false`. An entry for the same key under
+`[tool.flet.macos.info]` or `[tool.flet.android.meta_data]` takes precedence.
+
+On Windows and Linux, a custom [build template](#build-template) honors the
+setting only if its runner contains the same code as Flet's template
+(`windows/runner/main.cpp` and `linux/my_application.cc`).
+
+#### Example
+
+<Tabs groupId="flet-build--pyproject-toml">
+<TabItem value="flet-build" label="flet build">
+```bash
+flet build <target_platform> --no-impeller
+```
+</TabItem>
+<TabItem value="pyproject-toml" label="pyproject.toml">
+```toml
+[tool.flet]     # or [tool.flet.<PLATFORM>]
+impeller = false
+```
+</TabItem>
+</Tabs>
+
 ### Deep linking
 
 :::note[Platform support]

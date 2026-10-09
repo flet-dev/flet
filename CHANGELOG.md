@@ -11,6 +11,10 @@
 
 ### Improvements
 
+* Bump the bundled Flutter to [3.47.7](https://github.com/flutter/flutter/blob/stable/CHANGELOG.md#3477) (from 3.44.8). Android builds use Gradle 9.3.1, Android Gradle Plugin 8.13.2 and Kotlin 2.3.21 by @ndonkoHenri.
+
+  **Compatibility:** Desktop apps and the desktop app that `flet run` opens now render with Impeller, Flutter 3.47's default desktop renderer, instead of Skia. Use `flet build --no-impeller` (or `impeller = false` under `[tool.flet]`), `flet run --no-impeller` or the `FLET_NO_IMPELLER` environment variable to render with Skia; see [Renderer](/docs/publish#renderer). Android plugins that still use `jcenter()` or other APIs removed in Gradle 9 no longer build. `flet build` downloads Flutter 3.47.7 on first use.
+
 * Add `Theme.surfaces` and the `ThemeSurfaces` enum (`NEUTRAL`, `TONAL`) to choose whether surface colors are neutral or tinted with the seed color ([#6921](https://github.com/flet-dev/flet/issues/6921)) by @FeodorFitsner.
 * Add `flet test --update-failed-goldens` (`FLET_TEST_GOLDEN=failed`): compares screenshots as usual and overwrites only golden images that are missing or no longer match, so unchanged goldens stay untouched ([#6921](https://github.com/flet-dev/flet/issues/6921)) by @FeodorFitsner.
 * Add `bgcolor` to `FletTestApp.take_page_controls_screenshot()`, `assert_control_screenshot()` and `wrap_page_controls_in_screenshot()` to paint an opaque background behind the captured controls instead of a transparent one ([#6918](https://github.com/flet-dev/flet/pull/6918)) by @InesaFitsner.
@@ -19,7 +23,7 @@
 
 * Fix `flet build`, `flet debug` and `flet test` failing for macOS and iOS on Xcode 27, which rejects deployment targets below macOS 12 and iOS 15 ([#6874](https://github.com/flet-dev/flet/issues/6874)) by @ndonkoHenri.
 
-  **Compatibility:** Apps built with `flet build` and the macOS desktop client now require macOS 12 or later, and iOS apps require iOS 15 or later. Custom build templates need the same `Podfile` and Xcode project changes to build on Xcode 27. See the [macOS 12 and iOS 15 minimum](/docs/updates/breaking-changes/v1-1-0/minimum-macos-12-ios-15) guide.
+  **Compatibility:** Apps built with `flet build` and the macOS desktop client now require macOS 12 or later, and iOS apps require iOS 15 or later. Custom build templates keep building, because Flutter 3.47 raises the deployment targets during the build; apply the same `Podfile` and Xcode project changes to skip that step. See the [macOS 12 and iOS 15 minimum](/docs/updates/breaking-changes/v1-1-0/minimum-macos-12-ios-15) guide.
 
 ### Documentation
 

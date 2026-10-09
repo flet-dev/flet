@@ -617,6 +617,16 @@ class BaseBuildCommand(BaseFlutterCommand):
             "disabled Swift Package Manager in Flutter.",
         )
         parser.add_argument(
+            "--impeller",
+            dest="impeller",
+            action=argparse.BooleanOptionalAction,
+            default=None,
+            help="Render with Impeller, Flutter's default renderer (on by "
+            "default). Use --no-impeller (or `impeller = false` under [tool.flet]) "
+            "to render with Skia on macOS, Windows, Linux and Android; iOS always "
+            "uses Impeller and web always uses Skia",
+        )
+        parser.add_argument(
             "--cleanup-app",
             dest="cleanup_app",
             action="store_true",
@@ -1088,7 +1098,24 @@ class BaseBuildCommand(BaseFlutterCommand):
             )
         )
 
-        info_plist = {}
+        impeller = bool(self.get_bool_setting(self.options.impeller, "impeller", True))
+        if self.package_platform in ("iOS", "Emscripten") and (
+            self.options.impeller is False
+            or self.get_pyproject(f"tool.flet.{self.config_platform}.impeller") is False
+        ):
+            console.log(
+                "Warning: turning Impeller off has no effect on "
+                f"{'iOS' if self.package_platform == 'iOS' else 'web'}.",
+                style=warning_style,
+            )
+
+        # Explicit `[tool.flet.macos.info]` or `--info-plist` entries override
+        # this key.
+        info_plist = (
+            {"FLTEnableImpeller": False}
+            if self.package_platform == "Darwin" and not impeller
+            else {}
+        )
         macos_entitlements = {
             "com.apple.security.app-sandbox": False,
             "com.apple.security.cs.allow-jit": True,
@@ -1102,7 +1129,13 @@ class BaseBuildCommand(BaseFlutterCommand):
             "android.software.leanback": False,
             "android.hardware.touchscreen": False,
         }
-        android_meta_data = {}
+        # Explicit `[tool.flet.android.meta_data]` or `--android-meta-data`
+        # entries override this key.
+        android_meta_data = (
+            {"io.flutter.embedding.android.EnableImpeller": "false"}
+            if not impeller
+            else {}
+        )
         android_providers = {}
         # Gradle properties for the generated Android project. These were
         # hardcoded in the template; the defaults below reproduce them exactly,
@@ -1116,6 +1149,10 @@ class BaseBuildCommand(BaseFlutterCommand):
                 "-XX:ReservedCodeCacheSize=512m -XX:+HeapDumpOnOutOfMemoryError"
             ),
             "android.useAndroidX": "true",
+            # Kotlin's incremental compiler stores plugin sources relative to
+            # the Android project and fails the build when they sit on another
+            # Windows drive, e.g. the pub cache on C: and the app on D:.
+            "kotlin.incremental": "false",
         }
         # ProGuard/R8 rules for the generated Android project. Like
         # gradle_properties above, these were a fixed template file and the
@@ -1635,6 +1672,7 @@ class BaseBuildCommand(BaseFlutterCommand):
                     or os.getenv("FLET_ANDROID_SIGNING_KEY_STORE")
                 ),
                 "android_legacy_packaging": bool(android_legacy_packaging),
+                "impeller": impeller,
             },
             "flutter": {"dependencies": list(self.flutter_dependencies.keys())},
             "boot_screen": self._resolve_boot_screen(),

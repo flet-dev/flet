@@ -36,13 +36,6 @@ end
 post_install do |installer|
   installer.pods_project.targets.each do |target|
     flutter_additional_macos_build_settings(target)
-    # Pods targeting macOS older than 12.0 (e.g. FlutterMacOS at 10.15) inherit the
-    # platform above instead, because Xcode 27 rejects deployment targets below 12.0.
-    if target.deployment_target.to_s[/\d+/].to_i < 12
-      target.build_configurations.each do |config|
-        config.build_settings.delete('MACOSX_DEPLOYMENT_TARGET')
-      end
-    end
 
     # Ensure rive_native's setup script runs from the project root so pubspec.yaml is found in CI.
     next unless target.name == 'rive_native'

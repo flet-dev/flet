@@ -64,7 +64,8 @@ class AccessibilityFeatures:
     The platform is requesting that UI be rendered with darker colors.
 
     Note:
-        Only supported on iOS.
+        Reported on iOS, Android API 34+, Windows, Linux and web. Always `False`
+        on macOS.
     """
 
     invert_colors: bool

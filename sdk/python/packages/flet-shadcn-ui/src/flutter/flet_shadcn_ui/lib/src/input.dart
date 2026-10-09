@@ -4,6 +4,7 @@ import 'package:shadcn_ui/shadcn_ui.dart';
 
 import 'utils/field.dart';
 import 'utils/icons.dart';
+import 'utils/theme.dart';
 
 class ShadInputControl extends StatefulWidget {
   final Control control;
@@ -92,6 +93,7 @@ class _ShadInputControlState extends State<ShadInputControl> {
       leading: buildShadIconOrWidget(control, "leading"),
       trailing: buildShadIconOrWidget(control, "trailing"),
       autofocus: control.getBool("autofocus", false)!,
+      contextMenuBuilder: shadContextMenuBuilder,
       onChanged: _onChanged,
       onSubmitted: (value) => control.triggerEvent("submit", value),
       onPressed: control.hasEventHandler("click")
