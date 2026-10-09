@@ -10,7 +10,7 @@
 
 ### Bug fixes
 
-* Fix `flet run` ignoring the `FLET_ASSETS_DIR` environment variable ([#5631](https://github.com/flet-dev/flet/issues/5631)) by @ndonkoHenri.
+* Fix `flet run` ignoring the `FLET_ASSETS_DIR` environment variable and the app's own `ft.run(assets_dir=...)` ([#5631](https://github.com/flet-dev/flet/issues/5631)) by @ndonkoHenri.
 
 ### Documentation
 
