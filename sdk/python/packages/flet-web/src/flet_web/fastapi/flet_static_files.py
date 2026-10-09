@@ -126,9 +126,16 @@ class FletStaticFiles(StaticFiles):
     def lookup_path(self, path: str) -> tuple[str, Optional[os.stat_result]]:
         """Resolve a static file path, with SPA fallback for client-side routes.
 
-        Route-like paths (no extension, or `.html`) that don't match a file
-        fall back to `index.html` so the Flutter client can handle routing.
-        Asset-like paths (any other extension) resolve to a real `404`.
+        With the `path` route URL strategy, route-like paths (no extension, or
+        `.html`) that don't match a file fall back to `index.html` so the
+        Flutter client can handle routing. Asset-like paths (any other
+        extension) resolve to a real `404`.
+
+        With the `hash` strategy, routes live in the URL fragment and never
+        reach the server, so there is no fallback: any path that doesn't match
+        a file resolves to a real `404` (with a `404.html` from the assets
+        directory as its body, if there is one), while the mount root still
+        serves `index.html`.
 
         Args:
             path: Requested path, relative to the mounted static root
@@ -141,7 +148,10 @@ class FletStaticFiles(StaticFiles):
         logger.debug(f"StaticFiles.lookup_path: {self.__app_mount_path} {path}")
         full_path, stat_result = super().lookup_path(path)
 
-        if stat_result is not None:
+        if (
+            stat_result is not None
+            or self.__route_url_strategy == RouteUrlStrategy.HASH
+        ):
             return full_path, stat_result
 
         # Not found: SPA fallback only for route-like paths.
