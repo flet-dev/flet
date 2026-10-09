@@ -5,6 +5,12 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
+## 1.1.0
+
+### Fixed
+
+- Fixed `AudioRecorder.start_recording()` returning `False` without recording, or recording into the assets directory, when `output_path` names a file that does not exist yet ([#5999](https://github.com/flet-dev/flet/issues/5999)) by @ndonkoHenri.
+
 ## 0.85.0
 
 ### Added
