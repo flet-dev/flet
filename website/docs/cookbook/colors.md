@@ -44,6 +44,9 @@ When using strings, use only Flet named color identifiers (the same set exposed 
 
 There are 30 named theme colors in [`Theme.color_scheme`](../types/theme/index.md#flet.Theme.color_scheme) that are generated based on
 the [`Theme.color_scheme_seed`](../types/theme/index.md#flet.Theme.color_scheme_seed), which defaults to [`Colors.BLUE`](../types/colors.md#flet.Colors.BLUE).
+Surface colors (`surface`, `surface_container_*`, `on_surface`, `outline` and so on) use a neutral
+grey ramp unless [`Theme.surfaces`](../types/theme/index.md#flet.Theme.surfaces) is set to
+[`ThemeSurfaces.TONAL`](../types/themesurfaces.md).
 
 ```python-repl
 >>> page.theme = ft.Theme(color_scheme_seed=ft.Colors.GREEN)

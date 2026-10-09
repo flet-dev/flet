@@ -1,6 +1,7 @@
 ## 1.1.0
 
 * Flutter updated to [3.47.6](https://github.com/flutter/flutter/blob/stable/CHANGELOG.md#3476).
+* **Breaking:** `parseTheme()` now builds themes from a seed with neutral surfaces by default (`#ffffff` / `#121212` and a neutral grey ramp for surface containers, `onSurface`, `outline` and inverse surfaces); the seed still drives accent colors. A theme's `surfaces: "tonal"` restores the seed-tinted Material 3 surfaces. Adds the `ThemeSurfaces` enum, `parseThemeSurfaces()` and `neutralizeSurfaces()` ([#6921](https://github.com/flet-dev/flet/issues/6921)) by @FeodorFitsner.
 
 ## 1.0.4
 

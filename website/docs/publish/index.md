@@ -1005,12 +1005,12 @@ mode and `dark_color` for dark mode:
 ```toml
 [tool.flet.splash]
 color = "#ffffff"
-dark_color = "#222222"
+dark_color = "#121212"
 ```
 </TabItem>
 <TabItem value="flet-build" label="flet build">
 ```bash
-flet build <target_platform> --splash-color "#ffffff" --splash-dark-color "#222222"
+flet build <target_platform> --splash-color "#ffffff" --splash-dark-color "#121212"
 ```
 </TabItem>
 </Tabs>

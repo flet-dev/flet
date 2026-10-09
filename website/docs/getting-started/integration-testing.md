@@ -246,6 +246,10 @@ flet test android --device-id emulator-5554 -u
 </TabItem>
 </Tabs>
 
+After a change that affects many screens, use `--update-failed-goldens` instead.
+It compares as usual and overwrites only the goldens that are missing or no longer
+match, so unchanged images stay untouched in your diff.
+
 :::tip
 Render each screenshot on the same device/emulator you record its golden on —
 different screen sizes and densities produce different pixels.
@@ -403,6 +407,7 @@ uv run pytest -s -o log_cli=true -o log_cli_level=DEBUG
 | `[platform]` | `FLET_TEST_PLATFORM` (e.g. `ios`, `android`) |
 | `-d`, `--device-id` | `FLET_TEST_DEVICE` |
 | `-u`, `--update-goldens` | `FLET_TEST_GOLDEN=1` |
+| `--update-failed-goldens` | `FLET_TEST_GOLDEN=failed` |
 
 ```bash
 # run on an iOS simulator and (re)record golden screenshots
