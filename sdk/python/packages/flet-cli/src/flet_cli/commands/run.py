@@ -219,9 +219,9 @@ class Command(BaseCommand):
         Linux inotify watch or instance limit is reached, a warning is printed
         and the app runs without reloading on changes.
 
-        The `.flet/` directory is always ignored by the file watcher: it holds
-        the app's working directory and temp directory, so what the app writes
-        there is not a code change.
+        The `.flet/` directory is always ignored by the file watcher, both as
+        given and with symlinks resolved: it holds the app's working directory
+        and temp directory, so what the app writes there is not a code change.
 
         Args:
             options: Parsed command options produced by :meth:`add_arguments`.
@@ -365,7 +365,9 @@ class Command(BaseCommand):
             except Exception:
                 pass
 
-        ignore_dirs.append(str(flet_dir.resolve()))
+        ignore_dirs.extend(
+            dict.fromkeys([os.path.abspath(flet_dir), str(flet_dir.resolve())])
+        )
 
         my_event_handler = Handler(
             args=[sys.executable, "-u"]
@@ -564,17 +566,19 @@ class Handler(FileSystemEventHandler):
         """
         React to file-system events and trigger a debounced process restart.
 
-        Events coming from ignored directories are skipped. Restart is performed
-        for create/modify/delete/move events either on the target script or
-        within the watched directory tree.
+        Events coming from ignored directories are skipped; a path on another
+        drive than an ignored directory (Windows) is never inside it. Restart is
+        performed for create/modify/delete/move events either on the target
+        script or within the watched directory tree.
         """
 
+        child = os.path.abspath(event.src_path)
         for directory in self.ignore_dirs:
-            child = os.path.abspath(event.src_path)
-            # check if the file which triggered the reload is in the (ignored) directory
-            if os.path.commonpath([directory]) == os.path.commonpath(
-                [directory, child]
-            ):
+            try:
+                common = os.path.commonpath([directory, child])
+            except ValueError:
+                continue
+            if os.path.commonpath([directory]) == common:
                 return
 
         if (
