@@ -181,6 +181,11 @@ To modify this behavior, you can use one or more of these [`flet run`](../cli/fl
 * `-d` or `--directory` to watch for changes in the `[script]`s directory only
 * `-r` or `--recursive` to watch for changes in the `[script]`s directory and all sub-directories recursively
 
+A reload restarts your app's process. In desktop mode the window stays open, and it keeps
+the assets directory it was opened with: after changing `assets_dir` in `ft.run()`, stop
+and restart `flet run` to load assets from the new directory. With `--web`, a reload
+picks up the new directory.
+
 :::note[Example]
 
 <Tabs groupId="uv--pip">

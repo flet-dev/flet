@@ -171,12 +171,21 @@ before the app starts or at the very top of your `main.py` — to get the same b
 
 ### `FLET_ASSETS_DIR`
 
-Absolute path to the app's assets directory.
+Absolute path to the app's assets directory. When it is set, it takes precedence over the
+`assets_dir` argument of `ft.run()`.
 
-In production apps built with [`flet build`](../publish/index.md), this environment-variable points to the bundled assets absolute location at runtime.
-Use it when your code needs a filesystem path to bundled files (for example, JSON configs, databases, or model files).
+Where it is set:
 
-For local runs, it may be unset depending on how the app is started, so use a fallback:
+- In apps built with [`flet build`](../publish/index.md) (except `web`), it points to the
+  bundled assets at runtime.
+- [`flet run`](../cli/flet-run.md) sets it for your app only when you pass `--assets` or set
+  `FLET_ASSETS_DIR` yourself. Otherwise your app uses its own `ft.run(assets_dir=...)`,
+  `"assets"` next to your script by default. So with `flet run` the order is `--assets`,
+  then `FLET_ASSETS_DIR`, then `ft.run(assets_dir=...)`, then `"assets"`.
+- When you start the script with `python`, it is set only if you set it.
+
+Use it when your code needs a filesystem path to bundled files (for example, JSON configs,
+databases, or model files). As it is often unset in local runs, use a fallback:
 
 ```python
 import os
