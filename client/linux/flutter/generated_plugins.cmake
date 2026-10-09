@@ -12,6 +12,7 @@ list(APPEND FLUTTER_PLUGIN_LIST
   rive_native
   screen_retriever_linux
   url_launcher_linux
+  webview_all_linux
   window_manager
 )
 
