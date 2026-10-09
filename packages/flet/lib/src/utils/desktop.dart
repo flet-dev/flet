@@ -127,10 +127,20 @@ Future setWindowTitleBarVisibility(
   }
 }
 
+/// Whether the window is hidden from the Windows taskbar, as last applied by
+/// [setWindowSkipTaskBar].
+///
+/// On Windows, `window_manager`'s `isSkipTaskbar()` returns a flag that only
+/// its `setSkipTaskbar()` updates and that starts out `true`, although a new
+/// window has a taskbar button. [getWindowState] reports this value instead,
+/// so a window is not considered hidden from the taskbar until it actually is.
+bool _windowsSkipTaskBar = false;
+
 Future setWindowSkipTaskBar(bool skipTaskBar) async {
   if (isDesktopPlatform()) {
     debugPrint("setWindowSkipTaskBar($skipTaskBar)");
     await windowManager.setSkipTaskbar(skipTaskBar);
+    _windowsSkipTaskBar = skipTaskBar;
   }
 }
 
@@ -341,7 +351,9 @@ Future<WindowState> getWindowState() async {
       maximizable: await windowManager.isMaximizable(),
       resizable: await windowManager.isResizable(),
       preventClose: await windowManager.isPreventClose(),
-      skipTaskBar: await windowManager.isSkipTaskbar(),
+      skipTaskBar: isWindowsDesktop()
+          ? _windowsSkipTaskBar
+          : await windowManager.isSkipTaskbar(),
       width: size.width.toDouble(),
       height: size.height.toDouble(),
       top: pos.dy.toDouble(),
