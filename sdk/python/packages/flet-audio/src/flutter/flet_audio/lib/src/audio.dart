@@ -61,16 +61,20 @@ class AudioService extends FletService {
     update();
   }
 
+  /// Applies the control's properties to [player].
+  ///
+  /// A missing or empty `src` means there is no source yet, e.g. until the
+  /// user picks a file: the other properties are still applied, and a source
+  /// set earlier is released.
   @override
   void update() {
     debugPrint("Audio(${control.id}).update: ${control.properties}");
 
-    final resolvedSrc = control.getSrc("src");
+    final resolvedSrc = control.get("src") != null
+        ? control.getSrc("src")
+        : const ResolvedAssetSource();
     if (resolvedSrc.error != null) {
       throw Exception("Audio src decode error: ${resolvedSrc.error}");
-    }
-    if (resolvedSrc.isEmpty) {
-      throw Exception("Audio must have \"src\" specified.");
     }
     var autoplay = control.getBool("autoplay", false)!;
     var volume = control.getDouble("volume", 1.0)!;
@@ -80,8 +84,15 @@ class AudioService extends FletService {
 
     () async {
       bool srcChanged = false;
-      // URL or file
-      if (resolvedSrc.uri != null && resolvedSrc.uri != _src) {
+      if (resolvedSrc.isEmpty) {
+        // no source
+        if (_hasSource) {
+          _src = null;
+          _srcBytes = null;
+          await player.release();
+        }
+      } else if (resolvedSrc.uri != null && resolvedSrc.uri != _src) {
+        // URL or file
         _src = resolvedSrc.uri;
         _srcBytes = null;
         srcChanged = true;
@@ -130,6 +141,9 @@ class AudioService extends FletService {
     }();
   }
 
+  /// Whether a source is set, in [_src] or [_srcBytes].
+  bool get _hasSource => _src != null || _srcBytes != null;
+
   /// Pushes the currently tracked source ([_src] or [_srcBytes]) to the native
   /// [player], preparing it for playback.
   ///
@@ -149,8 +163,17 @@ class AudioService extends FletService {
     }
   }
 
+  /// Handles a method call from Python.
+  ///
+  /// `play`, `resume` and `seek` throw while no source is set. The native
+  /// players don't reject them: a seek never reports completion, so the call
+  /// would only fail after timing out, and the web and Linux players remember
+  /// a `resume` and start playing as soon as a source is set.
   Future<dynamic> _invokeMethod(String name, dynamic args) async {
     debugPrint("Audio.$name($args)");
+    if (!_hasSource && const ["play", "resume", "seek"].contains(name)) {
+      throw Exception("Audio must have \"src\" specified to $name.");
+    }
     switch (name) {
       case "play":
         final position = parseDuration(args["position"]);
