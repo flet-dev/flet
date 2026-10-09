@@ -10,7 +10,7 @@
 
 ### Bug fixes
 
-* Fix `requests.Session` ignoring its `verify` setting in apps built with `flet build` ([#5695](https://github.com/flet-dev/flet/issues/5695)) by @ndonkoHenri.
+* Fix `requests.Session` ignoring its `verify` setting in apps built with `flet build` ([#5695](https://github.com/flet-dev/flet/issues/5695), [#6936](https://github.com/flet-dev/flet/pull/6936)) by @ndonkoHenri.
 
 ### Documentation
 
