@@ -1,4 +1,4 @@
-from dataclasses import field
+from dataclasses import dataclass, field
 from typing import Annotated, Optional
 
 from flet.controls.alignment import Alignment
@@ -7,6 +7,7 @@ from flet.controls.control import Control
 from flet.controls.control_event import EventHandler
 from flet.controls.duration import DurationValue
 from flet.controls.events import (
+    InteractiveViewerTransformEvent,
     ScaleEndEvent,
     ScaleStartEvent,
     ScaleUpdateEvent,
@@ -16,7 +17,62 @@ from flet.controls.margin import Margin, MarginValue
 from flet.controls.types import ClipBehavior, Number
 from flet.utils.validation import V
 
-__all__ = ["InteractiveViewer"]
+__all__ = ["InteractiveViewer", "InteractiveViewerTransform"]
+
+
+@dataclass(kw_only=True)
+class InteractiveViewerTransform:
+    """
+    Effective transform currently applied to an :class:`InteractiveViewer`.
+
+    ``scale`` is Flutter's ``Matrix4.getMaxScaleOnAxis()`` after min/max scale
+    and boundary clamping. ``1.0`` is the identity transform of the laid-out
+    content, not a ratio against the content's original pixel size.
+
+    ``matrix`` is the 16 column-major entries of that matrix, in the same
+    order as Flutter's ``Matrix4.storage``. The translation component is also
+    available as :attr:`translation_x`, :attr:`translation_y` and
+    :attr:`translation_z` (storage indexes 12, 13 and 14).
+    """
+
+    scale: float
+    """
+    Maximum scale factor along the matrix axes. ``1.0`` is identity.
+    """
+
+    translation_x: float
+    """
+    Horizontal translation, in logical pixels.
+    """
+
+    translation_y: float
+    """
+    Vertical translation, in logical pixels.
+    """
+
+    translation_z: float
+    """
+    Z translation stored on the matrix.
+    """
+
+    matrix: list[float]
+    """
+    Column-major 4x4 matrix. Length is 16.
+    """
+
+    @classmethod
+    def from_message(cls, message: dict) -> "InteractiveViewerTransform":
+        """
+        Build a transform from the map returned by the Dart viewer.
+        """
+        matrix = message["m"]
+        return cls(
+            scale=float(message["s"]),
+            translation_x=float(message["tx"]),
+            translation_y=float(message["ty"]),
+            translation_z=float(message["tz"]),
+            matrix=[float(item) for item in matrix],
+        )
 
 
 @control("InteractiveViewer")
@@ -192,6 +248,23 @@ class InteractiveViewer(LayoutControl):
     Called when the user ends a pan or scale gesture.
     """
 
+    on_transform_changed: Optional[
+        EventHandler[InteractiveViewerTransformEvent["InteractiveViewer"]]
+    ] = None
+    """
+    Called when the effective transform changes.
+
+    Fires for pinch and pan gestures, pointer-wheel or trackpad zoom, and for
+    :meth:`zoom`, :meth:`pan`, :meth:`reset` and :meth:`restore_state`.
+    :meth:`save_state` only stores a snapshot, so it does not fire this event.
+    Intermediate updates are limited to :attr:`interaction_update_interval`
+    milliseconds, and the transform in effect when changes stop is still
+    delivered.
+
+    ``on_interaction_update`` reports the gesture's relative scale, not this
+    absolute transform.
+    """
+
     async def reset(self, animation_duration: Optional[DurationValue] = None):
         """
         Resets the current transform matrix to identity.
@@ -258,3 +331,32 @@ class InteractiveViewer(LayoutControl):
             and defaults to `0`.
         """
         await self._invoke_method("pan", arguments={"dx": dx, "dy": dy, "dz": dz})
+
+    async def get_scale(self) -> float:
+        """
+        Return the effective scale currently applied to :attr:`content`.
+
+        Returns:
+            ``1.0`` for identity, after min/max scale and boundary clamping.
+            This is the scale of the laid-out content, not a ratio against
+            the content's original pixel size.
+
+        Raises:
+            RuntimeError: If this control is not on a page.
+        """
+        return float(await self._invoke_method("get_scale"))
+
+    async def get_transform(self) -> InteractiveViewerTransform:
+        """
+        Return the effective transform currently applied to :attr:`content`.
+
+        Returns:
+            Scale, translation and the column-major 4x4 matrix, after
+            clamping.
+
+        Raises:
+            RuntimeError: If this control is not on a page.
+        """
+        return InteractiveViewerTransform.from_message(
+            await self._invoke_method("get_transform")
+        )

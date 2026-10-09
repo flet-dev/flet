@@ -1,6 +1,6 @@
 import 'dart:math' as math;
 
-import 'package:flutter/foundation.dart' show clampDouble;
+import 'package:flutter/foundation.dart' show clampDouble, unawaited;
 import 'package:flutter/gestures.dart';
 import 'package:flutter/widgets.dart';
 import 'package:vector_math/vector_math_64.dart' show Matrix4, Quad, Vector3;
@@ -45,6 +45,8 @@ class _InteractiveViewerControlState extends State<InteractiveViewerControl>
   Animation<Matrix4>? _animation;
   Matrix4? _savedMatrix;
   int _interactionUpdateTimestamp = DateTime.now().millisecondsSinceEpoch;
+  int _transformEventTimestamp = 0;
+  bool _transformFlushScheduled = false;
   final double _currentRotation = 0.0;
 
   /// Gesture settings the viewer was last built with, mirrored here so the
@@ -64,6 +66,7 @@ class _InteractiveViewerControlState extends State<InteractiveViewerControl>
     _animationController =
         AnimationController(vsync: this, duration: Duration.zero);
     widget.control.addInvokeMethodListener(_invokeMethod);
+    _transformationController.addListener(_onTransformChanged);
   }
 
   /// Handles method channel calls from the Python side, mirroring the
@@ -115,13 +118,69 @@ class _InteractiveViewerControlState extends State<InteractiveViewerControl>
           _transformationController.value = _savedMatrix!;
         }
         break;
+      case "get_scale":
+        return _transformationController.value.getMaxScaleOnAxis();
+      case "get_transform":
+        return _transformPayload();
       default:
         throw Exception("Unknown InteractiveViewer method: $name");
     }
   }
 
+  /// Scale, translation and column-major matrix currently applied.
+  Map<String, dynamic> _transformPayload() {
+    final Matrix4 matrix = _transformationController.value;
+    final Vector3 translation = matrix.getTranslation();
+    return <String, dynamic>{
+      "s": matrix.getMaxScaleOnAxis(),
+      "tx": translation.x,
+      "ty": translation.y,
+      "tz": translation.z,
+      "m": matrix.storage.toList(),
+    };
+  }
+
+  /// Notifies Python of the effective transform.
+  ///
+  /// Gesture, wheel and programmatic updates all write the same controller,
+  /// so one listener covers them. Intermediate notifications are limited to
+  /// `interaction_update_interval`; a trailing timer still sends the value
+  /// that remains once updates stop.
+  void _onTransformChanged() {
+    if (!mounted || !widget.control.hasEventHandler("transform_changed")) {
+      return;
+    }
+    final int interval =
+        widget.control.getInt("interaction_update_interval", 200)!;
+    final int now = DateTime.now().millisecondsSinceEpoch;
+    if (interval <= 0 || now - _transformEventTimestamp >= interval) {
+      _emitTransformChanged(now);
+      return;
+    }
+    if (_transformFlushScheduled) {
+      return;
+    }
+    _transformFlushScheduled = true;
+    final int wait = interval - (now - _transformEventTimestamp);
+    unawaited(
+      Future<void>.delayed(Duration(milliseconds: wait), () {
+        _transformFlushScheduled = false;
+        if (!mounted || !widget.control.hasEventHandler("transform_changed")) {
+          return;
+        }
+        _emitTransformChanged(DateTime.now().millisecondsSinceEpoch);
+      }),
+    );
+  }
+
+  void _emitTransformChanged(int now) {
+    _transformEventTimestamp = now;
+    widget.control.triggerEvent("transform_changed", _transformPayload());
+  }
+
   @override
   void dispose() {
+    _transformationController.removeListener(_onTransformChanged);
     _transformationController.dispose();
     _animationController.dispose();
     widget.control.removeInvokeMethodListener(_invokeMethod);
