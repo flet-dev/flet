@@ -91,10 +91,26 @@ class _SearchBarControlState extends State<SearchBarControl> {
       case "blur":
         _focusNode.unfocus();
         if (_controller.isOpen) {
-          FocusManager.instance.primaryFocus?.unfocus();
+          _unfocusViewHeader();
         }
       default:
         throw Exception("Unknown SearchBar method: $name");
+    }
+  }
+
+  /// Removes focus from the text field in the header of the open view.
+  ///
+  /// [SearchAnchor] builds that text field with a focus node of its own, so it
+  /// is reached through the primary focus. The primary focus is unfocused only
+  /// when it belongs to a text field driven by this SearchBar's [_controller],
+  /// which leaves focus alone when it is held by another control, such as a
+  /// text field in the suggestions or in a dialog shown over the view.
+  void _unfocusViewHeader() {
+    final primaryFocus = FocusManager.instance.primaryFocus;
+    final editable =
+        primaryFocus?.context?.findAncestorStateOfType<EditableTextState>();
+    if (identical(editable?.widget.controller, _controller)) {
+      primaryFocus!.unfocus();
     }
   }
 
