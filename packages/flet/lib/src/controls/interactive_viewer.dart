@@ -1,6 +1,7 @@
+import 'dart:async';
 import 'dart:math' as math;
 
-import 'package:flutter/foundation.dart' show clampDouble, unawaited;
+import 'package:flutter/foundation.dart' show clampDouble, visibleForTesting;
 import 'package:flutter/gestures.dart';
 import 'package:flutter/widgets.dart';
 import 'package:vector_math/vector_math_64.dart' show Matrix4, Quad, Vector3;
@@ -15,6 +16,76 @@ import '../utils/numbers.dart';
 import '../utils/time.dart';
 import '../widgets/error.dart';
 import 'base_controls.dart';
+
+/// Delivers `transform_changed` at most once per interval, plus one trailing
+/// event for the matrix that remains. An immediate delivery cancels the
+/// trailing timer, and the timer does not repeat a matrix already delivered.
+@visibleForTesting
+class InteractiveViewerTransformGate {
+  Timer? _timer;
+  int? _lastEmitMillis;
+  List<double>? _lastMatrix;
+
+  void dispose() {
+    _timer?.cancel();
+    _timer = null;
+  }
+
+  void onTransform({
+    required int Function() now,
+    required int intervalMillis,
+    required bool Function() enabled,
+    required List<double> Function() matrix,
+    required void Function() emit,
+  }) {
+    if (!enabled()) {
+      return;
+    }
+    final int nowMillis = now();
+    final int? lastEmitMillis = _lastEmitMillis;
+    if (intervalMillis <= 0 ||
+        lastEmitMillis == null ||
+        nowMillis - lastEmitMillis >= intervalMillis) {
+      _timer?.cancel();
+      _timer = null;
+      _emit(nowMillis, matrix(), emit);
+      return;
+    }
+    _timer ??= Timer(
+      Duration(milliseconds: intervalMillis - (nowMillis - lastEmitMillis)),
+      () {
+        _timer = null;
+        if (!enabled()) {
+          return;
+        }
+        final List<double> current = matrix();
+        if (_matches(current)) {
+          return;
+        }
+        _emit(now(), current, emit);
+      },
+    );
+  }
+
+  void _emit(int nowMillis, List<double> matrix, void Function() emit) {
+    _lastEmitMillis = nowMillis;
+    _lastMatrix = List<double>.from(matrix);
+    emit();
+  }
+
+  bool _matches(List<double> matrix) {
+    final List<double>? last = _lastMatrix;
+    if (last == null || last.length != matrix.length) {
+      return false;
+    }
+    for (int i = 0; i < last.length; i++) {
+      if (last[i] != matrix[i]) {
+        return false;
+      }
+    }
+    return true;
+  }
+}
 
 class InteractiveViewerControl extends StatefulWidget {
   final Control control;
@@ -45,8 +116,8 @@ class _InteractiveViewerControlState extends State<InteractiveViewerControl>
   Animation<Matrix4>? _animation;
   Matrix4? _savedMatrix;
   int _interactionUpdateTimestamp = DateTime.now().millisecondsSinceEpoch;
-  int _transformEventTimestamp = 0;
-  bool _transformFlushScheduled = false;
+  final InteractiveViewerTransformGate _transformGate =
+      InteractiveViewerTransformGate();
   final double _currentRotation = 0.0;
 
   /// Gesture settings the viewer was last built with, mirrored here so the
@@ -143,43 +214,23 @@ class _InteractiveViewerControlState extends State<InteractiveViewerControl>
   /// Notifies Python of the effective transform.
   ///
   /// Gesture, wheel and programmatic updates all write the same controller,
-  /// so one listener covers them. Intermediate notifications are limited to
-  /// `interaction_update_interval`; a trailing timer still sends the value
-  /// that remains once updates stop.
+  /// so one listener covers them.
   void _onTransformChanged() {
-    if (!mounted || !widget.control.hasEventHandler("transform_changed")) {
-      return;
-    }
-    final int interval =
-        widget.control.getInt("interaction_update_interval", 200)!;
-    final int now = DateTime.now().millisecondsSinceEpoch;
-    if (interval <= 0 || now - _transformEventTimestamp >= interval) {
-      _emitTransformChanged(now);
-      return;
-    }
-    if (_transformFlushScheduled) {
-      return;
-    }
-    _transformFlushScheduled = true;
-    final int wait = interval - (now - _transformEventTimestamp);
-    unawaited(
-      Future<void>.delayed(Duration(milliseconds: wait), () {
-        _transformFlushScheduled = false;
-        if (!mounted || !widget.control.hasEventHandler("transform_changed")) {
-          return;
-        }
-        _emitTransformChanged(DateTime.now().millisecondsSinceEpoch);
-      }),
+    _transformGate.onTransform(
+      now: () => DateTime.now().millisecondsSinceEpoch,
+      intervalMillis:
+          widget.control.getInt("interaction_update_interval", 200)!,
+      enabled: () =>
+          mounted && widget.control.hasEventHandler("transform_changed"),
+      matrix: () => _transformationController.value.storage,
+      emit: () =>
+          widget.control.triggerEvent("transform_changed", _transformPayload()),
     );
-  }
-
-  void _emitTransformChanged(int now) {
-    _transformEventTimestamp = now;
-    widget.control.triggerEvent("transform_changed", _transformPayload());
   }
 
   @override
   void dispose() {
+    _transformGate.dispose();
     _transformationController.removeListener(_onTransformChanged);
     _transformationController.dispose();
     _animationController.dispose();
