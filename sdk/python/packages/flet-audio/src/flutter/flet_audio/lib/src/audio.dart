@@ -64,8 +64,12 @@ class AudioService extends FletService {
   /// Applies the control's properties to [player].
   ///
   /// A missing or empty `src` means there is no source yet, e.g. until the
-  /// user picks a file: the other properties are still applied, and a source
-  /// set earlier is released.
+  /// user picks a file: the other properties are still applied, and playback
+  /// of a source set earlier stops.
+  ///
+  /// The player is paused rather than released: the web player keeps the URL
+  /// of a released source and skips loading it again, so setting the same
+  /// `src` again would leave nothing to play.
   @override
   void update() {
     debugPrint("Audio(${control.id}).update: ${control.properties}");
@@ -89,7 +93,7 @@ class AudioService extends FletService {
         if (_hasSource) {
           _src = null;
           _srcBytes = null;
-          await player.release();
+          await player.pause();
         }
       } else if (resolvedSrc.uri != null && resolvedSrc.uri != _src) {
         // URL or file
