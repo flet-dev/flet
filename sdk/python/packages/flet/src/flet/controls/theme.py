@@ -3277,6 +3277,29 @@ class DataTableTheme:
     """
 
 
+class ThemeSurfaces(Enum):
+    """
+    How surface colors of a :class:`~flet.Theme` are derived from its
+    :attr:`~flet.Theme.color_scheme_seed`.
+    """
+
+    NEUTRAL = "neutral"
+    """
+    Surfaces use a neutral grey ramp with no hue: white in light mode and
+    near-black (`#121212`) in dark mode. Accent colors (primary, secondary,
+    tertiary and their containers) still come from the seed.
+
+    The full list of neutral colors is in the
+    [Theming](https://flet.dev/docs/cookbook/theming#surfaces) guide.
+    """
+
+    TONAL = "tonal"
+    """
+    Surfaces are tinted with the seed hue, as in the Material 3 default
+    color scheme. This was the default before Flet 1.1.0.
+    """
+
+
 @value
 class Theme:
     """
@@ -3288,6 +3311,17 @@ class Theme:
     Overrides the default color scheme seed used to generate
     :class:`~flet.ColorScheme`.
     The default color is blue.
+
+    The seed drives accent colors. Surfaces are neutral unless
+    :attr:`surfaces` is set to :attr:`~flet.ThemeSurfaces.TONAL`.
+    """
+
+    surfaces: Optional[ThemeSurfaces] = None
+    """
+    How surface colors are derived from :attr:`color_scheme_seed`.
+
+    Defaults to :attr:`~flet.ThemeSurfaces.NEUTRAL` if `None`. Set it to
+    :attr:`~flet.ThemeSurfaces.TONAL` for seed-tinted Material 3 surfaces.
     """
 
     font_family: Optional[str] = None

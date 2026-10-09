@@ -672,6 +672,7 @@ if TYPE_CHECKING:
         TextButtonTheme,
         TextTheme,
         Theme,
+        ThemeSurfaces,
         TimePickerTheme,
         TooltipTheme,
     )
@@ -1199,6 +1200,7 @@ __all__ = [
     "TextThemeStyle",
     "Theme",
     "ThemeMode",
+    "ThemeSurfaces",
     "TileAffinity",
     "TimePicker",
     "TimePickerEntryMode",
@@ -1741,6 +1743,7 @@ _LAZY = {
     "TextThemeStyle": "flet.controls.text_style",
     "Theme": "flet.controls.theme",
     "ThemeMode": "flet.controls.types",
+    "ThemeSurfaces": "flet.controls.theme",
     "TileAffinity": "flet.controls.material.expansion_tile",
     "TimePicker": "flet.controls.material.time_picker",
     "TimePickerEntryMode": "flet.controls.material.time_picker",

@@ -120,6 +120,7 @@ class Command(BaseBuildCommand):
         self.device_id: Optional[str] = None
         self.tests_dir = "tests"
         self.update_goldens = False
+        self.update_failed_goldens = False
         self.pytest_args: list[str] = []
         self.flutter_test_host: Optional[str] = None
 
@@ -157,6 +158,14 @@ class Command(BaseBuildCommand):
             help="Capture/update golden screenshots instead of comparing.",
         )
         parser.add_argument(
+            "--update-failed-goldens",
+            dest="update_failed_goldens",
+            action="store_true",
+            default=False,
+            help="Compare screenshots and overwrite only golden images that "
+            "are missing or don't match.",
+        )
+        parser.add_argument(
             "--flutter-test-host",
             dest="flutter_test_host",
             default=None,
@@ -187,6 +196,7 @@ class Command(BaseBuildCommand):
         )
         self.tests_dir = options.tests_dir
         self.update_goldens = options.update_goldens
+        self.update_failed_goldens = options.update_failed_goldens
         self.flutter_test_host = options.flutter_test_host
 
         self.pytest_args = []
@@ -248,6 +258,8 @@ class Command(BaseBuildCommand):
             env["FLET_TEST_DEVICE"] = self.device_id
         if self.update_goldens:
             env["FLET_TEST_GOLDEN"] = "1"
+        elif self.update_failed_goldens:
+            env["FLET_TEST_GOLDEN"] = "failed"
 
         pytest_args = list(self.pytest_args)
         if self.verbose > 0:

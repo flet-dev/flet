@@ -1,6 +1,6 @@
 ## 1.1.0
 
-_No changes in the `flet` Dart package; version bumped for release coordination with the new `flet-shadcn-ui` extension ([#6918](https://github.com/flet-dev/flet/pull/6918))._
+* **Breaking:** `parseTheme()` now builds themes from a seed with neutral surfaces by default (`#ffffff` / `#121212` and a neutral grey ramp for surface containers, `onSurface`, `outline` and inverse surfaces); the seed still drives accent colors. A theme's `surfaces: "tonal"` restores the seed-tinted Material 3 surfaces. Adds the `ThemeSurfaces` enum, `parseThemeSurfaces()` and `neutralizeSurfaces()` ([#6921](https://github.com/flet-dev/flet/issues/6921)) by @FeodorFitsner.
 
 ## 1.0.4
 

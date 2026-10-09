@@ -33,6 +33,7 @@ Each guide explains the change, the reason for it, and how to migrate your code.
 #### Breaking changes
 
 - [macOS and iOS: built apps now require macOS 12 and iOS 15](/docs/updates/breaking-changes/v1-1-0/minimum-macos-12-ios-15)
+- [Default theme surfaces are now neutral (white / near-black)](/docs/updates/breaking-changes/v1-1-0/neutral-default-surfaces)
 
 ### Released in Flet 1.0.0
 
