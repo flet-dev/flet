@@ -15,6 +15,12 @@
 * Add `flet test --update-failed-goldens` (`FLET_TEST_GOLDEN=failed`): compares screenshots as usual and overwrites only golden images that are missing or no longer match, so unchanged goldens stay untouched ([#6921](https://github.com/flet-dev/flet/issues/6921)) by @FeodorFitsner.
 * Add `bgcolor` to `FletTestApp.take_page_controls_screenshot()`, `assert_control_screenshot()` and `wrap_page_controls_in_screenshot()` to paint an opaque background behind the captured controls instead of a transparent one ([#6918](https://github.com/flet-dev/flet/pull/6918)) by @InesaFitsner.
 
+### Bug fixes
+
+* Fix `flet build`, `flet debug` and `flet test` failing for macOS and iOS on Xcode 27, which rejects deployment targets below macOS 12 and iOS 15 ([#6874](https://github.com/flet-dev/flet/issues/6874)) by @ndonkoHenri.
+
+  **Compatibility:** Apps built with `flet build` and the macOS desktop client now require macOS 12 or later, and iOS apps require iOS 15 or later. Custom build templates need the same `Podfile` and Xcode project changes to build on Xcode 27. See the [macOS 12 and iOS 15 minimum](/docs/updates/breaking-changes/v1-1-0/minimum-macos-12-ios-15) guide.
+
 ### Documentation
 
 * Group the Reference > Controls section of the docs into Core, Material, Cupertino, Shadcn and Extensions ([#6918](https://github.com/flet-dev/flet/pull/6918)) by @InesaFitsner.

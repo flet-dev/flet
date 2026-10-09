@@ -1,5 +1,5 @@
 # Uncomment this line to define a global platform for your project
-# platform :ios, '13.0'
+# platform :ios, '15.0'
 
 # CocoaPods analytics sends network stats synchronously affecting flutter build latency.
 ENV['COCOAPODS_DISABLE_STATS'] = 'true'
@@ -37,6 +37,13 @@ end
 post_install do |installer|
   installer.pods_project.targets.each do |target|
     flutter_additional_ios_build_settings(target)
+    # Pods targeting iOS older than 15.0 (e.g. Flutter at 13.0) inherit the platform
+    # of the project instead, because Xcode 27 rejects deployment targets below 15.0.
+    if target.deployment_target.to_s[/\d+/].to_i < 15
+      target.build_configurations.each do |config|
+        config.build_settings.delete('IPHONEOS_DEPLOYMENT_TARGET')
+      end
+    end
 
     target.build_configurations.each do |config|
       # You can remove unused permissions here
