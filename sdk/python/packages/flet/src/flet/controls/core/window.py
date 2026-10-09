@@ -131,6 +131,12 @@ class Window(BaseControl):
     Tip:
         Can be used together with :attr:`flet.Page.bgcolor` to make
         a window transparent.
+
+    Limitation:
+        On Linux, a compositor must already be running when the app starts.
+        The window's visual is chosen once before the window is created and
+        cannot be swapped afterwards, so an app that starts before its
+        compositor stays opaque until it is restarted.
     """
 
     width: Optional[Number] = None

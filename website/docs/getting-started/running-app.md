@@ -196,3 +196,49 @@ flet run --recursive [script]
 </TabItem>
 </Tabs>
 :::
+
+## Troubleshooting
+
+### Hot reload is unavailable on Linux \{#linux-inotify-limits}
+
+On Linux, `flet run` watches for changes with inotify, which limits how many
+directories and files each user can watch at once. That limit is shared by all
+programs the user runs, so editors and IDEs can use up most of it, and
+`--recursive` needs one watch for every sub-directory, including `.venv`,
+`node_modules` and `build`. When the limit is reached, `flet run` prints a
+warning such as:
+
+```
+Warning: file watching is unavailable (inotify watch limit reached), so the app won't reload on changes.
+```
+
+The app still runs, but saving a file doesn't reload it.
+
+Check the current limits:
+
+```bash
+grep . /proc/sys/fs/inotify/max_user_watches /proc/sys/fs/inotify/max_user_instances
+```
+
+If either value is lower than the one below, raise it until the next reboot.
+Leave out a setting that's already higher, here and in the next step:
+
+```bash
+sudo sysctl fs.inotify.max_user_watches=524288 fs.inotify.max_user_instances=512
+```
+
+To keep the new values after a reboot, save them to a sysctl configuration file
+and load it:
+
+```bash
+printf 'fs.inotify.max_user_watches=524288\nfs.inotify.max_user_instances=512\n' | sudo tee /etc/sysctl.d/90-inotify.conf
+sudo sysctl --system
+```
+
+Then restart `flet run`.
+
+With `--recursive`, keep large directories such as `.venv` outside the watched
+directory, for example by keeping your app code in `src/` as
+[`flet create`](../cli/flet-create.md) does. `--ignore-dirs` doesn't reduce the
+number of watches: it only stops changes in those directories from reloading the
+app.

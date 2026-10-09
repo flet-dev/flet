@@ -7,7 +7,7 @@
 
 ## 1.0.4
 
-_No changes in the `flet` Dart package; version bumped for release coordination with the `flet build web` fix that sets the PWA manifest's `short_name` to the product name, and the new `--pwa-short-name` option ([#6911](https://github.com/flet-dev/flet/pull/6911))._
+* Depend on `screen_brightness_platform_interface`, `screen_brightness_android` and `screen_brightness_ios` instead of `screen_brightness`, and drive `ScreenBrightnessService` through `ScreenBrightnessPlatform.instance`: apps embedding `flet` no longer register the Windows, macOS and OHOS `screen_brightness` plugins, whose Windows one talks to monitors over DDC/CI while the app runs ([#6629](https://github.com/flet-dev/flet/issues/6629), [#6493](https://github.com/flet-dev/flet/issues/6493), [#6925](https://github.com/flet-dev/flet/pull/6925)) by @ndonkoHenri.
 
 ## 1.0.3
 

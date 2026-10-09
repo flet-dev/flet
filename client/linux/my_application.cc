@@ -108,6 +108,16 @@ static void my_application_activate(GApplication* application) {
   }
 
   gtk_window_set_default_size(window, 1280, 720);
+  // A window can only be transparent if its surface carries an alpha channel,
+  // which means selecting an RGBA visual. GTK only applies a visual before the
+  // widget is realized, and without a compositor there is nothing to blend the
+  // result against, so fall back to the default visual in that case.
+  GdkScreen* rgba_screen = gtk_window_get_screen(window);
+  GdkVisual* rgba_visual = gdk_screen_get_rgba_visual(rgba_screen);
+  if (rgba_visual != nullptr && gdk_screen_is_composited(rgba_screen)) {
+    gtk_widget_set_visual(GTK_WIDGET(window), rgba_visual);
+  }
+
   // Realize the native window without showing it so Dart can decide when to
   // display and position the window.
   gtk_widget_realize(GTK_WIDGET(window));
@@ -120,6 +130,21 @@ static void my_application_activate(GApplication* application) {
   }
 
   FlView* view = fl_view_new(project);
+
+  // The Flutter view paints an opaque black background by default, which would
+  // cover a transparent window no matter what the app asks for. A fully
+  // transparent colour makes the embedder skip that paint entirely, so
+  // whatever GTK draws below shows through. This alone changes nothing for a
+  // normal app: the top-level keeps painting its own opaque background until
+  // an app sets Window.bgcolor to a transparent colour, which window_manager
+  // applies as a CSS rule on the top-level.
+  //
+  // The colour is built directly rather than parsed from "#00000000": GDK3
+  // resolves "#" specs through pango_color_parse(), which rejects the 8-digit
+  // form outright and leaves the GdkRGBA untouched. The embedder only skips
+  // the paint for exactly (0, 0, 0, 0), so it has to be exact.
+  GdkRGBA background_color = {0.0, 0.0, 0.0, 0.0};
+  fl_view_set_background_color(view, &background_color);
   gtk_widget_show(GTK_WIDGET(view));
   gtk_container_add(GTK_CONTAINER(window), GTK_WIDGET(view));
 

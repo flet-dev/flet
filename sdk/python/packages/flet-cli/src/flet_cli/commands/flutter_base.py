@@ -59,6 +59,7 @@ class BaseFlutterCommand(BaseCommand):
         self.emojis = {}
         self.dart_exe = None
         self.flutter_exe = None
+        self._flutter_arch: Optional[tuple[str, Optional[str]]] = None
         self.required_flutter_version: Optional[version.Version] = None
         self.verbose = False
         self.require_android_sdk = False
@@ -155,16 +156,16 @@ class BaseFlutterCommand(BaseCommand):
         self.flutter_exe = self.find_flutter_batch("flutter")
         self.dart_exe = self.find_flutter_batch("dart")
 
-        if (
-            not self.flutter_exe
-            or not self.dart_exe
-            or not self.flutter_version_valid()
-        ):
+        sdk_found = bool(
+            self.flutter_exe and self.dart_exe and self.flutter_version_valid()
+        )
+        if not sdk_found or not self.flutter_sdk_supported():
             if not self.assume_yes:
-                console.log(
-                    "Flutter SDK not found or invalid version installed.",
-                    style=warning_style,
-                )
+                if not sdk_found:
+                    console.log(
+                        "Flutter SDK not found or invalid version installed.",
+                        style=warning_style,
+                    )
                 prompt = (
                     f"Flutter SDK {self.required_flutter_version} is required. "
                     f"It will be installed now. Proceed? [y/n] "
@@ -226,6 +227,44 @@ class BaseFlutterCommand(BaseCommand):
         else:
             console.log(1, "Failed to validate Flutter version.")
         return False
+
+    def flutter_sdk_supported(self) -> bool:
+        """
+        Check whether the Flutter SDK found can build for this command's target.
+
+        Returns:
+            `True` when the SDK can be used, otherwise `False`, in which case the
+                required Flutter SDK is installed and used instead.
+        """
+
+        return True
+
+    def flutter_arch(self) -> Optional[str]:
+        """
+        Return the CPU architecture of the Flutter SDK's Dart, such as `x64` or
+        `arm64`. On Windows, Flutter builds desktop apps for this architecture.
+
+        Returns:
+            The architecture reported by `dart --version`, or `None` when it can't
+                be determined.
+        """
+
+        if not self.dart_exe:
+            return None
+        if self._flutter_arch and self._flutter_arch[0] == self.dart_exe:
+            return self._flutter_arch[1]
+
+        arch = None
+        result = self.run(
+            [self.dart_exe, "--version"], cwd=os.getcwd(), capture_output=True
+        )
+        output = f"{result.stdout or ''}{result.stderr or ''}"
+        # e.g. `Dart SDK version: 3.12.2 (stable) (...) on "windows_arm64"`
+        match = re.search(r'on "[a-z]+_([a-z0-9]+)"', output)
+        if match:
+            arch = match.group(1)
+        self._flutter_arch = (self.dart_exe, arch)
+        return arch
 
     def install_flutter(self):
         """
