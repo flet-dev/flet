@@ -219,6 +219,10 @@ class Command(BaseCommand):
         Linux inotify watch or instance limit is reached, a warning is printed
         and the app runs without reloading on changes.
 
+        The `.flet/` directory is always ignored by the file watcher: it holds
+        the app's working directory and temp directory, so what the app writes
+        there is not a code change.
+
         Args:
             options: Parsed command options produced by :meth:`add_arguments`.
         """
@@ -360,6 +364,8 @@ class Command(BaseCommand):
                 )
             except Exception:
                 pass
+
+        ignore_dirs.append(str(flet_dir.resolve()))
 
         my_event_handler = Handler(
             args=[sys.executable, "-u"]
