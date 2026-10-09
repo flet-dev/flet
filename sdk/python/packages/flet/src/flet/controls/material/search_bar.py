@@ -303,6 +303,14 @@ class SearchBar(LayoutControl):
         """Requests focus for this control."""
         await self._invoke_method("focus")
 
+    async def blur(self):
+        """
+        Removes focus from this control, including the text field of its open view.
+
+        On mobile, this also hides the on-screen keyboard.
+        """
+        await self._invoke_method("blur")
+
     async def open_view(self):
         """Opens the search view."""
         await self._invoke_method("open_view")

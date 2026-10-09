@@ -102,6 +102,9 @@ class _CupertinoTextFieldControlState extends State<CupertinoTextFieldControl> {
     switch (name) {
       case "focus":
         _focusNode.requestFocus();
+      case "blur":
+        _focusNode.unfocus();
+        _shiftEnterfocusNode.unfocus();
       default:
         throw Exception("Unknown CupertinoTextField method: $name");
     }

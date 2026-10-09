@@ -572,3 +572,23 @@ class FormFieldControl(LayoutControl):
             ```
         """
         await self._invoke_method("focus")
+
+    async def blur(self):
+        """
+        Remove focus from this control.
+
+        On mobile, this also hides the on-screen keyboard.
+
+        Example:
+            ```python
+            async def main(page: ft.Page):
+                async def search(e: ft.Event[ft.Button]):
+                    await ctf.blur()
+
+                page.add(
+                    ctf := ft.TextField(),
+                    ft.Button("Search", on_click=search),
+                )
+            ```
+        """
+        await self._invoke_method("blur")

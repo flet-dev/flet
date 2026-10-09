@@ -85,6 +85,8 @@ class _DropdownControlState extends State<DropdownControl> {
     switch (name) {
       case "focus":
         _focusNode.requestFocus();
+      case "blur":
+        _focusNode.unfocus();
       default:
         throw Exception("Unknown Dropdown method: $name");
     }
