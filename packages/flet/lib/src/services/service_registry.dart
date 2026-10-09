@@ -25,6 +25,11 @@ class ServiceRegistry {
 
     // newly added services
     for (var serviceControl in serviceControls) {
+      final binding = _services[serviceControl.id];
+      if (binding != null && !identical(binding.control, serviceControl)) {
+        binding.dispose();
+        _services.remove(serviceControl.id);
+      }
       if (!_services.containsKey(serviceControl.id)) {
         // Isolate failures per service. ServiceBinding throws for a control
         // type no extension can build ("Unknown service"), and letting that

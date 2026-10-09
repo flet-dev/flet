@@ -247,6 +247,21 @@ class Control extends ChangeNotifier {
     List<Control> changedControls,
     String prefix,
   ) {
+    final preserveServices = parent?.type == "ServiceRegistry" &&
+        (src["_internals"] == null ||
+            (src["_internals"] as Map)["uid"] ==
+                parent!.get<Map>("_internals")?["uid"]);
+    // Empty structural lists are omitted from full Python snapshots.
+    if (parent?.type == "ServiceRegistry" &&
+        src["_c"] == "ServiceRegistry" &&
+        !src.containsKey("_services") &&
+        dst.containsKey("_services")) {
+      dst.remove("_services");
+      changes.add('$prefix._services');
+      if (!changedControls.any((c) => identical(c, parent))) {
+        changedControls.add(parent!);
+      }
+    }
     for (var entry in src.entries) {
       final key = entry.key;
       final fullKey = prefix.isEmpty ? key : '$prefix.$key';
@@ -259,6 +274,37 @@ class Control extends ChangeNotifier {
           (dst[key] as Control).id == entry.value["_i"]) {
         _mergeMaps(dst[key], dst[key].properties, entry.value, changes,
             changedControls, fullKey);
+      } else if (preserveServices &&
+          key == "_services" &&
+          dst[key] is List &&
+          entry.value is List) {
+        final existing = {
+          for (final service in dst[key] as List)
+            if (service is Control) service.id: service,
+        };
+        dst[key] = (entry.value as List).map((value) {
+          if (value is Map && value.containsKey("_c")) {
+            final service = existing[value["_i"]];
+            if (service != null && service.type == value["_c"]) {
+              // Reconnect snapshots must not detach a stateful service from
+              // its invoke listener, or restart its init/dispose lifecycle.
+              if (_removeOmittedServiceProperties(service.properties, value)) {
+                changes.add(fullKey);
+                if (!changedControls.any((c) => identical(c, service))) {
+                  changedControls.add(service);
+                }
+              }
+              _mergeMaps(service, service.properties, value, changes,
+                  changedControls, fullKey);
+              return service;
+            }
+          }
+          return _transformIfControl(value, parent, backend);
+        }).toList();
+        changes.add(fullKey);
+        if (!changedControls.any((c) => identical(c, parent))) {
+          changedControls.add(parent!);
+        }
       } else if (dst[key] != entry.value && !["_i", "_c"].contains(key)) {
         dst[key] = _transformIfControl(entry.value, parent, backend);
         changes.add(fullKey);
@@ -267,6 +313,22 @@ class Control extends ChangeNotifier {
         }
       }
     }
+  }
+
+  bool _removeOmittedServiceProperties(
+      Map<dynamic, dynamic> current, Map<dynamic, dynamic> snapshot) {
+    var changed = false;
+    for (final name in current.keys.toList()) {
+      if (!snapshot.containsKey(name)) {
+        current.remove(name);
+        changed = true;
+      } else if (current[name] is Map && snapshot[name] is Map) {
+        changed = _removeOmittedServiceProperties(
+                current[name] as Map, snapshot[name] as Map) ||
+            changed;
+      }
+    }
+    return changed;
   }
 
   ///
