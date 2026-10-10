@@ -26,7 +26,7 @@
 
   **Compatibility:** Apps built with `flet build` and the macOS desktop client now require macOS 12 or later, and iOS apps require iOS 15 or later. Custom build templates keep building, because Flutter 3.47 raises the deployment targets during the build; apply the same `Podfile` and Xcode project changes to skip that step. See the [macOS 12 and iOS 15 minimum](/docs/updates/breaking-changes/v1-1-0/minimum-macos-12-ios-15) guide.
 
-* Fix the loading logo of web apps served by `flet run --web` or `flet publish` showing off-center after reloading the page in a mobile browser ([#6051](https://github.com/flet-dev/flet/issues/6051)) by @ndonkoHenri.
+* Fix the loading logo of web apps served by `flet run --web` or `flet publish` showing off-center after reloading the page in a mobile browser ([#6051](https://github.com/flet-dev/flet/issues/6051), [#6943](https://github.com/flet-dev/flet/pull/6943)) by @ndonkoHenri.
 
 ### Documentation
 
