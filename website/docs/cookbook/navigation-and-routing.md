@@ -122,7 +122,7 @@ import flet as ft
 ft.run(main, route_url_strategy="hash")
 ```
 
-For Flet server deployments, you can also set the [`FLET_ROUTE_URL_STRATEGY`](../reference/environment-variables.md#flet_web_route_url_strategy)
+For Flet server deployments, you can also set the [`FLET_WEB_ROUTE_URL_STRATEGY`](../reference/environment-variables.md#flet_web_route_url_strategy)
 environment variable.
 
 ## Declarative Router

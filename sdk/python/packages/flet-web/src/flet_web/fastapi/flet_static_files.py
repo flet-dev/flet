@@ -69,8 +69,10 @@ class FletStaticFiles(StaticFiles):
         app_name: PWA application name.
         app_short_name: PWA application short name.
         app_description: PWA application description.
-        web_renderer: Type of web renderer.
-        route_url_strategy: Routing URL strategy.
+        web_renderer: Type of web renderer, as a `WebRenderer` or its value, e.g.
+            `"canvaskit"`.
+        route_url_strategy: Routing URL strategy, as a `RouteUrlStrategy` or its
+            value, e.g. `"hash"`.
         no_cdn: Whether not load CanvasKit, Pyodide, and fonts from CDN.
         websocket_endpoint_path: Path of Flet app WebSocket handler. A path
             without a leading `/` is resolved against the app mount path.
@@ -97,8 +99,8 @@ class FletStaticFiles(StaticFiles):
         self.__app_name = app_name
         self.__app_short_name = app_short_name
         self.__app_description = app_description
-        self.__web_renderer = web_renderer
-        self.__route_url_strategy = route_url_strategy
+        self.__web_renderer = WebRenderer(web_renderer)
+        self.__route_url_strategy = RouteUrlStrategy(route_url_strategy)
         self.__no_cdn = no_cdn
         self.__websocket_endpoint_path = websocket_endpoint_path
         self.__once = Once()

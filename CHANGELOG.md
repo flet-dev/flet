@@ -30,6 +30,7 @@
 ### Bug fixes
 
 * Fix Flet web apps using the `hash` route URL strategy returning `index.html` with a `200 OK` for unknown paths instead of a `404` ([#2796](https://github.com/flet-dev/flet/issues/2796)) by @ndonkoHenri.
+* Fix `flet.fastapi.app()` and `ft.run(..., export_asgi_app=True)` failing every request with a `500` error when `route_url_strategy` or `web_renderer` is passed as a string, such as `"hash"` by @ndonkoHenri.
 
 ### Documentation
 
