@@ -202,8 +202,9 @@ class Command(BaseCommand):
             dest="ignore_dirs",
             type=str,
             default=None,
-            help="Comma-separated list of directory names to ignore "
-            "when watching for file changes",
+            help="Comma-separated list of directories to ignore when watching for "
+            "file changes, relative to the script directory. The .flet directory "
+            "is always ignored",
         )
 
     def handle(self, options: argparse.Namespace) -> None:
@@ -219,9 +220,11 @@ class Command(BaseCommand):
         Linux inotify watch or instance limit is reached, a warning is printed
         and the app runs without reloading on changes.
 
-        The `.flet/` directory is always ignored by the file watcher, both as
-        given and with symlinks resolved: it holds the app's working directory
-        and temp directory, so what the app writes there is not a code change.
+        The `.flet/` directory is always ignored by the file watcher: it holds
+        the app's working directory and temp directory, so what the app writes
+        there is not a code change. Ignored directories are matched both as
+        given and with symlinks resolved, because events carry one form or the
+        other depending on the platform and on how the script path was given.
 
         Args:
             options: Parsed command options produced by :meth:`add_arguments`.
@@ -294,14 +297,12 @@ class Command(BaseCommand):
 
         assets_dir = resolve_assets_dir(script_dir, options.assets_dir)
 
-        ignore_dirs = (
-            [
-                str(script_dir.joinpath(directory).resolve())
-                for directory in options.ignore_dirs.split(",")
-            ]
-            if options.ignore_dirs
-            else []
-        )
+        ignore_dirs = []
+        for directory in options.ignore_dirs.split(",") if options.ignore_dirs else []:
+            ignore_dir = script_dir.joinpath(directory)
+            ignore_dirs.extend(
+                dict.fromkeys([os.path.abspath(ignore_dir), str(ignore_dir.resolve())])
+            )
 
         # Dev-mode app storage under a hidden, Flet-namespaced `.flet/` dir so
         # it stays out of the way and is git-ignored. Mirrors a built app: the
