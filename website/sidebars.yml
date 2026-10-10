@@ -749,6 +749,7 @@ docs:
           FloatingActionButtonTheme: types/floatingactionbuttontheme.md
           IconButtonTheme: types/iconbuttontheme.md
           IconTheme: types/icontheme.md
+          InputDecorationTheme: types/inputdecorationtheme.md
           ListTileTheme: types/listtiletheme.md
           NavigationBarTheme: types/navigationbartheme.md
           NavigationDrawerTheme: types/navigationdrawertheme.md
@@ -769,6 +770,7 @@ docs:
           SystemOverlayStyle: types/systemoverlaystyle.md
           TabBarTheme: types/tabbartheme.md
           TextButtonTheme: types/textbuttontheme.md
+          TextFieldTheme: types/textfieldtheme.md
           TextTheme: types/texttheme.md
           ThemeSurfaces: types/themesurfaces.md
           TimePickerTheme: types/timepickertheme.md
@@ -869,6 +871,7 @@ docs:
       - types/listtilestyle.md
       - types/listtiletitlealignment.md
       - types/mainaxisalignment.md
+      - types/materialtaptargetsize.md
       - types/mousecursor.md
       - types/markdowncodetheme.md
       - types/markdownextensionset.md

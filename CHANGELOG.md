@@ -12,6 +12,16 @@
 
 ### Improvements
 
+* Add `min_width`, `max_width`, `min_height` and `max_height` to every layout control. They are applied by the client on every layout pass, so a capped, centered column (e.g. `Container(max_width=760)` in a `Column(horizontal_alignment=CENTER)`) stays correct while the window resizes - no more computing widths in Python from `page.width` or `on_size_change`, which always lagged a frame or more behind by @FeodorFitsner.
+* Add `ft.MaterialTapTargetSize` with `Switch.material_tap_target_size` and `Theme.material_tap_target_size`: `SHRINK_WRAP` drops Material's 48px minimum tappable area for dense, pointer-driven layouts by @FeodorFitsner.
+* `Dropdown.height` now sizes the field itself, down to compact heights such as 32 or 40: the leading icon and trailing arrow no longer force a 48px minimum by @FeodorFitsner.
+* Add `PopupMenuButton.border_radius` to round the hover/splash highlight around custom `content` by @FeodorFitsner.
+* Add `Theme.input_decoration_theme` (`ft.InputDecorationTheme`) to style every `TextField` and `Dropdown` at once: border, label/hint/helper/error styles, content padding, density and fill. Its `border` takes per-state entries (`DEFAULT`, `HOVERED`, `FOCUSED`, `ERROR`, `DISABLED`); unset states keep the Material default, so a softer resting border still darkens on hover and turns primary on focus. Controls without their own `border` use the theme's by @FeodorFitsner.
+* Add `Theme.text_field_theme` (`ft.TextFieldTheme`) with `text_style` for the text being edited in every `TextField` by @FeodorFitsner.
+* Add `FletApp.platform_brightness` to preview an embedded app as though its device were in light or dark mode: an app on the `SYSTEM` theme follows it, `page.platform_brightness` reports it and `on_platform_brightness_change` fires by @FeodorFitsner.
+* Add `Theme.markdown_theme`: a default `MarkdownStyleSheet` for every `Markdown`, with a control's own `md_style_sheet` applied on top property by property by @FeodorFitsner.
+* Add `PopupMenuTheme.border_radius` to set the default hover/splash corner radius of every `PopupMenuButton` by @FeodorFitsner.
+
 * Bump the bundled Flutter to [3.47.7](https://github.com/flutter/flutter/blob/stable/CHANGELOG.md#3477) (from 3.44.8). Android builds use Gradle 9.3.1, Android Gradle Plugin 8.13.2 and Kotlin 2.3.21 by @ndonkoHenri.
 
   **Compatibility:** Desktop apps and the desktop app that `flet run` opens now render with Impeller, Flutter 3.47's default desktop renderer, instead of Skia. Use `flet build --no-impeller` (or `impeller = false` under `[tool.flet]`), `flet run --no-impeller` or the `FLET_NO_IMPELLER` environment variable to render with Skia; see [Renderer](/docs/publish#renderer). Android plugins that still use `jcenter()` or other APIs removed in Gradle 9 no longer build. `flet build` downloads Flutter 3.47.7 on first use.
@@ -22,6 +32,20 @@
 * Install `uvicorn[standard]` with `flet-web` again on Windows on ARM with Python 3.12 or later, now that `httptools` 0.9.0 ships wheels for it; Python 3.10 and 3.11 there keep plain `uvicorn`, because PyYAML has no wheels for them ([#6927](https://github.com/flet-dev/flet/pull/6927)) by @ndonkoHenri.
 
 ### Bug fixes
+
+* Fix a client method call (e.g. `FletApp.wait_idle()`) failing with "Concurrent modification during iteration" when the control's widget was rebuilt while the call was in progress by @FeodorFitsner.
+* Fix an app freezing - no more events or updates processed - when a client method result (e.g. an embedded `FletApp`'s `wait_idle()`) arrived after its control had been removed: the session raised on it, which ended the connection's receive loop. The result now reaches its caller, and every transport (Pyodide, socket, FastAPI) logs a failing message and keeps receiving instead of stopping by @FeodorFitsner.
+* Fix `Markdown` links always being blue and blockquotes light blue regardless of the theme: their defaults now come from the color scheme (`primary` for links, a surface container color for blockquotes) by @FeodorFitsner.
+* Fix an embedded `FletApp` without its own `theme_mode` taking the host page's theme mode instead of following the system (now: its platform brightness) by @FeodorFitsner.
+* Fix an embedded `FletApp` overwriting the host page's browser tab title on the web whenever the embedded app set `page.title`. An embedded app's title now only reaches the host, through `FletApp.on_title_change` by @FeodorFitsner.
+* Fix the session crashing with "Control must be added to the page first" when the client sends an event (e.g. `size_change`) for a control that was just removed from the page; such events are now dropped by @FeodorFitsner.
+* Fix `on_size_change` never reporting when Flutter reuses the widget for a different control at the same size (e.g. a new page swapped into the same slot) by @FeodorFitsner.
+* Fix a control's subtree (e.g. an embedded `FletApp`, which restarted its app) being rebuilt from scratch when its `opacity` changed between `1.0` and another value, or a `Container`'s `ignore_interactions` was toggled: the wrapping widget was added and removed, changing the widget tree's shape. It is now always present by @FeodorFitsner.
+* Fix `auto_scroll` losing the end when content at the end shrank (e.g. a placeholder replaced by something shorter): the position clamping up to the new end counted as the user scrolling up, so the view stopped following what was added next by @FeodorFitsner.
+* Fix an embedded `FletApp` taking the keyboard focus away from the host app when it starts or restarts (e.g. out of a text field being typed in); it gets the focus when the user clicks or taps into it by @FeodorFitsner.
+* Fix `InteractiveViewer` swallowing taps meant for its content when `pan_enabled` and `scale_enabled` are both off: it no longer installs gesture recognizers it can't use; programmatic zoom/pan still works by @FeodorFitsner.
+* An embedded app (`FletApp`) no longer takes its host's Cupertino colors: `CupertinoFilledButton`, `CupertinoButton` and adaptive buttons on iOS/macOS painted with the host app's primary color instead of the embedded app's own. An embedded page now carries a Cupertino theme derived from its own Material theme, as a top-level app does; top-level apps are unchanged by @FeodorFitsner.
+* `Button(adaptive=True)` on iOS/macOS now honors `bgcolor`, `color` and the padding of `style`: the Cupertino button it turns into ignored them and painted the theme's primary color by @FeodorFitsner.
 
 * Fix `flet build`, `flet debug` and `flet test` failing for macOS and iOS on Xcode 27, which rejects deployment targets below macOS 12 and iOS 15 ([#6874](https://github.com/flet-dev/flet/issues/6874)) by @ndonkoHenri.
 

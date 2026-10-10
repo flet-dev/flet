@@ -145,6 +145,45 @@ class _InteractiveViewerControlState extends State<InteractiveViewerControl>
     _trackpadScrollCausesScale =
         widget.control.getBool("trackpad_scroll_causes_scale", false)!;
 
+    // With every interaction off there is nothing for the viewer to handle,
+    // yet InteractiveViewer still installs its scale gesture recognizer,
+    // which competes in the gesture arena with - and can swallow - taps meant
+    // for the content. Build the same layout it would (clip, optional
+    // unbounded constraints, transform) without any gesture handling. The
+    // transformation controller still drives the transform, so programmatic
+    // zoom/pan keeps working.
+    if (!_panEnabled && !_scaleEnabled && !_trackpadScrollCausesScale) {
+      Widget child = ListenableBuilder(
+        listenable: _transformationController,
+        builder: (context, child) => Transform(
+          transform: _transformationController.value,
+          alignment: widget.control.getAlignment("alignment"),
+          child: child,
+        ),
+        child: KeyedSubtree(key: _childKey, child: content),
+      );
+      if (!widget.control.getBool("constrained", true)!) {
+        child = OverflowBox(
+          alignment: Alignment.topLeft,
+          minWidth: 0.0,
+          minHeight: 0.0,
+          maxWidth: double.infinity,
+          maxHeight: double.infinity,
+          child: child,
+        );
+      }
+      return LayoutControl(
+        control: widget.control,
+        child: ClipRect(
+          // The viewport the zoom/pan methods measure (_currentViewportRect).
+          key: _viewerKey,
+          clipBehavior:
+              widget.control.getClipBehavior("clip_behavior", Clip.hardEdge)!,
+          child: child,
+        ),
+      );
+    }
+
     Widget interactiveViewer = InteractiveViewer(
       key: _viewerKey,
       transformationController: _transformationController,

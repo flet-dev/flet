@@ -1,3 +1,4 @@
+from dataclasses import field
 from enum import Enum
 from typing import Optional, Union
 
@@ -308,7 +309,7 @@ class ListTile(LayoutControl, AdaptiveControl, ActionControl):
     The :class:`~flet.TextStyle` for the `leading` and `trailing` controls.
     """
 
-    min_height: Optional[Number] = None
+    min_height: Optional[Number] = field(default=None, kw_only=True)
     """
     The minimum height allocated for this control.
 
@@ -330,3 +331,9 @@ class ListTile(LayoutControl, AdaptiveControl, ActionControl):
     """
     Called when the user long-presses on this list tile.
     """
+
+    def init(self):
+        super().init()
+        # `min_height` is this control's own property (applied by the control),
+        # not the generic LayoutControl constraint - don't apply it twice.
+        self._internals["skip_properties"] = ["min_height"]

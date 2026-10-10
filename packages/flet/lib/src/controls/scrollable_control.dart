@@ -70,10 +70,16 @@ class _ScrollableControlState extends State<ScrollableControl>
     // at the end) leaves pixels unchanged, so it must NOT unpin — otherwise a
     // big extent jump would strand the view above the new content. Re-pin once
     // the position returns to within a small threshold of the end.
-    if (pos.pixels < _lastPixels - 0.5) {
-      _pinnedToEnd = false;
-    } else if (pos.pixels >= pos.maxScrollExtent - _autoScrollThreshold) {
+    //
+    // The end check comes first: content *shrinking* at the end (a
+    // placeholder replaced by something shorter) clamps the position up to
+    // the new end, which also decreases pixels but leaves the view at the
+    // end - that's not the user scrolling away, and unpinning there stranded
+    // the view above whatever grew next.
+    if (pos.pixels >= pos.maxScrollExtent - _autoScrollThreshold) {
       _pinnedToEnd = true;
+    } else if (pos.pixels < _lastPixels - 0.5) {
+      _pinnedToEnd = false;
     }
     _lastPixels = pos.pixels;
   }

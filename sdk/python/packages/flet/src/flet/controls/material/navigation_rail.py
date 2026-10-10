@@ -237,7 +237,7 @@ class NavigationRail(LayoutControl):
     min_width: Annotated[
         Optional[Number],
         V.ge(0),
-    ] = None
+    ] = field(default=None, kw_only=True)
     """
     The smallest possible width for the rail regardless of the destination's icon or \
     label size.
@@ -316,3 +316,9 @@ class NavigationRail(LayoutControl):
     """
     Called when selected destination changed.
     """
+
+    def init(self):
+        super().init()
+        # `min_width` is this control's own property (applied by the control),
+        # not the generic LayoutControl constraint - don't apply it twice.
+        self._internals["skip_properties"] = ["min_width"]

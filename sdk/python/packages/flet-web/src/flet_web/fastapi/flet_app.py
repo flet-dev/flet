@@ -236,9 +236,14 @@ class FletApp(Connection):
                     continue
                 ptype = data[0]
                 if ptype == 0x00:
-                    await self.__on_message(
-                        msgpack.unpackb(data[1:], ext_hook=decode_ext_from_msgpack)
-                    )
+                    # One bad message must not end the loop: nothing would be
+                    # received after it and the app would freeze.
+                    try:
+                        await self.__on_message(
+                            msgpack.unpackb(data[1:], ext_hook=decode_ext_from_msgpack)
+                        )
+                    except Exception:
+                        logger.exception("Error handling a message from the client.")
                 elif ptype == 0x01:
                     if len(data) < 5:
                         logger.debug("Dropping malformed data-channel frame.")

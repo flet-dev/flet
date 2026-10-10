@@ -12,6 +12,7 @@ import '../utils/launch_url.dart';
 import '../utils/markdown.dart';
 import '../utils/numbers.dart';
 import '../utils/text.dart';
+import '../utils/theme.dart';
 import '../utils/uri.dart';
 import 'base_controls.dart';
 import 'highlight_view.dart';
@@ -39,9 +40,17 @@ class MarkdownControl extends StatelessWidget {
         markdownStyleSheetFromTheme(theme).copyWith(
             code:
                 theme.textTheme.bodyMedium!.copyWith(fontFamily: "monospace"));
-    var mdStyleSheet =
-        control.getMarkdownStyleSheet("md_style_sheet", context) ??
-            markdownStyleSheetFromTheme(theme);
+    // `Theme.markdown_theme` underneath, the control's own sheet on top.
+    // With neither set, keep flutter_markdown's defaults but take link and
+    // blockquote colors from the theme rather than its fixed blue.
+    var themeSheet = theme.extension<MarkdownTheme>()?.styleSheet;
+    var ownSheet = control.get("md_style_sheet");
+    var mdStyleSheet = themeSheet == null && ownSheet is! Map
+        ? markdownStyleSheetFromTheme(theme)
+        : parseMarkdownStyleSheet({
+            ...?themeSheet,
+            if (ownSheet is Map) ...Map<String, dynamic>.from(ownSheet),
+          }, context);
     var codeTheme = control.getMarkdownCodeTheme("code_theme", theme);
     var latexStyle = control.getTextStyle("latex_style", theme);
     var latexScaleFactor = control.getDouble("latex_scale_factor");

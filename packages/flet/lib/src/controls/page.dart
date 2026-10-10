@@ -21,6 +21,7 @@ import '../routing/route_information_provider.dart';
 import '../routing/route_parser.dart';
 import '../routing/route_state.dart';
 import '../routing/router_delegate.dart';
+import '../services/embedded_window.dart';
 import '../services/service_binding.dart';
 import '../services/service_registry.dart';
 import '../utils/animations.dart';
@@ -38,6 +39,7 @@ import '../utils/user_fonts.dart';
 import '../widgets/animated_transition_page.dart';
 import '../widgets/boot_screen.dart';
 import '../widgets/page_context.dart';
+import '../widgets/embedded_app_scope.dart';
 import '../widgets/page_media.dart';
 import 'control_widget.dart';
 
@@ -78,6 +80,9 @@ class _PageControlState extends State<PageControl> with WidgetsBindingObserver {
   // app via FletApp, so its backend has a controlId). Embedded pages chain
   // their system back handling to the host through [_childBackButtonDispatcher].
   bool _isEmbedded = false;
+  EmbeddedAppScope? _embeddedScope;
+  String? _reportedTitle;
+  EmbeddedWindowService? _embeddedWindow;
 
   // For an embedded page, a child of the host Router's back button dispatcher.
   // Without it, MaterialApp.router/CupertinoApp.router would install their own
@@ -148,12 +153,35 @@ class _PageControlState extends State<PageControl> with WidgetsBindingObserver {
   void didChangeDependencies() {
     debugPrint("Page.didChangeDependencies: ${widget.control.id}");
     super.didChangeDependencies();
+
+    // Resolve the host scope *before* the services, not after: the embedded
+    // window service is built from it, so looking it up later leaves that
+    // service with nothing to apply on the pass that creates it.
+    //
+    // Reading it here rather than in initState both registers the dependency
+    // and re-runs this method whenever the host changes what it wants.
+    if (_isEmbedded) {
+      _embeddedScope = EmbeddedAppScope.maybeOf(context);
+    }
+
     _ensureServiceRegistries();
     _loadFontsIfNeeded(FletBackend.of(context));
 
-    // When embedded inside another Flet app, hook this page's system back
-    // handling into the host Router so an unhandled back propagates to the host
-    // (which pops the embedding view) instead of exiting the whole app.
+    // Take the route the host wants, and tell it our title.
+    if (_isEmbedded) {
+      var wanted = _embeddedScope?.route;
+      if (wanted != null && wanted.isNotEmpty && wanted != _routeState.route) {
+        // Push through the local provider so the Router parses it and updates
+        // RouteState - the same path a self-navigation takes.
+        (_routeInformationProvider as FletLocalRouteInformationProvider)
+            .didPushRouteInformation(RouteInformation(uri: Uri.parse(wanted)));
+      }
+      _reportTitleToHost();
+    }
+
+    // Hook this page's system back handling into the host Router so an
+    // unhandled back propagates to the host (which pops the embedding view)
+    // instead of exiting the whole app.
     if (_isEmbedded && _childBackButtonDispatcher == null) {
       final parentBackButtonDispatcher =
           Router.maybeOf(context)?.backButtonDispatcher;
@@ -214,7 +242,16 @@ class _PageControlState extends State<PageControl> with WidgetsBindingObserver {
     super.dispose();
   }
 
+  void _reportTitleToHost() {
+    var title = widget.control.getString("title");
+    if (title != null && title != _reportedTitle) {
+      _reportedTitle = title;
+      _embeddedScope?.onTitleChanged(title);
+    }
+  }
+
   void _onPageControlChanged() {
+    _reportTitleToHost();
     _ensureServiceRegistries();
   }
 
@@ -254,7 +291,27 @@ class _PageControlState extends State<PageControl> with WidgetsBindingObserver {
       _servicesControl = null;
     }
 
-    var windowControl = widget.control.child("window", visibleOnly: false);
+    // An embedded app must never drive the real OS window: the window service
+    // applies `page.window.*` *and* `page.title` to the actual host window
+    // (services/window.dart), so a guest setting a title would rename the app
+    // hosting it. It gets a simulated window wired to its host instead.
+    var pageWindow = widget.control.child("window", visibleOnly: false);
+    if (_isEmbedded) {
+      if (pageWindow != null && _embeddedWindow?.control != pageWindow) {
+        _embeddedWindow?.dispose();
+        _embeddedWindow = EmbeddedWindowService(
+          control: pageWindow,
+          onAction: (name, args) =>
+              _embeddedScope?.onWindowAction(name, args),
+        );
+      } else if (pageWindow == null && _embeddedWindow != null) {
+        _embeddedWindow?.dispose();
+        _embeddedWindow = null;
+      }
+      _embeddedWindow?.apply(_embeddedScope?.window);
+    }
+
+    var windowControl = _isEmbedded ? null : pageWindow;
     if (windowControl != null) {
       if (!identical(windowControl, _windowControl)) {
         _windowService?.dispose();
@@ -404,6 +461,8 @@ class _PageControlState extends State<PageControl> with WidgetsBindingObserver {
 
   void _routeChanged() {
     FletBackend.of(context).onRouteUpdated(_routeState.route);
+    // Let the hosting FletApp control mirror the route and raise its event.
+    _embeddedScope?.onRouteChanged(_routeState.route);
   }
 
   void _markViewAsPopped(String routeStr) {
@@ -562,8 +621,12 @@ class _PageControlState extends State<PageControl> with WidgetsBindingObserver {
         : PageDesign.material;
 
     // theme
+    // An embedded page does not inherit its host's theme mode: it is a
+    // separate app, and an unset `theme_mode` means SYSTEM - following the
+    // platform brightness its host gives it (`FletApp.platform_brightness`),
+    // not whatever theme the host app itself is in.
     var themeMode = control.getThemeMode("theme_mode") ??
-        PageContext.of(context)?.themeMode;
+        (_isEmbedded ? null : PageContext.of(context)?.themeMode);
 
     var themeAnimationStyle =
         control.getAnimationStyle("theme_animation_style");
@@ -576,7 +639,13 @@ class _PageControlState extends State<PageControl> with WidgetsBindingObserver {
     var brightness = context.select<FletBackend, Brightness>(
         (backend) => backend.platformBrightness);
 
-    var windowTitle = control.getString("title", "")!;
+    // An embedded page leaves the real window/tab title alone: its title
+    // goes to the host (`EmbeddedAppScope.onTitleChanged`), which shows it in
+    // the window it draws - or nowhere. `null` makes WidgetsApp skip its
+    // `Title` widget on the web, which would otherwise overwrite the host
+    // page's browser tab title.
+    String? windowTitle =
+        _isEmbedded ? null : control.getString("title", "")!;
 
     var newLightTheme = control.getTheme("theme", context, Brightness.light);
     var newDarkTheme = control.getString("dark_theme") == null
@@ -694,6 +763,18 @@ class _PageControlState extends State<PageControl> with WidgetsBindingObserver {
                 locale: localeConfiguration.locale,
               );
 
+    // An embedded page's own Cupertino theme, placed above its app. Flutter's
+    // `Theme` (which MaterialApp applies) reuses an ambient CupertinoTheme if
+    // one exists above it and only derives one from its ThemeData otherwise -
+    // so an embedded page's Cupertino widgets took their colors from the host
+    // app's theme. The theme here derives from this page's Material theme,
+    // which is what a top-level app gets on its own. Top-level pages are left
+    // alone: there their Cupertino colors also animate with MaterialApp's
+    // theme changes, which an ambient theme would cut short.
+    if (_isEmbedded && cupertinoTheme != null) {
+      app = CupertinoTheme(data: cupertinoTheme, child: app);
+    }
+
     if (control.getBool("enable_screenshots") == true) {
       app = RepaintBoundary(key: _rootKey, child: app);
     }
@@ -773,6 +854,12 @@ class _PageControlState extends State<PageControl> with WidgetsBindingObserver {
     return Navigator(
       key: navigatorKey,
       pages: pages,
+      // A route pushed onto a Navigator takes the focus by default. An
+      // embedded app pushes one when it starts (its boot screen, then its
+      // views) and on every restart, which pulled the focus out of whatever
+      // the host app had focused - e.g. a text field being typed in. It
+      // gets the focus when the user clicks or taps into it instead.
+      requestFocus: !_isEmbedded,
       onDidRemovePage: (page) {
         if (pages.length <= 1) {
           return;

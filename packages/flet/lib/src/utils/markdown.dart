@@ -51,15 +51,16 @@ Map<String, TextStyle> parseMarkdownCodeTheme(dynamic value, ThemeData theme) {
 
 /// Builds the default [MarkdownStyleSheet] for a Material [theme].
 ///
-/// Produces the same style sheet as `MarkdownStyleSheet.fromTheme` from
+/// Adapts `MarkdownStyleSheet.fromTheme` from
 /// `flutter_markdown_plus`, which only accepts the Flutter SDK's `ThemeData`
-/// and so can't take the `material_ui` theme Flet renders with. Pass the
+/// and so can't take the `material_ui` theme Flet renders with.
+/// Link and blockquote colors follow the theme color scheme. Pass the
 /// result to `MarkdownBody.styleSheet`: without a style sheet, the widget falls
 /// back to the SDK's default light theme.
 MarkdownStyleSheet markdownStyleSheetFromTheme(ThemeData theme) {
   final bodyMedium = theme.textTheme.bodyMedium!;
   return MarkdownStyleSheet(
-    a: const TextStyle(color: Colors.blue),
+    a: TextStyle(color: theme.colorScheme.primary),
     p: bodyMedium,
     pPadding: EdgeInsets.zero,
     code: bodyMedium.copyWith(
@@ -99,11 +100,8 @@ MarkdownStyleSheet markdownStyleSheetFromTheme(ThemeData theme) {
     tableCellsDecoration: const BoxDecoration(),
     blockquotePadding: const EdgeInsets.symmetric(horizontal: 12, vertical: 4),
     blockquoteDecoration: BoxDecoration(
-      color: theme.colorScheme.surfaceContainerHighest,
-      borderRadius: BorderRadius.circular(3),
-      border: Border(
-        left: BorderSide(color: theme.colorScheme.primary, width: 3),
-      ),
+      color: theme.colorScheme.surfaceContainerHigh,
+      borderRadius: BorderRadius.circular(4.0),
     ),
     codeblockPadding: const EdgeInsets.all(8.0),
     codeblockDecoration: BoxDecoration(
@@ -121,8 +119,8 @@ MarkdownStyleSheet? parseMarkdownStyleSheet(dynamic value, BuildContext context,
   if (value == null) return null;
   var theme = Theme.of(context);
   return markdownStyleSheetFromTheme(theme).copyWith(
-    a: parseTextStyle(
-        value["a_text_style"], theme, const TextStyle(color: Colors.blue))!,
+    a: parseTextStyle(value["a_text_style"], theme,
+        TextStyle(color: theme.colorScheme.primary))!,
     p: parseTextStyle(value["p_text_style"], theme, theme.textTheme.bodyMedium),
     pPadding: parsePadding(value["p_padding"], EdgeInsets.zero)!,
     code: parseTextStyle(value["code_text_style"], theme,
@@ -183,8 +181,8 @@ MarkdownStyleSheet? parseMarkdownStyleSheet(dynamic value, BuildContext context,
         value["blockquote_decoration"],
         context,
         BoxDecoration(
-            color: Colors.blue.shade100,
-            borderRadius: BorderRadius.circular(2.0)))!,
+            color: theme.colorScheme.surfaceContainerHigh,
+            borderRadius: BorderRadius.circular(4.0)))!,
     codeblockPadding:
         parsePadding(value["codeblock_padding"], const EdgeInsets.all(8.0))!,
     codeblockDecoration: parseBoxDecoration(
