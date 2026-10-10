@@ -505,3 +505,25 @@ def test_find_platform_image_warning_in_github(github, tmp_path):
 def test_module_console_matches_detected_format():
     # The shared console is plain whenever the detected format is not `rich`.
     assert flutter_base.no_rich_output == (flutter_base.log_format != "rich")
+
+
+def test_github_console_logs_plain_unwrapped_lines():
+    import io
+
+    from flet_cli.utils.log_format import GithubLogConsole
+
+    buf = io.StringIO()
+    console = GithubLogConsole(file=buf, width=80, force_terminal=False, log_path=False)
+    long = (
+        "Flutter executable: /opt/hostedtoolcache/flutter/stable-3.47.7-x64"
+        "/flutter/bin/cache/dart-sdk/bin/dart"
+    )
+    console.log(long)
+    console.log("Run subprocess:", ["flutter", "--version"])
+    lines = buf.getvalue().splitlines()
+    # No time column and no wrapping at the console width.
+    assert lines[0] == long
+    # Rich renders the list on its own line; it isn't indented under a
+    # (blank) time column.
+    assert lines[1:] == ["Run subprocess:", "['flutter', '--version']"]
+    assert not lines[0].startswith("[")

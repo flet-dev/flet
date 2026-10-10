@@ -205,6 +205,43 @@ def annotation_path(path: Union[str, os.PathLike]) -> str:
     return absolute.replace(os.sep, "/")
 
 
+class GithubLogConsole(Console):
+    """
+    Console for `github` output: `log()` writes plain lines.
+
+    Rich's `log()` lays lines out in a table with a time column — repeated
+    times are left blank, so continuation lines look indented — and wraps
+    them at the console width (80 columns without a terminal). On GitHub
+    Actions both are noise: the log viewer has its own timestamps and wraps
+    long lines itself. So `log()` prints like `print(..., soft_wrap=True)`.
+    """
+
+    def log(  # type: ignore[override]
+        self,
+        *objects: Any,
+        sep: str = " ",
+        end: str = "\n",
+        style: StyleType = None,
+        justify: Any = None,
+        emoji: Optional[bool] = None,
+        markup: Optional[bool] = None,
+        highlight: Optional[bool] = None,
+        log_locals: bool = False,
+        _stack_offset: int = 1,
+    ) -> None:
+        self.print(
+            *objects,
+            sep=sep,
+            end=end,
+            style=style,
+            justify=justify,
+            emoji=emoji,
+            markup=markup,
+            highlight=highlight,
+            soft_wrap=True,
+        )
+
+
 def plain_text(message: Any, markup: bool = True) -> str:
     """
     Render a console message as plain text.

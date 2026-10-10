@@ -25,6 +25,7 @@ from flet_cli.utils.flutter import get_flutter_dir, install_flutter
 from flet_cli.utils.log_format import (
     LOG_FORMATS,
     CliOutput,
+    GithubLogConsole,
     detect_log_format,
     resolve_log_format,
     step_title,
@@ -40,7 +41,8 @@ no_rich_output = log_format != "rich"
 
 error_style = Style(color="red", bold=True)
 warning_style = Style(color="yellow", bold=True)
-console = Console(
+# `github` output logs plain, unwrapped lines without the time column.
+console = (GithubLogConsole if log_format == "github" else Console)(
     log_path=False,
     theme=Theme({"log.message": "green bold"}),
     # no_rich_output forces fully plain output (no color, no animation).
