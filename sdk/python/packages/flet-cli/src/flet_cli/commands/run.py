@@ -220,11 +220,12 @@ class Command(BaseCommand):
         Linux inotify watch or instance limit is reached, a warning is printed
         and the app runs without reloading on changes.
 
-        The `.flet/` directory is always ignored by the file watcher: it holds
-        the app's working directory and temp directory, so what the app writes
-        there is not a code change. Ignored directories are matched both as
-        given and with symlinks resolved, because events carry one form or the
-        other depending on the platform and on how the script path was given.
+        The `.flet/` directory is always ignored by the file watcher: `flet run` starts
+        the app with its working directory set to `.flet/storage/data` and its temp
+        directory set to `.flet/storage/temp`, so files the app writes through relative
+        paths or `tempfile` are not code changes. Ignored directories are matched both
+        as given and with symlinks resolved, because events carry one form or the other
+        depending on the platform and on how the script path was given.
 
         Args:
             options: Parsed command options produced by :meth:`add_arguments`.
