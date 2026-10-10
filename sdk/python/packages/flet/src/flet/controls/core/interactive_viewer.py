@@ -228,8 +228,10 @@ class InteractiveViewer(LayoutControl):
 
     interaction_update_interval: int = 200
     """
-    The interval (in milliseconds) at which the :attr:`on_interaction_update` event is \
-    fired.
+    The minimum interval in milliseconds between intermediate
+    :attr:`on_interaction_update` and :attr:`on_transform_changed` events.
+    For :attr:`on_transform_changed`, the final effective transform
+    is also delivered after changes stop.
     """
 
     on_interaction_start: Optional[
