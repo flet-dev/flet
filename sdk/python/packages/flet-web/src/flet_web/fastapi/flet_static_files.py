@@ -121,6 +121,14 @@ class FletStaticFiles(StaticFiles):
         logger.info(f"Route URL strategy configured: {self.__route_url_strategy}")
         logger.info(f"No CDN configured: {self.__no_cdn}")
 
+    @property
+    def route_url_strategy(self) -> RouteUrlStrategy:
+        """
+        The route URL strategy written into the served `index.html`: the
+        `route_url_strategy` argument, or `FLET_WEB_ROUTE_URL_STRATEGY` if set.
+        """
+        return self.__route_url_strategy
+
     async def __call__(self, scope: Scope, receive: Receive, send: Send) -> None:
         await self.__once.do(self.__config, scope["root_path"])
         await super().__call__(scope, receive, send)

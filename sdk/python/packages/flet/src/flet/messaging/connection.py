@@ -3,6 +3,7 @@ from asyncio import AbstractEventLoop
 from concurrent.futures import ThreadPoolExecutor
 from typing import Any, Optional
 
+from flet.controls.types import RouteUrlStrategy
 from flet.messaging.protocol import Message
 from flet.pubsub.pubsub_hub import PubSubHub
 
@@ -21,6 +22,12 @@ class Connection:
     def __init__(self):
         self.page_name: str = ""
         self.page_url: Optional[str] = None
+        # Base path of the page in the browser URL, e.g. `/sub-app/`, which is
+        # the `<base href>` of the served web client.
+        self.page_base_path: str = "/"
+        # How the client represents routes in its URL, for URLs built for it,
+        # such as the page to return to after an OAuth redirect.
+        self.route_url_strategy: RouteUrlStrategy = RouteUrlStrategy.PATH
         # True when the connected client runs on the same machine (or in the
         # same process), so DataChannel bytes move at local-IPC / memcpy
         # speed. Widgets may use this to prefer uncompressed payloads over
