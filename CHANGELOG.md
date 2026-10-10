@@ -26,13 +26,13 @@
 
   **Compatibility:** Apps built with `flet build` and the macOS desktop client now require macOS 12 or later, and iOS apps require iOS 15 or later. Custom build templates keep building, because Flutter 3.47 raises the deployment targets during the build; apply the same `Podfile` and Xcode project changes to skip that step. See the [macOS 12 and iOS 15 minimum](/docs/updates/breaking-changes/v1-1-0/minimum-macos-12-ios-15) guide.
 
-* Fix `page.query` being empty in `main()` when the app is opened with a query string, e.g. `/?name=Joe`, and percent-encoded values such as `%26` being decoded twice ([#5898](https://github.com/flet-dev/flet/issues/5898)) by @ndonkoHenri.
-* Fix `TemplateRoute.match()` failing to match a route with a query string or fragment, e.g. `/store?ref=ad` against `/store`, or capturing them in the last parameter ([#5898](https://github.com/flet-dev/flet/issues/5898)) by @ndonkoHenri.
+* Fix `page.query` being empty in `main()` when the app is opened with a query string, e.g. `/?name=Joe`, and percent-encoded values such as `%26` being decoded twice ([#5898](https://github.com/flet-dev/flet/issues/5898), [#6942](https://github.com/flet-dev/flet/pull/6942)) by @ndonkoHenri.
+* Fix `TemplateRoute.match()` failing to match a route with a query string or fragment, e.g. `/store?ref=ad` against `/store`, or capturing them in the last parameter ([#5898](https://github.com/flet-dev/flet/issues/5898), [#6942](https://github.com/flet-dev/flet/pull/6942)) by @ndonkoHenri.
 
 ### Documentation
 
 * Group the Reference > Controls section of the docs into Core, Material, Cupertino, Shadcn and Extensions ([#6918](https://github.com/flet-dev/flet/pull/6918)) by @InesaFitsner.
-* Document reading query string parameters with `page.query` in the [Navigation and Routing](/docs/cookbook/navigation-and-routing#query-strings) guide, and add a `QueryString` reference page ([#5898](https://github.com/flet-dev/flet/issues/5898)) by @ndonkoHenri.
+* Document reading query string parameters with `page.query` in the [Navigation and Routing](/docs/cookbook/navigation-and-routing#query-strings) guide, and add a `QueryString` reference page ([#5898](https://github.com/flet-dev/flet/issues/5898), [#6942](https://github.com/flet-dev/flet/pull/6942)) by @ndonkoHenri.
 
 ## 1.0.4
 
