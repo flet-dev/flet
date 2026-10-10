@@ -560,3 +560,22 @@ def test_plain_cleanup_failure_is_one_plain_line(plain):
     # No box-drawn panel, no workflow command.
     assert plain.getvalue() == "Path to Flet app must be a directory\n"
     assert cmd.live.renderables[-1] == ""
+
+
+def test_plain_console_logs_each_call_on_its_own_line():
+    from flet_cli.utils.log_format import PlainLogConsole
+
+    buf = io.StringIO()
+    console = PlainLogConsole(file=buf, width=80, force_terminal=False, log_path=False)
+    # How `log_stdout` streams subprocess output: newline stripped, end="".
+    for line in (
+        "Resolving dependencies...",
+        "Downloading packages...",
+        "+ audioplayers 6.8.1",
+    ):
+        console.log(line, end="", markup=False)
+    assert buf.getvalue().splitlines() == [
+        "Resolving dependencies...",
+        "Downloading packages...",
+        "+ audioplayers 6.8.1",
+    ]

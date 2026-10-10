@@ -230,10 +230,12 @@ class PlainLogConsole(Console):
         log_locals: bool = False,
         _stack_offset: int = 1,
     ) -> None:
+        # One entry per call, like rich's log(): subprocess lines arrive
+        # with their newline stripped and `end=""`, and must not run together.
         self.print(
             *objects,
             sep=sep,
-            end=end,
+            end="\n",
             style=style,
             justify=justify,
             emoji=emoji,
