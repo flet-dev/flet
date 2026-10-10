@@ -418,13 +418,13 @@ class TestGithub:
             _command().cleanup(1, "Build output not found in [cyan]build/x[/cyan]")
         assert github.getvalue() == "::error::Build output not found in build/x\n"
 
-    def test_cleanup_success_prints_plain_message(self, github):
+    def test_cleanup_success_prints_nothing(self, github):
         cmd = _command()
         with pytest.raises(SystemExit) as exit_info:
             cmd.cleanup(0, "Successfully built your app!")
         assert exit_info.value.code == 0
-        # No workflow command and no box-drawn panel: just the line.
-        assert github.getvalue() == "Successfully built your app!\n"
+        # Non-interactive: the exit code is the result, no banner.
+        assert github.getvalue() == ""
         assert cmd.live.renderables[-1] == ""
 
     def test_flutter_doctor_is_a_group(self, github):
@@ -530,3 +530,33 @@ def test_github_console_logs_plain_unwrapped_lines():
     # (blank) time column.
     assert lines[1:] == ["Run subprocess:", "['flutter', '--version']"]
     assert not lines[0].startswith("[")
+
+
+@pytest.fixture
+def plain(monkeypatch):
+    """Switch the shared output to `plain`, recording what it prints."""
+    buffer, console = _console(terminal=False)
+    monkeypatch.setattr(output, "console", console)
+    monkeypatch.setattr(output, "format", "plain")
+    monkeypatch.setattr(output, "_group", None)
+    monkeypatch.setattr(output, "_failed_group", None)
+    return buffer
+
+
+def test_plain_cleanup_success_prints_nothing(plain):
+    cmd = _command()
+    with pytest.raises(SystemExit) as exit_info:
+        cmd.cleanup(0, "Successfully built your app!")
+    assert exit_info.value.code == 0
+    assert plain.getvalue() == ""
+    assert cmd.live.renderables[-1] == ""
+
+
+def test_plain_cleanup_failure_is_one_plain_line(plain):
+    cmd = _command()
+    with pytest.raises(SystemExit) as exit_info:
+        cmd.cleanup(1, "Path to Flet app must be a directory")
+    assert exit_info.value.code == 1
+    # No box-drawn panel, no workflow command.
+    assert plain.getvalue() == "Path to Flet app must be a directory\n"
+    assert cmd.live.renderables[-1] == ""

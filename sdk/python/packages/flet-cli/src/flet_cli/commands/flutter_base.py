@@ -540,12 +540,11 @@ class BaseFlutterCommand(BaseCommand):
         """
 
         if exit_code == 0:
-            if output.github:
-                # Plain lines: a box-drawn panel is terminal decoration that
-                # reads as noise in CI and hosted-build log viewers.
+            if self.no_rich_output:
+                # Non-interactive (plain/github): the exit code and the last
+                # step say it; a success banner is only noise in CI and
+                # hosted-build logs.
                 self.live.update("", refresh=True)
-                if message:
-                    output.console.print(message, soft_wrap=True)
             else:
                 self.live.update(
                     (message if no_border else Panel(message)) if message else "",
@@ -585,6 +584,11 @@ class BaseFlutterCommand(BaseCommand):
                 # The `::error::` line above already shows in the log (and
                 # as an annotation); a box-drawn panel would only repeat it.
                 self.live.update("", refresh=True)
+            elif self.no_rich_output:
+                # One plain line, not a box: some failures (bad arguments,
+                # a missing app) have no other output explaining them.
+                self.live.update("", refresh=True)
+                output.console.print(msg, style=error_style, soft_wrap=True)
             else:
                 self.live.update(Panel(msg, style=error_style), refresh=True)
 
