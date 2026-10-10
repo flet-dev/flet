@@ -203,7 +203,7 @@ class Command(BaseCommand):
             type=str,
             default=None,
             help="Comma-separated list of directories to ignore when watching for "
-            "file changes, relative to the script directory. The .flet directory "
+            "file changes, relative to the script directory. The `.flet` directory "
             "is always ignored",
         )
 

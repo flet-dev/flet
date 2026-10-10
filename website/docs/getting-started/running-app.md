@@ -183,8 +183,6 @@ To modify this behavior, you can use one or more of these [`flet run`](../cli/fl
 * `--ignore-dirs` to skip directories while watching, given relative to the `[script]`s directory
   and separated by commas, for example `--ignore-dirs logs,data`
 
-Changes in the project's `.flet` directory never trigger a reload: during `flet run` it holds the
-app's working directory and temporary directory, so files the app writes there are not code changes.
 
 :::note[Example]
 

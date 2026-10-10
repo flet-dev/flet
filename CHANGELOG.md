@@ -30,6 +30,7 @@
 ### Bug fixes
 
 * Fix `flet run -r` restarting the app whenever it writes to its working directory or temp directory, which also left `flet run -r --web` pages blank by @ndonkoHenri.
+* Fix `flet run --ignore-dirs` not ignoring directories on Linux when the project is opened through a symlink by @ndonkoHenri.
 
 ### Documentation
 
