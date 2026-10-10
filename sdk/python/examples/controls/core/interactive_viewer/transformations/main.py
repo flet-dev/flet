@@ -26,6 +26,24 @@ def main(page: ft.Page):
     async def handle_restore_state(e: ft.Event[ft.Button]):
         await i.restore_state()
 
+    async def handle_read_transform(e: ft.Event[ft.Button]):
+        scale = await i.get_scale()
+        transform = await i.get_transform()
+        scale_text.value = (
+            f"get_scale={scale:.2f}  "
+            f"tx={transform.translation_x:.1f}  ty={transform.translation_y:.1f}"
+        )
+        scale_text.update()
+
+    def handle_transform_changed(e: ft.InteractiveViewerTransformEvent):
+        scale_text.value = (
+            f"on_transform_changed scale={e.scale:.2f}  "
+            f"tx={e.translation_x:.1f}  ty={e.translation_y:.1f}"
+        )
+        scale_text.update()
+
+    scale_text = ft.Text("scale=1.00")
+
     page.add(
         ft.SafeArea(
             content=ft.Column(
@@ -34,8 +52,10 @@ def main(page: ft.Page):
                         min_scale=0.1,
                         max_scale=5,
                         boundary_margin=ft.Margin.all(20),
+                        on_transform_changed=handle_transform_changed,
                         content=ft.Image(src="https://picsum.photos/500/500"),
                     ),
+                    scale_text,
                     ft.Row(
                         wrap=True,
                         controls=[
@@ -46,6 +66,7 @@ def main(page: ft.Page):
                             ft.Button("Restore State", on_click=handle_restore_state),
                             ft.Button("Reset (instant)", on_click=handle_reset),
                             ft.Button("Reset (slow)", on_click=handle_reset_slow),
+                            ft.Button("Read transform", on_click=handle_read_transform),
                         ],
                     ),
                 ],
