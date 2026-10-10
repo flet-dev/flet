@@ -27,8 +27,8 @@
 
   **Compatibility:** Apps built with `flet build` and the macOS desktop client now require macOS 12 or later, and iOS apps require iOS 15 or later. Custom build templates keep building, because Flutter 3.47 raises the deployment targets during the build; apply the same `Podfile` and Xcode project changes to skip that step. See the [macOS 12 and iOS 15 minimum](/docs/updates/breaking-changes/v1-1-0/minimum-macos-12-ios-15) guide.
 
-* Fix `flet run -r` restarting the app whenever it writes to its working directory or temp directory, which also left `flet run -r --web` pages blank by @ndonkoHenri.
-* Fix `flet run --ignore-dirs` not ignoring directories on Linux when the project is opened through a symlink by @ndonkoHenri.
+* Fix `flet run -r` restarting the app whenever it writes to its working directory or temp directory, which also left `flet run -r --web` pages blank ([#6944](https://github.com/flet-dev/flet/pull/6944)) by @ndonkoHenri.
+* Fix `flet run --ignore-dirs` not ignoring directories on Linux when the project is opened through a symlink ([#6944](https://github.com/flet-dev/flet/pull/6944)) by @ndonkoHenri.
 
 ### Documentation
 
