@@ -2,8 +2,8 @@ import 'package:flet/src/controls/interactive_viewer.dart';
 import 'package:flet/src/flet_backend.dart';
 import 'package:flet/src/models/control.dart';
 import 'package:flutter/gestures.dart';
-import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:provider/provider.dart';
 
 class _TransformEvents extends FletBackend {
