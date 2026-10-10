@@ -30,10 +30,21 @@ from flet.utils.pip import (
 
 logger = logging.getLogger("flet")
 
-#: Conventional assets directory name, used as the default for `assets_dir`.
-#: A missing directory of this name is unremarkable; any other value was
-#: chosen deliberately, so a missing one is reported.
 DEFAULT_ASSETS_DIR = "assets"
+"""Conventional assets directory name, used as the default for `assets_dir`.
+
+A missing directory of this name is unremarkable; any other value was chosen
+deliberately, so a missing one is reported.
+"""
+
+DISPLAY_ASSETS_DIR_SUFFIX = "_ASSETS_DIR"
+"""Suffix of the line on which an app started by `flet run` reports its assets dir.
+
+Appended to `FLET_DISPLAY_URL_PREFIX`, it starts the line the app prints just
+before its page URL line, with its resolved assets directory (empty when it has
+none). `flet run` opens the desktop client with that directory, so the app's own
+`assets_dir` reaches it.
+"""
 
 AppCallable = Callable[[Page], Union[Any, Awaitable[Any]]]
 """Type alias for Flet app lifecycle callbacks.
@@ -222,11 +233,15 @@ async def run_async(
         """
         Handle app-start notification by logging/printing URL and optional browser open.
 
+        When started by `flet run`, the resolved assets directory is printed on
+        its own line first, so `flet run` can open the desktop client with it.
+
         Args:
             page_url: Resolved URL of the running app.
         """
 
         if url_prefix is not None:
+            print(f"{url_prefix}{DISPLAY_ASSETS_DIR_SUFFIX}", assets_dir or "")
             parts = [url_prefix, page_url]
             if view is not None:
                 parts.append(view.value)
@@ -688,9 +703,10 @@ def __get_assets_dir_path(assets_dir: Optional[str], relative_to_cwd=False):
     such a directory, so a missing one is unremarkable; any other value was
     chosen deliberately, so a missing one is a mistake worth a warning.
 
-    The env override is applied afterwards and is never dropped:
-    `FLET_ASSETS_DIR` is always set on purpose, so a bad value there is left
-    for downstream to report.
+    `FLET_ASSETS_DIR` takes precedence and is never dropped: it is always set
+    on purpose, so a bad value there is left for downstream to report. When it
+    is set, `assets_dir` is not checked, so nothing is logged about a
+    directory that isn't used.
 
     Args:
         assets_dir: Input assets directory path.
@@ -701,6 +717,11 @@ def __get_assets_dir_path(assets_dir: Optional[str], relative_to_cwd=False):
         Resolved assets directory path, or `None` if it was not set or does not
             exist.
     """
+
+    env_assets_dir = os.getenv("FLET_ASSETS_DIR")
+    if env_assets_dir:
+        logger.info("Assets path configured: %s (FLET_ASSETS_DIR)", env_assets_dir)
+        return env_assets_dir
 
     if assets_dir:
         requested = assets_dir
@@ -724,10 +745,6 @@ def __get_assets_dir_path(assets_dir: Optional[str], relative_to_cwd=False):
             else:
                 logger.warning("assets_dir does not exist: %s", assets_dir)
             assets_dir = None
-
-    env_assets_dir = os.getenv("FLET_ASSETS_DIR")
-    if env_assets_dir:
-        assets_dir = env_assets_dir
     return assets_dir
 
 
