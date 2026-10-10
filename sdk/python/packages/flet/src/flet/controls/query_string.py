@@ -25,8 +25,7 @@ class UrlComponents:
 
 class QueryString(UrlComponents):
     """
-    The query string of the current page route, available as
-    :attr:`flet.Page.query`.
+    The query string of the current page route, available as :attr:`flet.Page.query`.
 
     It is parsed from :attr:`flet.Page.route` on every access, so it can be read
     in `main()` as well as in a :attr:`flet.Page.on_route_change` handler. For
@@ -52,10 +51,12 @@ class QueryString(UrlComponents):
             key: The name of the query parameter.
 
         Returns:
-            The decoded value. When `key` appears more than once, its last value.
+            The decoded value. When `key` appears more than once, its last
+                non-empty value.
 
         Raises:
-            KeyError: If the route has no query parameter `key`.
+            KeyError: If the route has no query parameter `key` with a non-empty
+                value.
         """
         return self.to_dict[key]
 
@@ -75,8 +76,9 @@ class QueryString(UrlComponents):
 
         The route is read on every access, so the result always matches
         :attr:`flet.Page.route`. Keys and values are percent-decoded, with `+`
-        decoded as a space. When a key appears more than once, its last value is
-        returned.
+        decoded as a space. Parameters without a value, such as `debug` in
+        `?debug` or `?debug=`, are left out. When a key appears more than once,
+        its last non-empty value is returned.
         """
         return dict(urllib.parse.parse_qsl(self._split_route()[1]))
 
@@ -85,15 +87,16 @@ class QueryString(UrlComponents):
     def path(self) -> str:
         """
         Return the path component of the current page route, without the query
-        string.
+        string and fragment.
         """
         return self._split_route()[0]
 
     def _split_route(self) -> tuple[str, str]:
         """
-        Split the current page route into its path and query string at the first
-        `?`.
+        Split the current page route into its path and query string, dropping a
+        `#` fragment.
         """
         page = self.__page()
-        path, _, query = ((page.route if page else None) or "").partition("?")
+        route = (page.route if page else None) or ""
+        path, _, query = route.partition("#")[0].partition("?")
         return path, query

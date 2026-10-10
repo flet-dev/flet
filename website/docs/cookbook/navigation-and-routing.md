@@ -80,8 +80,10 @@ page.query.path  # "/search"
 
 `page.query` is parsed from the current route every time you read it, so it also works in `main()`,
 for example in a web app opened at `https://example.com/search?q=flet`.
-Values are decoded and always strings: after `page.navigate("/search", q="dom & dogs", page=2)`,
+Values are decoded and always strings: once `page.navigate("/search", q="dom & dogs", page=2)` has changed the route,
+for example in [`page.on_route_change`](../controls/page.md#flet.Page.on_route_change),
 `page.query.get("q")` returns `"dom & dogs"` and `page.query.get("page")` returns `"2"`.
+Parameters without a value, such as `?debug`, are left out.
 `get()` raises `KeyError` for a missing parameter; use `page.query.to_dict.get("q")` for an optional one.
 
 ## Back navigation and pop confirmation
@@ -126,7 +128,7 @@ else:
     print("Unknown route")
 ```
 
-Only the path is matched, so a query string doesn't affect the result: `/books/42?tab=reviews`
+Only the path is matched, so a query string or fragment doesn't affect the result: `/books/42?tab=reviews`
 matches `/books/:id` with `troute.id == "42"`. Read the query string with [`page.query`](#query-strings).
 
 ## Web URL strategy

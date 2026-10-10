@@ -15,9 +15,9 @@ class TemplateRoute:
     each new matching attempt, preventing stale values from leaking between
     checks.
 
-    Only the path of the route is matched; a query string is ignored, so
-    `/books/42?tab=reviews` matches `/books/:id` with `id` set to `"42"`. Read
-    query string parameters with :attr:`flet.Page.query`.
+    Only the path of the route is matched; a query string and a `#` fragment are
+    ignored, so `/books/42?tab=reviews` matches `/books/:id` with `id` set to
+    `"42"`. Read query string parameters with :attr:`flet.Page.query`.
     """
 
     def __init__(self, route: str) -> None:
@@ -29,7 +29,7 @@ class TemplateRoute:
         Tries to match the path of this instance route against a route template.
 
         The template is compiled with `repath.pattern()` and matched against the
-        route without its query string. If matching succeeds,
+        route without its query string and fragment. If matching succeeds,
         named parameters are stored and also assigned as attributes on this
         object (for example, `self.user_id`). If matching fails, previously
         captured attributes remain cleared.
@@ -47,7 +47,7 @@ class TemplateRoute:
 
         # perform new match
         pattern = repath.pattern(route_template)
-        match = re.match(pattern, self.route.partition("?")[0])
+        match = re.match(pattern, self.route.partition("#")[0].partition("?")[0])
 
         if match:
             self.__last_params = match.groupdict()
