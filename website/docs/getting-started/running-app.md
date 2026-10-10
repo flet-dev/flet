@@ -180,6 +180,9 @@ To modify this behavior, you can use one or more of these [`flet run`](../cli/fl
 
 * `-d` or `--directory` to watch for changes in the `[script]`s directory only
 * `-r` or `--recursive` to watch for changes in the `[script]`s directory and all sub-directories recursively
+* `--ignore-dirs` to skip directories while watching, given relative to the `[script]`s directory
+  and separated by commas, for example `--ignore-dirs logs,data`
+
 
 :::note[Example]
 

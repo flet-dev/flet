@@ -202,8 +202,9 @@ class Command(BaseCommand):
             dest="ignore_dirs",
             type=str,
             default=None,
-            help="Comma-separated list of directory names to ignore "
-            "when watching for file changes",
+            help="Comma-separated list of directories to ignore when watching for "
+            "file changes, relative to the script directory. The `.flet` directory "
+            "is always ignored",
         )
 
     def handle(self, options: argparse.Namespace) -> None:
@@ -218,6 +219,13 @@ class Command(BaseCommand):
         If starting the observer raises `OSError`, for example because the
         Linux inotify watch or instance limit is reached, a warning is printed
         and the app runs without reloading on changes.
+
+        The `.flet/` directory is always ignored by the file watcher: `flet run` starts
+        the app with its working directory set to `.flet/storage/data` and its temp
+        directory set to `.flet/storage/temp`, so files the app writes through relative
+        paths or `tempfile` are not code changes. Ignored directories are matched both
+        as given and with symlinks resolved, because events carry one form or the other
+        depending on the platform and on how the script path was given.
 
         Args:
             options: Parsed command options produced by :meth:`add_arguments`.
@@ -290,14 +298,12 @@ class Command(BaseCommand):
 
         assets_dir = resolve_assets_dir(script_dir, options.assets_dir)
 
-        ignore_dirs = (
-            [
-                str(script_dir.joinpath(directory).resolve())
-                for directory in options.ignore_dirs.split(",")
-            ]
-            if options.ignore_dirs
-            else []
-        )
+        ignore_dirs = []
+        for directory in options.ignore_dirs.split(",") if options.ignore_dirs else []:
+            ignore_dir = script_dir.joinpath(directory)
+            ignore_dirs.extend(
+                dict.fromkeys([os.path.abspath(ignore_dir), str(ignore_dir.resolve())])
+            )
 
         # Dev-mode app storage under a hidden, Flet-namespaced `.flet/` dir so
         # it stays out of the way and is git-ignored. Mirrors a built app: the
@@ -360,6 +366,10 @@ class Command(BaseCommand):
                 )
             except Exception:
                 pass
+
+        ignore_dirs.extend(
+            dict.fromkeys([os.path.abspath(flet_dir), str(flet_dir.resolve())])
+        )
 
         my_event_handler = Handler(
             args=[sys.executable, "-u"]
@@ -558,17 +568,19 @@ class Handler(FileSystemEventHandler):
         """
         React to file-system events and trigger a debounced process restart.
 
-        Events coming from ignored directories are skipped. Restart is performed
-        for create/modify/delete/move events either on the target script or
-        within the watched directory tree.
+        Events coming from ignored directories are skipped; a path on another
+        drive than an ignored directory (Windows) is never inside it. Restart is
+        performed for create/modify/delete/move events either on the target
+        script or within the watched directory tree.
         """
 
+        child = os.path.abspath(event.src_path)
         for directory in self.ignore_dirs:
-            child = os.path.abspath(event.src_path)
-            # check if the file which triggered the reload is in the (ignored) directory
-            if os.path.commonpath([directory]) == os.path.commonpath(
-                [directory, child]
-            ):
+            try:
+                common = os.path.commonpath([directory, child])
+            except ValueError:
+                continue
+            if os.path.commonpath([directory]) == common:
                 return
 
         if (
