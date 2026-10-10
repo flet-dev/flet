@@ -4,7 +4,6 @@ import re
 from pathlib import Path
 
 from rich.console import Group
-from rich.live import Live
 from rich.panel import Panel
 from rich.table import Column, Table
 
@@ -73,11 +72,7 @@ class Command(BaseFlutterCommand):
             self.emulator_name = self.options.emulator
             self.cold_boot = bool(self.options.cold)
 
-        self.status = console.status(
-            "[bold blue]Initializing environment...",
-            spinner="bouncingBall",
-        )
-        with Live(Group(self.status, self.progress), console=console) as self.live:
+        with self.live_status("[bold blue]Initializing environment..."):
             self.initialize_command()
             if self.action == "delete":
                 if not self.emulator_target:

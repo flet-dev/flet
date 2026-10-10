@@ -19,6 +19,7 @@
 * Add `Theme.surfaces` and the `ThemeSurfaces` enum (`NEUTRAL`, `TONAL`) to choose whether surface colors are neutral or tinted with the seed color ([#6921](https://github.com/flet-dev/flet/issues/6921)) by @FeodorFitsner.
 * Add `flet test --update-failed-goldens` (`FLET_TEST_GOLDEN=failed`): compares screenshots as usual and overwrites only golden images that are missing or no longer match, so unchanged goldens stay untouched ([#6921](https://github.com/flet-dev/flet/issues/6921)) by @FeodorFitsner.
 * Add `bgcolor` to `FletTestApp.take_page_controls_screenshot()`, `assert_control_screenshot()` and `wrap_page_controls_in_screenshot()` to paint an opaque background behind the captured controls instead of a transparent one ([#6918](https://github.com/flet-dev/flet/pull/6918)) by @InesaFitsner.
+* Add `--log-format {rich,plain,github}` (`FLET_CLI_LOG_FORMAT`) to `flet build`, `flet debug` and `flet test`. `github` prints plain output plus GitHub Actions workflow commands: a collapsible group per build step and annotations for warnings and errors; `plain` is the same as `--no-rich-output`. See [Log formats](/docs/cli/flet-build#log-formats) ([#6947](https://github.com/flet-dev/flet/issues/6947)) by @FeodorFitsner.
 * Install `uvicorn[standard]` with `flet-web` again on Windows on ARM with Python 3.12 or later, now that `httptools` 0.9.0 ships wheels for it; Python 3.10 and 3.11 there keep plain `uvicorn`, because PyYAML has no wheels for them ([#6927](https://github.com/flet-dev/flet/pull/6927)) by @ndonkoHenri.
 
 ### Bug fixes

@@ -3,9 +3,6 @@ import contextlib
 import os
 import platform
 
-from rich.console import Group
-from rich.live import Live
-
 from flet_cli.commands.build_base import BaseBuildCommand, console, verbose2_style
 
 
@@ -100,11 +97,9 @@ class Command(BaseBuildCommand):
             if self.options.device_id:
                 self.device_id = self.options.device_id
 
-        self.status = console.status(
-            f"[bold blue]Initializing {self.target_platform} debug session...",
-            spinner="bouncingBall",
-        )
-        with Live(Group(self.status, self.progress), console=console) as self.live:
+        with self.live_status(
+            f"[bold blue]Initializing {self.target_platform} debug session..."
+        ):
             self.check_device_id()
             self.initialize_command()
             if self.options.show_devices:
