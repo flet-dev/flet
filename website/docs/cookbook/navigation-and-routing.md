@@ -69,8 +69,8 @@ await page.push_route("/search", q="flet", page=2)
 
 ## Query strings
 
-[`page.route`](../controls/page.md#flet.Page.route) includes the query string, for example `/search?q=flet&page=2`.
-Read its parameters with [`page.query`](../types/querystring.md):
+[`page.route`][flet.Page.route] includes the query string, for example `/search?q=flet&page=2`.
+Read its parameters with [`page.query`][flet.Page.query]:
 
 ```python
 page.query.get("q")  # "flet"
@@ -81,7 +81,7 @@ page.query.path  # "/search"
 `page.query` is parsed from the current route every time you read it, so it also works in `main()`,
 for example in a web app opened at `https://example.com/search?q=flet`.
 Values are decoded and always strings: once `page.navigate("/search", q="dom & dogs", page=2)` has changed the route,
-for example in [`page.on_route_change`](../controls/page.md#flet.Page.on_route_change),
+for example in [`page.on_route_change`][flet.Page.on_route_change],
 `page.query.get("q")` returns `"dom & dogs"` and `page.query.get("page")` returns `"2"`.
 Parameters without a value, such as `?debug`, are left out.
 `get()` raises `KeyError` for a missing parameter; use `page.query.to_dict.get("q")` for an optional one.
