@@ -1418,25 +1418,8 @@ class BaseBuildCommand(BaseFlutterCommand):
             normalized_providers[key] = normalized
         android_providers = normalized_providers
 
-        deep_linking_scheme = (
-            self.get_pyproject("tool.flet.ios.deep_linking.scheme")
-            if self.package_platform == "iOS"
-            else (
-                self.get_pyproject("tool.flet.android.deep_linking.scheme")
-                if self.package_platform == "Android"
-                else self.get_pyproject("tool.flet.deep_linking.scheme")
-            )
-        )
-
-        deep_linking_host = (
-            self.get_pyproject("tool.flet.ios.deep_linking.host")
-            if self.package_platform == "iOS"
-            else (
-                self.get_pyproject("tool.flet.android.deep_linking.host")
-                if self.package_platform == "Android"
-                else self.get_pyproject("tool.flet.deep_linking.host")
-            )
-        )
+        deep_linking_scheme = self.get_deep_linking_setting("scheme")
+        deep_linking_host = self.get_deep_linking_setting("host")
 
         if self.options.deep_linking_scheme and self.options.deep_linking_host:
             deep_linking_scheme = self.options.deep_linking_scheme
@@ -2959,6 +2942,30 @@ class BaseBuildCommand(BaseFlutterCommand):
             if cli_option is not None
             else self.get_platform_setting(pyproj_setting, default_value)
         )
+
+    def get_deep_linking_setting(self, key: str):
+        """
+        Resolve a deep-linking setting (`scheme` or `host`).
+
+        On Android and iOS `[tool.flet.<platform>.deep_linking]` overrides
+        `[tool.flet.deep_linking]`, which is the fallback; other platforms
+        read only the common table. Resolved per key, so a platform table
+        may override just one of them.
+
+        Args:
+            key: `scheme` or `host`.
+
+        Returns:
+            The configured value, or `None`.
+        """
+
+        assert self.get_pyproject
+        platform = {"Android": "android", "iOS": "ios"}.get(self.package_platform)
+        if platform:
+            value = self.get_pyproject(f"tool.flet.{platform}.deep_linking.{key}")
+            if value is not None:
+                return value
+        return self.get_pyproject(f"tool.flet.deep_linking.{key}")
 
     def get_platform_setting(self, pyproj_setting, default_value=None):
         """
