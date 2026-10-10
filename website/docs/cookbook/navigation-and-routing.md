@@ -67,6 +67,23 @@ page.navigate("/search", q="flet", page=2)
 await page.push_route("/search", q="flet", page=2)
 ```
 
+## Query strings
+
+[`page.route`](../controls/page.md#flet.Page.route) includes the query string, for example `/search?q=flet&page=2`.
+Read its parameters with [`page.query`](../types/querystring.md):
+
+```python
+page.query.get("q")  # "flet"
+page.query.to_dict  # {"q": "flet", "page": "2"}
+page.query.path  # "/search"
+```
+
+`page.query` is parsed from the current route every time you read it, so it also works in `main()`,
+for example in a web app opened at `https://example.com/search?q=flet`.
+Values are decoded and always strings: after `page.navigate("/search", q="dom & dogs", page=2)`,
+`page.query.get("q")` returns `"dom & dogs"` and `page.query.get("page")` returns `"2"`.
+`get()` raises `KeyError` for a missing parameter; use `page.query.to_dict.get("q")` for an optional one.
+
 ## Back navigation and pop confirmation
 
 When users go back, Flet triggers [`page.on_view_pop`](../controls/page.md#flet.Page.on_view_pop).
@@ -108,6 +125,9 @@ elif troute.match("/account/:account_id/orders/:order_id"):
 else:
     print("Unknown route")
 ```
+
+If routes can carry a query string, match [`page.query.path`](../types/querystring.md) instead of `page.route`.
+Otherwise the last parameter also captures the query string: `/books/42?tab=reviews` gives `troute.id == "42?tab=reviews"`.
 
 ## Web URL strategy
 

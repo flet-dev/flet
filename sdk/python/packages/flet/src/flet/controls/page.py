@@ -1311,7 +1311,9 @@ class Page(BasePage):
     @property
     def query(self) -> QueryString:
         """
-        The query parameters of the current page.
+        The query string parameters of the current :attr:`route`.
+
+        See :class:`~flet.QueryString`.
         """
         return self.__query
 

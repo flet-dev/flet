@@ -25,23 +25,20 @@ class UrlComponents:
 
 class QueryString(UrlComponents):
     """
-    Note: `QueryString` class is meant to be for internal use inside of page. Hence, \
-    methods such as `get()` or `to_dict()` must be\n called from `page` object\n
+    The query string of the current page route, available as
+    :attr:`flet.Page.query`.
 
-    Constructor:
-            `page` takes `Page` class an argument and extracts URL automatically\n
+    It is parsed from :attr:`flet.Page.route` on every access, so it can be read
+    in `main()` as well as in a :attr:`flet.Page.on_route_change` handler. For
+    example, with the route `/products?id=1&sort=price`:
 
-    Methods:
-            Public:
-                `get()` method takes `key` an argument and returns value according to
-                key. (Ex: .../?name=Joe -> `get('name')` -> `Joe`)\n
-                `to_dict` returns all the key-value pairs of querystring as a `dict`\n
-                `path` returns url path (Ex: .../products?id=1 -> /products)
+    - `page.query.get("id")` returns `"1"`;
+    - `page.query.to_dict` returns `{"id": "1", "sort": "price"}`;
+    - `page.query.path` returns `"/products"`.
 
-            Private(meant to be used only inside of page class):
-                `post()` method takes key-value pair as an argument and returns
-                proceeded querystring ready to be merged with URL
-
+    Values are always strings. To navigate to a route with a query string, pass
+    the parameters as keyword arguments to :meth:`flet.Page.navigate` or
+    :meth:`flet.Page.push_route`.
     """
 
     def __init__(self, page):
@@ -49,13 +46,18 @@ class QueryString(UrlComponents):
 
     def get(self, key: str) -> str:
         """
-        Return the query parameter value for `key` from the current page route.
+        Return the value of the query parameter `key` in the current page route.
+
+        Args:
+            key: The name of the query parameter.
+
+        Returns:
+            The decoded value. When `key` appears more than once, its last value.
 
         Raises:
-            KeyError: If `key` does not exist in the parsed query parameters.
+            KeyError: If the route has no query parameter `key`.
         """
-        self._data = self.to_dict
-        return self._data[key]
+        return self.to_dict[key]
 
     def post(self, kwargs: dict):
         """
@@ -80,9 +82,10 @@ class QueryString(UrlComponents):
 
     # Path
     @property
-    def path(self):
+    def path(self) -> str:
         """
-        Return the path component of the current page route.
+        Return the path component of the current page route, without the query
+        string.
         """
         return self._split_route().path
 

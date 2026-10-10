@@ -31,6 +31,7 @@
 ### Documentation
 
 * Group the Reference > Controls section of the docs into Core, Material, Cupertino, Shadcn and Extensions ([#6918](https://github.com/flet-dev/flet/pull/6918)) by @InesaFitsner.
+* Document reading query string parameters with `page.query` in the [Navigation and Routing](/docs/cookbook/navigation-and-routing#query-strings) guide, and add a `QueryString` reference page ([#5898](https://github.com/flet-dev/flet/issues/5898)) by @ndonkoHenri.
 
 ## 1.0.4
 
