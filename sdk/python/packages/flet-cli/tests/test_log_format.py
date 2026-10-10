@@ -421,10 +421,19 @@ class TestGithub:
     def test_cleanup_success_prints_nothing(self, github):
         cmd = _command()
         with pytest.raises(SystemExit) as exit_info:
-            cmd.cleanup(0, "Successfully built your app!")
+            cmd.cleanup(0)
         assert exit_info.value.code == 0
         # Non-interactive: the exit code is the result, no banner.
         assert github.getvalue() == ""
+        assert cmd.live.renderables[-1] == ""
+
+    def test_cleanup_success_message_is_plain(self, github):
+        cmd = _command()
+        with pytest.raises(SystemExit):
+            cmd.cleanup(0, "Created emulator [cyan]pixel[/cyan].", no_border=True)
+        # A command's result (emulator actions, device lists) is still shown,
+        # without a panel.
+        assert github.getvalue() == "Created emulator pixel.\n"
         assert cmd.live.renderables[-1] == ""
 
     def test_flutter_doctor_is_a_group(self, github):
@@ -546,10 +555,30 @@ def plain(monkeypatch):
 def test_plain_cleanup_success_prints_nothing(plain):
     cmd = _command()
     with pytest.raises(SystemExit) as exit_info:
-        cmd.cleanup(0, "Successfully built your app!")
+        cmd.cleanup(0)
     assert exit_info.value.code == 0
     assert plain.getvalue() == ""
     assert cmd.live.renderables[-1] == ""
+
+
+def test_plain_cleanup_success_message_has_no_panel(plain):
+    cmd = _command()
+    with pytest.raises(SystemExit):
+        cmd.cleanup(0, "Deleted emulator [cyan]pixel[/cyan].")
+    assert plain.getvalue() == "Deleted emulator pixel.\n"
+
+
+def test_non_interactive_live_status_prints_no_spinner(monkeypatch):
+    from rich.progress import Progress
+
+    buffer, console = _console(terminal=False)
+    monkeypatch.setattr(flutter_base, "console", console)
+    cmd = _command(progress=Progress(transient=True, console=console))
+    with cmd.live_status("[bold blue]Provisioning windows test host..."):
+        cmd.status.update("[bold blue]Test host ready. Starting tests...")
+    # A non-transient Live prints its last frame (the spinner) on exit to a
+    # non-terminal console, running into whatever is logged next.
+    assert buffer.getvalue() == ""
 
 
 def test_plain_cleanup_failure_is_one_plain_line(plain):

@@ -16,6 +16,7 @@ from skimage.metrics import structural_similarity as ssim
 
 import flet as ft
 from flet.controls.control import Control
+from flet.pytest_plugin import ensure_newline
 from flet.testing.remote_tester import RemoteTester
 from flet.testing.tester import Tester
 from flet.utils.environment import without_host_python_config
@@ -26,6 +27,16 @@ if TYPE_CHECKING:
     from flet.app import AppCallable
 
 __all__ = ["FletTestApp"]
+
+
+def _print(*args, **kwargs) -> None:
+    """
+    `print()` that starts on its own line when pytest streams output (`-s`)
+    rather than after its progress dots, so workflow commands such as Flutter's
+    `::group::` lines are still recognized by CI.
+    """
+    ensure_newline()
+    print(*args, **kwargs)
 
 
 class DisposalMode(Enum):
@@ -183,6 +194,7 @@ class FletTestApp:
         self.__tcp_port = tcp_port
         self.__flutter_process: Optional[asyncio.subprocess.Process] = None
         self.__flutter_output = bytearray()
+        self.__echo_flutter_output = False
         self.__flutter_output_task: Optional[asyncio.Task] = None
         self.__page = None
         self.__tester: Union[Tester, RemoteTester, None] = None
@@ -249,7 +261,7 @@ class FletTestApp:
             remote = RemoteTester()
             self.__tcp_port = await remote.start(host="127.0.0.1", port=self.__tcp_port)
             self.__tester = remote
-            print(f"Started remote tester on 127.0.0.1:{self.__tcp_port}")
+            _print(f"Started remote tester on 127.0.0.1:{self.__tcp_port}")
         else:
             if self.__use_http:
                 os.environ["FLET_FORCE_WEB_SERVER"] = "true"
@@ -262,17 +274,19 @@ class FletTestApp:
                     view=None,
                 )
             )
-            print("Started Flet app")
+            _print("Started Flet app")
 
-        # Stream the Flutter test process output to the console when verbose
-        # (set by `flet test -v`) or when debug logging is on; otherwise
-        # capture it into a buffer so it can be dumped if the process fails.
-        verbose = (
+        # Echo the Flutter test process output line by line when verbose (set
+        # by `flet test -v`) or when debug logging is on; otherwise capture it
+        # into a buffer so it can be dumped if the process fails. Echoed, not
+        # inherited: each line must start on its own line, not after pytest's
+        # progress dots.
+        self.__echo_flutter_output = (
             get_bool_env_var("FLET_TEST_VERBOSE")
             or logging.getLogger().getEffectiveLevel() == logging.DEBUG
         )
-        stdout = None if verbose else asyncio.subprocess.PIPE
-        stderr = None if verbose else asyncio.subprocess.STDOUT
+        stdout = asyncio.subprocess.PIPE
+        stderr = asyncio.subprocess.STDOUT
 
         # The resolved Flutter executable (full path, `flutter.bat` on Windows)
         # is passed by `flet test`; fall back to a bare "flutter" on PATH.
@@ -338,8 +352,8 @@ class FletTestApp:
                 self.__read_flutter_output(self.__flutter_process.stdout)
             )
 
-        print("Started Flutter test process.")
-        print("Waiting for the Flutter app to connect...")
+        _print("Started Flutter test process.")
+        _print("Waiting for the Flutter app to connect...")
 
         def connected() -> bool:
             if self.__device_mode:
@@ -382,9 +396,13 @@ class FletTestApp:
         if len(line) > self.__flutter_output_line_limit:
             line = line[: self.__flutter_output_line_limit]
             truncated = True
-        self.__flutter_output.extend(line.rstrip(b"\r\n"))
+        text = bytes(line.rstrip(b"\r\n"))
         if truncated:
-            self.__flutter_output.extend(b" ...<truncated>")
+            text += b" ...<truncated>"
+        if self.__echo_flutter_output:
+            _print(text.decode(errors="replace"), flush=True)
+            return
+        self.__flutter_output.extend(text)
         self.__flutter_output.extend(b"\n")
         if len(self.__flutter_output) > self.__flutter_output_limit:
             del self.__flutter_output[: -self.__flutter_output_limit]
@@ -393,9 +411,9 @@ class FletTestApp:
         if not self.__flutter_output:
             return
         output = self.__flutter_output.decode(errors="replace")
-        print("---------- Flutter test process output (tail) ----------")
-        print(output)
-        print("---------- End of Flutter test process output ----------")
+        _print("---------- Flutter test process output (tail) ----------")
+        _print(output)
+        _print("---------- End of Flutter test process output ----------")
 
     def __flutter_test_target(self) -> str:
         # In device mode the driver (`integration_test/app_test.dart`) is
@@ -425,23 +443,23 @@ class FletTestApp:
         try:
             await self.tester.teardown(timeout=10)
         except (RuntimeError, TimeoutError) as e:
-            print(f"Tester teardown failed: {e}")
+            _print(f"Tester teardown failed: {e}")
 
         flutter_returncode: Optional[int] = None
         if self.__flutter_process:
-            print("\nWaiting for Flutter test process to exit...")
+            _print("Waiting for Flutter test process to exit...")
             try:
                 await asyncio.wait_for(self.__flutter_process.wait(), timeout=10)
                 flutter_returncode = self.__flutter_process.returncode
-                print(f"Flutter test process has exited (code {flutter_returncode}).")
+                _print(f"Flutter test process has exited (code {flutter_returncode}).")
             except asyncio.TimeoutError:
-                print("Flutter test process did not exit in time, terminating it...")
+                _print("Flutter test process did not exit in time, terminating it...")
                 self.__flutter_process.terminate()
                 # Optionally ensure it terminates
                 try:
                     await asyncio.wait_for(self.__flutter_process.wait(), timeout=5)
                 except asyncio.TimeoutError:
-                    print("Force killing Flutter test process...")
+                    _print("Force killing Flutter test process...")
                     self.__flutter_process.kill()
 
         if self.__flutter_output_task:
@@ -645,7 +663,7 @@ class FletTestApp:
         else:
             if not golden_image_path.exists():
                 if self.__golden_failed:
-                    print(f"Creating missing golden for {name}")
+                    _print(f"Creating missing golden for {name}")
                     golden_image_path.parent.mkdir(parents=True, exist_ok=True)
                     golden_image_path.write_bytes(screenshot)
                     return
@@ -655,14 +673,14 @@ class FletTestApp:
             golden_img = self._load_image_from_file(golden_image_path)
             img = self._load_image_from_bytes(screenshot)
             similarity = self._compare_images_rgb(golden_img, img)
-            print(f"Similarity for {name}: {similarity}%")
+            _print(f"Similarity for {name}: {similarity}%")
             if similarity_threshold == 0:
                 similarity_threshold = self.screenshots_similarity_threshold
             if self.__golden_failed and (
                 similarity <= similarity_threshold
                 or self._pixels_differ(golden_img, img)
             ):
-                print(f"Updating failed golden for {name}")
+                _print(f"Updating failed golden for {name}")
                 golden_image_path.write_bytes(screenshot)
                 return
             if similarity <= similarity_threshold:
@@ -904,7 +922,7 @@ class FletTestApp:
                 zip(golden_frames, actual_frames, strict=True)
             ):
                 similarity = self._compare_images_rgb(golden_frame, actual_frame)
-                print(f"GIF similarity for {name} frame {index}: {similarity}%")
+                _print(f"GIF similarity for {name} frame {index}: {similarity}%")
                 assert similarity > self.screenshots_similarity_threshold, (
                     f"{name} GIF frame {index} differs "
                     f"(similarity: {similarity}% <= "
@@ -969,7 +987,7 @@ class FletTestApp:
 
         if not golden_gif_path.exists():
             if self.__golden_failed:
-                print(f"Creating missing golden GIF for {name}")
+                _print(f"Creating missing golden GIF for {name}")
                 golden_gif_path.parent.mkdir(parents=True, exist_ok=True)
                 golden_gif_path.write_bytes(gif_bytes)
                 return
@@ -978,7 +996,7 @@ class FletTestApp:
         similarity, frame_count_mismatch = self._compare_gifs(
             golden_gif_path, gif_bytes
         )
-        print(f"Similarity for {name}: {similarity}%")
+        _print(f"Similarity for {name}: {similarity}%")
         if similarity_threshold == 0:
             similarity_threshold = self.screenshots_similarity_threshold
 
@@ -987,7 +1005,7 @@ class FletTestApp:
             or similarity <= similarity_threshold
             or self._gif_pixels_differ(golden_gif_path, gif_bytes)
         ):
-            print(f"Updating failed golden GIF for {name}")
+            _print(f"Updating failed golden GIF for {name}")
             golden_gif_path.write_bytes(gif_bytes)
             return
 

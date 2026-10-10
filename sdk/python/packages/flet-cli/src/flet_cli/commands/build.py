@@ -6,9 +6,6 @@ import tempfile
 from pathlib import Path
 from typing import Callable, Optional
 
-from rich.console import Group
-from rich.live import Live
-
 from flet_cli.commands.build_base import BaseBuildCommand, console
 from flet_cli.commands.flutter_base import verbose1_style
 from flet_cli.utils.android import flutter_target_platforms
@@ -94,11 +91,9 @@ class Command(BaseBuildCommand):
 
         super().handle(options)
         assert self.target_platform
-        self.status = console.status(
-            f"[bold blue]Initializing {self.target_platform} build...",
-            spinner="bouncingBall",
-        )
-        with Live(Group(self.status, self.progress), console=console) as self.live:
+        with self.live_status(
+            f"[bold blue]Initializing {self.target_platform} build..."
+        ):
             self.initialize_command()
             self.validate_target_platform()
             self.validate_entry_point()
@@ -118,6 +113,21 @@ class Command(BaseBuildCommand):
             self.copy_build_output()
             if self.target_platform == "macos":
                 self.sign_macos_app()
+
+            unsigned_ipa = self.target_platform == "ipa" and not self.built_ipa()
+            if self.no_rich_output:
+                # Non-interactive: the exit code is the result, no banner; only
+                # the missing .ipa is worth a warning.
+                if unsigned_ipa:
+                    self.warn(
+                        "No .ipa was produced: Xcode exports one only for a "
+                        "signed app. Configure a provisioning profile and a "
+                        "signing certificate to get an uploadable bundle: "
+                        "https://flet.dev/docs/publish/ios",
+                        title="iOS signing",
+                    )
+                self.cleanup(0)
+                return
 
             self.cleanup(
                 0,
@@ -139,7 +149,7 @@ class Command(BaseBuildCommand):
                         "[cyan]provisioning profile[/cyan] and a "
                         "[cyan]signing certificate[/cyan] to get an uploadable "
                         "bundle: https://flet.dev/docs/publish/ios"
-                        if self.target_platform == "ipa" and not self.built_ipa()
+                        if unsigned_ipa
                         else ""
                     )
                 ),

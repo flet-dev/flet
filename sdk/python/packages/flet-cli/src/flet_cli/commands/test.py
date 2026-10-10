@@ -7,8 +7,6 @@ import sys
 from pathlib import Path
 from typing import Optional
 
-from rich.console import Group
-from rich.live import Live
 from rich.markup import escape
 
 from flet_cli.commands.build_base import BaseBuildCommand, console
@@ -230,18 +228,13 @@ class Command(BaseBuildCommand):
             flutter_dir = Path(self.flutter_test_host).resolve()
             # Still need python_app_path/env for pytest; run a light init.
             self.test_mode = True
-            self.status = console.status(
-                "[bold blue]Preparing tests...", spinner="bouncingBall"
-            )
-            with Live(Group(self.status, self.progress), console=console) as self.live:
+            with self.live_status("[bold blue]Preparing tests..."):
                 self.initialize_command()
                 self.validate_entry_point()
         else:
-            self.status = console.status(
-                f"[bold blue]Provisioning {self.target_platform} test host...",
-                spinner="bouncingBall",
-            )
-            with Live(Group(self.status, self.progress), console=console) as self.live:
+            with self.live_status(
+                f"[bold blue]Provisioning {self.target_platform} test host..."
+            ):
                 flutter_dir = _provision_steps(self)
                 self.update_status("[bold blue]Test host ready. Starting tests...")
 
@@ -310,11 +303,7 @@ def provision_test_host(
     cmd.test_platform_name = plat
     cmd.target_platform = TEST_PLATFORMS[plat]["target_platform"]
 
-    cmd.status = console.status(
-        f"[bold blue]Provisioning {cmd.target_platform} test host...",
-        spinner="bouncingBall",
-    )
-    with Live(Group(cmd.status, cmd.progress), console=console) as cmd.live:
+    with cmd.live_status(f"[bold blue]Provisioning {cmd.target_platform} test host..."):
         flutter_dir = _provision_steps(cmd)
 
     # Make the SDK discoverable for the FletTestApp-spawned `flutter test` and

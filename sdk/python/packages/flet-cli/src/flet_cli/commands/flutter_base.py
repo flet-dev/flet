@@ -10,6 +10,7 @@ from typing import Any, Optional
 
 from packaging import version
 from rich.console import Console, Group
+from rich.live import Live
 from rich.panel import Panel
 from rich.progress import Progress
 from rich.prompt import Confirm
@@ -541,10 +542,13 @@ class BaseFlutterCommand(BaseCommand):
 
         if exit_code == 0:
             if self.no_rich_output:
-                # Non-interactive (plain/github): the exit code and the last
-                # step say it; a success banner is only noise in CI and
-                # hosted-build logs.
+                # Non-interactive (plain/github): no box-drawn panel. Commands
+                # whose result is the output (device lists, emulator actions)
+                # pass a message; `flet build` passes none, as the exit code
+                # and its last step already say it.
                 self.live.update("", refresh=True)
+                if message:
+                    output.console.print(message, soft_wrap=True)
             else:
                 self.live.update(
                     (message if no_border else Panel(message)) if message else "",
@@ -608,6 +612,28 @@ class BaseFlutterCommand(BaseCommand):
             console.log(flutter_doctor.stdout, style=verbose1_style)
         if flutter_doctor.stderr:
             console.log(flutter_doctor.stderr, style=error_style)
+
+    @contextlib.contextmanager
+    def live_status(self, status: str) -> Generator[Live, None, None]:
+        """
+        Show a spinner with `status`, and the SDK download progress bars, while
+        the block runs; available as `self.status` and `self.live`.
+
+        In the non-interactive formats (plain/github) the display is transient:
+        rich renders nothing to a non-terminal console while it runs, and a
+        non-transient one would print its last frame (the spinner) on exit.
+
+        Args:
+            status: Initial spinner text, such as `[bold blue]Initializing...`.
+        """
+
+        self.status = console.status(status, spinner="bouncingBall")
+        with Live(
+            Group(self.status, self.progress),
+            console=console,
+            transient=self.no_rich_output,
+        ) as self.live:
+            yield self.live
 
     def update_status(self, status):
         """
