@@ -126,8 +126,8 @@ else:
     print("Unknown route")
 ```
 
-If routes can carry a query string, match [`page.query.path`](../types/querystring.md) instead of `page.route`.
-Otherwise the last parameter also captures the query string: `/books/42?tab=reviews` gives `troute.id == "42?tab=reviews"`.
+Only the path is matched, so a query string doesn't affect the result: `/books/42?tab=reviews`
+matches `/books/:id` with `troute.id == "42"`. Read the query string with [`page.query`](#query-strings).
 
 ## Web URL strategy
 

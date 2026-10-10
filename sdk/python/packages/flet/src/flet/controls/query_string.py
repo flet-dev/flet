@@ -78,7 +78,7 @@ class QueryString(UrlComponents):
         decoded as a space. When a key appears more than once, its last value is
         returned.
         """
-        return dict(urllib.parse.parse_qsl(self._split_route().query))
+        return dict(urllib.parse.parse_qsl(self._split_route()[1]))
 
     # Path
     @property
@@ -87,11 +87,13 @@ class QueryString(UrlComponents):
         Return the path component of the current page route, without the query
         string.
         """
-        return self._split_route().path
+        return self._split_route()[0]
 
-    def _split_route(self) -> urllib.parse.SplitResult:
+    def _split_route(self) -> tuple[str, str]:
         """
-        Split the current page route into its URL components.
+        Split the current page route into its path and query string at the first
+        `?`.
         """
         page = self.__page()
-        return urllib.parse.urlsplit((page.route if page else None) or "")
+        path, _, query = ((page.route if page else None) or "").partition("?")
+        return path, query
