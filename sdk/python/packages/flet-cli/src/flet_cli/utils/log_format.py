@@ -205,15 +205,16 @@ def annotation_path(path: Union[str, os.PathLike]) -> str:
     return absolute.replace(os.sep, "/")
 
 
-class GithubLogConsole(Console):
+class PlainLogConsole(Console):
     """
-    Console for `github` output: `log()` writes plain lines.
+    Console for `plain` and `github` output: `log()` writes plain lines.
 
     Rich's `log()` lays lines out in a table with a time column — repeated
     times are left blank, so continuation lines look indented — and wraps
-    them at the console width (80 columns without a terminal). On GitHub
-    Actions both are noise: the log viewer has its own timestamps and wraps
-    long lines itself. So `log()` prints like `print(..., soft_wrap=True)`.
+    them at the console width (80 columns without a terminal). In CI and
+    hosted-build logs both are noise — the viewer wraps long lines itself
+    and usually has its own timestamps — so `log()` prints like
+    `print(..., soft_wrap=True)`.
     """
 
     def log(  # type: ignore[override]

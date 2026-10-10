@@ -383,8 +383,8 @@ class TestGithub:
             "Gradle task bundleRelease failed%0Awith exit code 1\n"
             "::endgroup::\n"
         )
-        # The error panel is still rendered, as in `plain`.
-        assert isinstance(cmd.live.renderables[-1], Panel)
+        # The annotation is the message; no box-drawn panel repeats it.
+        assert cmd.live.renderables[-1] == ""
 
     def test_cleanup_failure_after_step_raised(self, github):
         # An exception caught outside the step that raised it is still
@@ -418,11 +418,14 @@ class TestGithub:
             _command().cleanup(1, "Build output not found in [cyan]build/x[/cyan]")
         assert github.getvalue() == "::error::Build output not found in build/x\n"
 
-    def test_cleanup_success_prints_no_commands(self, github):
+    def test_cleanup_success_prints_plain_message(self, github):
+        cmd = _command()
         with pytest.raises(SystemExit) as exit_info:
-            _command().cleanup(0, "Successfully built your app!")
+            cmd.cleanup(0, "Successfully built your app!")
         assert exit_info.value.code == 0
-        assert github.getvalue() == ""
+        # No workflow command and no box-drawn panel: just the line.
+        assert github.getvalue() == "Successfully built your app!\n"
+        assert cmd.live.renderables[-1] == ""
 
     def test_flutter_doctor_is_a_group(self, github):
         cmd = _command(skip_flutter_doctor=False)
@@ -510,10 +513,10 @@ def test_module_console_matches_detected_format():
 def test_github_console_logs_plain_unwrapped_lines():
     import io
 
-    from flet_cli.utils.log_format import GithubLogConsole
+    from flet_cli.utils.log_format import PlainLogConsole
 
     buf = io.StringIO()
-    console = GithubLogConsole(file=buf, width=80, force_terminal=False, log_path=False)
+    console = PlainLogConsole(file=buf, width=80, force_terminal=False, log_path=False)
     long = (
         "Flutter executable: /opt/hostedtoolcache/flutter/stable-3.47.7-x64"
         "/flutter/bin/cache/dart-sdk/bin/dart"

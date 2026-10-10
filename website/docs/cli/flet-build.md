@@ -12,7 +12,7 @@ import CliBuild from '@site/.crocodocs/cli-build.mdx';
 reports its progress:
 
 * `rich` (default) - a live spinner shows the current step.
-* `plain` - plain text lines without colors or animation, same as `--no-rich-output`.
+* `plain` - plain text lines without colors, animation, timestamps or wrapping (log viewers wrap long lines themselves), same as `--no-rich-output`.
 * `github` - `plain` output plus [GitHub Actions workflow commands](https://docs.github.com/en/actions/reference/workflows-and-actions/workflow-commands):
   each build step (Flutter SDK, app shell, Python app packaging, icons, splash screens,
   `flutter build`, macOS signing and notarization, ...) is a collapsible group, and

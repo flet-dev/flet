@@ -25,7 +25,7 @@ from flet_cli.utils.flutter import get_flutter_dir, install_flutter
 from flet_cli.utils.log_format import (
     LOG_FORMATS,
     CliOutput,
-    GithubLogConsole,
+    PlainLogConsole,
     detect_log_format,
     resolve_log_format,
     step_title,
@@ -41,8 +41,8 @@ no_rich_output = log_format != "rich"
 
 error_style = Style(color="red", bold=True)
 warning_style = Style(color="yellow", bold=True)
-# `github` output logs plain, unwrapped lines without the time column.
-console = (GithubLogConsole if log_format == "github" else Console)(
+# `plain`/`github` log plain lines: no time column, no wrapping.
+console = (PlainLogConsole if no_rich_output else Console)(
     log_path=False,
     theme=Theme({"log.message": "green bold"}),
     # no_rich_output forces fully plain output (no color, no animation).
@@ -540,10 +540,17 @@ class BaseFlutterCommand(BaseCommand):
         """
 
         if exit_code == 0:
-            self.live.update(
-                (message if no_border else Panel(message)) if message else "",
-                refresh=True,
-            )
+            if output.github:
+                # Plain lines: a box-drawn panel is terminal decoration that
+                # reads as noise in CI and hosted-build log viewers.
+                self.live.update("", refresh=True)
+                if message:
+                    output.console.print(message, soft_wrap=True)
+            else:
+                self.live.update(
+                    (message if no_border else Panel(message)) if message else "",
+                    refresh=True,
+                )
         else:
             msg = (
                 message
@@ -574,7 +581,12 @@ class BaseFlutterCommand(BaseCommand):
                         Group(Panel(msg, style=error_style), status), refresh=True
                     )
                     self.run_flutter_doctor()
-            self.live.update(Panel(msg, style=error_style), refresh=True)
+            if output.github:
+                # The `::error::` line above already shows in the log (and
+                # as an annotation); a box-drawn panel would only repeat it.
+                self.live.update("", refresh=True)
+            else:
+                self.live.update(Panel(msg, style=error_style), refresh=True)
 
         sys.exit(exit_code)
 
