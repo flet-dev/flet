@@ -16,6 +16,7 @@ from flet.app import AppCallable
 from flet.controls.base_control import BaseControl
 from flet.controls.context import _context_page, context
 from flet.controls.exceptions import FletPageDisconnectedException
+from flet.controls.types import RouteUrlStrategy
 from flet.messaging.connection import Connection
 from flet.messaging.protocol import (
     ControlEventBody,
@@ -59,6 +60,10 @@ class FletApp(Connection):
             and redirecting to OAuth callback URL.
         upload_endpoint_path: Absolute URL of upload endpoint, e.g. `/upload`.
         secret_key: Secret key to sign upload requests.
+        route_url_strategy: Route URL strategy the client uses, so that URLs built
+            for it, such as the page to return to after an OAuth redirect, match.
+        proxy_path: URL prefix that a proxy in front of the app strips, as given
+            to `flet_web.fastapi.app()`; part of the page's base path.
     """
 
     def __init__(
@@ -71,8 +76,12 @@ class FletApp(Connection):
         oauth_state_timeout_seconds: int = DEFAULT_FLET_OAUTH_STATE_TIMEOUT,
         upload_endpoint_path: Optional[str] = None,
         secret_key: Optional[str] = None,
+        route_url_strategy: RouteUrlStrategy = RouteUrlStrategy.PATH,
+        proxy_path: Optional[str] = None,
     ):
         super().__init__()
+        self.route_url_strategy = route_url_strategy
+        self.__proxy_path = proxy_path
         self.__id = random_string(8)
         logger.info(f"New FletApp: {self.__id}")
 
@@ -124,6 +133,10 @@ class FletApp(Connection):
         self.pubsubhub = app_manager.get_pubsubhub(self.__main, loop=self.loop)
         self.page_url = str(websocket.url).rsplit("/", 1)[0]
         self.page_name = websocket.url.path.rsplit("/", 1)[0].lstrip("/")
+        mount_path = (
+            (self.__proxy_path or "") + websocket.scope.get("root_path", "")
+        ).strip("/")
+        self.page_base_path = f"/{mount_path}/" if mount_path else "/"
 
         if not self.__upload_endpoint_path:
             self.__upload_endpoint_path = (

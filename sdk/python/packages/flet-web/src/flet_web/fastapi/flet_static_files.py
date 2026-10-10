@@ -69,8 +69,10 @@ class FletStaticFiles(StaticFiles):
         app_name: PWA application name.
         app_short_name: PWA application short name.
         app_description: PWA application description.
-        web_renderer: Type of web renderer.
-        route_url_strategy: Routing URL strategy.
+        web_renderer: Type of web renderer, as a `WebRenderer` or its value, e.g.
+            `"canvaskit"`.
+        route_url_strategy: Routing URL strategy, as a `RouteUrlStrategy` or its
+            value, e.g. `"hash"`.
         no_cdn: Whether not load CanvasKit, Pyodide, and fonts from CDN.
         websocket_endpoint_path: Path of Flet app WebSocket handler. A path
             without a leading `/` is resolved against the app mount path.
@@ -97,8 +99,8 @@ class FletStaticFiles(StaticFiles):
         self.__app_name = app_name
         self.__app_short_name = app_short_name
         self.__app_description = app_description
-        self.__web_renderer = web_renderer
-        self.__route_url_strategy = route_url_strategy
+        self.__web_renderer = WebRenderer(web_renderer)
+        self.__route_url_strategy = RouteUrlStrategy(route_url_strategy)
         self.__no_cdn = no_cdn
         self.__websocket_endpoint_path = websocket_endpoint_path
         self.__once = Once()
@@ -119,6 +121,14 @@ class FletStaticFiles(StaticFiles):
         logger.info(f"Route URL strategy configured: {self.__route_url_strategy}")
         logger.info(f"No CDN configured: {self.__no_cdn}")
 
+    @property
+    def route_url_strategy(self) -> RouteUrlStrategy:
+        """
+        The route URL strategy written into the served `index.html`: the
+        `route_url_strategy` argument, or `FLET_WEB_ROUTE_URL_STRATEGY` if set.
+        """
+        return self.__route_url_strategy
+
     async def __call__(self, scope: Scope, receive: Receive, send: Send) -> None:
         await self.__once.do(self.__config, scope["root_path"])
         await super().__call__(scope, receive, send)
@@ -126,9 +136,16 @@ class FletStaticFiles(StaticFiles):
     def lookup_path(self, path: str) -> tuple[str, Optional[os.stat_result]]:
         """Resolve a static file path, with SPA fallback for client-side routes.
 
-        Route-like paths (no extension, or `.html`) that don't match a file
-        fall back to `index.html` so the Flutter client can handle routing.
-        Asset-like paths (any other extension) resolve to a real `404`.
+        With the `path` route URL strategy, route-like paths (no extension, or
+        `.html`) that don't match a file fall back to `index.html` so the
+        Flutter client can handle routing. Asset-like paths (any other
+        extension) resolve to a real `404`.
+
+        With the `hash` strategy, routes live in the URL fragment and never
+        reach the server, so there is no fallback: any path that doesn't match
+        a file resolves to a real `404` (with a `404.html` from the assets
+        directory as its body, if there is one), while the mount root still
+        serves `index.html`.
 
         Args:
             path: Requested path, relative to the mounted static root
@@ -141,7 +158,10 @@ class FletStaticFiles(StaticFiles):
         logger.debug(f"StaticFiles.lookup_path: {self.__app_mount_path} {path}")
         full_path, stat_result = super().lookup_path(path)
 
-        if stat_result is not None:
+        if (
+            stat_result is not None
+            or self.__route_url_strategy == RouteUrlStrategy.HASH
+        ):
             return full_path, stat_result
 
         # Not found: SPA fallback only for route-like paths.

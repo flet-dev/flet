@@ -53,6 +53,7 @@ from flet.controls.types import (
     DeviceOrientation,
     Locale,
     PagePlatform,
+    RouteUrlStrategy,
     Wrapper,
 )
 from flet.utils import is_pyodide
@@ -1224,10 +1225,18 @@ class Page(BasePage):
             if complete_page_html:
                 auth_attrs["completePageHtml"] = complete_page_html
             if redirect_to_page:
-                up = urlparse(provider.redirect_url)
-                auth_attrs["completePageUrl"] = up._replace(
-                    path=f"{self.session.connection.page_name}{self.route}"
-                ).geturl()
+                connection = self.session.connection
+                base_path = connection.page_base_path
+                redirect_url = urlparse(provider.redirect_url)
+                if connection.route_url_strategy == RouteUrlStrategy.HASH:
+                    complete_page_url = redirect_url._replace(
+                        path=base_path, query="", fragment=self.route
+                    )
+                else:
+                    complete_page_url = redirect_url._replace(
+                        path=base_path.rstrip("/") + self.route
+                    )
+                auth_attrs["completePageUrl"] = complete_page_url.geturl()
             self.session.connection.oauth_authorize(auth_attrs)
             if on_open_authorization_url:
                 await on_open_authorization_url(authorization_url)
