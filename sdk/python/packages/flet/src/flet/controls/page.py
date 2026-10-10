@@ -868,7 +868,6 @@ class Page(BasePage):
             if self.__last_route == e.route:
                 return False
             self.__last_route = e.route
-            self.query()
 
         elif isinstance(e, ViewPopEvent | ViewsPopUntilEvent):
             for v in unwrap_component(self.views):
@@ -1312,7 +1311,9 @@ class Page(BasePage):
     @property
     def query(self) -> QueryString:
         """
-        The query parameters of the current page.
+        The query string parameters of the current :attr:`route`.
+
+        See :class:`~flet.QueryString`.
         """
         return self.__query
 
