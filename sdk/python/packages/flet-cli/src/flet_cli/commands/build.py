@@ -219,33 +219,32 @@ class Command(BaseBuildCommand):
         assert self.platforms
         assert self.target_platform
 
-        self.update_status(
+        with self.step(
             f"[bold blue]Building [cyan]"
             f"{self.platforms[self.target_platform]['status_text']}[/cyan]..."
-        )
+        ):
+            # Clear the build output directories of artifacts from previous runs.
+            # Flutter only ever adds files to them, and copy_build_output harvests
+            # them wholesale — so without this, a previous build with different
+            # options (e.g. --arch, --split-per-abi, or a renamed product) would
+            # leak its artifacts into the user's output directory.
+            assert self.flutter_dir
+            flutter_dir = self.flutter_dir.resolve()
+            for output in self.platforms[self.target_platform]["outputs"]:
+                output_dir = Path(
+                    os.path.dirname(self.resolve_output_path(output))
+                ).resolve()
+                # only delete directories that are strictly inside the generated Flutter
+                # project (and never the project directory itself).
+                if output_dir != flutter_dir and output_dir.is_relative_to(flutter_dir):
+                    shutil.rmtree(output_dir, ignore_errors=True)
 
-        # Clear the build output directories of artifacts from previous runs. Flutter
-        # only ever adds files to them, and copy_build_output harvests them wholesale —
-        # so without this, a previous build with different options (e.g. --arch,
-        # --split-per-abi, or a renamed product) would leak its artifacts into the
-        # user's output directory.
-        assert self.flutter_dir
-        flutter_dir = self.flutter_dir.resolve()
-        for output in self.platforms[self.target_platform]["outputs"]:
-            output_dir = Path(
-                os.path.dirname(self.resolve_output_path(output))
-            ).resolve()
-            # only delete directories that are strictly inside the generated Flutter
-            # project (and never the project directory itself).
-            if output_dir != flutter_dir and output_dir.is_relative_to(flutter_dir):
-                shutil.rmtree(output_dir, ignore_errors=True)
+            self._run_flutter_command()
 
-        self._run_flutter_command()
-
-        console.log(
-            f"Built [cyan]{self.describe_build_output()}"
-            f"[/cyan] {self.emojis['checkmark']}",
-        )
+            console.log(
+                f"Built [cyan]{self.describe_build_output()}"
+                f"[/cyan] {self.emojis['checkmark']}",
+            )
 
     def built_ipa(self) -> bool:
         """
@@ -646,58 +645,60 @@ class Command(BaseBuildCommand):
             if self.verbose > 0:
                 console.log(message, style=verbose1_style)
 
-        self.update_status(f"[bold blue]Signing [cyan]{app_path.name}[/cyan]...")
-        try:
-            # Each lane scopes resolution to the certificate type Apple's
-            # services accept for it — which also lets an unset identity
-            # auto-discover the only candidate. The plain lane stays
-            # unscoped: Apple Development or corporate certificates are
-            # legitimate there.
-            if distribution == "app-store":
-                resolved = resolve_identity(identity, types=APP_STORE_CERTIFICATE_TYPES)
-            elif distribution == "developer-id":
-                resolved = resolve_identity(
-                    identity, types=DEVELOPER_ID_CERTIFICATE_TYPES
-                )
-            else:
-                resolved = resolve_identity(identity)
-            if not identity:
-                console.log(f"Signing identity: {resolved.name}")
-            if distribution == "developer-id" and resolved.is_adhoc:
-                self.cleanup(
-                    1,
-                    "Developer ID distribution requires a Developer ID "
-                    'identity; ad-hoc ("-") signed apps cannot be notarized.',
-                )
+        with self.step(f"[bold blue]Signing [cyan]{app_path.name}[/cyan]..."):
+            try:
+                # Each lane scopes resolution to the certificate type Apple's
+                # services accept for it — which also lets an unset identity
+                # auto-discover the only candidate. The plain lane stays
+                # unscoped: Apple Development or corporate certificates are
+                # legitimate there.
+                if distribution == "app-store":
+                    resolved = resolve_identity(
+                        identity, types=APP_STORE_CERTIFICATE_TYPES
+                    )
+                elif distribution == "developer-id":
+                    resolved = resolve_identity(
+                        identity, types=DEVELOPER_ID_CERTIFICATE_TYPES
+                    )
+                else:
+                    resolved = resolve_identity(identity)
+                if not identity:
+                    console.log(f"Signing identity: {resolved.name}")
+                if distribution == "developer-id" and resolved.is_adhoc:
+                    self.cleanup(
+                        1,
+                        "Developer ID distribution requires a Developer ID "
+                        'identity; ad-hoc ("-") signed apps cannot be notarized.',
+                    )
 
-            if distribution == "app-store":
-                self._sign_macos_app_store(app_path, resolved, entitlements, log)
-                return
+                if distribution == "app-store":
+                    self._sign_macos_app_store(app_path, resolved, entitlements, log)
+                    return
 
-            signed_count = sign_app(
-                app_path,
-                resolved,
-                entitlements=entitlements,
-                log=log,
-            )
-            console.log(
-                f"Signed [cyan]{app_path.name}[/cyan] ({signed_count} binaries, "
-                f"identity: {resolved.description}) {self.emojis['checkmark']}"
-            )
-
-            if distribution == "developer-id":
-                credentials = self._macos_notary_credentials()
-                self.update_status(
-                    f"[bold blue]Notarizing [cyan]{app_path.name}[/cyan] "
-                    "(this can take a few minutes)...",
+                signed_count = sign_app(
+                    app_path,
+                    resolved,
+                    entitlements=entitlements,
+                    log=log,
                 )
-                notarize_and_staple(app_path, credentials, log=log)
                 console.log(
-                    f"Notarized and stapled [cyan]{app_path.name}[/cyan] "
-                    f"{self.emojis['checkmark']}"
+                    f"Signed [cyan]{app_path.name}[/cyan] ({signed_count} binaries, "
+                    f"identity: {resolved.description}) {self.emojis['checkmark']}"
                 )
-        except MacOSSigningError as e:
-            self.cleanup(1, str(e))
+
+                if distribution == "developer-id":
+                    credentials = self._macos_notary_credentials()
+                    with self.step(
+                        f"[bold blue]Notarizing [cyan]{app_path.name}[/cyan] "
+                        "(this can take a few minutes)...",
+                    ):
+                        notarize_and_staple(app_path, credentials, log=log)
+                        console.log(
+                            f"Notarized and stapled [cyan]{app_path.name}[/cyan] "
+                            f"{self.emojis['checkmark']}"
+                        )
+            except MacOSSigningError as e:
+                self.cleanup(1, str(e))
 
     def _sign_macos_app_store(
         self,
@@ -797,12 +798,14 @@ class Command(BaseBuildCommand):
                 "or `[tool.flet.macos.info]` in pyproject.toml.",
             )
         if "ITSAppUsesNonExemptEncryption" not in info:
-            console.log(
-                "[yellow]Warning: ITSAppUsesNonExemptEncryption is not set in "
+            self.warn(
+                "ITSAppUsesNonExemptEncryption is not set in "
                 "Info.plist — App Store Connect will ask the export-compliance "
                 "question manually for every build. Set it with --info-plist "
                 "ITSAppUsesNonExemptEncryption=False if your app only uses "
-                "standard encryption.[/yellow]"
+                "standard encryption.",
+                title="App Store",
+                style="yellow",
             )
 
         profile_app_id = profile_application_identifier(profile_path)
@@ -845,17 +848,17 @@ class Command(BaseBuildCommand):
             f"{self.emojis['checkmark']}"
         )
 
-        self.update_status(f"[bold blue]Packaging [cyan]{app_path.stem}.pkg[/cyan]...")
-        pkg = build_pkg(
-            app_path,
-            installer,
-            self.out_dir / f"{app_path.stem}.pkg",
-            log=log,
-        )
-        console.log(
-            f"Packaged [cyan]{pkg.name}[/cyan] for App Store Connect "
-            f"(installer identity: {installer.name}) {self.emojis['checkmark']}"
-        )
+        with self.step(f"[bold blue]Packaging [cyan]{app_path.stem}.pkg[/cyan]..."):
+            pkg = build_pkg(
+                app_path,
+                installer,
+                self.out_dir / f"{app_path.stem}.pkg",
+                log=log,
+            )
+            console.log(
+                f"Packaged [cyan]{pkg.name}[/cyan] for App Store Connect "
+                f"(installer identity: {installer.name}) {self.emojis['checkmark']}"
+            )
 
     def _macos_notary_credentials(self) -> NotaryCredentials:
         """

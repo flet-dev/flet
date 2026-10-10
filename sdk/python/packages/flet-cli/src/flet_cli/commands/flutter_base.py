@@ -1,9 +1,11 @@
 import argparse
+import contextlib
 import os
 import platform
 import re
 import shutil
 import sys
+from collections.abc import Generator
 from typing import Any, Optional
 
 from packaging import version
@@ -20,15 +22,21 @@ from flet.utils import is_windows
 from flet.utils.platform_utils import get_bool_env_var
 from flet_cli.commands.base import BaseCommand
 from flet_cli.utils.flutter import get_flutter_dir, install_flutter
+from flet_cli.utils.log_format import (
+    LOG_FORMATS,
+    CliOutput,
+    detect_log_format,
+    resolve_log_format,
+    step_title,
+)
 
 # Detect the plain-output request BEFORE building the shared console: the
-# `--no-rich-output` argparse flag is parsed per-command, too late to
-# affect this module-level console, so check sys.argv for it here too
-# (alongside the env var). Without this, the flag only suppressed emojis
-# while the color + Live spinner kept going.
-no_rich_output = (
-    get_bool_env_var("FLET_CLI_NO_RICH_OUTPUT") or "--no-rich-output" in sys.argv
-)
+# `--log-format`/`--no-rich-output` argparse options are parsed per-command,
+# too late to affect this module-level console, so check sys.argv for them
+# here too (alongside the env vars). Without this, the flag only suppressed
+# emojis while the color + Live spinner kept going.
+log_format = detect_log_format(sys.argv, os.environ)
+no_rich_output = log_format != "rich"
 
 error_style = Style(color="red", bold=True)
 warning_style = Style(color="yellow", bold=True)
@@ -44,6 +52,11 @@ console = Console(
 )
 verbose1_style = Style(dim=True, bold=False)
 verbose2_style = Style(color="bright_black", bold=False)
+
+# Renders steps, warnings and errors in the selected log format.
+output = CliOutput(
+    console, log_format, warning_style=warning_style, error_style=error_style
+)
 
 
 class BaseFlutterCommand(BaseCommand):
@@ -79,6 +92,21 @@ class BaseFlutterCommand(BaseCommand):
         self.assume_yes = False
         self._android_install_confirmed = False
 
+    @property
+    def log_format(self) -> str:
+        """
+        The output format, one of `rich`, `plain` or `github`.
+
+        Stored on the process-wide `output`, which also renders module-level
+        warnings, so the format is the same everywhere.
+        """
+
+        return output.format
+
+    @log_format.setter
+    def log_format(self, value: str) -> None:
+        output.format = value
+
     def add_arguments(self, parser: argparse.ArgumentParser) -> None:
         """
         Register shared CLI arguments for Flutter-based commands.
@@ -88,10 +116,21 @@ class BaseFlutterCommand(BaseCommand):
         """
 
         parser.add_argument(
+            "--log-format",
+            type=str.lower,
+            choices=LOG_FORMATS,
+            default=None,
+            help="Output format: `rich` (default) shows a live spinner, `plain` "
+            "prints plain text lines, `github` prints plain text plus GitHub "
+            "Actions workflow commands - a collapsible group per build step and "
+            "annotations for warnings and errors [env: FLET_CLI_LOG_FORMAT=]",
+        )
+        parser.add_argument(
             "--no-rich-output",
             action="store_true",
             default=False,
-            help="Disable rich output and prefer plain text. Useful on Windows builds "
+            help="Disable rich output and prefer plain text, same as "
+            "`--log-format plain`. Useful on Windows builds "
             "[env: FLET_CLI_NO_RICH_OUTPUT=]",
         )
         parser.add_argument(
@@ -119,7 +158,16 @@ class BaseFlutterCommand(BaseCommand):
         """
 
         self.options = options
-        self.no_rich_output = self.no_rich_output or self.options.no_rich_output
+        try:
+            self.log_format = resolve_log_format(
+                getattr(options, "log_format", None),
+                getattr(options, "no_rich_output", False),
+                os.environ,
+            )
+        except ValueError as e:
+            console.print(str(e), style=error_style, markup=False)
+            sys.exit(1)
+        self.no_rich_output = self.log_format != "rich"
         self.verbose = self.options.verbose
         self.assume_yes = getattr(self.options, "assume_yes", False)
 
@@ -162,9 +210,10 @@ class BaseFlutterCommand(BaseCommand):
         if not sdk_found or not self.flutter_sdk_supported():
             if not self.assume_yes:
                 if not sdk_found:
-                    console.log(
+                    self.warn(
                         "Flutter SDK not found or invalid version installed.",
-                        style=warning_style,
+                        title="Flutter SDK",
+                        prefix="",
                     )
                 prompt = (
                     f"Flutter SDK {self.required_flutter_version} is required. "
@@ -275,30 +324,72 @@ class BaseFlutterCommand(BaseCommand):
         """
 
         assert self.required_flutter_version
-        self.update_status(
+        with self.step(
             f"[bold blue]Installing Flutter {self.required_flutter_version}..."
-        )
+        ):
+            flutter_dir = install_flutter(
+                str(self.required_flutter_version),
+                self.log_stdout,
+                progress=self.progress,
+            )
+            ext = ".bat" if platform.system() == "Windows" else ""
+            self.flutter_exe = os.path.join(flutter_dir, "bin", f"flutter{ext}")
+            self.dart_exe = os.path.join(flutter_dir, "bin", f"dart{ext}")
+            path_env = os.environ.get("PATH", "")
+            flutter_bin = os.path.join(flutter_dir, "bin")
+            self.env["PATH"] = (
+                os.pathsep.join([flutter_bin, path_env]) if path_env else flutter_bin
+            )
 
-        flutter_dir = install_flutter(
-            str(self.required_flutter_version), self.log_stdout, progress=self.progress
-        )
-        ext = ".bat" if platform.system() == "Windows" else ""
-        self.flutter_exe = os.path.join(flutter_dir, "bin", f"flutter{ext}")
-        self.dart_exe = os.path.join(flutter_dir, "bin", f"dart{ext}")
-        path_env = os.environ.get("PATH", "")
-        flutter_bin = os.path.join(flutter_dir, "bin")
-        self.env["PATH"] = (
-            os.pathsep.join([flutter_bin, path_env]) if path_env else flutter_bin
-        )
+            # desktop mode
+            desktop_platform = platform.system().lower()
+            if desktop_platform == "darwin":
+                desktop_platform = "macos"
+            if desktop_platform in ["macos", "windows", "linux"]:
+                if self.verbose > 0:
+                    console.log(
+                        "Ensure Flutter has desktop support enabled",
+                        style=verbose1_style,
+                    )
+                config_result = self.run(
+                    [
+                        self.flutter_exe,
+                        "config",
+                        "--no-version-check",
+                        "--suppress-analytics",
+                        f"--enable-{desktop_platform}-desktop",
+                    ],
+                    cwd=os.getcwd(),
+                    capture_output=self.verbose < 1,
+                )
+                if config_result.returncode != 0:
+                    if isinstance(config_result.stdout, str):
+                        console.log(config_result.stdout, style=verbose1_style)
+                    if isinstance(config_result.stderr, str):
+                        console.log(config_result.stderr, style=error_style)
+                    self.cleanup(config_result.returncode)
 
-        # desktop mode
-        desktop_platform = platform.system().lower()
-        if desktop_platform == "darwin":
-            desktop_platform = "macos"
-        if desktop_platform in ["macos", "windows", "linux"]:
             if self.verbose > 0:
                 console.log(
-                    "Ensure Flutter has desktop support enabled",
+                    f"Flutter {self.required_flutter_version} "
+                    f"installed {self.emojis['checkmark']}"
+                )
+
+    def install_jdk(self):
+        """
+        Install or resolve JDK and configure Flutter to use it.
+        """
+
+        from flet_cli.utils.jdk import install_jdk
+
+        with self.step("[bold blue]Installing JDK..."):
+            jdk_dir = install_jdk(self.log_stdout, progress=self.progress)
+            self.env["JAVA_HOME"] = jdk_dir
+
+            # config flutter's JDK dir
+            if self.verbose > 0:
+                console.log(
+                    "Configuring Flutter's path to JDK",
                     style=verbose1_style,
                 )
             config_result = self.run(
@@ -307,7 +398,7 @@ class BaseFlutterCommand(BaseCommand):
                     "config",
                     "--no-version-check",
                     "--suppress-analytics",
-                    f"--enable-{desktop_platform}-desktop",
+                    f"--jdk-dir={jdk_dir}",
                 ],
                 cwd=os.getcwd(),
                 capture_output=self.verbose < 1,
@@ -319,49 +410,8 @@ class BaseFlutterCommand(BaseCommand):
                     console.log(config_result.stderr, style=error_style)
                 self.cleanup(config_result.returncode)
 
-        if self.verbose > 0:
-            console.log(
-                f"Flutter {self.required_flutter_version} "
-                f"installed {self.emojis['checkmark']}"
-            )
-
-    def install_jdk(self):
-        """
-        Install or resolve JDK and configure Flutter to use it.
-        """
-
-        from flet_cli.utils.jdk import install_jdk
-
-        self.update_status("[bold blue]Installing JDK...")
-        jdk_dir = install_jdk(self.log_stdout, progress=self.progress)
-        self.env["JAVA_HOME"] = jdk_dir
-
-        # config flutter's JDK dir
-        if self.verbose > 0:
-            console.log(
-                "Configuring Flutter's path to JDK",
-                style=verbose1_style,
-            )
-        config_result = self.run(
-            [
-                self.flutter_exe,
-                "config",
-                "--no-version-check",
-                "--suppress-analytics",
-                f"--jdk-dir={jdk_dir}",
-            ],
-            cwd=os.getcwd(),
-            capture_output=self.verbose < 1,
-        )
-        if config_result.returncode != 0:
-            if isinstance(config_result.stdout, str):
-                console.log(config_result.stdout, style=verbose1_style)
-            if isinstance(config_result.stderr, str):
-                console.log(config_result.stderr, style=error_style)
-            self.cleanup(config_result.returncode)
-
-        if self.verbose > 0:
-            console.log(f"JDK installed {self.emojis['checkmark']}")
+            if self.verbose > 0:
+                console.log(f"JDK installed {self.emojis['checkmark']}")
 
     def install_android_sdk(self):
         """
@@ -370,13 +420,13 @@ class BaseFlutterCommand(BaseCommand):
 
         from flet_cli.utils.android_sdk import AndroidSDK
 
-        self.update_status("[bold blue]Installing Android SDK...")
-        self.env["ANDROID_HOME"] = AndroidSDK(
-            self.env["JAVA_HOME"], self.log_stdout, progress=self.progress
-        ).install()
+        with self.step("[bold blue]Installing Android SDK..."):
+            self.env["ANDROID_HOME"] = AndroidSDK(
+                self.env["JAVA_HOME"], self.log_stdout, progress=self.progress
+            ).install()
 
-        if self.verbose > 0:
-            console.log(f"Android SDK installed {self.emojis['checkmark']}")
+            if self.verbose > 0:
+                console.log(f"Android SDK installed {self.emojis['checkmark']}")
 
     def _confirm_android_sdk_installation(self) -> bool:
         """
@@ -498,6 +548,9 @@ class BaseFlutterCommand(BaseCommand):
                 if message is not None
                 else "Error building Flet app - see the log of failed command above."
             )
+            if output.github:
+                # Annotate the failure, titled after the step it happened in.
+                output.error(msg, title=output.error_title)
 
             # windows has been reported to raise encoding errors
             # when running `flutter doctor`
@@ -507,14 +560,18 @@ class BaseFlutterCommand(BaseCommand):
                 (self.no_rich_output and self.current_platform == "Windows")
                 or self.skip_flutter_doctor
             ):
-                status = console.status(
-                    "[bold blue]Running Flutter doctor...",
-                    spinner="bouncingBall",
-                )
-                self.live.update(
-                    Group(Panel(msg, style=error_style), status), refresh=True
-                )
-                self.run_flutter_doctor()
+                if output.github:
+                    with output.group("Running Flutter doctor"):
+                        self.run_flutter_doctor()
+                else:
+                    status = console.status(
+                        "[bold blue]Running Flutter doctor...",
+                        spinner="bouncingBall",
+                    )
+                    self.live.update(
+                        Group(Panel(msg, style=error_style), status), refresh=True
+                    )
+                    self.run_flutter_doctor()
             self.live.update(Panel(msg, style=error_style), refresh=True)
 
         sys.exit(exit_code)
@@ -546,6 +603,73 @@ class BaseFlutterCommand(BaseCommand):
             console.log(status)
         else:
             self.status.update(status)
+
+    @contextlib.contextmanager
+    def step(self, status: str) -> Generator[None, None, None]:
+        """
+        Run a block as a named build step.
+
+        `rich`: shows `status` on the live spinner. `plain`: logs `status`.
+        `github`: wraps the block in `::group::<title>` ... `::endgroup::`,
+        the title being `status` without markup and trailing ellipsis; the
+        group is closed even when the block raises or exits via `cleanup()`.
+        The block logs its own completion message, if any.
+
+        Args:
+            status: Status text, such as `[bold blue]Generating app icons...`.
+        """
+
+        if not output.github:
+            self.update_status(status)
+            yield
+            return
+
+        with output.group(step_title(status)):
+            yield
+
+    def warn(
+        self,
+        message: Any,
+        title: Optional[str] = None,
+        file: Optional[str] = None,
+        line: Optional[int] = None,
+        **kwargs: Any,
+    ) -> None:
+        """
+        Report a warning: a `Warning: <message>` log line, or a `::warning::`
+        annotation in the `github` log format.
+
+        Args:
+            message: The warning text.
+            title: Annotation title (`github` only).
+            file: File the annotation points to (`github` only).
+            line: Line in `file` (`github` only).
+            **kwargs: Passed to `CliOutput.warn()`.
+        """
+
+        output.warn(message, title=title, file=file, line=line, **kwargs)
+
+    def error(
+        self,
+        message: Any,
+        title: Optional[str] = None,
+        file: Optional[str] = None,
+        line: Optional[int] = None,
+        **kwargs: Any,
+    ) -> None:
+        """
+        Report an error: a log line in the error style, or an `::error::`
+        annotation in the `github` log format.
+
+        Args:
+            message: The error text.
+            title: Annotation title (`github` only).
+            file: File the annotation points to (`github` only).
+            line: Line in `file` (`github` only).
+            **kwargs: Passed to `CliOutput.error()`.
+        """
+
+        output.error(message, title=title, file=file, line=line, **kwargs)
 
     def log_stdout(self, message):
         """

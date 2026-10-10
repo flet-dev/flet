@@ -2091,7 +2091,7 @@ env: # (6)!
   PYTHONUTF8: 1 # (8)!
 
   # https://flet.dev/docs/reference/environment-variables
-  FLET_CLI_NO_RICH_OUTPUT: 1 # (9)!
+  FLET_CLI_LOG_FORMAT: github # (9)!
 
 jobs:
   build:
@@ -2191,7 +2191,7 @@ jobs:
 6. Environment variables shared by all jobs and steps.
 7. Python version used by `uv`.
 8. Forces UTF-8 mode for Python output/IO. Especially useful on Windows builds.
-9. Disables rich output from `flet build` for better readability in CI logs.
+9. Prints plain `flet build` output with a collapsible group per build step and annotations for warnings and errors. See [Log formats](../cli/flet-build.md#log-formats).
 10. Matrix strategy: each `include` item becomes a parallel build job.
 11. Checks out your repository so this workflow can access project files. View its docs [here](https://github.com/actions/checkout).
 12. Installs `uv` on the runner. View its docs [here](https://github.com/astral-sh/setup-uv).
