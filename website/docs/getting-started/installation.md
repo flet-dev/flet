@@ -27,6 +27,10 @@ Flet supports macOS 12 (Monterey) or later.
 
 Flet supports 64-bit version of Microsoft Windows 10 and Windows 11.
 
+On Windows on ARM, such as a Snapdragon PC, use Python 3.12 or later. On Python 3.10 and 3.11,
+installing `flet[all]` or `flet-cli` needs a C++ compiler, because [PyYAML](https://pypi.org/project/PyYAML), which `flet-cli` depends
+on, has no Windows on ARM wheels for them.
+
 #### Linux
 
 Flet supports Debian 10, 11 and 12 and Ubuntu 20.04, 22.04 and 24.04 LTS.
