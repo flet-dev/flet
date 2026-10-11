@@ -30,6 +30,7 @@
 ### Documentation
 
 * Group the Reference > Controls section of the docs into Core, Material, Cupertino, Shadcn and Extensions ([#6918](https://github.com/flet-dev/flet/pull/6918)) by @InesaFitsner.
+* Add a Distributing section to the Windows publishing guide: an Inno Setup installer script, a zip archive, code signing, and building the installer in GitHub Actions by @ndonkoHenri.
 
 ## 1.0.4
 
