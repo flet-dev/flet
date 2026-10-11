@@ -197,10 +197,19 @@ class TestLinuxIconGeneration:
         cmd = _run_customize_icons(tmp_path, assets=None)
         assert not (cmd.flutter_dir / "linux" / "icons").exists()
 
-    def test_vector_only_assets_generate_nothing(self, tmp_path):
-        """An SVG cannot be decoded, so there is no usable user icon."""
-        cmd = _run_customize_icons(tmp_path, assets={"icon.svg": b"<svg/>"})
-        assert not (cmd.flutter_dir / "linux" / "icons").exists()
+    def test_vector_only_assets_generate_icons(self, tmp_path):
+        cmd = _run_customize_icons(
+            tmp_path,
+            assets={
+                "icon.svg": b'<svg xmlns="http://www.w3.org/2000/svg" '
+                b'viewBox="0 0 24 24"><circle cx="12" cy="12" r="12" '
+                b'fill="#ff0055"/></svg>'
+            },
+        )
+        assert _png_size(_hicolor(cmd, 512)) == (512, 512)
+        assert sorted(p.name for p in (cmd.package_app_path / "assets").iterdir()) == [
+            "icon.svg"
+        ]
 
     def test_other_targets_do_not_render_linux_icons(self, tmp_path):
         cmd = _run_customize_icons(
