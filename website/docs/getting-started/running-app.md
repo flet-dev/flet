@@ -178,8 +178,17 @@ of this file are modified+saved, but will **not** watch for changes in other fil
 
 To modify this behavior, you can use one or more of these [`flet run`](../cli/flet-run.md) options:
 
-* `-d` or `--directory` to watch for changes in the `[script]`s directory only
-* `-r` or `--recursive` to watch for changes in the `[script]`s directory and all sub-directories recursively
+* `-d` or `--directory` to watch for changes in the directory of `[script]` only
+* `-r` or `--recursive` to watch for changes in the directory of `[script]` and all its sub-directories
+* `--ignore-dirs` to skip directories while watching: a comma-separated list of paths relative to the
+  directory of `[script]`, for example `--ignore-dirs logs,data`
+
+A reload restarts your app's process. In desktop mode the window stays open, and it keeps
+the assets directory it was opened with: after changing `assets_dir` in [`ft.run()`][flet.run],
+stop and restart `flet run` to load assets from the new directory. With `--web`, a reload
+picks up the new directory. If you pass `--assets` or set
+[`FLET_ASSETS_DIR`](../reference/environment-variables.md#flet_assets_dir), that directory
+is used instead, and changing `assets_dir` has no effect.
 
 :::note[Example]
 

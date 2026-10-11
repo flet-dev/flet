@@ -86,6 +86,8 @@ class FletBackend extends ChangeNotifier {
   final int? _reconnectTimeoutMs;
   int _reconnectStarted = 0;
   int _reconnectDelayMs = 0;
+  int _connectionId = 0;
+  bool _reconnectScheduled = false;
   FletBackendChannel? _backendChannel;
   final FletBackendChannelBuilder? _channelBuilder;
   late final DataChannelFactory _dataChannelFactory;
@@ -294,6 +296,14 @@ class FletBackend extends ChangeNotifier {
 
   Future<void> connect() async {
     debugPrint("Connecting to Flet backend $pageUri...");
+    // A newer connection attempt makes every earlier channel stale: only the
+    // channel of the latest attempt may trigger a reconnect.
+    final connectionId = ++_connectionId;
+    _reconnectScheduled = false;
+    void onChannelDisconnect() {
+      if (connectionId == _connectionId) _onDisconnect();
+    }
+
     try {
       final builder = _channelBuilder;
       if (builder != null) {
@@ -301,14 +311,14 @@ class FletBackend extends ChangeNotifier {
         // bridge). The builder is responsible for the entire transport
         // lifecycle; we just wire its callbacks to ours.
         _backendChannel =
-            builder(onDisconnect: _onDisconnect, onPacket: _onPacket);
+            builder(onDisconnect: onChannelDisconnect, onPacket: _onPacket);
       } else {
         _backendChannel = FletBackendChannel(
             address: pageUri.toString(),
             args: args ?? {},
             forcePyodide: forcePyodide == true,
             embedded: controlId != null,
-            onDisconnect: _onDisconnect,
+            onDisconnect: onChannelDisconnect,
             onPacket: _onPacket);
       }
       await _backendChannel!.connect();
@@ -772,7 +782,9 @@ class FletBackend extends ChangeNotifier {
   }
 
   _onDisconnect() {
-    if (_disposed) {
+    // One reconnect at a time: a second disconnect report for the same
+    // connection must not start a second, competing reconnect chain.
+    if (_disposed || _reconnectScheduled) {
       return;
     }
 
@@ -795,6 +807,7 @@ class FletBackend extends ChangeNotifier {
       _reconnect(nextReconnectDelayMs);
 
       debugPrint("Reconnect in $nextReconnectDelayMs milliseconds");
+      _reconnectScheduled = true;
       Future.delayed(Duration(milliseconds: nextReconnectDelayMs))
           .then((value) async {
         await connect();
