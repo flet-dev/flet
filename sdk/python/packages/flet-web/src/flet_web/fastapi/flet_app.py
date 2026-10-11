@@ -60,8 +60,7 @@ class FletApp(Connection):
             and redirecting to OAuth callback URL.
         upload_endpoint_path: Absolute URL of upload endpoint, e.g. `/upload`.
         secret_key: Secret key to sign upload requests.
-        route_url_strategy: Route URL strategy the client uses, so that URLs built
-            for it, such as the page to return to after an OAuth redirect, match.
+        route_url_strategy: Route URL strategy of the served web client.
         proxy_path: URL prefix that a proxy in front of the app strips, as given
             to `flet_web.fastapi.app()`; part of the page's base path.
     """
