@@ -78,6 +78,10 @@ class AudioService extends FletService {
   ///
   /// When `src` changes again while a source is still being prepared, the
   /// earlier preparation neither triggers `loaded` nor starts autoplay.
+  ///
+  /// Volume, balance and playback rate are applied again after a new source
+  /// is loaded, and before `loaded` is triggered, since loading can reset
+  /// them: a web media element resets its playback rate when it loads.
   @override
   void update() {
     debugPrint("Audio(${control.id}).update: ${control.properties}");
@@ -126,7 +130,9 @@ class AudioService extends FletService {
           rethrow;
         }
         if (sourceVersion != _sourceVersion) return;
-        control.triggerEvent("loaded");
+        _volume = null;
+        _balance = null;
+        _playbackRate = null;
       }
 
       // releaseMode
@@ -153,9 +159,11 @@ class AudioService extends FletService {
         await player.setBalance(balance);
       }
 
-      // autoplay
-      if (srcChanged && autoplay && sourceVersion == _sourceVersion) {
-        await player.resume();
+      if (srcChanged && sourceVersion == _sourceVersion) {
+        control.triggerEvent("loaded");
+        if (autoplay) {
+          await player.resume();
+        }
       }
     }();
   }
