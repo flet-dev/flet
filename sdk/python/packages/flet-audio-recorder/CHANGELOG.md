@@ -9,7 +9,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ### Fixed
 
-- Fixed `AudioRecorder.start_recording()` returning `False` without recording, or recording into the assets directory, when `output_path` names a file that does not exist yet ([#5999](https://github.com/flet-dev/flet/issues/5999)) by @ndonkoHenri.
+- Fixed `AudioRecorder.start_recording()` not recording to `output_path` on desktop, Android and iOS, where it returned `False`, failed, wrote no file, or recorded into the assets directory ([#5999](https://github.com/flet-dev/flet/issues/5999), [#6955](https://github.com/flet-dev/flet/pull/6955)) by @ndonkoHenri.
 
 ## 0.85.0
 
