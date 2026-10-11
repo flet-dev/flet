@@ -24,6 +24,11 @@ class AudioService extends FletService {
   double? _balance;
   double? _playbackRate;
 
+  /// Incremented whenever the source is set, cleared or the service is
+  /// disposed, so that an [update] that is still preparing an earlier source
+  /// can tell that it was superseded.
+  int _sourceVersion = 0;
+
   @override
   void init() {
     super.init();
@@ -70,6 +75,9 @@ class AudioService extends FletService {
   /// The player is paused rather than released: the web player keeps the URL
   /// of a released source and skips loading it again, so setting the same
   /// `src` again would leave nothing to play.
+  ///
+  /// When `src` changes again while a source is still being prepared, the
+  /// earlier preparation neither triggers `loaded` nor starts autoplay.
   @override
   void update() {
     debugPrint("Audio(${control.id}).update: ${control.properties}");
@@ -93,6 +101,7 @@ class AudioService extends FletService {
         if (_hasSource) {
           _src = null;
           _srcBytes = null;
+          _sourceVersion++;
           await player.pause();
         }
       } else if (resolvedSrc.uri != null && resolvedSrc.uri != _src) {
@@ -100,17 +109,23 @@ class AudioService extends FletService {
         _src = resolvedSrc.uri;
         _srcBytes = null;
         srcChanged = true;
-        await _applySource();
       } else if (resolvedSrc.bytes != null &&
           (_srcBytes == null || !listEquals(_srcBytes, resolvedSrc.bytes))) {
         // bytes
         _srcBytes = resolvedSrc.bytes;
         _src = null;
         srcChanged = true;
-        await _applySource();
       }
 
+      final sourceVersion = srcChanged ? ++_sourceVersion : _sourceVersion;
       if (srcChanged) {
+        try {
+          await _applySource();
+        } catch (_) {
+          if (sourceVersion != _sourceVersion) return;
+          rethrow;
+        }
+        if (sourceVersion != _sourceVersion) return;
         control.triggerEvent("loaded");
       }
 
@@ -139,7 +154,7 @@ class AudioService extends FletService {
       }
 
       // autoplay
-      if (srcChanged && autoplay) {
+      if (srcChanged && autoplay && sourceVersion == _sourceVersion) {
         await player.resume();
       }
     }();
@@ -230,6 +245,7 @@ class AudioService extends FletService {
   @override
   void dispose() {
     debugPrint("Audio(${control.id}).dispose()");
+    _sourceVersion++;
     control.removeInvokeMethodListener(_invokeMethod);
     _onDurationChangedSubscription?.cancel();
     _onStateChangedSubscription?.cancel();
