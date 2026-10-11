@@ -83,9 +83,10 @@ Builds a Linux executable.
 
 ## App icon
 
-The app icon is taken from `icon_linux.png` (falling back to `icon.png`, or the
+The app icon is taken from `icon_linux.svg` or `icon_linux.png` (falling back to
+`icon.svg`, `icon.png`, or the
 default Flet icon) in the `assets` directory of your Flet app — see
-[Icons](index.md#icons). `flet build linux` copies it into the bundle as
+[Icons](index.md#icons). `flet build linux` renders it into the bundle as
 `data/app_icon.png`, and the app sets it as its window icon on startup.
 
 How the icon shows up depends on the display server (see
