@@ -82,6 +82,10 @@ class AudioService extends FletService {
   /// Volume, balance and playback rate are applied again after a new source
   /// is loaded, and before `loaded` is triggered, since loading can reset
   /// them: a web media element resets its playback rate when it loads.
+  ///
+  /// Settings, `autoplay` included, are read from the control when they are
+  /// applied, not when [update] is called, so an update that finishes loading
+  /// a source after a later update never applies outdated values.
   @override
   void update() {
     debugPrint("Audio(${control.id}).update: ${control.properties}");
@@ -92,12 +96,6 @@ class AudioService extends FletService {
     if (resolvedSrc.error != null) {
       throw Exception("Audio src decode error: ${resolvedSrc.error}");
     }
-    var autoplay = control.getBool("autoplay", false)!;
-    var volume = control.getDouble("volume", 1.0)!;
-    var balance = control.getDouble("balance", 0.0)!;
-    var playbackRate = control.getDouble("playback_rate", 1)!;
-    var releaseMode = parseReleaseMode(control.getString("release_mode"));
-
     () async {
       bool srcChanged = false;
       if (resolvedSrc.isEmpty) {
@@ -135,6 +133,11 @@ class AudioService extends FletService {
         _playbackRate = null;
       }
 
+      final releaseMode = parseReleaseMode(control.getString("release_mode"));
+      final volume = control.getDouble("volume", 1.0)!;
+      final balance = control.getDouble("balance", 0.0)!;
+      final playbackRate = control.getDouble("playback_rate", 1)!;
+
       // releaseMode
       if (releaseMode != null && releaseMode != _releaseMode) {
         _releaseMode = releaseMode;
@@ -161,7 +164,7 @@ class AudioService extends FletService {
 
       if (srcChanged && sourceVersion == _sourceVersion) {
         control.triggerEvent("loaded");
-        if (autoplay) {
+        if (control.getBool("autoplay", false)!) {
           await player.resume();
         }
       }
