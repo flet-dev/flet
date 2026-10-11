@@ -31,6 +31,10 @@
 
 * Fix `flet run` ignoring the `FLET_ASSETS_DIR` environment variable and the app's own `ft.run(assets_dir=...)` ([#5631](https://github.com/flet-dev/flet/issues/5631), [#6935](https://github.com/flet-dev/flet/pull/6935)) by @ndonkoHenri.
 
+### Bug fixes
+
+* Fix `requests.Session` ignoring its `verify` setting in apps built with `flet build` ([#5695](https://github.com/flet-dev/flet/issues/5695), [#6936](https://github.com/flet-dev/flet/pull/6936)) by @ndonkoHenri.
+
 ### Documentation
 
 * Group the Reference > Controls section of the docs into Core, Material, Cupertino, Shadcn and Extensions ([#6918](https://github.com/flet-dev/flet/pull/6918)) by @InesaFitsner.
