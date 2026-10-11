@@ -53,6 +53,7 @@ from flet.controls.types import (
     DeviceOrientation,
     Locale,
     PagePlatform,
+    RouteUrlStrategy,
     Wrapper,
 )
 from flet.utils import is_pyodide
@@ -1204,10 +1205,56 @@ class Page(BasePage):
         authorization: "Optional[type[AT]]" = None,
     ) -> "AT":
         """
-        Starts OAuth flow.
+        Signs the user in with an OAuth provider.
 
-        See [Authentication](https://flet.dev/docs/cookbook/authentication)
+        Without `saved_token`, this starts the OAuth authorization code flow: it
+        opens the provider's authorization page and returns without waiting for
+        the user to sign in. The provider then sends the browser to its
+        `redirect_url`, and Flet exchanges the authorization code for a token,
+        fetches the user if requested and calls [`on_login`][flet.Page.on_login].
+        Handling that redirect needs the app to be served by Flet's web server.
+
+        With `saved_token`, this restores an earlier sign-in instead, without
+        opening any page: it refreshes the token if it has expired and can be
+        refreshed, fetches the user if requested and calls `on_login`.
+
+        See the [Authentication](https://flet.dev/docs/cookbook/authentication)
         guide for more information and examples.
+
+        Args:
+            provider: The OAuth provider to sign in with.
+            fetch_user: Whether to fetch the signed-in user's details, available
+                as the authorization's `user`.
+            fetch_groups: Whether to also fetch the user's groups into
+                `user.groups`. Groups are fetched only together with the user.
+                Of the built-in providers, only GitHub provides them; with the
+                others, `groups` is empty.
+            scope: Scopes to request in addition to the provider's default ones.
+            saved_token: A token from an earlier sign-in to restore, as returned
+                by [`OAuthToken.to_json()`][flet.auth.OAuthToken.to_json].
+            on_open_authorization_url: Async function that opens the
+                authorization URL it receives. By default, a web app opens it in
+                a popup window, and other apps open it with
+                [`UrlLauncher.launch_url()`][flet.UrlLauncher.launch_url].
+            complete_page_html: HTML of the page that the browser shows when the
+                provider redirects back, if `redirect_to_page` is `False`. By
+                default, the page tries to close itself and asks the user to
+                close it.
+            redirect_to_page: Whether to send the browser back to the app's
+                current page and route when the provider redirects back, instead
+                of showing `complete_page_html`. Use it in web apps that open the
+                authorization page in the same browser tab, for example with
+                `UrlLauncher().launch_url(url, web_only_window_name="_self")` in
+                `on_open_authorization_url`.
+            authorization: Class that performs the authorization. It is created
+                as `authorization(provider, fetch_user=..., fetch_groups=...,
+                scope=...)`. Defaults to
+                [`AuthorizationService`][flet.auth.AuthorizationService].
+
+        Returns:
+            The authorization, also available as [`auth`][flet.Page.auth].
+                Without `saved_token`, it has no token or user until `on_login`
+                is called.
         """
         if authorization is None:
             authorization = _default_authorization_impl()
@@ -1218,15 +1265,27 @@ class Page(BasePage):
             scope=scope,
         )
         if saved_token is None:
+            # The server keeps the state and completion options until the
+            # provider redirects back, then calls _authorize_callback().
             authorization_url, state = self.__authorization.get_authorization_data()
             auth_attrs = {"state": state}
             if complete_page_html:
                 auth_attrs["completePageHtml"] = complete_page_html
             if redirect_to_page:
-                up = urlparse(provider.redirect_url)
-                auth_attrs["completePageUrl"] = up._replace(
-                    path=f"{self.session.connection.page_name}{self.route}"
-                ).geturl()
+                # The current page on the redirect URL's host, with the route
+                # in the URL path or after `#`, as the client expects it.
+                connection = self.session.connection
+                base_path = connection.page_base_path
+                redirect_url = urlparse(provider.redirect_url)
+                if connection.route_url_strategy == RouteUrlStrategy.HASH:
+                    complete_page_url = redirect_url._replace(
+                        path=base_path, query="", fragment=self.route
+                    )
+                else:
+                    complete_page_url = redirect_url._replace(
+                        path=base_path.rstrip("/") + self.route
+                    )
+                auth_attrs["completePageUrl"] = complete_page_url.geturl()
             self.session.connection.oauth_authorize(auth_attrs)
             if on_open_authorization_url:
                 await on_open_authorization_url(authorization_url)
@@ -1238,6 +1297,7 @@ class Page(BasePage):
                 else:
                     await UrlLauncher().launch_url(authorization_url)
         else:
+            # Restore the saved sign-in; there is no redirect to wait for.
             await self.__authorization.dehydrate_token(saved_token)
 
             e = LoginEvent(name="login", control=self, error="", error_description="")

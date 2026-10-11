@@ -35,6 +35,9 @@
 
   **Compatibility:** Apps built with `flet build` and the macOS desktop client now require macOS 12 or later, and iOS apps require iOS 15 or later. Custom build templates keep building, because Flutter 3.47 raises the deployment targets during the build; apply the same `Podfile` and Xcode project changes to skip that step. See the [macOS 12 and iOS 15 minimum](/docs/updates/breaking-changes/v1-1-0/minimum-macos-12-ios-15) guide.
 
+* Fix Flet web apps using the `hash` route URL strategy returning `index.html` with a `200 OK` for unknown paths instead of a `404` ([#2796](https://github.com/flet-dev/flet/issues/2796), [#6954](https://github.com/flet-dev/flet/pull/6954)) by @ndonkoHenri.
+* Fix `flet.fastapi.app()` and `ft.run(..., export_asgi_app=True)` failing every request with a `500` error when `route_url_strategy` or `web_renderer` is passed as a string, such as `"hash"` ([#6954](https://github.com/flet-dev/flet/pull/6954)) by @ndonkoHenri.
+* Fix `page.login(redirect_to_page=True)` not returning to the page's route with the `hash` route URL strategy or under a `proxy_path` ([#6954](https://github.com/flet-dev/flet/pull/6954)) by @ndonkoHenri.
 * flet-audio: Fix `Audio` failing to play when it is created without `src` and `src` is set later ([#6133](https://github.com/flet-dev/flet/issues/6133), [#6956](https://github.com/flet-dev/flet/pull/6956)) by @ndonkoHenri.
 * flet-audio: Fix `Audio` ignoring `playback_rate` after `src` changes on web ([#6956](https://github.com/flet-dev/flet/pull/6956)) by @ndonkoHenri.
 * flet-audio-recorder: Fix `AudioRecorder.start_recording()` not recording to `output_path` on desktop, Android and iOS, where it returned `False`, failed, wrote no file, or recorded into the assets directory ([#5999](https://github.com/flet-dev/flet/issues/5999), [#6955](https://github.com/flet-dev/flet/pull/6955)) by @ndonkoHenri.
