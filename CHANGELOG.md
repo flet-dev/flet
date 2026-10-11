@@ -8,6 +8,14 @@
 
 ### New features
 
+* Add `InteractiveViewer.get_scale()`, `get_transform()`, and
+  `on_transform_changed` to expose the effective zoom scale,
+  translation, and transformation matrix, including reliable
+  final-state notifications after consecutive interactions
+  ([#6938](https://github.com/flet-dev/flet/issues/6938),
+  [#6939](https://github.com/flet-dev/flet/pull/6939))
+  by @ada-koki.
+
 * Add the `flet-shadcn-ui` extension: controls styled after [shadcn/ui](https://ui.shadcn.com), built on the Flutter [`shadcn_ui`](https://pub.dev/packages/shadcn_ui) package, with `Theme` color schemes and the [Lucide](https://lucide.dev) icon set (`LucideIcons`). It includes `Button`, `IconButton`, `Badge`, `Alert`, `Avatar`, `Card`, `Breadcrumb`, `Separator`, `Progress`, `Input`, `Textarea`, `Checkbox`, `Switch`, `Slider`, `RadioGroup`, `Select`, `InputOTP`, `Calendar`, `DatePicker`, `DateRangePicker`, `TimePicker`, `Tabs`, `Accordion`, `ResizablePanelGroup`, `Tooltip`, `Popover`, `ContextMenu`, `Menubar`, `Table`, `Dialog`, `Sheet`, `Toast` and `Sonner`; value controls support `label`, `description` and `error_text` ([#6918](https://github.com/flet-dev/flet/pull/6918)) by @InesaFitsner.
 
 ### Improvements
