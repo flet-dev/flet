@@ -28,6 +28,7 @@ class AudioService extends FletService {
   /// disposed, so that an [update] that is still preparing an earlier source
   /// can tell that it was superseded.
   int _sourceVersion = 0;
+  Future<void> _sourcePreparation = Future<void>.value();
 
   @override
   void init() {
@@ -134,9 +135,6 @@ class AudioService extends FletService {
       }
 
       final releaseMode = parseReleaseMode(control.getString("release_mode"));
-      final volume = control.getDouble("volume", 1.0)!;
-      final balance = control.getDouble("balance", 0.0)!;
-      final playbackRate = control.getDouble("playback_rate", 1)!;
 
       // releaseMode
       if (releaseMode != null && releaseMode != _releaseMode) {
@@ -145,18 +143,21 @@ class AudioService extends FletService {
       }
 
       // volume
+      final volume = control.getDouble("volume", 1.0)!;
       if (volume != _volume && volume >= 0 && volume <= 1) {
         _volume = volume;
         await player.setVolume(volume);
       }
 
       // playbackRate
+      final playbackRate = control.getDouble("playback_rate", 1)!;
       if (playbackRate != _playbackRate) {
         _playbackRate = playbackRate;
         await player.setPlaybackRate(playbackRate);
       }
 
       // balance
+      final balance = control.getDouble("balance", 0.0)!;
       if (!kIsWeb && balance != _balance && balance >= -1 && balance <= 1) {
         _balance = balance;
         await player.setBalance(balance);
@@ -180,17 +181,31 @@ class AudioService extends FletService {
   /// Used both when the source changes (from [update]) and to re-prepare
   /// playback after the player has reached [PlayerState.completed] under
   /// [ReleaseMode.release], where the native source has already been freed.
-  Future<void> _applySource() async {
-    if (_src != null) {
-      final assetSrc = control.backend.getAssetSource(_src!);
-      if (assetSrc.isFile) {
-        await player.setSourceDeviceFile(assetSrc.path);
-      } else {
-        await player.setSourceUrl(assetSrc.path);
+  /// Preparations run in order because setting a byte source may first write
+  /// a temporary file. A superseded preparation must finish before the latest
+  /// source is installed, otherwise its delayed write could replace that source.
+  Future<void> _applySource() {
+    final src = _src;
+    final srcBytes = _srcBytes;
+    final sourceVersion = _sourceVersion;
+    final preparation = _sourcePreparation.then((_) async {
+      if (sourceVersion != _sourceVersion) return;
+      if (src != null) {
+        final assetSrc = control.backend.getAssetSource(src);
+        if (assetSrc.isFile) {
+          await player.setSourceDeviceFile(assetSrc.path);
+        } else {
+          await player.setSourceUrl(assetSrc.path);
+        }
+      } else if (srcBytes != null) {
+        await player.setSourceBytes(srcBytes);
       }
-    } else if (_srcBytes != null) {
-      await player.setSourceBytes(_srcBytes!);
-    }
+    });
+    // Keep the queue usable after a failed load. The caller still receives the
+    // original error and decides whether this preparation was superseded.
+    _sourcePreparation = preparation.then<void>((_) {},
+        onError: (Object error, StackTrace stackTrace) {});
+    return preparation;
   }
 
   /// Handles a method call from Python.
