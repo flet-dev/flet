@@ -17,7 +17,7 @@ import qrcode
 from watchdog.events import FileSystemEventHandler
 from watchdog.observers import Observer
 
-from flet.app import DEFAULT_ASSETS_DIR
+from flet.app import DEFAULT_ASSETS_DIR, DISPLAY_ASSETS_DIR_SUFFIX
 from flet.utils import (
     get_free_tcp_port,
     get_local_ip,
@@ -32,21 +32,22 @@ from flet_cli.utils.pyproject_toml import load_pyproject_toml
 
 def resolve_assets_dir(script_dir: Path, assets_dir: Optional[str]) -> Optional[str]:
     """
-    Resolve `--assets` to an existing absolute path.
+    Resolve the assets directory to an existing absolute path.
 
     A relative path is resolved against the app's script directory. A directory
-    that does not exist is dropped rather than passed on, because the resolved
-    path is exported to the app process as `FLET_ASSETS_DIR`, which is treated
-    downstream as deliberate.
+    that does not exist is dropped, because the desktop view opened with it
+    would have nothing to load.
 
     Whether that is worth reporting depends on where the value came from.
-    `--assets` defaults to `DEFAULT_ASSETS_DIR` whether or not the app has such
-    a directory, so a missing one is unremarkable; any other value was typed by
-    the user, so a missing one is a mistake worth a warning.
+    The value falls back to `DEFAULT_ASSETS_DIR` when neither `--assets` nor
+    `FLET_ASSETS_DIR` is set, whether or not the app has such a directory, so a
+    missing one is unremarkable; any other value was set by the user, so a
+    missing one is a mistake worth a warning.
 
     Args:
         script_dir: Directory of the app being run.
-        assets_dir: The `--assets` value, absolute or relative.
+        assets_dir: The `--assets` or `FLET_ASSETS_DIR` value, or
+            `DEFAULT_ASSETS_DIR`, absolute or relative.
 
     Returns:
         The resolved absolute path, or `None` if it was not set or does not
@@ -193,9 +194,10 @@ class Command(BaseCommand):
             "--assets",
             dest="assets_dir",
             type=str,
-            default=DEFAULT_ASSETS_DIR,
+            default=None,
             help="Path to a directory containing static assets "
-            "used by the app (e.g. images, fonts)",
+            "used by the app (e.g. images, fonts); overrides the app's own "
+            f"`assets_dir` (default: {DEFAULT_ASSETS_DIR}) [env: FLET_ASSETS_DIR=]",
         )
         parser.add_argument(
             "--ignore-dirs",
@@ -218,6 +220,12 @@ class Command(BaseCommand):
         If starting the observer raises `OSError`, for example because the
         Linux inotify watch or instance limit is reached, a warning is printed
         and the app runs without reloading on changes.
+
+        An assets directory set with `--assets` or `FLET_ASSETS_DIR` is exported
+        to the app as an absolute `FLET_ASSETS_DIR` even when it doesn't exist,
+        so the user's choice still overrides the app's own `assets_dir`, and a
+        warning names the missing directory. The `"assets"` default is not
+        exported, so the app's own `assets_dir` applies.
 
         Args:
             options: Parsed command options produced by :meth:`add_arguments`.
@@ -288,7 +296,15 @@ class Command(BaseCommand):
         if port is None and not is_windows():
             uds_path = str(Path(tempfile.gettempdir()).joinpath(random_string(10)))
 
-        assets_dir = resolve_assets_dir(script_dir, options.assets_dir)
+        requested_assets_dir = options.assets_dir or os.getenv("FLET_ASSETS_DIR")
+        assets_dir = resolve_assets_dir(
+            script_dir, requested_assets_dir or DEFAULT_ASSETS_DIR
+        )
+        exported_assets_dir = (
+            str(script_dir.joinpath(requested_assets_dir).resolve())
+            if requested_assets_dir
+            else None
+        )
 
         ignore_dirs = (
             [
@@ -378,6 +394,7 @@ class Command(BaseCommand):
             hidden=options.hidden,
             no_impeller=no_impeller,
             assets_dir=assets_dir,
+            exported_assets_dir=exported_assets_dir,
             ignore_dirs=ignore_dirs,
             flet_app_data_dir=str(flet_app_data_dir),
             flet_app_cache_dir=str(flet_app_cache_dir),
@@ -447,6 +464,7 @@ class Handler(FileSystemEventHandler):
         hidden,
         no_impeller,
         assets_dir,
+        exported_assets_dir,
         ignore_dirs,
         flet_app_data_dir,
         flet_app_cache_dir,
@@ -467,6 +485,7 @@ class Handler(FileSystemEventHandler):
         self.hidden = hidden
         self.no_impeller = no_impeller
         self.assets_dir = assets_dir
+        self.exported_assets_dir = exported_assets_dir
         self.ignore_dirs = ignore_dirs
         self.last_time = time.time()
         self.is_running = False
@@ -503,8 +522,8 @@ class Handler(FileSystemEventHandler):
             p_env["FLET_WEB_APP_PATH"] = self.page_name
         if self.uds_path is not None:
             p_env["FLET_SERVER_UDS_PATH"] = self.uds_path
-        if self.assets_dir is not None:
-            p_env["FLET_ASSETS_DIR"] = self.assets_dir
+        if self.exported_assets_dir is not None:
+            p_env["FLET_ASSETS_DIR"] = self.exported_assets_dir
         # The app runs with its cwd set to the storage directory below, so a
         # relative path the user typed in their shell has to be resolved here
         # while that meaning still holds.
@@ -588,6 +607,10 @@ class Handler(FileSystemEventHandler):
         renders a QR code for mobile mode, or opens desktop view and waits for
         that process to finish.
 
+        The app reports its resolved assets directory on a line of its own just
+        before the URL line. It replaces `assets_dir`, so the desktop view opens
+        with the directory the app uses, including one set with `ft.run()`.
+
         Args:
             p: Running child process whose stdout is consumed.
         """
@@ -597,7 +620,10 @@ class Handler(FileSystemEventHandler):
             if not line:
                 break
             line = line.rstrip("\r\n")
-            if line.startswith(self.page_url_prefix):
+            assets_line_prefix = self.page_url_prefix + DISPLAY_ASSETS_DIR_SUFFIX
+            if line.startswith(assets_line_prefix):
+                self.assets_dir = line[len(assets_line_prefix) + 1 :] or None
+            elif line.startswith(self.page_url_prefix):
                 if not self.page_url:
                     parts = line[len(self.page_url_prefix) + 1 :].split(" ", 1)
                     self.page_url = parts[0]

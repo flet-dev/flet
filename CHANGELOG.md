@@ -8,6 +8,14 @@
 
 ### New features
 
+* Add `InteractiveViewer.get_scale()`, `get_transform()`, and
+  `on_transform_changed` to expose the effective zoom scale,
+  translation, and transformation matrix, including reliable
+  final-state notifications after consecutive interactions
+  ([#6938](https://github.com/flet-dev/flet/issues/6938),
+  [#6939](https://github.com/flet-dev/flet/pull/6939))
+  by @ada-koki.
+
 * Add the `flet-shadcn-ui` extension: controls styled after [shadcn/ui](https://ui.shadcn.com), built on the Flutter [`shadcn_ui`](https://pub.dev/packages/shadcn_ui) package, with `Theme` color schemes and the [Lucide](https://lucide.dev) icon set (`LucideIcons`). It includes `Button`, `IconButton`, `Badge`, `Alert`, `Avatar`, `Card`, `Breadcrumb`, `Separator`, `Progress`, `Input`, `Textarea`, `Checkbox`, `Switch`, `Slider`, `RadioGroup`, `Select`, `InputOTP`, `Calendar`, `DatePicker`, `DateRangePicker`, `TimePicker`, `Tabs`, `Accordion`, `ResizablePanelGroup`, `Tooltip`, `Popover`, `ContextMenu`, `Menubar`, `Table`, `Dialog`, `Sheet`, `Toast` and `Sonner`; value controls support `label`, `description` and `error_text` ([#6918](https://github.com/flet-dev/flet/pull/6918)) by @InesaFitsner.
 
 ### Improvements
@@ -19,6 +27,7 @@
 * Add `Theme.surfaces` and the `ThemeSurfaces` enum (`NEUTRAL`, `TONAL`) to choose whether surface colors are neutral or tinted with the seed color ([#6921](https://github.com/flet-dev/flet/issues/6921)) by @FeodorFitsner.
 * Add `flet test --update-failed-goldens` (`FLET_TEST_GOLDEN=failed`): compares screenshots as usual and overwrites only golden images that are missing or no longer match, so unchanged goldens stay untouched ([#6921](https://github.com/flet-dev/flet/issues/6921)) by @FeodorFitsner.
 * Add `bgcolor` to `FletTestApp.take_page_controls_screenshot()`, `assert_control_screenshot()` and `wrap_page_controls_in_screenshot()` to paint an opaque background behind the captured controls instead of a transparent one ([#6918](https://github.com/flet-dev/flet/pull/6918)) by @InesaFitsner.
+* Install `uvicorn[standard]` with `flet-web` again on Windows on ARM with Python 3.12 or later, now that `httptools` 0.9.0 ships wheels for it; Python 3.10 and 3.11 there keep plain `uvicorn`, because PyYAML has no wheels for them ([#6927](https://github.com/flet-dev/flet/pull/6927)) by @ndonkoHenri.
 
 ### Bug fixes
 
@@ -27,10 +36,15 @@
   **Compatibility:** Apps built with `flet build` and the macOS desktop client now require macOS 12 or later, and iOS apps require iOS 15 or later. Custom build templates keep building, because Flutter 3.47 raises the deployment targets during the build; apply the same `Podfile` and Xcode project changes to skip that step. See the [macOS 12 and iOS 15 minimum](/docs/updates/breaking-changes/v1-1-0/minimum-macos-12-ios-15) guide.
 
 * Fix the loading logo of web apps served by `flet run --web` or `flet publish` showing off-center after reloading the page in a mobile browser ([#6051](https://github.com/flet-dev/flet/issues/6051), [#6943](https://github.com/flet-dev/flet/pull/6943)) by @ndonkoHenri.
+* Fix `page.query` being empty in `main()` when the app is opened with a query string, e.g. `/?name=Joe`, and percent-encoded values such as `%26` being decoded twice ([#5898](https://github.com/flet-dev/flet/issues/5898), [#6942](https://github.com/flet-dev/flet/pull/6942)) by @ndonkoHenri.
+* Fix `TemplateRoute.match()` failing to match a route with a query string or fragment, e.g. `/store?ref=ad` against `/store`, or capturing them in the last parameter ([#5898](https://github.com/flet-dev/flet/issues/5898), [#6942](https://github.com/flet-dev/flet/pull/6942)) by @ndonkoHenri.
+* Fix `flet run` ignoring the `FLET_ASSETS_DIR` environment variable and the app's own `ft.run(assets_dir=...)` ([#5631](https://github.com/flet-dev/flet/issues/5631), [#6935](https://github.com/flet-dev/flet/pull/6935)) by @ndonkoHenri.
+* Fix `requests.Session` ignoring its `verify` setting in apps built with `flet build` ([#5695](https://github.com/flet-dev/flet/issues/5695), [#6936](https://github.com/flet-dev/flet/pull/6936)) by @ndonkoHenri.
 
 ### Documentation
 
 * Group the Reference > Controls section of the docs into Core, Material, Cupertino, Shadcn and Extensions ([#6918](https://github.com/flet-dev/flet/pull/6918)) by @InesaFitsner.
+* Document reading query string parameters with `page.query` in the [Navigation and Routing](/docs/cookbook/navigation-and-routing#query-strings) guide, and add a `QueryString` reference page ([#5898](https://github.com/flet-dev/flet/issues/5898), [#6942](https://github.com/flet-dev/flet/pull/6942)) by @ndonkoHenri.
 
 ## 1.0.4
 
