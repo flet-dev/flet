@@ -35,6 +35,7 @@
 
   **Compatibility:** Apps built with `flet build` and the macOS desktop client now require macOS 12 or later, and iOS apps require iOS 15 or later. Custom build templates keep building, because Flutter 3.47 raises the deployment targets during the build; apply the same `Podfile` and Xcode project changes to skip that step. See the [macOS 12 and iOS 15 minimum](/docs/updates/breaking-changes/v1-1-0/minimum-macos-12-ios-15) guide.
 
+* Fix setting `Window.skip_task_bar` to `True` not hiding the app from the taskbar on Windows ([#6302](https://github.com/flet-dev/flet/issues/6302), [#6946](https://github.com/flet-dev/flet/pull/6946)) by @ndonkoHenri.
 * Fix the desktop window flashing endlessly after a `flet run` hot reload ([#6913](https://github.com/flet-dev/flet/issues/6913), [#6945](https://github.com/flet-dev/flet/pull/6945)) by @ndonkoHenri.
 * Fix `flet run -r` restarting the app whenever it writes to its working directory or temp directory, which also left `flet run -r --web` pages blank ([#6944](https://github.com/flet-dev/flet/pull/6944)) by @ndonkoHenri.
 * Fix `flet run --ignore-dirs` not ignoring directories on Linux when the project is opened through a symlink ([#6944](https://github.com/flet-dev/flet/pull/6944)) by @ndonkoHenri.
