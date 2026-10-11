@@ -1,4 +1,3 @@
-import re
 import urllib.parse
 import weakref
 
@@ -23,63 +22,43 @@ class UrlComponents:
         """
         return urllib.parse.unquote(url)
 
-    def _is_encoded(self) -> bool:
-        """
-        Function returns True if URL is already encoded
-        """
-        if "?" in self.url:
-            q_result = self._querystring_part()
-            return (
-                self._decode_url_component(
-                    self.url[q_result.start() + 1 : q_result.end()]
-                )
-                != self.url[q_result.start() + 1 : q_result.end()]
-            )
-
-    def _querystring_part(self, url_string: bool = False):
-        """
-        Function sliced url part and returns querystring part.\n Use case: checking \
-        querystring part for encode, assigning decoded value
-        """
-        pattern = re.compile(r"\?[\w\D]+")
-        data = pattern.search(self.url)
-        return data if url_string is False else self.url[data.start() + 1 : data.end()]
-
 
 class QueryString(UrlComponents):
     """
-    Note: `QueryString` class is meant to be for internal use inside of page. Hence, \
-    methods such as `get()` or `to_dict()` must be\n called from `page` object\n
+    The query string of the current page route, available as :attr:`flet.Page.query`.
 
-    Constructor:
-            `page` takes `Page` class an argument and extracts URL automatically\n
+    It is parsed from :attr:`flet.Page.route` on every access, so it can be read
+    in `main()` as well as in a :attr:`flet.Page.on_route_change` handler. For
+    example, with the route `/products?id=1&sort=price`:
 
-    Methods:
-            Public:
-                `get()` method takes `key` an argument and returns value according to
-                key. (Ex: .../?name=Joe -> `get('name')` -> `Joe`)\n
-                `to_dict` returns all the key-value pairs of querystring as a `dict`\n
-                `path` returns url path (Ex: .../products?id=1 -> /products)
+    - `page.query.get("id")` returns `"1"`;
+    - `page.query.to_dict` returns `{"id": "1", "sort": "price"}`;
+    - `page.query.path` returns `"/products"`.
 
-            Private(meant to be used only inside of page class):
-                `post()` method takes key-value pair as an argument and returns
-                proceeded querystring ready to be merged with URL
-
+    Values are always strings. To navigate to a route with a query string, pass
+    the parameters as keyword arguments to :meth:`flet.Page.navigate` or
+    :meth:`flet.Page.push_route`.
     """
 
     def __init__(self, page):
         self.__page = weakref.ref(page)
-        self.url = None
 
     def get(self, key: str) -> str:
         """
-        Return the query parameter value for `key` from the current URL.
+        Return the value of the query parameter `key` in the current page route.
+
+        Args:
+            key: The name of the query parameter.
+
+        Returns:
+            The decoded value. When `key` appears more than once, its last
+                non-empty value.
 
         Raises:
-            KeyError: If `key` does not exist in the parsed query parameters.
+            KeyError: If the route has no query parameter `key` with a non-empty
+                value.
         """
-        self._data = self.to_dict
-        return self._data[key]
+        return self.to_dict[key]
 
     def post(self, kwargs: dict):
         """
@@ -93,34 +72,31 @@ class QueryString(UrlComponents):
     @property
     def to_dict(self) -> dict:
         """
-        Parse the current URL query component into a dictionary.
+        Parse the query component of the current page route into a dictionary.
+
+        The route is read on every access, so the result always matches
+        :attr:`flet.Page.route`. Keys and values are percent-decoded, with `+`
+        decoded as a space. Parameters without a value, such as `debug` in
+        `?debug` or `?debug=`, are left out. When a key appears more than once,
+        its last non-empty value is returned.
         """
-        self._data = urllib.parse.urlparse(self.url).query
-        return dict(urllib.parse.parse_qsl(self._data))
+        return dict(urllib.parse.parse_qsl(self._split_route()[1]))
 
     # Path
     @property
-    def path(self):
+    def path(self) -> str:
         """
-        Return the URL path, normalizing hash-style routes when present.
+        Return the path component of the current page route, without the query
+        string and fragment.
         """
-        self._updated_url = self.url.replace("#/", "") if "#" in self.url else self.url
-        return urllib.parse.urlparse(self._updated_url).path
+        return self._split_route()[0]
 
-    def __call__(self):
+    def _split_route(self) -> tuple[str, str]:
         """
-        Call dunder method updates url after updating `Page`
+        Split the current page route into its path and query string, dropping a
+        `#` fragment.
         """
-        if page := self.__page():
-            self.url = page.url + page.route
-
-            # Checking if self.url is encoded and decoding it accordingly
-            if self._is_encoded():
-                self.url = (
-                    page.url
-                    + urllib.parse.urlparse(self.url).path
-                    + "?"
-                    + self._decode_url_component(
-                        self._querystring_part(url_string=True)
-                    )
-                )
+        page = self.__page()
+        route = (page.route if page else None) or ""
+        path, _, query = route.partition("#")[0].partition("?")
+        return path, query
