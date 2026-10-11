@@ -27,6 +27,10 @@
 
   **Compatibility:** Apps built with `flet build` and the macOS desktop client now require macOS 12 or later, and iOS apps require iOS 15 or later. Custom build templates keep building, because Flutter 3.47 raises the deployment targets during the build; apply the same `Podfile` and Xcode project changes to skip that step. See the [macOS 12 and iOS 15 minimum](/docs/updates/breaking-changes/v1-1-0/minimum-macos-12-ios-15) guide.
 
+### Bug fixes
+
+* Fix `flet run` ignoring the `FLET_ASSETS_DIR` environment variable and the app's own `ft.run(assets_dir=...)` ([#5631](https://github.com/flet-dev/flet/issues/5631), [#6935](https://github.com/flet-dev/flet/pull/6935)) by @ndonkoHenri.
+
 ### Documentation
 
 * Group the Reference > Controls section of the docs into Core, Material, Cupertino, Shadcn and Extensions ([#6918](https://github.com/flet-dev/flet/pull/6918)) by @InesaFitsner.
