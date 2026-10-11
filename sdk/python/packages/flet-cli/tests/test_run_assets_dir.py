@@ -177,6 +177,7 @@ def _start_app_env(monkeypatch, tmp_path, exported_assets_dir):
         ios=False,
         android=False,
         hidden=False,
+        no_impeller=False,
         assets_dir=None,
         exported_assets_dir=exported_assets_dir,
         ignore_dirs=[],
