@@ -181,21 +181,23 @@ def annotation_path(path: Union[str, os.PathLike]) -> str:
     """
     Format a path for the `file=` property of an annotation.
 
-    GitHub matches annotation files against the repository checkout, which is
-    the working directory of a typical `flet build` step, so paths under the
-    working directory are made relative to it.
+    GitHub matches annotation files against `GITHUB_WORKSPACE`, even when
+    the build runs from a subdirectory. Outside GitHub Actions, use the
+    current working directory as the base.
 
     Args:
         path: The file path.
 
     Returns:
-        The path relative to the working directory when it is inside it,
+        The path relative to the workspace when it is inside it,
             otherwise the absolute path; always with `/` separators.
     """
 
     absolute = os.path.abspath(path)
     try:
-        relative = os.path.relpath(absolute)
+        relative = os.path.relpath(
+            absolute, os.environ.get("GITHUB_WORKSPACE") or os.getcwd()
+        )
     except ValueError:  # another drive on Windows
         relative = None
     if relative is not None and not (
@@ -373,7 +375,7 @@ class CliOutput:
         group_id = self.start_group(title)
         try:
             yield
-        except Exception:
+        except BaseException:
             self._failed_group = title
             raise
         finally:

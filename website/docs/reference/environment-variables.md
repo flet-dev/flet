@@ -197,7 +197,8 @@ to the `ft.run(assets_dir=...)`, as described in the [assets cookbook](../cookbo
 
 ### `FLET_CLI_LOG_FORMAT`
 
-Output format of `flet build`, `flet debug` and `flet test`: `rich`, `plain` or `github`.
+Output format of `flet build`, `flet debug`, `flet test`, `flet devices` and
+`flet emulators`: `rich`, `plain` or `github`.
 Same as the `--log-format` option, which takes precedence. See
 [`flet build`](../cli/flet-build.md#log-formats).
 

@@ -25,6 +25,7 @@ from flet_cli.commands.flutter_base import (
 )
 from flet_cli.utils.log_format import (
     CliOutput,
+    annotation_path,
     detect_log_format,
     escape_data,
     escape_property,
@@ -80,6 +81,30 @@ def _command(**attrs) -> BaseFlutterCommand:
     for name, value in attrs.items():
         setattr(cmd, name, value)
     return cmd
+
+
+class TestAnnotationPath:
+    @pytest.mark.parametrize("absolute", [False, True])
+    def test_workspace_path_from_subdirectory(self, monkeypatch, tmp_path, absolute):
+        project = tmp_path / "apps" / "sample"
+        project.mkdir(parents=True)
+        monkeypatch.setenv("GITHUB_WORKSPACE", str(tmp_path))
+        monkeypatch.chdir(project)
+        path = project / "assets" / "icon.png" if absolute else "assets/icon.png"
+        assert annotation_path(path) == "apps/sample/assets/icon.png"
+
+    def test_without_workspace_uses_working_directory(self, monkeypatch, tmp_path):
+        monkeypatch.delenv("GITHUB_WORKSPACE", raising=False)
+        monkeypatch.chdir(tmp_path)
+        assert annotation_path(tmp_path / "assets" / "icon.png") == "assets/icon.png"
+
+    def test_outside_workspace_stays_absolute(self, monkeypatch, tmp_path):
+        workspace = tmp_path / "workspace"
+        workspace.mkdir()
+        monkeypatch.setenv("GITHUB_WORKSPACE", str(workspace))
+        monkeypatch.chdir(tmp_path)
+        path = tmp_path / "icon.png"
+        assert annotation_path(path) == path.as_posix()
 
 
 class TestEscaping:
@@ -349,12 +374,14 @@ class TestGithub:
             "::group::Generating app icons\nGenerated app icons OK\n::endgroup::\n"
         )
 
-    def test_group_closed_on_exception(self, github):
+    @pytest.mark.parametrize("exception", [RuntimeError, SystemExit, KeyboardInterrupt])
+    def test_group_closed_on_exception(self, github, exception):
         cmd = _command()
-        with pytest.raises(RuntimeError), cmd.step("Packaging Python app..."):
-            raise RuntimeError("boom")
+        with pytest.raises(exception), cmd.step("Packaging Python app..."):
+            raise exception("boom")
         assert github.getvalue() == "::group::Packaging Python app\n::endgroup::\n"
         assert output.group_title is None
+        assert output.error_title == "Packaging Python app"
 
     def test_nested_steps_do_not_nest_groups(self, github):
         # GitHub Actions does not nest groups: the inner step closes the outer
