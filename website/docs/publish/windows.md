@@ -118,8 +118,8 @@ that directory after each `flet build windows`:
 
 Adjust the path for an all-users install or for Inno Setup 7. You can also open
 the script in the Inno Setup Compiler and choose **Build → Compile**. Either way
-the installer lands in `build\installer`, named after your product and version,
-for example `My-App-1.0.0-setup.exe`.
+the installer lands in `build\installer`, named after your artifact name and
+version, for example `my_app-1.0.0-setup.exe`.
 
 ```iss title="installer.iss"
 #define AppId "com.example.my_app" # (1)!
@@ -127,6 +127,7 @@ for example `My-App-1.0.0-setup.exe`.
 #define BuildDir "build\windows" # (3)!
 
 #define AppExePath AddBackslash(SourcePath) + BuildDir + "\" + AppExe
+#define ArtifactName Copy(AppExe, 1, Len(AppExe) - 4)
 #if !FileExists(AppExePath) # (4)!
   #error AppExe is not in BuildDir: run "flet build windows" first, or fix the values above.
 #endif
@@ -143,7 +144,7 @@ AppPublisher={#AppPublisher}
 VersionInfoVersion={#GetVersionNumbersString(AppExePath)} # (7)!
 UninstallDisplayName={#AppName} # (8)!
 UninstallDisplayIcon={app}\{#AppExe}
-DefaultDirName={autopf}\{#AppName} # (9)!
+DefaultDirName={autopf}\{code:SafeAppName} # (9)!
 DisableProgramGroupPage=yes
 PrivilegesRequired=lowest # (10)!
 PrivilegesRequiredOverridesAllowed=dialog
@@ -152,7 +153,7 @@ ArchitecturesInstallIn64BitMode=x64compatible
 WizardStyle=modern dynamic # (12)!
 SetupIconFile=build\flutter\windows\runner\resources\app_icon.ico # (13)!
 OutputDir=build\installer # (14)!
-OutputBaseFilename={#StringChange(AppName, " ", "-")}-{#AppVersion}-setup
+OutputBaseFilename={#StringChange(ArtifactName, " ", "-")}-{#AppVersion}-setup
 SolidCompression=yes # (15)!
 
 [Tasks]
@@ -164,24 +165,35 @@ Type: filesandordirs; Name: "{app}\data"; Check: IsUpgrade
 Type: filesandordirs; Name: "{app}\DLLs"; Check: IsUpgrade
 Type: filesandordirs; Name: "{app}\Lib"; Check: IsUpgrade
 Type: filesandordirs; Name: "{app}\site-packages"; Check: IsUpgrade
+Type: files; Name: "{app}\*.dll"; Check: IsUpgrade
 
 [Files]
 Source: "{#BuildDir}\*"; DestDir: "{app}"; Flags: ignoreversion recursesubdirs createallsubdirs # (18)!
 
 [Icons]
-Name: "{autoprograms}\{#AppName}"; Filename: "{app}\{#AppExe}" # (19)!
-Name: "{autodesktop}\{#AppName}"; Filename: "{app}\{#AppExe}"; Tasks: desktopicon
+Name: "{autoprograms}\{code:SafeAppName}"; Filename: "{app}\{#AppExe}" # (19)!
+Name: "{autodesktop}\{code:SafeAppName}"; Filename: "{app}\{#AppExe}"; Tasks: desktopicon
 
 [Run]
 Filename: "{app}\{#AppExe}"; Description: "{cm:LaunchProgram,{#StringChange(AppName, '&', '&&')}}"; Flags: nowait postinstall skipifsilent # (20)!
 
 [Code]
-function IsUpgrade: Boolean; # (21)!
+function SafeAppName(Param: String): String; # (21)!
+var
+  I: Integer;
+begin
+  Result := '{#StringChange(AppName, "'", "''")}';
+  for I := Length(Result) downto 1 do
+    if Pos(Result[I], '\/:*?"<>|') > 0 then
+      Delete(Result, I, 1);
+end;
+
+function IsUpgrade: Boolean; # (22)!
 begin
   Result := CompareText(RemoveBackslash(WizardForm.PrevAppDir), RemoveBackslash(WizardDirValue)) = 0;
 end;
 
-function NextButtonClick(CurPageID: Integer): Boolean; # (22)!
+function NextButtonClick(CurPageID: Integer): Boolean; # (23)!
 var
   Rec: TFindRec;
 begin
@@ -231,7 +243,8 @@ end;
    `UninstallDisplayName`, Inno Setup appends the version to the name, which
    Windows already lists separately.
 9. `{autopf}` is `%LOCALAPPDATA%\Programs` when installing for the current user,
-   and `C:\Program Files` when installing for all users.
+   and `C:\Program Files` when installing for all users. The folder, like the
+   shortcuts, is named after your product name (see 21).
 10. Lets the user choose: **Install for me only** needs no administrator rights,
     while **Install for all users** asks for them. An upgrade reuses the choice
     made the first time without asking again.
@@ -246,17 +259,19 @@ end;
     Inno Setup's default icon, for example when compiling where only
     `build\windows` exists.
 14. Writes the installer to `build\installer`, as
-    `<product>-<version>-setup.exe` with spaces turned into hyphens.
+    `<artifact>-<version>-setup.exe` with spaces turned into hyphens. The
+    artifact name is always a valid file name, since it names the `.exe`.
 15. Compresses all files as a single stream, which suits the thousands of small
     files in `Lib` and `site-packages`. A 206 MB test app compiled to a 55 MB
     installer with it, and to 61 MB without.
 16. An unticked **Create a desktop shortcut** box.
 17. An upgrade overwrites files, but never deletes the ones the new version no
-    longer ships, so a dependency you dropped would linger in `site-packages`,
-    still importable. These lines empty the folders that `flet build`
-    regenerates, before the new files go in, along with anything the app wrote
-    there. They run only when Setup installs over the app's own earlier
-    installation (see 21 and 22). Don't widen them to `{app}\*`.
+    longer ships, so a dependency you dropped would linger: in `site-packages`,
+    still importable, or as a Flutter plugin's DLL next to the `.exe`. These
+    lines empty the folders that `flet build` regenerates and remove the DLLs
+    next to the `.exe`, along with anything the app wrote there, before the new
+    files go in. They run only when Setup installs over the app's own earlier
+    installation (see 22 and 23). Don't widen them to `{app}\*`.
 18. Copies the whole folder. `ignoreversion` replaces every file on upgrade;
     without it, Setup keeps an installed DLL whose version number didn't change,
     even when its contents did.
@@ -266,9 +281,13 @@ end;
 20. Adds a ticked **Launch My App** box, with your product name, to the last
     page of the wizard. The app starts as the user who ran Setup, even after an
     all-users install, and it doesn't start during an unattended install.
-21. True when the destination is the folder of the app's earlier installation,
+21. Your product name without the characters Windows doesn't allow in file
+    names (`\ / : * ? " < > |`), for the install folder and the shortcuts. The
+    product name is for display and may contain them: `Notes: Pro` becomes
+    `Notes Pro`.
+22. True when the destination is the folder of the app's earlier installation,
     as recorded by Setup, so the `[InstallDelete]` lines run only on an upgrade.
-22. Keeps a first install out of a folder that already holds files, such as
+23. Keeps a first install out of a folder that already holds files, such as
     an existing folder the user picked, where the `[InstallDelete]` lines would
     later delete that folder's own `data` or `Lib`. Setup shows a message and
     stays on the folder page; an unattended install with `/DIR=` exits instead.
@@ -284,7 +303,7 @@ For unattended installs, for example by an IT department, Setup takes
 [command-line parameters](https://jrsoftware.org/ishelp/topic_setupcmdline.htm):
 
 ```powershell
-.\My-App-1.0.0-setup.exe /VERYSILENT /SUPPRESSMSGBOXES /CURRENTUSER
+.\my_app-1.0.0-setup.exe /VERYSILENT /SUPPRESSMSGBOXES /CURRENTUSER
 ```
 
 Use `/ALLUSERS`, from an administrator terminal, to install for all users.
