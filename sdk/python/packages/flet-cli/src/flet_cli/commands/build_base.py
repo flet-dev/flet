@@ -2152,6 +2152,7 @@ class BaseBuildCommand(BaseFlutterCommand):
                 # overwrote them on every build.
                 self._restore_generated_icons()
                 hash.commit()
+                console.log(f"Using default app icons {self.emojis['checkmark']}")
                 return
 
             source_path = self.assets_path.joinpath(source_name)
@@ -2159,6 +2160,7 @@ class BaseBuildCommand(BaseFlutterCommand):
 
             if not hash.has_changed() and not self._icons_missing(platform):
                 hash.commit()
+                console.log(f"App icons are up to date {self.emojis['checkmark']}")
                 return
 
             try:
@@ -2444,6 +2446,7 @@ class BaseBuildCommand(BaseFlutterCommand):
                 # without them this path fails resource linking outright rather
                 # than degrading to a plain background.
                 hash.commit()
+                console.log("Skipped splash screens: no source image found")
                 return
 
             dark_path = self.assets_path.joinpath(dark_name) if dark_name else None
@@ -2454,6 +2457,7 @@ class BaseBuildCommand(BaseFlutterCommand):
 
             if not hash.has_changed():
                 hash.commit()
+                console.log(f"Splash screens are up to date {self.emojis['checkmark']}")
                 return
 
             try:

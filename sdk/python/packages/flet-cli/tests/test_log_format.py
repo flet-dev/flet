@@ -638,8 +638,11 @@ def test_template_details_are_inside_app_shell_group(
     ]
 
 
-def test_image_details_are_inside_generation_groups(github, monkeypatch, tmp_path):
-    """Run the generators with verbose lookup logs and the splash icon fallback."""
+@pytest.fixture
+def image_build(github, monkeypatch, tmp_path):
+    import shutil
+    from pathlib import Path
+
     from PIL import Image
 
     from flet_cli.commands import build_base
@@ -657,6 +660,13 @@ def test_image_details_are_inside_generation_groups(github, monkeypatch, tmp_pat
     cmd = BaseBuildCommand.__new__(BaseBuildCommand)
     cmd.package_app_path = assets.parent
     cmd.flutter_dir = tmp_path / "flutter"
+    template = (
+        Path(__file__).resolve().parents[3]
+        / "templates"
+        / "build"
+        / "{{cookiecutter.out_dir}}"
+    )
+    shutil.copytree(template, cmd.flutter_dir)
     cmd.build_dir = tmp_path / "build"
     cmd.target_platform = cmd.config_platform = "web"
     cmd.options = SimpleNamespace()
@@ -669,7 +679,13 @@ def test_image_details_are_inside_generation_groups(github, monkeypatch, tmp_pat
     cmd.update_status = lambda *_: None
     cmd.verbose = 1
     cmd.emojis = {"checkmark": "OK"}
+    return cmd
 
+
+def test_image_details_are_inside_generation_groups(github, image_build):
+    """Run the generators with verbose lookup logs and the splash icon fallback."""
+    cmd = image_build
+    source = cmd.package_app_path / "assets" / "icon.png"
     cmd.customize_icons()
     cmd.customize_splash_images()
 
@@ -681,6 +697,45 @@ def test_image_details_are_inside_generation_groups(github, monkeypatch, tmp_pat
         "::group::Generating splash screens",
         f'Found "icon" image at {source}',
         "Generated splash screens OK",
+        "::endgroup::",
+    ]
+
+
+@pytest.mark.parametrize(
+    "case, icons, splash",
+    [
+        ("default", "Using default app icons OK", "Generated splash screens OK"),
+        ("cached", "App icons are up to date OK", "Splash screens are up to date OK"),
+        (
+            "missing",
+            "Using default app icons OK",
+            "Skipped splash screens: no source image found",
+        ),
+    ],
+)
+def test_skipped_image_generation_groups_have_a_result(
+    github, image_build, case, icons, splash
+):
+    cmd = image_build
+    cmd.verbose = 0
+    if case == "cached":
+        cmd.customize_icons()
+        cmd.customize_splash_images()
+        github.seek(0)
+        github.truncate()
+    else:
+        (cmd.package_app_path / "assets" / "icon.png").unlink()
+        if case == "missing":
+            (cmd.flutter_dir / "images" / "icon.png").unlink()
+
+    cmd.customize_icons()
+    cmd.customize_splash_images()
+    assert github.getvalue().splitlines() == [
+        "::group::Generating app icons",
+        icons,
+        "::endgroup::",
+        "::group::Generating splash screens",
+        splash,
         "::endgroup::",
     ]
 
