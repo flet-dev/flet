@@ -503,6 +503,7 @@ if TYPE_CHECKING:
         TextCapitalization,
         TextField,
         TextFieldPasteFilesEvent,
+        TextInputAction,
         TextOnlyInputFilter,
     )
     from flet.controls.material.time_picker import (
@@ -1205,6 +1206,7 @@ __all__ = [
     "TextField",
     "TextFieldPasteFilesEvent",
     "TextFieldTheme",
+    "TextInputAction",
     "TextOnlyInputFilter",
     "TextOverflow",
     "TextSelection",
@@ -1754,6 +1756,7 @@ _LAZY = {
     "TextDecorationStyle": "flet.controls.text_style",
     "TextField": "flet.controls.material.textfield",
     "TextFieldPasteFilesEvent": "flet.controls.material.textfield",
+    "TextInputAction": "flet.controls.material.textfield",
     "TextOnlyInputFilter": "flet.controls.material.textfield",
     "TextOverflow": "flet.controls.text_style",
     "TextSelection": "flet.controls.core.text",

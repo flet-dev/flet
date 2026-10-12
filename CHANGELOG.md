@@ -28,6 +28,8 @@
 * `flet build`: add `[tool.flet.ios.entitlement]` and `--ios-entitlements` to sign iOS apps with entitlements, such as push notifications, universal links, App Groups or critical alerts. See [Entitlements](/docs/publish/ios#entitlements) ([#6999](https://github.com/flet-dev/flet/pull/6999)) by @ndonkoHenri.
 * `flet build`: add `[tool.flet.android]` settings for the app's [Java compile options](/docs/publish/android#java-compile-options) (`compile_options`), [Gradle dependencies](/docs/publish/android#gradle-dependencies) (`gradle_dependencies`), and manifest [receivers](/docs/publish/android#receivers) (`receiver`) and [services](/docs/publish/android#services) (`service`) ([#6999](https://github.com/flet-dev/flet/pull/6999)) by @ndonkoHenri.
 
+* Add `text_input_action` to `TextField` and `CupertinoTextField`, with the `TextInputAction` enum, to choose the action button of the onscreen keyboard: `TextInputAction.NEXT` moves focus to the next focusable control, keeping the keyboard open when that is another text field ([#6962](https://github.com/flet-dev/flet/issues/6962)) by @ndonkoHenri.
+
 ### Improvements
 
 * The prebuilt Windows desktop client (`flet.exe` and its DLLs) that `flet run` downloads is now code-signed, so it starts with Windows Smart App Control turned on ([#7011](https://github.com/flet-dev/flet/issues/7011)) by @FeodorFitsner.
