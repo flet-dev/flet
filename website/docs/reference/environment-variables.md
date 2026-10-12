@@ -205,9 +205,19 @@ ft.run(main, assets_dir="assets")
 For control properties like [`Image.src`](../controls/image.md#flet.Image.src), continue using paths relative
 to the `ft.run(assets_dir=...)`, as described in the [assets cookbook](../cookbook/assets.md).
 
+### `FLET_CLI_LOG_FORMAT`
+
+Output format of `flet build`, `flet debug`, `flet test`, `flet devices` and
+`flet emulators`: `rich`, `plain` or `github`.
+Same as the `--log-format` option, which takes precedence. See
+[`flet build`](../cli/flet-build.md#log-formats).
+
+Defaults to `"github"` when `GITHUB_ACTIONS=true`, otherwise `"rich"`.
+
 ### `FLET_CLI_NO_RICH_OUTPUT`
 
-Whether to disable rich output in the console.
+Whether to disable rich output in the console. Selects `plain` unless
+`--log-format` or `FLET_CLI_LOG_FORMAT` explicitly selects `plain` or `github`.
 
 Defaults to `"false"`.
 

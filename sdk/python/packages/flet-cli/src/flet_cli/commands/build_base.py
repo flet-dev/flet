@@ -1,5 +1,6 @@
 import argparse
 import base64
+import contextlib
 import copy
 import glob
 import hashlib
@@ -30,7 +31,6 @@ from flet_platform_assets import (
 )
 from packaging.requirements import Requirement
 from rich.markup import escape
-from rich.panel import Panel
 from rich.table import Column, Table
 
 import flet.version
@@ -42,7 +42,6 @@ from flet_cli.commands.flutter_base import (
     error_style,
     verbose1_style,
     verbose2_style,
-    warning_style,
 )
 from flet_cli.commands.options import PassThroughArgsAction
 from flet_cli.utils.android import (
@@ -53,6 +52,7 @@ from flet_cli.utils.app_excludes import find_default_excludes
 from flet_cli.utils.cli import parse_cli_bool_value
 from flet_cli.utils.flutter import get_flutter_dir
 from flet_cli.utils.hash_stamp import HashStamp
+from flet_cli.utils.log_format import annotation_path
 from flet_cli.utils.merge import merge_dict
 from flet_cli.utils.plist import is_supported_plist_value, parse_cli_plist_value
 from flet_cli.utils.project_dependencies import (
@@ -1105,10 +1105,10 @@ class BaseBuildCommand(BaseFlutterCommand):
             self.options.impeller is False
             or self.get_pyproject(f"tool.flet.{self.config_platform}.impeller") is False
         ):
-            console.log(
-                "Warning: turning Impeller off has no effect on "
+            self.warn(
+                "turning Impeller off has no effect on "
                 f"{'iOS' if self.package_platform == 'iOS' else 'web'}.",
-                style=warning_style,
+                title="Impeller",
             )
 
         # Explicit `[tool.flet.macos.info]` or `--info-plist` entries override
@@ -1506,13 +1506,12 @@ class BaseBuildCommand(BaseFlutterCommand):
             and not self.debug_platform
             and not getattr(self, "test_mode", False)
         ):
-            console.print(
-                Panel(
-                    "This build will generate an .xcarchive (Xcode Archive). "
-                    "To produce an .ipa (iOS App Package), please specify "
-                    "a Provisioning Profile.",
-                    style=warning_style,
-                )
+            self.warn(
+                "This build will generate an .xcarchive (Xcode Archive). "
+                "To produce an .ipa (iOS App Package), please specify "
+                "a Provisioning Profile.",
+                title="iOS signing",
+                panel=True,
             )
 
         assert self.flutter_dir
@@ -1860,7 +1859,7 @@ class BaseBuildCommand(BaseFlutterCommand):
             template_ref = flet.version.flet_version
 
         is_local_dev = False
-        # Identity printed in status / hashed for invalidation; may differ from
+        # Identity logged / hashed for invalidation; may differ from
         # the path cookiecutter actually reads when caching kicks in below.
         template_source = template_url
         if template_url:
@@ -1903,111 +1902,118 @@ class BaseBuildCommand(BaseFlutterCommand):
 
         if hash_changed:
             # create a new Flutter bootstrap project directory, if non-existent
+            status = None
             if not second_pass:
                 self.flutter_dir.mkdir(parents=True, exist_ok=True)
-                status = f"[bold blue]Creating app shell from {template_source}"
-                if checkout:
-                    status += f' with ref "{template_ref}"'
-                status += "..."
-                self.update_status(status)
+                status = "[bold blue]Creating app shell..."
 
-            try:
-                from cookiecutter.main import cookiecutter
+            with self.step(status) if status else contextlib.nullcontext():
+                if not second_pass and self.verbose > 0:
+                    details = f"Template: {template_source}"
+                    if checkout:
+                        details += f' with ref "{template_ref}"'
+                    console.log(details, style=verbose1_style, markup=False)
+                try:
+                    from cookiecutter.main import cookiecutter
 
-                cookiecutter(
-                    template=template_url,
-                    checkout=checkout,
-                    directory=template_dir,
-                    output_dir=str(self.flutter_dir.parent),
-                    no_input=True,
-                    overwrite_if_exists=True,
-                    extra_context={
-                        k: v for k, v in self.template_data.items() if v is not None
-                    },
-                )
-            except Exception as e:
-                rmtree(self.flutter_dir)
-                self.cleanup(1, f"{e}")
+                    cookiecutter(
+                        template=template_url,
+                        checkout=checkout,
+                        directory=template_dir,
+                        output_dir=str(self.flutter_dir.parent),
+                        no_input=True,
+                        overwrite_if_exists=True,
+                        extra_context={
+                            k: v for k, v in self.template_data.items() if v is not None
+                        },
+                    )
+                except Exception as e:
+                    rmtree(self.flutter_dir)
+                    self.cleanup(1, f"{e}")
 
-            # For local development, override flet dependency with path
-            repo_root = None
-            pubspec = None
-            if is_local_dev:
-                repo_root = flet.version.find_repo_root(Path(__file__).resolve().parent)
-                if repo_root:
-                    flet_pkg_path = str(repo_root / "packages" / "flet")
-                    pubspec = self.load_yaml(self.pubspec_path)
-                    pubspec["dependencies"]["flet"] = {"path": flet_pkg_path}
-                    pubspec.setdefault("dependency_overrides", {})["flet"] = {
-                        "path": flet_pkg_path
-                    }
-
-            # In test mode, inject the integration-test driver (and flutter_test)
-            # as dev dependencies. They are intentionally NOT in the template
-            # pubspec: that keeps it valid YAML for the release patch tooling and
-            # ensures a normal `flet build` never pulls them. flet_integration_test
-            # is publish_to:none, so for local dev it resolves to the in-repo
-            # package by path, and for an end user it is a git dependency pinned to
-            # this flet version's tag.
-            if getattr(self, "test_mode", False):
-                if pubspec is None:
-                    pubspec = self.load_yaml(self.pubspec_path)
-                dev_deps = pubspec.setdefault("dev_dependencies", {})
-                dev_deps["flutter_test"] = {"sdk": "flutter"}
-                if is_local_dev and repo_root:
-                    fit_pkg_path = str(repo_root / "packages" / "flet_integration_test")
-                    dev_deps["flet_integration_test"] = {"path": fit_pkg_path}
-                    pubspec.setdefault("dependency_overrides", {})[
-                        "flet_integration_test"
-                    ] = {"path": fit_pkg_path}
-                else:
-                    dev_deps["flet_integration_test"] = {
-                        "git": {
-                            "url": "https://github.com/flet-dev/flet.git",
-                            "ref": f"v{flet.version.flet_version}",
-                            "path": "packages/flet_integration_test",
+                # For local development, override flet dependency with path
+                repo_root = None
+                pubspec = None
+                if is_local_dev:
+                    repo_root = flet.version.find_repo_root(
+                        Path(__file__).resolve().parent
+                    )
+                    if repo_root:
+                        flet_pkg_path = str(repo_root / "packages" / "flet")
+                        pubspec = self.load_yaml(self.pubspec_path)
+                        pubspec["dependencies"]["flet"] = {"path": flet_pkg_path}
+                        pubspec.setdefault("dependency_overrides", {})["flet"] = {
+                            "path": flet_pkg_path
                         }
-                    }
 
-            # Only the web (Pyodide) build loads the packaged app as a Flutter
-            # asset; on native platforms serious_python places it inside the
-            # bundle, and a missing app/app.zip asset would fail the build.
-            if self.config_platform == "web":
-                if pubspec is None:
-                    pubspec = self.load_yaml(self.pubspec_path)
-                assets = pubspec.setdefault("flutter", {}).setdefault("assets", [])
-                for asset in ["app/app.zip", "app/app.zip.hash"]:
-                    if asset not in assets:
-                        assets.append(asset)
-
-            if pubspec is not None:
-                self.save_yaml(self.pubspec_path, pubspec)
-
-            pyproject_pubspec = self.get_pyproject("tool.flet.flutter.pubspec")
-
-            if pyproject_pubspec:
-                pyproject_pubspec = copy.deepcopy(pyproject_pubspec)
-                pubspec = self.load_yaml(self.pubspec_path)
-                # Replace individual dependency entries from pyproject rather
-                # than deep-merging them — a Dart dependency can only have one
-                # source, so merging {"path":…} with {"git":…} is invalid.
-                for section in (
-                    "dependencies",
-                    "dependency_overrides",
-                    "dev_dependencies",
-                ):
-                    if section in pyproject_pubspec:
-                        pubspec.setdefault(section, {}).update(
-                            pyproject_pubspec.pop(section)
+                # In test mode, inject the integration-test driver (and flutter_test)
+                # as dev dependencies. They are intentionally NOT in the template
+                # pubspec: that keeps it valid YAML for the release patch tooling and
+                # ensures a normal `flet build` never pulls them. flet_integration_test
+                # is publish_to:none, so for local dev it resolves to the in-repo
+                # package by path, and for an end user it is a git dependency pinned to
+                # this flet version's tag.
+                if getattr(self, "test_mode", False):
+                    if pubspec is None:
+                        pubspec = self.load_yaml(self.pubspec_path)
+                    dev_deps = pubspec.setdefault("dev_dependencies", {})
+                    dev_deps["flutter_test"] = {"sdk": "flutter"}
+                    if is_local_dev and repo_root:
+                        fit_pkg_path = str(
+                            repo_root / "packages" / "flet_integration_test"
                         )
-                pubspec = merge_dict(pubspec, pyproject_pubspec)
-                self.save_yaml(self.pubspec_path, pubspec)
+                        dev_deps["flet_integration_test"] = {"path": fit_pkg_path}
+                        pubspec.setdefault("dependency_overrides", {})[
+                            "flet_integration_test"
+                        ] = {"path": fit_pkg_path}
+                    else:
+                        dev_deps["flet_integration_test"] = {
+                            "git": {
+                                "url": "https://github.com/flet-dev/flet.git",
+                                "ref": f"v{flet.version.flet_version}",
+                                "path": "packages/flet_integration_test",
+                            }
+                        }
 
-            # make backup of pubspec.yaml
-            shutil.copyfile(self.pubspec_path, f"{self.pubspec_path}.orig")
+                # Only the web (Pyodide) build loads the packaged app as a Flutter
+                # asset; on native platforms serious_python places it inside the
+                # bundle, and a missing app/app.zip asset would fail the build.
+                if self.config_platform == "web":
+                    if pubspec is None:
+                        pubspec = self.load_yaml(self.pubspec_path)
+                    assets = pubspec.setdefault("flutter", {}).setdefault("assets", [])
+                    for asset in ["app/app.zip", "app/app.zip.hash"]:
+                        if asset not in assets:
+                            assets.append(asset)
 
-            if not second_pass:
-                console.log(f"Created app shell {self.emojis['checkmark']}")
+                if pubspec is not None:
+                    self.save_yaml(self.pubspec_path, pubspec)
+
+                pyproject_pubspec = self.get_pyproject("tool.flet.flutter.pubspec")
+
+                if pyproject_pubspec:
+                    pyproject_pubspec = copy.deepcopy(pyproject_pubspec)
+                    pubspec = self.load_yaml(self.pubspec_path)
+                    # Replace individual dependency entries from pyproject rather
+                    # than deep-merging them — a Dart dependency can only have one
+                    # source, so merging {"path":…} with {"git":…} is invalid.
+                    for section in (
+                        "dependencies",
+                        "dependency_overrides",
+                        "dev_dependencies",
+                    ):
+                        if section in pyproject_pubspec:
+                            pubspec.setdefault(section, {}).update(
+                                pyproject_pubspec.pop(section)
+                            )
+                    pubspec = merge_dict(pubspec, pyproject_pubspec)
+                    self.save_yaml(self.pubspec_path, pubspec)
+
+                # make backup of pubspec.yaml
+                shutil.copyfile(self.pubspec_path, f"{self.pubspec_path}.orig")
+
+                if not second_pass:
+                    console.log(f"Created app shell {self.emojis['checkmark']}")
 
         hash.commit()
 
@@ -2045,22 +2051,21 @@ class BaseBuildCommand(BaseFlutterCommand):
                 shutil.move(self.flutter_packages_temp_dir, self.flutter_packages_dir)
 
         if self.flutter_packages_dir.exists():
-            self.update_status("[bold blue]Registering Flutter user extensions...")
+            with self.step("[bold blue]Registering app user extensions..."):
+                for fp in os.listdir(self.flutter_packages_dir):
+                    if (self.flutter_packages_dir / fp / "pubspec.yaml").exists():
+                        ext_dir = str(self.flutter_packages_dir / fp)
+                        if self.verbose > 0:
+                            console.log(f"Found app user extension at {ext_dir}")
+                        self.flutter_dependencies[fp] = {"path": ext_dir}
 
-            for fp in os.listdir(self.flutter_packages_dir):
-                if (self.flutter_packages_dir / fp / "pubspec.yaml").exists():
-                    ext_dir = str(self.flutter_packages_dir / fp)
-                    if self.verbose > 0:
-                        console.log(f"Found Flutter extension at {ext_dir}")
-                    self.flutter_dependencies[fp] = {"path": ext_dir}
+                self.template_data["flutter"]["dependencies"] = list(
+                    self.flutter_dependencies.keys()
+                )
 
-            self.template_data["flutter"]["dependencies"] = list(
-                self.flutter_dependencies.keys()
-            )
-
-            console.log(
-                f"Registered Flutter user extensions {self.emojis['checkmark']}"
-            )
+                console.log(
+                    f"Registered app user extensions {self.emojis['checkmark']}"
+                )
 
     def update_flutter_dependencies(self):
         """
@@ -2107,96 +2112,102 @@ class BaseBuildCommand(BaseFlutterCommand):
         if platform is None:
             return
 
-        hash = HashStamp(self.build_dir / ".hash" / "icons")
-        hash.update(ICONS_GENERATOR_VERSION)
-        hash.update(self.template_digest)
+        with self.step("[bold blue]Generating app icons..."):
+            hash = HashStamp(self.build_dir / ".hash" / "icons")
+            hash.update(ICONS_GENERATOR_VERSION)
+            hash.update(self.template_digest)
 
-        self.assets_path = self.package_app_path.joinpath("assets")
+            self.assets_path = self.package_app_path.joinpath("assets")
 
-        source_name = None
-        # Whether the source is a generic `icon.png` rather than artwork the
-        # author framed for this platform. A generic icon gets the platform's
-        # margin computed for it; `icon_<platform>.png` is a finished
-        # composition and is used exactly as supplied.
-        derived = False
-        if self.assets_path.exists():
-            # Only the target platform's chain is resolved; the other five
-            # lookups produced nothing this build could use.
-            source_name = self.find_platform_image(
-                self.assets_path, f"icon_{platform}", hash
+            source_name = None
+            # Whether the source is a generic `icon.png` rather than artwork the
+            # author framed for this platform. A generic icon gets the platform's
+            # margin computed for it; `icon_<platform>.png` is a finished
+            # composition and is used exactly as supplied.
+            derived = False
+            if self.assets_path.exists():
+                # Only the target platform's chain is resolved; the other five
+                # lookups produced nothing this build could use.
+                source_name = self.find_platform_image(
+                    self.assets_path, f"icon_{platform}", hash
+                )
+                if source_name is None:
+                    source_name = self.find_platform_image(
+                        self.assets_path, "icon", hash
+                    )
+                    derived = source_name is not None
+            hash.update(derived)
+
+            options = IconOptions(
+                background=self._resolve_icon_background(),
+                macos_style=self.get_pyproject("tool.flet.macos.icon_style") or "auto",
+                application_id=self.template_data["bundle_id"],
             )
+            hash.update(options)
+
             if source_name is None:
-                source_name = self.find_platform_image(self.assets_path, "icon", hash)
-                derived = source_name is not None
-        hash.update(derived)
+                # Rule 2: with no user icon there is nothing to improve on. The
+                # template's committed icons are better than anything derivable
+                # from a finished `images/icon.png`, and flutter_launcher_icons
+                # overwrote them on every build.
+                self._restore_generated_icons()
+                hash.commit()
+                console.log(f"Using default app icons {self.emojis['checkmark']}")
+                return
 
-        options = IconOptions(
-            background=self._resolve_icon_background(),
-            macos_style=self.get_pyproject("tool.flet.macos.icon_style") or "auto",
-            application_id=self.template_data["bundle_id"],
-        )
-        hash.update(options)
+            source_path = self.assets_path.joinpath(source_name)
+            hash.update(source_path.stat().st_mtime)
 
-        if source_name is None:
-            # Rule 2: with no user icon there is nothing to improve on. The
-            # template's committed icons are better than anything derivable
-            # from a finished `images/icon.png`, and flutter_launcher_icons
-            # overwrote them on every build.
-            self._restore_generated_icons()
-            hash.commit()
-            return
+            if not hash.has_changed() and not self._icons_missing(platform):
+                hash.commit()
+                console.log(f"App icons are up to date {self.emojis['checkmark']}")
+                return
 
-        source_path = self.assets_path.joinpath(source_name)
-        hash.update(source_path.stat().st_mtime)
+            try:
+                source, pre_rendered = load_source(source_path)
+            except SourceError as e:
+                if source_path.suffix.lower() == ".svg":
+                    self.cleanup(1, f"Could not generate app icons: {e}")
+                self.warn(e, title="App icon", file=annotation_path(source_path))
+                hash.commit()
+                return
 
-        if not hash.has_changed() and not self._icons_missing(platform):
-            hash.commit()
-            return
+            # Deliberately not squared first. Every icon is composed by centring
+            # the artwork on a square canvas anyway, so padding here would be
+            # redundant - and worse, it replaces the empty space with transparency,
+            # which makes finished opaque artwork look like a glyph and gets it
+            # reframed on top of being letterboxed.
+            if source.width != source.height:
+                self.warn(
+                    f"icon source is {source.width}x{source.height}, not "
+                    "square. It is centred on each icon, with the remaining space "
+                    "filled by icon_background where a platform needs an opaque "
+                    "icon and left transparent elsewhere. Supply a square image to "
+                    "frame it yourself.",
+                    title="App icon",
+                    file=annotation_path(source_path),
+                )
 
-        self.update_status("[bold blue]Generating app icons...")
-
-        try:
-            source, pre_rendered = load_source(source_path)
-        except SourceError as e:
-            if source_path.suffix.lower() == ".svg":
-                self.cleanup(1, f"Could not generate app icons: {e}")
-            console.log(f"Warning: {e}", style=warning_style)
-            hash.commit()
-            return
-
-        # Deliberately not squared first. Every icon is composed by centring
-        # the artwork on a square canvas anyway, so padding here would be
-        # redundant - and worse, it replaces the empty space with transparency,
-        # which makes finished opaque artwork look like a glyph and gets it
-        # reframed on top of being letterboxed.
-        if source.width != source.height:
-            console.log(
-                f"Warning: icon source is {source.width}x{source.height}, not "
-                "square. It is centred on each icon, with the remaining space "
-                "filled by icon_background where a platform needs an opaque "
-                "icon and left transparent elsewhere. Supply a square image to "
-                "frame it yourself.",
-                style=warning_style,
+            result = render_icons(
+                source,
+                options,
+                self._icon_spec(platform),
+                platform=platform,
+                pre_rendered=pre_rendered,
+                derived=derived,
             )
+            for message in result.warnings:
+                self.warn(message, title="App icon", file=annotation_path(source_path))
 
-        result = render_icons(
-            source,
-            options,
-            self._icon_spec(platform),
-            platform=platform,
-            pre_rendered=pre_rendered,
-            derived=derived,
-        )
-        for message in result.warnings:
-            console.log(f"Warning: {message}", style=warning_style)
+            self._backup_generated_icons(result)
+            write(
+                result,
+                self.flutter_dir,
+                declared_only=platform not in ICONS_CREATED_FRESH,
+            )
+            console.log(f"Generated app icons {self.emojis['checkmark']}")
 
-        self._backup_generated_icons(result)
-        write(
-            result, self.flutter_dir, declared_only=platform not in ICONS_CREATED_FRESH
-        )
-        console.log(f"Generated app icons {self.emojis['checkmark']}")
-
-        hash.commit()
+            hash.commit()
 
     def icon_background_value(self, platform: str) -> Optional[str]:
         """
@@ -2247,10 +2258,10 @@ class BaseBuildCommand(BaseFlutterCommand):
         except ValueError:
             # A typo in a colour must not stop a build that would otherwise
             # succeed; say what was ignored and carry on with the default.
-            console.log(
-                f'Warning: icon_background "{value}" is not a valid colour '
+            self.warn(
+                f'icon_background "{value}" is not a valid colour '
                 "(expected #rrggbb); using white.",
-                style=warning_style,
+                title="App icon",
             )
             return (255, 255, 255)
 
@@ -2379,110 +2390,115 @@ class BaseBuildCommand(BaseFlutterCommand):
         if not splash[platform]:
             return
 
-        hash = HashStamp(self.build_dir / ".hash" / "splashes")
-        hash.update(SPLASH_GENERATOR_VERSION)
-        hash.update(self.template_digest)
-        hash.update(splash)
+        with self.step("[bold blue]Generating splash screens..."):
+            hash = HashStamp(self.build_dir / ".hash" / "splashes")
+            hash.update(SPLASH_GENERATOR_VERSION)
+            hash.update(self.template_digest)
+            hash.update(splash)
 
-        self.assets_path = self.package_app_path.joinpath("assets")
+            self.assets_path = self.package_app_path.joinpath("assets")
 
-        light_name = dark_name = None
-        derived = False
-        if self.assets_path.exists():
+            light_name = dark_name = None
+            derived = False
+            if self.assets_path.exists():
 
-            def resolve(*names):
-                for name in names:
-                    found = self.find_platform_image(self.assets_path, name, hash)
-                    if found:
-                        return found
-                return None
+                def resolve(*names):
+                    for name in names:
+                        found = self.find_platform_image(self.assets_path, name, hash)
+                        if found:
+                            return found
+                    return None
 
-            # The documented fallback chain, resolved for this platform only.
-            # Unlike icons, splash terminates at the icon, so every app gets a
-            # splash even with no splash asset of its own.
-            light_name = resolve(f"splash_{platform}", "splash")
-            if light_name is None:
-                # Fell through to the app icon. An icon fills its canvas by
-                # design, so it is framed rather than drawn at splash size.
-                light_name = resolve("icon")
-                derived = light_name is not None
-            dark_name = resolve(f"splash_dark_{platform}", "splash_dark")
+                # The documented fallback chain, resolved for this platform only.
+                # Unlike icons, splash terminates at the icon, so every app gets a
+                # splash even with no splash asset of its own.
+                light_name = resolve(f"splash_{platform}", "splash")
+                if light_name is None:
+                    # Fell through to the app icon. An icon fills its canvas by
+                    # design, so it is framed rather than drawn at splash size.
+                    light_name = resolve("icon")
+                    derived = light_name is not None
+                dark_name = resolve(f"splash_dark_{platform}", "splash_dark")
 
-        options = SplashOptions(
-            color=splash["color"],
-            dark_color=splash["dark_color"],
-            icon_background=self.splash_setting("icon_background"),
-            icon_dark_background=self.splash_setting("icon_dark_background"),
-            icon_fit=self.splash_setting("icon_fit") or "contain",
-        )
-        hash.update(options)
-        hash.update(derived)
-
-        light_path = (
-            self.assets_path.joinpath(light_name)
-            if light_name
-            else self.flutter_dir.joinpath("images", "icon.png")
-        )
-        if light_name is None:
-            # The template's own icon, which is an icon like any other.
-            derived = True
-        if not light_path.is_file():
-            # A custom build template may ship no `images/icon.png`, leaving
-            # nothing to derive a splash from. The template ships 1x1
-            # transparent `drawable/splash.png` and `drawable/android12splash.png`
-            # so `@drawable/splash` and the Android 12 theme still resolve;
-            # without them this path fails resource linking outright rather
-            # than degrading to a plain background.
-            hash.commit()
-            return
-
-        dark_path = self.assets_path.joinpath(dark_name) if dark_name else None
-        for path in (light_path, dark_path):
-            if path is not None:
-                hash.update(str(path))
-                hash.update(path.stat().st_mtime)
-
-        if not hash.has_changed():
-            hash.commit()
-            return
-
-        self.update_status("[bold blue]Generating splash screens...")
-
-        try:
-            # Splash sizes are derived from source pixels / 4. Use a 1024px
-            # SVG canvas to match the recommended PNG's 256dp/pt/CSS px size.
-            light, _ = load_source(light_path, svg_size=1024)
-            dark = (
-                load_source(dark_path, svg_size=1024)[0]
-                if dark_path is not None
-                else None
+            options = SplashOptions(
+                color=splash["color"],
+                dark_color=splash["dark_color"],
+                icon_background=self.splash_setting("icon_background"),
+                icon_dark_background=self.splash_setting("icon_dark_background"),
+                icon_fit=self.splash_setting("icon_fit") or "contain",
             )
-        except SourceError as e:
-            if any(
-                path is not None and path.suffix.lower() == ".svg"
-                for path in (light_path, dark_path)
-            ):
-                self.cleanup(1, f"Could not generate splash screens: {e}")
-            console.log(f"Warning: {e}", style=warning_style)
+            hash.update(options)
+            hash.update(derived)
+
+            light_path = (
+                self.assets_path.joinpath(light_name)
+                if light_name
+                else self.flutter_dir.joinpath("images", "icon.png")
+            )
+            if light_name is None:
+                # The template's own icon, which is an icon like any other.
+                derived = True
+            if not light_path.is_file():
+                # A custom build template may ship no `images/icon.png`, leaving
+                # nothing to derive a splash from. The template ships 1x1
+                # transparent `drawable/splash.png` and `drawable/android12splash.png`
+                # so `@drawable/splash` and the Android 12 theme still resolve;
+                # without them this path fails resource linking outright rather
+                # than degrading to a plain background.
+                hash.commit()
+                console.log("Skipped splash screens: no source image found")
+                return
+
+            dark_path = self.assets_path.joinpath(dark_name) if dark_name else None
+            for path in (light_path, dark_path):
+                if path is not None:
+                    hash.update(str(path))
+                    hash.update(path.stat().st_mtime)
+
+            if not hash.has_changed():
+                hash.commit()
+                console.log(f"Splash screens are up to date {self.emojis['checkmark']}")
+                return
+
+            try:
+                # Splash sizes are derived from source pixels / 4. Use a 1024px
+                # SVG canvas to match the recommended PNG's 256dp/pt/CSS px size.
+                light, _ = load_source(light_path, svg_size=1024)
+                dark = (
+                    load_source(dark_path, svg_size=1024)[0]
+                    if dark_path is not None
+                    else None
+                )
+            except SourceError as e:
+                if any(
+                    path is not None and path.suffix.lower() == ".svg"
+                    for path in (light_path, dark_path)
+                ):
+                    self.cleanup(1, f"Could not generate splash screens: {e}")
+                self.warn(e, title="Splash screen")
+                hash.commit()
+                return
+
+            light, warning = square(light)
+            if warning:
+                self.warn(
+                    warning, title="Splash screen", file=annotation_path(light_path)
+                )
+            if dark is not None:
+                dark = square(dark)[0]
+
+            result = render_splash(
+                light, dark, options, platform=platform, derived=derived
+            )
+            for message in result.warnings:
+                self.warn(message, title="Splash screen")
+
+            write(result, self.flutter_dir, declared_only=False)
+            if platform == "ios":
+                self.patch_launch_storyboard(light)
+            console.log(f"Generated splash screens {self.emojis['checkmark']}")
+
             hash.commit()
-            return
-
-        light, warning = square(light)
-        if warning:
-            console.log(f"Warning: {warning}", style=warning_style)
-        if dark is not None:
-            dark = square(dark)[0]
-
-        result = render_splash(light, dark, options, platform=platform, derived=derived)
-        for message in result.warnings:
-            console.log(f"Warning: {message}", style=warning_style)
-
-        write(result, self.flutter_dir, declared_only=False)
-        if platform == "ios":
-            self.patch_launch_storyboard(light)
-        console.log(f"Generated splash screens {self.emojis['checkmark']}")
-
-        hash.commit()
 
     def patch_launch_storyboard(self, image) -> None:
         """
@@ -2519,10 +2535,10 @@ class BaseBuildCommand(BaseFlutterCommand):
             text,
         )
         if count != 1:
-            console.log(
-                "Warning: could not update the launch storyboard's image size "
+            self.warn(
+                "could not update the launch storyboard's image size "
                 f"({count} matches). The splash still renders; Xcode may warn.",
-                style=warning_style,
+                title="Splash screen",
             )
             return
         storyboard.write_text(patched, encoding="utf-8")
@@ -2566,322 +2582,327 @@ class BaseBuildCommand(BaseFlutterCommand):
 
         hash = HashStamp(self.build_dir / ".hash" / "package")
 
-        self.update_status("[bold blue]Packaging Python app...")
-        package_args = [
-            self.dart_exe,
-            "run",
-            "--suppress-analytics",
-            "serious_python:main",
-            "package",
-            str(self.package_app_path),
-            "--platform",
-            self.package_platform,
-            "--python-version",
-            self.python_release.short,
-        ]
+        with self.step("[bold blue]Packaging Python app..."):
+            package_args = [
+                self.dart_exe,
+                "run",
+                "--suppress-analytics",
+                "serious_python:main",
+                "package",
+                str(self.package_app_path),
+                "--platform",
+                self.package_platform,
+                "--python-version",
+                self.python_release.short,
+            ]
 
-        if self.template_data["options"]["target_arch"]:
-            # serious_python's --arch is a Dart multi-option: values must be
-            # comma-separated or the flag repeated. Space-separated values
-            # after the first are silently treated as positional arguments.
-            package_args.extend(
-                ["--arch", ",".join(self.template_data["options"]["target_arch"])]
-            )
-
-        # Only the short version is passed; serious_python derives the full
-        # version, python-build date, and dart_bridge version from its own
-        # committed snapshot of the manifest.
-        package_env = {
-            "SERIOUS_PYTHON_VERSION": self.python_release.short,
-        }
-
-        # requirements
-        requirements_txt = self.python_app_path.joinpath("requirements.txt")
-
-        toml_dependencies = (
-            get_poetry_dependencies(self.get_pyproject("tool.poetry.dependencies"))
-            or get_project_dependencies(self.get_pyproject("project.dependencies"))
-            or []
-        )
-
-        platform_dependencies = get_project_dependencies(
-            self.get_pyproject(f"tool.flet.{self.config_platform}.dependencies")
-        )
-        if platform_dependencies:
-            toml_dependencies.extend(platform_dependencies)
-
-        dev_packages_configured = False
-        if len(toml_dependencies) > 0:
-            dev_packages = self.get_platform_setting("dev_packages", {})
-            if len(dev_packages) > 0:
-                for i in range(0, len(toml_dependencies)):
-                    package_name = Requirement(toml_dependencies[i]).name
-                    if package_name in dev_packages:
-                        package_location = dev_packages[package_name]
-                        dev_path = Path(package_location)
-                        if not dev_path.is_absolute():
-                            dev_path = (self.python_app_path / dev_path).resolve()
-                        if dev_path.exists():
-                            # Use Path.as_uri() so Windows drive paths render as
-                            # `file:///D:/a/...` rather than `file://D:\a\...`,
-                            # which pip otherwise treats as a UNC path and fails
-                            # to resolve.
-                            toml_dependencies[i] = (
-                                f"{package_name} @ {dev_path.as_uri()}"
-                            )
-                        else:
-                            toml_dependencies[i] = (
-                                f"{package_name} @ {package_location}"
-                            )
-                        dev_packages_configured = True
-                if dev_packages_configured:
-                    toml_dependencies.append("--no-cache-dir")
-
-            for toml_dep in toml_dependencies:
-                package_args.extend(["-r", toml_dep])
-
-        elif requirements_txt.exists():
-            if self.verbose > 1:
-                with open(requirements_txt, encoding="utf-8") as f:
-                    reqs_txt_contents = f.read()
-                    console.log(
-                        f"Contents of requirements.txt: {reqs_txt_contents}",
-                        style=verbose2_style,
-                    )
-                    hash.update(reqs_txt_contents)
-            package_args.extend(["-r", "-r", "-r", str(requirements_txt)])
-        else:
-            package_args.extend(["-r", f"flet=={flet.version.flet_version}"])
-
-        # site-packages variable
-        if self.package_platform != "Emscripten":
-            package_env["SERIOUS_PYTHON_SITE_PACKAGES"] = str(
-                self.build_dir / "site-packages"
-            )
-            # app staging dir: serious_python's `package` places the processed
-            # app here (no app.zip on native); the platform native build copies
-            # it into the bundle (Android zips it as a stored asset).
-            package_env["SERIOUS_PYTHON_APP"] = str(self.build_dir / "python-app")
-            # app bundle id: serious_python (>= 4.4.2) namespaces the generated
-            # iOS framework bundle identifiers under it. Without it they keep a
-            # shared `org.python.*` default that is byte-identical in every Flet
-            # app — see flet-dev/flet#6724.
-            bundle_id = (self.template_data or {}).get("bundle_id")
-            if bundle_id:
-                package_env["SERIOUS_PYTHON_BUNDLE_ID"] = bundle_id
-
-        # Swift Package Manager (darwin): tell serious_python's package command to
-        # do the host-side SPM staging (the podspec prepare_command doesn't run
-        # under SPM) and write the SP_NATIVE_SET cache-bust key to this file.
-        # serious_python defaults to SPM staging, so be explicit either way — set
-        # it false for the CocoaPods cases (e.g. an app using flet-video).
-        if self.package_platform in ("iOS", "Darwin"):
-            spm = self._darwin_spm_active()
-            package_env["SERIOUS_PYTHON_DARWIN_SPM"] = "true" if spm else "false"
-            if spm:
-                package_env["SERIOUS_PYTHON_SPM_KEY_FILE"] = str(
-                    self.build_dir / ".serious_python_spm_key"
+            if self.template_data["options"]["target_arch"]:
+                # serious_python's --arch is a Dart multi-option: values must be
+                # comma-separated or the flag repeated. Space-separated values
+                # after the first are silently treated as positional arguments.
+                package_args.extend(
+                    ["--arch", ",".join(self.template_data["options"]["target_arch"])]
                 )
 
-        # flutter-packages variable
-        if self.flutter_packages_temp_dir.exists():
-            rmtree(self.flutter_packages_temp_dir)
+            # Only the short version is passed; serious_python derives the full
+            # version, python-build date, and dart_bridge version from its own
+            # committed snapshot of the manifest.
+            package_env = {
+                "SERIOUS_PYTHON_VERSION": self.python_release.short,
+            }
 
-        package_env["SERIOUS_PYTHON_FLUTTER_PACKAGES"] = str(
-            self.flutter_packages_temp_dir
-        )
+            # requirements
+            requirements_txt = self.python_app_path.joinpath("requirements.txt")
 
-        # exclude
-        app_exclude = self.options.exclude or self.get_platform_setting(
-            "app.exclude", []
-        )
-        explicit_excludes = [
-            "build",
-            *app_exclude,
-            *(["assets"] if self.target_platform == "web" else []),
-        ]
-
-        default_excludes: list[str] = []
-        if self.get_bool_setting(
-            self.options.default_excludes, "app.default_excludes", True
-        ):
-            app_include = self.options.include or self.get_platform_setting(
-                "app.include", []
-            )
-            default_excludes = find_default_excludes(
-                self.package_app_path, app_include, explicit_excludes
+            toml_dependencies = (
+                get_poetry_dependencies(self.get_pyproject("tool.poetry.dependencies"))
+                or get_project_dependencies(self.get_pyproject("project.dependencies"))
+                or []
             )
 
-        exclude_list = list(dict.fromkeys(explicit_excludes + default_excludes))
-        # one flag per path: serious_python (>= 5.0.0) doesn't split values on
-        # commas, so paths containing `,` survive
-        for path in exclude_list:
-            package_args.extend(["--exclude", path])
-
-        if default_excludes:
-            console.log(
-                "Excluded from app package by default: "
-                f"{', '.join(default_excludes)} "
-                "(use --include <path> or --no-default-excludes to package them)",
-                markup=False,
+            platform_dependencies = get_project_dependencies(
+                self.get_pyproject(f"tool.flet.{self.config_platform}.dependencies")
             )
-            env_files = [
-                p for p in default_excludes if p == ".env" or p.startswith(".env.")
+            if platform_dependencies:
+                toml_dependencies.extend(platform_dependencies)
+
+            dev_packages_configured = False
+            if len(toml_dependencies) > 0:
+                dev_packages = self.get_platform_setting("dev_packages", {})
+                if len(dev_packages) > 0:
+                    for i in range(0, len(toml_dependencies)):
+                        package_name = Requirement(toml_dependencies[i]).name
+                        if package_name in dev_packages:
+                            package_location = dev_packages[package_name]
+                            dev_path = Path(package_location)
+                            if not dev_path.is_absolute():
+                                dev_path = (self.python_app_path / dev_path).resolve()
+                            if dev_path.exists():
+                                # Use Path.as_uri() so Windows drive paths render as
+                                # `file:///D:/a/...` rather than `file://D:\a\...`,
+                                # which pip otherwise treats as a UNC path and fails
+                                # to resolve.
+                                toml_dependencies[i] = (
+                                    f"{package_name} @ {dev_path.as_uri()}"
+                                )
+                            else:
+                                toml_dependencies[i] = (
+                                    f"{package_name} @ {package_location}"
+                                )
+                            dev_packages_configured = True
+                    if dev_packages_configured:
+                        toml_dependencies.append("--no-cache-dir")
+
+                for toml_dep in toml_dependencies:
+                    package_args.extend(["-r", toml_dep])
+
+            elif requirements_txt.exists():
+                if self.verbose > 1:
+                    with open(requirements_txt, encoding="utf-8") as f:
+                        reqs_txt_contents = f.read()
+                        console.log(
+                            f"Contents of requirements.txt: {reqs_txt_contents}",
+                            style=verbose2_style,
+                        )
+                        hash.update(reqs_txt_contents)
+                package_args.extend(["-r", "-r", "-r", str(requirements_txt)])
+            else:
+                package_args.extend(["-r", f"flet=={flet.version.flet_version}"])
+
+            # site-packages variable
+            if self.package_platform != "Emscripten":
+                package_env["SERIOUS_PYTHON_SITE_PACKAGES"] = str(
+                    self.build_dir / "site-packages"
+                )
+                # app staging dir: serious_python's `package` places the processed
+                # app here (no app.zip on native); the platform native build copies
+                # it into the bundle (Android zips it as a stored asset).
+                package_env["SERIOUS_PYTHON_APP"] = str(self.build_dir / "python-app")
+                # app bundle id: serious_python (>= 4.4.2) namespaces the generated
+                # iOS framework bundle identifiers under it. Without it they keep a
+                # shared `org.python.*` default that is byte-identical in every Flet
+                # app — see flet-dev/flet#6724.
+                bundle_id = (self.template_data or {}).get("bundle_id")
+                if bundle_id:
+                    package_env["SERIOUS_PYTHON_BUNDLE_ID"] = bundle_id
+
+            # Swift Package Manager (darwin): tell serious_python's package command to
+            # do the host-side SPM staging (the podspec prepare_command doesn't run
+            # under SPM) and write the SP_NATIVE_SET cache-bust key to this file.
+            # serious_python defaults to SPM staging, so be explicit either way — set
+            # it false for the CocoaPods cases (e.g. an app using flet-video).
+            if self.package_platform in ("iOS", "Darwin"):
+                spm = self._darwin_spm_active()
+                package_env["SERIOUS_PYTHON_DARWIN_SPM"] = "true" if spm else "false"
+                if spm:
+                    package_env["SERIOUS_PYTHON_SPM_KEY_FILE"] = str(
+                        self.build_dir / ".serious_python_spm_key"
+                    )
+
+            # flutter-packages variable
+            if self.flutter_packages_temp_dir.exists():
+                rmtree(self.flutter_packages_temp_dir)
+
+            package_env["SERIOUS_PYTHON_FLUTTER_PACKAGES"] = str(
+                self.flutter_packages_temp_dir
+            )
+
+            # exclude
+            app_exclude = self.options.exclude or self.get_platform_setting(
+                "app.exclude", []
+            )
+            explicit_excludes = [
+                "build",
+                *app_exclude,
+                *(["assets"] if self.target_platform == "web" else []),
             ]
-            if env_files:
-                it = "it" if len(env_files) == 1 else "them"
+
+            default_excludes: list[str] = []
+            if self.get_bool_setting(
+                self.options.default_excludes, "app.default_excludes", True
+            ):
+                app_include = self.options.include or self.get_platform_setting(
+                    "app.include", []
+                )
+                default_excludes = find_default_excludes(
+                    self.package_app_path, app_include, explicit_excludes
+                )
+
+            exclude_list = list(dict.fromkeys(explicit_excludes + default_excludes))
+            # one flag per path: serious_python (>= 5.0.0) doesn't split values on
+            # commas, so paths containing `,` survive
+            for path in exclude_list:
+                package_args.extend(["--exclude", path])
+
+            if default_excludes:
+                if self.verbose > 0:
+                    console.log(
+                        "Excluded from app package by default: "
+                        f"{', '.join(default_excludes)} "
+                        "(use --include <path> or --no-default-excludes "
+                        "to package them)",
+                        style=verbose1_style,
+                        markup=False,
+                    )
+                env_files = [
+                    p for p in default_excludes if p == ".env" or p.startswith(".env.")
+                ]
+                if env_files:
+                    it = "it" if len(env_files) == 1 else "them"
+                    self.warn(
+                        f"{', '.join(env_files)} not packaged. If the app "
+                        f"loads {it} at runtime (e.g. with python-dotenv), package "
+                        f"{it} with `--include {' '.join(env_files)}` or "
+                        f"`include = {json.dumps(env_files)}` under [tool.flet.app] "
+                        "in pyproject.toml.",
+                        title="App package",
+                        markup=False,
+                    )
+            if self.verbose > 0:
                 console.log(
-                    f"Warning: {', '.join(env_files)} not packaged. If the app "
-                    f"loads {it} at runtime (e.g. with python-dotenv), package "
-                    f"{it} with `--include {' '.join(env_files)}` or "
-                    f"`include = {json.dumps(env_files)}` under [tool.flet.app] "
-                    "in pyproject.toml.",
-                    style=warning_style,
+                    f"App package exclude list: {exclude_list}",
+                    style=verbose1_style,
                     markup=False,
                 )
-        if self.verbose > 0:
-            console.log(
-                f"App package exclude list: {exclude_list}",
-                style=verbose1_style,
-                markup=False,
+
+            # source-packages
+            source_packages = self.options.source_packages or self.get_platform_setting(
+                "source_packages"
             )
-
-        # source-packages
-        source_packages = self.options.source_packages or self.get_platform_setting(
-            "source_packages"
-        )
-        if source_packages:
-            package_env["SERIOUS_PYTHON_ALLOW_SOURCE_DISTRIBUTIONS"] = ",".join(
-                source_packages
-            )
-
-        # android-extract-packages: path-hungry packages shipped extracted to disk
-        # instead of inside the zip (serious_python Android native-mmap packaging).
-        # A built-in default set covers commonly-broken packages; the user list
-        # (CLI / pyproject) is merged on top. Consumed by the serious_python_android
-        # Gradle split during `flutter build`, so the env var is set on build_env
-        # (see _run_flutter_command), not on the package step.
-        self.android_extract_packages: list[str] = []
-        if self.package_platform == "Android":
-            user_extract_packages = (
-                self.options.android_extract_packages
-                or self.get_platform_setting("extract_packages", [])
-            )
-            self.android_extract_packages = list(
-                dict.fromkeys(ANDROID_DEFAULT_EXTRACT_PACKAGES + user_extract_packages)
-            )
-
-        if self.get_bool_setting(self.options.compile_app, "compile.app", True):
-            package_args.append("--compile-app")
-
-        if self.get_bool_setting(
-            self.options.compile_packages, "compile.packages", True
-        ):
-            package_args.append("--compile-packages")
-
-        cleanup_app = self.get_bool_setting(
-            self.options.cleanup_app, "cleanup.app", False
-        )
-        cleanup_packages = self.get_bool_setting(
-            self.options.cleanup_packages, "cleanup.packages", True
-        )
-
-        if cleanup_app_files := (
-            self.options.cleanup_app_files
-            or self.get_platform_setting("cleanup.app_files")
-        ):
-            if isinstance(cleanup_app_files, str):
-                cleanup_app_files = [
-                    value.strip() for value in cleanup_app_files.split(",")
-                ]
-            if isinstance(cleanup_app_files, list):
-                for glob_pattern in cleanup_app_files:
-                    if glob_pattern.strip():
-                        package_args.extend(
-                            ["--cleanup-app-files", glob_pattern.strip()]
-                        )
-                cleanup_app = True
-
-        if cleanup_package_files := (
-            self.options.cleanup_package_files
-            or self.get_platform_setting("cleanup.package_files")
-        ):
-            if isinstance(cleanup_package_files, str):
-                cleanup_package_files = [
-                    value for value in cleanup_package_files.split(",")
-                ]
-            if isinstance(cleanup_package_files, list):
-                for glob_pattern in cleanup_package_files:
-                    if glob_pattern.strip():
-                        package_args.extend(
-                            ["--cleanup-package-files", glob_pattern.strip()]
-                        )
-                cleanup_packages = True
-
-        if cleanup_app:
-            package_args.append("--cleanup-app")
-
-        if cleanup_packages:
-            package_args.append("--cleanup-packages")
-
-        if self.verbose > 0:
-            console.log(
-                f"Compile app: {'--compile-app' in package_args}, "
-                f"cleanup app: {cleanup_app}, cleanup packages: {cleanup_packages} "
-                "(cleanup removes serious_python's default junk globs plus any "
-                "--cleanup-app-files/--cleanup-package-files)",
-                style=verbose1_style,
-            )
-
-        if self.verbose > 1:
-            package_args.append("--verbose")
-
-        # check if site-packages installation could be skipped
-        for arg in package_args:
-            hash.update(arg)
-
-        if not dev_packages_configured:
-            if not hash.has_changed():
-                package_args.append("--skip-site-packages")
-                # serious_python skips copying Flutter packages to the temp dir
-                # under --skip-site-packages, so register_flutter_extensions must
-                # keep (not wipe) the permanent flutter-packages copy from the
-                # previous build.
-                self.site_packages_skipped = True
-            else:
-                if self.flutter_packages_dir.exists():
-                    shutil.rmtree(self.flutter_packages_dir, ignore_errors=True)
-
-        package_result = self.run(
-            package_args,
-            cwd=str(self.flutter_dir),
-            env=package_env,
-            capture_output=self.verbose < 1,
-        )
-
-        if package_result.returncode != 0:
-            if isinstance(package_result.stdout, str):
-                console.log(package_result.stdout, style=verbose1_style)
-            if isinstance(package_result.stderr, str):
-                console.log(package_result.stderr, style=error_style)
-            self.cleanup(package_result.returncode)
-
-        hash.commit()
-
-        # verify the package output: web ships app/app.zip; native platforms
-        # stage the unpacked app to build/app for the native build to bundle.
-        if self.package_platform == "Emscripten":
-            app_zip_path = self.flutter_dir.joinpath("app", "app.zip")
-            if not os.path.exists(app_zip_path):
-                self.cleanup(1, "Flet app package app/app.zip was not created.")
-        else:
-            app_staging_dir = self.build_dir / "python-app"
-            if not app_staging_dir.exists():
-                self.cleanup(
-                    1, f"Flet app package was not staged to {app_staging_dir}."
+            if source_packages:
+                package_env["SERIOUS_PYTHON_ALLOW_SOURCE_DISTRIBUTIONS"] = ",".join(
+                    source_packages
                 )
 
-        console.log(f"Packaged Python app {self.emojis['checkmark']}")
+            # android-extract-packages: path-hungry packages shipped extracted to disk
+            # instead of inside the zip (serious_python Android native-mmap packaging).
+            # A built-in default set covers commonly-broken packages; the user list
+            # (CLI / pyproject) is merged on top. Consumed by the serious_python_android
+            # Gradle split during `flutter build`, so the env var is set on build_env
+            # (see _run_flutter_command), not on the package step.
+            self.android_extract_packages: list[str] = []
+            if self.package_platform == "Android":
+                user_extract_packages = (
+                    self.options.android_extract_packages
+                    or self.get_platform_setting("extract_packages", [])
+                )
+                self.android_extract_packages = list(
+                    dict.fromkeys(
+                        ANDROID_DEFAULT_EXTRACT_PACKAGES + user_extract_packages
+                    )
+                )
+
+            if self.get_bool_setting(self.options.compile_app, "compile.app", True):
+                package_args.append("--compile-app")
+
+            if self.get_bool_setting(
+                self.options.compile_packages, "compile.packages", True
+            ):
+                package_args.append("--compile-packages")
+
+            cleanup_app = self.get_bool_setting(
+                self.options.cleanup_app, "cleanup.app", False
+            )
+            cleanup_packages = self.get_bool_setting(
+                self.options.cleanup_packages, "cleanup.packages", True
+            )
+
+            if cleanup_app_files := (
+                self.options.cleanup_app_files
+                or self.get_platform_setting("cleanup.app_files")
+            ):
+                if isinstance(cleanup_app_files, str):
+                    cleanup_app_files = [
+                        value.strip() for value in cleanup_app_files.split(",")
+                    ]
+                if isinstance(cleanup_app_files, list):
+                    for glob_pattern in cleanup_app_files:
+                        if glob_pattern.strip():
+                            package_args.extend(
+                                ["--cleanup-app-files", glob_pattern.strip()]
+                            )
+                    cleanup_app = True
+
+            if cleanup_package_files := (
+                self.options.cleanup_package_files
+                or self.get_platform_setting("cleanup.package_files")
+            ):
+                if isinstance(cleanup_package_files, str):
+                    cleanup_package_files = [
+                        value for value in cleanup_package_files.split(",")
+                    ]
+                if isinstance(cleanup_package_files, list):
+                    for glob_pattern in cleanup_package_files:
+                        if glob_pattern.strip():
+                            package_args.extend(
+                                ["--cleanup-package-files", glob_pattern.strip()]
+                            )
+                    cleanup_packages = True
+
+            if cleanup_app:
+                package_args.append("--cleanup-app")
+
+            if cleanup_packages:
+                package_args.append("--cleanup-packages")
+
+            if self.verbose > 0:
+                console.log(
+                    f"Compile app: {'--compile-app' in package_args}, "
+                    f"cleanup app: {cleanup_app}, cleanup packages: {cleanup_packages} "
+                    "(cleanup removes serious_python's default junk globs plus any "
+                    "--cleanup-app-files/--cleanup-package-files)",
+                    style=verbose1_style,
+                )
+
+            if self.verbose > 1:
+                package_args.append("--verbose")
+
+            # check if site-packages installation could be skipped
+            for arg in package_args:
+                hash.update(arg)
+
+            if not dev_packages_configured:
+                if not hash.has_changed():
+                    package_args.append("--skip-site-packages")
+                    # serious_python skips copying Flutter packages to the temp dir
+                    # under --skip-site-packages, so register_flutter_extensions must
+                    # keep (not wipe) the permanent flutter-packages copy from the
+                    # previous build.
+                    self.site_packages_skipped = True
+                else:
+                    if self.flutter_packages_dir.exists():
+                        shutil.rmtree(self.flutter_packages_dir, ignore_errors=True)
+
+            package_result = self.run(
+                package_args,
+                cwd=str(self.flutter_dir),
+                env=package_env,
+                capture_output=self.verbose < 1,
+            )
+
+            if package_result.returncode != 0:
+                if isinstance(package_result.stdout, str):
+                    console.log(package_result.stdout, style=verbose1_style)
+                if isinstance(package_result.stderr, str):
+                    console.log(package_result.stderr, style=error_style)
+                self.cleanup(package_result.returncode)
+
+            hash.commit()
+
+            # verify the package output: web ships app/app.zip; native platforms
+            # stage the unpacked app to build/app for the native build to bundle.
+            if self.package_platform == "Emscripten":
+                app_zip_path = self.flutter_dir.joinpath("app", "app.zip")
+                if not os.path.exists(app_zip_path):
+                    self.cleanup(1, "Flet app package app/app.zip was not created.")
+            else:
+                app_staging_dir = self.build_dir / "python-app"
+                if not app_staging_dir.exists():
+                    self.cleanup(
+                        1, f"Flet app package was not staged to {app_staging_dir}."
+                    )
+
+            console.log(f"Packaged Python app {self.emojis['checkmark']}")
 
         # Drop the matching Pyodide runtime into the Flutter project's web/
         # directory so it ships in `flutter build web` output. Cached
@@ -2896,12 +2917,12 @@ class BaseBuildCommand(BaseFlutterCommand):
             if self.resolve_no_cdn():
                 from flet_cli.utils.pyodide import ensure_pyodide
 
-                self.update_status("[bold blue]Preparing Pyodide runtime...")
-                ensure_pyodide(self.python_release.pyodide, pyodide_dest)
-                console.log(
-                    f"Pyodide {self.python_release.pyodide} ready "
-                    f"{self.emojis['checkmark']}"
-                )
+                with self.step("[bold blue]Preparing Pyodide runtime..."):
+                    ensure_pyodide(self.python_release.pyodide, pyodide_dest)
+                    console.log(
+                        f"Pyodide {self.python_release.pyodide} ready "
+                        f"{self.emojis['checkmark']}"
+                    )
             elif pyodide_dest.exists():
                 # The Flutter project is reused across builds, so a copy left
                 # by an earlier `--no-cdn` build would otherwise still ship.
@@ -3235,12 +3256,13 @@ class BaseBuildCommand(BaseFlutterCommand):
                 "Flutter SDK.",
             )
 
-        console.log(
+        self.warn(
             f"The Flutter SDK at {escape(str(self.flutter_exe))} builds ARM64 "
             "Windows apps, but Flet's Python runtime for Windows is x64-only. "
             f"Flet will use its own Flutter {self.required_flutter_version} (x64) "
             "to build an x64 app, which runs on Windows on ARM.",
-            style=warning_style,
+            title="Flutter SDK",
+            prefix="",
         )
         return False
 
@@ -3286,76 +3308,78 @@ class BaseBuildCommand(BaseFlutterCommand):
         assert self.assets_path
         assert self.target_platform
 
-        self.update_status(
-            f"[bold blue]Copying build to [cyan]{self.rel_out_dir}[/cyan] directory...",
-        )
-
-        def make_ignore_fn(out_dir, out_glob):
-            """
-            Create a shutil ignore callback that keeps only one selected output glob.
-            """
-
-            def ignore(path, names):
-                """
-                Filter sibling entries at `out_dir` so only `out_glob` is copied.
-                """
-
-                if path == out_dir and out_glob != "*":
-                    return [f for f in os.listdir(path) if f != out_glob]
-                return []
-
-            return ignore
-
-        searched_outputs = []
-        copied = False
-        for build_output in self.platforms[self.target_platform]["outputs"]:
-            build_output_dir = self.resolve_output_path(build_output)
-            searched_outputs.append(build_output_dir)
-
+        with self.step("[bold blue]Preparing build output..."):
             if self.verbose > 0:
                 console.log(
-                    "Copying build output from: " + build_output_dir,
+                    f"Output directory: {self.rel_out_dir}",
                     style=verbose1_style,
+                    markup=False,
                 )
 
-            build_output_glob = os.path.basename(build_output_dir)
-            build_output_dir = os.path.dirname(build_output_dir)
-            if not os.path.isdir(build_output_dir) or not any(
-                build_output_glob in ("*", f) for f in os.listdir(build_output_dir)
-            ):
-                continue
-            copied = True
+            def make_ignore_fn(out_dir, out_glob):
+                """
+                Create a shutil ignore callback that keeps only one selected
+                output glob.
+                """
 
-            if self.out_dir.exists():
-                rmtree(str(self.out_dir))
-            self.out_dir.mkdir(parents=True, exist_ok=True)
+                def ignore(path, names):
+                    """
+                    Filter sibling entries at `out_dir` so only `out_glob` is copied.
+                    """
 
-            # copy build result to out_dir
-            copy_tree(
-                build_output_dir,
-                str(self.out_dir),
-                ignore=make_ignore_fn(build_output_dir, build_output_glob),
-            )
+                    if path == out_dir and out_glob != "*":
+                        return [f for f in os.listdir(path) if f != out_glob]
+                    return []
 
-        if not copied:
-            self.cleanup(
-                1,
-                "Build output not found in "
-                + ", ".join(escape(path) for path in searched_outputs),
-            )
+                return ignore
 
-        if self.target_platform == "web":
-            self.prune_cdn_assets()
-            if self.assets_path.exists():
-                # copy `assets` directory contents to the output directory
-                copy_tree(str(self.assets_path), str(self.out_dir))
-        elif self.target_platform in {"apk", "aab"}:
-            self.rename_android_build_outputs()
+            searched_outputs = []
+            copied = False
+            for build_output in self.platforms[self.target_platform]["outputs"]:
+                build_output_dir = self.resolve_output_path(build_output)
+                searched_outputs.append(build_output_dir)
 
-        console.log(
-            f"Copied build to [cyan]{self.rel_out_dir}[/cyan] "
-            f"directory {self.emojis['checkmark']}"
-        )
+                if self.verbose > 0:
+                    console.log(
+                        "Copying build output from: " + build_output_dir,
+                        style=verbose1_style,
+                    )
+
+                build_output_glob = os.path.basename(build_output_dir)
+                build_output_dir = os.path.dirname(build_output_dir)
+                if not os.path.isdir(build_output_dir) or not any(
+                    build_output_glob in ("*", f) for f in os.listdir(build_output_dir)
+                ):
+                    continue
+                copied = True
+
+                if self.out_dir.exists():
+                    rmtree(str(self.out_dir))
+                self.out_dir.mkdir(parents=True, exist_ok=True)
+
+                # copy build result to out_dir
+                copy_tree(
+                    build_output_dir,
+                    str(self.out_dir),
+                    ignore=make_ignore_fn(build_output_dir, build_output_glob),
+                )
+
+            if not copied:
+                self.cleanup(
+                    1,
+                    "Build output not found in "
+                    + ", ".join(escape(path) for path in searched_outputs),
+                )
+
+            if self.target_platform == "web":
+                self.prune_cdn_assets()
+                if self.assets_path.exists():
+                    # copy `assets` directory contents to the output directory
+                    copy_tree(str(self.assets_path), str(self.out_dir))
+            elif self.target_platform in {"apk", "aab"}:
+                self.rename_android_build_outputs()
+
+            console.log(f"Copied build {self.emojis['checkmark']}")
 
     def prune_cdn_assets(self):
         """
@@ -3428,10 +3452,11 @@ class BaseBuildCommand(BaseFlutterCommand):
 
             renamed_path = output_file.with_name(renamed)
             if renamed_path.exists():
-                console.log(
+                self.warn(
                     f"Skipping rename of [cyan]{name}[/cyan] because "
                     f"[cyan]{renamed}[/cyan] already exists.",
-                    style=warning_style,
+                    title="Build output",
+                    prefix="",
                 )
                 continue
 
