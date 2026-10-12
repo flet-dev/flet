@@ -23,10 +23,6 @@ env:
   UV_PYTHON: 3.12
   PYTHONUTF8: 1
 
-  # https://flet.dev/docs/reference/environment-variables
-  # Plain output plus GitHub Actions groups/annotations for each build step.
-  FLET_CLI_LOG_FORMAT: github
-
   FLET_BUILD_EXTRA_ARGS: ${{ inputs.extra_build_args }}
 
 jobs:

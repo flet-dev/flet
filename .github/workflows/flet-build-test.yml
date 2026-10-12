@@ -48,10 +48,6 @@ env:
   UV_PYTHON: 3.12
   PYTHONUTF8: 1
 
-  # https://flet.dev/docs/reference/environment-variables
-  # Plain output plus GitHub Actions groups/annotations for each build step.
-  FLET_CLI_LOG_FORMAT: github
-
   # Extra args passed via workflow_dispatch (empty for push/PR)
   FLET_PACK_EXTRA_ARGS: ${{ github.event_name == 'workflow_dispatch' && inputs.extra_pack_args || '' }}
 

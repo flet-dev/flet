@@ -1876,7 +1876,7 @@ class BaseBuildCommand(BaseFlutterCommand):
             template_ref = flet.version.flet_version
 
         is_local_dev = False
-        # Identity printed in status / hashed for invalidation; may differ from
+        # Identity logged / hashed for invalidation; may differ from
         # the path cookiecutter actually reads when caching kicks in below.
         template_source = template_url
         if template_url:
@@ -1922,12 +1922,14 @@ class BaseBuildCommand(BaseFlutterCommand):
             status = None
             if not second_pass:
                 self.flutter_dir.mkdir(parents=True, exist_ok=True)
-                status = f"[bold blue]Creating app shell from {template_source}"
-                if checkout:
-                    status += f' with ref "{template_ref}"'
-                status += "..."
+                status = "[bold blue]Creating app shell..."
 
             with self.step(status) if status else contextlib.nullcontext():
+                if not second_pass and self.verbose > 0:
+                    details = f"Template: {template_source}"
+                    if checkout:
+                        details += f' with ref "{template_ref}"'
+                    console.log(details, style=verbose1_style, markup=False)
                 try:
                     from cookiecutter.main import cookiecutter
 
@@ -2066,12 +2068,12 @@ class BaseBuildCommand(BaseFlutterCommand):
                 shutil.move(self.flutter_packages_temp_dir, self.flutter_packages_dir)
 
         if self.flutter_packages_dir.exists():
-            with self.step("[bold blue]Registering Flutter user extensions..."):
+            with self.step("[bold blue]Registering app user extensions..."):
                 for fp in os.listdir(self.flutter_packages_dir):
                     if (self.flutter_packages_dir / fp / "pubspec.yaml").exists():
                         ext_dir = str(self.flutter_packages_dir / fp)
                         if self.verbose > 0:
-                            console.log(f"Found Flutter extension at {ext_dir}")
+                            console.log(f"Found app user extension at {ext_dir}")
                         self.flutter_dependencies[fp] = {"path": ext_dir}
 
                 self.template_data["flutter"]["dependencies"] = list(
@@ -2079,7 +2081,7 @@ class BaseBuildCommand(BaseFlutterCommand):
                 )
 
                 console.log(
-                    f"Registered Flutter user extensions {self.emojis['checkmark']}"
+                    f"Registered app user extensions {self.emojis['checkmark']}"
                 )
 
     def update_flutter_dependencies(self):
@@ -2127,53 +2129,55 @@ class BaseBuildCommand(BaseFlutterCommand):
         if platform is None:
             return
 
-        hash = HashStamp(self.build_dir / ".hash" / "icons")
-        hash.update(ICONS_GENERATOR_VERSION)
-        hash.update(self.template_digest)
-
-        self.assets_path = self.package_app_path.joinpath("assets")
-
-        source_name = None
-        # Whether the source is a generic `icon.png` rather than artwork the
-        # author framed for this platform. A generic icon gets the platform's
-        # margin computed for it; `icon_<platform>.png` is a finished
-        # composition and is used exactly as supplied.
-        derived = False
-        if self.assets_path.exists():
-            # Only the target platform's chain is resolved; the other five
-            # lookups produced nothing this build could use.
-            source_name = self.find_platform_image(
-                self.assets_path, f"icon_{platform}", hash
-            )
-            if source_name is None:
-                source_name = self.find_platform_image(self.assets_path, "icon", hash)
-                derived = source_name is not None
-        hash.update(derived)
-
-        options = IconOptions(
-            background=self._resolve_icon_background(),
-            macos_style=self.get_pyproject("tool.flet.macos.icon_style") or "auto",
-            application_id=self.template_data["bundle_id"],
-        )
-        hash.update(options)
-
-        if source_name is None:
-            # Rule 2: with no user icon there is nothing to improve on. The
-            # template's committed icons are better than anything derivable
-            # from a finished `images/icon.png`, and flutter_launcher_icons
-            # overwrote them on every build.
-            self._restore_generated_icons()
-            hash.commit()
-            return
-
-        source_path = self.assets_path.joinpath(source_name)
-        hash.update(source_path.stat().st_mtime)
-
-        if not hash.has_changed() and not self._icons_missing(platform):
-            hash.commit()
-            return
-
         with self.step("[bold blue]Generating app icons..."):
+            hash = HashStamp(self.build_dir / ".hash" / "icons")
+            hash.update(ICONS_GENERATOR_VERSION)
+            hash.update(self.template_digest)
+
+            self.assets_path = self.package_app_path.joinpath("assets")
+
+            source_name = None
+            # Whether the source is a generic `icon.png` rather than artwork the
+            # author framed for this platform. A generic icon gets the platform's
+            # margin computed for it; `icon_<platform>.png` is a finished
+            # composition and is used exactly as supplied.
+            derived = False
+            if self.assets_path.exists():
+                # Only the target platform's chain is resolved; the other five
+                # lookups produced nothing this build could use.
+                source_name = self.find_platform_image(
+                    self.assets_path, f"icon_{platform}", hash
+                )
+                if source_name is None:
+                    source_name = self.find_platform_image(
+                        self.assets_path, "icon", hash
+                    )
+                    derived = source_name is not None
+            hash.update(derived)
+
+            options = IconOptions(
+                background=self._resolve_icon_background(),
+                macos_style=self.get_pyproject("tool.flet.macos.icon_style") or "auto",
+                application_id=self.template_data["bundle_id"],
+            )
+            hash.update(options)
+
+            if source_name is None:
+                # Rule 2: with no user icon there is nothing to improve on. The
+                # template's committed icons are better than anything derivable
+                # from a finished `images/icon.png`, and flutter_launcher_icons
+                # overwrote them on every build.
+                self._restore_generated_icons()
+                hash.commit()
+                return
+
+            source_path = self.assets_path.joinpath(source_name)
+            hash.update(source_path.stat().st_mtime)
+
+            if not hash.has_changed() and not self._icons_missing(platform):
+                hash.commit()
+                return
+
             try:
                 source, pre_rendered = load_source(source_path)
             except SourceError as e:
@@ -2216,7 +2220,7 @@ class BaseBuildCommand(BaseFlutterCommand):
             )
             console.log(f"Generated app icons {self.emojis['checkmark']}")
 
-        hash.commit()
+            hash.commit()
 
     def icon_background_value(self, platform: str) -> Optional[str]:
         """
@@ -2399,74 +2403,74 @@ class BaseBuildCommand(BaseFlutterCommand):
         if not splash[platform]:
             return
 
-        hash = HashStamp(self.build_dir / ".hash" / "splashes")
-        hash.update(SPLASH_GENERATOR_VERSION)
-        hash.update(self.template_digest)
-        hash.update(splash)
-
-        self.assets_path = self.package_app_path.joinpath("assets")
-
-        light_name = dark_name = None
-        derived = False
-        if self.assets_path.exists():
-
-            def resolve(*names):
-                for name in names:
-                    found = self.find_platform_image(self.assets_path, name, hash)
-                    if found:
-                        return found
-                return None
-
-            # The documented fallback chain, resolved for this platform only.
-            # Unlike icons, splash terminates at the icon, so every app gets a
-            # splash even with no splash asset of its own.
-            light_name = resolve(f"splash_{platform}", "splash")
-            if light_name is None:
-                # Fell through to the app icon. An icon fills its canvas by
-                # design, so it is framed rather than drawn at splash size.
-                light_name = resolve("icon")
-                derived = light_name is not None
-            dark_name = resolve(f"splash_dark_{platform}", "splash_dark")
-
-        options = SplashOptions(
-            color=splash["color"],
-            dark_color=splash["dark_color"],
-            icon_background=self.splash_setting("icon_background"),
-            icon_dark_background=self.splash_setting("icon_dark_background"),
-            icon_fit=self.splash_setting("icon_fit") or "contain",
-        )
-        hash.update(options)
-        hash.update(derived)
-
-        light_path = (
-            self.assets_path.joinpath(light_name)
-            if light_name
-            else self.flutter_dir.joinpath("images", "icon.png")
-        )
-        if light_name is None:
-            # The template's own icon, which is an icon like any other.
-            derived = True
-        if not light_path.is_file():
-            # A custom build template may ship no `images/icon.png`, leaving
-            # nothing to derive a splash from. The template ships 1x1
-            # transparent `drawable/splash.png` and `drawable/android12splash.png`
-            # so `@drawable/splash` and the Android 12 theme still resolve;
-            # without them this path fails resource linking outright rather
-            # than degrading to a plain background.
-            hash.commit()
-            return
-
-        dark_path = self.assets_path.joinpath(dark_name) if dark_name else None
-        for path in (light_path, dark_path):
-            if path is not None:
-                hash.update(str(path))
-                hash.update(path.stat().st_mtime)
-
-        if not hash.has_changed():
-            hash.commit()
-            return
-
         with self.step("[bold blue]Generating splash screens..."):
+            hash = HashStamp(self.build_dir / ".hash" / "splashes")
+            hash.update(SPLASH_GENERATOR_VERSION)
+            hash.update(self.template_digest)
+            hash.update(splash)
+
+            self.assets_path = self.package_app_path.joinpath("assets")
+
+            light_name = dark_name = None
+            derived = False
+            if self.assets_path.exists():
+
+                def resolve(*names):
+                    for name in names:
+                        found = self.find_platform_image(self.assets_path, name, hash)
+                        if found:
+                            return found
+                    return None
+
+                # The documented fallback chain, resolved for this platform only.
+                # Unlike icons, splash terminates at the icon, so every app gets a
+                # splash even with no splash asset of its own.
+                light_name = resolve(f"splash_{platform}", "splash")
+                if light_name is None:
+                    # Fell through to the app icon. An icon fills its canvas by
+                    # design, so it is framed rather than drawn at splash size.
+                    light_name = resolve("icon")
+                    derived = light_name is not None
+                dark_name = resolve(f"splash_dark_{platform}", "splash_dark")
+
+            options = SplashOptions(
+                color=splash["color"],
+                dark_color=splash["dark_color"],
+                icon_background=self.splash_setting("icon_background"),
+                icon_dark_background=self.splash_setting("icon_dark_background"),
+                icon_fit=self.splash_setting("icon_fit") or "contain",
+            )
+            hash.update(options)
+            hash.update(derived)
+
+            light_path = (
+                self.assets_path.joinpath(light_name)
+                if light_name
+                else self.flutter_dir.joinpath("images", "icon.png")
+            )
+            if light_name is None:
+                # The template's own icon, which is an icon like any other.
+                derived = True
+            if not light_path.is_file():
+                # A custom build template may ship no `images/icon.png`, leaving
+                # nothing to derive a splash from. The template ships 1x1
+                # transparent `drawable/splash.png` and `drawable/android12splash.png`
+                # so `@drawable/splash` and the Android 12 theme still resolve;
+                # without them this path fails resource linking outright rather
+                # than degrading to a plain background.
+                hash.commit()
+                return
+
+            dark_path = self.assets_path.joinpath(dark_name) if dark_name else None
+            for path in (light_path, dark_path):
+                if path is not None:
+                    hash.update(str(path))
+                    hash.update(path.stat().st_mtime)
+
+            if not hash.has_changed():
+                hash.commit()
+                return
+
             try:
                 light, _ = load_source(light_path)
                 dark = load_source(dark_path)[0] if dark_path is not None else None
@@ -2494,7 +2498,7 @@ class BaseBuildCommand(BaseFlutterCommand):
                 self.patch_launch_storyboard(light)
             console.log(f"Generated splash screens {self.emojis['checkmark']}")
 
-        hash.commit()
+            hash.commit()
 
     def patch_launch_storyboard(self, image) -> None:
         """
@@ -2731,12 +2735,15 @@ class BaseBuildCommand(BaseFlutterCommand):
                 package_args.extend(["--exclude", path])
 
             if default_excludes:
-                console.log(
-                    "Excluded from app package by default: "
-                    f"{', '.join(default_excludes)} "
-                    "(use --include <path> or --no-default-excludes to package them)",
-                    markup=False,
-                )
+                if self.verbose > 0:
+                    console.log(
+                        "Excluded from app package by default: "
+                        f"{', '.join(default_excludes)} "
+                        "(use --include <path> or --no-default-excludes "
+                        "to package them)",
+                        style=verbose1_style,
+                        markup=False,
+                    )
                 env_files = [
                     p for p in default_excludes if p == ".env" or p.startswith(".env.")
                 ]
@@ -3277,9 +3284,13 @@ class BaseBuildCommand(BaseFlutterCommand):
         assert self.assets_path
         assert self.target_platform
 
-        with self.step(
-            f"[bold blue]Copying build to [cyan]{self.rel_out_dir}[/cyan] directory...",
-        ):
+        with self.step("[bold blue]Preparing build output..."):
+            if self.verbose > 0:
+                console.log(
+                    f"Output directory: {self.rel_out_dir}",
+                    style=verbose1_style,
+                    markup=False,
+                )
 
             def make_ignore_fn(out_dir, out_glob):
                 """
@@ -3344,10 +3355,7 @@ class BaseBuildCommand(BaseFlutterCommand):
             elif self.target_platform in {"apk", "aab"}:
                 self.rename_android_build_outputs()
 
-            console.log(
-                f"Copied build to [cyan]{self.rel_out_dir}[/cyan] "
-                f"directory {self.emojis['checkmark']}"
-            )
+            console.log(f"Copied build {self.emojis['checkmark']}")
 
     def prune_cdn_assets(self):
         """

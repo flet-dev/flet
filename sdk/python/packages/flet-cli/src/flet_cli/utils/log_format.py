@@ -94,7 +94,8 @@ def resolve_log_format(
     `--log-format` wins over `FLET_CLI_LOG_FORMAT`. `--no-rich-output` and
     `FLET_CLI_NO_RICH_OUTPUT` are aliases of `plain`: they turn the default
     `rich` format into `plain` and leave an explicit `plain` or `github`
-    alone.
+    alone. Otherwise, when neither option nor environment variable selects
+    a format, `GITHUB_ACTIONS=true` selects `github`.
 
     Args:
         cli_value: The `--log-format` value, if given.
@@ -120,6 +121,12 @@ def resolve_log_format(
         no_rich_output or _truthy(env.get(NO_RICH_OUTPUT_ENV_VAR))
     ):
         return "plain"
+    if (
+        not cli_value
+        and not env.get(LOG_FORMAT_ENV_VAR)
+        and env.get("GITHUB_ACTIONS", "").lower() == "true"
+    ):
+        return "github"
     return log_format
 
 

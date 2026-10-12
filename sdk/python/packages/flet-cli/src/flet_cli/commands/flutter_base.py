@@ -123,10 +123,11 @@ class BaseFlutterCommand(BaseCommand):
             type=str.lower,
             choices=LOG_FORMATS,
             default=None,
-            help="Output format: `rich` (default) shows a live spinner, `plain` "
+            help="Output format: `rich` shows a live spinner, `plain` "
             "prints plain text lines, `github` prints plain text plus GitHub "
             "Actions workflow commands - a collapsible group per build step and "
-            "annotations for warnings and errors [env: FLET_CLI_LOG_FORMAT=]",
+            "annotations for warnings and errors. Defaults to `github` when "
+            "GITHUB_ACTIONS=true, otherwise `rich` [env: FLET_CLI_LOG_FORMAT=]",
         )
         parser.add_argument(
             "--no-rich-output",

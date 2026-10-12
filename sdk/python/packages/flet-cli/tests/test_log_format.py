@@ -146,6 +146,29 @@ class TestResolveLogFormat:
     def test_default_is_rich(self):
         assert resolve_log_format(None, False, {}) == "rich"
 
+    @pytest.mark.parametrize(
+        "value, expected",
+        [("true", "github"), ("TRUE", "github"), ("false", "rich"), ("1", "rich")],
+    )
+    def test_github_actions_default(self, value, expected):
+        assert resolve_log_format(None, False, {"GITHUB_ACTIONS": value}) == expected
+
+    @pytest.mark.parametrize("value", ["rich", "plain", "github"])
+    @pytest.mark.parametrize("source", ["cli", "env"])
+    def test_explicit_format_overrides_github_actions(self, value, source):
+        env = {"GITHUB_ACTIONS": "true"}
+        cli_value = value if source == "cli" else None
+        if source == "env":
+            env["FLET_CLI_LOG_FORMAT"] = value
+        assert resolve_log_format(cli_value, False, env) == value
+
+    @pytest.mark.parametrize("no_rich", [True, False])
+    def test_no_rich_output_overrides_github_actions(self, no_rich):
+        env = {"GITHUB_ACTIONS": "true"}
+        if not no_rich:
+            env["FLET_CLI_NO_RICH_OUTPUT"] = "1"
+        assert resolve_log_format(None, no_rich, env) == "plain"
+
     @pytest.mark.parametrize("value", ["rich", "plain", "github", "GitHub"])
     def test_cli_value(self, value):
         assert resolve_log_format(value, False, {}) == value.lower()
@@ -201,6 +224,24 @@ class TestDetectLogFormat:
             "github"
         )
 
+    @pytest.mark.parametrize(
+        "args, expected",
+        [
+            ([], "github"),
+            (["--log-format", "rich"], "rich"),
+            (["--log-format=plain"], "plain"),
+            (["--no-rich-output"], "plain"),
+            (["--", "--log-format", "plain"], "github"),
+        ],
+    )
+    def test_github_actions(self, args, expected):
+        assert (
+            detect_log_format(
+                ["flet", "build", "apk", *args], {"GITHUB_ACTIONS": "true"}
+            )
+            == expected
+        )
+
 
 class TestOption:
     def _parser(self) -> argparse.ArgumentParser:
@@ -221,9 +262,13 @@ class TestOption:
             (["--no-rich-output"], "plain"),
         ],
     )
-    def test_handle(self, monkeypatch, args, expected):
+    @pytest.mark.parametrize("github_actions", [False, True])
+    def test_handle(self, monkeypatch, args, expected, github_actions):
         monkeypatch.delenv("FLET_CLI_LOG_FORMAT", raising=False)
         monkeypatch.delenv("FLET_CLI_NO_RICH_OUTPUT", raising=False)
+        monkeypatch.setenv("GITHUB_ACTIONS", str(github_actions).lower())
+        if github_actions and not args:
+            expected = "github"
         monkeypatch.setattr(output, "format", output.format)
         options = self._parser().parse_args(["apk", *args])
         cmd = BuildCommand(argparse.ArgumentParser())
@@ -479,7 +524,8 @@ class TestGithub:
         """A typical build: one group per step, annotations where they occur."""
         cmd = _command(emojis={"checkmark": "OK"})
         log = output.console.print
-        with cmd.step("[bold blue]Creating app shell from template..."):
+        with cmd.step("[bold blue]Creating app shell..."):
+            log("Template: /path/to/template")
             log("Created app shell OK")
         with cmd.step("[bold blue]Packaging Python app..."):
             cmd.warn(
@@ -502,7 +548,8 @@ class TestGithub:
             log("Running Gradle task 'bundleRelease'...")
             cmd.cleanup(1)
         assert github.getvalue().splitlines() == [
-            "::group::Creating app shell from template",
+            "::group::Creating app shell",
+            "Template: /path/to/template",
             "Created app shell OK",
             "::endgroup::",
             "::group::Packaging Python app",
@@ -539,6 +586,106 @@ def test_find_platform_image_warning_in_github(github, tmp_path):
         '::"icon.svg" is a vector (SVG) image and cannot be used for "icon". '
         'Provide a raster "icon.png" to customize it — using the default for now.'
     )
+
+
+@pytest.mark.parametrize("custom_template", [False, True])
+@pytest.mark.parametrize("verbose", [0, 1])
+def test_template_details_are_inside_app_shell_group(
+    github, monkeypatch, tmp_path, custom_template, verbose
+):
+    from pathlib import Path
+
+    import cookiecutter.main
+
+    import flet.version
+    from flet_cli.commands import build_base
+    from flet_cli.commands.build_base import BaseBuildCommand
+    from flet_cli.utils.log_format import PlainLogConsole
+
+    console = PlainLogConsole(file=github, force_terminal=False, log_path=False)
+    monkeypatch.setattr(output, "console", console)
+    monkeypatch.setattr(build_base, "console", console)
+    monkeypatch.setattr(flet.version, "find_repo_root", lambda *_: None)
+
+    cmd = BaseBuildCommand.__new__(BaseBuildCommand)
+    cmd.flutter_dir = tmp_path / "flutter"
+    cmd.build_dir = tmp_path / "build"
+    cmd.pubspec_path = str(cmd.flutter_dir / "pubspec.yaml")
+    cmd.config_platform = "linux"
+    template = "https://example.com/template.git" if custom_template else None
+    cmd.options = SimpleNamespace(
+        template=template, template_ref="v1.1.0", template_dir=None
+    )
+    cmd.template_data = {"project_name": "test_app"}
+    cmd.get_pyproject = lambda *_: None
+    cmd.emojis = {"checkmark": "OK"}
+    cmd.verbose = verbose
+
+    def render(**kwargs):
+        Path(cmd.pubspec_path).write_text("{}")
+
+    monkeypatch.setattr(cookiecutter.main, "cookiecutter", render)
+    assert cmd.create_flutter_project()
+
+    source = template or str(
+        Path(build_base.__file__).resolve().parents[5] / "templates" / "build"
+    )
+    details = f"Template: {source}"
+    if custom_template:
+        details += ' with ref "v1.1.0"'
+    assert github.getvalue().splitlines() == [
+        "::group::Creating app shell",
+        *([details] if verbose else []),
+        "Created app shell OK",
+        "::endgroup::",
+    ]
+
+
+def test_image_details_are_inside_generation_groups(github, monkeypatch, tmp_path):
+    """Run the generators with verbose lookup logs and the splash icon fallback."""
+    from PIL import Image
+
+    from flet_cli.commands import build_base
+    from flet_cli.commands.build_base import BaseBuildCommand
+    from flet_cli.utils.log_format import PlainLogConsole
+
+    console = PlainLogConsole(file=github, force_terminal=False, log_path=False)
+    monkeypatch.setattr(output, "console", console)
+    monkeypatch.setattr(build_base, "console", console)
+    assets = tmp_path / "app" / "assets"
+    assets.mkdir(parents=True)
+    source = assets / "icon.png"
+    Image.new("RGBA", (1024, 1024), "red").save(source)
+
+    cmd = BaseBuildCommand.__new__(BaseBuildCommand)
+    cmd.package_app_path = assets.parent
+    cmd.flutter_dir = tmp_path / "flutter"
+    cmd.build_dir = tmp_path / "build"
+    cmd.target_platform = cmd.config_platform = "web"
+    cmd.options = SimpleNamespace()
+    cmd.template_data = {
+        "bundle_id": "com.example.test_app",
+        "splash": {"web": True, "color": "#ffffff", "dark_color": "#000000"},
+    }
+    cmd.template_digest = "test-template-digest"
+    cmd.get_pyproject = lambda *_: None
+    cmd.update_status = lambda *_: None
+    cmd.verbose = 1
+    cmd.emojis = {"checkmark": "OK"}
+
+    cmd.customize_icons()
+    cmd.customize_splash_images()
+
+    assert github.getvalue().splitlines() == [
+        "::group::Generating app icons",
+        f'Found "icon" image at {source}',
+        "Generated app icons OK",
+        "::endgroup::",
+        "::group::Generating splash screens",
+        f'Found "icon" image at {source}',
+        "Generated splash screens OK",
+        "::endgroup::",
+    ]
 
 
 def test_module_console_matches_detected_format():
