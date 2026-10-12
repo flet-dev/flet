@@ -146,6 +146,8 @@
 * Add `text_input_action` to `TextField` and `CupertinoTextField`, with the `TextInputAction` enum, to choose the action button of the onscreen keyboard: `TextInputAction.NEXT` moves focus to the next focusable control, keeping the keyboard open when that is another text field ([#6962](https://github.com/flet-dev/flet/issues/6962), [#7021](https://github.com/flet-dev/flet/pull/7021)) by @ndonkoHenri.
 * flet-audio: Add `Audio.context` (`AudioContext`, `AudioFocus`) to configure mobile audio focus and silent mode ([#7034](https://github.com/flet-dev/flet/issues/7034), [#7041](https://github.com/flet-dev/flet/pull/7041), [#7043](https://github.com/flet-dev/flet/pull/7043)) by @BartoszKog and @ndonkoHenri.
 
+* Add `TextField.clear()` and `CupertinoTextField.clear()` to empty a field, including in a component where the field's `value` is not bound to state ([#5979](https://github.com/flet-dev/flet/issues/5979)) by @ndonkoHenri.
+
 ### Improvements
 
 * Bump the bundled Flutter to [3.47.8](https://github.com/flutter/flutter/blob/stable/CHANGELOG.md#3478) (from 3.44.8). Android builds use Gradle 9.3.1, Android Gradle Plugin 8.13.2 and Kotlin 2.3.21 ([#6916](https://github.com/flet-dev/flet/pull/6916), [#7023](https://github.com/flet-dev/flet/pull/7023)) by @ndonkoHenri.

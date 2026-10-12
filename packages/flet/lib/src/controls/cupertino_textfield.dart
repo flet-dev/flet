@@ -102,9 +102,23 @@ class _CupertinoTextFieldControlState extends State<CupertinoTextFieldControl> {
     switch (name) {
       case "focus":
         _focusNode.requestFocus();
+      case "clear":
+        _clear();
       default:
         throw Exception("Unknown CupertinoTextField method: $name");
     }
+  }
+
+  /// Empties the field and reports the empty `value` to Python.
+  ///
+  /// Like a `value` change made by Python, this is not a user edit, so it
+  /// doesn't trigger `on_change`.
+  void _clear() {
+    _controller.clear();
+    widget.control.updateProperties({"value": ""});
+    setState(() {
+      _value = "";
+    });
   }
 
   void _onShiftEnterFocusChange() {
