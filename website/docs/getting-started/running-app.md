@@ -178,8 +178,17 @@ of this file are modified+saved, but will **not** watch for changes in other fil
 
 To modify this behavior, you can use one or more of these [`flet run`](../cli/flet-run.md) options:
 
-* `-d` or `--directory` to watch for changes in the `[script]`s directory only
-* `-r` or `--recursive` to watch for changes in the `[script]`s directory and all sub-directories recursively
+* `-d` or `--directory` to watch for changes in the directory of `[script]` only
+* `-r` or `--recursive` to watch for changes in the directory of `[script]` and all its sub-directories
+* `--ignore-dirs` to skip directories while watching: a comma-separated list of paths relative to the
+  directory of `[script]`, for example `--ignore-dirs logs,data`
+
+A reload restarts your app's process. In desktop mode the window stays open, and it keeps
+the assets directory it was opened with: after changing `assets_dir` in [`ft.run()`][flet.run],
+stop and restart `flet run` to load assets from the new directory. With `--web`, a reload
+picks up the new directory. If you pass `--assets` or set
+[`FLET_ASSETS_DIR`](../reference/environment-variables.md#flet_assets_dir), that directory
+is used instead, and changing `assets_dir` has no effect.
 
 :::note[Example]
 
@@ -196,3 +205,49 @@ flet run --recursive [script]
 </TabItem>
 </Tabs>
 :::
+
+## Troubleshooting
+
+### Hot reload is unavailable on Linux \{#linux-inotify-limits}
+
+On Linux, `flet run` watches for changes with inotify, which limits how many
+directories and files each user can watch at once. That limit is shared by all
+programs the user runs, so editors and IDEs can use up most of it, and
+`--recursive` needs one watch for every sub-directory, including `.venv`,
+`node_modules` and `build`. When the limit is reached, `flet run` prints a
+warning such as:
+
+```
+Warning: file watching is unavailable (inotify watch limit reached), so the app won't reload on changes.
+```
+
+The app still runs, but saving a file doesn't reload it.
+
+Check the current limits:
+
+```bash
+grep . /proc/sys/fs/inotify/max_user_watches /proc/sys/fs/inotify/max_user_instances
+```
+
+If either value is lower than the one below, raise it until the next reboot.
+Leave out a setting that's already higher, here and in the next step:
+
+```bash
+sudo sysctl fs.inotify.max_user_watches=524288 fs.inotify.max_user_instances=512
+```
+
+To keep the new values after a reboot, save them to a sysctl configuration file
+and load it:
+
+```bash
+printf 'fs.inotify.max_user_watches=524288\nfs.inotify.max_user_instances=512\n' | sudo tee /etc/sysctl.d/90-inotify.conf
+sudo sysctl --system
+```
+
+Then restart `flet run`.
+
+With `--recursive`, keep large directories such as `.venv` outside the watched
+directory, for example by keeping your app code in `src/` as
+[`flet create`](../cli/flet-create.md) does. `--ignore-dirs` doesn't reduce the
+number of watches: it only stops changes in those directories from reloading the
+app.

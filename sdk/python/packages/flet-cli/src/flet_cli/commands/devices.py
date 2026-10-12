@@ -2,7 +2,6 @@ import argparse
 import os
 
 from rich.console import Group
-from rich.live import Live
 from rich.panel import Panel
 from rich.table import Column, Table
 
@@ -70,11 +69,7 @@ class Command(BaseFlutterCommand):
             self.device_connection = self.options.device_connection
         self.platform_label = self.platform_labels[self.devices_platform]
 
-        self.status = console.status(
-            "[bold blue]Initializing environment...",
-            spinner="bouncingBall",
-        )
-        with Live(Group(self.status, self.progress), console=console) as self.live:
+        with self.live_status("[bold blue]Initializing environment..."):
             self.initialize_command()
             self.run_flutter_devices()
             self.cleanup(0)

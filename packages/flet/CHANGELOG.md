@@ -25,10 +25,11 @@
 * **Breaking:** `parseTheme()` now builds themes from a seed with neutral surfaces by default (`#ffffff` / `#121212` and a neutral grey ramp for surface containers, `onSurface`, `outline` and inverse surfaces); the seed still drives accent colors. A theme's `surfaces: "tonal"` restores the seed-tinted Material 3 surfaces. Adds the `ThemeSurfaces` enum, `parseThemeSurfaces()` and `neutralizeSurfaces()` ([#6921](https://github.com/flet-dev/flet/issues/6921)) by @FeodorFitsner.
 * Import Material and Cupertino from the `material_ui` and `cupertino_ui` packages instead of `package:flutter/material.dart` and `package:flutter/cupertino.dart`. Helpers that take or return Material or Cupertino types, such as `parseColor()`, `parseTextStyle()` and `parseButtonStyle()`, now use those packages' types, and `flet.dart` no longer re-exports `Icons` and `CupertinoIcons`. Requires Flutter 3.47 or later.
 * Add `markdownStyleSheetFromTheme()`, which builds the default `MarkdownStyleSheet` from a `material_ui` theme. `MarkdownStyleSheet.fromTheme()` from `flutter_markdown_plus` only accepts the Flutter SDK's `ThemeData`.
+* Fix `FletBackend` running two competing reconnects when a connection reports its disconnect twice, such as a socket reset after a `flet run` hot reload ([#6913](https://github.com/flet-dev/flet/issues/6913), [#6945](https://github.com/flet-dev/flet/pull/6945)) by @ndonkoHenri.
 
 ## 1.0.4
 
-_No changes in the `flet` Dart package; version bumped for release coordination with the `flet build web` fix that sets the PWA manifest's `short_name` to the product name, and the new `--pwa-short-name` option ([#6911](https://github.com/flet-dev/flet/pull/6911))._
+* Depend on `screen_brightness_platform_interface`, `screen_brightness_android` and `screen_brightness_ios` instead of `screen_brightness`, and drive `ScreenBrightnessService` through `ScreenBrightnessPlatform.instance`: apps embedding `flet` no longer register the Windows, macOS and OHOS `screen_brightness` plugins, whose Windows one talks to monitors over DDC/CI while the app runs ([#6629](https://github.com/flet-dev/flet/issues/6629), [#6493](https://github.com/flet-dev/flet/issues/6493), [#6925](https://github.com/flet-dev/flet/pull/6925)) by @ndonkoHenri.
 
 ## 1.0.3
 

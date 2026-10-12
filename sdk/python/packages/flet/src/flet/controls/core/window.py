@@ -131,6 +131,12 @@ class Window(BaseControl):
     Tip:
         Can be used together with :attr:`flet.Page.bgcolor` to make
         a window transparent.
+
+    Limitation:
+        On Linux, a compositor must already be running when the app starts.
+        The window's visual is chosen once before the window is created and
+        cannot be swapped afterwards, so an app that starts before its
+        compositor stays opaque until it is restarted.
     """
 
     width: Optional[Number] = None
@@ -257,8 +263,13 @@ class Window(BaseControl):
 
     skip_task_bar: bool = False
     """
-    Whether the app window should be hidden from the Task Bar (on Windows) or Dock (on \
-    macOS).
+    Whether the app window should be hidden from the
+    Task Bar (on Windows) or Dock (on macOS).
+
+    Note:
+        On Windows 11, the window is also hidden from the Alt+Tab switcher, so a
+        window that is minimized while hidden can only be restored by the app itself.
+        Keep a way to bring it back, such as a tray icon.
     """
 
     title_bar_hidden: bool = False

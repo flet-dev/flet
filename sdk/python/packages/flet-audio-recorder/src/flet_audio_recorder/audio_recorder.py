@@ -1,3 +1,4 @@
+import os
 from dataclasses import field
 from typing import Optional
 
@@ -69,7 +70,10 @@ class AudioRecorder(ft.Service):
 
         Args:
             output_path: The file path where the audio will be saved.
-                It must be specified if not on web.
+                It must be specified if not on web. On desktop, a relative path
+                is resolved against the app's working directory (`os.getcwd()`);
+                on mobile, it is passed to the device as is. Missing parent
+                directories are created.
             configuration: The configuration for the audio recorder. If `None`, the
                 :attr:`flet_audio_recorder.AudioRecorder.configuration` will be used.
             upload: Upload settings to stream recording bytes directly
@@ -88,6 +92,9 @@ class AudioRecorder(ft.Service):
         is_streaming = upload is not None or self.on_stream is not None
         if not is_streaming and not (self.page.web or output_path):
             raise ValueError("output_path must be provided on platforms other than web")
+
+        if output_path and (self.page.platform.is_desktop() and not self.page.web):
+            output_path = os.path.abspath(output_path)
 
         effective_configuration = (
             configuration if configuration is not None else self.configuration

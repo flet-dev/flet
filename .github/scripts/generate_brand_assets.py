@@ -13,7 +13,7 @@ Run from the repo root:
     uv run .github/scripts/generate_brand_assets.py --contact-sheet out.png
 
 Everything is derived from `media/logo/flet-icon-1024.png` (rasters) and
-`media/logo/logo-symbol.svg` (the two SVG destinations). The master's own
+`media/logo/logo-symbol.svg` (SVG destinations). The master's own
 padding is never trusted: it is cropped to its tight alpha bounding box and
 re-framed to an explicit fraction per variant, so a future rebrand only needs
 new masters dropped in and this script re-run.
@@ -247,12 +247,15 @@ def build_manifest() -> list[tuple[str, Path, dict]]:
     # at its natural size on a full screen, so this stays framed.
     glyph(1024, TEMPLATE_BUILD / "images/icon.png")
 
-    # Icon sources a user edits or replaces. Full-bleed by contract.
-    for dest in (
-        TEMPLATE_APP / "src/assets/icon.png",
-        EXAMPLES / "apps/counter_test_ios/assets/icon.png",
-    ):
-        m.append(("glyph", dest, {"canvas": 1024, "h_frac": FULL_BLEED_FRAC}))
+    # Raster icon source for the example. The app template uses the SVG master
+    # directly (see SVG_COPIES), so regenerating must not create a PNG sibling.
+    m.append(
+        (
+            "glyph",
+            EXAMPLES / "apps/counter_test_ios/assets/icon.png",
+            {"canvas": 1024, "h_frac": FULL_BLEED_FRAC},
+        )
+    )
 
     # --- Android launcher icons ------------------------------------------
     for folder, size in MIPMAP_SIZES.items():
@@ -408,6 +411,7 @@ def build_manifest() -> list[tuple[str, Path, dict]]:
 
 
 SVG_COPIES = [
+    (SYMBOL_SVG, TEMPLATE_APP / "src/assets/icon.svg"),
     (SYMBOL_SVG, WEB_STATIC / "logo.svg"),
     (SYMBOL_SVG, INTEGRATION / "assets/logo.svg"),
     (LOGO_DIR / "flet-logo.svg", WEB_STATIC / "flet-logo.svg"),
@@ -606,15 +610,18 @@ def verify() -> int:
             lo, hi = rgba.getchannel("A").getextrema()
             check(lo == 0, f"{rel}: expected transparency, min alpha={lo}")
 
-    for _, dest in SVG_COPIES:
+    for src, dest in SVG_COPIES:
         check(dest.exists(), f"missing: {dest.relative_to(REPO)}")
+        if src == SYMBOL_SVG and dest.exists():
+            check(
+                dest.read_bytes() == src.read_bytes(),
+                f"{dest.relative_to(REPO)} differs from {src.relative_to(REPO)}",
+            )
 
-    a, b = WEB_STATIC / "logo.svg", INTEGRATION / "assets/logo.svg"
-    if a.exists() and b.exists():
-        check(
-            a.read_bytes() == b.read_bytes(),
-            "website/static/img/logo.svg and integration_tests/assets/logo.svg differ",
-        )
+    check(
+        not (TEMPLATE_APP / "src/assets/icon.png").exists(),
+        "app template must use icon.svg without a PNG sibling",
+    )
 
     for f in failures:
         print(f"FAIL {f}")

@@ -8,6 +8,7 @@ readme = "README.md"
 requires-python = ">=3.10"
 dependencies = [
     "pillow >=11.3.0",
+    "resvg_py >=0.5.0,<0.6",
 ]
 
 [project.urls]

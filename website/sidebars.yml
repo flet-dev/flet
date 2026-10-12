@@ -695,6 +695,7 @@ docs:
         - services/permissionhandler/types/permissionstatus.md
       - types/pubsub/pubsubclient.md
       - types/pubsub/pubsubhub.md
+      - types/querystring.md
       - types/rect.md
       - types/ref.md
       - types/responsiverowbreakpoint.md

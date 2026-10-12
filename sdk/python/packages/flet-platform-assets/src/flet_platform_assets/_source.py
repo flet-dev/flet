@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+from io import BytesIO
 from pathlib import Path
 
 from PIL import Image, ImageOps, UnidentifiedImageError
@@ -21,15 +22,21 @@ class SourceError(Exception):
     """A source image could not be read."""
 
 
-def load_source(path: str | Path) -> tuple[Image.Image, bool]:
+def load_source(
+    path: str | Path, *, svg_size: int = MAX_SOURCE_SIZE
+) -> tuple[Image.Image, bool]:
     """Read an image and normalise it into something safe to composite.
 
     Handles the awkward inputs a real user supplies: a phone photo with an
     EXIF rotation, a palette or CMYK PNG, an animated GIF, a non-square
-    banner, or a pre-made `.ico`/`.icns` holding several resolutions.
+    banner, or a pre-made `.ico`/`.icns` holding several resolutions. SVG
+    artwork is rendered to fit within a 2048 × 2048 pixel canvas, preserving
+    its aspect ratio and transparency, without writing an intermediate PNG.
 
     Args:
         path: The image to read.
+        svg_size: Bounding width and height for SVG rendering, in pixels.
+            Raster inputs retain their size up to `MAX_SOURCE_SIZE`.
 
     Returns:
         A tuple of the normalised `RGBA` image and whether it was
@@ -42,7 +49,20 @@ def load_source(path: str | Path) -> tuple[Image.Image, bool]:
 
     path = Path(path)
     try:
-        img = Image.open(path)
+        if path.suffix.lower() == ".svg":
+            from resvg_py import svg_to_bytes
+
+            img = Image.open(
+                BytesIO(
+                    svg_to_bytes(
+                        svg_string=path.read_text(encoding="utf-8"),
+                        width=svg_size,
+                        height=svg_size,
+                    )
+                )
+            )
+        else:
+            img = Image.open(path)
         img.load()
     except FileNotFoundError as e:
         raise SourceError(f"icon source not found: {path}") from e

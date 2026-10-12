@@ -171,12 +171,22 @@ before the app starts or at the very top of your `main.py` — to get the same b
 
 ### `FLET_ASSETS_DIR`
 
-Absolute path to the app's assets directory.
+Absolute path to the app's assets directory. When it is set, it takes precedence over the
+`assets_dir` argument of [`ft.run()`][flet.run].
 
-In production apps built with [`flet build`](../publish/index.md), this environment-variable points to the bundled assets absolute location at runtime.
-Use it when your code needs a filesystem path to bundled files (for example, JSON configs, databases, or model files).
+Where it is set:
 
-For local runs, it may be unset depending on how the app is started, so use a fallback:
+- In apps built with [`flet build`](../publish/index.md) (except `web`), it points to the
+  bundled assets at runtime.
+- [`flet run`](../cli/flet-run.md) sets it for your app only when you pass `--assets` or set
+  `FLET_ASSETS_DIR` yourself. Otherwise your app uses its own
+  [`ft.run(assets_dir=...)`][flet.run], `"assets"` next to your script by default. So with
+  `flet run` the order is `--assets`, then `FLET_ASSETS_DIR`, then `ft.run(assets_dir=...)`,
+  then `"assets"`.
+- When you start the script with `python`, it is set only if you set it.
+
+Use it when your code needs a filesystem path to bundled files (for example, JSON configs,
+databases, or model files). As it is often unset in local runs, use a fallback:
 
 ```python
 import os
@@ -195,9 +205,19 @@ ft.run(main, assets_dir="assets")
 For control properties like [`Image.src`](../controls/image.md#flet.Image.src), continue using paths relative
 to the `ft.run(assets_dir=...)`, as described in the [assets cookbook](../cookbook/assets.md).
 
+### `FLET_CLI_LOG_FORMAT`
+
+Output format of `flet build`, `flet debug`, `flet test`, `flet devices` and
+`flet emulators`: `rich`, `plain` or `github`.
+Same as the `--log-format` option, which takes precedence. See
+[`flet build`](../cli/flet-build.md#log-formats).
+
+Defaults to `"github"` when `GITHUB_ACTIONS=true`, otherwise `"rich"`.
+
 ### `FLET_CLI_NO_RICH_OUTPUT`
 
-Whether to disable rich output in the console.
+Whether to disable rich output in the console. Selects `plain` unless
+`--log-format` or `FLET_CLI_LOG_FORMAT` explicitly selects `plain` or `github`.
 
 Defaults to `"false"`.
 

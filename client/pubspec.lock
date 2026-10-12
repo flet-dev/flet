@@ -1412,18 +1412,18 @@ packages:
     dependency: transitive
     description:
       name: record
-      sha256: "82539d1372e23cf51375fdfcba084f39912bcbf9a953b75d56596691f8f11c0f"
+      sha256: "7c4467dec63435c9206db183f8a4672cf8a62f5e5579e45803ceada8330756e7"
       url: "https://pub.dev"
     source: hosted
-    version: "7.1.1"
+    version: "7.1.2"
   record_android:
     dependency: transitive
     description:
       name: record_android
-      sha256: "28f1108626a190e249b01ffa9f639070e31e5157474b64a5ae380bf36aec9559"
+      sha256: f5080279259c4ad769590f1c165762eaa4e414178adc2e2fab137103228e07ac
       url: "https://pub.dev"
     source: hosted
-    version: "2.1.2"
+    version: "2.2.0"
   record_ios:
     dependency: transitive
     description:
@@ -1436,10 +1436,10 @@ packages:
     dependency: transitive
     description:
       name: record_linux
-      sha256: b7484fdaf1f6d291543b9cf615e78096662b02df68d7a4728b13f352bde58d27
+      sha256: "00c847ba25684572674dacfbd4bcabee6c5d9a1fa948778ff34091c71c19250f"
       url: "https://pub.dev"
     source: hosted
-    version: "2.1.1"
+    version: "2.1.3"
   record_macos:
     dependency: transitive
     description:
@@ -1468,18 +1468,18 @@ packages:
     dependency: transitive
     description:
       name: record_web
-      sha256: f53d3da48de3618a331868aec73261d5a75eddd9c09409afd9ec6d66b25db532
+      sha256: "7f6950be87abacb05cf77eb6ca200b60f2c2a6af5d50236b5f4baf53f92e755e"
       url: "https://pub.dev"
     source: hosted
-    version: "2.1.2"
+    version: "2.1.3"
   record_windows:
     dependency: transitive
     description:
       name: record_windows
-      sha256: e6884f91be4370f122111aca3c04291ae5fe6d8fd045f87afa967635a02dbbac
+      sha256: "8195489a47b5e8246985d6213ff65aae1b14e32a0ca45dc5f680e8d503296e1b"
       url: "https://pub.dev"
     source: hosted
-    version: "2.2.3"
+    version: "2.3.0"
   rive:
     dependency: transitive
     description:
@@ -1504,14 +1504,6 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "2.0.6"
-  screen_brightness:
-    dependency: transitive
-    description:
-      name: screen_brightness
-      sha256: e0edf92c08889e8f493cde291e7c687db2b4a1471f2371c074070b75d7c7d79b
-      url: "https://pub.dev"
-    source: hosted
-    version: "2.1.11"
   screen_brightness_android:
     dependency: transitive
     description:
@@ -1528,35 +1520,11 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "2.1.4"
-  screen_brightness_macos:
-    dependency: transitive
-    description:
-      name: screen_brightness_macos
-      sha256: b0957237b842d846a84363b69f229b339a8f91faced55041e245b2ebff7b0142
-      url: "https://pub.dev"
-    source: hosted
-    version: "2.1.4"
-  screen_brightness_ohos:
-    dependency: transitive
-    description:
-      name: screen_brightness_ohos
-      sha256: "569a2c97909a50894b81487619eb7654f5358443a5af05f840c19261f49c0940"
-      url: "https://pub.dev"
-    source: hosted
-    version: "2.1.4"
   screen_brightness_platform_interface:
     dependency: transitive
     description:
       name: screen_brightness_platform_interface
       sha256: "2de60c0ba569b898950029cc1f7e9dd72bda44a22beb5054aac331cb6fce2ff2"
-      url: "https://pub.dev"
-    source: hosted
-    version: "2.1.2"
-  screen_brightness_windows:
-    dependency: transitive
-    description:
-      name: screen_brightness_windows
-      sha256: "368b9c822e1671de81616e48150006e39eff2a434957e47ee638b09a32b2297c"
       url: "https://pub.dev"
     source: hosted
     version: "2.1.2"

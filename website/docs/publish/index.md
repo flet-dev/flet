@@ -71,7 +71,7 @@ README.md
 pyproject.toml # (1)!
 src
     assets # (2)!
-        icon.png
+        icon.svg
     main.py # (3)!
 ```
 
@@ -801,14 +801,15 @@ source_packages = ["package1", "package2"]
 
 ### Icons
 
-For most apps, you only need one image. Save it as `icon.png` in your app's
-`assets` directory (`src/assets/icon.png` in the [project structure](#project-structure)
+For most apps, you only need one image. Save it as `icon.svg` or `icon.png` in your
+app's `assets` directory (`src/assets/icon.svg` in the [project structure](#project-structure)
 above). When you run `flet build`, Flet generates the icons needed for your target
 platform.
 
 For the best results, use:
 
-- A **1024 × 1024 pixel PNG**, large enough for every supported platform.
+- A **square SVG canvas**, such as `viewBox="0 0 24 24"`, or a **1024 × 1024
+  pixel PNG**, large enough for every supported platform.
 - A **transparent background**, so Flet can add the background each platform needs.
 - Artwork that **fills the canvas**, without extra margins. Flet adds space around
   it where needed; margins in the source can make small icons look too small.
@@ -857,7 +858,7 @@ transparent; a fully opaque image covers it.
 
 #### What a padded or opaque source does
 
-Flet adjusts the space around transparent artwork in `icon.png` to suit each
+Flet adjusts the space around transparent artwork in your shared icon to suit each
 platform. This is called *framing*. It can shrink the artwork within its canvas,
 but does not enlarge it to remove existing margins.
 
@@ -885,13 +886,27 @@ approach when you want your design's own background to reach the edges.
 
 #### Image sizes and formats
 
-A 1024 × 1024 image covers the largest icons Flet generates. Larger images work
+A 1024 × 1024 raster image covers the largest icons Flet generates. Larger images work
 too. Smaller images may look blurry when enlarged; `flet build` warns if your
 source is smaller than the largest icon needed for the target platform.
 
-PNG is preferred. Flet also accepts `.webp`, `.jpg`, `.jpeg`, `.gif`, `.bmp`,
-`.tif`, and `.tiff`. If several files have the same base name, Flet prefers PNG.
-SVG is not supported; export it to PNG before building.
+SVG does not need a pixel resolution: a square `viewBox="0 0 24 24"` works as
+well as `viewBox="0 0 1024 1024"`. Flet renders it in memory at 2048 × 2048
+pixels before generating platform icons. A rectangular SVG keeps its aspect
+ratio, with its longest side rendered at 2048 pixels. Generated raster files
+stay in the build directory; your assets can contain just `icon.svg`.
+
+Use self-contained SVG artwork with vector paths. Embed any raster images;
+their original resolution still limits their quality. Convert text to paths
+for consistent results across build hosts. SVG rendering supports static
+artwork, including gradients; browser features such as scripts, animation,
+and HTML inside `foreignObject` are not supported. Malformed SVG input stops
+the build with an error naming the source file.
+
+Flet also accepts `.webp`, `.jpg`, `.jpeg`, `.gif`, `.bmp`, `.tif`, and `.tiff`.
+If several files have the same base name, existing raster formats take
+precedence over SVG: PNG first, then WebP, JPEG, GIF, BMP, TIFF, compatible ICO
+or ICNS, then SVG. Remove the raster sibling to use the SVG source.
 
 A non-square image is centred on a square canvas without stretching or cropping
 the source. The extra space is filled with `icon_background` for opaque outputs
@@ -912,8 +927,9 @@ non-square sources; use a square image if you want to choose the margins yoursel
 #### Making an icon for one platform
 
 To use different artwork or control the margins for one platform, add a file
-with that platform's name to `assets`, such as `icon_macos.png`. It takes
-precedence over `icon.png` for that platform; other platforms still use `icon.png`.
+with that platform's name to `assets`, such as `icon_macos.svg` or
+`icon_macos.png`. It takes precedence over the shared `icon.svg` or `icon.png`
+for that platform; other platforms still use the shared icon.
 
 **Platform-specific files keep the margins you supply.** Flet still generates the
 required image sizes and applies platform treatments, such as removing
@@ -986,10 +1002,10 @@ The faded area outside the circle may be hidden by the launcher's shape.
 :::
 
 The splash screen shows your app's artwork on a background colour while the app
-starts. By default, Flet uses `icon.png` from your app's `assets` directory, or
+starts. By default, Flet uses `icon.svg` or `icon.png` from your app's `assets` directory, or
 the default Flet icon if you have not supplied one.
 
-To use different artwork, save it as `splash.png` in `assets`
+To use different artwork, save it as `splash.svg` or `splash.png` in `assets`
 (`src/assets/splash.png` in the [project structure](#project-structure) above).
 A square PNG with a transparent background is a good starting point. Flet centres
 the artwork on the screen and generates the image sizes needed for your target
@@ -1037,18 +1053,22 @@ below.
 Use `splash.png` for shared artwork and `splash_dark.png` for a dark-mode version.
 You can override either for one platform by adding its name, such as
 `splash_android.png` or `splash_dark_android.png`.
+SVG versions use the same names with a `.svg` extension, including
+`splash.svg`, `splash_dark.svg`, and `splash_dark_android.svg`.
 
 Flet selects the first available image in this order. Replace `<platform>` with
 `android`, `ios`, or `web`:
 
 | Mode | First choice | Second choice | Fallback |
 |---|---|---|---|
-| Light | `splash_<platform>.png` | `splash.png` | `icon.png`, then the default Flet icon |
-| Dark | `splash_dark_<platform>.png` | `splash_dark.png` | The selected light-mode image |
+| Light | `splash_<platform>.svg` or `.png` | `splash.svg` or `.png` | `icon.svg` or `.png`, then the default Flet icon |
+| Dark | `splash_dark_<platform>.svg` or `.png` | `splash_dark.svg` or `.png` | The selected light-mode image |
 
 The same [image formats as app icons](#image-sizes-and-formats) are supported;
 PNG is preferred. A non-square image is centred on a square canvas with
 transparent padding, without stretching or cropping the source.
+SVG splash sources are rendered with their longest side at 1024 pixels,
+matching the on-screen size of the recommended 1024 × 1024 PNG source.
 
 :::note[Using the same artwork in both themes]
 If you only want to change the background in dark mode, save the same artwork
@@ -2091,7 +2111,7 @@ env: # (6)!
   PYTHONUTF8: 1 # (8)!
 
   # https://flet.dev/docs/reference/environment-variables
-  FLET_CLI_NO_RICH_OUTPUT: 1 # (9)!
+  FLET_CLI_LOG_FORMAT: github # (9)!
 
 jobs:
   build:
@@ -2191,7 +2211,7 @@ jobs:
 6. Environment variables shared by all jobs and steps.
 7. Python version used by `uv`.
 8. Forces UTF-8 mode for Python output/IO. Especially useful on Windows builds.
-9. Disables rich output from `flet build` for better readability in CI logs.
+9. Prints plain `flet build` output with a collapsible group per build step and annotations for warnings and errors. See [Log formats](../cli/flet-build.md#log-formats).
 10. Matrix strategy: each `include` item becomes a parallel build job.
 11. Checks out your repository so this workflow can access project files. View its docs [here](https://github.com/actions/checkout).
 12. Installs `uv` on the runner. View its docs [here](https://github.com/astral-sh/setup-uv).
