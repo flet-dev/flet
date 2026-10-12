@@ -570,8 +570,8 @@ class TestGithub:
         ]
 
 
-def test_find_platform_image_warning_in_github(github, tmp_path):
-    """`find_platform_image` warns through the shared output, no command needed."""
+def test_find_platform_image_svg_in_github(github, tmp_path):
+    """SVG sources are selected without emitting an unsupported-image warning."""
     from flet_cli.commands.build_base import BaseBuildCommand
 
     assets = tmp_path / "assets"
@@ -579,13 +579,10 @@ def test_find_platform_image_warning_in_github(github, tmp_path):
     (assets / "icon.svg").write_bytes(b"<svg/>")
     fake_self = SimpleNamespace(target_platform="web", verbose=0)
     hash = SimpleNamespace(update=lambda *_: None)
-    assert BaseBuildCommand.find_platform_image(fake_self, assets, "icon", hash) is None
-    line = github.getvalue()
-    assert line.startswith("::warning title=Image,file=")
-    assert line.rstrip("\n").endswith(
-        '::"icon.svg" is a vector (SVG) image and cannot be used for "icon". '
-        'Provide a raster "icon.png" to customize it — using the default for now.'
+    assert BaseBuildCommand.find_platform_image(fake_self, assets, "icon", hash) == (
+        "icon.svg"
     )
+    assert github.getvalue() == ""
 
 
 @pytest.mark.parametrize("custom_template", [False, True])

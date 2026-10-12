@@ -75,3 +75,59 @@ def test_other_platform_value_ignored():
 def test_bool_setting_precedence(cli, pyproject, expected):
     cmd = _command(pyproject)
     assert cmd.get_bool_setting(cli, "compile.app", True) is expected
+
+
+def _deep_linking_command(pyproject, package_platform):
+    cmd = _command(pyproject)
+    cmd.package_platform = package_platform
+    return cmd
+
+
+_COMMON_DEEP_LINK = {
+    "tool.flet.deep_linking.scheme": "https",
+    "tool.flet.deep_linking.host": "app.example.com",
+}
+
+
+@pytest.mark.parametrize("package_platform", ["Android", "iOS", "Darwin", "Emscripten"])
+def test_common_deep_linking_is_the_fallback(package_platform):
+    cmd = _deep_linking_command(_COMMON_DEEP_LINK, package_platform)
+    assert cmd.get_deep_linking_setting("scheme") == "https"
+    assert cmd.get_deep_linking_setting("host") == "app.example.com"
+
+
+@pytest.mark.parametrize(
+    ("package_platform", "section"), [("Android", "android"), ("iOS", "ios")]
+)
+def test_platform_deep_linking_overrides_common_per_key(package_platform, section):
+    cmd = _deep_linking_command(
+        {
+            **_COMMON_DEEP_LINK,
+            f"tool.flet.{section}.deep_linking.host": "m.example.com",
+        },
+        package_platform,
+    )
+    assert cmd.get_deep_linking_setting("scheme") == "https"
+    assert cmd.get_deep_linking_setting("host") == "m.example.com"
+
+
+def test_platform_only_deep_linking():
+    cmd = _deep_linking_command(
+        {
+            "tool.flet.ios.deep_linking.scheme": "myapp",
+            "tool.flet.ios.deep_linking.host": "open",
+        },
+        "iOS",
+    )
+    assert (
+        cmd.get_deep_linking_setting("scheme"),
+        cmd.get_deep_linking_setting("host"),
+    ) == (
+        "myapp",
+        "open",
+    )
+    # The iOS table doesn't leak to Android.
+    android = _deep_linking_command(
+        {"tool.flet.ios.deep_linking.scheme": "myapp"}, "Android"
+    )
+    assert android.get_deep_linking_setting("scheme") is None

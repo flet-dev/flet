@@ -164,7 +164,10 @@ if TYPE_CHECKING:
     from flet.controls.core.hero import Hero
     from flet.controls.core.icon import Icon
     from flet.controls.core.image import Image
-    from flet.controls.core.interactive_viewer import InteractiveViewer
+    from flet.controls.core.interactive_viewer import (
+        InteractiveViewer,
+        InteractiveViewerTransform,
+    )
     from flet.controls.core.keyboard_listener import (
         KeyboardListener,
         KeyDownEvent,
@@ -295,6 +298,7 @@ if TYPE_CHECKING:
         DragUpdateEvent,
         ForcePressEvent,
         HoverEvent,
+        InteractiveViewerTransformEvent,
         LongPressDownEvent,
         LongPressEndEvent,
         LongPressMoveUpdateEvent,
@@ -970,6 +974,8 @@ __all__ = [
     "InputBorder",
     "InputFilter",
     "InteractiveViewer",
+    "InteractiveViewerTransform",
+    "InteractiveViewerTransformEvent",
     "IosDeviceInfo",
     "IosUtsname",
     "Key",
@@ -1513,6 +1519,8 @@ _LAZY = {
     "InputBorder": "flet.controls.material.form_field_control",
     "InputFilter": "flet.controls.material.textfield",
     "InteractiveViewer": "flet.controls.core.interactive_viewer",
+    "InteractiveViewerTransform": "flet.controls.core.interactive_viewer",
+    "InteractiveViewerTransformEvent": "flet.controls.events",
     "IosDeviceInfo": "flet.controls.device_info",
     "IosUtsname": "flet.controls.device_info",
     "Key": "flet.controls.keys",

@@ -92,6 +92,18 @@ def app(
 
     fastapi_app = FastAPI()
 
+    static_files = FletStaticFiles(
+        proxy_path=proxy_path,
+        assets_dir=assets_dir,
+        app_name=app_name,
+        app_short_name=app_short_name,
+        app_description=app_description,
+        web_renderer=web_renderer,
+        route_url_strategy=route_url_strategy,
+        websocket_endpoint_path=websocket_endpoint,
+        no_cdn=no_cdn,
+    )
+
     @fastapi_app.websocket(f"/{websocket_endpoint}")
     async def app_handler(websocket: WebSocket):
         """
@@ -109,6 +121,8 @@ def app(
             oauth_state_timeout_seconds=oauth_state_timeout_seconds,
             upload_endpoint_path=upload_endpoint_path,
             secret_key=secret_key,
+            route_url_strategy=static_files.route_url_strategy,
+            proxy_path=proxy_path,
         ).handle(websocket)
 
     if upload_dir:
@@ -133,20 +147,7 @@ def app(
         """
         return await FletOAuth().handle(request)
 
-    fastapi_app.mount(
-        path="/",
-        app=FletStaticFiles(
-            proxy_path=proxy_path,
-            assets_dir=assets_dir,
-            app_name=app_name,
-            app_short_name=app_short_name,
-            app_description=app_description,
-            web_renderer=web_renderer,
-            route_url_strategy=route_url_strategy,
-            websocket_endpoint_path=websocket_endpoint,
-            no_cdn=no_cdn,
-        ),
-    )
+    fastapi_app.mount(path="/", app=static_files)
 
     # Add middleware for custom headers
     class CustomHeadersMiddleware(BaseHTTPMiddleware):

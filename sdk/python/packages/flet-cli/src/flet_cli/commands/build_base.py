@@ -3,6 +3,7 @@ import base64
 import contextlib
 import copy
 import glob
+import hashlib
 import json
 import os
 import platform
@@ -39,7 +40,6 @@ from flet_cli.commands.flutter_base import (
     BaseFlutterCommand,
     console,
     error_style,
-    output,
     verbose1_style,
     verbose2_style,
 )
@@ -86,8 +86,8 @@ ANDROID_DEFAULT_EXTRACT_PACKAGES: list[str] = []
 # produces. Both stamps hash it, so upgrading flet-cli regenerates rather
 # than leaving a user with output from the previous implementation. Nothing
 # else encodes the generator's identity now that the pubspec no longer does.
-ICONS_GENERATOR_VERSION = 1
-SPLASH_GENERATOR_VERSION = 3
+ICONS_GENERATOR_VERSION = 2
+SPLASH_GENERATOR_VERSION = 4
 
 # `flet build` target platform -> the platform name flet-platform-assets uses.
 # A target absent here generates no icons at all.
@@ -1419,25 +1419,8 @@ class BaseBuildCommand(BaseFlutterCommand):
             normalized_providers[key] = normalized
         android_providers = normalized_providers
 
-        deep_linking_scheme = (
-            self.get_pyproject("tool.flet.ios.deep_linking.scheme")
-            if self.package_platform == "iOS"
-            else (
-                self.get_pyproject("tool.flet.android.deep_linking.scheme")
-                if self.package_platform == "Android"
-                else self.get_pyproject("tool.flet.deep_linking.scheme")
-            )
-        )
-
-        deep_linking_host = (
-            self.get_pyproject("tool.flet.ios.deep_linking.host")
-            if self.package_platform == "iOS"
-            else (
-                self.get_pyproject("tool.flet.android.deep_linking.host")
-                if self.package_platform == "Android"
-                else self.get_pyproject("tool.flet.deep_linking.host")
-            )
-        )
+        deep_linking_scheme = self.get_deep_linking_setting("scheme")
+        deep_linking_host = self.get_deep_linking_setting("host")
 
         if self.options.deep_linking_scheme and self.options.deep_linking_host:
             deep_linking_scheme = self.options.deep_linking_scheme
@@ -2181,6 +2164,8 @@ class BaseBuildCommand(BaseFlutterCommand):
             try:
                 source, pre_rendered = load_source(source_path)
             except SourceError as e:
+                if source_path.suffix.lower() == ".svg":
+                    self.cleanup(1, f"Could not generate app icons: {e}")
                 self.warn(e, title="App icon", file=annotation_path(source_path))
                 hash.commit()
                 return
@@ -2472,9 +2457,20 @@ class BaseBuildCommand(BaseFlutterCommand):
                 return
 
             try:
-                light, _ = load_source(light_path)
-                dark = load_source(dark_path)[0] if dark_path is not None else None
+                # Splash sizes are derived from source pixels / 4. Use a 1024px
+                # SVG canvas to match the recommended PNG's 256dp/pt/CSS px size.
+                light, _ = load_source(light_path, svg_size=1024)
+                dark = (
+                    load_source(dark_path, svg_size=1024)[0]
+                    if dark_path is not None
+                    else None
+                )
             except SourceError as e:
+                if any(
+                    path is not None and path.suffix.lower() == ".svg"
+                    for path in (light_path, dark_path)
+                ):
+                    self.cleanup(1, f"Could not generate splash screens: {e}")
                 self.warn(e, title="Splash screen")
                 hash.commit()
                 return
@@ -2977,6 +2973,30 @@ class BaseBuildCommand(BaseFlutterCommand):
             if cli_option is not None
             else self.get_platform_setting(pyproj_setting, default_value)
         )
+
+    def get_deep_linking_setting(self, key: str):
+        """
+        Resolve a deep-linking setting (`scheme` or `host`).
+
+        On Android and iOS `[tool.flet.<platform>.deep_linking]` overrides
+        `[tool.flet.deep_linking]`, which is the fallback; other platforms
+        read only the common table. Resolved per key, so a platform table
+        may override just one of them.
+
+        Args:
+            key: `scheme` or `host`.
+
+        Returns:
+            The configured value, or `None`.
+        """
+
+        assert self.get_pyproject
+        platform = {"Android": "android", "iOS": "ios"}.get(self.package_platform)
+        if platform:
+            value = self.get_pyproject(f"tool.flet.{platform}.deep_linking.{key}")
+            if value is not None:
+                return value
+        return self.get_pyproject(f"tool.flet.deep_linking.{key}")
 
     def get_platform_setting(self, pyproj_setting, default_value=None):
         """
@@ -3571,12 +3591,10 @@ class BaseBuildCommand(BaseFlutterCommand):
 
         When multiple files share the same base name (e.g. `icon.png` and
         `icon.svg`), incompatible formats are filtered out and the rest are
-        ranked so a raster image (`.png` first) always wins, making the
-        choice deterministic regardless of filesystem ordering. Formats the
-        generator cannot use are dropped: `.svg` (vector, never decoded),
-        `.icns` (macOS-only) and `.ico` (Windows-only). If
-        the only candidate is a vector image, a warning is logged and `None`
-        is returned so the default icon is used.
+        ranked so existing raster images (`.png` first) win over SVG, making
+        the choice deterministic regardless of filesystem ordering. SVG is
+        rendered by the source loader. `.icns` is macOS-only and `.ico` is
+        Windows-only.
 
         Args:
             src_path: Source assets directory.
@@ -3587,18 +3605,15 @@ class BaseBuildCommand(BaseFlutterCommand):
             File name of matched image, or `None` if not found.
         """
 
-        # Drop candidates that cannot serve this target: .svg is vector and
-        # is never decoded, while .icns and .ico are container formats that
-        # only make sense for the platform that defines them. Pillow reads
+        # Drop candidates that cannot serve this target: .icns and .ico are
+        # container formats for the platform that defines them. Pillow reads
         # both, and `load_source` takes their largest frame, but using a
         # macOS icon set as an Android launcher icon is not what the file
         # name asked for.
         def _incompatible(p: str) -> bool:
             ext = Path(p).suffix.lower()
-            return (
-                ext == ".svg"
-                or (ext == ".icns" and self.target_platform != "macos")
-                or (ext == ".ico" and self.target_platform != "windows")
+            return (ext == ".icns" and self.target_platform != "macos") or (
+                ext == ".ico" and self.target_platform != "windows"
             )
 
         # glob order is filesystem-dependent — sort so the choice is
@@ -3616,6 +3631,7 @@ class BaseBuildCommand(BaseFlutterCommand):
             ".tiff": 5,
             ".ico": 6,
             ".icns": 6,
+            ".svg": 7,
         }
         candidates = sorted(glob.glob(str(src_path.joinpath(f"{image_name}.*"))))
         images = sorted(
@@ -3624,21 +3640,6 @@ class BaseBuildCommand(BaseFlutterCommand):
         )
 
         if not images:
-            # Nothing usable. If the only candidate was a vector image (e.g.
-            # an icon.svg with no raster sibling), say why it's ignored
-            # instead of silently falling back to the default icon.
-            svg = next(
-                (p for p in candidates if Path(p).suffix.lower() == ".svg"), None
-            )
-            if svg:
-                output.warn(
-                    f'"{Path(svg).name}" is a vector (SVG) image and '
-                    f'cannot be used for "{image_name}". Provide a raster '
-                    f'"{image_name}.png" to customize it — using the default '
-                    f"for now.",
-                    title="Image",
-                    file=annotation_path(svg),
-                )
             return None
 
         best = images[0]
@@ -3646,6 +3647,9 @@ class BaseBuildCommand(BaseFlutterCommand):
             console.log(f'Found "{image_name}" image at {best}', style=verbose1_style)
         hash.update(best)
         hash.update(Path(best).stat().st_mtime)
+        if Path(best).suffix.lower() == ".svg":
+            # SVG is often rewritten by generators that preserve timestamps.
+            hash.update(hashlib.sha256(Path(best).read_bytes()).hexdigest())
         return Path(best).name
 
     def run(self, args, cwd, env: Optional[dict] = None, capture_output=True):

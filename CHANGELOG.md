@@ -8,6 +8,14 @@
 
 ### New features
 
+* Add `InteractiveViewer.get_scale()`, `get_transform()`, and
+  `on_transform_changed` to expose the effective zoom scale,
+  translation, and transformation matrix, including reliable
+  final-state notifications after consecutive interactions
+  ([#6938](https://github.com/flet-dev/flet/issues/6938),
+  [#6939](https://github.com/flet-dev/flet/pull/6939))
+  by @ada-koki.
+
 * Add the `flet-shadcn-ui` extension: controls styled after [shadcn/ui](https://ui.shadcn.com), built on the Flutter [`shadcn_ui`](https://pub.dev/packages/shadcn_ui) package, with `Theme` color schemes and the [Lucide](https://lucide.dev) icon set (`LucideIcons`). It includes `Button`, `IconButton`, `Badge`, `Alert`, `Avatar`, `Card`, `Breadcrumb`, `Separator`, `Progress`, `Input`, `Textarea`, `Checkbox`, `Switch`, `Slider`, `RadioGroup`, `Select`, `InputOTP`, `Calendar`, `DatePicker`, `DateRangePicker`, `TimePicker`, `Tabs`, `Accordion`, `ResizablePanelGroup`, `Tooltip`, `Popover`, `ContextMenu`, `Menubar`, `Table`, `Dialog`, `Sheet`, `Toast` and `Sonner`; value controls support `label`, `description` and `error_text` ([#6918](https://github.com/flet-dev/flet/pull/6918)) by @InesaFitsner.
 
 ### Improvements
@@ -28,9 +36,28 @@
 
   **Compatibility:** Apps built with `flet build` and the macOS desktop client now require macOS 12 or later, and iOS apps require iOS 15 or later. Custom build templates keep building, because Flutter 3.47 raises the deployment targets during the build; apply the same `Podfile` and Xcode project changes to skip that step. See the [macOS 12 and iOS 15 minimum](/docs/updates/breaking-changes/v1-1-0/minimum-macos-12-ios-15) guide.
 
+* Fix Flet web apps using the `hash` route URL strategy returning `index.html` with a `200 OK` for unknown paths instead of a `404` ([#2796](https://github.com/flet-dev/flet/issues/2796), [#6954](https://github.com/flet-dev/flet/pull/6954)) by @ndonkoHenri.
+* Fix `flet.fastapi.app()` and `ft.run(..., export_asgi_app=True)` failing every request with a `500` error when `route_url_strategy` or `web_renderer` is passed as a string, such as `"hash"` ([#6954](https://github.com/flet-dev/flet/pull/6954)) by @ndonkoHenri.
+* Fix `page.login(redirect_to_page=True)` not returning to the page's route with the `hash` route URL strategy or under a `proxy_path` ([#6954](https://github.com/flet-dev/flet/pull/6954)) by @ndonkoHenri.
+* flet-audio: Fix `Audio` failing to play when it is created without `src` and `src` is set later ([#6133](https://github.com/flet-dev/flet/issues/6133), [#6956](https://github.com/flet-dev/flet/pull/6956)) by @ndonkoHenri.
+* flet-audio: Fix `Audio` ignoring `playback_rate` after `src` changes on web ([#6956](https://github.com/flet-dev/flet/pull/6956)) by @ndonkoHenri.
+* flet-audio-recorder: Fix `AudioRecorder.start_recording()` not recording to `output_path` on desktop, Android and iOS, where it returned `False`, failed, wrote no file, or recorded into the assets directory ([#5999](https://github.com/flet-dev/flet/issues/5999), [#6955](https://github.com/flet-dev/flet/pull/6955)) by @ndonkoHenri.
+* Fix `flet build` ignoring the common `[tool.flet.deep_linking]` on Android and iOS: it's now the fallback when `[tool.flet.<platform>.deep_linking]` doesn't set a key, as documented ([#6951](https://github.com/flet-dev/flet/issues/6951)) by @FeodorFitsner.
+* Fix setting `Window.skip_task_bar` to `True` not hiding the app from the taskbar on Windows ([#6302](https://github.com/flet-dev/flet/issues/6302), [#6946](https://github.com/flet-dev/flet/pull/6946)) by @ndonkoHenri.
+* Fix the desktop window flashing endlessly after a `flet run` hot reload ([#6913](https://github.com/flet-dev/flet/issues/6913), [#6945](https://github.com/flet-dev/flet/pull/6945)) by @ndonkoHenri.
+* Fix `flet run -r` restarting the app whenever it writes to its working directory or temp directory, which also left `flet run -r --web` pages blank ([#6944](https://github.com/flet-dev/flet/pull/6944)) by @ndonkoHenri.
+* Fix `flet run --ignore-dirs` not ignoring directories on Linux when the project is opened through a symlink ([#6944](https://github.com/flet-dev/flet/pull/6944)) by @ndonkoHenri.
+* Fix the loading logo of web apps served by `flet run --web` or `flet publish` showing off-center after reloading the page in a mobile browser ([#6051](https://github.com/flet-dev/flet/issues/6051), [#6943](https://github.com/flet-dev/flet/pull/6943)) by @ndonkoHenri.
+* Fix `page.query` being empty in `main()` when the app is opened with a query string, e.g. `/?name=Joe`, and percent-encoded values such as `%26` being decoded twice ([#5898](https://github.com/flet-dev/flet/issues/5898), [#6942](https://github.com/flet-dev/flet/pull/6942)) by @ndonkoHenri.
+* Fix `TemplateRoute.match()` failing to match a route with a query string or fragment, e.g. `/store?ref=ad` against `/store`, or capturing them in the last parameter ([#5898](https://github.com/flet-dev/flet/issues/5898), [#6942](https://github.com/flet-dev/flet/pull/6942)) by @ndonkoHenri.
+* Fix `flet run` ignoring the `FLET_ASSETS_DIR` environment variable and the app's own `ft.run(assets_dir=...)` ([#5631](https://github.com/flet-dev/flet/issues/5631), [#6935](https://github.com/flet-dev/flet/pull/6935)) by @ndonkoHenri.
+* Fix `requests.Session` ignoring its `verify` setting in apps built with `flet build` ([#5695](https://github.com/flet-dev/flet/issues/5695), [#6936](https://github.com/flet-dev/flet/pull/6936)) by @ndonkoHenri.
+
 ### Documentation
 
 * Group the Reference > Controls section of the docs into Core, Material, Cupertino, Shadcn and Extensions ([#6918](https://github.com/flet-dev/flet/pull/6918)) by @InesaFitsner.
+* Document reading query string parameters with `page.query` in the [Navigation and Routing](/docs/cookbook/navigation-and-routing#query-strings) guide, and add a `QueryString` reference page ([#5898](https://github.com/flet-dev/flet/issues/5898), [#6942](https://github.com/flet-dev/flet/pull/6942)) by @ndonkoHenri.
+* Add a Distributing section to the Windows publishing guide: an Inno Setup installer script, a zip archive, code signing, and building the installer in GitHub Actions ([#6957](https://github.com/flet-dev/flet/pull/6957)) by @ndonkoHenri.
 
 ## 1.0.4
 
