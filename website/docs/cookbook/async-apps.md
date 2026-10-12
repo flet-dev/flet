@@ -194,6 +194,19 @@ not `page.run_task(self.update_timer())`. It raises `TypeError` otherwise.
 `will_unmount()`, as above. `did_mount()` and `will_unmount()` are sync, which is
 why background work is started with `run_task()` rather than awaited there.
 
+In async code, you can also `await` the future to get the coroutine's return value,
+or the exception it raised. For example, to start two tasks and wait for both:
+
+```python
+async def load(e):
+    users = page.run_task(fetch_users)
+    orders = page.run_task(fetch_orders)
+    show(await users, await orders)
+```
+
+As with `asyncio` tasks, cancelling the coroutine that awaits the future also
+cancels the task.
+
 ## Threading
 
 Some libraries have no async version. To keep a blocking call off the loop, run it

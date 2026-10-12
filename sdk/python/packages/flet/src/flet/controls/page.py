@@ -4,7 +4,7 @@ import logging
 import sys
 import threading
 import weakref
-from collections.abc import Awaitable, Coroutine
+from collections.abc import Awaitable, Coroutine, Generator
 from concurrent.futures import CancelledError, Future, ThreadPoolExecutor
 from dataclasses import InitVar, dataclass, field, fields, is_dataclass
 from functools import partial
@@ -16,6 +16,7 @@ from typing import (
     Optional,
     ParamSpec,
     TypeVar,
+    cast,
 )
 from urllib.parse import urlparse
 
@@ -89,6 +90,25 @@ logger = logging.getLogger("flet")
 AT = TypeVar("AT", bound="Authorization")
 InputT = ParamSpec("InputT")
 RetT = TypeVar("RetT")
+
+
+class TaskFuture(Future[RetT]):
+    """
+    A `concurrent.futures.Future` of a task started with `Page.run_task()` that
+    can also be awaited.
+
+    Awaiting it returns the value of the task or raises its exception, from the
+    page's event loop or any other one. Cancelling the coroutine that awaits it
+    also cancels the task, as awaiting an `asyncio.Task` does; await
+    `asyncio.shield()` of it to keep the task running.
+
+    Blocking methods, such as `result()`, are meant for other threads: called on
+    the page's event loop thread, they block the loop that runs the task.
+    """
+
+    def __await__(self) -> Generator[Any, None, RetT]:
+        """Wait for the task to finish without blocking the event loop."""
+        return asyncio.wrap_future(self).__await__()
 
 
 @control("ServiceRegistry")
@@ -943,10 +963,25 @@ class Page(BasePage):
         handler: Callable[InputT, Awaitable[RetT]],
         *args: InputT.args,
         **kwargs: InputT.kwargs,
-    ) -> Future[RetT]:
+    ) -> TaskFuture[RetT]:
         """
         Run `handler` coroutine as a new Task in the event loop associated with the \
         current page.
+
+        Can be called from any thread.
+
+        Args:
+            handler: The coroutine function to run.
+            *args: Positional arguments to call `handler` with.
+            **kwargs: Keyword arguments to call `handler` with.
+
+        Returns:
+            A future of the task. Await it to get the value of `handler`, or use
+                its `concurrent.futures.Future` methods, such as `cancel()` and
+                `add_done_callback()`.
+
+        Raises:
+            TypeError: If `handler` is not a coroutine function.
         """
         _context_page.set(self)
         if not inspect.iscoroutinefunction(handler):
@@ -955,6 +990,7 @@ class Page(BasePage):
         future = asyncio.run_coroutine_threadsafe(
             handler(*args, **kwargs), self.session.connection.loop
         )
+        future.__class__ = TaskFuture
 
         def _on_completion(f):
             """
@@ -973,7 +1009,7 @@ class Page(BasePage):
 
         future.add_done_callback(_on_completion)
 
-        return future
+        return cast(TaskFuture[RetT], future)
 
     def __context_wrapper(self, handler: Callable[..., Any]) -> Wrapper:
         """
