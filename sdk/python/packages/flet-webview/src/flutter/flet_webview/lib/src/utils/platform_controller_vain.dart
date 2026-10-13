@@ -9,4 +9,9 @@ PlatformWebViewControllerCreationParams createPlatformCreationParams() =>
 
 Future<void> allowFileAccess(WebViewController controller) async {}
 
+Future<void> loadLocalFile(
+  WebViewController controller,
+  String absoluteFilePath,
+) => controller.loadFile(absoluteFilePath);
+
 Future<void> disposePlatformController(WebViewController controller) async {}

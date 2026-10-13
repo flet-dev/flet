@@ -322,13 +322,9 @@ class WebView(ft.LayoutControl):
         if no URL was ever loaded.
 
         Note:
-            - On Windows a file opened with :meth:`load_file` is served from an
-              internal virtual host, so its URL has the form
-              `https://app-file-<random>.webview.invalid/<file name>` rather than
-              `file://`, with a host that differs for each WebView.
-            - On web, after a link is followed to another origin, or from HTML
-              loaded with :meth:`load_html` or a `POST` response, this returns
-              the URL the app last loaded.
+            On web, after a link is followed to another origin, or from HTML
+            loaded with :meth:`load_html` or a `POST` response, this returns the
+            URL the app last loaded.
 
         Returns:
             The current URL that the WebView is displaying or `None`
@@ -369,11 +365,10 @@ class WebView(ft.LayoutControl):
 
         Note:
             - Not supported on web.
-            - On Windows the file's folder is served from an internal virtual
-              host, so :meth:`get_current_url` and :attr:`on_url_change` report
-              a URL of the form
-              `https://app-file-<random>.webview.invalid/<file name>` rather than
-              `file://`.
+            - On Windows the page is opened from its `file://` URL. It can load
+              the stylesheets, scripts and images it links to, but it cannot
+              read local files with `fetch()` or `XMLHttpRequest`, or load
+              JavaScript modules (`<script type="module">`).
 
         Args:
             path: The absolute path to the file.

@@ -197,7 +197,7 @@ class _WebViewControlState extends State<WebViewControl> {
     }
   }
 
-  /// Loads [url], routing `file:` URLs through [WebViewController.loadFile].
+  /// Loads [url], routing `file:` URLs through [loadLocalFile].
   ///
   /// `loadFile` is the only entry point that grants the webview access to the
   /// local filesystem: on Android it enables `WebSettings.allowFileAccess`,
@@ -207,9 +207,9 @@ class _WebViewControlState extends State<WebViewControl> {
   ///
   /// A `file:` URL falls through to [WebViewController.loadRequest] when
   /// [Uri.toFilePath] rejects it with an [UnsupportedError] (a query, a
-  /// fragment or, outside Windows, any authority), or when Windows or Linux
-  /// `loadFile` throws an [ArgumentError] for a relative or missing path. The
-  /// web has no local files.
+  /// fragment or, outside Windows, any authority), or when [loadLocalFile]
+  /// throws an [ArgumentError] for a relative or missing path on Windows or
+  /// Linux. The web has no local files.
   Future<void> _load(
     WebViewController controller,
     String url,
@@ -218,7 +218,7 @@ class _WebViewControlState extends State<WebViewControl> {
     final uri = Uri.parse(url);
     if (uri.scheme == "file" && !kIsWeb) {
       try {
-        await controller.loadFile(uri.toFilePath());
+        await loadLocalFile(controller, uri.toFilePath());
         return;
       } on UnsupportedError catch (e) {
         debugPrint("WebView: $url is not a loadable local file: $e");
@@ -273,7 +273,7 @@ class _WebViewControlState extends State<WebViewControl> {
       case "get_user_agent":
         return controller.getUserAgent();
       case "load_file":
-        await controller.loadFile(args["path"]);
+        await loadLocalFile(controller, args["path"]);
         break;
       case "load_html":
         var baseUrl = args["base_url"];
