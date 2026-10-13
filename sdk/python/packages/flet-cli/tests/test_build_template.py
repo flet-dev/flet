@@ -140,3 +140,31 @@ class TestBuildTemplateContract:
         manifest = json.loads(rendered)
         assert manifest["name"] == "Flet Studio"
         assert manifest["short_name"] == "Studio"
+
+
+class TestDefaultArtifactName:
+    """The `.app` name is what macOS users see (Finder, Dock, app menu), so it
+    defaults to the product name there; executables elsewhere keep the
+    project name (#6966)."""
+
+    def test_macos_uses_the_product_name(self):
+        assert (
+            BaseBuildCommand.default_artifact_name("macos", "Acme Notes", "acme_notes")
+            == "Acme Notes"
+        )
+
+    def test_macos_replaces_characters_file_names_cannot_hold(self):
+        assert (
+            BaseBuildCommand.default_artifact_name("macos", "Notes: A/B", "notes")
+            == "Notes- A-B"
+        )
+
+    def test_macos_falls_back_to_the_project_name(self):
+        assert BaseBuildCommand.default_artifact_name("macos", " ", "notes") == "notes"
+
+    @pytest.mark.parametrize("platform", ["windows", "linux", "android", "ios", "web"])
+    def test_other_platforms_use_the_project_name(self, platform):
+        assert (
+            BaseBuildCommand.default_artifact_name(platform, "Acme Notes", "acme_notes")
+            == "acme_notes"
+        )

@@ -425,15 +425,31 @@ It does **not** affect [bundle ID](#bundle-id)s or package identifiers.
 It can contain spaces or accents, but keep file system restrictions in mind on
 your target platforms.
 
+On macOS the `.app` name is what users see: Finder, Launchpad, Spotlight and the
+Dock show it, and so do the app menu, "About …" and "Quit …". That's why it
+defaults to the [product name](#product-name) there, while executables on other
+platforms default to the project name. A file-like common value with a macOS
+override gives both:
+
+```toml
+[tool.flet]
+artifact = "acme_notes"   # acme_notes.exe, Linux binary
+
+[tool.flet.macos]
+artifact = "Acme Notes"   # Acme Notes.app
+```
+
 #### Resolution order
 
 Its value is determined in the following order of precedence:
 
 1. [`--artifact`](../cli/flet-build.md#--artifact)
 2. `[tool.flet.<PLATFORM>].artifact`
-3. [`--project`](../cli/flet-build.md#--project)
-4. `[project].name`
-5. project/app directory name
+3. `[tool.flet].artifact`
+4. macOS only: the [product name](#product-name), with `/` and `:` replaced by `-`
+5. [`--project`](../cli/flet-build.md#--project)
+6. `[project].name`
+7. project/app directory name
 
 #### Example
 
