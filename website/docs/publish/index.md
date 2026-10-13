@@ -1723,8 +1723,12 @@ Below is a list of available bundles:
 Its value is determined in the following order of precedence:
 
 1. [`--permissions`](../cli/flet-build.md#--permissions)
-2. `[tool.flet].permissions` (type: list of strings)
-3. `[]`
+2. `[tool.flet.<PLATFORM>].permissions` (type: list of strings)
+3. `[tool.flet].permissions` (type: list of strings)
+4. `[]`
+
+A platform list replaces the common one rather than adding to it, and `[]`
+applies no bundles on that platform.
 
 ##### Example
 
@@ -1738,6 +1742,10 @@ flet build <target_platform> --permissions location microphone
 ```toml
 [tool.flet]
 permissions = ["location", "microphone"]
+
+# macOS: only the microphone
+[tool.flet.macos]
+permissions = ["microphone"]
 ```
 </TabItem>
 </Tabs>

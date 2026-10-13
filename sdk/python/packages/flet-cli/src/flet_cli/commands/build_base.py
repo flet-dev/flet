@@ -1179,11 +1179,7 @@ class BaseBuildCommand(BaseFlutterCommand):
         )
 
         # merge values from "--permissions" arg:
-        for p in (
-            self.options.permissions
-            or self.get_pyproject("tool.flet.permissions")
-            or []
-        ):
+        for p in self.resolve_permissions():
             if p in self.cross_platform_permissions:
                 permission_config = self.cross_platform_permissions[p]
                 info_plist.update(
@@ -2999,6 +2995,23 @@ class BaseBuildCommand(BaseFlutterCommand):
             if value is not None:
                 return value
         return self.get_pyproject(f"tool.flet.deep_linking.{key}")
+
+    def resolve_permissions(self) -> list[str]:
+        """
+        The cross-platform permission bundles to apply: `--permissions`, else
+        `[tool.flet.<platform>].permissions`, else `[tool.flet].permissions`.
+
+        A platform list replaces the common one, so `[]` applies none on that
+        platform.
+
+        Returns:
+            Bundle names, e.g. `["location", "camera"]`.
+        """
+
+        assert self.options
+        return list(
+            self.options.permissions or self.get_platform_setting("permissions") or []
+        )
 
     def get_platform_setting(self, pyproj_setting, default_value=None):
         """

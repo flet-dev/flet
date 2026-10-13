@@ -1,5 +1,6 @@
 """Invariants of the `flet build` cookiecutter template itself."""
 
+import argparse
 import json
 import re
 from pathlib import Path
@@ -168,3 +169,61 @@ class TestDefaultArtifactName:
             BaseBuildCommand.default_artifact_name(platform, "Acme Notes", "acme_notes")
             == "acme_notes"
         )
+
+
+class TestResolvePermissions:
+    """Permission bundles follow the per-platform override rule: a platform
+    list replaces the common one; `[]` applies none."""
+
+    @staticmethod
+    def _command(platform: str, pyproject: dict, cli=None) -> BaseBuildCommand:
+        cmd = BaseBuildCommand.__new__(BaseBuildCommand)
+        cmd.config_platform = platform
+        cmd.options = argparse.Namespace(permissions=cli)
+
+        def get(path):
+            node = pyproject
+            for part in path.split("."):
+                if not isinstance(node, dict) or part not in node:
+                    return None
+                node = node[part]
+            return node
+
+        cmd.get_pyproject = get
+        return cmd
+
+    def test_common_list(self):
+        project = {"tool": {"flet": {"permissions": ["location", "camera"]}}}
+        assert self._command("ios", project).resolve_permissions() == [
+            "location",
+            "camera",
+        ]
+
+    def test_platform_list_replaces_the_common_one(self):
+        project = {
+            "tool": {
+                "flet": {
+                    "permissions": ["location", "camera"],
+                    "macos": {"permissions": ["microphone"]},
+                }
+            }
+        }
+        assert self._command("macos", project).resolve_permissions() == ["microphone"]
+        assert self._command("ios", project).resolve_permissions() == [
+            "location",
+            "camera",
+        ]
+
+    def test_empty_platform_list_applies_none(self):
+        project = {
+            "tool": {
+                "flet": {"permissions": ["camera"], "android": {"permissions": []}}
+            }
+        }
+        assert self._command("android", project).resolve_permissions() == []
+
+    def test_cli_wins(self):
+        project = {"tool": {"flet": {"permissions": ["camera"]}}}
+        assert self._command(
+            "ios", project, cli=["biometric"]
+        ).resolve_permissions() == ["biometric"]

@@ -9,6 +9,7 @@
 
 ### New features
 
+* `flet build`: permission bundles can be set per platform with `[tool.flet.<platform>].permissions`, which replaces `[tool.flet].permissions` for that platform (`[]` applies none) by @FeodorFitsner.
 * Add `InteractiveViewer.get_scale()`, `get_transform()`, and
   `on_transform_changed` to expose the effective zoom scale,
   translation, and transformation matrix, including reliable
