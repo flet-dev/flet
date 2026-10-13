@@ -144,6 +144,10 @@ class WebView(ft.LayoutControl):
         - On Windows a handler set after the control was added to the page fires
           from the next page loaded.
         - On web it fires only for the first same-origin page shown.
+        - On Android :attr:`~flet_webview.WebViewScrollEvent.x` and
+          :attr:`~flet_webview.WebViewScrollEvent.y` are physical pixels: the
+          page's `window.scrollX` and `window.scrollY` multiplied by
+          `window.devicePixelRatio`.
     """
 
     on_console_message: Optional[ft.EventHandler[WebViewConsoleMessageEvent]] = None
@@ -155,6 +159,8 @@ class WebView(ft.LayoutControl):
           the page receives messages from the next page loaded.
         - On Linux :attr:`~flet_webview.WebViewConsoleMessageEvent.severity_level`
           is always :attr:`~flet_webview.LogLevelSeverity.LOG`.
+        - On Android `console.info()` messages have the
+          :attr:`~flet_webview.LogLevelSeverity.LOG` severity level.
         - On web only messages logged after :attr:`on_page_ended` fired are
           delivered.
     """
@@ -449,6 +455,8 @@ class WebView(ft.LayoutControl):
 
         Note:
             - Not supported on macOS.
+            - On Android the position is in physical pixels: the page's
+              `window.scrollY` becomes `y` divided by `window.devicePixelRatio`.
             - On web this works only for a same-origin page or HTML loaded with
               :meth:`load_html`.
 
@@ -471,6 +479,8 @@ class WebView(ft.LayoutControl):
 
         Note:
             - Not supported on macOS.
+            - On Android the amounts are physical pixels, so the page scrolls by
+              `y` divided by `window.devicePixelRatio` CSS pixels.
             - On web this works only for a same-origin page or HTML loaded with
               :meth:`load_html`.
 

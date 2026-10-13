@@ -160,6 +160,7 @@ class _WebViewControlState extends State<WebViewControl> {
     if (!_consoleHandlerRegistered &&
         widget.control.hasEventHandler("console_message")) {
       _consoleHandlerRegistered = true;
+      retainJavaScriptChannelCallbacks();
       await _attachHandler(
         "console_message",
         () => controller.setOnConsoleMessage((message) {
