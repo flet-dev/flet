@@ -40,6 +40,62 @@ InputBorder? parseInputBorder(dynamic value, ThemeData? theme,
   }
 }
 
+/// Parses [InputDecorationTheme.border] (Python) into a state-resolved
+/// border for [InputDecorationThemeData.border].
+///
+/// The "default" entry (or a single border) sets the shape for every state
+/// and the line for the resting state. "hovered", "focused", "error" and
+/// "disabled" use their own entry's side, falling back to the Material 3
+/// default for that state, so a theme can soften the resting line without
+/// losing the hover and focus feedback.
+InputBorder? parseInputDecorationThemeBorder(dynamic value, ThemeData theme) {
+  if (value is! Map) return null;
+  Map<dynamic, dynamic>? stateMap;
+  dynamic defaultEntry = value;
+  if (!value.containsKey("_type")) {
+    stateMap = value;
+    defaultEntry = value["default"];
+  }
+
+  var shape = parseInputBorder(defaultEntry, theme,
+      defaultValue: const OutlineInputBorder())!;
+  if (shape == InputBorder.none) return InputBorder.none;
+
+  BorderSide? sideOf(dynamic entry) =>
+      entry is Map ? parseBorderSide(entry["side"], theme) : null;
+  var restSide = sideOf(defaultEntry);
+  var hoveredSide = sideOf(stateMap?["hovered"]);
+  var focusedSide = sideOf(stateMap?["focused"]);
+  var errorSide = sideOf(stateMap?["error"]);
+  var disabledSide = sideOf(stateMap?["disabled"]);
+
+  var cs = theme.colorScheme;
+  var outline = shape is OutlineInputBorder;
+  return WidgetStateInputBorder.resolveWith((states) {
+    BorderSide side;
+    if (states.contains(WidgetState.disabled)) {
+      side = disabledSide ??
+          BorderSide(
+              color: cs.onSurface.withValues(alpha: outline ? 0.12 : 0.38));
+    } else if (states.contains(WidgetState.error)) {
+      side = errorSide ??
+          (states.contains(WidgetState.focused)
+              ? BorderSide(color: cs.error, width: 2.0)
+              : states.contains(WidgetState.hovered)
+                  ? BorderSide(color: cs.onErrorContainer)
+                  : BorderSide(color: cs.error));
+    } else if (states.contains(WidgetState.focused)) {
+      side = focusedSide ?? BorderSide(color: cs.primary, width: 2.0);
+    } else if (states.contains(WidgetState.hovered)) {
+      side = hoveredSide ?? BorderSide(color: cs.onSurface);
+    } else {
+      side = restSide ??
+          BorderSide(color: outline ? cs.outline : cs.onSurfaceVariant);
+    }
+    return shape.copyWith(borderSide: side);
+  });
+}
+
 /// The loose border properties deprecated in 1.0.0 and removed in 1.3.0:
 /// `border_radius`, `border_width`, `border_color`, `focused_border_width`
 /// and `focused_border_color`.
@@ -129,6 +185,13 @@ FormFieldBorders parseFormFieldBorders(Control control, ThemeData theme) {
 
   var defaultSide =
       defaultEntry is Map ? parseBorderSide(defaultEntry["side"], theme) : null;
+  // No border of its own: leave the slot empty so the theme's
+  // `input_decoration_theme.border` applies, if it has one.
+  if (value == null &&
+      theme.inputDecorationTheme.border != null &&
+      _LegacyBorderProps.of(control, theme).isEmpty) {
+    return borders;
+  }
   var defaultBorder = parseInputBorder(defaultEntry, theme,
       defaultValue: const OutlineInputBorder())!;
   borders.border = defaultBorder;
@@ -351,7 +414,8 @@ InputDecoration buildInputDecoration(
       disabledBorder: borders.disabledBorder,
       hoverColor: hoverColor,
       icon: control.buildIconOrWidget("icon"),
-      filled: control.getBool("filled", false)!,
+      // Unset leaves it to the theme (Flutter's default is not filled).
+      filled: control.getBool("filled"),
       fillColor: fillColor ?? (focused ? (focusedBgcolor ?? bgcolor) : bgcolor),
       //hint
       hintText: control.getString("hint_text"),

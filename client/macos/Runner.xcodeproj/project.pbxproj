@@ -281,7 +281,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "set -e\nPROJECT_ROOT=\"${PROJECT_DIR}/..\"\ncd \"$PROJECT_ROOT\"\nDART_BIN=\"${FLUTTER_ROOT}/bin/dart\"\nif [ ! -x \"$DART_BIN\" ]; then\n  DART_BIN=\"$(command -v dart || true)\"\nfi\nif [ -z \"$DART_BIN\" ]; then\n  echo \"error: dart not found; cannot run rive_native:setup\" >&2\n  exit 1\nfi\necho \"Running rive_native setup for macos...\"\n\"$DART_BIN\" run rive_native:setup --verbose --clean --platform macos\n";
+			shellScript = "set -e\nPROJECT_ROOT=\"${PROJECT_DIR}/..\"\ncd \"$PROJECT_ROOT\"\nDART_BIN=\"${FLUTTER_ROOT}/bin/dart\"\nif [ ! -x \"$DART_BIN\" ]; then\n  DART_BIN=\"$(command -v dart || true)\"\nfi\nif [ -z \"$DART_BIN\" ]; then\n  echo \"error: dart not found; cannot run rive_native:setup\" >&2\n  exit 1\nfi\necho \"Running rive_native setup for macos...\"\n\"$DART_BIN\" run rive_native:setup --verbose --platform macos\n";
 		};
 		15125595ECCDEE56B3D8B7C4 /* [CP] Check Pods Manifest.lock */ = {
 			isa = PBXShellScriptBuildPhase;

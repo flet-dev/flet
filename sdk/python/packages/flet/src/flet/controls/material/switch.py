@@ -11,6 +11,7 @@ from flet.controls.types import (
     ColorValue,
     IconData,
     LabelPosition,
+    MaterialTapTargetSize,
     MouseCursor,
     Number,
     StrOrControl,
@@ -203,6 +204,14 @@ class Switch(LayoutControl, AdaptiveControl):
     Defaults to horizontal padding of 4 pixels. If
     :attr:`flet.Theme.use_material3` is false, then there is no
     padding by default.
+    """
+
+    material_tap_target_size: Optional[MaterialTapTargetSize] = None
+    """
+    The size of the tappable area. `SHRINK_WRAP` makes the switch only as tall
+    as its track (32 rather than 48) - for dense, pointer-driven layouts.
+
+    Defaults to :attr:`flet.Theme.material_tap_target_size`, or `PADDED`.
     """
 
     on_change: Optional[ControlEventHandler["Switch"]] = None

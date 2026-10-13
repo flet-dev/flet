@@ -89,8 +89,15 @@ class PyodideConnection(Connection):
                 continue
             ptype = packet[0]
             if ptype == 0x00:
-                message = msgpack.unpackb(packet[1:], ext_hook=decode_ext_from_msgpack)
-                await self.__on_message(message)
+                # One bad message must not end the loop: nothing would be
+                # received after it and the app would freeze.
+                try:
+                    message = msgpack.unpackb(
+                        packet[1:], ext_hook=decode_ext_from_msgpack
+                    )
+                    await self.__on_message(message)
+                except Exception:
+                    logger.exception("Error handling a message from the client.")
             elif ptype == 0x01:
                 if len(packet) < 5:
                     logger.debug("Dropping malformed data-channel frame.")

@@ -10,10 +10,12 @@ from flet.controls.border_radius import BorderRadiusValue
 from flet.controls.box import BoxConstraints, BoxDecoration, BoxShadowValue
 from flet.controls.buttons import ButtonStyle, OutlinedBorder
 from flet.controls.control_state import ControlStateValue
+from flet.controls.core.markdown import MarkdownStyleSheet
 from flet.controls.duration import DurationValue
 from flet.controls.geometry import Size
 from flet.controls.margin import MarginValue
 from flet.controls.material.expansion_tile import TileAffinity
+from flet.controls.material.form_field_control import InputBorder
 from flet.controls.material.list_tile import ListTileStyle, ListTileTitleAlignment
 from flet.controls.material.menu_bar import MenuStyle
 from flet.controls.material.navigation_bar import NavigationBarLabelBehavior
@@ -38,6 +40,7 @@ from flet.controls.types import (
     ColorValue,
     IconData,
     MainAxisAlignment,
+    MaterialTapTargetSize,
     MouseCursor,
     NotchShape,
     Number,
@@ -2247,6 +2250,165 @@ class TimePickerTheme:
 
 
 @value
+class InputDecorationTheme:
+    """
+    Customizes the decoration of descendant :class:`~flet.TextField` and
+    :class:`~flet.Dropdown` controls: their border, label, hint and helper
+    styles, padding and fill.
+
+    A control's own properties win over the theme. A control with no
+    :attr:`~flet.FormFieldControl.border` uses the theme's :attr:`border`.
+
+    Example:
+        A soft resting border that darkens on hover and turns to the primary
+        color on focus:
+
+        ```python
+        page.theme = ft.Theme(
+            input_decoration_theme=ft.InputDecorationTheme(
+                border=ft.OutlineInputBorder(
+                    border_radius=8,
+                    side=ft.BorderSide(
+                        color=ft.Colors.with_opacity(0.24, ft.Colors.ON_SURFACE)
+                    ),
+                ),
+                label_style=ft.TextStyle(size=14),
+                hint_style=ft.TextStyle(size=14),
+            ),
+        )
+        ```
+    """
+
+    border: Optional[ControlStateValue[InputBorder]] = None
+    """
+    The border drawn around the decorated input area, for every state.
+
+    Accepts a single :class:`~flet.InputBorder` or a dictionary mapping
+    :class:`~flet.ControlState`s to :class:`~flet.InputBorder`s. Supported
+    state keys are :attr:`~flet.ControlState.DEFAULT`,
+    :attr:`~flet.ControlState.HOVERED`, :attr:`~flet.ControlState.FOCUSED`,
+    :attr:`~flet.ControlState.ERROR` and :attr:`~flet.ControlState.DISABLED`.
+
+    The `DEFAULT` entry (or the single border) sets the shape for all states
+    and the line for the resting state only. Each other state uses the `side`
+    of its own entry if given, otherwise the Material default for that state -
+    so setting only a soft resting color keeps the darker hover line and the
+    primary-colored, thicker focus line.
+    """
+
+    label_style: Optional[TextStyle] = None
+    """
+    The style of the label when it sits inside the field.
+    """
+
+    floating_label_style: Optional[TextStyle] = None
+    """
+    The style of the label when it floats above the field.
+    """
+
+    hint_style: Optional[TextStyle] = None
+    """
+    The style of the hint text.
+    """
+
+    helper_style: Optional[TextStyle] = None
+    """
+    The style of the helper text.
+    """
+
+    error_style: Optional[TextStyle] = None
+    """
+    The style of the error text.
+    """
+
+    counter_style: Optional[TextStyle] = None
+    """
+    The style of the counter text.
+    """
+
+    prefix_style: Optional[TextStyle] = None
+    """
+    The style of the prefix text.
+    """
+
+    suffix_style: Optional[TextStyle] = None
+    """
+    The style of the suffix text.
+    """
+
+    content_padding: Optional[PaddingValue] = None
+    """
+    The padding around the input text and label.
+    """
+
+    dense: Optional[bool] = None
+    """
+    Whether fields use less vertical space.
+    """
+
+    filled: Optional[bool] = None
+    """
+    Whether fields are filled with :attr:`fill_color`.
+    """
+
+    fill_color: Optional[ColorValue] = None
+    """
+    The fill color of filled fields.
+    """
+
+    hover_color: Optional[ColorValue] = None
+    """
+    The fill color of filled fields while hovered.
+    """
+
+    focus_color: Optional[ColorValue] = None
+    """
+    The fill color of filled fields while focused.
+    """
+
+    icon_color: Optional[ColorValue] = None
+    """
+    The color of the icon in front of the field.
+    """
+
+    prefix_icon_color: Optional[ColorValue] = None
+    """
+    The color of the prefix icon.
+    """
+
+    suffix_icon_color: Optional[ColorValue] = None
+    """
+    The color of the suffix icon.
+    """
+
+    align_label_with_hint: Optional[bool] = None
+    """
+    Whether the label aligns with the hint text in multiline fields, rather
+    than being vertically centered.
+    """
+
+    size_constraints: Optional[BoxConstraints] = None
+    """
+    The size constraints of the decorated input area.
+    """
+
+
+@value
+class TextFieldTheme:
+    """
+    Customizes descendant :class:`~flet.TextField` controls.
+    """
+
+    text_style: Optional[TextStyle] = None
+    """
+    The style of the text being edited. Overrides the default (the text
+    theme's `body_large`); a field's own :attr:`~flet.TextField.text_style`,
+    :attr:`~flet.TextField.text_size` and :attr:`~flet.TextField.color` win
+    over it.
+    """
+
+
+@value
 class DropdownTheme:
     """
     Customizes the appearance of descendant :class:`~flet.Dropdown` controls.
@@ -2846,6 +3008,13 @@ class PopupMenuTheme:
     descendant :class:`~flet.PopupMenuButton` controls.
     """
 
+    border_radius: Optional[BorderRadiusValue] = None
+    """
+    Overrides the default value of :attr:`flet.PopupMenuButton.border_radius` in \
+    all descendant :class:`~flet.PopupMenuButton` controls: the corner radius of
+    the hover/splash highlight around a button with custom `content`.
+    """
+
 
 @value
 class SearchBarTheme:
@@ -3415,6 +3584,26 @@ class Theme:
     Customizes the appearance of descendant :class:`~flet.Dropdown` controls.
     """
 
+    input_decoration_theme: Optional[InputDecorationTheme] = None
+    """
+    Customizes the decoration (border, label, hint, padding, fill) of
+    descendant :class:`~flet.TextField` and :class:`~flet.Dropdown` controls.
+    """
+
+    text_field_theme: Optional[TextFieldTheme] = None
+    """
+    Customizes descendant :class:`~flet.TextField` controls.
+    """
+
+    markdown_theme: Optional[MarkdownStyleSheet] = None
+    """
+    The default style sheet of descendant :class:`~flet.Markdown` controls.
+
+    A control's own :attr:`~flet.Markdown.md_style_sheet` is applied on top of
+    it, property by property. Unset properties fall back to defaults derived
+    from the theme - links in the color scheme's `primary`, for example.
+    """
+
     button_theme: Optional[ButtonTheme] = None
     """
     Customizes the appearance of descendant :class:`~flet.Button` controls.
@@ -3627,6 +3816,13 @@ class Theme:
     tooltip_theme: Optional[TooltipTheme] = None
     """
     Customizes the appearance of descendant tooltips.
+    """
+
+    material_tap_target_size: Optional[MaterialTapTargetSize] = None
+    """
+    The size of the tappable area of descendant Material controls (switches,
+    checkboxes, radios, buttons, ...). `SHRINK_WRAP` drops the 48px minimum
+    for dense, pointer-driven layouts. See :class:`~flet.MaterialTapTargetSize`.
     """
 
     visual_density: Optional[VisualDensity] = None

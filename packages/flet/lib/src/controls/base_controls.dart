@@ -125,13 +125,16 @@ Widget _opacity(BuildContext context, Widget widget, Control control) {
           : null,
       child: widget,
     );
-  } else if (opacity != null) {
-    return Opacity(
-      opacity: opacity,
-      child: widget,
-    );
   }
-  return widget;
+  // Always wrapped, also at the default 1.0 (not sent from Python): adding
+  // or removing the wrapper when opacity flips between 1 and something else
+  // changed the tree's shape, and Flutter rebuilt the whole subtree - an
+  // embedded app restarted, a text field lost its focus. Opacity at 1.0
+  // paints its child directly, without a layer.
+  return Opacity(
+    opacity: opacity ?? 1.0,
+    child: widget,
+  );
 }
 
 Widget _rotatedControl(BuildContext context, Widget widget, Control control) {
@@ -386,11 +389,54 @@ Widget _positionedControl(
 }
 
 Widget _sizedControl(Widget widget, Control control) {
-  final skipProps = control.internals?['skip_properties'] as List?;
-  if (skipProps != null && ['width', 'height'].any(skipProps.contains)) {
+  final skipProps =
+      (control.internals?['skip_properties'] as List?) ?? const [];
+  if (!['width', 'height'].any(skipProps.contains)) {
+    widget = _fixedSizeControl(widget, control);
+  }
+  return _constrainedControl(widget, control, skipProps);
+}
+
+/// Applies `min_width`/`max_width`/`min_height`/`max_height` as a
+/// [ConstrainedBox] around the control (outside any fixed size, so a fixed
+/// `width` is clamped into the range). Resolved by Flutter on every layout
+/// pass - unlike sizes computed in Python from `page.width`, it can't lag
+/// behind a resizing window. A control that implements one of these names
+/// itself lists it in `skip_properties`.
+Widget _constrainedControl(Widget widget, Control control, List skipProps) {
+  double? value(String name) =>
+      skipProps.contains(name) ? null : control.getDouble(name);
+
+  final minWidth = value("min_width");
+  final maxWidth = value("max_width");
+  final minHeight = value("min_height");
+  final maxHeight = value("max_height");
+  if (minWidth == null &&
+      maxWidth == null &&
+      minHeight == null &&
+      maxHeight == null) {
     return widget;
   }
 
+  final minW = minWidth ?? 0.0;
+  final minH = minHeight ?? 0.0;
+  return ConstrainedBox(
+    constraints: BoxConstraints(
+      minWidth: minW,
+      // A max below the min would be an invalid constraint; the min wins.
+      maxWidth: maxWidth == null
+          ? double.infinity
+          : (maxWidth < minW ? minW : maxWidth),
+      minHeight: minH,
+      maxHeight: maxHeight == null
+          ? double.infinity
+          : (maxHeight < minH ? minH : maxHeight),
+    ),
+    child: widget,
+  );
+}
+
+Widget _fixedSizeControl(Widget widget, Control control) {
   final width = control.getDouble("width");
   final height = control.getDouble("height");
   final animationSize = control.getAnimation("animate_size");
@@ -486,6 +532,27 @@ class _SizeChangeObserverState extends State<SizeChangeObserver> {
       }
       _dispatchSize(size, DateTime.now().millisecondsSinceEpoch);
     });
+  }
+
+  @override
+  void didUpdateWidget(covariant SizeChangeObserver oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    if (oldWidget.control.id != widget.control.id) {
+      // Flutter reused this widget for a different control (same type and
+      // position, e.g. a new page swapped into the same slot). The render
+      // object only reports when *its* size changes, so at an unchanged size
+      // the new control would never hear its size. Report it once.
+      _lastSize = null;
+      _pendingSize = null;
+      _timer?.cancel();
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        if (!mounted) return;
+        final box = context.findRenderObject();
+        if (box is RenderBox && box.hasSize) {
+          _onSizeChanged(box.size);
+        }
+      });
+    }
   }
 
   @override

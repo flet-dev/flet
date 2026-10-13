@@ -11,6 +11,7 @@ import '../utils/edge_insets.dart';
 import '../utils/misc.dart';
 import '../utils/numbers.dart';
 import '../utils/popup_menu.dart';
+import '../utils/theme.dart';
 import 'base_controls.dart';
 
 class PopupMenuButtonControl extends StatelessWidget {
@@ -42,6 +43,9 @@ class PopupMenuButtonControl extends StatelessWidget {
           Theme.of(context),
         ),
         constraints: control.getBoxConstraints("size_constraints"),
+        // Rounds the InkWell highlight around custom `content`.
+        borderRadius: control.getBorderRadius("border_radius") ??
+            Theme.of(context).extension<PopupMenuButtonTheme>()?.borderRadius,
         style: control.getButtonStyle("style", Theme.of(context)),
         popUpAnimationStyle: control.getAnimationStyle("popup_animation_style"),
         menuPadding: control.getPadding("menu_padding"),
