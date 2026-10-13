@@ -1,5 +1,6 @@
 """Invariants of the `flet build` cookiecutter template itself."""
 
+import argparse
 import json
 import re
 from pathlib import Path
@@ -140,3 +141,89 @@ class TestBuildTemplateContract:
         manifest = json.loads(rendered)
         assert manifest["name"] == "Flet Studio"
         assert manifest["short_name"] == "Studio"
+
+
+class TestDefaultArtifactName:
+    """The `.app` name is what macOS users see (Finder, Dock, app menu), so it
+    defaults to the product name there; executables elsewhere keep the
+    project name (#6966)."""
+
+    def test_macos_uses_the_product_name(self):
+        assert (
+            BaseBuildCommand.default_artifact_name("macos", "Acme Notes", "acme_notes")
+            == "Acme Notes"
+        )
+
+    def test_macos_replaces_characters_file_names_cannot_hold(self):
+        assert (
+            BaseBuildCommand.default_artifact_name("macos", "Notes: A/B", "notes")
+            == "Notes- A-B"
+        )
+
+    def test_macos_falls_back_to_the_project_name(self):
+        assert BaseBuildCommand.default_artifact_name("macos", " ", "notes") == "notes"
+
+    @pytest.mark.parametrize("platform", ["windows", "linux", "android", "ios", "web"])
+    def test_other_platforms_use_the_project_name(self, platform):
+        assert (
+            BaseBuildCommand.default_artifact_name(platform, "Acme Notes", "acme_notes")
+            == "acme_notes"
+        )
+
+
+class TestResolvePermissions:
+    """Permission bundles follow the per-platform override rule: a platform
+    list replaces the common one; `[]` applies none."""
+
+    @staticmethod
+    def _command(platform: str, pyproject: dict, cli=None) -> BaseBuildCommand:
+        cmd = BaseBuildCommand.__new__(BaseBuildCommand)
+        cmd.config_platform = platform
+        cmd.options = argparse.Namespace(permissions=cli)
+
+        def get(path):
+            node = pyproject
+            for part in path.split("."):
+                if not isinstance(node, dict) or part not in node:
+                    return None
+                node = node[part]
+            return node
+
+        cmd.get_pyproject = get
+        return cmd
+
+    def test_common_list(self):
+        project = {"tool": {"flet": {"permissions": ["location", "camera"]}}}
+        assert self._command("ios", project).resolve_permissions() == [
+            "location",
+            "camera",
+        ]
+
+    def test_platform_list_replaces_the_common_one(self):
+        project = {
+            "tool": {
+                "flet": {
+                    "permissions": ["location", "camera"],
+                    "macos": {"permissions": ["microphone"]},
+                }
+            }
+        }
+        assert self._command("macos", project).resolve_permissions() == ["microphone"]
+        assert self._command("ios", project).resolve_permissions() == [
+            "location",
+            "camera",
+        ]
+
+    def test_empty_platform_list_applies_none(self):
+        project = {
+            "tool": {
+                "flet": {"permissions": ["camera"], "android": {"permissions": []}}
+            }
+        }
+        assert self._command("android", project).resolve_permissions() == []
+
+    def test_cli_wins(self):
+        project = {"tool": {"flet": {"permissions": ["camera"]}}}
+        assert self._command(
+            "ios", project, cli=["biometric"]
+        ).resolve_permissions() == ["biometric"]

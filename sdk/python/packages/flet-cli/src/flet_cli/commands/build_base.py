@@ -10,7 +10,7 @@ import platform
 import re
 import shutil
 from pathlib import Path
-from typing import Optional, cast
+from typing import Any, Optional, cast
 
 import yaml
 from flet_platform_assets import (
@@ -1057,13 +1057,18 @@ class BaseBuildCommand(BaseFlutterCommand):
         )
         project_name_slug = slugify(cast(str, project_name_raw))
         project_name = project_name_slug.replace("-", "_")
+        product_name = (
+            self.options.product_name
+            or self.get_pyproject("tool.flet.product")
+            or project_name_raw
+        )
         artifact_name = (
             self.options.artifact_name
             or self.get_pyproject(f"tool.flet.{self.config_platform}.artifact")
             or self.get_pyproject("tool.flet.artifact")
-            or self.options.project_name
-            or self.get_pyproject("project.name")
-            or self.python_app_path.name
+            or self.default_artifact_name(
+                self.config_platform, product_name, project_name_raw
+            )
         )
         # Under integration test, `flutter test -d <desktop>` launches the built
         # binary by the project name (the Flutter pubspec `name`), but the
@@ -1072,13 +1077,6 @@ class BaseBuildCommand(BaseFlutterCommand):
         # test host can't find the binary. Pin them equal in test mode.
         if getattr(self, "test_mode", False):
             artifact_name = project_name
-        product_name = (
-            self.options.product_name
-            or self.get_pyproject("tool.flet.product")
-            or self.options.project_name
-            or self.get_pyproject("project.name")
-            or self.python_app_path.name
-        )
 
         split_per_abi = (
             self.options.split_per_abi
@@ -1181,11 +1179,7 @@ class BaseBuildCommand(BaseFlutterCommand):
         )
 
         # merge values from "--permissions" arg:
-        for p in (
-            self.options.permissions
-            or self.get_pyproject("tool.flet.permissions")
-            or []
-        ):
+        for p in self.resolve_permissions():
             if p in self.cross_platform_permissions:
                 permission_config = self.cross_platform_permissions[p]
                 info_plist.update(
@@ -3002,6 +2996,23 @@ class BaseBuildCommand(BaseFlutterCommand):
                 return value
         return self.get_pyproject(f"tool.flet.deep_linking.{key}")
 
+    def resolve_permissions(self) -> list[str]:
+        """
+        The cross-platform permission bundles to apply: `--permissions`, else
+        `[tool.flet.<platform>].permissions`, else `[tool.flet].permissions`.
+
+        A platform list replaces the common one, so `[]` applies none on that
+        platform.
+
+        Returns:
+            Bundle names, e.g. `["location", "camera"]`.
+        """
+
+        assert self.options
+        return list(
+            self.options.permissions or self.get_platform_setting("permissions") or []
+        )
+
     def get_platform_setting(self, pyproj_setting, default_value=None):
         """
         Resolve a pyproject setting with precedence: platform, global, default.
@@ -3467,6 +3478,35 @@ class BaseBuildCommand(BaseFlutterCommand):
                     f"[cyan]{renamed}[/cyan].",
                     style=verbose1_style,
                 )
+
+    @staticmethod
+    def default_artifact_name(
+        config_platform: Optional[str], product_name: Any, project_name: Any
+    ) -> str:
+        """
+        The artifact name when none is set.
+
+        On macOS the `.app` name is what users see: Finder, Launchpad,
+        Spotlight and the Dock show it, and `CFBundleName` (the app menu,
+        "About …", "Quit …") is `$(PRODUCT_NAME)`, the artifact name. So it
+        defaults to the product name there, without the `/` and `:` a macOS
+        file name can't contain. Elsewhere it names an executable and
+        defaults to the project name.
+
+        Args:
+            config_platform: The `[tool.flet.<platform>]` section in use.
+            product_name: The resolved product name.
+            project_name: The project name as given (not slugified).
+
+        Returns:
+            The artifact name to build with.
+        """
+
+        if config_platform == "macos":
+            name = str(product_name).replace("/", "-").replace(":", "-").strip()
+            if name:
+                return name
+        return str(project_name)
 
     @staticmethod
     def escape_single_quoted_yaml(value: Optional[str]) -> str:
