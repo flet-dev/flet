@@ -119,7 +119,9 @@ class WebView(ft.LayoutControl):
     `int` and contains the progress value.
 
     Note:
-        On Windows and web the progress is only ever `0` or `100`.
+        - On Windows and web the progress is only ever `0` or `100`.
+        - In web apps compiled to JavaScript (not WebAssembly), while
+          :attr:`on_scroll` is set, a page from another origin reports only `0`.
     """
 
     on_url_change: Optional[ft.ControlEventHandler["WebView"]] = None
@@ -399,6 +401,9 @@ class WebView(ft.LayoutControl):
             - On web a :attr:`~flet_webview.RequestMethod.POST` request is sent
               by the app itself, so the browser's cross-origin (CORS) rules apply
               to it.
+            - On Windows a :attr:`~flet_webview.RequestMethod.POST` request fails
+              and fires :attr:`on_web_resource_error`, because it is sent without
+              a body.
         """
         self._check_platform_support("load_request")
         await self._invoke_method(

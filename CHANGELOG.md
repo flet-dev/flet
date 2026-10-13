@@ -73,6 +73,7 @@
 * `flet build windows` now escapes the company and product names itself: remove any `""` or `\\` added by hand to work around the old behavior, otherwise the app looks for its data in a different folder ([#7038](https://github.com/flet-dev/flet/pull/7038)) by @ndonkoHenri.
 * The Flet desktop client is no longer built for Debian 10 on ARM64: `flet run` on an ARM64 Linux system with glibc older than 2.31 (Debian 10 and other glibc 2.28 distros) now stops with an error naming the glibc it needs. Debian 10 on x86-64 is still supported by @FeodorFitsner.
 * flet-audio: On Android, every `Audio` of an app now plays together by default, where one used to pause the others for good, and other apps' audio gets quieter instead of pausing. Set `context=AudioContext(focus=AudioFocus.GAIN)` on a music player to keep pausing other audio. See the [Android: every Audio now plays together by default](/docs/updates/breaking-changes/v1-1-0/android-audio-focus-default) guide ([#7034](https://github.com/flet-dev/flet/issues/7034), [#7043](https://github.com/flet-dev/flet/pull/7043)) by @ndonkoHenri.
+* The `full` flavor of the prebuilt Linux desktop client now needs `libwebkit2gtk-4.1-0` (Debian 12, Ubuntu 22.04 and newer) to start, even for apps that don't use `WebView`: install it with `sudo apt install libwebkit2gtk-4.1-0`. The default `light` flavor has no `WebView` and doesn't need it ([#6530](https://github.com/flet-dev/flet/issues/6530)) by @ndonkoHenri.
 
 ### New features
 
