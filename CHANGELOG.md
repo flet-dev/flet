@@ -9,6 +9,7 @@
 
 ### New features
 
+* Add `Page.get_package_info()`, returning `ft.PackageInfo` with the running app's name, package name, version, build number, build signature, installer store, and install/update times. A `flet build` app gets the `--build-version` and `--build-number` it was built with, so it no longer needs its own copy of the version ([#6950](https://github.com/flet-dev/flet/issues/6950)) by @FeodorFitsner.
 * `flet build`: permission bundles can be set per platform with `[tool.flet.<platform>].permissions`, which replaces `[tool.flet].permissions` for that platform (`[]` applies none) by @FeodorFitsner.
 * Add `InteractiveViewer.get_scale()`, `get_transform()`, and
   `on_transform_changed` to expose the effective zoom scale,

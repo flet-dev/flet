@@ -704,6 +704,20 @@ version = "1.0.0"
 </TabItem>
 </Tabs>
 
+#### Reading the version at runtime
+
+The build version and build number are embedded in the built app, so it can
+read them with [`Page.get_package_info()`](../controls/page.md#flet.Page.get_package_info)
+instead of keeping its own copy of the version:
+
+```python
+info = await page.get_package_info()
+print(info.version, info.build_number)  # 1.0.0 1
+```
+
+See [`PackageInfo`](../types/packageinfo.md) for the other metadata it returns and
+for what it describes when the app is not packaged with `flet build`.
+
 ### Output directory
 
 The directory where the build output is saved.

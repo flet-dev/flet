@@ -28,6 +28,7 @@ import '../utils/animations.dart';
 import '../utils/device_info.dart';
 import '../utils/locale.dart';
 import '../utils/numbers.dart';
+import '../utils/package_info.dart';
 import '../utils/platform.dart';
 import '../utils/platform_utils_web.dart'
     if (dart.library.io) "../utils/platform_utils_non_web.dart";
@@ -394,6 +395,8 @@ class _PageControlState extends State<PageControl> with WidgetsBindingObserver {
         break;
       case "get_device_info":
         return await getDeviceInfo();
+      case "get_package_info":
+        return await getPackageInfo();
       case "set_allowed_device_orientations":
         if (isMobilePlatform()) {
           var orientations = args["orientations"]

@@ -684,6 +684,7 @@ docs:
           ContinuousRectangleBorder: types/continuousrectangleborder.md
           RoundedRectangleBorder: types/roundedrectangleborder.md
           StadiumBorder: types/stadiumborder.md
+      - types/packageinfo.md
       - types/padding.md
       - types/paint.md
       - PaintGradient:
