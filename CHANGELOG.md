@@ -44,7 +44,7 @@
 
 ### Bug fixes
 
-* Fix a declarative component moved to a structurally different parent (for example a `Column` replaced by a `Row` when a responsive layout switches) being re-rendered as a fresh, never-mounted copy: its state was lost, its mount effects never ran and later state updates were ignored until a page reload, while the old copy stayed in the session index. A moved, already-mounted component now keeps its body by @FeodorFitsner.
+* Fix a declarative component moved to a structurally different parent (for example a `Column` replaced by a `Row` when a responsive layout switches) being re-rendered as a fresh, never-mounted copy: its state was lost, its mount effects never ran and later state updates were ignored until a page reload, while the old copy stayed in the session index. A moved, already-mounted component now keeps its body ([#6970](https://github.com/flet-dev/flet/issues/6970)) by @FeodorFitsner.
 * Fix a client method call (e.g. `FletApp.wait_idle()`) failing with "Concurrent modification during iteration" when the control's widget was rebuilt while the call was in progress by @FeodorFitsner.
 * Fix an app freezing - no more events or updates processed - when a client method result (e.g. an embedded `FletApp`'s `wait_idle()`) arrived after its control had been removed: the session raised on it, which ended the connection's receive loop. The result now reaches its caller, and every transport (Pyodide, socket, FastAPI) logs a failing message and keeps receiving instead of stopping by @FeodorFitsner.
 * Fix `Markdown` links always being blue and blockquotes light blue regardless of the theme: their defaults now come from the color scheme (`primary` for links, a surface container color for blockquotes) by @FeodorFitsner.
