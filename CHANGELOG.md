@@ -84,6 +84,7 @@
 * Group the Reference > Controls section of the docs into Core, Material, Cupertino, Shadcn and Extensions ([#6918](https://github.com/flet-dev/flet/pull/6918)) by @InesaFitsner.
 * Document reading query string parameters with `page.query` in the [Navigation and Routing](/docs/cookbook/navigation-and-routing#query-strings) guide, and add a `QueryString` reference page ([#5898](https://github.com/flet-dev/flet/issues/5898), [#6942](https://github.com/flet-dev/flet/pull/6942)) by @ndonkoHenri.
 * Add a Distributing section to the Windows publishing guide: an Inno Setup installer script, a zip archive, code signing, and building the installer in GitHub Actions ([#6957](https://github.com/flet-dev/flet/pull/6957)) by @ndonkoHenri.
+* Add a Microsoft Store section to the Windows publishing guide: packaging the app as an MSIX, testing it locally and with the Windows App Certification Kit, and submitting it through Partner Center ([#6968](https://github.com/flet-dev/flet/pull/6968)) by @ndonkoHenri.
 
 ## 1.0.4
 
