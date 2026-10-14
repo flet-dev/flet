@@ -531,22 +531,25 @@ jobs:
           export DEBIAN_FRONTEND=noninteractive
           export TZ=Etc/UTC
           if [[ "$DISTRO_ID" == "debian10" ]]; then
+            # Some archive.debian.org CDN edges persistently return 404 for
+            # packages the archive has. apt's mirror method fetches any file
+            # that fails from the next mirror: ftp.de.debian.org carries an
+            # identical copy of the archive.
+            for repo in debian debian-security; do
+              printf '%s\tpriority:1\n%s\tpriority:2\n' \
+                "http://archive.debian.org/$repo" \
+                "http://ftp.de.debian.org/debian-archive/$repo" \
+                > "/etc/apt/mirrors-$repo.txt"
+            done
             printf '%s\n' \
-              'deb http://archive.debian.org/debian buster main' \
-              'deb http://archive.debian.org/debian buster-updates main' \
-              'deb http://archive.debian.org/debian-security buster/updates main' \
+              'deb mirror+file:/etc/apt/mirrors-debian.txt buster main' \
+              'deb mirror+file:/etc/apt/mirrors-debian.txt buster-updates main' \
+              'deb mirror+file:/etc/apt/mirrors-debian-security.txt buster/updates main' \
               > /etc/apt/sources.list
             echo 'Acquire::Check-Valid-Until "false";' > /etc/apt/apt.conf.d/99no-check-valid-until
           fi
           apt-get update
-          # archive.debian.org's CDN sometimes serves cached 404s for packages it
-          # has; they clear within minutes, so retry. Downloaded packages are kept.
-          for attempt in 1 2 3 4 5; do
-            apt-get install -y git curl unzip xz-utils zip ca-certificates jq tzdata && break
-            [[ $attempt -lt 5 ]] || exit 1
-            echo "::warning::apt-get install failed (attempt $attempt), retrying in 60s"
-            sleep 60
-          done
+          apt-get install -y git curl unzip xz-utils zip ca-certificates jq tzdata
 
       - name: Checkout repository
         uses: actions/checkout@df4cb1c069e1874edd31b4311f1884172cec0e10 # v6.0.3
@@ -588,13 +591,7 @@ jobs:
           apt-get update --allow-releaseinfo-change
           LINUX_DEPS="$(uv run --project sdk/python/packages/flet-cli flet --version --json | jq -r '.linux_dependencies | join(" ")')"
           read -r -a linux_deps <<< "$LINUX_DEPS"
-          # Retried for archive.debian.org's cached 404s, as in "Install base packages".
-          for attempt in 1 2 3 4 5; do
-            apt-get install -y "${linux_deps[@]}" && break
-            [[ $attempt -lt 5 ]] || exit 1
-            echo "::warning::apt-get install failed (attempt $attempt), retrying in 60s"
-            sleep 60
-          done
+          apt-get install -y "${linux_deps[@]}"
 
       - name: Build Flutter Linux clients
         shell: bash
