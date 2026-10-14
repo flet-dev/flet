@@ -858,7 +858,8 @@ Here is how the same transparent image looks across platforms:
 A *maskable* web icon is used when a browser installs your app and the launcher
 applies its own icon shape, such as a circle or rounded square.
 
-If you do not supply an icon, Flet uses the default Flet icons.
+If you do not supply an icon, Flet generates the icons from the Flet logo in the
+same way.
 
 #### Background colour
 

@@ -16,6 +16,9 @@ Homepage = "https://flet.dev"
 Repository = "https://github.com/flet-dev/flet"
 Documentation = "https://flet.dev/docs"
 
+[tool.setuptools.package-data]
+flet_platform_assets = ["default_icon.svg"]
+
 [build-system]
 requires = ["setuptools"]
 build-backend = "setuptools.build_meta"

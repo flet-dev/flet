@@ -66,7 +66,7 @@ class TestBuildTemplateContract:
             try:
                 text = path.read_text()
             except UnicodeDecodeError:
-                continue  # binary asset, e.g. images/icon.png
+                continue  # binary asset, e.g. an icon
             # The negative lookahead skips method calls such as
             # `cookiecutter.items()` in .vars, which are not context keys.
             for key in re.findall(

@@ -45,6 +45,10 @@ paths to keep the result independent of fonts installed on the build host.
 `load_source(path, svg_size=1024)` uses a smaller SVG render canvas. `flet build`
 uses this for splashes, matching the on-screen size of a 1024px PNG source.
 
+`DEFAULT_ICON` is the path to the bundled Flet logo SVG. `flet build` renders
+icons and the splash from it, with `derived=True`, for an app that supplies no
+icon, so a preview made from it matches what the build produces.
+
 ## What it will not do
 
 It never re-frames your artwork. The padding inside your icon is a design

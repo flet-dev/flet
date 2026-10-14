@@ -704,13 +704,8 @@ def test_image_details_are_inside_generation_groups(github, image_build):
 @pytest.mark.parametrize(
     "case, icons, splash",
     [
-        ("default", "Using default app icons OK", "Generated splash screens OK"),
+        ("default", "Generated default app icons OK", "Generated splash screens OK"),
         ("cached", "App icons are up to date OK", "Splash screens are up to date OK"),
-        (
-            "missing",
-            "Using default app icons OK",
-            "Skipped splash screens: no source image found",
-        ),
     ],
 )
 def test_skipped_image_generation_groups_have_a_result(
@@ -725,8 +720,6 @@ def test_skipped_image_generation_groups_have_a_result(
         github.truncate()
     else:
         (cmd.package_app_path / "assets" / "icon.png").unlink()
-        if case == "missing":
-            (cmd.flutter_dir / "images" / "icon.png").unlink()
 
     cmd.customize_icons()
     cmd.customize_splash_images()

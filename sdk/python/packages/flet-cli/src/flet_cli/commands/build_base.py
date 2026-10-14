@@ -14,6 +14,7 @@ from typing import Any, Optional, cast
 
 import yaml
 from flet_platform_assets import (
+    DEFAULT_ICON,
     DEFAULT_SPECS,
     AssetSpec,
     IconOptions,
@@ -2130,7 +2131,6 @@ class BaseBuildCommand(BaseFlutterCommand):
                         self.assets_path, "icon", hash
                     )
                     derived = source_name is not None
-            hash.update(derived)
 
             options = IconOptions(
                 background=self._resolve_icon_background(),
@@ -2139,17 +2139,16 @@ class BaseBuildCommand(BaseFlutterCommand):
             )
             hash.update(options)
 
+            # With no icon of its own, an app gets icons generated from the Flet
+            # logo the same way, so the template's committed icons are only
+            # placeholders and every build's icons come from one pipeline.
+            source_path = (
+                self.assets_path.joinpath(source_name) if source_name else DEFAULT_ICON
+            )
             if source_name is None:
-                # Rule 2: with no user icon there is nothing to improve on. The
-                # template's committed icons are better than anything derivable
-                # from a finished `images/icon.png`, and flutter_launcher_icons
-                # overwrote them on every build.
-                self._restore_generated_icons()
-                hash.commit()
-                console.log(f"Using default app icons {self.emojis['checkmark']}")
-                return
-
-            source_path = self.assets_path.joinpath(source_name)
+                derived = True
+            hash.update(str(source_path))
+            hash.update(derived)
             hash.update(source_path.stat().st_mtime)
 
             if not hash.has_changed() and not self._icons_missing(platform):
@@ -2162,9 +2161,13 @@ class BaseBuildCommand(BaseFlutterCommand):
             except SourceError as e:
                 if source_path.suffix.lower() == ".svg":
                     self.cleanup(1, f"Could not generate app icons: {e}")
-                self.warn(e, title="App icon", file=annotation_path(source_path))
-                hash.commit()
-                return
+                self.warn(
+                    f"{e}. Using the default Flet icon.",
+                    title="App icon",
+                    file=annotation_path(source_path),
+                )
+                source_path, derived = DEFAULT_ICON, True
+                source, pre_rendered = load_source(source_path)
 
             # Deliberately not squared first. Every icon is composed by centring
             # the artwork on a square canvas anyway, so padding here would be
@@ -2193,13 +2196,15 @@ class BaseBuildCommand(BaseFlutterCommand):
             for message in result.warnings:
                 self.warn(message, title="App icon", file=annotation_path(source_path))
 
-            self._backup_generated_icons(result)
             write(
                 result,
                 self.flutter_dir,
                 declared_only=platform not in ICONS_CREATED_FRESH,
             )
-            console.log(f"Generated app icons {self.emojis['checkmark']}")
+            console.log(
+                f"Generated {'default ' if source_path == DEFAULT_ICON else ''}"
+                f"app icons {self.emojis['checkmark']}"
+            )
 
             hash.commit()
 
@@ -2319,50 +2324,6 @@ class BaseBuildCommand(BaseFlutterCommand):
                 return True
         return False
 
-    def _backup_generated_icons(self, result) -> None:
-        """
-        Keep the template's own icon under `.icons-orig` before overwriting it.
-
-        A user who deletes their `assets/icon.png` should get the template's
-        icon back, not keep the one generated from an asset that no longer
-        exists.
-
-        Args:
-            result: The render whose targets are about to be written.
-        """
-
-        assert self.build_dir
-        assert self.flutter_dir
-
-        backup_dir = self.build_dir / ".icons-orig"
-        paths = [asset.relative_path for asset in result.assets] + list(result.ico)
-        for relative_path in paths:
-            target = self.flutter_dir / relative_path
-            saved = backup_dir / relative_path
-            if target.is_file() and not saved.exists():
-                saved.parent.mkdir(parents=True, exist_ok=True)
-                shutil.copy(target, saved)
-
-    def _restore_generated_icons(self) -> None:
-        """
-        Put back every icon a previous build overwrote.
-
-        Called when no user icon resolves, so that removing `assets/icon.png`
-        returns the app to the template's committed icons.
-        """
-
-        assert self.build_dir
-        assert self.flutter_dir
-
-        backup_dir = self.build_dir / ".icons-orig"
-        if not backup_dir.is_dir():
-            return
-        for saved in backup_dir.rglob("*"):
-            if saved.is_file():
-                target = self.flutter_dir / saved.relative_to(backup_dir)
-                target.parent.mkdir(parents=True, exist_ok=True)
-                shutil.copy(saved, target)
-
     def customize_splash_images(self):
         """
         Resolve splash artwork for the target platform and generate every size.
@@ -2425,23 +2386,11 @@ class BaseBuildCommand(BaseFlutterCommand):
             hash.update(derived)
 
             light_path = (
-                self.assets_path.joinpath(light_name)
-                if light_name
-                else self.flutter_dir.joinpath("images", "icon.png")
+                self.assets_path.joinpath(light_name) if light_name else DEFAULT_ICON
             )
             if light_name is None:
-                # The template's own icon, which is an icon like any other.
+                # The Flet logo, the same default the app icons fall back to.
                 derived = True
-            if not light_path.is_file():
-                # A custom build template may ship no `images/icon.png`, leaving
-                # nothing to derive a splash from. The template ships 1x1
-                # transparent `drawable/splash.png` and `drawable/android12splash.png`
-                # so `@drawable/splash` and the Android 12 theme still resolve;
-                # without them this path fails resource linking outright rather
-                # than degrading to a plain background.
-                hash.commit()
-                console.log("Skipped splash screens: no source image found")
-                return
 
             dark_path = self.assets_path.joinpath(dark_name) if dark_name else None
             for path in (light_path, dark_path):
