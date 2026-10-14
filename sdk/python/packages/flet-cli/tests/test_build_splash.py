@@ -314,11 +314,11 @@ class TestAndroidAdaptiveIcon:
 class TestSplashPlaceholders:
     """`@drawable/splash` must always resolve, even when nothing is generated.
 
-    A custom build template may ship no `images/icon.png`, leaving no source
-    to derive a splash from. The generator returns early there, which used to
-    leave `launch_background.xml` and `values-v31/styles.xml` pointing at
-    drawables that did not exist - Android resource linking fails outright,
-    which is not the graceful degradation the code claimed.
+    A custom build template, or a build that skips splash generation, may
+    produce no splash images. That used to leave `launch_background.xml` and
+    `values-v31/styles.xml` pointing at drawables that did not exist - Android
+    resource linking fails outright, which is not the graceful degradation the
+    code claimed.
     """
 
     @pytest.mark.parametrize("name", ["splash.png", "android12splash.png"])

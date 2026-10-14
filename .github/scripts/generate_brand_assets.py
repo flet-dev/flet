@@ -62,6 +62,7 @@ SYMBOL_SVG = LOGO_DIR / "logo-symbol.svg"
 
 TEMPLATE_BUILD = REPO / "sdk/python/templates/build/{{cookiecutter.out_dir}}"
 TEMPLATE_APP = REPO / "sdk/python/templates/app/app/{{cookiecutter.out_dir}}"
+PLATFORM_ASSETS = REPO / "sdk/python/packages/flet-platform-assets/src/flet_platform_assets"
 CLIENT = REPO / "client"
 EXAMPLES = REPO / "sdk/python/examples"
 INTEGRATION = REPO / "sdk/python/packages/flet/integration_tests"
@@ -242,11 +243,6 @@ def build_manifest() -> list[tuple[str, Path, dict]]:
             {"canvas": 192, "h_frac": CLIENT_ANDROID_FRAC},
         )
     )
-    # The splash's last-resort source, not an icon source: `flet build`
-    # generates no icons at all when the app supplies none. A splash is drawn
-    # at its natural size on a full screen, so this stays framed.
-    glyph(1024, TEMPLATE_BUILD / "images/icon.png")
-
     # Raster icon source for the example. The app template uses the SVG master
     # directly (see SVG_COPIES), so regenerating must not create a PNG sibling.
     m.append(
@@ -273,9 +269,10 @@ def build_manifest() -> list[tuple[str, Path, dict]]:
         )
 
     # The adaptive-icon foreground layer, referenced by
-    # mipmap-anydpi-v26/ic_launcher.xml. The template has to ship these: an app
-    # with no icon of its own generates nothing, and an unresolved
-    # @drawable/ic_launcher_foreground fails Android resource linking outright.
+    # mipmap-anydpi-v26/ic_launcher.xml. `flet build` regenerates them on every
+    # build, from the app's icon or flet-platform-assets' default one, but the
+    # template still ships them: an unresolved @drawable/ic_launcher_foreground
+    # fails Android resource linking outright.
     for folder, size in ANDROID_ADAPTIVE_SIZES.items():
         m.append(
             (
@@ -354,10 +351,10 @@ def build_manifest() -> list[tuple[str, Path, dict]]:
             CLIENT / f"linux/icons/hicolor/{size}x{size}/apps/com.appveyor.flet.png",
         )
 
-    # The build template ships Linux icons for the same reason it ships them
-    # for every other platform: an app that supplies no icon of its own still
-    # gets the Flet one. Without these, `flet build linux` produced a bundle
-    # with no icon while iOS, macOS, Windows and web all had theirs.
+    # The build template's icons are placeholders: `flet build` overwrites them
+    # on every build, from the app's icon or flet-platform-assets' default one.
+    # On iOS, macOS, Windows and web it only overwrites files the template
+    # already has, so those must stay; Linux keeps them for parity.
     bundle = "{{cookiecutter.bundle_id}}"
     tight(256, TEMPLATE_BUILD / "linux/app_icon.png")
     for size in LINUX_HICOLOR_SIZES:
@@ -412,6 +409,9 @@ def build_manifest() -> list[tuple[str, Path, dict]]:
 
 SVG_COPIES = [
     (SYMBOL_SVG, TEMPLATE_APP / "src/assets/icon.svg"),
+    # What `flet build` renders icons and the splash from when an app supplies
+    # no icon of its own.
+    (SYMBOL_SVG, PLATFORM_ASSETS / "default_icon.svg"),
     (SYMBOL_SVG, WEB_STATIC / "logo.svg"),
     (SYMBOL_SVG, INTEGRATION / "assets/logo.svg"),
     (LOGO_DIR / "flet-logo.svg", WEB_STATIC / "flet-logo.svg"),

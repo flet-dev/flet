@@ -71,7 +71,6 @@ def _run_customize_icons(
     *,
     assets: Optional[dict[str, bytes]] = None,
     target_platform: str = "linux",
-    template_default_icon: bool = True,
 ) -> BaseBuildCommand:
     """
     Drive `BaseBuildCommand.customize_icons` against a faked project layout.
@@ -81,8 +80,6 @@ def _run_customize_icons(
         assets: mapping of file name to content for the user's `assets` dir,
             or `None` for an app without an assets dir.
         target_platform: `flet build` target platform.
-        template_default_icon: whether the rendered Flutter project ships
-            the template's default `images/icon.png`.
 
     Returns:
         The faked command object, with `flutter_dir` and friends set.
@@ -97,10 +94,7 @@ def _run_customize_icons(
             (assets_dir / name).write_bytes(content)
 
     flutter_dir = tmp_path / "flutter"
-    (flutter_dir / "images").mkdir(parents=True, exist_ok=True)
-    if template_default_icon:
-        (flutter_dir / "images" / "icon.png").write_bytes(_png_bytes())
-    (flutter_dir / "linux").mkdir(exist_ok=True)
+    (flutter_dir / "linux").mkdir(parents=True, exist_ok=True)
 
     build_dir = tmp_path / "build"
     build_dir.mkdir(exist_ok=True)
@@ -191,11 +185,11 @@ class TestLinuxIconGeneration:
         # the 64px generic one.
         assert _png_size(_hicolor(cmd, 512)) == (512, 512)
 
-    def test_no_user_icon_generates_nothing(self, tmp_path):
-        """Rule 2: the template's committed icons are better than anything
-        derivable from a finished images/icon.png, and are left alone."""
+    def test_no_user_icon_generates_default_icons(self, tmp_path):
+        """An app without an icon gets the Flet logo, generated like any
+        other icon rather than copied from the template."""
         cmd = _run_customize_icons(tmp_path, assets=None)
-        assert not (cmd.flutter_dir / "linux" / "icons").exists()
+        assert _png_size(_hicolor(cmd, 512)) == (512, 512)
 
     def test_vector_only_assets_generate_icons(self, tmp_path):
         cmd = _run_customize_icons(
@@ -233,11 +227,13 @@ class TestLinuxIconGeneration:
         assert _png_size(_hicolor(cmd, 512)) == (512, 512)
 
     def test_unreadable_source_warns_without_failing(self, tmp_path, capsys):
-        """A Pillow-vs-Dart decode divergence must never fail a build."""
+        """A Pillow-vs-Dart decode divergence must never fail a build: the
+        app gets the default icon instead."""
         cmd = _run_customize_icons(tmp_path, assets={"icon.png": b"not-actually-a-png"})
-        assert not (cmd.flutter_dir / "linux" / "icons").exists()
+        assert _png_size(_hicolor(cmd, 512)) == (512, 512)
         combined = capsys.readouterr()
         assert "could not read" in (combined.out + combined.err)
+        assert "Using the default Flet icon" in (combined.out + combined.err)
 
 
 SENTINEL = b"stale-output-marker"

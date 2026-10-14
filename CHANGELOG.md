@@ -22,6 +22,7 @@
 
 ### Improvements
 
+* `flet build` always generates app icons and the splash screen. An app without an icon of its own gets them generated from the Flet logo, which `flet-platform-assets` now bundles as `DEFAULT_ICON`, instead of the build template's committed icons. Previews of the icons a build will produce now match the build for every app. The default web icons are the bare logo rather than the logo on a white tile by @FeodorFitsner.
 * Add `min_width`, `max_width`, `min_height` and `max_height` to every layout control. They are applied by the client on every layout pass, so a capped, centered column (e.g. `Container(max_width=760)` in a `Column(horizontal_alignment=CENTER)`) stays correct while the window resizes - no more computing widths in Python from `page.width` or `on_size_change`, which always lagged a frame or more behind by @FeodorFitsner.
 * Add `ft.MaterialTapTargetSize` with `Switch.material_tap_target_size` and `Theme.material_tap_target_size`: `SHRINK_WRAP` drops Material's 48px minimum tappable area for dense, pointer-driven layouts by @FeodorFitsner.
 * `Dropdown.height` now sizes the field itself, down to compact heights such as 32 or 40: the leading icon and trailing arrow no longer force a 48px minimum by @FeodorFitsner.
