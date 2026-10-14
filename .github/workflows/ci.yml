@@ -539,7 +539,14 @@ jobs:
             echo 'Acquire::Check-Valid-Until "false";' > /etc/apt/apt.conf.d/99no-check-valid-until
           fi
           apt-get update
-          apt-get install -y git curl unzip xz-utils zip ca-certificates jq tzdata
+          # archive.debian.org's CDN sometimes serves cached 404s for packages it
+          # has; they clear within minutes, so retry. Downloaded packages are kept.
+          for attempt in 1 2 3 4 5; do
+            apt-get install -y git curl unzip xz-utils zip ca-certificates jq tzdata && break
+            [[ $attempt -lt 5 ]] || exit 1
+            echo "::warning::apt-get install failed (attempt $attempt), retrying in 60s"
+            sleep 60
+          done
 
       - name: Checkout repository
         uses: actions/checkout@df4cb1c069e1874edd31b4311f1884172cec0e10 # v6.0.3
@@ -581,7 +588,13 @@ jobs:
           apt-get update --allow-releaseinfo-change
           LINUX_DEPS="$(uv run --project sdk/python/packages/flet-cli flet --version --json | jq -r '.linux_dependencies | join(" ")')"
           read -r -a linux_deps <<< "$LINUX_DEPS"
-          apt-get install -y "${linux_deps[@]}"
+          # Retried for archive.debian.org's cached 404s, as in "Install base packages".
+          for attempt in 1 2 3 4 5; do
+            apt-get install -y "${linux_deps[@]}" && break
+            [[ $attempt -lt 5 ]] || exit 1
+            echo "::warning::apt-get install failed (attempt $attempt), retrying in 60s"
+            sleep 60
+          done
 
       - name: Build Flutter Linux clients
         shell: bash
