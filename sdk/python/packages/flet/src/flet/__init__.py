@@ -518,6 +518,7 @@ if TYPE_CHECKING:
     )
     from flet.controls.material.vertical_divider import VerticalDivider
     from flet.controls.multi_view import MultiView
+    from flet.controls.package_info import PackageInfo
     from flet.controls.padding import (
         Padding,
         PaddingValue,
@@ -1062,6 +1063,7 @@ __all__ = [
     "OutlinedButtonTheme",
     "OutlinedIconButton",
     "OverlayVisibilityMode",
+    "PackageInfo",
     "Padding",
     "PaddingValue",
     "Page",
@@ -1611,6 +1613,7 @@ _LAZY = {
     "OutlinedButtonTheme": "flet.controls.theme",
     "OutlinedIconButton": "flet.controls.material.icon_button",
     "OverlayVisibilityMode": "flet.controls.cupertino.cupertino_textfield",
+    "PackageInfo": "flet.controls.package_info",
     "Padding": "flet.controls.padding",
     "PaddingValue": "flet.controls.padding",
     "Page": "flet.controls.page",

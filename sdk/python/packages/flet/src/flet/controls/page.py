@@ -43,6 +43,7 @@ from flet.controls.device_info import (
 )
 from flet.controls.exceptions import FletUnsupportedPlatformException
 from flet.controls.multi_view import MultiView
+from flet.controls.package_info import PackageInfo
 from flet.controls.query_string import QueryString
 from flet.controls.ref import Ref
 from flet.controls.services.service import Service
@@ -1454,6 +1455,21 @@ class Page(BasePage):
             return from_dict(WindowsDeviceInfo, info)
         else:
             return None
+
+    async def get_package_info(self) -> PackageInfo:
+        """
+        Returns package metadata of the running application, such as its name,
+        version and build number.
+
+        For an app packaged with `flet build`, this is the metadata of the
+        built app, including the version and build number it was built with.
+        Otherwise, it describes the Flet client that renders the app.
+        See :class:`~flet.PackageInfo` for details.
+
+        Returns:
+            The application's package information.
+        """
+        return from_dict(PackageInfo, await self._invoke_method("get_package_info"))
 
     async def set_allowed_device_orientations(
         self, orientations: list[DeviceOrientation]
