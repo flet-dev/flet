@@ -1,0 +1,26 @@
+[project]
+name = "notifications"
+version = "1.0.0"
+description = "Shows, schedules and cancels local notifications, with channels, actions and typed tap handlers."
+requires-python = ">=3.10"
+keywords = ["services", "notifications", "scheduling", "channels", "actions", "async"]
+authors = [{ name = "Flet team", email = "hello@flet.dev" }]
+dependencies = ["flet", "flet-notifications"]
+
+[dependency-groups]
+dev = ["flet-cli", "flet-desktop", "flet-web"]
+
+[tool.flet.gallery]
+categories = ["Utility/Notifications"]
+
+[tool.flet.metadata]
+title = "Notifications"
+controls = ["Page", "AppBar", "Column", "Container", "Divider", "OutlinedButton", "Text", "LocalNotifications"]
+layout_pattern = "control-panel"
+complexity = "advanced"
+features = ["local notifications", "scheduling", "channels", "actions", "typed tap handlers"]
+
+[tool.flet]
+org = "dev.flet"
+company = "Flet"
+copyright = "Copyright (C) 2023-2026 by Flet"

@@ -22,6 +22,7 @@ dependencies = [
     "flet-lottie",
     "flet-local-auth",
     "flet-map",
+    "flet-notifications",
     "flet-permission-handler",
     "flet-rive",
     "flet-secure-storage",
@@ -56,6 +57,7 @@ flet-geolocator = { path = "../../../packages/flet-geolocator", editable = true 
 flet-lottie = { path = "../../../packages/flet-lottie", editable = true }
 flet-local-auth = { path = "../../../packages/flet-local-auth", editable = true }
 flet-map = { path = "../../../packages/flet-map", editable = true }
+flet-notifications = { path = "../../../packages/flet-notifications", editable = true }
 flet-permission-handler = { path = "../../../packages/flet-permission-handler", editable = true }
 flet-rive = { path = "../../../packages/flet-rive", editable = true }
 flet-secure-storage = { path = "../../../packages/flet-secure-storage", editable = true }
@@ -79,6 +81,7 @@ flet-geolocator = "../../../packages/flet-geolocator"
 flet-lottie = "../../../packages/flet-lottie"
 flet-local-auth = "../../../packages/flet-local-auth"
 flet-map = "../../../packages/flet-map"
+flet-notifications = "../../../packages/flet-notifications"
 flet-permission-handler = "../../../packages/flet-permission-handler"
 flet-rive = "../../../packages/flet-rive"
 flet-secure-storage = "../../../packages/flet-secure-storage"

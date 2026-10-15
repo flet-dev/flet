@@ -64,6 +64,7 @@ extensions = [
     "flet-lottie",
     "flet-local-auth",
     "flet-map",
+    "flet-notifications",
     "flet-permission-handler",
     "flet-rive",
     "flet-secure-storage",
