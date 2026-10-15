@@ -79,6 +79,9 @@ dependencies:
   flet_map:
     path: ../sdk/python/packages/flet-map/src/flutter/flet_map
 
+  flet_notifications:
+    path: ../sdk/python/packages/flet-notifications/src/flutter/flet_notifications
+
   flet_permission_handler:
     path: ../sdk/python/packages/flet-permission-handler/src/flutter/flet_permission_handler
 

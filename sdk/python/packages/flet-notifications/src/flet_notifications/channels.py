@@ -1,0 +1,86 @@
+"""Android notification channels."""
+
+from __future__ import annotations
+
+from dataclasses import dataclass
+
+from flet_notifications.types import Importance
+
+
+@dataclass(kw_only=True)
+class NotificationChannel:
+    """An Android notification channel (required since Android 8.0).
+
+    Sound and vibration are fixed at channel creation; to change them you
+    create a new channel with a new id.
+    """
+
+    id: str
+    name: str
+    description: str = ""
+    group_id: str | None = None
+    importance: Importance = Importance.DEFAULT
+    bypass_dnd: bool = False
+    play_sound: bool = True
+    sound: str | None = None  # raw resource name, e.g. "alert"
+    enable_vibration: bool = True
+    vibration_pattern: list[int] | None = None
+    show_badge: bool = True
+    enable_lights: bool = False
+    led_color: str | None = None  # #RRGGBB
+
+    def __post_init__(self) -> None:
+        if not self.id:
+            raise ValueError("channel id is required")
+        if not self.name:
+            raise ValueError("channel name is required")
+        if self.led_color is not None:
+            self.led_color = _validate_hex(self.led_color)
+
+    def to_dict(self) -> dict:
+        return {
+            "id": self.id,
+            "name": self.name,
+            "description": self.description,
+            "group_id": self.group_id,
+            "importance": self.importance.value,
+            "bypass_dnd": self.bypass_dnd,
+            "play_sound": self.play_sound,
+            "sound": self.sound,
+            "enable_vibration": self.enable_vibration,
+            "vibration_pattern": (
+                list(self.vibration_pattern) if self.vibration_pattern else None
+            ),
+            "show_badge": self.show_badge,
+            "enable_lights": self.enable_lights,
+            "led_color": self.led_color,
+        }
+
+    @classmethod
+    def from_dict(cls, data: dict) -> NotificationChannel:
+        return cls(
+            id=str(data.get("id", "")),
+            name=str(data.get("name", "")),
+            description=str(data.get("description") or ""),
+            group_id=data.get("groupId") or data.get("group_id"),
+            importance=Importance(data.get("importance", "defaultImportance")),
+            bypass_dnd=bool(data.get("bypass_dnd", False)),
+            play_sound=bool(data.get("play_sound", True)),
+            sound=data.get("sound"),
+            enable_vibration=bool(data.get("enable_vibration", True)),
+            vibration_pattern=data.get("vibration_pattern"),
+            show_badge=bool(data.get("show_badge", True)),
+            enable_lights=bool(data.get("enable_lights", False)),
+            led_color=data.get("led_color"),
+        )
+
+
+def _validate_hex(value: str) -> str:
+    v = value.strip()
+    if not v.startswith("#") or len(v) not in (7, 9):
+        raise ValueError(f"invalid hex color: {value!r}")
+    try:
+        int(v[1:], 16)
+    except ValueError as e:
+        raise ValueError(f"invalid hex color: {value!r}") from e
+    return v

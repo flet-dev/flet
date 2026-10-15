@@ -1,0 +1,29 @@
+[project]
+name = "flet-notifications"
+version = "0.1.0"
+description = "Local notifications service for Flet"
+authors = [{name = "Appveyor Systems Inc.", email = "hello@flet.dev"}]
+readme = "README.md"
+requires-python = ">=3.10"
+dependencies = [
+    "flet",
+]
+
+[project.urls]
+Homepage = "https://flet.dev"
+Documentation = "https://flet.dev/docs/services/notifications"
+Repository = "https://github.com/flet-dev/flet/tree/main/sdk/python/packages/flet-notifications"
+Issues = "https://github.com/flet-dev/flet/issues"
+
+[project.scripts]
+flet-notifications-patch = "flet_notifications.patcher:main"
+
+[tool.setuptools.package-data]
+"flutter.flet_notifications" = [
+    "pubspec.yaml",
+    "lib/**",
+]
+
+[build-system]
+requires = ["setuptools"]
+build-backend = "setuptools.build_meta"
