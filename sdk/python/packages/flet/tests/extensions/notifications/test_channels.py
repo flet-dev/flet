@@ -2,6 +2,7 @@
 
 import pytest
 
+import flet as ft
 from flet_notifications import (
     BigTextStyle,
     Importance,
@@ -39,15 +40,29 @@ def test_channel_vibration_pattern():
     assert encode_wire(channel)["vibration_pattern"] == [0, 250, 100]
 
 
-def test_channel_led_color_validated():
+@pytest.mark.parametrize(
+    ("color", "wire_value"),
+    [
+        (ft.Colors.RED, "red"),
+        (ft.Colors.RED_700, "red700"),
+        (ft.CupertinoColors.ACTIVE_BLUE, "activeBlue"),
+        (ft.Colors.with_opacity(0.5, ft.Colors.RED), "red,0.5"),
+        ("#FF0000", "#FF0000"),
+        ("#80FF0000", "#80FF0000"),
+        ("  #FF0000  ", "  #FF0000  "),
+        ("#FFF", "#FFF"),
+        (None, None),
+    ],
+)
+def test_channel_led_color_values(color, wire_value):
     channel = NotificationChannel(
-        id="led", name="LED", led_color="#FF0000", enable_lights=True
+        id="led", name="LED", led_color=color, enable_lights=True
     )
-    assert channel.led_color == "#FF0000"
-    with pytest.raises(ValueError, match="hex"):
-        NotificationChannel(id="led", name="LED", led_color="red")
-    with pytest.raises(ValueError, match="hex"):
-        NotificationChannel(id="led", name="LED", led_color="#FFF")
+    payload = encode_wire(channel)
+    if wire_value is None:
+        assert "led_color" not in payload
+    else:
+        assert payload["led_color"] == wire_value
 
 
 def test_channel_from_dict_round_trip():

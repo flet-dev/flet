@@ -126,11 +126,29 @@ def test_android_options_full_round_trip():
     assert len(d) == 35
 
 
-def test_android_options_hex_validation():
-    with pytest.raises(ValueError, match="#RRGGBB"):
-        AndroidOptions(color="red")
-    with pytest.raises(ValueError, match="#RRGGBB"):
-        AndroidOptions(led_color="#FFF")
+@pytest.mark.parametrize(
+    ("color", "wire_value"),
+    [
+        (ft.Colors.RED, "red"),
+        (ft.Colors.RED_700, "red700"),
+        (ft.CupertinoColors.ACTIVE_BLUE, "activeBlue"),
+        (ft.Colors.with_opacity(0.5, ft.Colors.RED), "red,0.5"),
+        ("#FF0000", "#FF0000"),
+        ("#80FF0000", "#80FF0000"),
+        ("  #FF0000  ", "  #FF0000  "),
+        ("#FFF", "#FFF"),
+        ("#8FFF", "#8FFF"),
+        ("0xff00ff00", "0xff00ff00"),
+        (None, None),
+    ],
+)
+def test_android_options_color_values(color, wire_value):
+    options = AndroidOptions(color=color, led_color=color)
+    payload = encode_wire(options)
+    if wire_value is None:
+        assert payload == {}
+    else:
+        assert payload == {"color": wire_value, "led_color": wire_value}
 
 
 def test_darwin_options():

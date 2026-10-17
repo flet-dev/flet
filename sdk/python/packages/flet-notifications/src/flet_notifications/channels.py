@@ -26,15 +26,14 @@ class NotificationChannel:
     vibration_pattern: list[int] | None = None
     show_badge: bool = True
     enable_lights: bool = False
-    led_color: str | None = None  # #RRGGBB
+    led_color: ft.ColorValue | None = None
+    """Channel LED color, used when :attr:`enable_lights` is enabled."""
 
     def __post_init__(self) -> None:
         if not self.id:
             raise ValueError("channel id is required")
         if not self.name:
             raise ValueError("channel name is required")
-        if self.led_color is not None:
-            self.led_color = _validate_hex(self.led_color)
 
     @classmethod
     def from_dict(cls, data: dict) -> "NotificationChannel":
@@ -53,14 +52,3 @@ class NotificationChannel:
             enable_lights=bool(data.get("enable_lights", False)),
             led_color=data.get("led_color"),
         )
-
-
-def _validate_hex(value: str) -> str:
-    v = value.strip()
-    if not v.startswith("#") or len(v) not in (7, 9):
-        raise ValueError(f"invalid hex color: {value!r}")
-    try:
-        int(v[1:], 16)
-    except ValueError as e:
-        raise ValueError(f"invalid hex color: {value!r}") from e
-    return v

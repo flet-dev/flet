@@ -56,23 +56,12 @@ class WindowsScenario(Enum):
     URGENT = "urgent"
 
 
-def _validate_hex(value: str, what: str) -> str:
-    v = value.strip()
-    if not v.startswith("#") or len(v) not in (7, 9):
-        raise ValueError(f"{what} must be #RRGGBB or #AARRGGBB, got {value!r}")
-    try:
-        int(v[1:], 16)
-    except ValueError as e:
-        raise ValueError(f"{what} must be #RRGGBB or #AARRGGBB, got {value!r}") from e
-    return v
-
-
 @ft.value(kw_only=True)
 class AndroidOptions:
     """Android notification and channel details.
 
-    Channel fields (`channel_description`, `channel_bypass_dnd`,
-    `audio_attributes_usage`) apply when the channel is created — on
+    Channel fields (:attr:`channel_description`, :attr:`channel_bypass_dnd`,
+    :attr:`audio_attributes_usage`) apply when the channel is created — on
     Android 8+ sound/vibration are immutable after creation, so changing
     them needs a new channel id.
     """
@@ -92,7 +81,8 @@ class AndroidOptions:
     auto_cancel: bool | None = None
     ongoing: bool | None = None
     silent: bool | None = None
-    color: str | None = None
+    color: ft.ColorValue | None = None
+    """Android notification accent color."""
     colorized: bool | None = None
     large_icon: str | None = None  # drawable / file path / content URI
     only_alert_once: bool | None = None
@@ -111,15 +101,12 @@ class AndroidOptions:
     ticker: str | None = None
     tag: str | None = None
     enable_lights: bool | None = None
-    led_color: str | None = None
+    led_color: ft.ColorValue | None = None
+    """Notification LED color, used with
+    :attr:`enable_lights`, :attr:`led_on_ms`, and :attr:`led_off_ms`.
+    """
     led_on_ms: int | None = None
     led_off_ms: int | None = None
-
-    def __post_init__(self) -> None:
-        for name in ("color", "led_color"):
-            value = getattr(self, name)
-            if value is not None:
-                setattr(self, name, _validate_hex(value, name))
 
 
 @ft.value(kw_only=True)

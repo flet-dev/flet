@@ -5,7 +5,6 @@ library;
 import 'dart:async';
 import 'dart:convert';
 import 'dart:typed_data';
-import 'dart:ui' show Color;
 
 import 'package:flet/flet.dart';
 import 'package:flutter/foundation.dart' show debugPrint;
@@ -570,7 +569,7 @@ class LocalNotificationsService extends FletService {
         autoCancel: optionalBool(androidOptions["auto_cancel"]) ?? true,
         ongoing: optionalBool(androidOptions["ongoing"]) ?? false,
         silent: optionalBool(androidOptions["silent"]) ?? false,
-        color: _parseHexColor(androidOptions["color"] as String?),
+        color: parseColor((androidOptions["color"] as String?)?.trim(), null),
         colorized: optionalBool(androidOptions["colorized"]) ?? false,
         largeIcon: _mapLargeIcon(androidOptions["large_icon"] as String?),
         onlyAlertOnce: optionalBool(androidOptions["only_alert_once"]) ?? false,
@@ -588,7 +587,7 @@ class LocalNotificationsService extends FletService {
         progress: (d["progress"] as int?) ?? 0,
         indeterminate: optionalBool(d["indeterminate"]) ?? false,
         enableLights: optionalBool(androidOptions["enable_lights"]) ?? false,
-        ledColor: _parseHexColor(androidOptions["led_color"] as String?),
+        ledColor: parseColor((androidOptions["led_color"] as String?)?.trim(), null),
         ledOnMs: androidOptions["led_on_ms"] as int?,
         ledOffMs: androidOptions["led_off_ms"] as int?,
         ticker: androidOptions["ticker"] as String?,
@@ -1067,7 +1066,7 @@ class LocalNotificationsService extends FletService {
           vibrationPattern: _toInt64List(map["vibration_pattern"]),
           showBadge: optionalBool(map["show_badge"]) ?? true,
           enableLights: optionalBool(map["enable_lights"]) ?? false,
-          ledColor: ledColor == null ? null : _parseHexColor(ledColor),
+          ledColor: parseColor(ledColor?.trim(), null),
         ),
       );
       return "ok";
@@ -1192,16 +1191,6 @@ class LocalNotificationsService extends FletService {
   Int64List? _toInt64List(Object? value) {
     if (value is! List) return null;
     return Int64List.fromList(value.map((e) => e as int).toList());
-  }
-
-  Color? _parseHexColor(String? hex) {
-    if (hex == null) return null;
-    var v = hex.trim();
-    if (!v.startsWith("#")) return null;
-    v = v.substring(1);
-    final value = int.parse(v, radix: 16);
-    // #RRGGBB is opaque; #AARRGGBB keeps its alpha.
-    return Color(v.length == 8 ? value : value | 0xFF000000);
   }
 
   // ── Foreground service (Android) ─────────────────────────────────────

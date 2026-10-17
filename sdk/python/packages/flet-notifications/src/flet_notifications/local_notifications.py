@@ -7,7 +7,6 @@
 
 import json
 from datetime import datetime, timedelta
-from typing import Optional
 
 import flet as ft
 from flet.utils import from_dict
@@ -70,7 +69,7 @@ class LocalNotifications(ft.Service):
         ```
     """
 
-    default_icon: Optional[str] = None
+    default_icon: str | None = None
     """Android default small icon drawable name (default: the app launcher icon)."""
 
     request_alert_permission: bool = True
@@ -85,40 +84,38 @@ class LocalNotifications(ft.Service):
     request_critical_permission: bool = False
     """iOS/macOS: request the critical-alert permission (needs an Apple entitlement)."""
 
-    app_name: Optional[str] = None
+    app_name: str | None = None
     """Windows: application name shown on toasts."""
 
-    app_user_model_id: Optional[str] = None
+    app_user_model_id: str | None = None
     """Windows: AppUserModelID used to group toasts under the app."""
 
-    windows_guid: Optional[str] = None
+    windows_guid: str | None = None
     """Windows: GUID identifying the toast notifier."""
 
-    on_tap: Optional[ft.EventHandler[NotificationEvent["LocalNotifications"]]] = None
+    on_tap: ft.EventHandler[NotificationEvent["LocalNotifications"]] | None = None
     """Fired when the notification body is tapped."""
 
-    on_action: Optional[ft.EventHandler[NotificationEvent["LocalNotifications"]]] = None
+    on_action: ft.EventHandler[NotificationEvent["LocalNotifications"]] | None = None
     """Fired when an action button is pressed (`action_id` names the button)."""
 
-    on_dismissed: Optional[ft.EventHandler[NotificationEvent["LocalNotifications"]]] = (
-        None
-    )
+    on_dismissed: ft.EventHandler[NotificationEvent["LocalNotifications"]] | None = None
     """Fired when the OS reports the notification was dismissed/cleared."""
 
     # ── Shared kwargs for show / schedule / periodically_show ────────────
 
     @staticmethod
     def _details_args(
-        style: Optional[Style],
+        style: Style | None,
         show_progress: bool,
         max_progress: int,
         progress: int,
         indeterminate: bool,
-        group_key: Optional[str],
+        group_key: str | None,
         set_as_group_summary: bool,
         group_alert_behavior: GroupAlertBehavior,
-        channel_id: Optional[str],
-        options: Optional[NotificationOptions] = None,
+        channel_id: str | None,
+        options: NotificationOptions | None = None,
     ) -> dict:
         """Collect style/progress/grouping arguments for Flet's encoder."""
         return {
@@ -145,20 +142,20 @@ class LocalNotifications(ft.Service):
     async def show(
         self,
         id: int,
-        title: Optional[str] = None,
-        body: Optional[str] = None,
+        title: str | None = None,
+        body: str | None = None,
         payload: str = "",
-        actions: Optional[list[NotificationAction]] = None,
-        style: Optional[Style] = None,
+        actions: list[NotificationAction] | None = None,
+        style: Style | None = None,
         show_progress: bool = False,
         max_progress: int = 0,
         progress: int = 0,
         indeterminate: bool = False,
-        group_key: Optional[str] = None,
+        group_key: str | None = None,
         set_as_group_summary: bool = False,
         group_alert_behavior: GroupAlertBehavior = GroupAlertBehavior.ALL,
-        channel_id: Optional[str] = None,
-        options: Optional[NotificationOptions] = None,
+        channel_id: str | None = None,
+        options: NotificationOptions | None = None,
     ) -> None:
         """Show a notification immediately.
 
@@ -201,7 +198,7 @@ class LocalNotifications(ft.Service):
             )
         )
 
-    async def cancel(self, id: int, tag: Optional[str] = None) -> None:
+    async def cancel(self, id: int, tag: str | None = None) -> None:
         """Cancel a previously shown or scheduled notification.
 
         Args:
@@ -233,23 +230,23 @@ class LocalNotifications(ft.Service):
         self,
         id: int,
         when: datetime | timedelta,
-        title: Optional[str] = None,
-        body: Optional[str] = None,
+        title: str | None = None,
+        body: str | None = None,
         payload: str = "",
-        actions: Optional[list[NotificationAction]] = None,
-        match_components: Optional[DateTimeComponents] = None,
-        options: Optional[NotificationOptions] = None,
+        actions: list[NotificationAction] | None = None,
+        match_components: DateTimeComponents | None = None,
+        options: NotificationOptions | None = None,
         schedule_mode: AndroidScheduleMode = AndroidScheduleMode.EXACT_ALLOW_WHILE_IDLE,
-        time_zone: Optional[str] = None,
-        style: Optional[Style] = None,
+        time_zone: str | None = None,
+        style: Style | None = None,
         show_progress: bool = False,
         max_progress: int = 0,
         progress: int = 0,
         indeterminate: bool = False,
-        group_key: Optional[str] = None,
+        group_key: str | None = None,
         set_as_group_summary: bool = False,
         group_alert_behavior: GroupAlertBehavior = GroupAlertBehavior.ALL,
-        channel_id: Optional[str] = None,
+        channel_id: str | None = None,
     ) -> None:
         """Schedule a notification for a future time, handled by the OS.
 
@@ -307,22 +304,22 @@ class LocalNotifications(ft.Service):
         self,
         id: int,
         repeat_interval: RepeatInterval,
-        title: Optional[str] = None,
-        body: Optional[str] = None,
+        title: str | None = None,
+        body: str | None = None,
         payload: str = "",
-        actions: Optional[list[NotificationAction]] = None,
+        actions: list[NotificationAction] | None = None,
         schedule_mode: AndroidScheduleMode = AndroidScheduleMode.EXACT_ALLOW_WHILE_IDLE,
-        repeat_duration_seconds: Optional[int] = None,
-        style: Optional[Style] = None,
+        repeat_duration_seconds: int | None = None,
+        style: Style | None = None,
         show_progress: bool = False,
         max_progress: int = 0,
         progress: int = 0,
         indeterminate: bool = False,
-        group_key: Optional[str] = None,
+        group_key: str | None = None,
         set_as_group_summary: bool = False,
         group_alert_behavior: GroupAlertBehavior = GroupAlertBehavior.ALL,
-        channel_id: Optional[str] = None,
-        options: Optional[NotificationOptions] = None,
+        channel_id: str | None = None,
+        options: NotificationOptions | None = None,
     ) -> None:
         """Show a notification repeating at a fixed interval.
 
@@ -447,19 +444,19 @@ class LocalNotifications(ft.Service):
     async def start_foreground_service(
         self,
         id: int,
-        title: Optional[str] = None,
-        body: Optional[str] = None,
+        title: str | None = None,
+        body: str | None = None,
         payload: str = "",
-        actions: Optional[list[NotificationAction]] = None,
-        style: Optional[Style] = None,
+        actions: list[NotificationAction] | None = None,
+        style: Style | None = None,
         show_progress: bool = False,
         max_progress: int = 0,
         progress: int = 0,
         indeterminate: bool = False,
-        channel_id: Optional[str] = None,
-        options: Optional[NotificationOptions] = None,
-        start_type: Optional[str] = None,
-        foreground_service_types: Optional[list[str]] = None,
+        channel_id: str | None = None,
+        options: NotificationOptions | None = None,
+        start_type: str | None = None,
+        foreground_service_types: list[str] | None = None,
     ) -> None:
         """Start a foreground service with a persistent notification.
 

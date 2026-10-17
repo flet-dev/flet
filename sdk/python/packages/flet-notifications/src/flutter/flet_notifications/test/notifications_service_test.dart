@@ -838,6 +838,58 @@ void registerPhase3Tests() {
     expect(details.sound!.sound, "alert_tone");
   });
 
+  final colorCases = <String?, int?>{
+    null: null,
+    "#FF0000": 0xFFFF0000,
+    "#80FF0000": 0x80FF0000,
+    "  #FF0000  ": 0xFFFF0000,
+    "#FFF": 0xFFFFFFFF,
+    "#8FFF": 0x88FFFFFF,
+    "0xff00ff00": 0xFF00FF00,
+    "red": 0xFFF44336,
+    "red700": 0xFFD32F2F,
+    "activeBlue": 0xFF007AFF,
+    "red,0.5": 0x80F44336,
+    "primary": null,
+    "not-a-color": null,
+    "#GGGGGG": null,
+  };
+
+  for (final entry in colorCases.entries) {
+    test("show resolves accent and LED color ${entry.key}", () async {
+      final service = _makeService();
+      final result = await service.invokeMethod("show", {
+        "id": 1,
+        "options": {
+          "android": {
+            "color": entry.key,
+            "led_color": entry.key,
+            "enable_lights": true,
+            "led_on_ms": 100,
+            "led_off_ms": 200,
+          },
+        },
+      });
+      expect(result, "ok");
+      final details =
+          plugin.shown.single["details"] as fln.AndroidNotificationDetails;
+      expect(details.color?.toARGB32(), entry.value);
+      expect(details.ledColor?.toARGB32(), entry.value);
+    });
+
+    test("channel resolves LED color ${entry.key}", () async {
+      final service = _makeService();
+      final result = await service.invokeMethod("create_notification_channel", {
+        "id": "lights",
+        "name": "Lights",
+        "enable_lights": true,
+        "led_color": entry.key,
+      });
+      expect(result, "ok");
+      expect(plugin.channelsCreated.single.ledColor?.toARGB32(), entry.value);
+    });
+  }
+
   test("show applies DarwinOptions on the macOS platform", () async {
     debugDefaultTargetPlatformOverride = TargetPlatform.macOS;
     addTearDown(() => debugDefaultTargetPlatformOverride = null);
