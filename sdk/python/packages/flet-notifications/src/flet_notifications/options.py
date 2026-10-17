@@ -10,6 +10,7 @@ escape hatch for everything else.
 from enum import Enum
 
 import flet as ft
+from flet_notifications.types import Importance
 
 
 class Priority(Enum):
@@ -71,8 +72,8 @@ class AndroidOptions:
     channel_bypass_dnd: bool | None = None
     audio_attributes_usage: str | None = None
     icon: str | None = None  # drawable resource name
-    importance: str | None = None  # Importance enum value
-    priority: Priority | str | None = None
+    importance: Importance | None = None
+    priority: Priority | None = None
     play_sound: bool | None = None
     sound: str | None = None  # raw resource name or URI
     enable_vibration: bool | None = None
@@ -92,7 +93,7 @@ class AndroidOptions:
     chronometer_count_down: bool | None = None
     sub_text: str | None = None
     number: int | None = None
-    visibility: Visibility | str | None = None
+    visibility: Visibility | None = None
     timeout_after: int | None = None  # ms
     category: str | None = None  # AndroidNotificationCategory value
     full_screen_intent: bool | None = None
@@ -117,7 +118,7 @@ class DarwinOptions:
     badge_number: int | None = None  # 0 clears the badge
     subtitle: str | None = None
     thread_identifier: str | None = None  # grouping
-    interruption_level: InterruptionLevel | str | None = None
+    interruption_level: InterruptionLevel | None = None
     critical_sound_volume: float | None = None  # 0.0 - 1.0
     attachments: list[str] | None = None  # file paths
     present_alert: bool | None = None
@@ -134,7 +135,7 @@ class LinuxOptions:
     icon: str | None = None
     sound: str | None = None
     category: str | None = None
-    urgency: LinuxUrgency | str | None = None
+    urgency: LinuxUrgency | None = None
     timeout_ms: int | None = None
     resident: bool | None = None
     transient: bool | None = None
@@ -149,7 +150,7 @@ class WindowsOptions:
     header: str | None = None
     audio: str | None = None  # URI or ms-winsoundevent name
     duration: str | None = None  # "long" | "short"
-    scenario: WindowsScenario | str | None = None
+    scenario: WindowsScenario | None = None
     timestamp: int | None = None  # epoch ms
     subtitle: str | None = None
     images: list[str] | None = None  # image URIs
@@ -184,7 +185,7 @@ class NotificationOptions:
             body="Shh",
             options=NotificationOptions(
                 android=AndroidOptions(silent=True, category="alarm"),
-                iOS=DarwinOptions(interruption_level="passive"),
+                iOS=DarwinOptions(interruption_level=InterruptionLevel.PASSIVE),
             ),
         )
         ```

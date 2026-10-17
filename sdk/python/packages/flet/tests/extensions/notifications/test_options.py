@@ -10,6 +10,7 @@ from flet.messaging.protocol import configure_encode_object_for_msgpack
 from flet_notifications import (
     AndroidOptions,
     DarwinOptions,
+    Importance,
     InterruptionLevel,
     LinuxOptions,
     LinuxUrgency,
@@ -28,6 +29,12 @@ from .helpers import encode_wire
 @pytest.mark.parametrize(
     ("options_type", "field", "enum_type", "values"),
     [
+        (
+            AndroidOptions,
+            "importance",
+            Importance,
+            ("unspecified", "min", "none", "low", "defaultImportance", "high", "max"),
+        ),
         (
             AndroidOptions,
             "priority",
@@ -51,21 +58,17 @@ from .helpers import encode_wire
     ],
 )
 def test_option_enums_preserve_wire_values(options_type, field, enum_type, values):
-    """Enum members and legacy strings retain the existing Dart payload."""
+    """Enum members retain the existing Dart payload."""
     assert tuple(member.value for member in enum_type) == values
     assert encode_wire(options_type()) == {}
     encoder = configure_encode_object_for_msgpack(ft.Control)
 
     for value in values:
-        for supplied in (enum_type(value), value):
-            payload = encode_wire(options_type(**{field: supplied}))
-            expected = {field: value}
-            assert type(payload[field]) is str
-            assert json.loads(json.dumps(payload)) == expected
-            assert msgpack.packb(payload, default=encoder) == msgpack.packb(expected)
-
-    # Unknown strings still reach Dart, which applies platform-specific fallbacks.
-    assert encode_wire(options_type(**{field: "unknown"})) == {field: "unknown"}
+        payload = encode_wire(options_type(**{field: enum_type(value)}))
+        expected = {field: value}
+        assert type(payload[field]) is str
+        assert json.loads(json.dumps(payload)) == expected
+        assert msgpack.packb(payload, default=encoder) == msgpack.packb(expected)
 
 
 def test_options_wire_payload_omits_none():
@@ -84,8 +87,8 @@ def test_android_options_full_round_trip():
         channel_description="Alerts channel",
         channel_bypass_dnd=True,
         icon="ic_stat",
-        importance="high",
-        priority="max",
+        importance=Importance.HIGH,
+        priority=Priority.MAX,
         play_sound=False,
         sound="alert_tone",
         enable_vibration=False,
@@ -104,7 +107,7 @@ def test_android_options_full_round_trip():
         chronometer_count_down=True,
         sub_text="details",
         number=4,
-        visibility="private",
+        visibility=Visibility.PRIVATE,
         timeout_after=60000,
         category="alarm",
         full_screen_intent=True,
@@ -158,7 +161,7 @@ def test_darwin_options():
             badge_number=0,
             subtitle="sub",
             thread_identifier="thread1",
-            interruption_level="timeSensitive",
+            interruption_level=InterruptionLevel.TIME_SENSITIVE,
             critical_sound_volume=0.5,
             attachments=["/tmp/a.png"],
             present_banner=False,
@@ -171,11 +174,15 @@ def test_darwin_options():
 
 
 def test_linux_windows_web_options():
-    assert encode_wire(LinuxOptions(urgency="critical", timeout_ms=5000)) == {
+    assert encode_wire(
+        LinuxOptions(urgency=LinuxUrgency.CRITICAL, timeout_ms=5000)
+    ) == {
         "urgency": "critical",
         "timeout_ms": 5000,
     }
-    assert encode_wire(WindowsOptions(scenario="alarm", duration="long")) == {
+    assert encode_wire(
+        WindowsOptions(scenario=WindowsScenario.ALARM, duration="long")
+    ) == {
         "scenario": "alarm",
         "duration": "long",
     }
@@ -221,7 +228,9 @@ async def test_schedule_and_periodic_forward_options():
             return "ok"
 
     service = Recording()
-    options = NotificationOptions(iOS=DarwinOptions(interruption_level="passive"))
+    options = NotificationOptions(
+        iOS=DarwinOptions(interruption_level=InterruptionLevel.PASSIVE)
+    )
     await service.schedule(id=1, when=timedelta(seconds=5), options=options)
     assert service.calls[-1][1]["options"]["iOS"] == {"interruption_level": "passive"}
     await service.periodically_show(
