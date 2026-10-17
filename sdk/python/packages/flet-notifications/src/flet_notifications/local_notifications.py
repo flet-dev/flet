@@ -47,27 +47,27 @@ class LocalNotifications(ft.Service):
     page. No need to add it to the page's controls.
 
     Example:
-        .. code-block:: python
-
-            import flet as ft
-            from flet_notifications import LocalNotifications
-
-
-            async def main(page: ft.Page):
-                notifications = LocalNotifications()
-
-                async def on_tap(e):
-                    print("tapped:", e.payload)
-
-                notifications.on_tap = on_tap
-
-                if await notifications.request_permissions():
-                    await notifications.show(
-                        id=1, title="Hello", body="from flet-notifications"
-                    )
+        ```python
+        import flet as ft
+        from flet_notifications import LocalNotifications
 
 
-            ft.run(main)
+        async def main(page: ft.Page):
+            notifications = LocalNotifications()
+
+            async def on_tap(e):
+                print("tapped:", e.payload)
+
+            notifications.on_tap = on_tap
+
+            if await notifications.request_permissions():
+                await notifications.show(
+                    id=1, title="Hello", body="from flet-notifications"
+                )
+
+
+        ft.run(main)
+        ```
     """
 
     default_icon: Optional[str] = None
