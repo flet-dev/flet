@@ -10,9 +10,10 @@ escape hatch for everything else.
 from __future__ import annotations
 
 from dataclasses import dataclass
+from enum import Enum
 
 
-class Priority(str):
+class Priority(str, Enum):
     """Android notification priority (pre-8.0 semantics)."""
 
     MIN = "min"
@@ -21,24 +22,16 @@ class Priority(str):
     HIGH = "high"
     MAX = "max"
 
-    @classmethod
-    def values(cls) -> tuple[str, ...]:
-        return (cls.MIN, cls.LOW, cls.DEFAULT, cls.HIGH, cls.MAX)
 
-
-class Visibility(str):
+class Visibility(str, Enum):
     """Android notification visibility (lock-screen disclosure)."""
 
     PUBLIC = "public"
     PRIVATE = "private"
     SECRET = "secret"
 
-    @classmethod
-    def values(cls) -> tuple[str, ...]:
-        return (cls.PUBLIC, cls.PRIVATE, cls.SECRET)
 
-
-class InterruptionLevel(str):
+class InterruptionLevel(str, Enum):
     """iOS/macOS interruption level (iOS 15+/macOS 12+)."""
 
     PASSIVE = "passive"
@@ -46,34 +39,22 @@ class InterruptionLevel(str):
     TIME_SENSITIVE = "timeSensitive"  # needs the Time Sensitive capability
     CRITICAL = "critical"  # needs an Apple entitlement
 
-    @classmethod
-    def values(cls) -> tuple[str, ...]:
-        return (cls.PASSIVE, cls.ACTIVE, cls.TIME_SENSITIVE, cls.CRITICAL)
 
-
-class LinuxUrgency(str):
+class LinuxUrgency(str, Enum):
     """Linux notification-server urgency."""
 
     LOW = "low"
     NORMAL = "normal"
     CRITICAL = "critical"
 
-    @classmethod
-    def values(cls) -> tuple[str, ...]:
-        return (cls.LOW, cls.NORMAL, cls.CRITICAL)
 
-
-class WindowsScenario(str):
+class WindowsScenario(str, Enum):
     """Windows toast scenario."""
 
     REMINDER = "reminder"
     ALARM = "alarm"
     INCOMING_CALL = "incomingCall"
     URGENT = "urgent"
-
-    @classmethod
-    def values(cls) -> tuple[str, ...]:
-        return (cls.REMINDER, cls.ALARM, cls.INCOMING_CALL, cls.URGENT)
 
 
 def _validate_hex(value: str, what: str) -> str:
@@ -103,7 +84,7 @@ class AndroidOptions:
     audio_attributes_usage: str | None = None
     icon: str | None = None  # drawable resource name
     importance: str | None = None  # Importance enum value
-    priority: str | None = None  # Priority value
+    priority: Priority | str | None = None
     play_sound: bool | None = None
     sound: str | None = None  # raw resource name or URI
     enable_vibration: bool | None = None
@@ -122,7 +103,7 @@ class AndroidOptions:
     chronometer_count_down: bool | None = None
     sub_text: str | None = None
     number: int | None = None
-    visibility: str | None = None  # Visibility value
+    visibility: Visibility | str | None = None
     timeout_after: int | None = None  # ms
     category: str | None = None  # AndroidNotificationCategory value
     full_screen_intent: bool | None = None
@@ -199,7 +180,7 @@ class DarwinOptions:
     badge_number: int | None = None  # 0 clears the badge
     subtitle: str | None = None
     thread_identifier: str | None = None  # grouping
-    interruption_level: str | None = None  # InterruptionLevel value
+    interruption_level: InterruptionLevel | str | None = None
     critical_sound_volume: float | None = None  # 0.0 - 1.0
     attachments: list[str] | None = None  # file paths
     present_alert: bool | None = None
@@ -236,7 +217,7 @@ class LinuxOptions:
     icon: str | None = None
     sound: str | None = None
     category: str | None = None
-    urgency: str | None = None  # LinuxUrgency value
+    urgency: LinuxUrgency | str | None = None
     timeout_ms: int | None = None
     resident: bool | None = None
     transient: bool | None = None
@@ -268,7 +249,7 @@ class WindowsOptions:
     header: str | None = None
     audio: str | None = None  # URI or ms-winsoundevent name
     duration: str | None = None  # "long" | "short"
-    scenario: str | None = None  # WindowsScenario value
+    scenario: WindowsScenario | str | None = None
     timestamp: int | None = None  # epoch ms
     subtitle: str | None = None
     images: list[str] | None = None  # image URIs

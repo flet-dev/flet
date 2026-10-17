@@ -1,16 +1,68 @@
 """Tests for the per-platform options surface."""
 
+import json
+
+import msgpack
 import pytest
 
+import flet as ft
+from flet.messaging.protocol import configure_encode_object_for_msgpack
 from flet_notifications import (
     AndroidOptions,
     DarwinOptions,
+    InterruptionLevel,
     LinuxOptions,
+    LinuxUrgency,
     LocalNotifications,
     NotificationOptions,
+    Priority,
+    Visibility,
     WebOptions,
     WindowsOptions,
+    WindowsScenario,
 )
+
+
+@pytest.mark.parametrize(
+    ("options_type", "field", "enum_type", "values"),
+    [
+        (
+            AndroidOptions,
+            "priority",
+            Priority,
+            ("min", "low", "default", "high", "max"),
+        ),
+        (AndroidOptions, "visibility", Visibility, ("public", "private", "secret")),
+        (
+            DarwinOptions,
+            "interruption_level",
+            InterruptionLevel,
+            ("passive", "active", "timeSensitive", "critical"),
+        ),
+        (LinuxOptions, "urgency", LinuxUrgency, ("low", "normal", "critical")),
+        (
+            WindowsOptions,
+            "scenario",
+            WindowsScenario,
+            ("reminder", "alarm", "incomingCall", "urgent"),
+        ),
+    ],
+)
+def test_option_enums_preserve_wire_values(options_type, field, enum_type, values):
+    """Enum members and legacy strings retain the existing Dart payload."""
+    assert tuple(member.value for member in enum_type) == values
+    assert options_type().to_dict() == {}
+    encoder = configure_encode_object_for_msgpack(ft.Control)
+
+    for value in values:
+        for supplied in (enum_type(value), value):
+            payload = options_type(**{field: supplied}).to_dict()
+            expected = {field: value}
+            assert json.loads(json.dumps(payload)) == expected
+            assert msgpack.packb(payload, default=encoder) == msgpack.packb(expected)
+
+    # Unknown strings still reach Dart, which applies platform-specific fallbacks.
+    assert options_type(**{field: "unknown"}).to_dict() == {field: "unknown"}
 
 
 def test_options_to_dict_omits_none():
