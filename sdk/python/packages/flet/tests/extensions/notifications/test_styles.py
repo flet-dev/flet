@@ -100,7 +100,7 @@ def test_person_wire_payload():
     }
 
 
-def test_style_union_membership():
+def test_style_inheritance():
     assert isinstance(BigTextStyle(big_text="x"), Style)
     assert isinstance(InboxStyle(lines=["a"]), Style)
 
@@ -115,6 +115,8 @@ def test_style_union_membership():
     ],
 )
 def test_style_discriminator_is_private_and_serialized(style, kind):
+    assert isinstance(style, Style)
+    assert issubclass(type(style), Style)
     assert not hasattr(style, "type")
     assert style._type == kind
     payload = encode_wire(prepare_style(style))

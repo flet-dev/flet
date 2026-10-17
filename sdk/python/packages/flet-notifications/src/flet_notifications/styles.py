@@ -1,9 +1,25 @@
 """Rich notification styles (big text, big picture, inbox, messaging)."""
 
+from abc import ABC, abstractmethod
 from dataclasses import field
 from datetime import datetime
 
 import flet as ft
+
+
+@ft.value(kw_only=True)
+class Style(ABC):
+    """Abstract base class for notification styles.
+
+    Use :class:`BigTextStyle`, :class:`BigPictureStyle`, :class:`InboxStyle`,
+    or :class:`MessagingStyle` to configure a notification's presentation.
+    """
+
+    _type: str = field(init=False, repr=False, compare=False)
+
+    @abstractmethod
+    def __post_init__(self) -> None:
+        """Set the concrete style's discriminator."""
 
 
 @ft.value(kw_only=True)
@@ -33,40 +49,37 @@ class AndroidIcon:
 
 
 @ft.value(kw_only=True)
-class BigTextStyle:
+class BigTextStyle(Style):
     """Expandable text (the Android "big text" style)."""
 
     big_text: str
     content_title: str | None = None
     summary_text: str | None = None
-    _type: str = field(init=False, repr=False, compare=False)
 
     def __post_init__(self) -> None:
         self._type = "big_text"
 
 
 @ft.value(kw_only=True)
-class BigPictureStyle:
+class BigPictureStyle(Style):
     """Expandable image (the Android "big picture" style)."""
 
     image: AndroidIcon
     large_icon: AndroidIcon | None = None
     content_title: str | None = None
     summary_text: str | None = None
-    _type: str = field(init=False, repr=False, compare=False)
 
     def __post_init__(self) -> None:
         self._type = "big_picture"
 
 
 @ft.value(kw_only=True)
-class InboxStyle:
+class InboxStyle(Style):
     """Up to seven expandable lines (the Android "inbox" style)."""
 
     lines: list[str] = field(default_factory=list)
     content_title: str | None = None
     summary_text: str | None = None
-    _type: str = field(init=False, repr=False, compare=False)
 
     def __post_init__(self) -> None:
         self._type = "inbox"
@@ -96,7 +109,7 @@ class Message:
 
 
 @ft.value(kw_only=True)
-class MessagingStyle:
+class MessagingStyle(Style):
     """Chat conversation (the Android/iOS messaging style)."""
 
     person: Person
@@ -104,14 +117,8 @@ class MessagingStyle:
     conversation_title: str | None = None
     group_conversation: bool = False
 
-    _type: str = field(init=False, repr=False, compare=False)
-
     def __post_init__(self) -> None:
         self._type = "messaging"
-
-
-Style = BigTextStyle | BigPictureStyle | InboxStyle | MessagingStyle
-"""Union of the supported notification styles."""
 
 
 def prepare_style(style: Style | None) -> Style | dict | None:
