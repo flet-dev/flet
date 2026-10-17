@@ -6,7 +6,7 @@ from enum import Enum
 import flet as ft
 
 
-class ResponseType(str, Enum):
+class ResponseType(Enum):
     """Type of a notification response delivered from the OS to the app."""
 
     TAP = "tap"

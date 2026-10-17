@@ -222,7 +222,8 @@ def test_build_schedule_args_defaults():
     )
     assert args["actions"] is None
     assert args["match_components"] is None
-    assert args["schedule_mode"] == "exactAllowWhileIdle"
+    assert args["schedule_mode"] is AndroidScheduleMode.EXACT_ALLOW_WHILE_IDLE
+    assert encode_wire(args)["schedule_mode"] == "exactAllowWhileIdle"
     assert args["options"] is None
 
 

@@ -12,7 +12,7 @@ from enum import Enum
 import flet as ft
 
 
-class Priority(str, Enum):
+class Priority(Enum):
     """Android notification priority (pre-8.0 semantics)."""
 
     MIN = "min"
@@ -22,7 +22,7 @@ class Priority(str, Enum):
     MAX = "max"
 
 
-class Visibility(str, Enum):
+class Visibility(Enum):
     """Android notification visibility (lock-screen disclosure)."""
 
     PUBLIC = "public"
@@ -30,7 +30,7 @@ class Visibility(str, Enum):
     SECRET = "secret"
 
 
-class InterruptionLevel(str, Enum):
+class InterruptionLevel(Enum):
     """iOS/macOS interruption level (iOS 15+/macOS 12+)."""
 
     PASSIVE = "passive"
@@ -39,7 +39,7 @@ class InterruptionLevel(str, Enum):
     CRITICAL = "critical"  # needs an Apple entitlement
 
 
-class LinuxUrgency(str, Enum):
+class LinuxUrgency(Enum):
     """Linux notification-server urgency."""
 
     LOW = "low"
@@ -47,7 +47,7 @@ class LinuxUrgency(str, Enum):
     CRITICAL = "critical"
 
 
-class WindowsScenario(str, Enum):
+class WindowsScenario(Enum):
     """Windows toast scenario."""
 
     REMINDER = "reminder"

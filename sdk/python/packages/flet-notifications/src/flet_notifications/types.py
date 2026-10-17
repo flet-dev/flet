@@ -3,7 +3,7 @@
 from enum import Enum
 
 
-class RepeatInterval(str, Enum):
+class RepeatInterval(Enum):
     """Repeat cadence for periodic notifications (Android/iOS/macOS)."""
 
     EVERY_MINUTE = "everyMinute"
@@ -12,7 +12,7 @@ class RepeatInterval(str, Enum):
     WEEKLY = "weekly"
 
 
-class DateTimeComponents(str, Enum):
+class DateTimeComponents(Enum):
     """Which parts of the scheduled date repeat (daily/weekly/monthly/yearly)."""
 
     TIME = "time"  # every day at the given time
@@ -21,7 +21,7 @@ class DateTimeComponents(str, Enum):
     DATE_AND_TIME = "dateAndTime"
 
 
-class AndroidScheduleMode(str, Enum):
+class AndroidScheduleMode(Enum):
     """Android alarm exactness mode."""
 
     ALARM_CLOCK = "alarmClock"  # exact + shows in alarm-clock UI
@@ -31,7 +31,7 @@ class AndroidScheduleMode(str, Enum):
     INEXACT_ALLOW_WHILE_IDLE = "inexactAllowWhileIdle"
 
 
-class Importance(str, Enum):
+class Importance(Enum):
     """Android notification-channel importance (also drives priority)."""
 
     UNSPECIFIED = "unspecified"
@@ -43,7 +43,7 @@ class Importance(str, Enum):
     MAX = "max"
 
 
-class GroupAlertBehavior(str, Enum):
+class GroupAlertBehavior(Enum):
     """Which notifications in a group alert the user."""
 
     ALL = "all"
