@@ -11,15 +11,18 @@ from flet_notifications import (
     NotificationError,
 )
 
+from .helpers import encode_wire
+
 
 def test_channel_defaults():
     channel = NotificationChannel(id="alerts", name="Alerts")
-    d = channel.to_dict()
-    assert d["importance"] == "defaultImportance"
-    assert d["play_sound"] is True
-    assert d["enable_vibration"] is True
-    assert d["show_badge"] is True
-    assert d["bypass_dnd"] is False
+    d = encode_wire(channel)
+    assert d == {"id": "alerts", "name": "Alerts", "description": ""}
+    assert channel.importance is Importance.DEFAULT
+    assert channel.play_sound is True
+    assert channel.enable_vibration is True
+    assert channel.show_badge is True
+    assert channel.bypass_dnd is False
 
 
 def test_channel_requires_id_and_name():
@@ -33,7 +36,7 @@ def test_channel_vibration_pattern():
     channel = NotificationChannel(
         id="vib", name="Vibrate", vibration_pattern=[0, 250, 100]
     )
-    assert channel.to_dict()["vibration_pattern"] == [0, 250, 100]
+    assert encode_wire(channel)["vibration_pattern"] == [0, 250, 100]
 
 
 def test_channel_led_color_validated():
@@ -56,7 +59,7 @@ def test_channel_from_dict_round_trip():
         bypass_dnd=True,
         sound="alert",
     )
-    restored = NotificationChannel.from_dict(original.to_dict())
+    restored = NotificationChannel.from_dict(encode_wire(original))
     assert restored == original
 
 
@@ -75,7 +78,7 @@ class _Recording(LocalNotifications):
         self.calls: list[tuple[str, dict | None]] = []
 
     async def _invoke_method(self, method_name, arguments=None, timeout=None):
-        self.calls.append((method_name, arguments))
+        self.calls.append((method_name, encode_wire(arguments)))
         return "ok"
 
 
@@ -100,14 +103,8 @@ async def test_create_channel_invokes_wire_payload():
         "description": "Important",
         "group_id": "updates",
         "importance": "high",
-        "bypass_dnd": False,
-        "play_sound": True,
         "sound": "alert_tone",
-        "enable_vibration": True,
         "vibration_pattern": [0, 250, 100],
-        "show_badge": True,
-        "enable_lights": False,
-        "led_color": None,
     }
 
 
@@ -174,13 +171,9 @@ async def test_foreground_service_start_stop_and_guard():
         {
             "id": "done",
             "title": "Done",
-            "destructive": False,
-            "foreground": True,
-            "cancel_notification": True,
-            "input": None,
         }
     ]
-    assert args["style"]["type"] == "big_text"
+    assert args["style"]["_type"] == "big_text"
     assert args["show_progress"] is True
     assert args["max_progress"] == 50
     assert args["channel_id"] == "c"

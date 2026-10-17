@@ -17,6 +17,8 @@ from flet_notifications.scheduling import (
     build_schedule_args,
 )
 
+from .helpers import encode_wire
+
 
 class RecordingService(LocalNotifications):
     def __init__(self):
@@ -24,7 +26,7 @@ class RecordingService(LocalNotifications):
         self.calls: list[tuple[str, dict | None]] = []
 
     async def _invoke_method(self, method_name, arguments=None, timeout=None):
-        self.calls.append((method_name, arguments))
+        self.calls.append((method_name, encode_wire(arguments)))
         return "ok"
 
 
@@ -114,10 +116,6 @@ async def test_schedule_with_actions():
         {
             "id": "open",
             "title": "Open",
-            "destructive": False,
-            "foreground": True,
-            "cancel_notification": True,
-            "input": None,
         }
     ]
 
@@ -166,7 +164,7 @@ async def test_cancel_pending_and_probes():
     assert service.calls[-1] == ("cancel_pending", None)
 
     async def invoke(method_name, arguments=None, timeout=None):
-        service.calls.append((method_name, arguments))
+        service.calls.append((method_name, encode_wire(arguments)))
         return "true"
 
     service._invoke_method = invoke
@@ -255,10 +253,8 @@ def test_schedule_forwards_style_progress_grouping():
     )
     _, args = service.calls[-1]
     assert args["style"] == {
-        "type": "big_text",
+        "_type": "big_text",
         "big_text": "long",
-        "content_title": None,
-        "summary_text": None,
     }
     assert args["show_progress"] is True
     assert args["max_progress"] == 100

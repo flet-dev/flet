@@ -1,14 +1,23 @@
 """Tests for the LocalNotifications service."""
 
+from datetime import timedelta
+
 import pytest
 
 import flet_notifications as fn
 from flet_notifications import (
+    AndroidIcon,
+    AndroidOptions,
+    BigPictureStyle,
     LocalNotifications,
     NotificationAction,
     NotificationActionInput,
     NotificationError,
+    NotificationOptions,
+    RepeatInterval,
 )
+
+from .helpers import encode_wire
 
 
 class RecordingService(LocalNotifications):
@@ -19,7 +28,7 @@ class RecordingService(LocalNotifications):
         self.calls: list[tuple[str, dict | None, int | None]] = []
 
     async def _invoke_method(self, method_name, arguments=None, timeout=None):
-        self.calls.append((method_name, arguments, timeout))
+        self.calls.append((method_name, encode_wire(arguments), timeout))
         return "ok"
 
 
@@ -93,14 +102,8 @@ async def test_show_invokes_dart_with_wire_args():
             {
                 "id": "open",
                 "title": "Open",
-                "destructive": False,
-                "foreground": True,
-                "cancel_notification": True,
                 "input": {
                     "label": "Say",
-                    "choices": [],
-                    "allow_free_form_input": True,
-                    "allowed_mime_types": [],
                 },
             }
         ],
@@ -127,6 +130,42 @@ async def test_show_without_actions():
     assert args["payload"] == ""
 
 
+@pytest.mark.parametrize(
+    "method_name", ["show", "schedule", "periodically_show", "start_foreground_service"]
+)
+@pytest.mark.asyncio
+async def test_methods_pass_nested_values_to_flet_encoder(method_name):
+    service = LocalNotifications()
+    calls = []
+
+    async def invoke(name, arguments=None, timeout=None):
+        calls.append(arguments)
+        return "ok"
+
+    service._invoke_method = invoke
+    options = NotificationOptions(android=AndroidOptions(silent=True))
+    style = BigPictureStyle(image=AndroidIcon(file_path="/tmp/photo.png"))
+    actions = [NotificationAction(id="open", title="Open")]
+    kwargs = dict(id=1, options=options, style=style, actions=actions)
+    if method_name == "schedule":
+        kwargs["when"] = timedelta(seconds=30)
+    elif method_name == "periodically_show":
+        kwargs["repeat_interval"] = RepeatInterval.HOURLY
+    await getattr(service, method_name)(**kwargs)
+
+    args = calls[-1]
+    assert args["options"] is options
+    assert args["style"] is style
+    assert args["actions"] is actions
+    wire = encode_wire(args)
+    assert wire["options"] == {"android": {"silent": True}}
+    assert wire["style"] == {
+        "_type": "big_picture",
+        "image": {"file_path": "/tmp/photo.png"},
+    }
+    assert wire["actions"] == [{"id": "open", "title": "Open"}]
+
+
 @pytest.mark.asyncio
 async def test_cancel_and_cancel_all():
     service = RecordingService()
@@ -141,7 +180,7 @@ async def test_request_permissions_uses_long_timeout():
     service = RecordingService()
 
     async def invoke(method_name, arguments=None, timeout=None):
-        service.calls.append((method_name, arguments, timeout))
+        service.calls.append((method_name, encode_wire(arguments), timeout))
         return "true"
 
     service._invoke_method = invoke

@@ -5,6 +5,8 @@ import pytest
 from flet_notifications import NotificationAction, NotificationActionInput
 from flet_notifications.base import NotificationError, check_result, to_bool
 
+from .helpers import encode_wire
+
 
 def test_action_defaults():
     action = NotificationAction(id="open", title="Open")
@@ -14,7 +16,7 @@ def test_action_defaults():
     assert action.input is None
 
 
-def test_action_to_dict():
+def test_action_wire_payload():
     action = NotificationAction(
         id="delete",
         title="Delete",
@@ -22,17 +24,16 @@ def test_action_to_dict():
         foreground=False,
         cancel_notification=False,
     )
-    assert action.to_dict() == {
+    assert encode_wire(action) == {
         "id": "delete",
         "title": "Delete",
         "destructive": True,
         "foreground": False,
         "cancel_notification": False,
-        "input": None,
     }
 
 
-def test_action_with_input_to_dict():
+def test_action_with_input_wire_payload():
     action = NotificationAction(
         id="reply",
         title="Reply",
@@ -43,24 +44,22 @@ def test_action_with_input_to_dict():
             allowed_mime_types=["image/png"],
         ),
     )
-    d = action.to_dict()
+    d = encode_wire(action)
     assert d["input"] == {
         "label": "Type here",
         "choices": ["Yes", "No"],
-        "allow_free_form_input": True,
         "allowed_mime_types": ["image/png"],
     }
 
 
 def test_input_defaults():
     inp = NotificationActionInput()
-    d = inp.to_dict()
-    assert d == {
-        "label": "",
-        "choices": [],
-        "allow_free_form_input": True,
-        "allowed_mime_types": [],
-    }
+    d = encode_wire(inp)
+    assert d == {}
+    assert inp.label == ""
+    assert inp.choices == []
+    assert inp.allow_free_form_input is True
+    assert inp.allowed_mime_types == []
 
 
 def test_check_result_ok():

@@ -13,6 +13,8 @@ from flet_notifications import (
     PendingNotification,
 )
 
+from .helpers import encode_wire
+
 
 class RecordingService(LocalNotifications):
     def __init__(self):
@@ -20,7 +22,7 @@ class RecordingService(LocalNotifications):
         self.calls: list[tuple[str, dict | None]] = []
 
     async def _invoke_method(self, method_name, arguments=None, timeout=None):
-        self.calls.append((method_name, arguments))
+        self.calls.append((method_name, encode_wire(arguments)))
         return "ok"
 
 

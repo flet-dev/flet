@@ -22,6 +22,8 @@ from flet_notifications import (
     WindowsScenario,
 )
 
+from .helpers import encode_wire
+
 
 @pytest.mark.parametrize(
     ("options_type", "field", "enum_type", "values"),
@@ -51,30 +53,30 @@ from flet_notifications import (
 def test_option_enums_preserve_wire_values(options_type, field, enum_type, values):
     """Enum members and legacy strings retain the existing Dart payload."""
     assert tuple(member.value for member in enum_type) == values
-    assert options_type().to_dict() == {}
+    assert encode_wire(options_type()) == {}
     encoder = configure_encode_object_for_msgpack(ft.Control)
 
     for value in values:
         for supplied in (enum_type(value), value):
-            payload = options_type(**{field: supplied}).to_dict()
+            payload = encode_wire(options_type(**{field: supplied}))
             expected = {field: value}
+            assert type(payload[field]) is str
             assert json.loads(json.dumps(payload)) == expected
             assert msgpack.packb(payload, default=encoder) == msgpack.packb(expected)
 
     # Unknown strings still reach Dart, which applies platform-specific fallbacks.
-    assert options_type(**{field: "unknown"}).to_dict() == {field: "unknown"}
+    assert encode_wire(options_type(**{field: "unknown"})) == {field: "unknown"}
 
 
-def test_options_to_dict_omits_none():
+def test_options_wire_payload_omits_none():
     options = NotificationOptions(
         android=AndroidOptions(silent=True),
         iOS=DarwinOptions(badge_number=3),
     )
-    d = options.to_dict()
+    d = encode_wire(options)
     assert d["android"] == {"silent": True}
     assert d["iOS"] == {"badge_number": 3}
-    assert d["macOS"] is None
-    assert d["linux"] is None
+    assert d == {"android": {"silent": True}, "iOS": {"badge_number": 3}}
 
 
 def test_android_options_full_round_trip():
@@ -115,7 +117,7 @@ def test_android_options_full_round_trip():
         led_on_ms=500,
         led_off_ms=500,
     )
-    d = options.to_dict()
+    d = encode_wire(options)
     assert d["ongoing"] is True
     assert d["color"] == "#FF0000"
     assert d["vibration_pattern"] == [0, 250, 100]
@@ -132,16 +134,18 @@ def test_android_options_hex_validation():
 
 
 def test_darwin_options():
-    d = DarwinOptions(
-        sound="chime",
-        badge_number=0,
-        subtitle="sub",
-        thread_identifier="thread1",
-        interruption_level="timeSensitive",
-        critical_sound_volume=0.5,
-        attachments=["/tmp/a.png"],
-        present_banner=False,
-    ).to_dict()
+    d = encode_wire(
+        DarwinOptions(
+            sound="chime",
+            badge_number=0,
+            subtitle="sub",
+            thread_identifier="thread1",
+            interruption_level="timeSensitive",
+            critical_sound_volume=0.5,
+            attachments=["/tmp/a.png"],
+            present_banner=False,
+        )
+    )
     assert d["badge_number"] == 0
     assert d["interruption_level"] == "timeSensitive"
     assert d["attachments"] == ["/tmp/a.png"]
@@ -149,15 +153,15 @@ def test_darwin_options():
 
 
 def test_linux_windows_web_options():
-    assert LinuxOptions(urgency="critical", timeout_ms=5000).to_dict() == {
+    assert encode_wire(LinuxOptions(urgency="critical", timeout_ms=5000)) == {
         "urgency": "critical",
         "timeout_ms": 5000,
     }
-    assert WindowsOptions(scenario="alarm", duration="long").to_dict() == {
+    assert encode_wire(WindowsOptions(scenario="alarm", duration="long")) == {
         "scenario": "alarm",
         "duration": "long",
     }
-    assert WebOptions(require_interaction=True, icon_url="x").to_dict() == {
+    assert encode_wire(WebOptions(require_interaction=True, icon_url="x")) == {
         "require_interaction": True,
         "icon_url": "x",
     }
@@ -171,7 +175,7 @@ async def test_show_forwards_options():
             self.calls = []
 
         async def _invoke_method(self, method_name, arguments=None, timeout=None):
-            self.calls.append((method_name, arguments))
+            self.calls.append((method_name, encode_wire(arguments)))
             return "ok"
 
     service = Recording()
@@ -180,11 +184,6 @@ async def test_show_forwards_options():
     _, args = service.calls[-1]
     assert args["options"] == {
         "android": {"ongoing": True},
-        "iOS": None,
-        "macOS": None,
-        "linux": None,
-        "windows": None,
-        "web": None,
     }
 
 
@@ -200,7 +199,7 @@ async def test_schedule_and_periodic_forward_options():
             self.calls = []
 
         async def _invoke_method(self, method_name, arguments=None, timeout=None):
-            self.calls.append((method_name, arguments))
+            self.calls.append((method_name, encode_wire(arguments)))
             return "ok"
 
     service = Recording()
@@ -221,7 +220,7 @@ async def test_fgs_forwards_start_type_and_types():
             self.calls = []
 
         async def _invoke_method(self, method_name, arguments=None, timeout=None):
-            self.calls.append((method_name, arguments))
+            self.calls.append((method_name, encode_wire(arguments)))
             return "ok"
 
     service = Recording()
