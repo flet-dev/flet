@@ -35,10 +35,10 @@ def build_schedule_args(
     group_alert_behavior: GroupAlertBehavior = GroupAlertBehavior.ALL,
     channel_id: str | None = None,
 ) -> dict:
-    """Build the ``schedule`` invoke payload.
+    """Build the `schedule` invoke payload.
 
-    Naive datetimes are wall-clock times interpreted in ``time_zone`` (or the
-    device timezone when ``time_zone`` is None); aware datetimes carry their
+    Naive datetimes are wall-clock times interpreted in `time_zone` (or the
+    device timezone when `time_zone` is None); aware datetimes carry their
     offset so the exact instant is preserved.
     """
     if isinstance(when, timedelta):
@@ -98,7 +98,7 @@ def build_periodic_args(
     group_alert_behavior: GroupAlertBehavior = GroupAlertBehavior.ALL,
     channel_id: str | None = None,
 ) -> dict:
-    """Build the ``periodically_show`` invoke payload."""
+    """Build the `periodically_show` invoke payload."""
     if repeat_duration_seconds is not None and repeat_duration_seconds < 60:
         raise ValueError("repeat_duration_seconds must be at least 60")
     return {

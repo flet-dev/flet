@@ -1,7 +1,7 @@
 """The LocalNotifications service: cross-platform notifications for Flet."""
 
-# NOTE: deliberately no ``from __future__ import annotations`` — Flet's event
-# resolver (``get_event_field_type``) evaluates class-level handler
+# NOTE: deliberately no `from __future__ import annotations` — Flet's event
+# resolver (`get_event_field_type`) evaluates class-level handler
 # annotations as real objects and raises on PEP 563 strings, which would
 # silently break on_tap/on_action/on_dismissed dispatch.
 
@@ -98,7 +98,7 @@ class LocalNotifications(ft.Service):
     """Fired when the notification body is tapped."""
 
     on_action: Optional[ft.EventHandler[NotificationEvent["LocalNotifications"]]] = None
-    """Fired when an action button is pressed (``action_id`` names the button)."""
+    """Fired when an action button is pressed (`action_id` names the button)."""
 
     on_dismissed: Optional[ft.EventHandler[NotificationEvent["LocalNotifications"]]] = (
         None
@@ -136,7 +136,7 @@ class LocalNotifications(ft.Service):
 
     @staticmethod
     def _serialize_details(details: dict) -> dict:
-        """Convert details kwargs to JSON-ready wire form (for ``show``)."""
+        """Convert details kwargs to JSON-ready wire form (for `show`)."""
         out = dict(details)
         out["style"] = details["style"].to_dict() if details["style"] else None
         out["options"] = details["options"].to_dict() if details["options"] else None
@@ -269,15 +269,15 @@ class LocalNotifications(ft.Service):
 
         Args:
             id: Notification id.
-            when: When to deliver — a ``datetime`` (naive values are
-                interpreted in ``time_zone`` or the device timezone) or a
-                ``timedelta`` from now.
+            when: When to deliver — a `datetime` (naive values are
+                interpreted in `time_zone` or the device timezone) or a
+                `timedelta` from now.
             match_components: Repeat on a calendar component (e.g. daily at
                 this time); use :meth:`periodically_show` for interval
                 recurrence.
             schedule_mode: Android alarm exactness mode.
-            time_zone: IANA timezone name for naive ``when`` and recurrence
-                (e.g. ``"Africa/Lagos"``); defaults to the device timezone.
+            time_zone: IANA timezone name for naive `when` and recurrence
+                (e.g. `"Africa/Lagos"`); defaults to the device timezone.
             style: Rich style (big text / big picture / inbox / messaging).
             show_progress: Show a determinate (or indeterminate) progress bar.
             group_key: Group related notifications together.
@@ -550,8 +550,8 @@ class LocalNotifications(ft.Service):
     async def get_notification_app_launch_details(self) -> LaunchDetails:
         """How the app was launched — if a notification launched it.
 
-        Background taps are replayed automatically to ``on_tap`` /
-        ``on_action``; this is for apps that want the cold-start details
+        Background taps are replayed automatically to `on_tap` /
+        `on_action`; this is for apps that want the cold-start details
         themselves.
         """
         result = await self._invoke_method("get_launch_details")

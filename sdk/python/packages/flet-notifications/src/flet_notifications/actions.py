@@ -9,8 +9,8 @@ from dataclasses import dataclass, field
 class NotificationActionInput:
     """Inline-reply input attached to a notification action.
 
-    Maps to ``AndroidNotificationActionInput`` on Android, the text variant of
-    ``DarwinNotificationAction`` on iOS/macOS and ``WindowsInput`` on Windows.
+    Maps to `AndroidNotificationActionInput` on Android, the text variant of
+    `DarwinNotificationAction` on iOS/macOS and `WindowsInput` on Windows.
     """
 
     label: str = ""  # placeholder / button title over the text field
@@ -31,9 +31,9 @@ class NotificationActionInput:
 class NotificationAction:
     """A button shown on a notification.
 
-    When the button is pressed, ``on_action`` fires with ``action_id == id``.
-    If ``input`` is set, the OS shows an inline-reply field and the typed text
-    arrives as ``NotificationEvent.input``.
+    When the button is pressed, `on_action` fires with `action_id == id`.
+    If `input` is set, the OS shows an inline-reply field and the typed text
+    arrives as `NotificationEvent.input`.
     """
 
     id: str

@@ -1,9 +1,9 @@
 """Post-build patcher for Flet Android apps using flet-notifications.
 
-``flet build apk`` generates the Flutter/Android project but
-``[tool.flet.android.*]`` can only express permissions, features, meta-data
-and providers — not the ``<receiver>`` entries or the Gradle desugaring
-flags that ``flutter_local_notifications`` needs. This script applies them
+`flet build apk` generates the Flutter/Android project but
+`[tool.flet.android.*]` can only express permissions, features, meta-data
+and providers — not the `<receiver>` entries or the Gradle desugaring
+flags that `flutter_local_notifications` needs. This script applies them
 to the generated project, idempotently.
 
 Usage::
@@ -14,7 +14,7 @@ Usage::
 
 Options:
     --foreground-service-type TYPE   Opt in to the foreground-service
-                                     manifest entry (e.g. ``specialUse``).
+                                     manifest entry (e.g. `specialUse`).
                                      Without it, only the notification
                                      receivers and permissions are patched.
 """
@@ -113,7 +113,7 @@ def patch_manifest(manifest_path: Path) -> list[str]:
 def patch_gradle(gradle_path: Path) -> list[str]:
     """Enable core-library desugaring (FLN v19+ requirement).
 
-    Real Flet projects have a non-empty ``dependencies { ... }`` block, so
+    Real Flet projects have a non-empty `dependencies { ... }` block, so
     the desugaring line is inserted after the opening brace rather than
     matching only the literal empty form. Missing anchors are reported on
     stderr instead of silently succeeding.

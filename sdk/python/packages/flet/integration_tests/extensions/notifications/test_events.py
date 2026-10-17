@@ -1,6 +1,5 @@
 """Tests for NotificationEvent hydration from Dart payloads."""
 
-
 from flet.utils import from_dict
 from flet_notifications import LocalNotifications, NotificationEvent, ResponseType
 
@@ -82,7 +81,7 @@ def test_event_defaults():
 def test_event_field_types_resolve_to_dataclass():
     """Typed payload events must resolve to the dataclass, not Event[...].
 
-    Regression guard: ``from __future__ import annotations`` in the service
+    Regression guard: `from __future__ import annotations` in the service
     module makes flet's resolver raise, silently breaking dispatch.
     """
     from flet.controls.control_event import ControlEvent, get_event_field_type

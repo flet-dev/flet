@@ -1,6 +1,6 @@
 """Per-platform notification options — the full detail surface.
 
-Mirrors ``flutter_local_notifications``' ``NotificationDetails`` one-to-one:
+Mirrors `flutter_local_notifications`' `NotificationDetails` one-to-one:
 one options object per platform, merged into the notification payload.
 The everyday knobs (title, body, payload, actions, style, progress,
 grouping, channel) stay as flat method kwargs; this is the complete
@@ -91,8 +91,8 @@ def _validate_hex(value: str, what: str) -> str:
 class AndroidOptions:
     """Android notification and channel details.
 
-    Channel fields (``channel_description``, ``channel_bypass_dnd``,
-    ``audio_attributes_usage``) apply when the channel is created — on
+    Channel fields (`channel_description`, `channel_bypass_dnd`,
+    `audio_attributes_usage`) apply when the channel is created — on
     Android 8+ sound/vibration are immutable after creation, so changing
     them needs a new channel id.
     """
@@ -326,7 +326,7 @@ class WebOptions:
 @dataclass(kw_only=True)
 class NotificationOptions:
     """Per-platform notification details, mirroring FLN's
-    ``NotificationDetails``.
+    `NotificationDetails`.
 
     Example::
 

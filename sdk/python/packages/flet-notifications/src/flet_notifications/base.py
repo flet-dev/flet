@@ -20,7 +20,7 @@ class ResponseType(str, Enum):
 class NotificationEvent(ft.Event[ft.EventControlType]):
     """A notification tap, action-button press or dismissal.
 
-    Delivered to ``on_tap`` / ``on_action`` / ``on_dismissed`` handlers.
+    Delivered to `on_tap` / `on_action` / `on_dismissed` handlers.
     """
 
     id: int = 0
@@ -55,7 +55,7 @@ class NotificationErrorCode:
 class NotificationError(Exception):
     """Raised when a notification operation fails.
 
-    ``code`` is a stable machine-readable identifier — see
+    `code` is a stable machine-readable identifier — see
     :class:`NotificationErrorCode` for the full list.
     """
 
@@ -71,7 +71,7 @@ class NotificationError(Exception):
 def check_result(result: object) -> None:
     """Raise :class:`NotificationError` if a Dart invoke returned an error string.
 
-    Dart service methods return ``"error:<code>:<message>"`` on failure.
+    Dart service methods return `"error:<code>:<message>"` on failure.
     """
     if isinstance(result, str) and result.startswith("error:"):
         _, _, rest = result.partition(":")
@@ -80,7 +80,7 @@ def check_result(result: object) -> None:
 
 
 def to_bool(result: object) -> bool:
-    """Coerce a Dart invoke result to bool (``"true"``/``"false"``)."""
+    """Coerce a Dart invoke result to bool (`"true"`/`"false"`)."""
     check_result(result)
     if isinstance(result, bool):
         return result
