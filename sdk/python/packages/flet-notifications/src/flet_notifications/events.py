@@ -1,7 +1,5 @@
 """Event payload types delivered from the Dart side."""
 
-from __future__ import annotations
-
 from dataclasses import dataclass
 
 from flet_notifications.base import NotificationEvent

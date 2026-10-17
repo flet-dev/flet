@@ -1,12 +1,12 @@
 """Rich notification styles (big text, big picture, inbox, messaging)."""
 
-from __future__ import annotations
-
-from dataclasses import dataclass, field
+from dataclasses import field
 from datetime import datetime
 
+import flet as ft
 
-@dataclass(kw_only=True)
+
+@ft.value(kw_only=True)
 class AndroidIcon:
     """An Android notification icon or image.
 
@@ -31,34 +31,21 @@ class AndroidIcon:
         if sum(s is not None for s in sources) != 1:
             raise ValueError("AndroidIcon requires exactly one source")
 
-    def to_dict(self) -> dict:
-        return {
-            "drawable_resource": self.drawable_resource,
-            "file_path": self.file_path,
-            "content_uri": self.content_uri,
-            "flutter_asset": self.flutter_asset,
-            "data_base64": self.data_base64,
-        }
 
-
-@dataclass(kw_only=True)
+@ft.value(kw_only=True)
 class BigTextStyle:
     """Expandable text (the Android "big text" style)."""
 
     big_text: str
     content_title: str | None = None
     summary_text: str | None = None
+    _type: str = field(init=False, repr=False, compare=False)
 
-    def to_dict(self) -> dict:
-        return {
-            "type": "big_text",
-            "big_text": self.big_text,
-            "content_title": self.content_title,
-            "summary_text": self.summary_text,
-        }
+    def __post_init__(self) -> None:
+        self._type = "big_text"
 
 
-@dataclass(kw_only=True)
+@ft.value(kw_only=True)
 class BigPictureStyle:
     """Expandable image (the Android "big picture" style)."""
 
@@ -66,39 +53,28 @@ class BigPictureStyle:
     large_icon: AndroidIcon | None = None
     content_title: str | None = None
     summary_text: str | None = None
+    _type: str = field(init=False, repr=False, compare=False)
 
-    def to_dict(self) -> dict:
-        return {
-            "type": "big_picture",
-            "image": self.image.to_dict(),
-            "large_icon": self.large_icon.to_dict() if self.large_icon else None,
-            "content_title": self.content_title,
-            "summary_text": self.summary_text,
-        }
+    def __post_init__(self) -> None:
+        self._type = "big_picture"
 
 
-@dataclass(kw_only=True)
+@ft.value(kw_only=True)
 class InboxStyle:
     """Up to seven expandable lines (the Android "inbox" style)."""
 
     lines: list[str] = field(default_factory=list)
     content_title: str | None = None
     summary_text: str | None = None
+    _type: str = field(init=False, repr=False, compare=False)
 
     def __post_init__(self) -> None:
+        self._type = "inbox"
         if not self.lines:
             raise ValueError("InboxStyle requires at least one line")
 
-    def to_dict(self) -> dict:
-        return {
-            "type": "inbox",
-            "lines": list(self.lines),
-            "content_title": self.content_title,
-            "summary_text": self.summary_text,
-        }
 
-
-@dataclass(kw_only=True)
+@ft.value(kw_only=True)
 class Person:
     """A participant in a messaging-style conversation."""
 
@@ -109,18 +85,8 @@ class Person:
     uri: str | None = None
     icon: AndroidIcon | None = None
 
-    def to_dict(self) -> dict:
-        return {
-            "name": self.name,
-            "key": self.key,
-            "bot": self.bot,
-            "important": self.important,
-            "uri": self.uri,
-            "icon": self.icon.to_dict() if self.icon else None,
-        }
 
-
-@dataclass(kw_only=True)
+@ft.value(kw_only=True)
 class Message:
     """One message in a messaging-style conversation."""
 
@@ -128,15 +94,8 @@ class Message:
     timestamp: datetime
     person: Person
 
-    def to_dict(self) -> dict:
-        return {
-            "text": self.text,
-            "timestamp": self.timestamp.isoformat(),
-            "person": self.person.to_dict(),
-        }
 
-
-@dataclass(kw_only=True)
+@ft.value(kw_only=True)
 class MessagingStyle:
     """Chat conversation (the Android/iOS messaging style)."""
 
@@ -145,15 +104,36 @@ class MessagingStyle:
     conversation_title: str | None = None
     group_conversation: bool = False
 
-    def to_dict(self) -> dict:
-        return {
-            "type": "messaging",
-            "person": self.person.to_dict(),
-            "messages": [m.to_dict() for m in self.messages],
-            "conversation_title": self.conversation_title,
-            "group_conversation": self.group_conversation,
-        }
+    _type: str = field(init=False, repr=False, compare=False)
+
+    def __post_init__(self) -> None:
+        self._type = "messaging"
 
 
 Style = BigTextStyle | BigPictureStyle | InboxStyle | MessagingStyle
 """Union of the supported notification styles."""
+
+
+def prepare_style(style: Style | None) -> Style | dict | None:
+    """Preserve message wall-clock timestamps while Flet encodes nested values.
+
+    The native parser expects ISO text. Flet's datetime codec normalizes naive
+    datetimes to the Python host's timezone, which would change their existing
+    interpretation in the notification device's local timezone.
+    """
+    if not isinstance(style, MessagingStyle):
+        return style
+    return {
+        "_type": style._type,
+        "person": style.person,
+        "messages": [
+            {
+                "text": message.text,
+                "timestamp": message.timestamp.isoformat(),
+                "person": message.person,
+            }
+            for message in style.messages
+        ],
+        "conversation_title": style.conversation_title,
+        "group_conversation": style.group_conversation,
+    }

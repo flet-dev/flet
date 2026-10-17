@@ -1,11 +1,11 @@
 """Action buttons and inline-reply inputs for notifications."""
 
-from __future__ import annotations
+from dataclasses import field
 
-from dataclasses import dataclass, field
+import flet as ft
 
 
-@dataclass(kw_only=True)
+@ft.value(kw_only=True)
 class NotificationActionInput:
     """Inline-reply input attached to a notification action.
 
@@ -18,16 +18,8 @@ class NotificationActionInput:
     allow_free_form_input: bool = True
     allowed_mime_types: list[str] = field(default_factory=list)
 
-    def to_dict(self) -> dict:
-        return {
-            "label": self.label,
-            "choices": list(self.choices),
-            "allow_free_form_input": self.allow_free_form_input,
-            "allowed_mime_types": list(self.allowed_mime_types),
-        }
 
-
-@dataclass(kw_only=True)
+@ft.value(kw_only=True)
 class NotificationAction:
     """A button shown on a notification.
 
@@ -42,13 +34,3 @@ class NotificationAction:
     foreground: bool = True  # bring the app to the foreground on press
     cancel_notification: bool = True  # Android: dismiss the notification
     input: NotificationActionInput | None = None
-
-    def to_dict(self) -> dict:
-        return {
-            "id": self.id,
-            "title": self.title,
-            "destructive": self.destructive,
-            "foreground": self.foreground,
-            "cancel_notification": self.cancel_notification,
-            "input": self.input.to_dict() if self.input else None,
-        }

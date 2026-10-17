@@ -1,7 +1,5 @@
 """Enums for scheduling and notification parameters."""
 
-from __future__ import annotations
-
 from enum import Enum
 
 

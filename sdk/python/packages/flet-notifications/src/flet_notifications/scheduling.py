@@ -1,10 +1,8 @@
 """Schedule argument serialization (pure — unit tested)."""
 
-from __future__ import annotations
-
 from datetime import datetime, timedelta
 
-from flet_notifications.styles import Style
+from flet_notifications.styles import Style, prepare_style
 from flet_notifications.types import (
     AndroidScheduleMode,
     DateTimeComponents,
@@ -60,19 +58,19 @@ def build_schedule_args(
         "title": title,
         "body": body,
         "payload": payload,
-        "actions": [a.to_dict() for a in actions] if actions else None,
+        "actions": actions or None,
         "when": when_payload,
-        "match_components": match_components.value if match_components else None,
-        "options": options.to_dict() if options else None,
-        "schedule_mode": schedule_mode.value,
-        "style": style.to_dict() if style else None,
+        "match_components": match_components,
+        "options": options,
+        "schedule_mode": schedule_mode,
+        "style": prepare_style(style),
         "show_progress": show_progress,
         "max_progress": max_progress,
         "progress": progress,
         "indeterminate": indeterminate,
         "group_key": group_key,
         "set_as_group_summary": set_as_group_summary,
-        "group_alert_behavior": group_alert_behavior.value,
+        "group_alert_behavior": group_alert_behavior,
         "channel_id": channel_id,
     }
 
@@ -106,18 +104,18 @@ def build_periodic_args(
         "title": title,
         "body": body,
         "payload": payload,
-        "actions": [a.to_dict() for a in actions] if actions else None,
-        "repeat_interval": repeat_interval.value,
-        "schedule_mode": schedule_mode.value,
+        "actions": actions or None,
+        "repeat_interval": repeat_interval,
+        "schedule_mode": schedule_mode,
         "repeat_duration_seconds": repeat_duration_seconds,
-        "options": options.to_dict() if options else None,
-        "style": style.to_dict() if style else None,
+        "options": options,
+        "style": prepare_style(style),
         "show_progress": show_progress,
         "max_progress": max_progress,
         "progress": progress,
         "indeterminate": indeterminate,
         "group_key": group_key,
         "set_as_group_summary": set_as_group_summary,
-        "group_alert_behavior": group_alert_behavior.value,
+        "group_alert_behavior": group_alert_behavior,
         "channel_id": channel_id,
     }

@@ -97,22 +97,22 @@ void main() {
     });
 
     test("big_text", () {
-      final style = parseStyle({"type": "big_text", "big_text": "long"})!;
+      final style = parseStyle({"_type": "big_text", "big_text": "long"})!;
       expect(style.type, "big_text");
       expect(style.bigText, "long");
     });
 
     test("big_text without text throws", () {
-      expect(() => parseStyle({"type": "big_text"}), throwsFormatException);
+      expect(() => parseStyle({"_type": "big_text"}), throwsFormatException);
     });
 
     test("big_picture requires an image", () {
       expect(
-        () => parseStyle({"type": "big_picture"}),
+        () => parseStyle({"_type": "big_picture"}),
         throwsFormatException,
       );
       final style = parseStyle({
-        "type": "big_picture",
+        "_type": "big_picture",
         "image": {"file_path": "/tmp/x.png"},
       })!;
       expect(style.image!.filePath, "/tmp/x.png");
@@ -120,19 +120,19 @@ void main() {
 
     test("inbox", () {
       final style = parseStyle({
-        "type": "inbox",
+        "_type": "inbox",
         "lines": ["a", "b"],
       })!;
       expect(style.lines, ["a", "b"]);
       expect(
-        () => parseStyle({"type": "inbox", "lines": []}),
+        () => parseStyle({"_type": "inbox", "lines": []}),
         throwsFormatException,
       );
     });
 
     test("messaging with person and messages", () {
       final style = parseStyle({
-        "type": "messaging",
+        "_type": "messaging",
         "person": {"name": "Ada"},
         "messages": [
           {
@@ -151,11 +151,11 @@ void main() {
     });
 
     test("messaging without person throws", () {
-      expect(() => parseStyle({"type": "messaging"}), throwsFormatException);
+      expect(() => parseStyle({"_type": "messaging"}), throwsFormatException);
     });
 
     test("unknown style type throws", () {
-      expect(() => parseStyle({"type": "carousel"}), throwsFormatException);
+      expect(() => parseStyle({"_type": "carousel"}), throwsFormatException);
     });
   });
 

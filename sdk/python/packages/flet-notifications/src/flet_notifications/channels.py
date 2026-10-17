@@ -1,13 +1,12 @@
 """Android notification channels."""
 
-from __future__ import annotations
+from dataclasses import field
 
-from dataclasses import dataclass
-
+import flet as ft
 from flet_notifications.types import Importance
 
 
-@dataclass(kw_only=True)
+@ft.value(kw_only=True)
 class NotificationChannel:
     """An Android notification channel (required since Android 8.0).
 
@@ -17,7 +16,7 @@ class NotificationChannel:
 
     id: str
     name: str
-    description: str = ""
+    description: str = field(default_factory=str)
     group_id: str | None = None
     importance: Importance = Importance.DEFAULT
     bypass_dnd: bool = False
@@ -37,27 +36,8 @@ class NotificationChannel:
         if self.led_color is not None:
             self.led_color = _validate_hex(self.led_color)
 
-    def to_dict(self) -> dict:
-        return {
-            "id": self.id,
-            "name": self.name,
-            "description": self.description,
-            "group_id": self.group_id,
-            "importance": self.importance.value,
-            "bypass_dnd": self.bypass_dnd,
-            "play_sound": self.play_sound,
-            "sound": self.sound,
-            "enable_vibration": self.enable_vibration,
-            "vibration_pattern": (
-                list(self.vibration_pattern) if self.vibration_pattern else None
-            ),
-            "show_badge": self.show_badge,
-            "enable_lights": self.enable_lights,
-            "led_color": self.led_color,
-        }
-
     @classmethod
-    def from_dict(cls, data: dict) -> NotificationChannel:
+    def from_dict(cls, data: dict) -> "NotificationChannel":
         return cls(
             id=str(data.get("id", "")),
             name=str(data.get("name", "")),

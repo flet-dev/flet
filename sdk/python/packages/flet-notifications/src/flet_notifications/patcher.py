@@ -19,8 +19,6 @@ Options:
                                      receivers and permissions are patched.
 """
 
-from __future__ import annotations
-
 import argparse
 import sys
 import xml.etree.ElementTree as ET

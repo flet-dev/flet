@@ -29,7 +29,7 @@ from flet_notifications.scheduling import (
     build_periodic_args,
     build_schedule_args,
 )
-from flet_notifications.styles import Style
+from flet_notifications.styles import Style, prepare_style
 from flet_notifications.types import (
     AndroidScheduleMode,
     DateTimeComponents,
@@ -120,9 +120,9 @@ class LocalNotifications(ft.Service):
         channel_id: Optional[str],
         options: Optional[NotificationOptions] = None,
     ) -> dict:
-        """Collect the style/progress/grouping kwargs (unserialized)."""
+        """Collect style/progress/grouping arguments for Flet's encoder."""
         return {
-            "style": style,
+            "style": prepare_style(style),
             "options": options,
             "show_progress": show_progress,
             "max_progress": max_progress,
@@ -133,15 +133,6 @@ class LocalNotifications(ft.Service):
             "group_alert_behavior": group_alert_behavior,
             "channel_id": channel_id,
         }
-
-    @staticmethod
-    def _serialize_details(details: dict) -> dict:
-        """Convert details kwargs to JSON-ready wire form (for `show`)."""
-        out = dict(details)
-        out["style"] = details["style"].to_dict() if details["style"] else None
-        out["options"] = details["options"].to_dict() if details["options"] else None
-        out["group_alert_behavior"] = details["group_alert_behavior"].value
-        return out
 
     async def initialize(self) -> None:
         """Initialize the notification backend.
@@ -193,20 +184,18 @@ class LocalNotifications(ft.Service):
                     "title": title,
                     "body": body,
                     "payload": payload,
-                    "actions": [a.to_dict() for a in actions] if actions else None,
-                    **self._serialize_details(
-                        self._details_args(
-                            style,
-                            show_progress,
-                            max_progress,
-                            progress,
-                            indeterminate,
-                            group_key,
-                            set_as_group_summary,
-                            group_alert_behavior,
-                            channel_id,
-                            options,
-                        )
+                    "actions": actions or None,
+                    **self._details_args(
+                        style,
+                        show_progress,
+                        max_progress,
+                        progress,
+                        indeterminate,
+                        group_key,
+                        set_as_group_summary,
+                        group_alert_behavior,
+                        channel_id,
+                        options,
                     ),
                 },
             )
@@ -433,9 +422,7 @@ class LocalNotifications(ft.Service):
 
     async def create_notification_channel(self, channel: NotificationChannel) -> None:
         """Create or update an Android notification channel."""
-        check_result(
-            await self._invoke_method("create_notification_channel", channel.to_dict())
-        )
+        check_result(await self._invoke_method("create_notification_channel", channel))
 
     async def delete_notification_channel(self, channel_id: str) -> None:
         """Delete an Android notification channel."""
@@ -491,20 +478,18 @@ class LocalNotifications(ft.Service):
                     "payload": payload,
                     "start_type": start_type,
                     "foreground_service_types": foreground_service_types,
-                    "actions": [a.to_dict() for a in actions] if actions else None,
-                    **self._serialize_details(
-                        self._details_args(
-                            style,
-                            show_progress,
-                            max_progress,
-                            progress,
-                            indeterminate,
-                            None,
-                            False,
-                            GroupAlertBehavior.ALL,
-                            channel_id,
-                            options,
-                        )
+                    "actions": actions or None,
+                    **self._details_args(
+                        style,
+                        show_progress,
+                        max_progress,
+                        progress,
+                        indeterminate,
+                        None,
+                        False,
+                        GroupAlertBehavior.ALL,
+                        channel_id,
+                        options,
                     ),
                 },
             )

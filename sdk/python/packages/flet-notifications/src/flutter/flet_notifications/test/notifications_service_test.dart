@@ -612,7 +612,7 @@ void registerPhase3Tests() {
       "body": "b",
       "payload": "",
       "actions": null,
-      "style": {"type": "big_text", "big_text": "long text"},
+      "style": {"_type": "big_text", "big_text": "long text"},
       "channel_id": null,
       "group_key": "grp",
       "set_as_group_summary": false,
@@ -643,7 +643,7 @@ void registerPhase3Tests() {
       "body": "b",
       "payload": "",
       "actions": null,
-      "style": {"type": "nope"},
+      "style": {"_type": "nope"},
       "channel_id": null,
     });
     expect(result, startsWith("error:invalid_style:"));

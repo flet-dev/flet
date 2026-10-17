@@ -177,7 +177,7 @@ ParsedStyle? parseStyle(Object? raw) {
   if (raw is! Map) {
     throw const FormatException("style must be a map");
   }
-  final type = raw["type"];
+  final type = raw["_type"];
   if (type is! String || type.isEmpty) {
     throw const FormatException("style type must be a non-empty string");
   }
