@@ -5,6 +5,7 @@ import 'package:flutter/gestures.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:material_ui/material_ui.dart';
+import 'package:provider/provider.dart';
 
 class _EventBackend extends FletBackend {
   _EventBackend()
@@ -323,5 +324,55 @@ void main() {
         );
       }
     }
+  }
+  for (final initiallySubscribed in [false, true]) {
+    testWidgets(
+        'toggle tap move from $initiallySubscribed preserves focused content',
+        (tester) async {
+      final backend = _EventBackend();
+      final parent =
+          Control(id: 1, type: 'Column', properties: {}, backend: backend);
+      final detector = Control(
+          id: 2,
+          type: 'GestureDetector',
+          parent: parent,
+          properties: {'on_tap': true, 'on_tap_move': initiallySubscribed},
+          backend: backend);
+      final field = Control(
+          id: 3,
+          type: 'TextField',
+          parent: detector,
+          properties: {'value': 'hello'},
+          backend: backend);
+      detector.properties['content'] = field;
+      Future<void> build() =>
+          tester.pumpWidget(ChangeNotifierProvider<FletBackend>.value(
+            value: backend,
+            child: MaterialApp(
+                home:
+                    Scaffold(body: GestureDetectorControl(control: detector))),
+          ));
+      await build();
+      expect(tester.takeException(), isNull);
+      await tester.tap(find.byType(TextField));
+      await tester.pump();
+      final before = tester.state(find.byType(EditableText));
+      expect(
+          tester
+              .widget<EditableText>(find.byType(EditableText))
+              .focusNode
+              .hasFocus,
+          isTrue);
+      detector.properties['on_tap_move'] = !initiallySubscribed;
+      await build();
+      await tester.pump();
+      final after = tester.state(find.byType(EditableText));
+      final hasFocus = tester
+          .widget<EditableText>(find.byType(EditableText))
+          .focusNode
+          .hasFocus;
+      expect(after, same(before));
+      expect(hasFocus, isTrue);
+    });
   }
 }

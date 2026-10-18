@@ -622,52 +622,49 @@ class _GestureDetectorControlState extends State<GestureDetectorControl> {
                     widget.control.triggerEvent("scale_end", details.toMap());
                   }
                 : null,
-            child: onTapMove
-                ? RawGestureDetector(
-                    behavior: HitTestBehavior.translucent,
-                    excludeFromSemantics: widget.control
-                        .getBool("exclude_from_semantics", false)!,
-                    gestures: {
-                      TapGestureRecognizer:
-                          GestureRecognizerFactoryWithHandlers<
-                              TapGestureRecognizer>(
-                        () => TapGestureRecognizer(
-                            debugOwner: this,
-                            supportedDevices: supportedDevices),
-                        (TapGestureRecognizer instance) {
-                          instance
-                            ..supportedDevices = supportedDevices
-                            ..gestureSettings =
-                                MediaQuery.maybeGestureSettingsOf(context)
-                            ..onTapDown =
-                                onTapDown || onTap ? handleTapDown : null
-                            ..onTapUp = onTapUp ? handleTapUp : null
-                            ..onTap = onTap ? handleTap : null
-                            ..onTapCancel = onTapCancel ? handleTapCancel : null
-                            ..onTapMove = handleTapMove
-                            ..onSecondaryTap =
-                                onSecondaryTap ? handleSecondaryTap : null
-                            ..onSecondaryTapDown = onSecondaryTapDown
-                                ? handleSecondaryTapDown
-                                : null
-                            ..onSecondaryTapUp =
-                                onSecondaryTapUp ? handleSecondaryTapUp : null
-                            ..onSecondaryTapCancel = onSecondaryTapCancel
-                                ? handleSecondaryTapCancel
-                                : null
-                            ..onTertiaryTapDown =
-                                onTertiaryTapDown ? handleTertiaryTapDown : null
-                            ..onTertiaryTapUp =
-                                onTertiaryTapUp ? handleTertiaryTapUp : null
-                            ..onTertiaryTapCancel = onTertiaryTapCancel
-                                ? handleTertiaryTapCancel
-                                : null;
-                        },
-                      ),
+            // Keep this wrapper mounted so toggling tap moves does not
+            // recreate the content subtree and discard its local state.
+            child: RawGestureDetector(
+              behavior: HitTestBehavior.translucent,
+              excludeFromSemantics:
+                  widget.control.getBool("exclude_from_semantics", false)!,
+              gestures: {
+                if (onTapMove)
+                  TapGestureRecognizer: GestureRecognizerFactoryWithHandlers<
+                      TapGestureRecognizer>(
+                    () => TapGestureRecognizer(
+                        debugOwner: this, supportedDevices: supportedDevices),
+                    (TapGestureRecognizer instance) {
+                      instance
+                        ..supportedDevices = supportedDevices
+                        ..gestureSettings =
+                            MediaQuery.maybeGestureSettingsOf(context)
+                        ..onTapDown = onTapDown || onTap ? handleTapDown : null
+                        ..onTapUp = onTapUp ? handleTapUp : null
+                        ..onTap = onTap ? handleTap : null
+                        ..onTapCancel = onTapCancel ? handleTapCancel : null
+                        ..onTapMove = handleTapMove
+                        ..onSecondaryTap =
+                            onSecondaryTap ? handleSecondaryTap : null
+                        ..onSecondaryTapDown =
+                            onSecondaryTapDown ? handleSecondaryTapDown : null
+                        ..onSecondaryTapUp =
+                            onSecondaryTapUp ? handleSecondaryTapUp : null
+                        ..onSecondaryTapCancel = onSecondaryTapCancel
+                            ? handleSecondaryTapCancel
+                            : null
+                        ..onTertiaryTapDown =
+                            onTertiaryTapDown ? handleTertiaryTapDown : null
+                        ..onTertiaryTapUp =
+                            onTertiaryTapUp ? handleTertiaryTapUp : null
+                        ..onTertiaryTapCancel = onTertiaryTapCancel
+                            ? handleTertiaryTapCancel
+                            : null;
                     },
-                    child: result,
-                  )
-                : result)
+                  ),
+              },
+              child: result,
+            ))
         : result;
 
     result = (onMultiTap || onMultiLongPress)
