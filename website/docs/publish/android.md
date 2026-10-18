@@ -546,6 +546,7 @@ Its value is determined in the following order of precedence:
 
 1. [`--android-meta-data`](../cli/flet-build.md#--android-meta-data)
 2. `[tool.flet.android.meta_data]`
+3. `io.flutter.embedding.android.EnableImpeller = "false"`, when the app is built with [`--no-impeller`](index.md#renderer).
 
 #### Example
 

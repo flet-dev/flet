@@ -4,7 +4,7 @@ version = "0.1.0"
 description = ""
 authors = [{name = "Appveyor Systems Inc.", email ="hello@flet.dev"}]
 license = "Apache-2.0"
-requires-python = ">=3.10,<3.15"
+requires-python = ">=3.10,<3.16"
 dependencies = [
     "flet",
     "flet-cli",
@@ -28,6 +28,7 @@ dependencies = [
     "flet-permission-handler",
     "flet-rive",
     "flet-secure-storage",
+    "flet-shadcn-ui",
     "flet-spinkit",
     "flet-video",
     "flet-webview",
@@ -56,6 +57,7 @@ flet-mcp = { workspace = true }
 flet-permission-handler = { workspace = true }
 flet-rive = { workspace = true }
 flet-secure-storage = { workspace = true }
+flet-shadcn-ui = { workspace = true }
 flet-spinkit = { workspace = true }
 flet-video = { workspace = true }
 flet-webview = { workspace = true }

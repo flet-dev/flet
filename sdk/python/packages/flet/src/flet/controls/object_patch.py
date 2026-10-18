@@ -345,8 +345,12 @@ class ObjectPatch:
         builder._compare_values(parent, path or [], None, src, dst, frozen=frozen)
 
         ops = list(builder.execute())
-        added = list(builder.get_added_controls())
+        # Collect removed controls BEFORE configuring added ones: configuring
+        # an added subtree may re-render a retained (moved) Component in place,
+        # replacing its body, and the removed walk would then miss the old
+        # body's controls and report the freshly rendered ones as removed.
         removed = list(builder.get_removed_controls())
+        added = list(builder.get_added_controls())
 
         builder.teardown()
 
@@ -1640,7 +1644,19 @@ class DiffBuilder:
                 item_cls.__flet_control_cls__ = self.control_cls
 
             if self.control_cls and isinstance(item, self.control_cls):
-                if not configure_setattr_only:
+                # A retained control moved under a newly added parent (same
+                # object, already initialized and live) keeps its current body:
+                # re-running build()/before_update() would re-render a
+                # Component over its old body with fresh, never-mounted
+                # children (same rule as `frozen and src is dst` in
+                # _compare_dataclasses).
+                state = getattr(item, "_state", None)
+                retained = (
+                    getattr(item, "_initialized", False)
+                    and state is not None
+                    and getattr(state, "mounted", False)
+                )
+                if not configure_setattr_only and not retained:
                     item.build()
                     item._before_update_safe()
                     object.__setattr__(item, "_initialized", True)

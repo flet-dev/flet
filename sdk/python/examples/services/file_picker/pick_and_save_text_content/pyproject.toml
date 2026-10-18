@@ -15,6 +15,7 @@ categories = ["Utility/FilePicker"]
 
 [tool.flet.metadata]
 title = "Pick and save text content"
+docs_intro = "Use [`pick_files()`][flet.FilePicker.pick_files] with `with_data=True` when you need file contents directly, such as in web apps where [`FilePickerFile.path`][flet.FilePickerFile.path] is not available."
 controls = ["SafeArea", "Column", "Page", "Text", "TextField", "Button", "FilePicker"]
 layout_pattern = "inline-actions"
 complexity = "basic"

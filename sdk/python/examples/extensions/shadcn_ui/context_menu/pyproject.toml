@@ -1,0 +1,27 @@
+[project]
+name = "shadcn-ui-context-menu"
+version = "1.0.0"
+description = "Browser-style context menu with shortcuts, a disabled item, a submenu and a click status line."
+requires-python = ">=3.10"
+keywords = ["shadcn", "context menu", "right click", "menu", "shortcut"]
+authors = [{ name = "Flet team", email = "hello@flet.dev" }]
+dependencies = ["flet", "flet-shadcn-ui"]
+
+[dependency-groups]
+dev = ["flet-cli", "flet-desktop", "flet-web"]
+
+[tool.flet.gallery]
+categories = ["Extensions/Shadcn"]
+
+[tool.flet.metadata]
+title = "Shadcn ContextMenu"
+controls = ["SafeArea", "Column", "Container", "Text", "ContextMenu", "MenuItem", "Separator"]
+layout_pattern = "inline-actions"
+complexity = "basic"
+features = ["right click", "submenu", "click handling"]
+
+[tool.flet]
+platforms = ["web", "macos", "windows", "linux"]
+org = "dev.flet"
+company = "Flet"
+copyright = "Copyright (C) 2023-2026 by Flet"

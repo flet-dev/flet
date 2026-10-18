@@ -14,11 +14,16 @@ dependencies:
     sdk: flutter
 
   cupertino_icons: ^1.0.8
+  # Exact versions: generated projects have no committed lock, and
+  # material_ui releases often, sometimes with layout changes. Bump them
+  # deliberately with each Flet release.
+  cupertino_ui: 1.1.2
+  material_ui: 1.6.0
 
   flet:
     path: ../../../../../packages/flet
 
-  serious_python: 5.0.0
+  serious_python: 6.0.0
 
   # MsgPack codec used by the dart_bridge FletBackendChannel implementation
   # in lib/main.dart — matches the wire format flet's existing socket

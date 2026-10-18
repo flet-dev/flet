@@ -1,0 +1,26 @@
+[project]
+name = "shadcn-ui-sonner"
+version = "1.0.0"
+description = "Stacked Sonner notifications, one per click, each with an Undo action."
+requires-python = ">=3.10"
+keywords = ["shadcn", "sonner", "toast", "notification", "stack"]
+authors = [{ name = "Flet team", email = "hello@flet.dev" }]
+dependencies = ["flet", "flet-shadcn-ui"]
+
+[dependency-groups]
+dev = ["flet-cli", "flet-desktop", "flet-web"]
+
+[tool.flet.gallery]
+categories = ["Extensions/Shadcn"]
+
+[tool.flet.metadata]
+title = "Shadcn Sonner"
+controls = ["SafeArea", "Column", "Text", "Sonner", "Button"]
+layout_pattern = "inline-actions"
+complexity = "basic"
+features = ["show_dialog", "stacked notifications", "action button"]
+
+[tool.flet]
+org = "dev.flet"
+company = "Flet"
+copyright = "Copyright (C) 2023-2026 by Flet"

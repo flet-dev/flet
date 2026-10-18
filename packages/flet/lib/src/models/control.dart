@@ -518,7 +518,11 @@ class Control extends ChangeNotifier {
       throw Exception("No invoke method listeners registered.");
     }
     List<dynamic> results = [];
-    for (var listener in _invokeMethodListeners) {
+    // Iterate a snapshot: a listener can take a while (e.g. FletApp's
+    // `wait_idle`), and the control's widget may rebuild in the meantime,
+    // removing and re-adding its listener - changing the live list mid-loop
+    // threw ConcurrentModificationError when the await resumed.
+    for (var listener in List.of(_invokeMethodListeners)) {
       results.add(await listener(name, args));
     }
     return results.length == 1 ? results[0] : results;

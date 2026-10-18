@@ -1,12 +1,17 @@
 import 'dart:ui';
 
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:flutter/rendering.dart';
 
 import '../models/control.dart';
 import 'borders.dart';
 import 'enums.dart';
 import 'numbers.dart';
+
+MaterialTapTargetSize? parseMaterialTapTargetSize(String? value,
+    [MaterialTapTargetSize? defaultValue]) {
+  return parseEnum(MaterialTapTargetSize.values, value, defaultValue);
+}
 
 Clip? parseClip(String? value, [Clip? defaultValue]) {
   return parseEnum(Clip.values, value, defaultValue);

@@ -48,9 +48,6 @@ env:
   UV_PYTHON: 3.12
   PYTHONUTF8: 1
 
-  # https://flet.dev/docs/reference/environment-variables
-  FLET_CLI_NO_RICH_OUTPUT: 1
-
   # Extra args passed via workflow_dispatch (empty for push/PR)
   FLET_PACK_EXTRA_ARGS: ${{ github.event_name == 'workflow_dispatch' && inputs.extra_pack_args || '' }}
 

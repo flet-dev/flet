@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 
 import '../extensions/control.dart';
 import '../models/control.dart';
@@ -218,9 +218,9 @@ class ContainerControl extends StatelessWidget with FletStoreMixin {
       container = ColorFiltered(colorFilter: colorFilter, child: container);
     }
 
-    if (ignoreInteractions) {
-      container = IgnorePointer(child: container);
-    }
+    // Always wrapped, so toggling `ignore_interactions` doesn't change the
+    // tree's shape (which rebuilt the subtree, losing its state).
+    container = IgnorePointer(ignoring: ignoreInteractions, child: container);
 
     return LayoutControl(control: control, child: container);
   }

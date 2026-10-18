@@ -1,0 +1,26 @@
+[project]
+name = "shadcn-ui-radio-group"
+version = "1.0.0"
+description = "Radio group for choosing a spacing option, with a live selection label."
+requires-python = ">=3.10"
+keywords = ["shadcn", "radio", "radio group", "options", "choice"]
+authors = [{ name = "Flet team", email = "hello@flet.dev" }]
+dependencies = ["flet", "flet-shadcn-ui"]
+
+[dependency-groups]
+dev = ["flet-cli", "flet-desktop", "flet-web"]
+
+[tool.flet.gallery]
+categories = ["Extensions/Shadcn"]
+
+[tool.flet.metadata]
+title = "Shadcn RadioGroup"
+controls = ["SafeArea", "Column", "Text", "RadioGroup", "Radio"]
+layout_pattern = "form"
+complexity = "basic"
+features = ["change handling", "sublabel"]
+
+[tool.flet]
+org = "dev.flet"
+company = "Flet"
+copyright = "Copyright (C) 2023-2026 by Flet"

@@ -1,7 +1,7 @@
 import 'package:flet/src/controls/list_tile.dart';
 import 'package:flet/src/flet_backend.dart';
 import 'package:flet/src/models/control.dart';
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 class _EventBackend extends FletBackend {

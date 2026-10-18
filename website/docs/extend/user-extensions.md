@@ -125,9 +125,18 @@ Read more information about using Flutter packages [here](https://docs.flutter.d
 
 In the `src/flutter/flet_spinkit/lib/src/flet_spinkit.dart` file, add import statement and replace Text widget with `SpinKitRotatingCircle` widget:
 
+:::note
+Flet's Dart code takes Material and Cupertino from the
+[`material_ui`](https://pub.dev/packages/material_ui) and
+[`cupertino_ui`](https://pub.dev/packages/cupertino_ui) packages, not from
+`package:flutter/material.dart` and `package:flutter/cupertino.dart`, and so
+should your extension. See
+[Material and Cupertino now come from material_ui and cupertino_ui](../updates/breaking-changes/v1-1-0/material-ui-cupertino-ui.md).
+:::
+
 ```dart
 import 'package:flet/flet.dart';
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 
 class FletSpinkitControl extends StatelessWidget {
@@ -375,7 +384,7 @@ In `src/flet_spinkit.dart` file, use helper methods `getColor` and `getDouble` t
 
 ```dart
 import 'package:flet/flet.dart';
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 
 class FletSpinkitControl extends StatelessWidget {
@@ -644,7 +653,7 @@ single extension can serve multiple named screens:
 
 ```dart
 import 'package:flet/flet.dart';
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 
 import 'my_boot_screen.dart';
 
@@ -682,7 +691,7 @@ The hook receives:
 
 ```dart
 import 'package:flet/flet.dart';
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 
 class MyBootScreen extends StatelessWidget {
   final Map<String, dynamic> options;

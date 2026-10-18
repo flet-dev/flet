@@ -643,6 +643,16 @@ example above will be translated accordingly into this:
 ```
 </details>
 
+## Minimum iOS version
+
+Apps built with `flet build ipa` and `flet build ios-simulator` run on iOS and
+iPadOS 15 or later, on devices and in the iOS Simulator. This is the lowest
+version that Xcode 27 can build for.
+
+The [build template](index.md#build-template) sets it with
+`IPHONEOS_DEPLOYMENT_TARGET` in the Xcode project and `platform :ios` in the
+`Podfile`. It can't be configured in `pyproject.toml`.
+
 ## Deploying an App to an Apple Device for Testing
 
 You can deploy `.ipa` files directly to an iPhone or iPad on macOS—ideal for

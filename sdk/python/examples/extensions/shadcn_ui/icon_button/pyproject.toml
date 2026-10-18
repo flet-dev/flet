@@ -1,0 +1,26 @@
+[project]
+name = "shadcn-ui-icon-button"
+version = "1.0.0"
+description = "Icon-only buttons in every variant with click feedback."
+requires-python = ">=3.10"
+keywords = ["shadcn", "icon button", "button", "lucide", "icon"]
+authors = [{ name = "Flet team", email = "hello@flet.dev" }]
+dependencies = ["flet", "flet-shadcn-ui"]
+
+[dependency-groups]
+dev = ["flet-cli", "flet-desktop", "flet-web"]
+
+[tool.flet.gallery]
+categories = ["Extensions/Shadcn"]
+
+[tool.flet.metadata]
+title = "Shadcn IconButton"
+controls = ["SafeArea", "Column", "Row", "Text", "IconButton"]
+layout_pattern = "inline-actions"
+complexity = "basic"
+features = ["variants", "click handling", "lucide icons"]
+
+[tool.flet]
+org = "dev.flet"
+company = "Flet"
+copyright = "Copyright (C) 2023-2026 by Flet"

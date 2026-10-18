@@ -158,13 +158,17 @@ if TYPE_CHECKING:
     from flet.controls.core.flet_app import (
         FletApp,
         FletAppOutputEvent,
+        FletAppWindowEvent,
     )
     from flet.controls.core.gesture_detector import GestureDetector
     from flet.controls.core.grid_view import GridView
     from flet.controls.core.hero import Hero
     from flet.controls.core.icon import Icon
     from flet.controls.core.image import Image
-    from flet.controls.core.interactive_viewer import InteractiveViewer
+    from flet.controls.core.interactive_viewer import (
+        InteractiveViewer,
+        InteractiveViewerTransform,
+    )
     from flet.controls.core.keyboard_listener import (
         KeyboardListener,
         KeyDownEvent,
@@ -295,6 +299,7 @@ if TYPE_CHECKING:
         DragUpdateEvent,
         ForcePressEvent,
         HoverEvent,
+        InteractiveViewerTransformEvent,
         LongPressDownEvent,
         LongPressEndEvent,
         LongPressMoveUpdateEvent,
@@ -513,6 +518,7 @@ if TYPE_CHECKING:
     )
     from flet.controls.material.vertical_divider import VerticalDivider
     from flet.controls.multi_view import MultiView
+    from flet.controls.package_info import PackageInfo
     from flet.controls.padding import (
         Padding,
         PaddingValue,
@@ -650,6 +656,7 @@ if TYPE_CHECKING:
         FloatingActionButtonTheme,
         IconButtonTheme,
         IconTheme,
+        InputDecorationTheme,
         ListTileTheme,
         NavigationBarTheme,
         NavigationDrawerTheme,
@@ -670,8 +677,10 @@ if TYPE_CHECKING:
         SystemOverlayStyle,
         TabBarTheme,
         TextButtonTheme,
+        TextFieldTheme,
         TextTheme,
         Theme,
+        ThemeSurfaces,
         TimePickerTheme,
         TooltipTheme,
     )
@@ -705,6 +714,7 @@ if TYPE_CHECKING:
         Locale,
         LocaleConfiguration,
         MainAxisAlignment,
+        MaterialTapTargetSize,
         MouseCursor,
         NotchShape,
         Number,
@@ -936,6 +946,7 @@ __all__ = [
     "FilterQuality",
     "FletApp",
     "FletAppOutputEvent",
+    "FletAppWindowEvent",
     "FletException",
     "FletPageDisconnectedException",
     "FletUnimplementedPlatformException",
@@ -967,8 +978,11 @@ __all__ = [
     "Image",
     "ImageRepeat",
     "InputBorder",
+    "InputDecorationTheme",
     "InputFilter",
     "InteractiveViewer",
+    "InteractiveViewerTransform",
+    "InteractiveViewerTransformEvent",
     "IosDeviceInfo",
     "IosUtsname",
     "Key",
@@ -1010,6 +1024,7 @@ __all__ = [
     "MarkdownCustomCodeTheme",
     "MarkdownExtensionSet",
     "MarkdownStyleSheet",
+    "MaterialTapTargetSize",
     "Matrix4",
     "MenuBar",
     "MenuItemButton",
@@ -1048,6 +1063,7 @@ __all__ = [
     "OutlinedButtonTheme",
     "OutlinedIconButton",
     "OverlayVisibilityMode",
+    "PackageInfo",
     "Padding",
     "PaddingValue",
     "Page",
@@ -1188,6 +1204,7 @@ __all__ = [
     "TextDecorationStyle",
     "TextField",
     "TextFieldPasteFilesEvent",
+    "TextFieldTheme",
     "TextOnlyInputFilter",
     "TextOverflow",
     "TextSelection",
@@ -1199,6 +1216,7 @@ __all__ = [
     "TextThemeStyle",
     "Theme",
     "ThemeMode",
+    "ThemeSurfaces",
     "TileAffinity",
     "TimePicker",
     "TimePickerEntryMode",
@@ -1454,6 +1472,8 @@ _LAZY = {
     "DropdownM2": "flet.controls.material.dropdownm2",
     "DropdownOption": "flet.controls.material.dropdown",
     "DropdownTheme": "flet.controls.theme",
+    "InputDecorationTheme": "flet.controls.theme",
+    "TextFieldTheme": "flet.controls.theme",
     "Duration": "flet.controls.duration",
     "DurationValue": "flet.controls.duration",
     "Event": "flet.controls.control_event",
@@ -1478,6 +1498,7 @@ _LAZY = {
     "FilterQuality": "flet.controls.box",
     "FletApp": "flet.controls.core.flet_app",
     "FletAppOutputEvent": "flet.controls.core.flet_app",
+    "FletAppWindowEvent": "flet.controls.core.flet_app",
     "FletException": "flet.controls.exceptions",
     "FletPageDisconnectedException": "flet.controls.exceptions",
     "FletUnimplementedPlatformException": "flet.controls.exceptions",
@@ -1511,6 +1532,8 @@ _LAZY = {
     "InputBorder": "flet.controls.material.form_field_control",
     "InputFilter": "flet.controls.material.textfield",
     "InteractiveViewer": "flet.controls.core.interactive_viewer",
+    "InteractiveViewerTransform": "flet.controls.core.interactive_viewer",
+    "InteractiveViewerTransformEvent": "flet.controls.events",
     "IosDeviceInfo": "flet.controls.device_info",
     "IosUtsname": "flet.controls.device_info",
     "Key": "flet.controls.keys",
@@ -1590,6 +1613,7 @@ _LAZY = {
     "OutlinedButtonTheme": "flet.controls.theme",
     "OutlinedIconButton": "flet.controls.material.icon_button",
     "OverlayVisibilityMode": "flet.controls.cupertino.cupertino_textfield",
+    "PackageInfo": "flet.controls.package_info",
     "Padding": "flet.controls.padding",
     "PaddingValue": "flet.controls.padding",
     "Page": "flet.controls.page",
@@ -1741,6 +1765,7 @@ _LAZY = {
     "TextThemeStyle": "flet.controls.text_style",
     "Theme": "flet.controls.theme",
     "ThemeMode": "flet.controls.types",
+    "ThemeSurfaces": "flet.controls.theme",
     "TileAffinity": "flet.controls.material.expansion_tile",
     "TimePicker": "flet.controls.material.time_picker",
     "TimePickerEntryMode": "flet.controls.material.time_picker",
@@ -1768,6 +1793,7 @@ _LAZY = {
     "ViewPopEvent": "flet.controls.page",
     "ViewsPopUntilEvent": "flet.controls.page",
     "VisualDensity": "flet.controls.types",
+    "MaterialTapTargetSize": "flet.controls.types",
     "Wakelock": "flet.controls.services.wakelock",
     "WebBrowserName": "flet.controls.device_info",
     "WebDeviceInfo": "flet.controls.device_info",
