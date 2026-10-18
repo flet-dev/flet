@@ -156,6 +156,38 @@ class _GestureDetectorControlState extends State<GestureDetectorControl> {
 
     var dragInterval = widget.control.getInt("drag_interval", 0)!;
 
+    final supportedDevices = () {
+      var supportedDevices =
+          widget.control.get<List<dynamic>>("allowed_devices");
+      return supportedDevices
+          ?.map((d) => parsePointerDeviceKind(d?.toString()))
+          .nonNulls
+          .toSet();
+    }();
+
+    void handleTapDown(TapDownDetails details) {
+      _tapDownDetails = details;
+      if (onTapDown) {
+        widget.control.triggerEvent("tap_down", details.toMap());
+      }
+    }
+
+    void handleTapUp(TapUpDetails details) {
+      widget.control.triggerEvent("tap_up", details.toMap());
+    }
+
+    void handleTap() {
+      widget.control.triggerEvent("tap", _tapDownDetails?.toMap());
+    }
+
+    void handleTapMove(TapMoveDetails details) {
+      widget.control.triggerEvent("tap_move", details.toMap());
+    }
+
+    void handleTapCancel() {
+      widget.control.triggerEvent("tap_cancel");
+    }
+
     void handlePanStart(DragStartDetails details) {
       _localPan = Offset(details.localPosition.dx, details.localPosition.dy);
       _globalPan = Offset(details.globalPosition.dx, details.globalPosition.dy);
@@ -294,41 +326,20 @@ class _GestureDetectorControlState extends State<GestureDetectorControl> {
                 widget.control.getBool("exclude_from_semantics", false)!,
             trackpadScrollCausesScale:
                 widget.control.getBool("trackpad_scroll_causes_scale", false)!,
-            supportedDevices: () {
-              var supportedDevices = 
-                  widget.control.get<List<dynamic>>("allowed_devices");
-              return supportedDevices
-                  ?.map((d) => parsePointerDeviceKind(d?.toString()))
-                  .nonNulls
-                  .toSet();
-            }(),
-            onTap: onTap
-                ? () =>
-                    widget.control.triggerEvent("tap", _tapDownDetails?.toMap())
-                : null,
-            onTapDown: onTapDown || onTap
-                ? (TapDownDetails details) {
-                    _tapDownDetails = details;
-                    if (onTapDown) {
-                      widget.control.triggerEvent("tap_down", details.toMap());
-                    }
-                  }
-                : null,
-            onTapUp: onTapUp
-                ? (TapUpDetails details) {
-                    widget.control.triggerEvent("tap_up", details.toMap());
-                  }
-                : null,
-            onTapMove: onTapMove
-                ? (TapMoveDetails details) {
-                    widget.control.triggerEvent("tap_move", details.toMap());
-                  }
-                : null,
-            onTapCancel: onTapCancel
-                ? () {
-                    widget.control.triggerEvent("tap_cancel");
-                  }
-                : null,
+            supportedDevices: supportedDevices,
+            // Flutter's GestureDetector never forwards `onTapMove` to its
+            // TapGestureRecognizer: the parameter is missing both from the
+            // recognizer registration condition and from the recognizer
+            // configuration, so it is dead and `tap_move` events would never
+            // fire. When `on_tap_move` is subscribed, the whole primary tap
+            // family is wired into our own TapGestureRecognizer registered by
+            // the RawGestureDetector wrapping the content below, so exactly
+            // one tap recognizer competes in the gesture arena.
+            onTap: !onTapMove && onTap ? handleTap : null,
+            onTapDown:
+                !onTapMove && (onTapDown || onTap) ? handleTapDown : null,
+            onTapUp: !onTapMove && onTapUp ? handleTapUp : null,
+            onTapCancel: !onTapMove && onTapCancel ? handleTapCancel : null,
             onSecondaryTap: onSecondaryTap
                 ? () => widget.control.triggerEvent("secondary_tap")
                 : null,
@@ -607,7 +618,34 @@ class _GestureDetectorControlState extends State<GestureDetectorControl> {
                     widget.control.triggerEvent("scale_end", details.toMap());
                   }
                 : null,
-            child: result)
+            child: onTapMove
+                ? RawGestureDetector(
+                    behavior: HitTestBehavior.translucent,
+                    excludeFromSemantics: widget.control
+                        .getBool("exclude_from_semantics", false)!,
+                    gestures: {
+                      TapGestureRecognizer:
+                          GestureRecognizerFactoryWithHandlers<
+                              TapGestureRecognizer>(
+                        () => TapGestureRecognizer(
+                            debugOwner: this,
+                            supportedDevices: supportedDevices),
+                        (TapGestureRecognizer instance) {
+                          instance
+                            ..gestureSettings =
+                                MediaQuery.maybeGestureSettingsOf(context)
+                            ..onTapDown =
+                                onTapDown || onTap ? handleTapDown : null
+                            ..onTapUp = onTapUp ? handleTapUp : null
+                            ..onTap = onTap ? handleTap : null
+                            ..onTapCancel = onTapCancel ? handleTapCancel : null
+                            ..onTapMove = handleTapMove;
+                        },
+                      ),
+                    },
+                    child: result,
+                  )
+                : result)
         : result;
 
     result = (onMultiTap || onMultiLongPress)
