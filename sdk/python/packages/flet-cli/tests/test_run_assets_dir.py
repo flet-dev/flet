@@ -320,7 +320,8 @@ class TestTheWindowUsesTheAppsAssetsDir:
         assert DISPLAY_ASSETS_DIR_SUFFIX not in printed
 
 
-def test_app_reports_its_assets_dir_before_the_url(tmp_path):
+@pytest.mark.parametrize("force_web_server", [False, True], ids=["socket", "web"])
+def test_app_reports_its_assets_dir_before_the_url(tmp_path, force_web_server):
     """A real app started with a URL prefix prints its resolved assets dir first."""
     assets = tmp_path / "my images é"
     assets.mkdir()
@@ -333,6 +334,9 @@ def test_app_reports_its_assets_dir_before_the_url(tmp_path):
         **os.environ,
         "FLET_DISPLAY_URL_PREFIX": "PAGE_URL_TEST",
         "FLET_SERVER_PORT": str(get_free_tcp_port()),
+        "FLET_FORCE_WEB_SERVER": str(force_web_server).lower(),
+        # Keep headless Linux from selecting web mode for the socket case.
+        "DISPLAY": "test",
         "PYTHONIOENCODING": "utf-8",
     }
     env.pop("FLET_ASSETS_DIR", None)
@@ -341,7 +345,7 @@ def test_app_reports_its_assets_dir_before_the_url(tmp_path):
         cwd=tmp_path,
         env=env,
         stdout=subprocess.PIPE,
-        stderr=subprocess.DEVNULL,
+        stderr=subprocess.STDOUT,
         encoding="utf-8",
     )
     lines = []
@@ -359,7 +363,12 @@ def test_app_reports_its_assets_dir_before_the_url(tmp_path):
     finally:
         p.kill()
         p.wait()
+        reader.join()
+        p.stdout.close()
     prefixed = [line for line in lines if line.startswith("PAGE_URL_TEST")]
+    assert len(prefixed) == 2, (
+        "App did not report its assets dir and URL:\n" + "\n".join(lines)
+    )
     assert prefixed[0] == (
         f"PAGE_URL_TEST{DISPLAY_ASSETS_DIR_SUFFIX} {assets.resolve()}"
     )
