@@ -735,14 +735,17 @@ class Session:
                                 hook._setup_task = asyncio.create_task(hook.setup())
                             else:
                                 res = hook.setup()
-                            if callable(res):
-                                hook.cleanup = res
-                        elif hook and hook.cleanup and is_cleanup:
+                            hook._returned_cleanup = res if callable(res) else None
+                        elif hook and is_cleanup:
                             hook.cancel()
-                            if inspect.iscoroutinefunction(hook.cleanup):
-                                hook._cleanup_task = asyncio.create_task(hook.cleanup())
-                            else:
-                                hook.cleanup()
+                            cleanup = hook.cleanup or hook._returned_cleanup
+                            hook._returned_cleanup = None
+                            if callable(cleanup) and inspect.iscoroutinefunction(
+                                cleanup
+                            ):
+                                hook._cleanup_task = asyncio.create_task(cleanup())
+                            elif callable(cleanup):
+                                cleanup()
                     except Exception as ex:
                         tb = traceback.format_exc()
                         self.error(f"Exception in effect: {ex}\n{tb}")
