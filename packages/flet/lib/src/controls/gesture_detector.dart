@@ -156,6 +156,66 @@ class _GestureDetectorControlState extends State<GestureDetectorControl> {
 
     var dragInterval = widget.control.getInt("drag_interval", 0)!;
 
+    final supportedDevices = () {
+      var supportedDevices =
+          widget.control.get<List<dynamic>>("allowed_devices");
+      return supportedDevices
+          ?.map((d) => parsePointerDeviceKind(d?.toString()))
+          .nonNulls
+          .toSet();
+    }();
+
+    void handleTapDown(TapDownDetails details) {
+      _tapDownDetails = details;
+      if (onTapDown) {
+        widget.control.triggerEvent("tap_down", details.toMap());
+      }
+    }
+
+    void handleTapUp(TapUpDetails details) {
+      widget.control.triggerEvent("tap_up", details.toMap());
+    }
+
+    void handleTap() {
+      widget.control.triggerEvent("tap", _tapDownDetails?.toMap());
+    }
+
+    void handleTapMove(TapMoveDetails details) {
+      widget.control.triggerEvent("tap_move", details.toMap());
+    }
+
+    void handleTapCancel() {
+      widget.control.triggerEvent("tap_cancel");
+    }
+
+    void handleSecondaryTap() {
+      widget.control.triggerEvent("secondary_tap");
+    }
+
+    void handleSecondaryTapDown(TapDownDetails details) {
+      widget.control.triggerEvent("secondary_tap_down", details.toMap());
+    }
+
+    void handleSecondaryTapUp(TapUpDetails details) {
+      widget.control.triggerEvent("secondary_tap_up", details.toMap());
+    }
+
+    void handleSecondaryTapCancel() {
+      widget.control.triggerEvent("secondary_tap_cancel");
+    }
+
+    void handleTertiaryTapDown(TapDownDetails details) {
+      widget.control.triggerEvent("tertiary_tap_down", details.toMap());
+    }
+
+    void handleTertiaryTapUp(TapUpDetails details) {
+      widget.control.triggerEvent("tertiary_tap_up", details.toMap());
+    }
+
+    void handleTertiaryTapCancel() {
+      widget.control.triggerEvent("tertiary_tap_cancel");
+    }
+
     void handlePanStart(DragStartDetails details) {
       _localPan = Offset(details.localPosition.dx, details.localPosition.dy);
       _globalPan = Offset(details.globalPosition.dx, details.globalPosition.dy);
@@ -294,77 +354,32 @@ class _GestureDetectorControlState extends State<GestureDetectorControl> {
                 widget.control.getBool("exclude_from_semantics", false)!,
             trackpadScrollCausesScale:
                 widget.control.getBool("trackpad_scroll_causes_scale", false)!,
-            supportedDevices: () {
-              var supportedDevices =
-                  widget.control.get<List<dynamic>>("allowed_devices");
-              return supportedDevices
-                  ?.map((d) => parsePointerDeviceKind(d?.toString()))
-                  .nonNulls
-                  .toSet();
-            }(),
-            onTap: onTap
-                ? () =>
-                    widget.control.triggerEvent("tap", _tapDownDetails?.toMap())
+            supportedDevices: supportedDevices,
+            // Flutter's GestureDetector does not forward onTapMove to its
+            // recognizer. Route all tap callbacks through one raw recognizer
+            // when tap moves are subscribed, preserving a single semantic tap
+            // action even when secondary or tertiary handlers are present.
+            onTap: !onTapMove && onTap ? handleTap : null,
+            onTapDown:
+                !onTapMove && (onTapDown || onTap) ? handleTapDown : null,
+            onTapUp: !onTapMove && onTapUp ? handleTapUp : null,
+            onTapCancel: !onTapMove && onTapCancel ? handleTapCancel : null,
+            onSecondaryTap:
+                !onTapMove && onSecondaryTap ? handleSecondaryTap : null,
+            onSecondaryTapDown: !onTapMove && onSecondaryTapDown
+                ? handleSecondaryTapDown
                 : null,
-            onTapDown: onTapDown || onTap
-                ? (TapDownDetails details) {
-                    _tapDownDetails = details;
-                    if (onTapDown) {
-                      widget.control.triggerEvent("tap_down", details.toMap());
-                    }
-                  }
+            onSecondaryTapUp:
+                !onTapMove && onSecondaryTapUp ? handleSecondaryTapUp : null,
+            onSecondaryTapCancel: !onTapMove && onSecondaryTapCancel
+                ? handleSecondaryTapCancel
                 : null,
-            onTapUp: onTapUp
-                ? (TapUpDetails details) {
-                    widget.control.triggerEvent("tap_up", details.toMap());
-                  }
-                : null,
-            onTapMove: onTapMove
-                ? (TapMoveDetails details) {
-                    widget.control.triggerEvent("tap_move", details.toMap());
-                  }
-                : null,
-            onTapCancel: onTapCancel
-                ? () {
-                    widget.control.triggerEvent("tap_cancel");
-                  }
-                : null,
-            onSecondaryTap: onSecondaryTap
-                ? () => widget.control.triggerEvent("secondary_tap")
-                : null,
-            onSecondaryTapDown: onSecondaryTapDown
-                ? (TapDownDetails details) {
-                    widget.control
-                        .triggerEvent("secondary_tap_down", details.toMap());
-                  }
-                : null,
-            onSecondaryTapUp: onSecondaryTapUp
-                ? (TapUpDetails details) {
-                    widget.control
-                        .triggerEvent("secondary_tap_up", details.toMap());
-                  }
-                : null,
-            onSecondaryTapCancel: onSecondaryTapCancel
-                ? () {
-                    widget.control.triggerEvent("secondary_tap_cancel");
-                  }
-                : null,
-            onTertiaryTapDown: onTertiaryTapDown
-                ? (TapDownDetails details) {
-                    widget.control
-                        .triggerEvent("tertiary_tap_down", details.toMap());
-                  }
-                : null,
-            onTertiaryTapUp: onTertiaryTapUp
-                ? (TapUpDetails details) {
-                    widget.control
-                        .triggerEvent("tertiary_tap_up", details.toMap());
-                  }
-                : null,
-            onTertiaryTapCancel: onTertiaryTapCancel
-                ? () {
-                    widget.control.triggerEvent("tertiary_tap_cancel");
-                  }
+            onTertiaryTapDown:
+                !onTapMove && onTertiaryTapDown ? handleTertiaryTapDown : null,
+            onTertiaryTapUp:
+                !onTapMove && onTertiaryTapUp ? handleTertiaryTapUp : null,
+            onTertiaryTapCancel: !onTapMove && onTertiaryTapCancel
+                ? handleTertiaryTapCancel
                 : null,
             onLongPressDown: onLongPressDown
                 ? (LongPressDownDetails details) {
@@ -607,7 +622,49 @@ class _GestureDetectorControlState extends State<GestureDetectorControl> {
                     widget.control.triggerEvent("scale_end", details.toMap());
                   }
                 : null,
-            child: result)
+            // Keep this wrapper mounted so toggling tap moves does not
+            // recreate the content subtree and discard its local state.
+            child: RawGestureDetector(
+              behavior: HitTestBehavior.translucent,
+              excludeFromSemantics:
+                  widget.control.getBool("exclude_from_semantics", false)!,
+              gestures: {
+                if (onTapMove)
+                  TapGestureRecognizer: GestureRecognizerFactoryWithHandlers<
+                      TapGestureRecognizer>(
+                    () => TapGestureRecognizer(
+                        debugOwner: this, supportedDevices: supportedDevices),
+                    (TapGestureRecognizer instance) {
+                      instance
+                        ..supportedDevices = supportedDevices
+                        ..gestureSettings =
+                            MediaQuery.maybeGestureSettingsOf(context)
+                        ..onTapDown = onTapDown || onTap ? handleTapDown : null
+                        ..onTapUp = onTapUp ? handleTapUp : null
+                        ..onTap = onTap ? handleTap : null
+                        ..onTapCancel = onTapCancel ? handleTapCancel : null
+                        ..onTapMove = handleTapMove
+                        ..onSecondaryTap =
+                            onSecondaryTap ? handleSecondaryTap : null
+                        ..onSecondaryTapDown =
+                            onSecondaryTapDown ? handleSecondaryTapDown : null
+                        ..onSecondaryTapUp =
+                            onSecondaryTapUp ? handleSecondaryTapUp : null
+                        ..onSecondaryTapCancel = onSecondaryTapCancel
+                            ? handleSecondaryTapCancel
+                            : null
+                        ..onTertiaryTapDown =
+                            onTertiaryTapDown ? handleTertiaryTapDown : null
+                        ..onTertiaryTapUp =
+                            onTertiaryTapUp ? handleTertiaryTapUp : null
+                        ..onTertiaryTapCancel = onTertiaryTapCancel
+                            ? handleTertiaryTapCancel
+                            : null;
+                    },
+                  ),
+              },
+              child: result,
+            ))
         : result;
 
     result = (onMultiTap || onMultiLongPress)
