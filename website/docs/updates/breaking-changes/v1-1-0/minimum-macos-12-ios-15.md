@@ -37,7 +37,9 @@ The macOS deployment target 'MACOSX_DEPLOYMENT_TARGET' is set to 11.0, but the r
 
 Flet 1.1.0 builds with Flutter 3.47, whose engine requires these minimums, and
 raises the deployment targets in the build template and the desktop client to
-match.
+match. The embedded Python runtime, its native modules and the Dart-Python bridge
+that `flet build` bundles (from serious_python 6.0.0) are built for the same
+minimums ([#6940](https://github.com/flet-dev/flet/issues/6940)).
 
 ## Who is affected
 
@@ -109,7 +111,8 @@ accepts iOS apps built with the iOS 27 SDK, which comes with Xcode 27
 
 - Docs: [Minimum macOS version](../../../publish/macos.md#minimum-macos-version),
   [Minimum iOS version](../../../publish/ios.md#minimum-ios-version)
-- Issue: [#6874](https://github.com/flet-dev/flet/issues/6874)
+- Issues: [#6874](https://github.com/flet-dev/flet/issues/6874),
+  [#6940](https://github.com/flet-dev/flet/issues/6940)
 - Pull request: [#6914](https://github.com/flet-dev/flet/pull/6914)
 - [Flutter supported platforms](https://docs.flutter.dev/reference/supported-platforms)
 - Release notes: [Flet 1.1.0](../../release-notes.md)
