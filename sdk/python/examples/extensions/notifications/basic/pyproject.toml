@@ -1,0 +1,35 @@
+[project]
+name = "notifications-basic"
+version = "1.0.0"
+description = "Requests notification permission, shows a system notification on button click, and handles taps."
+requires-python = ">=3.10"
+keywords = ["services", "notifications", "permissions", "tap handlers", "async"]
+authors = [{ name = "Flet team", email = "hello@flet.dev" }]
+dependencies = ["flet", "flet-notifications"]
+
+[dependency-groups]
+dev = ["flet-cli", "flet-desktop", "flet-web"]
+
+[tool.flet.gallery]
+categories = ["Utility/Notifications"]
+
+[tool.flet.metadata]
+title = "Basic notifications"
+controls = ["Page", "SafeArea", "OutlinedButton", "LocalNotifications"]
+layout_pattern = "inline-actions"
+complexity = "basic"
+features = ["notification permissions", "local notifications", "notification tap handling"]
+
+[tool.flet]
+org = "dev.flet"
+company = "Flet"
+copyright = "Copyright (C) 2023-2026 by Flet"
+
+[tool.flet.android]
+gradle_dependencies = 'coreLibraryDesugaring("com.android.tools:desugar_jdk_libs:2.1.4")'
+
+[tool.flet.android.compile_options]
+isCoreLibraryDesugaringEnabled = "true"
+
+[tool.flet.android.permission]
+POST_NOTIFICATIONS = true

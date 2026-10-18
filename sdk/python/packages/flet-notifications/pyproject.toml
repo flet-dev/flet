@@ -15,9 +15,6 @@ Documentation = "https://flet.dev/docs/services/notifications"
 Repository = "https://github.com/flet-dev/flet/tree/main/sdk/python/packages/flet-notifications"
 Issues = "https://github.com/flet-dev/flet/issues"
 
-[project.scripts]
-flet-notifications-patch = "flet_notifications.patcher:main"
-
 [tool.setuptools.package-data]
 "flutter.flet_notifications" = [
     "pubspec.yaml",
