@@ -47,6 +47,7 @@
 
 ### Bug fixes
 
+* Fix `GestureDetector.on_tap_move` not firing, while preserving tap accessibility and updates to `allowed_devices` ([#6961](https://github.com/flet-dev/flet/issues/6961), [#6982](https://github.com/flet-dev/flet/pull/6982)) by @inchang-ing.
 * Honor an explicit platform `app.hide_window_on_start = false` when the global setting is `true`, in both the Dart bootstrap and Windows runner ([#6949](https://github.com/flet-dev/flet/issues/6949), [#6981](https://github.com/flet-dev/flet/pull/6981)) by @LaoChouPro.
 * Fix a declarative component moved to a structurally different parent (for example a `Column` replaced by a `Row` when a responsive layout switches) being re-rendered as a fresh, never-mounted copy: its state was lost, its mount effects never ran and later state updates were ignored until a page reload, while the old copy stayed in the session index. A moved, already-mounted component now keeps its body ([#6970](https://github.com/flet-dev/flet/issues/6970)) by @FeodorFitsner.
 * Fix a client method call (e.g. `FletApp.wait_idle()`) failing with "Concurrent modification during iteration" when the control's widget was rebuilt while the call was in progress by @FeodorFitsner.
@@ -98,7 +99,6 @@
 
 ### Bug fixes
 
-* Fix `GestureDetector.on_tap_move` never firing its handler: Flutter's `GestureDetector` never forwards its `onTapMove` parameter to the `TapGestureRecognizer` it creates, so `tap_move` events were silently dropped. When `on_tap_move` is subscribed, the primary tap events are now wired into a `TapGestureRecognizer` registered by a `RawGestureDetector` wrapping the content ([#6961](https://github.com/flet-dev/flet/issues/6961), [#6982](https://github.com/flet-dev/flet/pull/6982)) by @inchang-ing.
 * Fix a web app built with `flet build web` getting its project name, e.g. `my_app`, as its label when installed as a PWA on iOS instead of its product name. The manifest's `short_name`, which iOS shows on the Home Screen, was set to the project name; it now defaults to the product name, like the page title. Product names containing quotes no longer break `manifest.json` ([#6911](https://github.com/flet-dev/flet/pull/6911)) by @FeodorFitsner.
 * Fix `flet build`, `flet test` and `flet debug` failing on new projects with a `jni_flutter` "Constant evaluation error" ([#6919](https://github.com/flet-dev/flet/issues/6919), [#6920](https://github.com/flet-dev/flet/pull/6920)) by @ndonkoHenri.
 * Fix `flet build windows` on Windows on ARM with an ARM64 Flutter SDK on `PATH` reporting success without copying the app to `build/windows`, and building an ARM64 app that can't load Flet's x64 Python runtime ([#6926](https://github.com/flet-dev/flet/pull/6926)) by @ndonkoHenri.

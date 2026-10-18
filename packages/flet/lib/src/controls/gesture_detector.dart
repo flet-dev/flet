@@ -188,6 +188,34 @@ class _GestureDetectorControlState extends State<GestureDetectorControl> {
       widget.control.triggerEvent("tap_cancel");
     }
 
+    void handleSecondaryTap() {
+      widget.control.triggerEvent("secondary_tap");
+    }
+
+    void handleSecondaryTapDown(TapDownDetails details) {
+      widget.control.triggerEvent("secondary_tap_down", details.toMap());
+    }
+
+    void handleSecondaryTapUp(TapUpDetails details) {
+      widget.control.triggerEvent("secondary_tap_up", details.toMap());
+    }
+
+    void handleSecondaryTapCancel() {
+      widget.control.triggerEvent("secondary_tap_cancel");
+    }
+
+    void handleTertiaryTapDown(TapDownDetails details) {
+      widget.control.triggerEvent("tertiary_tap_down", details.toMap());
+    }
+
+    void handleTertiaryTapUp(TapUpDetails details) {
+      widget.control.triggerEvent("tertiary_tap_up", details.toMap());
+    }
+
+    void handleTertiaryTapCancel() {
+      widget.control.triggerEvent("tertiary_tap_cancel");
+    }
+
     void handlePanStart(DragStartDetails details) {
       _localPan = Offset(details.localPosition.dx, details.localPosition.dy);
       _globalPan = Offset(details.globalPosition.dx, details.globalPosition.dy);
@@ -327,55 +355,31 @@ class _GestureDetectorControlState extends State<GestureDetectorControl> {
             trackpadScrollCausesScale:
                 widget.control.getBool("trackpad_scroll_causes_scale", false)!,
             supportedDevices: supportedDevices,
-            // Flutter's GestureDetector never forwards `onTapMove` to its
-            // TapGestureRecognizer: the parameter is missing both from the
-            // recognizer registration condition and from the recognizer
-            // configuration, so it is dead and `tap_move` events would never
-            // fire. When `on_tap_move` is subscribed, the whole primary tap
-            // family is wired into our own TapGestureRecognizer registered by
-            // the RawGestureDetector wrapping the content below, so exactly
-            // one tap recognizer competes in the gesture arena.
+            // Flutter's GestureDetector does not forward onTapMove to its
+            // recognizer. Route all tap callbacks through one raw recognizer
+            // when tap moves are subscribed, preserving a single semantic tap
+            // action even when secondary or tertiary handlers are present.
             onTap: !onTapMove && onTap ? handleTap : null,
             onTapDown:
                 !onTapMove && (onTapDown || onTap) ? handleTapDown : null,
             onTapUp: !onTapMove && onTapUp ? handleTapUp : null,
             onTapCancel: !onTapMove && onTapCancel ? handleTapCancel : null,
-            onSecondaryTap: onSecondaryTap
-                ? () => widget.control.triggerEvent("secondary_tap")
+            onSecondaryTap:
+                !onTapMove && onSecondaryTap ? handleSecondaryTap : null,
+            onSecondaryTapDown: !onTapMove && onSecondaryTapDown
+                ? handleSecondaryTapDown
                 : null,
-            onSecondaryTapDown: onSecondaryTapDown
-                ? (TapDownDetails details) {
-                    widget.control
-                        .triggerEvent("secondary_tap_down", details.toMap());
-                  }
+            onSecondaryTapUp:
+                !onTapMove && onSecondaryTapUp ? handleSecondaryTapUp : null,
+            onSecondaryTapCancel: !onTapMove && onSecondaryTapCancel
+                ? handleSecondaryTapCancel
                 : null,
-            onSecondaryTapUp: onSecondaryTapUp
-                ? (TapUpDetails details) {
-                    widget.control
-                        .triggerEvent("secondary_tap_up", details.toMap());
-                  }
-                : null,
-            onSecondaryTapCancel: onSecondaryTapCancel
-                ? () {
-                    widget.control.triggerEvent("secondary_tap_cancel");
-                  }
-                : null,
-            onTertiaryTapDown: onTertiaryTapDown
-                ? (TapDownDetails details) {
-                    widget.control
-                        .triggerEvent("tertiary_tap_down", details.toMap());
-                  }
-                : null,
-            onTertiaryTapUp: onTertiaryTapUp
-                ? (TapUpDetails details) {
-                    widget.control
-                        .triggerEvent("tertiary_tap_up", details.toMap());
-                  }
-                : null,
-            onTertiaryTapCancel: onTertiaryTapCancel
-                ? () {
-                    widget.control.triggerEvent("tertiary_tap_cancel");
-                  }
+            onTertiaryTapDown:
+                !onTapMove && onTertiaryTapDown ? handleTertiaryTapDown : null,
+            onTertiaryTapUp:
+                !onTapMove && onTertiaryTapUp ? handleTertiaryTapUp : null,
+            onTertiaryTapCancel: !onTapMove && onTertiaryTapCancel
+                ? handleTertiaryTapCancel
                 : null,
             onLongPressDown: onLongPressDown
                 ? (LongPressDownDetails details) {
@@ -632,6 +636,7 @@ class _GestureDetectorControlState extends State<GestureDetectorControl> {
                             supportedDevices: supportedDevices),
                         (TapGestureRecognizer instance) {
                           instance
+                            ..supportedDevices = supportedDevices
                             ..gestureSettings =
                                 MediaQuery.maybeGestureSettingsOf(context)
                             ..onTapDown =
@@ -639,7 +644,24 @@ class _GestureDetectorControlState extends State<GestureDetectorControl> {
                             ..onTapUp = onTapUp ? handleTapUp : null
                             ..onTap = onTap ? handleTap : null
                             ..onTapCancel = onTapCancel ? handleTapCancel : null
-                            ..onTapMove = handleTapMove;
+                            ..onTapMove = handleTapMove
+                            ..onSecondaryTap =
+                                onSecondaryTap ? handleSecondaryTap : null
+                            ..onSecondaryTapDown = onSecondaryTapDown
+                                ? handleSecondaryTapDown
+                                : null
+                            ..onSecondaryTapUp =
+                                onSecondaryTapUp ? handleSecondaryTapUp : null
+                            ..onSecondaryTapCancel = onSecondaryTapCancel
+                                ? handleSecondaryTapCancel
+                                : null
+                            ..onTertiaryTapDown =
+                                onTertiaryTapDown ? handleTertiaryTapDown : null
+                            ..onTertiaryTapUp =
+                                onTertiaryTapUp ? handleTertiaryTapUp : null
+                            ..onTertiaryTapCancel = onTertiaryTapCancel
+                                ? handleTertiaryTapCancel
+                                : null;
                         },
                       ),
                     },
