@@ -1,0 +1,26 @@
+name: flet_notifications
+description: Flet Local Notifications service
+version: 0.1.0
+publish_to: none
+
+environment:
+  sdk: '>=3.3.0 <4.0.0'
+  flutter: ">=3.38.1"
+
+dependencies:
+  flutter:
+    sdk: flutter
+
+  flutter_local_notifications: ^22.3.1
+  flutter_timezone: ^5.1.1
+  shared_preferences: ^2.5.6
+  timezone: ^0.11.0
+
+  flet:
+    path: ../../../../../../../packages/flet
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  flutter_lints: ^3.0.0
+  shared_preferences_platform_interface: ^2.4.2

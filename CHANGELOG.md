@@ -20,6 +20,7 @@
   by @ada-koki.
 
 * Add the `flet-shadcn-ui` extension: controls styled after [shadcn/ui](https://ui.shadcn.com), built on the Flutter [`shadcn_ui`](https://pub.dev/packages/shadcn_ui) package, with `Theme` color schemes and the [Lucide](https://lucide.dev) icon set (`LucideIcons`). It includes `Button`, `IconButton`, `Badge`, `Alert`, `Avatar`, `Card`, `Breadcrumb`, `Separator`, `Progress`, `Input`, `Textarea`, `Checkbox`, `Switch`, `Slider`, `RadioGroup`, `Select`, `InputOTP`, `Calendar`, `DatePicker`, `DateRangePicker`, `TimePicker`, `Tabs`, `Accordion`, `ResizablePanelGroup`, `Tooltip`, `Popover`, `ContextMenu`, `Menubar`, `Table`, `Dialog`, `Sheet`, `Toast` and `Sonner`; value controls support `label`, `description` and `error_text` ([#6918](https://github.com/flet-dev/flet/pull/6918)) by @InesaFitsner.
+* Add the `flet-notifications` extension: a `LocalNotifications` service that shows, schedules and cancels local notifications on Android, iOS, macOS, Windows, Linux and Web, wrapping the [`flutter_local_notifications`](https://pub.dev/packages/flutter_local_notifications) plugin, with permission requests, Android channels, rich styles, inline-reply actions and typed tap/action/dismissed handlers ([#6948](https://github.com/flet-dev/flet/issues/6948)) by @Nwokike.
 
 ### Improvements
 
