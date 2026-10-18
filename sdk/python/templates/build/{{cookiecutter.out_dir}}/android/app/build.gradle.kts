@@ -63,8 +63,9 @@ android {
     }
 
     compileOptions {
-        sourceCompatibility = JavaVersion.VERSION_17
-        targetCompatibility = JavaVersion.VERSION_17
+// flet: compile_options {% for name, expression in cookiecutter.options.android_compile_options.items() %}
+        {{ name }} = {{ expression }}
+// flet: end of compile_options {% endfor %}
     }
 
     sourceSets["main"].java.srcDir("src/main/kotlin")
@@ -130,4 +131,9 @@ flutter {
     source = "../.."
 }
 
-dependencies {}
+dependencies {
+// flet: dependencies {
+// flet: dependencies {% if cookiecutter.options.android_gradle_dependencies %}
+{{ cookiecutter.options.android_gradle_dependencies | indent(4, first=True) }}
+// flet: end of dependencies {% endif %}
+}

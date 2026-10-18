@@ -9,6 +9,7 @@ import os
 import platform
 import re
 import shutil
+import textwrap
 from pathlib import Path
 from typing import Any, Optional, cast
 
@@ -48,6 +49,8 @@ from flet_cli.commands.options import PassThroughArgsAction
 from flet_cli.utils.android import (
     ANDROID_ARCH_TO_FLUTTER_TARGET_PLATFORM,
     excluded_android_abis,
+    normalize_android_receivers,
+    normalize_android_services,
 )
 from flet_cli.utils.app_excludes import find_default_excludes
 from flet_cli.utils.cli import parse_cli_bool_value
@@ -70,6 +73,11 @@ DEFAULT_TEMPLATE_URL = (
     "https://github.com/flet-dev/flet/releases/download/"
     "v{version}/flet-build-template.zip"
 )
+
+DEFAULT_ANDROID_COMPILE_OPTIONS = {
+    "sourceCompatibility": "JavaVersion.VERSION_17",
+    "targetCompatibility": "JavaVersion.VERSION_17",
+}
 
 # Android (serious_python native-mmap packaging): pure Python ships in stored zips
 # read via zipimport, which breaks packages that read bundled data through a real
@@ -1639,8 +1647,12 @@ class BaseBuildCommand(BaseFlutterCommand):
                 "android_features": android_features,
                 "android_meta_data": android_meta_data,
                 "android_gradle_properties": android_gradle_properties,
+                "android_compile_options": self.get_android_compile_options(),
+                "android_gradle_dependencies": self.get_android_gradle_dependencies(),
                 "android_proguard_rules": android_proguard_rules,
                 "android_providers": android_providers,
+                "android_receivers": self.get_android_receivers(),
+                "android_services": self.get_android_services(),
                 "deep_linking": {
                     "scheme": deep_linking_scheme,
                     "host": deep_linking_host,
@@ -2944,6 +2956,73 @@ class BaseBuildCommand(BaseFlutterCommand):
             if value is not None:
                 return value
         return self.get_pyproject(f"tool.flet.deep_linking.{key}")
+
+    def get_android_compile_options(self) -> dict[str, str]:
+        """Merge Android compiler expressions over Flet's Java 17 defaults.
+
+        Keys are Gradle property identifiers; values are Kotlin expressions
+        rendered verbatim inside `android.compileOptions`.
+        """
+        assert self.get_pyproject
+        setting = "tool.flet.android.compile_options"
+        configured = self.get_pyproject(setting)
+        if configured is None:
+            configured = {}
+        if not isinstance(configured, dict):
+            self.cleanup(
+                1, f"Invalid {setting}: expected a table of Kotlin expressions."
+            )
+
+        resolved = DEFAULT_ANDROID_COMPILE_OPTIONS.copy()
+        for name, expression in configured.items():
+            if not isinstance(name, str) or not re.fullmatch(
+                r"[A-Za-z_][A-Za-z0-9_]*", name
+            ):
+                self.cleanup(
+                    1,
+                    f"Invalid {setting} key {name!r}: expected a property identifier.",
+                )
+            if not isinstance(expression, str) or not expression.strip():
+                self.cleanup(
+                    1,
+                    f"Invalid {setting}.{name}: expected a nonempty Kotlin expression "
+                    "string.",
+                )
+            resolved[name] = expression.strip()
+        return resolved
+
+    def get_android_gradle_dependencies(self) -> str:
+        """Read Kotlin declarations for the body of Gradle's dependencies block."""
+        assert self.get_pyproject
+        setting = "tool.flet.android.gradle_dependencies"
+        configured = self.get_pyproject(setting)
+        if configured is None:
+            return ""
+        if not isinstance(configured, str):
+            self.cleanup(
+                1, f"Invalid {setting}: expected a string of Kotlin declarations."
+            )
+        return textwrap.dedent(configured).strip()
+
+    def get_android_receivers(self) -> dict:
+        """Resolve Android manifest receiver declarations from project settings."""
+        assert self.get_pyproject
+        try:
+            return normalize_android_receivers(
+                self.get_pyproject("tool.flet.android.receiver")
+            )
+        except ValueError as exc:
+            self.cleanup(1, str(exc))
+
+    def get_android_services(self) -> dict:
+        """Resolve Android manifest service declarations from project settings."""
+        assert self.get_pyproject
+        try:
+            return normalize_android_services(
+                self.get_pyproject("tool.flet.android.service")
+            )
+        except ValueError as exc:
+            self.cleanup(1, str(exc))
 
     def resolve_permissions(self) -> list[str]:
         """

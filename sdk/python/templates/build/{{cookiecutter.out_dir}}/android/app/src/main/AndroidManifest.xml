@@ -69,6 +69,20 @@
             {% for mk, mv in v.meta_data.items() %}{% if mv is mapping %}<meta-data android:name="{{ mk }}"{% for attr_key, attr_value in mv.items() %} android:{{ attr_key }}="{{ attr_value }}"{% endfor %} />{% else %}<meta-data android:name="{{ mk }}" android:value="{{ mv }}" />{% endif %}
             {% endfor %}</provider>{% endif %}
         <!-- flet: end of provider {% endif %} {% endfor %} -->
+        <!-- flet: receiver {% for name, receiver in cookiecutter.options.android_receivers.items() %} -->
+        <receiver android:name="{{ name | e }}"{% for key, value in receiver.attributes.items() %} android:{{ key }}="{{ value | e }}"{% endfor %}{% if not receiver.intent_filters %} />{% else %}>
+            {% for intent_filter in receiver.intent_filters %}<intent-filter>
+                {% for action in intent_filter.actions %}<action android:name="{{ action | e }}" />
+                {% endfor %}{% for category in intent_filter.categories %}<category android:name="{{ category | e }}" />
+                {% endfor %}</intent-filter>
+            {% endfor %}</receiver>{% endif %}
+        <!-- flet: end of receiver {% endfor %} -->
+        <!-- flet: service {% for name, service in cookiecutter.options.android_services.items() %} -->
+        <service android:name="{{ name | e }}"{% for key, value in service.attributes.items() %} android:{{ key }}="{{ value | e }}"{% endfor %}{% if not service.property and not service.meta_data %} />{% else %}>
+            {% for name, attributes in service.property.items() %}<property android:name="{{ name | e }}"{% for key, value in attributes.items() %} android:{{ key }}="{{ value | e }}"{% endfor %} />
+            {% endfor %}{% for name, attributes in service.meta_data.items() %}<meta-data android:name="{{ name | e }}"{% for key, value in attributes.items() %} android:{{ key }}="{{ value | e }}"{% endfor %} />
+            {% endfor %}</service>{% endif %}
+        <!-- flet: end of service {% endfor %} -->
         <!-- Don't delete the meta-data below.
              This is used by the Flutter tool to generate GeneratedPluginRegistrant.java -->
         <meta-data
