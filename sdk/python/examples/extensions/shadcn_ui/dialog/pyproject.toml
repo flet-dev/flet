@@ -1,0 +1,26 @@
+[project]
+name = "shadcn-ui-dialog"
+version = "1.0.0"
+description = "Edit-profile dialog with inputs and a modal alert dialog for a destructive action."
+requires-python = ">=3.10"
+keywords = ["shadcn", "dialog", "modal", "alert dialog", "confirm"]
+authors = [{ name = "Flet team", email = "hello@flet.dev" }]
+dependencies = ["flet", "flet-shadcn-ui"]
+
+[dependency-groups]
+dev = ["flet-cli", "flet-desktop", "flet-web"]
+
+[tool.flet.gallery]
+categories = ["Extensions/Shadcn"]
+
+[tool.flet.metadata]
+title = "Shadcn Dialog"
+controls = ["SafeArea", "Column", "Row", "Text", "Container", "Dialog", "Input", "Button"]
+layout_pattern = "modal"
+complexity = "basic"
+features = ["show_dialog", "pop_dialog", "modal", "alert variant"]
+
+[tool.flet]
+org = "dev.flet"
+company = "Flet"
+copyright = "Copyright (C) 2023-2026 by Flet"

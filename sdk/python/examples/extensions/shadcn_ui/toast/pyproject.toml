@@ -1,0 +1,26 @@
+[project]
+name = "shadcn-ui-toast"
+version = "1.0.0"
+description = "Regular and destructive toasts with action buttons."
+requires-python = ">=3.10"
+keywords = ["shadcn", "toast", "notification", "snackbar", "alert"]
+authors = [{ name = "Flet team", email = "hello@flet.dev" }]
+dependencies = ["flet", "flet-shadcn-ui"]
+
+[dependency-groups]
+dev = ["flet-cli", "flet-desktop", "flet-web"]
+
+[tool.flet.gallery]
+categories = ["Extensions/Shadcn"]
+
+[tool.flet.metadata]
+title = "Shadcn Toast"
+controls = ["SafeArea", "Column", "Row", "Text", "Toast", "Button"]
+layout_pattern = "inline-actions"
+complexity = "basic"
+features = ["show_dialog", "action button", "destructive variant"]
+
+[tool.flet]
+org = "dev.flet"
+company = "Flet"
+copyright = "Copyright (C) 2023-2026 by Flet"

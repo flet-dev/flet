@@ -1,0 +1,26 @@
+[project]
+name = "shadcn-ui-table"
+version = "1.0.0"
+description = "Invoice table with a right-aligned amount column, a total footer and row click details."
+requires-python = ">=3.10"
+keywords = ["shadcn", "table", "data", "invoices", "rows"]
+authors = [{ name = "Flet team", email = "hello@flet.dev" }]
+dependencies = ["flet", "flet-shadcn-ui"]
+
+[dependency-groups]
+dev = ["flet-cli", "flet-desktop", "flet-web"]
+
+[tool.flet.gallery]
+categories = ["Extensions/Shadcn"]
+
+[tool.flet.metadata]
+title = "Shadcn Table"
+controls = ["SafeArea", "Column", "Text", "Table", "TableColumn", "TableRow", "TableCell"]
+layout_pattern = "data-table"
+complexity = "basic"
+features = ["row click", "footer", "column alignment"]
+
+[tool.flet]
+org = "dev.flet"
+company = "Flet"
+copyright = "Copyright (C) 2023-2026 by Flet"

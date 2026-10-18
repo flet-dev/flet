@@ -421,7 +421,16 @@ class Session:
             self.__index[control_id] = live_control
             return live_control
 
-        return control
+        if control is not None:
+            # The control was removed from the page after the client queued
+            # the event (e.g. a size_change from a widget that was just torn
+            # down). There is no page to run the handler against, so drop it
+            # rather than failing with "Control must be added to the page
+            # first".
+            logger.debug(
+                "Dropping event for detached control %s (%s)", control, control_id
+            )
+        return None
 
     # optimizations:
     # - disable auto-update
@@ -528,20 +537,31 @@ class Session:
             result: Returned result payload.
             error: Optional error message returned by the client.
 
-        Raises:
-            RuntimeError: If the referenced control is not registered in the session.
+        The result goes to the waiting call (matched by `call_id`) even if
+        the control has been removed from the page in the meantime - e.g. an
+        embedded app replaced while its `wait_idle()` was pending. It's a
+        legitimate answer to a legitimate call; raising here instead killed
+        the connection's receive loop and froze the whole app. A result
+        nobody is waiting for is dropped.
         """
-        if control_id in self.__index:
-            evt = self.__method_calls.pop(call_id, None)
-            if evt is None:
-                return
-            self.__method_call_results[evt] = (result, error)
-            evt.set()
-        else:
-            raise RuntimeError(
-                f"Error handling invoke method results. Control with ID {control_id} "
-                "is not registered."
+        evt = self.__method_calls.pop(call_id, None)
+        if evt is None:
+            logger.debug(
+                "Dropping invoke method result for call %s (control %s): "
+                "nobody is waiting for it.",
+                call_id,
+                control_id,
             )
+            return
+        if control_id not in self.__index:
+            logger.debug(
+                "Invoke method result for call %s arrived after control %s "
+                "was removed; delivering it anyway.",
+                call_id,
+                control_id,
+            )
+        self.__method_call_results[evt] = (result, error)
+        evt.set()
 
     def __cancel_method_calls(self):
         """

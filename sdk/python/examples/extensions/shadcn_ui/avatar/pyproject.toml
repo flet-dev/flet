@@ -1,0 +1,26 @@
+[project]
+name = "shadcn-ui-avatar"
+version = "1.0.0"
+description = "Avatars with an image, initials and an icon placeholder in several sizes."
+requires-python = ">=3.10"
+keywords = ["shadcn", "avatar", "profile", "image", "initials"]
+authors = [{ name = "Flet team", email = "hello@flet.dev" }]
+dependencies = ["flet", "flet-shadcn-ui"]
+
+[dependency-groups]
+dev = ["flet-cli", "flet-desktop", "flet-web"]
+
+[tool.flet.gallery]
+categories = ["Extensions/Shadcn"]
+
+[tool.flet.metadata]
+title = "Shadcn Avatar"
+controls = ["SafeArea", "Row", "Avatar", "Icon"]
+layout_pattern = "inline-actions"
+complexity = "basic"
+features = ["image fallback", "sizes"]
+
+[tool.flet]
+org = "dev.flet"
+company = "Flet"
+copyright = "Copyright (C) 2023-2026 by Flet"

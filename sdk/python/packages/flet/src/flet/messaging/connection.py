@@ -3,6 +3,7 @@ from asyncio import AbstractEventLoop
 from concurrent.futures import ThreadPoolExecutor
 from typing import Any, Optional
 
+from flet.controls.types import RouteUrlStrategy
 from flet.messaging.protocol import Message
 from flet.pubsub.pubsub_hub import PubSubHub
 
@@ -21,11 +22,16 @@ class Connection:
     def __init__(self):
         self.page_name: str = ""
         self.page_url: Optional[str] = None
-        # True when the connected client runs on the same machine (or in the
-        # same process), so DataChannel bytes move at local-IPC / memcpy
-        # speed. Widgets may use this to prefer uncompressed payloads over
-        # encoded ones.
+        self.page_base_path: str = "/"
+        """Base path of the page in the browser URL, e.g. `/sub-app/`, which is the
+        `<base href>` of the served web client."""
+        self.route_url_strategy: RouteUrlStrategy = RouteUrlStrategy.PATH
+        """Whether the client keeps routes in the URL path (`/store`)
+        or after `#` (`/#/store`)."""
         self.local_data_transport: bool = False
+        """`True` when the connected client runs on the same machine (or in the
+        same process), so DataChannel bytes move at local-IPC / memcpy speed.
+        Widgets may use this to prefer uncompressed payloads over encoded ones."""
         self.__pubsubhub = None
         self.__loop: Optional[AbstractEventLoop] = None
         self.__executor: Optional[ThreadPoolExecutor] = None

@@ -1,0 +1,26 @@
+[project]
+name = "shadcn-ui-sheet"
+version = "1.0.0"
+description = "Sheets sliding in from each side of the screen, with a dismiss status label."
+requires-python = ">=3.10"
+keywords = ["shadcn", "sheet", "drawer", "side panel", "slide-over"]
+authors = [{ name = "Flet team", email = "hello@flet.dev" }]
+dependencies = ["flet", "flet-shadcn-ui"]
+
+[dependency-groups]
+dev = ["flet-cli", "flet-desktop", "flet-web"]
+
+[tool.flet.gallery]
+categories = ["Extensions/Shadcn"]
+
+[tool.flet.metadata]
+title = "Shadcn Sheet"
+controls = ["SafeArea", "Column", "Row", "Text", "Container", "Sheet", "Input", "Button"]
+layout_pattern = "modal"
+complexity = "basic"
+features = ["show_dialog", "sides", "dismiss handling"]
+
+[tool.flet]
+org = "dev.flet"
+company = "Flet"
+copyright = "Copyright (C) 2023-2026 by Flet"

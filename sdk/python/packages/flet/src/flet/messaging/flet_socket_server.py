@@ -284,8 +284,15 @@ class FletSocketServer(Connection):
                     return
                 ptype = packet[0]
                 if ptype == 0x00:
-                    msg = msgpack.unpackb(packet[1:], ext_hook=decode_ext_from_msgpack)
-                    await self.__on_message(msg)
+                    # One bad message must not end the loop: nothing would be
+                    # received after it and the app would freeze.
+                    try:
+                        msg = msgpack.unpackb(
+                            packet[1:], ext_hook=decode_ext_from_msgpack
+                        )
+                        await self.__on_message(msg)
+                    except Exception:
+                        logger.exception("Error handling a message from the client.")
                 elif ptype == 0x01:
                     if len(packet) < 5:
                         logger.debug("Dropping malformed data-channel frame.")

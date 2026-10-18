@@ -531,10 +531,20 @@ jobs:
           export DEBIAN_FRONTEND=noninteractive
           export TZ=Etc/UTC
           if [[ "$DISTRO_ID" == "debian10" ]]; then
+            # Some archive.debian.org CDN edges persistently return 404 for
+            # packages the archive has. apt's mirror method fetches any file
+            # that fails from the next mirror: ftp.de.debian.org carries an
+            # identical copy of the archive.
+            for repo in debian debian-security; do
+              printf '%s\tpriority:1\n%s\tpriority:2\n' \
+                "http://archive.debian.org/$repo" \
+                "http://ftp.de.debian.org/debian-archive/$repo" \
+                > "/etc/apt/mirrors-$repo.txt"
+            done
             printf '%s\n' \
-              'deb http://archive.debian.org/debian buster main' \
-              'deb http://archive.debian.org/debian buster-updates main' \
-              'deb http://archive.debian.org/debian-security buster/updates main' \
+              'deb mirror+file:/etc/apt/mirrors-debian.txt buster main' \
+              'deb mirror+file:/etc/apt/mirrors-debian.txt buster-updates main' \
+              'deb mirror+file:/etc/apt/mirrors-debian-security.txt buster/updates main' \
               > /etc/apt/sources.list
             echo 'Acquire::Check-Valid-Until "false";' > /etc/apt/apt.conf.d/99no-check-valid-until
           fi
@@ -789,6 +799,7 @@ jobs:
             flet-permission-handler
             flet-rive
             flet-secure-storage
+            flet-shadcn-ui
             flet-spinkit
             flet-video
             flet-webview
@@ -1071,6 +1082,7 @@ jobs:
             flet_permission_handler \
             flet_rive \
             flet_secure_storage \
+            flet_shadcn_ui \
             flet_spinkit \
             flet_video \
             flet_webview \

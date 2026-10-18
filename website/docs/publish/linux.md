@@ -83,9 +83,10 @@ Builds a Linux executable.
 
 ## App icon
 
-The app icon is taken from `icon_linux.png` (falling back to `icon.png`, or the
+The app icon is taken from `icon_linux.svg` or `icon_linux.png` (falling back to
+`icon.svg`, `icon.png`, or the
 default Flet icon) in the `assets` directory of your Flet app — see
-[Icons](index.md#icons). `flet build linux` copies it into the bundle as
+[Icons](index.md#icons). `flet build linux` renders it into the bundle as
 `data/app_icon.png`, and the app sets it as its window icon on startup.
 
 How the icon shows up depends on the display server (see
@@ -626,3 +627,4 @@ echo $XDG_SESSION_TYPE   # "wayland" or "x11"
 | The taskbar/dock shows a generic icon on Wayland                                                                    | Wayland resolves icons from an installed desktop entry, not from the window — install the bundle's `share/` files as described in [App icon](#app-icon).                                                                                                          |
 | The dock tooltip or app switcher shows the bundle ID instead of the app name                                        | The desktop entry is not installed, so the desktop environment has no name for the app and falls back to the app id — install the bundle's `share/` files as described in [App icon](#app-icon). |
 | `rpmbuild` fails at `%mkbuilddir`, reporting `Bad file descriptor`                                                  | An earlier build left `~/rpmbuild/BUILD/<name>-<version>-build` behind and rpm cannot clear it before rebuilding. The errno is unrelated to the real cause — delete that directory and build again. |
+| The window is blank or flickers, curves and text look jagged, or the app crashes when maximized | Impeller, the default renderer, misbehaves with some GPUs, drivers and virtual machines — set [`FLET_NO_IMPELLER=1`](../reference/environment-variables.md#flet_no_impeller) or build with `--no-impeller` to render with Skia. See [Renderer](index.md#renderer). |

@@ -1,3 +1,95 @@
+## 1.1.0
+
+### Breaking changes
+
+* `flet build macos` names the `.app` bundle after the product name when no artifact name is set (was the project name): Finder, the Dock, Spotlight and the app menu show that name. To keep the previous name, set `[tool.flet.macos] artifact = "<project name>"`. See the [macOS .app named after the product name](/docs/updates/breaking-changes/v1-1-0/macos-app-named-after-product) guide ([#6966](https://github.com/flet-dev/flet/issues/6966)) by @FeodorFitsner.
+* Flet's Dart code now takes Material and Cupertino from the `material_ui` and `cupertino_ui` packages instead of the Flutter SDK's `package:flutter/material.dart` and `package:flutter/cupertino.dart`. The Dart code of extensions that uses Material or Cupertino must migrate. See the [Material and Cupertino now come from material_ui and cupertino_ui](/docs/updates/breaking-changes/v1-1-0/material-ui-cupertino-ui) guide by @ndonkoHenri.
+* Themes built from a seed color, including the default theme, now have neutral surfaces: white in light mode and near-black (`#121212`) in dark mode, with neutral greys for containers, outlines and text on surfaces. The seed still drives accent colors. To keep the seed-tinted Material 3 look, set `page.theme = ft.Theme(surfaces=ft.ThemeSurfaces.TONAL)` (and the same for `page.dark_theme`). See [Default theme surfaces are now neutral](https://flet.dev/docs/updates/breaking-changes/v1-1-0/neutral-default-surfaces) ([#6921](https://github.com/flet-dev/flet/issues/6921)) by @FeodorFitsner.
+* The default dark splash and loading screen color of web apps is now `#121212` (was `#222222`), to match the new dark theme surface ([#6921](https://github.com/flet-dev/flet/issues/6921)) by @FeodorFitsner.
+
+### New features
+
+* Add `Page.get_package_info()`, returning `ft.PackageInfo` with the running app's name, package name, version, build number, build signature, installer store, and install/update times. A `flet build` app gets the `--build-version` and `--build-number` it was built with, so it no longer needs its own copy of the version ([#6950](https://github.com/flet-dev/flet/issues/6950)) by @FeodorFitsner.
+* `flet build`: permission bundles can be set per platform with `[tool.flet.<platform>].permissions`, which replaces `[tool.flet].permissions` for that platform (`[]` applies none) by @FeodorFitsner.
+* Add `InteractiveViewer.get_scale()`, `get_transform()`, and
+  `on_transform_changed` to expose the effective zoom scale,
+  translation, and transformation matrix, including reliable
+  final-state notifications after consecutive interactions
+  ([#6938](https://github.com/flet-dev/flet/issues/6938),
+  [#6939](https://github.com/flet-dev/flet/pull/6939))
+  by @ada-koki.
+
+* Add the `flet-shadcn-ui` extension: controls styled after [shadcn/ui](https://ui.shadcn.com), built on the Flutter [`shadcn_ui`](https://pub.dev/packages/shadcn_ui) package, with `Theme` color schemes and the [Lucide](https://lucide.dev) icon set (`LucideIcons`). It includes `Button`, `IconButton`, `Badge`, `Alert`, `Avatar`, `Card`, `Breadcrumb`, `Separator`, `Progress`, `Input`, `Textarea`, `Checkbox`, `Switch`, `Slider`, `RadioGroup`, `Select`, `InputOTP`, `Calendar`, `DatePicker`, `DateRangePicker`, `TimePicker`, `Tabs`, `Accordion`, `ResizablePanelGroup`, `Tooltip`, `Popover`, `ContextMenu`, `Menubar`, `Table`, `Dialog`, `Sheet`, `Toast` and `Sonner`; value controls support `label`, `description` and `error_text` ([#6918](https://github.com/flet-dev/flet/pull/6918)) by @InesaFitsner.
+
+### Improvements
+
+* `flet build` always generates app icons and the splash screen. An app without an icon of its own gets them generated from the Flet logo, which `flet-platform-assets` now bundles as `DEFAULT_ICON`, instead of the build template's committed icons. Previews of the icons a build will produce now match the build for every app. The default web icons are the bare logo rather than the logo on a white tile by @FeodorFitsner.
+* Add `min_width`, `max_width`, `min_height` and `max_height` to every layout control. They are applied by the client on every layout pass, so a capped, centered column (e.g. `Container(max_width=760)` in a `Column(horizontal_alignment=CENTER)`) stays correct while the window resizes - no more computing widths in Python from `page.width` or `on_size_change`, which always lagged a frame or more behind by @FeodorFitsner.
+* Add `ft.MaterialTapTargetSize` with `Switch.material_tap_target_size` and `Theme.material_tap_target_size`: `SHRINK_WRAP` drops Material's 48px minimum tappable area for dense, pointer-driven layouts by @FeodorFitsner.
+* `Dropdown.height` now sizes the field itself, down to compact heights such as 32 or 40: the leading icon and trailing arrow no longer force a 48px minimum by @FeodorFitsner.
+* Add `PopupMenuButton.border_radius` to round the hover/splash highlight around custom `content` by @FeodorFitsner.
+* Add `Theme.input_decoration_theme` (`ft.InputDecorationTheme`) to style every `TextField` and `Dropdown` at once: border, label/hint/helper/error styles, content padding, density and fill. Its `border` takes per-state entries (`DEFAULT`, `HOVERED`, `FOCUSED`, `ERROR`, `DISABLED`); unset states keep the Material default, so a softer resting border still darkens on hover and turns primary on focus. Controls without their own `border` use the theme's by @FeodorFitsner.
+* Add `Theme.text_field_theme` (`ft.TextFieldTheme`) with `text_style` for the text being edited in every `TextField` by @FeodorFitsner.
+* Add `FletApp.platform_brightness` to preview an embedded app as though its device were in light or dark mode: an app on the `SYSTEM` theme follows it, `page.platform_brightness` reports it and `on_platform_brightness_change` fires by @FeodorFitsner.
+* Add `Theme.markdown_theme`: a default `MarkdownStyleSheet` for every `Markdown`, with a control's own `md_style_sheet` applied on top property by property by @FeodorFitsner.
+* Add `PopupMenuTheme.border_radius` to set the default hover/splash corner radius of every `PopupMenuButton` by @FeodorFitsner.
+
+* Bump the bundled Flutter to [3.47.7](https://github.com/flutter/flutter/blob/stable/CHANGELOG.md#3477) (from 3.44.8). Android builds use Gradle 9.3.1, Android Gradle Plugin 8.13.2 and Kotlin 2.3.21 by @ndonkoHenri.
+
+  **Compatibility:** Desktop apps and the desktop app that `flet run` opens now render with Impeller, Flutter 3.47's default desktop renderer, instead of Skia. Use `flet build --no-impeller` (or `impeller = false` under `[tool.flet]`), `flet run --no-impeller` or the `FLET_NO_IMPELLER` environment variable to render with Skia; see [Renderer](/docs/publish#renderer). Android plugins that still use `jcenter()` or other APIs removed in Gradle 9 no longer build. `flet build` downloads Flutter 3.47.7 on first use.
+
+* Add `Theme.surfaces` and the `ThemeSurfaces` enum (`NEUTRAL`, `TONAL`) to choose whether surface colors are neutral or tinted with the seed color ([#6921](https://github.com/flet-dev/flet/issues/6921)) by @FeodorFitsner.
+* Add `flet test --update-failed-goldens` (`FLET_TEST_GOLDEN=failed`): compares screenshots as usual and overwrites only golden images that are missing or no longer match, so unchanged goldens stay untouched ([#6921](https://github.com/flet-dev/flet/issues/6921)) by @FeodorFitsner.
+* Add `bgcolor` to `FletTestApp.take_page_controls_screenshot()`, `assert_control_screenshot()` and `wrap_page_controls_in_screenshot()` to paint an opaque background behind the captured controls instead of a transparent one ([#6918](https://github.com/flet-dev/flet/pull/6918)) by @InesaFitsner.
+* Add `--log-format {rich,plain,github}` (`FLET_CLI_LOG_FORMAT`) to `flet build`, `flet debug` and `flet test`. `github` prints plain output plus GitHub Actions workflow commands: a collapsible group per build step and annotations for warnings and errors; `plain` is the same as `--no-rich-output`. See [Log formats](/docs/cli/flet-build#log-formats) ([#6947](https://github.com/flet-dev/flet/issues/6947)) by @FeodorFitsner.
+* Install `uvicorn[standard]` with `flet-web` again on Windows on ARM with Python 3.12 or later, now that `httptools` 0.9.0 ships wheels for it; Python 3.10 and 3.11 there keep plain `uvicorn`, because PyYAML has no wheels for them ([#6927](https://github.com/flet-dev/flet/pull/6927)) by @ndonkoHenri.
+* Update python-build to `20261016` and serious_python to `6.0.0`, bringing CPython `3.12.15`, `3.13.16` and `3.14.8`. The bundled Python runtime, its native modules and dart_bridge `1.11.0` are now built for iOS 15 and macOS 12, the same minimums as the build template ([#6940](https://github.com/flet-dev/flet/issues/6940), [python-build#46](https://github.com/flet-dev/python-build/pull/46), [serious-python#256](https://github.com/flet-dev/serious-python/pull/256)) by @FeodorFitsner.
+
+### Bug fixes
+
+* Honor an explicit platform `app.hide_window_on_start = false` when the global setting is `true`, in both the Dart bootstrap and Windows runner ([#6949](https://github.com/flet-dev/flet/issues/6949), [#6981](https://github.com/flet-dev/flet/pull/6981)) by @LaoChouPro.
+* Fix a declarative component moved to a structurally different parent (for example a `Column` replaced by a `Row` when a responsive layout switches) being re-rendered as a fresh, never-mounted copy: its state was lost, its mount effects never ran and later state updates were ignored until a page reload, while the old copy stayed in the session index. A moved, already-mounted component now keeps its body ([#6970](https://github.com/flet-dev/flet/issues/6970)) by @FeodorFitsner.
+* Fix a client method call (e.g. `FletApp.wait_idle()`) failing with "Concurrent modification during iteration" when the control's widget was rebuilt while the call was in progress by @FeodorFitsner.
+* Fix an app freezing - no more events or updates processed - when a client method result (e.g. an embedded `FletApp`'s `wait_idle()`) arrived after its control had been removed: the session raised on it, which ended the connection's receive loop. The result now reaches its caller, and every transport (Pyodide, socket, FastAPI) logs a failing message and keeps receiving instead of stopping by @FeodorFitsner.
+* Fix `Markdown` links always being blue and blockquotes light blue regardless of the theme: their defaults now come from the color scheme (`primary` for links, a surface container color for blockquotes) by @FeodorFitsner.
+* Fix an embedded `FletApp` without its own `theme_mode` taking the host page's theme mode instead of following the system (now: its platform brightness) by @FeodorFitsner.
+* Fix an embedded `FletApp` overwriting the host page's browser tab title on the web whenever the embedded app set `page.title`. An embedded app's title now only reaches the host, through `FletApp.on_title_change` by @FeodorFitsner.
+* Fix the session crashing with "Control must be added to the page first" when the client sends an event (e.g. `size_change`) for a control that was just removed from the page; such events are now dropped by @FeodorFitsner.
+* Fix `on_size_change` never reporting when Flutter reuses the widget for a different control at the same size (e.g. a new page swapped into the same slot) by @FeodorFitsner.
+* Fix a control's subtree (e.g. an embedded `FletApp`, which restarted its app) being rebuilt from scratch when its `opacity` changed between `1.0` and another value, or a `Container`'s `ignore_interactions` was toggled: the wrapping widget was added and removed, changing the widget tree's shape. It is now always present by @FeodorFitsner.
+* Fix `auto_scroll` losing the end when content at the end shrank (e.g. a placeholder replaced by something shorter): the position clamping up to the new end counted as the user scrolling up, so the view stopped following what was added next by @FeodorFitsner.
+* Fix an embedded `FletApp` taking the keyboard focus away from the host app when it starts or restarts (e.g. out of a text field being typed in); it gets the focus when the user clicks or taps into it by @FeodorFitsner.
+* Fix `InteractiveViewer` swallowing taps meant for its content when `pan_enabled` and `scale_enabled` are both off: it no longer installs gesture recognizers it can't use; programmatic zoom/pan still works by @FeodorFitsner.
+* An embedded app (`FletApp`) no longer takes its host's Cupertino colors: `CupertinoFilledButton`, `CupertinoButton` and adaptive buttons on iOS/macOS painted with the host app's primary color instead of the embedded app's own. An embedded page now carries a Cupertino theme derived from its own Material theme, as a top-level app does; top-level apps are unchanged by @FeodorFitsner.
+* `Button(adaptive=True)` on iOS/macOS now honors `bgcolor`, `color` and the padding of `style`: the Cupertino button it turns into ignored them and painted the theme's primary color by @FeodorFitsner.
+
+* Fix `flet build`, `flet debug` and `flet test` failing for macOS and iOS on Xcode 27, which rejects deployment targets below macOS 12 and iOS 15 ([#6874](https://github.com/flet-dev/flet/issues/6874)) by @ndonkoHenri.
+
+  **Compatibility:** Apps built with `flet build` and the macOS desktop client now require macOS 12 or later, and iOS apps require iOS 15 or later. Custom build templates keep building, because Flutter 3.47 raises the deployment targets during the build; apply the same `Podfile` and Xcode project changes to skip that step. See the [macOS 12 and iOS 15 minimum](/docs/updates/breaking-changes/v1-1-0/minimum-macos-12-ios-15) guide.
+
+* Fix Flet web apps using the `hash` route URL strategy returning `index.html` with a `200 OK` for unknown paths instead of a `404` ([#2796](https://github.com/flet-dev/flet/issues/2796), [#6954](https://github.com/flet-dev/flet/pull/6954)) by @ndonkoHenri.
+* Fix `flet.fastapi.app()` and `ft.run(..., export_asgi_app=True)` failing every request with a `500` error when `route_url_strategy` or `web_renderer` is passed as a string, such as `"hash"` ([#6954](https://github.com/flet-dev/flet/pull/6954)) by @ndonkoHenri.
+* Fix `page.login(redirect_to_page=True)` not returning to the page's route with the `hash` route URL strategy or under a `proxy_path` ([#6954](https://github.com/flet-dev/flet/pull/6954)) by @ndonkoHenri.
+* flet-audio: Fix `Audio` failing to play when it is created without `src` and `src` is set later ([#6133](https://github.com/flet-dev/flet/issues/6133), [#6956](https://github.com/flet-dev/flet/pull/6956)) by @ndonkoHenri.
+* flet-audio: Fix `Audio` ignoring `playback_rate` after `src` changes on web ([#6956](https://github.com/flet-dev/flet/pull/6956)) by @ndonkoHenri.
+* flet-audio-recorder: Fix `AudioRecorder.start_recording()` not recording to `output_path` on desktop, Android and iOS, where it returned `False`, failed, wrote no file, or recorded into the assets directory ([#5999](https://github.com/flet-dev/flet/issues/5999), [#6955](https://github.com/flet-dev/flet/pull/6955)) by @ndonkoHenri.
+* Fix `flet build` ignoring the common `[tool.flet.deep_linking]` on Android and iOS: it's now the fallback when `[tool.flet.<platform>.deep_linking]` doesn't set a key, as documented ([#6951](https://github.com/flet-dev/flet/issues/6951)) by @FeodorFitsner.
+* Fix setting `Window.skip_task_bar` to `True` not hiding the app from the taskbar on Windows ([#6302](https://github.com/flet-dev/flet/issues/6302), [#6946](https://github.com/flet-dev/flet/pull/6946)) by @ndonkoHenri.
+* Fix the desktop window flashing endlessly after a `flet run` hot reload ([#6913](https://github.com/flet-dev/flet/issues/6913), [#6945](https://github.com/flet-dev/flet/pull/6945)) by @ndonkoHenri.
+* Fix `flet run -r` restarting the app whenever it writes to its working directory or temp directory, which also left `flet run -r --web` pages blank ([#6944](https://github.com/flet-dev/flet/pull/6944)) by @ndonkoHenri.
+* Fix `flet run --ignore-dirs` not ignoring directories on Linux when the project is opened through a symlink ([#6944](https://github.com/flet-dev/flet/pull/6944)) by @ndonkoHenri.
+* Fix the loading logo of web apps served by `flet run --web` or `flet publish` showing off-center after reloading the page in a mobile browser ([#6051](https://github.com/flet-dev/flet/issues/6051), [#6943](https://github.com/flet-dev/flet/pull/6943)) by @ndonkoHenri.
+* Fix `page.query` being empty in `main()` when the app is opened with a query string, e.g. `/?name=Joe`, and percent-encoded values such as `%26` being decoded twice ([#5898](https://github.com/flet-dev/flet/issues/5898), [#6942](https://github.com/flet-dev/flet/pull/6942)) by @ndonkoHenri.
+* Fix `TemplateRoute.match()` failing to match a route with a query string or fragment, e.g. `/store?ref=ad` against `/store`, or capturing them in the last parameter ([#5898](https://github.com/flet-dev/flet/issues/5898), [#6942](https://github.com/flet-dev/flet/pull/6942)) by @ndonkoHenri.
+* Fix `flet run` ignoring the `FLET_ASSETS_DIR` environment variable and the app's own `ft.run(assets_dir=...)` ([#5631](https://github.com/flet-dev/flet/issues/5631), [#6935](https://github.com/flet-dev/flet/pull/6935)) by @ndonkoHenri.
+* Fix `requests.Session` ignoring its `verify` setting in apps built with `flet build` ([#5695](https://github.com/flet-dev/flet/issues/5695), [#6936](https://github.com/flet-dev/flet/pull/6936)) by @ndonkoHenri.
+
+### Documentation
+
+* Group the Reference > Controls section of the docs into Core, Material, Cupertino, Shadcn and Extensions ([#6918](https://github.com/flet-dev/flet/pull/6918)) by @InesaFitsner.
+* Document reading query string parameters with `page.query` in the [Navigation and Routing](/docs/cookbook/navigation-and-routing#query-strings) guide, and add a `QueryString` reference page ([#5898](https://github.com/flet-dev/flet/issues/5898), [#6942](https://github.com/flet-dev/flet/pull/6942)) by @ndonkoHenri.
+* Add a Distributing section to the Windows publishing guide: an Inno Setup installer script, a zip archive, code signing, and building the installer in GitHub Actions ([#6957](https://github.com/flet-dev/flet/pull/6957)) by @ndonkoHenri.
+
 ## 1.0.4
 
 ### Improvements

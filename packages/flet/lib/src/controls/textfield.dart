@@ -1,5 +1,5 @@
 import 'package:flutter/foundation.dart';
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:flutter/services.dart';
 import 'package:pasteboard/pasteboard.dart';
 
@@ -225,6 +225,12 @@ class _TextFieldControlState extends State<TextFieldControl> {
     var focusedColor = widget.control.getColor("focused_color", context);
     var textStyle = widget.control
         .getTextStyle("text_style", Theme.of(context), const TextStyle())!;
+    // `Theme.text_field_theme.text_style` under the field's own style.
+    var themeTextStyle =
+        Theme.of(context).extension<TextFieldTheme>()?.textStyle;
+    if (themeTextStyle != null) {
+      textStyle = themeTextStyle.merge(textStyle);
+    }
     if (textSize != null || color != null || focusedColor != null) {
       textStyle = textStyle.copyWith(
           fontSize: textSize, color: _focused ? focusedColor ?? color : color);

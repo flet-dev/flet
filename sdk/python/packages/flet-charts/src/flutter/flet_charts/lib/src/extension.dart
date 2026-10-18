@@ -1,5 +1,5 @@
 import 'package:flet/flet.dart';
-import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 
 import 'bar_chart.dart';
 import 'candlestick_chart.dart';

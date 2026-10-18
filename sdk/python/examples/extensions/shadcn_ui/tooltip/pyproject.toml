@@ -1,0 +1,26 @@
+[project]
+name = "shadcn-ui-tooltip"
+version = "1.0.0"
+description = "Tooltips with text and with an icon row, shown on hover."
+requires-python = ">=3.10"
+keywords = ["shadcn", "tooltip", "hover", "hint"]
+authors = [{ name = "Flet team", email = "hello@flet.dev" }]
+dependencies = ["flet", "flet-shadcn-ui"]
+
+[dependency-groups]
+dev = ["flet-cli", "flet-desktop", "flet-web"]
+
+[tool.flet.gallery]
+categories = ["Extensions/Shadcn"]
+
+[tool.flet.metadata]
+title = "Shadcn Tooltip"
+controls = ["SafeArea", "Row", "Text", "Icon", "Tooltip", "Button", "IconButton"]
+layout_pattern = "inline-actions"
+complexity = "basic"
+features = ["hover", "wait duration"]
+
+[tool.flet]
+org = "dev.flet"
+company = "Flet"
+copyright = "Copyright (C) 2023-2026 by Flet"

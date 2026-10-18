@@ -30,7 +30,12 @@ int APIENTRY wWinMain(_In_ HINSTANCE instance, _In_opt_ HINSTANCE prev,
   }
   free(aumid);
 
+  // `flet run --no-impeller` sets FLET_NO_IMPELLER to render with Skia
+  // instead of Flutter's default, Impeller.
   flutter::DartProject project(L"data");
+  if (IsEnvironmentVariableTrue(L"FLET_NO_IMPELLER")) {
+    project.set_impeller_switch(flutter::ImpellerSwitch::Disabled);
+  }
 
   std::vector<std::string> command_line_arguments =
       GetCommandLineArguments();

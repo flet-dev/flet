@@ -1,0 +1,26 @@
+[project]
+name = "shadcn-ui-progress"
+version = "1.0.0"
+description = "Progress bar advanced in steps by a button, with a percentage label."
+requires-python = ">=3.10"
+keywords = ["shadcn", "progress", "progress bar", "loading", "percentage"]
+authors = [{ name = "Flet team", email = "hello@flet.dev" }]
+dependencies = ["flet", "flet-shadcn-ui"]
+
+[dependency-groups]
+dev = ["flet-cli", "flet-desktop", "flet-web"]
+
+[tool.flet.gallery]
+categories = ["Extensions/Shadcn"]
+
+[tool.flet.metadata]
+title = "Shadcn Progress"
+controls = ["SafeArea", "Column", "Row", "Text", "Progress", "Button"]
+layout_pattern = "inline-actions"
+complexity = "basic"
+features = ["live updates", "click handling"]
+
+[tool.flet]
+org = "dev.flet"
+company = "Flet"
+copyright = "Copyright (C) 2023-2026 by Flet"

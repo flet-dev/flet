@@ -1,0 +1,26 @@
+[project]
+name = "shadcn-ui-popover"
+version = "1.0.0"
+description = "Popover with a small dimensions form, opened by a button and closed on apply or tap outside."
+requires-python = ">=3.10"
+keywords = ["shadcn", "popover", "overlay", "floating panel", "form"]
+authors = [{ name = "Flet team", email = "hello@flet.dev" }]
+dependencies = ["flet", "flet-shadcn-ui"]
+
+[dependency-groups]
+dev = ["flet-cli", "flet-desktop", "flet-web"]
+
+[tool.flet.gallery]
+categories = ["Extensions/Shadcn"]
+
+[tool.flet.metadata]
+title = "Shadcn Popover"
+controls = ["SafeArea", "Column", "Row", "Text", "Popover", "Button", "Input"]
+layout_pattern = "inline-actions"
+complexity = "basic"
+features = ["open and close", "dismiss handling", "form"]
+
+[tool.flet]
+org = "dev.flet"
+company = "Flet"
+copyright = "Copyright (C) 2023-2026 by Flet"

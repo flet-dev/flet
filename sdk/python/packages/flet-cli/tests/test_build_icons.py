@@ -5,7 +5,7 @@ from PIL import Image
 from flet_cli.commands.build_base import BaseBuildCommand
 
 
-def test_removing_windows_icon_restores_template_icon(tmp_path):
+def test_removing_windows_icon_regenerates_default_icon(tmp_path):
     assets = tmp_path / "app" / "assets"
     assets.mkdir(parents=True)
     source = assets / "icon.png"
@@ -15,7 +15,7 @@ def test_removing_windows_icon_restores_template_icon(tmp_path):
     target = flutter_dir / "windows" / "runner" / "resources" / "app_icon.ico"
     target.parent.mkdir(parents=True)
     Image.new("RGBA", (256, 256), "blue").save(target)
-    original = target.read_bytes()
+    placeholder = target.read_bytes()
 
     cmd = BaseBuildCommand.__new__(BaseBuildCommand)
     cmd.package_app_path = assets.parent
@@ -31,12 +31,17 @@ def test_removing_windows_icon_restores_template_icon(tmp_path):
     cmd.emojis = {"checkmark": ""}
 
     cmd.customize_icons()
-    assert target.read_bytes() != original
+    user_icon = target.read_bytes()
+    assert user_icon != placeholder
 
-    # A later regeneration must not replace the original backup.
-    Image.new("RGBA", (256, 256), "green").save(assets / "icon_windows.png")
-    cmd.customize_icons()
+    # Without a user icon, the icon is generated from the Flet logo rather
+    # than left as the template's placeholder or the last user icon.
     source.unlink()
-    (assets / "icon_windows.png").unlink()
     cmd.customize_icons()
-    assert target.read_bytes() == original
+    default_icon = target.read_bytes()
+    assert default_icon not in (placeholder, user_icon)
+
+    with Image.open(target) as ico:
+        # The Flet logo is pink and blue on transparency, not a flat colour.
+        colours = ico.convert("RGBA").getcolors(256 * 256)
+        assert len(colours) > 2

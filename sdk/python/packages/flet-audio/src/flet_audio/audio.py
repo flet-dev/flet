@@ -24,6 +24,11 @@ class Audio(ft.Service):
     - A base64 string;
     - Raw bytes.
 
+    It can be left unset and assigned later, e.g. once the user picks a file.
+    While it is unset, :meth:`~flet_audio.Audio.play`,
+    :meth:`~flet_audio.Audio.resume` and :meth:`~flet_audio.Audio.seek` raise an
+    error.
+
     Note:
         [Here](https://github.com/bluefireteam/audioplayers/blob/main/troubleshooting.md#supported-formats--encodings)
             is a list of supported audio formats.

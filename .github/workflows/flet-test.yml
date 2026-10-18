@@ -38,7 +38,8 @@ env:
   PYTHONUTF8: 1
 
   # https://flet.dev/docs/reference/environment-variables
-  FLET_CLI_NO_RICH_OUTPUT: 1
+  # Override automatic GitHub Actions groups/annotations for on-device tests.
+  FLET_CLI_LOG_FORMAT: plain
   # Use the Flutter the setup action puts on PATH, not fvm.
   FLET_TEST_DISABLE_FVM: 1
 

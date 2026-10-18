@@ -47,7 +47,7 @@
     "ios": true,
     "web": true,
     "color": "#ffffff",
-    "dark_color": "#222222"
+    "dark_color": "#121212"
   },
   "boot_screen": null,
   "_extensions": [

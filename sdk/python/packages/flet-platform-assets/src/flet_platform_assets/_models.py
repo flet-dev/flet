@@ -103,7 +103,7 @@ class SplashOptions:
     """
 
     color: str = "#ffffff"
-    dark_color: str = "#222222"
+    dark_color: str = "#121212"
     icon_background: str | None = None
     icon_dark_background: str | None = None
     icon_fit: str = "contain"
