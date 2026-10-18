@@ -47,6 +47,7 @@
 
 ### Bug fixes
 
+* Fix `Tester.find_by_key()` not finding `Tab` and `PopupMenuItem` controls by their keys ([#6965](https://github.com/flet-dev/flet/issues/6965), [#6976](https://github.com/flet-dev/flet/pull/6976)) by @RezaShamsipour.
 * Fix `GestureDetector.on_tap_move` not firing, while preserving tap accessibility and updates to `allowed_devices` ([#6961](https://github.com/flet-dev/flet/issues/6961), [#6982](https://github.com/flet-dev/flet/pull/6982)) by @inchang-ing.
 * Honor an explicit platform `app.hide_window_on_start = false` when the global setting is `true`, in both the Dart bootstrap and Windows runner ([#6949](https://github.com/flet-dev/flet/issues/6949), [#6981](https://github.com/flet-dev/flet/pull/6981)) by @LaoChouPro.
 * Fix a declarative component moved to a structurally different parent (for example a `Column` replaced by a `Row` when a responsive layout switches) being re-rendered as a fresh, never-mounted copy: its state was lost, its mount effects never ran and later state updates were ignored until a page reload, while the old copy stayed in the session index. A moved, already-mounted component now keeps its body ([#6970](https://github.com/flet-dev/flet/issues/6970)) by @FeodorFitsner.
