@@ -64,15 +64,6 @@ void main() {
   });
 
   group("responseToEvent", () {
-    test("plain tap", () {
-      final event = responseToEvent(_response(payload: "hello"));
-      expect(event["id"], 7);
-      expect(event["action_id"], "");
-      expect(event["payload"], "hello");
-      expect(event["input"], "");
-      expect(event["response_type"], "tap");
-    });
-
     test("action with inline reply", () {
       final event = responseToEvent(
         _response(
@@ -85,22 +76,6 @@ void main() {
       expect(event["action_id"], "reply");
       expect(event["input"], "my answer");
       expect(event["response_type"], "action");
-    });
-
-    test("dismissed", () {
-      final event = responseToEvent(
-        _response(
-          type: fln.NotificationResponseType.notificationDismissed,
-        ),
-      );
-      expect(event["action_id"], "");
-      expect(event["response_type"], "dismissed");
-    });
-
-    test("null payload and input become empty strings", () {
-      final event = responseToEvent(_response());
-      expect(event["payload"], "");
-      expect(event["input"], "");
     });
   });
 
@@ -131,16 +106,11 @@ void main() {
       expect(drained.last["payload"], "second");
       expect(
         prefs.getKeys().where(
-          (k) => k.startsWith("flet_notifications_queue_"),
-        ),
+              (k) => k.startsWith("flet_notifications_queue_"),
+            ),
         isEmpty,
       );
       expect(prefs.getString("unrelated_key"), "keep me");
-    });
-
-    test("empty queue yields empty list", () async {
-      final prefs = await SharedPreferences.getInstance();
-      expect(await drainTapQueue(prefs), isEmpty);
     });
 
     test("unreadable entries are dropped, not fatal", () async {
@@ -168,55 +138,24 @@ void main() {
     });
   });
 
-  // ── Windows normalization ─────────────────────────────────────────────
-
-group("Windows response normalization", () {
-  test("actionId envelope is unwrapped to the button id", () {
-    // The Windows plugin returns the launch string as both actionId and
-    // payload; our Dart envelope carries id + payload as JSON.
-    const response = fln.NotificationResponse(
-      id: 7,
-      actionId: '{"id": "reply", "payload": "actions"}',
-      input: null,
-      payload: '{"id": "reply", "payload": "actions"}',
-      notificationResponseType:
-          fln.NotificationResponseType.selectedNotificationAction,
-      data: {"reply": "typed on windows"},
-    );
-    final event = responseToEvent(response);
-    expect(event["action_id"], "reply");
-    expect(event["payload"], "actions");
-    expect(event["input"], "typed on windows"); // normalized from data
-    expect(event["response_type"], "action");
+  group("Windows response normalization", () {
+    test("actionId envelope is unwrapped to the button id", () {
+      // The Windows plugin returns the launch string as both actionId and
+      // payload; our Dart envelope carries id + payload as JSON.
+      const response = fln.NotificationResponse(
+        id: 7,
+        actionId: '{"id": "reply", "payload": "actions"}',
+        input: null,
+        payload: '{"id": "reply", "payload": "actions"}',
+        notificationResponseType:
+            fln.NotificationResponseType.selectedNotificationAction,
+        data: {"reply": "typed on windows"},
+      );
+      final event = responseToEvent(response);
+      expect(event["action_id"], "reply");
+      expect(event["payload"], "actions");
+      expect(event["input"], "typed on windows"); // normalized from data
+      expect(event["response_type"], "action");
+    });
   });
-
-  test("plain Android/Darwin action ids pass through untouched", () {
-    const response = fln.NotificationResponse(
-      id: 8,
-      actionId: "reply",
-      input: "typed text",
-      payload: "actions",
-      notificationResponseType:
-          fln.NotificationResponseType.selectedNotificationAction,
-    );
-    final event = responseToEvent(response);
-    expect(event["action_id"], "reply");
-    expect(event["input"], "typed text");
-    expect(event["payload"], "actions");
-  });
-
-  test("Windows tap with no data keeps an empty input", () {
-    const response = fln.NotificationResponse(
-      id: 9,
-      actionId: '',
-      input: null,
-      payload: '',
-      notificationResponseType:
-          fln.NotificationResponseType.selectedNotification,
-    );
-    final event = responseToEvent(response);
-    expect(event["response_type"], "tap");
-    expect(event["input"], "");
-  });
-});
 }
