@@ -107,11 +107,16 @@ See also:
 
 The browser only accepts
 [`Notification.requestPermission()`](https://developer.mozilla.org/en-US/docs/Web/API/Notification/requestPermission_static)
-from a user gesture. The current bridge does not call this browser API:
+from a user gesture. Call
 [`request_permissions()`][flet_notifications.LocalNotifications.request_permissions]
-currently returns `True` on Web without prompting or checking browser permission.
-The upstream backend requires an existing permission grant before
-[`show()`][flet_notifications.LocalNotifications.show] can succeed.
+from an [`on_click`][flet.OutlinedButton.on_click] handler before calling
+[`show()`][flet_notifications.LocalNotifications.show]. Serve the app over HTTPS
+or a trusted localhost origin. If permission was denied, the user must change
+the site's browser permissions before requesting again.
+
+[`are_notifications_enabled()`][flet_notifications.LocalNotifications.are_notifications_enabled]
+checks browser permission without prompting. It returns `False` when permission
+is denied, undecided, or notifications are unsupported.
 
 The bridge also does not forward custom notification action buttons or
 [`WebOptions`][flet_notifications.WebOptions].

@@ -7,7 +7,7 @@ import 'dart:convert';
 import 'dart:typed_data';
 
 import 'package:flet/flet.dart';
-import 'package:flutter/foundation.dart' show debugPrint;
+import 'package:flutter/foundation.dart' show debugPrint, kIsWeb;
 import 'package:flutter_local_notifications/flutter_local_notifications.dart'
     as fln;
 import 'package:flutter_timezone/flutter_timezone.dart';
@@ -468,6 +468,11 @@ class LocalNotificationsService extends FletService {
   fln.AndroidFlutterLocalNotificationsPlugin? get _androidPlugin =>
       _plugin?.resolvePlatformSpecificImplementation<
         fln.AndroidFlutterLocalNotificationsPlugin
+      >();
+
+  fln.WebFlutterLocalNotificationsPlugin? get _webPlugin =>
+      _plugin?.resolvePlatformSpecificImplementation<
+        fln.WebFlutterLocalNotificationsPlugin
       >();
 
   // ── Notification details construction ───────────────────────────────
@@ -996,6 +1001,17 @@ class LocalNotificationsService extends FletService {
   // ── Permissions ─────────────────────────────────────────────────────
 
   Future<bool> _requestPermissions() async {
+    if (kIsWeb) {
+      final web = _webPlugin;
+      if (web == null || !fln.WebFlutterLocalNotificationsPlugin.isSupported) {
+        return false;
+      }
+      if (web.permissionStatus == fln.WebNotificationPermission.granted) {
+        return true;
+      }
+      return await web.requestNotificationsPermission() ?? false;
+    }
+
     final android = _androidPlugin;
     if (android != null) {
       return await android.requestNotificationsPermission() ?? false;
@@ -1027,8 +1043,7 @@ class LocalNotificationsService extends FletService {
           false;
     }
 
-    // Windows and Linux have no runtime notification permission; the web
-    // plugin requests the browser permission on `show`.
+    // Windows and Linux have no runtime notification permission request.
     return true;
   }
 
@@ -1287,6 +1302,11 @@ class LocalNotificationsService extends FletService {
   // ── Probes & OS integration ───────────────────────────────
 
   Future<bool> _areNotificationsEnabled() async {
+    if (kIsWeb) {
+      return fln.WebFlutterLocalNotificationsPlugin.isSupported &&
+          _webPlugin?.permissionStatus == fln.WebNotificationPermission.granted;
+    }
+
     final android = _androidPlugin;
     if (android != null) {
       return await android.areNotificationsEnabled() ?? false;
@@ -1306,7 +1326,7 @@ class LocalNotificationsService extends FletService {
       return (options?.isEnabled ?? false) ||
           (options?.isProvisionalEnabled ?? false);
     }
-    // Windows/Linux/web have no queryable gate.
+    // Windows and Linux have no queryable gate through this bridge.
     return true;
   }
 

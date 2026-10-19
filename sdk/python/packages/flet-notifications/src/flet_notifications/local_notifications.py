@@ -258,9 +258,8 @@ class LocalNotifications(ft.Service):
         progress updates. Android's :attr:`flet_notifications.AndroidOptions.tag` also
         participates in identifying immediately displayed notifications. Visible
         content, action support, and alerting depend on the current platform and the
-        user's notification settings. On Web, upstream requires browser permission
-        before showing, but this bridge currently does not request it. Without an
-        existing grant, showing fails.
+        user's notification settings. On Web, obtain browser permission with
+        :meth:`request_permissions` before showing a notification.
 
         Args:
             id: Notification identifier. Reuse it to update the same notification;
@@ -369,10 +368,15 @@ class LocalNotifications(ft.Service):
         `request_*_permission` properties. A previous denial may require the user to
         change system settings rather than displaying another prompt.
 
-        On Windows, Linux, and Web, this bridge currently returns `True` without
-        requesting or checking permission. On Web, the upstream plugin requires
-        permission before showing, but the bridge currently does not call its permission
-        API. This method's return value does not establish browser approval.
+        On Web, requests browser notification permission. Call from a user interaction,
+        such as an :attr:`flet.Button.on_click` handler, over HTTPS or a trusted
+        localhost origin. An existing denial returns `False` without prompting again;
+        the user must change the site's browser permissions. Dismissing the prompt
+        without granting access also returns `False`. Unsupported browsers return
+        `False`.
+
+        On Windows and Linux, this bridge returns `True` without requesting or checking
+        permission.
 
         Returns:
             Whether the native permission request succeeded, or `True` on platforms
@@ -917,13 +921,17 @@ class LocalNotifications(ft.Service):
         Check application-level notification authorization where supported.
 
         On Android, queries whether the app's notifications are enabled. On iOS/macOS,
-        includes provisional authorization, which permits quiet delivery. This check
-        does not guarantee a particular channel, sound, or alert can interrupt the user.
+        includes provisional authorization, which permits quiet delivery. On Web,
+        checks the current browser permission without displaying a prompt; denied,
+        undecided, or unsupported notification access returns `False`.
+
+        This check does not guarantee a particular channel, sound, or alert can
+        interrupt the user.
 
         Returns:
-            Native authorization status on Android/iOS/macOS. Currently returns `True`
-            unconditionally on Windows, Linux, and Web, without checking system or
-            browser notification settings.
+            Native authorization status on Android/iOS/macOS, or browser authorization
+            on Web. Returns `True` unconditionally on Windows and Linux, without
+            checking system notification settings.
 
         Raises:
             NotificationError: If the bridge reports initialization or operation
