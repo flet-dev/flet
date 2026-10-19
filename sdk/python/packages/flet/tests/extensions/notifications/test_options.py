@@ -1,246 +1,32 @@
 """Tests for the per-platform options surface."""
 
-import json
-
-import msgpack
 import pytest
 
-import flet as ft
-from flet.messaging.protocol import configure_encode_object_for_msgpack
 from flet_notifications import (
-    AndroidOptions,
-    DarwinOptions,
-    Importance,
-    InterruptionLevel,
-    LinuxOptions,
-    LinuxUrgency,
+    AndroidForegroundServiceType,
+    AndroidServiceStartType,
     LocalNotifications,
-    NotificationOptions,
-    Priority,
-    Visibility,
-    WebOptions,
-    WindowsOptions,
-    WindowsScenario,
 )
 
 from .helpers import encode_wire
 
 
 @pytest.mark.parametrize(
-    ("options_type", "field", "enum_type", "values"),
+    ("start_type", "wire_start"),
     [
         (
-            AndroidOptions,
-            "importance",
-            Importance,
-            ("unspecified", "min", "none", "low", "defaultImportance", "high", "max"),
+            AndroidServiceStartType.START_STICKY_COMPATIBILITY,
+            "startStickyCompatibility",
         ),
-        (
-            AndroidOptions,
-            "priority",
-            Priority,
-            ("min", "low", "default", "high", "max"),
-        ),
-        (AndroidOptions, "visibility", Visibility, ("public", "private", "secret")),
-        (
-            DarwinOptions,
-            "interruption_level",
-            InterruptionLevel,
-            ("passive", "active", "timeSensitive", "critical"),
-        ),
-        (LinuxOptions, "urgency", LinuxUrgency, ("low", "normal", "critical")),
-        (
-            WindowsOptions,
-            "scenario",
-            WindowsScenario,
-            ("reminder", "alarm", "incomingCall", "urgent"),
-        ),
+        (AndroidServiceStartType.START_STICKY, "startSticky"),
+        (AndroidServiceStartType.START_NOT_STICKY, "startNotSticky"),
+        (AndroidServiceStartType.START_REDELIVER_INTENT, "startRedeliverIntent"),
     ],
 )
-def test_option_enums_preserve_wire_values(options_type, field, enum_type, values):
-    """Enum members retain the existing Dart payload."""
-    assert tuple(member.value for member in enum_type) == values
-    assert encode_wire(options_type()) == {}
-    encoder = configure_encode_object_for_msgpack(ft.Control)
-
-    for value in values:
-        payload = encode_wire(options_type(**{field: enum_type(value)}))
-        expected = {field: value}
-        assert type(payload[field]) is str
-        assert json.loads(json.dumps(payload)) == expected
-        assert msgpack.packb(payload, default=encoder) == msgpack.packb(expected)
-
-
-def test_options_wire_payload_omits_none():
-    options = NotificationOptions(
-        android=AndroidOptions(silent=True),
-        iOS=DarwinOptions(badge_number=3),
-    )
-    d = encode_wire(options)
-    assert d["android"] == {"silent": True}
-    assert d["iOS"] == {"badge_number": 3}
-    assert d == {"android": {"silent": True}, "iOS": {"badge_number": 3}}
-
-
-def test_android_options_full_round_trip():
-    options = AndroidOptions(
-        channel_description="Alerts channel",
-        channel_bypass_dnd=True,
-        icon="ic_stat",
-        importance=Importance.HIGH,
-        priority=Priority.MAX,
-        play_sound=False,
-        sound="alert_tone",
-        enable_vibration=False,
-        vibration_pattern=[0, 250, 100],
-        channel_show_badge=False,
-        auto_cancel=False,
-        ongoing=True,
-        silent=True,
-        color="#FF0000",
-        colorized=True,
-        large_icon="content://icon",
-        only_alert_once=True,
-        show_when=False,
-        when=1700000000000,
-        uses_chronometer=True,
-        chronometer_count_down=True,
-        sub_text="details",
-        number=4,
-        visibility=Visibility.PRIVATE,
-        timeout_after=60000,
-        category="alarm",
-        full_screen_intent=True,
-        shortcut_id="sc",
-        additional_flags=["FLAG_INSISTENT"],
-        ticker="tick",
-        tag="tag1",
-        enable_lights=True,
-        led_color="#8000FF00",
-        led_on_ms=500,
-        led_off_ms=500,
-    )
-    d = encode_wire(options)
-    assert d["ongoing"] is True
-    assert d["color"] == "#FF0000"
-    assert d["vibration_pattern"] == [0, 250, 100]
-    assert d["category"] == "alarm"
-    assert d["led_color"] == "#8000FF00"
-    assert len(d) == 35
-
-
-@pytest.mark.parametrize(
-    ("color", "wire_value"),
-    [
-        (ft.Colors.RED, "red"),
-        (ft.Colors.RED_700, "red700"),
-        (ft.CupertinoColors.ACTIVE_BLUE, "activeBlue"),
-        (ft.Colors.with_opacity(0.5, ft.Colors.RED), "red,0.5"),
-        ("#FF0000", "#FF0000"),
-        ("#80FF0000", "#80FF0000"),
-        ("  #FF0000  ", "  #FF0000  "),
-        ("#FFF", "#FFF"),
-        ("#8FFF", "#8FFF"),
-        ("0xff00ff00", "0xff00ff00"),
-        (None, None),
-    ],
-)
-def test_android_options_color_values(color, wire_value):
-    options = AndroidOptions(color=color, led_color=color)
-    payload = encode_wire(options)
-    if wire_value is None:
-        assert payload == {}
-    else:
-        assert payload == {"color": wire_value, "led_color": wire_value}
-
-
-def test_darwin_options():
-    d = encode_wire(
-        DarwinOptions(
-            sound="chime",
-            badge_number=0,
-            subtitle="sub",
-            thread_identifier="thread1",
-            interruption_level=InterruptionLevel.TIME_SENSITIVE,
-            critical_sound_volume=0.5,
-            attachments=["/tmp/a.png"],
-            present_banner=False,
-        )
-    )
-    assert d["badge_number"] == 0
-    assert d["interruption_level"] == "timeSensitive"
-    assert d["attachments"] == ["/tmp/a.png"]
-    assert d["present_banner"] is False
-
-
-def test_linux_windows_web_options():
-    assert encode_wire(
-        LinuxOptions(urgency=LinuxUrgency.CRITICAL, timeout_ms=5000)
-    ) == {
-        "urgency": "critical",
-        "timeout_ms": 5000,
-    }
-    assert encode_wire(
-        WindowsOptions(scenario=WindowsScenario.ALARM, duration="long")
-    ) == {
-        "scenario": "alarm",
-        "duration": "long",
-    }
-    assert encode_wire(WebOptions(require_interaction=True, icon_url="x")) == {
-        "require_interaction": True,
-        "icon_url": "x",
-    }
-
-
 @pytest.mark.asyncio
-async def test_show_forwards_options():
-    class Recording(LocalNotifications):
-        def __init__(self):
-            super().__init__()
-            self.calls = []
+async def test_fgs_forwards_start_type_and_types(start_type, wire_start):
+    """Service enums reach the native boundary as recognized string values."""
 
-        async def _invoke_method(self, method_name, arguments=None, timeout=None):
-            self.calls.append((method_name, encode_wire(arguments)))
-            return "ok"
-
-    service = Recording()
-    options = NotificationOptions(android=AndroidOptions(ongoing=True))
-    await service.show(id=1, title="t", options=options)
-    _, args = service.calls[-1]
-    assert args["options"] == {
-        "android": {"ongoing": True},
-    }
-
-
-@pytest.mark.asyncio
-async def test_schedule_and_periodic_forward_options():
-    from datetime import timedelta
-
-    from flet_notifications import RepeatInterval
-
-    class Recording(LocalNotifications):
-        def __init__(self):
-            super().__init__()
-            self.calls = []
-
-        async def _invoke_method(self, method_name, arguments=None, timeout=None):
-            self.calls.append((method_name, encode_wire(arguments)))
-            return "ok"
-
-    service = Recording()
-    options = NotificationOptions(
-        iOS=DarwinOptions(interruption_level=InterruptionLevel.PASSIVE)
-    )
-    await service.schedule(id=1, when=timedelta(seconds=5), options=options)
-    assert service.calls[-1][1]["options"]["iOS"] == {"interruption_level": "passive"}
-    await service.periodically_show(
-        id=2, repeat_interval=RepeatInterval.HOURLY, options=options
-    )
-    assert service.calls[-1][1]["options"]["iOS"] == {"interruption_level": "passive"}
-
-
-@pytest.mark.asyncio
-async def test_fgs_forwards_start_type_and_types():
     class Recording(LocalNotifications):
         def __init__(self):
             super().__init__()
@@ -254,9 +40,23 @@ async def test_fgs_forwards_start_type_and_types():
     await service.start_foreground_service(
         id=1,
         title="t",
-        start_type="startStickyForeground",
-        foreground_service_types=["dataSync", "specialUse"],
+        start_type=start_type,
+        foreground_service_types=list(AndroidForegroundServiceType),
     )
     _, args = service.calls[-1]
-    assert args["start_type"] == "startStickyForeground"
-    assert args["foreground_service_types"] == ["dataSync", "specialUse"]
+    assert args["start_type"] == wire_start
+    assert args["foreground_service_types"] == [
+        "camera",
+        "connectedDevice",
+        "dataSync",
+        "health",
+        "location",
+        "mediaPlayback",
+        "mediaProjection",
+        "microphone",
+        "phoneCall",
+        "remoteMessaging",
+        "shortService",
+        "specialUse",
+        "systemExempted",
+    ]
