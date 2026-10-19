@@ -678,9 +678,12 @@ docs:
           CircularRectangleNotchShape: types/circularrectanglenotchshape.md
       - Notifications:
         - services/notifications/types/activenotification.md
+        - services/notifications/types/androidforegroundservicetype.md
         - services/notifications/types/androidicon.md
+        - services/notifications/types/androidnotificationcategory.md
         - services/notifications/types/androidoptions.md
         - services/notifications/types/androidschedulemode.md
+        - services/notifications/types/androidservicestarttype.md
         - services/notifications/types/bigpicturestyle.md
         - services/notifications/types/bigtextstyle.md
         - services/notifications/types/darwinoptions.md
@@ -690,6 +693,7 @@ docs:
         - services/notifications/types/inboxstyle.md
         - services/notifications/types/interruptionlevel.md
         - services/notifications/types/launchdetails.md
+        - services/notifications/types/linuxnotificationcategory.md
         - services/notifications/types/linuxoptions.md
         - services/notifications/types/linuxurgency.md
         - services/notifications/types/message.md
@@ -709,6 +713,8 @@ docs:
         - services/notifications/types/style.md
         - services/notifications/types/visibility.md
         - services/notifications/types/weboptions.md
+        - services/notifications/types/windowsnotificationduration.md
+        - services/notifications/types/windowsnotificationsound.md
         - services/notifications/types/windowsoptions.md
         - services/notifications/types/windowsscenario.md
       - types/observable.md

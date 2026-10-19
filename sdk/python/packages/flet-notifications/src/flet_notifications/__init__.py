@@ -1,10 +1,3 @@
-"""flet-notifications: cross-platform local notifications for Flet apps.
-
-Wraps the battle-tested `flutter_local_notifications` Flutter plugin and
-exposes it as a native Flet service (`ft.Service`), following the same
-extension architecture as `flet-ads` / `flet-yandex-ads`.
-"""
-
 from flet_notifications.actions import NotificationAction, NotificationActionInput
 from flet_notifications.base import (
     NotificationError,
@@ -43,20 +36,27 @@ from flet_notifications.styles import (
     Style,
 )
 from flet_notifications.types import (
+    AndroidForegroundServiceType,
+    AndroidNotificationCategory,
     AndroidScheduleMode,
+    AndroidServiceStartType,
     DateTimeComponents,
     GroupAlertBehavior,
     Importance,
+    LinuxNotificationCategory,
     RepeatInterval,
+    WindowsNotificationDuration,
+    WindowsNotificationSound,
 )
-
-__version__ = "0.1.4"
 
 __all__ = [
     "ActiveNotification",
+    "AndroidForegroundServiceType",
     "AndroidIcon",
+    "AndroidNotificationCategory",
     "AndroidOptions",
     "AndroidScheduleMode",
+    "AndroidServiceStartType",
     "BigPictureStyle",
     "BigTextStyle",
     "DarwinOptions",
@@ -66,6 +66,7 @@ __all__ = [
     "InboxStyle",
     "InterruptionLevel",
     "LaunchDetails",
+    "LinuxNotificationCategory",
     "LinuxOptions",
     "LinuxUrgency",
     "LocalNotifications",
@@ -86,6 +87,8 @@ __all__ = [
     "Style",
     "Visibility",
     "WebOptions",
+    "WindowsNotificationDuration",
+    "WindowsNotificationSound",
     "WindowsOptions",
     "WindowsScenario",
 ]

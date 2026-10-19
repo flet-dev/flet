@@ -1,5 +1,3 @@
-"""Schedule argument serialization (pure — unit tested)."""
-
 from datetime import datetime, timedelta
 
 from flet_notifications.styles import Style, prepare_style
@@ -9,6 +7,8 @@ from flet_notifications.types import (
     GroupAlertBehavior,
     RepeatInterval,
 )
+
+__all__ = []
 
 
 def build_schedule_args(
@@ -33,11 +33,12 @@ def build_schedule_args(
     group_alert_behavior: GroupAlertBehavior = GroupAlertBehavior.ALL,
     channel_id: str | None = None,
 ) -> dict:
-    """Build the `schedule` invoke payload.
+    """
+    Build the `schedule` invoke payload.
 
-    Naive datetimes are wall-clock times interpreted in `time_zone` (or the
-    device timezone when `time_zone` is None); aware datetimes carry their
-    offset so the exact instant is preserved.
+    Naive datetimes are wall-clock times interpreted in `time_zone` (or the device
+    timezone when `time_zone` is None); aware datetimes carry their offset so the exact
+    instant is preserved.
     """
     if isinstance(when, timedelta):
         when_payload: dict = {

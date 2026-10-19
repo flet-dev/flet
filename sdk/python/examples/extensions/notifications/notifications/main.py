@@ -12,6 +12,7 @@ import datetime
 
 import flet as ft
 from flet_notifications import (
+    AndroidNotificationCategory,
     AndroidOptions,
     AndroidScheduleMode,
     BigTextStyle,
@@ -24,6 +25,7 @@ from flet_notifications import (
     NotificationChannel,
     NotificationOptions,
     RepeatInterval,
+    Visibility,
 )
 
 # Activity terminal — house pattern (Courier New, #A6E22E on #0D0D0D).
@@ -240,7 +242,9 @@ def main(page: ft.Page):
                 body="Full platform options.",
                 options=NotificationOptions(
                     android=AndroidOptions(
-                        silent=True, category="alarm", visibility="public"
+                        silent=True,
+                        category=AndroidNotificationCategory.ALARM,
+                        visibility=Visibility.PUBLIC,
                     ),
                     iOS=DarwinOptions(interruption_level="passive"),
                 ),

@@ -931,6 +931,96 @@ void registerPhase3Tests() {
     expect(details.sound, "chime");
   });
 
+  test(
+    "Python Linux category wire values match upstream and are accepted",
+    () async {
+      const categories = [
+        "device",
+        "device.added",
+        "device.error",
+        "device.removed",
+        "email",
+        "email.arrived",
+        "email.bounced",
+        "im",
+        "im.error",
+        "im.received",
+        "network",
+        "network.connected",
+        "network.disconnected",
+        "network.error",
+        "presence",
+        "presence.offline",
+        "presence.online",
+        "transfer",
+        "transfer.complete",
+        "transfer.error",
+      ];
+      expect(
+        categories.toSet(),
+        fln.LinuxNotificationCategory.values.map((value) => value.name).toSet(),
+      );
+      final service = _makeService();
+      for (final category in categories) {
+        expect(
+          await service.invokeMethod("show", {
+            "id": 1,
+            "options": {
+              "linux": {"category": category},
+            },
+          }),
+          "ok",
+          reason: category,
+        );
+      }
+      expect(plugin.shown.length, categories.length);
+    },
+  );
+
+  test(
+    "Python Android category wire values select the intended native category",
+    () async {
+      const categories = {
+        "alarm": fln.AndroidNotificationCategory.alarm,
+        "call": fln.AndroidNotificationCategory.call,
+        "email": fln.AndroidNotificationCategory.email,
+        "error": fln.AndroidNotificationCategory.error,
+        "event": fln.AndroidNotificationCategory.event,
+        "locationSharing": fln.AndroidNotificationCategory.locationSharing,
+        "message": fln.AndroidNotificationCategory.message,
+        "missedCall": fln.AndroidNotificationCategory.missedCall,
+        "navigation": fln.AndroidNotificationCategory.navigation,
+        "progress": fln.AndroidNotificationCategory.progress,
+        "promo": fln.AndroidNotificationCategory.promo,
+        "recommendation": fln.AndroidNotificationCategory.recommendation,
+        "reminder": fln.AndroidNotificationCategory.reminder,
+        "service": fln.AndroidNotificationCategory.service,
+        "social": fln.AndroidNotificationCategory.social,
+        "status": fln.AndroidNotificationCategory.status,
+        "stopwatch": fln.AndroidNotificationCategory.stopwatch,
+        "system": fln.AndroidNotificationCategory.system,
+        "transport": fln.AndroidNotificationCategory.transport,
+        "workout": fln.AndroidNotificationCategory.workout,
+      };
+      final service = _makeService();
+      for (final entry in categories.entries) {
+        expect(
+          await service.invokeMethod("show", {
+            "id": 1,
+            "options": {
+              "android": {"category": entry.key},
+            },
+          }),
+          "ok",
+          reason: entry.key,
+        );
+        final details =
+            plugin.shown.last["details"] as fln.AndroidNotificationDetails;
+        expect(details.category, entry.value, reason: entry.key);
+      }
+    },
+  );
+
   test("unknown Android category surfaces as an error", () async {
     final service = _makeService();
     final result = await service.invokeMethod("show", {
