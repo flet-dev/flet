@@ -1,3 +1,4 @@
+import 'package:flet/flet.dart' show parseEnum, parseInt;
 import 'package:flutter_local_notifications/flutter_local_notifications.dart'
     as fln;
 import 'package:timezone/timezone.dart' as tz;
@@ -28,7 +29,7 @@ tz.TZDateTime parseWhen(Map<dynamic, dynamic> args, tz.Location fallback) {
 
   final delay = when["delay_seconds"];
   if (delay != null) {
-    final seconds = (delay as num).toInt();
+    final seconds = parseInt(delay)!;
     return tz.TZDateTime.now(location).add(Duration(seconds: seconds));
   }
 
@@ -37,7 +38,7 @@ tz.TZDateTime parseWhen(Map<dynamic, dynamic> args, tz.Location fallback) {
     throw const FormatException("when must carry delay_seconds or iso");
   }
   final parsed = DateTime.parse(iso);
-  final offsetSeconds = when["utc_offset_seconds"] as num?;
+  final offsetSeconds = parseInt(when["utc_offset_seconds"]);
   if (offsetSeconds != null) {
     // Aware datetime: preserve the instant, render in the target zone.
     return tz.TZDateTime.from(parsed.toUtc(), location);
@@ -56,45 +57,14 @@ tz.TZDateTime parseWhen(Map<dynamic, dynamic> args, tz.Location fallback) {
   );
 }
 
-fln.AndroidScheduleMode parseScheduleMode(String? value) {
-  switch (value) {
-    case "alarmClock":
-      return fln.AndroidScheduleMode.alarmClock;
-    case "exact":
-      return fln.AndroidScheduleMode.exact;
-    case "inexact":
-      return fln.AndroidScheduleMode.inexact;
-    case "inexactAllowWhileIdle":
-      return fln.AndroidScheduleMode.inexactAllowWhileIdle;
-    default:
-      return fln.AndroidScheduleMode.exactAllowWhileIdle;
-  }
-}
+fln.AndroidScheduleMode? parseAndroidScheduleMode(String? value,
+        [fln.AndroidScheduleMode? defaultValue]) =>
+    parseEnum(fln.AndroidScheduleMode.values, value, defaultValue);
 
-fln.DateTimeComponents? parseMatchComponents(String? value) {
-  switch (value) {
-    case "time":
-      return fln.DateTimeComponents.time;
-    case "dayOfWeekAndTime":
-      return fln.DateTimeComponents.dayOfWeekAndTime;
-    case "dayOfMonthAndTime":
-      return fln.DateTimeComponents.dayOfMonthAndTime;
-    case "dateAndTime":
-      return fln.DateTimeComponents.dateAndTime;
-    default:
-      return null;
-  }
-}
+fln.DateTimeComponents? parseDateTimeComponents(String? value,
+        [fln.DateTimeComponents? defaultValue]) =>
+    parseEnum(fln.DateTimeComponents.values, value, defaultValue);
 
-fln.RepeatInterval parseRepeatInterval(String? value) {
-  switch (value) {
-    case "everyMinute":
-      return fln.RepeatInterval.everyMinute;
-    case "hourly":
-      return fln.RepeatInterval.hourly;
-    case "weekly":
-      return fln.RepeatInterval.weekly;
-    default:
-      return fln.RepeatInterval.daily;
-  }
-}
+fln.RepeatInterval? parseRepeatInterval(String? value,
+        [fln.RepeatInterval? defaultValue]) =>
+    parseEnum(fln.RepeatInterval.values, value, defaultValue);

@@ -33,7 +33,7 @@ void main() {
     final date = parseWhen({
       "when": {
         "iso": "2030-06-01T12:00:00+01:00",
-        "utc_offset_seconds": 3600,
+        "utc_offset_seconds": "3600",
         "time_zone": "UTC",
       },
     }, tz.local);
@@ -44,7 +44,7 @@ void main() {
 
   test("delay from now lands in the future", () {
     final date = parseWhen({
-      "when": {"delay_seconds": 90, "time_zone": "UTC"},
+      "when": {"delay_seconds": "90", "time_zone": "UTC"},
     }, tz.UTC);
     expect(
       date.difference(tz.TZDateTime.now(tz.UTC)).inSeconds,

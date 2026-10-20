@@ -93,7 +93,7 @@ class LocalNotificationsService extends FletService {
         const <fln.DarwinNotificationCategory>[],
   }) {
     final defaultIcon =
-        control.getString("default_icon") ?? "@mipmap/ic_launcher";
+        control.getString("default_icon", "@mipmap/ic_launcher")!;
     final darwin = fln.DarwinInitializationSettings(
       requestAlertPermission:
           control.getBool("request_alert_permission", true)!,
@@ -113,10 +113,10 @@ class LocalNotificationsService extends FletService {
         defaultActionName: "Open",
       ),
       windows: fln.WindowsInitializationSettings(
-        appName: control.getString("app_name") ?? "Flet App",
+        appName: control.getString("app_name", "Flet App")!,
         appUserModelId:
-            control.getString("app_user_model_id") ?? "Flet.App.Notifications",
-        guid: control.getString("windows_guid") ?? _defaultWindowsGuid,
+            control.getString("app_user_model_id", "Flet.App.Notifications")!,
+        guid: control.getString("windows_guid", _defaultWindowsGuid)!,
       ),
       web: const fln.WebInitializationSettings(),
     );
@@ -209,7 +209,7 @@ class LocalNotificationsService extends FletService {
         final map = args as Map;
         final tag = map["tag"] as String?;
         await _plugin?.cancel(
-          id: map["id"] as int,
+          id: parseInt(map["id"])!,
           tag: tag?.isEmpty == true ? null : tag,
         );
         return "ok";
@@ -306,7 +306,7 @@ class LocalNotificationsService extends FletService {
   Future<String> _show(dynamic args) async {
     try {
       final map = args as Map;
-      final id = map["id"] as int;
+      final id = parseInt(map["id"])!;
       final title = map["title"] as String?;
       final body = map["body"] as String?;
       final payload = map["payload"] as String? ?? "";
@@ -353,17 +353,18 @@ class LocalNotificationsService extends FletService {
     }
     try {
       await _plugin!.zonedSchedule(
-        id: map["id"] as int,
+        id: parseInt(map["id"])!,
         title: map["title"] as String?,
         body: map["body"] as String?,
         scheduledDate: scheduledDate,
         notificationDetails: await _buildNotificationDetails(
-          id: map["id"] as int,
+          id: parseInt(map["id"])!,
           actions: actions,
           style: parseStyle(map["style"]),
           details: map,
         ),
-        androidScheduleMode: parseScheduleMode(map["schedule_mode"] as String?),
+        androidScheduleMode: parseScheduleMode(map["schedule_mode"] as String?,
+            fln.AndroidScheduleMode.exactAllowWhileIdle)!,
         payload: map["payload"] as String? ?? "",
         matchDateTimeComponents: parseMatchComponents(
           map["match_components"] as String?,
@@ -378,7 +379,7 @@ class LocalNotificationsService extends FletService {
   Future<String> _periodicallyShow(dynamic args) async {
     try {
       final map = args as Map;
-      final id = map["id"] as int;
+      final id = parseInt(map["id"])!;
       final actions = parseActions(map["actions"]);
       final styleError = _invalidStyleCode(map["style"]);
       if (styleError != null) return styleError;
@@ -388,11 +389,12 @@ class LocalNotificationsService extends FletService {
         style: parseStyle(map["style"]),
         details: map,
       );
-      final scheduleMode = parseScheduleMode(map["schedule_mode"] as String?);
+      final scheduleMode = parseScheduleMode(map["schedule_mode"] as String?,
+          fln.AndroidScheduleMode.exactAllowWhileIdle)!;
       final title = map["title"] as String?;
       final body = map["body"] as String?;
       final payload = map["payload"] as String? ?? "";
-      final durationSeconds = map["repeat_duration_seconds"] as int?;
+      final durationSeconds = parseInt(map["repeat_duration_seconds"]);
       if (durationSeconds != null) {
         await _plugin!.periodicallyShowWithDuration(
           id: id,
@@ -411,7 +413,8 @@ class LocalNotificationsService extends FletService {
         body: body,
         payload: payload,
         notificationDetails: notificationDetails,
-        repeatInterval: parseRepeatInterval(map["repeat_interval"] as String?),
+        repeatInterval: parseRepeatInterval(
+            map["repeat_interval"] as String?, fln.RepeatInterval.daily)!,
         androidScheduleMode: scheduleMode,
       );
       return "ok";
@@ -599,20 +602,20 @@ class LocalNotificationsService extends FletService {
           name,
           description: map["description"] as String?,
           groupId: map["group_id"] as String?,
-          importance: parseNotificationImportance(map["importance"] as String?,
-              fln.Importance.defaultImportance)!,
-          bypassDnd: optionalBool(map["bypass_dnd"]) ?? false,
-          playSound: optionalBool(map["play_sound"]) ?? true,
+          importance: parseNotificationImportance(
+              map["importance"] as String?, fln.Importance.defaultImportance)!,
+          bypassDnd: parseBool(map["bypass_dnd"], false)!,
+          playSound: parseBool(map["play_sound"], true)!,
           sound: map["sound"] == null
               ? null
               : fln.RawResourceAndroidNotificationSound(
                   map["sound"] as String,
                 ),
-          enableVibration: optionalBool(map["enable_vibration"]) ?? true,
+          enableVibration: parseBool(map["enable_vibration"], true)!,
           vibrationPattern:
               parseNotificationVibrationPattern(map["vibration_pattern"]),
-          showBadge: optionalBool(map["show_badge"]) ?? true,
-          enableLights: optionalBool(map["enable_lights"]) ?? false,
+          showBadge: parseBool(map["show_badge"], true)!,
+          enableLights: parseBool(map["enable_lights"], false)!,
           ledColor: parseColor(ledColor?.trim(), null),
         ),
       );
@@ -675,7 +678,7 @@ class LocalNotificationsService extends FletService {
     }
     try {
       final map = args as Map;
-      final id = map["id"] as int;
+      final id = parseInt(map["id"])!;
       if (id == 0) {
         return "error:invalid_service_id:foreground service id must be non-zero";
       }

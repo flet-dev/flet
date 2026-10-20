@@ -36,7 +36,7 @@ class _RecordingAndroid extends fln.AndroidFlutterLocalNotificationsPlugin {
     fln.AndroidNotificationDetails? notificationDetails,
     String? payload,
   }) async {
-    shown.add({'details': notificationDetails});
+    shown.add({'id': id, 'details': notificationDetails});
   }
 
   @override
@@ -220,7 +220,8 @@ void main() {
     expect(plugin.shown, isEmpty);
   });
 
-  test("show preserves invalid_option for an unknown Android category", () async {
+  test("show preserves invalid_option for an unknown Android category",
+      () async {
     final result = await _makeService().invokeMethod("show", {
       "id": 1,
       "options": {
@@ -232,27 +233,66 @@ void main() {
     expect(plugin.shown, isEmpty);
   });
 
-  test("show accepts enum names case-insensitively and falls back for unknown values", () async {
+  test(
+      "show accepts enum names case-insensitively and falls back for unknown values",
+      () async {
     final service = _makeService();
     for (final value in ["unknown", "HIGH"]) {
-      expect(await service.invokeMethod("show", {
-        "id": 1,
-        "options": {
-          "android": {
-            "importance": value,
-            "priority": value,
-            "visibility": "PRIVATE",
-          },
-        },
-      }), "ok");
+      expect(
+          await service.invokeMethod("show", {
+            "id": 1,
+            "options": {
+              "android": {
+                "importance": value,
+                "priority": value,
+                "visibility": "PRIVATE",
+              },
+            },
+          }),
+          "ok");
       final details =
           plugin.shown.last["details"] as fln.AndroidNotificationDetails;
-      expect(details.importance,
-          value == "HIGH" ? fln.Importance.high : fln.Importance.defaultImportance);
+      expect(
+          details.importance,
+          value == "HIGH"
+              ? fln.Importance.high
+              : fln.Importance.defaultImportance);
       expect(details.priority,
           value == "HIGH" ? fln.Priority.high : fln.Priority.defaultPriority);
       expect(details.visibility, fln.NotificationVisibility.private);
     }
+  });
+
+  test("show uses Flet primitive parsers for notification values", () async {
+    final result = await _makeService().invokeMethod("show", {
+      "id": "7",
+      "show_progress": "true",
+      "max_progress": "100",
+      "progress": "0",
+      "options": {
+        "android": {
+          "ongoing": "TRUE",
+          "auto_cancel": "false",
+          "number": "0",
+          "when": "1700000000123",
+          "additional_flags": "36",
+          "vibration_pattern": [0, "250", 100],
+        },
+      },
+    });
+    expect(result, "ok");
+    expect(plugin.shown.single["id"], 7);
+    final details =
+        plugin.shown.single["details"] as fln.AndroidNotificationDetails;
+    expect(details.showProgress, isTrue);
+    expect(details.maxProgress, 100);
+    expect(details.progress, 0);
+    expect(details.ongoing, isTrue);
+    expect(details.autoCancel, isFalse);
+    expect(details.number, 0);
+    expect(details.when, 1700000000123);
+    expect(details.additionalFlags!.toList(), [36]);
+    expect(details.vibrationPattern!.toList(), [0, 250, 100]);
   });
 
   test("show applies AndroidOptions onto the details", () async {

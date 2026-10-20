@@ -94,6 +94,10 @@ Future<fln.NotificationDetails> parseNotificationDetails({
   final webOptions = _platformOptions(details, "web") ?? const {};
   final windowsOptions = _platformOptions(details, "windows") ?? const {};
   final windowsAudio = windowsOptions["audio"] as String?;
+  final additionalFlags = parseInt(androidOptions["additional_flags"]);
+  final linuxTimeout = parseInt(linuxOptions["timeout_ms"]);
+  final windowsTimestamp = parseInt(windowsOptions["timestamp"]);
+  final webTimestamp = parseInt(webOptions["timestamp"]);
   final channelId =
       (d["channel_id"] as String?) ?? (androidOptions["channel_id"] as String?);
   final groupKey = d["group_key"] as String?;
@@ -113,9 +117,9 @@ Future<fln.NotificationDetails> parseNotificationDetails({
         androidOptions["audio_attributes_usage"] as String?,
         fln.AudioAttributesUsage.notification,
       )!,
-      additionalFlags: androidOptions["additional_flags"] == null
+      additionalFlags: additionalFlags == null
           ? null
-          : Int32List.fromList([androidOptions["additional_flags"] as int]),
+          : Int32List.fromList([additionalFlags]),
       actions: androidActions,
       styleInformation: parseStyleInformation(style),
       importance: parseNotificationImportance(
@@ -123,50 +127,46 @@ Future<fln.NotificationDetails> parseNotificationDetails({
           fln.Importance.defaultImportance)!,
       priority: parsePriority(
           androidOptions["priority"] as String?, fln.Priority.defaultPriority)!,
-      playSound: optionalBool(androidOptions["play_sound"]) ?? true,
+      playSound: parseBool(androidOptions["play_sound"], true)!,
       sound: parseSound(androidOptions["sound"] as String?),
-      enableVibration: optionalBool(androidOptions["enable_vibration"]) ?? true,
+      enableVibration: parseBool(androidOptions["enable_vibration"], true)!,
       vibrationPattern: parseNotificationVibrationPattern(
           androidOptions["vibration_pattern"]),
       groupKey: groupKey,
-      setAsGroupSummary: optionalBool(d["set_as_group_summary"]) ?? false,
+      setAsGroupSummary: parseBool(d["set_as_group_summary"], false)!,
       groupAlertBehavior: groupAlert,
-      autoCancel: optionalBool(androidOptions["auto_cancel"]) ?? true,
-      ongoing: optionalBool(androidOptions["ongoing"]) ?? false,
-      silent: optionalBool(androidOptions["silent"]) ?? false,
+      autoCancel: parseBool(androidOptions["auto_cancel"], true)!,
+      ongoing: parseBool(androidOptions["ongoing"], false)!,
+      silent: parseBool(androidOptions["silent"], false)!,
       color: parseColor((androidOptions["color"] as String?)?.trim(), null),
-      colorized: optionalBool(androidOptions["colorized"]) ?? false,
+      colorized: parseBool(androidOptions["colorized"], false)!,
       largeIcon: parseLargeIcon(androidOptions["large_icon"] as String?),
-      onlyAlertOnce: optionalBool(androidOptions["only_alert_once"]) ?? false,
-      showWhen: optionalBool(androidOptions["show_when"]) ?? true,
-      when: androidOptions["when"] as int?,
-      usesChronometer:
-          optionalBool(androidOptions["uses_chronometer"]) ?? false,
+      onlyAlertOnce: parseBool(androidOptions["only_alert_once"], false)!,
+      showWhen: parseBool(androidOptions["show_when"], true)!,
+      when: parseInt(androidOptions["when"]),
+      usesChronometer: parseBool(androidOptions["uses_chronometer"], false)!,
       chronometerCountDown:
-          optionalBool(androidOptions["chronometer_count_down"]) ?? false,
-      channelShowBadge:
-          optionalBool(androidOptions["channel_show_badge"]) ?? true,
-      channelBypassDnd:
-          optionalBool(androidOptions["channel_bypass_dnd"]) ?? false,
-      showProgress: optionalBool(d["show_progress"]) ?? false,
-      maxProgress: (d["max_progress"] as int?) ?? 0,
-      progress: (d["progress"] as int?) ?? 0,
-      indeterminate: optionalBool(d["indeterminate"]) ?? false,
-      enableLights: optionalBool(androidOptions["enable_lights"]) ?? false,
+          parseBool(androidOptions["chronometer_count_down"], false)!,
+      channelShowBadge: parseBool(androidOptions["channel_show_badge"], true)!,
+      channelBypassDnd: parseBool(androidOptions["channel_bypass_dnd"], false)!,
+      showProgress: parseBool(d["show_progress"], false)!,
+      maxProgress: parseInt(d["max_progress"], 0)!,
+      progress: parseInt(d["progress"], 0)!,
+      indeterminate: parseBool(d["indeterminate"], false)!,
+      enableLights: parseBool(androidOptions["enable_lights"], false)!,
       ledColor:
           parseColor((androidOptions["led_color"] as String?)?.trim(), null),
-      ledOnMs: androidOptions["led_on_ms"] as int?,
-      ledOffMs: androidOptions["led_off_ms"] as int?,
+      ledOnMs: parseInt(androidOptions["led_on_ms"]),
+      ledOffMs: parseInt(androidOptions["led_off_ms"]),
       ticker: androidOptions["ticker"] as String?,
       visibility: parseVisibility(androidOptions["visibility"] as String?),
-      timeoutAfter: androidOptions["timeout_after"] as int?,
+      timeoutAfter: parseInt(androidOptions["timeout_after"]),
       category: parseCategory(androidOptions["category"] as String?),
-      fullScreenIntent:
-          optionalBool(androidOptions["full_screen_intent"]) ?? false,
+      fullScreenIntent: parseBool(androidOptions["full_screen_intent"], false)!,
       shortcutId: androidOptions["shortcut_id"] as String?,
       subText: androidOptions["sub_text"] as String?,
       tag: androidOptions["tag"] as String?,
-      number: androidOptions["number"] as int?,
+      number: parseInt(androidOptions["number"]),
     ),
     iOS: darwinDetails,
     macOS: parseDarwinDetails(
@@ -181,16 +181,15 @@ Future<fln.NotificationDetails> parseNotificationDetails({
       category: parseLinuxCategory(linuxOptions["category"] as String?),
       urgency: parseLinuxUrgency(linuxOptions["urgency"] as String?,
           fln.LinuxNotificationUrgency.normal)!,
-      timeout: linuxOptions["timeout_ms"] == null
+      timeout: linuxTimeout == null
           ? const fln.LinuxNotificationTimeout.systemDefault()
           : fln.LinuxNotificationTimeout.fromDuration(
-              Duration(milliseconds: linuxOptions["timeout_ms"] as int),
-            ),
-      resident: optionalBool(linuxOptions["resident"]) ?? false,
-      transient: optionalBool(linuxOptions["transient"]) ?? false,
-      suppressSound: optionalBool(linuxOptions["suppress_sound"]) ?? false,
+              Duration(milliseconds: linuxTimeout)),
+      resident: parseBool(linuxOptions["resident"], false)!,
+      transient: parseBool(linuxOptions["transient"], false)!,
+      suppressSound: parseBool(linuxOptions["suppress_sound"], false)!,
       actionKeyAsIconName:
-          optionalBool(linuxOptions["action_key_as_icon_name"]) ?? false,
+          parseBool(linuxOptions["action_key_as_icon_name"], false)!,
     ),
     windows: fln.WindowsNotificationDetails(
       actions: windowsActions,
@@ -201,16 +200,13 @@ Future<fln.NotificationDetails> parseNotificationDetails({
           : parseWindowsAudio(
               windowsAudio,
               fln.WindowsNotificationAudio.preset(
-                sound: fln.WindowsNotificationSound.defaultSound,
-              ),
+                  sound: fln.WindowsNotificationSound.defaultSound),
             ),
       duration: parseWindowsDuration(windowsOptions["duration"] as String?),
       scenario: parseWindowsScenario(windowsOptions["scenario"] as String?),
-      timestamp: windowsOptions["timestamp"] == null
+      timestamp: windowsTimestamp == null
           ? null
-          : DateTime.fromMillisecondsSinceEpoch(
-              windowsOptions["timestamp"] as int,
-            ),
+          : DateTime.fromMillisecondsSinceEpoch(windowsTimestamp),
       subtitle: windowsOptions["subtitle"] as String?,
       images: (windowsOptions["images"] as List?)
               ?.map((e) => fln.WindowsImage(Uri.parse("$e"), altText: ""))
@@ -240,13 +236,12 @@ Future<fln.NotificationDetails> parseNotificationDetails({
           ? null
           : Uri.parse(webOptions["image_url"] as String),
       lang: webOptions["lang"] as String?,
-      requireInteraction:
-          optionalBool(webOptions["require_interaction"]) ?? false,
-      isSilent: optionalBool(webOptions["is_silent"]) ?? false,
-      renotify: optionalBool(webOptions["renotify"]) ?? false,
-      timestamp: webOptions["timestamp"] == null
+      requireInteraction: parseBool(webOptions["require_interaction"], false)!,
+      isSilent: parseBool(webOptions["is_silent"], false)!,
+      renotify: parseBool(webOptions["renotify"], false)!,
+      timestamp: webTimestamp == null
           ? null
-          : DateTime.fromMillisecondsSinceEpoch(webOptions["timestamp"] as int),
+          : DateTime.fromMillisecondsSinceEpoch(webTimestamp),
     ),
   );
 }
@@ -285,19 +280,18 @@ fln.DarwinNotificationDetails parseDarwinDetails({
   return fln.DarwinNotificationDetails(
     categoryIdentifier:
         actions.isEmpty ? null : "$darwinNotificationCategoryPrefix$id",
-    presentAlert: optionalBool(o["present_alert"]),
-    presentBadge: optionalBool(o["present_badge"]),
-    presentSound: optionalBool(o["present_sound"]),
-    presentBanner: optionalBool(o["present_banner"]),
-    presentList: optionalBool(o["present_list"]),
+    presentAlert: parseBool(o["present_alert"]),
+    presentBadge: parseBool(o["present_badge"]),
+    presentSound: parseBool(o["present_sound"]),
+    presentBanner: parseBool(o["present_banner"]),
+    presentList: parseBool(o["present_list"]),
     sound: o["sound"] as String?,
-    badgeNumber: o["badge_number"] as int?,
+    badgeNumber: parseInt(o["badge_number"]),
     subtitle: o["subtitle"] as String?,
     threadIdentifier: o["thread_identifier"] as String?,
-    interruptionLevel: parseInterruptionLevel(
-      o["interruption_level"] as String?,
-    ),
-    criticalSoundVolume: (o["critical_sound_volume"] as num?)?.toDouble(),
+    interruptionLevel:
+        parseInterruptionLevel(o["interruption_level"] as String?),
+    criticalSoundVolume: parseDouble(o["critical_sound_volume"]),
     attachments: (o["attachments"] as List?)
             ?.map((e) => fln.DarwinNotificationAttachment("$e"))
             .toList() ??
@@ -479,6 +473,6 @@ fln.Importance? parseNotificationImportance(String? value,
 
 /// Converts the vibration pattern shared by notifications and channels.
 Int64List? parseNotificationVibrationPattern(Object? value) {
-  if (value is! List) return null;
-  return Int64List.fromList(value.map((e) => e as int).toList());
+  final pattern = parseList(value, (item) => parseInt(item)!);
+  return pattern == null ? null : Int64List.fromList(pattern);
 }

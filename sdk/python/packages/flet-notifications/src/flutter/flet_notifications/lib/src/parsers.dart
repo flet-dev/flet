@@ -1,5 +1,7 @@
 import 'dart:convert';
 
+import 'package:flet/flet.dart' show parseBool;
+
 class ParsedInput {
   const ParsedInput({
     this.label = "",
@@ -57,9 +59,9 @@ List<ParsedAction> parseActions(Object? raw) {
     return ParsedAction(
       id: id,
       title: title,
-      destructive: optionalBool(entry["destructive"]) ?? false,
-      foreground: optionalBool(entry["foreground"]) ?? true,
-      cancelNotification: optionalBool(entry["cancel_notification"]) ?? true,
+      destructive: parseBool(entry["destructive"], false)!,
+      foreground: parseBool(entry["foreground"], true)!,
+      cancelNotification: parseBool(entry["cancel_notification"], true)!,
       input: parseInput(entry["input"]),
     );
   }).toList();
@@ -76,16 +78,10 @@ ParsedInput? parseInput(Object? raw) {
   return ParsedInput(
     label: raw["label"] is String ? raw["label"] as String : "",
     choices: choices is List ? choices.cast<String>() : const [],
-    allowFreeFormInput: optionalBool(raw["allow_free_form_input"]) ?? true,
+    allowFreeFormInput: parseBool(raw["allow_free_form_input"], true)!,
     allowedMimeTypes:
         mimeTypes is List ? mimeTypes.cast<String>().toSet() : const {},
   );
-}
-
-bool? optionalBool(Object? value) {
-  if (value == null) return null;
-  if (value is bool) return value;
-  throw const FormatException("expected a boolean");
 }
 
 /// A parsed Android icon/image source (exactly one set).
@@ -223,7 +219,7 @@ ParsedStyle? parseStyle(Object? raw) {
             ? messages.map(parseMessage).whereType<ParsedMessage>().toList()
             : const [],
         conversationTitle: raw["conversation_title"] as String?,
-        groupConversation: optionalBool(raw["group_conversation"]) ?? false,
+        groupConversation: parseBool(raw["group_conversation"], false)!,
       );
     default:
       throw FormatException("unknown style type: $type");
@@ -272,8 +268,8 @@ ParsedPerson? parsePerson(Object? raw) {
   return ParsedPerson(
     name: name,
     key: raw["key"] as String?,
-    bot: optionalBool(raw["bot"]) ?? false,
-    important: optionalBool(raw["important"]) ?? false,
+    bot: parseBool(raw["bot"], false)!,
+    important: parseBool(raw["important"], false)!,
     uri: raw["uri"] as String?,
     icon: parseIcon(raw["icon"]),
   );
