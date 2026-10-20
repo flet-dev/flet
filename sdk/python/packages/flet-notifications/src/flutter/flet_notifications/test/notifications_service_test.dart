@@ -15,6 +15,9 @@ class _RecordingAndroid extends fln.AndroidFlutterLocalNotificationsPlugin {
   final List<Map<String, Object?>> shown = [];
   final List<fln.AndroidNotificationChannel> channelsCreated = [];
   final List<Map<String, Object?>> periodicCalls = [];
+  List<fln.PendingNotificationRequest> pending = [];
+  List<fln.ActiveNotification> active = [];
+  bool failQueries = false;
   int permissionRequests = 0;
   bool permissionResult = true;
   int foregroundStarts = 0;
@@ -46,6 +49,19 @@ class _RecordingAndroid extends fln.AndroidFlutterLocalNotificationsPlugin {
   Future<bool?> requestNotificationsPermission() async {
     permissionRequests++;
     return permissionResult;
+  }
+
+  @override
+  Future<List<fln.PendingNotificationRequest>>
+      pendingNotificationRequests() async {
+    if (failQueries) throw StateError("Query unavailable");
+    return pending;
+  }
+
+  @override
+  Future<List<fln.ActiveNotification>> getActiveNotifications() async {
+    if (failQueries) throw StateError("Query unavailable");
+    return active;
   }
 
   @override
@@ -157,6 +173,64 @@ void main() {
   setUp(() {
     plugin = _RecordingAndroid();
     fln.FlutterLocalNotificationsPlatform.instance = plugin;
+  });
+
+  test("queries return native collections with normalized unavailable fields",
+      () async {
+    plugin.pending = [
+      const fln.PendingNotificationRequest(1, "Title", "Body", "payload"),
+      const fln.PendingNotificationRequest(2, null, null, null),
+    ];
+    plugin.active = [
+      const fln.ActiveNotification(
+        id: 1,
+        channelId: "updates",
+        groupKey: "messages",
+        tag: "reply",
+        title: "Title",
+        body: "Body",
+        payload: "payload",
+        bigText: "Expanded",
+      ),
+      const fln.ActiveNotification(),
+    ];
+    final service = _makeService();
+    expect(await service.invokeMethod("get_pending"), [
+      {"id": 1, "title": "Title", "body": "Body", "payload": "payload"},
+      {"id": 2, "title": "", "body": "", "payload": ""},
+    ]);
+    expect(await service.invokeMethod("get_active"), [
+      {
+        "id": 1,
+        "channel_id": "updates",
+        "group_key": "messages",
+        "tag": "reply",
+        "title": "Title",
+        "body": "Body",
+        "payload": "payload",
+        "big_text": "Expanded"
+      },
+      {
+        "id": 0,
+        "channel_id": "",
+        "group_key": "",
+        "tag": "",
+        "title": "",
+        "body": "",
+        "payload": "",
+        "big_text": ""
+      },
+    ]);
+    plugin.pending = [];
+    plugin.active = [];
+    for (final method in ["get_pending", "get_active"]) {
+      expect(await service.invokeMethod(method), isEmpty);
+    }
+    plugin.failQueries = true;
+    for (final method in ["get_pending", "get_active"]) {
+      expect(await service.invokeMethod(method),
+          startsWith("error:query_failed:"));
+    }
   });
 
   test("periodic intervals select presets or custom durations", () async {

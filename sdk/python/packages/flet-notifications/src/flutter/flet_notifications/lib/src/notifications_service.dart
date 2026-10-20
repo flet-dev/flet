@@ -432,21 +432,17 @@ class LocalNotificationsService extends FletService {
     }
   }
 
-  Future<String> _getPending() async {
+  Future<Object> _getPending() async {
     try {
       final pending = await _plugin!.pendingNotificationRequests();
-      return jsonEncode(
-        pending
-            .map(
-              (p) => {
+      return pending
+          .map((p) => {
                 "id": p.id,
-                "title": p.title,
-                "body": p.body,
-                "payload": p.payload,
-              },
-            )
-            .toList(),
-      );
+                "title": p.title ?? "",
+                "body": p.body ?? "",
+                "payload": p.payload ?? "",
+              })
+          .toList();
     } catch (e) {
       return "error:query_failed:$e";
     }
@@ -798,25 +794,21 @@ class LocalNotificationsService extends FletService {
     return await android?.hasNotificationPolicyAccess() ?? false;
   }
 
-  Future<String> _getActive() async {
+  Future<Object> _getActive() async {
     try {
       final active = await _plugin?.getActiveNotifications() ?? const [];
-      return jsonEncode(
-        active
-            .map(
-              (a) => {
-                "id": a.id,
-                "channel_id": a.channelId,
-                "group_key": a.groupKey,
-                "tag": a.tag,
-                "title": a.title,
-                "body": a.body,
-                "payload": a.payload,
-                "big_text": a.bigText,
-              },
-            )
-            .toList(),
-      );
+      return active
+          .map((a) => {
+                "id": a.id ?? 0,
+                "channel_id": a.channelId ?? "",
+                "group_key": a.groupKey ?? "",
+                "tag": a.tag ?? "",
+                "title": a.title ?? "",
+                "body": a.body ?? "",
+                "payload": a.payload ?? "",
+                "big_text": a.bigText ?? "",
+              })
+          .toList();
     } catch (e) {
       return "error:query_failed:$e";
     }

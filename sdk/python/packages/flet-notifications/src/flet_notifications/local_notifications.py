@@ -668,31 +668,20 @@ class LocalNotifications(ft.Service):
         """
         result = await self._invoke_method("get_pending")
         check_result(result)
-        return self._parse_pending(self._as_list(result))
-
-    @staticmethod
-    def _parse_pending(result: object) -> list[PendingNotification]:
         if not isinstance(result, list):
-            return []
-        pending = []
-        for entry in result:
-            if not isinstance(entry, dict):
-                continue
-            pending.append(
-                PendingNotification(
-                    id=int(entry.get("id", 0)),
-                    title=str(entry.get("title") or ""),
-                    body=str(entry.get("body") or ""),
-                    payload=str(entry.get("payload") or ""),
-                )
+            raise NotificationError(
+                "query_failed", "Expected a list of pending notifications"
             )
-        return pending
+        return [
+            from_dict(PendingNotification, {"id": 0, **entry})
+            for entry in result
+            if isinstance(entry, dict)
+        ]
 
     @staticmethod
     def _as_list(result: object) -> list:
         """
-        Decode a query result: Dart returns decoded collections or a JSON string \
-        depending on the platform (MsgPack vs method-channel transport).
+        Decode a channel query result supplied as a collection or JSON string.
         """
         if isinstance(result, str):
             try:
@@ -989,20 +978,14 @@ class LocalNotifications(ft.Service):
         """
         result = await self._invoke_method("get_active")
         check_result(result)
-        entries = self._as_list(result)
-        return [
-            ActiveNotification(
-                id=int(e.get("id", 0)),
-                channel_id=str(e.get("channel_id") or ""),
-                group_key=str(e.get("group_key") or ""),
-                tag=str(e.get("tag") or ""),
-                title=str(e.get("title") or ""),
-                body=str(e.get("body") or ""),
-                payload=str(e.get("payload") or ""),
-                big_text=str(e.get("big_text") or ""),
+        if not isinstance(result, list):
+            raise NotificationError(
+                "query_failed", "Expected a list of active notifications"
             )
-            for e in entries
-            if isinstance(e, dict)
+        return [
+            from_dict(ActiveNotification, entry)
+            for entry in result
+            if isinstance(entry, dict)
         ]
 
     async def get_notification_app_launch_details(self) -> LaunchDetails:
