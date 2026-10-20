@@ -1,4 +1,3 @@
-import json
 from datetime import datetime, timedelta
 
 import flet as ft
@@ -678,27 +677,6 @@ class LocalNotifications(ft.Service):
             if isinstance(entry, dict)
         ]
 
-    @staticmethod
-    def _as_list(result: object) -> list:
-        """
-        Decode a channel query result supplied as a collection or JSON string.
-        """
-        if isinstance(result, str):
-            try:
-                result = json.loads(result)
-            except json.JSONDecodeError as e:
-                raise NotificationError("query_failed", str(e)) from e
-        return result if isinstance(result, list) else []
-
-    @staticmethod
-    def _as_dict(result: object) -> dict:
-        if isinstance(result, str):
-            try:
-                result = json.loads(result)
-            except json.JSONDecodeError as e:
-                raise NotificationError("query_failed", str(e)) from e
-        return result if isinstance(result, dict) else {}
-
     async def can_schedule_exact_notifications(self) -> bool:
         """
         Check Android's authorization to schedule exact alarms.
@@ -797,9 +775,13 @@ class LocalNotifications(ft.Service):
         """
         result = await self._invoke_method("get_notification_channels")
         check_result(result)
+        if not isinstance(result, list):
+            raise NotificationError(
+                "query_failed", "Expected a list of notification channels"
+            )
         return [
-            NotificationChannel.from_dict(entry)
-            for entry in self._as_list(result)
+            from_dict(NotificationChannel, entry)
+            for entry in result
             if isinstance(entry, dict)
         ]
 
@@ -1010,7 +992,10 @@ class LocalNotifications(ft.Service):
         """
         result = await self._invoke_method("get_launch_details")
         check_result(result)
-        result = self._as_dict(result)
+        if not isinstance(result, dict):
+            raise NotificationError(
+                "query_failed", "Expected notification launch details"
+            )
         launched = bool(result.get("did_notification_launch_app", False))
         notification = result.get("notification")
         if not isinstance(notification, dict):
@@ -1019,7 +1004,13 @@ class LocalNotifications(ft.Service):
             did_notification_launch_app=launched,
             notification=from_dict(
                 NotificationEvent,
-                {"control": self, "name": "tap", **notification},
+                {
+                    **notification,
+                    "control": self,
+                    "name": {"action": "action", "dismissed": "dismiss"}.get(
+                        notification.get("response_type"), "tap"
+                    ),
+                },
             ),
         )
 

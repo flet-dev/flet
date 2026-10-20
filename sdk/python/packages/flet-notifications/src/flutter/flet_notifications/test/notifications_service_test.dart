@@ -1,4 +1,5 @@
 import 'dart:ui' show Color;
+import 'dart:typed_data';
 
 import 'package:flet/flet.dart';
 import 'package:flet_notifications/src/notifications_service.dart';
@@ -17,6 +18,8 @@ class _RecordingAndroid extends fln.AndroidFlutterLocalNotificationsPlugin {
   final List<Map<String, Object?>> periodicCalls = [];
   List<fln.PendingNotificationRequest> pending = [];
   List<fln.ActiveNotification> active = [];
+  List<fln.AndroidNotificationChannel>? queriedChannels = [];
+  fln.NotificationAppLaunchDetails? launchDetails;
   bool failQueries = false;
   int permissionRequests = 0;
   bool permissionResult = true;
@@ -62,6 +65,20 @@ class _RecordingAndroid extends fln.AndroidFlutterLocalNotificationsPlugin {
   Future<List<fln.ActiveNotification>> getActiveNotifications() async {
     if (failQueries) throw StateError("Query unavailable");
     return active;
+  }
+
+  @override
+  Future<List<fln.AndroidNotificationChannel>?>
+      getNotificationChannels() async {
+    if (failQueries) throw StateError("Query unavailable");
+    return queriedChannels;
+  }
+
+  @override
+  Future<fln.NotificationAppLaunchDetails?>
+      getNotificationAppLaunchDetails() async {
+    if (failQueries) throw StateError("Query unavailable");
+    return launchDetails;
   }
 
   @override
@@ -231,6 +248,80 @@ void main() {
       expect(await service.invokeMethod(method),
           startsWith("error:query_failed:"));
     }
+  });
+
+  test("channel and launch queries return native collections", () async {
+    plugin.queriedChannels = [
+      fln.AndroidNotificationChannel(
+        "alerts",
+        "Alerts",
+        description: "Important updates",
+        groupId: "updates",
+        importance: fln.Importance.high,
+        bypassDnd: true,
+        playSound: false,
+        sound: const fln.RawResourceAndroidNotificationSound("chime"),
+        enableVibration: false,
+        vibrationPattern: Int64List.fromList([0, 200, 100, 200]),
+        showBadge: false,
+        enableLights: true,
+        ledColor: const Color(0x80ff0000),
+      ),
+    ];
+    final service = _makeService();
+    expect(await service.invokeMethod("get_notification_channels"), [
+      {
+        "id": "alerts",
+        "name": "Alerts",
+        "description": "Important updates",
+        "group_id": "updates",
+        "importance": "high",
+        "bypass_dnd": true,
+        "play_sound": false,
+        "sound": "chime",
+        "enable_vibration": false,
+        "vibration_pattern": [0, 200, 100, 200],
+        "show_badge": false,
+        "enable_lights": true,
+        "led_color": "#80ff0000"
+      },
+    ]);
+    plugin.queriedChannels = null;
+    expect(await service.invokeMethod("get_notification_channels"), isEmpty);
+
+    expect(await service.invokeMethod("get_launch_details"),
+        {"did_notification_launch_app": false});
+    plugin.launchDetails = const fln.NotificationAppLaunchDetails(true);
+    expect(await service.invokeMethod("get_launch_details"),
+        {"did_notification_launch_app": true, "notification": null});
+    plugin.launchDetails = const fln.NotificationAppLaunchDetails(
+      true,
+      notificationResponse: fln.NotificationResponse(
+        id: 9,
+        actionId: "reply",
+        payload: "deep",
+        input: "Hello",
+        data: {"reply": "Hello"},
+        notificationResponseType:
+            fln.NotificationResponseType.selectedNotificationAction,
+      ),
+    );
+    expect(await service.invokeMethod("get_launch_details"), {
+      "did_notification_launch_app": true,
+      "notification": {
+        "id": 9,
+        "action_id": "reply",
+        "payload": "deep",
+        "input": "Hello",
+        "response_type": "action",
+        "data": {"reply": "Hello"}
+      },
+    });
+    plugin.failQueries = true;
+    expect(await service.invokeMethod("get_notification_channels"),
+        startsWith("error:channel_failed:"));
+    expect(await service.invokeMethod("get_launch_details"),
+        startsWith("error:query_failed:"));
   });
 
   test("periodic intervals select presets or custom durations", () async {
@@ -715,6 +806,7 @@ void main() {
     expect(details.threadIdentifier, "thread1");
     expect(details.interruptionLevel, fln.InterruptionLevel.passive);
     expect(details.sound, "chime");
+    expect(await service.invokeMethod("get_notification_channels"), isEmpty);
   });
 
   test(

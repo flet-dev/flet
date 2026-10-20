@@ -123,35 +123,3 @@ class NotificationChannel:
             raise ValueError("channel id is required")
         if not self.name:
             raise ValueError("channel name is required")
-
-    @classmethod
-    def from_dict(cls, data: dict) -> "NotificationChannel":
-        """
-        Construct a channel from a native channel-query result.
-
-        Args:
-            data: Mapping returned by the bridge, accepting `groupId` or `group_id`
-                for the channel's group and serialized
-                :class:`flet_notifications.Importance` values.
-
-        Returns:
-            Channel populated from the mapping, with defaults for absent fields.
-
-        Raises:
-            ValueError: If the ID or name is empty, or the importance is unknown.
-        """
-        return cls(
-            id=str(data.get("id", "")),
-            name=str(data.get("name", "")),
-            description=str(data.get("description") or ""),
-            group_id=data.get("groupId") or data.get("group_id"),
-            importance=Importance(data.get("importance", "defaultImportance")),
-            bypass_dnd=bool(data.get("bypass_dnd", False)),
-            play_sound=bool(data.get("play_sound", True)),
-            sound=data.get("sound"),
-            enable_vibration=bool(data.get("enable_vibration", True)),
-            vibration_pattern=data.get("vibration_pattern"),
-            show_badge=bool(data.get("show_badge", True)),
-            enable_lights=bool(data.get("enable_lights", False)),
-            led_color=data.get("led_color"),
-        )

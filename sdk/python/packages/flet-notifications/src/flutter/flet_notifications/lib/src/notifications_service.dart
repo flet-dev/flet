@@ -1,5 +1,4 @@
 import 'dart:async';
-import 'dart:convert';
 
 import 'package:flet/flet.dart';
 import 'package:flutter/foundation.dart' show debugPrint, kIsWeb;
@@ -636,34 +635,32 @@ class LocalNotificationsService extends FletService {
     return "ok";
   }
 
-  Future<String> _getChannels() async {
+  Future<Object> _getChannels() async {
     final android = _androidPlugin;
-    if (android == null) return "[]";
+    if (android == null) return <Map<String, Object?>>[];
     try {
       final channels = await android.getNotificationChannels() ?? const [];
-      return jsonEncode(
-        channels
-            .map(
-              (c) => {
-                "id": c.id,
-                "name": c.name,
-                "description": c.description ?? "",
-                "groupId": c.groupId,
-                "importance": c.importance.name,
-                "bypass_dnd": c.bypassDnd,
-                "play_sound": c.playSound,
-                "sound": c.sound?.sound,
-                "enable_vibration": c.enableVibration,
-                "vibration_pattern": c.vibrationPattern?.toList(),
-                "show_badge": c.showBadge,
-                "enable_lights": c.enableLights,
-                "led_color": c.ledColor == null
-                    ? null
-                    : "#${c.ledColor!.toARGB32().toRadixString(16).padLeft(8, "0")}",
-              },
-            )
-            .toList(),
-      );
+      return channels
+          .map(
+            (c) => {
+              "id": c.id,
+              "name": c.name,
+              "description": c.description ?? "",
+              "group_id": c.groupId,
+              "importance": c.importance.name,
+              "bypass_dnd": c.bypassDnd,
+              "play_sound": c.playSound,
+              "sound": c.sound?.sound,
+              "enable_vibration": c.enableVibration,
+              "vibration_pattern": c.vibrationPattern?.toList(),
+              "show_badge": c.showBadge,
+              "enable_lights": c.enableLights,
+              "led_color": c.ledColor == null
+                  ? null
+                  : "#${c.ledColor!.toARGB32().toRadixString(16).padLeft(8, "0")}",
+            },
+          )
+          .toList();
     } catch (e) {
       return "error:channel_failed:$e";
     }
@@ -814,17 +811,17 @@ class LocalNotificationsService extends FletService {
     }
   }
 
-  Future<String> _getLaunchDetails() async {
+  Future<Object> _getLaunchDetails() async {
     try {
       final details = await _plugin?.getNotificationAppLaunchDetails();
       if (details == null || details.didNotificationLaunchApp != true) {
-        return jsonEncode({"did_notification_launch_app": false});
+        return {"did_notification_launch_app": false};
       }
       final response = details.notificationResponse;
-      return jsonEncode({
+      return {
         "did_notification_launch_app": true,
         "notification": response == null ? null : responseToEvent(response),
-      });
+      };
     } catch (e) {
       return "error:query_failed:$e";
     }

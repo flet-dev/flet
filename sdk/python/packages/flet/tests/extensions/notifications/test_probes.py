@@ -1,12 +1,11 @@
 """Regression tests for native notification query results."""
 
-import json
-
 import pytest
 
 from flet_notifications import (
     ActiveNotification,
     Importance,
+    LaunchDetails,
     LocalNotifications,
     NotificationError,
     PendingNotification,
@@ -74,59 +73,107 @@ async def test_get_active_hydrates_native_collection():
 
 
 @pytest.mark.asyncio
-async def test_get_channels_decodes_json_string():
+async def test_get_channels_hydrates_native_collection():
+    """Channels preserve enums, nulls, explicit false flags, and ARGB colors."""
     from flet_notifications import NotificationChannel
 
     service = LocalNotifications()
 
     async def invoke(method_name, arguments=None, timeout=None):
-        return json.dumps(
-            [
-                {
-                    "id": "alerts",
-                    "name": "Alerts",
-                    "groupId": "updates",
-                    "importance": "high",
-                }
-            ]
-        )
+        return [
+            {
+                "id": "alerts",
+                "name": "Alerts",
+                "group_id": "updates",
+                "importance": "high",
+                "description": "Important updates",
+                "bypass_dnd": True,
+                "play_sound": False,
+                "sound": "chime",
+                "enable_vibration": False,
+                "vibration_pattern": [0, 200, 100, 200],
+                "show_badge": False,
+                "enable_lights": True,
+                "led_color": "#80ff0000",
+            },
+            {"id": "minimal", "name": "Minimal"},
+        ]
 
     service._invoke_method = invoke
     channels = await service.get_notification_channels()
     assert channels == [
         NotificationChannel(
-            id="alerts", name="Alerts", group_id="updates", importance=Importance.HIGH
-        )
+            id="alerts",
+            name="Alerts",
+            group_id="updates",
+            importance=Importance.HIGH,
+            description="Important updates",
+            bypass_dnd=True,
+            play_sound=False,
+            sound="chime",
+            enable_vibration=False,
+            vibration_pattern=[0, 200, 100, 200],
+            show_badge=False,
+            enable_lights=True,
+            led_color="#80ff0000",
+        ),
+        NotificationChannel(id="minimal", name="Minimal"),
     ]
 
 
 @pytest.mark.asyncio
-async def test_launch_details_decodes_json_string():
+async def test_launch_details_hydrates_action_event():
+    """Launch responses retain event context, action identity, and Windows inputs."""
     service = LocalNotifications()
 
     async def invoke(method_name, arguments=None, timeout=None):
-        return json.dumps(
-            {
-                "did_notification_launch_app": True,
-                "notification": {
-                    "id": 9,
-                    "action_id": "open",
-                    "payload": "deep",
-                    "input": "",
-                    "response_type": "action",
-                },
-            }
-        )
+        return {
+            "did_notification_launch_app": True,
+            "notification": {
+                "id": 9,
+                "action_id": "reply",
+                "payload": "deep",
+                "input": "Hello",
+                "data": {"reply": "Hello"},
+                "response_type": "action",
+            },
+        }
 
     service._invoke_method = invoke
     details = await service.get_notification_app_launch_details()
     assert details.did_notification_launch_app is True
     assert details.notification is not None
     assert details.notification.payload == "deep"
+    assert details.notification.control is service
+    assert details.notification.name == "action"
+    assert details.notification.action_id == "reply"
+    assert details.notification.input == "Hello"
+    assert details.notification.data == {"reply": "Hello"}
+
+
+@pytest.mark.parametrize("launched", [False, True])
+@pytest.mark.asyncio
+async def test_launch_details_without_response(launched):
+    """A launch flag can be returned without an associated response."""
+    service = LocalNotifications()
+
+    async def invoke(method_name, arguments=None, timeout=None):
+        return {"did_notification_launch_app": launched, "notification": None}
+
+    service._invoke_method = invoke
+    assert await service.get_notification_app_launch_details() == LaunchDetails(
+        did_notification_launch_app=launched
+    )
 
 
 @pytest.mark.parametrize(
-    "method", ["get_pending_notifications", "get_active_notifications"]
+    "method",
+    [
+        "get_pending_notifications",
+        "get_active_notifications",
+        "get_notification_channels",
+        "get_notification_app_launch_details",
+    ],
 )
 @pytest.mark.asyncio
 async def test_malformed_query_result_raises_query_failed(method):
@@ -143,7 +190,13 @@ async def test_malformed_query_result_raises_query_failed(method):
 
 
 @pytest.mark.parametrize(
-    "method", ["get_pending_notifications", "get_active_notifications"]
+    "method",
+    [
+        "get_pending_notifications",
+        "get_active_notifications",
+        "get_notification_channels",
+        "get_notification_app_launch_details",
+    ],
 )
 @pytest.mark.asyncio
 async def test_empty_query_result_and_native_failure(method):
@@ -151,10 +204,13 @@ async def test_empty_query_result_and_native_failure(method):
     service = LocalNotifications()
 
     async def empty(method_name, arguments=None, timeout=None):
-        return []
+        return {} if method == "get_notification_app_launch_details" else []
 
     service._invoke_method = empty
-    assert await getattr(service, method)() == []
+    expected = (
+        LaunchDetails() if method == "get_notification_app_launch_details" else []
+    )
+    assert await getattr(service, method)() == expected
 
     async def failure(method_name, arguments=None, timeout=None):
         return "error:query_failed:permission denied"
