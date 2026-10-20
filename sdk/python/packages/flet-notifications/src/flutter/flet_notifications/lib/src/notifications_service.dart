@@ -88,10 +88,7 @@ class LocalNotificationsService extends FletService {
     }
   }
 
-  fln.InitializationSettings _buildInitializationSettings({
-    List<fln.DarwinNotificationCategory> darwinCategories =
-        const <fln.DarwinNotificationCategory>[],
-  }) {
+  fln.InitializationSettings _buildInitializationSettings() {
     final defaultIcon =
         control.getString("default_icon", "@mipmap/ic_launcher")!;
     final darwin = fln.DarwinInitializationSettings(
@@ -103,7 +100,8 @@ class LocalNotificationsService extends FletService {
           control.getBool("request_badge_permission", true)!,
       requestCriticalPermission:
           control.getBool("request_critical_permission", false)!,
-      notificationCategories: darwinCategories,
+      notificationCategories:
+          _darwinCategories.values.expand((categories) => categories).toList(),
     );
     return fln.InitializationSettings(
       android: fln.AndroidInitializationSettings(defaultIcon),
@@ -533,11 +531,8 @@ class LocalNotificationsService extends FletService {
         actions: categoryActions,
       ),
     ];
-    final allCategories =
-        _darwinCategories.values.expand((categories) => categories).toList();
-
     await _plugin?.initialize(
-      settings: _buildInitializationSettings(darwinCategories: allCategories),
+      settings: _buildInitializationSettings(),
       onDidReceiveNotificationResponse: _handleResponse,
       onDidReceiveBackgroundNotificationResponse: notificationTapBackground,
     );

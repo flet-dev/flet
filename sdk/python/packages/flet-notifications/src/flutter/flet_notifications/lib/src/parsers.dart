@@ -161,7 +161,7 @@ class ParsedStyle {
   final bool groupConversation;
 }
 
-/// Parses the optional ``style`` argument of a show/schedule invoke.
+/// Parses the optional `style` argument of a show/schedule invoke.
 ParsedStyle? parseStyle(Object? raw) {
   if (raw == null) return null;
   if (raw is! Map) {

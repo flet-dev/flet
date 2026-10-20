@@ -112,6 +112,7 @@ class _RecordingAndroid extends fln.AndroidFlutterLocalNotificationsPlugin {
 /// Fake macOS platform implementation recording Darwin notification details.
 class _FakeMacOsPlugin extends fln.MacOSFlutterLocalNotificationsPlugin {
   fln.DarwinNotificationDetails? shownDarwin;
+  final List<fln.DarwinInitializationSettings> initializations = [];
 
   @override
   Future<bool?> initialize({
@@ -119,6 +120,7 @@ class _FakeMacOsPlugin extends fln.MacOSFlutterLocalNotificationsPlugin {
     fln.DidReceiveNotificationResponseCallback?
         onDidReceiveNotificationResponse,
   }) async {
+    initializations.add(settings);
     return true;
   }
 
@@ -556,6 +558,49 @@ void main() {
       expect(details.additionalFlags!.toList(), [mask]);
     });
   }
+
+  test("reinitialization preserves all registered Apple action categories",
+      () async {
+    debugDefaultTargetPlatformOverride = TargetPlatform.macOS;
+    addTearDown(() => debugDefaultTargetPlatformOverride = null);
+    final macos = _FakeMacOsPlugin();
+    fln.FlutterLocalNotificationsPlatform.instance = macos;
+    final service = _makeService();
+    for (final id in [1, 2]) {
+      expect(
+          await service.invokeMethod("show", {
+            "id": id,
+            "actions": [
+              {"id": "open$id", "title": "Open $id"},
+            ],
+          }),
+          "ok");
+    }
+    final categories = macos.initializations.last.notificationCategories;
+    expect(categories, hasLength(2));
+    expect(
+        categories.map((c) => c.actions.single.identifier), ["open1", "open2"]);
+
+    expect(await service.invokeMethod("initialize"), "ok");
+    expect(macos.initializations.last.notificationCategories, categories);
+
+    expect(
+        await service.invokeMethod("show", {
+          "id": 3,
+          "actions": [
+            {
+              "id": "reply",
+              "title": "Reply",
+              "input": {"label": "Message"}
+            },
+          ],
+        }),
+        "ok");
+    final updated = macos.initializations.last.notificationCategories;
+    expect(updated.map((c) => c.actions.single.identifier),
+        ["open1", "open2", "reply"]);
+    expect(updated.last.actions.single.buttonTitle, "Message");
+  });
 
   test("show applies DarwinOptions on the macOS platform", () async {
     debugDefaultTargetPlatformOverride = TargetPlatform.macOS;

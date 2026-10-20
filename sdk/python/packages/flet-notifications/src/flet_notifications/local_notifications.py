@@ -225,12 +225,6 @@ class LocalNotifications(ft.Service):
         changed initialization properties. Initialization can request Apple permissions
         according to the service's permission flags.
 
-        Note:
-            Explicit reinitialization currently supplies no previously accumulated Apple
-            action categories. Avoid using it just to refresh notifications after
-            creating action buttons; posting notifications handles category registration
-            automatically.
-
         Raises:
             NotificationError: If the bridge reports initialization or operation
                 failure.

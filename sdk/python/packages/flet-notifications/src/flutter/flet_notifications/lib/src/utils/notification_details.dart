@@ -241,7 +241,7 @@ Future<fln.NotificationDetails> parseNotificationDetails({
   );
 }
 
-/// Extracts one platform's options dict from the ``options`` payload.
+/// Extracts one platform's options dict from the `options` payload.
 Map<dynamic, dynamic>? _platformOptions(Map? details, String platform) {
   final options = details?["options"];
   if (options is! Map) return null;
