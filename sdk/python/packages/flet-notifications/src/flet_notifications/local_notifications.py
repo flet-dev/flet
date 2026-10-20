@@ -1,8 +1,3 @@
-# NOTE: deliberately no `from __future__ import annotations` — Flet's event
-# resolver (`get_event_field_type`) evaluates class-level handler
-# annotations as real objects and raises on PEP 563 strings, which would
-# silently break on_tap/on_action/on_dismissed dispatch.
-
 import json
 from datetime import datetime, timedelta
 
