@@ -2,6 +2,8 @@ import 'dart:ui' show Color;
 
 import 'package:flet/flet.dart';
 import 'package:flet_notifications/src/notifications_service.dart';
+import 'package:flet_notifications/src/utils/notification_details.dart'
+    as notification_details;
 import 'package:flutter/foundation.dart'
     show debugDefaultTargetPlatformOverride, TargetPlatform;
 import 'package:flutter_local_notifications/flutter_local_notifications.dart'
@@ -263,6 +265,66 @@ void main() {
     }
   });
 
+  test("Linux timeouts accept duration maps and retain sentinel values",
+      () async {
+    final cases = <(Object?, int)>[
+      ({"seconds": 5}, 5000),
+      (5000, 5000),
+      (0, 0),
+      (-1, -1),
+      (null, -1),
+    ];
+    for (final (timeout, expected) in cases) {
+      final details = await notification_details.parseNotificationDetails(
+        id: 1,
+        actions: const [],
+        details: {
+          "options": {
+            "linux": {"timeout": timeout}
+          }
+        },
+        registerDarwinCategories: (_, __) async {},
+      );
+      expect(details.linux!.timeout.value, expected);
+    }
+  });
+
+  test("Android durations convert maps and integer milliseconds", () async {
+    final cases = <(Map<String, dynamic>, int, int, int)>[
+      (
+        {
+          "timeout_after": {"minutes": 1},
+          "led_on_duration": {"milliseconds": 100},
+          "led_off_duration": {"milliseconds": 200},
+        },
+        60000,
+        100,
+        200
+      ),
+      (
+        {"timeout_after": 60000, "led_on_duration": 100, "led_off_duration": 200},
+        60000,
+        100,
+        200
+      ),
+      ({"timeout_after": 0, "led_on_duration": 0, "led_off_duration": 0}, 0, 0, 0),
+    ];
+    final service = _makeService();
+    for (final (options, timeout, on, off) in cases) {
+      expect(
+          await service.invokeMethod("show", {
+            "id": 1,
+            "options": {"android": options},
+          }),
+          "ok");
+      final details =
+          plugin.shown.last["details"] as fln.AndroidNotificationDetails;
+      expect(details.timeoutAfter, timeout);
+      expect(details.ledOnMs, on);
+      expect(details.ledOffMs, off);
+    }
+  });
+
   test("show uses Flet primitive parsers for notification values", () async {
     final result = await _makeService().invokeMethod("show", {
       "id": "7",
@@ -504,8 +566,8 @@ void main() {
             "color": entry.key,
             "led_color": entry.key,
             "enable_lights": true,
-            "led_on_ms": 100,
-            "led_off_ms": 200,
+            "led_on_duration": 100,
+            "led_off_duration": 200,
           },
         },
       });

@@ -394,11 +394,12 @@ class AndroidOptions:
     `None` leaves the choice to Android. See :class:`flet_notifications.Visibility`.
     """
 
-    timeout_after: int | None = None
+    timeout_after: ft.DurationValue | None = None
     """
-    Milliseconds after posting before Android cancels the notification.
+    Time after posting before Android cancels the notification.
 
-    `None` does not request automatic cancellation after a timeout.
+    Accepts a :class:`~flet.Duration` or integer milliseconds. `None` does not request
+    automatic cancellation after a timeout.
     """
 
     category: AndroidNotificationCategory | None = None
@@ -474,14 +475,24 @@ class AndroidOptions:
 
     On Android 8.0+, fixed at channel creation. Accepts concrete Flet colors;
     theme-dependent colors cannot be resolved by this headless service. Before Android
-    8.0, also set :attr:`led_on_ms` and :attr:`led_off_ms`.
+    8.0, also set :attr:`led_on_duration` and :attr:`led_off_duration`.
     """
 
-    led_on_ms: int | None = None
-    """LED on-time in milliseconds, used only before Android 8.0."""
+    led_on_duration: ft.DurationValue | None = None
+    """
+    Time the notification LED remains on during each blink.
 
-    led_off_ms: int | None = None
-    """LED off-time in milliseconds, used only before Android 8.0."""
+    Accepts a :class:`~flet.Duration` or integer milliseconds. Used only before Android
+    8.0; on newer versions, the channel and device control the blinking pattern.
+    """
+
+    led_off_duration: ft.DurationValue | None = None
+    """
+    Time the notification LED remains off between blinks.
+
+    Accepts a :class:`~flet.Duration` or integer milliseconds. Used only before Android
+    8.0; on newer versions, the channel and device control the blinking pattern.
+    """
 
 
 @ft.value(kw_only=True)
@@ -619,12 +630,14 @@ class LinuxOptions:
     urgency: LinuxUrgency | None = None
     """Urgency hint."""
 
-    timeout_ms: int | None = None
+    timeout: ft.DurationValue | None = None
     """
-    Requested time to keep the notification visible, in milliseconds.
+    Requested time to keep the notification visible.
 
-    `None` or `-1` uses the server's default; `0` requests no expiry. The server can
-    ignore this hint or apply its own policy, especially for critical notifications.
+    Accepts a :class:`~flet.Duration` or an integer number of milliseconds. For example,
+    `ft.Duration(seconds=5)` requests five seconds. `None` or `-1` uses the notification
+    server's timeout; `0` requests no expiry. The server can ignore this hint or apply
+    its own policy, especially for critical notifications.
     """
 
     resident: bool | None = None

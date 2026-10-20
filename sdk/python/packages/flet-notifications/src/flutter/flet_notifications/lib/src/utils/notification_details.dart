@@ -95,7 +95,7 @@ Future<fln.NotificationDetails> parseNotificationDetails({
   final windowsOptions = _platformOptions(details, "windows") ?? const {};
   final windowsAudio = windowsOptions["audio"] as String?;
   final additionalFlags = parseInt(androidOptions["additional_flags"]);
-  final linuxTimeout = parseInt(linuxOptions["timeout_ms"]);
+  final linuxTimeout = parseDuration(linuxOptions["timeout"]);
   final windowsTimestamp = parseInt(windowsOptions["timestamp"]);
   final webTimestamp = parseInt(webOptions["timestamp"]);
   final channelId =
@@ -156,11 +156,12 @@ Future<fln.NotificationDetails> parseNotificationDetails({
       enableLights: parseBool(androidOptions["enable_lights"], false)!,
       ledColor:
           parseColor((androidOptions["led_color"] as String?)?.trim(), null),
-      ledOnMs: parseInt(androidOptions["led_on_ms"]),
-      ledOffMs: parseInt(androidOptions["led_off_ms"]),
+      ledOnMs: parseDuration(androidOptions["led_on_duration"])?.inMilliseconds,
+      ledOffMs: parseDuration(androidOptions["led_off_duration"])?.inMilliseconds,
       ticker: androidOptions["ticker"] as String?,
       visibility: parseVisibility(androidOptions["visibility"] as String?),
-      timeoutAfter: parseInt(androidOptions["timeout_after"]),
+      timeoutAfter:
+          parseDuration(androidOptions["timeout_after"])?.inMilliseconds,
       category: parseCategory(androidOptions["category"] as String?),
       fullScreenIntent: parseBool(androidOptions["full_screen_intent"], false)!,
       shortcutId: androidOptions["shortcut_id"] as String?,
@@ -183,8 +184,7 @@ Future<fln.NotificationDetails> parseNotificationDetails({
           fln.LinuxNotificationUrgency.normal)!,
       timeout: linuxTimeout == null
           ? const fln.LinuxNotificationTimeout.systemDefault()
-          : fln.LinuxNotificationTimeout.fromDuration(
-              Duration(milliseconds: linuxTimeout)),
+          : fln.LinuxNotificationTimeout.fromDuration(linuxTimeout),
       resident: parseBool(linuxOptions["resident"], false)!,
       transient: parseBool(linuxOptions["transient"], false)!,
       suppressSound: parseBool(linuxOptions["suppress_sound"], false)!,

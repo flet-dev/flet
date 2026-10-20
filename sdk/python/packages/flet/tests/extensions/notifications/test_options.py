@@ -2,9 +2,12 @@
 
 import pytest
 
+import flet as ft
 from flet_notifications import (
     AndroidForegroundServiceType,
+    AndroidOptions,
     AndroidServiceStartType,
+    LinuxOptions,
     LocalNotifications,
 )
 
@@ -60,3 +63,33 @@ async def test_fgs_forwards_start_type_and_types(start_type, wire_start):
         "specialUse",
         "systemExempted",
     ]
+
+
+@pytest.mark.parametrize(
+    ("timeout", "expected"),
+    [
+        (ft.Duration(seconds=5), {"seconds": 5}),
+        (5000, 5000),
+        (0, 0),
+        (-1, -1),
+        (None, None),
+    ],
+)
+def test_linux_timeout_encodes_duration_and_special_values(timeout, expected):
+    """Duration objects and Linux timeout sentinels survive the real transport."""
+    assert encode_wire(LinuxOptions(timeout=timeout)).get("timeout") == expected
+
+
+@pytest.mark.parametrize(
+    ("duration", "expected"),
+    [(ft.Duration(seconds=2), {"seconds": 2}), (2000, 2000), (0, 0), (None, None)],
+)
+def test_android_durations_encode_objects_and_milliseconds(duration, expected):
+    """Timeout and LED durations use Flet's normal transport representation."""
+    wire = encode_wire(
+        AndroidOptions(
+            timeout_after=duration, led_on_duration=duration, led_off_duration=duration
+        )
+    )
+    for name in ("timeout_after", "led_on_duration", "led_off_duration"):
+        assert wire.get(name) == expected
