@@ -363,10 +363,10 @@ class LocalNotificationsService extends FletService {
           style: parseStyle(map["style"]),
           details: map,
         ),
-        androidScheduleMode: parseScheduleMode(map["schedule_mode"] as String?,
+        androidScheduleMode: parseAndroidScheduleMode(map["schedule_mode"] as String?,
             fln.AndroidScheduleMode.exactAllowWhileIdle)!,
         payload: map["payload"] as String? ?? "",
-        matchDateTimeComponents: parseMatchComponents(
+        matchDateTimeComponents: parseDateTimeComponents(
           map["match_components"] as String?,
         ),
       );
@@ -389,7 +389,7 @@ class LocalNotificationsService extends FletService {
         style: parseStyle(map["style"]),
         details: map,
       );
-      final scheduleMode = parseScheduleMode(map["schedule_mode"] as String?,
+      final scheduleMode = parseAndroidScheduleMode(map["schedule_mode"] as String?,
           fln.AndroidScheduleMode.exactAllowWhileIdle)!;
       final title = map["title"] as String?;
       final body = map["body"] as String?;
