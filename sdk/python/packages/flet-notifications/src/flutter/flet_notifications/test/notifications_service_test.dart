@@ -118,6 +118,34 @@ void main() {
     fln.FlutterLocalNotificationsPlatform.instance = plugin;
   });
 
+  test("display timestamps preserve their instant across native details",
+      () async {
+    for (final timestamp in [
+      DateTime.parse("2030-06-01T14:00:00.123+02:00"),
+      DateTime.parse("2030-06-01T00:30:00+02:00"),
+      DateTime.parse("2030-06-01T23:30:00-05:00"),
+      DateTime(2030, 6, 1, 12, 0, 0, 123),
+      null,
+    ]) {
+      final details = await notification_details.parseNotificationDetails(
+        id: 1,
+        actions: [],
+        details: {
+          "options": {
+            "android": {"timestamp": timestamp, "show_timestamp": false},
+            "windows": {"timestamp": timestamp},
+            "web": {"timestamp": timestamp},
+          },
+        },
+        registerDarwinCategories: (_, __) async {},
+      );
+      expect(details.android!.when, timestamp?.millisecondsSinceEpoch);
+      expect(details.android!.showWhen, isFalse);
+      expect(details.windows!.timestamp, timestamp);
+      expect(details.web!.timestamp, timestamp);
+    }
+  });
+
   test("show maps actions onto AndroidNotificationAction", () async {
     final service = _makeService();
     final result = await service.invokeMethod("show", {
@@ -153,6 +181,7 @@ void main() {
     final details =
         plugin.shown.single["details"] as fln.AndroidNotificationDetails;
     expect(details.icon, isNull);
+    expect(details.showWhen, isTrue);
     expect(details.audioAttributesUsage, fln.AudioAttributesUsage.notification);
     expect(details.additionalFlags, isNull);
     final actions = details.actions!;
@@ -302,12 +331,21 @@ void main() {
         200
       ),
       (
-        {"timeout_after": 60000, "led_on_duration": 100, "led_off_duration": 200},
+        {
+          "timeout_after": 60000,
+          "led_on_duration": 100,
+          "led_off_duration": 200
+        },
         60000,
         100,
         200
       ),
-      ({"timeout_after": 0, "led_on_duration": 0, "led_off_duration": 0}, 0, 0, 0),
+      (
+        {"timeout_after": 0, "led_on_duration": 0, "led_off_duration": 0},
+        0,
+        0,
+        0
+      ),
     ];
     final service = _makeService();
     for (final (options, timeout, on, off) in cases) {
@@ -336,7 +374,6 @@ void main() {
           "ongoing": "TRUE",
           "auto_cancel": "false",
           "number": "0",
-          "when": "1700000000123",
           "additional_flags": "36",
           "vibration_pattern": [0, "250", 100],
         },
@@ -352,7 +389,6 @@ void main() {
     expect(details.ongoing, isTrue);
     expect(details.autoCancel, isFalse);
     expect(details.number, 0);
-    expect(details.when, 1700000000123);
     expect(details.additionalFlags!.toList(), [36]);
     expect(details.vibrationPattern!.toList(), [0, 250, 100]);
   });

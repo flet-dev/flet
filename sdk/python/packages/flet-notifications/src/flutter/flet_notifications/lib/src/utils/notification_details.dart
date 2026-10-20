@@ -96,8 +96,6 @@ Future<fln.NotificationDetails> parseNotificationDetails({
   final windowsAudio = windowsOptions["audio"] as String?;
   final additionalFlags = parseInt(androidOptions["additional_flags"]);
   final linuxTimeout = parseDuration(linuxOptions["timeout"]);
-  final windowsTimestamp = parseInt(windowsOptions["timestamp"]);
-  final webTimestamp = parseInt(webOptions["timestamp"]);
   final channelId =
       (d["channel_id"] as String?) ?? (androidOptions["channel_id"] as String?);
   final groupKey = d["group_key"] as String?;
@@ -142,8 +140,8 @@ Future<fln.NotificationDetails> parseNotificationDetails({
       colorized: parseBool(androidOptions["colorized"], false)!,
       largeIcon: parseLargeIcon(androidOptions["large_icon"] as String?),
       onlyAlertOnce: parseBool(androidOptions["only_alert_once"], false)!,
-      showWhen: parseBool(androidOptions["show_when"], true)!,
-      when: parseInt(androidOptions["when"]),
+      showWhen: parseBool(androidOptions["show_timestamp"], true)!,
+      when: (androidOptions["timestamp"] as DateTime?)?.millisecondsSinceEpoch,
       usesChronometer: parseBool(androidOptions["uses_chronometer"], false)!,
       chronometerCountDown:
           parseBool(androidOptions["chronometer_count_down"], false)!,
@@ -157,7 +155,8 @@ Future<fln.NotificationDetails> parseNotificationDetails({
       ledColor:
           parseColor((androidOptions["led_color"] as String?)?.trim(), null),
       ledOnMs: parseDuration(androidOptions["led_on_duration"])?.inMilliseconds,
-      ledOffMs: parseDuration(androidOptions["led_off_duration"])?.inMilliseconds,
+      ledOffMs:
+          parseDuration(androidOptions["led_off_duration"])?.inMilliseconds,
       ticker: androidOptions["ticker"] as String?,
       visibility: parseVisibility(androidOptions["visibility"] as String?),
       timeoutAfter:
@@ -204,9 +203,7 @@ Future<fln.NotificationDetails> parseNotificationDetails({
             ),
       duration: parseWindowsDuration(windowsOptions["duration"] as String?),
       scenario: parseWindowsScenario(windowsOptions["scenario"] as String?),
-      timestamp: windowsTimestamp == null
-          ? null
-          : DateTime.fromMillisecondsSinceEpoch(windowsTimestamp),
+      timestamp: windowsOptions["timestamp"] as DateTime?,
       subtitle: windowsOptions["subtitle"] as String?,
       images: (windowsOptions["images"] as List?)
               ?.map((e) => fln.WindowsImage(Uri.parse("$e"), altText: ""))
@@ -239,9 +236,7 @@ Future<fln.NotificationDetails> parseNotificationDetails({
       requireInteraction: parseBool(webOptions["require_interaction"], false)!,
       isSilent: parseBool(webOptions["is_silent"], false)!,
       renotify: parseBool(webOptions["renotify"], false)!,
-      timestamp: webTimestamp == null
-          ? null
-          : DateTime.fromMillisecondsSinceEpoch(webTimestamp),
+      timestamp: webOptions["timestamp"] as DateTime?,
     ),
   );
 }

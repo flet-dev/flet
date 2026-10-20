@@ -1,6 +1,6 @@
 """Tests for the LocalNotifications service."""
 
-from datetime import timedelta
+from datetime import datetime, timedelta, timezone
 
 import pytest
 
@@ -48,6 +48,7 @@ async def test_methods_encode_nested_notification_values(
     options = NotificationOptions(
         android=AndroidOptions(
             silent=True,
+            show_timestamp=False,
             icon="ic_stat_notify",
             audio_attributes_usage=AndroidAudioAttributesUsage.ALARM,
             additional_flags=flags,
@@ -57,7 +58,7 @@ async def test_methods_encode_nested_notification_values(
             icon_url="/assets/icon.png",
             require_interaction=True,
             is_silent=False,
-            timestamp=1700000000123,
+            timestamp=datetime(2023, 11, 14, 22, 13, 20, 123000, tzinfo=timezone.utc),
         ),
     )
     style = BigPictureStyle(image=AndroidIcon(file_path="/tmp/photo.png"))
@@ -74,6 +75,7 @@ async def test_methods_encode_nested_notification_values(
     assert wire["options"] == {
         "android": {
             "silent": True,
+            "show_timestamp": False,
             "icon": "ic_stat_notify",
             "audio_attributes_usage": "alarm",
             "additional_flags": expected_flags,
@@ -83,7 +85,9 @@ async def test_methods_encode_nested_notification_values(
             "icon_url": "/assets/icon.png",
             "require_interaction": True,
             "is_silent": False,
-            "timestamp": 1700000000123,
+            "timestamp": datetime(
+                2023, 11, 14, 22, 13, 20, 123000, tzinfo=timezone.utc
+            ),
         },
     }
     assert wire["style"] == {

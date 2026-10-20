@@ -1,5 +1,7 @@
 """Tests for the per-platform options surface."""
 
+from datetime import datetime, timedelta, timezone
+
 import pytest
 
 import flet as ft
@@ -9,9 +11,37 @@ from flet_notifications import (
     AndroidServiceStartType,
     LinuxOptions,
     LocalNotifications,
+    WebOptions,
+    WindowsOptions,
 )
 
 from .helpers import encode_wire
+
+
+@pytest.mark.parametrize(
+    "timestamp",
+    [
+        datetime(2030, 6, 1, 12, 0, 0, 123000, tzinfo=timezone.utc),
+        datetime(2030, 6, 1, 14, 0, 0, 123000, tzinfo=timezone(timedelta(hours=2))),
+        datetime(2030, 6, 1, 7, 0, 0, 123000, tzinfo=timezone(timedelta(hours=-5))),
+        datetime(2030, 6, 1, 0, 30, tzinfo=timezone(timedelta(hours=2))),
+        datetime(2030, 6, 1, 23, 30, tzinfo=timezone(timedelta(hours=-5))),
+        datetime(2030, 6, 1, 12, 0, 0, 123000),
+        None,
+    ],
+)
+def test_display_timestamps_preserve_instants_through_transport(timestamp):
+    """Display timestamps use UTC transport, preserving aware and naive instants."""
+    expected = timestamp.astimezone(timezone.utc) if timestamp is not None else None
+    for options, field in (
+        (AndroidOptions(timestamp=timestamp), "timestamp"),
+        (WindowsOptions(timestamp=timestamp), "timestamp"),
+        (WebOptions(timestamp=timestamp), "timestamp"),
+    ):
+        actual = encode_wire(options).get(field)
+        assert actual == expected
+        if actual is not None:
+            assert actual.utcoffset() == timedelta(0)
 
 
 @pytest.mark.parametrize(

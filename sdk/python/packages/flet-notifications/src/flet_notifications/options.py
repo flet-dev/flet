@@ -1,3 +1,4 @@
+from datetime import datetime
 from enum import Enum
 
 import flet as ft
@@ -371,24 +372,27 @@ class AndroidOptions:
     notification, without alerting on each update.
     """
 
-    show_when: bool | None = None
+    show_timestamp: bool | None = None
     """
     Whether to display the notification timestamp.
 
-    Set :attr:`when` to override the displayed time.
+    Set :attr:`timestamp` to override the displayed time.
     """
 
-    when: int | None = None
+    timestamp: datetime | None = None
     """
-    Displayed timestamp as milliseconds since the Unix epoch in UTC.
+    Time displayed on the notification.
 
     When `None`, uses the notification's posting time. This does not schedule delivery;
     use :meth:`flet_notifications.LocalNotifications.schedule` for that.
+
+    Timezone-aware values preserve their instant. A naive datetime is interpreted in
+    the Python host's local timezone.
     """
 
     uses_chronometer: bool | None = None
     """
-    Whether to show elapsed time from :attr:`when` instead of a timestamp.
+    Whether to show elapsed time from :attr:`timestamp` instead of a timestamp.
 
     Android updates the minutes and seconds automatically, which is useful for ongoing
     calls or timers.
@@ -770,12 +774,15 @@ class WindowsOptions:
     :class:`flet_notifications.WindowsScenario`.
     """
 
-    timestamp: int | None = None
+    timestamp: datetime | None = None
     """
-    Timestamp displayed on the toast, in milliseconds since the Unix epoch.
+    Time displayed on the toast.
 
     Overrides the displayed time without changing when the notification is delivered.
     `None` uses the system's posting time.
+
+    Timezone-aware values preserve their instant. A naive datetime is interpreted in
+    the Python host's local timezone.
     """
 
     subtitle: str | None = None
@@ -864,12 +871,15 @@ class WebOptions:
     Sound can still be suppressed by :attr:`is_silent` or user settings.
     """
 
-    timestamp: int | None = None
+    timestamp: datetime | None = None
     """
-    Time associated with the notification's event, in Unix epoch milliseconds.
+    Time associated with the notification's event.
 
     Can represent an earlier event, such as a message received while offline. This is
     display metadata; it does not schedule notification delivery.
+
+    Timezone-aware values preserve their instant. A naive datetime is interpreted in
+    the Python host's local timezone.
     """
 
 
