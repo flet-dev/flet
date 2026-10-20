@@ -150,6 +150,9 @@ void main() {
     expect(result, "ok");
     final details =
         plugin.shown.single["details"] as fln.AndroidNotificationDetails;
+    expect(details.icon, isNull);
+    expect(details.audioAttributesUsage, fln.AudioAttributesUsage.notification);
+    expect(details.additionalFlags, isNull);
     final actions = details.actions!;
     expect(actions, hasLength(2));
     expect(actions[0].id, "open");
@@ -229,6 +232,9 @@ void main() {
       "channel_id": null,
       "options": {
         "android": {
+          "icon": "ic_stat_notify",
+          "audio_attributes_usage": "alarm",
+          "additional_flags": 36,
           "ongoing": true,
           "silent": true,
           "category": "alarm",
@@ -249,6 +255,9 @@ void main() {
     expect(result, "ok");
     final details =
         plugin.shown.single["details"] as fln.AndroidNotificationDetails;
+    expect(details.icon, "ic_stat_notify");
+    expect(details.audioAttributesUsage, fln.AudioAttributesUsage.alarm);
+    expect(details.additionalFlags!.toList(), [36]);
     expect(details.ongoing, isTrue);
     expect(details.silent, isTrue);
     expect(details.category, fln.AndroidNotificationCategory.alarm);
@@ -264,6 +273,29 @@ void main() {
     expect(details.playSound, isFalse);
     expect(details.sound!.sound, "alert_tone");
   });
+
+  for (final mask in [0, 4, 36]) {
+    test("show forwards flag mask $mask and camel-case audio usage", () async {
+      final service = _makeService();
+      final result = await service.invokeMethod("show", {
+        "id": 1,
+        "options": {
+          "android": {
+            "audio_attributes_usage": "notificationRingtone",
+            "additional_flags": mask,
+          },
+        },
+      });
+      expect(result, "ok");
+      final details =
+          plugin.shown.single["details"] as fln.AndroidNotificationDetails;
+      expect(
+        details.audioAttributesUsage,
+        fln.AudioAttributesUsage.notificationRingtone,
+      );
+      expect(details.additionalFlags!.toList(), [mask]);
+    });
+  }
 
   test("show applies DarwinOptions on the macOS platform", () async {
     debugDefaultTargetPlatformOverride = TargetPlatform.macOS;

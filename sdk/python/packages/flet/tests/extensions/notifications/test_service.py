@@ -5,7 +5,9 @@ from datetime import timedelta
 import pytest
 
 from flet_notifications import (
+    AndroidAudioAttributesUsage,
     AndroidIcon,
+    AndroidNotificationFlag,
     AndroidOptions,
     BigPictureStyle,
     LocalNotifications,
@@ -21,8 +23,18 @@ from .helpers import encode_wire
 @pytest.mark.parametrize(
     "method_name", ["show", "schedule", "periodically_show", "start_foreground_service"]
 )
+@pytest.mark.parametrize(
+    ("flags", "expected_flags"),
+    [
+        (AndroidNotificationFlag.NONE, 0),
+        (0x400, 0x400),
+        (AndroidNotificationFlag.INSISTENT | AndroidNotificationFlag.NO_CLEAR, 36),
+    ],
+)
 @pytest.mark.asyncio
-async def test_methods_encode_nested_notification_values(method_name):
+async def test_methods_encode_nested_notification_values(
+    method_name, flags, expected_flags
+):
     service = LocalNotifications()
     calls = []
 
@@ -31,7 +43,14 @@ async def test_methods_encode_nested_notification_values(method_name):
         return "ok"
 
     service._invoke_method = invoke
-    options = NotificationOptions(android=AndroidOptions(silent=True))
+    options = NotificationOptions(
+        android=AndroidOptions(
+            silent=True,
+            icon="ic_stat_notify",
+            audio_attributes_usage=AndroidAudioAttributesUsage.ALARM,
+            additional_flags=flags,
+        )
+    )
     style = BigPictureStyle(image=AndroidIcon(file_path="/tmp/photo.png"))
     actions = [NotificationAction(id="open", title="Open")]
     kwargs = dict(id=1, options=options, style=style, actions=actions)
@@ -43,7 +62,14 @@ async def test_methods_encode_nested_notification_values(method_name):
 
     args = calls[-1]
     wire = encode_wire(args)
-    assert wire["options"] == {"android": {"silent": True}}
+    assert wire["options"] == {
+        "android": {
+            "silent": True,
+            "icon": "ic_stat_notify",
+            "audio_attributes_usage": "alarm",
+            "additional_flags": expected_flags,
+        }
+    }
     assert wire["style"] == {
         "_type": "big_picture",
         "image": {"file_path": "/tmp/photo.png"},

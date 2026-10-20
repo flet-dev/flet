@@ -678,9 +678,11 @@ docs:
           CircularRectangleNotchShape: types/circularrectanglenotchshape.md
       - Notifications:
         - services/notifications/types/activenotification.md
+        - services/notifications/types/androidaudioattributesusage.md
         - services/notifications/types/androidforegroundservicetype.md
         - services/notifications/types/androidicon.md
         - services/notifications/types/androidnotificationcategory.md
+        - services/notifications/types/androidnotificationflag.md
         - services/notifications/types/androidoptions.md
         - services/notifications/types/androidschedulemode.md
         - services/notifications/types/androidservicestarttype.md

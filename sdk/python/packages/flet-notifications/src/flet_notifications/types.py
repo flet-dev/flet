@@ -1,8 +1,10 @@
-from enum import Enum
+from enum import Enum, IntFlag
 
 __all__ = [
+    "AndroidAudioAttributesUsage",
     "AndroidForegroundServiceType",
     "AndroidNotificationCategory",
+    "AndroidNotificationFlag",
     "AndroidScheduleMode",
     "AndroidServiceStartType",
     "DateTimeComponents",
@@ -13,6 +15,141 @@ __all__ = [
     "WindowsNotificationDuration",
     "WindowsNotificationSound",
 ]
+
+
+class AndroidAudioAttributesUsage(Enum):
+    """
+    Intended use of an Android notification's sound.
+
+    Used by :attr:`flet_notifications.AndroidOptions.audio_attributes_usage` to help
+    Android apply audio routing, volume, and interruption policies. This describes the
+    sound; it does not grant permission to bypass the user's sound or Do Not Disturb
+    settings. On Android 8.0+, an existing channel retains its audio configuration.
+
+    See Android's [audio usage reference](https://developer.android.com/reference/android/media/AudioAttributes).
+    """
+
+    ALARM = "alarm"
+    """Audio for an alarm, such as a wake-up alarm."""
+
+    ASSISTANCE_ACCESSIBILITY = "assistanceAccessibility"
+    """Audio for accessibility assistance, such as a screen reader."""
+
+    ASSISTANCE_NAVIGATION_GUIDANCE = "assistanceNavigationGuidance"
+    """Spoken directions or other navigation guidance."""
+
+    ASSISTANCE_SONIFICATION = "assistanceSonification"
+    """Short sounds accompanying user-interface actions."""
+
+    ASSISTANT = "assistant"
+    """Responses from an assistant, such as spoken answers or reminders."""
+
+    GAME = "game"
+    """Audio associated with gameplay."""
+
+    MEDIA = "media"
+    """Media playback, such as music or video audio."""
+
+    NOTIFICATION = "notification"
+    """Audio drawing attention to a notification."""
+
+    NOTIFICATION_EVENT = "notificationEvent"
+    """Audio for an event that needs attention, such as a reminder."""
+
+    NOTIFICATION_RINGTONE = "notificationRingtone"
+    """Ringtone audio announcing an incoming call."""
+
+    UNKNOWN = "unknown"
+    """Audio whose intended use is unspecified."""
+
+    VOICE_COMMUNICATION = "voiceCommunication"
+    """Speech used for a telephone or VoIP conversation."""
+
+    VOICE_COMMUNICATION_SIGNALLING = "voiceCommunicationSignalling"
+    """Call-signalling sounds, such as a dial tone or busy tone."""
+
+
+class AndroidNotificationFlag(IntFlag):
+    """
+    Additional behavior bits for an Android notification.
+
+    Combine members with `|` and pass the result to
+    :attr:`flet_notifications.AndroidOptions.additional_flags`. These bits are added
+    after the notification is built; they cannot clear flags set by other options.
+    Android's notification permissions, channel settings, and platform restrictions
+    still apply.
+
+    Example:
+        ```python
+        import flet_notifications as ftn
+
+        options = ftn.AndroidOptions(
+            additional_flags=ftn.AndroidNotificationFlag.INSISTENT
+            | ftn.AndroidNotificationFlag.NO_CLEAR
+        )
+        ```
+
+    Deprecated flags and system-managed status flags are omitted. To start a foreground
+    service, use :meth:`flet_notifications.LocalNotifications.start_foreground_service`.
+    See Android's [notification flags](https://developer.android.com/reference/android/app/Notification#flags).
+    """
+
+    NONE = 0
+    """Add no flags; flags set by other notification options remain in effect."""
+
+    ONGOING_EVENT = 2
+    """
+    Mark the notification as representing work currently in progress, such as a call.
+
+    Prefer :attr:`flet_notifications.AndroidOptions.ongoing` for this behavior.
+    """
+
+    INSISTENT = 4
+    """
+    Request repeating audio until cancellation or the notification window is opened.
+
+    Sound must be enabled and permitted by the notification's channel and user settings.
+    """
+
+    ONLY_ALERT_ONCE = 8
+    """
+    Alert only when the notification is first posted, rather than on later updates.
+
+    Also stops ongoing sound, vibration, or notification-LED alerting. Prefer
+    :attr:`flet_notifications.AndroidOptions.only_alert_once` for this behavior.
+    """
+
+    AUTO_CANCEL = 16
+    """
+    Cancel the notification when the user taps it.
+
+    Prefer :attr:`flet_notifications.AndroidOptions.auto_cancel` for this behavior.
+    """
+
+    NO_CLEAR = 32
+    """
+    Request that the notification remain when the user presses Clear all.
+
+    This does not prevent the app from cancelling the notification or guarantee that
+    the notification cannot be dismissed individually.
+    """
+
+    LOCAL_ONLY = 256
+    """
+    Mark the notification as relevant only to the current device.
+
+    Recommends that the notification not be bridged to other devices.
+    """
+
+    GROUP_SUMMARY = 512
+    """
+    Mark the notification as the summary of a group.
+
+    Requires the notification method's `group_key` argument. Prefer passing
+    `set_as_group_summary=True` to :meth:`flet_notifications.LocalNotifications.show`,
+    :meth:`flet_notifications.LocalNotifications.schedule`, or
+    :meth:`flet_notifications.LocalNotifications.periodically_show` for this behavior.
+    """
 
 
 class RepeatInterval(Enum):

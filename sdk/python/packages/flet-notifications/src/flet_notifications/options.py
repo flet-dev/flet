@@ -2,7 +2,9 @@ from enum import Enum
 
 import flet as ft
 from flet_notifications.types import (
+    AndroidAudioAttributesUsage,
     AndroidNotificationCategory,
+    AndroidNotificationFlag,
     Importance,
     LinuxNotificationCategory,
     WindowsNotificationDuration,
@@ -177,15 +179,11 @@ class AndroidOptions:
     """
     Android-specific notification and channel settings.
 
-    `None` leaves a property to the native backend. On Android 8.0+, importance, sound,
-    vibration, lights, and badge settings belong to the channel. Reusing a channel ID
-    does not replace its established behavior or the user's choices. Create a
+    On Android 8.0+, importance, sound, vibration, lights, and badge settings belong to
+    the channel. Reusing a channel ID does not replace its established behavior or the
+    user's choices. Create a
     :class:`~flet_notifications.NotificationChannel` before posting when you need a
     custom channel name or group.
-
-    Note:
-        :attr:`icon`, :attr:`audio_attributes_usage`, and :attr:`additional_flags` are
-        currently not forwarded to the native plugin.
     """
 
     channel_id: str | None = None
@@ -211,20 +209,29 @@ class AndroidOptions:
     before creating a channel with this enabled.
     """
 
-    audio_attributes_usage: str | None = None
+    audio_attributes_usage: AndroidAudioAttributesUsage | None = None
     """
-    Intended Android audio usage, such as `"alarm"` or `"notification"`.
+    Intended use of the notification sound.
 
-    Currently not forwarded by the bridge; the plugin uses notification audio usage
-    regardless of this value.
+    Helps Android select audio routing, volume, and interruption policies. On Android
+    8.0+, this is used when creating a channel; an existing channel keeps its audio
+    configuration. It does not enable sound when :attr:`play_sound` is `False` nor grant
+    access to bypass Do Not Disturb.
     """
 
     icon: str | None = None
     """
-    Drawable resource name intended to override the small notification icon.
+    Bundled drawable resource name for this notification's small icon.
 
-    Currently not forwarded by the bridge. Use
-    :attr:`flet_notifications.LocalNotifications.default_icon` instead.
+    Supply the resource name without a file extension, such as `"ic_stat_notify"`.
+    `None` uses :attr:`flet_notifications.LocalNotifications.default_icon`.
+
+    Include the drawable in the Android app. Use a white silhouette on a transparent
+    background, with resources sized for the supported screen densities. Android
+    Studio's
+    [notification icon wizard](https://developer.android.com/studio/write/create-app-icons#create-notification)
+    generates the appropriate drawable variants. Android uses the icon's alpha channel
+    to determine its visible shape; an opaque background can appear as a solid block.
     """
 
     importance: Importance | None = None
@@ -420,11 +427,25 @@ class AndroidOptions:
     section. This extension does not create the shortcut.
     """
 
-    additional_flags: list[str] | None = None
+    additional_flags: AndroidNotificationFlag | int | None = None
     """
-    Additional Android notification flags reserved for native customization.
+    Additional native Android notification flags, combined using `|`.
 
-    Currently not forwarded by the bridge; setting this field has no effect.
+    For example, combine :attr:`flet_notifications.AndroidNotificationFlag.INSISTENT`
+    and :attr:`flet_notifications.AndroidNotificationFlag.NO_CLEAR` to request repeating
+    audio and retention when the user presses Clear all. Android may restrict the
+    effect of individual flags.
+
+    A raw integer bitmask is also accepted for Android flags not represented by
+    :class:`flet_notifications.AndroidNotificationFlag`. Combine integer flag values
+    using `|` in the same way. See Android's
+    [notification flags](https://developer.android.com/reference/android/app/Notification#flags)
+    for their meanings and restrictions.
+
+    Flags are added after the notification is built. `None` or
+    :attr:`flet_notifications.AndroidNotificationFlag.NONE` adds no flags and does not
+    clear flags set by other options. Prefer dedicated options such as :attr:`ongoing`
+    and :attr:`auto_cancel` when available.
     """
 
     ticker: str | None = None

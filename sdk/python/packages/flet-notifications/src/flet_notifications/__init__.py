@@ -36,8 +36,10 @@ from flet_notifications.styles import (
     Style,
 )
 from flet_notifications.types import (
+    AndroidAudioAttributesUsage,
     AndroidForegroundServiceType,
     AndroidNotificationCategory,
+    AndroidNotificationFlag,
     AndroidScheduleMode,
     AndroidServiceStartType,
     DateTimeComponents,
@@ -51,9 +53,11 @@ from flet_notifications.types import (
 
 __all__ = [
     "ActiveNotification",
+    "AndroidAudioAttributesUsage",
     "AndroidForegroundServiceType",
     "AndroidIcon",
     "AndroidNotificationCategory",
+    "AndroidNotificationFlag",
     "AndroidOptions",
     "AndroidScheduleMode",
     "AndroidServiceStartType",

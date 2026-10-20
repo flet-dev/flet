@@ -560,6 +560,15 @@ class LocalNotificationsService extends FletService {
         channelId ?? _channelId,
         _channelName,
         channelDescription: androidOptions["channel_description"] as String?,
+        icon: androidOptions["icon"] as String?,
+        audioAttributesUsage: parseEnum(
+          fln.AudioAttributesUsage.values,
+          androidOptions["audio_attributes_usage"] as String?,
+          fln.AudioAttributesUsage.notification,
+        )!,
+        additionalFlags: androidOptions["additional_flags"] == null
+            ? null
+            : Int32List.fromList([androidOptions["additional_flags"] as int]),
         actions: androidActions,
         styleInformation: _mapStyleInformation(style),
         importance: _mapImportance(androidOptions["importance"] as String?),
