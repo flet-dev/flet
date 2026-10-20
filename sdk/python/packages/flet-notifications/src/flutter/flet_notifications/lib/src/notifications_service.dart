@@ -599,7 +599,8 @@ class LocalNotificationsService extends FletService {
           name,
           description: map["description"] as String?,
           groupId: map["group_id"] as String?,
-          importance: parseNotificationImportance(map["importance"] as String?),
+          importance: parseNotificationImportance(map["importance"] as String?,
+              fln.Importance.defaultImportance)!,
           bypassDnd: optionalBool(map["bypass_dnd"]) ?? false,
           playSound: optionalBool(map["play_sound"]) ?? true,
           sound: map["sound"] == null
@@ -686,8 +687,9 @@ class LocalNotificationsService extends FletService {
         title: map["title"] as String?,
         body: map["body"] as String?,
         payload: map["payload"] as String? ?? "",
-        startType: _mapServiceStartType(map["start_type"] as String?),
-        foregroundServiceTypes: _mapForegroundServiceTypes(
+        startType: parseServiceStartType(map["start_type"] as String?,
+            fln.AndroidServiceStartType.startSticky)!,
+        foregroundServiceTypes: parseForegroundServiceTypes(
           map["foreground_service_types"] as List?,
         ),
         notificationDetails: (await _buildNotificationDetails(
@@ -713,20 +715,11 @@ class LocalNotificationsService extends FletService {
     return "ok";
   }
 
-  fln.AndroidServiceStartType _mapServiceStartType(String? value) {
-    switch (value) {
-      case "startStickyCompatibility":
-        return fln.AndroidServiceStartType.startStickyCompatibility;
-      case "startNotSticky":
-        return fln.AndroidServiceStartType.startNotSticky;
-      case "startRedeliverIntent":
-        return fln.AndroidServiceStartType.startRedeliverIntent;
-      default:
-        return fln.AndroidServiceStartType.startSticky;
-    }
-  }
+  fln.AndroidServiceStartType? parseServiceStartType(String? value,
+          [fln.AndroidServiceStartType? defaultValue]) =>
+      parseEnum(fln.AndroidServiceStartType.values, value, defaultValue);
 
-  Set<fln.AndroidServiceForegroundType>? _mapForegroundServiceTypes(
+  Set<fln.AndroidServiceForegroundType>? parseForegroundServiceTypes(
     List? values,
   ) {
     if (values == null || values.isEmpty) return null;

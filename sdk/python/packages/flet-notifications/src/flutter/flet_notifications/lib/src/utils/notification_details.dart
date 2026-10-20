@@ -22,9 +22,8 @@ class InvalidNotificationOptionException implements Exception {
 
 /// Converts a wire payload into the upstream platform notification details.
 ///
-/// The service supplies category registration so plugin state remains there. Keep
-/// this callback at its existing position: conversion failures before and after
-/// registration must retain the same side effects and invoke error behavior.
+/// The service owns category registration and supplies it as a callback. Category
+/// registration completes before the remaining platform details are constructed.
 Future<fln.NotificationDetails> parseNotificationDetails({
   required int id,
   required List<ParsedAction> actions,
@@ -55,7 +54,7 @@ Future<fln.NotificationDetails> parseNotificationDetails({
       )
       .toList();
 
-  final darwinDetails = _mapDarwinDetails(
+  final darwinDetails = parseDarwinDetails(
     id: id,
     actions: actions,
     options: _platformOptions(details, "iOS"),
@@ -94,12 +93,14 @@ Future<fln.NotificationDetails> parseNotificationDetails({
   final linuxOptions = _platformOptions(details, "linux") ?? const {};
   final webOptions = _platformOptions(details, "web") ?? const {};
   final windowsOptions = _platformOptions(details, "windows") ?? const {};
+  final windowsAudio = windowsOptions["audio"] as String?;
   final channelId =
       (d["channel_id"] as String?) ?? (androidOptions["channel_id"] as String?);
   final groupKey = d["group_key"] as String?;
-  final groupAlert = _mapGroupAlertBehavior(
+  final groupAlert = parseGroupAlertBehavior(
     d["group_alert_behavior"] as String?,
-  );
+    fln.GroupAlertBehavior.all,
+  )!;
 
   return fln.NotificationDetails(
     android: fln.AndroidNotificationDetails(
@@ -116,12 +117,14 @@ Future<fln.NotificationDetails> parseNotificationDetails({
           ? null
           : Int32List.fromList([androidOptions["additional_flags"] as int]),
       actions: androidActions,
-      styleInformation: _mapStyleInformation(style),
-      importance:
-          parseNotificationImportance(androidOptions["importance"] as String?),
-      priority: _mapPriority(androidOptions["priority"] as String?),
+      styleInformation: parseStyleInformation(style),
+      importance: parseNotificationImportance(
+          androidOptions["importance"] as String?,
+          fln.Importance.defaultImportance)!,
+      priority: parsePriority(
+          androidOptions["priority"] as String?, fln.Priority.defaultPriority)!,
       playSound: optionalBool(androidOptions["play_sound"]) ?? true,
-      sound: _mapSound(androidOptions["sound"] as String?),
+      sound: parseSound(androidOptions["sound"] as String?),
       enableVibration: optionalBool(androidOptions["enable_vibration"]) ?? true,
       vibrationPattern: parseNotificationVibrationPattern(
           androidOptions["vibration_pattern"]),
@@ -133,7 +136,7 @@ Future<fln.NotificationDetails> parseNotificationDetails({
       silent: optionalBool(androidOptions["silent"]) ?? false,
       color: parseColor((androidOptions["color"] as String?)?.trim(), null),
       colorized: optionalBool(androidOptions["colorized"]) ?? false,
-      largeIcon: _mapLargeIcon(androidOptions["large_icon"] as String?),
+      largeIcon: parseLargeIcon(androidOptions["large_icon"] as String?),
       onlyAlertOnce: optionalBool(androidOptions["only_alert_once"]) ?? false,
       showWhen: optionalBool(androidOptions["show_when"]) ?? true,
       when: androidOptions["when"] as int?,
@@ -155,9 +158,9 @@ Future<fln.NotificationDetails> parseNotificationDetails({
       ledOnMs: androidOptions["led_on_ms"] as int?,
       ledOffMs: androidOptions["led_off_ms"] as int?,
       ticker: androidOptions["ticker"] as String?,
-      visibility: _mapVisibility(androidOptions["visibility"] as String?),
+      visibility: parseVisibility(androidOptions["visibility"] as String?),
       timeoutAfter: androidOptions["timeout_after"] as int?,
-      category: _mapCategory(androidOptions["category"] as String?),
+      category: parseCategory(androidOptions["category"] as String?),
       fullScreenIntent:
           optionalBool(androidOptions["full_screen_intent"]) ?? false,
       shortcutId: androidOptions["shortcut_id"] as String?,
@@ -166,17 +169,18 @@ Future<fln.NotificationDetails> parseNotificationDetails({
       number: androidOptions["number"] as int?,
     ),
     iOS: darwinDetails,
-    macOS: _mapDarwinDetails(
+    macOS: parseDarwinDetails(
       id: id,
       actions: actions,
       options: _platformOptions(details, "macOS"),
     ),
     linux: fln.LinuxNotificationDetails(
       defaultActionName: "Open",
-      icon: _mapLinuxIcon(linuxOptions["icon"] as String?),
-      sound: _mapLinuxSound(linuxOptions["sound"] as String?),
-      category: _mapLinuxCategory(linuxOptions["category"] as String?),
-      urgency: _mapLinuxUrgency(linuxOptions["urgency"] as String?),
+      icon: parseLinuxIcon(linuxOptions["icon"] as String?),
+      sound: parseLinuxSound(linuxOptions["sound"] as String?),
+      category: parseLinuxCategory(linuxOptions["category"] as String?),
+      urgency: parseLinuxUrgency(linuxOptions["urgency"] as String?,
+          fln.LinuxNotificationUrgency.normal)!,
       timeout: linuxOptions["timeout_ms"] == null
           ? const fln.LinuxNotificationTimeout.systemDefault()
           : fln.LinuxNotificationTimeout.fromDuration(
@@ -191,10 +195,17 @@ Future<fln.NotificationDetails> parseNotificationDetails({
     windows: fln.WindowsNotificationDetails(
       actions: windowsActions,
       inputs: windowsInputs,
-      header: _mapWindowsHeader(windowsOptions["header"] as String?),
-      audio: _mapWindowsAudio(windowsOptions["audio"] as String?),
-      duration: _mapWindowsDuration(windowsOptions["duration"] as String?),
-      scenario: _mapWindowsScenario(windowsOptions["scenario"] as String?),
+      header: parseWindowsHeader(windowsOptions["header"] as String?),
+      audio: windowsAudio == null || windowsAudio.isEmpty
+          ? null
+          : parseWindowsAudio(
+              windowsAudio,
+              fln.WindowsNotificationAudio.preset(
+                sound: fln.WindowsNotificationSound.defaultSound,
+              ),
+            ),
+      duration: parseWindowsDuration(windowsOptions["duration"] as String?),
+      scenario: parseWindowsScenario(windowsOptions["scenario"] as String?),
       timestamp: windowsOptions["timestamp"] == null
           ? null
           : DateTime.fromMillisecondsSinceEpoch(
@@ -248,7 +259,7 @@ Map<dynamic, dynamic>? _platformOptions(Map? details, String platform) {
   return platformOptions is Map ? platformOptions : null;
 }
 
-fln.AndroidNotificationSound? _mapSound(String? sound) {
+fln.AndroidNotificationSound? parseSound(String? sound) {
   if (sound == null || sound.isEmpty) return null;
   if (sound.startsWith("content://") || sound.startsWith("file://")) {
     return fln.UriAndroidNotificationSound(sound);
@@ -257,7 +268,7 @@ fln.AndroidNotificationSound? _mapSound(String? sound) {
 }
 
 /// Notification large icons accept bitmaps (drawable, file path or bytes).
-fln.AndroidBitmap<Object>? _mapLargeIcon(String? source) {
+fln.AndroidBitmap<Object>? parseLargeIcon(String? source) {
   if (source == null || source.isEmpty) return null;
   if (source.startsWith("/") || source.contains("\\")) {
     return fln.FilePathAndroidBitmap(source);
@@ -265,7 +276,7 @@ fln.AndroidBitmap<Object>? _mapLargeIcon(String? source) {
   return fln.DrawableResourceAndroidBitmap(source);
 }
 
-fln.DarwinNotificationDetails _mapDarwinDetails({
+fln.DarwinNotificationDetails parseDarwinDetails({
   required int id,
   required List<ParsedAction> actions,
   Map<dynamic, dynamic>? options,
@@ -283,7 +294,7 @@ fln.DarwinNotificationDetails _mapDarwinDetails({
     badgeNumber: o["badge_number"] as int?,
     subtitle: o["subtitle"] as String?,
     threadIdentifier: o["thread_identifier"] as String?,
-    interruptionLevel: _mapInterruptionLevel(
+    interruptionLevel: parseInterruptionLevel(
       o["interruption_level"] as String?,
     ),
     criticalSoundVolume: (o["critical_sound_volume"] as num?)?.toDouble(),
@@ -294,50 +305,18 @@ fln.DarwinNotificationDetails _mapDarwinDetails({
   );
 }
 
-fln.Priority _mapPriority(String? value) {
-  switch (value) {
-    case "min":
-      return fln.Priority.min;
-    case "low":
-      return fln.Priority.low;
-    case "high":
-      return fln.Priority.high;
-    case "max":
-      return fln.Priority.max;
-    default:
-      return fln.Priority.defaultPriority;
-  }
-}
+fln.Priority? parsePriority(String? value, [fln.Priority? defaultValue]) =>
+    parseEnum(fln.Priority.values, value, defaultValue);
 
-fln.NotificationVisibility? _mapVisibility(String? value) {
-  switch (value) {
-    case "public":
-      return fln.NotificationVisibility.public;
-    case "private":
-      return fln.NotificationVisibility.private;
-    case "secret":
-      return fln.NotificationVisibility.secret;
-    default:
-      return null;
-  }
-}
+fln.NotificationVisibility? parseVisibility(String? value,
+        [fln.NotificationVisibility? defaultValue]) =>
+    parseEnum(fln.NotificationVisibility.values, value, defaultValue);
 
-fln.InterruptionLevel? _mapInterruptionLevel(String? value) {
-  switch (value) {
-    case "passive":
-      return fln.InterruptionLevel.passive;
-    case "active":
-      return fln.InterruptionLevel.active;
-    case "timeSensitive":
-      return fln.InterruptionLevel.timeSensitive;
-    case "critical":
-      return fln.InterruptionLevel.critical;
-    default:
-      return null;
-  }
-}
+fln.InterruptionLevel? parseInterruptionLevel(String? value,
+        [fln.InterruptionLevel? defaultValue]) =>
+    parseEnum(fln.InterruptionLevel.values, value, defaultValue);
 
-fln.LinuxNotificationIcon? _mapLinuxIcon(String? name) {
+fln.LinuxNotificationIcon? parseLinuxIcon(String? name) {
   if (name == null || name.isEmpty) return null;
   if (name.startsWith("/") || name.startsWith("file://")) {
     return fln.FilePathLinuxIcon(name);
@@ -345,12 +324,12 @@ fln.LinuxNotificationIcon? _mapLinuxIcon(String? name) {
   return fln.ThemeLinuxIcon(name);
 }
 
-fln.LinuxNotificationSound? _mapLinuxSound(String? name) {
+fln.LinuxNotificationSound? parseLinuxSound(String? name) {
   if (name == null || name.isEmpty) return null;
   return fln.ThemeLinuxSound(name);
 }
 
-fln.LinuxNotificationCategory? _mapLinuxCategory(String? value) {
+fln.LinuxNotificationCategory? parseLinuxCategory(String? value) {
   if (value == null) return null;
   for (final category in fln.LinuxNotificationCategory.values) {
     if (category.name == value) return category;
@@ -358,24 +337,18 @@ fln.LinuxNotificationCategory? _mapLinuxCategory(String? value) {
   throw FormatException("unknown Linux notification category: $value");
 }
 
-fln.LinuxNotificationUrgency? _mapLinuxUrgency(String? value) {
-  switch (value) {
-    case "low":
-      return fln.LinuxNotificationUrgency.low;
-    case "critical":
-      return fln.LinuxNotificationUrgency.critical;
-    default:
-      return fln.LinuxNotificationUrgency.normal;
-  }
-}
+fln.LinuxNotificationUrgency? parseLinuxUrgency(String? value,
+        [fln.LinuxNotificationUrgency? defaultValue]) =>
+    parseEnum(fln.LinuxNotificationUrgency.values, value, defaultValue);
 
-fln.WindowsHeader? _mapWindowsHeader(String? title) {
+fln.WindowsHeader? parseWindowsHeader(String? title) {
   if (title == null || title.isEmpty) return null;
   return fln.WindowsHeader(id: "header", title: title, arguments: "");
 }
 
-fln.WindowsNotificationAudio? _mapWindowsAudio(String? value) {
-  if (value == null || value.isEmpty) return null;
+fln.WindowsNotificationAudio? parseWindowsAudio(String? value,
+    [fln.WindowsNotificationAudio? defaultValue]) {
+  if (value == null || value.isEmpty) return defaultValue;
   if (value == "silent") return fln.WindowsNotificationAudio.silent();
   const presets = {
     "default": fln.WindowsNotificationSound.defaultSound,
@@ -384,42 +357,25 @@ fln.WindowsNotificationAudio? _mapWindowsAudio(String? value) {
     "reminder": fln.WindowsNotificationSound.reminder,
     "sms": fln.WindowsNotificationSound.sms,
   };
-  return fln.WindowsNotificationAudio.preset(
-    sound: presets[value] ?? fln.WindowsNotificationSound.defaultSound,
-  );
+  final sound = presets[value];
+  return sound == null
+      ? defaultValue
+      : fln.WindowsNotificationAudio.preset(sound: sound);
 }
 
-fln.WindowsNotificationDuration? _mapWindowsDuration(String? value) {
-  switch (value) {
-    case "long":
-      return fln.WindowsNotificationDuration.long;
-    case "short":
-      return fln.WindowsNotificationDuration.short;
-    default:
-      return null;
-  }
-}
+fln.WindowsNotificationDuration? parseWindowsDuration(String? value,
+        [fln.WindowsNotificationDuration? defaultValue]) =>
+    parseEnum(fln.WindowsNotificationDuration.values, value, defaultValue);
 
-fln.WindowsNotificationScenario? _mapWindowsScenario(String? value) {
-  switch (value) {
-    case "reminder":
-      return fln.WindowsNotificationScenario.reminder;
-    case "alarm":
-      return fln.WindowsNotificationScenario.alarm;
-    case "incomingCall":
-      return fln.WindowsNotificationScenario.incomingCall;
-    case "urgent":
-      return fln.WindowsNotificationScenario.urgent;
-    default:
-      return null;
-  }
-}
+fln.WindowsNotificationScenario? parseWindowsScenario(String? value,
+        [fln.WindowsNotificationScenario? defaultValue]) =>
+    parseEnum(fln.WindowsNotificationScenario.values, value, defaultValue);
 
-/// Maps a parsed style onto the Android `styleInformation` object.
+/// Converts a parsed style onto the Android `styleInformation` object.
 ///
 /// Styles are an Android concept in the plugin; iOS/macOS render titles,
 /// attachments and interruptions through their own details fields.
-fln.StyleInformation? _mapStyleInformation(ParsedStyle? style) {
+fln.StyleInformation? parseStyleInformation(ParsedStyle? style) {
   if (style == null) return null;
   switch (style.type) {
     case "big_text":
@@ -430,8 +386,8 @@ fln.StyleInformation? _mapStyleInformation(ParsedStyle? style) {
       );
     case "big_picture":
       return fln.BigPictureStyleInformation(
-        _mapBitmap(style.image!)!,
-        largeIcon: _mapBitmap(style.largeIcon),
+        parseBitmap(style.image!)!,
+        largeIcon: parseBitmap(style.largeIcon),
         contentTitle: style.contentTitle,
         summaryText: style.summaryText,
       );
@@ -443,7 +399,7 @@ fln.StyleInformation? _mapStyleInformation(ParsedStyle? style) {
       );
     case "messaging":
       return fln.MessagingStyleInformation(
-        _mapPerson(style.person!),
+        parsePerson(style.person!),
         conversationTitle: style.conversationTitle,
         groupConversation: style.groupConversation,
         messages: style.messages
@@ -451,7 +407,7 @@ fln.StyleInformation? _mapStyleInformation(ParsedStyle? style) {
               (m) => fln.Message(
                 m.text,
                 DateTime.parse(m.timestampIso),
-                _mapPerson(m.person),
+                parsePerson(m.person),
               ),
             )
             .toList(),
@@ -463,7 +419,7 @@ fln.StyleInformation? _mapStyleInformation(ParsedStyle? style) {
 
 /// Maps an icon onto a style image. FLN's big-picture bitmaps support
 /// drawable, file-path and byte sources only.
-fln.AndroidBitmap<Object>? _mapBitmap(ParsedIcon? icon) {
+fln.AndroidBitmap<Object>? parseBitmap(ParsedIcon? icon) {
   if (icon == null) return null;
   final drawable = icon.drawableResource;
   if (drawable != null) return fln.DrawableResourceAndroidBitmap(drawable);
@@ -477,7 +433,7 @@ fln.AndroidBitmap<Object>? _mapBitmap(ParsedIcon? icon) {
 }
 
 /// Maps an icon onto an Android notification icon (all five sources).
-fln.AndroidIcon<Object>? _mapIcon(ParsedIcon? icon) {
+fln.AndroidIcon<Object>? parseIcon(ParsedIcon? icon) {
   if (icon == null) return null;
   final drawable = icon.drawableResource;
   if (drawable != null) return fln.DrawableResourceAndroidIcon(drawable);
@@ -492,97 +448,34 @@ fln.AndroidIcon<Object>? _mapIcon(ParsedIcon? icon) {
   throw const FormatException("icon has no source");
 }
 
-fln.Person _mapPerson(ParsedPerson person) {
+fln.Person parsePerson(ParsedPerson person) {
   return fln.Person(
     name: person.name,
     key: person.key,
     bot: person.bot,
     important: person.important,
     uri: person.uri,
-    icon: _mapIcon(person.icon),
+    icon: parseIcon(person.icon),
   );
 }
 
-fln.GroupAlertBehavior _mapGroupAlertBehavior(String? value) {
-  switch (value) {
-    case "summary":
-      return fln.GroupAlertBehavior.summary;
-    case "children":
-      return fln.GroupAlertBehavior.children;
-    default:
-      return fln.GroupAlertBehavior.all;
-  }
-}
+fln.GroupAlertBehavior? parseGroupAlertBehavior(String? value,
+        [fln.GroupAlertBehavior? defaultValue]) =>
+    parseEnum(fln.GroupAlertBehavior.values, value, defaultValue);
 
-fln.AndroidNotificationCategory? _mapCategory(String? value) {
+fln.AndroidNotificationCategory? parseCategory(String? value) {
   if (value == null) return null;
-  switch (value) {
-    case "alarm":
-      return fln.AndroidNotificationCategory.alarm;
-    case "call":
-      return fln.AndroidNotificationCategory.call;
-    case "email":
-      return fln.AndroidNotificationCategory.email;
-    case "error":
-      return fln.AndroidNotificationCategory.error;
-    case "event":
-      return fln.AndroidNotificationCategory.event;
-    case "locationSharing":
-      return fln.AndroidNotificationCategory.locationSharing;
-    case "message":
-      return fln.AndroidNotificationCategory.message;
-    case "missedCall":
-      return fln.AndroidNotificationCategory.missedCall;
-    case "navigation":
-      return fln.AndroidNotificationCategory.navigation;
-    case "progress":
-      return fln.AndroidNotificationCategory.progress;
-    case "promo":
-      return fln.AndroidNotificationCategory.promo;
-    case "recommendation":
-      return fln.AndroidNotificationCategory.recommendation;
-    case "reminder":
-      return fln.AndroidNotificationCategory.reminder;
-    case "service":
-      return fln.AndroidNotificationCategory.service;
-    case "social":
-      return fln.AndroidNotificationCategory.social;
-    case "status":
-      return fln.AndroidNotificationCategory.status;
-    case "stopwatch":
-      return fln.AndroidNotificationCategory.stopwatch;
-    case "system":
-      return fln.AndroidNotificationCategory.system;
-    case "transport":
-      return fln.AndroidNotificationCategory.transport;
-    case "workout":
-      return fln.AndroidNotificationCategory.workout;
-    default:
-      throw InvalidNotificationOptionException(
-        "unknown notification category: $value",
-      );
-  }
+  final category = parseEnum(fln.AndroidNotificationCategory.values, value);
+  if (category != null) return category;
+  throw InvalidNotificationOptionException(
+    "unknown notification category: $value",
+  );
 }
 
 /// Converts importance for both notifications and explicitly created channels.
-fln.Importance parseNotificationImportance(String? value) {
-  switch (value) {
-    case "unspecified":
-      return fln.Importance.unspecified;
-    case "min":
-      return fln.Importance.min;
-    case "none":
-      return fln.Importance.none;
-    case "low":
-      return fln.Importance.low;
-    case "high":
-      return fln.Importance.high;
-    case "max":
-      return fln.Importance.max;
-    default:
-      return fln.Importance.defaultImportance;
-  }
-}
+fln.Importance? parseNotificationImportance(String? value,
+        [fln.Importance? defaultValue]) =>
+    parseEnum(fln.Importance.values, value, defaultValue);
 
 /// Converts the vibration pattern shared by notifications and channels.
 Int64List? parseNotificationVibrationPattern(Object? value) {

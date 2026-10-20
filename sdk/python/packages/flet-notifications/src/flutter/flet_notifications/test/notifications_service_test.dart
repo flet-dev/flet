@@ -232,6 +232,29 @@ void main() {
     expect(plugin.shown, isEmpty);
   });
 
+  test("show accepts enum names case-insensitively and falls back for unknown values", () async {
+    final service = _makeService();
+    for (final value in ["unknown", "HIGH"]) {
+      expect(await service.invokeMethod("show", {
+        "id": 1,
+        "options": {
+          "android": {
+            "importance": value,
+            "priority": value,
+            "visibility": "PRIVATE",
+          },
+        },
+      }), "ok");
+      final details =
+          plugin.shown.last["details"] as fln.AndroidNotificationDetails;
+      expect(details.importance,
+          value == "HIGH" ? fln.Importance.high : fln.Importance.defaultImportance);
+      expect(details.priority,
+          value == "HIGH" ? fln.Priority.high : fln.Priority.defaultPriority);
+      expect(details.visibility, fln.NotificationVisibility.private);
+    }
+  });
+
   test("show applies AndroidOptions onto the details", () async {
     final service = _makeService();
     final result = await service.invokeMethod("show", {
