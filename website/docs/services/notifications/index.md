@@ -118,8 +118,9 @@ the site's browser permissions before requesting again.
 checks browser permission without prompting. It returns `False` when permission
 is denied, undecided, or notifications are unsupported.
 
-The bridge also does not forward custom notification action buttons or
-[`WebOptions`][flet_notifications.WebOptions].
+Use [`WebOptions`][flet_notifications.WebOptions] to customize browser notifications.
+The browser and operating system determine which presentation options are honored.
+Custom notification action buttons are not yet forwarded by the bridge.
 
 ## Examples
 

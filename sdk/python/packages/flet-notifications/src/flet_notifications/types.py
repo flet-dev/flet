@@ -12,6 +12,7 @@ __all__ = [
     "Importance",
     "LinuxNotificationCategory",
     "RepeatInterval",
+    "WebNotificationDirection",
     "WindowsNotificationDuration",
     "WindowsNotificationSound",
 ]
@@ -901,3 +902,21 @@ class AndroidForegroundServiceType(Enum):
 
     See [Android's requirements](https://developer.android.com/develop/background-work/services/fgs/service-types#system-exempted) for this type.
     """  # noqa: E501
+
+
+class WebNotificationDirection(Enum):
+    """
+    Text direction for a browser notification.
+
+    Used by :attr:`flet_notifications.WebOptions.direction`. Browsers may ignore this
+    hint; it does not translate the notification's content.
+    """
+
+    AUTO = "auto"
+    """Use the browser's language-setting behavior to choose the text direction."""
+
+    LEFT_TO_RIGHT = "leftToRight"
+    """Request left-to-right text layout."""
+
+    RIGHT_TO_LEFT = "rightToLeft"
+    """Request right-to-left text layout."""

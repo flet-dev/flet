@@ -1,7 +1,3 @@
-/// The `LocalNotifications` Flet service: a 1:1 bridge from the Python
-/// control to `flutter_local_notifications`.
-library;
-
 import 'dart:async';
 import 'dart:convert';
 import 'dart:typed_data';
@@ -88,8 +84,7 @@ class LocalNotificationsService extends FletService {
       await _plugin!.initialize(
         settings: _buildInitializationSettings(),
         onDidReceiveNotificationResponse: _handleResponse,
-        onDidReceiveBackgroundNotificationResponse:
-            notificationTapBackground,
+        onDidReceiveBackgroundNotificationResponse: notificationTapBackground,
       );
       _initialized = true;
       await _replayQueuedTaps();
@@ -110,22 +105,14 @@ class LocalNotificationsService extends FletService {
     final defaultIcon =
         control.getString("default_icon") ?? "@mipmap/ic_launcher";
     final darwin = fln.DarwinInitializationSettings(
-      requestAlertPermission: control.getBool(
-        "request_alert_permission",
-        true,
-      )!,
-      requestSoundPermission: control.getBool(
-        "request_sound_permission",
-        true,
-      )!,
-      requestBadgePermission: control.getBool(
-        "request_badge_permission",
-        true,
-      )!,
-      requestCriticalPermission: control.getBool(
-        "request_critical_permission",
-        false,
-      )!,
+      requestAlertPermission:
+          control.getBool("request_alert_permission", true)!,
+      requestSoundPermission:
+          control.getBool("request_sound_permission", true)!,
+      requestBadgePermission:
+          control.getBool("request_badge_permission", true)!,
+      requestCriticalPermission:
+          control.getBool("request_critical_permission", false)!,
       notificationCategories: darwinCategories,
     );
     return fln.InitializationSettings(
@@ -467,13 +454,11 @@ class LocalNotificationsService extends FletService {
 
   fln.AndroidFlutterLocalNotificationsPlugin? get _androidPlugin =>
       _plugin?.resolvePlatformSpecificImplementation<
-        fln.AndroidFlutterLocalNotificationsPlugin
-      >();
+          fln.AndroidFlutterLocalNotificationsPlugin>();
 
   fln.WebFlutterLocalNotificationsPlugin? get _webPlugin =>
       _plugin?.resolvePlatformSpecificImplementation<
-        fln.WebFlutterLocalNotificationsPlugin
-      >();
+          fln.WebFlutterLocalNotificationsPlugin>();
 
   // ── Notification details construction ───────────────────────────────
 
@@ -483,31 +468,27 @@ class LocalNotificationsService extends FletService {
     ParsedStyle? style,
     Map? details,
   }) async {
-    final androidActions =
-        actions
-            .map(
-              (a) => fln.AndroidNotificationAction(
-                a.id,
-                a.title,
-                showsUserInterface: a.foreground,
-                cancelNotification: a.cancelNotification,
-                allowGeneratedReplies: a.input != null,
-                inputs:
-                    a.input == null
-                        ? const []
-                        : [
-                          fln.AndroidNotificationActionInput(
-                            label: a.input!.label.isEmpty
-                                ? null
-                                : a.input!.label,
-                            choices: a.input!.choices,
-                            allowFreeFormInput: a.input!.allowFreeFormInput,
-                            allowedMimeTypes: a.input!.allowedMimeTypes,
-                          ),
-                        ],
-              ),
-            )
-            .toList();
+    final androidActions = actions
+        .map(
+          (a) => fln.AndroidNotificationAction(
+            a.id,
+            a.title,
+            showsUserInterface: a.foreground,
+            cancelNotification: a.cancelNotification,
+            allowGeneratedReplies: a.input != null,
+            inputs: a.input == null
+                ? const []
+                : [
+                    fln.AndroidNotificationActionInput(
+                      label: a.input!.label.isEmpty ? null : a.input!.label,
+                      choices: a.input!.choices,
+                      allowFreeFormInput: a.input!.allowFreeFormInput,
+                      allowedMimeTypes: a.input!.allowedMimeTypes,
+                    ),
+                  ],
+          ),
+        )
+        .toList();
 
     final darwinDetails = _mapDarwinDetails(
       id: id,
@@ -520,15 +501,14 @@ class LocalNotificationsService extends FletService {
     }
 
     final payloadForWindows = (details ?? const {})["payload"] as String? ?? "";
-    final windowsActions =
-        actions.map((a) {
-          return fln.WindowsAction(
-            content: a.title,
-            arguments: jsonEncode({"id": a.id, "payload": payloadForWindows}),
-            inputId: a.input == null ? null : a.id,
-            activationBehavior: fln.WindowsNotificationBehavior.dismiss,
-          );
-        }).toList();
+    final windowsActions = actions.map((a) {
+      return fln.WindowsAction(
+        content: a.title,
+        arguments: jsonEncode({"id": a.id, "payload": payloadForWindows}),
+        inputId: a.input == null ? null : a.id,
+        activationBehavior: fln.WindowsNotificationBehavior.dismiss,
+      );
+    }).toList();
 
     // Windows renders inline replies as separate input elements; Android and
     // Darwin put them on the action itself.
@@ -547,9 +527,10 @@ class LocalNotificationsService extends FletService {
     final d = details ?? const {};
     final androidOptions = _platformOptions(details, "android") ?? const {};
     final linuxOptions = _platformOptions(details, "linux") ?? const {};
+    final webOptions = _platformOptions(details, "web") ?? const {};
     final windowsOptions = _platformOptions(details, "windows") ?? const {};
-    final channelId =
-        (d["channel_id"] as String?) ?? (androidOptions["channel_id"] as String?);
+    final channelId = (d["channel_id"] as String?) ??
+        (androidOptions["channel_id"] as String?);
     final groupKey = d["group_key"] as String?;
     final groupAlert = _mapGroupAlertBehavior(
       d["group_alert_behavior"] as String?,
@@ -575,7 +556,8 @@ class LocalNotificationsService extends FletService {
         priority: _mapPriority(androidOptions["priority"] as String?),
         playSound: optionalBool(androidOptions["play_sound"]) ?? true,
         sound: _mapSound(androidOptions["sound"] as String?),
-        enableVibration: optionalBool(androidOptions["enable_vibration"]) ?? true,
+        enableVibration:
+            optionalBool(androidOptions["enable_vibration"]) ?? true,
         vibrationPattern: _toInt64List(androidOptions["vibration_pattern"]),
         groupKey: groupKey,
         setAsGroupSummary: optionalBool(d["set_as_group_summary"]) ?? false,
@@ -589,7 +571,8 @@ class LocalNotificationsService extends FletService {
         onlyAlertOnce: optionalBool(androidOptions["only_alert_once"]) ?? false,
         showWhen: optionalBool(androidOptions["show_when"]) ?? true,
         when: androidOptions["when"] as int?,
-        usesChronometer: optionalBool(androidOptions["uses_chronometer"]) ?? false,
+        usesChronometer:
+            optionalBool(androidOptions["uses_chronometer"]) ?? false,
         chronometerCountDown:
             optionalBool(androidOptions["chronometer_count_down"]) ?? false,
         channelShowBadge:
@@ -601,7 +584,8 @@ class LocalNotificationsService extends FletService {
         progress: (d["progress"] as int?) ?? 0,
         indeterminate: optionalBool(d["indeterminate"]) ?? false,
         enableLights: optionalBool(androidOptions["enable_lights"]) ?? false,
-        ledColor: parseColor((androidOptions["led_color"] as String?)?.trim(), null),
+        ledColor:
+            parseColor((androidOptions["led_color"] as String?)?.trim(), null),
         ledOnMs: androidOptions["led_on_ms"] as int?,
         ledOffMs: androidOptions["led_off_ms"] as int?,
         ticker: androidOptions["ticker"] as String?,
@@ -630,8 +614,8 @@ class LocalNotificationsService extends FletService {
         timeout: linuxOptions["timeout_ms"] == null
             ? const fln.LinuxNotificationTimeout.systemDefault()
             : fln.LinuxNotificationTimeout.fromDuration(
-              Duration(milliseconds: linuxOptions["timeout_ms"] as int),
-            ),
+                Duration(milliseconds: linuxOptions["timeout_ms"] as int),
+              ),
         resident: optionalBool(linuxOptions["resident"]) ?? false,
         transient: optionalBool(linuxOptions["transient"]) ?? false,
         suppressSound: optionalBool(linuxOptions["suppress_sound"]) ?? false,
@@ -648,21 +632,43 @@ class LocalNotificationsService extends FletService {
         timestamp: windowsOptions["timestamp"] == null
             ? null
             : DateTime.fromMillisecondsSinceEpoch(
-              windowsOptions["timestamp"] as int,
-            ),
+                windowsOptions["timestamp"] as int,
+              ),
         subtitle: windowsOptions["subtitle"] as String?,
-        images:
-            (windowsOptions["images"] as List?)
+        images: (windowsOptions["images"] as List?)
                 ?.map((e) => fln.WindowsImage(Uri.parse("$e"), altText: ""))
                 .toList() ??
             const [],
-        bindings:
-            (windowsOptions["bindings"] as Map?)?.map(
+        bindings: (windowsOptions["bindings"] as Map?)?.map(
               (k, v) => MapEntry("$k", "$v"),
             ) ??
             const {},
       ),
-      web: const fln.WebNotificationDetails(),
+      web: fln.WebNotificationDetails(
+        direction: parseEnum(
+          fln.WebNotificationDirection.values,
+          webOptions["direction"] as String?,
+          fln.WebNotificationDirection.auto,
+        )!,
+        badgeUrl: webOptions["badge_url"] == null
+            ? null
+            : Uri.parse(webOptions["badge_url"] as String),
+        iconUrl: webOptions["icon_url"] == null
+            ? null
+            : Uri.parse(webOptions["icon_url"] as String),
+        imageUrl: webOptions["image_url"] == null
+            ? null
+            : Uri.parse(webOptions["image_url"] as String),
+        lang: webOptions["lang"] as String?,
+        requireInteraction:
+            optionalBool(webOptions["require_interaction"]) ?? false,
+        isSilent: optionalBool(webOptions["is_silent"]) ?? false,
+        renotify: optionalBool(webOptions["renotify"]) ?? false,
+        timestamp: webOptions["timestamp"] == null
+            ? null
+            : DateTime.fromMillisecondsSinceEpoch(
+                webOptions["timestamp"] as int),
+      ),
     );
   }
 
@@ -712,8 +718,7 @@ class LocalNotificationsService extends FletService {
         o["interruption_level"] as String?,
       ),
       criticalSoundVolume: (o["critical_sound_volume"] as num?)?.toDouble(),
-      attachments:
-          (o["attachments"] as List?)
+      attachments: (o["attachments"] as List?)
               ?.map((e) => fln.DarwinNotificationAttachment("$e"))
               .toList() ??
           const [],
@@ -896,7 +901,8 @@ class LocalNotificationsService extends FletService {
     final path = icon.filePath;
     if (path != null) return fln.FilePathAndroidBitmap(path);
     final data = icon.data;
-    if (data != null) return fln.ByteArrayAndroidBitmap(Uint8List.fromList(data));
+    if (data != null)
+      return fln.ByteArrayAndroidBitmap(Uint8List.fromList(data));
     throw const FormatException(
       "big-picture images support drawable, file path and byte sources",
     );
@@ -964,28 +970,27 @@ class LocalNotificationsService extends FletService {
     int id,
     List<ParsedAction> actions,
   ) async {
-    final categoryActions =
-        actions.map((a) {
-          final options = <fln.DarwinNotificationActionOption>{
-            if (a.destructive) fln.DarwinNotificationActionOption.destructive,
-            if (a.foreground) fln.DarwinNotificationActionOption.foreground,
-          };
-          final input = a.input;
-          if (input == null) {
-            return fln.DarwinNotificationAction.plain(
-              a.id,
-              a.title,
-              options: options,
-            );
-          }
-          return fln.DarwinNotificationAction.text(
-            a.id,
-            a.title,
-            buttonTitle: input.label.isEmpty ? a.title : input.label,
-            placeholder: input.label.isEmpty ? null : input.label,
-            options: options,
-          );
-        }).toList();
+    final categoryActions = actions.map((a) {
+      final options = <fln.DarwinNotificationActionOption>{
+        if (a.destructive) fln.DarwinNotificationActionOption.destructive,
+        if (a.foreground) fln.DarwinNotificationActionOption.foreground,
+      };
+      final input = a.input;
+      if (input == null) {
+        return fln.DarwinNotificationAction.plain(
+          a.id,
+          a.title,
+          options: options,
+        );
+      }
+      return fln.DarwinNotificationAction.text(
+        a.id,
+        a.title,
+        buttonTitle: input.label.isEmpty ? a.title : input.label,
+        placeholder: input.label.isEmpty ? null : input.label,
+        options: options,
+      );
+    }).toList();
 
     // setNotificationCategories REPLACES the set, so every category created
     // so far is re-applied together; otherwise notification B's actions would
@@ -996,9 +1001,8 @@ class LocalNotificationsService extends FletService {
         actions: categoryActions,
       ),
     ];
-    final allCategories = _darwinCategories.values
-        .expand((categories) => categories)
-        .toList();
+    final allCategories =
+        _darwinCategories.values.expand((categories) => categories).toList();
 
     await _plugin?.initialize(
       settings: _buildInitializationSettings(darwinCategories: allCategories),
@@ -1027,8 +1031,7 @@ class LocalNotificationsService extends FletService {
     }
 
     final ios = _plugin?.resolvePlatformSpecificImplementation<
-      fln.IOSFlutterLocalNotificationsPlugin
-    >();
+        fln.IOSFlutterLocalNotificationsPlugin>();
     if (ios != null) {
       return await ios.requestPermissions(
             sound: control.getBool("request_sound_permission", true)!,
@@ -1040,8 +1043,7 @@ class LocalNotificationsService extends FletService {
     }
 
     final macos = _plugin?.resolvePlatformSpecificImplementation<
-      fln.MacOSFlutterLocalNotificationsPlugin
-    >();
+        fln.MacOSFlutterLocalNotificationsPlugin>();
     if (macos != null) {
       return await macos.requestPermissions(
             sound: control.getBool("request_sound_permission", true)!,
@@ -1080,12 +1082,11 @@ class LocalNotificationsService extends FletService {
           importance: _mapImportance(map["importance"] as String?),
           bypassDnd: optionalBool(map["bypass_dnd"]) ?? false,
           playSound: optionalBool(map["play_sound"]) ?? true,
-          sound:
-              map["sound"] == null
-                  ? null
-                  : fln.RawResourceAndroidNotificationSound(
-                    map["sound"] as String,
-                  ),
+          sound: map["sound"] == null
+              ? null
+              : fln.RawResourceAndroidNotificationSound(
+                  map["sound"] as String,
+                ),
           enableVibration: optionalBool(map["enable_vibration"]) ?? true,
           vibrationPattern: _toInt64List(map["vibration_pattern"]),
           showBadge: optionalBool(map["show_badge"]) ?? true,
@@ -1247,7 +1248,8 @@ class LocalNotificationsService extends FletService {
           actions: actions,
           style: parseStyle(map["style"]),
           details: map,
-        )).android,
+        ))
+            .android,
       );
       return "ok";
     } catch (e) {
@@ -1285,20 +1287,25 @@ class LocalNotificationsService extends FletService {
       "camera": fln.AndroidServiceForegroundType.foregroundServiceTypeCamera,
       "connectedDevice":
           fln.AndroidServiceForegroundType.foregroundServiceTypeConnectedDevice,
-      "dataSync": fln.AndroidServiceForegroundType.foregroundServiceTypeDataSync,
+      "dataSync":
+          fln.AndroidServiceForegroundType.foregroundServiceTypeDataSync,
       "health": fln.AndroidServiceForegroundType.foregroundServiceTypeHealth,
-      "location": fln.AndroidServiceForegroundType.foregroundServiceTypeLocation,
+      "location":
+          fln.AndroidServiceForegroundType.foregroundServiceTypeLocation,
       "mediaPlayback":
           fln.AndroidServiceForegroundType.foregroundServiceTypeMediaPlayback,
       "mediaProjection":
           fln.AndroidServiceForegroundType.foregroundServiceTypeMediaProjection,
-      "microphone": fln.AndroidServiceForegroundType.foregroundServiceTypeMicrophone,
-      "phoneCall": fln.AndroidServiceForegroundType.foregroundServiceTypePhoneCall,
+      "microphone":
+          fln.AndroidServiceForegroundType.foregroundServiceTypeMicrophone,
+      "phoneCall":
+          fln.AndroidServiceForegroundType.foregroundServiceTypePhoneCall,
       "remoteMessaging":
           fln.AndroidServiceForegroundType.foregroundServiceTypeRemoteMessaging,
       "shortService":
           fln.AndroidServiceForegroundType.foregroundServiceTypeShortService,
-      "specialUse": fln.AndroidServiceForegroundType.foregroundServiceTypeSpecialUse,
+      "specialUse":
+          fln.AndroidServiceForegroundType.foregroundServiceTypeSpecialUse,
       "systemExempted":
           fln.AndroidServiceForegroundType.foregroundServiceTypeSystemExempted,
     };
@@ -1377,8 +1384,7 @@ class LocalNotificationsService extends FletService {
       final response = details.notificationResponse;
       return jsonEncode({
         "did_notification_launch_app": true,
-        "notification":
-            response == null ? null : responseToEvent(response),
+        "notification": response == null ? null : responseToEvent(response),
       });
     } catch (e) {
       return "error:query_failed:$e";

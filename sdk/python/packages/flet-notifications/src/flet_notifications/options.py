@@ -7,6 +7,7 @@ from flet_notifications.types import (
     AndroidNotificationFlag,
     Importance,
     LinuxNotificationCategory,
+    WebNotificationDirection,
     WindowsNotificationDuration,
     WindowsNotificationSound,
 )
@@ -728,42 +729,70 @@ class WindowsOptions:
 @ft.value(kw_only=True)
 class WebOptions:
     """
-    Browser Notification API options reserved by the Python API.
+    Browser-specific presentation options for
+    :meth:`flet_notifications.LocalNotifications.show`.
 
-    Note:
-        The Dart bridge currently creates default web notification details and does not
-        forward any fields in this class. Setting these options has no effect. Browser
-        defaults apply.
+    Individual options may be ignored depending on the browser and operating system.
+    Notification permission is still required. Image URLs must be accessible to the
+    browser; local Python file paths are not resolved or uploaded by these options.
+
+    See the browser [notification options](https://developer.mozilla.org/en-US/docs/Web/API/ServiceWorkerRegistration/showNotification#parameters)
+    for platform support and restrictions.
     """
 
-    direction: str | None = None
-    """Text direction (`"auto"`, `"ltr"`, or `"rtl"`); currently not forwarded."""
+    direction: WebNotificationDirection | None = None
+    """Requested text direction; the browser may ignore this hint."""
 
     badge_url: str | None = None
-    """URL of a compact badge image; currently not forwarded."""
+    """
+    URL of a compact image used where the full notification icon will not fit.
+
+    Some platforms mask this image to a monochrome silhouette.
+    """
 
     icon_url: str | None = None
-    """URL of the notification icon; currently not forwarded."""
+    """URL of an image displayed alongside the notification's title and body."""
 
     image_url: str | None = None
-    """URL of a larger notification image; currently not forwarded."""
+    """URL of a larger image displayed within the notification's content."""
 
     lang: str | None = None
-    """BCP 47 language tag, such as `"en-GB"`; currently not forwarded."""
+    """
+    BCP 47 language tag for the content, such as `"en-GB"` or `"ja-JP"`.
+
+    This labels the language; it does not translate the title or body.
+    """
 
     require_interaction: bool | None = None
-    """Whether to remain visible until user interaction; currently not forwarded."""
+    """
+    Request that the notification remain visible until clicked or dismissed.
+
+    The browser and operating system determine whether this request is honored.
+    """
 
     is_silent: bool | None = None
-    """Whether to suppress sound and vibration; currently not forwarded."""
+    """
+    Whether to suppress notification sound and vibration.
+
+    `False` permits alerting but does not override browser or system sound settings.
+    """
 
     renotify: bool | None = None
     """
-    Whether replacing a notification alerts the user again; currently not forwarded.
+    Whether replacing a notification should alert the user again.
+
+    Call :meth:`flet_notifications.LocalNotifications.show` with the same `id` to
+    replace a notification. The backend uses that ID as the browser notification tag.
+    Sound can still be suppressed by :attr:`is_silent` or user settings.
     """
 
     timestamp: int | None = None
-    """Event timestamp in Unix epoch milliseconds; currently not forwarded."""
+    """
+    Time associated with the notification's event, in Unix epoch milliseconds.
+
+    Can represent an earlier event, such as a message received while offline. This is
+    display metadata; it does not schedule notification delivery.
+    """
 
 
 @ft.value(kw_only=True)
@@ -806,4 +835,4 @@ class NotificationOptions:
     """Details used when running on Windows."""
 
     web: WebOptions | None = None
-    """Reserved browser details; currently not forwarded by the bridge."""
+    """Details used when running in a web browser."""

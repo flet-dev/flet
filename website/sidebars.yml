@@ -714,6 +714,7 @@ docs:
         - services/notifications/types/responsetype.md
         - services/notifications/types/style.md
         - services/notifications/types/visibility.md
+        - services/notifications/types/webnotificationdirection.md
         - services/notifications/types/weboptions.md
         - services/notifications/types/windowsnotificationduration.md
         - services/notifications/types/windowsnotificationsound.md

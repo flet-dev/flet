@@ -47,6 +47,7 @@ from flet_notifications.types import (
     Importance,
     LinuxNotificationCategory,
     RepeatInterval,
+    WebNotificationDirection,
     WindowsNotificationDuration,
     WindowsNotificationSound,
 )
@@ -90,6 +91,7 @@ __all__ = [
     "ResponseType",
     "Style",
     "Visibility",
+    "WebNotificationDirection",
     "WebOptions",
     "WindowsNotificationDuration",
     "WindowsNotificationSound",

@@ -15,6 +15,8 @@ from flet_notifications import (
     NotificationError,
     NotificationOptions,
     RepeatInterval,
+    WebNotificationDirection,
+    WebOptions,
 )
 
 from .helpers import encode_wire
@@ -49,7 +51,14 @@ async def test_methods_encode_nested_notification_values(
             icon="ic_stat_notify",
             audio_attributes_usage=AndroidAudioAttributesUsage.ALARM,
             additional_flags=flags,
-        )
+        ),
+        web=WebOptions(
+            direction=WebNotificationDirection.RIGHT_TO_LEFT,
+            icon_url="/assets/icon.png",
+            require_interaction=True,
+            is_silent=False,
+            timestamp=1700000000123,
+        ),
     )
     style = BigPictureStyle(image=AndroidIcon(file_path="/tmp/photo.png"))
     actions = [NotificationAction(id="open", title="Open")]
@@ -68,7 +77,14 @@ async def test_methods_encode_nested_notification_values(
             "icon": "ic_stat_notify",
             "audio_attributes_usage": "alarm",
             "additional_flags": expected_flags,
-        }
+        },
+        "web": {
+            "direction": "rightToLeft",
+            "icon_url": "/assets/icon.png",
+            "require_interaction": True,
+            "is_silent": False,
+            "timestamp": 1700000000123,
+        },
     }
     assert wire["style"] == {
         "_type": "big_picture",

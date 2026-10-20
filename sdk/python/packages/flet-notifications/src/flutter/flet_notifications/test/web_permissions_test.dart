@@ -17,6 +17,19 @@ external JSObject get _global;
 
 // Avoid service-worker registration while retaining the upstream permission API.
 class _WebPlugin extends fln.WebFlutterLocalNotificationsPlugin {
+  final List<fln.WebNotificationDetails> shown = [];
+
+  @override
+  Future<void> show({
+    required int id,
+    String? title,
+    String? body,
+    String? payload,
+    fln.WebNotificationDetails? notificationDetails,
+  }) async {
+    shown.add(notificationDetails!);
+  }
+
   @override
   Future<bool?> initialize({
     fln.DidReceiveNotificationResponseCallback?
@@ -124,5 +137,77 @@ void main() {
     expect(await service.invokeMethod('are_notifications_enabled'), 'false');
     expect(await service.invokeMethod('request_permissions'), 'false');
     expect(requests, 0);
+  });
+
+  test('show forwards all browser presentation options', () async {
+    final service = _service();
+    final result = await service.invokeMethod('show', {
+      'id': 7,
+      'title': 'A message',
+      'options': {
+        'web': {
+          'direction': 'rightToLeft',
+          'badge_url': 'https://example.com/badge.png',
+          'icon_url': '/assets/icon.png',
+          'image_url': 'https://example.com/photo.png',
+          'lang': 'ar',
+          'require_interaction': true,
+          'is_silent': true,
+          'renotify': true,
+          'timestamp': 1700000000123,
+        },
+      },
+    });
+    expect(result, 'ok');
+    final plugin = fln.FlutterLocalNotificationsPlatform.instance as _WebPlugin;
+    final details = plugin.shown.single;
+    expect(details.direction, fln.WebNotificationDirection.rightToLeft);
+    expect(details.badgeUrl, Uri.parse('https://example.com/badge.png'));
+    expect(details.iconUrl, Uri.parse('/assets/icon.png'));
+    expect(details.imageUrl, Uri.parse('https://example.com/photo.png'));
+    expect(details.lang, 'ar');
+    expect(details.requireInteraction, isTrue);
+    expect(details.isSilent, isTrue);
+    expect(details.renotify, isTrue);
+    expect(details.timestamp!.millisecondsSinceEpoch, 1700000000123);
+  });
+
+  test(
+      'omitted web options use upstream defaults and explicit false is honored',
+      () async {
+    final service = _service();
+    final plugin = fln.FlutterLocalNotificationsPlatform.instance as _WebPlugin;
+    expect(await service.invokeMethod('show', {'id': 7}), 'ok');
+    final defaults = plugin.shown.single;
+    expect(defaults.direction, fln.WebNotificationDirection.auto);
+    expect(defaults.badgeUrl, isNull);
+    expect(defaults.iconUrl, isNull);
+    expect(defaults.imageUrl, isNull);
+    expect(defaults.lang, isNull);
+    expect(defaults.timestamp, isNull);
+    expect(defaults.requireInteraction, isFalse);
+    expect(defaults.isSilent, isFalse);
+    expect(defaults.renotify, isFalse);
+
+    for (final enabled in [true, false]) {
+      expect(
+          await service.invokeMethod('show', {
+            'id': 7,
+            'options': {
+              'web': {
+                'direction': 'leftToRight',
+                'require_interaction': enabled,
+                'is_silent': enabled,
+                'renotify': enabled,
+              },
+            },
+          }),
+          'ok');
+      final details = plugin.shown.last;
+      expect(details.direction, fln.WebNotificationDirection.leftToRight);
+      expect(details.requireInteraction, enabled);
+      expect(details.isSilent, enabled);
+      expect(details.renotify, enabled);
+    }
   });
 }
