@@ -220,6 +220,18 @@ void main() {
     expect(plugin.shown, isEmpty);
   });
 
+  test("show preserves invalid_option for an unknown Android category", () async {
+    final result = await _makeService().invokeMethod("show", {
+      "id": 1,
+      "options": {
+        "android": {"category": "unknown-category"},
+      },
+    });
+    expect(result,
+        "error:invalid_option:unknown notification category: unknown-category");
+    expect(plugin.shown, isEmpty);
+  });
+
   test("show applies AndroidOptions onto the details", () async {
     final service = _makeService();
     final result = await service.invokeMethod("show", {
