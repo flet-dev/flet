@@ -53,12 +53,11 @@ class NotificationActionInput:
 @ft.value(kw_only=True)
 class NotificationAction:
     """
-    Button attached to a notification on Android, iOS, macOS, or Windows.
+    Button attached to a notification on Android, iOS, macOS, Windows, or Web.
 
     Selections are reported through
     :attr:`flet_notifications.LocalNotifications.on_action`, with :attr:`id` in
-    :attr:`flet_notifications.NotificationEvent.action_id`. The bridge does not
-    currently forward custom action buttons to Linux or Web.
+    :attr:`flet_notifications.NotificationEvent.action_id`.
 
     For inline replies, set :attr:`input`. Reply text is available in
     :attr:`flet_notifications.NotificationEvent.input`; Windows also returns input
@@ -70,36 +69,60 @@ class NotificationAction:
     Nonempty identifier returned when the action is selected.
 
     Choose distinct IDs within a notification so handlers can distinguish its buttons.
-    Windows also uses this ID to identify an associated input.
+
+    Note:
+        Windows also uses this ID to identify an associated input.
     """
 
     title: str
-    """Nonempty button label displayed by the operating system."""
+    """
+    Nonempty button label displayed by the operating system.
+
+    Note:
+        Linux does not support custom action buttons through this extension. On Web,
+        browser and operating-system support determine whether buttons appear and how
+        many can be shown. See browser [notification action support](https://developer.mozilla.org/en-US/docs/Web/API/Notification/actions#browser_compatibility).
+        Keep essential actions available in the app as well.
+    """
 
     destructive: bool = False
     """
-    Whether iOS/macOS should style the action as destructive.
+    Whether to style the action as destructive.
 
-    This changes presentation, not the action's behavior;
-    Android and Windows ignore the flag.
+    This changes presentation, not the action's behavior.
+
+    Note:
+        Supported only on iOS/macOS. Android, Windows, and Web ignore this flag.
     """
 
     foreground: bool = True
     """
     Whether selecting the action brings the app to the foreground.
 
-    Used on Android and iOS/macOS. With `False`, those platforms may run the background
-    handler, which queues the event for replay when the service next initializes. Python
-    handlers do not execute inside that background isolate. Windows actions currently
-    use dismiss activation regardless of this flag.
+    On Android and iOS/macOS, `False` allows the background handler to queue the event
+    for replay when the service next initializes. Python handlers do not execute inside
+    that background isolate.
+
+    Note:
+        Supported only on Android and iOS/macOS. Windows actions use dismiss activation
+        regardless of this flag. Web ignores this flag; the upstream service worker
+        delivers the click to an open app window or opens the app if none is available.
     """
 
     cancel_notification: bool = True
     """
-    Whether Android dismisses the notification when this action is selected.
+    Whether to dismiss the notification when this action is selected.
 
-    Not forwarded on other platforms.
+    Note:
+        Supported only on Android. This flag is not forwarded on other platforms.
     """
 
     input: NotificationActionInput | None = None
-    """Optional reply input associated with this action."""
+    """
+    Reply input associated with this action.
+
+    Note:
+        Supported on Android, iOS, macOS, and Windows. On Web, the action remains a
+        regular button; the input configuration is not forwarded. Linux does not
+        support custom action inputs through this extension.
+    """

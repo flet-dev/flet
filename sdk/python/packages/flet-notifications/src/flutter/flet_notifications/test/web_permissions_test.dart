@@ -18,6 +18,7 @@ external JSObject get _global;
 // Avoid service-worker registration while retaining the upstream permission API.
 class _WebPlugin extends fln.WebFlutterLocalNotificationsPlugin {
   final List<fln.WebNotificationDetails> shown = [];
+  fln.DidReceiveNotificationResponseCallback? onResponse;
 
   @override
   Future<void> show({
@@ -34,22 +35,48 @@ class _WebPlugin extends fln.WebFlutterLocalNotificationsPlugin {
   Future<bool?> initialize({
     fln.DidReceiveNotificationResponseCallback?
         onDidReceiveNotificationResponse,
-  }) async =>
-      true;
+  }) async {
+    onResponse = onDidReceiveNotificationResponse;
+    return true;
+  }
 }
 
-LocalNotificationsService _service() => LocalNotificationsService(
-      control: Control(
-        id: 1,
-        type: 'LocalNotifications',
-        properties: const {},
-        backend: FletBackend(
-          pageUri: Uri.parse('http://localhost'),
-          assetsDir: '',
-          extensions: [],
-          multiView: false,
-        ),
-      ),
+class _RecordingControl extends Control {
+  final List<Map<String, Object?>> events = [];
+
+  _RecordingControl()
+      : super(
+          id: 1,
+          type: 'LocalNotifications',
+          properties: const {},
+          backend: FletBackend(
+            pageUri: Uri.parse('http://localhost'),
+            assetsDir: '',
+            extensions: [],
+            multiView: false,
+          ),
+        );
+
+  @override
+  void triggerEvent(String eventName, [dynamic data]) {
+    events.add({'name': eventName, 'data': data});
+  }
+}
+
+LocalNotificationsService _service({Control? control}) =>
+    LocalNotificationsService(
+      control: control ??
+          Control(
+            id: 1,
+            type: 'LocalNotifications',
+            properties: const {},
+            backend: FletBackend(
+              pageUri: Uri.parse('http://localhost'),
+              assetsDir: '',
+              extensions: [],
+              multiView: false,
+            ),
+          ),
     );
 
 void main() {
@@ -144,6 +171,10 @@ void main() {
     final result = await service.invokeMethod('show', {
       'id': 7,
       'title': 'A message',
+      'actions': [
+        {'id': 'open', 'title': 'Open'},
+        {'id': 'archive', 'title': 'Archive', 'foreground': false},
+      ],
       'options': {
         'web': {
           'direction': 'rightToLeft',
@@ -161,6 +192,8 @@ void main() {
     expect(result, 'ok');
     final plugin = fln.FlutterLocalNotificationsPlatform.instance as _WebPlugin;
     final details = plugin.shown.single;
+    expect(details.actions.map((a) => a.action), ['open', 'archive']);
+    expect(details.actions.map((a) => a.title), ['Open', 'Archive']);
     expect(details.direction, fln.WebNotificationDirection.rightToLeft);
     expect(details.badgeUrl, Uri.parse('https://example.com/badge.png'));
     expect(details.iconUrl, Uri.parse('/assets/icon.png'));
@@ -179,6 +212,7 @@ void main() {
     final plugin = fln.FlutterLocalNotificationsPlatform.instance as _WebPlugin;
     expect(await service.invokeMethod('show', {'id': 7}), 'ok');
     final defaults = plugin.shown.single;
+    expect(defaults.actions, isEmpty);
     expect(defaults.direction, fln.WebNotificationDirection.auto);
     expect(defaults.badgeUrl, isNull);
     expect(defaults.iconUrl, isNull);
@@ -210,4 +244,29 @@ void main() {
       expect(details.renotify, enabled);
     }
   });
+  for (final action in [true, false]) {
+    test('browser callback emits ${action ? "action" : "tap"} with payload',
+        () async {
+      final control = _RecordingControl();
+      final service = _service(control: control);
+      expect(await service.invokeMethod('initialize'), 'ok');
+      final plugin =
+          fln.FlutterLocalNotificationsPlatform.instance as _WebPlugin;
+      plugin.onResponse!(fln.NotificationResponse(
+        id: 7,
+        actionId: action ? 'archive' : null,
+        payload: 'message:42',
+        notificationResponseType: action
+            ? fln.NotificationResponseType.selectedNotificationAction
+            : fln.NotificationResponseType.selectedNotification,
+      ));
+      final event = control.events.single;
+      expect(event['name'], action ? 'action' : 'tap');
+      final data = event['data'] as Map;
+      expect(data['id'], 7);
+      expect(data['action_id'], action ? 'archive' : '');
+      expect(data['payload'], 'message:42');
+      expect(data['response_type'], action ? 'action' : 'tap');
+    });
+  }
 }

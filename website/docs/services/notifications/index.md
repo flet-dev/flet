@@ -120,7 +120,9 @@ is denied, undecided, or notifications are unsupported.
 
 Use [`WebOptions`][flet_notifications.WebOptions] to customize browser notifications.
 The browser and operating system determine which presentation options are honored.
-Custom notification action buttons are not yet forwarded by the bridge.
+[`NotificationAction`][flet_notifications.NotificationAction] buttons are forwarded
+on Web, but browser support and the number of visible buttons vary. Inline action
+inputs are not supported; provide essential actions within the app as well.
 
 ## Examples
 

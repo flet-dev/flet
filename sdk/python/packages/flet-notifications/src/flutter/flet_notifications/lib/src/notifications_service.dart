@@ -645,6 +645,9 @@ class LocalNotificationsService extends FletService {
             const {},
       ),
       web: fln.WebNotificationDetails(
+        actions: actions
+            .map((a) => fln.WebNotificationAction(action: a.id, title: a.title))
+            .toList(),
         direction: parseEnum(
           fln.WebNotificationDirection.values,
           webOptions["direction"] as String?,
