@@ -15,6 +15,8 @@ from starlette.routing import BaseRoute
 
 import flet_web.fastapi
 
+_DEFAULT_RESPONSE_CLASS = Default(JSONResponse)
+
 
 class FastAPI(fastapi.FastAPI):
     """
@@ -38,7 +40,7 @@ class FastAPI(fastapi.FastAPI):
         openapi_tags: Optional[list[dict[str, Any]]] = None,
         servers: Optional[list[dict[str, Union[str, Any]]]] = None,
         dependencies: Optional[Sequence[Depends]] = None,
-        default_response_class: type[Response] = Default(JSONResponse),
+        default_response_class: type[Response] = _DEFAULT_RESPONSE_CLASS,
         redirect_slashes: bool = True,
         docs_url: Optional[str] = "/docs",
         redoc_url: Optional[str] = "/redoc",
@@ -139,8 +141,7 @@ class FastAPI(fastapi.FastAPI):
             terms_of_service=terms_of_service,
             contact=contact,
             license_info=license_info,
-            openapi_prefix=openapi_prefix,
-            root_path=root_path,
+            root_path=root_path or openapi_prefix,
             root_path_in_servers=root_path_in_servers,
             responses=responses,
             callbacks=callbacks,

@@ -224,7 +224,7 @@ class TabControl extends Tab {
   static Key? _keyFromControl(Control control) {
     final controlKey = control.getKey("key");
     if (controlKey is ControlValueKey) {
-      return ValueKey(controlKey.value);
+      return valueKeyFromValue(controlKey.value);
     }
     return null;
   }

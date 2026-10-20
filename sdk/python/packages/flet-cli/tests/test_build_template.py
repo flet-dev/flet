@@ -11,6 +11,7 @@ import yaml
 from jinja2 import Environment, StrictUndefined
 
 from flet_cli.commands.build_base import BaseBuildCommand
+from flet_cli.utils.pyproject_toml import load_pyproject_toml
 
 BUILD_TEMPLATE_DIR = (
     Path(__file__).resolve().parents[3]
@@ -35,6 +36,66 @@ def _render_template(path: Path, **context: Any) -> str:
 
     env = Environment(keep_trailing_newline=True, undefined=StrictUndefined)
     return env.from_string(path.read_text()).render(cookiecutter=context)
+
+
+@pytest.mark.parametrize(
+    ("template", "platform"),
+    [
+        ("lib/flet_generated.dart", "windows"),
+        ("lib/flet_generated.dart", "macos"),
+        ("lib/flet_generated.dart", "linux"),
+        ("windows/runner/flutter_window.cpp", "windows"),
+    ],
+)
+@pytest.mark.parametrize(
+    ("global_value", "platform_value", "expected"),
+    [
+        (None, None, False),
+        (True, None, True),
+        (False, None, False),
+        (True, False, False),
+        (False, True, True),
+        (None, True, True),
+        (None, False, False),
+    ],
+)
+def test_hide_window_on_start_precedence(
+    tmp_path, template, platform, global_value, platform_value, expected
+):
+    """An explicit platform false keeps the generated window visible."""
+    settings = {
+        "tool.flet.app": global_value,
+        f"tool.flet.{platform}.app": platform_value,
+    }
+    (tmp_path / "pyproject.toml").write_text(
+        "\n".join(
+            f"[{table}]\nhide_window_on_start = {str(value).lower()}\n"
+            for table, value in settings.items()
+            if value is not None
+        ),
+        encoding="utf-8",
+    )
+    rendered = (
+        Environment(undefined=StrictUndefined)
+        .from_string((BUILD_TEMPLATE_DIR / template).read_text())
+        .render(
+            get_pyproject=load_pyproject_toml(tmp_path),
+            cookiecutter={
+                "options": {"config_platform": platform},
+                "flutter": {"dependencies": []},
+                "python_module_name": "main",
+                "boot_screen": {"name": "flet", "options_b64": "e30="},
+            },
+        )
+    )
+    pattern = (
+        r'bool.tryParse\("([^"]+)"'
+        if template.endswith(".dart")
+        else r"const bool hide_window_on_start =\s+(true|false)"
+    )
+    match = re.search(pattern, rendered)
+    assert match is not None
+    assert (match.group(1).lower() == "true") is expected
 
 
 class TestBuildTemplateContract:
