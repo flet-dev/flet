@@ -52,62 +52,70 @@ class NotificationChannel:
     """
     Whether the channel should attempt to bypass Do Not Disturb.
 
-    Obtain notification-policy access with
-    :meth:`flet_notifications.LocalNotifications.request_notification_policy_access`
-    before creating the channel; otherwise Android ignores the request.
+    Note:
+        Obtain notification-policy access with
+        :meth:`flet_notifications.LocalNotifications.request_notification_policy_access`
+        before creating the channel; otherwise Android ignores the request.
     """
 
     play_sound: bool = True
     """
     Whether notifications in the channel play sound.
 
-    Fixed at channel creation. Use :attr:`sound` to choose a custom sound.
+    Note:
+        Fixed at channel creation. Use :attr:`sound` to choose a custom sound.
     """
 
     sound: str | None = None
     """
     Raw Android sound-resource name without an extension, such as `"alert"`.
 
-    Requires :attr:`play_sound`. `None` uses the default notification sound. This
-    channel API accepts raw resource names, not file paths or content URIs. Fixed at
-    channel creation.
+    Note:
+        Requires :attr:`play_sound`. `None` uses the default notification sound. This
+        channel API accepts raw resource names, not file paths or content URIs. Fixed at
+        channel creation.
     """
 
     enable_vibration: bool = True
     """
     Whether notifications in the channel vibrate.
 
-    Requires the Android `VIBRATE` permission. Fixed at channel creation.
+    Note:
+        Requires the Android `VIBRATE` permission. Fixed at channel creation.
     """
 
     vibration_pattern: list[int] | None = None
     """
     Alternating delay and vibration durations, in milliseconds.
 
-    For example, `[0, 200, 100, 200]` starts immediately and vibrates twice. Requires
-    :attr:`enable_vibration`; fixed at channel creation.
+    Note:
+        For example, `[0, 200, 100, 200]` starts immediately and vibrates twice.
+        Requires :attr:`enable_vibration`; fixed at channel creation.
     """
 
     show_badge: bool = True
     """
     Whether notifications may contribute launcher badges.
 
-    Requires support from the launcher and is subject to user settings.
+    Note:
+        Requires support from the launcher and is subject to user settings.
     """
 
     enable_lights: bool = False
     """
     Whether to use the notification LED on supported devices.
 
-    Fixed at channel creation.
+    Note:
+        Fixed at channel creation.
     """
 
     led_color: ft.ColorValue | None = None
     """
     LED color used when :attr:`enable_lights` is enabled.
 
-    Accepts concrete Flet color names and hexadecimal colors. Theme-dependent colors
-    cannot be resolved by this headless service. Fixed at channel creation.
+    Note:
+        Accepts concrete Flet color names and hexadecimal colors. Theme-dependent colors
+        cannot be resolved by this headless service. Fixed at channel creation.
     """
 
     def __post_init__(self) -> None:

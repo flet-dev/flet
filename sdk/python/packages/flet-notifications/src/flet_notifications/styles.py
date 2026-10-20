@@ -24,8 +24,11 @@ class Style(ABC):
     Pass a concrete :class:`flet_notifications.BigTextStyle`,
     :class:`flet_notifications.BigPictureStyle`, :class:`flet_notifications.InboxStyle`,
     or :class:`flet_notifications.MessagingStyle` to a notification method's `style`
-    argument. The bridge currently applies these layouts only on Android; other
-    platforms use their normal notification presentation.
+    argument.
+
+    Note:
+        Rich layouts are supported only on Android. Other platforms use their normal
+        notification presentation.
     """
 
     _type: str = field(init=False, repr=False, compare=False)
@@ -63,16 +66,18 @@ class AndroidIcon:
     """
     Android `content://` URI used as a person's icon.
 
-    The app must have permission to read it. Not supported by
-    :class:`flet_notifications.BigPictureStyle`.
+    Note:
+        The app must have permission to read it. Not supported by
+        :class:`flet_notifications.BigPictureStyle`.
     """
 
     flutter_asset: str | None = None
     """
     Flutter bitmap-asset path used as a person's icon.
 
-    The asset must be bundled in the app. Not supported by
-    :class:`flet_notifications.BigPictureStyle`.
+    Note:
+        The asset must be bundled in the app. Not supported by
+        :class:`flet_notifications.BigPictureStyle`.
     """
 
     data_base64: str | None = None
@@ -100,8 +105,9 @@ class BigTextStyle(Style):
     """
     Expanded Android notification layout displaying a longer body.
 
-    The normal notification `body` remains the collapsed text. Android chooses how much
-    expanded text fits. Other platforms ignore this style.
+    Note:
+        The normal notification `body` remains the collapsed text. Android chooses how
+        much expanded text fits. Other platforms ignore this style.
     """
 
     big_text: str
@@ -126,8 +132,9 @@ class BigPictureStyle(Style):
     """
     Expanded Android notification layout displaying a large image.
 
-    Uses drawable, device-file, or base64-byte image sources. Content URIs and Flutter
-    assets are not accepted by this layout. Other platforms ignore it.
+    Note:
+        Uses drawable, device-file, or base64-byte image sources. Content URIs and
+        Flutter assets are not accepted by this layout. Other platforms ignore it.
     """
 
     image: AndroidIcon
@@ -235,9 +242,10 @@ class Message:
     """
     Participant who sent this message.
 
-    For an outgoing message, pass the same participant used as
-    :attr:`flet_notifications.MessagingStyle.person`; this API requires an explicit
-    person.
+    Note:
+        For an outgoing message, pass the same participant used as
+        :attr:`flet_notifications.MessagingStyle.person`; this API requires an explicit
+        person.
     """
 
 

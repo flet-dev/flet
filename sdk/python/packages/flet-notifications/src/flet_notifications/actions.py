@@ -10,43 +10,54 @@ class NotificationActionInput:
     """
     Input collected when a notification action is selected.
 
-    Used by :attr:`flet_notifications.NotificationAction.input`. Android supports reply
-    choices, free-form text, and MIME-type hints. iOS/macOS use a text-input action;
-    Windows uses a separate text box associated with the action ID. The bridge does not
-    forward custom action inputs on Linux or Web.
+    Used by :attr:`flet_notifications.NotificationAction.input`.
+
+    Note:
+        Android supports reply choices, free-form text, and MIME-type hints. iOS/macOS
+        use a text-input action; Windows uses a separate text box associated with the
+        action ID. Custom action inputs are not supported on Linux or Web.
     """
 
     label: str = ""
     """
     User-visible label describing the input.
 
-    On Android, labels the reply input. On iOS/macOS, supplies the text-input button
-    title and placeholder; an empty label uses the action title for the button. On
-    Windows, supplies the text box title and placeholder.
+    Note:
+        On Android, labels the reply input. On iOS/macOS, supplies the text-input button
+        title and placeholder; an empty label uses the action title for the button. On
+        Windows, supplies the text box title and placeholder.
     """
 
     choices: list[str] = field(default_factory=list)
     """
-    Suggested reply strings offered by Android.
+    Suggested reply strings.
 
-    An empty list provides no predefined choices. Not forwarded on other platforms.
+    An empty list provides no predefined choices.
+
+    Note:
+        Supported only on Android.
     """
 
     allow_free_form_input: bool = True
     """
-    Whether Android lets the user type an arbitrary reply.
+    Whether to allow the user to type an arbitrary reply.
 
-    Set to `False` with :attr:`choices` to restrict Android replies to suggestions. This
-    flag is not forwarded on iOS/macOS or Windows.
+    Set to `False` with :attr:`choices` to restrict replies to suggestions.
+
+    Note:
+        Supported only on Android. Reply inputs on iOS, macOS, and Windows allow
+        free-form text.
     """
 
     allowed_mime_types: list[str] = field(default_factory=list)
     """
-    MIME types accepted by Android's remote input, such as `"image/png"`.
+    Accepted reply MIME types, such as `"image/png"`.
 
-    An empty list requests no MIME-type-specific input. The event model exposes text
-    responses; it does not provide a dedicated attachment-result field. Not forwarded on
-    other platforms.
+    An empty list requests no MIME-type-specific input.
+
+    Note:
+        The event model exposes text responses, not a dedicated attachment-result field.
+        MIME-type filtering is supported only on Android.
     """
 
 
@@ -60,8 +71,10 @@ class NotificationAction:
     :attr:`flet_notifications.NotificationEvent.action_id`.
 
     For inline replies, set :attr:`input`. Reply text is available in
-    :attr:`flet_notifications.NotificationEvent.input`; Windows also returns input
-    values in the event's inherited `data` mapping.
+    :attr:`flet_notifications.NotificationEvent.input`.
+
+    Note:
+        Windows also returns input values in the event's inherited `data` mapping.
     """
 
     id: str
@@ -92,21 +105,21 @@ class NotificationAction:
     This changes presentation, not the action's behavior.
 
     Note:
-        Supported only on iOS/macOS. Android, Windows, and Web ignore this flag.
+        Supported only on iOS and macOS.
     """
 
     foreground: bool = True
     """
     Whether selecting the action brings the app to the foreground.
 
-    On Android and iOS/macOS, `False` allows the background handler to queue the event
-    for replay when the service next initializes. Python handlers do not execute inside
-    that background isolate.
-
     Note:
-        Supported only on Android and iOS/macOS. Windows actions use dismiss activation
-        regardless of this flag. Web ignores this flag; the upstream service worker
-        delivers the click to an open app window or opens the app if none is available.
+        Supported only on Android, iOS, and macOS. With `False`, those platforms may
+        queue the event for replay when the service next initializes. Python handlers
+        do not execute inside the background isolate.
+
+        Windows actions use dismiss activation regardless of this flag. Web ignores this
+        flag; the upstream service worker delivers the click to an open app window or
+        opens the app if none is available.
     """
 
     cancel_notification: bool = True
@@ -114,7 +127,7 @@ class NotificationAction:
     Whether to dismiss the notification when this action is selected.
 
     Note:
-        Supported only on Android. This flag is not forwarded on other platforms.
+        Supported only on Android.
     """
 
     input: NotificationActionInput | None = None
@@ -122,7 +135,6 @@ class NotificationAction:
     Reply input associated with this action.
 
     Note:
-        Supported on Android, iOS, macOS, and Windows. On Web, the action remains a
-        regular button; the input configuration is not forwarded. Linux does not
-        support custom action inputs through this extension.
+        Supported only on Android, iOS, macOS, and Windows. On Web, the action remains a
+        regular button without a reply input.
     """

@@ -166,7 +166,7 @@ class LocalNotificationsService extends FletService {
     final type = event["response_type"];
     final name = switch (type) {
       "action" => "action",
-      "dismissed" => "dismissed",
+      "dismissed" => "dismiss",
       _ => "tap",
     };
     control.triggerEvent(name, event);

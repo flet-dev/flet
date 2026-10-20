@@ -44,16 +44,17 @@ class LocalNotifications(ft.Service):
     added to the page's visual controls. Initialization occurs when the service reaches
     the client; method calls wait for it to finish.
 
-    Feature support varies: rich styles and progress are Android-specific; calendar and
-    interval recurrence are available on Android, iOS, and macOS; Windows supports
-    one-shot scheduling; Linux and Web do not provide scheduling through this extension.
-    Platform permissions and native configuration still apply. See the notification
-    service's requirements in the user guide.
+    Note:
+        Feature support varies: rich styles and progress are Android-specific; calendar
+        and interval recurrence are available on Android, iOS, and macOS; Windows
+        supports one-shot scheduling; Linux and Web do not provide scheduling through
+        this extension. Platform permissions and native configuration still apply. See
+        the notification service's requirements in the user guide.
 
     Notification response handlers receive
-    :class:`flet_notifications.NotificationEvent`. When a background action runs
-    without the app UI, a native Dart handler persists the event for replay when the
-    service next initializes; it does not execute Python in the background.
+    :class:`flet_notifications.NotificationEvent`. When a background action runs without
+    the app UI, a native Dart handler persists the event for replay when the service
+    next initializes; it does not execute Python in the background.
 
     Example:
         ```python
@@ -121,9 +122,10 @@ class LocalNotifications(ft.Service):
     """
     Whether to request iOS/macOS critical-alert authorization.
 
-    Used during initialization and by :meth:`request_permissions`. Requires Apple's
-    critical-alert entitlement; this flag does not obtain that entitlement. See
-    :attr:`flet_notifications.InterruptionLevel.CRITICAL`.
+    Note:
+        Used during initialization and by :meth:`request_permissions`. Requires Apple's
+        critical-alert entitlement; this flag does not obtain that entitlement. See
+        :attr:`flet_notifications.InterruptionLevel.CRITICAL`.
     """
 
     app_name: str | None = None
@@ -163,19 +165,26 @@ class LocalNotifications(ft.Service):
     Called when the user selects a notification action button.
 
     Use :attr:`flet_notifications.NotificationEvent.action_id` to identify the button
-    and :attr:`flet_notifications.NotificationEvent.input` for reply text. Background
-    Android/iOS actions are queued and replayed on the next service initialization;
-    Python is not run in the background isolate.
+    and :attr:`flet_notifications.NotificationEvent.input` for reply text.
+
+    Note:
+        On Windows, the event's inherited `data` mapping contains reply values keyed
+        by :attr:`flet_notifications.NotificationAction.id`. For an action with the
+        ID `"reply"`, read `e.data["reply"]`. When exactly one value is returned,
+        :attr:`flet_notifications.NotificationEvent.input` also contains that text.
+
+        Background Android/iOS actions are queued and replayed on the next service
+        initialization; Python is not run in the background isolate.
     """
 
-    on_dismissed: ft.EventHandler[NotificationEvent["LocalNotifications"]] | None = None
+    on_dismiss: ft.EventHandler[NotificationEvent["LocalNotifications"]] | None = None
     """
     Called if the native backend reports a notification dismissal.
 
-    The bridge currently does not configure Android dismissal isolates or Apple
-    dismissal categories, so this handler does not enable dismissal reporting on those
-    platforms. Delivery is backend-dependent; do not rely on a dismissal event for every
-    notification that disappears.
+    Note:
+        Dismissal reporting is not supported on Android, iOS, or macOS. Delivery on
+        other platforms depends on native support; do not rely on a dismissal event
+        for every notification that disappears.
     """
 
     # ── Shared kwargs for show / schedule / periodically_show ────────────
@@ -249,12 +258,14 @@ class LocalNotifications(ft.Service):
         """
         Display a local notification immediately.
 
-        Reusing an ID normally updates the existing notification, which is useful for
-        progress updates. Android's :attr:`flet_notifications.AndroidOptions.tag` also
-        participates in identifying immediately displayed notifications. Visible
-        content, action support, and alerting depend on the current platform and the
-        user's notification settings. On Web, obtain browser permission with
-        :meth:`request_permissions` before showing a notification.
+        Note:
+            Reusing an ID normally updates the existing notification, which is useful
+            for progress updates. Android's
+            :attr:`flet_notifications.AndroidOptions.tag` also participates in
+            identifying immediately displayed notifications. Visible content, action
+            support, and alerting depend on the current platform and the user's
+            notification settings. On Web, obtain browser permission with
+            :meth:`request_permissions` before showing a notification.
 
         Args:
             id: Notification identifier. Reuse it to update the same notification;
@@ -320,9 +331,11 @@ class LocalNotifications(ft.Service):
         """
         Remove a displayed notification and cancel its scheduled request.
 
-        On Android, a tag applies only to notifications posted immediately; scheduled
-        alarms are identified by ID. On Windows, removal requires an MSIX package
-        identity. Calling this method does not synthesize an :attr:`on_dismissed` event.
+        Note:
+            On Android, a tag applies only to notifications posted immediately;
+            scheduled alarms are identified by ID. On Windows, removal requires an MSIX
+            package identity. Calling this method does not synthesize an
+            :attr:`on_dismiss` event.
 
         Args:
             id: Identifier of the notification to remove.
@@ -343,9 +356,10 @@ class LocalNotifications(ft.Service):
         """
         Remove all of the app's displayed and scheduled notifications.
 
-        To remove only undelivered requests, use :meth:`cancel_pending`. Windows removal
-        requires an MSIX package identity. Does not remove Android channels or channel
-        groups.
+        Note:
+            To remove only undelivered requests, use :meth:`cancel_pending`. Windows
+            removal requires an MSIX package identity. Does not remove Android channels
+            or channel groups.
 
         Raises:
             NotificationError: If the bridge reports initialization or operation
@@ -357,25 +371,26 @@ class LocalNotifications(ft.Service):
         """
         Request notification authorization where the platform supports a prompt.
 
-        On Android 13+, requests `POST_NOTIFICATIONS`; older Android versions do not
-        show that runtime prompt. On iOS/macOS, requests the alert, sound, badge, and
-        critical permissions selected by this service's corresponding
-        `request_*_permission` properties. A previous denial may require the user to
-        change system settings rather than displaying another prompt.
+        Note:
+            On Android 13+, requests `POST_NOTIFICATIONS`; older Android versions do not
+            show that runtime prompt. On iOS/macOS, requests the alert, sound, badge,
+            and critical permissions selected by this service's corresponding
+            `request_*_permission` properties. A previous denial may require the user to
+            change system settings rather than displaying another prompt.
 
-        On Web, requests browser notification permission. Call from a user interaction,
-        such as an :attr:`flet.Button.on_click` handler, over HTTPS or a trusted
-        localhost origin. An existing denial returns `False` without prompting again;
-        the user must change the site's browser permissions. Dismissing the prompt
-        without granting access also returns `False`. Unsupported browsers return
-        `False`.
+            On Web, requests browser notification permission. Call from a user
+            interaction, such as an :attr:`flet.Button.on_click` handler, over HTTPS or
+            a trusted localhost origin. An existing denial returns `False` without
+            prompting again; the user must change the site's browser permissions.
+            Dismissing the prompt without granting access also returns `False`.
+            Unsupported browsers return `False`.
 
-        On Windows and Linux, this bridge returns `True` without requesting or checking
-        permission.
+            On Windows and Linux, returns `True` without requesting or
+            checking permission.
 
         Returns:
             Whether the native permission request succeeded, or `True` on platforms
-            where this bridge performs no request. It does not guarantee delivery
+            where no permission request is performed. It does not guarantee delivery
             through per-channel restrictions, Focus, or Do Not Disturb.
 
         Raises:
@@ -410,11 +425,13 @@ class LocalNotifications(ft.Service):
         """
         Schedule a notification for a date, a delay, or a recurring calendar match.
 
-        Supported on Android, iOS, macOS, and Windows. Windows schedules a single
-        delivery even when calendar components are supplied. Linux and Web do not
-        support this operation. Android needs the scheduling receivers and permissions
-        described in the notification service requirements; restoring schedules after a
-        reboot also requires the boot receiver.
+        Note:
+            Supported only on Android, iOS, macOS, and Windows. Windows schedules a
+            single
+            delivery even when calendar components are supplied. Android needs the
+            scheduling receivers and
+            permissions described in the notification service requirements; restoring
+            schedules after a reboot also requires the boot receiver.
 
         Calendar recurrence and fixed intervals are different: use
         :meth:`periodically_show` for notifications repeating after an elapsed interval
@@ -543,14 +560,14 @@ class LocalNotifications(ft.Service):
         """
         Schedule a notification repeating after a fixed elapsed interval.
 
-        The first delivery is one interval after this call, not immediately. Supported
-        on Android, iOS, and macOS; Windows, Linux, and Web do not support this
-        operation. Android requires the scheduling setup described in the notification
-        service requirements. Actual timing is subject to OS power management and alarm
-        policies.
-
         For a specific local time such as 09:00 every day, use :meth:`schedule` with
         :class:`~flet_notifications.DateTimeComponents` instead.
+
+        Note:
+            - The first delivery is one interval after this call, not immediately.
+            - Supported only on Android, iOS, and macOS. Android requires the scheduling
+              setup described in the notification service requirements. Actual timing
+              is subject to OS power management and alarm policies.
 
         Args:
             id: Notification identifier. Reuse it to update the same notification;
@@ -628,8 +645,10 @@ class LocalNotifications(ft.Service):
         """
         Cancel all scheduled notifications without removing displayed ones.
 
-        Supported on Android, iOS, and macOS. Other platforms report an unsupported
-        operation. Use :meth:`cancel` to remove a specific pending request.
+        Note:
+            Supported only on Android, iOS, and macOS. Other platforms report an
+            unsupported
+            operation. Use :meth:`cancel` to remove a specific pending request.
 
         Raises:
             NotificationError: If the bridge reports initialization or operation
@@ -641,10 +660,11 @@ class LocalNotifications(ft.Service):
         """
         Query notifications scheduled for future delivery.
 
-        Supported by Android, iOS, macOS, and the Windows backend. Windows query support
-        depends on package identity. Unsupported queries can report a
-        :class:`~flet_notifications.NotificationError`; an empty list is not a universal
-        unsupported-platform response.
+        Note:
+            Supported only on Android, iOS, macOS, and Windows. Windows query
+            support depends on package identity. Unsupported queries can report a
+            :class:`~flet_notifications.NotificationError`; an empty list is not a
+            universal unsupported-platform response.
 
         Returns:
             Snapshots of pending requests. These do not include every platform detail
@@ -702,8 +722,9 @@ class LocalNotifications(ft.Service):
         """
         Check Android's authorization to schedule exact alarms.
 
-        Android restricts exact alarms from Android 12 onward. This is separate from
-        notification-display permission and channel settings.
+        Note:
+            Android restricts exact alarms from Android 12 onward. This is separate from
+            notification-display permission and channel settings.
 
         Returns:
             Whether the Android backend reports exact alarms are allowed. Returns `True`
@@ -742,10 +763,11 @@ class LocalNotifications(ft.Service):
         """
         Create an Android notification channel or update its mutable details.
 
-        Applies on Android 8.0+. Existing channel sound, vibration, lights, and
-        importance cannot be reset through this call. See
-        :class:`~flet_notifications.NotificationChannel` for creation-time settings.
-        Non-Android platforms report an unsupported operation.
+        Note:
+            Applies on Android 8.0+. Existing channel sound, vibration, lights, and
+            importance cannot be reset through this call. See
+            :class:`~flet_notifications.NotificationChannel` for creation-time settings.
+            Non-Android platforms report an unsupported operation.
 
         Args:
             channel: Channel declaration. Post notifications using its ID as
@@ -761,9 +783,10 @@ class LocalNotifications(ft.Service):
         """
         Delete an Android notification channel on Android 8.0+.
 
-        Non-Android platforms report an unsupported operation. This does not cancel
-        pending schedules that still refer to the channel; cancel those separately if
-        they should no longer deliver notifications.
+        Note:
+            Non-Android platforms report an unsupported operation. This does not cancel
+            pending schedules that still refer to the channel; cancel those separately
+            if they should no longer deliver notifications.
 
         Args:
             channel_id: Identifier of the channel to delete.
@@ -821,16 +844,17 @@ class LocalNotifications(ft.Service):
         """
         Start an Android foreground service with a visible notification.
 
-        Requires a service declaration, appropriate foreground-service permissions, and
-        types matching the actual work. See
-        :class:`flet_notifications.AndroidForegroundServiceType` for the shared
-        setup and each type's `pyproject.toml` entries and runtime requirements.
-        Other platforms report an unsupported operation.
+        Note:
+            Requires a service declaration, appropriate foreground-service permissions,
+            and types matching the actual work. See
+            :class:`flet_notifications.AndroidForegroundServiceType` for the shared
+            setup and each type's `pyproject.toml` entries and runtime requirements.
+            Other platforms report an unsupported operation.
 
-        This starts the plugin's native foreground service; it does not create a Python
-        worker or guarantee that Android will keep the process alive indefinitely.
-        Android's start restrictions and service time limits still apply. Use
-        :meth:`stop_foreground_service` when the work is finished.
+            This starts the plugin's native foreground service; it does not create a
+            Python worker or guarantee that Android will keep the process alive
+            indefinitely. Android's start restrictions and service time limits still
+            apply. Use :meth:`stop_foreground_service` when the work is finished.
 
         Args:
             id: Nonzero identifier for the foreground-service notification.
@@ -899,9 +923,10 @@ class LocalNotifications(ft.Service):
         """
         Stop the Android foreground service started by this extension.
 
-        Removes the service's foreground notification. It does not terminate Python
-        tasks you started; stop the associated application work yourself. Other
-        platforms report an unsupported operation.
+        Note:
+            Removes the service's foreground notification. It does not terminate Python
+            tasks you started; stop the associated application work yourself. Other
+            platforms report an unsupported operation.
 
         Raises:
             NotificationError: If the bridge reports initialization or operation
@@ -915,10 +940,11 @@ class LocalNotifications(ft.Service):
         """
         Check application-level notification authorization where supported.
 
-        On Android, queries whether the app's notifications are enabled. On iOS/macOS,
-        includes provisional authorization, which permits quiet delivery. On Web,
-        checks the current browser permission without displaying a prompt; denied,
-        undecided, or unsupported notification access returns `False`.
+        Note:
+            On Android, queries whether the app's notifications are enabled. On
+            iOS/macOS, includes provisional authorization, which permits quiet delivery.
+            On Web, checks the current browser permission without displaying a prompt;
+            denied, undecided, or unsupported notification access returns `False`.
 
         This check does not guarantee a particular channel, sound, or alert can
         interrupt the user.
@@ -938,10 +964,11 @@ class LocalNotifications(ft.Service):
         """
         Open the operating system's notification settings for this app.
 
-        On iOS, the plugin tries the app's notification settings and falls back to the
-        app's general settings when necessary. Unsupported platforms can report an
-        error. The bridge discards the native success flag, so a successful return does
-        not confirm that a settings screen opened.
+        Note:
+            On iOS, the plugin tries the app's notification settings and falls back to
+            the app's general settings when necessary. Unsupported platforms can report
+            an error. The bridge discards the native success flag, so a successful
+            return does not confirm that a settings screen opened.
 
         Raises:
             NotificationError: If the bridge reports initialization or operation
@@ -953,10 +980,12 @@ class LocalNotifications(ft.Service):
         """
         Query delivered notifications that have not been dismissed or removed.
 
-        Supported on Android 6.0+, iOS 10+, macOS 10.14+, and Windows with an MSIX
-        package identity. The Windows backend returns an empty list without that
-        identity. Linux does not support the query; unsupported backends can report an
-        error rather than returning an empty list.
+        Note:
+            Supported only on Android 6.0+, iOS 10+, macOS 10.14+, and Windows with an
+            MSIX
+            package identity. The Windows backend returns an empty list without that
+            identity. Unsupported platforms can report an error rather than returning an
+            empty list.
 
         Returns:
             Snapshots of active notifications, with platform-dependent fields. Missing
@@ -988,11 +1017,12 @@ class LocalNotifications(ft.Service):
         """
         Query whether a notification caused this application launch.
 
-        Use for initial routing or inspecting the launch payload. It does not consume
-        the response or suppress the automatic :attr:`on_tap` / :attr:`on_action`
-        replay, so avoid processing the same launch twice if you use both mechanisms.
-        Linux does not provide launch details through the upstream plugin; other
-        platforms may also return no details.
+        Note:
+            Use for initial routing or inspecting the launch payload. It does not
+            consume the response or suppress the automatic :attr:`on_tap` /
+            :attr:`on_action` replay, so avoid processing the same launch twice if you
+            use both mechanisms. Linux does not provide launch details through the
+            upstream plugin; other platforms may also return no details.
 
         Returns:
             Launch information, with `did_notification_launch_app=False` when the
@@ -1022,11 +1052,13 @@ class LocalNotifications(ft.Service):
         """
         Request access to Android full-screen notification intents.
 
-        On Android 14+, access can depend on the app's permitted use and user settings.
-        Requires the `USE_FULL_SCREEN_INTENT` manifest permission. After obtaining
-        access, enable :attr:`flet_notifications.AndroidOptions.full_screen_intent` on
-        the notification. A grant does not guarantee full-screen presentation; Android
-        may show a heads-up notification instead.
+        Note:
+            On Android 14+, access can depend on the app's permitted use and user
+            settings. Requires the `USE_FULL_SCREEN_INTENT` manifest permission. After
+            obtaining access, enable
+            :attr:`flet_notifications.AndroidOptions.full_screen_intent` on the
+            notification. A grant does not guarantee full-screen presentation; Android
+            may show a heads-up notification instead.
 
         Returns:
             Whether the Android backend reports access is granted; `False` on
@@ -1060,9 +1092,10 @@ class LocalNotifications(ft.Service):
         """
         Open Android's notification-policy access settings when required.
 
-        Requires `ACCESS_NOTIFICATION_POLICY` in the Android manifest. Obtain access
-        before creating channels with
-        :attr:`flet_notifications.NotificationChannel.bypass_dnd` enabled.
+        Note:
+            Requires `ACCESS_NOTIFICATION_POLICY` in the Android manifest. Obtain access
+            before creating channels with
+            :attr:`flet_notifications.NotificationChannel.bypass_dnd` enabled.
 
         Returns:
             Whether Android reports access after the request, or `False` on other
@@ -1084,9 +1117,10 @@ class LocalNotifications(ft.Service):
         """
         Create a group organizing Android channels in system notification settings.
 
-        Supported on Android 8.0+. This is distinct from grouping displayed
-        notifications with `group_key`. Create the group before creating channels that
-        refer to its ID. Other platforms report an unsupported operation.
+        Note:
+            Supported only on Android 8.0+. This is distinct from grouping displayed
+            notifications with `group_key`. Create the group before creating channels
+            that refer to its ID. Other platforms report an unsupported operation.
 
         Args:
             group_id: Stable identifier for the channel group.
@@ -1112,9 +1146,11 @@ class LocalNotifications(ft.Service):
         """
         Delete an Android notification-channel group and all its channels.
 
-        Supported on Android 8.0+; other platforms report an unsupported operation. This
-        also removes channel configuration for the group's channels. Cancel unwanted
-        pending notifications separately.
+        Note:
+            Supported only on Android 8.0+; other platforms report an unsupported
+            operation.
+            This also removes channel configuration for the group's channels. Cancel
+            unwanted pending notifications separately.
 
         Args:
             group_id: Identifier of the group to delete.

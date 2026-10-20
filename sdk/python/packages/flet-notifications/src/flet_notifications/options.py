@@ -31,9 +31,10 @@ class Priority(Enum):
     """
     Notification priority on Android 7.1 and earlier.
 
-    On Android 8.0 and later, channel :class:`~flet_notifications.Importance` determines
-    interruption behavior instead. Priority is a presentation hint; it does not override
-    the user's notification preferences.
+    Note:
+        On Android 8.0 and later, channel :class:`~flet_notifications.Importance`
+        determines interruption behavior instead. Priority is a presentation hint; it
+        does not override the user's notification preferences.
     """
 
     MIN = "min"
@@ -122,7 +123,8 @@ class LinuxUrgency(Enum):
     """
     Urgency hint sent to the Linux desktop notification server.
 
-    The server decides how to display notifications and may ignore hints.
+    Note:
+        The server decides how to display notifications and may ignore hints.
     """
 
     LOW = "low"
@@ -144,8 +146,9 @@ class WindowsScenario(Enum):
     """
     Windows toast scenario controlling presentation and default audio.
 
-    Set :attr:`flet_notifications.WindowsOptions.scenario`. Windows applies its own
-    version, capability, and user-setting restrictions to each scenario.
+    Note:
+        Set :attr:`flet_notifications.WindowsOptions.scenario`. Windows applies its own
+        version, capability, and user-setting restrictions to each scenario.
     """
 
     REMINDER = "reminder"
@@ -161,7 +164,8 @@ class WindowsScenario(Enum):
     """
     Show an expanded alarm that remains until dismissed.
 
-    Windows normally loops the alarm sound unless audio options override it.
+    Note:
+        Windows normally loops the alarm sound unless audio options override it.
     """
 
     INCOMING_CALL = "incomingCall"
@@ -171,7 +175,8 @@ class WindowsScenario(Enum):
     """
     Request an urgent notification that may break through Do Not Disturb.
 
-    Requires a Windows version and user settings that permit urgent notifications.
+    Note:
+        Requires a Windows version and user settings that permit urgent notifications.
     """
 
 
@@ -180,11 +185,11 @@ class AndroidOptions:
     """
     Android-specific notification and channel settings.
 
-    On Android 8.0+, importance, sound, vibration, lights, and badge settings belong to
-    the channel. Reusing a channel ID does not replace its established behavior or the
-    user's choices. Create a
-    :class:`~flet_notifications.NotificationChannel` before posting when you need a
-    custom channel name or group.
+    Note:
+        On Android 8.0+, importance, sound, vibration, lights, and badge settings belong
+        to the channel. Reusing a channel ID does not replace its established behavior
+        or the user's choices. Create a :class:`~flet_notifications.NotificationChannel`
+        before posting when you need a custom channel name or group.
     """
 
     channel_id: str | None = None
@@ -196,28 +201,32 @@ class AndroidOptions:
 
     channel_description: str | None = None
     """
-    User-visible explanation of the channel on Android 8.0+.
+    User-visible explanation of the channel.
 
-    Used when creating the channel.
+    Note:
+        Used when creating the channel on Android 8.0+.
     """
 
     channel_bypass_dnd: bool | None = None
     """
     Whether a newly created channel may bypass Do Not Disturb.
 
-    Obtain notification-policy access with
-    :meth:`flet_notifications.LocalNotifications.request_notification_policy_access`
-    before creating a channel with this enabled.
+    Note:
+        Obtain notification-policy access with
+        :meth:`flet_notifications.LocalNotifications.request_notification_policy_access`
+        before creating a channel with this enabled.
     """
 
     audio_attributes_usage: AndroidAudioAttributesUsage | None = None
     """
     Intended use of the notification sound.
 
-    Helps Android select audio routing, volume, and interruption policies. On Android
-    8.0+, this is used when creating a channel; an existing channel keeps its audio
-    configuration. It does not enable sound when :attr:`play_sound` is `False` nor grant
-    access to bypass Do Not Disturb.
+    Helps Android select audio routing, volume, and interruption policies.
+
+    Note:
+        On Android 8.0+, this is used when creating a channel; an existing channel keeps
+        its audio configuration. It does not enable sound when :attr:`play_sound` is
+        `False` or grant access to bypass Do Not Disturb.
     """
 
     icon: str | None = None
@@ -227,34 +236,42 @@ class AndroidOptions:
     Supply the resource name without a file extension, such as `"ic_stat_notify"`.
     `None` uses :attr:`flet_notifications.LocalNotifications.default_icon`.
 
-    Include the drawable in the Android app. Use a white silhouette on a transparent
-    background, with resources sized for the supported screen densities. Android
-    Studio's
-    [notification icon wizard](https://developer.android.com/studio/write/create-app-icons#create-notification)
-    generates the appropriate drawable variants. Android uses the icon's alpha channel
-    to determine its visible shape; an opaque background can appear as a solid block.
+    Include the drawable in the Android app.
+
+    Note:
+        Use a white silhouette on a transparent background, with resources sized for
+        the supported screen densities. Android Studio's
+        [notification icon wizard](https://developer.android.com/studio/write/create-app-icons#create-notification)
+        generates the appropriate drawable variants. Android uses the icon's alpha
+        channel to determine its visible shape; an opaque background can appear as a
+        solid block.
     """
 
     importance: Importance | None = None
     """
     Importance used when creating the channel on Android 8.0+.
 
-    Existing channels keep their importance; the user may change it in system settings.
+    Note:
+        Existing channels keep their importance; the user may change it in system
+        settings.
     """
 
     priority: Priority | None = None
     """
-    Priority used on Android 7.1 and earlier.
+    Notification priority.
 
-    On Android 8.0+, configure :attr:`importance` instead.
+    Note:
+        Used on Android 7.1 and earlier. On Android 8.0+, configure :attr:`importance`
+        instead.
     """
 
     play_sound: bool | None = None
     """
     Whether to play a notification sound.
 
-    On Android 8.0+, this is fixed when the channel is first created. See :attr:`sound`
-    and :attr:`silent`.
+    Note:
+        On Android 8.0+, this is fixed when the channel is first created. See
+        :attr:`sound` and :attr:`silent`.
     """
 
     sound: str | None = None
@@ -263,15 +280,19 @@ class AndroidOptions:
 
     A raw resource name, such as `"alert"`, omits the file extension. When
     :attr:`play_sound` is enabled and this is `None`, Android uses the default
-    notification sound. Immutable for an existing channel on Android 8.0+.
+    notification sound.
+
+    Note:
+        Immutable for an existing channel on Android 8.0+.
     """
 
     enable_vibration: bool | None = None
     """
     Whether to vibrate.
 
-    Requires the Android `VIBRATE` permission. On Android 8.0+, the setting belongs to
-    the channel and cannot be changed by subsequent notifications.
+    Note:
+        Requires the Android `VIBRATE` permission. On Android 8.0+, the setting belongs
+        to the channel and cannot be changed by subsequent notifications.
     """
 
     vibration_pattern: list[int] | None = None
@@ -279,15 +300,18 @@ class AndroidOptions:
     Alternating delay and vibration durations, in milliseconds.
 
     For example, `[0, 200, 100, 200]` starts immediately, vibrates for 200 ms, pauses
-    for 100 ms, then vibrates for 200 ms. Requires :attr:`enable_vibration`. On Android
-    8.0+, fixed at channel creation.
+    for 100 ms, then vibrates for 200 ms.
+
+    Note:
+        Requires :attr:`enable_vibration`. On Android 8.0+, fixed at channel creation.
     """
 
     channel_show_badge: bool | None = None
     """
     Whether the channel's notifications may contribute launcher badges.
 
-    The launcher must support notification badges.
+    Note:
+        The launcher must support notification badges.
     """
 
     auto_cancel: bool | None = None
@@ -297,8 +321,9 @@ class AndroidOptions:
     """
     Whether to mark the notification as an ongoing activity.
 
-    Android controls whether the user can dismiss ongoing notifications; this does not
-    start a foreground service.
+    Note:
+        Android controls whether the user can dismiss ongoing notifications; this does
+        not start a foreground service.
     """
 
     silent: bool | None = None
@@ -321,17 +346,21 @@ class AndroidOptions:
     """
     Whether to use :attr:`color` for the notification background.
 
-    When disabled, the color accents the app icon. Android usually restricts background
-    coloring to foreground-service notifications.
+    Note:
+        When disabled, the color accents the app icon. Android usually restricts
+        background coloring to foreground-service notifications.
     """
 
     large_icon: str | None = None
     """
     Drawable resource name or absolute device file path for the large icon.
 
-    Paths beginning with `/` or containing a backslash are treated as file paths; other
-    strings are drawable names. Content URIs are not supported by this field. For richer
-    image sources, see :class:`~flet_notifications.AndroidIcon`.
+    Paths beginning with `/` or containing a backslash are treated as file paths;
+    other strings are drawable names.
+
+    Note:
+        Content URIs are not supported by this field. For richer image sources, see
+        :class:`~flet_notifications.AndroidIcon`.
     """
 
     only_alert_once: bool | None = None
@@ -367,24 +396,27 @@ class AndroidOptions:
 
     chronometer_count_down: bool | None = None
     """
-    Whether the chronometer counts down rather than up on Android 7.0+.
+    Whether the chronometer counts down rather than up.
 
-    Requires :attr:`uses_chronometer` to be enabled.
+    Note:
+        Supported only on Android 7.0+. Requires :attr:`uses_chronometer` to be enabled.
     """
 
     sub_text: str | None = None
     """
     Supplementary information displayed in the notification template.
 
-    Android 7.0+ places this in the header. Earlier versions use the same line as the
-    progress bar, so avoid using both on those versions.
+    Note:
+        Android 7.0+ places this in the header. Earlier versions use the same line as
+        the progress bar, so avoid using both on those versions.
     """
 
     number: int | None = None
     """
     Notification count displayed by launchers that support badge numbers.
 
-    Ignored when the launcher does not support this feature.
+    Note:
+        Ignored when the launcher does not support this feature.
     """
 
     visibility: Visibility | None = None
@@ -398,8 +430,7 @@ class AndroidOptions:
     """
     Time after posting before Android cancels the notification.
 
-    Accepts a :class:`~flet.Duration` or integer milliseconds. `None` does not request
-    automatic cancellation after a timeout.
+    `None` does not request automatic cancellation after a timeout.
     """
 
     category: AndroidNotificationCategory | None = None
@@ -414,19 +445,21 @@ class AndroidOptions:
     """
     Whether to request full-screen presentation when the notification arrives.
 
-    Requires Android manifest configuration and, on Android 14+, full-screen-intent
-    access. See
-    :meth:`flet_notifications.LocalNotifications.request_full_screen_intent_permission`.
-    Android may show a heads-up notification instead. A full-screen launch is reported
-    through :attr:`flet_notifications.LocalNotifications.on_tap`.
+    Note:
+        Requires Android manifest configuration and, on Android 14+, full-screen-intent
+        access. See
+        :meth:`flet_notifications.LocalNotifications.request_full_screen_intent_permission`.
+        Android may show a heads-up notification instead. A full-screen launch is
+        reported through :attr:`flet_notifications.LocalNotifications.on_tap`.
     """
 
     shortcut_id: str | None = None
     """
     ID of a published, long-lived sharing shortcut linked to the notification.
 
-    On Android 11+, this can help a messaging notification appear in the conversation
-    section. This extension does not create the shortcut.
+    Note:
+        On Android 11+, this can help a messaging notification appear in the
+        conversation section. This extension does not create the shortcut.
     """
 
     additional_flags: AndroidNotificationFlag | int | None = None
@@ -435,14 +468,16 @@ class AndroidOptions:
 
     For example, combine :attr:`flet_notifications.AndroidNotificationFlag.INSISTENT`
     and :attr:`flet_notifications.AndroidNotificationFlag.NO_CLEAR` to request repeating
-    audio and retention when the user presses Clear all. Android may restrict the
-    effect of individual flags.
+    audio and retention when the user presses Clear all.
+
+    Note:
+        Android may restrict the effect of individual flags.
 
     A raw integer bitmask is also accepted for Android flags not represented by
     :class:`flet_notifications.AndroidNotificationFlag`. Combine integer flag values
-    using `|` in the same way. See Android's
-    [notification flags](https://developer.android.com/reference/android/app/Notification#flags)
-    for their meanings and restrictions.
+    using `|` in the same way. See Android's [notification
+    flags](https://developer.android.com/reference/android/app/Notification#flags) for
+    their meanings and restrictions.
 
     Flags are added after the notification is built. `None` or
     :attr:`flet_notifications.AndroidNotificationFlag.NONE` adds no flags and does not
@@ -466,32 +501,36 @@ class AndroidOptions:
     """
     Whether to enable the notification LED on devices that provide one.
 
-    On Android 8.0+, this belongs to the channel.
+    Note:
+        On Android 8.0+, this belongs to the channel.
     """
 
     led_color: ft.ColorValue | None = None
     """
     Color of the notification LED when :attr:`enable_lights` is enabled.
 
-    On Android 8.0+, fixed at channel creation. Accepts concrete Flet colors;
-    theme-dependent colors cannot be resolved by this headless service. Before Android
-    8.0, also set :attr:`led_on_duration` and :attr:`led_off_duration`.
+    Note:
+        On Android 8.0+, fixed at channel creation. Accepts concrete Flet colors;
+        theme-dependent colors cannot be resolved by this headless service. Before
+        Android 8.0, also set :attr:`led_on_duration` and :attr:`led_off_duration`.
     """
 
     led_on_duration: ft.DurationValue | None = None
     """
     Time the notification LED remains on during each blink.
 
-    Accepts a :class:`~flet.Duration` or integer milliseconds. Used only before Android
-    8.0; on newer versions, the channel and device control the blinking pattern.
+    Note:
+        Used only before Android 8.0; on newer versions, the channel and device control
+        the blinking pattern.
     """
 
     led_off_duration: ft.DurationValue | None = None
     """
     Time the notification LED remains off between blinks.
 
-    Accepts a :class:`~flet.Duration` or integer milliseconds. Used only before Android
-    8.0; on newer versions, the channel and device control the blinking pattern.
+    Note:
+        Used only before Android 8.0; on newer versions, the channel and device control
+        the blinking pattern.
     """
 
 
@@ -509,9 +548,10 @@ class DarwinOptions:
     """
     Name of a notification sound file in the app bundle.
 
-    Requires :attr:`present_sound`. With sound presentation enabled, `None` uses the
-    default notification sound. Apple limits supported file formats and custom-sound
-    duration.
+    Note:
+        Requires :attr:`present_sound`. With sound presentation enabled, `None` uses the
+        default notification sound. Apple limits supported file formats and custom-sound
+        duration.
     """
 
     badge_number: int | None = None
@@ -519,7 +559,10 @@ class DarwinOptions:
     Number to apply to the application icon badge.
 
     Use `0` to clear the badge, a positive number to set it, or `None` to leave it
-    unchanged. Requires badge authorization.
+    unchanged.
+
+    Note:
+        Requires badge authorization.
     """
 
     subtitle: str | None = None
@@ -536,26 +579,29 @@ class DarwinOptions:
     """
     Delivery urgency on iOS 15+ and macOS 12+.
 
-    See :class:`flet_notifications.InterruptionLevel` for presentation behavior and
-    capability requirements. `None` leaves the level to the system.
+    Note:
+        See :class:`flet_notifications.InterruptionLevel` for presentation behavior and
+        capability requirements. `None` leaves the level to the system.
     """
 
     critical_sound_volume: float | None = None
     """
     Volume of a critical-alert sound, from `0.0` to `1.0`.
 
-    Used only for critical alerts on iOS 12+ and macOS 10.14+. Requires the
-    critical-alert entitlement and authorization; see
-    :attr:`flet_notifications.InterruptionLevel.CRITICAL`.
+    Note:
+        Used only for critical alerts on iOS 12+ and macOS 10.14+. Requires the
+        critical-alert entitlement and authorization; see
+        :attr:`flet_notifications.InterruptionLevel.CRITICAL`.
     """
 
     attachments: list[str] | None = None
     """
     Local device file paths of media to attach to the notification.
 
-    Supported on iOS 10+ and macOS 10.14+. Files must be accessible to the app and use a
-    media format accepted by Apple's notification framework. These are device paths, not
-    URLs or paths on the Python server.
+    Note:
+        Supported only on iOS 10+ and macOS 10.14+. Files must be accessible to the app
+        and use a media format accepted by Apple's notification framework. These are
+        device paths, not URLs or paths on the Python server.
     """
 
     present_alert: bool | None = None
@@ -585,17 +631,22 @@ class DarwinOptions:
 
     present_banner: bool | None = None
     """
-    Whether to show a foreground banner on iOS 14+ and macOS 11+.
+    Whether to show a foreground banner.
 
     `None` inherits the enabled initialization default.
+
+    Note:
+        Supported only on iOS 14+ and macOS 11+.
     """
 
     present_list: bool | None = None
     """
     Whether to add a foreground notification to Notification Center.
 
-    Applies on iOS 14+ and macOS 11+. `None` inherits the enabled initialization
-    default.
+    `None` inherits the enabled initialization default.
+
+    Note:
+        Supported only on iOS 14+ and macOS 11+.
     """
 
 
@@ -604,8 +655,9 @@ class LinuxOptions:
     """
     Hints for a Linux freedesktop notification server.
 
-    Feature support varies by desktop and notification daemon. Unsupported hints may be
-    ignored. This extension does not expose server-capability queries.
+    Note:
+        Feature support varies by desktop and notification daemon. Unsupported hints may
+        be ignored. This extension does not expose server-capability queries.
     """
 
     icon: str | None = None
@@ -623,8 +675,9 @@ class LinuxOptions:
     """
     Category hint used by the server to classify the notification.
 
-    See :class:`~flet_notifications.LinuxNotificationCategory`. The notification
-    server determines the presentation and may ignore this hint.
+    Note:
+        See :class:`~flet_notifications.LinuxNotificationCategory`. The notification
+        server determines the presentation and may ignore this hint.
     """
 
     urgency: LinuxUrgency | None = None
@@ -634,25 +687,29 @@ class LinuxOptions:
     """
     Requested time to keep the notification visible.
 
-    Accepts a :class:`~flet.Duration` or an integer number of milliseconds. For example,
-    `ft.Duration(seconds=5)` requests five seconds. `None` or `-1` uses the notification
-    server's timeout; `0` requests no expiry. The server can ignore this hint or apply
-    its own policy, especially for critical notifications.
+    Integer values are interpreted as milliseconds. `None` or `-1` uses the notification
+    server's timeout; `0` requests no expiry.
+
+    Note:
+        The server can ignore this hint or apply its own policy, especially for critical
+        notifications.
     """
 
     resident: bool | None = None
     """
     Whether to retain the notification after an action is invoked.
 
-    The user or application must remove resident notifications; requires persistence
-    support from the notification server.
+    Note:
+        The user or application must remove resident notifications; requires persistence
+        support from the notification server.
     """
 
     transient: bool | None = None
     """
     Whether to bypass notification history or persistence.
 
-    Requires support from the desktop notification server.
+    Note:
+        Requires support from the desktop notification server.
     """
 
     suppress_sound: bool | None = None
@@ -666,8 +723,9 @@ class LinuxOptions:
     """
     Whether to interpret action identifiers as desktop icon names.
 
-    Requires server support. The bridge currently adds no custom Linux actions, so this
-    has no effect on its action buttons.
+    Note:
+        Custom notification action buttons are not supported on Linux, so this setting
+        has no effect.
     """
 
 
@@ -676,25 +734,26 @@ class WindowsOptions:
     """
     Presentation settings for Windows toast notifications.
 
-    URI and file values refer to resources available on the Windows device, not files on
-    the Python server. Windows version and packaging determine which toast features are
-    available.
+    Note:
+        URI and file values refer to resources available on the Windows device, not
+        files on the Python server. Windows version and packaging determine which toast
+        features are available.
     """
 
     header: str | None = None
     """
     Header text used to group Windows notifications.
 
-    The bridge uses a fixed header ID (`"header"`) and empty activation arguments; this
-    field supplies only the visible title.
+    Sets the visible title of a header with the fixed ID `"header"` and no activation
+    arguments.
     """
 
     audio: WindowsNotificationSound | None = None
     """
     Windows system notification sound, or silence.
 
-    See :class:`~flet_notifications.WindowsNotificationSound`. Custom audio URIs
-    and arbitrary `ms-winsoundevent` names are not supported by this bridge.
+    See :class:`~flet_notifications.WindowsNotificationSound`. Custom audio URIs and
+    arbitrary `ms-winsoundevent` names are not supported.
     """
 
     duration: WindowsNotificationDuration | None = None
@@ -726,8 +785,8 @@ class WindowsOptions:
     """
     Image URI strings to include in the toast.
 
-    Use URIs accessible to Windows, such as `file:///C:/images/status.png`. The bridge
-    uses default image placement and empty alternative text.
+    Use URIs accessible to Windows, such as `file:///C:/images/status.png`. Images use
+    default placement and empty alternative text.
     """
 
     bindings: dict[str, str] | None = None
@@ -745,16 +804,22 @@ class WebOptions:
     Browser-specific presentation options for
     :meth:`flet_notifications.LocalNotifications.show`.
 
-    Individual options may be ignored depending on the browser and operating system.
-    Notification permission is still required. Image URLs must be accessible to the
-    browser; local Python file paths are not resolved or uploaded by these options.
+    Note:
+        Individual options may be ignored depending on the browser and operating system.
+        Notification permission is still required. Image URLs must be accessible to the
+        browser; local Python file paths are not resolved or uploaded by these options.
 
-    See the browser [notification options](https://developer.mozilla.org/en-US/docs/Web/API/ServiceWorkerRegistration/showNotification#parameters)
+    See the browser [notification
+    options](https://developer.mozilla.org/en-US/docs/Web/API/ServiceWorkerRegistration/showNotification#parameters)
     for platform support and restrictions.
     """
 
     direction: WebNotificationDirection | None = None
-    """Requested text direction; the browser may ignore this hint."""
+    """
+    Requested text direction.
+
+    The browser may ignore this hint.
+    """
 
     badge_url: str | None = None
     """

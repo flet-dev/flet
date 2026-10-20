@@ -17,9 +17,9 @@ def test_event_field_types_resolve_to_dataclass():
     from flet.controls.control_event import ControlEvent, get_event_field_type
 
     service = LocalNotifications(
-        on_tap=lambda e: None, on_action=lambda e: None, on_dismissed=lambda e: None
+        on_tap=lambda e: None, on_action=lambda e: None, on_dismiss=lambda e: None
     )
-    for field_name in ("on_tap", "on_action", "on_dismissed"):
+    for field_name in ("on_tap", "on_action", "on_dismiss"):
         resolved = get_event_field_type(service, field_name)
         assert resolved is not None, field_name
         assert resolved != ControlEvent, field_name

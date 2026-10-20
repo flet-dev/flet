@@ -22,12 +22,15 @@ class AndroidAudioAttributesUsage(Enum):
     """
     Intended use of an Android notification's sound.
 
-    Used by :attr:`flet_notifications.AndroidOptions.audio_attributes_usage` to help
-    Android apply audio routing, volume, and interruption policies. This describes the
-    sound; it does not grant permission to bypass the user's sound or Do Not Disturb
-    settings. On Android 8.0+, an existing channel retains its audio configuration.
+    Note:
+        Used by :attr:`flet_notifications.AndroidOptions.audio_attributes_usage` to help
+        Android apply audio routing, volume, and interruption policies. This describes
+        the sound; it does not grant permission to bypass the user's sound or Do Not
+        Disturb settings. On Android 8.0+, an existing channel retains its audio
+        configuration.
 
-    See Android's [audio usage reference](https://developer.android.com/reference/android/media/AudioAttributes).
+    See Android's [audio usage
+    reference](https://developer.android.com/reference/android/media/AudioAttributes).
     """
 
     ALARM = "alarm"
@@ -75,10 +78,12 @@ class AndroidNotificationFlag(IntFlag):
     Additional behavior bits for an Android notification.
 
     Combine members with `|` and pass the result to
-    :attr:`flet_notifications.AndroidOptions.additional_flags`. These bits are added
-    after the notification is built; they cannot clear flags set by other options.
-    Android's notification permissions, channel settings, and platform restrictions
-    still apply.
+    :attr:`flet_notifications.AndroidOptions.additional_flags`.
+
+    Note:
+        These bits are added after the notification is built; they cannot clear flags
+        set by other options. Android's notification permissions, channel settings, and
+        platform restrictions still apply.
 
     Example:
         ```python
@@ -92,7 +97,8 @@ class AndroidNotificationFlag(IntFlag):
 
     Deprecated flags and system-managed status flags are omitted. To start a foreground
     service, use :meth:`flet_notifications.LocalNotifications.start_foreground_service`.
-    See Android's [notification flags](https://developer.android.com/reference/android/app/Notification#flags).
+    See Android's [notification
+    flags](https://developer.android.com/reference/android/app/Notification#flags).
     """
 
     NONE = 0
@@ -155,13 +161,15 @@ class AndroidNotificationFlag(IntFlag):
 
 class RepeatInterval(Enum):
     """
-    Fixed intervals for
-    :meth:`flet_notifications.LocalNotifications.periodically_show`.
+    Fixed intervals for :meth:`flet_notifications.LocalNotifications.periodically_show`.
 
-    Supported on Android, iOS, and macOS. The first notification is delivered one
-    interval after scheduling. For a particular local time, such as 09:00 each day, use
+    The first notification is delivered one interval after scheduling. For a particular
+    local time, such as 09:00 each day, use
     :class:`flet_notifications.DateTimeComponents` with
     :meth:`flet_notifications.LocalNotifications.schedule` instead.
+
+    Note:
+        Supported only on Android, iOS, and macOS.
     """
 
     EVERY_MINUTE = "everyMinute"
@@ -181,10 +189,14 @@ class DateTimeComponents(Enum):
     """
     Calendar components to match when repeating a scheduled notification.
 
-    Used by :meth:`flet_notifications.LocalNotifications.schedule` on Android, iOS, and
-    macOS. The next matching date can precede the full date supplied in `when`: matching
-    only the time repeats from the next occurrence of that time. Windows ignores these
-    components and schedules a single delivery.
+    Used by :meth:`flet_notifications.LocalNotifications.schedule`. The next matching
+    date can precede the full date supplied in `when`: matching only the time repeats
+    from the next occurrence of that time.
+
+    Note:
+        Calendar recurrence is supported only on Android, iOS, and macOS. Windows
+        ignores
+        these components and schedules a single delivery.
     """
 
     TIME = "time"
@@ -204,12 +216,14 @@ class AndroidScheduleMode(Enum):
     """
     How Android schedules the alarm that delivers a notification.
 
-    Exact modes require exact-alarm access on Android versions that restrict it. Check
-    :meth:`flet_notifications.LocalNotifications.can_schedule_exact_notifications` and,
-    when needed, call
-    :meth:`flet_notifications.LocalNotifications.request_exact_alarm_permission`.
-    Inexact modes trade timing precision for lower power use. Delivery remains subject
-    to Android's alarm quotas and background-execution restrictions.
+    Note:
+        Exact modes require exact-alarm access on Android versions that restrict it.
+        Check
+        :meth:`flet_notifications.LocalNotifications.can_schedule_exact_notifications`
+        and, when needed, call
+        :meth:`flet_notifications.LocalNotifications.request_exact_alarm_permission`.
+        Inexact modes trade timing precision for lower power use. Delivery remains
+        subject to Android's alarm quotas and background-execution restrictions.
     """
 
     ALARM_CLOCK = "alarmClock"
@@ -381,8 +395,9 @@ class LinuxNotificationCategory(Enum):
     """
     Freedesktop category hint used by a Linux notification server.
 
-    Set :attr:`flet_notifications.LinuxOptions.category`. The desktop notification
-    server decides how to filter or present each category and may ignore the hint.
+    Note:
+        Set :attr:`flet_notifications.LinuxOptions.category`. The desktop notification
+        server decides how to filter or present each category and may ignore the hint.
     """
 
     DEVICE = "device"
@@ -463,11 +478,11 @@ class WindowsNotificationDuration(Enum):
 
 class WindowsNotificationSound(Enum):
     """
-    Audio choices supported by the Windows notification bridge.
+    Sound choices for Windows notifications.
 
-    Set :attr:`flet_notifications.WindowsOptions.audio`. These members select
-    Windows system sounds or silence; custom sound URIs are not supported by
-    the current bridge.
+    Note:
+        Set :attr:`flet_notifications.WindowsOptions.audio`. These members select
+        Windows system sounds or silence. Custom sound URIs are not supported.
     """
 
     DEFAULT = "default"
@@ -493,9 +508,10 @@ class AndroidServiceStartType(Enum):
     """
     Android restart policy for the extension's foreground service.
 
-    Used by :meth:`flet_notifications.LocalNotifications.start_foreground_service`.
-    These policies govern native service recreation, not Python task restart.
-    Android's foreground-service start restrictions still apply.
+    Note:
+        Used by :meth:`flet_notifications.LocalNotifications.start_foreground_service`.
+        These policies govern native service recreation, not Python task restart.
+        Android's foreground-service start restrictions still apply.
     """
 
     START_STICKY_COMPATIBILITY = "startStickyCompatibility"
@@ -533,10 +549,10 @@ class AndroidForegroundServiceType(Enum):
     """
     Kind of work performed by an Android foreground service.
 
-    Used by :meth:`flet_notifications.LocalNotifications.start_foreground_service`.
-    Each member below includes its `pyproject.toml` entries and any additional
-    runtime or eligibility requirements. The type-specific foreground-service
-    permissions are required when targeting Android 14+.
+    Used by :meth:`flet_notifications.LocalNotifications.start_foreground_service`. Each
+    member below includes its `pyproject.toml` entries and any additional runtime or
+    eligibility requirements. The type-specific foreground-service permissions are
+    required when targeting Android 14+.
 
     Start with this shared configuration, then merge the entries for the
     selected member into the same service and permission tables:
@@ -549,21 +565,22 @@ class AndroidForegroundServiceType(Enum):
     FOREGROUND_SERVICE = true
     ```
 
-    Do not repeat a TOML table header when combining examples. When using more
-    than one service type, combine the manifest names with `|`, for example
-    `foregroundServiceType = "location|mediaPlayback"`, and include the
-    permissions and prerequisites for every selected type. Pass the matching
-    enum members to the method's
+    Do not repeat a TOML table header when combining examples. When using more than one
+    service type, combine the manifest names with `|`, for example
+    `foregroundServiceType = "location|mediaPlayback"`, and include the permissions and
+    prerequisites for every selected type. Pass the matching enum members to the
+    method's
     [`foreground_service_types`][flet_notifications.LocalNotifications.start_foreground_service]
     argument.
 
-    Manifest declarations do not grant runtime permissions. Obtain any required
-    runtime grants or consent before starting. Selecting a type does not start
-    camera, recording, location, or other application work, and does not remove
-    Android's background-start or execution-time restrictions.
+    Note:
+        Manifest declarations do not grant runtime permissions. Obtain any required
+        runtime grants or consent before starting. Selecting a type does not start
+        camera, recording, location, or other application work, and does not remove
+        Android's background-start or execution-time restrictions.
 
-    See the [Android service configuration guide](/docs/publish/android#services)
-    for how these entries map to the Android manifest.
+    See the [Android service configuration guide](/docs/publish/android#services) for
+    how these entries map to the Android manifest.
     """  # noqa: E501
 
     CAMERA = "camera"
@@ -582,11 +599,14 @@ class AndroidForegroundServiceType(Enum):
     CAMERA = true
     ```
 
-    Obtain the `CAMERA` runtime grant before starting. While-in-use restrictions
-    usually require starting while the app is visible; background and boot starts
-    are restricted. Declaring `CAMERA` in this file does not grant access.
+    Note:
+        Obtain the `CAMERA` runtime grant before starting. While-in-use restrictions
+        usually require starting while the app is visible; background and boot starts
+        are restricted. Declaring `CAMERA` in this file does not grant access.
 
-    See [Android's requirements](https://developer.android.com/develop/background-work/services/fgs/service-types#camera) for this type.
+    See [Android's
+    requirements](https://developer.android.com/develop/background-work/services/fgs/service-types#camera)
+    for this type.
     """  # noqa: E501
 
     CONNECTED_DEVICE = "connectedDevice"
@@ -606,16 +626,20 @@ class AndroidForegroundServiceType(Enum):
     BLUETOOTH_CONNECT = true
     ```
 
-    This example is for a Bluetooth connection on Android 12+. Obtain the
-    `BLUETOOTH_CONNECT` runtime grant before starting. Other operations may need
-    `BLUETOOTH_SCAN` or `BLUETOOTH_ADVERTISE` instead.
+    Note:
+        This example is for a Bluetooth connection on Android 12+. Obtain the
+        `BLUETOOTH_CONNECT` runtime grant before starting. Other operations may need
+        `BLUETOOTH_SCAN` or `BLUETOOTH_ADVERTISE` instead.
 
-    For other transports, satisfy the applicable prerequisite: a declared
-    network, Wi-Fi, NFC, or infrared permission; a granted UWB permission; or
-    USB device permission obtained through Android's USB permission dialog.
-    Use the permissions for the transport your app actually uses.
+    Note:
+        For other transports, satisfy the applicable prerequisite: a declared network,
+        Wi-Fi, NFC, or infrared permission; a granted UWB permission; or USB device
+        permission obtained through Android's USB permission dialog. Use the permissions
+        for the transport your app actually uses.
 
-    See [Android's requirements](https://developer.android.com/develop/background-work/services/fgs/service-types#connected-device) for this type.
+    See [Android's
+    requirements](https://developer.android.com/develop/background-work/services/fgs/service-types#connected-device)
+    for this type.
     """  # noqa: E501
 
     DATA_SYNC = "dataSync"
@@ -633,12 +657,15 @@ class AndroidForegroundServiceType(Enum):
     FOREGROUND_SERVICE_DATA_SYNC = true
     ```
 
-    This type has no additional type-specific runtime permission prerequisite.
-    Access to the actual data or network may require other permissions.
-    Apps targeting Android 15+ cannot start this type from a boot-completed
-    receiver; Android also applies execution time limits.
+    Note:
+        This type has no additional type-specific runtime permission prerequisite.
+        Access to the actual data or network may require other permissions. Apps
+        targeting Android 15+ cannot start this type from a boot-completed receiver;
+        Android also applies execution time limits.
 
-    See [Android's requirements](https://developer.android.com/develop/background-work/services/fgs/service-types#data-sync) for this type.
+    See [Android's
+    requirements](https://developer.android.com/develop/background-work/services/fgs/service-types#data-sync)
+    for this type.
     """  # noqa: E501
 
     HEALTH = "health"
@@ -646,8 +673,8 @@ class AndroidForegroundServiceType(Enum):
     Health or fitness work, such as tracking an exercise session.
 
     Merge these entries with the shared configuration in
-    :class:`flet_notifications.AndroidForegroundServiceType`. This example uses
-    activity recognition; adapt its sensor permission to your use case.
+    :class:`flet_notifications.AndroidForegroundServiceType`. This example uses activity
+    recognition; adapt its sensor permission to your use case.
 
     ```toml
     [tool.flet.android.service."com.dexterous.flutterlocalnotifications.ForegroundService"]
@@ -658,21 +685,23 @@ class AndroidForegroundServiceType(Enum):
     ACTIVITY_RECOGNITION = true
     ```
 
-    This example is for activity recognition. Obtain the `ACTIVITY_RECOGNITION`
-    runtime grant before starting.
+    This example is for activity recognition. Obtain the `ACTIVITY_RECOGNITION` runtime
+    grant before starting.
 
-    Other health workloads can qualify through `HIGH_SAMPLING_RATE_SENSORS`
-    or an appropriate sensor permission. Body-sensor access uses `BODY_SENSORS`
-    on API 35 and earlier; newer health access can use `READ_HEART_RATE`,
-    `READ_SKIN_TEMPERATURE`, or `READ_OXYGEN_SATURATION`. Declare and request the
-    permissions matching your sensor and Android version, rather than adding
-    all of them.
+    Other health workloads can qualify through `HIGH_SAMPLING_RATE_SENSORS` or an
+    appropriate sensor permission. Body-sensor access uses `BODY_SENSORS` on API 35 and
+    earlier; newer health access can use `READ_HEART_RATE`, `READ_SKIN_TEMPERATURE`, or
+    `READ_OXYGEN_SATURATION`. Declare and request the permissions matching your sensor
+    and Android version, rather than adding all of them.
 
-    For body-sensor use subject to while-in-use restrictions, background access
-    also needs `BODY_SENSORS_BACKGROUND` on API 33–35 or
-    `READ_HEALTH_DATA_IN_BACKGROUND` on API 36+, as applicable.
+    Note:
+        For body-sensor use subject to while-in-use restrictions, background access also
+        needs `BODY_SENSORS_BACKGROUND` on API 33–35 or `READ_HEALTH_DATA_IN_BACKGROUND`
+        on API 36+, as applicable.
 
-    See [Android's requirements](https://developer.android.com/develop/background-work/services/fgs/service-types#health) for this type.
+    See [Android's
+    requirements](https://developer.android.com/develop/background-work/services/fgs/service-types#health)
+    for this type.
     """  # noqa: E501
 
     LOCATION = "location"
@@ -692,17 +721,19 @@ class AndroidForegroundServiceType(Enum):
     ACCESS_FINE_LOCATION = true
     ```
 
-    The user must enable device location services and grant coarse or fine
-    location access before the service starts. Request coarse and fine together
-    when precise location is needed; approximate access may be sufficient for
-    your use case.
+    The user must enable device location services and grant coarse or fine location
+    access before the service starts. Request coarse and fine together when precise
+    location is needed; approximate access may be sufficient for your use case.
 
-    While-in-use restrictions usually require starting while the app is visible.
-    Starting from the background requires `ACCESS_BACKGROUND_LOCATION` where
-    applicable, as well as satisfying Android's foreground-service start rules.
-    The block above does not request background location.
+    Note:
+        While-in-use restrictions usually require starting while the app is visible.
+        Starting from the background requires `ACCESS_BACKGROUND_LOCATION` where
+        applicable, as well as satisfying Android's foreground-service start rules. The
+        block above does not request background location.
 
-    See [Android's requirements](https://developer.android.com/develop/background-work/services/fgs/service-types#location) for this type.
+    See [Android's
+    requirements](https://developer.android.com/develop/background-work/services/fgs/service-types#location)
+    for this type.
     """  # noqa: E501
 
     MEDIA_PLAYBACK = "mediaPlayback"
@@ -720,11 +751,14 @@ class AndroidForegroundServiceType(Enum):
     FOREGROUND_SERVICE_MEDIA_PLAYBACK = true
     ```
 
-    This type has no additional type-specific runtime permission prerequisite.
-    It does not start media playback itself. Apps targeting Android 15+ cannot
-    start this type from a boot-completed receiver.
+    Note:
+        This type has no additional type-specific runtime permission prerequisite. It
+        does not start media playback itself. Apps targeting Android 15+ cannot start
+        this type from a boot-completed receiver.
 
-    See [Android's requirements](https://developer.android.com/develop/background-work/services/fgs/service-types#media) for this type.
+    See [Android's
+    requirements](https://developer.android.com/develop/background-work/services/fgs/service-types#media)
+    for this type.
     """  # noqa: E501
 
     MEDIA_PROJECTION = "mediaProjection"
@@ -742,14 +776,17 @@ class AndroidForegroundServiceType(Enum):
     FOREGROUND_SERVICE_MEDIA_PROJECTION = true
     ```
 
-    Obtain the user's screen-capture consent through Android's
-    `MediaProjectionManager.createScreenCaptureIntent()` flow before starting
-    the service. A manifest permission cannot replace this consent.
-    This extension does not expose that flow; the component performing screen
-    capture must obtain it. Apps targeting Android 15+ cannot start this type
-    from a boot-completed receiver.
+    Note:
+        Obtain the user's screen-capture consent through Android's
+        `MediaProjectionManager.createScreenCaptureIntent()` flow before starting the
+        service. A manifest permission cannot replace this consent. This extension does
+        not expose that flow; the component performing screen capture must obtain it.
+        Apps targeting Android 15+ cannot start this type from a boot-completed
+        receiver.
 
-    See [Android's requirements](https://developer.android.com/develop/background-work/services/fgs/service-types#media-projection) for this type.
+    See [Android's
+    requirements](https://developer.android.com/develop/background-work/services/fgs/service-types#media-projection)
+    for this type.
     """  # noqa: E501
 
     MICROPHONE = "microphone"
@@ -768,12 +805,15 @@ class AndroidForegroundServiceType(Enum):
     RECORD_AUDIO = true
     ```
 
-    Obtain the `RECORD_AUDIO` runtime grant before starting. While-in-use
-    restrictions usually require starting while the app is visible;
-    background and boot starts are restricted. Declaring the permission does
-    not start recording or grant microphone access.
+    Note:
+        Obtain the `RECORD_AUDIO` runtime grant before starting. While-in-use
+        restrictions usually require starting while the app is visible; background and
+        boot starts are restricted. Declaring the permission does not start recording or
+        grant microphone access.
 
-    See [Android's requirements](https://developer.android.com/develop/background-work/services/fgs/service-types#microphone) for this type.
+    See [Android's
+    requirements](https://developer.android.com/develop/background-work/services/fgs/service-types#microphone)
+    for this type.
     """  # noqa: E501
 
     PHONE_CALL = "phoneCall"
@@ -781,8 +821,8 @@ class AndroidForegroundServiceType(Enum):
     Continuation of a voice or video call.
 
     Merge these entries with the shared configuration in
-    :class:`flet_notifications.AndroidForegroundServiceType`. This example is
-    for a self-managed calling app.
+    :class:`flet_notifications.AndroidForegroundServiceType`. This example is for a
+    self-managed calling app.
 
     ```toml
     [tool.flet.android.service."com.dexterous.flutterlocalnotifications.ForegroundService"]
@@ -793,15 +833,18 @@ class AndroidForegroundServiceType(Enum):
     MANAGE_OWN_CALLS = true
     ```
 
-    This example is for a self-managed calling app using Android's
-    `ConnectionService` APIs and declaring `MANAGE_OWN_CALLS`. Alternatively,
-    the app can qualify by holding the default-dialer role. Adding this block
-    does not implement calling or obtain that role.
+    This example is for a self-managed calling app using Android's `ConnectionService`
+    APIs and declaring `MANAGE_OWN_CALLS`. Alternatively, the app can qualify by holding
+    the default-dialer role. Adding this block does not implement calling or obtain that
+    role.
 
-    Apps targeting Android 15+ cannot start this type from a boot-completed
-    receiver.
+    Note:
+        Apps targeting Android 15+ cannot start this type from a boot-completed
+        receiver.
 
-    See [Android's requirements](https://developer.android.com/develop/background-work/services/fgs/service-types#phone-call) for this type.
+    See [Android's
+    requirements](https://developer.android.com/develop/background-work/services/fgs/service-types#phone-call)
+    for this type.
     """  # noqa: E501
 
     REMOTE_MESSAGING = "remoteMessaging"
@@ -819,11 +862,14 @@ class AndroidForegroundServiceType(Enum):
     FOREGROUND_SERVICE_REMOTE_MESSAGING = true
     ```
 
-    This type has no additional type-specific runtime permission prerequisite.
-    Use it for continuity of messaging between devices, rather than ordinary
-    local notifications or an incoming push message.
+    Note:
+        This type has no additional type-specific runtime permission prerequisite. Use
+        it for continuity of messaging between devices, rather than ordinary local
+        notifications or an incoming push message.
 
-    See [Android's requirements](https://developer.android.com/develop/background-work/services/fgs/service-types#remote-messaging) for this type.
+    See [Android's
+    requirements](https://developer.android.com/develop/background-work/services/fgs/service-types#remote-messaging)
+    for this type.
     """  # noqa: E501
 
     SHORT_SERVICE = "shortService"
@@ -841,15 +887,18 @@ class AndroidForegroundServiceType(Enum):
     No type-specific foreground-service permission is required; the shared
     `FOREGROUND_SERVICE` permission is still needed.
 
-    Android limits this type to about three minutes and does not support sticky
-    restart behavior. Use
-    :attr:`flet_notifications.AndroidServiceStartType.START_NOT_STICKY` and call
-    :meth:`flet_notifications.LocalNotifications.stop_foreground_service` before
-    the deadline. This type cannot start another foreground service. If combined
-    with another service type, Android ignores `shortService` and applies the
-    other type's requirements.
+    Note:
+        Android limits this type to about three minutes and does not support sticky
+        restart behavior. Use
+        :attr:`flet_notifications.AndroidServiceStartType.START_NOT_STICKY` and call
+        :meth:`flet_notifications.LocalNotifications.stop_foreground_service` before the
+        deadline. This type cannot start another foreground service. If combined with
+        another service type, Android ignores `shortService` and applies the other
+        type's requirements.
 
-    See [Android's requirements](https://developer.android.com/develop/background-work/services/fgs/service-types#short-service) for this type.
+    See [Android's
+    requirements](https://developer.android.com/develop/background-work/services/fgs/service-types#short-service)
+    for this type.
     """  # noqa: E501
 
     SPECIAL_USE = "specialUse"
@@ -870,13 +919,16 @@ class AndroidForegroundServiceType(Enum):
     FOREGROUND_SERVICE_SPECIAL_USE = true
     ```
 
-    Replace the subtype description with the specific work your service
-    performs and why it needs this type. Android requires this service property;
-    Google Play reviews the declared use case. This type has no additional
-    type-specific runtime permission prerequisite and is not a substitute for
-    another type that already describes the work.
+    Note:
+        Replace the subtype description with the specific work your service performs and
+        why it needs this type. Android requires this service property; Google Play
+        reviews the declared use case. This type has no additional type-specific runtime
+        permission prerequisite and is not a substitute for another type that already
+        describes the work.
 
-    See [Android's requirements](https://developer.android.com/develop/background-work/services/fgs/service-types#special-use) for this type.
+    See [Android's
+    requirements](https://developer.android.com/develop/background-work/services/fgs/service-types#special-use)
+    for this type.
     """  # noqa: E501
 
     SYSTEM_EXEMPTED = "systemExempted"
@@ -894,13 +946,16 @@ class AndroidForegroundServiceType(Enum):
     FOREGROUND_SERVICE_SYSTEM_EXEMPTED = true
     ```
 
-    The app must independently meet Android's eligibility criteria, such as
-    being a qualifying device-management app, a configured VPN, or holding an
-    applicable exact-alarm permission for the permitted use case. Declaring the
-    permission alone does not make the app eligible; Android rejects this type
-    for ineligible apps. Ordinary applications cannot select it to bypass limits.
+    Note:
+        The app must independently meet Android's eligibility criteria, such as being a
+        qualifying device-management app, a configured VPN, or holding an applicable
+        exact-alarm permission for the permitted use case. Declaring the permission
+        alone does not make the app eligible; Android rejects this type for ineligible
+        apps. Ordinary applications cannot select it to bypass limits.
 
-    See [Android's requirements](https://developer.android.com/develop/background-work/services/fgs/service-types#system-exempted) for this type.
+    See [Android's
+    requirements](https://developer.android.com/develop/background-work/services/fgs/service-types#system-exempted)
+    for this type.
     """  # noqa: E501
 
 
@@ -908,8 +963,9 @@ class WebNotificationDirection(Enum):
     """
     Text direction for a browser notification.
 
-    Used by :attr:`flet_notifications.WebOptions.direction`. Browsers may ignore this
-    hint; it does not translate the notification's content.
+    Note:
+        Used by :attr:`flet_notifications.WebOptions.direction`. Browsers may ignore
+        this hint; it does not translate the notification's content.
     """
 
     AUTO = "auto"

@@ -31,8 +31,9 @@ class ResponseType(Enum):
     """
     The platform reported that the notification was dismissed.
 
-    Reporting requires native support and configuration. This enum value alone does not
-    enable dismissal reporting.
+    Note:
+        Reporting requires native support and configuration. This enum value alone does
+        not enable dismissal reporting.
     """
 
 
@@ -43,9 +44,13 @@ class NotificationEvent(ft.Event[ft.EventControlType]):
 
     Delivered to :attr:`flet_notifications.LocalNotifications.on_tap`,
     :attr:`flet_notifications.LocalNotifications.on_action`, and
-    :attr:`flet_notifications.LocalNotifications.on_dismissed`. The inherited `control`
-    is the service that emitted the event. On Windows, the inherited `data` mapping
-    contains action-input values keyed by the input ID.
+    :attr:`flet_notifications.LocalNotifications.on_dismiss`. The inherited `control`
+    is the service that emitted the event.
+
+    Note:
+        On Windows, the inherited `data` mapping contains reply values keyed by
+        :attr:`flet_notifications.NotificationAction.id`. See
+        :attr:`flet_notifications.LocalNotifications.on_action` for how to read them.
     """
 
     id: int = 0
@@ -70,8 +75,10 @@ class NotificationEvent(ft.Event[ft.EventControlType]):
     """
     Text entered through a notification reply input, or an empty string.
 
-    On Windows, the bridge copies the sole input value here when exactly one input is
-    returned. The full Windows input mapping remains in `data`.
+    Note:
+        On Windows, contains the reply text when exactly one input value is returned.
+        All reply values remain available in the inherited `data` mapping, keyed by
+        :attr:`flet_notifications.NotificationAction.id`.
     """
 
     response_type: str = ResponseType.TAP.value
@@ -81,8 +88,6 @@ class NotificationEvent(ft.Event[ft.EventControlType]):
     Compare with :attr:`flet_notifications.ResponseType.TAP` followed by `.value`, for
     example, rather than the enum member itself.
     """
-    # Windows action inputs arrive in the inherited `data` field, keyed by
-    # the input id (Windows leaves `input` null).
 
 
 class NotificationErrorCode:
