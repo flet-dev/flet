@@ -539,13 +539,12 @@ class LocalNotifications(ft.Service):
     async def periodically_show(
         self,
         id: int,
-        repeat_interval: RepeatInterval,
+        repeat_interval: RepeatInterval | ft.DurationValue,
         title: str | None = None,
         body: str | None = None,
         payload: str = "",
         actions: list[NotificationAction] | None = None,
         schedule_mode: AndroidScheduleMode = AndroidScheduleMode.EXACT_ALLOW_WHILE_IDLE,
-        repeat_duration_seconds: int | None = None,
         style: Style | None = None,
         show_progress: bool = False,
         max_progress: int = 0,
@@ -573,9 +572,9 @@ class LocalNotifications(ft.Service):
             id: Notification identifier. Reuse it to update the same notification;
                 on Android, a tag also participates in identifying immediately shown
                 notifications. Native platforms can impose identifier range limits.
-            repeat_interval: Standard repeat interval, used unless
-                `repeat_duration_seconds` is provided. The argument remains required
-                even when a custom duration overrides it.
+            repeat_interval: Standard repeat interval or a custom duration of at least
+                one minute, such as `ft.Duration(minutes=15)`. Integer values are
+                interpreted as milliseconds.
             title: Notification title. `None` omits the title.
             body: Notification body. `None` omits the body.
             payload: Application-defined string returned with tap and action events.
@@ -585,8 +584,6 @@ class LocalNotifications(ft.Service):
             schedule_mode: Android alarm precision and idle-mode behavior; see
                 :class:`~flet_notifications.AndroidScheduleMode`. Exact modes require
                 the applicable exact-alarm access. Ignored on other platforms.
-            repeat_duration_seconds: Custom interval in whole seconds, at least
-                `60`. Overrides `repeat_interval`. `None` uses the enum interval.
             style: Expanded Android layout; see :class:`~flet_notifications.Style`.
                 Other platforms ignore this argument.
             show_progress: Whether to show an Android progress bar.
@@ -609,7 +606,9 @@ class LocalNotifications(ft.Service):
                 :class:`~flet_notifications.NotificationOptions`.
 
         Raises:
-            ValueError: If `repeat_duration_seconds` is less than `60`.
+            ValueError: If `repeat_interval` is not a
+                :class:`~flet_notifications.RepeatInterval`, :class:`~flet.Duration`,
+                or integer, or if a custom duration is less than one minute.
             NotificationError: If the bridge reports initialization or scheduling
                 failure.
         """
@@ -624,7 +623,6 @@ class LocalNotifications(ft.Service):
                     payload=payload,
                     actions=actions or [],
                     schedule_mode=schedule_mode,
-                    repeat_duration_seconds=repeat_duration_seconds,
                     **self._details_args(
                         style,
                         show_progress,

@@ -4,9 +4,11 @@ from datetime import datetime, timedelta, timezone
 
 import pytest
 
+import flet as ft
 from flet_notifications import (
     DateTimeComponents,
     LocalNotifications,
+    RepeatInterval,
 )
 
 from .helpers import encode_wire
@@ -20,6 +22,54 @@ class RecordingService(LocalNotifications):
     async def _invoke_method(self, method_name, arguments=None, timeout=None):
         self.calls.append((method_name, encode_wire(arguments)))
         return "ok"
+
+
+@pytest.mark.parametrize(
+    ("interval", "expected"),
+    [
+        *((interval, interval.value) for interval in RepeatInterval),
+        (ft.Duration(minutes=15), {"minutes": 15}),
+        (ft.Duration(seconds=60), {"seconds": 60}),
+        (
+            ft.Duration(seconds=60, milliseconds=500),
+            {"seconds": 60, "milliseconds": 500},
+        ),
+        (60000, 60000),
+    ],
+)
+@pytest.mark.asyncio
+async def test_periodic_interval_encodes_presets_and_custom_durations(
+    interval, expected
+):
+    """Preset and custom intervals share one argument through the real transport."""
+    service = RecordingService()
+    await service.periodically_show(id=1, repeat_interval=interval)
+    name, args = service.calls[-1]
+    assert name == "periodically_show"
+    assert args["repeat_interval"] == expected
+    assert "repeat_duration_seconds" not in args
+
+
+@pytest.mark.parametrize(
+    "interval",
+    [
+        ft.Duration(seconds=59, milliseconds=999, microseconds=999),
+        ft.Duration(),
+        ft.Duration(minutes=-1),
+        59999,
+        0,
+        -1,
+        "daily",
+        None,
+    ],
+)
+@pytest.mark.asyncio
+async def test_invalid_periodic_interval_fails_before_invocation(interval):
+    """Invalid types and sub-minute intervals never reach the client."""
+    service = RecordingService()
+    with pytest.raises(ValueError, match="repeat_interval"):
+        await service.periodically_show(id=1, repeat_interval=interval)
+    assert service.calls == []
 
 
 @pytest.mark.asyncio

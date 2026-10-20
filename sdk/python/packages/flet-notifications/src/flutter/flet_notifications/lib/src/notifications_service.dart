@@ -363,7 +363,8 @@ class LocalNotificationsService extends FletService {
           style: parseStyle(map["style"]),
           details: map,
         ),
-        androidScheduleMode: parseAndroidScheduleMode(map["schedule_mode"] as String?,
+        androidScheduleMode: parseAndroidScheduleMode(
+            map["schedule_mode"] as String?,
             fln.AndroidScheduleMode.exactAllowWhileIdle)!,
         payload: map["payload"] as String? ?? "",
         matchDateTimeComponents: parseDateTimeComponents(
@@ -389,23 +390,32 @@ class LocalNotificationsService extends FletService {
         style: parseStyle(map["style"]),
         details: map,
       );
-      final scheduleMode = parseAndroidScheduleMode(map["schedule_mode"] as String?,
+      final scheduleMode = parseAndroidScheduleMode(
+          map["schedule_mode"] as String?,
           fln.AndroidScheduleMode.exactAllowWhileIdle)!;
       final title = map["title"] as String?;
       final body = map["body"] as String?;
       final payload = map["payload"] as String? ?? "";
-      final durationSeconds = parseInt(map["repeat_duration_seconds"]);
-      if (durationSeconds != null) {
+      final interval = map["repeat_interval"];
+      if (interval is! String) {
+        final duration = parseDuration(interval);
+        if (duration == null || duration < const Duration(minutes: 1)) {
+          return "error:invalid_option:repeat_interval must be at least one minute";
+        }
         await _plugin!.periodicallyShowWithDuration(
           id: id,
           title: title,
           body: body,
           payload: payload,
           notificationDetails: notificationDetails,
-          repeatDurationInterval: Duration(seconds: durationSeconds),
+          repeatDurationInterval: duration,
           androidScheduleMode: scheduleMode,
         );
         return "ok";
+      }
+      final repeatInterval = parseRepeatInterval(interval);
+      if (repeatInterval == null) {
+        return "error:invalid_option:Unknown repeat_interval: $interval";
       }
       await _plugin!.periodicallyShow(
         id: id,
@@ -413,8 +423,7 @@ class LocalNotificationsService extends FletService {
         body: body,
         payload: payload,
         notificationDetails: notificationDetails,
-        repeatInterval: parseRepeatInterval(
-            map["repeat_interval"] as String?, fln.RepeatInterval.daily)!,
+        repeatInterval: repeatInterval,
         androidScheduleMode: scheduleMode,
       );
       return "ok";

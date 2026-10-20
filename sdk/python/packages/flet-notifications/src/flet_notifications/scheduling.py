@@ -1,5 +1,6 @@
 from datetime import datetime, timedelta
 
+import flet as ft
 from flet_notifications.styles import Style, prepare_style
 from flet_notifications.types import (
     AndroidScheduleMode,
@@ -79,13 +80,12 @@ def build_schedule_args(
 def build_periodic_args(
     *,
     id: int,
-    repeat_interval: RepeatInterval,
+    repeat_interval: RepeatInterval | ft.DurationValue,
     title: str | None,
     body: str | None,
     payload: str,
     actions: list,
     schedule_mode: AndroidScheduleMode,
-    repeat_duration_seconds: int | None,
     options: object | None = None,
     style: Style | None = None,
     show_progress: bool = False,
@@ -98,8 +98,18 @@ def build_periodic_args(
     channel_id: str | None = None,
 ) -> dict:
     """Build the `periodically_show` invoke payload."""
-    if repeat_duration_seconds is not None and repeat_duration_seconds < 60:
-        raise ValueError("repeat_duration_seconds must be at least 60")
+    if isinstance(repeat_interval, ft.Duration):
+        milliseconds = repeat_interval.in_milliseconds
+    elif isinstance(repeat_interval, int):
+        milliseconds = repeat_interval
+    elif isinstance(repeat_interval, RepeatInterval):
+        milliseconds = None
+    else:
+        raise ValueError(
+            "repeat_interval must be a RepeatInterval, Duration, or integer"
+        )
+    if milliseconds is not None and milliseconds < 60000:
+        raise ValueError("repeat_interval must be at least one minute")
     return {
         "id": id,
         "title": title,
@@ -108,7 +118,6 @@ def build_periodic_args(
         "actions": actions or None,
         "repeat_interval": repeat_interval,
         "schedule_mode": schedule_mode,
-        "repeat_duration_seconds": repeat_duration_seconds,
         "options": options,
         "style": prepare_style(style),
         "show_progress": show_progress,

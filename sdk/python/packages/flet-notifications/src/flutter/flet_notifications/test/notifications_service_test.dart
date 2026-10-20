@@ -14,6 +14,7 @@ import 'package:flutter_test/flutter_test.dart';
 class _RecordingAndroid extends fln.AndroidFlutterLocalNotificationsPlugin {
   final List<Map<String, Object?>> shown = [];
   final List<fln.AndroidNotificationChannel> channelsCreated = [];
+  final List<Map<String, Object?>> periodicCalls = [];
   int permissionRequests = 0;
   bool permissionResult = true;
   int foregroundStarts = 0;
@@ -51,6 +52,44 @@ class _RecordingAndroid extends fln.AndroidFlutterLocalNotificationsPlugin {
   Future<void> createNotificationChannel(
       fln.AndroidNotificationChannel channel) async {
     channelsCreated.add(channel);
+  }
+
+  @override
+  Future<void> periodicallyShow({
+    required int id,
+    required fln.RepeatInterval repeatInterval,
+    String? title,
+    String? body,
+    fln.AndroidNotificationDetails? notificationDetails,
+    String? payload,
+    fln.AndroidScheduleMode scheduleMode = fln.AndroidScheduleMode.exact,
+  }) async {
+    periodicCalls.add({
+      'interval': repeatInterval,
+      'title': title,
+      'body': body,
+      'payload': payload,
+      'scheduleMode': scheduleMode,
+    });
+  }
+
+  @override
+  Future<void> periodicallyShowWithDuration({
+    required int id,
+    required Duration repeatDurationInterval,
+    String? title,
+    String? body,
+    fln.AndroidNotificationDetails? notificationDetails,
+    String? payload,
+    fln.AndroidScheduleMode scheduleMode = fln.AndroidScheduleMode.exact,
+  }) async {
+    periodicCalls.add({
+      'interval': repeatDurationInterval,
+      'title': title,
+      'body': body,
+      'payload': payload,
+      'scheduleMode': scheduleMode,
+    });
   }
 
   @override
@@ -116,6 +155,54 @@ void main() {
   setUp(() {
     plugin = _RecordingAndroid();
     fln.FlutterLocalNotificationsPlatform.instance = plugin;
+  });
+
+  test("periodic intervals select presets or custom durations", () async {
+    final service = _makeService();
+    for (final (interval, expected) in <(Object, Object)>[
+      ("HOURLY", fln.RepeatInterval.hourly),
+      ({"minutes": 15}, const Duration(minutes: 15)),
+      (
+        {"seconds": 60, "milliseconds": 500},
+        const Duration(seconds: 60, milliseconds: 500)
+      ),
+      (60000, const Duration(minutes: 1)),
+    ]) {
+      final result = await service.invokeMethod("periodically_show", {
+        "id": 1,
+        "title": "Reminder",
+        "body": "Take a break",
+        "payload": "break",
+        "repeat_interval": interval,
+      });
+      expect(result, "ok");
+      expect(plugin.periodicCalls.last, {
+        'interval': expected,
+        'title': 'Reminder',
+        'body': 'Take a break',
+        'payload': 'break',
+        'scheduleMode': fln.AndroidScheduleMode.exactAllowWhileIdle,
+      });
+    }
+  });
+
+  test("invalid periodic intervals do not schedule notifications", () async {
+    final service = _makeService();
+    for (final interval in [
+      {"seconds": 59, "milliseconds": 999, "microseconds": 999},
+      59999,
+      0,
+      -1,
+      "unknown",
+      null,
+    ]) {
+      final result = await service.invokeMethod("periodically_show", {
+        "id": 1,
+        "repeat_interval": interval,
+      });
+      expect(result, startsWith("error:invalid_option:"));
+    }
+    expect(plugin.periodicCalls, isEmpty);
   });
 
   test("display timestamps preserve their instant across native details",
