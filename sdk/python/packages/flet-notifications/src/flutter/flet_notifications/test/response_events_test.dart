@@ -80,6 +80,18 @@ void main() {
   });
 
   group("drainTapQueue", () {
+    test("refreshes events written after the main isolate cached preferences",
+        () async {
+      final prefs = await SharedPreferences.getInstance();
+      final event = responseToEvent(_response(payload: "background"));
+      await store.setValue("String", "flutter.flet_notifications_queue_100-1",
+          jsonEncode(event));
+      expect(prefs.getKeys(), isEmpty);
+
+      expect(await drainTapQueue(prefs), [event]);
+      expect(await drainTapQueue(prefs), isEmpty);
+    });
+
     test("returns events in key order and removes them", () async {
       final older = responseToEvent(_response(payload: "first"));
       final newer = responseToEvent(_response(payload: "second"));
@@ -124,17 +136,6 @@ void main() {
       expect(drained, isEmpty);
       // The bad entry is removed rather than left to wedge the queue.
       expect(prefs.getKeys(), isNot(contains("flet_notifications_queue_1-1")));
-    });
-  });
-
-  group("launch fingerprint dedupe", () {
-    test("emits once per unique payload", () async {
-      final prefs = await SharedPreferences.getInstance();
-      final event = responseToEvent(_response(payload: "hello"));
-      expect(await shouldEmitLaunch(prefs, event), isTrue);
-      expect(await shouldEmitLaunch(prefs, event), isFalse);
-      final other = responseToEvent(_response(payload: "changed"));
-      expect(await shouldEmitLaunch(prefs, other), isTrue);
     });
   });
 

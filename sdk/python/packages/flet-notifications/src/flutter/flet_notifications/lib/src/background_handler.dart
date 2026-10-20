@@ -8,13 +8,14 @@
 ///
 /// Unique keys per tap avoid read-modify-write races between the background
 /// isolate and the main isolate.
+library;
+
 import 'dart:convert';
 
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 const String _queuePrefix = "flet_notifications_queue_";
-const String _launchKey = "flet_notifications_last_launch";
 
 /// Serializes a notification response into the event payload shape the
 /// Python `NotificationEvent` dataclass expects.
@@ -74,9 +75,6 @@ Map<String, Object?> responseToEvent(NotificationResponse response) {
 /// shaker keeps it.
 @pragma('vm:entry-point')
 void notificationTapBackground(NotificationResponse response) {
-  // Fire-and-forget: the background isolate outlives this callback (the
-  // plugin's dispatcher keeps its event channel open), so the pending
-  // persist completes before the isolate is torn down.
   SharedPreferences.getInstance().then((prefs) {
     final stamp = DateTime.now().microsecondsSinceEpoch;
     final key = "$_queuePrefix$stamp-${identityHashCode(response)}";
@@ -88,6 +86,8 @@ void notificationTapBackground(NotificationResponse response) {
 Future<List<Map<String, Object?>>> drainTapQueue(
   SharedPreferences prefs,
 ) async {
+  // Another isolate may have written entries since this instance was cached.
+  await prefs.reload();
   final keys = prefs.getKeys().where((k) => k.startsWith(_queuePrefix)).toList()
     ..sort();
   final out = <Map<String, Object?>>[];
@@ -106,19 +106,4 @@ Future<List<Map<String, Object?>>> drainTapQueue(
     await prefs.remove(key);
   }
   return out;
-}
-
-/// Fingerprint of a cold-start launch response, used to emit it at most once.
-String launchFingerprint(Map<String, Object?> event) =>
-    "${event["id"]}|${event["action_id"]}|${event["payload"]}"
-    "|${event["input"]}|${event["response_type"]}";
-
-Future<bool> shouldEmitLaunch(
-  SharedPreferences prefs,
-  Map<String, Object?> event,
-) async {
-  final fingerprint = launchFingerprint(event);
-  if (fingerprint == prefs.getString(_launchKey)) return false;
-  await prefs.setString(_launchKey, fingerprint);
-  return true;
 }

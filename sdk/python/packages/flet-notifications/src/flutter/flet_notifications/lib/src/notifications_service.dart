@@ -25,6 +25,7 @@ class LocalNotificationsService extends FletService {
   fln.FlutterLocalNotificationsPlugin? _plugin;
   bool _initialized = false;
   bool _replaying = false;
+  bool _launchReplayComplete = false;
   Future<void>? _initFuture;
   // Accumulated Darwin action categories, keyed by notification id. iOS
   // replaces the whole category set on every setNotificationCategories call,
@@ -138,19 +139,18 @@ class LocalNotificationsService extends FletService {
   }
 
   Future<void> _replayLaunchDetails() async {
+    if (_launchReplayComplete) return;
     try {
       final details = await _plugin?.getNotificationAppLaunchDetails();
-      if (details?.didNotificationLaunchApp != true ||
-          details?.notificationResponse == null) {
-        return;
+      // Concurrent initialization may already have handled the startup response.
+      if (_launchReplayComplete) return;
+      if (details?.didNotificationLaunchApp == true &&
+          details?.notificationResponse != null) {
+        _emit(responseToEvent(details!.notificationResponse!));
       }
-      final event = responseToEvent(details!.notificationResponse!);
-      final prefs = await SharedPreferences.getInstance();
-      if (await shouldEmitLaunch(prefs, event)) {
-        _emit(event);
-      }
+      // Later activity intents can describe taps already delivered by callbacks.
+      _launchReplayComplete = true;
     } catch (e) {
-      // Best-effort: preferences unavailable must not break the service.
       debugPrint("flet_notifications: launch details replay failed: $e");
     }
   }

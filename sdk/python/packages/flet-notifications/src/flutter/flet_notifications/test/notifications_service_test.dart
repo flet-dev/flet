@@ -10,6 +10,7 @@ import 'package:flutter/foundation.dart'
 import 'package:flutter_local_notifications/flutter_local_notifications.dart'
     as fln;
 import 'package:flutter_test/flutter_test.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 /// Records converted native details without performing operating-system actions.
 class _RecordingAndroid extends fln.AndroidFlutterLocalNotificationsPlugin {
@@ -21,6 +22,7 @@ class _RecordingAndroid extends fln.AndroidFlutterLocalNotificationsPlugin {
   List<fln.AndroidNotificationChannel>? queriedChannels = [];
   fln.NotificationAppLaunchDetails? launchDetails;
   bool failQueries = false;
+  fln.DidReceiveNotificationResponseCallback? onResponse;
   int permissionRequests = 0;
   bool permissionResult = true;
   int foregroundStarts = 0;
@@ -34,8 +36,10 @@ class _RecordingAndroid extends fln.AndroidFlutterLocalNotificationsPlugin {
         onDidReceiveNotificationResponse,
     fln.DidReceiveBackgroundNotificationResponseCallback?
         onDidReceiveBackgroundNotificationResponse,
-  }) async =>
-      true;
+  }) async {
+    onResponse = onDidReceiveNotificationResponse;
+    return true;
+  }
 
   @override
   Future<void> show({
@@ -169,27 +173,113 @@ class _FakeMacOsPlugin extends fln.MacOSFlutterLocalNotificationsPlugin {
   }
 }
 
-LocalNotificationsService _makeService({Map<String, dynamic>? properties}) {
+class _RecordingControl extends Control {
+  final List<Map<String, Object?>> events = [];
+
+  _RecordingControl()
+      : super(
+          id: 1,
+          type: "LocalNotifications",
+          properties: const {},
+          backend: FletBackend(
+            pageUri: Uri.parse("http://localhost"),
+            assetsDir: "",
+            extensions: [],
+            multiView: false,
+          ),
+        );
+
+  @override
+  void triggerEvent(String name, [dynamic data]) {
+    events.add({"name": name, "data": data});
+  }
+}
+
+LocalNotificationsService _makeService(
+    {Map<String, dynamic>? properties, Control? control}) {
+  if (control != null) return LocalNotificationsService(control: control);
   final backend = FletBackend(
     pageUri: Uri.parse("uri"),
     assetsDir: "",
     extensions: [],
     multiView: false,
   );
-  final control = Control(
+  final defaultControl = Control(
     id: 1,
     type: "LocalNotifications",
     properties: properties ?? const {},
     backend: backend,
   );
-  return LocalNotificationsService(control: control);
+  return LocalNotificationsService(control: defaultControl);
 }
 
 void main() {
+  TestWidgetsFlutterBinding.ensureInitialized();
   late _RecordingAndroid plugin;
   setUp(() {
     plugin = _RecordingAndroid();
     fln.FlutterLocalNotificationsPlatform.instance = plugin;
+  });
+
+  test("launch replay is once per service and allows identical later sessions",
+      () async {
+    SharedPreferences.setMockInitialValues({});
+    plugin.launchDetails = const fln.NotificationAppLaunchDetails(
+      true,
+      notificationResponse: fln.NotificationResponse(
+        id: 7,
+        actionId: "reply",
+        input: "Hello",
+        payload: "conversation:7",
+        notificationResponseType:
+            fln.NotificationResponseType.selectedNotificationAction,
+      ),
+    );
+    final firstControl = _RecordingControl();
+    final firstService = _makeService(control: firstControl);
+    expect(
+        await Future.wait([
+          firstService.invokeMethod("initialize"),
+          firstService.invokeMethod("initialize"),
+        ]),
+        ["ok", "ok"]);
+    expect(await firstService.invokeMethod("initialize"), "ok");
+    expect(firstControl.events, hasLength(1));
+    expect(firstControl.events.single["name"], "action");
+
+    // A new user interaction with identical content is still delivered live.
+    plugin.onResponse!(plugin.launchDetails!.notificationResponse!);
+    expect(firstControl.events, hasLength(2));
+    expect(firstControl.events.last, firstControl.events.first);
+
+    final nextControl = _RecordingControl();
+    final nextService = _makeService(control: nextControl);
+    expect(await nextService.invokeMethod("initialize"), "ok");
+    expect(nextControl.events, [firstControl.events.first]);
+  });
+
+  test("reinitialization does not replay an already delivered live tap",
+      () async {
+    SharedPreferences.setMockInitialValues({});
+    final control = _RecordingControl();
+    final service = _makeService(control: control);
+    expect(await service.invokeMethod("initialize"), "ok");
+    expect(control.events, isEmpty);
+
+    const response = fln.NotificationResponse(
+      id: 7,
+      payload: "opened while running",
+      notificationResponseType:
+          fln.NotificationResponseType.selectedNotification,
+    );
+    plugin.onResponse!(response);
+    // Android's current activity intent now exposes this same live response.
+    plugin.launchDetails = const fln.NotificationAppLaunchDetails(
+      true,
+      notificationResponse: response,
+    );
+    expect(await service.invokeMethod("initialize"), "ok");
+    expect(control.events, hasLength(1));
   });
 
   test("queries return native collections with normalized unavailable fields",
