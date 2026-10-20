@@ -1,10 +1,3 @@
-/// Pure parsers for notification actions and styles.
-///
-/// Kept free of `flutter_local_notifications` model dependencies so they can
-/// be unit-tested without a plugin platform. The service maps the parsed
-/// results onto platform-specific objects.
-library;
-
 import 'dart:convert';
 
 class ParsedInput {
@@ -84,8 +77,9 @@ ParsedInput? parseInput(Object? raw) {
     label: raw["label"] is String ? raw["label"] as String : "",
     choices: choices is List ? choices.cast<String>() : const [],
     allowFreeFormInput: optionalBool(raw["allow_free_form_input"]) ?? true,
-    allowedMimeTypes: mimeTypes is List ? mimeTypes.cast<String>().toSet() : const {},
-      );
+    allowedMimeTypes:
+        mimeTypes is List ? mimeTypes.cast<String>().toSet() : const {},
+  );
 }
 
 bool? optionalBool(Object? value) {
@@ -225,10 +219,9 @@ ParsedStyle? parseStyle(Object? raw) {
       return ParsedStyle(
         type: type,
         person: person,
-        messages:
-            messages is List
-                ? messages.map(parseMessage).whereType<ParsedMessage>().toList()
-                : const [],
+        messages: messages is List
+            ? messages.map(parseMessage).whereType<ParsedMessage>().toList()
+            : const [],
         conversationTitle: raw["conversation_title"] as String?,
         groupConversation: optionalBool(raw["group_conversation"]) ?? false,
       );

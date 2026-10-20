@@ -1,9 +1,3 @@
-/// Pure parsing helpers for scheduling invokes.
-///
-/// Kept free of plugin dependencies (only `timezone` value types) so the
-/// time-conversion rules can be unit-tested directly.
-library;
-
 import 'package:flutter_local_notifications/flutter_local_notifications.dart'
     as fln;
 import 'package:timezone/timezone.dart' as tz;

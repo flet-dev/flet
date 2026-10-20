@@ -8,8 +8,6 @@
 ///
 /// Unique keys per tap avoid read-modify-write races between the background
 /// isolate and the main isolate.
-library;
-
 import 'dart:convert';
 
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
@@ -21,14 +19,16 @@ const String _launchKey = "flet_notifications_last_launch";
 /// Serializes a notification response into the event payload shape the
 /// Python `NotificationEvent` dataclass expects.
 Map<String, Object?> responseToEvent(NotificationResponse response) {
-  final isAction =
-      response.notificationResponseType ==
+  final isAction = response.notificationResponseType ==
       NotificationResponseType.selectedNotificationAction;
-  final isDismissed =
-      response.notificationResponseType ==
+  final isDismissed = response.notificationResponseType ==
       NotificationResponseType.notificationDismissed;
   var input = response.input;
-  var actionId = isDismissed ? "" : isAction ? (response.actionId ?? "") : "";
+  var actionId = isDismissed
+      ? ""
+      : isAction
+          ? (response.actionId ?? "")
+          : "";
   var payload = response.payload ?? "";
   // Windows returns the launch string (our JSON envelope) as both actionId
   // and payload, and typed text in `data` (input always null there).
@@ -48,12 +48,11 @@ Map<String, Object?> responseToEvent(NotificationResponse response) {
       // Not our envelope: Android/Darwin/plain action ids pass through.
     }
   }
-  final normalizedInput =
-      (input != null && input.isNotEmpty)
-          ? input
-          : (response.data.length == 1
-              ? response.data.values.first.toString()
-              : "");
+  final normalizedInput = (input != null && input.isNotEmpty)
+      ? input
+      : (response.data.length == 1
+          ? response.data.values.first.toString()
+          : "");
   return <String, Object?>{
     "id": response.id ?? -1,
     "action_id": actionId,
@@ -62,8 +61,8 @@ Map<String, Object?> responseToEvent(NotificationResponse response) {
     "response_type": isDismissed
         ? "dismissed"
         : isAction
-        ? "action"
-        : "tap",
+            ? "action"
+            : "tap",
     // Windows text/selection inputs arrive here (input is always null there).
     "data": response.data,
   };
@@ -89,12 +88,8 @@ void notificationTapBackground(NotificationResponse response) {
 Future<List<Map<String, Object?>>> drainTapQueue(
   SharedPreferences prefs,
 ) async {
-  final keys =
-      prefs
-          .getKeys()
-          .where((k) => k.startsWith(_queuePrefix))
-          .toList()
-        ..sort();
+  final keys = prefs.getKeys().where((k) => k.startsWith(_queuePrefix)).toList()
+    ..sort();
   final out = <Map<String, Object?>>[];
   for (final key in keys) {
     final raw = prefs.getString(key);
