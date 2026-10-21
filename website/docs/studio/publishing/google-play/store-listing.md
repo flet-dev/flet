@@ -17,8 +17,9 @@ doesn't build the app and doesn't use credits.
 :::note[Before you start]
 Sending the listing needs a [connected Google Play account](index.md#step-2-connect-google-play)
 with the **Manage store presence** permission for the app (Play Console › Users and
-permissions › the service account › the app › Store presence), and the app
-created in Play Console. If the app's listing is already on Google
+permissions › the service account › the app › Store presence) — plus **Edit and
+delete draft apps** while the app is still a draft — and the app created in Play
+Console. If the app's listing is already on Google
 Play, start with **Import from Google Play**.
 :::
 

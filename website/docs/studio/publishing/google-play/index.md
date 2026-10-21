@@ -90,7 +90,10 @@ for all your apps.
    - under **Releases**, only if you'll submit to Production from Studio:
      **Release to production, exclude devices, and use Play App Signing**;
    - under **Store presence**, only if you'll send the
-     [store listing](store-listing.md) from Studio: **Manage store presence**.
+     [store listing](store-listing.md) from Studio: **Manage store presence** —
+     and, while the app is still a draft in Play Console (its name shows
+     "(unreviewed)"), **Draft apps › Edit and delete draft apps** too. Releases
+     don't need it.
 
    Leave the rest unticked: Studio doesn't need **Admin**, financial data or tester
    lists.
@@ -175,7 +178,7 @@ Google Play already has the build, so a retry never submits it twice.
 |---|---|
 | Google Play has no app *package* yet | Create the app and upload its first release yourself ([step 1](#step-1-create-the-app-and-upload-its-first-release)), then **Retry upload** |
 | Google Play needs a contact email for the app | Add an email under **Contact details** in the [store listing](store-listing.md), then send it again |
-| *Service account* can't change this app's store listing | Give it **Store presence › Manage store presence** for the app in Play Console › Users and permissions, wait a few minutes, then **Retry upload** |
+| *Service account* can't change this app's store listing | Give it **Store presence › Manage store presence** for the app in Play Console › Users and permissions — and **Draft apps › Edit and delete draft apps** while the app is a draft — wait a few minutes, then **Retry upload** |
 | *Service account* can't release this app | Give it the app's permissions in Play Console › Users and permissions ([step 2](#in-play-console)), wait a few minutes, then **Retry upload** |
 | Enable the Google Play Android Developer API | Enable it in the service account's Google Cloud project, then **Retry upload** |
 | Google rejected the service account key | The key was deleted or the account disabled: create a new JSON key and connect it |
