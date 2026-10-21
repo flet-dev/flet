@@ -1,7 +1,7 @@
 import 'dart:async';
 
 import 'package:flet/flet.dart';
-import 'package:flutter/foundation.dart' show debugPrint, kIsWeb;
+import 'package:flutter/foundation.dart' show debugPrint;
 import 'package:flutter_local_notifications/flutter_local_notifications.dart'
     as fln;
 import 'package:flutter_timezone/flutter_timezone.dart';
@@ -54,13 +54,32 @@ class LocalNotificationsService extends FletService {
   /// invokes issued before initialization completes wait for it instead of
   /// silently no-oping.
   Future<void> _ensureInitialized({bool force = false}) {
-    if (force || _initFuture == null) {
-      _initFuture = _doInitialize();
+    if (_initFuture != null) return _initFuture!;
+    if (_initialized && !force) return Future.value();
+    return _initFuture = _doInitialize().whenComplete(() => _initFuture = null);
+  }
+
+  Future<void> _initializeBackend() async {
+    try {
+      final result = await _plugin!.initialize(
+        settings: _buildInitializationSettings(),
+        onDidReceiveNotificationResponse: _handleResponse,
+        onDidReceiveBackgroundNotificationResponse: notificationTapBackground,
+      );
+      // Apple returns the permission-request result, even when no prompt is
+      // requested. A false result still means the backend was configured.
+      if (result != true && !(isApplePlatform() && result == false)) {
+        throw StateError(
+            "notification backend initialization returned $result");
+      }
+    } catch (_) {
+      _initialized = false;
+      rethrow;
     }
-    return _initFuture!;
   }
 
   Future<void> _doInitialize() async {
+    _initialized = false;
     try {
       // The timezone database is only needed for scheduling; if it fails to
       // load, notifications still show.
@@ -73,11 +92,7 @@ class LocalNotificationsService extends FletService {
       }
 
       _plugin ??= fln.FlutterLocalNotificationsPlugin();
-      await _plugin!.initialize(
-        settings: _buildInitializationSettings(),
-        onDidReceiveNotificationResponse: _handleResponse,
-        onDidReceiveBackgroundNotificationResponse: notificationTapBackground,
-      );
+      await _initializeBackend();
       _initialized = true;
       await _replayQueuedTaps();
       await _replayLaunchDetails();
@@ -86,7 +101,6 @@ class LocalNotificationsService extends FletService {
       // retry on the next invoke and surface the failure to the caller.
       debugPrint("flet_notifications: initialization failed: $e");
       _initialized = false;
-      _initFuture = null;
     }
   }
 
@@ -489,6 +503,7 @@ class LocalNotificationsService extends FletService {
     int id,
     List<ParsedAction> actions,
   ) async {
+    if (!isApplePlatform()) return;
     final categoryActions = actions.map((a) {
       final options = <fln.DarwinNotificationActionOption>{
         if (a.destructive) fln.DarwinNotificationActionOption.destructive,
@@ -520,17 +535,13 @@ class LocalNotificationsService extends FletService {
         actions: categoryActions,
       ),
     ];
-    await _plugin?.initialize(
-      settings: _buildInitializationSettings(),
-      onDidReceiveNotificationResponse: _handleResponse,
-      onDidReceiveBackgroundNotificationResponse: notificationTapBackground,
-    );
+    await _initializeBackend();
   }
 
   // ── Permissions ─────────────────────────────────────────────────────
 
   Future<bool> _requestPermissions() async {
-    if (kIsWeb) {
+    if (isWebPlatform()) {
       final web = _webPlugin;
       if (web == null || !fln.WebFlutterLocalNotificationsPlugin.isSupported) {
         return false;
@@ -714,7 +725,7 @@ class LocalNotificationsService extends FletService {
   // ── Probes & OS integration ───────────────────────────────
 
   Future<bool> _areNotificationsEnabled() async {
-    if (kIsWeb) {
+    if (isWebPlatform()) {
       return fln.WebFlutterLocalNotificationsPlugin.isSupported &&
           _webPlugin?.permissionStatus == fln.WebNotificationPermission.granted;
     }

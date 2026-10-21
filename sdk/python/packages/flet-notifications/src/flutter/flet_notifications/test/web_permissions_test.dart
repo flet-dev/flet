@@ -18,6 +18,8 @@ external JSObject get _global;
 // Avoid service-worker registration while retaining the upstream permission API.
 class _WebPlugin extends fln.WebFlutterLocalNotificationsPlugin {
   final List<fln.WebNotificationDetails> shown = [];
+  bool? initializationResult = true;
+  int initializations = 0;
   fln.DidReceiveNotificationResponseCallback? onResponse;
 
   @override
@@ -36,8 +38,9 @@ class _WebPlugin extends fln.WebFlutterLocalNotificationsPlugin {
     fln.DidReceiveNotificationResponseCallback?
         onDidReceiveNotificationResponse,
   }) async {
+    initializations++;
     onResponse = onDidReceiveNotificationResponse;
-    return true;
+    return initializationResult;
   }
 }
 
@@ -126,6 +129,30 @@ void main() {
         permission == 'granted' ? 'true' : 'false',
       );
       expect(requests, 0);
+    });
+  }
+
+  for (final result in [false, null]) {
+    test('web initialization result $result blocks showing and permits retry',
+        () async {
+      final plugin = _WebPlugin()..initializationResult = result;
+      fln.FlutterLocalNotificationsPlatform.instance = plugin;
+      final service = _service();
+      expect(await service.invokeMethod('show', {'id': 1}),
+          startsWith('error:init_failed:'));
+      expect(plugin.shown, isEmpty);
+      plugin.initializationResult = true;
+      expect(await service.invokeMethod('show', {'id': 1}), 'ok');
+      expect(plugin.initializations, 2);
+      expect(
+          await service.invokeMethod('show', {
+            'id': 2,
+            'actions': [
+              {'id': 'open', 'title': 'Open'}
+            ],
+          }),
+          'ok');
+      expect(plugin.initializations, 2);
     });
   }
 

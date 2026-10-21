@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:ui' show Color;
 import 'dart:typed_data';
 
@@ -26,6 +27,11 @@ class _RecordingAndroid extends fln.AndroidFlutterLocalNotificationsPlugin {
   int permissionRequests = 0;
   bool permissionResult = true;
   int foregroundStarts = 0;
+  int initializations = 0;
+  bool initializationResult = true;
+  bool failInitialization = false;
+  Completer<void>? initializationStarted;
+  Future<void>? initializationGate;
   fln.AndroidServiceStartType? lastStartType;
   Set<fln.AndroidServiceForegroundType>? lastForegroundServiceTypes;
 
@@ -37,8 +43,12 @@ class _RecordingAndroid extends fln.AndroidFlutterLocalNotificationsPlugin {
     fln.DidReceiveBackgroundNotificationResponseCallback?
         onDidReceiveBackgroundNotificationResponse,
   }) async {
+    initializations++;
+    initializationStarted?.complete();
+    if (initializationGate != null) await initializationGate;
+    if (failInitialization) throw StateError("initialization failed");
     onResponse = onDidReceiveNotificationResponse;
-    return true;
+    return initializationResult;
   }
 
   @override
@@ -150,6 +160,8 @@ class _RecordingAndroid extends fln.AndroidFlutterLocalNotificationsPlugin {
 class _FakeMacOsPlugin extends fln.MacOSFlutterLocalNotificationsPlugin {
   fln.DarwinNotificationDetails? shownDarwin;
   final List<fln.DarwinInitializationSettings> initializations = [];
+  bool? initializationResult = true;
+  bool failInitialization = false;
 
   @override
   Future<bool?> initialize({
@@ -158,7 +170,8 @@ class _FakeMacOsPlugin extends fln.MacOSFlutterLocalNotificationsPlugin {
         onDidReceiveNotificationResponse,
   }) async {
     initializations.add(settings);
-    return true;
+    if (failInitialization) throw StateError("initialization failed");
+    return initializationResult;
   }
 
   @override
@@ -219,6 +232,130 @@ void main() {
   setUp(() {
     plugin = _RecordingAndroid();
     fln.FlutterLocalNotificationsPlatform.instance = plugin;
+  });
+
+  for (final throws in [false, true]) {
+    test("failed initialization ($throws) blocks showing and allows retry",
+        () async {
+      plugin.initializationResult = false;
+      plugin.failInitialization = throws;
+      final service = _makeService();
+      expect(await service.invokeMethod("show", {"id": 1}),
+          startsWith("error:init_failed:"));
+      expect(plugin.shown, isEmpty);
+      plugin.initializationResult = true;
+      plugin.failInitialization = false;
+      expect(await service.invokeMethod("show", {"id": 1}), "ok");
+      expect(plugin.initializations, 2);
+      expect(plugin.shown, hasLength(1));
+      // Action buttons must not reinitialize non-Apple backends.
+      expect(
+          await service.invokeMethod("show", {
+            "id": 2,
+            "actions": [
+              {"id": "open", "title": "Open"}
+            ],
+          }),
+          "ok");
+      expect(plugin.initializations, 2);
+    });
+  }
+
+  test("concurrent explicit and implicit initialization share a failed attempt",
+      () async {
+    final gate = Completer<void>();
+    final started = Completer<void>();
+    plugin.initializationGate = gate.future;
+    plugin.initializationStarted = started;
+    plugin.initializationResult = false;
+    final service = _makeService();
+    final results = Future.wait([
+      service.invokeMethod("initialize"),
+      service.invokeMethod("initialize"),
+      service.invokeMethod("show", {"id": 1}),
+    ]);
+    await started.future;
+    expect(plugin.initializations, 1);
+    gate.complete();
+    expect(await results, everyElement(startsWith("error:init_failed:")));
+    expect(plugin.shown, isEmpty);
+    plugin.initializationStarted = null;
+    plugin.initializationGate = null;
+    plugin.initializationResult = true;
+    expect(await service.invokeMethod("show", {"id": 1}), "ok");
+    expect(plugin.initializations, 2);
+  });
+
+  test("failed forced reinitialization clears the previous ready state",
+      () async {
+    final service = _makeService();
+    expect(await service.invokeMethod("initialize"), "ok");
+    plugin.initializationResult = false;
+    expect(await service.invokeMethod("initialize"),
+        startsWith("error:init_failed:"));
+    expect(await service.invokeMethod("show", {"id": 1}),
+        startsWith("error:init_failed:"));
+    expect(plugin.shown, isEmpty);
+    plugin.initializationResult = true;
+    expect(await service.invokeMethod("show", {"id": 1}), "ok");
+  });
+
+  test("Apple permission denial allows operations and category registration",
+      () async {
+    debugDefaultTargetPlatformOverride = TargetPlatform.macOS;
+    addTearDown(() => debugDefaultTargetPlatformOverride = null);
+    final macos = _FakeMacOsPlugin()..initializationResult = false;
+    fln.FlutterLocalNotificationsPlatform.instance = macos;
+    final service = _makeService();
+    expect(await service.invokeMethod("initialize"), "ok");
+    expect(
+        await service.invokeMethod("show", {
+          "id": 1,
+          "actions": [
+            {"id": "open", "title": "Open"}
+          ],
+        }),
+        "ok");
+    expect(macos.shownDarwin, isNotNull);
+    expect(macos.initializations.last.notificationCategories, hasLength(1));
+  });
+
+  test("an absent Apple initialization result fails setup and can retry",
+      () async {
+    debugDefaultTargetPlatformOverride = TargetPlatform.macOS;
+    addTearDown(() => debugDefaultTargetPlatformOverride = null);
+    final macos = _FakeMacOsPlugin()..initializationResult = null;
+    fln.FlutterLocalNotificationsPlatform.instance = macos;
+    final service = _makeService();
+    expect(await service.invokeMethod("show", {"id": 1}),
+        startsWith("error:init_failed:"));
+    expect(macos.shownDarwin, isNull);
+    macos.initializationResult = false;
+    expect(await service.invokeMethod("show", {"id": 1}), "ok");
+  });
+
+  test("failed Apple category registration blocks showing and retries setup",
+      () async {
+    debugDefaultTargetPlatformOverride = TargetPlatform.macOS;
+    addTearDown(() => debugDefaultTargetPlatformOverride = null);
+    final macos = _FakeMacOsPlugin();
+    fln.FlutterLocalNotificationsPlatform.instance = macos;
+    final service = _makeService();
+    expect(await service.invokeMethod("initialize"), "ok");
+    macos.failInitialization = true;
+    expect(
+        await service.invokeMethod("show", {
+          "id": 1,
+          "actions": [
+            {"id": "open", "title": "Open"}
+          ],
+        }),
+        startsWith("error:show_failed:"));
+    expect(macos.shownDarwin, isNull);
+    macos.failInitialization = false;
+    expect(await service.invokeMethod("show", {"id": 1}), "ok");
+    expect(macos.initializations, hasLength(3));
+    expect(macos.initializations.last.notificationCategories, hasLength(1));
   });
 
   test("launch replay is once per service and allows identical later sessions",
