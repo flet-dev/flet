@@ -174,6 +174,7 @@ Google Play already has the build, so a retry never submits it twice.
 | Error | Fix |
 |---|---|
 | Google Play has no app *package* yet | Create the app and upload its first release yourself ([step 1](#step-1-create-the-app-and-upload-its-first-release)), then **Retry upload** |
+| Google Play needs a contact email for the app | Add an email under **Contact details** in the [store listing](store-listing.md), then send it again |
 | *Service account* can't change this app's store listing | Give it **Store presence › Manage store presence** for the app in Play Console › Users and permissions, wait a few minutes, then **Retry upload** |
 | *Service account* can't release this app | Give it the app's permissions in Play Console › Users and permissions ([step 2](#in-play-console)), wait a few minutes, then **Retry upload** |
 | Enable the Google Play Android Developer API | Enable it in the service account's Google Cloud project, then **Retry upload** |
