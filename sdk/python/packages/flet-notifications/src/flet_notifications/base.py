@@ -194,11 +194,3 @@ def check_result(result: object) -> None:
         _, _, rest = result.partition(":")
         code, _, message = rest.partition(":")
         raise NotificationError(code.strip(), message.strip())
-
-
-def to_bool(result: object) -> bool:
-    """Coerce a Dart invoke result to bool (`"true"`/`"false"`)."""
-    check_result(result)
-    if isinstance(result, bool):
-        return result
-    return str(result).strip().lower() == "true"

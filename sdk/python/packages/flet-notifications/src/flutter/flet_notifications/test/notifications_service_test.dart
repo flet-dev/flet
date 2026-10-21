@@ -25,7 +25,7 @@ class _RecordingAndroid extends fln.AndroidFlutterLocalNotificationsPlugin {
   bool failQueries = false;
   fln.DidReceiveNotificationResponseCallback? onResponse;
   int permissionRequests = 0;
-  bool permissionResult = true;
+  bool? permissionResult = true;
   int foregroundStarts = 0;
   int initializations = 0;
   bool initializationResult = true;
@@ -138,6 +138,27 @@ class _RecordingAndroid extends fln.AndroidFlutterLocalNotificationsPlugin {
       'scheduleMode': scheduleMode,
     });
   }
+
+  @override
+  Future<bool?> canScheduleExactNotifications() async => permissionResult;
+
+  @override
+  Future<bool?> requestExactAlarmsPermission() async => permissionResult;
+
+  @override
+  Future<bool?> areNotificationsEnabled() async => permissionResult;
+
+  @override
+  Future<bool?> requestFullScreenIntentPermission() async => permissionResult;
+
+  @override
+  Future<bool?> hasNotificationPolicyAccess() async => permissionResult;
+
+  @override
+  Future<bool?> requestNotificationPolicyAccess() async => permissionResult;
+
+  @override
+  Future<bool?> openAppNotificationSettings() async => permissionResult;
 
   @override
   Future<void> startForegroundService({
@@ -678,11 +699,50 @@ void main() {
 
   test("request_permissions uses the Android runtime permission", () async {
     final service = _makeService();
-    expect(await service.invokeMethod("request_permissions", null), "true");
+    expect(await service.invokeMethod("request_permissions", null), isTrue);
     expect(plugin.permissionRequests, 1);
 
     plugin.permissionResult = false;
-    expect(await service.invokeMethod("request_permissions", null), "false");
+    expect(await service.invokeMethod("request_permissions", null), isFalse);
+  });
+
+  test("boolean methods retain native grants, denials and null fallbacks",
+      () async {
+    final service = _makeService();
+    for (final result in [true, false, null]) {
+      plugin.permissionResult = result;
+      for (final method in [
+        "request_permissions",
+        "can_schedule_exact_notifications",
+        "request_exact_alarm_permission",
+        "are_notifications_enabled",
+        "request_full_screen_intent",
+        "has_notification_policy_access",
+        "request_notification_policy_access",
+        "open_app_settings",
+      ]) {
+        expect(await service.invokeMethod(method), result ?? false,
+            reason: method);
+      }
+    }
+  });
+
+  test("Android-only boolean methods retain their other-platform fallbacks",
+      () async {
+    debugDefaultTargetPlatformOverride = TargetPlatform.macOS;
+    addTearDown(() => debugDefaultTargetPlatformOverride = null);
+    fln.FlutterLocalNotificationsPlatform.instance = _FakeMacOsPlugin();
+    final service = _makeService();
+    expect(
+        await service.invokeMethod("can_schedule_exact_notifications"), isTrue);
+    for (final method in [
+      "request_exact_alarm_permission",
+      "request_full_screen_intent",
+      "has_notification_policy_access",
+      "request_notification_policy_access"
+    ]) {
+      expect(await service.invokeMethod(method), isFalse, reason: method);
+    }
   });
 
   test("show forwards style onto styleInformation", () async {

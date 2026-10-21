@@ -7,7 +7,6 @@ from flet_notifications.base import (
     NotificationError,
     NotificationEvent,
     check_result,
-    to_bool,
 )
 from flet_notifications.channels import NotificationChannel
 from flet_notifications.events import (
@@ -392,7 +391,9 @@ class LocalNotifications(ft.Service):
                 failure.
         """
         # Permission dialogs can take a while; allow more than the default.
-        return to_bool(await self._invoke_method("request_permissions", timeout=300))
+        result = await self._invoke_method("request_permissions", timeout=300)
+        check_result(result)
+        return result
 
     async def schedule(
         self,
@@ -698,7 +699,9 @@ class LocalNotifications(ft.Service):
             NotificationError: If the bridge reports initialization or operation
                 failure.
         """
-        return to_bool(await self._invoke_method("can_schedule_exact_notifications"))
+        result = await self._invoke_method("can_schedule_exact_notifications")
+        check_result(result)
+        return result
 
     async def request_exact_alarm_permission(self) -> bool:
         """
@@ -717,9 +720,11 @@ class LocalNotifications(ft.Service):
             NotificationError: If the bridge reports initialization or operation
                 failure.
         """
-        return to_bool(
-            await self._invoke_method("request_exact_alarm_permission", timeout=300)
+        result = await self._invoke_method(
+            "request_exact_alarm_permission", timeout=300
         )
+        check_result(result)
+        return result
 
     # ── Channels (Android 8.0+) ─────────────────────────────────────────
 
@@ -926,7 +931,9 @@ class LocalNotifications(ft.Service):
             NotificationError: If the bridge reports initialization or operation
                 failure.
         """
-        return to_bool(await self._invoke_method("are_notifications_enabled"))
+        result = await self._invoke_method("are_notifications_enabled")
+        check_result(result)
+        return result
 
     async def open_app_notification_settings(self) -> None:
         """
@@ -1039,9 +1046,9 @@ class LocalNotifications(ft.Service):
             NotificationError: If the bridge reports initialization or operation
                 failure.
         """
-        return to_bool(
-            await self._invoke_method("request_full_screen_intent", timeout=300)
-        )
+        result = await self._invoke_method("request_full_screen_intent", timeout=300)
+        check_result(result)
+        return result
 
     async def has_notification_policy_access(self) -> bool:
         """
@@ -1057,7 +1064,9 @@ class LocalNotifications(ft.Service):
             NotificationError: If the bridge reports initialization or operation
                 failure.
         """
-        return to_bool(await self._invoke_method("has_notification_policy_access"))
+        result = await self._invoke_method("has_notification_policy_access")
+        check_result(result)
+        return result
 
     async def request_notification_policy_access(self) -> bool:
         """
@@ -1076,9 +1085,11 @@ class LocalNotifications(ft.Service):
             NotificationError: If the bridge reports initialization or operation
                 failure.
         """
-        return to_bool(
-            await self._invoke_method("request_notification_policy_access", timeout=300)
+        result = await self._invoke_method(
+            "request_notification_policy_access", timeout=300
         )
+        check_result(result)
+        return result
 
     # ── Channel groups (Android 8.0+) ───────────────────────────────────
 

@@ -126,7 +126,7 @@ void main() {
       notification['permission'] = permission.toJS;
       expect(
         await _service().invokeMethod('are_notifications_enabled'),
-        permission == 'granted' ? 'true' : 'false',
+        permission == 'granted',
       );
       expect(requests, 0);
     });
@@ -160,15 +160,15 @@ void main() {
     test('request returns the browser result $result', () async {
       requestResult = result;
       final service = _service();
-      expect(await service.invokeMethod('are_notifications_enabled'), 'false');
+      expect(await service.invokeMethod('are_notifications_enabled'), isFalse);
       expect(
         await service.invokeMethod('request_permissions'),
-        result == 'granted' ? 'true' : 'false',
+        result == 'granted',
       );
       expect(requests, 1);
       expect(
         await service.invokeMethod('are_notifications_enabled'),
-        result == 'granted' ? 'true' : 'false',
+        result == 'granted',
       );
     });
   }
@@ -178,7 +178,7 @@ void main() {
       notification['permission'] = permission.toJS;
       expect(
         await _service().invokeMethod('request_permissions'),
-        permission == 'granted' ? 'true' : 'false',
+        permission == 'granted',
       );
       expect(requests, 0);
     });
@@ -188,8 +188,8 @@ void main() {
       () async {
     _global.delete('Notification'.toJS);
     final service = _service();
-    expect(await service.invokeMethod('are_notifications_enabled'), 'false');
-    expect(await service.invokeMethod('request_permissions'), 'false');
+    expect(await service.invokeMethod('are_notifications_enabled'), isFalse);
+    expect(await service.invokeMethod('request_permissions'), isFalse);
     expect(requests, 0);
   });
 

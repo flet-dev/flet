@@ -255,29 +255,23 @@ class LocalNotificationsService extends FletService {
         return await _stopForegroundService();
 
       case "request_permissions":
-        return (await _requestPermissions()) ? "true" : "false";
+        return await _requestPermissions();
 
       case "can_schedule_exact_notifications":
         final android = _androidPlugin;
-        if (android == null) return "true";
-        return (await android.canScheduleExactNotifications() ?? false)
-            ? "true"
-            : "false";
+        if (android == null) return true;
+        return await android.canScheduleExactNotifications() ?? false;
 
       case "request_exact_alarm_permission":
         final android = _androidPlugin;
-        if (android == null) return "false";
-        return (await android.requestExactAlarmsPermission() ?? false)
-            ? "true"
-            : "false";
+        if (android == null) return false;
+        return await android.requestExactAlarmsPermission() ?? false;
 
       case "are_notifications_enabled":
-        return (await _areNotificationsEnabled()) ? "true" : "false";
+        return await _areNotificationsEnabled();
 
       case "open_app_settings":
-        return (await _plugin?.openAppNotificationSettings() ?? false)
-            ? "true"
-            : "false";
+        return await _plugin?.openAppNotificationSettings() ?? false;
 
       case "get_active":
         return await _getActive();
@@ -286,19 +280,14 @@ class LocalNotificationsService extends FletService {
         return await _getLaunchDetails();
 
       case "request_full_screen_intent":
-        final android = _androidPlugin;
-        return (await android?.requestFullScreenIntentPermission() ?? false)
-            ? "true"
-            : "false";
+        return await _androidPlugin?.requestFullScreenIntentPermission() ??
+            false;
 
       case "has_notification_policy_access":
-        return (await _hasNotificationPolicyAccess()) ? "true" : "false";
+        return await _hasNotificationPolicyAccess();
 
       case "request_notification_policy_access":
-        final android = _androidPlugin;
-        return (await android?.requestNotificationPolicyAccess() ?? false)
-            ? "true"
-            : "false";
+        return await _androidPlugin?.requestNotificationPolicyAccess() ?? false;
 
       case "create_notification_channel_group":
         return await _createChannelGroup(args);
@@ -815,12 +804,11 @@ class LocalNotificationsService extends FletService {
   }
 
   Future<String> _deleteChannelGroup(dynamic args) async {
-    final android = _androidPlugin;
-    if (android == null) {
+    if (_androidPlugin == null) {
       return "error:unsupported_platform:channel groups are Android-only";
     }
     final map = args as Map;
-    await android.deleteNotificationChannelGroup(
+    await _androidPlugin!.deleteNotificationChannelGroup(
       groupId: map["group_id"] as String,
     );
     return "ok";
