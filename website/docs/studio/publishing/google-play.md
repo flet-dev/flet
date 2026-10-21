@@ -58,7 +58,11 @@ for all your apps.
 
 ### In Google Cloud
 
-1. Pick or create a project in the [Google Cloud console](https://console.cloud.google.com/).
+1. Open a project in the [Google Cloud console](https://console.cloud.google.com/).
+   **Any project works** — an existing one, or a new one just for publishing (the
+   project picker at the top › **New project**). It doesn't have to be linked to
+   your Play Console account, and it costs nothing: the Google Play Android
+   Developer API is free, and no billing account is needed.
 2. Enable the **Google Play Android Developer API** for it
    (**APIs & Services › Library**, search for "Google Play Android Developer").
 3. Go to **IAM & Admin › Service accounts** and **Create service account**. Give
