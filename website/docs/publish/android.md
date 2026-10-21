@@ -8,6 +8,11 @@ import Tabs from '@theme/Tabs';
 Instructions for packaging a Flet app into an
 Android APK and Android App Bundle (AAB).
 
+:::tip[Build in Flet Studio]
+Don't want to set up the Android SDK? [Flet Studio](../studio/publishing/android.md)
+builds APKs and app bundles in the cloud and publishes them to Google Play.
+:::
+
 :::tip[Info]
 This guide provides detailed Android-specific information.
 Complementary and more general information is available [here](index.md).
