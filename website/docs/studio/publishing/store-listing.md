@@ -16,7 +16,9 @@ doesn't build the app and doesn't use credits.
 
 :::note[Before you start]
 Sending the listing needs a [connected Google Play account](google-play.md#step-2-connect-google-play)
-and the app created in Play Console. If the app's listing is already on Google
+with the **Manage store presence** permission for the app (Play Console › Users and
+permissions › the service account › the app › Store presence), and the app
+created in Play Console. If the app's listing is already on Google
 Play, start with **Import from Google Play**.
 :::
 

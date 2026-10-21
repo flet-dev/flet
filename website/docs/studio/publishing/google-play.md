@@ -88,10 +88,12 @@ for all your apps.
      for you;
    - under **Releases**: **Release apps to testing tracks**;
    - under **Releases**, only if you'll submit to Production from Studio:
-     **Release to production, exclude devices, and use Play App Signing**.
+     **Release to production, exclude devices, and use Play App Signing**;
+   - under **Store presence**, only if you'll send the
+     [store listing](store-listing.md) from Studio: **Manage store presence**.
 
-   Leave the rest unticked: Studio doesn't need **Admin**, financial data, store
-   presence or tester lists.
+   Leave the rest unticked: Studio doesn't need **Admin**, financial data or tester
+   lists.
 4. **Invite user**. A service account doesn't have to accept anything.
 
 Permission changes can take a few minutes to apply.
@@ -172,6 +174,7 @@ Google Play already has the build, so a retry never submits it twice.
 | Error | Fix |
 |---|---|
 | Google Play has no app *package* yet | Create the app and upload its first release yourself ([step 1](#step-1-create-the-app-and-upload-its-first-release)), then **Retry upload** |
+| *Service account* can't change this app's store listing | Give it **Store presence › Manage store presence** for the app in Play Console › Users and permissions, wait a few minutes, then **Retry upload** |
 | *Service account* can't release this app | Give it the app's permissions in Play Console › Users and permissions ([step 2](#in-play-console)), wait a few minutes, then **Retry upload** |
 | Enable the Google Play Android Developer API | Enable it in the service account's Google Cloud project, then **Retry upload** |
 | Google rejected the service account key | The key was deleted or the account disabled: create a new JSON key and connect it |
