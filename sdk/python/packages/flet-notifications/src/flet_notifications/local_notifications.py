@@ -186,10 +186,11 @@ class LocalNotifications(ft.Service):
         for every notification that disappears.
     """
 
-    # ── Shared kwargs for show / schedule / periodically_show ────────────
+    # ── Shared notification details ─────────────────────────────────────
 
     @staticmethod
     def _details_args(
+        *,
         style: Style | None,
         show_progress: bool,
         max_progress: int,
@@ -201,7 +202,7 @@ class LocalNotifications(ft.Service):
         channel_id: str | None,
         options: NotificationOptions | None = None,
     ) -> dict:
-        """Collect style/progress/grouping arguments for Flet's encoder."""
+        """Prepare shared notification details once for Flet's encoder."""
         return {
             "style": prepare_style(style),
             "options": options,
@@ -305,16 +306,16 @@ class LocalNotifications(ft.Service):
                     "payload": payload,
                     "actions": actions or None,
                     **self._details_args(
-                        style,
-                        show_progress,
-                        max_progress,
-                        progress,
-                        indeterminate,
-                        group_key,
-                        set_as_group_summary,
-                        group_alert_behavior,
-                        channel_id,
-                        options,
+                        style=style,
+                        show_progress=show_progress,
+                        max_progress=max_progress,
+                        progress=progress,
+                        indeterminate=indeterminate,
+                        group_key=group_key,
+                        set_as_group_summary=set_as_group_summary,
+                        group_alert_behavior=group_alert_behavior,
+                        channel_id=channel_id,
+                        options=options,
                     ),
                 },
             )
@@ -503,29 +504,31 @@ class LocalNotifications(ft.Service):
         check_result(
             await self._invoke_method(
                 "schedule",
-                build_schedule_args(
-                    id=id,
-                    when=when,
-                    title=title,
-                    body=body,
-                    payload=payload,
-                    actions=actions or [],
-                    match_components=match_components,
-                    schedule_mode=schedule_mode,
-                    time_zone=time_zone,
-                    **self._details_args(
-                        style,
-                        show_progress,
-                        max_progress,
-                        progress,
-                        indeterminate,
-                        group_key,
-                        set_as_group_summary,
-                        group_alert_behavior,
-                        channel_id,
-                        options,
+                {
+                    "id": id,
+                    "title": title,
+                    "body": body,
+                    "payload": payload,
+                    "actions": actions or None,
+                    **build_schedule_args(
+                        when=when,
+                        match_components=match_components,
+                        schedule_mode=schedule_mode,
+                        time_zone=time_zone,
                     ),
-                ),
+                    **self._details_args(
+                        style=style,
+                        show_progress=show_progress,
+                        max_progress=max_progress,
+                        progress=progress,
+                        indeterminate=indeterminate,
+                        group_key=group_key,
+                        set_as_group_summary=set_as_group_summary,
+                        group_alert_behavior=group_alert_behavior,
+                        channel_id=channel_id,
+                        options=options,
+                    ),
+                },
             )
         )
 
@@ -608,27 +611,29 @@ class LocalNotifications(ft.Service):
         check_result(
             await self._invoke_method(
                 "periodically_show",
-                build_periodic_args(
-                    id=id,
-                    repeat_interval=repeat_interval,
-                    title=title,
-                    body=body,
-                    payload=payload,
-                    actions=actions or [],
-                    schedule_mode=schedule_mode,
-                    **self._details_args(
-                        style,
-                        show_progress,
-                        max_progress,
-                        progress,
-                        indeterminate,
-                        group_key,
-                        set_as_group_summary,
-                        group_alert_behavior,
-                        channel_id,
-                        options,
+                {
+                    "id": id,
+                    "title": title,
+                    "body": body,
+                    "payload": payload,
+                    "actions": actions or None,
+                    **build_periodic_args(
+                        repeat_interval=repeat_interval,
+                        schedule_mode=schedule_mode,
                     ),
-                ),
+                    **self._details_args(
+                        style=style,
+                        show_progress=show_progress,
+                        max_progress=max_progress,
+                        progress=progress,
+                        indeterminate=indeterminate,
+                        group_key=group_key,
+                        set_as_group_summary=set_as_group_summary,
+                        group_alert_behavior=group_alert_behavior,
+                        channel_id=channel_id,
+                        options=options,
+                    ),
+                },
             )
         )
 
@@ -867,16 +872,16 @@ class LocalNotifications(ft.Service):
                     "foreground_service_types": foreground_service_types,
                     "actions": actions or None,
                     **self._details_args(
-                        style,
-                        show_progress,
-                        max_progress,
-                        progress,
-                        indeterminate,
-                        None,
-                        False,
-                        GroupAlertBehavior.ALL,
-                        channel_id,
-                        options,
+                        style=style,
+                        show_progress=show_progress,
+                        max_progress=max_progress,
+                        progress=progress,
+                        indeterminate=indeterminate,
+                        group_key=None,
+                        set_as_group_summary=False,
+                        group_alert_behavior=GroupAlertBehavior.ALL,
+                        channel_id=channel_id,
+                        options=options,
                     ),
                 },
             )
