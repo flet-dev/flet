@@ -1,3 +1,9 @@
+## 1.0.5
+
+### Bug fixes
+
+* Fix `flet run --web` and other Flet web apps failing to start with FastAPI 0.145 or later, which removed the `openapi_prefix` argument ([#6984](https://github.com/flet-dev/flet/issues/6984)) by @FeodorFitsner.
+
 ## 1.0.4
 
 ### Improvements
