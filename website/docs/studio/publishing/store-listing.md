@@ -33,9 +33,9 @@ as you edit:
   en-US/full_description.txt
   en-US/video.txt                    a YouTube URL (optional)
   en-US/images/icon.png
-  en-US/images/featureGraphic.png
-  en-US/images/phoneScreenshots/1.png, 2.png, ...
-  en-US/images/tenInchScreenshots/1.png, ...
+  en-US/images/feature_graphic.png
+  en-US/images/phone_screenshots/1.png, 2.png, ...
+  en-US/images/tablet_screenshots/1.png, ...
   de-DE/...
 ```
 
@@ -47,8 +47,10 @@ as you edit:
   with AI** when adding a language) puts a ready request in the agent's message
   box; review it and send. Or just ask the agent to write, shorten or translate
   the texts — the listing updates as it edits these files.
-- **The file names are fastlane's**: copy the folder to
-  `fastlane/metadata/android/` to use it with fastlane `supply`.
+- **Coming from fastlane?** Studio also reads fastlane `supply`'s folder names
+  (`featureGraphic.png`, `phoneScreenshots/`, `tenInchScreenshots/`), so a
+  `metadata/android` folder copied into `.store/google-play/` works; Studio moves
+  a set to its own names when it next changes it.
 
 ## Languages
 
