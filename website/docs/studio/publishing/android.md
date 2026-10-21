@@ -10,7 +10,7 @@ The Android section of **Publish** has three actions:
 |---|---|---|
 | **Create an APK** | An `.apk` file | Installing directly on a phone or tablet |
 | **Create an app bundle (.aab)** | A signed `.aab` file | Uploading to Google Play yourself, e.g. an app's first release |
-| **Publish to Google Play** | A release on a Google Play track | See [Publishing to Google Play](google-play.md) |
+| **Publish to Google Play** | A release on a Google Play track | See [Publishing to Google Play](google-play/index.md) |
 
 All three use the app's **Android signing key** when one is selected — the same key
 for APKs and app bundles.
@@ -49,7 +49,7 @@ selected.
 
 Use **Create an app bundle (.aab)** to upload a release to Google Play yourself —
 mainly an app's **first release**, which Google requires to be uploaded in Play
-Console. After that, [Publish to Google Play](google-play.md) uploads for you.
+Console. After that, [Publish to Google Play](google-play/index.md) uploads for you.
 
 A phone can't install an `.aab` directly.
 
@@ -107,7 +107,7 @@ an upload is yours. So on a phone:
 - An APK from Studio won't update a copy installed from Google Play, and the other
   way round — uninstall one to install the other.
 - To give testers the exact build Google Play delivers, use a Google Play testing
-  track ([install your test build](google-play.md#install-your-test-build-on-a-phone)),
+  track ([install your test build](google-play/index.md#install-your-test-build-on-a-phone)),
   or download a Google-signed universal APK from Play Console's **App bundle
   explorer**.
 

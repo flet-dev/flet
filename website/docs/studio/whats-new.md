@@ -17,11 +17,11 @@ reverse-chronological order. Flet Studio ships independently of the Flet SDK —
 * **Publish to Google Play.** Studio signs your Android app with your key and
   releases it on Internal, Closed or Open testing, or submits it to Production. If
   only the upload fails, **Retry upload** sends the same build again without
-  charging credits. See [Publishing to Google Play](publishing/google-play.md).
+  charging credits. See [Publishing to Google Play](publishing/google-play/index.md).
 * **Google Play store listing.** Write the app's name and descriptions, add
   screenshots straight from the Preview's Android phone and tablet devices, import
   an existing listing, and send it to Google Play — on its own (no build, no
-  credits) or with a release. See [Google Play store listing](publishing/store-listing.md).
+  credits) or with a release. See [Google Play store listing](publishing/google-play/store-listing.md).
 * **Signing keys and store accounts.** Create or import Android signing keys, back
   them up, and connect Google Play once for all your apps, in the new **Settings ›
   Signing keys** and **Settings › Store accounts**.

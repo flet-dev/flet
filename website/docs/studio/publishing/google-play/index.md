@@ -24,7 +24,7 @@ You need:
 
 - A **Google Play developer account** ([Play Console](https://play.google.com/console)).
 - An **Android signing key** selected for the app in Studio — see
-  [Android apps](android.md#signing-key). Google Play only accepts updates signed
+  [Android apps](../android.md#signing-key). Google Play only accepts updates signed
   with the key the app's first release was uploaded with, so keep using the same
   one.
 - The app's **package name** set in Studio (**Publish › Settings › Android ›
@@ -46,7 +46,7 @@ to happen in Play Console. Do it once per app:
 Google Play now knows the app and remembers the key it was signed with as the
 app's **upload key**. Google re-signs the copies it delivers with its own key
 (Play App Signing), which is why your key must never change — see
-[Android apps](android.md#apks-and-google-play-installs).
+[Android apps](../android.md#apks-and-google-play-installs).
 
 {/* SCREENSHOT: /img/docs/studio/publishing/play-console-first-release.png — Play Console › Internal testing › Create new release, with the .aab uploaded */}
 
@@ -266,7 +266,7 @@ is the easy way to get one signed with the key Studio will keep using.
 
 ### Can I use an app that's already on Google Play?
 
-Yes. [Import its upload key](android.md#import-a-key) (the keystore you've been
+Yes. [Import its upload key](../android.md#import-a-key) (the keystore you've been
 signing with), set the same package name, connect Google Play, and publish. The
 build number must be higher than Google Play's latest; Studio starts above it
 automatically.
@@ -276,7 +276,7 @@ automatically.
 Yes, but not over a copy installed from Google Play, and the other way round:
 Google Play re-signs its copies with Google's key, and Android only updates an app
 with one signed by the same key. See
-[Android apps](android.md#apks-and-google-play-installs).
+[Android apps](../android.md#apks-and-google-play-installs).
 
 ### What can't Studio do on Google Play yet?
 

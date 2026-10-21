@@ -954,8 +954,9 @@ studio:
   Publishing:
     _index: studio/publishing/index.md
     Android apps: studio/publishing/android.md
-    Google Play: studio/publishing/google-play.md
-    Google Play store listing: studio/publishing/store-listing.md
+    Google Play:
+      _index: studio/publishing/google-play/index.md
+      Store listing: studio/publishing/google-play/store-listing.md
     Signing keys and store accounts: studio/publishing/signing-keys-and-store-accounts.md
   What's new: studio/whats-new
   Terms of Service: studio/terms-of-service

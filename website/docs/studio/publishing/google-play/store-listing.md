@@ -15,7 +15,7 @@ doesn't build the app and doesn't use credits.
 {/* SCREENSHOT: /img/docs/studio/publishing/store-listing.png — the Update store listing screen: language, texts, graphics */}
 
 :::note[Before you start]
-Sending the listing needs a [connected Google Play account](google-play.md#step-2-connect-google-play)
+Sending the listing needs a [connected Google Play account](index.md#step-2-connect-google-play)
 with the **Manage store presence** permission for the app (Play Console › Users and
 permissions › the service account › the app › Store presence), and the app
 created in Play Console. If the app's listing is already on Google
