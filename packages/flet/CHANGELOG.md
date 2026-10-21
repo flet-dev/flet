@@ -1,6 +1,6 @@
 ## 1.0.5
 
-_No changes in the `flet` Dart package; version bumped for release coordination with the fix for Flet web apps failing to start with FastAPI 0.145 or later ([#6984](https://github.com/flet-dev/flet/issues/6984))._
+_No changes in the `flet` Dart package; version bumped for release coordination with the fix for Flet web apps failing to start with FastAPI 0.145 or later ([#6984](https://github.com/flet-dev/flet/issues/6984), [#6988](https://github.com/flet-dev/flet/pull/6988))._
 
 ## 1.0.4
 
