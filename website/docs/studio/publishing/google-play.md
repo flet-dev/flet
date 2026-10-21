@@ -81,11 +81,17 @@ for all your apps.
    account** › **Users and permissions**. Then **Invite new users**.
 2. Enter the service account's email (`…@….iam.gserviceaccount.com`, also in the
    JSON key as `client_email`).
-3. On the **App permissions** tab, **Add app**, choose your app and tick:
-   - **View app information and download bulk reports (read-only)**
-   - **Release apps to testing tracks**
-   - **Release to production, exclude devices, and use Play App Signing** — only
-     if you'll submit to Production from Studio.
+3. On the **App permissions** tab, **Add app** and choose your app. In
+   **Permissions for *your app***, tick:
+   - under **App access**: **View app information (read-only)**. Play Console ticks
+     the permissions that come with it (such as *View app quality information*)
+     for you;
+   - under **Releases**: **Release apps to testing tracks**;
+   - under **Releases**, only if you'll submit to Production from Studio:
+     **Release to production, exclude devices, and use Play App Signing**.
+
+   Leave the rest unticked: Studio doesn't need **Admin**, financial data, store
+   presence or tester lists.
 4. **Invite user**. A service account doesn't have to accept anything.
 
 Permission changes can take a few minutes to apply.
