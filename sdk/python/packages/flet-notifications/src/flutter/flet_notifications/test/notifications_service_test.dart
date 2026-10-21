@@ -3,7 +3,7 @@ import 'dart:typed_data';
 
 import 'package:flet/flet.dart';
 import 'package:flet_notifications/src/notifications_service.dart';
-import 'package:flet_notifications/src/utils/notification_details.dart'
+import 'package:flet_notifications/src/utils/details.dart'
     as notification_details;
 import 'package:flutter/foundation.dart'
     show debugDefaultTargetPlatformOverride, TargetPlatform;
@@ -962,7 +962,7 @@ void main() {
       "style": null,
       "channel_id": null,
       "start_type": "startStickyCompatibility",
-      "foreground_service_types": ["dataSync", "specialUse"],
+      "foreground_service_types": ["DATASYNC", "specialUse", "dataSync"],
     });
     expect(result, "ok");
     expect(plugin.foregroundStarts, 1);
@@ -972,6 +972,62 @@ void main() {
       fln.AndroidServiceForegroundType.foregroundServiceTypeDataSync,
       fln.AndroidServiceForegroundType.foregroundServiceTypeSpecialUse,
     });
+  });
+
+  test("invalid foreground types prevent the native service from starting",
+      () async {
+    final service = _makeService();
+    for (final value in [
+      "dataSync",
+      ["dataSync", "typo"],
+      [42]
+    ]) {
+      final result = await service.invokeMethod("start_foreground_service", {
+        "id": 4,
+        "foreground_service_types": value,
+      });
+      expect(result, startsWith("error:invalid_option:"));
+    }
+    expect(plugin.foregroundStarts, 0);
+  });
+
+  test("absent and empty foreground types use the manifest", () async {
+    final service = _makeService();
+    for (final value in [null, []]) {
+      expect(
+          await service.invokeMethod("start_foreground_service", {
+            "id": 4,
+            "foreground_service_types": value,
+          }),
+          "ok");
+      expect(plugin.lastForegroundServiceTypes, isNull);
+    }
+    expect(plugin.foregroundStarts, 2);
+  });
+
+  test("malformed reply collections return invalid_action before showing",
+      () async {
+    final service = _makeService();
+    for (final input in [
+      {
+        "choices": ["Yes", 42]
+      },
+      {
+        "allowed_mime_types": ["image/png", 42]
+      },
+      {"choices": "Yes"},
+      {"allowed_mime_types": "image/png"},
+    ]) {
+      expect(
+          await service.invokeMethod("show", {
+            "id": 1,
+            "actions": [
+              {"id": "reply", "title": "Reply", "input": input}
+            ],
+          }),
+          startsWith("error:invalid_action:"));
+    }
+    expect(plugin.shown, isEmpty);
   });
 
   final colorCases = <String, int?>{

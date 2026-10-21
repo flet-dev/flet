@@ -5,20 +5,15 @@ import 'package:flet/flet.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart'
     as fln;
 
-import '../parsers.dart';
+import 'actions.dart';
+import 'parsers.dart';
+import 'styles.dart';
 
 const String _channelId = "flet_notifications";
 const String _channelName = "Notifications";
 
 /// Shared by Darwin notification details and the service's category registry.
 const String darwinNotificationCategoryPrefix = "flet_notifications_actions_";
-
-/// Raised for invalid per-platform option values (bad category, …) so the
-/// invoke returns `invalid_option` rather than a generic `invalid_action`.
-class InvalidNotificationOptionException implements Exception {
-  InvalidNotificationOptionException(this.message);
-  final String message;
-}
 
 /// Converts a wire payload into the upstream platform notification details.
 ///
@@ -158,10 +153,12 @@ Future<fln.NotificationDetails> parseNotificationDetails({
       ledOffMs:
           parseDuration(androidOptions["led_off_duration"])?.inMilliseconds,
       ticker: androidOptions["ticker"] as String?,
-      visibility: parseVisibility(androidOptions["visibility"] as String?),
+      visibility:
+          parseNotificationVisibility(androidOptions["visibility"] as String?),
       timeoutAfter:
           parseDuration(androidOptions["timeout_after"])?.inMilliseconds,
-      category: parseCategory(androidOptions["category"] as String?),
+      category: parseAndroidNotificationCategory(
+          androidOptions["category"] as String?),
       fullScreenIntent: parseBool(androidOptions["full_screen_intent"], false)!,
       shortcutId: androidOptions["shortcut_id"] as String?,
       subText: androidOptions["sub_text"] as String?,
@@ -176,10 +173,11 @@ Future<fln.NotificationDetails> parseNotificationDetails({
     ),
     linux: fln.LinuxNotificationDetails(
       defaultActionName: "Open",
-      icon: parseLinuxIcon(linuxOptions["icon"] as String?),
-      sound: parseLinuxSound(linuxOptions["sound"] as String?),
-      category: parseLinuxCategory(linuxOptions["category"] as String?),
-      urgency: parseLinuxUrgency(linuxOptions["urgency"] as String?,
+      icon: parseLinuxNotificationIcon(linuxOptions["icon"] as String?),
+      sound: parseLinuxNotificationSound(linuxOptions["sound"] as String?),
+      category:
+          parseLinuxNotificationCategory(linuxOptions["category"] as String?),
+      urgency: parseLinuxNotificationUrgency(linuxOptions["urgency"] as String?,
           fln.LinuxNotificationUrgency.normal)!,
       timeout: linuxTimeout == null
           ? const fln.LinuxNotificationTimeout.systemDefault()
@@ -196,13 +194,15 @@ Future<fln.NotificationDetails> parseNotificationDetails({
       header: parseWindowsHeader(windowsOptions["header"] as String?),
       audio: windowsAudio == null || windowsAudio.isEmpty
           ? null
-          : parseWindowsAudio(
+          : parseWindowsNotificationAudio(
               windowsAudio,
               fln.WindowsNotificationAudio.preset(
                   sound: fln.WindowsNotificationSound.defaultSound),
             ),
-      duration: parseWindowsDuration(windowsOptions["duration"] as String?),
-      scenario: parseWindowsScenario(windowsOptions["scenario"] as String?),
+      duration: parseWindowsNotificationDuration(
+          windowsOptions["duration"] as String?),
+      scenario: parseWindowsNotificationScenario(
+          windowsOptions["scenario"] as String?),
       timestamp: windowsOptions["timestamp"] as DateTime?,
       subtitle: windowsOptions["subtitle"] as String?,
       images: (windowsOptions["images"] as List?)
@@ -249,23 +249,6 @@ Map<dynamic, dynamic>? _platformOptions(Map? details, String platform) {
   return platformOptions is Map ? platformOptions : null;
 }
 
-fln.AndroidNotificationSound? parseSound(String? sound) {
-  if (sound == null || sound.isEmpty) return null;
-  if (sound.startsWith("content://") || sound.startsWith("file://")) {
-    return fln.UriAndroidNotificationSound(sound);
-  }
-  return fln.RawResourceAndroidNotificationSound(sound);
-}
-
-/// Notification large icons accept bitmaps (drawable, file path or bytes).
-fln.AndroidBitmap<Object>? parseLargeIcon(String? source) {
-  if (source == null || source.isEmpty) return null;
-  if (source.startsWith("/") || source.contains("\\")) {
-    return fln.FilePathAndroidBitmap(source);
-  }
-  return fln.DrawableResourceAndroidBitmap(source);
-}
-
 fln.DarwinNotificationDetails parseDarwinDetails({
   required int id,
   required List<ParsedAction> actions,
@@ -292,182 +275,4 @@ fln.DarwinNotificationDetails parseDarwinDetails({
             .toList() ??
         const [],
   );
-}
-
-fln.Priority? parsePriority(String? value, [fln.Priority? defaultValue]) =>
-    parseEnum(fln.Priority.values, value, defaultValue);
-
-fln.NotificationVisibility? parseVisibility(String? value,
-        [fln.NotificationVisibility? defaultValue]) =>
-    parseEnum(fln.NotificationVisibility.values, value, defaultValue);
-
-fln.InterruptionLevel? parseInterruptionLevel(String? value,
-        [fln.InterruptionLevel? defaultValue]) =>
-    parseEnum(fln.InterruptionLevel.values, value, defaultValue);
-
-fln.LinuxNotificationIcon? parseLinuxIcon(String? name) {
-  if (name == null || name.isEmpty) return null;
-  if (name.startsWith("/") || name.startsWith("file://")) {
-    return fln.FilePathLinuxIcon(name);
-  }
-  return fln.ThemeLinuxIcon(name);
-}
-
-fln.LinuxNotificationSound? parseLinuxSound(String? name) {
-  if (name == null || name.isEmpty) return null;
-  return fln.ThemeLinuxSound(name);
-}
-
-fln.LinuxNotificationCategory? parseLinuxCategory(String? value) {
-  if (value == null) return null;
-  for (final category in fln.LinuxNotificationCategory.values) {
-    if (category.name == value) return category;
-  }
-  throw FormatException("unknown Linux notification category: $value");
-}
-
-fln.LinuxNotificationUrgency? parseLinuxUrgency(String? value,
-        [fln.LinuxNotificationUrgency? defaultValue]) =>
-    parseEnum(fln.LinuxNotificationUrgency.values, value, defaultValue);
-
-fln.WindowsHeader? parseWindowsHeader(String? title) {
-  if (title == null || title.isEmpty) return null;
-  return fln.WindowsHeader(id: "header", title: title, arguments: "");
-}
-
-fln.WindowsNotificationAudio? parseWindowsAudio(String? value,
-    [fln.WindowsNotificationAudio? defaultValue]) {
-  if (value == null || value.isEmpty) return defaultValue;
-  if (value == "silent") return fln.WindowsNotificationAudio.silent();
-  const presets = {
-    "default": fln.WindowsNotificationSound.defaultSound,
-    "im": fln.WindowsNotificationSound.im,
-    "mail": fln.WindowsNotificationSound.mail,
-    "reminder": fln.WindowsNotificationSound.reminder,
-    "sms": fln.WindowsNotificationSound.sms,
-  };
-  final sound = presets[value];
-  return sound == null
-      ? defaultValue
-      : fln.WindowsNotificationAudio.preset(sound: sound);
-}
-
-fln.WindowsNotificationDuration? parseWindowsDuration(String? value,
-        [fln.WindowsNotificationDuration? defaultValue]) =>
-    parseEnum(fln.WindowsNotificationDuration.values, value, defaultValue);
-
-fln.WindowsNotificationScenario? parseWindowsScenario(String? value,
-        [fln.WindowsNotificationScenario? defaultValue]) =>
-    parseEnum(fln.WindowsNotificationScenario.values, value, defaultValue);
-
-/// Converts a parsed style onto the Android `styleInformation` object.
-///
-/// Styles are an Android concept in the plugin; iOS/macOS render titles,
-/// attachments and interruptions through their own details fields.
-fln.StyleInformation? parseStyleInformation(ParsedStyle? style) {
-  if (style == null) return null;
-  switch (style.type) {
-    case "big_text":
-      return fln.BigTextStyleInformation(
-        style.bigText!,
-        contentTitle: style.contentTitle,
-        summaryText: style.summaryText,
-      );
-    case "big_picture":
-      return fln.BigPictureStyleInformation(
-        parseBitmap(style.image!)!,
-        largeIcon: parseBitmap(style.largeIcon),
-        contentTitle: style.contentTitle,
-        summaryText: style.summaryText,
-      );
-    case "inbox":
-      return fln.InboxStyleInformation(
-        style.lines,
-        contentTitle: style.contentTitle,
-        summaryText: style.summaryText,
-      );
-    case "messaging":
-      return fln.MessagingStyleInformation(
-        parsePerson(style.person!),
-        conversationTitle: style.conversationTitle,
-        groupConversation: style.groupConversation,
-        messages: style.messages
-            .map(
-              (m) => fln.Message(
-                m.text,
-                DateTime.parse(m.timestampIso),
-                parsePerson(m.person),
-              ),
-            )
-            .toList(),
-      );
-    default:
-      throw FormatException("unknown style type: ${style.type}");
-  }
-}
-
-/// Maps an icon onto a style image. FLN's big-picture bitmaps support
-/// drawable, file-path and byte sources only.
-fln.AndroidBitmap<Object>? parseBitmap(ParsedIcon? icon) {
-  if (icon == null) return null;
-  final drawable = icon.drawableResource;
-  if (drawable != null) return fln.DrawableResourceAndroidBitmap(drawable);
-  final path = icon.filePath;
-  if (path != null) return fln.FilePathAndroidBitmap(path);
-  final data = icon.data;
-  if (data != null) return fln.ByteArrayAndroidBitmap(Uint8List.fromList(data));
-  throw const FormatException(
-    "big-picture images support drawable, file path and byte sources",
-  );
-}
-
-/// Maps an icon onto an Android notification icon (all five sources).
-fln.AndroidIcon<Object>? parseIcon(ParsedIcon? icon) {
-  if (icon == null) return null;
-  final drawable = icon.drawableResource;
-  if (drawable != null) return fln.DrawableResourceAndroidIcon(drawable);
-  final path = icon.filePath;
-  if (path != null) return fln.BitmapFilePathAndroidIcon(path);
-  final uri = icon.contentUri;
-  if (uri != null) return fln.ContentUriAndroidIcon(uri);
-  final asset = icon.flutterAsset;
-  if (asset != null) return fln.FlutterBitmapAssetAndroidIcon(asset);
-  final data = icon.data;
-  if (data != null) return fln.ByteArrayAndroidIcon(Uint8List.fromList(data));
-  throw const FormatException("icon has no source");
-}
-
-fln.Person parsePerson(ParsedPerson person) {
-  return fln.Person(
-    name: person.name,
-    key: person.key,
-    bot: person.bot,
-    important: person.important,
-    uri: person.uri,
-    icon: parseIcon(person.icon),
-  );
-}
-
-fln.GroupAlertBehavior? parseGroupAlertBehavior(String? value,
-        [fln.GroupAlertBehavior? defaultValue]) =>
-    parseEnum(fln.GroupAlertBehavior.values, value, defaultValue);
-
-fln.AndroidNotificationCategory? parseCategory(String? value) {
-  if (value == null) return null;
-  final category = parseEnum(fln.AndroidNotificationCategory.values, value);
-  if (category != null) return category;
-  throw InvalidNotificationOptionException(
-    "unknown notification category: $value",
-  );
-}
-
-/// Converts importance for both notifications and explicitly created channels.
-fln.Importance? parseNotificationImportance(String? value,
-        [fln.Importance? defaultValue]) =>
-    parseEnum(fln.Importance.values, value, defaultValue);
-
-/// Converts the vibration pattern shared by notifications and channels.
-Int64List? parseNotificationVibrationPattern(Object? value) {
-  final pattern = parseList(value, (item) => parseInt(item)!);
-  return pattern == null ? null : Int64List.fromList(pattern);
 }

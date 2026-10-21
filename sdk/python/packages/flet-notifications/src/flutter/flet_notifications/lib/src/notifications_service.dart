@@ -12,9 +12,11 @@ import 'package:timezone/data/latest_all.dart' as tz;
 import 'package:timezone/timezone.dart' as tz;
 
 import 'background_handler.dart';
-import 'parsers.dart';
-import 'scheduling.dart';
-import 'utils/notification_details.dart';
+import 'utils/actions.dart';
+import 'utils/details.dart';
+import 'utils/parsers.dart';
+import 'utils/scheduling.dart';
+import 'utils/styles.dart';
 
 class LocalNotificationsService extends FletService {
   LocalNotificationsService({required super.control});
@@ -169,11 +171,6 @@ class LocalNotificationsService extends FletService {
     control.triggerEvent(name, event);
   }
 
-  // ── Method routing ──────────────────────────────────────────────────
-
-  /// Routes an invoke call from the Python control. Public so the invoke
-  /// seam can be exercised in tests (Flet delivers invokes here via the
-  /// listener registered in [init]).
   Future<dynamic> invokeMethod(String name, [dynamic args]) async {
     if (name != "initialize") {
       await _ensureInitialized();
@@ -690,7 +687,7 @@ class LocalNotificationsService extends FletService {
         startType: parseServiceStartType(map["start_type"] as String?,
             fln.AndroidServiceStartType.startSticky)!,
         foregroundServiceTypes: parseForegroundServiceTypes(
-          map["foreground_service_types"] as List?,
+          map["foreground_service_types"],
         ),
         notificationDetails: (await _buildNotificationDetails(
           id: id,
@@ -701,6 +698,8 @@ class LocalNotificationsService extends FletService {
             .android,
       );
       return "ok";
+    } on InvalidNotificationOptionException catch (e) {
+      return "error:invalid_option:${e.message}";
     } catch (e) {
       return "error:foreground_service_failed:$e";
     }
@@ -713,46 +712,6 @@ class LocalNotificationsService extends FletService {
     }
     await android.stopForegroundService();
     return "ok";
-  }
-
-  fln.AndroidServiceStartType? parseServiceStartType(String? value,
-          [fln.AndroidServiceStartType? defaultValue]) =>
-      parseEnum(fln.AndroidServiceStartType.values, value, defaultValue);
-
-  Set<fln.AndroidServiceForegroundType>? parseForegroundServiceTypes(
-    List? values,
-  ) {
-    if (values == null || values.isEmpty) return null;
-    const lookup = {
-      "camera": fln.AndroidServiceForegroundType.foregroundServiceTypeCamera,
-      "connectedDevice":
-          fln.AndroidServiceForegroundType.foregroundServiceTypeConnectedDevice,
-      "dataSync":
-          fln.AndroidServiceForegroundType.foregroundServiceTypeDataSync,
-      "health": fln.AndroidServiceForegroundType.foregroundServiceTypeHealth,
-      "location":
-          fln.AndroidServiceForegroundType.foregroundServiceTypeLocation,
-      "mediaPlayback":
-          fln.AndroidServiceForegroundType.foregroundServiceTypeMediaPlayback,
-      "mediaProjection":
-          fln.AndroidServiceForegroundType.foregroundServiceTypeMediaProjection,
-      "microphone":
-          fln.AndroidServiceForegroundType.foregroundServiceTypeMicrophone,
-      "phoneCall":
-          fln.AndroidServiceForegroundType.foregroundServiceTypePhoneCall,
-      "remoteMessaging":
-          fln.AndroidServiceForegroundType.foregroundServiceTypeRemoteMessaging,
-      "shortService":
-          fln.AndroidServiceForegroundType.foregroundServiceTypeShortService,
-      "specialUse":
-          fln.AndroidServiceForegroundType.foregroundServiceTypeSpecialUse,
-      "systemExempted":
-          fln.AndroidServiceForegroundType.foregroundServiceTypeSystemExempted,
-    };
-    return values
-        .map((v) => lookup["$v"])
-        .whereType<fln.AndroidServiceForegroundType>()
-        .toSet();
   }
 
   // ── Probes & OS integration ───────────────────────────────

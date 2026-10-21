@@ -1,88 +1,9 @@
 import 'dart:convert';
+import 'dart:typed_data';
 
 import 'package:flet/flet.dart' show parseBool;
-
-class ParsedInput {
-  const ParsedInput({
-    this.label = "",
-    this.choices = const [],
-    this.allowFreeFormInput = true,
-    this.allowedMimeTypes = const {},
-  });
-
-  final String label;
-  final List<String> choices;
-  final bool allowFreeFormInput;
-  final Set<String> allowedMimeTypes;
-}
-
-class ParsedAction {
-  const ParsedAction({
-    required this.id,
-    required this.title,
-    this.destructive = false,
-    this.foreground = true,
-    this.cancelNotification = true,
-    this.input,
-  });
-
-  final String id;
-  final String title;
-  final bool destructive;
-  final bool foreground;
-  final bool cancelNotification;
-  final ParsedInput? input;
-}
-
-/// Parses the `actions` argument (a list of dicts sent from Python) into
-/// [ParsedAction]s.
-///
-/// Throws [FormatException] with a human-readable message on bad input; the
-/// service converts it into an `error:invalid_action:...` invoke result.
-List<ParsedAction> parseActions(Object? raw) {
-  if (raw == null) return const [];
-  if (raw is! List) {
-    throw const FormatException("actions must be a list");
-  }
-  return raw.map((entry) {
-    if (entry is! Map) {
-      throw const FormatException("each action must be a map");
-    }
-    final id = entry["id"];
-    final title = entry["title"];
-    if (id is! String || id.isEmpty) {
-      throw const FormatException("action id must be a non-empty string");
-    }
-    if (title is! String || title.isEmpty) {
-      throw const FormatException("action title must be a non-empty string");
-    }
-    return ParsedAction(
-      id: id,
-      title: title,
-      destructive: parseBool(entry["destructive"], false)!,
-      foreground: parseBool(entry["foreground"], true)!,
-      cancelNotification: parseBool(entry["cancel_notification"], true)!,
-      input: parseInput(entry["input"]),
-    );
-  }).toList();
-}
-
-/// Parses the optional inline-reply `input` of an action.
-ParsedInput? parseInput(Object? raw) {
-  if (raw == null) return null;
-  if (raw is! Map) {
-    throw const FormatException("input must be a map");
-  }
-  final choices = raw["choices"];
-  final mimeTypes = raw["allowed_mime_types"];
-  return ParsedInput(
-    label: raw["label"] is String ? raw["label"] as String : "",
-    choices: choices is List ? choices.cast<String>() : const [],
-    allowFreeFormInput: parseBool(raw["allow_free_form_input"], true)!,
-    allowedMimeTypes:
-        mimeTypes is List ? mimeTypes.cast<String>().toSet() : const {},
-  );
-}
+import 'package:flutter_local_notifications/flutter_local_notifications.dart'
+    as fln;
 
 /// A parsed Android icon/image source (exactly one set).
 class ParsedIcon {
@@ -215,9 +136,8 @@ ParsedStyle? parseStyle(Object? raw) {
       return ParsedStyle(
         type: type,
         person: person,
-        messages: messages is List
-            ? messages.map(parseMessage).whereType<ParsedMessage>().toList()
-            : const [],
+        messages:
+            messages is List ? messages.map(parseMessage).toList() : const [],
         conversationTitle: raw["conversation_title"] as String?,
         groupConversation: parseBool(raw["group_conversation"], false)!,
       );
@@ -275,7 +195,7 @@ ParsedPerson? parsePerson(Object? raw) {
   );
 }
 
-ParsedMessage? parseMessage(Object? raw) {
+ParsedMessage parseMessage(Object? raw) {
   if (raw is! Map) {
     throw const FormatException("message must be a map");
   }
@@ -289,4 +209,92 @@ ParsedMessage? parseMessage(Object? raw) {
     throw const FormatException("message requires a person");
   }
   return ParsedMessage(text: text, timestampIso: timestamp, person: person);
+}
+
+/// Converts a parsed style onto the Android `styleInformation` object.
+///
+/// Styles are an Android concept in the plugin; iOS/macOS render titles,
+/// attachments and interruptions through their own details fields.
+fln.StyleInformation? parseStyleInformation(ParsedStyle? style) {
+  if (style == null) return null;
+  switch (style.type) {
+    case "big_text":
+      return fln.BigTextStyleInformation(
+        style.bigText!,
+        contentTitle: style.contentTitle,
+        summaryText: style.summaryText,
+      );
+    case "big_picture":
+      return fln.BigPictureStyleInformation(
+        parseAndroidBitmap(style.image!)!,
+        largeIcon: parseAndroidBitmap(style.largeIcon),
+        contentTitle: style.contentTitle,
+        summaryText: style.summaryText,
+      );
+    case "inbox":
+      return fln.InboxStyleInformation(
+        style.lines,
+        contentTitle: style.contentTitle,
+        summaryText: style.summaryText,
+      );
+    case "messaging":
+      return fln.MessagingStyleInformation(
+        parseAndroidPerson(style.person!),
+        conversationTitle: style.conversationTitle,
+        groupConversation: style.groupConversation,
+        messages: style.messages
+            .map(
+              (m) => fln.Message(
+                m.text,
+                DateTime.parse(m.timestampIso),
+                parseAndroidPerson(m.person),
+              ),
+            )
+            .toList(),
+      );
+    default:
+      throw FormatException("unknown style type: ${style.type}");
+  }
+}
+
+/// Maps an icon onto a style image. FLN's big-picture bitmaps support
+/// drawable, file-path and byte sources only.
+fln.AndroidBitmap<Object>? parseAndroidBitmap(ParsedIcon? icon) {
+  if (icon == null) return null;
+  final drawable = icon.drawableResource;
+  if (drawable != null) return fln.DrawableResourceAndroidBitmap(drawable);
+  final path = icon.filePath;
+  if (path != null) return fln.FilePathAndroidBitmap(path);
+  final data = icon.data;
+  if (data != null) return fln.ByteArrayAndroidBitmap(Uint8List.fromList(data));
+  throw const FormatException(
+    "big-picture images support drawable, file path and byte sources",
+  );
+}
+
+/// Maps an icon onto an Android notification icon (all five sources).
+fln.AndroidIcon<Object>? parseAndroidIcon(ParsedIcon? icon) {
+  if (icon == null) return null;
+  final drawable = icon.drawableResource;
+  if (drawable != null) return fln.DrawableResourceAndroidIcon(drawable);
+  final path = icon.filePath;
+  if (path != null) return fln.BitmapFilePathAndroidIcon(path);
+  final uri = icon.contentUri;
+  if (uri != null) return fln.ContentUriAndroidIcon(uri);
+  final asset = icon.flutterAsset;
+  if (asset != null) return fln.FlutterBitmapAssetAndroidIcon(asset);
+  final data = icon.data;
+  if (data != null) return fln.ByteArrayAndroidIcon(Uint8List.fromList(data));
+  throw const FormatException("icon has no source");
+}
+
+fln.Person parseAndroidPerson(ParsedPerson person) {
+  return fln.Person(
+    name: person.name,
+    key: person.key,
+    bot: person.bot,
+    important: person.important,
+    uri: person.uri,
+    icon: parseAndroidIcon(person.icon),
+  );
 }

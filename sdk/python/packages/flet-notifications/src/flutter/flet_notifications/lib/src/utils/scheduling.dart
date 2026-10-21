@@ -1,6 +1,4 @@
-import 'package:flet/flet.dart' show parseEnum, parseInt;
-import 'package:flutter_local_notifications/flutter_local_notifications.dart'
-    as fln;
+import 'package:flet/flet.dart' show parseInt;
 import 'package:timezone/timezone.dart' as tz;
 
 /// Resolves the target location: an explicit IANA zone name when given,
@@ -56,15 +54,3 @@ tz.TZDateTime parseWhen(Map<dynamic, dynamic> args, tz.Location fallback) {
     parsed.microsecond,
   );
 }
-
-fln.AndroidScheduleMode? parseAndroidScheduleMode(String? value,
-        [fln.AndroidScheduleMode? defaultValue]) =>
-    parseEnum(fln.AndroidScheduleMode.values, value, defaultValue);
-
-fln.DateTimeComponents? parseDateTimeComponents(String? value,
-        [fln.DateTimeComponents? defaultValue]) =>
-    parseEnum(fln.DateTimeComponents.values, value, defaultValue);
-
-fln.RepeatInterval? parseRepeatInterval(String? value,
-        [fln.RepeatInterval? defaultValue]) =>
-    parseEnum(fln.RepeatInterval.values, value, defaultValue);

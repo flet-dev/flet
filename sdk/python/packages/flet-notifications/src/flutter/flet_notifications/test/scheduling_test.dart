@@ -1,4 +1,4 @@
-import 'package:flet_notifications/src/scheduling.dart';
+import 'package:flet_notifications/src/utils/scheduling.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:timezone/data/latest_all.dart' as tz;
 import 'package:timezone/timezone.dart' as tz;
