@@ -9,6 +9,7 @@ from flet_notifications import (
     LocalNotifications,
     NotificationError,
     PendingNotification,
+    ResponseType,
 )
 
 
@@ -119,9 +120,17 @@ async def test_get_channels_hydrates_native_collection():
     ]
 
 
+@pytest.mark.parametrize(
+    ("wire_type", "event_name", "expected"),
+    [
+        ("tap", "tap", ResponseType.TAP),
+        ("action", "action", ResponseType.ACTION),
+        ("dismissed", "dismiss", ResponseType.DISMISSED),
+    ],
+)
 @pytest.mark.asyncio
-async def test_launch_details_hydrates_action_event():
-    """Launch responses retain event context, action identity, and Windows inputs."""
+async def test_launch_details_hydrates_response_enum(wire_type, event_name, expected):
+    """Launch responses retain enum types, event context, and Windows inputs."""
     service = LocalNotifications()
 
     async def invoke(method_name, arguments=None, timeout=None):
@@ -133,7 +142,7 @@ async def test_launch_details_hydrates_action_event():
                 "payload": "deep",
                 "input": "Hello",
                 "data": {"reply": "Hello"},
-                "response_type": "action",
+                "response_type": wire_type,
             },
         }
 
@@ -143,7 +152,8 @@ async def test_launch_details_hydrates_action_event():
     assert details.notification is not None
     assert details.notification.payload == "deep"
     assert details.notification.control is service
-    assert details.notification.name == "action"
+    assert details.notification.name == event_name
+    assert details.notification.response_type is expected
     assert details.notification.action_id == "reply"
     assert details.notification.input == "Hello"
     assert details.notification.data == {"reply": "Hello"}
@@ -281,6 +291,7 @@ async def test_malformed_launch_fields_are_query_failures():
         {"notification": False},
         {"notification": "invalid"},
         {"notification": {"response_type": []}},
+        {"notification": {"response_type": "unknown"}},
     ]:
 
         async def invoke(method_name, arguments=None, timeout=None, *, response=result):

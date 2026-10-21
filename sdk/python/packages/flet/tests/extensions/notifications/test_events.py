@@ -1,7 +1,13 @@
 """Tests for NotificationEvent hydration from Dart payloads."""
 
-from flet.utils import from_dict
-from flet_notifications import LocalNotifications, NotificationEvent
+import weakref
+from unittest.mock import AsyncMock, Mock
+
+import pytest
+
+import flet as ft
+from flet.controls.context import _context_page
+from flet_notifications import LocalNotifications, NotificationEvent, ResponseType
 
 # Guards against the ControlEventHandler[X] double-wrap bug: typed payload
 # events must resolve to the dataclass, and dispatch must call the handler
@@ -30,20 +36,45 @@ def test_event_field_types_resolve_to_dataclass():
         )
 
 
-def test_windows_input_data_reaches_event():
-    service = LocalNotifications()
-    event = from_dict(
-        NotificationEvent,
-        {
-            "control": service,
-            "name": "action",
-            "id": 1,
-            "action_id": "reply",
-            "payload": "",
-            "response_type": "action",
-            "input": "",
-            "data": {"textBox": "typed on windows"},
-        },
-    )
-    # The inherited `data` field carries Windows input values by input id.
-    assert event.data == {"textBox": "typed on windows"}
+@pytest.mark.parametrize(
+    ("wire_type", "event_name", "expected"),
+    [
+        ("tap", "tap", ResponseType.TAP),
+        ("action", "action", ResponseType.ACTION),
+        ("dismissed", "dismiss", ResponseType.DISMISSED),
+        (None, "tap", ResponseType.TAP),
+    ],
+)
+@pytest.mark.asyncio
+async def test_live_event_dispatch_hydrates_response_enum(
+    wire_type, event_name, expected
+):
+    """Real event dispatch supplies enums while retaining Windows reply data."""
+    events = []
+    service = LocalNotifications(**{f"on_{event_name}": lambda e: events.append(e)})
+    session = Mock(index={service._i: service}, after_event=AsyncMock())
+    page = ft.Page(sess=session)
+    service._parent = weakref.ref(page)
+    payload = {
+        "id": 1,
+        "action_id": "reply" if wire_type == "action" else "",
+        "payload": "conversation:1",
+        "input": "",
+        "data": {"textBox": "typed on windows"} if wire_type == "action" else {},
+    }
+    if wire_type is not None:
+        payload["response_type"] = wire_type
+    token = _context_page.set(page)
+    try:
+        await service._trigger_event(event_name, payload)
+    finally:
+        _context_page.reset(token)
+    assert len(events) == 1
+    event = events[0]
+    assert isinstance(event, NotificationEvent)
+    assert event.response_type is expected
+    assert event.control is service
+    assert event.name == event_name
+    assert event.payload == "conversation:1"
+    assert event.data == payload["data"]
+    session.after_event.assert_awaited_once_with(service)

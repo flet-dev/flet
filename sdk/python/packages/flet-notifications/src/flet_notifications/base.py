@@ -15,12 +15,8 @@ __all__ = [
 
 class ResponseType(Enum):
     """
-    Kinds of notification response represented by
-    :class:`flet_notifications.NotificationEvent`.
-
-    :attr:`flet_notifications.NotificationEvent.response_type` contains the string value
-    of the enum member, not a :class:`flet_notifications.ResponseType`
-    instance.
+    Kinds of interaction reported by
+    :attr:`flet_notifications.NotificationEvent.response_type`.
     """
 
     TAP = "tap"
@@ -83,12 +79,9 @@ class NotificationEvent(ft.Event[ft.EventControlType]):
         :attr:`flet_notifications.NotificationAction.id`.
     """
 
-    response_type: str = ResponseType.TAP.value
+    response_type: ResponseType = ResponseType.TAP
     """
-    String response kind: `"tap"`, `"action"`, or `"dismissed"`.
-
-    Compare with :attr:`flet_notifications.ResponseType.TAP` followed by `.value`, for
-    example, rather than the enum member itself.
+    Whether the user selected the notification, activated an action, or dismissed it.
     """
 
 
