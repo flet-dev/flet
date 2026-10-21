@@ -8,20 +8,6 @@ New features, improvements, and bug fixes in Flet Studio, listed in
 reverse-chronological order. Flet Studio ships independently of the Flet SDK — see
 [Flet release notes](../updates/release-notes.md) for SDK changes.
 
-{/* TODO: set the date when Studio publishing ships. */}
-## Publishing
-
-* **Build your app in the cloud.** Publish builds your app for Windows, macOS,
-  Linux, Android, iOS (Simulator) and the web, with nothing to install, and shows
-  each step's log as it runs. See [Publishing](publishing/index.md).
-* **Publish to Google Play.** Studio signs your Android app with your key and
-  releases it on Internal, Closed or Open testing, or submits it to Production. If
-  only the upload fails, **Retry upload** sends the same build again without
-  charging credits. See [Publishing to Google Play](publishing/google-play.md).
-* **Signing keys and store accounts.** Create or import Android signing keys, back
-  them up, and connect Google Play once for all your apps, in the new **Settings ›
-  Signing keys** and **Settings › Store accounts**.
-
 ## September 29, 2026
 
 * **The agent sees the app it builds.** While working on your request it can run

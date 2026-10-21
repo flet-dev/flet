@@ -24,9 +24,8 @@ installation is required.
 - **Sharing.** Share public apps with a link so others can run them and explore
   the code.
 - **Private projects.** Keep your apps and source code private while you work.
-- **Cloud packaging and publishing.** Build your app for Windows, macOS, Linux,
-  Android, iOS and the web in the cloud, without a local build environment, and
-  publish Android apps to Google Play. See [Publishing](publishing/index.md).
+- **Cloud packaging and publishing — coming soon.** Build app packages and
+  publish them from Studio without a local build environment.
 
 See [what's new](whats-new.md) for the latest improvements.
 
