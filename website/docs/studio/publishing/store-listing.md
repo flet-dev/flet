@@ -43,8 +43,10 @@ as you edit:
   folder out; downloading the app as a `.zip` keeps it.
 - **It's versioned with your app**: restoring an earlier version restores its
   listing too.
-- **The AI agent can work on it.** Ask it to write the descriptions, shorten them
-  to fit, or translate them — it edits these files.
+- **The AI agent can work on it.** **Write with AI** (and **Add and translate
+  with AI** when adding a language) puts a ready request in the agent's message
+  box; review it and send. Or just ask the agent to write, shorten or translate
+  the texts — the listing updates as it edits these files.
 - **The file names are fastlane's**: copy the folder to
   `fastlane/metadata/android/` to use it with fastlane `supply`.
 
@@ -88,8 +90,16 @@ wrong under it. Transparent areas (such as a device frame's rounded corners)
 become white when Studio uploads an image, since Google Play doesn't accept
 transparency in screenshots.
 
-Use the arrows under a screenshot to change its place: Google Play shows them in
+Drag a screenshot by its handle to change its place: Google Play shows them in
 that order.
+
+### The app icon
+
+**Use the app's icon** makes the listing icon from the icon your Android builds
+use (Android's own icon if set, else the app's icon, else Flet's): 512 × 512,
+centred, with transparent areas filled with the app's **Icon background** colour
+(white if it has none). Use it again after changing the app's icon. An icon
+smaller than 512 px is upscaled and may look blurry: a 1024 px icon works best.
 
 ### Take screenshots in the Preview
 
@@ -98,8 +108,8 @@ Google Play: 1080 × 1920 and 1600 × 2560 pixels.
 
 1. In the Preview, choose the **Android phone** device (or **Android tablet**).
 2. Open the screen of your app you want to show.
-3. In the device options, under **Screenshot**, click **Screen to store
-   listing** — or **Framed** to include the device frame.
+3. In the device options, under **Screenshot › Add to the Google Play store
+   listing**, click **Screen** — or **Framed** to include the device frame.
 
 The screenshot is added to the default language's phone (or tablet) screenshots.
 Repeat for each screen. **Screen** and **Framed** above them still download the
