@@ -122,13 +122,15 @@ Play — a different package name is a different app.
 
 ### Why is my APK so big?
 
-By default an APK holds your app for every phone architecture, with Python and
-your app's packages inside. Turn on **Split APK per ABI** in **Publish › Settings ›
-Android** to get one smaller APK per architecture instead (modern phones need the
-`arm64-v8a` one). App bundles don't have this problem: Google Play delivers each
-device only what it needs. See
-[Packaging app for Android](../../publish/android.md#split-apk-per-abi) for
-details.
+An APK holds Python, your app's packages, and native code for every phone
+architecture it supports — by default all three (`arm64-v8a`, `armeabi-v7a`,
+`x86_64`), so one file runs on any device. To make it smaller, choose fewer in
+**Publish › Settings › Android**, under **Advanced settings › Architectures ›
+Target architectures**: most phones today only need `arm64-v8a`, but the APK then
+only installs on those. The setting applies to app bundles too.
+
+App bundles don't have this problem: Google Play delivers each device only what it
+needs.
 
 ### Can I use a different key for APKs?
 
