@@ -75,7 +75,10 @@ for all your apps.
 
 ### In Play Console
 
-1. Go to **Users and permissions** and **Invite new users**.
+1. Open **Users and permissions**: it's an account-level page, not an app's. From
+   the [Play Console](https://play.google.com/console) home, click the developer
+   account icon at the top right (next to **Notifications**) › **Manage developer
+   account** › **Users and permissions**. Then **Invite new users**.
 2. Enter the service account's email (`…@….iam.gserviceaccount.com`, also in the
    JSON key as `client_email`).
 3. On the **App permissions** tab, **Add app**, choose your app and tick:
