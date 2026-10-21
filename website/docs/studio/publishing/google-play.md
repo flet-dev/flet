@@ -192,6 +192,9 @@ In Play Console, go to **Test and release › Testing › Internal testing ›
 Testers**. Create an email list, add the **Google accounts** of your testers
 (including your own), tick the list and save.
 
+Google doesn't notify the people on the list: send them the **Join on the web**
+link yourself (next step).
+
 ### Join the test
 
 Each tester does this once:
