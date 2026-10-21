@@ -471,7 +471,7 @@ void main() {
       DateTime(2030, 6, 1, 12, 0, 0, 123),
       null,
     ]) {
-      final details = await notification_details.parseNotificationDetails(
+      final details = notification_details.parseNotificationDetails(
         id: 1,
         actions: [],
         details: {
@@ -481,7 +481,6 @@ void main() {
             "web": {"timestamp": timestamp},
           },
         },
-        registerDarwinCategories: (_, __) async {},
       );
       expect(details.android!.when, timestamp?.millisecondsSinceEpoch);
       expect(details.android!.showWhen, isFalse);
@@ -595,6 +594,40 @@ void main() {
     expect(plugin.shown, isEmpty);
   });
 
+  test("all notification methods report nested style failures consistently",
+      () async {
+    final service = _makeService();
+    for (final method in [
+      "show",
+      "schedule",
+      "periodically_show",
+      "start_foreground_service"
+    ]) {
+      expect(
+          await service.invokeMethod(method, {
+            "id": 4,
+            "when": {"iso": "2030-01-01T12:00:00"},
+            "repeat_interval": "hourly",
+            "style": {
+              "_type": "messaging",
+              "person": {"name": "Me"},
+              "messages": [
+                {
+                  "text": "Hello",
+                  "timestamp": "invalid",
+                  "person": {"name": "Alex"}
+                }
+              ]
+            },
+          }),
+          startsWith("error:invalid_style:"),
+          reason: method);
+    }
+    expect(plugin.shown, isEmpty);
+    expect(plugin.periodicCalls, isEmpty);
+    expect(plugin.foregroundStarts, 0);
+  });
+
   test("show preserves invalid_option for an unknown Android category",
       () async {
     final result = await _makeService().invokeMethod("show", {
@@ -648,7 +681,7 @@ void main() {
       (null, -1),
     ];
     for (final (timeout, expected) in cases) {
-      final details = await notification_details.parseNotificationDetails(
+      final details = notification_details.parseNotificationDetails(
         id: 1,
         actions: const [],
         details: {
@@ -656,7 +689,6 @@ void main() {
             "linux": {"timeout": timeout}
           }
         },
-        registerDarwinCategories: (_, __) async {},
       );
       expect(details.linux!.timeout.value, expected);
     }
@@ -855,6 +887,70 @@ void main() {
     expect(updated.map((c) => c.actions.single.identifier),
         ["open1", "open2", "reply"]);
     expect(updated.last.actions.single.buttonTitle, "Message");
+  });
+
+  test("invalid styles and details leave Apple action categories unchanged",
+      () async {
+    debugDefaultTargetPlatformOverride = TargetPlatform.macOS;
+    addTearDown(() => debugDefaultTargetPlatformOverride = null);
+    final macos = _FakeMacOsPlugin();
+    fln.FlutterLocalNotificationsPlatform.instance = macos;
+    final service = _makeService();
+    expect(await service.invokeMethod("initialize"), "ok");
+    final initializations = macos.initializations.length;
+    for (final payload in [
+      {
+        "style": {
+          "_type": "big_picture",
+          "image": {"content_uri": "content://image"}
+        }
+      },
+      {
+        "style": {
+          "_type": "messaging",
+          "person": {"name": "Me"},
+          "messages": [
+            {
+              "text": "Hello",
+              "timestamp": "invalid",
+              "person": {"name": "Alex"}
+            }
+          ]
+        }
+      },
+      {
+        "options": {
+          "android": {"category": "invalid"}
+        }
+      },
+    ]) {
+      expect(
+          await service.invokeMethod("show", {
+            "id": 1,
+            "actions": [
+              {"id": "open", "title": "Open"}
+            ],
+            ...payload,
+          }),
+          startsWith(payload.containsKey("style")
+              ? "error:invalid_style:"
+              : "error:invalid_option:"));
+      expect(macos.initializations, hasLength(initializations));
+      expect(macos.shownDarwin, isNull);
+    }
+    expect(
+        await service.invokeMethod("show", {
+          "id": 2,
+          "actions": [
+            {"id": "reply", "title": "Reply"}
+          ],
+        }),
+        "ok");
+    expect(macos.initializations.last.notificationCategories, hasLength(1));
+    expect(
+        macos.initializations.last.notificationCategories.single.actions.single
+            .identifier,
+        "reply");
   });
 
   test("show applies DarwinOptions on the macOS platform", () async {

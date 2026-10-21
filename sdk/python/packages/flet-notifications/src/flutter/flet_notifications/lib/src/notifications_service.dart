@@ -305,8 +305,6 @@ class LocalNotificationsService extends FletService {
       final body = map["body"] as String?;
       final payload = map["payload"] as String? ?? "";
       final actions = parseActions(map["actions"]);
-      final styleError = _invalidStyleCode(map["style"]);
-      if (styleError != null) return styleError;
       await _plugin!.show(
         id: id,
         title: title,
@@ -315,13 +313,15 @@ class LocalNotificationsService extends FletService {
         notificationDetails: await _buildNotificationDetails(
           id: id,
           actions: actions,
-          style: parseStyle(map["style"]),
+          style: map["style"],
           details: map,
         ),
       );
       return "ok";
     } on InvalidNotificationOptionException catch (e) {
       return "error:invalid_option:${e.message}";
+    } on InvalidNotificationStyleException catch (e) {
+      return "error:invalid_style:${e.message}";
     } on FormatException catch (e) {
       return "error:invalid_action:${e.message}";
     } catch (e) {
@@ -337,8 +337,6 @@ class LocalNotificationsService extends FletService {
     } on FormatException catch (e) {
       return "error:invalid_action:${e.message}";
     }
-    final styleError = _invalidStyleCode(map["style"]);
-    if (styleError != null) return styleError;
     final tz.TZDateTime scheduledDate;
     try {
       scheduledDate = parseWhen(map, tz.local);
@@ -354,7 +352,7 @@ class LocalNotificationsService extends FletService {
         notificationDetails: await _buildNotificationDetails(
           id: parseInt(map["id"])!,
           actions: actions,
-          style: parseStyle(map["style"]),
+          style: map["style"],
           details: map,
         ),
         androidScheduleMode: parseAndroidScheduleMode(
@@ -366,6 +364,10 @@ class LocalNotificationsService extends FletService {
         ),
       );
       return "ok";
+    } on InvalidNotificationStyleException catch (e) {
+      return "error:invalid_style:${e.message}";
+    } on InvalidNotificationOptionException catch (e) {
+      return "error:invalid_option:${e.message}";
     } catch (e) {
       return "error:schedule_failed:$e";
     }
@@ -376,12 +378,10 @@ class LocalNotificationsService extends FletService {
       final map = args as Map;
       final id = parseInt(map["id"])!;
       final actions = parseActions(map["actions"]);
-      final styleError = _invalidStyleCode(map["style"]);
-      if (styleError != null) return styleError;
       final notificationDetails = await _buildNotificationDetails(
         id: id,
         actions: actions,
-        style: parseStyle(map["style"]),
+        style: map["style"],
         details: map,
       );
       final scheduleMode = parseAndroidScheduleMode(
@@ -421,8 +421,12 @@ class LocalNotificationsService extends FletService {
         androidScheduleMode: scheduleMode,
       );
       return "ok";
+    } on InvalidNotificationStyleException catch (e) {
+      return "error:invalid_style:${e.message}";
     } on FormatException catch (e) {
       return "error:invalid_action:${e.message}";
+    } on InvalidNotificationOptionException catch (e) {
+      return "error:invalid_option:${e.message}";
     } catch (e) {
       return "error:schedule_failed:$e";
     }
@@ -457,26 +461,19 @@ class LocalNotificationsService extends FletService {
   Future<fln.NotificationDetails> _buildNotificationDetails({
     required int id,
     required List<ParsedAction> actions,
-    ParsedStyle? style,
+    Object? style,
     Map? details,
-  }) =>
-      parseNotificationDetails(
-        id: id,
-        actions: actions,
-        style: style,
-        details: details,
-        registerDarwinCategories: _registerDarwinCategories,
-      );
-
-  /// Parses the optional style of a show/schedule payload, mapping format
-  /// failures to the `invalid_style` error code.
-  String? _invalidStyleCode(Object? raw) {
-    try {
-      parseStyle(raw);
-    } on FormatException catch (e) {
-      return "error:invalid_style:${e.message}";
+  }) async {
+    final notificationDetails = parseNotificationDetails(
+      id: id,
+      actions: actions,
+      style: parseStyle(style),
+      details: details,
+    );
+    if (actions.isNotEmpty) {
+      await _registerDarwinCategories(id, actions);
     }
-    return null;
+    return notificationDetails;
   }
 
   /// Registers the action buttons as a Darwin notification category.
@@ -677,8 +674,6 @@ class LocalNotificationsService extends FletService {
         return "error:invalid_service_id:foreground service id must be non-zero";
       }
       final actions = parseActions(map["actions"]);
-      final styleError = _invalidStyleCode(map["style"]);
-      if (styleError != null) return styleError;
       await android.startForegroundService(
         id: id,
         title: map["title"] as String?,
@@ -692,7 +687,7 @@ class LocalNotificationsService extends FletService {
         notificationDetails: (await _buildNotificationDetails(
           id: id,
           actions: actions,
-          style: parseStyle(map["style"]),
+          style: map["style"],
           details: map,
         ))
             .android,
@@ -700,6 +695,8 @@ class LocalNotificationsService extends FletService {
       return "ok";
     } on InvalidNotificationOptionException catch (e) {
       return "error:invalid_option:${e.message}";
+    } on InvalidNotificationStyleException catch (e) {
+      return "error:invalid_style:${e.message}";
     } catch (e) {
       return "error:foreground_service_failed:$e";
     }

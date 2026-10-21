@@ -7,7 +7,6 @@ import 'package:flutter_local_notifications/flutter_local_notifications.dart'
 
 import 'actions.dart';
 import 'parsers.dart';
-import 'styles.dart';
 
 const String _channelId = "flet_notifications";
 const String _channelName = "Notifications";
@@ -16,17 +15,12 @@ const String _channelName = "Notifications";
 const String darwinNotificationCategoryPrefix = "flet_notifications_actions_";
 
 /// Converts a wire payload into the upstream platform notification details.
-///
-/// The service owns category registration and supplies it as a callback. Category
-/// registration completes before the remaining platform details are constructed.
-Future<fln.NotificationDetails> parseNotificationDetails({
+fln.NotificationDetails parseNotificationDetails({
   required int id,
   required List<ParsedAction> actions,
-  ParsedStyle? style,
+  fln.StyleInformation? style,
   Map? details,
-  required Future<void> Function(int, List<ParsedAction>)
-      registerDarwinCategories,
-}) async {
+}) {
   final androidActions = actions
       .map(
         (a) => fln.AndroidNotificationAction(
@@ -54,10 +48,6 @@ Future<fln.NotificationDetails> parseNotificationDetails({
     actions: actions,
     options: _platformOptions(details, "iOS"),
   );
-
-  if (actions.isNotEmpty) {
-    await registerDarwinCategories(id, actions);
-  }
 
   final payloadForWindows = (details ?? const {})["payload"] as String? ?? "";
   final windowsActions = actions.map((a) {
@@ -114,14 +104,14 @@ Future<fln.NotificationDetails> parseNotificationDetails({
           ? null
           : Int32List.fromList([additionalFlags]),
       actions: androidActions,
-      styleInformation: parseStyleInformation(style),
+      styleInformation: style,
       importance: parseNotificationImportance(
           androidOptions["importance"] as String?,
           fln.Importance.defaultImportance)!,
       priority: parsePriority(
           androidOptions["priority"] as String?, fln.Priority.defaultPriority)!,
       playSound: parseBool(androidOptions["play_sound"], true)!,
-      sound: parseSound(androidOptions["sound"] as String?),
+      sound: parseAndroidNotificationSound(androidOptions["sound"] as String?),
       enableVibration: parseBool(androidOptions["enable_vibration"], true)!,
       vibrationPattern: parseNotificationVibrationPattern(
           androidOptions["vibration_pattern"]),
