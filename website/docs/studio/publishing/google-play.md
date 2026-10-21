@@ -128,6 +128,9 @@ Open **Publish**, then **Publish to Google Play** in the Android section.
 - **What's new**: optional release notes (up to 500 characters) shown on Google
   Play, in the **Language** you enter (default `en-US`). They belong to this
   release only and aren't remembered for the next one.
+- **Store listing**: tick **Also send the store listing** to send the app's name,
+  descriptions and screenshots in the same change — see
+  [Google Play store listing](store-listing.md).
 - **Version and build number**: the build number becomes the release's version
   code. Studio starts it above the highest one Google Play already has, so it never
   clashes.
@@ -233,9 +236,9 @@ The Play Store says **Item not found** until the account has joined the test:
 ### "(unreviewed)" in the app's name
 
 Until the app's store listing is set up and reviewed, testers see a temporary name
-such as `com.example.myapp (unreviewed)` on Google Play. Fill in **Grow users ›
-Store presence › Main store listing** in Play Console (name, descriptions,
-graphics) to fix it. The app's name on the phone, under its icon, is already the
+such as `com.example.myapp (unreviewed)` on Google Play. Send a
+[store listing](store-listing.md) from Studio (or fill in **Grow users › Store
+presence › Main store listing** in Play Console) to fix it. The app's name on the phone, under its icon, is already the
 right one: it comes from the app itself.
 
 ## Production
@@ -274,5 +277,6 @@ with one signed by the same key. See
 
 ### What can't Studio do on Google Play yet?
 
-Staged rollouts, custom tracks, release notes in several languages, store listing
-and graphics, and in-app products. Use Play Console for those.
+Staged rollouts, custom tracks, release notes in several languages, in-app
+products, and the parts of the app's setup outside its store listing (category,
+App content declarations, pricing and countries). Use Play Console for those.

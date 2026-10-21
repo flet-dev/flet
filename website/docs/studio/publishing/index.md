@@ -29,7 +29,7 @@ Each action is one **run** for one platform:
 | Windows | **Create Windows app (.zip)** |
 | macOS | **Create macOS app (.app)** — not signed or notarized: for testing on your own Mac |
 | Linux | **Create Linux app (.tar.gz)** |
-| Android | **Create an APK**, **Create an app bundle (.aab)**, **Publish to Google Play** — see [Android apps](android.md) and [Google Play](google-play.md) |
+| Android | **Create an APK**, **Create an app bundle (.aab)**, **Publish to Google Play**, **Update store listing** — see [Android apps](android.md), [Google Play](google-play.md) and [the store listing](store-listing.md) |
 | iOS | **Create an iOS Simulator app** — no Apple account needed |
 | Web | **Create web app (.zip)** — the files to host yourself |
 
