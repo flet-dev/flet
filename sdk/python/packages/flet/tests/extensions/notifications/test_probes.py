@@ -22,7 +22,6 @@ async def test_get_pending_hydrates_native_collection():
             {"id": 1, "title": "A", "body": "b", "payload": "p"},
             {"id": 2},
             {},
-            None,
         ]
 
     service._invoke_method = invoke
@@ -52,7 +51,6 @@ async def test_get_active_hydrates_native_collection():
                 "big_text": "long",
             },
             {},
-            None,
         ]
 
     service._invoke_method = invoke
@@ -220,3 +218,75 @@ async def test_empty_query_result_and_native_failure(method):
         await getattr(service, method)()
     assert exc.value.code == "query_failed"
     assert exc.value.message == "permission denied"
+
+
+@pytest.mark.parametrize(
+    "method",
+    [
+        "get_pending_notifications",
+        "get_active_notifications",
+        "get_notification_channels",
+    ],
+)
+@pytest.mark.asyncio
+async def test_malformed_collection_entry_rejects_the_whole_query(method):
+    """A bad row after a valid one must not produce a partial successful result."""
+    service = LocalNotifications()
+    valid = (
+        {"id": "alerts", "name": "Alerts"}
+        if method == "get_notification_channels"
+        else {"id": 1}
+    )
+    for entry in [None, [], "invalid", 42]:
+
+        async def invoke(method_name, arguments=None, timeout=None, *, response=entry):
+            return [valid, response]
+
+        service._invoke_method = invoke
+        with pytest.raises(NotificationError) as exc:
+            await getattr(service, method)()
+        assert exc.value.code == "query_failed"
+        assert "index 1" in exc.value.message
+
+
+@pytest.mark.asyncio
+async def test_channel_reconstruction_errors_are_query_failures():
+    """Invalid enum values and missing required fields identify the failing row."""
+    service = LocalNotifications()
+    for entry in [
+        {"id": "alerts", "name": "Alerts", "importance": "invalid"},
+        {"id": "alerts"},
+    ]:
+
+        async def invoke(method_name, arguments=None, timeout=None, *, response=entry):
+            return [{"id": "valid", "name": "Valid"}, response]
+
+        service._invoke_method = invoke
+        with pytest.raises(NotificationError) as exc:
+            await service.get_notification_channels()
+        assert exc.value.code == "query_failed"
+        assert "NotificationChannel at index 1" in exc.value.message
+        assert isinstance(exc.value.__cause__, (TypeError, ValueError))
+
+
+@pytest.mark.asyncio
+async def test_malformed_launch_fields_are_query_failures():
+    """Wrong flag or response shapes cannot masquerade as launch snapshots."""
+    service = LocalNotifications()
+    for result in [
+        {"did_notification_launch_app": "false"},
+        {"did_notification_launch_app": 1},
+        {"did_notification_launch_app": None},
+        {"notification": []},
+        {"notification": False},
+        {"notification": "invalid"},
+        {"notification": {"response_type": []}},
+    ]:
+
+        async def invoke(method_name, arguments=None, timeout=None, *, response=result):
+            return response
+
+        service._invoke_method = invoke
+        with pytest.raises(NotificationError) as exc:
+            await service.get_notification_app_launch_details()
+        assert exc.value.code == "query_failed"

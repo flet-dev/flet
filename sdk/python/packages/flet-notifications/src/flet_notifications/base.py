@@ -1,7 +1,9 @@
 from dataclasses import dataclass
 from enum import Enum
+from typing import TypeVar
 
 import flet as ft
+from flet.utils import from_dict
 
 __all__ = [
     "NotificationError",
@@ -141,7 +143,7 @@ class NotificationErrorCode:
     """Starting the Android foreground service failed."""
 
     QUERY_FAILED = "query_failed"
-    """A notification query failed or its returned JSON could not be decoded."""
+    """A notification query failed or returned malformed data."""
 
     PERMISSION_FAILED = "permission_failed"
     """
@@ -194,3 +196,34 @@ def check_result(result: object) -> None:
         _, _, rest = result.partition(":")
         code, _, message = rest.partition(":")
         raise NotificationError(code.strip(), message.strip())
+
+
+_QueryItem = TypeVar("_QueryItem")
+
+
+def parse_query_list(
+    result: object,
+    item_type: type[_QueryItem],
+    *,
+    defaults: dict[str, object] | None = None,
+) -> list[_QueryItem]:
+    """Reconstruct query snapshots without silently skipping malformed entries."""
+    check_result(result)
+    if not isinstance(result, list):
+        raise NotificationError(
+            "query_failed", f"Expected a list of {item_type.__name__}"
+        )
+    items = []
+    for index, entry in enumerate(result):
+        if not isinstance(entry, dict):
+            raise NotificationError(
+                "query_failed",
+                f"Expected {item_type.__name__} mapping at index {index}",
+            )
+        try:
+            items.append(from_dict(item_type, {**(defaults or {}), **entry}))
+        except (TypeError, ValueError) as exc:
+            raise NotificationError(
+                "query_failed", f"Invalid {item_type.__name__} at index {index}: {exc}"
+            ) from exc
+    return items

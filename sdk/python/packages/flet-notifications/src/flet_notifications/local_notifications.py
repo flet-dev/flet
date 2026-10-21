@@ -7,6 +7,7 @@ from flet_notifications.base import (
     NotificationError,
     NotificationEvent,
     check_result,
+    parse_query_list,
 )
 from flet_notifications.channels import NotificationChannel
 from flet_notifications.events import (
@@ -668,20 +669,14 @@ class LocalNotifications(ft.Service):
             and cannot be edited to change the native schedule.
 
         Raises:
-            NotificationError: If the bridge reports initialization or operation
-                failure.
+            NotificationError: If the backend reports a failure or returns malformed
+                query data.
         """
-        result = await self._invoke_method("get_pending")
-        check_result(result)
-        if not isinstance(result, list):
-            raise NotificationError(
-                "query_failed", "Expected a list of pending notifications"
-            )
-        return [
-            from_dict(PendingNotification, {"id": 0, **entry})
-            for entry in result
-            if isinstance(entry, dict)
-        ]
+        return parse_query_list(
+            await self._invoke_method("get_pending"),
+            PendingNotification,
+            defaults={"id": 0},
+        )
 
     async def can_schedule_exact_notifications(self) -> bool:
         """
@@ -780,20 +775,12 @@ class LocalNotifications(ft.Service):
             including changes made by the user.
 
         Raises:
-            NotificationError: If the bridge reports initialization or operation
-                failure.
+            NotificationError: If the backend reports a failure or returns malformed
+                query data.
         """
-        result = await self._invoke_method("get_notification_channels")
-        check_result(result)
-        if not isinstance(result, list):
-            raise NotificationError(
-                "query_failed", "Expected a list of notification channels"
-            )
-        return [
-            from_dict(NotificationChannel, entry)
-            for entry in result
-            if isinstance(entry, dict)
-        ]
+        return parse_query_list(
+            await self._invoke_method("get_notification_channels"), NotificationChannel
+        )
 
     # ── Foreground service (Android) ────────────────────────────────────
 
@@ -967,20 +954,12 @@ class LocalNotifications(ft.Service):
             text values are represented as empty strings.
 
         Raises:
-            NotificationError: If the bridge reports initialization or operation
-                failure.
+            NotificationError: If the backend reports a failure or returns malformed
+                query data.
         """
-        result = await self._invoke_method("get_active")
-        check_result(result)
-        if not isinstance(result, list):
-            raise NotificationError(
-                "query_failed", "Expected a list of active notifications"
-            )
-        return [
-            from_dict(ActiveNotification, entry)
-            for entry in result
-            if isinstance(entry, dict)
-        ]
+        return parse_query_list(
+            await self._invoke_method("get_active"), ActiveNotification
+        )
 
     async def get_notification_app_launch_details(self) -> LaunchDetails:
         """
@@ -999,8 +978,8 @@ class LocalNotifications(ft.Service):
             even when the launch flag is set.
 
         Raises:
-            NotificationError: If the bridge reports initialization or operation
-                failure.
+            NotificationError: If the backend reports a failure or returns malformed
+                query data.
         """
         result = await self._invoke_method("get_launch_details")
         check_result(result)
@@ -1008,23 +987,36 @@ class LocalNotifications(ft.Service):
             raise NotificationError(
                 "query_failed", "Expected notification launch details"
             )
-        launched = bool(result.get("did_notification_launch_app", False))
+        launched = result.get("did_notification_launch_app", False)
+        if not isinstance(launched, bool):
+            raise NotificationError(
+                "query_failed", "Expected a boolean notification launch flag"
+            )
         notification = result.get("notification")
-        if not isinstance(notification, dict):
+        if notification is None:
             return LaunchDetails(did_notification_launch_app=launched)
-        return LaunchDetails(
-            did_notification_launch_app=launched,
-            notification=from_dict(
-                NotificationEvent,
-                {
-                    **notification,
-                    "control": self,
-                    "name": {"action": "action", "dismissed": "dismiss"}.get(
-                        notification.get("response_type"), "tap"
-                    ),
-                },
-            ),
-        )
+        if not isinstance(notification, dict):
+            raise NotificationError(
+                "query_failed", "Expected a notification response mapping"
+            )
+        try:
+            return LaunchDetails(
+                did_notification_launch_app=launched,
+                notification=from_dict(
+                    NotificationEvent,
+                    {
+                        **notification,
+                        "control": self,
+                        "name": {"action": "action", "dismissed": "dismiss"}.get(
+                            notification.get("response_type"), "tap"
+                        ),
+                    },
+                ),
+            )
+        except (TypeError, ValueError) as exc:
+            raise NotificationError(
+                "query_failed", f"Invalid notification launch response: {exc}"
+            ) from exc
 
     async def request_full_screen_intent_permission(self) -> bool:
         """
