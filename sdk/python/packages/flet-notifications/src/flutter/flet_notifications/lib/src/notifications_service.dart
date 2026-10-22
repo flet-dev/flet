@@ -489,10 +489,24 @@ class LocalNotificationsService extends FletService {
       actions: actions,
       details: details,
     );
+    await _ensureAndroidChannel(details);
     if (actions.isNotEmpty) {
       await _registerDarwinCategories(id, actions);
     }
     return notificationDetails;
+  }
+
+  /// Creates or updates a channel declared inline on a notification.
+  ///
+  /// Posting alone creates a missing channel without its group; registering it
+  /// first applies every declared setting, including the group.
+  Future<void> _ensureAndroidChannel(Map? details) async {
+    final options = details?["options"];
+    final android = options is Map ? options["android"] : null;
+    final channel = android is Map ? android["channel"] : null;
+    final plugin = _androidPlugin;
+    if (channel is! Map || plugin == null) return;
+    await plugin.createNotificationChannel(parseNotificationChannel(channel));
   }
 
   /// Replaces Apple's category set with all registered notification actions.
@@ -590,34 +604,12 @@ class LocalNotificationsService extends FletService {
     if (android == null) {
       throw UnsupportedError("channels are Android-only");
     }
-    final map = args as Map;
-    final id = map["id"] as String;
-    final name = map["name"] as String;
-    if (id.isEmpty || name.isEmpty) {
+    if (args is! Map) {
       throw const NotificationException.invalidChannel(
-        "id and name are required",
+        "channel must be a NotificationChannel",
       );
     }
-    final ledColor = map["led_color"] as String?;
-    await android.createNotificationChannel(
-      fln.AndroidNotificationChannel(
-        id,
-        name,
-        description: map["description"] as String?,
-        groupId: map["group_id"] as String?,
-        importance: parseNotificationImportance(
-            map["importance"] as String?, fln.Importance.defaultImportance)!,
-        bypassDnd: parseBool(map["bypass_dnd"], false)!,
-        playSound: parseBool(map["play_sound"], true)!,
-        sound: parseAndroidNotificationSound(map["sound"] as String?),
-        enableVibration: parseBool(map["enable_vibration"], true)!,
-        vibrationPattern:
-            parseNotificationVibrationPattern(map["vibration_pattern"]),
-        showBadge: parseBool(map["show_badge"], true)!,
-        enableLights: parseBool(map["enable_lights"], false)!,
-        ledColor: parseColor(ledColor?.trim(), null),
-      ),
-    );
+    await android.createNotificationChannel(parseNotificationChannel(args));
     return "ok";
   }
 
@@ -641,7 +633,7 @@ class LocalNotificationsService extends FletService {
           (c) => {
             "id": c.id,
             "name": c.name,
-            "description": c.description ?? "",
+            "description": c.description,
             "group_id": c.groupId,
             "importance": c.importance.name,
             "bypass_dnd": c.bypassDnd,
@@ -651,6 +643,7 @@ class LocalNotificationsService extends FletService {
             "vibration_pattern": c.vibrationPattern?.toList(),
             "show_badge": c.showBadge,
             "enable_lights": c.enableLights,
+            "audio_attributes_usage": c.audioAttributesUsage.name,
             "led_color": c.ledColor == null
                 ? null
                 : "#${c.ledColor!.toARGB32().toRadixString(16).padLeft(8, "0")}",

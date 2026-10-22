@@ -589,8 +589,8 @@ class LocalNotifications(ft.Service):
             Non-Android platforms report an unsupported operation.
 
         Args:
-            channel: Channel declaration. Post notifications using its ID as
-                :attr:`flet_notifications.AndroidOptions.channel_id`. Create its group
+            channel: Channel declaration. Post notifications to it by passing its ID
+                as :attr:`flet_notifications.AndroidOptions.channel`. Create its group
                 first when a group ID is supplied.
 
         Raises:

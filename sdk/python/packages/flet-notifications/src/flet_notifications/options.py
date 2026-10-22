@@ -2,13 +2,12 @@ from datetime import datetime
 from enum import Enum
 
 import flet as ft
+from flet_notifications.channels import NotificationChannel
 from flet_notifications.styles import Style
 from flet_notifications.types import (
-    AndroidAudioAttributesUsage,
     AndroidNotificationCategory,
     AndroidNotificationFlag,
     GroupAlertBehavior,
-    Importance,
     LinuxNotificationCategory,
     WebNotificationDirection,
     WindowsNotificationDuration,
@@ -238,22 +237,26 @@ class AndroidGroup:
 @ft.value(kw_only=True)
 class AndroidOptions:
     """
-    Android-specific notification and channel settings.
+    Android-specific notification settings.
+
+    Importance, sound, vibration, lights, and badge behavior belong to the
+    notification's :attr:`channel`; see
+    :class:`~flet_notifications.NotificationChannel`.
+    """
+
+    channel: NotificationChannel | str | None = None
+    """
+    Channel the notification is posted to.
+
+    Pass a :class:`~flet_notifications.NotificationChannel` to create the channel on
+    first use, or the ID of a channel created earlier with
+    :meth:`flet_notifications.LocalNotifications.create_notification_channel`. A
+    missing channel referenced only by ID is created with the name `"Notifications"`
+    and default settings. `None` uses the extension's default channel.
 
     Note:
-        On Android 8.0+, importance, sound, vibration, lights, and badge settings belong
-        to the channel. Reusing a channel ID does not replace its established behavior
-        or the user's choices. Create a :class:`~flet_notifications.NotificationChannel`
-        before posting when you need a custom channel name or group.
-    """
-
-    channel_id: str | None = None
-    """
-    ID of the channel the notification is posted to.
-
-    The bridge creates a missing channel with the name `"Notifications"`. Pre-create a
-    :class:`~flet_notifications.NotificationChannel` to customize its name or group.
-    `None` uses the extension's default channel.
+        Before Android 8.0, which has no channels, the channel's sound, vibration,
+        lights, and importance apply to the individual notification.
     """
 
     style: Style | None = None
@@ -277,36 +280,6 @@ class AndroidOptions:
     `None` leaves the notification ungrouped.
     """
 
-    channel_description: str | None = None
-    """
-    User-visible explanation of the channel.
-
-    Note:
-        Used when creating the channel on Android 8.0+.
-    """
-
-    channel_bypass_dnd: bool | None = None
-    """
-    Whether a newly created channel may bypass Do Not Disturb.
-
-    Note:
-        Obtain notification-policy access with
-        :meth:`flet_notifications.LocalNotifications.request_notification_policy_access`
-        before creating a channel with this enabled.
-    """
-
-    audio_attributes_usage: AndroidAudioAttributesUsage | None = None
-    """
-    Intended use of the notification sound.
-
-    Helps Android select audio routing, volume, and interruption policies.
-
-    Note:
-        On Android 8.0+, this is used when creating a channel; an existing channel keeps
-        its audio configuration. It does not enable sound when :attr:`play_sound` is
-        `False` or grant access to bypass Do Not Disturb.
-    """
-
     icon: str | None = None
     """
     Bundled drawable resource name for this notification's small icon.
@@ -325,71 +298,13 @@ class AndroidOptions:
         solid block.
     """
 
-    importance: Importance | None = None
-    """
-    Importance used when creating the channel on Android 8.0+.
-
-    Note:
-        Existing channels keep their importance; the user may change it in system
-        settings.
-    """
-
     priority: Priority | None = None
     """
     Notification priority.
 
     Note:
-        Used on Android 7.1 and earlier. On Android 8.0+, configure :attr:`importance`
-        instead.
-    """
-
-    play_sound: bool | None = None
-    """
-    Whether to play a notification sound.
-
-    Note:
-        On Android 8.0+, this is fixed when the channel is first created. See
-        :attr:`sound` and :attr:`silent`.
-    """
-
-    sound: str | None = None
-    """
-    Sound resource name or `content://` / `file://` URI on the Android device.
-
-    A raw resource name, such as `"alert"`, omits the file extension. When
-    :attr:`play_sound` is enabled and this is `None`, Android uses the default
-    notification sound.
-
-    Note:
-        Immutable for an existing channel on Android 8.0+.
-    """
-
-    enable_vibration: bool | None = None
-    """
-    Whether to vibrate.
-
-    Note:
-        Requires the Android `VIBRATE` permission. On Android 8.0+, the setting belongs
-        to the channel and cannot be changed by subsequent notifications.
-    """
-
-    vibration_pattern: list[int] | None = None
-    """
-    Alternating delay and vibration durations, in milliseconds.
-
-    For example, `[0, 200, 100, 200]` starts immediately, vibrates for 200 ms, pauses
-    for 100 ms, then vibrates for 200 ms.
-
-    Note:
-        Requires :attr:`enable_vibration`. On Android 8.0+, fixed at channel creation.
-    """
-
-    channel_show_badge: bool | None = None
-    """
-    Whether the channel's notifications may contribute launcher badges.
-
-    Note:
-        The launcher must support notification badges.
+        Used on Android 7.1 and earlier. On Android 8.0+, the :attr:`channel`'s
+        :attr:`~flet_notifications.NotificationChannel.importance` applies instead.
     """
 
     auto_cancel: bool | None = None
@@ -578,31 +493,14 @@ class AndroidOptions:
     use only the notification ID, not this pair.
     """
 
-    enable_lights: bool | None = None
-    """
-    Whether to enable the notification LED on devices that provide one.
-
-    Note:
-        On Android 8.0+, this belongs to the channel.
-    """
-
-    led_color: ft.ColorValue | None = None
-    """
-    Color of the notification LED when :attr:`enable_lights` is enabled.
-
-    Note:
-        On Android 8.0+, fixed at channel creation. Accepts concrete Flet colors;
-        theme-dependent colors cannot be resolved by this headless service. Before
-        Android 8.0, also set :attr:`led_on_duration` and :attr:`led_off_duration`.
-    """
-
     led_on_duration: ft.DurationValue | None = None
     """
     Time the notification LED remains on during each blink.
 
     Note:
-        Used only before Android 8.0; on newer versions, the channel and device control
-        the blinking pattern.
+        Used only before Android 8.0, together with the :attr:`channel`'s
+        :attr:`~flet_notifications.NotificationChannel.led_color`. On newer versions,
+        the device controls the blinking pattern.
     """
 
     led_off_duration: ft.DurationValue | None = None
@@ -610,8 +508,9 @@ class AndroidOptions:
     Time the notification LED remains off between blinks.
 
     Note:
-        Used only before Android 8.0; on newer versions, the channel and device control
-        the blinking pattern.
+        Used only before Android 8.0, together with the :attr:`channel`'s
+        :attr:`~flet_notifications.NotificationChannel.led_color`. On newer versions,
+        the device controls the blinking pattern.
     """
 
 

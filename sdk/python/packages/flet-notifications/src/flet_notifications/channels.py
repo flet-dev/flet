@@ -1,7 +1,5 @@
-from dataclasses import field
-
 import flet as ft
-from flet_notifications.types import Importance
+from flet_notifications.types import AndroidAudioAttributesUsage, Importance
 
 __all__ = ["NotificationChannel"]
 
@@ -9,14 +7,19 @@ __all__ = ["NotificationChannel"]
 @ft.value(kw_only=True)
 class NotificationChannel:
     """
-    Android 8.0+ notification channel grouping notifications with shared behavior.
+    Android notification channel grouping notifications with shared behavior.
 
-    Create it with
-    :meth:`flet_notifications.LocalNotifications.create_notification_channel`, then
-    pass its :attr:`id` as :attr:`flet_notifications.AndroidOptions.channel_id`.
-    Users manage channel preferences independently in Android settings. Sound,
-    vibration, lights, and importance cannot be reset by posting another notification
-    or recreating the same channel; use a new ID for a different configuration.
+    Pass it as :attr:`flet_notifications.AndroidOptions.channel` to create the channel
+    when a notification is first posted to it, or create it upfront with
+    :meth:`flet_notifications.LocalNotifications.create_notification_channel` and pass
+    its :attr:`id` instead. Users manage channel preferences independently in Android
+    settings. Sound, vibration, lights, and importance cannot be reset by posting
+    another notification or recreating the same channel; use a new ID for a different
+    configuration.
+
+    Note:
+        Channels exist on Android 8.0+. On earlier versions, the channel's sound,
+        vibration, lights, and importance apply to each notification posted with it.
 
     Raises:
         ValueError: If :attr:`id` or :attr:`name` is empty.
@@ -28,8 +31,12 @@ class NotificationChannel:
     name: str
     """Nonempty, user-visible channel name displayed in Android settings."""
 
-    description: str = field(default_factory=str)
-    """User-visible explanation of the notifications delivered through this channel."""
+    description: str | None = None
+    """
+    User-visible explanation of the notifications delivered through this channel.
+
+    `None` shows no description.
+    """
 
     group_id: str | None = None
     """
@@ -70,8 +77,8 @@ class NotificationChannel:
     """
     Sound resource name or `content://` / `file://` URI on the Android device.
 
-    A raw resource name, such as `"alert"`, omits the file extension. Uses the same
-    sources as :attr:`flet_notifications.AndroidOptions.sound`.
+    A raw resource name, such as `"alert"`, refers to a file in the app's
+    `res/raw` resources and omits the file extension.
 
     Note:
         Requires :attr:`play_sound`. `None` uses the default notification sound.
@@ -119,6 +126,20 @@ class NotificationChannel:
     Note:
         Accepts concrete Flet color names and hexadecimal colors. Theme-dependent colors
         cannot be resolved by this headless service. Fixed at channel creation.
+    """
+
+    audio_attributes_usage: AndroidAudioAttributesUsage = (
+        AndroidAudioAttributesUsage.NOTIFICATION
+    )
+    """
+    Intended use of the channel's sound.
+
+    Helps Android select audio routing, volume, and interruption policies. It does not
+    enable sound when :attr:`play_sound` is `False` or grant access to bypass Do Not
+    Disturb.
+
+    Note:
+        Fixed at channel creation.
     """
 
     def __post_init__(self) -> None:

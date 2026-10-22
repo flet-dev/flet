@@ -798,7 +798,8 @@ void main() {
         "vibration_pattern": [0, 200, 100, 200],
         "show_badge": false,
         "enable_lights": true,
-        "led_color": "#80ff0000"
+        "led_color": "#80ff0000",
+        "audio_attributes_usage": "notification"
       },
     ]);
     plugin.queriedChannels = null;
@@ -1125,7 +1126,7 @@ void main() {
             "id": 1,
             "options": {
               "android": {
-                "importance": value,
+                "channel": {"id": "c", "name": "C", "importance": value},
                 "priority": value,
                 "visibility": "PRIVATE",
               },
@@ -1223,7 +1224,11 @@ void main() {
           "auto_cancel": "false",
           "number": "0",
           "additional_flags": "36",
-          "vibration_pattern": [0, "250", 100],
+          "channel": {
+            "id": "c",
+            "name": "C",
+            "vibration_pattern": [0, "250", 100],
+          },
         },
       },
     });
@@ -1252,12 +1257,20 @@ void main() {
       "options": {
         "android": {
           "icon": "ic_stat_notify",
-          "audio_attributes_usage": "alarm",
+          "channel": {
+            "id": "alarms",
+            "name": "Alarms",
+            "group_id": "urgent",
+            "audio_attributes_usage": "alarm",
+            "importance": "high",
+            "vibration_pattern": [0, 250, 100],
+            "play_sound": false,
+            "sound": "alert_tone",
+          },
           "additional_flags": 36,
           "ongoing": true,
           "silent": true,
           "category": "alarm",
-          "importance": "high",
           "priority": "max",
           "color": "#FF0000",
           "sub_text": "details",
@@ -1265,9 +1278,6 @@ void main() {
           "visibility": "private",
           "timeout_after": 60000,
           "full_screen_intent": true,
-          "vibration_pattern": [0, 250, 100],
-          "play_sound": false,
-          "sound": "alert_tone",
         },
       },
     });
@@ -1275,6 +1285,12 @@ void main() {
     final details =
         plugin.shown.single["details"] as fln.AndroidNotificationDetails;
     expect(details.icon, "ic_stat_notify");
+    expect(details.channelId, "alarms");
+    expect(details.channelName, "Alarms");
+    final channel = plugin.channelsCreated.single;
+    expect(channel.id, "alarms");
+    expect(channel.groupId, "urgent");
+    expect(channel.importance, fln.Importance.high);
     expect(details.audioAttributesUsage, fln.AudioAttributesUsage.alarm);
     expect(details.additionalFlags!.toList(), [36]);
     expect(details.ongoing, isTrue);
@@ -1293,6 +1309,41 @@ void main() {
     expect(details.sound!.sound, "alert_tone");
   });
 
+  test("a channel ID posts without registering a channel", () async {
+    final service = _makeService();
+    for (final channel in [null, "updates"]) {
+      expect(
+          await service.invokeMethod("show", {
+            "id": 1,
+            "options": {
+              "android": {"channel": channel},
+            },
+          }),
+          "ok");
+      final details =
+          plugin.shown.last["details"] as fln.AndroidNotificationDetails;
+      expect(details.channelId, channel ?? "flet_notifications");
+      expect(details.channelName, "Notifications");
+      expect(details.importance, fln.Importance.defaultImportance);
+      expect(details.playSound, isTrue);
+    }
+    expect(plugin.channelsCreated, isEmpty);
+  });
+
+  test("an invalid inline channel does not post the notification", () async {
+    final result = await _makeService().invokeMethod("show", {
+      "id": 1,
+      "options": {
+        "android": {
+          "channel": {"id": "c"},
+        },
+      },
+    });
+    expect(result, startsWith("error:invalid_channel:"));
+    expect(plugin.shown, isEmpty);
+    expect(plugin.channelsCreated, isEmpty);
+  });
+
   for (final mask in [0, 4, 36]) {
     test("show forwards flag mask $mask and camel-case audio usage", () async {
       final service = _makeService();
@@ -1300,7 +1351,11 @@ void main() {
         "id": 1,
         "options": {
           "android": {
-            "audio_attributes_usage": "notificationRingtone",
+            "channel": {
+              "id": "c",
+              "name": "C",
+              "audio_attributes_usage": "notificationRingtone",
+            },
             "additional_flags": mask,
           },
         },
@@ -1816,8 +1871,12 @@ void main() {
         "options": {
           "android": {
             "color": entry.key,
-            "led_color": entry.key,
-            "enable_lights": true,
+            "channel": {
+              "id": "lights",
+              "name": "Lights",
+              "led_color": entry.key,
+              "enable_lights": true,
+            },
             "led_on_duration": 100,
             "led_off_duration": 200,
           },

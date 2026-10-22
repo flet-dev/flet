@@ -6,6 +6,60 @@ import 'package:flutter_local_notifications/flutter_local_notifications.dart'
 
 import 'errors.dart';
 
+/// Channel used when a notification names none.
+const String defaultChannelId = "flet_notifications";
+
+/// Name given to channels created from a bare ID.
+const String defaultChannelName = "Notifications";
+
+/// Parses a `NotificationChannel` payload, or a bare channel ID, into a native
+/// channel.
+///
+/// Missing fields take the Python `NotificationChannel` defaults, which Flet
+/// omits from the wire. `null` resolves to the extension's default channel.
+fln.AndroidNotificationChannel parseNotificationChannel(Object? value) {
+  if (value == null || value is String) {
+    final id = value as String?;
+    return fln.AndroidNotificationChannel(
+      id == null || id.isEmpty ? defaultChannelId : id,
+      defaultChannelName,
+    );
+  }
+  if (value is! Map) {
+    throw const NotificationException.invalidChannel(
+      "channel must be a NotificationChannel or an ID",
+    );
+  }
+  final id = value["id"];
+  final name = value["name"];
+  if (id is! String || id.isEmpty || name is! String || name.isEmpty) {
+    throw const NotificationException.invalidChannel(
+        "id and name are required");
+  }
+  return fln.AndroidNotificationChannel(
+    id,
+    name,
+    description: value["description"] as String?,
+    groupId: value["group_id"] as String?,
+    importance: parseNotificationImportance(
+        value["importance"] as String?, fln.Importance.defaultImportance)!,
+    bypassDnd: parseBool(value["bypass_dnd"], false)!,
+    playSound: parseBool(value["play_sound"], true)!,
+    sound: parseAndroidNotificationSound(value["sound"] as String?),
+    enableVibration: parseBool(value["enable_vibration"], true)!,
+    vibrationPattern:
+        parseNotificationVibrationPattern(value["vibration_pattern"]),
+    showBadge: parseBool(value["show_badge"], true)!,
+    enableLights: parseBool(value["enable_lights"], false)!,
+    ledColor: parseColor((value["led_color"] as String?)?.trim(), null),
+    audioAttributesUsage: parseEnum(
+      fln.AudioAttributesUsage.values,
+      value["audio_attributes_usage"] as String?,
+      fln.AudioAttributesUsage.notification,
+    )!,
+  );
+}
+
 fln.AndroidNotificationSound? parseAndroidNotificationSound(String? sound) {
   if (sound == null || sound.isEmpty) return null;
   if (sound.startsWith("content://") || sound.startsWith("file://")) {

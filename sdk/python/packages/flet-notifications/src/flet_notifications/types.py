@@ -23,11 +23,10 @@ class AndroidAudioAttributesUsage(Enum):
     Intended use of an Android notification's sound.
 
     Note:
-        Used by :attr:`flet_notifications.AndroidOptions.audio_attributes_usage` to help
-        Android apply audio routing, volume, and interruption policies. This describes
-        the sound; it does not grant permission to bypass the user's sound or Do Not
-        Disturb settings. On Android 8.0+, an existing channel retains its audio
-        configuration.
+        Used by :attr:`flet_notifications.NotificationChannel.audio_attributes_usage`
+        to help Android apply audio routing, volume, and interruption policies. This
+        describes the sound; it does not grant permission to bypass the user's sound or
+        Do Not Disturb settings. An existing channel retains its audio configuration.
 
     See Android's [audio usage
     reference](https://developer.android.com/reference/android/media/AudioAttributes).

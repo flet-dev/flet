@@ -10,9 +10,6 @@ import 'errors.dart';
 import 'parsers.dart';
 import 'styles.dart';
 
-const String _channelId = "flet_notifications";
-const String _channelName = "Notifications";
-
 /// Shared by Darwin notification details and the service's category registry.
 const String darwinNotificationCategoryPrefix = "flet_notifications_actions_";
 
@@ -84,34 +81,27 @@ fln.NotificationDetails parseNotificationDetails({
     final linuxTimeout = parseDuration(linuxOptions["timeout"]);
     final progress = androidOptions["progress"] as Map?;
     final group = androidOptions["group"] as Map?;
+    final channel = parseNotificationChannel(androidOptions["channel"]);
 
     return fln.NotificationDetails(
       android: fln.AndroidNotificationDetails(
-        androidOptions["channel_id"] as String? ?? _channelId,
-        _channelName,
-        channelDescription: androidOptions["channel_description"] as String?,
+        channel.id,
+        channel.name,
+        channelDescription: channel.description,
         icon: androidOptions["icon"] as String?,
-        audioAttributesUsage: parseEnum(
-          fln.AudioAttributesUsage.values,
-          androidOptions["audio_attributes_usage"] as String?,
-          fln.AudioAttributesUsage.notification,
-        )!,
+        audioAttributesUsage: channel.audioAttributesUsage,
         additionalFlags: additionalFlags == null
             ? null
             : Int32List.fromList([additionalFlags]),
         actions: androidActions,
         styleInformation: parseStyle(androidOptions["style"]),
-        importance: parseNotificationImportance(
-            androidOptions["importance"] as String?,
-            fln.Importance.defaultImportance)!,
+        importance: channel.importance,
         priority: parsePriority(androidOptions["priority"] as String?,
             fln.Priority.defaultPriority)!,
-        playSound: parseBool(androidOptions["play_sound"], true)!,
-        sound:
-            parseAndroidNotificationSound(androidOptions["sound"] as String?),
-        enableVibration: parseBool(androidOptions["enable_vibration"], true)!,
-        vibrationPattern: parseNotificationVibrationPattern(
-            androidOptions["vibration_pattern"]),
+        playSound: channel.playSound,
+        sound: channel.sound,
+        enableVibration: channel.enableVibration,
+        vibrationPattern: channel.vibrationPattern,
         groupKey: group?["key"] as String?,
         setAsGroupSummary: parseBool(group?["summary"], false)!,
         groupAlertBehavior: parseGroupAlertBehavior(
@@ -131,17 +121,14 @@ fln.NotificationDetails parseNotificationDetails({
         usesChronometer: parseBool(androidOptions["uses_chronometer"], false)!,
         chronometerCountDown:
             parseBool(androidOptions["chronometer_count_down"], false)!,
-        channelShowBadge:
-            parseBool(androidOptions["channel_show_badge"], true)!,
-        channelBypassDnd:
-            parseBool(androidOptions["channel_bypass_dnd"], false)!,
+        channelShowBadge: channel.showBadge,
+        channelBypassDnd: channel.bypassDnd,
         showProgress: progress != null,
         maxProgress: parseInt(progress?["max"], 100)!,
         progress: parseInt(progress?["value"], 0)!,
         indeterminate: parseBool(progress?["indeterminate"], false)!,
-        enableLights: parseBool(androidOptions["enable_lights"], false)!,
-        ledColor:
-            parseColor((androidOptions["led_color"] as String?)?.trim(), null),
+        enableLights: channel.enableLights,
+        ledColor: channel.ledColor,
         ledOnMs:
             parseDuration(androidOptions["led_on_duration"])?.inMilliseconds,
         ledOffMs:

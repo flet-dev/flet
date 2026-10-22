@@ -12,6 +12,7 @@ from flet_notifications import (
     BigPictureStyle,
     LocalNotifications,
     NotificationAction,
+    NotificationChannel,
     NotificationError,
     NotificationOptions,
     RepeatInterval,
@@ -50,7 +51,11 @@ async def test_methods_encode_nested_notification_values(
             silent=True,
             show_timestamp=False,
             icon="ic_stat_notify",
-            audio_attributes_usage=AndroidAudioAttributesUsage.ALARM,
+            channel=NotificationChannel(
+                id="alarms",
+                name="Alarms",
+                audio_attributes_usage=AndroidAudioAttributesUsage.ALARM,
+            ),
             additional_flags=flags,
             style=BigPictureStyle(image=AndroidIcon(file_path="/tmp/photo.png")),
         ),
@@ -77,7 +82,11 @@ async def test_methods_encode_nested_notification_values(
             "silent": True,
             "show_timestamp": False,
             "icon": "ic_stat_notify",
-            "audio_attributes_usage": "alarm",
+            "channel": {
+                "id": "alarms",
+                "name": "Alarms",
+                "audio_attributes_usage": "alarm",
+            },
             "additional_flags": expected_flags,
             "style": {
                 "_type": "big_picture",

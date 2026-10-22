@@ -74,7 +74,7 @@ async def test_get_active_hydrates_native_collection():
 @pytest.mark.asyncio
 async def test_get_channels_hydrates_native_collection():
     """Channels preserve enums, nulls, explicit false flags, and ARGB colors."""
-    from flet_notifications import NotificationChannel
+    from flet_notifications import AndroidAudioAttributesUsage, NotificationChannel
 
     service = LocalNotifications()
 
@@ -94,6 +94,7 @@ async def test_get_channels_hydrates_native_collection():
                 "show_badge": False,
                 "enable_lights": True,
                 "led_color": "#80ff0000",
+                "audio_attributes_usage": "alarm",
             },
             {"id": "minimal", "name": "Minimal"},
         ]
@@ -115,6 +116,7 @@ async def test_get_channels_hydrates_native_collection():
             show_badge=False,
             enable_lights=True,
             led_color="#80ff0000",
+            audio_attributes_usage=AndroidAudioAttributesUsage.ALARM,
         ),
         NotificationChannel(id="minimal", name="Minimal"),
     ]

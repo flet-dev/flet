@@ -147,7 +147,7 @@ async def test_schedule_forwards_android_style_progress_and_group():
         when=timedelta(seconds=5),
         options=NotificationOptions(
             android=AndroidOptions(
-                channel_id="c1",
+                channel="c1",
                 style=BigTextStyle(big_text="long"),
                 progress=AndroidProgress(value=25),
                 group=AndroidGroup(
@@ -161,7 +161,7 @@ async def test_schedule_forwards_android_style_progress_and_group():
     _, args = service.calls[-1]
     assert encode_wire(args["options"]) == {
         "android": {
-            "channel_id": "c1",
+            "channel": "c1",
             "style": {"_type": "big_text", "big_text": "long"},
             "progress": {"value": 25},
             "group": {"key": "grp", "summary": True, "alert_behavior": "summary"},
