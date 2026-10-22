@@ -76,6 +76,64 @@ identity verification: up to 20 devices, through invitations.
 See Google's [developer verification guides](https://developer.android.com/developer-verification/guides)
 for the details.
 
+To give people a link to download the app, use a [download page](#download-page).
+
+## Download page
+
+**Publish to a download page** builds a signed APK and puts it on a page your users
+can open: a link like `get.flet.app/…`, with a **Download APK** button, the app's
+icon, version and "What's new", install steps, and a QR code on computers.
+The link stays the same across releases: share it once — on your website, in an
+email, as a QR code on a flyer — and each publish replaces the app behind it.
+
+{/* SCREENSHOT: /img/docs/studio/publishing/download-page.png — the public download page on a phone */}
+
+The action needs your own [signing key](#signing-key), so updates install over
+earlier versions. Register the app with Google too: see
+[Share an APK outside Google Play](#share-an-apk-outside-google-play).
+
+### Publish
+
+1. Open **Publish › Android › Publish to a download page**.
+2. Select a signing key, and optionally write **What's new**.
+3. Click **Publish to a download page**. When the run finishes, the app is on the
+   page.
+
+Already made a signed APK with **Create an APK**? Open that run and click
+**Publish to the download page** — no new build, no credits. The same button on
+an earlier download page run puts that version back (a rollback).
+
+### Share the link
+
+The **Download page** section of the action screen, and the **Download page** row
+in **Overview**, have the link with **Copy link**, **QR code** and **Open**.
+
+| | Explorer | Creator |
+|---|---|---|
+| Link | Private: `get.flet.app/` and a random code | The private link, plus a readable one: `get.flet.app/your-app` |
+| How long a release stays up | 7 days after its build: publish again to keep the app up | While it's the current release |
+| Run downloads in Studio | 7 days | 90 days |
+
+Set a readable link under **Readable link**: lowercase letters, digits and hyphens.
+If you rename it, the old name keeps redirecting for 30 days.
+
+### New link, take offline
+
+In the **Download page** section's **⋯** menu:
+
+- **Create a new link** — the current private link stops working at once. Use it
+  if a link reached people it shouldn't have.
+- **Take offline** — the page stops offering the app until you publish again.
+
+### What your users see
+
+The page shows the **Download APK** button and the steps to install: Android asks
+them to allow their browser to install unknown apps the first time. Installing a
+newer version later keeps their data — as long as you keep the same signing key.
+
+Each page has a **Report this app** link. Flet reviews reports and can take a page
+down; you'll see that in Studio.
+
 ## Create an app bundle (.aab)
 
 An app bundle is what Google Play takes: Google builds the APKs for each device

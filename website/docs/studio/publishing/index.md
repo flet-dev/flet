@@ -29,7 +29,7 @@ Each action is one **run** for one platform:
 | Windows | **Create Windows app (.zip)** |
 | macOS | **Create macOS app (.app)** — not signed or notarized: for testing on your own Mac |
 | Linux | **Create Linux app (.tar.gz)** |
-| Android | **Create an APK**, **Create an app bundle (.aab)**, **Publish to Google Play**, **Update store listing** — see [Android apps](android.md), [Google Play](google-play/index.md) and [the store listing](google-play/store-listing.md) |
+| Android | **Create an APK**, **Publish to a download page**, **Create an app bundle (.aab)**, **Publish to Google Play**, **Update store listing** — see [Android apps](android.md), [the download page](android.md#download-page), [Google Play](google-play/index.md) and [the store listing](google-play/store-listing.md) |
 | iOS | **Create an iOS Simulator app** — no Apple account needed |
 | Web | **Create web app (.zip)** — the files to host yourself |
 
@@ -105,9 +105,11 @@ Open a run from Overview or Activity:
 
 ### Downloads expire
 
-Studio keeps a run's files for **30 days**, and the last three successful runs of
-each action. After that, Overview says **Download expired** — start a new run to
-get the files again. What's on a store stays there.
+Studio keeps a run's files for **7 days** on the Explorer plan and **90 days** on
+Creator, and at most the last three successful runs of each action. After that,
+Overview says **Download expired** — start a new run to get the files again.
+What's on a store stays there, and so does the app on its
+[download page](android.md#download-page) while it's up.
 
 ### Queued runs
 
