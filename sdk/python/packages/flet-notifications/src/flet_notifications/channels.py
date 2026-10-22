@@ -68,12 +68,15 @@ class NotificationChannel:
 
     sound: str | None = None
     """
-    Raw Android sound-resource name without an extension, such as `"alert"`.
+    Sound resource name or `content://` / `file://` URI on the Android device.
+
+    A raw resource name, such as `"alert"`, omits the file extension. Uses the same
+    sources as :attr:`flet_notifications.AndroidOptions.sound`.
 
     Note:
-        Requires :attr:`play_sound`. `None` uses the default notification sound. This
-        channel API accepts raw resource names, not file paths or content URIs. Fixed at
-        channel creation.
+        Requires :attr:`play_sound`. `None` uses the default notification sound.
+        Fixed at channel creation; changing this value does not replace an existing
+        channel's sound.
     """
 
     enable_vibration: bool = True

@@ -709,6 +709,40 @@ void main() {
     }
   });
 
+  test("copying queried channels preserves resource and URI sound sources",
+      () async {
+    final service = _makeService();
+    for (final sound in <fln.AndroidNotificationSound?>[
+      null,
+      const fln.RawResourceAndroidNotificationSound("chime"),
+      const fln.UriAndroidNotificationSound(
+          "content://media/internal/audio/media/1"),
+      const fln.UriAndroidNotificationSound(
+          "file:///storage/emulated/0/Notifications/chime.wav"),
+    ]) {
+      plugin.queriedChannels = [
+        fln.AndroidNotificationChannel("original", "Alerts", sound: sound),
+      ];
+      final channels =
+          await service.invokeMethod("get_notification_channels") as List;
+      final channel = channels.single as Map;
+      expect(channel["sound"], sound?.sound);
+      expect(
+          await service.invokeMethod("create_notification_channel", {
+            ...channel,
+            "id": "copy",
+          }),
+          "ok");
+      final copied = plugin.channelsCreated.last.sound;
+      if (sound == null) {
+        expect(copied, isNull);
+      } else {
+        expect(copied.runtimeType, sound.runtimeType);
+        expect(copied!.sound, sound.sound);
+      }
+    }
+  });
+
   test("channel and launch queries return native collections", () async {
     plugin.queriedChannels = [
       fln.AndroidNotificationChannel(

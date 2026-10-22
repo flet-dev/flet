@@ -615,9 +615,7 @@ class LocalNotificationsService extends FletService {
             map["importance"] as String?, fln.Importance.defaultImportance)!,
         bypassDnd: parseBool(map["bypass_dnd"], false)!,
         playSound: parseBool(map["play_sound"], true)!,
-        sound: map["sound"] == null
-            ? null
-            : fln.RawResourceAndroidNotificationSound(map["sound"] as String),
+        sound: parseAndroidNotificationSound(map["sound"] as String?),
         enableVibration: parseBool(map["enable_vibration"], true)!,
         vibrationPattern:
             parseNotificationVibrationPattern(map["vibration_pattern"]),
