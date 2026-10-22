@@ -107,15 +107,29 @@ async def test_schedule_aware_datetime_carries_offset():
     assert args["when"]["time_zone"] is None
 
 
+@pytest.mark.parametrize(
+    ("delay", "microseconds"),
+    [
+        (timedelta(seconds=30), 30_000_000),
+        (timedelta(seconds=1, microseconds=500001), 1_500_001),
+        (timedelta(milliseconds=500), 500_000),
+        (timedelta(microseconds=1), 1),
+        (timedelta(), 0),
+        (timedelta(microseconds=-1), -1),
+        (timedelta(days=100000, microseconds=1), 8_640_000_000_000_001),
+    ],
+)
 @pytest.mark.asyncio
-async def test_schedule_timedelta_becomes_delay():
+async def test_schedule_timedelta_becomes_delay(delay, microseconds):
+    """Timedeltas retain exact integer microseconds through the transport."""
     service = RecordingService()
-    await service.schedule(id=3, when=timedelta(seconds=30))
+    await service.schedule(id=3, when=delay)
     _, args = service.calls[-1]
     assert args["when"] == {
-        "delay_seconds": 30.0,
+        "delay_ms": microseconds,
         "time_zone": None,
     }
+    assert type(args["when"]["delay_ms"]) is int
 
 
 def test_schedule_forwards_style_progress_grouping():

@@ -42,13 +42,19 @@ void main() {
     expect(date.location.name, "UTC");
   });
 
-  test("delay from now lands in the future", () {
-    final date = parseWhen({
-      "when": {"delay_seconds": "90", "time_zone": "UTC"},
-    }, tz.UTC);
-    expect(
-      date.difference(tz.TZDateTime.now(tz.UTC)).inSeconds,
-      inInclusiveRange(85, 90),
-    );
+  test("relative delays retain fractional seconds in the target zone", () {
+    final location = tz.getLocation("Africa/Lagos");
+    for (final microseconds in [90000000, 1500001, 500000, 1, 0, -1]) {
+      final delay = Duration(microseconds: microseconds);
+      final before = tz.TZDateTime.now(location);
+      final date = parseWhen({
+        "when": {"delay_ms": microseconds, "time_zone": "Africa/Lagos"},
+      }, tz.UTC);
+      final after = tz.TZDateTime.now(location);
+      expect(date.location.name, "Africa/Lagos");
+      expect(date.isBefore(before.add(delay)), isFalse,
+          reason: "$microseconds");
+      expect(date.isAfter(after.add(delay)), isFalse, reason: "$microseconds");
+    }
   });
 }

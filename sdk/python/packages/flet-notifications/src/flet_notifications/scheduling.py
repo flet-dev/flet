@@ -25,8 +25,8 @@ def build_schedule_args(
     instant is preserved.
     """
     if isinstance(when, timedelta):
-        when_payload: dict = {
-            "delay_seconds": when.total_seconds(),
+        when_payload = {
+            "delay_ms": when // timedelta(microseconds=1),
             "time_zone": time_zone,
         }
     else:

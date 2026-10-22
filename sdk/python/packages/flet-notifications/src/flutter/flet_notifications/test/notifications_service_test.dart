@@ -1,6 +1,6 @@
 import 'dart:async';
-import 'dart:ui' show Color;
 import 'dart:typed_data';
+import 'dart:ui' show Color;
 
 import 'package:flet/flet.dart';
 import 'package:flet_notifications/src/notifications_service.dart';
@@ -449,7 +449,7 @@ void main() {
       null,
       {"iso": "invalid"},
       {"iso": "2099-01-01T12:00:00", "time_zone": "Invalid/Zone"},
-      {"delay_seconds": "invalid"},
+      {"delay_ms": "invalid"},
       {"iso": 42},
     ]) {
       expect(await service.invokeMethod("schedule", {"id": 4, "when": when}),

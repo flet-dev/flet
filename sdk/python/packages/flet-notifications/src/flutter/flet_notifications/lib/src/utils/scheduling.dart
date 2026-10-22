@@ -1,4 +1,4 @@
-import 'package:flet/flet.dart' show parseInt;
+import 'package:flet/flet.dart' show parseDuration, parseInt, DurationUnit;
 import 'package:timezone/timezone.dart' as tz;
 
 import 'errors.dart';
@@ -14,7 +14,7 @@ tz.Location resolveLocation(String? timeZone) {
 
 /// Parses the `when` payload of a `schedule` invoke into a [tz.TZDateTime].
 ///
-/// - `delay_seconds` → now + delay in the target zone (from `timedelta`)
+/// - `delay_ms` → now + delay in the target zone (from `timedelta`)
 /// - `iso` with an offset → the exact instant, rendered in the target zone
 /// - `iso` without an offset → wall-clock time in the target zone
 tz.TZDateTime parseWhen(Map<dynamic, dynamic> args, tz.Location fallback) {
@@ -28,18 +28,19 @@ tz.TZDateTime parseWhen(Map<dynamic, dynamic> args, tz.Location fallback) {
         ? resolveLocation(timeZone)
         : fallback;
 
-    final delay = when["delay_seconds"];
+    final delay = when["delay_ms"];
     if (delay != null) {
-      final seconds = parseInt(delay);
-      if (seconds == null) {
-        throw const FormatException("delay_seconds must be numeric");
+      if (delay is! int) {
+        throw const FormatException("delay_ms must be an integer");
       }
-      return tz.TZDateTime.now(location).add(Duration(seconds: seconds));
+      return tz.TZDateTime.now(location).add(
+        parseDuration(delay, null, DurationUnit.microseconds)!,
+      );
     }
 
     final iso = when["iso"] as String?;
     if (iso == null) {
-      throw const FormatException("when must carry delay_seconds or iso");
+      throw const FormatException("when must carry delay_ms or iso");
     }
     final parsed = DateTime.parse(iso);
     final offsetSeconds = parseInt(when["utc_offset_seconds"]);
