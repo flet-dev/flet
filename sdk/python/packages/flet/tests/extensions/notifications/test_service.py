@@ -6,10 +6,10 @@ import pytest
 
 from flet_notifications import (
     AndroidAudioAttributesUsage,
+    AndroidBigPictureStyle,
     AndroidIcon,
     AndroidNotificationFlag,
     AndroidOptions,
-    BigPictureStyle,
     LocalNotifications,
     NotificationAction,
     NotificationChannel,
@@ -57,7 +57,7 @@ async def test_methods_encode_nested_notification_values(
                 audio_attributes_usage=AndroidAudioAttributesUsage.ALARM,
             ),
             additional_flags=flags,
-            style=BigPictureStyle(image=AndroidIcon(file_path="/tmp/photo.png")),
+            style=AndroidBigPictureStyle(image=AndroidIcon(file_path="/tmp/photo.png")),
         ),
         web=WebOptions(
             direction=WebNotificationDirection.RIGHT_TO_LEFT,

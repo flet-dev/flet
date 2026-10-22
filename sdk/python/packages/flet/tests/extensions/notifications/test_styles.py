@@ -5,16 +5,16 @@ from datetime import datetime, timedelta, timezone
 import pytest
 
 from flet_notifications import (
+    AndroidBigPictureStyle,
+    AndroidBigTextStyle,
     AndroidIcon,
+    AndroidInboxStyle,
+    AndroidMessage,
+    AndroidMessagingStyle,
     AndroidOptions,
-    BigPictureStyle,
-    BigTextStyle,
-    InboxStyle,
+    AndroidPerson,
     LocalNotifications,
-    Message,
-    MessagingStyle,
     NotificationOptions,
-    Person,
     RepeatInterval,
 )
 
@@ -24,10 +24,13 @@ from .helpers import encode_wire
 @pytest.mark.parametrize(
     ("style", "kind"),
     [
-        (BigTextStyle(big_text="Long text"), "big_text"),
-        (BigPictureStyle(image=AndroidIcon(file_path="/tmp/photo.png")), "big_picture"),
-        (InboxStyle(lines=["one"]), "inbox"),
-        (MessagingStyle(person=Person(name="Ada")), "messaging"),
+        (AndroidBigTextStyle(big_text="Long text"), "big_text"),
+        (
+            AndroidBigPictureStyle(image=AndroidIcon(file_path="/tmp/photo.png")),
+            "big_picture",
+        ),
+        (AndroidInboxStyle(lines=["one"]), "inbox"),
+        (AndroidMessagingStyle(person=AndroidPerson(name="Ada")), "messaging"),
     ],
 )
 def test_styles_encode_native_discriminators(style, kind):
@@ -43,8 +46,8 @@ def test_styles_encode_native_discriminators(style, kind):
 @pytest.mark.asyncio
 async def test_message_timestamp_preserves_instant(method_name):
     """Every notification method sends current message times as exact instants."""
-    person = Person(name="Ada")
-    message = Message(
+    person = AndroidPerson(name="Ada")
+    message = AndroidMessage(
         text="Hi",
         timestamp=datetime(
             2030, 1, 1, 10, 0, tzinfo=timezone(timedelta(hours=5, minutes=30))
@@ -52,7 +55,9 @@ async def test_message_timestamp_preserves_instant(method_name):
         person=person,
     )
     options = NotificationOptions(
-        android=AndroidOptions(style=MessagingStyle(person=person, messages=[message]))
+        android=AndroidOptions(
+            style=AndroidMessagingStyle(person=person, messages=[message])
+        )
     )
     service = LocalNotifications()
     calls = []

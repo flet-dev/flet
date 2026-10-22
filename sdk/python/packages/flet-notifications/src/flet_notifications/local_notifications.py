@@ -123,7 +123,7 @@ class LocalNotifications(ft.Service):
     Note:
         Used during initialization and by :meth:`request_permissions`. Requires Apple's
         critical-alert entitlement; this flag does not obtain that entitlement. See
-        :attr:`flet_notifications.InterruptionLevel.CRITICAL`.
+        :attr:`flet_notifications.DarwinInterruptionLevel.CRITICAL`.
     """
 
     app_name: str | None = None

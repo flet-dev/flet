@@ -3,11 +3,11 @@ from enum import Enum
 
 import flet as ft
 from flet_notifications.channels import NotificationChannel
-from flet_notifications.styles import Style
+from flet_notifications.styles import AndroidStyle
 from flet_notifications.types import (
+    AndroidGroupAlertBehavior,
     AndroidNotificationCategory,
     AndroidNotificationFlag,
-    GroupAlertBehavior,
     LinuxNotificationCategory,
     WebNotificationDirection,
     WindowsNotificationDuration,
@@ -17,26 +17,26 @@ from flet_notifications.types import (
 __all__ = [
     "AndroidGroup",
     "AndroidOptions",
+    "AndroidPriority",
     "AndroidProgress",
+    "AndroidVisibility",
+    "DarwinInterruptionLevel",
     "DarwinOptions",
-    "InterruptionLevel",
     "LinuxOptions",
     "LinuxUrgency",
     "NotificationOptions",
-    "Priority",
-    "Visibility",
     "WebOptions",
     "WindowsOptions",
     "WindowsScenario",
 ]
 
 
-class Priority(Enum):
+class AndroidPriority(Enum):
     """
     Notification priority on Android 7.1 and earlier.
 
     Note:
-        On Android 8.0 and later, channel :class:`~flet_notifications.Importance`
+        On Android 8.0 and later, channel :class:`~flet_notifications.AndroidImportance`
         determines interruption behavior instead. Priority is a presentation hint; it
         does not override the user's notification preferences.
     """
@@ -57,7 +57,7 @@ class Priority(Enum):
     """Use the highest priority for critical, immediate information."""
 
 
-class Visibility(Enum):
+class AndroidVisibility(Enum):
     """
     How much Android notification content may appear on a secure lock screen.
 
@@ -76,7 +76,7 @@ class Visibility(Enum):
     """Hide the notification entirely on a secure lock screen."""
 
 
-class InterruptionLevel(Enum):
+class DarwinInterruptionLevel(Enum):
     """
     Presentation urgency on iOS 15+ and macOS 12+.
 
@@ -226,7 +226,7 @@ class AndroidGroup:
     summary: bool = False
     """Whether this notification summarizes the other notifications in the group."""
 
-    alert_behavior: GroupAlertBehavior = GroupAlertBehavior.ALL
+    alert_behavior: AndroidGroupAlertBehavior = AndroidGroupAlertBehavior.ALL
     """
     Which members of the group may sound or vibrate.
 
@@ -259,9 +259,9 @@ class AndroidOptions:
         lights, and importance apply to the individual notification.
     """
 
-    style: Style | None = None
+    style: AndroidStyle | None = None
     """
-    Expanded layout of the notification; see :class:`~flet_notifications.Style`.
+    Expanded layout of the notification; see :class:`~flet_notifications.AndroidStyle`.
 
     `None` uses the standard layout.
     """
@@ -298,7 +298,7 @@ class AndroidOptions:
         solid block.
     """
 
-    priority: Priority | None = None
+    priority: AndroidPriority | None = None
     """
     Notification priority.
 
@@ -415,11 +415,12 @@ class AndroidOptions:
         Ignored when the launcher does not support this feature.
     """
 
-    visibility: Visibility | None = None
+    visibility: AndroidVisibility | None = None
     """
     How much content may appear on a secure lock screen.
 
-    `None` leaves the choice to Android. See :class:`flet_notifications.Visibility`.
+    `None` leaves the choice to Android. See
+    :class:`flet_notifications.AndroidVisibility`.
     """
 
     timeout_after: ft.DurationValue | None = None
@@ -555,13 +556,13 @@ class DarwinOptions:
     Notifications with the same identifier belong to the same thread.
     """
 
-    interruption_level: InterruptionLevel | None = None
+    interruption_level: DarwinInterruptionLevel | None = None
     """
     Delivery urgency on iOS 15+ and macOS 12+.
 
     Note:
-        See :class:`flet_notifications.InterruptionLevel` for presentation behavior and
-        capability requirements. `None` leaves the level to the system.
+        See :class:`flet_notifications.DarwinInterruptionLevel` for presentation
+        behavior and capability requirements. `None` leaves the level to the system.
     """
 
     critical_sound_volume: float | None = None
@@ -571,7 +572,7 @@ class DarwinOptions:
     Note:
         Used only for critical alerts on iOS 12+ and macOS 10.14+. Requires the
         critical-alert entitlement and authorization; see
-        :attr:`flet_notifications.InterruptionLevel.CRITICAL`.
+        :attr:`flet_notifications.DarwinInterruptionLevel.CRITICAL`.
     """
 
     attachments: list[str] | None = None
@@ -877,7 +878,9 @@ class NotificationOptions:
 
         options = ftn.NotificationOptions(
             android=ftn.AndroidOptions(silent=True),
-            iOS=ftn.DarwinOptions(interruption_level=ftn.InterruptionLevel.PASSIVE),
+            iOS=ftn.DarwinOptions(
+                interruption_level=ftn.DarwinInterruptionLevel.PASSIVE
+            ),
         )
         await notifications.show(id=1, title="Background update", options=options)
         ```

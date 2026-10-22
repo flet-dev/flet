@@ -12,22 +12,22 @@ import datetime
 
 import flet as ft
 from flet_notifications import (
+    AndroidBigTextStyle,
     AndroidGroup,
+    AndroidInboxStyle,
     AndroidNotificationCategory,
     AndroidOptions,
     AndroidProgress,
     AndroidScheduleMode,
-    BigTextStyle,
+    AndroidVisibility,
     DarwinOptions,
     DateTimeComponents,
-    InboxStyle,
     LocalNotifications,
     NotificationAction,
     NotificationActionInput,
     NotificationChannel,
     NotificationOptions,
     RepeatInterval,
-    Visibility,
 )
 
 # Activity terminal — house pattern (Courier New, #A6E22E on #0D0D0D).
@@ -195,7 +195,7 @@ def main(page: ft.Page):
                 body="Tap to expand.",
                 options=NotificationOptions(
                     android=AndroidOptions(
-                        style=BigTextStyle(
+                        style=AndroidBigTextStyle(
                             big_text="The quick brown fox jumps over the lazy dog. " * 3
                         )
                     )
@@ -212,7 +212,7 @@ def main(page: ft.Page):
                 body="3 unread.",
                 options=NotificationOptions(
                     android=AndroidOptions(
-                        style=InboxStyle(lines=["First", "Second", "Third"])
+                        style=AndroidInboxStyle(lines=["First", "Second", "Third"])
                     )
                 ),
             ),
@@ -257,7 +257,7 @@ def main(page: ft.Page):
                     android=AndroidOptions(
                         silent=True,
                         category=AndroidNotificationCategory.ALARM,
-                        visibility=Visibility.PUBLIC,
+                        visibility=AndroidVisibility.PUBLIC,
                     ),
                     iOS=DarwinOptions(interruption_level="passive"),
                 ),

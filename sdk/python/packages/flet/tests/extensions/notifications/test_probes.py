@@ -4,7 +4,7 @@ import pytest
 
 from flet_notifications import (
     ActiveNotification,
-    Importance,
+    AndroidImportance,
     LaunchDetails,
     LocalNotifications,
     NotificationError,
@@ -106,7 +106,7 @@ async def test_get_channels_hydrates_native_collection():
             id="alerts",
             name="Alerts",
             group_id="updates",
-            importance=Importance.HIGH,
+            importance=AndroidImportance.HIGH,
             description="Important updates",
             bypass_dnd=True,
             play_sound=False,

@@ -3,13 +3,13 @@ from enum import Enum, IntFlag
 __all__ = [
     "AndroidAudioAttributesUsage",
     "AndroidForegroundServiceType",
+    "AndroidGroupAlertBehavior",
+    "AndroidImportance",
     "AndroidNotificationCategory",
     "AndroidNotificationFlag",
     "AndroidScheduleMode",
     "AndroidServiceStartType",
     "DateTimeComponents",
-    "GroupAlertBehavior",
-    "Importance",
     "LinuxNotificationCategory",
     "RepeatInterval",
     "WebNotificationDirection",
@@ -260,14 +260,14 @@ class AndroidScheduleMode(Enum):
     """
 
 
-class Importance(Enum):
+class AndroidImportance(Enum):
     """
     Importance of an Android notification channel on Android 8.0 and later.
 
     Controls how prominently notifications interrupt the user. After a channel is
     created, its importance is controlled by the user in system settings; posting
     another notification does not override that choice. Use
-    :class:`~flet_notifications.Priority` for Android 7.1 and earlier.
+    :class:`~flet_notifications.AndroidPriority` for Android 7.1 and earlier.
     """
 
     UNSPECIFIED = "unspecified"
@@ -301,7 +301,7 @@ class Importance(Enum):
     """
 
 
-class GroupAlertBehavior(Enum):
+class AndroidGroupAlertBehavior(Enum):
     """
     Which Android notifications in a group may play sound or vibrate.
 

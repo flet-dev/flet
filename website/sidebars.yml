@@ -679,29 +679,33 @@ docs:
       - Notifications:
         - services/notifications/types/activenotification.md
         - services/notifications/types/androidaudioattributesusage.md
+        - services/notifications/types/androidbigpicturestyle.md
+        - services/notifications/types/androidbigtextstyle.md
         - services/notifications/types/androidforegroundservicetype.md
         - services/notifications/types/androidgroup.md
+        - services/notifications/types/androidgroupalertbehavior.md
         - services/notifications/types/androidicon.md
+        - services/notifications/types/androidimportance.md
+        - services/notifications/types/androidinboxstyle.md
+        - services/notifications/types/androidmessage.md
+        - services/notifications/types/androidmessagingstyle.md
         - services/notifications/types/androidnotificationcategory.md
         - services/notifications/types/androidnotificationflag.md
         - services/notifications/types/androidoptions.md
+        - services/notifications/types/androidperson.md
+        - services/notifications/types/androidpriority.md
         - services/notifications/types/androidprogress.md
         - services/notifications/types/androidschedulemode.md
         - services/notifications/types/androidservicestarttype.md
-        - services/notifications/types/bigpicturestyle.md
-        - services/notifications/types/bigtextstyle.md
+        - services/notifications/types/androidstyle.md
+        - services/notifications/types/androidvisibility.md
+        - services/notifications/types/darwininterruptionlevel.md
         - services/notifications/types/darwinoptions.md
         - services/notifications/types/datetimecomponents.md
-        - services/notifications/types/groupalertbehavior.md
-        - services/notifications/types/importance.md
-        - services/notifications/types/inboxstyle.md
-        - services/notifications/types/interruptionlevel.md
         - services/notifications/types/launchdetails.md
         - services/notifications/types/linuxnotificationcategory.md
         - services/notifications/types/linuxoptions.md
         - services/notifications/types/linuxurgency.md
-        - services/notifications/types/message.md
-        - services/notifications/types/messagingstyle.md
         - services/notifications/types/notificationaction.md
         - services/notifications/types/notificationactioninput.md
         - services/notifications/types/notificationchannel.md
@@ -710,12 +714,8 @@ docs:
         - services/notifications/types/notificationevent.md
         - services/notifications/types/notificationoptions.md
         - services/notifications/types/pendingnotification.md
-        - services/notifications/types/person.md
-        - services/notifications/types/priority.md
         - services/notifications/types/repeatinterval.md
         - services/notifications/types/responsetype.md
-        - services/notifications/types/style.md
-        - services/notifications/types/visibility.md
         - services/notifications/types/webnotificationdirection.md
         - services/notifications/types/weboptions.md
         - services/notifications/types/windowsnotificationduration.md

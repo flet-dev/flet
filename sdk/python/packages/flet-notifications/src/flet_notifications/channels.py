@@ -1,5 +1,5 @@
 import flet as ft
-from flet_notifications.types import AndroidAudioAttributesUsage, Importance
+from flet_notifications.types import AndroidAudioAttributesUsage, AndroidImportance
 
 __all__ = ["NotificationChannel"]
 
@@ -47,12 +47,13 @@ class NotificationChannel:
     This organizes channels in settings; it does not group notifications in the tray.
     """
 
-    importance: Importance = Importance.DEFAULT
+    importance: AndroidImportance = AndroidImportance.DEFAULT
     """
     Initial channel importance.
 
-    The user can change it after creation. See :class:`flet_notifications.Importance`
-    for the interruption behavior of each level.
+    The user can change it after creation. See
+    :class:`flet_notifications.AndroidImportance` for the interruption behavior of each
+    level.
     """
 
     bypass_dnd: bool = False

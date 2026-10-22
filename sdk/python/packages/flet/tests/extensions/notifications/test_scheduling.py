@@ -6,12 +6,12 @@ import pytest
 
 import flet as ft
 from flet_notifications import (
+    AndroidBigTextStyle,
     AndroidGroup,
+    AndroidGroupAlertBehavior,
     AndroidOptions,
     AndroidProgress,
-    BigTextStyle,
     DateTimeComponents,
-    GroupAlertBehavior,
     LocalNotifications,
     NotificationOptions,
     RepeatInterval,
@@ -148,12 +148,12 @@ async def test_schedule_forwards_android_style_progress_and_group():
         options=NotificationOptions(
             android=AndroidOptions(
                 channel="c1",
-                style=BigTextStyle(big_text="long"),
+                style=AndroidBigTextStyle(big_text="long"),
                 progress=AndroidProgress(value=25),
                 group=AndroidGroup(
                     key="grp",
                     summary=True,
-                    alert_behavior=GroupAlertBehavior.SUMMARY,
+                    alert_behavior=AndroidGroupAlertBehavior.SUMMARY,
                 ),
             )
         ),

@@ -5,25 +5,26 @@ from datetime import datetime
 import flet as ft
 
 __all__ = [
+    "AndroidBigPictureStyle",
+    "AndroidBigTextStyle",
     "AndroidIcon",
-    "BigPictureStyle",
-    "BigTextStyle",
-    "InboxStyle",
-    "Message",
-    "MessagingStyle",
-    "Person",
-    "Style",
+    "AndroidInboxStyle",
+    "AndroidMessage",
+    "AndroidMessagingStyle",
+    "AndroidPerson",
+    "AndroidStyle",
 ]
 
 
 @ft.value(kw_only=True)
-class Style(ABC):
+class AndroidStyle(ABC):
     """
     Abstract base for rich Android notification layouts.
 
-    Pass a concrete :class:`flet_notifications.BigTextStyle`,
-    :class:`flet_notifications.BigPictureStyle`, :class:`flet_notifications.InboxStyle`,
-    or :class:`flet_notifications.MessagingStyle` as
+    Pass a concrete :class:`flet_notifications.AndroidBigTextStyle`,
+    :class:`flet_notifications.AndroidBigPictureStyle`,
+    :class:`flet_notifications.AndroidInboxStyle`, or
+    :class:`flet_notifications.AndroidMessagingStyle` as
     :attr:`flet_notifications.AndroidOptions.style`.
 
     Note:
@@ -43,10 +44,10 @@ class AndroidIcon:
     """
     Image source for an Android person icon or big-picture bitmap.
 
-    Set exactly one source. :attr:`flet_notifications.Person.icon` supports all five
-    sources; :class:`flet_notifications.BigPictureStyle` supports only drawable
-    resources, file paths, and base64-encoded bytes. Paths and URIs refer to the Android
-    device, not the Python server.
+    Set exactly one source. :attr:`flet_notifications.AndroidPerson.icon` supports all
+    five sources; :class:`flet_notifications.AndroidBigPictureStyle` supports only
+    drawable resources, file paths, and base64-encoded bytes. Paths and URIs refer to
+    the Android device, not the Python server.
 
     Raises:
         ValueError: If zero or multiple sources are provided.
@@ -68,7 +69,7 @@ class AndroidIcon:
 
     Note:
         The app must have permission to read it. Not supported by
-        :class:`flet_notifications.BigPictureStyle`.
+        :class:`flet_notifications.AndroidBigPictureStyle`.
     """
 
     flutter_asset: str | None = None
@@ -77,7 +78,7 @@ class AndroidIcon:
 
     Note:
         The asset must be bundled in the app. Not supported by
-        :class:`flet_notifications.BigPictureStyle`.
+        :class:`flet_notifications.AndroidBigPictureStyle`.
     """
 
     data_base64: str | None = None
@@ -101,7 +102,7 @@ class AndroidIcon:
 
 
 @ft.value(kw_only=True)
-class BigTextStyle(Style):
+class AndroidBigTextStyle(AndroidStyle):
     """
     Expanded Android notification layout displaying a longer body.
 
@@ -128,7 +129,7 @@ class BigTextStyle(Style):
 
 
 @ft.value(kw_only=True)
-class BigPictureStyle(Style):
+class AndroidBigPictureStyle(AndroidStyle):
     """
     Expanded Android notification layout displaying a large image.
 
@@ -158,7 +159,7 @@ class BigPictureStyle(Style):
 
 
 @ft.value(kw_only=True)
-class InboxStyle(Style):
+class AndroidInboxStyle(AndroidStyle):
     """
     Expanded Android notification layout showing a list of text lines.
 
@@ -181,11 +182,11 @@ class InboxStyle(Style):
     def __post_init__(self) -> None:
         self._type = "inbox"
         if not self.lines:
-            raise ValueError("InboxStyle requires at least one line")
+            raise ValueError("AndroidInboxStyle requires at least one line")
 
 
 @ft.value(kw_only=True)
-class Person:
+class AndroidPerson:
     """
     Participant identity used by an Android messaging-style notification.
 
@@ -220,9 +221,9 @@ class Person:
 
 
 @ft.value(kw_only=True)
-class Message:
+class AndroidMessage:
     """
-    Message displayed in an Android :class:`flet_notifications.MessagingStyle` \
+    Message displayed in an Android :class:`flet_notifications.AndroidMessagingStyle` \
     conversation.
     """
 
@@ -237,19 +238,19 @@ class Message:
     the Python host's local timezone.
     """
 
-    person: Person
+    person: AndroidPerson
     """
     Participant who sent this message.
 
     Note:
         For an outgoing message, pass the same participant used as
-        :attr:`flet_notifications.MessagingStyle.person`; this API requires an explicit
-        person.
+        :attr:`flet_notifications.AndroidMessagingStyle.person`; this API requires an
+        explicit person.
     """
 
 
 @ft.value(kw_only=True)
-class MessagingStyle(Style):
+class AndroidMessagingStyle(AndroidStyle):
     """
     Android notification layout for a conversation and its recent messages.
 
@@ -257,10 +258,10 @@ class MessagingStyle(Style):
     :attr:`flet_notifications.DarwinOptions.thread_identifier` for grouping.
     """
 
-    person: Person
+    person: AndroidPerson
     """Identity of the local user receiving or participating in the conversation."""
 
-    messages: list[Message] = field(default_factory=list)
+    messages: list[AndroidMessage] = field(default_factory=list)
     """
     Messages to show in the conversation.
 
