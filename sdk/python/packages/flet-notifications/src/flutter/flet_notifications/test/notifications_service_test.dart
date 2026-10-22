@@ -19,6 +19,7 @@ class _RecordingAndroid extends fln.AndroidFlutterLocalNotificationsPlugin {
   final List<Map<String, Object?>> shown = [];
   final List<fln.AndroidNotificationChannel> channelsCreated = [];
   final List<Map<String, Object?>> periodicCalls = [];
+  final List<Map<String, Object?>> scheduledCalls = [];
   List<fln.PendingNotificationRequest> pending = [];
   List<fln.ActiveNotification> active = [];
   List<fln.AndroidNotificationChannel>? queriedChannels = [];
@@ -192,8 +193,18 @@ class _RecordingAndroid extends fln.AndroidFlutterLocalNotificationsPlugin {
     fln.DateTimeComponents? matchDateTimeComponents,
     fln.AndroidNotificationDetails? notificationDetails,
     fln.AndroidScheduleMode scheduleMode = fln.AndroidScheduleMode.exact,
-  }) async =>
-      _checkOperation();
+  }) async {
+    _checkOperation();
+    scheduledCalls.add({
+      "id": id,
+      "title": title,
+      "body": body,
+      "payload": payload,
+      "scheduledDate": scheduledDate,
+      "scheduleMode": scheduleMode,
+      "matchComponents": matchDateTimeComponents,
+    });
+  }
 
   @override
   Future<void> cancel({required int id, String? tag}) async =>
@@ -1284,6 +1295,81 @@ void main() {
     expect(updated.map((c) => c.actions.single.identifier),
         ["open1", "open2", "reply"]);
     expect(updated.last.actions.single.buttonTitle, "Message");
+  });
+
+  test("invalid scheduling arguments leave Apple categories unchanged",
+      () async {
+    debugDefaultTargetPlatformOverride = TargetPlatform.macOS;
+    addTearDown(() => debugDefaultTargetPlatformOverride = null);
+    final macos = _FakeMacOsPlugin();
+    fln.FlutterLocalNotificationsPlatform.instance = macos;
+    final service = _makeService();
+    expect(await service.invokeMethod("initialize"), "ok");
+    final initializations = macos.initializations.length;
+    final cases = <(String, Map<String, Object?>, String)>[
+      ("schedule", {"schedule_mode": 42}, "schedule_failed"),
+      ("schedule", {"match_components": 42}, "schedule_failed"),
+      ("schedule", {"payload": 42}, "schedule_failed"),
+      ("periodically_show", {"repeat_interval": 59999}, "invalid_option"),
+      ("periodically_show", {"repeat_interval": "unknown"}, "invalid_option"),
+      ("periodically_show", {"repeat_interval": null}, "invalid_option"),
+      ("periodically_show", {"schedule_mode": 42}, "schedule_failed"),
+      ("periodically_show", {"title": 42}, "schedule_failed"),
+    ];
+    for (final (method, invalid, code) in cases) {
+      expect(
+          await service.invokeMethod(method, {
+            "id": 1,
+            "when": {"iso": "2099-01-01T12:00:00"},
+            "repeat_interval": "hourly",
+            "actions": [
+              {"id": "stale", "title": "Stale"}
+            ],
+            ...invalid,
+          }),
+          startsWith("error:$code:"));
+      expect(macos.initializations, hasLength(initializations),
+          reason: "$method $invalid");
+    }
+    expect(
+        await service.invokeMethod("show", {
+          "id": 2,
+          "actions": [
+            {"id": "valid", "title": "Valid"}
+          ],
+        }),
+        "ok");
+    final categories = macos.initializations.last.notificationCategories;
+    expect(categories, hasLength(1));
+    expect(categories.single.actions.single.identifier, "valid");
+  });
+
+  test("schedule retains its native arguments after validation", () async {
+    final service = _makeService();
+    expect(
+        await service.invokeMethod("schedule", {
+          "id": 4,
+          "title": "Reminder",
+          "body": "Meeting",
+          "payload": "meeting:4",
+          "when": {
+            "iso": "2099-06-01T14:00:00+02:00",
+            "utc_offset_seconds": 7200,
+            "time_zone": "UTC"
+          },
+          "schedule_mode": "inexactAllowWhileIdle",
+          "match_components": "dayOfWeekAndTime",
+        }),
+        "ok");
+    final call = plugin.scheduledCalls.single;
+    expect(call["id"], 4);
+    expect(call["title"], "Reminder");
+    expect(call["body"], "Meeting");
+    expect(call["payload"], "meeting:4");
+    expect((call["scheduledDate"] as tz.TZDateTime).toUtc(),
+        DateTime.utc(2099, 6, 1, 12));
+    expect(call["scheduleMode"], fln.AndroidScheduleMode.inexactAllowWhileIdle);
+    expect(call["matchComponents"], fln.DateTimeComponents.dayOfWeekAndTime);
   });
 
   test("invalid styles and details leave Apple action categories unchanged",

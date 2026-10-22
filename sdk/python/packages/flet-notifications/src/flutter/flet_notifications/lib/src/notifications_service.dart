@@ -370,26 +370,30 @@ class LocalNotificationsService extends FletService {
 
   Future<String> _schedule(dynamic args) async {
     final map = args as Map;
+    final id = parseInt(map["id"])!;
+    final title = map["title"] as String?;
+    final body = map["body"] as String?;
+    final payload = map["payload"] as String? ?? "";
     final actions = parseActions(map["actions"]);
     final scheduledDate = parseWhen(map, tz.local);
+    final scheduleMode = parseAndroidScheduleMode(
+        map["schedule_mode"] as String?,
+        fln.AndroidScheduleMode.exactAllowWhileIdle)!;
+    final matchComponents =
+        parseDateTimeComponents(map["match_components"] as String?);
     await _plugin!.zonedSchedule(
-      id: parseInt(map["id"])!,
-      title: map["title"] as String?,
-      body: map["body"] as String?,
+      id: id,
+      title: title,
+      body: body,
       scheduledDate: scheduledDate,
+      androidScheduleMode: scheduleMode,
+      payload: payload,
+      matchDateTimeComponents: matchComponents,
       notificationDetails: await _buildNotificationDetails(
-        id: parseInt(map["id"])!,
+        id: id,
         actions: actions,
         style: map["style"],
         details: map,
-      ),
-      androidScheduleMode: parseAndroidScheduleMode(
-        map["schedule_mode"] as String?,
-        fln.AndroidScheduleMode.exactAllowWhileIdle,
-      )!,
-      payload: map["payload"] as String? ?? "",
-      matchDateTimeComponents: parseDateTimeComponents(
-        map["match_components"] as String?,
       ),
     );
     return "ok";
@@ -398,27 +402,33 @@ class LocalNotificationsService extends FletService {
   Future<String> _periodicallyShow(dynamic args) async {
     final map = args as Map;
     final id = parseInt(map["id"])!;
+    final title = map["title"] as String?;
+    final body = map["body"] as String?;
+    final payload = map["payload"] as String? ?? "";
     final actions = parseActions(map["actions"]);
+    final scheduleMode = parseAndroidScheduleMode(
+        map["schedule_mode"] as String?,
+        fln.AndroidScheduleMode.exactAllowWhileIdle)!;
+    final interval = map["repeat_interval"];
+    final repeatInterval =
+        interval is String ? parseRepeatInterval(interval) : null;
+    final duration = interval is! String ? parseDuration(interval) : null;
+    if (interval is String && repeatInterval == null) {
+      throw NotificationException.invalidOption(
+          "Unknown repeat_interval: $interval");
+    }
+    if (interval is! String &&
+        (duration == null || duration < const Duration(minutes: 1))) {
+      throw const NotificationException.invalidOption(
+          "repeat_interval must be at least one minute");
+    }
     final notificationDetails = await _buildNotificationDetails(
       id: id,
       actions: actions,
       style: map["style"],
       details: map,
     );
-    final scheduleMode = parseAndroidScheduleMode(
-        map["schedule_mode"] as String?,
-        fln.AndroidScheduleMode.exactAllowWhileIdle)!;
-    final title = map["title"] as String?;
-    final body = map["body"] as String?;
-    final payload = map["payload"] as String? ?? "";
-    final interval = map["repeat_interval"];
-    if (interval is! String) {
-      final duration = parseDuration(interval);
-      if (duration == null || duration < const Duration(minutes: 1)) {
-        throw const NotificationException.invalidOption(
-          "repeat_interval must be at least one minute",
-        );
-      }
+    if (duration != null) {
       await _plugin!.periodicallyShowWithDuration(
         id: id,
         title: title,
@@ -428,23 +438,17 @@ class LocalNotificationsService extends FletService {
         repeatDurationInterval: duration,
         androidScheduleMode: scheduleMode,
       );
-      return "ok";
-    }
-    final repeatInterval = parseRepeatInterval(interval);
-    if (repeatInterval == null) {
-      throw NotificationException.invalidOption(
-        "Unknown repeat_interval: $interval",
+    } else {
+      await _plugin!.periodicallyShow(
+        id: id,
+        title: title,
+        body: body,
+        payload: payload,
+        notificationDetails: notificationDetails,
+        repeatInterval: repeatInterval!,
+        androidScheduleMode: scheduleMode,
       );
     }
-    await _plugin!.periodicallyShow(
-      id: id,
-      title: title,
-      body: body,
-      payload: payload,
-      notificationDetails: notificationDetails,
-      repeatInterval: repeatInterval,
-      androidScheduleMode: scheduleMode,
-    );
     return "ok";
   }
 
