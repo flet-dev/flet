@@ -60,10 +60,11 @@ class LocalNotificationsService extends FletService {
     return _initFuture = _doInitialize().whenComplete(() => _initFuture = null);
   }
 
-  Future<void> _initializeBackend() async {
+  Future<void> _initializeBackend({bool requestPermissions = true}) async {
     try {
       final result = await _plugin!.initialize(
-        settings: _buildInitializationSettings(),
+        settings: _buildInitializationSettings(
+            requestPermissions: requestPermissions),
         onDidReceiveNotificationResponse: _handleResponse,
         onDidReceiveBackgroundNotificationResponse: notificationTapBackground,
       );
@@ -105,17 +106,18 @@ class LocalNotificationsService extends FletService {
     }
   }
 
-  fln.InitializationSettings _buildInitializationSettings() {
+  fln.InitializationSettings _buildInitializationSettings(
+      {bool requestPermissions = true}) {
     final defaultIcon =
         control.getString("default_icon", "@mipmap/ic_launcher")!;
     final darwin = fln.DarwinInitializationSettings(
-      requestAlertPermission:
+      requestAlertPermission: requestPermissions &&
           control.getBool("request_alert_permission", true)!,
-      requestSoundPermission:
+      requestSoundPermission: requestPermissions &&
           control.getBool("request_sound_permission", true)!,
-      requestBadgePermission:
+      requestBadgePermission: requestPermissions &&
           control.getBool("request_badge_permission", true)!,
-      requestCriticalPermission:
+      requestCriticalPermission: requestPermissions &&
           control.getBool("request_critical_permission", false)!,
       notificationCategories:
           _darwinCategories.values.expand((categories) => categories).toList(),
@@ -494,15 +496,9 @@ class LocalNotificationsService extends FletService {
     return notificationDetails;
   }
 
-  /// Registers the action buttons as a Darwin notification category.
+  /// Replaces Apple's category set with all registered notification actions.
   ///
-  /// iOS/macOS require categories to be registered through
-  /// `InitializationSettings.notificationCategories` before a notification
-  /// can reference them, and `setNotificationCategories` replaces the whole
-  /// set — so each notification with actions gets its own category,
-  /// registered by re-initializing the plugin. iOS `initialize` is
-  /// re-entrant (it re-applies permissions and categories), which makes this
-  /// safe. Without this, action buttons silently never appear on iOS.
+  /// Category updates use initialization without requesting authorization.
   Future<void> _registerDarwinCategories(
     int id,
     List<ParsedAction> actions,
@@ -530,16 +526,13 @@ class LocalNotificationsService extends FletService {
       );
     }).toList();
 
-    // setNotificationCategories REPLACES the set, so every category created
-    // so far is re-applied together; otherwise notification B's actions would
-    // clobber notification A's.
     _darwinCategories[id] = [
       fln.DarwinNotificationCategory(
         "$darwinNotificationCategoryPrefix$id",
         actions: categoryActions,
       ),
     ];
-    await _initializeBackend();
+    await _initializeBackend(requestPermissions: false);
   }
 
   // ── Permissions ─────────────────────────────────────────────────────

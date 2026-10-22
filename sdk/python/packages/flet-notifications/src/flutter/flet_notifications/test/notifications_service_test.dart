@@ -257,6 +257,7 @@ class _FakeMacOsPlugin extends fln.MacOSFlutterLocalNotificationsPlugin {
   final List<fln.DarwinInitializationSettings> initializations = [];
   bool? initializationResult = true;
   bool failInitialization = false;
+  final List<Map<String, bool>> permissionRequests = [];
 
   @override
   Future<bool?> initialize({
@@ -267,6 +268,20 @@ class _FakeMacOsPlugin extends fln.MacOSFlutterLocalNotificationsPlugin {
     initializations.add(settings);
     if (failInitialization) throw StateError("initialization failed");
     return initializationResult;
+  }
+
+  @override
+  Future<bool?> requestPermissions({
+    bool sound = false,
+    bool alert = false,
+    bool badge = false,
+    bool provisional = false,
+    bool critical = false,
+    bool providesAppNotificationSettings = false,
+  }) async {
+    permissionRequests.add(
+        {"sound": sound, "alert": alert, "badge": badge, "critical": critical});
+    return true;
   }
 
   @override
@@ -1287,6 +1302,53 @@ void main() {
       expect(details.additionalFlags!.toList(), [mask]);
     });
   }
+
+  test("Apple category refreshes do not repeat authorization requests",
+      () async {
+    debugDefaultTargetPlatformOverride = TargetPlatform.macOS;
+    addTearDown(() => debugDefaultTargetPlatformOverride = null);
+    final macos = _FakeMacOsPlugin();
+    fln.FlutterLocalNotificationsPlatform.instance = macos;
+    final service = _makeService(properties: {
+      "request_alert_permission": false,
+      "request_sound_permission": true,
+      "request_badge_permission": false,
+      "request_critical_permission": true,
+    });
+    List<bool> flags(fln.DarwinInitializationSettings settings) => [
+          settings.requestAlertPermission,
+          settings.requestSoundPermission,
+          settings.requestBadgePermission,
+          settings.requestCriticalPermission,
+        ];
+    expect(await service.invokeMethod("initialize"), "ok");
+    expect(flags(macos.initializations.single), [false, true, false, true]);
+    // The native Apple implementation returns false when no permission is requested.
+    macos.initializationResult = false;
+    for (final id in [1, 2]) {
+      expect(
+          await service.invokeMethod("show", {
+            "id": id,
+            "actions": [
+              {"id": "open$id", "title": "Open"}
+            ],
+          }),
+          "ok");
+      expect(flags(macos.initializations.last), everyElement(isFalse));
+    }
+    final categories = macos.initializations.last.notificationCategories;
+    expect(categories, hasLength(2));
+    expect(await service.invokeMethod("request_permissions"), isTrue);
+    expect(macos.permissionRequests.single, {
+      "alert": false,
+      "sound": true,
+      "badge": false,
+      "critical": true,
+    });
+    expect(await service.invokeMethod("initialize"), "ok");
+    expect(flags(macos.initializations.last), [false, true, false, true]);
+    expect(macos.initializations.last.notificationCategories, categories);
+  });
 
   test("reinitialization preserves all registered Apple action categories",
       () async {
