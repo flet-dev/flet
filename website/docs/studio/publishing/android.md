@@ -41,6 +41,41 @@ An APK installs over the copy on the phone when it's signed with the same key an
 its **build number** isn't lower. Studio's build numbers always go up, so a newer run
 installs over an older one.
 
+### Share an APK outside Google Play
+
+Android devices are starting to require that apps come from **registered
+developers** — including apps installed from a website, an email or another
+store. Google enforces it from September 30, 2026 in Brazil, Indonesia, Singapore
+and Thailand, and on certified Android devices everywhere from 2027. An APK from a
+developer who isn't registered can still be installed, but only through Android's
+extra "advanced" install steps.
+
+Apps you publish on Google Play are registered automatically. To share an APK
+outside Google Play, register it with Google:
+
+1. **Sign up and verify your identity** in the
+   [Android Developer Console](https://android.google.com/developerconsole) — or,
+   if the app is also on Google Play, in Play Console. Individuals need a photo ID
+   and proof of address; organizations also a D-U-N-S number and a verified
+   website.
+2. **Register the app's package name and its signing key.** Studio shows both on
+   **Create an APK**, with copy buttons: the package name as Android builds get it,
+   and your signing key's SHA-256 fingerprint (also in **Settings › Signing keys ›
+   ⋯ › Copy SHA-256 fingerprint**).
+3. If the package name was already used by an app on devices, Google may ask you to
+   **prove you hold the key**: an APK signed with it that contains a token Google
+   gives you. Studio can't make that file yet — tell us if you need it.
+
+Register an APK signed with **your own key**: a test-signed APK (made without a
+key) can't be registered, and once registered, keep using the same key — Google
+ties the app to it.
+
+To share the app with a few testers only, **limited distribution** needs no
+identity verification: up to 20 devices, through invitations.
+
+See Google's [developer verification guides](https://developer.android.com/developer-verification/guides)
+for the details.
+
 ## Create an app bundle (.aab)
 
 An app bundle is what Google Play takes: Google builds the APKs for each device
