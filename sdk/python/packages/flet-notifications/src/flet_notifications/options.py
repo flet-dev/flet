@@ -2,10 +2,12 @@ from datetime import datetime
 from enum import Enum
 
 import flet as ft
+from flet_notifications.styles import Style
 from flet_notifications.types import (
     AndroidAudioAttributesUsage,
     AndroidNotificationCategory,
     AndroidNotificationFlag,
+    GroupAlertBehavior,
     Importance,
     LinuxNotificationCategory,
     WebNotificationDirection,
@@ -14,7 +16,9 @@ from flet_notifications.types import (
 )
 
 __all__ = [
+    "AndroidGroup",
     "AndroidOptions",
+    "AndroidProgress",
     "DarwinOptions",
     "InterruptionLevel",
     "LinuxOptions",
@@ -182,6 +186,56 @@ class WindowsScenario(Enum):
 
 
 @ft.value(kw_only=True)
+class AndroidProgress:
+    """
+    Progress bar shown in an Android notification.
+
+    Set it as :attr:`flet_notifications.AndroidOptions.progress`. To advance the bar,
+    show the notification again with the same ID and an updated :attr:`value`;
+    combine with :attr:`flet_notifications.AndroidOptions.only_alert_once` to avoid
+    alerting on each update.
+    """
+
+    value: int = 0
+    """Current progress, between `0` and :attr:`max`."""
+
+    max: int = 100
+    """Value at which the progress bar is full."""
+
+    indeterminate: bool = False
+    """
+    Whether to show ongoing activity without a known completion amount.
+
+    When `True`, :attr:`value` and :attr:`max` are ignored.
+    """
+
+
+@ft.value(kw_only=True)
+class AndroidGroup:
+    """
+    Group of related notifications bundled together in the Android notification tray.
+
+    Set it as :attr:`flet_notifications.AndroidOptions.group`. Notifications sharing a
+    :attr:`key` are bundled; one of them can act as the group's summary. This is
+    distinct from a notification-channel group and from Apple threads (see
+    :attr:`flet_notifications.DarwinOptions.thread_identifier`).
+    """
+
+    key: str
+    """Identifier shared by every notification in the group."""
+
+    summary: bool = False
+    """Whether this notification summarizes the other notifications in the group."""
+
+    alert_behavior: GroupAlertBehavior = GroupAlertBehavior.ALL
+    """
+    Which members of the group may sound or vibrate.
+
+    Apply the same behavior to the group's children and summary for consistent results.
+    """
+
+
+@ft.value(kw_only=True)
 class AndroidOptions:
     """
     Android-specific notification and channel settings.
@@ -195,9 +249,32 @@ class AndroidOptions:
 
     channel_id: str | None = None
     """
-    Channel ID to use when the method's `channel_id` is omitted.
+    ID of the channel the notification is posted to.
 
-    The bridge creates a missing channel with the name `"Notifications"`.
+    The bridge creates a missing channel with the name `"Notifications"`. Pre-create a
+    :class:`~flet_notifications.NotificationChannel` to customize its name or group.
+    `None` uses the extension's default channel.
+    """
+
+    style: Style | None = None
+    """
+    Expanded layout of the notification; see :class:`~flet_notifications.Style`.
+
+    `None` uses the standard layout.
+    """
+
+    progress: AndroidProgress | None = None
+    """
+    Progress bar shown in the notification.
+
+    `None` shows no progress bar.
+    """
+
+    group: AndroidGroup | None = None
+    """
+    Group this notification belongs to.
+
+    `None` leaves the notification ungrouped.
     """
 
     channel_description: str | None = None
@@ -891,8 +968,8 @@ class NotificationOptions:
     Pass this object to :meth:`flet_notifications.LocalNotifications.show`,
     :meth:`flet_notifications.LocalNotifications.schedule`, or
     :meth:`flet_notifications.LocalNotifications.periodically_show`. Only the current
-    platform's entry is used. Unset entries use the bridge defaults. Common arguments
-    such as title, actions, style, progress, and grouping are passed directly to those
+    platform's entry is used. Unset entries use the bridge defaults. Cross-platform
+    content such as title, body, payload, and actions is passed directly to those
     methods.
 
     Example:

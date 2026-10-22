@@ -12,8 +12,10 @@ import datetime
 
 import flet as ft
 from flet_notifications import (
+    AndroidGroup,
     AndroidNotificationCategory,
     AndroidOptions,
+    AndroidProgress,
     AndroidScheduleMode,
     BigTextStyle,
     DarwinOptions,
@@ -191,8 +193,12 @@ def main(page: ft.Page):
                 id=5,
                 title="Long read",
                 body="Tap to expand.",
-                style=BigTextStyle(
-                    big_text="The quick brown fox jumps over the lazy dog. " * 3
+                options=NotificationOptions(
+                    android=AndroidOptions(
+                        style=BigTextStyle(
+                            big_text="The quick brown fox jumps over the lazy dog. " * 3
+                        )
+                    )
                 ),
             ),
             "show",
@@ -204,7 +210,11 @@ def main(page: ft.Page):
                 id=6,
                 title="Inbox",
                 body="3 unread.",
-                style=InboxStyle(lines=["First", "Second", "Third"]),
+                options=NotificationOptions(
+                    android=AndroidOptions(
+                        style=InboxStyle(lines=["First", "Second", "Third"])
+                    )
+                ),
             ),
             "show",
         )
@@ -214,10 +224,10 @@ def main(page: ft.Page):
             notifications.show(
                 id=7,
                 title="Downloading",
-                body="0%",
-                show_progress=True,
-                max_progress=4,
-                progress=1,
+                body="25%",
+                options=NotificationOptions(
+                    android=AndroidOptions(progress=AndroidProgress(value=25))
+                ),
             ),
             "show",
         )
@@ -228,8 +238,11 @@ def main(page: ft.Page):
                 id=8,
                 title="Summary",
                 body="Group summary.",
-                group_key="demo_group",
-                set_as_group_summary=True,
+                options=NotificationOptions(
+                    android=AndroidOptions(
+                        group=AndroidGroup(key="demo_group", summary=True)
+                    )
+                ),
             ),
             "show",
         )

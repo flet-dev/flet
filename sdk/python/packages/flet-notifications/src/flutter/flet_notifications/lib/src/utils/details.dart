@@ -8,6 +8,7 @@ import 'package:flutter_local_notifications/flutter_local_notifications.dart'
 import 'actions.dart';
 import 'errors.dart';
 import 'parsers.dart';
+import 'styles.dart';
 
 const String _channelId = "flet_notifications";
 const String _channelName = "Notifications";
@@ -19,7 +20,6 @@ const String darwinNotificationCategoryPrefix = "flet_notifications_actions_";
 fln.NotificationDetails parseNotificationDetails({
   required int id,
   required List<ParsedAction> actions,
-  fln.StyleInformation? style,
   Map? details,
 }) {
   try {
@@ -75,7 +75,6 @@ fln.NotificationDetails parseNotificationDetails({
         .toList();
 
     // Rich details forwarded from the invoke payload (all optional).
-    final d = details ?? const {};
     final androidOptions = _platformOptions(details, "android") ?? const {};
     final linuxOptions = _platformOptions(details, "linux") ?? const {};
     final webOptions = _platformOptions(details, "web") ?? const {};
@@ -83,17 +82,12 @@ fln.NotificationDetails parseNotificationDetails({
     final windowsAudio = windowsOptions["audio"] as String?;
     final additionalFlags = parseInt(androidOptions["additional_flags"]);
     final linuxTimeout = parseDuration(linuxOptions["timeout"]);
-    final channelId = (d["channel_id"] as String?) ??
-        (androidOptions["channel_id"] as String?);
-    final groupKey = d["group_key"] as String?;
-    final groupAlert = parseGroupAlertBehavior(
-      d["group_alert_behavior"] as String?,
-      fln.GroupAlertBehavior.all,
-    )!;
+    final progress = androidOptions["progress"] as Map?;
+    final group = androidOptions["group"] as Map?;
 
     return fln.NotificationDetails(
       android: fln.AndroidNotificationDetails(
-        channelId ?? _channelId,
+        androidOptions["channel_id"] as String? ?? _channelId,
         _channelName,
         channelDescription: androidOptions["channel_description"] as String?,
         icon: androidOptions["icon"] as String?,
@@ -106,7 +100,7 @@ fln.NotificationDetails parseNotificationDetails({
             ? null
             : Int32List.fromList([additionalFlags]),
         actions: androidActions,
-        styleInformation: style,
+        styleInformation: parseStyle(androidOptions["style"]),
         importance: parseNotificationImportance(
             androidOptions["importance"] as String?,
             fln.Importance.defaultImportance)!,
@@ -118,9 +112,12 @@ fln.NotificationDetails parseNotificationDetails({
         enableVibration: parseBool(androidOptions["enable_vibration"], true)!,
         vibrationPattern: parseNotificationVibrationPattern(
             androidOptions["vibration_pattern"]),
-        groupKey: groupKey,
-        setAsGroupSummary: parseBool(d["set_as_group_summary"], false)!,
-        groupAlertBehavior: groupAlert,
+        groupKey: group?["key"] as String?,
+        setAsGroupSummary: parseBool(group?["summary"], false)!,
+        groupAlertBehavior: parseGroupAlertBehavior(
+          group?["alert_behavior"] as String?,
+          fln.GroupAlertBehavior.all,
+        )!,
         autoCancel: parseBool(androidOptions["auto_cancel"], true)!,
         ongoing: parseBool(androidOptions["ongoing"], false)!,
         silent: parseBool(androidOptions["silent"], false)!,
@@ -138,10 +135,10 @@ fln.NotificationDetails parseNotificationDetails({
             parseBool(androidOptions["channel_show_badge"], true)!,
         channelBypassDnd:
             parseBool(androidOptions["channel_bypass_dnd"], false)!,
-        showProgress: parseBool(d["show_progress"], false)!,
-        maxProgress: parseInt(d["max_progress"], 0)!,
-        progress: parseInt(d["progress"], 0)!,
-        indeterminate: parseBool(d["indeterminate"], false)!,
+        showProgress: progress != null,
+        maxProgress: parseInt(progress?["max"], 100)!,
+        progress: parseInt(progress?["value"], 0)!,
+        indeterminate: parseBool(progress?["indeterminate"], false)!,
         enableLights: parseBool(androidOptions["enable_lights"], false)!,
         ledColor:
             parseColor((androidOptions["led_color"] as String?)?.trim(), null),

@@ -51,7 +51,10 @@ class ActiveNotification:
     """Android notification-channel ID, or an empty string when unavailable."""
 
     group_key: str = ""
-    """Android notification-group key, or an empty string when unavailable."""
+    """
+    Android :attr:`flet_notifications.AndroidGroup.key`, or an empty string when
+    unavailable.
+    """
 
     tag: str = ""
     """Android notification tag, or an empty string when unavailable."""

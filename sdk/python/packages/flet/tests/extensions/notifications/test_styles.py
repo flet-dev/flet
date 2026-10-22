@@ -6,16 +6,17 @@ import pytest
 
 from flet_notifications import (
     AndroidIcon,
+    AndroidOptions,
     BigPictureStyle,
     BigTextStyle,
     InboxStyle,
     LocalNotifications,
     Message,
     MessagingStyle,
+    NotificationOptions,
     Person,
     RepeatInterval,
 )
-from flet_notifications.styles import prepare_style
 
 from .helpers import encode_wire
 
@@ -30,29 +31,29 @@ from .helpers import encode_wire
     ],
 )
 def test_styles_encode_native_discriminators(style, kind):
-    payload = encode_wire(prepare_style(style))
+    """Each concrete style is encoded with the discriminator Dart switches on."""
+    payload = encode_wire(style)
     assert payload["_type"] == kind
     assert "type" not in payload
 
 
 @pytest.mark.parametrize(
-    "timestamp",
-    [
-        datetime(2030, 1, 1, 10, 0),
-        datetime(2030, 1, 1, 10, 0, tzinfo=timezone(timedelta(hours=5, minutes=30))),
-    ],
-)
-@pytest.mark.parametrize(
     "method_name", ["show", "schedule", "periodically_show", "start_foreground_service"]
 )
 @pytest.mark.asyncio
-async def test_message_timestamp_preserves_wall_clock_and_offset(
-    timestamp, method_name
-):
-    """Every notification method preserves current message times through transport."""
+async def test_message_timestamp_preserves_instant(method_name):
+    """Every notification method sends current message times as exact instants."""
     person = Person(name="Ada")
-    message = Message(text="Hi", timestamp=timestamp, person=person)
-    style = MessagingStyle(person=person, messages=[message])
+    message = Message(
+        text="Hi",
+        timestamp=datetime(
+            2030, 1, 1, 10, 0, tzinfo=timezone(timedelta(hours=5, minutes=30))
+        ),
+        person=person,
+    )
+    options = NotificationOptions(
+        android=AndroidOptions(style=MessagingStyle(person=person, messages=[message]))
+    )
     service = LocalNotifications()
     calls = []
 
@@ -61,14 +62,13 @@ async def test_message_timestamp_preserves_wall_clock_and_offset(
         return "ok"
 
     service._invoke_method = invoke
-    kwargs = {"id": 1, "style": style}
+    kwargs = {"id": 1, "options": options}
     if method_name == "schedule":
         kwargs["when"] = timedelta(seconds=30)
     elif method_name == "periodically_show":
         kwargs["repeat_interval"] = RepeatInterval.HOURLY
     for _ in range(2):
         await getattr(service, method_name)(**kwargs)
-        assert calls[-1]["style"]["messages"][0]["timestamp"] == (
-            message.timestamp.isoformat()
-        )
+        style = calls[-1]["options"]["android"]["style"]
+        assert style["messages"][0]["timestamp"] == message.timestamp
         message.timestamp += timedelta(minutes=1)

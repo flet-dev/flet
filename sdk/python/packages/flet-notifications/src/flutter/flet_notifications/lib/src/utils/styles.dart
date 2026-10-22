@@ -158,12 +158,12 @@ fln.Message parseMessage(Object? value) {
   }
   final text = value["text"];
   final timestamp = value["timestamp"];
-  if (text is! String || text.isEmpty || timestamp is! String) {
+  if (text is! String || text.isEmpty || timestamp is! DateTime) {
     throw const FormatException("message requires text and timestamp");
   }
   final person = parseAndroidPerson(value["person"]);
   if (person == null) {
     throw const FormatException("message requires a person");
   }
-  return fln.Message(text, DateTime.parse(timestamp), person);
+  return fln.Message(text, timestamp, person);
 }

@@ -13,10 +13,10 @@ class NotificationChannel:
 
     Create it with
     :meth:`flet_notifications.LocalNotifications.create_notification_channel`, then
-    pass its :attr:`id` as the notification's `channel_id`. Users manage channel
-    preferences independently in Android settings. Sound, vibration, lights, and
-    importance cannot be reset by posting another notification or recreating the same
-    channel; use a new ID for a different configuration.
+    pass its :attr:`id` as :attr:`flet_notifications.AndroidOptions.channel_id`.
+    Users manage channel preferences independently in Android settings. Sound,
+    vibration, lights, and importance cannot be reset by posting another notification
+    or recreating the same channel; use a new ID for a different configuration.
 
     Raises:
         ValueError: If :attr:`id` or :attr:`name` is empty.

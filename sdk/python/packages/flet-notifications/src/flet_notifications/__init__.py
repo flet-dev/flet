@@ -13,7 +13,9 @@ from flet_notifications.events import (
 )
 from flet_notifications.local_notifications import LocalNotifications
 from flet_notifications.options import (
+    AndroidGroup,
     AndroidOptions,
+    AndroidProgress,
     DarwinOptions,
     InterruptionLevel,
     LinuxOptions,
@@ -56,10 +58,12 @@ __all__ = [
     "ActiveNotification",
     "AndroidAudioAttributesUsage",
     "AndroidForegroundServiceType",
+    "AndroidGroup",
     "AndroidIcon",
     "AndroidNotificationCategory",
     "AndroidNotificationFlag",
     "AndroidOptions",
+    "AndroidProgress",
     "AndroidScheduleMode",
     "AndroidServiceStartType",
     "BigPictureStyle",

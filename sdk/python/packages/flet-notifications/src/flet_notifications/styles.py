@@ -23,8 +23,8 @@ class Style(ABC):
 
     Pass a concrete :class:`flet_notifications.BigTextStyle`,
     :class:`flet_notifications.BigPictureStyle`, :class:`flet_notifications.InboxStyle`,
-    or :class:`flet_notifications.MessagingStyle` to a notification method's `style`
-    argument.
+    or :class:`flet_notifications.MessagingStyle` as
+    :attr:`flet_notifications.AndroidOptions.style`.
 
     Note:
         Rich layouts are supported only on Android. Other platforms use their normal
@@ -233,9 +233,8 @@ class Message:
     """
     Time the message arrived.
 
-    Timezone-aware values preserve their instant. A naive datetime is interpreted in the
-    notification device's local timezone. Android ultimately stores the time as Unix
-    epoch milliseconds.
+    Timezone-aware values preserve their instant. A naive datetime is interpreted in
+    the Python host's local timezone.
     """
 
     person: Person
@@ -282,29 +281,3 @@ class MessagingStyle(Style):
 
     def __post_init__(self) -> None:
         self._type = "messaging"
-
-
-def prepare_style(style: Style | None) -> Style | dict | None:
-    """
-    Preserve message wall-clock timestamps while Flet encodes nested values.
-
-    The native parser expects ISO text. Flet's datetime codec normalizes naive datetimes
-    to the Python host's timezone, which would change their existing interpretation in
-    the notification device's local timezone.
-    """
-    if not isinstance(style, MessagingStyle):
-        return style
-    return {
-        "_type": style._type,
-        "person": style.person,
-        "messages": [
-            {
-                "text": message.text,
-                "timestamp": message.timestamp.isoformat(),
-                "person": message.person,
-            }
-            for message in style.messages
-        ],
-        "conversation_title": style.conversation_title,
-        "group_conversation": style.group_conversation,
-    }

@@ -20,13 +20,11 @@ from flet_notifications.scheduling import (
     build_periodic_args,
     build_schedule_args,
 )
-from flet_notifications.styles import Style, prepare_style
 from flet_notifications.types import (
     AndroidForegroundServiceType,
     AndroidScheduleMode,
     AndroidServiceStartType,
     DateTimeComponents,
-    GroupAlertBehavior,
     RepeatInterval,
 )
 
@@ -44,7 +42,8 @@ class LocalNotifications(ft.Service):
     the client; method calls wait for it to finish.
 
     Note:
-        Feature support varies: rich styles and progress are Android-specific; calendar
+        Feature support varies: rich styles, progress, and grouping are
+        Android-specific (see :class:`flet_notifications.AndroidOptions`); calendar
         and interval recurrence are available on Android, iOS, and macOS; Windows
         supports one-shot scheduling; Linux and Web do not provide scheduling through
         this extension. Platform permissions and native configuration still apply. See
@@ -186,36 +185,6 @@ class LocalNotifications(ft.Service):
         for every notification that disappears.
     """
 
-    # ── Shared notification details ─────────────────────────────────────
-
-    @staticmethod
-    def _details_args(
-        *,
-        style: Style | None,
-        show_progress: bool,
-        max_progress: int,
-        progress: int,
-        indeterminate: bool,
-        group_key: str | None,
-        set_as_group_summary: bool,
-        group_alert_behavior: GroupAlertBehavior,
-        channel_id: str | None,
-        options: NotificationOptions | None = None,
-    ) -> dict:
-        """Prepare shared notification details once for Flet's encoder."""
-        return {
-            "style": prepare_style(style),
-            "options": options,
-            "show_progress": show_progress,
-            "max_progress": max_progress,
-            "progress": progress,
-            "indeterminate": indeterminate,
-            "group_key": group_key,
-            "set_as_group_summary": set_as_group_summary,
-            "group_alert_behavior": group_alert_behavior,
-            "channel_id": channel_id,
-        }
-
     async def initialize(self) -> None:
         """
         Initialize or reinitialize the native notification backend.
@@ -238,15 +207,6 @@ class LocalNotifications(ft.Service):
         body: str | None = None,
         payload: str = "",
         actions: list[NotificationAction] | None = None,
-        style: Style | None = None,
-        show_progress: bool = False,
-        max_progress: int = 0,
-        progress: int = 0,
-        indeterminate: bool = False,
-        group_key: str | None = None,
-        set_as_group_summary: bool = False,
-        group_alert_behavior: GroupAlertBehavior = GroupAlertBehavior.ALL,
-        channel_id: str | None = None,
         options: NotificationOptions | None = None,
     ) -> None:
         """
@@ -254,7 +214,7 @@ class LocalNotifications(ft.Service):
 
         Note:
             Reusing an ID normally updates the existing notification, which is useful
-            for progress updates. Android's
+            for :attr:`flet_notifications.AndroidOptions.progress` updates. Android's
             :attr:`flet_notifications.AndroidOptions.tag` also participates in
             identifying immediately displayed notifications. Visible content, action
             support, and alerting depend on the current platform and the user's
@@ -271,24 +231,6 @@ class LocalNotifications(ft.Service):
                 The service does not interpret this value.
             actions: Action buttons; see :class:`flet_notifications.NotificationAction`
                 for platform support and background-response behavior.
-            style: Expanded Android layout; see :class:`~flet_notifications.Style`.
-                Other platforms ignore this argument.
-            show_progress: Whether to show an Android progress bar.
-            max_progress: Maximum value of the Android determinate progress bar.
-            progress: Current Android progress value, normally between `0` and
-                `max_progress`. Update the same ID to advance the bar.
-            indeterminate: Whether the Android progress bar shows ongoing activity
-                without a known completion amount. Requires `show_progress=True`.
-            group_key: Android group identifier for related notifications. This is
-                distinct from a notification-channel group and from Apple threads.
-            set_as_group_summary: Whether this Android notification summarizes the
-                notifications sharing `group_key`.
-            group_alert_behavior: Which Android group members may sound or vibrate;
-                see :class:`~flet_notifications.GroupAlertBehavior`.
-            channel_id: Android channel ID. Takes precedence over
-                :attr:`flet_notifications.AndroidOptions.channel_id`. Missing channels
-                are created automatically. Pre-create a channel to customize its name or
-                group.
             options: Additional per-platform details; see
                 :class:`~flet_notifications.NotificationOptions`.
 
@@ -305,18 +247,7 @@ class LocalNotifications(ft.Service):
                     "body": body,
                     "payload": payload,
                     "actions": actions or None,
-                    **self._details_args(
-                        style=style,
-                        show_progress=show_progress,
-                        max_progress=max_progress,
-                        progress=progress,
-                        indeterminate=indeterminate,
-                        group_key=group_key,
-                        set_as_group_summary=set_as_group_summary,
-                        group_alert_behavior=group_alert_behavior,
-                        channel_id=channel_id,
-                        options=options,
-                    ),
+                    "options": options,
                 },
             )
         )
@@ -408,15 +339,6 @@ class LocalNotifications(ft.Service):
         options: NotificationOptions | None = None,
         schedule_mode: AndroidScheduleMode = AndroidScheduleMode.EXACT_ALLOW_WHILE_IDLE,
         time_zone: str | None = None,
-        style: Style | None = None,
-        show_progress: bool = False,
-        max_progress: int = 0,
-        progress: int = 0,
-        indeterminate: bool = False,
-        group_key: str | None = None,
-        set_as_group_summary: bool = False,
-        group_alert_behavior: GroupAlertBehavior = GroupAlertBehavior.ALL,
-        channel_id: str | None = None,
     ) -> None:
         """
         Schedule a notification for a date, a delay, or a recurring calendar match.
@@ -465,24 +387,6 @@ class LocalNotifications(ft.Service):
             time_zone: IANA timezone name, such as `"Europe/Paris"`, for calendar
                 interpretation and recurrence. When `None`, uses the device timezone;
                 the bridge falls back to UTC if timezone lookup fails.
-            style: Expanded Android layout; see :class:`~flet_notifications.Style`.
-                Other platforms ignore this argument.
-            show_progress: Whether to show an Android progress bar.
-            max_progress: Maximum value of the Android determinate progress bar.
-            progress: Current Android progress value, normally between `0` and
-                `max_progress`. Update the same ID to advance the bar.
-            indeterminate: Whether the Android progress bar shows ongoing activity
-                without a known completion amount. Requires `show_progress=True`.
-            group_key: Android group identifier for related notifications. This is
-                distinct from a notification-channel group and from Apple threads.
-            set_as_group_summary: Whether this Android notification summarizes the
-                notifications sharing `group_key`.
-            group_alert_behavior: Which Android group members may sound or vibrate;
-                see :class:`~flet_notifications.GroupAlertBehavior`.
-            channel_id: Android channel ID. Takes precedence over
-                :attr:`flet_notifications.AndroidOptions.channel_id`. Missing channels
-                are created automatically. Pre-create a channel to customize its name or
-                group.
 
         Raises:
             NotificationError: If the bridge reports initialization or operation
@@ -518,18 +422,7 @@ class LocalNotifications(ft.Service):
                         schedule_mode=schedule_mode,
                         time_zone=time_zone,
                     ),
-                    **self._details_args(
-                        style=style,
-                        show_progress=show_progress,
-                        max_progress=max_progress,
-                        progress=progress,
-                        indeterminate=indeterminate,
-                        group_key=group_key,
-                        set_as_group_summary=set_as_group_summary,
-                        group_alert_behavior=group_alert_behavior,
-                        channel_id=channel_id,
-                        options=options,
-                    ),
+                    "options": options,
                 },
             )
         )
@@ -543,15 +436,6 @@ class LocalNotifications(ft.Service):
         payload: str = "",
         actions: list[NotificationAction] | None = None,
         schedule_mode: AndroidScheduleMode = AndroidScheduleMode.EXACT_ALLOW_WHILE_IDLE,
-        style: Style | None = None,
-        show_progress: bool = False,
-        max_progress: int = 0,
-        progress: int = 0,
-        indeterminate: bool = False,
-        group_key: str | None = None,
-        set_as_group_summary: bool = False,
-        group_alert_behavior: GroupAlertBehavior = GroupAlertBehavior.ALL,
-        channel_id: str | None = None,
         options: NotificationOptions | None = None,
     ) -> None:
         """
@@ -582,24 +466,6 @@ class LocalNotifications(ft.Service):
             schedule_mode: Android alarm precision and idle-mode behavior; see
                 :class:`~flet_notifications.AndroidScheduleMode`. Exact modes require
                 the applicable exact-alarm access. Ignored on other platforms.
-            style: Expanded Android layout; see :class:`~flet_notifications.Style`.
-                Other platforms ignore this argument.
-            show_progress: Whether to show an Android progress bar.
-            max_progress: Maximum value of the Android determinate progress bar.
-            progress: Current Android progress value, normally between `0` and
-                `max_progress`. Update the same ID to advance the bar.
-            indeterminate: Whether the Android progress bar shows ongoing activity
-                without a known completion amount. Requires `show_progress=True`.
-            group_key: Android group identifier for related notifications. This is
-                distinct from a notification-channel group and from Apple threads.
-            set_as_group_summary: Whether this Android notification summarizes the
-                notifications sharing `group_key`.
-            group_alert_behavior: Which Android group members may sound or vibrate;
-                see :class:`~flet_notifications.GroupAlertBehavior`.
-            channel_id: Android channel ID. Takes precedence over
-                :attr:`flet_notifications.AndroidOptions.channel_id`. Missing channels
-                are created automatically. Pre-create a channel to customize its name or
-                group.
             options: Additional per-platform details; see
                 :class:`~flet_notifications.NotificationOptions`.
 
@@ -623,18 +489,7 @@ class LocalNotifications(ft.Service):
                         repeat_interval=repeat_interval,
                         schedule_mode=schedule_mode,
                     ),
-                    **self._details_args(
-                        style=style,
-                        show_progress=show_progress,
-                        max_progress=max_progress,
-                        progress=progress,
-                        indeterminate=indeterminate,
-                        group_key=group_key,
-                        set_as_group_summary=set_as_group_summary,
-                        group_alert_behavior=group_alert_behavior,
-                        channel_id=channel_id,
-                        options=options,
-                    ),
+                    "options": options,
                 },
             )
         )
@@ -735,7 +590,8 @@ class LocalNotifications(ft.Service):
 
         Args:
             channel: Channel declaration. Post notifications using its ID as
-                `channel_id`. Create its group first when a group ID is supplied.
+                :attr:`flet_notifications.AndroidOptions.channel_id`. Create its group
+                first when a group ID is supplied.
 
         Raises:
             NotificationError: If the bridge reports initialization or operation
@@ -791,12 +647,6 @@ class LocalNotifications(ft.Service):
         body: str | None = None,
         payload: str = "",
         actions: list[NotificationAction] | None = None,
-        style: Style | None = None,
-        show_progress: bool = False,
-        max_progress: int = 0,
-        progress: int = 0,
-        indeterminate: bool = False,
-        channel_id: str | None = None,
         options: NotificationOptions | None = None,
         start_type: AndroidServiceStartType | None = None,
         foreground_service_types: list[AndroidForegroundServiceType] | None = None,
@@ -824,18 +674,6 @@ class LocalNotifications(ft.Service):
                 The service does not interpret this value.
             actions: Action buttons; see :class:`~flet_notifications.NotificationAction`
                 for platform support and background-response behavior.
-            style: Expanded Android layout; see :class:`~flet_notifications.Style`.
-                Other platforms ignore this argument.
-            show_progress: Whether to show an Android progress bar.
-            max_progress: Maximum value of the Android determinate progress bar.
-            progress: Current Android progress value, normally between `0` and
-                `max_progress`. Update the same ID to advance the bar.
-            indeterminate: Whether the Android progress bar shows ongoing activity
-                without a known completion amount. Requires `show_progress=True`.
-            channel_id: Android channel ID. Takes precedence over
-                :attr:`flet_notifications.AndroidOptions.channel_id`. Missing channels
-                are created automatically. Pre-create a channel to customize its name or
-                group.
             options: Additional per-platform details; see
                 :class:`~flet_notifications.NotificationOptions`.
             start_type: Native service restart policy; see
@@ -863,18 +701,7 @@ class LocalNotifications(ft.Service):
                     "start_type": start_type,
                     "foreground_service_types": foreground_service_types,
                     "actions": actions or None,
-                    **self._details_args(
-                        style=style,
-                        show_progress=show_progress,
-                        max_progress=max_progress,
-                        progress=progress,
-                        indeterminate=indeterminate,
-                        group_key=None,
-                        set_as_group_summary=False,
-                        group_alert_behavior=GroupAlertBehavior.ALL,
-                        channel_id=channel_id,
-                        options=options,
-                    ),
+                    "options": options,
                 },
             )
         )
@@ -1093,8 +920,9 @@ class LocalNotifications(ft.Service):
 
         Note:
             Supported only on Android 8.0+. This is distinct from grouping displayed
-            notifications with `group_key`. Create the group before creating channels
-            that refer to its ID. Other platforms report an unsupported operation.
+            notifications with :attr:`flet_notifications.AndroidOptions.group`. Create
+            the group before creating channels that refer to its ID. Other platforms
+            report an unsupported operation.
 
         Args:
             group_id: Stable identifier for the channel group.

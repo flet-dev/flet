@@ -6,8 +6,14 @@ import pytest
 
 import flet as ft
 from flet_notifications import (
+    AndroidGroup,
+    AndroidOptions,
+    AndroidProgress,
+    BigTextStyle,
     DateTimeComponents,
+    GroupAlertBehavior,
     LocalNotifications,
+    NotificationOptions,
     RepeatInterval,
 )
 
@@ -132,37 +138,32 @@ async def test_schedule_timedelta_becomes_delay(delay, microseconds):
     assert type(args["when"]["delay_ms"]) is int
 
 
-def test_schedule_forwards_style_progress_grouping():
-    from flet_notifications import BigTextStyle, GroupAlertBehavior
-
+@pytest.mark.asyncio
+async def test_schedule_forwards_android_style_progress_and_group():
+    """Android layout, progress, group and channel travel inside the options."""
     service = RecordingService()
-    service.calls.clear()
-    # recorded via the synchronous RecordingService path
-    import asyncio
-
-    asyncio.run(
-        service.schedule(
-            id=11,
-            when=timedelta(seconds=5),
-            style=BigTextStyle(big_text="long"),
-            show_progress=True,
-            max_progress=100,
-            progress=25,
-            group_key="grp",
-            set_as_group_summary=True,
-            group_alert_behavior=GroupAlertBehavior.SUMMARY,
-            channel_id="c1",
-        )
+    await service.schedule(
+        id=11,
+        when=timedelta(seconds=5),
+        options=NotificationOptions(
+            android=AndroidOptions(
+                channel_id="c1",
+                style=BigTextStyle(big_text="long"),
+                progress=AndroidProgress(value=25),
+                group=AndroidGroup(
+                    key="grp",
+                    summary=True,
+                    alert_behavior=GroupAlertBehavior.SUMMARY,
+                ),
+            )
+        ),
     )
     _, args = service.calls[-1]
-    assert args["style"] == {
-        "_type": "big_text",
-        "big_text": "long",
+    assert encode_wire(args["options"]) == {
+        "android": {
+            "channel_id": "c1",
+            "style": {"_type": "big_text", "big_text": "long"},
+            "progress": {"value": 25},
+            "group": {"key": "grp", "summary": True, "alert_behavior": "summary"},
+        }
     }
-    assert args["show_progress"] is True
-    assert args["max_progress"] == 100
-    assert args["progress"] == 25
-    assert args["group_key"] == "grp"
-    assert args["set_as_group_summary"] is True
-    assert args["group_alert_behavior"] == "summary"
-    assert args["channel_id"] == "c1"

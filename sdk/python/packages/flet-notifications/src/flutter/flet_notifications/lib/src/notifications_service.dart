@@ -17,7 +17,6 @@ import 'utils/details.dart';
 import 'utils/errors.dart';
 import 'utils/parsers.dart';
 import 'utils/scheduling.dart';
-import 'utils/styles.dart';
 
 class LocalNotificationsService extends FletService {
   LocalNotificationsService({required super.control});
@@ -368,7 +367,6 @@ class LocalNotificationsService extends FletService {
       notificationDetails: await _buildNotificationDetails(
         id: id,
         actions: actions,
-        style: map["style"],
         details: map,
       ),
     );
@@ -399,7 +397,6 @@ class LocalNotificationsService extends FletService {
       notificationDetails: await _buildNotificationDetails(
         id: id,
         actions: actions,
-        style: map["style"],
         details: map,
       ),
     );
@@ -432,7 +429,6 @@ class LocalNotificationsService extends FletService {
     final notificationDetails = await _buildNotificationDetails(
       id: id,
       actions: actions,
-      style: map["style"],
       details: map,
     );
     if (duration != null) {
@@ -486,13 +482,11 @@ class LocalNotificationsService extends FletService {
   Future<fln.NotificationDetails> _buildNotificationDetails({
     required int id,
     required List<ParsedAction> actions,
-    Object? style,
     Map? details,
   }) async {
     final notificationDetails = parseNotificationDetails(
       id: id,
       actions: actions,
-      style: parseStyle(style),
       details: details,
     );
     if (actions.isNotEmpty) {
@@ -695,7 +689,6 @@ class LocalNotificationsService extends FletService {
       notificationDetails: (await _buildNotificationDetails(
         id: id,
         actions: actions,
-        style: map["style"],
         details: map,
       ))
           .android,

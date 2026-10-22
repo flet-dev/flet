@@ -45,7 +45,7 @@ void main() {
       "messages": [
         {
           "text": "Hello",
-          "timestamp": "2030-06-01T14:00:00+02:00",
+          "timestamp": DateTime.parse("2030-06-01T14:00:00+02:00"),
           "person": {
             "name": "Alex",
             "uri": "mailto:alex@example.com",

@@ -152,10 +152,8 @@ class AndroidNotificationFlag(IntFlag):
     """
     Mark the notification as the summary of a group.
 
-    Requires the notification method's `group_key` argument. Prefer passing
-    `set_as_group_summary=True` to :meth:`flet_notifications.LocalNotifications.show`,
-    :meth:`flet_notifications.LocalNotifications.schedule`, or
-    :meth:`flet_notifications.LocalNotifications.periodically_show` for this behavior.
+    Requires :attr:`flet_notifications.AndroidOptions.group`. Prefer setting
+    :attr:`flet_notifications.AndroidGroup.summary` for this behavior.
     """
 
 

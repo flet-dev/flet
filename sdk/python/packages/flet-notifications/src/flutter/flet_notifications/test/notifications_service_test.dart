@@ -1020,15 +1020,17 @@ void main() {
       "body": "b",
       "payload": "",
       "actions": null,
-      "style": {"_type": "big_text", "big_text": "long text"},
-      "channel_id": null,
-      "group_key": "grp",
-      "set_as_group_summary": false,
-      "group_alert_behavior": "summary",
-      "show_progress": true,
-      "max_progress": 100,
-      "progress": 30,
-      "indeterminate": false,
+      "options": {
+        "android": {
+          "style": {"_type": "big_text", "big_text": "long text"},
+          "group": {
+            "key": "grp",
+            "summary": false,
+            "alert_behavior": "summary"
+          },
+          "progress": {"value": 30},
+        },
+      },
     });
     expect(result, "ok");
     final details =
@@ -1037,6 +1039,7 @@ void main() {
     expect(style, isA<fln.BigTextStyleInformation>());
     expect((style as fln.BigTextStyleInformation).bigText, "long text");
     expect(details.groupKey, "grp");
+    expect(details.setAsGroupSummary, isFalse);
     expect(details.groupAlertBehavior, fln.GroupAlertBehavior.summary);
     expect(details.showProgress, isTrue);
     expect(details.maxProgress, 100);
@@ -1051,8 +1054,11 @@ void main() {
       "body": "b",
       "payload": "",
       "actions": null,
-      "style": {"_type": "nope"},
-      "channel_id": null,
+      "options": {
+        "android": {
+          "style": {"_type": "nope"}
+        }
+      },
     });
     expect(result, startsWith("error:invalid_style:"));
     expect(plugin.shown, isEmpty);
@@ -1072,16 +1078,20 @@ void main() {
             "id": 4,
             "when": {"iso": "2030-01-01T12:00:00"},
             "repeat_interval": "hourly",
-            "style": {
-              "_type": "messaging",
-              "person": {"name": "Me"},
-              "messages": [
-                {
-                  "text": "Hello",
-                  "timestamp": "invalid",
-                  "person": {"name": "Alex"}
-                }
-              ]
+            "options": {
+              "android": {
+                "style": {
+                  "_type": "messaging",
+                  "person": {"name": "Me"},
+                  "messages": [
+                    {
+                      "text": "Hello",
+                      "timestamp": "invalid",
+                      "person": {"name": "Alex"}
+                    }
+                  ]
+                },
+              },
             },
           }),
           startsWith("error:invalid_style:"),
@@ -1206,11 +1216,9 @@ void main() {
   test("show uses Flet primitive parsers for notification values", () async {
     final result = await _makeService().invokeMethod("show", {
       "id": "7",
-      "show_progress": "true",
-      "max_progress": "100",
-      "progress": "0",
       "options": {
         "android": {
+          "progress": {"max": "100", "value": "0", "indeterminate": "false"},
           "ongoing": "TRUE",
           "auto_cancel": "false",
           "number": "0",
@@ -1241,8 +1249,6 @@ void main() {
       "body": "b",
       "payload": "",
       "actions": null,
-      "style": null,
-      "channel_id": null,
       "options": {
         "android": {
           "icon": "ic_stat_notify",
@@ -1335,9 +1341,11 @@ void main() {
           "title": "Updated",
           "body": "Progress",
           "payload": "updated",
-          "show_progress": true,
-          "max_progress": 100,
-          "progress": 25,
+          "options": {
+            "android": {
+              "progress": {"value": 25, "max": 100},
+            },
+          },
           "actions": [
             {...open, "cancel_notification": false},
             {
@@ -1570,31 +1578,33 @@ void main() {
     final service = _makeService();
     expect(await service.invokeMethod("initialize"), "ok");
     final initializations = macos.initializations.length;
-    for (final payload in [
-      {
-        "style": {
-          "_type": "big_picture",
-          "image": {"content_uri": "content://image"}
-        }
-      },
-      {
-        "style": {
-          "_type": "messaging",
-          "person": {"name": "Me"},
-          "messages": [
-            {
-              "text": "Hello",
-              "timestamp": "invalid",
-              "person": {"name": "Alex"}
-            }
-          ]
-        }
-      },
-      {
-        "options": {
-          "android": {"category": "invalid"}
-        }
-      },
+    for (final (android, error) in [
+      (
+        {
+          "style": {
+            "_type": "big_picture",
+            "image": {"content_uri": "content://image"}
+          }
+        },
+        "error:invalid_style:",
+      ),
+      (
+        {
+          "style": {
+            "_type": "messaging",
+            "person": {"name": "Me"},
+            "messages": [
+              {
+                "text": "Hello",
+                "timestamp": "invalid",
+                "person": {"name": "Alex"}
+              }
+            ]
+          }
+        },
+        "error:invalid_style:",
+      ),
+      ({"category": "invalid"}, "error:invalid_option:"),
     ]) {
       expect(
           await service.invokeMethod("show", {
@@ -1602,11 +1612,9 @@ void main() {
             "actions": [
               {"id": "open", "title": "Open"}
             ],
-            ...payload,
+            "options": {"android": android},
           }),
-          startsWith(payload.containsKey("style")
-              ? "error:invalid_style:"
-              : "error:invalid_option:"));
+          startsWith(error));
       expect(macos.initializations, hasLength(initializations));
       expect(macos.shownDarwin, isNull);
     }
@@ -1637,8 +1645,6 @@ void main() {
       "body": "b",
       "payload": "",
       "actions": null,
-      "style": null,
-      "channel_id": null,
       "options": {
         "iOS": {
           "badge_number": 3,
@@ -1727,8 +1733,6 @@ void main() {
       "body": "b",
       "payload": "",
       "actions": null,
-      "style": null,
-      "channel_id": null,
       "start_type": "startStickyCompatibility",
       "foreground_service_types": ["DATASYNC", "specialUse", "dataSync"],
     });

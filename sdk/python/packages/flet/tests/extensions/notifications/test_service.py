@@ -52,6 +52,7 @@ async def test_methods_encode_nested_notification_values(
             icon="ic_stat_notify",
             audio_attributes_usage=AndroidAudioAttributesUsage.ALARM,
             additional_flags=flags,
+            style=BigPictureStyle(image=AndroidIcon(file_path="/tmp/photo.png")),
         ),
         web=WebOptions(
             direction=WebNotificationDirection.RIGHT_TO_LEFT,
@@ -61,9 +62,8 @@ async def test_methods_encode_nested_notification_values(
             timestamp=datetime(2023, 11, 14, 22, 13, 20, 123000, tzinfo=timezone.utc),
         ),
     )
-    style = BigPictureStyle(image=AndroidIcon(file_path="/tmp/photo.png"))
     actions = [NotificationAction(id="open", title="Open")]
-    kwargs = dict(id=1, options=options, style=style, actions=actions)
+    kwargs = dict(id=1, options=options, actions=actions)
     if method_name == "schedule":
         kwargs["when"] = timedelta(seconds=30)
     elif method_name == "periodically_show":
@@ -79,6 +79,10 @@ async def test_methods_encode_nested_notification_values(
             "icon": "ic_stat_notify",
             "audio_attributes_usage": "alarm",
             "additional_flags": expected_flags,
+            "style": {
+                "_type": "big_picture",
+                "image": {"file_path": "/tmp/photo.png"},
+            },
         },
         "web": {
             "direction": "rightToLeft",
@@ -89,10 +93,6 @@ async def test_methods_encode_nested_notification_values(
                 2023, 11, 14, 22, 13, 20, 123000, tzinfo=timezone.utc
             ),
         },
-    }
-    assert wire["style"] == {
-        "_type": "big_picture",
-        "image": {"file_path": "/tmp/photo.png"},
     }
     assert wire["actions"] == [{"id": "open", "title": "Open"}]
 
