@@ -12,6 +12,7 @@ import 'package:flutter_local_notifications/flutter_local_notifications.dart'
     as fln;
 import 'package:flutter_test/flutter_test.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:timezone/timezone.dart' as tz;
 
 /// Records converted native details without performing operating-system actions.
 class _RecordingAndroid extends fln.AndroidFlutterLocalNotificationsPlugin {
@@ -23,6 +24,18 @@ class _RecordingAndroid extends fln.AndroidFlutterLocalNotificationsPlugin {
   List<fln.AndroidNotificationChannel>? queriedChannels = [];
   fln.NotificationAppLaunchDetails? launchDetails;
   bool failQueries = false;
+  Object? operationError;
+
+  void _checkOperation() {
+    final error = operationError;
+    if (error != null) throw error;
+  }
+
+  bool? _probeResult() {
+    _checkOperation();
+    return permissionResult;
+  }
+
   fln.DidReceiveNotificationResponseCallback? onResponse;
   int permissionRequests = 0;
   bool? permissionResult = true;
@@ -59,11 +72,13 @@ class _RecordingAndroid extends fln.AndroidFlutterLocalNotificationsPlugin {
     fln.AndroidNotificationDetails? notificationDetails,
     String? payload,
   }) async {
+    _checkOperation();
     shown.add({'id': id, 'details': notificationDetails});
   }
 
   @override
   Future<bool?> requestNotificationsPermission() async {
+    _checkOperation();
     permissionRequests++;
     return permissionResult;
   }
@@ -71,12 +86,14 @@ class _RecordingAndroid extends fln.AndroidFlutterLocalNotificationsPlugin {
   @override
   Future<List<fln.PendingNotificationRequest>>
       pendingNotificationRequests() async {
+    _checkOperation();
     if (failQueries) throw StateError("Query unavailable");
     return pending;
   }
 
   @override
   Future<List<fln.ActiveNotification>> getActiveNotifications() async {
+    _checkOperation();
     if (failQueries) throw StateError("Query unavailable");
     return active;
   }
@@ -84,6 +101,7 @@ class _RecordingAndroid extends fln.AndroidFlutterLocalNotificationsPlugin {
   @override
   Future<List<fln.AndroidNotificationChannel>?>
       getNotificationChannels() async {
+    _checkOperation();
     if (failQueries) throw StateError("Query unavailable");
     return queriedChannels;
   }
@@ -91,6 +109,7 @@ class _RecordingAndroid extends fln.AndroidFlutterLocalNotificationsPlugin {
   @override
   Future<fln.NotificationAppLaunchDetails?>
       getNotificationAppLaunchDetails() async {
+    _checkOperation();
     if (failQueries) throw StateError("Query unavailable");
     return launchDetails;
   }
@@ -98,6 +117,7 @@ class _RecordingAndroid extends fln.AndroidFlutterLocalNotificationsPlugin {
   @override
   Future<void> createNotificationChannel(
       fln.AndroidNotificationChannel channel) async {
+    _checkOperation();
     channelsCreated.add(channel);
   }
 
@@ -111,6 +131,7 @@ class _RecordingAndroid extends fln.AndroidFlutterLocalNotificationsPlugin {
     String? payload,
     fln.AndroidScheduleMode scheduleMode = fln.AndroidScheduleMode.exact,
   }) async {
+    _checkOperation();
     periodicCalls.add({
       'interval': repeatInterval,
       'title': title,
@@ -130,6 +151,7 @@ class _RecordingAndroid extends fln.AndroidFlutterLocalNotificationsPlugin {
     String? payload,
     fln.AndroidScheduleMode scheduleMode = fln.AndroidScheduleMode.exact,
   }) async {
+    _checkOperation();
     periodicCalls.add({
       'interval': repeatDurationInterval,
       'title': title,
@@ -140,25 +162,65 @@ class _RecordingAndroid extends fln.AndroidFlutterLocalNotificationsPlugin {
   }
 
   @override
-  Future<bool?> canScheduleExactNotifications() async => permissionResult;
+  Future<bool?> canScheduleExactNotifications() async => _probeResult();
 
   @override
-  Future<bool?> requestExactAlarmsPermission() async => permissionResult;
+  Future<bool?> requestExactAlarmsPermission() async => _probeResult();
 
   @override
-  Future<bool?> areNotificationsEnabled() async => permissionResult;
+  Future<bool?> areNotificationsEnabled() async => _probeResult();
 
   @override
-  Future<bool?> requestFullScreenIntentPermission() async => permissionResult;
+  Future<bool?> requestFullScreenIntentPermission() async => _probeResult();
 
   @override
-  Future<bool?> hasNotificationPolicyAccess() async => permissionResult;
+  Future<bool?> hasNotificationPolicyAccess() async => _probeResult();
 
   @override
-  Future<bool?> requestNotificationPolicyAccess() async => permissionResult;
+  Future<bool?> requestNotificationPolicyAccess() async => _probeResult();
 
   @override
-  Future<bool?> openAppNotificationSettings() async => permissionResult;
+  Future<bool?> openAppNotificationSettings() async => _probeResult();
+
+  @override
+  Future<void> zonedSchedule({
+    required int id,
+    String? title,
+    String? body,
+    required tz.TZDateTime scheduledDate,
+    String? payload,
+    fln.DateTimeComponents? matchDateTimeComponents,
+    fln.AndroidNotificationDetails? notificationDetails,
+    fln.AndroidScheduleMode scheduleMode = fln.AndroidScheduleMode.exact,
+  }) async =>
+      _checkOperation();
+
+  @override
+  Future<void> cancel({required int id, String? tag}) async =>
+      _checkOperation();
+
+  @override
+  Future<void> cancelAll() async => _checkOperation();
+
+  @override
+  Future<void> cancelAllPendingNotifications() async => _checkOperation();
+
+  @override
+  Future<void> stopForegroundService() async => _checkOperation();
+
+  @override
+  Future<void> deleteNotificationChannel({required String channelId}) async =>
+      _checkOperation();
+
+  @override
+  Future<void> createNotificationChannelGroup(
+          fln.AndroidNotificationChannelGroup group) async =>
+      _checkOperation();
+
+  @override
+  Future<void> deleteNotificationChannelGroup(
+          {required String groupId}) async =>
+      _checkOperation();
 
   @override
   Future<void> startForegroundService({
@@ -171,6 +233,7 @@ class _RecordingAndroid extends fln.AndroidFlutterLocalNotificationsPlugin {
         fln.AndroidServiceStartType.startSticky,
     Set<fln.AndroidServiceForegroundType>? foregroundServiceTypes,
   }) async {
+    _checkOperation();
     foregroundStarts++;
     lastStartType = startType;
     lastForegroundServiceTypes = foregroundServiceTypes;
@@ -253,6 +316,143 @@ void main() {
   setUp(() {
     plugin = _RecordingAndroid();
     fln.FlutterLocalNotificationsPlatform.instance = plugin;
+  });
+
+  test("dispatcher distinguishes unsupported operations from native failures",
+      () async {
+    final service = _makeService();
+    expect(await service.invokeMethod("initialize"), "ok");
+    final operations = <(String, Map<String, Object?>?, String)>[
+      ("show", {"id": 4}, "show_failed"),
+      (
+        "schedule",
+        {
+          "id": 4,
+          "when": {"iso": "2099-01-01T12:00:00"}
+        },
+        "schedule_failed"
+      ),
+      (
+        "periodically_show",
+        {"id": 4, "repeat_interval": "hourly"},
+        "schedule_failed"
+      ),
+      (
+        "periodically_show",
+        {"id": 4, "repeat_interval": 60000},
+        "schedule_failed"
+      ),
+      ("get_pending", null, "query_failed"),
+      ("get_active", null, "query_failed"),
+      ("get_launch_details", null, "query_failed"),
+      ("get_notification_channels", null, "channel_failed"),
+      (
+        "create_notification_channel",
+        {"id": "alerts", "name": "Alerts"},
+        "channel_failed"
+      ),
+      (
+        "delete_notification_channel",
+        {"channel_id": "alerts"},
+        "channel_failed"
+      ),
+      (
+        "create_notification_channel_group",
+        {"group_id": "alerts", "name": "Alerts"},
+        "channel_failed"
+      ),
+      (
+        "delete_notification_channel_group",
+        {"group_id": "alerts"},
+        "channel_failed"
+      ),
+      ("start_foreground_service", {"id": 4}, "foreground_service_failed"),
+      ("stop_foreground_service", null, "foreground_service_failed"),
+      ("cancel", {"id": 4}, "cancel_failed"),
+      ("cancel_all", null, "cancel_failed"),
+      ("cancel_pending", null, "cancel_failed"),
+      for (final method in [
+        "request_permissions",
+        "can_schedule_exact_notifications",
+        "request_exact_alarm_permission",
+        "are_notifications_enabled",
+        "open_app_settings",
+        "request_full_screen_intent",
+        "has_notification_policy_access",
+        "request_notification_policy_access"
+      ])
+        (method, null, "permission_failed"),
+    ];
+    for (final error in [
+      UnsupportedError("feature unavailable"),
+      UnimplementedError("feature unavailable"),
+      StateError("native failure: keep this detail"),
+      const FormatException("native format failure"),
+    ]) {
+      plugin.operationError = error;
+      for (final (method, args, code) in operations) {
+        final result = await service.invokeMethod(method, args);
+        if (error is UnsupportedError || error is UnimplementedError) {
+          expect(result,
+              "error:unsupported_platform:$method is not available on this platform");
+        } else {
+          expect(result, "error:$code:$error", reason: method);
+        }
+      }
+    }
+  });
+
+  test("parser errors keep their codes across notification methods", () async {
+    final service = _makeService();
+    for (final method in [
+      "show",
+      "schedule",
+      "periodically_show",
+      "start_foreground_service"
+    ]) {
+      final args = {
+        "id": 4,
+        "when": {"iso": "2099-01-01T12:00:00"},
+        "repeat_interval": "hourly"
+      };
+      expect(
+          await service.invokeMethod(method, {
+            ...args,
+            "actions": [{}]
+          }),
+          startsWith("error:invalid_action:"));
+      for (final options in [
+        {
+          "linux": {"category": "invalid"}
+        },
+        {
+          "android": {"icon": 42}
+        },
+      ]) {
+        expect(
+            await service.invokeMethod(method, {...args, "options": options}),
+            startsWith("error:invalid_option:"));
+      }
+    }
+    for (final when in [
+      null,
+      {"iso": "invalid"},
+      {"iso": "2099-01-01T12:00:00", "time_zone": "Invalid/Zone"},
+      {"delay_seconds": "invalid"},
+      {"iso": 42},
+    ]) {
+      expect(await service.invokeMethod("schedule", {"id": 4, "when": when}),
+          startsWith("error:invalid_schedule:"));
+    }
+    expect(
+        await service.invokeMethod(
+            "create_notification_channel", {"id": "", "name": "Alerts"}),
+        startsWith("error:invalid_channel:"));
+    expect(
+        await service.invokeMethod("unknown"), "error:unknown_method:unknown");
+    expect(plugin.shown, isEmpty);
+    expect(plugin.foregroundStarts, 0);
+    expect(plugin.channelsCreated, isEmpty);
   });
 
   for (final throws in [false, true]) {

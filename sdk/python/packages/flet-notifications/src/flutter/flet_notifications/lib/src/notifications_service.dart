@@ -14,6 +14,7 @@ import 'package:timezone/timezone.dart' as tz;
 import 'background_handler.dart';
 import 'utils/actions.dart';
 import 'utils/details.dart';
+import 'utils/errors.dart';
 import 'utils/parsers.dart';
 import 'utils/scheduling.dart';
 import 'utils/styles.dart';
@@ -189,18 +190,59 @@ class LocalNotificationsService extends FletService {
     if (name != "initialize") {
       await _ensureInitialized();
       if (!_initialized) {
-        return "error:init_failed:notification backend unavailable";
+        return const NotificationException.initFailed(
+          "notification backend unavailable",
+        ).toResult();
       }
     }
     try {
       return await _dispatch(name, args);
+    } on NotificationException catch (e) {
+      return e.toResult();
     } on UnimplementedError {
-      // The plugin/platform cannot do this (e.g. scheduling on Linux/web).
-      return "error:unsupported_platform:$name is not available on this "
-          "platform";
+      return NotificationException.unsupportedPlatform(
+        "$name is not available on this platform",
+      ).toResult();
     } on UnsupportedError {
-      return "error:unsupported_platform:$name is not available on this "
-          "platform";
+      return NotificationException.unsupportedPlatform(
+        "$name is not available on this platform",
+      ).toResult();
+    } catch (e) {
+      final code = switch (name) {
+        "show" => NotificationErrorCode.showFailed,
+        "schedule" ||
+        "periodically_show" =>
+          NotificationErrorCode.scheduleFailed,
+        "get_pending" ||
+        "get_active" ||
+        "get_launch_details" =>
+          NotificationErrorCode.queryFailed,
+        "create_notification_channel" ||
+        "delete_notification_channel" ||
+        "get_notification_channels" ||
+        "create_notification_channel_group" ||
+        "delete_notification_channel_group" =>
+          NotificationErrorCode.channelFailed,
+        "start_foreground_service" ||
+        "stop_foreground_service" =>
+          NotificationErrorCode.foregroundServiceFailed,
+        "cancel" ||
+        "cancel_all" ||
+        "cancel_pending" =>
+          NotificationErrorCode.cancelFailed,
+        "request_permissions" ||
+        "can_schedule_exact_notifications" ||
+        "request_exact_alarm_permission" ||
+        "are_notifications_enabled" ||
+        "open_app_settings" ||
+        "request_full_screen_intent" ||
+        "has_notification_policy_access" ||
+        "request_notification_policy_access" =>
+          NotificationErrorCode.permissionFailed,
+        _ => null,
+      };
+      if (code == null) rethrow;
+      return NotificationException(code, e.toString()).toResult();
     }
   }
 
@@ -208,7 +250,11 @@ class LocalNotificationsService extends FletService {
     switch (name) {
       case "initialize":
         await _ensureInitialized(force: true);
-        return _initialized ? "ok" : "error:init_failed:initialize failed";
+        return _initialized
+            ? "ok"
+            : const NotificationException.initFailed(
+                "initialize failed",
+              ).toResult();
 
       case "show":
         return await _show(args);
@@ -296,159 +342,124 @@ class LocalNotificationsService extends FletService {
         return await _deleteChannelGroup(args);
 
       default:
-        return "error:unknown_method:$name";
+        throw NotificationException.unknownMethod(name);
     }
   }
 
   Future<String> _show(dynamic args) async {
-    try {
-      final map = args as Map;
-      final id = parseInt(map["id"])!;
-      final title = map["title"] as String?;
-      final body = map["body"] as String?;
-      final payload = map["payload"] as String? ?? "";
-      final actions = parseActions(map["actions"]);
-      await _plugin!.show(
-        id: id,
-        title: title,
-        body: body,
-        payload: payload,
-        notificationDetails: await _buildNotificationDetails(
-          id: id,
-          actions: actions,
-          style: map["style"],
-          details: map,
-        ),
-      );
-      return "ok";
-    } on InvalidNotificationOptionException catch (e) {
-      return "error:invalid_option:${e.message}";
-    } on InvalidNotificationStyleException catch (e) {
-      return "error:invalid_style:${e.message}";
-    } on FormatException catch (e) {
-      return "error:invalid_action:${e.message}";
-    } catch (e) {
-      return "error:show_failed:$e";
-    }
-  }
-
-  Future<String> _schedule(dynamic args) async {
     final map = args as Map;
-    final List<ParsedAction> actions;
-    try {
-      actions = parseActions(map["actions"]);
-    } on FormatException catch (e) {
-      return "error:invalid_action:${e.message}";
-    }
-    final tz.TZDateTime scheduledDate;
-    try {
-      scheduledDate = parseWhen(map, tz.local);
-    } on FormatException catch (e) {
-      return "error:invalid_schedule:${e.message}";
-    }
-    try {
-      await _plugin!.zonedSchedule(
-        id: parseInt(map["id"])!,
-        title: map["title"] as String?,
-        body: map["body"] as String?,
-        scheduledDate: scheduledDate,
-        notificationDetails: await _buildNotificationDetails(
-          id: parseInt(map["id"])!,
-          actions: actions,
-          style: map["style"],
-          details: map,
-        ),
-        androidScheduleMode: parseAndroidScheduleMode(
-            map["schedule_mode"] as String?,
-            fln.AndroidScheduleMode.exactAllowWhileIdle)!,
-        payload: map["payload"] as String? ?? "",
-        matchDateTimeComponents: parseDateTimeComponents(
-          map["match_components"] as String?,
-        ),
-      );
-      return "ok";
-    } on InvalidNotificationStyleException catch (e) {
-      return "error:invalid_style:${e.message}";
-    } on InvalidNotificationOptionException catch (e) {
-      return "error:invalid_option:${e.message}";
-    } catch (e) {
-      return "error:schedule_failed:$e";
-    }
-  }
-
-  Future<String> _periodicallyShow(dynamic args) async {
-    try {
-      final map = args as Map;
-      final id = parseInt(map["id"])!;
-      final actions = parseActions(map["actions"]);
-      final notificationDetails = await _buildNotificationDetails(
+    final id = parseInt(map["id"])!;
+    final title = map["title"] as String?;
+    final body = map["body"] as String?;
+    final payload = map["payload"] as String? ?? "";
+    final actions = parseActions(map["actions"]);
+    await _plugin!.show(
+      id: id,
+      title: title,
+      body: body,
+      payload: payload,
+      notificationDetails: await _buildNotificationDetails(
         id: id,
         actions: actions,
         style: map["style"],
         details: map,
-      );
-      final scheduleMode = parseAndroidScheduleMode(
-          map["schedule_mode"] as String?,
-          fln.AndroidScheduleMode.exactAllowWhileIdle)!;
-      final title = map["title"] as String?;
-      final body = map["body"] as String?;
-      final payload = map["payload"] as String? ?? "";
-      final interval = map["repeat_interval"];
-      if (interval is! String) {
-        final duration = parseDuration(interval);
-        if (duration == null || duration < const Duration(minutes: 1)) {
-          return "error:invalid_option:repeat_interval must be at least one minute";
-        }
-        await _plugin!.periodicallyShowWithDuration(
-          id: id,
-          title: title,
-          body: body,
-          payload: payload,
-          notificationDetails: notificationDetails,
-          repeatDurationInterval: duration,
-          androidScheduleMode: scheduleMode,
+      ),
+    );
+    return "ok";
+  }
+
+  Future<String> _schedule(dynamic args) async {
+    final map = args as Map;
+    final actions = parseActions(map["actions"]);
+    final scheduledDate = parseWhen(map, tz.local);
+    await _plugin!.zonedSchedule(
+      id: parseInt(map["id"])!,
+      title: map["title"] as String?,
+      body: map["body"] as String?,
+      scheduledDate: scheduledDate,
+      notificationDetails: await _buildNotificationDetails(
+        id: parseInt(map["id"])!,
+        actions: actions,
+        style: map["style"],
+        details: map,
+      ),
+      androidScheduleMode: parseAndroidScheduleMode(
+        map["schedule_mode"] as String?,
+        fln.AndroidScheduleMode.exactAllowWhileIdle,
+      )!,
+      payload: map["payload"] as String? ?? "",
+      matchDateTimeComponents: parseDateTimeComponents(
+        map["match_components"] as String?,
+      ),
+    );
+    return "ok";
+  }
+
+  Future<String> _periodicallyShow(dynamic args) async {
+    final map = args as Map;
+    final id = parseInt(map["id"])!;
+    final actions = parseActions(map["actions"]);
+    final notificationDetails = await _buildNotificationDetails(
+      id: id,
+      actions: actions,
+      style: map["style"],
+      details: map,
+    );
+    final scheduleMode = parseAndroidScheduleMode(
+        map["schedule_mode"] as String?,
+        fln.AndroidScheduleMode.exactAllowWhileIdle)!;
+    final title = map["title"] as String?;
+    final body = map["body"] as String?;
+    final payload = map["payload"] as String? ?? "";
+    final interval = map["repeat_interval"];
+    if (interval is! String) {
+      final duration = parseDuration(interval);
+      if (duration == null || duration < const Duration(minutes: 1)) {
+        throw const NotificationException.invalidOption(
+          "repeat_interval must be at least one minute",
         );
-        return "ok";
       }
-      final repeatInterval = parseRepeatInterval(interval);
-      if (repeatInterval == null) {
-        return "error:invalid_option:Unknown repeat_interval: $interval";
-      }
-      await _plugin!.periodicallyShow(
+      await _plugin!.periodicallyShowWithDuration(
         id: id,
         title: title,
         body: body,
         payload: payload,
         notificationDetails: notificationDetails,
-        repeatInterval: repeatInterval,
+        repeatDurationInterval: duration,
         androidScheduleMode: scheduleMode,
       );
       return "ok";
-    } on InvalidNotificationStyleException catch (e) {
-      return "error:invalid_style:${e.message}";
-    } on FormatException catch (e) {
-      return "error:invalid_action:${e.message}";
-    } on InvalidNotificationOptionException catch (e) {
-      return "error:invalid_option:${e.message}";
-    } catch (e) {
-      return "error:schedule_failed:$e";
     }
+    final repeatInterval = parseRepeatInterval(interval);
+    if (repeatInterval == null) {
+      throw NotificationException.invalidOption(
+        "Unknown repeat_interval: $interval",
+      );
+    }
+    await _plugin!.periodicallyShow(
+      id: id,
+      title: title,
+      body: body,
+      payload: payload,
+      notificationDetails: notificationDetails,
+      repeatInterval: repeatInterval,
+      androidScheduleMode: scheduleMode,
+    );
+    return "ok";
   }
 
-  Future<Object> _getPending() async {
-    try {
-      final pending = await _plugin!.pendingNotificationRequests();
-      return pending
-          .map((p) => {
-                "id": p.id,
-                "title": p.title ?? "",
-                "body": p.body ?? "",
-                "payload": p.payload ?? "",
-              })
-          .toList();
-    } catch (e) {
-      return "error:query_failed:$e";
-    }
+  Future<List<Map<String, Object?>>> _getPending() async {
+    final pending = await _plugin!.pendingNotificationRequests();
+    return pending
+        .map(
+          (p) => {
+            "id": p.id,
+            "title": p.title ?? "",
+            "body": p.body ?? "",
+            "payload": p.payload ?? "",
+          },
+        )
+        .toList();
   }
 
   fln.AndroidFlutterLocalNotificationsPlugin? get _androidPlugin =>
@@ -579,49 +590,45 @@ class LocalNotificationsService extends FletService {
   Future<String> _createChannel(dynamic args) async {
     final android = _androidPlugin;
     if (android == null) {
-      return "error:unsupported_platform:channels are Android-only";
+      throw UnsupportedError("channels are Android-only");
     }
-    try {
-      final map = args as Map;
-      final id = map["id"] as String;
-      final name = map["name"] as String;
-      if (id.isEmpty || name.isEmpty) {
-        return "error:invalid_channel:id and name are required";
-      }
-      final ledColor = map["led_color"] as String?;
-      await android.createNotificationChannel(
-        fln.AndroidNotificationChannel(
-          id,
-          name,
-          description: map["description"] as String?,
-          groupId: map["group_id"] as String?,
-          importance: parseNotificationImportance(
-              map["importance"] as String?, fln.Importance.defaultImportance)!,
-          bypassDnd: parseBool(map["bypass_dnd"], false)!,
-          playSound: parseBool(map["play_sound"], true)!,
-          sound: map["sound"] == null
-              ? null
-              : fln.RawResourceAndroidNotificationSound(
-                  map["sound"] as String,
-                ),
-          enableVibration: parseBool(map["enable_vibration"], true)!,
-          vibrationPattern:
-              parseNotificationVibrationPattern(map["vibration_pattern"]),
-          showBadge: parseBool(map["show_badge"], true)!,
-          enableLights: parseBool(map["enable_lights"], false)!,
-          ledColor: parseColor(ledColor?.trim(), null),
-        ),
+    final map = args as Map;
+    final id = map["id"] as String;
+    final name = map["name"] as String;
+    if (id.isEmpty || name.isEmpty) {
+      throw const NotificationException.invalidChannel(
+        "id and name are required",
       );
-      return "ok";
-    } catch (e) {
-      return "error:channel_failed:$e";
     }
+    final ledColor = map["led_color"] as String?;
+    await android.createNotificationChannel(
+      fln.AndroidNotificationChannel(
+        id,
+        name,
+        description: map["description"] as String?,
+        groupId: map["group_id"] as String?,
+        importance: parseNotificationImportance(
+            map["importance"] as String?, fln.Importance.defaultImportance)!,
+        bypassDnd: parseBool(map["bypass_dnd"], false)!,
+        playSound: parseBool(map["play_sound"], true)!,
+        sound: map["sound"] == null
+            ? null
+            : fln.RawResourceAndroidNotificationSound(map["sound"] as String),
+        enableVibration: parseBool(map["enable_vibration"], true)!,
+        vibrationPattern:
+            parseNotificationVibrationPattern(map["vibration_pattern"]),
+        showBadge: parseBool(map["show_badge"], true)!,
+        enableLights: parseBool(map["enable_lights"], false)!,
+        ledColor: parseColor(ledColor?.trim(), null),
+      ),
+    );
+    return "ok";
   }
 
   Future<String> _deleteChannel(dynamic args) async {
     final android = _androidPlugin;
     if (android == null) {
-      return "error:unsupported_platform:channels are Android-only";
+      throw UnsupportedError("channels are Android-only");
     }
     final map = args as Map;
     final channelId = map["channel_id"] as String;
@@ -629,35 +636,31 @@ class LocalNotificationsService extends FletService {
     return "ok";
   }
 
-  Future<Object> _getChannels() async {
+  Future<List<Map<String, Object?>>> _getChannels() async {
     final android = _androidPlugin;
     if (android == null) return <Map<String, Object?>>[];
-    try {
-      final channels = await android.getNotificationChannels() ?? const [];
-      return channels
-          .map(
-            (c) => {
-              "id": c.id,
-              "name": c.name,
-              "description": c.description ?? "",
-              "group_id": c.groupId,
-              "importance": c.importance.name,
-              "bypass_dnd": c.bypassDnd,
-              "play_sound": c.playSound,
-              "sound": c.sound?.sound,
-              "enable_vibration": c.enableVibration,
-              "vibration_pattern": c.vibrationPattern?.toList(),
-              "show_badge": c.showBadge,
-              "enable_lights": c.enableLights,
-              "led_color": c.ledColor == null
-                  ? null
-                  : "#${c.ledColor!.toARGB32().toRadixString(16).padLeft(8, "0")}",
-            },
-          )
-          .toList();
-    } catch (e) {
-      return "error:channel_failed:$e";
-    }
+    final channels = await android.getNotificationChannels() ?? const [];
+    return channels
+        .map(
+          (c) => {
+            "id": c.id,
+            "name": c.name,
+            "description": c.description ?? "",
+            "group_id": c.groupId,
+            "importance": c.importance.name,
+            "bypass_dnd": c.bypassDnd,
+            "play_sound": c.playSound,
+            "sound": c.sound?.sound,
+            "enable_vibration": c.enableVibration,
+            "vibration_pattern": c.vibrationPattern?.toList(),
+            "show_badge": c.showBadge,
+            "enable_lights": c.enableLights,
+            "led_color": c.ledColor == null
+                ? null
+                : "#${c.ledColor!.toARGB32().toRadixString(16).padLeft(8, "0")}",
+          },
+        )
+        .toList();
   }
 
   // ── Foreground service (Android) ─────────────────────────────────────
@@ -665,47 +668,43 @@ class LocalNotificationsService extends FletService {
   Future<String> _startForegroundService(dynamic args) async {
     final android = _androidPlugin;
     if (android == null) {
-      return "error:unsupported_platform:foreground service is Android-only";
+      throw UnsupportedError("foreground service is Android-only");
     }
-    try {
-      final map = args as Map;
-      final id = parseInt(map["id"])!;
-      if (id == 0) {
-        return "error:invalid_service_id:foreground service id must be non-zero";
-      }
-      final actions = parseActions(map["actions"]);
-      await android.startForegroundService(
-        id: id,
-        title: map["title"] as String?,
-        body: map["body"] as String?,
-        payload: map["payload"] as String? ?? "",
-        startType: parseServiceStartType(map["start_type"] as String?,
-            fln.AndroidServiceStartType.startSticky)!,
-        foregroundServiceTypes: parseForegroundServiceTypes(
-          map["foreground_service_types"],
-        ),
-        notificationDetails: (await _buildNotificationDetails(
-          id: id,
-          actions: actions,
-          style: map["style"],
-          details: map,
-        ))
-            .android,
+    final map = args as Map;
+    final id = parseInt(map["id"])!;
+    if (id == 0) {
+      throw const NotificationException.invalidServiceId(
+        "foreground service id must be non-zero",
       );
-      return "ok";
-    } on InvalidNotificationOptionException catch (e) {
-      return "error:invalid_option:${e.message}";
-    } on InvalidNotificationStyleException catch (e) {
-      return "error:invalid_style:${e.message}";
-    } catch (e) {
-      return "error:foreground_service_failed:$e";
     }
+    final actions = parseActions(map["actions"]);
+    await android.startForegroundService(
+      id: id,
+      title: map["title"] as String?,
+      body: map["body"] as String?,
+      payload: map["payload"] as String? ?? "",
+      startType: parseServiceStartType(
+        map["start_type"] as String?,
+        fln.AndroidServiceStartType.startSticky,
+      )!,
+      foregroundServiceTypes: parseForegroundServiceTypes(
+        map["foreground_service_types"],
+      ),
+      notificationDetails: (await _buildNotificationDetails(
+        id: id,
+        actions: actions,
+        style: map["style"],
+        details: map,
+      ))
+          .android,
+    );
+    return "ok";
   }
 
   Future<String> _stopForegroundService() async {
     final android = _androidPlugin;
     if (android == null) {
-      return "error:unsupported_platform:foreground service is Android-only";
+      throw UnsupportedError("foreground service is Android-only");
     }
     await android.stopForegroundService();
     return "ok";
@@ -747,65 +746,55 @@ class LocalNotificationsService extends FletService {
     return await android?.hasNotificationPolicyAccess() ?? false;
   }
 
-  Future<Object> _getActive() async {
-    try {
-      final active = await _plugin?.getActiveNotifications() ?? const [];
-      return active
-          .map((a) => {
-                "id": a.id ?? 0,
-                "channel_id": a.channelId ?? "",
-                "group_key": a.groupKey ?? "",
-                "tag": a.tag ?? "",
-                "title": a.title ?? "",
-                "body": a.body ?? "",
-                "payload": a.payload ?? "",
-                "big_text": a.bigText ?? "",
-              })
-          .toList();
-    } catch (e) {
-      return "error:query_failed:$e";
-    }
+  Future<List<Map<String, Object?>>> _getActive() async {
+    final active = await _plugin?.getActiveNotifications() ?? const [];
+    return active
+        .map(
+          (a) => {
+            "id": a.id ?? 0,
+            "channel_id": a.channelId ?? "",
+            "group_key": a.groupKey ?? "",
+            "tag": a.tag ?? "",
+            "title": a.title ?? "",
+            "body": a.body ?? "",
+            "payload": a.payload ?? "",
+            "big_text": a.bigText ?? "",
+          },
+        )
+        .toList();
   }
 
-  Future<Object> _getLaunchDetails() async {
-    try {
-      final details = await _plugin?.getNotificationAppLaunchDetails();
-      if (details == null || details.didNotificationLaunchApp != true) {
-        return {"did_notification_launch_app": false};
-      }
-      final response = details.notificationResponse;
-      return {
-        "did_notification_launch_app": true,
-        "notification": response == null ? null : responseToEvent(response),
-      };
-    } catch (e) {
-      return "error:query_failed:$e";
+  Future<Map<String, Object?>> _getLaunchDetails() async {
+    final details = await _plugin?.getNotificationAppLaunchDetails();
+    if (details == null || details.didNotificationLaunchApp != true) {
+      return {"did_notification_launch_app": false};
     }
+    final response = details.notificationResponse;
+    return {
+      "did_notification_launch_app": true,
+      "notification": response == null ? null : responseToEvent(response),
+    };
   }
 
   Future<String> _createChannelGroup(dynamic args) async {
     final android = _androidPlugin;
     if (android == null) {
-      return "error:unsupported_platform:channel groups are Android-only";
+      throw UnsupportedError("channel groups are Android-only");
     }
-    try {
-      final map = args as Map;
-      await android.createNotificationChannelGroup(
-        fln.AndroidNotificationChannelGroup(
-          map["group_id"] as String,
-          map["name"] as String,
-          description: map["description"] as String?,
-        ),
-      );
-      return "ok";
-    } catch (e) {
-      return "error:channel_failed:$e";
-    }
+    final map = args as Map;
+    await android.createNotificationChannelGroup(
+      fln.AndroidNotificationChannelGroup(
+        map["group_id"] as String,
+        map["name"] as String,
+        description: map["description"] as String?,
+      ),
+    );
+    return "ok";
   }
 
   Future<String> _deleteChannelGroup(dynamic args) async {
     if (_androidPlugin == null) {
-      return "error:unsupported_platform:channel groups are Android-only";
+      throw UnsupportedError("channel groups are Android-only");
     }
     final map = args as Map;
     await _androidPlugin!.deleteNotificationChannelGroup(

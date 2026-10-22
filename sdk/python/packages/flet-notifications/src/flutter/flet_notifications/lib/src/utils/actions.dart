@@ -1,5 +1,7 @@
 import 'package:flet/flet.dart' show parseBool, parseList;
 
+import 'errors.dart';
+
 class ParsedInput {
   const ParsedInput({
     this.label = "",
@@ -35,12 +37,13 @@ class ParsedAction {
 /// Parses the `actions` argument (a list of dicts sent from Python) into
 /// [ParsedAction]s.
 ///
-/// Throws [FormatException] with a human-readable message on bad input; the
-/// service converts it into an `error:invalid_action:...` invoke result.
+/// Throws [NotificationException] with `invalid_action` for malformed actions.
 List<ParsedAction> parseActions(Object? raw) {
   if (raw == null) return const [];
   if (raw is! List) {
-    throw const FormatException("actions must be a list");
+    throw const NotificationException.invalidAction(
+      "actions must be a list",
+    );
   }
   return parseList(raw, parseAction)!;
 }
@@ -48,15 +51,21 @@ List<ParsedAction> parseActions(Object? raw) {
 /// Parses one notification action.
 ParsedAction parseAction(Object? entry) {
   if (entry is! Map) {
-    throw const FormatException("each action must be a map");
+    throw const NotificationException.invalidAction(
+      "each action must be a map",
+    );
   }
   final id = entry["id"];
   final title = entry["title"];
   if (id is! String || id.isEmpty) {
-    throw const FormatException("action id must be a non-empty string");
+    throw const NotificationException.invalidAction(
+      "action id must be a non-empty string",
+    );
   }
   if (title is! String || title.isEmpty) {
-    throw const FormatException("action title must be a non-empty string");
+    throw const NotificationException.invalidAction(
+      "action title must be a non-empty string",
+    );
   }
   return ParsedAction(
     id: id,
@@ -72,18 +81,21 @@ ParsedAction parseAction(Object? entry) {
 ParsedInput? parseActionInput(Object? raw) {
   if (raw == null) return null;
   if (raw is! Map) {
-    throw const FormatException("input must be a map");
+    throw const NotificationException.invalidAction("input must be a map");
   }
   final choices = raw["choices"];
   final mimeTypes = raw["allowed_mime_types"];
   if (choices != null &&
       (choices is! List || choices.any((v) => v is! String))) {
-    throw const FormatException("input choices must be a list of strings");
+    throw const NotificationException.invalidAction(
+      "input choices must be a list of strings",
+    );
   }
   if (mimeTypes != null &&
       (mimeTypes is! List || mimeTypes.any((v) => v is! String))) {
-    throw const FormatException(
-        "input allowed_mime_types must be a list of strings");
+    throw const NotificationException.invalidAction(
+      "input allowed_mime_types must be a list of strings",
+    );
   }
   return ParsedInput(
     label: raw["label"] is String ? raw["label"] as String : "",

@@ -1,4 +1,5 @@
 import 'package:flet_notifications/src/utils/styles.dart';
+import 'package:flet_notifications/src/utils/errors.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart'
     as fln;
 import 'package:flutter_test/flutter_test.dart';
@@ -111,8 +112,10 @@ void main() {
         "lines": [42]
       },
     ]) {
-      expect(() => parseStyle(value),
-          throwsA(isA<InvalidNotificationStyleException>()));
+      expect(
+          () => parseStyle(value),
+          throwsA(isA<NotificationException>().having(
+              (e) => e.code, "code", NotificationErrorCode.invalidStyle)));
     }
   });
 }

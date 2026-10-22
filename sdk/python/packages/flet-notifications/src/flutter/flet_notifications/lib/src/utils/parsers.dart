@@ -4,12 +4,7 @@ import 'package:flet/flet.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart'
     as fln;
 
-/// Raised for invalid per-platform option values (bad category, …) so the
-/// invoke returns `invalid_option` rather than a generic `invalid_action`.
-class InvalidNotificationOptionException implements Exception {
-  InvalidNotificationOptionException(this.message);
-  final String message;
-}
+import 'errors.dart';
 
 fln.AndroidNotificationSound? parseAndroidNotificationSound(String? sound) {
   if (sound == null || sound.isEmpty) return null;
@@ -57,7 +52,9 @@ fln.LinuxNotificationCategory? parseLinuxNotificationCategory(String? value) {
   for (final category in fln.LinuxNotificationCategory.values) {
     if (category.name.toLowerCase() == value.toLowerCase()) return category;
   }
-  throw FormatException("unknown Linux notification category: $value");
+  throw NotificationException.invalidOption(
+    "unknown Linux notification category: $value",
+  );
 }
 
 fln.LinuxNotificationUrgency? parseLinuxNotificationUrgency(String? value,
@@ -101,11 +98,12 @@ fln.GroupAlertBehavior? parseGroupAlertBehavior(String? value,
     parseEnum(fln.GroupAlertBehavior.values, value, defaultValue);
 
 fln.AndroidNotificationCategory? parseAndroidNotificationCategory(
-    String? value) {
+  String? value,
+) {
   if (value == null) return null;
   final category = parseEnum(fln.AndroidNotificationCategory.values, value);
   if (category != null) return category;
-  throw InvalidNotificationOptionException(
+  throw NotificationException.invalidOption(
     "unknown notification category: $value",
   );
 }
@@ -136,26 +134,34 @@ fln.AndroidServiceStartType? parseServiceStartType(String? value,
         [fln.AndroidServiceStartType? defaultValue]) =>
     parseEnum(fln.AndroidServiceStartType.values, value, defaultValue);
 
-fln.AndroidServiceForegroundType? parseForegroundServiceType(String? value,
-        [fln.AndroidServiceForegroundType? defaultValue]) =>
-    parseEnum(fln.AndroidServiceForegroundType.values,
-        value == null ? null : "foregroundServiceType$value", defaultValue);
+fln.AndroidServiceForegroundType? parseForegroundServiceType(
+  String? value, [
+  fln.AndroidServiceForegroundType? defaultValue,
+]) =>
+    parseEnum(
+      fln.AndroidServiceForegroundType.values,
+      value == null ? null : "foregroundServiceType$value",
+      defaultValue,
+    );
 
 /// An absent or empty list lets Android use the manifest's service types.
 /// Invalid entries are rejected rather than silently changing the service type.
 Set<fln.AndroidServiceForegroundType>? parseForegroundServiceTypes(
-    Object? values) {
+  Object? values,
+) {
   if (values == null) return null;
   if (values is! List) {
-    throw InvalidNotificationOptionException(
-        "foreground_service_types must be a list");
+    throw const NotificationException.invalidOption(
+      "foreground_service_types must be a list",
+    );
   }
   if (values.isEmpty) return null;
   return parseList(values, (value) {
     final type = value is String ? parseForegroundServiceType(value) : null;
     if (type == null) {
-      throw InvalidNotificationOptionException(
-          "unknown foreground_service_types entry: $value");
+      throw NotificationException.invalidOption(
+        "unknown foreground_service_types entry: $value",
+      );
     }
     return type;
   })!

@@ -104,6 +104,9 @@ class NotificationErrorCode:
     SHOW_FAILED = "show_failed"
     """Displaying a notification failed."""
 
+    CANCEL_FAILED = "cancel_failed"
+    """Cancelling displayed or scheduled notifications failed."""
+
     SCHEDULE_FAILED = "schedule_failed"
     """Scheduling a notification or registering a repeating request failed."""
 
@@ -140,10 +143,8 @@ class NotificationErrorCode:
 
     PERMISSION_FAILED = "permission_failed"
     """
-    Reserved code for a failed permission operation.
-
-    Not every native permission failure is translated to this code by the current
-    bridge.
+    A permission request, permission-status check, or opening notification settings
+    failed.
     """
 
     UNKNOWN_METHOD = "unknown_method"

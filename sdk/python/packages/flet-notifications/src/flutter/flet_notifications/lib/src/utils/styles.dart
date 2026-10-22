@@ -4,10 +4,7 @@ import 'package:flet/flet.dart' show parseBool, parseList;
 import 'package:flutter_local_notifications/flutter_local_notifications.dart'
     as fln;
 
-/// A malformed style payload, reported separately from action and option errors.
-class InvalidNotificationStyleException extends FormatException {
-  InvalidNotificationStyleException(super.message);
-}
+import 'errors.dart';
 
 /// Parses the optional Android style directly into its native representation.
 fln.StyleInformation? parseStyle(Object? value) {
@@ -68,9 +65,9 @@ fln.StyleInformation? parseStyle(Object? value) {
         throw FormatException("unknown style type: ${value["_type"]}");
     }
   } on FormatException catch (e) {
-    throw InvalidNotificationStyleException(e.message);
+    throw NotificationException.invalidStyle(e.message);
   } on TypeError catch (e) {
-    throw InvalidNotificationStyleException("invalid style field: $e");
+    throw NotificationException.invalidStyle("invalid style field: $e");
   }
 }
 
