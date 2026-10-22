@@ -1,4 +1,4 @@
-import 'dart:convert';
+import 'dart:typed_data';
 
 import 'package:flet/flet.dart' show parseBool, parseList;
 import 'package:flutter_local_notifications/flutter_local_notifications.dart'
@@ -71,65 +71,56 @@ fln.StyleInformation? parseStyle(Object? value) {
   }
 }
 
-/// Validates the shared icon payload before selecting a native representation.
-({String source, String value})? parseIconSource(Object? value) {
+/// Reads the discriminator and value of an `AndroidIcon` payload.
+({String type, Object? value})? _parseIconSource(Object? value) {
   if (value == null) return null;
   if (value is! Map) {
     throw const FormatException("icon must be a map");
   }
-  const sources = [
-    "drawable_resource",
-    "file_path",
-    "content_uri",
-    "flutter_asset",
-    "data_base64",
-  ];
-  final selected = sources.where((key) => value[key] != null).toList();
-  if (selected.length != 1) {
-    throw const FormatException("icon requires exactly one source");
-  }
-  final source = selected.single;
-  final data = value[source];
-  if (data is! String) {
-    throw FormatException("icon $source must be a string");
-  }
-  return (source: source, value: data);
+  final type = value["_type"];
+  return switch (type) {
+    "drawable" => (type: type as String, value: value["name"]),
+    "file" => (type: type as String, value: value["path"]),
+    "bytes" => (type: type as String, value: value["data"]),
+    "content_uri" => (type: type as String, value: value["uri"]),
+    _ => throw FormatException("unknown icon type: $type"),
+  };
 }
 
-/// Big-picture bitmaps support drawable resources, files and base64 bytes.
+/// Notification images accept drawable, file and byte sources.
 fln.AndroidBitmap<Object>? parseAndroidBitmap(Object? value) {
-  final icon = parseIconSource(value);
+  final icon = _parseIconSource(value);
   if (icon == null) return null;
-  switch (icon.source) {
-    case "drawable_resource":
-      return fln.DrawableResourceAndroidBitmap(icon.value);
-    case "file_path":
-      return fln.FilePathAndroidBitmap(icon.value);
-    case "data_base64":
-      return fln.ByteArrayAndroidBitmap(base64Decode(icon.value));
-    default:
+  switch (icon) {
+    case (type: "drawable", value: final String name):
+      return fln.DrawableResourceAndroidBitmap(name);
+    case (type: "file", value: final String path):
+      return fln.FilePathAndroidBitmap(path);
+    case (type: "bytes", value: final Uint8List data):
+      return fln.ByteArrayAndroidBitmap(data);
+    case (type: "content_uri", value: _):
       throw const FormatException(
-          "big-picture images support drawable, file path and byte sources");
+          "notification images support drawable, file and byte sources");
+    default:
+      throw FormatException("invalid ${icon.type} icon");
   }
 }
 
-/// Person icons additionally support content URIs and Flutter assets.
+/// Person icons additionally support content URIs.
 fln.AndroidIcon<Object>? parseAndroidIcon(Object? value) {
-  final icon = parseIconSource(value);
+  final icon = _parseIconSource(value);
   if (icon == null) return null;
-  switch (icon.source) {
-    case "drawable_resource":
-      return fln.DrawableResourceAndroidIcon(icon.value);
-    case "file_path":
-      return fln.BitmapFilePathAndroidIcon(icon.value);
-    case "content_uri":
-      return fln.ContentUriAndroidIcon(icon.value);
-    case "flutter_asset":
-      return fln.FlutterBitmapAssetAndroidIcon(icon.value);
-    case "data_base64":
-      return fln.ByteArrayAndroidIcon(base64Decode(icon.value));
+  switch (icon) {
+    case (type: "drawable", value: final String name):
+      return fln.DrawableResourceAndroidIcon(name);
+    case (type: "file", value: final String path):
+      return fln.BitmapFilePathAndroidIcon(path);
+    case (type: "bytes", value: final Uint8List data):
+      return fln.ByteArrayAndroidIcon(data);
+    case (type: "content_uri", value: final String uri):
+      return fln.ContentUriAndroidIcon(uri);
     default:
-      throw const FormatException("unknown icon source");
+      throw FormatException("invalid ${icon.type} icon");
   }
 }
 

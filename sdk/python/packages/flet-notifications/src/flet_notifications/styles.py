@@ -7,6 +7,11 @@ import flet as ft
 __all__ = [
     "AndroidBigPictureStyle",
     "AndroidBigTextStyle",
+    "AndroidBitmap",
+    "AndroidBytesBitmap",
+    "AndroidContentUriIcon",
+    "AndroidDrawableBitmap",
+    "AndroidFileBitmap",
     "AndroidIcon",
     "AndroidInboxStyle",
     "AndroidMessage",
@@ -40,65 +45,123 @@ class AndroidStyle(ABC):
 
 
 @ft.value(kw_only=True)
-class AndroidIcon:
+class AndroidIcon(ABC):
     """
-    Image source for an Android person icon or big-picture bitmap.
+    Abstract base for Android image sources.
 
-    Set exactly one source. :attr:`flet_notifications.AndroidPerson.icon` supports all
-    five sources; :class:`flet_notifications.AndroidBigPictureStyle` supports only
-    drawable resources, file paths, and base64-encoded bytes. Paths and URIs refer to
-    the Android device, not the Python server.
-
-    Raises:
-        ValueError: If zero or multiple sources are provided.
-    """
-
-    drawable_resource: str | None = None
-    """
-    Name of an image in the app's Android drawable resources.
-
-    For example, `"contact_avatar"`, without the file extension.
+    :attr:`flet_notifications.AndroidPerson.icon` accepts any concrete source:
+    :class:`flet_notifications.AndroidDrawableBitmap`,
+    :class:`flet_notifications.AndroidFileBitmap`,
+    :class:`flet_notifications.AndroidBytesBitmap`, or
+    :class:`flet_notifications.AndroidContentUriIcon`. Notification images accept only
+    the :class:`flet_notifications.AndroidBitmap` sources.
     """
 
-    file_path: str | None = None
-    """Absolute path of an image file accessible to the app on the Android device."""
+    _type: str = field(init=False, repr=False, compare=False)
 
-    content_uri: str | None = None
+    @abstractmethod
+    def __post_init__(self) -> None:
+        """Set the concrete source's discriminator."""
+
+
+@ft.value(kw_only=True)
+class AndroidBitmap(AndroidIcon, ABC):
     """
-    Android `content://` URI used as a person's icon.
+    Abstract base for Android image sources that can be decoded into a bitmap.
+
+    Accepted by :attr:`flet_notifications.AndroidOptions.large_icon` and
+    :class:`flet_notifications.AndroidBigPictureStyle`, as well as anywhere an
+    :class:`flet_notifications.AndroidIcon` is accepted.
+    """
+
+
+@ft.value(kw_only=True)
+class AndroidDrawableBitmap(AndroidBitmap):
+    """
+    Image from the app's Android drawable resources.
 
     Note:
-        The app must have permission to read it. Not supported by
-        :class:`flet_notifications.AndroidBigPictureStyle`.
+        `flet build` does not yet provide a way to add drawable resources to the app.
+        Use :class:`flet_notifications.AndroidBytesBitmap` or
+        :class:`flet_notifications.AndroidFileBitmap` for your own images.
     """
 
-    flutter_asset: str | None = None
+    name: str
     """
-    Flutter bitmap-asset path used as a person's icon.
+    Resource name, without the file extension.
 
-    Note:
-        The asset must be bundled in the app. Not supported by
-        :class:`flet_notifications.AndroidBigPictureStyle`.
-    """
-
-    data_base64: str | None = None
-    """
-    Base64-encoded image bytes, without a data-URL prefix.
-
-    For example, `base64.b64encode(image_bytes).decode("ascii")`. Supported by both
-    person icons and big-picture bitmaps.
+    For example, `"contact_avatar"` for `res/drawable/contact_avatar.png`.
     """
 
     def __post_init__(self) -> None:
-        sources = [
-            self.drawable_resource,
-            self.file_path,
-            self.content_uri,
-            self.flutter_asset,
-            self.data_base64,
-        ]
-        if sum(s is not None for s in sources) != 1:
-            raise ValueError("AndroidIcon requires exactly one source")
+        self._type = "drawable"
+
+
+@ft.value(kw_only=True)
+class AndroidFileBitmap(AndroidBitmap):
+    """
+    Image file on the Android device.
+
+    In a built app, files in the app's assets directory are available on the device,
+    for example at `Path(__file__).parent / "assets" / "avatar.png"`; files the app
+    saves, such as under a :class:`flet.StoragePaths` directory, can also be used.
+
+    Note:
+        The path must exist on the Android device. While developing with `flet run`
+        against a phone, Python runs on your computer, so its paths do not exist on
+        the device; use :class:`flet_notifications.AndroidBytesBitmap` instead.
+    """
+
+    path: str
+    """Absolute path of an image file readable by the app."""
+
+    def __post_init__(self) -> None:
+        self._type = "file"
+
+
+@ft.value(kw_only=True)
+class AndroidBytesBitmap(AndroidBitmap):
+    """
+    Image from encoded bytes, such as the contents of a PNG or JPEG file.
+
+    The bytes travel with the notification request, so this source works wherever the
+    Python code runs, including `flet run` against a phone. Prefer it for images
+    shipped with the app or downloaded at runtime.
+
+    Example:
+        ```python
+        from pathlib import Path
+
+        import flet_notifications as ftn
+
+        avatar = ftn.AndroidBytesBitmap(
+            data=(Path(__file__).parent / "assets" / "avatar.png").read_bytes()
+        )
+        ```
+    """
+
+    data: bytes
+    """Encoded image bytes."""
+
+    def __post_init__(self) -> None:
+        self._type = "bytes"
+
+
+@ft.value(kw_only=True)
+class AndroidContentUriIcon(AndroidIcon):
+    """
+    Image identified by an Android `content://` URI.
+
+    Note:
+        Supported only by :attr:`flet_notifications.AndroidPerson.icon`. The app must
+        have permission to read the URI.
+    """
+
+    uri: str
+    """Content URI of the image, such as `"content://contacts/people/1/photo"`."""
+
+    def __post_init__(self) -> None:
+        self._type = "content_uri"
 
 
 @ft.value(kw_only=True)
@@ -134,18 +197,18 @@ class AndroidBigPictureStyle(AndroidStyle):
     Expanded Android notification layout displaying a large image.
 
     Note:
-        Uses drawable, device-file, or base64-byte image sources. Content URIs and
-        Flutter assets are not accepted by this layout. Other platforms ignore it.
+        Other platforms ignore this style.
     """
 
-    image: AndroidIcon
+    image: AndroidBitmap
     """Image displayed in the expanded notification."""
 
-    large_icon: AndroidIcon | None = None
+    large_icon: AndroidBitmap | None = None
     """
-    Optional large icon for the expanded notification.
+    Large icon shown while the notification is expanded.
 
-    Supports the same bitmap sources as :attr:`image`.
+    `None` keeps the notification's
+    :attr:`~flet_notifications.AndroidOptions.large_icon`.
     """
 
     content_title: str | None = None

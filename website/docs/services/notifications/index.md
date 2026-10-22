@@ -103,6 +103,39 @@ See also:
 - [Android permissions](../../publish/android.md#permissions)
 - [Receiver configuration](../../publish/android.md#receivers)
 
+#### Images and icons
+
+Android notification images, such as
+[`AndroidOptions.large_icon`][flet_notifications.AndroidOptions.large_icon] and
+[`AndroidBigPictureStyle`][flet_notifications.AndroidBigPictureStyle], accept these sources:
+
+- [`AndroidBytesBitmap`][flet_notifications.AndroidBytesBitmap]: the image's bytes.
+  Works everywhere, including `flet run` against a phone, so prefer it for images
+  shipped with the app or downloaded at runtime:
+
+  ```python
+  from pathlib import Path
+
+  import flet_notifications as ftn
+
+  avatar = ftn.AndroidBytesBitmap(
+      data=(Path(__file__).parent / "assets" / "avatar.png").read_bytes()
+  )
+  ```
+
+- [`AndroidFileBitmap`][flet_notifications.AndroidFileBitmap]: a file path on the
+  device. Works in built apps, but not with `flet run` against a phone, where Python
+  runs on your computer.
+- [`AndroidDrawableBitmap`][flet_notifications.AndroidDrawableBitmap]: a drawable
+  resource bundled with the app.
+
+`flet build` does not yet provide a way to add your own drawable or raw resources.
+As a result, the small status-bar icon
+([`default_icon`][flet_notifications.LocalNotifications.default_icon]) is currently
+limited to the app's launcher icon. Android draws it from its transparency alone, so
+it can appear as a solid shape. Bundled custom channel sounds are not possible yet
+either.
+
 ### Web
 
 The browser only accepts

@@ -7,7 +7,10 @@ import pytest
 from flet_notifications import (
     AndroidBigPictureStyle,
     AndroidBigTextStyle,
-    AndroidIcon,
+    AndroidBytesBitmap,
+    AndroidContentUriIcon,
+    AndroidDrawableBitmap,
+    AndroidFileBitmap,
     AndroidInboxStyle,
     AndroidMessage,
     AndroidMessagingStyle,
@@ -26,7 +29,7 @@ from .helpers import encode_wire
     [
         (AndroidBigTextStyle(big_text="Long text"), "big_text"),
         (
-            AndroidBigPictureStyle(image=AndroidIcon(file_path="/tmp/photo.png")),
+            AndroidBigPictureStyle(image=AndroidFileBitmap(path="/tmp/photo.png")),
             "big_picture",
         ),
         (AndroidInboxStyle(lines=["one"]), "inbox"),
@@ -77,3 +80,19 @@ async def test_message_timestamp_preserves_instant(method_name):
         style = calls[-1]["options"]["android"]["style"]
         assert style["messages"][0]["timestamp"] == message.timestamp
         message.timestamp += timedelta(minutes=1)
+
+
+def test_icon_sources_encode_discriminators_and_raw_bytes():
+    """Icon sources carry their kind, and byte sources travel as raw bytes."""
+    assert encode_wire(AndroidDrawableBitmap(name="avatar")) == {
+        "_type": "drawable",
+        "name": "avatar",
+    }
+    assert encode_wire(AndroidBytesBitmap(data=b"\x01\x02")) == {
+        "_type": "bytes",
+        "data": b"\x01\x02",
+    }
+    assert encode_wire(AndroidContentUriIcon(uri="content://x")) == {
+        "_type": "content_uri",
+        "uri": "content://x",
+    }

@@ -68,15 +68,6 @@ fln.AndroidNotificationSound? parseAndroidNotificationSound(String? sound) {
   return fln.RawResourceAndroidNotificationSound(sound);
 }
 
-/// Notification large icons accept bitmaps (drawable, file path or bytes).
-fln.AndroidBitmap<Object>? parseLargeIcon(String? source) {
-  if (source == null || source.isEmpty) return null;
-  if (source.startsWith("/") || source.contains("\\")) {
-    return fln.FilePathAndroidBitmap(source);
-  }
-  return fln.DrawableResourceAndroidBitmap(source);
-}
-
 fln.Priority? parsePriority(String? value, [fln.Priority? defaultValue]) =>
     parseEnum(fln.Priority.values, value, defaultValue);
 

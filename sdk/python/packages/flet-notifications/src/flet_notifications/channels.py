@@ -85,6 +85,9 @@ class NotificationChannel:
         Requires :attr:`play_sound`. `None` uses the default notification sound.
         Fixed at channel creation; changing this value does not replace an existing
         channel's sound.
+
+        `flet build` does not yet provide a way to add raw resources to the app, so a
+        bundled custom sound is not currently possible.
     """
 
     enable_vibration: bool = True

@@ -1,3 +1,5 @@
+import 'dart:typed_data';
+
 import 'package:flet_notifications/src/utils/styles.dart';
 import 'package:flet_notifications/src/utils/errors.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart'
@@ -9,8 +11,11 @@ void main() {
       () {
     final picture = parseStyle({
       "_type": "big_picture",
-      "image": {"data_base64": "AQID"},
-      "large_icon": {"drawable_resource": "avatar"},
+      "image": {
+        "_type": "bytes",
+        "data": Uint8List.fromList([1, 2, 3]),
+      },
+      "large_icon": {"_type": "drawable", "name": "avatar"},
       "content_title": "Photo",
       "summary_text": "Summary",
     }) as fln.BigPictureStyleInformation;
@@ -38,7 +43,7 @@ void main() {
         "name": "Me",
         "key": "self",
         "bot": true,
-        "icon": {"flutter_asset": "assets/me.png"}
+        "icon": {"_type": "file", "path": "/data/me.png"}
       },
       "conversation_title": "Chat",
       "group_conversation": true,
@@ -50,14 +55,15 @@ void main() {
             "name": "Alex",
             "uri": "mailto:alex@example.com",
             "important": true,
-            "icon": {"content_uri": "content://avatar/1"}
+            "icon": {"_type": "content_uri", "uri": "content://avatar/1"}
           },
         }
       ],
     }) as fln.MessagingStyleInformation;
     expect(style.person.key, "self");
     expect(style.person.bot, isTrue);
-    expect(style.person.icon, isA<fln.FlutterBitmapAssetAndroidIcon>());
+    expect((style.person.icon as fln.BitmapFilePathAndroidIcon).data,
+        "/data/me.png");
     expect(style.conversationTitle, "Chat");
     expect(style.groupConversation, isTrue);
     final message = style.messages!.single;
@@ -80,15 +86,19 @@ void main() {
     for (final value in [
       {
         "_type": "big_picture",
-        "image": {"content_uri": "content://image/1"}
+        "image": {"_type": "content_uri", "uri": "content://image/1"}
       },
       {
         "_type": "big_picture",
-        "image": {"data_base64": "%%%"}
+        "image": {"_type": "bytes", "data": "AQID"}
       },
       {
         "_type": "big_picture",
-        "image": {"file_path": "/a", "drawable_resource": "a"}
+        "image": {"_type": "asset", "path": "a.png"}
+      },
+      {
+        "_type": "big_picture",
+        "image": {"path": "/a"}
       },
       {
         "_type": "messaging",

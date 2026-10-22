@@ -681,6 +681,11 @@ docs:
         - services/notifications/types/androidaudioattributesusage.md
         - services/notifications/types/androidbigpicturestyle.md
         - services/notifications/types/androidbigtextstyle.md
+        - services/notifications/types/androidbitmap.md
+        - services/notifications/types/androidbytesbitmap.md
+        - services/notifications/types/androidcontenturiicon.md
+        - services/notifications/types/androiddrawablebitmap.md
+        - services/notifications/types/androidfilebitmap.md
         - services/notifications/types/androidforegroundservicetype.md
         - services/notifications/types/androidgroup.md
         - services/notifications/types/androidgroupalertbehavior.md

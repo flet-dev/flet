@@ -113,7 +113,7 @@ fln.NotificationDetails parseNotificationDetails({
         silent: parseBool(androidOptions["silent"], false)!,
         color: parseColor((androidOptions["color"] as String?)?.trim(), null),
         colorized: parseBool(androidOptions["colorized"], false)!,
-        largeIcon: parseLargeIcon(androidOptions["large_icon"] as String?),
+        largeIcon: parseAndroidBitmap(androidOptions["large_icon"]),
         onlyAlertOnce: parseBool(androidOptions["only_alert_once"], false)!,
         showWhen: parseBool(androidOptions["show_timestamp"], true)!,
         when:

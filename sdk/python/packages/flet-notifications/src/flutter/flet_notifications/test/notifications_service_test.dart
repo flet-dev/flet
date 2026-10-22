@@ -1257,6 +1257,7 @@ void main() {
       "options": {
         "android": {
           "icon": "ic_stat_notify",
+          "large_icon": {"_type": "file", "path": "/data/avatar.png"},
           "channel": {
             "id": "alarms",
             "name": "Alarms",
@@ -1285,6 +1286,8 @@ void main() {
     final details =
         plugin.shown.single["details"] as fln.AndroidNotificationDetails;
     expect(details.icon, "ic_stat_notify");
+    expect((details.largeIcon as fln.FilePathAndroidBitmap).data,
+        "/data/avatar.png");
     expect(details.channelId, "alarms");
     expect(details.channelName, "Alarms");
     final channel = plugin.channelsCreated.single;
@@ -1638,7 +1641,7 @@ void main() {
         {
           "style": {
             "_type": "big_picture",
-            "image": {"content_uri": "content://image"}
+            "image": {"_type": "content_uri", "uri": "content://image"}
           }
         },
         "error:invalid_style:",

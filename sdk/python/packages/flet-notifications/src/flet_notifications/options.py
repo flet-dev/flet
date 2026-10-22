@@ -3,7 +3,7 @@ from enum import Enum
 
 import flet as ft
 from flet_notifications.channels import NotificationChannel
-from flet_notifications.styles import AndroidStyle
+from flet_notifications.styles import AndroidBitmap, AndroidStyle
 from flet_notifications.types import (
     AndroidGroupAlertBehavior,
     AndroidNotificationCategory,
@@ -287,8 +287,6 @@ class AndroidOptions:
     Supply the resource name without a file extension, such as `"ic_stat_notify"`.
     `None` uses :attr:`flet_notifications.LocalNotifications.default_icon`.
 
-    Include the drawable in the Android app.
-
     Note:
         Use a white silhouette on a transparent background, with resources sized for
         the supported screen densities. Android Studio's
@@ -296,6 +294,10 @@ class AndroidOptions:
         generates the appropriate drawable variants. Android uses the icon's alpha
         channel to determine its visible shape; an opaque background can appear as a
         solid block.
+
+        `flet build` does not yet provide a way to add drawable resources to the app,
+        so only the app's launcher icon (`"@mipmap/ic_launcher"`) is currently
+        available.
     """
 
     priority: AndroidPriority | None = None
@@ -344,16 +346,11 @@ class AndroidOptions:
         background coloring to foreground-service notifications.
     """
 
-    large_icon: str | None = None
+    large_icon: AndroidBitmap | None = None
     """
-    Drawable resource name or absolute device file path for the large icon.
+    Large image shown beside the notification content, such as a contact photo.
 
-    Paths beginning with `/` or containing a backslash are treated as file paths;
-    other strings are drawable names.
-
-    Note:
-        Content URIs are not supported by this field. For richer image sources, see
-        :class:`~flet_notifications.AndroidIcon`.
+    `None` shows no large icon.
     """
 
     only_alert_once: bool | None = None

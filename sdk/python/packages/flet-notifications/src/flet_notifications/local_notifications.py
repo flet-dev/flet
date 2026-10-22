@@ -86,8 +86,8 @@ class LocalNotifications(ft.Service):
     Default small Android notification icon.
 
     Supply a bundled drawable resource name, such as `"ic_stat_notify"`, without an
-    extension. `None` uses `"@mipmap/ic_launcher"`. Android notification icons have
-    platform-specific size and transparency requirements.
+    extension. `None` uses `"@mipmap/ic_launcher"`. See
+    :attr:`flet_notifications.AndroidOptions.icon` for the icon's requirements.
     """
 
     request_alert_permission: bool = True
