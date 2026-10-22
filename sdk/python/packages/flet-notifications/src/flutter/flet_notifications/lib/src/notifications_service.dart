@@ -30,11 +30,10 @@ class LocalNotificationsService extends FletService {
   bool _replaying = false;
   bool _launchReplayComplete = false;
   Future<void>? _initFuture;
-  // Accumulated Darwin action categories, keyed by notification id. iOS
-  // replaces the whole category set on every setNotificationCategories call,
-  // so all registered categories are re-applied together — otherwise a later
-  // notification's actions would clobber an earlier one's.
-  final Map<int, List<fln.DarwinNotificationCategory>> _darwinCategories = {};
+  // Desired categories are retained for retries; registered categories reflect
+  // only the snapshot from the last successful native initialization.
+  final Map<int, fln.DarwinNotificationCategory> _darwinCategories = {};
+  Map<int, fln.DarwinNotificationCategory> _registeredDarwinCategories = {};
 
   @override
   void init() {
@@ -62,9 +61,13 @@ class LocalNotificationsService extends FletService {
 
   Future<void> _initializeBackend({bool requestPermissions = true}) async {
     try {
+      final categories =
+          Map<int, fln.DarwinNotificationCategory>.of(_darwinCategories);
       final result = await _plugin!.initialize(
         settings: _buildInitializationSettings(
-            requestPermissions: requestPermissions),
+          requestPermissions: requestPermissions,
+          notificationCategories: categories.values.toList(),
+        ),
         onDidReceiveNotificationResponse: _handleResponse,
         onDidReceiveBackgroundNotificationResponse: notificationTapBackground,
       );
@@ -74,6 +77,7 @@ class LocalNotificationsService extends FletService {
         throw StateError(
             "notification backend initialization returned $result");
       }
+      if (isApplePlatform()) _registeredDarwinCategories = categories;
     } catch (_) {
       _initialized = false;
       rethrow;
@@ -106,8 +110,10 @@ class LocalNotificationsService extends FletService {
     }
   }
 
-  fln.InitializationSettings _buildInitializationSettings(
-      {bool requestPermissions = true}) {
+  fln.InitializationSettings _buildInitializationSettings({
+    bool requestPermissions = true,
+    required List<fln.DarwinNotificationCategory> notificationCategories,
+  }) {
     final defaultIcon =
         control.getString("default_icon", "@mipmap/ic_launcher")!;
     final darwin = fln.DarwinInitializationSettings(
@@ -119,8 +125,7 @@ class LocalNotificationsService extends FletService {
           control.getBool("request_badge_permission", true)!,
       requestCriticalPermission: requestPermissions &&
           control.getBool("request_critical_permission", false)!,
-      notificationCategories:
-          _darwinCategories.values.expand((categories) => categories).toList(),
+      notificationCategories: notificationCategories,
     );
     return fln.InitializationSettings(
       android: fln.AndroidInitializationSettings(defaultIcon),
@@ -526,12 +531,14 @@ class LocalNotificationsService extends FletService {
       );
     }).toList();
 
-    _darwinCategories[id] = [
-      fln.DarwinNotificationCategory(
-        "$darwinNotificationCategoryPrefix$id",
-        actions: categoryActions,
-      ),
-    ];
+    final category = fln.DarwinNotificationCategory(
+      "$darwinNotificationCategoryPrefix$id",
+      actions: categoryActions,
+    );
+    _darwinCategories[id] = category;
+    if (areDarwinCategoriesEqual(_registeredDarwinCategories[id], category)) {
+      return;
+    }
     await _initializeBackend(requestPermissions: false);
   }
 

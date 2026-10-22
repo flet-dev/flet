@@ -1,4 +1,7 @@
 import 'package:flet/flet.dart' show parseBool, parseList;
+import 'package:flutter/foundation.dart' show setEquals;
+import 'package:flutter_local_notifications/flutter_local_notifications.dart'
+    as fln;
 
 import 'errors.dart';
 
@@ -104,4 +107,27 @@ ParsedInput? parseActionInput(Object? raw) {
     allowedMimeTypes:
         mimeTypes is List ? Set<String>.from(mimeTypes) : const {},
   );
+}
+
+/// Compares the native category definitions, including action order and options.
+bool areDarwinCategoriesEqual(
+  fln.DarwinNotificationCategory? registered,
+  fln.DarwinNotificationCategory category,
+) {
+  if (registered == null ||
+      registered.identifier != category.identifier ||
+      !setEquals(registered.options, category.options) ||
+      registered.actions.length != category.actions.length) {
+    return false;
+  }
+  for (var i = 0; i < category.actions.length; i++) {
+    final a = registered.actions[i];
+    final b = category.actions[i];
+    if ((a.type, a.identifier, a.title, a.buttonTitle, a.placeholder) !=
+            (b.type, b.identifier, b.title, b.buttonTitle, b.placeholder) ||
+        !setEquals(a.options, b.options)) {
+      return false;
+    }
+  }
+  return true;
 }

@@ -600,7 +600,14 @@ void main() {
         startsWith("error:show_failed:"));
     expect(macos.shownDarwin, isNull);
     macos.failInitialization = false;
-    expect(await service.invokeMethod("show", {"id": 1}), "ok");
+    final retry = {
+      "id": 1,
+      "actions": [
+        {"id": "open", "title": "Open"}
+      ]
+    };
+    expect(await service.invokeMethod("show", retry), "ok");
+    expect(await service.invokeMethod("show", retry), "ok");
     expect(macos.initializations, hasLength(3));
     expect(macos.initializations.last.notificationCategories, hasLength(1));
   });
@@ -1302,6 +1309,92 @@ void main() {
       expect(details.additionalFlags!.toList(), [mask]);
     });
   }
+
+  test(
+      "Apple category updates skip unchanged definitions and refresh real edits",
+      () async {
+    debugDefaultTargetPlatformOverride = TargetPlatform.macOS;
+    addTearDown(() => debugDefaultTargetPlatformOverride = null);
+    final macos = _FakeMacOsPlugin();
+    fln.FlutterLocalNotificationsPlatform.instance = macos;
+    final service = _makeService();
+    final open = <String, Object?>{"id": "open", "title": "Open"};
+    final reply = <String, Object?>{
+      "id": "reply",
+      "title": "Reply",
+      "input": {"label": "Message"}
+    };
+    final original = [open, reply];
+    Future<dynamic> show(List<Map<String, Object?>> actions, {int id = 1}) =>
+        service.invokeMethod("show", {"id": id, "actions": actions});
+    expect(await show(original), "ok");
+    final initializations = macos.initializations.length;
+    expect(
+        await service.invokeMethod("show", {
+          "id": 1,
+          "title": "Updated",
+          "body": "Progress",
+          "payload": "updated",
+          "show_progress": true,
+          "max_progress": 100,
+          "progress": 25,
+          "actions": [
+            {...open, "cancel_notification": false},
+            {
+              ...reply,
+              "input": {
+                "label": "Message",
+                "choices": ["Yes"],
+                "allow_free_form_input": false,
+                "allowed_mime_types": ["image/png"]
+              }
+            },
+          ],
+        }),
+        "ok");
+    expect(macos.initializations, hasLength(initializations));
+    // Each variant changes one Apple-visible aspect of the original actions.
+    for (final actions in <List<Map<String, Object?>>>[
+      [
+        {...open, "title": "Open item"},
+        reply
+      ],
+      [
+        {...open, "id": "view"},
+        reply
+      ],
+      [
+        {...open, "destructive": true},
+        reply
+      ],
+      [
+        {...open, "foreground": false},
+        reply
+      ],
+      [
+        open,
+        {
+          ...reply,
+          "input": {"label": "Answer"}
+        }
+      ],
+      [
+        open,
+        {...reply, "input": null}
+      ],
+      [reply, open],
+      [open],
+    ]) {
+      expect(await show(original), "ok");
+      final before = macos.initializations.length;
+      expect(await show(actions), "ok");
+      expect(macos.initializations, hasLength(before + 1));
+      expect(await show(actions), "ok");
+      expect(macos.initializations, hasLength(before + 1));
+    }
+    expect(await show(original, id: 2), "ok");
+    expect(macos.initializations.last.notificationCategories, hasLength(2));
+  });
 
   test("Apple category refreshes do not repeat authorization requests",
       () async {
