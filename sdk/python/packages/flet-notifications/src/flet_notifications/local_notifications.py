@@ -314,7 +314,7 @@ class LocalNotifications(ft.Service):
                 **Has effect on iOS/macOS only**.
             critical: Whether to request permission for critical alerts, which sound
                 through mute and Do Not Disturb. Requires Apple's critical-alert
-                entitlement, which this argument does not obtain; see
+                entitlement in the app; see
                 :attr:`flet_notifications.DarwinInterruptionLevel.CRITICAL`.
                 **Has effect on iOS/macOS only**.
             provisional: Whether to request provisional authorization instead of

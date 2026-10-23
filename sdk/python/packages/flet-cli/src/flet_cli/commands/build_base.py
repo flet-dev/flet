@@ -726,6 +726,16 @@ class BaseBuildCommand(BaseFlutterCommand):
             "(macos only); can be used multiple times",
         )
         parser.add_argument(
+            "--ios-entitlements",
+            dest="ios_entitlements",
+            action="extend",
+            nargs="+",
+            default=[],
+            help="The list of `<key>=<value>` entitlements. Values can be booleans, "
+            "strings, numbers, TOML arrays, or TOML inline tables "
+            "(ipa and ios-simulator only); can be used multiple times",
+        )
+        parser.add_argument(
             "--android-features",
             dest="android_features",
             action="extend",
@@ -1647,6 +1657,7 @@ class BaseBuildCommand(BaseFlutterCommand):
                 ),
                 "info_plist": info_plist,
                 "macos_entitlements": macos_entitlements,
+                "ios_entitlements": self.get_ios_entitlements(),
                 "android_permissions": android_permissions,
                 "android_features": android_features,
                 "android_meta_data": android_meta_data,
@@ -2960,6 +2971,36 @@ class BaseBuildCommand(BaseFlutterCommand):
             if value is not None:
                 return value
         return self.get_pyproject(f"tool.flet.deep_linking.{key}")
+
+    def get_ios_entitlements(self) -> dict:
+        """
+        Resolve the iOS app's entitlements.
+
+        Entries of `--ios-entitlements` override those of `[tool.flet.ios.entitlement]`.
+        Values are written to `Runner.entitlements` with their plist types.
+        """
+        assert self.get_pyproject
+        assert self.options
+        ios_entitlements = dict(self.get_pyproject("tool.flet.ios.entitlement") or {})
+
+        # parse --ios-entitlements
+        for p in self.options.ios_entitlements:
+            i = p.find("=")
+            if i > -1:
+                ios_entitlements[p[:i]] = parse_cli_plist_value(p[i + 1 :])
+            else:
+                self.cleanup(1, f"Invalid iOS entitlement option: {p}")
+
+        for key, value in ios_entitlements.items():
+            if not is_supported_plist_value(value):
+                self.cleanup(
+                    1,
+                    "Unsupported iOS entitlement value type for "
+                    f"{key}: {type(value).__name__}. Supported types are "
+                    "string, boolean, integer, float, dictionary, and arrays "
+                    "containing those values.",
+                )
+        return ios_entitlements
 
     def get_android_compile_options(self) -> dict[str, str]:
         """Merge Android compiler expressions over Flet's Java 17 defaults.

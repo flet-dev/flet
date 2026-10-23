@@ -116,10 +116,22 @@ class DarwinInterruptionLevel(Enum):
     """
     Present a critical alert that can sound through mute and Do Not Disturb.
 
-    Requires Apple's approval for the critical-alert entitlement and the user's
-    critical-alert authorization; request it with `critical=True` in
-    :meth:`flet_notifications.LocalNotifications.request_permissions`. Reserve for
-    urgent health or safety alerts.
+    Reserve for urgent health or safety alerts. Requires:
+
+    - Apple's approval of the critical-alert entitlement for the app, which Apple
+      grants on request to apps such as medical, health, and public-safety apps.
+      Once approved, enable the capability on the app's App ID.
+    - The [entitlement](https://flet.dev/docs/publish/ios#entitlements) in the app,
+      declared in `pyproject.toml`:
+
+      ```toml
+      [tool.flet.ios.entitlement]
+      "com.apple.developer.usernotifications.critical-alerts" = true
+      ```
+
+      Use `[tool.flet.macos.entitlement]` for macOS.
+    - The user's critical-alert authorization, requested with `critical=True` in
+      :meth:`flet_notifications.LocalNotifications.request_permissions`.
     """
 
 
