@@ -59,6 +59,7 @@ from flet_cli.utils.plist import is_supported_plist_value, parse_cli_plist_value
 from flet_cli.utils.project_dependencies import (
     get_poetry_dependencies,
     get_project_dependencies,
+    read_requirements_file_text,
 )
 from flet_cli.utils.pyproject_toml import load_pyproject_toml
 from flet_cli.utils.python_versions import (
@@ -2302,6 +2303,29 @@ class BaseBuildCommand(BaseFlutterCommand):
                 return AssetSpec(ico_sizes=sizes)
         return None
 
+    def _site_packages_missing(self) -> bool:
+        """
+        Whether the packages installed by the previous build are gone.
+
+        Guards the case where an unchanged stamp would skip installing the
+        packages but `site-packages` was deleted or emptied since, for example
+        by a CI cache that restores `build/.hash` without it. serious_python
+        installs into `build/site-packages` on native platforms (passed as
+        `SERIOUS_PYTHON_SITE_PACKAGES`) and into `build/site-packages` under
+        its working directory, the Flutter project, on web.
+
+        Returns:
+            `True` when that `site-packages` directory is missing or empty.
+        """
+
+        assert self.flutter_dir
+
+        if self.package_platform == "Emscripten":
+            site_packages = self.flutter_dir / "build" / "site-packages"
+        else:
+            site_packages = self.build_dir / "site-packages"
+        return not site_packages.is_dir() or not any(site_packages.iterdir())
+
     def _icons_missing(self, platform: str) -> bool:
         """
         Whether any icon this build should have produced is absent.
@@ -2600,14 +2624,16 @@ class BaseBuildCommand(BaseFlutterCommand):
                     package_args.extend(["-r", toml_dep])
 
             elif requirements_txt.exists():
+                # pip reads the file itself, so only its path is in
+                # package_args: hash its text, and that of the files it
+                # includes, so editing them reinstalls the packages.
+                reqs_txt_contents = read_requirements_file_text(requirements_txt)
                 if self.verbose > 1:
-                    with open(requirements_txt, encoding="utf-8") as f:
-                        reqs_txt_contents = f.read()
-                        console.log(
-                            f"Contents of requirements.txt: {reqs_txt_contents}",
-                            style=verbose2_style,
-                        )
-                        hash.update(reqs_txt_contents)
+                    console.log(
+                        f"Contents of requirements.txt: {escape(reqs_txt_contents)}",
+                        style=verbose2_style,
+                    )
+                hash.update(reqs_txt_contents)
                 package_args.extend(["-r", "-r", "-r", str(requirements_txt)])
             else:
                 package_args.extend(["-r", f"flet=={flet.version.flet_version}"])
@@ -2805,7 +2831,7 @@ class BaseBuildCommand(BaseFlutterCommand):
                 hash.update(arg)
 
             if not dev_packages_configured:
-                if not hash.has_changed():
+                if not hash.has_changed() and not self._site_packages_missing():
                     package_args.append("--skip-site-packages")
                     # serious_python skips copying Flutter packages to the temp dir
                     # under --skip-site-packages, so register_flutter_extensions must

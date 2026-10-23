@@ -3,6 +3,7 @@
 # Based on: https://pypi.org/project/toml-to-requirements/
 
 import re
+from pathlib import Path
 from typing import Any, Optional
 
 from packaging.requirements import Requirement
@@ -131,3 +132,46 @@ def get_project_dependencies(
             dependencies.add(_windows_safe(dep))
 
     return sorted(dependencies)
+
+
+_REQUIREMENTS_INCLUDE_RE = re.compile(
+    r"^\s*(?:-r|--requirement|-c|--constraint)(?:\s*=\s*|\s+|(?=\S))(\S+)"
+)
+
+
+def read_requirements_file_text(path: Path) -> str:
+    """
+    Return the text of a `requirements.txt` file and of the files it includes.
+
+    Files included with `-r`/`--requirement` or `-c`/`--constraint` are read
+    too, relative to the file that includes them, so a change to any of them
+    changes the result. URLs and files that don't exist are skipped.
+
+    Args:
+        path: The path of the `requirements.txt` file.
+
+    Returns:
+        The concatenated text of the file and of the files it includes.
+    """
+
+    parts: list[str] = []
+    visited: set[Path] = set()
+
+    def read(file: Path) -> None:
+        file = file.resolve()
+        if file in visited or not file.is_file():
+            return
+        visited.add(file)
+        text = file.read_text(encoding="utf-8", errors="replace")
+        parts.append(text)
+        for line in text.splitlines():
+            match = _REQUIREMENTS_INCLUDE_RE.match(line)
+            if not match:
+                continue
+            include = match.group(1)
+            if re.match(r"^[a-z][a-z0-9+.-]*://", include, re.I):
+                continue
+            read(file.parent / include)
+
+    read(Path(path))
+    return "".join(parts)

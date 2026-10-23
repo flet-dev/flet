@@ -5,6 +5,7 @@ import pytest
 from flet_cli.utils.project_dependencies import (
     get_poetry_dependencies,
     get_project_dependencies,
+    read_requirements_file_text,
 )
 
 # ---------------------------------------------------------------------------
@@ -239,3 +240,59 @@ class TestGetProjectDependencies:
         for dep in result:
             req = Requirement(dep)
             assert req.name  # must parse without error
+
+
+# ---------------------------------------------------------------------------
+# read_requirements_file_text
+# ---------------------------------------------------------------------------
+
+
+class TestReadRequirementsFileText:
+    def test_plain_file(self, tmp_path):
+        """Returns the file's text when it includes no other files."""
+        reqs = tmp_path / "requirements.txt"
+        reqs.write_text("flet\nhttpx==0.28.1\n")
+        assert read_requirements_file_text(reqs) == "flet\nhttpx==0.28.1\n"
+
+    def test_follows_requirement_and_constraint_includes(self, tmp_path):
+        """Reads files included with every `-r`/`-c` spelling, relative paths."""
+        (tmp_path / "sub").mkdir()
+        reqs = tmp_path / "requirements.txt"
+        reqs.write_text(
+            "flet\n-r sub/a.txt\n--requirement=b.txt\n-cc.txt\n--constraint d.txt\n"
+        )
+        (tmp_path / "sub" / "a.txt").write_text("pkg-a\n-r nested.txt\n")
+        (tmp_path / "sub" / "nested.txt").write_text("pkg-nested\n")
+        (tmp_path / "b.txt").write_text("pkg-b\n")
+        (tmp_path / "c.txt").write_text("pkg-c<2\n")
+        (tmp_path / "d.txt").write_text("pkg-d<3\n")
+
+        text = read_requirements_file_text(reqs)
+
+        for name in ["pkg-a", "pkg-nested", "pkg-b", "pkg-c<2", "pkg-d<3"]:
+            assert name in text
+
+    def test_include_cycle_read_once(self, tmp_path):
+        """Reads each file once when files include each other."""
+        reqs = tmp_path / "requirements.txt"
+        reqs.write_text("flet\n-r other.txt\n")
+        (tmp_path / "other.txt").write_text("httpx\n-r requirements.txt\n")
+        text = read_requirements_file_text(reqs)
+        assert text.count("flet\n") == 1
+        assert text.count("httpx\n") == 1
+
+    def test_urls_and_missing_files_skipped(self, tmp_path):
+        """Skips included URLs and files that don't exist."""
+        reqs = tmp_path / "requirements.txt"
+        reqs.write_text("flet\n-r https://example.com/r.txt\n-r missing.txt\n")
+        assert read_requirements_file_text(reqs) == reqs.read_text()
+
+    def test_editing_an_included_file_changes_text(self, tmp_path):
+        """Changes when only an included file is edited."""
+        reqs = tmp_path / "requirements.txt"
+        reqs.write_text("flet\n-r more.txt\n")
+        more = tmp_path / "more.txt"
+        more.write_text("httpx\n")
+        before = read_requirements_file_text(reqs)
+        more.write_text("httpx\ntabulate\n")
+        assert read_requirements_file_text(reqs) != before
