@@ -463,7 +463,7 @@ void main() {
     for (final when in [
       null,
       {"iso": "invalid"},
-      {"iso": "2099-01-01T12:00:00", "time_zone": "Invalid/Zone"},
+      {"iso": "2099-01-01T12:00:00", "timezone": "Invalid/Zone"},
       {"delay_ms": "invalid"},
       {"iso": 42},
     ]) {
@@ -1610,7 +1610,7 @@ void main() {
           "when": {
             "iso": "2099-06-01T14:00:00+02:00",
             "utc_offset_seconds": 7200,
-            "time_zone": "UTC"
+            "timezone": "UTC"
           },
           "schedule_mode": "inexactAllowWhileIdle",
           "match_components": "dayOfWeekAndTime",

@@ -1,6 +1,7 @@
 """Tests for scheduling APIs."""
 
 from datetime import datetime, timedelta, timezone
+from zoneinfo import ZoneInfo
 
 import pytest
 
@@ -79,7 +80,8 @@ async def test_invalid_periodic_interval_fails_before_invocation(interval):
 
 
 @pytest.mark.asyncio
-async def test_schedule_naive_datetime_with_timezone():
+async def test_schedule_naive_datetime_is_device_wall_clock():
+    """A naive datetime is sent as wall-clock time, with no timezone of its own."""
     service = RecordingService()
     when = datetime(2030, 1, 15, 9, 30)
     await service.schedule(
@@ -87,7 +89,6 @@ async def test_schedule_naive_datetime_with_timezone():
         when=when,
         title="t",
         body="b",
-        time_zone="Africa/Lagos",
         match_components=DateTimeComponents.TIME,
     )
     name, args = service.calls[-1]
@@ -95,7 +96,7 @@ async def test_schedule_naive_datetime_with_timezone():
     assert args["when"] == {
         "iso": "2030-01-15T09:30:00",
         "utc_offset_seconds": None,
-        "time_zone": "Africa/Lagos",
+        "timezone": None,
     }
     assert args["match_components"] == "time"
     assert args["schedule_mode"] == "exactAllowWhileIdle"
@@ -104,13 +105,25 @@ async def test_schedule_naive_datetime_with_timezone():
 
 @pytest.mark.asyncio
 async def test_schedule_aware_datetime_carries_offset():
+    """A fixed-offset datetime keeps its instant and names no timezone."""
     service = RecordingService()
     when = datetime(2030, 6, 1, 12, 0, tzinfo=timezone(timedelta(hours=1)))
     await service.schedule(id=2, when=when)
     _, args = service.calls[-1]
     assert args["when"]["iso"] == "2030-06-01T12:00:00+01:00"
     assert args["when"]["utc_offset_seconds"] == 3600
-    assert args["when"]["time_zone"] is None
+    assert args["when"]["timezone"] is None
+
+
+@pytest.mark.asyncio
+async def test_schedule_zoneinfo_datetime_names_its_timezone():
+    """A ZoneInfo on `when` names the zone used for calendar recurrence."""
+    service = RecordingService()
+    when = datetime(2030, 6, 1, 9, 0, tzinfo=ZoneInfo("Europe/Paris"))
+    await service.schedule(id=2, when=when, match_components=DateTimeComponents.TIME)
+    _, args = service.calls[-1]
+    assert args["when"]["iso"] == "2030-06-01T09:00:00+02:00"
+    assert args["when"]["timezone"] == "Europe/Paris"
 
 
 @pytest.mark.parametrize(
@@ -131,10 +144,7 @@ async def test_schedule_timedelta_becomes_delay(delay, microseconds):
     service = RecordingService()
     await service.schedule(id=3, when=delay)
     _, args = service.calls[-1]
-    assert args["when"] == {
-        "delay_ms": microseconds,
-        "time_zone": None,
-    }
+    assert args["when"] == {"delay_ms": microseconds}
     assert type(args["when"]["delay_ms"]) is int
 
 

@@ -5,9 +5,9 @@ import 'errors.dart';
 
 /// Resolves the target location: an explicit IANA zone name when given,
 /// otherwise `tz.local` (set from the device timezone at init).
-tz.Location resolveLocation(String? timeZone) {
-  if (timeZone != null && timeZone.isNotEmpty) {
-    return tz.getLocation(timeZone);
+tz.Location resolveLocation(String? timezone) {
+  if (timezone != null && timezone.isNotEmpty) {
+    return tz.getLocation(timezone);
   }
   return tz.local;
 }
@@ -23,9 +23,9 @@ tz.TZDateTime parseWhen(Map<dynamic, dynamic> args, tz.Location fallback) {
     if (when is! Map) {
       throw const FormatException("when must be a map");
     }
-    final timeZone = when["time_zone"] as String?;
-    final location = (timeZone != null && timeZone.isNotEmpty)
-        ? resolveLocation(timeZone)
+    final timezone = when["timezone"] as String?;
+    final location = (timezone != null && timezone.isNotEmpty)
+        ? resolveLocation(timezone)
         : fallback;
 
     final delay = when["delay_ms"];

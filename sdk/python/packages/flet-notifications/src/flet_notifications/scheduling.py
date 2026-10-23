@@ -1,4 +1,5 @@
 from datetime import datetime, timedelta
+from zoneinfo import ZoneInfo
 
 import flet as ft
 from flet_notifications.types import (
@@ -15,27 +16,29 @@ def build_schedule_args(
     when: datetime | timedelta,
     match_components: DateTimeComponents | None,
     schedule_mode: AndroidScheduleMode,
-    time_zone: str | None,
 ) -> dict:
     """
     Build the timing fields for a `schedule` invocation.
 
-    Naive datetimes are wall-clock times interpreted in `time_zone` (or the device
-    timezone when `time_zone` is None); aware datetimes carry their offset so the exact
-    instant is preserved.
+    Naive datetimes are wall-clock times in the device timezone; aware datetimes carry
+    their offset so the exact instant is preserved. A `ZoneInfo` on `when` also names
+    the timezone used for calendar recurrence.
     """
+    timezone = (
+        when.tzinfo.key
+        if isinstance(when, datetime) and isinstance(when.tzinfo, ZoneInfo)
+        else None
+    )
+
     if isinstance(when, timedelta):
-        when_payload = {
-            "delay_ms": when // timedelta(microseconds=1),
-            "time_zone": time_zone,
-        }
+        when_payload = {"delay_ms": when // timedelta(microseconds=1)}
     else:
         when_payload = {
             "iso": when.isoformat(),
             "utc_offset_seconds": when.utcoffset().total_seconds()
             if when.utcoffset() is not None
             else None,
-            "time_zone": time_zone,
+            "timezone": timezone,
         }
 
     return {

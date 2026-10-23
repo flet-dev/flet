@@ -8,6 +8,7 @@ license = "Apache-2.0"
 requires-python = ">=3.10"
 dependencies = [
     "flet",
+    "tzdata",
 ]
 
 [project.urls]

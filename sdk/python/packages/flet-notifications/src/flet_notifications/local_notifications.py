@@ -342,7 +342,6 @@ class LocalNotifications(ft.Service):
         match_components: DateTimeComponents | None = None,
         options: NotificationOptions | None = None,
         schedule_mode: AndroidScheduleMode = AndroidScheduleMode.EXACT_ALLOW_WHILE_IDLE,
-        time_zone: str | None = None,
     ) -> None:
         """
         Schedule a notification for a date, a delay, or a recurring calendar match.
@@ -369,10 +368,15 @@ class LocalNotifications(ft.Service):
                 on Android, a tag also participates in identifying immediately shown
                 notifications. Native platforms can impose identifier range limits.
             when: Delivery time as a `datetime`, or a delay as a `timedelta`.
-                Naive datetimes are wall-clock times in `time_zone` or the device
-                timezone; aware datetimes preserve their exact instant. Native
-                scheduling has at best second precision, and delay fractions are
-                truncated to whole seconds.
+                Naive datetimes are wall-clock times in the device timezone; aware
+                datetimes preserve their exact instant. For calendar recurrence in a
+                particular timezone, use a
+                [`ZoneInfo`](https://docs.python.org/3/library/zoneinfo.html#zoneinfo.ZoneInfo)
+                time zone, such as
+                `datetime(2027, 1, 1, 9, tzinfo=ZoneInfo("Europe/Paris"))`; other
+                values recur in the device timezone, which falls back to UTC if
+                lookup fails. Native scheduling has at best second precision, and
+                delay fractions are truncated to whole seconds.
             title: Notification title. `None` omits the title.
             body: Notification body. `None` omits the body.
             payload: Application-defined string returned with tap and action events.
@@ -388,9 +392,6 @@ class LocalNotifications(ft.Service):
             schedule_mode: Android alarm precision and idle-mode behavior; see
                 :class:`~flet_notifications.AndroidScheduleMode`. Exact modes require
                 the applicable exact-alarm access. Ignored on other platforms.
-            time_zone: IANA timezone name, such as `"Europe/Paris"`, for calendar
-                interpretation and recurrence. When `None`, uses the device timezone;
-                the bridge falls back to UTC if timezone lookup fails.
 
         Raises:
             NotificationError: If the bridge reports initialization or operation
@@ -399,14 +400,15 @@ class LocalNotifications(ft.Service):
         Example:
             ```python
             from datetime import datetime
+            from zoneinfo import ZoneInfo
+
             import flet_notifications as ftn
 
             await notifications.schedule(
                 id=2,
-                when=datetime(2027, 1, 1, 9, 0),
+                when=datetime(2027, 1, 1, 9, 0, tzinfo=ZoneInfo("Europe/Paris")),
                 title="Morning reminder",
                 match_components=ftn.DateTimeComponents.TIME,
-                time_zone="Europe/Paris",
                 schedule_mode=ftn.AndroidScheduleMode.INEXACT_ALLOW_WHILE_IDLE,
             )
             ```
@@ -424,7 +426,6 @@ class LocalNotifications(ft.Service):
                         when=when,
                         match_components=match_components,
                         schedule_mode=schedule_mode,
-                        time_zone=time_zone,
                     ),
                     "options": options,
                 },

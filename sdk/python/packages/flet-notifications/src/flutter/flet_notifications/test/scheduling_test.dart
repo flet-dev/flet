@@ -8,7 +8,7 @@ void main() {
 
   test("naive wall clock in the target zone", () {
     final date = parseWhen({
-      "when": {"iso": "2030-01-15T09:30:00", "time_zone": "Africa/Lagos"},
+      "when": {"iso": "2030-01-15T09:30:00", "timezone": "Africa/Lagos"},
     }, tz.UTC);
     expect(date.location.name, "Africa/Lagos");
     expect(date.year, 2030);
@@ -22,7 +22,7 @@ void main() {
     tz.setLocalLocation(tz.getLocation("Europe/Berlin"));
     addTearDown(() => tz.setLocalLocation(tz.getLocation("UTC")));
     final date = parseWhen({
-      "when": {"iso": "2030-03-01T08:00:00", "time_zone": null},
+      "when": {"iso": "2030-03-01T08:00:00", "timezone": null},
     }, tz.local);
     expect(date.location.name, "Europe/Berlin");
     expect(date.hour, 8);
@@ -34,7 +34,7 @@ void main() {
       "when": {
         "iso": "2030-06-01T12:00:00+01:00",
         "utc_offset_seconds": "3600",
-        "time_zone": "UTC",
+        "timezone": "UTC",
       },
     }, tz.local);
     expect(date.hour, 11);
@@ -48,7 +48,7 @@ void main() {
       final delay = Duration(microseconds: microseconds);
       final before = tz.TZDateTime.now(location);
       final date = parseWhen({
-        "when": {"delay_ms": microseconds, "time_zone": "Africa/Lagos"},
+        "when": {"delay_ms": microseconds, "timezone": "Africa/Lagos"},
       }, tz.UTC);
       final after = tz.TZDateTime.now(location);
       expect(date.location.name, "Africa/Lagos");
