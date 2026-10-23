@@ -32,7 +32,7 @@ fln.NotificationDetails parseNotificationDetails({
                 ? const []
                 : [
                     fln.AndroidNotificationActionInput(
-                      label: a.input!.label.isEmpty ? null : a.input!.label,
+                      label: a.input!.label,
                       choices: a.input!.choices,
                       allowFreeFormInput: a.input!.allowFreeFormInput,
                       allowedMimeTypes: a.input!.allowedMimeTypes,
@@ -48,7 +48,7 @@ fln.NotificationDetails parseNotificationDetails({
       options: _platformOptions(details, "ios"),
     );
 
-    final payloadForWindows = (details ?? const {})["payload"] as String? ?? "";
+    final payloadForWindows = (details ?? const {})["payload"] as String?;
     final windowsActions = actions.map((a) {
       return fln.WindowsAction(
         content: a.title,
@@ -65,8 +65,8 @@ fln.NotificationDetails parseNotificationDetails({
         .map(
           (a) => fln.WindowsTextInput(
             id: a.id,
-            title: a.input!.label.isEmpty ? null : a.input!.label,
-            placeHolderContent: a.input!.label.isEmpty ? null : a.input!.label,
+            title: a.input!.label,
+            placeHolderContent: a.input!.label,
           ),
         )
         .toList();

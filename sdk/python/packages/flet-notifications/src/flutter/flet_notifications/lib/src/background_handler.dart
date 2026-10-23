@@ -24,41 +24,35 @@ Map<String, Object?> responseToEvent(NotificationResponse response) {
       NotificationResponseType.selectedNotificationAction;
   final isDismissed = response.notificationResponseType ==
       NotificationResponseType.notificationDismissed;
-  var input = response.input;
-  var actionId = isDismissed
-      ? ""
-      : isAction
-          ? (response.actionId ?? "")
-          : "";
-  var payload = response.payload ?? "";
+  String? nonEmpty(String? value) =>
+      value == null || value.isEmpty ? null : value;
+  var actionId = isAction ? nonEmpty(response.actionId) : null;
+  var payload = nonEmpty(response.payload);
   // Windows returns the launch string (our JSON envelope) as both actionId
   // and payload, and typed text in `data` (input always null there).
   // Unwrap both so every platform yields the same event shape.
-  if (isAction && actionId.isNotEmpty) {
+  if (actionId != null) {
     try {
       final decoded = jsonDecode(actionId);
       if (decoded is Map && decoded["id"] is String) {
         // Windows returns the launch string as both actionId and payload;
         // the envelope carries the real button id and payload.
         actionId = decoded["id"] as String;
-        if (decoded["payload"] is String) {
-          payload = decoded["payload"] as String;
-        }
+        payload = nonEmpty(decoded["payload"] as String?);
       }
     } on FormatException {
       // Not our envelope: Android/Darwin/plain action ids pass through.
     }
   }
-  final normalizedInput = (input != null && input.isNotEmpty)
-      ? input
-      : (response.data.length == 1
-          ? response.data.values.first.toString()
-          : "");
+  final input = nonEmpty(response.input) ??
+      (response.data.length == 1
+          ? nonEmpty(response.data.values.first.toString())
+          : null);
   return <String, Object?>{
-    "id": response.id ?? -1,
+    "id": response.id,
     "action_id": actionId,
     "payload": payload,
-    "input": normalizedInput,
+    "input": input,
     "response_type": isDismissed
         ? "dismissed"
         : isAction

@@ -13,14 +13,13 @@ from flet_notifications import (
 
 @pytest.mark.asyncio
 async def test_get_pending_hydrates_native_collection():
-    """Pending snapshots use native collections and dataclass text defaults."""
+    """Pending snapshots use native collections, with None for missing text."""
     service = LocalNotifications()
 
     async def invoke(method_name, arguments=None, timeout=None):
         return [
             {"id": 1, "title": "A", "body": "b", "payload": "p"},
             {"id": 2},
-            {},
         ]
 
     service._invoke_method = invoke
@@ -28,7 +27,6 @@ async def test_get_pending_hydrates_native_collection():
     assert pending == [
         PendingNotification(id=1, title="A", body="b", payload="p"),
         PendingNotification(id=2),
-        PendingNotification(id=0),
     ]
 
 

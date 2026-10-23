@@ -18,13 +18,13 @@ class NotificationActionInput:
         action ID. Custom action inputs are not supported on Linux or Web.
     """
 
-    label: str = ""
+    label: str | None = None
     """
     User-visible label describing the input.
 
     Note:
         On Android, labels the reply input. On iOS/macOS, supplies the text-input button
-        title and placeholder; an empty label uses the action title for the button. On
+        title and placeholder; `None` uses the action title for the button. On
         Windows, supplies the text box title and placeholder.
     """
 

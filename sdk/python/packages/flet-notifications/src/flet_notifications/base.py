@@ -54,27 +54,27 @@ class NotificationEvent(ft.Event[ft.EventControlType]):
         :attr:`flet_notifications.LocalNotifications.on_action` for how to read them.
     """
 
-    id: int = 0
-    """Identifier of the notification; native responses without an ID use `-1`."""
+    id: int | None = None
+    """Identifier of the notification, or `None` when the platform reports none."""
 
-    action_id: str = ""
+    action_id: str | None = None
     """
     Selected action's :attr:`flet_notifications.NotificationAction.id`.
 
-    An empty string indicates a body tap or a dismissal rather than an action.
+    `None` for a body tap or a dismissal rather than an action.
     """
 
-    payload: str = ""
+    payload: str | None = None
     """
     Application payload supplied when the notification was created.
 
-    An empty string represents no payload. The service does not interpret the payload;
-    the application can use it for routing or identifying an item.
+    `None` when the notification has no payload. The service does not interpret the
+    payload; the application can use it for routing or identifying an item.
     """
 
-    input: str = ""
+    input: str | None = None
     """
-    Text entered through a notification reply input, or an empty string.
+    Text entered through a notification reply input, or `None` when there is none.
 
     Note:
         On Windows, contains the reply text when exactly one input value is returned.
@@ -172,8 +172,6 @@ _QueryItem = TypeVar("_QueryItem")
 def parse_query_list(
     result: object,
     item_type: type[_QueryItem],
-    *,
-    defaults: dict[str, object] | None = None,
 ) -> list[_QueryItem]:
     """Reconstruct query snapshots without silently skipping malformed entries."""
     if not isinstance(result, list):
@@ -187,7 +185,7 @@ def parse_query_list(
                 f"Expected {item_type.__name__} mapping at index {index}",
             )
         try:
-            items.append(from_dict(item_type, {**(defaults or {}), **entry}))
+            items.append(from_dict(item_type, entry))
         except (TypeError, ValueError) as exc:
             raise NotificationError(
                 f"Invalid {item_type.__name__} at index {index}: {exc}",

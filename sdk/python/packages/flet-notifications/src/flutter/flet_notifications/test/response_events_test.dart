@@ -77,6 +77,15 @@ void main() {
       expect(event["input"], "my answer");
       expect(event["response_type"], "action");
     });
+
+    test("absent values are null, not placeholders", () {
+      final event = responseToEvent(_response(id: null, payload: ""));
+      expect(event["id"], isNull);
+      expect(event["action_id"], isNull);
+      expect(event["payload"], isNull);
+      expect(event["input"], isNull);
+      expect(event["response_type"], "tap");
+    });
   });
 
   group("drainTapQueue", () {
@@ -157,6 +166,20 @@ void main() {
       expect(event["payload"], "actions");
       expect(event["input"], "typed on windows"); // normalized from data
       expect(event["response_type"], "action");
+    });
+
+    test("an envelope without a payload yields no payload", () {
+      const envelope = '{"id": "open", "payload": null}';
+      const response = fln.NotificationResponse(
+        id: 7,
+        actionId: envelope,
+        payload: envelope,
+        notificationResponseType:
+            fln.NotificationResponseType.selectedNotificationAction,
+      );
+      final event = responseToEvent(response);
+      expect(event["action_id"], "open");
+      expect(event["payload"], isNull);
     });
   });
 }

@@ -189,9 +189,10 @@ class LocalNotifications(ft.Service):
     async def show(
         self,
         id: int,
+        *,
         title: str | None = None,
         body: str | None = None,
-        payload: str = "",
+        payload: str | None = None,
         actions: list[NotificationAction] | None = None,
         options: NotificationOptions | None = None,
     ) -> None:
@@ -214,7 +215,8 @@ class LocalNotifications(ft.Service):
             title: Notification title. `None` omits the title.
             body: Notification body. `None` omits the body.
             payload: Application-defined string returned with tap and action events.
-                The service does not interpret this value.
+                The service does not interpret this value. `None` attaches no
+                payload.
             actions: Action buttons; see :class:`flet_notifications.NotificationAction`
                 for platform support and background-response behavior.
             options: Additional per-platform details; see
@@ -236,7 +238,7 @@ class LocalNotifications(ft.Service):
             },
         )
 
-    async def cancel(self, id: int, tag: str | None = None) -> None:
+    async def cancel(self, id: int, *, tag: str | None = None) -> None:
         """
         Remove a displayed notification and cancel its scheduled request.
 
@@ -347,10 +349,11 @@ class LocalNotifications(ft.Service):
     async def schedule(
         self,
         id: int,
+        *,
         when: datetime | timedelta,
         title: str | None = None,
         body: str | None = None,
-        payload: str = "",
+        payload: str | None = None,
         actions: list[NotificationAction] | None = None,
         match_components: DateTimeComponents | None = None,
         options: NotificationOptions | None = None,
@@ -361,22 +364,17 @@ class LocalNotifications(ft.Service):
         """
         Schedule a notification for a date, a delay, or a recurring calendar match.
 
-        Note:
-            Supported only on Android, iOS, macOS, and Windows. Windows schedules a
-            single
-            delivery even when calendar components are supplied. Android needs the
-            scheduling receivers and
-            permissions described in the notification service requirements; restoring
-            schedules after a reboot also requires the boot receiver.
-
-        Calendar recurrence and fixed intervals are different: use
-        :meth:`periodically_show` for notifications repeating after an elapsed interval
-        rather than at a particular local time.
+        To repeat after a fixed elapsed interval rather than at a particular local
+        time, use :meth:`periodically_show`.
 
         Note:
-            iOS retains at most 64 pending notifications per app on supported system
-            versions. Plan schedules within this limit and query
-            :meth:`get_pending_notifications` when managing pending requests.
+            - Supported on Android, iOS, macOS, and Windows. Windows delivers once,
+              ignoring `match_components`.
+            - On Android, delivery needs the scheduled-notification receiver, and
+              restoring schedules after a reboot also needs the boot receiver; see the
+              [Android setup](https://flet.dev/docs/services/notifications#android).
+            - iOS keeps at most 64 pending notifications per app. Check
+              :meth:`get_pending_notifications` when scheduling many.
 
         Args:
             id: Notification identifier. Reuse it to update the same notification;
@@ -395,7 +393,8 @@ class LocalNotifications(ft.Service):
             title: Notification title. `None` omits the title.
             body: Notification body. `None` omits the body.
             payload: Application-defined string returned with tap and action events.
-                The service does not interpret this value.
+                The service does not interpret this value. `None` attaches no
+                payload.
             actions: Action buttons; see :class:`~flet_notifications.NotificationAction`
                 for platform support and background-response behavior.
             match_components: Calendar components used for recurrence on Android,
@@ -450,10 +449,11 @@ class LocalNotifications(ft.Service):
     async def periodically_show(
         self,
         id: int,
+        *,
         repeat_interval: RepeatInterval | ft.DurationValue,
         title: str | None = None,
         body: str | None = None,
-        payload: str = "",
+        payload: str | None = None,
         actions: list[NotificationAction] | None = None,
         schedule_mode: AndroidScheduleMode = (
             AndroidScheduleMode.INEXACT_ALLOW_WHILE_IDLE
@@ -468,9 +468,11 @@ class LocalNotifications(ft.Service):
 
         Note:
             - The first delivery is one interval after this call, not immediately.
-            - Supported only on Android, iOS, and macOS. Android requires the scheduling
-              setup described in the notification service requirements. Actual timing
-              is subject to OS power management and alarm policies.
+            - Supported on Android, iOS, and macOS. Actual timing is subject to the
+              system's power management and alarm policies.
+            - On Android, delivery needs the scheduled-notification receiver, and
+              restoring schedules after a reboot also needs the boot receiver; see the
+              [Android setup](https://flet.dev/docs/services/notifications#android).
 
         Args:
             id: Notification identifier. Reuse it to update the same notification;
@@ -482,7 +484,8 @@ class LocalNotifications(ft.Service):
             title: Notification title. `None` omits the title.
             body: Notification body. `None` omits the body.
             payload: Application-defined string returned with tap and action events.
-                The service does not interpret this value.
+                The service does not interpret this value. `None` attaches no
+                payload.
             actions: Action buttons; see :class:`~flet_notifications.NotificationAction`
                 for platform support and background-response behavior.
             schedule_mode: Android alarm precision and idle-mode behavior. The
@@ -521,8 +524,8 @@ class LocalNotifications(ft.Service):
 
         Note:
             Supported only on Android, iOS, and macOS. Other platforms report an
-            unsupported
-            operation. Use :meth:`cancel` to remove a specific pending request.
+            unsupported operation. Use :meth:`cancel` to remove a specific pending
+            request.
 
         Raises:
             NotificationError: If the bridge reports initialization or operation
@@ -542,17 +545,13 @@ class LocalNotifications(ft.Service):
 
         Returns:
             Snapshots of pending requests. These do not include every platform detail
-            and cannot be edited to change the native schedule.
+                and cannot be edited to change the native schedule.
 
         Raises:
             NotificationError: If the backend reports a failure or returns malformed
                 query data.
         """
-        return parse_query_list(
-            await self._call("get_pending"),
-            PendingNotification,
-            defaults={"id": 0},
-        )
+        return parse_query_list(await self._call("get_pending"), PendingNotification)
 
     async def can_schedule_exact_notifications(self) -> bool:
         """
@@ -564,7 +563,7 @@ class LocalNotifications(ft.Service):
 
         Returns:
             Whether the Android backend reports exact alarms are allowed. Returns `True`
-            on non-Android platforms, where exact scheduling is not restricted.
+                on non-Android platforms, where exact scheduling is not restricted.
 
         Raises:
             NotificationError: If the bridge reports initialization or operation
@@ -589,16 +588,14 @@ class LocalNotifications(ft.Service):
 
         Returns:
             Whether access is granted after the request. Returns `True` on non-Android
-            platforms, where exact scheduling is not restricted. A grant does not
-            create a scheduled notification.
+                platforms, where exact scheduling is not restricted. A grant does not
+                create a scheduled notification.
 
         Raises:
             NotificationError: If the bridge reports initialization or operation
                 failure.
         """
         return await self._call("request_exact_alarm_permission", timeout=300)
-
-    # ── Channels (Android 8.0+) ─────────────────────────────────────────
 
     async def create_notification_channel(self, channel: NotificationChannel) -> None:
         """
@@ -645,8 +642,8 @@ class LocalNotifications(ft.Service):
 
         Returns:
             Channel snapshots on supported Android versions, or an empty list on
-            non-Android platforms. Returned values reflect the native channel settings,
-            including changes made by the user.
+                non-Android platforms. Returned values reflect the native channel
+                settings, including changes made by the user.
 
         Raises:
             NotificationError: If the backend reports a failure or returns malformed
@@ -656,14 +653,12 @@ class LocalNotifications(ft.Service):
             await self._call("get_notification_channels"), NotificationChannel
         )
 
-    # ── Foreground service (Android) ────────────────────────────────────
-
     async def start_foreground_service(
         self,
         id: int,
         title: str | None = None,
         body: str | None = None,
-        payload: str = "",
+        payload: str | None = None,
         actions: list[NotificationAction] | None = None,
         options: NotificationOptions | None = None,
         start_type: AndroidServiceStartType | None = None,
@@ -689,7 +684,8 @@ class LocalNotifications(ft.Service):
             title: Notification title. `None` omits the title.
             body: Notification body. `None` omits the body.
             payload: Application-defined string returned with tap and action events.
-                The service does not interpret this value.
+                The service does not interpret this value. `None` attaches no
+                payload.
             actions: Action buttons; see :class:`~flet_notifications.NotificationAction`
                 for platform support and background-response behavior.
             options: Additional per-platform details; see
@@ -740,8 +736,6 @@ class LocalNotifications(ft.Service):
         """
         await self._call("stop_foreground_service")
 
-    # ── Probes & OS integration ─────────────────────────────────────────
-
     async def are_notifications_enabled(self) -> bool:
         """
         Check application-level notification authorization where supported.
@@ -757,8 +751,8 @@ class LocalNotifications(ft.Service):
 
         Returns:
             Native authorization status on Android/iOS/macOS, or browser authorization
-            on Web. Returns `True` unconditionally on Windows and Linux, without
-            checking system notification settings.
+                on Web. Returns `True` unconditionally on Windows and Linux, without
+                checking system notification settings.
 
         Raises:
             NotificationError: If the bridge reports initialization or operation
@@ -794,8 +788,8 @@ class LocalNotifications(ft.Service):
             empty list.
 
         Returns:
-            Snapshots of active notifications, with platform-dependent fields. Missing
-            text values are represented as empty strings.
+            Snapshots of active notifications, with platform-dependent fields.
+                Unavailable values are `None`.
 
         Raises:
             NotificationError: If the backend reports a failure or returns malformed
@@ -817,7 +811,7 @@ class LocalNotifications(ft.Service):
 
         Returns:
             Whether the Android backend reports access is granted; `False` on
-            non-Android platforms.
+                non-Android platforms.
 
         Raises:
             NotificationError: If the bridge reports initialization or operation
@@ -860,10 +854,8 @@ class LocalNotifications(ft.Service):
         """
         return await self._call("request_notification_policy_access", timeout=300)
 
-    # ── Channel groups (Android 8.0+) ───────────────────────────────────
-
     async def create_notification_channel_group(
-        self, group_id: str, name: str, description: str = ""
+        self, group_id: str, *, name: str, description: str | None = None
     ) -> None:
         """
         Create a group organizing Android channels in system notification settings.

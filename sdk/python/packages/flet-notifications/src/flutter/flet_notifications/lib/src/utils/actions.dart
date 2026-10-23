@@ -7,13 +7,13 @@ import 'errors.dart';
 
 class ParsedInput {
   const ParsedInput({
-    this.label = "",
+    this.label,
     this.choices = const [],
     this.allowFreeFormInput = true,
     this.allowedMimeTypes = const {},
   });
 
-  final String label;
+  final String? label;
   final List<String> choices;
   final bool allowFreeFormInput;
   final Set<String> allowedMimeTypes;
@@ -101,7 +101,9 @@ ParsedInput? parseActionInput(Object? raw) {
     );
   }
   return ParsedInput(
-    label: raw["label"] is String ? raw["label"] as String : "",
+    label: raw["label"] is String && (raw["label"] as String).isNotEmpty
+        ? raw["label"] as String
+        : null,
     choices: choices is List ? List<String>.from(choices) : const [],
     allowFreeFormInput: parseBool(raw["allow_free_form_input"], true)!,
     allowedMimeTypes:

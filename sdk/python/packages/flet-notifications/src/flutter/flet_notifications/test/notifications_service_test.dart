@@ -737,7 +737,7 @@ void main() {
     expect(control.events, hasLength(1));
   });
 
-  test("queries return native collections with normalized unavailable fields",
+  test("queries return native collections with null unavailable fields",
       () async {
     plugin.pending = [
       const fln.PendingNotificationRequest(1, "Title", "Body", "payload"),
@@ -759,7 +759,7 @@ void main() {
     final service = _makeService();
     expect(await _call(service, "get_pending"), [
       {"id": 1, "title": "Title", "body": "Body", "payload": "payload"},
-      {"id": 2, "title": "", "body": "", "payload": ""},
+      {"id": 2, "title": null, "body": null, "payload": null},
     ]);
     expect(await _call(service, "get_active"), [
       {
@@ -773,14 +773,14 @@ void main() {
         "big_text": "Expanded"
       },
       {
-        "id": 0,
-        "channel_id": "",
-        "group_key": "",
-        "tag": "",
-        "title": "",
-        "body": "",
-        "payload": "",
-        "big_text": ""
+        "id": null,
+        "channel_id": null,
+        "group_key": null,
+        "tag": null,
+        "title": null,
+        "body": null,
+        "payload": null,
+        "big_text": null
       },
     ]);
     plugin.pending = [];

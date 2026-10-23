@@ -303,7 +303,7 @@ void main() {
       expect(event['name'], action ? 'action' : 'tap');
       final data = event['data'] as Map;
       expect(data['id'], 7);
-      expect(data['action_id'], action ? 'archive' : '');
+      expect(data['action_id'], action ? 'archive' : null);
       expect(data['payload'], 'message:42');
       expect(data['response_type'], action ? 'action' : 'tap');
     });

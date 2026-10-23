@@ -337,7 +337,7 @@ class LocalNotificationsService extends FletService {
     final id = parseInt(map["id"])!;
     final title = map["title"] as String?;
     final body = map["body"] as String?;
-    final payload = map["payload"] as String? ?? "";
+    final payload = map["payload"] as String?;
     final actions = parseActions(map["actions"]);
     await _plugin!.show(
       id: id,
@@ -357,7 +357,7 @@ class LocalNotificationsService extends FletService {
     final id = parseInt(map["id"])!;
     final title = map["title"] as String?;
     final body = map["body"] as String?;
-    final payload = map["payload"] as String? ?? "";
+    final payload = map["payload"] as String?;
     final actions = parseActions(map["actions"]);
     final scheduledDate = parseWhen(map, tz.local);
     final scheduleMode = parseAndroidScheduleMode(
@@ -386,7 +386,7 @@ class LocalNotificationsService extends FletService {
     final id = parseInt(map["id"])!;
     final title = map["title"] as String?;
     final body = map["body"] as String?;
-    final payload = map["payload"] as String? ?? "";
+    final payload = map["payload"] as String?;
     final actions = parseActions(map["actions"]);
     final scheduleMode = parseAndroidScheduleMode(
         map["schedule_mode"] as String?,
@@ -438,9 +438,9 @@ class LocalNotificationsService extends FletService {
         .map(
           (p) => {
             "id": p.id,
-            "title": p.title ?? "",
-            "body": p.body ?? "",
-            "payload": p.payload ?? "",
+            "title": p.title,
+            "body": p.body,
+            "payload": p.payload,
           },
         )
         .toList();
@@ -510,8 +510,8 @@ class LocalNotificationsService extends FletService {
       return fln.DarwinNotificationAction.text(
         a.id,
         a.title,
-        buttonTitle: input.label.isEmpty ? a.title : input.label,
-        placeholder: input.label.isEmpty ? null : input.label,
+        buttonTitle: input.label ?? a.title,
+        placeholder: input.label,
         options: options,
       );
     }).toList();
@@ -649,7 +649,7 @@ class LocalNotificationsService extends FletService {
       id: id,
       title: map["title"] as String?,
       body: map["body"] as String?,
-      payload: map["payload"] as String? ?? "",
+      payload: map["payload"] as String?,
       startType: parseServiceStartType(
         map["start_type"] as String?,
         fln.AndroidServiceStartType.startSticky,
@@ -713,14 +713,14 @@ class LocalNotificationsService extends FletService {
     return active
         .map(
           (a) => {
-            "id": a.id ?? 0,
-            "channel_id": a.channelId ?? "",
-            "group_key": a.groupKey ?? "",
-            "tag": a.tag ?? "",
-            "title": a.title ?? "",
-            "body": a.body ?? "",
-            "payload": a.payload ?? "",
-            "big_text": a.bigText ?? "",
+            "id": a.id,
+            "channel_id": a.channelId,
+            "group_key": a.groupKey,
+            "tag": a.tag,
+            "title": a.title,
+            "body": a.body,
+            "payload": a.payload,
+            "big_text": a.bigText,
           },
         )
         .toList();
