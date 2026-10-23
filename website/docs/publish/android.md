@@ -1323,6 +1323,133 @@ dependencies {
 
 </details>
 
+## Resources
+
+You can add your own files to the Android app's `res` directory, such as a
+notification icon, an image, or a sound that native code or an extension looks up
+by name at runtime.
+
+See also:
+
+- [App resources overview](https://developer.android.com/guide/topics/resources/providing-resources)
+
+### Resolution order
+
+Its value is determined in the following order of precedence:
+
+1. `[tool.flet.android].res_dir`
+
+There is no default. Omitting the setting adds no resources.
+
+### Supported value forms
+
+The value is the path of a directory, relative to the directory containing
+`pyproject.toml`. Its layout mirrors Android's `res` directory: one level of
+resource type directories, each holding resource files.
+
+Supported resource types are `anim`, `animator`, `color`, `drawable`, `font`,
+`interpolator`, `layout`, `menu`, `mipmap`, `raw`, `transition`, `values`, and
+`xml`.
+
+A type directory may carry Android
+[configuration qualifiers](https://developer.android.com/guide/topics/resources/providing-resources#AlternativeResources),
+such as `drawable-hdpi` or `values-night`.
+
+A resource's name is its file name without the extension, so
+`drawable/ic_stat_notify.png` is the drawable `ic_stat_notify`. File names may
+contain only lowercase letters, digits, and underscores, and must start with a
+letter. Hidden files, such as `.DS_Store`, are ignored.
+
+The files are copied into the [generated project](index.md#build-template) on every build. A file removed
+from the directory is also removed from the next build.
+
+### Reserved names
+
+Flet generates some resources itself, such as the launcher icon and splash screen.
+Android identifies a resource by its type and name, not by its file, so a file
+defining one of these resources fails the build, whatever its qualifiers or
+extension. For example, `drawable-ldpi/splash.png` and `drawable/splash.xml` both
+define Flet's drawable `splash`. Rename such files.
+
+| Type       | Reserved names                | Generated for                                                               |
+|------------|-------------------------------|-----------------------------------------------------------------------------|
+| `drawable` | `splash`, `launch_background` | [Splash screen](index.md#splash-screen)                                     |
+| `drawable` | `android12splash`             | [Android 12 splash icon](index.md#android-12-splash-icon)                   |
+| `drawable` | `ic_launcher_foreground`      | [App icon](index.md#icons), as the adaptive icon's foreground               |
+| `mipmap`   | `ic_launcher`                 | [App icon](index.md#icons)                                                  |
+| `raw`      | `flet_res_keep`               | [Keeping resources in release builds](#keeping-resources-in-release-builds) |
+| `xml`      | `provider_paths`              | Flet's built-in [file provider](#providers)                                 |
+
+Files in `values` directories merge their contents rather than replacing each
+other, so only the paths of Flet's own values files are reserved:
+
+- `values/colors.xml`, `values/ic_launcher_background.xml`, `values/styles.xml`
+- `values-night/colors.xml`, `values-night/styles.xml`
+- `values-v31/styles.xml`, `values-night-v31/styles.xml`
+
+Your own values files may declare any resources except those Flet declares. Flet
+doesn't check this; Android's build fails with a "Duplicate resources" error that
+names both files. The reserved names are:
+
+- the color `ic_launcher_background`, for the
+  [adaptive icon background](#adaptive-icon-background);
+- the color `flet_splash_background`, for the
+  [splash background colors](index.md#splash-background-colors);
+- the styles `LaunchTheme` and `NormalTheme`, for the
+  [splash screen](index.md#splash-screen) and the app's window.
+
+### Keeping resources in release builds
+
+Release builds remove resources that no native code references. A resource your
+Python code names only at runtime, such as a notification icon, would be removed
+too. Flet therefore lists every copied resource in a generated keep file,
+`res/raw/flet_res_keep.xml`, so all of them are kept. Resources defined inside
+`values` files are not listed.
+
+### Example
+
+Add a notification icon, a picture, and a sound:
+
+```
+my_app/
+├── pyproject.toml
+├── android_res/
+│   ├── drawable/
+│   │   ├── ic_stat_notify.png
+│   │   └── promo_banner.png
+│   └── raw/
+│       └── alert.mp3
+└── src/
+    └── main.py
+```
+
+<Tabs groupId="pyproject-toml">
+<TabItem value="pyproject-toml" label="pyproject.toml">
+```toml
+[tool.flet.android]
+res_dir = "android_res"
+```
+</TabItem>
+</Tabs>
+
+The app can then refer to them by name, for example with the
+[notifications extension](../services/notifications/index.md):
+
+```python
+import flet_notifications as ftn
+
+notifications = ftn.LocalNotifications(default_icon="ic_stat_notify")
+
+options = ftn.NotificationOptions(
+    android=ftn.AndroidOptions(
+        style=ftn.AndroidBigPictureStyle(
+            image=ftn.AndroidDrawableBitmap(name="promo_banner")
+        ),
+        channel=ftn.NotificationChannel(id="alerts", name="Alerts", sound="alert"),
+    )
+)
+```
+
 ## ProGuard / R8 rules
 
 Release builds run [R8](https://developer.android.com/build/shrink-code), which removes unused

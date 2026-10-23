@@ -48,6 +48,10 @@ from flet_cli.commands.flutter_base import (
 from flet_cli.commands.options import PassThroughArgsAction
 from flet_cli.utils.android import (
     ANDROID_ARCH_TO_FLUTTER_TARGET_PLATFORM,
+    ANDROID_RESOURCES_KEEP_FILE,
+    android_resource_clashes,
+    android_resource_files,
+    android_resources_keep_xml,
     excluded_android_abis,
     normalize_android_receivers,
     normalize_android_services,
@@ -3023,6 +3027,78 @@ class BaseBuildCommand(BaseFlutterCommand):
             )
         except ValueError as exc:
             self.cleanup(1, str(exc))
+
+    def copy_android_resources(self):
+        """
+        Copy the app's own Android resources into the generated project.
+
+        `tool.flet.android.res_dir` names a directory, relative to the project,
+        laid out like Android's `res` directory, such as `drawable/ic_stat.png`
+        or `raw/alert.mp3`. Files copied by the previous build are removed first,
+        so deleting a resource from the directory also removes it from the app.
+        A keep rule protects the copied resources from release-build resource
+        shrinking, because Python code can refer to them only by name.
+        """
+
+        assert self.get_pyproject
+        assert self.python_app_path
+        assert self.build_dir
+        assert self.flutter_dir
+
+        if self.package_platform != "Android":
+            return
+
+        res_path = self.flutter_dir / "android" / "app" / "src" / "main" / "res"
+        manifest_path = self.build_dir / ".hash" / "android-resources"
+        previous = (
+            manifest_path.read_text().splitlines() if manifest_path.exists() else []
+        )
+        for relative in previous:
+            (res_path / relative).unlink(missing_ok=True)
+
+        setting = self.get_pyproject("tool.flet.android.res_dir")
+        if setting is None:
+            manifest_path.unlink(missing_ok=True)
+            return
+        res_dir = self.python_app_path / setting
+        if not res_dir.is_dir():
+            self.cleanup(
+                1, f"Invalid tool.flet.android.res_dir: {res_dir} is not a directory."
+            )
+        try:
+            files = android_resource_files(res_dir)
+        except ValueError as exc:
+            self.cleanup(1, f"Invalid tool.flet.android.res_dir entry {exc}")
+
+        clashes = android_resource_clashes(files, res_path)
+        if clashes:
+            self.cleanup(
+                1,
+                "Android resources in tool.flet.android.res_dir clash with "
+                "resources Flet generates; rename them:\n"
+                + "\n".join(
+                    f"  {file.as_posix()} (Flet's {generated.as_posix()})"
+                    for file, generated in clashes
+                ),
+            )
+
+        with self.step("[bold blue]Copying Android resources..."):
+            copied = []
+            for relative in files:
+                target = res_path / relative
+                target.parent.mkdir(parents=True, exist_ok=True)
+                shutil.copy2(res_dir / relative, target)
+                copied.append(relative.as_posix())
+
+            keep_xml = android_resources_keep_xml(files)
+            if keep_xml is not None:
+                keep_path = res_path / ANDROID_RESOURCES_KEEP_FILE
+                keep_path.parent.mkdir(parents=True, exist_ok=True)
+                keep_path.write_text(keep_xml)
+                copied.append(ANDROID_RESOURCES_KEEP_FILE.as_posix())
+
+            manifest_path.parent.mkdir(parents=True, exist_ok=True)
+            manifest_path.write_text("\n".join(copied))
 
     def resolve_permissions(self) -> list[str]:
         """

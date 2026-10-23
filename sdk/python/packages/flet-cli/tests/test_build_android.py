@@ -1,3 +1,4 @@
+import contextlib
 import copy
 import xml.etree.ElementTree as ET
 from pathlib import Path
@@ -458,3 +459,154 @@ class TestServices:
         with pytest.raises(ValueError) as error:
             self._resolve(configured)
         assert path in str(error.value)
+
+
+def _resources_command(tmp_path, settings):
+    """Create a build command with a generated Android project for resources."""
+    cmd = _command(settings)
+    cmd.package_platform = "Android"
+    cmd.python_app_path = tmp_path
+    cmd.build_dir = tmp_path / "build"
+    cmd.flutter_dir = cmd.build_dir / "flutter"
+    cmd.step = lambda status: contextlib.nullcontext()
+    res = cmd.flutter_dir / "android/app/src/main/res"
+    _write(res / "mipmap-hdpi/ic_launcher.png", b"launcher")
+    _write(res / "drawable-xhdpi/splash.png", b"splash")
+    _write(res / "values/colors.xml", b"colors")
+    return cmd, res
+
+
+def _write(path, data=b"data"):
+    """Create a file and its parent directories."""
+    path.parent.mkdir(parents=True, exist_ok=True)
+    path.write_bytes(data)
+
+
+class TestResources:
+    SETTINGS = {"tool.flet.android.res_dir": "android_res"}
+
+    def test_copies_resources_and_keeps_those_referenced_by_name(self, tmp_path):
+        """Resources are copied, and every file-based one is kept from shrinking."""
+        source = tmp_path / "android_res"
+        _write(source / "drawable-hdpi/ic_stat.png", b"hdpi")
+        _write(source / "drawable-xhdpi/ic_stat.png", b"xhdpi")
+        _write(source / "raw/alert.mp3")
+        _write(source / "values/brand.xml")
+        _write(source / "raw/.DS_Store")
+        cmd, res = _resources_command(tmp_path, self.SETTINGS)
+
+        cmd.copy_android_resources()
+
+        assert (res / "drawable-hdpi/ic_stat.png").read_bytes() == b"hdpi"
+        assert (res / "drawable-xhdpi/ic_stat.png").read_bytes() == b"xhdpi"
+        assert (res / "raw/alert.mp3").exists()
+        assert (res / "values/brand.xml").exists()
+        assert not (res / "raw/.DS_Store").exists()
+        keep = ET.parse(res / "raw/flet_res_keep.xml").getroot()
+        assert keep.get("{http://schemas.android.com/tools}keep") == (
+            "@drawable/ic_stat,@raw/alert"
+        )
+
+    def test_rebuilds_remove_resources_no_longer_supplied(self, tmp_path):
+        """Removing a resource, or the setting, removes it from the next build."""
+        source = tmp_path / "android_res"
+        _write(source / "drawable/ic_stat.png")
+        _write(source / "raw/alert.mp3")
+        cmd, res = _resources_command(tmp_path, self.SETTINGS)
+        cmd.copy_android_resources()
+
+        (source / "raw/alert.mp3").unlink()
+        cmd.copy_android_resources()
+        assert (res / "drawable/ic_stat.png").exists()
+        assert not (res / "raw/alert.mp3").exists()
+        assert "@raw/alert" not in (res / "raw/flet_res_keep.xml").read_text()
+
+        cmd.get_pyproject = {}.get
+        cmd.copy_android_resources()
+        assert not (res / "drawable/ic_stat.png").exists()
+        assert not (res / "raw/flet_res_keep.xml").exists()
+        assert (res / "mipmap-hdpi/ic_launcher.png").exists()
+
+    def test_values_only_resources_need_no_keep_rule(self, tmp_path):
+        """Resources defined in values files produce no keep file."""
+        _write(tmp_path / "android_res/values/strings.xml")
+        cmd, res = _resources_command(tmp_path, self.SETTINGS)
+
+        cmd.copy_android_resources()
+
+        assert (res / "values/strings.xml").exists()
+        assert not (res / "raw/flet_res_keep.xml").exists()
+
+    @pytest.mark.parametrize(
+        ("path", "generated"),
+        [
+            ("mipmap-hdpi/ic_launcher.png", "mipmap-hdpi/ic_launcher.png"),
+            ("drawable-ldpi/splash.png", "drawable-xhdpi/splash.png"),
+            ("drawable/splash.xml", "drawable-xhdpi/splash.png"),
+            ("values/colors.xml", "values/colors.xml"),
+            ("raw/flet_res_keep.txt", "raw/flet_res_keep.xml"),
+        ],
+    )
+    def test_resources_flet_generates_are_reserved_by_name(
+        self, tmp_path, path, generated
+    ):
+        """Any file defining a resource Flet generates is rejected before copying."""
+        _write(tmp_path / "android_res/drawable/ic_stat.png")
+        _write(tmp_path / "android_res" / path, b"mine")
+        cmd, res = _resources_command(tmp_path, self.SETTINGS)
+
+        with pytest.raises(ValueError, match="clash") as exc:
+            cmd.copy_android_resources()
+        assert f"{path} (Flet's {generated})" in str(exc.value)
+        assert not (res / "drawable/ic_stat.png").exists()
+        assert (res / "mipmap-hdpi/ic_launcher.png").read_bytes() == b"launcher"
+
+    def test_other_values_files_merge_with_flet_values(self, tmp_path):
+        """A values file with its own name is copied beside Flet's values files."""
+        _write(tmp_path / "android_res/values/brand_colors.xml")
+        _write(tmp_path / "android_res/values-night/colors.xml")
+        cmd, res = _resources_command(tmp_path, self.SETTINGS)
+
+        cmd.copy_android_resources()
+
+        assert (res / "values/brand_colors.xml").exists()
+        assert (res / "values-night/colors.xml").exists()
+        assert (res / "values/colors.xml").read_bytes() == b"colors"
+
+    @pytest.mark.parametrize(
+        ("path", "message"),
+        [
+            ("sounds/alert.mp3", "unknown Android resource type 'sounds'"),
+            ("drawable/Icon-1.png", "lowercase letters, digits, and underscores"),
+            ("drawable/1icon.png", "must start with a letter"),
+            ("drawable/nested/icon.png", "cannot be nested"),
+            ("drawable/icon.png+drawable/icon.xml", "the same resource as icon.png"),
+            ("icon.png", "expected a resource type directory"),
+        ],
+    )
+    def test_invalid_layouts_report_the_setting(self, tmp_path, path, message):
+        """Malformed resource directories fail with the offending entry."""
+        for part in path.split("+"):
+            _write(tmp_path / "android_res" / part)
+        cmd, _ = _resources_command(tmp_path, self.SETTINGS)
+
+        with pytest.raises(ValueError, match="tool.flet.android.res_dir") as exc:
+            cmd.copy_android_resources()
+        assert message in str(exc.value)
+
+    def test_missing_directory_reports_the_setting(self, tmp_path):
+        """A res_dir that does not exist fails the build."""
+        cmd, _ = _resources_command(tmp_path, self.SETTINGS)
+
+        with pytest.raises(ValueError, match="is not a directory"):
+            cmd.copy_android_resources()
+
+    def test_other_platforms_ignore_resources(self, tmp_path):
+        """Builds for other platforms neither validate nor copy resources."""
+        _write(tmp_path / "android_res/drawable/ic_stat.png")
+        cmd, res = _resources_command(tmp_path, self.SETTINGS)
+        cmd.package_platform = "iOS"
+
+        cmd.copy_android_resources()
+
+        assert not (res / "drawable").exists()

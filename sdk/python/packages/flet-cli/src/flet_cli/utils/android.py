@@ -1,6 +1,8 @@
 """Helpers for Android-specific build configuration."""
 
 import re
+from pathlib import Path
+from typing import Optional
 
 ANDROID_ARCH_TO_FLUTTER_TARGET_PLATFORM = {
     "armeabi-v7a": "android-arm",
@@ -216,3 +218,165 @@ def normalize_android_services(configured) -> dict:
             entry[kind] = normalized
         resolved[name] = entry
     return resolved
+
+
+ANDROID_RESOURCE_TYPES = {
+    "anim",
+    "animator",
+    "color",
+    "drawable",
+    "font",
+    "interpolator",
+    "layout",
+    "menu",
+    "mipmap",
+    "raw",
+    "transition",
+    "values",
+    "xml",
+}
+"""Android resource directory types an app may supply, before any qualifiers."""
+
+ANDROID_RESOURCES_KEEP_FILE = Path("raw") / "flet_res_keep.xml"
+"""Generated keep rule, relative to the project's `res` directory."""
+
+
+def android_resource_files(res_dir: Path) -> list[Path]:
+    """
+    List an app's Android resource files and validate their layout.
+
+    The directory mirrors Android's `res` directory: one level of type
+    directories, such as `drawable-hdpi` or `raw`, each holding resource files.
+
+    Args:
+        res_dir: The app's resource directory.
+
+    Returns:
+        Resource file paths relative to `res_dir`, sorted.
+
+    Raises:
+        ValueError: If an entry does not follow Android's resource layout or
+            naming rules.
+    """
+
+    files = []
+    seen = {}
+    for entry in sorted(res_dir.iterdir()):
+        if entry.name.startswith("."):
+            continue
+        if not entry.is_dir():
+            raise ValueError(
+                f"{entry}: expected a resource type directory, such as "
+                "`drawable` or `raw`."
+            )
+        if entry.name.split("-")[0] not in ANDROID_RESOURCE_TYPES:
+            raise ValueError(
+                f"{entry}: unknown Android resource type "
+                f"{entry.name.split('-')[0]!r}. Supported: "
+                f"{', '.join(sorted(ANDROID_RESOURCE_TYPES))}."
+            )
+        for file in sorted(entry.iterdir()):
+            if file.name.startswith("."):
+                continue
+            if not file.is_file():
+                raise ValueError(f"{file}: resource directories cannot be nested.")
+            if not re.fullmatch(r"[a-z][a-z0-9_]*(\.[A-Za-z0-9.]+)?", file.name):
+                raise ValueError(
+                    f"{file}: Android resource file names may contain only "
+                    "lowercase letters, digits, and underscores, and must start "
+                    "with a letter."
+                )
+            relative = file.relative_to(res_dir)
+            duplicate = seen.setdefault(
+                (entry.name, android_resource_key(relative)), file
+            )
+            if duplicate != file:
+                raise ValueError(
+                    f"{file}: defines the same resource as {duplicate.name}."
+                )
+            files.append(relative)
+    return files
+
+
+def android_resource_key(path: Path) -> tuple[str, str]:
+    """
+    Identify the resource a file in a `res` directory defines.
+
+    Files define the same resource when they share a resource type and name, even
+    in different qualifier directories or with different extensions:
+    `drawable-hdpi/splash.png` and `drawable/splash.xml` are both the drawable
+    `splash`. Values files merge their contents instead, so they are identified by
+    their directory and file name.
+
+    Args:
+        path: File path relative to the `res` directory.
+
+    Returns:
+        The resource type, or values directory, and the resource or file name.
+    """
+
+    kind = path.parent.name.split("-")[0]
+    if kind == "values":
+        return path.parent.name, path.name
+    return kind, path.name.split(".")[0]
+
+
+def android_resource_clashes(
+    files: list[Path], res_path: Path
+) -> list[tuple[Path, Path]]:
+    """
+    Find app resources that would add to or replace resources Flet generates.
+
+    Args:
+        files: The app's resource file paths, relative to its resource directory.
+        res_path: The generated project's `res` directory, holding only the files
+            Flet generates.
+
+    Returns:
+        Each clashing app file paired with a generated file defining the same
+        resource, both relative to their `res` directories.
+    """
+
+    generated = {
+        android_resource_key(ANDROID_RESOURCES_KEEP_FILE): ANDROID_RESOURCES_KEEP_FILE
+    }
+    for path in sorted(res_path.glob("*/*")):
+        if path.is_file():
+            relative = path.relative_to(res_path)
+            generated.setdefault(android_resource_key(relative), relative)
+    return [
+        (file, generated[android_resource_key(file)])
+        for file in files
+        if android_resource_key(file) in generated
+    ]
+
+
+def android_resources_keep_xml(files: list[Path]) -> Optional[str]:
+    """
+    Build a keep rule for resources the app refers to only by name.
+
+    Release builds remove resources that no code references directly, which
+    includes resources Python code names at runtime, such as a notification
+    icon. Values resources are not file-based and are not listed.
+
+    Args:
+        files: Resource file paths relative to the `res` directory.
+
+    Returns:
+        The keep file's XML, or `None` when there is nothing to keep.
+    """
+
+    names = sorted(
+        {
+            f"@{file.parent.name.split('-')[0]}/{file.name.split('.')[0]}"
+            for file in files
+            if file.parent.name.split("-")[0] != "values"
+        }
+    )
+    if not names:
+        return None
+    return (
+        '<?xml version="1.0" encoding="utf-8"?>\n'
+        '<resources xmlns:tools="http://schemas.android.com/tools"\n'
+        f'    tools:keep="{",".join(names)}" />\n'
+    )
