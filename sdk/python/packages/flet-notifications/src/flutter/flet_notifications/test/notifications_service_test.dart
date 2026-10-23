@@ -892,7 +892,7 @@ void main() {
         'title': 'Reminder',
         'body': 'Take a break',
         'payload': 'break',
-        'scheduleMode': fln.AndroidScheduleMode.exactAllowWhileIdle,
+        'scheduleMode': fln.AndroidScheduleMode.inexactAllowWhileIdle,
       });
     }
   });

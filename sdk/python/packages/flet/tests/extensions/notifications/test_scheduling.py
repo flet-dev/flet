@@ -100,7 +100,7 @@ async def test_schedule_naive_datetime_is_device_wall_clock():
         "timezone": None,
     }
     assert args["match_components"] == "time"
-    assert args["schedule_mode"] == "exactAllowWhileIdle"
+    assert args["schedule_mode"] == "inexactAllowWhileIdle"
     assert args["options"] is None
 
 

@@ -372,7 +372,7 @@ class LocalNotificationsService extends FletService {
     final scheduledDate = parseWhen(map, tz.local);
     final scheduleMode = parseAndroidScheduleMode(
         map["schedule_mode"] as String?,
-        fln.AndroidScheduleMode.exactAllowWhileIdle)!;
+        fln.AndroidScheduleMode.inexactAllowWhileIdle)!;
     final matchComponents =
         parseDateTimeComponents(map["match_components"] as String?);
     await _plugin!.zonedSchedule(
@@ -400,7 +400,7 @@ class LocalNotificationsService extends FletService {
     final actions = parseActions(map["actions"]);
     final scheduleMode = parseAndroidScheduleMode(
         map["schedule_mode"] as String?,
-        fln.AndroidScheduleMode.exactAllowWhileIdle)!;
+        fln.AndroidScheduleMode.inexactAllowWhileIdle)!;
     final interval = map["repeat_interval"];
     final repeatInterval =
         interval is String ? parseRepeatInterval(interval) : null;

@@ -351,7 +351,9 @@ class LocalNotifications(ft.Service):
         actions: list[NotificationAction] | None = None,
         match_components: DateTimeComponents | None = None,
         options: NotificationOptions | None = None,
-        schedule_mode: AndroidScheduleMode = AndroidScheduleMode.EXACT_ALLOW_WHILE_IDLE,
+        schedule_mode: AndroidScheduleMode = (
+            AndroidScheduleMode.INEXACT_ALLOW_WHILE_IDLE
+        ),
     ) -> None:
         """
         Schedule a notification for a date, a delay, or a recurring calendar match.
@@ -400,8 +402,10 @@ class LocalNotifications(ft.Service):
             options: Additional per-platform details; see
                 :class:`~flet_notifications.NotificationOptions`.
             schedule_mode: Android alarm precision and idle-mode behavior; see
-                :class:`~flet_notifications.AndroidScheduleMode`. Exact modes require
-                the applicable exact-alarm access. Ignored on other platforms.
+                :class:`~flet_notifications.AndroidScheduleMode`. The default needs
+                no special access, but Android may deliver the notification some
+                minutes late. Exact modes deliver on time and require exact-alarm
+                access. Ignored on other platforms.
 
         Raises:
             NotificationPermissionError: If an exact `schedule_mode` lacks Android
@@ -420,7 +424,6 @@ class LocalNotifications(ft.Service):
                 when=datetime(2027, 1, 1, 9, 0, tzinfo=ZoneInfo("Europe/Paris")),
                 title="Morning reminder",
                 match_components=ftn.DateTimeComponents.TIME,
-                schedule_mode=ftn.AndroidScheduleMode.INEXACT_ALLOW_WHILE_IDLE,
             )
             ```
         """
@@ -449,7 +452,9 @@ class LocalNotifications(ft.Service):
         body: str | None = None,
         payload: str = "",
         actions: list[NotificationAction] | None = None,
-        schedule_mode: AndroidScheduleMode = AndroidScheduleMode.EXACT_ALLOW_WHILE_IDLE,
+        schedule_mode: AndroidScheduleMode = (
+            AndroidScheduleMode.INEXACT_ALLOW_WHILE_IDLE
+        ),
         options: NotificationOptions | None = None,
     ) -> None:
         """
@@ -477,11 +482,11 @@ class LocalNotifications(ft.Service):
                 The service does not interpret this value.
             actions: Action buttons; see :class:`~flet_notifications.NotificationAction`
                 for platform support and background-response behavior.
-            schedule_mode: Android alarm precision and idle-mode behavior; see
-                :class:`~flet_notifications.AndroidScheduleMode`. Exact modes require
-                the applicable exact-alarm access. Ignored on other platforms.
-            options: Additional per-platform details; see
-                :class:`~flet_notifications.NotificationOptions`.
+            schedule_mode: Android alarm precision and idle-mode behavior. The
+                default needs no special access, but Android may deliver the
+                notification some minutes late. Exact modes deliver on time and
+                require exact-alarm access. Ignored on other platforms.
+            options: Additional per-platform details.
 
         Raises:
             NotificationInvalidArgumentError: If `repeat_interval` is not a
@@ -568,10 +573,16 @@ class LocalNotifications(ft.Service):
         """
         Request Android exact-alarm access through system settings when needed.
 
-        Use with the `SCHEDULE_EXACT_ALARM` manifest permission. This is especially
-        relevant to apps targeting Android 13+ and running on Android 14+, where the
-        permission may not be granted at installation. Exact-alarm access is separate
-        from :meth:`request_permissions`.
+        Opens the system settings screen where the user can allow the app's alarms;
+        it is not a dialog. Returns once the user leaves that screen. On Android 14+,
+        the access is off until the user turns it on there. Exact-alarm access is
+        separate from :meth:`request_permissions`.
+
+        Note:
+            Requires `SCHEDULE_EXACT_ALARM` in the app's permissions; without it, the
+            settings screen cannot grant access and this returns `False`. See
+            :class:`flet_notifications.AndroidScheduleMode` for what exact
+            scheduling involves.
 
         Returns:
             Whether access is granted after the request. Returns `True` on non-Android

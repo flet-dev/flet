@@ -213,14 +213,34 @@ class AndroidScheduleMode(Enum):
     """
     How Android schedules the alarm that delivers a notification.
 
+    Inexact modes need no special access but may deliver some minutes late, as
+    Android batches alarms to save power. Exact modes deliver on time and need
+    exact-alarm access:
+
+    - Declare it in `pyproject.toml`:
+
+      ```toml
+      [tool.flet.android.permission]
+      SCHEDULE_EXACT_ALARM = true
+      ```
+
+    - On Android 14+, the access is off until the user turns it on in system
+      settings. Check it with
+      :meth:`flet_notifications.LocalNotifications.can_schedule_exact_notifications`
+      and open that settings screen with
+      :meth:`flet_notifications.LocalNotifications.request_exact_alarm_permission`.
+    - Scheduling in an exact mode without the access raises
+      :class:`flet_notifications.NotificationPermissionError`.
+    - The user or the system can revoke the access at any time. Android then stops
+      the app and cancels its future exact alarms, so those notifications are not
+      delivered. Check the access when the app starts and reschedule once it is
+      granted again. See Android's
+      [exact alarm permission](https://developer.android.com/develop/background-work/services/alarms/schedule#exact-permission-declare)
+      documentation.
+
     Note:
-        Exact modes require exact-alarm access on Android versions that restrict it.
-        Check
-        :meth:`flet_notifications.LocalNotifications.can_schedule_exact_notifications`
-        and, when needed, call
-        :meth:`flet_notifications.LocalNotifications.request_exact_alarm_permission`.
-        Inexact modes trade timing precision for lower power use. Delivery remains
-        subject to Android's alarm quotas and background-execution restrictions.
+        Delivery in every mode remains subject to Android's alarm quotas and
+        background-execution restrictions.
     """
 
     ALARM_CLOCK = "alarmClock"
@@ -256,7 +276,9 @@ class AndroidScheduleMode(Enum):
     """
     Schedule approximately at the requested time, including during idle mode.
 
-    Does not require exact-alarm access; Android may batch or delay delivery.
+    Does not require exact-alarm access; Android may batch or delay delivery. This is
+    the default of :meth:`flet_notifications.LocalNotifications.schedule` and
+    :meth:`flet_notifications.LocalNotifications.periodically_show`.
     """
 
 

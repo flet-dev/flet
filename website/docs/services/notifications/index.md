@@ -62,19 +62,18 @@ isCoreLibraryDesugaringEnabled = "true" # (2)!
 POST_NOTIFICATIONS = true # (3)!
 VIBRATE = true # (4)!
 RECEIVE_BOOT_COMPLETED = true # (5)!
-SCHEDULE_EXACT_ALARM = true # (6)!
 
 [tool.flet.android.receiver."com.dexterous.flutterlocalnotifications.ActionBroadcastReceiver"]
-exported = false # (7)!
+exported = false # (6)!
 
 [tool.flet.android.receiver."com.dexterous.flutterlocalnotifications.ScheduledNotificationReceiver"]
-exported = false # (8)!
+exported = false # (7)!
 
 [tool.flet.android.receiver."com.dexterous.flutterlocalnotifications.ScheduledNotificationBootReceiver"]
-exported = false # (9)!
+exported = false # (8)!
 
 [[tool.flet.android.receiver."com.dexterous.flutterlocalnotifications.ScheduledNotificationBootReceiver".intent_filter]]
-actions = [ # (10)!
+actions = [ # (9)!
     "android.intent.action.BOOT_COMPLETED",
     "android.intent.action.MY_PACKAGE_REPLACED",
     "android.intent.action.QUICKBOOT_POWERON",
@@ -87,11 +86,10 @@ actions = [ # (10)!
 3. Allows notification permission requests on Android 13+. Request permission at runtime with [`request_permissions()`][flet_notifications.LocalNotifications.request_permissions].
 4. Allows notification vibration.
 5. Lets scheduled notifications be restored after a reboot.
-6. Allows exact schedule modes. Omit this permission for inexact scheduling only. Use [`request_exact_alarm_permission()`][flet_notifications.LocalNotifications.request_exact_alarm_permission] to request exact-alarm access when needed.
-7. Registers the receiver that handles notification action buttons and triggers [`on_action`][flet_notifications.LocalNotifications.on_action]. It is needed when using [`NotificationAction`][flet_notifications.NotificationAction]. `exported = false` keeps it private to the app.
-8. Registers the receiver that delivers scheduled notifications. Include it when using [`schedule()`][flet_notifications.LocalNotifications.schedule] or [`periodically_show()`][flet_notifications.LocalNotifications.periodically_show].
-9. Registers the receiver that restores scheduled notifications after reboot or app updates. A non-exported receiver can still receive the system broadcasts listed below.
-10. Subscribes the boot receiver to normal boot, app replacement, and device-specific quick-boot events.
+6. Registers the receiver that handles notification action buttons and triggers [`on_action`][flet_notifications.LocalNotifications.on_action]. It is needed when using [`NotificationAction`][flet_notifications.NotificationAction]. `exported = false` keeps it private to the app.
+7. Registers the receiver that delivers scheduled notifications. Include it when using [`schedule()`][flet_notifications.LocalNotifications.schedule] or [`periodically_show()`][flet_notifications.LocalNotifications.periodically_show]. For on-time delivery with an exact schedule mode, see [`AndroidScheduleMode`][flet_notifications.AndroidScheduleMode].
+8. Registers the receiver that restores scheduled notifications after reboot or app updates. A non-exported receiver can still receive the system broadcasts listed below.
+9. Subscribes the boot receiver to normal boot, app replacement, and device-specific quick-boot events.
 </TabItem>
 </Tabs>
 

@@ -18,7 +18,6 @@ from flet_notifications import (
     AndroidNotificationCategory,
     AndroidOptions,
     AndroidProgress,
-    AndroidScheduleMode,
     AndroidVisibility,
     DarwinOptions,
     DateTimeComponents,
@@ -293,7 +292,6 @@ def main(page: ft.Page):
                 title="Daily reminder",
                 body="Every day at 08:30.",
                 match_components=DateTimeComponents.TIME,
-                schedule_mode=AndroidScheduleMode.EXACT_ALLOW_WHILE_IDLE,
             ),
             "schedule",
         )
