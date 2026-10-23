@@ -194,13 +194,9 @@ class LocalNotificationsService extends FletService {
       jsonEncode(responseToEvent(response));
 
   void _emit(Map<String, Object?> event) {
-    final type = event["response_type"];
-    final name = switch (type) {
-      "action" => "action",
-      "dismissed" => "dismiss",
-      _ => "tap",
-    };
-    control.triggerEvent(name, event);
+    final data = Map<String, Object?>.of(event);
+    final name = data.remove("event") as String? ?? "tap";
+    control.triggerEvent(name, data);
   }
 
   Future<dynamic> invokeMethod(String name, [dynamic args]) async {

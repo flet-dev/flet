@@ -75,16 +75,17 @@ void main() {
       );
       expect(event["action_id"], "reply");
       expect(event["input"], "my answer");
-      expect(event["response_type"], "action");
+      expect(event["event"], "action");
     });
 
     test("absent values are null, not placeholders", () {
       final event = responseToEvent(_response(id: null, payload: ""));
+      expect(event["event"], "tap");
       expect(event["id"], isNull);
-      expect(event["action_id"], isNull);
       expect(event["payload"], isNull);
-      expect(event["input"], isNull);
-      expect(event["response_type"], "tap");
+      // Only action responses carry action fields.
+      expect(event.containsKey("action_id"), isFalse);
+      expect(event.containsKey("input"), isFalse);
     });
   });
 
@@ -165,7 +166,7 @@ void main() {
       expect(event["action_id"], "reply");
       expect(event["payload"], "actions");
       expect(event["input"], "typed on windows"); // normalized from data
-      expect(event["response_type"], "action");
+      expect(event["event"], "action");
     });
 
     test("an envelope without a payload yields no payload", () {

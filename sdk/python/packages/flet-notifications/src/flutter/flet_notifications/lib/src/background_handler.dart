@@ -17,8 +17,12 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 const String _queuePrefix = "flet_notifications_queue_";
 
-/// Serializes a notification response into the event payload shape the
-/// Python `NotificationEvent` dataclass expects.
+/// Serializes a notification response into the payload of the Python event it
+/// becomes.
+///
+/// `event` names the service event to emit (`tap`, `action` or `dismiss`); it
+/// routes queued responses and is not sent to Python. Only action responses carry
+/// `action_id` and `input`, matching `NotificationActionEvent`.
 Map<String, Object?> responseToEvent(NotificationResponse response) {
   final isAction = response.notificationResponseType ==
       NotificationResponseType.selectedNotificationAction;
@@ -49,15 +53,15 @@ Map<String, Object?> responseToEvent(NotificationResponse response) {
           ? nonEmpty(response.data.values.first.toString())
           : null);
   return <String, Object?>{
-    "id": response.id,
-    "action_id": actionId,
-    "payload": payload,
-    "input": input,
-    "response_type": isDismissed
-        ? "dismissed"
+    "event": isDismissed
+        ? "dismiss"
         : isAction
             ? "action"
             : "tap",
+    "id": response.id,
+    "payload": payload,
+    if (isAction) "action_id": actionId,
+    if (isAction) "input": input,
     // Windows text/selection inputs arrive here (input is always null there).
     "data": response.data,
   };

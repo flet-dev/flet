@@ -1,12 +1,12 @@
 from flet_notifications.actions import NotificationAction, NotificationActionInput
 from flet_notifications.base import (
+    NotificationActionEvent,
     NotificationError,
     NotificationEvent,
     NotificationInitializationError,
     NotificationInvalidArgumentError,
     NotificationPermissionError,
     NotificationUnsupportedPlatformError,
-    ResponseType,
 )
 from flet_notifications.channels import NotificationChannel
 from flet_notifications.events import (
@@ -97,6 +97,7 @@ __all__ = [
     "LinuxUrgency",
     "LocalNotifications",
     "NotificationAction",
+    "NotificationActionEvent",
     "NotificationActionInput",
     "NotificationChannel",
     "NotificationError",
@@ -108,7 +109,6 @@ __all__ = [
     "NotificationUnsupportedPlatformError",
     "PendingNotification",
     "RepeatInterval",
-    "ResponseType",
     "WebNotificationDirection",
     "WebOptions",
     "WindowsNotificationDuration",

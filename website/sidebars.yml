@@ -711,6 +711,7 @@ docs:
         - services/notifications/types/linuxoptions.md
         - services/notifications/types/linuxurgency.md
         - services/notifications/types/notificationaction.md
+        - services/notifications/types/notificationactionevent.md
         - services/notifications/types/notificationactioninput.md
         - services/notifications/types/notificationchannel.md
         - services/notifications/types/notificationerror.md
@@ -722,7 +723,6 @@ docs:
         - services/notifications/types/notificationunsupportedplatformerror.md
         - services/notifications/types/pendingnotification.md
         - services/notifications/types/repeatinterval.md
-        - services/notifications/types/responsetype.md
         - services/notifications/types/webnotificationdirection.md
         - services/notifications/types/weboptions.md
         - services/notifications/types/windowsnotificationduration.md

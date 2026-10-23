@@ -68,10 +68,10 @@ class NotificationAction:
 
     Selections are reported through
     :attr:`flet_notifications.LocalNotifications.on_action`, with :attr:`id` in
-    :attr:`flet_notifications.NotificationEvent.action_id`.
+    :attr:`flet_notifications.NotificationActionEvent.action_id`.
 
     For inline replies, set :attr:`input`. Reply text is available in
-    :attr:`flet_notifications.NotificationEvent.input`.
+    :attr:`flet_notifications.NotificationActionEvent.input`.
 
     Note:
         Windows also returns input values in the event's inherited `data` mapping.

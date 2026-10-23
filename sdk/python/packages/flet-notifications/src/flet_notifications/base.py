@@ -1,68 +1,33 @@
 from dataclasses import dataclass
-from enum import Enum
 from typing import TypeVar
 
 import flet as ft
 from flet.utils import from_dict
 
 __all__ = [
+    "NotificationActionEvent",
     "NotificationError",
     "NotificationEvent",
     "NotificationInitializationError",
     "NotificationInvalidArgumentError",
     "NotificationPermissionError",
     "NotificationUnsupportedPlatformError",
-    "ResponseType",
 ]
 
 
-class ResponseType(Enum):
-    """
-    Kinds of interaction reported by
-    :attr:`flet_notifications.NotificationEvent.response_type`.
-    """
-
-    TAP = "tap"
-    """The user selected the notification itself."""
-
-    ACTION = "action"
-    """The user selected one of the notification action buttons."""
-
-    DISMISSED = "dismissed"
-    """
-    The platform reported that the notification was dismissed.
-
-    Note:
-        Reporting requires native support and configuration. This enum value alone does
-        not enable dismissal reporting.
-    """
-
-
-@dataclass
+@dataclass(kw_only=True)
 class NotificationEvent(ft.Event[ft.EventControlType]):
     """
-    Notification selection, action response, or reported dismissal.
+    The user selected a notification, or the platform reported its dismissal.
 
-    Delivered to :attr:`flet_notifications.LocalNotifications.on_tap`,
-    :attr:`flet_notifications.LocalNotifications.on_action`, and
-    :attr:`flet_notifications.LocalNotifications.on_dismiss`. The inherited `control`
-    is the service that emitted the event.
-
-    Note:
-        On Windows, the inherited `data` mapping contains reply values keyed by
-        :attr:`flet_notifications.NotificationAction.id`. See
-        :attr:`flet_notifications.LocalNotifications.on_action` for how to read them.
+    Delivered to :attr:`flet_notifications.LocalNotifications.on_tap` and
+    :attr:`flet_notifications.LocalNotifications.on_dismiss`. Action buttons deliver
+    :class:`flet_notifications.NotificationActionEvent` instead. The inherited
+    `control` is the service that emitted the event.
     """
 
     id: int | None = None
     """Identifier of the notification, or `None` when the platform reports none."""
-
-    action_id: str | None = None
-    """
-    Selected action's :attr:`flet_notifications.NotificationAction.id`.
-
-    `None` for a body tap or a dismissal rather than an action.
-    """
 
     payload: str | None = None
     """
@@ -72,19 +37,31 @@ class NotificationEvent(ft.Event[ft.EventControlType]):
     payload; the application can use it for routing or identifying an item.
     """
 
+
+@dataclass(kw_only=True)
+class NotificationActionEvent(NotificationEvent[ft.EventControlType]):
+    """
+    The user selected one of a notification's action buttons.
+
+    Delivered to :attr:`flet_notifications.LocalNotifications.on_action`.
+
+    Note:
+        On Windows, the inherited `data` mapping contains reply values keyed by
+        :attr:`flet_notifications.NotificationAction.id`. See
+        :attr:`flet_notifications.LocalNotifications.on_action` for how to read them.
+    """
+
+    action_id: str
+    """Selected action's :attr:`flet_notifications.NotificationAction.id`."""
+
     input: str | None = None
     """
-    Text entered through a notification reply input, or `None` when there is none.
+    Text entered through the action's reply input, or `None` when there is none.
 
     Note:
         On Windows, contains the reply text when exactly one input value is returned.
         All reply values remain available in the inherited `data` mapping, keyed by
         :attr:`flet_notifications.NotificationAction.id`.
-    """
-
-    response_type: ResponseType = ResponseType.TAP
-    """
-    Whether the user selected the notification, activated an action, or dismissed it.
     """
 
 

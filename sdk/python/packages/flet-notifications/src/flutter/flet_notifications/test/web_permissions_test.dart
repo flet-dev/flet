@@ -303,9 +303,11 @@ void main() {
       expect(event['name'], action ? 'action' : 'tap');
       final data = event['data'] as Map;
       expect(data['id'], 7);
-      expect(data['action_id'], action ? 'archive' : null);
+      expect(data.containsKey('action_id'), action);
+      if (action) expect(data['action_id'], 'archive');
       expect(data['payload'], 'message:42');
-      expect(data['response_type'], action ? 'action' : 'tap');
+      // The event kind routes the event and is not sent to Python.
+      expect(data.containsKey('event'), isFalse);
     });
   }
 }

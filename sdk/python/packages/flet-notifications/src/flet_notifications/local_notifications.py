@@ -4,6 +4,7 @@ from typing import Any
 import flet as ft
 from flet_notifications.actions import NotificationAction
 from flet_notifications.base import (
+    NotificationActionEvent,
     NotificationEvent,
     NotificationInvalidArgumentError,
     error_from_bridge,
@@ -130,12 +131,16 @@ class LocalNotifications(ft.Service):
         notification's content.
     """
 
-    on_action: ft.EventHandler[NotificationEvent["LocalNotifications"]] | None = None
+    on_action: ft.EventHandler[NotificationActionEvent["LocalNotifications"]] | None = (
+        None
+    )
     """
     Called when the user selects a notification action button.
 
-    Use :attr:`flet_notifications.NotificationEvent.action_id` to identify the button
-    and :attr:`flet_notifications.NotificationEvent.input` for reply text.
+    Its handler receives a :class:`flet_notifications.NotificationActionEvent`; use
+    its :attr:`~flet_notifications.NotificationActionEvent.action_id` to identify
+    the button and :attr:`~flet_notifications.NotificationActionEvent.input` for
+    reply text.
 
     Note:
         - When an action launches the app, this handler is called for it once the
@@ -143,7 +148,8 @@ class LocalNotifications(ft.Service):
         - On Windows, the event's inherited `data` mapping contains reply values
           keyed by :attr:`flet_notifications.NotificationAction.id`. For an action
           with the ID `"reply"`, read `e.data["reply"]`. When exactly one value is
-          returned, :attr:`flet_notifications.NotificationEvent.input` also contains
+          returned,
+          :attr:`flet_notifications.NotificationActionEvent.input` also contains
           that text.
         - Background Android/iOS actions are queued and replayed on the next service
           initialization; Python is not run in the background isolate.
