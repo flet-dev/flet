@@ -65,9 +65,9 @@ fln.StyleInformation? parseStyle(Object? value) {
         throw FormatException("unknown style type: ${value["_type"]}");
     }
   } on FormatException catch (e) {
-    throw NotificationException.invalidStyle(e.message);
+    throw NotificationException.invalidArgument(e.message);
   } on TypeError catch (e) {
-    throw NotificationException.invalidStyle("invalid style field: $e");
+    throw NotificationException.invalidArgument("invalid style field: $e");
   }
 }
 

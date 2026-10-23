@@ -6,6 +6,7 @@ import 'dart:js_interop_unsafe';
 
 import 'package:flet/flet.dart';
 import 'package:flet_notifications/src/notifications_service.dart';
+import 'package:flet_notifications/src/utils/errors.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart'
     as fln;
@@ -82,6 +83,17 @@ LocalNotificationsService _service({Control? control}) =>
           ),
     );
 
+/// Invokes [method] and returns its result, or for a failure the text Flet
+/// reports to Python: the [NotificationException]'s `"<code>: <message>"`.
+Future<Object?> _call(LocalNotificationsService service, String method,
+    [Object? args]) async {
+  try {
+    return await service.invokeMethod(method, args);
+  } on NotificationException catch (e) {
+    return e.toString();
+  }
+}
+
 void main() {
   TestWidgetsFlutterBinding.ensureInitialized();
 
@@ -125,7 +137,7 @@ void main() {
     test('status reports $permission without prompting', () async {
       notification['permission'] = permission.toJS;
       expect(
-        await _service().invokeMethod('are_notifications_enabled'),
+        await _call(_service(), 'are_notifications_enabled'),
         permission == 'granted',
       );
       expect(requests, 0);
@@ -138,20 +150,20 @@ void main() {
       final plugin = _WebPlugin()..initializationResult = result;
       fln.FlutterLocalNotificationsPlatform.instance = plugin;
       final service = _service();
-      expect(await service.invokeMethod('show', {'id': 1}),
-          startsWith('error:init_failed:'));
+      expect(await _call(service, 'show', {'id': 1}),
+          startsWith('initialization_failed: '));
       expect(plugin.shown, isEmpty);
       plugin.initializationResult = true;
-      expect(await service.invokeMethod('show', {'id': 1}), 'ok');
+      expect(await _call(service, 'show', {'id': 1}), null);
       expect(plugin.initializations, 2);
       expect(
-          await service.invokeMethod('show', {
+          await _call(service, 'show', {
             'id': 2,
             'actions': [
               {'id': 'open', 'title': 'Open'}
             ],
           }),
-          'ok');
+          null);
       expect(plugin.initializations, 2);
     });
   }
@@ -160,14 +172,14 @@ void main() {
     test('request returns the browser result $result', () async {
       requestResult = result;
       final service = _service();
-      expect(await service.invokeMethod('are_notifications_enabled'), isFalse);
+      expect(await _call(service, 'are_notifications_enabled'), isFalse);
       expect(
-        await service.invokeMethod('request_permissions'),
+        await _call(service, 'request_permissions'),
         result == 'granted',
       );
       expect(requests, 1);
       expect(
-        await service.invokeMethod('are_notifications_enabled'),
+        await _call(service, 'are_notifications_enabled'),
         result == 'granted',
       );
     });
@@ -177,7 +189,7 @@ void main() {
     test('existing $permission does not request permission again', () async {
       notification['permission'] = permission.toJS;
       expect(
-        await _service().invokeMethod('request_permissions'),
+        await _call(_service(), 'request_permissions'),
         permission == 'granted',
       );
       expect(requests, 0);
@@ -188,14 +200,14 @@ void main() {
       () async {
     _global.delete('Notification'.toJS);
     final service = _service();
-    expect(await service.invokeMethod('are_notifications_enabled'), isFalse);
-    expect(await service.invokeMethod('request_permissions'), isFalse);
+    expect(await _call(service, 'are_notifications_enabled'), isFalse);
+    expect(await _call(service, 'request_permissions'), isFalse);
     expect(requests, 0);
   });
 
   test('show forwards all browser presentation options', () async {
     final service = _service();
-    final result = await service.invokeMethod('show', {
+    final result = await _call(service, 'show', {
       'id': 7,
       'title': 'A message',
       'actions': [
@@ -216,7 +228,7 @@ void main() {
         },
       },
     });
-    expect(result, 'ok');
+    expect(result, null);
     final plugin = fln.FlutterLocalNotificationsPlatform.instance as _WebPlugin;
     final details = plugin.shown.single;
     expect(details.actions.map((a) => a.action), ['open', 'archive']);
@@ -237,7 +249,7 @@ void main() {
       () async {
     final service = _service();
     final plugin = fln.FlutterLocalNotificationsPlatform.instance as _WebPlugin;
-    expect(await service.invokeMethod('show', {'id': 7}), 'ok');
+    expect(await _call(service, 'show', {'id': 7}), null);
     final defaults = plugin.shown.single;
     expect(defaults.actions, isEmpty);
     expect(defaults.direction, fln.WebNotificationDirection.auto);
@@ -252,7 +264,7 @@ void main() {
 
     for (final enabled in [true, false]) {
       expect(
-          await service.invokeMethod('show', {
+          await _call(service, 'show', {
             'id': 7,
             'options': {
               'web': {
@@ -263,7 +275,7 @@ void main() {
               },
             },
           }),
-          'ok');
+          null);
       final details = plugin.shown.last;
       expect(details.direction, fln.WebNotificationDirection.leftToRight);
       expect(details.requireInteraction, enabled);
@@ -276,7 +288,7 @@ void main() {
         () async {
       final control = _RecordingControl();
       final service = _service(control: control);
-      expect(await service.invokeMethod('initialize'), 'ok');
+      expect(await _call(service, 'initialize'), null);
       final plugin =
           fln.FlutterLocalNotificationsPlatform.instance as _WebPlugin;
       plugin.onResponse!(fln.NotificationResponse(

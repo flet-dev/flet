@@ -61,12 +61,12 @@ tz.TZDateTime parseWhen(Map<dynamic, dynamic> args, tz.Location fallback) {
       parsed.microsecond,
     );
   } on FormatException catch (e) {
-    throw NotificationException.invalidSchedule(e.message);
+    throw NotificationException.invalidArgument(e.message);
   } on TypeError catch (e) {
-    throw NotificationException.invalidSchedule(
+    throw NotificationException.invalidArgument(
       "invalid schedule field: $e",
     );
   } on tz.LocationNotFoundException catch (e) {
-    throw NotificationException.invalidSchedule(e.toString());
+    throw NotificationException.invalidArgument(e.toString());
   }
 }

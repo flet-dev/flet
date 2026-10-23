@@ -129,7 +129,7 @@ async def test_get_channels_hydrates_native_collection():
     ],
 )
 @pytest.mark.asyncio
-async def test_malformed_query_result_raises_query_failed(method):
+async def test_malformed_query_result_raises_notification_error(method):
     """Unexpected response shapes must not silently appear as empty results."""
     service = LocalNotifications()
 
@@ -139,7 +139,7 @@ async def test_malformed_query_result_raises_query_failed(method):
     service._invoke_method = invoke
     with pytest.raises(NotificationError) as exc:
         await getattr(service, method)()
-    assert exc.value.code == "query_failed"
+    assert type(exc.value) is NotificationError
 
 
 @pytest.mark.parametrize(
@@ -162,13 +162,12 @@ async def test_empty_query_result_and_native_failure(method):
     assert await getattr(service, method)() == []
 
     async def failure(method_name, arguments=None, timeout=None):
-        return "error:query_failed:permission denied"
+        raise RuntimeError("operation_failed: permission denied")
 
     service._invoke_method = failure
     with pytest.raises(NotificationError) as exc:
         await getattr(service, method)()
-    assert exc.value.code == "query_failed"
-    assert exc.value.message == "permission denied"
+    assert str(exc.value) == "permission denied"
 
 
 @pytest.mark.parametrize(
@@ -196,8 +195,7 @@ async def test_malformed_collection_entry_rejects_the_whole_query(method):
         service._invoke_method = invoke
         with pytest.raises(NotificationError) as exc:
             await getattr(service, method)()
-        assert exc.value.code == "query_failed"
-        assert "index 1" in exc.value.message
+        assert "index 1" in str(exc.value)
 
 
 @pytest.mark.asyncio
@@ -215,6 +213,5 @@ async def test_channel_reconstruction_errors_are_query_failures():
         service._invoke_method = invoke
         with pytest.raises(NotificationError) as exc:
             await service.get_notification_channels()
-        assert exc.value.code == "query_failed"
-        assert "NotificationChannel at index 1" in exc.value.message
+        assert "NotificationChannel at index 1" in str(exc.value)
         assert isinstance(exc.value.__cause__, (TypeError, ValueError))

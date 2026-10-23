@@ -3,6 +3,7 @@ import 'dart:convert';
 
 import 'package:flet/flet.dart';
 import 'package:flutter/foundation.dart' show debugPrint;
+import 'package:flutter/services.dart' show PlatformException;
 import 'package:flutter_local_notifications/flutter_local_notifications.dart'
     as fln;
 import 'package:flutter_timezone/flutter_timezone.dart';
@@ -27,6 +28,7 @@ class LocalNotificationsService extends FletService {
 
   fln.FlutterLocalNotificationsPlugin? _plugin;
   bool _initialized = false;
+  String? _initializationError;
   bool _replaying = false;
   bool _launchReplayComplete = false;
 
@@ -92,6 +94,7 @@ class LocalNotificationsService extends FletService {
 
   Future<void> _doInitialize() async {
     _initialized = false;
+    _initializationError = null;
     try {
       // The timezone database is only needed for scheduling; if it fails to
       // load, notifications still show.
@@ -113,6 +116,7 @@ class LocalNotificationsService extends FletService {
       // retry on the next invoke and surface the failure to the caller.
       debugPrint("flet_notifications: initialization failed: $e");
       _initialized = false;
+      _initializationError = e.toString();
     }
   }
 
@@ -212,57 +216,35 @@ class LocalNotificationsService extends FletService {
   Future<dynamic> invokeMethod(String name, [dynamic args]) async {
     if (name != "initialize") {
       await _ensureInitialized();
-      if (!_initialized) {
-        return const NotificationException.initFailed(
-          "notification backend unavailable",
-        ).toResult();
-      }
+      _throwIfNotInitialized();
     }
     try {
       return await _dispatch(name, args);
-    } on NotificationException catch (e) {
-      return e.toResult();
+    } on NotificationException {
+      rethrow;
     } on UnimplementedError {
-      return NotificationException.unsupportedPlatform(
+      throw NotificationException.unsupportedPlatform(
         "$name is not available on this platform",
-      ).toResult();
+      );
     } on UnsupportedError {
-      return NotificationException.unsupportedPlatform(
+      throw NotificationException.unsupportedPlatform(
         "$name is not available on this platform",
-      ).toResult();
+      );
+    } on PlatformException catch (e) {
+      final message = "${e.code}: ${e.message ?? ""}";
+      throw e.code == "exact_alarms_not_permitted"
+          ? NotificationException.permissionDenied(message)
+          : NotificationException.operationFailed(message);
     } catch (e) {
-      final code = switch (name) {
-        "show" => NotificationErrorCode.showFailed,
-        "schedule" ||
-        "periodically_show" =>
-          NotificationErrorCode.scheduleFailed,
-        "get_pending" || "get_active" => NotificationErrorCode.queryFailed,
-        "create_notification_channel" ||
-        "delete_notification_channel" ||
-        "get_notification_channels" ||
-        "create_notification_channel_group" ||
-        "delete_notification_channel_group" =>
-          NotificationErrorCode.channelFailed,
-        "start_foreground_service" ||
-        "stop_foreground_service" =>
-          NotificationErrorCode.foregroundServiceFailed,
-        "cancel" ||
-        "cancel_all" ||
-        "cancel_pending" =>
-          NotificationErrorCode.cancelFailed,
-        "request_permissions" ||
-        "can_schedule_exact_notifications" ||
-        "request_exact_alarm_permission" ||
-        "are_notifications_enabled" ||
-        "open_app_settings" ||
-        "request_full_screen_intent" ||
-        "has_notification_policy_access" ||
-        "request_notification_policy_access" =>
-          NotificationErrorCode.permissionFailed,
-        _ => null,
-      };
-      if (code == null) rethrow;
-      return NotificationException(code, e.toString()).toResult();
+      throw NotificationException.operationFailed(e.toString());
+    }
+  }
+
+  void _throwIfNotInitialized() {
+    if (!_initialized) {
+      throw NotificationException.initializationFailed(
+        _initializationError ?? "notification backend unavailable",
+      );
     }
   }
 
@@ -270,11 +252,8 @@ class LocalNotificationsService extends FletService {
     switch (name) {
       case "initialize":
         await _ensureInitialized(force: true);
-        return _initialized
-            ? "ok"
-            : const NotificationException.initFailed(
-                "initialize failed",
-              ).toResult();
+        _throwIfNotInitialized();
+        return null;
 
       case "show":
         return await _show(args);
@@ -286,11 +265,11 @@ class LocalNotificationsService extends FletService {
           id: parseInt(map["id"])!,
           tag: tag?.isEmpty == true ? null : tag,
         );
-        return "ok";
+        return null;
 
       case "cancel_all":
         await _plugin?.cancelAll();
-        return "ok";
+        return null;
 
       case "schedule":
         return await _schedule(args);
@@ -300,7 +279,7 @@ class LocalNotificationsService extends FletService {
 
       case "cancel_pending":
         await _plugin?.cancelAllPendingNotifications();
-        return "ok";
+        return null;
 
       case "get_pending":
         return await _getPending();
@@ -359,11 +338,11 @@ class LocalNotificationsService extends FletService {
         return await _deleteChannelGroup(args);
 
       default:
-        throw NotificationException.unknownMethod(name);
+        throw NotificationException.operationFailed("unknown method $name");
     }
   }
 
-  Future<String> _show(dynamic args) async {
+  Future<void> _show(dynamic args) async {
     final map = args as Map;
     final id = parseInt(map["id"])!;
     final title = map["title"] as String?;
@@ -381,10 +360,9 @@ class LocalNotificationsService extends FletService {
         details: map,
       ),
     );
-    return "ok";
   }
 
-  Future<String> _schedule(dynamic args) async {
+  Future<void> _schedule(dynamic args) async {
     final map = args as Map;
     final id = parseInt(map["id"])!;
     final title = map["title"] as String?;
@@ -411,10 +389,9 @@ class LocalNotificationsService extends FletService {
         details: map,
       ),
     );
-    return "ok";
   }
 
-  Future<String> _periodicallyShow(dynamic args) async {
+  Future<void> _periodicallyShow(dynamic args) async {
     final map = args as Map;
     final id = parseInt(map["id"])!;
     final title = map["title"] as String?;
@@ -429,12 +406,12 @@ class LocalNotificationsService extends FletService {
         interval is String ? parseRepeatInterval(interval) : null;
     final duration = interval is! String ? parseDuration(interval) : null;
     if (interval is String && repeatInterval == null) {
-      throw NotificationException.invalidOption(
+      throw NotificationException.invalidArgument(
           "Unknown repeat_interval: $interval");
     }
     if (interval is! String &&
         (duration == null || duration < const Duration(minutes: 1))) {
-      throw const NotificationException.invalidOption(
+      throw const NotificationException.invalidArgument(
           "repeat_interval must be at least one minute");
     }
     final notificationDetails = await _buildNotificationDetails(
@@ -463,7 +440,6 @@ class LocalNotificationsService extends FletService {
         androidScheduleMode: scheduleMode,
       );
     }
-    return "ok";
   }
 
   Future<List<Map<String, Object?>>> _getPending() async {
@@ -610,24 +586,22 @@ class LocalNotificationsService extends FletService {
 
   // ── Channels (Android 8.0+) ──────────────────────────────────────────
 
-  Future<String> _createChannel(dynamic args) async {
+  Future<void> _createChannel(dynamic args) async {
     final android = _androidPlugin;
-    if (android == null) return "ok";
+    if (android == null) return;
     if (args is! Map) {
-      throw const NotificationException.invalidChannel(
+      throw const NotificationException.invalidArgument(
           "channel must be a NotificationChannel");
     }
     await android.createNotificationChannel(parseNotificationChannel(args));
-    return "ok";
   }
 
-  Future<String> _deleteChannel(dynamic args) async {
+  Future<void> _deleteChannel(dynamic args) async {
     final android = _androidPlugin;
-    if (android == null) return "ok";
+    if (android == null) return;
     final map = args as Map;
     final channelId = map["channel_id"] as String;
     await android.deleteNotificationChannel(channelId: channelId);
-    return "ok";
   }
 
   Future<List<Map<String, Object?>>> _getChannels() async {
@@ -660,7 +634,7 @@ class LocalNotificationsService extends FletService {
 
   // ── Foreground service (Android) ─────────────────────────────────────
 
-  Future<String> _startForegroundService(dynamic args) async {
+  Future<void> _startForegroundService(dynamic args) async {
     final android = _androidPlugin;
     if (android == null) {
       throw UnsupportedError("foreground service is Android-only");
@@ -668,7 +642,7 @@ class LocalNotificationsService extends FletService {
     final map = args as Map;
     final id = parseInt(map["id"])!;
     if (id == 0) {
-      throw const NotificationException.invalidServiceId(
+      throw const NotificationException.invalidArgument(
         "foreground service id must be non-zero",
       );
     }
@@ -692,14 +666,12 @@ class LocalNotificationsService extends FletService {
       ))
           .android,
     );
-    return "ok";
   }
 
-  Future<String> _stopForegroundService() async {
+  Future<void> _stopForegroundService() async {
     final android = _androidPlugin;
-    if (android == null) return "ok";
+    if (android == null) return;
     await android.stopForegroundService();
-    return "ok";
   }
 
   // ── Probes & OS integration ───────────────────────────────
@@ -756,9 +728,9 @@ class LocalNotificationsService extends FletService {
         .toList();
   }
 
-  Future<String> _createChannelGroup(dynamic args) async {
+  Future<void> _createChannelGroup(dynamic args) async {
     final android = _androidPlugin;
-    if (android == null) return "ok";
+    if (android == null) return;
     final map = args as Map;
     await android.createNotificationChannelGroup(
       fln.AndroidNotificationChannelGroup(
@@ -767,16 +739,14 @@ class LocalNotificationsService extends FletService {
         description: map["description"] as String?,
       ),
     );
-    return "ok";
   }
 
-  Future<String> _deleteChannelGroup(dynamic args) async {
+  Future<void> _deleteChannelGroup(dynamic args) async {
     final android = _androidPlugin;
-    if (android == null) return "ok";
+    if (android == null) return;
     final map = args as Map;
     await android.deleteNotificationChannelGroup(
       groupId: map["group_id"] as String,
     );
-    return "ok";
   }
 }

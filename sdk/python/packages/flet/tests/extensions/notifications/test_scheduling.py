@@ -14,6 +14,7 @@ from flet_notifications import (
     AndroidProgress,
     DateTimeComponents,
     LocalNotifications,
+    NotificationInvalidArgumentError,
     NotificationOptions,
     RepeatInterval,
 )
@@ -74,7 +75,7 @@ async def test_periodic_interval_encodes_presets_and_custom_durations(
 async def test_invalid_periodic_interval_fails_before_invocation(interval):
     """Invalid types and sub-minute intervals never reach the client."""
     service = RecordingService()
-    with pytest.raises(ValueError, match="repeat_interval"):
+    with pytest.raises(NotificationInvalidArgumentError, match="repeat_interval"):
         await service.periodically_show(id=1, repeat_interval=interval)
     assert service.calls == []
 

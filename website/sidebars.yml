@@ -714,9 +714,12 @@ docs:
         - services/notifications/types/notificationactioninput.md
         - services/notifications/types/notificationchannel.md
         - services/notifications/types/notificationerror.md
-        - services/notifications/types/notificationerrorcode.md
         - services/notifications/types/notificationevent.md
+        - services/notifications/types/notificationinitializationerror.md
+        - services/notifications/types/notificationinvalidargumenterror.md
         - services/notifications/types/notificationoptions.md
+        - services/notifications/types/notificationpermissionerror.md
+        - services/notifications/types/notificationunsupportedplatformerror.md
         - services/notifications/types/pendingnotification.md
         - services/notifications/types/repeatinterval.md
         - services/notifications/types/responsetype.md

@@ -224,9 +224,9 @@ fln.NotificationDetails parseNotificationDetails({
       ),
     );
   } on FormatException catch (e) {
-    throw NotificationException.invalidOption(e.message);
+    throw NotificationException.invalidArgument(e.message);
   } on TypeError catch (e) {
-    throw NotificationException.invalidOption(
+    throw NotificationException.invalidArgument(
       "invalid notification option: $e",
     );
   }

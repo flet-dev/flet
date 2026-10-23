@@ -4,12 +4,14 @@ import 'dart:ui' show Color;
 
 import 'package:flet/flet.dart';
 import 'package:flet_notifications/src/notifications_service.dart';
+import 'package:flet_notifications/src/utils/errors.dart';
 import 'package:flet_notifications/src/utils/details.dart'
     as notification_details;
 import 'package:flutter/foundation.dart'
     show debugDefaultTargetPlatformOverride, TargetPlatform;
 import 'package:flutter_local_notifications/flutter_local_notifications.dart'
     as fln;
+import 'package:flutter/services.dart' show PlatformException;
 import 'package:flutter_test/flutter_test.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:timezone/timezone.dart' as tz;
@@ -320,6 +322,17 @@ class _RecordingControl extends Control {
   }
 }
 
+/// Invokes [method] and returns its result, or for a failure the text Flet
+/// reports to Python: the [NotificationException]'s `"<code>: <message>"`.
+Future<Object?> _call(LocalNotificationsService service, String method,
+    [Object? args]) async {
+  try {
+    return await service.invokeMethod(method, args);
+  } on NotificationException catch (e) {
+    return e.toString();
+  }
+}
+
 LocalNotificationsService _makeService(
     {Map<String, dynamic>? properties, Control? control}) {
   if (control != null) return LocalNotificationsService(control: control);
@@ -346,58 +359,75 @@ void main() {
     fln.FlutterLocalNotificationsPlatform.instance = plugin;
   });
 
+  test(
+      "platform errors keep their code, and denied exact alarms are permissions",
+      () async {
+    final service = _makeService();
+    plugin.operationError = PlatformException(
+        code: "exact_alarms_not_permitted",
+        message: "Exact alarms are not permitted");
+    expect(
+        await _call(service, "can_schedule_exact_notifications"),
+        "permission_denied: exact_alarms_not_permitted: "
+        "Exact alarms are not permitted");
+    plugin.operationError = PlatformException(
+        code: "invalid_icon", message: "The resource icon could not be found");
+    expect(await _call(service, "can_schedule_exact_notifications"),
+        "operation_failed: invalid_icon: The resource icon could not be found");
+  });
+
   test("dispatcher distinguishes unsupported operations from native failures",
       () async {
     final service = _makeService();
-    expect(await service.invokeMethod("initialize"), "ok");
+    expect(await _call(service, "initialize"), null);
     final operations = <(String, Map<String, Object?>?, String)>[
-      ("show", {"id": 4}, "show_failed"),
+      ("show", {"id": 4}, "operation_failed"),
       (
         "schedule",
         {
           "id": 4,
           "when": {"iso": "2099-01-01T12:00:00"}
         },
-        "schedule_failed"
+        "operation_failed"
       ),
       (
         "periodically_show",
         {"id": 4, "repeat_interval": "hourly"},
-        "schedule_failed"
+        "operation_failed"
       ),
       (
         "periodically_show",
         {"id": 4, "repeat_interval": 60000},
-        "schedule_failed"
+        "operation_failed"
       ),
-      ("get_pending", null, "query_failed"),
-      ("get_active", null, "query_failed"),
-      ("get_notification_channels", null, "channel_failed"),
+      ("get_pending", null, "operation_failed"),
+      ("get_active", null, "operation_failed"),
+      ("get_notification_channels", null, "operation_failed"),
       (
         "create_notification_channel",
         {"id": "alerts", "name": "Alerts"},
-        "channel_failed"
+        "operation_failed"
       ),
       (
         "delete_notification_channel",
         {"channel_id": "alerts"},
-        "channel_failed"
+        "operation_failed"
       ),
       (
         "create_notification_channel_group",
         {"group_id": "alerts", "name": "Alerts"},
-        "channel_failed"
+        "operation_failed"
       ),
       (
         "delete_notification_channel_group",
         {"group_id": "alerts"},
-        "channel_failed"
+        "operation_failed"
       ),
-      ("start_foreground_service", {"id": 4}, "foreground_service_failed"),
-      ("stop_foreground_service", null, "foreground_service_failed"),
-      ("cancel", {"id": 4}, "cancel_failed"),
-      ("cancel_all", null, "cancel_failed"),
-      ("cancel_pending", null, "cancel_failed"),
+      ("start_foreground_service", {"id": 4}, "operation_failed"),
+      ("stop_foreground_service", null, "operation_failed"),
+      ("cancel", {"id": 4}, "operation_failed"),
+      ("cancel_all", null, "operation_failed"),
+      ("cancel_pending", null, "operation_failed"),
       for (final method in [
         "request_permissions",
         "can_schedule_exact_notifications",
@@ -408,7 +438,7 @@ void main() {
         "has_notification_policy_access",
         "request_notification_policy_access"
       ])
-        (method, null, "permission_failed"),
+        (method, null, "operation_failed"),
     ];
     for (final error in [
       UnsupportedError("feature unavailable"),
@@ -418,12 +448,12 @@ void main() {
     ]) {
       plugin.operationError = error;
       for (final (method, args, code) in operations) {
-        final result = await service.invokeMethod(method, args);
+        final result = await _call(service, method, args);
         if (error is UnsupportedError || error is UnimplementedError) {
           expect(result,
-              "error:unsupported_platform:$method is not available on this platform");
+              "unsupported_platform: $method is not available on this platform");
         } else {
-          expect(result, "error:$code:$error", reason: method);
+          expect(result, "$code: $error", reason: method);
         }
       }
     }
@@ -443,11 +473,11 @@ void main() {
         "repeat_interval": "hourly"
       };
       expect(
-          await service.invokeMethod(method, {
+          await _call(service, method, {
             ...args,
             "actions": [{}]
           }),
-          startsWith("error:invalid_action:"));
+          startsWith("invalid_argument: "));
       for (final options in [
         {
           "linux": {"category": "invalid"}
@@ -456,9 +486,8 @@ void main() {
           "android": {"icon": 42}
         },
       ]) {
-        expect(
-            await service.invokeMethod(method, {...args, "options": options}),
-            startsWith("error:invalid_option:"));
+        expect(await _call(service, method, {...args, "options": options}),
+            startsWith("invalid_argument: "));
       }
     }
     for (final when in [
@@ -468,15 +497,15 @@ void main() {
       {"delay_ms": "invalid"},
       {"iso": 42},
     ]) {
-      expect(await service.invokeMethod("schedule", {"id": 4, "when": when}),
-          startsWith("error:invalid_schedule:"));
+      expect(await _call(service, "schedule", {"id": 4, "when": when}),
+          startsWith("invalid_argument: "));
     }
     expect(
-        await service.invokeMethod(
-            "create_notification_channel", {"id": "", "name": "Alerts"}),
-        startsWith("error:invalid_channel:"));
-    expect(
-        await service.invokeMethod("unknown"), "error:unknown_method:unknown");
+        await _call(service, "create_notification_channel",
+            {"id": "", "name": "Alerts"}),
+        startsWith("invalid_argument: "));
+    expect(await _call(service, "unknown"),
+        "operation_failed: unknown method unknown");
     expect(plugin.shown, isEmpty);
     expect(plugin.foregroundStarts, 0);
     expect(plugin.channelsCreated, isEmpty);
@@ -488,23 +517,25 @@ void main() {
       plugin.initializationResult = false;
       plugin.failInitialization = throws;
       final service = _makeService();
-      expect(await service.invokeMethod("show", {"id": 1}),
-          startsWith("error:init_failed:"));
+      final failure = await _call(service, "show", {"id": 1});
+      expect(failure, startsWith("initialization_failed: "));
+      // The cause of the failure, not a generic message, reaches Python.
+      expect(failure, isNot(contains("notification backend unavailable")));
       expect(plugin.shown, isEmpty);
       plugin.initializationResult = true;
       plugin.failInitialization = false;
-      expect(await service.invokeMethod("show", {"id": 1}), "ok");
+      expect(await _call(service, "show", {"id": 1}), null);
       expect(plugin.initializations, 2);
       expect(plugin.shown, hasLength(1));
       // Action buttons must not reinitialize non-Apple backends.
       expect(
-          await service.invokeMethod("show", {
+          await _call(service, "show", {
             "id": 2,
             "actions": [
               {"id": "open", "title": "Open"}
             ],
           }),
-          "ok");
+          null);
       expect(plugin.initializations, 2);
     });
   }
@@ -518,34 +549,34 @@ void main() {
     plugin.initializationResult = false;
     final service = _makeService();
     final results = Future.wait([
-      service.invokeMethod("initialize"),
-      service.invokeMethod("initialize"),
-      service.invokeMethod("show", {"id": 1}),
+      _call(service, "initialize"),
+      _call(service, "initialize"),
+      _call(service, "show", {"id": 1}),
     ]);
     await started.future;
     expect(plugin.initializations, 1);
     gate.complete();
-    expect(await results, everyElement(startsWith("error:init_failed:")));
+    expect(await results, everyElement(startsWith("initialization_failed: ")));
     expect(plugin.shown, isEmpty);
     plugin.initializationStarted = null;
     plugin.initializationGate = null;
     plugin.initializationResult = true;
-    expect(await service.invokeMethod("show", {"id": 1}), "ok");
+    expect(await _call(service, "show", {"id": 1}), null);
     expect(plugin.initializations, 2);
   });
 
   test("failed forced reinitialization clears the previous ready state",
       () async {
     final service = _makeService();
-    expect(await service.invokeMethod("initialize"), "ok");
+    expect(await _call(service, "initialize"), null);
     plugin.initializationResult = false;
-    expect(await service.invokeMethod("initialize"),
-        startsWith("error:init_failed:"));
-    expect(await service.invokeMethod("show", {"id": 1}),
-        startsWith("error:init_failed:"));
+    expect(await _call(service, "initialize"),
+        startsWith("initialization_failed: "));
+    expect(await _call(service, "show", {"id": 1}),
+        startsWith("initialization_failed: "));
     expect(plugin.shown, isEmpty);
     plugin.initializationResult = true;
-    expect(await service.invokeMethod("show", {"id": 1}), "ok");
+    expect(await _call(service, "show", {"id": 1}), null);
   });
 
   test("Apple permission denial allows operations and category registration",
@@ -555,15 +586,15 @@ void main() {
     final macos = _FakeMacOsPlugin()..initializationResult = false;
     fln.FlutterLocalNotificationsPlatform.instance = macos;
     final service = _makeService();
-    expect(await service.invokeMethod("initialize"), "ok");
+    expect(await _call(service, "initialize"), null);
     expect(
-        await service.invokeMethod("show", {
+        await _call(service, "show", {
           "id": 1,
           "actions": [
             {"id": "open", "title": "Open"}
           ],
         }),
-        "ok");
+        null);
     expect(macos.shownDarwin, isNotNull);
     expect(macos.initializations.last.notificationCategories, hasLength(1));
   });
@@ -575,11 +606,11 @@ void main() {
     final macos = _FakeMacOsPlugin()..initializationResult = null;
     fln.FlutterLocalNotificationsPlatform.instance = macos;
     final service = _makeService();
-    expect(await service.invokeMethod("show", {"id": 1}),
-        startsWith("error:init_failed:"));
+    expect(await _call(service, "show", {"id": 1}),
+        startsWith("initialization_failed: "));
     expect(macos.shownDarwin, isNull);
     macos.initializationResult = false;
-    expect(await service.invokeMethod("show", {"id": 1}), "ok");
+    expect(await _call(service, "show", {"id": 1}), null);
   });
 
   test("failed Apple category registration blocks showing and retries setup",
@@ -589,16 +620,16 @@ void main() {
     final macos = _FakeMacOsPlugin();
     fln.FlutterLocalNotificationsPlatform.instance = macos;
     final service = _makeService();
-    expect(await service.invokeMethod("initialize"), "ok");
+    expect(await _call(service, "initialize"), null);
     macos.failInitialization = true;
     expect(
-        await service.invokeMethod("show", {
+        await _call(service, "show", {
           "id": 1,
           "actions": [
             {"id": "open", "title": "Open"}
           ],
         }),
-        startsWith("error:show_failed:"));
+        startsWith("operation_failed: "));
     expect(macos.shownDarwin, isNull);
     macos.failInitialization = false;
     final retry = {
@@ -607,8 +638,8 @@ void main() {
         {"id": "open", "title": "Open"}
       ]
     };
-    expect(await service.invokeMethod("show", retry), "ok");
-    expect(await service.invokeMethod("show", retry), "ok");
+    expect(await _call(service, "show", retry), null);
+    expect(await _call(service, "show", retry), null);
     expect(macos.initializations, hasLength(3));
     expect(macos.initializations.last.notificationCategories, hasLength(1));
   });
@@ -631,11 +662,11 @@ void main() {
     final firstService = _makeService(control: firstControl);
     expect(
         await Future.wait([
-          firstService.invokeMethod("initialize"),
-          firstService.invokeMethod("initialize"),
+          _call(firstService, "initialize"),
+          _call(firstService, "initialize"),
         ]),
-        ["ok", "ok"]);
-    expect(await firstService.invokeMethod("initialize"), "ok");
+        [null, null]);
+    expect(await _call(firstService, "initialize"), null);
     expect(firstControl.events, hasLength(1));
     expect(firstControl.events.single["name"], "action");
 
@@ -646,7 +677,7 @@ void main() {
 
     final nextControl = _RecordingControl();
     final nextService = _makeService(control: nextControl);
-    expect(await nextService.invokeMethod("initialize"), "ok");
+    expect(await _call(nextService, "initialize"), null);
     expect(nextControl.events, [firstControl.events.first]);
   });
 
@@ -667,7 +698,7 @@ void main() {
     plugin.onLaunchDetailsQuery = () => plugin.onResponse!(response);
     final control = _RecordingControl();
     final service = _makeService(control: control);
-    expect(await service.invokeMethod("initialize"), "ok");
+    expect(await _call(service, "initialize"), null);
     expect(control.events, hasLength(1));
     expect(control.events.single["name"], "tap");
 
@@ -682,7 +713,7 @@ void main() {
     SharedPreferences.setMockInitialValues({});
     final control = _RecordingControl();
     final service = _makeService(control: control);
-    expect(await service.invokeMethod("initialize"), "ok");
+    expect(await _call(service, "initialize"), null);
     expect(control.events, isEmpty);
 
     const response = fln.NotificationResponse(
@@ -697,7 +728,7 @@ void main() {
       true,
       notificationResponse: response,
     );
-    expect(await service.invokeMethod("initialize"), "ok");
+    expect(await _call(service, "initialize"), null);
     expect(control.events, hasLength(1));
   });
 
@@ -721,11 +752,11 @@ void main() {
       const fln.ActiveNotification(),
     ];
     final service = _makeService();
-    expect(await service.invokeMethod("get_pending"), [
+    expect(await _call(service, "get_pending"), [
       {"id": 1, "title": "Title", "body": "Body", "payload": "payload"},
       {"id": 2, "title": "", "body": "", "payload": ""},
     ]);
-    expect(await service.invokeMethod("get_active"), [
+    expect(await _call(service, "get_active"), [
       {
         "id": 1,
         "channel_id": "updates",
@@ -750,12 +781,11 @@ void main() {
     plugin.pending = [];
     plugin.active = [];
     for (final method in ["get_pending", "get_active"]) {
-      expect(await service.invokeMethod(method), isEmpty);
+      expect(await _call(service, method), isEmpty);
     }
     plugin.failQueries = true;
     for (final method in ["get_pending", "get_active"]) {
-      expect(await service.invokeMethod(method),
-          startsWith("error:query_failed:"));
+      expect(await _call(service, method), startsWith("operation_failed: "));
     }
   });
 
@@ -774,15 +804,15 @@ void main() {
         fln.AndroidNotificationChannel("original", "Alerts", sound: sound),
       ];
       final channels =
-          await service.invokeMethod("get_notification_channels") as List;
+          await _call(service, "get_notification_channels") as List;
       final channel = channels.single as Map;
       expect(channel["sound"], sound?.sound);
       expect(
-          await service.invokeMethod("create_notification_channel", {
+          await _call(service, "create_notification_channel", {
             ...channel,
             "id": "copy",
           }),
-          "ok");
+          null);
       final copied = plugin.channelsCreated.last.sound;
       if (sound == null) {
         expect(copied, isNull);
@@ -812,7 +842,7 @@ void main() {
       ),
     ];
     final service = _makeService();
-    expect(await service.invokeMethod("get_notification_channels"), [
+    expect(await _call(service, "get_notification_channels"), [
       {
         "id": "alerts",
         "name": "Alerts",
@@ -831,11 +861,11 @@ void main() {
       },
     ]);
     plugin.queriedChannels = null;
-    expect(await service.invokeMethod("get_notification_channels"), isEmpty);
+    expect(await _call(service, "get_notification_channels"), isEmpty);
 
     plugin.failQueries = true;
-    expect(await service.invokeMethod("get_notification_channels"),
-        startsWith("error:channel_failed:"));
+    expect(await _call(service, "get_notification_channels"),
+        startsWith("operation_failed: "));
   });
 
   test("periodic intervals select presets or custom durations", () async {
@@ -849,14 +879,14 @@ void main() {
       ),
       (60000, const Duration(minutes: 1)),
     ]) {
-      final result = await service.invokeMethod("periodically_show", {
+      final result = await _call(service, "periodically_show", {
         "id": 1,
         "title": "Reminder",
         "body": "Take a break",
         "payload": "break",
         "repeat_interval": interval,
       });
-      expect(result, "ok");
+      expect(result, null);
       expect(plugin.periodicCalls.last, {
         'interval': expected,
         'title': 'Reminder',
@@ -877,11 +907,11 @@ void main() {
       "unknown",
       null,
     ]) {
-      final result = await service.invokeMethod("periodically_show", {
+      final result = await _call(service, "periodically_show", {
         "id": 1,
         "repeat_interval": interval,
       });
-      expect(result, startsWith("error:invalid_option:"));
+      expect(result, startsWith("invalid_argument: "));
     }
     expect(plugin.periodicCalls, isEmpty);
   });
@@ -915,7 +945,7 @@ void main() {
 
   test("show maps actions onto AndroidNotificationAction", () async {
     final service = _makeService();
-    final result = await service.invokeMethod("show", {
+    final result = await _call(service, "show", {
       "id": 1,
       "title": "t",
       "body": "b",
@@ -944,7 +974,7 @@ void main() {
         },
       ],
     });
-    expect(result, "ok");
+    expect(result, null);
     final details =
         plugin.shown.single["details"] as fln.AndroidNotificationDetails;
     expect(details.icon, isNull);
@@ -965,11 +995,11 @@ void main() {
 
   test("request_permissions uses the Android runtime permission", () async {
     final service = _makeService();
-    expect(await service.invokeMethod("request_permissions", null), isTrue);
+    expect(await _call(service, "request_permissions", null), isTrue);
     expect(plugin.permissionRequests, 1);
 
     plugin.permissionResult = false;
-    expect(await service.invokeMethod("request_permissions", null), isFalse);
+    expect(await _call(service, "request_permissions", null), isFalse);
   });
 
   test("boolean methods retain native grants, denials and null fallbacks",
@@ -987,8 +1017,7 @@ void main() {
         "request_notification_policy_access",
         "open_app_settings",
       ]) {
-        expect(await service.invokeMethod(method), result ?? false,
-            reason: method);
+        expect(await _call(service, method), result ?? false, reason: method);
       }
     }
   });
@@ -1004,7 +1033,7 @@ void main() {
       "can_schedule_exact_notifications",
       "request_exact_alarm_permission",
     ]) {
-      expect(await service.invokeMethod(method), isTrue, reason: method);
+      expect(await _call(service, method), isTrue, reason: method);
     }
     // Full-screen intents and notification-policy access do not exist elsewhere.
     for (final method in [
@@ -1012,9 +1041,9 @@ void main() {
       "has_notification_policy_access",
       "request_notification_policy_access"
     ]) {
-      expect(await service.invokeMethod(method), isFalse, reason: method);
+      expect(await _call(service, method), isFalse, reason: method);
     }
-    expect(await service.invokeMethod("get_notification_channels"), isEmpty);
+    expect(await _call(service, "get_notification_channels"), isEmpty);
     for (final (method, args) in [
       ("create_notification_channel", {"id": "alerts", "name": "Alerts"}),
       ("delete_notification_channel", {"channel_id": "alerts"}),
@@ -1022,15 +1051,15 @@ void main() {
       ("delete_notification_channel_group", {"group_id": "g"}),
       ("stop_foreground_service", null),
     ]) {
-      expect(await service.invokeMethod(method, args), "ok", reason: method);
+      expect(await _call(service, method, args), null, reason: method);
     }
-    expect(await service.invokeMethod("start_foreground_service", {"id": 1}),
-        startsWith("error:unsupported_platform:"));
+    expect(await _call(service, "start_foreground_service", {"id": 1}),
+        startsWith("unsupported_platform: "));
   });
 
   test("show forwards style onto styleInformation", () async {
     final service = _makeService();
-    final result = await service.invokeMethod("show", {
+    final result = await _call(service, "show", {
       "id": 1,
       "title": "t",
       "body": "b",
@@ -1048,7 +1077,7 @@ void main() {
         },
       },
     });
-    expect(result, "ok");
+    expect(result, null);
     final details =
         plugin.shown.single["details"] as fln.AndroidNotificationDetails;
     final style = details.styleInformation;
@@ -1062,9 +1091,9 @@ void main() {
     expect(details.progress, 30);
   });
 
-  test("show with an invalid style returns invalid_style", () async {
+  test("show with an invalid style returns invalid_argument", () async {
     final service = _makeService();
-    final result = await service.invokeMethod("show", {
+    final result = await _call(service, "show", {
       "id": 1,
       "title": "t",
       "body": "b",
@@ -1076,7 +1105,7 @@ void main() {
         }
       },
     });
-    expect(result, startsWith("error:invalid_style:"));
+    expect(result, startsWith("invalid_argument: "));
     expect(plugin.shown, isEmpty);
   });
 
@@ -1090,7 +1119,7 @@ void main() {
       "start_foreground_service"
     ]) {
       expect(
-          await service.invokeMethod(method, {
+          await _call(service, method, {
             "id": 4,
             "when": {"iso": "2030-01-01T12:00:00"},
             "repeat_interval": "hourly",
@@ -1110,7 +1139,7 @@ void main() {
               },
             },
           }),
-          startsWith("error:invalid_style:"),
+          startsWith("invalid_argument: "),
           reason: method);
     }
     expect(plugin.shown, isEmpty);
@@ -1118,16 +1147,16 @@ void main() {
     expect(plugin.foregroundStarts, 0);
   });
 
-  test("show preserves invalid_option for an unknown Android category",
+  test("show preserves invalid_argument for an unknown Android category",
       () async {
-    final result = await _makeService().invokeMethod("show", {
+    final result = await _call(_makeService(), "show", {
       "id": 1,
       "options": {
         "android": {"category": "unknown-category"},
       },
     });
     expect(result,
-        "error:invalid_option:unknown notification category: unknown-category");
+        "invalid_argument: unknown notification category: unknown-category");
     expect(plugin.shown, isEmpty);
   });
 
@@ -1137,7 +1166,7 @@ void main() {
     final service = _makeService();
     for (final value in ["unknown", "HIGH"]) {
       expect(
-          await service.invokeMethod("show", {
+          await _call(service, "show", {
             "id": 1,
             "options": {
               "android": {
@@ -1147,7 +1176,7 @@ void main() {
               },
             },
           }),
-          "ok");
+          null);
       final details =
           plugin.shown.last["details"] as fln.AndroidNotificationDetails;
       expect(
@@ -1216,11 +1245,11 @@ void main() {
     final service = _makeService();
     for (final (options, timeout, on, off) in cases) {
       expect(
-          await service.invokeMethod("show", {
+          await _call(service, "show", {
             "id": 1,
             "options": {"android": options},
           }),
-          "ok");
+          null);
       final details =
           plugin.shown.last["details"] as fln.AndroidNotificationDetails;
       expect(details.timeoutAfter, timeout);
@@ -1230,7 +1259,7 @@ void main() {
   });
 
   test("show uses Flet primitive parsers for notification values", () async {
-    final result = await _makeService().invokeMethod("show", {
+    final result = await _call(_makeService(), "show", {
       "id": "7",
       "options": {
         "android": {
@@ -1247,7 +1276,7 @@ void main() {
         },
       },
     });
-    expect(result, "ok");
+    expect(result, null);
     expect(plugin.shown.single["id"], 7);
     final details =
         plugin.shown.single["details"] as fln.AndroidNotificationDetails;
@@ -1263,7 +1292,7 @@ void main() {
 
   test("show applies AndroidOptions onto the details", () async {
     final service = _makeService();
-    final result = await service.invokeMethod("show", {
+    final result = await _call(service, "show", {
       "id": 1,
       "title": "t",
       "body": "b",
@@ -1297,7 +1326,7 @@ void main() {
         },
       },
     });
-    expect(result, "ok");
+    expect(result, null);
     final details =
         plugin.shown.single["details"] as fln.AndroidNotificationDetails;
     expect(details.icon, "ic_stat_notify");
@@ -1331,13 +1360,13 @@ void main() {
     final service = _makeService();
     for (final channel in [null, "updates"]) {
       expect(
-          await service.invokeMethod("show", {
+          await _call(service, "show", {
             "id": 1,
             "options": {
               "android": {"channel": channel},
             },
           }),
-          "ok");
+          null);
       final details =
           plugin.shown.last["details"] as fln.AndroidNotificationDetails;
       expect(details.channelId, channel ?? "flet_notifications");
@@ -1349,7 +1378,7 @@ void main() {
   });
 
   test("an invalid inline channel does not post the notification", () async {
-    final result = await _makeService().invokeMethod("show", {
+    final result = await _call(_makeService(), "show", {
       "id": 1,
       "options": {
         "android": {
@@ -1357,7 +1386,7 @@ void main() {
         },
       },
     });
-    expect(result, startsWith("error:invalid_channel:"));
+    expect(result, startsWith("invalid_argument: "));
     expect(plugin.shown, isEmpty);
     expect(plugin.channelsCreated, isEmpty);
   });
@@ -1365,7 +1394,7 @@ void main() {
   for (final mask in [0, 4, 36]) {
     test("show forwards flag mask $mask and camel-case audio usage", () async {
       final service = _makeService();
-      final result = await service.invokeMethod("show", {
+      final result = await _call(service, "show", {
         "id": 1,
         "options": {
           "android": {
@@ -1378,7 +1407,7 @@ void main() {
           },
         },
       });
-      expect(result, "ok");
+      expect(result, null);
       final details =
           plugin.shown.single["details"] as fln.AndroidNotificationDetails;
       expect(
@@ -1405,11 +1434,11 @@ void main() {
     };
     final original = [open, reply];
     Future<dynamic> show(List<Map<String, Object?>> actions, {int id = 1}) =>
-        service.invokeMethod("show", {"id": id, "actions": actions});
-    expect(await show(original), "ok");
+        _call(service, "show", {"id": id, "actions": actions});
+    expect(await show(original), null);
     final initializations = macos.initializations.length;
     expect(
-        await service.invokeMethod("show", {
+        await _call(service, "show", {
           "id": 1,
           "title": "Updated",
           "body": "Progress",
@@ -1432,7 +1461,7 @@ void main() {
             },
           ],
         }),
-        "ok");
+        null);
     expect(macos.initializations, hasLength(initializations));
     // Each variant changes one Apple-visible aspect of the original actions.
     for (final actions in <List<Map<String, Object?>>>[
@@ -1466,14 +1495,14 @@ void main() {
       [reply, open],
       [open],
     ]) {
-      expect(await show(original), "ok");
+      expect(await show(original), null);
       final before = macos.initializations.length;
-      expect(await show(actions), "ok");
+      expect(await show(actions), null);
       expect(macos.initializations, hasLength(before + 1));
-      expect(await show(actions), "ok");
+      expect(await show(actions), null);
       expect(macos.initializations, hasLength(before + 1));
     }
-    expect(await show(original, id: 2), "ok");
+    expect(await show(original, id: 2), null);
     expect(macos.initializations.last.notificationCategories, hasLength(2));
   });
 
@@ -1495,31 +1524,31 @@ void main() {
           settings.requestBadgePermission,
           settings.requestCriticalPermission,
         ];
-    expect(await service.invokeMethod("initialize"), "ok");
+    expect(await _call(service, "initialize"), null);
     expect(flags(macos.initializations.single), [false, true, false, true]);
     // The native Apple implementation returns false when no permission is requested.
     macos.initializationResult = false;
     for (final id in [1, 2]) {
       expect(
-          await service.invokeMethod("show", {
+          await _call(service, "show", {
             "id": id,
             "actions": [
               {"id": "open$id", "title": "Open"}
             ],
           }),
-          "ok");
+          null);
       expect(flags(macos.initializations.last), everyElement(isFalse));
     }
     final categories = macos.initializations.last.notificationCategories;
     expect(categories, hasLength(2));
-    expect(await service.invokeMethod("request_permissions"), isTrue);
+    expect(await _call(service, "request_permissions"), isTrue);
     expect(macos.permissionRequests.single, {
       "alert": false,
       "sound": true,
       "badge": false,
       "critical": true,
     });
-    expect(await service.invokeMethod("initialize"), "ok");
+    expect(await _call(service, "initialize"), null);
     expect(flags(macos.initializations.last), [false, true, false, true]);
     expect(macos.initializations.last.notificationCategories, categories);
   });
@@ -1533,24 +1562,24 @@ void main() {
     final service = _makeService();
     for (final id in [1, 2]) {
       expect(
-          await service.invokeMethod("show", {
+          await _call(service, "show", {
             "id": id,
             "actions": [
               {"id": "open$id", "title": "Open $id"},
             ],
           }),
-          "ok");
+          null);
     }
     final categories = macos.initializations.last.notificationCategories;
     expect(categories, hasLength(2));
     expect(
         categories.map((c) => c.actions.single.identifier), ["open1", "open2"]);
 
-    expect(await service.invokeMethod("initialize"), "ok");
+    expect(await _call(service, "initialize"), null);
     expect(macos.initializations.last.notificationCategories, categories);
 
     expect(
-        await service.invokeMethod("show", {
+        await _call(service, "show", {
           "id": 3,
           "actions": [
             {
@@ -1560,7 +1589,7 @@ void main() {
             },
           ],
         }),
-        "ok");
+        null);
     final updated = macos.initializations.last.notificationCategories;
     expect(updated.map((c) => c.actions.single.identifier),
         ["open1", "open2", "reply"]);
@@ -1574,21 +1603,21 @@ void main() {
     final macos = _FakeMacOsPlugin();
     fln.FlutterLocalNotificationsPlatform.instance = macos;
     final service = _makeService();
-    expect(await service.invokeMethod("initialize"), "ok");
+    expect(await _call(service, "initialize"), null);
     final initializations = macos.initializations.length;
     final cases = <(String, Map<String, Object?>, String)>[
-      ("schedule", {"schedule_mode": 42}, "schedule_failed"),
-      ("schedule", {"match_components": 42}, "schedule_failed"),
-      ("schedule", {"payload": 42}, "schedule_failed"),
-      ("periodically_show", {"repeat_interval": 59999}, "invalid_option"),
-      ("periodically_show", {"repeat_interval": "unknown"}, "invalid_option"),
-      ("periodically_show", {"repeat_interval": null}, "invalid_option"),
-      ("periodically_show", {"schedule_mode": 42}, "schedule_failed"),
-      ("periodically_show", {"title": 42}, "schedule_failed"),
+      ("schedule", {"schedule_mode": 42}, "operation_failed"),
+      ("schedule", {"match_components": 42}, "operation_failed"),
+      ("schedule", {"payload": 42}, "operation_failed"),
+      ("periodically_show", {"repeat_interval": 59999}, "invalid_argument"),
+      ("periodically_show", {"repeat_interval": "unknown"}, "invalid_argument"),
+      ("periodically_show", {"repeat_interval": null}, "invalid_argument"),
+      ("periodically_show", {"schedule_mode": 42}, "operation_failed"),
+      ("periodically_show", {"title": 42}, "operation_failed"),
     ];
     for (final (method, invalid, code) in cases) {
       expect(
-          await service.invokeMethod(method, {
+          await _call(service, method, {
             "id": 1,
             "when": {"iso": "2099-01-01T12:00:00"},
             "repeat_interval": "hourly",
@@ -1597,18 +1626,18 @@ void main() {
             ],
             ...invalid,
           }),
-          startsWith("error:$code:"));
+          startsWith("$code: "));
       expect(macos.initializations, hasLength(initializations),
           reason: "$method $invalid");
     }
     expect(
-        await service.invokeMethod("show", {
+        await _call(service, "show", {
           "id": 2,
           "actions": [
             {"id": "valid", "title": "Valid"}
           ],
         }),
-        "ok");
+        null);
     final categories = macos.initializations.last.notificationCategories;
     expect(categories, hasLength(1));
     expect(categories.single.actions.single.identifier, "valid");
@@ -1617,7 +1646,7 @@ void main() {
   test("schedule retains its native arguments after validation", () async {
     final service = _makeService();
     expect(
-        await service.invokeMethod("schedule", {
+        await _call(service, "schedule", {
           "id": 4,
           "title": "Reminder",
           "body": "Meeting",
@@ -1630,7 +1659,7 @@ void main() {
           "schedule_mode": "inexactAllowWhileIdle",
           "match_components": "dayOfWeekAndTime",
         }),
-        "ok");
+        null);
     final call = plugin.scheduledCalls.single;
     expect(call["id"], 4);
     expect(call["title"], "Reminder");
@@ -1649,7 +1678,7 @@ void main() {
     final macos = _FakeMacOsPlugin();
     fln.FlutterLocalNotificationsPlatform.instance = macos;
     final service = _makeService();
-    expect(await service.invokeMethod("initialize"), "ok");
+    expect(await _call(service, "initialize"), null);
     final initializations = macos.initializations.length;
     for (final (android, error) in [
       (
@@ -1659,7 +1688,7 @@ void main() {
             "image": {"_type": "content_uri", "uri": "content://image"}
           }
         },
-        "error:invalid_style:",
+        "invalid_argument: ",
       ),
       (
         {
@@ -1675,12 +1704,12 @@ void main() {
             ]
           }
         },
-        "error:invalid_style:",
+        "invalid_argument: ",
       ),
-      ({"category": "invalid"}, "error:invalid_option:"),
+      ({"category": "invalid"}, "invalid_argument: "),
     ]) {
       expect(
-          await service.invokeMethod("show", {
+          await _call(service, "show", {
             "id": 1,
             "actions": [
               {"id": "open", "title": "Open"}
@@ -1692,13 +1721,13 @@ void main() {
       expect(macos.shownDarwin, isNull);
     }
     expect(
-        await service.invokeMethod("show", {
+        await _call(service, "show", {
           "id": 2,
           "actions": [
             {"id": "reply", "title": "Reply"}
           ],
         }),
-        "ok");
+        null);
     expect(macos.initializations.last.notificationCategories, hasLength(1));
     expect(
         macos.initializations.last.notificationCategories.single.actions.single
@@ -1712,7 +1741,7 @@ void main() {
     final macos = _FakeMacOsPlugin();
     fln.FlutterLocalNotificationsPlatform.instance = macos;
     final service = _makeService();
-    final result = await service.invokeMethod("show", {
+    final result = await _call(service, "show", {
       "id": 2,
       "title": "t",
       "body": "b",
@@ -1735,7 +1764,7 @@ void main() {
         },
       },
     });
-    expect(result, "ok");
+    expect(result, null);
     // Running on macOS applies the *macOS* options (badge 1), not iOS's.
     final details = macos.shownDarwin!;
     expect(details.badgeNumber, 1);
@@ -1743,7 +1772,7 @@ void main() {
     expect(details.threadIdentifier, "thread1");
     expect(details.interruptionLevel, fln.InterruptionLevel.passive);
     expect(details.sound, "chime");
-    expect(await service.invokeMethod("get_notification_channels"), isEmpty);
+    expect(await _call(service, "get_notification_channels"), isEmpty);
   });
 
   test(
@@ -1757,13 +1786,13 @@ void main() {
       final service = _makeService();
       for (final category in categories) {
         expect(
-          await service.invokeMethod("show", {
+          await _call(service, "show", {
             "id": 1,
             "options": {
               "linux": {"category": category},
             },
           }),
-          "ok",
+          null,
           reason: category,
         );
       }
@@ -1782,13 +1811,13 @@ void main() {
       final service = _makeService();
       for (final entry in categories.entries) {
         expect(
-          await service.invokeMethod("show", {
+          await _call(service, "show", {
             "id": 1,
             "options": {
               "android": {"category": entry.key},
             },
           }),
-          "ok",
+          null,
           reason: entry.key,
         );
         final details =
@@ -1800,7 +1829,7 @@ void main() {
 
   test("foreground service forwards start type and service types", () async {
     final service = _makeService();
-    final result = await service.invokeMethod("start_foreground_service", {
+    final result = await _call(service, "start_foreground_service", {
       "id": 4,
       "title": "t",
       "body": "b",
@@ -1809,7 +1838,7 @@ void main() {
       "start_type": "startStickyCompatibility",
       "foreground_service_types": ["DATASYNC", "specialUse", "dataSync"],
     });
-    expect(result, "ok");
+    expect(result, null);
     expect(plugin.foregroundStarts, 1);
     expect(plugin.lastStartType,
         fln.AndroidServiceStartType.startStickyCompatibility);
@@ -1827,11 +1856,11 @@ void main() {
       ["dataSync", "typo"],
       [42]
     ]) {
-      final result = await service.invokeMethod("start_foreground_service", {
+      final result = await _call(service, "start_foreground_service", {
         "id": 4,
         "foreground_service_types": value,
       });
-      expect(result, startsWith("error:invalid_option:"));
+      expect(result, startsWith("invalid_argument: "));
     }
     expect(plugin.foregroundStarts, 0);
   });
@@ -1840,17 +1869,17 @@ void main() {
     final service = _makeService();
     for (final value in [null, []]) {
       expect(
-          await service.invokeMethod("start_foreground_service", {
+          await _call(service, "start_foreground_service", {
             "id": 4,
             "foreground_service_types": value,
           }),
-          "ok");
+          null);
       expect(plugin.lastForegroundServiceTypes, isNull);
     }
     expect(plugin.foregroundStarts, 2);
   });
 
-  test("malformed reply collections return invalid_action before showing",
+  test("malformed reply collections return invalid_argument before showing",
       () async {
     final service = _makeService();
     for (final input in [
@@ -1864,13 +1893,13 @@ void main() {
       {"allowed_mime_types": "image/png"},
     ]) {
       expect(
-          await service.invokeMethod("show", {
+          await _call(service, "show", {
             "id": 1,
             "actions": [
               {"id": "reply", "title": "Reply", "input": input}
             ],
           }),
-          startsWith("error:invalid_action:"));
+          startsWith("invalid_argument: "));
     }
     expect(plugin.shown, isEmpty);
   });
@@ -1884,7 +1913,7 @@ void main() {
   for (final entry in colorCases.entries) {
     test("show resolves accent and LED color ${entry.key}", () async {
       final service = _makeService();
-      final result = await service.invokeMethod("show", {
+      final result = await _call(service, "show", {
         "id": 1,
         "options": {
           "android": {
@@ -1900,7 +1929,7 @@ void main() {
           },
         },
       });
-      expect(result, "ok");
+      expect(result, null);
       final details =
           plugin.shown.single["details"] as fln.AndroidNotificationDetails;
       expect(details.color?.toARGB32(), entry.value);
@@ -1908,13 +1937,13 @@ void main() {
     });
     test("channel resolves LED color ${entry.key}", () async {
       final service = _makeService();
-      final result = await service.invokeMethod("create_notification_channel", {
+      final result = await _call(service, "create_notification_channel", {
         "id": "lights",
         "name": "Lights",
         "enable_lights": true,
         "led_color": entry.key,
       });
-      expect(result, "ok");
+      expect(result, null);
       expect(plugin.channelsCreated.single.ledColor?.toARGB32(), entry.value);
     });
   }

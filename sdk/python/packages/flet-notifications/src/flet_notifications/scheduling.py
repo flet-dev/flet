@@ -2,6 +2,7 @@ from datetime import datetime, timedelta
 from zoneinfo import ZoneInfo
 
 import flet as ft
+from flet_notifications.base import NotificationInvalidArgumentError
 from flet_notifications.types import (
     AndroidScheduleMode,
     DateTimeComponents,
@@ -61,11 +62,13 @@ def build_periodic_args(
     elif isinstance(repeat_interval, RepeatInterval):
         milliseconds = None
     else:
-        raise ValueError(
+        raise NotificationInvalidArgumentError(
             "repeat_interval must be a RepeatInterval, Duration, or integer"
         )
     if milliseconds is not None and milliseconds < 60000:
-        raise ValueError("repeat_interval must be at least one minute")
+        raise NotificationInvalidArgumentError(
+            "repeat_interval must be at least one minute"
+        )
     return {
         "repeat_interval": repeat_interval,
         "schedule_mode": schedule_mode,

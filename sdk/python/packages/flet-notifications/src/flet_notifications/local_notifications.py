@@ -1,10 +1,12 @@
 from datetime import datetime, timedelta
+from typing import Any
 
 import flet as ft
 from flet_notifications.actions import NotificationAction
 from flet_notifications.base import (
     NotificationEvent,
-    check_result,
+    NotificationInvalidArgumentError,
+    error_from_bridge,
     parse_query_list,
 )
 from flet_notifications.channels import NotificationChannel
@@ -193,6 +195,18 @@ class LocalNotifications(ft.Service):
         for every notification that disappears.
     """
 
+    async def _call(
+        self,
+        method_name: str,
+        arguments: Any = None,
+        timeout: float | None = None,
+    ) -> Any:
+        """Invoke a bridge method, raising its failures as `NotificationError`."""
+        try:
+            return await self._invoke_method(method_name, arguments, timeout=timeout)
+        except RuntimeError as e:
+            raise error_from_bridge(str(e)) from None
+
     async def initialize(self) -> None:
         """
         Initialize or reinitialize the native notification backend.
@@ -206,7 +220,7 @@ class LocalNotifications(ft.Service):
             NotificationError: If the bridge reports initialization or operation
                 failure.
         """
-        check_result(await self._invoke_method("initialize"))
+        await self._call("initialize")
 
     async def show(
         self,
@@ -246,18 +260,16 @@ class LocalNotifications(ft.Service):
             NotificationError: If the bridge reports initialization or operation
                 failure.
         """
-        check_result(
-            await self._invoke_method(
-                "show",
-                {
-                    "id": id,
-                    "title": title,
-                    "body": body,
-                    "payload": payload,
-                    "actions": actions or None,
-                    "options": options,
-                },
-            )
+        await self._call(
+            "show",
+            {
+                "id": id,
+                "title": title,
+                "body": body,
+                "payload": payload,
+                "actions": actions or None,
+                "options": options,
+            },
         )
 
     async def cancel(self, id: int, tag: str | None = None) -> None:
@@ -279,11 +291,7 @@ class LocalNotifications(ft.Service):
             NotificationError: If the bridge reports initialization or operation
                 failure.
         """
-        check_result(
-            await self._invoke_method(
-                "cancel", {"id": id, "tag": tag} if tag else {"id": id}
-            )
-        )
+        await self._call("cancel", {"id": id, "tag": tag} if tag else {"id": id})
 
     async def cancel_all(self) -> None:
         """
@@ -298,7 +306,7 @@ class LocalNotifications(ft.Service):
             NotificationError: If the bridge reports initialization or operation
                 failure.
         """
-        check_result(await self._invoke_method("cancel_all"))
+        await self._call("cancel_all")
 
     async def request_permissions(self) -> bool:
         """
@@ -331,9 +339,7 @@ class LocalNotifications(ft.Service):
                 failure.
         """
         # Permission dialogs can take a while; allow more than the default.
-        result = await self._invoke_method("request_permissions", timeout=300)
-        check_result(result)
-        return result
+        return await self._call("request_permissions", timeout=300)
 
     async def schedule(
         self,
@@ -398,8 +404,9 @@ class LocalNotifications(ft.Service):
                 the applicable exact-alarm access. Ignored on other platforms.
 
         Raises:
-            NotificationError: If the bridge reports initialization or operation
-                failure.
+            NotificationPermissionError: If an exact `schedule_mode` lacks Android
+                exact-alarm access.
+            NotificationError: If the bridge reports another failure.
 
         Example:
             ```python
@@ -417,23 +424,21 @@ class LocalNotifications(ft.Service):
             )
             ```
         """
-        check_result(
-            await self._invoke_method(
-                "schedule",
-                {
-                    "id": id,
-                    "title": title,
-                    "body": body,
-                    "payload": payload,
-                    "actions": actions or None,
-                    **build_schedule_args(
-                        when=when,
-                        match_components=match_components,
-                        schedule_mode=schedule_mode,
-                    ),
-                    "options": options,
-                },
-            )
+        await self._call(
+            "schedule",
+            {
+                "id": id,
+                "title": title,
+                "body": body,
+                "payload": payload,
+                "actions": actions or None,
+                **build_schedule_args(
+                    when=when,
+                    match_components=match_components,
+                    schedule_mode=schedule_mode,
+                ),
+                "options": options,
+            },
         )
 
     async def periodically_show(
@@ -479,28 +484,27 @@ class LocalNotifications(ft.Service):
                 :class:`~flet_notifications.NotificationOptions`.
 
         Raises:
-            ValueError: If `repeat_interval` is not a
+            NotificationInvalidArgumentError: If `repeat_interval` is not a
                 :class:`~flet_notifications.RepeatInterval`, :class:`~flet.Duration`,
                 or integer, or if a custom duration is less than one minute.
-            NotificationError: If the bridge reports initialization or scheduling
-                failure.
+            NotificationPermissionError: If an exact `schedule_mode` lacks Android
+                exact-alarm access.
+            NotificationError: If the bridge reports another failure.
         """
-        check_result(
-            await self._invoke_method(
-                "periodically_show",
-                {
-                    "id": id,
-                    "title": title,
-                    "body": body,
-                    "payload": payload,
-                    "actions": actions or None,
-                    **build_periodic_args(
-                        repeat_interval=repeat_interval,
-                        schedule_mode=schedule_mode,
-                    ),
-                    "options": options,
-                },
-            )
+        await self._call(
+            "periodically_show",
+            {
+                "id": id,
+                "title": title,
+                "body": body,
+                "payload": payload,
+                "actions": actions or None,
+                **build_periodic_args(
+                    repeat_interval=repeat_interval,
+                    schedule_mode=schedule_mode,
+                ),
+                "options": options,
+            },
         )
 
     async def cancel_pending(self) -> None:
@@ -516,7 +520,7 @@ class LocalNotifications(ft.Service):
             NotificationError: If the bridge reports initialization or operation
                 failure.
         """
-        check_result(await self._invoke_method("cancel_pending"))
+        await self._call("cancel_pending")
 
     async def get_pending_notifications(self) -> list[PendingNotification]:
         """
@@ -537,7 +541,7 @@ class LocalNotifications(ft.Service):
                 query data.
         """
         return parse_query_list(
-            await self._invoke_method("get_pending"),
+            await self._call("get_pending"),
             PendingNotification,
             defaults={"id": 0},
         )
@@ -558,9 +562,7 @@ class LocalNotifications(ft.Service):
             NotificationError: If the bridge reports initialization or operation
                 failure.
         """
-        result = await self._invoke_method("can_schedule_exact_notifications")
-        check_result(result)
-        return result
+        return await self._call("can_schedule_exact_notifications")
 
     async def request_exact_alarm_permission(self) -> bool:
         """
@@ -580,11 +582,7 @@ class LocalNotifications(ft.Service):
             NotificationError: If the bridge reports initialization or operation
                 failure.
         """
-        result = await self._invoke_method(
-            "request_exact_alarm_permission", timeout=300
-        )
-        check_result(result)
-        return result
+        return await self._call("request_exact_alarm_permission", timeout=300)
 
     # ── Channels (Android 8.0+) ─────────────────────────────────────────
 
@@ -607,7 +605,7 @@ class LocalNotifications(ft.Service):
             NotificationError: If the bridge reports initialization or operation
                 failure.
         """
-        check_result(await self._invoke_method("create_notification_channel", channel))
+        await self._call("create_notification_channel", channel)
 
     async def delete_notification_channel(self, channel_id: str) -> None:
         """
@@ -625,11 +623,7 @@ class LocalNotifications(ft.Service):
             NotificationError: If the bridge reports initialization or operation
                 failure.
         """
-        check_result(
-            await self._invoke_method(
-                "delete_notification_channel", {"channel_id": channel_id}
-            )
-        )
+        await self._call("delete_notification_channel", {"channel_id": channel_id})
 
     async def get_notification_channels(self) -> list[NotificationChannel]:
         """
@@ -645,7 +639,7 @@ class LocalNotifications(ft.Service):
                 query data.
         """
         return parse_query_list(
-            await self._invoke_method("get_notification_channels"), NotificationChannel
+            await self._call("get_notification_channels"), NotificationChannel
         )
 
     # ── Foreground service (Android) ────────────────────────────────────
@@ -695,25 +689,26 @@ class LocalNotifications(ft.Service):
                 or an empty list uses the manifest's service types.
 
         Raises:
-            ValueError: If `id` is `0`.
-            NotificationError: If the bridge reports initialization or service failure.
+            NotificationInvalidArgumentError: If `id` is `0`.
+            NotificationUnsupportedPlatformError: Outside Android.
+            NotificationError: If the bridge reports another failure.
         """
         if id == 0:
-            raise ValueError("foreground service id must be non-zero")
-        check_result(
-            await self._invoke_method(
-                "start_foreground_service",
-                {
-                    "id": id,
-                    "title": title,
-                    "body": body,
-                    "payload": payload,
-                    "start_type": start_type,
-                    "foreground_service_types": foreground_service_types,
-                    "actions": actions or None,
-                    "options": options,
-                },
+            raise NotificationInvalidArgumentError(
+                "foreground service id must be non-zero"
             )
+        await self._call(
+            "start_foreground_service",
+            {
+                "id": id,
+                "title": title,
+                "body": body,
+                "payload": payload,
+                "start_type": start_type,
+                "foreground_service_types": foreground_service_types,
+                "actions": actions or None,
+                "options": options,
+            },
         )
 
     async def stop_foreground_service(self) -> None:
@@ -729,7 +724,7 @@ class LocalNotifications(ft.Service):
             NotificationError: If the bridge reports initialization or operation
                 failure.
         """
-        check_result(await self._invoke_method("stop_foreground_service"))
+        await self._call("stop_foreground_service")
 
     # ── Probes & OS integration ─────────────────────────────────────────
 
@@ -755,9 +750,7 @@ class LocalNotifications(ft.Service):
             NotificationError: If the bridge reports initialization or operation
                 failure.
         """
-        result = await self._invoke_method("are_notifications_enabled")
-        check_result(result)
-        return result
+        return await self._call("are_notifications_enabled")
 
     async def open_app_notification_settings(self) -> None:
         """
@@ -773,7 +766,7 @@ class LocalNotifications(ft.Service):
             NotificationError: If the bridge reports initialization or operation
                 failure.
         """
-        check_result(await self._invoke_method("open_app_settings"))
+        await self._call("open_app_settings")
 
     async def get_active_notifications(self) -> list[ActiveNotification]:
         """
@@ -794,9 +787,7 @@ class LocalNotifications(ft.Service):
             NotificationError: If the backend reports a failure or returns malformed
                 query data.
         """
-        return parse_query_list(
-            await self._invoke_method("get_active"), ActiveNotification
-        )
+        return parse_query_list(await self._call("get_active"), ActiveNotification)
 
     async def request_full_screen_intent_permission(self) -> bool:
         """
@@ -818,9 +809,7 @@ class LocalNotifications(ft.Service):
             NotificationError: If the bridge reports initialization or operation
                 failure.
         """
-        result = await self._invoke_method("request_full_screen_intent", timeout=300)
-        check_result(result)
-        return result
+        return await self._call("request_full_screen_intent", timeout=300)
 
     async def has_notification_policy_access(self) -> bool:
         """
@@ -836,9 +825,7 @@ class LocalNotifications(ft.Service):
             NotificationError: If the bridge reports initialization or operation
                 failure.
         """
-        result = await self._invoke_method("has_notification_policy_access")
-        check_result(result)
-        return result
+        return await self._call("has_notification_policy_access")
 
     async def request_notification_policy_access(self) -> bool:
         """
@@ -857,11 +844,7 @@ class LocalNotifications(ft.Service):
             NotificationError: If the bridge reports initialization or operation
                 failure.
         """
-        result = await self._invoke_method(
-            "request_notification_policy_access", timeout=300
-        )
-        check_result(result)
-        return result
+        return await self._call("request_notification_policy_access", timeout=300)
 
     # ── Channel groups (Android 8.0+) ───────────────────────────────────
 
@@ -886,15 +869,13 @@ class LocalNotifications(ft.Service):
             NotificationError: If the bridge reports initialization or operation
                 failure.
         """
-        check_result(
-            await self._invoke_method(
-                "create_notification_channel_group",
-                {
-                    "group_id": group_id,
-                    "name": name,
-                    "description": description,
-                },
-            )
+        await self._call(
+            "create_notification_channel_group",
+            {
+                "group_id": group_id,
+                "name": name,
+                "description": description,
+            },
         )
 
     async def delete_notification_channel_group(self, group_id: str) -> None:
@@ -913,9 +894,7 @@ class LocalNotifications(ft.Service):
             NotificationError: If the bridge reports initialization or operation
                 failure.
         """
-        check_result(
-            await self._invoke_method(
-                "delete_notification_channel_group",
-                {"group_id": group_id},
-            )
+        await self._call(
+            "delete_notification_channel_group",
+            {"group_id": group_id},
         )

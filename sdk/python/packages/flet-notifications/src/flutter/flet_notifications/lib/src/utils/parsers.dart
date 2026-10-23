@@ -26,14 +26,14 @@ fln.AndroidNotificationChannel parseNotificationChannel(Object? value) {
     );
   }
   if (value is! Map) {
-    throw const NotificationException.invalidChannel(
+    throw const NotificationException.invalidArgument(
       "channel must be a NotificationChannel or an ID",
     );
   }
   final id = value["id"];
   final name = value["name"];
   if (id is! String || id.isEmpty || name is! String || name.isEmpty) {
-    throw const NotificationException.invalidChannel(
+    throw const NotificationException.invalidArgument(
         "id and name are required");
   }
   return fln.AndroidNotificationChannel(
@@ -97,7 +97,7 @@ fln.LinuxNotificationCategory? parseLinuxNotificationCategory(String? value) {
   for (final category in fln.LinuxNotificationCategory.values) {
     if (category.name.toLowerCase() == value.toLowerCase()) return category;
   }
-  throw NotificationException.invalidOption(
+  throw NotificationException.invalidArgument(
     "unknown Linux notification category: $value",
   );
 }
@@ -148,7 +148,7 @@ fln.AndroidNotificationCategory? parseAndroidNotificationCategory(
   if (value == null) return null;
   final category = parseEnum(fln.AndroidNotificationCategory.values, value);
   if (category != null) return category;
-  throw NotificationException.invalidOption(
+  throw NotificationException.invalidArgument(
     "unknown notification category: $value",
   );
 }
@@ -196,7 +196,7 @@ Set<fln.AndroidServiceForegroundType>? parseForegroundServiceTypes(
 ) {
   if (values == null) return null;
   if (values is! List) {
-    throw const NotificationException.invalidOption(
+    throw const NotificationException.invalidArgument(
       "foreground_service_types must be a list",
     );
   }
@@ -204,7 +204,7 @@ Set<fln.AndroidServiceForegroundType>? parseForegroundServiceTypes(
   return parseList(values, (value) {
     final type = value is String ? parseForegroundServiceType(value) : null;
     if (type == null) {
-      throw NotificationException.invalidOption(
+      throw NotificationException.invalidArgument(
         "unknown foreground_service_types entry: $value",
       );
     }

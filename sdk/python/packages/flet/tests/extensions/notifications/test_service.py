@@ -4,6 +4,7 @@ from datetime import datetime, timedelta, timezone
 
 import pytest
 
+import flet as ft
 from flet_notifications import (
     AndroidAudioAttributesUsage,
     AndroidBigPictureStyle,
@@ -14,7 +15,11 @@ from flet_notifications import (
     NotificationAction,
     NotificationChannel,
     NotificationError,
+    NotificationInitializationError,
+    NotificationInvalidArgumentError,
     NotificationOptions,
+    NotificationPermissionError,
+    NotificationUnsupportedPlatformError,
     RepeatInterval,
     WebNotificationDirection,
     WebOptions,
@@ -108,18 +113,62 @@ async def test_methods_encode_nested_notification_values(
     assert wire["actions"] == [{"id": "open", "title": "Open"}]
 
 
+@pytest.mark.parametrize(
+    ("reported", "error", "message"),
+    [
+        (
+            "unsupported_platform: start_foreground_service is not available",
+            NotificationUnsupportedPlatformError,
+            "start_foreground_service is not available",
+        ),
+        (
+            "initialization_failed: backend unavailable",
+            NotificationInitializationError,
+            "backend unavailable",
+        ),
+        (
+            "invalid_argument: unknown category",
+            NotificationInvalidArgumentError,
+            "unknown category",
+        ),
+        (
+            "permission_denied: exact_alarms_not_permitted: denied",
+            NotificationPermissionError,
+            "exact_alarms_not_permitted: denied",
+        ),
+        (
+            "operation_failed: invalid_icon: missing",
+            NotificationError,
+            "invalid_icon: missing",
+        ),
+        (
+            "Calling show method of inexistent control: 7",
+            NotificationError,
+            "Calling show method of inexistent control: 7",
+        ),
+    ],
+)
 @pytest.mark.asyncio
-async def test_error_result_raises():
+async def test_bridge_failures_raise_their_error_class(reported, error, message):
+    """A failed call's reported code selects the NotificationError subclass raised."""
     service = LocalNotifications()
 
     async def fail(method_name, arguments=None, timeout=None):
-        return "error:show_failed:boom"
+        raise RuntimeError(reported)
 
     service._invoke_method = fail
     with pytest.raises(NotificationError) as exc:
         await service.show(id=1, title="t")
-    assert exc.value.code == "show_failed"
-    assert exc.value.message == "boom"
+    assert type(exc.value) is error
+    assert str(exc.value) == message
+
+
+def test_error_classes_are_also_caught_as_their_generic_kinds():
+    """Unsupported-platform and invalid-argument errors match Flet and Python bases."""
+    assert issubclass(
+        NotificationUnsupportedPlatformError, ft.FletUnsupportedPlatformException
+    )
+    assert issubclass(NotificationInvalidArgumentError, ValueError)
 
 
 @pytest.mark.parametrize(
@@ -149,14 +198,16 @@ async def test_boolean_methods_preserve_native_results_and_errors(
     async def invoke(method_name, arguments=None, timeout=None):
         assert method_name == native_method
         assert timeout == expected_timeout
+        if isinstance(result, Exception):
+            raise result
         return encode_wire(result)
 
     expected_timeout = timeout
     service._invoke_method = invoke
     for result in [True, False]:
         assert await getattr(service, method)() is result
-    result = "error:init_failed:backend unavailable"
+    result = RuntimeError("initialization_failed: backend unavailable")
     with pytest.raises(NotificationError) as exc:
         await getattr(service, method)()
-    assert exc.value.code == "init_failed"
-    assert exc.value.message == "backend unavailable"
+    assert type(exc.value) is NotificationInitializationError
+    assert str(exc.value) == "backend unavailable"

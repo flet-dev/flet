@@ -1,64 +1,42 @@
-/// Error categories shared with the Python notification API.
+/// Error categories shared with the Python `NotificationErrorCode` enum.
 enum NotificationErrorCode {
   unsupportedPlatform("unsupported_platform"),
-  initFailed("init_failed"),
-  showFailed("show_failed"),
-  cancelFailed("cancel_failed"),
-  scheduleFailed("schedule_failed"),
-  invalidAction("invalid_action"),
-  invalidSchedule("invalid_schedule"),
-  invalidStyle("invalid_style"),
-  invalidChannel("invalid_channel"),
-  invalidServiceId("invalid_service_id"),
-  invalidOption("invalid_option"),
-  channelFailed("channel_failed"),
-  foregroundServiceFailed("foreground_service_failed"),
-  queryFailed("query_failed"),
-  permissionFailed("permission_failed"),
-  unknownMethod("unknown_method");
+  initializationFailed("initialization_failed"),
+  invalidArgument("invalid_argument"),
+  permissionDenied("permission_denied"),
+  operationFailed("operation_failed");
 
   const NotificationErrorCode(this.value);
 
-  /// Serialized code used by Python's NotificationErrorCode constants.
+  /// Serialized code matching the Python enum's value.
   final String value;
 }
 
 /// A notification failure with a code understood by the Python API.
+///
+/// Flet reports a failed method call to Python with the exception's text, so
+/// [toString] leads with the code for Python to map back to a
+/// `NotificationError`.
 class NotificationException implements Exception {
   const NotificationException(this.code, this.message);
-
-  const NotificationException.initFailed(String message)
-      : this(NotificationErrorCode.initFailed, message);
-
-  const NotificationException.invalidAction(String message)
-      : this(NotificationErrorCode.invalidAction, message);
-
-  const NotificationException.invalidChannel(String message)
-      : this(NotificationErrorCode.invalidChannel, message);
-
-  const NotificationException.invalidOption(String message)
-      : this(NotificationErrorCode.invalidOption, message);
-
-  const NotificationException.invalidSchedule(String message)
-      : this(NotificationErrorCode.invalidSchedule, message);
-
-  const NotificationException.invalidServiceId(String message)
-      : this(NotificationErrorCode.invalidServiceId, message);
-
-  const NotificationException.invalidStyle(String message)
-      : this(NotificationErrorCode.invalidStyle, message);
-
-  const NotificationException.unknownMethod(String message)
-      : this(NotificationErrorCode.unknownMethod, message);
 
   const NotificationException.unsupportedPlatform(String message)
       : this(NotificationErrorCode.unsupportedPlatform, message);
 
+  const NotificationException.initializationFailed(String message)
+      : this(NotificationErrorCode.initializationFailed, message);
+
+  const NotificationException.invalidArgument(String message)
+      : this(NotificationErrorCode.invalidArgument, message);
+
+  const NotificationException.permissionDenied(String message)
+      : this(NotificationErrorCode.permissionDenied, message);
+
+  const NotificationException.operationFailed(String message)
+      : this(NotificationErrorCode.operationFailed, message);
+
   final NotificationErrorCode code;
   final String message;
-
-  /// Encodes the failure for the Python invocation result.
-  String toResult() => "error:${code.value}:$message";
 
   @override
   String toString() => "${code.value}: $message";

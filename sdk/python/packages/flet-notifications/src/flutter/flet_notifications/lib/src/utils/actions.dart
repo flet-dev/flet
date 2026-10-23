@@ -40,11 +40,11 @@ class ParsedAction {
 /// Parses the `actions` argument (a list of dicts sent from Python) into
 /// [ParsedAction]s.
 ///
-/// Throws [NotificationException] with `invalid_action` for malformed actions.
+/// Throws [NotificationException] with `invalid_argument` for malformed actions.
 List<ParsedAction> parseActions(Object? raw) {
   if (raw == null) return const [];
   if (raw is! List) {
-    throw const NotificationException.invalidAction(
+    throw const NotificationException.invalidArgument(
       "actions must be a list",
     );
   }
@@ -54,19 +54,19 @@ List<ParsedAction> parseActions(Object? raw) {
 /// Parses one notification action.
 ParsedAction parseAction(Object? entry) {
   if (entry is! Map) {
-    throw const NotificationException.invalidAction(
+    throw const NotificationException.invalidArgument(
       "each action must be a map",
     );
   }
   final id = entry["id"];
   final title = entry["title"];
   if (id is! String || id.isEmpty) {
-    throw const NotificationException.invalidAction(
+    throw const NotificationException.invalidArgument(
       "action id must be a non-empty string",
     );
   }
   if (title is! String || title.isEmpty) {
-    throw const NotificationException.invalidAction(
+    throw const NotificationException.invalidArgument(
       "action title must be a non-empty string",
     );
   }
@@ -84,19 +84,19 @@ ParsedAction parseAction(Object? entry) {
 ParsedInput? parseActionInput(Object? raw) {
   if (raw == null) return null;
   if (raw is! Map) {
-    throw const NotificationException.invalidAction("input must be a map");
+    throw const NotificationException.invalidArgument("input must be a map");
   }
   final choices = raw["choices"];
   final mimeTypes = raw["allowed_mime_types"];
   if (choices != null &&
       (choices is! List || choices.any((v) => v is! String))) {
-    throw const NotificationException.invalidAction(
+    throw const NotificationException.invalidArgument(
       "input choices must be a list of strings",
     );
   }
   if (mimeTypes != null &&
       (mimeTypes is! List || mimeTypes.any((v) => v is! String))) {
-    throw const NotificationException.invalidAction(
+    throw const NotificationException.invalidArgument(
       "input allowed_mime_types must be a list of strings",
     );
   }

@@ -7,8 +7,11 @@ from flet.utils import from_dict
 
 __all__ = [
     "NotificationError",
-    "NotificationErrorCode",
     "NotificationEvent",
+    "NotificationInitializationError",
+    "NotificationInvalidArgumentError",
+    "NotificationPermissionError",
+    "NotificationUnsupportedPlatformError",
     "ResponseType",
 ]
 
@@ -85,111 +88,82 @@ class NotificationEvent(ft.Event[ft.EventControlType]):
     """
 
 
-class NotificationErrorCode:
-    """
-    Machine-readable error codes returned by the notification bridge.
-
-    Compare these constants with :attr:`flet_notifications.NotificationError.code`.
-    Codes describe the failing operation or parsing stage; read
-    :attr:`flet_notifications.NotificationError.message` for native details. They are
-    strings, not enum members.
-    """
-
-    UNSUPPORTED_PLATFORM = "unsupported_platform"
-    """The operation is not implemented on the current platform."""
-
-    INIT_FAILED = "init_failed"
-    """The notification backend could not initialize."""
-
-    SHOW_FAILED = "show_failed"
-    """Displaying a notification failed."""
-
-    CANCEL_FAILED = "cancel_failed"
-    """Cancelling displayed or scheduled notifications failed."""
-
-    SCHEDULE_FAILED = "schedule_failed"
-    """Scheduling a notification or registering a repeating request failed."""
-
-    INVALID_ACTION = "invalid_action"
-    """Action parsing rejected the supplied data."""
-
-    INVALID_SCHEDULE = "invalid_schedule"
-    """The schedule time could not be parsed."""
-
-    INVALID_STYLE = "invalid_style"
-    """The style discriminator or required style data was invalid."""
-
-    INVALID_CHANNEL = "invalid_channel"
-    """A channel declaration was missing its required ID or name."""
-
-    INVALID_SERVICE_ID = "invalid_service_id"
-    """
-    A foreground-service notification used the forbidden ID `0`.
-
-    The Python method rejects this earlier with `ValueError`.
-    """
-
-    INVALID_OPTION = "invalid_option"
-    """The bridge rejected an invalid platform option, such as an unknown category."""
-
-    CHANNEL_FAILED = "channel_failed"
-    """Creating or querying an Android channel or channel group failed."""
-
-    FOREGROUND_SERVICE_FAILED = "foreground_service_failed"
-    """Starting the Android foreground service failed."""
-
-    QUERY_FAILED = "query_failed"
-    """A notification query failed or returned malformed data."""
-
-    PERMISSION_FAILED = "permission_failed"
-    """
-    A permission request, permission-status check, or opening notification settings
-    failed.
-    """
-
-    UNKNOWN_METHOD = "unknown_method"
-    """The native service did not recognize the invoked method name."""
-
-
 class NotificationError(ft.FletException):
     """
-    Exception raised when the notification bridge returns an error result.
+    Base class for notification failures.
 
-    Inspect :attr:`code` to handle known failures and :attr:`message` for details.
-    Native errors not converted to the bridge's error format may propagate through Flet
-    separately.
+    Raised as-is when the platform reports a failure without a more specific class,
+    with a message starting with the platform's own error code, such as
+    `"invalid_icon: ..."` when a notification icon resource is missing. Catch it to
+    handle every notification failure.
 
-    Args:
-        code: Machine-readable error identifier; see
-            :class:`flet_notifications.NotificationErrorCode`.
-        message: Optional explanation of the failure.
+    See these subclasses:
+
+    - :class:`~flet_notifications.NotificationUnsupportedPlatformError`
+    - :class:`~flet_notifications.NotificationInitializationError`
+    - :class:`~flet_notifications.NotificationInvalidArgumentError`
+    - :class:`~flet_notifications.NotificationPermissionError`
     """
 
-    def __init__(self, code: str, message: str = "") -> None:
-        self.code = code
-        """
-        Machine-readable failure code; see
-        :class:`flet_notifications.NotificationErrorCode`.
-        """
-        self.message = message
-        """Native failure details, or an empty string when none were supplied."""
-        super().__init__(f"{code}: {message}" if message else code)
 
-    def __repr__(self) -> str:
-        return f"NotificationError(code={self.code!r}, message={self.message!r})"
-
-
-def check_result(result: object) -> None:
+class NotificationUnsupportedPlatformError(
+    NotificationError, ft.FletUnsupportedPlatformException
+):
     """
-    Raise :class:`flet_notifications.NotificationError` if a Dart invoke returned an
-    error string.
+    Raised when an operation is not available on the current platform.
 
-    Dart service methods return `"error:<code>:<message>"` on failure.
+    For example, :meth:`flet_notifications.LocalNotifications.start_foreground_service`
+    outside Android. Also caught as :class:`flet.FletUnsupportedPlatformException`.
     """
-    if isinstance(result, str) and result.startswith("error:"):
-        _, _, rest = result.partition(":")
-        code, _, message = rest.partition(":")
-        raise NotificationError(code.strip(), message.strip())
+
+
+class NotificationInitializationError(NotificationError):
+    """
+    Raised when the notification backend could not initialize.
+
+    The message describes the cause. Call
+    :meth:`flet_notifications.LocalNotifications.initialize` to retry.
+    """
+
+
+class NotificationInvalidArgumentError(NotificationError, ValueError):
+    """
+    Raised when a value passed to a notification operation is invalid.
+
+    Also caught as `ValueError`.
+    """
+
+
+class NotificationPermissionError(NotificationError):
+    """
+    Raised when the platform refuses an operation for lack of permission.
+
+    For example, scheduling with an exact
+    :class:`~flet_notifications.AndroidScheduleMode` without exact-alarm access; see
+    :meth:`flet_notifications.LocalNotifications.request_exact_alarm_permission`.
+    """
+
+
+_BRIDGE_ERRORS: dict[str, type[NotificationError]] = {
+    "unsupported_platform": NotificationUnsupportedPlatformError,
+    "initialization_failed": NotificationInitializationError,
+    "invalid_argument": NotificationInvalidArgumentError,
+    "permission_denied": NotificationPermissionError,
+    "operation_failed": NotificationError,
+}
+"""Exception class for each failure code the Dart service reports."""
+
+
+def error_from_bridge(text: str) -> NotificationError:
+    """
+    Rebuild a bridge failure from the text Flet reports for a failed method call.
+
+    The Dart service fails with `"<code>: <message>"`. Other failures, such as a
+    missing control, become a plain :class:`flet_notifications.NotificationError`.
+    """
+    code, separator, message = text.partition(": ")
+    error = _BRIDGE_ERRORS.get(code) if separator else None
+    return error(message) if error else NotificationError(text)
 
 
 _QueryItem = TypeVar("_QueryItem")
@@ -202,22 +176,20 @@ def parse_query_list(
     defaults: dict[str, object] | None = None,
 ) -> list[_QueryItem]:
     """Reconstruct query snapshots without silently skipping malformed entries."""
-    check_result(result)
     if not isinstance(result, list):
         raise NotificationError(
-            "query_failed", f"Expected a list of {item_type.__name__}"
+            f"Expected a list of {item_type.__name__}",
         )
     items = []
     for index, entry in enumerate(result):
         if not isinstance(entry, dict):
             raise NotificationError(
-                "query_failed",
                 f"Expected {item_type.__name__} mapping at index {index}",
             )
         try:
             items.append(from_dict(item_type, {**(defaults or {}), **entry}))
         except (TypeError, ValueError) as exc:
             raise NotificationError(
-                "query_failed", f"Invalid {item_type.__name__} at index {index}: {exc}"
+                f"Invalid {item_type.__name__} at index {index}: {exc}",
             ) from exc
     return items

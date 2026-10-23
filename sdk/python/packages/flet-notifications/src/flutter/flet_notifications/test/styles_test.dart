@@ -125,7 +125,7 @@ void main() {
       expect(
           () => parseStyle(value),
           throwsA(isA<NotificationException>().having(
-              (e) => e.code, "code", NotificationErrorCode.invalidStyle)));
+              (e) => e.code, "code", NotificationErrorCode.invalidArgument)));
     }
   });
 }
