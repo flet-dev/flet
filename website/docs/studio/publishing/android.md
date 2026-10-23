@@ -24,6 +24,10 @@ Android asks you to allow installing apps from that source — the browser or th
 Files app — the first time: **Settings › Apps › Special app access › Install
 unknown apps** if you need to change it later.
 
+The APK is built for **Most phones** (`arm64-v8a`) unless you pick **All devices**
+in the action screen's **Architectures** section — see
+[Why is my APK so big?](#why-is-my-apk-so-big).
+
 ### Test-signed APKs
 
 Without a signing key, the APK is signed with a **test key** and the run says so.
@@ -215,15 +219,17 @@ Play — a different package name is a different app.
 
 ### Why is my APK so big?
 
-An APK holds Python, your app's packages, and native code for every phone
-architecture it supports — by default all three (`arm64-v8a`, `armeabi-v7a`,
-`x86_64`), so one file runs on any device. To make it smaller, choose fewer in
-**Publish › Settings › Android**, under **Advanced settings › Architectures ›
-Target architectures**: most phones today only need `arm64-v8a`, but the APK then
-only installs on those. The setting applies to app bundles too.
+An APK holds Python, your app's packages, and native code for each phone
+architecture it supports. Studio builds APKs for **Most phones** (`arm64-v8a`) by
+default: practically every phone in use, at about a third of the size of all three.
+Pick **All devices** in the action screen's **Architectures** section to also
+support old 32-bit phones (`armeabi-v7a`) and x86 emulators and Chromebooks
+(`x86_64`), or **Custom** to choose.
 
-App bundles don't have this problem: Google Play delivers each device only what it
-needs.
+App bundles don't have this problem: they include all three, and Google Play
+delivers each device only what it needs. Their architectures come from **Publish ›
+Settings › Android › Advanced settings › Architectures**, which is also where an
+APK's choice starts when you set it there.
 
 ### Can I use a different key for APKs?
 
