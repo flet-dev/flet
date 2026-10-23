@@ -47,6 +47,7 @@
 
 ### Bug fixes
 
+* Fix `flet test` failing when the app under test starts slowly, as on the first run after a build: the test now waits until the app has loaded its first page ([#6993](https://github.com/flet-dev/flet/issues/6993)) by @ndonkoHenri.
 * Fix `Tester.find_by_key()` not finding `Tab` and `PopupMenuItem` controls by their keys ([#6965](https://github.com/flet-dev/flet/issues/6965), [#6976](https://github.com/flet-dev/flet/pull/6976)) by @RezaShamsipour.
 * Fix `GestureDetector.on_tap_move` not firing, while preserving tap accessibility and updates to `allowed_devices` ([#6961](https://github.com/flet-dev/flet/issues/6961), [#6982](https://github.com/flet-dev/flet/pull/6982)) by @inchang-ing.
 * Honor an explicit platform `app.hide_window_on_start = false` when the global setting is `true`, in both the Dart bootstrap and Windows runner ([#6949](https://github.com/flet-dev/flet/issues/6949), [#6981](https://github.com/flet-dev/flet/pull/6981)) by @LaoChouPro.
