@@ -79,15 +79,17 @@ class NotificationChannel:
     Sound resource name or `content://` / `file://` URI on the Android device.
 
     A raw resource name, such as `"alert"`, refers to a file in the app's
-    `res/raw` resources and omits the file extension.
+    `res/raw` resources and omits the file extension. Add the file with the
+    [`res_dir`](https://flet.dev/docs/publish/android#resources) build setting,
+    for example as `raw/alert.mp3`.
 
     Note:
         Requires :attr:`play_sound`. `None` uses the default notification sound.
         Fixed at channel creation; changing this value does not replace an existing
         channel's sound.
 
-        `flet build` does not yet provide a way to add raw resources to the app, so a
-        bundled custom sound is not currently possible.
+        A `file://` URI of a file in the app's private storage is stored but not
+        played, because the system cannot read the file.
     """
 
     enable_vibration: bool = True

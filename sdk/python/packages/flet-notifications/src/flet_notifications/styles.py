@@ -72,6 +72,11 @@ class AndroidBitmap(AndroidIcon, ABC):
     Accepted by :attr:`flet_notifications.AndroidOptions.large_icon` and
     :class:`flet_notifications.AndroidBigPictureStyle`, as well as anywhere an
     :class:`flet_notifications.AndroidIcon` is accepted.
+
+    :class:`flet_notifications.AndroidBytesBitmap` works wherever the Python code
+    runs and suits most images. :class:`flet_notifications.AndroidFileBitmap` needs a
+    file on the device, and :class:`flet_notifications.AndroidDrawableBitmap` an image
+    bundled with the app.
     """
 
 
@@ -80,10 +85,9 @@ class AndroidDrawableBitmap(AndroidBitmap):
     """
     Image from the app's Android drawable resources.
 
-    Note:
-        `flet build` does not yet provide a way to add drawable resources to the app.
-        Use :class:`flet_notifications.AndroidBytesBitmap` or
-        :class:`flet_notifications.AndroidFileBitmap` for your own images.
+    Add the image with the
+    [`res_dir`](https://flet.dev/docs/publish/android#resources) build setting,
+    for example as `drawable/promo_banner.png`.
     """
 
     name: str
@@ -107,9 +111,10 @@ class AndroidFileBitmap(AndroidBitmap):
     saves, such as under a :class:`flet.StoragePaths` directory, can also be used.
 
     Note:
-        The path must exist on the Android device. While developing with `flet run`
-        against a phone, Python runs on your computer, so its paths do not exist on
-        the device; use :class:`flet_notifications.AndroidBytesBitmap` instead.
+        The path must exist on the Android device. While developing with
+        [`flet run`](https://flet.dev/docs/cli/flet-run/) against a phone, Python runs
+        on your computer, so its paths do not exist on the device; use
+        :class:`flet_notifications.AndroidBytesBitmap` instead.
     """
 
     path: str
@@ -125,8 +130,9 @@ class AndroidBytesBitmap(AndroidBitmap):
     Image from encoded bytes, such as the contents of a PNG or JPEG file.
 
     The bytes travel with the notification request, so this source works wherever the
-    Python code runs, including `flet run` against a phone. Prefer it for images
-    shipped with the app or downloaded at runtime.
+    Python code runs, including [`flet run`](https://flet.dev/docs/cli/flet-run/)
+    against a phone. Prefer it for images shipped with the app or downloaded at
+    runtime.
 
     Example:
         ```python

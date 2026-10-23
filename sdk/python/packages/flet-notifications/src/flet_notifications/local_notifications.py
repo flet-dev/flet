@@ -86,8 +86,12 @@ class LocalNotifications(ft.Service):
     Default small Android notification icon.
 
     Supply a bundled drawable resource name, such as `"ic_stat_notify"`, without an
-    extension. `None` uses `"@mipmap/ic_launcher"`. See
-    :attr:`flet_notifications.AndroidOptions.icon` for the icon's requirements.
+    extension. See :attr:`flet_notifications.AndroidOptions.icon` for the icon's
+    requirements and how to bundle it.
+
+    `None` uses the app's launcher icon, `"@mipmap/ic_launcher"`. Android draws the
+    small icon from its transparency alone, so the launcher icon usually shows as a
+    plain shape rather than your app's icon.
     """
 
     request_alert_permission: bool = True

@@ -295,9 +295,14 @@ class AndroidOptions:
         channel to determine its visible shape; an opaque background can appear as a
         solid block.
 
-        `flet build` does not yet provide a way to add drawable resources to the app,
-        so only the app's launcher icon (`"@mipmap/ic_launcher"`) is currently
-        available.
+        Add the drawable with the
+        [`res_dir`](https://flet.dev/docs/publish/android#resources) build
+        setting, for example as `drawable/ic_stat_notify.png`. Bundled resources
+        exist only in apps built with
+        [`flet build`](https://flet.dev/docs/cli/flet-build/) or
+        [`flet debug`](https://flet.dev/docs/cli/flet-debug/); under
+        [`flet run`](https://flet.dev/docs/cli/flet-run/), a missing icon raises
+        :class:`flet_notifications.NotificationError`.
     """
 
     priority: AndroidPriority | None = None
