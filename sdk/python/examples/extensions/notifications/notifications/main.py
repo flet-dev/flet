@@ -258,7 +258,7 @@ def main(page: ft.Page):
                         category=AndroidNotificationCategory.ALARM,
                         visibility=AndroidVisibility.PUBLIC,
                     ),
-                    iOS=DarwinOptions(interruption_level="passive"),
+                    ios=DarwinOptions(interruption_level="passive"),
                 ),
             ),
             "show",

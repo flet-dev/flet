@@ -45,7 +45,7 @@ fln.NotificationDetails parseNotificationDetails({
     final darwinDetails = parseDarwinDetails(
       id: id,
       actions: actions,
-      options: _platformOptions(details, "iOS"),
+      options: _platformOptions(details, "ios"),
     );
 
     final payloadForWindows = (details ?? const {})["payload"] as String? ?? "";
@@ -151,7 +151,7 @@ fln.NotificationDetails parseNotificationDetails({
       macOS: parseDarwinDetails(
         id: id,
         actions: actions,
-        options: _platformOptions(details, "macOS"),
+        options: _platformOptions(details, "macos"),
       ),
       linux: fln.LinuxNotificationDetails(
         defaultActionName: "Open",

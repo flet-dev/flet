@@ -117,9 +117,9 @@ class DarwinInterruptionLevel(Enum):
     Present a critical alert that can sound through mute and Do Not Disturb.
 
     Requires Apple's approval for the critical-alert entitlement and the user's
-    critical-alert authorization. Enable
-    :attr:`flet_notifications.LocalNotifications.request_critical_permission` when
-    requesting permission. Reserve for urgent health or safety alerts.
+    critical-alert authorization; request it with `critical=True` in
+    :meth:`flet_notifications.LocalNotifications.request_permissions`. Reserve for
+    urgent health or safety alerts.
     """
 
 
@@ -880,7 +880,7 @@ class NotificationOptions:
 
         options = ftn.NotificationOptions(
             android=ftn.AndroidOptions(silent=True),
-            iOS=ftn.DarwinOptions(
+            ios=ftn.DarwinOptions(
                 interruption_level=ftn.DarwinInterruptionLevel.PASSIVE
             ),
         )
@@ -891,10 +891,10 @@ class NotificationOptions:
     android: AndroidOptions | None = None
     """Details used when running on Android."""
 
-    iOS: DarwinOptions | None = None
+    ios: DarwinOptions | None = None
     """Details used when running on iOS."""
 
-    macOS: DarwinOptions | None = None
+    macos: DarwinOptions | None = None
     """Details used when running on macOS."""
 
     linux: LinuxOptions | None = None

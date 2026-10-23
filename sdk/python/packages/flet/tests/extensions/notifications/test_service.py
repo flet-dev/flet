@@ -211,3 +211,34 @@ async def test_boolean_methods_preserve_native_results_and_errors(
         await getattr(service, method)()
     assert type(exc.value) is NotificationInitializationError
     assert str(exc.value) == "backend unavailable"
+
+
+@pytest.mark.asyncio
+async def test_request_permissions_sends_the_requested_apple_authorizations():
+    """Apple authorization kinds travel as arguments, defaulting to a full prompt."""
+    service = LocalNotifications()
+    calls = []
+
+    async def invoke(method_name, arguments=None, timeout=None):
+        calls.append(arguments)
+        return True
+
+    service._invoke_method = invoke
+    await service.request_permissions()
+    await service.request_permissions(alert=False, critical=True, provisional=True)
+    assert calls == [
+        {
+            "alert": True,
+            "sound": True,
+            "badge": True,
+            "critical": False,
+            "provisional": False,
+        },
+        {
+            "alert": False,
+            "sound": True,
+            "badge": True,
+            "critical": True,
+            "provisional": True,
+        },
+    ]

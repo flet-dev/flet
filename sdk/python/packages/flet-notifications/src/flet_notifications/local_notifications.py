@@ -93,42 +93,6 @@ class LocalNotifications(ft.Service):
     plain shape rather than your app's icon.
     """
 
-    request_alert_permission: bool = True
-    """
-    Whether to request iOS/macOS alert authorization during initialization.
-
-    Also controls which authorization is requested by :meth:`request_permissions`. Set
-    this, :attr:`request_sound_permission`, and :attr:`request_badge_permission` to
-    `False` to defer those prompts. Set the desired flags to `True` before calling
-    :meth:`request_permissions`.
-    """
-
-    request_sound_permission: bool = True
-    """
-    Whether to request iOS/macOS sound authorization during initialization.
-
-    Also used by :meth:`request_permissions`. Authorization permits sounds;
-    :attr:`flet_notifications.DarwinOptions.present_sound` controls presentation.
-    """
-
-    request_badge_permission: bool = True
-    """
-    Whether to request iOS/macOS badge authorization during initialization.
-
-    Also used by :meth:`request_permissions`. Set the badge value through
-    :attr:`flet_notifications.DarwinOptions.badge_number`.
-    """
-
-    request_critical_permission: bool = False
-    """
-    Whether to request iOS/macOS critical-alert authorization.
-
-    Note:
-        Used during initialization and by :meth:`request_permissions`. Requires Apple's
-        critical-alert entitlement; this flag does not obtain that entitlement. See
-        :attr:`flet_notifications.DarwinInterruptionLevel.CRITICAL`.
-    """
-
     app_name: str | None = None
     """
     Application name used by the Windows notification backend.
@@ -213,8 +177,8 @@ class LocalNotifications(ft.Service):
 
         The service initializes automatically, and other methods wait for that
         initialization. Call explicitly to retry a failed initialization or apply
-        changed initialization properties. Initialization can request Apple permissions
-        according to the service's permission flags.
+        changed initialization properties. Initialization never requests permission;
+        see :meth:`request_permissions`.
 
         Raises:
             NotificationError: If the bridge reports initialization or operation
@@ -308,38 +272,77 @@ class LocalNotifications(ft.Service):
         """
         await self._call("cancel_all")
 
-    async def request_permissions(self) -> bool:
+    async def request_permissions(
+        self,
+        *,
+        alert: bool = True,
+        sound: bool = True,
+        badge: bool = True,
+        critical: bool = False,
+        provisional: bool = False,
+    ) -> bool:
         """
         Request notification authorization where the platform supports a prompt.
 
+        The service never prompts on its own; call this when the app is ready to
+        explain why it needs notifications.
+
         Note:
-            On Android 13+, requests `POST_NOTIFICATIONS`; older Android versions do not
-            show that runtime prompt. On iOS/macOS, requests the alert, sound, badge,
-            and critical permissions selected by this service's corresponding
-            `request_*_permission` properties. A previous denial may require the user to
-            change system settings rather than displaying another prompt.
+            - On Android 13+, requests `POST_NOTIFICATIONS`; older Android versions
+              do not show that runtime prompt. On iOS/macOS, requests the kinds of
+              authorization selected by the arguments. A previous denial may require
+              the user to change system settings rather than displaying another prompt.
 
-            On Web, requests browser notification permission. Call from a user
-            interaction, such as an :attr:`flet.Button.on_click` handler, over HTTPS or
-            a trusted localhost origin. An existing denial returns `False` without
-            prompting again; the user must change the site's browser permissions.
-            Dismissing the prompt without granting access also returns `False`.
-            Unsupported browsers return `False`.
+            - On Web, requests browser notification permission. Call from a user
+              interaction, such as an :attr:`flet.Button.on_click` handler,
+              over HTTPS or a trusted localhost origin. An existing denial returns
+              `False` without prompting again; the user must change the site's
+              browser permissions. Dismissing the prompt without granting access also
+              returns `False`. Unsupported browsers return `False`.
 
-            On Windows and Linux, returns `True` without requesting or
-            checking permission.
+            - On Windows and Linux, returns `True` without requesting or
+              checking permission.
+
+        Args:
+            alert: Whether to request permission to display alerts. iOS/macOS only.
+            sound: Whether to request permission to play sounds. Whether a sound
+                plays also depends on
+                :attr:`flet_notifications.DarwinOptions.present_sound`.
+                **Has effect on iOS/macOS only**.
+            badge: Whether to request permission to badge the app icon; set the
+                value with :attr:`flet_notifications.DarwinOptions.badge_number`.
+                **Has effect on iOS/macOS only**.
+            critical: Whether to request permission for critical alerts, which sound
+                through mute and Do Not Disturb. Requires Apple's critical-alert
+                entitlement, which this argument does not obtain; see
+                :attr:`flet_notifications.DarwinInterruptionLevel.CRITICAL`.
+                **Has effect on iOS/macOS only**.
+            provisional: Whether to request provisional authorization instead of
+                prompting: notifications are delivered quietly to Notification
+                Center, where the user can keep or turn them off. No prompt is shown.
+                **Has effect on iOS/macOS only**.
 
         Returns:
             Whether the native permission request succeeded, or `True` on platforms
-            where no permission request is performed. It does not guarantee delivery
-            through per-channel restrictions, Focus, or Do Not Disturb.
+                where no permission request is performed. It does not guarantee delivery
+                through per-channel restrictions, Focus, or Do Not Disturb.
 
         Raises:
             NotificationError: If the bridge reports initialization or operation
                 failure.
         """
         # Permission dialogs can take a while; allow more than the default.
-        return await self._call("request_permissions", timeout=300)
+        return await self._call(
+            "request_permissions",
+            {
+                "alert": alert,
+                "sound": sound,
+                "badge": badge,
+                "critical": critical,
+                "provisional": provisional,
+            },
+            timeout=300,
+        )
 
     async def schedule(
         self,

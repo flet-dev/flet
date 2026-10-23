@@ -56,8 +56,6 @@ class LocalNotificationsService extends FletService {
     super.dispose();
   }
 
-  // ── Initialization ──────────────────────────────────────────────────
-
   /// Idempotent initialization. Concurrent callers await the same future, so
   /// invokes issued before initialization completes wait for it instead of
   /// silently no-oping.
@@ -67,13 +65,12 @@ class LocalNotificationsService extends FletService {
     return _initFuture = _doInitialize().whenComplete(() => _initFuture = null);
   }
 
-  Future<void> _initializeBackend({bool requestPermissions = true}) async {
+  Future<void> _initializeBackend() async {
     try {
       final categories =
           Map<int, fln.DarwinNotificationCategory>.of(_darwinCategories);
       final result = await _plugin!.initialize(
         settings: _buildInitializationSettings(
-          requestPermissions: requestPermissions,
           notificationCategories: categories.values.toList(),
         ),
         onDidReceiveNotificationResponse: _handleResponse,
@@ -121,24 +118,17 @@ class LocalNotificationsService extends FletService {
   }
 
   fln.InitializationSettings _buildInitializationSettings({
-    bool requestPermissions = true,
     required List<fln.DarwinNotificationCategory> notificationCategories,
   }) {
-    final defaultIcon =
-        control.getString("default_icon", "@mipmap/ic_launcher")!;
     final darwin = fln.DarwinInitializationSettings(
-      requestAlertPermission: requestPermissions &&
-          control.getBool("request_alert_permission", true)!,
-      requestSoundPermission: requestPermissions &&
-          control.getBool("request_sound_permission", true)!,
-      requestBadgePermission: requestPermissions &&
-          control.getBool("request_badge_permission", true)!,
-      requestCriticalPermission: requestPermissions &&
-          control.getBool("request_critical_permission", false)!,
+      requestAlertPermission: false,
+      requestSoundPermission: false,
+      requestBadgePermission: false,
       notificationCategories: notificationCategories,
     );
     return fln.InitializationSettings(
-      android: fln.AndroidInitializationSettings(defaultIcon),
+      android: fln.AndroidInitializationSettings(
+          control.getString("default_icon", "@mipmap/ic_launcher")!),
       iOS: darwin,
       macOS: darwin,
       linux: const fln.LinuxInitializationSettings(
@@ -300,7 +290,7 @@ class LocalNotificationsService extends FletService {
         return await _stopForegroundService();
 
       case "request_permissions":
-        return await _requestPermissions();
+        return await _requestPermissions(args);
 
       case "can_schedule_exact_notifications":
         final android = _androidPlugin;
@@ -534,12 +524,12 @@ class LocalNotificationsService extends FletService {
     if (areDarwinCategoriesEqual(_registeredDarwinCategories[id], category)) {
       return;
     }
-    await _initializeBackend(requestPermissions: false);
+    await _initializeBackend();
   }
 
   // ── Permissions ─────────────────────────────────────────────────────
 
-  Future<bool> _requestPermissions() async {
+  Future<bool> _requestPermissions(dynamic args) async {
     if (isWebPlatform()) {
       final web = _webPlugin;
       if (web == null || !fln.WebFlutterLocalNotificationsPlugin.isSupported) {
@@ -556,14 +546,21 @@ class LocalNotificationsService extends FletService {
       return await android.requestNotificationsPermission() ?? false;
     }
 
+    final map = args is Map ? args : const {};
+    final alert = parseBool(map["alert"], true)!;
+    final sound = parseBool(map["sound"], true)!;
+    final badge = parseBool(map["badge"], true)!;
+    final critical = parseBool(map["critical"], false)!;
+    final provisional = parseBool(map["provisional"], false)!;
     final ios = _plugin?.resolvePlatformSpecificImplementation<
         fln.IOSFlutterLocalNotificationsPlugin>();
     if (ios != null) {
       return await ios.requestPermissions(
-            sound: control.getBool("request_sound_permission", true)!,
-            alert: control.getBool("request_alert_permission", true)!,
-            badge: control.getBool("request_badge_permission", true)!,
-            critical: control.getBool("request_critical_permission", false)!,
+            alert: alert,
+            sound: sound,
+            badge: badge,
+            critical: critical,
+            provisional: provisional,
           ) ??
           false;
     }
@@ -572,10 +569,11 @@ class LocalNotificationsService extends FletService {
         fln.MacOSFlutterLocalNotificationsPlugin>();
     if (macos != null) {
       return await macos.requestPermissions(
-            sound: control.getBool("request_sound_permission", true)!,
-            alert: control.getBool("request_alert_permission", true)!,
-            badge: control.getBool("request_badge_permission", true)!,
-            critical: control.getBool("request_critical_permission", false)!,
+            alert: alert,
+            sound: sound,
+            badge: badge,
+            critical: critical,
+            provisional: provisional,
           ) ??
           false;
     }

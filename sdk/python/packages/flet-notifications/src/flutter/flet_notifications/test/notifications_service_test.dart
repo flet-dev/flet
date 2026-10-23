@@ -283,8 +283,13 @@ class _FakeMacOsPlugin extends fln.MacOSFlutterLocalNotificationsPlugin {
     bool critical = false,
     bool providesAppNotificationSettings = false,
   }) async {
-    permissionRequests.add(
-        {"sound": sound, "alert": alert, "badge": badge, "critical": critical});
+    permissionRequests.add({
+      "sound": sound,
+      "alert": alert,
+      "badge": badge,
+      "critical": critical,
+      "provisional": provisional,
+    });
     return true;
   }
 
@@ -1506,26 +1511,22 @@ void main() {
     expect(macos.initializations.last.notificationCategories, hasLength(2));
   });
 
-  test("Apple category refreshes do not repeat authorization requests",
+  test("Apple authorization is requested only by request_permissions",
       () async {
     debugDefaultTargetPlatformOverride = TargetPlatform.macOS;
     addTearDown(() => debugDefaultTargetPlatformOverride = null);
     final macos = _FakeMacOsPlugin();
     fln.FlutterLocalNotificationsPlatform.instance = macos;
-    final service = _makeService(properties: {
-      "request_alert_permission": false,
-      "request_sound_permission": true,
-      "request_badge_permission": false,
-      "request_critical_permission": true,
-    });
+    final service = _makeService();
     List<bool> flags(fln.DarwinInitializationSettings settings) => [
           settings.requestAlertPermission,
           settings.requestSoundPermission,
           settings.requestBadgePermission,
           settings.requestCriticalPermission,
+          settings.requestProvisionalPermission,
         ];
     expect(await _call(service, "initialize"), null);
-    expect(flags(macos.initializations.single), [false, true, false, true]);
+    expect(flags(macos.initializations.single), everyElement(isFalse));
     // The native Apple implementation returns false when no permission is requested.
     macos.initializationResult = false;
     for (final id in [1, 2]) {
@@ -1541,15 +1542,26 @@ void main() {
     }
     final categories = macos.initializations.last.notificationCategories;
     expect(categories, hasLength(2));
-    expect(await _call(service, "request_permissions"), isTrue);
+    expect(macos.permissionRequests, isEmpty);
+
+    expect(
+        await _call(service, "request_permissions", {
+          "alert": false,
+          "sound": true,
+          "badge": false,
+          "critical": true,
+          "provisional": true,
+        }),
+        isTrue);
     expect(macos.permissionRequests.single, {
       "alert": false,
       "sound": true,
       "badge": false,
       "critical": true,
+      "provisional": true,
     });
     expect(await _call(service, "initialize"), null);
-    expect(flags(macos.initializations.last), [false, true, false, true]);
+    expect(flags(macos.initializations.last), everyElement(isFalse));
     expect(macos.initializations.last.notificationCategories, categories);
   });
 
@@ -1748,14 +1760,14 @@ void main() {
       "payload": "",
       "actions": null,
       "options": {
-        "iOS": {
+        "ios": {
           "badge_number": 3,
           "subtitle": "sub",
           "thread_identifier": "thread1",
           "interruption_level": "passive",
           "sound": "chime",
         },
-        "macOS": {
+        "macos": {
           "badge_number": 1,
           "subtitle": "sub",
           "thread_identifier": "thread1",
