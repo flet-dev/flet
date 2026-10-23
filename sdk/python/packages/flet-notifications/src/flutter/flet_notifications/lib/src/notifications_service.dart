@@ -29,6 +29,7 @@ class LocalNotificationsService extends FletService {
   bool _initialized = false;
   bool _replaying = false;
   bool _launchReplayComplete = false;
+
   /// Live responses received before the launch replay finishes.
   ///
   /// Android can deliver the response that launched the app both live and through
@@ -329,7 +330,7 @@ class LocalNotificationsService extends FletService {
 
       case "request_exact_alarm_permission":
         final android = _androidPlugin;
-        if (android == null) return false;
+        if (android == null) return true;
         return await android.requestExactAlarmsPermission() ?? false;
 
       case "are_notifications_enabled":
@@ -611,13 +612,10 @@ class LocalNotificationsService extends FletService {
 
   Future<String> _createChannel(dynamic args) async {
     final android = _androidPlugin;
-    if (android == null) {
-      throw UnsupportedError("channels are Android-only");
-    }
+    if (android == null) return "ok";
     if (args is! Map) {
       throw const NotificationException.invalidChannel(
-        "channel must be a NotificationChannel",
-      );
+          "channel must be a NotificationChannel");
     }
     await android.createNotificationChannel(parseNotificationChannel(args));
     return "ok";
@@ -625,9 +623,7 @@ class LocalNotificationsService extends FletService {
 
   Future<String> _deleteChannel(dynamic args) async {
     final android = _androidPlugin;
-    if (android == null) {
-      throw UnsupportedError("channels are Android-only");
-    }
+    if (android == null) return "ok";
     final map = args as Map;
     final channelId = map["channel_id"] as String;
     await android.deleteNotificationChannel(channelId: channelId);
@@ -701,9 +697,7 @@ class LocalNotificationsService extends FletService {
 
   Future<String> _stopForegroundService() async {
     final android = _androidPlugin;
-    if (android == null) {
-      throw UnsupportedError("foreground service is Android-only");
-    }
+    if (android == null) return "ok";
     await android.stopForegroundService();
     return "ok";
   }
@@ -764,9 +758,7 @@ class LocalNotificationsService extends FletService {
 
   Future<String> _createChannelGroup(dynamic args) async {
     final android = _androidPlugin;
-    if (android == null) {
-      throw UnsupportedError("channel groups are Android-only");
-    }
+    if (android == null) return "ok";
     final map = args as Map;
     await android.createNotificationChannelGroup(
       fln.AndroidNotificationChannelGroup(
@@ -779,11 +771,10 @@ class LocalNotificationsService extends FletService {
   }
 
   Future<String> _deleteChannelGroup(dynamic args) async {
-    if (_androidPlugin == null) {
-      throw UnsupportedError("channel groups are Android-only");
-    }
+    final android = _androidPlugin;
+    if (android == null) return "ok";
     final map = args as Map;
-    await _androidPlugin!.deleteNotificationChannelGroup(
+    await android.deleteNotificationChannelGroup(
       groupId: map["group_id"] as String,
     );
     return "ok";

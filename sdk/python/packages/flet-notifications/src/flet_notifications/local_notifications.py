@@ -552,7 +552,7 @@ class LocalNotifications(ft.Service):
 
         Returns:
             Whether the Android backend reports exact alarms are allowed. Returns `True`
-            on non-Android platforms, where this Android check is not applied.
+            on non-Android platforms, where exact scheduling is not restricted.
 
         Raises:
             NotificationError: If the bridge reports initialization or operation
@@ -572,8 +572,9 @@ class LocalNotifications(ft.Service):
         from :meth:`request_permissions`.
 
         Returns:
-            Whether access is granted after the request. Returns `False` on non-Android
-            platforms. A grant does not create a scheduled notification.
+            Whether access is granted after the request. Returns `True` on non-Android
+            platforms, where exact scheduling is not restricted. A grant does not
+            create a scheduled notification.
 
         Raises:
             NotificationError: If the bridge reports initialization or operation
@@ -595,7 +596,7 @@ class LocalNotifications(ft.Service):
             Applies on Android 8.0+. Existing channel sound, vibration, lights, and
             importance cannot be reset through this call. See
             :class:`~flet_notifications.NotificationChannel` for creation-time settings.
-            Non-Android platforms report an unsupported operation.
+            Does nothing on other platforms, which have no channels.
 
         Args:
             channel: Channel declaration. Post notifications to it by passing its ID
@@ -613,9 +614,9 @@ class LocalNotifications(ft.Service):
         Delete an Android notification channel on Android 8.0+.
 
         Note:
-            Non-Android platforms report an unsupported operation. This does not cancel
-            pending schedules that still refer to the channel; cancel those separately
-            if they should no longer deliver notifications.
+            This does not cancel pending schedules that still refer to the channel;
+            cancel those separately if they should no longer deliver notifications.
+            Does nothing on other platforms, which have no channels.
 
         Args:
             channel_id: Identifier of the channel to delete.
@@ -721,8 +722,8 @@ class LocalNotifications(ft.Service):
 
         Note:
             Removes the service's foreground notification. It does not terminate Python
-            tasks you started; stop the associated application work yourself. Other
-            platforms report an unsupported operation.
+            tasks you started; stop the associated application work yourself. Does
+            nothing on other platforms, where no foreground service can run.
 
         Raises:
             NotificationError: If the bridge reports initialization or operation
@@ -873,8 +874,8 @@ class LocalNotifications(ft.Service):
         Note:
             Supported only on Android 8.0+. This is distinct from grouping displayed
             notifications with :attr:`flet_notifications.AndroidOptions.group`. Create
-            the group before creating channels that refer to its ID. Other platforms
-            report an unsupported operation.
+            the group before creating channels that refer to its ID. Does nothing on
+            other platforms, which have no channels.
 
         Args:
             group_id: Stable identifier for the channel group.
@@ -901,10 +902,9 @@ class LocalNotifications(ft.Service):
         Delete an Android notification-channel group and all its channels.
 
         Note:
-            Supported only on Android 8.0+; other platforms report an unsupported
-            operation.
-            This also removes channel configuration for the group's channels. Cancel
-            unwanted pending notifications separately.
+            Supported only on Android 8.0+. This also removes channel configuration for
+            the group's channels. Cancel unwanted pending notifications separately.
+            Does nothing on other platforms, which have no channels.
 
         Args:
             group_id: Identifier of the group to delete.

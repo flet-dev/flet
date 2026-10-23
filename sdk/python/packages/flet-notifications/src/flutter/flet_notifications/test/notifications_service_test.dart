@@ -993,22 +993,39 @@ void main() {
     }
   });
 
-  test("Android-only boolean methods retain their other-platform fallbacks",
+  test("Android-only methods answer for the platform or do nothing elsewhere",
       () async {
     debugDefaultTargetPlatformOverride = TargetPlatform.macOS;
     addTearDown(() => debugDefaultTargetPlatformOverride = null);
     fln.FlutterLocalNotificationsPlatform.instance = _FakeMacOsPlugin();
     final service = _makeService();
-    expect(
-        await service.invokeMethod("can_schedule_exact_notifications"), isTrue);
+    // Exact timing is never restricted elsewhere.
     for (final method in [
+      "can_schedule_exact_notifications",
       "request_exact_alarm_permission",
+    ]) {
+      expect(await service.invokeMethod(method), isTrue, reason: method);
+    }
+    // Full-screen intents and notification-policy access do not exist elsewhere.
+    for (final method in [
       "request_full_screen_intent",
       "has_notification_policy_access",
       "request_notification_policy_access"
     ]) {
       expect(await service.invokeMethod(method), isFalse, reason: method);
     }
+    expect(await service.invokeMethod("get_notification_channels"), isEmpty);
+    for (final (method, args) in [
+      ("create_notification_channel", {"id": "alerts", "name": "Alerts"}),
+      ("delete_notification_channel", {"channel_id": "alerts"}),
+      ("create_notification_channel_group", {"group_id": "g", "name": "G"}),
+      ("delete_notification_channel_group", {"group_id": "g"}),
+      ("stop_foreground_service", null),
+    ]) {
+      expect(await service.invokeMethod(method, args), "ok", reason: method);
+    }
+    expect(await service.invokeMethod("start_foreground_service", {"id": 1}),
+        startsWith("error:unsupported_platform:"));
   });
 
   test("show forwards style onto styleInformation", () async {
