@@ -707,7 +707,6 @@ docs:
         - services/notifications/types/darwininterruptionlevel.md
         - services/notifications/types/darwinoptions.md
         - services/notifications/types/datetimecomponents.md
-        - services/notifications/types/launchdetails.md
         - services/notifications/types/linuxnotificationcategory.md
         - services/notifications/types/linuxoptions.md
         - services/notifications/types/linuxurgency.md

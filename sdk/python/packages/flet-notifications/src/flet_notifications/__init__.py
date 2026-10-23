@@ -8,7 +8,6 @@ from flet_notifications.base import (
 from flet_notifications.channels import NotificationChannel
 from flet_notifications.events import (
     ActiveNotification,
-    LaunchDetails,
     PendingNotification,
 )
 from flet_notifications.local_notifications import LocalNotifications
@@ -90,7 +89,6 @@ __all__ = [
     "DarwinInterruptionLevel",
     "DarwinOptions",
     "DateTimeComponents",
-    "LaunchDetails",
     "LinuxNotificationCategory",
     "LinuxOptions",
     "LinuxUrgency",

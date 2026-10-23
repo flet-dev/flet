@@ -38,6 +38,7 @@ class _RecordingAndroid extends fln.AndroidFlutterLocalNotificationsPlugin {
   }
 
   fln.DidReceiveNotificationResponseCallback? onResponse;
+  void Function()? onLaunchDetailsQuery;
   int permissionRequests = 0;
   bool? permissionResult = true;
   int foregroundStarts = 0;
@@ -112,6 +113,7 @@ class _RecordingAndroid extends fln.AndroidFlutterLocalNotificationsPlugin {
       getNotificationAppLaunchDetails() async {
     _checkOperation();
     if (failQueries) throw StateError("Query unavailable");
+    onLaunchDetailsQuery?.call();
     return launchDetails;
   }
 
@@ -370,7 +372,6 @@ void main() {
       ),
       ("get_pending", null, "query_failed"),
       ("get_active", null, "query_failed"),
-      ("get_launch_details", null, "query_failed"),
       ("get_notification_channels", null, "channel_failed"),
       (
         "create_notification_channel",
@@ -649,6 +650,33 @@ void main() {
     expect(nextControl.events, [firstControl.events.first]);
   });
 
+  test("a launch response also delivered live during startup is emitted once",
+      () async {
+    SharedPreferences.setMockInitialValues({});
+    const response = fln.NotificationResponse(
+      id: 50,
+      payload: "cold launch",
+      notificationResponseType:
+          fln.NotificationResponseType.selectedNotification,
+    );
+    plugin.launchDetails = const fln.NotificationAppLaunchDetails(
+      true,
+      notificationResponse: response,
+    );
+    // Android delivers the launching tap live before launch details are read.
+    plugin.onLaunchDetailsQuery = () => plugin.onResponse!(response);
+    final control = _RecordingControl();
+    final service = _makeService(control: control);
+    expect(await service.invokeMethod("initialize"), "ok");
+    expect(control.events, hasLength(1));
+    expect(control.events.single["name"], "tap");
+
+    // A later tap with identical content is a new interaction and is delivered.
+    plugin.onLaunchDetailsQuery = null;
+    plugin.onResponse!(response);
+    expect(control.events, hasLength(2));
+  });
+
   test("reinitialization does not replay an already delivered live tap",
       () async {
     SharedPreferences.setMockInitialValues({});
@@ -765,7 +793,7 @@ void main() {
     }
   });
 
-  test("channel and launch queries return native collections", () async {
+  test("channel queries return native collections", () async {
     plugin.queriedChannels = [
       fln.AndroidNotificationChannel(
         "alerts",
@@ -805,39 +833,9 @@ void main() {
     plugin.queriedChannels = null;
     expect(await service.invokeMethod("get_notification_channels"), isEmpty);
 
-    expect(await service.invokeMethod("get_launch_details"),
-        {"did_notification_launch_app": false});
-    plugin.launchDetails = const fln.NotificationAppLaunchDetails(true);
-    expect(await service.invokeMethod("get_launch_details"),
-        {"did_notification_launch_app": true, "notification": null});
-    plugin.launchDetails = const fln.NotificationAppLaunchDetails(
-      true,
-      notificationResponse: fln.NotificationResponse(
-        id: 9,
-        actionId: "reply",
-        payload: "deep",
-        input: "Hello",
-        data: {"reply": "Hello"},
-        notificationResponseType:
-            fln.NotificationResponseType.selectedNotificationAction,
-      ),
-    );
-    expect(await service.invokeMethod("get_launch_details"), {
-      "did_notification_launch_app": true,
-      "notification": {
-        "id": 9,
-        "action_id": "reply",
-        "payload": "deep",
-        "input": "Hello",
-        "response_type": "action",
-        "data": {"reply": "Hello"}
-      },
-    });
     plugin.failQueries = true;
     expect(await service.invokeMethod("get_notification_channels"),
         startsWith("error:channel_failed:"));
-    expect(await service.invokeMethod("get_launch_details"),
-        startsWith("error:query_failed:"));
   });
 
   test("periodic intervals select presets or custom durations", () async {

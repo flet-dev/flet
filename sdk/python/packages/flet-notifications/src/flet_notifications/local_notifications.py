@@ -1,10 +1,8 @@
 from datetime import datetime, timedelta
 
 import flet as ft
-from flet.utils import from_dict
 from flet_notifications.actions import NotificationAction
 from flet_notifications.base import (
-    NotificationError,
     NotificationEvent,
     check_result,
     parse_query_list,
@@ -12,7 +10,6 @@ from flet_notifications.base import (
 from flet_notifications.channels import NotificationChannel
 from flet_notifications.events import (
     ActiveNotification,
-    LaunchDetails,
     PendingNotification,
 )
 from flet_notifications.options import NotificationOptions
@@ -157,9 +154,14 @@ class LocalNotifications(ft.Service):
     """
     Called when the user selects the notification body.
 
-    The event includes the notification ID and application payload. A response that
-    launched the app is replayed after initialization when launch details are available.
-    Full-screen Android notification launches also use this handler.
+    The event includes the notification ID and application payload. Full-screen
+    Android notification launches also use this handler.
+
+    Note:
+        When selecting a notification launches the app, this handler is called for it
+        once the service initializes, so set it when creating the service. It is
+        called once per launch; use it, for example, to route the app to the
+        notification's content.
     """
 
     on_action: ft.EventHandler[NotificationEvent["LocalNotifications"]] | None = None
@@ -170,13 +172,15 @@ class LocalNotifications(ft.Service):
     and :attr:`flet_notifications.NotificationEvent.input` for reply text.
 
     Note:
-        On Windows, the event's inherited `data` mapping contains reply values keyed
-        by :attr:`flet_notifications.NotificationAction.id`. For an action with the
-        ID `"reply"`, read `e.data["reply"]`. When exactly one value is returned,
-        :attr:`flet_notifications.NotificationEvent.input` also contains that text.
-
-        Background Android/iOS actions are queued and replayed on the next service
-        initialization; Python is not run in the background isolate.
+        - When an action launches the app, this handler is called for it once the
+          service initializes, as with :attr:`on_tap`.
+        - On Windows, the event's inherited `data` mapping contains reply values
+          keyed by :attr:`flet_notifications.NotificationAction.id`. For an action
+          with the ID `"reply"`, read `e.data["reply"]`. When exactly one value is
+          returned, :attr:`flet_notifications.NotificationEvent.input` also contains
+          that text.
+        - Background Android/iOS actions are queued and replayed on the next service
+          initialization; Python is not run in the background isolate.
     """
 
     on_dismiss: ft.EventHandler[NotificationEvent["LocalNotifications"]] | None = None
@@ -792,63 +796,6 @@ class LocalNotifications(ft.Service):
         return parse_query_list(
             await self._invoke_method("get_active"), ActiveNotification
         )
-
-    async def get_notification_app_launch_details(self) -> LaunchDetails:
-        """
-        Query whether a notification caused this application launch.
-
-        Note:
-            Use for initial routing or inspecting the launch payload. It does not
-            consume the response or suppress the automatic :attr:`on_tap` /
-            :attr:`on_action` replay, so avoid processing the same launch twice if you
-            use both mechanisms. Linux does not provide launch details through the
-            upstream plugin; other platforms may also return no details.
-
-        Returns:
-            Launch information, with `did_notification_launch_app=False` when the
-            backend supplies no notification launch. The response itself can be `None`
-            even when the launch flag is set.
-
-        Raises:
-            NotificationError: If the backend reports a failure or returns malformed
-                query data.
-        """
-        result = await self._invoke_method("get_launch_details")
-        check_result(result)
-        if not isinstance(result, dict):
-            raise NotificationError(
-                "query_failed", "Expected notification launch details"
-            )
-        launched = result.get("did_notification_launch_app", False)
-        if not isinstance(launched, bool):
-            raise NotificationError(
-                "query_failed", "Expected a boolean notification launch flag"
-            )
-        notification = result.get("notification")
-        if notification is None:
-            return LaunchDetails(did_notification_launch_app=launched)
-        if not isinstance(notification, dict):
-            raise NotificationError(
-                "query_failed", "Expected a notification response mapping"
-            )
-        try:
-            return LaunchDetails(
-                did_notification_launch_app=launched,
-                notification=from_dict(
-                    NotificationEvent,
-                    {
-                        **notification,
-                        "control": self,
-                        "name": {"action": "action", "dismissed": "dismiss"}.get(
-                            notification.get("response_type"), "tap"
-                        ),
-                    },
-                ),
-            )
-        except (TypeError, ValueError) as exc:
-            raise NotificationError(
-                "query_failed", f"Invalid notification launch response: {exc}"
-            ) from exc
 
     async def request_full_screen_intent_permission(self) -> bool:
         """

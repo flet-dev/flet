@@ -1,10 +1,7 @@
 from dataclasses import dataclass
 
-from flet_notifications.base import NotificationEvent
-
 __all__ = [
     "ActiveNotification",
-    "LaunchDetails",
     "PendingNotification",
 ]
 
@@ -70,26 +67,3 @@ class ActiveNotification:
 
     big_text: str = ""
     """Expanded Android big-text content, or an empty string when unavailable."""
-
-
-@dataclass
-class LaunchDetails:
-    """
-    Information about whether a notification launched the application.
-
-    Returned by
-    :meth:`flet_notifications.LocalNotifications.get_notification_app_launch_details`.
-    This describes the launch of the app, rather than the latest notification received
-    while the app was running.
-    """
-
-    did_notification_launch_app: bool = False
-    """Whether a notification caused the application to launch."""
-
-    notification: NotificationEvent | None = None
-    """
-    Response associated with the launch, when available.
-
-    Can be `None` when no notification launched the app or the platform cannot provide a
-    response. See :class:`flet_notifications.NotificationEvent`.
-    """

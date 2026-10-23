@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:convert';
 
 import 'package:flet/flet.dart';
 import 'package:flutter/foundation.dart' show debugPrint;
@@ -28,6 +29,11 @@ class LocalNotificationsService extends FletService {
   bool _initialized = false;
   bool _replaying = false;
   bool _launchReplayComplete = false;
+  /// Live responses received before the launch replay finishes.
+  ///
+  /// Android can deliver the response that launched the app both live and through
+  /// launch details, so a launch response already seen live is not replayed.
+  final Set<String> _liveResponsesBeforeLaunchReplay = {};
   Future<void>? _initFuture;
   // Desired categories are retained for retries; registered categories reflect
   // only the snapshot from the last successful native initialization.
@@ -167,10 +173,13 @@ class LocalNotificationsService extends FletService {
       final details = await _plugin?.getNotificationAppLaunchDetails();
       // Concurrent initialization may already have handled the startup response.
       if (_launchReplayComplete) return;
+      final response = details?.notificationResponse;
       if (details?.didNotificationLaunchApp == true &&
-          details?.notificationResponse != null) {
-        _emit(responseToEvent(details!.notificationResponse!));
+          response != null &&
+          !_liveResponsesBeforeLaunchReplay.contains(_responseKey(response))) {
+        _emit(responseToEvent(response));
       }
+      _liveResponsesBeforeLaunchReplay.clear();
       // Later activity intents can describe taps already delivered by callbacks.
       _launchReplayComplete = true;
     } catch (e) {
@@ -179,8 +188,15 @@ class LocalNotificationsService extends FletService {
   }
 
   void _handleResponse(fln.NotificationResponse response) {
+    if (!_launchReplayComplete) {
+      _liveResponsesBeforeLaunchReplay.add(_responseKey(response));
+    }
     _emit(responseToEvent(response));
   }
+
+  /// Identifies a response by the fields delivered to Python.
+  static String _responseKey(fln.NotificationResponse response) =>
+      jsonEncode(responseToEvent(response));
 
   void _emit(Map<String, Object?> event) {
     final type = event["response_type"];
@@ -219,10 +235,7 @@ class LocalNotificationsService extends FletService {
         "schedule" ||
         "periodically_show" =>
           NotificationErrorCode.scheduleFailed,
-        "get_pending" ||
-        "get_active" ||
-        "get_launch_details" =>
-          NotificationErrorCode.queryFailed,
+        "get_pending" || "get_active" => NotificationErrorCode.queryFailed,
         "create_notification_channel" ||
         "delete_notification_channel" ||
         "get_notification_channels" ||
@@ -327,9 +340,6 @@ class LocalNotificationsService extends FletService {
 
       case "get_active":
         return await _getActive();
-
-      case "get_launch_details":
-        return await _getLaunchDetails();
 
       case "request_full_screen_intent":
         return await _androidPlugin?.requestFullScreenIntentPermission() ??
@@ -750,18 +760,6 @@ class LocalNotificationsService extends FletService {
           },
         )
         .toList();
-  }
-
-  Future<Map<String, Object?>> _getLaunchDetails() async {
-    final details = await _plugin?.getNotificationAppLaunchDetails();
-    if (details == null || details.didNotificationLaunchApp != true) {
-      return {"did_notification_launch_app": false};
-    }
-    final response = details.notificationResponse;
-    return {
-      "did_notification_launch_app": true,
-      "notification": response == null ? null : responseToEvent(response),
-    };
   }
 
   Future<String> _createChannelGroup(dynamic args) async {

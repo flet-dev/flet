@@ -375,13 +375,6 @@ def main(page: ft.Page):
 
         guarded_async(_list, "get_active_notifications")
 
-    def check_launch(e):
-        async def _check():
-            details = await notifications.get_notification_app_launch_details()
-            log_line(f"launched by notification: {details.did_notification_launch_app}")
-
-        guarded_async(_check, "get_notification_app_launch_details")
-
     def check_policy(e):
         async def _check():
             granted = await notifications.has_notification_policy_access()
@@ -411,7 +404,6 @@ def main(page: ft.Page):
         ("all", "Are enabled", check_enabled),
         ("all", "Open settings", open_settings),
         ("all", "Active list", list_active),
-        ("all", "Launch details", check_launch),
         ("schedule_oneshot", "Schedule in 10s", schedule_delayed),
         ("schedule_recurring", "Schedule daily 08:30", schedule_daily),
         ("periodic", "Schedule hourly", schedule_hourly),
