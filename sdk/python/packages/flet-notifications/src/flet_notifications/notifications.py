@@ -30,6 +30,7 @@ from flet_notifications.types import (
 )
 from flet_notifications.validation import (
     validate_arguments,
+    validate_non_empty,
     validate_notification_id,
 )
 
@@ -732,9 +733,11 @@ class Notifications(ft.Service):
             channel_id: Identifier of the channel to delete.
 
         Raises:
+            NotificationInvalidArgumentError: If `channel_id` is empty.
             NotificationError: If the bridge reports initialization or operation
                 failure.
         """
+        validate_non_empty(channel_id=channel_id)
         await self._call("delete_notification_channel", {"channel_id": channel_id})
 
     async def get_notification_channels(self) -> list[NotificationChannel]:
@@ -1068,9 +1071,12 @@ class Notifications(ft.Service):
             description: Optional explanation of the group, supported on Android 9.0+.
 
         Raises:
+            NotificationInvalidArgumentError: If `group_id` is empty.
+            NotificationInvalidArgumentError: If `name` is empty.
             NotificationError: If the bridge reports initialization or operation
                 failure.
         """
+        validate_non_empty(group_id=group_id, name=name)
         await self._call(
             "create_notification_channel_group",
             {
@@ -1093,9 +1099,11 @@ class Notifications(ft.Service):
             group_id: Identifier of the group to delete.
 
         Raises:
+            NotificationInvalidArgumentError: If `group_id` is empty.
             NotificationError: If the bridge reports initialization or operation
                 failure.
         """
+        validate_non_empty(group_id=group_id)
         await self._call(
             "delete_notification_channel_group",
             {"group_id": group_id},

@@ -1,7 +1,8 @@
 import dataclasses
 from typing import Any
 
-from flet.utils.validation import validate
+import flet as ft
+from flet.utils.validation import FieldRule, V, validate
 from flet_notifications.base import NotificationInvalidArgumentError
 
 __all__ = []
@@ -47,3 +48,39 @@ def validate_notification_id(id: int) -> None:
         raise NotificationInvalidArgumentError(
             f"id must be between {-(2**31)} and {2**31 - 1}, got {id}"
         )
+
+
+def validate_non_empty(**values: str) -> None:
+    """
+    Check that string arguments aren't empty.
+
+    Raises:
+        NotificationInvalidArgumentError: Naming the first empty argument.
+    """
+    for name, value in values.items():
+        if not value:
+            raise NotificationInvalidArgumentError(f"{name} must be non-empty")
+
+
+def non_negative_duration(*special: int) -> FieldRule:
+    """
+    A `V` rule requiring a `DurationValue` field not to be negative.
+
+    Args:
+        special: Negative values, in milliseconds, the field also accepts, such
+            as `-1` for a platform default.
+    """
+
+    def check(instance: Any, field_name: str, value: Any) -> None:
+        if value is None:
+            return
+        milliseconds = (
+            value.in_milliseconds if isinstance(value, ft.Duration) else value
+        )
+        if milliseconds < 0 and milliseconds not in special:
+            allowed = "".join(f", except {s}" for s in special)
+            raise ValueError(
+                f"{field_name} must not be negative{allowed}, got {milliseconds} ms"
+            )
+
+    return V.field(check)

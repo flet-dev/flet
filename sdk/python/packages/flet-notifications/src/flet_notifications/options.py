@@ -15,6 +15,7 @@ from flet_notifications.types import (
     WindowsNotificationDuration,
     WindowsNotificationSound,
 )
+from flet_notifications.validation import non_negative_duration
 
 __all__ = [
     "AndroidGroup",
@@ -439,7 +440,7 @@ class AndroidOptions:
     :class:`flet_notifications.AndroidVisibility`.
     """
 
-    timeout_after: ft.DurationValue | None = None
+    timeout_after: Annotated[ft.DurationValue | None, non_negative_duration()] = None
     """
     Time after posting before Android cancels the notification.
 
@@ -510,7 +511,7 @@ class AndroidOptions:
     use only the notification ID, not this pair.
     """
 
-    led_on_duration: ft.DurationValue | None = None
+    led_on_duration: Annotated[ft.DurationValue | None, non_negative_duration()] = None
     """
     Time the notification LED remains on during each blink.
 
@@ -520,7 +521,7 @@ class AndroidOptions:
         the device controls the blinking pattern.
     """
 
-    led_off_duration: ft.DurationValue | None = None
+    led_off_duration: Annotated[ft.DurationValue | None, non_negative_duration()] = None
     """
     Time the notification LED remains off between blinks.
 
@@ -680,7 +681,7 @@ class LinuxOptions:
     urgency: LinuxUrgency | None = None
     """Urgency hint."""
 
-    timeout: ft.DurationValue | None = None
+    timeout: Annotated[ft.DurationValue | None, non_negative_duration(-1)] = None
     """
     Requested time to keep the notification visible.
 

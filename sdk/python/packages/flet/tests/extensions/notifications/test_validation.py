@@ -9,6 +9,7 @@ from flet_notifications import (
     AndroidOptions,
     AndroidProgress,
     DarwinOptions,
+    LinuxOptions,
     NotificationAction,
     NotificationChannel,
     NotificationInvalidArgumentError,
@@ -174,4 +175,66 @@ async def test_windows_progress_updates_are_validated(client_platform):
         await service.update_windows_progress(
             1, WindowsProgress(status="Downloading", value=5, max=4)
         )
+    service._invoke_method.assert_not_called()
+
+
+@pytest.mark.parametrize(
+    ("options", "message"),
+    [
+        (
+            NotificationOptions(android=AndroidOptions(timeout_after=-1)),
+            "AndroidOptions: timeout_after must not be negative, got -1 ms",
+        ),
+        (
+            NotificationOptions(
+                android=AndroidOptions(led_off_duration=ft.Duration(seconds=-1))
+            ),
+            "AndroidOptions: led_off_duration must not be negative, got -1000 ms",
+        ),
+        (
+            NotificationOptions(linux=LinuxOptions(timeout=-2)),
+            "LinuxOptions: timeout must not be negative, except -1, got -2 ms",
+        ),
+    ],
+)
+@pytest.mark.asyncio
+async def test_negative_durations_fail_before_the_call(options, message):
+    """Durations can't be negative, apart from documented special values."""
+    service = _service()
+    with pytest.raises(NotificationInvalidArgumentError, match=message):
+        await service.show(1, options=options)
+    service._invoke_method.assert_not_called()
+
+
+@pytest.mark.parametrize("timeout", [-1, 0, ft.Duration(seconds=5)])
+@pytest.mark.asyncio
+async def test_linux_timeout_special_values_reach_the_client(timeout):
+    """`-1` (the server's timeout) and `0` (no expiry) are valid Linux timeouts."""
+    service = _service()
+    await service.show(
+        1, options=NotificationOptions(linux=LinuxOptions(timeout=timeout))
+    )
+    service._invoke_method.assert_called_once()
+
+
+@pytest.mark.parametrize(
+    ("call", "message"),
+    [
+        (lambda n: n.delete_notification_channel(""), "channel_id"),
+        (
+            lambda n: n.create_notification_channel_group("", name="Group"),
+            "group_id",
+        ),
+        (lambda n: n.create_notification_channel_group("g", name=""), "name"),
+        (lambda n: n.delete_notification_channel_group(""), "group_id"),
+    ],
+)
+@pytest.mark.asyncio
+async def test_empty_channel_and_group_ids_fail_before_the_call(call, message):
+    """Channel and group methods need non-empty IDs and names."""
+    service = _service()
+    with pytest.raises(
+        NotificationInvalidArgumentError, match=f"{message} must be non-empty"
+    ):
+        await call(service)
     service._invoke_method.assert_not_called()
