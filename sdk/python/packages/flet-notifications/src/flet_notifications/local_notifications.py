@@ -364,9 +364,9 @@ class LocalNotifications(ft.Service):
         Note:
             - Supported on Android, iOS, macOS, and Windows. Windows delivers once,
               ignoring `match_components`.
-            - On Android, delivery needs the scheduled-notification receiver, and
-              restoring schedules after a reboot also needs the boot receiver; see the
-              [Android setup](https://flet.dev/docs/services/notifications#android).
+            - On Android, schedules are restored after a reboot or an app update,
+              through the `RECEIVE_BOOT_COMPLETED` permission flet-notifications adds
+              by default.
             - iOS keeps at most 64 pending notifications per app. Check
               :meth:`get_pending_notifications` when scheduling many.
 
@@ -464,9 +464,9 @@ class LocalNotifications(ft.Service):
             - The first delivery is one interval after this call, not immediately.
             - Supported on Android, iOS, and macOS. Actual timing is subject to the
               system's power management and alarm policies.
-            - On Android, delivery needs the scheduled-notification receiver, and
-              restoring schedules after a reboot also needs the boot receiver; see the
-              [Android setup](https://flet.dev/docs/services/notifications#android).
+            - On Android, schedules are restored after a reboot or an app update,
+              through the `RECEIVE_BOOT_COMPLETED` permission flet-notifications adds
+              by default.
 
         Args:
             id: Notification identifier. Reuse it to update the same notification;

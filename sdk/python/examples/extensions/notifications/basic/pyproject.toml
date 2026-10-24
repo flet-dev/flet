@@ -24,12 +24,3 @@ features = ["notification permissions", "local notifications", "notification tap
 org = "dev.flet"
 company = "Flet"
 copyright = "Copyright (C) 2023-2026 by Flet"
-
-[tool.flet.android]
-gradle_dependencies = 'coreLibraryDesugaring("com.android.tools:desugar_jdk_libs:2.1.4")'
-
-[tool.flet.android.compile_options]
-isCoreLibraryDesugaringEnabled = "true"
-
-[tool.flet.android.permission]
-POST_NOTIFICATIONS = true

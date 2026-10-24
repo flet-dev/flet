@@ -21,6 +21,8 @@ Issues = "https://github.com/flet-dev/flet/issues"
 "flutter.flet_notifications" = [
     "pubspec.yaml",
     "lib/**",
+    "android/**",
+    "flet-extension.toml",
 ]
 
 [build-system]

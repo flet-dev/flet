@@ -221,7 +221,7 @@ class AndroidScheduleMode(Enum):
 
       ```toml
       [tool.flet.android.permission]
-      SCHEDULE_EXACT_ALARM = true
+      "android.permission.SCHEDULE_EXACT_ALARM" = true
       ```
 
     - On Android 14+, the access is off until the user turns it on in system
@@ -581,7 +581,7 @@ class AndroidForegroundServiceType(Enum):
     exported = false
 
     [tool.flet.android.permission]
-    FOREGROUND_SERVICE = true
+    "android.permission.FOREGROUND_SERVICE" = true
     ```
 
     Do not repeat a TOML table header when combining examples. When using more than one
@@ -614,8 +614,8 @@ class AndroidForegroundServiceType(Enum):
     foregroundServiceType = "camera"
 
     [tool.flet.android.permission]
-    FOREGROUND_SERVICE_CAMERA = true
-    CAMERA = true
+    "android.permission.FOREGROUND_SERVICE_CAMERA" = true
+    "android.permission.CAMERA" = true
     ```
 
     Note:
@@ -641,8 +641,8 @@ class AndroidForegroundServiceType(Enum):
     foregroundServiceType = "connectedDevice"
 
     [tool.flet.android.permission]
-    FOREGROUND_SERVICE_CONNECTED_DEVICE = true
-    BLUETOOTH_CONNECT = true
+    "android.permission.FOREGROUND_SERVICE_CONNECTED_DEVICE" = true
+    "android.permission.BLUETOOTH_CONNECT" = true
     ```
 
     Note:
@@ -673,7 +673,7 @@ class AndroidForegroundServiceType(Enum):
     foregroundServiceType = "dataSync"
 
     [tool.flet.android.permission]
-    FOREGROUND_SERVICE_DATA_SYNC = true
+    "android.permission.FOREGROUND_SERVICE_DATA_SYNC" = true
     ```
 
     Note:
@@ -700,8 +700,8 @@ class AndroidForegroundServiceType(Enum):
     foregroundServiceType = "health"
 
     [tool.flet.android.permission]
-    FOREGROUND_SERVICE_HEALTH = true
-    ACTIVITY_RECOGNITION = true
+    "android.permission.FOREGROUND_SERVICE_HEALTH" = true
+    "android.permission.ACTIVITY_RECOGNITION" = true
     ```
 
     This example is for activity recognition. Obtain the `ACTIVITY_RECOGNITION` runtime
@@ -735,9 +735,9 @@ class AndroidForegroundServiceType(Enum):
     foregroundServiceType = "location"
 
     [tool.flet.android.permission]
-    FOREGROUND_SERVICE_LOCATION = true
-    ACCESS_COARSE_LOCATION = true
-    ACCESS_FINE_LOCATION = true
+    "android.permission.FOREGROUND_SERVICE_LOCATION" = true
+    "android.permission.ACCESS_COARSE_LOCATION" = true
+    "android.permission.ACCESS_FINE_LOCATION" = true
     ```
 
     The user must enable device location services and grant coarse or fine location
@@ -767,7 +767,7 @@ class AndroidForegroundServiceType(Enum):
     foregroundServiceType = "mediaPlayback"
 
     [tool.flet.android.permission]
-    FOREGROUND_SERVICE_MEDIA_PLAYBACK = true
+    "android.permission.FOREGROUND_SERVICE_MEDIA_PLAYBACK" = true
     ```
 
     Note:
@@ -792,7 +792,7 @@ class AndroidForegroundServiceType(Enum):
     foregroundServiceType = "mediaProjection"
 
     [tool.flet.android.permission]
-    FOREGROUND_SERVICE_MEDIA_PROJECTION = true
+    "android.permission.FOREGROUND_SERVICE_MEDIA_PROJECTION" = true
     ```
 
     Note:
@@ -820,8 +820,8 @@ class AndroidForegroundServiceType(Enum):
     foregroundServiceType = "microphone"
 
     [tool.flet.android.permission]
-    FOREGROUND_SERVICE_MICROPHONE = true
-    RECORD_AUDIO = true
+    "android.permission.FOREGROUND_SERVICE_MICROPHONE" = true
+    "android.permission.RECORD_AUDIO" = true
     ```
 
     Note:
@@ -848,8 +848,8 @@ class AndroidForegroundServiceType(Enum):
     foregroundServiceType = "phoneCall"
 
     [tool.flet.android.permission]
-    FOREGROUND_SERVICE_PHONE_CALL = true
-    MANAGE_OWN_CALLS = true
+    "android.permission.FOREGROUND_SERVICE_PHONE_CALL" = true
+    "android.permission.MANAGE_OWN_CALLS" = true
     ```
 
     This example is for a self-managed calling app using Android's `ConnectionService`
@@ -878,7 +878,7 @@ class AndroidForegroundServiceType(Enum):
     foregroundServiceType = "remoteMessaging"
 
     [tool.flet.android.permission]
-    FOREGROUND_SERVICE_REMOTE_MESSAGING = true
+    "android.permission.FOREGROUND_SERVICE_REMOTE_MESSAGING" = true
     ```
 
     Note:
@@ -935,7 +935,7 @@ class AndroidForegroundServiceType(Enum):
     "android.app.PROPERTY_SPECIAL_USE_FGS_SUBTYPE" = "Describe the service's actual work"
 
     [tool.flet.android.permission]
-    FOREGROUND_SERVICE_SPECIAL_USE = true
+    "android.permission.FOREGROUND_SERVICE_SPECIAL_USE" = true
     ```
 
     Note:
@@ -962,7 +962,7 @@ class AndroidForegroundServiceType(Enum):
     foregroundServiceType = "systemExempted"
 
     [tool.flet.android.permission]
-    FOREGROUND_SERVICE_SYSTEM_EXEMPTED = true
+    "android.permission.FOREGROUND_SERVICE_SYSTEM_EXEMPTED" = true
     ```
 
     Note:

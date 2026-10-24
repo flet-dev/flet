@@ -1,0 +1,7 @@
+# flutter_local_notifications uses Java APIs that need core library desugaring
+# in the app module, even in apps that never schedule a notification.
+[android]
+gradle_dependencies = 'coreLibraryDesugaring("com.android.tools:desugar_jdk_libs:2.1.4")'
+
+[android.compile_options]
+isCoreLibraryDesugaringEnabled = "true"

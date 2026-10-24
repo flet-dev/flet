@@ -19,6 +19,13 @@ dependencies:
   flet:
     path: ../../../../../../../packages/flet
 
+flutter:
+  plugin:
+    platforms:
+      android:
+        package: dev.flet.flet_notifications
+        pluginClass: FletNotificationsPlugin
+
 dev_dependencies:
   flutter_test:
     sdk: flutter

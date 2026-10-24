@@ -44,62 +44,22 @@ The following sections describe the configuration required for each platform.
 
 ### Android
 
-Configure the native dependency, compile option, permissions, and receivers in
-your app's `pyproject.toml` before building:
+No configuration is needed. The extension adds the receivers that deliver
+action buttons and scheduled notifications, and restore schedules after a reboot
+or an app update, to your app's manifest, with the `POST_NOTIFICATIONS`,
+`VIBRATE` and `RECEIVE_BOOT_COMPLETED` permissions. [`flet build`](../../cli/flet-build.md)
+also enables the core library desugaring the notifications plugin requires,
+through the extension's [build settings](../../extend/user-extensions.md#build-settings).
 
-<Tabs groupId="pyproject-toml">
-<TabItem value="pyproject-toml" label="pyproject.toml">
-```toml
-[tool.flet.android]
-gradle_dependencies = '''
-coreLibraryDesugaring("com.android.tools:desugar_jdk_libs:2.1.4")
-''' # (1)!
-
-[tool.flet.android.compile_options]
-isCoreLibraryDesugaringEnabled = "true" # (2)!
-
-[tool.flet.android.permission]
-POST_NOTIFICATIONS = true # (3)!
-VIBRATE = true # (4)!
-RECEIVE_BOOT_COMPLETED = true # (5)!
-
-[tool.flet.android.receiver."com.dexterous.flutterlocalnotifications.ActionBroadcastReceiver"]
-exported = false # (6)!
-
-[tool.flet.android.receiver."com.dexterous.flutterlocalnotifications.ScheduledNotificationReceiver"]
-exported = false # (7)!
-
-[tool.flet.android.receiver."com.dexterous.flutterlocalnotifications.ScheduledNotificationBootReceiver"]
-exported = false # (8)!
-
-[[tool.flet.android.receiver."com.dexterous.flutterlocalnotifications.ScheduledNotificationBootReceiver".intent_filter]]
-actions = [ # (9)!
-    "android.intent.action.BOOT_COMPLETED",
-    "android.intent.action.MY_PACKAGE_REPLACED",
-    "android.intent.action.QUICKBOOT_POWERON",
-    "com.htc.intent.action.QUICKBOOT_POWERON",
-]
-```
-
-1. Adds the Java compatibility library used by the notifications plugin's scheduling implementation.
-2. Enables core-library desugaring so those Java APIs work on older Android versions. The plugin requires this together with the dependency above, even if the app does not schedule notifications.
-3. Allows notification permission requests on Android 13+. Request permission at runtime with [`request_permissions()`][flet_notifications.LocalNotifications.request_permissions].
-4. Allows notification vibration.
-5. Lets scheduled notifications be restored after a reboot.
-6. Registers the receiver that handles notification action buttons and triggers [`on_action`][flet_notifications.LocalNotifications.on_action]. It is needed when using [`NotificationAction`][flet_notifications.NotificationAction]. `exported = false` keeps it private to the app.
-7. Registers the receiver that delivers scheduled notifications. Include it when using [`schedule()`][flet_notifications.LocalNotifications.schedule] or [`periodically_show()`][flet_notifications.LocalNotifications.periodically_show]. For on-time delivery with an exact schedule mode, see [`AndroidScheduleMode`][flet_notifications.AndroidScheduleMode].
-8. Registers the receiver that restores scheduled notifications after reboot or app updates. A non-exported receiver can still receive the system broadcasts listed below.
-9. Subscribes the boot receiver to normal boot, app replacement, and device-specific quick-boot events.
-</TabItem>
-</Tabs>
+Some features need permissions only your app can decide to request:
+exact schedules (see [`AndroidScheduleMode`][flet_notifications.AndroidScheduleMode]),
+full-screen notifications (see [`AndroidOptions.full_screen_intent`][flet_notifications.AndroidOptions.full_screen_intent]),
+and foreground services (see [`start_foreground_service()`][flet_notifications.LocalNotifications.start_foreground_service]).
 
 See also:
 
 - [Android publishing guide](../../publish/android.md)
-- [Android Java compile options](../../publish/android.md#java-compile-options)
-- [Android Gradle dependencies](../../publish/android.md#gradle-dependencies)
 - [Android permissions](../../publish/android.md#permissions)
-- [Android Receiver configuration](../../publish/android.md#receivers)
 - [Android Resources](../../publish/android.md#resources)
 
 ### Web

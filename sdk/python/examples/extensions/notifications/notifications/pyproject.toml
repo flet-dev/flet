@@ -25,31 +25,5 @@ org = "dev.flet"
 company = "Flet"
 copyright = "Copyright (C) 2023-2026 by Flet"
 
-[tool.flet.android]
-gradle_dependencies = 'coreLibraryDesugaring("com.android.tools:desugar_jdk_libs:2.1.4")'
-
-[tool.flet.android.compile_options]
-isCoreLibraryDesugaringEnabled = "true"
-
 [tool.flet.android.permission]
-POST_NOTIFICATIONS = true
-VIBRATE = true
-RECEIVE_BOOT_COMPLETED = true
-SCHEDULE_EXACT_ALARM = true
-
-[tool.flet.android.receiver."com.dexterous.flutterlocalnotifications.ActionBroadcastReceiver"]
-exported = false
-
-[tool.flet.android.receiver."com.dexterous.flutterlocalnotifications.ScheduledNotificationReceiver"]
-exported = false
-
-[tool.flet.android.receiver."com.dexterous.flutterlocalnotifications.ScheduledNotificationBootReceiver"]
-exported = false
-
-[[tool.flet.android.receiver."com.dexterous.flutterlocalnotifications.ScheduledNotificationBootReceiver".intent_filter]]
-actions = [
-    "android.intent.action.BOOT_COMPLETED",
-    "android.intent.action.MY_PACKAGE_REPLACED",
-    "android.intent.action.QUICKBOOT_POWERON",
-    "com.htc.intent.action.QUICKBOOT_POWERON",
-]
+"android.permission.SCHEDULE_EXACT_ALARM" = true
