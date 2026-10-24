@@ -235,6 +235,19 @@ def test_instance_of_supports_optional_none_and_expected_types():
     validate(Sample(value=5))
 
 
+def test_rules_allow_none_for_pipe_optional_annotations():
+    """Ensure rules allow `None` when the field annotation is written `T | None`."""
+
+    @dataclass
+    class Sample:
+        count: Annotated[int | None, V.ge(0)] = None
+
+    validate(Sample(count=None))
+    validate(Sample(count=1))
+    with pytest.raises(ValueError, match="count must be greater than or equal to 0"):
+        validate(Sample(count=-1))
+
+
 def test_instance_of_reports_default_type_errors():
     """Validate default type error formatting for `V.instance_of()` tuples."""
 
