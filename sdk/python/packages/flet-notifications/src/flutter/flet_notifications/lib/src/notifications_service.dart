@@ -2,7 +2,7 @@ import 'dart:async';
 import 'dart:convert';
 
 import 'package:flet/flet.dart';
-import 'package:flutter/foundation.dart' show debugPrint;
+import 'package:flutter/foundation.dart' show debugPrint, visibleForTesting;
 import 'package:flutter/services.dart' show PlatformException;
 import 'package:flutter_local_notifications/flutter_local_notifications.dart'
     as fln;
@@ -28,6 +28,9 @@ class LocalNotificationsService extends FletService {
 
   fln.FlutterLocalNotificationsPlugin? _plugin;
   bool _initialized = false;
+
+  /// The [_initializationProperties] of the last successful initialization.
+  Object? _appliedInitializationProperties;
   String? _initializationError;
   bool _replaying = false;
   bool _launchReplayComplete = false;
@@ -51,9 +54,47 @@ class LocalNotificationsService extends FletService {
   }
 
   @override
+  void update() {
+    if (_initializationProperties != _appliedInitializationProperties) {
+      unawaited(_applyChangedInitializationProperties());
+    }
+  }
+
+  @override
   void dispose() {
     control.removeInvokeMethodListener(invokeMethod);
     super.dispose();
+  }
+
+  /// Service properties the native backend is initialized with.
+  ///
+  /// Other property changes, such as setting an event handler, need no
+  /// reinitialization.
+  (String?, String?, String?, String?) get _initializationProperties => (
+        control.getString("default_icon"),
+        control.getString("app_name"),
+        control.getString("app_user_model_id"),
+        control.getString("windows_guid"),
+      );
+
+  /// Reinitializes the backend with changed initialization properties.
+  ///
+  /// A running initialization finishes first; a backend that never initialized
+  /// picks up the new properties on its next retry instead.
+  Future<void> _applyChangedInitializationProperties() async {
+    await _initFuture;
+    if (_appliedInitializationProperties == null ||
+        _initializationProperties == _appliedInitializationProperties) {
+      return;
+    }
+    await _ensureInitialized(force: true);
+  }
+
+  /// Initializes the backend again, failing as the next method call would.
+  @visibleForTesting
+  Future<void> reinitialize() async {
+    await _ensureInitialized(force: true);
+    _throwIfNotInitialized();
   }
 
   /// Idempotent initialization. Concurrent callers await the same future, so
@@ -66,6 +107,7 @@ class LocalNotificationsService extends FletService {
   }
 
   Future<void> _initializeBackend() async {
+    final properties = _initializationProperties;
     try {
       final categories =
           Map<int, fln.DarwinNotificationCategory>.of(_darwinCategories);
@@ -83,6 +125,7 @@ class LocalNotificationsService extends FletService {
             "notification backend initialization returned $result");
       }
       if (isApplePlatform()) _registeredDarwinCategories = categories;
+      _appliedInitializationProperties = properties;
     } catch (_) {
       _initialized = false;
       rethrow;
@@ -200,10 +243,8 @@ class LocalNotificationsService extends FletService {
   }
 
   Future<dynamic> invokeMethod(String name, [dynamic args]) async {
-    if (name != "initialize") {
-      await _ensureInitialized();
-      _throwIfNotInitialized();
-    }
+    await _ensureInitialized();
+    _throwIfNotInitialized();
     try {
       return await _dispatch(name, args);
     } on NotificationException {
@@ -236,11 +277,6 @@ class LocalNotificationsService extends FletService {
 
   Future<dynamic> _dispatch(String name, dynamic args) async {
     switch (name) {
-      case "initialize":
-        await _ensureInitialized(force: true);
-        _throwIfNotInitialized();
-        return null;
-
       case "show":
         return await _show(args);
 

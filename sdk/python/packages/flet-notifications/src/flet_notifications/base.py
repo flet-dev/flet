@@ -98,8 +98,8 @@ class NotificationInitializationError(NotificationError):
     """
     Raised when the notification backend could not initialize.
 
-    The message describes the cause. Call
-    :meth:`flet_notifications.LocalNotifications.initialize` to retry.
+    The message describes the cause. The service retries the initialization on the
+    next method call.
     """
 
 

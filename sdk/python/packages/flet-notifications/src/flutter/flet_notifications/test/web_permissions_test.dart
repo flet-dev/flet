@@ -94,6 +94,17 @@ Future<Object?> _call(LocalNotificationsService service, String method,
   }
 }
 
+/// Reinitializes [service] and returns `null`, or for a failure the text Flet
+/// reports to Python, as [_call] does.
+Future<Object?> _reinitialize(LocalNotificationsService service) async {
+  try {
+    await service.reinitialize();
+    return null;
+  } on NotificationException catch (e) {
+    return e.toString();
+  }
+}
+
 void main() {
   TestWidgetsFlutterBinding.ensureInitialized();
 
@@ -288,7 +299,7 @@ void main() {
         () async {
       final control = _RecordingControl();
       final service = _service(control: control);
-      expect(await _call(service, 'initialize'), null);
+      expect(await _reinitialize(service), null);
       final plugin =
           fln.FlutterLocalNotificationsPlatform.instance as _WebPlugin;
       plugin.onResponse!(fln.NotificationResponse(

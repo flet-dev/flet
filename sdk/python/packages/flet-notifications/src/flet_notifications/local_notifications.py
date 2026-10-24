@@ -38,8 +38,11 @@ class LocalNotifications(ft.Service):
 
     Create one service per page and keep its reference for sending notifications and
     handling responses. It registers with the page automatically and does not need to be
-    added to the page's visual controls. Initialization occurs when the service reaches
-    the client; method calls wait for it to finish.
+    added to the page's visual controls. The native backend initializes when the
+    service reaches the client, and method calls wait for it to finish. Changing
+    :attr:`default_icon`, :attr:`app_name`, :attr:`app_user_model_id`, or
+    :attr:`windows_guid` initializes it again with the new values; a failed
+    initialization is retried on the next method call.
 
     Note:
         Feature support varies: rich styles, progress, and grouping are
@@ -176,21 +179,6 @@ class LocalNotifications(ft.Service):
             return await self._invoke_method(method_name, arguments, timeout=timeout)
         except RuntimeError as e:
             raise error_from_bridge(str(e)) from None
-
-    async def initialize(self) -> None:
-        """
-        Initialize or reinitialize the native notification backend.
-
-        The service initializes automatically, and other methods wait for that
-        initialization. Call explicitly to retry a failed initialization or apply
-        changed initialization properties. Initialization never requests permission;
-        see :meth:`request_permissions`.
-
-        Raises:
-            NotificationError: If the bridge reports initialization or operation
-                failure.
-        """
-        await self._call("initialize")
 
     async def show(
         self,

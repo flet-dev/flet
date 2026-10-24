@@ -49,6 +49,7 @@ class _RecordingAndroid extends fln.AndroidFlutterLocalNotificationsPlugin {
   bool failInitialization = false;
   Completer<void>? initializationStarted;
   Future<void>? initializationGate;
+  fln.AndroidInitializationSettings? lastInitializationSettings;
   fln.AndroidServiceStartType? lastStartType;
   Set<fln.AndroidServiceForegroundType>? lastForegroundServiceTypes;
 
@@ -61,6 +62,7 @@ class _RecordingAndroid extends fln.AndroidFlutterLocalNotificationsPlugin {
         onDidReceiveBackgroundNotificationResponse,
   }) async {
     initializations++;
+    lastInitializationSettings = settings;
     initializationStarted?.complete();
     if (initializationGate != null) await initializationGate;
     if (failInitialization) throw StateError("initialization failed");
@@ -338,6 +340,17 @@ Future<Object?> _call(LocalNotificationsService service, String method,
   }
 }
 
+/// Reinitializes [service] and returns `null`, or for a failure the text Flet
+/// reports to Python, as [_call] does.
+Future<Object?> _reinitialize(LocalNotificationsService service) async {
+  try {
+    await service.reinitialize();
+    return null;
+  } on NotificationException catch (e) {
+    return e.toString();
+  }
+}
+
 LocalNotificationsService _makeService(
     {Map<String, dynamic>? properties, Control? control}) {
   if (control != null) return LocalNotificationsService(control: control);
@@ -364,6 +377,65 @@ void main() {
     fln.FlutterLocalNotificationsPlatform.instance = plugin;
   });
 
+  test("changing an initialization property reinitializes with the new value",
+      () async {
+    final service = _makeService(properties: {"default_icon": "ic_old"});
+    expect(await _call(service, "cancel_all"), null);
+    expect(plugin.initializations, 1);
+    expect(plugin.lastInitializationSettings!.defaultIcon, "ic_old");
+
+    // Other properties, such as event handlers, need no reinitialization.
+    service.control.properties["on_tap"] = true;
+    service.update();
+    await pumpEventQueue();
+    expect(plugin.initializations, 1);
+
+    service.control.properties["default_icon"] = "ic_new";
+    service.update();
+    await pumpEventQueue();
+    expect(plugin.initializations, 2);
+    expect(plugin.lastInitializationSettings!.defaultIcon, "ic_new");
+  });
+
+  test("a property change during initialization is applied once it finishes",
+      () async {
+    final gate = Completer<void>();
+    plugin.initializationStarted = Completer<void>();
+    plugin.initializationGate = gate.future;
+    final service = _makeService(properties: {"default_icon": "ic_old"});
+    final pending = _call(service, "cancel_all");
+    await plugin.initializationStarted!.future;
+
+    service.control.properties["default_icon"] = "ic_new";
+    service.update();
+    plugin.initializationGate = null;
+    gate.complete();
+    expect(await pending, null);
+    await pumpEventQueue();
+    expect(plugin.initializations, 2);
+    expect(plugin.lastInitializationSettings!.defaultIcon, "ic_new");
+  });
+
+  test("a failed backend picks up changed properties on its next retry",
+      () async {
+    plugin.failInitialization = true;
+    final service = _makeService(properties: {"default_icon": "ic_old"});
+    expect(await _call(service, "cancel_all"),
+        startsWith("initialization_failed: "));
+    expect(plugin.initializations, 1);
+
+    service.control.properties["default_icon"] = "ic_new";
+    service.update();
+    await pumpEventQueue();
+    // No extra attempt: the next method call retries.
+    expect(plugin.initializations, 1);
+
+    plugin.failInitialization = false;
+    expect(await _call(service, "cancel_all"), null);
+    expect(plugin.initializations, 2);
+    expect(plugin.lastInitializationSettings!.defaultIcon, "ic_new");
+  });
+
   test(
       "platform errors keep their code, and denied exact alarms are permissions",
       () async {
@@ -384,7 +456,7 @@ void main() {
   test("dispatcher distinguishes unsupported operations from native failures",
       () async {
     final service = _makeService();
-    expect(await _call(service, "initialize"), null);
+    expect(await _reinitialize(service), null);
     final operations = <(String, Map<String, Object?>?, String)>[
       ("show", {"id": 4}, "operation_failed"),
       (
@@ -554,8 +626,8 @@ void main() {
     plugin.initializationResult = false;
     final service = _makeService();
     final results = Future.wait([
-      _call(service, "initialize"),
-      _call(service, "initialize"),
+      _reinitialize(service),
+      _reinitialize(service),
       _call(service, "show", {"id": 1}),
     ]);
     await started.future;
@@ -573,10 +645,9 @@ void main() {
   test("failed forced reinitialization clears the previous ready state",
       () async {
     final service = _makeService();
-    expect(await _call(service, "initialize"), null);
+    expect(await _reinitialize(service), null);
     plugin.initializationResult = false;
-    expect(await _call(service, "initialize"),
-        startsWith("initialization_failed: "));
+    expect(await _reinitialize(service), startsWith("initialization_failed: "));
     expect(await _call(service, "show", {"id": 1}),
         startsWith("initialization_failed: "));
     expect(plugin.shown, isEmpty);
@@ -591,7 +662,7 @@ void main() {
     final macos = _FakeMacOsPlugin()..initializationResult = false;
     fln.FlutterLocalNotificationsPlatform.instance = macos;
     final service = _makeService();
-    expect(await _call(service, "initialize"), null);
+    expect(await _reinitialize(service), null);
     expect(
         await _call(service, "show", {
           "id": 1,
@@ -625,7 +696,7 @@ void main() {
     final macos = _FakeMacOsPlugin();
     fln.FlutterLocalNotificationsPlatform.instance = macos;
     final service = _makeService();
-    expect(await _call(service, "initialize"), null);
+    expect(await _reinitialize(service), null);
     macos.failInitialization = true;
     expect(
         await _call(service, "show", {
@@ -667,11 +738,11 @@ void main() {
     final firstService = _makeService(control: firstControl);
     expect(
         await Future.wait([
-          _call(firstService, "initialize"),
-          _call(firstService, "initialize"),
+          _reinitialize(firstService),
+          _reinitialize(firstService),
         ]),
         [null, null]);
-    expect(await _call(firstService, "initialize"), null);
+    expect(await _reinitialize(firstService), null);
     expect(firstControl.events, hasLength(1));
     expect(firstControl.events.single["name"], "action");
 
@@ -682,7 +753,7 @@ void main() {
 
     final nextControl = _RecordingControl();
     final nextService = _makeService(control: nextControl);
-    expect(await _call(nextService, "initialize"), null);
+    expect(await _reinitialize(nextService), null);
     expect(nextControl.events, [firstControl.events.first]);
   });
 
@@ -703,7 +774,7 @@ void main() {
     plugin.onLaunchDetailsQuery = () => plugin.onResponse!(response);
     final control = _RecordingControl();
     final service = _makeService(control: control);
-    expect(await _call(service, "initialize"), null);
+    expect(await _reinitialize(service), null);
     expect(control.events, hasLength(1));
     expect(control.events.single["name"], "tap");
 
@@ -718,7 +789,7 @@ void main() {
     SharedPreferences.setMockInitialValues({});
     final control = _RecordingControl();
     final service = _makeService(control: control);
-    expect(await _call(service, "initialize"), null);
+    expect(await _reinitialize(service), null);
     expect(control.events, isEmpty);
 
     const response = fln.NotificationResponse(
@@ -733,7 +804,7 @@ void main() {
       true,
       notificationResponse: response,
     );
-    expect(await _call(service, "initialize"), null);
+    expect(await _reinitialize(service), null);
     expect(control.events, hasLength(1));
   });
 
@@ -1525,7 +1596,7 @@ void main() {
           settings.requestCriticalPermission,
           settings.requestProvisionalPermission,
         ];
-    expect(await _call(service, "initialize"), null);
+    expect(await _reinitialize(service), null);
     expect(flags(macos.initializations.single), everyElement(isFalse));
     // The native Apple implementation returns false when no permission is requested.
     macos.initializationResult = false;
@@ -1560,7 +1631,7 @@ void main() {
       "critical": true,
       "provisional": true,
     });
-    expect(await _call(service, "initialize"), null);
+    expect(await _reinitialize(service), null);
     expect(flags(macos.initializations.last), everyElement(isFalse));
     expect(macos.initializations.last.notificationCategories, categories);
   });
@@ -1587,7 +1658,7 @@ void main() {
     expect(
         categories.map((c) => c.actions.single.identifier), ["open1", "open2"]);
 
-    expect(await _call(service, "initialize"), null);
+    expect(await _reinitialize(service), null);
     expect(macos.initializations.last.notificationCategories, categories);
 
     expect(
@@ -1615,7 +1686,7 @@ void main() {
     final macos = _FakeMacOsPlugin();
     fln.FlutterLocalNotificationsPlatform.instance = macos;
     final service = _makeService();
-    expect(await _call(service, "initialize"), null);
+    expect(await _reinitialize(service), null);
     final initializations = macos.initializations.length;
     final cases = <(String, Map<String, Object?>, String)>[
       ("schedule", {"schedule_mode": 42}, "operation_failed"),
@@ -1690,7 +1761,7 @@ void main() {
     final macos = _FakeMacOsPlugin();
     fln.FlutterLocalNotificationsPlatform.instance = macos;
     final service = _makeService();
-    expect(await _call(service, "initialize"), null);
+    expect(await _reinitialize(service), null);
     final initializations = macos.initializations.length;
     for (final (android, error) in [
       (
