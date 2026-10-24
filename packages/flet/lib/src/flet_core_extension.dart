@@ -89,6 +89,7 @@ import 'controls/reorderable_list_view.dart';
 import 'controls/responsive_row.dart';
 import 'controls/rotated_box.dart';
 import 'controls/row.dart';
+import 'controls/refresh_indicator.dart';
 import 'controls/safe_area.dart';
 import 'controls/screenshot.dart';
 import 'controls/search_bar.dart';
@@ -334,6 +335,8 @@ class FletCoreExtension extends FletExtension {
         return RotatedBoxControl(key: key, control: control);
       case "Row":
         return RowControl(key: key, control: control);
+      case "RefreshIndicator":
+        return RefreshIndicatorControl(key: key, control: control);
       case "SafeArea":
         return SafeAreaControl(key: key, control: control);
       case "Screenshot":

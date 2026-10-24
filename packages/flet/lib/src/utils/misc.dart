@@ -133,6 +133,11 @@ FloatingLabelBehavior? parseFloatingLabelBehavior(String? value,
   return parseEnum(FloatingLabelBehavior.values, value, defaultValue);
 }
 
+RefreshIndicatorTriggerMode? parseRefreshIndicatorTriggerMode(String? value,
+    [RefreshIndicatorTriggerMode? defaultValue]) {
+  return parseEnum(RefreshIndicatorTriggerMode.values, value, defaultValue);
+}
+
 extension MiscParsers on Control {
   Clip? getClipBehavior(String propertyName, [Clip? defaultValue]) {
     return parseClip(get(propertyName), defaultValue);
@@ -237,6 +242,11 @@ extension MiscParsers on Control {
   FloatingLabelBehavior? getFloatingLabelBehavior(String propertyName,
       [FloatingLabelBehavior? defaultValue]) {
     return parseFloatingLabelBehavior(get(propertyName), defaultValue);
+  }
+
+  RefreshIndicatorTriggerMode? getRefreshIndicatorTriggerMode(String propertyName,
+      [RefreshIndicatorTriggerMode? defaultValue]) {
+    return parseRefreshIndicatorTriggerMode(get(propertyName), defaultValue);
   }
 }
 
