@@ -20,14 +20,15 @@ import 'utils/errors.dart';
 import 'utils/parsers.dart';
 import 'utils/scheduling.dart';
 import 'utils/tap_queue_signal.dart';
+import 'utils/windows_identity.dart';
 
 class NotificationsService extends FletService {
   NotificationsService({required super.control});
 
-  static const String _defaultWindowsGuid =
-      "9F4B0E2A-1C3D-4E5F-8A9B-0C1D2E3F4A5B";
-
   fln.FlutterLocalNotificationsPlugin? _plugin;
+
+  /// This app's default Windows identity, read once on Windows.
+  WindowsIdentity? _windowsIdentity;
   bool _initialized = false;
 
   /// The [_initializationProperties] of the last successful initialization.
@@ -171,6 +172,9 @@ class NotificationsService extends FletService {
       }
 
       _plugin ??= fln.FlutterLocalNotificationsPlugin();
+      if (isWindowsDesktop()) {
+        _windowsIdentity ??= await defaultWindowsIdentity();
+      }
       if (isApplePlatform()) await _loadDarwinCategories();
       await _initializeBackend();
       _initialized = true;
@@ -206,10 +210,17 @@ class NotificationsService extends FletService {
         defaultActionName: "Open",
       ),
       windows: fln.WindowsInitializationSettings(
-        appName: control.getString("windows_app_name", "Flet App")!,
-        appUserModelId: control.getString(
-            "windows_app_user_model_id", "Flet.App.Notifications")!,
-        guid: control.getString("windows_guid", _defaultWindowsGuid)!,
+        appName: control.getString("windows_app_name") ??
+            _windowsIdentity?.appName ??
+            "Flet App",
+        appUserModelId: control.getString("windows_app_user_model_id") ??
+            _windowsIdentity?.appUserModelId ??
+            "Flet.App",
+        guid: control.getString("windows_guid") ??
+            _windowsIdentity?.guid ??
+            windowsIdentity(
+                    productName: "", internalName: "", executablePath: "")
+                .guid,
       ),
       web: const fln.WebInitializationSettings(),
     );

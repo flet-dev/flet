@@ -99,24 +99,27 @@ class Notifications(ft.Service):
 
     windows_app_name: str | None = None
     """
-    Application name used by the Windows notification backend.
+    Name Windows shows for the app's notifications, and in its notification settings.
 
-    Set a name identifying your application.
+    `None` uses the app's product name, from its executable's version information.
     """
 
     windows_app_user_model_id: str | None = None
     """
-    Windows AppUserModelID identifying the source of notifications.
+    Windows AppUserModelID identifying the source of the app's notifications.
 
-    Choose a stable ID unique to your app and consistent with its Windows packaging and
-    shortcut identity.
+    Windows keeps notification settings and history per AppUserModelID, so apps must
+    not share one. `None` derives one from the app's executable, such as
+    `"Flet.myapp.3f2a9c1e"`, that is stable across launches and differs between apps.
+    Set one when Windows should treat the app as the one with that ID, such as the ID
+    of its Start menu shortcut or installer.
     """
 
     windows_guid: str | None = None
     """
-    GUID identifying the Windows toast activation component.
+    GUID of the component Windows activates when the user selects a notification.
 
-    Use a stable, application-specific GUID to avoid sharing an identity with other
+    `None` derives one from :attr:`windows_app_user_model_id`, so it differs between
     apps.
     """
 
