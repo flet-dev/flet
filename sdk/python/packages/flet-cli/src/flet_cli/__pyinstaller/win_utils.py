@@ -1,19 +1,25 @@
 import os
+import shutil
 import tempfile
 import uuid
 from pathlib import Path
+from typing import Optional
 
 import pefile
 from packaging import version
-from PyInstaller.building.icon import normalize_icon_type
 from PyInstaller.compat import win32api
 from PyInstaller.utils.win32 import versioninfo
 from PyInstaller.utils.win32.icon import IconFile, normalize_icon_type
 
 
-def update_flet_view_icon(exe_path, icon_path):
+def update_flet_view_icon(exe_path: str, icon_path: str) -> None:
     """
     Replace icon resources in a Windows executable.
+
+    When the icon is an `.ico` file, or an image converted to one, it is also
+    written to `data/app_icon.ico` next to the executable: Windows shows the icon
+    of an app without package identity on its notifications from an image file,
+    not from the executable's resources.
 
     Args:
         exe_path: Path to target executable file.
@@ -48,15 +54,22 @@ def update_flet_view_icon(exe_path, icon_path):
 
     win32api.EndUpdateResource(hdst, 0)
 
+    # Copy the icon only when normalize_icon_type() produced an .ico file.
+    if Path(normalized_icon_path).suffix.lower() == ".ico":
+        icon_file = Path(exe_path).parent / "data" / "app_icon.ico"
+        icon_file.parent.mkdir(parents=True, exist_ok=True)
+        shutil.copyfile(normalized_icon_path, icon_file)
+        print("Writing", icon_file)
+
 
 def update_flet_view_version_info(
-    exe_path,
-    product_name,
-    file_description,
-    product_version,
-    file_version,
-    company_name,
-    copyright,
+    exe_path: str,
+    product_name: Optional[str],
+    file_description: Optional[str],
+    product_version: Optional[str],
+    file_version: Optional[str],
+    company_name: Optional[str],
+    copyright: Optional[str],
 ) -> str:
     """
     Update VERSIONINFO resources in a Windows executable.
