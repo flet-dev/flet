@@ -10,6 +10,7 @@ from flet_notifications import (
     AndroidOptions,
     AndroidServiceStartType,
     LinuxOptions,
+    NotificationAction,
     Notifications,
     WebOptions,
     WindowsOptions,
@@ -123,3 +124,16 @@ def test_android_durations_encode_objects_and_milliseconds(duration, expected):
     )
     for name in ("timeout_after", "led_on_duration", "led_off_duration"):
         assert wire.get(name) == expected
+
+
+def test_action_sends_require_authentication_only_when_set():
+    """The flag reaches the client only when an action requires unlocking."""
+    assert "require_authentication" not in encode_wire(
+        NotificationAction(id="open", title="Open")
+    )
+    assert (
+        encode_wire(
+            NotificationAction(id="delete", title="Delete", require_authentication=True)
+        )["require_authentication"]
+        is True
+    )

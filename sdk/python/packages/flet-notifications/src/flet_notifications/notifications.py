@@ -34,7 +34,8 @@ __all__ = ["Notifications"]
 @ft.control("Notifications")
 class Notifications(ft.Service):
     """
-    Native local notifications for Android, iOS, macOS, Windows, Linux, and Web.
+    Provides native local notifications for Android, iOS, macOS, Windows, Linux,
+    and Web.
 
     Create one service per page and keep its reference for sending notifications and
     handling responses. It registers with the page automatically and does not need to be

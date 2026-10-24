@@ -1674,6 +1674,10 @@ void main() {
         reply
       ],
       [
+        {...open, "require_authentication": true},
+        reply
+      ],
+      [
         open,
         {
           ...reply,
@@ -1699,8 +1703,8 @@ void main() {
     expect(await show(original, id: 2), null);
     expect(macos.initializations, hasLength(before));
     // Every distinct set of actions keeps its category: the original and the
-    // eight variants.
-    expect(macos.initializations.last.notificationCategories, hasLength(9));
+    // nine variants.
+    expect(macos.initializations.last.notificationCategories, hasLength(10));
   });
 
   test("Apple authorization is requested only by request_permissions",
@@ -1844,6 +1848,57 @@ void main() {
     expect(
         darwinCategoryIdentifier(specs({"cancel_notification": false})), base);
     expect(darwinCategoryIdentifier(specs({"destructive": true})), isNot(base));
+    expect(darwinCategoryIdentifier(specs({"require_authentication": true})),
+        isNot(base));
+  });
+
+  test("actions can require unlocking the device on Apple platforms", () {
+    final category = darwinCategory(
+        "c",
+        darwinActionSpecs(parseActions([
+          {"id": "delete", "title": "Delete", "require_authentication": true},
+          {"id": "open", "title": "Open"},
+        ])));
+    expect(category.actions.first.options,
+        contains(fln.DarwinNotificationActionOption.authenticationRequired));
+    expect(
+        category.actions.last.options,
+        isNot(contains(
+            fln.DarwinNotificationActionOption.authenticationRequired)));
+  });
+
+  test("stored Apple categories gain the defaults of fields added since",
+      () async {
+    debugDefaultTargetPlatformOverride = TargetPlatform.macOS;
+    addTearDown(() => debugDefaultTargetPlatformOverride = null);
+    const old = "${darwinCategoryPrefix}old";
+    await SharedPreferencesAsync().setString(
+        "flet_notifications_darwin_categories",
+        jsonEncode({
+          // Stored before `require_authentication` was added.
+          old: [
+            ["open", "Open", false, true, false, null]
+          ],
+          "${darwinCategoryPrefix}malformed": [
+            [1, "Open"]
+          ],
+        }));
+    final macos = _FakeMacOsPlugin();
+    fln.FlutterLocalNotificationsPlatform.instance = macos;
+    expect(await _reinitialize(_makeService()), null);
+    final category = macos.initializations.single.notificationCategories.single;
+    expect(category.identifier, old);
+    expect(category.actions.single.identifier, "open");
+    expect(category.actions.single.options,
+        {fln.DarwinNotificationActionOption.foreground});
+  });
+
+  test("stored action specs complete to the specs of default actions", () {
+    expect(
+        completeDarwinActionSpec(["open", "Open"]),
+        darwinActionSpecs(parseActions([
+          {"id": "open", "title": "Open"}
+        ])).single);
   });
 
   test("invalid scheduling arguments leave Apple categories unchanged",

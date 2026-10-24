@@ -122,6 +122,16 @@ class NotificationAction:
         opens the app if none is available.
     """
 
+    require_authentication: bool = False
+    """
+    Whether the user must unlock the device before the action runs.
+
+    Use it for actions with consequences, such as deleting or paying.
+
+    Note:
+        Supported only on iOS and macOS.
+    """
+
     cancel_notification: bool = True
     """
     Whether to dismiss the notification when this action is selected.

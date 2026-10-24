@@ -26,6 +26,7 @@ class ParsedAction {
     required this.title,
     this.destructive = false,
     this.foreground = true,
+    this.authenticationRequired = false,
     this.cancelNotification = true,
     this.input,
   });
@@ -34,6 +35,7 @@ class ParsedAction {
   final String title;
   final bool destructive;
   final bool foreground;
+  final bool authenticationRequired;
   final bool cancelNotification;
   final ParsedInput? input;
 }
@@ -76,6 +78,7 @@ ParsedAction parseAction(Object? entry) {
     title: title,
     destructive: parseBool(entry["destructive"], false)!,
     foreground: parseBool(entry["foreground"], true)!,
+    authenticationRequired: parseBool(entry["require_authentication"], false)!,
     cancelNotification: parseBool(entry["cancel_notification"], true)!,
     input: parseActionInput(entry["input"]),
   );
@@ -115,6 +118,31 @@ ParsedInput? parseActionInput(Object? raw) {
 /// Prefix of the Apple category identifiers this extension registers.
 const String darwinCategoryPrefix = "flet_notifications_actions_";
 
+/// Defaults of the fields describing an action in [darwinActionSpecs], used for
+/// fields added after an entry was stored. New fields go at the end, with the
+/// default that matches how actions behaved before.
+const List<Object?> _darwinActionSpecDefaults = [
+  null, // id
+  null, // title
+  false, // destructive
+  true, // foreground
+  false, // has input
+  null, // input label
+  false, // authentication required
+];
+
+/// Completes a stored [darwinActionSpecs] entry with the defaults of fields
+/// added since, or returns `null` when it doesn't describe an action.
+List<Object?>? completeDarwinActionSpec(List<Object?> spec) {
+  if (spec.length < 2 ||
+      spec.length > _darwinActionSpecDefaults.length ||
+      spec[0] is! String ||
+      spec[1] is! String) {
+    return null;
+  }
+  return [...spec, ..._darwinActionSpecDefaults.skip(spec.length)];
+}
+
 /// The fields of each action that define its Apple category, in a form that can
 /// be stored and compared.
 List<List<Object?>> darwinActionSpecs(List<ParsedAction> actions) => [
@@ -126,6 +154,7 @@ List<List<Object?>> darwinActionSpecs(List<ParsedAction> actions) => [
           a.foreground,
           a.input != null,
           a.input?.label,
+          a.authenticationRequired,
         ],
     ];
 
@@ -142,12 +171,25 @@ String darwinCategoryIdentifier(List<List<Object?>> specs) {
   return "$darwinCategoryPrefix${hash.toRadixString(16).padLeft(8, "0")}";
 }
 
-/// Builds the Apple category for actions described by [specs].
-fln.DarwinNotificationCategory darwinCategory(List<List<Object?>> specs) {
+/// Builds the Apple category [identifier] for actions described by [specs].
+///
+/// The identifier is the one notifications were delivered with, which for
+/// categories stored before fields were added differs from
+/// [darwinCategoryIdentifier] of their completed specs.
+fln.DarwinNotificationCategory darwinCategory(
+    String identifier, List<List<Object?>> specs) {
   return fln.DarwinNotificationCategory(
-    darwinCategoryIdentifier(specs),
+    identifier,
     actions: [
-      for (final [id, title, destructive, foreground, hasInput, label] in specs)
+      for (final [
+            id,
+            title,
+            destructive,
+            foreground,
+            hasInput,
+            label,
+            authenticationRequired,
+          ] in specs)
         _darwinAction(
           id as String,
           title as String,
@@ -156,6 +198,8 @@ fln.DarwinNotificationCategory darwinCategory(List<List<Object?>> specs) {
               fln.DarwinNotificationActionOption.destructive,
             if (foreground == true)
               fln.DarwinNotificationActionOption.foreground,
+            if (authenticationRequired == true)
+              fln.DarwinNotificationActionOption.authenticationRequired,
           },
           hasInput == true,
           label as String?,

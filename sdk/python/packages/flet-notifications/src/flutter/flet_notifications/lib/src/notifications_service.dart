@@ -163,7 +163,8 @@ class NotificationsService extends FletService {
       final result = await _plugin!.initialize(
         settings: _buildInitializationSettings(
           notificationCategories: [
-            for (final specs in categories.values) darwinCategory(specs),
+            for (final MapEntry(:key, :value) in categories.entries)
+              darwinCategory(key, value),
           ],
         ),
         onDidReceiveNotificationResponse: _forwardResponse,
@@ -652,12 +653,13 @@ class NotificationsService extends FletService {
       if (stored == null) return;
       for (final MapEntry(:key, :value)
           in (jsonDecode(stored) as Map).entries) {
+        final specs = [
+          for (final spec in value as List)
+            completeDarwinActionSpec(List<Object?>.of(spec as List))
+        ];
+        if (specs.contains(null)) continue;
         _darwinCategories.putIfAbsent(
-          key as String,
-          () => [
-            for (final spec in value as List) List<Object?>.of(spec as List)
-          ],
-        );
+            key as String, () => specs.cast<List<Object?>>());
       }
     } catch (e) {
       // Best-effort: categories registered in this run still work.
