@@ -11,6 +11,8 @@ from PyInstaller.compat import win32api
 from PyInstaller.utils.win32 import versioninfo
 from PyInstaller.utils.win32.icon import IconFile, normalize_icon_type
 
+import flet_cli.__pyinstaller.config as hook_config
+
 
 def update_flet_view_icon(exe_path: str, icon_path: str) -> None:
     """
@@ -26,7 +28,7 @@ def update_flet_view_icon(exe_path: str, icon_path: str) -> None:
         icon_path: Path to source icon file or executable resource.
     """
 
-    print("Updating Flet View icon", exe_path, icon_path)
+    hook_config.log_progress("Updating Flet View icon", exe_path, icon_path)
 
     RT_ICON = 3
     RT_GROUP_ICON = 14
@@ -35,7 +37,7 @@ def update_flet_view_icon(exe_path: str, icon_path: str) -> None:
         icon_path, ("exe", "ico"), "ico", os.getcwd()
     )
     icon = IconFile(normalized_icon_path)
-    print("Copying icons from", normalized_icon_path)
+    hook_config.log_progress("Copying icons from", normalized_icon_path)
 
     hdst = win32api.BeginUpdateResource(exe_path, 0)
 
@@ -46,10 +48,14 @@ def update_flet_view_icon(exe_path: str, icon_path: str) -> None:
     data = icon.grp_icon_dir()
     data = data + icon.grp_icondir_entries(iconid)
     win32api.UpdateResource(hdst, RT_GROUP_ICON, i, data, 1033)
-    print("Writing RT_GROUP_ICON %d resource with %d bytes", i, len(data))
+    hook_config.log_progress(
+        f"Writing RT_GROUP_ICON {i} resource with {len(data)} bytes"
+    )
     for data in icon.images:
         win32api.UpdateResource(hdst, RT_ICON, iconid, data, 1033)
-        print("Writing RT_ICON %d resource with %d bytes", iconid, len(data))
+        hook_config.log_progress(
+            f"Writing RT_ICON {iconid} resource with {len(data)} bytes"
+        )
         iconid = iconid + 1
 
     win32api.EndUpdateResource(hdst, 0)
@@ -59,7 +65,7 @@ def update_flet_view_icon(exe_path: str, icon_path: str) -> None:
         icon_file = Path(exe_path).parent / "data" / "app_icon.ico"
         icon_file.parent.mkdir(parents=True, exist_ok=True)
         shutil.copyfile(normalized_icon_path, icon_file)
-        print("Writing", icon_file)
+        hook_config.log_progress("Writing", icon_file)
 
 
 def update_flet_view_version_info(
@@ -87,7 +93,7 @@ def update_flet_view_version_info(
         Path to a temporary text file containing serialized version info.
     """
 
-    print("Updating Flet View version info", exe_path)
+    hook_config.log_progress("Updating Flet View version info", exe_path)
 
     # load versioninfo from exe
     if versioninfo.read_version_info_from_executable:

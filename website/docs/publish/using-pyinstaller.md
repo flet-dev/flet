@@ -29,7 +29,8 @@ speed-vs-control curve:
 Reach for `flet pack` when you want a desktop artifact quickly; use
 [`flet build`](index.md) when you target mobile or web, need deeper
 customization, or use an extension the prebuilt client doesn't include: its
-controls show as unknown controls in a packed app.
+controls show as unknown controls in a packed app, and `flet pack` warns about
+each one your app imports.
 
 Like PyInstaller itself, `flet pack` is not a cross-compiler: run it on each
 OS you target — [CI](#packaging-in-ci) makes this painless.
@@ -219,7 +220,9 @@ the Flet viewer inside it.
   the underlying `pyinstaller` command, one at a time. Attach a value that starts with `-`
   using `=`, e.g. `--pyinstaller-build-args=--clean`.
 - `--` — pass everything that follows it straight through to `pyinstaller`, e.g.
-  `flet pack main.py -- --clean --log-level=WARN`.
+  `flet pack main.py -- --clean --noupx`.
+- `-v` — show packaging progress and PyInstaller's `INFO` log, or its `DEBUG`
+  log with `-vv`. Without it, only warnings and errors are shown.
 
 The full option list is in the [`flet pack` reference](../cli/flet-pack.md).
 

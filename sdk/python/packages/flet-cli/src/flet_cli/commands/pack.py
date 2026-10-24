@@ -1,6 +1,7 @@
 import argparse
 import gzip
 import hashlib
+import logging
 import os
 import re
 import shutil
@@ -234,6 +235,38 @@ class Command(BaseCommand):
             f.write(f"{h.hexdigest()} {os.path.getsize(archive_path)}")
 
     @staticmethod
+    def warn_missing_extensions(options, snapshot_path: str) -> None:
+        """
+        Warn about the extensions the app imports that the client doesn't include.
+
+        Their controls show as unknown controls in the packed app. Nothing is
+        printed when the client's extensions can't be read.
+
+        Args:
+            options: Parsed command-line options.
+            snapshot_path: Path to the client's AOT snapshot.
+        """
+        from flet_cli.__pyinstaller.extensions import (
+            find_missing_extensions,
+            get_client_extensions,
+        )
+
+        client_extensions = get_client_extensions(snapshot_path)
+        if client_extensions is None:
+            return
+        app_dir = Path(options.script).resolve().parent
+        for extension in find_missing_extensions(app_dir, client_extensions):
+            source = (
+                f" (from {extension.distribution})" if extension.distribution else ""
+            )
+            print(
+                f"Warning: the Flet client that flet pack bundles doesn't include "
+                f"the {extension.package} extension{source}, so its controls "
+                f"will show as unknown controls. Package apps that use it with "
+                f"flet build instead: https://flet.dev/docs/publish"
+            )
+
+    @staticmethod
     def resolve_linux_app_id(options) -> str:
         """
         The identity the packed app will report to the desktop.
@@ -444,7 +477,13 @@ class Command(BaseCommand):
 
             from flet_cli.__pyinstaller.utils import copy_flet_bin
 
-            pyi_args = [options.script, "--noconfirm"]
+            hook_config.verbose = options.verbose
+            if not options.verbose:
+                logging.getLogger("flet_desktop").setLevel(logging.WARNING)
+
+            # Arguments passed after `--` come later, so their --log-level wins.
+            pyi_log_level = ("WARN", "INFO", "DEBUG")[min(options.verbose, 2)]
+            pyi_args = [options.script, "--noconfirm", "--log-level", pyi_log_level]
             if not options.debug_console:
                 pyi_args.extend(["--noconsole"])
             if options.icon:
@@ -513,6 +552,13 @@ class Command(BaseCommand):
                         update_flet_view_version_info,
                     )
 
+                    self.warn_missing_extensions(
+                        options,
+                        os.path.join(
+                            hook_config.temp_bin_dir, "flet", "data", "app.so"
+                        ),
+                    )
+
                     exe_path = os.path.join(
                         hook_config.temp_bin_dir, "flet", "flet.exe"
                     )
@@ -575,6 +621,13 @@ class Command(BaseCommand):
                         )
                         sys.exit(1)
 
+                    self.warn_missing_extensions(
+                        options,
+                        os.path.join(
+                            app_path, "Contents", "Frameworks", "App.framework", "App"
+                        ),
+                    )
+
                     # icon
                     if options.icon:
                         icon_path = options.icon
@@ -610,6 +663,13 @@ class Command(BaseCommand):
                 elif is_linux():
                     from flet_desktop import get_artifact_filename
 
+                    self.warn_missing_extensions(
+                        options,
+                        os.path.join(
+                            hook_config.temp_bin_dir, "flet", "lib", "libapp.so"
+                        ),
+                    )
+
                     # Compress the flet/ directory into a tar.gz
                     # so ensure_client_cached() finds it at runtime.
                     self.compress_flet_client_dir(
@@ -617,7 +677,8 @@ class Command(BaseCommand):
                     )
 
             # run PyInstaller
-            print("Running PyInstaller:", pyi_args)
+            print("Packaging the app with PyInstaller...")
+            hook_config.log_progress("Running PyInstaller:", pyi_args)
             PyInstaller.__main__.run(pyi_args)
 
             # Written after the build, because the entry's Exec= needs the
@@ -626,6 +687,8 @@ class Command(BaseCommand):
                 self.write_linux_desktop_entry(
                     options, dist_dir, self.resolve_linux_app_id(options)
                 )
+
+            print(f"Packaged the app into {dist_dir}")
 
         except ImportError as e:
             print("Please install PyInstaller module to use flet pack command:", e)
@@ -637,7 +700,9 @@ class Command(BaseCommand):
             if hook_config.temp_bin_dir is not None and os.path.exists(
                 hook_config.temp_bin_dir
             ):
-                print("Deleting temp directory:", hook_config.temp_bin_dir)
+                hook_config.log_progress(
+                    "Deleting temp directory:", hook_config.temp_bin_dir
+                )
                 shutil.rmtree(hook_config.temp_bin_dir, ignore_errors=True)
             if identity_dir is not None:
                 shutil.rmtree(identity_dir, ignore_errors=True)

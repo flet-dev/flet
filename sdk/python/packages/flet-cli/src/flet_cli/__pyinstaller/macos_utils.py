@@ -9,6 +9,7 @@ from typing import Any, Optional
 
 from PyInstaller.building.icon import normalize_icon_type
 
+import flet_cli.__pyinstaller.config as hook_config
 from flet.utils import safe_tar_extractall
 from flet_cli.__pyinstaller.utils import normalize_tar_entry
 
@@ -42,7 +43,7 @@ def update_flet_view_icon(app_path: str, icon_path: str) -> None:
         icon_path: Path to source icon file.
     """
 
-    print("Updating Flet View icon", app_path, icon_path)
+    hook_config.log_progress("Updating Flet View icon", app_path, icon_path)
 
     icon_file = "AppIcon.icns"
 
@@ -52,7 +53,7 @@ def update_flet_view_icon(app_path: str, icon_path: str) -> None:
     )
 
     # patch icon
-    print("Copying icons from", normalized_icon_path)
+    hook_config.log_progress("Copying icons from", normalized_icon_path)
     shutil.copy(
         normalized_icon_path,
         os.path.join(app_path, "Contents", "Resources", icon_file),
@@ -86,7 +87,7 @@ def update_flet_view_version_info(
         Final app bundle path (may change when app bundle is renamed).
     """
 
-    print("Updating Flet View plist", app_path)
+    hook_config.log_progress("Updating Flet View plist", app_path)
 
     pl = __load_info_plist(app_path)
 
@@ -123,7 +124,7 @@ def assemble_app_bundle(app_path: str, tar_path: str) -> None:
     """
 
     # sign app bundle
-    print(f"Signing file {app_path}")
+    hook_config.log_progress(f"Signing file {app_path}")
     cmd_args = [
         "codesign",
         "-s",
