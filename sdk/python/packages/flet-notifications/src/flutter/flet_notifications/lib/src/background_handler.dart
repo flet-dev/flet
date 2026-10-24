@@ -7,10 +7,13 @@
 /// next time the service initializes.
 ///
 /// Unique keys per tap avoid read-modify-write races between the background
-/// isolate and the main isolate.
+/// isolate and the main isolate. [SharedPreferencesAsync] stores them without
+/// the `flutter.` prefix of the legacy API, so `ft.SharedPreferences` neither
+/// lists nor clears them, and reads them from the platform without caching.
 library;
 
 import 'dart:convert';
+import 'dart:ui' show DartPluginRegistrant;
 
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -70,27 +73,28 @@ Map<String, Object?> responseToEvent(NotificationResponse response) {
 /// Entry point invoked by the OS in a background isolate.
 ///
 /// Must stay top-level and `@pragma('vm:entry-point')` annotated so the tree
-/// shaker keeps it.
+/// shaker keeps it. Background isolates do not register Dart plugin
+/// implementations by themselves, and [SharedPreferencesAsync] needs them.
 @pragma('vm:entry-point')
 void notificationTapBackground(NotificationResponse response) {
-  SharedPreferences.getInstance().then((prefs) {
-    final stamp = DateTime.now().microsecondsSinceEpoch;
-    final key = "$_queuePrefix$stamp-${identityHashCode(response)}";
-    prefs.setString(key, jsonEncode(responseToEvent(response)));
-  });
+  DartPluginRegistrant.ensureInitialized();
+  final stamp = DateTime.now().microsecondsSinceEpoch;
+  final key = "$_queuePrefix$stamp-${identityHashCode(response)}";
+  SharedPreferencesAsync()
+      .setString(key, jsonEncode(responseToEvent(response)));
 }
 
 /// Reads and removes all queued taps, oldest key first.
 Future<List<Map<String, Object?>>> drainTapQueue(
-  SharedPreferences prefs,
+  SharedPreferencesAsync prefs,
 ) async {
-  // Another isolate may have written entries since this instance was cached.
-  await prefs.reload();
-  final keys = prefs.getKeys().where((k) => k.startsWith(_queuePrefix)).toList()
+  final keys = (await prefs.getKeys())
+      .where((k) => k.startsWith(_queuePrefix))
+      .toList()
     ..sort();
   final out = <Map<String, Object?>>[];
   for (final key in keys) {
-    final raw = prefs.getString(key);
+    final raw = await prefs.getString(key);
     if (raw != null) {
       try {
         final decoded = jsonDecode(raw);

@@ -1,5 +1,6 @@
+import 'dart:convert';
+
 import 'package:flet/flet.dart' show parseBool, parseList;
-import 'package:flutter/foundation.dart' show setEquals;
 import 'package:flutter_local_notifications/flutter_local_notifications.dart'
     as fln;
 
@@ -111,25 +112,73 @@ ParsedInput? parseActionInput(Object? raw) {
   );
 }
 
-/// Compares the native category definitions, including action order and options.
-bool areDarwinCategoriesEqual(
-  fln.DarwinNotificationCategory? registered,
-  fln.DarwinNotificationCategory category,
+/// Prefix of the Apple category identifiers this extension registers.
+const String darwinCategoryPrefix = "flet_notifications_actions_";
+
+/// The fields of each action that define its Apple category, in a form that can
+/// be stored and compared.
+List<List<Object?>> darwinActionSpecs(List<ParsedAction> actions) => [
+      for (final a in actions)
+        [
+          a.id,
+          a.title,
+          a.destructive,
+          a.foreground,
+          a.input != null,
+          a.input?.label,
+        ],
+    ];
+
+/// Identifier of the Apple category for actions described by [specs].
+///
+/// It is derived from the actions, so notifications with the same buttons share
+/// a category, and it stays the same across app launches.
+String darwinCategoryIdentifier(List<List<Object?>> specs) {
+  // 32-bit FNV-1a, which unlike `hashCode` is stable across runs.
+  var hash = 0x811c9dc5;
+  for (final unit in utf8.encode(jsonEncode(specs))) {
+    hash = ((hash ^ unit) * 0x01000193) & 0xffffffff;
+  }
+  return "$darwinCategoryPrefix${hash.toRadixString(16).padLeft(8, "0")}";
+}
+
+/// Builds the Apple category for actions described by [specs].
+fln.DarwinNotificationCategory darwinCategory(List<List<Object?>> specs) {
+  return fln.DarwinNotificationCategory(
+    darwinCategoryIdentifier(specs),
+    actions: [
+      for (final [id, title, destructive, foreground, hasInput, label] in specs)
+        _darwinAction(
+          id as String,
+          title as String,
+          {
+            if (destructive == true)
+              fln.DarwinNotificationActionOption.destructive,
+            if (foreground == true)
+              fln.DarwinNotificationActionOption.foreground,
+          },
+          hasInput == true,
+          label as String?,
+        ),
+    ],
+  );
+}
+
+fln.DarwinNotificationAction _darwinAction(
+  String id,
+  String title,
+  Set<fln.DarwinNotificationActionOption> options,
+  bool hasInput,
+  String? label,
 ) {
-  if (registered == null ||
-      registered.identifier != category.identifier ||
-      !setEquals(registered.options, category.options) ||
-      registered.actions.length != category.actions.length) {
-    return false;
+  if (!hasInput) {
+    return fln.DarwinNotificationAction.plain(id, title, options: options);
   }
-  for (var i = 0; i < category.actions.length; i++) {
-    final a = registered.actions[i];
-    final b = category.actions[i];
-    if ((a.type, a.identifier, a.title, a.buttonTitle, a.placeholder) !=
-            (b.type, b.identifier, b.title, b.buttonTitle, b.placeholder) ||
-        !setEquals(a.options, b.options)) {
-      return false;
-    }
-  }
-  return true;
+  return fln.DarwinNotificationAction.text(
+    id,
+    title,
+    buttonTitle: label ?? title,
+    placeholder: label,
+    options: options,
+  );
 }

@@ -10,12 +10,8 @@ import 'errors.dart';
 import 'parsers.dart';
 import 'styles.dart';
 
-/// Shared by Darwin notification details and the service's category registry.
-const String darwinNotificationCategoryPrefix = "flet_notifications_actions_";
-
 /// Converts a wire payload into the upstream platform notification details.
 fln.NotificationDetails parseNotificationDetails({
-  required int id,
   required List<ParsedAction> actions,
   Map? details,
 }) {
@@ -43,7 +39,6 @@ fln.NotificationDetails parseNotificationDetails({
         .toList();
 
     final darwinDetails = parseDarwinDetails(
-      id: id,
       actions: actions,
       options: _platformOptions(details, "ios"),
     );
@@ -149,7 +144,6 @@ fln.NotificationDetails parseNotificationDetails({
       ),
       iOS: darwinDetails,
       macOS: parseDarwinDetails(
-        id: id,
         actions: actions,
         options: _platformOptions(details, "macos"),
       ),
@@ -241,14 +235,14 @@ Map<dynamic, dynamic>? _platformOptions(Map? details, String platform) {
 }
 
 fln.DarwinNotificationDetails parseDarwinDetails({
-  required int id,
   required List<ParsedAction> actions,
   Map<dynamic, dynamic>? options,
 }) {
   final o = options ?? const {};
   return fln.DarwinNotificationDetails(
-    categoryIdentifier:
-        actions.isEmpty ? null : "$darwinNotificationCategoryPrefix$id",
+    categoryIdentifier: actions.isEmpty
+        ? null
+        : darwinCategoryIdentifier(darwinActionSpecs(actions)),
     presentAlert: parseBool(o["present_alert"]),
     presentBadge: parseBool(o["present_badge"]),
     presentSound: parseBool(o["present_sound"]),

@@ -5,37 +5,8 @@ import 'package:flutter_local_notifications/flutter_local_notifications.dart'
     as fln;
 import 'package:flutter_test/flutter_test.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:shared_preferences_platform_interface/shared_preferences_platform_interface.dart';
-
-/// In-memory store so the tap queue can be tested without platform channels.
-class _FakeStore extends SharedPreferencesStorePlatform {
-  final Map<String, Object> values = {};
-
-  @override
-  Future<bool> remove(String key) async {
-    values.remove(key);
-    return true;
-  }
-
-  @override
-  Future<bool> setValue(String valueType, String key, Object value) async {
-    values[key] = value;
-    return true;
-  }
-
-  @override
-  Future<bool> clear() async {
-    values.clear();
-    return true;
-  }
-
-  @override
-  Future<Map<String, Object>> getAll() async {
-    return {
-      for (final entry in values.entries) entry.key: entry.value,
-    };
-  }
-}
+import 'package:shared_preferences_platform_interface/in_memory_shared_preferences_async.dart';
+import 'package:shared_preferences_platform_interface/shared_preferences_async_platform_interface.dart';
 
 fln.NotificationResponse _response({
   int? id = 7,
@@ -55,12 +26,12 @@ fln.NotificationResponse _response({
 }
 
 void main() {
-  late _FakeStore store;
+  late SharedPreferencesAsync prefs;
 
   setUp(() {
-    store = _FakeStore();
-    SharedPreferencesStorePlatform.instance = store;
-    SharedPreferences.resetStatic();
+    SharedPreferencesAsyncPlatform.instance =
+        InMemorySharedPreferencesAsync.empty();
+    prefs = SharedPreferencesAsync();
   });
 
   group("responseToEvent", () {
@@ -90,62 +61,32 @@ void main() {
   });
 
   group("drainTapQueue", () {
-    test("refreshes events written after the main isolate cached preferences",
-        () async {
-      final prefs = await SharedPreferences.getInstance();
-      final event = responseToEvent(_response(payload: "background"));
-      await store.setValue("String", "flutter.flet_notifications_queue_100-1",
-          jsonEncode(event));
-      expect(prefs.getKeys(), isEmpty);
-
-      expect(await drainTapQueue(prefs), [event]);
-      expect(await drainTapQueue(prefs), isEmpty);
-    });
-
     test("returns events in key order and removes them", () async {
       final older = responseToEvent(_response(payload: "first"));
       final newer = responseToEvent(_response(payload: "second"));
-      // The store contract returns keys with the legacy "flutter." prefix
-      // (the real method-channel store does the same).
-      store.setValue(
-        "String",
-        "flutter.flet_notifications_queue_100-1",
-        jsonEncode(older),
-      );
-      store.setValue(
-        "String",
-        "flutter.flet_notifications_queue_200-2",
-        jsonEncode(newer),
-      );
-      store.setValue("String", "flutter.unrelated_key", "keep me");
+      await prefs.setString(
+          "flet_notifications_queue_200-2", jsonEncode(newer));
+      await prefs.setString(
+          "flet_notifications_queue_100-1", jsonEncode(older));
+      await prefs.setString("unrelated_key", "keep me");
 
-      // Populate the store first: the SharedPreferences instance snapshots
-      // its keys at construction.
-      final prefs = await SharedPreferences.getInstance();
-      final drained = await drainTapQueue(prefs);
-      expect(drained, hasLength(2));
-      expect(drained.first["payload"], "first");
-      expect(drained.last["payload"], "second");
-      expect(
-        prefs.getKeys().where(
-              (k) => k.startsWith("flet_notifications_queue_"),
-            ),
-        isEmpty,
-      );
-      expect(prefs.getString("unrelated_key"), "keep me");
+      expect(await drainTapQueue(prefs), [older, newer]);
+      expect(await drainTapQueue(prefs), isEmpty);
+      expect(await prefs.getKeys(), {"unrelated_key"});
     });
 
     test("unreadable entries are dropped, not fatal", () async {
-      store.setValue(
-        "String",
-        "flutter.flet_notifications_queue_1-1",
-        "not json",
-      );
-      final prefs = await SharedPreferences.getInstance();
-      final drained = await drainTapQueue(prefs);
-      expect(drained, isEmpty);
+      await prefs.setString("flet_notifications_queue_1-1", "not json");
+      expect(await drainTapQueue(prefs), isEmpty);
       // The bad entry is removed rather than left to wedge the queue.
-      expect(prefs.getKeys(), isNot(contains("flet_notifications_queue_1-1")));
+      expect(await prefs.getKeys(), isEmpty);
+    });
+
+    test("background taps are queued for the main isolate", () async {
+      final response = _response(payload: "background");
+      notificationTapBackground(response);
+      await pumpEventQueue();
+      expect(await drainTapQueue(prefs), [responseToEvent(response)]);
     });
   });
 

@@ -4,6 +4,7 @@ import 'dart:ui' show Color;
 
 import 'package:flet/flet.dart';
 import 'package:flet_notifications/src/notifications_service.dart';
+import 'package:flet_notifications/src/utils/actions.dart';
 import 'package:flet_notifications/src/utils/errors.dart';
 import 'package:flet_notifications/src/utils/details.dart'
     as notification_details;
@@ -13,7 +14,8 @@ import 'package:flutter_local_notifications/flutter_local_notifications.dart'
     as fln;
 import 'package:flutter/services.dart' show PlatformException;
 import 'package:flutter_test/flutter_test.dart';
-import 'package:shared_preferences/shared_preferences.dart';
+import 'package:shared_preferences_platform_interface/in_memory_shared_preferences_async.dart';
+import 'package:shared_preferences_platform_interface/shared_preferences_async_platform_interface.dart';
 import 'package:timezone/timezone.dart' as tz;
 
 /// Records converted native details without performing operating-system actions.
@@ -373,6 +375,9 @@ void main() {
   TestWidgetsFlutterBinding.ensureInitialized();
   late _RecordingAndroid plugin;
   setUp(() {
+    // Persisted Apple categories must not leak between tests.
+    SharedPreferencesAsyncPlatform.instance =
+        InMemorySharedPreferencesAsync.empty();
     plugin = _RecordingAndroid();
     fln.FlutterLocalNotificationsPlatform.instance = plugin;
   });
@@ -722,7 +727,8 @@ void main() {
 
   test("launch replay is once per service and allows identical later sessions",
       () async {
-    SharedPreferences.setMockInitialValues({});
+    SharedPreferencesAsyncPlatform.instance =
+        InMemorySharedPreferencesAsync.empty();
     plugin.launchDetails = const fln.NotificationAppLaunchDetails(
       true,
       notificationResponse: fln.NotificationResponse(
@@ -759,7 +765,8 @@ void main() {
 
   test("a launch response also delivered live during startup is emitted once",
       () async {
-    SharedPreferences.setMockInitialValues({});
+    SharedPreferencesAsyncPlatform.instance =
+        InMemorySharedPreferencesAsync.empty();
     const response = fln.NotificationResponse(
       id: 50,
       payload: "cold launch",
@@ -786,7 +793,8 @@ void main() {
 
   test("reinitialization does not replay an already delivered live tap",
       () async {
-    SharedPreferences.setMockInitialValues({});
+    SharedPreferencesAsyncPlatform.instance =
+        InMemorySharedPreferencesAsync.empty();
     final control = _RecordingControl();
     final service = _makeService(control: control);
     expect(await _reinitialize(service), null);
@@ -1002,7 +1010,6 @@ void main() {
       null,
     ]) {
       final details = notification_details.parseNotificationDetails(
-        id: 1,
         actions: [],
         details: {
           "options": {
@@ -1277,7 +1284,6 @@ void main() {
     ];
     for (final (timeout, expected) in cases) {
       final details = notification_details.parseNotificationDetails(
-        id: 1,
         actions: const [],
         details: {
           "options": {
@@ -1495,7 +1501,7 @@ void main() {
   }
 
   test(
-      "Apple category updates skip unchanged definitions and refresh real edits",
+      "Apple categories are shared by identical actions and kept for each variant",
       () async {
     debugDefaultTargetPlatformOverride = TargetPlatform.macOS;
     addTearDown(() => debugDefaultTargetPlatformOverride = null);
@@ -1578,8 +1584,13 @@ void main() {
       expect(await show(actions), null);
       expect(macos.initializations, hasLength(before + 1));
     }
+    // Another notification with the same actions reuses their category.
+    final before = macos.initializations.length;
     expect(await show(original, id: 2), null);
-    expect(macos.initializations.last.notificationCategories, hasLength(2));
+    expect(macos.initializations, hasLength(before));
+    // Every distinct set of actions keeps its category: the original and the
+    // eight variants.
+    expect(macos.initializations.last.notificationCategories, hasLength(9));
   });
 
   test("Apple authorization is requested only by request_permissions",
@@ -1633,7 +1644,10 @@ void main() {
     });
     expect(await _reinitialize(service), null);
     expect(flags(macos.initializations.last), everyElement(isFalse));
-    expect(macos.initializations.last.notificationCategories, categories);
+    expect(
+        macos.initializations.last.notificationCategories
+            .map((c) => c.identifier),
+        categories.map((c) => c.identifier));
   });
 
   test("reinitialization preserves all registered Apple action categories",
@@ -1659,7 +1673,10 @@ void main() {
         categories.map((c) => c.actions.single.identifier), ["open1", "open2"]);
 
     expect(await _reinitialize(service), null);
-    expect(macos.initializations.last.notificationCategories, categories);
+    expect(
+        macos.initializations.last.notificationCategories
+            .map((c) => c.identifier),
+        categories.map((c) => c.identifier));
 
     expect(
         await _call(service, "show", {
@@ -1677,6 +1694,46 @@ void main() {
     expect(updated.map((c) => c.actions.single.identifier),
         ["open1", "open2", "reply"]);
     expect(updated.last.actions.single.buttonTitle, "Message");
+  });
+
+  test("Apple action categories survive an app restart", () async {
+    debugDefaultTargetPlatformOverride = TargetPlatform.macOS;
+    addTearDown(() => debugDefaultTargetPlatformOverride = null);
+    final actions = [
+      {"id": "open", "title": "Open"},
+    ];
+    final first = _FakeMacOsPlugin();
+    fln.FlutterLocalNotificationsPlatform.instance = first;
+    expect(await _call(_makeService(), "show", {"id": 1, "actions": actions}),
+        null);
+    final identifier =
+        first.initializations.last.notificationCategories.single.identifier;
+
+    // A new service, as after a restart, registers the stored category while
+    // initializing, so taps on notifications delivered earlier keep actions.
+    final second = _FakeMacOsPlugin();
+    fln.FlutterLocalNotificationsPlatform.instance = second;
+    final service = _makeService();
+    expect(await _reinitialize(service), null);
+    expect(
+        second.initializations.single.notificationCategories
+            .map((c) => c.identifier),
+        [identifier]);
+    expect(await _call(service, "show", {"id": 2, "actions": actions}), null);
+    expect(second.initializations, hasLength(1));
+  });
+
+  test("Apple category identifiers depend only on Apple-visible actions", () {
+    List<List<Object?>> specs(Map<String, Object?> action) =>
+        darwinActionSpecs(parseActions([
+          {"id": "reply", "title": "Reply", ...action}
+        ]));
+    final base = darwinCategoryIdentifier(specs({}));
+    expect(base, startsWith(darwinCategoryPrefix));
+    expect(darwinCategoryIdentifier(specs({})), base);
+    expect(
+        darwinCategoryIdentifier(specs({"cancel_notification": false})), base);
+    expect(darwinCategoryIdentifier(specs({"destructive": true})), isNot(base));
   });
 
   test("invalid scheduling arguments leave Apple categories unchanged",

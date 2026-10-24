@@ -41,10 +41,23 @@ class LocalNotificationsService extends FletService {
   /// launch details, so a launch response already seen live is not replayed.
   final Set<String> _liveResponsesBeforeLaunchReplay = {};
   Future<void>? _initFuture;
-  // Desired categories are retained for retries; registered categories reflect
-  // only the snapshot from the last successful native initialization.
-  final Map<int, fln.DarwinNotificationCategory> _darwinCategories = {};
-  Map<int, fln.DarwinNotificationCategory> _registeredDarwinCategories = {};
+
+  /// [SharedPreferencesAsync] key of the persisted Apple action categories,
+  /// out of reach of `ft.SharedPreferences`.
+  static const String _darwinCategoriesKey =
+      "flet_notifications_darwin_categories";
+
+  /// Apple action categories by identifier, as [darwinActionSpecs].
+  ///
+  /// Apple replaces every registered category on each registration, so all of
+  /// them, including those of notifications scheduled in earlier app runs, are
+  /// persisted and registered together.
+  final Map<String, List<List<Object?>>> _darwinCategories = {};
+  bool _darwinCategoriesLoaded = false;
+
+  /// Identifiers of the categories registered by the last successful
+  /// initialization.
+  Set<String> _registeredDarwinCategories = {};
 
   @override
   void init() {
@@ -109,11 +122,12 @@ class LocalNotificationsService extends FletService {
   Future<void> _initializeBackend() async {
     final properties = _initializationProperties;
     try {
-      final categories =
-          Map<int, fln.DarwinNotificationCategory>.of(_darwinCategories);
+      final categories = Map.of(_darwinCategories);
       final result = await _plugin!.initialize(
         settings: _buildInitializationSettings(
-          notificationCategories: categories.values.toList(),
+          notificationCategories: [
+            for (final specs in categories.values) darwinCategory(specs),
+          ],
         ),
         onDidReceiveNotificationResponse: _handleResponse,
         onDidReceiveBackgroundNotificationResponse: notificationTapBackground,
@@ -124,7 +138,9 @@ class LocalNotificationsService extends FletService {
         throw StateError(
             "notification backend initialization returned $result");
       }
-      if (isApplePlatform()) _registeredDarwinCategories = categories;
+      if (isApplePlatform()) {
+        _registeredDarwinCategories = categories.keys.toSet();
+      }
       _appliedInitializationProperties = properties;
     } catch (_) {
       _initialized = false;
@@ -147,6 +163,7 @@ class LocalNotificationsService extends FletService {
       }
 
       _plugin ??= fln.FlutterLocalNotificationsPlugin();
+      if (isApplePlatform()) await _loadDarwinCategories();
       await _initializeBackend();
       _initialized = true;
       await _replayQueuedTaps();
@@ -193,8 +210,7 @@ class LocalNotificationsService extends FletService {
     if (_replaying) return;
     _replaying = true;
     try {
-      final prefs = await SharedPreferences.getInstance();
-      for (final event in await drainTapQueue(prefs)) {
+      for (final event in await drainTapQueue(SharedPreferencesAsync())) {
         _emit(event);
       }
     } catch (e) {
@@ -377,7 +393,6 @@ class LocalNotificationsService extends FletService {
       body: body,
       payload: payload,
       notificationDetails: await _buildNotificationDetails(
-        id: id,
         actions: actions,
         details: map,
       ),
@@ -406,7 +421,6 @@ class LocalNotificationsService extends FletService {
       payload: payload,
       matchDateTimeComponents: matchComponents,
       notificationDetails: await _buildNotificationDetails(
-        id: id,
         actions: actions,
         details: map,
       ),
@@ -437,7 +451,6 @@ class LocalNotificationsService extends FletService {
           "repeat_interval must be at least one minute");
     }
     final notificationDetails = await _buildNotificationDetails(
-      id: id,
       actions: actions,
       details: map,
     );
@@ -489,18 +502,16 @@ class LocalNotificationsService extends FletService {
   // ── Notification details construction ───────────────────────────────
 
   Future<fln.NotificationDetails> _buildNotificationDetails({
-    required int id,
     required List<ParsedAction> actions,
     Map? details,
   }) async {
     final notificationDetails = parseNotificationDetails(
-      id: id,
       actions: actions,
       details: details,
     );
     await _ensureAndroidChannel(details);
     if (actions.isNotEmpty) {
-      await _registerDarwinCategories(id, actions);
+      await _registerDarwinCategory(actions);
     }
     return notificationDetails;
   }
@@ -518,45 +529,49 @@ class LocalNotificationsService extends FletService {
     await plugin.createNotificationChannel(parseNotificationChannel(channel));
   }
 
-  /// Replaces Apple's category set with all registered notification actions.
+  /// Registers the Apple category of [actions] if it is new.
   ///
   /// Category updates use initialization without requesting authorization.
-  Future<void> _registerDarwinCategories(
-    int id,
-    List<ParsedAction> actions,
-  ) async {
+  Future<void> _registerDarwinCategory(List<ParsedAction> actions) async {
     if (!isApplePlatform()) return;
-    final categoryActions = actions.map((a) {
-      final options = <fln.DarwinNotificationActionOption>{
-        if (a.destructive) fln.DarwinNotificationActionOption.destructive,
-        if (a.foreground) fln.DarwinNotificationActionOption.foreground,
-      };
-      final input = a.input;
-      if (input == null) {
-        return fln.DarwinNotificationAction.plain(
-          a.id,
-          a.title,
-          options: options,
+    final specs = darwinActionSpecs(actions);
+    final identifier = darwinCategoryIdentifier(specs);
+    if (_registeredDarwinCategories.contains(identifier)) return;
+    _darwinCategories[identifier] = specs;
+    await _saveDarwinCategories();
+    await _initializeBackend();
+  }
+
+  /// Restores the categories registered in earlier app runs, once per service.
+  Future<void> _loadDarwinCategories() async {
+    if (_darwinCategoriesLoaded) return;
+    _darwinCategoriesLoaded = true;
+    try {
+      final stored =
+          await SharedPreferencesAsync().getString(_darwinCategoriesKey);
+      if (stored == null) return;
+      for (final MapEntry(:key, :value)
+          in (jsonDecode(stored) as Map).entries) {
+        _darwinCategories.putIfAbsent(
+          key as String,
+          () => [
+            for (final spec in value as List) List<Object?>.of(spec as List)
+          ],
         );
       }
-      return fln.DarwinNotificationAction.text(
-        a.id,
-        a.title,
-        buttonTitle: input.label ?? a.title,
-        placeholder: input.label,
-        options: options,
-      );
-    }).toList();
-
-    final category = fln.DarwinNotificationCategory(
-      "$darwinNotificationCategoryPrefix$id",
-      actions: categoryActions,
-    );
-    _darwinCategories[id] = category;
-    if (areDarwinCategoriesEqual(_registeredDarwinCategories[id], category)) {
-      return;
+    } catch (e) {
+      // Best-effort: categories registered in this run still work.
+      debugPrint("flet_notifications: loading action categories failed: $e");
     }
-    await _initializeBackend();
+  }
+
+  Future<void> _saveDarwinCategories() async {
+    try {
+      await SharedPreferencesAsync()
+          .setString(_darwinCategoriesKey, jsonEncode(_darwinCategories));
+    } catch (e) {
+      debugPrint("flet_notifications: saving action categories failed: $e");
+    }
   }
 
   // ── Permissions ─────────────────────────────────────────────────────
@@ -690,7 +705,6 @@ class LocalNotificationsService extends FletService {
         map["foreground_service_types"],
       ),
       notificationDetails: (await _buildNotificationDetails(
-        id: id,
         actions: actions,
         details: map,
       ))
