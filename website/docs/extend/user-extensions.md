@@ -51,6 +51,15 @@ open build/macos/flet-spinkit-example.app
 
 Once the project was built for desktop once, you can make changes to your python files and run it without rebuilding.
 
+:::note
+`flet run` uses the app built in `build/<platform>` under the folder you run it
+from, so run it from the project's folder. Without a build, `flet run` and
+[`flet pack`](../publish/using-pyinstaller.md) use the prebuilt Flet client,
+which only includes the [built-in extensions](built-in-extensions.md): your
+extension's controls show as unknown controls there. Ship apps that use it with
+[`flet build`](../cli/flet-build.md).
+:::
+
 First, if you are not using uv, install dependencies from pyproject.toml:
 
 ```

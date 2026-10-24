@@ -24,10 +24,12 @@ speed-vs-control curve:
 | Python dependencies | Discovered by PyInstaller's static analysis of your imports | Installed in full from your declared [app dependencies](index.md#app-dependencies)                                          |
 | Build time       | Fast — no native compilation                                | Slower — a full Flutter build                                                                                              |
 | Customization    | Icon and executable/bundle metadata                         | Everything: icons, splash, [build template](index.md#build-template), [signing and store packaging](macos.md#code-signing) |
+| Extensions       | Only the [built-in extensions](../extend/built-in-extensions.md) of the prebuilt client | Any, including [your own and third-party ones](../extend/user-extensions.md)                                                |
 
 Reach for `flet pack` when you want a desktop artifact quickly; use
-[`flet build`](index.md) when you target mobile or web, or need deeper
-customization.
+[`flet build`](index.md) when you target mobile or web, need deeper
+customization, or use an extension the prebuilt client doesn't include: its
+controls show as unknown controls in a packed app.
 
 Like PyInstaller itself, `flet pack` is not a cross-compiler: run it on each
 OS you target — [CI](#packaging-in-ci) makes this painless.
