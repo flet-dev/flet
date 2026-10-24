@@ -169,6 +169,16 @@ built in rather than applied at launch. Reach for it if you would rather have
 packaging handled than assemble it yourself.
 :::
 
+## Linux client flavor
+
+On Linux, `flet pack` bundles the [desktop client flavor](../getting-started/installation.md#linux)
+selected where you run it: the light one by default, which leaves out the
+[Audio](../services/audio/index.md), [Video](../controls/video/index.md) and
+[Rive](../controls/rive/index.md) extensions. `flet pack` warns when your app
+imports one of them. It reads `desktop_flavor` from the `pyproject.toml` of the
+folder you run it from, or
+[`FLET_DESKTOP_FLAVOR`](../reference/environment-variables.md#flet_desktop_flavor).
+
 ## Including assets
 
 If your app uses [assets](../cookbook/assets.md), include them with

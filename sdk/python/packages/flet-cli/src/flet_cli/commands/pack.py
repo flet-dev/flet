@@ -239,8 +239,9 @@ class Command(BaseCommand):
         """
         Warn about the extensions the app imports that the client doesn't include.
 
-        Their controls show as unknown controls in the packed app. Nothing is
-        printed when the client's extensions can't be read.
+        Their controls show as unknown controls in the packed app. With the light
+        Linux client, the full client is suggested too, as it includes more
+        extensions. Nothing is printed when the client's extensions can't be read.
 
         Args:
             options: Parsed command-line options.
@@ -250,20 +251,33 @@ class Command(BaseCommand):
             find_missing_extensions,
             get_client_extensions,
         )
+        from flet_desktop import get_artifact_filename
 
         client_extensions = get_client_extensions(snapshot_path)
         if client_extensions is None:
             return
+        light = is_linux() and "-light-" in get_artifact_filename()
         app_dir = Path(options.script).resolve().parent
         for extension in find_missing_extensions(app_dir, client_extensions):
             source = (
                 f" (from {extension.distribution})" if extension.distribution else ""
             )
+            if light:
+                fix = (
+                    "Pack with the full Linux client if it includes the extension "
+                    "(https://flet.dev/docs/publish/using-pyinstaller"
+                    "#linux-client-flavor), or package the app with flet build: "
+                    "https://flet.dev/docs/publish"
+                )
+            else:
+                fix = (
+                    "Package apps that use it with flet build instead: "
+                    "https://flet.dev/docs/publish"
+                )
             print(
-                f"Warning: the Flet client that flet pack bundles doesn't include "
-                f"the {extension.package} extension{source}, so its controls "
-                f"will show as unknown controls. Package apps that use it with "
-                f"flet build instead: https://flet.dev/docs/publish"
+                f"Warning: the {'light ' if light else ''}Flet client that flet pack "
+                f"bundles doesn't include the {extension.package} extension{source}, "
+                f"so its controls will show as unknown controls. {fix}"
             )
 
     @staticmethod
