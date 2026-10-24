@@ -728,6 +728,7 @@ docs:
         - services/notifications/types/windowsnotificationduration.md
         - services/notifications/types/windowsnotificationsound.md
         - services/notifications/types/windowsoptions.md
+        - services/notifications/types/windowsprogress.md
         - services/notifications/types/windowsscenario.md
       - types/observable.md
       - types/offset.md

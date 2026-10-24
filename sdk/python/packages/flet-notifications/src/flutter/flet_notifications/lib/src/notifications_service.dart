@@ -429,6 +429,9 @@ class NotificationsService extends FletService {
       case "start_foreground_service":
         return await _startForegroundService(args);
 
+      case "update_windows_progress":
+        return await _updateWindowsProgress(args);
+
       case "stop_foreground_service":
         return await _stopForegroundService();
 
@@ -589,6 +592,10 @@ class NotificationsService extends FletService {
   fln.AndroidFlutterLocalNotificationsPlugin? get _androidPlugin =>
       _plugin?.resolvePlatformSpecificImplementation<
           fln.AndroidFlutterLocalNotificationsPlugin>();
+
+  fln.FlutterLocalNotificationsWindows? get _windowsPlugin =>
+      _plugin?.resolvePlatformSpecificImplementation<
+          fln.FlutterLocalNotificationsWindows>();
 
   fln.WebFlutterLocalNotificationsPlugin? get _webPlugin =>
       _plugin?.resolvePlatformSpecificImplementation<
@@ -780,6 +787,30 @@ class NotificationsService extends FletService {
   }
 
   // ── Foreground service (Android) ─────────────────────────────────────
+
+  /// Updates the progress bar of a shown Windows notification in place.
+  ///
+  /// Returns `false` when the notification is no longer shown.
+  Future<bool> _updateWindowsProgress(dynamic args) async {
+    final windows = _windowsPlugin;
+    if (windows == null) {
+      throw UnsupportedError("updating progress in place is Windows-only");
+    }
+    final map = args as Map;
+    // Windows only updates the bar's value and label; its status and title stay
+    // as shown.
+    final result = await windows.updateProgressBar(
+      notificationId: parseInt(map["id"])!,
+      progressBar: parseWindowsProgress(map["progress"] as Map),
+    );
+    return switch (result) {
+      fln.NotificationUpdateResult.success => true,
+      fln.NotificationUpdateResult.notFound => false,
+      fln.NotificationUpdateResult.error =>
+        throw const NotificationException.operationFailed(
+            "Windows could not update the notification"),
+    };
+  }
 
   Future<void> _startForegroundService(dynamic args) async {
     final android = _androidPlugin;

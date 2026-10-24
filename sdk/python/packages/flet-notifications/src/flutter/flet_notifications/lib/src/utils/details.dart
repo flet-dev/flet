@@ -75,6 +75,7 @@ fln.NotificationDetails parseNotificationDetails({
     final webOptions = _platformOptions(details, "web") ?? const {};
     final windowsOptions = _platformOptions(details, "windows") ?? const {};
     final windowsAudio = windowsOptions["audio"] as String?;
+    final windowsProgress = windowsOptions["progress"] as Map?;
     final additionalFlags = parseInt(androidOptions["additional_flags"]);
     final linuxTimeout = parseDuration(linuxOptions["timeout"]);
     final progress = androidOptions["progress"] as Map?;
@@ -185,6 +186,9 @@ fln.NotificationDetails parseNotificationDetails({
             windowsOptions["scenario"] as String?),
         timestamp: windowsOptions["timestamp"] as DateTime?,
         subtitle: windowsOptions["subtitle"] as String?,
+        progressBars: [
+          if (windowsProgress != null) parseWindowsProgress(windowsProgress),
+        ],
         images: (windowsOptions["images"] as List?)
                 ?.map((e) => fln.WindowsImage(Uri.parse("$e"), altText: ""))
                 .toList() ??

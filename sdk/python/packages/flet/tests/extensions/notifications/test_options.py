@@ -1,6 +1,8 @@
 """Tests for the per-platform options surface."""
 
+import weakref
 from datetime import datetime, timedelta, timezone
+from unittest.mock import Mock
 
 import pytest
 
@@ -12,8 +14,10 @@ from flet_notifications import (
     LinuxOptions,
     NotificationAction,
     Notifications,
+    NotificationUnsupportedPlatformError,
     WebOptions,
     WindowsOptions,
+    WindowsProgress,
 )
 
 from .helpers import encode_wire
@@ -124,6 +128,81 @@ def test_android_durations_encode_objects_and_milliseconds(duration, expected):
     )
     for name in ("timeout_after", "led_on_duration", "led_off_duration"):
         assert wire.get(name) == expected
+
+
+def test_windows_progress_sends_values_the_client_defaults():
+    """Default progress fields are omitted, matching the client's defaults."""
+    assert encode_wire(WindowsOptions(progress=WindowsProgress(status="Downloading")))[
+        "progress"
+    ] == {"status": "Downloading"}
+    assert encode_wire(
+        WindowsProgress(
+            status="Downloading",
+            value=3,
+            max=10,
+            indeterminate=True,
+            title="report.pdf",
+            label="3/10",
+        )
+    ) == {
+        "status": "Downloading",
+        "value": 3,
+        "max": 10,
+        "indeterminate": True,
+        "title": "report.pdf",
+        "label": "3/10",
+    }
+
+
+class _RecordingNotifications(Notifications):
+    """A service on a page of the given platform, recording its client calls."""
+
+    def __init__(self, platform: ft.PagePlatform, web: bool = False):
+        super().__init__()
+        self.calls = []
+        self._page = ft.Page(sess=Mock())
+        self._page.platform = platform
+        self._page.web = web
+        self._parent = weakref.ref(self._page)
+
+    async def _invoke_method(self, method_name, arguments=None, timeout=None):
+        self.calls.append((method_name, encode_wire(arguments)))
+        return False
+
+
+@pytest.mark.asyncio
+async def test_windows_progress_update_sends_the_progress():
+    """An in-place update sends the progress and returns the client's answer."""
+    service = _RecordingNotifications(ft.PagePlatform.WINDOWS)
+    progress = WindowsProgress(status="Downloading...", value=3, max=10, label="3/10")
+    assert await service.update_windows_progress(5, progress) is False
+    assert service.calls == [
+        (
+            "update_windows_progress",
+            {
+                "id": 5,
+                "progress": {
+                    "status": "Downloading...",
+                    "value": 3,
+                    "max": 10,
+                    "label": "3/10",
+                },
+            },
+        )
+    ]
+
+
+@pytest.mark.parametrize(
+    ("platform", "web"),
+    [(ft.PagePlatform.ANDROID, False), (ft.PagePlatform.WINDOWS, True)],
+)
+@pytest.mark.asyncio
+async def test_windows_progress_update_is_windows_only(platform, web):
+    """Other platforms, and web apps opened on Windows, fail before the call."""
+    service = _RecordingNotifications(platform, web)
+    with pytest.raises(NotificationUnsupportedPlatformError, match="only available"):
+        await service.update_windows_progress(5, WindowsProgress(status="Working"))
+    assert service.calls == []
 
 
 def test_action_sends_require_authentication_only_when_set():

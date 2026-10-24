@@ -27,6 +27,7 @@ from flet_notifications.options import (
     NotificationOptions,
     WebOptions,
     WindowsOptions,
+    WindowsProgress,
     WindowsScenario,
 )
 from flet_notifications.styles import (
@@ -114,5 +115,6 @@ __all__ = [
     "WindowsNotificationDuration",
     "WindowsNotificationSound",
     "WindowsOptions",
+    "WindowsProgress",
     "WindowsScenario",
 ]

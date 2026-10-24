@@ -263,6 +263,71 @@ class _RecordingAndroid extends fln.AndroidFlutterLocalNotificationsPlugin {
   }
 }
 
+/// Fake Windows platform implementation recording in-place updates.
+///
+/// The real class loads the Windows plugin's DLL when constructed, so the fake
+/// only implements its interface; members the tests don't use are left to
+/// [noSuchMethod].
+class _FakeWindowsPlugin extends fln.FlutterLocalNotificationsPlatform
+    implements fln.FlutterLocalNotificationsWindows {
+  final List<(int, fln.WindowsProgressBar)> updates = [];
+  fln.NotificationUpdateResult updateResult =
+      fln.NotificationUpdateResult.success;
+
+  @override
+  Future<bool> initialize({
+    required fln.WindowsInitializationSettings settings,
+    fln.DidReceiveNotificationResponseCallback?
+        onDidReceiveNotificationResponse,
+  }) async =>
+      true;
+
+  @override
+  Future<fln.NotificationUpdateResult> updateProgressBar({
+    required int notificationId,
+    required fln.WindowsProgressBar progressBar,
+  }) async {
+    updates.add((notificationId, progressBar));
+    return updateResult;
+  }
+
+  @override
+  Future<void> show({
+    required int id,
+    String? title,
+    String? body,
+    String? payload,
+    fln.WindowsNotificationDetails? notificationDetails,
+  }) =>
+      throw UnimplementedError();
+
+  @override
+  Future<void> zonedSchedule({
+    required int id,
+    String? title,
+    String? body,
+    required tz.TZDateTime scheduledDate,
+    fln.WindowsNotificationDetails? notificationDetails,
+    String? payload,
+    fln.DateTimeComponents? matchDateTimeComponents,
+  }) =>
+      throw UnimplementedError();
+
+  @override
+  Future<void> periodicallyShow({
+    required int id,
+    String? title,
+    String? body,
+    required fln.RepeatInterval repeatInterval,
+    fln.WindowsNotificationDetails? notificationDetails,
+    String? payload,
+  }) =>
+      throw UnimplementedError();
+
+  @override
+  dynamic noSuchMethod(Invocation invocation) => super.noSuchMethod(invocation);
+}
+
 /// Fake macOS platform implementation recording Darwin notification details.
 class _FakeMacOsPlugin extends fln.MacOSFlutterLocalNotificationsPlugin {
   fln.DarwinNotificationDetails? shownDarwin;
@@ -1381,6 +1446,93 @@ void main() {
     expect(notificationImportanceName(fln.Importance.defaultImportance),
         "default");
     expect(notificationImportanceName(fln.Importance.high), "high");
+  });
+
+  test("Windows progress counts up to its max", () {
+    double? value(Map<String, Object?> progress) =>
+        parseWindowsProgress({"status": "Downloading", ...progress}).value;
+    expect(value({}), 0);
+    expect(value({"value": 30}), 0.3);
+    expect(value({"value": 3, "max": 10}), 0.3);
+    expect(value({"value": 30, "max": 0}), 0);
+    expect(value({"value": 150}), 1);
+    expect(value({"value": 30, "indeterminate": true}), isNull);
+
+    final details = notification_details.parseNotificationDetails(
+      actions: const [],
+      details: {
+        "options": {
+          "windows": {
+            "progress": {
+              "status": "Downloading",
+              "value": 3,
+              "max": 10,
+              "title": "report.pdf",
+              "label": "3/10",
+            },
+          },
+        },
+      },
+    );
+    final bar = details.windows!.progressBars.single;
+    expect(bar.status, "Downloading");
+    expect(bar.title, "report.pdf");
+    expect(bar.label, "3/10");
+    expect(details.windows!.progressBars.single.value, 0.3);
+  });
+
+  test("Windows progress updates in place and reports dismissed notifications",
+      () async {
+    debugDefaultTargetPlatformOverride = TargetPlatform.windows;
+    addTearDown(() => debugDefaultTargetPlatformOverride = null);
+    final windows = _FakeWindowsPlugin();
+    fln.FlutterLocalNotificationsPlatform.instance = windows;
+    final service = _makeService();
+
+    expect(
+        await _call(service, "update_windows_progress", {
+          "id": 5,
+          "progress": {
+            "status": "Downloading",
+            "value": 3,
+            "max": 10,
+            "label": "3/10",
+          },
+        }),
+        true);
+    final (id, bar) = windows.updates.single;
+    expect(id, 5);
+    expect(bar.id, "progress");
+    expect(bar.value, 0.3);
+    expect(bar.label, "3/10");
+
+    expect(
+        await _call(service, "update_windows_progress", {
+          "id": 5,
+          "progress": {"status": "Downloading", "indeterminate": true},
+        }),
+        true);
+    expect(windows.updates.last.$2.value, isNull);
+    expect(windows.updates.last.$2.label, isNull);
+
+    const progress = {
+      "id": 5,
+      "progress": {"status": "Downloading"},
+    };
+    windows.updateResult = fln.NotificationUpdateResult.notFound;
+    expect(await _call(service, "update_windows_progress", progress), false);
+    windows.updateResult = fln.NotificationUpdateResult.error;
+    expect(await _call(service, "update_windows_progress", progress),
+        startsWith("operation_failed: "));
+  });
+
+  test("Windows progress updates are unsupported elsewhere", () async {
+    expect(
+        await _call(_makeService(), "update_windows_progress", {
+          "id": 5,
+          "progress": {"status": "Downloading"},
+        }),
+        startsWith("unsupported_platform: "));
   });
 
   test("Linux timeouts accept duration maps and retain sentinel values",

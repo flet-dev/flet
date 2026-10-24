@@ -7,6 +7,7 @@ from flet_notifications.base import (
     NotificationActionEvent,
     NotificationEvent,
     NotificationInvalidArgumentError,
+    NotificationUnsupportedPlatformError,
     error_from_bridge,
     parse_query_list,
 )
@@ -15,7 +16,7 @@ from flet_notifications.events import (
     ActiveNotification,
     PendingNotification,
 )
-from flet_notifications.options import NotificationOptions
+from flet_notifications.options import NotificationOptions, WindowsProgress
 from flet_notifications.scheduling import (
     build_periodic_args,
     build_schedule_args,
@@ -721,6 +722,64 @@ class Notifications(ft.Service):
                 failure.
         """
         await self._call("stop_foreground_service")
+
+    async def update_windows_progress(self, id: int, progress: WindowsProgress) -> bool:
+        """
+        Update the progress bar of a shown Windows notification in place.
+
+        Unlike showing the notification again, the update doesn't pop the toast up
+        again. The notification must already have been shown with
+        :attr:`flet_notifications.WindowsOptions.progress`; to advance it, change
+        the values of the same progress object and pass it here.
+
+        Note:
+            Windows only updates the bar itself and its label:
+
+            - :attr:`~flet_notifications.WindowsProgress.value`,
+              :attr:`~flet_notifications.WindowsProgress.max` and
+              :attr:`~flet_notifications.WindowsProgress.indeterminate` apply.
+            - :attr:`~flet_notifications.WindowsProgress.status` and
+              :attr:`~flet_notifications.WindowsProgress.title` keep the values the
+              notification was shown with; changes to them are ignored.
+            - :attr:`~flet_notifications.WindowsProgress.label` can only be updated
+              if the notification was shown with one, and setting it to `None`
+              keeps the last label shown.
+
+        Args:
+            id: Identifier of the notification to update.
+            progress: The progress to show.
+
+        Returns:
+            Whether the notification was updated; `False` when it is no longer
+                shown, such as after the user dismissed it.
+
+        Raises:
+            NotificationUnsupportedPlatformError: When not on Windows.
+            NotificationError: If the bridge reports another failure.
+
+        Example:
+            ```python
+            progress = ftn.WindowsProgress(status="Downloading...", label="0/10")
+            await notifications.show(
+                id=7,
+                title="report.pdf",
+                options=ftn.NotificationOptions(
+                    windows=ftn.WindowsOptions(progress=progress)
+                ),
+            )
+            for step in range(1, 11):
+                progress.value = step * 10
+                progress.label = f"{step}/10"
+                await notifications.update_windows_progress(7, progress)
+            ```
+        """
+        if self.page.web or self.page.platform != ft.PagePlatform.WINDOWS:
+            raise NotificationUnsupportedPlatformError(
+                "update_windows_progress() is only supported on Windows"
+            )
+        return await self._call(
+            "update_windows_progress", {"id": id, "progress": progress}
+        )
 
     async def are_notifications_enabled(self) -> bool:
         """

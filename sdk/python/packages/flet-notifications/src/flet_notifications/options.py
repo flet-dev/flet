@@ -725,6 +725,41 @@ class LinuxOptions:
 
 
 @ft.value(kw_only=True)
+class WindowsProgress:
+    """
+    Progress bar shown in a Windows toast notification.
+
+    Set it as :attr:`flet_notifications.WindowsOptions.progress`. To advance the bar
+    without popping the toast up again, call
+    :meth:`flet_notifications.Notifications.update_windows_progress`.
+    """
+
+    status: str
+    """Text describing the activity, such as `"Downloading..."`."""
+
+    value: int = 0
+    """Current progress, between `0` and :attr:`max`."""
+
+    max: int = 100
+    """Value at which the progress bar is full."""
+
+    indeterminate: bool = False
+    """
+    Whether to show ongoing activity without a known completion amount.
+
+    When `True`, :attr:`value` and :attr:`max` are ignored.
+    """
+
+    title: str | None = None
+    """Title shown above the progress bar."""
+
+    label: str | None = None
+    """
+    Text shown instead of the percentage, such as `"3/10"` for discrete progress.
+    """
+
+
+@ft.value(kw_only=True)
 class WindowsOptions:
     """
     Presentation settings for Windows toast notifications.
@@ -778,6 +813,9 @@ class WindowsOptions:
 
     subtitle: str | None = None
     """Additional text line displayed below the notification body."""
+
+    progress: WindowsProgress | None = None
+    """Progress bar shown in the toast."""
 
     images: list[str] | None = None
     """

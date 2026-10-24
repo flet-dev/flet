@@ -135,6 +135,24 @@ fln.WindowsNotificationDuration? parseWindowsNotificationDuration(String? value,
         [fln.WindowsNotificationDuration? defaultValue]) =>
     parseEnum(fln.WindowsNotificationDuration.values, value, defaultValue);
 
+/// Converts a `WindowsProgress`, whose value counts up to its `max`, to the
+/// plugin's progress bar, whose value is a fraction.
+fln.WindowsProgressBar parseWindowsProgress(Map value) {
+  final max = parseInt(value["max"], 100)!;
+  final current = parseInt(value["value"], 0)!;
+  return fln.WindowsProgressBar(
+    id: "progress",
+    status: value["status"] as String? ?? "",
+    title: value["title"] as String?,
+    label: value["label"] as String?,
+    value: parseBool(value["indeterminate"], false)!
+        ? null
+        : max <= 0
+            ? 0
+            : (current / max).clamp(0.0, 1.0),
+  );
+}
+
 fln.WindowsNotificationScenario? parseWindowsNotificationScenario(String? value,
         [fln.WindowsNotificationScenario? defaultValue]) =>
     parseEnum(fln.WindowsNotificationScenario.values, value, defaultValue);
