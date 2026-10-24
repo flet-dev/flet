@@ -1,6 +1,7 @@
 """Tests for the Notifications service."""
 
 from datetime import datetime, timedelta, timezone
+from unittest.mock import AsyncMock
 
 import pytest
 
@@ -239,3 +240,66 @@ async def test_request_permissions_sends_the_requested_apple_authorizations():
             "provisional": True,
         },
     ]
+
+
+@pytest.mark.parametrize(
+    ("call", "platform", "web"),
+    [
+        (
+            lambda n: n.schedule(1, when=timedelta(minutes=1)),
+            ft.PagePlatform.LINUX,
+            False,
+        ),
+        (lambda n: n.schedule(1, when=timedelta(minutes=1)), ft.PagePlatform.IOS, True),
+        (
+            lambda n: n.periodically_show(1, repeat_interval=RepeatInterval.DAILY),
+            ft.PagePlatform.WINDOWS,
+            False,
+        ),
+        (lambda n: n.cancel_pending(), ft.PagePlatform.WINDOWS, False),
+        (lambda n: n.get_pending_notifications(), ft.PagePlatform.LINUX, False),
+        (lambda n: n.get_active_notifications(), ft.PagePlatform.LINUX, False),
+        (lambda n: n.open_app_notification_settings(), ft.PagePlatform.MACOS, True),
+        (lambda n: n.start_foreground_service(1), ft.PagePlatform.IOS, False),
+    ],
+)
+@pytest.mark.asyncio
+async def test_platform_specific_methods_fail_before_the_call(
+    client_platform, call, platform, web
+):
+    """Methods raise on platforms without support, without calling the client."""
+    client_platform.platform, client_platform.web = platform, web
+    service = Notifications()
+    service._invoke_method = AsyncMock()
+    with pytest.raises(NotificationUnsupportedPlatformError, match="only supported"):
+        await call(service)
+    service._invoke_method.assert_not_called()
+
+
+@pytest.mark.parametrize(
+    "call",
+    [
+        lambda n: n.cancel_pending(),
+        lambda n: n.get_pending_notifications(),
+        lambda n: n.get_active_notifications(),
+    ],
+)
+@pytest.mark.asyncio
+async def test_web_supported_methods_reach_the_client(client_platform, call):
+    """Methods the browser supports are called on the web."""
+    client_platform.platform, client_platform.web = ft.PagePlatform.WINDOWS, True
+    service = Notifications()
+    service._invoke_method = AsyncMock(return_value=[])
+    await call(service)
+    service._invoke_method.assert_called_once()
+
+
+@pytest.mark.asyncio
+async def test_unsupported_platform_error_lists_supported_platforms(client_platform):
+    """The error names the method and the platforms that support it."""
+    client_platform.platform = ft.PagePlatform.LINUX
+    with pytest.raises(NotificationUnsupportedPlatformError) as e:
+        await Notifications().schedule(1, when=timedelta(minutes=1))
+    assert str(e.value) == (
+        "schedule() is only supported on Android, iOS, macOS and Windows"
+    )

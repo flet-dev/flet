@@ -31,6 +31,16 @@ from flet_notifications.types import (
 
 __all__ = ["Notifications"]
 
+# Display names of the platforms, in the order error messages list them.
+_PLATFORM_NAMES = {
+    ft.PagePlatform.ANDROID: "Android",
+    ft.PagePlatform.ANDROID_TV: "Android",
+    ft.PagePlatform.IOS: "iOS",
+    ft.PagePlatform.MACOS: "macOS",
+    ft.PagePlatform.WINDOWS: "Windows",
+    ft.PagePlatform.LINUX: "Linux",
+}
+
 
 @ft.control("Notifications")
 class Notifications(ft.Service):
@@ -167,6 +177,31 @@ class Notifications(ft.Service):
         - Background Android/iOS actions are queued and replayed on the next service
           initialization; Python is not run in the background isolate.
     """
+
+    def _require_platform(
+        self, method: str, platforms: set[ft.PagePlatform], *, web: bool = False
+    ) -> None:
+        """
+        Raise unless the app runs on one of `platforms`, or in a browser if `web`.
+
+        Raises:
+            NotificationUnsupportedPlatformError: Elsewhere, naming `method` and the
+                platforms it is supported on.
+        """
+        page = self.page
+        if web if page.web else page.platform in platforms:
+            return
+        names = list(
+            dict.fromkeys(n for p, n in _PLATFORM_NAMES.items() if p in platforms)
+        )
+        if web:
+            names.append("the web")
+        listed = (
+            names[0] if len(names) == 1 else f"{', '.join(names[:-1])} and {names[-1]}"
+        )
+        raise NotificationUnsupportedPlatformError(
+            f"{method}() is only supported on {listed}"
+        )
 
     async def _call(self, method_name: str, arguments: Any = None) -> Any:
         """Invoke a bridge method, raising its failures as `NotificationError`."""
@@ -396,6 +431,8 @@ class Notifications(ft.Service):
                 access. Ignored on other platforms.
 
         Raises:
+            NotificationUnsupportedPlatformError: If called on Linux or the web,
+                which don't support scheduled notifications.
             NotificationInvalidArgumentError: If `when` is not in the future.
             NotificationPermissionError: If an exact `schedule_mode` lacks Android
                 exact-alarm access.
@@ -416,6 +453,16 @@ class Notifications(ft.Service):
             )
             ```
         """
+        self._require_platform(
+            "schedule",
+            {
+                ft.PagePlatform.ANDROID,
+                ft.PagePlatform.ANDROID_TV,
+                ft.PagePlatform.IOS,
+                ft.PagePlatform.MACOS,
+                ft.PagePlatform.WINDOWS,
+            },
+        )
         await self._call(
             "schedule",
             {
@@ -482,6 +529,8 @@ class Notifications(ft.Service):
             options: Additional per-platform details.
 
         Raises:
+            NotificationUnsupportedPlatformError: If called on Windows, Linux or
+                the web, which don't support repeating notifications.
             NotificationInvalidArgumentError: If `repeat_interval` is not a
                 :class:`~flet_notifications.RepeatInterval`, :class:`~flet.Duration`,
                 or integer, or if a custom duration is less than one minute.
@@ -489,6 +538,15 @@ class Notifications(ft.Service):
                 exact-alarm access.
             NotificationError: If the bridge reports another failure.
         """
+        self._require_platform(
+            "periodically_show",
+            {
+                ft.PagePlatform.ANDROID,
+                ft.PagePlatform.ANDROID_TV,
+                ft.PagePlatform.IOS,
+                ft.PagePlatform.MACOS,
+            },
+        )
         await self._call(
             "periodically_show",
             {
@@ -510,14 +568,27 @@ class Notifications(ft.Service):
         Cancel all scheduled notifications without removing displayed ones.
 
         Note:
-            Supported only on Android, iOS, and macOS. Other platforms report an
-            unsupported operation. Use :meth:`cancel` to remove a specific pending
-            request.
+            Supported on Android, iOS, and macOS. Does nothing on the web, which has
+            no scheduled notifications. Use :meth:`cancel` to remove a specific
+            pending request.
 
         Raises:
+            NotificationUnsupportedPlatformError: If called on Windows, which
+                can't cancel pending notifications all at once, or on Linux, which
+                doesn't support scheduled notifications.
             NotificationError: If the bridge reports initialization or operation
                 failure.
         """
+        self._require_platform(
+            "cancel_pending",
+            {
+                ft.PagePlatform.ANDROID,
+                ft.PagePlatform.ANDROID_TV,
+                ft.PagePlatform.IOS,
+                ft.PagePlatform.MACOS,
+            },
+            web=True,
+        )
         await self._call("cancel_pending")
 
     async def get_pending_notifications(self) -> list[PendingNotification]:
@@ -525,19 +596,31 @@ class Notifications(ft.Service):
         Query notifications scheduled for future delivery.
 
         Note:
-            Supported only on Android, iOS, macOS, and Windows. Windows query
-            support depends on package identity. Unsupported queries can report a
-            :class:`~flet_notifications.NotificationError`; an empty list is not a
-            universal unsupported-platform response.
+            Supported on Android, iOS, macOS, and Windows, where the query depends on
+            package identity. Returns an empty list on the web, which has no scheduled
+            notifications.
 
         Returns:
             Snapshots of pending requests. These do not include every platform detail
                 and cannot be edited to change the native schedule.
 
         Raises:
+            NotificationUnsupportedPlatformError: If called on Linux, which doesn't
+                support scheduled notifications.
             NotificationError: If the backend reports a failure or returns malformed
                 query data.
         """
+        self._require_platform(
+            "get_pending_notifications",
+            {
+                ft.PagePlatform.ANDROID,
+                ft.PagePlatform.ANDROID_TV,
+                ft.PagePlatform.IOS,
+                ft.PagePlatform.MACOS,
+                ft.PagePlatform.WINDOWS,
+            },
+            web=True,
+        )
         return parse_query_list(await self._call("get_pending"), PendingNotification)
 
     async def can_schedule_exact_notifications(self) -> bool:
@@ -659,7 +742,6 @@ class Notifications(ft.Service):
             and types matching the actual work. See
             :class:`flet_notifications.AndroidForegroundServiceType` for the shared
             setup and each type's `pyproject.toml` entries and runtime requirements.
-            Other platforms report an unsupported operation.
 
             This starts the plugin's native foreground service; it does not create a
             Python worker or guarantee that Android will keep the process alive
@@ -687,9 +769,14 @@ class Notifications(ft.Service):
 
         Raises:
             NotificationInvalidArgumentError: If `id` is `0`.
-            NotificationUnsupportedPlatformError: Outside Android.
+            NotificationUnsupportedPlatformError: If called on a platform other
+                than Android, where foreground services don't exist.
             NotificationError: If the bridge reports another failure.
         """
+        self._require_platform(
+            "start_foreground_service",
+            {ft.PagePlatform.ANDROID, ft.PagePlatform.ANDROID_TV},
+        )
         if id == 0:
             raise NotificationInvalidArgumentError(
                 "foreground service id must be non-zero"
@@ -754,7 +841,8 @@ class Notifications(ft.Service):
                 shown, such as after the user dismissed it.
 
         Raises:
-            NotificationUnsupportedPlatformError: When not on Windows.
+            NotificationUnsupportedPlatformError: If called on a platform other
+                than Windows, including a web app opened on Windows.
             NotificationError: If the bridge reports another failure.
 
         Example:
@@ -773,10 +861,7 @@ class Notifications(ft.Service):
                 await notifications.update_windows_progress(7, progress)
             ```
         """
-        if self.page.web or self.page.platform != ft.PagePlatform.WINDOWS:
-            raise NotificationUnsupportedPlatformError(
-                "update_windows_progress() is only supported on Windows"
-            )
+        self._require_platform("update_windows_progress", {ft.PagePlatform.WINDOWS})
         return await self._call(
             "update_windows_progress", {"id": id, "progress": progress}
         )
@@ -811,14 +896,25 @@ class Notifications(ft.Service):
 
         Note:
             On iOS, the plugin tries the app's notification settings and falls back to
-            the app's general settings when necessary. Unsupported platforms can report
-            an error. The bridge discards the native success flag, so a successful
-            return does not confirm that a settings screen opened.
+            the app's general settings when necessary. The bridge discards the native
+            success flag, so a successful return does not confirm that a settings
+            screen opened.
 
         Raises:
+            NotificationUnsupportedPlatformError: If called on Windows, Linux or
+                the web, where the app's notification settings can't be opened.
             NotificationError: If the bridge reports initialization or operation
                 failure.
         """
+        self._require_platform(
+            "open_app_notification_settings",
+            {
+                ft.PagePlatform.ANDROID,
+                ft.PagePlatform.ANDROID_TV,
+                ft.PagePlatform.IOS,
+                ft.PagePlatform.MACOS,
+            },
+        )
         await self._call("open_app_settings")
 
     async def get_active_notifications(self) -> list[ActiveNotification]:
@@ -826,20 +922,31 @@ class Notifications(ft.Service):
         Query delivered notifications that have not been dismissed or removed.
 
         Note:
-            Supported only on Android 6.0+, iOS 10+, macOS 10.14+, and Windows with an
-            MSIX
-            package identity. The Windows backend returns an empty list without that
-            identity. Unsupported platforms can report an error rather than returning an
-            empty list.
+            Supported on Android 6.0+, iOS 10+, macOS 10.14+, the web, and Windows with
+            an MSIX package identity. Without that identity, Windows returns an empty
+            list.
 
         Returns:
             Snapshots of active notifications, with platform-dependent fields.
                 Unavailable values are `None`.
 
         Raises:
+            NotificationUnsupportedPlatformError: If called on Linux, which can't
+                list the notifications it shows.
             NotificationError: If the backend reports a failure or returns malformed
                 query data.
         """
+        self._require_platform(
+            "get_active_notifications",
+            {
+                ft.PagePlatform.ANDROID,
+                ft.PagePlatform.ANDROID_TV,
+                ft.PagePlatform.IOS,
+                ft.PagePlatform.MACOS,
+                ft.PagePlatform.WINDOWS,
+            },
+            web=True,
+        )
         return parse_query_list(await self._call("get_active"), ActiveNotification)
 
     async def request_full_screen_intent_permission(self) -> bool:
