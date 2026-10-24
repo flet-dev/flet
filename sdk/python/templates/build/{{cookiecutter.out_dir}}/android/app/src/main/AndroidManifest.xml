@@ -1,25 +1,25 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools">
-    <!-- flet: permission {% for k, v in cookiecutter.options.android_permissions.items() %} {% if v %} -->
+    <!-- flet: permission {% for k, v in cookiecutter._options.android_permissions.items() %} {% if v %} -->
     <uses-permission android:name="{{ k }}"{% if v is mapping %}{% for ak, av in v.items() %} android:{{ ak }}="{{ av }}"{% endfor %}{% endif %} />
     <!-- flet: end of permission {% else %} -->
     <uses-permission android:name="{{ k }}" tools:node="remove" />
     <!-- flet: end of permission {% endif %} {% endfor %} -->
 
-    <!-- flet: feature {% for k, v in cookiecutter.options.android_features.items() %} -->
+    <!-- flet: feature {% for k, v in cookiecutter._options.android_features.items() %} -->
     <uses-feature android:name="{{ k }}" android:required="{% if v == True %}true{% else %}false{% endif %}" />
     <!-- flet: end of feature {% endfor %} -->
 
-    <!-- {% set manifest_application = cookiecutter.pyproject.get('tool', {}).get('flet', {}).get('android', {}).get('manifest_application', {}) %} -->
+    <!-- {% set manifest_application = cookiecutter._pyproject.get('tool', {}).get('flet', {}).get('android', {}).get('manifest_application', {}) %} -->
     <application
         android:label="{{ cookiecutter.product_name }}"
         android:name="${applicationName}"
         android:enableOnBackInvokedCallback="true"
-        {% if manifest_application -%}{% for k, v in cookiecutter.pyproject.tool.flet.android.manifest_application.items() -%}
+        {% if manifest_application -%}{% for k, v in cookiecutter._pyproject.tool.flet.android.manifest_application.items() -%}
         android:{{ k }}="{{ v }}"
         {% endfor -%}{% endif -%}
         android:icon="@mipmap/ic_launcher">
-        <!-- flet: meta-data {% for k, v in cookiecutter.options.android_meta_data.items() %} -->
+        <!-- flet: meta-data {% for k, v in cookiecutter._options.android_meta_data.items() %} -->
         <meta-data android:name="{{ k }}" android:value="{{ v }}" />
         <!-- flet: end of meta-data {% endfor %} -->
         <activity
@@ -44,14 +44,14 @@
                 <category android:name="android.intent.category.LAUNCHER" />
                 <category android:name="android.intent.category.LEANBACK_LAUNCHER" />   <!-- Google TV -->
             </intent-filter>
-            <!-- flet: deep linking {% if cookiecutter.options.deep_linking.scheme and cookiecutter.options.deep_linking.host %} -->
+            <!-- flet: deep linking {% if cookiecutter._options.deep_linking.scheme and cookiecutter._options.deep_linking.host %} -->
             <meta-data android:name="flutter_deeplinking_enabled" android:value="true" />
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />
                 <category android:name="android.intent.category.DEFAULT" />
                 <category android:name="android.intent.category.BROWSABLE" />
-                <data android:scheme="{{ cookiecutter.options.deep_linking.scheme }}"
-                    android:host="{{ cookiecutter.options.deep_linking.host }}" />
+                <data android:scheme="{{ cookiecutter._options.deep_linking.scheme }}"
+                    android:host="{{ cookiecutter._options.deep_linking.host }}" />
             </intent-filter>
             <!-- flet: end of deep linking {% endif %} -->
         </activity>
@@ -64,12 +64,12 @@
                 android:name="android.support.FILE_PROVIDER_PATHS"
                 android:resource="@xml/provider_paths" />
         </provider>
-        <!-- flet: provider {% for k, v in cookiecutter.options.android_providers.items() %} {% if v %} -->
+        <!-- flet: provider {% for k, v in cookiecutter._options.android_providers.items() %} {% if v %} -->
         <provider android:name="{{ k }}"{% for ak, av in v.items() if ak != 'meta_data' %} android:{{ ak }}="{{ av }}"{% endfor %}{% if not v.get('meta_data') %} />{% else %}>
             {% for mk, mv in v.meta_data.items() %}{% if mv is mapping %}<meta-data android:name="{{ mk }}"{% for attr_key, attr_value in mv.items() %} android:{{ attr_key }}="{{ attr_value }}"{% endfor %} />{% else %}<meta-data android:name="{{ mk }}" android:value="{{ mv }}" />{% endif %}
             {% endfor %}</provider>{% endif %}
         <!-- flet: end of provider {% endif %} {% endfor %} -->
-        <!-- flet: receiver {% for name, receiver in cookiecutter.options.android_receivers.items() %} -->
+        <!-- flet: receiver {% for name, receiver in cookiecutter._options.android_receivers.items() %} -->
         <receiver android:name="{{ name | e }}"{% for key, value in receiver.attributes.items() %} android:{{ key }}="{{ value | e }}"{% endfor %}{% if not receiver.intent_filters %} />{% else %}>
             {% for intent_filter in receiver.intent_filters %}<intent-filter>
                 {% for action in intent_filter.actions %}<action android:name="{{ action | e }}" />
@@ -77,7 +77,7 @@
                 {% endfor %}</intent-filter>
             {% endfor %}</receiver>{% endif %}
         <!-- flet: end of receiver {% endfor %} -->
-        <!-- flet: service {% for name, service in cookiecutter.options.android_services.items() %} -->
+        <!-- flet: service {% for name, service in cookiecutter._options.android_services.items() %} -->
         <service android:name="{{ name | e }}"{% for key, value in service.attributes.items() %} android:{{ key }}="{{ value | e }}"{% endfor %}{% if not service.property and not service.meta_data %} />{% else %}>
             {% for name, attributes in service.property.items() %}<property android:name="{{ name | e }}"{% for key, value in attributes.items() %} android:{{ key }}="{{ value | e }}"{% endfor %} />
             {% endfor %}{% for name, attributes in service.meta_data.items() %}<meta-data android:name="{{ name | e }}"{% for key, value in attributes.items() %} android:{{ key }}="{{ value | e }}"{% endfor %} />

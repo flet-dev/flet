@@ -1654,7 +1654,10 @@ class BaseBuildCommand(BaseFlutterCommand):
             "ios_signing_certificate": ios_signing_certificate,
             "ios_export_options": ios_export_options,
             "ios_team_id": ios_team_id,
-            "options": {
+            # `_` makes `_options` and `_pyproject` private cookiecutter
+            # variables, which reach the template unchanged. Cookiecutter
+            # renders other values as Jinja and turns them into strings.
+            "_options": {
                 "package_platform": self.package_platform,
                 "config_platform": self.config_platform,
                 "python_version": self.python_release.short,
@@ -1703,7 +1706,7 @@ class BaseBuildCommand(BaseFlutterCommand):
                 or self.icon_background_value("android")
                 or "#ffffff"
             ),
-            "pyproject": self.get_pyproject(),
+            "_pyproject": self.get_pyproject(),
         }
 
     @staticmethod
@@ -2139,7 +2142,7 @@ class BaseBuildCommand(BaseFlutterCommand):
                 markup=False,
             )
 
-        options = self.template_data["options"]
+        options = self.template_data["_options"]
         options["android_compile_options"] = self.get_android_compile_options()
         options["android_gradle_dependencies"] = self.get_android_gradle_dependencies()
 
@@ -2620,12 +2623,12 @@ class BaseBuildCommand(BaseFlutterCommand):
                 self.python_release.short,
             ]
 
-            if self.template_data["options"]["target_arch"]:
+            if self.template_data["_options"]["target_arch"]:
                 # serious_python's --arch is a Dart multi-option: values must be
                 # comma-separated or the flag repeated. Space-separated values
                 # after the first are silently treated as positional arguments.
                 package_args.extend(
-                    ["--arch", ",".join(self.template_data["options"]["target_arch"])]
+                    ["--arch", ",".join(self.template_data["_options"]["target_arch"])]
                 )
 
             # Only the short version is passed; serious_python derives the full

@@ -81,7 +81,7 @@ def test_hide_window_on_start_precedence(
         .render(
             get_pyproject=load_pyproject_toml(tmp_path),
             cookiecutter={
-                "options": {"config_platform": platform},
+                "_options": {"config_platform": platform},
                 "flutter": {"dependencies": []},
                 "python_module_name": "main",
                 "boot_screen": {"name": "flet", "options_b64": "e30="},

@@ -282,7 +282,7 @@ def _render_ios(name: str, entitlements: dict) -> str:
     return (
         Environment(keep_trailing_newline=True)
         .from_string(path.read_text())
-        .render(cookiecutter={"options": {"ios_entitlements": entitlements}})
+        .render(cookiecutter={"_options": {"ios_entitlements": entitlements}})
     )
 
 
@@ -328,6 +328,28 @@ class TestEntitlements:
             "com.apple.developer.associated-domains": ["applinks:example.com"],
         }
         rendered = _render_ios("Runner/Runner.entitlements", entitlements)
+        assert plistlib.loads(rendered.encode()) == entitlements
+
+    def test_entitlements_keep_their_types_through_cookiecutter(self):
+        """Numbers keep their plist types and strings are escaped after cookiecutter
+        processes the build's context."""
+        from cookiecutter.prompt import prompt_for_config
+
+        entitlements = {
+            "com.example.count": 32,
+            "com.example.ratio": 0.5,
+            "com.example.name": "Tom & Jerry <{{ x }}>",
+            "com.example.enabled": True,
+        }
+        context = prompt_for_config(
+            {"cookiecutter": {"_options": {"ios_entitlements": entitlements}}},
+            no_input=True,
+        )
+        rendered = (
+            Environment(keep_trailing_newline=True)
+            .from_string((IOS_TEMPLATE_DIR / "Runner/Runner.entitlements").read_text())
+            .render(cookiecutter=context)
+        )
         assert plistlib.loads(rendered.encode()) == entitlements
 
     @pytest.mark.parametrize(

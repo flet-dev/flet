@@ -6,6 +6,7 @@
 * Flet's Dart code now takes Material and Cupertino from the `material_ui` and `cupertino_ui` packages instead of the Flutter SDK's `package:flutter/material.dart` and `package:flutter/cupertino.dart`. The Dart code of extensions that uses Material or Cupertino must migrate. See the [Material and Cupertino now come from material_ui and cupertino_ui](/docs/updates/breaking-changes/v1-1-0/material-ui-cupertino-ui) guide by @ndonkoHenri.
 * Themes built from a seed color, including the default theme, now have neutral surfaces: white in light mode and near-black (`#121212`) in dark mode, with neutral greys for containers, outlines and text on surfaces. The seed still drives accent colors. To keep the seed-tinted Material 3 look, set `page.theme = ft.Theme(surfaces=ft.ThemeSurfaces.TONAL)` (and the same for `page.dark_theme`). See [Default theme surfaces are now neutral](https://flet.dev/docs/updates/breaking-changes/v1-1-0/neutral-default-surfaces) ([#6921](https://github.com/flet-dev/flet/issues/6921)) by @FeodorFitsner.
 * The default dark splash and loading screen color of web apps is now `#121212` (was `#222222`), to match the new dark theme surface ([#6921](https://github.com/flet-dev/flet/issues/6921)) by @FeodorFitsner.
+* Custom [`flet build` templates](/docs/publish#build-template) (`--template`) must read the build's settings from `cookiecutter._options` and the app's `pyproject.toml` from `cookiecutter._pyproject` (were `cookiecutter.options` and `cookiecutter.pyproject`). Cookiecutter passes these private variables to the template unchanged, so numbers keep their types and values aren't rendered as Jinja by @ndonkoHenri.
 
 ### New features
 
@@ -55,6 +56,7 @@
 ### Bug fixes
 
 * Fix `flet build` apps showing a blank page when the system suspended them while Python was starting, such as when iOS launches an app in the background for a notification action by @ndonkoHenri.
+* Fix `flet build` writing numbers in `[tool.flet.macos.entitlement]`, `[tool.flet.ios.info]` and `[tool.flet.macos.info]` as strings, producing invalid plists when keys or values contain `&` or `<`, and failing when a `pyproject.toml` value contains `{{` by @ndonkoHenri.
 * Fix `Tester.find_by_key()` not finding `Tab` and `PopupMenuItem` controls by their keys ([#6965](https://github.com/flet-dev/flet/issues/6965), [#6976](https://github.com/flet-dev/flet/pull/6976)) by @RezaShamsipour.
 * Fix `GestureDetector.on_tap_move` not firing, while preserving tap accessibility and updates to `allowed_devices` ([#6961](https://github.com/flet-dev/flet/issues/6961), [#6982](https://github.com/flet-dev/flet/pull/6982)) by @inchang-ing.
 * Honor an explicit platform `app.hide_window_on_start = false` when the global setting is `true`, in both the Dart bootstrap and Windows runner ([#6949](https://github.com/flet-dev/flet/issues/6949), [#6981](https://github.com/flet-dev/flet/pull/6981)) by @LaoChouPro.

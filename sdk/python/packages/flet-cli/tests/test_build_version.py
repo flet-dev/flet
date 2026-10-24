@@ -31,7 +31,7 @@ def flutter_version_args(
     cmd = options.handler.__self__
     cmd.options = options
     cmd.build_dir = cmd.flutter_dir = "."
-    cmd.template_data = {"options": {"target_arch": None}, "split_per_abi": False}
+    cmd.template_data = {"_options": {"target_arch": None}, "split_per_abi": False}
     values = pyproject or {}
     cmd.get_pyproject = lambda key=None: values.get(key)
     cmd.target_platform = "apk"

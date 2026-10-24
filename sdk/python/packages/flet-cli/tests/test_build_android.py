@@ -42,7 +42,7 @@ def _render_gradle(cmd):
             "org_name_2": "com.example",
             "package_name": "example",
             "split_per_abi": False,
-            "options": {
+            "_options": {
                 "android_compile_options": cmd.get_android_compile_options(),
                 "android_gradle_dependencies": cmd.get_android_gradle_dependencies(),
                 "android_legacy_packaging": False,
@@ -63,8 +63,8 @@ def _render_manifest(cmd):
         .render(
             cookiecutter={
                 "product_name": "Example",
-                "pyproject": {},
-                "options": {
+                "_pyproject": {},
+                "_options": {
                     "android_receivers": cmd.get_android_receivers(),
                     "android_services": cmd.get_android_services(),
                     "android_permissions": {"android.permission.INTERNET": True},

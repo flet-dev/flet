@@ -179,14 +179,14 @@ class Command(BaseBuildCommand):
 
         if (
             self.target_platform in ("apk", "aab")
-            and self.template_data["options"]["target_arch"]
+            and self.template_data["_options"]["target_arch"]
         ):
             args.extend(
                 [
                     "--target-platform",
                     ",".join(
                         flutter_target_platforms(
-                            self.template_data["options"]["target_arch"]
+                            self.template_data["_options"]["target_arch"]
                         )
                     ),
                 ]
@@ -576,7 +576,7 @@ class Command(BaseBuildCommand):
             # The authoritative check reads the built app's Info.plist; this
             # one catches the common case — the key not configured at all —
             # before the build.
-            if not self.template_data["options"]["info_plist"].get(
+            if not self.template_data["_options"]["info_plist"].get(
                 "LSApplicationCategoryType"
             ):
                 self.cleanup(

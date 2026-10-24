@@ -39,8 +39,8 @@
   "font_fallback_base_url_js": "null",
   "no_wasm": false,
   "pyodide_version": "",
-  "options": null,
-  "pyproject": null,
+  "_options": null,
+  "_pyproject": null,
   "adaptive_icon_background": "#ffffff",
   "splash": {
     "android": true,

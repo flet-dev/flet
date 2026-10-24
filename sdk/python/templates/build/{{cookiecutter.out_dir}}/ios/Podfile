@@ -88,7 +88,7 @@ post_install do |installer|
         {%- for macro, plist_keys in permission_mapping.items() %}
           {%- set ns = namespace(enabled=False) %}
           {%- for key in plist_keys %}
-            {%- if key in cookiecutter.options.info_plist %}
+            {%- if key in cookiecutter._options.info_plist %}
               {%- set ns.enabled = True %}
             {%- endif %}
           {%- endfor %}

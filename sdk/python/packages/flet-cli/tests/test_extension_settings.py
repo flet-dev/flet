@@ -425,7 +425,7 @@ class TestBuildCommand:
 
         cmd.cleanup = cleanup
         cmd.template_data = {
-            "options": {
+            "_options": {
                 "android_compile_options": cmd.get_android_compile_options(),
                 "android_gradle_dependencies": cmd.get_android_gradle_dependencies(),
             }
@@ -460,7 +460,7 @@ class TestBuildCommand:
 
         cmd.apply_extension_settings()
 
-        options = cmd.template_data["options"]
+        options = cmd.template_data["_options"]
         assert options["android_compile_options"]["isCoreLibraryDesugaringEnabled"] == (
             "true"
         )
@@ -486,7 +486,7 @@ class TestBuildCommand:
         cmd.apply_extension_settings()
         cmd.apply_extension_settings()
 
-        assert cmd.template_data["options"]["android_gradle_dependencies"] == (
+        assert cmd.template_data["_options"]["android_gradle_dependencies"] == (
             f'{DESUGARING}\nimplementation("a:a:1")'
         )
 

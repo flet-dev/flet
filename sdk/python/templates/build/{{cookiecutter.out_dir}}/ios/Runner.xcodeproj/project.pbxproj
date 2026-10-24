@@ -371,7 +371,7 @@
 {% if cookiecutter.ios_provisioning_profile %}
 				PROVISIONING_PROFILE_SPECIFIER = "{{ cookiecutter.ios_provisioning_profile }}";
 {% endif %}
-{% if cookiecutter.options.ios_entitlements %}
+{% if cookiecutter._options.ios_entitlements %}
 				CODE_SIGN_ENTITLEMENTS = Runner/Runner.entitlements;
 {% endif %}
 				ENABLE_BITCODE = NO;
@@ -568,7 +568,7 @@
 {% if cookiecutter.ios_provisioning_profile %}
 				PROVISIONING_PROFILE_SPECIFIER = "{{ cookiecutter.ios_provisioning_profile }}";
 {% endif %}
-{% if cookiecutter.options.ios_entitlements %}
+{% if cookiecutter._options.ios_entitlements %}
 				CODE_SIGN_ENTITLEMENTS = Runner/Runner.entitlements;
 {% endif %}
 				ENABLE_BITCODE = NO;
@@ -603,7 +603,7 @@
 {% if cookiecutter.ios_provisioning_profile %}
 				PROVISIONING_PROFILE_SPECIFIER = "{{ cookiecutter.ios_provisioning_profile }}";
 {% endif %}
-{% if cookiecutter.options.ios_entitlements %}
+{% if cookiecutter._options.ios_entitlements %}
 				CODE_SIGN_ENTITLEMENTS = Runner/Runner.entitlements;
 {% endif %}
 				ENABLE_BITCODE = NO;
