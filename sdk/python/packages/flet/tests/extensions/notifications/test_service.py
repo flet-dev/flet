@@ -172,37 +172,34 @@ def test_error_classes_are_also_caught_as_their_generic_kinds():
 
 
 @pytest.mark.parametrize(
-    ("method", "native_method", "timeout"),
+    ("method", "native_method"),
     [
-        ("request_permissions", "request_permissions", 300),
-        ("can_schedule_exact_notifications", "can_schedule_exact_notifications", None),
-        ("request_exact_alarm_permission", "request_exact_alarm_permission", 300),
-        ("are_notifications_enabled", "are_notifications_enabled", None),
-        ("request_full_screen_intent_permission", "request_full_screen_intent", 300),
-        ("has_notification_policy_access", "has_notification_policy_access", None),
+        ("request_permissions", "request_permissions"),
+        ("can_schedule_exact_notifications", "can_schedule_exact_notifications"),
+        ("request_exact_alarm_permission", "request_exact_alarm_permission"),
+        ("are_notifications_enabled", "are_notifications_enabled"),
+        ("request_full_screen_intent_permission", "request_full_screen_intent"),
+        ("has_notification_policy_access", "has_notification_policy_access"),
         (
             "request_notification_policy_access",
             "request_notification_policy_access",
-            300,
         ),
     ],
 )
 @pytest.mark.asyncio
 async def test_boolean_methods_preserve_native_results_and_errors(
-    method, native_method, timeout
+    method, native_method
 ):
-    """Boolean results survive transport without hiding errors or changing timeouts."""
+    """Boolean results survive transport without hiding errors."""
     service = Notifications()
     result = False
 
     async def invoke(method_name, arguments=None, timeout=None):
         assert method_name == native_method
-        assert timeout == expected_timeout
         if isinstance(result, Exception):
             raise result
         return encode_wire(result)
 
-    expected_timeout = timeout
     service._invoke_method = invoke
     for result in [True, False]:
         assert await getattr(service, method)() is result

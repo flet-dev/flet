@@ -166,15 +166,10 @@ class Notifications(ft.Service):
         for every notification that disappears.
     """
 
-    async def _call(
-        self,
-        method_name: str,
-        arguments: Any = None,
-        timeout: float | None = None,
-    ) -> Any:
+    async def _call(self, method_name: str, arguments: Any = None) -> Any:
         """Invoke a bridge method, raising its failures as `NotificationError`."""
         try:
-            return await self._invoke_method(method_name, arguments, timeout=timeout)
+            return await self._invoke_method(method_name, arguments)
         except RuntimeError as e:
             raise error_from_bridge(str(e)) from None
 
@@ -335,7 +330,6 @@ class Notifications(ft.Service):
                 "critical": critical,
                 "provisional": provisional,
             },
-            timeout=300,
         )
 
     async def schedule(
@@ -587,7 +581,7 @@ class Notifications(ft.Service):
             NotificationError: If the bridge reports initialization or operation
                 failure.
         """
-        return await self._call("request_exact_alarm_permission", timeout=300)
+        return await self._call("request_exact_alarm_permission")
 
     async def create_notification_channel(self, channel: NotificationChannel) -> None:
         """
@@ -809,7 +803,7 @@ class Notifications(ft.Service):
             NotificationError: If the bridge reports initialization or operation
                 failure.
         """
-        return await self._call("request_full_screen_intent", timeout=300)
+        return await self._call("request_full_screen_intent")
 
     async def has_notification_policy_access(self) -> bool:
         """
@@ -844,7 +838,7 @@ class Notifications(ft.Service):
             NotificationError: If the bridge reports initialization or operation
                 failure.
         """
-        return await self._call("request_notification_policy_access", timeout=300)
+        return await self._call("request_notification_policy_access")
 
     async def create_notification_channel_group(
         self, group_id: str, *, name: str, description: str | None = None

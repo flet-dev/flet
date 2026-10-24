@@ -272,7 +272,6 @@ class FilePicker(Service):
                 "dialog_title": dialog_title,
                 "initial_directory": initial_directory,
             },
-            timeout=3600,
         )
 
     async def save_file(
@@ -327,7 +326,6 @@ class FilePicker(Service):
                 "allowed_extensions": allowed_extensions,
                 "src_bytes": src_bytes,
             },
-            timeout=3600,
         )
 
     async def pick_files(
@@ -387,7 +385,6 @@ class FilePicker(Service):
                 "compression_quality": compression_quality,
                 "cancel_upload_on_window_blur": cancel_upload_on_window_blur,
             },
-            timeout=3600,
         )
         return [FilePickerFile(**self._normalize_file(file)) for file in files]
 
