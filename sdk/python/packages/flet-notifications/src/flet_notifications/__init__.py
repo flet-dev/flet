@@ -1,36 +1,20 @@
-from flet_notifications.actions import NotificationAction, NotificationActionInput
-from flet_notifications.base import (
-    NotificationActionEvent,
-    NotificationEvent,
-    NotificationException,
-    NotificationInitializationException,
-    NotificationInvalidArgumentException,
-    NotificationPermissionException,
-    NotificationUnsupportedPlatformException,
-)
-from flet_notifications.channels import NotificationChannel
-from flet_notifications.events import (
-    ActiveNotification,
-    PendingNotification,
-)
-from flet_notifications.notifications import Notifications
-from flet_notifications.options import (
+from flet_notifications.android import (
+    AndroidAudioAttributesUsage,
+    AndroidForegroundServiceType,
     AndroidGroup,
+    AndroidGroupAlertBehavior,
+    AndroidImportance,
+    AndroidNotificationCategory,
+    AndroidNotificationFlag,
     AndroidOptions,
     AndroidPriority,
     AndroidProgress,
+    AndroidScheduleMode,
+    AndroidServiceStartType,
     AndroidVisibility,
-    DarwinInterruptionLevel,
-    DarwinOptions,
-    LinuxOptions,
-    LinuxUrgency,
-    NotificationOptions,
-    WebOptions,
-    WindowsOptions,
-    WindowsProgress,
-    WindowsScenario,
+    NotificationChannel,
 )
-from flet_notifications.styles import (
+from flet_notifications.android_styles import (
     AndroidBigPictureStyle,
     AndroidBigTextStyle,
     AndroidBitmap,
@@ -45,21 +29,48 @@ from flet_notifications.styles import (
     AndroidPerson,
     AndroidStyle,
 )
-from flet_notifications.types import (
-    AndroidAudioAttributesUsage,
-    AndroidForegroundServiceType,
-    AndroidGroupAlertBehavior,
-    AndroidImportance,
-    AndroidNotificationCategory,
-    AndroidNotificationFlag,
-    AndroidScheduleMode,
-    AndroidServiceStartType,
-    DateTimeComponents,
+from flet_notifications.darwin import (
+    DarwinInterruptionLevel,
+    DarwinOptions,
+)
+from flet_notifications.events import (
+    NotificationActionEvent,
+    NotificationEvent,
+)
+from flet_notifications.exceptions import (
+    NotificationException,
+    NotificationInitializationException,
+    NotificationInvalidArgumentException,
+    NotificationPermissionException,
+    NotificationUnsupportedPlatformException,
+)
+from flet_notifications.linux import (
     LinuxNotificationCategory,
+    LinuxOptions,
+    LinuxUrgency,
+)
+from flet_notifications.notifications import (
+    Notifications,
+)
+from flet_notifications.types import (
+    ActiveNotification,
+    DateTimeComponents,
+    NotificationAction,
+    NotificationActionInput,
+    NotificationOptions,
+    PendingNotification,
     RepeatInterval,
+)
+from flet_notifications.web import (
     WebNotificationDirection,
+    WebOptions,
+)
+from flet_notifications.windows import (
     WindowsNotificationDuration,
     WindowsNotificationSound,
+    WindowsOptions,
+    WindowsProgress,
+    WindowsScenario,
 )
 
 __all__ = [

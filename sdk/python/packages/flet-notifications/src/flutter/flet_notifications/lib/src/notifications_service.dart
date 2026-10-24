@@ -261,8 +261,6 @@ class NotificationsService extends FletService {
     );
   }
 
-  // ── Tap replay (background taps + cold starts) ──────────────────────
-
   Future<void> _replayQueuedTaps() async {
     if (_disposed) return;
     if (_replaying) {
@@ -607,8 +605,6 @@ class NotificationsService extends FletService {
       ? windowsLaunchArguments(notificationId: id, payload: payload)
       : payload;
 
-  // ── Notification details construction ───────────────────────────────
-
   Future<fln.NotificationDetails> _buildNotificationDetails({
     required List<ParsedAction> actions,
     Map? details,
@@ -683,8 +679,6 @@ class NotificationsService extends FletService {
     }
   }
 
-  // ── Permissions ─────────────────────────────────────────────────────
-
   Future<bool> _requestPermissions(dynamic args) async {
     if (isWebPlatform()) {
       final web = _webPlugin;
@@ -738,8 +732,6 @@ class NotificationsService extends FletService {
     return true;
   }
 
-  // ── Channels (Android 8.0+) ──────────────────────────────────────────
-
   Future<void> _createChannel(dynamic args) async {
     final android = _androidPlugin;
     if (android == null) return;
@@ -785,8 +777,6 @@ class NotificationsService extends FletService {
         )
         .toList();
   }
-
-  // ── Foreground service (Android) ─────────────────────────────────────
 
   /// Updates the progress bar of a shown Windows notification in place.
   ///
@@ -850,8 +840,6 @@ class NotificationsService extends FletService {
     if (android == null) return;
     await android.stopForegroundService();
   }
-
-  // ── Probes & OS integration ───────────────────────────────
 
   Future<bool> _areNotificationsEnabled() async {
     if (isWebPlatform()) {

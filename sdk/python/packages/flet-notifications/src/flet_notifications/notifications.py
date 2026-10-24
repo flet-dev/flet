@@ -1,31 +1,31 @@
 from datetime import datetime, timedelta
-from typing import Any
+from typing import Any, TypeVar
 
 import flet as ft
-from flet_notifications.actions import NotificationAction
-from flet_notifications.base import (
-    NotificationActionEvent,
-    NotificationEvent,
+from flet.utils import from_dict
+from flet_notifications.android import (
+    AndroidForegroundServiceType,
+    AndroidScheduleMode,
+    AndroidServiceStartType,
+    NotificationChannel,
+)
+from flet_notifications.events import NotificationActionEvent, NotificationEvent
+from flet_notifications.exceptions import (
+    NotificationException,
     NotificationInvalidArgumentException,
     NotificationUnsupportedPlatformException,
     error_from_bridge,
-    parse_query_list,
 )
-from flet_notifications.channels import NotificationChannel
-from flet_notifications.events import (
-    ActiveNotification,
-    PendingNotification,
-)
-from flet_notifications.options import NotificationOptions, WindowsProgress
 from flet_notifications.scheduling import (
     build_periodic_args,
     build_schedule_args,
 )
 from flet_notifications.types import (
-    AndroidForegroundServiceType,
-    AndroidScheduleMode,
-    AndroidServiceStartType,
+    ActiveNotification,
     DateTimeComponents,
+    NotificationAction,
+    NotificationOptions,
+    PendingNotification,
     RepeatInterval,
 )
 from flet_notifications.validation import (
@@ -33,18 +33,35 @@ from flet_notifications.validation import (
     validate_non_empty,
     validate_notification_id,
 )
+from flet_notifications.windows import WindowsProgress
 
 __all__ = ["Notifications"]
 
-# Display names of the platforms, in the order error messages list them.
-_PLATFORM_NAMES = {
-    ft.PagePlatform.ANDROID: "Android",
-    ft.PagePlatform.ANDROID_TV: "Android",
-    ft.PagePlatform.IOS: "iOS",
-    ft.PagePlatform.MACOS: "macOS",
-    ft.PagePlatform.WINDOWS: "Windows",
-    ft.PagePlatform.LINUX: "Linux",
-}
+_QueryItem = TypeVar("_QueryItem")
+
+
+def parse_query_list(
+    result: object,
+    item_type: type[_QueryItem],
+) -> list[_QueryItem]:
+    """Reconstruct query snapshots without silently skipping malformed entries."""
+    if not isinstance(result, list):
+        raise NotificationException(
+            f"Expected a list of {item_type.__name__}",
+        )
+    items = []
+    for index, entry in enumerate(result):
+        if not isinstance(entry, dict):
+            raise NotificationException(
+                f"Expected {item_type.__name__} mapping at index {index}",
+            )
+        try:
+            items.append(from_dict(item_type, entry))
+        except (TypeError, ValueError) as exc:
+            raise NotificationException(
+                f"Invalid {item_type.__name__} at index {index}: {exc}",
+            ) from exc
+    return items
 
 
 @ft.control("Notifications")
@@ -196,6 +213,15 @@ class Notifications(ft.Service):
         page = self.page
         if web if page.web else page.platform in platforms:
             return
+
+        _PLATFORM_NAMES = {
+            ft.PagePlatform.ANDROID: "Android",
+            ft.PagePlatform.ANDROID_TV: "Android",
+            ft.PagePlatform.IOS: "iOS",
+            ft.PagePlatform.MACOS: "macOS",
+            ft.PagePlatform.WINDOWS: "Windows",
+            ft.PagePlatform.LINUX: "Linux",
+        }
         names = list(
             dict.fromkeys(n for p, n in _PLATFORM_NAMES.items() if p in platforms)
         )

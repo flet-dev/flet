@@ -3,7 +3,7 @@ from typing import Any
 
 import flet as ft
 from flet.utils.validation import FieldRule, V, validate
-from flet_notifications.base import NotificationInvalidArgumentException
+from flet_notifications.exceptions import NotificationInvalidArgumentException
 
 __all__ = []
 

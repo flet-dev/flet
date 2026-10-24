@@ -2,12 +2,9 @@ from datetime import datetime, timedelta
 from zoneinfo import ZoneInfo
 
 import flet as ft
-from flet_notifications.base import NotificationInvalidArgumentException
-from flet_notifications.types import (
-    AndroidScheduleMode,
-    DateTimeComponents,
-    RepeatInterval,
-)
+from flet_notifications.android import AndroidScheduleMode
+from flet_notifications.exceptions import NotificationInvalidArgumentException
+from flet_notifications.types import DateTimeComponents, RepeatInterval
 
 __all__ = []
 

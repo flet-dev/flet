@@ -284,7 +284,7 @@ class AndroidPerson:
 
     icon: AndroidIcon | None = None
     """
-    Optional participant avatar, supporting any \
+    Optional participant avatar, supporting any
     :class:`flet_notifications.AndroidIcon` source.
     """
 
@@ -292,7 +292,7 @@ class AndroidPerson:
 @ft.value(kw_only=True)
 class AndroidMessage:
     """
-    Message displayed in an Android :class:`flet_notifications.AndroidMessagingStyle` \
+    Message displayed in an Android :class:`flet_notifications.AndroidMessagingStyle`
     conversation.
     """
 
