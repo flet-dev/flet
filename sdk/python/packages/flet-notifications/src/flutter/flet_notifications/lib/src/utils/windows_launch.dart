@@ -18,18 +18,24 @@ String windowsLaunchArguments({
       "payload": payload,
     });
 
-/// Decodes [windowsLaunchArguments], or returns `null` for other strings, such
-/// as action ids on other platforms.
+/// Decodes [windowsLaunchArguments], or returns `null` for other strings.
 ({int? notificationId, String? actionId, String? payload})?
     decodeWindowsLaunchArguments(String? arguments) {
   if (arguments == null || !arguments.startsWith("{")) return null;
   try {
     final decoded = jsonDecode(arguments);
     if (decoded is! Map || !decoded.containsKey("notification")) return null;
+    final (notificationId, actionId, payload) =
+        (decoded["notification"], decoded["id"], decoded["payload"]);
+    if (notificationId is! int? ||
+        actionId is! String? ||
+        payload is! String?) {
+      return null;
+    }
     return (
-      notificationId: decoded["notification"] as int?,
-      actionId: decoded["id"] as String?,
-      payload: decoded["payload"] as String?,
+      notificationId: notificationId,
+      actionId: actionId,
+      payload: payload,
     );
   } on FormatException {
     return null;

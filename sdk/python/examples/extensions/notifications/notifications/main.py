@@ -156,7 +156,6 @@ def main(page: ft.Page):
     notifications.on_action = lambda e: log_line(
         f"action: {e.action_id!r} payload={e.payload!r} input={e.input!r}"
     )
-    notifications.on_dismissed = lambda e: log_line(f"dismissed: id={e.id}")
 
     # ── Handlers ──
     def show_plain(e):

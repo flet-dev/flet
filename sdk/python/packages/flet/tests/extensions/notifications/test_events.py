@@ -26,13 +26,10 @@ def test_event_field_types_resolve_to_dataclass():
     """
     from flet.controls.control_event import ControlEvent, get_event_field_type
 
-    service = Notifications(
-        on_tap=lambda e: None, on_action=lambda e: None, on_dismiss=lambda e: None
-    )
+    service = Notifications(on_tap=lambda e: None, on_action=lambda e: None)
     for field_name, expected in (
         ("on_tap", NotificationEvent),
         ("on_action", NotificationActionEvent),
-        ("on_dismiss", NotificationEvent),
     ):
         resolved = get_event_field_type(service, field_name)
         assert resolved is not None, field_name
@@ -44,7 +41,7 @@ def test_event_field_types_resolve_to_dataclass():
         )
 
 
-@pytest.mark.parametrize("event_name", ["tap", "action", "dismiss"])
+@pytest.mark.parametrize("event_name", ["tap", "action"])
 @pytest.mark.asyncio
 async def test_live_event_dispatch_builds_each_handlers_event(event_name):
     """Real dispatch builds an action event only for actions, keeping reply data."""

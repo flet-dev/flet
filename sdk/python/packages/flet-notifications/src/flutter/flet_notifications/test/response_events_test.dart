@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:flet_notifications/src/background_handler.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flet_notifications/src/utils/windows_launch.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart'
     as fln;
@@ -92,6 +93,9 @@ void main() {
   });
 
   group("Windows responses", () {
+    setUp(() => debugDefaultTargetPlatformOverride = TargetPlatform.windows);
+    tearDown(() => debugDefaultTargetPlatformOverride = null);
+
     // The Windows plugin reports every click as an action whose actionId and
     // payload are the clicked element's launch arguments, with no id.
     fln.NotificationResponse windowsClick(String arguments,
@@ -145,5 +149,26 @@ void main() {
       expect(event["id"], 3);
       expect(event["action_id"], '{"id": "x"}');
     });
+  });
+
+  test("an action id shaped like Windows launch arguments is kept elsewhere",
+      () {
+    debugDefaultTargetPlatformOverride = TargetPlatform.android;
+    addTearDown(() => debugDefaultTargetPlatformOverride = null);
+    const response = fln.NotificationResponse(
+      id: 3,
+      actionId: '{"notification": 9}',
+      notificationResponseType:
+          fln.NotificationResponseType.selectedNotificationAction,
+    );
+    final event = responseToEvent(response);
+    expect(event["event"], "action");
+    expect(event["id"], 3);
+    expect(event["action_id"], '{"notification": 9}');
+  });
+
+  test("Windows launch arguments with wrongly typed fields are not decoded",
+      () {
+    expect(decodeWindowsLaunchArguments('{"notification": "reply"}'), isNull);
   });
 }

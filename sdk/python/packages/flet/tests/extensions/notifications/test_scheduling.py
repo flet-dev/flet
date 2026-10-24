@@ -134,8 +134,6 @@ async def test_schedule_zoneinfo_datetime_names_its_timezone():
         (timedelta(seconds=1, microseconds=500001), 1_500_001),
         (timedelta(milliseconds=500), 500_000),
         (timedelta(microseconds=1), 1),
-        (timedelta(), 0),
-        (timedelta(microseconds=-1), -1),
         (timedelta(days=100000, microseconds=1), 8_640_000_000_000_001),
     ],
 )
@@ -150,6 +148,16 @@ async def test_schedule_timedelta_becomes_delay(delay, microseconds):
     assert (
         ft.Duration.from_unit(**args["when"]["delay"]).in_microseconds == microseconds
     )
+
+
+@pytest.mark.parametrize("delay", [timedelta(), timedelta(microseconds=-1)])
+@pytest.mark.asyncio
+async def test_schedule_non_positive_timedelta_fails_before_invocation(delay):
+    """A delay that isn't in the future never reaches the client."""
+    service = RecordingService()
+    with pytest.raises(NotificationInvalidArgumentError, match="future"):
+        await service.schedule(id=3, when=delay)
+    assert service.calls == []
 
 
 @pytest.mark.asyncio

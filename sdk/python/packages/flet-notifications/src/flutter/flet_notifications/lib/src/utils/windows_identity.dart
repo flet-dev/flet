@@ -16,7 +16,7 @@ typedef WindowsIdentity = ({
   String? iconPath,
 });
 
-/// Namespace of the GUIDs derived by [windowsIdentity].
+/// Namespace of the GUIDs derived by [windowsGuid].
 const String _guidNamespace = "c8b28b8a-5d47-46ee-b461-e128fa3932c2";
 
 /// Derives an app's default [WindowsIdentity] from its executable.
@@ -24,7 +24,7 @@ const String _guidNamespace = "c8b28b8a-5d47-46ee-b461-e128fa3932c2";
 /// The AppUserModelID combines [internalName] with a hash of
 /// [executablePath], so it is stable across launches and differs between
 /// apps, and between copies of an app installed in different places. The GUID
-/// is a name-based UUID of the AppUserModelID.
+/// is [windowsGuid] of the AppUserModelID.
 ///
 /// [iconPath] is the app's icon file, which Windows shows on its notifications.
 WindowsIdentity windowsIdentity({
@@ -41,13 +41,18 @@ WindowsIdentity windowsIdentity({
   final appUserModelId =
       "Flet.${name.isEmpty ? "App" : name.substring(0, name.length.clamp(0, 64))}"
       ".$pathHash";
-  return WindowsIdentity(
+  return (
     appName: productName.trim().isEmpty ? "Flet App" : productName.trim(),
     appUserModelId: appUserModelId,
-    guid: _uuid5(_guidNamespace, appUserModelId),
+    guid: windowsGuid(appUserModelId),
     iconPath: iconPath,
   );
 }
+
+/// The COM activation GUID of [appUserModelId]: a name-based UUID of it, so
+/// apps with different AppUserModelIDs get different GUIDs.
+String windowsGuid(String appUserModelId) =>
+    _uuid5(_guidNamespace, appUserModelId);
 
 /// A name-based UUID, version 5, as defined by RFC 9562.
 String _uuid5(String namespace, String name) {

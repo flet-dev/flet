@@ -69,7 +69,8 @@ fln.AndroidNotificationSound? parseAndroidNotificationSound(String? sound) {
 }
 
 fln.Priority? parsePriority(String? value, [fln.Priority? defaultValue]) =>
-    parseEnum(fln.Priority.values, value, defaultValue);
+    parseEnum(fln.Priority.values,
+        value == "default" ? "defaultPriority" : value, defaultValue);
 
 fln.NotificationVisibility? parseNotificationVisibility(String? value,
         [fln.NotificationVisibility? defaultValue]) =>
@@ -155,7 +156,15 @@ fln.AndroidNotificationCategory? parseAndroidNotificationCategory(
 
 fln.Importance? parseNotificationImportance(String? value,
         [fln.Importance? defaultValue]) =>
-    parseEnum(fln.Importance.values, value, defaultValue);
+    parseEnum(fln.Importance.values,
+        value == "default" ? "defaultImportance" : value, defaultValue);
+
+/// The `AndroidImportance` value of [importance], as [parseNotificationImportance]
+/// parses it.
+String notificationImportanceName(fln.Importance importance) =>
+    importance == fln.Importance.defaultImportance
+        ? "default"
+        : importance.name;
 
 /// Converts the vibration pattern shared by notifications and channels.
 Int64List? parseNotificationVibrationPattern(Object? value) {

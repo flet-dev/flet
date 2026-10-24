@@ -42,14 +42,35 @@ class NotificationsService extends FletService {
 
   /// Stops replaying the queue when background isolates add to it.
   void Function()? _stopListeningForQueuedTaps;
-  bool _launchReplayComplete = false;
+  bool _disposed = false;
+  Future<void>? _initFuture;
+
+  /// The live service, which receives the plugin's notification responses.
+  ///
+  /// The Windows and Linux plugins keep the response callback of their first
+  /// initialization until the app exits, so every service hands the plugin
+  /// [_forwardResponse], which reaches whichever service is live.
+  static NotificationsService? _live;
+
+  /// Whether the response that launched the app was handled.
+  ///
+  /// Launch details describe how the process started, so only the first
+  /// service replays them.
+  static bool _launchReplayComplete = false;
 
   /// Live responses received before the launch replay finishes.
   ///
   /// Android can deliver the response that launched the app both live and through
   /// launch details, so a launch response already seen live is not replayed.
-  final Set<String> _liveResponsesBeforeLaunchReplay = {};
-  Future<void>? _initFuture;
+  static final Set<String> _liveResponsesBeforeLaunchReplay = {};
+
+  /// Resets the state services share across the process.
+  @visibleForTesting
+  static void resetForTesting() {
+    _live = null;
+    _launchReplayComplete = false;
+    _liveResponsesBeforeLaunchReplay.clear();
+  }
 
   /// [SharedPreferencesAsync] key of the persisted Apple action categories,
   /// out of reach of `ft.SharedPreferences`.
@@ -71,6 +92,7 @@ class NotificationsService extends FletService {
   @override
   void init() {
     super.init();
+    _live = this;
     control.addInvokeMethodListener(invokeMethod);
     unawaited(_ensureInitialized());
   }
@@ -84,7 +106,10 @@ class NotificationsService extends FletService {
 
   @override
   void dispose() {
+    _disposed = true;
+    if (identical(_live, this)) _live = null;
     _stopListeningForQueuedTaps?.call();
+    _stopListeningForQueuedTaps = null;
     control.removeInvokeMethodListener(invokeMethod);
     super.dispose();
   }
@@ -113,9 +138,11 @@ class NotificationsService extends FletService {
     await _ensureInitialized(force: true);
   }
 
-  /// Initializes the backend again, failing as the next method call would.
+  /// Initializes the backend again as the live service, failing as the next
+  /// method call would.
   @visibleForTesting
   Future<void> reinitialize() async {
+    _live = this;
     await _ensureInitialized(force: true);
     _throwIfNotInitialized();
   }
@@ -139,7 +166,7 @@ class NotificationsService extends FletService {
             for (final specs in categories.values) darwinCategory(specs),
           ],
         ),
-        onDidReceiveNotificationResponse: _handleResponse,
+        onDidReceiveNotificationResponse: _forwardResponse,
         onDidReceiveBackgroundNotificationResponse: notificationTapBackground,
       );
       // Apple returns the permission-request result, even when no prompt is
@@ -171,14 +198,18 @@ class NotificationsService extends FletService {
       } catch (_) {
         // Device timezone lookup failed; scheduled times fall back to UTC.
       }
+      if (_disposed) return;
 
       _plugin ??= fln.FlutterLocalNotificationsPlugin();
       if (isWindowsDesktop()) {
         _windowsIdentity ??= await defaultWindowsIdentity();
       }
       if (isApplePlatform()) await _loadDarwinCategories();
+      if (_disposed) return;
       await _initializeBackend();
       _initialized = true;
+      // A service disposed meanwhile leaves the queue to its successor.
+      if (_disposed) return;
       // Listen before draining, so entries queued meanwhile are not missed.
       _stopListeningForQueuedTaps ??=
           listenForQueuedTaps(() => unawaited(_replayQueuedTaps()));
@@ -196,6 +227,7 @@ class NotificationsService extends FletService {
   fln.InitializationSettings _buildInitializationSettings({
     required List<fln.DarwinNotificationCategory> notificationCategories,
   }) {
+    final customAppUserModelId = control.getString("windows_app_user_model_id");
     final darwin = fln.DarwinInitializationSettings(
       requestAlertPermission: false,
       requestSoundPermission: false,
@@ -214,15 +246,15 @@ class NotificationsService extends FletService {
         appName: control.getString("windows_app_name") ??
             _windowsIdentity?.appName ??
             "Flet App",
-        appUserModelId: control.getString("windows_app_user_model_id") ??
+        appUserModelId: customAppUserModelId ??
             _windowsIdentity?.appUserModelId ??
             "Flet.App",
         iconPath: _windowsIdentity?.iconPath,
         guid: control.getString("windows_guid") ??
-            _windowsIdentity?.guid ??
-            windowsIdentity(
-                    productName: "", internalName: "", executablePath: "")
-                .guid,
+            (customAppUserModelId != null
+                ? windowsGuid(customAppUserModelId)
+                : _windowsIdentity?.guid) ??
+            windowsGuid("Flet.App"),
       ),
       web: const fln.WebInitializationSettings(),
     );
@@ -231,6 +263,7 @@ class NotificationsService extends FletService {
   // ── Tap replay (background taps + cold starts) ──────────────────────
 
   Future<void> _replayQueuedTaps() async {
+    if (_disposed) return;
     if (_replaying) {
       _replayAgain = true;
       return;
@@ -239,6 +272,7 @@ class NotificationsService extends FletService {
     try {
       do {
         _replayAgain = false;
+        if (_disposed) break;
         for (final event in await drainTapQueue(SharedPreferencesAsync())) {
           _emit(event);
         }
@@ -252,11 +286,12 @@ class NotificationsService extends FletService {
   }
 
   Future<void> _replayLaunchDetails() async {
-    if (_launchReplayComplete) return;
+    if (_launchReplayComplete || _disposed) return;
     try {
       final details = await _plugin?.getNotificationAppLaunchDetails();
-      // Concurrent initialization may already have handled the startup response.
-      if (_launchReplayComplete) return;
+      // Concurrent initialization may already have handled the startup
+      // response, and a disposed service leaves it to its successor.
+      if (_launchReplayComplete || _disposed) return;
       final response = details?.notificationResponse;
       if (details?.didNotificationLaunchApp == true &&
           response != null &&
@@ -266,8 +301,22 @@ class NotificationsService extends FletService {
       _liveResponsesBeforeLaunchReplay.clear();
       // Later activity intents can describe taps already delivered by callbacks.
       _launchReplayComplete = true;
+    } on UnimplementedError {
+      // Linux reports no launch details.
+      _liveResponsesBeforeLaunchReplay.clear();
+      _launchReplayComplete = true;
     } catch (e) {
       debugPrint("flet_notifications: launch details replay failed: $e");
+    }
+  }
+
+  /// Hands [response] to the live service, or queues it for the next one.
+  static void _forwardResponse(fln.NotificationResponse response) {
+    final live = _live;
+    if (live != null) {
+      live._handleResponse(response);
+    } else {
+      unawaited(queueResponse(response));
     }
   }
 
@@ -290,6 +339,18 @@ class NotificationsService extends FletService {
 
   Future<dynamic> invokeMethod(String name, [dynamic args]) async {
     await _ensureInitialized();
+    // The backend can't initialize in a browser without notifications. The
+    // permission probes still answer, so apps can fall back.
+    if (isWebPlatform() &&
+        !fln.WebFlutterLocalNotificationsPlugin.isSupported) {
+      if (name == "request_permissions" ||
+          name == "are_notifications_enabled") {
+        return false;
+      }
+      throw const NotificationException.unsupportedPlatform(
+        "this browser does not support notifications",
+      );
+    }
     _throwIfNotInitialized();
     try {
       return await _dispatch(name, args);
@@ -303,6 +364,9 @@ class NotificationsService extends FletService {
       throw NotificationException.unsupportedPlatform(
         "$name is not available on this platform",
       );
+    } on ArgumentError catch (e) {
+      // The plugin's own checks, such as a schedule date in the past.
+      throw NotificationException.invalidArgument(e.toString());
     } on PlatformException catch (e) {
       final message = "${e.code}: ${e.message ?? ""}";
       throw e.code == "exact_alarms_not_permitted"
@@ -696,7 +760,7 @@ class NotificationsService extends FletService {
             "name": c.name,
             "description": c.description,
             "group_id": c.groupId,
-            "importance": c.importance.name,
+            "importance": notificationImportanceName(c.importance),
             "bypass_dnd": c.bypassDnd,
             "play_sound": c.playSound,
             "sound": c.sound?.sound,

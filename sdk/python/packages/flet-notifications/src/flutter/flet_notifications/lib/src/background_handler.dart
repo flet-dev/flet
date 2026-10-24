@@ -16,6 +16,7 @@ library;
 import 'dart:convert';
 import 'dart:ui' show DartPluginRegistrant;
 
+import 'package:flet/flet.dart' show isWindowsDesktop;
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -27,14 +28,12 @@ const String _queuePrefix = "flet_notifications_queue_";
 /// Serializes a notification response into the payload of the Python event it
 /// becomes.
 ///
-/// `event` names the service event to emit (`tap`, `action` or `dismiss`); it
+/// `event` names the service event to emit (`tap` or `action`); it
 /// routes queued responses and is not sent to Python. Only action responses carry
 /// `action_id` and `input`, matching `NotificationActionEvent`.
 Map<String, Object?> responseToEvent(NotificationResponse response) {
   var isAction = response.notificationResponseType ==
       NotificationResponseType.selectedNotificationAction;
-  final isDismissed = response.notificationResponseType ==
-      NotificationResponseType.notificationDismissed;
   String? nonEmpty(String? value) =>
       value == null || value.isEmpty ? null : value;
   var id = response.id;
@@ -42,7 +41,10 @@ Map<String, Object?> responseToEvent(NotificationResponse response) {
   var payload = nonEmpty(response.payload);
   // Windows reports every click as an action whose id is the clicked element's
   // launch arguments, and typed text in `data` (input is always null there).
-  final launch = decodeWindowsLaunchArguments(response.actionId);
+  // Elsewhere, an action id is the app's own and kept as it is.
+  final launch = isWindowsDesktop()
+      ? decodeWindowsLaunchArguments(response.actionId)
+      : null;
   if (launch != null) {
     id = launch.notificationId ?? id;
     actionId = nonEmpty(launch.actionId);
@@ -54,11 +56,7 @@ Map<String, Object?> responseToEvent(NotificationResponse response) {
           ? nonEmpty(response.data.values.first.toString())
           : null);
   return <String, Object?>{
-    "event": isDismissed
-        ? "dismiss"
-        : isAction
-            ? "action"
-            : "tap",
+    "event": isAction ? "action" : "tap",
     "id": id,
     "payload": payload,
     if (isAction) "action_id": actionId,
@@ -76,6 +74,11 @@ Map<String, Object?> responseToEvent(NotificationResponse response) {
 @pragma('vm:entry-point')
 Future<void> notificationTapBackground(NotificationResponse response) async {
   DartPluginRegistrant.ensureInitialized();
+  await queueResponse(response);
+}
+
+/// Persists [response] for the service to replay, and signals it.
+Future<void> queueResponse(NotificationResponse response) async {
   final stamp = DateTime.now().microsecondsSinceEpoch;
   final key = "$_queuePrefix$stamp-${identityHashCode(response)}";
   await SharedPreferencesAsync()

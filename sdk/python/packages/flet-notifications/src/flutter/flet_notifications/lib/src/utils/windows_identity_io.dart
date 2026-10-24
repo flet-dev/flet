@@ -9,7 +9,11 @@ import 'windows_identity.dart';
 /// information and executable, or from the executable alone when the version
 /// information can't be read.
 ///
-/// Its icon is the `data\app_icon.ico` that `flet build` places next to the
+/// An app packaged with `flet pack` runs the shared Flet client, so its
+/// identity is derived from the packaged executable, which the app passes in
+/// `FLET_APP_USER_MODEL_ID`.
+///
+/// The icon is the `data\app_icon.ico` that `flet build` places next to the
 /// executable, when present.
 Future<WindowsIdentity> defaultWindowsIdentity() async {
   var productName = "";
@@ -26,7 +30,8 @@ Future<WindowsIdentity> defaultWindowsIdentity() async {
   return windowsIdentity(
     productName: productName,
     internalName: internalName,
-    executablePath: executable.path,
+    executablePath:
+        Platform.environment["FLET_APP_USER_MODEL_ID"] ?? executable.path,
     iconPath: icon.existsSync() ? icon.path : null,
   );
 }

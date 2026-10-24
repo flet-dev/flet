@@ -42,7 +42,10 @@ class _WebPlugin extends fln.WebFlutterLocalNotificationsPlugin {
   }) async {
     initializations++;
     onResponse = onDidReceiveNotificationResponse;
-    return initializationResult;
+    // The browser plugin fails to initialize without notification support.
+    return fln.WebFlutterLocalNotificationsPlugin.isSupported
+        ? initializationResult
+        : false;
   }
 }
 
@@ -115,6 +118,7 @@ void main() {
   late int requests;
 
   setUp(() {
+    NotificationsService.resetForTesting();
     SharedPreferencesAsyncPlatform.instance =
         InMemorySharedPreferencesAsync.empty();
     TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger
@@ -214,6 +218,8 @@ void main() {
     final service = _service();
     expect(await _call(service, 'are_notifications_enabled'), isFalse);
     expect(await _call(service, 'request_permissions'), isFalse);
+    expect(await _call(service, 'show', {'id': 1}),
+        startsWith('unsupported_platform: '));
     expect(requests, 0);
   });
 

@@ -309,7 +309,7 @@ class AndroidImportance(Enum):
     LOW = "low"
     """Show notifications without sound."""
 
-    DEFAULT = "defaultImportance"
+    DEFAULT = "default"
     """Use normal prominence, including sound when enabled for the channel."""
 
     HIGH = "high"

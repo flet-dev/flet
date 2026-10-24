@@ -32,6 +32,8 @@ def build_schedule_args(
     )
 
     if isinstance(when, timedelta):
+        if when <= timedelta(0):
+            raise NotificationInvalidArgumentError("when must be in the future")
         when_payload = {
             "delay": ft.Duration.from_unit(
                 microseconds=when // timedelta(microseconds=1)

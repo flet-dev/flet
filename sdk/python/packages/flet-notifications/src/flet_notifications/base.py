@@ -18,10 +18,9 @@ __all__ = [
 @dataclass(kw_only=True)
 class NotificationEvent(ft.Event[ft.EventControlType]):
     """
-    The user selected a notification, or the platform reported its dismissal.
+    The user selected a notification.
 
-    Delivered to :attr:`flet_notifications.Notifications.on_tap` and
-    :attr:`flet_notifications.Notifications.on_dismiss`. Action buttons deliver
+    Delivered to :attr:`flet_notifications.Notifications.on_tap`. Action buttons deliver
     :class:`flet_notifications.NotificationActionEvent` instead. The inherited
     `control` is the service that emitted the event.
     """

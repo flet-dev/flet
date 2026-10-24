@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:convert';
 import 'dart:typed_data';
 import 'dart:ui' show Color;
 
@@ -7,6 +8,7 @@ import 'package:flet_notifications/src/background_handler.dart';
 import 'package:flet_notifications/src/notifications_service.dart';
 import 'package:flet_notifications/src/utils/actions.dart';
 import 'package:flet_notifications/src/utils/errors.dart';
+import 'package:flet_notifications/src/utils/parsers.dart';
 import 'package:flet_notifications/src/utils/details.dart'
     as notification_details;
 import 'package:flutter/foundation.dart'
@@ -377,6 +379,7 @@ void main() {
   TestWidgetsFlutterBinding.ensureInitialized();
   late _RecordingAndroid plugin;
   setUp(() {
+    NotificationsService.resetForTesting();
     // Persisted Apple categories must not leak between tests.
     SharedPreferencesAsyncPlatform.instance =
         InMemorySharedPreferencesAsync.empty();
@@ -730,7 +733,7 @@ void main() {
     expect(macos.initializations.last.notificationCategories, hasLength(1));
   });
 
-  test("launch replay is once per service and allows identical later sessions",
+  test("launch replay is once per process and allows identical later taps",
       () async {
     SharedPreferencesAsyncPlatform.instance =
         InMemorySharedPreferencesAsync.empty();
@@ -762,10 +765,11 @@ void main() {
     expect(firstControl.events, hasLength(2));
     expect(firstControl.events.last, firstControl.events.first);
 
+    // A later service, such as after a session restart, doesn't replay it.
     final nextControl = _RecordingControl();
     final nextService = _makeService(control: nextControl);
     expect(await _reinitialize(nextService), null);
-    expect(nextControl.events, [firstControl.events.first]);
+    expect(nextControl.events, isEmpty);
   });
 
   test("a launch response also delivered live during startup is emitted once",
@@ -794,6 +798,66 @@ void main() {
     plugin.onLaunchDetailsQuery = null;
     plugin.onResponse!(response);
     expect(control.events, hasLength(2));
+  });
+
+  test("responses reach the live service through an earlier one's callback",
+      () async {
+    const response = fln.NotificationResponse(
+      id: 60,
+      payload: "after restart",
+      notificationResponseType:
+          fln.NotificationResponseType.selectedNotification,
+    );
+    final firstControl = _RecordingControl();
+    final first = _makeService(control: firstControl);
+    expect(await _reinitialize(first), null);
+    // Windows and Linux keep the first initialization's callback.
+    final firstCallback = plugin.onResponse!;
+    first.dispose();
+
+    final nextControl = _RecordingControl();
+    final next = _makeService(control: nextControl);
+    expect(await _reinitialize(next), null);
+    firstCallback(response);
+    expect(firstControl.events, isEmpty);
+    expect(nextControl.events.single["data"], containsPair("id", 60));
+  });
+
+  test("a response without a live service is replayed by the next one",
+      () async {
+    const response = fln.NotificationResponse(
+      id: 61,
+      payload: "between sessions",
+      notificationResponseType:
+          fln.NotificationResponseType.selectedNotification,
+    );
+    final first = _makeService(control: _RecordingControl());
+    expect(await _reinitialize(first), null);
+    final callback = plugin.onResponse!;
+    first.dispose();
+    callback(response);
+    await pumpEventQueue();
+
+    final nextControl = _RecordingControl();
+    expect(await _reinitialize(_makeService(control: nextControl)), null);
+    expect(nextControl.events.single["data"], containsPair("id", 61));
+  });
+
+  test("a service disposed while initializing leaves the queue to the next one",
+      () async {
+    final prefs = SharedPreferencesAsync();
+    await prefs.setString("flet_notifications_queue_1-1",
+        jsonEncode({"event": "tap", "id": 62, "payload": null, "data": {}}));
+    final firstControl = _RecordingControl();
+    final first = _makeService(control: firstControl);
+    final initializing = _reinitialize(first);
+    first.dispose();
+    await initializing;
+    expect(firstControl.events, isEmpty);
+
+    final nextControl = _RecordingControl();
+    expect(await _reinitialize(_makeService(control: nextControl)), null);
+    expect(nextControl.events.single["data"], containsPair("id", 62));
   });
 
   test("reinitialization does not replay an already delivered live tap",
@@ -1307,6 +1371,16 @@ void main() {
           value == "HIGH" ? fln.Priority.high : fln.Priority.defaultPriority);
       expect(details.visibility, fln.NotificationVisibility.private);
     }
+  });
+
+  test("\"default\" names the default Android priority and importance", () {
+    expect(parsePriority("default", fln.Priority.high),
+        fln.Priority.defaultPriority);
+    expect(parseNotificationImportance("default", fln.Importance.high),
+        fln.Importance.defaultImportance);
+    expect(notificationImportanceName(fln.Importance.defaultImportance),
+        "default");
+    expect(notificationImportanceName(fln.Importance.high), "high");
   });
 
   test("Linux timeouts accept duration maps and retain sentinel values",

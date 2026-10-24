@@ -40,9 +40,11 @@ class Notifications(ft.Service):
     handling responses. It registers with the page automatically and does not need to be
     added to the page's visual controls. The native backend initializes when the
     service reaches the client, and method calls wait for it to finish. Changing
-    :attr:`android_default_icon`, :attr:`windows_app_name`,
-    :attr:`windows_app_user_model_id`, or :attr:`windows_guid` initializes it again
-    with the new values; a failed initialization is retried on the next method call.
+    :attr:`android_default_icon` initializes it again with the new value; a failed
+    initialization is retried on the next method call. Windows keeps the identity
+    the app's notifications first registered with until the app exits, so changes
+    to :attr:`windows_app_name`, :attr:`windows_app_user_model_id`, and
+    :attr:`windows_guid` apply from its next launch.
 
     Note:
         Feature support varies: rich styles, progress, and grouping are
@@ -164,16 +166,6 @@ class Notifications(ft.Service):
           initialization; Python is not run in the background isolate.
     """
 
-    on_dismiss: ft.EventHandler[NotificationEvent["Notifications"]] | None = None
-    """
-    Called if the native backend reports a notification dismissal.
-
-    Note:
-        Dismissal reporting is not supported on Android, iOS, or macOS. Delivery on
-        other platforms depends on native support; do not rely on a dismissal event
-        for every notification that disappears.
-    """
-
     async def _call(self, method_name: str, arguments: Any = None) -> Any:
         """Invoke a bridge method, raising its failures as `NotificationError`."""
         try:
@@ -240,8 +232,7 @@ class Notifications(ft.Service):
         Note:
             On Android, a tag applies only to notifications posted immediately;
             scheduled alarms are identified by ID. On Windows, removal requires an MSIX
-            package identity. Calling this method does not synthesize an
-            :attr:`on_dismiss` event.
+            package identity.
 
         Args:
             id: Identifier of the notification to remove.
@@ -328,7 +319,6 @@ class Notifications(ft.Service):
             NotificationError: If the bridge reports initialization or operation
                 failure.
         """
-        # Permission dialogs can take a while; allow more than the default.
         return await self._call(
             "request_permissions",
             {
@@ -404,6 +394,7 @@ class Notifications(ft.Service):
                 access. Ignored on other platforms.
 
         Raises:
+            NotificationInvalidArgumentError: If `when` is not in the future.
             NotificationPermissionError: If an exact `schedule_mode` lacks Android
                 exact-alarm access.
             NotificationError: If the bridge reports another failure.
