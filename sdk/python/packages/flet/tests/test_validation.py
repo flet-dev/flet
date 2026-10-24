@@ -5,6 +5,7 @@ from typing import Annotated, Optional
 
 import pytest
 
+import flet as ft
 from flet.utils.validation import (
     ClassRule,
     V,
@@ -246,6 +247,35 @@ def test_rules_allow_none_for_pipe_optional_annotations():
     validate(Sample(count=1))
     with pytest.raises(ValueError, match="count must be greater than or equal to 0"):
         validate(Sample(count=-1))
+
+
+def test_rules_validate_value_types():
+    """
+    Ensure rules work on `@ft.value` types, including inherited fields and values
+    changed after construction.
+    """
+
+    @ft.value(kw_only=True)
+    class Base:
+        count: Annotated[int | None, V.ge(0)] = None
+
+    @ft.value(kw_only=True)
+    class Sample(Base):
+        name: Annotated[str, V.non_empty()] = "sample"
+        value: Annotated[int, V.le_field("max")] = 0
+        max: int = 10
+
+    sample = Sample(count=1, value=10)
+    validate(sample)
+    sample.value = 11
+    with pytest.raises(
+        ValueError, match=r"value \(11\) must be less than or equal to max \(10\)"
+    ):
+        validate(sample)
+    with pytest.raises(ValueError, match="count must be greater than or equal to 0"):
+        validate(Sample(count=-1))
+    with pytest.raises(ValueError, match="name must be non-empty"):
+        validate(Sample(name=""))
 
 
 def test_instance_of_reports_default_type_errors():
