@@ -20,6 +20,7 @@ def _command(settings):
     """Create a build command whose configuration errors raise ValueError."""
     cmd = BaseBuildCommand.__new__(BaseBuildCommand)
     cmd.get_pyproject = settings.get
+    cmd.extensions = []
 
     def cleanup(code, message):
         """Capture a failed build setting without exiting the test process."""

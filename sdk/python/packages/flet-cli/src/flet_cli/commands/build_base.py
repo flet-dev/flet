@@ -58,6 +58,13 @@ from flet_cli.utils.android import (
 )
 from flet_cli.utils.app_excludes import find_default_excludes
 from flet_cli.utils.cli import parse_cli_bool_value
+from flet_cli.utils.extension_settings import (
+    ExtensionSettings,
+    contributed_settings,
+    find_extension_settings,
+    merge_compile_options,
+    merge_gradle_dependencies,
+)
 from flet_cli.utils.flutter import get_flutter_dir
 from flet_cli.utils.hash_stamp import HashStamp
 from flet_cli.utils.log_format import annotation_path
@@ -162,6 +169,8 @@ class BaseBuildCommand(BaseFlutterCommand):
         self.out_dir = None
         self.python_module_name = None
         self.get_pyproject = None
+        self.extensions: list[ExtensionSettings] = []
+        """Build settings of installed extensions, read after packaging."""
         self.python_app_path = None
         self.build_dir = None
         self.flutter_dir: Optional[Path] = None
@@ -2089,6 +2098,51 @@ class BaseBuildCommand(BaseFlutterCommand):
                     f"Registered app user extensions {self.emojis['checkmark']}"
                 )
 
+        self.apply_extension_settings()
+
+    def apply_extension_settings(self):
+        """
+        Apply the build settings installed extensions declare in their
+        `flet-extension.toml`, under the app's own settings.
+
+        Settings an extension changes are recomputed for the second template pass.
+        """
+
+        assert self.build_dir
+        assert self.flutter_dir
+        assert self.get_pyproject
+        assert self.template_data
+
+        # serious_python installs web packages in its own default location, the
+        # `build/site-packages` directory of the Flutter project it runs in.
+        site_packages_dir = (
+            self.flutter_dir / "build" / "site-packages"
+            if self.package_platform == "Emscripten"
+            else self.build_dir / "site-packages"
+        )
+        try:
+            self.extensions, warnings = find_extension_settings(
+                site_packages_dir, self.flutter_packages_dir
+            )
+        except ValueError as e:
+            self.cleanup(1, str(e))
+        for warning in warnings:
+            self.warn(warning)
+        for extension in self.extensions:
+            contributed = contributed_settings(extension)
+            if not contributed:
+                continue
+            console.log(
+                f"Applied build settings from {extension.label}: "
+                f"{', '.join(contributed)}",
+                style=verbose1_style,
+                markup=False,
+            )
+
+        options = self.template_data["options"]
+        options["android_compile_options"] = self.get_android_compile_options()
+        options["android_gradle_dependencies"] = self.get_android_gradle_dependencies()
+
     def update_flutter_dependencies(self):
         """
         Merge resolved Flutter extension dependencies into `pubspec.yaml`.
@@ -3003,14 +3057,20 @@ class BaseBuildCommand(BaseFlutterCommand):
         return ios_entitlements
 
     def get_android_compile_options(self) -> dict[str, str]:
-        """Merge Android compiler expressions over Flet's Java 17 defaults.
+        """Merge Android compiler expressions over installed extensions' and
+        Flet's Java 17 defaults.
 
         Keys are Gradle property identifiers; values are Kotlin expressions
         rendered verbatim inside `android.compileOptions`.
         """
         assert self.get_pyproject
         setting = "tool.flet.android.compile_options"
-        configured = self.get_pyproject(setting)
+        try:
+            configured = merge_compile_options(
+                self.get_pyproject(setting), self.extensions
+            )
+        except ValueError as e:
+            self.cleanup(1, str(e))
         if configured is None:
             configured = {}
         if not isinstance(configured, dict):
@@ -3037,10 +3097,13 @@ class BaseBuildCommand(BaseFlutterCommand):
         return resolved
 
     def get_android_gradle_dependencies(self) -> str:
-        """Read Kotlin declarations for the body of Gradle's dependencies block."""
+        """Read Kotlin declarations for the body of Gradle's dependencies block,
+        after those of installed extensions."""
         assert self.get_pyproject
         setting = "tool.flet.android.gradle_dependencies"
-        configured = self.get_pyproject(setting)
+        configured = merge_gradle_dependencies(
+            self.get_pyproject(setting), self.extensions
+        )
         if configured is None:
             return ""
         if not isinstance(configured, str):

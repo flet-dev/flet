@@ -1194,14 +1194,17 @@ See also:
 
 Each property's value is determined in the following order of precedence:
 
-1. The matching entry in `[tool.flet.android.compile_options]`
-2. Flet's CLI default for that property, if defined
+1. `[tool.flet.android.compile_options]`
+2. `[android.compile_options]` in the `flet-extension.toml` of the
+   [app's dependencies](index.md#app-dependencies)
+   (see [Build settings](../extend/user-extensions.md#build-settings))
+3. Flet's defaults:
+
+   <AndroidCompileOptionsDefaults />
 
 Overrides apply per property. Additional properties are added to the block;
 omitted properties retain their defaults. Omitting the table or using an empty
-table preserves all defaults:
-
-<AndroidCompileOptionsDefaults />
+table preserves all defaults.
 
 ### Supported value forms
 
@@ -1257,9 +1260,13 @@ See also:
 Its value is determined in the following order of precedence:
 
 1. `[tool.flet.android].gradle_dependencies`
+2. `[android].gradle_dependencies` in the `flet-extension.toml` of the
+   [app's dependencies](index.md#app-dependencies), placed before yours, and left
+   out when yours already contain it
+   (see [Build settings](../extend/user-extensions.md#build-settings))
 
-There are no default declarations. Omitting the setting or using an empty string
-adds no Gradle dependencies. Your declarations supplement any dependencies
+There are no default declarations. When neither the setting nor an extension
+provides declarations, no Gradle dependencies are added. Your declarations supplement any dependencies
 provided by the template, Flutter, and its plugins.
 
 ### Supported value forms
