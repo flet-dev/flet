@@ -28,6 +28,10 @@ from flet_notifications.types import (
     DateTimeComponents,
     RepeatInterval,
 )
+from flet_notifications.validation import (
+    validate_arguments,
+    validate_notification_id,
+)
 
 __all__ = ["Notifications"]
 
@@ -247,9 +251,16 @@ class Notifications(ft.Service):
                 :class:`~flet_notifications.NotificationOptions`.
 
         Raises:
+            NotificationInvalidArgumentError: If `id` doesn't fit a 32-bit signed
+                integer.
+            NotificationInvalidArgumentError: If a value in `actions` or `options` is
+                invalid, such as an empty action title or a progress value above
+                its maximum.
             NotificationError: If the bridge reports initialization or operation
                 failure.
         """
+        validate_notification_id(id)
+        validate_arguments(actions, options)
         await self._call(
             "show",
             {
@@ -277,9 +288,12 @@ class Notifications(ft.Service):
                 Matches both tag and ID when provided; ignored on other platforms.
 
         Raises:
+            NotificationInvalidArgumentError: If `id` doesn't fit a 32-bit signed
+                integer.
             NotificationError: If the bridge reports initialization or operation
                 failure.
         """
+        validate_notification_id(id)
         await self._call("cancel", {"id": id, "tag": tag} if tag else {"id": id})
 
     async def cancel_all(self) -> None:
@@ -434,6 +448,10 @@ class Notifications(ft.Service):
             NotificationUnsupportedPlatformError: If called on Linux or the web,
                 which don't support scheduled notifications.
             NotificationInvalidArgumentError: If `when` is not in the future.
+            NotificationInvalidArgumentError: If `id` doesn't fit a 32-bit signed
+                integer.
+            NotificationInvalidArgumentError: If a value in `actions` or `options` is
+                invalid.
             NotificationPermissionError: If an exact `schedule_mode` lacks Android
                 exact-alarm access.
             NotificationError: If the bridge reports another failure.
@@ -463,6 +481,8 @@ class Notifications(ft.Service):
                 ft.PagePlatform.WINDOWS,
             },
         )
+        validate_notification_id(id)
+        validate_arguments(actions, options)
         await self._call(
             "schedule",
             {
@@ -531,9 +551,13 @@ class Notifications(ft.Service):
         Raises:
             NotificationUnsupportedPlatformError: If called on Windows, Linux or
                 the web, which don't support repeating notifications.
-            NotificationInvalidArgumentError: If `repeat_interval` is not a
-                :class:`~flet_notifications.RepeatInterval`, :class:`~flet.Duration`,
-                or integer, or if a custom duration is less than one minute.
+            NotificationInvalidArgumentError: If `repeat_interval` isn't a
+                :class:`~flet_notifications.RepeatInterval` or a duration of at
+                least one minute.
+            NotificationInvalidArgumentError: If `id` doesn't fit a 32-bit signed
+                integer.
+            NotificationInvalidArgumentError: If a value in `actions` or `options` is
+                invalid.
             NotificationPermissionError: If an exact `schedule_mode` lacks Android
                 exact-alarm access.
             NotificationError: If the bridge reports another failure.
@@ -547,6 +571,8 @@ class Notifications(ft.Service):
                 ft.PagePlatform.MACOS,
             },
         )
+        validate_notification_id(id)
+        validate_arguments(actions, options)
         await self._call(
             "periodically_show",
             {
@@ -683,9 +709,14 @@ class Notifications(ft.Service):
                 first when a group ID is supplied.
 
         Raises:
+            NotificationInvalidArgumentError: If `channel` has an empty
+                :attr:`~flet_notifications.NotificationChannel.id`.
+            NotificationInvalidArgumentError: If `channel` has an empty
+                :attr:`~flet_notifications.NotificationChannel.name`.
             NotificationError: If the bridge reports initialization or operation
                 failure.
         """
+        validate_arguments(channel)
         await self._call("create_notification_channel", channel)
 
     async def delete_notification_channel(self, channel_id: str) -> None:
@@ -768,9 +799,13 @@ class Notifications(ft.Service):
                 or an empty list uses the manifest's service types.
 
         Raises:
-            NotificationInvalidArgumentError: If `id` is `0`.
             NotificationUnsupportedPlatformError: If called on a platform other
                 than Android, where foreground services don't exist.
+            NotificationInvalidArgumentError: If `id` is `0`.
+            NotificationInvalidArgumentError: If `id` doesn't fit a 32-bit signed
+                integer.
+            NotificationInvalidArgumentError: If a value in `actions` or `options` is
+                invalid.
             NotificationError: If the bridge reports another failure.
         """
         self._require_platform(
@@ -781,6 +816,8 @@ class Notifications(ft.Service):
             raise NotificationInvalidArgumentError(
                 "foreground service id must be non-zero"
             )
+        validate_notification_id(id)
+        validate_arguments(actions, options)
         await self._call(
             "start_foreground_service",
             {
@@ -843,6 +880,11 @@ class Notifications(ft.Service):
         Raises:
             NotificationUnsupportedPlatformError: If called on a platform other
                 than Windows, including a web app opened on Windows.
+            NotificationInvalidArgumentError: If `id` doesn't fit a 32-bit signed
+                integer.
+            NotificationInvalidArgumentError: If `progress` is invalid, such as a
+                :attr:`~flet_notifications.WindowsProgress.value` above its
+                :attr:`~flet_notifications.WindowsProgress.max`.
             NotificationError: If the bridge reports another failure.
 
         Example:
@@ -862,6 +904,8 @@ class Notifications(ft.Service):
             ```
         """
         self._require_platform("update_windows_progress", {ft.PagePlatform.WINDOWS})
+        validate_notification_id(id)
+        validate_arguments(progress)
         return await self._call(
             "update_windows_progress", {"id": id, "progress": progress}
         )

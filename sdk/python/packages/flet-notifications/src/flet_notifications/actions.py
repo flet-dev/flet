@@ -1,6 +1,8 @@
 from dataclasses import field
+from typing import Annotated
 
 import flet as ft
+from flet.utils.validation import V
 
 __all__ = ["NotificationAction", "NotificationActionInput"]
 
@@ -77,7 +79,7 @@ class NotificationAction:
         Windows also returns input values in the event's inherited `data` mapping.
     """
 
-    id: str
+    id: Annotated[str, V.non_empty()]
     """
     Nonempty identifier returned when the action is selected.
 
@@ -87,7 +89,7 @@ class NotificationAction:
         Windows also uses this ID to identify an associated input.
     """
 
-    title: str
+    title: Annotated[str, V.non_empty()]
     """
     Nonempty button label displayed by the operating system.
 

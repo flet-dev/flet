@@ -1,4 +1,7 @@
+from typing import Annotated
+
 import flet as ft
+from flet.utils.validation import V
 from flet_notifications.types import AndroidAudioAttributesUsage, AndroidImportance
 
 __all__ = ["NotificationChannel"]
@@ -25,10 +28,10 @@ class NotificationChannel:
         ValueError: If :attr:`id` or :attr:`name` is empty.
     """
 
-    id: str
+    id: Annotated[str, V.non_empty()]
     """Nonempty, stable channel identifier used when posting notifications."""
 
-    name: str
+    name: Annotated[str, V.non_empty()]
     """Nonempty, user-visible channel name displayed in Android settings."""
 
     description: str | None = None
@@ -147,9 +150,3 @@ class NotificationChannel:
     Note:
         Fixed at channel creation.
     """
-
-    def __post_init__(self) -> None:
-        if not self.id:
-            raise ValueError("channel id is required")
-        if not self.name:
-            raise ValueError("channel name is required")

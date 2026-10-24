@@ -1,8 +1,10 @@
 from abc import ABC, abstractmethod
 from dataclasses import field
 from datetime import datetime
+from typing import Annotated
 
 import flet as ft
+from flet.utils.validation import V
 
 __all__ = [
     "AndroidBigPictureStyle",
@@ -239,7 +241,7 @@ class AndroidInboxStyle(AndroidStyle):
         ValueError: If :attr:`lines` is empty.
     """
 
-    lines: list[str] = field(default_factory=list)
+    lines: Annotated[list[str], V.non_empty()] = field(default_factory=list)
     """Nonempty list of lines to display when the notification is expanded."""
 
     content_title: str | None = None
@@ -250,8 +252,6 @@ class AndroidInboxStyle(AndroidStyle):
 
     def __post_init__(self) -> None:
         self._type = "inbox"
-        if not self.lines:
-            raise ValueError("AndroidInboxStyle requires at least one line")
 
 
 @ft.value(kw_only=True)

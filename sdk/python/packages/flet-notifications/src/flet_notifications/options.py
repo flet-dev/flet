@@ -1,7 +1,9 @@
 from datetime import datetime
 from enum import Enum
+from typing import Annotated
 
 import flet as ft
+from flet.utils.validation import V
 from flet_notifications.channels import NotificationChannel
 from flet_notifications.styles import AndroidBitmap, AndroidStyle
 from flet_notifications.types import (
@@ -207,10 +209,10 @@ class AndroidProgress:
     alerting on each update.
     """
 
-    value: int = 0
+    value: Annotated[int, V.ge(0), V.le_field("max")] = 0
     """Current progress, between `0` and :attr:`max`."""
 
-    max: int = 100
+    max: Annotated[int, V.gt(0)] = 100
     """Value at which the progress bar is full."""
 
     indeterminate: bool = False
@@ -232,7 +234,7 @@ class AndroidGroup:
     :attr:`flet_notifications.DarwinOptions.thread_identifier`).
     """
 
-    key: str
+    key: Annotated[str, V.non_empty()]
     """Identifier shared by every notification in the group."""
 
     summary: bool = False
@@ -421,7 +423,7 @@ class AndroidOptions:
         the progress bar, so avoid using both on those versions.
     """
 
-    number: int | None = None
+    number: Annotated[int | None, V.ge(0)] = None
     """
     Notification count displayed by launchers that support badge numbers.
 
@@ -549,7 +551,7 @@ class DarwinOptions:
         duration.
     """
 
-    badge_number: int | None = None
+    badge_number: Annotated[int | None, V.ge(0)] = None
     """
     Number to apply to the application icon badge.
 
@@ -579,7 +581,7 @@ class DarwinOptions:
         behavior and capability requirements. `None` leaves the level to the system.
     """
 
-    critical_sound_volume: float | None = None
+    critical_sound_volume: Annotated[float | None, V.between(0.0, 1.0)] = None
     """
     Volume of a critical-alert sound, from `0.0` to `1.0`.
 
@@ -734,13 +736,13 @@ class WindowsProgress:
     :meth:`flet_notifications.Notifications.update_windows_progress`.
     """
 
-    status: str
+    status: Annotated[str, V.non_empty()]
     """Text describing the activity, such as `"Downloading..."`."""
 
-    value: int = 0
+    value: Annotated[int, V.ge(0), V.le_field("max")] = 0
     """Current progress, between `0` and :attr:`max`."""
 
-    max: int = 100
+    max: Annotated[int, V.gt(0)] = 100
     """Value at which the progress bar is full."""
 
     indeterminate: bool = False
