@@ -21,8 +21,8 @@ import 'utils/parsers.dart';
 import 'utils/scheduling.dart';
 import 'utils/tap_queue_signal.dart';
 
-class LocalNotificationsService extends FletService {
-  LocalNotificationsService({required super.control});
+class NotificationsService extends FletService {
+  NotificationsService({required super.control});
 
   static const String _defaultWindowsGuid =
       "9F4B0E2A-1C3D-4E5F-8A9B-0C1D2E3F4A5B";

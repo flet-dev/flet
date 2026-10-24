@@ -16,8 +16,8 @@ from flet_notifications import (
     AndroidMessagingStyle,
     AndroidOptions,
     AndroidPerson,
-    LocalNotifications,
     NotificationOptions,
+    Notifications,
     RepeatInterval,
 )
 
@@ -62,7 +62,7 @@ async def test_message_timestamp_preserves_instant(method_name):
             style=AndroidMessagingStyle(person=person, messages=[message])
         )
     )
-    service = LocalNotifications()
+    service = Notifications()
     calls = []
 
     async def invoke(name, arguments=None, timeout=None):

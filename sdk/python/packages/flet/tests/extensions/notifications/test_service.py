@@ -1,4 +1,4 @@
-"""Tests for the LocalNotifications service."""
+"""Tests for the Notifications service."""
 
 from datetime import datetime, timedelta, timezone
 
@@ -11,7 +11,6 @@ from flet_notifications import (
     AndroidFileBitmap,
     AndroidNotificationFlag,
     AndroidOptions,
-    LocalNotifications,
     NotificationAction,
     NotificationChannel,
     NotificationError,
@@ -19,6 +18,7 @@ from flet_notifications import (
     NotificationInvalidArgumentError,
     NotificationOptions,
     NotificationPermissionError,
+    Notifications,
     NotificationUnsupportedPlatformError,
     RepeatInterval,
     WebNotificationDirection,
@@ -43,7 +43,7 @@ from .helpers import encode_wire
 async def test_methods_encode_nested_notification_values(
     method_name, flags, expected_flags
 ):
-    service = LocalNotifications()
+    service = Notifications()
     calls = []
 
     async def invoke(name, arguments=None, timeout=None):
@@ -151,7 +151,7 @@ async def test_methods_encode_nested_notification_values(
 @pytest.mark.asyncio
 async def test_bridge_failures_raise_their_error_class(reported, error, message):
     """A failed call's reported code selects the NotificationError subclass raised."""
-    service = LocalNotifications()
+    service = Notifications()
 
     async def fail(method_name, arguments=None, timeout=None):
         raise RuntimeError(reported)
@@ -192,7 +192,7 @@ async def test_boolean_methods_preserve_native_results_and_errors(
     method, native_method, timeout
 ):
     """Boolean results survive transport without hiding errors or changing timeouts."""
-    service = LocalNotifications()
+    service = Notifications()
     result = False
 
     async def invoke(method_name, arguments=None, timeout=None):
@@ -216,7 +216,7 @@ async def test_boolean_methods_preserve_native_results_and_errors(
 @pytest.mark.asyncio
 async def test_request_permissions_sends_the_requested_apple_authorizations():
     """Apple authorization kinds travel as arguments, defaulting to a full prompt."""
-    service = LocalNotifications()
+    service = Notifications()
     calls = []
 
     async def invoke(method_name, arguments=None, timeout=None):

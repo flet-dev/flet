@@ -1445,7 +1445,7 @@ The app can then refer to them by name, for example with the
 ```python
 import flet_notifications as ftn
 
-notifications = ftn.LocalNotifications(default_icon="ic_stat_notify")
+notifications = ftn.Notifications(android_default_icon="ic_stat_notify")
 
 options = ftn.NotificationOptions(
     android=ftn.AndroidOptions(

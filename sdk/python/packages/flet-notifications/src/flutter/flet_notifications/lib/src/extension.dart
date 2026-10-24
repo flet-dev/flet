@@ -6,8 +6,8 @@ class Extension extends FletExtension {
   @override
   FletService? createService(Control control) {
     switch (control.type) {
-      case "LocalNotifications":
-        return LocalNotificationsService(control: control);
+      case "Notifications":
+        return NotificationsService(control: control);
       default:
         return null;
     }

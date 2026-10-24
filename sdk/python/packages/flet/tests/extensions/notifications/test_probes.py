@@ -5,8 +5,8 @@ import pytest
 from flet_notifications import (
     ActiveNotification,
     AndroidImportance,
-    LocalNotifications,
     NotificationError,
+    Notifications,
     PendingNotification,
 )
 
@@ -14,7 +14,7 @@ from flet_notifications import (
 @pytest.mark.asyncio
 async def test_get_pending_hydrates_native_collection():
     """Pending snapshots use native collections, with None for missing text."""
-    service = LocalNotifications()
+    service = Notifications()
 
     async def invoke(method_name, arguments=None, timeout=None):
         return [
@@ -33,7 +33,7 @@ async def test_get_pending_hydrates_native_collection():
 @pytest.mark.asyncio
 async def test_get_active_hydrates_native_collection():
     """Active snapshots retain all available fields and fill missing fields."""
-    service = LocalNotifications()
+    service = Notifications()
 
     async def invoke(method_name, arguments=None, timeout=None):
         return [
@@ -72,7 +72,7 @@ async def test_get_channels_hydrates_native_collection():
     """Channels preserve enums, nulls, explicit false flags, and ARGB colors."""
     from flet_notifications import AndroidAudioAttributesUsage, NotificationChannel
 
-    service = LocalNotifications()
+    service = Notifications()
 
     async def invoke(method_name, arguments=None, timeout=None):
         return [
@@ -129,7 +129,7 @@ async def test_get_channels_hydrates_native_collection():
 @pytest.mark.asyncio
 async def test_malformed_query_result_raises_notification_error(method):
     """Unexpected response shapes must not silently appear as empty results."""
-    service = LocalNotifications()
+    service = Notifications()
 
     async def invoke(method_name, arguments=None, timeout=None):
         return "not json"
@@ -151,7 +151,7 @@ async def test_malformed_query_result_raises_notification_error(method):
 @pytest.mark.asyncio
 async def test_empty_query_result_and_native_failure(method):
     """Empty query results and native error codes survive the transport change."""
-    service = LocalNotifications()
+    service = Notifications()
 
     async def empty(method_name, arguments=None, timeout=None):
         return []
@@ -179,7 +179,7 @@ async def test_empty_query_result_and_native_failure(method):
 @pytest.mark.asyncio
 async def test_malformed_collection_entry_rejects_the_whole_query(method):
     """A bad row after a valid one must not produce a partial successful result."""
-    service = LocalNotifications()
+    service = Notifications()
     valid = (
         {"id": "alerts", "name": "Alerts"}
         if method == "get_notification_channels"
@@ -199,7 +199,7 @@ async def test_malformed_collection_entry_rejects_the_whole_query(method):
 @pytest.mark.asyncio
 async def test_channel_reconstruction_errors_are_query_failures():
     """Invalid enum values and missing required fields identify the failing row."""
-    service = LocalNotifications()
+    service = Notifications()
     for entry in [
         {"id": "alerts", "name": "Alerts", "importance": "invalid"},
         {"id": "alerts"},

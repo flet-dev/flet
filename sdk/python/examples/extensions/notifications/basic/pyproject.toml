@@ -15,7 +15,7 @@ categories = ["Utility/Notifications"]
 
 [tool.flet.metadata]
 title = "Basic notifications"
-controls = ["Page", "SafeArea", "OutlinedButton", "LocalNotifications"]
+controls = ["Page", "SafeArea", "OutlinedButton", "Notifications"]
 layout_pattern = "inline-actions"
 complexity = "basic"
 features = ["notification permissions", "local notifications", "notification tap handling"]

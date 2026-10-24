@@ -317,7 +317,7 @@ class _RecordingControl extends Control {
   _RecordingControl()
       : super(
           id: 1,
-          type: "LocalNotifications",
+          type: "Notifications",
           properties: const {},
           backend: FletBackend(
             pageUri: Uri.parse("http://localhost"),
@@ -335,7 +335,7 @@ class _RecordingControl extends Control {
 
 /// Invokes [method] and returns its result, or for a failure the text Flet
 /// reports to Python: the [NotificationException]'s `"<code>: <message>"`.
-Future<Object?> _call(LocalNotificationsService service, String method,
+Future<Object?> _call(NotificationsService service, String method,
     [Object? args]) async {
   try {
     return await service.invokeMethod(method, args);
@@ -346,7 +346,7 @@ Future<Object?> _call(LocalNotificationsService service, String method,
 
 /// Reinitializes [service] and returns `null`, or for a failure the text Flet
 /// reports to Python, as [_call] does.
-Future<Object?> _reinitialize(LocalNotificationsService service) async {
+Future<Object?> _reinitialize(NotificationsService service) async {
   try {
     await service.reinitialize();
     return null;
@@ -355,9 +355,9 @@ Future<Object?> _reinitialize(LocalNotificationsService service) async {
   }
 }
 
-LocalNotificationsService _makeService(
+NotificationsService _makeService(
     {Map<String, dynamic>? properties, Control? control}) {
-  if (control != null) return LocalNotificationsService(control: control);
+  if (control != null) return NotificationsService(control: control);
   final backend = FletBackend(
     pageUri: Uri.parse("uri"),
     assetsDir: "",
@@ -366,11 +366,11 @@ LocalNotificationsService _makeService(
   );
   final defaultControl = Control(
     id: 1,
-    type: "LocalNotifications",
+    type: "Notifications",
     properties: properties ?? const {},
     backend: backend,
   );
-  return LocalNotificationsService(control: defaultControl);
+  return NotificationsService(control: defaultControl);
 }
 
 void main() {

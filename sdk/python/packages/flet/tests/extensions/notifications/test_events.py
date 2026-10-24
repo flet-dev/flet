@@ -8,9 +8,9 @@ import pytest
 import flet as ft
 from flet.controls.context import _context_page
 from flet_notifications import (
-    LocalNotifications,
     NotificationActionEvent,
     NotificationEvent,
+    Notifications,
 )
 
 # Guards against the ControlEventHandler[X] double-wrap bug: typed payload
@@ -26,7 +26,7 @@ def test_event_field_types_resolve_to_dataclass():
     """
     from flet.controls.control_event import ControlEvent, get_event_field_type
 
-    service = LocalNotifications(
+    service = Notifications(
         on_tap=lambda e: None, on_action=lambda e: None, on_dismiss=lambda e: None
     )
     for field_name, expected in (
@@ -49,7 +49,7 @@ def test_event_field_types_resolve_to_dataclass():
 async def test_live_event_dispatch_builds_each_handlers_event(event_name):
     """Real dispatch builds an action event only for actions, keeping reply data."""
     events = []
-    service = LocalNotifications(**{f"on_{event_name}": lambda e: events.append(e)})
+    service = Notifications(**{f"on_{event_name}": lambda e: events.append(e)})
     session = Mock(index={service._i: service}, after_event=AsyncMock())
     page = ft.Page(sess=session)
     service._parent = weakref.ref(page)

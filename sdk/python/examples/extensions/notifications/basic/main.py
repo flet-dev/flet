@@ -6,7 +6,7 @@ def main(page: ft.Page):
     async def on_tap(e):
         print("tapped:", e.payload)
 
-    notifications = ftn.LocalNotifications(on_tap=on_tap)
+    notifications = ftn.Notifications(on_tap=on_tap)
 
     async def notify(e):
         if await notifications.request_permissions():

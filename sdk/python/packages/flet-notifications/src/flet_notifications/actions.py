@@ -67,7 +67,7 @@ class NotificationAction:
     Button attached to a notification on Android, iOS, macOS, Windows, or Web.
 
     Selections are reported through
-    :attr:`flet_notifications.LocalNotifications.on_action`, with :attr:`id` in
+    :attr:`flet_notifications.Notifications.on_action`, with :attr:`id` in
     :attr:`flet_notifications.NotificationActionEvent.action_id`.
 
     For inline replies, set :attr:`input`. Reply text is available in

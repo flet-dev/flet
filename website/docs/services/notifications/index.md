@@ -1,5 +1,5 @@
 ---
-class_name: "flet_notifications.LocalNotifications"
+class_name: "flet_notifications.Notifications"
 examples: "extensions/notifications"
 title: "Notifications"
 ---
@@ -54,7 +54,7 @@ through the extension's [build settings](../../extend/user-extensions.md#build-s
 Some features need permissions only your app can decide to request:
 exact schedules (see [`AndroidScheduleMode`][flet_notifications.AndroidScheduleMode]),
 full-screen notifications (see [`AndroidOptions.full_screen_intent`][flet_notifications.AndroidOptions.full_screen_intent]),
-and foreground services (see [`start_foreground_service()`][flet_notifications.LocalNotifications.start_foreground_service]).
+and foreground services (see [`start_foreground_service()`][flet_notifications.Notifications.start_foreground_service]).
 
 See also:
 
@@ -67,13 +67,13 @@ See also:
 The browser only accepts
 [`Notification.requestPermission()`](https://developer.mozilla.org/en-US/docs/Web/API/Notification/requestPermission_static)
 from a user gesture. Call
-[`request_permissions()`][flet_notifications.LocalNotifications.request_permissions]
+[`request_permissions()`][flet_notifications.Notifications.request_permissions]
 from an [`on_click`][flet.OutlinedButton.on_click] handler before calling
-[`show()`][flet_notifications.LocalNotifications.show]. Serve the app over HTTPS
+[`show()`][flet_notifications.Notifications.show]. Serve the app over HTTPS
 or a trusted localhost origin. If permission was denied, the user must change
 the site's browser permissions before requesting again.
 
-[`are_notifications_enabled()`][flet_notifications.LocalNotifications.are_notifications_enabled]
+[`are_notifications_enabled()`][flet_notifications.Notifications.are_notifications_enabled]
 checks browser permission without prompting. It returns `False` when permission
 is denied, undecided, or notifications are unsupported.
 

@@ -11,7 +11,7 @@ class NotificationChannel:
 
     Pass it as :attr:`flet_notifications.AndroidOptions.channel` to create the channel
     when a notification is first posted to it, or create it upfront with
-    :meth:`flet_notifications.LocalNotifications.create_notification_channel` and pass
+    :meth:`flet_notifications.Notifications.create_notification_channel` and pass
     its :attr:`id` instead. Users manage channel preferences independently in Android
     settings. Sound, vibration, lights, and importance cannot be reset by posting
     another notification or recreating the same channel; use a new ID for a different
@@ -43,7 +43,7 @@ class NotificationChannel:
     ID of the notification-channel group containing this channel.
 
     Create the group first with
-    :meth:`flet_notifications.LocalNotifications.create_notification_channel_group`.
+    :meth:`flet_notifications.Notifications.create_notification_channel_group`.
     This organizes channels in settings; it does not group notifications in the tray.
     """
 
@@ -62,7 +62,7 @@ class NotificationChannel:
 
     Note:
         Obtain notification-policy access with
-        :meth:`flet_notifications.LocalNotifications.request_notification_policy_access`
+        :meth:`flet_notifications.Notifications.request_notification_policy_access`
         before creating the channel; otherwise Android ignores the request.
     """
 

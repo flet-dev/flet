@@ -28,11 +28,11 @@ from flet_notifications.types import (
     RepeatInterval,
 )
 
-__all__ = ["LocalNotifications"]
+__all__ = ["Notifications"]
 
 
-@ft.control("LocalNotifications")
-class LocalNotifications(ft.Service):
+@ft.control("Notifications")
+class Notifications(ft.Service):
     """
     Native local notifications for Android, iOS, macOS, Windows, Linux, and Web.
 
@@ -64,7 +64,7 @@ class LocalNotifications(ft.Service):
 
 
         def main(page: ft.Page):
-            notifications = ftn.LocalNotifications(
+            notifications = ftn.Notifications(
                 on_tap=lambda e: print("Opened:", e.payload)
             )
 
@@ -120,7 +120,7 @@ class LocalNotifications(ft.Service):
     apps.
     """
 
-    on_tap: ft.EventHandler[NotificationEvent["LocalNotifications"]] | None = None
+    on_tap: ft.EventHandler[NotificationEvent["Notifications"]] | None = None
     """
     Called when the user selects the notification body.
 
@@ -134,9 +134,7 @@ class LocalNotifications(ft.Service):
         notification's content.
     """
 
-    on_action: ft.EventHandler[NotificationActionEvent["LocalNotifications"]] | None = (
-        None
-    )
+    on_action: ft.EventHandler[NotificationActionEvent["Notifications"]] | None = None
     """
     Called when the user selects a notification action button.
 
@@ -158,7 +156,7 @@ class LocalNotifications(ft.Service):
           initialization; Python is not run in the background isolate.
     """
 
-    on_dismiss: ft.EventHandler[NotificationEvent["LocalNotifications"]] | None = None
+    on_dismiss: ft.EventHandler[NotificationEvent["Notifications"]] | None = None
     """
     Called if the native backend reports a notification dismissal.
 

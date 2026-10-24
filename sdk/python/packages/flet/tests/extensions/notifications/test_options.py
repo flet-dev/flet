@@ -10,7 +10,7 @@ from flet_notifications import (
     AndroidOptions,
     AndroidServiceStartType,
     LinuxOptions,
-    LocalNotifications,
+    Notifications,
     WebOptions,
     WindowsOptions,
 )
@@ -60,7 +60,7 @@ def test_display_timestamps_preserve_instants_through_transport(timestamp):
 async def test_fgs_forwards_start_type_and_types(start_type, wire_start):
     """Service enums reach the native boundary as recognized string values."""
 
-    class Recording(LocalNotifications):
+    class Recording(Notifications):
         def __init__(self):
             super().__init__()
             self.calls = []

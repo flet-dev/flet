@@ -1,6 +1,6 @@
 # Flet Notifications
 
-`LocalNotifications` service for Flet apps. Show, schedule and cancel system notifications on Android, iOS, macOS, Windows, Linux and Web via the [`flutter_local_notifications`](https://pub.dev/packages/flutter_local_notifications) Flutter plugin.
+`Notifications` service for Flet apps. Show, schedule and cancel system notifications on Android, iOS, macOS, Windows, Linux and Web via the [`flutter_local_notifications`](https://pub.dev/packages/flutter_local_notifications) Flutter plugin.
 
 > **[Try Flet online in Flet Studio](https://studio.flet.dev)**
 >

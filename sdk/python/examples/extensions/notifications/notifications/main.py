@@ -21,11 +21,11 @@ from flet_notifications import (
     AndroidVisibility,
     DarwinOptions,
     DateTimeComponents,
-    LocalNotifications,
     NotificationAction,
     NotificationActionInput,
     NotificationChannel,
     NotificationOptions,
+    Notifications,
     RepeatInterval,
 )
 
@@ -75,7 +75,7 @@ def main(page: ft.Page):
     page.scroll = ft.ScrollMode.AUTO
     page.padding = 16
 
-    notifications = LocalNotifications()
+    notifications = Notifications()
 
     log_text = ft.Text(
         value="",

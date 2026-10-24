@@ -131,7 +131,7 @@ class DarwinInterruptionLevel(Enum):
 
       Use `[tool.flet.macos.entitlement]` for macOS.
     - The user's critical-alert authorization, requested with `critical=True` in
-      :meth:`flet_notifications.LocalNotifications.request_permissions`.
+      :meth:`flet_notifications.Notifications.request_permissions`.
     """
 
 
@@ -262,7 +262,7 @@ class AndroidOptions:
 
     Pass a :class:`~flet_notifications.NotificationChannel` to create the channel on
     first use, or the ID of a channel created earlier with
-    :meth:`flet_notifications.LocalNotifications.create_notification_channel`. A
+    :meth:`flet_notifications.Notifications.create_notification_channel`. A
     missing channel referenced only by ID is created with the name `"Notifications"`
     and default settings. `None` uses the extension's default channel.
 
@@ -297,7 +297,7 @@ class AndroidOptions:
     Bundled drawable resource name for this notification's small icon.
 
     Supply the resource name without a file extension, such as `"ic_stat_notify"`.
-    `None` uses :attr:`flet_notifications.LocalNotifications.android_default_icon`.
+    `None` uses :attr:`flet_notifications.Notifications.android_default_icon`.
 
     Note:
         Use a white silhouette on a transparent background, with resources sized for
@@ -390,7 +390,7 @@ class AndroidOptions:
     Time displayed on the notification.
 
     When `None`, uses the notification's posting time. This does not schedule delivery;
-    use :meth:`flet_notifications.LocalNotifications.schedule` for that.
+    use :meth:`flet_notifications.Notifications.schedule` for that.
 
     Timezone-aware values preserve their instant. A naive datetime is interpreted in
     the Python host's local timezone.
@@ -459,9 +459,9 @@ class AndroidOptions:
     Note:
         Requires Android manifest configuration and, on Android 14+, full-screen-intent
         access. See
-        :meth:`flet_notifications.LocalNotifications.request_full_screen_intent_permission`.
+        :meth:`flet_notifications.Notifications.request_full_screen_intent_permission`.
         Android may show a heads-up notification instead. A full-screen launch is
-        reported through :attr:`flet_notifications.LocalNotifications.on_tap`.
+        reported through :attr:`flet_notifications.Notifications.on_tap`.
     """
 
     shortcut_id: str | None = None
@@ -504,7 +504,7 @@ class AndroidOptions:
     Additional identifier for immediately displayed Android notifications.
 
     The same `(tag, id)` pair replaces a visible notification. Pass the tag to
-    :meth:`flet_notifications.LocalNotifications.cancel` to remove it. Scheduled alarms
+    :meth:`flet_notifications.Notifications.cancel` to remove it. Scheduled alarms
     use only the notification ID, not this pair.
     """
 
@@ -800,7 +800,7 @@ class WindowsOptions:
 class WebOptions:
     """
     Browser-specific presentation options for
-    :meth:`flet_notifications.LocalNotifications.show`.
+    :meth:`flet_notifications.Notifications.show`.
 
     Note:
         Individual options may be ignored depending on the browser and operating system.
@@ -857,7 +857,7 @@ class WebOptions:
     """
     Whether replacing a notification should alert the user again.
 
-    Call :meth:`flet_notifications.LocalNotifications.show` with the same `id` to
+    Call :meth:`flet_notifications.Notifications.show` with the same `id` to
     replace a notification. The backend uses that ID as the browser notification tag.
     Sound can still be suppressed by :attr:`is_silent` or user settings.
     """
@@ -879,9 +879,9 @@ class NotificationOptions:
     """
     Platform-specific details for a notification.
 
-    Pass this object to :meth:`flet_notifications.LocalNotifications.show`,
-    :meth:`flet_notifications.LocalNotifications.schedule`, or
-    :meth:`flet_notifications.LocalNotifications.periodically_show`. Only the current
+    Pass this object to :meth:`flet_notifications.Notifications.show`,
+    :meth:`flet_notifications.Notifications.schedule`, or
+    :meth:`flet_notifications.Notifications.periodically_show`. Only the current
     platform's entry is used. Unset entries use the bridge defaults. Cross-platform
     content such as title, body, payload, and actions is passed directly to those
     methods.

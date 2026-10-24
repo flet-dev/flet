@@ -52,7 +52,7 @@ class _RecordingControl extends Control {
   _RecordingControl()
       : super(
           id: 1,
-          type: 'LocalNotifications',
+          type: 'Notifications',
           properties: const {},
           backend: FletBackend(
             pageUri: Uri.parse('http://localhost'),
@@ -68,12 +68,11 @@ class _RecordingControl extends Control {
   }
 }
 
-LocalNotificationsService _service({Control? control}) =>
-    LocalNotificationsService(
+NotificationsService _service({Control? control}) => NotificationsService(
       control: control ??
           Control(
             id: 1,
-            type: 'LocalNotifications',
+            type: 'Notifications',
             properties: const {},
             backend: FletBackend(
               pageUri: Uri.parse('http://localhost'),
@@ -86,7 +85,7 @@ LocalNotificationsService _service({Control? control}) =>
 
 /// Invokes [method] and returns its result, or for a failure the text Flet
 /// reports to Python: the [NotificationException]'s `"<code>: <message>"`.
-Future<Object?> _call(LocalNotificationsService service, String method,
+Future<Object?> _call(NotificationsService service, String method,
     [Object? args]) async {
   try {
     return await service.invokeMethod(method, args);
@@ -97,7 +96,7 @@ Future<Object?> _call(LocalNotificationsService service, String method,
 
 /// Reinitializes [service] and returns `null`, or for a failure the text Flet
 /// reports to Python, as [_call] does.
-Future<Object?> _reinitialize(LocalNotificationsService service) async {
+Future<Object?> _reinitialize(NotificationsService service) async {
   try {
     await service.reinitialize();
     return null;

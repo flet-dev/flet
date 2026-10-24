@@ -20,8 +20,8 @@ class NotificationEvent(ft.Event[ft.EventControlType]):
     """
     The user selected a notification, or the platform reported its dismissal.
 
-    Delivered to :attr:`flet_notifications.LocalNotifications.on_tap` and
-    :attr:`flet_notifications.LocalNotifications.on_dismiss`. Action buttons deliver
+    Delivered to :attr:`flet_notifications.Notifications.on_tap` and
+    :attr:`flet_notifications.Notifications.on_dismiss`. Action buttons deliver
     :class:`flet_notifications.NotificationActionEvent` instead. The inherited
     `control` is the service that emitted the event.
     """
@@ -43,12 +43,12 @@ class NotificationActionEvent(NotificationEvent[ft.EventControlType]):
     """
     The user selected one of a notification's action buttons.
 
-    Delivered to :attr:`flet_notifications.LocalNotifications.on_action`.
+    Delivered to :attr:`flet_notifications.Notifications.on_action`.
 
     Note:
         On Windows, the inherited `data` mapping contains reply values keyed by
         :attr:`flet_notifications.NotificationAction.id`. See
-        :attr:`flet_notifications.LocalNotifications.on_action` for how to read them.
+        :attr:`flet_notifications.Notifications.on_action` for how to read them.
     """
 
     action_id: str
@@ -89,7 +89,7 @@ class NotificationUnsupportedPlatformError(
     """
     Raised when an operation is not available on the current platform.
 
-    For example, :meth:`flet_notifications.LocalNotifications.start_foreground_service`
+    For example, :meth:`flet_notifications.Notifications.start_foreground_service`
     outside Android. Also caught as :class:`flet.FletUnsupportedPlatformException`.
     """
 
@@ -117,7 +117,7 @@ class NotificationPermissionError(NotificationError):
 
     For example, scheduling with an exact
     :class:`~flet_notifications.AndroidScheduleMode` without exact-alarm access; see
-    :meth:`flet_notifications.LocalNotifications.request_exact_alarm_permission`.
+    :meth:`flet_notifications.Notifications.request_exact_alarm_permission`.
     """
 
 

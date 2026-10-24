@@ -15,7 +15,7 @@ categories = ["Utility/Notifications"]
 
 [tool.flet.metadata]
 title = "Notifications"
-controls = ["Page", "AppBar", "Column", "Container", "Divider", "OutlinedButton", "Text", "LocalNotifications"]
+controls = ["Page", "AppBar", "Column", "Container", "Divider", "OutlinedButton", "Text", "Notifications"]
 layout_pattern = "control-panel"
 complexity = "advanced"
 features = ["local notifications", "scheduling", "channels", "actions", "typed tap handlers"]

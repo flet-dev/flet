@@ -13,16 +13,16 @@ from flet_notifications import (
     AndroidOptions,
     AndroidProgress,
     DateTimeComponents,
-    LocalNotifications,
     NotificationInvalidArgumentError,
     NotificationOptions,
+    Notifications,
     RepeatInterval,
 )
 
 from .helpers import encode_wire
 
 
-class RecordingService(LocalNotifications):
+class RecordingService(Notifications):
     def __init__(self):
         super().__init__()
         self.calls: list[tuple[str, dict | None]] = []

@@ -95,7 +95,7 @@ class AndroidNotificationFlag(IntFlag):
         ```
 
     Deprecated flags and system-managed status flags are omitted. To start a foreground
-    service, use :meth:`flet_notifications.LocalNotifications.start_foreground_service`.
+    service, use :meth:`flet_notifications.Notifications.start_foreground_service`.
     See Android's [notification
     flags](https://developer.android.com/reference/android/app/Notification#flags).
     """
@@ -158,12 +158,12 @@ class AndroidNotificationFlag(IntFlag):
 
 class RepeatInterval(Enum):
     """
-    Fixed intervals for :meth:`flet_notifications.LocalNotifications.periodically_show`.
+    Fixed intervals for :meth:`flet_notifications.Notifications.periodically_show`.
 
     The first notification is delivered one interval after scheduling. For a particular
     local time, such as 09:00 each day, use
     :class:`flet_notifications.DateTimeComponents` with
-    :meth:`flet_notifications.LocalNotifications.schedule` instead.
+    :meth:`flet_notifications.Notifications.schedule` instead.
 
     Note:
         Supported only on Android, iOS, and macOS.
@@ -186,7 +186,7 @@ class DateTimeComponents(Enum):
     """
     Calendar components to match when repeating a scheduled notification.
 
-    Used by :meth:`flet_notifications.LocalNotifications.schedule`. The next matching
+    Used by :meth:`flet_notifications.Notifications.schedule`. The next matching
     date can precede the full date supplied in `when`: matching only the time repeats
     from the next occurrence of that time.
 
@@ -226,9 +226,9 @@ class AndroidScheduleMode(Enum):
 
     - On Android 14+, the access is off until the user turns it on in system
       settings. Check it with
-      :meth:`flet_notifications.LocalNotifications.can_schedule_exact_notifications`
+      :meth:`flet_notifications.Notifications.can_schedule_exact_notifications`
       and open that settings screen with
-      :meth:`flet_notifications.LocalNotifications.request_exact_alarm_permission`.
+      :meth:`flet_notifications.Notifications.request_exact_alarm_permission`.
     - Scheduling in an exact mode without the access raises
       :class:`flet_notifications.NotificationPermissionError`.
     - The user or the system can revoke the access at any time. Android then stops
@@ -277,8 +277,8 @@ class AndroidScheduleMode(Enum):
     Schedule approximately at the requested time, including during idle mode.
 
     Does not require exact-alarm access; Android may batch or delay delivery. This is
-    the default of :meth:`flet_notifications.LocalNotifications.schedule` and
-    :meth:`flet_notifications.LocalNotifications.periodically_show`.
+    the default of :meth:`flet_notifications.Notifications.schedule` and
+    :meth:`flet_notifications.Notifications.periodically_show`.
     """
 
 
@@ -528,7 +528,7 @@ class AndroidServiceStartType(Enum):
     Android restart policy for the extension's foreground service.
 
     Note:
-        Used by :meth:`flet_notifications.LocalNotifications.start_foreground_service`.
+        Used by :meth:`flet_notifications.Notifications.start_foreground_service`.
         These policies govern native service recreation, not Python task restart.
         Android's foreground-service start restrictions still apply.
     """
@@ -568,7 +568,7 @@ class AndroidForegroundServiceType(Enum):
     """
     Kind of work performed by an Android foreground service.
 
-    Used by :meth:`flet_notifications.LocalNotifications.start_foreground_service`. Each
+    Used by :meth:`flet_notifications.Notifications.start_foreground_service`. Each
     member below includes its `pyproject.toml` entries and any additional runtime or
     eligibility requirements. The type-specific foreground-service permissions are
     required when targeting Android 14+.
@@ -589,7 +589,7 @@ class AndroidForegroundServiceType(Enum):
     `foregroundServiceType = "location|mediaPlayback"`, and include the permissions and
     prerequisites for every selected type. Pass the matching enum members to the
     method's
-    [`foreground_service_types`][flet_notifications.LocalNotifications.start_foreground_service]
+    [`foreground_service_types`][flet_notifications.Notifications.start_foreground_service]
     argument.
 
     Note:
@@ -910,7 +910,7 @@ class AndroidForegroundServiceType(Enum):
         Android limits this type to about three minutes and does not support sticky
         restart behavior. Use
         :attr:`flet_notifications.AndroidServiceStartType.START_NOT_STICKY` and call
-        :meth:`flet_notifications.LocalNotifications.stop_foreground_service` before the
+        :meth:`flet_notifications.Notifications.stop_foreground_service` before the
         deadline. This type cannot start another foreground service. If combined with
         another service type, Android ignores `shortService` and applies the other
         type's requirements.

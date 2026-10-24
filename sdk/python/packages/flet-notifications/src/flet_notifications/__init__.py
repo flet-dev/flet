@@ -13,7 +13,7 @@ from flet_notifications.events import (
     ActiveNotification,
     PendingNotification,
 )
-from flet_notifications.local_notifications import LocalNotifications
+from flet_notifications.notifications import Notifications
 from flet_notifications.options import (
     AndroidGroup,
     AndroidOptions,
@@ -95,7 +95,6 @@ __all__ = [
     "LinuxNotificationCategory",
     "LinuxOptions",
     "LinuxUrgency",
-    "LocalNotifications",
     "NotificationAction",
     "NotificationActionEvent",
     "NotificationActionInput",
@@ -107,6 +106,7 @@ __all__ = [
     "NotificationOptions",
     "NotificationPermissionError",
     "NotificationUnsupportedPlatformError",
+    "Notifications",
     "PendingNotification",
     "RepeatInterval",
     "WebNotificationDirection",
