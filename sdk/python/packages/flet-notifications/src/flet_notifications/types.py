@@ -230,7 +230,7 @@ class AndroidScheduleMode(Enum):
       and open that settings screen with
       :meth:`flet_notifications.Notifications.request_exact_alarm_permission`.
     - Scheduling in an exact mode without the access raises
-      :class:`flet_notifications.NotificationPermissionError`.
+      :class:`flet_notifications.NotificationPermissionException`.
     - The user or the system can revoke the access at any time. Android then stops
       the app and cancels its future exact alarms, so those notifications are not
       delivered. Check the access when the app starts and reschedule once it is

@@ -6,12 +6,12 @@ from flet.utils import from_dict
 
 __all__ = [
     "NotificationActionEvent",
-    "NotificationError",
     "NotificationEvent",
-    "NotificationInitializationError",
-    "NotificationInvalidArgumentError",
-    "NotificationPermissionError",
-    "NotificationUnsupportedPlatformError",
+    "NotificationException",
+    "NotificationInitializationException",
+    "NotificationInvalidArgumentException",
+    "NotificationPermissionException",
+    "NotificationUnsupportedPlatformException",
 ]
 
 
@@ -64,7 +64,7 @@ class NotificationActionEvent(NotificationEvent[ft.EventControlType]):
     """
 
 
-class NotificationError(ft.FletException):
+class NotificationException(ft.FletException):
     """
     Base class for notification failures.
 
@@ -75,15 +75,15 @@ class NotificationError(ft.FletException):
 
     See these subclasses:
 
-    - :class:`~flet_notifications.NotificationUnsupportedPlatformError`
-    - :class:`~flet_notifications.NotificationInitializationError`
-    - :class:`~flet_notifications.NotificationInvalidArgumentError`
-    - :class:`~flet_notifications.NotificationPermissionError`
+    - :class:`~flet_notifications.NotificationUnsupportedPlatformException`
+    - :class:`~flet_notifications.NotificationInitializationException`
+    - :class:`~flet_notifications.NotificationInvalidArgumentException`
+    - :class:`~flet_notifications.NotificationPermissionException`
     """
 
 
-class NotificationUnsupportedPlatformError(
-    NotificationError, ft.FletUnsupportedPlatformException
+class NotificationUnsupportedPlatformException(
+    NotificationException, ft.FletUnsupportedPlatformException
 ):
     """
     Raised when an operation is not available on the current platform.
@@ -93,7 +93,7 @@ class NotificationUnsupportedPlatformError(
     """
 
 
-class NotificationInitializationError(NotificationError):
+class NotificationInitializationException(NotificationException):
     """
     Raised when the notification backend could not initialize.
 
@@ -102,7 +102,7 @@ class NotificationInitializationError(NotificationError):
     """
 
 
-class NotificationInvalidArgumentError(NotificationError, ValueError):
+class NotificationInvalidArgumentException(NotificationException, ValueError):
     """
     Raised when a value passed to a notification operation is invalid.
 
@@ -110,7 +110,7 @@ class NotificationInvalidArgumentError(NotificationError, ValueError):
     """
 
 
-class NotificationPermissionError(NotificationError):
+class NotificationPermissionException(NotificationException):
     """
     Raised when the platform refuses an operation for lack of permission.
 
@@ -120,26 +120,26 @@ class NotificationPermissionError(NotificationError):
     """
 
 
-_BRIDGE_ERRORS: dict[str, type[NotificationError]] = {
-    "unsupported_platform": NotificationUnsupportedPlatformError,
-    "initialization_failed": NotificationInitializationError,
-    "invalid_argument": NotificationInvalidArgumentError,
-    "permission_denied": NotificationPermissionError,
-    "operation_failed": NotificationError,
+_BRIDGE_ERRORS: dict[str, type[NotificationException]] = {
+    "unsupported_platform": NotificationUnsupportedPlatformException,
+    "initialization_failed": NotificationInitializationException,
+    "invalid_argument": NotificationInvalidArgumentException,
+    "permission_denied": NotificationPermissionException,
+    "operation_failed": NotificationException,
 }
 """Exception class for each failure code the Dart service reports."""
 
 
-def error_from_bridge(text: str) -> NotificationError:
+def error_from_bridge(text: str) -> NotificationException:
     """
     Rebuild a bridge failure from the text Flet reports for a failed method call.
 
     The Dart service fails with `"<code>: <message>"`. Other failures, such as a
-    missing control, become a plain :class:`flet_notifications.NotificationError`.
+    missing control, become a plain :class:`flet_notifications.NotificationException`.
     """
     code, separator, message = text.partition(": ")
     error = _BRIDGE_ERRORS.get(code) if separator else None
-    return error(message) if error else NotificationError(text)
+    return error(message) if error else NotificationException(text)
 
 
 _QueryItem = TypeVar("_QueryItem")
@@ -151,19 +151,19 @@ def parse_query_list(
 ) -> list[_QueryItem]:
     """Reconstruct query snapshots without silently skipping malformed entries."""
     if not isinstance(result, list):
-        raise NotificationError(
+        raise NotificationException(
             f"Expected a list of {item_type.__name__}",
         )
     items = []
     for index, entry in enumerate(result):
         if not isinstance(entry, dict):
-            raise NotificationError(
+            raise NotificationException(
                 f"Expected {item_type.__name__} mapping at index {index}",
             )
         try:
             items.append(from_dict(item_type, entry))
         except (TypeError, ValueError) as exc:
-            raise NotificationError(
+            raise NotificationException(
                 f"Invalid {item_type.__name__} at index {index}: {exc}",
             ) from exc
     return items

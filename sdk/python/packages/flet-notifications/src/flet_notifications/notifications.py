@@ -6,8 +6,8 @@ from flet_notifications.actions import NotificationAction
 from flet_notifications.base import (
     NotificationActionEvent,
     NotificationEvent,
-    NotificationInvalidArgumentError,
-    NotificationUnsupportedPlatformError,
+    NotificationInvalidArgumentException,
+    NotificationUnsupportedPlatformException,
     error_from_bridge,
     parse_query_list,
 )
@@ -190,7 +190,7 @@ class Notifications(ft.Service):
         Raise unless the app runs on one of `platforms`, or in a browser if `web`.
 
         Raises:
-            NotificationUnsupportedPlatformError: Elsewhere, naming `method` and the
+            NotificationUnsupportedPlatformException: Elsewhere, naming `method` and the
                 platforms it is supported on.
         """
         page = self.page
@@ -204,12 +204,12 @@ class Notifications(ft.Service):
         listed = (
             names[0] if len(names) == 1 else f"{', '.join(names[:-1])} and {names[-1]}"
         )
-        raise NotificationUnsupportedPlatformError(
+        raise NotificationUnsupportedPlatformException(
             f"{method}() is only supported on {listed}"
         )
 
     async def _call(self, method_name: str, arguments: Any = None) -> Any:
-        """Invoke a bridge method, raising its failures as `NotificationError`."""
+        """Invoke a bridge method, raising its failures as `NotificationException`."""
         try:
             return await self._invoke_method(method_name, arguments)
         except RuntimeError as e:
@@ -252,12 +252,12 @@ class Notifications(ft.Service):
                 :class:`~flet_notifications.NotificationOptions`.
 
         Raises:
-            NotificationInvalidArgumentError: If `id` doesn't fit a 32-bit signed
+            NotificationInvalidArgumentException: If `id` doesn't fit a 32-bit signed
                 integer.
-            NotificationInvalidArgumentError: If a value in `actions` or `options` is
-                invalid, such as an empty action title or a progress value above
-                its maximum.
-            NotificationError: If the bridge reports initialization or operation
+            NotificationInvalidArgumentException: If a value in `actions` or
+                `options` is invalid, such as an empty action title or a progress
+                value above its maximum.
+            NotificationException: If the bridge reports initialization or operation
                 failure.
         """
         validate_notification_id(id)
@@ -289,9 +289,9 @@ class Notifications(ft.Service):
                 Matches both tag and ID when provided; ignored on other platforms.
 
         Raises:
-            NotificationInvalidArgumentError: If `id` doesn't fit a 32-bit signed
+            NotificationInvalidArgumentException: If `id` doesn't fit a 32-bit signed
                 integer.
-            NotificationError: If the bridge reports initialization or operation
+            NotificationException: If the bridge reports initialization or operation
                 failure.
         """
         validate_notification_id(id)
@@ -307,7 +307,7 @@ class Notifications(ft.Service):
             or channel groups.
 
         Raises:
-            NotificationError: If the bridge reports initialization or operation
+            NotificationException: If the bridge reports initialization or operation
                 failure.
         """
         await self._call("cancel_all")
@@ -368,7 +368,7 @@ class Notifications(ft.Service):
                 through per-channel restrictions, Focus, or Do Not Disturb.
 
         Raises:
-            NotificationError: If the bridge reports initialization or operation
+            NotificationException: If the bridge reports initialization or operation
                 failure.
         """
         return await self._call(
@@ -446,16 +446,16 @@ class Notifications(ft.Service):
                 access. Ignored on other platforms.
 
         Raises:
-            NotificationUnsupportedPlatformError: If called on Linux or the web,
+            NotificationUnsupportedPlatformException: If called on Linux or the web,
                 which don't support scheduled notifications.
-            NotificationInvalidArgumentError: If `when` is not in the future.
-            NotificationInvalidArgumentError: If `id` doesn't fit a 32-bit signed
+            NotificationInvalidArgumentException: If `when` is not in the future.
+            NotificationInvalidArgumentException: If `id` doesn't fit a 32-bit signed
                 integer.
-            NotificationInvalidArgumentError: If a value in `actions` or `options` is
-                invalid.
-            NotificationPermissionError: If an exact `schedule_mode` lacks Android
+            NotificationInvalidArgumentException: If a value in `actions` or
+                `options` is invalid.
+            NotificationPermissionException: If an exact `schedule_mode` lacks Android
                 exact-alarm access.
-            NotificationError: If the bridge reports another failure.
+            NotificationException: If the bridge reports another failure.
 
         Example:
             ```python
@@ -550,18 +550,18 @@ class Notifications(ft.Service):
             options: Additional per-platform details.
 
         Raises:
-            NotificationUnsupportedPlatformError: If called on Windows, Linux or
+            NotificationUnsupportedPlatformException: If called on Windows, Linux or
                 the web, which don't support repeating notifications.
-            NotificationInvalidArgumentError: If `repeat_interval` isn't a
+            NotificationInvalidArgumentException: If `repeat_interval` isn't a
                 :class:`~flet_notifications.RepeatInterval` or a duration of at
                 least one minute.
-            NotificationInvalidArgumentError: If `id` doesn't fit a 32-bit signed
+            NotificationInvalidArgumentException: If `id` doesn't fit a 32-bit signed
                 integer.
-            NotificationInvalidArgumentError: If a value in `actions` or `options` is
-                invalid.
-            NotificationPermissionError: If an exact `schedule_mode` lacks Android
+            NotificationInvalidArgumentException: If a value in `actions` or
+                `options` is invalid.
+            NotificationPermissionException: If an exact `schedule_mode` lacks Android
                 exact-alarm access.
-            NotificationError: If the bridge reports another failure.
+            NotificationException: If the bridge reports another failure.
         """
         self._require_platform(
             "periodically_show",
@@ -600,10 +600,10 @@ class Notifications(ft.Service):
             pending request.
 
         Raises:
-            NotificationUnsupportedPlatformError: If called on Windows, which
+            NotificationUnsupportedPlatformException: If called on Windows, which
                 can't cancel pending notifications all at once, or on Linux, which
                 doesn't support scheduled notifications.
-            NotificationError: If the bridge reports initialization or operation
+            NotificationException: If the bridge reports initialization or operation
                 failure.
         """
         self._require_platform(
@@ -632,9 +632,9 @@ class Notifications(ft.Service):
                 and cannot be edited to change the native schedule.
 
         Raises:
-            NotificationUnsupportedPlatformError: If called on Linux, which doesn't
+            NotificationUnsupportedPlatformException: If called on Linux, which doesn't
                 support scheduled notifications.
-            NotificationError: If the backend reports a failure or returns malformed
+            NotificationException: If the backend reports a failure or returns malformed
                 query data.
         """
         self._require_platform(
@@ -663,7 +663,7 @@ class Notifications(ft.Service):
                 on non-Android platforms, where exact scheduling is not restricted.
 
         Raises:
-            NotificationError: If the bridge reports initialization or operation
+            NotificationException: If the bridge reports initialization or operation
                 failure.
         """
         return await self._call("can_schedule_exact_notifications")
@@ -689,7 +689,7 @@ class Notifications(ft.Service):
                 create a scheduled notification.
 
         Raises:
-            NotificationError: If the bridge reports initialization or operation
+            NotificationException: If the bridge reports initialization or operation
                 failure.
         """
         return await self._call("request_exact_alarm_permission")
@@ -710,11 +710,11 @@ class Notifications(ft.Service):
                 first when a group ID is supplied.
 
         Raises:
-            NotificationInvalidArgumentError: If `channel` has an empty
+            NotificationInvalidArgumentException: If `channel` has an empty
                 :attr:`~flet_notifications.NotificationChannel.id`.
-            NotificationInvalidArgumentError: If `channel` has an empty
+            NotificationInvalidArgumentException: If `channel` has an empty
                 :attr:`~flet_notifications.NotificationChannel.name`.
-            NotificationError: If the bridge reports initialization or operation
+            NotificationException: If the bridge reports initialization or operation
                 failure.
         """
         validate_arguments(channel)
@@ -733,8 +733,8 @@ class Notifications(ft.Service):
             channel_id: Identifier of the channel to delete.
 
         Raises:
-            NotificationInvalidArgumentError: If `channel_id` is empty.
-            NotificationError: If the bridge reports initialization or operation
+            NotificationInvalidArgumentException: If `channel_id` is empty.
+            NotificationException: If the bridge reports initialization or operation
                 failure.
         """
         validate_non_empty(channel_id=channel_id)
@@ -750,7 +750,7 @@ class Notifications(ft.Service):
                 settings, including changes made by the user.
 
         Raises:
-            NotificationError: If the backend reports a failure or returns malformed
+            NotificationException: If the backend reports a failure or returns malformed
                 query data.
         """
         return parse_query_list(
@@ -802,21 +802,21 @@ class Notifications(ft.Service):
                 or an empty list uses the manifest's service types.
 
         Raises:
-            NotificationUnsupportedPlatformError: If called on a platform other
+            NotificationUnsupportedPlatformException: If called on a platform other
                 than Android, where foreground services don't exist.
-            NotificationInvalidArgumentError: If `id` is `0`.
-            NotificationInvalidArgumentError: If `id` doesn't fit a 32-bit signed
+            NotificationInvalidArgumentException: If `id` is `0`.
+            NotificationInvalidArgumentException: If `id` doesn't fit a 32-bit signed
                 integer.
-            NotificationInvalidArgumentError: If a value in `actions` or `options` is
-                invalid.
-            NotificationError: If the bridge reports another failure.
+            NotificationInvalidArgumentException: If a value in `actions` or
+                `options` is invalid.
+            NotificationException: If the bridge reports another failure.
         """
         self._require_platform(
             "start_foreground_service",
             {ft.PagePlatform.ANDROID, ft.PagePlatform.ANDROID_TV},
         )
         if id == 0:
-            raise NotificationInvalidArgumentError(
+            raise NotificationInvalidArgumentException(
                 "foreground service id must be non-zero"
             )
         validate_notification_id(id)
@@ -845,7 +845,7 @@ class Notifications(ft.Service):
             nothing on other platforms, where no foreground service can run.
 
         Raises:
-            NotificationError: If the bridge reports initialization or operation
+            NotificationException: If the bridge reports initialization or operation
                 failure.
         """
         await self._call("stop_foreground_service")
@@ -881,14 +881,14 @@ class Notifications(ft.Service):
                 shown, such as after the user dismissed it.
 
         Raises:
-            NotificationUnsupportedPlatformError: If called on a platform other
+            NotificationUnsupportedPlatformException: If called on a platform other
                 than Windows, including a web app opened on Windows.
-            NotificationInvalidArgumentError: If `id` doesn't fit a 32-bit signed
+            NotificationInvalidArgumentException: If `id` doesn't fit a 32-bit signed
                 integer.
-            NotificationInvalidArgumentError: If `progress` is invalid, such as a
+            NotificationInvalidArgumentException: If `progress` is invalid, such as a
                 :attr:`~flet_notifications.WindowsProgress.value` above its
                 :attr:`~flet_notifications.WindowsProgress.max`.
-            NotificationError: If the bridge reports another failure.
+            NotificationException: If the bridge reports another failure.
 
         Example:
             ```python
@@ -932,7 +932,7 @@ class Notifications(ft.Service):
                 checking system notification settings.
 
         Raises:
-            NotificationError: If the bridge reports initialization or operation
+            NotificationException: If the bridge reports initialization or operation
                 failure.
         """
         return await self._call("are_notifications_enabled")
@@ -948,9 +948,9 @@ class Notifications(ft.Service):
             screen opened.
 
         Raises:
-            NotificationUnsupportedPlatformError: If called on Windows, Linux or
+            NotificationUnsupportedPlatformException: If called on Windows, Linux or
                 the web, where the app's notification settings can't be opened.
-            NotificationError: If the bridge reports initialization or operation
+            NotificationException: If the bridge reports initialization or operation
                 failure.
         """
         self._require_platform(
@@ -978,9 +978,9 @@ class Notifications(ft.Service):
                 Unavailable values are `None`.
 
         Raises:
-            NotificationUnsupportedPlatformError: If called on Linux, which can't
+            NotificationUnsupportedPlatformException: If called on Linux, which can't
                 list the notifications it shows.
-            NotificationError: If the backend reports a failure or returns malformed
+            NotificationException: If the backend reports a failure or returns malformed
                 query data.
         """
         self._require_platform(
@@ -1013,7 +1013,7 @@ class Notifications(ft.Service):
                 non-Android platforms.
 
         Raises:
-            NotificationError: If the bridge reports initialization or operation
+            NotificationException: If the bridge reports initialization or operation
                 failure.
         """
         return await self._call("request_full_screen_intent")
@@ -1029,7 +1029,7 @@ class Notifications(ft.Service):
             Whether access is granted on Android, or `False` on other platforms.
 
         Raises:
-            NotificationError: If the bridge reports initialization or operation
+            NotificationException: If the bridge reports initialization or operation
                 failure.
         """
         return await self._call("has_notification_policy_access")
@@ -1048,7 +1048,7 @@ class Notifications(ft.Service):
             platforms. The user can decline the request.
 
         Raises:
-            NotificationError: If the bridge reports initialization or operation
+            NotificationException: If the bridge reports initialization or operation
                 failure.
         """
         return await self._call("request_notification_policy_access")
@@ -1071,9 +1071,9 @@ class Notifications(ft.Service):
             description: Optional explanation of the group, supported on Android 9.0+.
 
         Raises:
-            NotificationInvalidArgumentError: If `group_id` is empty.
-            NotificationInvalidArgumentError: If `name` is empty.
-            NotificationError: If the bridge reports initialization or operation
+            NotificationInvalidArgumentException: If `group_id` is empty.
+            NotificationInvalidArgumentException: If `name` is empty.
+            NotificationException: If the bridge reports initialization or operation
                 failure.
         """
         validate_non_empty(group_id=group_id, name=name)
@@ -1099,8 +1099,8 @@ class Notifications(ft.Service):
             group_id: Identifier of the group to delete.
 
         Raises:
-            NotificationInvalidArgumentError: If `group_id` is empty.
-            NotificationError: If the bridge reports initialization or operation
+            NotificationInvalidArgumentException: If `group_id` is empty.
+            NotificationException: If the bridge reports initialization or operation
                 failure.
         """
         validate_non_empty(group_id=group_id)

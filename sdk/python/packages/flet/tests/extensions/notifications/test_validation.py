@@ -12,7 +12,7 @@ from flet_notifications import (
     LinuxOptions,
     NotificationAction,
     NotificationChannel,
-    NotificationInvalidArgumentError,
+    NotificationInvalidArgumentException,
     NotificationOptions,
     Notifications,
     WindowsOptions,
@@ -53,8 +53,8 @@ def _service() -> Notifications:
             "AndroidGroup: key must be non-empty",
         ),
         (
-            NotificationOptions(android=AndroidOptions(number=-1)),
-            "AndroidOptions: number must be greater than or equal to 0",
+            NotificationOptions(android=AndroidOptions(badge_number=-1)),
+            "AndroidOptions: badge_number must be greater than or equal to 0",
         ),
         (
             NotificationOptions(
@@ -88,7 +88,7 @@ def _service() -> Notifications:
 async def test_invalid_options_fail_before_the_call(options, message):
     """Nested option values that break a rule raise, naming their class."""
     service = _service()
-    with pytest.raises(NotificationInvalidArgumentError, match=message):
+    with pytest.raises(NotificationInvalidArgumentException, match=message):
         await service.show(1, options=options)
     service._invoke_method.assert_not_called()
 
@@ -104,7 +104,7 @@ async def test_invalid_options_fail_before_the_call(options, message):
 async def test_invalid_actions_fail_before_the_call(action, message):
     """Actions need an ID and a title."""
     service = _service()
-    with pytest.raises(NotificationInvalidArgumentError, match=message):
+    with pytest.raises(NotificationInvalidArgumentException, match=message):
         await service.show(1, actions=[action])
     service._invoke_method.assert_not_called()
 
@@ -122,7 +122,9 @@ async def test_invalid_actions_fail_before_the_call(action, message):
 async def test_ids_outside_32_bits_fail_before_the_call(call, id):
     """Notification IDs must fit a 32-bit signed integer."""
     service = _service()
-    with pytest.raises(NotificationInvalidArgumentError, match="id must be between"):
+    with pytest.raises(
+        NotificationInvalidArgumentException, match="id must be between"
+    ):
         await call(service, id)
     service._invoke_method.assert_not_called()
 
@@ -147,7 +149,7 @@ async def test_valid_nested_values_reach_the_client():
             android=AndroidOptions(
                 progress=AndroidProgress(value=100),
                 channel=NotificationChannel(id="downloads", name="Downloads"),
-                number=0,
+                badge_number=0,
             ),
             ios=DarwinOptions(badge_number=0, critical_sound_volume=1.0),
         ),
@@ -160,7 +162,7 @@ async def test_channels_are_validated_when_created():
     """A channel created on its own is checked too."""
     service = _service()
     with pytest.raises(
-        NotificationInvalidArgumentError, match="name must be non-empty"
+        NotificationInvalidArgumentException, match="name must be non-empty"
     ):
         await service.create_notification_channel(NotificationChannel(id="c", name=""))
     service._invoke_method.assert_not_called()
@@ -171,7 +173,7 @@ async def test_windows_progress_updates_are_validated(client_platform):
     """An in-place progress update is checked before the call."""
     client_platform.platform = ft.PagePlatform.WINDOWS
     service = _service()
-    with pytest.raises(NotificationInvalidArgumentError, match="WindowsProgress"):
+    with pytest.raises(NotificationInvalidArgumentException, match="WindowsProgress"):
         await service.update_windows_progress(
             1, WindowsProgress(status="Downloading", value=5, max=4)
         )
@@ -201,7 +203,7 @@ async def test_windows_progress_updates_are_validated(client_platform):
 async def test_negative_durations_fail_before_the_call(options, message):
     """Durations can't be negative, apart from documented special values."""
     service = _service()
-    with pytest.raises(NotificationInvalidArgumentError, match=message):
+    with pytest.raises(NotificationInvalidArgumentException, match=message):
         await service.show(1, options=options)
     service._invoke_method.assert_not_called()
 
@@ -234,7 +236,7 @@ async def test_empty_channel_and_group_ids_fail_before_the_call(call, message):
     """Channel and group methods need non-empty IDs and names."""
     service = _service()
     with pytest.raises(
-        NotificationInvalidArgumentError, match=f"{message} must be non-empty"
+        NotificationInvalidArgumentException, match=f"{message} must be non-empty"
     ):
         await call(service)
     service._invoke_method.assert_not_called()

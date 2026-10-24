@@ -1,7 +1,7 @@
 ---
-title: "NotificationInvalidArgumentError"
+title: "NotificationInvalidArgumentException"
 ---
 
 import {ClassAll} from '@site/src/components/crocodocs';
 
-<ClassAll name="flet_notifications.NotificationInvalidArgumentError" />
+<ClassAll name="flet_notifications.NotificationInvalidArgumentException" />

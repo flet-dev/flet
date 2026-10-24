@@ -1,4 +1,4 @@
-/// Error categories shared with the Python `NotificationErrorCode` enum.
+/// Error codes Python maps to its notification exception classes.
 enum NotificationErrorCode {
   unsupportedPlatform("unsupported_platform"),
   initializationFailed("initialization_failed"),
@@ -16,7 +16,7 @@ enum NotificationErrorCode {
 ///
 /// Flet reports a failed method call to Python with the exception's text, so
 /// [toString] leads with the code for Python to map back to a
-/// `NotificationError`.
+/// `NotificationException` subclass.
 class NotificationException implements Exception {
   const NotificationException(this.code, this.message);
 

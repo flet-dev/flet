@@ -5,7 +5,7 @@ import pytest
 from flet_notifications import (
     ActiveNotification,
     AndroidImportance,
-    NotificationError,
+    NotificationException,
     Notifications,
     PendingNotification,
 )
@@ -135,9 +135,9 @@ async def test_malformed_query_result_raises_notification_error(method):
         return "not json"
 
     service._invoke_method = invoke
-    with pytest.raises(NotificationError) as exc:
+    with pytest.raises(NotificationException) as exc:
         await getattr(service, method)()
-    assert type(exc.value) is NotificationError
+    assert type(exc.value) is NotificationException
 
 
 @pytest.mark.parametrize(
@@ -163,7 +163,7 @@ async def test_empty_query_result_and_native_failure(method):
         raise RuntimeError("operation_failed: permission denied")
 
     service._invoke_method = failure
-    with pytest.raises(NotificationError) as exc:
+    with pytest.raises(NotificationException) as exc:
         await getattr(service, method)()
     assert str(exc.value) == "permission denied"
 
@@ -191,7 +191,7 @@ async def test_malformed_collection_entry_rejects_the_whole_query(method):
             return [valid, response]
 
         service._invoke_method = invoke
-        with pytest.raises(NotificationError) as exc:
+        with pytest.raises(NotificationException) as exc:
             await getattr(service, method)()
         assert "index 1" in str(exc.value)
 
@@ -209,7 +209,7 @@ async def test_channel_reconstruction_errors_are_query_failures():
             return [{"id": "valid", "name": "Valid"}, response]
 
         service._invoke_method = invoke
-        with pytest.raises(NotificationError) as exc:
+        with pytest.raises(NotificationException) as exc:
             await service.get_notification_channels()
         assert "NotificationChannel at index 1" in str(exc.value)
         assert isinstance(exc.value.__cause__, (TypeError, ValueError))

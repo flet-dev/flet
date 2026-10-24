@@ -2,7 +2,7 @@ from datetime import datetime, timedelta
 from zoneinfo import ZoneInfo
 
 import flet as ft
-from flet_notifications.base import NotificationInvalidArgumentError
+from flet_notifications.base import NotificationInvalidArgumentException
 from flet_notifications.types import (
     AndroidScheduleMode,
     DateTimeComponents,
@@ -33,7 +33,7 @@ def build_schedule_args(
 
     if isinstance(when, timedelta):
         if when <= timedelta(0):
-            raise NotificationInvalidArgumentError("when must be in the future")
+            raise NotificationInvalidArgumentException("when must be in the future")
         when_payload = {
             "delay": ft.Duration.from_unit(
                 microseconds=when // timedelta(microseconds=1)
@@ -68,11 +68,11 @@ def build_periodic_args(
     elif isinstance(repeat_interval, RepeatInterval):
         milliseconds = None
     else:
-        raise NotificationInvalidArgumentError(
+        raise NotificationInvalidArgumentException(
             "repeat_interval must be a RepeatInterval, Duration, or integer"
         )
     if milliseconds is not None and milliseconds < 60000:
-        raise NotificationInvalidArgumentError(
+        raise NotificationInvalidArgumentException(
             "repeat_interval must be at least one minute"
         )
     return {

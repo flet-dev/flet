@@ -14,7 +14,7 @@ from flet_notifications import (
     LinuxOptions,
     NotificationAction,
     Notifications,
-    NotificationUnsupportedPlatformError,
+    NotificationUnsupportedPlatformException,
     WebOptions,
     WindowsOptions,
     WindowsProgress,
@@ -200,7 +200,9 @@ async def test_windows_progress_update_sends_the_progress():
 async def test_windows_progress_update_is_windows_only(platform, web):
     """Other platforms, and web apps opened on Windows, fail before the call."""
     service = _RecordingNotifications(platform, web)
-    with pytest.raises(NotificationUnsupportedPlatformError, match="only supported"):
+    with pytest.raises(
+        NotificationUnsupportedPlatformException, match="only supported"
+    ):
         await service.update_windows_progress(5, WindowsProgress(status="Working"))
     assert service.calls == []
 

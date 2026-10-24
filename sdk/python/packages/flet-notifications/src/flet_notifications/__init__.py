@@ -1,12 +1,12 @@
 from flet_notifications.actions import NotificationAction, NotificationActionInput
 from flet_notifications.base import (
     NotificationActionEvent,
-    NotificationError,
     NotificationEvent,
-    NotificationInitializationError,
-    NotificationInvalidArgumentError,
-    NotificationPermissionError,
-    NotificationUnsupportedPlatformError,
+    NotificationException,
+    NotificationInitializationException,
+    NotificationInvalidArgumentException,
+    NotificationPermissionException,
+    NotificationUnsupportedPlatformException,
 )
 from flet_notifications.channels import NotificationChannel
 from flet_notifications.events import (
@@ -100,13 +100,13 @@ __all__ = [
     "NotificationActionEvent",
     "NotificationActionInput",
     "NotificationChannel",
-    "NotificationError",
     "NotificationEvent",
-    "NotificationInitializationError",
-    "NotificationInvalidArgumentError",
+    "NotificationException",
+    "NotificationInitializationException",
+    "NotificationInvalidArgumentException",
     "NotificationOptions",
-    "NotificationPermissionError",
-    "NotificationUnsupportedPlatformError",
+    "NotificationPermissionException",
+    "NotificationUnsupportedPlatformException",
     "Notifications",
     "PendingNotification",
     "RepeatInterval",

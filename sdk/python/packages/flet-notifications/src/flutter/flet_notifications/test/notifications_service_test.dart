@@ -1610,7 +1610,7 @@ void main() {
           "progress": {"max": "100", "value": "0", "indeterminate": "false"},
           "ongoing": "TRUE",
           "auto_cancel": "false",
-          "number": "0",
+          "badge_number": "0",
           "additional_flags": "36",
           "channel": {
             "id": "c",
@@ -1663,7 +1663,7 @@ void main() {
           "priority": "max",
           "color": "#FF0000",
           "sub_text": "details",
-          "number": 4,
+          "badge_number": 4,
           "visibility": "private",
           "timeout_after": 60000,
           "full_screen_intent": true,

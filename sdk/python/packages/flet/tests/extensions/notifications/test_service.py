@@ -14,13 +14,13 @@ from flet_notifications import (
     AndroidOptions,
     NotificationAction,
     NotificationChannel,
-    NotificationError,
-    NotificationInitializationError,
-    NotificationInvalidArgumentError,
+    NotificationException,
+    NotificationInitializationException,
+    NotificationInvalidArgumentException,
     NotificationOptions,
-    NotificationPermissionError,
+    NotificationPermissionException,
     Notifications,
-    NotificationUnsupportedPlatformError,
+    NotificationUnsupportedPlatformException,
     RepeatInterval,
     WebNotificationDirection,
     WebOptions,
@@ -119,46 +119,46 @@ async def test_methods_encode_nested_notification_values(
     [
         (
             "unsupported_platform: start_foreground_service is not available",
-            NotificationUnsupportedPlatformError,
+            NotificationUnsupportedPlatformException,
             "start_foreground_service is not available",
         ),
         (
             "initialization_failed: backend unavailable",
-            NotificationInitializationError,
+            NotificationInitializationException,
             "backend unavailable",
         ),
         (
             "invalid_argument: unknown category",
-            NotificationInvalidArgumentError,
+            NotificationInvalidArgumentException,
             "unknown category",
         ),
         (
             "permission_denied: exact_alarms_not_permitted: denied",
-            NotificationPermissionError,
+            NotificationPermissionException,
             "exact_alarms_not_permitted: denied",
         ),
         (
             "operation_failed: invalid_icon: missing",
-            NotificationError,
+            NotificationException,
             "invalid_icon: missing",
         ),
         (
             "Calling show method of inexistent control: 7",
-            NotificationError,
+            NotificationException,
             "Calling show method of inexistent control: 7",
         ),
     ],
 )
 @pytest.mark.asyncio
 async def test_bridge_failures_raise_their_error_class(reported, error, message):
-    """A failed call's reported code selects the NotificationError subclass raised."""
+    """A failed call's reported code selects the exception class raised."""
     service = Notifications()
 
     async def fail(method_name, arguments=None, timeout=None):
         raise RuntimeError(reported)
 
     service._invoke_method = fail
-    with pytest.raises(NotificationError) as exc:
+    with pytest.raises(NotificationException) as exc:
         await service.show(id=1, title="t")
     assert type(exc.value) is error
     assert str(exc.value) == message
@@ -167,9 +167,9 @@ async def test_bridge_failures_raise_their_error_class(reported, error, message)
 def test_error_classes_are_also_caught_as_their_generic_kinds():
     """Unsupported-platform and invalid-argument errors match Flet and Python bases."""
     assert issubclass(
-        NotificationUnsupportedPlatformError, ft.FletUnsupportedPlatformException
+        NotificationUnsupportedPlatformException, ft.FletUnsupportedPlatformException
     )
-    assert issubclass(NotificationInvalidArgumentError, ValueError)
+    assert issubclass(NotificationInvalidArgumentException, ValueError)
 
 
 @pytest.mark.parametrize(
@@ -205,9 +205,9 @@ async def test_boolean_methods_preserve_native_results_and_errors(
     for result in [True, False]:
         assert await getattr(service, method)() is result
     result = RuntimeError("initialization_failed: backend unavailable")
-    with pytest.raises(NotificationError) as exc:
+    with pytest.raises(NotificationException) as exc:
         await getattr(service, method)()
-    assert type(exc.value) is NotificationInitializationError
+    assert type(exc.value) is NotificationInitializationException
     assert str(exc.value) == "backend unavailable"
 
 
@@ -271,7 +271,9 @@ async def test_platform_specific_methods_fail_before_the_call(
     client_platform.platform, client_platform.web = platform, web
     service = Notifications()
     service._invoke_method = AsyncMock()
-    with pytest.raises(NotificationUnsupportedPlatformError, match="only supported"):
+    with pytest.raises(
+        NotificationUnsupportedPlatformException, match="only supported"
+    ):
         await call(service)
     service._invoke_method.assert_not_called()
 
@@ -298,7 +300,7 @@ async def test_web_supported_methods_reach_the_client(client_platform, call):
 async def test_unsupported_platform_error_lists_supported_platforms(client_platform):
     """The error names the method and the platforms that support it."""
     client_platform.platform = ft.PagePlatform.LINUX
-    with pytest.raises(NotificationUnsupportedPlatformError) as e:
+    with pytest.raises(NotificationUnsupportedPlatformException) as e:
         await Notifications().schedule(1, when=timedelta(minutes=1))
     assert str(e.value) == (
         "schedule() is only supported on Android, iOS, macOS and Windows"

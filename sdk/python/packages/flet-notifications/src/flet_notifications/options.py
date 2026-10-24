@@ -317,7 +317,7 @@ class AndroidOptions:
         [`flet build`](https://flet.dev/docs/cli/flet-build/) or
         [`flet debug`](https://flet.dev/docs/cli/flet-debug/); under
         [`flet run`](https://flet.dev/docs/cli/flet-run/), a missing icon raises
-        :class:`flet_notifications.NotificationError`.
+        :class:`flet_notifications.NotificationException`.
     """
 
     priority: AndroidPriority | None = None
@@ -424,7 +424,7 @@ class AndroidOptions:
         the progress bar, so avoid using both on those versions.
     """
 
-    number: Annotated[int | None, V.ge(0)] = None
+    badge_number: Annotated[int | None, V.ge(0)] = None
     """
     Notification count displayed by launchers that support badge numbers.
 

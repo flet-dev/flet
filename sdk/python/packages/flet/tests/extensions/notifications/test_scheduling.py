@@ -13,7 +13,7 @@ from flet_notifications import (
     AndroidOptions,
     AndroidProgress,
     DateTimeComponents,
-    NotificationInvalidArgumentError,
+    NotificationInvalidArgumentException,
     NotificationOptions,
     Notifications,
     RepeatInterval,
@@ -75,7 +75,7 @@ async def test_periodic_interval_encodes_presets_and_custom_durations(
 async def test_invalid_periodic_interval_fails_before_invocation(interval):
     """Invalid types and sub-minute intervals never reach the client."""
     service = RecordingService()
-    with pytest.raises(NotificationInvalidArgumentError, match="repeat_interval"):
+    with pytest.raises(NotificationInvalidArgumentException, match="repeat_interval"):
         await service.periodically_show(id=1, repeat_interval=interval)
     assert service.calls == []
 
@@ -155,7 +155,7 @@ async def test_schedule_timedelta_becomes_delay(delay, microseconds):
 async def test_schedule_non_positive_timedelta_fails_before_invocation(delay):
     """A delay that isn't in the future never reaches the client."""
     service = RecordingService()
-    with pytest.raises(NotificationInvalidArgumentError, match="future"):
+    with pytest.raises(NotificationInvalidArgumentException, match="future"):
         await service.schedule(id=3, when=delay)
     assert service.calls == []
 

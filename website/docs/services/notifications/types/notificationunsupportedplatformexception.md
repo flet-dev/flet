@@ -1,7 +1,7 @@
 ---
-title: "NotificationUnsupportedPlatformError"
+title: "NotificationUnsupportedPlatformException"
 ---
 
 import {ClassAll} from '@site/src/components/crocodocs';
 
-<ClassAll name="flet_notifications.NotificationUnsupportedPlatformError" />
+<ClassAll name="flet_notifications.NotificationUnsupportedPlatformException" />

@@ -3,7 +3,7 @@ from typing import Any
 
 import flet as ft
 from flet.utils.validation import FieldRule, V, validate
-from flet_notifications.base import NotificationInvalidArgumentError
+from flet_notifications.base import NotificationInvalidArgumentException
 
 __all__ = []
 
@@ -15,7 +15,7 @@ def validate_arguments(*values: Any) -> None:
     Rules are the `V` validators in each class's annotations.
 
     Raises:
-        NotificationInvalidArgumentError: For the first value that breaks a rule,
+        NotificationInvalidArgumentException: For the first value that breaks a rule,
             naming its class.
     """
     for value in values:
@@ -23,7 +23,7 @@ def validate_arguments(*values: Any) -> None:
             try:
                 validate(value)
             except ValueError as e:
-                raise NotificationInvalidArgumentError(
+                raise NotificationInvalidArgumentException(
                     f"{type(value).__name__}: {e}"
                 ) from None
             validate_arguments(
@@ -41,11 +41,11 @@ def validate_notification_id(id: int) -> None:
     notifications with.
 
     Raises:
-        NotificationInvalidArgumentError: If `id` is outside the range of a
+        NotificationInvalidArgumentException: If `id` is outside the range of a
             32-bit signed integer.
     """
     if not -(2**31) <= id <= 2**31 - 1:
-        raise NotificationInvalidArgumentError(
+        raise NotificationInvalidArgumentException(
             f"id must be between {-(2**31)} and {2**31 - 1}, got {id}"
         )
 
@@ -55,11 +55,11 @@ def validate_non_empty(**values: str) -> None:
     Check that string arguments aren't empty.
 
     Raises:
-        NotificationInvalidArgumentError: Naming the first empty argument.
+        NotificationInvalidArgumentException: Naming the first empty argument.
     """
     for name, value in values.items():
         if not value:
-            raise NotificationInvalidArgumentError(f"{name} must be non-empty")
+            raise NotificationInvalidArgumentException(f"{name} must be non-empty")
 
 
 def non_negative_duration(*special: int) -> FieldRule:

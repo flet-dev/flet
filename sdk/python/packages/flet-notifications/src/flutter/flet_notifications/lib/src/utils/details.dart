@@ -144,7 +144,7 @@ fln.NotificationDetails parseNotificationDetails({
         shortcutId: androidOptions["shortcut_id"] as String?,
         subText: androidOptions["sub_text"] as String?,
         tag: androidOptions["tag"] as String?,
-        number: parseInt(androidOptions["number"]),
+        number: parseInt(androidOptions["badge_number"]),
       ),
       iOS: darwinDetails,
       macOS: parseDarwinDetails(
