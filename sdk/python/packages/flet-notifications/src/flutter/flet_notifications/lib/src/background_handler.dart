@@ -20,6 +20,7 @@ import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import 'utils/tap_queue_signal.dart';
+import 'utils/windows_launch.dart';
 
 const String _queuePrefix = "flet_notifications_queue_";
 
@@ -30,29 +31,23 @@ const String _queuePrefix = "flet_notifications_queue_";
 /// routes queued responses and is not sent to Python. Only action responses carry
 /// `action_id` and `input`, matching `NotificationActionEvent`.
 Map<String, Object?> responseToEvent(NotificationResponse response) {
-  final isAction = response.notificationResponseType ==
+  var isAction = response.notificationResponseType ==
       NotificationResponseType.selectedNotificationAction;
   final isDismissed = response.notificationResponseType ==
       NotificationResponseType.notificationDismissed;
   String? nonEmpty(String? value) =>
       value == null || value.isEmpty ? null : value;
+  var id = response.id;
   var actionId = isAction ? nonEmpty(response.actionId) : null;
   var payload = nonEmpty(response.payload);
-  // Windows returns the launch string (our JSON envelope) as both actionId
-  // and payload, and typed text in `data` (input always null there).
-  // Unwrap both so every platform yields the same event shape.
-  if (actionId != null) {
-    try {
-      final decoded = jsonDecode(actionId);
-      if (decoded is Map && decoded["id"] is String) {
-        // Windows returns the launch string as both actionId and payload;
-        // the envelope carries the real button id and payload.
-        actionId = decoded["id"] as String;
-        payload = nonEmpty(decoded["payload"] as String?);
-      }
-    } on FormatException {
-      // Not our envelope: Android/Darwin/plain action ids pass through.
-    }
+  // Windows reports every click as an action whose id is the clicked element's
+  // launch arguments, and typed text in `data` (input is always null there).
+  final launch = decodeWindowsLaunchArguments(response.actionId);
+  if (launch != null) {
+    id = launch.notificationId ?? id;
+    actionId = nonEmpty(launch.actionId);
+    payload = nonEmpty(launch.payload);
+    isAction = actionId != null;
   }
   final input = nonEmpty(response.input) ??
       (response.data.length == 1
@@ -64,7 +59,7 @@ Map<String, Object?> responseToEvent(NotificationResponse response) {
         : isAction
             ? "action"
             : "tap",
-    "id": response.id,
+    "id": id,
     "payload": payload,
     if (isAction) "action_id": actionId,
     if (isAction) "input": input,

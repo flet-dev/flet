@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:flet_notifications/src/background_handler.dart';
+import 'package:flet_notifications/src/utils/windows_launch.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart'
     as fln;
 import 'package:flutter_test/flutter_test.dart';
@@ -90,38 +91,59 @@ void main() {
     });
   });
 
-  group("Windows response normalization", () {
-    test("actionId envelope is unwrapped to the button id", () {
-      // The Windows plugin returns the launch string as both actionId and
-      // payload; our Dart envelope carries id + payload as JSON.
-      const response = fln.NotificationResponse(
-        id: 7,
-        actionId: '{"id": "reply", "payload": "actions"}',
-        input: null,
-        payload: '{"id": "reply", "payload": "actions"}',
-        notificationResponseType:
-            fln.NotificationResponseType.selectedNotificationAction,
-        data: {"reply": "typed on windows"},
-      );
-      final event = responseToEvent(response);
+  group("Windows responses", () {
+    // The Windows plugin reports every click as an action whose actionId and
+    // payload are the clicked element's launch arguments, with no id.
+    fln.NotificationResponse windowsClick(String arguments,
+            {Map<String, String> data = const {}}) =>
+        fln.NotificationResponse(
+          actionId: arguments,
+          payload: arguments,
+          notificationResponseType:
+              fln.NotificationResponseType.selectedNotificationAction,
+          data: data,
+        );
+
+    test("a click on the body is a tap with the notification's id", () {
+      final event = responseToEvent(windowsClick(
+          windowsLaunchArguments(notificationId: 7, payload: "probe")));
+      expect(event["event"], "tap");
+      expect(event["id"], 7);
+      expect(event["payload"], "probe");
+      expect(event.containsKey("action_id"), isFalse);
+    });
+
+    test("a button click is an action with the notification's id", () {
+      final event = responseToEvent(windowsClick(
+          windowsLaunchArguments(
+              notificationId: 7, payload: "actions", actionId: "reply"),
+          data: {"reply": "typed on windows"}));
+      expect(event["event"], "action");
+      expect(event["id"], 7);
       expect(event["action_id"], "reply");
       expect(event["payload"], "actions");
       expect(event["input"], "typed on windows"); // normalized from data
-      expect(event["event"], "action");
     });
 
-    test("an envelope without a payload yields no payload", () {
-      const envelope = '{"id": "open", "payload": null}';
+    test("launch arguments without a payload yield no payload", () {
+      final event = responseToEvent(windowsClick(
+          windowsLaunchArguments(notificationId: 7, payload: null)));
+      expect(event["event"], "tap");
+      expect(event["payload"], isNull);
+    });
+
+    test("other platforms' JSON action ids are not taken for launch arguments",
+        () {
       const response = fln.NotificationResponse(
-        id: 7,
-        actionId: envelope,
-        payload: envelope,
+        id: 3,
+        actionId: '{"id": "x"}',
         notificationResponseType:
             fln.NotificationResponseType.selectedNotificationAction,
       );
       final event = responseToEvent(response);
-      expect(event["action_id"], "open");
-      expect(event["payload"], isNull);
+      expect(event["event"], "action");
+      expect(event["id"], 3);
+      expect(event["action_id"], '{"id": "x"}');
     });
   });
 }

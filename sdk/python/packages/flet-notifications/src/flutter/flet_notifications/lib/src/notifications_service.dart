@@ -21,6 +21,7 @@ import 'utils/parsers.dart';
 import 'utils/scheduling.dart';
 import 'utils/tap_queue_signal.dart';
 import 'utils/windows_identity.dart';
+import 'utils/windows_launch.dart';
 
 class NotificationsService extends FletService {
   NotificationsService({required super.control});
@@ -413,7 +414,7 @@ class NotificationsService extends FletService {
     final id = parseInt(map["id"])!;
     final title = map["title"] as String?;
     final body = map["body"] as String?;
-    final payload = map["payload"] as String?;
+    final payload = _launchPayload(id, map["payload"] as String?);
     final actions = parseActions(map["actions"]);
     await _plugin!.show(
       id: id,
@@ -432,7 +433,7 @@ class NotificationsService extends FletService {
     final id = parseInt(map["id"])!;
     final title = map["title"] as String?;
     final body = map["body"] as String?;
-    final payload = map["payload"] as String?;
+    final payload = _launchPayload(id, map["payload"] as String?);
     final actions = parseActions(map["actions"]);
     final scheduledDate = parseWhen(map, tz.local);
     final scheduleMode = parseAndroidScheduleMode(
@@ -460,7 +461,7 @@ class NotificationsService extends FletService {
     final id = parseInt(map["id"])!;
     final title = map["title"] as String?;
     final body = map["body"] as String?;
-    final payload = map["payload"] as String?;
+    final payload = _launchPayload(id, map["payload"] as String?);
     final actions = parseActions(map["actions"]);
     final scheduleMode = parseAndroidScheduleMode(
         map["schedule_mode"] as String?,
@@ -526,6 +527,12 @@ class NotificationsService extends FletService {
   fln.WebFlutterLocalNotificationsPlugin? get _webPlugin =>
       _plugin?.resolvePlatformSpecificImplementation<
           fln.WebFlutterLocalNotificationsPlugin>();
+
+  /// The payload to give the plugin: on Windows, the notification's launch
+  /// arguments, so a click on its body can be told apart from its buttons.
+  String? _launchPayload(int id, String? payload) => isWindowsDesktop()
+      ? windowsLaunchArguments(notificationId: id, payload: payload)
+      : payload;
 
   // ── Notification details construction ───────────────────────────────
 

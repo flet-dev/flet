@@ -1,4 +1,3 @@
-import 'dart:convert';
 import 'dart:typed_data';
 
 import 'package:flet/flet.dart';
@@ -9,6 +8,7 @@ import 'actions.dart';
 import 'errors.dart';
 import 'parsers.dart';
 import 'styles.dart';
+import 'windows_launch.dart';
 
 /// Converts a wire payload into the upstream platform notification details.
 fln.NotificationDetails parseNotificationDetails({
@@ -43,11 +43,14 @@ fln.NotificationDetails parseNotificationDetails({
       options: _platformOptions(details, "ios"),
     );
 
-    final payloadForWindows = (details ?? const {})["payload"] as String?;
     final windowsActions = actions.map((a) {
       return fln.WindowsAction(
         content: a.title,
-        arguments: jsonEncode({"id": a.id, "payload": payloadForWindows}),
+        arguments: windowsLaunchArguments(
+          notificationId: parseInt((details ?? const {})["id"]),
+          payload: (details ?? const {})["payload"] as String?,
+          actionId: a.id,
+        ),
         inputId: a.input == null ? null : a.id,
         activationBehavior: fln.WindowsNotificationBehavior.dismiss,
       );
