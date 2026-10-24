@@ -386,7 +386,8 @@ void main() {
 
   test("changing an initialization property reinitializes with the new value",
       () async {
-    final service = _makeService(properties: {"default_icon": "ic_old"});
+    final service =
+        _makeService(properties: {"android_default_icon": "ic_old"});
     expect(await _call(service, "cancel_all"), null);
     expect(plugin.initializations, 1);
     expect(plugin.lastInitializationSettings!.defaultIcon, "ic_old");
@@ -397,7 +398,7 @@ void main() {
     await pumpEventQueue();
     expect(plugin.initializations, 1);
 
-    service.control.properties["default_icon"] = "ic_new";
+    service.control.properties["android_default_icon"] = "ic_new";
     service.update();
     await pumpEventQueue();
     expect(plugin.initializations, 2);
@@ -409,11 +410,12 @@ void main() {
     final gate = Completer<void>();
     plugin.initializationStarted = Completer<void>();
     plugin.initializationGate = gate.future;
-    final service = _makeService(properties: {"default_icon": "ic_old"});
+    final service =
+        _makeService(properties: {"android_default_icon": "ic_old"});
     final pending = _call(service, "cancel_all");
     await plugin.initializationStarted!.future;
 
-    service.control.properties["default_icon"] = "ic_new";
+    service.control.properties["android_default_icon"] = "ic_new";
     service.update();
     plugin.initializationGate = null;
     gate.complete();
@@ -426,12 +428,13 @@ void main() {
   test("a failed backend picks up changed properties on its next retry",
       () async {
     plugin.failInitialization = true;
-    final service = _makeService(properties: {"default_icon": "ic_old"});
+    final service =
+        _makeService(properties: {"android_default_icon": "ic_old"});
     expect(await _call(service, "cancel_all"),
         startsWith("initialization_failed: "));
     expect(plugin.initializations, 1);
 
-    service.control.properties["default_icon"] = "ic_new";
+    service.control.properties["android_default_icon"] = "ic_new";
     service.update();
     await pumpEventQueue();
     // No extra attempt: the next method call retries.

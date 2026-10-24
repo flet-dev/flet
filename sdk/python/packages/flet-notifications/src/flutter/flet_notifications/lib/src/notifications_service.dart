@@ -92,9 +92,9 @@ class LocalNotificationsService extends FletService {
   /// Other property changes, such as setting an event handler, need no
   /// reinitialization.
   (String?, String?, String?, String?) get _initializationProperties => (
-        control.getString("default_icon"),
-        control.getString("app_name"),
-        control.getString("app_user_model_id"),
+        control.getString("android_default_icon"),
+        control.getString("windows_app_name"),
+        control.getString("windows_app_user_model_id"),
         control.getString("windows_guid"),
       );
 
@@ -198,17 +198,17 @@ class LocalNotificationsService extends FletService {
       notificationCategories: notificationCategories,
     );
     return fln.InitializationSettings(
-      android: fln.AndroidInitializationSettings(
-          control.getString("default_icon", "@mipmap/ic_launcher")!),
+      android: fln.AndroidInitializationSettings(control.getString(
+          "android_default_icon", "flet_notifications_icon")!),
       iOS: darwin,
       macOS: darwin,
       linux: const fln.LinuxInitializationSettings(
         defaultActionName: "Open",
       ),
       windows: fln.WindowsInitializationSettings(
-        appName: control.getString("app_name", "Flet App")!,
-        appUserModelId:
-            control.getString("app_user_model_id", "Flet.App.Notifications")!,
+        appName: control.getString("windows_app_name", "Flet App")!,
+        appUserModelId: control.getString(
+            "windows_app_user_model_id", "Flet.App.Notifications")!,
         guid: control.getString("windows_guid", _defaultWindowsGuid)!,
       ),
       web: const fln.WebInitializationSettings(),

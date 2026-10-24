@@ -40,9 +40,9 @@ class LocalNotifications(ft.Service):
     handling responses. It registers with the page automatically and does not need to be
     added to the page's visual controls. The native backend initializes when the
     service reaches the client, and method calls wait for it to finish. Changing
-    :attr:`default_icon`, :attr:`app_name`, :attr:`app_user_model_id`, or
-    :attr:`windows_guid` initializes it again with the new values; a failed
-    initialization is retried on the next method call.
+    :attr:`android_default_icon`, :attr:`windows_app_name`,
+    :attr:`windows_app_user_model_id`, or :attr:`windows_guid` initializes it again
+    with the new values; a failed initialization is retried on the next method call.
 
     Note:
         Feature support varies: rich styles, progress, and grouping are
@@ -84,7 +84,7 @@ class LocalNotifications(ft.Service):
         ```
     """
 
-    default_icon: str | None = None
+    android_default_icon: str = "flet_notifications_icon"
     """
     Default small Android notification icon.
 
@@ -92,19 +92,19 @@ class LocalNotifications(ft.Service):
     extension. See :attr:`flet_notifications.AndroidOptions.icon` for the icon's
     requirements and how to bundle it.
 
-    `None` uses the app's launcher icon, `"@mipmap/ic_launcher"`. Android draws the
-    small icon from its transparency alone, so the launcher icon usually shows as a
-    plain shape rather than your app's icon.
+    The default is a silhouette of the Flet logo that this extension provides. Android
+    draws the small icon from its transparency alone, so use a silhouette of your own
+    to show your app's brand instead.
     """
 
-    app_name: str | None = None
+    windows_app_name: str | None = None
     """
     Application name used by the Windows notification backend.
 
     Set a name identifying your application.
     """
 
-    app_user_model_id: str | None = None
+    windows_app_user_model_id: str | None = None
     """
     Windows AppUserModelID identifying the source of notifications.
 

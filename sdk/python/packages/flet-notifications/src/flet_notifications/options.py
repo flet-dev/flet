@@ -297,7 +297,7 @@ class AndroidOptions:
     Bundled drawable resource name for this notification's small icon.
 
     Supply the resource name without a file extension, such as `"ic_stat_notify"`.
-    `None` uses :attr:`flet_notifications.LocalNotifications.default_icon`.
+    `None` uses :attr:`flet_notifications.LocalNotifications.android_default_icon`.
 
     Note:
         Use a white silhouette on a transparent background, with resources sized for
