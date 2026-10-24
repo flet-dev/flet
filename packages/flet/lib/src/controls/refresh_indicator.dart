@@ -9,7 +9,6 @@ import '../utils/misc.dart';
 import '../utils/numbers.dart';
 import '../widgets/error.dart';
 import 'base_controls.dart';
-import 'control_widget.dart';
 
 class RefreshIndicatorControl extends StatefulWidget {
   final Control control;
