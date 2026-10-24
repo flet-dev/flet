@@ -2,8 +2,10 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 
+import '../extensions/control.dart';
 import '../models/control.dart';
 import '../utils/colors.dart';
+import '../utils/misc.dart';
 import '../utils/numbers.dart';
 import '../widgets/error.dart';
 import 'base_controls.dart';
@@ -23,7 +25,6 @@ class RefreshIndicatorControl extends StatefulWidget {
 class _RefreshIndicatorControlState extends State<RefreshIndicatorControl> {
   final GlobalKey<RefreshIndicatorState> _refreshKey =
       GlobalKey<RefreshIndicatorState>();
-
   Completer<void>? _refreshCompleter;
 
   @override
@@ -67,35 +68,30 @@ class _RefreshIndicatorControlState extends State<RefreshIndicatorControl> {
       );
     }
 
-    final displacement = widget.control.getDouble("displacement", 40.0)!;
-    final edgeOffset = widget.control.getDouble("edge_offset", 0.0)!;
-    final color = widget.control.getColor("color", context);
-    final backgroundColor = widget.control.getColor("background_color", context);
-    final handleNestedScrolls = widget.control.getBool("handle_nested_scrolls", false)!;
+    final triggerMode = 
+        widget.control.getRefreshIndicatorTriggerMode(
+          "trigger_mode", 
+          RefreshIndicatorTriggerMode.onEdge)!;
+
+    final handleNestedScrolls =
+        widget.control.getBool("handle_nested_scrolls", false)!;
     final ScrollNotificationPredicate notificationPredicate =
         handleNestedScrolls
             ? (notification) => true
             : defaultScrollNotificationPredicate;
 
-    final semanticsLabel = widget.control.getString("semantics_label");
-    final semanticsValue = widget.control.getString("semantics_value");
-    final strokeWidth = widget.control.getDouble("stroke_width", 2.0)!;
-    final elevation = widget.control.getDouble("elevation", 2.0)!;
-    final triggerMode = widget.control.getRefreshIndicatorTriggerMode("trigger_mode", RefreshIndicatorTriggerMode.onEdge)!;
-
-    final hasOnStatusChange =
-        widget.control.hasEventHandler("status_change");
-
-    final Widget refreshIndicator = RefreshIndicator(
+    final refreshIndicator = RefreshIndicator(
       key: _refreshKey,
-      displacement: displacement,
-      edgeOffset: edgeOffset,
-      onStatusChange: hasOnStatusChange
-          ? (RefreshIndicatorStatus status) {
-              widget.control.triggerEvent("status_change", status.name);
-            }
-          : null,
-
+      displacement: widget.control.getDouble("displacement", 40.0)!,
+      edgeOffset: widget.control.getDouble("edge_offset", 0.0)!,
+      color: widget.control.getColor("color", context),
+      backgroundColor: widget.control.getColor("background_color", context),
+      notificationPredicate: notificationPredicate,
+      semanticsLabel: widget.control.getString("semantics_label"),
+      semanticsValue: widget.control.getString("semantics_value"),
+      strokeWidth: widget.control.getDouble("stroke_width", 2.0)!,
+      triggerMode: triggerMode,
+      elevation: widget.control.getDouble("elevation", 2.0)!,
       onRefresh: () async {
         widget.control.triggerEvent("refresh", null);
         _refreshCompleter = Completer<void>();
@@ -105,14 +101,6 @@ class _RefreshIndicatorControlState extends State<RefreshIndicatorControl> {
           _refreshCompleter = null;
         }
       },
-      color: color,
-      backgroundColor: backgroundColor,
-      notificationPredicate: notificationPredicate,
-      semanticsLabel: semanticsLabel,
-      semanticsValue: semanticsValue,
-      strokeWidth: strokeWidth,
-      triggerMode: triggerMode,
-      elevation: elevation,
       child: content,
     );
 
