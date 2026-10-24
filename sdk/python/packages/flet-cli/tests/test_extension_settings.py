@@ -361,6 +361,8 @@ class TestMergeGradleDependencies:
             ('implementation(\n  "vendor:runtime:1"\n)', False),
             ('debugImplementation("vendor:runtime:1")', True),
             ('// implementation("vendor:runtime:1")', True),
+            ('/* implementation("vendor:runtime:1") */', True),
+            ('/*\n implementation("vendor:runtime:1")\n*/', True),
             ('maven("https://x")\nimplementation("vendor:runtime:1")', False),
         ],
     )
@@ -442,7 +444,8 @@ class TestBuildCommand:
     def test_extension_settings_reach_template_options(
         self, tmp_path, package_platform, site_packages
     ):
-        """Installed extension settings are applied for the second template pass."""
+        """Installed extensions are found, and their Android settings applied to
+        Android builds for the second template pass."""
         _install(
             tmp_path / site_packages,
             "flet-x",
@@ -460,12 +463,34 @@ class TestBuildCommand:
 
         cmd.apply_extension_settings()
 
+        assert [e.name for e in cmd.extensions] == ["flet-x"]
+        assert cmd.warnings == []
         options = cmd.template_data["_options"]
+        if package_platform != "Android":
+            # Android settings only apply to Android builds.
+            assert not options["android_gradle_dependencies"]
+            return
         assert options["android_compile_options"]["isCoreLibraryDesugaringEnabled"] == (
             "true"
         )
         assert options["android_gradle_dependencies"] == DESUGARING
-        assert cmd.warnings == []
+
+    def test_conflicting_extensions_do_not_fail_other_builds(self, tmp_path):
+        """Extensions' conflicting Android compile options only fail Android builds."""
+        for name, value in (("flet-a", "true"), ("flet-b", "false")):
+            _install(
+                tmp_path / "build/site-packages",
+                name,
+                {
+                    f"{name.replace('-', '_')}/flet-extension.toml": (
+                        "[android.compile_options]\n"
+                        f'isCoreLibraryDesugaringEnabled = "{value}"'
+                    )
+                },
+            )
+        self._command(tmp_path, {}, "iOS").apply_extension_settings()
+        with pytest.raises(ValueError, match="onflict"):
+            self._command(tmp_path, {}).apply_extension_settings()
 
     def test_reapplying_does_not_repeat_extension_settings(self, tmp_path):
         """Applying twice gives the same options as applying once."""

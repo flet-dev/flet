@@ -102,6 +102,15 @@ def test_imported_modules_skip_environments_and_output(tmp_path):
     assert find_imported_modules(tmp_path) == {"flet", "pkg", "a", "c"}
 
 
+def test_imported_modules_skip_symlinked_folders_and_unreadable_files(tmp_path):
+    """A folder linking to its parent and a dangling file link don't stop the scan."""
+    (tmp_path / "main.py").write_text("import flet\n")
+    (tmp_path / "loop").symlink_to(tmp_path, target_is_directory=True)
+    (tmp_path / "legacy.py").symlink_to(tmp_path / "missing.py")
+
+    assert find_imported_modules(tmp_path) == {"flet"}
+
+
 def test_missing_extensions_are_imported_and_not_in_client(site_packages, tmp_path):
     """Only imported extensions the client lacks are reported."""
     for name in ("in_client", "unused", "missing"):

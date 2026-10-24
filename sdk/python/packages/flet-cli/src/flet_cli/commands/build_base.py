@@ -2142,9 +2142,14 @@ class BaseBuildCommand(BaseFlutterCommand):
                 markup=False,
             )
 
-        options = self.template_data["_options"]
-        options["android_compile_options"] = self.get_android_compile_options()
-        options["android_gradle_dependencies"] = self.get_android_gradle_dependencies()
+        # Android settings only apply to Android builds, so other builds don't
+        # fail on extensions' conflicting compile options.
+        if self.package_platform == "Android":
+            options = self.template_data["_options"]
+            options["android_compile_options"] = self.get_android_compile_options()
+            options["android_gradle_dependencies"] = (
+                self.get_android_gradle_dependencies()
+            )
 
     def update_flutter_dependencies(self):
         """
@@ -3167,6 +3172,10 @@ class BaseBuildCommand(BaseFlutterCommand):
         if setting is None:
             manifest_path.unlink(missing_ok=True)
             return
+        if not isinstance(setting, str):
+            self.cleanup(
+                1, "Invalid tool.flet.android.res_dir: expected a directory path."
+            )
         res_dir = self.python_app_path / setting
         if not res_dir.is_dir():
             self.cleanup(

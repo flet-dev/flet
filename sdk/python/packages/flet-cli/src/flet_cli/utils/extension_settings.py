@@ -208,7 +208,7 @@ def merge_gradle_dependencies(
 
     Extensions' declarations come first, then the app's. A declaration is added
     once, and an extension's is left out when the app's declarations already
-    contain it as a whole, ignoring whitespace and the app's line comments.
+    contain it as a whole, ignoring whitespace and the app's comments.
 
     Args:
         app_dependencies: The app's `[tool.flet.android].gradle_dependencies`.
@@ -222,7 +222,8 @@ def merge_gradle_dependencies(
 
     if app_dependencies is not None and not isinstance(app_dependencies, str):
         return app_dependencies
-    app = _compact(re.sub(r"(^|\s)//[^\n]*", r"\1", app_dependencies or ""))
+    app = re.sub(r"/\*.*?\*/", " ", app_dependencies or "", flags=re.DOTALL)
+    app = _compact(re.sub(r"(^|\s)//[^\n]*", r"\1", app))
     declarations: list[str] = []
     for extension in extensions:
         declaration = extension.settings.get("android.gradle_dependencies")

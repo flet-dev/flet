@@ -112,8 +112,8 @@ def find_imported_modules(app_dir: Path) -> set[str]:
     """
     Return the top-level modules the app's Python files import.
 
-    Virtual environments, hidden folders and build output in `app_dir` are
-    skipped, as are files that don't parse.
+    Virtual environments, hidden folders, build output and symlinked folders in
+    `app_dir` are skipped, as are files that can't be read or don't parse.
 
     Args:
         app_dir: Directory of the app's main script.
@@ -123,7 +123,7 @@ def find_imported_modules(app_dir: Path) -> set[str]:
     for path in _iter_app_files(app_dir):
         try:
             tree = ast.parse(path.read_bytes(), filename=str(path))
-        except (SyntaxError, ValueError):
+        except (OSError, SyntaxError, ValueError):
             continue
         for node in ast.walk(tree):
             if isinstance(node, ast.Import):
@@ -159,10 +159,15 @@ def _iter_app_files(directory: Path):
     Yield the Python files of an app folder, recursively.
     """
 
-    for path in sorted(directory.iterdir()):
+    try:
+        paths = sorted(directory.iterdir())
+    except OSError:
+        return
+    for path in paths:
         if path.is_dir():
             if (
-                path.name.startswith(".")
+                path.is_symlink()
+                or path.name.startswith(".")
                 or path.name in _SKIPPED_DIRS
                 or (path / "pyvenv.cfg").exists()
             ):
