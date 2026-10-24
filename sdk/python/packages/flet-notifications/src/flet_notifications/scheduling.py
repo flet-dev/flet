@@ -32,7 +32,11 @@ def build_schedule_args(
     )
 
     if isinstance(when, timedelta):
-        when_payload = {"delay_ms": when // timedelta(microseconds=1)}
+        when_payload = {
+            "delay": ft.Duration.from_unit(
+                microseconds=when // timedelta(microseconds=1)
+            )
+        }
     else:
         when_payload = {
             "iso": when.isoformat(),

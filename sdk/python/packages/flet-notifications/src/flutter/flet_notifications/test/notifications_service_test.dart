@@ -571,7 +571,7 @@ void main() {
       null,
       {"iso": "invalid"},
       {"iso": "2099-01-01T12:00:00", "timezone": "Invalid/Zone"},
-      {"delay_ms": "invalid"},
+      {"delay": "invalid"},
       {"iso": 42},
     ]) {
       expect(await _call(service, "schedule", {"id": 4, "when": when}),

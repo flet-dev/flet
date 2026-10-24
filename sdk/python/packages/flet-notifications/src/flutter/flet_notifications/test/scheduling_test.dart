@@ -44,11 +44,29 @@ void main() {
 
   test("relative delays retain fractional seconds in the target zone", () {
     final location = tz.getLocation("Africa/Lagos");
-    for (final microseconds in [90000000, 1500001, 500000, 1, 0, -1]) {
+    // Delays as Python's `ft.Duration` encodes them: unit maps without zero units.
+    for (final (microseconds, wire) in <(int, Map<String, int>)>[
+      (90000000, {"seconds": 30, "minutes": 1}),
+      (1500001, {"microseconds": 1, "milliseconds": 500, "seconds": 1}),
+      (500000, {"milliseconds": 500}),
+      (1, {"microseconds": 1}),
+      (0, {}),
+      (
+        -1,
+        {
+          "microseconds": 999,
+          "milliseconds": 999,
+          "seconds": 59,
+          "minutes": 59,
+          "hours": 23,
+          "days": -1,
+        }
+      ),
+    ]) {
       final delay = Duration(microseconds: microseconds);
       final before = tz.TZDateTime.now(location);
       final date = parseWhen({
-        "when": {"delay_ms": microseconds, "timezone": "Africa/Lagos"},
+        "when": {"delay": wire, "timezone": "Africa/Lagos"},
       }, tz.UTC);
       final after = tz.TZDateTime.now(location);
       expect(date.location.name, "Africa/Lagos");

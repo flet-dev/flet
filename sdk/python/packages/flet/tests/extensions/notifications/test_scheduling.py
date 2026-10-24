@@ -141,12 +141,15 @@ async def test_schedule_zoneinfo_datetime_names_its_timezone():
 )
 @pytest.mark.asyncio
 async def test_schedule_timedelta_becomes_delay(delay, microseconds):
-    """Timedeltas retain exact integer microseconds through the transport."""
+    """Timedeltas travel as Flet durations with exact microseconds."""
     service = RecordingService()
     await service.schedule(id=3, when=delay)
     _, args = service.calls[-1]
-    assert args["when"] == {"delay_ms": microseconds}
-    assert type(args["when"]["delay_ms"]) is int
+    assert list(args["when"]) == ["delay"]
+    # Flet encodes a Duration as a map of its nonzero units.
+    assert (
+        ft.Duration.from_unit(**args["when"]["delay"]).in_microseconds == microseconds
+    )
 
 
 @pytest.mark.asyncio
