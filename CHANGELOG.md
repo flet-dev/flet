@@ -47,6 +47,7 @@
 
 ### Bug fixes
 
+* iOS apps built with `flet build ipa` no longer fail App Store Connect validation with ITMS-90683 (missing `NSPhotoLibraryUsageDescription` and `NSCameraUsageDescription` purpose strings): the `file_picker` plugin is updated to 13.x, which picks photos with the system photo picker and no longer links DKImagePickerController's camera and photo-library code. `device_info_plus`, `package_info_plus` and `share_plus` move to their next major versions with it (`win32` 6). `FilePicker.save_file()` on desktop now creates the chosen file (empty when no `src_bytes` are given) before returning its path by @FeodorFitsner.
 * Fix `Tester.find_by_key()` not finding `Tab` and `PopupMenuItem` controls by their keys ([#6965](https://github.com/flet-dev/flet/issues/6965), [#6976](https://github.com/flet-dev/flet/pull/6976)) by @RezaShamsipour.
 * Fix `GestureDetector.on_tap_move` not firing, while preserving tap accessibility and updates to `allowed_devices` ([#6961](https://github.com/flet-dev/flet/issues/6961), [#6982](https://github.com/flet-dev/flet/pull/6982)) by @inchang-ing.
 * Honor an explicit platform `app.hide_window_on_start = false` when the global setting is `true`, in both the Dart bootstrap and Windows runner ([#6949](https://github.com/flet-dev/flet/issues/6949), [#6981](https://github.com/flet-dev/flet/pull/6981)) by @LaoChouPro.
