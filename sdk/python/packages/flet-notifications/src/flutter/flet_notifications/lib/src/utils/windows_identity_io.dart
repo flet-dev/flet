@@ -8,6 +8,9 @@ import 'windows_identity.dart';
 /// The default [WindowsIdentity] of the running app, from its version
 /// information and executable, or from the executable alone when the version
 /// information can't be read.
+///
+/// Its icon is the `data\app_icon.ico` that `flet build` places next to the
+/// executable, when present.
 Future<WindowsIdentity> defaultWindowsIdentity() async {
   var productName = "";
   var internalName = "";
@@ -18,9 +21,12 @@ Future<WindowsIdentity> defaultWindowsIdentity() async {
   } catch (e) {
     debugPrint("flet_notifications: reading the app's version info failed: $e");
   }
+  final executable = File(Platform.resolvedExecutable);
+  final icon = File("${executable.parent.path}\\data\\app_icon.ico");
   return windowsIdentity(
     productName: productName,
     internalName: internalName,
-    executablePath: Platform.resolvedExecutable,
+    executablePath: executable.path,
+    iconPath: icon.existsSync() ? icon.path : null,
   );
 }

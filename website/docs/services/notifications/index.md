@@ -62,6 +62,17 @@ See also:
 - [Android permissions](../../publish/android.md#permissions)
 - [Android Resources](../../publish/android.md#resources)
 
+### Windows
+
+Building the app with [`flet build windows`](../../publish/windows.md) needs
+Visual Studio's **C++ ATL for latest build tools** component, for the
+architecture you build for. The Visual Studio Installer selects the x86 & x64
+one with the [Desktop development with C++](../../publish/windows.md#visual-studio)
+workload, but not in Build Tools installations, and the ARM64 one, needed on
+Windows on Arm, is never selected. Without it, the build fails with
+`Cannot open include file: 'atlbase.h'`. Add it in the Visual Studio Installer,
+under **Modify** > **Individual components**.
+
 ### Web
 
 The browser only accepts

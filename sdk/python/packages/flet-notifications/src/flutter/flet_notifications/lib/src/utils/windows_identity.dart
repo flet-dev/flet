@@ -13,6 +13,7 @@ typedef WindowsIdentity = ({
   String appName,
   String appUserModelId,
   String guid,
+  String? iconPath,
 });
 
 /// Namespace of the GUIDs derived by [windowsIdentity].
@@ -24,10 +25,13 @@ const String _guidNamespace = "c8b28b8a-5d47-46ee-b461-e128fa3932c2";
 /// [executablePath], so it is stable across launches and differs between
 /// apps, and between copies of an app installed in different places. The GUID
 /// is a name-based UUID of the AppUserModelID.
+///
+/// [iconPath] is the app's icon file, which Windows shows on its notifications.
 WindowsIdentity windowsIdentity({
   required String productName,
   required String internalName,
   required String executablePath,
+  String? iconPath,
 }) {
   final name = internalName.replaceAll(RegExp(r"[^A-Za-z0-9]"), "");
   final pathHash = sha1
@@ -37,10 +41,11 @@ WindowsIdentity windowsIdentity({
   final appUserModelId =
       "Flet.${name.isEmpty ? "App" : name.substring(0, name.length.clamp(0, 64))}"
       ".$pathHash";
-  return (
+  return WindowsIdentity(
     appName: productName.trim().isEmpty ? "Flet App" : productName.trim(),
     appUserModelId: appUserModelId,
     guid: _uuid5(_guidNamespace, appUserModelId),
+    iconPath: iconPath,
   );
 }
 

@@ -113,6 +113,11 @@ class Notifications(ft.Service):
     `"Flet.myapp.3f2a9c1e"`, that is stable across launches and differs between apps.
     Set one when Windows should treat the app as the one with that ID, such as the ID
     of its Start menu shortcut or installer.
+
+    Note:
+        Windows shows the app's icon, from `flet build`, on its notifications, and
+        keeps the icon it first showed for an AppUserModelID: after changing the app's
+        icon, set a new ID to see the new one.
     """
 
     windows_guid: str | None = None

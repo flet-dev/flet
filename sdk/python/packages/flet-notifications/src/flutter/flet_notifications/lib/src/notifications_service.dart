@@ -217,6 +217,7 @@ class NotificationsService extends FletService {
         appUserModelId: control.getString("windows_app_user_model_id") ??
             _windowsIdentity?.appUserModelId ??
             "Flet.App",
+        iconPath: _windowsIdentity?.iconPath,
         guid: control.getString("windows_guid") ??
             _windowsIdentity?.guid ??
             windowsIdentity(
