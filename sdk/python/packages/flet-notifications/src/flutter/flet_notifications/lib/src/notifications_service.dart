@@ -19,6 +19,7 @@ import 'utils/details.dart';
 import 'utils/errors.dart';
 import 'utils/parsers.dart';
 import 'utils/scheduling.dart';
+import 'utils/tap_queue_signal.dart';
 
 class LocalNotificationsService extends FletService {
   LocalNotificationsService({required super.control});
@@ -33,6 +34,12 @@ class LocalNotificationsService extends FletService {
   Object? _appliedInitializationProperties;
   String? _initializationError;
   bool _replaying = false;
+
+  /// Whether the queue gained entries during the running replay.
+  bool _replayAgain = false;
+
+  /// Stops replaying the queue when background isolates add to it.
+  void Function()? _stopListeningForQueuedTaps;
   bool _launchReplayComplete = false;
 
   /// Live responses received before the launch replay finishes.
@@ -75,6 +82,7 @@ class LocalNotificationsService extends FletService {
 
   @override
   void dispose() {
+    _stopListeningForQueuedTaps?.call();
     control.removeInvokeMethodListener(invokeMethod);
     super.dispose();
   }
@@ -166,6 +174,9 @@ class LocalNotificationsService extends FletService {
       if (isApplePlatform()) await _loadDarwinCategories();
       await _initializeBackend();
       _initialized = true;
+      // Listen before draining, so entries queued meanwhile are not missed.
+      _stopListeningForQueuedTaps ??=
+          listenForQueuedTaps(() => unawaited(_replayQueuedTaps()));
       await _replayQueuedTaps();
       await _replayLaunchDetails();
     } catch (e) {
@@ -207,12 +218,18 @@ class LocalNotificationsService extends FletService {
   // ── Tap replay (background taps + cold starts) ──────────────────────
 
   Future<void> _replayQueuedTaps() async {
-    if (_replaying) return;
+    if (_replaying) {
+      _replayAgain = true;
+      return;
+    }
     _replaying = true;
     try {
-      for (final event in await drainTapQueue(SharedPreferencesAsync())) {
-        _emit(event);
-      }
+      do {
+        _replayAgain = false;
+        for (final event in await drainTapQueue(SharedPreferencesAsync())) {
+          _emit(event);
+        }
+      } while (_replayAgain);
     } catch (e) {
       // Best-effort: preferences unavailable must not break the service.
       debugPrint("flet_notifications: tap queue replay failed: $e");

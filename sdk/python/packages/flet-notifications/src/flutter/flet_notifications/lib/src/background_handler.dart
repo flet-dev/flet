@@ -1,10 +1,11 @@
 /// Background tap handling.
 ///
-/// When the app process is not running and the user taps a notification (or
-/// presses an action button), Android/iOS run this top-level handler in a
-/// background isolate managed by the plugin. The response is persisted to
-/// shared preferences under a unique queue key and replayed — in order — the
-/// next time the service initializes.
+/// Android and iOS deliver responses to actions that do not bring the app to the
+/// foreground, and on iOS taps on a terminated app, to this top-level handler in
+/// a background isolate managed by the plugin, whether or not the app is
+/// running. The response is persisted to shared preferences under a unique
+/// queue key, and the service replays the queue, in order, when it initializes
+/// and whenever the handler signals a new entry.
 ///
 /// Unique keys per tap avoid read-modify-write races between the background
 /// isolate and the main isolate. [SharedPreferencesAsync] stores them without
@@ -17,6 +18,8 @@ import 'dart:ui' show DartPluginRegistrant;
 
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+
+import 'utils/tap_queue_signal.dart';
 
 const String _queuePrefix = "flet_notifications_queue_";
 
@@ -76,12 +79,13 @@ Map<String, Object?> responseToEvent(NotificationResponse response) {
 /// shaker keeps it. Background isolates do not register Dart plugin
 /// implementations by themselves, and [SharedPreferencesAsync] needs them.
 @pragma('vm:entry-point')
-void notificationTapBackground(NotificationResponse response) {
+Future<void> notificationTapBackground(NotificationResponse response) async {
   DartPluginRegistrant.ensureInitialized();
   final stamp = DateTime.now().microsecondsSinceEpoch;
   final key = "$_queuePrefix$stamp-${identityHashCode(response)}";
-  SharedPreferencesAsync()
+  await SharedPreferencesAsync()
       .setString(key, jsonEncode(responseToEvent(response)));
+  signalTapQueued();
 }
 
 /// Reads and removes all queued taps, oldest key first.

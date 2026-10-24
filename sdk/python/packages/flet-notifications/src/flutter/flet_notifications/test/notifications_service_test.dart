@@ -3,6 +3,7 @@ import 'dart:typed_data';
 import 'dart:ui' show Color;
 
 import 'package:flet/flet.dart';
+import 'package:flet_notifications/src/background_handler.dart';
 import 'package:flet_notifications/src/notifications_service.dart';
 import 'package:flet_notifications/src/utils/actions.dart';
 import 'package:flet_notifications/src/utils/errors.dart';
@@ -14,6 +15,7 @@ import 'package:flutter_local_notifications/flutter_local_notifications.dart'
     as fln;
 import 'package:flutter/services.dart' show PlatformException;
 import 'package:flutter_test/flutter_test.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:shared_preferences_platform_interface/in_memory_shared_preferences_async.dart';
 import 'package:shared_preferences_platform_interface/shared_preferences_async_platform_interface.dart';
 import 'package:timezone/timezone.dart' as tz;
@@ -814,6 +816,37 @@ void main() {
     );
     expect(await _reinitialize(service), null);
     expect(control.events, hasLength(1));
+  });
+
+  test("background responses are delivered while the service runs", () async {
+    SharedPreferencesAsyncPlatform.instance =
+        InMemorySharedPreferencesAsync.empty();
+    final control = _RecordingControl();
+    final service = _makeService(control: control);
+    expect(await _reinitialize(service), null);
+
+    fln.NotificationResponse archive(int id) => fln.NotificationResponse(
+          id: id,
+          actionId: "archive",
+          notificationResponseType:
+              fln.NotificationResponseType.selectedNotificationAction,
+        );
+    // Responses arriving during a replay are delivered by a further pass.
+    await Future.wait([
+      notificationTapBackground(archive(1)),
+      notificationTapBackground(archive(2)),
+    ]);
+    await pumpEventQueue();
+    expect(control.events.map((e) => e["name"]), ["action", "action"]);
+    expect(control.events.map((e) => (e["data"] as Map)["id"]), [1, 2]);
+    expect(await SharedPreferencesAsync().getKeys(), isEmpty);
+
+    // A disposed service leaves responses queued for the next one.
+    service.dispose();
+    await notificationTapBackground(archive(3));
+    await pumpEventQueue();
+    expect(control.events, hasLength(2));
+    expect(await SharedPreferencesAsync().getKeys(), hasLength(1));
   });
 
   test("queries return native collections with null unavailable fields",
