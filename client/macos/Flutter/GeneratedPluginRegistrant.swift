@@ -9,7 +9,7 @@ import audioplayers_darwin
 import battery_plus
 import connectivity_plus
 import device_info_plus
-import file_picker
+import file_picker_darwin
 import flutter_secure_storage_darwin
 import geolocator_apple
 import local_auth_darwin
