@@ -5,5 +5,5 @@
 /// `dart:isolate`.
 library;
 
-export 'tap_queue_signal_stub.dart'
-    if (dart.library.io) 'tap_queue_signal_io.dart';
+export 'response_queue_signal_stub.dart'
+    if (dart.library.io) 'response_queue_signal_io.dart';

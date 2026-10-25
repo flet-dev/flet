@@ -522,12 +522,12 @@ void main() {
         code: "exact_alarms_not_permitted",
         message: "Exact alarms are not permitted");
     expect(
-        await _call(service, "can_schedule_exact_notifications"),
+        await _call(service, "can_schedule_exact_alarms"),
         "permission_denied: exact_alarms_not_permitted: "
         "Exact alarms are not permitted");
     plugin.operationError = PlatformException(
         code: "invalid_icon", message: "The resource icon could not be found");
-    expect(await _call(service, "can_schedule_exact_notifications"),
+    expect(await _call(service, "can_schedule_exact_alarms"),
         "operation_failed: invalid_icon: The resource icon could not be found");
   });
 
@@ -582,10 +582,10 @@ void main() {
       ("stop_foreground_service", null, "operation_failed"),
       ("cancel", {"id": 4}, "operation_failed"),
       ("cancel_all", null, "operation_failed"),
-      ("cancel_pending", null, "operation_failed"),
+      ("cancel_all_pending", null, "operation_failed"),
       for (final method in [
         "request_permissions",
-        "can_schedule_exact_notifications",
+        "can_schedule_exact_alarms",
         "request_exact_alarm_permission",
         "are_notifications_enabled",
         "open_app_settings",
@@ -1257,7 +1257,7 @@ void main() {
       plugin.permissionResult = result;
       for (final method in [
         "request_permissions",
-        "can_schedule_exact_notifications",
+        "can_schedule_exact_alarms",
         "request_exact_alarm_permission",
         "are_notifications_enabled",
         "request_full_screen_intent",
@@ -1278,7 +1278,7 @@ void main() {
     final service = _makeService();
     // Exact timing is never restricted elsewhere.
     for (final method in [
-      "can_schedule_exact_notifications",
+      "can_schedule_exact_alarms",
       "request_exact_alarm_permission",
     ]) {
       expect(await _call(service, method), isTrue, reason: method);

@@ -328,7 +328,7 @@ class Notifications(ft.Service):
         Remove all of the app's displayed and scheduled notifications.
 
         Note:
-            To remove only undelivered requests, use :meth:`cancel_pending`. Windows
+            To remove only undelivered requests, use :meth:`cancel_all_pending`. Windows
             removal requires an MSIX package identity. Does not remove Android channels
             or channel groups.
 
@@ -616,7 +616,7 @@ class Notifications(ft.Service):
             },
         )
 
-    async def cancel_pending(self) -> None:
+    async def cancel_all_pending(self) -> None:
         """
         Cancel all scheduled notifications without removing displayed ones.
 
@@ -633,7 +633,7 @@ class Notifications(ft.Service):
                 failure.
         """
         self._require_platform(
-            "cancel_pending",
+            "cancel_all_pending",
             {
                 ft.PagePlatform.ANDROID,
                 ft.PagePlatform.ANDROID_TV,
@@ -642,7 +642,7 @@ class Notifications(ft.Service):
             },
             web=True,
         )
-        await self._call("cancel_pending")
+        await self._call("cancel_all_pending")
 
     async def get_pending_notifications(self) -> list[PendingNotification]:
         """
@@ -676,7 +676,7 @@ class Notifications(ft.Service):
         )
         return parse_query_list(await self._call("get_pending"), PendingNotification)
 
-    async def can_schedule_exact_notifications(self) -> bool:
+    async def can_schedule_exact_alarms(self) -> bool:
         """
         Check Android's authorization to schedule exact alarms.
 
@@ -692,7 +692,7 @@ class Notifications(ft.Service):
             NotificationException: If the bridge reports initialization or operation
                 failure.
         """
-        return await self._call("can_schedule_exact_notifications")
+        return await self._call("can_schedule_exact_alarms")
 
     async def request_exact_alarm_permission(self) -> bool:
         """

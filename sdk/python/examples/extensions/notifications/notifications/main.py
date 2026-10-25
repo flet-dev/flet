@@ -48,7 +48,7 @@ REQUIRED = {
     "schedule_oneshot": SCHEDULED,  # Linux/Web have no OS scheduler
     "schedule_recurring": SCHEDULED,
     "periodic": SCHEDULED,
-    "cancel_pending": SCHEDULED,
+    "cancel_all_pending": SCHEDULED,
     "exact_alarms": ANDROID_ONLY,  # AlarmManager alarms on Android
     "channels": ANDROID_ONLY,  # Notification channels are Android 8+
     "channel_groups": ANDROID_ONLY,
@@ -60,7 +60,7 @@ REASON = {
     "schedule_oneshot": "Android/iOS/macOS only — Linux/Web have no OS scheduler",
     "schedule_recurring": "Android/iOS/macOS only — Linux/Web have no OS scheduler",
     "periodic": "Android/iOS/macOS only — Linux/Web have no OS scheduler",
-    "cancel_pending": "Android/iOS/macOS only — Linux/Web have no OS scheduler",
+    "cancel_all_pending": "Android/iOS/macOS only — Linux/Web have no OS scheduler",
     "exact_alarms": "Android only",
     "channels": "Android only (channels are an Android 8+ concept)",
     "channel_groups": "Android only",
@@ -313,17 +313,17 @@ def main(page: ft.Page):
 
         guarded_async(_list, "get_pending_notifications")
 
-    def cancel_pending(e):
-        guarded(notifications.cancel_pending(), "cancel_pending")
+    def cancel_all_pending(e):
+        guarded(notifications.cancel_all_pending(), "cancel_all_pending")
 
     def check_exact(e):
         async def _check():
-            allowed = await notifications.can_schedule_exact_notifications()
+            allowed = await notifications.can_schedule_exact_alarms()
             log_line(f"exact alarms allowed: {allowed}")
             if not allowed:
                 await notifications.request_exact_alarm_permission()
 
-        guarded_async(_check, "can_schedule_exact_notifications")
+        guarded_async(_check, "can_schedule_exact_alarms")
 
     def create_channel(e):
         guarded(
@@ -404,8 +404,8 @@ def main(page: ft.Page):
         ("schedule_oneshot", "Schedule in 10s", schedule_delayed),
         ("schedule_recurring", "Schedule daily 08:30", schedule_daily),
         ("periodic", "Schedule hourly", schedule_hourly),
-        ("cancel_pending", "List pending", list_pending),
-        ("cancel_pending", "Cancel pending", cancel_pending),
+        ("cancel_all_pending", "List pending", list_pending),
+        ("cancel_all_pending", "Cancel pending", cancel_all_pending),
         ("exact_alarms", "Check exact alarms", check_exact),
         ("channels", "Create channel", create_channel),
         ("channels", "List channels", list_channels),

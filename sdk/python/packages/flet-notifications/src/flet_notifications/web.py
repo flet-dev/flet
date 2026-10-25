@@ -78,7 +78,7 @@ class WebOptions:
     The browser and operating system determine whether this request is honored.
     """
 
-    is_silent: bool | None = None
+    silent: bool | None = None
     """
     Whether to suppress notification sound and vibration.
 
@@ -91,7 +91,7 @@ class WebOptions:
 
     Call :meth:`flet_notifications.Notifications.show` with the same `id` to
     replace a notification. The backend uses that ID as the browser notification tag.
-    Sound can still be suppressed by :attr:`is_silent` or user settings.
+    Sound can still be suppressed by :attr:`silent` or user settings.
     """
 
     timestamp: datetime | None = None

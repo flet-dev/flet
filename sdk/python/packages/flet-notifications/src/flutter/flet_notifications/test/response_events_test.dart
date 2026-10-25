@@ -62,7 +62,7 @@ void main() {
     });
   });
 
-  group("drainTapQueue", () {
+  group("drainResponseQueue", () {
     test("returns events in key order and removes them", () async {
       final older = responseToEvent(_response(payload: "first"));
       final newer = responseToEvent(_response(payload: "second"));
@@ -72,14 +72,14 @@ void main() {
           "flet_notifications_queue_100-1", jsonEncode(older));
       await prefs.setString("unrelated_key", "keep me");
 
-      expect(await drainTapQueue(prefs), [older, newer]);
-      expect(await drainTapQueue(prefs), isEmpty);
+      expect(await drainResponseQueue(prefs), [older, newer]);
+      expect(await drainResponseQueue(prefs), isEmpty);
       expect(await prefs.getKeys(), {"unrelated_key"});
     });
 
     test("unreadable entries are dropped, not fatal", () async {
       await prefs.setString("flet_notifications_queue_1-1", "not json");
-      expect(await drainTapQueue(prefs), isEmpty);
+      expect(await drainResponseQueue(prefs), isEmpty);
       // The bad entry is removed rather than left to wedge the queue.
       expect(await prefs.getKeys(), isEmpty);
     });
@@ -88,7 +88,7 @@ void main() {
       final response = _response(payload: "background");
       notificationTapBackground(response);
       await pumpEventQueue();
-      expect(await drainTapQueue(prefs), [responseToEvent(response)]);
+      expect(await drainResponseQueue(prefs), [responseToEvent(response)]);
     });
   });
 

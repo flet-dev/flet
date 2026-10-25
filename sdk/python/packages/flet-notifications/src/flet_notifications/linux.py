@@ -166,7 +166,7 @@ class LinuxOptions:
         Requires support from the desktop notification server.
     """
 
-    suppress_sound: bool | None = None
+    silent: bool | None = None
     """
     Whether to ask the server to suppress notification sounds.
 

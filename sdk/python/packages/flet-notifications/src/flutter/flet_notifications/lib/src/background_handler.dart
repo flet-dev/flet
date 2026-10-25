@@ -1,13 +1,14 @@
-/// Background tap handling.
+/// Queued notification responses.
 ///
 /// Android and iOS deliver responses to actions that do not bring the app to the
 /// foreground, and on iOS taps on a terminated app, to this top-level handler in
 /// a background isolate managed by the plugin, whether or not the app is
-/// running. The response is persisted to shared preferences under a unique
-/// queue key, and the service replays the queue, in order, when it initializes
-/// and whenever the handler signals a new entry.
+/// running. Responses that arrive while no service runs are queued the same
+/// way. Each is persisted to shared preferences under a unique queue key, and
+/// the service replays the queue, in order, when it initializes and whenever a
+/// new entry is signaled.
 ///
-/// Unique keys per tap avoid read-modify-write races between the background
+/// Unique keys per response avoid read-modify-write races between the background
 /// isolate and the main isolate. [SharedPreferencesAsync] stores them without
 /// the `flutter.` prefix of the legacy API, so `ft.SharedPreferences` neither
 /// lists nor clears them, and reads them from the platform without caching.
@@ -20,7 +21,7 @@ import 'package:flet/flet.dart' show isWindowsDesktop;
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-import 'utils/tap_queue_signal.dart';
+import 'utils/response_queue_signal.dart';
 import 'utils/windows_launch.dart';
 
 const String _queuePrefix = "flet_notifications_queue_";
@@ -83,11 +84,11 @@ Future<void> queueResponse(NotificationResponse response) async {
   final key = "$_queuePrefix$stamp-${identityHashCode(response)}";
   await SharedPreferencesAsync()
       .setString(key, jsonEncode(responseToEvent(response)));
-  signalTapQueued();
+  signalResponseQueued();
 }
 
-/// Reads and removes all queued taps, oldest key first.
-Future<List<Map<String, Object?>>> drainTapQueue(
+/// Reads and removes all queued responses, oldest key first.
+Future<List<Map<String, Object?>>> drainResponseQueue(
   SharedPreferencesAsync prefs,
 ) async {
   final keys = (await prefs.getKeys())

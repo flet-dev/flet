@@ -19,7 +19,7 @@ import 'utils/details.dart';
 import 'utils/errors.dart';
 import 'utils/parsers.dart';
 import 'utils/scheduling.dart';
-import 'utils/tap_queue_signal.dart';
+import 'utils/response_queue_signal.dart';
 import 'utils/windows_identity.dart';
 import 'utils/windows_launch.dart';
 
@@ -48,7 +48,7 @@ class NotificationsService extends FletService {
   bool _replayAgain = false;
 
   /// Stops replaying the queue when background isolates add to it.
-  void Function()? _stopListeningForQueuedTaps;
+  void Function()? _stopListeningForQueuedResponses;
   bool _disposed = false;
   Future<void>? _initFuture;
 
@@ -115,8 +115,8 @@ class NotificationsService extends FletService {
   void dispose() {
     _disposed = true;
     if (identical(_live, this)) _live = null;
-    _stopListeningForQueuedTaps?.call();
-    _stopListeningForQueuedTaps = null;
+    _stopListeningForQueuedResponses?.call();
+    _stopListeningForQueuedResponses = null;
     control.removeInvokeMethodListener(invokeMethod);
     super.dispose();
   }
@@ -226,9 +226,9 @@ class NotificationsService extends FletService {
       // A service disposed meanwhile leaves the queue to its successor.
       if (_disposed) return;
       // Listen before draining, so entries queued meanwhile are not missed.
-      _stopListeningForQueuedTaps ??=
-          listenForQueuedTaps(() => unawaited(_replayQueuedTaps()));
-      await _replayQueuedTaps();
+      _stopListeningForQueuedResponses ??=
+          listenForQueuedResponses(() => unawaited(_replayQueuedResponses()));
+      await _replayQueuedResponses();
       await _replayLaunchDetails();
     } catch (e) {
       // Initialization failed (e.g. invalid platform settings). Allow a
@@ -279,7 +279,7 @@ class NotificationsService extends FletService {
   ///
   /// Signals that arrive during a replay make it drain the queue again rather
   /// than run concurrently.
-  Future<void> _replayQueuedTaps() async {
+  Future<void> _replayQueuedResponses() async {
     if (_disposed) return;
     if (_replaying) {
       _replayAgain = true;
@@ -290,13 +290,14 @@ class NotificationsService extends FletService {
       do {
         _replayAgain = false;
         if (_disposed) break;
-        for (final event in await drainTapQueue(SharedPreferencesAsync())) {
+        for (final event
+            in await drainResponseQueue(SharedPreferencesAsync())) {
           _triggerResponseEvent(event);
         }
       } while (_replayAgain);
     } catch (e) {
       // Best-effort: preferences unavailable must not break the service.
-      debugPrint("flet_notifications: tap queue replay failed: $e");
+      debugPrint("flet_notifications: response queue replay failed: $e");
     } finally {
       _replaying = false;
     }
@@ -437,7 +438,7 @@ class NotificationsService extends FletService {
       case "periodically_show":
         return await _periodicallyShow(args);
 
-      case "cancel_pending":
+      case "cancel_all_pending":
         await _plugin?.cancelAllPendingNotifications();
         return null;
 
@@ -465,7 +466,7 @@ class NotificationsService extends FletService {
       case "request_permissions":
         return await _requestPermissions(args);
 
-      case "can_schedule_exact_notifications":
+      case "can_schedule_exact_alarms":
         final android = _androidPlugin;
         if (android == null) return true;
         return await android.canScheduleExactNotifications() ?? false;

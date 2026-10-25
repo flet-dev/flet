@@ -240,7 +240,7 @@ void main() {
           'image_url': 'https://example.com/photo.png',
           'lang': 'ar',
           'require_interaction': true,
-          'is_silent': true,
+          'silent': true,
           'renotify': true,
           'timestamp': DateTime.utc(2023, 11, 14, 22, 13, 20, 123),
         },
@@ -288,7 +288,7 @@ void main() {
               'web': {
                 'direction': 'leftToRight',
                 'require_interaction': enabled,
-                'is_silent': enabled,
+                'silent': enabled,
                 'renotify': enabled,
               },
             },

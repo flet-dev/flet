@@ -180,7 +180,7 @@ class AndroidScheduleMode(Enum):
 
     - On Android 14+, the access is off until the user turns it on in system
       settings. Check it with
-      :meth:`flet_notifications.Notifications.can_schedule_exact_notifications`
+      :meth:`flet_notifications.Notifications.can_schedule_exact_alarms`
       and open that settings screen with
       :meth:`flet_notifications.Notifications.request_exact_alarm_permission`.
     - Scheduling in an exact mode without the access raises

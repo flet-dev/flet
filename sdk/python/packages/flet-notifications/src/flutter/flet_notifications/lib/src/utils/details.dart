@@ -165,7 +165,7 @@ fln.NotificationDetails parseNotificationDetails({
             : fln.LinuxNotificationTimeout.fromDuration(linuxTimeout),
         resident: parseBool(linuxOptions["resident"], false)!,
         transient: parseBool(linuxOptions["transient"], false)!,
-        suppressSound: parseBool(linuxOptions["suppress_sound"], false)!,
+        suppressSound: parseBool(linuxOptions["silent"], false)!,
         actionKeyAsIconName:
             parseBool(linuxOptions["action_key_as_icon_name"], false)!,
       ),
@@ -220,7 +220,7 @@ fln.NotificationDetails parseNotificationDetails({
         lang: webOptions["lang"] as String?,
         requireInteraction:
             parseBool(webOptions["require_interaction"], false)!,
-        isSilent: parseBool(webOptions["is_silent"], false)!,
+        isSilent: parseBool(webOptions["silent"], false)!,
         renotify: parseBool(webOptions["renotify"], false)!,
         timestamp: webOptions["timestamp"] as DateTime?,
       ),

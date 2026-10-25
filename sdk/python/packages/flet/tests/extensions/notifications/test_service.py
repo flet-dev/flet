@@ -71,7 +71,7 @@ async def test_methods_encode_nested_notification_values(
             direction=WebNotificationDirection.RIGHT_TO_LEFT,
             icon_url="/assets/icon.png",
             require_interaction=True,
-            is_silent=False,
+            silent=False,
             timestamp=datetime(2023, 11, 14, 22, 13, 20, 123000, tzinfo=timezone.utc),
         ),
     )
@@ -105,7 +105,7 @@ async def test_methods_encode_nested_notification_values(
             "direction": "rightToLeft",
             "icon_url": "/assets/icon.png",
             "require_interaction": True,
-            "is_silent": False,
+            "silent": False,
             "timestamp": datetime(
                 2023, 11, 14, 22, 13, 20, 123000, tzinfo=timezone.utc
             ),
@@ -176,7 +176,7 @@ def test_error_classes_are_also_caught_as_their_generic_kinds():
     ("method", "native_method"),
     [
         ("request_permissions", "request_permissions"),
-        ("can_schedule_exact_notifications", "can_schedule_exact_notifications"),
+        ("can_schedule_exact_alarms", "can_schedule_exact_alarms"),
         ("request_exact_alarm_permission", "request_exact_alarm_permission"),
         ("are_notifications_enabled", "are_notifications_enabled"),
         ("request_full_screen_intent_permission", "request_full_screen_intent"),
@@ -256,7 +256,7 @@ async def test_request_permissions_sends_the_requested_apple_authorizations():
             ft.PagePlatform.WINDOWS,
             False,
         ),
-        (lambda n: n.cancel_pending(), ft.PagePlatform.WINDOWS, False),
+        (lambda n: n.cancel_all_pending(), ft.PagePlatform.WINDOWS, False),
         (lambda n: n.get_pending_notifications(), ft.PagePlatform.LINUX, False),
         (lambda n: n.get_active_notifications(), ft.PagePlatform.LINUX, False),
         (lambda n: n.open_app_notification_settings(), ft.PagePlatform.MACOS, True),
@@ -281,7 +281,7 @@ async def test_platform_specific_methods_fail_before_the_call(
 @pytest.mark.parametrize(
     "call",
     [
-        lambda n: n.cancel_pending(),
+        lambda n: n.cancel_all_pending(),
         lambda n: n.get_pending_notifications(),
         lambda n: n.get_active_notifications(),
     ],
