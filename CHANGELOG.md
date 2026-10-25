@@ -18,6 +18,7 @@
   ([#6938](https://github.com/flet-dev/flet/issues/6938),
   [#6939](https://github.com/flet-dev/flet/pull/6939))
   by @ada-koki.
+* Add the `RefreshIndicator` control for pull-to-refresh: pulling its scrollable `content` down calls the async `on_refresh` handler and shows a progress indicator until it returns, and `show()` refreshes without a pull, for desktop and web. See [RefreshIndicator](https://flet.dev/docs/controls/refreshindicator) ([#6997](https://github.com/flet-dev/flet/pull/6997)) by @osamalzabidi.
 
 * Add the `flet-shadcn-ui` extension: controls styled after [shadcn/ui](https://ui.shadcn.com), built on the Flutter [`shadcn_ui`](https://pub.dev/packages/shadcn_ui) package, with `Theme` color schemes and the [Lucide](https://lucide.dev) icon set (`LucideIcons`). It includes `Button`, `IconButton`, `Badge`, `Alert`, `Avatar`, `Card`, `Breadcrumb`, `Separator`, `Progress`, `Input`, `Textarea`, `Checkbox`, `Switch`, `Slider`, `RadioGroup`, `Select`, `InputOTP`, `Calendar`, `DatePicker`, `DateRangePicker`, `TimePicker`, `Tabs`, `Accordion`, `ResizablePanelGroup`, `Tooltip`, `Popover`, `ContextMenu`, `Menubar`, `Table`, `Dialog`, `Sheet`, `Toast` and `Sonner`; value controls support `label`, `description` and `error_text` ([#6918](https://github.com/flet-dev/flet/pull/6918)) by @InesaFitsner.
 
