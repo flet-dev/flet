@@ -4,7 +4,9 @@ import 'package:flet/flet.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart'
     as fln;
 
+import '../utils/actions.dart';
 import '../utils/errors.dart';
+import 'android_styles.dart';
 
 /// Channel used when a notification names none.
 const String defaultChannelId = "flet_notifications";
@@ -142,4 +144,95 @@ Set<fln.AndroidServiceForegroundType>? parseForegroundServiceTypes(
     return type;
   })!
       .toSet();
+}
+
+/// Builds the Android details of a notification from an `AndroidOptions` payload.
+fln.AndroidNotificationDetails parseAndroidDetails({
+  required List<ParsedAction> actions,
+  Map<dynamic, dynamic>? options,
+}) {
+  final androidOptions = options ?? const {};
+  final androidActions = actions
+      .map(
+        (a) => fln.AndroidNotificationAction(
+          a.id,
+          a.title,
+          showsUserInterface: a.foreground,
+          cancelNotification: a.cancelNotification,
+          allowGeneratedReplies: a.input != null,
+          inputs: a.input == null
+              ? const []
+              : [
+                  fln.AndroidNotificationActionInput(
+                    label: a.input!.label,
+                    choices: a.input!.choices,
+                    allowFreeFormInput: a.input!.allowFreeFormInput,
+                    allowedMimeTypes: a.input!.allowedMimeTypes,
+                  ),
+                ],
+        ),
+      )
+      .toList();
+  final additionalFlags = parseInt(androidOptions["additional_flags"]);
+  final progress = androidOptions["progress"] as Map?;
+  final group = androidOptions["group"] as Map?;
+  final channel = parseNotificationChannel(androidOptions["channel"]);
+  return fln.AndroidNotificationDetails(
+    channel.id,
+    channel.name,
+    channelDescription: channel.description,
+    icon: androidOptions["icon"] as String?,
+    audioAttributesUsage: channel.audioAttributesUsage,
+    additionalFlags:
+        additionalFlags == null ? null : Int32List.fromList([additionalFlags]),
+    actions: androidActions,
+    styleInformation: parseStyle(androidOptions["style"]),
+    importance: channel.importance,
+    priority: parsePriority(
+        androidOptions["priority"] as String?, fln.Priority.defaultPriority)!,
+    playSound: channel.playSound,
+    sound: channel.sound,
+    enableVibration: channel.enableVibration,
+    vibrationPattern: channel.vibrationPattern,
+    groupKey: group?["key"] as String?,
+    setAsGroupSummary: parseBool(group?["summary"], false)!,
+    groupAlertBehavior: parseGroupAlertBehavior(
+      group?["alert_behavior"] as String?,
+      fln.GroupAlertBehavior.all,
+    )!,
+    autoCancel: parseBool(androidOptions["auto_cancel"], true)!,
+    ongoing: parseBool(androidOptions["ongoing"], false)!,
+    silent: parseBool(androidOptions["silent"], false)!,
+    color: parseColor((androidOptions["color"] as String?)?.trim(), null),
+    colorized: parseBool(androidOptions["colorized"], false)!,
+    largeIcon: parseAndroidBitmap(androidOptions["large_icon"]),
+    onlyAlertOnce: parseBool(androidOptions["only_alert_once"], false)!,
+    showWhen: parseBool(androidOptions["show_timestamp"], true)!,
+    when: (androidOptions["timestamp"] as DateTime?)?.millisecondsSinceEpoch,
+    usesChronometer: parseBool(androidOptions["uses_chronometer"], false)!,
+    chronometerCountDown:
+        parseBool(androidOptions["chronometer_count_down"], false)!,
+    channelShowBadge: channel.showBadge,
+    channelBypassDnd: channel.bypassDnd,
+    showProgress: progress != null,
+    maxProgress: parseInt(progress?["max"], 100)!,
+    progress: parseInt(progress?["value"], 0)!,
+    indeterminate: parseBool(progress?["indeterminate"], false)!,
+    enableLights: channel.enableLights,
+    ledColor: channel.ledColor,
+    ledOnMs: parseDuration(androidOptions["led_on_duration"])?.inMilliseconds,
+    ledOffMs: parseDuration(androidOptions["led_off_duration"])?.inMilliseconds,
+    ticker: androidOptions["ticker"] as String?,
+    visibility:
+        parseNotificationVisibility(androidOptions["visibility"] as String?),
+    timeoutAfter:
+        parseDuration(androidOptions["timeout_after"])?.inMilliseconds,
+    category:
+        parseAndroidNotificationCategory(androidOptions["category"] as String?),
+    fullScreenIntent: parseBool(androidOptions["full_screen_intent"], false)!,
+    shortcutId: androidOptions["shortcut_id"] as String?,
+    subText: androidOptions["sub_text"] as String?,
+    tag: androidOptions["tag"] as String?,
+    number: parseInt(androidOptions["badge_number"]),
+  );
 }

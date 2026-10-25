@@ -4,6 +4,8 @@ import 'package:flet/flet.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart'
     as fln;
 
+import '../utils/actions.dart';
+
 /// Launch arguments for a Windows notification or one of its buttons.
 ///
 /// Windows hands the app a clicked element's launch arguments and nothing else:
@@ -94,3 +96,74 @@ fln.WindowsProgressBar parseWindowsProgress(Map value) {
 fln.WindowsNotificationScenario? parseWindowsNotificationScenario(String? value,
         [fln.WindowsNotificationScenario? defaultValue]) =>
     parseEnum(fln.WindowsNotificationScenario.values, value, defaultValue);
+
+/// Builds the Windows details of a notification from a `WindowsOptions` payload.
+///
+/// [notificationId] and [payload] go into the launch arguments of the buttons,
+/// which Windows hands back on a click.
+fln.WindowsNotificationDetails parseWindowsDetails({
+  required List<ParsedAction> actions,
+  Map<dynamic, dynamic>? options,
+  int? notificationId,
+  String? payload,
+}) {
+  final windowsOptions = options ?? const {};
+  final windowsAudio = windowsOptions["sound"] as String?;
+  final windowsProgress = windowsOptions["progress"] as Map?;
+  final windowsActions = actions.map((a) {
+    return fln.WindowsAction(
+      content: a.title,
+      arguments: windowsLaunchArguments(
+        notificationId: notificationId,
+        payload: payload,
+        actionId: a.id,
+      ),
+      inputId: a.input == null ? null : a.id,
+      activationBehavior: fln.WindowsNotificationBehavior.dismiss,
+    );
+  }).toList();
+
+  // Windows renders inline replies as separate input elements; Android and
+  // Darwin put them on the action itself.
+  final windowsInputs = actions
+      .where((a) => a.input != null)
+      .map(
+        (a) => fln.WindowsTextInput(
+          id: a.id,
+          title: a.input!.label,
+          placeHolderContent: a.input!.label,
+        ),
+      )
+      .toList();
+
+  return fln.WindowsNotificationDetails(
+    actions: windowsActions,
+    inputs: windowsInputs,
+    header: parseWindowsHeader(windowsOptions["header"] as String?),
+    audio: windowsAudio == null || windowsAudio.isEmpty
+        ? null
+        : parseWindowsNotificationAudio(
+            windowsAudio,
+            loop: parseBool(windowsOptions["loop_sound"], false)!,
+            defaultValue: fln.WindowsNotificationAudio.preset(
+                sound: fln.WindowsNotificationSound.defaultSound),
+          ),
+    duration:
+        parseWindowsNotificationDuration(windowsOptions["duration"] as String?),
+    scenario:
+        parseWindowsNotificationScenario(windowsOptions["scenario"] as String?),
+    timestamp: windowsOptions["timestamp"] as DateTime?,
+    subtitle: windowsOptions["subtitle"] as String?,
+    progressBars: [
+      if (windowsProgress != null) parseWindowsProgress(windowsProgress),
+    ],
+    images: (windowsOptions["images"] as List?)
+            ?.map((e) => fln.WindowsImage(Uri.parse("$e"), altText: ""))
+            .toList() ??
+        const [],
+    bindings: (windowsOptions["bindings"] as Map?)?.map(
+          (k, v) => MapEntry("$k", "$v"),
+        ) ??
+        const {},
+  );
+}

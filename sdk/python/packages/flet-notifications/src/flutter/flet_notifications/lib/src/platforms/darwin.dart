@@ -6,6 +6,7 @@ import 'package:flutter_local_notifications/flutter_local_notifications.dart'
 
 import '../utils/actions.dart';
 
+/// Builds the iOS or macOS details of a notification from a `DarwinOptions` payload.
 fln.DarwinNotificationDetails parseDarwinDetails({
   required List<ParsedAction> actions,
   Map<dynamic, dynamic>? options,

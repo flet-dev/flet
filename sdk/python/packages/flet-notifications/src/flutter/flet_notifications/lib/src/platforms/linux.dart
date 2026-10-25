@@ -26,3 +26,26 @@ fln.LinuxNotificationCategory? parseLinuxNotificationCategory(String? value) {
 fln.LinuxNotificationUrgency? parseLinuxNotificationUrgency(String? value,
         [fln.LinuxNotificationUrgency? defaultValue]) =>
     parseEnum(fln.LinuxNotificationUrgency.values, value, defaultValue);
+
+/// Builds the Linux details of a notification from a `LinuxOptions` payload.
+fln.LinuxNotificationDetails parseLinuxDetails(Map<dynamic, dynamic>? options) {
+  final linuxOptions = options ?? const {};
+  final linuxTimeout = parseDuration(linuxOptions["timeout"]);
+  return fln.LinuxNotificationDetails(
+    defaultActionName: "Open",
+    icon: parseLinuxNotificationIcon(linuxOptions["icon"] as String?),
+    sound: parseLinuxNotificationSound(linuxOptions["sound"] as String?),
+    category:
+        parseLinuxNotificationCategory(linuxOptions["category"] as String?),
+    urgency: parseLinuxNotificationUrgency(linuxOptions["urgency"] as String?,
+        fln.LinuxNotificationUrgency.normal)!,
+    timeout: linuxTimeout == null
+        ? const fln.LinuxNotificationTimeout.systemDefault()
+        : fln.LinuxNotificationTimeout.fromDuration(linuxTimeout),
+    resident: parseBool(linuxOptions["resident"], false)!,
+    transient: parseBool(linuxOptions["transient"], false)!,
+    suppressSound: parseBool(linuxOptions["silent"], false)!,
+    actionKeyAsIconName:
+        parseBool(linuxOptions["action_key_as_icon_name"], false)!,
+  );
+}
