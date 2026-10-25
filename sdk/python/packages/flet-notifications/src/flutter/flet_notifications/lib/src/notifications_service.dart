@@ -291,7 +291,7 @@ class NotificationsService extends FletService {
         _replayAgain = false;
         if (_disposed) break;
         for (final event in await drainTapQueue(SharedPreferencesAsync())) {
-          _emit(event);
+          _triggerResponseEvent(event);
         }
       } while (_replayAgain);
     } catch (e) {
@@ -317,7 +317,7 @@ class NotificationsService extends FletService {
       if (details?.didNotificationLaunchApp == true &&
           response != null &&
           !_liveResponsesBeforeLaunchReplay.contains(_responseKey(response))) {
-        _emit(responseToEvent(response));
+        _triggerResponseEvent(responseToEvent(response));
       }
       _liveResponsesBeforeLaunchReplay.clear();
       // Later activity intents can describe taps already delivered by callbacks.
@@ -347,7 +347,7 @@ class NotificationsService extends FletService {
     if (!_launchReplayComplete) {
       _liveResponsesBeforeLaunchReplay.add(_responseKey(response));
     }
-    _emit(responseToEvent(response));
+    _triggerResponseEvent(responseToEvent(response));
   }
 
   /// Identifies a response by the fields delivered to Python.
@@ -355,7 +355,7 @@ class NotificationsService extends FletService {
       jsonEncode(responseToEvent(response));
 
   /// Sends [event] to Python as the event it names, without the `event` key.
-  void _emit(Map<String, Object?> event) {
+  void _triggerResponseEvent(Map<String, Object?> event) {
     final data = Map<String, Object?>.of(event);
     final name = data.remove("event") as String? ?? "tap";
     control.triggerEvent(name, data);
