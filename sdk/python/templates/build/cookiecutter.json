@@ -51,6 +51,6 @@
   },
   "boot_screen": null,
   "_extensions": [
-    "cookiecutter_extensions.FletExtension"
+    "cookiecutter_extensions.FletJinjaExtension"
   ]
 }

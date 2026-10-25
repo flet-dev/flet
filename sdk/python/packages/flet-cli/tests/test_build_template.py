@@ -1,6 +1,7 @@
 """Invariants of the `flet build` cookiecutter template itself."""
 
 import argparse
+import importlib.util
 import json
 import re
 from pathlib import Path
@@ -96,6 +97,25 @@ def test_hide_window_on_start_precedence(
     match = re.search(pattern, rendered)
     assert match is not None
     assert (match.group(1).lower() == "true") is expected
+
+
+def test_get_pyproject_reads_the_app_pyproject_flet_build_passes():
+    """The template's `get_pyproject()` finds settings in `cookiecutter._pyproject`."""
+    spec = importlib.util.spec_from_file_location(
+        "cookiecutter_extensions",
+        BUILD_TEMPLATE_DIR.parent / "cookiecutter_extensions.py",
+    )
+    extensions = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(extensions)
+    env = Environment(extensions=[extensions.FletJinjaExtension])
+    rendered = env.from_string(
+        "{{ get_pyproject('tool.flet.android.min_sdk_version') }}"
+    ).render(
+        cookiecutter={
+            "_pyproject": {"tool": {"flet": {"android": {"min_sdk_version": 23}}}}
+        }
+    )
+    assert rendered == "23"
 
 
 class TestBuildTemplateContract:
