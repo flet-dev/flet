@@ -954,6 +954,7 @@ studio:
   Publishing:
     _index: studio/publishing/index.md
     Android apps: studio/publishing/android.md
+    iOS apps: studio/publishing/ios.md
     Google Play:
       _index: studio/publishing/google-play/index.md
       Store listing: studio/publishing/google-play/store-listing.md

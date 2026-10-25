@@ -30,11 +30,10 @@ Each action is one **run** for one platform:
 | macOS | **Create macOS app (.app)** — not signed or notarized: for testing on your own Mac |
 | Linux | **Create Linux app (.tar.gz)** |
 | Android | **Create an APK**, **Publish to a download page**, **Create an app bundle (.aab)**, **Publish to Google Play**, **Update store listing** — see [Android apps](android.md), [the download page](android.md#download-page), [Google Play](google-play/index.md) and [the store listing](google-play/store-listing.md) |
-| iOS | **Create an iOS Simulator app** — no Apple account needed |
+| iOS | **Create an iOS Simulator app** (no Apple account needed), **Create an iOS app (.ipa)**, **Publish to TestFlight** — see [iOS apps](ios.md) |
 | Web | **Create web app (.zip)** — the files to host yourself |
 
-Microsoft Store, Mac App Store, TestFlight, App Store and publishing a website show
-**Coming soon**.
+Microsoft Store, Mac App Store, App Store and publishing a website show **Coming soon**.
 
 ## Start a run
 
