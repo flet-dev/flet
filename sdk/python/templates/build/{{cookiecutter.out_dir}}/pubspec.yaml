@@ -29,8 +29,6 @@ dependencies:
   # in lib/main.dart — matches the wire format flet's existing socket
   # transport already speaks.
   msgpack_dart: ^1.0.1
-
-  package_info_plus: ^9.0.0
   path_provider: ^2.1.4
   path: ^1.9.0
   window_manager: ^0.5.1
