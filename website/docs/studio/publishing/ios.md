@@ -1,8 +1,8 @@
 ---
-title: "iOS apps (.ipa and TestFlight)"
+title: "iOS apps (.ipa, TestFlight and the App Store)"
 ---
 
-# iOS apps: .ipa and TestFlight
+# iOS apps: .ipa, TestFlight and the App Store
 
 The iOS section of **Publish** has these actions:
 
@@ -11,8 +11,8 @@ The iOS section of **Publish** has these actions:
 | **Create an iOS Simulator app** | A `.app` for the iOS Simulator | Trying the app on a Mac. No Apple account needed |
 | **Create an iOS app (.ipa)** | A signed `.ipa`: App Store, Ad hoc or Development | Uploading to App Store Connect yourself, or installing on registered iPhones and iPads |
 | **Publish to TestFlight** | A build on TestFlight | Testers who install it with the TestFlight app |
-
-**Publish to the App Store** shows **Coming soon**.
+| **Publish to the App Store** | A version submitted for App Review | Releasing the app on the App Store |
+| **Update App Store listing** | The listing sent to App Store Connect | Changing the name, descriptions, screenshots and details. No build, no credits |
 
 Everything except the Simulator app needs an Apple Developer Program membership and an
 **App Store Connect account** connected to Studio.
@@ -171,3 +171,55 @@ never uses that feature, as long as a library in the app could. If App Store Con
 reports **ITMS-90683**, add the purpose strings in **Publish › Settings › iOS**:
 **Permissions** for camera, photo library, microphone or location, or **Info.plist
 entries** for any other key Apple names. Then publish again.
+
+## App Store listing
+
+Studio keeps the app's App Store listing in the app's files, in the hidden
+`.store/app-store/` folder, which is never packaged into the app. Edit it on **Update App
+Store listing**:
+
+- **Texts**, per language: app name and subtitle (30 characters each), description
+  (4000), keywords (100, comma-separated), promotional text (170), and the support,
+  marketing and privacy policy URLs. **Write with AI** asks the agent to write or
+  translate the texts from what the app does.
+- **Screenshots**: 1 to 10 for **iPhone (6.9")** and for **iPad (13")**. Flet apps run on
+  iPad too, so Apple asks for both. In the Preview, pick the **iPhone 6.9"** or
+  **iPad 13"** device and add the screen to the App Store listing: it's captured at
+  Apple's size (1320 × 2868 and 2064 × 2752). A language without screenshots uses the
+  default language's. The app's icon comes from its build.
+- **App details**: the primary and secondary category, and the copyright line.
+- **App Review contact**: the name, email and phone App Review can reach, and optional
+  notes for the reviewer. Don't put passwords in the notes.
+
+**Import from App Store** replaces the files with the app's current listing in App Store
+Connect.
+
+**Update App Store listing** sends the listing to the app's version that's still being
+prepared: the one with the app's current version number (Publish › Settings ›
+Version), which Studio creates if needed. A screenshot set is only uploaded again when
+it changed. App Store Connect doesn't let you change a version that's waiting for or in
+review: remove it from review there first, or wait for Apple's decision.
+
+Some of what Apple asks for isn't part of the listing and is set only in App Store
+Connect: **App Privacy** (what data the app collects), **pricing and availability**, and
+the **age rating** questionnaire.
+
+## App Store
+
+**Publish to the App Store** builds the app for the App Store, uploads it as for
+TestFlight, then:
+
+1. finds or creates the App Store version for the run's version number. A version that's
+   already on the App Store can't change: set a newer version number first.
+2. attaches the build and sets **Release**: automatically once Apple approves the
+   version, or manually, when you release it in App Store Connect.
+3. sets **What's new**. Apple skips it for an app's first version.
+4. sends the App Store listing too, if you choose **Also send the App Store listing**.
+5. submits the version for **App Review**.
+
+If App Store Connect can't submit the version yet, for example because screenshots, App
+Privacy answers or the age rating are missing, the run lists what Apple asked for. Fix
+those, then **Retry upload**: the build isn't uploaded again and there's no new charge.
+
+Apple usually reviews a version within a day or two. App Store Connect shows its status
+and emails you when it changes.
