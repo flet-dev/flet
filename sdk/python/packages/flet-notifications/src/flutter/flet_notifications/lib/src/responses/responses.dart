@@ -21,8 +21,8 @@ import 'package:flet/flet.dart' show isWindowsDesktop;
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
+import '../platforms/windows.dart';
 import 'response_queue_signal.dart';
-import '../utils/windows_launch.dart';
 
 const String _queuePrefix = "flet_notifications_queue_";
 

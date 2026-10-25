@@ -1,8 +1,8 @@
 import 'dart:convert';
 
+import 'package:flet_notifications/src/platforms/windows.dart';
 import 'package:flet_notifications/src/responses/responses.dart';
 import 'package:flutter/foundation.dart';
-import 'package:flet_notifications/src/utils/windows_launch.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart'
     as fln;
 import 'package:flutter_test/flutter_test.dart';

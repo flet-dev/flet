@@ -1,4 +1,6 @@
-import 'package:flet/flet.dart' show parseDuration, parseInt;
+import 'package:flet/flet.dart' show parseDuration, parseEnum, parseInt;
+import 'package:flutter_local_notifications/flutter_local_notifications.dart'
+    as fln;
 import 'package:timezone/timezone.dart' as tz;
 
 import 'errors.dart';
@@ -68,3 +70,11 @@ tz.TZDateTime parseWhen(Map<dynamic, dynamic> args, tz.Location fallback) {
     throw NotificationException.invalidArgument(e.toString());
   }
 }
+
+fln.DateTimeComponents? parseDateTimeComponents(String? value,
+        [fln.DateTimeComponents? defaultValue]) =>
+    parseEnum(fln.DateTimeComponents.values, value, defaultValue);
+
+fln.RepeatInterval? parseRepeatInterval(String? value,
+        [fln.RepeatInterval? defaultValue]) =>
+    parseEnum(fln.RepeatInterval.values, value, defaultValue);

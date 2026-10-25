@@ -4,7 +4,7 @@ import 'package:flet/flet.dart' show parseBool, parseList;
 import 'package:flutter_local_notifications/flutter_local_notifications.dart'
     as fln;
 
-import 'errors.dart';
+import '../utils/errors.dart';
 
 /// Parses the optional Android style directly into its native representation.
 fln.StyleInformation? parseStyle(Object? value) {

@@ -1,6 +1,6 @@
 import 'dart:typed_data';
 
-import 'package:flet_notifications/src/utils/styles.dart';
+import 'package:flet_notifications/src/platforms/android_styles.dart';
 import 'package:flet_notifications/src/utils/errors.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart'
     as fln;

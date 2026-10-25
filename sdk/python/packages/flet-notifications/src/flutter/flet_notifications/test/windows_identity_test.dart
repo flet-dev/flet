@@ -1,4 +1,4 @@
-import 'package:flet_notifications/src/utils/windows_identity.dart';
+import 'package:flet_notifications/src/platforms/windows_identity.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 void main() {

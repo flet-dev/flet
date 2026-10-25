@@ -13,15 +13,16 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:timezone/data/latest_all.dart' as tz;
 import 'package:timezone/timezone.dart' as tz;
 
+import 'platforms/android.dart';
+import 'platforms/darwin.dart';
+import 'platforms/windows.dart';
+import 'platforms/windows_identity.dart';
 import 'responses/response_queue_signal.dart';
 import 'responses/responses.dart';
 import 'utils/actions.dart';
 import 'utils/details.dart';
 import 'utils/errors.dart';
-import 'utils/parsers.dart';
 import 'utils/scheduling.dart';
-import 'utils/windows_identity.dart';
-import 'utils/windows_launch.dart';
 
 /// The `Notifications` service: runs Python's method calls on the
 /// notifications plugin and sends notification responses back as events.

@@ -4,7 +4,7 @@ import 'package:flet/flet.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart'
     as fln;
 
-import 'errors.dart';
+import '../utils/errors.dart';
 
 /// Channel used when a notification names none.
 const String defaultChannelId = "flet_notifications";
@@ -76,84 +76,6 @@ fln.NotificationVisibility? parseNotificationVisibility(String? value,
         [fln.NotificationVisibility? defaultValue]) =>
     parseEnum(fln.NotificationVisibility.values, value, defaultValue);
 
-fln.InterruptionLevel? parseInterruptionLevel(String? value,
-        [fln.InterruptionLevel? defaultValue]) =>
-    parseEnum(fln.InterruptionLevel.values, value, defaultValue);
-
-fln.LinuxNotificationIcon? parseLinuxNotificationIcon(String? name) {
-  if (name == null || name.isEmpty) return null;
-  if (name.startsWith("/") || name.startsWith("file://")) {
-    return fln.FilePathLinuxIcon(name);
-  }
-  return fln.ThemeLinuxIcon(name);
-}
-
-fln.LinuxNotificationSound? parseLinuxNotificationSound(String? name) {
-  if (name == null || name.isEmpty) return null;
-  return fln.ThemeLinuxSound(name);
-}
-
-fln.LinuxNotificationCategory? parseLinuxNotificationCategory(String? value) {
-  if (value == null) return null;
-  for (final category in fln.LinuxNotificationCategory.values) {
-    if (category.name.toLowerCase() == value.toLowerCase()) return category;
-  }
-  return null;
-}
-
-fln.LinuxNotificationUrgency? parseLinuxNotificationUrgency(String? value,
-        [fln.LinuxNotificationUrgency? defaultValue]) =>
-    parseEnum(fln.LinuxNotificationUrgency.values, value, defaultValue);
-
-/// A Windows header with [title], under a fixed ID, so every notification with
-/// a header shares one group in the notification center.
-fln.WindowsHeader? parseWindowsHeader(String? title) {
-  if (title == null || title.isEmpty) return null;
-  return fln.WindowsHeader(id: "header", title: title, arguments: "");
-}
-
-fln.WindowsNotificationAudio? parseWindowsNotificationAudio(
-  String? value, {
-  bool loop = false,
-  fln.WindowsNotificationAudio? defaultValue,
-}) {
-  if (value == null || value.isEmpty) return defaultValue;
-  if (value.toLowerCase() == "silent") {
-    return fln.WindowsNotificationAudio.silent();
-  }
-  final sound = parseEnum(fln.WindowsNotificationSound.values,
-      value == "default" ? "defaultSound" : value);
-  return sound == null
-      ? defaultValue
-      : fln.WindowsNotificationAudio.preset(sound: sound, shouldLoop: loop);
-}
-
-fln.WindowsNotificationDuration? parseWindowsNotificationDuration(String? value,
-        [fln.WindowsNotificationDuration? defaultValue]) =>
-    parseEnum(fln.WindowsNotificationDuration.values, value, defaultValue);
-
-/// Converts a `WindowsProgress`, whose value counts up to its `max`, to the
-/// plugin's progress bar, whose value is a fraction.
-fln.WindowsProgressBar parseWindowsProgress(Map value) {
-  final max = parseInt(value["max"], 100)!;
-  final current = parseInt(value["value"], 0)!;
-  return fln.WindowsProgressBar(
-    id: "progress",
-    status: value["status"] as String? ?? "",
-    title: value["title"] as String?,
-    label: value["label"] as String?,
-    value: parseBool(value["indeterminate"], false)!
-        ? null
-        : max <= 0
-            ? 0
-            : (current / max).clamp(0.0, 1.0),
-  );
-}
-
-fln.WindowsNotificationScenario? parseWindowsNotificationScenario(String? value,
-        [fln.WindowsNotificationScenario? defaultValue]) =>
-    parseEnum(fln.WindowsNotificationScenario.values, value, defaultValue);
-
 fln.GroupAlertBehavior? parseGroupAlertBehavior(String? value,
         [fln.GroupAlertBehavior? defaultValue]) =>
     parseEnum(fln.GroupAlertBehavior.values, value, defaultValue);
@@ -183,14 +105,6 @@ Int64List? parseNotificationVibrationPattern(Object? value) {
 fln.AndroidScheduleMode? parseAndroidScheduleMode(String? value,
         [fln.AndroidScheduleMode? defaultValue]) =>
     parseEnum(fln.AndroidScheduleMode.values, value, defaultValue);
-
-fln.DateTimeComponents? parseDateTimeComponents(String? value,
-        [fln.DateTimeComponents? defaultValue]) =>
-    parseEnum(fln.DateTimeComponents.values, value, defaultValue);
-
-fln.RepeatInterval? parseRepeatInterval(String? value,
-        [fln.RepeatInterval? defaultValue]) =>
-    parseEnum(fln.RepeatInterval.values, value, defaultValue);
 
 fln.AndroidServiceStartType? parseServiceStartType(String? value,
         [fln.AndroidServiceStartType? defaultValue]) =>

@@ -4,11 +4,13 @@ import 'package:flet/flet.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart'
     as fln;
 
+import '../platforms/android.dart';
+import '../platforms/android_styles.dart';
+import '../platforms/darwin.dart';
+import '../platforms/linux.dart';
+import '../platforms/windows.dart';
 import 'actions.dart';
 import 'errors.dart';
-import 'parsers.dart';
-import 'styles.dart';
-import 'windows_launch.dart';
 
 /// Converts a wire payload into the upstream platform notification details.
 fln.NotificationDetails parseNotificationDetails({
@@ -240,32 +242,4 @@ Map<dynamic, dynamic>? _platformOptions(Map? details, String platform) {
   if (options is! Map) return null;
   final platformOptions = options[platform];
   return platformOptions is Map ? platformOptions : null;
-}
-
-fln.DarwinNotificationDetails parseDarwinDetails({
-  required List<ParsedAction> actions,
-  Map<dynamic, dynamic>? options,
-}) {
-  final o = options ?? const {};
-  return fln.DarwinNotificationDetails(
-    categoryIdentifier: actions.isEmpty
-        ? null
-        : darwinCategoryIdentifier(darwinActionSpecs(actions)),
-    presentAlert: parseBool(o["present_alert"]),
-    presentBadge: parseBool(o["present_badge"]),
-    presentSound: parseBool(o["present_sound"]),
-    presentBanner: parseBool(o["present_banner"]),
-    presentList: parseBool(o["present_list"]),
-    sound: o["sound"] as String?,
-    badgeNumber: parseInt(o["badge_number"]),
-    subtitle: o["subtitle"] as String?,
-    threadIdentifier: o["thread_identifier"] as String?,
-    interruptionLevel:
-        parseInterruptionLevel(o["interruption_level"] as String?),
-    criticalSoundVolume: parseDouble(o["critical_sound_volume"]),
-    attachments: (o["attachments"] as List?)
-            ?.map((e) => fln.DarwinNotificationAttachment("$e"))
-            .toList() ??
-        const [],
-  );
 }

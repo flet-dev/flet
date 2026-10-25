@@ -4,13 +4,15 @@ import 'dart:typed_data';
 import 'dart:ui' show Color;
 
 import 'package:flet/flet.dart';
-import 'package:flet_notifications/src/responses/responses.dart';
 import 'package:flet_notifications/src/notifications_service.dart';
+import 'package:flet_notifications/src/platforms/android.dart';
+import 'package:flet_notifications/src/platforms/darwin.dart';
+import 'package:flet_notifications/src/platforms/windows.dart';
+import 'package:flet_notifications/src/responses/responses.dart';
 import 'package:flet_notifications/src/utils/actions.dart';
-import 'package:flet_notifications/src/utils/errors.dart';
-import 'package:flet_notifications/src/utils/parsers.dart';
 import 'package:flet_notifications/src/utils/details.dart'
     as notification_details;
+import 'package:flet_notifications/src/utils/errors.dart';
 import 'package:flutter/foundation.dart'
     show debugDefaultTargetPlatformOverride, TargetPlatform;
 import 'package:flutter_local_notifications/flutter_local_notifications.dart'
