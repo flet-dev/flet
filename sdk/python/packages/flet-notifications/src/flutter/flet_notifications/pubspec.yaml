@@ -12,6 +12,7 @@ dependencies:
     sdk: flutter
 
   crypto: ^3.0.6
+  ffi: ^2.1.0
   flutter_local_notifications: ^22.3.1
   flutter_timezone: ^5.1.1
   package_info_plus: ^9.0.0

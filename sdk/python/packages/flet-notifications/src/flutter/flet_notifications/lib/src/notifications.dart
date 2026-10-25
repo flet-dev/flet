@@ -227,6 +227,7 @@ class NotificationsService extends FletService {
       _plugin ??= fln.FlutterLocalNotificationsPlugin();
       if (isWindowsDesktop()) {
         _windowsIdentity ??= await defaultWindowsIdentity();
+        _registerWindowsLauncher();
       }
       if (isApplePlatform()) await _loadDarwinCategories();
       if (_disposed) return;
@@ -274,14 +275,40 @@ class NotificationsService extends FletService {
             _windowsIdentity?.appUserModelId ??
             "Flet.App",
         iconPath: _windowsIdentity?.iconPath,
-        guid: control.getString("windows_guid") ??
-            (customAppUserModelId != null
-                ? windowsGuid(customAppUserModelId)
-                : _windowsIdentity?.guid) ??
-            windowsGuid("Flet.App"),
+        guid: control.getString("windows_guid") ?? _derivedWindowsGuid(),
       ),
       web: const fln.WebInitializationSettings(),
     );
+  }
+
+  /// The Windows activation GUID derived from the app's AppUserModelID, the
+  /// one Python sets or the default one.
+  String _derivedWindowsGuid() {
+    final customAppUserModelId = control.getString("windows_app_user_model_id");
+    return (customAppUserModelId != null
+            ? windowsGuid(customAppUserModelId)
+            : _windowsIdentity?.guid) ??
+        windowsGuid("Flet.App");
+  }
+
+  /// Lets Windows start a `flet build` app to deliver a notification selection
+  /// made after the app exited.
+  ///
+  /// Skipped when Python sets `windows_guid`: an app with its own activation
+  /// GUID registers that class itself, typically from its installer.
+  void _registerWindowsLauncher() {
+    if (control.getString("windows_guid") != null) return;
+    final executable = windowsLauncherPath();
+    if (executable == null) return;
+    try {
+      if (!registerWindowsLauncher(_derivedWindowsGuid(), executable)) {
+        debugPrint("flet_notifications: registering the Windows launcher "
+            "failed");
+      }
+    } catch (e) {
+      debugPrint(
+          "flet_notifications: registering the Windows launcher failed: $e");
+    }
   }
 
   /// Emits the responses queued while no service ran, oldest first.

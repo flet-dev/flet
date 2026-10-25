@@ -170,7 +170,9 @@ class Notifications(ft.Service):
     GUID of the component Windows activates when the user selects a notification.
 
     `None` derives one from :attr:`windows_app_user_model_id`, so it differs between
-    apps.
+    apps, and registers the app built with `flet build` as the one Windows starts to
+    deliver a selection made after the app exited. With a custom GUID, the app's
+    installer registers that component instead.
     """
 
     on_tap: ft.EventHandler[NotificationEvent["Notifications"]] | None = None
@@ -186,7 +188,9 @@ class Notifications(ft.Service):
           called once per launch; use it, for example, to route the app to the
           notification's content.
         - On Linux, a selection reaches the app only while it is running; selecting a
-          notification after the app has closed doesn't launch it.
+          notification after the app has closed doesn't launch it. On Windows, the
+          same applies to an app run with `flet run` or packaged with `flet pack`; an
+          app built with `flet build` is launched.
     """
 
     on_action: ft.EventHandler[NotificationActionEvent["Notifications"]] | None = None
@@ -210,7 +214,9 @@ class Notifications(ft.Service):
         - Background Android/iOS actions are queued and replayed on the next service
           initialization; Python is not run in the background isolate.
         - On Linux, an action reaches the app only while it is running; selecting one
-          after the app has closed doesn't launch it.
+          after the app has closed doesn't launch it. On Windows, the same applies to
+          an app run with `flet run` or packaged with `flet pack`; an app built with
+          `flet build` is launched.
     """
 
     def _require_platform(
