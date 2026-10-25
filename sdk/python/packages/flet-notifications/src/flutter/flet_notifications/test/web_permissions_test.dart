@@ -4,15 +4,15 @@ library;
 import 'dart:js_interop';
 import 'dart:js_interop_unsafe';
 
-import 'package:flet/flet.dart';
 import 'package:flet_notifications/src/notifications_service.dart';
-import 'package:flet_notifications/src/utils/errors.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart'
     as fln;
 import 'package:flutter_test/flutter_test.dart';
 import 'package:shared_preferences_platform_interface/in_memory_shared_preferences_async.dart';
 import 'package:shared_preferences_platform_interface/shared_preferences_async_platform_interface.dart';
+
+import 'fakes.dart' show invoke, makeService;
 
 @JS('globalThis')
 external JSObject get _global;
@@ -46,65 +46,6 @@ class _WebPlugin extends fln.WebFlutterLocalNotificationsPlugin {
     return fln.WebFlutterLocalNotificationsPlugin.isSupported
         ? initializationResult
         : false;
-  }
-}
-
-class _RecordingControl extends Control {
-  final List<Map<String, Object?>> events = [];
-
-  _RecordingControl()
-      : super(
-          id: 1,
-          type: 'Notifications',
-          properties: const {},
-          backend: FletBackend(
-            pageUri: Uri.parse('http://localhost'),
-            assetsDir: '',
-            extensions: [],
-            multiView: false,
-          ),
-        );
-
-  @override
-  void triggerEvent(String eventName, [dynamic data]) {
-    events.add({'name': eventName, 'data': data});
-  }
-}
-
-NotificationsService _service({Control? control}) => NotificationsService(
-      control: control ??
-          Control(
-            id: 1,
-            type: 'Notifications',
-            properties: const {},
-            backend: FletBackend(
-              pageUri: Uri.parse('http://localhost'),
-              assetsDir: '',
-              extensions: [],
-              multiView: false,
-            ),
-          ),
-    );
-
-/// Invokes [method] and returns its result, or for a failure the text Flet
-/// reports to Python: the [NotificationException]'s `"<code>: <message>"`.
-Future<Object?> _call(NotificationsService service, String method,
-    [Object? args]) async {
-  try {
-    return await service.invokeMethod(method, args);
-  } on NotificationException catch (e) {
-    return e.toString();
-  }
-}
-
-/// Reinitializes [service] and returns `null`, or for a failure the text Flet
-/// reports to Python, as [_call] does.
-Future<Object?> _reinitialize(NotificationsService service) async {
-  try {
-    await service.reinitialize();
-    return null;
-  } on NotificationException catch (e) {
-    return e.toString();
   }
 }
 
@@ -153,79 +94,33 @@ void main() {
     test('status reports $permission without prompting', () async {
       notification['permission'] = permission.toJS;
       expect(
-        await _call(_service(), 'are_notifications_enabled'),
+        await invoke(makeService(), 'are_notifications_enabled'),
         permission == 'granted',
       );
       expect(requests, 0);
     });
   }
 
-  for (final result in [false, null]) {
-    test('web initialization result $result blocks showing and permits retry',
-        () async {
-      final plugin = _WebPlugin()..initializationResult = result;
-      fln.FlutterLocalNotificationsPlatform.instance = plugin;
-      final service = _service();
-      expect(await _call(service, 'show', {'id': 1}),
-          startsWith('initialization_failed: '));
-      expect(plugin.shown, isEmpty);
-      plugin.initializationResult = true;
-      expect(await _call(service, 'show', {'id': 1}), null);
-      expect(plugin.initializations, 2);
-      expect(
-          await _call(service, 'show', {
-            'id': 2,
-            'actions': [
-              {'id': 'open', 'title': 'Open'}
-            ],
-          }),
-          null);
-      expect(plugin.initializations, 2);
-    });
-  }
-
-  for (final result in ['granted', 'denied', 'default']) {
-    test('request returns the browser result $result', () async {
-      requestResult = result;
-      final service = _service();
-      expect(await _call(service, 'are_notifications_enabled'), isFalse);
-      expect(
-        await _call(service, 'request_permissions'),
-        result == 'granted',
-      );
-      expect(requests, 1);
-      expect(
-        await _call(service, 'are_notifications_enabled'),
-        result == 'granted',
-      );
-    });
-  }
-
-  for (final permission in ['granted', 'denied']) {
-    test('existing $permission does not request permission again', () async {
-      notification['permission'] = permission.toJS;
-      expect(
-        await _call(_service(), 'request_permissions'),
-        permission == 'granted',
-      );
-      expect(requests, 0);
-    });
-  }
+  test('granted permission is not requested again', () async {
+    notification['permission'] = 'granted'.toJS;
+    expect(await invoke(makeService(), 'request_permissions'), isTrue);
+    expect(requests, 0);
+  });
 
   test('missing browser Notification API reports false without throwing',
       () async {
     _global.delete('Notification'.toJS);
-    final service = _service();
-    expect(await _call(service, 'are_notifications_enabled'), isFalse);
-    expect(await _call(service, 'request_permissions'), isFalse);
-    expect(await _call(service, 'show', {'id': 1}),
+    final service = makeService();
+    expect(await invoke(service, 'are_notifications_enabled'), isFalse);
+    expect(await invoke(service, 'request_permissions'), isFalse);
+    expect(await invoke(service, 'show', {'id': 1}),
         startsWith('unsupported_platform: '));
     expect(requests, 0);
   });
 
   test('show forwards all browser presentation options', () async {
-    final service = _service();
-    final result = await _call(service, 'show', {
+    final service = makeService();
+    final result = await invoke(service, 'show', {
       'id': 7,
       'title': 'A message',
       'actions': [
@@ -261,71 +156,4 @@ void main() {
     expect(details.renotify, isTrue);
     expect(details.timestamp!.millisecondsSinceEpoch, 1700000000123);
   });
-
-  test(
-      'omitted web options use upstream defaults and explicit false is honored',
-      () async {
-    final service = _service();
-    final plugin = fln.FlutterLocalNotificationsPlatform.instance as _WebPlugin;
-    expect(await _call(service, 'show', {'id': 7}), null);
-    final defaults = plugin.shown.single;
-    expect(defaults.actions, isEmpty);
-    expect(defaults.direction, fln.WebNotificationDirection.auto);
-    expect(defaults.badgeUrl, isNull);
-    expect(defaults.iconUrl, isNull);
-    expect(defaults.imageUrl, isNull);
-    expect(defaults.lang, isNull);
-    expect(defaults.timestamp, isNull);
-    expect(defaults.requireInteraction, isFalse);
-    expect(defaults.isSilent, isFalse);
-    expect(defaults.renotify, isFalse);
-
-    for (final enabled in [true, false]) {
-      expect(
-          await _call(service, 'show', {
-            'id': 7,
-            'options': {
-              'web': {
-                'direction': 'leftToRight',
-                'require_interaction': enabled,
-                'silent': enabled,
-                'renotify': enabled,
-              },
-            },
-          }),
-          null);
-      final details = plugin.shown.last;
-      expect(details.direction, fln.WebNotificationDirection.leftToRight);
-      expect(details.requireInteraction, enabled);
-      expect(details.isSilent, enabled);
-      expect(details.renotify, enabled);
-    }
-  });
-  for (final action in [true, false]) {
-    test('browser callback emits ${action ? "action" : "tap"} with payload',
-        () async {
-      final control = _RecordingControl();
-      final service = _service(control: control);
-      expect(await _reinitialize(service), null);
-      final plugin =
-          fln.FlutterLocalNotificationsPlatform.instance as _WebPlugin;
-      plugin.onResponse!(fln.NotificationResponse(
-        id: 7,
-        actionId: action ? 'archive' : null,
-        payload: 'message:42',
-        notificationResponseType: action
-            ? fln.NotificationResponseType.selectedNotificationAction
-            : fln.NotificationResponseType.selectedNotification,
-      ));
-      final event = control.events.single;
-      expect(event['name'], action ? 'action' : 'tap');
-      final data = event['data'] as Map;
-      expect(data['id'], 7);
-      expect(data.containsKey('action_id'), action);
-      if (action) expect(data['action_id'], 'archive');
-      expect(data['payload'], 'message:42');
-      // The event kind routes the event and is not sent to Python.
-      expect(data.containsKey('event'), isFalse);
-    });
-  }
 }

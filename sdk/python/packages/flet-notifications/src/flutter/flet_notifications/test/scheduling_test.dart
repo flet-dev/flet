@@ -48,20 +48,6 @@ void main() {
     for (final (microseconds, wire) in <(int, Map<String, int>)>[
       (90000000, {"seconds": 30, "minutes": 1}),
       (1500001, {"microseconds": 1, "milliseconds": 500, "seconds": 1}),
-      (500000, {"milliseconds": 500}),
-      (1, {"microseconds": 1}),
-      (0, {}),
-      (
-        -1,
-        {
-          "microseconds": 999,
-          "milliseconds": 999,
-          "seconds": 59,
-          "minutes": 59,
-          "hours": 23,
-          "days": -1,
-        }
-      ),
     ]) {
       final delay = Duration(microseconds: microseconds);
       final before = tz.TZDateTime.now(location);

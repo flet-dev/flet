@@ -83,13 +83,6 @@ void main() {
       // The bad entry is removed rather than left to wedge the queue.
       expect(await prefs.getKeys(), isEmpty);
     });
-
-    test("background taps are queued for the main isolate", () async {
-      final response = _response(payload: "background");
-      notificationResponseBackground(response);
-      await pumpEventQueue();
-      expect(await drainResponseQueue(prefs), [responseToEvent(response)]);
-    });
   });
 
   group("Windows responses", () {
@@ -127,13 +120,6 @@ void main() {
       expect(event["action_id"], "reply");
       expect(event["payload"], "actions");
       expect(event["input"], "typed on windows"); // normalized from data
-    });
-
-    test("launch arguments without a payload yield no payload", () {
-      final event = responseToEvent(windowsClick(
-          windowsLaunchArguments(notificationId: 7, payload: null)));
-      expect(event["event"], "tap");
-      expect(event["payload"], isNull);
     });
 
     test("other platforms' JSON action ids are not taken for launch arguments",

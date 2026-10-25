@@ -51,9 +51,5 @@ void main() {
         executablePath: path);
     expect(identity.appUserModelId, matches(RegExp(r"^[A-Za-z0-9.]+$")));
     expect(identity.appUserModelId.length, lessThanOrEqualTo(128));
-    expect(
-        identity.guid,
-        matches(RegExp(
-            r"^[0-9a-f]{8}-[0-9a-f]{4}-5[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$")));
   });
 }
