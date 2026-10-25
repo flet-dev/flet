@@ -56,6 +56,7 @@
 ### Bug fixes
 
 * Fix `flet build` apps showing a blank page when the system suspended them while Python was starting, such as when iOS launches an app in the background for a notification action ([#6999](https://github.com/flet-dev/flet/pull/6999)) by @ndonkoHenri.
+* Fix `flet build` naming a Linux app's icons `None.png` and leaving the iOS frameworks it builds from the app's packages under shared identifiers when no `bundle_id` is set ([#6999](https://github.com/flet-dev/flet/pull/6999)) by @ndonkoHenri.
 * Fix `flet build` writing numbers in `[tool.flet.macos.entitlement]`, `[tool.flet.ios.info]` and `[tool.flet.macos.info]` as strings, producing invalid plists when keys or values contain `&` or `<`, and failing when a `pyproject.toml` value contains `{{` ([#6999](https://github.com/flet-dev/flet/pull/6999)) by @ndonkoHenri.
 * Fix `FilePicker` dialogs failing with a timeout after being open for an hour ([#6999](https://github.com/flet-dev/flet/pull/6999)) by @ndonkoHenri.
 * Fix `Tester.find_by_key()` not finding `Tab` and `PopupMenuItem` controls by their keys ([#6965](https://github.com/flet-dev/flet/issues/6965), [#6976](https://github.com/flet-dev/flet/pull/6976)) by @RezaShamsipour.

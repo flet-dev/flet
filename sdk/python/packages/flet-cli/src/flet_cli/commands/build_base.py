@@ -1563,6 +1563,12 @@ class BaseBuildCommand(BaseFlutterCommand):
         # Resolved before the context, because the PWA background falls
         # through to it.
         splash = self._resolve_splash()
+        org_name = (
+            self.options.org_name
+            or self.get_pyproject(f"tool.flet.{self.config_platform}.org")
+            or self.get_pyproject("tool.flet.org")
+            or "com.flet"
+        )
 
         self.template_data = {
             "out_dir": self.flutter_dir.name,
@@ -1638,12 +1644,13 @@ class BaseBuildCommand(BaseFlutterCommand):
             # Pre-escaped Linux desktop entry values.
             "linux_desktop_exec": self.escape_linux_desktop_exec(str(artifact_name)),
             "linux_categories": linux_categories,
-            "org_name": self.options.org_name
-            or self.get_pyproject(f"tool.flet.{self.config_platform}.org")
-            or self.get_pyproject("tool.flet.org"),
+            "org_name": org_name,
+            # The template derives nothing from these: the build names files
+            # after the bundle ID too, such as the app's Linux icons.
             "bundle_id": self.options.bundle_id
             or self.get_pyproject(f"tool.flet.{self.config_platform}.bundle_id")
-            or self.get_pyproject("tool.flet.bundle_id"),
+            or self.get_pyproject("tool.flet.bundle_id")
+            or f"{org_name}.{project_name_slug}",
             "company_name": (
                 self.options.company_name or self.get_pyproject("tool.flet.company")
             ),
