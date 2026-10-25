@@ -2305,26 +2305,47 @@ class BaseBuildCommand(BaseFlutterCommand):
 
     def _site_packages_missing(self) -> bool:
         """
-        Whether the packages installed by the previous build are gone.
+        Whether any required platform package directory has no package files.
 
-        Guards the case where an unchanged stamp would skip installing the
-        packages but `site-packages` was deleted or emptied since, for example
-        by a CI cache that restores `build/.hash` without it. serious_python
-        installs into `build/site-packages` on native platforms (passed as
-        `SERIOUS_PYTHON_SITE_PACKAGES`) and into `build/site-packages` under
-        its working directory, the Flutter project, on web.
+        Check every requested mobile architecture. Empty directories and hidden
+        staging metadata such as Darwin's `.pod` symlink do not count as packages.
+        Darwin's architecture directories are merged into the root by packaging.
 
         Returns:
-            `True` when that `site-packages` directory is missing or empty.
+            `True` when any required package directory is missing or empty.
         """
 
         assert self.flutter_dir
+        assert self.build_dir
+        assert self.template_data
 
         if self.package_platform == "Emscripten":
             site_packages = self.flutter_dir / "build" / "site-packages"
         else:
             site_packages = self.build_dir / "site-packages"
-        return not site_packages.is_dir() or not any(site_packages.iterdir())
+
+        architectures = self.template_data["options"]["target_arch"]
+        if self.package_platform == "Android":
+            architectures = architectures or self.python_release.android_abis
+        elif self.package_platform == "iOS":
+            architectures = architectures or (
+                "iphoneos.arm64",
+                "iphonesimulator.arm64",
+                "iphonesimulator.x86_64",
+            )
+        else:
+            architectures = ("",)
+
+        def has_package_files(directory: Path) -> bool:
+            for _, directories, files in os.walk(directory):
+                directories[:] = [d for d in directories if not d.startswith(".")]
+                if any(not name.startswith(".") for name in files):
+                    return True
+            return False
+
+        return any(
+            not has_package_files(site_packages / arch) for arch in architectures
+        )
 
     def _icons_missing(self, platform: str) -> bool:
         """

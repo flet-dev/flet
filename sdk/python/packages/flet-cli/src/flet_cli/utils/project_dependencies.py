@@ -2,7 +2,10 @@
 
 # Based on: https://pypi.org/project/toml-to-requirements/
 
+import os
 import re
+import shlex
+from collections.abc import Iterator
 from pathlib import Path
 from typing import Any, Optional
 
@@ -134,9 +137,40 @@ def get_project_dependencies(
     return sorted(dependencies)
 
 
-_REQUIREMENTS_INCLUDE_RE = re.compile(
-    r"^\s*(?:-r|--requirement|-c|--constraint)(?:\s*=\s*|\s+|(?=\S))(\S+)"
-)
+def _requirements_includes(text: str) -> Iterator[str]:
+    """Yield include paths after pip-style line and option preprocessing."""
+    pending = ""
+    for line in [*text.splitlines(), ""]:
+        # Join before stripping comments, as pip does. Comment lines themselves
+        # never continue onto the following line.
+        if line.endswith("\\") and not line.lstrip().startswith("#"):
+            pending += line[:-1]
+            continue
+        line, pending = pending + line, ""
+        line = re.sub(r"(^|\s+)#.*$", "", line).strip()
+        if not line.startswith("-"):
+            continue
+        line = re.sub(
+            r"\$\{([A-Z0-9_]+)\}",
+            lambda match: os.environ.get(match[1]) or match[0],
+            line,
+        )
+        try:
+            options = iter(shlex.split(line))
+        except ValueError:
+            # Leave malformed options for pip to report during installation.
+            continue
+        for option in options:
+            if option in ("-r", "--requirement", "-c", "--constraint"):
+                include = next(options, "")
+            elif option.startswith(("--requirement=", "--constraint=")):
+                include = option.partition("=")[2]
+            elif option.startswith(("-r", "-c")):
+                include = option[2:]
+            else:
+                continue
+            if include:
+                yield include
 
 
 def read_requirements_file_text(path: Path) -> str:
@@ -145,7 +179,8 @@ def read_requirements_file_text(path: Path) -> str:
 
     Files included with `-r`/`--requirement` or `-c`/`--constraint` are read
     too, relative to the file that includes them, so a change to any of them
-    changes the result. URLs and files that don't exist are skipped.
+    changes the result. Includes support quoted paths, line continuations and
+    pip's `${NAME}` environment variables. URLs and missing files are skipped.
 
     Args:
         path: The path of the `requirements.txt` file.
@@ -158,17 +193,13 @@ def read_requirements_file_text(path: Path) -> str:
     visited: set[Path] = set()
 
     def read(file: Path) -> None:
-        file = file.resolve()
-        if file in visited or not file.is_file():
+        resolved = file.resolve()
+        if resolved in visited or not file.is_file():
             return
-        visited.add(file)
+        visited.add(resolved)
         text = file.read_text(encoding="utf-8", errors="replace")
         parts.append(text)
-        for line in text.splitlines():
-            match = _REQUIREMENTS_INCLUDE_RE.match(line)
-            if not match:
-                continue
-            include = match.group(1)
+        for include in _requirements_includes(text):
             if re.match(r"^[a-z][a-z0-9+.-]*://", include, re.I):
                 continue
             read(file.parent / include)
