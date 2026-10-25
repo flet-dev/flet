@@ -35,16 +35,16 @@ class RepeatInterval(Enum):
     """
 
     EVERY_MINUTE = "everyMinute"
-    """Repeat every minute, starting one minute after scheduling."""
+    """Repeats every minute, starting one minute after scheduling."""
 
     HOURLY = "hourly"
-    """Repeat every hour, starting one hour after scheduling."""
+    """Repeats every hour, starting one hour after scheduling."""
 
     DAILY = "daily"
-    """Repeat every day, starting one day after scheduling."""
+    """Repeats every day, starting one day after scheduling."""
 
     WEEKLY = "weekly"
-    """Repeat every week, starting one week after scheduling."""
+    """Repeats every week, starting one week after scheduling."""
 
 
 class DateTimeComponents(Enum):
@@ -62,16 +62,16 @@ class DateTimeComponents(Enum):
     """
 
     TIME = "time"
-    """Repeat daily at the hour, minute, and second of the scheduled time."""
+    """Repeats daily at the hour, minute, and second of the scheduled time."""
 
     DAY_OF_WEEK_AND_TIME = "dayOfWeekAndTime"
-    """Repeat weekly on the weekday and at the time of the scheduled date."""
+    """Repeats weekly on the weekday and at the time of the scheduled date."""
 
     DAY_OF_MONTH_AND_TIME = "dayOfMonthAndTime"
-    """Repeat monthly on the day of the month and at the scheduled time."""
+    """Repeats monthly on the day of the month and at the scheduled time."""
 
     DATE_AND_TIME = "dateAndTime"
-    """Repeat yearly on the month and day and at the time of the scheduled date."""
+    """Repeats yearly on the month and day and at the time of the scheduled date."""
 
 
 @ft.value(kw_only=True)

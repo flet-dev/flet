@@ -25,7 +25,7 @@ class WindowsScenario(Enum):
 
     REMINDER = "reminder"
     """
-    Request an expanded reminder that remains until manually dismissed.
+    Requests an expanded reminder that remains until manually dismissed.
 
     Upstream requires an action that activates a background task for this behavior. The
     extension currently creates dismissing actions, so this scenario alone does not
@@ -34,18 +34,18 @@ class WindowsScenario(Enum):
 
     ALARM = "alarm"
     """
-    Show an expanded alarm that remains until dismissed.
+    Shows an expanded alarm that remains until dismissed.
 
     Note:
         Windows normally loops the alarm sound unless sound options override it.
     """
 
     INCOMING_CALL = "incomingCall"
-    """Use the incoming-call layout with looping call audio by default."""
+    """Uses the incoming-call layout with looping call audio by default."""
 
     URGENT = "urgent"
     """
-    Request an urgent notification that may break through Do Not Disturb.
+    Requests an urgent notification that may break through Do Not Disturb.
 
     Note:
         Requires a Windows version and user settings that permit urgent notifications.
@@ -61,10 +61,10 @@ class WindowsNotificationDuration(Enum):
     """
 
     SHORT = "short"
-    """Request the shorter toast display duration."""
+    """Requests the shorter toast display duration."""
 
     LONG = "long"
-    """Request the longer toast display duration."""
+    """Requests the longer toast display duration."""
 
 
 class WindowsNotificationSound(Enum):
@@ -80,82 +80,82 @@ class WindowsNotificationSound(Enum):
     """
 
     DEFAULT = "default"
-    """Play the standard Windows notification sound."""
+    """Plays the standard Windows notification sound."""
 
     SILENT = "silent"
-    """Disable audio."""
+    """Disables audio."""
 
     IM = "im"
-    """Play the Windows instant-message notification sound."""
+    """Plays the Windows instant-message notification sound."""
 
     MAIL = "mail"
-    """Play the Windows email notification sound."""
+    """Plays the Windows email notification sound."""
 
     REMINDER = "reminder"
-    """Play the Windows reminder notification sound."""
+    """Plays the Windows reminder notification sound."""
 
     SMS = "sms"
-    """Play the Windows text-message notification sound."""
+    """Plays the Windows text-message notification sound."""
 
     ALARM_1 = "alarm1"
-    """Play Windows' looping alarm sound 1."""
+    """Plays Windows' looping alarm sound 1."""
 
     ALARM_2 = "alarm2"
-    """Play Windows' looping alarm sound 2."""
+    """Plays Windows' looping alarm sound 2."""
 
     ALARM_3 = "alarm3"
-    """Play Windows' looping alarm sound 3."""
+    """Plays Windows' looping alarm sound 3."""
 
     ALARM_4 = "alarm4"
-    """Play Windows' looping alarm sound 4."""
+    """Plays Windows' looping alarm sound 4."""
 
     ALARM_5 = "alarm5"
-    """Play Windows' looping alarm sound 5."""
+    """Plays Windows' looping alarm sound 5."""
 
     ALARM_6 = "alarm6"
-    """Play Windows' looping alarm sound 6."""
+    """Plays Windows' looping alarm sound 6."""
 
     ALARM_7 = "alarm7"
-    """Play Windows' looping alarm sound 7."""
+    """Plays Windows' looping alarm sound 7."""
 
     ALARM_8 = "alarm8"
-    """Play Windows' looping alarm sound 8."""
+    """Plays Windows' looping alarm sound 8."""
 
     ALARM_9 = "alarm9"
-    """Play Windows' looping alarm sound 9."""
+    """Plays Windows' looping alarm sound 9."""
 
     ALARM_10 = "alarm10"
-    """Play Windows' looping alarm sound 10."""
+    """Plays Windows' looping alarm sound 10."""
 
     CALL_1 = "call1"
-    """Play Windows' looping ringtone 1."""
+    """Plays Windows' looping ringtone 1."""
 
     CALL_2 = "call2"
-    """Play Windows' looping ringtone 2."""
+    """Plays Windows' looping ringtone 2."""
 
     CALL_3 = "call3"
-    """Play Windows' looping ringtone 3."""
+    """Plays Windows' looping ringtone 3."""
 
     CALL_4 = "call4"
-    """Play Windows' looping ringtone 4."""
+    """Plays Windows' looping ringtone 4."""
 
     CALL_5 = "call5"
-    """Play Windows' looping ringtone 5."""
+    """Plays Windows' looping ringtone 5."""
 
     CALL_6 = "call6"
-    """Play Windows' looping ringtone 6."""
+    """Plays Windows' looping ringtone 6."""
 
     CALL_7 = "call7"
-    """Play Windows' looping ringtone 7."""
+    """Plays Windows' looping ringtone 7."""
 
     CALL_8 = "call8"
-    """Play Windows' looping ringtone 8."""
+    """Plays Windows' looping ringtone 8."""
 
     CALL_9 = "call9"
-    """Play Windows' looping ringtone 9."""
+    """Plays Windows' looping ringtone 9."""
 
     CALL_10 = "call10"
-    """Play Windows' looping ringtone 10."""
+    """Plays Windows' looping ringtone 10."""
 
 
 @ft.value(kw_only=True)

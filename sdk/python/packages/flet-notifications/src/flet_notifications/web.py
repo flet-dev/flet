@@ -19,13 +19,13 @@ class WebNotificationDirection(Enum):
     """
 
     AUTO = "auto"
-    """Use the browser's language-setting behavior to choose the text direction."""
+    """Uses the browser's language-setting behavior to choose the text direction."""
 
     LEFT_TO_RIGHT = "leftToRight"
-    """Request left-to-right text layout."""
+    """Requests left-to-right text layout."""
 
     RIGHT_TO_LEFT = "rightToLeft"
-    """Request right-to-left text layout."""
+    """Requests right-to-left text layout."""
 
 
 @ft.value(kw_only=True)

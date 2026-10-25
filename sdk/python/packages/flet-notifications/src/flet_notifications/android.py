@@ -108,25 +108,25 @@ class AndroidNotificationFlag(IntFlag):
     """
 
     NONE = 0
-    """Add no flags; flags set by other notification options remain in effect."""
+    """Adds no flags; flags set by other notification options remain in effect."""
 
     ONGOING_EVENT = 2
     """
-    Mark the notification as representing work currently in progress, such as a call.
+    Marks the notification as representing work currently in progress, such as a call.
 
     Prefer :attr:`flet_notifications.AndroidOptions.ongoing` for this behavior.
     """
 
     INSISTENT = 4
     """
-    Request repeating audio until cancellation or the notification window is opened.
+    Requests repeating audio until cancellation or the notification window is opened.
 
     Sound must be enabled and permitted by the notification's channel and user settings.
     """
 
     ONLY_ALERT_ONCE = 8
     """
-    Alert only when the notification is first posted, rather than on later updates.
+    Alerts only when the notification is first posted, rather than on later updates.
 
     Also stops ongoing sound, vibration, or notification-LED alerting. Prefer
     :attr:`flet_notifications.AndroidOptions.only_alert_once` for this behavior.
@@ -134,14 +134,14 @@ class AndroidNotificationFlag(IntFlag):
 
     AUTO_CANCEL = 16
     """
-    Cancel the notification when the user taps it.
+    Cancels the notification when the user taps it.
 
     Prefer :attr:`flet_notifications.AndroidOptions.auto_cancel` for this behavior.
     """
 
     NO_CLEAR = 32
     """
-    Request that the notification remain when the user presses Clear all.
+    Requests that the notification remain when the user presses Clear all.
 
     This does not prevent the app from cancelling the notification or guarantee that
     the notification cannot be dismissed individually.
@@ -149,14 +149,14 @@ class AndroidNotificationFlag(IntFlag):
 
     LOCAL_ONLY = 256
     """
-    Mark the notification as relevant only to the current device.
+    Marks the notification as relevant only to the current device.
 
     Recommends that the notification not be bridged to other devices.
     """
 
     GROUP_SUMMARY = 512
     """
-    Mark the notification as the summary of a group.
+    Marks the notification as the summary of a group.
 
     Requires :attr:`flet_notifications.AndroidOptions.group`. Prefer setting
     :attr:`flet_notifications.AndroidGroup.summary` for this behavior.
@@ -199,7 +199,7 @@ class AndroidScheduleMode(Enum):
 
     ALARM_CLOCK = "alarmClock"
     """
-    Schedule an exact alarm-clock notification that can run during idle mode.
+    Schedules an exact alarm-clock notification that can run during idle mode.
 
     Uses Android's alarm-clock mechanism and can appear in its next-alarm UI. Requires
     exact-alarm access.
@@ -207,28 +207,28 @@ class AndroidScheduleMode(Enum):
 
     EXACT = "exact"
     """
-    Schedule for the requested time, with deferral possible during idle mode.
+    Schedules for the requested time, with deferral possible during idle mode.
 
     Requires exact-alarm access.
     """
 
     EXACT_ALLOW_WHILE_IDLE = "exactAllowWhileIdle"
     """
-    Schedule an exact alarm that can execute during low-power idle mode.
+    Schedules an exact alarm that can execute during low-power idle mode.
 
     Requires exact-alarm access.
     """
 
     INEXACT = "inexact"
     """
-    Schedule approximately at the requested time, allowing idle-mode deferral.
+    Schedules approximately at the requested time, allowing idle-mode deferral.
 
     Does not require exact-alarm access.
     """
 
     INEXACT_ALLOW_WHILE_IDLE = "inexactAllowWhileIdle"
     """
-    Schedule approximately at the requested time, including during idle mode.
+    Schedules approximately at the requested time, including during idle mode.
 
     Does not require exact-alarm access; Android may batch or delay delivery. This is
     the default of :meth:`flet_notifications.Notifications.schedule` and
@@ -255,23 +255,23 @@ class AndroidImportance(Enum):
     """
 
     MIN = "min"
-    """Show notifications quietly, with minimal prominence and no status-bar icon."""
+    """Shows notifications quietly, with minimal prominence and no status-bar icon."""
 
     NONE = "none"
-    """Disable notifications from the channel."""
+    """Disables notifications from the channel."""
 
     LOW = "low"
-    """Show notifications without sound."""
+    """Shows notifications without sound."""
 
     DEFAULT = "default"
-    """Use normal prominence, including sound when enabled for the channel."""
+    """Uses normal prominence, including sound when enabled for the channel."""
 
     HIGH = "high"
-    """Use high prominence, including sound and a heads-up display when allowed."""
+    """Uses high prominence, including sound and a heads-up display when allowed."""
 
     MAX = "max"
     """
-    Map to Android's maximum-importance constant.
+    Maps to Android's maximum-importance constant.
 
     Android documents this level as unused; use :attr:`HIGH` for urgent channels.
     """
@@ -286,13 +286,13 @@ class AndroidGroupAlertBehavior(Enum):
     """
 
     ALL = "all"
-    """Allow both the group summary and child notifications to alert."""
+    """Allows both the group summary and child notifications to alert."""
 
     SUMMARY = "summary"
-    """Allow only the group summary to alert; silence its children."""
+    """Allows only the group summary to alert; silences its children."""
 
     CHILDREN = "children"
-    """Allow only child notifications to alert; silence the group summary."""
+    """Allows only child notifications to alert; silences the group summary."""
 
 
 class AndroidNotificationCategory(Enum):
@@ -376,7 +376,7 @@ class AndroidServiceStartType(Enum):
 
     START_STICKY_COMPATIBILITY = "startStickyCompatibility"
     """
-    Use the compatibility form of Android's sticky-service policy.
+    Uses the compatibility form of Android's sticky-service policy.
 
     Unlike :attr:`START_STICKY`, it does not guarantee a restart callback after
     the service process is killed.
@@ -384,7 +384,7 @@ class AndroidServiceStartType(Enum):
 
     START_STICKY = "startSticky"
     """
-    Ask Android to recreate the service after its process is killed.
+    Asks Android to recreate the service after its process is killed.
 
     The previous start intent is not retained; a recreated service may receive
     a null intent. This policy does not guarantee uninterrupted execution.
@@ -392,14 +392,14 @@ class AndroidServiceStartType(Enum):
 
     START_NOT_STICKY = "startNotSticky"
     """
-    Do not recreate a killed service unless there are pending start requests.
+    Doesn't recreate a killed service unless there are pending start requests.
 
     The app must explicitly start new work when appropriate.
     """
 
     START_REDELIVER_INTENT = "startRedeliverIntent"
     """
-    Ask Android to recreate a killed service and redeliver its last start intent.
+    Asks Android to recreate a killed service and redeliver its last start intent.
 
     Application work must tolerate being restarted or delivered again.
     """
@@ -830,19 +830,19 @@ class AndroidPriority(Enum):
     """
 
     MIN = "min"
-    """Use the lowest priority for information that does not need attention."""
+    """Uses the lowest priority for information that does not need attention."""
 
     LOW = "low"
-    """Use low priority for non-urgent background information."""
+    """Uses low priority for non-urgent background information."""
 
     DEFAULT = "default"
-    """Use normal priority for ordinary notifications."""
+    """Uses normal priority for ordinary notifications."""
 
     HIGH = "high"
-    """Use high priority for time-sensitive information."""
+    """Uses high priority for time-sensitive information."""
 
     MAX = "max"
-    """Use the highest priority for critical, immediate information."""
+    """Uses the highest priority for critical, immediate information."""
 
 
 class AndroidVisibility(Enum):
@@ -853,15 +853,15 @@ class AndroidVisibility(Enum):
     """
 
     PUBLIC = "public"
-    """Allow the entire notification to appear on any lock screen."""
+    """Allows the entire notification to appear on any lock screen."""
 
     PRIVATE = "private"
     """
-    Show the notification while concealing sensitive content on secure lockscreens.
+    Shows the notification while concealing sensitive content on secure lockscreens.
     """
 
     SECRET = "secret"
-    """Hide the notification entirely on a secure lock screen."""
+    """Hides the notification entirely on a secure lock screen."""
 
 
 @ft.value(kw_only=True)

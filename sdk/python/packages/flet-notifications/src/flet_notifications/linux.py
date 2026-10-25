@@ -20,14 +20,14 @@ class LinuxUrgency(Enum):
     """
 
     LOW = "low"
-    """Use low urgency for information that does not require immediate attention."""
+    """Uses low urgency for information that does not require immediate attention."""
 
     NORMAL = "normal"
-    """Use normal urgency for an ordinary notification."""
+    """Uses normal urgency for an ordinary notification."""
 
     CRITICAL = "critical"
     """
-    Use critical urgency for information requiring immediate attention.
+    Uses critical urgency for information requiring immediate attention.
 
     A conforming server should keep critical notifications visible until dismissed, but
     desktop-specific behavior can vary.

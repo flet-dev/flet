@@ -21,7 +21,7 @@ class DarwinInterruptionLevel(Enum):
 
     PASSIVE = "passive"
     """
-    Add the notification quietly to the notification list.
+    Adds the notification quietly to the notification list.
 
     Does not light the screen or play a sound. Appropriate for information the user can
     read later, such as a recommendation or routine status update.
@@ -29,7 +29,7 @@ class DarwinInterruptionLevel(Enum):
 
     ACTIVE = "active"
     """
-    Present the notification immediately, lighting the screen and allowing sound.
+    Presents the notification immediately, lighting the screen and allowing sound.
 
     Uses ordinary notification behavior and respects Focus and notification summary
     settings. Appropriate for updates that merit attention without requiring an
@@ -38,7 +38,7 @@ class DarwinInterruptionLevel(Enum):
 
     TIME_SENSITIVE = "timeSensitive"
     """
-    Present time-sensitive information immediately, subject to user settings.
+    Presents time-sensitive information immediately, subject to user settings.
 
     Can bypass notification summaries and Focus when the user allows time-sensitive
     notifications. Add the Time Sensitive Notifications capability to the iOS app. Use
@@ -48,7 +48,7 @@ class DarwinInterruptionLevel(Enum):
 
     CRITICAL = "critical"
     """
-    Present a critical alert that can sound through mute and Do Not Disturb.
+    Presents a critical alert that can sound through mute and Do Not Disturb.
 
     Reserve for urgent health or safety alerts. Requires:
 
