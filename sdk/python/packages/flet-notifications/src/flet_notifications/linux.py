@@ -175,9 +175,13 @@ class LinuxOptions:
 
     action_key_as_icon_name: bool | None = None
     """
-    Whether to interpret action identifiers as desktop icon names.
+    Whether to show action buttons as icons.
+
+    The notification server reads each
+    :attr:`flet_notifications.NotificationAction.id` as an icon name from the desktop's
+    icon theme, such as `"mail-reply-sender"`, and uses the action's title as the icon's
+    accessible label.
 
     Note:
-        Custom notification action buttons are not supported on Linux, so this setting
-        has no effect.
+        Requires support from the desktop notification server.
     """

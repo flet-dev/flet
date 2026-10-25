@@ -84,7 +84,7 @@ class NotificationActionInput:
     Note:
         Android supports reply choices, free-form text, and MIME-type hints. iOS/macOS
         use a text-input action; Windows uses a separate text box associated with the
-        action ID. Custom action inputs are not supported on Linux or Web.
+        action ID. Linux and Web show the action as a regular button without an input.
     """
 
     label: str | None = None
@@ -133,7 +133,7 @@ class NotificationActionInput:
 @ft.value(kw_only=True)
 class NotificationAction:
     """
-    Button attached to a notification on Android, iOS, macOS, Windows, or Web.
+    Button attached to a notification.
 
     Selections are reported through
     :attr:`flet_notifications.Notifications.on_action`, with :attr:`id` in
@@ -161,9 +161,9 @@ class NotificationAction:
     Nonempty button label displayed by the operating system.
 
     Note:
-        Linux does not support custom action buttons through this extension. On Web,
-        browser and operating-system support determine whether buttons appear and how
-        many can be shown. See browser [notification action support](https://developer.mozilla.org/en-US/docs/Web/API/Notification/actions#browser_compatibility).
+        On Linux, the desktop's notification server decides whether buttons appear. On
+        Web, browser and operating-system support determine whether buttons appear and
+        how many can be shown. See browser [notification action support](https://developer.mozilla.org/en-US/docs/Web/API/Notification/actions#browser_compatibility).
         Keep essential actions available in the app as well.
     """
 
@@ -186,7 +186,8 @@ class NotificationAction:
         queue the event for replay when the service next initializes. Python handlers
         do not execute inside the background isolate.
 
-        Windows actions use dismiss activation regardless of this flag. Web ignores this
+        Windows actions use dismiss activation regardless of this flag. Linux ignores
+        this flag and reports the action only while the app is running. Web ignores this
         flag; the upstream service worker delivers the click to an open app window or
         opens the app if none is available.
     """
@@ -214,8 +215,8 @@ class NotificationAction:
     Reply input associated with this action.
 
     Note:
-        Supported only on Android, iOS, macOS, and Windows. On Web, the action remains a
-        regular button without a reply input.
+        Supported only on Android, iOS, macOS, and Windows. On Linux and Web, the action
+        remains a regular button without a reply input.
     """
 
 

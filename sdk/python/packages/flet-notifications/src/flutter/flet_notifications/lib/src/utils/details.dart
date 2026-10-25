@@ -29,7 +29,10 @@ fln.NotificationDetails parseNotificationDetails({
         actions: actions,
         options: _platformOptions(details, "macos"),
       ),
-      linux: parseLinuxDetails(_platformOptions(details, "linux")),
+      linux: parseLinuxDetails(
+        actions: actions,
+        options: _platformOptions(details, "linux"),
+      ),
       windows: parseWindowsDetails(
         actions: actions,
         options: _platformOptions(details, "windows"),

@@ -2,6 +2,8 @@ import 'package:flet/flet.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart'
     as fln;
 
+import '../utils/actions.dart';
+
 fln.LinuxNotificationIcon? parseLinuxNotificationIcon(String? name) {
   if (name == null || name.isEmpty) return null;
   if (name.startsWith("/") || name.startsWith("file://")) {
@@ -28,7 +30,10 @@ fln.LinuxNotificationUrgency? parseLinuxNotificationUrgency(String? value,
     parseEnum(fln.LinuxNotificationUrgency.values, value, defaultValue);
 
 /// Builds the Linux details of a notification from a `LinuxOptions` payload.
-fln.LinuxNotificationDetails parseLinuxDetails(Map<dynamic, dynamic>? options) {
+fln.LinuxNotificationDetails parseLinuxDetails({
+  required List<ParsedAction> actions,
+  Map<dynamic, dynamic>? options,
+}) {
   final linuxOptions = options ?? const {};
   final linuxTimeout = parseDuration(linuxOptions["timeout"]);
   return fln.LinuxNotificationDetails(
@@ -45,6 +50,9 @@ fln.LinuxNotificationDetails parseLinuxDetails(Map<dynamic, dynamic>? options) {
     resident: parseBool(linuxOptions["resident"], false)!,
     transient: parseBool(linuxOptions["transient"], false)!,
     suppressSound: parseBool(linuxOptions["silent"], false)!,
+    actions: actions
+        .map((a) => fln.LinuxNotificationAction(key: a.id, label: a.title))
+        .toList(),
     actionKeyAsIconName:
         parseBool(linuxOptions["action_key_as_icon_name"], false)!,
   );
