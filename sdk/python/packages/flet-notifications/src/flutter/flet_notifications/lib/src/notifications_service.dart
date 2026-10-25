@@ -13,13 +13,13 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:timezone/data/latest_all.dart' as tz;
 import 'package:timezone/timezone.dart' as tz;
 
-import 'background_handler.dart';
+import 'responses/response_queue_signal.dart';
+import 'responses/responses.dart';
 import 'utils/actions.dart';
 import 'utils/details.dart';
 import 'utils/errors.dart';
 import 'utils/parsers.dart';
 import 'utils/scheduling.dart';
-import 'utils/response_queue_signal.dart';
 import 'utils/windows_identity.dart';
 import 'utils/windows_launch.dart';
 
@@ -175,7 +175,8 @@ class NotificationsService extends FletService {
           ],
         ),
         onDidReceiveNotificationResponse: _forwardResponse,
-        onDidReceiveBackgroundNotificationResponse: notificationTapBackground,
+        onDidReceiveBackgroundNotificationResponse:
+            notificationResponseBackground,
       );
       // Apple returns the permission-request result, even when no prompt is
       // requested. A false result still means the backend was configured.

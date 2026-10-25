@@ -1,6 +1,6 @@
 import 'dart:convert';
 
-import 'package:flet_notifications/src/background_handler.dart';
+import 'package:flet_notifications/src/responses/responses.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flet_notifications/src/utils/windows_launch.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart'
@@ -86,7 +86,7 @@ void main() {
 
     test("background taps are queued for the main isolate", () async {
       final response = _response(payload: "background");
-      notificationTapBackground(response);
+      notificationResponseBackground(response);
       await pumpEventQueue();
       expect(await drainResponseQueue(prefs), [responseToEvent(response)]);
     });

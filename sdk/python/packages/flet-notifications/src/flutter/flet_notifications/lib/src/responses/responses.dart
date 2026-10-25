@@ -21,8 +21,8 @@ import 'package:flet/flet.dart' show isWindowsDesktop;
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-import 'utils/response_queue_signal.dart';
-import 'utils/windows_launch.dart';
+import 'response_queue_signal.dart';
+import '../utils/windows_launch.dart';
 
 const String _queuePrefix = "flet_notifications_queue_";
 
@@ -73,7 +73,8 @@ Map<String, Object?> responseToEvent(NotificationResponse response) {
 /// shaker keeps it. Background isolates do not register Dart plugin
 /// implementations by themselves, and [SharedPreferencesAsync] needs them.
 @pragma('vm:entry-point')
-Future<void> notificationTapBackground(NotificationResponse response) async {
+Future<void> notificationResponseBackground(
+    NotificationResponse response) async {
   DartPluginRegistrant.ensureInitialized();
   await queueResponse(response);
 }

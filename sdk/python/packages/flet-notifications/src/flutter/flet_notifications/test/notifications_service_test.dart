@@ -4,7 +4,7 @@ import 'dart:typed_data';
 import 'dart:ui' show Color;
 
 import 'package:flet/flet.dart';
-import 'package:flet_notifications/src/background_handler.dart';
+import 'package:flet_notifications/src/responses/responses.dart';
 import 'package:flet_notifications/src/notifications_service.dart';
 import 'package:flet_notifications/src/utils/actions.dart';
 import 'package:flet_notifications/src/utils/errors.dart';
@@ -965,8 +965,8 @@ void main() {
         );
     // Responses arriving during a replay are delivered by a further pass.
     await Future.wait([
-      notificationTapBackground(archive(1)),
-      notificationTapBackground(archive(2)),
+      notificationResponseBackground(archive(1)),
+      notificationResponseBackground(archive(2)),
     ]);
     await pumpEventQueue();
     expect(control.events.map((e) => e["name"]), ["action", "action"]);
@@ -975,7 +975,7 @@ void main() {
 
     // A disposed service leaves responses queued for the next one.
     service.dispose();
-    await notificationTapBackground(archive(3));
+    await notificationResponseBackground(archive(3));
     await pumpEventQueue();
     expect(control.events, hasLength(2));
     expect(await SharedPreferencesAsync().getKeys(), hasLength(1));
