@@ -5,7 +5,7 @@ import flet as ft
 from flet_notifications.validation import non_negative_duration
 
 __all__ = [
-    "LinuxNotificationCategory",
+    "LinuxCategory",
     "LinuxOptions",
     "LinuxUrgency",
 ]
@@ -34,7 +34,7 @@ class LinuxUrgency(Enum):
     """
 
 
-class LinuxNotificationCategory(Enum):
+class LinuxCategory(Enum):
     """
     Freedesktop category hint used by a Linux notification server.
 
@@ -125,12 +125,12 @@ class LinuxOptions:
     sound: str | None = None
     """Name of a sound from the desktop sound theme, such as `"message"`."""
 
-    category: LinuxNotificationCategory | None = None
+    category: LinuxCategory | None = None
     """
     Category hint used by the server to classify the notification.
 
     Note:
-        See :class:`~flet_notifications.LinuxNotificationCategory`. The notification
+        See :class:`~flet_notifications.LinuxCategory`. The notification
         server determines the presentation and may ignore this hint.
     """
 

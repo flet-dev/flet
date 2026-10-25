@@ -6,11 +6,11 @@ import flet as ft
 from flet.utils.validation import V
 
 __all__ = [
-    "WindowsNotificationDuration",
-    "WindowsNotificationSound",
+    "WindowsDuration",
     "WindowsOptions",
     "WindowsProgress",
     "WindowsScenario",
+    "WindowsSound",
 ]
 
 
@@ -52,7 +52,7 @@ class WindowsScenario(Enum):
     """
 
 
-class WindowsNotificationDuration(Enum):
+class WindowsDuration(Enum):
     """
     How long Windows should display a toast notification.
 
@@ -67,7 +67,7 @@ class WindowsNotificationDuration(Enum):
     """Requests the longer toast display duration."""
 
 
-class WindowsNotificationSound(Enum):
+class WindowsSound(Enum):
     """
     Sound choices for Windows notifications.
 
@@ -212,7 +212,7 @@ class WindowsOptions:
     arguments.
     """
 
-    sound: WindowsNotificationSound | None = None
+    sound: WindowsSound | None = None
     """
     The sound to be played when the toast is displayed.
 
@@ -232,11 +232,11 @@ class WindowsOptions:
         loop.
     """
 
-    duration: WindowsNotificationDuration | None = None
+    duration: WindowsDuration | None = None
     """
     Requested toast display duration.
 
-    See :class:`~flet_notifications.WindowsNotificationDuration`. The scenario
+    See :class:`~flet_notifications.WindowsDuration`. The scenario
     and Windows settings can influence the actual duration.
     """
 

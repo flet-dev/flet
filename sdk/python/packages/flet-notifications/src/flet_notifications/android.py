@@ -9,12 +9,12 @@ from flet_notifications.validation import non_negative_duration
 
 __all__ = [
     "AndroidAudioAttributesUsage",
+    "AndroidCategory",
+    "AndroidFlag",
     "AndroidForegroundServiceType",
     "AndroidGroup",
     "AndroidGroupAlertBehavior",
     "AndroidImportance",
-    "AndroidNotificationCategory",
-    "AndroidNotificationFlag",
     "AndroidOptions",
     "AndroidPriority",
     "AndroidProgress",
@@ -79,7 +79,7 @@ class AndroidAudioAttributesUsage(Enum):
     """Call-signalling sounds, such as a dial tone or busy tone."""
 
 
-class AndroidNotificationFlag(IntFlag):
+class AndroidFlag(IntFlag):
     """
     Additional behavior bits for an Android notification.
 
@@ -96,8 +96,7 @@ class AndroidNotificationFlag(IntFlag):
         import flet_notifications as ftn
 
         options = ftn.AndroidOptions(
-            additional_flags=ftn.AndroidNotificationFlag.INSISTENT
-            | ftn.AndroidNotificationFlag.NO_CLEAR
+            additional_flags=ftn.AndroidFlag.INSISTENT | ftn.AndroidFlag.NO_CLEAR
         )
         ```
 
@@ -295,7 +294,7 @@ class AndroidGroupAlertBehavior(Enum):
     """Allows only child notifications to alert; silences the group summary."""
 
 
-class AndroidNotificationCategory(Enum):
+class AndroidCategory(Enum):
     """
     Semantic category Android uses to classify and rank a notification.
 
@@ -1257,11 +1256,11 @@ class AndroidOptions:
     `None` does not request automatic cancellation after a timeout.
     """
 
-    category: AndroidNotificationCategory | None = None
+    category: AndroidCategory | None = None
     """
     Semantic category used by Android to rank and filter notifications.
 
-    See :class:`~flet_notifications.AndroidNotificationCategory` for the supported
+    See :class:`~flet_notifications.AndroidCategory` for the supported
     categories. This does not change the notification channel's importance.
     """
 
@@ -1286,25 +1285,25 @@ class AndroidOptions:
         conversation section. This extension does not create the shortcut.
     """
 
-    additional_flags: AndroidNotificationFlag | int | None = None
+    additional_flags: AndroidFlag | int | None = None
     """
     Additional native Android notification flags, combined using `|`.
 
-    For example, combine :attr:`flet_notifications.AndroidNotificationFlag.INSISTENT`
-    and :attr:`flet_notifications.AndroidNotificationFlag.NO_CLEAR` to request repeating
+    For example, combine :attr:`flet_notifications.AndroidFlag.INSISTENT`
+    and :attr:`flet_notifications.AndroidFlag.NO_CLEAR` to request repeating
     audio and retention when the user presses Clear all.
 
     Note:
         Android may restrict the effect of individual flags.
 
     A raw integer bitmask is also accepted for Android flags not represented by
-    :class:`flet_notifications.AndroidNotificationFlag`. Combine integer flag values
+    :class:`flet_notifications.AndroidFlag`. Combine integer flag values
     using `|` in the same way. See Android's [notification
     flags](https://developer.android.com/reference/android/app/Notification#flags) for
     their meanings and restrictions.
 
     Flags are added after the notification is built. `None` or
-    :attr:`flet_notifications.AndroidNotificationFlag.NONE` adds no flags and does not
+    :attr:`flet_notifications.AndroidFlag.NONE` adds no flags and does not
     clear flags set by other options. Prefer dedicated options such as :attr:`ongoing`
     and :attr:`auto_cancel` when available.
     """

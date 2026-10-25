@@ -13,9 +13,9 @@ import datetime
 import flet as ft
 from flet_notifications import (
     AndroidBigTextStyle,
+    AndroidCategory,
     AndroidGroup,
     AndroidInboxStyle,
-    AndroidNotificationCategory,
     AndroidOptions,
     AndroidProgress,
     AndroidVisibility,
@@ -254,7 +254,7 @@ def main(page: ft.Page):
                 options=NotificationOptions(
                     android=AndroidOptions(
                         silent=True,
-                        category=AndroidNotificationCategory.ALARM,
+                        category=AndroidCategory.ALARM,
                         visibility=AndroidVisibility.PUBLIC,
                     ),
                     ios=DarwinOptions(interruption_level="passive"),

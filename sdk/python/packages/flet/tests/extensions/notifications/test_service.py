@@ -10,7 +10,7 @@ from flet_notifications import (
     AndroidAudioAttributesUsage,
     AndroidBigPictureStyle,
     AndroidFileBitmap,
-    AndroidNotificationFlag,
+    AndroidFlag,
     AndroidOptions,
     NotificationAction,
     NotificationChannel,
@@ -22,7 +22,7 @@ from flet_notifications import (
     Notifications,
     NotificationUnsupportedPlatformException,
     RepeatInterval,
-    WebNotificationDirection,
+    WebDirection,
     WebOptions,
 )
 
@@ -35,9 +35,9 @@ from .helpers import encode_wire
 @pytest.mark.parametrize(
     ("flags", "expected_flags"),
     [
-        (AndroidNotificationFlag.NONE, 0),
+        (AndroidFlag.NONE, 0),
         (0x400, 0x400),
-        (AndroidNotificationFlag.INSISTENT | AndroidNotificationFlag.NO_CLEAR, 36),
+        (AndroidFlag.INSISTENT | AndroidFlag.NO_CLEAR, 36),
     ],
 )
 @pytest.mark.asyncio
@@ -68,7 +68,7 @@ async def test_methods_encode_nested_notification_values(
             ),
         ),
         web=WebOptions(
-            direction=WebNotificationDirection.RIGHT_TO_LEFT,
+            direction=WebDirection.RIGHT_TO_LEFT,
             icon_url="/assets/icon.png",
             require_interaction=True,
             silent=False,

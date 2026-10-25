@@ -1,11 +1,11 @@
 from flet_notifications.android import (
     AndroidAudioAttributesUsage,
+    AndroidCategory,
+    AndroidFlag,
     AndroidForegroundServiceType,
     AndroidGroup,
     AndroidGroupAlertBehavior,
     AndroidImportance,
-    AndroidNotificationCategory,
-    AndroidNotificationFlag,
     AndroidOptions,
     AndroidPriority,
     AndroidProgress,
@@ -45,7 +45,7 @@ from flet_notifications.exceptions import (
     NotificationUnsupportedPlatformException,
 )
 from flet_notifications.linux import (
-    LinuxNotificationCategory,
+    LinuxCategory,
     LinuxOptions,
     LinuxUrgency,
 )
@@ -62,15 +62,15 @@ from flet_notifications.types import (
     RepeatInterval,
 )
 from flet_notifications.web import (
-    WebNotificationDirection,
+    WebDirection,
     WebOptions,
 )
 from flet_notifications.windows import (
-    WindowsNotificationDuration,
-    WindowsNotificationSound,
+    WindowsDuration,
     WindowsOptions,
     WindowsProgress,
     WindowsScenario,
+    WindowsSound,
 )
 
 __all__ = [
@@ -80,9 +80,11 @@ __all__ = [
     "AndroidBigTextStyle",
     "AndroidBitmap",
     "AndroidBytesBitmap",
+    "AndroidCategory",
     "AndroidContentUriIcon",
     "AndroidDrawableBitmap",
     "AndroidFileBitmap",
+    "AndroidFlag",
     "AndroidForegroundServiceType",
     "AndroidGroup",
     "AndroidGroupAlertBehavior",
@@ -91,8 +93,6 @@ __all__ = [
     "AndroidInboxStyle",
     "AndroidMessage",
     "AndroidMessagingStyle",
-    "AndroidNotificationCategory",
-    "AndroidNotificationFlag",
     "AndroidOptions",
     "AndroidPerson",
     "AndroidPriority",
@@ -104,7 +104,7 @@ __all__ = [
     "DarwinInterruptionLevel",
     "DarwinOptions",
     "DateTimeComponents",
-    "LinuxNotificationCategory",
+    "LinuxCategory",
     "LinuxOptions",
     "LinuxUrgency",
     "NotificationAction",
@@ -121,11 +121,11 @@ __all__ = [
     "Notifications",
     "PendingNotification",
     "RepeatInterval",
-    "WebNotificationDirection",
+    "WebDirection",
     "WebOptions",
-    "WindowsNotificationDuration",
-    "WindowsNotificationSound",
+    "WindowsDuration",
     "WindowsOptions",
     "WindowsProgress",
     "WindowsScenario",
+    "WindowsSound",
 ]

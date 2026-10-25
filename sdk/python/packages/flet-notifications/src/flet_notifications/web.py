@@ -4,12 +4,12 @@ from enum import Enum
 import flet as ft
 
 __all__ = [
-    "WebNotificationDirection",
+    "WebDirection",
     "WebOptions",
 ]
 
 
-class WebNotificationDirection(Enum):
+class WebDirection(Enum):
     """
     Text direction for a browser notification.
 
@@ -44,7 +44,7 @@ class WebOptions:
     for platform support and restrictions.
     """
 
-    direction: WebNotificationDirection | None = None
+    direction: WebDirection | None = None
     """
     Requested text direction.
 
