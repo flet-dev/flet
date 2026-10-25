@@ -108,11 +108,12 @@ class Notifications(ft.Service):
 
 
         def main(page: ft.Page):
-            notifications = ftn.Notifications(
-                on_tap=lambda e: print("Opened:", e.payload)
-            )
+            def handle_tap(e: ftn.NotificationEvent):
+                page.add(ft.Text(f"Opened {e.payload}"))
 
-            async def notify(e):
+            notifications = ftn.Notifications(on_tap=handle_tap)
+
+            async def notify(e: ft.Event[ft.Button]):
                 if await notifications.request_permissions():
                     await notifications.show(
                         id=1,
@@ -121,7 +122,7 @@ class Notifications(ft.Service):
                         payload="download:42",
                     )
 
-            page.add(ft.OutlinedButton(content="Notify", on_click=notify))
+            page.add(ft.SafeArea(content=ft.Button("Notify", on_click=notify)))
 
 
         ft.run(main)
