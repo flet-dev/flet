@@ -20,12 +20,20 @@ class EffectHook(Hook):
 
     setup: Callable[[], Any | Awaitable[Any]]
     cleanup: Callable[[], Any | Awaitable[Any]] | None = None
+    _returned_cleanup: Callable[[], Any | Awaitable[Any]] | None = None
     deps: list[Any] | None = None
     prev_deps: list[Any] | None = None
 
     # runtime
     _setup_task: asyncio.Task | None = None  # last scheduled setup task
     _cleanup_task: asyncio.Task | None = None  # last scheduled cleanup task
+
+    def has_lifecycle_work(self) -> bool:
+        return (
+            callable(self.cleanup)
+            or callable(self._returned_cleanup)
+            or (self._setup_task is not None and not self._setup_task.done())
+        )
 
     def cancel(self):
         """

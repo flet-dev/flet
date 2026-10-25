@@ -25,9 +25,12 @@ dependencies:
   connectivity_plus: ^7.0.0
   cupertino_icons: ^1.0.6
   cupertino_ui: ^1.1.2
-  device_info_plus: ^12.3.0
+  device_info_plus: ^13.3.0
   equatable: ^2.0.3
-  file_picker: ^11.0.2
+  file_picker: ^13.2.0
+  # Web-only picker options (cancel_upload_on_window_blur); imported
+  # conditionally (utils/file_picker_web_options_web.dart).
+  file_picker_web: ^4.2.0
   flutter_highlight: ^0.7.0
   flutter_markdown_plus: ^1.0.7
   flutter_markdown_plus_latex: ^1.0.5
@@ -38,7 +41,7 @@ dependencies:
   markdown: ^7.3.0
   material_ui: ^1.6.0
   msgpack_dart: ^1.0.1
-  package_info_plus: ^9.0.0
+  package_info_plus: ^10.2.2
   path: ^1.9.0
   path_provider: ^2.1.5
   pasteboard: ^0.5.0
@@ -53,7 +56,7 @@ dependencies:
   screen_brightness_platform_interface: ^2.1.2
   sensors_plus: ^7.0.0
   shared_preferences: ^2.5.3
-  share_plus: ^12.0.1
+  share_plus: ^13.3.1
   shimmer: ^4.0.0
   url_launcher: ^6.3.2
   vector_math: ^2.2.0
@@ -63,6 +66,7 @@ dependencies:
   wakelock_plus: ^1.4.0
 
 dev_dependencies:
+  cross_file: ^0.3.5+4
   flutter_test:
     sdk: flutter
   flutter_lints: ^3.0.1
