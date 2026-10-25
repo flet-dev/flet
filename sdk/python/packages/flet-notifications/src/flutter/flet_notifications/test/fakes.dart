@@ -4,7 +4,7 @@ library;
 import 'dart:async';
 
 import 'package:flet/flet.dart';
-import 'package:flet_notifications/src/notifications_service.dart';
+import 'package:flet_notifications/src/notifications.dart';
 import 'package:flet_notifications/src/utils/errors.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart'
     as fln;

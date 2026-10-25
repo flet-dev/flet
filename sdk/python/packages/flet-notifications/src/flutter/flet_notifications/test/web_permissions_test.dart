@@ -4,7 +4,7 @@ library;
 import 'dart:js_interop';
 import 'dart:js_interop_unsafe';
 
-import 'package:flet_notifications/src/notifications_service.dart';
+import 'package:flet_notifications/src/notifications.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart'
     as fln;

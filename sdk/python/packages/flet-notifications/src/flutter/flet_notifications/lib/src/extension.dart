@@ -1,6 +1,6 @@
 import 'package:flet/flet.dart';
 
-import 'notifications_service.dart';
+import 'notifications.dart';
 
 class Extension extends FletExtension {
   @override
