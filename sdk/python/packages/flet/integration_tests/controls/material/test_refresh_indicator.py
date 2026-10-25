@@ -1,7 +1,7 @@
-import flet.testing as ftt
 import pytest
 
 import flet as ft
+import flet.testing as ftt
 
 
 def _refresh_content() -> ft.ListView:
@@ -37,13 +37,13 @@ async def test_with_color(flet_app: ftt.FletTestApp, request):
 
 
 @pytest.mark.asyncio(loop_scope="module")
-async def test_with_background_color(flet_app: ftt.FletTestApp, request):
+async def test_with_bgcolor(flet_app: ftt.FletTestApp, request):
     await flet_app.assert_control_screenshot(
         request.node.name,
         ft.RefreshIndicator(
             content=_refresh_content(),
             color=ft.Colors.WHITE,
-            background_color=ft.Colors.BLUE,
+            bgcolor=ft.Colors.BLUE,
         ),
     )
 
@@ -118,12 +118,9 @@ async def test_with_semantics(flet_app: ftt.FletTestApp, request):
 
 @pytest.mark.asyncio(loop_scope="module")
 async def test_with_handlers(flet_app: ftt.FletTestApp, request):
-    """Renders correctly when both event handlers are provided."""
+    """Renders the same with an `on_refresh` handler."""
 
-    async def handle_refresh(e: ft.ControlEvent):
-        pass
-
-    def handle_status(e: ft.ControlEvent):
+    async def handle_refresh(e: ft.Event[ft.RefreshIndicator]):
         pass
 
     await flet_app.assert_control_screenshot(
@@ -131,6 +128,5 @@ async def test_with_handlers(flet_app: ftt.FletTestApp, request):
         ft.RefreshIndicator(
             content=_refresh_content(),
             on_refresh=handle_refresh,
-            on_status_change=handle_status,
         ),
     )

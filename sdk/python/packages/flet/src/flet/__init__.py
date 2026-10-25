@@ -461,7 +461,10 @@ if TYPE_CHECKING:
     from flet.controls.material.radio import Radio
     from flet.controls.material.radio_group import RadioGroup
     from flet.controls.material.range_slider import RangeSlider
-    from flet.controls.material.refresh_indicator import RefreshIndicator
+    from flet.controls.material.refresh_indicator import (
+        RefreshIndicator,
+        RefreshIndicatorTriggerMode,
+    )
     from flet.controls.material.reorderable_list_view import (
         OnReorderEvent,
         ReorderableListView,
@@ -1105,9 +1108,10 @@ __all__ = [
     "RawImage",
     "Rect",
     "Ref",
+    "RefreshIndicator",
+    "RefreshIndicatorTriggerMode",
     "ReorderableDragHandle",
     "ReorderableListView",
-    "RefreshIndicator",
     "ResponsiveNumber",
     "ResponsiveRow",
     "ResponsiveRowBreakpoint",
@@ -1656,9 +1660,10 @@ _LAZY = {
     "RawImage": "flet.controls.core.raw_image",
     "Rect": "flet.controls.geometry",
     "Ref": "flet.controls.ref",
+    "RefreshIndicator": "flet.controls.material.refresh_indicator",
+    "RefreshIndicatorTriggerMode": "flet.controls.material.refresh_indicator",
     "ReorderableDragHandle": "flet.controls.core.reorderable_drag_handle",
     "ReorderableListView": "flet.controls.material.reorderable_list_view",
-    "RefreshIndicator": "flet.controls.material.refresh_indicator",
     "ResponsiveNumber": "flet.controls.types",
     "ResponsiveRow": "flet.controls.core.responsive_row",
     "ResponsiveRowBreakpoint": "flet.controls.types",

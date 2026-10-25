@@ -15,8 +15,8 @@ from flet.controls.cupertino.cupertino_colors import CupertinoColors
 from flet.controls.icon_data import IconData
 
 if TYPE_CHECKING:
-    from flet.controls.buttons import ShapeBorder
     from flet.controls.control import Control  # noqa
+    from flet.controls.buttons import ShapeBorder
 
 
 class AppView(Enum):
@@ -1549,44 +1549,6 @@ class VisualDensity(Enum):
 
     For desktop platforms, this returns :attr:`COMPACT`, and for other platforms,
     it returns a default-constructed visual density.
-    """
-
-
-class RefreshIndicatorTriggerMode(Enum):
-    """
-    Determines when a :class:`~flet.RefreshIndicator` can be triggered by the
-    user's pull gesture.
-
-    Triggering controls whether the indicator responds only when the wrapped
-    scrollable child is already scrolled to its leading edge, or anywhere
-    within the scrollable area.
-
-    See also:
-
-    * :attr:`flet.RefreshIndicator.trigger_mode` — the property that uses
-      this enum.
-    * Flutter's `RefreshIndicatorTriggerMode
-      <https://api.flutter.dev/flutter/material/RefreshIndicatorTriggerMode.html>`_.
-    """
-
-    ON_EDGE = "onEdge"
-    """
-    The refresh indicator can only be triggered when the scrollable child is
-    at its leading edge (i.e. the user has scrolled all the way to the top and
-    continues pulling down).
-
-    This is the default mode and matches the platform behaviour of most
-    Material applications.
-    """
-
-    ANYWHERE = "anywhere"
-    """
-    The refresh indicator can be triggered by a pull gesture anywhere within
-    the scrollable area, regardless of the current scroll position.
-
-    Use this when the wrapped child is short enough that its content never
-    scrolls (e.g. it fits within the viewport), or when you want a more
-    forgiving pull-to-refresh affordance.
     """
 
 

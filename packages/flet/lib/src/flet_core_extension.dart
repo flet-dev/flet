@@ -84,12 +84,12 @@ import 'controls/progress_ring.dart';
 import 'controls/radio_group.dart';
 import 'controls/range_slider.dart';
 import 'controls/raw_image.dart';
+import 'controls/refresh_indicator.dart';
 import 'controls/reorderable_drag_handle.dart';
 import 'controls/reorderable_list_view.dart';
 import 'controls/responsive_row.dart';
 import 'controls/rotated_box.dart';
 import 'controls/row.dart';
-import 'controls/refresh_indicator.dart';
 import 'controls/safe_area.dart';
 import 'controls/screenshot.dart';
 import 'controls/search_bar.dart';
@@ -325,6 +325,8 @@ class FletCoreExtension extends FletExtension {
         return RangeSliderControl(key: key, control: control);
       case "RawImage":
         return RawImageControl(key: key, control: control);
+      case "RefreshIndicator":
+        return RefreshIndicatorControl(key: key, control: control);
       case "ReorderableDragHandle":
         return ReorderableDragHandleControl(key: key, control: control);
       case "ReorderableListView":
@@ -335,8 +337,6 @@ class FletCoreExtension extends FletExtension {
         return RotatedBoxControl(key: key, control: control);
       case "Row":
         return RowControl(key: key, control: control);
-      case "RefreshIndicator":
-        return RefreshIndicatorControl(key: key, control: control);
       case "SafeArea":
         return SafeAreaControl(key: key, control: control);
       case "Screenshot":

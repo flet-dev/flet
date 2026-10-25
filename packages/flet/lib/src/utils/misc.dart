@@ -244,7 +244,8 @@ extension MiscParsers on Control {
     return parseFloatingLabelBehavior(get(propertyName), defaultValue);
   }
 
-  RefreshIndicatorTriggerMode? getRefreshIndicatorTriggerMode(String propertyName,
+  RefreshIndicatorTriggerMode? getRefreshIndicatorTriggerMode(
+      String propertyName,
       [RefreshIndicatorTriggerMode? defaultValue]) {
     return parseRefreshIndicatorTriggerMode(get(propertyName), defaultValue);
   }
