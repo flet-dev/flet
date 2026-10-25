@@ -118,6 +118,24 @@ void main() {
     expect(requests, 0);
   });
 
+  test('a backend that cannot initialize reports false and retries later',
+      () async {
+    // As when the service worker can't register, as in private windows.
+    final plugin = _WebPlugin()..initializationResult = false;
+    fln.FlutterLocalNotificationsPlatform.instance = plugin;
+    final service = makeService();
+    expect(await invoke(service, 'are_notifications_enabled'), isFalse);
+    expect(await invoke(service, 'request_permissions'), isFalse);
+    expect(await invoke(service, 'show', {'id': 1}),
+        'unsupported_platform: this browser can\'t show notifications');
+    expect(requests, 0);
+    expect(plugin.shown, isEmpty);
+
+    plugin.initializationResult = true;
+    expect(await invoke(service, 'show', {'id': 1}), null);
+    expect(plugin.shown, hasLength(1));
+  });
+
   test('show forwards all browser presentation options', () async {
     final service = makeService();
     final result = await invoke(service, 'show', {

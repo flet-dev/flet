@@ -364,22 +364,34 @@ class NotificationsService extends FletService {
     control.triggerEvent(name, data);
   }
 
+  fln.AndroidFlutterLocalNotificationsPlugin? get _androidPlugin =>
+      _plugin?.resolvePlatformSpecificImplementation<
+          fln.AndroidFlutterLocalNotificationsPlugin>();
+
+  fln.FlutterLocalNotificationsWindows? get _windowsPlugin =>
+      _plugin?.resolvePlatformSpecificImplementation<
+          fln.FlutterLocalNotificationsWindows>();
+
+  fln.WebFlutterLocalNotificationsPlugin? get _webPlugin =>
+      _plugin?.resolvePlatformSpecificImplementation<
+          fln.WebFlutterLocalNotificationsPlugin>();
+
   /// Runs the Python method [name] with [args] once the backend is ready.
   ///
   /// Every failure is thrown as a [NotificationException], whose code selects
   /// the exception class Python raises.
   Future<dynamic> invokeMethod(String name, [dynamic args]) async {
     await _ensureInitialized();
-    // The backend can't initialize in a browser without notifications. The
-    // permission probes still answer, so apps can fall back.
-    if (isWebPlatform() &&
-        !fln.WebFlutterLocalNotificationsPlugin.isSupported) {
+    // The backend can't initialize in a browser without notifications, or
+    // whose service worker can't register, as in Firefox's private windows.
+    // The permission probes still answer, so apps can fall back.
+    if (isWebPlatform() && !_initialized) {
       if (name == "request_permissions" ||
           name == "are_notifications_enabled") {
         return false;
       }
       throw const NotificationException.unsupportedPlatform(
-        "this browser does not support notifications",
+        "this browser can't show notifications",
       );
     }
     _throwIfNotInitialized();
@@ -500,7 +512,6 @@ class NotificationsService extends FletService {
     }
   }
 
-  /// Cancels a notification, treating an empty tag as no tag.
   Future<void> _cancel(dynamic args) async {
     final map = args as Map;
     final tag = map["tag"] as String?;
@@ -620,18 +631,6 @@ class NotificationsService extends FletService {
         )
         .toList();
   }
-
-  fln.AndroidFlutterLocalNotificationsPlugin? get _androidPlugin =>
-      _plugin?.resolvePlatformSpecificImplementation<
-          fln.AndroidFlutterLocalNotificationsPlugin>();
-
-  fln.FlutterLocalNotificationsWindows? get _windowsPlugin =>
-      _plugin?.resolvePlatformSpecificImplementation<
-          fln.FlutterLocalNotificationsWindows>();
-
-  fln.WebFlutterLocalNotificationsPlugin? get _webPlugin =>
-      _plugin?.resolvePlatformSpecificImplementation<
-          fln.WebFlutterLocalNotificationsPlugin>();
 
   /// The payload to give the plugin: on Windows, the notification's launch
   /// arguments, so a click on its body can be told apart from its buttons.
