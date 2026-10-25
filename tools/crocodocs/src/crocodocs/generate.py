@@ -222,46 +222,52 @@ def _group_files_by_example(files: list[str]) -> dict[str, list[str]]:
 _EXAMPLE_TEXT_FILE_SUFFIXES = {".toml", ".txt", ".md", ".json", ".yaml", ".yml"}
 _EXAMPLE_TEXT_FILE_MAX_BYTES = 64 * 1024
 
-_DOCS_ONLY_PYPROJECT_TABLES = ("tool.flet.gallery", "tool.flet.metadata")
-_TOML_TABLE_HEADER_RE = re.compile(
-    r"^\s*\[\[?\s*([A-Za-z0-9_-]+(?:\s*\.\s*[A-Za-z0-9_-]+)*)\s*\]\]?\s*(?:#.*)?$"
-)
 
+def _strip_example_pyprojects(
+    repo_root: Path, pyproject_paths: list[Path]
+) -> dict[Path, str]:
+    """Return the given example pyproject.toml files as `flet create --example` writes them.
 
-def _strip_docs_only_pyproject_tables(text: str) -> str:
-    """Remove the tables that only feed the docs and the gallery from a pyproject.toml.
-
-    Leftover runs of blank lines are collapsed and the text keeps a single trailing
-    newline.
+    The stripping lives in flet-cli, so it runs in the SDK's environment through
+    scripts/example_pyprojects.py, the same way the CLI partials are rendered.
     """
-    kept: list[str] = []
-    skipping = False
-    for line in text.splitlines():
-        header = _TOML_TABLE_HEADER_RE.match(line)
-        if header:
-            name = re.sub(r"\s+", "", header.group(1))
-            skipping = any(
-                name == table or name.startswith(f"{table}.")
-                for table in _DOCS_ONLY_PYPROJECT_TABLES
-            )
-        if not skipping:
-            kept.append(line)
-    stripped = re.sub(r"\n{3,}", "\n\n", "\n".join(kept)).strip("\n")
-    return f"{stripped}\n"
+    if not pyproject_paths:
+        return {}
+    script = Path(__file__).parent / "scripts" / "example_pyprojects.py"
+    env = {k: v for k, v in os.environ.items() if k != "VIRTUAL_ENV"}
+    result = subprocess.run(
+        [
+            "uv",
+            "--directory",
+            str(repo_root / "sdk/python"),
+            "run",
+            "python",
+            str(script),
+        ],
+        input=json.dumps([str(path) for path in pyproject_paths]),
+        check=True,
+        capture_output=True,
+        text=True,
+        cwd=repo_root,
+        env=env,
+    )
+    # Skip anything printed before the JSON, e.g. flet-cli's Git version warning.
+    stdout = result.stdout[max(result.stdout.find("{"), 0) :]
+    return {Path(path): text for path, text in json.loads(stdout).items()}
 
 
 def _generate_example_file_sources(
-    examples_root: Path, files: list[str], output_path: Path
+    examples_root: Path, files: list[str], output_path: Path, repo_root: Path
 ) -> int:
     """Write a JSON file mapping non-Python example text files to their contents.
 
     Covers files such as pyproject.toml that the docs show next to an example's
-    Python source; pyproject.toml is shown without its gallery and docs metadata
-    tables. Python files are already in code-examples.json and binary or
-    large files are left out. The docs load this file on demand, so it does not
-    grow every page's bundle.
+    Python source; pyproject.toml is shown as `flet create --example` writes it,
+    without its docs tables. Python files are already in code-examples.json and
+    binary or large files are left out. The docs load this file on demand,
+    so it does not grow every page's bundle.
     """
-    mapping: dict[str, str] = {}
+    paths: list[Path] = []
     for example_dir, example_files in _group_files_by_example(files).items():
         for name in example_files:
             path = examples_root / example_dir / name
@@ -269,13 +275,21 @@ def _generate_example_file_sources(
                 continue
             if path.stat().st_size > _EXAMPLE_TEXT_FILE_MAX_BYTES:
                 continue
+            paths.append(path)
+
+    pyprojects = _strip_example_pyprojects(
+        repo_root, [path for path in paths if path.name == "pyproject.toml"]
+    )
+    mapping: dict[str, str] = {}
+    for path in paths:
+        if path in pyprojects:
+            content = pyprojects[path]
+        else:
             try:
                 content = path.read_text(encoding="utf-8")
             except (OSError, UnicodeDecodeError):
                 continue
-            if name == "pyproject.toml":
-                content = _strip_docs_only_pyproject_tables(content)
-            mapping[f"{example_dir}/{name}"] = content
+        mapping[path.relative_to(examples_root).as_posix()] = content
 
     output_path.write_text(
         json.dumps(mapping, indent=2, sort_keys=True), encoding="utf-8"
@@ -384,7 +398,10 @@ def run_generate(
     )
     example_file_sources_output = config.partials_output_dir / "example-files.json"
     example_file_source_entries = _generate_example_file_sources(
-        config.examples_root, example_files, example_file_sources_output
+        config.examples_root,
+        example_files,
+        example_file_sources_output,
+        repo_root=config.project_root.parent.parent,
     )
 
     reporter.stage("Extracting API data")
