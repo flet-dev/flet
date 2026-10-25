@@ -180,10 +180,12 @@ class Notifications(ft.Service):
     Android notification launches also use this handler.
 
     Note:
-        When selecting a notification launches the app, this handler is called for it
-        once the service initializes, so set it when creating the service. It is
-        called once per launch; use it, for example, to route the app to the
-        notification's content.
+        - When selecting a notification launches the app, this handler is called for
+          it once the service initializes, so set it when creating the service. It is
+          called once per launch; use it, for example, to route the app to the
+          notification's content.
+        - On Linux, a selection reaches the app only while it is running; selecting a
+          notification after the app has closed doesn't launch it.
     """
 
     on_action: ft.EventHandler[NotificationActionEvent["Notifications"]] | None = None
@@ -206,6 +208,8 @@ class Notifications(ft.Service):
           that text.
         - Background Android/iOS actions are queued and replayed on the next service
           initialization; Python is not run in the background isolate.
+        - On Linux, an action reaches the app only while it is running; selecting one
+          after the app has closed doesn't launch it.
     """
 
     def _require_platform(
