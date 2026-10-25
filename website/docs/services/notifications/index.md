@@ -12,6 +12,11 @@ Show, schedule, and cancel system notifications in your [Flet](https://flet.dev)
 using the `flet-notifications` extension. It wraps Flutter's
 [`flutter_local_notifications`](https://pub.dev/packages/flutter_local_notifications) package.
 
+The notifications are local: your app posts them itself, either at once or scheduled
+ahead of time, in which case the operating system delivers them even while the app isn't
+running. Push notifications sent from a server, through Firebase Cloud Messaging or the
+Apple Push Notification service, are not supported by this extension.
+
 ## Platform Support
 
 | Platform  | Windows | macOS | Linux | iOS | Android | Web |

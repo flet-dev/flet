@@ -80,6 +80,13 @@ class Notifications(ft.Service):
     to :attr:`windows_app_name`, :attr:`windows_app_user_model_id`, and
     :attr:`windows_guid` apply from its next launch.
 
+    :meth:`show` posts from wherever the app's code runs, such as when a download
+    finishes or a message arrives, so that code must be running. Desktop and web
+    apps run while their window or tab is open. Android may stop an app's process
+    some time after it leaves the screen; keep long work going with
+    :meth:`start_foreground_service`. iOS suspends an app moments after it leaves the
+    screen, so schedule the notifications iOS users should get later.
+
     Note:
         Feature support varies: rich styles, progress, and grouping are
         Android-specific (see :class:`flet_notifications.AndroidOptions`); calendar
@@ -89,7 +96,8 @@ class Notifications(ft.Service):
         the notification service's requirements in the user guide.
 
     Notification response handlers receive
-    :class:`flet_notifications.NotificationEvent`. When a background action runs without
+    :class:`flet_notifications.NotificationEvent`. A tap that launches a closed app is
+    delivered once the service initializes. When a background action runs without
     the app UI, a native Dart handler persists the event for replay when the service
     next initializes; it does not execute Python in the background.
 
