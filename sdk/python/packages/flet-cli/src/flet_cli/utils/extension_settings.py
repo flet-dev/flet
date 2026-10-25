@@ -264,8 +264,15 @@ def contributed_settings(extension: ExtensionSettings) -> list[str]:
 
 
 def _compact(code: str) -> str:
-    """Remove all whitespace, so equivalent Kotlin declarations compare equal."""
-    return re.sub(r"\s+", "", code)
+    """
+    Remove whitespace outside string literals, so declarations that differ only in
+    formatting compare equal while ones with different paths or names don't.
+    """
+    return re.sub(
+        r"(\"(?:\\.|[^\"\\])*\"|'(?:\\.|[^'\\])*')|\s+",
+        lambda m: m.group(1) or "",
+        code,
+    )
 
 
 def _read_settings(extension: ExtensionSettings) -> tuple[dict[str, Any], list[str]]:
