@@ -23,7 +23,7 @@ dependencies:
   flet:
     path: ../../../../../packages/flet
 
-  serious_python: 6.0.0
+  serious_python: 6.0.1
 
   # MsgPack codec used by the dart_bridge FletBackendChannel implementation
   # in lib/main.dart — matches the wire format flet's existing socket
@@ -36,10 +36,6 @@ dependencies:
 dependency_overrides:
   flet:
     path: ../../../../../packages/flet
-  # serious_python 6.0.0 declares (but never imports) toml ^0.15.0, which pins
-  # petitparser ^6; file_picker_linux 2.x needs petitparser ^7 via dbus -> xml.
-  # Remove once serious_python drops or bumps its toml dependency.
-  toml: ^0.18.0
 
 dev_dependencies:
   flutter_lints: ^2.0.0
