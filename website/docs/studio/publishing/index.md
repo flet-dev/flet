@@ -15,7 +15,10 @@ install. Open it with the **Publish** button in the app bar.
 **Publish** has three tabs:
 
 - **Overview**: one section per platform with its actions, and under them what each
-  action produced last — with **Download**, or where a store has it.
+  action produced last — with **Download**, or where a store has it. Android and
+  iOS also show their store (Google Play, the App Store): the store account the app
+  uses, whether the store has the app yet, and the store listing, with **Edit** and
+  **Send**.
 - **Activity**: every run of the app, newest first, with its status. Open one for
   its details.
 - **Settings**: the app's build settings — shared ones, plus a scope per platform.

@@ -32,8 +32,9 @@ profiles, and uploads builds. You don't use Xcode or Keychain Access.
 4. Note the key's **Key ID** and the **Issuer ID** shown above the list of keys. Your
    **Team ID** is in [Membership details](https://developer.apple.com/account#MembershipDetailsCard)
    on developer.apple.com.
-5. In Studio, choose **Settings › Store accounts › Connect a store › App Store
-   Connect**, or **Connect App Store Connect** on an iOS action screen. Upload the
+5. In Studio, click **Connect App Store Connect** in the **App Store** panel of
+   **Publish › Overview** (or at the bottom of an iOS action screen, or in
+   **Settings › Store accounts › Connect a store › App Store Connect**). Upload the
    `.p8` and enter the three IDs.
 
 Studio checks the key with Apple before saving it. It tells you if the key isn't a
@@ -132,7 +133,8 @@ Before the first run:
 
 1. **Create the app** in App Store Connect: **Apps › + › New App**, platform **iOS**,
    the app's bundle ID (Studio registers it, so it's already in the list), and any name
-   and SKU. Until the app exists, the action screen says so and won't start a run.
+   and SKU. Until the app exists, Overview's App Store panel and the action screen
+   say so, and the action won't start a run. **Check again** looks again.
 2. **Create a TestFlight group** in App Store Connect › TestFlight, and add testers.
    **Internal** testers are members of your App Store Connect team. **External**
    testers are anyone, invited by email or a public link.
@@ -193,6 +195,11 @@ Store listing**:
 
 **Import from App Store** replaces the files with the app's current listing in App Store
 Connect.
+
+Overview's **App Store** panel shows where the listing stands: **Not started**, **Not
+sent yet**, **Sent** with the date, or **Changes not sent** when it was edited since.
+**Edit** opens the listing, and **Send** sends it as **Update App Store listing**
+does.
 
 **Update App Store listing** sends the listing to the app's version that's still being
 prepared: the one with the app's current version number (Publish › Settings ›

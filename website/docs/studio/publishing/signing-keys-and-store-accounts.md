@@ -19,11 +19,14 @@ all its apps. Each app selects which ones it uses, per platform.
 
 - **Settings › Signing keys** and **Settings › Store accounts** list what's saved to
   each of your Studio accounts, with how many apps use each one.
-- **Publish › Settings › Android › Signing & accounts** selects the ones an app
-  uses on Android. iOS actions select theirs on the action screen.
-- An action's screen shows the ones it needs, with **Add signing key**, **Connect
-  Google Play** or **Connect App Store Connect** when there are none yet. What you add there is saved to
-  the Studio account and selected for the app.
+- **Publish › Overview** shows the store account each platform's store uses (the
+  Google Play and App Store panels), with **Connect** or **Change**.
+- **Publish › Settings › Android › Signing & accounts** selects the signing key an
+  app uses on Android.
+- An action's screen shows the signing key it needs, with **Add signing key** when
+  there's none yet, and at the bottom the store account it uses, with **Change**
+  (or **Connect Google Play** / **Connect App Store Connect**). What you add there
+  is saved to the Studio account and selected for the app.
 
 {/* SCREENSHOT: /img/docs/studio/publishing/settings-signing-keys.png — Settings › Signing keys with a key and its ⋯ menu */}
 

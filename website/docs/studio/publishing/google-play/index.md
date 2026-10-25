@@ -103,15 +103,15 @@ Permission changes can take a few minutes to apply.
 
 ### In Studio
 
-On the **Publish to Google Play** action screen (or **Publish › Settings ›
-Android › Signing & accounts**, or **Settings › Store accounts**), click **Connect
-Google Play**, choose the JSON key file and **Connect**. The name is filled in from
-the service account's email; change it if you like.
+In the **Google Play** panel of **Publish › Overview** (or at the bottom of the
+**Publish to Google Play** screen, or in **Settings › Store accounts**), click
+**Connect Google Play**, choose the JSON key file and **Connect**. The name is filled
+in from the service account's email; change it if you like.
 
 The account is saved to your Studio account, so your other apps can use it too, and
-selected for this app. Studio checks access straight away: under the account the
-action screen shows **Connected · com.example.myapp · latest build 28**, or what's
-wrong and how to fix it.
+selected for this app. Studio checks access straight away: the panel's **App** line
+shows the app's package name with a **Play Console** link, or what's wrong and how
+to fix it. **Change** switches the app to another account.
 
 {/* SCREENSHOT: /img/docs/studio/publishing/connect-google-play.png — the Connect Google Play dialog with a key chosen */}
 

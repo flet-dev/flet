@@ -8,9 +8,14 @@ Your app's store listing — its name, descriptions, icon, feature graphic and
 screenshots on Google Play — can be written and kept in Flet Studio, and sent to
 Google Play without opening Play Console.
 
-Open it with **Update store listing** in the Android section of **Publish**. The
-screen is the listing itself: edit it there, then **Send to Google Play**. It
-doesn't build the app and doesn't use credits.
+Open it with **Start listing** or **Edit** on the **Listing** line of the Google
+Play panel in **Publish › Overview** (or **Update store listing** in the Android
+section's menu). The screen is the listing itself: edit it there, then **Send to
+Google Play**. It doesn't build the app and doesn't use credits.
+
+The **Listing** line says where the listing stands: **Not started**, **Not sent
+yet**, **Sent** with the date, or **Changes not sent** when it was edited since.
+**Send** there sends it without opening the screen.
 
 {/* SCREENSHOT: /img/docs/studio/publishing/store-listing.png — the Update store listing screen: language, texts, graphics */}
 
@@ -133,7 +138,8 @@ optional. They're shown on the app's page on Google Play.
 
 ## Send the listing
 
-- **Update store listing › Send to Google Play** sends only the listing.
+- **Send** on Overview's Google Play panel, or **Update store listing › Send to
+  Google Play**, sends only the listing.
 - Or, on **Publish to Google Play**, tick **Also send the store listing** to send
   it in the same change as the release.
 
