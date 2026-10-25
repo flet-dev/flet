@@ -222,6 +222,33 @@ def _group_files_by_example(files: list[str]) -> dict[str, list[str]]:
 _EXAMPLE_TEXT_FILE_SUFFIXES = {".toml", ".txt", ".md", ".json", ".yaml", ".yml"}
 _EXAMPLE_TEXT_FILE_MAX_BYTES = 64 * 1024
 
+_DOCS_ONLY_PYPROJECT_TABLES = ("tool.flet.gallery", "tool.flet.metadata")
+_TOML_TABLE_HEADER_RE = re.compile(
+    r"^\s*\[\[?\s*([A-Za-z0-9_-]+(?:\s*\.\s*[A-Za-z0-9_-]+)*)\s*\]\]?\s*(?:#.*)?$"
+)
+
+
+def _strip_docs_only_pyproject_tables(text: str) -> str:
+    """Remove the tables that only feed the docs and the gallery from a pyproject.toml.
+
+    Leftover runs of blank lines are collapsed and the text keeps a single trailing
+    newline.
+    """
+    kept: list[str] = []
+    skipping = False
+    for line in text.splitlines():
+        header = _TOML_TABLE_HEADER_RE.match(line)
+        if header:
+            name = re.sub(r"\s+", "", header.group(1))
+            skipping = any(
+                name == table or name.startswith(f"{table}.")
+                for table in _DOCS_ONLY_PYPROJECT_TABLES
+            )
+        if not skipping:
+            kept.append(line)
+    stripped = re.sub(r"\n{3,}", "\n\n", "\n".join(kept)).strip("\n")
+    return f"{stripped}\n"
+
 
 def _generate_example_file_sources(
     examples_root: Path, files: list[str], output_path: Path
@@ -229,7 +256,8 @@ def _generate_example_file_sources(
     """Write a JSON file mapping non-Python example text files to their contents.
 
     Covers files such as pyproject.toml that the docs show next to an example's
-    Python source. Python files are already in code-examples.json and binary or
+    Python source; pyproject.toml is shown without its gallery and docs metadata
+    tables. Python files are already in code-examples.json and binary or
     large files are left out. The docs load this file on demand, so it does not
     grow every page's bundle.
     """
@@ -245,6 +273,8 @@ def _generate_example_file_sources(
                 content = path.read_text(encoding="utf-8")
             except (OSError, UnicodeDecodeError):
                 continue
+            if name == "pyproject.toml":
+                content = _strip_docs_only_pyproject_tables(content)
             mapping[f"{example_dir}/{name}"] = content
 
     output_path.write_text(
