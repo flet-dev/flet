@@ -4,7 +4,7 @@ import flet_notifications as ftn
 
 def main(page: ft.Page):
     def handle_tap(e: ftn.NotificationEvent):
-        page.show_dialog(ft.SnackBar(ft.Text(f"Opened notification {e.payload}")))
+        page.show_dialog(ft.SnackBar(f"Opened notification {e.payload}"))
 
     notifications = ftn.Notifications(on_tap=handle_tap)
 
@@ -19,7 +19,9 @@ def main(page: ft.Page):
             payload="notif-1",
         )
 
-    page.add(ft.SafeArea(content=ft.Button("Notify", on_click=notify)))
+    page.add(
+        ft.SafeArea(content=ft.Button("Notify", on_click=notify)),
+    )
 
 
 if __name__ == "__main__":

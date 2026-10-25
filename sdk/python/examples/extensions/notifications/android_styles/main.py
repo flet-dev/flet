@@ -91,7 +91,7 @@ async def main(page: ft.Page):
     page.add(
         ft.SafeArea(
             content=ft.Column(
-                [
+                controls=[
                     ft.Button("Big text", on_click=big_text),
                     ft.Button("Big picture", on_click=big_picture),
                     ft.Button("Inbox", on_click=inbox),

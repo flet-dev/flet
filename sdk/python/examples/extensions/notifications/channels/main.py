@@ -45,7 +45,9 @@ async def main(page: ft.Page):
             ft.Text(f"{c.name} ({c.importance.name.lower()})") for c in channels
         ] or [ft.Text("No channels yet.")]
         # Android drops notifications posted to a channel that doesn't exist.
-        post_button.disabled = "messages" not in {c.id for c in channels}
+        missing = "messages" not in {c.id for c in channels}
+        post_button.disabled = missing
+        post_button.tooltip = "Create the channels first" if missing else None
         page.update()
 
     async def create(e: ft.Event[ft.Button]):
@@ -71,17 +73,15 @@ async def main(page: ft.Page):
         await notifications.delete_channel_group(GROUP)
         await refresh()
 
-    listed = ft.Column()
-    post_button = ft.Button("Post a message", on_click=post)
     page.add(
         ft.SafeArea(
             content=ft.Column(
-                [
+                controls=[
                     ft.Button("Create channels", on_click=create),
-                    post_button,
+                    post_button := ft.Button("Post a message", on_click=post),
                     ft.Button("Delete channels", on_click=delete),
                     ft.Text("Channels", weight=ft.FontWeight.BOLD),
-                    listed,
+                    listed := ft.Column(),
                 ]
             )
         )

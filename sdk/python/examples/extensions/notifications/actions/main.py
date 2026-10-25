@@ -18,7 +18,7 @@ def main(page: ft.Page):
 
     async def show_message(e: ft.Event[ft.Button]):
         if not await notifications.request_permissions():
-            page.show_dialog(ft.SnackBar(ft.Text("Notifications are turned off.")))
+            page.show_dialog(ft.SnackBar("Notifications are turned off."))
             return
         await notifications.show(
             id=1,
@@ -42,10 +42,14 @@ def main(page: ft.Page):
             ],
         )
 
-    log = ft.Column()
     page.add(
         ft.SafeArea(
-            content=ft.Column([ft.Button("Show message", on_click=show_message), log])
+            content=ft.Column(
+                controls=[
+                    ft.Button("Show message", on_click=show_message),
+                    log := ft.Column(),
+                ]
+            )
         )
     )
 

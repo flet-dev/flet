@@ -26,7 +26,8 @@ async def main(page: ft.Page):
         status.value = (
             "Exact alarms are allowed." if allowed else "Exact alarms are not allowed."
         )
-        allow_button.visible = not allowed
+        allow_button.disabled = allowed
+        allow_button.tooltip = "Already allowed" if allowed else None
         page.update()
 
     async def allow(e: ft.Event[ft.Button]):
@@ -35,7 +36,7 @@ async def main(page: ft.Page):
 
     async def schedule(e: ft.Event[ft.Button]):
         if not await notifications.can_schedule_exact_alarms():
-            page.show_dialog(ft.SnackBar(ft.Text("Allow exact alarms first.")))
+            page.show_dialog(ft.SnackBar("Allow exact alarms first."))
             return
         await notifications.request_permissions()
         await notifications.schedule(
@@ -45,21 +46,20 @@ async def main(page: ft.Page):
             body="Delivered on the dot, even in Doze.",
             schedule_mode=ftn.AndroidScheduleMode.EXACT_ALLOW_WHILE_IDLE,
         )
-        page.show_dialog(ft.SnackBar(ft.Text("Scheduled for one minute from now.")))
+        page.show_dialog(ft.SnackBar("Scheduled for one minute from now."))
 
     async def handle_lifecycle(e: ft.AppLifecycleStateChangeEvent):
         if e.state == ft.AppLifecycleState.RESUME:
             await refresh()
 
     page.on_app_lifecycle_state_change = handle_lifecycle
-    status = ft.Text()
-    allow_button = ft.Button("Allow exact alarms", on_click=allow)
+
     page.add(
         ft.SafeArea(
             content=ft.Column(
-                [
-                    status,
-                    allow_button,
+                controls=[
+                    status := ft.Text(),
+                    allow_button := ft.Button("Allow exact alarms", on_click=allow),
                     ft.Button("Remind me in exactly one minute", on_click=schedule),
                 ]
             )

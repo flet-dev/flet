@@ -34,7 +34,7 @@ def main(page: ft.Page):
     page.add(
         ft.SafeArea(
             content=ft.Column(
-                [
+                controls=[
                     ft.Button("Start sync", on_click=start),
                     ft.Button("Stop sync", on_click=stop),
                 ]

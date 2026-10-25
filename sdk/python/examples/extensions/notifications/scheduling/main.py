@@ -25,8 +25,8 @@ async def main(page: ft.Page):
         return
 
     notifications = ftn.Notifications()
-    # Windows schedules one-off notifications only, without recurrence.
     windows = page.platform == ft.PagePlatform.WINDOWS
+    one_off_only = "Windows schedules one-off notifications only" if windows else None
 
     async def refresh():
         scheduled = await notifications.get_pending()
@@ -71,19 +71,33 @@ async def main(page: ft.Page):
         await notifications.cancel_all_pending()
         await refresh()
 
-    pending = ft.Column()
     page.add(
         ft.SafeArea(
             content=ft.Column(
-                [
+                controls=[
                     ft.Button("In 10 seconds", on_click=in_ten_seconds),
                     ft.Button(
-                        "Every day at 9:00", on_click=every_morning, visible=not windows
+                        "Every day at 9:00",
+                        on_click=every_morning,
+                        disabled=windows,
+                        tooltip=one_off_only,
                     ),
-                    ft.Button("Every hour", on_click=every_hour, visible=not windows),
-                    ft.Button("Cancel all", on_click=cancel_all, visible=not windows),
+                    ft.Button(
+                        "Every hour",
+                        on_click=every_hour,
+                        disabled=windows,
+                        tooltip=one_off_only,
+                    ),
+                    ft.Button(
+                        "Cancel all",
+                        on_click=cancel_all,
+                        disabled=windows,
+                        tooltip="Windows cancels scheduled notifications one by one"
+                        if windows
+                        else None,
+                    ),
                     ft.Text("Pending", weight=ft.FontWeight.BOLD),
-                    pending,
+                    pending := ft.Column(),
                 ]
             )
         )

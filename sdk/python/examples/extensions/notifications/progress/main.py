@@ -65,11 +65,13 @@ async def main(page: ft.Page):
                     status="Downloading", value=step, max=STEPS, label=f"{step}/{STEPS}"
                 ),
             ):
-                page.show_dialog(ft.SnackBar(ft.Text("Download notification closed.")))
+                page.show_dialog(ft.SnackBar("Download notification closed."))
                 return
         await notifications.show(1, title="report.pdf", body="Download complete")
 
-    page.add(ft.SafeArea(content=ft.Button("Download", on_click=download)))
+    page.add(
+        ft.SafeArea(content=ft.Button("Download", on_click=download)),
+    )
 
 
 if __name__ == "__main__":

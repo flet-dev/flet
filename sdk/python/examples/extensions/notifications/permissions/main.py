@@ -1,13 +1,6 @@
 import flet as ft
 import flet_notifications as ftn
 
-SETTINGS_PLATFORMS = {
-    ft.PagePlatform.ANDROID,
-    ft.PagePlatform.ANDROID_TV,
-    ft.PagePlatform.IOS,
-    ft.PagePlatform.MACOS,
-}
-
 
 async def main(page: ft.Page):
     notifications = ftn.Notifications()
@@ -15,14 +8,16 @@ async def main(page: ft.Page):
         ft.PagePlatform.ANDROID,
         ft.PagePlatform.ANDROID_TV,
     }
+    has_settings = not page.web and page.platform in {
+        ft.PagePlatform.ANDROID,
+        ft.PagePlatform.ANDROID_TV,
+        ft.PagePlatform.IOS,
+        ft.PagePlatform.MACOS,
+    }
 
     async def refresh():
         enabled = await notifications.are_notifications_enabled()
         status.value = "Notifications are on." if enabled else "Notifications are off."
-        # Once the user has said no, only the system settings can turn them on.
-        settings_button.visible = not enabled and (
-            not page.web and page.platform in SETTINGS_PLATFORMS
-        )
         page.update()
 
     async def request(e: ft.Event[ft.Button]):
@@ -34,7 +29,7 @@ async def main(page: ft.Page):
 
     async def request_full_screen(e: ft.Event[ft.Button]):
         granted = await notifications.request_full_screen_intent_permission()
-        page.show_dialog(ft.SnackBar(ft.Text(f"Full-screen notifications: {granted}")))
+        page.show_dialog(ft.SnackBar(f"Full-screen notifications: {granted}"))
 
     async def request_policy_access(e: ft.Event[ft.Button]):
         if not await notifications.has_notification_policy_access():
@@ -46,24 +41,30 @@ async def main(page: ft.Page):
             await refresh()
 
     page.on_app_lifecycle_state_change = handle_lifecycle
-    status = ft.Text()
-    settings_button = ft.Button("Open notification settings", on_click=open_settings)
+
     page.add(
         ft.SafeArea(
             content=ft.Column(
-                [
-                    status,
+                controls=[
+                    status := ft.Text(),
                     ft.Button("Ask for permission", on_click=request),
-                    settings_button,
+                    ft.Button(
+                        "Open notification settings",
+                        on_click=open_settings,
+                        disabled=not has_settings,
+                        tooltip=None if has_settings else "Android, iOS and macOS only",
+                    ),
                     ft.Button(
                         "Allow full-screen notifications",
                         on_click=request_full_screen,
-                        visible=android,
+                        disabled=not android,
+                        tooltip=None if android else "Android only",
                     ),
                     ft.Button(
                         "Allow Do Not Disturb access",
                         on_click=request_policy_access,
-                        visible=android,
+                        disabled=not android,
+                        tooltip=None if android else "Android only",
                     ),
                 ]
             )

@@ -38,7 +38,7 @@ async def main(page: ft.Page):
         shown = await notifications.get_active()
         listed.controls = [
             ft.Row(
-                [
+                controls=[
                     ft.Text(f"#{n.id} {n.title or ''}"),
                     ft.TextButton(
                         "Dismiss",
@@ -75,11 +75,11 @@ async def main(page: ft.Page):
             await refresh()
 
     page.on_app_lifecycle_state_change = handle_lifecycle
-    listed = ft.Column()
+
     page.add(
         ft.SafeArea(
             content=ft.Column(
-                [
+                controls=[
                     ft.Text(
                         "Windows lists and removes notifications only for apps "
                         "packaged as MSIX.",
@@ -89,7 +89,7 @@ async def main(page: ft.Page):
                     ft.Button("Post messages", on_click=post),
                     ft.Button("Dismiss all", on_click=dismiss_all),
                     ft.Text("Shown", weight=ft.FontWeight.BOLD),
-                    listed,
+                    listed := ft.Column(),
                 ]
             )
         )
