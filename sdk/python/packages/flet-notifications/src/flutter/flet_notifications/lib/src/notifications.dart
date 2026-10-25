@@ -422,13 +422,7 @@ class NotificationsService extends FletService {
         return await _show(args);
 
       case "cancel":
-        final map = args as Map;
-        final tag = map["tag"] as String?;
-        await _plugin?.cancel(
-          id: parseInt(map["id"])!,
-          tag: tag?.isEmpty == true ? null : tag,
-        );
-        return null;
+        return await _cancel(args);
 
       case "cancel_all":
         await _plugin?.cancelAll();
@@ -469,14 +463,12 @@ class NotificationsService extends FletService {
         return await _requestPermissions(args);
 
       case "can_schedule_exact_alarms":
-        final android = _androidPlugin;
-        if (android == null) return true;
-        return await android.canScheduleExactNotifications() ?? false;
+        return _androidPlugin == null ||
+            (await _androidPlugin!.canScheduleExactNotifications() ?? false);
 
       case "request_exact_alarm_permission":
-        final android = _androidPlugin;
-        if (android == null) return true;
-        return await android.requestExactAlarmsPermission() ?? false;
+        return _androidPlugin == null ||
+            (await _androidPlugin!.requestExactAlarmsPermission() ?? false);
 
       case "are_notifications_enabled":
         return await _areNotificationsEnabled();
@@ -506,6 +498,16 @@ class NotificationsService extends FletService {
       default:
         throw NotificationException.operationFailed("unknown method $name");
     }
+  }
+
+  /// Cancels a notification, treating an empty tag as no tag.
+  Future<void> _cancel(dynamic args) async {
+    final map = args as Map;
+    final tag = map["tag"] as String?;
+    await _plugin?.cancel(
+      id: parseInt(map["id"])!,
+      tag: tag?.isEmpty == true ? null : tag,
+    );
   }
 
   Future<void> _show(dynamic args) async {
@@ -818,7 +820,8 @@ class NotificationsService extends FletService {
   Future<bool> _updateWindowsProgress(dynamic args) async {
     final windows = _windowsPlugin;
     if (windows == null) {
-      throw UnsupportedError("updating progress in place is Windows-only");
+      throw const NotificationException.unsupportedPlatform(
+          "update_windows_progress() is only supported on Windows");
     }
     final map = args as Map;
     // Windows only updates the bar's value and label; its status and title stay
@@ -839,7 +842,8 @@ class NotificationsService extends FletService {
   Future<void> _startForegroundService(dynamic args) async {
     final android = _androidPlugin;
     if (android == null) {
-      throw UnsupportedError("foreground service is Android-only");
+      throw const NotificationException.unsupportedPlatform(
+          "start_foreground_service() is only supported on Android");
     }
     final map = args as Map;
     final id = parseInt(map["id"])!;
