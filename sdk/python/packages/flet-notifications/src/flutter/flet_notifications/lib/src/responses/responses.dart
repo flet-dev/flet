@@ -88,28 +88,34 @@ Future<void> queueResponse(NotificationResponse response) async {
   signalResponseQueued();
 }
 
-/// Reads and removes all queued responses, oldest key first.
-Future<List<Map<String, Object?>>> drainResponseQueue(
+/// Delivers the queued responses, oldest key first, removing each once
+/// [deliver] has taken it.
+///
+/// Stops when [deliver] returns `false`, such as when the service that would
+/// receive the responses is gone, and leaves the rest queued. Unreadable entries
+/// are removed, so the queue can't wedge on bad data.
+Future<void> consumeResponseQueue(
   SharedPreferencesAsync prefs,
+  bool Function(Map<String, Object?> event) deliver,
 ) async {
   final keys = (await prefs.getKeys())
       .where((k) => k.startsWith(_queuePrefix))
       .toList()
     ..sort();
-  final out = <Map<String, Object?>>[];
   for (final key in keys) {
-    final raw = await prefs.getString(key);
-    if (raw != null) {
-      try {
-        final decoded = jsonDecode(raw);
-        if (decoded is Map) {
-          out.add(decoded.cast<String, Object?>());
-        }
-      } on FormatException {
-        // Drop unreadable entries — the queue must not wedge on bad data.
-      }
-    }
+    final event = _decodeQueuedResponse(await prefs.getString(key));
+    if (event != null && !deliver(event)) return;
     await prefs.remove(key);
   }
-  return out;
+}
+
+/// The event stored as [raw], or `null` when it's missing or unreadable.
+Map<String, Object?>? _decodeQueuedResponse(String? raw) {
+  if (raw == null) return null;
+  try {
+    final decoded = jsonDecode(raw);
+    return decoded is Map ? decoded.cast<String, Object?>() : null;
+  } on FormatException {
+    return null;
+  }
 }

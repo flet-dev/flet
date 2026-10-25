@@ -72,12 +72,19 @@ class NotificationsService extends FletService {
   /// launch details, so a launch response already seen live is not replayed.
   static final Set<String> _liveResponsesBeforeLaunchReplay = {};
 
+  /// The latest consumption of the response queue.
+  ///
+  /// Services consume the queue one at a time, so one that is closing and one
+  /// that is starting never deliver the same responses.
+  static Future<void> _queueConsumption = Future.value();
+
   /// Resets the state services share across the process.
   @visibleForTesting
   static void resetForTesting() {
     _live = null;
     _launchReplayComplete = false;
     _liveResponsesBeforeLaunchReplay.clear();
+    _queueConsumption = Future.value();
   }
 
   /// [SharedPreferencesAsync] key of the persisted Apple action categories,
@@ -292,10 +299,7 @@ class NotificationsService extends FletService {
       do {
         _replayAgain = false;
         if (_disposed) break;
-        for (final event
-            in await drainResponseQueue(SharedPreferencesAsync())) {
-          _triggerResponseEvent(event);
-        }
+        await _consumeQueuedResponses();
       } while (_replayAgain);
     } catch (e) {
       // Best-effort: preferences unavailable must not break the service.
@@ -303,6 +307,20 @@ class NotificationsService extends FletService {
     } finally {
       _replaying = false;
     }
+  }
+
+  /// Delivers the queued responses to this service after any other service's
+  /// consumption finishes, leaving them queued once this service is disposed.
+  Future<void> _consumeQueuedResponses() {
+    final consumption = _queueConsumption.then(
+      (_) => consumeResponseQueue(SharedPreferencesAsync(), (event) {
+        if (_disposed) return false;
+        _triggerResponseEvent(event);
+        return true;
+      }),
+    );
+    _queueConsumption = consumption.catchError((_) {});
+    return consumption;
   }
 
   /// Emits the response that launched the app, once per process.

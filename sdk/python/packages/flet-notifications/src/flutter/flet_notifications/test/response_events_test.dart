@@ -62,8 +62,18 @@ void main() {
     });
   });
 
-  group("drainResponseQueue", () {
-    test("returns events in key order and removes them", () async {
+  group("consumeResponseQueue", () {
+    Future<List<Map<String, Object?>>> consume({int? stopAfter}) async {
+      final delivered = <Map<String, Object?>>[];
+      await consumeResponseQueue(prefs, (event) {
+        if (stopAfter != null && delivered.length == stopAfter) return false;
+        delivered.add(event);
+        return true;
+      });
+      return delivered;
+    }
+
+    test("delivers events in key order and removes them", () async {
       final older = responseToEvent(_response(payload: "first"));
       final newer = responseToEvent(_response(payload: "second"));
       await prefs.setString(
@@ -72,14 +82,26 @@ void main() {
           "flet_notifications_queue_100-1", jsonEncode(older));
       await prefs.setString("unrelated_key", "keep me");
 
-      expect(await drainResponseQueue(prefs), [older, newer]);
-      expect(await drainResponseQueue(prefs), isEmpty);
+      expect(await consume(), [older, newer]);
+      expect(await consume(), isEmpty);
       expect(await prefs.getKeys(), {"unrelated_key"});
+    });
+
+    test("events not taken stay queued", () async {
+      final older = responseToEvent(_response(payload: "first"));
+      final newer = responseToEvent(_response(payload: "second"));
+      await prefs.setString(
+          "flet_notifications_queue_100-1", jsonEncode(older));
+      await prefs.setString(
+          "flet_notifications_queue_200-2", jsonEncode(newer));
+
+      expect(await consume(stopAfter: 1), [older]);
+      expect(await consume(), [newer]);
     });
 
     test("unreadable entries are dropped, not fatal", () async {
       await prefs.setString("flet_notifications_queue_1-1", "not json");
-      expect(await drainResponseQueue(prefs), isEmpty);
+      expect(await consume(), isEmpty);
       // The bad entry is removed rather than left to wedge the queue.
       expect(await prefs.getKeys(), isEmpty);
     });
