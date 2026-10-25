@@ -1,6 +1,13 @@
 #include "my_application.h"
 
+#include <errno.h>
 #include <flutter_linux/flutter_linux.h>
+#include <glib-unix.h>
+#include <glib/gstdio.h>
+#include <signal.h>
+#include <string.h>
+#include <sys/stat.h>
+#include <unistd.h>
 #ifdef GDK_WINDOWING_X11
 #include <gdk/gdkx.h>
 #endif
@@ -26,6 +33,252 @@ static gboolean no_impeller_requested() {
     return TRUE;
   }
   return g_strcmp0(g_getenv("FLUTTER_LINUX_RENDERER"), "software") == 0;
+}
+
+// Marks a desktop entry this app installed for itself, so it is only ever
+// rewritten or removed when it is the app's own.
+#define FLET_GENERATED_KEY "X-Flet-Generated"
+
+// While the app runs with its desktop entry installed: the entry, the
+// directory holding the app's runtime files, and this instance's marker in it.
+static gchar* installed_entry = nullptr;
+static gchar* runtime_dir = nullptr;
+static gchar* instance_marker = nullptr;
+
+// Who a desktop entry in the user's data directory belongs to.
+typedef enum { ENTRY_ABSENT, ENTRY_OWN, ENTRY_FOREIGN } EntryOwner;
+
+// Tells whose entry is at `path`, and returns an own entry's `contents`.
+//
+// Only a regular file this app can read and that carries FLET_GENERATED_KEY
+// is its own. Anything else that is there, such as an unreadable file or a
+// symlink, is the user's, and must not be replaced.
+static EntryOwner user_entry_owner(const gchar* path, gchar** contents) {
+  GStatBuf status;
+  if (g_lstat(path, &status) != 0) {
+    return errno == ENOENT ? ENTRY_ABSENT : ENTRY_FOREIGN;
+  }
+  g_autofree gchar* data = nullptr;
+  g_autoptr(GKeyFile) entry = g_key_file_new();
+  if (!S_ISREG(status.st_mode) ||
+      !g_file_get_contents(path, &data, nullptr, nullptr) ||
+      !g_key_file_load_from_data(entry, data, -1, G_KEY_FILE_NONE, nullptr) ||
+      !g_key_file_has_key(entry, G_KEY_FILE_DESKTOP_GROUP, FLET_GENERATED_KEY,
+                          nullptr)) {
+    return ENTRY_FOREIGN;
+  }
+  if (contents != nullptr) {
+    *contents = g_steal_pointer(&data);
+  }
+  return ENTRY_OWN;
+}
+
+// Returns whether `a` and `b` are the same file.
+static gboolean same_file(const gchar* a, const gchar* b) {
+  GStatBuf a_status, b_status;
+  return g_stat(a, &a_status) == 0 && g_stat(b, &b_status) == 0 &&
+         a_status.st_dev == b_status.st_dev &&
+         a_status.st_ino == b_status.st_ino;
+}
+
+// Returns whether another instance of the app runs, going by the markers in
+// `dir`; markers of instances that have exited are removed.
+static gboolean other_instance_running(const gchar* dir) {
+  g_autoptr(GDir) markers = g_dir_open(dir, 0, nullptr);
+  if (markers == nullptr) {
+    return FALSE;
+  }
+  gboolean running = FALSE;
+  const gchar* name;
+  while ((name = g_dir_read_name(markers)) != nullptr) {
+    gchar* end = nullptr;
+    gint64 pid = g_ascii_strtoll(name, &end, 10);
+    if (end == name || *end != '\0' || pid <= 0 || pid == getpid()) {
+      continue;
+    }
+    if (kill((pid_t)pid, 0) == 0 || errno == EPERM) {
+      running = TRUE;
+    } else {
+      g_autofree gchar* marker = g_build_filename(dir, name, nullptr);
+      g_remove(marker);
+    }
+  }
+  return running;
+}
+
+// Quotes `path` as one argument of a desktop entry's Exec key: inside double
+// quotes, `"`, `` ` ``, `$` and `\` are backslash-escaped.
+static gchar* quote_exec_argument(const gchar* path) {
+  GString* quoted = g_string_new("\"");
+  for (const gchar* c = path; *c != '\0'; c++) {
+    if (*c == '"' || *c == '`' || *c == '$' || *c == '\\') {
+      g_string_append_c(quoted, '\\');
+    }
+    g_string_append_c(quoted, *c);
+  }
+  g_string_append_c(quoted, '"');
+  return g_string_free(quoted, FALSE);
+}
+
+// Removes the desktop entry install_desktop_entry() installed, once no other
+// instance of the app runs.
+static void remove_desktop_entry() {
+  if (instance_marker == nullptr) {
+    return;
+  }
+  g_remove(instance_marker);
+  if (!other_instance_running(runtime_dir)) {
+    if (user_entry_owner(installed_entry, nullptr) == ENTRY_OWN) {
+      g_remove(installed_entry);
+    }
+    g_autofree gchar* icon = g_build_filename(runtime_dir, "icon.png", nullptr);
+    g_remove(icon);
+    g_rmdir(runtime_dir);
+  }
+  g_clear_pointer(&instance_marker, g_free);
+  g_clear_pointer(&installed_entry, g_free);
+  g_clear_pointer(&runtime_dir, g_free);
+}
+
+// Removes the desktop entry when the app is told to terminate, as at logout,
+// then terminates as the signal would have.
+static gboolean on_terminate_signal(gpointer signal_number) {
+  remove_desktop_entry();
+  signal(GPOINTER_TO_INT(signal_number), SIG_DFL);
+  raise(GPOINTER_TO_INT(signal_number));
+  return G_SOURCE_REMOVE;
+}
+
+// Installs the bundle's desktop entry for the current user while the app
+// runs, so desktops that take an app's icon and name only from an installed
+// entry show them.
+//
+// GNOME Shell does that on Wayland, and from version 46 on X11 too, and so do
+// KDE Plasma and COSMIC on Wayland: without an entry the dock shows a generic
+// icon and the app id as its name. The entry must be named after the app id,
+// as the desktop finds it by that name. It is hidden from the application
+// launcher (`NoDisplay`), and points at this executable, or at the AppImage
+// the app runs from, and at a copy of the bundle's icon that stays put while
+// any instance runs.
+//
+// The last instance to exit removes it, so it never outlives the app: an
+// entry in the user's directory takes precedence over a package's, and would
+// hide a version of the app installed later from the launcher.
+//
+// An entry the user installed is left alone, and so are sandboxed apps, which
+// Flatpak and Snap register, and an app a package installed with its own entry.
+static void install_desktop_entry(const gchar* exe_path) {
+  if (g_getenv("FLATPAK_ID") != nullptr || g_getenv("SNAP") != nullptr) {
+    return;
+  }
+  // An AppImage runs from a mount that goes away with it.
+  const gchar* launch_path = g_getenv("APPIMAGE");
+  if (launch_path == nullptr || *launch_path == '\0') {
+    launch_path = exe_path;
+  }
+  // GLib checks that an entry's program exists using the path as written,
+  // but expands `%` codes in it to launch it, so no Exec works for a path
+  // with a `%`.
+  if (strchr(launch_path, '%') != nullptr) {
+    return;
+  }
+
+  g_autofree gchar* entry_name = g_strconcat(APPLICATION_ID, ".desktop", nullptr);
+  g_autofree gchar* user_entry = g_build_filename(
+      g_get_user_data_dir(), "applications", entry_name, nullptr);
+  g_autofree gchar* installed = nullptr;
+  EntryOwner owner = user_entry_owner(user_entry, &installed);
+  if (owner == ENTRY_FOREIGN) {
+    return;
+  }
+
+  // The bundle keeps its entry in `share/` next to the executable; an AppImage
+  // or another `prefix/bin` + `prefix/share` layout keeps it a level up.
+  g_autofree gchar* exe_dir = g_path_get_dirname(exe_path);
+  g_autofree gchar* source = g_build_filename(exe_dir, "share", "applications",
+                                              entry_name, nullptr);
+  g_autoptr(GKeyFile) entry = g_key_file_new();
+  if (!g_key_file_load_from_file(entry, source, G_KEY_FILE_NONE, nullptr)) {
+    g_free(source);
+    source = g_build_filename(exe_dir, "..", "share", "applications",
+                              entry_name, nullptr);
+    if (!g_key_file_load_from_file(entry, source, G_KEY_FILE_NONE, nullptr)) {
+      return;
+    }
+  }
+
+  // The bundle's own entry is in a system data directory only when a wrapper
+  // added its `share/` to XDG_DATA_DIRS, which the desktop doesn't see.
+  for (const gchar* const* dir = g_get_system_data_dirs(); *dir != nullptr;
+       dir++) {
+    g_autofree gchar* system_entry =
+        g_build_filename(*dir, "applications", entry_name, nullptr);
+    if (g_file_test(system_entry, G_FILE_TEST_EXISTS) &&
+        !same_file(system_entry, source)) {
+      if (owner == ENTRY_OWN) {
+        g_remove(user_entry);
+      }
+      return;
+    }
+  }
+
+  // The marker comes first, so an instance exiting meanwhile keeps the entry.
+  g_autofree gchar* app_runtime_dir = g_build_filename(
+      g_get_user_runtime_dir(), "flet", APPLICATION_ID, nullptr);
+  g_autofree gchar* pid = g_strdup_printf("%d", (int)getpid());
+  g_autofree gchar* marker = g_build_filename(app_runtime_dir, pid, nullptr);
+  if (g_mkdir_with_parents(app_runtime_dir, 0700) != 0 ||
+      !g_file_set_contents(marker, "", 0, nullptr)) {
+    return;
+  }
+
+  g_autofree gchar* exec_path = quote_exec_argument(launch_path);
+  g_autofree gchar* exec = g_strconcat(exec_path, " %U", nullptr);
+  g_key_file_set_string(entry, G_KEY_FILE_DESKTOP_GROUP,
+                        G_KEY_FILE_DESKTOP_KEY_EXEC, exec);
+  g_autofree gchar* bundle_icon =
+      g_build_filename(exe_dir, "data", "app_icon.png", nullptr);
+  g_autofree gchar* icon_data = nullptr;
+  gsize icon_size = 0;
+  if (g_file_get_contents(bundle_icon, &icon_data, &icon_size, nullptr)) {
+    g_autofree gchar* icon =
+        g_build_filename(app_runtime_dir, "icon.png", nullptr);
+    g_key_file_set_string(
+        entry, G_KEY_FILE_DESKTOP_GROUP, G_KEY_FILE_DESKTOP_KEY_ICON,
+        g_file_set_contents(icon, icon_data, icon_size, nullptr) ? icon
+                                                                 : bundle_icon);
+  }
+  g_key_file_set_boolean(entry, G_KEY_FILE_DESKTOP_GROUP,
+                         G_KEY_FILE_DESKTOP_KEY_NO_DISPLAY, TRUE);
+  g_key_file_set_boolean(entry, G_KEY_FILE_DESKTOP_GROUP, FLET_GENERATED_KEY,
+                         TRUE);
+  // The bundle's comment explains installing the entry by hand.
+  g_key_file_remove_comment(entry, nullptr, nullptr, nullptr);
+
+  g_autofree gchar* contents = g_key_file_to_data(entry, nullptr, nullptr);
+  if (g_strcmp0(contents, installed) != 0) {
+    g_autofree gchar* user_dir = g_path_get_dirname(user_entry);
+    g_autoptr(GError) error = nullptr;
+    if (g_mkdir_with_parents(user_dir, 0700) != 0 ||
+        !g_file_set_contents(user_entry, contents, -1, &error)) {
+      g_warning("Failed to install desktop entry %s: %s", user_entry,
+                error != nullptr ? error->message : g_strerror(errno));
+      g_remove(marker);
+      return;
+    }
+  }
+
+  installed_entry = g_steal_pointer(&user_entry);
+  runtime_dir = g_steal_pointer(&app_runtime_dir);
+  instance_marker = g_steal_pointer(&marker);
+  // Closing the window runs the app's shutdown, which removes the entry;
+  // `sys.exit()` ends the process at once, leaving it to the next start.
+  atexit(remove_desktop_entry);
+  const int terminate_signals[] = {SIGTERM, SIGINT, SIGHUP};
+  for (int signal_number : terminate_signals) {
+    g_unix_signal_add(signal_number, on_terminate_signal,
+                      GINT_TO_POINTER(signal_number));
+  }
 }
 
 // Implements GApplication::activate.
@@ -65,9 +318,14 @@ static void my_application_activate(GApplication* application) {
   // XWayland) it is exported as the _NET_WM_ICON property read by taskbars
   // and window switchers. Native Wayland sessions have no window-icon
   // protocol GTK 3 can use; there the desktop environment resolves the icon
-  // from an installed APPLICATION_ID.desktop entry instead.
+  // from an installed APPLICATION_ID.desktop entry instead, which
+  // install_desktop_entry() provides.
   g_autofree gchar* exe_path = g_file_read_link("/proc/self/exe", nullptr);
   if (exe_path != nullptr) {
+    // `[tool.flet.linux].desktop_entry=false` turns the entry off.
+    if ({{ "FALSE" if get_pyproject("tool.flet.linux.desktop_entry") == false else "TRUE" }}) {
+      install_desktop_entry(exe_path);
+    }
     g_autofree gchar* exe_dir = g_path_get_dirname(exe_path);
     g_autofree gchar* icon_path =
         g_build_filename(exe_dir, "data", "app_icon.png", nullptr);
@@ -193,6 +451,7 @@ static void my_application_shutdown(GApplication* application) {
   //MyApplication* self = MY_APPLICATION(object);
 
   // Perform any actions required at application shutdown.
+  remove_desktop_entry();
 
   G_APPLICATION_CLASS(my_application_parent_class)->shutdown(application);
 }

@@ -23,6 +23,7 @@
 
 ### Improvements
 
+* `flet build linux` apps install a hidden desktop entry for the current user while they run, so GNOME's dock shows the app's icon and name instead of a generic icon and the app id, on Wayland and on GNOME 46+ under X11. Turn it off with `[tool.flet.linux] desktop_entry = false`. See [App icon](https://flet.dev/docs/publish/linux#app-icon) by @ndonkoHenri.
 * `flet build` always generates app icons and the splash screen. An app without an icon of its own gets them generated from the Flet logo, which `flet-platform-assets` now bundles as `DEFAULT_ICON`, instead of the build template's committed icons. Previews of the icons a build will produce now match the build for every app. The default web icons are the bare logo rather than the logo on a white tile by @FeodorFitsner.
 * Add `min_width`, `max_width`, `min_height` and `max_height` to every layout control. They are applied by the client on every layout pass, so a capped, centered column (e.g. `Container(max_width=760)` in a `Column(horizontal_alignment=CENTER)`) stays correct while the window resizes - no more computing widths in Python from `page.width` or `on_size_change`, which always lagged a frame or more behind by @FeodorFitsner.
 * Add `ft.MaterialTapTargetSize` with `Switch.material_tap_target_size` and `Theme.material_tap_target_size`: `SHRINK_WRAP` drops Material's 48px minimum tappable area for dense, pointer-driven layouts by @FeodorFitsner.

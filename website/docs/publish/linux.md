@@ -89,20 +89,37 @@ default Flet icon) in the `assets` directory of your Flet app — see
 [Icons](index.md#icons). `flet build linux` renders it into the bundle as
 `data/app_icon.png`, and the app sets it as its window icon on startup.
 
-How the icon shows up depends on the display server (see
+How the icon shows up depends on the desktop (see
 [Window positioning on Wayland](#window-positioning-on-wayland) for checking
 the session type):
 
-- **X11** (and XWayland): taskbars and window switchers read the window icon
-  directly — it works out of the box, no installation needed.
+- **X11** (and XWayland): most taskbars and window switchers read the window
+  icon directly. GNOME Shell 46 and later (Ubuntu 24.04) doesn't, even on X11.
 - **Wayland** (the default session on modern GNOME/Ubuntu): the protocol has no
   window-icon concept. The desktop environment resolves the app's name and icon
   from an installed `.desktop` entry matching the app id, and shows a generic
   icon until one is installed.
 
-For Wayland (and for listing the app in the application launcher on any
-session), the bundle ships a ready-to-install desktop entry and icon under
-`share/`:
+So that the dock shows the app's icon and name everywhere, the app installs a
+desktop entry for the current user while it runs, at
+`applications/<bundle_id>.desktop` in `$XDG_DATA_HOME` (`~/.local/share` by
+default), and the last running instance removes it when it closes. The entry
+is hidden from the application launcher (`NoDisplay=true`), so it doesn't add
+the app to the user's app grid, and as it doesn't outlive the app, pinning the
+app to the dock lasts only while it runs. The app leaves alone an entry with
+the same name that a package installed system-wide, or that the user
+installed themselves, and installs none when it runs in Flatpak or Snap, or
+from a path containing `%`.
+
+To turn this off, set `desktop_entry` to `false`:
+
+```toml title="pyproject.toml"
+[tool.flet.linux]
+desktop_entry = false
+```
+
+To list the app in the application launcher, or pin it for good, install the
+desktop entry and icon the bundle ships under `share/`:
 
 ```
 share/applications/<bundle_id>.desktop
@@ -133,10 +150,11 @@ arguments and the launcher fails. Linux packaging tools
 The desktop entry's name comes from `--product` and its comment from
 `--description` (or the corresponding `pyproject.toml` settings); the app id is
 the [bundle ID](index.md#bundle-id) — `<org_name>.<project_name>` by default.
-Until the entry is installed the desktop environment has no name for the app
-and falls back to that id, so the dock tooltip reads `com.example.my_app`
-rather than your product name; installing the entry fixes the name and the
-Wayland icon together, since both are resolved from it.
+Without an entry the desktop environment has no name for the app and falls back
+to that id, so the dock tooltip reads `com.example.my_app` rather than your
+product name; an installed entry, the app's own or this one, fixes the name and
+the icon together, since both are resolved from it. Installing this entry
+replaces the one the app installs for itself, which then leaves it alone.
 
 Its [application categories](#application-categories) decide where the app is
 filed in application menus.
@@ -374,15 +392,10 @@ executable's own path, so `AppRun` only has to `exec` it.
 `desktop-file-validate` over it, failing on any error. Both are satisfied by
 the generated entry.
 
-:::note[An AppImage registers nothing with the desktop]
-The desktop entry travels *inside* the image, where nothing scans it. So the
-app grid has no entry for the app, and hovering its icon shows the app id
-rather than the name — the shell has no `Name=` to read and falls back to what
-the window calls itself.
-
-The window and dock icons still work on X11, because those come from the
-window's own `_NET_WM_ICON` rather than from an entry. On Wayland, where the
-icon is resolved through the entry too, an unregistered AppImage gets neither.
+:::note[An AppImage isn't listed in the app grid]
+The desktop entry travels *inside* the image, where nothing scans it. While the
+app runs, the hidden entry it installs for itself (see [App icon](#app-icon))
+gives the dock its icon and name. But the app grid has no entry for the app.
 
 Users can register it themselves with a tool like
 [AppImageLauncher](https://github.com/TheAssassin/AppImageLauncher). If you
