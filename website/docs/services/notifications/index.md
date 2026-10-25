@@ -49,7 +49,7 @@ The following sections describe the configuration required for each platform.
 
 ### Android
 
-No configuration is needed. The extension adds the receivers that deliver
+The extension adds the receivers that deliver
 action buttons and scheduled notifications, and restore schedules after a reboot
 or an app update, to your app's manifest, with the `POST_NOTIFICATIONS`,
 `VIBRATE` and `RECEIVE_BOOT_COMPLETED` permissions. [`flet build`](../../cli/flet-build.md)

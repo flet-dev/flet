@@ -190,10 +190,18 @@ class AndroidScheduleMode(Enum):
       granted again. See Android's
       [exact alarm permission](https://developer.android.com/develop/background-work/services/alarms/schedule#exact-permission-declare)
       documentation.
+    - Alarm-clock and calendar apps can declare
+      `"android.permission.USE_EXACT_ALARM"` instead. Android grants it without
+      the user's action and it can't be revoked, but Google Play allows it only for
+      those kinds of apps.
 
     Note:
         Delivery in every mode remains subject to Android's alarm quotas and
-        background-execution restrictions.
+        background-execution restrictions. Some manufacturers, such as Xiaomi,
+        Huawei and Samsung, also stop apps in the background, so scheduled
+        notifications may not arrive until the user exempts the app; see
+        [Don't kill my app!](https://dontkillmyapp.com). Samsung devices have been
+        reported to accept at most 500 scheduled alarms per app.
     """
 
     ALARM_CLOCK = "alarmClock"
@@ -923,6 +931,8 @@ class NotificationChannel:
         Obtain notification-policy access with
         :meth:`flet_notifications.Notifications.request_notification_policy_access`
         before creating the channel; otherwise Android ignores the request.
+        Bypassing Do Not Disturb doesn't override the device's silent or vibrate
+        mode.
     """
 
     play_sound: bool = True
@@ -1269,11 +1279,16 @@ class AndroidOptions:
     Whether to request full-screen presentation when the notification arrives.
 
     Note:
-        Requires Android manifest configuration and, on Android 14+, full-screen-intent
+        Requires the `"android.permission.USE_FULL_SCREEN_INTENT"` permission in
+        `[tool.flet.android.permission]` and, on Android 14+, full-screen-intent
         access. See
         :meth:`flet_notifications.Notifications.request_full_screen_intent_permission`.
         Android may show a heads-up notification instead. A full-screen launch is
         reported through :attr:`flet_notifications.Notifications.on_tap`.
+
+        On a locked device, Android turns the screen on and starts the app, but the
+        app stays behind the lock screen: the user sees the notification there and
+        reaches the app after unlocking.
     """
 
     shortcut_id: str | None = None
