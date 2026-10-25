@@ -147,6 +147,10 @@ Set<fln.AndroidServiceForegroundType>? parseForegroundServiceTypes(
 }
 
 /// Builds the Android details of a notification from an `AndroidOptions` payload.
+///
+/// The channel's LED color is set on the notification only with both LED
+/// durations: Android before 8.0 blinks the LED per notification and needs
+/// them, and later versions take the color from the channel.
 fln.AndroidNotificationDetails parseAndroidDetails({
   required List<ParsedAction> actions,
   Map<dynamic, dynamic>? options,
@@ -177,6 +181,10 @@ fln.AndroidNotificationDetails parseAndroidDetails({
   final progress = androidOptions["progress"] as Map?;
   final group = androidOptions["group"] as Map?;
   final channel = parseNotificationChannel(androidOptions["channel"]);
+  final ledOnMs =
+      parseDuration(androidOptions["led_on_duration"])?.inMilliseconds;
+  final ledOffMs =
+      parseDuration(androidOptions["led_off_duration"])?.inMilliseconds;
   return fln.AndroidNotificationDetails(
     channel.id,
     channel.name,
@@ -219,9 +227,9 @@ fln.AndroidNotificationDetails parseAndroidDetails({
     progress: parseInt(progress?["value"], 0)!,
     indeterminate: parseBool(progress?["indeterminate"], false)!,
     enableLights: channel.enableLights,
-    ledColor: channel.ledColor,
-    ledOnMs: parseDuration(androidOptions["led_on_duration"])?.inMilliseconds,
-    ledOffMs: parseDuration(androidOptions["led_off_duration"])?.inMilliseconds,
+    ledColor: ledOnMs != null && ledOffMs != null ? channel.ledColor : null,
+    ledOnMs: ledOnMs,
+    ledOffMs: ledOffMs,
     ticker: androidOptions["ticker"] as String?,
     visibility:
         parseNotificationVisibility(androidOptions["visibility"] as String?),

@@ -1325,9 +1325,10 @@ class AndroidOptions:
     Time the notification LED remains on during each blink.
 
     Note:
-        Used only before Android 8.0, together with the :attr:`channel`'s
-        :attr:`~flet_notifications.NotificationChannel.led_color`. On newer versions,
-        the device controls the blinking pattern.
+        Effective only before Android 8.0, where the LED blinks in the :attr:`channel`'s
+        :attr:`~flet_notifications.NotificationChannel.led_color` only when both
+        :attr:`led_on_duration` and :attr:`led_off_duration` are set. On newer
+        versions, the device controls the blinking pattern.
     """
 
     led_off_duration: Annotated[ft.DurationValue | None, non_negative_duration()] = None
@@ -1335,7 +1336,8 @@ class AndroidOptions:
     Time the notification LED remains off between blinks.
 
     Note:
-        Used only before Android 8.0, together with the :attr:`channel`'s
-        :attr:`~flet_notifications.NotificationChannel.led_color`. On newer versions,
-        the device controls the blinking pattern.
+        Effective only before Android 8.0, where the LED blinks in the :attr:`channel`'s
+        :attr:`~flet_notifications.NotificationChannel.led_color` only when both
+        :attr:`led_on_duration` and :attr:`led_off_duration` are set. On newer
+        versions, the device controls the blinking pattern.
     """
