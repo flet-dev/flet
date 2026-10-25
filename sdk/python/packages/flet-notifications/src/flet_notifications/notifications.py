@@ -188,9 +188,10 @@ class Notifications(ft.Service):
           called once per launch; use it, for example, to route the app to the
           notification's content.
         - On Linux, a selection reaches the app only while it is running; selecting a
-          notification after the app has closed doesn't launch it. On Windows, the
-          same applies to an app run with `flet run` or packaged with `flet pack`; an
-          app built with `flet build` is launched.
+          notification after the app has closed doesn't launch it.
+        - On Windows, an app built with `flet build` is launched to receive a
+          selection made after it closed. An app run with `flet run` or packaged with
+          `flet pack` receives a selection only while it is running.
     """
 
     on_action: ft.EventHandler[NotificationActionEvent["Notifications"]] | None = None
@@ -214,9 +215,10 @@ class Notifications(ft.Service):
         - Background Android/iOS actions are queued and replayed on the next service
           initialization; Python is not run in the background isolate.
         - On Linux, an action reaches the app only while it is running; selecting one
-          after the app has closed doesn't launch it. On Windows, the same applies to
-          an app run with `flet run` or packaged with `flet pack`; an app built with
-          `flet build` is launched.
+          after the app has closed doesn't launch it.
+        - On Windows, an app built with `flet build` is launched to receive an action
+          selected after it closed. An app run with `flet run` or packaged with
+          `flet pack` receives an action only while it is running.
     """
 
     def _require_platform(
