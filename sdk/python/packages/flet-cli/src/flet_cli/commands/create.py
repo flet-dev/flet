@@ -17,6 +17,7 @@ from flet_cli.utils.examples import (
     copy_local_example,
     download_example,
     normalize_example_id,
+    remove_tooling_only_tables,
     set_project_metadata,
 )
 
@@ -237,6 +238,7 @@ class Command(BaseCommand):
                 )
             exit(1)
 
+        remove_tooling_only_tables(out_dir / "pyproject.toml")
         set_project_metadata(
             out_dir / "pyproject.toml",
             name=slugify(options.project_name or out_dir.name),

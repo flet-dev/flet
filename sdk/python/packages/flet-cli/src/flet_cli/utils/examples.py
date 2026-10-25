@@ -15,6 +15,11 @@ EXAMPLES_REPO_PATH = "sdk/python/examples"
 
 _SKIPPED_NAMES = {"__pycache__", "build", "dist"}
 
+_IRRELEVANT_TABLES = ("tool.flet.gallery", "tool.flet.metadata")
+_TOML_TABLE_HEADER_RE = re.compile(
+    r"^\s*\[\[?\s*([A-Za-z0-9_-]+(?:\s*\.\s*[A-Za-z0-9_-]+)*)\s*\]\]?\s*(?:#.*)?$"
+)
+
 
 class ExampleNotFoundError(Exception):
     """Raised when an example ID does not name an example project."""
@@ -164,3 +169,23 @@ def set_project_metadata(
     pyproject_path.write_text(
         text[: match.start(1)] + table + text[match.end(1) :], encoding="utf-8"
     )
+
+
+def remove_tooling_only_tables(pyproject_path: Path) -> None:
+    """
+    Remove the pyproect.toml tables that are irrelevant for the example
+    and collapse blank lines.
+    """
+    kept: list[str] = []
+    skipping = False
+    for line in pyproject_path.read_text(encoding="utf-8").splitlines():
+        if header := _TOML_TABLE_HEADER_RE.match(line):
+            name = re.sub(r"\s+", "", header.group(1))
+            skipping = any(
+                name == table or name.startswith(f"{table}.")
+                for table in _IRRELEVANT_TABLES
+            )
+        if not skipping:
+            kept.append(line)
+    text = re.sub(r"\n{3,}", "\n\n", "\n".join(kept)).strip("\n")
+    pyproject_path.write_text(f"{text}\n", encoding="utf-8")
