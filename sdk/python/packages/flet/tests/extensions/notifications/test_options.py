@@ -16,6 +16,7 @@ from flet_notifications import (
     Notifications,
     NotificationUnsupportedPlatformException,
     WebOptions,
+    WindowsNotificationSound,
     WindowsOptions,
     WindowsProgress,
 )
@@ -218,3 +219,13 @@ def test_action_sends_require_authentication_only_when_set():
         )["require_authentication"]
         is True
     )
+
+
+def test_windows_looping_sounds_reach_the_client():
+    """Alarm and call sounds go by the plugin's names, with the loop flag."""
+    assert encode_wire(
+        WindowsOptions(sound=WindowsNotificationSound.CALL_10, loop_sound=True)
+    ) == {"sound": "call10", "loop_sound": True}
+    assert [
+        s.value for s in WindowsNotificationSound if s.name.startswith("ALARM")
+    ] == [f"alarm{i}" for i in range(1, 11)]

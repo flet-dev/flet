@@ -98,37 +98,34 @@ fln.LinuxNotificationCategory? parseLinuxNotificationCategory(String? value) {
   for (final category in fln.LinuxNotificationCategory.values) {
     if (category.name.toLowerCase() == value.toLowerCase()) return category;
   }
-  throw NotificationException.invalidArgument(
-    "unknown Linux notification category: $value",
-  );
+  return null;
 }
 
 fln.LinuxNotificationUrgency? parseLinuxNotificationUrgency(String? value,
         [fln.LinuxNotificationUrgency? defaultValue]) =>
     parseEnum(fln.LinuxNotificationUrgency.values, value, defaultValue);
 
+/// A Windows header with [title], under a fixed ID, so every notification with
+/// a header shares one group in the notification center.
 fln.WindowsHeader? parseWindowsHeader(String? title) {
   if (title == null || title.isEmpty) return null;
   return fln.WindowsHeader(id: "header", title: title, arguments: "");
 }
 
-fln.WindowsNotificationAudio? parseWindowsNotificationAudio(String? value,
-    [fln.WindowsNotificationAudio? defaultValue]) {
+fln.WindowsNotificationAudio? parseWindowsNotificationAudio(
+  String? value, {
+  bool loop = false,
+  fln.WindowsNotificationAudio? defaultValue,
+}) {
   if (value == null || value.isEmpty) return defaultValue;
   if (value.toLowerCase() == "silent") {
     return fln.WindowsNotificationAudio.silent();
   }
-  const presets = {
-    "default": fln.WindowsNotificationSound.defaultSound,
-    "im": fln.WindowsNotificationSound.im,
-    "mail": fln.WindowsNotificationSound.mail,
-    "reminder": fln.WindowsNotificationSound.reminder,
-    "sms": fln.WindowsNotificationSound.sms,
-  };
-  final sound = presets[value.toLowerCase()];
+  final sound = parseEnum(fln.WindowsNotificationSound.values,
+      value == "default" ? "defaultSound" : value);
   return sound == null
       ? defaultValue
-      : fln.WindowsNotificationAudio.preset(sound: sound);
+      : fln.WindowsNotificationAudio.preset(sound: sound, shouldLoop: loop);
 }
 
 fln.WindowsNotificationDuration? parseWindowsNotificationDuration(String? value,
@@ -162,15 +159,8 @@ fln.GroupAlertBehavior? parseGroupAlertBehavior(String? value,
     parseEnum(fln.GroupAlertBehavior.values, value, defaultValue);
 
 fln.AndroidNotificationCategory? parseAndroidNotificationCategory(
-  String? value,
-) {
-  if (value == null) return null;
-  final category = parseEnum(fln.AndroidNotificationCategory.values, value);
-  if (category != null) return category;
-  throw NotificationException.invalidArgument(
-    "unknown notification category: $value",
-  );
-}
+        String? value) =>
+    parseEnum(fln.AndroidNotificationCategory.values, value);
 
 fln.Importance? parseNotificationImportance(String? value,
         [fln.Importance? defaultValue]) =>

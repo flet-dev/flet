@@ -635,10 +635,10 @@ void main() {
           startsWith("invalid_argument: "));
       for (final options in [
         {
-          "linux": {"category": "invalid"}
+          "android": {"icon": 42}
         },
         {
-          "android": {"icon": 42}
+          "android": {"timestamp": "invalid"}
         },
       ]) {
         expect(await _call(service, method, {...args, "options": options}),
@@ -1395,17 +1395,17 @@ void main() {
     expect(plugin.foregroundStarts, 0);
   });
 
-  test("show preserves invalid_argument for an unknown Android category",
-      () async {
+  test("show ignores an unknown Android category", () async {
     final result = await _call(_makeService(), "show", {
       "id": 1,
       "options": {
         "android": {"category": "unknown-category"},
       },
     });
-    expect(result,
-        "invalid_argument: unknown notification category: unknown-category");
-    expect(plugin.shown, isEmpty);
+    expect(result, null);
+    final details =
+        plugin.shown.single["details"] as fln.AndroidNotificationDetails;
+    expect(details.category, isNull);
   });
 
   test(
@@ -1446,6 +1446,35 @@ void main() {
     expect(notificationImportanceName(fln.Importance.defaultImportance),
         "default");
     expect(notificationImportanceName(fln.Importance.high), "high");
+  });
+
+  test("Windows sounds are selected by name and can loop", () {
+    fln.WindowsNotificationAudio? audio(Map<String, Object?> windows) =>
+        notification_details
+            .parseNotificationDetails(
+              actions: const [],
+              details: {
+                "options": {"windows": windows},
+              },
+            )
+            .windows!
+            .audio;
+
+    // Every plugin sound is reachable by its name, "default" included.
+    for (final sound in fln.WindowsNotificationSound.values) {
+      final name = sound == fln.WindowsNotificationSound.defaultSound
+          ? "default"
+          : sound.toString().split(".").last;
+      expect(audio({"sound": name})!.source, sound.name, reason: name);
+    }
+    expect(audio({"sound": "alarm3"})!.shouldLoop, isFalse);
+    final looping = audio({"sound": "call10", "loop_sound": true})!;
+    expect(looping.source, fln.WindowsNotificationSound.call10.name);
+    expect(looping.shouldLoop, isTrue);
+    expect(audio({"sound": "silent"})!.isSilent, isTrue);
+    expect(audio({"sound": "unknown"})!.source,
+        fln.WindowsNotificationSound.defaultSound.name);
+    expect(audio({}), isNull);
   });
 
   test("Windows progress counts up to its max", () {
@@ -2163,7 +2192,7 @@ void main() {
         },
         "invalid_argument: ",
       ),
-      ({"category": "invalid"}, "invalid_argument: "),
+      ({"icon": 42}, "invalid_argument: "),
     ]) {
       expect(
           await _call(service, "show", {
@@ -2232,30 +2261,26 @@ void main() {
     expect(await _call(service, "get_notification_channels"), isEmpty);
   });
 
-  test(
-    "Python Linux category wire values match upstream and are accepted",
-    () async {
-      const categories = ['email.arrived', 'presence.offline'];
-      expect(
-        fln.LinuxNotificationCategory.values.map((value) => value.name),
-        containsAll(categories),
-      );
-      final service = _makeService();
-      for (final category in categories) {
-        expect(
-          await _call(service, "show", {
-            "id": 1,
-            "options": {
-              "linux": {"category": category},
-            },
-          }),
-          null,
-          reason: category,
-        );
-      }
-      expect(plugin.shown.length, categories.length);
-    },
-  );
+  test("Linux categories are selected by their freedesktop names", () {
+    fln.LinuxNotificationCategory? category(String value) =>
+        notification_details
+            .parseNotificationDetails(
+              actions: const [],
+              details: {
+                "options": {
+                  "linux": {"category": value},
+                },
+              },
+            )
+            .linux!
+            .category;
+    expect(
+        category("email.arrived"), fln.LinuxNotificationCategory.emailArrived);
+    // Misspelled upstream; the freedesktop name stays the reliable key.
+    expect(category("presence.offline"),
+        fln.LinuxNotificationCategory.presenceOffile);
+    expect(category("emailArrived"), isNull);
+  });
 
   test(
     "Python Android category wire values select the intended native category",

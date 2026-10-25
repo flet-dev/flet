@@ -74,7 +74,7 @@ fln.NotificationDetails parseNotificationDetails({
     final linuxOptions = _platformOptions(details, "linux") ?? const {};
     final webOptions = _platformOptions(details, "web") ?? const {};
     final windowsOptions = _platformOptions(details, "windows") ?? const {};
-    final windowsAudio = windowsOptions["audio"] as String?;
+    final windowsAudio = windowsOptions["sound"] as String?;
     final windowsProgress = windowsOptions["progress"] as Map?;
     final additionalFlags = parseInt(androidOptions["additional_flags"]);
     final linuxTimeout = parseDuration(linuxOptions["timeout"]);
@@ -177,7 +177,8 @@ fln.NotificationDetails parseNotificationDetails({
             ? null
             : parseWindowsNotificationAudio(
                 windowsAudio,
-                fln.WindowsNotificationAudio.preset(
+                loop: parseBool(windowsOptions["loop_sound"], false)!,
+                defaultValue: fln.WindowsNotificationAudio.preset(
                     sound: fln.WindowsNotificationSound.defaultSound),
               ),
         duration: parseWindowsNotificationDuration(

@@ -23,6 +23,13 @@ import 'utils/tap_queue_signal.dart';
 import 'utils/windows_identity.dart';
 import 'utils/windows_launch.dart';
 
+/// The `Notifications` service: runs Python's method calls on the
+/// notifications plugin and sends notification responses back as events.
+///
+/// The backend initializes when the service starts, and method calls wait for
+/// it. Responses that arrive while no service runs, such as taps in a
+/// background isolate or the tap that launched the app, are replayed once a
+/// service initializes.
 class NotificationsService extends FletService {
   NotificationsService({required super.control});
 
@@ -186,6 +193,13 @@ class NotificationsService extends FletService {
     }
   }
 
+  /// Loads what the backend needs, initializes it, then replays the queued
+  /// and launch responses.
+  ///
+  /// The steps run in order: the timezone for scheduling, the Windows identity,
+  /// the stored Apple categories, then the backend. The queue is listened to
+  /// before it's drained, so entries added meanwhile aren't missed. A failure
+  /// is kept for the next method call to report, and that call retries.
   Future<void> _doInitialize() async {
     _initialized = false;
     _initializationError = null;
@@ -261,6 +275,10 @@ class NotificationsService extends FletService {
     );
   }
 
+  /// Emits the responses queued while no service ran, oldest first.
+  ///
+  /// Signals that arrive during a replay make it drain the queue again rather
+  /// than run concurrently.
   Future<void> _replayQueuedTaps() async {
     if (_disposed) return;
     if (_replaying) {
@@ -284,6 +302,10 @@ class NotificationsService extends FletService {
     }
   }
 
+  /// Emits the response that launched the app, once per process.
+  ///
+  /// Android can also deliver that response live; one already seen live isn't
+  /// emitted again.
   Future<void> _replayLaunchDetails() async {
     if (_launchReplayComplete || _disposed) return;
     try {
@@ -319,6 +341,8 @@ class NotificationsService extends FletService {
     }
   }
 
+  /// Emits a live response, noting it until the launch replay finishes so
+  /// the launch response isn't emitted twice.
   void _handleResponse(fln.NotificationResponse response) {
     if (!_launchReplayComplete) {
       _liveResponsesBeforeLaunchReplay.add(_responseKey(response));
@@ -330,12 +354,17 @@ class NotificationsService extends FletService {
   static String _responseKey(fln.NotificationResponse response) =>
       jsonEncode(responseToEvent(response));
 
+  /// Sends [event] to Python as the event it names, without the `event` key.
   void _emit(Map<String, Object?> event) {
     final data = Map<String, Object?>.of(event);
     final name = data.remove("event") as String? ?? "tap";
     control.triggerEvent(name, data);
   }
 
+  /// Runs the Python method [name] with [args] once the backend is ready.
+  ///
+  /// Every failure is thrown as a [NotificationException], whose code selects
+  /// the exception class Python raises.
   Future<dynamic> invokeMethod(String name, [dynamic args]) async {
     await _ensureInitialized();
     // The backend can't initialize in a browser without notifications. The
@@ -670,6 +699,8 @@ class NotificationsService extends FletService {
     }
   }
 
+  /// Stores the Apple categories for [_loadDarwinCategories] to restore in
+  /// later app runs.
   Future<void> _saveDarwinCategories() async {
     try {
       await SharedPreferencesAsync()

@@ -37,7 +37,7 @@ class WindowsScenario(Enum):
     Show an expanded alarm that remains until dismissed.
 
     Note:
-        Windows normally loops the alarm sound unless audio options override it.
+        Windows normally loops the alarm sound unless sound options override it.
     """
 
     INCOMING_CALL = "incomingCall"
@@ -72,12 +72,18 @@ class WindowsNotificationSound(Enum):
     Sound choices for Windows notifications.
 
     Note:
-        Set :attr:`flet_notifications.WindowsOptions.audio`. These members select
+        Set :attr:`flet_notifications.WindowsOptions.sound`. These members select
         Windows system sounds or silence. Custom sound URIs are not supported.
+
+        The `ALARM_*` and `CALL_*` sounds are made for alarms and incoming calls,
+        and loop with :attr:`flet_notifications.WindowsOptions.loop_sound`.
     """
 
     DEFAULT = "default"
     """Play the standard Windows notification sound."""
+
+    SILENT = "silent"
+    """Disable audio."""
 
     IM = "im"
     """Play the Windows instant-message notification sound."""
@@ -91,8 +97,65 @@ class WindowsNotificationSound(Enum):
     SMS = "sms"
     """Play the Windows text-message notification sound."""
 
-    SILENT = "silent"
-    """Disable audio for this toast."""
+    ALARM_1 = "alarm1"
+    """Play Windows' looping alarm sound 1."""
+
+    ALARM_2 = "alarm2"
+    """Play Windows' looping alarm sound 2."""
+
+    ALARM_3 = "alarm3"
+    """Play Windows' looping alarm sound 3."""
+
+    ALARM_4 = "alarm4"
+    """Play Windows' looping alarm sound 4."""
+
+    ALARM_5 = "alarm5"
+    """Play Windows' looping alarm sound 5."""
+
+    ALARM_6 = "alarm6"
+    """Play Windows' looping alarm sound 6."""
+
+    ALARM_7 = "alarm7"
+    """Play Windows' looping alarm sound 7."""
+
+    ALARM_8 = "alarm8"
+    """Play Windows' looping alarm sound 8."""
+
+    ALARM_9 = "alarm9"
+    """Play Windows' looping alarm sound 9."""
+
+    ALARM_10 = "alarm10"
+    """Play Windows' looping alarm sound 10."""
+
+    CALL_1 = "call1"
+    """Play Windows' looping ringtone 1."""
+
+    CALL_2 = "call2"
+    """Play Windows' looping ringtone 2."""
+
+    CALL_3 = "call3"
+    """Play Windows' looping ringtone 3."""
+
+    CALL_4 = "call4"
+    """Play Windows' looping ringtone 4."""
+
+    CALL_5 = "call5"
+    """Play Windows' looping ringtone 5."""
+
+    CALL_6 = "call6"
+    """Play Windows' looping ringtone 6."""
+
+    CALL_7 = "call7"
+    """Play Windows' looping ringtone 7."""
+
+    CALL_8 = "call8"
+    """Play Windows' looping ringtone 8."""
+
+    CALL_9 = "call9"
+    """Play Windows' looping ringtone 9."""
+
+    CALL_10 = "call10"
+    """Play Windows' looping ringtone 10."""
 
 
 @ft.value(kw_only=True)
@@ -149,12 +212,24 @@ class WindowsOptions:
     arguments.
     """
 
-    audio: WindowsNotificationSound | None = None
+    sound: WindowsNotificationSound | None = None
     """
-    Windows system notification sound, or silence.
+    The sound to be played when the toast is displayed.
 
-    See :class:`~flet_notifications.WindowsNotificationSound`. Custom audio URIs and
-    arbitrary `ms-winsoundevent` names are not supported.
+    Custom audio URIs and arbitrary `ms-winsoundevent` names are not supported.
+    """
+
+    loop_sound: bool | None = None
+    """
+    Whether :attr:`sound` repeats until the notification is dismissed.
+
+    Note:
+        Windows loops sound only for notifications that stay on screen: those with
+        a :attr:`scenario` of :attr:`~flet_notifications.WindowsScenario.ALARM`,
+        :attr:`~flet_notifications.WindowsScenario.REMINDER` or
+        :attr:`~flet_notifications.WindowsScenario.INCOMING_CALL`, or a long
+        :attr:`duration`. Use it with the alarm and call sounds, which are made to
+        loop.
     """
 
     duration: WindowsNotificationDuration | None = None

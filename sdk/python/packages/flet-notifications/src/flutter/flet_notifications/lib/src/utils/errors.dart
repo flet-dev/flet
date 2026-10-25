@@ -38,6 +38,8 @@ class NotificationException implements Exception {
   final NotificationErrorCode code;
   final String message;
 
+  /// `"<code>: <message>"`, the text Flet reports to Python, which reads the
+  /// code to choose the exception class.
   @override
   String toString() => "${code.value}: $message";
 }
