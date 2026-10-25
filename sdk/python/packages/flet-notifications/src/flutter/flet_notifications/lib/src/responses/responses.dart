@@ -17,10 +17,11 @@ library;
 import 'dart:convert';
 import 'dart:ui' show DartPluginRegistrant;
 
-import 'package:flet/flet.dart' show isWindowsDesktop;
+import 'package:flet/flet.dart' show isApplePlatform, isWindowsDesktop;
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
+import '../platforms/darwin.dart';
 import '../platforms/windows.dart';
 import 'response_queue_signal.dart';
 
@@ -51,6 +52,8 @@ Map<String, Object?> responseToEvent(NotificationResponse response) {
     actionId = nonEmpty(launch.actionId);
     payload = nonEmpty(launch.payload);
     isAction = actionId != null;
+  } else if (actionId != null && isApplePlatform()) {
+    actionId = darwinActionId(actionId);
   }
   final input = nonEmpty(response.input) ??
       (response.data.length == 1

@@ -39,6 +39,19 @@ fln.InterruptionLevel? parseInterruptionLevel(String? value,
         [fln.InterruptionLevel? defaultValue]) =>
     parseEnum(fln.InterruptionLevel.values, value, defaultValue);
 
+/// Prefix of the native identifiers of background Apple actions.
+///
+/// The plugin opens the app for an action whenever any category has a
+/// foreground action with its identifier, so a background action shares no
+/// identifier with foreground ones.
+const String _darwinBackgroundActionPrefix = "flet_notifications_background_";
+
+/// The app's ID of the Apple action with the native [identifier].
+String darwinActionId(String identifier) =>
+    identifier.startsWith(_darwinBackgroundActionPrefix)
+        ? identifier.substring(_darwinBackgroundActionPrefix.length)
+        : identifier;
+
 /// Prefix of the Apple category identifiers this extension registers.
 const String darwinCategoryPrefix = "flet_notifications_actions_";
 
@@ -115,7 +128,9 @@ fln.DarwinNotificationCategory darwinCategory(
             authenticationRequired,
           ] in specs)
         _darwinAction(
-          id as String,
+          foreground == true
+              ? id as String
+              : "$_darwinBackgroundActionPrefix$id",
           title as String,
           {
             if (destructive == true)

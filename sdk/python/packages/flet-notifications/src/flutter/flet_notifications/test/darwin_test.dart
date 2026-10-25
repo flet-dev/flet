@@ -241,6 +241,20 @@ void main() {
     expect(second.initializations, hasLength(1));
   });
 
+  test("background actions share no native identifier with foreground ones",
+      () {
+    final category = darwinCategory(
+        "c",
+        darwinActionSpecs(parseActions([
+          {"id": "open", "title": "Open"},
+          {"id": "archive", "title": "Archive", "foreground": false},
+        ])));
+    final identifiers = category.actions.map((a) => a.identifier);
+    expect(identifiers.first, "open");
+    expect(identifiers.last, isNot("archive"));
+    expect(darwinActionId(identifiers.last), "archive");
+  });
+
   test("actions can require unlocking the device on Apple platforms", () {
     final category = darwinCategory(
         "c",

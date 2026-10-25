@@ -1,7 +1,9 @@
 import 'dart:convert';
 
+import 'package:flet_notifications/src/platforms/darwin.dart';
 import 'package:flet_notifications/src/platforms/windows.dart';
 import 'package:flet_notifications/src/responses/responses.dart';
+import 'package:flet_notifications/src/utils/actions.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart'
     as fln;
@@ -157,6 +159,25 @@ void main() {
       expect(event["id"], 3);
       expect(event["action_id"], '{"id": "x"}');
     });
+  });
+
+  test("Apple background actions report the app's action id", () {
+    final native = darwinCategory(
+        "c",
+        darwinActionSpecs(parseActions([
+          {"id": "archive", "title": "Archive", "foreground": false},
+        ]))).actions.single.identifier;
+    fln.NotificationResponse archive() => fln.NotificationResponse(
+          id: 3,
+          actionId: native,
+          notificationResponseType:
+              fln.NotificationResponseType.selectedNotificationAction,
+        );
+    addTearDown(() => debugDefaultTargetPlatformOverride = null);
+    debugDefaultTargetPlatformOverride = TargetPlatform.iOS;
+    expect(responseToEvent(archive())["action_id"], "archive");
+    debugDefaultTargetPlatformOverride = TargetPlatform.android;
+    expect(responseToEvent(archive())["action_id"], native);
   });
 
   test("an action id shaped like Windows launch arguments is kept elsewhere",
