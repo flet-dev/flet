@@ -15,9 +15,9 @@ fln.StyleInformation? parseStyle(Object? value) {
     }
     switch (value["_type"]) {
       case "big_text":
-        final text = value["big_text"];
+        final text = value["text"];
         if (text is! String || text.isEmpty) {
-          throw const FormatException("big_text style requires big_text");
+          throw const FormatException("big_text style requires text");
         }
         return fln.BigTextStyleInformation(
           text,

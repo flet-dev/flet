@@ -39,7 +39,7 @@ async def main(page: ft.Page):
             "Release notes",
             "Version 2.0 is out",
             ftn.AndroidBigTextStyle(
-                big_text="Version 2.0 brings offline mode, a redesigned editor, "
+                text="Version 2.0 brings offline mode, a redesigned editor, "
                 "faster sync and dozens of fixes. Expand to read the highlights."
             ),
         )

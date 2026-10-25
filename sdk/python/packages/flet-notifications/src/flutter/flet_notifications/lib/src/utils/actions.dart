@@ -105,7 +105,7 @@ ParsedInput? parseActionInput(Object? raw) {
         ? raw["label"] as String
         : null,
     choices: choices is List ? List<String>.from(choices) : const [],
-    allowFreeFormInput: parseBool(raw["allow_free_form_input"], true)!,
+    allowFreeFormInput: parseBool(raw["allow_free_form"], true)!,
     allowedMimeTypes:
         mimeTypes is List ? Set<String>.from(mimeTypes) : const {},
   );

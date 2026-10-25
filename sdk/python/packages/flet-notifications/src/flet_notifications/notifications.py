@@ -436,7 +436,7 @@ class Notifications(ft.Service):
               through the `RECEIVE_BOOT_COMPLETED` permission flet-notifications adds
               by default.
             - iOS keeps at most 64 pending notifications per app. Check
-              :meth:`get_pending_notifications` when scheduling many.
+              :meth:`get_pending` when scheduling many.
 
         Args:
             id: Notification identifier. Reuse it to update the same notification;
@@ -644,7 +644,7 @@ class Notifications(ft.Service):
         )
         await self._call("cancel_all_pending")
 
-    async def get_pending_notifications(self) -> list[PendingNotification]:
+    async def get_pending(self) -> list[PendingNotification]:
         """
         Query notifications scheduled for future delivery.
 
@@ -664,7 +664,7 @@ class Notifications(ft.Service):
                 query data.
         """
         self._require_platform(
-            "get_pending_notifications",
+            "get_pending",
             {
                 ft.PagePlatform.ANDROID,
                 ft.PagePlatform.ANDROID_TV,
@@ -720,7 +720,7 @@ class Notifications(ft.Service):
         """
         return await self._call("request_exact_alarm_permission")
 
-    async def create_notification_channel(self, channel: NotificationChannel) -> None:
+    async def create_channel(self, channel: NotificationChannel) -> None:
         """
         Create an Android notification channel or update its mutable details.
 
@@ -744,9 +744,9 @@ class Notifications(ft.Service):
                 failure.
         """
         validate_arguments(channel)
-        await self._call("create_notification_channel", channel)
+        await self._call("create_channel", channel)
 
-    async def delete_notification_channel(self, channel_id: str) -> None:
+    async def delete_channel(self, channel_id: str) -> None:
         """
         Delete an Android notification channel on Android 8.0+.
 
@@ -764,9 +764,9 @@ class Notifications(ft.Service):
                 failure.
         """
         validate_non_empty(channel_id=channel_id)
-        await self._call("delete_notification_channel", {"channel_id": channel_id})
+        await self._call("delete_channel", {"channel_id": channel_id})
 
-    async def get_notification_channels(self) -> list[NotificationChannel]:
+    async def get_channels(self) -> list[NotificationChannel]:
         """
         Query the app's Android notification channels.
 
@@ -779,9 +779,7 @@ class Notifications(ft.Service):
             NotificationException: If the backend reports a failure or returns malformed
                 query data.
         """
-        return parse_query_list(
-            await self._call("get_notification_channels"), NotificationChannel
-        )
+        return parse_query_list(await self._call("get_channels"), NotificationChannel)
 
     async def start_foreground_service(
         self,
@@ -792,7 +790,7 @@ class Notifications(ft.Service):
         actions: list[NotificationAction] | None = None,
         options: NotificationOptions | None = None,
         start_type: AndroidServiceStartType | None = None,
-        foreground_service_types: list[AndroidForegroundServiceType] | None = None,
+        service_types: list[AndroidForegroundServiceType] | None = None,
     ) -> None:
         """
         Start an Android foreground service with a visible notification.
@@ -822,7 +820,7 @@ class Notifications(ft.Service):
             start_type: Native service restart policy; see
                 :class:`~flet_notifications.AndroidServiceStartType`. This does
                 not control restarting Python tasks.
-            foreground_service_types: Kinds of work performed by the service;
+            service_types: Kinds of work performed by the service;
                 see :class:`~flet_notifications.AndroidForegroundServiceType`.
                 Must match the manifest declarations and permissions. `None`
                 or an empty list uses the manifest's service types.
@@ -855,7 +853,7 @@ class Notifications(ft.Service):
                 "body": body,
                 "payload": payload,
                 "start_type": start_type,
-                "foreground_service_types": foreground_service_types,
+                "service_types": service_types,
                 "actions": actions or None,
                 "options": options,
             },
@@ -965,7 +963,7 @@ class Notifications(ft.Service):
         """
         return await self._call("are_notifications_enabled")
 
-    async def open_app_notification_settings(self) -> None:
+    async def open_settings(self) -> None:
         """
         Open the operating system's notification settings for this app.
 
@@ -982,7 +980,7 @@ class Notifications(ft.Service):
                 failure.
         """
         self._require_platform(
-            "open_app_notification_settings",
+            "open_settings",
             {
                 ft.PagePlatform.ANDROID,
                 ft.PagePlatform.ANDROID_TV,
@@ -990,9 +988,9 @@ class Notifications(ft.Service):
                 ft.PagePlatform.MACOS,
             },
         )
-        await self._call("open_app_settings")
+        await self._call("open_settings")
 
-    async def get_active_notifications(self) -> list[ActiveNotification]:
+    async def get_active(self) -> list[ActiveNotification]:
         """
         Query delivered notifications that have not been dismissed or removed.
 
@@ -1012,7 +1010,7 @@ class Notifications(ft.Service):
                 query data.
         """
         self._require_platform(
-            "get_active_notifications",
+            "get_active",
             {
                 ft.PagePlatform.ANDROID,
                 ft.PagePlatform.ANDROID_TV,
@@ -1081,7 +1079,7 @@ class Notifications(ft.Service):
         """
         return await self._call("request_notification_policy_access")
 
-    async def create_notification_channel_group(
+    async def create_channel_group(
         self, group_id: str, *, name: str, description: str | None = None
     ) -> None:
         """
@@ -1106,7 +1104,7 @@ class Notifications(ft.Service):
         """
         validate_non_empty(group_id=group_id, name=name)
         await self._call(
-            "create_notification_channel_group",
+            "create_channel_group",
             {
                 "group_id": group_id,
                 "name": name,
@@ -1114,7 +1112,7 @@ class Notifications(ft.Service):
             },
         )
 
-    async def delete_notification_channel_group(self, group_id: str) -> None:
+    async def delete_channel_group(self, group_id: str) -> None:
         """
         Delete an Android notification-channel group and all its channels.
 
@@ -1133,6 +1131,6 @@ class Notifications(ft.Service):
         """
         validate_non_empty(group_id=group_id)
         await self._call(
-            "delete_notification_channel_group",
+            "delete_channel_group",
             {"group_id": group_id},
         )

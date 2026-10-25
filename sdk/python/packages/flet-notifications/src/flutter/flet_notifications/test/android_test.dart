@@ -77,12 +77,11 @@ void main() {
       plugin.queriedChannels = [
         fln.AndroidNotificationChannel("original", "Alerts", sound: sound),
       ];
-      final channels =
-          await invoke(service, "get_notification_channels") as List;
+      final channels = await invoke(service, "get_channels") as List;
       final channel = channels.single as Map;
       expect(channel["sound"], sound?.sound);
       expect(
-          await invoke(service, "create_notification_channel", {
+          await invoke(service, "create_channel", {
             ...channel,
             "id": "copy",
           }),
@@ -116,7 +115,7 @@ void main() {
       ),
     ];
     final service = makeService();
-    expect(await invoke(service, "get_notification_channels"), [
+    expect(await invoke(service, "get_channels"), [
       {
         "id": "alerts",
         "name": "Alerts",
@@ -135,7 +134,7 @@ void main() {
       },
     ]);
     plugin.queriedChannels = null;
-    expect(await invoke(service, "get_notification_channels"), isEmpty);
+    expect(await invoke(service, "get_channels"), isEmpty);
   });
 
   test("show maps actions onto AndroidNotificationAction", () async {
@@ -163,7 +162,7 @@ void main() {
           "input": {
             "label": "Say",
             "choices": <String>[],
-            "allow_free_form_input": true,
+            "allow_free_form": true,
             "allowed_mime_types": <String>[],
           },
         },
@@ -196,7 +195,7 @@ void main() {
       "request_full_screen_intent",
       "has_notification_policy_access",
       "request_notification_policy_access",
-      "open_app_settings",
+      "open_settings",
     ]) {
       expect(await invoke(service, method), isFalse, reason: method);
     }
@@ -223,12 +222,12 @@ void main() {
     ]) {
       expect(await invoke(service, method), isFalse, reason: method);
     }
-    expect(await invoke(service, "get_notification_channels"), isEmpty);
+    expect(await invoke(service, "get_channels"), isEmpty);
     for (final (method, args) in [
-      ("create_notification_channel", {"id": "alerts", "name": "Alerts"}),
-      ("delete_notification_channel", {"channel_id": "alerts"}),
-      ("create_notification_channel_group", {"group_id": "g", "name": "G"}),
-      ("delete_notification_channel_group", {"group_id": "g"}),
+      ("create_channel", {"id": "alerts", "name": "Alerts"}),
+      ("delete_channel", {"channel_id": "alerts"}),
+      ("create_channel_group", {"group_id": "g", "name": "G"}),
+      ("delete_channel_group", {"group_id": "g"}),
       ("stop_foreground_service", null),
     ]) {
       expect(await invoke(service, method, args), null, reason: method);
@@ -253,7 +252,7 @@ void main() {
       "actions": null,
       "options": {
         "android": {
-          "style": {"_type": "big_text", "big_text": "long text"},
+          "style": {"_type": "big_text", "text": "long text"},
           "group": {
             "key": "grp",
             "summary": false,
@@ -410,7 +409,7 @@ void main() {
       "payload": "",
       "actions": null,
       "start_type": "startStickyCompatibility",
-      "foreground_service_types": ["DATASYNC", "specialUse", "dataSync"],
+      "service_types": ["DATASYNC", "specialUse", "dataSync"],
     });
     expect(result, null);
     expect(plugin.foregroundStarts, 1);
@@ -432,7 +431,7 @@ void main() {
     ]) {
       final result = await invoke(service, "start_foreground_service", {
         "id": 4,
-        "foreground_service_types": value,
+        "service_types": value,
       });
       expect(result, startsWith("invalid_argument: "));
     }
@@ -445,7 +444,7 @@ void main() {
       expect(
           await invoke(service, "start_foreground_service", {
             "id": 4,
-            "foreground_service_types": value,
+            "service_types": value,
           }),
           null);
       expect(plugin.lastForegroundServiceTypes, isNull);

@@ -35,7 +35,7 @@ async def main(page: ft.Page):
         )
 
     async def refresh():
-        shown = await notifications.get_active_notifications()
+        shown = await notifications.get_active()
         listed.controls = [
             ft.Row(
                 [

@@ -30,7 +30,7 @@ async def main(page: ft.Page):
         await refresh()
 
     async def open_settings(e: ft.Event[ft.Button]):
-        await notifications.open_app_notification_settings()
+        await notifications.open_settings()
 
     async def request_full_screen(e: ft.Event[ft.Button]):
         granted = await notifications.request_full_screen_intent_permission()

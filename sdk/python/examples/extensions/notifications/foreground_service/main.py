@@ -25,7 +25,7 @@ def main(page: ft.Page):
             1,
             title="Syncing photos",
             body="Keeps running while you use other apps",
-            foreground_service_types=[ftn.AndroidForegroundServiceType.DATA_SYNC],
+            service_types=[ftn.AndroidForegroundServiceType.DATA_SYNC],
         )
 
     async def stop(e: ft.Event[ft.Button]):

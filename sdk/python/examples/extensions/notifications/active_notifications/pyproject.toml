@@ -15,7 +15,7 @@ categories = ["Utility/Notifications"]
 
 [tool.flet.metadata]
 title = "Shown notifications"
-docs_intro = "Groups the messages under a summary on Android, where dismissing the summary dismisses the whole group, and in one thread on iOS and macOS. [`get_active_notifications()`][flet_notifications.Notifications.get_active_notifications] lists only this app's notifications that are still shown. On Windows, listing and removing them needs an app packaged as MSIX."
+docs_intro = "Groups the messages under a summary on Android, where dismissing the summary dismisses the whole group, and in one thread on iOS and macOS. [`get_active()`][flet_notifications.Notifications.get_active] lists only this app's notifications that are still shown. On Windows, listing and removing them needs an app packaged as MSIX."
 controls = ["SafeArea", "Column", "Row", "Button", "TextButton", "Text", "Notifications"]
 layout_pattern = "inline-actions"
 complexity = "intermediate"

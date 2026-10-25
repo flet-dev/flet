@@ -116,7 +116,7 @@ void main() {
         "person": {"name": "Me"},
         "messages": "invalid"
       },
-      {"_type": "big_text", "big_text": "Hello", "content_title": 42},
+      {"_type": "big_text", "text": "Hello", "content_title": 42},
       {
         "_type": "inbox",
         "lines": [42]

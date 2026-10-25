@@ -130,7 +130,7 @@ Set<fln.AndroidServiceForegroundType>? parseForegroundServiceTypes(
   if (values == null) return null;
   if (values is! List) {
     throw const NotificationException.invalidArgument(
-      "foreground_service_types must be a list",
+      "service_types must be a list",
     );
   }
   if (values.isEmpty) return null;
@@ -138,7 +138,7 @@ Set<fln.AndroidServiceForegroundType>? parseForegroundServiceTypes(
     final type = value is String ? parseForegroundServiceType(value) : null;
     if (type == null) {
       throw NotificationException.invalidArgument(
-        "unknown foreground_service_types entry: $value",
+        "unknown service_types entry: $value",
       );
     }
     return type;

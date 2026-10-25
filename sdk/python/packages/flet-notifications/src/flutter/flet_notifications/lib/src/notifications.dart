@@ -453,13 +453,13 @@ class NotificationsService extends FletService {
       case "get_pending":
         return await _getPending();
 
-      case "create_notification_channel":
+      case "create_channel":
         return await _createChannel(args);
 
-      case "delete_notification_channel":
+      case "delete_channel":
         return await _deleteChannel(args);
 
-      case "get_notification_channels":
+      case "get_channels":
         return await _getChannels();
 
       case "start_foreground_service":
@@ -485,7 +485,7 @@ class NotificationsService extends FletService {
       case "are_notifications_enabled":
         return await _areNotificationsEnabled();
 
-      case "open_app_settings":
+      case "open_settings":
         return await _plugin?.openAppNotificationSettings() ?? false;
 
       case "get_active":
@@ -501,10 +501,10 @@ class NotificationsService extends FletService {
       case "request_notification_policy_access":
         return await _androidPlugin?.requestNotificationPolicyAccess() ?? false;
 
-      case "create_notification_channel_group":
+      case "create_channel_group":
         return await _createChannelGroup(args);
 
-      case "delete_notification_channel_group":
+      case "delete_channel_group":
         return await _deleteChannelGroup(args);
 
       default:
@@ -862,7 +862,7 @@ class NotificationsService extends FletService {
         fln.AndroidServiceStartType.startSticky,
       )!,
       foregroundServiceTypes: parseForegroundServiceTypes(
-        map["foreground_service_types"],
+        map["service_types"],
       ),
       notificationDetails: (await _buildNotificationDetails(
         actions: actions,

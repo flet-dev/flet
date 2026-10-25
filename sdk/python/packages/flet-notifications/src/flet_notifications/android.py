@@ -373,15 +373,15 @@ class AndroidServiceStartType(Enum):
         Android's foreground-service start restrictions still apply.
     """
 
-    START_STICKY_COMPATIBILITY = "startStickyCompatibility"
+    STICKY_COMPATIBILITY = "startStickyCompatibility"
     """
     Uses the compatibility form of Android's sticky-service policy.
 
-    Unlike :attr:`START_STICKY`, it does not guarantee a restart callback after
+    Unlike :attr:`STICKY`, it does not guarantee a restart callback after
     the service process is killed.
     """
 
-    START_STICKY = "startSticky"
+    STICKY = "startSticky"
     """
     Asks Android to recreate the service after its process is killed.
 
@@ -389,14 +389,14 @@ class AndroidServiceStartType(Enum):
     a null intent. This policy does not guarantee uninterrupted execution.
     """
 
-    START_NOT_STICKY = "startNotSticky"
+    NOT_STICKY = "startNotSticky"
     """
     Doesn't recreate a killed service unless there are pending start requests.
 
     The app must explicitly start new work when appropriate.
     """
 
-    START_REDELIVER_INTENT = "startRedeliverIntent"
+    REDELIVER_INTENT = "startRedeliverIntent"
     """
     Asks Android to recreate a killed service and redeliver its last start intent.
 
@@ -429,7 +429,7 @@ class AndroidForegroundServiceType(Enum):
     `foregroundServiceType = "location|mediaPlayback"`, and include the permissions and
     prerequisites for every selected type. Pass the matching enum members to the
     method's
-    [`foreground_service_types`][flet_notifications.Notifications.start_foreground_service]
+    [`service_types`][flet_notifications.Notifications.start_foreground_service]
     argument.
 
     Note:
@@ -749,7 +749,7 @@ class AndroidForegroundServiceType(Enum):
     Note:
         Android limits this type to about three minutes and does not support sticky
         restart behavior. Use
-        :attr:`flet_notifications.AndroidServiceStartType.START_NOT_STICKY` and call
+        :attr:`flet_notifications.AndroidServiceStartType.NOT_STICKY` and call
         :meth:`flet_notifications.Notifications.stop_foreground_service` before the
         deadline. This type cannot start another foreground service. If combined with
         another service type, Android ignores `shortService` and applies the other
@@ -870,7 +870,7 @@ class NotificationChannel:
 
     Pass it as :attr:`flet_notifications.AndroidOptions.channel` to create the channel
     when a notification is first posted to it, or create it upfront with
-    :meth:`flet_notifications.Notifications.create_notification_channel` and pass
+    :meth:`flet_notifications.Notifications.create_channel` and pass
     its :attr:`id` instead. Users manage channel preferences independently in Android
     settings. Sound, vibration, lights, and importance cannot be reset by posting
     another notification or recreating the same channel; use a new ID for a different
@@ -902,7 +902,7 @@ class NotificationChannel:
     ID of the notification-channel group containing this channel.
 
     Create the group first with
-    :meth:`flet_notifications.Notifications.create_notification_channel_group`.
+    :meth:`flet_notifications.Notifications.create_channel_group`.
     This organizes channels in settings; it does not group notifications in the tray.
     """
 
@@ -1074,7 +1074,7 @@ class AndroidOptions:
 
     Pass a :class:`~flet_notifications.NotificationChannel` to create the channel on
     first use, or the ID of a channel created earlier with
-    :meth:`flet_notifications.Notifications.create_notification_channel`. A
+    :meth:`flet_notifications.Notifications.create_channel`. A
     missing channel referenced only by ID is created with the name `"Notifications"`
     and default settings. `None` uses the extension's default channel.
 

@@ -107,7 +107,7 @@ class NotificationActionInput:
         Supported only on Android.
     """
 
-    allow_free_form_input: bool = True
+    allow_free_form: bool = True
     """
     Whether to allow the user to type an arbitrary reply.
 
@@ -225,7 +225,7 @@ class PendingNotification:
     Notification scheduled for future delivery.
 
     Returned by
-    :meth:`flet_notifications.Notifications.get_pending_notifications`. This is a
+    :meth:`flet_notifications.Notifications.get_pending`. This is a
     query snapshot, not an editable schedule; changing its fields does not update or
     cancel the native request. Unavailable values are `None`.
     """
@@ -248,7 +248,7 @@ class ActiveNotification:
     """
     Snapshot of a delivered notification that has not been removed.
 
-    Returned by :meth:`flet_notifications.Notifications.get_active_notifications`.
+    Returned by :meth:`flet_notifications.Notifications.get_active`.
     Availability of individual fields depends on the platform; unavailable values are
     `None`. Modifying this object does not change the notification.
     """

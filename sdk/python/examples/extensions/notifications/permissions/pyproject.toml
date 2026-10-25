@@ -15,7 +15,7 @@ categories = ["Utility/Notifications"]
 
 [tool.flet.metadata]
 title = "Permissions"
-docs_intro = "Calls [`open_app_notification_settings()`][flet_notifications.Notifications.open_app_notification_settings] when the user has turned notifications off, since the system won't ask again. The full-screen and Do Not Disturb buttons appear only on Android, and need the `USE_FULL_SCREEN_INTENT` and `ACCESS_NOTIFICATION_POLICY` permissions declared in `pyproject.toml`."
+docs_intro = "Calls [`open_settings()`][flet_notifications.Notifications.open_settings] when the user has turned notifications off, since the system won't ask again. The full-screen and Do Not Disturb buttons appear only on Android, and need the `USE_FULL_SCREEN_INTENT` and `ACCESS_NOTIFICATION_POLICY` permissions declared in `pyproject.toml`."
 controls = ["SafeArea", "Column", "Text", "Button", "SnackBar", "Notifications"]
 layout_pattern = "inline-actions"
 complexity = "basic"

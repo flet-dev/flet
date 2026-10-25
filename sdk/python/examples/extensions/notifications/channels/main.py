@@ -40,7 +40,7 @@ async def main(page: ft.Page):
     notifications = ftn.Notifications()
 
     async def refresh():
-        channels = await notifications.get_notification_channels()
+        channels = await notifications.get_channels()
         listed.controls = [
             ft.Text(f"{c.name} ({c.importance.name.lower()})") for c in channels
         ] or [ft.Text("No channels yet.")]
@@ -49,9 +49,9 @@ async def main(page: ft.Page):
         page.update()
 
     async def create(e: ft.Event[ft.Button]):
-        await notifications.create_notification_channel_group(GROUP, name="Chat")
+        await notifications.create_channel_group(GROUP, name="Chat")
         for channel in CHANNELS:
-            await notifications.create_notification_channel(channel)
+            await notifications.create_channel(channel)
         await refresh()
 
     async def post(e: ft.Event[ft.Button]):
@@ -68,7 +68,7 @@ async def main(page: ft.Page):
 
     async def delete(e: ft.Event[ft.Button]):
         # Deleting a group deletes its channels too.
-        await notifications.delete_notification_channel_group(GROUP)
+        await notifications.delete_channel_group(GROUP)
         await refresh()
 
     listed = ft.Column()

@@ -182,7 +182,7 @@ class AndroidBigTextStyle(AndroidStyle):
         much expanded text fits. Other platforms ignore this style.
     """
 
-    big_text: str
+    text: str
     """Nonempty text displayed when the Android notification is expanded."""
 
     content_title: str | None = None

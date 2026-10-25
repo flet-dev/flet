@@ -97,7 +97,7 @@ void main() {
               "input": {
                 "label": "Message",
                 "choices": ["Yes"],
-                "allow_free_form_input": false,
+                "allow_free_form": false,
                 "allowed_mime_types": ["image/png"]
               }
             },

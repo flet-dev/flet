@@ -29,7 +29,7 @@ async def main(page: ft.Page):
     windows = page.platform == ft.PagePlatform.WINDOWS
 
     async def refresh():
-        scheduled = await notifications.get_pending_notifications()
+        scheduled = await notifications.get_pending()
         # Windows reports pending notifications without their title.
         rows = [ft.Text(f"#{n.id} {n.title or ''}") for n in scheduled]
         pending.controls = rows or [ft.Text("Nothing scheduled.")]
