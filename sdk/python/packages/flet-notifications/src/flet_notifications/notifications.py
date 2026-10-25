@@ -918,6 +918,8 @@ class Notifications(ft.Service):
 
         Example:
             ```python
+            import flet_notifications as ftn
+
             progress = ftn.WindowsProgress(status="Downloading...", label="0/10")
             await notifications.show(
                 id=7,

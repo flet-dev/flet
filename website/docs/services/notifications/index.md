@@ -98,7 +98,23 @@ inputs are not supported; provide essential actions within the app as well.
 
 <CodeExample path={frontMatter.examples + '/basic/main.py'} language="python" />
 
-<CodeExample path={frontMatter.examples + '/notifications/main.py'} language="python" />
+<CodeExample path={frontMatter.examples + '/permissions/main.py'} language="python" />
+
+<CodeExample path={frontMatter.examples + '/actions/main.py'} language="python" />
+
+<CodeExample path={frontMatter.examples + '/scheduling/main.py'} language="python" />
+
+<CodeExample path={frontMatter.examples + '/exact_alarms/main.py'} language="python" />
+
+<CodeExample path={frontMatter.examples + '/progress/main.py'} language="python" />
+
+<CodeExample path={frontMatter.examples + '/active_notifications/main.py'} language="python" />
+
+<CodeExample path={frontMatter.examples + '/android_styles/main.py'} language="python" />
+
+<CodeExample path={frontMatter.examples + '/channels/main.py'} language="python" />
+
+<CodeExample path={frontMatter.examples + '/foreground_service/main.py'} language="python" />
 
 ## Description
 
