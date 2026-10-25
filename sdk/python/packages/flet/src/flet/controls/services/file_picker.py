@@ -291,7 +291,8 @@ class FilePicker(Service):
         Note:
             - On desktop, this method opens a dialog for the user to select a
                 location and file name. If `src_bytes` is provided, those bytes
-                are written to the selected file.
+                are written to the selected file; otherwise the file is created
+                empty, for the app to write to the returned path.
 
         Args:
             dialog_title: The title of the dialog window.

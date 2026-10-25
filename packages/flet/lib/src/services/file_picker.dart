@@ -4,6 +4,8 @@ import 'package:http/http.dart' as http;
 
 import '../flet_service.dart';
 import '../utils/file_picker.dart';
+import '../utils/file_picker_web_options.dart'
+    if (dart.library.js_interop) '../utils/file_picker_web_options_web.dart';
 import '../utils/numbers.dart';
 import '../utils/platform.dart';
 import '../utils/platform_utils_web.dart'
@@ -68,30 +70,46 @@ class FilePickerService extends FletService {
         }
 
         // Note for future edits: nothing may be awaited between entering this
-        // method and the FilePicker.pickFiles() call below. On the gesture
-        // path an async gap discards the browser's user activation and the
-        // dialog silently never opens. See flet-dev/flet#3710.
-        final result = await FilePicker.pickFiles(
-            dialogTitle: dialogTitle,
-            initialDirectory: initialDirectory,
-            lockParentWindow: true,
-            type: fileType,
-            allowedExtensions: allowedExtensions,
-            compressionQuality: compressionQuality,
-            allowMultiple: args["allow_multiple"],
-            withData: withData,
-            withReadStream: !withData,
+        // method and the FilePicker.pickFiles() / pickFile() call below. On
+        // the gesture path an async gap discards the browser's user
+        // activation and the dialog silently never opens. See
+        // flet-dev/flet#3710.
+        final webOptions = filePickerWebOptions(
             cancelUploadOnWindowBlur: cancelUploadOnWindowBlur);
-        _files = Map.of(result?.files.asMap() ?? {});
-        var pickedFiles = _files.entries.map((file) {
-          return FilePickerFile(
+        final List<PlatformFile> picked;
+        if (args["allow_multiple"] == true) {
+          picked = await FilePicker.pickFiles(
+              dialogTitle: dialogTitle,
+              initialDirectory: initialDirectory,
+              type: fileType,
+              allowedExtensions: allowedExtensions,
+              compressionQuality: compressionQuality,
+              windowsOptions: const WindowsOptions(lockParentWindow: true),
+              linuxOptions: const LinuxOptions(lockParentWindow: true),
+              webOptions: webOptions);
+        } else {
+          final file = await FilePicker.pickFile(
+              dialogTitle: dialogTitle,
+              initialDirectory: initialDirectory,
+              type: fileType,
+              allowedExtensions: allowedExtensions,
+              compressionQuality: compressionQuality,
+              windowsOptions: const WindowsOptions(lockParentWindow: true),
+              linuxOptions: const LinuxOptions(lockParentWindow: true),
+              webOptions: webOptions);
+          picked = file != null ? [file] : [];
+        }
+        _files = Map.of(picked.asMap());
+        var pickedFiles = <Map<String, dynamic>>[];
+        for (var file in _files.entries) {
+          pickedFiles.add(FilePickerFile(
                   id: file.key, // use entry's index as id
                   name: file.value.name,
                   path: kIsWeb ? null : file.value.path,
-                  size: file.value.size,
-                  bytes: withData ? file.value.bytes : null)
-              .toMap();
-        }).toList();
+                  size: file.value.lengthSync() ?? await file.value.length() ?? 0,
+                  bytes: withData ? await file.value.readAsBytes() : null)
+              .toMap());
+        }
         if (fromGesture) {
           // A gesture-triggered pick has no caller to return to.
           control.triggerEvent("result", {"files": pickedFiles});
@@ -107,16 +125,22 @@ class FilePickerService extends FletService {
           throw Exception(
               "\"file_name\" is required when saving a file on Web.");
         }
-        return await FilePicker.saveFile(
+        // file_picker 13 always writes the file. Without bytes (desktop) the
+        // app writes it itself at the returned path, so start it empty.
+        final saved = await FilePicker.saveFile(
             dialogTitle: dialogTitle,
-            fileName: args["file_name"] != null || !isIOSMobile()
-                ? args["file_name"]
-                : "new-file",
+            fileName: args["file_name"] ??
+                (isAndroidMobile() || isIOSMobile() ? "new-file" : ""),
             initialDirectory: initialDirectory,
-            lockParentWindow: true,
-            type: fileType,
-            allowedExtensions: allowedExtensions,
-            bytes: srcBytes);
+            bytes: srcBytes != null
+                ? Uint8List.fromList(List<int>.from(srcBytes))
+                : Uint8List(0),
+            windowsOptions: const WindowsOptions(lockParentWindow: true),
+            linuxOptions: const LinuxOptions(lockParentWindow: true));
+        if (saved == null) {
+          return null;
+        }
+        return saved.scheme == "file" ? saved.toFilePath() : saved.toString();
       case "get_directory_path":
         if (kIsWeb) {
           throw Exception("Get Directory Path dialog is not supported on web.");
@@ -124,7 +148,8 @@ class FilePickerService extends FletService {
         return await FilePicker.getDirectoryPath(
           dialogTitle: dialogTitle,
           initialDirectory: initialDirectory,
-          lockParentWindow: true,
+          windowsOptions: const WindowsOptions(lockParentWindow: true),
+          linuxOptions: const LinuxOptions(lockParentWindow: true),
         );
       default:
         throw Exception("Unknown FilePicker method: $name");
@@ -159,16 +184,17 @@ class FilePickerService extends FletService {
   }
 
   Future uploadFile(PlatformFile file, String uploadUrl, String method) async {
-    final fileReadStream = file.readStream;
-    if (fileReadStream == null) {
-      throw Exception('Cannot read file from null stream');
+    final size = file.lengthSync() ?? await file.length();
+    if (size == null) {
+      throw Exception("Cannot read the size of ${file.name}");
     }
+    final fileReadStream = file.readAsByteStream();
     debugPrint("Uploading ${file.name}");
     final streamedRequest = http.StreamedRequest(method, Uri.parse(uploadUrl))
       ..headers.addAll({
         //'Cache-Control': 'no-cache',
       });
-    streamedRequest.contentLength = file.size;
+    streamedRequest.contentLength = size;
 
     // send 0%
     sendProgress(file.name, 0, null);
@@ -180,7 +206,7 @@ class FilePickerService extends FletService {
       //debugPrint(chunk.length);
       streamedRequest.sink.add(chunk);
       bytesSent += chunk.length;
-      progress = bytesSent / file.size;
+      progress = size == 0 ? 1.0 : bytesSent / size;
       if (progress >= lastSent) {
         lastSent += 0.1;
         if (progress != 1.0) {
