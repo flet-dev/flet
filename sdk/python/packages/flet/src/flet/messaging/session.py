@@ -4,6 +4,7 @@ import inspect
 import logging
 import traceback
 import weakref
+from collections.abc import Awaitable, Callable
 from datetime import datetime, timedelta, timezone
 from typing import TYPE_CHECKING, Any, Optional
 
@@ -749,7 +750,7 @@ class Session:
                         is_cleanup = effect[1]
                         # print(f"**** Running effect: {hook} {is_cleanup}")
                         if hook and hook.setup and not is_cleanup:
-                            hook.cancel()
+                            hook.cancel_setup()
                             res = None
                             if inspect.iscoroutinefunction(hook.setup):
                                 hook._setup_task = asyncio.create_task(hook.setup())
@@ -757,17 +758,46 @@ class Session:
                                 res = hook.setup()
                             hook._returned_cleanup = res if callable(res) else None
                         elif hook and is_cleanup:
-                            hook.cancel()
-                            cleanup = hook.cleanup or hook._returned_cleanup
-                            hook._returned_cleanup = None
-                            if callable(cleanup) and inspect.iscoroutinefunction(
-                                cleanup
-                            ):
-                                hook._cleanup_task = asyncio.create_task(cleanup())
-                            elif callable(cleanup):
-                                cleanup()
+                            hook.cancel_setup()
+                            cleanups = hook.take_cleanups()
+                            if any(map(inspect.iscoroutinefunction, cleanups)):
+                                hook._cleanup_task = asyncio.create_task(
+                                    self.__run_effect_cleanups_async(cleanups)
+                                )
+                            else:
+                                self.__run_effect_cleanups(cleanups)
                     except Exception as ex:
-                        tb = traceback.format_exc()
-                        self.error(f"Exception in effect: {ex}\n{tb}")
+                        self.__report_effect_error(ex)
         except asyncio.CancelledError:
             pass
+
+    def __run_effect_cleanups(self, cleanups: list[Callable[[], Any]]):
+        """
+        Runs an effect's cleanups in order. One that raises is reported and doesn't
+        keep the others from running.
+        """
+        for cleanup in cleanups:
+            try:
+                cleanup()
+            except Exception as ex:
+                self.__report_effect_error(ex)
+
+    async def __run_effect_cleanups_async(
+        self, cleanups: list[Callable[[], Any | Awaitable[Any]]]
+    ):
+        """
+        Runs an effect's cleanups in order, awaiting the `async` ones. One that
+        raises is reported and doesn't keep the others from running.
+        """
+        for cleanup in cleanups:
+            try:
+                res = cleanup()
+                if inspect.isawaitable(res):
+                    await res
+            except Exception as ex:
+                self.__report_effect_error(ex)
+
+    def __report_effect_error(self, ex: Exception):
+        """Reports an exception raised by an effect setup or cleanup."""
+        tb = traceback.format_exc()
+        self.error(f"Exception in effect: {ex}\n{tb}")

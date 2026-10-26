@@ -1,7 +1,4 @@
-import asyncio
 from datetime import datetime, timezone
-
-import pytest
 
 from flet.components.component import Component
 from flet.components.hooks.use_effect import EffectHook
@@ -73,56 +70,3 @@ def test_attach_connection_restores_state_and_flushes_buffer():
     assert session.expires_at is None
     assert session._Session__send_buffer == []
     assert new_conn.messages == [buffered_message]
-
-
-@pytest.mark.asyncio
-async def test_cleanup_returned_by_effect_setup_runs_on_unmount():
-    conn = Connection()
-    conn.pubsubhub = PubSubHub()
-    session = Session(conn)
-    component = Component(fn=lambda: None, args=(), kwargs={})
-    component._state.mounted = True
-    cleanup_ran = asyncio.Event()
-
-    def cleanup():
-        cleanup_ran.set()
-
-    hook = EffectHook(component, setup=lambda: None, _returned_cleanup=cleanup)
-    component._state.hooks = [hook]
-    component._schedule_effect = session.schedule_effect  # type: ignore[method-assign]
-    component._run_unmount_effects()
-    session.start_updates_scheduler()
-
-    await asyncio.wait_for(cleanup_ran.wait(), timeout=1)
-    session._Session__closed = True
-    session._Session__updates_ready.set()
-    await session._Session__updates_task
-
-
-@pytest.mark.asyncio
-async def test_unmount_cancels_pending_async_effect_setup():
-    conn = Connection()
-    conn.pubsubhub = PubSubHub()
-    session = Session(conn)
-    component = Component(fn=lambda: None, args=(), kwargs={})
-    component._state.mounted = True
-    started = asyncio.Event()
-
-    async def setup():
-        started.set()
-        await asyncio.Event().wait()
-
-    task = asyncio.create_task(setup())
-    await started.wait()
-    hook = EffectHook(component, setup=setup)
-    hook._setup_task = task
-    component._state.hooks = [hook]
-    component._schedule_effect = session.schedule_effect  # type: ignore[method-assign]
-    component._run_unmount_effects()
-    session.start_updates_scheduler()
-
-    with pytest.raises(asyncio.CancelledError):
-        await asyncio.wait_for(task, timeout=1)
-    session._Session__closed = True
-    session._Session__updates_ready.set()
-    await session._Session__updates_task

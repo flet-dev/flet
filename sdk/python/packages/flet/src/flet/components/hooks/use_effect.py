@@ -21,30 +21,55 @@ class EffectHook(Hook):
     setup: Callable[[], Any | Awaitable[Any]]
     cleanup: Callable[[], Any | Awaitable[Any]] | None = None
     _returned_cleanup: Callable[[], Any | Awaitable[Any]] | None = None
+    """The cleanup the last non-`async` setup run returned, if any."""
+
     deps: list[Any] | None = None
     prev_deps: list[Any] | None = None
 
-    # runtime
-    _setup_task: asyncio.Task | None = None  # last scheduled setup task
-    _cleanup_task: asyncio.Task | None = None  # last scheduled cleanup task
+    _setup_task: asyncio.Task | None = None
+    """The task running the last `async` setup, cancelled when the effect re-runs or
+    the component unmounts."""
+
+    _cleanup_task: asyncio.Task | None = None
+    """The task running the last `async` cleanups, held so it isn't garbage collected
+    before it finishes."""
+
+    def has_cleanup(self) -> bool:
+        """
+        Whether the effect has a cleanup to run: one its setup returned, the
+        `cleanup` argument, or both.
+        """
+        return callable(self._returned_cleanup) or callable(self.cleanup)
 
     def has_lifecycle_work(self) -> bool:
-        return (
-            callable(self.cleanup)
-            or callable(self._returned_cleanup)
-            or (self._setup_task is not None and not self._setup_task.done())
+        """
+        Whether unmounting has work to do: a cleanup to run, or a setup task still
+        running to cancel.
+        """
+        return self.has_cleanup() or (
+            self._setup_task is not None and not self._setup_task.done()
         )
 
-    def cancel(self):
+    def take_cleanups(self) -> list[Callable[[], Any | Awaitable[Any]]]:
         """
-        Cancels currently scheduled setup and cleanup tasks, if still pending.
+        Returns the cleanups to run, in order: the one the last setup returned, then
+        the `cleanup` argument.
 
-        Safe to call repeatedly; completed tasks are ignored.
+        The returned cleanup belongs to the setup run that returned it, so it is
+        forgotten here and runs only once.
+        """
+        cleanups = [c for c in (self._returned_cleanup, self.cleanup) if callable(c)]
+        self._returned_cleanup = None
+        return cleanups
+
+    def cancel_setup(self):
+        """
+        Cancels the last setup task, if it is still running.
+
+        A running cleanup task is left to finish. Safe to call repeatedly.
         """
         if self._setup_task and not self._setup_task.done():
             self._setup_task.cancel()
-        if self._cleanup_task and not self._cleanup_task.done():
-            self._cleanup_task.cancel()
 
 
 def use_effect(
@@ -56,14 +81,18 @@ def use_effect(
     Perform side effects in function components.
 
     Args:
-        setup: A function that performs the side effect. It may optionally return
-            a cleanup function.
+        setup: A function that performs the side effect. A non-`async` setup may
+            return a cleanup function, which runs at the same times as `cleanup`,
+            just before it. An `async` setup's return value is not used: pass
+            `cleanup` instead. An `async` setup still running when the effect
+            re-runs or the component unmounts is cancelled.
         dependencies: Values the effect depends on. The effect always runs after the
             component mounts. If absent, it also re-runs after every render. If
             empty, it runs only on mount. Otherwise, it re-runs only when one of the
             dependencies has changed.
         cleanup: An optional function that cleans up after the effect. It is run
-            before the effect is re-run, and when the component unmounts.
+            before the effect is re-run, and when the component unmounts. It may be
+            `async`.
     """
     component = current_component()
     deps = list(dependencies) if dependencies is not None else None
