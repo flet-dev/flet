@@ -116,7 +116,7 @@ class Command(BaseCommand):
 
         self.verbose = options.verbose
 
-        if options.example:
+        if options.example is not None:
             self._create_from_example(options)
             return
 
@@ -217,13 +217,34 @@ class Command(BaseCommand):
         created_out_dir = not out_dir.exists()
         try:
             if use_local:
-                copy_local_example(local_examples / example, out_dir)
+                source = (local_examples / example).resolve()
+                if not source.is_relative_to(local_examples.resolve()):
+                    raise ExampleNotFoundError(f"Invalid example: {example!r}")
+                copy_local_example(source, out_dir)
             else:
                 with console.status(f"Downloading example {escape(example)}..."):
                     download_example(example, ref, out_dir)
+
+            pyproject_path = out_dir / "pyproject.toml"
+            pyproject = strip_tooling_only_tables(
+                pyproject_path.read_text(encoding="utf-8")
+            )
+            renamed = set_project_metadata(
+                pyproject,
+                name=slugify(options.project_name or out_dir.name),
+                description=options.description,
+            )
+            pyproject_path.write_text(renamed or pyproject, encoding="utf-8")
         except Exception as e:
+            # The output directory was missing or empty, so everything in it is ours.
             if created_out_dir:
                 shutil.rmtree(out_dir, ignore_errors=True)
+            elif out_dir.is_dir():
+                for child in out_dir.iterdir():
+                    if child.is_dir() and not child.is_symlink():
+                        shutil.rmtree(child, ignore_errors=True)
+                    else:
+                        child.unlink(missing_ok=True)
             if isinstance(e, ExampleNotFoundError):
                 console.print(f"Error: {escape(str(e))}", style=error_style)
                 if not use_local and not options.example_ref:
@@ -238,16 +259,12 @@ class Command(BaseCommand):
                 )
             exit(1)
 
-        pyproject_path = out_dir / "pyproject.toml"
-        pyproject_path.write_text(
-            strip_tooling_only_tables(pyproject_path.read_text(encoding="utf-8")),
-            encoding="utf-8",
-        )
-        set_project_metadata(
-            pyproject_path,
-            name=slugify(options.project_name or out_dir.name),
-            description=options.description,
-        )
+        if renamed is None:
+            console.print(
+                "Warning: couldn't set the project name in pyproject.toml; "
+                "edit [project].name there by hand.",
+                style=Style(color="yellow"),
+            )
 
         console.print(
             "The app has been created.\n", style=Style(color="green", bold=True)

@@ -1,3 +1,4 @@
+import copy
 import json
 import os
 import re
@@ -6,6 +7,11 @@ import urllib.error
 import urllib.parse
 import urllib.request
 from pathlib import Path
+
+try:
+    import tomllib
+except ModuleNotFoundError:
+    import tomli as tomllib
 
 EXAMPLES_REPO = "flet-dev/flet"
 """GitHub repository that hosts the Flet examples."""
@@ -32,11 +38,19 @@ def normalize_example_id(example: str) -> str:
     Accepts backslashes and surrounding slashes, so IDs typed on Windows or copied
     with a trailing `/` work.
 
+    Args:
+        example: Example ID as given on the command line, e.g.
+            `controls/material/button/basic`.
+
+    Returns:
+        The normalized example ID.
+
     Raises:
-        ExampleNotFoundError: If the ID is empty or contains `.` or `..` parts.
+        ExampleNotFoundError: If the ID is empty, contains `.` or `..` parts, or
+            names a drive, such as `C:/examples`.
     """
     parts = [p for p in example.replace("\\", "/").split("/") if p]
-    if not parts or any(p in (".", "..") for p in parts):
+    if not parts or any(p in (".", "..") or ":" in p for p in parts):
         raise ExampleNotFoundError(f"Invalid example: {example!r}")
     return "/".join(parts)
 
@@ -52,6 +66,10 @@ def copy_local_example(example_dir: Path, dest: Path) -> None:
 
     Hidden entries and build output are left out, and so are subdirectories that
     are examples of their own (they contain a `pyproject.toml`).
+
+    Args:
+        example_dir: Directory of the example in the local examples checkout.
+        dest: Directory to copy the example into; created when missing.
 
     Raises:
         ExampleNotFoundError: If `example_dir` has no `pyproject.toml`.
@@ -73,6 +91,11 @@ def copy_local_example(example_dir: Path, dest: Path) -> None:
         }
 
     shutil.copytree(example_dir, dest, ignore=ignore, dirs_exist_ok=True)
+
+
+def _is_safe_file_name(name: str) -> bool:
+    """Whether `name` is a single file or directory name on every platform."""
+    return name not in ("", ".", "..") and not any(c in name for c in "/\\:")
 
 
 def _github_get(url: str) -> bytes:
@@ -107,9 +130,16 @@ def download_example(example: str, ref: str, dest: Path) -> None:
     come from `raw.githubusercontent.com`, which is not rate-limited the same way.
     Hidden entries, build output and nested examples are left out.
 
+    Args:
+        example: Normalized example ID, relative to `EXAMPLES_REPO_PATH`.
+        ref: Git branch, tag or commit to download the example from.
+        dest: Directory to download the example into; created when missing.
+
     Raises:
         ExampleNotFoundError: If `ref` or the example doesn't exist, or the
             directory has no `pyproject.toml`.
+        ValueError: If an entry's name isn't a plain file name, so writing it
+            could land outside `dest`.
     """
     root = f"{EXAMPLES_REPO_PATH}/{example}"
     try:
@@ -128,6 +158,8 @@ def download_example(example: str, ref: str, dest: Path) -> None:
         relative, entries = pending.pop()
         for entry in entries:
             name = entry["name"]
+            if not _is_safe_file_name(name):
+                raise ValueError(f"Unsafe file name in example: {name!r}")
             if _is_skipped(name):
                 continue
             target = f"{relative}/{name}" if relative else name
@@ -142,19 +174,47 @@ def download_example(example: str, ref: str, dest: Path) -> None:
                 path.write_bytes(_github_get(entry["download_url"]))
 
 
-def set_project_metadata(
-    pyproject_path: Path, name: str, description: str | None
-) -> None:
+def _parse_toml(text: str) -> dict | None:
+    """Parse `text` as TOML, or return None when it isn't valid."""
+    try:
+        return tomllib.loads(text)
+    except tomllib.TOMLDecodeError:
+        return None
+
+
+def _prune_empty_tables(data: dict) -> dict:
+    """Return `data` without tables that are empty once their empty tables go."""
+    pruned = {}
+    for key, value in data.items():
+        if isinstance(value, dict):
+            value = _prune_empty_tables(value)
+            if not value:
+                continue
+        pruned[key] = value
+    return pruned
+
+
+def set_project_metadata(text: str, name: str, description: str | None) -> str | None:
     """
-    Set `[project].name`, and `[project].description` when given, in place.
+    Set `[project].name`, and `[project].description` when given, in a
+    pyproject.toml.
 
     Edits the matching lines rather than re-serializing the TOML, so the
     example's formatting and comments are kept.
+
+    Args:
+        text: Contents of the pyproject.toml.
+        name: Project name to set.
+        description: Project description to set, or None to keep the current one.
+
+    Returns:
+        The edited contents, or None when the edit can't be made safely, for
+        example when the TOML is invalid or a value spans several lines.
     """
-    text = pyproject_path.read_text(encoding="utf-8")
-    match = re.search(r"(?ms)^\[project\][ \t]*\n(.*?)(?=^\[|\Z)", text)
-    if not match:
-        return
+    original = _parse_toml(text)
+    match = re.search(r"(?ms)^\[project\][ \t]*(?:#[^\n]*)?\n(.*?)(?=^\[|\Z)", text)
+    if original is None or not match:
+        return None
     table = match.group(1)
     values = {"name": name}
     if description is not None:
@@ -162,20 +222,33 @@ def set_project_metadata(
     for key, value in values.items():
         line = f"{key} = {json.dumps(value, ensure_ascii=False)}"
         table, count = re.subn(
-            rf"(?m)^{key}[ \t]*=.*$", line.replace("\\", "\\\\"), table, count=1
+            rf"(?m)^[ \t]*{key}[ \t]*=.*$", line.replace("\\", "\\\\"), table, count=1
         )
         if not count:
             table = f"{line}\n{table}"
-    pyproject_path.write_text(
-        text[: match.start(1)] + table + text[match.end(1) :], encoding="utf-8"
-    )
+    edited = text[: match.start(1)] + table + text[match.end(1) :]
+
+    expected = copy.deepcopy(original)
+    expected.setdefault("project", {}).update(values)
+    return edited if _parse_toml(edited) == expected else None
 
 
 def strip_tooling_only_tables(text: str) -> str:
     """
-    Return pyproject.toml `text` without the tables that are irrelevant for the
-    example, with blank lines collapsed.
+    Remove the tables that are irrelevant for the example from a pyproject.toml,
+    with any of their sub-tables, and collapses the blank lines left behind.
+
+    Args:
+        text: Contents of the pyproject.toml.
+
+    Returns:
+        The contents without those tables, or `text` unchanged when it isn't
+            valid TOML or when the line-based removal would change anything else,
+            for example a table header inside a multiline string.
     """
+    original = _parse_toml(text)
+    if original is None:
+        return text
     kept: list[str] = []
     skipping = False
     for line in text.splitlines():
@@ -187,5 +260,16 @@ def strip_tooling_only_tables(text: str) -> str:
             )
         if not skipping:
             kept.append(line)
-    stripped = re.sub(r"\n{3,}", "\n\n", "\n".join(kept)).strip("\n")
-    return f"{stripped}\n"
+    stripped = re.sub(r"\n{3,}", "\n\n", "\n".join(kept)).strip("\n") + "\n"
+
+    expected = copy.deepcopy(original)
+    for table in _TOOLING_ONLY_TABLES:
+        *parents, last = table.split(".")
+        parent = expected
+        for key in parents:
+            parent = parent.get(key, {})
+        parent.pop(last, None)
+    parsed = _parse_toml(stripped)
+    if parsed is None or _prune_empty_tables(parsed) != _prune_empty_tables(expected):
+        return text
+    return stripped
