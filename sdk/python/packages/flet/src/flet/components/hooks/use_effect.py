@@ -125,22 +125,56 @@ def use_effect(
     cleanup: Callable[[], Any | Awaitable[Any]] | None = None,
 ):
     """
-    Perform side effects in function components.
+    Runs a side effect, such as starting a timer or opening a connection, after the
+    component renders, and cleans it up when it is no longer needed.
+
+    The setup runs after the component mounts, then again after each render that
+    `dependencies` selects. Before it runs again, and when the component unmounts,
+    the effect's cleanups run: the cleanup the setup returned, then `cleanup`. They
+    run once for each time the setup ran, and always finish, in order, before the
+    setup runs again, even when one of them is `async`.
+
+    A cleanup the setup returns belongs to that setup run, so it sees the same
+    values the setup saw. `cleanup` is the function the latest render passed, so it
+    sees that render's values. Returning the cleanup from the setup is usually what
+    you want.
 
     Args:
-        setup: A function that performs the side effect. A non-`async` setup may
-            return a cleanup function, which runs at the same times as `cleanup`,
-            just before it. An `async` setup's return value is not used: pass
-            `cleanup` instead. An `async` setup still running when the effect
-            re-runs or the component unmounts is cancelled.
+        setup: A function that performs the side effect. It may be `async`. A
+            non-`async` setup may return a cleanup function. An `async` setup's
+            return value is not used: pass `cleanup` instead. An `async` setup still
+            running when the effect re-runs or the component unmounts is cancelled.
         dependencies: Values the effect depends on. The effect always runs after the
             component mounts. If absent, it also re-runs after every render. If
             empty, it runs only on mount. Otherwise, it re-runs only when one of the
             dependencies has changed.
-        cleanup: An optional function that cleans up after the effect. It is run
-            before the effect is re-run, and when the component unmounts. It may be
-            `async`. The effect's cleanups always finish, in order, before its setup
-            runs again.
+        cleanup: A function that cleans up after the effect, run after the cleanup
+            the setup returned. It may be `async`.
+
+    Example:
+        ```python
+        import asyncio
+        from datetime import datetime
+
+        import flet as ft
+
+
+        @ft.component
+        def Clock():
+            now, set_now = ft.use_state(datetime.now())
+
+            def start_ticking():
+                async def tick():
+                    while True:
+                        await asyncio.sleep(1)
+                        set_now(datetime.now())
+
+                task = asyncio.create_task(tick())
+                return task.cancel  # stops ticking when Clock unmounts
+
+            ft.use_effect(start_ticking, [])
+            return ft.Text(f"{now:%H:%M:%S}")
+        ```
     """
     component = current_component()
     deps = list(dependencies) if dependencies is not None else None
@@ -164,24 +198,21 @@ def use_effect(
 
 def on_mounted(fn: Callable[[], Any | Awaitable[Any]]) -> None:
     """
-    Run exactly once after the component mounts.
+    Runs `fn` once, after the component mounts.
 
     Args:
-        fn (Callable[[], Any | Awaitable[Any]]): A function to run after the component
-            mounts.
+        fn: The function to run. It may be `async`.
     """
     use_effect(fn, dependencies=[])
 
 
 def on_unmounted(fn: Callable[[], Any | Awaitable[Any]]) -> None:
     """
-    Run exactly once when the component unmounts.
+    Runs `fn` once, when the component unmounts.
 
     Args:
-        fn (Callable[[], Any | Awaitable[Any]]): A function to run when the component
-            unmounts.
+        fn: The function to run. It may be `async`.
     """
-    # No-op setup; only need cleanup to fire on unmount
     use_effect(lambda: None, dependencies=[], cleanup=fn)
 
 
@@ -189,16 +220,14 @@ def on_updated(
     fn: Callable[[], Any | Awaitable[Any]], dependencies: Sequence[Any] | None = None
 ) -> None:
     """
-    Run after each post-mount render (or when dependencies change).
-    With dependencies=None this fires every update; with dependencies=[...] only
-    on changes.
+    Runs `fn` after the component mounts, then again after each render that
+    `dependencies` selects.
 
     Args:
-        fn (Callable[[], Any | Awaitable[Any]]): A function to run after each
-            post-mount render (or when dependencies change).
-        dependencies (Sequence[Any] | None): If present, `fn` is only run when one
-            of the dependencies has changed. If absent, `fn` is run after every
-            render.
+        fn: The function to run. It may be `async`.
+        dependencies: Values `fn` depends on. If absent, `fn` re-runs after every
+            render. Otherwise, it re-runs only when one of the dependencies has
+            changed.
     """
     use_effect(fn, dependencies=dependencies)
 
