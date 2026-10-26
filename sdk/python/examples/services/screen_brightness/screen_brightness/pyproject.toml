@@ -12,6 +12,7 @@ dev = ["flet-cli", "flet-desktop", "flet-web"]
 
 [tool.flet.gallery]
 categories = ["Utility/ScreenBrightness"]
+platforms = ["android", "ios"]
 
 [tool.flet.metadata]
 title = "Screen brightness"
@@ -24,4 +25,3 @@ features = ["brightness control", "change events"]
 org = "dev.flet"
 company = "Flet"
 copyright = "Copyright (C) 2023-2026 by Flet"
-platforms = ["android", "ios"]
