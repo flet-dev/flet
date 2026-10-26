@@ -1,4 +1,8 @@
 import asyncio
+import gc
+import sys
+import weakref
+from datetime import datetime, timezone
 
 import pytest
 import pytest_asyncio
@@ -48,6 +52,7 @@ class EffectRunner:
         await self._drain()
 
     async def unmount(self):
+        self.component._state.mounted = False
         self.component._run_unmount_effects()
         await self._drain()
 
@@ -202,11 +207,13 @@ class TestEffectLoop:
         assert log == ["setup returned", "cleanup returned", "cleanup argument"]
 
     @pytest.mark.asyncio
-    async def test_async_cleanup_runs_on_dependency_change(self, runner):
-        """An `async` cleanup runs when a dependency change re-runs the setup."""
+    async def test_setup_waits_for_async_cleanup(self, runner):
+        """A dependency change runs the setup again only after an `async` cleanup has
+        finished."""
         log: list[str] = []
 
         async def cleanup():
+            await asyncio.sleep(0)
             log.append("cleanup")
 
         await runner.mount(
@@ -220,7 +227,515 @@ class TestEffectLoop:
             )
         )
 
-        assert log == ["setup 1", "setup 2", "cleanup"]
+        assert log == ["setup 1", "cleanup", "setup 2"]
+
+    @pytest.mark.asyncio
+    async def test_cleanups_finish_in_order_before_setup_reruns(self, runner):
+        """An `async` returned cleanup finishes before a non-`async` `cleanup`
+        argument runs, and both before the setup runs again."""
+        log: list[str] = []
+
+        def make_setup(tag):
+            def setup():
+                log.append(f"setup {tag}")
+
+                async def flush():
+                    await asyncio.sleep(0)
+                    log.append(f"flush {tag}")
+
+                return flush
+
+            return setup
+
+        def close():
+            log.append("close")
+
+        await runner.mount(
+            lambda: use_effect_module.use_effect(make_setup("1"), [1], close)
+        )
+        await runner.rerender(
+            lambda: use_effect_module.use_effect(make_setup("2"), [2], close)
+        )
+
+        assert log == ["setup 1", "flush 1", "close", "setup 2"]
+
+    @pytest.mark.asyncio
+    async def test_async_cleanup_finishes_when_nothing_else_references_it(self, runner):
+        """An `async` cleanup finishes even when nothing else references it across a
+        garbage collection."""
+        log: list[str] = []
+        gates: list[weakref.ref[asyncio.Future]] = []
+
+        def make_setup(tag):
+            def setup():
+                log.append(f"setup {tag}")
+
+                async def cleanup():
+                    gate = asyncio.get_running_loop().create_future()
+                    gates.append(weakref.ref(gate))
+                    await gate
+                    log.append(f"cleanup {tag}")
+
+                return cleanup
+
+            return setup
+
+        await runner.mount(lambda: use_effect_module.use_effect(make_setup("1"), [1]))
+        await runner.rerender(
+            lambda: use_effect_module.use_effect(make_setup("2"), [2])
+        )
+
+        gc.collect()
+        (gate,) = [g for ref in gates if (g := ref()) is not None]
+        gate.set_result(None)
+        await asyncio.sleep(0.01)
+
+        assert log == ["setup 1", "cleanup 1", "setup 2"]
+        assert not runner.session._Session__effect_cleanup_tasks
+
+    @pytest.mark.asyncio
+    async def test_setup_superseded_while_waiting_never_runs(self, runner):
+        """A setup still waiting for cleanups when the effect re-runs again is
+        skipped, and only the latest setup runs."""
+        log: list[str] = []
+        release = asyncio.Event()
+
+        async def first_cleanup():
+            await release.wait()
+            log.append("cleanup 1")
+
+        def setup_1():
+            log.append("setup 1")
+            return first_cleanup
+
+        await runner.mount(lambda: use_effect_module.use_effect(setup_1, [1]))
+        await runner.rerender(
+            lambda: use_effect_module.use_effect(lambda: log.append("setup 2"), [2])
+        )
+        await runner.rerender(
+            lambda: use_effect_module.use_effect(lambda: log.append("setup 3"), [3])
+        )
+        release.set()
+        await asyncio.sleep(0.01)
+
+        assert log == ["setup 1", "cleanup 1", "setup 3"]
+
+    @pytest.mark.asyncio
+    async def test_unmount_cancels_setup_waiting_for_cleanups(self, runner):
+        """Unmounting while a setup waits for cleanups means it never runs."""
+        log: list[str] = []
+        release = asyncio.Event()
+
+        async def first_cleanup():
+            await release.wait()
+            log.append("cleanup 1")
+
+        def setup_1():
+            log.append("setup 1")
+            return first_cleanup
+
+        await runner.mount(lambda: use_effect_module.use_effect(setup_1, [1]))
+        await runner.rerender(
+            lambda: use_effect_module.use_effect(lambda: log.append("setup 2"), [2])
+        )
+        await runner.unmount()
+        release.set()
+        await asyncio.sleep(0.01)
+
+        assert log == ["setup 1", "cleanup 1"]
+
+    @pytest.mark.asyncio
+    async def test_cleanup_argument_runs_once_per_setup_while_cleanups_wait(
+        self, runner
+    ):
+        """Re-renders during a slow cleanup don't run the `cleanup` argument again
+        for setups that never ran."""
+        log: list[str] = []
+        release = asyncio.Event()
+
+        def setup():
+            log.append("setup")
+
+            async def flush():
+                await release.wait()
+                log.append("flush")
+
+            return flush
+
+        def close():
+            log.append("close")
+
+        def body():
+            use_effect_module.use_effect(setup, None, close)
+
+        await runner.mount(body)
+        for _ in range(3):
+            await runner.rerender(body)
+        release.set()
+        await asyncio.sleep(0.01)
+
+        assert log == ["setup", "flush", "close", "setup"]
+
+    @pytest.mark.asyncio
+    async def test_back_to_back_setups_run_the_cleanup_between(self, runner):
+        """Two setups scheduled before the effect loop runs still run the first
+        one's cleanup between them."""
+        log: list[str] = []
+        runs = iter(["1", "2"])
+
+        def setup():
+            tag = next(runs)
+            log.append(f"setup {tag}")
+            return lambda: log.append(f"cleanup {tag}")
+
+        runner._render(lambda: use_effect_module.use_effect(setup))
+        runner.component._state.mounted = True
+        (hook,) = runner.component._state.hooks
+        runner.session.schedule_effect(hook, False)
+        runner.session.schedule_effect(hook, False)
+        await runner._drain()
+
+        assert log == ["setup 1", "cleanup 1", "setup 2"]
+
+    @pytest.mark.asyncio
+    async def test_waiting_setup_never_runs_after_unmount_while_disconnected(
+        self, runner
+    ):
+        """A setup waiting for cleanups doesn't run once the component has unmounted,
+        even when the session was disconnected and dropped the unmount cleanup."""
+        log: list[str] = []
+        release = asyncio.Event()
+
+        async def first_cleanup():
+            await release.wait()
+            log.append("cleanup 1")
+
+        def setup_1():
+            log.append("setup 1")
+            return first_cleanup
+
+        await runner.mount(lambda: use_effect_module.use_effect(setup_1, [1]))
+        await runner.rerender(
+            lambda: use_effect_module.use_effect(lambda: log.append("setup 2"), [2])
+        )
+        runner.session._Session__conn = None
+        runner.session._Session__expires_at = datetime.now(timezone.utc)
+        await runner.unmount()
+        release.set()
+        await asyncio.sleep(0.01)
+
+        assert log == ["setup 1", "cleanup 1"]
+
+    @pytest.mark.asyncio
+    async def test_unmount_as_cleanups_finish_skips_the_waiting_setup(self, runner):
+        """Unmounting just as slow cleanups finish means the setup waiting for them
+        never runs."""
+        log: list[str] = []
+        release = asyncio.Event()
+
+        async def first_cleanup():
+            await release.wait()
+            log.append("cleanup 1")
+
+        def setup_1():
+            log.append("setup 1")
+            return first_cleanup
+
+        def setup_2():
+            log.append("setup 2")
+            return lambda: log.append("cleanup 2")
+
+        await runner.mount(lambda: use_effect_module.use_effect(setup_1, [1]))
+        await runner.rerender(lambda: use_effect_module.use_effect(setup_2, [2]))
+        release.set()
+        runner.component._state.mounted = False
+        runner.component._run_unmount_effects()
+        await runner._drain()
+
+        assert log == ["setup 1", "cleanup 1"]
+
+    @pytest.mark.asyncio
+    async def test_render_as_cleanups_finish_runs_the_latest_setup_once(self, runner):
+        """A render just as slow cleanups finish runs only its own setup, once."""
+        log: list[str] = []
+        release = asyncio.Event()
+
+        async def first_cleanup():
+            await release.wait()
+            log.append("cleanup 1")
+
+        def setup_1():
+            log.append("setup 1")
+            return first_cleanup
+
+        def make_setup(tag):
+            def setup():
+                log.append(f"setup {tag}")
+                return lambda: log.append(f"cleanup {tag}")
+
+            return setup
+
+        await runner.mount(lambda: use_effect_module.use_effect(setup_1, [1]))
+        await runner.rerender(
+            lambda: use_effect_module.use_effect(make_setup("2"), [2])
+        )
+        release.set()
+        runner._render(lambda: use_effect_module.use_effect(make_setup("3"), [3]))
+        runner.component._run_render_effects()
+        await runner._drain()
+
+        assert log == ["setup 1", "cleanup 1", "setup 3"]
+
+    @pytest.mark.asyncio
+    async def test_each_render_runs_its_own_setup_once(self, runner):
+        """A render landing between slow cleanups finishing and the waiting setup
+        running doesn't run its setup twice: each render's setup runs once, in
+        order."""
+        log: list[str] = []
+        release = asyncio.Event()
+
+        async def first_cleanup():
+            await release.wait()
+            log.append("cleanup 1")
+
+        def setup_1():
+            log.append("setup 1")
+            return first_cleanup
+
+        def make_setup(tag):
+            def setup():
+                log.append(f"setup {tag}")
+                return lambda: log.append(f"cleanup {tag}")
+
+            return setup
+
+        def render_3():
+            runner._render(lambda: use_effect_module.use_effect(make_setup("3"), [3]))
+            runner.component._run_render_effects()
+
+        await runner.mount(lambda: use_effect_module.use_effect(setup_1, [1]))
+        await runner.rerender(
+            lambda: use_effect_module.use_effect(make_setup("2"), [2])
+        )
+        release.set()
+        asyncio.get_running_loop().call_soon(render_3)
+        await runner._drain()
+
+        assert log.count("setup 3") == 1
+        assert log[:2] == ["setup 1", "cleanup 1"]
+        assert log[-1] == "setup 3"
+
+    @pytest.mark.asyncio
+    async def test_waiting_setup_never_runs_after_the_session_closes(self, runner):
+        """A setup waiting for cleanups doesn't run once the session has closed."""
+        log: list[str] = []
+        release = asyncio.Event()
+
+        async def first_cleanup():
+            await release.wait()
+            log.append("cleanup 1")
+
+        def setup_1():
+            log.append("setup 1")
+            return first_cleanup
+
+        await runner.mount(lambda: use_effect_module.use_effect(setup_1, [1]))
+        await runner.rerender(
+            lambda: use_effect_module.use_effect(lambda: log.append("setup 2"), [2])
+        )
+        runner.session._Session__closed = True
+        release.set()
+        await asyncio.sleep(0.01)
+
+        assert log == ["setup 1", "cleanup 1"]
+
+    @pytest.mark.asyncio
+    async def test_quick_mount_and_unmount_runs_setup_then_cleanup(self, runner):
+        """A component unmounted before its effects ran still runs the setup, then
+        the cleanup, once each."""
+        log: list[str] = []
+
+        runner._render(
+            lambda: use_effect_module.use_effect(
+                lambda: log.append("setup"), [], cleanup=lambda: log.append("cleanup")
+            )
+        )
+        runner.component._state.mounted = True
+        runner.component._run_mount_effects()
+        runner.component._state.mounted = False
+        runner.component._run_unmount_effects()
+        await runner._drain()
+
+        assert log == ["setup", "cleanup"]
+
+    @pytest.mark.asyncio
+    async def test_setup_running_after_unmount_is_cleaned_up_right_away(self, runner):
+        """A setup that runs after its component unmounted, with no cleanup
+        scheduled, is cleaned up right away."""
+        log: list[str] = []
+        runs = iter(["1", "2"])
+
+        def setup():
+            tag = next(runs)
+            log.append(f"setup {tag}")
+            return lambda: log.append(f"cleanup {tag}")
+
+        await runner.mount(lambda: use_effect_module.use_effect(setup, [1]))
+        (hook,) = runner.component._state.hooks
+        runner.component._state.mounted = False
+        runner.component._state.hooks.clear()
+        runner.session.schedule_effect(hook, False)
+        await runner._drain()
+
+        assert log == ["setup 1", "cleanup 1", "setup 2", "cleanup 2"]
+
+    @pytest.mark.asyncio
+    async def test_cancelled_error_from_a_cleanup_keeps_effects_running(self, runner):
+        """A cleanup raising `CancelledError` counts as cancelled, not failed, and
+        the effect's setup and later effects still run."""
+        log: list[str] = []
+
+        def make_setup(tag):
+            def setup():
+                log.append(f"setup {tag}")
+
+                async def cleanup():
+                    log.append(f"async cleanup {tag}")
+
+                return cleanup
+
+            return setup
+
+        def cancelled_cleanup():
+            raise asyncio.CancelledError
+
+        for i, deps in enumerate(([1], [2], [3])):
+            body = lambda deps=deps: use_effect_module.use_effect(  # noqa: E731
+                make_setup(deps[0]), deps, cancelled_cleanup
+            )
+            await (runner.mount(body) if i == 0 else runner.rerender(body))
+
+        assert log == [
+            "setup 1",
+            "async cleanup 1",
+            "setup 2",
+            "async cleanup 2",
+            "setup 3",
+        ]
+        assert runner.errors == []
+
+    @pytest.mark.asyncio
+    async def test_cancelled_async_cleanup_does_not_skip_the_other(self, runner):
+        """An `async` cleanup that gets cancelled doesn't keep the other `async`
+        cleanup from running."""
+        log: list[str] = []
+
+        def setup():
+            async def cleanup():
+                future = asyncio.get_running_loop().create_future()
+                future.cancel()
+                await future
+
+            return cleanup
+
+        async def cleanup_argument():
+            log.append("cleanup argument")
+
+        await runner.mount(
+            lambda: use_effect_module.use_effect(setup, [], cleanup_argument)
+        )
+        await runner.unmount()
+
+        assert log == ["cleanup argument"]
+        assert runner.errors == []
+
+    @pytest.mark.asyncio
+    async def test_async_cleanups_run_one_after_the_other(self, runner):
+        """The `cleanup` argument starts only once an `async` returned cleanup has
+        finished."""
+        log: list[str] = []
+
+        def setup():
+            async def flush():
+                for _ in range(3):
+                    await asyncio.sleep(0)
+                log.append("flushed")
+
+            return flush
+
+        async def close():
+            log.append("closed")
+
+        await runner.mount(lambda: use_effect_module.use_effect(setup, [], close))
+        await runner.unmount()
+
+        assert log == ["flushed", "closed"]
+
+    @pytest.mark.asyncio
+    async def test_async_cleanup_failure_is_reported_while_the_other_runs(self, runner):
+        """An `async` cleanup that raises is reported without waiting for the
+        cleanup after it, which may never finish."""
+
+        def setup():
+            async def cleanup():
+                raise RuntimeError("cleanup failed")
+
+            return cleanup
+
+        async def hanging_cleanup():
+            await asyncio.get_running_loop().create_future()
+
+        await runner.mount(
+            lambda: use_effect_module.use_effect(setup, [], hanging_cleanup)
+        )
+        await runner.unmount()
+
+        assert len(runner.errors) == 1
+        assert "cleanup failed" in runner.errors[0]
+        for task in runner.session._Session__effect_cleanup_tasks:
+            task.cancel()
+
+    @pytest.mark.skipif(sys.version_info < (3, 11), reason="needs Task.cancelling()")
+    @pytest.mark.asyncio
+    async def test_cancelling_cleanups_skips_the_ones_not_reached(self, runner):
+        """Cancelling the task finishing `async` cleanups skips the ones it hasn't
+        reached."""
+        log: list[str] = []
+
+        def setup():
+            async def cleanup():
+                await asyncio.get_running_loop().create_future()
+
+            return cleanup
+
+        async def cleanup_argument():
+            log.append("cleanup argument")
+
+        await runner.mount(
+            lambda: use_effect_module.use_effect(setup, [], cleanup_argument)
+        )
+        await runner.unmount()
+        (task,) = runner.session._Session__effect_cleanup_tasks
+        task.cancel()
+        with pytest.raises(asyncio.CancelledError):
+            await task
+
+        assert log == []
+        assert runner.errors == []
+
+    @pytest.mark.asyncio
+    async def test_async_cleanup_return_value_is_ignored(self, runner):
+        """An `async` cleanup returning an exception object isn't reported."""
+
+        async def cleanup():
+            return RuntimeError("just a value")
+
+        await runner.mount(
+            lambda: use_effect_module.use_effect(lambda: None, [], cleanup)
+        )
+        await runner.unmount()
+
+        assert runner.errors == []
 
     @pytest.mark.asyncio
     async def test_failing_cleanup_does_not_skip_the_other(self, runner):

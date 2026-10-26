@@ -1,6 +1,6 @@
 import asyncio
 from collections.abc import Awaitable, Callable, Sequence
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 from typing import Any
 
 from flet.components.hooks.hook import Hook
@@ -31,8 +31,20 @@ class EffectHook(Hook):
     the component unmounts."""
 
     _cleanup_task: asyncio.Task | None = None
-    """The task running the last `async` cleanups, held so it isn't garbage collected
-    before it finishes."""
+    """The task finishing the effect's last cleanups, when one of them is `async`.
+    Until it has finished and the effect's waiting setups and cleanups have run,
+    new ones wait in `_queued`."""
+
+    _queued: list[Callable[[], Any | Awaitable[Any]] | None] = field(
+        default_factory=list
+    )
+    """Setups and cleanups waiting for `_cleanup_task`, in the order they were
+    scheduled: a setup as the setup function it was scheduled with, a cleanup as
+    `None`."""
+
+    _active: bool = False
+    """Whether a setup has run since the last cleanup, so there is something to
+    clean up."""
 
     def has_cleanup(self) -> bool:
         """
@@ -61,6 +73,41 @@ class EffectHook(Hook):
         cleanups = [c for c in (self._returned_cleanup, self.cleanup) if callable(c)]
         self._returned_cleanup = None
         return cleanups
+
+    def running_cleanup(self) -> asyncio.Task | None:
+        """
+        Returns the task finishing the effect's last cleanups, until it has finished
+        and the setups and cleanups waiting for it have run.
+        """
+        return self._cleanup_task
+
+    def is_live(self) -> bool:
+        """
+        Whether the effect still belongs to a mounted component: it hasn't unmounted
+        and hasn't been replaced by a remount.
+        """
+        component = self.component
+        return (
+            component is not None
+            and component._state.mounted
+            and self in component._state.hooks
+        )
+
+    def take_queued(self) -> list[Callable[[], Any | Awaitable[Any]] | None]:
+        """
+        Returns what to run of the setups and cleanups that waited for the effect's
+        cleanups, in `_queued`'s form: one cleanup if any was queued, then the last
+        setup if it came last. Earlier setups never ran and were superseded, so
+        there is nothing to run them for. No setup is returned once the effect
+        isn't live (see `is_live()`).
+        """
+        queued, self._queued = self._queued, []
+        ops: list[Callable[[], Any | Awaitable[Any]] | None] = []
+        if any(op is None for op in queued):
+            ops.append(None)
+        if queued and queued[-1] is not None and self.is_live():
+            ops.append(queued[-1])
+        return ops
 
     def cancel_setup(self):
         """
@@ -92,7 +139,8 @@ def use_effect(
             dependencies has changed.
         cleanup: An optional function that cleans up after the effect. It is run
             before the effect is re-run, and when the component unmounts. It may be
-            `async`.
+            `async`. The effect's cleanups always finish, in order, before its setup
+            runs again.
     """
     component = current_component()
     deps = list(dependencies) if dependencies is not None else None
