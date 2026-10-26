@@ -2,6 +2,7 @@ import React, {useEffect, useRef, useState} from "react";
 import CodeBlock from "@theme/CodeBlock";
 
 import {
+  findExampleDir,
   getExampleMetadata,
   getExampleSource,
   getExampleWebSupported,
@@ -27,26 +28,22 @@ function languageForFile(name) {
   return LANGUAGE_BY_EXTENSION[extension] ?? "text";
 }
 
+/** Marks a file whose source chunk failed to load, so selecting it again retries. */
+const LOAD_FAILED = Symbol("load failed");
+
 /**
- * Return the example files that can be shown as tabs, with the requested file
- * first, then pyproject.toml, then the remaining Python and text files.
- * Python sources come from the code-examples bundle; other text files are loaded
- * on demand, so only their names are checked here.
+ * Order the example files that can be shown as tabs: the requested file first,
+ * then pyproject.toml, then the remaining Python and text files.
  */
-function viewableFiles(exampleDir, mainFile, files) {
+function sortTabs(mainFile, viewableFiles) {
   const rank = (name) => {
     if (name === mainFile) return 0;
     if (name === "pyproject.toml") return 1;
     if (name.endsWith(".py")) return 2;
     return 3;
   };
-  return files
-    .filter((name) =>
-      name.endsWith(".py")
-        ? getExampleSource(`${exampleDir}/${name}`) != null
-        : languageForFile(name) !== "text" || name.endsWith(".txt"),
-    )
-    .sort((a, b) => rank(a) - rank(b) || a.localeCompare(b));
+  const files = viewableFiles.includes(mainFile) ? viewableFiles : [mainFile, ...viewableFiles];
+  return [...files].sort((a, b) => rank(a) - rank(b) || a.localeCompare(b));
 }
 
 function GitHubIcon() {
@@ -126,8 +123,7 @@ function CreateCommand({exampleDir}) {
  * the code block's header shows the project's files as tabs, and a row of actions
  * above it holds a "Try Online" link to Flet Studio when the example supports web,
  * a link to the example's source on GitHub, and a copyable `flet create --example`
- * command. Files that can't be shown
- * as text, such as assets, are counted in the source link.
+ * command.
  * Shows an error message if the example path is not found in the code-examples bundle.
  *
  * @param {string} path - Relative path to the example file within the examples root.
@@ -136,11 +132,10 @@ function CreateCommand({exampleDir}) {
  */
 export default function CodeExample({path, language = "python", title}) {
   const source = getExampleSource(path);
-  const exampleDir = path.includes("/") ? path.slice(0, path.lastIndexOf("/")) : path;
-  const metadata = getExampleMetadata(exampleDir);
-  const mainFile = path.slice(exampleDir.length + 1);
-  const files = metadata?.files ?? [];
-  const tabs = metadata ? viewableFiles(exampleDir, mainFile, files) : [];
+  const exampleDir = findExampleDir(path);
+  const metadata = exampleDir ? getExampleMetadata(exampleDir) : null;
+  const mainFile = exampleDir ? path.slice(exampleDir.length + 1) : path;
+  const tabs = metadata ? sortTabs(mainFile, metadata.viewableFiles ?? []) : [];
 
   const [activeFile, setActiveFile] = useState(mainFile);
   const [loadedSources, setLoadedSources] = useState({});
@@ -150,9 +145,14 @@ export default function CodeExample({path, language = "python", title}) {
       return undefined;
     }
     let cancelled = false;
-    loadExampleFileSource(`${exampleDir}/${activeFile}`).then((text) => {
-      if (!cancelled) setLoadedSources((current) => ({...current, [activeFile]: text}));
-    });
+    loadExampleFileSource(`${exampleDir}/${activeFile}`).then(
+      (text) => {
+        if (!cancelled) setLoadedSources((current) => ({...current, [activeFile]: text}));
+      },
+      () => {
+        if (!cancelled) setLoadedSources((current) => ({...current, [activeFile]: LOAD_FAILED}));
+      },
+    );
     return () => {
       cancelled = true;
     };
@@ -175,7 +175,13 @@ export default function CodeExample({path, language = "python", title}) {
   const showTryOnline = getExampleWebSupported(exampleDir);
   const studioUrl = `${FLET_STUDIO_BASE}/${exampleDir}`;
   const sourceUrl = `${EXAMPLES_SOURCE_BASE}/${exampleDir}`;
-  const otherFileCount = files.length - tabs.length;
+
+  const selectFile = (name) => {
+    if (loadedSources[name] === LOAD_FAILED) {
+      setLoadedSources(({[name]: _failed, ...rest}) => rest);
+    }
+    setActiveFile(name);
+  };
 
   let activeSource;
   if (activeFile === mainFile) {
@@ -185,7 +191,14 @@ export default function CodeExample({path, language = "python", title}) {
   } else {
     activeSource = loadedSources[activeFile];
   }
-  const activeLanguage = activeFile === mainFile ? language : languageForFile(activeFile);
+  let activeLanguage = activeFile === mainFile ? language : languageForFile(activeFile);
+  if (activeSource === LOAD_FAILED) {
+    activeSource = `Couldn't load ${activeFile}. Select its tab again to retry.`;
+    activeLanguage = "text";
+  } else if (activeSource === null) {
+    activeSource = `${activeFile} is not available.`;
+    activeLanguage = "text";
+  }
 
   const fileTabs = (
     <div className="code-example-tabs" role="tablist" aria-label="Example files">
@@ -196,7 +209,7 @@ export default function CodeExample({path, language = "python", title}) {
           role="tab"
           aria-selected={name === activeFile}
           className="code-example-tab"
-          onClick={() => setActiveFile(name)}
+          onClick={() => selectFile(name)}
         >
           {name === mainFile && title ? title : name}
         </button>
@@ -213,15 +226,11 @@ export default function CodeExample({path, language = "python", title}) {
           href={sourceUrl}
           target="_blank"
           rel="noopener noreferrer"
-          title={
-            otherFileCount > 0
-              ? `View the full example on GitHub, including ${otherFileCount} more file${otherFileCount === 1 ? "" : "s"}`
-              : "View the full example on GitHub"
-          }
+          title="View the full example on GitHub"
         >
           <GitHubIcon />
           <span className="code-example-action-label">
-            Source{otherFileCount > 0 ? ` (+${otherFileCount} file${otherFileCount === 1 ? "" : "s"})` : ""}
+            Source
           </span>
         </a>
         {showTryOnline && (
@@ -237,7 +246,7 @@ export default function CodeExample({path, language = "python", title}) {
         )}
       </div>
       <CodeBlock language={activeLanguage} title={fileTabs}>
-        {activeSource ?? (activeSource === null ? `# ${activeFile} is not available.` : "Loading…")}
+        {activeSource ?? "Loading…"}
       </CodeBlock>
     </div>
   );
