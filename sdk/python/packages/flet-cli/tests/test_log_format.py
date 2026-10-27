@@ -75,6 +75,7 @@ def _command(**attrs) -> BaseFlutterCommand:
     cmd.live = _Live()
     cmd.no_rich_output = True
     cmd.skip_flutter_doctor = True
+    cmd.flutter_exe = "flutter"
     cmd.current_platform = "Linux"
     cmd.statuses = []
     cmd.update_status = cmd.statuses.append

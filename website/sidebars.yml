@@ -450,6 +450,7 @@ docs:
       HapticFeedback: services/hapticfeedback.md
       LocalAuthentication: services/localauthentication/index.md
       Magnetometer: services/magnetometer.md
+      Notifications: services/notifications/index.md
       PermissionHandler: services/permissionhandler/index.md
       ScreenBrightness: services/screenbrightness.md
       SemanticsService: services/semanticsservice.md
@@ -675,6 +676,60 @@ docs:
           _index: types/notchshape/index.md
           AutomaticNotchShape: types/automaticnotchshape.md
           CircularRectangleNotchShape: types/circularrectanglenotchshape.md
+      - Notifications:
+        - services/notifications/types/activenotification.md
+        - services/notifications/types/androidaudioattributesusage.md
+        - services/notifications/types/androidbigpicturestyle.md
+        - services/notifications/types/androidbigtextstyle.md
+        - services/notifications/types/androidbitmap.md
+        - services/notifications/types/androidbytesbitmap.md
+        - services/notifications/types/androidcategory.md
+        - services/notifications/types/androidcontenturiicon.md
+        - services/notifications/types/androiddrawablebitmap.md
+        - services/notifications/types/androidfilebitmap.md
+        - services/notifications/types/androidflag.md
+        - services/notifications/types/androidforegroundservicetype.md
+        - services/notifications/types/androidgroup.md
+        - services/notifications/types/androidgroupalertbehavior.md
+        - services/notifications/types/androidicon.md
+        - services/notifications/types/androidimportance.md
+        - services/notifications/types/androidinboxstyle.md
+        - services/notifications/types/androidmessage.md
+        - services/notifications/types/androidmessagingstyle.md
+        - services/notifications/types/androidoptions.md
+        - services/notifications/types/androidperson.md
+        - services/notifications/types/androidpriority.md
+        - services/notifications/types/androidprogress.md
+        - services/notifications/types/androidschedulemode.md
+        - services/notifications/types/androidservicestarttype.md
+        - services/notifications/types/androidstyle.md
+        - services/notifications/types/androidvisibility.md
+        - services/notifications/types/darwininterruptionlevel.md
+        - services/notifications/types/darwinoptions.md
+        - services/notifications/types/datetimecomponents.md
+        - services/notifications/types/linuxcategory.md
+        - services/notifications/types/linuxoptions.md
+        - services/notifications/types/linuxurgency.md
+        - services/notifications/types/notificationaction.md
+        - services/notifications/types/notificationactionevent.md
+        - services/notifications/types/notificationactioninput.md
+        - services/notifications/types/notificationchannel.md
+        - services/notifications/types/notificationevent.md
+        - services/notifications/types/notificationexception.md
+        - services/notifications/types/notificationinitializationexception.md
+        - services/notifications/types/notificationinvalidargumentexception.md
+        - services/notifications/types/notificationoptions.md
+        - services/notifications/types/notificationpermissionexception.md
+        - services/notifications/types/notificationunsupportedplatformexception.md
+        - services/notifications/types/pendingnotification.md
+        - services/notifications/types/repeatinterval.md
+        - services/notifications/types/webdirection.md
+        - services/notifications/types/weboptions.md
+        - services/notifications/types/windowsduration.md
+        - services/notifications/types/windowsoptions.md
+        - services/notifications/types/windowsprogress.md
+        - services/notifications/types/windowsscenario.md
+        - services/notifications/types/windowssound.md
       - types/observable.md
       - types/offset.md
       - OutlinedBorder:

@@ -4,6 +4,8 @@ title: "Packaging app for Android"
 
 import TabItem from '@theme/TabItem';
 import Tabs from '@theme/Tabs';
+import AndroidCompileOptionsDefaults from '@site/.crocodocs/android-compile-options-defaults.mdx';
+import AndroidCompileOptionsExample from '@site/.crocodocs/android-compile-options-example.mdx';
 
 Instructions for packaging a Flet app into an
 Android APK and Android App Bundle (AAB).
@@ -670,6 +672,189 @@ uses the same authorities will cause the Android manifest merger to fail —
 pick a different `android:authorities` value for your custom provider.
 :::
 
+### Receivers
+
+You can declare broadcast receivers inside the `<application>` element of
+[`AndroidManifest.xml`](index.md#build-template). The receiver classes must be
+provided by your app or one of its native dependencies.
+
+See also:
+
+- [`<receiver>` element](https://developer.android.com/guide/topics/manifest/receiver-element)
+- [`<intent-filter>` element](https://developer.android.com/guide/topics/manifest/intent-filter-element)
+
+#### Resolution order
+
+Its value is determined in the following order of precedence:
+
+1. `[tool.flet.android.receiver]`
+
+There are no default receivers. Omitting the table adds none.
+
+#### Supported value forms
+
+Each receiver's table key supplies its `android:name`. Its entries become
+`android:<key>="<value>"` attributes. Attribute values must be strings, booleans,
+or numbers. Booleans are written as lowercase `true` or `false`; XML attribute
+values are escaped. The `name` key is reserved for the receiver table key.
+
+A value of `false` or an empty table skips a declaration. This does not remove a
+receiver contributed by a dependency's manifest.
+
+The reserved `intent_filter` key accepts an array of tables. Each filter requires
+an `actions` list containing at least one nonempty string, and accepts an optional
+`categories` list of nonempty strings. Each filter is rendered separately.
+Receivers with intent filters must explicitly set `exported`.
+
+This setting currently supports receiver attributes and intent-filter actions and
+categories. Filter attributes, `<data>` elements, and receiver metadata are not
+supported. Configure required [permissions](#permissions) separately; for example,
+receiving `BOOT_COMPLETED` requires `RECEIVE_BOOT_COMPLETED`.
+
+#### Example
+
+<Tabs groupId="pyproject-toml">
+<TabItem value="pyproject-toml" label="pyproject.toml">
+```toml
+[tool.flet.android.receiver."com.example.BootReceiver"]
+exported = false
+enabled = true
+
+[[tool.flet.android.receiver."com.example.BootReceiver".intent_filter]]
+actions = ["android.intent.action.BOOT_COMPLETED"]
+
+[[tool.flet.android.receiver."com.example.BootReceiver".intent_filter]]
+actions = ["com.example.REFRESH", "com.example.RESET"]
+categories = ["com.example.INTERNAL"]
+
+[tool.flet.android.receiver."com.example.SyncReceiver"]
+exported = false
+process = ":sync"
+```
+</TabItem>
+</Tabs>
+<details>
+<summary>Template translation</summary>
+
+In [`AndroidManifest.xml`](index.md#build-template),
+the `pyproject.toml` example above will be translated accordingly into this:
+
+```xml
+<application>
+    <receiver android:name="com.example.BootReceiver"
+              android:exported="false"
+              android:enabled="true">
+        <intent-filter>
+            <action android:name="android.intent.action.BOOT_COMPLETED" />
+        </intent-filter>
+        <intent-filter>
+            <action android:name="com.example.REFRESH" />
+            <action android:name="com.example.RESET" />
+            <category android:name="com.example.INTERNAL" />
+        </intent-filter>
+    </receiver>
+    <receiver android:name="com.example.SyncReceiver"
+              android:exported="false"
+              android:process=":sync" />
+</application>
+```
+
+</details>
+
+### Services
+
+You can declare services inside the `<application>` element of
+[`AndroidManifest.xml`](index.md#build-template). The service classes must be
+provided by your app or one of its native dependencies.
+
+See also:
+
+- [`<service>` element](https://developer.android.com/guide/topics/manifest/service-element)
+- [`<property>` element](https://developer.android.com/guide/topics/manifest/property-element)
+- [`<meta-data>` element](https://developer.android.com/guide/topics/manifest/meta-data-element)
+
+#### Resolution order
+
+Its value is determined in the following order of precedence:
+
+1. `[tool.flet.android.service]`
+
+There are no default services. Omitting the table adds none.
+
+#### Supported value forms
+
+Each service's table key supplies its `android:name`. Other entries become
+`android:<key>="<value>"` attributes. Attribute values must be strings, booleans,
+or numbers. Booleans are written as lowercase `true` or `false`, and XML attribute
+values are escaped. The `name` key is reserved for the table key.
+
+A value of `false` or an empty table skips a declaration. This does not remove a
+service contributed by a dependency's manifest.
+
+The reserved `property` and `meta_data` sub-tables emit nested `<property>` and
+`<meta-data>` elements. Each child table key supplies its `android:name`, and its
+value can be:
+
+- A string, boolean, or number, rendered as `android:value`.
+- A table with exactly one `value` entry, containing a string, boolean, or number.
+- A table with exactly one `resource` entry, containing a nonempty resource string,
+  such as `"@xml/service_config"`. The resource must exist in the Android project.
+
+Service intent filters are not currently supported. Configure any required
+[permissions](#permissions) separately; service declarations do not add them.
+
+#### Example
+
+Declare a data-sync service with metadata, and a special-use service with its
+required subtype property:
+
+<Tabs groupId="pyproject-toml">
+<TabItem value="pyproject-toml" label="pyproject.toml">
+```toml
+[tool.flet.android.service."com.example.SyncService"]
+exported = false
+foregroundServiceType = "dataSync"
+stopWithTask = true
+
+[tool.flet.android.service."com.example.SyncService".meta_data]
+"com.example.RETRY_COUNT" = 3
+"com.example.LOGGING_ENABLED" = false
+
+[tool.flet.android.service."com.example.SpecialService"]
+exported = false
+foregroundServiceType = "specialUse"
+
+[tool.flet.android.service."com.example.SpecialService".property]
+"android.app.PROPERTY_SPECIAL_USE_FGS_SUBTYPE" = "Describe the service's work"
+```
+</TabItem>
+</Tabs>
+<details>
+<summary>Template translation</summary>
+
+In [`AndroidManifest.xml`](index.md#build-template),
+the `pyproject.toml` example above will be translated accordingly into this:
+
+```xml
+<application>
+    <service android:name="com.example.SyncService"
+             android:exported="false"
+             android:foregroundServiceType="dataSync"
+             android:stopWithTask="true">
+        <meta-data android:name="com.example.RETRY_COUNT" android:value="3" />
+        <meta-data android:name="com.example.LOGGING_ENABLED" android:value="false" />
+    </service>
+    <service android:name="com.example.SpecialService"
+             android:exported="false"
+             android:foregroundServiceType="specialUse">
+        <property android:name="android.app.PROPERTY_SPECIAL_USE_FGS_SUBTYPE"
+                  android:value="Describe the service's work" />
+    </service>
+</application>
+```
+
+</details>
+
 ### Features
 
 A hardware or software feature that is used by the application.
@@ -994,6 +1179,283 @@ adaptive_icon_background = "#0B6BFF"
 ```
 </TabItem>
 </Tabs>
+
+## Java compile options
+
+You can add or override properties in the Android `compileOptions` block of
+[`android/app/build.gradle.kts`](index.md#build-template).
+
+See also:
+
+- [Java versions in Android builds](https://developer.android.com/build/jdks)
+- [Android Gradle compile options](https://developer.android.com/reference/tools/gradle-api/8.13/com/android/build/api/dsl/CompileOptions)
+
+### Resolution order
+
+Each property's value is determined in the following order of precedence:
+
+1. `[tool.flet.android.compile_options]`
+2. `[android.compile_options]` in the `flet-extension.toml` of the
+   [app's dependencies](index.md#app-dependencies)
+   (see [Build settings](../extend/user-extensions.md#build-settings))
+3. Flet's defaults:
+
+   <AndroidCompileOptionsDefaults />
+
+Overrides apply per property. Additional properties are added to the block;
+omitted properties retain their defaults. Omitting the table or using an empty
+table preserves all defaults.
+
+### Supported value forms
+
+Keys must be Gradle property identifiers, using Gradle's original casing.
+Each value must be a nonempty string containing a Kotlin expression; Flet inserts
+the expression without adding quotes. Gradle checks whether each property and
+expression is supported by your Android Gradle plugin.
+
+Use the string `"true"`, rather than the TOML boolean `true`. For a Kotlin string
+literal, include its quotes in the expression, for example `encoding = '"UTF-8"'`.
+
+### Example
+
+For a legacy Android integration that requires Java 8 source syntax and
+ISO-8859-1 encoded Java files, override only those properties:
+
+<Tabs groupId="pyproject-toml">
+<TabItem value="pyproject-toml" label="pyproject.toml">
+```toml
+[tool.flet.android.compile_options]
+sourceCompatibility = "JavaVersion.VERSION_1_8"
+encoding = '"ISO-8859-1"'
+```
+</TabItem>
+</Tabs>
+<details>
+<summary>Template translation</summary>
+
+In [`android/app/build.gradle.kts`](index.md#build-template),
+the `pyproject.toml` example above will be translated accordingly into this:
+
+<AndroidCompileOptionsExample />
+
+</details>
+
+:::note
+Changing Java compatibility here does not change Kotlin's compiler target, which
+the default template sets to JVM 17. Keep the Java and Kotlin targets compatible
+when customizing your build template.
+:::
+
+## Gradle dependencies
+
+You can add Kotlin declarations to the `dependencies` block in
+[`android/app/build.gradle.kts`](index.md#build-template).
+
+See also:
+
+- [Declaring Gradle dependencies](https://docs.gradle.org/current/userguide/declaring_dependencies_basics.html)
+
+### Resolution order
+
+Its value is determined in the following order of precedence:
+
+1. `[tool.flet.android].gradle_dependencies`
+2. `[android].gradle_dependencies` in the `flet-extension.toml` of the
+   [app's dependencies](index.md#app-dependencies), placed before yours, and left
+   out when yours already contain it
+   (see [Build settings](../extend/user-extensions.md#build-settings))
+
+There are no default declarations. When neither the setting nor an extension
+provides declarations, no Gradle dependencies are added. Your declarations supplement any dependencies
+provided by the template, Flutter, and its plugins.
+
+### Supported value forms
+
+The value must be a string containing Kotlin code for the **body** of the
+`dependencies` block. Omit the outer `dependencies { ... }` wrapper.
+
+Use a TOML multiline literal string (`'''...'''`) to preserve Kotlin quotes and
+backslashes without additional escaping. Flet removes common leading indentation
+and surrounding whitespace, then indents the code inside the generated block.
+Gradle validates and executes the Kotlin declarations.
+
+You can use ordinary coordinates, `platform(...)`, `files(...)`, `project(...)`,
+version-catalog references, and nested dependency configuration or `constraints`
+blocks. Referenced repositories, files, project modules, catalogs, and
+configurations must already be available in the Gradle project.
+
+This setting configures native Android dependencies. Android-specific Python
+packages continue to use `[tool.flet.android].dependencies`.
+
+### Example
+
+Add Gson for JSON handling in native Android code, annotations needed only
+at compile time, and JUnit for native unit tests:
+
+<Tabs groupId="pyproject-toml">
+<TabItem value="pyproject-toml" label="pyproject.toml">
+```toml
+[tool.flet.android]
+gradle_dependencies = '''
+// Available to the app at compile time and runtime.
+implementation("com.google.code.gson:gson:2.12.0")
+
+// Available at compile time, without adding a runtime dependency.
+compileOnly("org.jetbrains:annotations:24.1.0")
+
+// Available to native Android unit tests.
+testImplementation("junit:junit:4.13.2")
+'''
+```
+</TabItem>
+</Tabs>
+<details>
+<summary>Template translation</summary>
+
+In [`android/app/build.gradle.kts`](index.md#build-template),
+the `gradle_dependencies` setting above will be translated accordingly into this:
+
+```kotlin
+dependencies {
+    // Available to the app at compile time and runtime.
+    implementation("com.google.code.gson:gson:2.12.0")
+
+    // Available at compile time, without adding a runtime dependency.
+    compileOnly("org.jetbrains:annotations:24.1.0")
+
+    // Available to native Android unit tests.
+    testImplementation("junit:junit:4.13.2")
+}
+```
+
+</details>
+
+## Resources
+
+You can add your own files to the Android app's `res` directory, such as a
+notification icon, an image, or a sound that native code or an extension looks up
+by name at runtime.
+
+See also:
+
+- [App resources overview](https://developer.android.com/guide/topics/resources/providing-resources)
+
+### Resolution order
+
+Its value is determined in the following order of precedence:
+
+1. `[tool.flet.android].res_dir`
+
+There is no default. Omitting the setting adds no resources.
+
+### Supported value forms
+
+The value is the path of a directory, relative to the directory containing
+`pyproject.toml`. Its layout mirrors Android's `res` directory: one level of
+resource type directories, each holding resource files.
+
+Supported resource types are `anim`, `animator`, `color`, `drawable`, `font`,
+`interpolator`, `layout`, `menu`, `mipmap`, `raw`, `transition`, `values`, and
+`xml`.
+
+A type directory may carry Android
+[configuration qualifiers](https://developer.android.com/guide/topics/resources/providing-resources#AlternativeResources),
+such as `drawable-hdpi` or `values-night`.
+
+A resource's name is its file name without the extension, so
+`drawable/ic_stat_notify.png` is the drawable `ic_stat_notify`. File names may
+contain only lowercase letters, digits, and underscores, and must start with a
+letter. Hidden files, such as `.DS_Store`, are ignored.
+
+The files are copied into the [generated project](index.md#build-template) on every build. A file removed
+from the directory is also removed from the next build.
+
+### Reserved names
+
+Flet generates some resources itself, such as the launcher icon and splash screen.
+Android identifies a resource by its type and name, not by its file, so a file
+defining one of these resources fails the build, whatever its qualifiers or
+extension. For example, `drawable-ldpi/splash.png` and `drawable/splash.xml` both
+define Flet's drawable `splash`. Rename such files.
+
+| Type       | Reserved names                | Generated for                                                               |
+|------------|-------------------------------|-----------------------------------------------------------------------------|
+| `drawable` | `splash`, `launch_background` | [Splash screen](index.md#splash-screen)                                     |
+| `drawable` | `android12splash`             | [Android 12 splash icon](index.md#android-12-splash-icon)                   |
+| `drawable` | `ic_launcher_foreground`      | [App icon](index.md#icons), as the adaptive icon's foreground               |
+| `mipmap`   | `ic_launcher`                 | [App icon](index.md#icons)                                                  |
+| `raw`      | `flet_res_keep`               | [Keeping resources in release builds](#keeping-resources-in-release-builds) |
+| `xml`      | `provider_paths`              | Flet's built-in [file provider](#providers)                                 |
+
+Files in `values` directories merge their contents rather than replacing each
+other, so only the paths of Flet's own values files are reserved:
+
+- `values/colors.xml`, `values/ic_launcher_background.xml`, `values/styles.xml`
+- `values-night/colors.xml`, `values-night/styles.xml`
+- `values-v31/styles.xml`, `values-night-v31/styles.xml`
+
+Your own values files may declare any resources except those Flet declares. Flet
+doesn't check this; Android's build fails with a "Duplicate resources" error that
+names both files. The reserved names are:
+
+- the color `ic_launcher_background`, for the
+  [adaptive icon background](#adaptive-icon-background);
+- the color `flet_splash_background`, for the
+  [splash background colors](index.md#splash-background-colors);
+- the styles `LaunchTheme` and `NormalTheme`, for the
+  [splash screen](index.md#splash-screen) and the app's window.
+
+### Keeping resources in release builds
+
+Release builds remove resources that no native code references. A resource your
+Python code names only at runtime, such as a notification icon, would be removed
+too. Flet therefore lists every copied resource in a generated keep file,
+`res/raw/flet_res_keep.xml`, so all of them are kept. Resources defined inside
+`values` files are not listed.
+
+### Example
+
+Add a notification icon, a picture, and a sound:
+
+```
+my_app/
+├── pyproject.toml
+├── android_res/
+│   ├── drawable/
+│   │   ├── ic_stat_notify.png
+│   │   └── promo_banner.png
+│   └── raw/
+│       └── alert.mp3
+└── src/
+    └── main.py
+```
+
+<Tabs groupId="pyproject-toml">
+<TabItem value="pyproject-toml" label="pyproject.toml">
+```toml
+[tool.flet.android]
+res_dir = "android_res"
+```
+</TabItem>
+</Tabs>
+
+The app can then refer to them by name, for example with the
+[notifications extension](../services/notifications/index.md):
+
+```python
+import flet_notifications as ftn
+
+notifications = ftn.Notifications(android_default_icon="ic_stat_notify")
+
+options = ftn.NotificationOptions(
+    android=ftn.AndroidOptions(
+        style=ftn.AndroidBigPictureStyle(
+            image=ftn.AndroidDrawableBitmap(name="promo_banner")
+        ),
+        channel=ftn.NotificationChannel(id="alerts", name="Alerts", sound="alert"),
+    )
+)
+```
 
 ## ProGuard / R8 rules
 

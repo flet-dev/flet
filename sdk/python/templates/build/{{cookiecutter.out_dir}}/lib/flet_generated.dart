@@ -11,7 +11,7 @@ import 'package:flet/flet.dart';
 import 'package:{{ dep }}/{{ dep }}.dart' as {{ dep }};
 {% endfor %}
 
-{% set hide_window_on_start = get_pyproject("tool.flet." ~ cookiecutter.options.config_platform ~ ".app.hide_window_on_start") %}
+{% set hide_window_on_start = get_pyproject("tool.flet." ~ cookiecutter._options.config_platform ~ ".app.hide_window_on_start") %}
 {% if hide_window_on_start is none %}
 {% set hide_window_on_start = get_pyproject("tool.flet.app.hide_window_on_start") %}
 {% endif %}

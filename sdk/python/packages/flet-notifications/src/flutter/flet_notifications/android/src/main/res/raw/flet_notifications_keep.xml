@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- The default icon is looked up by name at runtime, so release builds'
+     resource shrinking must keep it. -->
+<resources xmlns:tools="http://schemas.android.com/tools"
+    tools:keep="@drawable/flet_notifications_icon" />

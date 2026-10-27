@@ -436,7 +436,7 @@ static void my_application_activate(GApplication* application) {
   fl_dart_project_set_dart_entrypoint_arguments(project, self->dart_entrypoint_arguments);
   // `flet build --no-impeller` renders with Skia; FLET_NO_IMPELLER does the
   // same when the app starts.
-  if ({{ "FALSE" if cookiecutter.options.impeller else "TRUE" }} || no_impeller_requested()) {
+  if ({{ "FALSE" if cookiecutter._options.impeller else "TRUE" }} || no_impeller_requested()) {
     fl_dart_project_set_enable_impeller(project, FALSE);
   }
 

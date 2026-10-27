@@ -9,6 +9,7 @@ import os
 import platform
 import re
 import shutil
+import textwrap
 from pathlib import Path
 from typing import Any, Optional, cast
 
@@ -47,10 +48,23 @@ from flet_cli.commands.flutter_base import (
 from flet_cli.commands.options import PassThroughArgsAction
 from flet_cli.utils.android import (
     ANDROID_ARCH_TO_FLUTTER_TARGET_PLATFORM,
+    ANDROID_RESOURCES_KEEP_FILE,
+    android_resource_clashes,
+    android_resource_files,
+    android_resources_keep_xml,
     excluded_android_abis,
+    normalize_android_receivers,
+    normalize_android_services,
 )
 from flet_cli.utils.app_excludes import find_default_excludes
 from flet_cli.utils.cli import parse_cli_bool_value
+from flet_cli.utils.extension_settings import (
+    ExtensionSettings,
+    contributed_settings,
+    find_extension_settings,
+    merge_compile_options,
+    merge_gradle_dependencies,
+)
 from flet_cli.utils.flutter import get_flutter_dir
 from flet_cli.utils.hash_stamp import HashStamp
 from flet_cli.utils.log_format import annotation_path
@@ -71,6 +85,11 @@ DEFAULT_TEMPLATE_URL = (
     "https://github.com/flet-dev/flet/releases/download/"
     "v{version}/flet-build-template.zip"
 )
+
+DEFAULT_ANDROID_COMPILE_OPTIONS = {
+    "sourceCompatibility": "JavaVersion.VERSION_17",
+    "targetCompatibility": "JavaVersion.VERSION_17",
+}
 
 # Android (serious_python native-mmap packaging): pure Python ships in stored zips
 # read via zipimport, which breaks packages that read bundled data through a real
@@ -151,6 +170,8 @@ class BaseBuildCommand(BaseFlutterCommand):
         self.out_dir = None
         self.python_module_name = None
         self.get_pyproject = None
+        self.extensions: list[ExtensionSettings] = []
+        """Build settings of installed extensions, read after packaging."""
         self.python_app_path = None
         self.build_dir = None
         self.flutter_dir: Optional[Path] = None
@@ -713,6 +734,16 @@ class BaseBuildCommand(BaseFlutterCommand):
             help="The list of `<key>=<value>` entitlements. Values can be booleans, "
             "strings, numbers, TOML arrays, or TOML inline tables "
             "(macos only); can be used multiple times",
+        )
+        parser.add_argument(
+            "--ios-entitlements",
+            dest="ios_entitlements",
+            action="extend",
+            nargs="+",
+            default=[],
+            help="The list of `<key>=<value>` entitlements. Values can be booleans, "
+            "strings, numbers, TOML arrays, or TOML inline tables "
+            "(ipa and ios-simulator only); can be used multiple times",
         )
         parser.add_argument(
             "--android-features",
@@ -1533,6 +1564,12 @@ class BaseBuildCommand(BaseFlutterCommand):
         # Resolved before the context, because the PWA background falls
         # through to it.
         splash = self._resolve_splash()
+        org_name = (
+            self.options.org_name
+            or self.get_pyproject(f"tool.flet.{self.config_platform}.org")
+            or self.get_pyproject("tool.flet.org")
+            or "com.flet"
+        )
 
         self.template_data = {
             "out_dir": self.flutter_dir.name,
@@ -1608,12 +1645,13 @@ class BaseBuildCommand(BaseFlutterCommand):
             # Pre-escaped Linux desktop entry values.
             "linux_desktop_exec": self.escape_linux_desktop_exec(str(artifact_name)),
             "linux_categories": linux_categories,
-            "org_name": self.options.org_name
-            or self.get_pyproject(f"tool.flet.{self.config_platform}.org")
-            or self.get_pyproject("tool.flet.org"),
+            "org_name": org_name,
+            # The template derives nothing from these: the build names files
+            # after the bundle ID too, such as the app's Linux icons.
             "bundle_id": self.options.bundle_id
             or self.get_pyproject(f"tool.flet.{self.config_platform}.bundle_id")
-            or self.get_pyproject("tool.flet.bundle_id"),
+            or self.get_pyproject("tool.flet.bundle_id")
+            or f"{org_name}.{project_name_slug}",
             "company_name": (
                 self.options.company_name or self.get_pyproject("tool.flet.company")
             ),
@@ -1624,7 +1662,10 @@ class BaseBuildCommand(BaseFlutterCommand):
             "ios_signing_certificate": ios_signing_certificate,
             "ios_export_options": ios_export_options,
             "ios_team_id": ios_team_id,
-            "options": {
+            # `_` makes `_options` and `_pyproject` private cookiecutter
+            # variables, which reach the template unchanged. Cookiecutter
+            # renders other values as Jinja and turns them into strings.
+            "_options": {
                 "package_platform": self.package_platform,
                 "config_platform": self.config_platform,
                 "python_version": self.python_release.short,
@@ -1636,12 +1677,17 @@ class BaseBuildCommand(BaseFlutterCommand):
                 ),
                 "info_plist": info_plist,
                 "macos_entitlements": macos_entitlements,
+                "ios_entitlements": self.get_ios_entitlements(),
                 "android_permissions": android_permissions,
                 "android_features": android_features,
                 "android_meta_data": android_meta_data,
                 "android_gradle_properties": android_gradle_properties,
+                "android_compile_options": self.get_android_compile_options(),
+                "android_gradle_dependencies": self.get_android_gradle_dependencies(),
                 "android_proguard_rules": android_proguard_rules,
                 "android_providers": android_providers,
+                "android_receivers": self.get_android_receivers(),
+                "android_services": self.get_android_services(),
                 "deep_linking": {
                     "scheme": deep_linking_scheme,
                     "host": deep_linking_host,
@@ -1668,7 +1714,7 @@ class BaseBuildCommand(BaseFlutterCommand):
                 or self.icon_background_value("android")
                 or "#ffffff"
             ),
-            "pyproject": self.get_pyproject(),
+            "_pyproject": self.get_pyproject(),
         }
 
     @staticmethod
@@ -2063,6 +2109,56 @@ class BaseBuildCommand(BaseFlutterCommand):
                     f"Registered app user extensions {self.emojis['checkmark']}"
                 )
 
+        self.apply_extension_settings()
+
+    def apply_extension_settings(self):
+        """
+        Apply the build settings installed extensions declare in their
+        `flet-extension.toml`, under the app's own settings.
+
+        Settings an extension changes are recomputed for the second template pass.
+        """
+
+        assert self.build_dir
+        assert self.flutter_dir
+        assert self.get_pyproject
+        assert self.template_data
+
+        # serious_python installs web packages in its own default location, the
+        # `build/site-packages` directory of the Flutter project it runs in.
+        site_packages_dir = (
+            self.flutter_dir / "build" / "site-packages"
+            if self.package_platform == "Emscripten"
+            else self.build_dir / "site-packages"
+        )
+        try:
+            self.extensions, warnings = find_extension_settings(
+                site_packages_dir, self.flutter_packages_dir
+            )
+        except ValueError as e:
+            self.cleanup(1, str(e))
+        for warning in warnings:
+            self.warn(warning)
+        for extension in self.extensions:
+            contributed = contributed_settings(extension)
+            if not contributed:
+                continue
+            console.log(
+                f"Applied build settings from {extension.label}: "
+                f"{', '.join(contributed)}",
+                style=verbose1_style,
+                markup=False,
+            )
+
+        # Android settings only apply to Android builds, so other builds don't
+        # fail on extensions' conflicting compile options.
+        if self.package_platform == "Android":
+            options = self.template_data["_options"]
+            options["android_compile_options"] = self.get_android_compile_options()
+            options["android_gradle_dependencies"] = (
+                self.get_android_gradle_dependencies()
+            )
+
     def update_flutter_dependencies(self):
         """
         Merge resolved Flutter extension dependencies into `pubspec.yaml`.
@@ -2324,7 +2420,7 @@ class BaseBuildCommand(BaseFlutterCommand):
         else:
             site_packages = self.build_dir / "site-packages"
 
-        architectures = self.template_data["options"]["target_arch"]
+        architectures = self.template_data["_options"]["target_arch"]
         if self.package_platform == "Android":
             architectures = architectures or self.python_release.android_abis
         elif self.package_platform == "iOS":
@@ -2584,12 +2680,12 @@ class BaseBuildCommand(BaseFlutterCommand):
                 self.python_release.short,
             ]
 
-            if self.template_data["options"]["target_arch"]:
+            if self.template_data["_options"]["target_arch"]:
                 # serious_python's --arch is a Dart multi-option: values must be
                 # comma-separated or the flag repeated. Space-separated values
                 # after the first are silently treated as positional arguments.
                 package_args.extend(
-                    ["--arch", ",".join(self.template_data["options"]["target_arch"])]
+                    ["--arch", ",".join(self.template_data["_options"]["target_arch"])]
                 )
 
             # Only the short version is passed; serious_python derives the full
@@ -2991,6 +3087,188 @@ class BaseBuildCommand(BaseFlutterCommand):
             if value is not None:
                 return value
         return self.get_pyproject(f"tool.flet.deep_linking.{key}")
+
+    def get_ios_entitlements(self) -> dict:
+        """
+        Resolve the iOS app's entitlements.
+
+        Entries of `--ios-entitlements` override those of `[tool.flet.ios.entitlement]`.
+        Values are written to `Runner.entitlements` with their plist types.
+        """
+        assert self.get_pyproject
+        assert self.options
+        ios_entitlements = dict(self.get_pyproject("tool.flet.ios.entitlement") or {})
+
+        # parse --ios-entitlements
+        for p in self.options.ios_entitlements:
+            i = p.find("=")
+            if i > -1:
+                ios_entitlements[p[:i]] = parse_cli_plist_value(p[i + 1 :])
+            else:
+                self.cleanup(1, f"Invalid iOS entitlement option: {p}")
+
+        for key, value in ios_entitlements.items():
+            if not is_supported_plist_value(value):
+                self.cleanup(
+                    1,
+                    "Unsupported iOS entitlement value type for "
+                    f"{key}: {type(value).__name__}. Supported types are "
+                    "string, boolean, integer, float, dictionary, and arrays "
+                    "containing those values.",
+                )
+        return ios_entitlements
+
+    def get_android_compile_options(self) -> dict[str, str]:
+        """Merge Android compiler expressions over installed extensions' and
+        Flet's Java 17 defaults.
+
+        Keys are Gradle property identifiers; values are Kotlin expressions
+        rendered verbatim inside `android.compileOptions`.
+        """
+        assert self.get_pyproject
+        setting = "tool.flet.android.compile_options"
+        try:
+            configured = merge_compile_options(
+                self.get_pyproject(setting), self.extensions
+            )
+        except ValueError as e:
+            self.cleanup(1, str(e))
+        if configured is None:
+            configured = {}
+        if not isinstance(configured, dict):
+            self.cleanup(
+                1, f"Invalid {setting}: expected a table of Kotlin expressions."
+            )
+
+        resolved = DEFAULT_ANDROID_COMPILE_OPTIONS.copy()
+        for name, expression in configured.items():
+            if not isinstance(name, str) or not re.fullmatch(
+                r"[A-Za-z_][A-Za-z0-9_]*", name
+            ):
+                self.cleanup(
+                    1,
+                    f"Invalid {setting} key {name!r}: expected a property identifier.",
+                )
+            if not isinstance(expression, str) or not expression.strip():
+                self.cleanup(
+                    1,
+                    f"Invalid {setting}.{name}: expected a nonempty Kotlin expression "
+                    "string.",
+                )
+            resolved[name] = expression.strip()
+        return resolved
+
+    def get_android_gradle_dependencies(self) -> str:
+        """Read Kotlin declarations for the body of Gradle's dependencies block,
+        after those of installed extensions."""
+        assert self.get_pyproject
+        setting = "tool.flet.android.gradle_dependencies"
+        configured = merge_gradle_dependencies(
+            self.get_pyproject(setting), self.extensions
+        )
+        if configured is None:
+            return ""
+        if not isinstance(configured, str):
+            self.cleanup(
+                1, f"Invalid {setting}: expected a string of Kotlin declarations."
+            )
+        return textwrap.dedent(configured).strip()
+
+    def get_android_receivers(self) -> dict:
+        """Resolve Android manifest receiver declarations from project settings."""
+        assert self.get_pyproject
+        try:
+            return normalize_android_receivers(
+                self.get_pyproject("tool.flet.android.receiver")
+            )
+        except ValueError as exc:
+            self.cleanup(1, str(exc))
+
+    def get_android_services(self) -> dict:
+        """Resolve Android manifest service declarations from project settings."""
+        assert self.get_pyproject
+        try:
+            return normalize_android_services(
+                self.get_pyproject("tool.flet.android.service")
+            )
+        except ValueError as exc:
+            self.cleanup(1, str(exc))
+
+    def copy_android_resources(self):
+        """
+        Copy the app's own Android resources into the generated project.
+
+        `tool.flet.android.res_dir` names a directory, relative to the project,
+        laid out like Android's `res` directory, such as `drawable/ic_stat.png`
+        or `raw/alert.mp3`. Files copied by the previous build are removed first,
+        so deleting a resource from the directory also removes it from the app.
+        A keep rule protects the copied resources from release-build resource
+        shrinking, because Python code can refer to them only by name.
+        """
+
+        assert self.get_pyproject
+        assert self.python_app_path
+        assert self.build_dir
+        assert self.flutter_dir
+
+        if self.package_platform != "Android":
+            return
+
+        res_path = self.flutter_dir / "android" / "app" / "src" / "main" / "res"
+        manifest_path = self.build_dir / ".hash" / "android-resources"
+        previous = (
+            manifest_path.read_text().splitlines() if manifest_path.exists() else []
+        )
+        for relative in previous:
+            (res_path / relative).unlink(missing_ok=True)
+
+        setting = self.get_pyproject("tool.flet.android.res_dir")
+        if setting is None:
+            manifest_path.unlink(missing_ok=True)
+            return
+        if not isinstance(setting, str):
+            self.cleanup(
+                1, "Invalid tool.flet.android.res_dir: expected a directory path."
+            )
+        res_dir = self.python_app_path / setting
+        if not res_dir.is_dir():
+            self.cleanup(
+                1, f"Invalid tool.flet.android.res_dir: {res_dir} is not a directory."
+            )
+        try:
+            files = android_resource_files(res_dir)
+        except ValueError as exc:
+            self.cleanup(1, f"Invalid tool.flet.android.res_dir entry {exc}")
+
+        clashes = android_resource_clashes(files, res_path)
+        if clashes:
+            self.cleanup(
+                1,
+                "Android resources in tool.flet.android.res_dir clash with "
+                "resources Flet generates; rename them:\n"
+                + "\n".join(
+                    f"  {file.as_posix()} (Flet's {generated.as_posix()})"
+                    for file, generated in clashes
+                ),
+            )
+
+        with self.step("[bold blue]Copying Android resources..."):
+            copied = []
+            for relative in files:
+                target = res_path / relative
+                target.parent.mkdir(parents=True, exist_ok=True)
+                shutil.copy2(res_dir / relative, target)
+                copied.append(relative.as_posix())
+
+            keep_xml = android_resources_keep_xml(files)
+            if keep_xml is not None:
+                keep_path = res_path / ANDROID_RESOURCES_KEEP_FILE
+                keep_path.parent.mkdir(parents=True, exist_ok=True)
+                keep_path.write_text(keep_xml)
+                copied.append(ANDROID_RESOURCES_KEEP_FILE.as_posix())
+
+            manifest_path.parent.mkdir(parents=True, exist_ok=True)
+            manifest_path.write_text("\n".join(copied))
 
     def resolve_permissions(self) -> list[str]:
         """

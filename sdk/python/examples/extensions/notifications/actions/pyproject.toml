@@ -1,0 +1,27 @@
+[project]
+name = "notifications-actions"
+version = "1.0.0"
+description = "Adds buttons and an inline reply to a notification, and handles them in the app."
+requires-python = ">=3.10"
+keywords = ["services", "notifications", "actions", "inline reply", "background actions", "async"]
+authors = [{ name = "Flet team", email = "hello@flet.dev" }]
+dependencies = ["flet", "flet-notifications"]
+
+[dependency-groups]
+dev = ["flet-cli", "flet-desktop", "flet-web"]
+
+[tool.flet.gallery]
+categories = ["Utility/Notifications"]
+
+[tool.flet.metadata]
+title = "Action buttons and replies"
+docs_intro = "Button presses arrive in [`on_action`][flet_notifications.Notifications.on_action], with the typed reply in [`input`][flet_notifications.NotificationActionEvent.input]. The Archive button uses [`foreground=False`][flet_notifications.NotificationAction.foreground], so it is handled without opening the app. Inline replies need Android, iOS, macOS or Windows, and Delete asks to unlock the device on iOS."
+controls = ["SafeArea", "Column", "Button", "Text", "SnackBar", "Notifications"]
+layout_pattern = "inline-actions"
+complexity = "intermediate"
+features = ["notification actions", "inline replies", "background actions", "action authentication"]
+
+[tool.flet]
+org = "dev.flet"
+company = "Flet"
+copyright = "Copyright (C) 2023-2026 by Flet"

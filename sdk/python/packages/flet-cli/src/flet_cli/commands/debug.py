@@ -116,6 +116,7 @@ class Command(BaseBuildCommand):
                 self.update_flutter_dependencies()
             self.customize_icons()
             self.customize_splash_images()
+            self.copy_android_resources()
             self.run_flutter()
             self.cleanup(0, message="Debug session ended.")
 

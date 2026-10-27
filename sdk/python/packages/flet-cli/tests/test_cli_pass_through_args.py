@@ -188,7 +188,7 @@ class TestProgramCommand:
         cmd.verbose = 0
         cmd.flutter_exe = "flutter"
         cmd.build_dir = cmd.flutter_dir = tmp_path
-        cmd.template_data = {"options": {"target_arch": None}, "split_per_abi": False}
+        cmd.template_data = {"_options": {"target_arch": None}, "split_per_abi": False}
         cmd.get_pyproject = lambda setting=None: None
         cmd.target_platform = cmd.debug_platform = cmd.device_id = "macos"
         cmd.package_platform = cmd.platforms["macos"]["package_platform"]

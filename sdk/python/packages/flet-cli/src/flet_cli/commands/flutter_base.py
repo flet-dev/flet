@@ -565,11 +565,10 @@ class BaseFlutterCommand(BaseCommand):
                 # Annotate the failure, titled after the step it happened in.
                 output.error(msg, title=output.error_title)
 
-            # windows has been reported to raise encoding errors
-            # when running `flutter doctor`
-            # so skip running `flutter doctor` if no_rich_output is True
-            # and platform is Windows
-            if not (
+            # windows has been reported to raise encoding errors when running
+            # `flutter doctor` so skip running `flutter doctor` if no_rich_output is
+            # True and platform is Windows
+            if self.flutter_exe and not (
                 (self.no_rich_output and self.current_platform == "Windows")
                 or self.skip_flutter_doctor
             ):

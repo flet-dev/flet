@@ -227,6 +227,17 @@ Whether to skip running `flutter doctor` when a build fails.
 
 Defaults to `False`.
 
+### `FLET_DESKTOP_FLAVOR`
+
+Flavor of the Flet desktop client on Linux: `full` or `light`. See
+[Linux](../getting-started/installation.md#linux) for what each includes. It
+is read when a desktop app starts the Flet client, and by
+[`flet pack`](../publish/using-pyinstaller.md#linux-client-flavor) to choose
+the client it bundles. It wins over `desktop_flavor` in the `[tool.flet]` table
+of the `pyproject.toml` in the current folder.
+
+Defaults to `light`.
+
 ### `FLET_FORCE_WEB_SERVER`
 
 Set to `true` to force running app as a web app. Automatically set on headless Linux hosts.

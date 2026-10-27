@@ -77,7 +77,7 @@ int APIENTRY wWinMain(_In_ HINSTANCE instance, _In_opt_ HINSTANCE prev,
   // Impeller; FLET_NO_IMPELLER does the same when the app starts.
   flutter::DartProject project(L"data");
   const bool no_impeller =
-      {{ "false" if cookiecutter.options.impeller else "true" }} ||
+      {{ "false" if cookiecutter._options.impeller else "true" }} ||
       IsEnvironmentVariableTrue(L"FLET_NO_IMPELLER");
   if (no_impeller) {
     project.set_impeller_switch(flutter::ImpellerSwitch::Disabled);
