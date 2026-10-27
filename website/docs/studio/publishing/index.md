@@ -6,48 +6,55 @@ title: "Publishing overview"
 
 Flet Studio builds your app for Windows, macOS, Linux, Android, iOS and the web in
 the cloud, and can deliver it to an app store — no Flutter, Xcode or Android SDK to
-install. Open it with the **Publish** button in the app bar.
+install. Open it with the **Publish** button in the app bar, or **Publish** in the app's
+**Manage** menu.
 
-{/* SCREENSHOT: /img/docs/studio/publishing/overview.png — Publish › Overview with the Android section and its outputs */}
+{/* SCREENSHOT: /img/docs/studio/publishing/all-platforms.png — Publish › All platforms with each platform's state */}
 
 ## Publish at a glance
 
-**Publish** has three tabs:
+**Publish** is organized by platform. Its menu lists **All platforms**, then Android,
+iOS, Windows, macOS, Linux and Web, each with its state (✓ published, ! needs you,
+✕ the last run failed) or how many runs are going.
 
-- **Overview**: one section per platform with its actions, and under them what each
-  action produced last — with **Download**, or where a store has it. Android and
-  iOS also show their store (Google Play, the App Store): the store account the app
-  uses, whether the store has the app yet, and the store listing, with **Edit** and
-  **Send**.
-- **Activity**: every run of the app, newest first, with its status. Open one for
-  its details.
-- **Settings**: the app's build settings — shared ones, plus a scope per platform.
+**All platforms** shows every platform with its state; open one to publish or update
+it. A platform's page, and All platforms too, has three tabs:
 
-## Actions
+| Tab | On a platform's page | On All platforms |
+|---|---|---|
+| **Overview** | A card for each place the app goes on that platform | Every platform with its state |
+| **Activity** | That platform's runs | Every run of the app, filterable by platform |
+| **Settings** | The platform's settings, and its [signing key](signing-keys-and-store-accounts.md) | **Shared settings**: the defaults every platform starts from |
 
-Each action is one **run** for one platform:
+## Where your app goes
 
-| Platform | Actions |
+Each card is a place the app goes:
+
+| Platform | Cards |
 |---|---|
-| Windows | **Create Windows app (.zip)** |
-| macOS | **Create macOS app (.app)** — not signed or notarized: for testing on your own Mac |
-| Linux | **Create Linux app (.tar.gz)** |
-| Android | **Create an APK**, **Publish to a download page**, **Create an app bundle (.aab)**, **Publish to Google Play**, **Update store listing** — see [Android apps](android.md), [the download page](android.md#download-page), [Google Play](google-play/index.md) and [the store listing](google-play/store-listing.md) |
-| iOS | **Create an iOS Simulator app** (no Apple account needed), **Create an iOS app (.ipa)**, **Publish to TestFlight**, **Publish to the App Store**, **Update App Store listing** — see [iOS apps](ios.md) |
-| Web | **Create web app (.zip)** — the files to host yourself |
+| Android | **Google Play** (its testing tracks and Production, and the store listing) and **Direct download** (an APK on your app's own download page). See [Android apps](android.md) and [Google Play](google-play/index.md) |
+| iOS | **App Store & TestFlight**, **Test on your devices** (an install link for your registered iPhones and iPads) and **iOS Simulator**. See [iOS apps](ios.md) |
+| Windows, macOS, Linux | **The app**, zipped, to run on that system. See [Desktop apps](desktop.md) |
+| Web | **The app's files**, to host on your own server. See [Web apps](web.md) |
 
-Microsoft Store, Mac App Store and publishing a website show **Coming soon**.
+A card shows its **next step** until it's set up: **Connect Google Play**, **Create
+APK**, **Create Windows app**, … Once something is published, it shows **what's
+live**, with **Update** to publish the app as it is now: **Create** (or **Publish**) the
+first time, **Update** after that.
+
+While a run is going, its card shows what it's doing ("Building Version 1.0.0 ·
+Build 13…") and its button waits. Open the line for the run's details.
 
 ## Start a run
 
-Click an action to open its screen:
+A card's button opens the action's screen:
 
 - **The settings it needs**, such as the app's name and package name, open at the
   top; the rest of the platform's settings are further down. Changes are saved to
   the app as you make them.
 - **Version and build** for this run.
-- Anything to set up first, such as a [signing key](signing-keys-and-store-accounts.md),
-  shown in red at the bottom until it's done.
+- What signs the build, and the store account it uses.
+- Anything to set up first, shown in red at the bottom until it's done.
 - The **estimated credits** and your balance.
 
 Then click the action's button. The run's details open and follow it live.
@@ -76,13 +83,13 @@ usage** for your balance, plans and credit packs.
 ## Build settings
 
 Your app's build settings live in its `pyproject.toml`, under `[project]` and
-`[tool.flet]` — the same file `flet build` reads. **Publish › Settings** edits them:
+`[tool.flet]`: the same file `flet build` reads.
 
-- **Shared** settings apply to every platform: name, version, description, icon,
-  splash screen, and more.
-- **Each platform's** scope adds its own settings (Android's SDK versions and
+- **All platforms › Settings** (Shared settings) applies to every platform: name,
+  version, description, icon, splash screen, and more.
+- **Each platform's Settings tab** adds its own settings (Android's SDK versions and
   permissions, iOS's bundle ID, ...) and can **override** a shared one for that
-  platform only.
+  platform only. It says how many settings differ from Shared settings.
 
 Changes there are written to `pyproject.toml`, and edits you (or the agent) make to
 the file show up there. See
@@ -93,7 +100,7 @@ Signing keys and store accounts are never stored in your app's files. See
 
 ## Run details
 
-Open a run from Overview or Activity:
+Open a run from its card or from Activity:
 
 - **Status**, cost, version and duration. A run can be canceled while it waits or
   builds.
@@ -109,7 +116,7 @@ Open a run from Overview or Activity:
 
 Studio keeps a run's files for **7 days** on the Explorer plan and **90 days** on
 Creator, and at most the last three successful runs of each action. After that,
-Overview says **Download expired** — start a new run to get the files again.
+the card says **Download expired**: **Update** to get the files again.
 What's on a store stays there, and so does the app on its
 [download page](android.md#download-page) while it's up.
 

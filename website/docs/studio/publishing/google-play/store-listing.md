@@ -8,19 +8,19 @@ Your app's store listing — its name, descriptions, icon, feature graphic and
 screenshots on Google Play — can be written and kept in Flet Studio, and sent to
 Google Play without opening Play Console.
 
-Open it with **Start listing** or **Edit** on the **Listing** line of the Google
-Play panel in **Publish › Overview** (or **Update store listing** in the Android
-section's menu). The screen is the listing itself: edit it there, then **Send to
-Google Play**. It doesn't build the app and doesn't use credits.
+Open it with **Create listing** or **Update listing** on the **Store listing** row of
+the Google Play card in **Publish › Android**. The screen is the listing itself: edit
+it there, then **Send to Google Play**. It doesn't build the app and doesn't use
+credits.
 
-The **Listing** line says where the listing stands: **Not started**, **Not sent
-yet**, **Sent** with the date, or **Changes not sent** when it was edited since.
-**Send** there sends it without opening the screen.
+The **Store listing** row says where the listing stands: **Not created yet**, **No
+update sent**, **Sent** with the date, or **Changed, not sent** when it was edited
+since. When something on it needs fixing, the row says what.
 
 {/* SCREENSHOT: /img/docs/studio/publishing/store-listing.png — the Update store listing screen: language, texts, graphics */}
 
 :::note[Before you start]
-Sending the listing needs a [connected Google Play account](index.md#step-2-connect-google-play)
+Sending the listing needs a [connected Google Play account](index.md#step-1-connect-google-play)
 with the **Manage store presence** permission for the app (Play Console › Users and
 permissions › the service account › the app › Store presence) — plus **Edit and
 delete draft apps** while the app is still a draft — and the app created in Play
@@ -138,8 +138,7 @@ optional. They're shown on the app's page on Google Play.
 
 ## Send the listing
 
-- **Send** on Overview's Google Play panel, or **Update store listing › Send to
-  Google Play**, sends only the listing.
+- **Send to Google Play** on the listing screen sends only the listing.
 - Or, on **Publish to Google Play**, tick **Also send the store listing** to send
   it in the same change as the release.
 
