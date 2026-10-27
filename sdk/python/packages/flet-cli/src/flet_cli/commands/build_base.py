@@ -59,6 +59,7 @@ from flet_cli.utils.plist import is_supported_plist_value, parse_cli_plist_value
 from flet_cli.utils.project_dependencies import (
     get_poetry_dependencies,
     get_project_dependencies,
+    read_requirements_file_text,
 )
 from flet_cli.utils.pyproject_toml import load_pyproject_toml
 from flet_cli.utils.python_versions import (
@@ -2302,6 +2303,50 @@ class BaseBuildCommand(BaseFlutterCommand):
                 return AssetSpec(ico_sizes=sizes)
         return None
 
+    def _site_packages_missing(self) -> bool:
+        """
+        Whether any required platform package directory has no package files.
+
+        Check every requested mobile architecture. Empty directories and hidden
+        staging metadata such as Darwin's `.pod` symlink do not count as packages.
+        Darwin's architecture directories are merged into the root by packaging.
+
+        Returns:
+            `True` when any required package directory is missing or empty.
+        """
+
+        assert self.flutter_dir
+        assert self.build_dir
+        assert self.template_data
+
+        if self.package_platform == "Emscripten":
+            site_packages = self.flutter_dir / "build" / "site-packages"
+        else:
+            site_packages = self.build_dir / "site-packages"
+
+        architectures = self.template_data["options"]["target_arch"]
+        if self.package_platform == "Android":
+            architectures = architectures or self.python_release.android_abis
+        elif self.package_platform == "iOS":
+            architectures = architectures or (
+                "iphoneos.arm64",
+                "iphonesimulator.arm64",
+                "iphonesimulator.x86_64",
+            )
+        else:
+            architectures = ("",)
+
+        def has_package_files(directory: Path) -> bool:
+            for _, directories, files in os.walk(directory):
+                directories[:] = [d for d in directories if not d.startswith(".")]
+                if any(not name.startswith(".") for name in files):
+                    return True
+            return False
+
+        return any(
+            not has_package_files(site_packages / arch) for arch in architectures
+        )
+
     def _icons_missing(self, platform: str) -> bool:
         """
         Whether any icon this build should have produced is absent.
@@ -2600,14 +2645,16 @@ class BaseBuildCommand(BaseFlutterCommand):
                     package_args.extend(["-r", toml_dep])
 
             elif requirements_txt.exists():
+                # pip reads the file itself, so only its path is in
+                # package_args: hash its text, and that of the files it
+                # includes, so editing them reinstalls the packages.
+                reqs_txt_contents = read_requirements_file_text(requirements_txt)
                 if self.verbose > 1:
-                    with open(requirements_txt, encoding="utf-8") as f:
-                        reqs_txt_contents = f.read()
-                        console.log(
-                            f"Contents of requirements.txt: {reqs_txt_contents}",
-                            style=verbose2_style,
-                        )
-                        hash.update(reqs_txt_contents)
+                    console.log(
+                        f"Contents of requirements.txt: {escape(reqs_txt_contents)}",
+                        style=verbose2_style,
+                    )
+                hash.update(reqs_txt_contents)
                 package_args.extend(["-r", "-r", "-r", str(requirements_txt)])
             else:
                 package_args.extend(["-r", f"flet=={flet.version.flet_version}"])
@@ -2805,7 +2852,7 @@ class BaseBuildCommand(BaseFlutterCommand):
                 hash.update(arg)
 
             if not dev_packages_configured:
-                if not hash.has_changed():
+                if not hash.has_changed() and not self._site_packages_missing():
                     package_args.append("--skip-site-packages")
                     # serious_python skips copying Flutter packages to the temp dir
                     # under --skip-site-packages, so register_flutter_extensions must
