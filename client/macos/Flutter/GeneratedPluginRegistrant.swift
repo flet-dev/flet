@@ -9,7 +9,7 @@ import audioplayers_darwin
 import battery_plus
 import connectivity_plus
 import device_info_plus
-import file_picker
+import file_picker_darwin
 import flutter_local_notifications
 import flutter_secure_storage_darwin
 import flutter_timezone

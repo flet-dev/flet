@@ -341,7 +341,7 @@ class Component(BaseControl):
                     or hook.deps != hook.prev_deps
                 )
                 if deps_changed:
-                    if callable(hook.cleanup):
+                    if hook.has_cleanup():
                         self._schedule_effect(hook, is_cleanup=True)
                     self._schedule_effect(hook, is_cleanup=False)
 
@@ -354,7 +354,7 @@ class Component(BaseControl):
             logger.debug("%s._run_unmount_effects()", self)
         for hook in self._state.hooks:
             # all effects are running on unmount
-            if isinstance(hook, EffectHook) and callable(hook.cleanup):
+            if isinstance(hook, EffectHook) and hook.has_lifecycle_work():
                 self._schedule_effect(hook, is_cleanup=True)
         self._state.hooks.clear()
 
