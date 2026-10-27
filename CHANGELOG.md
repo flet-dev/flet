@@ -53,6 +53,7 @@
 * Add `--log-format {rich,plain,github}` (`FLET_CLI_LOG_FORMAT`) to `flet build`, `flet debug` and `flet test`. `github` prints plain output plus GitHub Actions workflow commands: a collapsible group per build step and annotations for warnings and errors; `plain` is the same as `--no-rich-output`. See [Log formats](/docs/cli/flet-build#log-formats) ([#6947](https://github.com/flet-dev/flet/issues/6947)) by @FeodorFitsner.
 * Install `uvicorn[standard]` with `flet-web` again on Windows on ARM with Python 3.12 or later, now that `httptools` 0.9.0 ships wheels for it; Python 3.10 and 3.11 there keep plain `uvicorn`, because PyYAML has no wheels for them ([#6927](https://github.com/flet-dev/flet/pull/6927)) by @ndonkoHenri.
 * Update python-build to `20261016` and serious_python to `6.0.1`, bringing CPython `3.12.15`, `3.13.16` and `3.14.8`. The bundled Python runtime, its native modules and dart_bridge `1.11.0` are now built for iOS 15 and macOS 12, the same minimums as the build template ([#6940](https://github.com/flet-dev/flet/issues/6940), [python-build#46](https://github.com/flet-dev/python-build/pull/46), [serious-python#256](https://github.com/flet-dev/serious-python/pull/256), [serious-python#257](https://github.com/flet-dev/serious-python/pull/257)) by @FeodorFitsner.
+* Make the future returned by `page.run_task()` awaitable, so `await page.run_task(handler)` returns the value of `handler` ([#6515](https://github.com/flet-dev/flet/issues/6515), [#7008](https://github.com/flet-dev/flet/pull/7008)) by @ndonkoHenri.
 
 ### Bug fixes
 
