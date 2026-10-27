@@ -5,7 +5,7 @@ import sys
 import threading
 import weakref
 from collections.abc import Awaitable, Coroutine, Generator
-from concurrent.futures import CancelledError, Future, ThreadPoolExecutor
+from concurrent.futures import Future, ThreadPoolExecutor
 from dataclasses import InitVar, dataclass, field, fields, is_dataclass
 from functools import partial
 from typing import (
@@ -996,16 +996,20 @@ class Page(BasePage):
             """
             Surface background task exceptions to default error handling.
 
+            Only `Exception`s are re-raised: `concurrent.futures` logs those and
+            goes on to the next done callback, while a `BaseException` raised
+            here would skip the remaining callbacks, including the one that
+            wakes a coroutine awaiting the future.
+
             Args:
                 f: Completed future returned by `run_coroutine_threadsafe()`.
             """
 
-            try:
-                exception = f.exception()
-                if exception:
-                    raise exception
-            except CancelledError:
-                pass
+            if f.cancelled():
+                return
+            exception = f.exception()
+            if isinstance(exception, Exception):
+                raise exception
 
         future.add_done_callback(_on_completion)
 
