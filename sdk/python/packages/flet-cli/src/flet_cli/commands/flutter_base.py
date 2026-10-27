@@ -187,6 +187,7 @@ class BaseFlutterCommand(BaseCommand):
         assert self.options
         self.required_flutter_version = version.Version(flet.version.flutter_version)
         if self.required_flutter_version == version.Version("0"):
+            self.skip_flutter_doctor = True
             self.cleanup(
                 1,
                 "Unable to determine the required Flutter SDK version. "
