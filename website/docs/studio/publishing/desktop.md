@@ -9,11 +9,12 @@ packaged for that system:
 
 | Platform | Card | What you get |
 |---|---|---|
-| Windows | **Create Windows app** | A `.zip` with the app's folder and its `.exe` |
+| Windows | **Create Windows app** | An installer (`setup.exe`), and a portable `.zip` with the app's folder and its `.exe` |
 | macOS | **Create macOS app** | The `.app`, zipped |
 | Linux | **Create Linux app** | A `.tar.gz` with the app's folder and its executable |
 
-When the run finishes, the card shows the build with **Download**. **Update** builds
+When the run finishes, the card shows the build with **Download** (on Windows,
+**Download › Installer** or **Portable**). **Update** builds
 the app as it is now. Downloads are kept for a while (see
 [Downloads expire](index.md#downloads-expire)); after that the card says **Download
 expired** and **Update** builds it again.
@@ -30,11 +31,28 @@ asks before opening them the first time.
 
 ### Windows
 
+**Download › Installer (setup.exe)** is what to give your users:
+
+1. Run the `setup.exe`.
+2. If **Windows protected your PC** (SmartScreen) appears, click **More info ›
+   Run anyway**.
+3. Choose **Install for me only** (no administrator rights needed) or **Install for
+   all users**, and finish Setup.
+
+The app is then in the Start menu, and in **Settings › Apps** to uninstall it. Running
+the `setup.exe` of a newer version upgrades it in place, keeping the app's data, as
+long as the app's [bundle ID](../../publish/index.md#bundle-id) stays the same: Setup
+finds the installed app by it.
+
+**Download › Portable (.zip)** runs without installing, e.g. from a USB stick or on a
+PC where you can't install apps:
+
 1. Unzip the download (**right-click › Extract All…**). Keep the folder together: the
    `.exe` needs the files next to it.
-2. Run the app's `.exe`.
-3. If **Windows protected your PC** (SmartScreen) appears, click **More info ›
-   Run anyway**. Windows remembers it for that file.
+2. Run the app's `.exe`, and confirm SmartScreen as above.
+
+Keep the app's **company name** and **product name** the same between releases, too:
+the app keeps its data in a folder named after them.
 
 ### macOS
 
@@ -65,6 +83,6 @@ Not from Studio yet. Download the app as a `.zip` from the app bar and build it 
 own computer with [`flet build`](../../publish/index.md), which can make store-ready,
 signed packages.
 
-### Can I get an installer?
+### Can the Windows installer be signed?
 
-Not yet: the Windows card gives a `.zip` to unzip and run.
+Not yet. Until it is, SmartScreen asks before running it, as above.
