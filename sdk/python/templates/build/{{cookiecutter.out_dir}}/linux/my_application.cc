@@ -1,11 +1,13 @@
 #include "my_application.h"
 
 #include <errno.h>
+#include <fcntl.h>
 #include <flutter_linux/flutter_linux.h>
 #include <glib-unix.h>
 #include <glib/gstdio.h>
 #include <signal.h>
 #include <string.h>
+#include <sys/file.h>
 #include <sys/stat.h>
 #include <unistd.h>
 #ifdef GDK_WINDOWING_X11
@@ -47,6 +49,42 @@ static gchar* instance_marker = nullptr;
 
 // Who a desktop entry in the user's data directory belongs to.
 typedef enum { ENTRY_ABSENT, ENTRY_OWN, ENTRY_FOREIGN } EntryOwner;
+
+// Serializes entry updates and the last instance's cleanup. Keep the lock
+// beside the runtime directory, and never unlink it: replacing its inode
+// would let a new instance bypass a lock another instance still holds.
+class DesktopEntryLock {
+ public:
+  explicit DesktopEntryLock(const gchar* dir) {
+    g_autofree gchar* parent = g_path_get_dirname(dir);
+    if (g_mkdir_with_parents(parent, 0700) != 0) {
+      return;
+    }
+    g_autofree gchar* path = g_strconcat(dir, ".lock", nullptr);
+    fd_ = g_open(path, O_CREAT | O_RDWR | O_CLOEXEC, 0600);
+    if (fd_ < 0) {
+      return;
+    }
+    while (flock(fd_, LOCK_EX) != 0) {
+      if (errno != EINTR) {
+        close(fd_);
+        fd_ = -1;
+        return;
+      }
+    }
+  }
+
+  ~DesktopEntryLock() {
+    if (fd_ >= 0) {
+      close(fd_);
+    }
+  }
+
+  bool acquired() const { return fd_ >= 0; }
+
+ private:
+  int fd_ = -1;
+};
 
 // Tells whose entry is at `path`, and returns an own entry's `contents`.
 //
@@ -126,6 +164,10 @@ static void remove_desktop_entry() {
   if (instance_marker == nullptr) {
     return;
   }
+  DesktopEntryLock lock(runtime_dir);
+  if (!lock.acquired()) {
+    return;
+  }
   g_remove(instance_marker);
   if (!other_instance_running(runtime_dir)) {
     if (user_entry_owner(installed_entry, nullptr) == ENTRY_OWN) {
@@ -173,13 +215,21 @@ static void install_desktop_entry(const gchar* exe_path) {
   }
   // An AppImage runs from a mount that goes away with it.
   const gchar* launch_path = g_getenv("APPIMAGE");
-  if (launch_path == nullptr || *launch_path == '\0') {
+  const gboolean is_appimage = launch_path != nullptr && *launch_path != '\0';
+  if (!is_appimage) {
     launch_path = exe_path;
   }
   // GLib checks that an entry's program exists using the path as written,
   // but expands `%` codes in it to launch it, so no Exec works for a path
   // with a `%`.
   if (strchr(launch_path, '%') != nullptr) {
+    return;
+  }
+
+  g_autofree gchar* app_runtime_dir = g_build_filename(
+      g_get_user_runtime_dir(), "flet", APPLICATION_ID, nullptr);
+  DesktopEntryLock lock(app_runtime_dir);
+  if (!lock.acquired()) {
     return;
   }
 
@@ -207,14 +257,16 @@ static void install_desktop_entry(const gchar* exe_path) {
     }
   }
 
-  // The bundle's own entry is in a system data directory only when a wrapper
-  // added its `share/` to XDG_DATA_DIRS, which the desktop doesn't see.
+  // A prefix/bin + prefix/share install can use the source itself as its
+  // system entry. Preserve it too; same_file() alone cannot distinguish an
+  // installed entry from a wrapper's process-local XDG_DATA_DIRS addition.
+  // Only an AppImage's own entry is known to live on a temporary mount.
   for (const gchar* const* dir = g_get_system_data_dirs(); *dir != nullptr;
        dir++) {
     g_autofree gchar* system_entry =
         g_build_filename(*dir, "applications", entry_name, nullptr);
     if (g_file_test(system_entry, G_FILE_TEST_EXISTS) &&
-        !same_file(system_entry, source)) {
+        !(is_appimage && same_file(system_entry, source))) {
       if (owner == ENTRY_OWN) {
         g_remove(user_entry);
       }
@@ -222,9 +274,8 @@ static void install_desktop_entry(const gchar* exe_path) {
     }
   }
 
-  // The marker comes first, so an instance exiting meanwhile keeps the entry.
-  g_autofree gchar* app_runtime_dir = g_build_filename(
-      g_get_user_runtime_dir(), "flet", APPLICATION_ID, nullptr);
+  // The lock keeps cleanup from removing the entry between the ownership
+  // check above and this instance publishing its marker and entry.
   g_autofree gchar* pid = g_strdup_printf("%d", (int)getpid());
   g_autofree gchar* marker = g_build_filename(app_runtime_dir, pid, nullptr);
   if (g_mkdir_with_parents(app_runtime_dir, 0700) != 0 ||
