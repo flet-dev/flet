@@ -36,10 +36,11 @@ asks before opening them the first time.
 1. Run the `setup.exe`.
 2. If **Windows protected your PC** (SmartScreen) appears, click **More info ›
    Run anyway**.
-3. Choose **Install for me only** (no administrator rights needed) or **Install for
-   all users**, and finish Setup.
 
-The app is then in the Start menu, and in **Settings › Apps** to uninstall it. Running
+That's it: Setup asks nothing, installs the app for the current user in a few seconds
+(no administrator rights needed) and opens it. The app is then in the Start menu, and
+in **Settings › Apps** to uninstall it. To install it for every user of the PC instead,
+run `setup.exe /ALLUSERS` from an administrator's command prompt. Running
 the `setup.exe` of a newer version upgrades it in place, keeping the app's data, as
 long as the app's [bundle ID](../../publish/index.md#bundle-id) stays the same: Setup
 finds the installed app by it.
