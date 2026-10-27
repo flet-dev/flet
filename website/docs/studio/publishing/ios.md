@@ -73,6 +73,20 @@ Before the first run, **create a TestFlight group** in App Store Connect › Tes
 add testers. **Internal** testers are members of your App Store Connect team.
 **External** testers are anyone, invited by email or a public link.
 
+### Test Information for external testers
+
+Apple's beta review reads TestFlight's **Test Information** before external testers get
+an app's first build: a **beta app description**, a **feedback email**, and a contact
+for the reviewer (name, email and phone). Internal testers don't need it.
+
+Add them in the App Store listing (**Update listing** on the card's Store listing row):
+the **TestFlight** section has the beta description and feedback email, and the **App
+Review** section the contact. Studio sends them with the build. If you've already filled
+them in App Store Connect › TestFlight › Test Information, that counts too.
+
+With an external group ticked and something missing, the TestFlight screen says what,
+with **Edit App Store listing**, and won't start the run until it's there.
+
 On the screen's **Release** section:
 
 - **Testers**: the groups that get the build. Internal groups set to receive every build
