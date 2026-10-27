@@ -374,6 +374,14 @@ def __get_on_session_created(
             session: Active page session.
         """
 
+        def mark_test_ready():
+            # Registration precedes main(). Send readiness in a page patch only
+            # after main's initial updates, including for an intentionally empty
+            # app. Generator apps are ready after their first yielded update.
+            if session.page.test and not session.page._internals.get("test_ready"):
+                session.page._internals["test_ready"] = True
+                session.page.update()
+
         logger.info("App session started")
         try:
             assert main is not None
@@ -385,15 +393,18 @@ def __get_on_session_created(
             elif inspect.isasyncgenfunction(main):
                 async for _ in main(session.page):
                     await session.after_event(session.page)
+                    mark_test_ready()
 
             elif inspect.isgeneratorfunction(main):
                 for _ in main(session.page):
                     await session.after_event(session.page)
+                    mark_test_ready()
             else:
                 # run synchronously
                 main(session.page)
 
             await session.after_event(session.page)
+            mark_test_ready()
 
         except Exception as e:
             logger.error("Unhandled error in main() handler", exc_info=True)
