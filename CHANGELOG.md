@@ -47,6 +47,7 @@
 
 ### Bug fixes
 
+* Fix `flet build` not reinstalling the app's packages after `requirements.txt` is edited or `build/site-packages` is deleted ([#6994](https://github.com/flet-dev/flet/issues/6994), [#6996](https://github.com/flet-dev/flet/pull/6996)) by @ndonkoHenri.
 * Fix `flet test` failing when the app under test starts slowly, as on the first run after a build: the test now waits until the app finishes initializing its first page ([#6993](https://github.com/flet-dev/flet/issues/6993), [#6995](https://github.com/flet-dev/flet/pull/6995)) by @ndonkoHenri.
 * Fix `use_effect()` losing setup-returned cleanup callbacks after a component re-renders, so they run before dependency-triggered setup and on unmount; cancel pending async setup tasks on unmount ([#6963](https://github.com/flet-dev/flet/issues/6963), [#6983](https://github.com/flet-dev/flet/pull/6983)) by @mangod12.
 * iOS apps built with `flet build ipa` no longer fail App Store Connect validation with ITMS-90683 (missing `NSPhotoLibraryUsageDescription` and `NSCameraUsageDescription` purpose strings): the `file_picker` plugin is updated to 13.x, which picks photos with the system photo picker and no longer links DKImagePickerController's camera and photo-library code. `device_info_plus`, `package_info_plus` and `share_plus` move to their next major versions with it (`win32` 6). `FilePicker.save_file()` on desktop now creates the chosen file (empty when no `src_bytes` are given) before returning its path by @FeodorFitsner.
