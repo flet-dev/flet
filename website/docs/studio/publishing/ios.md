@@ -80,8 +80,8 @@ an app's first build: a **beta app description**, a **feedback email**, and a co
 for the reviewer (name, email and phone). Internal testers don't need it.
 
 Add them in the App Store listing (**Update listing** on the card's Store listing row):
-the **TestFlight** section has the beta description and feedback email, and the **App
-Review** section the contact. Studio sends them with the build. If you've already filled
+the **TestFlight** section has the beta description and feedback email, and **App Review
+contact** the contact. Studio sends them with the build. If you've already filled
 them in App Store Connect › TestFlight › Test Information, that counts too.
 
 With an external group ticked and something missing, the TestFlight screen says what,
