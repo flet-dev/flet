@@ -5,6 +5,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:integration_test/integration_test.dart';
 
+import 'app_startup.dart';
 import 'remote_widget_tester.dart';
 
 /// Device-mode integration test entry point for an app built with `flet build`.
@@ -30,12 +31,10 @@ void runFletDeviceTest({required void Function(List<String>) appMain}) {
       }
 
       // Launch the on-device app (no args => production/dart_bridge mode) and
-      // pump frames here, in the test body, so it starts and renders its first
-      // UI before any remote command arrives.
+      // pump frames here, in the test body, until it has loaded its first
+      // page, so no remote command arrives before the app's UI exists.
       appMain(const []);
-      for (var i = 0; i < 20; i++) {
-        await tester.pump(const Duration(milliseconds: 100));
-      }
+      await waitForAppLoaded(tester);
 
       // Connect the remote tester last; the Python RemoteTester server unblocks
       // once connected and drives the app from here on.
