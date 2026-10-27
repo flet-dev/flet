@@ -94,16 +94,17 @@ RetT = TypeVar("RetT")
 
 class TaskFuture(Future[RetT]):
     """
-    A `concurrent.futures.Future` of a task started with `Page.run_task()` that
-    can also be awaited.
+    The future of a task started with `Page.run_task()`.
 
-    Awaiting it returns the value of the task or raises its exception, from the
-    page's event loop or any other one. Cancelling the coroutine that awaits it
-    also cancels the task, as awaiting an `asyncio.Task` does; await
-    `asyncio.shield()` of it to keep the task running.
+    It is a `concurrent.futures.Future` that can also be awaited, from the page's
+    event loop or any other one: `await` returns the task's value or raises its
+    exception. Awaiting doesn't consume it: the outcome stays available through
+    `result()` and `exception()`.
 
-    Blocking methods, such as `result()`, are meant for other threads: called on
-    the page's event loop thread, they block the loop that runs the task.
+    Cancelling the coroutine that awaits it also cancels the task, as with an
+    `asyncio.Task`; await `asyncio.shield()` of it to keep the task running.
+    `result()` blocks, so call it on the page's event loop thread only once the
+    task is done.
     """
 
     def __await__(self) -> Generator[Any, None, RetT]:
@@ -976,12 +977,20 @@ class Page(BasePage):
             **kwargs: Keyword arguments to call `handler` with.
 
         Returns:
-            A future of the task. Await it to get the value of `handler`, or use
-                its `concurrent.futures.Future` methods, such as `cancel()` and
-                `add_done_callback()`.
+            A future of the task. Awaiting it returns the value of `handler`, or
+                raises its exception. The future keeps that outcome, so keep a
+                reference to it to call `cancel()`, `result()` or
+                `add_done_callback()` later.
 
         Raises:
             TypeError: If `handler` is not a coroutine function.
+
+        Example:
+            ```python
+            future = page.run_task(fetch_users)
+            users = await future  # the value, not a future
+            future.result()  # the same value, without blocking
+            ```
         """
         _context_page.set(self)
         if not inspect.iscoroutinefunction(handler):
@@ -994,12 +1003,13 @@ class Page(BasePage):
 
         def _on_completion(f):
             """
-            Surface background task exceptions to default error handling.
+            Log the exception of a task nobody awaits.
 
-            Only `Exception`s are re-raised: `concurrent.futures` logs those and
-            goes on to the next done callback, while a `BaseException` raised
-            here would skip the remaining callbacks, including the one that
-            wakes a coroutine awaiting the future.
+            `concurrent.futures` logs an `Exception` raised from a done callback
+            and runs the next one. The task's outcome is stored on the future
+            and reaches awaiters through their own callback, so raising here is
+            only for the log. A `BaseException` is not re-raised: it would skip
+            the remaining callbacks and leave awaiters waiting forever.
 
             Args:
                 f: Completed future returned by `run_coroutine_threadsafe()`.

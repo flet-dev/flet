@@ -204,8 +204,13 @@ async def load(e):
     show(await users, await orders)
 ```
 
-As with `asyncio` tasks, cancelling the coroutine that awaits the future also
-cancels the task.
+The future keeps the outcome after you await it, so keep a reference to it if you
+also need to cancel the task or check it later. As with `asyncio` tasks,
+cancelling the coroutine that awaits the future also cancels the task.
+
+If nobody awaits the future, an exception raised by the task is logged, in your
+terminal or in the [console log](../publish/index.md#console-output) of a built
+app, rather than lost.
 
 ## Threading
 
