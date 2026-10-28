@@ -53,7 +53,7 @@ def use_state(
 
 @overload
 def use_state(
-    initial: StateT,
+    initial: StateT | Callable[[], StateT],
 ) -> tuple[StateT, Callable[[StateT | Updater], None]]: ...
 
 
