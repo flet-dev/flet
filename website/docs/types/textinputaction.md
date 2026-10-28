@@ -1,7 +1,15 @@
 ---
+class_name: "flet.TextInputAction"
+examples: "controls/material/text_field"
 title: "TextInputAction"
 ---
 
-import {ClassAll} from '@site/src/components/crocodocs';
+import {ClassMembers, ClassSummary, CodeExample} from '@site/src/components/crocodocs';
 
-<ClassAll name="flet.TextInputAction" separateSignature={false} />
+<ClassSummary name={frontMatter.class_name} />
+
+## Examples
+
+<CodeExample path={frontMatter.examples + '/keyboard_actions/main.py'} language="python" />
+
+<ClassMembers name={frontMatter.class_name} separateSignature={false} />

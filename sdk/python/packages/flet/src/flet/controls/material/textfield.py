@@ -185,7 +185,7 @@ class KeyboardType(Enum):
 
 class TextCapitalization(Enum):
     """
-    Configures how the platform keyboard will select an uppercase or lowercase \
+    Configures how the platform keyboard will select an uppercase or lowercase
     keyboard.
 
     Only supports text keyboards, other keyboard types will ignore this
@@ -230,20 +230,28 @@ class TextInputAction(Enum):
     The action button of the onscreen keyboard, and what pressing it or `Enter` does.
 
     Each action lists the mobile platforms whose keyboards support it. In debug
-    builds on Android and iOS, an action that the platform doesn't support fails an
-    assertion when the field gets focus.
+    builds on Android and iOS, such as an app running on the iOS Simulator, a field
+    with an action that the platform doesn't support gets focus without showing the
+    keyboard, and no error is reported. On Android, release builds show the
+    keyboard with its default action button instead.
     """
 
     NONE = "none"
     """
     No action specific to the field; the platform decides how the keyboard looks.
 
-    Supported on Android only.
+    Pressing the action button removes focus from the field, which closes the
+    keyboard.
+
+    Note:
+        Supported on Android only.
     """
 
     UNSPECIFIED = "unspecified"
     """
     Lets the platform choose the most appropriate action.
+
+    Keeps focus in the field, so the keyboard stays open.
 
     Supported on Android and iOS.
     """
@@ -297,35 +305,48 @@ class TextInputAction(Enum):
     Moves focus to the previous focusable control, keeping the keyboard open when
     it's another text field.
 
-    Supported on Android only.
+    Note:
+        Supported on Android only.
     """
 
     CONTINUE_ACTION = "continueAction"
     """
     Continues to the next step, such as the next page of a sign-up flow.
 
-    Supported on iOS only.
+    Doesn't move focus: the field keeps it, so the keyboard stays open.
+
+    Note:
+        Supported on iOS only.
     """
 
     JOIN = "join"
     """
     Joins something, such as a wireless network.
 
-    Supported on iOS only.
+    Keeps focus in the field, so the keyboard stays open.
+
+    Note:
+        Supported on iOS only.
     """
 
     ROUTE = "route"
     """
     Shows routing options, such as driving directions.
 
-    Supported on iOS only.
+    Keeps focus in the field, so the keyboard stays open.
+
+    Note:
+        Supported on iOS only.
     """
 
     EMERGENCY_CALL = "emergencyCall"
     """
     Calls emergency services.
 
-    Supported on iOS only.
+    Keeps focus in the field, so the keyboard stays open.
+
+    Note:
+        Supported on iOS only.
     """
 
     NEWLINE = "newline"
@@ -341,7 +362,7 @@ class TextInputAction(Enum):
 @value
 class InputFilter:
     """
-    An input filter that uses a regular expression to allow or deny/block certain \
+    An input filter that uses a regular expression to allow or deny/block certain
     patterns in the input.
     """
 
@@ -422,7 +443,7 @@ class TextOnlyInputFilter(InputFilter):
 )
 class TextField(FormFieldControl, AdaptiveControl):
     """
-    A text field lets the user enter text, either with hardware keyboard or with an \
+    A text field lets the user enter text, either with hardware keyboard or with an
     onscreen keyboard.
 
     Example:
@@ -521,7 +542,7 @@ class TextField(FormFieldControl, AdaptiveControl):
 
     can_reveal_password: bool = False
     """
-    Displays a toggle icon button that allows revealing the entered password. Is shown \
+    Displays a toggle icon button that allows revealing the entered password. Is shown
     if both :attr:`password` and `can_reveal_password` are `True`.
 
     The icon is displayed in the same location as :attr:`flet.FormFieldControl.suffix`
@@ -539,8 +560,8 @@ class TextField(FormFieldControl, AdaptiveControl):
 
     shift_enter: bool = False
     """
-    Changes the behavior of `Enter` button in :attr:`multiline` textfield to be \
-    chat-like, i.e. new line can be added with `Shift`+`Enter` and pressing just \
+    Changes the behavior of `Enter` button in :attr:`multiline` textfield to be
+    chat-like, i.e. new line can be added with `Shift`+`Enter` and pressing just
     `Enter` fires :attr:`on_submit` event.
     """
 
@@ -820,8 +841,7 @@ class TextField(FormFieldControl, AdaptiveControl):
 
     text_input_action: Optional[TextInputAction] = field(default=None, kw_only=True)
     """
-    The action button of the onscreen keyboard, and what pressing it or `Enter` \
-    does.
+    The action button of the onscreen keyboard, and what pressing it or `Enter` does.
 
     :attr:`~flet.TextInputAction.NEXT` and :attr:`~flet.TextInputAction.PREVIOUS`
     move focus to the next or previous focusable control in reading order, which
@@ -844,15 +864,9 @@ class TextField(FormFieldControl, AdaptiveControl):
 
     Example:
         ```python
-        ft.Column(
-            [
-                ft.TextField(
-                    label="Name", text_input_action=ft.TextInputAction.NEXT
-                ),
-                ft.TextField(
-                    label="Email", text_input_action=ft.TextInputAction.DONE
-                ),
-            ]
+        page.add(
+            ft.TextField(label="Name", text_input_action=ft.TextInputAction.NEXT),
+            ft.TextField(label="Email", text_input_action=ft.TextInputAction.DONE),
         )
         ```
     """
