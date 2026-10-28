@@ -2,7 +2,7 @@ from __future__ import annotations
 
 from collections.abc import Callable
 from dataclasses import dataclass
-from typing import Any, TypeVar
+from typing import Any, TypeVar, overload
 
 from flet.components.hooks.hook import Hook
 from flet.components.observable import Observable, ObservableSubscription
@@ -43,6 +43,18 @@ class StateHook(Hook):
     Incremented each time `set_state` accepts a changed value. Used to mark
     hook-level updates even when consumers do not inspect `value` directly.
     """
+
+
+@overload
+def use_state(
+    initial: Callable[[], StateT],
+) -> tuple[StateT, Callable[[StateT | Updater], None]]: ...
+
+
+@overload
+def use_state(
+    initial: StateT | Callable[[], StateT],
+) -> tuple[StateT, Callable[[StateT | Updater], None]]: ...
 
 
 def use_state(
