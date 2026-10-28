@@ -577,6 +577,7 @@ jobs:
       RIVE_ENABLED: ${{ matrix.rive_enabled }}
     steps:
       - name: Install base packages
+        timeout-minutes: 15
         shell: bash
         run: |
           export DEBIAN_FRONTEND=noninteractive
@@ -598,6 +599,14 @@ jobs:
               'deb mirror+file:/etc/apt/mirrors-debian-security.txt buster/updates main' \
               > /etc/apt/sources.list
             echo 'Acquire::Check-Valid-Until "false";' > /etc/apt/apt.conf.d/99no-check-valid-until
+            # With pipelining, ftp.de.debian.org answers apt with the wrong
+            # files ("File has unexpected size") and apt then waits forever.
+            # Fetch one file per request, retry, and time out stalled ones.
+            printf '%s\n' \
+              'Acquire::http::Pipeline-Depth "0";' \
+              'Acquire::Retries "3";' \
+              'Acquire::http::Timeout "30";' \
+              > /etc/apt/apt.conf.d/99archive-mirrors
           fi
           apt-get update
           apt-get install -y git curl unzip xz-utils zip ca-certificates jq tzdata
@@ -634,6 +643,7 @@ jobs:
           fi
 
       - name: Install dependencies
+        timeout-minutes: 15
         shell: bash
         run: |
           if [[ -f /etc/apt/sources.list ]]; then
