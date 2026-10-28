@@ -31,7 +31,8 @@ class BottomAppBarControl extends StatelessWidget {
       padding: control.getPadding("padding"),
       height: control.getDouble("height"),
       elevation: control.getDouble("elevation"),
-      shape: control.getNotchedShape("shape", theme),
+      shape: _shiftNotch(
+          control.getNotchedShape("shape", theme), control.getMargin("margin")),
       shadowColor: control.getColor("shadow_color", context),
       color: control.getColor("bgcolor", context),
       notchMargin: control.getDouble("notch_margin", 4.0)!,
@@ -49,4 +50,32 @@ class BottomAppBarControl extends StatelessWidget {
 
     return LayoutControl(control: control, child: bottomAppBar);
   }
+}
+
+/// Moves the notch of [shape] back under the floating action button when the
+/// bar has a [margin].
+///
+/// The margin is applied around the bar, but `Scaffold` reports the button's
+/// position relative to the whole bottom slot, so the notch would otherwise be
+/// cut `margin.left` too far right and `margin.top` too far down.
+NotchedShape? _shiftNotch(NotchedShape? shape, EdgeInsets? margin) {
+  if (shape == null ||
+      margin == null ||
+      (margin.left == 0 && margin.top == 0)) {
+    return shape;
+  }
+  return _OffsetNotchedShape(shape, Offset(-margin.left, -margin.top));
+}
+
+/// A [NotchedShape] that shifts the guest rectangle by [offset] before
+/// cutting [inner]'s notch.
+class _OffsetNotchedShape extends NotchedShape {
+  const _OffsetNotchedShape(this.inner, this.offset);
+
+  final NotchedShape inner;
+  final Offset offset;
+
+  @override
+  Path getOuterPath(Rect host, Rect? guest) =>
+      inner.getOuterPath(host, guest?.shift(offset));
 }
