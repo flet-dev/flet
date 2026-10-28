@@ -847,6 +847,7 @@ jobs:
             flet-lottie
             flet-local-auth
             flet-map
+            flet-notifications
             flet-permission-handler
             flet-rive
             flet-secure-storage
@@ -1130,6 +1131,7 @@ jobs:
             flet_lottie \
             flet_local_auth \
             flet_map \
+            flet_notifications \
             flet_permission_handler \
             flet_rive \
             flet_secure_storage \

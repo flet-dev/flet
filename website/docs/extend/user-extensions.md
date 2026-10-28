@@ -2,6 +2,9 @@
 title: "Creating an Extension"
 ---
 
+import TabItem from '@theme/TabItem';
+import Tabs from '@theme/Tabs';
+
 While [Flet controls](/docs/controls) leverage many built-in [Flutter widgets](https://docs.flutter.dev/ui/widgets) to enable the creation of complex applications, not all Flutter widgets or third-party packages can be directly supported by the Flet team or included in the core Flet framework. At the same time, the Flutter ecosystem is vast and offers developers a wide range of possibilities to extend functionality beyond the core.
 
 To address this, the Flet framework provides an extensibility mechanism. This allows you to incorporate widgets and APIs from your own custom Flutter packages or [third-party libraries](https://pub.dev/packages?sort=popularity) directly into your Flet application.
@@ -47,6 +50,15 @@ open build/macos/flet-spinkit-example.app
 #### Change Python files
 
 Once the project was built for desktop once, you can make changes to your python files and run it without rebuilding.
+
+:::note
+`flet run` uses the app built in `build/<platform>` under the folder you run it
+from, so run it from the project's folder. Without a build, `flet run` and
+[`flet pack`](../publish/using-pyinstaller.md) use the prebuilt Flet client,
+which only includes the [built-in extensions](built-in-extensions.md): your
+extension's controls show as unknown controls there. Ship apps that use it with
+[`flet build`](../cli/flet-build.md).
+:::
 
 First, if you are not using uv, install dependencies from pyproject.toml:
 
@@ -198,6 +210,7 @@ After creating new Flet project from extension template, you will see the follow
             │   └── src
             │       ├── extension.dart
             │       └── flet_spinkit.dart
+            ├── flet-extension.toml
             └── pubspec.yaml
 ```
 
@@ -224,6 +237,11 @@ Flutter package manifest for the extension. Declares SDK constraints and depende
 
 * `flet` for Flet extension APIs
 * `flutter_spinkit` for the spinner widgets used by the control
+
+##### flet-extension.toml
+
+[Build settings](#build-settings) that `flet build` applies to apps using the
+extension. The template's file only contains comments, so it applies nothing.
 
 ##### flet_spinkit.dart
 
@@ -636,6 +654,122 @@ The receiving side's queue is **unbounded by default**. If a producer outpaces t
 - **First-party reference widget**: `MatplotlibChartCanvas` — a complete migration from `_invoke_method` PNG dispatch to a 1-byte-opcode data channel, including backpressure ack and the GPU / CPU rendering strategies. [Python](https://github.com/flet-dev/flet/blob/main/sdk/python/packages/flet-charts/src/flet_charts/matplotlib_chart_canvas.py) · [Dart](https://github.com/flet-dev/flet/blob/main/sdk/python/packages/flet-charts/src/flutter/flet_charts/lib/src/matplotlib_chart_canvas.dart)
 - **Full design / performance notes** (wire format, cross-mode operation, concurrency model, empirical numbers): [`dedicated-data-channels.md`](https://github.com/flet-dev/serious-python/blob/main/docs/dedicated-data-channels.md) in `flet-dev/serious-python`.
 - **Wire-format protocol upgrade** for anyone implementing a custom Flet backend or sidecar: [Flet protocol framing upgraded for DataChannel support](/docs/updates/breaking-changes/v0-86-0/data-channel-protocol-upgrade).
+
+## Build settings
+
+Some Flutter packages need settings that only the app can make, such as Gradle
+options in the Android app module. Instead of asking every app to add them to its
+`pyproject.toml`, an extension declares them in a `flet-extension.toml` file, and
+[`flet build`](../cli/flet-build.md) applies them to each app that installs the
+extension.
+
+Prefer what Flutter applies on its own when it can. When the Flutter package is
+an Android plugin, receivers, services and permissions in its
+`android/src/main/AndroidManifest.xml` are merged into the app's manifest by
+every build, without `flet-extension.toml`. The extension template's Flutter
+package is not a plugin; Flutter merges nothing from it until `pubspec.yaml`
+declares one:
+
+```yaml title="pubspec.yaml"
+flutter:
+  plugin:
+    platforms:
+      android:
+        package: dev.flet.flet_spinkit
+        pluginClass: FletSpinkitPlugin
+```
+
+The plugin also needs an `android/` project with that plugin class. See the
+[`android/` folder](https://github.com/flet-dev/flet/tree/main/sdk/python/packages/flet-notifications/src/flutter/flet_notifications/android)
+of `flet-notifications` for a minimal one, whose class does nothing, and add
+`android/**` to the package's `package-data` if its entry lists files.
+
+### Settings
+
+The file uses the keys of the app's `[tool.flet]` table,
+without the `tool.flet` prefix. It supports these settings:
+
+| Setting | App setting |
+| --- | --- |
+| `[android.compile_options]` | [Java compile options](../publish/android.md#java-compile-options) |
+| `[android].gradle_dependencies` | [Gradle dependencies](../publish/android.md#gradle-dependencies) |
+
+For example, an extension whose Flutter package requires core library
+desugaring:
+
+```toml title="flet-extension.toml"
+[android]
+gradle_dependencies = 'coreLibraryDesugaring("com.android.tools:desugar_jdk_libs:2.1.4")'
+
+[android.compile_options]
+isCoreLibraryDesugaringEnabled = "true"
+```
+
+`flet build` lists the settings each extension applies. It ignores other keys,
+with a warning, and fails when the file has a `[tool]` table.
+
+### Combining with app settings
+
+Extension settings are defaults; the app's own settings take precedence:
+
+* Compile options are merged, and the app's value of an option wins. Two
+  extensions setting an option to different values is a conflict, which fails
+  the build. The app resolves it by setting that option itself.
+* Gradle dependencies of extensions are placed before the app's. Each is added
+  once, and is left out when the app's declarations already contain it.
+
+### Packaging
+
+Put the file in the Flutter package, next to its `pubspec.yaml`, and include it
+in the package's `package-data` entry, so it ships with the rest of the Flutter
+package. The extension template does both: its `["**/*"]` entry includes every
+file of the Flutter package.
+
+```toml title="pyproject.toml"
+[tool.setuptools.package-data]
+"flutter.flet_spinkit" = [
+    "lib/**",
+    "pubspec.yaml",
+    "flet-extension.toml",
+]
+```
+
+`flet build` finds the file through the `RECORD` of the installed distribution,
+so other places in the wheel work too, as long as the file is inside one of its
+packages. For example, to keep it next to `pyproject.toml`, have the build
+backend place it inside a package of the wheel:
+
+<Tabs groupId="build-backend">
+<TabItem value="hatchling" label="hatchling">
+```toml title="pyproject.toml"
+[tool.hatch.build.targets.wheel.force-include]
+"flet-extension.toml" = "flet_spinkit/flet-extension.toml"
+```
+</TabItem>
+<TabItem value="setuptools" label="setuptools">
+Setuptools only packs files from inside a package, so add a symbolic link there
+that points to the file, and list the link in `package-data`. The wheel contains
+the file itself.
+
+```bash
+ln -s ../../../flet-extension.toml src/flutter/flet_spinkit/flet-extension.toml
+```
+
+On Windows, Git checks out symbolic links as plain text files unless they are
+enabled, so build the wheel where they are.
+</TabItem>
+</Tabs>
+
+Setuptools' `data-files` does not work: it installs the file outside the
+extension's packages, and `flet build` warns that the settings were not applied.
+
+A distribution can contain one `flet-extension.toml`. Its settings are not
+applied when an app's
+[cleanup settings](../publish/index.md#compilation-and-cleanup) remove the file
+or the package's `.dist-info` metadata. `flet build` warns about a removed file,
+and about removed metadata of a package with a Flutter package. Without its
+metadata, a package without one can't be identified, so keep `.dist-info`
+directories when using extensions.
 
 ## Boot screen
 

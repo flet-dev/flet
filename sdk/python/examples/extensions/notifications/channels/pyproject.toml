@@ -1,0 +1,27 @@
+[project]
+name = "notifications-channels"
+version = "1.0.0"
+description = "Creates a group of Android notification channels, posts to one, lists them and deletes them."
+requires-python = ">=3.10"
+keywords = ["services", "notifications", "channels", "channel groups", "android", "async"]
+authors = [{ name = "Flet team", email = "hello@flet.dev" }]
+dependencies = ["flet", "flet-notifications"]
+
+[dependency-groups]
+dev = ["flet-cli", "flet-desktop", "flet-web"]
+
+[tool.flet.gallery]
+categories = ["Utility/Notifications"]
+
+[tool.flet.metadata]
+title = "Android channels"
+docs_intro = "A channel's importance, sound and vibration are fixed once it is created: after that, only the user can change them in the system settings. Android only."
+controls = ["SafeArea", "Column", "Button", "Text", "Notifications"]
+layout_pattern = "inline-actions"
+complexity = "intermediate"
+features = ["notification channels", "channel groups"]
+
+[tool.flet]
+org = "dev.flet"
+company = "Flet"
+copyright = "Copyright (C) 2023-2026 by Flet"

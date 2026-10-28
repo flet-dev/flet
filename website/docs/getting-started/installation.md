@@ -40,9 +40,13 @@ Flet supports Debian 10, 11 and 12 and Ubuntu 20.04, 22.04 and 24.04 LTS.
 
 On Linux, the Flet desktop client is available in two flavors: **full** and **light**.
 
-The **light** flavor (default on Linux) does not include audio and video extensions, resulting in a smaller download. The **full** flavor bundles audio and video support out of the box.
+The **light** flavor (default on Linux) does not include the audio, video and Rive extensions,
+resulting in a smaller download. The **full** flavor bundles audio and video support out
+of the box, and Rive on Ubuntu 24.04 x86-64.
 
-To select the flavor, either set the `FLET_DESKTOP_FLAVOR` environment variable:
+To select the flavor, either set the
+[`FLET_DESKTOP_FLAVOR`](../reference/environment-variables.md#flet_desktop_flavor)
+environment variable:
 
 ```bash
 export FLET_DESKTOP_FLAVOR=full
@@ -55,7 +59,9 @@ or add the setting to your project's `pyproject.toml`:
 desktop_flavor = "full"
 ```
 
-If you use the **light** flavor and need audio or video, you will need to install the required libraries yourself - see the [Audio](../services/audio/index.md#usage) and [Video](../controls/video/index.md#linux) setup guides.
+If you use the **light** flavor and need audio or video, you will need to install the
+required libraries yourself - see the [Audio](../services/audio/index.md#usage) and
+[Video](../controls/video/index.md#linux) setup guides.
 </details>
 
 <details>

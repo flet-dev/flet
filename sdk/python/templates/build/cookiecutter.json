@@ -9,19 +9,19 @@
   "linux_desktop_exec": "{{ cookiecutter.artifact_name }}",
   "linux_categories": "Utility;",
   "product_name": "{{ cookiecutter.project_name }}",
-  "org_name": "{{ cookiecutter.org_name if 'org_name' in cookiecutter else 'com.flet' }}",
+  "org_name": "",
   "company_name": "Your Company",
   "copyright": "Copyright (c) 2026 Your Company",
   "flutter": null,
   "sep": "/",
-  "bundle_id": "{{ cookiecutter.bundle_id if 'bundle_id' in cookiecutter else cookiecutter.org_name + '.' + cookiecutter.project_name_slug }}",
-  "org_name_2": "{{ cookiecutter.bundle_id.rsplit('.', 1)[0] if 'bundle_id' in cookiecutter else cookiecutter.org_name if 'org_name' in cookiecutter else 'com.flet' }}",
+  "bundle_id": "",
+  "org_name_2": "{{ cookiecutter.bundle_id.rsplit('.', 1)[0] }}",
   "ios_provisioning_profile": "",
   "ios_export_method": "",
   "ios_signing_certificate": "",
   "ios_export_options": {},
   "ios_team_id": "",
-  "package_name": "{{ cookiecutter.bundle_id.rsplit('.', 1)[-1].replace('-', '_') if 'bundle_id' in cookiecutter else cookiecutter.project_name }}",
+  "package_name": "{{ cookiecutter.bundle_id.rsplit('.', 1)[-1].replace('-', '_') }}",
   "kotlin_dir": "{{ cookiecutter.org_name_2.replace('.', cookiecutter.sep) }}{{ cookiecutter.sep }}{{ cookiecutter.package_name }}{{ cookiecutter.sep }}",
   "base_url": "/",
   "route_url_strategy": "path",
@@ -39,8 +39,8 @@
   "font_fallback_base_url_js": "null",
   "no_wasm": false,
   "pyodide_version": "",
-  "options": null,
-  "pyproject": null,
+  "_options": null,
+  "_pyproject": null,
   "adaptive_icon_background": "#ffffff",
   "splash": {
     "android": true,
@@ -51,6 +51,6 @@
   },
   "boot_screen": null,
   "_extensions": [
-    "cookiecutter_extensions.FletExtension"
+    "cookiecutter_extensions.FletJinjaExtension"
   ]
 }

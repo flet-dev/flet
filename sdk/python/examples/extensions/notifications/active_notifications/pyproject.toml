@@ -1,0 +1,27 @@
+[project]
+name = "notifications-active-notifications"
+version = "1.0.0"
+description = "Posts a group of notifications, lists the ones still shown, and dismisses them."
+requires-python = ">=3.10"
+keywords = ["services", "notifications", "active notifications", "grouping", "cancel", "async"]
+authors = [{ name = "Flet team", email = "hello@flet.dev" }]
+dependencies = ["flet", "flet-notifications"]
+
+[dependency-groups]
+dev = ["flet-cli", "flet-desktop", "flet-web"]
+
+[tool.flet.gallery]
+categories = ["Utility/Notifications"]
+
+[tool.flet.metadata]
+title = "Shown notifications"
+docs_intro = "Groups the messages under a summary on Android, where dismissing the summary dismisses the whole group, and in one thread on iOS and macOS. [`get_active()`][flet_notifications.Notifications.get_active] lists only this app's notifications that are still shown. On Windows, listing and removing them needs an app packaged as MSIX."
+controls = ["SafeArea", "Column", "Row", "Button", "TextButton", "Text", "Notifications"]
+layout_pattern = "inline-actions"
+complexity = "intermediate"
+features = ["active notifications", "notification groups", "cancelling notifications"]
+
+[tool.flet]
+org = "dev.flet"
+company = "Flet"
+copyright = "Copyright (C) 2023-2026 by Flet"

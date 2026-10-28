@@ -2,10 +2,12 @@
 
 import argparse
 import datetime
+import plistlib
 from pathlib import Path
 from typing import Optional
 
 import pytest
+from jinja2 import Environment
 
 from flet_cli.commands import build as build_module
 from flet_cli.commands.build import Command
@@ -251,4 +253,115 @@ class TestProvisioningPreflight:
         """A stray space in pyproject shouldn't look like a missing profile."""
         assert (
             find_provisioning_profile("  Store Profile  ", [make_profile()]) is not None
+        )
+
+
+IOS_TEMPLATE_DIR = (
+    Path(__file__).resolve().parents[3] / "templates/build/{{cookiecutter.out_dir}}/ios"
+)
+
+
+def _entitlements_command(pyproject: Optional[dict], cli: Optional[list] = None):
+    """Create a build command reading `[tool.flet.ios.entitlement]` and CLI entries."""
+    cmd = Command(argparse.ArgumentParser())
+    cmd.get_pyproject = lambda key: (
+        pyproject if key == "tool.flet.ios.entitlement" else None
+    )
+    cmd.options = argparse.Namespace(ios_entitlements=cli or [])
+
+    def cleanup(code, message=None, **kwargs):
+        raise Exit(code, message)
+
+    cmd.cleanup = cleanup
+    return cmd
+
+
+def _render_ios(name: str, entitlements: dict) -> str:
+    """Render an iOS template file with the given entitlements."""
+    path = IOS_TEMPLATE_DIR / name
+    return (
+        Environment(keep_trailing_newline=True)
+        .from_string(path.read_text())
+        .render(cookiecutter={"_options": {"ios_entitlements": entitlements}})
+    )
+
+
+class TestEntitlements:
+    def test_absent_settings_resolve_to_no_entitlements(self):
+        """Without settings, the app declares no entitlements."""
+        assert _entitlements_command(None).get_ios_entitlements() == {}
+
+    def test_cli_entries_override_pyproject_and_keep_their_types(self):
+        """CLI entries override pyproject ones and keep their plist value types."""
+        cmd = _entitlements_command(
+            {
+                "aps-environment": "development",
+                "com.apple.developer.usernotifications.critical-alerts": True,
+            },
+            cli=[
+                "aps-environment=production",
+                "com.apple.developer.associated-domains=['applinks:example.com']",
+            ],
+        )
+        assert cmd.get_ios_entitlements() == {
+            "aps-environment": "production",
+            "com.apple.developer.usernotifications.critical-alerts": True,
+            "com.apple.developer.associated-domains": ["applinks:example.com"],
+        }
+
+    def test_malformed_cli_entry_fails(self):
+        """A CLI entry without `=` is rejected."""
+        with pytest.raises(Exit, match="Invalid iOS entitlement option"):
+            _entitlements_command(None, cli=["aps-environment"]).get_ios_entitlements()
+
+    def test_unsupported_value_type_fails(self):
+        """A value plists cannot hold is rejected with its key."""
+        cmd = _entitlements_command({"com.example.when": datetime.date(2030, 1, 1)})
+        with pytest.raises(Exit, match="com.example.when"):
+            cmd.get_ios_entitlements()
+
+    def test_entitlements_file_holds_the_resolved_values(self):
+        """The rendered entitlements file is a plist of the resolved entries."""
+        entitlements = {
+            "aps-environment": "development",
+            "com.apple.developer.usernotifications.critical-alerts": True,
+            "com.apple.developer.associated-domains": ["applinks:example.com"],
+        }
+        rendered = _render_ios("Runner/Runner.entitlements", entitlements)
+        assert plistlib.loads(rendered.encode()) == entitlements
+
+    def test_entitlements_keep_their_types_through_cookiecutter(self):
+        """Numbers keep their plist types and strings are escaped after cookiecutter
+        processes the build's context."""
+        from cookiecutter.prompt import prompt_for_config
+
+        entitlements = {
+            "com.example.count": 32,
+            "com.example.ratio": 0.5,
+            "com.example.name": "Tom & Jerry <{{ x }}>",
+            "com.example.enabled": True,
+        }
+        context = prompt_for_config(
+            {"cookiecutter": {"_options": {"ios_entitlements": entitlements}}},
+            no_input=True,
+        )
+        rendered = (
+            Environment(keep_trailing_newline=True)
+            .from_string((IOS_TEMPLATE_DIR / "Runner/Runner.entitlements").read_text())
+            .render(cookiecutter=context)
+        )
+        assert plistlib.loads(rendered.encode()) == entitlements
+
+    @pytest.mark.parametrize(
+        ("entitlements", "expected"),
+        [({}, 0), ({"aps-environment": "development"}, 3)],
+    )
+    def test_project_signs_with_entitlements_only_when_declared(
+        self, entitlements, expected
+    ):
+        """Every app build configuration uses the file, but only if it has entries."""
+        rendered = _render_ios("Runner.xcodeproj/project.pbxproj", entitlements)
+        assert (
+            rendered.count("CODE_SIGN_ENTITLEMENTS = Runner/Runner.entitlements;")
+            == expected
         )

@@ -12,7 +12,7 @@ def command(tmp_path):
     cmd = BaseBuildCommand.__new__(BaseBuildCommand)
     cmd.build_dir = tmp_path / "build"
     cmd.flutter_dir = cmd.build_dir / "flutter"
-    cmd.template_data = {"options": {"target_arch": []}}
+    cmd.template_data = {"_options": {"target_arch": []}}
     cmd.python_release = SimpleNamespace(android_abis=("arm64-v8a", "x86_64"))
     return cmd
 
@@ -97,7 +97,7 @@ def test_every_default_mobile_architecture_needs_packages(
 )
 def test_only_selected_architectures_need_packages(command, platform, architecture):
     command.package_platform = platform
-    command.template_data["options"]["target_arch"] = [architecture]
+    command.template_data["_options"]["target_arch"] = [architecture]
     write_package(command.build_dir / "site-packages" / architecture)
 
     assert not command._site_packages_missing()
