@@ -959,6 +959,7 @@ studio:
       _index: studio/publishing/google-play/index.md
       Store listing: studio/publishing/google-play/store-listing.md
     Desktop apps: studio/publishing/desktop.md
+    Microsoft Store: studio/publishing/microsoft-store.md
     Web apps: studio/publishing/web.md
     Signing keys and store accounts: studio/publishing/signing-keys-and-store-accounts.md
   What's new: studio/whats-new

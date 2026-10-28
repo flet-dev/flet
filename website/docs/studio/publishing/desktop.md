@@ -115,9 +115,9 @@ UK, and to individual developers in the US and Canada.
 
 ### Can I put the app on the Microsoft Store or the Mac App Store?
 
-Not from Studio yet. Download the app as a `.zip` from the app bar and build it on your
-own computer with [`flet build`](../../publish/index.md), which can make store-ready,
-signed packages.
+The Microsoft Store, yes: see [Microsoft Store](microsoft-store.md). The Mac App Store,
+not from Studio yet: build the app on your own computer with
+[`flet build`](../../publish/index.md).
 
 ### Will SmartScreen stop asking once the app is signed?
 
