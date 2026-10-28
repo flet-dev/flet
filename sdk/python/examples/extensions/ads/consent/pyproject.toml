@@ -12,6 +12,7 @@ dev = ["flet-cli", "flet-desktop", "flet-web"]
 
 [tool.flet.gallery]
 categories = ["Marketing/Ads"]
+platforms = ["ios", "android"]
 
 [tool.flet.metadata]
 title = "AdMob Consent (UMP)"
@@ -21,7 +22,6 @@ complexity = "basic"
 features = ["consent gathering", "consent form", "privacy options form", "consent status"]
 
 [tool.flet]
-platforms = ["ios", "android"]
 org = "dev.flet"
 company = "Flet"
 copyright = "Copyright (C) 2023-2026 by Flet"

@@ -12,6 +12,7 @@ dev = ["flet-cli", "flet-desktop", "flet-web"]
 
 [tool.flet.gallery]
 categories = ["Media/Camera"]
+platforms = ["web", "ios", "android"]
 
 [tool.flet.metadata]
 title = "Camera playground"
@@ -21,7 +22,6 @@ complexity = "advanced"
 features = ["camera initialization", "photo capture", "video recording", "record pause/resume", "image streaming", "preview pause/resume", "camera state events"]
 
 [tool.flet]
-platforms = ["web", "ios", "android"]
 org = "dev.flet"
 company = "Flet"
 copyright = "Copyright (C) 2023-2026 by Flet"

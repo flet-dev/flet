@@ -12,6 +12,7 @@ dev = ["flet-cli", "flet-desktop", "flet-web"]
 
 [tool.flet.gallery]
 categories = ["Extensions/Shadcn"]
+platforms = ["web", "macos", "windows", "linux"]
 
 [tool.flet.metadata]
 title = "Shadcn ContextMenu"
@@ -21,7 +22,6 @@ complexity = "basic"
 features = ["right click", "submenu", "click handling"]
 
 [tool.flet]
-platforms = ["web", "macos", "windows", "linux"]
 org = "dev.flet"
 company = "Flet"
 copyright = "Copyright (C) 2023-2026 by Flet"

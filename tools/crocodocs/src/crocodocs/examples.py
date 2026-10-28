@@ -61,10 +61,12 @@ def _read_pyproject(pyproject_path: Path) -> dict[str, Any]:
 def _example_web_supported(pyproject_path: Path) -> bool:
     """Return True when the example at pyproject_path supports the web platform.
 
-    Web is supported when [tool.flet].platforms is absent, empty, or contains "web".
+    Web is supported when [tool.flet.gallery].platforms is absent, empty, or
+    contains "web".
     """
     data = _read_pyproject(pyproject_path)
-    platforms = data.get("tool", {}).get("flet", {}).get("platforms")
+    flet = data.get("tool", {}).get("flet", {})
+    platforms = flet.get("gallery", {}).get("platforms")
     if not platforms:
         return True
     return "web" in platforms
