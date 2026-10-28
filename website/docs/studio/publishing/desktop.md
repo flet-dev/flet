@@ -41,9 +41,11 @@ That's it: Setup asks nothing, installs the app for the current user in a few se
 (no administrator rights needed) and opens it. The app is then in the Start menu, and
 in **Settings › Apps** to uninstall it. To install it for every user of the PC instead,
 run `setup.exe /ALLUSERS` from an administrator's command prompt. Running
-the `setup.exe` of a newer version upgrades it in place, keeping the app's data, as
+the `setup.exe` of a newer build upgrades it in place, keeping the app's data, as
 long as the app's [bundle ID](../../publish/index.md#bundle-id) stays the same: Setup
-finds the installed app by it.
+finds the installed app by it. Running the `setup.exe` of the build that's installed,
+or of an older one, just opens the installed app: to go back to an older build,
+uninstall the app first.
 
 **Download › Portable (.zip)** runs without installing, e.g. from a USB stick or on a
 PC where you can't install apps:
