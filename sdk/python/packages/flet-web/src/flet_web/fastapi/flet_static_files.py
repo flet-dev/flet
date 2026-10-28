@@ -1,3 +1,5 @@
+import gzip
+import hashlib
 import logging
 import mimetypes
 import os
@@ -6,7 +8,11 @@ import tempfile
 from pathlib import Path
 from typing import Optional
 
+import anyio
 from fastapi.staticfiles import StaticFiles
+from starlette.datastructures import Headers
+from starlette.responses import FileResponse, Response
+from starlette.staticfiles import NotModifiedResponse
 from starlette.types import Receive, Scope, Send
 
 import flet_web.fastapi as flet_fastapi
@@ -26,6 +32,26 @@ logger = logging.getLogger(flet_fastapi.__name__)
 # that do not register them by default.
 mimetypes.add_type("text/javascript", ".mjs")
 mimetypes.add_type("application/wasm", ".wasm")
+
+# Text and WebAssembly files shrink about 3x with gzip; images, archives and
+# `.woff2` fonts are already compressed.
+COMPRESSIBLE_EXTENSIONS = {
+    ".css",
+    ".html",
+    ".js",
+    ".json",
+    ".map",
+    ".mjs",
+    ".otf",
+    ".svg",
+    ".ttf",
+    ".txt",
+    ".wasm",
+    ".xml",
+}
+
+# Below this size, compression saves less than it costs.
+MIN_COMPRESSED_FILE_SIZE = 1024
 
 
 def resolve_assets_dir(assets_dir: Optional[str]) -> Optional[str]:
@@ -59,9 +85,85 @@ def resolve_assets_dir(assets_dir: Optional[str]) -> Optional[str]:
     return resolved
 
 
+def is_compressible(path: str, stat_result: os.stat_result) -> bool:
+    """
+    Whether a static file is served gzip-compressed to browsers that accept it.
+
+    Args:
+        path: Path of the file.
+        stat_result: The file's `os.stat()` result.
+    """
+
+    return (
+        os.path.splitext(path)[1].lower() in COMPRESSIBLE_EXTENSIONS
+        and stat_result.st_size >= MIN_COMPRESSED_FILE_SIZE
+    )
+
+
+def accepts_gzip(accept_encoding: str) -> bool:
+    """
+    Whether an `Accept-Encoding` request header allows a gzip response.
+
+    Args:
+        accept_encoding: Value of the header, e.g. `"gzip, deflate, br"`.
+
+    Returns:
+        `True` if `gzip` is listed without `q=0`.
+    """
+
+    for coding in accept_encoding.split(","):
+        name, *params = coding.split(";")
+        if name.strip().lower() != "gzip":
+            continue
+        for param in params:
+            key, _, value = param.partition("=")
+            if key.strip().lower() == "q":
+                try:
+                    return float(value) > 0
+                except ValueError:
+                    return False
+        return True
+    return False
+
+
+def write_gzip(source: str, target: str, stat_result: os.stat_result):
+    """
+    Write a gzip-compressed copy of a file.
+
+    The copy gets the source's modification time, so that it is served with the
+    same `Last-Modified` header and, being of a different size, its own `ETag`.
+    The gzip header stores no file name or time, so the copy's bytes, and its
+    `ETag`, are the same every time the file is compressed.
+
+    Args:
+        source: Path of the file to compress.
+        target: Path of the compressed copy.
+        stat_result: The source's `os.stat()` result.
+    """
+
+    temp = f"{target}.tmp"
+    with (
+        open(source, "rb") as src,
+        open(temp, "wb") as raw,
+        gzip.GzipFile(
+            filename="", mode="wb", compresslevel=6, fileobj=raw, mtime=0
+        ) as dst,
+    ):
+        shutil.copyfileobj(src, dst)
+    os.utime(temp, ns=(stat_result.st_atime_ns, stat_result.st_mtime_ns))
+    os.replace(temp, target)
+
+
 class FletStaticFiles(StaticFiles):
     """
     Serve Flet app static files.
+
+    Text and WebAssembly files, like the web client's `main.dart.wasm` and
+    `main.dart.js`, are sent gzip-compressed to browsers that accept it, which
+    makes them about 3x smaller to download. Each file is compressed once, in a
+    worker thread, on its first request, and the compressed copy is kept in a
+    temporary directory until the server exits. Byte range requests get the
+    uncompressed file.
 
     Args:
         assets_dir: Path to app's assets directory. A relative path is resolved
@@ -104,6 +206,8 @@ class FletStaticFiles(StaticFiles):
         self.__no_cdn = no_cdn
         self.__websocket_endpoint_path = websocket_endpoint_path
         self.__once = Once()
+        self.__gzip_dir: Optional[str] = None
+        self.__gzip_locks: dict[str, anyio.Lock] = {}
 
         env_web_renderer = os.getenv("FLET_WEB_RENDERER")
         if env_web_renderer:
@@ -132,6 +236,101 @@ class FletStaticFiles(StaticFiles):
     async def __call__(self, scope: Scope, receive: Receive, send: Send) -> None:
         await self.__once.do(self.__config, scope["root_path"])
         await super().__call__(scope, receive, send)
+
+    def file_response(
+        self,
+        full_path,
+        stat_result: os.stat_result,
+        scope: Scope,
+        status_code: int = 200,
+    ) -> Response:
+        """
+        Respond with a static file, marking compressible files as served by
+        `Accept-Encoding`.
+        """
+        response = super().file_response(full_path, stat_result, scope, status_code)
+        if is_compressible(str(full_path), stat_result):
+            # Tells caches that the response depends on the browser's
+            # `Accept-Encoding`, so they keep the plain and gzip versions apart.
+            response.headers["Vary"] = "Accept-Encoding"
+        return response
+
+    async def get_response(self, path: str, scope: Scope) -> Response:
+        """
+        Respond with a static file, gzip-compressed if the browser accepts it.
+
+        Args:
+            path: Requested path, relative to the mounted static root.
+            scope: ASGI request scope.
+
+        Returns:
+            The compressed file for a `200` response of a compressible file to a
+                request that accepts gzip and has no `Range` header, or
+                `304 Not Modified` if the browser has that compressed file
+                cached; otherwise the response of `StaticFiles`.
+        """
+
+        response = await super().get_response(path, scope)
+        if (
+            response.status_code != 200
+            or not isinstance(response, FileResponse)
+            or response.stat_result is None
+            or not is_compressible(str(response.path), response.stat_result)
+        ):
+            return response
+
+        request_headers = Headers(scope=scope)
+        if "range" in request_headers or not accepts_gzip(
+            request_headers.get("accept-encoding", "")
+        ):
+            return response
+
+        try:
+            gzip_path, gzip_stat = await self.__compress(
+                str(response.path), response.stat_result
+            )
+        except OSError as e:
+            logger.warning(f"Could not compress {response.path}: {e}")
+            return response
+
+        compressed = FileResponse(
+            gzip_path,
+            stat_result=gzip_stat,
+            media_type=response.media_type,
+            headers={"Content-Encoding": "gzip", "Vary": "Accept-Encoding"},
+        )
+        if self.is_not_modified(compressed.headers, request_headers):
+            return NotModifiedResponse(compressed.headers)
+        return compressed
+
+    async def __compress(
+        self, path: str, stat_result: os.stat_result
+    ) -> tuple[str, os.stat_result]:
+        """
+        Get the gzip-compressed copy of a file, compressing it first if needed.
+
+        Copies are keyed by the file's path, size and modification time, so a
+        file changed while the server runs is compressed again. Concurrent
+        requests for the same file wait for one compression.
+
+        Args:
+            path: Path of the file.
+            stat_result: The file's `os.stat()` result.
+
+        Returns:
+            The path and `os.stat()` result of the compressed copy.
+        """
+
+        assert self.__gzip_dir
+        key = hashlib.sha256(
+            f"{path}\0{stat_result.st_size}\0{stat_result.st_mtime_ns}".encode()
+        ).hexdigest()
+        gzip_path = os.path.join(self.__gzip_dir, f"{key}.gz")
+        lock = self.__gzip_locks.setdefault(key, anyio.Lock())
+        async with lock:
+            if not os.path.exists(gzip_path):
+                await anyio.to_thread.run_sync(write_gzip, path, gzip_path, stat_result)
+        return gzip_path, os.stat(gzip_path)
 
     def lookup_path(self, path: str) -> tuple[str, Optional[os.stat_result]]:
         """Resolve a static file path, with SPA fallback for client-side routes.
@@ -194,6 +393,11 @@ class FletStaticFiles(StaticFiles):
         temp_dir = tempfile.mkdtemp()
         app_manager.add_temp_dir(temp_dir)
         logger.info(f"Temp dir created for patched index and manifest: {temp_dir}")
+
+        # where gzip-compressed copies of served files are stored; outside
+        # temp_dir, which is served
+        self.__gzip_dir = tempfile.mkdtemp()
+        app_manager.add_temp_dir(self.__gzip_dir)
 
         # "standard" web files
         web_dir = get_package_web_dir()
