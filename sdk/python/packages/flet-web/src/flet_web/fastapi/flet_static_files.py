@@ -7,9 +7,10 @@ import shutil
 import tempfile
 from email.utils import parsedate
 from pathlib import Path
-from typing import Optional
+from typing import Optional, Union
 
 import anyio
+import anyio.to_thread
 from fastapi.staticfiles import StaticFiles
 from starlette.datastructures import Headers
 from starlette.responses import FileResponse, Response
@@ -211,6 +212,7 @@ class FletStaticFiles(StaticFiles):
         self.__once = Once()
         self.__gzip_dir: Optional[str] = None
         self.__gzip_locks: dict[str, anyio.Lock] = {}
+        self.__gzip_failures: set[str] = set()
 
         env_web_renderer = os.getenv("FLET_WEB_RENDERER")
         if env_web_renderer:
@@ -242,14 +244,14 @@ class FletStaticFiles(StaticFiles):
 
     def file_response(
         self,
-        full_path,
+        full_path: Union[str, os.PathLike[str]],
         stat_result: os.stat_result,
         scope: Scope,
         status_code: int = 200,
     ) -> Response:
         """
-        Respond with a static file, marking compressible files as served by
-        `Accept-Encoding`.
+        Respond with a static file, adding `Vary: Accept-Encoding` to
+        compressible ones.
 
         Unlike `StaticFiles`, this never responds with `304 Not Modified`:
         `get_response()` checks the browser's cached copy once it has picked
@@ -290,16 +292,24 @@ class FletStaticFiles(StaticFiles):
             and "range" not in request_headers
             and accepts_gzip(request_headers.get("accept-encoding", ""))
         ):
-            try:
-                gzip_path, gzip_stat = await self.__compress(
-                    str(response.path), response.stat_result
-                )
-            except OSError as e:
-                logger.warning(f"Could not compress {response.path}: {e}")
-            else:
-                # Derived from the plain file's `ETag`, so it changes whenever
-                # the file does, and never equals it.
-                etag = response.headers["etag"].removesuffix('"') + '-gzip"'
+            # Derived from the plain file's `ETag`, so it changes whenever the
+            # file does, and never equals it.
+            etag = response.headers["etag"].removesuffix('"') + '-gzip"'
+            gzip_headers = Headers(
+                {
+                    "etag": etag,
+                    "last-modified": response.headers["last-modified"],
+                    "vary": "Accept-Encoding",
+                }
+            )
+            # Checked before compressing, so a browser revalidating its copy
+            # after a server restart doesn't wait for the file to be compressed.
+            if self.is_not_modified(gzip_headers, request_headers):
+                return NotModifiedResponse(gzip_headers)
+
+            compressed = await self.__compress(str(response.path), response.stat_result)
+            if compressed:
+                gzip_path, gzip_stat = compressed
                 response = FileResponse(
                     gzip_path,
                     stat_result=gzip_stat,
@@ -344,7 +354,7 @@ class FletStaticFiles(StaticFiles):
 
     async def __compress(
         self, path: str, stat_result: os.stat_result
-    ) -> tuple[str, os.stat_result]:
+    ) -> Optional[tuple[str, os.stat_result]]:
         """
         Get the gzip-compressed copy of a file, compressing it first if needed.
 
@@ -352,14 +362,16 @@ class FletStaticFiles(StaticFiles):
         time: a file changed while the server runs is compressed again, and
         paths that name the same file, such as differently cased ones on a
         case-insensitive file system, share one copy. Concurrent requests for
-        the same file wait for one compression.
+        the same file wait for one compression. A file that fails to compress
+        is logged and not tried again until it changes.
 
         Args:
             path: Path of the file.
             stat_result: The file's `os.stat()` result.
 
         Returns:
-            The path and `os.stat()` result of the compressed copy.
+            The path and `os.stat()` result of the compressed copy, or `None` if
+                the file could not be compressed.
         """
 
         assert self.__gzip_dir
@@ -371,12 +383,25 @@ class FletStaticFiles(StaticFiles):
         key = hashlib.sha256(
             f"{identity}\0{stat_result.st_size}\0{stat_result.st_mtime_ns}".encode()
         ).hexdigest()
+        if key in self.__gzip_failures:
+            return None
         gzip_path = os.path.join(self.__gzip_dir, f"{key}.gz")
+
+        def compress() -> os.stat_result:
+            if not os.path.exists(gzip_path):
+                write_gzip(path, gzip_path, stat_result)
+            return os.stat(gzip_path)
+
         lock = self.__gzip_locks.setdefault(key, anyio.Lock())
         async with lock:
-            if not os.path.exists(gzip_path):
-                await anyio.to_thread.run_sync(write_gzip, path, gzip_path, stat_result)
-        return gzip_path, os.stat(gzip_path)
+            if key in self.__gzip_failures:
+                return None
+            try:
+                return gzip_path, await anyio.to_thread.run_sync(compress)
+            except OSError as e:
+                logger.warning(f"Could not compress {path}: {e}")
+                self.__gzip_failures.add(key)
+                return None
 
     def lookup_path(self, path: str) -> tuple[str, Optional[os.stat_result]]:
         """Resolve a static file path, with SPA fallback for client-side routes.

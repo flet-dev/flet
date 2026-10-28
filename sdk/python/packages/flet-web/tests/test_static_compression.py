@@ -4,6 +4,8 @@ import gzip
 import importlib
 import os
 
+import anyio
+import httpx
 import pytest
 from fastapi import FastAPI
 from fastapi.testclient import TestClient
@@ -26,6 +28,19 @@ def web(tmp_path, monkeypatch):
     (web / "logo.png").write_bytes(b"\x89PNG" + bytes(4096))
     monkeypatch.setattr(static_files, "get_package_web_dir", lambda: str(web))
     return web
+
+
+@pytest.fixture
+def compressions(monkeypatch):
+    """Paths of the files compressed, in order."""
+    calls = []
+    write_gzip = static_files.write_gzip
+    monkeypatch.setattr(
+        static_files,
+        "write_gzip",
+        lambda *args: calls.append(args[0]) or write_gzip(*args),
+    )
+    return calls
 
 
 @pytest.fixture
@@ -127,20 +142,38 @@ class TestCompressedResponses:
 
 
 class TestCompressedCopies:
-    def test_compresses_each_file_once(self, client, monkeypatch):
+    def test_compresses_each_file_once(self, client, compressions):
         """Later requests reuse the compressed copy."""
-        calls = []
-        write_gzip = static_files.write_gzip
-        monkeypatch.setattr(
-            static_files,
-            "write_gzip",
-            lambda *args: calls.append(args[0]) or write_gzip(*args),
-        )
-
         for _ in range(3):
             assert client.get("/main.dart.wasm", headers=GZIP).content == WASM
 
-        assert len(calls) == 1
+        assert len(compressions) == 1
+
+    def test_concurrent_first_requests_compress_once(self, web, compressions):
+        """Requests arriving together wait for one compression."""
+        app = FastAPI()
+        app.mount("/", static_files.FletStaticFiles())
+        contents = []
+
+        async def fetch(client):
+            response = await client.get("/main.dart.wasm", headers=GZIP)
+            contents.append(response.content)
+
+        async def main():
+            transport = httpx.ASGITransport(app=app)
+            async with (
+                httpx.AsyncClient(
+                    transport=transport, base_url="http://test"
+                ) as client,
+                anyio.create_task_group() as tg,
+            ):
+                for _ in range(5):
+                    tg.start_soon(fetch, client)
+
+        anyio.run(main)
+
+        assert contents == [WASM] * 5
+        assert len(compressions) == 1
 
     def test_compresses_a_changed_file_again(self, client, web):
         """A file changed while the server runs is served with its new content."""
@@ -154,22 +187,15 @@ class TestCompressedCopies:
 
         assert client.get("/main.dart.wasm", headers=GZIP).content == changed
 
-    def test_paths_naming_the_same_file_share_one_copy(self, client, web, monkeypatch):
+    def test_paths_naming_the_same_file_share_one_copy(self, client, web, compressions):
         """Differently cased paths to one file are compressed once."""
         if not (web / "MAIN.DART.WASM").exists():
             pytest.skip("The file system is case-sensitive")
-        calls = []
-        write_gzip = static_files.write_gzip
-        monkeypatch.setattr(
-            static_files,
-            "write_gzip",
-            lambda *args: calls.append(args[0]) or write_gzip(*args),
-        )
 
         for path in ["/main.dart.wasm", "/MAIN.dart.wasm", "/Main.Dart.Wasm"]:
             assert client.get(path, headers=GZIP).content == WASM
 
-        assert len(calls) == 1
+        assert len(compressions) == 1
 
     def test_compressed_copy_is_reproducible(self, web, tmp_path):
         """Compressing a file twice gives the same bytes and modification time."""
@@ -201,17 +227,21 @@ class TestCompressedCopies:
         assert list(target.parent.iterdir()) == []
 
     def test_sends_plain_file_when_compression_fails(self, client, monkeypatch):
-        """A failure to write the compressed copy falls back to the plain file."""
+        """A file that fails to compress is sent plain and not compressed again."""
+        calls = []
 
         def fail(*args):
+            calls.append(args[0])
             raise OSError("No space left on device")
 
         monkeypatch.setattr(static_files, "write_gzip", fail)
-        response = client.get("/main.dart.wasm", headers=GZIP)
+        for _ in range(3):
+            response = client.get("/main.dart.wasm", headers=GZIP)
+            assert response.status_code == 200
+            assert "content-encoding" not in response.headers
+            assert response.content == WASM
 
-        assert response.status_code == 200
-        assert "content-encoding" not in response.headers
-        assert response.content == WASM
+        assert len(calls) == 1
 
 
 class TestRevalidation:
@@ -294,3 +324,22 @@ class TestRevalidation:
         assert response.status_code == 200
         assert response.headers["etag"] != old.headers["etag"]
         assert response.content == b"A" * 1025
+
+    def test_revalidation_after_restart_does_not_compress(self, web, compressions):
+        """A cached compressed file is confirmed without compressing it again."""
+        app = FastAPI()
+        app.mount("/", static_files.FletStaticFiles())
+        with TestClient(app) as client:
+            etag = client.get("/main.dart.wasm", headers=GZIP).headers["etag"]
+
+        restarted = FastAPI()
+        restarted.mount("/", static_files.FletStaticFiles())
+        with TestClient(restarted) as client:
+            response = client.get(
+                "/main.dart.wasm", headers={**GZIP, "If-None-Match": etag}
+            )
+
+        assert response.status_code == 304
+        assert response.headers["etag"] == etag
+        assert response.headers["vary"] == "Accept-Encoding"
+        assert len(compressions) == 1
