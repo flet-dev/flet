@@ -5,6 +5,7 @@ import mimetypes
 import os
 import shutil
 import tempfile
+from email.utils import parsedate
 from pathlib import Path
 from typing import Optional
 
@@ -108,22 +109,22 @@ def accepts_gzip(accept_encoding: str) -> bool:
         accept_encoding: Value of the header, e.g. `"gzip, deflate, br"`.
 
     Returns:
-        `True` if `gzip` is listed without `q=0`.
+        `True` if `gzip`, or else `*`, is listed without `q=0`.
     """
 
+    qualities = {}
     for coding in accept_encoding.split(","):
         name, *params = coding.split(";")
-        if name.strip().lower() != "gzip":
-            continue
+        quality = 1.0
         for param in params:
             key, _, value = param.partition("=")
             if key.strip().lower() == "q":
                 try:
-                    return float(value) > 0
+                    quality = float(value)
                 except ValueError:
-                    return False
-        return True
-    return False
+                    quality = 0.0
+        qualities[name.strip().lower()] = quality
+    return qualities.get("gzip", qualities.get("*", 0.0)) > 0
 
 
 def write_gzip(source: str, target: str, stat_result: os.stat_result):
@@ -131,9 +132,7 @@ def write_gzip(source: str, target: str, stat_result: os.stat_result):
     Write a gzip-compressed copy of a file.
 
     The copy gets the source's modification time, so that it is served with the
-    same `Last-Modified` header and, being of a different size, its own `ETag`.
-    The gzip header stores no file name or time, so the copy's bytes, and its
-    `ETag`, are the same every time the file is compressed.
+    same `Last-Modified` header. A copy left unfinished by an error is removed.
 
     Args:
         source: Path of the file to compress.
@@ -142,16 +141,20 @@ def write_gzip(source: str, target: str, stat_result: os.stat_result):
     """
 
     temp = f"{target}.tmp"
-    with (
-        open(source, "rb") as src,
-        open(temp, "wb") as raw,
-        gzip.GzipFile(
-            filename="", mode="wb", compresslevel=6, fileobj=raw, mtime=0
-        ) as dst,
-    ):
-        shutil.copyfileobj(src, dst)
-    os.utime(temp, ns=(stat_result.st_atime_ns, stat_result.st_mtime_ns))
-    os.replace(temp, target)
+    try:
+        with (
+            open(source, "rb") as src,
+            open(temp, "wb") as raw,
+            gzip.GzipFile(
+                filename="", mode="wb", compresslevel=6, fileobj=raw, mtime=0
+            ) as dst,
+        ):
+            shutil.copyfileobj(src, dst)
+        os.utime(temp, ns=(stat_result.st_atime_ns, stat_result.st_mtime_ns))
+        os.replace(temp, target)
+    finally:
+        if os.path.exists(temp):
+            os.remove(temp)
 
 
 class FletStaticFiles(StaticFiles):
@@ -247,8 +250,14 @@ class FletStaticFiles(StaticFiles):
         """
         Respond with a static file, marking compressible files as served by
         `Accept-Encoding`.
+
+        Unlike `StaticFiles`, this never responds with `304 Not Modified`:
+        `get_response()` checks the browser's cached copy once it has picked
+        the plain or compressed file.
         """
-        response = super().file_response(full_path, stat_result, scope, status_code)
+        response = FileResponse(
+            full_path, status_code=status_code, stat_result=stat_result
+        )
         if is_compressible(str(full_path), stat_result):
             # Tells caches that the response depends on the browser's
             # `Accept-Encoding`, so they keep the plain and gzip versions apart.
@@ -265,43 +274,73 @@ class FletStaticFiles(StaticFiles):
 
         Returns:
             The compressed file for a `200` response of a compressible file to a
-                request that accepts gzip and has no `Range` header, or
-                `304 Not Modified` if the browser has that compressed file
-                cached; otherwise the response of `StaticFiles`.
+                request that accepts gzip and has no `Range` header; otherwise
+                the response of `StaticFiles`. Either is `304 Not Modified` if
+                the browser has that same file cached.
         """
 
         response = await super().get_response(path, scope)
-        if (
-            response.status_code != 200
-            or not isinstance(response, FileResponse)
-            or response.stat_result is None
-            or not is_compressible(str(response.path), response.stat_result)
-        ):
+        if response.status_code != 200 or not isinstance(response, FileResponse):
             return response
 
         request_headers = Headers(scope=scope)
-        if "range" in request_headers or not accepts_gzip(
-            request_headers.get("accept-encoding", "")
+        if (
+            response.stat_result is not None
+            and is_compressible(str(response.path), response.stat_result)
+            and "range" not in request_headers
+            and accepts_gzip(request_headers.get("accept-encoding", ""))
         ):
-            return response
+            try:
+                gzip_path, gzip_stat = await self.__compress(
+                    str(response.path), response.stat_result
+                )
+            except OSError as e:
+                logger.warning(f"Could not compress {response.path}: {e}")
+            else:
+                # Derived from the plain file's `ETag`, so it changes whenever
+                # the file does, and never equals it.
+                etag = response.headers["etag"].removesuffix('"') + '-gzip"'
+                response = FileResponse(
+                    gzip_path,
+                    stat_result=gzip_stat,
+                    media_type=response.media_type,
+                    headers={
+                        "Content-Encoding": "gzip",
+                        "ETag": etag,
+                        "Vary": "Accept-Encoding",
+                    },
+                )
 
-        try:
-            gzip_path, gzip_stat = await self.__compress(
-                str(response.path), response.stat_result
-            )
-        except OSError as e:
-            logger.warning(f"Could not compress {response.path}: {e}")
-            return response
+        if self.is_not_modified(response.headers, request_headers):
+            return NotModifiedResponse(response.headers)
+        return response
 
-        compressed = FileResponse(
-            gzip_path,
-            stat_result=gzip_stat,
-            media_type=response.media_type,
-            headers={"Content-Encoding": "gzip", "Vary": "Accept-Encoding"},
+    def is_not_modified(
+        self, response_headers: Headers, request_headers: Headers
+    ) -> bool:
+        """
+        Whether the browser's cached copy of a file is still current.
+
+        `If-None-Match`, when sent, decides alone, so a cached copy in the
+        other encoding, which has the same `Last-Modified`, is never taken as
+        current.
+
+        Args:
+            response_headers: Headers of the response that would be sent.
+            request_headers: Headers of the request.
+        """
+
+        if if_none_match := request_headers.get("if-none-match"):
+            tags = [tag.strip().removeprefix("W/") for tag in if_none_match.split(",")]
+            return response_headers["etag"] in tags or "*" in tags
+
+        if_modified_since = parsedate(request_headers.get("if-modified-since", ""))
+        last_modified = parsedate(response_headers.get("last-modified", ""))
+        return (
+            if_modified_since is not None
+            and last_modified is not None
+            and if_modified_since >= last_modified
         )
-        if self.is_not_modified(compressed.headers, request_headers):
-            return NotModifiedResponse(compressed.headers)
-        return compressed
 
     async def __compress(
         self, path: str, stat_result: os.stat_result
@@ -309,9 +348,11 @@ class FletStaticFiles(StaticFiles):
         """
         Get the gzip-compressed copy of a file, compressing it first if needed.
 
-        Copies are keyed by the file's path, size and modification time, so a
-        file changed while the server runs is compressed again. Concurrent
-        requests for the same file wait for one compression.
+        Copies are keyed by the file's identity on disk, size and modification
+        time: a file changed while the server runs is compressed again, and
+        paths that name the same file, such as differently cased ones on a
+        case-insensitive file system, share one copy. Concurrent requests for
+        the same file wait for one compression.
 
         Args:
             path: Path of the file.
@@ -322,8 +363,13 @@ class FletStaticFiles(StaticFiles):
         """
 
         assert self.__gzip_dir
+        identity = (
+            f"{stat_result.st_dev}:{stat_result.st_ino}"
+            if stat_result.st_ino
+            else os.path.normcase(os.path.realpath(path))
+        )
         key = hashlib.sha256(
-            f"{path}\0{stat_result.st_size}\0{stat_result.st_mtime_ns}".encode()
+            f"{identity}\0{stat_result.st_size}\0{stat_result.st_mtime_ns}".encode()
         ).hexdigest()
         gzip_path = os.path.join(self.__gzip_dir, f"{key}.gz")
         lock = self.__gzip_locks.setdefault(key, anyio.Lock())

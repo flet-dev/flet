@@ -49,10 +49,13 @@ class TestAcceptsGzip:
             ("gzip;q=invalid", False),
             ("br, deflate", False),
             ("", False),
+            ("*;q=1, identity;q=0", True),
+            ("*, gzip;q=0", False),
+            ("*;q=0", False),
         ],
     )
     def test_reads_accept_encoding(self, accept_encoding, expected):
-        """`gzip` is accepted when listed without a zero quality."""
+        """`gzip`, or else `*`, is accepted when listed without a zero quality."""
         assert static_files.accepts_gzip(accept_encoding) is expected
 
 
@@ -89,6 +92,17 @@ class TestCompressedResponses:
         assert response.status_code == 206
         assert "content-encoding" not in response.headers
         assert response.content == WASM[256:512]
+
+    def test_head_request_gets_compressed_headers(self, client):
+        """A `HEAD` request gets the compressed file's headers and no body."""
+        get = client.get("/main.dart.wasm", headers=GZIP)
+        head = client.head("/main.dart.wasm", headers=GZIP)
+
+        assert head.status_code == 200
+        assert head.headers["content-encoding"] == "gzip"
+        assert head.headers["content-length"] == get.headers["content-length"]
+        assert head.headers["etag"] == get.headers["etag"]
+        assert head.content == b""
 
     @pytest.mark.parametrize("path", ["/small.js", "/logo.png"])
     def test_sends_small_and_binary_files_as_is(self, client, path):
@@ -140,6 +154,23 @@ class TestCompressedCopies:
 
         assert client.get("/main.dart.wasm", headers=GZIP).content == changed
 
+    def test_paths_naming_the_same_file_share_one_copy(self, client, web, monkeypatch):
+        """Differently cased paths to one file are compressed once."""
+        if not (web / "MAIN.DART.WASM").exists():
+            pytest.skip("The file system is case-sensitive")
+        calls = []
+        write_gzip = static_files.write_gzip
+        monkeypatch.setattr(
+            static_files,
+            "write_gzip",
+            lambda *args: calls.append(args[0]) or write_gzip(*args),
+        )
+
+        for path in ["/main.dart.wasm", "/MAIN.dart.wasm", "/Main.Dart.Wasm"]:
+            assert client.get(path, headers=GZIP).content == WASM
+
+        assert len(calls) == 1
+
     def test_compressed_copy_is_reproducible(self, web, tmp_path):
         """Compressing a file twice gives the same bytes and modification time."""
         source = web / "main.dart.wasm"
@@ -151,6 +182,23 @@ class TestCompressedCopies:
         assert first.read_bytes() == second.read_bytes()
         assert gzip.decompress(first.read_bytes()) == WASM
         assert first.stat().st_mtime_ns == stat.st_mtime_ns
+
+    def test_unfinished_copy_is_removed(self, web, tmp_path, monkeypatch):
+        """A copy that fails partway through writing leaves no file behind."""
+
+        def fail(src, dst):
+            dst.write(src.read(1024))
+            raise OSError("No space left on device")
+
+        monkeypatch.setattr(static_files.shutil, "copyfileobj", fail)
+        source = web / "main.dart.wasm"
+        target = tmp_path / "copies" / "main.gz"
+        target.parent.mkdir()
+
+        with pytest.raises(OSError):
+            static_files.write_gzip(str(source), str(target), source.stat())
+
+        assert list(target.parent.iterdir()) == []
 
     def test_sends_plain_file_when_compression_fails(self, client, monkeypatch):
         """A failure to write the compressed copy falls back to the plain file."""
@@ -197,3 +245,52 @@ class TestRevalidation:
 
         assert response.status_code == 200
         assert response.content == WASM
+
+    def test_cached_compressed_file_is_revalidated_by_date(self, client):
+        """`If-Modified-Since` alone gets a `304` for the compressed file."""
+        compressed = client.get("/main.dart.wasm", headers=GZIP)
+
+        response = client.get(
+            "/main.dart.wasm",
+            headers={
+                **GZIP,
+                "If-Modified-Since": compressed.headers["last-modified"],
+            },
+        )
+
+        assert response.status_code == 304
+        assert response.headers["etag"] == compressed.headers["etag"]
+
+    def test_plain_etag_does_not_match_compressed_file(self, client):
+        """A gzip request with the plain file's `ETag` gets the compressed file."""
+        plain = client.get("/main.dart.wasm", headers={"Accept-Encoding": "identity"})
+
+        response = client.get(
+            "/main.dart.wasm",
+            headers={
+                **GZIP,
+                "If-None-Match": plain.headers["etag"],
+                "If-Modified-Since": plain.headers["last-modified"],
+            },
+        )
+
+        assert response.status_code == 200
+        assert response.headers["content-encoding"] == "gzip"
+        assert response.content == WASM
+
+    def test_etag_changes_with_the_file(self, client, web):
+        """Changed content of the same modification time gets a new `ETag`."""
+        path = web / "main.dart.wasm"
+        path.write_bytes(b"A" * 1024)
+        stat = path.stat()
+        old = client.get("/main.dart.wasm", headers=GZIP)
+
+        path.write_bytes(b"A" * 1025)
+        os.utime(path, ns=(stat.st_atime_ns, stat.st_mtime_ns))
+        response = client.get(
+            "/main.dart.wasm", headers={**GZIP, "If-None-Match": old.headers["etag"]}
+        )
+
+        assert response.status_code == 200
+        assert response.headers["etag"] != old.headers["etag"]
+        assert response.content == b"A" * 1025
