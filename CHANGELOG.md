@@ -105,6 +105,7 @@
 * Fix `TemplateRoute.match()` failing to match a route with a query string or fragment, e.g. `/store?ref=ad` against `/store`, or capturing them in the last parameter ([#5898](https://github.com/flet-dev/flet/issues/5898), [#6942](https://github.com/flet-dev/flet/pull/6942)) by @ndonkoHenri.
 * Fix `flet run` ignoring the `FLET_ASSETS_DIR` environment variable and the app's own `ft.run(assets_dir=...)` ([#5631](https://github.com/flet-dev/flet/issues/5631), [#6935](https://github.com/flet-dev/flet/pull/6935)) by @ndonkoHenri.
 * Fix `requests.Session` ignoring its `verify` setting in apps built with `flet build` ([#5695](https://github.com/flet-dev/flet/issues/5695), [#6936](https://github.com/flet-dev/flet/pull/6936)) by @ndonkoHenri.
+* Fix `ProgressBar.semantics_value` and `ProgressRing.semantics_value` being read with a trailing ".0" by screen readers; they now take strings, such as `"60%"` or `"Step 3 of 5"` ([#7013](https://github.com/flet-dev/flet/pull/7013)) by @ndonkoHenri.
 
 ### Documentation
 
