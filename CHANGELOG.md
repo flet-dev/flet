@@ -7,6 +7,7 @@
 * Themes built from a seed color, including the default theme, now have neutral surfaces: white in light mode and near-black (`#121212`) in dark mode, with neutral greys for containers, outlines and text on surfaces. The seed still drives accent colors. To keep the seed-tinted Material 3 look, set `page.theme = ft.Theme(surfaces=ft.ThemeSurfaces.TONAL)` (and the same for `page.dark_theme`). See [Default theme surfaces are now neutral](https://flet.dev/docs/updates/breaking-changes/v1-1-0/neutral-default-surfaces) ([#6921](https://github.com/flet-dev/flet/issues/6921)) by @FeodorFitsner.
 * The default dark splash and loading screen color of web apps is now `#121212` (was `#222222`), to match the new dark theme surface ([#6921](https://github.com/flet-dev/flet/issues/6921)) by @FeodorFitsner.
 * Custom [`flet build` templates](/docs/publish#build-template) (`--template`) must read the build's settings from `cookiecutter._options` and the app's `pyproject.toml` from `cookiecutter._pyproject` (were `cookiecutter.options` and `cookiecutter.pyproject`). Cookiecutter passes these private variables to the template unchanged, so numbers keep their types and values aren't rendered as Jinja ([#6999](https://github.com/flet-dev/flet/pull/6999)) by @ndonkoHenri.
+* The Flet desktop client is no longer built for Debian 10 on ARM64: `flet run` on an ARM64 Linux system with glibc older than 2.31 (Debian 10 and other glibc 2.28 distros) now stops with an error naming the glibc it needs. Debian 10 on x86-64 is still supported by @FeodorFitsner.
 
 ### New features
 

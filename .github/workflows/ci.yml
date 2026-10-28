@@ -484,15 +484,6 @@ jobs:
             platform_arch: x86_64
             rive_enabled: false
             title: Debian 10 AMD64
-          - distro_id: debian10
-            container: debian:10
-            manylinux_tag: manylinux_2_28
-            arch: arm64
-            runner: ubuntu-24.04-arm
-            build_arch: arm64
-            platform_arch: aarch64
-            rive_enabled: false
-            title: Debian 10 ARM64
           - distro_id: debian12
             container: debian:12
             manylinux_tag: manylinux_2_36
@@ -599,14 +590,6 @@ jobs:
               'deb mirror+file:/etc/apt/mirrors-debian-security.txt buster/updates main' \
               > /etc/apt/sources.list
             echo 'Acquire::Check-Valid-Until "false";' > /etc/apt/apt.conf.d/99no-check-valid-until
-            # With pipelining, ftp.de.debian.org answers apt with the wrong
-            # files ("File has unexpected size") and apt then waits forever.
-            # Fetch one file per request, retry, and time out stalled ones.
-            printf '%s\n' \
-              'Acquire::http::Pipeline-Depth "0";' \
-              'Acquire::Retries "3";' \
-              'Acquire::http::Timeout "30";' \
-              > /etc/apt/apt.conf.d/99archive-mirrors
           fi
           apt-get update
           apt-get install -y git curl unzip xz-utils zip ca-certificates jq tzdata

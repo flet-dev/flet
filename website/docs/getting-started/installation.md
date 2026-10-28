@@ -33,7 +33,7 @@ on, has no Windows on ARM wheels for them.
 
 #### Linux
 
-Flet supports Debian 10, 11 and 12 and Ubuntu 20.04, 22.04 and 24.04 LTS.
+Flet supports Debian 10, 11 and 12 and Ubuntu 20.04, 22.04 and 24.04 LTS. On ARM64, Debian 10 isn't supported: the oldest supported release there is Debian 11 or Ubuntu 20.04.
 
 <details>
 <summary>Desktop flavor (audio & video support)</summary>

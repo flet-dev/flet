@@ -35,13 +35,13 @@ logger = logging.getLogger(flet_desktop.__name__)
 
 # Supported Linux build targets ordered by glibc version.
 # Each entry maps a minimum glibc (major, minor) to a distro_id used in
-# release artifact filenames.
+# release artifact filenames, and the architectures it is built for.
 _GLIBC_DISTRO_TABLE = [
-    ((2, 28), "debian10"),
-    ((2, 31), "ubuntu20.04"),
-    ((2, 35), "ubuntu22.04"),
-    ((2, 36), "debian12"),
-    ((2, 39), "ubuntu24.04"),
+    ((2, 28), "debian10", ("amd64",)),
+    ((2, 31), "ubuntu20.04", ("amd64", "arm64")),
+    ((2, 35), "ubuntu22.04", ("amd64", "arm64")),
+    ((2, 36), "debian12", ("amd64", "arm64")),
+    ((2, 39), "ubuntu24.04", ("amd64", "arm64")),
 ]
 
 
@@ -117,29 +117,46 @@ def __get_system_glibc_version():
         return (0, 0)
 
 
-def __get_linux_distro_id():
+def __get_linux_distro_id(arch: str):
     """
     Return the distro id to use for downloading the Linux binary archive.
 
     Uses glibc version detection to pick the best matching build target
-    (highest glibc requirement that is <= system glibc).  Can be
+    for `arch` (highest glibc requirement that is <= system glibc).  Can be
     overridden via the `FLET_LINUX_DISTRO` environment variable.
+
+    Raises:
+        RuntimeError: If the system glibc is older than every build for `arch`.
     """
 
     override = os.environ.get("FLET_LINUX_DISTRO", "").strip()
     if override:
         return override
 
+    targets = [
+        (required_glibc, distro_id)
+        for required_glibc, distro_id, arches in _GLIBC_DISTRO_TABLE
+        if arch in arches
+    ]
+    if not targets:
+        raise RuntimeError(f"Flet desktop client is not available for Linux {arch}.")
     sys_glibc = __get_system_glibc_version()
     best = None
-    for required_glibc, distro_id in _GLIBC_DISTRO_TABLE:
+    for required_glibc, distro_id in targets:
         if sys_glibc >= required_glibc:
             best = distro_id
     if best is None:
-        best = _GLIBC_DISTRO_TABLE[0][1]  # oldest as last resort
-        logger.warning(
-            f"Could not detect glibc version (got {sys_glibc}), "
-            f"falling back to {best}. Set FLET_LINUX_DISTRO to override."
+        oldest_glibc, oldest = targets[0]
+        if sys_glibc == (0, 0):
+            logger.warning(
+                "Could not detect glibc version, "
+                f"falling back to {oldest}. Set FLET_LINUX_DISTRO to override."
+            )
+            return oldest
+        raise RuntimeError(
+            f"Flet desktop client for Linux {arch} requires glibc "
+            f"{oldest_glibc[0]}.{oldest_glibc[1]} or newer, "
+            f"but this system has glibc {sys_glibc[0]}.{sys_glibc[1]}."
         )
     return best
 
@@ -158,8 +175,8 @@ def get_artifact_filename():
     if is_macos():
         return "flet-macos.tar.gz"
     # Linux
-    distro = __get_linux_distro_id()
     arch = get_arch()
+    distro = __get_linux_distro_id(arch)
     flavor = __get_desktop_flavor()
     if flavor == "light":
         return f"flet-linux-{distro}-light-{arch}.tar.gz"
