@@ -26,8 +26,9 @@ The settings for each platform (the app's name, icon, version, …) are on its
 
 ## Open the app
 
-Studio's desktop apps aren't signed with a code-signing certificate yet, so the system
-asks before opening them the first time.
+Unless you [sign the Windows app](#sign-the-windows-app), Studio's desktop apps aren't
+signed with a code-signing certificate, so the system asks before opening them the first
+time.
 
 ### Windows
 
@@ -78,6 +79,38 @@ On macOS 14 and earlier, **right-click the app › Open** and confirm instead.
 The app needs GTK 3, which desktop Linux distributions include. On a minimal system,
 install it first (`sudo apt install libgtk-3-0` on Debian and Ubuntu).
 
+## Sign the Windows app
+
+Signed, Windows shows your name as the app's publisher instead of "Unknown publisher",
+the app runs with Smart App Control on, and SmartScreen builds up a reputation for it.
+Studio signs with your own
+[Azure Artifact Signing](https://learn.microsoft.com/azure/artifact-signing/) account:
+
+1. In the Azure portal, create an Artifact Signing account, validate your identity and
+   create a certificate profile (Public Trust). Note the account's region and name, and
+   the profile's name.
+2. In **Microsoft Entra ID › App registrations**, register an app (e.g. *Flet Studio
+   signing*). Copy its **Application (client) ID** and **Directory (tenant) ID**.
+3. Under the app's **Certificates & secrets**, add a client secret. Copy its **Value**
+   (Azure shows it once) and note when it expires.
+4. On the certificate profile, open **Access control (IAM) › Add role assignment** and
+   give the app registration the **Artifact Signing Certificate Profile Signer** role.
+5. In Studio, open **Publish › Windows › Settings › Code signing › Connect Azure
+   Artifact Signing**, and enter all of the above.
+
+Studio checks it by signing a test digest once, then shows who the certificate names.
+From the next run, every file of the app that isn't signed yet (the `.exe`, `.dll` and
+`.pyd` files) is signed and timestamped, and so are the installer and its uninstaller.
+The run fails if any of them isn't validly signed.
+
+The client secret stays on Studio's servers: a build only gets an access token that
+expires within the hour and can only sign. Studio warns on the card a month before the
+secret expires; make a new one in the app registration and connect again.
+
+Each signed file is one signature on your Azure bill: a Python app has dozens to hundreds
+of files. Artifact Signing is available to organizations in the US, Canada, the EU and the
+UK, and to individual developers in the US and Canada.
+
 ## Questions
 
 ### Can I put the app on the Microsoft Store or the Mac App Store?
@@ -86,6 +119,12 @@ Not from Studio yet. Download the app as a `.zip` from the app bar and build it 
 own computer with [`flet build`](../../publish/index.md), which can make store-ready,
 signed packages.
 
-### Can the Windows installer be signed?
+### Will SmartScreen stop asking once the app is signed?
 
-Not yet. Until it is, SmartScreen asks before running it, as above.
+The publisher is shown right away. SmartScreen's reputation builds up as people download
+and run the app, so a brand-new publisher may still see a warning at first.
+
+### Can I sign with my own certificate (.pfx)?
+
+Not yet: Studio signs with Azure Artifact Signing. Certificates for code signing now have
+to live in a hardware or cloud key store, which Artifact Signing is.
