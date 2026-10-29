@@ -25,9 +25,11 @@ account:
    with the **Manager** role. Studio doesn't use its **Reply URL**: enter
    `https://localhost/` (Partner Center refuses some addresses, such as one without
    the trailing slash).
-3. Open the application and copy its **Tenant ID** and **Client ID**. Select **Add new
-   key** and copy the key: Partner Center shows it once. Note when it expires.
-4. On the card, select **Connect Microsoft Store** and enter them. Studio lists your
+3. Open the application and copy its **Client ID**. Select **Add new key** and copy the
+   key: Partner Center shows it once. Note when it expires.
+4. Copy the **Tenant ID** from **Account settings › Organization profile › Tenants**
+   (or the Azure portal's **Microsoft Entra ID › Overview**).
+5. On the card, select **Connect Microsoft Store** and enter them. Studio lists your
    apps with it to check it.
 
 The key stays on Studio's servers; it never reaches a build.
