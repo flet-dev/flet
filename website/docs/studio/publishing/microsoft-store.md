@@ -82,9 +82,9 @@ Publish screen says which version the Store has and offers the next one.
 
 ### Is the Store app signed with my Artifact Signing certificate?
 
-No. Microsoft signs Store packages itself. If you
-[sign your Windows app](desktop.md#sign-the-windows-app), the files inside the package
-are signed with your certificate too.
+No. Microsoft signs Store packages itself, so Studio doesn't sign the files inside
+them either, even if you [sign your Windows app](desktop.md#sign-the-windows-app): Store
+packages don't use up your Artifact Signing signatures.
 
 ### Can I publish an update while one is in certification?
 
