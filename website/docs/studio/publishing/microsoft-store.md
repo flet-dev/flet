@@ -40,8 +40,9 @@ Reserve your app's name in [Partner Center](https://partner.microsoft.com/dashbo
 first: **Apps and games › New product › MSIX or PWA app**, enter the name, then
 **Reserve product name**. Then choose it on the card. Studio takes the package's
 identity from Partner Center (`Package/Identity/Name` and `Package/Identity/Publisher`);
-copy the **Publisher display name** from the app's **Product identity** page, exactly
-as shown.
+the API doesn't give the publisher display name, so copy it once from the app's
+**Product identity** page (`Package/Properties/PublisherDisplayName`), exactly as shown.
+It's the same for all apps in your account: Studio remembers it for the next one.
 
 ## The first submission
 
