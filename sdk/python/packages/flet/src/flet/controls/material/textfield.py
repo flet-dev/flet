@@ -240,8 +240,7 @@ class TextInputAction(Enum):
     """
     No action specific to the field; the platform decides how the keyboard looks.
 
-    Pressing the action button removes focus from the field, which closes the
-    keyboard.
+    Keeps focus in the field, so the keyboard stays open.
 
     Note:
         Supported on Android only.
