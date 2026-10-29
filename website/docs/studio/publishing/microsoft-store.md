@@ -52,15 +52,19 @@ the age-ratings questionnaire. The card walks you through it:
 
 1. **Create Store package (.msix)** and download it.
 2. In Partner Center, on the app's overview page, select **Start submission**, then
-   complete:
-   - **Properties:** a privacy policy URL, required for desktop apps.
+   complete each section
+   ([Microsoft's checklist](https://learn.microsoft.com/windows/apps/publish/publish-your-app/msix/create-app-submission)):
+   - **Pricing and availability:** a base price (Free or a price). Markets, audience,
+     discoverability and schedule have defaults.
+   - **Properties:** a category, and a privacy policy URL if the app collects or
+     transmits personal information.
    - **Age ratings:** the questionnaire.
-   - **Store listings:** a description and at least one screenshot (1366 × 768 or
-     larger).
    - **Packages:** upload the `.msix`.
+   - **Store listings:** a description and at least one screenshot (1366 × 768 or
+     larger), in at least one language.
    - **Submission options › Restricted capabilities:** explain why the app needs
      `runFullTrust`. The card has a ready-to-paste explanation.
-3. Submit it for certification.
+3. Select **Submit for certification**.
 
 Once Microsoft publishes it, the card shows the app on the Store and Studio sends the
 updates.
