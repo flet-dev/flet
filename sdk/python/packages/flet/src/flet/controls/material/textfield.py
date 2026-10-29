@@ -1,4 +1,4 @@
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 from enum import Enum
 from typing import Annotated, Optional, Union
 
@@ -28,6 +28,7 @@ __all__ = [
     "TextCapitalization",
     "TextField",
     "TextFieldPasteFilesEvent",
+    "TextInputAction",
     "TextOnlyInputFilter",
 ]
 
@@ -184,7 +185,7 @@ class KeyboardType(Enum):
 
 class TextCapitalization(Enum):
     """
-    Configures how the platform keyboard will select an uppercase or lowercase \
+    Configures how the platform keyboard will select an uppercase or lowercase
     keyboard.
 
     Only supports text keyboards, other keyboard types will ignore this
@@ -224,10 +225,143 @@ class TextCapitalization(Enum):
     """
 
 
+class TextInputAction(Enum):
+    """
+    The action button of the onscreen keyboard, and what pressing it or `Enter` does.
+
+    Each action lists the mobile platforms whose keyboards support it. In debug
+    builds on Android and iOS, such as an app running on the iOS Simulator, a field
+    with an action that the platform doesn't support gets focus without showing the
+    keyboard, and no error is reported. On Android, release builds show the
+    keyboard with its default action button instead.
+    """
+
+    NONE = "none"
+    """
+    No action specific to the field; the platform decides how the keyboard looks.
+
+    Keeps focus in the field, so the keyboard stays open.
+
+    Note:
+        Supported on Android only.
+    """
+
+    UNSPECIFIED = "unspecified"
+    """
+    Lets the platform choose the most appropriate action.
+
+    Keeps focus in the field, so the keyboard stays open.
+
+    Supported on Android and iOS.
+    """
+
+    DONE = "done"
+    """
+    The user is done entering input, such as at the end of a form.
+
+    Removes focus from the field, which closes the keyboard.
+
+    Supported on Android and iOS.
+    """
+
+    GO = "go"
+    """
+    Takes the user to the destination they typed, such as a URL.
+
+    Removes focus from the field, which closes the keyboard.
+
+    Supported on Android and iOS.
+    """
+
+    SEARCH = "search"
+    """
+    Runs a search for the typed text.
+
+    Removes focus from the field, which closes the keyboard.
+
+    Supported on Android and iOS.
+    """
+
+    SEND = "send"
+    """
+    Sends what the user typed, such as a message.
+
+    Removes focus from the field, which closes the keyboard.
+
+    Supported on Android and iOS.
+    """
+
+    NEXT = "next"
+    """
+    Moves focus to the next focusable control, keeping the keyboard open when it's
+    another text field.
+
+    Supported on Android and iOS.
+    """
+
+    PREVIOUS = "previous"
+    """
+    Moves focus to the previous focusable control, keeping the keyboard open when
+    it's another text field.
+
+    Note:
+        Supported on Android only.
+    """
+
+    CONTINUE_ACTION = "continueAction"
+    """
+    Continues to the next step, such as the next page of a sign-up flow.
+
+    Doesn't move focus: the field keeps it, so the keyboard stays open.
+
+    Note:
+        Supported on iOS only.
+    """
+
+    JOIN = "join"
+    """
+    Joins something, such as a wireless network.
+
+    Keeps focus in the field, so the keyboard stays open.
+
+    Note:
+        Supported on iOS only.
+    """
+
+    ROUTE = "route"
+    """
+    Shows routing options, such as driving directions.
+
+    Keeps focus in the field, so the keyboard stays open.
+
+    Note:
+        Supported on iOS only.
+    """
+
+    EMERGENCY_CALL = "emergencyCall"
+    """
+    Calls emergency services.
+
+    Keeps focus in the field, so the keyboard stays open.
+
+    Note:
+        Supported on iOS only.
+    """
+
+    NEWLINE = "newline"
+    """
+    Inserts a new line into a multiline field.
+
+    On a single-line field, it removes focus from the field like :attr:`DONE`.
+
+    Supported on Android and iOS.
+    """
+
+
 @value
 class InputFilter:
     """
-    An input filter that uses a regular expression to allow or deny/block certain \
+    An input filter that uses a regular expression to allow or deny/block certain
     patterns in the input.
     """
 
@@ -308,7 +442,7 @@ class TextOnlyInputFilter(InputFilter):
 )
 class TextField(FormFieldControl, AdaptiveControl):
     """
-    A text field lets the user enter text, either with hardware keyboard or with an \
+    A text field lets the user enter text, either with hardware keyboard or with an
     onscreen keyboard.
 
     Example:
@@ -407,7 +541,7 @@ class TextField(FormFieldControl, AdaptiveControl):
 
     can_reveal_password: bool = False
     """
-    Displays a toggle icon button that allows revealing the entered password. Is shown \
+    Displays a toggle icon button that allows revealing the entered password. Is shown
     if both :attr:`password` and `can_reveal_password` are `True`.
 
     The icon is displayed in the same location as :attr:`flet.FormFieldControl.suffix`
@@ -425,8 +559,8 @@ class TextField(FormFieldControl, AdaptiveControl):
 
     shift_enter: bool = False
     """
-    Changes the behavior of `Enter` button in :attr:`multiline` textfield to be \
-    chat-like, i.e. new line can be added with `Shift`+`Enter` and pressing just \
+    Changes the behavior of `Enter` button in :attr:`multiline` textfield to be
+    chat-like, i.e. new line can be added with `Shift`+`Enter` and pressing just
     `Enter` fires :attr:`on_submit` event.
     """
 
@@ -702,6 +836,38 @@ class TextField(FormFieldControl, AdaptiveControl):
     Note:
         This callback is a notification only and does not include the pointer event
         details.
+    """
+
+    text_input_action: Optional[TextInputAction] = field(default=None, kw_only=True)
+    """
+    The action button of the onscreen keyboard, and what pressing it or `Enter` does.
+
+    :attr:`~flet.TextInputAction.NEXT` and :attr:`~flet.TextInputAction.PREVIOUS`
+    move focus to the next or previous focusable control in reading order, which
+    can be a button in this field's :attr:`~flet.FormFieldControl.suffix`. When
+    that control is another text field, the keyboard stays open.
+    See :class:`~flet.TextInputAction` for what the other actions do and the
+    platforms that support them.
+
+    On a single-line field, every action also calls :attr:`on_submit`.
+    On a :attr:`multiline` field, the action doesn't call :attr:`on_submit`, and
+    with an action other than :attr:`~flet.TextInputAction.NEWLINE`, `Enter` and
+    the keyboard's action key usually perform the action instead of inserting a
+    new line. On the web, that includes `Shift+Enter` on a :attr:`shift_enter`
+    field.
+
+    If not set, a single-line field uses :attr:`~flet.TextInputAction.DONE` and a
+    :attr:`multiline` field uses :attr:`~flet.TextInputAction.NEWLINE`.
+
+    A change made while this field has focus applies the next time it gets focus.
+
+    Example:
+        ```python
+        page.add(
+            ft.TextField(label="Name", text_input_action=ft.TextInputAction.NEXT),
+            ft.TextField(label="Email", text_input_action=ft.TextInputAction.DONE),
+        )
+        ```
     """
 
     def _migrate_state(self, other: BaseControl):

@@ -963,6 +963,7 @@ docs:
       - types/textbaseline.md
       - types/textcapitalization.md
       - types/textdecorationstyle.md
+      - types/textinputaction.md
       - types/textoverflow.md
       - types/textselectionchangecause.md
       - types/thememode.md
