@@ -61,7 +61,9 @@ the age-ratings questionnaire. The card walks you through it:
    - **Age ratings:** the questionnaire.
    - **Packages:** upload the `.msix`.
    - **Store listings:** a description and at least one screenshot (1366 × 768 or
-     larger), in at least one language.
+     larger), in at least one language. To take one, preview the app on **Windows 11**,
+     open the preview options, turn on **Pin to 1280×720**, then **Screen**: it saves
+     the app at 1920 × 1080.
    - **Submission options › Restricted capabilities:** explain why the app needs
      `runFullTrust`. The card has a ready-to-paste explanation.
 3. Select **Submit for certification**.
