@@ -32,9 +32,9 @@ Each card is a place the app goes:
 
 | Platform | Cards |
 |---|---|
-| Android | **Google Play** (its testing tracks and Production, and the store listing) and **Direct download** (an APK on your app's own download page). See [Android apps](android.md) and [Google Play](google-play/index.md) |
+| Android | **Google Play** (its testing tracks and Production, and the store listing) and **Android app (APK)** (an APK, and the app's download page). See [Android apps](android.md) and [Google Play](google-play/index.md) |
 | iOS | **App Store & TestFlight**, **Test on your devices** (an install link for your registered iPhones and iPads) and **iOS Simulator**. See [iOS apps](ios.md) |
-| Windows, macOS, Linux | **The app**, zipped, to run on that system. See [Desktop apps](desktop.md) |
+| Windows, macOS, Linux | **The app** for that system (Windows: an installer and a portable `.zip`; macOS: a disk image; Linux: a `.tar.gz`), and the app's download page. Windows has the **Microsoft Store** too. See [Desktop apps](desktop.md) |
 | Web | **The app's files**, to host on your own server. See [Web apps](web.md) |
 
 A card shows its **next step** until it's set up: **Connect Google Play**, **Create

@@ -162,6 +162,32 @@ The certificate is used during the build, in a temporary keychain that's deleted
 afterwards. Notarization happens on Studio's servers: neither your App Store Connect key
 nor a token made from it reaches the build machine.
 
+## Download page
+
+Your Windows, Mac and Linux builds can go on the app's download page, the same page
+and link as its [Android APK](android.md#download-page). Each visitor sees their own
+system's download first (**Download for Windows**, **Download for Mac**…), with the
+others listed under it, and who signed each one.
+
+- **Also publish to the download page** on **Create Windows app**, **Create Mac app**
+  and **Create Linux app** publishes the build when it's done. It's ticked by default
+  once the page has a release.
+- **Publish** on the card's **Download page** puts a build that isn't there yet on it,
+  with no new build and no credits.
+- The card's **⋯** takes this platform off the page; the others stay.
+
+Only signed builds go on the page:
+
+| Platform | What goes on the page |
+|---|---|
+| Windows | The installer, [signed with Azure Artifact Signing](#sign-the-windows-app) |
+| macOS | The disk image, [signed with Developer ID and notarized](#sign-and-notarize-the-mac-app) |
+| Linux | The `.tar.gz`, while the page has a signed Windows or Mac build: Linux has no signing of its own, so it comes from a publisher Microsoft or Apple verified. It comes off the page with the last of those |
+
+A build made with **Skip signing for this run** can't go on the page. Releases stay up
+as long as your plan keeps them ([how long](android.md#share-the-link)), counted from
+their build.
+
 ## Questions
 
 ### Can I put the app on the Microsoft Store or the Mac App Store?

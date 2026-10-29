@@ -10,7 +10,7 @@ goes:
 | Card | What it does |
 |---|---|
 | **Google Play** | Publishes the app to Google Play's testing tracks and to Production. See [Publishing to Google Play](google-play/index.md). |
-| **Direct download** | Builds an APK and puts it on your app's own [download page](#download-page): a link anyone can open on their phone. |
+| **Android app (APK)** | Builds an APK and puts it on your app's own [download page](#download-page): a link anyone can open on their phone. |
 
 Each card shows its next step while it isn't set up yet, then what's live, with
 **Update** to publish a new version. **Activity** lists the platform's runs, and
@@ -26,13 +26,20 @@ like `get.flet.app/…`, with a **Download APK** button, the app's icon, version
 across updates: share it once (on your website, in an email, as a QR code on a
 flyer) and each update replaces the app behind it.
 
+It's the app's one download page: [Windows, Mac and Linux builds](desktop.md#download-page)
+can go on it too, and each visitor sees their own system's download first.
+
 {/* SCREENSHOT: /img/docs/studio/publishing/download-page.png — the public download page on a phone */}
 
 ### Create the APK
 
-1. On **Publish › Android**, click **Create APK** on the **Direct download** card.
+1. On **Publish › Android**, click **Create APK** on the **Android app (APK)** card.
 2. Optionally write **What's new**, and pick the [architectures](#why-is-my-apk-so-big).
 3. Click **Create APK**. When the run finishes, the app is on the page.
+
+**Also publish to the download page** is ticked by default; untick it for an APK just
+to try on your own phone (**Download APK** on the card gets it). **Publish** on the
+card's **Download page** puts a build that isn't there yet on it, with no new build.
 
 The first Android run makes the app's [signing key](#signing-key). Back it up when
 the card asks: every update has to be signed with it.
@@ -58,7 +65,9 @@ and hyphens. If you rename it, the old name keeps redirecting for 30 days.
 
 ### New link, take offline
 
-In the **Download page** section's **⋯** menu on Create APK:
+The card's **Download page ⋯** has **Take Android off the page** (the other platforms
+stay) and **Download page settings**, which opens the page's settings on Create APK.
+In the **Download page** section's **⋯** menu there:
 
 - **Create a new link**: the current private link stops working at once. Use it if
   a link reached people it shouldn't have.
@@ -137,7 +146,7 @@ alias and passwords. **Keep it somewhere safe**:
 - The backup is also what you'd use to build the app on your own computer with
   [`flet build`](../../publish/android.md#signing-an-android-bundle).
 
-Until you download it, the **Direct download** card and the Signing card remind
+Until you download it, the **Android app (APK)** card and the Signing card remind
 you. Only the owner of the Studio account can download a backup.
 
 ### Use your own key
