@@ -21,7 +21,10 @@ account:
    applications**. Your Partner Center account must be associated with a Microsoft
    Entra tenant (**Account settings › Tenants**), which needs someone with Global
    administrator rights in it.
-2. Add an application, or create one there, with the **Manager** role.
+2. Add an application, or create one there (**Create Microsoft Entra application**),
+   with the **Manager** role. Studio doesn't use its **Reply URL**: enter
+   `https://localhost/` (Partner Center refuses some addresses, such as one without
+   the trailing slash).
 3. Open the application and copy its **Tenant ID** and **Client ID**. Select **Add new
    key** and copy the key: Partner Center shows it once. Note when it expires.
 4. On the card, select **Connect Microsoft Store** and enter them. Studio lists your
