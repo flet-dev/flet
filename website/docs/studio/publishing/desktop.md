@@ -10,7 +10,7 @@ packaged for that system:
 | Platform | Card | What you get |
 |---|---|---|
 | Windows | **Create Windows app** | An installer (`setup.exe`), and a portable `.zip` with the app's folder and its `.exe` |
-| macOS | **Create Mac app (.dmg)** | A disk image with the app, [signed and notarized](#sign-and-notarize-the-mac-app): it opens on any Mac. Or, on the **Unsigned Mac app** card, the `.app` zipped, for your own Mac |
+| macOS | **Create Mac app** | A disk image (`.dmg`) with the app and an Applications shortcut, [signed and notarized](#sign-and-notarize-the-mac-app) when signing is set up |
 | Linux | **Create Linux app** | A `.tar.gz` with the app's folder and its executable |
 
 When the run finishes, the card shows the build with **Download** (on Windows,
@@ -60,14 +60,13 @@ the app keeps its data in a folder named after them.
 
 ### macOS
 
-The **Mac app (.dmg)** opens like any app from the internet: open the `.dmg`, drag the
+A **signed** Mac app opens like any app from the internet: open the `.dmg`, drag the
 app onto the **Applications** shortcut, and open it from there. macOS asks once whether
 to open an app downloaded from the internet, and shows that Apple checked it.
 
-The **unsigned** app asks more:
+An **unsigned** one asks more:
 
-1. Unzip the download (double-click it) and move the `.app` to **Applications** if you
-   like.
+1. Open the `.dmg` and drag the app to **Applications**.
 2. Open it. macOS says it can't verify the app, because it isn't notarized by Apple.
    Click **Done** (not **Move to Trash**).
 3. Open **System Settings › Privacy & Security**, scroll to the message about the app,
@@ -119,21 +118,26 @@ UK, and to individual developers in the US and Canada.
 
 ## Mac app
 
-Macs open an app downloaded from the internet without a warning only when it's signed
-with a **Developer ID** certificate and notarized by Apple. The **Mac app** card on
-**Publish › macOS** does both:
+**Create Mac app** on **Publish › macOS** makes a disk image: open it and drag the app
+to **Applications**. Then **Download** and **Update**, as the other cards.
 
-1. **Connect App Store Connect**: Apple notarizes with your App Store Connect account,
-   the same connection as iOS (an app that has one for iOS uses it).
-2. **Add Developer ID certificate**: your team's *Developer ID Application* certificate,
-   as a `.p12`. See [Sign and notarize the Mac app](#sign-and-notarize-the-mac-app).
-3. **Create Mac app (.dmg)**. The run signs the app, puts it in a disk image with an
-   Applications shortcut, signs that, has Apple notarize it (usually a few minutes) and
-   staples Apple's ticket to it, so it opens even offline. Then **Download** and
-   **Update**, as the other cards.
+Macs open an app downloaded from the internet only when it's signed with a
+**Developer ID** certificate and notarized by Apple; otherwise macOS blocks opening it
+by default. Signing is the app's setting, in **Publish › macOS › Settings › Signing**:
 
-If Apple doesn't notarize the app, the run fails and its log lists what Apple found,
-file by file.
+1. **App Store Connect**: Apple notarizes with your App Store Connect account, the same
+   connection as iOS (an app that has one for iOS uses it).
+2. **Developer ID certificate**: your team's *Developer ID Application* certificate, as a
+   `.p12`. See [Sign and notarize the Mac app](#sign-and-notarize-the-mac-app).
+
+With both, every run signs the app, puts it in the disk image, signs that, has Apple
+notarize it (usually a few minutes) and staples Apple's ticket to it, so it opens even
+offline. The card says whether runs are signed. If signing or notarizing fails, the run
+fails and says why (Apple's findings file by file), rather than making an unsigned app.
+
+For a quick test build, **Skip signing for this run** on the Create Mac app screen builds
+it unsigned once, without changing the settings. **Create Windows app** has the same
+option.
 
 ### Sign and notarize the Mac app
 
