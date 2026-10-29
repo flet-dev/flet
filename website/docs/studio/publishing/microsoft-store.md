@@ -42,7 +42,8 @@ first: **Apps and games › New product › MSIX or PWA app**, enter the name, t
 identity from Partner Center (`Package/Identity/Name` and `Package/Identity/Publisher`);
 the API doesn't give the publisher display name, so copy it once from the app's
 **Product identity** page (`Package/Properties/PublisherDisplayName`), exactly as shown.
-It's the same for all apps in your account: Studio remembers it for the next one.
+It's the same for all apps in your account: Studio remembers it for the next one. The package is named as the app you
+reserved (Partner Center accepts no other name), whatever the app's **Product name**.
 
 ## The first submission
 
