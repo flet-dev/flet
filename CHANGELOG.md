@@ -59,7 +59,7 @@
 
 ### Bug fixes
 
-* Fix `use_state()` type inference for callable initializers in mypy and ty ([#6960](https://github.com/flet-dev/flet/issues/6960), [#7014](https://github.com/flet-dev/flet/pull/7014)) by @mmporong.
+* Fix `use_state()` and `use_ref()` type inference for callable initializers in mypy and ty ([#6960](https://github.com/flet-dev/flet/issues/6960), [#7014](https://github.com/flet-dev/flet/pull/7014), [#7023](https://github.com/flet-dev/flet/pull/7023)) by @mmporong.
 * Fix `flet build` apps showing a blank page when the system suspended them while Python was starting, such as when iOS launches an app in the background for a notification action ([#6999](https://github.com/flet-dev/flet/pull/6999)) by @ndonkoHenri.
 * Fix `flet build` naming a Linux app's icons `None.png` and leaving the iOS frameworks it builds from the app's packages under shared identifiers when no `bundle_id` is set ([#6999](https://github.com/flet-dev/flet/pull/6999)) by @ndonkoHenri.
 * Fix `flet build` writing numbers in `[tool.flet.macos.entitlement]`, `[tool.flet.ios.info]` and `[tool.flet.macos.info]` as strings, producing invalid plists when keys or values contain `&` or `<`, and failing when a `pyproject.toml` value contains `{{` ([#6999](https://github.com/flet-dev/flet/pull/6999)) by @ndonkoHenri.
