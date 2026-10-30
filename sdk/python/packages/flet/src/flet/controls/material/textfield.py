@@ -240,7 +240,8 @@ class TextInputAction(Enum):
     """
     No action specific to the field; the platform decides how the keyboard looks.
 
-    Keeps focus in the field, so the keyboard stays open.
+    Pressing the action button removes focus from the field, which closes the
+    keyboard. In a multiline field it inserts a new line instead.
 
     Note:
         Supported on Android only.
