@@ -60,18 +60,19 @@ The card has the page's link with **Open**, **Copy**, **QR code** and **Share**.
 | How long a release stays up | 7 days after its build: update the APK to keep the app up | While it's the current release |
 | Run downloads in Studio | 7 days | 90 days |
 
-Set a readable link under **Readable link** in **Download page settings**: lowercase letters, digits
-and hyphens. If you rename it, the old name keeps redirecting for 30 days.
+Set a readable link under **Readable name** in **Download page settings** (✎, then ✓):
+lowercase letters, digits and hyphens. If you rename it, the old name keeps redirecting
+for 30 days.
 
 ### New link, take offline
 
 The card's **Download page ⋯** has **Take Android off the page** (the other platforms
-stay) and **Download page settings**: the page's link and readable name, and in its
-**⋯** menu:
+stay) and **Download page settings**, which shows the page link, what's on the page,
+the readable name, and:
 
-- **Create a new link**: the current private link stops working at once. Use it if
+- **Private link › Replace**: the current private link stops working at once. Use it if
   a link reached people it shouldn't have.
-- **Take offline**: the page stops offering the app until you update it again.
+- **Take offline**: every platform's build comes off the page until you publish again.
 
 ### What your users see
 
