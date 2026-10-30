@@ -165,8 +165,7 @@ nor a token made from it reaches the build machine.
 ## Mac App Store and TestFlight
 
 The macOS page's **App Store & TestFlight** card puts the app on TestFlight for Mac, for
-your testers. The Mac App Store itself comes next. It uses the same App Store Connect
-account as iOS.
+your testers, and on the Mac App Store. It uses the same App Store Connect account as iOS.
 
 1. **App category:** Apple needs it for every Mac build. Choose it on the card. It's
    also the App Store listing's primary category. If the app's macOS Info.plist sets
@@ -176,6 +175,11 @@ account as iOS.
    tick both platforms: one app, one purchase.
 3. **Publish** on the TestFlight row builds the app for the Mac App Store and uploads it
    from Studio's servers.
+4. **Publish** on the App Store row submits the macOS version for App Review: a new build,
+   or one already on TestFlight (no build, no credits). It needs the App Store listing
+   with **Mac screenshots**: in the Preview, pick the macOS device and add the screen to
+   the App Store listing (2880 × 1800). The listing's texts are the same as iOS's; the
+   card's **Update listing** sends them, with the Mac screenshots, to the macOS version.
 
 If App Store Connect already has the app for iOS, the card asks once how the Mac app is
 sold:
@@ -222,9 +226,8 @@ their build.
 
 ### Can I put the app on the Microsoft Store or the Mac App Store?
 
-The Microsoft Store, yes: see [Microsoft Store](microsoft-store.md). The Mac App Store:
-TestFlight for Mac, yes ([Mac App Store and TestFlight](#mac-app-store-and-testflight)).
-Submitting to the Mac App Store itself is coming next.
+Yes: see [Microsoft Store](microsoft-store.md) and
+[Mac App Store and TestFlight](#mac-app-store-and-testflight).
 
 ### Will SmartScreen stop asking once the app is signed?
 
