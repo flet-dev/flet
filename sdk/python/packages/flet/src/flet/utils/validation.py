@@ -20,6 +20,7 @@ The public entry points are:
 """
 
 import sys
+import types
 from collections.abc import Iterable
 from dataclasses import dataclass
 from functools import cache
@@ -1635,19 +1636,18 @@ def _strip_annotated(annotation: Any) -> Any:
 
 def _annotation_allows_none(annotation: Any) -> bool:
     """
-    Return `True` if annotation contains `None` (for example `Optional[T]`).
+    Return `True` if annotation contains `None`, as in `Optional[T]` or `T | None`.
 
     Args:
         annotation: Annotation to inspect.
 
     Returns:
-        `True` when the normalized annotation is a `Union[...]` containing
-        `NoneType`.
+        `True` when the normalized annotation is a union containing `NoneType`.
     """
 
     annotation = _strip_annotated(annotation)
     origin = get_origin(annotation)
-    if origin is Union:
+    if origin is Union or origin is types.UnionType:
         return any(arg is type(None) for arg in get_args(annotation))
     return False
 

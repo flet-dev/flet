@@ -63,6 +63,53 @@ export function getExampleWebSupported(exampleDir) {
 }
 
 /**
+ * Return the metadata entry of an example directory, or null when the directory has
+ * no pyproject.toml. The entry's `files` lists the files the example owns, relative
+ * to its directory.
+ * @param {string} exampleDir - Path of the example directory relative to examples_root.
+ */
+export function getExampleMetadata(exampleDir) {
+  return examplesMetadata[exampleDir] ?? null;
+}
+
+/**
+ * Return the directory of the example project that owns an example file: its
+ * nearest ancestor directory with a pyproject.toml. Returns null when no ancestor
+ * is an example project.
+ * @param {string} path - Path of the file relative to examples_root.
+ */
+export function findExampleDir(path) {
+  let dir = path;
+  while (dir.includes("/")) {
+    dir = dir.slice(0, dir.lastIndexOf("/"));
+    if (dir in examplesMetadata) return dir;
+  }
+  return null;
+}
+
+let exampleFileSourcesPromise = null;
+
+/**
+ * Resolve to the source text of a non-Python example file such as pyproject.toml,
+ * or null if it is not bundled. These sources live in a separate chunk that is
+ * fetched the first time one is requested, so pages that never show them don't
+ * download it. Rejects when the chunk can't be fetched; the next call fetches it
+ * again.
+ * @param {string} path - Path of the file relative to examples_root.
+ */
+export async function loadExampleFileSource(path) {
+  exampleFileSourcesPromise ??= import("@site/.crocodocs/example-files.json").then(
+    (module) => module.default ?? module,
+    (error) => {
+      exampleFileSourcesPromise = null;
+      throw error;
+    },
+  );
+  const sources = await exampleFileSourcesPromise;
+  return sources[path] ?? null;
+}
+
+/**
  * Convert a name string to a URL-safe anchor by stripping quotes, replacing brackets,
  * collapsing non-alphanumeric runs to hyphens, and trimming leading/trailing hyphens.
  */

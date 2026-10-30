@@ -187,6 +187,7 @@ class BaseFlutterCommand(BaseCommand):
         assert self.options
         self.required_flutter_version = version.Version(flet.version.flutter_version)
         if self.required_flutter_version == version.Version("0"):
+            self.skip_flutter_doctor = True
             self.cleanup(
                 1,
                 "Unable to determine the required Flutter SDK version. "
@@ -565,11 +566,10 @@ class BaseFlutterCommand(BaseCommand):
                 # Annotate the failure, titled after the step it happened in.
                 output.error(msg, title=output.error_title)
 
-            # windows has been reported to raise encoding errors
-            # when running `flutter doctor`
-            # so skip running `flutter doctor` if no_rich_output is True
-            # and platform is Windows
-            if not (
+            # windows has been reported to raise encoding errors when running
+            # `flutter doctor` so skip running `flutter doctor` if no_rich_output is
+            # True and platform is Windows
+            if self.flutter_exe and not (
                 (self.no_rich_output and self.current_platform == "Windows")
                 or self.skip_flutter_doctor
             ):

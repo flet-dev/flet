@@ -341,7 +341,7 @@ class Component(BaseControl):
                     or hook.deps != hook.prev_deps
                 )
                 if deps_changed:
-                    if callable(hook.cleanup) or callable(hook._returned_cleanup):
+                    if hook.has_cleanup():
                         self._schedule_effect(hook, is_cleanup=True)
                     self._schedule_effect(hook, is_cleanup=False)
 

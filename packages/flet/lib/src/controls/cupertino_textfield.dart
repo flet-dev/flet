@@ -285,6 +285,7 @@ class _CupertinoTextFieldControlState extends State<CupertinoTextFieldControl> {
             ? TextInputType.multiline
             : widget.control
                 .getTextInputType("keyboard_type", TextInputType.text)!,
+        textInputAction: widget.control.getTextInputAction("text_input_action"),
         clearButtonSemanticLabel:
             widget.control.getString("clear_button_semantics_label"),
         autocorrect: autocorrect,

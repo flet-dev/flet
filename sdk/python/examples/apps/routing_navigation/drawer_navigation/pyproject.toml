@@ -12,6 +12,7 @@ dev = ["flet-cli", "flet-desktop", "flet-web"]
 
 [tool.flet.gallery]
 categories = ["Navigation/Routing"]
+platforms = ["web"]
 
 [tool.flet.metadata]
 title = "Drawer navigation"
@@ -21,7 +22,6 @@ complexity = "basic"
 features = ["routing", "drawer navigation", "back navigation"]
 
 [tool.flet]
-platforms = ["web"]
 org = "dev.flet"
 company = "Flet"
 copyright = "Copyright (C) 2023-2026 by Flet"

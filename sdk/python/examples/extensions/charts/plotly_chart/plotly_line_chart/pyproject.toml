@@ -12,6 +12,7 @@ dev = ["flet-cli", "flet-desktop", "flet-web"]
 
 [tool.flet.gallery]
 categories = ["Charts/PlotlyChart"]
+platforms = ["ios", "android", "macos", "windows", "linux"]
 
 [tool.flet.metadata]
 title = "Plotly line chart"
@@ -22,7 +23,6 @@ complexity = "basic"
 features = ["chart visualization"]
 
 [tool.flet]
-platforms = ["ios", "android", "macos", "windows", "linux"]
 org = "dev.flet"
 company = "Flet"
 copyright = "Copyright (C) 2023-2026 by Flet"

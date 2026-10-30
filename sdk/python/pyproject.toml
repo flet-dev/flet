@@ -25,6 +25,7 @@ dependencies = [
     "flet-local-auth",
     "flet-map",
     "flet-mcp",
+    "flet-notifications",
     "flet-permission-handler",
     "flet-rive",
     "flet-secure-storage",
@@ -54,6 +55,7 @@ flet-lottie = { workspace = true }
 flet-local-auth = { workspace = true }
 flet-map = { workspace = true }
 flet-mcp = { workspace = true }
+flet-notifications = { workspace = true }
 flet-permission-handler = { workspace = true }
 flet-rive = { workspace = true }
 flet-secure-storage = { workspace = true }
@@ -130,6 +132,7 @@ isort = { known-first-party = [
     "flet_local_auth",
     "flet_map",
     "flet_mcp",
+    "flet_notifications",
     "flet_permission_handler",
     "flet_rive",
     "flet_secure_storage",

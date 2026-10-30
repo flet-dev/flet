@@ -12,6 +12,7 @@ dev = ["flet-cli", "flet-desktop", "flet-web"]
 
 [tool.flet.gallery]
 categories = ["Sensors/Accelerometer"]
+platforms = ["android", "ios"]
 
 [tool.flet.metadata]
 title = "Accelerometer"
@@ -24,7 +25,6 @@ features = ["live sensor readings", "sensor error handling"]
 org = "dev.flet"
 company = "Flet"
 copyright = "Copyright (C) 2023-2026 by Flet"
-platforms = ["android", "ios"]
 
 [tool.flet.ios.info]
 NSMotionUsageDescription = "This app uses device motion sensors (accelerometer, gyroscope, magnetometer) to demonstrate the Accelerometer control."

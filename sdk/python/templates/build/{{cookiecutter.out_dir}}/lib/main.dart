@@ -59,6 +59,13 @@ void main(List<String> args) async {
 
   FletDeepLinkingBootstrap.install();
 
+  // Windows adds `-Embedding` when it starts the app because the user clicked
+  // one of its notifications. Drop it, so it isn't taken as a page URL below;
+  // the click itself reaches the notifications extension once that starts.
+  if (!kIsWeb && Platform.isWindows) {
+    args = [for (final arg in args) if (arg != "-Embedding") arg];
+  }
+
   _args = List<String>.from(args);
 
   var devPageUrl = const String.fromEnvironment("FLET_PAGE_URL");

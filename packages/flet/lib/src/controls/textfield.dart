@@ -309,6 +309,7 @@ class _TextFieldControlState extends State<TextFieldControl> {
             ? TextInputType.multiline
             : widget.control
                 .getTextInputType("keyboard_type", TextInputType.text)!,
+        textInputAction: widget.control.getTextInputAction("text_input_action"),
         autocorrect: widget.control.getBool("autocorrect", true)!,
         enableSuggestions: widget.control.getBool("enable_suggestions", true)!,
         smartDashesType: widget.control.getBool("smart_dashes_type", true)!

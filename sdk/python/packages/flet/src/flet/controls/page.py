@@ -4,8 +4,8 @@ import logging
 import sys
 import threading
 import weakref
-from collections.abc import Awaitable, Coroutine
-from concurrent.futures import CancelledError, Future, ThreadPoolExecutor
+from collections.abc import Awaitable, Coroutine, Generator
+from concurrent.futures import Future, ThreadPoolExecutor
 from dataclasses import InitVar, dataclass, field, fields, is_dataclass
 from functools import partial
 from typing import (
@@ -16,6 +16,7 @@ from typing import (
     Optional,
     ParamSpec,
     TypeVar,
+    cast,
 )
 from urllib.parse import urlparse
 
@@ -89,6 +90,26 @@ logger = logging.getLogger("flet")
 AT = TypeVar("AT", bound="Authorization")
 InputT = ParamSpec("InputT")
 RetT = TypeVar("RetT")
+
+
+class TaskFuture(Future[RetT]):
+    """
+    The future of a task started with `Page.run_task()`.
+
+    It is a `concurrent.futures.Future` that can also be awaited, from the page's
+    event loop or any other one: `await` returns the task's value or raises its
+    exception. Awaiting doesn't consume it: the outcome stays available through
+    `result()` and `exception()`.
+
+    Cancelling the coroutine that awaits it also cancels the task, as with an
+    `asyncio.Task`; await `asyncio.shield()` of it to keep the task running.
+    `result()` blocks, so call it on the page's event loop thread only once the
+    task is done.
+    """
+
+    def __await__(self) -> Generator[Any, None, RetT]:
+        """Wait for the task to finish without blocking the event loop."""
+        return asyncio.wrap_future(self).__await__()
 
 
 @control("ServiceRegistry")
@@ -943,10 +964,33 @@ class Page(BasePage):
         handler: Callable[InputT, Awaitable[RetT]],
         *args: InputT.args,
         **kwargs: InputT.kwargs,
-    ) -> Future[RetT]:
+    ) -> TaskFuture[RetT]:
         """
         Run `handler` coroutine as a new Task in the event loop associated with the \
         current page.
+
+        Can be called from any thread.
+
+        Args:
+            handler: The coroutine function to run.
+            *args: Positional arguments to call `handler` with.
+            **kwargs: Keyword arguments to call `handler` with.
+
+        Returns:
+            A future of the task. Awaiting it returns the value of `handler`, or
+                raises its exception. The future keeps that outcome, so keep a
+                reference to it to call `cancel()`, `result()` or
+                `add_done_callback()` later.
+
+        Raises:
+            TypeError: If `handler` is not a coroutine function.
+
+        Example:
+            ```python
+            future = page.run_task(fetch_users)
+            users = await future  # the value, not a future
+            future.result()  # the same value, without blocking
+            ```
         """
         _context_page.set(self)
         if not inspect.iscoroutinefunction(handler):
@@ -955,25 +999,31 @@ class Page(BasePage):
         future = asyncio.run_coroutine_threadsafe(
             handler(*args, **kwargs), self.session.connection.loop
         )
+        future.__class__ = TaskFuture
 
         def _on_completion(f):
             """
-            Surface background task exceptions to default error handling.
+            Log the exception of a task nobody awaits.
+
+            `concurrent.futures` logs an `Exception` raised from a done callback
+            and runs the next one. The task's outcome is stored on the future
+            and reaches awaiters through their own callback, so raising here is
+            only for the log. A `BaseException` is not re-raised: it would skip
+            the remaining callbacks and leave awaiters waiting forever.
 
             Args:
                 f: Completed future returned by `run_coroutine_threadsafe()`.
             """
 
-            try:
-                exception = f.exception()
-                if exception:
-                    raise exception
-            except CancelledError:
-                pass
+            if f.cancelled():
+                return
+            exception = f.exception()
+            if isinstance(exception, Exception):
+                raise exception
 
         future.add_done_callback(_on_completion)
 
-        return future
+        return cast(TaskFuture[RetT], future)
 
     def __context_wrapper(self, handler: Callable[..., Any]) -> Wrapper:
         """

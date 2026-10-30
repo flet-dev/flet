@@ -71,10 +71,27 @@ class ProgressRing(LayoutControl):
     Used to identify the purpose of this progress bar for screen reading software.
     """
 
-    semantics_value: Optional[Number] = None
+    semantics_value: Optional[str] = None
     """
-    Used for determinate progress indicators to indicate how much progress has been \
-    made.
+    The progress made, as read by screen reading software.
+
+    What it can hold depends on :attr:`value`:
+
+    - When :attr:`value` is set, the indicator is announced as a progress bar from
+      `0` to `100`, so this should be a number in that range or a percentage, for
+      example `"60"` or `"60%"`. Defaults to the percentage of progress made, for
+      example `"60"` for a `value` of `0.6`.
+    - When :attr:`value` is not set, the indicator is announced as a loading
+      spinner, so this can be any text, for example `"Step 3 of 5"`.
+
+    To describe a determinate indicator in words, such as `"Step 3 of 5"`, use
+    :attr:`semantics_label` instead: screen readers read the label, then this
+    value.
+
+    Note:
+        In debug builds, such as `flet debug`, a determinate indicator whose
+        `semantics_value` is not a number or a percentage raises an error. Release
+        builds pass it through as is, but platforms may not read it as expected.
     """
 
     track_gap: Optional[Number] = None

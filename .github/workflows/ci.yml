@@ -311,10 +311,16 @@ jobs:
       - build_flet_package
     permissions:
       contents: read
+      id-token: write # Azure OIDC login for Artifact Signing
+    # Release builds sign the client; the environment gives the Azure federated
+    # credential a stable subject and can be restricted to release tags.
+    environment: ${{ startsWith(github.ref, 'refs/tags/') && 'windows-signing' || '' }}
     env:
       PKG_VER: ${{ needs.build_flet_package.outputs.PKG_VER }}
       BUILD_NUM: ${{ needs.build_flet_package.outputs.BUILD_NUM }}
       PYPI_VER: ${{ needs.build_flet_package.outputs.PYPI_VER }}
+      RUNNER_DIR: ${{ github.workspace }}/client/build/windows/x64/runner
+      RELEASE_DIR: ${{ github.workspace }}/client/build/windows/x64/runner/Release
     steps:
       - name: Checkout repository
         uses: actions/checkout@df4cb1c069e1874edd31b4311f1884172cec0e10 # v6.0.3
@@ -333,9 +339,6 @@ jobs:
           cache: ${{ !startsWith(github.ref, 'refs/tags/') }}
 
       - name: Build Flutter Windows client
-        env:
-          RUNNER_DIR: ${{ env.ROOT }}/client/build/windows/x64/runner
-          RELEASE_DIR: ${{ env.ROOT }}/client/build/windows/x64/runner/Release
         shell: bash
         working-directory: client
         run: |
@@ -346,6 +349,54 @@ jobs:
           cp "${WINDIR}/system32/vcruntime140.dll" "$RELEASE_DIR"
           cp "${WINDIR}/system32/vcruntime140_1.dll" "$RELEASE_DIR"
 
+      # Smart App Control blocks unsigned DLLs too, so every binary is signed.
+      # Already-signed ones (VC runtime etc.) are left as they are.
+      - name: Find unsigned binaries
+        id: unsigned
+        if: startsWith(github.ref, 'refs/tags/')
+        shell: pwsh
+        run: |
+          $files = Get-ChildItem $env:RELEASE_DIR -Recurse -Include *.exe,*.dll |
+            Where-Object { (Get-AuthenticodeSignature $_.FullName).Status -eq 'NotSigned' } |
+            ForEach-Object { $_.FullName }
+          $files | ForEach-Object { Write-Host $_ }
+          "files<<EOF" >> $env:GITHUB_OUTPUT
+          $files >> $env:GITHUB_OUTPUT
+          "EOF" >> $env:GITHUB_OUTPUT
+
+      - name: Azure login
+        if: startsWith(github.ref, 'refs/tags/')
+        uses: azure/login@a641126d1b8aa4d1fa005f4f92df94a3a4c4c906 # v3.1.0
+        with:
+          client-id: ${{ secrets.AZURE_CLIENT_ID }}
+          tenant-id: ${{ secrets.AZURE_TENANT_ID }}
+          subscription-id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
+
+      - name: Sign Windows client
+        if: startsWith(github.ref, 'refs/tags/')
+        uses: azure/artifact-signing-action@c7ab2a863ab5f9a846ddb8265964877ef296ee82 # v2.0.0
+        with:
+          endpoint: ${{ vars.ARTIFACT_SIGNING_ENDPOINT }}
+          signing-account-name: ${{ vars.ARTIFACT_SIGNING_ACCOUNT }}
+          certificate-profile-name: ${{ vars.ARTIFACT_SIGNING_CERT_PROFILE }}
+          files: ${{ steps.unsigned.outputs.files }}
+          description: Flet
+          description-url: https://flet.dev
+
+      - name: Verify signatures
+        if: startsWith(github.ref, 'refs/tags/')
+        shell: pwsh
+        run: |
+          $invalid = Get-ChildItem $env:RELEASE_DIR -Recurse -Include *.exe,*.dll |
+            Get-AuthenticodeSignature | Where-Object { $_.Status -ne 'Valid' }
+          if ($invalid) {
+            $invalid | Format-Table Status, Path -AutoSize | Out-String -Width 400 | Write-Host
+            throw "Some Windows client binaries are not validly signed."
+          }
+
+      - name: Package Windows client
+        shell: bash
+        run: |
           # Rename Release folder to flet
           mv "$RELEASE_DIR" "${RUNNER_DIR}/flet"
 
@@ -433,15 +484,6 @@ jobs:
             platform_arch: x86_64
             rive_enabled: false
             title: Debian 10 AMD64
-          - distro_id: debian10
-            container: debian:10
-            manylinux_tag: manylinux_2_28
-            arch: arm64
-            runner: ubuntu-24.04-arm
-            build_arch: arm64
-            platform_arch: aarch64
-            rive_enabled: false
-            title: Debian 10 ARM64
           - distro_id: debian12
             container: debian:12
             manylinux_tag: manylinux_2_36
@@ -526,6 +568,7 @@ jobs:
       RIVE_ENABLED: ${{ matrix.rive_enabled }}
     steps:
       - name: Install base packages
+        timeout-minutes: 15
         shell: bash
         run: |
           export DEBIAN_FRONTEND=noninteractive
@@ -583,6 +626,7 @@ jobs:
           fi
 
       - name: Install dependencies
+        timeout-minutes: 15
         shell: bash
         run: |
           if [[ -f /etc/apt/sources.list ]]; then
@@ -796,6 +840,7 @@ jobs:
             flet-lottie
             flet-local-auth
             flet-map
+            flet-notifications
             flet-permission-handler
             flet-rive
             flet-secure-storage
@@ -1079,6 +1124,7 @@ jobs:
             flet_lottie \
             flet_local_auth \
             flet_map \
+            flet_notifications \
             flet_permission_handler \
             flet_rive \
             flet_secure_storage \

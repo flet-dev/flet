@@ -45,6 +45,7 @@ def _provision_steps(cmd: "BaseBuildCommand") -> Path:
     cmd.register_flutter_extensions()
     if cmd.create_flutter_project(second_pass=True):
         cmd.update_flutter_dependencies()
+    cmd.copy_android_resources()
     return cmd.flutter_dir
 
 

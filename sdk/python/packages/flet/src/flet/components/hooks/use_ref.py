@@ -2,7 +2,7 @@ from __future__ import annotations
 
 from collections.abc import Callable
 from dataclasses import dataclass
-from typing import Generic, TypeVar
+from typing import Any, Generic, TypeVar, overload
 
 from flet.components.hooks.hook import Hook
 from flet.components.utils import current_component
@@ -33,6 +33,20 @@ class RefHook(Hook, Generic[RefValueT]):
     """
 
     ref: MutableRef[RefValueT]
+
+
+@overload
+def use_ref(initial_value: None = None) -> MutableRef[Any]: ...
+
+
+@overload
+def use_ref(initial_value: Callable[[], RefValueT]) -> MutableRef[RefValueT]: ...
+
+
+@overload
+def use_ref(
+    initial_value: RefValueT | Callable[[], RefValueT],
+) -> MutableRef[RefValueT]: ...
 
 
 def use_ref(

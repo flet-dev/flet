@@ -5,7 +5,7 @@
  * work well for content-centric websites.
  */
 
-@import url("https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,200,1,200&icon_names=bolt,build,deployed_code,play_arrow");
+@import url("https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,200,1,200&icon_names=bolt,build,check,content_copy,deployed_code,play_arrow,terminal");
 
 /* You can override the default Infima variables here. */
 :root {
@@ -521,6 +521,148 @@ h6 {
 .code-example-try-online .material-symbols-outlined {
   font-size: 1.125rem;
   font-variation-settings: "FILL" 1, "GRAD" 200, "opsz" 24, "wght" 400;
+}
+
+.code-example--project [class*="codeBlockTitle"] {
+  padding: 0 calc(var(--ifm-pre-padding) - 10px);
+}
+
+.code-example-tabs {
+  display: flex;
+  min-width: 0;
+  overflow-x: auto;
+  scrollbar-width: none;
+}
+
+.code-example-tab {
+  flex: none;
+  border: none;
+  border-bottom: 2px solid transparent;
+  margin-bottom: -1px;
+  padding: 0.6rem 10px calc(0.6rem - 1px);
+  background: none;
+  color: inherit;
+  opacity: 0.6;
+  font-family: var(--ifm-font-family-monospace);
+  font-size: var(--ifm-code-font-size);
+  font-weight: 500;
+  line-height: 1.2;
+  cursor: pointer;
+}
+
+.code-example-tab:hover {
+  opacity: 0.85;
+}
+
+.code-example-tab[aria-selected="true"] {
+  opacity: 1;
+  border-bottom-color: var(--ifm-color-primary);
+}
+
+.code-example-actions {
+  position: relative;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 0.375rem;
+  margin-bottom: 0.5rem;
+}
+
+.code-example-actions .code-example-try-online {
+  margin-bottom: 0;
+  border: 1px solid transparent;
+}
+
+.code-example-actions .code-example-action,
+.code-example-actions .code-example-try-online {
+  box-sizing: border-box;
+  height: 32px;
+  padding-top: 0;
+  padding-bottom: 0;
+  line-height: 1;
+}
+
+.code-example-action {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35em;
+  border: 1px solid var(--ifm-color-emphasis-300);
+  border-radius: 5px;
+  padding: 5px 10px;
+  background: none;
+  color: var(--ifm-color-emphasis-800);
+  font-size: 0.875rem;
+  font-weight: 500;
+  line-height: 1.2;
+  text-decoration: none;
+  cursor: pointer;
+}
+
+.code-example-action:hover {
+  color: var(--ifm-color-emphasis-900);
+  text-decoration: none;
+  background-color: var(--ifm-color-emphasis-100);
+}
+
+.code-example-action .material-symbols-outlined {
+  font-size: 1.125rem;
+}
+
+.code-example-create {
+  display: flex;
+}
+
+.code-example-create-popover {
+  position: absolute;
+  z-index: 10;
+  left: 0;
+  right: 0;
+  top: calc(100% + 6px);
+  border: 1px solid var(--ifm-color-emphasis-300);
+  border-radius: 8px;
+  padding: 0.75rem;
+  background-color: var(--ifm-background-surface-color);
+  box-shadow: var(--ifm-global-shadow-md);
+}
+
+.code-example-create-popover p {
+  margin: 0 0 0.5rem;
+  font-size: 0.875rem;
+}
+
+.code-example-create-command {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.code-example-create-command code {
+  flex: 1;
+  min-width: 0;
+  overflow-wrap: anywhere;
+  user-select: all;
+}
+
+.code-example-create-command button {
+  flex: none;
+  display: inline-flex;
+  border: none;
+  border-radius: 5px;
+  padding: 4px;
+  background: none;
+  color: var(--ifm-color-emphasis-700);
+  cursor: pointer;
+}
+
+.code-example-create-command button:hover {
+  background-color: var(--ifm-color-emphasis-200);
+}
+
+@media (max-width: 576px) {
+  .code-example-action-label {
+    display: none;
+  }
 }
 
 /* Dark theme */

@@ -332,6 +332,11 @@ TextInputType? parseTextInputType(String? value,
   return typeMap[value?.toLowerCase()] ?? defaultValue;
 }
 
+TextInputAction? parseTextInputAction(String? value,
+    [TextInputAction? defaultValue]) {
+  return parseEnum(TextInputAction.values, value, defaultValue);
+}
+
 InputDecoration buildInputDecoration(
   BuildContext context,
   Control control, {
@@ -479,6 +484,11 @@ extension FormFieldParsers on Control {
   TextInputType? getTextInputType(String propertyName,
       [TextInputType? defaultValue]) {
     return parseTextInputType(get(propertyName), defaultValue);
+  }
+
+  TextInputAction? getTextInputAction(String propertyName,
+      [TextInputAction? defaultValue]) {
+    return parseTextInputAction(get(propertyName), defaultValue);
   }
 
   OverlayVisibilityMode? getOverlayVisibilityMode(String propertyName,
