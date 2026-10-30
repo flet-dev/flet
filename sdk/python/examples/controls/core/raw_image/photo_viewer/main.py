@@ -1,5 +1,6 @@
 import asyncio
-import urllib.request
+
+import httpx2
 
 import flet as ft
 
@@ -20,9 +21,10 @@ async def main(page: ft.Page):
 
     async def fetch(url: str) -> bytes:
         if url not in cache:
-            cache[url] = await asyncio.to_thread(
-                lambda: urllib.request.urlopen(url, timeout=20).read()
-            )
+            async with httpx2.AsyncClient(follow_redirects=True, timeout=20) as client:
+                response = await client.get(url)
+                response.raise_for_status()
+                cache[url] = response.content
         return cache[url]
 
     async def show(i: int):
