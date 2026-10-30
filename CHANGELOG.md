@@ -27,6 +27,7 @@
 * `flet build`: extensions can declare build settings, such as Android compile options and Gradle dependencies, in a `flet-extension.toml` file, applied to every app that installs them under the app's own settings. See [Build settings](/docs/extend/user-extensions#build-settings) ([#6999](https://github.com/flet-dev/flet/pull/6999)) by @ndonkoHenri.
 * `flet build`: add `[tool.flet.ios.entitlement]` and `--ios-entitlements` to sign iOS apps with entitlements, such as push notifications, universal links, App Groups or critical alerts. See [Entitlements](/docs/publish/ios#entitlements) ([#6999](https://github.com/flet-dev/flet/pull/6999)) by @ndonkoHenri.
 * `flet build`: add `[tool.flet.android]` settings for the app's [Java compile options](/docs/publish/android#java-compile-options) (`compile_options`), [Gradle dependencies](/docs/publish/android#gradle-dependencies) (`gradle_dependencies`), and manifest [receivers](/docs/publish/android#receivers) (`receiver`) and [services](/docs/publish/android#services) (`service`) ([#6999](https://github.com/flet-dev/flet/pull/6999)) by @ndonkoHenri.
+* Add `text_input_action` to `TextField` and `CupertinoTextField`, with the `TextInputAction` enum, to choose the action button of the onscreen keyboard: `TextInputAction.NEXT` moves focus to the next focusable control, keeping the keyboard open when that is another text field ([#6962](https://github.com/flet-dev/flet/issues/6962), [#7021](https://github.com/flet-dev/flet/pull/7021)) by @ndonkoHenri.
 
 ### Improvements
 
@@ -45,7 +46,7 @@
 * Add `Theme.markdown_theme`: a default `MarkdownStyleSheet` for every `Markdown`, with a control's own `md_style_sheet` applied on top property by property by @FeodorFitsner.
 * Add `PopupMenuTheme.border_radius` to set the default hover/splash corner radius of every `PopupMenuButton` by @FeodorFitsner.
 
-* Bump the bundled Flutter to [3.47.7](https://github.com/flutter/flutter/blob/stable/CHANGELOG.md#3477) (from 3.44.8). Android builds use Gradle 9.3.1, Android Gradle Plugin 8.13.2 and Kotlin 2.3.21 by @ndonkoHenri.
+* Bump the bundled Flutter to [3.47.8](https://github.com/flutter/flutter/blob/stable/CHANGELOG.md#3478) (from 3.44.8). Android builds use Gradle 9.3.1, Android Gradle Plugin 8.13.2 and Kotlin 2.3.21 ([#6916](https://github.com/flet-dev/flet/pull/6916), [#7023](https://github.com/flet-dev/flet/pull/7023)) by @ndonkoHenri.
 
   **Compatibility:** Desktop apps and the desktop app that `flet run` opens now render with Impeller, Flutter 3.47's default desktop renderer, instead of Skia. Use `flet build --no-impeller` (or `impeller = false` under `[tool.flet]`), `flet run --no-impeller` or the `FLET_NO_IMPELLER` environment variable to render with Skia; see [Renderer](/docs/publish#renderer). Android plugins that still use `jcenter()` or other APIs removed in Gradle 9 no longer build. `flet build` downloads Flutter 3.47.7 on first use.
 
@@ -59,7 +60,7 @@
 
 ### Bug fixes
 
-* Fix `use_state()` type inference for callable initializers in mypy and ty ([#6960](https://github.com/flet-dev/flet/issues/6960), [#7014](https://github.com/flet-dev/flet/pull/7014)) by @mmporong.
+* Fix `use_state()` and `use_ref()` type inference for callable initializers in mypy and ty ([#6960](https://github.com/flet-dev/flet/issues/6960), [#7014](https://github.com/flet-dev/flet/pull/7014), [#7023](https://github.com/flet-dev/flet/pull/7023)) by @mmporong.
 * Fix `BottomAppBar` cutting its notch away from the floating action button when the bar has a left or top `margin`, including an animated one ([#6986](https://github.com/flet-dev/flet/issues/6986), [#7024](https://github.com/flet-dev/flet/pull/7024)) by @ndonkoHenri.
 * Fix `Theme.bottom_appbar_theme` being ignored, so its `bgcolor`, `shape` and other settings never reached `BottomAppBar` ([#7024](https://github.com/flet-dev/flet/pull/7024)) by @ndonkoHenri.
 * Fix `flet build` apps showing a blank page when the system suspended them while Python was starting, such as when iOS launches an app in the background for a notification action ([#6999](https://github.com/flet-dev/flet/pull/6999)) by @ndonkoHenri.
@@ -68,7 +69,7 @@
 * Fix `FilePicker` dialogs failing with a timeout after being open for an hour ([#6999](https://github.com/flet-dev/flet/pull/6999)) by @ndonkoHenri.
 * Fix `flet build` failing on every rebuild after one with changed build options, in apps with Flutter extensions ([#7010](https://github.com/flet-dev/flet/issues/7010), [#7012](https://github.com/flet-dev/flet/pull/7012)) by @ndonkoHenri.
 * Fix `flet build` not reinstalling the app's packages after `requirements.txt` is edited or `build/site-packages` is deleted ([#6994](https://github.com/flet-dev/flet/issues/6994), [#6996](https://github.com/flet-dev/flet/pull/6996)) by @ndonkoHenri.
-* Fix `flet test` failing when the app under test starts slowly, as on the first run after a build: the test now waits until the app finishes initializing its first page ([#6993](https://github.com/flet-dev/flet/issues/6993), [#6995](https://github.com/flet-dev/flet/pull/6995)) by @ndonkoHenri.
+* Fix `flet test` failing when the app under test starts slowly, as on the first run after a build: the test now waits until the app finishes initializing its first page, and fails right away with the Python traceback when the app's Python program fails to start ([#6993](https://github.com/flet-dev/flet/issues/6993), [#6995](https://github.com/flet-dev/flet/pull/6995), [#7023](https://github.com/flet-dev/flet/pull/7023)) by @ndonkoHenri.
 * Fix `use_effect()` cleanups being skipped: a cleanup returned by the setup was lost once the component re-rendered, only one ran when `cleanup=` was passed too, and `async` cleanups never ran when a dependency change re-ran the effect. A pending `async` setup is also cancelled on unmount ([#6963](https://github.com/flet-dev/flet/issues/6963), [#6983](https://github.com/flet-dev/flet/pull/6983), [#7005](https://github.com/flet-dev/flet/pull/7005)) by @mangod12.
 * iOS apps built with `flet build ipa` no longer fail App Store Connect validation with ITMS-90683 (missing `NSPhotoLibraryUsageDescription` and `NSCameraUsageDescription` purpose strings): the `file_picker` plugin is updated to 13.x, which picks photos with the system photo picker and no longer links DKImagePickerController's camera and photo-library code. `device_info_plus`, `package_info_plus` and `share_plus` move to their next major versions with it (`win32` 6). `FilePicker.save_file()` on desktop now creates the chosen file (empty when no `src_bytes` are given) before returning its path by @FeodorFitsner.
 * Fix `Tester.find_by_key()` not finding `Tab` and `PopupMenuItem` controls by their keys ([#6965](https://github.com/flet-dev/flet/issues/6965), [#6976](https://github.com/flet-dev/flet/pull/6976)) by @RezaShamsipour.
