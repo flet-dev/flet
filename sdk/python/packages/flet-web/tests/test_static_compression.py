@@ -10,6 +10,7 @@ import pytest
 from fastapi import FastAPI
 from fastapi.testclient import TestClient
 
+compression = importlib.import_module("flet_web.compression")
 static_files = importlib.import_module("flet_web.fastapi.flet_static_files")
 
 GZIP = {"Accept-Encoding": "gzip"}
@@ -71,7 +72,7 @@ class TestAcceptsGzip:
     )
     def test_reads_accept_encoding(self, accept_encoding, expected):
         """`gzip`, or else `*`, is accepted when listed without a zero quality."""
-        assert static_files.accepts_gzip(accept_encoding) is expected
+        assert compression.accepts_gzip(accept_encoding) is expected
 
 
 class TestCompressedResponses:
@@ -202,8 +203,8 @@ class TestCompressedCopies:
         source = web / "main.dart.wasm"
         stat = source.stat()
         first, second = tmp_path / "first.gz", tmp_path / "second.gz"
-        static_files.write_gzip(str(source), str(first), stat)
-        static_files.write_gzip(str(source), str(second), stat)
+        compression.write_gzip(str(source), str(first), stat)
+        compression.write_gzip(str(source), str(second), stat)
 
         assert first.read_bytes() == second.read_bytes()
         assert gzip.decompress(first.read_bytes()) == WASM
@@ -216,13 +217,13 @@ class TestCompressedCopies:
             dst.write(src.read(1024))
             raise OSError("No space left on device")
 
-        monkeypatch.setattr(static_files.shutil, "copyfileobj", fail)
+        monkeypatch.setattr(compression.shutil, "copyfileobj", fail)
         source = web / "main.dart.wasm"
         target = tmp_path / "copies" / "main.gz"
         target.parent.mkdir()
 
         with pytest.raises(OSError):
-            static_files.write_gzip(str(source), str(target), source.stat())
+            compression.write_gzip(str(source), str(target), source.stat())
 
         assert list(target.parent.iterdir()) == []
 
