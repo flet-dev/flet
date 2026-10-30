@@ -194,7 +194,7 @@ when its status changes.
 
 ### An .ipa to upload yourself
 
-**Create IPA for manual upload**, at the bottom of the App Store & TestFlight card,
+**Create .ipa for manual upload**, at the bottom of the App Store & TestFlight card,
 builds a signed App Store `.ipa` to upload to App Store Connect yourself, e.g. with
 [Transporter](https://apps.apple.com/app/transporter/id1450874784). It doesn't install on
 devices: to try a build on a phone, use [TestFlight](#testflight) or
