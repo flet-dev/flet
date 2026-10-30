@@ -158,8 +158,10 @@ class RefreshIndicator(LayoutControl):
         Dispatches events, and hides the progress indicator once
         :attr:`on_refresh` returns or raises.
         """
+        session = self.page.session if event_name == "refresh" else None
         try:
             await super()._trigger_event(event_name, event_data, e)
         finally:
-            if event_name == "refresh" and self.page is not None:
+            # Unmounting the client widget already finishes its refresh.
+            if session is not None and session.index.get(self._i) is self:
                 await self._invoke_method("finish_refresh")
