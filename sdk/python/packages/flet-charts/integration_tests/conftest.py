@@ -1,8 +1,13 @@
+import os
 from pathlib import Path
 
 import pytest_asyncio
 
 import flet.testing as ftt
+
+# The committed goldens were rendered with Skia, so the app under test
+# renders with Skia until they are regenerated with Impeller.
+os.environ.setdefault("FLET_NO_IMPELLER", "1")
 
 
 def create_flet_app(request):

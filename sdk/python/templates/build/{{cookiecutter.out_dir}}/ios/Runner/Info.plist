@@ -5,7 +5,7 @@
 		<key>CFBundleDevelopmentRegion</key>
 		<string>$(DEVELOPMENT_LANGUAGE)</string>
 		<key>CFBundleDisplayName</key>
-		<string>{{ cookiecutter.product_name }}</string>
+		<string>{{ cookiecutter.product_name | e }}</string>
 		<key>CFBundleExecutable</key>
 		<string>$(EXECUTABLE_NAME)</string>
 		<key>CFBundleIdentifier</key>
@@ -13,7 +13,7 @@
 		<key>CFBundleInfoDictionaryVersion</key>
 		<string>6.0</string>
 		<key>CFBundleName</key>
-		<string>{{ cookiecutter.project_name }}</string>
+		<string>{{ cookiecutter.project_name | e }}</string>
 		<key>CFBundlePackageType</key>
 		<string>APPL</string>
 		<key>CFBundleShortVersionString</key>
@@ -50,7 +50,7 @@
 			<key>NSAllowsArbitraryLoads</key>
 			<true />
 		</dict>
-		<!-- flet: deep linking {% if cookiecutter.options.deep_linking.scheme and cookiecutter.options.deep_linking.host%} -->
+		<!-- flet: deep linking {% if cookiecutter._options.deep_linking.scheme and cookiecutter._options.deep_linking.host%} -->
 		<key>FlutterDeepLinkingEnabled</key>
 		<true />
 		<key>CFBundleURLTypes</key>
@@ -59,10 +59,10 @@
 				<key>CFBundleTypeRole</key>
 				<string>Editor</string>
 				<key>CFBundleURLName</key>
-				<string>{{ cookiecutter.options.deep_linking.host }}</string>
+				<string>{{ cookiecutter._options.deep_linking.host }}</string>
 				<key>CFBundleURLSchemes</key>
 				<array>
-					<string>{{ cookiecutter.options.deep_linking.scheme }}</string>
+					<string>{{ cookiecutter._options.deep_linking.scheme }}</string>
 				</array>
 			</dict>
 		</array>
@@ -70,7 +70,7 @@
 
 		{% macro render_value(value) -%}
 		{% if value is string -%}
-		<string>{{ value }}</string>
+		<string>{{ value | e }}</string>
 		{% elif value is boolean -%}
 		<{{ "true" if value else "false" }}/>
 		{% elif value is integer -%}
@@ -91,10 +91,10 @@
 		{% endmacro -%}
 		{% macro render_dict(d) -%}
 		{% for key, value in d.items() -%}
-		<key>{{ key }}</key>
+		<key>{{ key | e }}</key>
 		{{ render_value(value) }}
 		{% endfor -%}
 		{% endmacro -%}
-		{{ render_dict(cookiecutter.options.info_plist) }}
+		{{ render_dict(cookiecutter._options.info_plist) }}
 	</dict>
 </plist>

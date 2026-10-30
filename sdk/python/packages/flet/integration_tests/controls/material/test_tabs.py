@@ -273,6 +273,50 @@ async def test_disabled_tabs(flet_app: ftt.FletTestApp):
     assert clicked_indexes == [1]
 
 
+@pytest.mark.parametrize(
+    "key",
+    [
+        "tab-key",
+        42,
+        42.5,
+        True,
+        ft.ValueKey("tab-key"),
+        ft.ValueKey(42),
+        ft.ValueKey(42.5),
+        ft.ValueKey(True),
+    ],
+    ids=[
+        "str",
+        "int",
+        "float",
+        "bool",
+        "value-str",
+        "value-int",
+        "value-float",
+        "value-bool",
+    ],
+)
+@pytest.mark.asyncio(loop_scope="function")
+async def test_find_by_key(flet_app: ftt.FletTestApp, key):
+    clicked_indexes = []
+    tabs = ft.Tabs(
+        length=2,
+        content=ft.TabBar(
+            tabs=[ft.Tab(label="First"), ft.Tab(label="Second", key=key)],
+            on_click=lambda e: clicked_indexes.append(e.data),
+        ),
+    )
+    flet_app.page.add(tabs)
+    await flet_app.tester.pump_and_settle()
+
+    finder = await flet_app.tester.find_by_key(key)
+    assert finder.count == 1
+    await flet_app.tester.tap(finder)
+    await flet_app.tester.pump_and_settle()
+    assert tabs.selected_index == 1
+    assert clicked_indexes == [1]
+
+
 @pytest.mark.asyncio(loop_scope="function")
 async def test_unbounded_tabbarview_height(flet_app: ftt.FletTestApp, request):
     flet_app.page.theme_mode = ft.ThemeMode.LIGHT

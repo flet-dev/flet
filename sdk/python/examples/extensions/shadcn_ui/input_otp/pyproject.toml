@@ -1,0 +1,26 @@
+[project]
+name = "shadcn-ui-input-otp"
+version = "1.0.0"
+description = "Six-digit one-time code input in two groups, with change, complete and clear handling."
+requires-python = ">=3.10"
+keywords = ["shadcn", "otp", "one-time password", "code", "verification"]
+authors = [{ name = "Flet team", email = "hello@flet.dev" }]
+dependencies = ["flet", "flet-shadcn-ui"]
+
+[dependency-groups]
+dev = ["flet-cli", "flet-desktop", "flet-web"]
+
+[tool.flet.gallery]
+categories = ["Extensions/Shadcn"]
+
+[tool.flet.metadata]
+title = "Shadcn InputOTP"
+controls = ["SafeArea", "Column", "Text", "InputOTP", "Button"]
+layout_pattern = "form"
+complexity = "basic"
+features = ["change handling", "complete handling", "set value from code"]
+
+[tool.flet]
+org = "dev.flet"
+company = "Flet"
+copyright = "Copyright (C) 2023-2026 by Flet"

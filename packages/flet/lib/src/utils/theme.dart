@@ -1,5 +1,6 @@
-import 'package:flutter/cupertino.dart';
-import 'package:flutter/material.dart';
+import 'package:collection/collection.dart';
+import 'package:cupertino_ui/cupertino_ui.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:flutter/services.dart';
 
 import '../flet_backend.dart';
@@ -15,6 +16,7 @@ import 'colors.dart';
 import 'dismissible.dart';
 import 'edge_insets.dart';
 import 'enums.dart';
+import 'form_field.dart';
 import 'geometry.dart';
 import 'icons.dart';
 import 'menu.dart';
@@ -48,12 +50,86 @@ class SystemUiOverlayStyleTheme
 
   @override
   bool operator ==(Object other) {
-    return systemUiOverlayStyle ==
-        (other as SystemUiOverlayStyleTheme).systemUiOverlayStyle;
+    return other is SystemUiOverlayStyleTheme &&
+        systemUiOverlayStyle == other.systemUiOverlayStyle;
   }
 
   @override
   int get hashCode => systemUiOverlayStyle.hashCode;
+}
+
+class TextFieldTheme extends ThemeExtension<TextFieldTheme> {
+  /// Default style of the text being edited in a `TextField`; Flutter's
+  /// [ThemeData] has no slot for it.
+  final TextStyle? textStyle;
+  const TextFieldTheme(this.textStyle);
+
+  @override
+  TextFieldTheme copyWith({TextStyle? textStyle}) =>
+      TextFieldTheme(textStyle ?? this.textStyle);
+
+  @override
+  TextFieldTheme lerp(covariant TextFieldTheme? other, double t) =>
+      other is TextFieldTheme
+          ? TextFieldTheme(TextStyle.lerp(textStyle, other.textStyle, t))
+          : this;
+
+  @override
+  bool operator ==(Object other) =>
+      other is TextFieldTheme && other.textStyle == textStyle;
+
+  @override
+  int get hashCode => textStyle.hashCode;
+}
+
+/// App-wide default for `Markdown.md_style_sheet` (`Theme.markdown_theme`):
+/// kept as the raw property map so a control's own sheet can be layered over
+/// it key by key before parsing. Flutter has no Markdown theme.
+class MarkdownTheme extends ThemeExtension<MarkdownTheme> {
+  final Map<String, dynamic>? styleSheet;
+  const MarkdownTheme(this.styleSheet);
+
+  @override
+  MarkdownTheme copyWith({Map<String, dynamic>? styleSheet}) =>
+      MarkdownTheme(styleSheet ?? this.styleSheet);
+
+  @override
+  MarkdownTheme lerp(covariant MarkdownTheme? other, double t) =>
+      other is MarkdownTheme ? other : this;
+
+  @override
+  bool operator ==(Object other) =>
+      other is MarkdownTheme &&
+      const DeepCollectionEquality().equals(other.styleSheet, styleSheet);
+
+  @override
+  int get hashCode => const DeepCollectionEquality().hash(styleSheet);
+}
+
+/// `Theme.popup_menu_theme.border_radius`: the default corner radius of a
+/// `PopupMenuButton`'s hover/splash highlight. Flutter's PopupMenuThemeData
+/// has no such setting.
+class PopupMenuButtonTheme extends ThemeExtension<PopupMenuButtonTheme> {
+  final BorderRadius? borderRadius;
+  const PopupMenuButtonTheme(this.borderRadius);
+
+  @override
+  PopupMenuButtonTheme copyWith({BorderRadius? borderRadius}) =>
+      PopupMenuButtonTheme(borderRadius ?? this.borderRadius);
+
+  @override
+  PopupMenuButtonTheme lerp(covariant PopupMenuButtonTheme? other, double t) =>
+      other is PopupMenuButtonTheme
+          ? PopupMenuButtonTheme(
+              BorderRadius.lerp(borderRadius, other.borderRadius, t))
+          : this;
+
+  @override
+  bool operator ==(Object other) =>
+      other is PopupMenuButtonTheme && other.borderRadius == borderRadius;
+
+  @override
+  int get hashCode => borderRadius.hashCode;
 }
 
 CupertinoThemeData parseCupertinoTheme(
@@ -83,6 +159,59 @@ ThemeMode? parseThemeMode(String? value, [ThemeMode? defaultValue]) {
   return parseEnum(ThemeMode.values, value, defaultValue);
 }
 
+/// How surface colors of a theme built from a seed color are derived.
+enum ThemeSurfaces {
+  /// Surfaces use a neutral, hue-free grey ramp: white-based in light mode
+  /// and near-black in dark mode. Accent colors still come from the seed.
+  neutral,
+
+  /// Surfaces are tinted with the seed hue (the Material 3 default).
+  tonal
+}
+
+ThemeSurfaces? parseThemeSurfaces(String? value,
+    [ThemeSurfaces? defaultValue]) {
+  return parseEnum(ThemeSurfaces.values, value, defaultValue);
+}
+
+/// Replaces seed-tinted surface roles of [scheme] with a neutral grey ramp.
+ColorScheme neutralizeSurfaces(ColorScheme scheme) {
+  if (scheme.brightness == Brightness.dark) {
+    return scheme.copyWith(
+      surface: const Color(0xFF121212),
+      surfaceBright: const Color(0xFF3B3B3B),
+      surfaceDim: const Color(0xFF121212),
+      surfaceContainerLowest: const Color(0xFF0D0D0D),
+      surfaceContainerLow: const Color(0xFF1B1B1B),
+      surfaceContainer: const Color(0xFF202020),
+      surfaceContainerHigh: const Color(0xFF292929),
+      surfaceContainerHighest: const Color(0xFF313131),
+      onSurface: const Color(0xFFE7E7E7),
+      onSurfaceVariant: const Color(0xFFABABAB),
+      outline: const Color(0xFF8D8D8D),
+      outlineVariant: const Color(0xFF3B3B3B),
+      inverseSurface: const Color(0xFFE7E7E7),
+      onInverseSurface: const Color(0xFF1B1B1B),
+    );
+  }
+  return scheme.copyWith(
+    surface: const Color(0xFFFFFFFF),
+    surfaceBright: const Color(0xFFFFFFFF),
+    surfaceDim: const Color(0xFFDDDDDD),
+    surfaceContainerLowest: const Color(0xFFFFFFFF),
+    surfaceContainerLow: const Color(0xFFF7F7F7),
+    surfaceContainer: const Color(0xFFF2F2F2),
+    surfaceContainerHigh: const Color(0xFFEDEDED),
+    surfaceContainerHighest: const Color(0xFFE7E7E7),
+    onSurface: const Color(0xFF1B1B1B),
+    onSurfaceVariant: const Color(0xFF5E5E5E),
+    outline: const Color(0xFF7A7A7A),
+    outlineVariant: const Color(0xFFD5D5D5),
+    inverseSurface: const Color(0xFF303030),
+    onInverseSurface: const Color(0xFFF2F2F2),
+  );
+}
+
 ThemeData parseTheme(
     dynamic value, BuildContext context, Brightness? brightness,
     {ThemeData? parentTheme}) {
@@ -92,12 +221,20 @@ ThemeData parseTheme(
       parseColor(value?["color_scheme_seed"], theme) ?? Colors.blue;
 
   // create new theme
-  theme ??= ThemeData(
-    colorSchemeSeed: colorSchemeSeed,
-    fontFamily: value?["font_family"],
-    brightness: brightness,
-    useMaterial3: value?["use_material3"],
-  );
+  if (theme == null) {
+    var tonal = parseThemeSurfaces(value?["surfaces"]) == ThemeSurfaces.tonal;
+    theme = ThemeData(
+      colorSchemeSeed: tonal ? colorSchemeSeed : null,
+      colorScheme: tonal
+          ? null
+          : neutralizeSurfaces(ColorScheme.fromSeed(
+              seedColor: colorSchemeSeed,
+              brightness: brightness ?? Brightness.light)),
+      fontFamily: value?["font_family"],
+      brightness: brightness,
+      useMaterial3: value?["use_material3"],
+    );
+  }
 
   ColorScheme? colorScheme = parseColorScheme(value?["color_scheme"], theme);
   DividerThemeData? dividerTheme =
@@ -108,10 +245,21 @@ ThemeData parseTheme(
       SystemUiOverlayStyleTheme(value?["system_overlay_style"] != null
           ? parseSystemUiOverlayStyle(
               value?["system_overlay_style"], theme, brightness)
-          : null)
+          : null),
+      TextFieldTheme(value?["text_field_theme"] != null
+          ? parseTextStyle(value?["text_field_theme"]["text_style"], theme)
+          : null),
+      MarkdownTheme(value?["markdown_theme"] is Map
+          ? Map<String, dynamic>.from(value?["markdown_theme"])
+          : null),
+      PopupMenuButtonTheme(value?["popup_menu_theme"] != null
+          ? parseBorderRadius(value?["popup_menu_theme"]["border_radius"])
+          : null),
     },
     visualDensity:
         parseVisualDensity(value?["visual_density"], theme.visualDensity)!,
+    materialTapTargetSize: parseMaterialTapTargetSize(
+        value?["material_tap_target_size"], theme.materialTapTargetSize),
     pageTransitionsTheme: parsePageTransitions(
         value?["page_transitions"], theme.pageTransitionsTheme)!,
     colorScheme: colorScheme,
@@ -182,6 +330,12 @@ ThemeData parseTheme(
     iconTheme: parseIconTheme(value?["icon_theme"], theme),
     timePickerTheme: parseTimePickerTheme(value?["time_picker_theme"], theme),
   );
+
+  // Parsed against the finished theme, so its default state colors come from
+  // the final color scheme.
+  theme = theme.copyWith(
+      inputDecorationTheme: parseInputDecorationTheme(
+          value?["input_decoration_theme"], theme));
 
   return theme.copyWith(
       cupertinoOverrideTheme: fixCupertinoTheme(
@@ -801,6 +955,35 @@ TimePickerThemeData? parseTimePickerTheme(
         parseWidgetStateColor(value["time_selector_separator_color"], theme),
     timeSelectorSeparatorTextStyle: parseWidgetStateTextStyle(
         value["time_selector_separator_text_style"], theme),
+  );
+}
+
+InputDecorationThemeData? parseInputDecorationTheme(
+    Map<dynamic, dynamic>? value, ThemeData theme,
+    [InputDecorationThemeData? defaultValue]) {
+  if (value == null) return defaultValue;
+
+  return theme.inputDecorationTheme.copyWith(
+    border: parseInputDecorationThemeBorder(value["border"], theme),
+    labelStyle: parseTextStyle(value["label_style"], theme),
+    floatingLabelStyle: parseTextStyle(value["floating_label_style"], theme),
+    hintStyle: parseTextStyle(value["hint_style"], theme),
+    helperStyle: parseTextStyle(value["helper_style"], theme),
+    errorStyle: parseTextStyle(value["error_style"], theme),
+    counterStyle: parseTextStyle(value["counter_style"], theme),
+    prefixStyle: parseTextStyle(value["prefix_style"], theme),
+    suffixStyle: parseTextStyle(value["suffix_style"], theme),
+    contentPadding: parsePadding(value["content_padding"]),
+    isDense: parseBool(value["dense"]),
+    filled: parseBool(value["filled"]),
+    fillColor: parseColor(value["fill_color"], theme),
+    hoverColor: parseColor(value["hover_color"], theme),
+    focusColor: parseColor(value["focus_color"], theme),
+    iconColor: parseColor(value["icon_color"], theme),
+    prefixIconColor: parseColor(value["prefix_icon_color"], theme),
+    suffixIconColor: parseColor(value["suffix_icon_color"], theme),
+    alignLabelWithHint: parseBool(value["align_label_with_hint"]),
+    constraints: parseBoxConstraints(value["size_constraints"]),
   );
 }
 

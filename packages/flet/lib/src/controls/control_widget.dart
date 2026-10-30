@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 
 import '../flet_backend.dart';
 import '../models/control.dart';
@@ -37,19 +37,7 @@ class ControlWidget extends StatelessWidget {
       FletBackend.of(context).globalKeys[controlKey.toString()] =
           key as GlobalKey;
     } else if (controlKey != null) {
-      // Preserve the concrete value type so the resulting ValueKey<T> matches
-      // what callers construct in tests, e.g. `find.byKey(Key('foo'))` which
-      // resolves to `ValueKey<String>('foo')`. `ValueKey(controlKey.value)`
-      // would produce `ValueKey<Object>(...)` because `controlKey.value` is
-      // statically typed `Object`, and ValueKey's `==` is runtimeType-strict
-      // — `ValueKey<Object>` is never equal to `ValueKey<String>`.
-      key = switch (controlKey.value) {
-        String v => ValueKey<String>(v),
-        int v => ValueKey<int>(v),
-        double v => ValueKey<double>(v),
-        bool v => ValueKey<bool>(v),
-        _ => ValueKey(controlKey.value),
-      };
+      key = valueKeyFromValue(controlKey.value);
     }
 
     return control.buildInControlContext((context) {

@@ -345,7 +345,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 15.0;
 				MTL_ENABLE_DEBUG_INFO = NO;
 				SDKROOT = iphoneos;
 				SUPPORTED_PLATFORMS = iphoneos;
@@ -370,6 +370,9 @@
 {% endif %}
 {% if cookiecutter.ios_provisioning_profile %}
 				PROVISIONING_PROFILE_SPECIFIER = "{{ cookiecutter.ios_provisioning_profile }}";
+{% endif %}
+{% if cookiecutter._options.ios_entitlements %}
+				CODE_SIGN_ENTITLEMENTS = Runner/Runner.entitlements;
 {% endif %}
 				ENABLE_BITCODE = NO;
 				INFOPLIST_FILE = Runner/Info.plist;
@@ -488,7 +491,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 15.0;
 				MTL_ENABLE_DEBUG_INFO = YES;
 				ONLY_ACTIVE_ARCH = YES;
 				SDKROOT = iphoneos;
@@ -537,7 +540,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 15.0;
 				MTL_ENABLE_DEBUG_INFO = NO;
 				SDKROOT = iphoneos;
 				SUPPORTED_PLATFORMS = iphoneos;
@@ -564,6 +567,9 @@
 {% endif %}
 {% if cookiecutter.ios_provisioning_profile %}
 				PROVISIONING_PROFILE_SPECIFIER = "{{ cookiecutter.ios_provisioning_profile }}";
+{% endif %}
+{% if cookiecutter._options.ios_entitlements %}
+				CODE_SIGN_ENTITLEMENTS = Runner/Runner.entitlements;
 {% endif %}
 				ENABLE_BITCODE = NO;
 				INFOPLIST_FILE = Runner/Info.plist;
@@ -596,6 +602,9 @@
 {% endif %}
 {% if cookiecutter.ios_provisioning_profile %}
 				PROVISIONING_PROFILE_SPECIFIER = "{{ cookiecutter.ios_provisioning_profile }}";
+{% endif %}
+{% if cookiecutter._options.ios_entitlements %}
+				CODE_SIGN_ENTITLEMENTS = Runner/Runner.entitlements;
 {% endif %}
 				ENABLE_BITCODE = NO;
 				INFOPLIST_FILE = Runner/Info.plist;

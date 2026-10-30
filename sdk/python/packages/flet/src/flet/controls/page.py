@@ -4,8 +4,8 @@ import logging
 import sys
 import threading
 import weakref
-from collections.abc import Awaitable, Coroutine
-from concurrent.futures import CancelledError, Future, ThreadPoolExecutor
+from collections.abc import Awaitable, Coroutine, Generator
+from concurrent.futures import Future, ThreadPoolExecutor
 from dataclasses import InitVar, dataclass, field, fields, is_dataclass
 from functools import partial
 from typing import (
@@ -16,6 +16,7 @@ from typing import (
     Optional,
     ParamSpec,
     TypeVar,
+    cast,
 )
 from urllib.parse import urlparse
 
@@ -43,6 +44,7 @@ from flet.controls.device_info import (
 )
 from flet.controls.exceptions import FletUnsupportedPlatformException
 from flet.controls.multi_view import MultiView
+from flet.controls.package_info import PackageInfo
 from flet.controls.query_string import QueryString
 from flet.controls.ref import Ref
 from flet.controls.services.service import Service
@@ -53,6 +55,7 @@ from flet.controls.types import (
     DeviceOrientation,
     Locale,
     PagePlatform,
+    RouteUrlStrategy,
     Wrapper,
 )
 from flet.utils import is_pyodide
@@ -87,6 +90,26 @@ logger = logging.getLogger("flet")
 AT = TypeVar("AT", bound="Authorization")
 InputT = ParamSpec("InputT")
 RetT = TypeVar("RetT")
+
+
+class TaskFuture(Future[RetT]):
+    """
+    The future of a task started with `Page.run_task()`.
+
+    It is a `concurrent.futures.Future` that can also be awaited, from the page's
+    event loop or any other one: `await` returns the task's value or raises its
+    exception. Awaiting doesn't consume it: the outcome stays available through
+    `result()` and `exception()`.
+
+    Cancelling the coroutine that awaits it also cancels the task, as with an
+    `asyncio.Task`; await `asyncio.shield()` of it to keep the task running.
+    `result()` blocks, so call it on the page's event loop thread only once the
+    task is done.
+    """
+
+    def __await__(self) -> Generator[Any, None, RetT]:
+        """Wait for the task to finish without blocking the event loop."""
+        return asyncio.wrap_future(self).__await__()
 
 
 @control("ServiceRegistry")
@@ -513,6 +536,17 @@ class Page(BasePage):
         This property is read-only.
     """
 
+    embedded: bool = False
+    """
+    Whether this app is running as a guest inside another Flet app, embedded
+    with [`FletApp`][flet.FletApp].
+
+    An embedded app does not own the real OS window: `page.window` is not
+    applied, and `page.title` is reported to the host rather than renaming the
+    window around it. Check this to skip anything that assumes the app owns its
+    window.
+    """
+
     web: bool = False
     """
     `True` if the application is running in the web browser.
@@ -868,7 +902,6 @@ class Page(BasePage):
             if self.__last_route == e.route:
                 return False
             self.__last_route = e.route
-            self.query()
 
         elif isinstance(e, ViewPopEvent | ViewsPopUntilEvent):
             for v in unwrap_component(self.views):
@@ -931,10 +964,33 @@ class Page(BasePage):
         handler: Callable[InputT, Awaitable[RetT]],
         *args: InputT.args,
         **kwargs: InputT.kwargs,
-    ) -> Future[RetT]:
+    ) -> TaskFuture[RetT]:
         """
         Run `handler` coroutine as a new Task in the event loop associated with the \
         current page.
+
+        Can be called from any thread.
+
+        Args:
+            handler: The coroutine function to run.
+            *args: Positional arguments to call `handler` with.
+            **kwargs: Keyword arguments to call `handler` with.
+
+        Returns:
+            A future of the task. Awaiting it returns the value of `handler`, or
+                raises its exception. The future keeps that outcome, so keep a
+                reference to it to call `cancel()`, `result()` or
+                `add_done_callback()` later.
+
+        Raises:
+            TypeError: If `handler` is not a coroutine function.
+
+        Example:
+            ```python
+            future = page.run_task(fetch_users)
+            users = await future  # the value, not a future
+            future.result()  # the same value, without blocking
+            ```
         """
         _context_page.set(self)
         if not inspect.iscoroutinefunction(handler):
@@ -943,25 +999,31 @@ class Page(BasePage):
         future = asyncio.run_coroutine_threadsafe(
             handler(*args, **kwargs), self.session.connection.loop
         )
+        future.__class__ = TaskFuture
 
         def _on_completion(f):
             """
-            Surface background task exceptions to default error handling.
+            Log the exception of a task nobody awaits.
+
+            `concurrent.futures` logs an `Exception` raised from a done callback
+            and runs the next one. The task's outcome is stored on the future
+            and reaches awaiters through their own callback, so raising here is
+            only for the log. A `BaseException` is not re-raised: it would skip
+            the remaining callbacks and leave awaiters waiting forever.
 
             Args:
                 f: Completed future returned by `run_coroutine_threadsafe()`.
             """
 
-            try:
-                exception = f.exception()
-                if exception:
-                    raise exception
-            except CancelledError:
-                pass
+            if f.cancelled():
+                return
+            exception = f.exception()
+            if isinstance(exception, Exception):
+                raise exception
 
         future.add_done_callback(_on_completion)
 
-        return future
+        return cast(TaskFuture[RetT], future)
 
     def __context_wrapper(self, handler: Callable[..., Any]) -> Wrapper:
         """
@@ -1205,10 +1267,56 @@ class Page(BasePage):
         authorization: "Optional[type[AT]]" = None,
     ) -> "AT":
         """
-        Starts OAuth flow.
+        Signs the user in with an OAuth provider.
 
-        See [Authentication](https://flet.dev/docs/cookbook/authentication)
+        Without `saved_token`, this starts the OAuth authorization code flow: it
+        opens the provider's authorization page and returns without waiting for
+        the user to sign in. The provider then sends the browser to its
+        `redirect_url`, and Flet exchanges the authorization code for a token,
+        fetches the user if requested and calls [`on_login`][flet.Page.on_login].
+        Handling that redirect needs the app to be served by Flet's web server.
+
+        With `saved_token`, this restores an earlier sign-in instead, without
+        opening any page: it refreshes the token if it has expired and can be
+        refreshed, fetches the user if requested and calls `on_login`.
+
+        See the [Authentication](https://flet.dev/docs/cookbook/authentication)
         guide for more information and examples.
+
+        Args:
+            provider: The OAuth provider to sign in with.
+            fetch_user: Whether to fetch the signed-in user's details, available
+                as the authorization's `user`.
+            fetch_groups: Whether to also fetch the user's groups into
+                `user.groups`. Groups are fetched only together with the user.
+                Of the built-in providers, only GitHub provides them; with the
+                others, `groups` is empty.
+            scope: Scopes to request in addition to the provider's default ones.
+            saved_token: A token from an earlier sign-in to restore, as returned
+                by [`OAuthToken.to_json()`][flet.auth.OAuthToken.to_json].
+            on_open_authorization_url: Async function that opens the
+                authorization URL it receives. By default, a web app opens it in
+                a popup window, and other apps open it with
+                [`UrlLauncher.launch_url()`][flet.UrlLauncher.launch_url].
+            complete_page_html: HTML of the page that the browser shows when the
+                provider redirects back, if `redirect_to_page` is `False`. By
+                default, the page tries to close itself and asks the user to
+                close it.
+            redirect_to_page: Whether to send the browser back to the app's
+                current page and route when the provider redirects back, instead
+                of showing `complete_page_html`. Use it in web apps that open the
+                authorization page in the same browser tab, for example with
+                `UrlLauncher().launch_url(url, web_only_window_name="_self")` in
+                `on_open_authorization_url`.
+            authorization: Class that performs the authorization. It is created
+                as `authorization(provider, fetch_user=..., fetch_groups=...,
+                scope=...)`. Defaults to
+                [`AuthorizationService`][flet.auth.AuthorizationService].
+
+        Returns:
+            The authorization, also available as [`auth`][flet.Page.auth].
+                Without `saved_token`, it has no token or user until `on_login`
+                is called.
         """
         if authorization is None:
             authorization = _default_authorization_impl()
@@ -1219,15 +1327,27 @@ class Page(BasePage):
             scope=scope,
         )
         if saved_token is None:
+            # The server keeps the state and completion options until the
+            # provider redirects back, then calls _authorize_callback().
             authorization_url, state = self.__authorization.get_authorization_data()
             auth_attrs = {"state": state}
             if complete_page_html:
                 auth_attrs["completePageHtml"] = complete_page_html
             if redirect_to_page:
-                up = urlparse(provider.redirect_url)
-                auth_attrs["completePageUrl"] = up._replace(
-                    path=f"{self.session.connection.page_name}{self.route}"
-                ).geturl()
+                # The current page on the redirect URL's host, with the route
+                # in the URL path or after `#`, as the client expects it.
+                connection = self.session.connection
+                base_path = connection.page_base_path
+                redirect_url = urlparse(provider.redirect_url)
+                if connection.route_url_strategy == RouteUrlStrategy.HASH:
+                    complete_page_url = redirect_url._replace(
+                        path=base_path, query="", fragment=self.route
+                    )
+                else:
+                    complete_page_url = redirect_url._replace(
+                        path=base_path.rstrip("/") + self.route
+                    )
+                auth_attrs["completePageUrl"] = complete_page_url.geturl()
             self.session.connection.oauth_authorize(auth_attrs)
             if on_open_authorization_url:
                 await on_open_authorization_url(authorization_url)
@@ -1239,6 +1359,7 @@ class Page(BasePage):
                 else:
                     await UrlLauncher().launch_url(authorization_url)
         else:
+            # Restore the saved sign-in; there is no redirect to wait for.
             await self.__authorization.dehydrate_token(saved_token)
 
             e = LoginEvent(name="login", control=self, error="", error_description="")
@@ -1312,7 +1433,9 @@ class Page(BasePage):
     @property
     def query(self) -> QueryString:
         """
-        The query parameters of the current page.
+        The query string parameters of the current :attr:`route`.
+
+        See :class:`~flet.QueryString`.
         """
         return self.__query
 
@@ -1382,6 +1505,21 @@ class Page(BasePage):
             return from_dict(WindowsDeviceInfo, info)
         else:
             return None
+
+    async def get_package_info(self) -> PackageInfo:
+        """
+        Returns package metadata of the running application, such as its name,
+        version and build number.
+
+        For an app packaged with `flet build`, this is the metadata of the
+        built app, including the version and build number it was built with.
+        Otherwise, it describes the Flet client that renders the app.
+        See :class:`~flet.PackageInfo` for details.
+
+        Returns:
+            The application's package information.
+        """
+        return from_dict(PackageInfo, await self._invoke_method("get_package_info"))
 
     async def set_allowed_device_orientations(
         self, orientations: list[DeviceOrientation]

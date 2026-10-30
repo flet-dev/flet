@@ -35,13 +35,13 @@ logger = logging.getLogger(flet_desktop.__name__)
 
 # Supported Linux build targets ordered by glibc version.
 # Each entry maps a minimum glibc (major, minor) to a distro_id used in
-# release artifact filenames.
+# release artifact filenames, and the architectures it is built for.
 _GLIBC_DISTRO_TABLE = [
-    ((2, 28), "debian10"),
-    ((2, 31), "ubuntu20.04"),
-    ((2, 35), "ubuntu22.04"),
-    ((2, 36), "debian12"),
-    ((2, 39), "ubuntu24.04"),
+    ((2, 28), "debian10", ("amd64",)),
+    ((2, 31), "ubuntu20.04", ("amd64", "arm64")),
+    ((2, 35), "ubuntu22.04", ("amd64", "arm64")),
+    ((2, 36), "debian12", ("amd64", "arm64")),
+    ((2, 39), "ubuntu24.04", ("amd64", "arm64")),
 ]
 
 
@@ -117,29 +117,46 @@ def __get_system_glibc_version():
         return (0, 0)
 
 
-def __get_linux_distro_id():
+def __get_linux_distro_id(arch: str):
     """
     Return the distro id to use for downloading the Linux binary archive.
 
     Uses glibc version detection to pick the best matching build target
-    (highest glibc requirement that is <= system glibc).  Can be
+    for `arch` (highest glibc requirement that is <= system glibc).  Can be
     overridden via the `FLET_LINUX_DISTRO` environment variable.
+
+    Raises:
+        RuntimeError: If the system glibc is older than every build for `arch`.
     """
 
     override = os.environ.get("FLET_LINUX_DISTRO", "").strip()
     if override:
         return override
 
+    targets = [
+        (required_glibc, distro_id)
+        for required_glibc, distro_id, arches in _GLIBC_DISTRO_TABLE
+        if arch in arches
+    ]
+    if not targets:
+        raise RuntimeError(f"Flet desktop client is not available for Linux {arch}.")
     sys_glibc = __get_system_glibc_version()
     best = None
-    for required_glibc, distro_id in _GLIBC_DISTRO_TABLE:
+    for required_glibc, distro_id in targets:
         if sys_glibc >= required_glibc:
             best = distro_id
     if best is None:
-        best = _GLIBC_DISTRO_TABLE[0][1]  # oldest as last resort
-        logger.warning(
-            f"Could not detect glibc version (got {sys_glibc}), "
-            f"falling back to {best}. Set FLET_LINUX_DISTRO to override."
+        oldest_glibc, oldest = targets[0]
+        if sys_glibc == (0, 0):
+            logger.warning(
+                "Could not detect glibc version, "
+                f"falling back to {oldest}. Set FLET_LINUX_DISTRO to override."
+            )
+            return oldest
+        raise RuntimeError(
+            f"Flet desktop client for Linux {arch} requires glibc "
+            f"{oldest_glibc[0]}.{oldest_glibc[1]} or newer, "
+            f"but this system has glibc {sys_glibc[0]}.{sys_glibc[1]}."
         )
     return best
 
@@ -158,8 +175,8 @@ def get_artifact_filename():
     if is_macos():
         return "flet-macos.tar.gz"
     # Linux
-    distro = __get_linux_distro_id()
     arch = get_arch()
+    distro = __get_linux_distro_id(arch)
     flavor = __get_desktop_flavor()
     if flavor == "light":
         return f"flet-linux-{distro}-light-{arch}.tar.gz"
@@ -487,7 +504,7 @@ def __linux_identity_args(args: list) -> tuple:
     return [app_id, *args[1:]], {"executable": executable}
 
 
-def open_flet_view(page_url, assets_dir, hidden):
+def open_flet_view(page_url, assets_dir, hidden, *, no_impeller=False):
     """
     Start a desktop view process and return the process object and PID file path.
 
@@ -495,6 +512,7 @@ def open_flet_view(page_url, assets_dir, hidden):
         page_url: Page endpoint the desktop client should open.
         assets_dir: Optional assets directory passed to the client process.
         hidden: Whether the window should start hidden.
+        no_impeller: Whether the client renders with Skia instead of Impeller.
 
     Returns:
         A tuple containing:
@@ -503,7 +521,7 @@ def open_flet_view(page_url, assets_dir, hidden):
     """
 
     args, flet_env, pid_file = __locate_and_unpack_flet_view(
-        page_url, assets_dir, hidden
+        page_url, assets_dir, hidden, no_impeller
     )
     args, extra = __linux_identity_args(args)
     p = subprocess.Popen(args, env=flet_env, **extra)
@@ -511,7 +529,7 @@ def open_flet_view(page_url, assets_dir, hidden):
     return p, pid_file
 
 
-async def open_flet_view_async(page_url, assets_dir, hidden):
+async def open_flet_view_async(page_url, assets_dir, hidden, *, no_impeller=False):
     """
     Asynchronously start a desktop view process.
 
@@ -519,6 +537,7 @@ async def open_flet_view_async(page_url, assets_dir, hidden):
         page_url: Page endpoint the desktop client should open.
         assets_dir: Optional assets directory passed to the client process.
         hidden: Whether the window should start hidden.
+        no_impeller: Whether the client renders with Skia instead of Impeller.
 
     Returns:
         A tuple containing:
@@ -527,7 +546,7 @@ async def open_flet_view_async(page_url, assets_dir, hidden):
     """
 
     args, flet_env, pid_file = __locate_and_unpack_flet_view(
-        page_url, assets_dir, hidden
+        page_url, assets_dir, hidden, no_impeller
     )
     args, extra = __linux_identity_args(args)
     p = await asyncio.create_subprocess_exec(args[0], *args[1:], env=flet_env, **extra)
@@ -580,7 +599,7 @@ def close_flet_view(pid_file):
             os.remove(pid_file)
 
 
-def __locate_and_unpack_flet_view(page_url, assets_dir, hidden):
+def __locate_and_unpack_flet_view(page_url, assets_dir, hidden, no_impeller=False):
     """
     Resolve desktop client executable, prepare launch arguments, and environment.
 
@@ -596,6 +615,7 @@ def __locate_and_unpack_flet_view(page_url, assets_dir, hidden):
         page_url: Page endpoint the desktop client should open.
         assets_dir: Optional assets directory passed to the client process.
         hidden: Whether to set `FLET_HIDE_WINDOW_ON_START=true` in process env.
+        no_impeller: Whether to set `FLET_NO_IMPELLER=true` in process env.
 
     Returns:
         A tuple containing:
@@ -721,5 +741,8 @@ def __locate_and_unpack_flet_view(page_url, assets_dir, hidden):
 
     if hidden:
         flet_env["FLET_HIDE_WINDOW_ON_START"] = "true"
+
+    if no_impeller:
+        flet_env["FLET_NO_IMPELLER"] = "true"
 
     return args, flet_env, pid_file

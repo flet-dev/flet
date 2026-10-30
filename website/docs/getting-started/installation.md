@@ -27,18 +27,26 @@ Flet supports macOS 12 (Monterey) or later.
 
 Flet supports 64-bit version of Microsoft Windows 10 and Windows 11.
 
+On Windows on ARM, such as a Snapdragon PC, use Python 3.12 or later. On Python 3.10 and 3.11,
+installing `flet[all]` or `flet-cli` needs a C++ compiler, because [PyYAML](https://pypi.org/project/PyYAML), which `flet-cli` depends
+on, has no Windows on ARM wheels for them.
+
 #### Linux
 
-Flet supports Debian 10, 11 and 12 and Ubuntu 20.04, 22.04 and 24.04 LTS.
+Flet supports Debian 10, 11 and 12 and Ubuntu 20.04, 22.04 and 24.04 LTS. On ARM64, Debian 10 isn't supported: the oldest supported release there is Debian 11 or Ubuntu 20.04.
 
 <details>
 <summary>Desktop flavor (audio & video support)</summary>
 
 On Linux, the Flet desktop client is available in two flavors: **full** and **light**.
 
-The **light** flavor (default on Linux) does not include audio and video extensions, resulting in a smaller download. The **full** flavor bundles audio and video support out of the box.
+The **light** flavor (default on Linux) does not include the audio, video and Rive extensions,
+resulting in a smaller download. The **full** flavor bundles audio and video support out
+of the box, and Rive on Ubuntu 24.04 x86-64.
 
-To select the flavor, either set the `FLET_DESKTOP_FLAVOR` environment variable:
+To select the flavor, either set the
+[`FLET_DESKTOP_FLAVOR`](../reference/environment-variables.md#flet_desktop_flavor)
+environment variable:
 
 ```bash
 export FLET_DESKTOP_FLAVOR=full
@@ -51,7 +59,9 @@ or add the setting to your project's `pyproject.toml`:
 desktop_flavor = "full"
 ```
 
-If you use the **light** flavor and need audio or video, you will need to install the required libraries yourself - see the [Audio](../services/audio/index.md#usage) and [Video](../controls/video/index.md#linux) setup guides.
+If you use the **light** flavor and need audio or video, you will need to install the
+required libraries yourself - see the [Audio](../services/audio/index.md#usage) and
+[Video](../controls/video/index.md#linux) setup guides.
 </details>
 
 <details>

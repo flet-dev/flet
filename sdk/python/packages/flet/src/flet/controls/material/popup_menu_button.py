@@ -4,6 +4,7 @@ from typing import Optional
 
 from flet.controls.animation import AnimationStyle
 from flet.controls.base_control import control
+from flet.controls.border_radius import BorderRadiusValue
 from flet.controls.box import BoxConstraints
 from flet.controls.buttons import ButtonStyle, OutlinedBorder
 from flet.controls.control import Control
@@ -189,6 +190,15 @@ class PopupMenuButton(LayoutControl):
     The menu's shape.
 
     Defaults to `CircleBorder(radius=10.0)`.
+    """
+
+    border_radius: Optional[BorderRadiusValue] = None
+    """
+    The corner radius of the button's hover/splash highlight when it shows a
+    custom :attr:`content` (rather than an :attr:`icon`).
+
+    Without it the highlight is a sharp-cornered rectangle, which shows past
+    a rounded `content`.
     """
 
     padding: PaddingValue = 8

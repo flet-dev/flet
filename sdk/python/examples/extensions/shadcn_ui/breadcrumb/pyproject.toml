@@ -1,0 +1,26 @@
+[project]
+name = "shadcn-ui-breadcrumb"
+version = "1.0.0"
+description = "Breadcrumb paths with clickable links, an ellipsis and a custom separator."
+requires-python = ">=3.10"
+keywords = ["shadcn", "breadcrumb", "navigation", "path", "links"]
+authors = [{ name = "Flet team", email = "hello@flet.dev" }]
+dependencies = ["flet", "flet-shadcn-ui"]
+
+[dependency-groups]
+dev = ["flet-cli", "flet-desktop", "flet-web"]
+
+[tool.flet.gallery]
+categories = ["Extensions/Shadcn"]
+
+[tool.flet.metadata]
+title = "Shadcn Breadcrumb"
+controls = ["SafeArea", "Column", "Text", "Breadcrumb", "BreadcrumbItem", "BreadcrumbEllipsis"]
+layout_pattern = "sections"
+complexity = "basic"
+features = ["click handling", "custom separator"]
+
+[tool.flet]
+org = "dev.flet"
+company = "Flet"
+copyright = "Copyright (C) 2023-2026 by Flet"

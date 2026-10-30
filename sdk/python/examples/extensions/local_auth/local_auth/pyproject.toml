@@ -12,6 +12,7 @@ dev = ["flet-cli", "flet-desktop", "flet-web"]
 
 [tool.flet.gallery]
 categories = ["Utility/LocalAuthentication"]
+platforms = ["ios", "android", "windows", "macos"]
 
 [tool.flet.metadata]
 title = "Local authentication"
@@ -24,5 +25,4 @@ features = ["biometric authentication", "device capability checks"]
 org = "dev.flet"
 company = "Flet"
 copyright = "Copyright (C) 2023-2026 by Flet"
-platforms = ["ios", "android", "windows", "macos"]
 permissions = ["biometric"]

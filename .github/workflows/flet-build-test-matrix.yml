@@ -23,9 +23,6 @@ env:
   UV_PYTHON: 3.12
   PYTHONUTF8: 1
 
-  # https://flet.dev/docs/reference/environment-variables
-  FLET_CLI_NO_RICH_OUTPUT: 1
-
   FLET_BUILD_EXTRA_ARGS: ${{ inputs.extra_build_args }}
 
 jobs:

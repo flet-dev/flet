@@ -1,5 +1,5 @@
 import 'package:flet/flet.dart';
-import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 
 import 'webview_mobile_and_mac.dart';
 import 'webview_web.dart' if (dart.library.io) "webview_web_vain.dart";

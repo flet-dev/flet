@@ -1,0 +1,31 @@
+[project]
+name = "notifications-permissions"
+version = "1.0.0"
+description = "Checks whether notifications are on, asks for permission, and opens the system settings when the user said no."
+requires-python = ">=3.10"
+keywords = ["services", "notifications", "permissions", "settings", "app lifecycle", "async"]
+authors = [{ name = "Flet team", email = "hello@flet.dev" }]
+dependencies = ["flet", "flet-notifications"]
+
+[dependency-groups]
+dev = ["flet-cli", "flet-desktop", "flet-web"]
+
+[tool.flet.gallery]
+categories = ["Utility/Notifications"]
+
+[tool.flet.metadata]
+title = "Permissions"
+docs_intro = "Calls [`open_settings()`][flet_notifications.Notifications.open_settings] when the user has turned notifications off, since the system won't ask again. The full-screen and Do Not Disturb buttons appear only on Android, and need the `USE_FULL_SCREEN_INTENT` and `ACCESS_NOTIFICATION_POLICY` permissions declared in `pyproject.toml`."
+controls = ["SafeArea", "Column", "Text", "Button", "SnackBar", "Notifications"]
+layout_pattern = "inline-actions"
+complexity = "basic"
+features = ["notification permissions", "notification settings", "full-screen intent permission", "Do Not Disturb access"]
+
+[tool.flet]
+org = "dev.flet"
+company = "Flet"
+copyright = "Copyright (C) 2023-2026 by Flet"
+
+[tool.flet.android.permission]
+"android.permission.USE_FULL_SCREEN_INTENT" = true
+"android.permission.ACCESS_NOTIFICATION_POLICY" = true

@@ -1,2 +1,2 @@
-{% for rule in cookiecutter.options.android_proguard_rules %}{{ rule }}
+{% for rule in cookiecutter._options.android_proguard_rules %}{{ rule }}
 {% endfor %}

@@ -5,7 +5,7 @@ publish_to: none
 
 environment:
   sdk: '>=3.2.3 <4.0.0'
-  flutter: ">=1.17.0"
+  flutter: ">=3.47.0"
 
 dependencies:
   flutter:
@@ -16,6 +16,7 @@ dependencies:
   media_kit_video: 2.0.1
   media_kit_libs_video: 1.0.7
 
+  material_ui: ^1.6.0
   flet:
     path: ../../../../../../../packages/flet
 

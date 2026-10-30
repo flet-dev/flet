@@ -32,10 +32,13 @@ To develop locally, [install Flet](getting-started/installation.md), [create a p
 
 <Image src="assets/getting-started/counter-app/macos.png" alt="Counter app running on macOS" width="60%" />
 
-:::tip[Quick desktop preview]
-Already have [`uv`](https://docs.astral.sh/uv/#installation)? Run this in your terminal to open a minimal Flet app without creating a project:
+## Quick preview from your terminal
 
-<Tabs>
+Already have [`uv`](https://docs.astral.sh/uv/#installation)? Run one of these in your terminal to open a minimal Flet app without installing Flet or creating a project.
+
+### In a desktop window
+
+<Tabs groupId="bash--powershell">
 <TabItem value="bash" label="Bash">
 
 ```bash
@@ -65,4 +68,38 @@ ft.run(main)
 
 </TabItem>
 </Tabs>
-:::
+
+### In your web browser
+
+The app is served locally and opens in a new browser tab. Press <kbd>Ctrl</kbd>+<kbd>C</kbd> in the terminal to stop it:
+
+<Tabs groupId="bash--powershell">
+<TabItem value="bash" label="Bash">
+
+```bash
+uvx --with flet-web -- python <<'PY'
+import flet as ft
+
+def main(page: ft.Page):
+    page.add(ft.Text("Hello from Flet!"))
+
+ft.run(main, view=ft.AppView.WEB_BROWSER)
+PY
+```
+
+</TabItem>
+<TabItem value="powershell" label="PowerShell">
+
+```powershell
+@'
+import flet as ft
+
+def main(page: ft.Page):
+    page.add(ft.Text("Hello from Flet!"))
+
+ft.run(main, view=ft.AppView.WEB_BROWSER)
+'@ | uvx --with flet-web -- python -
+```
+
+</TabItem>
+</Tabs>

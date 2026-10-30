@@ -24,10 +24,13 @@ speed-vs-control curve:
 | Python dependencies | Discovered by PyInstaller's static analysis of your imports | Installed in full from your declared [app dependencies](index.md#app-dependencies)                                          |
 | Build time       | Fast — no native compilation                                | Slower — a full Flutter build                                                                                              |
 | Customization    | Icon and executable/bundle metadata                         | Everything: icons, splash, [build template](index.md#build-template), [signing and store packaging](macos.md#code-signing) |
+| Extensions       | Only the [built-in extensions](../extend/built-in-extensions.md) of the prebuilt client | Any, including [your own and third-party ones](../extend/user-extensions.md)                                                |
 
 Reach for `flet pack` when you want a desktop artifact quickly; use
-[`flet build`](index.md) when you target mobile or web, or need deeper
-customization.
+[`flet build`](index.md) when you target mobile or web, need deeper
+customization, or use an extension the prebuilt client doesn't include: its
+controls show as unknown controls in a packed app, and `flet pack` warns about
+each one your app imports.
 
 Like PyInstaller itself, `flet pack` is not a cross-compiler: run it on each
 OS you target — [CI](#packaging-in-ci) makes this painless.
@@ -166,6 +169,16 @@ built in rather than applied at launch. Reach for it if you would rather have
 packaging handled than assemble it yourself.
 :::
 
+## Linux client flavor
+
+On Linux, `flet pack` bundles the [desktop client flavor](../getting-started/installation.md#linux)
+selected where you run it: the light one by default, which leaves out the
+[Audio](../services/audio/index.md), [Video](../controls/video/index.md) and
+[Rive](../controls/rive/index.md) extensions. `flet pack` warns when your app
+imports one of them. It reads `desktop_flavor` from the `pyproject.toml` of the
+folder you run it from, or
+[`FLET_DESKTOP_FLAVOR`](../reference/environment-variables.md#flet_desktop_flavor).
+
 ## Including assets
 
 If your app uses [assets](../cookbook/assets.md), include them with
@@ -217,7 +230,9 @@ the Flet viewer inside it.
   the underlying `pyinstaller` command, one at a time. Attach a value that starts with `-`
   using `=`, e.g. `--pyinstaller-build-args=--clean`.
 - `--` — pass everything that follows it straight through to `pyinstaller`, e.g.
-  `flet pack main.py -- --clean --log-level=WARN`.
+  `flet pack main.py -- --clean --noupx`.
+- `-v` — show packaging progress and PyInstaller's `INFO` log, or its `DEBUG`
+  log with `-vv`. Without it, only warnings and errors are shown.
 
 The full option list is in the [`flet pack` reference](../cli/flet-pack.md).
 
@@ -276,3 +291,4 @@ jobs:
 | `ModuleNotFoundError` inside the packaged app only          | The module is imported dynamically, so PyInstaller's static analysis missed it — repackage with [`--hidden-import`](../cli/flet-pack.md#--hidden-import) `<module>`.                                                                                                                                                                                               |
 | The packaged app exits or misbehaves with no visible error  | Repackage with [`--debug-console`](../cli/flet-pack.md#--debug-console) `1` to get a console window showing Python output and tracebacks.                                                                                                                                                                                                                          |
 | macOS: `"App" is damaged and can't be opened` on other Macs | Downloaded apps must be signed and notarized for Gatekeeper to run them. Sign the bundle with [`--codesign-identity`](../cli/flet-pack.md#--codesign-identity), then notarize and staple it — the [Notarization](macos.md#notarization) section explains the concepts and commands, which apply to any signed app. `flet build macos` automates this entire chain. |
+| Windows: the taskbar keeps showing an old icon              | Windows caches the taskbar icon by the executable's path and doesn't notice when that file is replaced by one with a different icon, for example after repackaging with a new [`--icon`](../cli/flet-pack.md#--icon). Restart Windows, or run the executable from a new folder or under a new name.                                                                |

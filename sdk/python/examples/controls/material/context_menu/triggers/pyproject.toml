@@ -12,6 +12,7 @@ dev = ["flet-cli", "flet-desktop", "flet-web"]
 
 [tool.flet.gallery]
 categories = ["Input/ContextMenu"]
+platforms = ["web", "macos", "windows", "linux"]
 
 [tool.flet.metadata]
 title = "Triggers"
@@ -24,4 +25,3 @@ features = ["multi-trigger menus", "item selection callback", "dismiss callback"
 org = "dev.flet"
 company = "Flet"
 copyright = "Copyright (C) 2023-2026 by Flet"
-platforms = ["web", "macos", "windows", "linux"]

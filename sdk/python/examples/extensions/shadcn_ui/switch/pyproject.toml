@@ -1,0 +1,26 @@
+[project]
+name = "shadcn-ui-switch"
+version = "1.0.0"
+description = "Airplane-mode switch with a live status label."
+requires-python = ">=3.10"
+keywords = ["shadcn", "switch", "toggle", "label"]
+authors = [{ name = "Flet team", email = "hello@flet.dev" }]
+dependencies = ["flet", "flet-shadcn-ui"]
+
+[dependency-groups]
+dev = ["flet-cli", "flet-desktop", "flet-web"]
+
+[tool.flet.gallery]
+categories = ["Extensions/Shadcn"]
+
+[tool.flet.metadata]
+title = "Shadcn Switch"
+controls = ["SafeArea", "Column", "Text", "Switch"]
+layout_pattern = "form"
+complexity = "basic"
+features = ["change handling", "sublabel"]
+
+[tool.flet]
+org = "dev.flet"
+company = "Flet"
+copyright = "Copyright (C) 2023-2026 by Flet"

@@ -33,6 +33,7 @@ DEFAULT_PACKAGES: list[str] = [
     "flet_permission_handler",
     "flet_rive",
     "flet_secure_storage",
+    "flet_shadcn_ui",
     "flet_video",
     "flet_webview",
 ]

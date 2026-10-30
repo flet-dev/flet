@@ -1,5 +1,5 @@
-import 'package:flutter/cupertino.dart';
-import 'package:flutter/material.dart';
+import 'package:cupertino_ui/cupertino_ui.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:flutter/services.dart';
 
 import '../extensions/control.dart';
@@ -285,6 +285,7 @@ class _CupertinoTextFieldControlState extends State<CupertinoTextFieldControl> {
             ? TextInputType.multiline
             : widget.control
                 .getTextInputType("keyboard_type", TextInputType.text)!,
+        textInputAction: widget.control.getTextInputAction("text_input_action"),
         clearButtonSemanticLabel:
             widget.control.getString("clear_button_semantics_label"),
         autocorrect: autocorrect,

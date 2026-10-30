@@ -1,0 +1,27 @@
+[project]
+name = "notifications-android-styles"
+version = "1.0.0"
+description = "Shows expandable big text, big picture, inbox and messaging notifications."
+requires-python = ">=3.10"
+keywords = ["services", "notifications", "styles", "big picture", "messaging", "android", "async"]
+authors = [{ name = "Flet team", email = "hello@flet.dev" }]
+dependencies = ["flet", "flet-notifications"]
+
+[dependency-groups]
+dev = ["flet-cli", "flet-desktop", "flet-web"]
+
+[tool.flet.gallery]
+categories = ["Utility/Notifications"]
+
+[tool.flet.metadata]
+title = "Android styles"
+docs_intro = "The big picture is `landscape.png` from the example's [`assets`](https://github.com/flet-dev/flet/tree/main/sdk/python/examples/extensions/notifications/android_styles/assets) folder, sent as bytes. Android only."
+controls = ["SafeArea", "Column", "Button", "Notifications"]
+layout_pattern = "inline-actions"
+complexity = "intermediate"
+features = ["big text style", "big picture style", "inbox style", "messaging style"]
+
+[tool.flet]
+org = "dev.flet"
+company = "Flet"
+copyright = "Copyright (C) 2023-2026 by Flet"

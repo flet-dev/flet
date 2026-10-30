@@ -45,14 +45,6 @@ the dialog opens inside the original gesture, and handle the selection in
 See [Client actions](../cookbook/client-actions.md).
 :::
 
-## Picking files with a client action
-
-The picked files stay associated with the `FilePicker`, so
-[`upload()`](filepicker.md#flet.FilePicker.upload) works exactly as it does
-after `pick_files()`.
-
-<CodeExample path={frontMatter.examples + '/pick_files_action/main.py'} language="python" />
-
 ### Uploading files
 
 To upload one or more files, call [`FilePicker.pick_files()`](filepicker.md#flet.FilePicker.pick_files)
@@ -105,26 +97,23 @@ and in your app you can display the uploaded picture with:
 ft.Image(src="/uploads/<some-uploaded-picture.png>")
 ```
 
+## Picking files with a client action
+
+The picked files stay associated with the `FilePicker`, so
+[`upload()`](filepicker.md#flet.FilePicker.upload) works exactly as it does
+after `pick_files()`.
+
+<CodeExample path={frontMatter.examples + '/pick_files_action/main.py'} language="python" />
+
 ## Examples
 
 <CodeExample path={frontMatter.examples + '/pick_save_and_get_directory_path/main.py'} language="python" />
 
 <Image src={frontMatter.example_images + '/pick_save_and_get_directory_path.png'} width="55%" />
 
-### Pick and upload files
-
-The following example demonstrates multi-file [pick](filepicker.md#flet.FilePicker.pick_files)
-and [upload](filepicker.md#flet.FilePicker.upload) app.
-
 <CodeExample path={frontMatter.examples + '/pick_and_upload/main.py'} language="python" />
 
 <Image src={frontMatter.example_images + '/pick_and_upload.png'} width="55%" />
-
-### Pick text content and save/download it
-
-Use [`pick_files()`](filepicker.md#flet.FilePicker.pick_files) with `with_data=True` when
-you need file contents directly, such as in web apps where
-[`FilePickerFile.path`](../types/filepickerfile.md#flet.FilePickerFile.path) is not available.
 
 <CodeExample path={frontMatter.examples + '/pick_and_save_text_content/main.py'} language="python" />
 

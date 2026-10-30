@@ -1,5 +1,7 @@
 """Invariants of the `flet build` cookiecutter template itself."""
 
+import argparse
+import importlib.util
 import json
 import re
 from pathlib import Path
@@ -10,6 +12,7 @@ import yaml
 from jinja2 import Environment, StrictUndefined
 
 from flet_cli.commands.build_base import BaseBuildCommand
+from flet_cli.utils.pyproject_toml import load_pyproject_toml
 
 BUILD_TEMPLATE_DIR = (
     Path(__file__).resolve().parents[3]
@@ -34,6 +37,85 @@ def _render_template(path: Path, **context: Any) -> str:
 
     env = Environment(keep_trailing_newline=True, undefined=StrictUndefined)
     return env.from_string(path.read_text()).render(cookiecutter=context)
+
+
+@pytest.mark.parametrize(
+    ("template", "platform"),
+    [
+        ("lib/flet_generated.dart", "windows"),
+        ("lib/flet_generated.dart", "macos"),
+        ("lib/flet_generated.dart", "linux"),
+        ("windows/runner/flutter_window.cpp", "windows"),
+    ],
+)
+@pytest.mark.parametrize(
+    ("global_value", "platform_value", "expected"),
+    [
+        (None, None, False),
+        (True, None, True),
+        (False, None, False),
+        (True, False, False),
+        (False, True, True),
+        (None, True, True),
+        (None, False, False),
+    ],
+)
+def test_hide_window_on_start_precedence(
+    tmp_path, template, platform, global_value, platform_value, expected
+):
+    """An explicit platform false keeps the generated window visible."""
+    settings = {
+        "tool.flet.app": global_value,
+        f"tool.flet.{platform}.app": platform_value,
+    }
+    (tmp_path / "pyproject.toml").write_text(
+        "\n".join(
+            f"[{table}]\nhide_window_on_start = {str(value).lower()}\n"
+            for table, value in settings.items()
+            if value is not None
+        ),
+        encoding="utf-8",
+    )
+    rendered = (
+        Environment(undefined=StrictUndefined)
+        .from_string((BUILD_TEMPLATE_DIR / template).read_text())
+        .render(
+            get_pyproject=load_pyproject_toml(tmp_path),
+            cookiecutter={
+                "_options": {"config_platform": platform},
+                "flutter": {"dependencies": []},
+                "python_module_name": "main",
+                "boot_screen": {"name": "flet", "options_b64": "e30="},
+            },
+        )
+    )
+    pattern = (
+        r'bool.tryParse\("([^"]+)"'
+        if template.endswith(".dart")
+        else r"const bool hide_window_on_start =\s+(true|false)"
+    )
+    match = re.search(pattern, rendered)
+    assert match is not None
+    assert (match.group(1).lower() == "true") is expected
+
+
+def test_get_pyproject_reads_the_app_pyproject_flet_build_passes():
+    """The template's `get_pyproject()` finds settings in `cookiecutter._pyproject`."""
+    spec = importlib.util.spec_from_file_location(
+        "cookiecutter_extensions",
+        BUILD_TEMPLATE_DIR.parent / "cookiecutter_extensions.py",
+    )
+    extensions = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(extensions)
+    env = Environment(extensions=[extensions.FletJinjaExtension])
+    rendered = env.from_string(
+        "{{ get_pyproject('tool.flet.android.min_sdk_version') }}"
+    ).render(
+        cookiecutter={
+            "_pyproject": {"tool": {"flet": {"android": {"min_sdk_version": 23}}}}
+        }
+    )
+    assert rendered == "23"
 
 
 class TestBuildTemplateContract:
@@ -65,7 +147,7 @@ class TestBuildTemplateContract:
             try:
                 text = path.read_text()
             except UnicodeDecodeError:
-                continue  # binary asset, e.g. images/icon.png
+                continue  # binary asset, e.g. an icon
             # The negative lookahead skips method calls such as
             # `cookiecutter.items()` in .vars, which are not context keys.
             for key in re.findall(
@@ -140,3 +222,89 @@ class TestBuildTemplateContract:
         manifest = json.loads(rendered)
         assert manifest["name"] == "Flet Studio"
         assert manifest["short_name"] == "Studio"
+
+
+class TestDefaultArtifactName:
+    """The `.app` name is what macOS users see (Finder, Dock, app menu), so it
+    defaults to the product name there; executables elsewhere keep the
+    project name (#6966)."""
+
+    def test_macos_uses_the_product_name(self):
+        assert (
+            BaseBuildCommand.default_artifact_name("macos", "Acme Notes", "acme_notes")
+            == "Acme Notes"
+        )
+
+    def test_macos_replaces_characters_file_names_cannot_hold(self):
+        assert (
+            BaseBuildCommand.default_artifact_name("macos", "Notes: A/B", "notes")
+            == "Notes- A-B"
+        )
+
+    def test_macos_falls_back_to_the_project_name(self):
+        assert BaseBuildCommand.default_artifact_name("macos", " ", "notes") == "notes"
+
+    @pytest.mark.parametrize("platform", ["windows", "linux", "android", "ios", "web"])
+    def test_other_platforms_use_the_project_name(self, platform):
+        assert (
+            BaseBuildCommand.default_artifact_name(platform, "Acme Notes", "acme_notes")
+            == "acme_notes"
+        )
+
+
+class TestResolvePermissions:
+    """Permission bundles follow the per-platform override rule: a platform
+    list replaces the common one; `[]` applies none."""
+
+    @staticmethod
+    def _command(platform: str, pyproject: dict, cli=None) -> BaseBuildCommand:
+        cmd = BaseBuildCommand.__new__(BaseBuildCommand)
+        cmd.config_platform = platform
+        cmd.options = argparse.Namespace(permissions=cli)
+
+        def get(path):
+            node = pyproject
+            for part in path.split("."):
+                if not isinstance(node, dict) or part not in node:
+                    return None
+                node = node[part]
+            return node
+
+        cmd.get_pyproject = get
+        return cmd
+
+    def test_common_list(self):
+        project = {"tool": {"flet": {"permissions": ["location", "camera"]}}}
+        assert self._command("ios", project).resolve_permissions() == [
+            "location",
+            "camera",
+        ]
+
+    def test_platform_list_replaces_the_common_one(self):
+        project = {
+            "tool": {
+                "flet": {
+                    "permissions": ["location", "camera"],
+                    "macos": {"permissions": ["microphone"]},
+                }
+            }
+        }
+        assert self._command("macos", project).resolve_permissions() == ["microphone"]
+        assert self._command("ios", project).resolve_permissions() == [
+            "location",
+            "camera",
+        ]
+
+    def test_empty_platform_list_applies_none(self):
+        project = {
+            "tool": {
+                "flet": {"permissions": ["camera"], "android": {"permissions": []}}
+            }
+        }
+        assert self._command("android", project).resolve_permissions() == []
+
+    def test_cli_wins(self):
+        project = {"tool": {"flet": {"permissions": ["camera"]}}}
+        assert self._command(
+            "ios", project, cli=["biometric"]
+        ).resolve_permissions() == ["biometric"]

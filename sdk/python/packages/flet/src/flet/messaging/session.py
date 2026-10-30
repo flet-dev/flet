@@ -4,6 +4,7 @@ import inspect
 import logging
 import traceback
 import weakref
+from collections.abc import Awaitable, Callable
 from datetime import datetime, timedelta, timezone
 from typing import TYPE_CHECKING, Any, Optional
 
@@ -60,7 +61,12 @@ class Session:
         self.__method_call_results: dict[asyncio.Event, tuple[Any, Optional[str]]] = {}
         self.__updates_ready: asyncio.Event = asyncio.Event()
         self.__pending_updates: set[BaseControl] = set()
-        self.__pending_effects: list[tuple[weakref.ref[EffectHook], bool]] = []
+        self.__pending_effects: list[
+            tuple[EffectHook, Callable[[], Any | Awaitable[Any]] | None]
+        ] = []
+        self.__effect_cleanup_tasks: set[asyncio.Task] = set()
+        """Tasks awaiting `async` effect cleanups, held until they finish so they
+        aren't garbage collected while pending."""
         self.__updates_task: Optional[asyncio.Task] = None
         self.__closed = False
         # Whether this session's app renders via the declarative components
@@ -421,7 +427,16 @@ class Session:
             self.__index[control_id] = live_control
             return live_control
 
-        return control
+        if control is not None:
+            # The control was removed from the page after the client queued
+            # the event (e.g. a size_change from a widget that was just torn
+            # down). There is no page to run the handler against, so drop it
+            # rather than failing with "Control must be added to the page
+            # first".
+            logger.debug(
+                "Dropping event for detached control %s (%s)", control, control_id
+            )
+        return None
 
     # optimizations:
     # - disable auto-update
@@ -528,20 +543,31 @@ class Session:
             result: Returned result payload.
             error: Optional error message returned by the client.
 
-        Raises:
-            RuntimeError: If the referenced control is not registered in the session.
+        The result goes to the waiting call (matched by `call_id`) even if
+        the control has been removed from the page in the meantime - e.g. an
+        embedded app replaced while its `wait_idle()` was pending. It's a
+        legitimate answer to a legitimate call; raising here instead killed
+        the connection's receive loop and froze the whole app. A result
+        nobody is waiting for is dropped.
         """
-        if control_id in self.__index:
-            evt = self.__method_calls.pop(call_id, None)
-            if evt is None:
-                return
-            self.__method_call_results[evt] = (result, error)
-            evt.set()
-        else:
-            raise RuntimeError(
-                f"Error handling invoke method results. Control with ID {control_id} "
-                "is not registered."
+        evt = self.__method_calls.pop(call_id, None)
+        if evt is None:
+            logger.debug(
+                "Dropping invoke method result for call %s (control %s): "
+                "nobody is waiting for it.",
+                call_id,
+                control_id,
             )
+            return
+        if control_id not in self.__index:
+            logger.debug(
+                "Invoke method result for call %s arrived after control %s "
+                "was removed; delivering it anyway.",
+                call_id,
+                control_id,
+            )
+        self.__method_call_results[evt] = (result, error)
+        evt.set()
 
     def __cancel_method_calls(self):
         """
@@ -687,7 +713,7 @@ class Session:
         # Hold a strong reference to the hook until it runs.  A weakref would
         # get cleared when the owning component unmounts and clears
         # `_state.hooks` — dropping queued cleanup effects on the floor.
-        self.__pending_effects.append((hook, is_cleanup))
+        self.__pending_effects.append((hook, None if is_cleanup else hook.setup))
         self.__updates_ready.set()
 
     def start_updates_scheduler(self):
@@ -723,28 +749,139 @@ class Session:
                 pending_effects = list(self.__pending_effects)
                 self.__pending_effects.clear()
 
-                for effect in pending_effects:
-                    try:
-                        hook = effect[0]
-                        is_cleanup = effect[1]
-                        # print(f"**** Running effect: {hook} {is_cleanup}")
-                        if hook and hook.setup and not is_cleanup:
-                            hook.cancel()
-                            res = None
-                            if inspect.iscoroutinefunction(hook.setup):
-                                hook._setup_task = asyncio.create_task(hook.setup())
-                            else:
-                                res = hook.setup()
-                            if callable(res):
-                                hook.cleanup = res
-                        elif hook and hook.cleanup and is_cleanup:
-                            hook.cancel()
-                            if inspect.iscoroutinefunction(hook.cleanup):
-                                hook._cleanup_task = asyncio.create_task(hook.cleanup())
-                            else:
-                                hook.cleanup()
-                    except Exception as ex:
-                        tb = traceback.format_exc()
-                        self.error(f"Exception in effect: {ex}\n{tb}")
+                for hook, setup in pending_effects:
+                    if hook:
+                        self.__run_effect(hook, setup)
         except asyncio.CancelledError:
             pass
+
+    def __run_effect(
+        self, hook: "EffectHook", setup: Callable[[], Any | Awaitable[Any]] | None
+    ):
+        """
+        Runs an effect's `setup`, the setup function it was scheduled with, or its
+        cleanups when `setup` is `None`. Queues it while the effect's previous
+        cleanups are still finishing.
+
+        Cleanups run only if a setup ran since the last ones, and always before the
+        next setup, even when that setup was scheduled without them. A setup that
+        runs after its component unmounted is cleaned up right away. A
+        `CancelledError` the effect raises itself means it was cancelled, which
+        isn't an error: running an effect never awaits, so it can't come from the
+        scheduler being cancelled. Other errors are reported.
+        """
+        try:
+            if hook.running_cleanup():
+                hook._queued.append(setup)
+                return
+            hook.cancel_setup()
+            if hook._active and (setup is None or hook.has_cleanup()):
+                hook._active = False
+                self.__run_effect_cleanups(hook, hook.take_cleanups())
+                if hook.running_cleanup() and setup is not None:
+                    hook._queued.append(setup)
+                    return
+            if setup is not None:
+                hook._active = True
+                if inspect.iscoroutinefunction(setup):
+                    hook._setup_task = asyncio.create_task(setup())
+                else:
+                    res = setup()
+                    hook._returned_cleanup = res if callable(res) else None
+                if not hook.is_live():
+                    hook.cancel_setup()
+                    hook._active = False
+                    self.__run_effect_cleanups(hook, hook.take_cleanups())
+        except asyncio.CancelledError:
+            pass
+        except Exception as ex:
+            self.__report_effect_error(ex)
+
+    def __run_effect_cleanups(
+        self,
+        hook: "EffectHook",
+        cleanups: list[Callable[[], Any | Awaitable[Any]]],
+    ):
+        """
+        Runs an effect's cleanups in order.
+
+        Non-`async` cleanups run right away, up to the first `async` one. That one
+        and the rest are finished in a task. Until it finishes, the effect's next
+        setups and cleanups wait. Then they run right away, before anything
+        scheduled later, unless the session has closed or disconnected.
+        """
+        started = None
+        for i, cleanup in enumerate(cleanups):
+            if inspect.iscoroutinefunction(cleanup):
+                break
+            started = self.__call_effect_cleanup(cleanup)
+            if started is not None:
+                i += 1
+                break
+        else:
+            return
+        task = asyncio.create_task(self.__finish_effect_cleanups(cleanups[i:], started))
+        hook._cleanup_task = task
+        self.__effect_cleanup_tasks.add(task)
+
+        def done(task: asyncio.Task):
+            self.__effect_cleanup_tasks.discard(task)
+            hook._cleanup_task = None
+            queued = hook.take_queued()
+            if self.__closed or (self.__conn is None and self.__expires_at is not None):
+                return
+            for setup in queued:
+                self.__run_effect(hook, setup)
+
+        task.add_done_callback(done)
+
+    def __call_effect_cleanup(
+        self, cleanup: Callable[[], Any | Awaitable[Any]]
+    ) -> Awaitable[Any] | None:
+        """
+        Calls a cleanup and returns what it returned if that is awaitable.
+
+        A cleanup that raises is reported; one that raises `CancelledError` was
+        cancelled, which isn't an error.
+        """
+        try:
+            res = cleanup()
+            return res if inspect.isawaitable(res) else None
+        except asyncio.CancelledError:
+            return None
+        except Exception as ex:
+            self.__report_effect_error(ex)
+            return None
+
+    async def __finish_effect_cleanups(
+        self,
+        cleanups: list[Callable[[], Any | Awaitable[Any]]],
+        started: Awaitable[Any] | None,
+    ):
+        """
+        Finishes an effect's cleanups in order: awaits `started`, then calls and
+        awaits each of `cleanups`.
+
+        One that raises is reported, and one that raises or is cancelled doesn't
+        keep the others from running. If this task itself is cancelled, the
+        cleanups not reached are skipped. Telling that apart from a cleanup
+        cancelled on its own needs `Task.cancelling()`, so on Python 3.10 they
+        still run.
+        """
+        pending = [started] if started is not None else []
+        for item in pending + cleanups:
+            try:
+                res = item if inspect.isawaitable(item) else item()
+                if inspect.isawaitable(res):
+                    await res
+            except asyncio.CancelledError:
+                task = asyncio.current_task()
+                if task is not None and getattr(task, "cancelling", lambda: 0)():
+                    raise
+            except Exception as ex:
+                self.__report_effect_error(ex)
+
+    def __report_effect_error(self, ex: Exception):
+        """Reports an exception raised by an effect setup or cleanup."""
+        tb = "".join(traceback.format_exception(type(ex), ex, ex.__traceback__))
+        self.error(f"Exception in effect: {ex}\n{tb}")
