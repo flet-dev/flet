@@ -290,7 +290,7 @@ ThemeData parseTheme(
     floatingActionButtonTheme: parseFloatingActionButtonTheme(
         value?["floating_action_button_theme"], theme),
     bottomAppBarTheme:
-        parseBottomAppBarTheme(value?["bottom_app_bar_theme"], theme),
+        parseBottomAppBarTheme(value?["bottom_appbar_theme"], theme),
     checkboxTheme: parseCheckboxTheme(value?["checkbox_theme"], theme),
     radioTheme: parseRadioTheme(value?["radio_theme"], theme),
     badgeTheme: parseBadgeTheme(value?["badge_theme"], theme),
@@ -734,7 +734,7 @@ BottomAppBarThemeData? parseBottomAppBarTheme(
   if (value == null) return defaultValue;
 
   return theme.bottomAppBarTheme.copyWith(
-    color: parseColor(value["color"], theme),
+    color: parseColor(value["bgcolor"], theme),
     shadowColor: parseColor(value["shadow_color"], theme),
     elevation: parseDouble(value["elevation"]),
     height: parseDouble(value["height"]),
