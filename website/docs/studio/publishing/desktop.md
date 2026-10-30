@@ -162,6 +162,36 @@ The certificate is used during the build, in a temporary keychain that's deleted
 afterwards. Notarization happens on Studio's servers: neither your App Store Connect key
 nor a token made from it reaches the build machine.
 
+## Mac App Store and TestFlight
+
+The macOS page's **App Store & TestFlight** card puts the app on TestFlight for Mac, for
+your testers. The Mac App Store itself comes next. It uses the same App Store Connect
+account as iOS.
+
+1. **App category:** Apple needs it for every Mac build. Choose it on the card. It's
+   also the App Store listing's primary category. If the app's macOS Info.plist sets
+   `LSApplicationCategoryType`, that one is used.
+2. **Create the app in App Store Connect** (**Apps › + › New App**, platform **macOS**,
+   the bundle ID from the list), then **Check setup**. If the app should be on iOS too,
+   tick both platforms: one app, one purchase.
+3. **Publish** on the TestFlight row builds the app for the Mac App Store and uploads it
+   from Studio's servers.
+
+If App Store Connect already has the app for iOS, the card asks once how the Mac app is
+sold:
+
+- **Add macOS to the app** (recommended): one app for both platforms. One purchase covers
+  iPhone, iPad and Mac (Universal Purchase), with one name and price. Apple can't undo
+  this, so Studio asks you to confirm.
+- **A separate macOS app**: its own app and purchase in App Store Connect, with its own
+  bundle ID. Set it in **macOS › Settings**, for example `com.example.app.mac`, then
+  create that app in App Store Connect.
+
+Studio makes everything the build is signed with: the app is sandboxed and signed with
+your team's Apple Distribution certificate (the same one as iOS), and the package
+(`.pkg`) with a Mac Installer certificate, under a Mac App Store profile. The card's
+**Create .pkg for manual upload** makes the package without uploading it.
+
 ## Download page
 
 Your Windows, Mac and Linux builds can go on the app's download page, the same page
@@ -192,10 +222,9 @@ their build.
 
 ### Can I put the app on the Microsoft Store or the Mac App Store?
 
-The Microsoft Store, yes: see [Microsoft Store](microsoft-store.md). The Mac App Store,
-not from Studio yet: build the app on your own computer with
-[`flet build`](../../publish/index.md). Until then, the [Mac app](#mac-app) opens on any
-Mac, signed and notarized.
+The Microsoft Store, yes: see [Microsoft Store](microsoft-store.md). The Mac App Store:
+TestFlight for Mac, yes ([Mac App Store and TestFlight](#mac-app-store-and-testflight)).
+Submitting to the Mac App Store itself is coming next.
 
 ### Will SmartScreen stop asking once the app is signed?
 

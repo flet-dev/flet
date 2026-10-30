@@ -63,6 +63,11 @@ Check the bundle ID before you create the app: it can't be changed later. If Stu
 couldn't register it (the key needs Admin access), register it yourself in your Apple
 Developer account under **Identifiers**.
 
+If App Store Connect already has the app for macOS (it was on the Mac first), the card
+asks once instead: **Add iOS to the app** (one purchase for both; Apple can't undo it) or
+**A separate iOS app** with its own bundle ID. See
+[Mac App Store and TestFlight](desktop.md#mac-app-store-and-testflight).
+
 ## TestFlight
 
 **Publish** (or **Update**) on the card's **TestFlight** row builds the app for the App
