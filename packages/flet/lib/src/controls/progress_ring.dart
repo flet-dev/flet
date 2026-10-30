@@ -26,7 +26,7 @@ class ProgressRingControl extends StatelessWidget {
       backgroundColor: control.getColor("bgcolor", context),
       semanticsLabel: control.getString("semantics_label"),
       strokeCap: control.getStrokeCap("stroke_cap"),
-      semanticsValue: control.getDouble("semantics_value")?.toString(),
+      semanticsValue: control.getString("semantics_value"),
       strokeAlign: control.getDouble("stroke_align"),
       trackGap: control.getDouble("track_gap"),
       constraints: control.getBoxConstraints("size_constraints"),

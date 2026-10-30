@@ -12,6 +12,7 @@ dev = ["flet-cli", "flet-desktop", "flet-web"]
 
 [tool.flet.gallery]
 categories = ["Sensors/HapticFeedback"]
+platforms = ["android", "ios"]
 
 [tool.flet.metadata]
 title = "Haptic feedback"
@@ -24,7 +25,6 @@ features = ["haptic feedback"]
 org = "dev.flet"
 company = "Flet"
 copyright = "Copyright (C) 2023-2026 by Flet"
-platforms = ["android", "ios"]
 
 [tool.flet.android.permission]
 "android.permission.VIBRATE" = true

@@ -74,6 +74,22 @@ void main() {
             contains('Initialization failed'))));
   });
 
+  testWidgets('a Python program that fails to start fails with its traceback',
+      (tester) async {
+    final backend = await _mountApp(tester);
+    // The embedded Python program exits before it connects, so the backend
+    // is still loading and only the boot screen shows the error.
+    Timer(const Duration(milliseconds: 300), () {
+      backend.bootStatus.value = const BootStatus(BootStage.startingUp,
+          error: "ModuleNotFoundError: No module named 'pydantic_core'");
+    });
+
+    await expectLater(
+        () => waitForAppLoaded(tester),
+        throwsA(isA<Exception>().having((e) => e.toString(), 'message',
+            contains("No module named 'pydantic_core'"))));
+  });
+
   testWidgets('a registered app that never initializes times out',
       (tester) async {
     final backend = await _mountApp(tester);

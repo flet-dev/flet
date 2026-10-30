@@ -12,6 +12,7 @@ dev = ["flet-cli", "flet-desktop", "flet-web"]
 
 [tool.flet.gallery]
 categories = ["Utility/FilePicker"]
+platforms = ["web"]
 
 [tool.flet.metadata]
 title = "Pick and upload files"
@@ -25,4 +26,3 @@ features = ["file upload", "upload progress"]
 org = "dev.flet"
 company = "Flet"
 copyright = "Copyright (C) 2023-2026 by Flet"
-platforms = ["web"]

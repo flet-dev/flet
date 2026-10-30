@@ -1886,6 +1886,13 @@ class BaseBuildCommand(BaseFlutterCommand):
         assert self.build_dir
         assert self.pubspec_path
 
+        # A deleted extension in build/flutter-packages would make this build
+        # fail before it could reinstall it: start over with a fresh project,
+        # fresh packages, and regenerated icons and splash images.
+        if not second_pass and self._flutter_packages_missing():
+            for stamp in ("template-1", "template-2", "package", "icons", "splashes"):
+                (self.build_dir / ".hash" / stamp).unlink(missing_ok=True)
+
         hash = HashStamp(
             self.build_dir / ".hash" / f"template-{'2' if second_pass else '1'}"
         )
@@ -2398,6 +2405,38 @@ class BaseBuildCommand(BaseFlutterCommand):
             if sizes:
                 return AssetSpec(ico_sizes=sizes)
         return None
+
+    def _flutter_packages_missing(self) -> bool:
+        """
+        Whether the Flutter project depends on an extension that is gone.
+
+        The previous build's `pubspec.yaml` lists the Flutter packages of the
+        app's extensions by their path in `build/flutter-packages`. If one of
+        them was deleted since, resolving that `pubspec.yaml` fails, and it is
+        resolved before the packages could be installed again, so the build
+        can't recover on its own. The build then starts over: the Flutter
+        project is rendered again, which also restores the template's icons
+        and splash images, so those are generated again too.
+
+        Returns:
+            `True` when a dependency's path is inside `build/flutter-packages`
+                and has no `pubspec.yaml`.
+        """
+
+        assert self.pubspec_path
+        assert self.build_dir
+
+        if not os.path.exists(self.pubspec_path):
+            return False
+        pubspec = self.load_yaml(self.pubspec_path) or {}
+        packages_dir = (self.build_dir / "flutter-packages").resolve()
+        for dependency in (pubspec.get("dependencies") or {}).values():
+            if not isinstance(dependency, dict) or "path" not in dependency:
+                continue
+            path = (Path(self.pubspec_path).parent / dependency["path"]).resolve()
+            if packages_dir in path.parents and not (path / "pubspec.yaml").exists():
+                return True
+        return False
 
     def _site_packages_missing(self) -> bool:
         """
@@ -2947,17 +2986,17 @@ class BaseBuildCommand(BaseFlutterCommand):
             for arg in package_args:
                 hash.update(arg)
 
-            if not dev_packages_configured:
-                if not hash.has_changed() and not self._site_packages_missing():
-                    package_args.append("--skip-site-packages")
-                    # serious_python skips copying Flutter packages to the temp dir
-                    # under --skip-site-packages, so register_flutter_extensions must
-                    # keep (not wipe) the permanent flutter-packages copy from the
-                    # previous build.
-                    self.site_packages_skipped = True
-                else:
-                    if self.flutter_packages_dir.exists():
-                        shutil.rmtree(self.flutter_packages_dir, ignore_errors=True)
+            if (
+                not dev_packages_configured
+                and not hash.has_changed()
+                and not self._site_packages_missing()
+            ):
+                package_args.append("--skip-site-packages")
+                # serious_python skips copying Flutter packages to the temp dir
+                # under --skip-site-packages, so register_flutter_extensions must
+                # keep (not wipe) the permanent flutter-packages copy from the
+                # previous build.
+                self.site_packages_skipped = True
 
             package_result = self.run(
                 package_args,

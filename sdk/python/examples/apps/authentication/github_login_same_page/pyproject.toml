@@ -10,6 +10,9 @@ dependencies = ["flet"]
 [dependency-groups]
 dev = ["flet-cli", "flet-desktop", "flet-web"]
 
+[tool.flet.gallery]
+platforms = ["web"]
+
 [tool.flet.metadata]
 title = "GitHub login in same page"
 controls = ["SafeArea", "Column", "Button", "Text", "GitHubOAuthProvider", "UrlLauncher"]
@@ -21,4 +24,3 @@ features = ["oauth login", "same-tab redirect"]
 org = "dev.flet"
 company = "Flet"
 copyright = "Copyright (C) 2023-2026 by Flet"
-platforms = ["web"]

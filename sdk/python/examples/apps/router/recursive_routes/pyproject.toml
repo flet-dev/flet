@@ -12,6 +12,7 @@ dev = ["flet-cli", "flet-desktop", "flet-web"]
 
 [tool.flet.gallery]
 categories = ["Navigation/Router"]
+platforms = ["web"]
 
 [tool.flet.metadata]
 title = "Recursive routes"
@@ -22,7 +23,6 @@ complexity = "intermediate"
 features = ["recursive routes", "use_view_path", "manage_views", "tree URLs"]
 
 [tool.flet]
-platforms = ["web"]
 org = "dev.flet"
 company = "Flet"
 copyright = "Copyright (C) 2023-2026 by Flet"

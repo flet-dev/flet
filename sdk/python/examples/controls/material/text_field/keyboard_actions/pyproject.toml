@@ -1,0 +1,30 @@
+[project]
+name = "text-field-keyboard-actions"
+version = "1.0.0"
+description = "Chains form fields with the keyboard's Next button and sends the form with its Send button."
+requires-python = ">=3.10"
+keywords = ["text field", "keyboard", "text input action", "next", "form", "focus"]
+authors = [{ name = "Flet team", email = "hello@flet.dev" }]
+dependencies = ["flet"]
+
+[dependency-groups]
+dev = ["flet-cli", "flet-desktop", "flet-web"]
+
+[tool.flet.gallery]
+categories = ["Input/TextField"]
+
+[tool.flet.metadata]
+title = "Keyboard actions"
+docs_intro = """
+Set [`text_input_action`][flet.TextField.text_input_action] to choose the action button of the onscreen keyboard.
+
+Here, the keyboard's Next button moves from one field to the next while the keyboard stays open, and its Send button on the last field calls [`on_submit`][flet.TextField.on_submit]. On desktop and web, `Enter` does the same."""
+controls = ["SafeArea", "Column", "TextField", "Text"]
+layout_pattern = "form"
+complexity = "basic"
+features = ["keyboard action button", "focus chaining", "form submission"]
+
+[tool.flet]
+org = "dev.flet"
+company = "Flet"
+copyright = "Copyright (C) 2023-2026 by Flet"
