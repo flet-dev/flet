@@ -33,6 +33,7 @@
 ### Improvements
 
 * The prebuilt Windows desktop client (`flet.exe` and its DLLs) that `flet run` downloads is now code-signed, so it starts with Windows Smart App Control turned on ([#7011](https://github.com/flet-dev/flet/issues/7011)) by @FeodorFitsner.
+* Web apps served by Flet, such as with `flet run --web`, send their text and WebAssembly files gzip-compressed to browsers that accept it, so `main.dart.wasm`, `main.dart.js`, CanvasKit and fonts download about 3x smaller ([#6266](https://github.com/flet-dev/flet/issues/6266), [#7026](https://github.com/flet-dev/flet/pull/7026)) by @ndonkoHenri.
 * `flet pack` warns about each extension the app imports that the prebuilt Flet client doesn't include, since its controls show as unknown controls in the packed app ([#6999](https://github.com/flet-dev/flet/pull/6999)) by @ndonkoHenri.
 * `flet pack` shows only warnings and errors by default instead of PyInstaller's full log: `-v` shows packaging progress and PyInstaller's `INFO` log, `-vv` its `DEBUG` log ([#6999](https://github.com/flet-dev/flet/pull/6999)) by @ndonkoHenri.
 * `flet build linux` apps install a hidden desktop entry for the current user while they run, so GNOME's dock shows the app's icon and name instead of a generic icon and the app id, on Wayland and on GNOME 46+ under X11. Turn it off with `[tool.flet.linux] desktop_entry = false`. See [App icon](https://flet.dev/docs/publish/linux#app-icon) ([#7001](https://github.com/flet-dev/flet/pull/7001)) by @ndonkoHenri.
