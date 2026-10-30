@@ -35,8 +35,6 @@ logger = logging.getLogger(flet_fastapi.__name__)
 mimetypes.add_type("text/javascript", ".mjs")
 mimetypes.add_type("application/wasm", ".wasm")
 
-# Text and WebAssembly files shrink about 3x with gzip; images, archives and
-# `.woff2` fonts are already compressed.
 COMPRESSIBLE_EXTENSIONS = {
     ".css",
     ".html",
@@ -51,9 +49,18 @@ COMPRESSIBLE_EXTENSIONS = {
     ".wasm",
     ".xml",
 }
+"""
+Extensions of files sent gzip-compressed to browsers that accept it.
 
-# Below this size, compression saves less than it costs.
+Text and WebAssembly files shrink about 3x with gzip; images, archives and
+`.woff2` fonts are already compressed.
+"""
+
 MIN_COMPRESSED_FILE_SIZE = 1024
+"""
+Size in bytes below which files are sent uncompressed, as compression saves less
+than it costs.
+"""
 
 
 def resolve_assets_dir(assets_dir: Optional[str]) -> Optional[str]:
