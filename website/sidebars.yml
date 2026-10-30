@@ -224,6 +224,7 @@ docs:
         Radio: controls/radio.md
         RadioGroup: controls/radiogroup.md
         RangeSlider: controls/rangeslider.md
+        RefreshIndicator: controls/refreshindicator.md
         ReorderableListView: controls/reorderablelistview.md
         SearchBar: controls/searchbar.md
         SegmentedButton:
@@ -943,6 +944,7 @@ docs:
       - types/pointerdevicetype.md
       - types/pointmode.md
       - types/popupmenuposition.md
+      - types/refreshindicatortriggermode.md
       - types/route.md
       - types/routeurlstrategy.md
       - types/scrollbar.md
