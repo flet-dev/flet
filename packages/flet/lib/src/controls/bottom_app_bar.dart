@@ -31,27 +31,43 @@ class BottomAppBarControl extends StatelessWidget {
         "shape", theme, BottomAppBarTheme.of(context).shape);
     final geometry =
         Scaffold.maybeOf(context) != null ? Scaffold.geometryOf(context) : null;
-    final margin = control.getMargin("margin");
+    final skipProps = control.internals?["skip_properties"] as List?;
+    final margin = skipProps?.contains("margin") == true
+        ? null
+        : control.getMargin("margin");
     final marginAnimation = control.getAnimation("animate_margin");
     final content = control.buildWidget("content");
 
-    Widget buildBar(EdgeInsets? margin, Widget? child) => BottomAppBar(
-          clipBehavior: clipBehavior,
-          padding: control.getPadding("padding"),
-          height: control.getDouble("height"),
-          elevation: control.getDouble("elevation"),
-          shape: _shiftNotch(shape, margin, geometry),
-          shadowColor: control.getColor("shadow_color", context),
-          color: control.getColor("bgcolor", context),
-          notchMargin: control.getDouble("notch_margin", 4.0)!,
-          child: child,
+    Widget buildBar(EdgeInsets? margin, Widget? child) {
+      Widget bar = BottomAppBar(
+        clipBehavior: clipBehavior,
+        padding: control.getPadding("padding"),
+        height: control.getDouble("height"),
+        elevation: control.getDouble("elevation"),
+        shape: _shiftNotch(shape, margin, geometry),
+        shadowColor: control.getColor("shadow_color", context),
+        color: control.getColor("bgcolor", context),
+        notchMargin: control.getDouble("notch_margin", 4.0)!,
+        child: child,
+      );
+      if (borderRadius != null && borderRadius != BorderRadius.zero) {
+        bar = ClipRRect(
+          borderRadius: borderRadius,
+          // can't use Clip.none here, so fallback to Clip.antiAlias in that case
+          clipBehavior:
+              clipBehavior == Clip.none ? Clip.antiAlias : clipBehavior,
+          child: bar,
         );
+      }
+      return bar;
+    }
 
     // LayoutControl animates an animated margin around the bar, which moves
     // the bar without resizing it, so BottomAppBar keeps its notch where it
     // was first cut. Animating the same margin here rebuilds the notch for
-    // every frame of that animation.
-    Widget bottomAppBar = margin != null && marginAnimation != null
+    // every frame of that animation. The clip is built inside the builder,
+    // so adding or removing a border radius keeps the animation running.
+    final bottomAppBar = margin != null && marginAnimation != null
         ? TweenAnimationBuilder<EdgeInsets>(
             tween: EdgeInsetsTween(begin: margin, end: margin),
             duration: marginAnimation.duration,
@@ -60,15 +76,6 @@ class BottomAppBarControl extends StatelessWidget {
             child: content,
           )
         : buildBar(margin, content);
-
-    if (borderRadius != null && borderRadius != BorderRadius.zero) {
-      bottomAppBar = ClipRRect(
-        borderRadius: borderRadius,
-        // can't use Clip.none here, so fallback to Clip.antiAlias in that case
-        clipBehavior: clipBehavior == Clip.none ? Clip.antiAlias : clipBehavior,
-        child: bottomAppBar,
-      );
-    }
 
     return LayoutControl(control: control, child: bottomAppBar);
   }
