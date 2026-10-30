@@ -60,6 +60,7 @@
 
 ### Bug fixes
 
+* Fix `ResponsiveRow` not resizing its children when their `col` changes ([#6734](https://github.com/flet-dev/flet/issues/6734)) by @ndonkoHenri.
 * Fix `use_state()` and `use_ref()` type inference for callable initializers in mypy and ty ([#6960](https://github.com/flet-dev/flet/issues/6960), [#7014](https://github.com/flet-dev/flet/pull/7014), [#7023](https://github.com/flet-dev/flet/pull/7023)) by @mmporong.
 * Fix `flet build` apps showing a blank page when the system suspended them while Python was starting, such as when iOS launches an app in the background for a notification action ([#6999](https://github.com/flet-dev/flet/pull/6999)) by @ndonkoHenri.
 * Fix `flet build` naming a Linux app's icons `None.png` and leaving the iOS frameworks it builds from the app's packages under shared identifiers when no `bundle_id` is set ([#6999](https://github.com/flet-dev/flet/pull/6999)) by @ndonkoHenri.
@@ -132,7 +133,6 @@
 * Fix `pip install "flet[all]"` failing without a C++ compiler on Windows on ARM: `flet-web` no longer installs `uvicorn[standard]` there, whose `httptools` has no wheels for it ([#6927](https://github.com/flet-dev/flet/pull/6927)) by @ndonkoHenri.
 * Fix `flet run` crashing with `inotify watch limit reached` on Linux; it now warns that the app won't reload on changes and runs it anyway ([#6711](https://github.com/flet-dev/flet/issues/6711), [#6924](https://github.com/flet-dev/flet/pull/6924)) by @ndonkoHenri.
 * Fix Flet apps on Windows turning off HDR, or dimming and blanking external monitors, while running; the unused desktop plugins of `screen_brightness` are no longer bundled ([#6629](https://github.com/flet-dev/flet/issues/6629), [#6493](https://github.com/flet-dev/flet/issues/6493), [#6925](https://github.com/flet-dev/flet/pull/6925)) by @ndonkoHenri.
-* Fix `ResponsiveRow` not resizing its children when their `col` changes ([#6734](https://github.com/flet-dev/flet/issues/6734)) by @ndonkoHenri.
 
 ## 1.0.3
 
