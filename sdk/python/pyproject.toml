@@ -27,6 +27,7 @@ dependencies = [
     "flet-mcp",
     "flet-notifications",
     "flet-permission-handler",
+    "flet-quick-actions",
     "flet-rive",
     "flet-secure-storage",
     "flet-shadcn-ui",
@@ -57,6 +58,7 @@ flet-map = { workspace = true }
 flet-mcp = { workspace = true }
 flet-notifications = { workspace = true }
 flet-permission-handler = { workspace = true }
+flet-quick-actions = { workspace = true }
 flet-rive = { workspace = true }
 flet-secure-storage = { workspace = true }
 flet-shadcn-ui = { workspace = true }
@@ -134,6 +136,7 @@ isort = { known-first-party = [
     "flet_mcp",
     "flet_notifications",
     "flet_permission_handler",
+    "flet_quick_actions",
     "flet_rive",
     "flet_secure_storage",
     "flet_video",
