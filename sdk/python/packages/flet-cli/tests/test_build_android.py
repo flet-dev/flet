@@ -55,7 +55,8 @@ def _render_gradle(cmd):
 
 
 def _render_manifest(cmd):
-    """Parse a rendered manifest containing receivers and existing app entries."""
+    """Parse a rendered manifest containing queries, receivers, and existing app
+    entries."""
     path = ANDROID_APP_TEMPLATE / "src/main/AndroidManifest.xml"
     rendered = (
         Environment(undefined=StrictUndefined)
@@ -65,6 +66,7 @@ def _render_manifest(cmd):
                 "product_name": "Example",
                 "_pyproject": {},
                 "_options": {
+                    "android_queries": cmd.get_android_queries(),
                     "android_receivers": cmd.get_android_receivers(),
                     "android_services": cmd.get_android_services(),
                     "android_permissions": {"android.permission.INTERNET": True},

@@ -855,6 +855,112 @@ the `pyproject.toml` example above will be translated accordingly into this:
 
 </details>
 
+### Queries
+
+On Android 11 and later, an app sees only some of the other apps installed on
+the device. To check whether another app is installed, open it, or read its
+content provider, for example a payment app or apps that handle a URL scheme
+(such as with [`UrlLauncher.can_launch_url()`][flet.UrlLauncher.can_launch_url]),
+declare it in the `<queries>` element of
+[`AndroidManifest.xml`](index.md#build-template).
+
+See also:
+
+- [Package visibility](https://developer.android.com/training/package-visibility)
+- [`<queries>` element](https://developer.android.com/guide/topics/manifest/queries-element)
+
+#### Resolution order
+
+Its value is determined in the following order of precedence:
+
+1. `[tool.flet.android.queries]`
+
+#### Supported value forms
+
+The table accepts three keys:
+
+- `packages`: a list of app package names, such as `"com.tencent.mm"`. Each
+  becomes a `<package>` element.
+- `intent`: an array of tables, each becoming an `<intent>` element, for the
+  apps that can handle that intent. Each table has:
+    - `action`: the name of exactly one action.
+    - `categories`: an optional list of category names.
+    - `data`: an optional table, or list of tables, each becoming a `<data>`
+      element. Only the `scheme`, `host` and `mimeType` attributes are
+      supported, and each can be set once per intent, in one `<data>` element
+      or spread over several. Android allows `*` as the value of `scheme` and
+      `host` and as a MIME subtype, such as `"image/*"`.
+- `providers`: a list of content provider authorities, each becoming a
+  `<provider>` element. One entry can list several authorities separated by
+  `;`.
+
+Repeated packages and providers are declared once. Flet always declares one
+intent itself, `android.intent.action.PROCESS_TEXT` for `text/plain`, which the
+text selection menu uses to find apps that can process selected text, such as
+translators. Your declarations are added after it.
+
+#### Example
+
+<Tabs groupId="pyproject-toml">
+<TabItem value="pyproject-toml" label="pyproject.toml">
+```toml
+[tool.flet.android.queries]
+packages = ["com.eg.android.AlipayGphone", "com.tencent.mm"]
+providers = ["com.example.settings.files"]
+
+[[tool.flet.android.queries.intent]]
+action = "android.intent.action.VIEW"
+data = { scheme = "alipays" }
+
+[[tool.flet.android.queries.intent]]
+action = "android.intent.action.SEND"
+data = { mimeType = "image/*" }
+
+[[tool.flet.android.queries.intent]]
+action = "android.intent.action.VIEW"
+categories = ["android.intent.category.BROWSABLE"]
+data = [{ scheme = "https" }, { host = "example.com" }]
+```
+</TabItem>
+</Tabs>
+<details>
+<summary>Template translation</summary>
+
+In [`AndroidManifest.xml`](index.md#build-template),
+the `pyproject.toml` example above will be translated accordingly into this:
+
+```xml
+<manifest>
+    <queries>
+        <!-- Always added by Flet, for the text selection menu -->
+        <intent>
+            <action android:name="android.intent.action.PROCESS_TEXT" />
+            <data android:mimeType="text/plain" />
+        </intent>
+        <!-- From the example -->
+        <package android:name="com.eg.android.AlipayGphone" />
+        <package android:name="com.tencent.mm" />
+        <intent>
+            <action android:name="android.intent.action.VIEW" />
+            <data android:scheme="alipays" />
+        </intent>
+        <intent>
+            <action android:name="android.intent.action.SEND" />
+            <data android:mimeType="image/*" />
+        </intent>
+        <intent>
+            <action android:name="android.intent.action.VIEW" />
+            <category android:name="android.intent.category.BROWSABLE" />
+            <data android:scheme="https" />
+            <data android:host="example.com" />
+        </intent>
+        <provider android:authorities="com.example.settings.files" />
+    </queries>
+</manifest>
+```
+
+</details>
+
 ### Features
 
 A hardware or software feature that is used by the application.
