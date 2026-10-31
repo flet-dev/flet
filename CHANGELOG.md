@@ -62,6 +62,8 @@
 
 ### Bug fixes
 
+* Fix the full Linux desktop client failing to start after an OS upgrade or a `FLET_LINUX_DISTRO` change, when the client cached for the previous distro was reused ([#5311](https://github.com/flet-dev/flet/issues/5311), [#7030](https://github.com/flet-dev/flet/pull/7030)) by @ndonkoHenri.
+* Fix `desktop_flavor` in `pyproject.toml` being ignored when the app is started from another directory with `flet run` or `python` ([#6265](https://github.com/flet-dev/flet/issues/6265), [#7030](https://github.com/flet-dev/flet/pull/7030)) by @ndonkoHenri.
 * Fix `use_state()` and `use_ref()` type inference for callable initializers in mypy and ty ([#6960](https://github.com/flet-dev/flet/issues/6960), [#7014](https://github.com/flet-dev/flet/pull/7014), [#7023](https://github.com/flet-dev/flet/pull/7023)) by @mmporong.
 * Fix `BottomAppBar` cutting its notch away from the floating action button when the bar has a left or top `margin`, including an animated one ([#6986](https://github.com/flet-dev/flet/issues/6986), [#7024](https://github.com/flet-dev/flet/pull/7024)) by @ndonkoHenri.
 * Fix `Theme.bottom_appbar_theme` being ignored, so its `bgcolor`, `shape` and other settings never reached `BottomAppBar` ([#7024](https://github.com/flet-dev/flet/pull/7024)) by @ndonkoHenri.
@@ -126,6 +128,8 @@
 ### Improvements
 
 * Add `--pwa-short-name` and `[tool.flet.web].pwa_short_name` to `flet build web` to set the `short_name` of the web app manifest: the label shown under the app icon when the PWA is installed, e.g. on the iOS Home Screen. It defaults to the product name ([#6911](https://github.com/flet-dev/flet/pull/6911)) by @FeodorFitsner.
+* Warn when a desktop app uses an extension the prebuilt desktop client doesn't include, such as Audio or Video with the light Linux client, instead of only showing unknown controls ([#6121](https://github.com/flet-dev/flet/issues/6121), [#6265](https://github.com/flet-dev/flet/issues/6265), [#7030](https://github.com/flet-dev/flet/pull/7030)) by @ndonkoHenri.
+* Show which packages to install when the Linux desktop client can't start because a shared library such as `libmpv.so.2` can't be loaded ([#2823](https://github.com/flet-dev/flet/issues/2823), [#7030](https://github.com/flet-dev/flet/pull/7030)) by @ndonkoHenri.
 
 ### Bug fixes
 

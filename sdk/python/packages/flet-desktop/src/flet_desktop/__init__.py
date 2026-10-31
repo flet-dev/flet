@@ -2,6 +2,7 @@ import asyncio
 import contextlib
 import ctypes
 import ctypes.util
+import functools
 import hashlib
 import logging
 import os
@@ -29,6 +30,12 @@ from flet.utils import (
     random_string,
     safe_tar_extractall,
     safe_zip_extractall,
+)
+from flet_desktop.extensions import (
+    find_extension_packages,
+    find_imported_modules,
+    find_installed_extensions,
+    get_client_extensions,
 )
 
 logger = logging.getLogger(flet_desktop.__name__)
@@ -58,49 +65,194 @@ def get_package_bin_dir():
     return str(Path(__file__).parent.joinpath("app"))
 
 
-def __get_desktop_flavor():
+def __read_pyproject_flavor(pyproject_path: Path) -> str | None:
     """
-    Return the desktop client flavor to use: `"full"` or `"light"`.
+    Return `[tool.flet].desktop_flavor` from a `pyproject.toml`, if valid.
 
-    Resolution order:
+    Args:
+        pyproject_path: Path of the `pyproject.toml` to read.
 
-    1. `FLET_DESKTOP_FLAVOR` environment variable.
-    2. `[tool.flet].desktop_flavor` in the project's `pyproject.toml`.
-    3. Default: `"light"` on Linux, `"full"` elsewhere.
+    Returns:
+        `"full"` or `"light"`, or `None` when the file is missing, unreadable
+            or has no valid setting.
     """
 
-    env_flavor = os.environ.get("FLET_DESKTOP_FLAVOR", "").strip().lower()
-    if env_flavor in ("full", "light"):
-        return env_flavor
-
-    # Try reading from pyproject.toml in the current working directory.
     try:
         if sys.version_info >= (3, 11):
             import tomllib
         else:
             import tomli as tomllib  # type: ignore[no-redef]
 
-        pyproject_path = Path(os.getcwd()) / "pyproject.toml"
-        if pyproject_path.is_file():
-            with pyproject_path.open("rb") as f:
-                data = tomllib.load(f)
-            flavor = data.get("tool", {}).get("flet", {}).get("desktop_flavor", "")
-            if isinstance(flavor, str) and flavor.strip().lower() in (
-                "full",
-                "light",
-            ):
-                return flavor.strip().lower()
+        if not pyproject_path.is_file():
+            return None
+        with pyproject_path.open("rb") as f:
+            data = tomllib.load(f)
+        flavor = data.get("tool", {}).get("flet", {}).get("desktop_flavor", "")
+        if isinstance(flavor, str) and flavor.strip().lower() in ("full", "light"):
+            return flavor.strip().lower()
     except Exception:
         pass
+    return None
 
-    return "light" if is_linux() else "full"
+
+def __get_configured_desktop_flavor() -> str | None:
+    """
+    Return the desktop client flavor the user configured, or `None`.
+
+    Resolution order:
+
+    1. `FLET_DESKTOP_FLAVOR` environment variable.
+    2. `[tool.flet].desktop_flavor` in the `pyproject.toml` of the current
+       working directory.
+    3. `[tool.flet].desktop_flavor` in the nearest `pyproject.toml` at or
+       above the directory of the started script, `sys.argv[0]`, so an app
+       started from another directory reads its own project's setting. It is
+       skipped when `sys.argv[0]` is not a file, as with `python -c`.
+
+    A frozen app, such as one made with `flet pack`, uses only the environment
+    variable: its bundled client must not be swapped for one picked by a
+    `pyproject.toml` in the directory it is started from or installed in.
+
+    Invalid values are ignored.
+    """
+
+    env_flavor = os.environ.get("FLET_DESKTOP_FLAVOR", "").strip().lower()
+    if env_flavor in ("full", "light"):
+        return env_flavor
+    if getattr(sys, "frozen", False):
+        return None
+
+    candidates = [Path(os.getcwd()) / "pyproject.toml"]
+    script = Path(sys.argv[0] if sys.argv else "")
+    with contextlib.suppress(OSError):
+        if script.is_file():
+            for directory in script.resolve().parents:
+                pyproject_path = directory / "pyproject.toml"
+                if pyproject_path.is_file():
+                    if pyproject_path != candidates[0]:
+                        candidates.append(pyproject_path)
+                    break
+    for pyproject_path in candidates:
+        flavor = __read_pyproject_flavor(pyproject_path)
+        if flavor:
+            return flavor
+    return None
 
 
+def __get_desktop_flavor():
+    """
+    Return the desktop client flavor to use: `"full"` or `"light"`.
+
+    The configured flavor (see `__get_configured_desktop_flavor()`) wins;
+    otherwise `"light"` on Linux and `"full"` elsewhere.
+    """
+
+    return __get_configured_desktop_flavor() or ("light" if is_linux() else "full")
+
+
+def __get_cached_client_extensions(
+    client_dir: Path, snapshot_path: Path
+) -> set[str] | None:
+    """
+    Return the Flutter packages compiled into a cached client.
+
+    They are read from the client's AOT snapshot once and stored in an
+    `.extensions` file in its cache directory, so later starts don't scan the
+    snapshot again.
+
+    Args:
+        client_dir: Cache directory of the client.
+        snapshot_path: Path to the client's AOT snapshot.
+
+    Returns:
+        Names of the packages, or `None` when they can't be told.
+    """
+
+    marker = client_dir / ".extensions"
+    with contextlib.suppress(OSError):
+        extensions = set(marker.read_text().split())
+        if "flet" in extensions:
+            return extensions
+    extensions = get_client_extensions(str(snapshot_path))
+    if extensions is not None:
+        with contextlib.suppress(OSError):
+            marker.write_text("\n".join(sorted(extensions)))
+    return extensions
+
+
+def __warn_missing_extensions(
+    client_dir: Path, snapshot_path: Path, app_dir: str | Path | None
+) -> None:
+    """
+    Warn about the extensions the app uses that the cached client doesn't include.
+
+    Their controls render as unknown controls and their services never
+    answer, without either pointing at the client. An extension counts as used
+    when its module is already imported or one of the app's Python files
+    imports it. On Linux, the light client suggests the full one, which
+    includes more extensions; otherwise a client made with `flet build`, which
+    Flet uses when the app is started from its project folder, is suggested.
+    Problems while checking are logged at debug level and never stop the app.
+
+    Args:
+        client_dir: Cache directory of the client.
+        snapshot_path: Path to the client's AOT snapshot.
+        app_dir: Directory of the app's main script, or `None` to use the
+            directory of `sys.argv[0]` when that is a file.
+    """
+
+    try:
+        client_extensions = __get_cached_client_extensions(client_dir, snapshot_path)
+        if client_extensions is None:
+            return
+        if find_extension_packages() <= client_extensions:
+            return
+        missing = [
+            e for e in find_installed_extensions() if e.package not in client_extensions
+        ]
+        if not missing:
+            return
+        imported = {name.split(".")[0] for name in list(sys.modules)}
+        if any(not e.modules & imported for e in missing):
+            if app_dir is None:
+                script = Path(sys.argv[0] if sys.argv else "")
+                app_dir = script.resolve().parent if script.is_file() else None
+            if app_dir is not None:
+                imported |= find_imported_modules(Path(app_dir))
+        light = is_linux() and __get_desktop_flavor() == "light"
+        for extension in (e for e in missing if e.modules & imported):
+            source = (
+                f" (from {extension.distribution})" if extension.distribution else ""
+            )
+            if light:
+                fix = (
+                    "If the full client includes it, set FLET_DESKTOP_FLAVOR=full "
+                    'or desktop_flavor = "full" under [tool.flet] in pyproject.toml: '
+                    "https://flet.dev/docs/getting-started/installation#linux"
+                )
+            else:
+                fix = (
+                    "Build a client that includes it with `flet build` and start the "
+                    "app from the project folder: https://flet.dev/docs/extend/"
+                    "user-extensions#change-python-files"
+                )
+            logger.warning(
+                f"The {'light ' if light else ''}Flet desktop client doesn't include "
+                f"the {extension.package} extension{source} the app uses, so its "
+                f"controls show as unknown controls and its services don't respond. "
+                f"{fix}"
+            )
+    except Exception as e:
+        logger.debug(f"Could not check the client's extensions: {e}")
+
+
+@functools.cache
 def __get_system_glibc_version():
     """
     Return the system glibc version as a `(major, minor)` tuple.
 
-    Falls back to `(0, 0)` when detection fails.
+    Falls back to `(0, 0)` when detection fails. The result is cached for the
+    process, since the system glibc can't change while it runs.
     """
 
     try:
@@ -132,6 +284,13 @@ def __get_linux_distro_id(arch: str):
     override = os.environ.get("FLET_LINUX_DISTRO", "").strip()
     if override:
         return override
+    return __get_glibc_distro_id(arch)
+
+
+def __get_glibc_distro_id(arch: str):
+    """
+    Return the distro id of the newest build target the system glibc supports.
+    """
 
     targets = [
         (required_glibc, distro_id)
@@ -193,6 +352,10 @@ def __get_client_storage_dir(fingerprint: str | None = None) -> Path:
     from being shadowed by — or shadowing — the vanilla client or another
     app's patched client of the same Flet version.
 
+    On Linux the name is `flet-desktop-{flavor}-{distro}-{version}`. Each distro
+    build links the `libmpv` soname of that distro, so a client extracted before
+    an OS upgrade or a `FLET_LINUX_DISTRO` change is never reused.
+
     Args:
         fingerprint: Optional content fingerprint of the bundled client archive.
 
@@ -201,7 +364,13 @@ def __get_client_storage_dir(fingerprint: str | None = None) -> Path:
     """
 
     flavor = __get_desktop_flavor()
-    name = f"flet-desktop-{flavor}-{flet_desktop.version.version}"
+    if is_linux():
+        name = (
+            f"flet-desktop-{flavor}-{__get_linux_distro_id(get_arch())}-"
+            f"{flet_desktop.version.version}"
+        )
+    else:
+        name = f"flet-desktop-{flavor}-{flet_desktop.version.version}"
     if fingerprint:
         name += f"-{fingerprint}"
     return Path.home().joinpath(".flet", "client", name)
@@ -263,15 +432,15 @@ def __gc_stale_client_dirs(cache_dir: Path, max_age_days: int = 30) -> None:
     """
     Best-effort eviction of superseded fingerprinted cache siblings.
 
-    Removes sibling `flet-desktop-{flavor}-{version}-{fingerprint}` dirs not
-    used for `max_age_days` (tracked via a `.last-used` marker). Dirs are
-    renamed before deletion, so a dir whose files are in use by a running app
-    fails the rename on Windows and is left untouched. Leftovers of
-    interrupted deletions are swept too.
+    Removes sibling dirs whose name differs from `cache_dir` only in the
+    `-{fingerprint}` suffix and that were not used for `max_age_days` (tracked
+    via a `.last-used` marker). Dirs are renamed before deletion, so a dir whose
+    files are in use by a running app fails the rename on Windows and is left
+    untouched. Leftovers of interrupted deletions are swept too.
 
     Args:
         cache_dir: Cache directory of the client in use; its siblings with the
-            same `flet-desktop-{flavor}-{version}-` prefix are candidates.
+            same name up to the fingerprint are candidates.
         max_age_days: Days a sibling must have been unused before eviction.
     """
 
@@ -504,7 +673,7 @@ def __linux_identity_args(args: list) -> tuple:
     return [app_id, *args[1:]], {"executable": executable}
 
 
-def open_flet_view(page_url, assets_dir, hidden, *, no_impeller=False):
+def open_flet_view(page_url, assets_dir, hidden, *, no_impeller=False, app_dir=None):
     """
     Start a desktop view process and return the process object and PID file path.
 
@@ -513,6 +682,9 @@ def open_flet_view(page_url, assets_dir, hidden, *, no_impeller=False):
         assets_dir: Optional assets directory passed to the client process.
         hidden: Whether the window should start hidden.
         no_impeller: Whether the client renders with Skia instead of Impeller.
+        app_dir: Directory of the app's main script, searched for imports of
+            extensions the client lacks. Defaults to the directory of
+            `sys.argv[0]`.
 
     Returns:
         A tuple containing:
@@ -521,7 +693,7 @@ def open_flet_view(page_url, assets_dir, hidden, *, no_impeller=False):
     """
 
     args, flet_env, pid_file = __locate_and_unpack_flet_view(
-        page_url, assets_dir, hidden, no_impeller
+        page_url, assets_dir, hidden, no_impeller, app_dir
     )
     args, extra = __linux_identity_args(args)
     p = subprocess.Popen(args, env=flet_env, **extra)
@@ -529,7 +701,9 @@ def open_flet_view(page_url, assets_dir, hidden, *, no_impeller=False):
     return p, pid_file
 
 
-async def open_flet_view_async(page_url, assets_dir, hidden, *, no_impeller=False):
+async def open_flet_view_async(
+    page_url, assets_dir, hidden, *, no_impeller=False, app_dir=None
+):
     """
     Asynchronously start a desktop view process.
 
@@ -538,6 +712,9 @@ async def open_flet_view_async(page_url, assets_dir, hidden, *, no_impeller=Fals
         assets_dir: Optional assets directory passed to the client process.
         hidden: Whether the window should start hidden.
         no_impeller: Whether the client renders with Skia instead of Impeller.
+        app_dir: Directory of the app's main script, searched for imports of
+            extensions the client lacks. Defaults to the directory of
+            `sys.argv[0]`.
 
     Returns:
         A tuple containing:
@@ -546,12 +723,46 @@ async def open_flet_view_async(page_url, assets_dir, hidden, *, no_impeller=Fals
     """
 
     args, flet_env, pid_file = __locate_and_unpack_flet_view(
-        page_url, assets_dir, hidden, no_impeller
+        page_url, assets_dir, hidden, no_impeller, app_dir
     )
     args, extra = __linux_identity_args(args)
     p = await asyncio.create_subprocess_exec(args[0], *args[1:], env=flet_env, **extra)
     __apply_taskbar_props(p.pid)
     return p, pid_file
+
+
+def explain_client_exit(returncode: int | None) -> None:
+    """
+    Log a hint when the dynamic loader could not start the desktop client.
+
+    On Linux the dynamic loader exits with status 127 when a shared library the
+    client links against is missing or too old, and prints a one-line error that
+    names only the library. With the full flavor, the usual cause is `libmpv` or
+    GStreamer, which only that flavor links.
+
+    Args:
+        returncode: Exit status of the client process, or `None` if it is
+            still running.
+    """
+
+    if returncode != 127 or not is_linux():
+        return
+    message = (
+        "The Flet desktop client could not start because a library it needs "
+        "could not be loaded (see the loader error above)."
+    )
+    if __get_desktop_flavor() == "full":
+        message += (
+            " The full client needs libmpv and GStreamer: on Debian 12+ and "
+            "Ubuntu 24.04+ run `sudo apt install libmpv2 "
+            "libgstreamer-plugins-base1.0-0` (libmpv1 on older releases). Apps "
+            "that need none of the extensions only the full client includes can "
+            "use the light client by setting FLET_DESKTOP_FLAVOR=light. See "
+            "https://flet.dev/docs/getting-started/installation#linux"
+        )
+    else:
+        message += " Install the system package that provides it."
+    logger.error(message)
 
 
 def __apply_taskbar_props(pid: int) -> None:
@@ -599,7 +810,9 @@ def close_flet_view(pid_file):
             os.remove(pid_file)
 
 
-def __locate_and_unpack_flet_view(page_url, assets_dir, hidden, no_impeller=False):
+def __locate_and_unpack_flet_view(
+    page_url, assets_dir, hidden, no_impeller=False, app_dir=None
+):
     """
     Resolve desktop client executable, prepare launch arguments, and environment.
 
@@ -607,7 +820,8 @@ def __locate_and_unpack_flet_view(page_url, assets_dir, hidden, no_impeller=Fals
 
     1. Prefer app binaries produced by `flet build` in the current workspace.
     2. Use `FLET_VIEW_PATH` when provided.
-    3. Use cached / downloaded client from `~/.flet/client/`.
+    3. Use cached / downloaded client from `~/.flet/client/`, warning about
+       the extensions the app uses that it doesn't include.
 
     Platform-specific launch commands are prepared for Windows, macOS, and Linux.
 
@@ -616,6 +830,9 @@ def __locate_and_unpack_flet_view(page_url, assets_dir, hidden, no_impeller=Fals
         assets_dir: Optional assets directory passed to the client process.
         hidden: Whether to set `FLET_HIDE_WINDOW_ON_START=true` in process env.
         no_impeller: Whether to set `FLET_NO_IMPELLER=true` in process env.
+        app_dir: Directory of the app's main script, searched for imports of
+            extensions a cached client lacks, or `None` for that of
+            `sys.argv[0]`.
 
     Returns:
         A tuple containing:
@@ -664,6 +881,9 @@ def __locate_and_unpack_flet_view(page_url, assets_dir, hidden, no_impeller=Fals
         if not flet_path:
             cache_dir = ensure_client_cached()
             flet_path = str(cache_dir.joinpath("flet", "flet.exe"))
+            __warn_missing_extensions(
+                cache_dir, cache_dir.joinpath("flet", "data", "app.so"), app_dir
+            )
 
         args = [flet_path, page_url, pid_file]
 
@@ -695,6 +915,11 @@ def __locate_and_unpack_flet_view(page_url, assets_dir, hidden, no_impeller=Fals
                 raise FileNotFoundError(
                     f"Application bundle not found in {temp_flet_dir}"
                 )
+            __warn_missing_extensions(
+                temp_flet_dir,
+                Path(app_path, "Contents", "Frameworks", "App.framework", "App"),
+                app_dir,
+            )
 
         logger.info(f"page_url: {page_url}")
         logger.info(f"pid_file: {pid_file}")
@@ -731,6 +956,9 @@ def __locate_and_unpack_flet_view(page_url, assets_dir, hidden, no_impeller=Fals
                 # 3. Use cached or downloaded client
                 cache_dir = ensure_client_cached()
                 app_path = str(cache_dir.joinpath("flet", "flet"))
+                __warn_missing_extensions(
+                    cache_dir, cache_dir.joinpath("flet", "lib", "libapp.so"), app_dir
+                )
 
         args = [str(app_path), page_url, pid_file]
 

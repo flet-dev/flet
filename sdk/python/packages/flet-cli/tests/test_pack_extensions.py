@@ -3,7 +3,7 @@ from pathlib import Path
 
 import pytest
 
-from flet_cli.__pyinstaller.extensions import (
+from flet_desktop.extensions import (
     find_imported_modules,
     find_installed_extensions,
     find_missing_extensions,

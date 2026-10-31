@@ -1,4 +1,5 @@
 import argparse
+import contextlib
 import errno
 import logging
 import os
@@ -235,6 +236,13 @@ class Command(BaseCommand):
         warning names the missing directory. The `"assets"` default is not
         exported, so the app's own `assets_dir` applies.
 
+        The desktop client is opened from this process, whose working directory
+        is where `flet run` was started, so `[tool.flet].desktop_flavor` of the
+        nearest `pyproject.toml` at or above the app's script is exported as
+        `FLET_DESKTOP_FLAVOR` when that variable is not set. That file may belong
+        to an enclosing project rather than the app, so if it can't be read or
+        parsed it is ignored instead of stopping the app.
+
         Args:
             options: Parsed command options produced by :meth:`add_arguments`.
         """
@@ -283,6 +291,23 @@ class Command(BaseCommand):
         no_impeller = options.no_impeller or impeller is False
         if options.no_impeller and (options.web or options.ios or options.android):
             print("Warning: --no-impeller applies only to the desktop app.")
+
+        flavor_dir = next(
+            (
+                d
+                for d in [script_dir.resolve(), *script_dir.resolve().parents]
+                if d.joinpath("pyproject.toml").is_file()
+            ),
+            None,
+        )
+        desktop_flavor = None
+        if flavor_dir:
+            with contextlib.suppress(OSError, ValueError, AttributeError, TypeError):
+                desktop_flavor = load_pyproject_toml(flavor_dir)(
+                    "tool.flet.desktop_flavor"
+                )
+        if desktop_flavor and not os.environ.get("FLET_DESKTOP_FLAVOR"):
+            os.environ["FLET_DESKTOP_FLAVOR"] = str(desktop_flavor)
 
         if get_pyproject("tool.flet.app.path"):
             script_dir = script_dir.joinpath(get_pyproject("tool.flet.app.path"))
@@ -668,15 +693,16 @@ class Handler(FileSystemEventHandler):
         """
 
         try:
-            from flet_desktop import open_flet_view
+            from flet_desktop import explain_client_exit, open_flet_view
 
             self.fvp, self.pid_file = open_flet_view(
                 self.page_url,
                 self.assets_dir,
                 self.hidden,
                 no_impeller=self.no_impeller,
+                app_dir=os.path.dirname(self.script_path),
             )
-            self.fvp.wait()
+            explain_client_exit(self.fvp.wait())
             self.p.send_signal(signal.SIGTERM)
             try:
                 self.p.wait(2)
