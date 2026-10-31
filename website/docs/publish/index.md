@@ -1434,7 +1434,8 @@ When a link opens the app, its path and query become the
 [page route][flet.Page.route]: `myapp://pay/result?id=42` starts the app with
 `page.route` set to `/result?id=42`, and while the app is running it triggers
 [`on_route_change`][flet.Page.on_route_change] with that route. The host is not
-part of the route.
+part of the route. See [Deep links](../cookbook/navigation-and-routing.md#deep-links)
+for handling it in the app.
 
 On iOS, `https` links open the app only as
 [Universal Links](https://developer.apple.com/ios/universal-links/), which also
