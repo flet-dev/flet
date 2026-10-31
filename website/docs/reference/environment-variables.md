@@ -234,7 +234,8 @@ Flavor of the Flet desktop client on Linux: `full` or `light`. See
 is read when a desktop app starts the Flet client, and by
 [`flet pack`](../publish/using-pyinstaller.md#linux-client-flavor) to choose
 the client it bundles. It wins over `desktop_flavor` in the `[tool.flet]` table
-of the `pyproject.toml` in the current folder.
+of the `pyproject.toml` in the current folder, or else of the nearest one at or above
+the app's script, so an app started from another folder uses its own setting.
 
 Defaults to `light`.
 
@@ -265,6 +266,10 @@ the system can run.
 Set it when the picked build expects a different `libmpv` than the system ships (for
 example `debian12` on Rocky Linux and AlmaLinux 9, see
 [Video](../controls/video/index.md#linux)), or when Flet can't detect the glibc version.
+
+Each build is cached in its own folder in `~/.flet/client`, so after an OS upgrade or a
+change of this variable, Flet downloads the matching build instead of reusing the
+previous one.
 
 ### `FLET_LOG_LEVEL`
 
