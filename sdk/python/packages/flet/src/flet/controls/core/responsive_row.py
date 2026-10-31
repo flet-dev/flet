@@ -65,6 +65,24 @@ class ResponsiveRow(LayoutControl, ScrollableControl, AdaptiveControl):
             ),
             message="columns must be greater than 0 for all breakpoints",
         ),
+        V.ensure(
+            lambda ctrl: (
+                ctrl.spacing >= 0
+                if isinstance(ctrl.spacing, (int, float))
+                else all(v >= 0 for v in ctrl.spacing.values())
+            ),
+            message="spacing must be greater than or equal to 0 for all breakpoints",
+        ),
+        V.ensure(
+            lambda ctrl: (
+                ctrl.run_spacing >= 0
+                if isinstance(ctrl.run_spacing, (int, float))
+                else all(v >= 0 for v in ctrl.run_spacing.values())
+            ),
+            message=(
+                "run_spacing must be greater than or equal to 0 for all breakpoints"
+            ),
+        ),
     )
 
     columns: ResponsiveNumber = 12
@@ -94,11 +112,19 @@ class ResponsiveRow(LayoutControl, ScrollableControl, AdaptiveControl):
         Has effect only when :attr:`alignment` is set to
         :attr:`flet.MainAxisAlignment.START`, :attr:`flet.MainAxisAlignment.END`,
         or :attr:`flet.MainAxisAlignment.CENTER`.
+
+    Raises:
+        ValueError: If it is negative.
+        ValueError: If any breakpoint-specific value is negative.
     """
 
     run_spacing: ResponsiveNumber = 10
     """
     The spacing between runs.
+
+    Raises:
+        ValueError: If it is negative.
+        ValueError: If any breakpoint-specific value is negative.
     """
 
     breakpoints: dict[Union[ResponsiveRowBreakpoint, str], Number] = field(
