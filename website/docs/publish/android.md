@@ -492,10 +492,9 @@ You can add or override attributes on the `<application>` element of the
 `AndroidManifest.xml` file in the [build template](index.md#build-template).
 
 Flet always sets four of them itself: `label` to the app's
-[product name](index.md#product-name), `name` to `${applicationName}`
-(Flutter's application class), `enableOnBackInvokedCallback` to `true` and
-`icon` to `@mipmap/ic_launcher`. An entry with the same name replaces Flet's
-value.
+[product name](index.md#product-name), `name` to `${applicationName}`,
+`enableOnBackInvokedCallback` to `true` and `icon` to `@mipmap/ic_launcher`.
+An entry with the same name replaces Flet's value.
 
 Values must be strings, booleans, or numbers. Booleans are written as lowercase
 `true` or `false`, and XML attribute values are escaped.
@@ -541,6 +540,108 @@ the `pyproject.toml` example above will be translated accordingly into this:
     </application>
 </manifest>
 ```
+</details>
+
+### Activity intent filters
+
+You can add intent filters to the app's main activity, so Android offers the app
+for the intents they match: links with several schemes, hosts or paths, verified
+[App Links](https://developer.android.com/training/app-links), files of a given
+type, content shared from other apps, and more.
+
+Links, that is `VIEW` intents with a URL, arrive in your app as routes, in
+[`page.route`][flet.Page.route], as described in
+[Deep links](../cookbook/navigation-and-routing.md#deep-links). Any other intent,
+such as opening a file or `SEND`, must be handled by your app or one of its
+native dependencies.
+
+For a single link scheme, with an optional host, on both Android and iOS,
+[deep linking](index.md#deep-linking) is simpler.
+
+See also:
+
+- [`<intent-filter>` element](https://developer.android.com/guide/topics/manifest/intent-filter-element)
+- [`<data>` element](https://developer.android.com/guide/topics/manifest/data-element)
+
+#### Resolution order
+
+Its value is determined in the following order of precedence:
+
+1. `[tool.flet.android.activity]`
+
+There are no default filters. Omitting the table adds none.
+
+#### Supported value forms
+
+The `intent_filter` key accepts an array of filter tables, each rendered as an
+`<intent-filter>` element. A filter table has:
+
+- `actions`: a list of at least one action name.
+- `categories`: an optional list of category names.
+- `data`: an optional table, or list of tables, each becoming a `<data>`
+  element. Its entries become `android:<key>="<value>"` attributes, such as
+  `scheme`, `host`, `pathPrefix` or `mimeType`.
+- Any other entry becomes an attribute of the `<intent-filter>` element itself,
+  such as `autoVerify` or `priority`.
+
+Values must be strings, booleans, or numbers. Booleans are written as lowercase
+`true` or `false`, and XML attribute values are escaped.
+
+Flet always declares the launcher filter that opens the app from the home
+screen, and the [deep linking](index.md#deep-linking) filter when it is set.
+Your filters are added after them.
+
+#### Example
+
+<Tabs groupId="pyproject-toml">
+<TabItem value="pyproject-toml" label="pyproject.toml">
+```toml
+[[tool.flet.android.activity.intent_filter]]
+autoVerify = true
+actions = ["android.intent.action.VIEW"]
+categories = ["android.intent.category.DEFAULT", "android.intent.category.BROWSABLE"]
+data = [{ scheme = "https", host = "example.com", pathPrefix = "/invite" }]
+
+[[tool.flet.android.activity.intent_filter]]
+actions = ["android.intent.action.SEND"]
+categories = ["android.intent.category.DEFAULT"]
+data = { mimeType = "text/plain" }
+```
+</TabItem>
+</Tabs>
+<details>
+<summary>Template translation</summary>
+
+In [`AndroidManifest.xml`](index.md#build-template),
+the `pyproject.toml` example above will be translated accordingly into this:
+
+```xml
+<manifest>
+    <application>
+        <activity android:name=".MainActivity">
+            <!-- Always added by Flet -->
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+                <category android:name="android.intent.category.LEANBACK_LAUNCHER" />
+            </intent-filter>
+            <!-- From the example -->
+            <intent-filter android:autoVerify="true">
+                <action android:name="android.intent.action.VIEW" />
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+                <data android:scheme="https" android:host="example.com" android:pathPrefix="/invite" />
+            </intent-filter>
+            <intent-filter>
+                <action android:name="android.intent.action.SEND" />
+                <category android:name="android.intent.category.DEFAULT" />
+                <data android:mimeType="text/plain" />
+            </intent-filter>
+        </activity>
+    </application>
+</manifest>
+```
+
 </details>
 
 ### Meta-data
@@ -730,15 +831,13 @@ values are escaped. The `name` key is reserved for the receiver table key.
 A value of `false` or an empty table skips a declaration. This does not remove a
 receiver contributed by a dependency's manifest.
 
-The reserved `intent_filter` key accepts an array of tables. Each filter requires
-an `actions` list containing at least one nonempty string, and accepts an optional
-`categories` list of nonempty strings. Each filter is rendered separately.
-Receivers with intent filters must explicitly set `exported`.
+The reserved `intent_filter` key accepts an array of filter tables, in the same
+format as the [activity's intent filters](#activity-intent-filters). Receivers
+with intent filters must explicitly set `exported`.
 
-This setting currently supports receiver attributes and intent-filter actions and
-categories. Filter attributes, `<data>` elements, and receiver metadata are not
-supported. Configure required [permissions](#permissions) separately; for example,
-receiving `BOOT_COMPLETED` requires `RECEIVE_BOOT_COMPLETED`.
+Receiver metadata isn't supported. Configure required [permissions](#permissions)
+separately; for example, receiving `BOOT_COMPLETED` requires
+`RECEIVE_BOOT_COMPLETED`.
 
 #### Example
 

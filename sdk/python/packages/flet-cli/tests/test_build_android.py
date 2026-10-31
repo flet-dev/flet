@@ -69,6 +69,7 @@ def _render_manifest(cmd):
                     "android_application_attributes": (
                         cmd.get_android_application_attributes("Example")
                     ),
+                    "android_activity": cmd.get_android_activity(),
                     "android_queries": cmd.get_android_queries(),
                     "android_receivers": cmd.get_android_receivers(),
                     "android_services": cmd.get_android_services(),

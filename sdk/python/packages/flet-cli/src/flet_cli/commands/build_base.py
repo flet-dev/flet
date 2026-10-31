@@ -53,6 +53,7 @@ from flet_cli.utils.android import (
     android_resource_files,
     android_resources_keep_xml,
     excluded_android_abis,
+    normalize_android_activity,
     normalize_android_application_attributes,
     normalize_android_queries,
     normalize_android_receivers,
@@ -1687,6 +1688,7 @@ class BaseBuildCommand(BaseFlutterCommand):
                 "android_application_attributes": (
                     self.get_android_application_attributes(product_name)
                 ),
+                "android_activity": self.get_android_activity(),
                 "android_queries": self.get_android_queries(),
                 "android_receivers": self.get_android_receivers(),
                 "android_services": self.get_android_services(),
@@ -3251,6 +3253,17 @@ class BaseBuildCommand(BaseFlutterCommand):
             return normalize_android_application_attributes(
                 self.get_pyproject("tool.flet.android.manifest_application"),
                 product_name,
+            )
+        except ValueError as exc:
+            self.cleanup(1, str(exc))
+
+    def get_android_activity(self) -> dict:
+        """Resolve what the app adds to its main activity, such as intent
+        filters, from project settings."""
+        assert self.get_pyproject
+        try:
+            return normalize_android_activity(
+                self.get_pyproject("tool.flet.android.activity")
             )
         except ValueError as exc:
             self.cleanup(1, str(exc))

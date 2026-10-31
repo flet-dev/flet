@@ -1437,6 +1437,9 @@ When a link opens the app, its path and query become the
 part of the route. See [Deep links](../cookbook/navigation-and-routing.md#deep-links)
 for handling it in the app.
 
+On Android, more filters, such as several schemes, paths or verified App Links,
+can be added with [activity intent filters](android.md#activity-intent-filters).
+
 On iOS, `https` links open the app only as
 [Universal Links](https://developer.apple.com/ios/universal-links/), which also
 need the `com.apple.developer.associated-domains` [entitlement](ios.md#entitlements)
