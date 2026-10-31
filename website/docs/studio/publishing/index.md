@@ -95,8 +95,8 @@ Changes there are written to `pyproject.toml`, and edits you (or the agent) make
 the file show up there. See
 [Publishing a Flet app](../../publish/index.md) for every setting.
 
-Signing keys and store accounts are never stored in your app's files. See
-[Signing keys and store accounts](signing-keys-and-store-accounts.md).
+Signing keys and publishing accounts are never stored in your app's files. See
+[Signing keys and publishing accounts](signing-keys-and-store-accounts.md).
 
 ## Run details
 

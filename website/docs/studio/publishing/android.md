@@ -164,7 +164,7 @@ in Play Console, and phones won't update a download page APK over one signed wit
 another key.
 
 The key you replace isn't deleted. Once no app uses it, it's listed under **Unused
-signing keys** in **Settings › Store accounts**, where you can back it up and delete
+signing keys** in **Settings › Publishing accounts**, where you can back it up and delete
 it.
 
 Older Java keystore formats (JCEKS, BKS) aren't supported: Studio shows the

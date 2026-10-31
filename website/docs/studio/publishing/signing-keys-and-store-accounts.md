@@ -1,15 +1,16 @@
 ---
-title: "Signing keys and store accounts"
+title: "Signing keys and publishing accounts"
 ---
 
-# Signing keys and store accounts
+# Signing keys and publishing accounts
 
 Publishing needs two kinds of secrets, and Studio keeps both for you:
 
 - **Signing keys** sign your app's builds, proving that updates come from you: the
   app's Android key, and the Apple Distribution certificate.
-- **Store accounts** let Studio publish to a store on your behalf: Google Play
-  service accounts and App Store Connect API keys.
+- **Publishing accounts** let Studio publish and sign on your behalf: Google Play
+  service accounts, App Store Connect API keys, Microsoft Store (Partner Center)
+  connections and Azure Artifact Signing connections.
 
 ## Signing keys live with the app
 
@@ -48,21 +49,38 @@ needs you to confirm you don't need it.
 
 A key no app uses, for example one you replaced with **Use your own key…** or one
 left from before Studio made a key per app, is listed under **Unused signing keys**
-in **Settings › Store accounts**, with **Download backup**, **Rename** and **Delete**.
+in **Settings › Publishing accounts**, with **Download backup** and **Delete**.
 The list disappears once there are none.
 
-## Store accounts are shared
+## Publishing accounts are shared
 
-Store accounts are saved to your **Studio account** (personal or team), so all its
-apps can use them. Each app chooses which one it publishes with.
+Publishing accounts are saved to your **Studio account** (personal or team), so all
+its apps can use them. Each app chooses which one it uses.
 
-- Connect one from the store's card: **Connect Google Play** on Publish › Android,
-  **Connect App Store Connect** on Publish › iOS. Choose an account you connected
-  before, or connect another.
-- **Connection details** on the card shows the account the app uses, with **Change
-  connection…** and **Disconnect from this app**, which only unselects it for the app.
-- **Settings › Store accounts** lists each Studio account's store accounts, with how
-  many apps use each one. Each one's **⋯** menu has **Rename** and **Disconnect**.
+- Connect one from where it's used: **Connect Google Play** on Publish › Android,
+  **Connect App Store Connect** on Publish › iOS or macOS, **Connect Microsoft Store**
+  on Publish › Windows, and Azure Artifact Signing in Publish › Windows › Settings.
+  Choose an account you connected before, or connect another. **Settings ›
+  Publishing accounts › Connect account** connects one too.
+- **Connection details** on a store's card shows the account the app uses, with
+  **Change connection…** and **Disconnect from this app**, which only unselects it for
+  the app.
+- **Settings › Publishing accounts** lists each account with its provider and how many
+  apps use it, and flags a problem when Studio knows of one: a check that failed, or a
+  client secret that has expired or expires within 30 days.
+
+Select an account to open its page:
+
+- **Status:** Studio checks the connection with its provider when the page opens.
+- **Details:** its identifiers (team and key ID, service account, tenant and client
+  ID…), when it was added and last used.
+- **Used by:** the apps that use it, and on which platforms. Select one to open its
+  Publish page.
+- **Update credentials…** gives the same connection a new key or client secret, for
+  example after rotating one or when a secret expires. The apps that use it keep it.
+  An App Store Connect key must be of the same team.
+- **Rename**, and **Disconnect**, which lists the apps it affects and what stops
+  working for them before you confirm.
 
 Disconnecting a Google Play account only removes it from Studio: the service account
 and its permissions stay in Google Cloud and Play Console until you remove them
@@ -80,7 +98,7 @@ Connect, and deleting an Apple certificate doesn't revoke it at Apple.
 - **Signing keys** are handed to the build machine of a run that needs one, once,
   for that build only, and deleted with the machine when it ends. Your app's own
   code runs on that machine too, as it does when you build on your own computer.
-- **Store account keys** never leave Studio's servers: uploads to a store run
+- **Publishing account keys** never leave Studio's servers: uploads to a store run
   there, not on the build machine. That includes the App Store Connect key, which
   Studio also uses there to create certificates and profiles.
 
@@ -96,7 +114,7 @@ other apps use them.
 
 ### Can a team share keys and accounts?
 
-Yes: store accounts saved to a team's Studio account can be used by all the team's
+Yes: publishing accounts saved to a team's Studio account can be used by all the team's
 apps, and each app's key belongs to the team's account too. Only the team's owner can
 download a key's backup.
 

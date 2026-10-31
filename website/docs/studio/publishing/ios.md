@@ -44,7 +44,7 @@ Team key, lacks Admin access, or belongs to another team.
 The key is stored encrypted and is only used on Studio's servers. It never reaches a
 build machine. **Connection details** on the card shows which account the app uses,
 with **Change connection…** and **Disconnect from this app**. See
-[Signing keys and store accounts](signing-keys-and-store-accounts.md).
+[Signing keys and publishing accounts](signing-keys-and-store-accounts.md).
 
 ## Create the app in App Store Connect
 

@@ -93,7 +93,7 @@ change it if you like.
 The account is saved to your Studio account, so your other apps can use it too.
 **Connection details** on the card shows which account the app uses, with
 **Change connection…** and **Disconnect from this app**. Your saved accounts are
-listed in **Settings › Store accounts**.
+listed in **Settings › Publishing accounts**.
 
 {/* SCREENSHOT: /img/docs/studio/publishing/connect-google-play.png — the Connect Google Play dialog with a key chosen */}
 
