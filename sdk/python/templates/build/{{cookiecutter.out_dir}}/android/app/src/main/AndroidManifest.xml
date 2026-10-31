@@ -99,5 +99,18 @@
             <action android:name="android.intent.action.PROCESS_TEXT" />
             <data android:mimeType="text/plain" />
         </intent>
+        <!-- flet: queries packages {% for package in cookiecutter._options.android_queries.packages %} -->
+        <package android:name="{{ package | e }}" />
+        <!-- flet: end of queries packages {% endfor %} -->
+        <!-- flet: queries intents {% for intent in cookiecutter._options.android_queries.intents %} -->
+        <intent>
+            <action android:name="{{ intent.action | e }}" />
+            {% for category in intent.categories %}<category android:name="{{ category | e }}" />
+            {% endfor %}{% for data in intent.data %}<data{% for key, value in data.items() %} android:{{ key }}="{{ value | e }}"{% endfor %} />
+            {% endfor %}</intent>
+        <!-- flet: end of queries intents {% endfor %} -->
+        <!-- flet: queries providers {% for authorities in cookiecutter._options.android_queries.providers %} -->
+        <provider android:authorities="{{ authorities | e }}" />
+        <!-- flet: end of queries providers {% endfor %} -->
     </queries>
 </manifest>

@@ -53,6 +53,7 @@ from flet_cli.utils.android import (
     android_resource_files,
     android_resources_keep_xml,
     excluded_android_abis,
+    normalize_android_queries,
     normalize_android_receivers,
     normalize_android_services,
 )
@@ -1686,6 +1687,7 @@ class BaseBuildCommand(BaseFlutterCommand):
                 "android_gradle_dependencies": self.get_android_gradle_dependencies(),
                 "android_proguard_rules": android_proguard_rules,
                 "android_providers": android_providers,
+                "android_queries": self.get_android_queries(),
                 "android_receivers": self.get_android_receivers(),
                 "android_services": self.get_android_services(),
                 "deep_linking": {
@@ -3212,6 +3214,17 @@ class BaseBuildCommand(BaseFlutterCommand):
                 1, f"Invalid {setting}: expected a string of Kotlin declarations."
             )
         return textwrap.dedent(configured).strip()
+
+    def get_android_queries(self) -> dict:
+        """Resolve the apps, intents, and providers declared in the manifest's
+        `<queries>` from project settings."""
+        assert self.get_pyproject
+        try:
+            return normalize_android_queries(
+                self.get_pyproject("tool.flet.android.queries")
+            )
+        except ValueError as exc:
+            self.cleanup(1, str(exc))
 
     def get_android_receivers(self) -> dict:
         """Resolve Android manifest receiver declarations from project settings."""

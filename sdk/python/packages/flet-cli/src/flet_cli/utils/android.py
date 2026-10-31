@@ -220,6 +220,114 @@ def normalize_android_services(configured) -> dict:
     return resolved
 
 
+ANDROID_QUERIES_DATA_ATTRIBUTES = ("scheme", "host", "mimeType")
+"""`<data>` attributes Android supports in a `<queries>` intent; each may be set
+once per intent."""
+
+
+def normalize_android_queries(configured) -> dict:
+    """Validate the apps, intents, and providers an app declares it queries.
+
+    Android 11 and later hide other apps from an app unless its manifest names
+    them in `<queries>`. Intents follow Android's limits for `<queries>`: one
+    action, optional categories, and `<data>` elements that set each of
+    `scheme`, `host`, and `mimeType` at most once in total. Duplicate packages
+    and providers are dropped.
+
+    Returns:
+        A table with `packages`, `intents`, and `providers` lists, empty by default.
+
+    Raises:
+        ValueError: If a query declaration is malformed.
+    """
+    setting = "tool.flet.android.queries"
+
+    def fail(path, message):
+        """Report a malformed declaration using its full configuration path."""
+        raise ValueError(f"Invalid {path}: {message}.")
+
+    def names(key, pattern, description):
+        """Validate a list of names and drop duplicates, keeping their order."""
+        values = configured.get(key, [])
+        if not isinstance(values, list) or not all(
+            isinstance(value, str) and re.fullmatch(pattern, value.strip())
+            for value in values
+        ):
+            fail(f"{setting}.{key}", f"expected a list of {description}")
+        return list(dict.fromkeys(value.strip() for value in values))
+
+    resolved = {"packages": [], "intents": [], "providers": []}
+    if configured is None:
+        return resolved
+    if not isinstance(configured, dict):
+        fail(setting, "expected a table with packages, intent, or providers")
+    for key in configured:
+        if key not in ("packages", "intent", "providers"):
+            fail(
+                f"{setting}.{key}", "only packages, intent, and providers are supported"
+            )
+
+    resolved["packages"] = names(
+        "packages",
+        r"[A-Za-z][A-Za-z0-9_]*(\.[A-Za-z][A-Za-z0-9_]*)+",
+        "package names, such as com.example.app",
+    )
+    resolved["providers"] = names(
+        "providers", r"[^\s;]+(;[^\s;]+)*", "provider authorities"
+    )
+
+    intents = configured.get("intent", [])
+    if not isinstance(intents, list):
+        fail(f"{setting}.intent", "expected a list of intent tables")
+    for index, intent in enumerate(intents):
+        path = f"{setting}.intent[{index}]"
+        if not isinstance(intent, dict):
+            fail(path, "expected an intent table")
+        for key in intent:
+            if key not in ("action", "categories", "data"):
+                fail(f"{path}.{key}", "only action, categories, and data are supported")
+        action = intent.get("action")
+        if not isinstance(action, str) or not action.strip():
+            fail(f"{path}.action", "expected one nonempty action name")
+        categories = intent.get("categories", [])
+        if not isinstance(categories, list) or not all(
+            isinstance(c, str) and c.strip() for c in categories
+        ):
+            fail(f"{path}.categories", "expected a list of nonempty strings")
+        data = intent.get("data", [])
+        single = isinstance(data, dict)
+        if single:
+            data = [data]
+        if not isinstance(data, list):
+            fail(f"{path}.data", "expected a data table or a list of data tables")
+        normalized_data = []
+        used = set()
+        for data_index, element in enumerate(data):
+            data_path = f"{path}.data" if single else f"{path}.data[{data_index}]"
+            if not isinstance(element, dict) or not element:
+                fail(data_path, "expected a nonempty table of data attributes")
+            for key, value in element.items():
+                if key not in ANDROID_QUERIES_DATA_ATTRIBUTES:
+                    fail(
+                        f"{data_path}.{key}",
+                        "only scheme, host, and mimeType are supported in queries",
+                    )
+                if key in used:
+                    fail(f"{data_path}.{key}", f"{key} can be set only once per intent")
+                if not isinstance(value, str) or not value.strip():
+                    fail(f"{data_path}.{key}", "expected a nonempty string")
+                used.add(key)
+            normalized_data.append({k: v.strip() for k, v in element.items()})
+        resolved["intents"].append(
+            {
+                "action": action.strip(),
+                "categories": [c.strip() for c in categories],
+                "data": normalized_data,
+            }
+        )
+    return resolved
+
+
 ANDROID_RESOURCE_TYPES = {
     "anim",
     "animator",
