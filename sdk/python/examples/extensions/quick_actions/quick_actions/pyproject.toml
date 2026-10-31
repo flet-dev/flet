@@ -1,0 +1,27 @@
+[project]
+name = "quick-actions"
+version = "1.0.0"
+description = "Sets home-screen quick actions and handles shortcut taps."
+requires-python = ">=3.10"
+keywords = ["quickactions", "shortcuts", "services", "mobile"]
+authors = [{ name = "Flet team", email = "hello@flet.dev" }]
+dependencies = ["flet", "flet-quick-actions"]
+
+[dependency-groups]
+dev = ["flet-cli", "flet-desktop", "flet-web"]
+
+[tool.flet.gallery]
+categories = ["Utility/QuickActions"]
+platforms = ["ios", "android"]
+
+[tool.flet.metadata]
+title = "Quick actions"
+controls = ["SafeArea", "Column", "Page", "QuickActions", "Text", "Button"]
+layout_pattern = "inline-actions"
+complexity = "basic"
+features = ["home-screen shortcuts", "dynamic shortcuts", "launch action handling"]
+
+[tool.flet]
+org = "dev.flet"
+company = "Flet"
+copyright = "Copyright (C) 2023-2026 by Flet"

@@ -1,0 +1,27 @@
+[project]
+name = "flet-quick-actions"
+version = "0.1.0"
+description = "Flet Quick Actions service."
+readme = "README.md"
+authors = [{ name = "Flet contributors", email = "hello@flet.dev" }]
+license = "Apache-2.0"
+requires-python = ">=3.10"
+dependencies = [
+    "flet"
+]
+
+[project.urls]
+Homepage = "https://flet.dev"
+Documentation = "https://flet.dev/docs/services/quickactions"
+Repository = "https://github.com/flet-dev/flet/tree/main/sdk/python/packages/flet-quick-actions"
+Issues = "https://github.com/flet-dev/flet/issues"
+
+[tool.setuptools.package-data]
+"flutter.flet_quick_actions" = [
+    "pubspec.yaml", 
+    "lib/**"
+]
+
+[build-system]
+requires = ["setuptools"]
+build-backend = "setuptools.build_meta"
