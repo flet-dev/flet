@@ -31,7 +31,8 @@ All routes should start with `/`, for example `/store`, `/products/42`, `/settin
 
 ## Handling route changes
 
-Whenever route changes (URL edit, browser Back/Forward, or app navigation),
+Whenever route changes (URL edit, browser Back/Forward, app navigation, or a
+[deep link](#deep-links) opening the running app),
 [`page.on_route_change`][flet.Page.on_route_change] event is triggered.
 Use this event as the place where you decide which views must exist for the current route.
 
@@ -53,6 +54,20 @@ The pattern below is the baseline for most apps:
 :::
 
 <CodeExample path="apps/routing_navigation/building_views_on_route_change/main.py" language="python" />
+
+## Deep links
+
+In an Android or iOS app built with `flet build`, a
+[deep link](../publish/index.md#deep-linking) that opens the app becomes a route:
+its path and query, without its scheme and host. For example,
+`myapp://pay/result?id=42` starts the app with [`page.route`][flet.Page.route]
+set to `/result?id=42`, and while the app is running it triggers
+[`page.on_route_change`][flet.Page.on_route_change] with that route.
+
+Handle it like any other route: build [`page.views`][flet.BasePage.views] from
+[`page.route`][flet.Page.route] when the app starts and in
+[`page.on_route_change`][flet.Page.on_route_change], as shown above, and the app
+opens on the screen the link points to in both cases.
 
 ## Programmatic navigation
 
