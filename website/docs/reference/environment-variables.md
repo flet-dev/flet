@@ -248,6 +248,24 @@ Set to `true` to start app with the main window hidden.
 
 Defaults to `False`.
 
+### `FLET_LINUX_DISTRO`
+
+Linux build of the Flet desktop client to download, for example `debian12`. It is used
+as is, instead of the build Flet picks from the system's glibc version: the newest one
+the system can run.
+
+| Build | Needs glibc | Architectures | [Full flavor](#flet_desktop_flavor) loads |
+|---|---|---|---|
+| `debian10` | 2.28 | x86-64 | `libmpv.so.1` |
+| `ubuntu20.04` | 2.31 | x86-64, ARM64 | `libmpv.so.1` |
+| `ubuntu22.04` | 2.35 | x86-64, ARM64 | `libmpv.so.1` |
+| `debian12` | 2.36 | x86-64, ARM64 | `libmpv.so.2` |
+| `ubuntu24.04` | 2.39 | x86-64, ARM64 | `libmpv.so.2` |
+
+Set it when the picked build expects a different `libmpv` than the system ships (for
+example `debian12` on Rocky Linux and AlmaLinux 9, see
+[Video](../controls/video/index.md#linux)), or when Flet can't detect the glibc version.
+
 ### `FLET_LOG_LEVEL`
 
 Log level to apply when the app starts, e.g. `"info"` or `"debug"`. See

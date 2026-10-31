@@ -42,18 +42,18 @@ To install the `flet-video` package and add it to your project dependencies:
     After this, you will have to manually add this package to your `requirements.txt` or `pyproject.toml`.
 
 > [!NOTE]
-> To play video on Linux/WSL you need to install [`libmpv`](https://github.com/mpv-player/mpv) library:
+> On Linux, `Video` is only available in the **full** desktop client. The default **light** client
+> shows `Unknown control: Video` - set [`FLET_DESKTOP_FLAVOR=full`](https://flet.dev/docs/reference/environment-variables#flet_desktop_flavor) or `desktop_flavor = "full"` under
+> `[tool.flet]` in `pyproject.toml`.
+>
+> The full client needs the `libmpv` and GStreamer runtime libraries. On Debian 12+ and Ubuntu 24.04+:
 >
 > ```bash
-> sudo apt update
-> sudo apt install libmpv-dev libmpv2
+> sudo apt install libmpv2 libgstreamer-plugins-base1.0-0
 > ```
 >
-> If you encounter `libmpv.so.1` load errors, run:
->
-> ```bash
-> sudo ln -s /usr/lib/x86_64-linux-gnu/libmpv.so /usr/lib/libmpv.so.1
-> ```
+> On Debian 11 and Ubuntu 20.04/22.04, install `libmpv1` instead of `libmpv2`. No `libmpv.so.1` symlink
+> is needed. See the [Video docs](https://flet.dev/docs/controls/video#linux) for other distributions.
 
 ### Examples
 

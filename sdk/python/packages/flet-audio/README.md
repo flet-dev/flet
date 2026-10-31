@@ -42,15 +42,20 @@ To install the `flet-audio` package and add it to your project dependencies:
     After this, you will have to manually add this package to your `requirements.txt` or `pyproject.toml`.
 
 > [!NOTE]
-> On Linux/WSL, you need to install [`GStreamer`](https://github.com/GStreamer/gstreamer) library.
+> On Linux, `Audio` is only available in the **full** desktop client. With the default **light** client,
+> calls such as [`play()`](https://flet.dev/docs/services/audio#flet_audio.Audio.play) fail with `Timeout waiting for invoke method listener` - set
+> [`FLET_DESKTOP_FLAVOR=full`](https://flet.dev/docs/reference/environment-variables#flet_desktop_flavor) or `desktop_flavor = "full"` under `[tool.flet]` in `pyproject.toml`.
 >
-> If you receive `error while loading shared libraries: libgstapp-1.0.so.0`, it means `GStreamer` is not installed in your WSL environment.
->
-> To install it, run the following command:
+> The full client needs GStreamer and, because it also contains the `Video` control, `libmpv`.
+> On Debian 12+ and Ubuntu 24.04+:
 >
 > ```bash
-> apt install -y libgstreamer1.0-0 gstreamer1.0-plugins-base gstreamer1.0-plugins-good gstreamer1.0-plugins-bad gstreamer1.0-plugins-ugly gstreamer1.0-libav gstreamer1.0-tools
+> sudo apt install libmpv2 gstreamer1.0-plugins-base gstreamer1.0-plugins-good
 > ```
+>
+> On Debian 11 and Ubuntu 20.04/22.04, install `libmpv1` instead of `libmpv2`. For more formats, also install
+> `gstreamer1.0-plugins-bad gstreamer1.0-plugins-ugly gstreamer1.0-libav`.
+> If you receive `error while loading shared libraries: libgstapp-1.0.so.0`, GStreamer is not installed.
 
 ### Examples
 

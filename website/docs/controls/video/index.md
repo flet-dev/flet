@@ -91,20 +91,56 @@ See also:
 
 ### Linux
 
-[`libmpv`](https://github.com/mpv-player/mpv) libraries must be installed and present on the machine running the app.
+On Linux, `Video` is only available in the **full** desktop client. The default
+**light** client doesn't include it and shows `Unknown control: Video` instead -
+set [`FLET_DESKTOP_FLAVOR=full`](../../reference/environment-variables.md#flet_desktop_flavor) or `desktop_flavor = "full"` in `pyproject.toml`,
+as described in [Installation](../../getting-started/installation.md#linux).
 
-On Ubuntu/Debian, this can be done with:
+The full client links against [`libmpv`](https://github.com/mpv-player/mpv) and
+GStreamer, so it doesn't start without them
+(`error while loading shared libraries: libmpv.so.2` or `libgstapp-1.0.so.0`).
+Install the runtime packages.
+
+Debian 12 and later, Ubuntu 24.04 and later, Raspberry Pi OS (Bookworm):
+
 ```bash
-sudo apt install libmpv-dev mpv
+sudo apt install libmpv2 libgstreamer-plugins-base1.0-0
 ```
 
-If you encounter `libmpv.so.1` load errors, run:
+Debian 11, Ubuntu 20.04 and 22.04:
 
 ```bash
-sudo apt update
-sudo apt install libmpv-dev libmpv2
-sudo ln -s /usr/lib/x86_64-linux-gnu/libmpv.so /usr/lib/libmpv.so.1
+sudo apt install libmpv1 libgstreamer-plugins-base1.0-0
 ```
+
+Fedora:
+
+```bash
+sudo dnf install mpv-libs gstreamer1-plugins-base
+```
+
+openSUSE Tumbleweed:
+
+```bash
+sudo zypper install libmpv2 libgstapp-1_0-0
+```
+
+Rocky Linux and AlmaLinux 9 (EPEL and RPM Fusion enabled):
+
+```bash
+sudo dnf install mpv-libs gstreamer1-plugins-base
+export FLET_LINUX_DISTRO=debian12
+```
+
+On Rocky Linux and AlmaLinux 9, the build Flet picks for their glibc expects `libmpv.so.1`,
+while these repositories ship `libmpv.so.2`, hence
+[`FLET_LINUX_DISTRO`](../../reference/environment-variables.md#flet_linux_distro).
+On the other distributions above, the client build Flet downloads expects the
+`libmpv` version the distribution ships, so no `libmpv.so.1` symlink is needed.
+If you created one for an older Flet version, remove it.
+
+[`flet build linux`](../../publish/linux.md#prerequisites) also needs the development
+packages, such as `libmpv-dev`, on the build machine.
 
 ## Examples
 

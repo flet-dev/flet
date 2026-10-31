@@ -37,8 +37,21 @@ pip install flet-audio  # (1)!
 </TabItem>
 </Tabs>
 :::note[Linux requirements]
+On Linux, `Audio` is only available in the **full** desktop client. With the default **light**
+client, calls such as [`play()`][flet_audio.Audio.play] fail with `Timeout waiting for invoke method listener` - set
+[`FLET_DESKTOP_FLAVOR=full`](../../reference/environment-variables.md#flet_desktop_flavor) or `desktop_flavor = "full"` in `pyproject.toml`, as described in
+[Installation](../../getting-started/installation.md#linux).
+
 To play audio on Linux (or [WSL](https://docs.microsoft.com/en-us/windows/wsl/about)) you need to
-install [`GStreamer`](https://github.com/GStreamer/gstreamer) library.
+install [`GStreamer`](https://github.com/GStreamer/gstreamer) library. The full client also contains
+the [`Video`](../../controls/video/index.md#linux) control, so it needs `libmpv` too. On Debian 12+
+and Ubuntu 24.04+:
+
+```bash
+sudo apt install libmpv2
+```
+
+On older releases, install `libmpv1` instead.
 
 To install the minimal set of GStreamer libs on Ubuntu/Debian, run:
 
