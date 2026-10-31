@@ -131,6 +131,8 @@ class ResponsiveRowControl extends StatelessWidget with FletStoreMixin {
                 "alignment", MainAxisAlignment.start)!,
             mainAxisSize: MainAxisSize.max,
             crossAxisAlignment: crossAxisAlignment,
+            // Required by `CrossAxisAlignment.baseline`, ignored otherwise.
+            textBaseline: TextBaseline.alphabetic,
             children: controls,
           );
 
