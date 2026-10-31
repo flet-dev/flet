@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:flutter/widgets.dart';
 
 import '../models/control.dart';
@@ -47,12 +49,13 @@ class ResponsiveRowControl extends StatelessWidget with FletStoreMixin {
             breakpoints[k.toString()] = val;
           }
         });
-        var bpSpacing =
-            getBreakpointNumber(spacing, view.size.width, breakpoints);
+        var bpSpacing = max(
+            0.0, getBreakpointNumber(spacing, view.size.width, breakpoints));
         var bpColumns =
             getBreakpointNumber(columns, view.size.width, breakpoints);
 
         double totalCols = 0;
+        double totalWidth = 0;
         List<Widget> controls = [];
         for (var ctrl in control.children("controls")) {
           final col = ctrl.getResponsiveNumber("col", 12)!;
@@ -69,8 +72,11 @@ class ResponsiveRowControl extends StatelessWidget with FletStoreMixin {
           // Convert virtual columns into a fixed pixel width for this child.
           // We first remove the total horizontal gaps from the available width,
           // then divide the remaining width across the configured columns.
+          // 0.1px is left unused so rounding never makes a full row of
+          // children wider than the available width.
           var colWidth =
-              (constraints.maxWidth - bpSpacing * (bpColumns - 1)) / bpColumns;
+              (constraints.maxWidth - 0.1 - bpSpacing * (bpColumns - 1)) /
+                  bpColumns;
           var childWidth = colWidth * bpCol + bpSpacing * (bpCol - 1);
 
           // Guard against tiny/invalid available widths so Flutter never sees
@@ -78,6 +84,7 @@ class ResponsiveRowControl extends StatelessWidget with FletStoreMixin {
           if (childWidth < 0) {
             childWidth = 0;
           }
+          totalWidth += childWidth + (controls.isEmpty ? 0 : bpSpacing);
 
           // Key the child with a GlobalKey tied to its Control identity so
           // that when this build switches between Row and Wrap (a different
@@ -92,7 +99,9 @@ class ResponsiveRowControl extends StatelessWidget with FletStoreMixin {
           ));
         }
 
-        var wrap = (totalCols > bpColumns);
+        // Wrap when the children take more columns than the row has, or when
+        // they don't fit in pixels: widths clamped to zero still leave their gaps.
+        var wrap = totalCols > bpColumns || totalWidth > constraints.maxWidth;
 
         try {
           // Keep a single row when everything fits; otherwise switch to Wrap so
@@ -100,9 +109,11 @@ class ResponsiveRowControl extends StatelessWidget with FletStoreMixin {
           if (wrap) {
             return Wrap(
               direction: Axis.horizontal,
-              spacing: bpSpacing - 0.1,
-              runSpacing: getBreakpointNumber(
-                  runSpacing, view.size.width, breakpoints),
+              spacing: bpSpacing,
+              runSpacing: max(
+                  0.0,
+                  getBreakpointNumber(
+                      runSpacing, view.size.width, breakpoints)),
               alignment:
                   control.getWrapAlignment("alignment", WrapAlignment.start)!,
               crossAxisAlignment: control.getWrapCrossAlignment(
@@ -115,11 +126,13 @@ class ResponsiveRowControl extends StatelessWidget with FletStoreMixin {
               "vertical_alignment", CrossAxisAlignment.start)!;
 
           Widget row = Row(
-            spacing: bpSpacing - 0.1,
+            spacing: bpSpacing,
             mainAxisAlignment: control.getMainAxisAlignment(
                 "alignment", MainAxisAlignment.start)!,
             mainAxisSize: MainAxisSize.max,
             crossAxisAlignment: crossAxisAlignment,
+            // Required by `CrossAxisAlignment.baseline`, ignored otherwise.
+            textBaseline: TextBaseline.alphabetic,
             children: controls,
           );
 

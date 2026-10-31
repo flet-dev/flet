@@ -34,7 +34,23 @@ class PatchTarget {
   final dynamic obj;
   final Control control;
 
-  const PatchTarget(this.obj, this.control);
+  /// The top-level property of [control] that holds [obj], or `null` when
+  /// [obj] is the properties map of [control] itself.
+  final String? property;
+
+  const PatchTarget(this.obj, this.control, [this.property]);
+
+  /// Notifies the parent of [control] when an op on [key] of [obj] changes a
+  /// property the parent depends on.
+  ///
+  /// An op on a nested value, such as a breakpoint of a `col` map, changes
+  /// the top-level [property] that holds it rather than [key].
+  void notifyParentIfPropertyChanged(dynamic key) {
+    final name = property ?? key;
+    if (name is String) {
+      control.notifyParentIfPropertyChanged(name);
+    }
+  }
 }
 
 /// Represents a node or control in the UI tree.
@@ -50,7 +66,11 @@ class Control extends ChangeNotifier {
   final String type;
   final Map<String, dynamic> properties;
   bool notifyParent = false;
-  final List<String> _notifyParentProperties = ["visible"];
+
+  /// Properties whose change also notifies the parent, because the parent
+  /// reads them when it builds: `visible` (hidden children are skipped) and
+  /// `col` (`ResponsiveRow` sizes its children from it).
+  final List<String> _notifyParentProperties = ["visible", "col"];
   WeakReference<Control>? _parent;
   late final WeakReference<FletBackend> _backend;
   Completer<void>? _listenerAddedCompleter;
@@ -355,8 +375,10 @@ class Control extends ChangeNotifier {
       var path = pathIndex[index]!;
       dynamic obj = this;
       Control? control = this;
+      String? property;
       for (var p in path) {
         if (obj is Control) {
+          property = p;
           obj = obj.properties[p];
         } else if (obj is Map) {
           obj = obj[p];
@@ -365,9 +387,11 @@ class Control extends ChangeNotifier {
         }
         if (obj is Control) {
           control = obj;
+          property = null;
         }
       }
-      return PatchTarget(obj is Control ? obj.properties : obj, control!);
+      return PatchTarget(
+          obj is Control ? obj.properties : obj, control!, property);
     }
 
     // apply patch commands
@@ -383,9 +407,7 @@ class Control extends ChangeNotifier {
         if (shouldNotify) {
           node.control.notify();
         }
-        if (key is String) {
-          node.control.notifyParentIfPropertyChanged(key);
-        }
+        node.notifyParentIfPropertyChanged(key);
       } else if (opType == OperationType.add) {
         // ADD
         var node = getPatchTarget(op[1]);
@@ -400,6 +422,7 @@ class Control extends ChangeNotifier {
           throw Exception("Add operation can be applied to lists or maps: $op");
         }
         if (shouldNotify) node.control.notify();
+        node.notifyParentIfPropertyChanged(index);
       } else if (opType == OperationType.remove) {
         // REMOVE
         var node = getPatchTarget(op[1]);
@@ -413,6 +436,7 @@ class Control extends ChangeNotifier {
               "Remove operation can be applied to lists or maps: $op");
         }
         if (shouldNotify) node.control.notify();
+        node.notifyParentIfPropertyChanged(index);
       } else if (opType == OperationType.move) {
         // MOVE
         var fromNode = getPatchTarget(op[1]);
@@ -435,6 +459,8 @@ class Control extends ChangeNotifier {
             toNode.control.notify();
           }
         }
+        fromNode.notifyParentIfPropertyChanged(fromIndex);
+        toNode.notifyParentIfPropertyChanged(toIndex);
       } else {
         throw Exception("Unknown patch operation: ${op[0]}");
       }

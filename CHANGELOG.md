@@ -62,6 +62,9 @@
 
 ### Bug fixes
 
+* Fix `ResponsiveRow` not resizing its children when their `col` changes ([#6734](https://github.com/flet-dev/flet/issues/6734), [#7027](https://github.com/flet-dev/flet/pull/7027)) by @ndonkoHenri.
+* Fix `ResponsiveRow` failing with `spacing=0`, and reject negative `spacing` and `run_spacing` ([#6368](https://github.com/flet-dev/flet/issues/6368), [#7027](https://github.com/flet-dev/flet/pull/7027)) by @ndonkoHenri.
+* Fix `Row` and `ResponsiveRow` failing with `vertical_alignment=CrossAxisAlignment.BASELINE` ([#6368](https://github.com/flet-dev/flet/issues/6368), [#7027](https://github.com/flet-dev/flet/pull/7027)) by @ndonkoHenri.
 * Fix `use_state()` and `use_ref()` type inference for callable initializers in mypy and ty ([#6960](https://github.com/flet-dev/flet/issues/6960), [#7014](https://github.com/flet-dev/flet/pull/7014), [#7023](https://github.com/flet-dev/flet/pull/7023)) by @mmporong.
 * Fix `BottomAppBar` cutting its notch away from the floating action button when the bar has a left or top `margin`, including an animated one ([#6986](https://github.com/flet-dev/flet/issues/6986), [#7024](https://github.com/flet-dev/flet/pull/7024)) by @ndonkoHenri.
 * Fix `Theme.bottom_appbar_theme` being ignored, so its `bgcolor`, `shape` and other settings never reached `BottomAppBar` ([#7024](https://github.com/flet-dev/flet/pull/7024)) by @ndonkoHenri.
