@@ -220,6 +220,49 @@ def normalize_android_services(configured) -> dict:
     return resolved
 
 
+def normalize_android_application_attributes(configured, product_name: str) -> dict:
+    """Merge the app's `<application>` attributes over the ones Flet sets.
+
+    Flet sets `label` to the product name, `name` to Flutter's application
+    class, `enableOnBackInvokedCallback` to `true` and `icon` to the launcher
+    icon. An entry with the same key replaces Flet's value instead of adding
+    the attribute a second time.
+
+    Args:
+        configured: The app's `<application>` attributes, if any.
+        product_name: The app's product name, used as the default label.
+
+    Returns:
+        Attribute names mapped to their manifest values; booleans are written
+            as lowercase `true` or `false`.
+
+    Raises:
+        ValueError: If the table, an attribute name or a value is malformed.
+    """
+    setting = "tool.flet.android.manifest_application"
+    resolved = {
+        "label": product_name,
+        "name": "${applicationName}",
+        "enableOnBackInvokedCallback": "true",
+        "icon": "@mipmap/ic_launcher",
+    }
+    if configured is None:
+        return resolved
+    if not isinstance(configured, dict):
+        raise ValueError(f"Invalid {setting}: expected a table of attributes.")
+    for key, value in configured.items():
+        if not isinstance(key, str) or not re.fullmatch(r"[A-Za-z_][A-Za-z0-9_]*", key):
+            raise ValueError(
+                f"Invalid {setting}: invalid Android attribute name {key!r}."
+            )
+        if not isinstance(value, (str, bool, int, float)):
+            raise ValueError(
+                f"Invalid {setting}.{key}: expected a string, boolean, or number."
+            )
+        resolved[key] = str(value).lower() if isinstance(value, bool) else str(value)
+    return resolved
+
+
 ANDROID_QUERIES_DATA_ATTRIBUTES = ("scheme", "host", "mimeType")
 """`<data>` attributes Android supports in a `<queries>` intent; each may be set
 once per intent."""

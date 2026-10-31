@@ -491,6 +491,15 @@ is `AndroidManifest.xml`, which gets populated with the information you provide.
 You can add or override attributes on the `<application>` element of the
 `AndroidManifest.xml` file in the [build template](index.md#build-template).
 
+Flet always sets four of them itself: `label` to the app's
+[product name](index.md#product-name), `name` to `${applicationName}`
+(Flutter's application class), `enableOnBackInvokedCallback` to `true` and
+`icon` to `@mipmap/ic_launcher`. An entry with the same name replaces Flet's
+value.
+
+Values must be strings, booleans, or numbers. Booleans are written as lowercase
+`true` or `false`, and XML attribute values are escaped.
+
 See also:
 
 - [`<application>` element](https://developer.android.com/guide/topics/manifest/application-element)
@@ -520,7 +529,13 @@ the `pyproject.toml` example above will be translated accordingly into this:
 
 ```xml
 <manifest>
+    <!-- label, name, enableOnBackInvokedCallback and icon are Flet's defaults;
+         usesCleartextTraffic and allowBackup come from the example -->
     <application
+        android:label="My App"
+        android:name="${applicationName}"
+        android:enableOnBackInvokedCallback="true"
+        android:icon="@mipmap/ic_launcher"
         android:usesCleartextTraffic="true"
         android:allowBackup="false">
     </application>
