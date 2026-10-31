@@ -97,21 +97,26 @@ class ResponsiveRow(LayoutControl, ScrollableControl, AdaptiveControl):
     alignment: MainAxisAlignment = MainAxisAlignment.START
     """
     Defines how the child :attr:`controls` should be placed horizontally.
+
+    When the controls don't fit on one line and wrap, it applies to each line
+    separately.
     """
 
     vertical_alignment: CrossAxisAlignment = CrossAxisAlignment.START
     """
     Defines how the child :attr:`controls` should be placed vertically.
+
+    When the controls don't fit on one line and wrap, only
+    :attr:`~flet.CrossAxisAlignment.START`, :attr:`~flet.CrossAxisAlignment.END`
+    and :attr:`~flet.CrossAxisAlignment.CENTER` apply, within each line;
+    :attr:`~flet.CrossAxisAlignment.STRETCH` and
+    :attr:`~flet.CrossAxisAlignment.BASELINE` behave like
+    :attr:`~flet.CrossAxisAlignment.START`.
     """
 
     spacing: ResponsiveNumber = 10
     """
-    The spacing between controls in a row in virtual pixels.
-
-    Note:
-        Has effect only when :attr:`alignment` is set to
-        :attr:`flet.MainAxisAlignment.START`, :attr:`flet.MainAxisAlignment.END`,
-        or :attr:`flet.MainAxisAlignment.CENTER`.
+    The horizontal spacing between controls, in logical pixels.
 
     Raises:
         ValueError: If it is negative.
@@ -120,7 +125,7 @@ class ResponsiveRow(LayoutControl, ScrollableControl, AdaptiveControl):
 
     run_spacing: ResponsiveNumber = 10
     """
-    The spacing between runs.
+    The vertical spacing between lines when the controls wrap, in logical pixels.
 
     Raises:
         ValueError: If it is negative.
