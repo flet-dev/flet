@@ -46,6 +46,13 @@
                     android:host="{{ cookiecutter._options.deep_linking.host | e }}"{% endif %} />
             </intent-filter>
             <!-- flet: end of deep linking {% endif %} -->
+            <!-- flet: activity intent filters {% for intent_filter in cookiecutter._options.android_activity.intent_filters %} -->
+            <intent-filter{% for key, value in intent_filter.attributes.items() %} android:{{ key }}="{{ value | e }}"{% endfor %}>
+                {% for action in intent_filter.actions %}<action android:name="{{ action | e }}" />
+                {% endfor %}{% for category in intent_filter.categories %}<category android:name="{{ category | e }}" />
+                {% endfor %}{% for data in intent_filter.data %}<data{% for key, value in data.items() %} android:{{ key }}="{{ value | e }}"{% endfor %} />
+                {% endfor %}</intent-filter>
+            <!-- flet: end of activity intent filters {% endfor %} -->
         </activity>
         <provider
             android:name="androidx.core.content.FileProvider"
@@ -63,9 +70,10 @@
         <!-- flet: end of provider {% endif %} {% endfor %} -->
         <!-- flet: receiver {% for name, receiver in cookiecutter._options.android_receivers.items() %} -->
         <receiver android:name="{{ name | e }}"{% for key, value in receiver.attributes.items() %} android:{{ key }}="{{ value | e }}"{% endfor %}{% if not receiver.intent_filters %} />{% else %}>
-            {% for intent_filter in receiver.intent_filters %}<intent-filter>
+            {% for intent_filter in receiver.intent_filters %}<intent-filter{% for key, value in intent_filter.attributes.items() %} android:{{ key }}="{{ value | e }}"{% endfor %}>
                 {% for action in intent_filter.actions %}<action android:name="{{ action | e }}" />
                 {% endfor %}{% for category in intent_filter.categories %}<category android:name="{{ category | e }}" />
+                {% endfor %}{% for data in intent_filter.data %}<data{% for key, value in data.items() %} android:{{ key }}="{{ value | e }}"{% endfor %} />
                 {% endfor %}</intent-filter>
             {% endfor %}</receiver>{% endif %}
         <!-- flet: end of receiver {% endfor %} -->

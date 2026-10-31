@@ -57,6 +57,121 @@ def excluded_android_abis(archs: list[str]) -> list[str]:
     return [abi for abi in ANDROID_ARCH_TO_FLUTTER_TARGET_PLATFORM if abi not in archs]
 
 
+def _android_attributes(values: dict, path: str, reserved=()) -> dict:
+    """Validate Android attribute names and normalize scalar values for XML.
+
+    Raises:
+        ValueError: If a name is not an attribute name or a value isn't a string,
+            boolean, or number.
+    """
+    resolved = {}
+    for key, value in values.items():
+        if key in reserved:
+            continue
+        if not isinstance(key, str) or not re.fullmatch(r"[A-Za-z_][A-Za-z0-9_]*", key):
+            raise ValueError(f"Invalid {path}: invalid Android attribute name {key!r}.")
+        if not isinstance(value, (str, bool, int, float)):
+            raise ValueError(
+                f"Invalid {path}.{key}: expected a string, boolean, or number."
+            )
+        resolved[key] = str(value).lower() if isinstance(value, bool) else str(value)
+    return resolved
+
+
+def normalize_android_intent_filters(filters, path: str) -> list:
+    """Validate a list of `<intent-filter>` tables.
+
+    Each table needs at least one action in `actions` and may have
+    `categories` and `data`: a table, or list of tables, of `<data>`
+    attributes. Its other entries become the filter's own attributes, such as
+    `autoVerify` or `priority`.
+
+    Args:
+        filters: The configured list of filter tables.
+        path: The setting's path, used in error messages.
+
+    Returns:
+        Each filter's `attributes`, `actions`, `categories` and `data` list.
+
+    Raises:
+        ValueError: If a filter is malformed.
+    """
+
+    def fail(at, message):
+        """Report a malformed filter using its full configuration path."""
+        raise ValueError(f"Invalid {at}: {message}.")
+
+    if not isinstance(filters, list):
+        fail(path, "expected a list of filter tables")
+    normalized_filters = []
+    for index, intent_filter in enumerate(filters):
+        filter_path = f"{path}[{index}]"
+        if not isinstance(intent_filter, dict):
+            fail(filter_path, "expected a filter table")
+        for key in ("action", "category"):
+            if key in intent_filter:
+                fail(f"{filter_path}.{key}", f"use {key}s, a list of names")
+        normalized = {
+            "attributes": _android_attributes(
+                intent_filter, filter_path, ("actions", "categories", "data")
+            )
+        }
+        for key in ("actions", "categories"):
+            values = intent_filter.get(key, [])
+            if not isinstance(values, list) or not all(
+                isinstance(value, str) and value.strip() for value in values
+            ):
+                fail(f"{filter_path}.{key}", "expected a list of nonempty strings")
+            normalized[key] = [value.strip() for value in values]
+        if not normalized["actions"]:
+            fail(f"{filter_path}.actions", "at least one action is required")
+        data = intent_filter.get("data", [])
+        single = isinstance(data, dict)
+        if not isinstance(data, (dict, list)):
+            fail(
+                f"{filter_path}.data", "expected a data table or a list of data tables"
+            )
+        normalized["data"] = []
+        for data_index, element in enumerate([data] if single else data):
+            data_path = (
+                f"{filter_path}.data" if single else f"{filter_path}.data[{data_index}]"
+            )
+            if not isinstance(element, dict) or not element:
+                fail(data_path, "expected a nonempty table of data attributes")
+            normalized["data"].append(_android_attributes(element, data_path))
+        normalized_filters.append(normalized)
+    return normalized_filters
+
+
+def normalize_android_activity(configured) -> dict:
+    """Validate what the app adds to its main activity.
+
+    Only intent filters are supported; they are added after the activity's own
+    launcher and deep-linking filters.
+
+    Returns:
+        A table with the activity's `intent_filters`, empty by default.
+
+    Raises:
+        ValueError: If the table or one of its filters is malformed.
+    """
+    setting = "tool.flet.android.activity"
+    if configured is None:
+        return {"intent_filters": []}
+    if not isinstance(configured, dict):
+        raise ValueError(f"Invalid {setting}: expected a table.")
+    for key in configured:
+        if key != "intent_filter":
+            raise ValueError(
+                f"Invalid {setting}.{key}: only intent_filter is supported."
+            )
+    return {
+        "intent_filters": normalize_android_intent_filters(
+            configured.get("intent_filter", []), f"{setting}.intent_filter"
+        )
+    }
+
+
 def normalize_android_receivers(configured) -> dict:
     """Validate receiver tables and normalize their manifest attributes.
 
@@ -99,35 +214,9 @@ def normalize_android_receivers(configured) -> dict:
                 str(value).lower() if isinstance(value, bool) else str(value)
             )
 
-        filters = receiver.get("intent_filter", [])
-        if not isinstance(filters, list):
-            fail(f"{path}.intent_filter", "expected a list of filter tables")
-        normalized_filters = []
-        for index, intent_filter in enumerate(filters):
-            filter_path = f"{path}.intent_filter[{index}]"
-            if not isinstance(intent_filter, dict):
-                fail(filter_path, "expected a filter table")
-            for key in intent_filter:
-                if key not in ("actions", "categories"):
-                    fail(
-                        f"{filter_path}.{key}",
-                        "only actions and categories are supported",
-                    )
-            normalized = {}
-            for key in ("actions", "categories"):
-                values = intent_filter.get(key, [])
-                if not isinstance(values, list):
-                    fail(f"{filter_path}.{key}", "expected a list of nonempty strings")
-                for value in values:
-                    if not isinstance(value, str) or not value.strip():
-                        fail(
-                            f"{filter_path}.{key}",
-                            "expected a list of nonempty strings",
-                        )
-                normalized[key] = values.copy()
-            if not normalized["actions"]:
-                fail(f"{filter_path}.actions", "at least one action is required")
-            normalized_filters.append(normalized)
+        normalized_filters = normalize_android_intent_filters(
+            receiver.get("intent_filter", []), f"{path}.intent_filter"
+        )
 
         if normalized_filters and "exported" not in attributes:
             fail(
