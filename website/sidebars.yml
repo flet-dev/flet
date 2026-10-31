@@ -951,6 +951,7 @@ docs:
 
 studio:
   Introduction: studio/index
+  GitHub: studio/github
   Publishing:
     _index: studio/publishing/index.md
     Android apps: studio/publishing/android.md
