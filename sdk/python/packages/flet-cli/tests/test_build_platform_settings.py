@@ -1,5 +1,7 @@
 """Platform-over-global precedence of `[tool.flet]` settings in `flet build`."""
 
+import argparse
+
 import pytest
 
 from flet_cli.commands.build_base import BaseBuildCommand
@@ -77,9 +79,17 @@ def test_bool_setting_precedence(cli, pyproject, expected):
     assert cmd.get_bool_setting(cli, "compile.app", True) is expected
 
 
-def _deep_linking_command(pyproject, package_platform):
+def _deep_linking_command(pyproject, package_platform, scheme=None, host=None):
     cmd = _command(pyproject)
     cmd.package_platform = package_platform
+    cmd.options = argparse.Namespace(deep_linking_scheme=scheme, deep_linking_host=host)
+
+    def cleanup(code, message):
+        """Capture a failed build setting without exiting the test process."""
+        assert code == 1
+        raise ValueError(message)
+
+    cmd.cleanup = cleanup
     return cmd
 
 
@@ -92,8 +102,7 @@ _COMMON_DEEP_LINK = {
 @pytest.mark.parametrize("package_platform", ["Android", "iOS", "Darwin", "Emscripten"])
 def test_common_deep_linking_is_the_fallback(package_platform):
     cmd = _deep_linking_command(_COMMON_DEEP_LINK, package_platform)
-    assert cmd.get_deep_linking_setting("scheme") == "https"
-    assert cmd.get_deep_linking_setting("host") == "app.example.com"
+    assert cmd.get_deep_linking() == {"scheme": "https", "host": "app.example.com"}
 
 
 @pytest.mark.parametrize(
@@ -107,8 +116,7 @@ def test_platform_deep_linking_overrides_common_per_key(package_platform, sectio
         },
         package_platform,
     )
-    assert cmd.get_deep_linking_setting("scheme") == "https"
-    assert cmd.get_deep_linking_setting("host") == "m.example.com"
+    assert cmd.get_deep_linking() == {"scheme": "https", "host": "m.example.com"}
 
 
 def test_platform_only_deep_linking():
@@ -119,15 +127,9 @@ def test_platform_only_deep_linking():
         },
         "iOS",
     )
-    assert (
-        cmd.get_deep_linking_setting("scheme"),
-        cmd.get_deep_linking_setting("host"),
-    ) == (
-        "myapp",
-        "open",
-    )
+    assert cmd.get_deep_linking() == {"scheme": "myapp", "host": "open"}
     # The iOS table doesn't leak to Android.
     android = _deep_linking_command(
         {"tool.flet.ios.deep_linking.scheme": "myapp"}, "Android"
     )
-    assert android.get_deep_linking_setting("scheme") is None
+    assert android.get_deep_linking() == {"scheme": None, "host": None}

@@ -1425,8 +1425,21 @@ using a [URI (Uniform Resource Identifier)](https://en.wikipedia.org/wiki/Unifor
 Instead of opening the app's homepage, deep links direct users to a specific page,
 feature, or content within the app, enhancing user experience and engagement.
 
-- **Scheme**: deep linking URL scheme, e.g. `"https"` or `"myapp"`.
-- **Host**: deep linking URL host.
+- **Scheme**: the URL scheme that opens the app, e.g. `"myapp"` or `"https"`.
+- **Host**: optional; when set, only links with this host open the app. It is
+  required for the `http` and `https` schemes, since without one the app would
+  claim every web link.
+
+When a link opens the app, its path and query become the
+[page route][flet.Page.route]: `myapp://pay/result?id=42` starts the app with
+`page.route` set to `/result?id=42`, and while the app is running it triggers
+[`on_route_change`][flet.Page.on_route_change] with that route. The host is not
+part of the route.
+
+On iOS, `https` links open the app only as
+[Universal Links](https://developer.apple.com/ios/universal-links/), which also
+need the `com.apple.developer.associated-domains` [entitlement](ios.md#entitlements)
+and a file hosted on your domain.
 
 See also:
 
@@ -1439,12 +1452,14 @@ See also:
 
 Its value is determined in the following order of precedence:
 
-1. [`--deep-linking-scheme`](../cli/flet-build.md#--deep-linking-scheme) and
-   [`--deep-linking-host`](../cli/flet-build.md#--deep-linking-host) (only when both are provided)
+1. [`--deep-linking-scheme`](../cli/flet-build.md#--deep-linking-scheme), with
+   [`--deep-linking-host`](../cli/flet-build.md#--deep-linking-host) if given
 2. `[tool.flet.<PLATFORM>.deep_linking].scheme` / `[tool.flet.<PLATFORM>.deep_linking].host`, where `<PLATFORM>` can be android or ios
 3. `[tool.flet.deep_linking].scheme` / `[tool.flet.deep_linking].host`
 
-Both scheme and host are required; if either is missing, the deep-linking entries are not added.
+A scheme passed on the command line replaces both settings from `pyproject.toml`.
+Without a scheme, no deep-linking entries are added; a host without a scheme
+stops the build with an error.
 
 #### Example
 
@@ -1452,15 +1467,15 @@ Both scheme and host are required; if either is missing, the deep-linking entrie
 <TabItem value="flet-build" label="flet build">
 ```bash
 flet build <target_platform> \
-  --deep-linking-scheme "https" \
-  --deep-linking-host "mydomain.com"
+  --deep-linking-scheme "myapp" \
+  --deep-linking-host "pay"
 ```
 </TabItem>
 <TabItem value="pyproject-toml" label="pyproject.toml">
 ```toml
 [tool.flet.deep_linking]    # or [tool.flet.<PLATFORM>.deep_linking]
-scheme = "https"
-host = "mydomain.com"
+scheme = "myapp"
+host = "pay"                # optional
 ```
 </TabItem>
 </Tabs>
@@ -1469,18 +1484,18 @@ host = "mydomain.com"
 <summary>Template translation</summary>
 
 In the Android [`AndroidManifest.xml`](android.md#android-manifest),
-the `pyproject.toml` example above will be translated accordingly into this:
+the example above will be translated accordingly into this:
 
 ```xml
 <manifest>
     <application>
         <activity android:name=".MainActivity">
-            <meta-data android:name="flutter_deeplinking_enabled" android:value="true" />
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />
                 <category android:name="android.intent.category.DEFAULT" />
                 <category android:name="android.intent.category.BROWSABLE" />
-                <data android:scheme="https" android:host="mydomain.com" />
+                <!-- without a host: <data android:scheme="myapp" /> -->
+                <data android:scheme="myapp" android:host="pay" />
             </intent-filter>
         </activity>
     </application>
@@ -1488,29 +1503,31 @@ the `pyproject.toml` example above will be translated accordingly into this:
 ```
 
 In the iOS [`ios/Runner/Info.plist`](ios.md#infoplist),
-the `pyproject.toml` example above will be translated accordingly into this:
+the example above will be translated accordingly into this:
 
 ```xml
 <plist version="1.0">
     <dict>
-        <key>FlutterDeepLinkingEnabled</key>
-        <true />
         <key>CFBundleURLTypes</key>
         <array>
             <dict>
                 <key>CFBundleTypeRole</key>
                 <string>Editor</string>
                 <key>CFBundleURLName</key>
-                <string>mydomain.com</string>
+                <!-- without a host: $(PRODUCT_BUNDLE_IDENTIFIER) -->
+                <string>pay</string>
                 <key>CFBundleURLSchemes</key>
                 <array>
-                    <string>https</string>
+                    <string>myapp</string>
                 </array>
             </dict>
         </array>
     </dict>
 </plist>
 ```
+
+iOS matches links on the scheme only, so on iOS any `myapp://` link opens the
+app, whatever its host.
 </details>
 
 ### Target Architecture
