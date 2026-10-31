@@ -10,15 +10,8 @@
     <uses-feature android:name="{{ k }}" android:required="{% if v == True %}true{% else %}false{% endif %}" />
     <!-- flet: end of feature {% endfor %} -->
 
-    <!-- {% set manifest_application = cookiecutter._pyproject.get('tool', {}).get('flet', {}).get('android', {}).get('manifest_application', {}) %} -->
-    <application
-        android:label="{{ cookiecutter.product_name }}"
-        android:name="${applicationName}"
-        android:enableOnBackInvokedCallback="true"
-        {% if manifest_application -%}{% for k, v in cookiecutter._pyproject.tool.flet.android.manifest_application.items() -%}
-        android:{{ k }}="{{ v }}"
-        {% endfor -%}{% endif -%}
-        android:icon="@mipmap/ic_launcher">
+    <application{% for key, value in cookiecutter._options.android_application_attributes.items() %}
+        android:{{ key }}="{{ value | e }}"{% endfor %}>
         <!-- flet: meta-data {% for k, v in cookiecutter._options.android_meta_data.items() %} -->
         <meta-data android:name="{{ k }}" android:value="{{ v }}" />
         <!-- flet: end of meta-data {% endfor %} -->
