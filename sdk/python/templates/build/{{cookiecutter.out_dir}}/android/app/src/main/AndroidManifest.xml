@@ -1,19 +1,19 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools">
     <!-- flet: permission {% for k, v in cookiecutter._options.android_permissions.items() %} {% if v %} -->
-    <uses-permission android:name="{{ k }}"{% if v is mapping %}{% for ak, av in v.items() %} android:{{ ak }}="{{ av }}"{% endfor %}{% endif %} />
+    <uses-permission android:name="{{ k | e }}"{% if v is mapping %}{% for ak, av in v.items() %} android:{{ ak }}="{{ av | e }}"{% endfor %}{% endif %} />
     <!-- flet: end of permission {% else %} -->
-    <uses-permission android:name="{{ k }}" tools:node="remove" />
+    <uses-permission android:name="{{ k | e }}" tools:node="remove" />
     <!-- flet: end of permission {% endif %} {% endfor %} -->
 
     <!-- flet: feature {% for k, v in cookiecutter._options.android_features.items() %} -->
-    <uses-feature android:name="{{ k }}" android:required="{% if v == True %}true{% else %}false{% endif %}" />
+    <uses-feature android:name="{{ k | e }}" android:required="{% if v == True %}true{% else %}false{% endif %}" />
     <!-- flet: end of feature {% endfor %} -->
 
     <application{% for key, value in cookiecutter._options.android_application_attributes.items() %}
         android:{{ key }}="{{ value | e }}"{% endfor %}>
         <!-- flet: meta-data {% for k, v in cookiecutter._options.android_meta_data.items() %} -->
-        <meta-data android:name="{{ k }}" android:value="{{ v }}" />
+        <meta-data android:name="{{ k | e }}" android:value="{{ v | e }}" />
         <!-- flet: end of meta-data {% endfor %} -->
         <activity
             android:name=".MainActivity"
@@ -64,8 +64,8 @@
                 android:resource="@xml/provider_paths" />
         </provider>
         <!-- flet: provider {% for k, v in cookiecutter._options.android_providers.items() %} {% if v %} -->
-        <provider android:name="{{ k }}"{% for ak, av in v.items() if ak != 'meta_data' %} android:{{ ak }}="{{ av }}"{% endfor %}{% if not v.get('meta_data') %} />{% else %}>
-            {% for mk, mv in v.meta_data.items() %}{% if mv is mapping %}<meta-data android:name="{{ mk }}"{% for attr_key, attr_value in mv.items() %} android:{{ attr_key }}="{{ attr_value }}"{% endfor %} />{% else %}<meta-data android:name="{{ mk }}" android:value="{{ mv }}" />{% endif %}
+        <provider android:name="{{ k | e }}"{% for ak, av in v.items() if ak != 'meta_data' %} android:{{ ak }}="{{ av | e }}"{% endfor %}{% if not v.get('meta_data') %} />{% else %}>
+            {% for mk, mv in v.meta_data.items() %}{% if mv is mapping %}<meta-data android:name="{{ mk | e }}"{% for attr_key, attr_value in mv.items() %} android:{{ attr_key }}="{{ attr_value | e }}"{% endfor %} />{% else %}<meta-data android:name="{{ mk | e }}" android:value="{{ mv | e }}" />{% endif %}
             {% endfor %}</provider>{% endif %}
         <!-- flet: end of provider {% endif %} {% endfor %} -->
         <!-- flet: receiver {% for name, receiver in cookiecutter._options.android_receivers.items() %} -->

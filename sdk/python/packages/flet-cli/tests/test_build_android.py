@@ -563,6 +563,77 @@ class TestActivityIntentFilters:
         assert path in str(error.value)
 
 
+class TestManifestEscaping:
+    """Cover XML escaping of meta-data, provider, permission and feature values."""
+
+    def test_special_characters_round_trip(self):
+        """Values with `&`, `<` or quotes keep the manifest valid and read back."""
+        path = ANDROID_APP_TEMPLATE / "src/main/AndroidManifest.xml"
+        options = {
+            "android_application_attributes": {"label": "Example"},
+            "android_activity": {"intent_filters": []},
+            "android_queries": {"packages": [], "intents": [], "providers": []},
+            "android_receivers": {},
+            "android_services": {},
+            "android_permissions": {
+                "android.permission.INTERNET": True,
+                "com.example.PERMISSION": {"maxSdkVersion": 'A&B "<x>"'},
+            },
+            "android_features": {"com.example.feature&x": False},
+            "android_meta_data": {"com.example.url": "https://e.com/?a=1&b=2"},
+            "android_providers": {
+                "com.example.Provider": {
+                    "authorities": "${applicationId}.files",
+                    "label": "Files & Photos",
+                    "meta_data": {
+                        "com.example.text": "a<b",
+                        "com.example.res": {"resource": "@xml/a&b"},
+                    },
+                }
+            },
+            "deep_linking": {"scheme": None, "host": None},
+        }
+        manifest = ET.fromstring(
+            Environment(undefined=StrictUndefined)
+            .from_string(path.read_text())
+            .render(
+                cookiecutter={
+                    "product_name": "Example",
+                    "_pyproject": {},
+                    "_options": options,
+                }
+            )
+        )
+
+        def attr(element, key):
+            """Return an Android XML attribute of an element."""
+            return element.get(f"{{{ANDROID_NS}}}{key}")
+
+        assert attr(manifest.find("application/meta-data"), "value") == (
+            "https://e.com/?a=1&b=2"
+        )
+        provider = next(
+            p
+            for p in manifest.findall("application/provider")
+            if attr(p, "name") == "com.example.Provider"
+        )
+        assert attr(provider, "authorities") == "${applicationId}.files"
+        assert attr(provider, "label") == "Files & Photos"
+        assert [
+            (attr(m, "value"), attr(m, "resource"))
+            for m in provider.findall("meta-data")
+        ] == [("a<b", None), (None, "@xml/a&b")]
+        permission = next(
+            p
+            for p in manifest.findall("uses-permission")
+            if attr(p, "name") == "com.example.PERMISSION"
+        )
+        assert attr(permission, "maxSdkVersion") == 'A&B "<x>"'
+        assert [attr(f, "name") for f in manifest.findall("uses-feature")] == [
+            "com.example.feature&x"
+        ]
+
+
 class TestReceivers:
     """Cover receiver declarations, intent filters, and manifest preservation."""
 
