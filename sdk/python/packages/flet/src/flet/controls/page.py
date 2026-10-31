@@ -532,6 +532,8 @@ class Page(BasePage):
     """
     Gets current app route.
 
+    In an app opened from a deep link, it starts as the link's path and query.
+
     Note:
         This property is read-only.
     """
@@ -669,8 +671,9 @@ class Page(BasePage):
 
     on_route_change: Optional[EventHandler[RouteChangeEvent]] = None
     """
-    Called when page route changes either programmatically, by editing application URL \
-    or using browser Back/Forward buttons.
+    Called when page route changes either programmatically, by editing application \
+    URL, using browser Back/Forward buttons, or when a deep link opens the running \
+    app.
     """
 
     on_view_pop: Optional[EventHandler[ViewPopEvent]] = None

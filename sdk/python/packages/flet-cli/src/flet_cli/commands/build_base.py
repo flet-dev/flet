@@ -53,6 +53,9 @@ from flet_cli.utils.android import (
     android_resource_files,
     android_resources_keep_xml,
     excluded_android_abis,
+    normalize_android_activity,
+    normalize_android_application_attributes,
+    normalize_android_queries,
     normalize_android_receivers,
     normalize_android_services,
 )
@@ -787,12 +790,13 @@ class BaseBuildCommand(BaseFlutterCommand):
             "--deep-linking-scheme",
             dest="deep_linking_scheme",
             help="Deep linking URL scheme to configure for iOS and Android builds, "
-            "i.g. `https` or `myapp`",
+            "e.g. `myapp` or `https`",
         )
         parser.add_argument(
             "--deep-linking-host",
             dest="deep_linking_host",
-            help="Deep linking URL host for iOS and Android builds",
+            help="Deep linking URL host for iOS and Android builds; optional except "
+            "for `http` and `https` schemes. Requires --deep-linking-scheme",
         )
         parser.add_argument(
             "--android-signing-key-store",
@@ -1446,12 +1450,7 @@ class BaseBuildCommand(BaseFlutterCommand):
             normalized_providers[key] = normalized
         android_providers = normalized_providers
 
-        deep_linking_scheme = self.get_deep_linking_setting("scheme")
-        deep_linking_host = self.get_deep_linking_setting("host")
-
-        if self.options.deep_linking_scheme and self.options.deep_linking_host:
-            deep_linking_scheme = self.options.deep_linking_scheme
-            deep_linking_host = self.options.deep_linking_host
+        deep_linking = self.get_deep_linking()
 
         target_arch = self.options.target_arch or self.get_platform_setting(
             "target_arch"
@@ -1686,12 +1685,14 @@ class BaseBuildCommand(BaseFlutterCommand):
                 "android_gradle_dependencies": self.get_android_gradle_dependencies(),
                 "android_proguard_rules": android_proguard_rules,
                 "android_providers": android_providers,
+                "android_application_attributes": (
+                    self.get_android_application_attributes(product_name)
+                ),
+                "android_activity": self.get_android_activity(),
+                "android_queries": self.get_android_queries(),
                 "android_receivers": self.get_android_receivers(),
                 "android_services": self.get_android_services(),
-                "deep_linking": {
-                    "scheme": deep_linking_scheme,
-                    "host": deep_linking_host,
-                },
+                "deep_linking": deep_linking,
                 "android_signing": bool(
                     self.options.android_signing_key_store
                     or self.get_pyproject("tool.flet.android.signing.key_store")
@@ -3103,29 +3104,60 @@ class BaseBuildCommand(BaseFlutterCommand):
             else self.get_platform_setting(pyproj_setting, default_value)
         )
 
-    def get_deep_linking_setting(self, key: str):
+    def get_deep_linking(self) -> dict:
         """
-        Resolve a deep-linking setting (`scheme` or `host`).
+        Resolve the deep-linking scheme and optional host.
 
-        On Android and iOS `[tool.flet.<platform>.deep_linking]` overrides
-        `[tool.flet.deep_linking]`, which is the fallback; other platforms
-        read only the common table. Resolved per key, so a platform table
-        may override just one of them.
-
-        Args:
-            key: `scheme` or `host`.
+        The CLI options replace the project settings when a scheme is passed.
+        Otherwise, on Android and iOS the platform's own deep-linking table
+        overrides the common one per key, so it may set just one of them;
+        other platforms read only the common table. On Android and iOS a host
+        needs a scheme, and `http` and `https` need a host: without one, the
+        Android app would offer to open every web link.
 
         Returns:
-            The configured value, or `None`.
+            A table with `scheme` and `host`, each `None` when not set.
         """
 
         assert self.get_pyproject
+        if self.options.deep_linking_host and not self.options.deep_linking_scheme:
+            self.cleanup(
+                1, "--deep-linking-host needs --deep-linking-scheme to be set too."
+            )
         platform = {"Android": "android", "iOS": "ios"}.get(self.package_platform)
+        values = {}
+        for key in ("scheme", "host"):
+            if self.options.deep_linking_scheme:
+                value = getattr(self.options, f"deep_linking_{key}")
+            else:
+                value = None
+                if platform:
+                    value = self.get_pyproject(
+                        f"tool.flet.{platform}.deep_linking.{key}"
+                    )
+                if value is None:
+                    value = self.get_pyproject(f"tool.flet.deep_linking.{key}")
+            if value is not None and not isinstance(value, str):
+                self.cleanup(
+                    1, f"Invalid deep linking {key}: expected a string, got {value!r}."
+                )
+            values[key] = (value.strip() or None) if value else None
+
         if platform:
-            value = self.get_pyproject(f"tool.flet.{platform}.deep_linking.{key}")
-            if value is not None:
-                return value
-        return self.get_pyproject(f"tool.flet.deep_linking.{key}")
+            if values["host"] and not values["scheme"]:
+                self.cleanup(
+                    1,
+                    f"Deep linking host {values['host']!r} needs a scheme, "
+                    'such as "myapp" or "https".',
+                )
+            scheme = (values["scheme"] or "").lower()
+            if scheme in ("http", "https") and not values["host"]:
+                self.cleanup(
+                    1,
+                    f"Deep linking scheme {values['scheme']!r} needs a host: "
+                    "without one, the app would open every web link.",
+                )
+        return values
 
     def get_ios_entitlements(self) -> dict:
         """
@@ -3212,6 +3244,40 @@ class BaseBuildCommand(BaseFlutterCommand):
                 1, f"Invalid {setting}: expected a string of Kotlin declarations."
             )
         return textwrap.dedent(configured).strip()
+
+    def get_android_application_attributes(self, product_name: str) -> dict:
+        """Resolve the manifest's `<application>` attributes: Flet's defaults with
+        the app's own attributes on top."""
+        assert self.get_pyproject
+        try:
+            return normalize_android_application_attributes(
+                self.get_pyproject("tool.flet.android.manifest_application"),
+                product_name,
+            )
+        except ValueError as exc:
+            self.cleanup(1, str(exc))
+
+    def get_android_activity(self) -> dict:
+        """Resolve what the app adds to its main activity, such as intent
+        filters, from project settings."""
+        assert self.get_pyproject
+        try:
+            return normalize_android_activity(
+                self.get_pyproject("tool.flet.android.activity")
+            )
+        except ValueError as exc:
+            self.cleanup(1, str(exc))
+
+    def get_android_queries(self) -> dict:
+        """Resolve the apps, intents, and providers declared in the manifest's
+        `<queries>` from project settings."""
+        assert self.get_pyproject
+        try:
+            return normalize_android_queries(
+                self.get_pyproject("tool.flet.android.queries")
+            )
+        except ValueError as exc:
+            self.cleanup(1, str(exc))
 
     def get_android_receivers(self) -> dict:
         """Resolve Android manifest receiver declarations from project settings."""

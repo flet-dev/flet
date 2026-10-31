@@ -55,7 +55,8 @@ def _render_gradle(cmd):
 
 
 def _render_manifest(cmd):
-    """Parse a rendered manifest containing receivers and existing app entries."""
+    """Parse a rendered manifest containing queries, receivers, and existing app
+    entries."""
     path = ANDROID_APP_TEMPLATE / "src/main/AndroidManifest.xml"
     rendered = (
         Environment(undefined=StrictUndefined)
@@ -65,6 +66,11 @@ def _render_manifest(cmd):
                 "product_name": "Example",
                 "_pyproject": {},
                 "_options": {
+                    "android_application_attributes": (
+                        cmd.get_android_application_attributes("Example")
+                    ),
+                    "android_activity": cmd.get_android_activity(),
+                    "android_queries": cmd.get_android_queries(),
                     "android_receivers": cmd.get_android_receivers(),
                     "android_services": cmd.get_android_services(),
                     "android_permissions": {"android.permission.INTERNET": True},
@@ -214,6 +220,418 @@ class TestGradleDependencies:
         assert expected_body in rendered
         assert 'implementation(platform("com.example:bom:1.0"))' in rendered
         assert "{{ this_must_not_be_processed_as_jinja }}" in rendered
+
+
+class TestApplicationAttributes:
+    """Cover Flet's `<application>` defaults and the app's overrides."""
+
+    @staticmethod
+    def _application(configured):
+        """Render application settings and return the `<application>` element."""
+        manifest = _render_manifest(
+            _command({"tool.flet.android.manifest_application": configured})
+        )
+        return manifest.find("application")
+
+    @staticmethod
+    def _attributes(element):
+        """Return an element's Android attributes without the namespace."""
+        prefix = f"{{{ANDROID_NS}}}"
+        return {
+            key[len(prefix) :]: value
+            for key, value in element.attrib.items()
+            if key.startswith(prefix)
+        }
+
+    @pytest.mark.parametrize("configured", [None, {}])
+    def test_defaults_without_settings(self, configured):
+        """Without settings, `<application>` gets Flet's four attributes."""
+        assert self._attributes(self._application(configured)) == {
+            "label": "Example",
+            "name": "${applicationName}",
+            "enableOnBackInvokedCallback": "true",
+            "icon": "@mipmap/ic_launcher",
+        }
+
+    def test_overrides_replace_defaults_once_and_values_are_escaped(self):
+        """Overriding a default writes it once; booleans and XML are normalized."""
+        configured = {
+            "label": 'A&B "app" <x>',
+            "icon": "@mipmap/custom",
+            "enableOnBackInvokedCallback": False,
+            "allowBackup": False,
+            "usesCleartextTraffic": "true",
+            "networkSecurityConfig": "@xml/network_security_config",
+        }
+        before = copy.deepcopy(configured)
+        attributes = self._attributes(self._application(configured))
+        assert configured == before
+        assert attributes == {
+            "label": 'A&B "app" <x>',
+            "name": "${applicationName}",
+            "enableOnBackInvokedCallback": "false",
+            "icon": "@mipmap/custom",
+            "allowBackup": "false",
+            "usesCleartextTraffic": "true",
+            "networkSecurityConfig": "@xml/network_security_config",
+        }
+
+    @pytest.mark.parametrize(
+        "configured, path",
+        [
+            ([], "tool.flet.android.manifest_application"),
+            ({"bad:name": "x"}, "tool.flet.android.manifest_application"),
+            ({"allowBackup": []}, "manifest_application.allowBackup"),
+        ],
+    )
+    def test_invalid_attributes_report_the_setting_path(self, configured, path):
+        """Identify the malformed application attribute in errors."""
+        with pytest.raises(ValueError) as error:
+            _command(
+                {"tool.flet.android.manifest_application": configured}
+            ).get_android_application_attributes("Example")
+        assert path in str(error.value)
+
+
+class TestQueries:
+    """Cover package, intent, and provider queries and the built-in query."""
+
+    @staticmethod
+    def _resolve(configured):
+        """Resolve query declarations through the build command."""
+        return _command({"tool.flet.android.queries": configured}).get_android_queries()
+
+    @staticmethod
+    def _queries(configured):
+        """Render query settings and return the manifest's `<queries>` element."""
+        manifest = _render_manifest(_command({"tool.flet.android.queries": configured}))
+        assert len(manifest.findall("queries")) == 1
+        return manifest.find("queries")
+
+    @staticmethod
+    def _attr(element, key):
+        """Return an Android XML attribute of an element."""
+        return element.get(f"{{{ANDROID_NS}}}{key}")
+
+    @pytest.mark.parametrize("configured", [None, {}])
+    def test_absent_queries_keep_only_the_built_in_intent(self, configured):
+        """Without settings, `<queries>` holds only Flet's PROCESS_TEXT intent."""
+        queries = self._queries(configured)
+        assert [child.tag for child in queries] == ["intent"]
+        assert (
+            self._attr(queries.find("intent/action"), "name")
+            == "android.intent.action.PROCESS_TEXT"
+        )
+
+    def test_packages_intents_and_providers_render_after_the_built_in_intent(self):
+        """Render every declaration in order, escaped, without mutating the input."""
+        configured = {
+            "packages": ["com.eg.android.AlipayGphone", "com.tencent.mm"],
+            "intent": [
+                {"action": "android.intent.action.VIEW", "data": {"scheme": "alipays"}},
+                {
+                    "action": "android.intent.action.VIEW",
+                    "categories": ["android.intent.category.BROWSABLE"],
+                    "data": [{"scheme": "https"}, {"host": 'a&b"<c>'}],
+                },
+                {
+                    "action": "android.intent.action.SEND",
+                    "data": {"mimeType": "image/*"},
+                },
+            ],
+            "providers": ["com.example.settings;com.example.files"],
+        }
+        before = copy.deepcopy(configured)
+        queries = self._queries(configured)
+        assert configured == before
+        assert [child.tag for child in queries] == [
+            "intent",
+            "package",
+            "package",
+            "intent",
+            "intent",
+            "intent",
+            "provider",
+        ]
+        assert [self._attr(p, "name") for p in queries.findall("package")] == [
+            "com.eg.android.AlipayGphone",
+            "com.tencent.mm",
+        ]
+        intents = queries.findall("intent")[1:]
+        assert self._attr(intents[0].find("action"), "name") == (
+            "android.intent.action.VIEW"
+        )
+        assert intents[0].find("category") is None
+        assert self._attr(intents[0].find("data"), "scheme") == "alipays"
+        assert [self._attr(c, "name") for c in intents[1].findall("category")] == [
+            "android.intent.category.BROWSABLE"
+        ]
+        data = intents[1].findall("data")
+        assert [self._attr(d, "scheme") for d in data] == ["https", None]
+        assert self._attr(data[1], "host") == 'a&b"<c>'
+        assert self._attr(intents[2].find("data"), "mimeType") == "image/*"
+        assert self._attr(queries.find("provider"), "authorities") == (
+            "com.example.settings;com.example.files"
+        )
+
+    def test_duplicates_and_whitespace_are_dropped(self):
+        """Repeated packages and providers appear once; names are trimmed."""
+        assert self._resolve(
+            {
+                "packages": ["com.example.app", " com.example.app ", "com.example.b"],
+                "providers": ["com.example.files", "com.example.files"],
+                "intent": [{"action": " android.intent.action.VIEW "}],
+            }
+        ) == {
+            "packages": ["com.example.app", "com.example.b"],
+            "intents": [
+                {"action": "android.intent.action.VIEW", "categories": [], "data": []}
+            ],
+            "providers": ["com.example.files"],
+        }
+
+    @pytest.mark.parametrize(
+        "configured, path",
+        [
+            ([], "tool.flet.android.queries"),
+            ({"package": ["com.example.app"]}, "queries.package"),
+            ({"packages": "com.example.app"}, "queries.packages"),
+            ({"packages": ["app"]}, "queries.packages"),
+            ({"packages": ["com.example.my app"]}, "queries.packages"),
+            ({"providers": [""]}, "queries.providers"),
+            ({"providers": ["a;;b"]}, "queries.providers"),
+            ({"intent": {"action": "a"}}, "queries.intent"),
+            ({"intent": [False]}, "queries.intent[0]"),
+            ({"intent": [{}]}, "intent[0].action"),
+            ({"intent": [{"action": ["a", "b"]}]}, "intent[0].action"),
+            ({"intent": [{"action": "a", "actions": ["b"]}]}, "intent[0].actions"),
+            ({"intent": [{"action": "a", "categories": "c"}]}, "intent[0].categories"),
+            ({"intent": [{"action": "a", "data": "https"}]}, "intent[0].data"),
+            ({"intent": [{"action": "a", "data": [{}]}]}, "intent[0].data[0]"),
+            (
+                {"intent": [{"action": "a", "data": {"path": "/pay"}}]},
+                "intent[0].data.path",
+            ),
+            (
+                {"intent": [{"action": "a", "data": {"scheme": ""}}]},
+                "intent[0].data.scheme",
+            ),
+            (
+                {
+                    "intent": [
+                        {"action": "a", "data": [{"scheme": "a"}, {"scheme": "b"}]}
+                    ]
+                },
+                "intent[0].data[1].scheme",
+            ),
+        ],
+    )
+    def test_invalid_queries_report_the_setting_path(self, configured, path):
+        """Identify the malformed query declaration in errors."""
+        with pytest.raises(ValueError) as error:
+            self._resolve(configured)
+        assert path in str(error.value)
+
+
+class TestActivityIntentFilters:
+    """Cover intent filters added to the main activity and shared filter rules."""
+
+    @staticmethod
+    def _activity(configured):
+        """Render activity settings and return the main `<activity>` element."""
+        manifest = _render_manifest(
+            _command({"tool.flet.android.activity": configured})
+        )
+        return manifest.find("application/activity")
+
+    @staticmethod
+    def _attr(element, key):
+        """Return an Android XML attribute of an element."""
+        return element.get(f"{{{ANDROID_NS}}}{key}")
+
+    @pytest.mark.parametrize("configured", [None, {}, {"intent_filter": []}])
+    def test_without_settings_only_the_launcher_filter_remains(self, configured):
+        """Without filters, the activity keeps only Flet's launcher filter."""
+        filters = self._activity(configured).findall("intent-filter")
+        assert len(filters) == 1
+        assert (
+            self._attr(filters[0].find("action"), "name")
+            == "android.intent.action.MAIN"
+        )
+
+    def test_filters_render_after_flets_with_attributes_and_data(self):
+        """Render each filter's attributes, actions, categories and data in order."""
+        configured = {
+            "intent_filter": [
+                {
+                    "autoVerify": True,
+                    "actions": ["android.intent.action.VIEW"],
+                    "categories": [
+                        "android.intent.category.DEFAULT",
+                        "android.intent.category.BROWSABLE",
+                    ],
+                    "data": [
+                        {"scheme": "https", "host": "example.com"},
+                        {"pathPrefix": "/invite"},
+                    ],
+                },
+                {
+                    "actions": ["android.intent.action.SEND"],
+                    "categories": ["android.intent.category.DEFAULT"],
+                    "data": {"mimeType": "text/plain"},
+                    "label": 'A&B "share"',
+                },
+            ]
+        }
+        before = copy.deepcopy(configured)
+        filters = self._activity(configured).findall("intent-filter")
+        assert configured == before
+        assert len(filters) == 3
+        view, send = filters[1], filters[2]
+        assert self._attr(view, "autoVerify") == "true"
+        assert [self._attr(c, "name") for c in view.findall("category")] == [
+            "android.intent.category.DEFAULT",
+            "android.intent.category.BROWSABLE",
+        ]
+        assert [
+            {k.split("}")[1]: v for k, v in d.attrib.items()}
+            for d in view.findall("data")
+        ] == [{"scheme": "https", "host": "example.com"}, {"pathPrefix": "/invite"}]
+        assert self._attr(send.find("action"), "name") == "android.intent.action.SEND"
+        assert self._attr(send.find("data"), "mimeType") == "text/plain"
+        assert self._attr(send, "label") == 'A&B "share"'
+
+    def test_receiver_filters_accept_data_and_attributes(self):
+        """Receivers share the same filter rules, including `<data>`."""
+        manifest = _render_manifest(
+            _command(
+                {
+                    "tool.flet.android.receiver": {
+                        "com.example.Packages": {
+                            "exported": True,
+                            "intent_filter": [
+                                {
+                                    "priority": 10,
+                                    "actions": ["android.intent.action.PACKAGE_ADDED"],
+                                    "data": {"scheme": "package"},
+                                }
+                            ],
+                        }
+                    }
+                }
+            )
+        )
+        intent_filter = manifest.find("application/receiver/intent-filter")
+        assert self._attr(intent_filter, "priority") == "10"
+        assert self._attr(intent_filter.find("data"), "scheme") == "package"
+
+    @pytest.mark.parametrize(
+        "configured, path",
+        [
+            ([], "tool.flet.android.activity"),
+            ({"launchMode": "singleTask"}, "activity.launchMode"),
+            ({"intent_filter": {}}, "activity.intent_filter"),
+            ({"intent_filter": [False]}, "intent_filter[0]"),
+            ({"intent_filter": [{}]}, "intent_filter[0].actions"),
+            ({"intent_filter": [{"action": "a"}]}, "intent_filter[0].action"),
+            (
+                {"intent_filter": [{"actions": ["a"], "category": "c"}]},
+                "intent_filter[0].category",
+            ),
+            (
+                {"intent_filter": [{"actions": ["a"], "data": "https"}]},
+                "intent_filter[0].data",
+            ),
+            (
+                {"intent_filter": [{"actions": ["a"], "data": [{}]}]},
+                "intent_filter[0].data[0]",
+            ),
+            (
+                {"intent_filter": [{"actions": ["a"], "data": {"bad:key": "x"}}]},
+                "intent_filter[0].data",
+            ),
+            (
+                {"intent_filter": [{"actions": ["a"], "autoVerify": []}]},
+                "intent_filter[0].autoVerify",
+            ),
+        ],
+    )
+    def test_invalid_activity_settings_report_the_setting_path(self, configured, path):
+        """Identify the malformed activity setting or filter in errors."""
+        with pytest.raises(ValueError) as error:
+            _command({"tool.flet.android.activity": configured}).get_android_activity()
+        assert path in str(error.value)
+
+
+class TestManifestEscaping:
+    """Cover XML escaping of meta-data, provider, permission and feature values."""
+
+    def test_special_characters_round_trip(self):
+        """Values with `&`, `<` or quotes keep the manifest valid and read back."""
+        path = ANDROID_APP_TEMPLATE / "src/main/AndroidManifest.xml"
+        options = {
+            "android_application_attributes": {"label": "Example"},
+            "android_activity": {"intent_filters": []},
+            "android_queries": {"packages": [], "intents": [], "providers": []},
+            "android_receivers": {},
+            "android_services": {},
+            "android_permissions": {
+                "android.permission.INTERNET": True,
+                "com.example.PERMISSION": {"maxSdkVersion": 'A&B "<x>"'},
+            },
+            "android_features": {"com.example.feature&x": False},
+            "android_meta_data": {"com.example.url": "https://e.com/?a=1&b=2"},
+            "android_providers": {
+                "com.example.Provider": {
+                    "authorities": "${applicationId}.files",
+                    "label": "Files & Photos",
+                    "meta_data": {
+                        "com.example.text": "a<b",
+                        "com.example.res": {"resource": "@xml/a&b"},
+                    },
+                }
+            },
+            "deep_linking": {"scheme": None, "host": None},
+        }
+        manifest = ET.fromstring(
+            Environment(undefined=StrictUndefined)
+            .from_string(path.read_text())
+            .render(
+                cookiecutter={
+                    "product_name": "Example",
+                    "_pyproject": {},
+                    "_options": options,
+                }
+            )
+        )
+
+        def attr(element, key):
+            """Return an Android XML attribute of an element."""
+            return element.get(f"{{{ANDROID_NS}}}{key}")
+
+        assert attr(manifest.find("application/meta-data"), "value") == (
+            "https://e.com/?a=1&b=2"
+        )
+        provider = next(
+            p
+            for p in manifest.findall("application/provider")
+            if attr(p, "name") == "com.example.Provider"
+        )
+        assert attr(provider, "authorities") == "${applicationId}.files"
+        assert attr(provider, "label") == "Files & Photos"
+        assert [
+            (attr(m, "value"), attr(m, "resource"))
+            for m in provider.findall("meta-data")
+        ] == [("a<b", None), (None, "@xml/a&b")]
+        permission = next(
+            p
+            for p in manifest.findall("uses-permission")
+            if attr(p, "name") == "com.example.PERMISSION"
+        )
+        assert attr(permission, "maxSdkVersion") == 'A&B "<x>"'
+        assert [attr(f, "name") for f in manifest.findall("uses-feature")] == [
+            "com.example.feature&x"
+        ]
 
 
 class TestReceivers:
