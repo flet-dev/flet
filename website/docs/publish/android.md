@@ -519,10 +519,12 @@ In the [`AndroidManifest.xml`](index.md#build-template),
 the `pyproject.toml` example above will be translated accordingly into this:
 
 ```xml
-<application
-    android:usesCleartextTraffic="true"
-    android:allowBackup="false">
-</application>
+<manifest>
+    <application
+        android:usesCleartextTraffic="true"
+        android:allowBackup="false">
+    </application>
+</manifest>
 ```
 </details>
 
@@ -575,10 +577,12 @@ In the [`AndroidManifest.xml`](index.md#build-template),
 the `pyproject.toml` example above will be translated accordingly into this:
 
 ```xml
-<application>
-    <meta-data android:name="firebase_analytics_collection_enabled" android:value="true" />
-    <meta-data android:name="default_timeout_seconds" android:value="30" />
-</application>
+<manifest>
+    <application>
+        <meta-data android:name="firebase_analytics_collection_enabled" android:value="true" />
+        <meta-data android:name="default_timeout_seconds" android:value="30" />
+    </application>
+</manifest>
 ```
 </details>
 
@@ -621,6 +625,13 @@ sub-entry's key is the `android:name`; the value can be either:
 - an inline table — its entries become `android:<key>="<value>"` attributes
   on the `<meta-data>` element (useful for `android:resource="@xml/…"`).
 
+Flet always declares one provider itself, `androidx.core.content.FileProvider`
+with authorities `${applicationId}.provider`, which shares the app's files with
+other apps; your providers are added after it.
+
+Don't reuse `${applicationId}.provider` as the `android:authorities` of your own
+provider: the Android manifest merger fails on duplicate authorities.
+
 #### Example
 
 <Tabs groupId="pyproject-toml">
@@ -647,30 +658,33 @@ In the [`AndroidManifest.xml`](index.md#build-template),
 the `pyproject.toml` example above will be translated accordingly into this:
 
 ```xml
-<application>
-    <provider android:name="rikka.shizuku.ShizukuProvider"
-              android:authorities="${applicationId}.shizuku"
-              android:multiprocess="false"
-              android:enabled="true"
-              android:exported="true"
-              android:permission="android.permission.INTERACT_ACROSS_USERS_FULL" />
-    <provider android:name="com.example.MyProvider"
-              android:authorities="${applicationId}.myprovider"
-              android:exported="false"
-              android:grantUriPermissions="true">
-        <meta-data android:name="android.support.FILE_PROVIDER_PATHS" android:resource="@xml/file_paths" />
-        <meta-data android:name="some.other.key" android:value="some-value" />
-    </provider>
-</application>
+<manifest>
+    <application>
+        <!-- Always added by Flet -->
+        <provider android:name="androidx.core.content.FileProvider"
+                  android:authorities="${applicationId}.provider"
+                  android:exported="false"
+                  android:grantUriPermissions="true">
+            <meta-data android:name="android.support.FILE_PROVIDER_PATHS" android:resource="@xml/provider_paths" />
+        </provider>
+        <!-- From the example -->
+        <provider android:name="rikka.shizuku.ShizukuProvider"
+                  android:authorities="${applicationId}.shizuku"
+                  android:multiprocess="false"
+                  android:enabled="true"
+                  android:exported="true"
+                  android:permission="android.permission.INTERACT_ACROSS_USERS_FULL" />
+        <provider android:name="com.example.MyProvider"
+                  android:authorities="${applicationId}.myprovider"
+                  android:exported="false"
+                  android:grantUriPermissions="true">
+            <meta-data android:name="android.support.FILE_PROVIDER_PATHS" android:resource="@xml/file_paths" />
+            <meta-data android:name="some.other.key" android:value="some-value" />
+        </provider>
+    </application>
+</manifest>
 ```
 </details>
-
-:::note
-Flet already declares a built-in `androidx.core.content.FileProvider` with
-authorities `${applicationId}.provider`. Declaring another provider that
-uses the same authorities will cause the Android manifest merger to fail —
-pick a different `android:authorities` value for your custom provider.
-:::
 
 ### Receivers
 
@@ -740,23 +754,25 @@ In [`AndroidManifest.xml`](index.md#build-template),
 the `pyproject.toml` example above will be translated accordingly into this:
 
 ```xml
-<application>
-    <receiver android:name="com.example.BootReceiver"
-              android:exported="false"
-              android:enabled="true">
-        <intent-filter>
-            <action android:name="android.intent.action.BOOT_COMPLETED" />
-        </intent-filter>
-        <intent-filter>
-            <action android:name="com.example.REFRESH" />
-            <action android:name="com.example.RESET" />
-            <category android:name="com.example.INTERNAL" />
-        </intent-filter>
-    </receiver>
-    <receiver android:name="com.example.SyncReceiver"
-              android:exported="false"
-              android:process=":sync" />
-</application>
+<manifest>
+    <application>
+        <receiver android:name="com.example.BootReceiver"
+                  android:exported="false"
+                  android:enabled="true">
+            <intent-filter>
+                <action android:name="android.intent.action.BOOT_COMPLETED" />
+            </intent-filter>
+            <intent-filter>
+                <action android:name="com.example.REFRESH" />
+                <action android:name="com.example.RESET" />
+                <category android:name="com.example.INTERNAL" />
+            </intent-filter>
+        </receiver>
+        <receiver android:name="com.example.SyncReceiver"
+                  android:exported="false"
+                  android:process=":sync" />
+    </application>
+</manifest>
 ```
 
 </details>
@@ -836,21 +852,23 @@ In [`AndroidManifest.xml`](index.md#build-template),
 the `pyproject.toml` example above will be translated accordingly into this:
 
 ```xml
-<application>
-    <service android:name="com.example.SyncService"
-             android:exported="false"
-             android:foregroundServiceType="dataSync"
-             android:stopWithTask="true">
-        <meta-data android:name="com.example.RETRY_COUNT" android:value="3" />
-        <meta-data android:name="com.example.LOGGING_ENABLED" android:value="false" />
-    </service>
-    <service android:name="com.example.SpecialService"
-             android:exported="false"
-             android:foregroundServiceType="specialUse">
-        <property android:name="android.app.PROPERTY_SPECIAL_USE_FGS_SUBTYPE"
-                  android:value="Describe the service's work" />
-    </service>
-</application>
+<manifest>
+    <application>
+        <service android:name="com.example.SyncService"
+                 android:exported="false"
+                 android:foregroundServiceType="dataSync"
+                 android:stopWithTask="true">
+            <meta-data android:name="com.example.RETRY_COUNT" android:value="3" />
+            <meta-data android:name="com.example.LOGGING_ENABLED" android:value="false" />
+        </service>
+        <service android:name="com.example.SpecialService"
+                 android:exported="false"
+                 android:foregroundServiceType="specialUse">
+            <property android:name="android.app.PROPERTY_SPECIAL_USE_FGS_SUBTYPE"
+                      android:value="Describe the service's work" />
+        </service>
+    </application>
+</manifest>
 ```
 
 </details>
@@ -1022,6 +1040,10 @@ the example above will be translated accordingly into this:
 
 ```xml
 <manifest>
+    <!-- Flet's defaults, unless set in your settings -->
+    <uses-feature android:name="android.software.leanback" android:required="false" />
+    <uses-feature android:name="android.hardware.touchscreen" android:required="false" />
+    <!-- From the example -->
     <uses-feature android:name="android.hardware.camera" android:required="true" />
     <uses-feature android:name="android.hardware.location.gps" android:required="false" />
 </manifest>
@@ -1111,6 +1133,9 @@ the `pyproject.toml` example above will be translated accordingly into this:
 
 ```xml
 <manifest>
+    <!-- Flet's default, unless set to false in your settings -->
+    <uses-permission android:name="android.permission.INTERNET" />
+    <!-- From the example -->
     <uses-permission android:name="android.permission.CAMERA" />
     <uses-permission android:name="android.permission.RECORD_AUDIO" />
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" android:maxSdkVersion="30" />
@@ -1147,8 +1172,10 @@ Play Console. Setting them to `false` removes them:
 which generates:
 
 ```xml
-<uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" tools:node="remove" />
-<uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" tools:node="remove" />
+<manifest>
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" tools:node="remove" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" tools:node="remove" />
+</manifest>
 ```
 
 Removing a permission that nothing declares is harmless — `tools:node="remove"` on an
