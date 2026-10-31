@@ -65,6 +65,7 @@
 
 ### Bug fixes
 
+* Fix `flet build` for Android failing when a `[tool.flet.android.meta_data]` value or a `[tool.flet.android.provider]` attribute contains `&`, `<` or `"`, which were written into the manifest unescaped by @ndonkoHenri.
 * Fix `flet build` for Android failing when `[tool.flet.android.manifest_application]` sets `label`, `name`, `icon` or `enableOnBackInvokedCallback`, which wrote the attribute twice instead of replacing Flet's value by @ndonkoHenri.
 * Fix `use_state()` and `use_ref()` type inference for callable initializers in mypy and ty ([#6960](https://github.com/flet-dev/flet/issues/6960), [#7014](https://github.com/flet-dev/flet/pull/7014), [#7023](https://github.com/flet-dev/flet/pull/7023)) by @mmporong.
 * Fix `BottomAppBar` cutting its notch away from the floating action button when the bar has a left or top `margin`, including an animated one ([#6986](https://github.com/flet-dev/flet/issues/6986), [#7024](https://github.com/flet-dev/flet/pull/7024)) by @ndonkoHenri.
