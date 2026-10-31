@@ -700,6 +700,7 @@ class Handler(FileSystemEventHandler):
                 self.assets_dir,
                 self.hidden,
                 no_impeller=self.no_impeller,
+                app_dir=os.path.dirname(self.script_path),
             )
             explain_client_exit(self.fvp.wait())
             self.p.send_signal(signal.SIGTERM)

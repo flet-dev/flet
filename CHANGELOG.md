@@ -128,7 +128,7 @@
 ### Improvements
 
 * Add `--pwa-short-name` and `[tool.flet.web].pwa_short_name` to `flet build web` to set the `short_name` of the web app manifest: the label shown under the app icon when the PWA is installed, e.g. on the iOS Home Screen. It defaults to the product name ([#6911](https://github.com/flet-dev/flet/pull/6911)) by @FeodorFitsner.
-* Warn when the light Linux desktop client is used by default while `flet-audio` or `flet-video` is installed, since it has neither extension ([#6121](https://github.com/flet-dev/flet/issues/6121), [#6265](https://github.com/flet-dev/flet/issues/6265)) by @ndonkoHenri.
+* Warn when a desktop app uses an extension the prebuilt desktop client doesn't include, such as Audio or Video with the light Linux client, instead of only showing unknown controls ([#6121](https://github.com/flet-dev/flet/issues/6121), [#6265](https://github.com/flet-dev/flet/issues/6265)) by @ndonkoHenri.
 * Show which packages to install when the Linux desktop client can't start because a shared library such as `libmpv.so.2` can't be loaded ([#2823](https://github.com/flet-dev/flet/issues/2823)) by @ndonkoHenri.
 
 ### Bug fixes

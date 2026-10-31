@@ -4,7 +4,6 @@ import ctypes
 import ctypes.util
 import functools
 import hashlib
-import importlib.util
 import logging
 import os
 import shutil
@@ -31,6 +30,12 @@ from flet.utils import (
     random_string,
     safe_tar_extractall,
     safe_zip_extractall,
+)
+from flet_desktop.extensions import (
+    find_extension_packages,
+    find_imported_modules,
+    find_installed_extensions,
+    get_client_extensions,
 )
 
 logger = logging.getLogger(flet_desktop.__name__)
@@ -145,32 +150,100 @@ def __get_desktop_flavor():
     return __get_configured_desktop_flavor() or ("light" if is_linux() else "full")
 
 
-def __warn_light_flavor_without_media() -> None:
+def __get_cached_client_extensions(
+    client_dir: Path, snapshot_path: Path
+) -> set[str] | None:
     """
-    Warn when the Linux default light client is used with Audio or Video installed.
+    Return the Flutter packages compiled into a cached client.
 
-    The light client does not contain those extensions, so a `Video` renders
-    as "Unknown control: Video" and `Audio` method calls time out, without
-    either pointing at the client flavor. Configuring a flavor explicitly,
-    `"light"` included, silences the warning.
+    They are read from the client's AOT snapshot once and stored in an
+    `.extensions` file in its cache directory, so later starts don't scan the
+    snapshot again.
+
+    Args:
+        client_dir: Cache directory of the client.
+        snapshot_path: Path to the client's AOT snapshot.
+
+    Returns:
+        Names of the packages, or `None` when they can't be told.
     """
 
-    if __get_configured_desktop_flavor() is not None:
-        return
-    installed = [
-        name.replace("_", "-")
-        for name in ("flet_audio", "flet_video")
-        if importlib.util.find_spec(name) is not None
-    ]
-    if installed:
-        verb = "is" if len(installed) == 1 else "are"
-        logger.warning(
-            "Using the light Flet desktop client, the Linux default, which does "
-            f"not include Audio and Video, although {' and '.join(installed)} "
-            f"{verb} installed. To use them, set FLET_DESKTOP_FLAVOR=full or "
-            'desktop_flavor = "full" under [tool.flet] in pyproject.toml; set '
-            'it to "light" to hide this warning.'
-        )
+    marker = client_dir / ".extensions"
+    with contextlib.suppress(OSError):
+        extensions = set(marker.read_text().split())
+        if "flet" in extensions:
+            return extensions
+    extensions = get_client_extensions(str(snapshot_path))
+    if extensions is not None:
+        with contextlib.suppress(OSError):
+            marker.write_text("\n".join(sorted(extensions)))
+    return extensions
+
+
+def __warn_missing_extensions(
+    client_dir: Path, snapshot_path: Path, app_dir: str | Path | None
+) -> None:
+    """
+    Warn about the extensions the app uses that the cached client doesn't include.
+
+    Their controls render as unknown controls and their services never
+    answer, without either pointing at the client. An extension counts as used
+    when its module is already imported or one of the app's Python files
+    imports it. On Linux, the light client suggests the full one, which
+    includes more extensions; otherwise a client made with `flet build`, which
+    Flet uses when the app is started from its project folder, is suggested.
+    Problems while checking are logged at debug level and never stop the app.
+
+    Args:
+        client_dir: Cache directory of the client.
+        snapshot_path: Path to the client's AOT snapshot.
+        app_dir: Directory of the app's main script, or `None` to use the
+            directory of `sys.argv[0]` when that is a file.
+    """
+
+    try:
+        client_extensions = __get_cached_client_extensions(client_dir, snapshot_path)
+        if client_extensions is None:
+            return
+        if find_extension_packages() <= client_extensions:
+            return
+        missing = [
+            e for e in find_installed_extensions() if e.package not in client_extensions
+        ]
+        if not missing:
+            return
+        imported = {name.split(".")[0] for name in list(sys.modules)}
+        if any(not e.modules & imported for e in missing):
+            if app_dir is None:
+                script = Path(sys.argv[0] if sys.argv else "")
+                app_dir = script.resolve().parent if script.is_file() else None
+            if app_dir is not None:
+                imported |= find_imported_modules(Path(app_dir))
+        light = is_linux() and __get_desktop_flavor() == "light"
+        for extension in (e for e in missing if e.modules & imported):
+            source = (
+                f" (from {extension.distribution})" if extension.distribution else ""
+            )
+            if light:
+                fix = (
+                    "If the full client includes it, set FLET_DESKTOP_FLAVOR=full "
+                    'or desktop_flavor = "full" under [tool.flet] in pyproject.toml: '
+                    "https://flet.dev/docs/getting-started/installation#linux"
+                )
+            else:
+                fix = (
+                    "Build a client that includes it with `flet build` and start the "
+                    "app from the project folder: https://flet.dev/docs/extend/"
+                    "user-extensions#change-python-files"
+                )
+            logger.warning(
+                f"The {'light ' if light else ''}Flet desktop client doesn't include "
+                f"the {extension.package} extension{source} the app uses, so its "
+                f"controls show as unknown controls and its services don't respond. "
+                f"{fix}"
+            )
+    except Exception as e:
+        logger.debug(f"Could not check the client's extensions: {e}")
 
 
 @functools.cache
@@ -600,7 +673,7 @@ def __linux_identity_args(args: list) -> tuple:
     return [app_id, *args[1:]], {"executable": executable}
 
 
-def open_flet_view(page_url, assets_dir, hidden, *, no_impeller=False):
+def open_flet_view(page_url, assets_dir, hidden, *, no_impeller=False, app_dir=None):
     """
     Start a desktop view process and return the process object and PID file path.
 
@@ -609,6 +682,9 @@ def open_flet_view(page_url, assets_dir, hidden, *, no_impeller=False):
         assets_dir: Optional assets directory passed to the client process.
         hidden: Whether the window should start hidden.
         no_impeller: Whether the client renders with Skia instead of Impeller.
+        app_dir: Directory of the app's main script, searched for imports of
+            extensions the client lacks. Defaults to the directory of
+            `sys.argv[0]`.
 
     Returns:
         A tuple containing:
@@ -617,7 +693,7 @@ def open_flet_view(page_url, assets_dir, hidden, *, no_impeller=False):
     """
 
     args, flet_env, pid_file = __locate_and_unpack_flet_view(
-        page_url, assets_dir, hidden, no_impeller
+        page_url, assets_dir, hidden, no_impeller, app_dir
     )
     args, extra = __linux_identity_args(args)
     p = subprocess.Popen(args, env=flet_env, **extra)
@@ -625,7 +701,9 @@ def open_flet_view(page_url, assets_dir, hidden, *, no_impeller=False):
     return p, pid_file
 
 
-async def open_flet_view_async(page_url, assets_dir, hidden, *, no_impeller=False):
+async def open_flet_view_async(
+    page_url, assets_dir, hidden, *, no_impeller=False, app_dir=None
+):
     """
     Asynchronously start a desktop view process.
 
@@ -634,6 +712,9 @@ async def open_flet_view_async(page_url, assets_dir, hidden, *, no_impeller=Fals
         assets_dir: Optional assets directory passed to the client process.
         hidden: Whether the window should start hidden.
         no_impeller: Whether the client renders with Skia instead of Impeller.
+        app_dir: Directory of the app's main script, searched for imports of
+            extensions the client lacks. Defaults to the directory of
+            `sys.argv[0]`.
 
     Returns:
         A tuple containing:
@@ -642,7 +723,7 @@ async def open_flet_view_async(page_url, assets_dir, hidden, *, no_impeller=Fals
     """
 
     args, flet_env, pid_file = __locate_and_unpack_flet_view(
-        page_url, assets_dir, hidden, no_impeller
+        page_url, assets_dir, hidden, no_impeller, app_dir
     )
     args, extra = __linux_identity_args(args)
     p = await asyncio.create_subprocess_exec(args[0], *args[1:], env=flet_env, **extra)
@@ -656,8 +737,8 @@ def explain_client_exit(returncode: int | None) -> None:
 
     On Linux the dynamic loader exits with status 127 when a shared library the
     client links against is missing or too old, and prints a one-line error that
-    names only the library. The full client links `libmpv` and GStreamer, which
-    are the usual cause.
+    names only the library. With the full flavor, the usual cause is `libmpv` or
+    GStreamer, which only that flavor links.
 
     Args:
         returncode: Exit status of the client process, or `None` if it is
@@ -666,15 +747,22 @@ def explain_client_exit(returncode: int | None) -> None:
 
     if returncode != 127 or not is_linux():
         return
-    logger.error(
+    message = (
         "The Flet desktop client could not start because a library it needs "
-        "could not be loaded (see the loader error above). The full client, "
-        "which includes Audio and Video, needs libmpv and GStreamer: on Debian "
-        "12+ and Ubuntu 24.04+ run `sudo apt install libmpv2 "
-        "libgstreamer-plugins-base1.0-0` (libmpv1 on older releases). Apps "
-        "without Audio or Video can use the light client by setting "
-        "FLET_DESKTOP_FLAVOR=light. See https://flet.dev/docs/controls/video#linux"
+        "could not be loaded (see the loader error above)."
     )
+    if __get_desktop_flavor() == "full":
+        message += (
+            " The full client needs libmpv and GStreamer: on Debian 12+ and "
+            "Ubuntu 24.04+ run `sudo apt install libmpv2 "
+            "libgstreamer-plugins-base1.0-0` (libmpv1 on older releases). Apps "
+            "that need none of the extensions only the full client includes can "
+            "use the light client by setting FLET_DESKTOP_FLAVOR=light. See "
+            "https://flet.dev/docs/getting-started/installation#linux"
+        )
+    else:
+        message += " Install the system package that provides it."
+    logger.error(message)
 
 
 def __apply_taskbar_props(pid: int) -> None:
@@ -722,7 +810,9 @@ def close_flet_view(pid_file):
             os.remove(pid_file)
 
 
-def __locate_and_unpack_flet_view(page_url, assets_dir, hidden, no_impeller=False):
+def __locate_and_unpack_flet_view(
+    page_url, assets_dir, hidden, no_impeller=False, app_dir=None
+):
     """
     Resolve desktop client executable, prepare launch arguments, and environment.
 
@@ -730,7 +820,8 @@ def __locate_and_unpack_flet_view(page_url, assets_dir, hidden, no_impeller=Fals
 
     1. Prefer app binaries produced by `flet build` in the current workspace.
     2. Use `FLET_VIEW_PATH` when provided.
-    3. Use cached / downloaded client from `~/.flet/client/`.
+    3. Use cached / downloaded client from `~/.flet/client/`, warning about
+       the extensions the app uses that it doesn't include.
 
     Platform-specific launch commands are prepared for Windows, macOS, and Linux.
 
@@ -739,6 +830,9 @@ def __locate_and_unpack_flet_view(page_url, assets_dir, hidden, no_impeller=Fals
         assets_dir: Optional assets directory passed to the client process.
         hidden: Whether to set `FLET_HIDE_WINDOW_ON_START=true` in process env.
         no_impeller: Whether to set `FLET_NO_IMPELLER=true` in process env.
+        app_dir: Directory of the app's main script, searched for imports of
+            extensions a cached client lacks, or `None` for that of
+            `sys.argv[0]`.
 
     Returns:
         A tuple containing:
@@ -787,6 +881,9 @@ def __locate_and_unpack_flet_view(page_url, assets_dir, hidden, no_impeller=Fals
         if not flet_path:
             cache_dir = ensure_client_cached()
             flet_path = str(cache_dir.joinpath("flet", "flet.exe"))
+            __warn_missing_extensions(
+                cache_dir, cache_dir.joinpath("flet", "data", "app.so"), app_dir
+            )
 
         args = [flet_path, page_url, pid_file]
 
@@ -818,6 +915,11 @@ def __locate_and_unpack_flet_view(page_url, assets_dir, hidden, no_impeller=Fals
                 raise FileNotFoundError(
                     f"Application bundle not found in {temp_flet_dir}"
                 )
+            __warn_missing_extensions(
+                temp_flet_dir,
+                Path(app_path, "Contents", "Frameworks", "App.framework", "App"),
+                app_dir,
+            )
 
         logger.info(f"page_url: {page_url}")
         logger.info(f"pid_file: {pid_file}")
@@ -852,9 +954,11 @@ def __locate_and_unpack_flet_view(page_url, assets_dir, hidden, no_impeller=Fals
                     )
             if not app_path:
                 # 3. Use cached or downloaded client
-                __warn_light_flavor_without_media()
                 cache_dir = ensure_client_cached()
                 app_path = str(cache_dir.joinpath("flet", "flet"))
+                __warn_missing_extensions(
+                    cache_dir, cache_dir.joinpath("flet", "lib", "libapp.so"), app_dir
+                )
 
         args = [str(app_path), page_url, pid_file]
 
