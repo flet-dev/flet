@@ -76,6 +76,10 @@ Select an account to open its page:
   ID…), when it was added and last used.
 - **Used by:** the apps that use it, and on which platforms. Select one to open its
   Publish page.
+- **Secret expires** (Microsoft Store and Azure Artifact Signing): when the client
+  secret expires, as Partner Center or Microsoft Entra ID shows it. Studio can't read
+  it from them, so enter it when you connect, or set it here later: the account is
+  flagged 30 days before.
 - **Update credentials…** gives the same connection a new key or client secret, for
   example after rotating one or when a secret expires. The apps that use it keep it.
   An App Store Connect key must be of the same team.
