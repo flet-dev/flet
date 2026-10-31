@@ -1,3 +1,4 @@
+import argparse
 import contextlib
 import copy
 import xml.etree.ElementTree as ET
@@ -7,6 +8,7 @@ import pytest
 from jinja2 import Environment, StrictUndefined
 
 from flet_cli.commands.build_base import BaseBuildCommand
+from flet_cli.utils.android import excluded_android_abis, flutter_target_platforms
 from flet_cli.utils.project_dependencies import get_project_dependencies
 
 ANDROID_NS = "http://schemas.android.com/apk/res/android"
@@ -31,17 +33,38 @@ def _command(settings):
     return cmd
 
 
-def _render_gradle(cmd):
+def _cli_command(settings=None, argv=(), package_platform="Android"):
+    """Create a build command with the real `flet build` options parsed from
+    `argv`, whose configuration errors raise ValueError."""
+    parser = argparse.ArgumentParser(add_help=False)
+    cmd = BaseBuildCommand(parser)
+    cmd.options = parser.parse_args(list(argv))
+    values = settings or {}
+    cmd.get_pyproject = lambda key=None: values.get(key)
+    cmd.extensions = []
+    cmd.package_platform = package_platform
+    cmd.config_platform = package_platform.lower()
+
+    def cleanup(code, message):
+        """Capture a failed build setting without exiting the test process."""
+        assert code == 1
+        raise ValueError(message)
+
+    cmd.cleanup = cleanup
+    return cmd
+
+
+def _render_gradle(cmd, pyproject=None, split_per_abi=False, **options):
     """Render the Android Gradle template using resolved command settings."""
     env = Environment(undefined=StrictUndefined)
-    env.globals["get_pyproject"] = lambda key: None
+    env.globals["get_pyproject"] = (pyproject or {}).get
     return env.from_string(
         (ANDROID_APP_TEMPLATE / "build.gradle.kts").read_text()
     ).render(
         cookiecutter={
             "org_name_2": "com.example",
             "package_name": "example",
-            "split_per_abi": False,
+            "split_per_abi": split_per_abi,
             "_options": {
                 "android_compile_options": cmd.get_android_compile_options(),
                 "android_gradle_dependencies": cmd.get_android_gradle_dependencies(),
@@ -49,14 +72,15 @@ def _render_gradle(cmd):
                 "android_excluded_abis": [],
                 "android_signing": False,
                 "target_arch": [],
+                **options,
             },
         }
     )
 
 
-def _render_manifest(cmd):
+def _render_manifest(cmd, **options):
     """Parse a rendered manifest containing queries, receivers, and existing app
-    entries."""
+    entries; `options` replace the other template options."""
     path = ANDROID_APP_TEMPLATE / "src/main/AndroidManifest.xml"
     rendered = (
         Environment(undefined=StrictUndefined)
@@ -80,11 +104,17 @@ def _render_manifest(cmd):
                         "com.example.Provider": {"exported": "false"}
                     },
                     "deep_linking": {"scheme": None, "host": None},
+                    **options,
                 },
             }
         )
     )
     return ET.fromstring(rendered)
+
+
+def _attr(element, key):
+    """Return an Android XML attribute of an element."""
+    return element.get(f"{{{ANDROID_NS}}}{key}")
 
 
 class TestCompileOptions:
@@ -632,6 +662,572 @@ class TestManifestEscaping:
         assert [attr(f, "name") for f in manifest.findall("uses-feature")] == [
             "com.example.feature&x"
         ]
+
+
+class TestPermissions:
+    """Cover `<uses-permission>` defaults, bundles, settings, CLI and rendering."""
+
+    def test_internet_is_the_default(self):
+        """Without settings, only `INTERNET` is requested."""
+        assert _cli_command().get_android_permissions() == {
+            "android.permission.INTERNET": True
+        }
+
+    def test_bundles_then_settings_then_cli(self):
+        """Bundles add permissions, settings override them and the CLI wins."""
+        cmd = _cli_command(
+            {
+                "tool.flet.android.permission": {
+                    "android.permission.CAMERA": False,
+                    "android.permission.RECORD_AUDIO": True,
+                    "android.permission.BLUETOOTH_SCAN": {
+                        "usesPermissionFlags": "neverForLocation"
+                    },
+                }
+            },
+            [
+                "--permissions",
+                "camera",
+                "--android-permissions",
+                "android.permission.RECORD_AUDIO=false",
+                "android.permission.VIBRATE=TRUE",
+            ],
+        )
+        assert cmd.get_android_permissions() == {
+            "android.permission.INTERNET": True,
+            "android.permission.CAMERA": False,
+            "android.permission.RECORD_AUDIO": False,
+            "android.permission.BLUETOOTH_SCAN": {
+                "usesPermissionFlags": "neverForLocation"
+            },
+            "android.permission.VIBRATE": True,
+        }
+
+    def test_disabled_permissions_render_a_remove_entry(self):
+        """`False` writes `tools:node="remove"`; a table becomes attributes."""
+        manifest = _render_manifest(
+            _command({}),
+            android_permissions={
+                "android.permission.INTERNET": True,
+                "android.permission.READ_EXTERNAL_STORAGE": False,
+                "android.permission.ACCESS_FINE_LOCATION": {"maxSdkVersion": "30"},
+            },
+        )
+        permissions = {_attr(p, "name"): p for p in manifest.findall("uses-permission")}
+        removed = permissions["android.permission.READ_EXTERNAL_STORAGE"]
+        assert removed.get("{http://schemas.android.com/tools}node") == "remove"
+        assert (
+            _attr(
+                permissions["android.permission.ACCESS_FINE_LOCATION"], "maxSdkVersion"
+            )
+            == "30"
+        )
+
+    @pytest.mark.parametrize(
+        "settings, argv, message",
+        [
+            ({}, ["--android-permissions", "android.permission.CAMERA"], "option:"),
+            (
+                {},
+                ["--android-permissions", "android.permission.CAMERA=maybe"],
+                "Expected true or false",
+            ),
+            (
+                {"tool.flet.android.permission": {"android.permission.CAMERA": "yes"}},
+                [],
+                "Expected boolean or inline table",
+            ),
+            (
+                {
+                    "tool.flet.android.permission": {
+                        "android.permission.CAMERA": {"maxSdkVersion": []}
+                    }
+                },
+                [],
+                "Expected string, boolean, or number",
+            ),
+        ],
+    )
+    def test_invalid_permissions_fail(self, settings, argv, message):
+        """Malformed CLI options and setting values stop the build."""
+        with pytest.raises(ValueError, match=message):
+            _cli_command(settings, argv).get_android_permissions()
+
+
+class TestFeatures:
+    """Cover `<uses-feature>` defaults, bundles, settings, CLI and rendering."""
+
+    def test_leanback_and_touchscreen_are_optional_by_default(self):
+        """Without settings, TV and touchscreen support aren't required."""
+        assert _cli_command().get_android_features() == {
+            "android.software.leanback": False,
+            "android.hardware.touchscreen": False,
+        }
+
+    def test_bundles_then_settings_then_cli(self):
+        """Bundles add features, settings override them and the CLI wins."""
+        cmd = _cli_command(
+            {
+                "tool.flet.android.feature": {
+                    "android.hardware.camera": True,
+                    "android.hardware.touchscreen": True,
+                }
+            },
+            [
+                "--permissions",
+                "camera",
+                "--android-features",
+                "android.hardware.touchscreen=false",
+            ],
+        )
+        features = cmd.get_android_features()
+        assert features["android.hardware.camera"] is True
+        assert features["android.hardware.camera.front"] is False
+        assert features["android.hardware.touchscreen"] is False
+
+    def test_features_render_required(self):
+        """Each feature is written with its `required` value."""
+        manifest = _render_manifest(
+            _command({}),
+            android_features={"android.hardware.camera": True, "android.x": False},
+        )
+        assert {
+            _attr(f, "name"): _attr(f, "required")
+            for f in manifest.findall("uses-feature")
+        } == {"android.hardware.camera": "true", "android.x": "false"}
+
+    @pytest.mark.parametrize(
+        "argv, message",
+        [
+            (["--android-features", "android.hardware.camera"], "option:"),
+            (["--android-features", "android.hardware.camera=1x"], "true or false"),
+        ],
+    )
+    def test_invalid_cli_values_fail(self, argv, message):
+        """Malformed `--android-features` entries stop the build."""
+        with pytest.raises(ValueError, match=message):
+            _cli_command({}, argv).get_android_features()
+
+
+class TestMetaData:
+    """Cover `<application>` meta-data defaults, settings, CLI and rendering."""
+
+    @pytest.mark.parametrize(
+        "impeller, expected",
+        [
+            (True, {}),
+            (False, {"io.flutter.embedding.android.EnableImpeller": "false"}),
+        ],
+    )
+    def test_impeller_default(self, impeller, expected):
+        """Building without Impeller turns it off through meta-data."""
+        assert _cli_command().get_android_meta_data(impeller) == expected
+
+    def test_settings_then_cli(self):
+        """Settings override the Impeller default and the CLI wins."""
+        cmd = _cli_command(
+            {
+                "tool.flet.android.meta_data": {
+                    "io.flutter.embedding.android.EnableImpeller": "true",
+                    "com.example.timeout": "30",
+                }
+            },
+            ["--android-meta-data", "com.example.timeout=60", "com.example.url=a=b"],
+        )
+        assert cmd.get_android_meta_data(False) == {
+            "io.flutter.embedding.android.EnableImpeller": "true",
+            "com.example.timeout": "60",
+            "com.example.url": "a=b",
+        }
+
+    def test_meta_data_renders_under_application(self):
+        """Each entry is an `<application>` `<meta-data>`, next to the template's
+        own `flutterEmbedding` entry."""
+        manifest = _render_manifest(
+            _command({}), android_meta_data={"com.example.timeout": "30"}
+        )
+        assert {
+            _attr(m, "name"): _attr(m, "value")
+            for m in manifest.findall("application/meta-data")
+        } == {"com.example.timeout": "30", "flutterEmbedding": "2"}
+
+    def test_invalid_cli_value_fails(self):
+        """An `--android-meta-data` entry without `=` stops the build."""
+        with pytest.raises(ValueError, match="meta-data option"):
+            _cli_command({}, ["--android-meta-data", "flag"]).get_android_meta_data(
+                True
+            )
+
+
+class TestProviders:
+    """Cover app `<provider>` declarations, validation and rendering."""
+
+    @staticmethod
+    def _resolve(configured):
+        """Resolve provider declarations through the build command."""
+        return _cli_command(
+            {"tool.flet.android.provider": configured}
+        ).get_android_providers()
+
+    @pytest.mark.parametrize("configured", [None, {}, {"com.example.P": False}])
+    def test_absent_or_disabled_providers(self, configured):
+        """No table, an empty one, or `false` declares nothing."""
+        assert self._resolve(configured) == {}
+
+    def test_attributes_and_meta_data_are_normalized(self):
+        """Booleans become lowercase strings in attributes and meta-data."""
+        assert self._resolve(
+            {
+                "com.example.P": {
+                    "authorities": "${applicationId}.p",
+                    "exported": False,
+                    "meta_data": {
+                        "com.example.flag": True,
+                        "com.example.paths": {"resource": "@xml/paths"},
+                    },
+                },
+                "com.example.Skipped": {},
+            }
+        ) == {
+            "com.example.P": {
+                "authorities": "${applicationId}.p",
+                "exported": "false",
+                "meta_data": {
+                    "com.example.flag": "true",
+                    "com.example.paths": {"resource": "@xml/paths"},
+                },
+            }
+        }
+
+    def test_providers_render_after_flets_file_provider(self):
+        """The app's providers follow Flet's `FileProvider` with their meta-data."""
+        cmd = _cli_command(
+            {
+                "tool.flet.android.provider": {
+                    "com.example.P": {
+                        "authorities": "${applicationId}.p",
+                        "meta_data": {"com.example.paths": {"resource": "@xml/p"}},
+                    }
+                }
+            }
+        )
+        manifest = _render_manifest(cmd, android_providers=cmd.get_android_providers())
+        providers = manifest.findall("application/provider")
+        assert [_attr(p, "name") for p in providers] == [
+            "androidx.core.content.FileProvider",
+            "com.example.P",
+        ]
+        assert _attr(providers[1].find("meta-data"), "resource") == "@xml/p"
+
+    @pytest.mark.parametrize(
+        "configured, message",
+        [
+            ({"com.example.P": True}, "'true' is not supported"),
+            ({"com.example.P": "x"}, "Expected boolean or inline table"),
+            ({"com.example.P": {"name": "other"}}, "'name' is reserved"),
+            ({"com.example.P": {"exported": []}}, "Expected string, boolean"),
+            ({"com.example.P": {"meta_data": []}}, "Expected inline table"),
+            ({"com.example.P": {"meta_data": {"k": []}}}, "or inline table"),
+            ({"com.example.P": {"meta_data": {"k": {"value": []}}}}, "k.value"),
+        ],
+    )
+    def test_invalid_providers_fail(self, configured, message):
+        """Malformed provider declarations stop the build with a clear message."""
+        with pytest.raises(ValueError, match=message):
+            self._resolve(configured)
+
+
+class TestGradleProperties:
+    """Cover `gradle.properties` defaults, overrides and rendering."""
+
+    TEMPLATE = ANDROID_APP_TEMPLATE.parent / "gradle.properties"
+
+    def test_defaults(self):
+        """Without settings, the properties the template used to hardcode apply."""
+        properties = _cli_command().get_android_gradle_properties()
+        assert properties["android.useAndroidX"] == "true"
+        assert properties["kotlin.incremental"] == "false"
+        assert properties["org.gradle.jvmargs"].startswith("-Xmx8G ")
+
+    def test_settings_override_and_add(self):
+        """Settings replace a default and add new properties, which render as-is."""
+        cmd = _cli_command(
+            {
+                "tool.flet.android.gradle_properties": {
+                    "org.gradle.jvmargs": "-Xmx4G",
+                    "org.gradle.caching": "true",
+                }
+            }
+        )
+        properties = cmd.get_android_gradle_properties()
+        rendered = (
+            Environment(undefined=StrictUndefined)
+            .from_string(self.TEMPLATE.read_text())
+            .render(
+                cookiecutter={"_options": {"android_gradle_properties": properties}}
+            )
+        )
+        lines = rendered.splitlines()
+        assert "org.gradle.jvmargs=-Xmx4G" in lines
+        assert "org.gradle.caching=true" in lines
+        assert "android.useAndroidX=true" in lines
+
+
+class TestProguardRules:
+    """Cover ProGuard/R8 default rules, added rules and rendering."""
+
+    TEMPLATE = ANDROID_APP_TEMPLATE / "proguard-rules.pro"
+    DEFAULTS = [
+        "-keep class com.flet.serious_python_android.** { *; }",
+        "-keepnames class * { *; }",
+    ]
+
+    @staticmethod
+    def _rendered(rules):
+        """Render `proguard-rules.pro` and return its non-empty lines."""
+        rendered = (
+            Environment(undefined=StrictUndefined)
+            .from_string(TestProguardRules.TEMPLATE.read_text())
+            .render(cookiecutter={"_options": {"android_proguard_rules": rules}})
+        )
+        return [line for line in rendered.splitlines() if line.strip()]
+
+    @pytest.mark.parametrize(
+        "settings, expected",
+        [
+            ({}, DEFAULTS),
+            (
+                {"tool.flet.android.proguard_rules": ["-keep class org.x.** { *; }"]},
+                [*DEFAULTS, "-keep class org.x.** { *; }"],
+            ),
+            ({"tool.flet.android.proguard_default_rules": False}, []),
+            (
+                {
+                    "tool.flet.android.proguard_default_rules": False,
+                    "tool.flet.android.proguard_rules": ["-dontwarn org.x.**"],
+                },
+                ["-dontwarn org.x.**"],
+            ),
+        ],
+    )
+    def test_rules_append_to_the_defaults_unless_dropped(self, settings, expected):
+        """Rules add to the defaults, which only `proguard_default_rules` drops."""
+        rules = _cli_command(settings).get_android_proguard_rules()
+        assert rules == expected
+        assert self._rendered(rules) == expected
+
+
+class TestGradleTemplate:
+    """Cover SDK versions, ABIs and signing as rendered in `build.gradle.kts`."""
+
+    @pytest.mark.parametrize(
+        "pyproject, min_sdk, target_sdk",
+        [
+            ({}, "flutter.minSdkVersion", "flutter.targetSdkVersion"),
+            (
+                {
+                    "tool.flet.android.min_sdk_version": 24,
+                    "tool.flet.android.target_sdk_version": 35,
+                },
+                "24",
+                "35",
+            ),
+        ],
+    )
+    def test_sdk_versions(self, pyproject, min_sdk, target_sdk):
+        """SDK versions come from the settings, else Flutter's defaults."""
+        rendered = _render_gradle(_command({}), pyproject)
+        assert f"val resolvedMinSdk = {min_sdk}" in rendered
+        assert f"val resolvedTargetSdk = {target_sdk}" in rendered
+
+    def test_target_arch_filters_abis_unless_split(self):
+        """Target architectures become ABI filters; a split build has none."""
+        cmd = _command({})
+        filtered = _render_gradle(cmd, target_arch=["arm64-v8a"])
+        assert 'abiFilters += listOf("arm64-v8a")' in filtered
+        assert "abiFilters" not in _render_gradle(cmd, split_per_abi=True)
+
+    def test_excluded_abis_are_packaging_excludes(self):
+        """ABIs left out of the build are excluded from the packaged libraries."""
+        rendered = _render_gradle(
+            _command({}), android_excluded_abis=["armeabi-v7a", "x86_64"]
+        )
+        assert 'excludes += listOf("lib/armeabi-v7a/**", "lib/x86_64/**")' in rendered
+
+    @pytest.mark.parametrize("signing", [False, True])
+    def test_signing_config_only_with_a_key_store(self, signing):
+        """The release signing config is generated only when signing is set."""
+        rendered = _render_gradle(_command({}), android_signing=signing)
+        assert ("FLET_ANDROID_SIGNING_KEY_STORE" in rendered) is signing
+
+
+class TestAbis:
+    """Cover mapping and excluding Android ABIs."""
+
+    def test_flutter_target_platforms(self):
+        """ABI names map to `flutter build --target-platform` values in order."""
+        assert flutter_target_platforms(["arm64-v8a", "x86_64"]) == [
+            "android-arm64",
+            "android-x64",
+        ]
+
+    def test_unknown_abi_fails(self):
+        """An ABI Flutter can't build is rejected with the supported list."""
+        with pytest.raises(ValueError, match="Supported: armeabi-v7a"):
+            flutter_target_platforms(["mips"])
+
+    @pytest.mark.parametrize(
+        "archs, excluded",
+        [([], []), (["arm64-v8a"], ["armeabi-v7a", "x86_64"])],
+    )
+    def test_excluded_android_abis(self, archs, excluded):
+        """Requested ABIs are kept; with none requested, nothing is excluded."""
+        assert excluded_android_abis(archs) == excluded
+
+
+class TestAdaptiveIconBackground:
+    """Cover the adaptive launcher icon's background color resource."""
+
+    def test_background_color_renders(self):
+        """The configured color becomes the `ic_launcher_background` resource."""
+        rendered = (
+            Environment(undefined=StrictUndefined)
+            .from_string(
+                (
+                    ANDROID_APP_TEMPLATE
+                    / "src/main/res/values/ic_launcher_background.xml"
+                ).read_text()
+            )
+            .render(cookiecutter={"adaptive_icon_background": "#FF6200EE"})
+        )
+        color = ET.fromstring(rendered).find("color")
+        assert (color.get("name"), color.text) == (
+            "ic_launcher_background",
+            "#FF6200EE",
+        )
+
+
+class TestSigning:
+    """Cover the environment variables that sign the Android build."""
+
+    ENV = (
+        "FLET_ANDROID_SIGNING_KEY_STORE",
+        "FLET_ANDROID_SIGNING_KEY_STORE_PASSWORD",
+        "FLET_ANDROID_SIGNING_KEY_PASSWORD",
+        "FLET_ANDROID_SIGNING_KEY_ALIAS",
+    )
+
+    @pytest.fixture(autouse=True)
+    def _clean_env(self, monkeypatch):
+        """Start each test without signing variables from the environment."""
+        for name in self.ENV:
+            monkeypatch.delenv(name, raising=False)
+
+    def test_nothing_without_a_key_store_or_passwords(self):
+        """Without settings, the build isn't signed."""
+        assert _cli_command().get_android_signing_env() == {}
+
+    def test_cli_then_settings_then_environment(self, monkeypatch):
+        """The CLI wins over settings, which win over environment variables."""
+        monkeypatch.setenv("FLET_ANDROID_SIGNING_KEY_STORE", "env.jks")
+        monkeypatch.setenv("FLET_ANDROID_SIGNING_KEY_ALIAS", "env-alias")
+        settings = {
+            "tool.flet.android.signing.key_store": "project.jks",
+            "tool.flet.android.signing.key_alias": "project-alias",
+        }
+        assert _cli_command(settings).get_android_signing_env() == {
+            "FLET_ANDROID_SIGNING_KEY_STORE": "project.jks",
+            "FLET_ANDROID_SIGNING_KEY_ALIAS": "project-alias",
+        }
+        assert _cli_command(
+            settings,
+            [
+                "--android-signing-key-store",
+                "cli.jks",
+                "--android-signing-key-alias",
+                "cli-alias",
+            ],
+        ).get_android_signing_env() == {
+            "FLET_ANDROID_SIGNING_KEY_STORE": "cli.jks",
+            "FLET_ANDROID_SIGNING_KEY_ALIAS": "cli-alias",
+        }
+        assert _cli_command().get_android_signing_env() == {
+            "FLET_ANDROID_SIGNING_KEY_STORE": "env.jks",
+            "FLET_ANDROID_SIGNING_KEY_ALIAS": "env-alias",
+        }
+
+    def test_alias_defaults_to_upload(self):
+        """A key store without an alias uses `upload`."""
+        env = _cli_command(
+            {"tool.flet.android.signing.key_store": "app.jks"}
+        ).get_android_signing_env()
+        assert env["FLET_ANDROID_SIGNING_KEY_ALIAS"] == "upload"
+
+    @pytest.mark.parametrize(
+        "argv, expected",
+        [
+            (["--android-signing-key-store-password", "s"], ("s", "s")),
+            (["--android-signing-key-password", "k"], ("k", "k")),
+            (
+                [
+                    "--android-signing-key-store-password",
+                    "s",
+                    "--android-signing-key-password",
+                    "k",
+                ],
+                ("s", "k"),
+            ),
+        ],
+    )
+    def test_one_password_is_used_for_both(self, argv, expected):
+        """When only one password is given, it's used for the key store and key."""
+        env = _cli_command({}, argv).get_android_signing_env()
+        assert (
+            env["FLET_ANDROID_SIGNING_KEY_STORE_PASSWORD"],
+            env["FLET_ANDROID_SIGNING_KEY_PASSWORD"],
+        ) == expected
+
+    def test_passwords_come_from_the_environment(self, monkeypatch):
+        """Passwords can come from environment variables instead of the CLI."""
+        monkeypatch.setenv("FLET_ANDROID_SIGNING_KEY_PASSWORD", "env-key")
+        env = _cli_command().get_android_signing_env()
+        assert env["FLET_ANDROID_SIGNING_KEY_STORE_PASSWORD"] == "env-key"
+        assert env["FLET_ANDROID_SIGNING_KEY_PASSWORD"] == "env-key"
+
+    def test_passwords_in_pyproject_are_ignored(self):
+        """Passwords aren't read from `pyproject.toml`, so they stay out of git."""
+        env = _cli_command(
+            {"tool.flet.android.signing.key_store_password": "leaked"}
+        ).get_android_signing_env()
+        assert "FLET_ANDROID_SIGNING_KEY_STORE_PASSWORD" not in env
+
+
+class TestExtractPackages:
+    """Cover the Python packages shipped extracted to disk on Android."""
+
+    @pytest.mark.parametrize(
+        "settings, argv, expected",
+        [
+            ({}, [], []),
+            ({"tool.flet.extract_packages": ["a", "b"]}, [], ["a", "b"]),
+            (
+                {
+                    "tool.flet.extract_packages": ["a"],
+                    "tool.flet.android.extract_packages": ["b", "b"],
+                },
+                [],
+                ["b"],
+            ),
+            (
+                {"tool.flet.android.extract_packages": ["b"]},
+                ["--android-extract-packages", "c", "d"],
+                ["c", "d"],
+            ),
+        ],
+    )
+    def test_cli_then_platform_then_common_setting(self, settings, argv, expected):
+        """The CLI wins over the Android setting, which wins over the common one."""
+        assert _cli_command(settings, argv).get_android_extract_packages() == expected
 
 
 class TestReceivers:
