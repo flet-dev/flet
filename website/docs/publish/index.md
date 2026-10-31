@@ -1472,34 +1472,44 @@ In the Android [`AndroidManifest.xml`](android.md#android-manifest),
 the `pyproject.toml` example above will be translated accordingly into this:
 
 ```xml
-<meta-data android:name="flutter_deeplinking_enabled" android:value="true" />
-<intent-filter>
-    <action android:name="android.intent.action.VIEW" />
-    <category android:name="android.intent.category.DEFAULT" />
-    <category android:name="android.intent.category.BROWSABLE" />
-    <data android:scheme="https" android:host="mydomain.com" />
-</intent-filter>
+<manifest>
+    <application>
+        <activity android:name=".MainActivity">
+            <meta-data android:name="flutter_deeplinking_enabled" android:value="true" />
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+                <data android:scheme="https" android:host="mydomain.com" />
+            </intent-filter>
+        </activity>
+    </application>
+</manifest>
 ```
 
 In the iOS [`ios/Runner/Info.plist`](ios.md#infoplist),
 the `pyproject.toml` example above will be translated accordingly into this:
 
 ```xml
-<key>FlutterDeepLinkingEnabled</key>
-<true />
-<key>CFBundleURLTypes</key>
-<array>
+<plist version="1.0">
     <dict>
-        <key>CFBundleTypeRole</key>
-        <string>Editor</string>
-        <key>CFBundleURLName</key>
-        <string>mydomain.com</string>
-        <key>CFBundleURLSchemes</key>
+        <key>FlutterDeepLinkingEnabled</key>
+        <true />
+        <key>CFBundleURLTypes</key>
         <array>
-            <string>https</string>
+            <dict>
+                <key>CFBundleTypeRole</key>
+                <string>Editor</string>
+                <key>CFBundleURLName</key>
+                <string>mydomain.com</string>
+                <key>CFBundleURLSchemes</key>
+                <array>
+                    <string>https</string>
+                </array>
+            </dict>
         </array>
     </dict>
-</array>
+</plist>
 ```
 </details>
 
