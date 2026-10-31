@@ -173,11 +173,13 @@ def __warn_light_flavor_without_media() -> None:
         )
 
 
+@functools.cache
 def __get_system_glibc_version():
     """
     Return the system glibc version as a `(major, minor)` tuple.
 
-    Falls back to `(0, 0)` when detection fails.
+    Falls back to `(0, 0)` when detection fails. The result is cached for the
+    process, since the system glibc can't change while it runs.
     """
 
     try:
@@ -212,14 +214,9 @@ def __get_linux_distro_id(arch: str):
     return __get_glibc_distro_id(arch)
 
 
-@functools.cache
 def __get_glibc_distro_id(arch: str):
     """
     Return the distro id of the newest build target the system glibc supports.
-
-    The result is cached for the process, since the system glibc can't change
-    while it runs: detecting it may spawn `ldconfig`, and a failed detection is
-    reported once.
     """
 
     targets = [
