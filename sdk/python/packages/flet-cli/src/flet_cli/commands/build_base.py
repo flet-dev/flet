@@ -2,6 +2,7 @@ import argparse
 import base64
 import contextlib
 import copy
+import datetime
 import glob
 import hashlib
 import json
@@ -1318,8 +1319,7 @@ class BaseBuildCommand(BaseFlutterCommand):
             "company_name": (
                 self.options.company_name or self.get_pyproject("tool.flet.company")
             ),
-            "copyright": self.options.copyright
-            or self.get_pyproject("tool.flet.copyright"),
+            "copyright": self.get_copyright(),
             "ios_export_method": ios_signing["export_method"],
             "ios_provisioning_profile": ios_signing["provisioning_profile"],
             "ios_signing_certificate": ios_signing["signing_certificate"],
@@ -2828,6 +2828,28 @@ class BaseBuildCommand(BaseFlutterCommand):
                     "without one, the app would open every web link.",
                 )
         return values
+
+    def get_copyright(self) -> str:
+        """
+        Resolve the app's copyright text.
+
+        Comes from `--copyright`, else `[tool.flet].copyright`.
+        Without either, it's generated from the company set with
+        `--company` or `[tool.flet].company`, and left empty without one.
+
+        Returns:
+            The copyright text, possibly empty.
+        """
+        assert self.get_pyproject
+        assert self.options
+        company = self.options.company_name or self.get_pyproject("tool.flet.company")
+        return (
+            self.options.copyright
+            or self.get_pyproject("tool.flet.copyright")
+            or (
+                f"Copyright © {datetime.date.today().year} {company}" if company else ""
+            )
+        )
 
     def get_info_plist(self, impeller: bool) -> dict:
         """

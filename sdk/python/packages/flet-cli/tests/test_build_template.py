@@ -1,6 +1,7 @@
 """Invariants of the `flet build` cookiecutter template itself."""
 
 import argparse
+import datetime
 import importlib.util
 import json
 import re
@@ -308,3 +309,54 @@ class TestResolvePermissions:
         assert self._command(
             "ios", project, cli=["biometric"]
         ).resolve_permissions() == ["biometric"]
+
+
+class TestCopyright:
+    @staticmethod
+    def _command(settings=None, argv=()):
+        """Create a build command with the real options parsed from `argv`."""
+        parser = argparse.ArgumentParser(add_help=False)
+        cmd = BaseBuildCommand(parser)
+        cmd.options = parser.parse_args(list(argv))
+        cmd.get_pyproject = lambda key=None: (settings or {}).get(key)
+        return cmd
+
+    def test_cli_overrides_pyproject(self):
+        """`--copyright` overrides `[tool.flet].copyright`."""
+        cmd = self._command(
+            {"tool.flet.copyright": "From pyproject"}, ["--copyright", "From CLI"]
+        )
+        assert cmd.get_copyright() == "From CLI"
+
+    def test_pyproject_is_used_as_written(self):
+        """`[tool.flet].copyright` wins over the company and isn't changed."""
+        cmd = self._command(
+            {"tool.flet.copyright": "(c) Acme.", "tool.flet.company": "Other"}
+        )
+        assert cmd.get_copyright() == "(c) Acme."
+
+    @pytest.mark.parametrize(
+        ("settings", "argv"),
+        [({"tool.flet.company": "Acme Inc."}, ()), ({}, ("--company", "Acme Inc."))],
+    )
+    def test_generated_from_the_company(self, settings, argv):
+        """Without a copyright, it names the company and the current year."""
+        year = datetime.date.today().year
+        assert (
+            self._command(settings, argv).get_copyright()
+            == f"Copyright © {year} Acme Inc."
+        )
+
+    def test_empty_without_a_company(self):
+        """Without a copyright or company, the app claims no owner."""
+        assert self._command().get_copyright() == ""
+
+    def test_template_defaults(self):
+        """The template has no placeholder copyright, and keeps the default company,
+        which names the Windows app's data folder: changing it would leave the
+        data of already released apps behind."""
+        defaults = json.loads(
+            (BUILD_TEMPLATE_DIR.parent / "cookiecutter.json").read_text()
+        )
+        assert defaults["copyright"] == ""
+        assert defaults["company_name"] == "Your Company"

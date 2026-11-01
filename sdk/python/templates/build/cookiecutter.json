@@ -11,7 +11,7 @@
   "product_name": "{{ cookiecutter.project_name }}",
   "org_name": "",
   "company_name": "Your Company",
-  "copyright": "Copyright (c) 2026 Your Company",
+  "copyright": "",
   "flutter": null,
   "sep": "/",
   "bundle_id": "",

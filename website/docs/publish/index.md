@@ -625,7 +625,8 @@ Its value is determined in the following order of precedence:
 
 1. [`--copyright`](../cli/flet-build.md#--copyright)
 2. `[tool.flet].copyright`
-3. Build template default (see [Template Source](#template-source))
+3. `Copyright © <year of the build> <company>`, if a [company name](#company-name) is set
+4. Empty
 
 #### Example
 
