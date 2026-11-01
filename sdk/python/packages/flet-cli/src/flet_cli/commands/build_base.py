@@ -2829,16 +2829,16 @@ class BaseBuildCommand(BaseFlutterCommand):
                 )
         return values
 
-    def get_copyright(self) -> str:
+    def get_copyright(self) -> Optional[str]:
         """
         Resolve the app's copyright text.
 
         Comes from `--copyright`, else `[tool.flet].copyright`.
         Without either, it's generated from the company set with
-        `--company` or `[tool.flet].company`, and left empty without one.
+        `--company` or `[tool.flet].company`.
 
         Returns:
-            The copyright text, possibly empty.
+            The copyright text, or `None` to use the build template's default.
         """
         assert self.get_pyproject
         assert self.options
@@ -2847,7 +2847,9 @@ class BaseBuildCommand(BaseFlutterCommand):
             self.options.copyright
             or self.get_pyproject("tool.flet.copyright")
             or (
-                f"Copyright © {datetime.date.today().year} {company}" if company else ""
+                f"Copyright © {datetime.date.today().year} {company}"
+                if company
+                else None
             )
         )
 

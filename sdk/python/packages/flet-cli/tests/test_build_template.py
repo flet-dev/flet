@@ -347,9 +347,9 @@ class TestCopyright:
             == f"Copyright © {year} Acme Inc."
         )
 
-    def test_empty_without_a_company(self):
-        """Without a copyright or company, the app claims no owner."""
-        assert self._command().get_copyright() == ""
+    def test_template_default_without_a_company(self):
+        """Without a copyright or company, the build template's default applies."""
+        assert self._command().get_copyright() is None
 
     def test_template_defaults(self):
         """The template has no placeholder copyright, and keeps the default company,
@@ -393,3 +393,27 @@ class TestCopyright:
             assert f'VALUE "{key}", "{written}" "\\0"' in rendered
         assert f'VALUE "OriginalFilename", "{written}.exe" "\\0"' in rendered
         assert f'VALUE "ProductName", "{written}" "\\0"' in rendered
+
+    @pytest.mark.parametrize(
+        ("value", "written"),
+        [
+            ("Acme & Sons", "Acme & Sons"),
+            ('Tom "T" Jerry', 'Tom \\"T\\" Jerry'),
+            (r"Acme\new", r"Acme\\new"),
+        ],
+    )
+    def test_windows_window_title_is_escaped(self, value, written):
+        """The product name follows C++ string rules in the Windows runner: an
+        unescaped `"` fails the build, and an unescaped `\\n` becomes a line break."""
+        rendered = (
+            Environment(undefined=StrictUndefined)
+            .from_string(
+                (BUILD_TEMPLATE_DIR / "windows/runner/main.cpp").read_text(
+                    encoding="utf-8"
+                )
+            )
+            .render(
+                cookiecutter={"product_name": value, "_options": {"impeller": True}}
+            )
+        )
+        assert f'window.Create(L"{written}", origin, size)' in rendered
