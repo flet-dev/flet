@@ -1323,7 +1323,6 @@ class BaseBuildCommand(BaseFlutterCommand):
             "ios_export_method": ios_signing["export_method"],
             "ios_provisioning_profile": ios_signing["provisioning_profile"],
             "ios_signing_certificate": ios_signing["signing_certificate"],
-            "ios_export_options": ios_signing["export_options"],
             "ios_team_id": ios_signing["team_id"],
             # `_` makes `_options` and `_pyproject` private cookiecutter
             # variables, which reach the template unchanged. Cookiecutter
@@ -1341,6 +1340,7 @@ class BaseBuildCommand(BaseFlutterCommand):
                 "info_plist": self.get_info_plist(impeller),
                 "macos_entitlements": self.get_macos_entitlements(),
                 "ios_entitlements": self.get_ios_entitlements(),
+                "ios_export_options": ios_signing["export_options"],
                 "android_permissions": android_permissions,
                 "android_features": android_features,
                 "android_meta_data": android_meta_data,
@@ -2976,6 +2976,22 @@ class BaseBuildCommand(BaseFlutterCommand):
             or self.get_pyproject("tool.flet.ios.export_options")
             or {}
         )
+        if not isinstance(export_options, dict):
+            self.cleanup(
+                1,
+                "Invalid iOS export options: expected a table, "
+                f"got {export_options!r}.",
+            )
+        for key, value in export_options.items():
+            if not is_supported_plist_value(value):
+                self.cleanup(
+                    1,
+                    "Unsupported iOS export option value type for "
+                    f"{key}: {type(value).__name__}. Supported types are "
+                    "string, boolean, integer, float, dictionary, and arrays "
+                    "containing those values.",
+                )
+
         return {
             "export_method": export_method,
             "provisioning_profile": (

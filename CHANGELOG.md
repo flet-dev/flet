@@ -66,6 +66,7 @@
 
 ### Bug fixes
 
+* Fix `flet build ipa` failing to export when a `[tool.flet.ios.export_options]` value contains `<`, `>` or `&`, such as `thinning = "<none>"`, and writing numbers as strings.
 * Fix `flet build` for Android failing when a `[tool.flet.android.meta_data]` value or a `[tool.flet.android.provider]` attribute contains `&`, `<` or `"`, which were written into the manifest unescaped ([#7031](https://github.com/flet-dev/flet/pull/7031)) by @ndonkoHenri.
 * Fix `flet build` for Android failing when `[tool.flet.android.manifest_application]` sets `label`, `name`, `icon` or `enableOnBackInvokedCallback`, which wrote the attribute twice instead of replacing Flet's value ([#7031](https://github.com/flet-dev/flet/pull/7031)) by @ndonkoHenri.
 * Fix `flet build` failing with no explanation unless run with `-vv` when a step reported its error on stdout, such as a `SyntaxError` in an app file ([#7029](https://github.com/flet-dev/flet/issues/7029), [#7031](https://github.com/flet-dev/flet/pull/7031)) by @ndonkoHenri.
