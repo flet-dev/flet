@@ -42,15 +42,19 @@ Open the app, then **Manage › GitHub**, and choose:
 - **Folder**: the repository's root, or a folder in it (a monorepo with several
   apps). Folders that hold a Flet app (a `pyproject.toml`) are marked.
 
-Before you connect, Studio says what will happen:
+Then choose **which files to keep**. Connecting makes the folder and Studio the
+same; after that, changes go both ways.
 
-- **The folder has an app.** The repository wins: Studio's files are replaced with
-  the folder's. Studio keeps the app's current files as a version first.
-- **The folder is empty or doesn't exist yet.** Studio's files become its first
-  commit. An empty repository works too.
+- **Studio's files**: the app's files are committed to the folder in one commit.
+  The folder's other files are deleted in that commit (the branch's history keeps
+  them). Files outside the folder aren't touched. An empty repository works too.
+- **The repository's files**: the app's files in Studio are replaced with the
+  folder's. Studio keeps the app's current files as a version first, so you can
+  restore them.
 
-A folder with files but no `pyproject.toml` can't be connected: choose the app's
-folder or an empty one.
+When only one side has files, that side is chosen for you. The folder doesn't need
+to hold a Flet app: you can connect any folder and let Studio or the agent add the
+rest.
 
 ### Public and private projects
 
