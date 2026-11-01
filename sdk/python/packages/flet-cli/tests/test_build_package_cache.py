@@ -200,6 +200,7 @@ class TestMissingExtensionRecovery:
         command.template_data = {"project_name": "test_app"}
         command.get_pyproject = lambda *_: None
         command.config_platform = "web"
+        command.required_flutter_version = "3.47.9"
         command.emojis = {"checkmark": ""}
         command.verbose = 0
         command.step = lambda *_: contextlib.nullcontext()

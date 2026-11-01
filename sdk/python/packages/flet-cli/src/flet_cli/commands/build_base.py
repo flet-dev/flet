@@ -1867,6 +1867,22 @@ class BaseBuildCommand(BaseFlutterCommand):
             ),
         }
 
+    def _clear_dart_tool_on_flutter_change(self):
+        """
+        Delete `.dart_tool` from the Flutter project when the required Flutter
+        version differs from the one the project was last built with.
+
+        `dart run` reuses the build hook binaries in `.dart_tool`, and a Dart SDK
+        can't load binaries compiled by a version with a different kernel format.
+        A project with no recorded version counts as changed.
+        """
+
+        hash = HashStamp(self.build_dir / ".hash" / "flutter")
+        hash.update(self.required_flutter_version)
+        if hash.has_changed():
+            shutil.rmtree(self.flutter_dir / ".dart_tool", ignore_errors=True)
+            hash.commit()
+
     def create_flutter_project(self, second_pass=False):
         """
         Render Flutter bootstrap project from template if template inputs changed.
@@ -1892,6 +1908,9 @@ class BaseBuildCommand(BaseFlutterCommand):
         if not second_pass and self._flutter_packages_missing():
             for stamp in ("template-1", "template-2", "package", "icons", "splashes"):
                 (self.build_dir / ".hash" / stamp).unlink(missing_ok=True)
+
+        if not second_pass:
+            self._clear_dart_tool_on_flutter_change()
 
         hash = HashStamp(
             self.build_dir / ".hash" / f"template-{'2' if second_pass else '1'}"
