@@ -360,3 +360,36 @@ class TestCopyright:
         )
         assert defaults["copyright"] == ""
         assert defaults["company_name"] == "Your Company"
+
+    @pytest.mark.parametrize(
+        ("value", "written"),
+        [
+            ("Copyright © 2026 Acme & Sons", "Copyright © 2026 Acme & Sons"),
+            ("", ""),
+            ('Tom "T" Jerry', 'Tom ""T"" Jerry'),
+            (r"Acme\new", r"Acme\\new"),
+        ],
+    )
+    def test_windows_resource_strings_are_escaped(self, value, written):
+        """Values in the Windows resource file follow its string rules: an unescaped
+        `"` fails the build, and an unescaped `\\n` becomes a line break."""
+        rendered = (
+            Environment(undefined=StrictUndefined)
+            .from_string(
+                (BUILD_TEMPLATE_DIR / "windows/runner/Runner.rc").read_text(
+                    encoding="utf-8"
+                )
+            )
+            .render(
+                cookiecutter={
+                    "company_name": value,
+                    "product_name": value,
+                    "artifact_name": value,
+                    "copyright": value,
+                }
+            )
+        )
+        for key in ("CompanyName", "FileDescription", "InternalName", "LegalCopyright"):
+            assert f'VALUE "{key}", "{written}" "\\0"' in rendered
+        assert f'VALUE "OriginalFilename", "{written}.exe" "\\0"' in rendered
+        assert f'VALUE "ProductName", "{written}" "\\0"' in rendered
