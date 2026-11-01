@@ -1145,87 +1145,6 @@ class BaseBuildCommand(BaseFlutterCommand):
                 title="Impeller",
             )
 
-        # Explicit `[tool.flet.macos.info]` or `--info-plist` entries override
-        # this key.
-        info_plist = (
-            {"FLTEnableImpeller": False}
-            if self.package_platform == "Darwin" and not impeller
-            else {}
-        )
-        macos_entitlements = {
-            "com.apple.security.app-sandbox": False,
-            "com.apple.security.cs.allow-jit": True,
-            "com.apple.security.cs.allow-unsigned-executable-memory": True,
-            "com.apple.security.network.client": True,
-            "com.apple.security.network.server": True,
-            "com.apple.security.files.user-selected.read-write": True,
-        }
-
-        # merge values from "--permissions" arg:
-        for p in self.resolve_permissions():
-            if p in self.cross_platform_permissions:
-                permission_config = self.cross_platform_permissions[p]
-                info_plist.update(
-                    permission_config.get(f"{self.config_platform}_info_plist", {})
-                    or permission_config.get("info_plist", {})
-                )
-                macos_entitlements.update(
-                    self.cross_platform_permissions[p]["macos_entitlements"]
-                )
-
-        info_plist = merge_dict(
-            info_plist,
-            (
-                self.get_pyproject("tool.flet.macos.info")
-                if self.package_platform == "Darwin"
-                else self.get_pyproject("tool.flet.ios.info")
-            )
-            or {},
-        )
-
-        # parse --info-plist
-        for p in self.options.info_plist:
-            i = p.find("=")
-            if i > -1:
-                k = p[:i]
-                v = p[i + 1 :]
-                info_plist[k] = parse_cli_plist_value(v)
-            else:
-                self.cleanup(1, f"Invalid Info.plist option: {p}")
-
-        for key, value in info_plist.items():
-            if not is_supported_plist_value(value):
-                self.cleanup(
-                    1,
-                    "Unsupported Info.plist value type for "
-                    f"{key}: {type(value).__name__}. Supported types are "
-                    "string, boolean, integer, float, dictionary, and arrays "
-                    "containing those values.",
-                )
-
-        macos_entitlements = merge_dict(
-            macos_entitlements,
-            self.get_pyproject("tool.flet.macos.entitlement") or {},
-        )
-
-        # parse --macos-entitlements
-        for p in self.options.macos_entitlements:
-            i = p.find("=")
-            if i > -1:
-                macos_entitlements[p[:i]] = parse_cli_plist_value(p[i + 1 :])
-            else:
-                self.cleanup(1, f"Invalid macOS entitlement option: {p}")
-
-        for key, value in macos_entitlements.items():
-            if not is_supported_plist_value(value):
-                self.cleanup(
-                    1,
-                    "Unsupported macOS entitlement value type for "
-                    f"{key}: {type(value).__name__}. Supported types are "
-                    "string, boolean, integer, float, dictionary, and arrays "
-                    "containing those values.",
-                )
-
         android_permissions = self.get_android_permissions()
         android_features = self.get_android_features()
         android_meta_data = self.get_android_meta_data(impeller)
@@ -1273,45 +1192,11 @@ class BaseBuildCommand(BaseFlutterCommand):
                 # Build only for the ABIs the bundled Python supports.
                 target_arch = python_abis
 
-        ios_export_method = (
-            self.options.ios_export_method
-            or self.get_pyproject("tool.flet.ios.export_method")
-            or "debugging"
-        )
-
-        ios_export_method_opts = (
-            self.get_pyproject("tool.flet.ios.export_methods").get(ios_export_method)
-            if self.get_pyproject("tool.flet.ios.export_methods")
-            else {}
-        ) or {}
-
-        ios_provisioning_profile = (
-            self.options.ios_provisioning_profile
-            or ios_export_method_opts.get("provisioning_profile")
-            or self.get_pyproject("tool.flet.ios.provisioning_profile")
-        )
-
-        ios_signing_certificate = (
-            self.options.ios_signing_certificate
-            or ios_export_method_opts.get("signing_certificate")
-            or self.get_pyproject("tool.flet.ios.signing_certificate")
-        )
-
-        ios_export_options = (
-            ios_export_method_opts.get("export_options")
-            or self.get_pyproject("tool.flet.ios.export_options")
-            or {}
-        )
-
-        ios_team_id = (
-            self.options.ios_team_id
-            or ios_export_method_opts.get("team_id")
-            or self.get_pyproject("tool.flet.ios.team_id")
-        )
+        ios_signing = self.get_ios_signing()
 
         if (
             self.target_platform in ["ipa"]
-            and not ios_provisioning_profile
+            and not ios_signing["provisioning_profile"]
             and not self.debug_platform
             and not getattr(self, "test_mode", False)
         ):
@@ -1435,11 +1320,11 @@ class BaseBuildCommand(BaseFlutterCommand):
             ),
             "copyright": self.options.copyright
             or self.get_pyproject("tool.flet.copyright"),
-            "ios_export_method": ios_export_method,
-            "ios_provisioning_profile": ios_provisioning_profile,
-            "ios_signing_certificate": ios_signing_certificate,
-            "ios_export_options": ios_export_options,
-            "ios_team_id": ios_team_id,
+            "ios_export_method": ios_signing["export_method"],
+            "ios_provisioning_profile": ios_signing["provisioning_profile"],
+            "ios_signing_certificate": ios_signing["signing_certificate"],
+            "ios_export_options": ios_signing["export_options"],
+            "ios_team_id": ios_signing["team_id"],
             # `_` makes `_options` and `_pyproject` private cookiecutter
             # variables, which reach the template unchanged. Cookiecutter
             # renders other values as Jinja and turns them into strings.
@@ -1453,8 +1338,8 @@ class BaseBuildCommand(BaseFlutterCommand):
                     if self.package_platform == "Android"
                     else []
                 ),
-                "info_plist": info_plist,
-                "macos_entitlements": macos_entitlements,
+                "info_plist": self.get_info_plist(impeller),
+                "macos_entitlements": self.get_macos_entitlements(),
                 "ios_entitlements": self.get_ios_entitlements(),
                 "android_permissions": android_permissions,
                 "android_features": android_features,
@@ -2943,6 +2828,173 @@ class BaseBuildCommand(BaseFlutterCommand):
                     "without one, the app would open every web link.",
                 )
         return values
+
+    def get_info_plist(self, impeller: bool) -> dict:
+        """
+        Resolve the entries added to the iOS or macOS app's `Info.plist`.
+
+        Entries of `--info-plist` override those of `[tool.flet.ios.info]` or
+        `[tool.flet.macos.info]`, which override those of the permission bundles.
+
+        Args:
+            impeller: Whether the app uses Impeller. When it doesn't, macOS apps
+                get `FLTEnableImpeller = false`; iOS has no such switch.
+
+        Returns:
+            The entries, with their plist value types.
+        """
+        assert self.get_pyproject
+        assert self.options
+        info_plist = (
+            {"FLTEnableImpeller": False}
+            if self.package_platform == "Darwin" and not impeller
+            else {}
+        )
+
+        # merge values from "--permissions" arg:
+        for p in self.resolve_permissions():
+            if p in self.cross_platform_permissions:
+                permission_config = self.cross_platform_permissions[p]
+                info_plist.update(
+                    permission_config.get(f"{self.config_platform}_info_plist", {})
+                    or permission_config.get("info_plist", {})
+                )
+
+        info_plist = merge_dict(
+            info_plist,
+            (
+                self.get_pyproject("tool.flet.macos.info")
+                if self.package_platform == "Darwin"
+                else self.get_pyproject("tool.flet.ios.info")
+            )
+            or {},
+        )
+
+        # parse --info-plist
+        for p in self.options.info_plist:
+            i = p.find("=")
+            if i > -1:
+                k = p[:i]
+                v = p[i + 1 :]
+                info_plist[k] = parse_cli_plist_value(v)
+            else:
+                self.cleanup(1, f"Invalid Info.plist option: {p}")
+
+        for key, value in info_plist.items():
+            if not is_supported_plist_value(value):
+                self.cleanup(
+                    1,
+                    "Unsupported Info.plist value type for "
+                    f"{key}: {type(value).__name__}. Supported types are "
+                    "string, boolean, integer, float, dictionary, and arrays "
+                    "containing those values.",
+                )
+        return info_plist
+
+    def get_macos_entitlements(self) -> dict:
+        """
+        Resolve the macOS app's entitlements.
+
+        Entries of `--macos-entitlements` override those of
+        `[tool.flet.macos.entitlement]`, which override those of the permission
+        bundles and Flet's defaults.
+
+        Returns:
+            The entitlements, with their plist value types.
+        """
+        assert self.get_pyproject
+        assert self.options
+        macos_entitlements = {
+            "com.apple.security.app-sandbox": False,
+            "com.apple.security.cs.allow-jit": True,
+            "com.apple.security.cs.allow-unsigned-executable-memory": True,
+            "com.apple.security.network.client": True,
+            "com.apple.security.network.server": True,
+            "com.apple.security.files.user-selected.read-write": True,
+        }
+
+        # merge values from "--permissions" arg:
+        for p in self.resolve_permissions():
+            if p in self.cross_platform_permissions:
+                macos_entitlements.update(
+                    self.cross_platform_permissions[p]["macos_entitlements"]
+                )
+
+        macos_entitlements = merge_dict(
+            macos_entitlements,
+            self.get_pyproject("tool.flet.macos.entitlement") or {},
+        )
+
+        # parse --macos-entitlements
+        for p in self.options.macos_entitlements:
+            i = p.find("=")
+            if i > -1:
+                macos_entitlements[p[:i]] = parse_cli_plist_value(p[i + 1 :])
+            else:
+                self.cleanup(1, f"Invalid macOS entitlement option: {p}")
+
+        for key, value in macos_entitlements.items():
+            if not is_supported_plist_value(value):
+                self.cleanup(
+                    1,
+                    "Unsupported macOS entitlement value type for "
+                    f"{key}: {type(value).__name__}. Supported types are "
+                    "string, boolean, integer, float, dictionary, and arrays "
+                    "containing those values.",
+                )
+        return macos_entitlements
+
+    def get_ios_signing(self) -> dict:
+        """
+        Resolve how the iOS app is signed and exported.
+
+        The export method comes from `--ios-export-method`, else
+        `[tool.flet.ios].export_method`, else `debugging`. Each other setting comes
+        from its CLI option if it has one, else the table of that export method
+        under `[tool.flet.ios.export_methods]`, else `[tool.flet.ios]`.
+
+        Returns:
+            A table with `export_method`, `provisioning_profile`,
+                `signing_certificate`, `team_id` and `export_options`.
+        """
+        assert self.get_pyproject
+        assert self.options
+        export_method = (
+            self.options.ios_export_method
+            or self.get_pyproject("tool.flet.ios.export_method")
+            or "debugging"
+        )
+
+        export_method_opts = (
+            self.get_pyproject("tool.flet.ios.export_methods").get(export_method)
+            if self.get_pyproject("tool.flet.ios.export_methods")
+            else {}
+        ) or {}
+
+        export_options = (
+            export_method_opts.get("export_options")
+            or self.get_pyproject("tool.flet.ios.export_options")
+            or {}
+        )
+        return {
+            "export_method": export_method,
+            "provisioning_profile": (
+                self.options.ios_provisioning_profile
+                or export_method_opts.get("provisioning_profile")
+                or self.get_pyproject("tool.flet.ios.provisioning_profile")
+            ),
+            "signing_certificate": (
+                self.options.ios_signing_certificate
+                or export_method_opts.get("signing_certificate")
+                or self.get_pyproject("tool.flet.ios.signing_certificate")
+            ),
+            "team_id": (
+                self.options.ios_team_id
+                or export_method_opts.get("team_id")
+                or self.get_pyproject("tool.flet.ios.team_id")
+            ),
+            "export_options": export_options,
+        }
 
     def get_ios_entitlements(self) -> dict:
         """
