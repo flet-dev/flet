@@ -106,6 +106,90 @@ DEFAULT_ANDROID_COMPILE_OPTIONS = {
 # real offenders here as they are found.
 ANDROID_DEFAULT_EXTRACT_PACKAGES: list[str] = []
 
+CROSS_PLATFORM_PERMISSIONS = {
+    "location": {
+        "ios_info_plist": {
+            "NSLocationWhenInUseUsageDescription": "This app uses location service when in use.",  # noqa: E501
+            "NSLocationAlwaysAndWhenInUseUsageDescription": "This app uses location service.",  # noqa: E501
+        },
+        "macos_info_plist": {
+            "NSLocationUsageDescription": "This app needs access to your location.",  # noqa: E501
+        },
+        "macos_entitlements": {
+            "com.apple.security.personal-information.location": True
+        },
+        "android_permissions": {
+            "android.permission.ACCESS_FINE_LOCATION": True,
+            "android.permission.ACCESS_COARSE_LOCATION": True,
+            "android.permission.ACCESS_BACKGROUND_LOCATION": True,
+        },
+        "android_features": {
+            "android.hardware.location.network": False,
+            "android.hardware.location.gps": False,
+        },
+    },
+    "camera": {
+        "ios_info_plist": {
+            "NSCameraUsageDescription": "This app uses the camera to capture photos and videos."  # noqa: E501
+        },
+        "macos_info_plist": {
+            "NSCameraUsageDescription": "This app uses the camera to capture photos and videos."  # noqa: E501
+        },
+        "macos_entitlements": {"com.apple.security.device.camera": True},
+        "android_permissions": {"android.permission.CAMERA": True},
+        "android_features": {
+            "android.hardware.camera": False,
+            "android.hardware.camera.any": False,
+            "android.hardware.camera.front": False,
+            "android.hardware.camera.external": False,
+            "android.hardware.camera.autofocus": False,
+        },
+    },
+    "microphone": {
+        "ios_info_plist": {
+            "NSMicrophoneUsageDescription": "This app uses microphone to record sounds.",  # noqa: E501
+        },
+        "macos_info_plist": {
+            "NSMicrophoneUsageDescription": "This app uses microphone to record sounds.",  # noqa: E501
+        },
+        "macos_entitlements": {"com.apple.security.device.audio-input": True},
+        # Recording itself only needs RECORD_AUDIO: recordings are written
+        # to app-scoped storage, which requires no permission. Do not add
+        # READ/WRITE_EXTERNAL_STORAGE here — Google Play's Photo and Video
+        # Permissions policy rejects apps that request broad media/storage
+        # access without a qualifying use case, and this group is opt-in
+        # for the microphone, not for the user's media library.
+        "android_permissions": {"android.permission.RECORD_AUDIO": True},
+        "android_features": {},
+    },
+    "photo_library": {
+        "ios_info_plist": {
+            "NSPhotoLibraryUsageDescription": "This app saves photos and videos to the photo library."  # noqa: E501
+        },
+        "macos_info_plist": {
+            "NSPhotoLibraryUsageDescription": "This app saves photos and videos to the photo library."  # noqa: E501
+        },
+        "macos_entitlements": {
+            "com.apple.security.personal-information.photos-library": True
+        },
+        "android_permissions": {
+            "android.permission.READ_MEDIA_VISUAL_USER_SELECTED": True
+        },
+        "android_features": {},
+    },
+    "biometric": {
+        "ios_info_plist": {
+            "NSFaceIDUsageDescription": "This app uses biometrics to authenticate you."  # noqa: E501
+        },
+        "macos_info_plist": {
+            "NSFaceIDUsageDescription": "This app uses biometrics to authenticate you."  # noqa: E501
+        },
+        "macos_entitlements": {},
+        "android_permissions": {},
+        "android_features": {},
+    },
+}
+
 # Bumped whenever a change to flet-platform-assets alters the pixels it
 # produces. Both stamps hash it, so upgrading flet-cli regenerates rather
 # than leaving a user with output from the previous implementation. Nothing
@@ -253,90 +337,6 @@ class BaseBuildCommand(BaseFlutterCommand):
                 "outputs": ["build/ios/iphonesimulator/*"],
                 "dist": "ios-simulator",
                 "can_be_run_on": ["Darwin"],
-            },
-        }
-
-        self.cross_platform_permissions = {
-            "location": {
-                "ios_info_plist": {
-                    "NSLocationWhenInUseUsageDescription": "This app uses location service when in use.",  # noqa: E501
-                    "NSLocationAlwaysAndWhenInUseUsageDescription": "This app uses location service.",  # noqa: E501
-                },
-                "macos_info_plist": {
-                    "NSLocationUsageDescription": "This app needs access to your location.",  # noqa: E501
-                },
-                "macos_entitlements": {
-                    "com.apple.security.personal-information.location": True
-                },
-                "android_permissions": {
-                    "android.permission.ACCESS_FINE_LOCATION": True,
-                    "android.permission.ACCESS_COARSE_LOCATION": True,
-                    "android.permission.ACCESS_BACKGROUND_LOCATION": True,
-                },
-                "android_features": {
-                    "android.hardware.location.network": False,
-                    "android.hardware.location.gps": False,
-                },
-            },
-            "camera": {
-                "ios_info_plist": {
-                    "NSCameraUsageDescription": "This app uses the camera to capture photos and videos."  # noqa: E501
-                },
-                "macos_info_plist": {
-                    "NSCameraUsageDescription": "This app uses the camera to capture photos and videos."  # noqa: E501
-                },
-                "macos_entitlements": {"com.apple.security.device.camera": True},
-                "android_permissions": {"android.permission.CAMERA": True},
-                "android_features": {
-                    "android.hardware.camera": False,
-                    "android.hardware.camera.any": False,
-                    "android.hardware.camera.front": False,
-                    "android.hardware.camera.external": False,
-                    "android.hardware.camera.autofocus": False,
-                },
-            },
-            "microphone": {
-                "ios_info_plist": {
-                    "NSMicrophoneUsageDescription": "This app uses microphone to record sounds.",  # noqa: E501
-                },
-                "macos_info_plist": {
-                    "NSMicrophoneUsageDescription": "This app uses microphone to record sounds.",  # noqa: E501
-                },
-                "macos_entitlements": {"com.apple.security.device.audio-input": True},
-                # Recording itself only needs RECORD_AUDIO: recordings are written
-                # to app-scoped storage, which requires no permission. Do not add
-                # READ/WRITE_EXTERNAL_STORAGE here — Google Play's Photo and Video
-                # Permissions policy rejects apps that request broad media/storage
-                # access without a qualifying use case, and this group is opt-in
-                # for the microphone, not for the user's media library.
-                "android_permissions": {"android.permission.RECORD_AUDIO": True},
-                "android_features": {},
-            },
-            "photo_library": {
-                "ios_info_plist": {
-                    "NSPhotoLibraryUsageDescription": "This app saves photos and videos to the photo library."  # noqa: E501
-                },
-                "macos_info_plist": {
-                    "NSPhotoLibraryUsageDescription": "This app saves photos and videos to the photo library."  # noqa: E501
-                },
-                "macos_entitlements": {
-                    "com.apple.security.personal-information.photos-library": True
-                },
-                "android_permissions": {
-                    "android.permission.READ_MEDIA_VISUAL_USER_SELECTED": True
-                },
-                "android_features": {},
-            },
-            "biometric": {
-                "ios_info_plist": {
-                    "NSFaceIDUsageDescription": "This app uses biometrics to authenticate you."  # noqa: E501
-                },
-                "macos_info_plist": {
-                    "NSFaceIDUsageDescription": "This app uses biometrics to authenticate you."  # noqa: E501
-                },
-                "macos_entitlements": {},
-                "android_permissions": {},
-                "android_features": {},
             },
         }
 
@@ -782,7 +782,7 @@ class BaseBuildCommand(BaseFlutterCommand):
             action="extend",
             nargs="+",
             default=[],
-            choices=["location", "camera", "microphone", "photo_library", "biometric"],
+            choices=list(CROSS_PLATFORM_PERMISSIONS),
             help="The list of pre-defined cross-platform permissions for iOS, Android "
             "and macOS builds",
         )
@@ -2853,8 +2853,8 @@ class BaseBuildCommand(BaseFlutterCommand):
 
         # merge values from "--permissions" arg:
         for p in self.resolve_permissions():
-            if p in self.cross_platform_permissions:
-                permission_config = self.cross_platform_permissions[p]
+            if p in CROSS_PLATFORM_PERMISSIONS:
+                permission_config = CROSS_PLATFORM_PERMISSIONS[p]
                 info_plist.update(
                     permission_config.get(f"{self.config_platform}_info_plist", {})
                     or permission_config.get("info_plist", {})
@@ -2915,9 +2915,9 @@ class BaseBuildCommand(BaseFlutterCommand):
 
         # merge values from "--permissions" arg:
         for p in self.resolve_permissions():
-            if p in self.cross_platform_permissions:
+            if p in CROSS_PLATFORM_PERMISSIONS:
                 macos_entitlements.update(
-                    self.cross_platform_permissions[p]["macos_entitlements"]
+                    CROSS_PLATFORM_PERMISSIONS[p]["macos_entitlements"]
                 )
 
         macos_entitlements = merge_dict(
@@ -3126,9 +3126,9 @@ class BaseBuildCommand(BaseFlutterCommand):
         assert self.get_pyproject
         android_permissions = {"android.permission.INTERNET": True}
         for p in self.resolve_permissions():
-            if p in self.cross_platform_permissions:
+            if p in CROSS_PLATFORM_PERMISSIONS:
                 android_permissions.update(
-                    self.cross_platform_permissions[p]["android_permissions"]
+                    CROSS_PLATFORM_PERMISSIONS[p]["android_permissions"]
                 )
         android_permissions = merge_dict(
             android_permissions,
@@ -3189,9 +3189,9 @@ class BaseBuildCommand(BaseFlutterCommand):
             "android.hardware.touchscreen": False,
         }
         for p in self.resolve_permissions():
-            if p in self.cross_platform_permissions:
+            if p in CROSS_PLATFORM_PERMISSIONS:
                 android_features.update(
-                    self.cross_platform_permissions[p]["android_features"]
+                    CROSS_PLATFORM_PERMISSIONS[p]["android_features"]
                 )
         android_features = merge_dict(
             android_features,
