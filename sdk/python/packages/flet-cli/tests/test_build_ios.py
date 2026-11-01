@@ -4,6 +4,7 @@ import argparse
 import datetime
 import plistlib
 import re
+import xml.etree.ElementTree as ET
 from pathlib import Path
 from typing import Optional
 
@@ -744,6 +745,22 @@ class TestProjectTemplate:
             rendered.count("PRODUCT_BUNDLE_IDENTIFIER = com.acme.app.RunnerTests;") == 3
         )
         assert rendered.count('PRODUCT_NAME = "Acme App";') == 3
+
+
+class TestScheme:
+    def test_scheme_is_valid_for_any_artifact_name(self):
+        """The scheme doesn't hold the artifact name: Flutter's Swift Package Manager
+        migration copies its `BuildableName` back unescaped, so a `&` in that name
+        would make the scheme unreadable and fail the build."""
+        rendered = _render_template(
+            "Runner.xcodeproj/xcshareddata/xcschemes/Runner.xcscheme",
+            artifact_name="Tom & Jerry",
+        )
+        names = {
+            reference.get("BuildableName")
+            for reference in ET.fromstring(rendered).iter("BuildableReference")
+        }
+        assert names == {"Runner.app", "RunnerTests.xctest"}
 
 
 class TestExportOptionsTemplate:

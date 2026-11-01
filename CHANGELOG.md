@@ -66,6 +66,7 @@
 
 ### Bug fixes
 
+* Fix `flet build macos` failing with `Scheme Runner is not currently configured for the build action` when the product or artifact name contains `&`.
 * Fix `flet build` rejecting `--permissions biometric`, although the `biometric` permission bundle works from `pyproject.toml`.
 * Fix `flet build ipa` failing to export when a `[tool.flet.ios.export_options]` value contains `<`, `>` or `&`, such as `thinning = "<none>"`, and writing numbers as strings.
 * Fix `flet build` for Android failing when a `[tool.flet.android.meta_data]` value or a `[tool.flet.android.provider]` attribute contains `&`, `<` or `"`, which were written into the manifest unescaped ([#7031](https://github.com/flet-dev/flet/pull/7031)) by @ndonkoHenri.
