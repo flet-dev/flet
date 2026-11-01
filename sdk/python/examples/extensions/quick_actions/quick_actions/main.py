@@ -32,12 +32,12 @@ def main(page: ft.Page):
                 ShortcutItem(
                     type="new_message",
                     localized_title="New Message",
-                    icon="ic_new_message",
+                    icon="ic_launcher",
                 ),
                 ShortcutItem(
                     type="search",
                     localized_title="Search",
-                    icon="ic_search",
+                    icon="ic_launcher",
                 ),
             ]
         )
