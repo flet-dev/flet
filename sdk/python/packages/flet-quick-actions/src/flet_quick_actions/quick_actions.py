@@ -1,5 +1,6 @@
 from typing import Optional
 
+from flet.controls.base_control import control
 from flet.controls.services.service import Service
 from flet_quick_actions.types import ShortcutItem
 
@@ -8,7 +9,7 @@ import flet as ft
 __all__ = ["QuickActions"]
 
 
-@ft.control("QuickActions")
+@control("QuickActions")
 class QuickActions(Service):
     """
     A service for managing the app's home-screen quick actions.
