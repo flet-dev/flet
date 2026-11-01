@@ -67,7 +67,7 @@ You can find more information about `flet create` command [here](../cli/flet-cre
 
 `src/main.py` already contains a small working counter app with a button that increments it:
 
-<CodeExample path="apps/templates/basic_counter/main.py" language="python" title="src/main.py" />
+<CodeExample path="apps/templates/basic_counter/src/main.py" language="python" title="src/main.py" />
 
 <Image src="assets/getting-started/counter-app/macos.png" alt="Counter app running on macOS" width="60%" />
 

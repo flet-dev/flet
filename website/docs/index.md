@@ -16,7 +16,7 @@ Start with a UI for a script or build a complete application with multiple scree
 
 This small counter app displays a number and increments it when you press **+**:
 
-<CodeExample path="apps/templates/basic_counter/main.py" language="python" title="src/main.py" />
+<CodeExample path="apps/templates/basic_counter/src/main.py" language="python" title="src/main.py" />
 
 ## Try Flet on your phone
 
