@@ -435,6 +435,18 @@ class TestInfoPlistSettings:
             "NSLocationAlwaysAndWhenInUseUsageDescription",
         }
 
+    def test_permissions_option_accepts_every_bundle(self):
+        """`--permissions` accepts exactly the predefined permission bundles."""
+        parser = argparse.ArgumentParser(add_help=False)
+        cmd = BaseBuildCommand(parser)
+        option = next(a for a in parser._actions if a.dest == "permissions")
+        assert set(option.choices) == set(cmd.cross_platform_permissions)
+
+    def test_biometric_bundle_from_the_cli(self):
+        """`--permissions biometric` adds the Face ID usage description."""
+        cmd = _settings_command(argv=["--permissions", "biometric"])
+        assert set(cmd.get_info_plist(impeller=True)) == {"NSFaceIDUsageDescription"}
+
     def test_unknown_permission_bundle_adds_nothing(self):
         """A name that isn't a permission bundle adds no entries."""
         cmd = _settings_command({"tool.flet.permissions": ["unknown"]})

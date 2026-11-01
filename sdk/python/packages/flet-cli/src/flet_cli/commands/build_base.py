@@ -782,7 +782,7 @@ class BaseBuildCommand(BaseFlutterCommand):
             action="extend",
             nargs="+",
             default=[],
-            choices=["location", "camera", "microphone", "photo_library"],
+            choices=["location", "camera", "microphone", "photo_library", "biometric"],
             help="The list of pre-defined cross-platform permissions for iOS, Android "
             "and macOS builds",
         )
