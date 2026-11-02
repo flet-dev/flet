@@ -20,6 +20,7 @@ class AudioService extends FletService {
   String? _src;
   Uint8List? _srcBytes;
   ReleaseMode? _releaseMode;
+  AudioContext? _audioContext;
   double? _volume;
   double? _balance;
   double? _playbackRate;
@@ -140,6 +141,13 @@ class AudioService extends FletService {
       if (releaseMode != null && releaseMode != _releaseMode) {
         _releaseMode = releaseMode;
         await player.setReleaseMode(releaseMode);
+      }
+
+      // audioContext
+      final audioContext = parseAudioContext(control.get("audio_context"));
+      if (audioContext != null && audioContext != _audioContext) {
+        _audioContext = audioContext;
+        await player.setAudioContext(audioContext);
       }
 
       // volume
