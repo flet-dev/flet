@@ -1,5 +1,7 @@
 """Platform-over-global precedence of `[tool.flet]` settings in `flet build`."""
 
+from types import SimpleNamespace
+
 import pytest
 
 from flet_cli.commands.build_base import BaseBuildCommand
@@ -52,6 +54,55 @@ def test_other_platform_value_ignored():
         }
     )
     assert cmd.get_platform_setting("dev_packages") == {"flet": "../flet"}
+
+
+def test_explicit_platform_overrides_the_build_platform():
+    cmd = _command(
+        {
+            "tool.flet.android.icon_background": "#003366",
+            "tool.flet.icon_background": "#1a1a2e",
+        },
+        platform="macos",
+    )
+    assert cmd.get_platform_setting("icon_background", platform="android") == "#003366"
+    assert cmd.get_platform_setting("icon_background") == "#1a1a2e"
+
+
+@pytest.mark.parametrize(
+    "key",
+    ["color", "dark_color", "icon_background", "icon_dark_background", "icon_fit"],
+)
+def test_empty_platform_splash_value_clears_global(key):
+    cmd = _command(
+        {f"tool.flet.android.splash.{key}": "", f"tool.flet.splash.{key}": "global"}
+    )
+    assert cmd.splash_setting(key) == ""
+
+
+def test_empty_platform_splash_colour_falls_back_to_the_default():
+    cmd = _command(
+        {"tool.flet.android.splash.color": "", "tool.flet.splash.color": "#000000"}
+    )
+    cmd.options = SimpleNamespace(
+        no_android_splash=None,
+        no_ios_splash=None,
+        no_web_splash=None,
+        splash_color=None,
+        splash_dark_color=None,
+    )
+    assert cmd._resolve_splash()["color"] == "#ffffff"
+
+
+def test_empty_platform_icon_background_falls_back_to_white():
+    cmd = _command(
+        {
+            "tool.flet.macos.icon_background": "",
+            "tool.flet.icon_background": "#1a1a2e",
+        },
+        platform="macos",
+    )
+    assert cmd.icon_background_value("macos") == ""
+    assert cmd._resolve_icon_background() == (255, 255, 255)
 
 
 @pytest.mark.parametrize(
