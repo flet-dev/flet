@@ -427,7 +427,8 @@ determines the name of the `.exe` file, and on macOS it sets the name of the `.a
 It does **not** affect [bundle ID](#bundle-id)s or package identifiers.
 
 It can contain spaces or accents, but keep file system restrictions in mind on
-your target platforms.
+your target platforms. On Windows, it names the `.exe` file, so it can't contain
+any of `< > : " / \ | ? *`, and `flet build` stops with an error if it does.
 
 On macOS the `.app` name is what users see: Finder, Launchpad, Spotlight and the
 Dock show it, and so do the app menu, "About …" and "Quit …". That's why it

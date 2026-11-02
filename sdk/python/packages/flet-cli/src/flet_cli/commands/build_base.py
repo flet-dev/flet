@@ -1038,6 +1038,29 @@ class BaseBuildCommand(BaseFlutterCommand):
             f"[magenta]{self.current_platform}[/]."
             self.cleanup(1, message)
 
+    def validate_artifact_name(self, artifact_name: Any):
+        """
+        Stop the build if the artifact name can't name a file on the target platform.
+
+        A Windows app's artifact name names its `.exe` file, which can't contain
+        any of `< > : " / \\ | ? *`.
+
+        Args:
+            artifact_name: The resolved artifact name.
+        """
+        if self.config_platform != "windows":
+            return
+        invalid = sorted(set(str(artifact_name)) & set('<>:"/\\|?*'))
+        if invalid:
+            self.skip_flutter_doctor = True
+            self.cleanup(
+                1,
+                f"Artifact name {escape(repr(str(artifact_name)))} can't be used on "
+                f"Windows, where a file name can't contain {' '.join(invalid)}. "
+                "Set a different name with --artifact or "
+                f"{escape('`artifact` in [tool.flet]')}.",
+            )
+
     def validate_entry_point(self):
         """
         Resolve app entry-point module and ensure corresponding Python file exists.
@@ -1114,6 +1137,7 @@ class BaseBuildCommand(BaseFlutterCommand):
         # test host can't find the binary. Pin them equal in test mode.
         if getattr(self, "test_mode", False):
             artifact_name = project_name
+        self.validate_artifact_name(artifact_name)
 
         split_per_abi = (
             self.options.split_per_abi

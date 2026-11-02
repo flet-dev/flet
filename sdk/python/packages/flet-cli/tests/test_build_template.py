@@ -11,6 +11,7 @@ from typing import Any
 import pytest
 import yaml
 from jinja2 import Environment, StrictUndefined
+from rich.text import Text
 
 from flet_cli.commands.build_base import BaseBuildCommand
 from flet_cli.utils.pyproject_toml import load_pyproject_toml
@@ -417,3 +418,34 @@ class TestCopyright:
             )
         )
         assert f'window.Create(L"{written}", origin, size)' in rendered
+
+
+class TestArtifactName:
+    @staticmethod
+    def _validate(config_platform, artifact_name):
+        """Validate `artifact_name`, returning the `cleanup` calls it causes."""
+        cmd = BaseBuildCommand(argparse.ArgumentParser(add_help=False))
+        cmd.config_platform = config_platform
+        calls = []
+        cmd.cleanup = lambda code, message=None, **kwargs: calls.append((code, message))
+        cmd.validate_artifact_name(artifact_name)
+        return calls
+
+    @pytest.mark.parametrize("name", ["acme_notes", "Acme Notes", "Acme & Sons", "é"])
+    def test_valid_names_pass_on_windows(self, name):
+        """Spaces, accents and `&` are valid in a Windows file name."""
+        assert self._validate("windows", name) == []
+
+    @pytest.mark.parametrize("char", list('<>:"/\\|?*'))
+    def test_reserved_characters_stop_a_windows_build(self, char):
+        """A character that a Windows file name can't contain fails with its name."""
+        [(code, message)] = self._validate("windows", f"acme{char}notes")
+        shown = Text.from_markup(message).plain
+        assert code == 1
+        assert f"contain {char}." in shown
+        assert "`artifact` in [tool.flet]." in shown
+
+    @pytest.mark.parametrize("config_platform", ["macos", "linux", "android", "ios"])
+    def test_other_platforms_are_not_checked(self, config_platform):
+        """The Windows file name rules apply only to Windows builds."""
+        assert self._validate(config_platform, 'acme"notes') == []
