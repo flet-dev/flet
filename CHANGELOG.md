@@ -7,7 +7,7 @@
 * Themes built from a seed color, including the default theme, now have neutral surfaces: white in light mode and near-black (`#121212`) in dark mode, with neutral greys for containers, outlines and text on surfaces. The seed still drives accent colors. To keep the seed-tinted Material 3 look, set `page.theme = ft.Theme(surfaces=ft.ThemeSurfaces.TONAL)` (and the same for `page.dark_theme`). See [Default theme surfaces are now neutral](https://flet.dev/docs/updates/breaking-changes/v1-1-0/neutral-default-surfaces) ([#6921](https://github.com/flet-dev/flet/issues/6921)) by @FeodorFitsner.
 * The default dark splash and loading screen color of web apps is now `#121212` (was `#222222`), to match the new dark theme surface ([#6921](https://github.com/flet-dev/flet/issues/6921)) by @FeodorFitsner.
 * Custom [`flet build` templates](/docs/publish#build-template) (`--template`) must read the build's settings from `cookiecutter._options` and the app's `pyproject.toml` from `cookiecutter._pyproject` (were `cookiecutter.options` and `cookiecutter.pyproject`). Cookiecutter passes these private variables to the template unchanged, so numbers keep their types and values aren't rendered as Jinja ([#6999](https://github.com/flet-dev/flet/pull/6999)) by @ndonkoHenri.
-* Custom [`flet build` templates](/docs/publish#build-template) (`--template`) must read the iOS export options from `cookiecutter._options.ios_export_options` (was `cookiecutter.ios_export_options`), otherwise they are left out of `exportOptions.plist` without an error by @ndonkoHenri.
+* Custom [`flet build` templates](/docs/publish#build-template) (`--template`) must read the iOS export options from `cookiecutter._options.ios_export_options` (was `cookiecutter.ios_export_options`), otherwise they are left out of `exportOptions.plist` without an error ([#7036](https://github.com/flet-dev/flet/pull/7036)) by @ndonkoHenri.
 * The Flet desktop client is no longer built for Debian 10 on ARM64: `flet run` on an ARM64 Linux system with glibc older than 2.31 (Debian 10 and other glibc 2.28 distros) now stops with an error naming the glibc it needs. Debian 10 on x86-64 is still supported by @FeodorFitsner.
 
 ### New features
@@ -57,9 +57,9 @@
 
 ### Bug fixes
 
-* Fix `flet build macos` failing with `Scheme Runner is not currently configured for the build action` when the product or artifact name contains `&`.
-* Fix `flet build` rejecting `--permissions biometric`, although the `biometric` permission bundle works from `pyproject.toml`.
-* Fix `flet build ipa` failing to export when a `[tool.flet.ios.export_options]` value contains `<`, `>` or `&`, such as `thinning = "<none>"`, and writing numbers as strings.
+* Fix `flet build macos` failing with `Scheme Runner is not currently configured for the build action` when the product or artifact name contains `&` ([#7036](https://github.com/flet-dev/flet/pull/7036)) by @ndonkoHenri.
+* Fix `flet build` rejecting `--permissions biometric`, although the `biometric` permission bundle works from `pyproject.toml` ([#7036](https://github.com/flet-dev/flet/pull/7036)) by @ndonkoHenri.
+* Fix `flet build ipa` failing to export when a `[tool.flet.ios.export_options]` value contains `<`, `>` or `&`, such as `thinning = "<none>"`, and writing numbers as strings ([#7036](https://github.com/flet-dev/flet/pull/7036)) by @ndonkoHenri.
 * Fix `flet build` for Android failing when a `[tool.flet.android.meta_data]` value or a `[tool.flet.android.provider]` attribute contains `&`, `<` or `"`, which were written into the manifest unescaped ([#7031](https://github.com/flet-dev/flet/pull/7031)) by @ndonkoHenri.
 * Fix `flet build` for Android failing when `[tool.flet.android.manifest_application]` sets `label`, `name`, `icon` or `enableOnBackInvokedCallback`, which wrote the attribute twice instead of replacing Flet's value ([#7031](https://github.com/flet-dev/flet/pull/7031)) by @ndonkoHenri.
 * Fix `flet build` failing with no explanation unless run with `-vv` when a step reported its error on stdout, such as a `SyntaxError` in an app file ([#7029](https://github.com/flet-dev/flet/issues/7029), [#7031](https://github.com/flet-dev/flet/pull/7031)) by @ndonkoHenri.
