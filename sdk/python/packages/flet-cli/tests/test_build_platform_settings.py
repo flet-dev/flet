@@ -1,6 +1,8 @@
 """Platform-over-global precedence of `[tool.flet]` settings in `flet build`."""
 
+import argparse
 from types import SimpleNamespace
+from unittest.mock import MagicMock
 
 import pytest
 
@@ -57,6 +59,7 @@ def test_other_platform_value_ignored():
 
 
 def test_explicit_platform_overrides_the_build_platform():
+    """An explicit `platform` reads that platform's table, not the built one's."""
     cmd = _command(
         {
             "tool.flet.android.icon_background": "#003366",
@@ -73,6 +76,7 @@ def test_explicit_platform_overrides_the_build_platform():
     ["color", "dark_color", "icon_background", "icon_dark_background", "icon_fit"],
 )
 def test_empty_platform_splash_value_clears_global(key):
+    """An empty platform splash value replaces the global one."""
     cmd = _command(
         {f"tool.flet.android.splash.{key}": "", f"tool.flet.splash.{key}": "global"}
     )
@@ -80,6 +84,7 @@ def test_empty_platform_splash_value_clears_global(key):
 
 
 def test_empty_platform_splash_colour_falls_back_to_the_default():
+    """An empty platform splash colour resolves to the default colour."""
     cmd = _command(
         {"tool.flet.android.splash.color": "", "tool.flet.splash.color": "#000000"}
     )
@@ -94,6 +99,7 @@ def test_empty_platform_splash_colour_falls_back_to_the_default():
 
 
 def test_empty_platform_icon_background_falls_back_to_white():
+    """An empty platform icon background resolves to white."""
     cmd = _command(
         {
             "tool.flet.macos.icon_background": "",
@@ -103,6 +109,51 @@ def test_empty_platform_icon_background_falls_back_to_white():
     )
     assert cmd.icon_background_value("macos") == ""
     assert cmd._resolve_icon_background() == (255, 255, 255)
+
+
+def _template_data(pyproject, tmp_path):
+    """Build the template data of an Android build with the real options."""
+    parser = argparse.ArgumentParser(add_help=False)
+    cmd = BaseBuildCommand(parser)
+    cmd.options = parser.parse_args([])
+    cmd.python_app_path = tmp_path
+    cmd.flutter_dir = tmp_path
+    cmd.config_platform = "android"
+    cmd.target_platform = "apk"
+    cmd.package_platform = "Android"
+    cmd.python_release = MagicMock(android_abis=["arm64-v8a"])
+    values = {"project.name": "my-app", **pyproject}
+    cmd.get_pyproject = lambda key=None: values.get(key) if key else {}
+    cmd.setup_template_data()
+    return cmd.template_data
+
+
+@pytest.mark.parametrize(
+    ("platform_value", "org_name", "artifact_name", "bundle_id"),
+    [
+        ("", "com.flet", "my-app", "com.flet.my-app"),
+        (None, "com.global", "global", "com.global.id"),
+        ("android", "android", "android", "android"),
+    ],
+)
+def test_identity_settings_reach_the_template(
+    tmp_path, platform_value, org_name, artifact_name, bundle_id
+):
+    """`org`, `artifact` and `bundle_id` resolve platform over global over default."""
+    data = _template_data(
+        {
+            "tool.flet.org": "com.global",
+            "tool.flet.artifact": "global",
+            "tool.flet.bundle_id": "com.global.id",
+            "tool.flet.android.org": platform_value,
+            "tool.flet.android.artifact": platform_value,
+            "tool.flet.android.bundle_id": platform_value,
+        },
+        tmp_path,
+    )
+    assert data["org_name"] == org_name
+    assert data["artifact_name"] == artifact_name
+    assert data["bundle_id"] == bundle_id
 
 
 @pytest.mark.parametrize(
