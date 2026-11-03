@@ -57,7 +57,7 @@ The card has the page's link with **Open**, **Copy**, **QR code** and **Share**.
 | | Explorer | Creator |
 |---|---|---|
 | Link | Private: `get.flet.app/` and a random code | The private link, plus a readable one: `get.flet.app/your-app` |
-| How long a release stays up | 7 days after its build: update the APK to keep the app up | While it's the current release |
+| How long a release stays up | 7 days after its build: update the APK to keep the app up | 1 year after its build: a new version starts the year again |
 | Run downloads in Studio | 7 days | 90 days |
 
 Set a readable link under **Readable name** in **Download page settings** (✎, then ✓):

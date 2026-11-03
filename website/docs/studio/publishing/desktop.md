@@ -84,6 +84,12 @@ On macOS 14 and earlier, **right-click the app › Open** and confirm instead.
 The app needs GTK 3, which desktop Linux distributions include. On a minimal system,
 install it first (`sudo apt install libgtk-3-0` on Debian and Ubuntu).
 
+:::note[Creator plan]
+Code signing, notarization, the Mac App Store and the Microsoft Store are part of
+the Creator plan. On Explorer, Windows and Mac apps are built unsigned. See
+[Plans](index.md#plans).
+:::
+
 ## Sign the Windows app
 
 Signed, Windows shows your name as the app's publisher instead of "Unknown publisher",

@@ -12,6 +12,11 @@ signs the package once it passes certification: you need no code-signing certifi
 You need a Microsoft Store developer account. Registration is free, for individuals
 and companies: start it at [storedeveloper.microsoft.com](https://storedeveloper.microsoft.com).
 
+:::note[Creator plan]
+Publishing to the Microsoft Store is part of the Creator plan. On Explorer, the button on its card offers a
+free 7-day Creator trial with 500 bonus credits. See [Plans](index.md#plans).
+:::
+
 ## Connect Microsoft Store
 
 Studio submits your app's updates with an application you add to your Partner Center

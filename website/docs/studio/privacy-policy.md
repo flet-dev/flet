@@ -46,7 +46,7 @@ This policy covers personal information processed by Flet Studio as currently im
 
 **Content you create or upload.** When you use Flet Studio, we store the app source code, files, and versions that you create, edit, or upload to the Service, along with their metadata (file path, size, timestamps, app name, description, dependencies, tags). This content is stored in object storage hosted by our infrastructure provider, Railway.
 
-**AI conversations.** When you use the AI agent, we store your prompts, the AI's responses (including generated code and a record of the actions the AI took in your project), and any ratings you give on responses. Conversations are stored in our database, per app and per account, until you delete the conversation or the associated app, until your account is deleted, or until we remove them under a data-retention policy we may adopt.
+**AI conversations.** When you use the AI agent, we store your prompts, the AI's responses (including generated code and a record of the actions the AI took in your project), and any ratings you give on responses. Conversations are stored in our database, per app and per account, until you delete the conversation or the associated app, until your account is deleted, or until the conversation hasn't been used for 30 days (90 days on paid plans), when it is deleted.
 
 **Billing information.** When you purchase a paid plan or AI credits, Stripe collects your payment card details and billing address at checkout. We store your Stripe customer and subscription identifiers, your plan status, and records of your purchases and credit grants, and we retain billing addresses and purchase records for bookkeeping in QuickBooks Online.
 
@@ -152,7 +152,8 @@ We do **not** set any advertising cookies, analytics cookies, social-media cooki
 - **User content** (apps, files, versions) is retained for as long as your account is active or until you delete it.
 - **Sign-in metadata** (last sign-in timestamp, last sign-in IP) is overwritten on each new sign-in; older values are not kept.
 - **Usage counters** are kept per day and are not retained beyond what is needed for quota enforcement and operational analysis.
-- **AI conversations** are retained until you delete the conversation or the associated app, or until your account is deleted.
+- **AI conversations** are deleted 30 days after the conversation was last used (90 days on paid plans), or earlier when you delete the conversation or the associated app, or your account is deleted. A conversation in active use keeps its earlier messages.
+- **Build logs** (a build's log, steps and annotations) are deleted 30 days after the build (1 year on paid plans); a short record of each build (what was built, when, its status and cost) is kept with the app. Build files are deleted after 7 days (90 days on paid plans), and download page releases expire after 7 days (1 year on paid plans).
 - **Billing records** (purchase and credit-usage ledgers, invoices) are retained for as long as required by applicable tax and accounting law, generally seven years in Canada, even after account deletion.
 - **Newsletter list membership** is maintained by Mailgun until you unsubscribe; when we process an account-deletion request, we also remove your address from the mailing list.
 - **Server-side telemetry** (Logfire traces and logs) is retained for a limited period configured with our observability provider.

@@ -17,6 +17,11 @@ and the repository stay in step both ways:
 Studio connects to repositories that already exist; create the repository on
 GitHub first. Each app is connected to one repository, branch and folder.
 
+:::note[Creator plan]
+GitHub sync is part of the Creator plan. On Explorer, the button on its card offers a
+free 7-day Creator trial with 500 bonus credits. See [Plans](publishing/index.md#plans).
+:::
+
 ## Before you start
 
 Studio reaches GitHub through the **Flet Studio** GitHub App:

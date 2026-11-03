@@ -63,10 +63,13 @@ See the [Privacy Policy](privacy-policy.md) for details.
 ### Do I need an account or a paid plan?
 
 You can try Studio and run shared public apps without an account. Sign in to save
-projects and use the AI agent. Explorer is free and includes monthly AI credits
-and access to the Pro agent. Creator adds private apps, more credits, Expert agent
-access, and on-demand credit top-ups. Accounts with an existing wallet credit
-balance can also access Expert. See [pricing](/pricing) for current allowances.
+projects, use the AI agent and build your apps. Explorer is free: 500 credits a
+month for the agent and builds, the Pro agent, and builds for Android, iOS (your
+own devices), web, Windows, macOS and Linux. Creator adds 10,000 credits a month,
+private apps, publishing to Google Play, the App Store and Microsoft Store, code
+signing and notarization, GitHub sync and the Expert agent. You can try Creator free
+for 7 days, and anyone can buy credit packs. See [Plans](publishing/index.md#plans)
+and [pricing](/pricing).
 
 ### Do I have to use AI?
 
