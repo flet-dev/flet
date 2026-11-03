@@ -91,7 +91,7 @@ int APIENTRY wWinMain(_In_ HINSTANCE instance, _In_opt_ HINSTANCE prev,
   FlutterWindow window(project);
   Win32Window::Point origin(10, 10);
   Win32Window::Size size(1280, 720);
-  if (!window.Create(L"{{ cookiecutter.product_name }}", origin, size)) {
+  if (!window.Create(L"{{ cookiecutter.product_name | replace("\\", "\\\\") | replace('"', '\\"') }}", origin, size)) {
     return EXIT_FAILURE;
   }
   window.SetQuitOnClose(true);

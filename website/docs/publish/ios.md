@@ -352,12 +352,10 @@ Both simple and complex structures are supported:
 
 - string
 - boolean
+- integer
+- float
 - dictionary (nested key-value object)
-- array of strings
-- array of booleans
-- array of dictionaries (including dictionaries that contain arrays)
-
-Numbers are not yet supported.
+- array of any of these values
 </TabItem>
 </Tabs>
 ##### Example
@@ -384,21 +382,25 @@ In the [`ios/exportOptions.plist`](index.md#build-template),
 the example above will be translated accordingly into this:
 
 ```xml
-<key>uploadSymbols</key>
-<false/>
-<key>compileBitcode</key>
-<false/>
-<key>thinning</key>
-<string>&lt;none&gt;</string>
-<key>manifest</key>
-<dict>
-    <key>appURL</key>
-    <string>https://example.com/app.ipa</string>
-    <key>displayImageURL</key>
-    <string>https://example.com/icon57.png</string>
-    <key>fullSizeImageURL</key>
-    <string>https://example.com/icon512.png</string>
-</dict>
+<plist version="1.0">
+    <dict>
+        <key>uploadSymbols</key>
+        <false/>
+        <key>compileBitcode</key>
+        <false/>
+        <key>thinning</key>
+        <string>&lt;none&gt;</string>
+        <key>manifest</key>
+        <dict>
+            <key>appURL</key>
+            <string>https://example.com/app.ipa</string>
+            <key>displayImageURL</key>
+            <string>https://example.com/icon57.png</string>
+            <key>fullSizeImageURL</key>
+            <string>https://example.com/icon512.png</string>
+        </dict>
+    </dict>
+</plist>
 ```
 </details>
 
@@ -568,52 +570,42 @@ example above will be translated accordingly into this:
 
 ```xml
 <plist version="1.0">
-	<dict>
-
+    <dict>
         <key>NSCameraUsageDescription</key>
         <string>This app needs camera access.</string>
-
         <key>UIFileSharingEnabled</key>
         <true/>
-
         <key>ExampleInteger</key>
         <integer>32</integer>
-
         <key>ExampleReal</key>
         <real>0.5</real>
-
         <key>LSApplicationQueriesSchemes</key>
         <array>
             <string>myapp</string>
             <string>myapp-beta</string>
         </array>
-
         <key>FeatureFlags</key>
         <array>
             <true/>
             <false/>
         </array>
-
         <key>RetryDelays</key>
         <array>
             <integer>1</integer>
             <integer>2</integer>
             <integer>3</integer>
         </array>
-
         <key>OpacitySteps</key>
         <array>
             <real>0.25</real>
             <real>0.5</real>
             <real>0.75</real>
         </array>
-
         <key>NSAppTransportSecurity</key>
         <dict>
             <key>NSAllowsArbitraryLoads</key>
             <false/>
         </dict>
-
         <key>CFBundleURLTypes</key>
         <array>
             <dict>
@@ -637,8 +629,7 @@ example above will be translated accordingly into this:
                 </array>
             </dict>
         </array>
-
-	</dict>
+    </dict>
 </plist>
 ```
 </details>
@@ -730,16 +721,20 @@ In [`ios/Runner/Runner.entitlements`](index.md#build-template), the example abov
 will be translated accordingly into this:
 
 ```xml
-<key>aps-environment</key>
-<string>production</string>
-<key>com.apple.developer.associated-domains</key>
-<array>
-    <string>applinks:example.com</string>
-</array>
-<key>com.apple.security.application-groups</key>
-<array>
-    <string>group.dev.example.myapp</string>
-</array>
+<plist version="1.0">
+    <dict>
+        <key>aps-environment</key>
+        <string>production</string>
+        <key>com.apple.developer.associated-domains</key>
+        <array>
+            <string>applinks:example.com</string>
+        </array>
+        <key>com.apple.security.application-groups</key>
+        <array>
+            <string>group.dev.example.myapp</string>
+        </array>
+    </dict>
+</plist>
 ```
 
 </details>

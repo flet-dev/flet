@@ -20,6 +20,7 @@ class AudioService extends FletService {
   String? _src;
   Uint8List? _srcBytes;
   ReleaseMode? _releaseMode;
+  AudioContext? _audioContext;
   double? _volume;
   double? _balance;
   double? _playbackRate;
@@ -121,6 +122,16 @@ class AudioService extends FletService {
       }
 
       final sourceVersion = srcChanged ? ++_sourceVersion : _sourceVersion;
+
+      // Apply the context before loading: Android re-prepares an existing
+      // source when its context changes, without awaiting that preparation.
+      final audioContext = parseAudioContext(control.get("audio_context"));
+      if (audioContext != null && audioContext != _audioContext) {
+        _audioContext = audioContext;
+        await player.setAudioContext(audioContext);
+        if (sourceVersion != _sourceVersion) return;
+      }
+
       if (srcChanged) {
         try {
           await _applySource();
