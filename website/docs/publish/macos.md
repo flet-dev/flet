@@ -166,52 +166,42 @@ example above will be translated accordingly into this:
 
 ```xml
 <plist version="1.0">
-	<dict>
-
+    <dict>
         <key>LSApplicationCategoryType</key>
         <string>public.app-category.utilities</string>
-
         <key>NSSupportsSuddenTermination</key>
         <true/>
-
         <key>ExampleInteger</key>
         <integer>32</integer>
-
         <key>ExampleReal</key>
         <real>0.5</real>
-
         <key>SupportedModes</key>
         <array>
             <string>basic</string>
             <string>advanced</string>
         </array>
-
         <key>FeatureFlags</key>
         <array>
             <true/>
             <false/>
         </array>
-
         <key>RetryDelays</key>
         <array>
             <integer>1</integer>
             <integer>2</integer>
             <integer>3</integer>
         </array>
-
         <key>OpacitySteps</key>
         <array>
             <real>0.25</real>
             <real>0.5</real>
             <real>0.75</real>
         </array>
-
         <key>NSAppTransportSecurity</key>
         <dict>
             <key>NSAllowsArbitraryLoads</key>
             <false/>
         </dict>
-
         <key>CFBundleDocumentTypes</key>
         <array>
             <dict>
@@ -231,8 +221,7 @@ example above will be translated accordingly into this:
                 </array>
             </dict>
         </array>
-
-	</dict>
+    </dict>
 </plist>
 ```
 </details>
@@ -347,47 +336,51 @@ In both [`macos/Runner/DebugProfile.entitlements`](index.md#build-template) and
 will be translated accordingly into this:
 
 ```xml
-<key>com.apple.security.network.client</key>
-<true />
-<key>com.apple.developer.ubiquity-kvstore-identifier</key>
-<string>ABCDE12345.dev.example.myapp</string>
-<key>ExampleInteger</key>
-<integer>32</integer>
-<key>ExampleReal</key>
-<real>0.5</real>
-<key>com.apple.security.application-groups</key>
-<array>
-    <string>group.dev.example.myapp</string>
-    <string>group.dev.example.shared</string>
-</array>
-<key>ExampleBooleanArray</key>
-<array>
-    <true />
-    <false />
-</array>
-<key>com.apple.security.scripting-targets</key>
-<dict>
-    <key>com.apple.mail</key>
-    <array>
-        <string>compose</string>
-        <string>send</string>
-    </array>
-</dict>
-<key>ExampleArrayOfDictionaries</key>
-<array>
+<plist version="1.0">
     <dict>
-        <key>Name</key>
-        <string>alpha</string>
-        <key>Enabled</key>
+        <key>com.apple.security.network.client</key>
         <true />
+        <key>com.apple.developer.ubiquity-kvstore-identifier</key>
+        <string>ABCDE12345.dev.example.myapp</string>
+        <key>ExampleInteger</key>
+        <integer>32</integer>
+        <key>ExampleReal</key>
+        <real>0.5</real>
+        <key>com.apple.security.application-groups</key>
+        <array>
+            <string>group.dev.example.myapp</string>
+            <string>group.dev.example.shared</string>
+        </array>
+        <key>ExampleBooleanArray</key>
+        <array>
+            <true />
+            <false />
+        </array>
+        <key>com.apple.security.scripting-targets</key>
+        <dict>
+            <key>com.apple.mail</key>
+            <array>
+                <string>compose</string>
+                <string>send</string>
+            </array>
+        </dict>
+        <key>ExampleArrayOfDictionaries</key>
+        <array>
+            <dict>
+                <key>Name</key>
+                <string>alpha</string>
+                <key>Enabled</key>
+                <true />
+            </dict>
+            <dict>
+                <key>Name</key>
+                <string>beta</string>
+                <key>Enabled</key>
+                <false />
+            </dict>
+        </array>
     </dict>
-    <dict>
-        <key>Name</key>
-        <string>beta</string>
-        <key>Enabled</key>
-        <false />
-    </dict>
-</array>
+</plist>
 ```
 </details>
 
