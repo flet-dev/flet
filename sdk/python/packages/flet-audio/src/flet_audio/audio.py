@@ -31,8 +31,8 @@ class Audio(ft.Service):
     - Raw bytes.
 
     It can be left unset and assigned later, e.g. once the user picks a file.
-    While it is unset, :meth:`~flet_audio.Audio.play`,
-    :meth:`~flet_audio.Audio.resume` and :meth:`~flet_audio.Audio.seek` raise an
+    While it is unset, :meth:`flet_audio.Audio.play`,
+    :meth:`flet_audio.Audio.resume` and :meth:`flet_audio.Audio.seek` raise an
     error.
 
     Note:
@@ -91,8 +91,8 @@ class Audio(ft.Service):
 
     Should ideally be set when creating the control. On Android, changing it after a
     source is set prepares that source again, which restarts audio that is playing
-    from the beginning. Changing it to :attr:`~flet_audio.AudioFocus.GAIN` stops
-    that audio instead, until :meth:`~flet_audio.Audio.resume` is called.
+    from the beginning. Changing it to :attr:`flet_audio.AudioFocus.GAIN` stops
+    that audio instead, until :meth:`flet_audio.Audio.resume` is called.
 
     Note:
         If the app declares the `android.permission.MODIFY_AUDIO_SETTINGS` permission,
@@ -118,10 +118,10 @@ class Audio(ft.Service):
     Note:
         - On Android, it doesn't fire when something else pauses this audio, such as a
             ringing phone call or another app taking audio focus, so the last reported
-            state remains :attr:`~flet_audio.AudioState.PLAYING`.
-            :meth:`~flet_audio.Audio.get_current_position` stops advancing meanwhile.
-        - On iOS, audio with :attr:`~flet_audio.ReleaseMode.LOOP` reports
-            :attr:`~flet_audio.AudioState.COMPLETED` each time it restarts, while it
+            state remains :attr:`flet_audio.AudioState.PLAYING`.
+            :meth:`flet_audio.Audio.get_current_position` stops advancing meanwhile.
+        - On iOS, audio with :attr:`flet_audio.ReleaseMode.LOOP` reports
+            :attr:`flet_audio.AudioState.COMPLETED` each time it restarts, while it
             keeps playing.
     """
 
@@ -137,7 +137,7 @@ class Audio(ft.Service):
         - On Android, it stops firing while something else pauses this audio, such as
             a ringing phone call or another app taking audio focus.
         - On iOS, it stops firing once audio with
-            :attr:`~flet_audio.ReleaseMode.LOOP` restarts for the first time.
+            :attr:`flet_audio.ReleaseMode.LOOP` restarts for the first time.
     """
 
     on_seek_complete: Optional[ft.ControlEventHandler["Audio"]] = None
@@ -163,7 +163,7 @@ class Audio(ft.Service):
         """
         Pauses the audio that is currently playing.
 
-        If you call :meth:`~flet_audio.Audio.resume` later,
+        If you call :meth:`flet_audio.Audio.resume` later,
         the audio will resume from the point that it has been paused.
         """
         await self._invoke_method("pause")
@@ -178,7 +178,7 @@ class Audio(ft.Service):
         """
         Releases the resources associated with this media player.
         These are going to be fetched or buffered again as soon as
-        you change the source or call :meth:`~flet_audio.Audio.resume`.
+        you change the source or call :meth:`flet_audio.Audio.resume`.
         """
         await self._invoke_method("release")
 

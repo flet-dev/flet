@@ -35,7 +35,8 @@ Calls :meth:`flet.Page.update` after modifying controls.
 
 - **Qualified reference:** `:attr:`flet.Page.route`` — links to the member, displays inline code `Page.route`
 - **Extension reference:** `:attr:`flet_map.Map.animation_curve`` — links to the extension member, displays inline code `Map.animation_curve`
-- **Short display with `~`:** `:attr:`~flet.Page.route`` — links to the member, displays inline code `route`
+- **Avoid `~` on members (`:attr:`, `:meth:`, etc.):** `:attr:`~flet.Page.route`` displays only `route`, hiding the class in the docs and IDE tooltips. On `:class:` it makes no difference
+  - **Exception:** use it for a member the documented class inherits, where showing the parent would mislead. In `TextField`, `:attr:`~flet.FormFieldControl.label`` displays `label`, which is a `TextField` property too
 - **Local member (same class):** `:attr:`value`` — no qualifier needed
 - **Method with parens:** `:meth:`update`` — do NOT include `()` in the target
 
