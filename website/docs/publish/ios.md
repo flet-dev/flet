@@ -352,12 +352,10 @@ Both simple and complex structures are supported:
 
 - string
 - boolean
+- integer
+- float
 - dictionary (nested key-value object)
-- array of strings
-- array of booleans
-- array of dictionaries (including dictionaries that contain arrays)
-
-Numbers are not yet supported.
+- array of any of these values
 </TabItem>
 </Tabs>
 ##### Example

@@ -7,21 +7,15 @@
 * Themes built from a seed color, including the default theme, now have neutral surfaces: white in light mode and near-black (`#121212`) in dark mode, with neutral greys for containers, outlines and text on surfaces. The seed still drives accent colors. To keep the seed-tinted Material 3 look, set `page.theme = ft.Theme(surfaces=ft.ThemeSurfaces.TONAL)` (and the same for `page.dark_theme`). See [Default theme surfaces are now neutral](https://flet.dev/docs/updates/breaking-changes/v1-1-0/neutral-default-surfaces) ([#6921](https://github.com/flet-dev/flet/issues/6921)) by @FeodorFitsner.
 * The default dark splash and loading screen color of web apps is now `#121212` (was `#222222`), to match the new dark theme surface ([#6921](https://github.com/flet-dev/flet/issues/6921)) by @FeodorFitsner.
 * Custom [`flet build` templates](/docs/publish#build-template) (`--template`) must read the build's settings from `cookiecutter._options` and the app's `pyproject.toml` from `cookiecutter._pyproject` (were `cookiecutter.options` and `cookiecutter.pyproject`). Cookiecutter passes these private variables to the template unchanged, so numbers keep their types and values aren't rendered as Jinja ([#6999](https://github.com/flet-dev/flet/pull/6999)) by @ndonkoHenri.
+* Custom [`flet build` templates](/docs/publish#build-template) (`--template`) must read the iOS export options from `cookiecutter._options.ios_export_options` (was `cookiecutter.ios_export_options`), otherwise they are left out of `exportOptions.plist` without an error ([#7036](https://github.com/flet-dev/flet/pull/7036)) by @ndonkoHenri.
 * The Flet desktop client is no longer built for Debian 10 on ARM64: `flet run` on an ARM64 Linux system with glibc older than 2.31 (Debian 10 and other glibc 2.28 distros) now stops with an error naming the glibc it needs. Debian 10 on x86-64 is still supported by @FeodorFitsner.
 
 ### New features
 
 * Add `Page.get_package_info()`, returning `ft.PackageInfo` with the running app's name, package name, version, build number, build signature, installer store, and install/update times. A `flet build` app gets the `--build-version` and `--build-number` it was built with, so it no longer needs its own copy of the version ([#6950](https://github.com/flet-dev/flet/issues/6950)) by @FeodorFitsner.
 * `flet build`: permission bundles can be set per platform with `[tool.flet.<platform>].permissions`, which replaces `[tool.flet].permissions` for that platform (`[]` applies none) by @FeodorFitsner.
-* Add `InteractiveViewer.get_scale()`, `get_transform()`, and
-  `on_transform_changed` to expose the effective zoom scale,
-  translation, and transformation matrix, including reliable
-  final-state notifications after consecutive interactions
-  ([#6938](https://github.com/flet-dev/flet/issues/6938),
-  [#6939](https://github.com/flet-dev/flet/pull/6939))
-  by @ada-koki.
+* Add `InteractiveViewer.get_scale()`, `get_transform()`, and `on_transform_changed` to expose the effective zoom scale, translation, and transformation matrix, including reliable final-state notifications after consecutive interactions ([#6938](https://github.com/flet-dev/flet/issues/6938), [#6939](https://github.com/flet-dev/flet/pull/6939)) by @ada-koki.
 * Add the `RefreshIndicator` control for pull-to-refresh: pulling its scrollable `content` down calls the async `on_refresh` handler and shows a progress indicator until it returns, and `show()` refreshes without a pull, for desktop and web. See [RefreshIndicator](https://flet.dev/docs/controls/refreshindicator) ([#6997](https://github.com/flet-dev/flet/pull/6997)) by @osamalzabidi.
-
 * Add the `flet-shadcn-ui` extension: controls styled after [shadcn/ui](https://ui.shadcn.com), built on the Flutter [`shadcn_ui`](https://pub.dev/packages/shadcn_ui) package, with `Theme` color schemes and the [Lucide](https://lucide.dev) icon set (`LucideIcons`). It includes `Button`, `IconButton`, `Badge`, `Alert`, `Avatar`, `Card`, `Breadcrumb`, `Separator`, `Progress`, `Input`, `Textarea`, `Checkbox`, `Switch`, `Slider`, `RadioGroup`, `Select`, `InputOTP`, `Calendar`, `DatePicker`, `DateRangePicker`, `TimePicker`, `Tabs`, `Accordion`, `ResizablePanelGroup`, `Tooltip`, `Popover`, `ContextMenu`, `Menubar`, `Table`, `Dialog`, `Sheet`, `Toast` and `Sonner`; value controls support `label`, `description` and `error_text` ([#6918](https://github.com/flet-dev/flet/pull/6918)) by @InesaFitsner.
 * Add the `flet-notifications` extension: a `Notifications` service that shows, schedules and cancels local notifications on Android, iOS, macOS, Windows, Linux and Web, wrapping the [`flutter_local_notifications`](https://pub.dev/packages/flutter_local_notifications) plugin, with permission requests, Android channels, rich styles, inline-reply actions and typed tap and action handlers ([#6948](https://github.com/flet-dev/flet/issues/6948), [#6999](https://github.com/flet-dev/flet/pull/6999)) by @Nwokike.
 * `flet build`: add `[tool.flet.android].res_dir` to bundle the app's own Android resources, such as a notification icon or sound that code looks up by name; they are kept in release builds. See [Resources](/docs/publish/android#resources) ([#6999](https://github.com/flet-dev/flet/pull/6999)) by @ndonkoHenri.
@@ -36,6 +30,8 @@
 
 ### Improvements
 
+* Bump the bundled Flutter to [3.47.8](https://github.com/flutter/flutter/blob/stable/CHANGELOG.md#3478) (from 3.44.8). Android builds use Gradle 9.3.1, Android Gradle Plugin 8.13.2 and Kotlin 2.3.21 ([#6916](https://github.com/flet-dev/flet/pull/6916), [#7023](https://github.com/flet-dev/flet/pull/7023)) by @ndonkoHenri.
+  **Compatibility:** Desktop apps and the desktop app that `flet run` opens now render with Impeller, Flutter 3.47's default desktop renderer, instead of Skia. Use `flet build --no-impeller` (or `impeller = false` under `[tool.flet]`), `flet run --no-impeller` or the `FLET_NO_IMPELLER` environment variable to render with Skia; see [Renderer](/docs/publish#renderer). Android plugins that still use `jcenter()` or other APIs removed in Gradle 9 no longer build. `flet build` downloads Flutter 3.47.7 on first use.
 * The prebuilt Windows desktop client (`flet.exe` and its DLLs) that `flet run` downloads is now code-signed, so it starts with Windows Smart App Control turned on ([#7011](https://github.com/flet-dev/flet/issues/7011)) by @FeodorFitsner.
 * Web apps served by Flet, such as with `flet run --web`, send their text and WebAssembly files gzip-compressed to browsers that accept it, so `main.dart.wasm`, `main.dart.js`, CanvasKit and fonts download about 3x smaller ([#6266](https://github.com/flet-dev/flet/issues/6266), [#7026](https://github.com/flet-dev/flet/pull/7026)) by @ndonkoHenri.
 * `flet pack` warns about each extension the app imports that the prebuilt Flet client doesn't include, since its controls show as unknown controls in the packed app ([#6999](https://github.com/flet-dev/flet/pull/6999)) by @ndonkoHenri.
@@ -51,11 +47,6 @@
 * Add `FletApp.platform_brightness` to preview an embedded app as though its device were in light or dark mode: an app on the `SYSTEM` theme follows it, `page.platform_brightness` reports it and `on_platform_brightness_change` fires by @FeodorFitsner.
 * Add `Theme.markdown_theme`: a default `MarkdownStyleSheet` for every `Markdown`, with a control's own `md_style_sheet` applied on top property by property by @FeodorFitsner.
 * Add `PopupMenuTheme.border_radius` to set the default hover/splash corner radius of every `PopupMenuButton` by @FeodorFitsner.
-
-* Bump the bundled Flutter to [3.47.8](https://github.com/flutter/flutter/blob/stable/CHANGELOG.md#3478) (from 3.44.8). Android builds use Gradle 9.3.1, Android Gradle Plugin 8.13.2 and Kotlin 2.3.21 ([#6916](https://github.com/flet-dev/flet/pull/6916), [#7023](https://github.com/flet-dev/flet/pull/7023)) by @ndonkoHenri.
-
-  **Compatibility:** Desktop apps and the desktop app that `flet run` opens now render with Impeller, Flutter 3.47's default desktop renderer, instead of Skia. Use `flet build --no-impeller` (or `impeller = false` under `[tool.flet]`), `flet run --no-impeller` or the `FLET_NO_IMPELLER` environment variable to render with Skia; see [Renderer](/docs/publish#renderer). Android plugins that still use `jcenter()` or other APIs removed in Gradle 9 no longer build. `flet build` downloads Flutter 3.47.7 on first use.
-
 * Add `Theme.surfaces` and the `ThemeSurfaces` enum (`NEUTRAL`, `TONAL`) to choose whether surface colors are neutral or tinted with the seed color ([#6921](https://github.com/flet-dev/flet/issues/6921)) by @FeodorFitsner.
 * Add `flet test --update-failed-goldens` (`FLET_TEST_GOLDEN=failed`): compares screenshots as usual and overwrites only golden images that are missing or no longer match, so unchanged goldens stay untouched ([#6921](https://github.com/flet-dev/flet/issues/6921)) by @FeodorFitsner.
 * Add `bgcolor` to `FletTestApp.take_page_controls_screenshot()`, `assert_control_screenshot()` and `wrap_page_controls_in_screenshot()` to paint an opaque background behind the captured controls instead of a transparent one ([#6918](https://github.com/flet-dev/flet/pull/6918)) by @InesaFitsner.
@@ -66,6 +57,9 @@
 
 ### Bug fixes
 
+* Fix `flet build macos` failing with `Scheme Runner is not currently configured for the build action` when the product or artifact name contains `&` ([#7036](https://github.com/flet-dev/flet/pull/7036)) by @ndonkoHenri.
+* Fix `flet build` rejecting `--permissions biometric`, although the `biometric` permission bundle works from `pyproject.toml` ([#7036](https://github.com/flet-dev/flet/pull/7036)) by @ndonkoHenri.
+* Fix `flet build ipa` failing to export when a `[tool.flet.ios.export_options]` value contains `<`, `>` or `&`, such as `thinning = "<none>"`, and writing numbers as strings ([#7036](https://github.com/flet-dev/flet/pull/7036)) by @ndonkoHenri.
 * Fix `flet build` for Android failing when a `[tool.flet.android.meta_data]` value or a `[tool.flet.android.provider]` attribute contains `&`, `<` or `"`, which were written into the manifest unescaped ([#7031](https://github.com/flet-dev/flet/pull/7031)) by @ndonkoHenri.
 * Fix `flet build` for Android failing when `[tool.flet.android.manifest_application]` sets `label`, `name`, `icon` or `enableOnBackInvokedCallback`, which wrote the attribute twice instead of replacing Flet's value ([#7031](https://github.com/flet-dev/flet/pull/7031)) by @ndonkoHenri.
 * Fix `flet build` failing with no explanation unless run with `-vv` when a step reported its error on stdout, such as a `SyntaxError` in an app file ([#7029](https://github.com/flet-dev/flet/issues/7029), [#7031](https://github.com/flet-dev/flet/pull/7031)) by @ndonkoHenri.
@@ -101,11 +95,8 @@
 * Fix `InteractiveViewer` swallowing taps meant for its content when `pan_enabled` and `scale_enabled` are both off: it no longer installs gesture recognizers it can't use; programmatic zoom/pan still works by @FeodorFitsner.
 * An embedded app (`FletApp`) no longer takes its host's Cupertino colors: `CupertinoFilledButton`, `CupertinoButton` and adaptive buttons on iOS/macOS painted with the host app's primary color instead of the embedded app's own. An embedded page now carries a Cupertino theme derived from its own Material theme, as a top-level app does; top-level apps are unchanged by @FeodorFitsner.
 * `Button(adaptive=True)` on iOS/macOS now honors `bgcolor`, `color` and the padding of `style`: the Cupertino button it turns into ignored them and painted the theme's primary color by @FeodorFitsner.
-
 * Fix `flet build`, `flet debug` and `flet test` failing for macOS and iOS on Xcode 27, which rejects deployment targets below macOS 12 and iOS 15 ([#6874](https://github.com/flet-dev/flet/issues/6874)) by @ndonkoHenri.
-
   **Compatibility:** Apps built with `flet build` and the macOS desktop client now require macOS 12 or later, and iOS apps require iOS 15 or later. Custom build templates keep building, because Flutter 3.47 raises the deployment targets during the build; apply the same `Podfile` and Xcode project changes to skip that step. See the [macOS 12 and iOS 15 minimum](/docs/updates/breaking-changes/v1-1-0/minimum-macos-12-ios-15) guide.
-
 * Fix Flet web apps using the `hash` route URL strategy returning `index.html` with a `200 OK` for unknown paths instead of a `404` ([#2796](https://github.com/flet-dev/flet/issues/2796), [#6954](https://github.com/flet-dev/flet/pull/6954)) by @ndonkoHenri.
 * Fix `flet.fastapi.app()` and `ft.run(..., export_asgi_app=True)` failing every request with a `500` error when `route_url_strategy` or `web_renderer` is passed as a string, such as `"hash"` ([#6954](https://github.com/flet-dev/flet/pull/6954)) by @ndonkoHenri.
 * Fix `page.login(redirect_to_page=True)` not returning to the page's route with the `hash` route URL strategy or under a `proxy_path` ([#6954](https://github.com/flet-dev/flet/pull/6954)) by @ndonkoHenri.

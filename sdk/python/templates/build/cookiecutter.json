@@ -19,7 +19,6 @@
   "ios_provisioning_profile": "",
   "ios_export_method": "",
   "ios_signing_certificate": "",
-  "ios_export_options": {},
   "ios_team_id": "",
   "package_name": "{{ cookiecutter.bundle_id.rsplit('.', 1)[-1].replace('-', '_') }}",
   "kotlin_dir": "{{ cookiecutter.org_name_2.replace('.', cookiecutter.sep) }}{{ cookiecutter.sep }}{{ cookiecutter.package_name }}{{ cookiecutter.sep }}",
