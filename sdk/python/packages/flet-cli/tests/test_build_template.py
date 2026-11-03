@@ -1,6 +1,7 @@
 """Invariants of the `flet build` cookiecutter template itself."""
 
 import argparse
+import datetime
 import importlib.util
 import json
 import re
@@ -10,6 +11,7 @@ from typing import Any
 import pytest
 import yaml
 from jinja2 import Environment, StrictUndefined
+from rich.text import Text
 
 from flet_cli.commands.build_base import BaseBuildCommand
 from flet_cli.utils.pyproject_toml import load_pyproject_toml
@@ -308,3 +310,158 @@ class TestResolvePermissions:
         assert self._command(
             "ios", project, cli=["biometric"]
         ).resolve_permissions() == ["biometric"]
+
+
+class TestCopyright:
+    @staticmethod
+    def _command(settings=None, argv=()):
+        """Create a build command with the real options parsed from `argv`."""
+        parser = argparse.ArgumentParser(add_help=False)
+        cmd = BaseBuildCommand(parser)
+        cmd.options = parser.parse_args(list(argv))
+        cmd.get_pyproject = lambda key=None: (settings or {}).get(key)
+        return cmd
+
+    def test_cli_overrides_pyproject(self):
+        """`--copyright` overrides `[tool.flet].copyright`."""
+        cmd = self._command(
+            {"tool.flet.copyright": "From pyproject"}, ["--copyright", "From CLI"]
+        )
+        assert cmd.get_copyright() == "From CLI"
+
+    def test_empty_cli_copyright_overrides_pyproject(self):
+        """An empty CLI value clears the copyright despite configured defaults."""
+        cmd = self._command(
+            {"tool.flet.copyright": "From pyproject", "tool.flet.company": "Acme"},
+            ["--copyright", ""],
+        )
+        assert cmd.get_copyright() == ""
+
+    @pytest.mark.parametrize("argv", [(), ("--company", "Other")])
+    def test_empty_pyproject_copyright_overrides_company(self, argv):
+        """An empty TOML value suppresses generation from either company source."""
+        cmd = self._command(
+            {"tool.flet.copyright": "", "tool.flet.company": "Acme"}, argv
+        )
+        assert cmd.get_copyright() == ""
+
+    def test_pyproject_is_used_as_written(self):
+        """`[tool.flet].copyright` wins over the company and isn't changed."""
+        cmd = self._command(
+            {"tool.flet.copyright": "(c) Acme.", "tool.flet.company": "Other"}
+        )
+        assert cmd.get_copyright() == "(c) Acme."
+
+    @pytest.mark.parametrize(
+        ("settings", "argv"),
+        [({"tool.flet.company": "Acme Inc."}, ()), ({}, ("--company", "Acme Inc."))],
+    )
+    def test_generated_from_the_company(self, settings, argv):
+        """Without a copyright, it names the company and the current year."""
+        year = datetime.date.today().year
+        assert (
+            self._command(settings, argv).get_copyright()
+            == f"Copyright © {year} Acme Inc."
+        )
+
+    def test_template_default_without_a_company(self):
+        """Without a copyright or company, the build template's default applies."""
+        assert self._command().get_copyright() is None
+
+    def test_template_defaults(self):
+        """The template has no placeholder copyright, and keeps the default company,
+        which names the Windows app's data folder: changing it would leave the
+        data of already released apps behind."""
+        defaults = json.loads(
+            (BUILD_TEMPLATE_DIR.parent / "cookiecutter.json").read_text()
+        )
+        assert defaults["copyright"] == ""
+        assert defaults["company_name"] == "Your Company"
+
+    @pytest.mark.parametrize(
+        ("value", "written"),
+        [
+            ("Copyright © 2026 Acme & Sons", "Copyright © 2026 Acme & Sons"),
+            ("", ""),
+            ('Tom "T" Jerry', 'Tom ""T"" Jerry'),
+            (r"Acme\new", r"Acme\\new"),
+        ],
+    )
+    def test_windows_resource_strings_are_escaped(self, value, written):
+        """Values in the Windows resource file follow its string rules: an unescaped
+        `"` fails the build, and an unescaped `\\n` becomes a line break."""
+        rendered = (
+            Environment(undefined=StrictUndefined)
+            .from_string(
+                (BUILD_TEMPLATE_DIR / "windows/runner/Runner.rc").read_text(
+                    encoding="utf-8"
+                )
+            )
+            .render(
+                cookiecutter={
+                    "company_name": value,
+                    "product_name": value,
+                    "artifact_name": value,
+                    "copyright": value,
+                }
+            )
+        )
+        for key in ("CompanyName", "FileDescription", "InternalName", "LegalCopyright"):
+            assert f'VALUE "{key}", "{written}" "\\0"' in rendered
+        assert f'VALUE "OriginalFilename", "{written}.exe" "\\0"' in rendered
+        assert f'VALUE "ProductName", "{written}" "\\0"' in rendered
+
+    @pytest.mark.parametrize(
+        ("value", "written"),
+        [
+            ("Acme & Sons", "Acme & Sons"),
+            ('Tom "T" Jerry', 'Tom \\"T\\" Jerry'),
+            (r"Acme\new", r"Acme\\new"),
+        ],
+    )
+    def test_windows_window_title_is_escaped(self, value, written):
+        """The product name follows C++ string rules in the Windows runner: an
+        unescaped `"` fails the build, and an unescaped `\\n` becomes a line break."""
+        rendered = (
+            Environment(undefined=StrictUndefined)
+            .from_string(
+                (BUILD_TEMPLATE_DIR / "windows/runner/main.cpp").read_text(
+                    encoding="utf-8"
+                )
+            )
+            .render(
+                cookiecutter={"product_name": value, "_options": {"impeller": True}}
+            )
+        )
+        assert f'window.Create(L"{written}", origin, size)' in rendered
+
+
+class TestArtifactName:
+    @staticmethod
+    def _validate(config_platform, artifact_name):
+        """Validate `artifact_name`, returning the `cleanup` calls it causes."""
+        cmd = BaseBuildCommand(argparse.ArgumentParser(add_help=False))
+        cmd.config_platform = config_platform
+        calls = []
+        cmd.cleanup = lambda code, message=None, **kwargs: calls.append((code, message))
+        cmd.validate_artifact_name(artifact_name)
+        return calls
+
+    @pytest.mark.parametrize("name", ["acme_notes", "Acme Notes", "Acme & Sons", "é"])
+    def test_valid_names_pass_on_windows(self, name):
+        """Spaces, accents and `&` are valid in a Windows file name."""
+        assert self._validate("windows", name) == []
+
+    @pytest.mark.parametrize("char", list('<>:"/\\|?*'))
+    def test_reserved_characters_stop_a_windows_build(self, char):
+        """A character that a Windows file name can't contain fails with its name."""
+        [(code, message)] = self._validate("windows", f"acme{char}notes")
+        shown = Text.from_markup(message).plain
+        assert code == 1
+        assert f"contain {char}." in shown
+        assert "`artifact` in [tool.flet]." in shown
+
+    @pytest.mark.parametrize("config_platform", ["macos", "linux", "android", "ios"])
+    def test_other_platforms_are_not_checked(self, config_platform):
+        """The Windows file name rules apply only to Windows builds."""
+        assert self._validate(config_platform, 'acme"notes') == []

@@ -234,7 +234,11 @@ Flavor of the Flet desktop client on Linux: `full` or `light`. See
 is read when a desktop app starts the Flet client, and by
 [`flet pack`](../publish/using-pyinstaller.md#linux-client-flavor) to choose
 the client it bundles. It wins over `desktop_flavor` in the `[tool.flet]` table
-of the `pyproject.toml` in the current folder.
+of the `pyproject.toml` in the current folder, or else of the nearest one at or above
+the app's script, so an app started from another folder uses its own setting.
+
+Apps packaged with `flet pack` use their bundled client's flavor unless this
+variable overrides it; nearby `pyproject.toml` files are ignored.
 
 Defaults to `light`.
 
@@ -247,6 +251,30 @@ Set to `true` to force running app as a web app. Automatically set on headless L
 Set to `true` to start app with the main window hidden.
 
 Defaults to `False`.
+
+### `FLET_LINUX_DISTRO`
+
+Linux build of the Flet desktop client to download, for example `debian12`. It is used
+as is, instead of the build Flet picks from the system's glibc version: the newest one
+the system can run.
+
+| Build | Needs glibc | Architectures | [Full flavor](#flet_desktop_flavor) loads |
+|---|---|---|---|
+| `debian10` | 2.28 | x86-64 | `libmpv.so.1` |
+| `ubuntu20.04` | 2.31 | x86-64, ARM64 | `libmpv.so.1` |
+| `ubuntu22.04` | 2.35 | x86-64, ARM64 | `libmpv.so.1` |
+| `debian12` | 2.36 | x86-64, ARM64 | `libmpv.so.2` |
+| `ubuntu24.04` | 2.39 | x86-64, ARM64 | `libmpv.so.2` |
+
+Set it when the picked build expects a different `libmpv` than the system ships,
+or when Flet can't detect the glibc version. The selected build must still be
+compatible with the system's glibc and architecture. For example, `debian12`
+requires glibc 2.36 and cannot run on Rocky Linux or AlmaLinux 9 (glibc 2.34);
+see [Video](../controls/video/index.md#linux) for local build guidance.
+
+Each build is cached in its own folder in `~/.flet/client`, so after an OS upgrade or a
+change of this variable, Flet downloads the matching build instead of reusing the
+previous one.
 
 ### `FLET_LOG_LEVEL`
 

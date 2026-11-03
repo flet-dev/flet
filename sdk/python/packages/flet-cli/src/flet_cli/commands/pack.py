@@ -247,11 +247,11 @@ class Command(BaseCommand):
             options: Parsed command-line options.
             snapshot_path: Path to the client's AOT snapshot.
         """
-        from flet_cli.__pyinstaller.extensions import (
+        from flet_desktop import get_artifact_filename
+        from flet_desktop.extensions import (
             find_missing_extensions,
             get_client_extensions,
         )
-        from flet_desktop import get_artifact_filename
 
         client_extensions = get_client_extensions(snapshot_path)
         if client_extensions is None:

@@ -1,6 +1,3 @@
-import argparse
-
-
 def _indent_block(text: str, indent: int) -> str:
     """Indent every line of text by the given number of spaces."""
     prefix = " " * indent
@@ -26,12 +23,10 @@ def _toml_value(value) -> str:
 
 
 def _load_cross_platform_permissions() -> dict:
-    """Load the cross-platform permissions dict from flet-cli's BaseBuildCommand."""
-    from flet_cli.commands.build_base import BaseBuildCommand
+    """Load the cross-platform permissions dict from flet-cli's build command."""
+    from flet_cli.commands.build_base import CROSS_PLATFORM_PERMISSIONS
 
-    parser = argparse.ArgumentParser(add_help=False)
-    command = BaseBuildCommand(parser)
-    return command.cross_platform_permissions
+    return CROSS_PLATFORM_PERMISSIONS
 
 
 def _render_toml_block(config: dict) -> str:

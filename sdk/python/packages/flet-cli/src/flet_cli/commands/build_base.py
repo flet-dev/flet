@@ -2,6 +2,7 @@ import argparse
 import base64
 import contextlib
 import copy
+import datetime
 import glob
 import hashlib
 import json
@@ -53,6 +54,9 @@ from flet_cli.utils.android import (
     android_resource_files,
     android_resources_keep_xml,
     excluded_android_abis,
+    normalize_android_activity,
+    normalize_android_application_attributes,
+    normalize_android_queries,
     normalize_android_receivers,
     normalize_android_services,
 )
@@ -102,6 +106,90 @@ DEFAULT_ANDROID_COMPILE_OPTIONS = {
 # importlib.resources.as_file() extracts cacert.pem to a temp file on demand). Add
 # real offenders here as they are found.
 ANDROID_DEFAULT_EXTRACT_PACKAGES: list[str] = []
+
+CROSS_PLATFORM_PERMISSIONS = {
+    "location": {
+        "ios_info_plist": {
+            "NSLocationWhenInUseUsageDescription": "This app uses location service when in use.",  # noqa: E501
+            "NSLocationAlwaysAndWhenInUseUsageDescription": "This app uses location service.",  # noqa: E501
+        },
+        "macos_info_plist": {
+            "NSLocationUsageDescription": "This app needs access to your location.",  # noqa: E501
+        },
+        "macos_entitlements": {
+            "com.apple.security.personal-information.location": True
+        },
+        "android_permissions": {
+            "android.permission.ACCESS_FINE_LOCATION": True,
+            "android.permission.ACCESS_COARSE_LOCATION": True,
+            "android.permission.ACCESS_BACKGROUND_LOCATION": True,
+        },
+        "android_features": {
+            "android.hardware.location.network": False,
+            "android.hardware.location.gps": False,
+        },
+    },
+    "camera": {
+        "ios_info_plist": {
+            "NSCameraUsageDescription": "This app uses the camera to capture photos and videos."  # noqa: E501
+        },
+        "macos_info_plist": {
+            "NSCameraUsageDescription": "This app uses the camera to capture photos and videos."  # noqa: E501
+        },
+        "macos_entitlements": {"com.apple.security.device.camera": True},
+        "android_permissions": {"android.permission.CAMERA": True},
+        "android_features": {
+            "android.hardware.camera": False,
+            "android.hardware.camera.any": False,
+            "android.hardware.camera.front": False,
+            "android.hardware.camera.external": False,
+            "android.hardware.camera.autofocus": False,
+        },
+    },
+    "microphone": {
+        "ios_info_plist": {
+            "NSMicrophoneUsageDescription": "This app uses microphone to record sounds.",  # noqa: E501
+        },
+        "macos_info_plist": {
+            "NSMicrophoneUsageDescription": "This app uses microphone to record sounds.",  # noqa: E501
+        },
+        "macos_entitlements": {"com.apple.security.device.audio-input": True},
+        # Recording itself only needs RECORD_AUDIO: recordings are written
+        # to app-scoped storage, which requires no permission. Do not add
+        # READ/WRITE_EXTERNAL_STORAGE here — Google Play's Photo and Video
+        # Permissions policy rejects apps that request broad media/storage
+        # access without a qualifying use case, and this group is opt-in
+        # for the microphone, not for the user's media library.
+        "android_permissions": {"android.permission.RECORD_AUDIO": True},
+        "android_features": {},
+    },
+    "photo_library": {
+        "ios_info_plist": {
+            "NSPhotoLibraryUsageDescription": "This app saves photos and videos to the photo library."  # noqa: E501
+        },
+        "macos_info_plist": {
+            "NSPhotoLibraryUsageDescription": "This app saves photos and videos to the photo library."  # noqa: E501
+        },
+        "macos_entitlements": {
+            "com.apple.security.personal-information.photos-library": True
+        },
+        "android_permissions": {
+            "android.permission.READ_MEDIA_VISUAL_USER_SELECTED": True
+        },
+        "android_features": {},
+    },
+    "biometric": {
+        "ios_info_plist": {
+            "NSFaceIDUsageDescription": "This app uses biometrics to authenticate you."  # noqa: E501
+        },
+        "macos_info_plist": {
+            "NSFaceIDUsageDescription": "This app uses biometrics to authenticate you."  # noqa: E501
+        },
+        "macos_entitlements": {},
+        "android_permissions": {},
+        "android_features": {},
+    },
+}
 
 # Bumped whenever a change to flet-platform-assets alters the pixels it
 # produces. Both stamps hash it, so upgrading flet-cli regenerates rather
@@ -250,90 +338,6 @@ class BaseBuildCommand(BaseFlutterCommand):
                 "outputs": ["build/ios/iphonesimulator/*"],
                 "dist": "ios-simulator",
                 "can_be_run_on": ["Darwin"],
-            },
-        }
-
-        self.cross_platform_permissions = {
-            "location": {
-                "ios_info_plist": {
-                    "NSLocationWhenInUseUsageDescription": "This app uses location service when in use.",  # noqa: E501
-                    "NSLocationAlwaysAndWhenInUseUsageDescription": "This app uses location service.",  # noqa: E501
-                },
-                "macos_info_plist": {
-                    "NSLocationUsageDescription": "This app needs access to your location.",  # noqa: E501
-                },
-                "macos_entitlements": {
-                    "com.apple.security.personal-information.location": True
-                },
-                "android_permissions": {
-                    "android.permission.ACCESS_FINE_LOCATION": True,
-                    "android.permission.ACCESS_COARSE_LOCATION": True,
-                    "android.permission.ACCESS_BACKGROUND_LOCATION": True,
-                },
-                "android_features": {
-                    "android.hardware.location.network": False,
-                    "android.hardware.location.gps": False,
-                },
-            },
-            "camera": {
-                "ios_info_plist": {
-                    "NSCameraUsageDescription": "This app uses the camera to capture photos and videos."  # noqa: E501
-                },
-                "macos_info_plist": {
-                    "NSCameraUsageDescription": "This app uses the camera to capture photos and videos."  # noqa: E501
-                },
-                "macos_entitlements": {"com.apple.security.device.camera": True},
-                "android_permissions": {"android.permission.CAMERA": True},
-                "android_features": {
-                    "android.hardware.camera": False,
-                    "android.hardware.camera.any": False,
-                    "android.hardware.camera.front": False,
-                    "android.hardware.camera.external": False,
-                    "android.hardware.camera.autofocus": False,
-                },
-            },
-            "microphone": {
-                "ios_info_plist": {
-                    "NSMicrophoneUsageDescription": "This app uses microphone to record sounds.",  # noqa: E501
-                },
-                "macos_info_plist": {
-                    "NSMicrophoneUsageDescription": "This app uses microphone to record sounds.",  # noqa: E501
-                },
-                "macos_entitlements": {"com.apple.security.device.audio-input": True},
-                # Recording itself only needs RECORD_AUDIO: recordings are written
-                # to app-scoped storage, which requires no permission. Do not add
-                # READ/WRITE_EXTERNAL_STORAGE here — Google Play's Photo and Video
-                # Permissions policy rejects apps that request broad media/storage
-                # access without a qualifying use case, and this group is opt-in
-                # for the microphone, not for the user's media library.
-                "android_permissions": {"android.permission.RECORD_AUDIO": True},
-                "android_features": {},
-            },
-            "photo_library": {
-                "ios_info_plist": {
-                    "NSPhotoLibraryUsageDescription": "This app saves photos and videos to the photo library."  # noqa: E501
-                },
-                "macos_info_plist": {
-                    "NSPhotoLibraryUsageDescription": "This app saves photos and videos to the photo library."  # noqa: E501
-                },
-                "macos_entitlements": {
-                    "com.apple.security.personal-information.photos-library": True
-                },
-                "android_permissions": {
-                    "android.permission.READ_MEDIA_VISUAL_USER_SELECTED": True
-                },
-                "android_features": {},
-            },
-            "biometric": {
-                "ios_info_plist": {
-                    "NSFaceIDUsageDescription": "This app uses biometrics to authenticate you."  # noqa: E501
-                },
-                "macos_info_plist": {
-                    "NSFaceIDUsageDescription": "This app uses biometrics to authenticate you."  # noqa: E501
-                },
-                "macos_entitlements": {},
-                "android_permissions": {},
-                "android_features": {},
             },
         }
 
@@ -779,7 +783,7 @@ class BaseBuildCommand(BaseFlutterCommand):
             action="extend",
             nargs="+",
             default=[],
-            choices=["location", "camera", "microphone", "photo_library"],
+            choices=list(CROSS_PLATFORM_PERMISSIONS),
             help="The list of pre-defined cross-platform permissions for iOS, Android "
             "and macOS builds",
         )
@@ -787,12 +791,13 @@ class BaseBuildCommand(BaseFlutterCommand):
             "--deep-linking-scheme",
             dest="deep_linking_scheme",
             help="Deep linking URL scheme to configure for iOS and Android builds, "
-            "i.g. `https` or `myapp`",
+            "e.g. `myapp` or `https`",
         )
         parser.add_argument(
             "--deep-linking-host",
             dest="deep_linking_host",
-            help="Deep linking URL host for iOS and Android builds",
+            help="Deep linking URL host for iOS and Android builds; optional except "
+            "for `http` and `https` schemes. Requires --deep-linking-scheme",
         )
         parser.add_argument(
             "--android-signing-key-store",
@@ -1033,6 +1038,29 @@ class BaseBuildCommand(BaseFlutterCommand):
             f"[magenta]{self.current_platform}[/]."
             self.cleanup(1, message)
 
+    def validate_artifact_name(self, artifact_name: Any):
+        """
+        Stop the build if the artifact name can't name a file on the target platform.
+
+        A Windows app's artifact name names its `.exe` file, which can't contain
+        any of `< > : " / \\ | ? *`.
+
+        Args:
+            artifact_name: The resolved artifact name.
+        """
+        if self.config_platform != "windows":
+            return
+        invalid = sorted(set(str(artifact_name)) & set('<>:"/\\|?*'))
+        if invalid:
+            self.skip_flutter_doctor = True
+            self.cleanup(
+                1,
+                f"Artifact name {escape(repr(str(artifact_name)))} can't be used on "
+                f"Windows, where a file name can't contain {' '.join(invalid)}. "
+                "Set a different name with --artifact or "
+                f"{escape('`artifact` in [tool.flet]')}.",
+            )
+
     def validate_entry_point(self):
         """
         Resolve app entry-point module and ensure corresponding Python file exists.
@@ -1097,8 +1125,7 @@ class BaseBuildCommand(BaseFlutterCommand):
         )
         artifact_name = (
             self.options.artifact_name
-            or self.get_pyproject(f"tool.flet.{self.config_platform}.artifact")
-            or self.get_pyproject("tool.flet.artifact")
+            or self.get_platform_setting("artifact")
             or self.default_artifact_name(
                 self.config_platform, product_name, project_name_raw
             )
@@ -1110,6 +1137,7 @@ class BaseBuildCommand(BaseFlutterCommand):
         # test host can't find the binary. Pin them equal in test mode.
         if getattr(self, "test_mode", False):
             artifact_name = project_name
+        self.validate_artifact_name(artifact_name)
 
         split_per_abi = (
             self.options.split_per_abi
@@ -1142,316 +1170,14 @@ class BaseBuildCommand(BaseFlutterCommand):
                 title="Impeller",
             )
 
-        # Explicit `[tool.flet.macos.info]` or `--info-plist` entries override
-        # this key.
-        info_plist = (
-            {"FLTEnableImpeller": False}
-            if self.package_platform == "Darwin" and not impeller
-            else {}
-        )
-        macos_entitlements = {
-            "com.apple.security.app-sandbox": False,
-            "com.apple.security.cs.allow-jit": True,
-            "com.apple.security.cs.allow-unsigned-executable-memory": True,
-            "com.apple.security.network.client": True,
-            "com.apple.security.network.server": True,
-            "com.apple.security.files.user-selected.read-write": True,
-        }
-        android_permissions = {"android.permission.INTERNET": True}
-        android_features = {
-            "android.software.leanback": False,
-            "android.hardware.touchscreen": False,
-        }
-        # Explicit `[tool.flet.android.meta_data]` or `--android-meta-data`
-        # entries override this key.
-        android_meta_data = (
-            {"io.flutter.embedding.android.EnableImpeller": "false"}
-            if not impeller
-            else {}
-        )
-        android_providers = {}
-        # Gradle properties for the generated Android project. These were
-        # hardcoded in the template; the defaults below reproduce them exactly,
-        # and `[tool.flet.android.gradle_properties]` can override any entry or
-        # add new ones. The memory settings in particular are too large for some
-        # CI runners (a standard GitHub-hosted runner has ~7 GB of RAM, less
-        # than -Xmx8G alone), which previously could not be changed at all.
-        android_gradle_properties = {
-            "org.gradle.jvmargs": (
-                "-Xmx8G -XX:MaxMetaspaceSize=4G "
-                "-XX:ReservedCodeCacheSize=512m -XX:+HeapDumpOnOutOfMemoryError"
-            ),
-            "android.useAndroidX": "true",
-            # Kotlin's incremental compiler stores plugin sources relative to
-            # the Android project and fails the build when they sit on another
-            # Windows drive, e.g. the pub cache on C: and the app on D:.
-            "kotlin.incremental": "false",
-        }
-        # ProGuard/R8 rules for the generated Android project. Like
-        # gradle_properties above, these were a fixed template file and the
-        # defaults reproduce it exactly. R8 renames classes in release builds
-        # while pyjnius resolves them by name, so an app that reaches into a
-        # bundled AAR needs a keep rule and had no way to add one.
-        #
-        # `proguard_rules` appends, since R8 has no directive that undoes a
-        # keep. Removing a default therefore needs its own switch:
-        # `proguard_default_rules = false` drops them, which is the only way to
-        # shed `-keepnames class * { *; }`. Keeping the two separate stops
-        # users pasting today's defaults into pyproject.toml and silently
-        # holding them after the defaults change.
-        keep_defaults = (
-            self.get_pyproject("tool.flet.android.proguard_default_rules") is not False
-        )
-        android_proguard_rules = (
-            [
-                "-keep class com.flet.serious_python_android.** { *; }",
-                "-keepnames class * { *; }",
-            ]
-            if keep_defaults
-            else []
-        )
+        android_permissions = self.get_android_permissions()
+        android_features = self.get_android_features()
+        android_meta_data = self.get_android_meta_data(impeller)
+        android_providers = self.get_android_providers()
+        android_gradle_properties = self.get_android_gradle_properties()
+        android_proguard_rules = self.get_android_proguard_rules()
 
-        # merge values from "--permissions" arg:
-        for p in self.resolve_permissions():
-            if p in self.cross_platform_permissions:
-                permission_config = self.cross_platform_permissions[p]
-                info_plist.update(
-                    permission_config.get(f"{self.config_platform}_info_plist", {})
-                    or permission_config.get("info_plist", {})
-                )
-                macos_entitlements.update(
-                    self.cross_platform_permissions[p]["macos_entitlements"]
-                )
-                android_permissions.update(
-                    self.cross_platform_permissions[p]["android_permissions"]
-                )
-                android_features.update(
-                    self.cross_platform_permissions[p]["android_features"]
-                )
-
-        info_plist = merge_dict(
-            info_plist,
-            (
-                self.get_pyproject("tool.flet.macos.info")
-                if self.package_platform == "Darwin"
-                else self.get_pyproject("tool.flet.ios.info")
-            )
-            or {},
-        )
-
-        # parse --info-plist
-        for p in self.options.info_plist:
-            i = p.find("=")
-            if i > -1:
-                k = p[:i]
-                v = p[i + 1 :]
-                info_plist[k] = parse_cli_plist_value(v)
-            else:
-                self.cleanup(1, f"Invalid Info.plist option: {p}")
-
-        for key, value in info_plist.items():
-            if not is_supported_plist_value(value):
-                self.cleanup(
-                    1,
-                    "Unsupported Info.plist value type for "
-                    f"{key}: {type(value).__name__}. Supported types are "
-                    "string, boolean, integer, float, dictionary, and arrays "
-                    "containing those values.",
-                )
-
-        macos_entitlements = merge_dict(
-            macos_entitlements,
-            self.get_pyproject("tool.flet.macos.entitlement") or {},
-        )
-
-        # parse --macos-entitlements
-        for p in self.options.macos_entitlements:
-            i = p.find("=")
-            if i > -1:
-                macos_entitlements[p[:i]] = parse_cli_plist_value(p[i + 1 :])
-            else:
-                self.cleanup(1, f"Invalid macOS entitlement option: {p}")
-
-        for key, value in macos_entitlements.items():
-            if not is_supported_plist_value(value):
-                self.cleanup(
-                    1,
-                    "Unsupported macOS entitlement value type for "
-                    f"{key}: {type(value).__name__}. Supported types are "
-                    "string, boolean, integer, float, dictionary, and arrays "
-                    "containing those values.",
-                )
-
-        android_permissions = merge_dict(
-            android_permissions,
-            self.get_pyproject("tool.flet.android.permission") or {},
-        )
-
-        android_gradle_properties = merge_dict(
-            android_gradle_properties,
-            self.get_pyproject("tool.flet.android.gradle_properties") or {},
-        )
-
-        android_proguard_rules = android_proguard_rules + [
-            str(rule)
-            for rule in (self.get_pyproject("tool.flet.android.proguard_rules") or [])
-        ]
-
-        # parse --android-permissions
-        for p in self.options.android_permissions:
-            i = p.find("=")
-            if i > -1:
-                try:
-                    android_permissions[p[:i]] = parse_cli_bool_value(p[i + 1 :])
-                except ValueError:
-                    self.cleanup(
-                        1,
-                        f"Invalid Android permission option value for {p[:i]}: "
-                        f"{p[i + 1 :]}. Expected true or false.",
-                    )
-            else:
-                self.cleanup(1, f"Invalid Android permission option: {p}")
-
-        for key, value in android_permissions.items():
-            if isinstance(value, bool):
-                continue
-            if isinstance(value, dict):
-                for ak, av in value.items():
-                    if not isinstance(av, (str, bool, int, float)):
-                        self.cleanup(
-                            1,
-                            f"Invalid Android permission attribute value for "
-                            f"{key}.{ak}: {type(av).__name__}. "
-                            "Expected string, boolean, or number.",
-                        )
-                continue
-            self.cleanup(
-                1,
-                f"Invalid Android permission value for {key}: "
-                f"{type(value).__name__}. Expected boolean or inline table.",
-            )
-
-        android_features = merge_dict(
-            android_features,
-            self.get_pyproject("tool.flet.android.feature") or {},
-        )
-
-        # parse --android-features
-        for p in self.options.android_features:
-            i = p.find("=")
-            if i > -1:
-                try:
-                    android_features[p[:i]] = parse_cli_bool_value(p[i + 1 :])
-                except ValueError:
-                    self.cleanup(
-                        1,
-                        f"Invalid Android feature option value for {p[:i]}: "
-                        f"{p[i + 1 :]}. Expected true or false.",
-                    )
-            else:
-                self.cleanup(1, f"Invalid Android feature option: {p}")
-
-        android_meta_data = merge_dict(
-            android_meta_data,
-            self.get_pyproject("tool.flet.android.meta_data") or {},
-        )
-
-        # parse --android-meta-data
-        for p in self.options.android_meta_data:
-            i = p.find("=")
-            if i > -1:
-                android_meta_data[p[:i]] = p[i + 1 :]
-            else:
-                self.cleanup(1, f"Invalid Android meta-data option: {p}")
-
-        android_providers = merge_dict(
-            android_providers,
-            self.get_pyproject("tool.flet.android.provider") or {},
-        )
-
-        def _xml_attr_value(v):
-            # Android XML expects lowercase booleans.
-            if isinstance(v, bool):
-                return "true" if v else "false"
-            return v
-
-        normalized_providers = {}
-        for key, value in android_providers.items():
-            if value is False or value == {}:
-                continue
-            if value is True:
-                self.cleanup(
-                    1,
-                    f"Invalid Android provider value for {key}: 'true' is not "
-                    "supported. Use an inline table of attributes, or 'false' "
-                    "to skip.",
-                )
-            if not isinstance(value, dict):
-                self.cleanup(
-                    1,
-                    f"Invalid Android provider value for {key}: "
-                    f"{type(value).__name__}. Expected boolean or inline table.",
-                )
-            normalized = {}
-            for ak, av in value.items():
-                if ak == "name":
-                    self.cleanup(
-                        1,
-                        f"Invalid Android provider attribute for {key}: "
-                        "'name' is reserved and is taken from the table key.",
-                    )
-                if ak == "meta_data":
-                    if not isinstance(av, dict):
-                        self.cleanup(
-                            1,
-                            f"Invalid Android provider meta_data for {key}: "
-                            f"{type(av).__name__}. Expected inline table.",
-                        )
-                    normalized_meta = {}
-                    for mk, mv in av.items():
-                        if isinstance(mv, (str, bool, int, float)):
-                            normalized_meta[mk] = _xml_attr_value(mv)
-                            continue
-                        if isinstance(mv, dict):
-                            normalized_attrs = {}
-                            for attr_key, attr_value in mv.items():
-                                if not isinstance(attr_value, (str, bool, int, float)):
-                                    self.cleanup(
-                                        1,
-                                        f"Invalid Android provider meta-data "
-                                        f"attribute value for "
-                                        f"{key}.meta_data.{mk}.{attr_key}: "
-                                        f"{type(attr_value).__name__}. "
-                                        "Expected string, boolean, or number.",
-                                    )
-                                normalized_attrs[attr_key] = _xml_attr_value(attr_value)
-                            normalized_meta[mk] = normalized_attrs
-                            continue
-                        self.cleanup(
-                            1,
-                            f"Invalid Android provider meta-data value for "
-                            f"{key}.meta_data.{mk}: {type(mv).__name__}. "
-                            "Expected string, boolean, number, or inline table.",
-                        )
-                    normalized["meta_data"] = normalized_meta
-                    continue
-                if not isinstance(av, (str, bool, int, float)):
-                    self.cleanup(
-                        1,
-                        f"Invalid Android provider attribute value for "
-                        f"{key}.{ak}: {type(av).__name__}. "
-                        "Expected string, boolean, or number.",
-                    )
-                normalized[ak] = _xml_attr_value(av)
-            normalized_providers[key] = normalized
-        android_providers = normalized_providers
-
-        deep_linking_scheme = self.get_deep_linking_setting("scheme")
-        deep_linking_host = self.get_deep_linking_setting("host")
-
-        if self.options.deep_linking_scheme and self.options.deep_linking_host:
-            deep_linking_scheme = self.options.deep_linking_scheme
-            deep_linking_host = self.options.deep_linking_host
+        deep_linking = self.get_deep_linking()
 
         target_arch = self.options.target_arch or self.get_platform_setting(
             "target_arch"
@@ -1491,45 +1217,11 @@ class BaseBuildCommand(BaseFlutterCommand):
                 # Build only for the ABIs the bundled Python supports.
                 target_arch = python_abis
 
-        ios_export_method = (
-            self.options.ios_export_method
-            or self.get_pyproject("tool.flet.ios.export_method")
-            or "debugging"
-        )
-
-        ios_export_method_opts = (
-            self.get_pyproject("tool.flet.ios.export_methods").get(ios_export_method)
-            if self.get_pyproject("tool.flet.ios.export_methods")
-            else {}
-        ) or {}
-
-        ios_provisioning_profile = (
-            self.options.ios_provisioning_profile
-            or ios_export_method_opts.get("provisioning_profile")
-            or self.get_pyproject("tool.flet.ios.provisioning_profile")
-        )
-
-        ios_signing_certificate = (
-            self.options.ios_signing_certificate
-            or ios_export_method_opts.get("signing_certificate")
-            or self.get_pyproject("tool.flet.ios.signing_certificate")
-        )
-
-        ios_export_options = (
-            ios_export_method_opts.get("export_options")
-            or self.get_pyproject("tool.flet.ios.export_options")
-            or {}
-        )
-
-        ios_team_id = (
-            self.options.ios_team_id
-            or ios_export_method_opts.get("team_id")
-            or self.get_pyproject("tool.flet.ios.team_id")
-        )
+        ios_signing = self.get_ios_signing()
 
         if (
             self.target_platform in ["ipa"]
-            and not ios_provisioning_profile
+            and not ios_signing["provisioning_profile"]
             and not self.debug_platform
             and not getattr(self, "test_mode", False)
         ):
@@ -1565,10 +1257,7 @@ class BaseBuildCommand(BaseFlutterCommand):
         # through to it.
         splash = self._resolve_splash()
         org_name = (
-            self.options.org_name
-            or self.get_pyproject(f"tool.flet.{self.config_platform}.org")
-            or self.get_pyproject("tool.flet.org")
-            or "com.flet"
+            self.options.org_name or self.get_platform_setting("org") or "com.flet"
         )
 
         self.template_data = {
@@ -1649,19 +1338,16 @@ class BaseBuildCommand(BaseFlutterCommand):
             # The template derives nothing from these: the build names files
             # after the bundle ID too, such as the app's Linux icons.
             "bundle_id": self.options.bundle_id
-            or self.get_pyproject(f"tool.flet.{self.config_platform}.bundle_id")
-            or self.get_pyproject("tool.flet.bundle_id")
+            or self.get_platform_setting("bundle_id")
             or f"{org_name}.{project_name_slug}",
             "company_name": (
                 self.options.company_name or self.get_pyproject("tool.flet.company")
             ),
-            "copyright": self.options.copyright
-            or self.get_pyproject("tool.flet.copyright"),
-            "ios_export_method": ios_export_method,
-            "ios_provisioning_profile": ios_provisioning_profile,
-            "ios_signing_certificate": ios_signing_certificate,
-            "ios_export_options": ios_export_options,
-            "ios_team_id": ios_team_id,
+            "copyright": self.get_copyright(),
+            "ios_export_method": ios_signing["export_method"],
+            "ios_provisioning_profile": ios_signing["provisioning_profile"],
+            "ios_signing_certificate": ios_signing["signing_certificate"],
+            "ios_team_id": ios_signing["team_id"],
             # `_` makes `_options` and `_pyproject` private cookiecutter
             # variables, which reach the template unchanged. Cookiecutter
             # renders other values as Jinja and turns them into strings.
@@ -1675,9 +1361,10 @@ class BaseBuildCommand(BaseFlutterCommand):
                     if self.package_platform == "Android"
                     else []
                 ),
-                "info_plist": info_plist,
-                "macos_entitlements": macos_entitlements,
+                "info_plist": self.get_info_plist(impeller),
+                "macos_entitlements": self.get_macos_entitlements(),
                 "ios_entitlements": self.get_ios_entitlements(),
+                "ios_export_options": ios_signing["export_options"],
                 "android_permissions": android_permissions,
                 "android_features": android_features,
                 "android_meta_data": android_meta_data,
@@ -1686,12 +1373,14 @@ class BaseBuildCommand(BaseFlutterCommand):
                 "android_gradle_dependencies": self.get_android_gradle_dependencies(),
                 "android_proguard_rules": android_proguard_rules,
                 "android_providers": android_providers,
+                "android_application_attributes": (
+                    self.get_android_application_attributes(product_name)
+                ),
+                "android_activity": self.get_android_activity(),
+                "android_queries": self.get_android_queries(),
                 "android_receivers": self.get_android_receivers(),
                 "android_services": self.get_android_services(),
-                "deep_linking": {
-                    "scheme": deep_linking_scheme,
-                    "host": deep_linking_host,
-                },
+                "deep_linking": deep_linking,
                 "android_signing": bool(
                     self.options.android_signing_key_store
                     or self.get_pyproject("tool.flet.android.signing.key_store")
@@ -1759,10 +1448,11 @@ class BaseBuildCommand(BaseFlutterCommand):
         """
         One splash setting, platform-specific over global.
 
-        The same precedence the splash colours use, so every key under
-        `[tool.flet.splash]` can be overridden per platform without each one
-        spelling the lookup out again. A key that was renamed is read under
-        its former name too, so existing configuration keeps working.
+        Uses the precedence of `get_platform_setting`, so every key under
+        `[tool.flet.splash]` can be overridden per platform, even with an empty
+        value, without each one spelling the lookup out again. A key that was
+        renamed is read under its former name too, so existing configuration
+        keeps working.
 
         Args:
             key: Setting name below the `splash` table.
@@ -1771,14 +1461,10 @@ class BaseBuildCommand(BaseFlutterCommand):
             The configured value, or `None`.
         """
 
-        assert self.get_pyproject
-
         for name in (key, SPLASH_KEY_ALIASES.get(key)):
             if name is None:
                 continue
-            value = self.get_pyproject(
-                f"tool.flet.{self.config_platform}.splash.{name}"
-            ) or self.get_pyproject(f"tool.flet.splash.{name}")
+            value = self.get_platform_setting(f"splash.{name}")
             if value is not None:
                 return value
         return None
@@ -1867,6 +1553,22 @@ class BaseBuildCommand(BaseFlutterCommand):
             ),
         }
 
+    def _clear_dart_tool_on_flutter_change(self):
+        """
+        Delete `.dart_tool` from the Flutter project when the required Flutter
+        version differs from the one the project was last built with.
+
+        `dart run` reuses the build hook binaries in `.dart_tool`, and a Dart SDK
+        can't load binaries compiled by a version with a different kernel format.
+        A project with no recorded version counts as changed.
+        """
+
+        hash = HashStamp(self.build_dir / ".hash" / "flutter")
+        hash.update(self.required_flutter_version)
+        if hash.has_changed():
+            shutil.rmtree(self.flutter_dir / ".dart_tool", ignore_errors=True)
+            hash.commit()
+
     def create_flutter_project(self, second_pass=False):
         """
         Render Flutter bootstrap project from template if template inputs changed.
@@ -1892,6 +1594,9 @@ class BaseBuildCommand(BaseFlutterCommand):
         if not second_pass and self._flutter_packages_missing():
             for stamp in ("template-1", "template-2", "package", "icons", "splashes"):
                 (self.build_dir / ".hash" / stamp).unlink(missing_ok=True)
+
+        if not second_pass:
+            self._clear_dart_tool_on_flutter_change()
 
         hash = HashStamp(
             self.build_dir / ".hash" / f"template-{'2' if second_pass else '1'}"
@@ -2327,11 +2032,7 @@ class BaseBuildCommand(BaseFlutterCommand):
             The colour string, or `None` when nothing is configured.
         """
 
-        assert self.get_pyproject
-
-        return self.get_pyproject(
-            f"tool.flet.{platform}.icon_background"
-        ) or self.get_pyproject("tool.flet.icon_background")
+        return self.get_platform_setting("icon_background", platform=platform)
 
     def _resolve_icon_background(self) -> tuple[int, int, int]:
         """
@@ -2905,17 +2606,11 @@ class BaseBuildCommand(BaseFlutterCommand):
             # (CLI / pyproject) is merged on top. Consumed by the serious_python_android
             # Gradle split during `flutter build`, so the env var is set on build_env
             # (see _run_flutter_command), not on the package step.
-            self.android_extract_packages: list[str] = []
-            if self.package_platform == "Android":
-                user_extract_packages = (
-                    self.options.android_extract_packages
-                    or self.get_platform_setting("extract_packages", [])
-                )
-                self.android_extract_packages = list(
-                    dict.fromkeys(
-                        ANDROID_DEFAULT_EXTRACT_PACKAGES + user_extract_packages
-                    )
-                )
+            self.android_extract_packages: list[str] = (
+                self.get_android_extract_packages()
+                if self.package_platform == "Android"
+                else []
+            )
 
             if self.get_bool_setting(self.options.compile_app, "compile.app", True):
                 package_args.append("--compile-app")
@@ -3103,29 +2798,267 @@ class BaseBuildCommand(BaseFlutterCommand):
             else self.get_platform_setting(pyproj_setting, default_value)
         )
 
-    def get_deep_linking_setting(self, key: str):
+    def get_deep_linking(self) -> dict:
         """
-        Resolve a deep-linking setting (`scheme` or `host`).
+        Resolve the deep-linking scheme and optional host.
 
-        On Android and iOS `[tool.flet.<platform>.deep_linking]` overrides
-        `[tool.flet.deep_linking]`, which is the fallback; other platforms
-        read only the common table. Resolved per key, so a platform table
-        may override just one of them.
-
-        Args:
-            key: `scheme` or `host`.
+        The CLI options replace the project settings when a scheme is passed.
+        Otherwise, on Android and iOS the platform's own deep-linking table
+        overrides the common one per key, so it may set just one of them;
+        other platforms read only the common table. On Android and iOS a host
+        needs a scheme, and `http` and `https` need a host: without one, the
+        Android app would offer to open every web link.
 
         Returns:
-            The configured value, or `None`.
+            A table with `scheme` and `host`, each `None` when not set.
         """
 
         assert self.get_pyproject
+        if self.options.deep_linking_host and not self.options.deep_linking_scheme:
+            self.cleanup(
+                1, "--deep-linking-host needs --deep-linking-scheme to be set too."
+            )
         platform = {"Android": "android", "iOS": "ios"}.get(self.package_platform)
+        values = {}
+        for key in ("scheme", "host"):
+            if self.options.deep_linking_scheme:
+                value = getattr(self.options, f"deep_linking_{key}")
+            else:
+                value = None
+                if platform:
+                    value = self.get_pyproject(
+                        f"tool.flet.{platform}.deep_linking.{key}"
+                    )
+                if value is None:
+                    value = self.get_pyproject(f"tool.flet.deep_linking.{key}")
+            if value is not None and not isinstance(value, str):
+                self.cleanup(
+                    1, f"Invalid deep linking {key}: expected a string, got {value!r}."
+                )
+            values[key] = (value.strip() or None) if value else None
+
         if platform:
-            value = self.get_pyproject(f"tool.flet.{platform}.deep_linking.{key}")
-            if value is not None:
-                return value
-        return self.get_pyproject(f"tool.flet.deep_linking.{key}")
+            if values["host"] and not values["scheme"]:
+                self.cleanup(
+                    1,
+                    f"Deep linking host {values['host']!r} needs a scheme, "
+                    'such as "myapp" or "https".',
+                )
+            scheme = (values["scheme"] or "").lower()
+            if scheme in ("http", "https") and not values["host"]:
+                self.cleanup(
+                    1,
+                    f"Deep linking scheme {values['scheme']!r} needs a host: "
+                    "without one, the app would open every web link.",
+                )
+        return values
+
+    def get_copyright(self) -> Optional[str]:
+        """
+        Resolve the app's copyright text.
+
+        Comes from `--copyright`, else `[tool.flet].copyright`.
+        An explicitly empty value leaves the copyright blank.
+        Without either, it's generated from the company set with
+        `--company` or `[tool.flet].company`.
+
+        Returns:
+            The copyright text, or `None` to use the build template's default.
+        """
+        assert self.get_pyproject
+        assert self.options
+        if self.options.copyright is not None:
+            return self.options.copyright
+        copyright = self.get_pyproject("tool.flet.copyright")
+        if copyright is not None:
+            return copyright
+        company = self.options.company_name or self.get_pyproject("tool.flet.company")
+        return (
+            f"Copyright © {datetime.date.today().year} {company}" if company else None
+        )
+
+    def get_info_plist(self, impeller: bool) -> dict:
+        """
+        Resolve the entries added to the iOS or macOS app's `Info.plist`.
+
+        Entries of `--info-plist` override those of `[tool.flet.ios.info]` or
+        `[tool.flet.macos.info]`, which override those of the permission bundles.
+
+        Args:
+            impeller: Whether the app uses Impeller. When it doesn't, macOS apps
+                get `FLTEnableImpeller = false`; iOS has no such switch.
+
+        Returns:
+            The entries, with their plist value types.
+        """
+        assert self.get_pyproject
+        assert self.options
+        info_plist = (
+            {"FLTEnableImpeller": False}
+            if self.package_platform == "Darwin" and not impeller
+            else {}
+        )
+
+        # merge values from "--permissions" arg:
+        for p in self.resolve_permissions():
+            if p in CROSS_PLATFORM_PERMISSIONS:
+                permission_config = CROSS_PLATFORM_PERMISSIONS[p]
+                info_plist.update(
+                    permission_config.get(f"{self.config_platform}_info_plist", {})
+                    or permission_config.get("info_plist", {})
+                )
+
+        info_plist = merge_dict(
+            info_plist,
+            (
+                self.get_pyproject("tool.flet.macos.info")
+                if self.package_platform == "Darwin"
+                else self.get_pyproject("tool.flet.ios.info")
+            )
+            or {},
+        )
+
+        # parse --info-plist
+        for p in self.options.info_plist:
+            i = p.find("=")
+            if i > -1:
+                k = p[:i]
+                v = p[i + 1 :]
+                info_plist[k] = parse_cli_plist_value(v)
+            else:
+                self.cleanup(1, f"Invalid Info.plist option: {p}")
+
+        for key, value in info_plist.items():
+            if not is_supported_plist_value(value):
+                self.cleanup(
+                    1,
+                    "Unsupported Info.plist value type for "
+                    f"{key}: {type(value).__name__}. Supported types are "
+                    "string, boolean, integer, float, dictionary, and arrays "
+                    "containing those values.",
+                )
+        return info_plist
+
+    def get_macos_entitlements(self) -> dict:
+        """
+        Resolve the macOS app's entitlements.
+
+        Entries of `--macos-entitlements` override those of
+        `[tool.flet.macos.entitlement]`, which override those of the permission
+        bundles and Flet's defaults.
+
+        Returns:
+            The entitlements, with their plist value types.
+        """
+        assert self.get_pyproject
+        assert self.options
+        macos_entitlements = {
+            "com.apple.security.app-sandbox": False,
+            "com.apple.security.cs.allow-jit": True,
+            "com.apple.security.cs.allow-unsigned-executable-memory": True,
+            "com.apple.security.network.client": True,
+            "com.apple.security.network.server": True,
+            "com.apple.security.files.user-selected.read-write": True,
+        }
+
+        # merge values from "--permissions" arg:
+        for p in self.resolve_permissions():
+            if p in CROSS_PLATFORM_PERMISSIONS:
+                macos_entitlements.update(
+                    CROSS_PLATFORM_PERMISSIONS[p]["macos_entitlements"]
+                )
+
+        macos_entitlements = merge_dict(
+            macos_entitlements,
+            self.get_pyproject("tool.flet.macos.entitlement") or {},
+        )
+
+        # parse --macos-entitlements
+        for p in self.options.macos_entitlements:
+            i = p.find("=")
+            if i > -1:
+                macos_entitlements[p[:i]] = parse_cli_plist_value(p[i + 1 :])
+            else:
+                self.cleanup(1, f"Invalid macOS entitlement option: {p}")
+
+        for key, value in macos_entitlements.items():
+            if not is_supported_plist_value(value):
+                self.cleanup(
+                    1,
+                    "Unsupported macOS entitlement value type for "
+                    f"{key}: {type(value).__name__}. Supported types are "
+                    "string, boolean, integer, float, dictionary, and arrays "
+                    "containing those values.",
+                )
+        return macos_entitlements
+
+    def get_ios_signing(self) -> dict:
+        """
+        Resolve how the iOS app is signed and exported.
+
+        The export method comes from `--ios-export-method`, else
+        `[tool.flet.ios].export_method`, else `debugging`. Each other setting comes
+        from its CLI option if it has one, else the table of that export method
+        under `[tool.flet.ios.export_methods]`, else `[tool.flet.ios]`.
+
+        Returns:
+            A table with `export_method`, `provisioning_profile`,
+                `signing_certificate`, `team_id` and `export_options`.
+        """
+        assert self.get_pyproject
+        assert self.options
+        export_method = (
+            self.options.ios_export_method
+            or self.get_pyproject("tool.flet.ios.export_method")
+            or "debugging"
+        )
+
+        export_method_opts = (
+            self.get_pyproject("tool.flet.ios.export_methods").get(export_method)
+            if self.get_pyproject("tool.flet.ios.export_methods")
+            else {}
+        ) or {}
+
+        export_options = (
+            export_method_opts.get("export_options")
+            or self.get_pyproject("tool.flet.ios.export_options")
+            or {}
+        )
+        if not isinstance(export_options, dict):
+            self.cleanup(
+                1,
+                "Invalid iOS export options: expected a table, "
+                f"got {export_options!r}.",
+            )
+        for key, value in export_options.items():
+            if not is_supported_plist_value(value):
+                self.cleanup(
+                    1,
+                    "Unsupported iOS export option value type for "
+                    f"{key}: {type(value).__name__}. Supported types are "
+                    "string, boolean, integer, float, dictionary, and arrays "
+                    "containing those values.",
+                )
+
+        return {
+            "export_method": export_method,
+            "provisioning_profile": (
+                self.options.ios_provisioning_profile
+                or export_method_opts.get("provisioning_profile")
+                or self.get_pyproject("tool.flet.ios.provisioning_profile")
+            ),
+            "signing_certificate": (
+                self.options.ios_signing_certificate
+                or export_method_opts.get("signing_certificate")
+                or self.get_pyproject("tool.flet.ios.signing_certificate")
+            ),
+            "team_id": (
+                self.options.ios_team_id
+                or export_method_opts.get("team_id")
+                or self.get_pyproject("tool.flet.ios.team_id")
+            ),
+            "export_options": export_options,
+        }
 
     def get_ios_entitlements(self) -> dict:
         """
@@ -3212,6 +3145,405 @@ class BaseBuildCommand(BaseFlutterCommand):
                 1, f"Invalid {setting}: expected a string of Kotlin declarations."
             )
         return textwrap.dedent(configured).strip()
+
+    def get_android_application_attributes(self, product_name: str) -> dict:
+        """Resolve the manifest's `<application>` attributes: Flet's defaults with
+        the app's own attributes on top."""
+        assert self.get_pyproject
+        try:
+            return normalize_android_application_attributes(
+                self.get_pyproject("tool.flet.android.manifest_application"),
+                product_name,
+            )
+        except ValueError as exc:
+            self.cleanup(1, str(exc))
+
+    def get_android_permissions(self) -> dict:
+        """
+        Resolve the app's `<uses-permission>` entries.
+
+        `INTERNET` is on by default. The cross-platform permission bundles,
+        the project settings and then the CLI options are applied on top; a
+        value of `False` removes the permission, even one a plugin adds.
+
+        Returns:
+            Permission names mapped to `True`, `False`, or a table of extra
+            attributes.
+        """
+
+        assert self.get_pyproject
+        android_permissions = {"android.permission.INTERNET": True}
+        for p in self.resolve_permissions():
+            if p in CROSS_PLATFORM_PERMISSIONS:
+                android_permissions.update(
+                    CROSS_PLATFORM_PERMISSIONS[p]["android_permissions"]
+                )
+        android_permissions = merge_dict(
+            android_permissions,
+            self.get_pyproject("tool.flet.android.permission") or {},
+        )
+
+        # parse --android-permissions
+        for p in self.options.android_permissions:
+            i = p.find("=")
+            if i > -1:
+                try:
+                    android_permissions[p[:i]] = parse_cli_bool_value(p[i + 1 :])
+                except ValueError:
+                    self.cleanup(
+                        1,
+                        f"Invalid Android permission option value for {p[:i]}: "
+                        f"{p[i + 1 :]}. Expected true or false.",
+                    )
+            else:
+                self.cleanup(1, f"Invalid Android permission option: {p}")
+
+        for key, value in android_permissions.items():
+            if isinstance(value, bool):
+                continue
+            if isinstance(value, dict):
+                for ak, av in value.items():
+                    if not isinstance(av, (str, bool, int, float)):
+                        self.cleanup(
+                            1,
+                            f"Invalid Android permission attribute value for "
+                            f"{key}.{ak}: {type(av).__name__}. "
+                            "Expected string, boolean, or number.",
+                        )
+                continue
+            self.cleanup(
+                1,
+                f"Invalid Android permission value for {key}: "
+                f"{type(value).__name__}. Expected boolean or inline table.",
+            )
+        return android_permissions
+
+    def get_android_features(self) -> dict:
+        """
+        Resolve the app's `<uses-feature>` entries.
+
+        Leanback and touchscreen are declared as not required by default, so
+        the app installs on TVs and devices without a touchscreen. The
+        cross-platform permission bundles, the project settings and then the
+        CLI options are applied on top.
+
+        Returns:
+            Feature names mapped to whether the feature is required.
+        """
+
+        assert self.get_pyproject
+        android_features = {
+            "android.software.leanback": False,
+            "android.hardware.touchscreen": False,
+        }
+        for p in self.resolve_permissions():
+            if p in CROSS_PLATFORM_PERMISSIONS:
+                android_features.update(
+                    CROSS_PLATFORM_PERMISSIONS[p]["android_features"]
+                )
+        android_features = merge_dict(
+            android_features,
+            self.get_pyproject("tool.flet.android.feature") or {},
+        )
+
+        # parse --android-features
+        for p in self.options.android_features:
+            i = p.find("=")
+            if i > -1:
+                try:
+                    android_features[p[:i]] = parse_cli_bool_value(p[i + 1 :])
+                except ValueError:
+                    self.cleanup(
+                        1,
+                        f"Invalid Android feature option value for {p[:i]}: "
+                        f"{p[i + 1 :]}. Expected true or false.",
+                    )
+            else:
+                self.cleanup(1, f"Invalid Android feature option: {p}")
+        return android_features
+
+    def get_android_meta_data(self, impeller: bool) -> dict:
+        """
+        Resolve the `<meta-data>` entries of the app's `<application>`.
+
+        Without Impeller, `io.flutter.embedding.android.EnableImpeller` is set
+        to `"false"`; the project settings and then the CLI options are
+        applied on top and may override it.
+
+        Args:
+            impeller: Whether the app is built with the Impeller renderer.
+
+        Returns:
+            Meta-data names mapped to their values.
+        """
+
+        assert self.get_pyproject
+        android_meta_data = (
+            {"io.flutter.embedding.android.EnableImpeller": "false"}
+            if not impeller
+            else {}
+        )
+        android_meta_data = merge_dict(
+            android_meta_data,
+            self.get_pyproject("tool.flet.android.meta_data") or {},
+        )
+
+        # parse --android-meta-data
+        for p in self.options.android_meta_data:
+            i = p.find("=")
+            if i > -1:
+                android_meta_data[p[:i]] = p[i + 1 :]
+            else:
+                self.cleanup(1, f"Invalid Android meta-data option: {p}")
+        return android_meta_data
+
+    def get_android_providers(self) -> dict:
+        """
+        Resolve the app's own `<provider>` entries from project settings.
+
+        A provider set to `False` or an empty table is skipped. Booleans are
+        written as lowercase `true` or `false`.
+
+        Returns:
+            Provider class names mapped to their attributes, with an optional
+            `meta_data` table.
+        """
+
+        assert self.get_pyproject
+        android_providers = merge_dict(
+            {}, self.get_pyproject("tool.flet.android.provider") or {}
+        )
+
+        def _xml_attr_value(v):
+            # Android XML expects lowercase booleans.
+            if isinstance(v, bool):
+                return "true" if v else "false"
+            return v
+
+        normalized_providers = {}
+        for key, value in android_providers.items():
+            if value is False or value == {}:
+                continue
+            if value is True:
+                self.cleanup(
+                    1,
+                    f"Invalid Android provider value for {key}: 'true' is not "
+                    "supported. Use an inline table of attributes, or 'false' "
+                    "to skip.",
+                )
+            if not isinstance(value, dict):
+                self.cleanup(
+                    1,
+                    f"Invalid Android provider value for {key}: "
+                    f"{type(value).__name__}. Expected boolean or inline table.",
+                )
+            normalized = {}
+            for ak, av in value.items():
+                if ak == "name":
+                    self.cleanup(
+                        1,
+                        f"Invalid Android provider attribute for {key}: "
+                        "'name' is reserved and is taken from the table key.",
+                    )
+                if ak == "meta_data":
+                    if not isinstance(av, dict):
+                        self.cleanup(
+                            1,
+                            f"Invalid Android provider meta_data for {key}: "
+                            f"{type(av).__name__}. Expected inline table.",
+                        )
+                    normalized_meta = {}
+                    for mk, mv in av.items():
+                        if isinstance(mv, (str, bool, int, float)):
+                            normalized_meta[mk] = _xml_attr_value(mv)
+                            continue
+                        if isinstance(mv, dict):
+                            normalized_attrs = {}
+                            for attr_key, attr_value in mv.items():
+                                if not isinstance(attr_value, (str, bool, int, float)):
+                                    self.cleanup(
+                                        1,
+                                        f"Invalid Android provider meta-data "
+                                        f"attribute value for "
+                                        f"{key}.meta_data.{mk}.{attr_key}: "
+                                        f"{type(attr_value).__name__}. "
+                                        "Expected string, boolean, or number.",
+                                    )
+                                normalized_attrs[attr_key] = _xml_attr_value(attr_value)
+                            normalized_meta[mk] = normalized_attrs
+                            continue
+                        self.cleanup(
+                            1,
+                            f"Invalid Android provider meta-data value for "
+                            f"{key}.meta_data.{mk}: {type(mv).__name__}. "
+                            "Expected string, boolean, number, or inline table.",
+                        )
+                    normalized["meta_data"] = normalized_meta
+                    continue
+                if not isinstance(av, (str, bool, int, float)):
+                    self.cleanup(
+                        1,
+                        f"Invalid Android provider attribute value for "
+                        f"{key}.{ak}: {type(av).__name__}. "
+                        "Expected string, boolean, or number.",
+                    )
+                normalized[ak] = _xml_attr_value(av)
+            normalized_providers[key] = normalized
+        return normalized_providers
+
+    def get_android_gradle_properties(self) -> dict:
+        """
+        Resolve the generated Android project's `gradle.properties`.
+
+        The defaults reproduce the file the template used to hardcode; project
+        settings override any entry or add new ones. The memory settings in
+        particular are too large for some CI runners (a standard GitHub-hosted
+        runner has about 7 GB of RAM, less than `-Xmx8G` alone).
+        `kotlin.incremental` is off because Kotlin's incremental compiler
+        stores plugin sources relative to the Android project and fails the
+        build when they sit on another Windows drive, e.g. the pub cache on
+        `C:` and the app on `D:`.
+
+        Returns:
+            Property names mapped to their values.
+        """
+
+        assert self.get_pyproject
+        return merge_dict(
+            {
+                "org.gradle.jvmargs": (
+                    "-Xmx8G -XX:MaxMetaspaceSize=4G "
+                    "-XX:ReservedCodeCacheSize=512m -XX:+HeapDumpOnOutOfMemoryError"
+                ),
+                "android.useAndroidX": "true",
+                "kotlin.incremental": "false",
+            },
+            self.get_pyproject("tool.flet.android.gradle_properties") or {},
+        )
+
+    def get_android_proguard_rules(self) -> list[str]:
+        """
+        Resolve the generated Android project's ProGuard/R8 rules.
+
+        R8 renames classes in release builds while pyjnius resolves them by
+        name, so an app that reaches into a bundled AAR needs keep rules. The
+        project's rules are appended to the defaults, since R8 has no directive
+        that undoes a keep; `proguard_default_rules = false` drops the
+        defaults, the only way to shed `-keepnames class * { *; }`. Keeping
+        the two settings separate stops users from copying today's defaults
+        into `pyproject.toml` and silently keeping them after they change.
+
+        Returns:
+            The rules, one per line of `proguard-rules.pro`.
+        """
+
+        assert self.get_pyproject
+        keep_defaults = (
+            self.get_pyproject("tool.flet.android.proguard_default_rules") is not False
+        )
+        defaults = (
+            [
+                "-keep class com.flet.serious_python_android.** { *; }",
+                "-keepnames class * { *; }",
+            ]
+            if keep_defaults
+            else []
+        )
+        return defaults + [
+            str(rule)
+            for rule in (self.get_pyproject("tool.flet.android.proguard_rules") or [])
+        ]
+
+    def get_android_signing_env(self) -> dict:
+        """
+        Resolve the environment variables that sign the Android build.
+
+        The key store comes from the CLI option, the project settings or the
+        `FLET_ANDROID_SIGNING_KEY_STORE` environment variable. The passwords
+        come from the CLI options or their environment variables only, never
+        from `pyproject.toml`; when just one of them is given, it is used for
+        both. The key alias, `upload` by default, is set only with a key store.
+
+        Returns:
+            The `FLET_ANDROID_SIGNING_*` variables to pass to the build.
+        """
+
+        assert self.get_pyproject
+        env = {}
+        key_store = (
+            self.options.android_signing_key_store
+            or self.get_pyproject("tool.flet.android.signing.key_store")
+            or os.getenv("FLET_ANDROID_SIGNING_KEY_STORE")
+        )
+        if key_store:
+            env["FLET_ANDROID_SIGNING_KEY_STORE"] = key_store
+
+        key_store_password = (
+            self.options.android_signing_key_store_password
+            or os.getenv("FLET_ANDROID_SIGNING_KEY_STORE_PASSWORD")
+        )
+        key_password = self.options.android_signing_key_password or os.getenv(
+            "FLET_ANDROID_SIGNING_KEY_PASSWORD"
+        )
+        if key_store_password or key_password:
+            env["FLET_ANDROID_SIGNING_KEY_STORE_PASSWORD"] = (
+                key_store_password if key_store_password else key_password
+            )
+            env["FLET_ANDROID_SIGNING_KEY_PASSWORD"] = (
+                key_password if key_password else key_store_password
+            )
+
+        if key_store:
+            env["FLET_ANDROID_SIGNING_KEY_ALIAS"] = (
+                self.options.android_signing_key_alias
+                or self.get_pyproject("tool.flet.android.signing.key_alias")
+                or os.getenv("FLET_ANDROID_SIGNING_KEY_ALIAS")
+                or "upload"
+            )
+        return env
+
+    def get_android_extract_packages(self) -> list[str]:
+        """
+        Resolve the Python packages shipped extracted to disk on Android
+        instead of in the zip Python imports from, for packages that read
+        their data through a real file path.
+
+        Flet's defaults come first, followed by the CLI option or else the
+        project settings; duplicates are dropped.
+
+        Returns:
+            Package names, in order.
+        """
+
+        user_extract_packages = (
+            self.options.android_extract_packages
+            or self.get_platform_setting("extract_packages", [])
+        )
+        return list(
+            dict.fromkeys(ANDROID_DEFAULT_EXTRACT_PACKAGES + user_extract_packages)
+        )
+
+    def get_android_activity(self) -> dict:
+        """Resolve what the app adds to its main activity, such as intent
+        filters, from project settings."""
+        assert self.get_pyproject
+        try:
+            return normalize_android_activity(
+                self.get_pyproject("tool.flet.android.activity")
+            )
+        except ValueError as exc:
+            self.cleanup(1, str(exc))
+
+    def get_android_queries(self) -> dict:
+        """Resolve the apps, intents, and providers declared in the manifest's
+        `<queries>` from project settings."""
+        assert self.get_pyproject
+        try:
+            return normalize_android_queries(
+                self.get_pyproject("tool.flet.android.queries")
+            )
+        except ValueError as exc:
+            self.cleanup(1, str(exc))
 
     def get_android_receivers(self) -> dict:
         """Resolve Android manifest receiver declarations from project settings."""
@@ -3326,18 +3658,20 @@ class BaseBuildCommand(BaseFlutterCommand):
             self.options.permissions or self.get_platform_setting("permissions") or []
         )
 
-    def get_platform_setting(self, pyproj_setting, default_value=None):
+    def get_platform_setting(self, pyproj_setting, default_value=None, platform=None):
         """
         Resolve a pyproject setting with precedence: platform, global, default.
 
-        The platform value wins whenever it is set, even when it is empty, so
-        `[]` or `{}` under `tool.flet.<platform>.` clears a global list or table
-        for that platform.
+        The platform value wins whenever it is set, even when it is empty or
+        false, so `[]`, `{}` or `""` under `tool.flet.<platform>.` clears a
+        global value for that platform.
 
         Args:
             pyproj_setting: Relative key under `tool.flet.<platform>.` and
                 `tool.flet.`.
             default_value: Fallback value when neither key is defined.
+            platform: Platform whose table overrides the global one. Defaults
+                to the platform being built.
 
         Returns:
             Resolved setting value.
@@ -3345,7 +3679,7 @@ class BaseBuildCommand(BaseFlutterCommand):
 
         assert self.get_pyproject
         for key in (
-            f"tool.flet.{self.config_platform}.{pyproj_setting}",
+            f"tool.flet.{platform or self.config_platform}.{pyproj_setting}",
             f"tool.flet.{pyproj_setting}",
         ):
             value = self.get_pyproject(key)
@@ -3462,37 +3796,7 @@ class BaseBuildCommand(BaseFlutterCommand):
         if self.package_platform == "Emscripten" and self.build_wasm():
             build_args.append("--wasm")
 
-        android_signing_key_store = (
-            self.options.android_signing_key_store
-            or self.get_pyproject("tool.flet.android.signing.key_store")
-            or os.getenv("FLET_ANDROID_SIGNING_KEY_STORE")
-        )
-        if android_signing_key_store:
-            build_env["FLET_ANDROID_SIGNING_KEY_STORE"] = android_signing_key_store
-
-        key_store_password = (
-            self.options.android_signing_key_store_password
-            or os.getenv("FLET_ANDROID_SIGNING_KEY_STORE_PASSWORD")
-        )
-        key_password = self.options.android_signing_key_password or os.getenv(
-            "FLET_ANDROID_SIGNING_KEY_PASSWORD"
-        )
-        if key_store_password or key_password:
-            build_env["FLET_ANDROID_SIGNING_KEY_STORE_PASSWORD"] = (
-                key_store_password if key_store_password else key_password
-            )
-            build_env["FLET_ANDROID_SIGNING_KEY_PASSWORD"] = (
-                key_password if key_password else key_store_password
-            )
-
-        if android_signing_key_store:
-            android_signing_key_alias = (
-                self.options.android_signing_key_alias
-                or self.get_pyproject("tool.flet.android.signing.key_alias")
-                or os.getenv("FLET_ANDROID_SIGNING_KEY_ALIAS")
-                or "upload"
-            )
-            build_env["FLET_ANDROID_SIGNING_KEY_ALIAS"] = android_signing_key_alias
+        build_env.update(self.get_android_signing_env())
 
         flutter_build_args = (
             self.options.flutter_build_args

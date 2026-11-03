@@ -610,6 +610,7 @@ def test_template_details_are_inside_app_shell_group(
     cmd.build_dir = tmp_path / "build"
     cmd.pubspec_path = str(cmd.flutter_dir / "pubspec.yaml")
     cmd.config_platform = "linux"
+    cmd.required_flutter_version = "3.47.9"
     template = "https://example.com/template.git" if custom_template else None
     cmd.options = SimpleNamespace(
         template=template, template_ref="v1.1.0", template_dir=None

@@ -2,6 +2,7 @@ from typing import Optional, Union
 
 import flet as ft
 from flet_audio.types import (
+    AudioContext,
     AudioDurationChangeEvent,
     AudioPositionChangeEvent,
     AudioStateChangeEvent,
@@ -73,6 +74,21 @@ class Audio(ft.Service):
     release_mode: ReleaseMode = ReleaseMode.RELEASE
     """
     Defines the release mode.
+    """
+
+    audio_context: Optional[AudioContext] = None
+    """
+    Configures platform-specific audio session and focus behavior
+    (for example mixing or ducking background music on Android/iOS).
+
+    When unset (`None`), Flet does not apply a custom audio context, so the
+    player keeps whatever context it already has. For a new player on mobile,
+    that means the usual effective behavior:
+    :attr:`~flet_audio.AudioContextRoute.SYSTEM`,
+    :attr:`~flet_audio.AudioContextFocus.GAIN`, `respect_silence=False`,
+    and `stay_awake=False`.
+
+    See :class:`~flet_audio.AudioContext`.
     """
 
     on_loaded: Optional[ft.ControlEventHandler["Audio"]] = None

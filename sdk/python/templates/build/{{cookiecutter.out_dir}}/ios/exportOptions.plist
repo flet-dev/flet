@@ -3,30 +3,32 @@
 <plist version="1.0">
 <dict>
     <key>method</key>
-    <string>{{ cookiecutter.ios_export_method }}</string>
+    <string>{{ cookiecutter.ios_export_method | e }}</string>
     <key>provisioningProfiles</key>
     <dict>
-        <key>{{ cookiecutter.bundle_id }}</key>
-        <string>{{ cookiecutter.ios_provisioning_profile }}</string>
+        <key>{{ cookiecutter.bundle_id | e }}</key>
+        <string>{{ cookiecutter.ios_provisioning_profile | e }}</string>
     </dict>
 
     {% if cookiecutter.ios_team_id %}
     <key>teamID</key>
-    <string>{{ cookiecutter.ios_team_id }}</string>
+    <string>{{ cookiecutter.ios_team_id | e }}</string>
     {% endif %}
 
     {% if cookiecutter.ios_signing_certificate %}
     <key>signingCertificate</key>
-    <string>{{ cookiecutter.ios_signing_certificate }}</string>
+    <string>{{ cookiecutter.ios_signing_certificate | e }}</string>
     {% endif %}
 
-    {% macro render_dict(d) -%}
-    {% for key, value in d.items() -%}
-    <key>{{ key }}</key>
+    {% macro render_value(value) -%}
     {% if value is string -%}
-    <string>{{ value }}</string>
+    <string>{{ value | e }}</string>
     {% elif value is boolean -%}
     <{{ "true" if value else "false" }}/>
+    {% elif value is integer -%}
+    <integer>{{ value }}</integer>
+    {% elif value is float -%}
+    <real>{{ value }}</real>
     {% elif value is mapping -%}
     <dict>
         {{ render_dict(value) }}
@@ -34,20 +36,17 @@
     {% elif value is sequence -%}  {# Support for lists/arrays #}
     <array>
         {% for item in value -%}
-            {% if item is string -%}
-            <string>{{ item }}</string>
-            {% elif item is boolean -%}
-            <{{ "true" if item else "false" }}/>
-            {% elif item is mapping -%}
-            <dict>
-                {{ render_dict(item) }}
-            </dict>
-            {% endif -%}
+            {{ render_value(item) }}
         {% endfor -%}
     </array>
     {% endif -%}
+    {% endmacro -%}
+    {% macro render_dict(d) -%}
+    {% for key, value in d.items() -%}
+    <key>{{ key | e }}</key>
+    {{ render_value(value) }}
     {% endfor -%}
     {% endmacro -%}
-    {{ render_dict(cookiecutter.ios_export_options) }}
+    {{ render_dict(cookiecutter._options.ios_export_options) }}
 </dict>
 </plist>

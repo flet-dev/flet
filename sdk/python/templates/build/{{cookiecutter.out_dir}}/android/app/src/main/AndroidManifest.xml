@@ -1,26 +1,19 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools">
     <!-- flet: permission {% for k, v in cookiecutter._options.android_permissions.items() %} {% if v %} -->
-    <uses-permission android:name="{{ k }}"{% if v is mapping %}{% for ak, av in v.items() %} android:{{ ak }}="{{ av }}"{% endfor %}{% endif %} />
+    <uses-permission android:name="{{ k | e }}"{% if v is mapping %}{% for ak, av in v.items() %} android:{{ ak }}="{{ av | e }}"{% endfor %}{% endif %} />
     <!-- flet: end of permission {% else %} -->
-    <uses-permission android:name="{{ k }}" tools:node="remove" />
+    <uses-permission android:name="{{ k | e }}" tools:node="remove" />
     <!-- flet: end of permission {% endif %} {% endfor %} -->
 
     <!-- flet: feature {% for k, v in cookiecutter._options.android_features.items() %} -->
-    <uses-feature android:name="{{ k }}" android:required="{% if v == True %}true{% else %}false{% endif %}" />
+    <uses-feature android:name="{{ k | e }}" android:required="{% if v == True %}true{% else %}false{% endif %}" />
     <!-- flet: end of feature {% endfor %} -->
 
-    <!-- {% set manifest_application = cookiecutter._pyproject.get('tool', {}).get('flet', {}).get('android', {}).get('manifest_application', {}) %} -->
-    <application
-        android:label="{{ cookiecutter.product_name }}"
-        android:name="${applicationName}"
-        android:enableOnBackInvokedCallback="true"
-        {% if manifest_application -%}{% for k, v in cookiecutter._pyproject.tool.flet.android.manifest_application.items() -%}
-        android:{{ k }}="{{ v }}"
-        {% endfor -%}{% endif -%}
-        android:icon="@mipmap/ic_launcher">
+    <application{% for key, value in cookiecutter._options.android_application_attributes.items() %}
+        android:{{ key }}="{{ value | e }}"{% endfor %}>
         <!-- flet: meta-data {% for k, v in cookiecutter._options.android_meta_data.items() %} -->
-        <meta-data android:name="{{ k }}" android:value="{{ v }}" />
+        <meta-data android:name="{{ k | e }}" android:value="{{ v | e }}" />
         <!-- flet: end of meta-data {% endfor %} -->
         <activity
             android:name=".MainActivity"
@@ -44,16 +37,22 @@
                 <category android:name="android.intent.category.LAUNCHER" />
                 <category android:name="android.intent.category.LEANBACK_LAUNCHER" />   <!-- Google TV -->
             </intent-filter>
-            <!-- flet: deep linking {% if cookiecutter._options.deep_linking.scheme and cookiecutter._options.deep_linking.host %} -->
-            <meta-data android:name="flutter_deeplinking_enabled" android:value="true" />
+            <!-- flet: deep linking {% if cookiecutter._options.deep_linking.scheme %} -->
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />
                 <category android:name="android.intent.category.DEFAULT" />
                 <category android:name="android.intent.category.BROWSABLE" />
-                <data android:scheme="{{ cookiecutter._options.deep_linking.scheme }}"
-                    android:host="{{ cookiecutter._options.deep_linking.host }}" />
+                <data android:scheme="{{ cookiecutter._options.deep_linking.scheme | e }}"{% if cookiecutter._options.deep_linking.host %}
+                    android:host="{{ cookiecutter._options.deep_linking.host | e }}"{% endif %} />
             </intent-filter>
             <!-- flet: end of deep linking {% endif %} -->
+            <!-- flet: activity intent filters {% for intent_filter in cookiecutter._options.android_activity.intent_filters %} -->
+            <intent-filter{% for key, value in intent_filter.attributes.items() %} android:{{ key }}="{{ value | e }}"{% endfor %}>
+                {% for action in intent_filter.actions %}<action android:name="{{ action | e }}" />
+                {% endfor %}{% for category in intent_filter.categories %}<category android:name="{{ category | e }}" />
+                {% endfor %}{% for data in intent_filter.data %}<data{% for key, value in data.items() %} android:{{ key }}="{{ value | e }}"{% endfor %} />
+                {% endfor %}</intent-filter>
+            <!-- flet: end of activity intent filters {% endfor %} -->
         </activity>
         <provider
             android:name="androidx.core.content.FileProvider"
@@ -65,15 +64,16 @@
                 android:resource="@xml/provider_paths" />
         </provider>
         <!-- flet: provider {% for k, v in cookiecutter._options.android_providers.items() %} {% if v %} -->
-        <provider android:name="{{ k }}"{% for ak, av in v.items() if ak != 'meta_data' %} android:{{ ak }}="{{ av }}"{% endfor %}{% if not v.get('meta_data') %} />{% else %}>
-            {% for mk, mv in v.meta_data.items() %}{% if mv is mapping %}<meta-data android:name="{{ mk }}"{% for attr_key, attr_value in mv.items() %} android:{{ attr_key }}="{{ attr_value }}"{% endfor %} />{% else %}<meta-data android:name="{{ mk }}" android:value="{{ mv }}" />{% endif %}
+        <provider android:name="{{ k | e }}"{% for ak, av in v.items() if ak != 'meta_data' %} android:{{ ak }}="{{ av | e }}"{% endfor %}{% if not v.get('meta_data') %} />{% else %}>
+            {% for mk, mv in v.meta_data.items() %}{% if mv is mapping %}<meta-data android:name="{{ mk | e }}"{% for attr_key, attr_value in mv.items() %} android:{{ attr_key }}="{{ attr_value | e }}"{% endfor %} />{% else %}<meta-data android:name="{{ mk | e }}" android:value="{{ mv | e }}" />{% endif %}
             {% endfor %}</provider>{% endif %}
         <!-- flet: end of provider {% endif %} {% endfor %} -->
         <!-- flet: receiver {% for name, receiver in cookiecutter._options.android_receivers.items() %} -->
         <receiver android:name="{{ name | e }}"{% for key, value in receiver.attributes.items() %} android:{{ key }}="{{ value | e }}"{% endfor %}{% if not receiver.intent_filters %} />{% else %}>
-            {% for intent_filter in receiver.intent_filters %}<intent-filter>
+            {% for intent_filter in receiver.intent_filters %}<intent-filter{% for key, value in intent_filter.attributes.items() %} android:{{ key }}="{{ value | e }}"{% endfor %}>
                 {% for action in intent_filter.actions %}<action android:name="{{ action | e }}" />
                 {% endfor %}{% for category in intent_filter.categories %}<category android:name="{{ category | e }}" />
+                {% endfor %}{% for data in intent_filter.data %}<data{% for key, value in data.items() %} android:{{ key }}="{{ value | e }}"{% endfor %} />
                 {% endfor %}</intent-filter>
             {% endfor %}</receiver>{% endif %}
         <!-- flet: end of receiver {% endfor %} -->
@@ -99,5 +99,18 @@
             <action android:name="android.intent.action.PROCESS_TEXT" />
             <data android:mimeType="text/plain" />
         </intent>
+        <!-- flet: queries packages {% for package in cookiecutter._options.android_queries.packages %} -->
+        <package android:name="{{ package | e }}" />
+        <!-- flet: end of queries packages {% endfor %} -->
+        <!-- flet: queries intents {% for intent in cookiecutter._options.android_queries.intents %} -->
+        <intent>
+            <action android:name="{{ intent.action | e }}" />
+            {% for category in intent.categories %}<category android:name="{{ category | e }}" />
+            {% endfor %}{% for data in intent.data %}<data{% for key, value in data.items() %} android:{{ key }}="{{ value | e }}"{% endfor %} />
+            {% endfor %}</intent>
+        <!-- flet: end of queries intents {% endfor %} -->
+        <!-- flet: queries providers {% for authorities in cookiecutter._options.android_queries.providers %} -->
+        <provider android:authorities="{{ authorities | e }}" />
+        <!-- flet: end of queries providers {% endfor %} -->
     </queries>
 </manifest>

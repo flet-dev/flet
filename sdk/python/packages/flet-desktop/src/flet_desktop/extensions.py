@@ -57,6 +57,26 @@ def get_client_extensions(snapshot_path: str) -> Optional[set[str]]:
     return packages if "flet" in packages else None
 
 
+def find_extension_packages() -> set[str]:
+    """
+    Return the Flutter package names of the extensions on `sys.path`.
+
+    Extensions install a `flutter/<package>/pubspec.yaml` file next to their
+    Python modules, so this only lists those folders, without reading any
+    distribution's metadata. Use `find_installed_extensions()` to learn which
+    distribution and modules a package comes with.
+    """
+
+    packages: set[str] = set()
+    for entry in sys.path:
+        flutter_dir = Path(entry or ".") / "flutter"
+        try:
+            packages.update(p.parent.name for p in flutter_dir.glob("*/pubspec.yaml"))
+        except OSError:
+            continue
+    return packages
+
+
 def find_installed_extensions() -> list[InstalledExtension]:
     """
     Return the Flet extensions installed in the current environment.
