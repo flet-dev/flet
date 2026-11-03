@@ -13,7 +13,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ### Changed
 
-- On Android, every `Audio` of an app now plays together by default, where one used to pause the others for good, and other apps' audio gets quieter instead of pausing. Set `context=AudioContext(focus=AudioFocus.GAIN)` for the previous behavior ([#7034](https://github.com/flet-dev/flet/issues/7034), [#7043](https://github.com/flet-dev/flet/pull/7043)).
+- On Android, every `Audio` of an app now plays together by default, where one used to pause the others for good, and other apps' audio gets quieter instead of pausing. Set `context=AudioContext(focus=AudioFocus.GAIN)` for the previous behavior. See the [Android: every Audio now plays together by default](https://flet.dev/docs/updates/breaking-changes/v1-1-0/android-audio-focus-default) guide ([#7034](https://github.com/flet-dev/flet/issues/7034), [#7043](https://github.com/flet-dev/flet/pull/7043)).
 
 ### Fixed
 
