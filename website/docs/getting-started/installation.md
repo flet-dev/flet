@@ -59,9 +59,15 @@ or add the setting to your project's `pyproject.toml`:
 desktop_flavor = "full"
 ```
 
-If you use the **light** flavor and need audio or video, you will need to install the
-required libraries yourself - see the [Audio](../services/audio/index.md#usage) and
-[Video](../controls/video/index.md#linux) setup guides.
+Installing system libraries doesn't add audio or video to the **light** flavor: with it, a
+`Video` control shows `Unknown control: Video` and `Audio` calls time out. Use the **full**
+flavor instead. It needs the system's `libmpv` and GStreamer libraries to start; see the
+[Video](../controls/video/index.md#linux) setup guide for the packages to install.
+When your app uses an extension that the client it starts doesn't include, Flet logs a
+warning that names the extension.
+
+Flet downloads the client build that matches your system's glibc version. To pick a build
+yourself, set [`FLET_LINUX_DISTRO`](../reference/environment-variables.md#flet_linux_distro).
 </details>
 
 <details>

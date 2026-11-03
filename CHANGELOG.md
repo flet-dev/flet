@@ -59,6 +59,8 @@
 
 ### Bug fixes
 
+* Fix the full Linux desktop client failing to start after an OS upgrade or a `FLET_LINUX_DISTRO` change, when the client cached for the previous distro was reused ([#5311](https://github.com/flet-dev/flet/issues/5311), [#7030](https://github.com/flet-dev/flet/pull/7030)) by @ndonkoHenri.
+* Fix `desktop_flavor` in `pyproject.toml` being ignored when the app is started from another directory with `flet run` or `python` ([#6265](https://github.com/flet-dev/flet/issues/6265), [#7030](https://github.com/flet-dev/flet/pull/7030)) by @ndonkoHenri.
 * Fix `flet build windows` stopping with an unclear CMake error when the artifact name contains a character that Windows doesn't allow in file names: it now names the character before building ([#7038](https://github.com/flet-dev/flet/pull/7038)) by @ndonkoHenri.
 * Fix `flet build windows` failing when the company, copyright or product name contains `"`, and turning sequences such as `\n` in them into control characters ([#7038](https://github.com/flet-dev/flet/pull/7038)) by @ndonkoHenri.
 * Fix `flet build macos` failing with `Scheme Runner is not currently configured for the build action` when the product or artifact name contains `&` ([#7036](https://github.com/flet-dev/flet/pull/7036)) by @ndonkoHenri.
@@ -131,6 +133,8 @@
 ### Improvements
 
 * Add `--pwa-short-name` and `[tool.flet.web].pwa_short_name` to `flet build web` to set the `short_name` of the web app manifest: the label shown under the app icon when the PWA is installed, e.g. on the iOS Home Screen. It defaults to the product name ([#6911](https://github.com/flet-dev/flet/pull/6911)) by @FeodorFitsner.
+* Warn when a desktop app uses an extension the prebuilt desktop client doesn't include, such as Audio or Video with the light Linux client, instead of only showing unknown controls ([#6121](https://github.com/flet-dev/flet/issues/6121), [#6265](https://github.com/flet-dev/flet/issues/6265), [#7030](https://github.com/flet-dev/flet/pull/7030)) by @ndonkoHenri.
+* Show which packages to install when the Linux desktop client can't start because a shared library such as `libmpv.so.2` can't be loaded ([#2823](https://github.com/flet-dev/flet/issues/2823), [#7030](https://github.com/flet-dev/flet/pull/7030)) by @ndonkoHenri.
 
 ### Bug fixes
 
