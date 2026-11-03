@@ -83,11 +83,18 @@ class Audio(ft.Service):
 
     context: Optional[AudioContext] = None
     """
-    How this audio interacts with the device and with other audio on mobile platforms,
-    such as whether it plays over other audio.
+    Defines how this audio interacts with the device and with other audio on mobile
+    platforms, such as whether it plays over other audio.
 
-    If `None`, every :class:`~flet_audio.AudioContext` default applies, so on Android
-    every `Audio` of an app plays together.
+    If `None`, :attr:`flet_audio.AudioContext.respect_silence` is `False`, and
+    :attr:`flet_audio.AudioContext.focus` depends on the platform:
+
+    - On Android, `focus` is :attr:`flet_audio.AudioFocus.DUCK_OTHERS`, so every
+      `Audio` of an app plays together, and other apps' audio gets quieter.
+    - On iOS, `focus` is :attr:`flet_audio.AudioFocus.GAIN`, which interrupts other
+      apps' audio. If another `Audio` of the app has applied a context, that context
+      applies instead, because iOS shares it across the app.
+    - On other platforms, this property is ignored.
 
     Should ideally be set when creating the control. On Android, changing it after a
     source is set prepares that source again, which restarts audio that is playing
@@ -116,10 +123,11 @@ class Audio(ft.Service):
     Fires when audio player state changes.
 
     Note:
-        - On Android, it doesn't fire when something else pauses this audio, such as a
-            ringing phone call or another app taking audio focus, so the last reported
-            state remains :attr:`flet_audio.AudioState.PLAYING`.
-            :meth:`flet_audio.Audio.get_current_position` stops advancing meanwhile.
+        - On Android and iOS, it doesn't fire when another app pauses this audio, nor
+            on Android when a phone call rings, so the last reported state remains
+            :attr:`flet_audio.AudioState.PLAYING`.
+            :meth:`flet_audio.Audio.get_current_position` stops advancing meanwhile,
+            and :meth:`flet_audio.Audio.resume` plays the audio again.
         - On iOS, audio with :attr:`flet_audio.ReleaseMode.LOOP` reports
             :attr:`flet_audio.AudioState.COMPLETED` each time it restarts, while it
             keeps playing.

@@ -3,6 +3,7 @@ import 'package:audioplayers_platform_interface/audioplayers_platform_interface.
 import 'package:flet/flet.dart';
 import 'package:flet_audio/src/audio.dart';
 import 'package:flet_audio/src/extension.dart';
+import 'package:flet_audio/src/utils/audio.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:path_provider_platform_interface/path_provider_platform_interface.dart';
@@ -109,9 +110,11 @@ class _AudioPlatform extends AudioplayersPlatformInterface {
 
 class _GlobalPlatform extends GlobalAudioplayersPlatformInterface {
   final audioFocuses = <AndroidAudioFocus>[];
+  final iosOptions = <Set<AVAudioSessionOptions>>[];
   @override
   Future<void> setGlobalAudioContext(AudioContext context) async {
     audioFocuses.add(context.android.audioFocus);
+    iosOptions.add(context.iOS.options);
   }
 
   @override
@@ -171,6 +174,7 @@ void main() {
     paths = _PathProvider(directory);
     PathProviderPlatform.instance = paths;
     debugDefaultTargetPlatformOverride = TargetPlatform.macOS;
+    IosDucking.reset();
     backend = FletBackend(
         pageUri: Uri.parse('http://localhost'),
         assetsDir: '',
@@ -380,6 +384,100 @@ void main() {
       service.update();
       await _settle();
       expect(platform.audioFocuses, hasLength(1));
+    });
+
+    test('applies a context equal to the default on iOS', () async {
+      await createService(TargetPlatform.iOS);
+      control.properties['context'] = {'focus': 'gain'};
+      service.update();
+      await _settle();
+      expect(platform.contexts.single.iOS.options, isEmpty);
+    });
+
+    group('ducking on iOS', () {
+      const duck = {AVAudioSessionOptions.duckOthers};
+      const mix = {AVAudioSessionOptions.mixWithOthers};
+
+      Future<dynamic> call(_Control target, String method) => target
+          .invokeMethod(method, {'position': null}, const Duration(seconds: 5));
+
+      setUp(() async {
+        await createService(TargetPlatform.iOS);
+        control.properties['src'] = 'https://example.com/a.wav';
+        control.properties['context'] = {'focus': 'duckOthers'};
+        service.init();
+        await _settle();
+      });
+
+      test('is released until the audio plays', () async {
+        expect(globalPlatform.iosOptions, [mix]);
+        await call(control, 'play');
+        expect(globalPlatform.iosOptions, [mix, duck]);
+      });
+
+      test('is released and restored when pausing and resuming', () async {
+        await call(control, 'play');
+        await call(control, 'pause');
+        await _settle();
+        expect(globalPlatform.iosOptions, [mix, duck, mix]);
+        await call(control, 'resume');
+        expect(globalPlatform.iosOptions, [mix, duck, mix, duck]);
+      });
+
+      test('is released when the audio is released', () async {
+        await call(control, 'play');
+        await call(control, 'release');
+        await _settle();
+        expect(globalPlatform.iosOptions, [mix, duck, mix]);
+      });
+
+      test('is released when the audio completes', () async {
+        await call(control, 'play');
+        platform.events.values.single
+            .add(const AudioEvent(eventType: AudioEventType.complete));
+        await _settle();
+        expect(globalPlatform.iosOptions, [mix, duck, mix]);
+      });
+
+      test('stays while looping audio restarts', () async {
+        control.properties['release_mode'] = 'loop';
+        service.update();
+        await _settle();
+        await call(control, 'play');
+        platform.events.values.single
+            .add(const AudioEvent(eventType: AudioEventType.complete));
+        await _settle();
+        expect(globalPlatform.iosOptions, [mix, duck]);
+      });
+
+      test('stays until the last playing audio stops', () async {
+        final other = _Control(backend, {'src': 'https://example.com/b.wav'});
+        final otherService = AudioService(control: other);
+        await otherService.player.creatingCompleter.future;
+        otherService.init();
+        await _settle();
+        await call(control, 'play');
+        await call(other, 'play');
+        await call(control, 'pause');
+        await _settle();
+        expect(globalPlatform.iosOptions, [mix, duck]);
+        await call(other, 'pause');
+        await _settle();
+        expect(globalPlatform.iosOptions, [mix, duck, mix]);
+        otherService.dispose();
+      });
+
+      test('never changes a context without ducking', () async {
+        IosDucking.reset();
+        globalPlatform.iosOptions.clear();
+        control.properties['context'] = {'focus': 'mixWithOthers'};
+        service.update();
+        await _settle();
+        await call(control, 'play');
+        await call(control, 'pause');
+        await _settle();
+        expect(globalPlatform.iosOptions, isEmpty);
+      });
     });
 
     test('is ignored on other platforms', () async {

@@ -136,17 +136,23 @@ class AudioFocus(Enum):
 
     On Android, any other audio that is playing, including another
     :class:`~flet_audio.Audio` of the same app, is paused and doesn't resume on its
-    own. On iOS, other apps' audio is interrupted.
+    own. On iOS, other apps' audio is interrupted and doesn't resume on its own. If
+    the app has already played audio, this happens as soon as the context is applied,
+    even before this audio plays.
 
     Best for music players.
     """
 
     DUCK_OTHERS = "duckOthers"
     """
-    Lowers the volume of other apps' audio until this audio stops.
+    Lowers the volume of other apps' audio while this audio plays.
 
     On Android, another :class:`~flet_audio.Audio` of the same app keeps playing at
-    its own volume.
+    its own volume. Other apps' audio also stays lowered while this audio is paused,
+    until it is released or finishes after resuming.
+
+    On iOS, other apps' audio returns to its volume once no
+    :class:`~flet_audio.Audio` of the app is playing.
 
     Warning:
         On iOS, can't be combined with :attr:`flet_audio.AudioContext.respect_silence`.

@@ -21,9 +21,14 @@ class AudioService extends FletService {
   Uint8List? _srcBytes;
   ReleaseMode? _releaseMode;
 
-  /// The context [player] currently has, which starts as the default that
-  /// `Extension.ensureInitialized` gives every player.
-  AudioContext _audioContext = parseAudioContext(null);
+  /// The context last applied to [player].
+  ///
+  /// On Android, it starts as the default that `Extension.ensureInitialized`
+  /// gives every player. On iOS, it starts as `null`: a context applies to the
+  /// whole app there, so any context that is set must be applied, even one equal
+  /// to the default.
+  AudioContext? _audioContext =
+      isAndroidMobile() ? parseAudioContext(null) : null;
 
   double? _volume;
   double? _balance;
@@ -53,6 +58,7 @@ class AudioService extends FletService {
     _onStateChangedSubscription =
         player.onPlayerStateChanged.listen((PlayerState state) {
       control.triggerEvent("state_change", {"state": state.name});
+      _trackIosDucking(state);
     });
 
     _onPositionChangedSubscription =
@@ -154,7 +160,7 @@ class AudioService extends FletService {
       if (srcChanged && sourceVersion == _sourceVersion) {
         control.triggerEvent("loaded");
         if (control.getBool("autoplay", false)!) {
-          await player.resume();
+          await _resume();
         }
       }
     }();
@@ -207,10 +213,38 @@ class AudioService extends FletService {
   /// support audio contexts.
   Future<void> _applyAudioContext() async {
     if (!isMobilePlatform()) return;
-    final audioContext = parseAudioContext(control.get("context"));
+    final value = control.get("context");
+    if (value == null && _audioContext == null) return;
+    final audioContext = parseAudioContext(value);
     if (audioContext == _audioContext) return;
     _audioContext = audioContext;
     await player.setAudioContext(audioContext);
+    if (isIOSMobile()) await IosDucking.contextApplied(audioContext);
+  }
+
+  /// Starts [player], after restoring any context [IosDucking] released.
+  Future<void> _resume() async {
+    if (!isIOSMobile()) return player.resume();
+    await IosDucking.startPlaying(this);
+    try {
+      await player.resume();
+    } catch (_) {
+      await IosDucking.stopPlaying(this);
+      rethrow;
+    }
+  }
+
+  /// Tells [IosDucking] when [player] stops playing.
+  ///
+  /// iOS reports [PlayerState.completed] each time audio under
+  /// [ReleaseMode.loop] restarts, while it keeps playing.
+  void _trackIosDucking(PlayerState state) {
+    if (!isIOSMobile() ||
+        state == PlayerState.playing ||
+        (state == PlayerState.completed && _releaseMode == ReleaseMode.loop)) {
+      return;
+    }
+    IosDucking.stopPlaying(this);
   }
 
   /// Whether a source is set, in [_src] or [_srcBytes].
@@ -292,10 +326,10 @@ class AudioService extends FletService {
         } else if (position != null) {
           await player.seek(position);
         }
-        await player.resume();
+        await _resume();
         break;
       case "resume":
-        await player.resume();
+        await _resume();
         break;
       case "pause":
         await player.pause();
@@ -334,6 +368,7 @@ class AudioService extends FletService {
     _onPositionChangedSubscription?.cancel();
     _onSeekCompleteSubscription?.cancel();
     player.dispose();
+    if (isIOSMobile()) IosDucking.stopPlaying(this);
     super.dispose();
   }
 }
