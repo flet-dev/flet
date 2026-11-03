@@ -13,6 +13,21 @@ class _AudioPlatform extends AudioplayersPlatformInterface {
   Completer<void>? volumeGate;
   Completer<void>? sourceGate;
   bool failNextSource = false;
+  bool prepared = false;
+  final contexts = <AudioContext>[];
+  int contextRepreparations = 0;
+
+  @override
+  Future<void> setAudioContext(String id, AudioContext context) async {
+    contexts.add(context);
+    if (sources.isNotEmpty) {
+      // Android stops and asynchronously re-prepares an existing source when
+      // its context changes. The method returns before it is prepared again.
+      prepared = false;
+      contextRepreparations++;
+    }
+  }
+
   @override
   Future<void> create(String id) async {}
   @override
@@ -31,6 +46,7 @@ class _AudioPlatform extends AudioplayersPlatformInterface {
       return;
     }
     sources.add(url);
+    prepared = true;
     events[id]!.add(
         const AudioEvent(eventType: AudioEventType.prepared, isPrepared: true));
   }
@@ -53,6 +69,8 @@ class _AudioPlatform extends AudioplayersPlatformInterface {
   Future<void> setBalance(String id, double balance) async {}
   @override
   Future<int?> getCurrentPosition(String id) async => 0;
+  @override
+  Future<int?> getDuration(String id) async => prepared ? 1000 : null;
   @override
   Future<void> pause(String id) async {}
   @override
@@ -160,6 +178,32 @@ void main() {
     expect(platform.rate, 2.0);
     expect(control.events.where((e) => e == 'loaded'), hasLength(2));
   });
+  test('applies audio context before preparing the initial source', () async {
+    debugDefaultTargetPlatformOverride = TargetPlatform.android;
+    control.properties['src'] = 'https://example.com/effect.wav';
+    control.properties['audio_context'] = {'focus': 'mixWithOthers'};
+
+    service.update();
+    await _settle();
+
+    expect(platform.contexts.single.android.audioFocus, AndroidAudioFocus.none);
+    expect(control.events.where((e) => e == 'loaded'), hasLength(1));
+    expect(await service.player.getDuration(), const Duration(seconds: 1));
+    expect(platform.contextRepreparations, 0);
+  });
+
+  test('applies audio context without a source', () async {
+    debugDefaultTargetPlatformOverride = TargetPlatform.android;
+    control.properties['audio_context'] = {'focus': 'mixWithOthers'};
+
+    service.update();
+    await _settle();
+
+    expect(platform.contexts.single.android.audioFocus, AndroidAudioFocus.none);
+    expect(platform.sources, isEmpty);
+    expect(control.events, isNot(contains('loaded')));
+  });
+
   test('installs the latest URL after a superseded byte file write', () async {
     final gate = Completer<void>();
     paths.gate = gate;

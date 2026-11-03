@@ -252,10 +252,14 @@ Throughout this documentation, the following placeholders are used:
 
 :::note[Platform-specific overrides]
 When a setting can be set both under `[tool.flet]` and under `[tool.flet.<PLATFORM>]`,
-the platform value wins whenever it is present. For list and table settings (such as
-`app.exclude`, `app.include`, `source_packages`, `dev_packages`, `target_arch`,
-`cleanup.app_files`, `cleanup.package_files` and `flutter.build_args`), an empty value
-clears the global one for that platform:
+the platform value wins whenever it is present, including `false` and empty strings. For
+example, `hide_window_on_start = false` under `[tool.flet.macos.app]` shows the app at
+startup on macOS even when `[tool.flet.app]` hides it, and `org = ""` under
+`[tool.flet.ios]` drops the global `org` on iOS, so the default applies.
+
+For list and table settings (such as `app.exclude`, `app.include`, `source_packages`,
+`dev_packages`, `target_arch`, `cleanup.app_files`, `cleanup.package_files` and
+`flutter.build_args`), an empty value clears the global one for that platform:
 
 ```toml
 [tool.flet]
