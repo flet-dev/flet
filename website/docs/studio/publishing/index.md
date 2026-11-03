@@ -109,7 +109,7 @@ are always signed, and iOS install links work on Explorer.
 
 **Free trial.** Try Creator for 7 days, monthly or annual: a card is required, and you
 get 500 bonus credits on top of Explorer's 500 a month (the 10,000 start with your
-first payment). **Start plan now** in **Settings › Plan & usage** ends the trial early
+first payment). **Start plan now** in **Settings › Usage & billing** ends the trial early
 and gives you the 10,000 credits at once; cancelling before the trial ends costs
 nothing, and you keep the bonus. Each account, and each card, can have one trial.
 
