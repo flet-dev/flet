@@ -59,6 +59,9 @@
 
 ### Bug fixes
 
+* Fix `ResponsiveRow` not resizing its children when their `col` changes ([#6734](https://github.com/flet-dev/flet/issues/6734), [#7027](https://github.com/flet-dev/flet/pull/7027)) by @ndonkoHenri.
+* Fix `ResponsiveRow` failing with `spacing=0`, and reject negative `spacing` and `run_spacing` ([#6368](https://github.com/flet-dev/flet/issues/6368), [#7027](https://github.com/flet-dev/flet/pull/7027)) by @ndonkoHenri.
+* Fix `Row` and `ResponsiveRow` failing with `vertical_alignment=CrossAxisAlignment.BASELINE` ([#6368](https://github.com/flet-dev/flet/issues/6368), [#7027](https://github.com/flet-dev/flet/pull/7027)) by @ndonkoHenri.
 * Fix the full Linux desktop client failing to start after an OS upgrade or a `FLET_LINUX_DISTRO` change, when the client cached for the previous distro was reused ([#5311](https://github.com/flet-dev/flet/issues/5311), [#7030](https://github.com/flet-dev/flet/pull/7030)) by @ndonkoHenri.
 * Fix `desktop_flavor` in `pyproject.toml` being ignored when the app is started from another directory with `flet run` or `python` ([#6265](https://github.com/flet-dev/flet/issues/6265), [#7030](https://github.com/flet-dev/flet/pull/7030)) by @ndonkoHenri.
 * Fix `flet build windows` stopping with an unclear CMake error when the artifact name contains a character that Windows doesn't allow in file names: it now names the character before building ([#7038](https://github.com/flet-dev/flet/pull/7038)) by @ndonkoHenri.

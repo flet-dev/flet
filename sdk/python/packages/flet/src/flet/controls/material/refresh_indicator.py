@@ -157,11 +157,18 @@ class RefreshIndicator(LayoutControl):
         """
         Dispatches events, and hides the progress indicator once
         :attr:`on_refresh` returns or raises.
+
+        :attr:`on_refresh` may re-render the component, which replaces this control with
+        a new instance that takes over its id. So the progress indicator is hidden
+        through whichever instance has the id when the handler finishes. If none
+        has it, the control was removed during the refresh, and removing it
+        already hid the progress indicator.
         """
         session = self.page.session if event_name == "refresh" else None
         try:
             await super()._trigger_event(event_name, event_data, e)
         finally:
-            # Unmounting the client widget already finishes its refresh.
-            if session is not None and session.index.get(self._i) is self:
-                await self._invoke_method("finish_refresh")
+            if session is not None:
+                current = session.index.get(self._i)
+                if isinstance(current, RefreshIndicator):
+                    await current._invoke_method("finish_refresh")

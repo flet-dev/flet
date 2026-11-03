@@ -69,9 +69,9 @@ class Control(BaseControl):
 
     This control spans the 12 virtual columns by default.
 
-    | Breakpoint | Dimension |
+    | Breakpoint | Min width |
     |---|---|
-    | xs | <576px |
+    | xs | ≥0px |
     | sm | ≥576px |
     | md | ≥768px |
     | lg | ≥992px |
