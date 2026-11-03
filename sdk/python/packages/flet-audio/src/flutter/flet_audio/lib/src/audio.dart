@@ -35,6 +35,9 @@ class AudioService extends FletService {
   int _sourceVersion = 0;
   Future<void> _sourcePreparation = Future<void>.value();
 
+  /// The error from preparing the latest source, if that failed.
+  Object? _sourceError;
+
   @override
   void init() {
     super.init();
@@ -146,34 +149,7 @@ class AudioService extends FletService {
         _playbackRate = null;
       }
 
-      final releaseMode = parseReleaseMode(control.getString("release_mode"));
-
-      // releaseMode
-      if (releaseMode != null && releaseMode != _releaseMode) {
-        _releaseMode = releaseMode;
-        await player.setReleaseMode(releaseMode);
-      }
-
-      // volume
-      final volume = control.getDouble("volume", 1.0)!;
-      if (volume != _volume && volume >= 0 && volume <= 1) {
-        _volume = volume;
-        await player.setVolume(volume);
-      }
-
-      // playbackRate
-      final playbackRate = control.getDouble("playback_rate", 1)!;
-      if (playbackRate != _playbackRate) {
-        _playbackRate = playbackRate;
-        await player.setPlaybackRate(playbackRate);
-      }
-
-      // balance
-      final balance = control.getDouble("balance", 0.0)!;
-      if (!kIsWeb && balance != _balance && balance >= -1 && balance <= 1) {
-        _balance = balance;
-        await player.setBalance(balance);
-      }
+      await _applySettings();
 
       if (srcChanged && sourceVersion == _sourceVersion) {
         control.triggerEvent("loaded");
@@ -182,6 +158,49 @@ class AudioService extends FletService {
         }
       }
     }();
+  }
+
+  /// Applies the control's release mode, volume, playback rate and balance to
+  /// [player], when they changed.
+  Future<void> _applySettings() async {
+    // releaseMode
+    final releaseMode = parseReleaseMode(control.getString("release_mode"));
+    if (releaseMode != null && releaseMode != _releaseMode) {
+      _releaseMode = releaseMode;
+      await player.setReleaseMode(releaseMode);
+    }
+
+    // volume
+    final volume = control.getDouble("volume", 1.0)!;
+    if (volume != _volume && volume >= 0 && volume <= 1) {
+      _volume = volume;
+      await player.setVolume(volume);
+    }
+
+    // playbackRate
+    final playbackRate = control.getDouble("playback_rate", 1)!;
+    if (playbackRate != _playbackRate) {
+      _playbackRate = playbackRate;
+      await player.setPlaybackRate(playbackRate);
+    }
+
+    // balance
+    final balance = control.getDouble("balance", 0.0)!;
+    if (!kIsWeb && balance != _balance && balance >= -1 && balance <= 1) {
+      _balance = balance;
+      await player.setBalance(balance);
+    }
+  }
+
+  /// Loads a source that failed to load again, then does what [update] couldn't
+  /// do after the failure.
+  Future<void> _reloadSource() async {
+    await _applySource();
+    _volume = null;
+    _balance = null;
+    _playbackRate = null;
+    await _applySettings();
+    control.triggerEvent("loaded");
   }
 
   /// Applies the control's `context` to [player] on the platforms that
@@ -229,8 +248,11 @@ class AudioService extends FletService {
     });
     // Keep the queue usable after a failed load. The caller still receives the
     // original error and decides whether this preparation was superseded.
-    _sourcePreparation = preparation.then<void>((_) {},
-        onError: (Object error, StackTrace stackTrace) {});
+    _sourcePreparation = preparation.then<void>((_) {
+      _sourceError = null;
+    }, onError: (Object error, StackTrace stackTrace) {
+      _sourceError = error;
+    });
     return preparation;
   }
 
@@ -242,7 +264,8 @@ class AudioService extends FletService {
   /// a `resume` and start playing as soon as a source is set.
   ///
   /// They also wait for a source that is still being prepared, because a seek
-  /// before that never completes on iOS.
+  /// before that never completes on iOS. A source that failed to load is loaded
+  /// again, so they either report its error at once or work once it is available.
   Future<dynamic> _invokeMethod(String name, dynamic args) async {
     debugPrint("Audio.$name($args)");
     if (const ["play", "resume", "seek"].contains(name)) {
@@ -250,6 +273,7 @@ class AudioService extends FletService {
         throw Exception("Audio must have \"src\" specified to $name.");
       }
       await _sourcePreparation;
+      if (_sourceError != null) await _reloadSource();
     }
     switch (name) {
       case "play":

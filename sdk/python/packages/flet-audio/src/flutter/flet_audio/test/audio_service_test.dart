@@ -17,6 +17,8 @@ class _AudioPlatform extends AudioplayersPlatformInterface {
   Completer<void>? sourceGate;
   Completer<void>? contextGate;
   bool failNextSource = false;
+  bool failSources = false;
+  ReleaseMode? releaseMode;
   bool prepared = false;
   final contexts = <AudioContext>[];
   int contextRepreparations = 0;
@@ -51,7 +53,7 @@ class _AudioPlatform extends AudioplayersPlatformInterface {
     final gate = sourceGate;
     sourceGate = null;
     if (gate != null) await gate.future;
-    if (failNextSource) {
+    if (failNextSource || failSources) {
       failNextSource = false;
       events[id]!.addError(StateError('superseded load failed'));
       return;
@@ -75,7 +77,10 @@ class _AudioPlatform extends AudioplayersPlatformInterface {
   }
 
   @override
-  Future<void> setReleaseMode(String id, ReleaseMode mode) async {}
+  Future<void> setReleaseMode(String id, ReleaseMode mode) async {
+    releaseMode = mode;
+  }
+
   @override
   Future<void> setBalance(String id, double balance) async {}
   @override
@@ -278,6 +283,34 @@ void main() {
     await play;
     expect(platform.sources, hasLength(1));
     expect(platform.resumes, 1);
+  });
+  test('play reports a source that fails to load', () async {
+    platform.failSources = true;
+    runZonedGuarded(() {
+      control.properties['src'] = 'https://example.com/missing.wav';
+      service.init();
+    }, (_, __) {});
+    await _settle();
+    await expectLater(
+        control.invokeMethod(
+            'play', {'position': null}, const Duration(seconds: 5)),
+        throwsA(anything));
+    expect(platform.resumes, 0);
+  });
+  test('play loads a source again after it failed to load', () async {
+    platform.failNextSource = true;
+    runZonedGuarded(() {
+      control.properties['src'] = 'https://example.com/a.wav';
+      control.properties['release_mode'] = 'loop';
+      service.init();
+    }, (_, __) {});
+    await _settle();
+    await control.invokeMethod(
+        'play', {'position': null}, const Duration(seconds: 5));
+    expect(platform.sources, hasLength(1));
+    expect(platform.resumes, 1);
+    expect(platform.releaseMode, ReleaseMode.loop);
+    expect(control.events.where((e) => e == 'loaded'), hasLength(1));
   });
   group('context', () {
     Future<void> createService(TargetPlatform targetPlatform) async {
