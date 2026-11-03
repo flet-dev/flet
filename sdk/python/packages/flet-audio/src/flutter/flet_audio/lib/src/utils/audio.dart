@@ -1,25 +1,28 @@
 import 'package:audioplayers/audioplayers.dart';
-import 'package:collection/collection.dart';
 import 'package:flet/flet.dart';
 
 ReleaseMode? parseReleaseMode(String? value, [ReleaseMode? defaultValue]) {
-  if (value == null) return defaultValue;
-  return ReleaseMode.values.firstWhereOrNull(
-          (e) => e.name.toLowerCase() == value.toLowerCase()) ??
-      defaultValue;
+  return parseEnum(ReleaseMode.values, value, defaultValue);
 }
 
-AudioContext? parseAudioContext(dynamic value) {
-  if (value is! Map) return null;
+AudioContextConfigFocus? parseAudioFocus(String? value,
+    [AudioContextConfigFocus? defaultValue]) {
+  return parseEnum(AudioContextConfigFocus.values, value, defaultValue);
+}
 
-  final config = AudioContextConfig(
-    route: parseEnum(AudioContextConfigRoute.values, value["route"]?.toString(),
-        AudioContextConfigRoute.system)!,
-    focus: parseEnum(AudioContextConfigFocus.values, value["focus"]?.toString(),
-        AudioContextConfigFocus.gain)!,
-    respectSilence: parseBool(value["respect_silence"], false)!,
-    stayAwake: parseBool(value["stay_awake"], false)!,
-  );
-
-  return config.build();
+/// Parses an `AudioContext`, or its defaults when [value] isn't set.
+///
+/// The Android focus defaults to `duckOthers` rather than audioplayers' `gain`,
+/// under which each player that starts pauses the others for good, unlike on
+/// other platforms.
+AudioContext parseAudioContext(dynamic value) {
+  final Map context = value is Map ? value : const {};
+  return AudioContextConfig(
+    focus: parseAudioFocus(
+        context["focus"]?.toString(),
+        isAndroidMobile()
+            ? AudioContextConfigFocus.duckOthers
+            : AudioContextConfigFocus.gain)!,
+    respectSilence: parseBool(context["respect_silence"], false)!,
+  ).build();
 }

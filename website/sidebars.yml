@@ -506,9 +506,8 @@ docs:
       - types/animationstyle.md
       - Audio:
         - services/audio/types/audiocontext.md
-        - services/audio/types/audiocontextfocus.md
-        - services/audio/types/audiocontextroute.md
         - services/audio/types/audiodurationchangeevent.md
+        - services/audio/types/audiofocus.md
         - services/audio/types/audiopositionchangeevent.md
         - services/audio/types/audiostatechangeevent.md
         - services/audio/types/audiostate.md

@@ -11,6 +11,7 @@
 * `flet build` for macOS and Windows no longer writes a placeholder copyright: without `copyright`, it's generated from `company`, or left empty without one. On macOS, the copyright text is used as written, no longer followed by `. All rights reserved.` ([#7038](https://github.com/flet-dev/flet/pull/7038)) by @ndonkoHenri.
 * `flet build windows` now escapes the company and product names itself: remove any `""` or `\\` added by hand to work around the old behavior, otherwise the app looks for its data in a different folder ([#7038](https://github.com/flet-dev/flet/pull/7038)) by @ndonkoHenri.
 * The Flet desktop client is no longer built for Debian 10 on ARM64: `flet run` on an ARM64 Linux system with glibc older than 2.31 (Debian 10 and other glibc 2.28 distros) now stops with an error naming the glibc it needs. Debian 10 on x86-64 is still supported by @FeodorFitsner.
+* flet-audio: On Android, every `Audio` of an app now plays together by default, where one used to pause the others for good, and other apps' audio gets quieter instead of pausing. Set `context=AudioContext(focus=AudioFocus.GAIN)` on a music player to keep pausing other audio ([#7034](https://github.com/flet-dev/flet/issues/7034), [#7041](https://github.com/flet-dev/flet/pull/7041)) by @BartoszKog.
 
 ### New features
 
@@ -28,7 +29,7 @@
 * `flet build`: add `[tool.flet.android.queries]` to declare the apps, intents and content providers an Android app looks up, which Android 11+ hides otherwise, for example to open a payment app or check a URL scheme with `UrlLauncher.can_launch_url()`. See [Queries](/docs/publish/android#queries) ([#6560](https://github.com/flet-dev/flet/issues/6560), [#7031](https://github.com/flet-dev/flet/pull/7031)) by @ndonkoHenri.
 * `flet build`: add `[tool.flet.android]` settings for the app's [Java compile options](/docs/publish/android#java-compile-options) (`compile_options`), [Gradle dependencies](/docs/publish/android#gradle-dependencies) (`gradle_dependencies`), and manifest [receivers](/docs/publish/android#receivers) (`receiver`) and [services](/docs/publish/android#services) (`service`) ([#6999](https://github.com/flet-dev/flet/pull/6999)) by @ndonkoHenri.
 * Add `text_input_action` to `TextField` and `CupertinoTextField`, with the `TextInputAction` enum, to choose the action button of the onscreen keyboard: `TextInputAction.NEXT` moves focus to the next focusable control, keeping the keyboard open when that is another text field ([#6962](https://github.com/flet-dev/flet/issues/6962), [#7021](https://github.com/flet-dev/flet/pull/7021)) by @ndonkoHenri.
-* `flet-audio`: Added `Audio.audio_context` (`AudioContext`, `AudioContextFocus`, `AudioContextRoute`) for configuring mobile audio session and focus behavior ([#7034](https://github.com/flet-dev/flet/issues/7034)) by @BartoszKog.
+* flet-audio: Add `Audio.context` (`AudioContext`, `AudioFocus`) to configure mobile audio focus and silent mode ([#7034](https://github.com/flet-dev/flet/issues/7034), [#7041](https://github.com/flet-dev/flet/pull/7041)) by @BartoszKog.
 
 ### Improvements
 

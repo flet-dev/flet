@@ -14,6 +14,11 @@ from flet_audio.types import (
 class Audio(ft.Service):
     """
     A control to simultaneously play multiple audio sources.
+
+    Note:
+        Keep a reference to an `Audio`, such as in a variable that your event handlers
+        use, for as long as it should play. Flet removes services that no longer have
+        live Python references after an event is handled, which stops their playback.
     """
 
     src: Optional[Union[str, bytes]] = None
@@ -76,19 +81,23 @@ class Audio(ft.Service):
     Defines the release mode.
     """
 
-    audio_context: Optional[AudioContext] = None
+    context: Optional[AudioContext] = None
     """
-    Configures platform-specific audio session and focus behavior
-    (for example mixing or ducking background music on Android/iOS).
+    How this audio interacts with the device and with other audio on mobile platforms,
+    such as whether it plays over other audio.
 
-    When unset (`None`), Flet does not apply a custom audio context, so the
-    player keeps whatever context it already has. For a new player on mobile,
-    that means the usual effective behavior:
-    :attr:`~flet_audio.AudioContextRoute.SYSTEM`,
-    :attr:`~flet_audio.AudioContextFocus.GAIN`, `respect_silence=False`,
-    and `stay_awake=False`.
+    If `None`, every :class:`~flet_audio.AudioContext` default applies, so on Android
+    every `Audio` of an app plays together.
 
-    See :class:`~flet_audio.AudioContext`.
+    Should ideally be set when creating the control. On Android, changing it after a
+    source is set prepares that source again, which restarts audio that is playing
+    from the beginning. Changing it to :attr:`~flet_audio.AudioFocus.GAIN` stops
+    that audio instead, until :meth:`~flet_audio.Audio.resume` is called.
+
+    Note:
+        If the app declares the `android.permission.MODIFY_AUDIO_SETTINGS` permission,
+        setting this resets the device's audio mode to normal and turns its
+        speakerphone off, which can interrupt a call that the app has in progress.
     """
 
     on_loaded: Optional[ft.ControlEventHandler["Audio"]] = None
@@ -105,6 +114,15 @@ class Audio(ft.Service):
     on_state_change: Optional[ft.EventHandler[AudioStateChangeEvent]] = None
     """
     Fires when audio player state changes.
+
+    Note:
+        - On Android, it doesn't fire when something else pauses this audio, such as a
+            ringing phone call or another app taking audio focus, so the last reported
+            state remains :attr:`~flet_audio.AudioState.PLAYING`.
+            :meth:`~flet_audio.Audio.get_current_position` stops advancing meanwhile.
+        - On iOS, audio with :attr:`~flet_audio.ReleaseMode.LOOP` reports
+            :attr:`~flet_audio.AudioState.COMPLETED` each time it restarts, while it
+            keeps playing.
     """
 
     on_position_change: Optional[ft.EventHandler[AudioPositionChangeEvent]] = None
@@ -114,6 +132,12 @@ class Audio(ft.Service):
     every 1 second if the status is playing.
 
     Can be used for a progress bar.
+
+    Note:
+        - On Android, it stops firing while something else pauses this audio, such as
+            a ringing phone call or another app taking audio focus.
+        - On iOS, it stops firing once audio with
+            :attr:`~flet_audio.ReleaseMode.LOOP` restarts for the first time.
     """
 
     on_seek_complete: Optional[ft.ControlEventHandler["Audio"]] = None

@@ -9,9 +9,8 @@ if TYPE_CHECKING:
 
 __all__ = [
     "AudioContext",
-    "AudioContextFocus",
-    "AudioContextRoute",
     "AudioDurationChangeEvent",
+    "AudioFocus",
     "AudioPositionChangeEvent",
     "AudioState",
     "AudioStateChangeEvent",
@@ -122,111 +121,82 @@ class AudioDurationChangeEvent(ft.Event["Audio"]):
     """The duration of the audio."""
 
 
-class AudioContextFocus(Enum):
+class AudioFocus(Enum):
     """
-    How the audio player requests and handles audio focus on mobile platforms.
+    How an :class:`~flet_audio.Audio` shares audio with other audio on mobile platforms.
+
+    On Android, focus belongs to each player, so an :class:`~flet_audio.Audio` competes
+    with others of the same app as it does with other apps. On iOS, it only decides how
+    the app treats other apps, because all audio of an app always plays together.
     """
 
     GAIN = "gain"
     """
-    Requests permanent audio focus, pausing other background audio apps.
+    Plays as the only audio.
+
+    On Android, any other audio that is playing, including another
+    :class:`~flet_audio.Audio` of the same app, is paused and doesn't resume on its
+    own. On iOS, other apps' audio is interrupted.
+
+    Best for music players.
     """
 
     DUCK_OTHERS = "duckOthers"
     """
-    Lowers the volume of other audio apps while this audio plays.
+    Lowers the volume of other apps' audio until this audio stops.
+
+    On Android, another :class:`~flet_audio.Audio` of the same app keeps playing at
+    its own volume.
 
     Warning:
-        Due to iOS platform limitations, cannot be combined with
-        :attr:`~flet_audio.AudioContext.respect_silence` set to `True`.
+        On iOS, can't be combined with :attr:`flet_audio.AudioContext.respect_silence`.
     """
 
     MIX_WITH_OTHERS = "mixWithOthers"
     """
-    Mixes with other background audio apps without pausing or ducking them.
+    Plays over other audio, which isn't affected.
+
+    On Android, nothing else pauses this audio, though Android still mutes it while a
+    phone call is ringing, during which its position keeps advancing.
+
+    Best for short sound effects that shouldn't lower the volume of other apps.
 
     Warning:
-        Due to iOS platform limitations, cannot be combined with
-        :attr:`~flet_audio.AudioContext.respect_silence` set to `True`.
+        On iOS, can't be combined with :attr:`flet_audio.AudioContext.respect_silence`.
     """
-
-
-class AudioContextRoute(Enum):
-    """
-    Audio output routing behavior.
-    """
-
-    SYSTEM = "system"
-    """Uses the default system audio route."""
-
-    SPEAKER = "speaker"
-    """
-    Forces audio output through the built-in speaker.
-
-    Warning:
-        Due to iOS platform limitations, cannot be combined with
-        :attr:`~flet_audio.AudioContext.respect_silence` set to `True`.
-    """
-
-    EARPIECE = "earpiece"
-    """Routes audio output to the earpiece receiver."""
 
 
 @ft.value(kw_only=True)
 class AudioContext:
     """
-    Cross-platform configuration for native audio session and focus behavior.
+    How an :class:`~flet_audio.Audio` interacts with the device and with other audio.
 
-    Unset fields (`None`) are filled in when the context is applied on mobile:
-    route as :attr:`~flet_audio.AudioContextRoute.SYSTEM`, focus as
-    :attr:`~flet_audio.AudioContextFocus.GAIN`, and `respect_silence` /
-    `stay_awake` as `False`.
+    Applies on Android and iOS. Other platforms ignore it.
 
     Note:
-        On iOS, audio context cannot be handled for each player individually,
-        so setting this property on an :class:`~flet_audio.Audio` instance
-        applies the context globally for the app.
-
-        Meaningful mainly on Android and iOS; desktop and web ignore it.
+        On iOS, it applies to the whole app rather than to one
+        :class:`~flet_audio.Audio`, so the one that applied it last decides for all
+        others.
     """
 
-    route: Optional[AudioContextRoute] = None
+    focus: Optional[AudioFocus] = None
     """
-    The audio output route (:attr:`~flet_audio.AudioContextRoute.SYSTEM`,
-    :attr:`~flet_audio.AudioContextRoute.SPEAKER`, or
-    :attr:`~flet_audio.AudioContextRoute.EARPIECE`).
+    How the audio shares with other audio.
 
-    If unset (`None`), mobile platforms behave as
-    :attr:`~flet_audio.AudioContextRoute.SYSTEM`.
-    """
-
-    focus: Optional[AudioContextFocus] = None
-    """
-    The audio focus mode (:attr:`~flet_audio.AudioContextFocus.GAIN`,
-    :attr:`~flet_audio.AudioContextFocus.DUCK_OTHERS`, or
-    :attr:`~flet_audio.AudioContextFocus.MIX_WITH_OTHERS`).
-
-    If unset (`None`), mobile platforms behave as
-    :attr:`~flet_audio.AudioContextFocus.GAIN`.
+    If `None`, :attr:`flet_audio.AudioFocus.DUCK_OTHERS` applies on Android, so
+    every :class:`~flet_audio.Audio` of an app plays together, and
+    :attr:`flet_audio.AudioFocus.GAIN` applies on iOS.
     """
 
-    respect_silence: Optional[bool] = None
+    respect_silence: bool = False
     """
-    Whether the audio should be muted when the device is in silent/ringer mode.
+    Whether the audio follows the device's silent mode.
 
-    If unset (`None`), mobile platforms behave as `False`
-    (audio can play while the device is silenced).
+    On Android, this plays the audio as a ringtone, so it also follows the ringer
+    volume instead of the media volume.
 
     Warning:
-        Due to iOS platform limitations, setting this to `True` cannot be
-        combined with :attr:`~flet_audio.AudioContextFocus.DUCK_OTHERS`,
-        :attr:`~flet_audio.AudioContextFocus.MIX_WITH_OTHERS`, or
-        :attr:`~flet_audio.AudioContextRoute.SPEAKER`.
-    """
-
-    stay_awake: Optional[bool] = None
-    """
-    Whether to keep the device awake (acquire a wake lock) while playing audio.
-
-    If unset (`None`), mobile platforms behave as `False`.
+        On iOS, can't be combined with :attr:`focus` set to
+        :attr:`flet_audio.AudioFocus.DUCK_OTHERS` or
+        :attr:`flet_audio.AudioFocus.MIX_WITH_OTHERS`.
     """

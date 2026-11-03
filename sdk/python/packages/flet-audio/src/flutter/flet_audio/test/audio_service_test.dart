@@ -2,6 +2,7 @@ import 'dart:async';
 import 'package:audioplayers_platform_interface/audioplayers_platform_interface.dart';
 import 'package:flet/flet.dart';
 import 'package:flet_audio/src/audio.dart';
+import 'package:flet_audio/src/extension.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:path_provider_platform_interface/path_provider_platform_interface.dart';
@@ -9,23 +10,33 @@ import 'package:path_provider_platform_interface/path_provider_platform_interfac
 class _AudioPlatform extends AudioplayersPlatformInterface {
   final events = <String, StreamController<AudioEvent>>{};
   final sources = <String>[];
+  int sourcesWhenFocusApplied = -1;
+  int resumes = 0;
   double rate = 1;
   Completer<void>? volumeGate;
   Completer<void>? sourceGate;
+  Completer<void>? contextGate;
   bool failNextSource = false;
   bool prepared = false;
   final contexts = <AudioContext>[];
   int contextRepreparations = 0;
 
+  List<AndroidAudioFocus> get audioFocuses =>
+      contexts.map((context) => context.android.audioFocus).toList();
+
   @override
   Future<void> setAudioContext(String id, AudioContext context) async {
     contexts.add(context);
+    sourcesWhenFocusApplied = sources.length;
     if (sources.isNotEmpty) {
       // Android stops and asynchronously re-prepares an existing source when
       // its context changes. The method returns before it is prepared again.
       prepared = false;
       contextRepreparations++;
     }
+    final gate = contextGate;
+    contextGate = null;
+    if (gate != null) await gate.future;
   }
 
   @override
@@ -72,6 +83,11 @@ class _AudioPlatform extends AudioplayersPlatformInterface {
   @override
   Future<int?> getDuration(String id) async => prepared ? 1000 : null;
   @override
+  Future<void> resume(String id) async {
+    resumes++;
+  }
+
+  @override
   Future<void> pause(String id) async {}
   @override
   Future<void> stop(String id) async {}
@@ -87,6 +103,12 @@ class _AudioPlatform extends AudioplayersPlatformInterface {
 }
 
 class _GlobalPlatform extends GlobalAudioplayersPlatformInterface {
+  final audioFocuses = <AndroidAudioFocus>[];
+  @override
+  Future<void> setGlobalAudioContext(AudioContext context) async {
+    audioFocuses.add(context.android.audioFocus);
+  }
+
   @override
   Future<void> init() async {}
   @override
@@ -123,6 +145,7 @@ Future<void> _settle() async {
 void main() {
   TestWidgetsFlutterBinding.ensureInitialized();
   late _AudioPlatform platform;
+  late _GlobalPlatform globalPlatform;
   late _PathProvider paths;
   late Directory directory;
   late FletBackend backend;
@@ -137,7 +160,8 @@ void main() {
     originalPaths = PathProviderPlatform.instance;
     platform = _AudioPlatform();
     AudioplayersPlatformInterface.instance = platform;
-    GlobalAudioplayersPlatformInterface.instance = _GlobalPlatform();
+    globalPlatform = _GlobalPlatform();
+    GlobalAudioplayersPlatformInterface.instance = globalPlatform;
     directory = await Directory.systemTemp.createTemp('flet-audio-test-');
     paths = _PathProvider(directory);
     PathProviderPlatform.instance = paths;
@@ -181,7 +205,7 @@ void main() {
   test('applies audio context before preparing the initial source', () async {
     debugDefaultTargetPlatformOverride = TargetPlatform.android;
     control.properties['src'] = 'https://example.com/effect.wav';
-    control.properties['audio_context'] = {'focus': 'mixWithOthers'};
+    control.properties['context'] = {'focus': 'mixWithOthers'};
 
     service.update();
     await _settle();
@@ -194,7 +218,7 @@ void main() {
 
   test('applies audio context without a source', () async {
     debugDefaultTargetPlatformOverride = TargetPlatform.android;
-    control.properties['audio_context'] = {'focus': 'mixWithOthers'};
+    control.properties['context'] = {'focus': 'mixWithOthers'};
 
     service.update();
     await _settle();
@@ -239,5 +263,115 @@ void main() {
     await _settle();
     expect(platform.sources, ['https://example.com/latest.wav']);
     expect(control.events.where((e) => e == 'loaded'), hasLength(1));
+  });
+  test('play waits for a source that is still being prepared', () async {
+    final gate = Completer<void>();
+    platform.sourceGate = gate;
+    control.properties['src'] = 'https://example.com/a.wav';
+    service.init();
+    await _settle();
+    final play = control.invokeMethod(
+        'play', {'position': null}, const Duration(seconds: 5));
+    await _settle();
+    expect(platform.resumes, 0);
+    gate.complete();
+    await play;
+    expect(platform.sources, hasLength(1));
+    expect(platform.resumes, 1);
+  });
+  group('context', () {
+    Future<void> createService(TargetPlatform targetPlatform) async {
+      debugDefaultTargetPlatformOverride = targetPlatform;
+      await service.player.dispose();
+      service = AudioService(control: control);
+      await service.player.creatingCompleter.future;
+    }
+
+    setUp(() => createService(TargetPlatform.android));
+
+    test('leaves the default context to the extension', () async {
+      control.properties['src'] = 'https://example.com/a.wav';
+      service.update();
+      await _settle();
+      expect(platform.audioFocuses, isEmpty);
+    });
+
+    test('is applied once and before the source', () async {
+      control.properties['src'] = 'https://example.com/a.wav';
+      control.properties['context'] = {'focus': 'mixWithOthers'};
+      service.update();
+      await _settle();
+      service.update();
+      await _settle();
+      expect(platform.audioFocuses, [AndroidAudioFocus.none]);
+      expect(platform.sourcesWhenFocusApplied, 0);
+      expect(platform.sources, hasLength(1));
+    });
+
+    test('a source set while the focus is applied replaces the earlier one',
+        () async {
+      final gate = Completer<void>();
+      platform.contextGate = gate;
+      control.properties['src'] = 'https://example.com/first.wav';
+      control.properties['context'] = {'focus': 'mixWithOthers'};
+      service.update();
+      await _settle();
+      control.properties['src'] = 'https://example.com/latest.wav';
+      service.update();
+      await _settle();
+      gate.complete();
+      await _settle();
+      expect(platform.sources, ['https://example.com/latest.wav']);
+      expect(control.events.where((e) => e == 'loaded'), hasLength(1));
+    });
+
+    test('maps every value and returns to the default when cleared', () async {
+      for (final value in ['gain', 'mixWithOthers', null]) {
+        control.properties['context'] = value == null ? null : {'focus': value};
+        service.update();
+        await _settle();
+      }
+      expect(platform.audioFocuses, [
+        AndroidAudioFocus.gain,
+        AndroidAudioFocus.none,
+        AndroidAudioFocus.gainTransientMayDuck,
+      ]);
+    });
+
+    test('applies only a set context on iOS', () async {
+      await createService(TargetPlatform.iOS);
+      service.update();
+      await _settle();
+      expect(platform.audioFocuses, isEmpty);
+      control.properties['context'] = {'focus': 'mixWithOthers'};
+      service.update();
+      await _settle();
+      expect(platform.audioFocuses, hasLength(1));
+    });
+
+    test('is ignored on other platforms', () async {
+      await createService(TargetPlatform.macOS);
+      control.properties['context'] = {'focus': 'mixWithOthers'};
+      service.update();
+      await _settle();
+      expect(platform.audioFocuses, isEmpty);
+    });
+
+    test('the extension sets the default for every player on Android',
+        () async {
+      Extension().ensureInitialized();
+      await _settle();
+      expect(globalPlatform.audioFocuses,
+          [AndroidAudioFocus.gainTransientMayDuck]);
+    });
+
+    test('the extension sets no default on other platforms', () async {
+      for (final other in [TargetPlatform.iOS, TargetPlatform.macOS]) {
+        debugDefaultTargetPlatformOverride = other;
+        Extension().ensureInitialized();
+        await _settle();
+      }
+      expect(globalPlatform.audioFocuses, isEmpty);
+    });
   });
 }

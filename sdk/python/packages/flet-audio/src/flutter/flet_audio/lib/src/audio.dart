@@ -20,7 +20,11 @@ class AudioService extends FletService {
   String? _src;
   Uint8List? _srcBytes;
   ReleaseMode? _releaseMode;
-  AudioContext? _audioContext;
+
+  /// The context [player] currently has, which starts as the default that
+  /// `Extension.ensureInitialized` gives every player.
+  AudioContext _audioContext = parseAudioContext(null);
+
   double? _volume;
   double? _balance;
   double? _playbackRate;
@@ -88,6 +92,9 @@ class AudioService extends FletService {
   /// Settings, `autoplay` included, are read from the control when they are
   /// applied, not when [update] is called, so an update that finishes loading
   /// a source after a later update never applies outdated values.
+  ///
+  /// The audio context is applied before the source, because changing it later
+  /// makes the Android player prepare its source again.
   @override
   void update() {
     debugPrint("Audio(${control.id}).update: ${control.properties}");
@@ -122,19 +129,13 @@ class AudioService extends FletService {
       }
 
       final sourceVersion = srcChanged ? ++_sourceVersion : _sourceVersion;
-
-      // Apply the context before loading: Android re-prepares an existing
-      // source when its context changes, without awaiting that preparation.
-      final audioContext = parseAudioContext(control.get("audio_context"));
-      if (audioContext != null && audioContext != _audioContext) {
-        _audioContext = audioContext;
-        await player.setAudioContext(audioContext);
+      final contextApplied = _applyAudioContext();
+      if (!srcChanged) {
+        await contextApplied;
         if (sourceVersion != _sourceVersion) return;
-      }
-
-      if (srcChanged) {
+      } else {
         try {
-          await _applySource();
+          await _applySource(after: contextApplied);
         } catch (_) {
           if (sourceVersion != _sourceVersion) return;
           rethrow;
@@ -183,6 +184,16 @@ class AudioService extends FletService {
     }();
   }
 
+  /// Applies the control's `context` to [player] on the platforms that
+  /// support audio contexts.
+  Future<void> _applyAudioContext() async {
+    if (!isMobilePlatform()) return;
+    final audioContext = parseAudioContext(control.get("context"));
+    if (audioContext == _audioContext) return;
+    _audioContext = audioContext;
+    await player.setAudioContext(audioContext);
+  }
+
   /// Whether a source is set, in [_src] or [_srcBytes].
   bool get _hasSource => _src != null || _srcBytes != null;
 
@@ -195,11 +206,15 @@ class AudioService extends FletService {
   /// Preparations run in order because setting a byte source may first write
   /// a temporary file. A superseded preparation must finish before the latest
   /// source is installed, otherwise its delayed write could replace that source.
-  Future<void> _applySource() {
+  ///
+  /// The source is set once [after] completes, while the preparation is queued
+  /// right away, so that a method call received in the meantime waits for it.
+  Future<void> _applySource({Future<void>? after}) {
     final src = _src;
     final srcBytes = _srcBytes;
     final sourceVersion = _sourceVersion;
     final preparation = _sourcePreparation.then((_) async {
+      await after;
       if (sourceVersion != _sourceVersion) return;
       if (src != null) {
         final assetSrc = control.backend.getAssetSource(src);
@@ -225,10 +240,16 @@ class AudioService extends FletService {
   /// players don't reject them: a seek never reports completion, so the call
   /// would only fail after timing out, and the web and Linux players remember
   /// a `resume` and start playing as soon as a source is set.
+  ///
+  /// They also wait for a source that is still being prepared, because a seek
+  /// before that never completes on iOS.
   Future<dynamic> _invokeMethod(String name, dynamic args) async {
     debugPrint("Audio.$name($args)");
-    if (!_hasSource && const ["play", "resume", "seek"].contains(name)) {
-      throw Exception("Audio must have \"src\" specified to $name.");
+    if (const ["play", "resume", "seek"].contains(name)) {
+      if (!_hasSource) {
+        throw Exception("Audio must have \"src\" specified to $name.");
+      }
+      await _sourcePreparation;
     }
     switch (name) {
       case "play":
