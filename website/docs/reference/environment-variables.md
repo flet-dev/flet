@@ -237,6 +237,9 @@ the client it bundles. It wins over `desktop_flavor` in the `[tool.flet]` table
 of the `pyproject.toml` in the current folder, or else of the nearest one at or above
 the app's script, so an app started from another folder uses its own setting.
 
+Apps packaged with `flet pack` use their bundled client's flavor unless this
+variable overrides it; nearby `pyproject.toml` files are ignored.
+
 Defaults to `light`.
 
 ### `FLET_FORCE_WEB_SERVER`
@@ -263,9 +266,11 @@ the system can run.
 | `debian12` | 2.36 | x86-64, ARM64 | `libmpv.so.2` |
 | `ubuntu24.04` | 2.39 | x86-64, ARM64 | `libmpv.so.2` |
 
-Set it when the picked build expects a different `libmpv` than the system ships (for
-example `debian12` on Rocky Linux and AlmaLinux 9, see
-[Video](../controls/video/index.md#linux)), or when Flet can't detect the glibc version.
+Set it when the picked build expects a different `libmpv` than the system ships,
+or when Flet can't detect the glibc version. The selected build must still be
+compatible with the system's glibc and architecture. For example, `debian12`
+requires glibc 2.36 and cannot run on Rocky Linux or AlmaLinux 9 (glibc 2.34);
+see [Video](../controls/video/index.md#linux) for local build guidance.
 
 Each build is cached in its own folder in `~/.flet/client`, so after an OS upgrade or a
 change of this variable, Flet downloads the matching build instead of reusing the

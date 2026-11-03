@@ -109,9 +109,9 @@ def __get_configured_desktop_flavor() -> str | None:
        started from another directory reads its own project's setting. It is
        skipped when `sys.argv[0]` is not a file, as with `python -c`.
 
-    A frozen app, such as one made with `flet pack`, uses only the environment
-    variable: its bundled client must not be swapped for one picked by a
-    `pyproject.toml` in the directory it is started from or installed in.
+    A frozen app, such as one made with `flet pack`, uses the environment
+    variable or the flavor of its bundled Linux client. A `pyproject.toml` in
+    the directory it is started from or installed in is ignored.
 
     Invalid values are ignored.
     """
@@ -120,6 +120,15 @@ def __get_configured_desktop_flavor() -> str | None:
     if env_flavor in ("full", "light"):
         return env_flavor
     if getattr(sys, "frozen", False):
+        if is_linux():
+            arch = get_arch()
+            distro = __get_linux_distro_id(arch)
+            for flavor, suffix in (("full", ""), ("light", "-light")):
+                archive = Path(get_package_bin_dir()) / (
+                    f"flet-linux-{distro}{suffix}-{arch}.tar.gz"
+                )
+                if archive.is_file():
+                    return flavor
         return None
 
     candidates = [Path(os.getcwd()) / "pyproject.toml"]

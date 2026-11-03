@@ -129,12 +129,15 @@ Rocky Linux and AlmaLinux 9 (EPEL and RPM Fusion enabled):
 
 ```bash
 sudo dnf install mpv-libs gstreamer1-plugins-base
-export FLET_LINUX_DISTRO=debian12
 ```
 
-On Rocky Linux and AlmaLinux 9, the build Flet picks for their glibc expects `libmpv.so.1`,
-while these repositories ship `libmpv.so.2`, hence
-[`FLET_LINUX_DISTRO`](../../reference/environment-variables.md#flet_linux_distro).
+Rocky Linux and AlmaLinux 9 have glibc 2.34. The compatible prebuilt full client
+expects `libmpv.so.1`, while these repositories ship `libmpv.so.2`. Build the
+client locally with [`flet build linux`](../../publish/linux.md#prerequisites)
+against the installed libraries. Setting `FLET_LINUX_DISTRO=debian12` does not
+resolve this mismatch: that build requires glibc 2.36 and cannot run on these
+systems.
+
 On the other distributions above, the client build Flet downloads expects the
 `libmpv` version the distribution ships, so no `libmpv.so.1` symlink is needed.
 If you created one for an older Flet version, remove it.
