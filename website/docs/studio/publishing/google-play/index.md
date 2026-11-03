@@ -10,8 +10,8 @@ in one run. Everything happens on the **Google Play** card of **Publish › Andr
 it shows the next step until the app is set up, then a row per track.
 
 :::note[Creator plan]
-Publishing to Google Play is part of the Creator plan. On Explorer, the button on its card offers a
-free 7-day Creator trial with 500 bonus credits. See [Plans](../index.md#plans).
+Publishing to Google Play is part of the Creator plan. On Explorer, the **Free trial** link on its
+card opens the plans, where you can start a free 7-day Creator trial with 500 bonus credits. See [Plans](../index.md#plans).
 :::
 
 :::tip[In short]

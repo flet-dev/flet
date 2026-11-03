@@ -13,8 +13,8 @@ You need a Microsoft Store developer account. Registration is free, for individu
 and companies: start it at [storedeveloper.microsoft.com](https://storedeveloper.microsoft.com).
 
 :::note[Creator plan]
-Publishing to the Microsoft Store is part of the Creator plan. On Explorer, the button on its card offers a
-free 7-day Creator trial with 500 bonus credits. See [Plans](index.md#plans).
+Publishing to the Microsoft Store is part of the Creator plan. On Explorer, the **Free trial** link on its
+card opens the plans, where you can start a free 7-day Creator trial with 500 bonus credits. See [Plans](index.md#plans).
 :::
 
 ## Connect Microsoft Store

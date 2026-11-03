@@ -81,8 +81,8 @@ that didn't start or stopped answering — aren't charged. See **Settings › Pl
 usage** for your balance, plans and credit packs.
 
 When a run or an agent request needs more credits than you have, its screen offers
-what's next: on Explorer, a free 7-day Creator trial with 500 bonus credits, or a
-pack of 10,000 credits for $20. Checkout brings you back to the same screen.
+a pack of 10,000 credits for $20 and, on Explorer, a free 7-day Creator trial with 500
+bonus credits. Checkout brings you back to the same screen.
 
 ## Plans
 

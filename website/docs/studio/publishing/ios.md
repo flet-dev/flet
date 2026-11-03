@@ -20,7 +20,8 @@ Each card shows its next step while it isn't set up yet, then what's live, with
 
 :::note[Creator plan]
 The App Store, TestFlight and an App Store .ipa are part of the Creator plan; the
-App Store card offers a free 7-day trial with 500 bonus credits. On Explorer you can
+App Store card's **Free trial** link opens the plans, where you can start a free 7-day
+trial with 500 bonus credits. On Explorer you can
 still [test on your devices](#test-on-your-devices) with install links and build the
 [iOS Simulator app](#ios-simulator-app). See [Plans](index.md#plans).
 :::
