@@ -329,6 +329,22 @@ class TestCopyright:
         )
         assert cmd.get_copyright() == "From CLI"
 
+    def test_empty_cli_copyright_overrides_pyproject(self):
+        """An empty CLI value clears the copyright despite configured defaults."""
+        cmd = self._command(
+            {"tool.flet.copyright": "From pyproject", "tool.flet.company": "Acme"},
+            ["--copyright", ""],
+        )
+        assert cmd.get_copyright() == ""
+
+    @pytest.mark.parametrize("argv", [(), ("--company", "Other")])
+    def test_empty_pyproject_copyright_overrides_company(self, argv):
+        """An empty TOML value suppresses generation from either company source."""
+        cmd = self._command(
+            {"tool.flet.copyright": "", "tool.flet.company": "Acme"}, argv
+        )
+        assert cmd.get_copyright() == ""
+
     def test_pyproject_is_used_as_written(self):
         """`[tool.flet].copyright` wins over the company and isn't changed."""
         cmd = self._command(
