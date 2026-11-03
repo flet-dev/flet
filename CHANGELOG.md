@@ -8,6 +8,8 @@
 * The default dark splash and loading screen color of web apps is now `#121212` (was `#222222`), to match the new dark theme surface ([#6921](https://github.com/flet-dev/flet/issues/6921)) by @FeodorFitsner.
 * Custom [`flet build` templates](/docs/publish#build-template) (`--template`) must read the build's settings from `cookiecutter._options` and the app's `pyproject.toml` from `cookiecutter._pyproject` (were `cookiecutter.options` and `cookiecutter.pyproject`). Cookiecutter passes these private variables to the template unchanged, so numbers keep their types and values aren't rendered as Jinja ([#6999](https://github.com/flet-dev/flet/pull/6999)) by @ndonkoHenri.
 * Custom [`flet build` templates](/docs/publish#build-template) (`--template`) must read the iOS export options from `cookiecutter._options.ios_export_options` (was `cookiecutter.ios_export_options`), otherwise they are left out of `exportOptions.plist` without an error ([#7036](https://github.com/flet-dev/flet/pull/7036)) by @ndonkoHenri.
+* `flet build` for macOS and Windows no longer writes a placeholder copyright: without `copyright`, it's generated from `company`, or left empty without one. On macOS, the copyright text is used as written, no longer followed by `. All rights reserved.` ([#7038](https://github.com/flet-dev/flet/pull/7038)) by @ndonkoHenri.
+* `flet build windows` now escapes the company and product names itself: remove any `""` or `\\` added by hand to work around the old behavior, otherwise the app looks for its data in a different folder ([#7038](https://github.com/flet-dev/flet/pull/7038)) by @ndonkoHenri.
 * The Flet desktop client is no longer built for Debian 10 on ARM64: `flet run` on an ARM64 Linux system with glibc older than 2.31 (Debian 10 and other glibc 2.28 distros) now stops with an error naming the glibc it needs. Debian 10 on x86-64 is still supported by @FeodorFitsner.
 
 ### New features
@@ -57,6 +59,8 @@
 
 ### Bug fixes
 
+* Fix `flet build windows` stopping with an unclear CMake error when the artifact name contains a character that Windows doesn't allow in file names: it now names the character before building ([#7038](https://github.com/flet-dev/flet/pull/7038)) by @ndonkoHenri.
+* Fix `flet build windows` failing when the company, copyright or product name contains `"`, and turning sequences such as `\n` in them into control characters ([#7038](https://github.com/flet-dev/flet/pull/7038)) by @ndonkoHenri.
 * Fix `flet build macos` failing with `Scheme Runner is not currently configured for the build action` when the product or artifact name contains `&` ([#7036](https://github.com/flet-dev/flet/pull/7036)) by @ndonkoHenri.
 * Fix `flet build` rejecting `--permissions biometric`, although the `biometric` permission bundle works from `pyproject.toml` ([#7036](https://github.com/flet-dev/flet/pull/7036)) by @ndonkoHenri.
 * Fix `flet build ipa` failing to export when a `[tool.flet.ios.export_options]` value contains `<`, `>` or `&`, such as `thinning = "<none>"`, and writing numbers as strings ([#7036](https://github.com/flet-dev/flet/pull/7036)) by @ndonkoHenri.

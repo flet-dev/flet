@@ -2,6 +2,7 @@ import argparse
 import base64
 import contextlib
 import copy
+import datetime
 import glob
 import hashlib
 import json
@@ -1037,6 +1038,29 @@ class BaseBuildCommand(BaseFlutterCommand):
             f"[magenta]{self.current_platform}[/]."
             self.cleanup(1, message)
 
+    def validate_artifact_name(self, artifact_name: Any):
+        """
+        Stop the build if the artifact name can't name a file on the target platform.
+
+        A Windows app's artifact name names its `.exe` file, which can't contain
+        any of `< > : " / \\ | ? *`.
+
+        Args:
+            artifact_name: The resolved artifact name.
+        """
+        if self.config_platform != "windows":
+            return
+        invalid = sorted(set(str(artifact_name)) & set('<>:"/\\|?*'))
+        if invalid:
+            self.skip_flutter_doctor = True
+            self.cleanup(
+                1,
+                f"Artifact name {escape(repr(str(artifact_name)))} can't be used on "
+                f"Windows, where a file name can't contain {' '.join(invalid)}. "
+                "Set a different name with --artifact or "
+                f"{escape('`artifact` in [tool.flet]')}.",
+            )
+
     def validate_entry_point(self):
         """
         Resolve app entry-point module and ensure corresponding Python file exists.
@@ -1113,6 +1137,7 @@ class BaseBuildCommand(BaseFlutterCommand):
         # test host can't find the binary. Pin them equal in test mode.
         if getattr(self, "test_mode", False):
             artifact_name = project_name
+        self.validate_artifact_name(artifact_name)
 
         split_per_abi = (
             self.options.split_per_abi
@@ -1318,8 +1343,7 @@ class BaseBuildCommand(BaseFlutterCommand):
             "company_name": (
                 self.options.company_name or self.get_pyproject("tool.flet.company")
             ),
-            "copyright": self.options.copyright
-            or self.get_pyproject("tool.flet.copyright"),
+            "copyright": self.get_copyright(),
             "ios_export_method": ios_signing["export_method"],
             "ios_provisioning_profile": ios_signing["provisioning_profile"],
             "ios_signing_certificate": ios_signing["signing_certificate"],
@@ -2828,6 +2852,30 @@ class BaseBuildCommand(BaseFlutterCommand):
                     "without one, the app would open every web link.",
                 )
         return values
+
+    def get_copyright(self) -> Optional[str]:
+        """
+        Resolve the app's copyright text.
+
+        Comes from `--copyright`, else `[tool.flet].copyright`.
+        An explicitly empty value leaves the copyright blank.
+        Without either, it's generated from the company set with
+        `--company` or `[tool.flet].company`.
+
+        Returns:
+            The copyright text, or `None` to use the build template's default.
+        """
+        assert self.get_pyproject
+        assert self.options
+        if self.options.copyright is not None:
+            return self.options.copyright
+        copyright = self.get_pyproject("tool.flet.copyright")
+        if copyright is not None:
+            return copyright
+        company = self.options.company_name or self.get_pyproject("tool.flet.company")
+        return (
+            f"Copyright © {datetime.date.today().year} {company}" if company else None
+        )
 
     def get_info_plist(self, impeller: bool) -> dict:
         """

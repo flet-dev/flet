@@ -312,20 +312,31 @@ class TestEntitlementsTemplates:
 
 
 class TestAppInfoConfig:
-    def test_names_and_copyright(self):
-        """The artifact name, bundle ID and copyright reach the build settings."""
-        rendered = _render_template(
+    def test_names(self):
+        """The artifact name and bundle ID reach the build settings."""
+        lines = _render_template(
             "Runner/Configs/AppInfo.xcconfig",
             artifact_name="Tom & Jerry",
             bundle_id="com.acme.app",
-            copyright="Copyright (c) 2026 Acme",
-        )
-        lines = rendered.splitlines()
+        ).splitlines()
         assert "PRODUCT_NAME = Tom & Jerry" in lines
         assert "PRODUCT_BUNDLE_IDENTIFIER = com.acme.app" in lines
-        assert (
-            "PRODUCT_COPYRIGHT = Copyright (c) 2026 Acme. All rights reserved." in lines
-        )
+
+    @pytest.mark.parametrize(
+        ("value", "line"),
+        [
+            ("Copyright © 2026 Acme Inc.", "Copyright © 2026 Acme Inc."),
+            ("", ""),
+            ("See https://acme.example", "See https:/$()/acme.example"),
+        ],
+    )
+    def test_copyright_is_written_as_given(self, value, line):
+        """The copyright gets no added text, and `//`, which starts a comment in
+        an xcconfig file, is written so that Xcode reads it literally."""
+        rendered = _render_template("Runner/Configs/AppInfo.xcconfig", copyright=value)
+        assert f"PRODUCT_COPYRIGHT = {line}".rstrip() in [
+            text.rstrip() for text in rendered.splitlines()
+        ]
 
 
 class TestProjectTemplate:

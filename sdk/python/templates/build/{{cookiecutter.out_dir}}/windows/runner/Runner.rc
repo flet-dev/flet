@@ -1,3 +1,4 @@
+{% macro rc_string(value) -%}{{ value | replace("\\", "\\\\") | replace('"', '""') }}{%- endmacro -%}
 // Microsoft Visual C++ generated resource script.
 //
 #pragma code_page(65001)
@@ -89,13 +90,13 @@ BEGIN
     BEGIN
         BLOCK "040904e4"
         BEGIN
-            VALUE "CompanyName", "{{ cookiecutter.company_name }}" "\0"
-            VALUE "FileDescription", "{{ cookiecutter.product_name }}" "\0"
+            VALUE "CompanyName", "{{ rc_string(cookiecutter.company_name) }}" "\0"
+            VALUE "FileDescription", "{{ rc_string(cookiecutter.product_name) }}" "\0"
             VALUE "FileVersion", VERSION_AS_STRING "\0"
-            VALUE "InternalName", "{{ cookiecutter.artifact_name }}" "\0"
-            VALUE "LegalCopyright", "{{ cookiecutter.copyright }}" "\0"
-            VALUE "OriginalFilename", "{{ cookiecutter.artifact_name }}.exe" "\0"
-            VALUE "ProductName", "{{ cookiecutter.product_name }}" "\0"
+            VALUE "InternalName", "{{ rc_string(cookiecutter.artifact_name) }}" "\0"
+            VALUE "LegalCopyright", "{{ rc_string(cookiecutter.copyright) }}" "\0"
+            VALUE "OriginalFilename", "{{ rc_string(cookiecutter.artifact_name) }}.exe" "\0"
+            VALUE "ProductName", "{{ rc_string(cookiecutter.product_name) }}" "\0"
             VALUE "ProductVersion", VERSION_AS_STRING "\0"
         END
     END
