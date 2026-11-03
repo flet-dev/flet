@@ -200,6 +200,7 @@ class TestMissingExtensionRecovery:
         command.template_data = {"project_name": "test_app"}
         command.get_pyproject = lambda *_: None
         command.config_platform = "web"
+        command.required_flutter_version = "3.47.9"
         command.emojis = {"checkmark": ""}
         command.verbose = 0
         command.step = lambda *_: contextlib.nullcontext()
@@ -224,6 +225,54 @@ class TestMissingExtensionRecovery:
         assert command.create_flutter_project() is extension_deleted
         assert [(stamps / s).exists() for s in derived] == [not extension_deleted] * 4
         assert ("flet_map" in pubspec_dependencies(command)) is not extension_deleted
+
+
+class TestFlutterVersionChange:
+    """`.dart_tool` following the Flutter version the project is built with."""
+
+    @pytest.mark.parametrize(
+        ("previous", "kept"),
+        [(None, False), ("3.44.8", False), ("3.47.9", True)],
+    )
+    def test_clears_dart_tool_only_on_change(self, command, previous, kept):
+        """Keeps `.dart_tool` only when the recorded Flutter version matches."""
+        if previous:
+            command.required_flutter_version = previous
+            command._clear_dart_tool_on_flutter_change()
+        dart_tool = command.flutter_dir / ".dart_tool"
+        dart_tool.mkdir(parents=True)
+
+        command.required_flutter_version = "3.47.9"
+        command._clear_dart_tool_on_flutter_change()
+
+        assert dart_tool.exists() is kept
+
+    def test_project_render_clears_dart_tool(self, command, monkeypatch, tmp_path):
+        """`create_flutter_project()` clears `.dart_tool` from an older Flutter."""
+        import cookiecutter.main
+
+        command.options = SimpleNamespace(
+            template=str(tmp_path / "template"), template_ref=None, template_dir=None
+        )
+        command.template_data = {"project_name": "test_app"}
+        command.get_pyproject = lambda *_: None
+        command.config_platform = "web"
+        command.emojis = {"checkmark": ""}
+        command.verbose = 0
+        command.step = lambda *_: contextlib.nullcontext()
+        command.pubspec_path = str(command.flutter_dir / "pubspec.yaml")
+        monkeypatch.setattr(
+            cookiecutter.main, "cookiecutter", lambda **_: write_pubspec(command)
+        )
+        command.required_flutter_version = "3.44.8"
+        assert command.create_flutter_project()
+        dart_tool = command.flutter_dir / ".dart_tool"
+        dart_tool.mkdir()
+
+        command.required_flutter_version = "3.47.9"
+        command.create_flutter_project()
+
+        assert not dart_tool.exists()
 
 
 class TestPackagePythonApp:
