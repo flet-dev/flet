@@ -1097,8 +1097,7 @@ class BaseBuildCommand(BaseFlutterCommand):
         )
         artifact_name = (
             self.options.artifact_name
-            or self.get_pyproject(f"tool.flet.{self.config_platform}.artifact")
-            or self.get_pyproject("tool.flet.artifact")
+            or self.get_platform_setting("artifact")
             or self.default_artifact_name(
                 self.config_platform, product_name, project_name_raw
             )
@@ -1565,10 +1564,7 @@ class BaseBuildCommand(BaseFlutterCommand):
         # through to it.
         splash = self._resolve_splash()
         org_name = (
-            self.options.org_name
-            or self.get_pyproject(f"tool.flet.{self.config_platform}.org")
-            or self.get_pyproject("tool.flet.org")
-            or "com.flet"
+            self.options.org_name or self.get_platform_setting("org") or "com.flet"
         )
 
         self.template_data = {
@@ -1649,8 +1645,7 @@ class BaseBuildCommand(BaseFlutterCommand):
             # The template derives nothing from these: the build names files
             # after the bundle ID too, such as the app's Linux icons.
             "bundle_id": self.options.bundle_id
-            or self.get_pyproject(f"tool.flet.{self.config_platform}.bundle_id")
-            or self.get_pyproject("tool.flet.bundle_id")
+            or self.get_platform_setting("bundle_id")
             or f"{org_name}.{project_name_slug}",
             "company_name": (
                 self.options.company_name or self.get_pyproject("tool.flet.company")
@@ -1759,10 +1754,11 @@ class BaseBuildCommand(BaseFlutterCommand):
         """
         One splash setting, platform-specific over global.
 
-        The same precedence the splash colours use, so every key under
-        `[tool.flet.splash]` can be overridden per platform without each one
-        spelling the lookup out again. A key that was renamed is read under
-        its former name too, so existing configuration keeps working.
+        Uses the precedence of `get_platform_setting`, so every key under
+        `[tool.flet.splash]` can be overridden per platform, even with an empty
+        value, without each one spelling the lookup out again. A key that was
+        renamed is read under its former name too, so existing configuration
+        keeps working.
 
         Args:
             key: Setting name below the `splash` table.
@@ -1771,14 +1767,10 @@ class BaseBuildCommand(BaseFlutterCommand):
             The configured value, or `None`.
         """
 
-        assert self.get_pyproject
-
         for name in (key, SPLASH_KEY_ALIASES.get(key)):
             if name is None:
                 continue
-            value = self.get_pyproject(
-                f"tool.flet.{self.config_platform}.splash.{name}"
-            ) or self.get_pyproject(f"tool.flet.splash.{name}")
+            value = self.get_platform_setting(f"splash.{name}")
             if value is not None:
                 return value
         return None
@@ -2327,11 +2319,7 @@ class BaseBuildCommand(BaseFlutterCommand):
             The colour string, or `None` when nothing is configured.
         """
 
-        assert self.get_pyproject
-
-        return self.get_pyproject(
-            f"tool.flet.{platform}.icon_background"
-        ) or self.get_pyproject("tool.flet.icon_background")
+        return self.get_platform_setting("icon_background", platform=platform)
 
     def _resolve_icon_background(self) -> tuple[int, int, int]:
         """
@@ -3326,18 +3314,20 @@ class BaseBuildCommand(BaseFlutterCommand):
             self.options.permissions or self.get_platform_setting("permissions") or []
         )
 
-    def get_platform_setting(self, pyproj_setting, default_value=None):
+    def get_platform_setting(self, pyproj_setting, default_value=None, platform=None):
         """
         Resolve a pyproject setting with precedence: platform, global, default.
 
-        The platform value wins whenever it is set, even when it is empty, so
-        `[]` or `{}` under `tool.flet.<platform>.` clears a global list or table
-        for that platform.
+        The platform value wins whenever it is set, even when it is empty or
+        false, so `[]`, `{}` or `""` under `tool.flet.<platform>.` clears a
+        global value for that platform.
 
         Args:
             pyproj_setting: Relative key under `tool.flet.<platform>.` and
                 `tool.flet.`.
             default_value: Fallback value when neither key is defined.
+            platform: Platform whose table overrides the global one. Defaults
+                to the platform being built.
 
         Returns:
             Resolved setting value.
@@ -3345,7 +3335,7 @@ class BaseBuildCommand(BaseFlutterCommand):
 
         assert self.get_pyproject
         for key in (
-            f"tool.flet.{self.config_platform}.{pyproj_setting}",
+            f"tool.flet.{platform or self.config_platform}.{pyproj_setting}",
             f"tool.flet.{pyproj_setting}",
         ):
             value = self.get_pyproject(key)
