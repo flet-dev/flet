@@ -90,11 +90,14 @@ class Audio(ft.Service):
     :attr:`flet_audio.AudioContext.focus` depends on the platform:
 
     - On Android, `focus` is :attr:`flet_audio.AudioFocus.DUCK_OTHERS`, so every
-      `Audio` of an app plays together, and other apps' audio gets quieter.
+      `Audio` of an app plays together, and other apps' audio usually gets quieter.
     - On iOS, `focus` is :attr:`flet_audio.AudioFocus.GAIN`, which interrupts other
-      apps' audio. If another `Audio` of the app has applied a context, that context
-      applies instead, because iOS shares it across the app.
+      apps' audio.
     - On other platforms, this property is ignored.
+
+    On iOS, a context applies to the whole app, so if another `Audio` of the app has
+    applied one, all of it applies here instead of these values, `respect_silence`
+    included. Setting this back to `None` after it was set applies these values.
 
     Should ideally be set when creating the control. On Android, changing it after a
     source is set prepares that source again, which restarts audio that is playing
@@ -105,6 +108,7 @@ class Audio(ft.Service):
         If the app declares the `android.permission.MODIFY_AUDIO_SETTINGS` permission,
         setting this resets the device's audio mode to normal and turns its
         speakerphone off, which can interrupt a call that the app has in progress.
+        The same reset happens once when the app starts, whether or not this is set.
     """
 
     on_loaded: Optional[ft.ControlEventHandler["Audio"]] = None

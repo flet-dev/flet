@@ -148,11 +148,14 @@ class AudioFocus(Enum):
     Lowers the volume of other apps' audio while this audio plays.
 
     On Android, another :class:`~flet_audio.Audio` of the same app keeps playing at
-    its own volume. Other apps' audio also stays lowered while this audio is paused,
-    until it is released or finishes after resuming.
+    its own volume. An app can choose to pause its audio instead of having it lowered,
+    which some do for speech. Other apps' audio also stays lowered while this audio is
+    paused, until it is released or finishes after resuming.
 
     On iOS, other apps' audio returns to its volume once no
-    :class:`~flet_audio.Audio` of the app is playing.
+    :class:`~flet_audio.Audio` of the app is playing. An
+    :class:`~flet_audio.Audio` that something else paused still counts as playing until
+    it is paused or released, or finishes after resuming.
 
     Warning:
         On iOS, can't be combined with :attr:`flet_audio.AudioContext.respect_silence`.

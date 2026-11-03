@@ -53,15 +53,24 @@ class IosDucking {
   /// Restores the applied context before [player] starts playing.
   ///
   /// [player] counts as playing from here on, so that another player stopping
-  /// before its state changes doesn't end the lowering.
+  /// before its state changes doesn't end the lowering. If restoring fails, the
+  /// next player to start tries again.
   static Future<void> startPlaying(Object player) async {
     _playing.add(player);
     if (!_released) return;
     _released = false;
-    await AudioPlayer.global.setAudioContext(_context!);
+    try {
+      await AudioPlayer.global.setAudioContext(_context!);
+    } catch (_) {
+      _released = true;
+      rethrow;
+    }
   }
 
   /// Ends the lowering if [player] was the last one playing.
+  ///
+  /// A failure leaves the lowering in place until the next player stops, as no
+  /// caller could act on it.
   static Future<void> stopPlaying(Object player) async {
     _playing.remove(player);
     await _releaseIfIdle();
@@ -76,10 +85,15 @@ class IosDucking {
       return;
     }
     _released = true;
-    await AudioPlayer.global.setAudioContext(context.copy(
-        iOS: AudioContextIOS(
-            category: context.iOS.category,
-            options: const {AVAudioSessionOptions.mixWithOthers})));
+    try {
+      await AudioPlayer.global.setAudioContext(context.copy(
+          iOS: AudioContextIOS(
+              category: context.iOS.category,
+              options: const {AVAudioSessionOptions.mixWithOthers})));
+    } catch (error) {
+      _released = false;
+      debugPrint("Audio context could not stop lowering other audio: $error");
+    }
   }
 
   /// Forgets all state, between tests.

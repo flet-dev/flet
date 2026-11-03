@@ -225,8 +225,8 @@ class AudioService extends FletService {
   /// Starts [player], after restoring any context [IosDucking] released.
   Future<void> _resume() async {
     if (!isIOSMobile()) return player.resume();
-    await IosDucking.startPlaying(this);
     try {
+      await IosDucking.startPlaying(this);
       await player.resume();
     } catch (_) {
       await IosDucking.stopPlaying(this);

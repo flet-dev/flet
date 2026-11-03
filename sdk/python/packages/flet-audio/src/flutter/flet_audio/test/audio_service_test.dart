@@ -111,8 +111,13 @@ class _AudioPlatform extends AudioplayersPlatformInterface {
 class _GlobalPlatform extends GlobalAudioplayersPlatformInterface {
   final audioFocuses = <AndroidAudioFocus>[];
   final iosOptions = <Set<AVAudioSessionOptions>>[];
+  bool failNext = false;
   @override
   Future<void> setGlobalAudioContext(AudioContext context) async {
+    if (failNext) {
+      failNext = false;
+      throw StateError('session refused the context');
+    }
     audioFocuses.add(context.android.audioFocus);
     iosOptions.add(context.iOS.options);
   }
@@ -465,6 +470,46 @@ void main() {
         await _settle();
         expect(globalPlatform.iosOptions, [mix, duck, mix]);
         otherService.dispose();
+      });
+
+      test('tries again when restoring it failed', () async {
+        globalPlatform.failNext = true;
+        await expectLater(call(control, 'play'), throwsA(anything));
+        expect(platform.resumes, 0);
+        await call(control, 'play');
+        expect(platform.resumes, 1);
+        expect(globalPlatform.iosOptions, [mix, duck]);
+      });
+
+      test('a player that failed to start does not keep it', () async {
+        await call(control, 'play');
+        await call(control, 'pause');
+        await _settle();
+        final other = _Control(backend, {'src': 'https://example.com/b.wav'});
+        final otherService = AudioService(control: other);
+        await otherService.player.creatingCompleter.future;
+        otherService.init();
+        await _settle();
+        globalPlatform.failNext = true;
+        await expectLater(call(other, 'play'), throwsA(anything));
+        globalPlatform.iosOptions.clear();
+        await call(control, 'play');
+        await call(control, 'pause');
+        await _settle();
+        expect(globalPlatform.iosOptions, [duck, mix]);
+        otherService.dispose();
+      });
+
+      test('tries again when ending it failed', () async {
+        await call(control, 'play');
+        globalPlatform.failNext = true;
+        await call(control, 'pause');
+        await _settle();
+        expect(globalPlatform.iosOptions, [mix, duck]);
+        await call(control, 'resume');
+        await call(control, 'pause');
+        await _settle();
+        expect(globalPlatform.iosOptions, [mix, duck, mix]);
       });
 
       test('never changes a context without ducking', () async {

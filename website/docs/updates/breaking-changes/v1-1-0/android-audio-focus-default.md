@@ -21,23 +21,24 @@ Flet 1.1.0 changes how an [`Audio`][flet_audio.Audio] with no
   app. The paused audio didn't resume on its own.
 - **Now**: the default is
   [`AudioFocus.DUCK_OTHERS`][flet_audio.AudioFocus.DUCK_OTHERS]. Every `Audio` of
-  an app plays together, and other apps' audio gets quieter while the `Audio`
-  plays. It stays quieter while the `Audio` is paused, until the `Audio` is
-  released or finishes after resuming.
+  an app plays together, and other apps' audio usually gets quieter while the
+  `Audio` plays, though some apps pause instead, especially for speech. It stays
+  quieter while the `Audio` is paused, until the `Audio` is released or finishes
+  after resuming.
 
 The previous behavior is still available with
 [`AudioFocus.GAIN`][flet_audio.AudioFocus.GAIN].
 
 Only Android changes. On iOS, the default stays `GAIN`: an app's `Audio` never pause
 each other there, so the problem this fixes doesn't exist. Other apps' audio is
-therefore interrupted on iOS by default, and gets quieter on Android. Windows, macOS,
-Linux and web ignore `context`.
+therefore interrupted on iOS by default, and usually gets quieter on Android.
+Windows, macOS, Linux and web ignore `context`.
 
 ## Symptoms
 
 No error is raised - the change is audible. On Android, after the upgrade:
 
-- A music player no longer stops the music or podcast of another app, which keeps
+- A music player no longer stops the music of another app, which usually keeps
   playing at a lower volume.
 - Starting a track while another one plays makes both audible, where starting the
   new track used to silence the previous one.
