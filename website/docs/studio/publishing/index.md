@@ -55,7 +55,7 @@ A card's button opens the action's screen:
 - **Version and build** for this run.
 - What signs the build, and the store account it uses.
 - Anything to set up first, shown in red at the bottom until it's done.
-- The **estimated credits** and your balance.
+- What the run costs per minute, and your balance.
 
 Then click the action's button. The run's details open and follow it live.
 
@@ -72,13 +72,20 @@ Then click the action's button. The run's details open and follow it live.
 ## Credits
 
 Builds run on cloud machines and use **credits**, the same balance as the AI agent.
-The action screen shows an estimate before you start, from how long your app's
-earlier builds took. You're charged for the time the build actually takes, with a
-per-run minimum. Uploading to a store afterwards is free.
+Each kind of machine (Linux, Windows, Mac) has a price per minute, shown on the
+action's screen, and a 3-minute minimum.
 
-Runs that fail because of Studio's build machines rather than your app — a machine
-that didn't start or stopped answering — aren't charged. See **Settings › Plan &
-usage** for your balance, plans and credit packs.
+- A run starts only if your balance covers its minimum. Waiting in the queue and
+  getting a machine ready are free.
+- The minimum is charged when the build starts on the machine. After that, each
+  minute is charged as it begins.
+- If your credits run out during a run, the run stops, and the minutes it used stay
+  charged.
+- Uploading to a store after the build is free.
+
+If a build machine fails in the middle of your run, contact Flet support and we'll
+make it right. See **Settings › Usage & billing** for your balance, plans and credit
+packs.
 
 When a run or an agent request needs more credits than you have, its screen offers
 a pack of 10,000 credits for $20 and, on Explorer, a free 7-day Creator trial with 500
