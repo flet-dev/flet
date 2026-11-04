@@ -61,12 +61,14 @@ When only one side has files, that side is chosen for you. The folder doesn't ne
 to hold a Flet app: you can connect any folder and let Studio or the agent add the
 rest.
 
-### Public and private projects
+### Public and private apps
 
-A public Studio project can only use a public repository. A private project (on
-paid plans) can use a public or a private one. If a connected repository is made
-private on GitHub, a public project stops syncing until you make it private or
-disconnect the repository.
+A public app can only sync with a public repository, or the repository's private code
+would be visible to everyone. A private app (Creator plan) can use a public or a private
+one. When you pick a private repository for a public app, **Make app private** right
+there makes the app private and lets you connect. If a connected repository is made
+private on GitHub, a public app stops syncing until you make it private or disconnect
+the repository.
 
 ## How changes are committed
 
@@ -137,7 +139,7 @@ why. Fix the cause, then use **Sync now**. Common causes:
 
 - **The Flet Studio app was uninstalled**, or the repository was removed from its
   access: install it again or give it the repository on GitHub.
-- **The repository was deleted, archived or made private** (for a public project).
+- **The repository was deleted, archived or made private** (for a public app).
 - **The branch was deleted**: disconnect, then connect to another branch.
 
 If a push doesn't show up in Studio, **Sync now** looks for it. Studio also looks
