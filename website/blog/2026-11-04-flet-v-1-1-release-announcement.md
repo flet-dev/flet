@@ -95,7 +95,7 @@ The extension also ships the full **Lucide icon set** as `shad.LucideIcons`, and
 
 Building forms is simpler too: value controls such as `Input`, `Select`, `DatePicker` and `RadioGroup` have `label`, `description` and `error_text` properties, so a validated form is just a column of fields and a few lines of Python. See the [form example](/docs/controls/shadcnui#forms).
 
-{/* TODO: screenshot of shadcn controls, e.g. /img/blog/flet-1-1/shadcn.png */}
+<img src="/img/blog/flet-1-1/shadcn.png" className="screenshot screenshot-70" style={{borderRadius: '7px'}} alt="Shadcn Card, Input, Select, Switch, Button, Calendar and Badge controls in a Flet app" />
 
 You can try every shadcn control in the Gallery of [Flet Studio](https://studio.flet.dev/gallery/shadcn). Big thanks to [@InesaFitsner](https://github.com/InesaFitsner) for building this extension!
 
