@@ -12,7 +12,11 @@ from flet.utils.validation import V
 __all__ = ["CupertinoSlider"]
 
 
-@control("CupertinoSlider")
+@control(
+    "CupertinoSlider",
+    client_writable=("value",),
+    enabled_only=("change", "change_end", "change_start", "value"),
+)
 class CupertinoSlider(LayoutControl):
     """
     An iOS-type slider.

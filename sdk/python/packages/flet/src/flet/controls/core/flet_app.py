@@ -38,7 +38,7 @@ class FletAppWindowEvent(Event["FletApp"]):
     """Method arguments, or the properties written when `action` is `"set"`."""
 
 
-@control("FletApp")
+@control("FletApp", client_writable=("route", "title"))
 class FletApp(LayoutControl):
     """
     Renders another Flet app in the current app, similar to HTML IFrame, but for Flet.

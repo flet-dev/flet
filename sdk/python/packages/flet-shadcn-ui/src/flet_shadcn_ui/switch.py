@@ -5,7 +5,7 @@ import flet as ft
 __all__ = ["Switch"]
 
 
-@ft.control("ShadSwitch")
+@ft.control("ShadSwitch", client_writable=("value",), enabled_only=("change", "value"))
 class Switch(ft.LayoutControl):
     """
     A Shadcn switch.

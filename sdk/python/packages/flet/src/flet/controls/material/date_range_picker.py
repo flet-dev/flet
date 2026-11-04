@@ -21,7 +21,7 @@ __all__ = [
 ]
 
 
-@control("DateRangePicker")
+@control("DateRangePicker", client_writable=("end_value", "open", "start_value"))
 class DateRangePicker(DialogControl):
     """
     A Material-style date range picker dialog.

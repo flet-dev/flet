@@ -9,7 +9,7 @@ from flet.utils.validation import V
 __all__ = ["CupertinoActionSheetAction"]
 
 
-@control("CupertinoActionSheetAction")
+@control("CupertinoActionSheetAction", enabled_only=("click",))
 class CupertinoActionSheetAction(LayoutControl):
     """
     An action button typically used in a CupertinoActionSheet.

@@ -85,7 +85,11 @@ class MatplotlibChartToolbarButtonsUpdateEvent(ft.Event["MatplotlibChart"]):
     """
 
 
-@ft.control(kw_only=True, isolated=True)
+@ft.control(
+    kw_only=True,
+    isolated=True,
+    server_events=("message", "toolbar_buttons_update"),
+)
 class MatplotlibChart(ft.GestureDetector):
     """
     Displays a [Matplotlib](https://matplotlib.org/) chart.

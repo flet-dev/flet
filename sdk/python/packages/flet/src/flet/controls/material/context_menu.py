@@ -1,3 +1,4 @@
+import itertools
 from dataclasses import dataclass, field
 from enum import Enum
 from typing import Annotated, Optional
@@ -87,8 +88,14 @@ class ContextMenuSelectEvent(ContextMenuDismissEvent):
 
     @property
     def item(self) -> Optional[PopupMenuItem]:
-        """The selected menu item."""
-        return self.page.get_control(self.item_id)
+        """The selected menu item, or `None` if it isn't an item of this menu."""
+        menu = self.control
+        for item in itertools.chain(
+            menu.items, menu.primary_items, menu.secondary_items, menu.tertiary_items
+        ):
+            if item._i == self.item_id:
+                return item
+        return None
 
 
 @control("ContextMenu")

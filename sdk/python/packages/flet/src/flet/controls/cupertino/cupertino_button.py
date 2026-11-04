@@ -46,7 +46,7 @@ class CupertinoButtonSize(Enum):
     """
 
 
-@control("CupertinoButton")
+@control("CupertinoButton", enabled_only=("click", "long_press"))
 class CupertinoButton(LayoutControl, ActionControl):
     """
     An iOS-style button.

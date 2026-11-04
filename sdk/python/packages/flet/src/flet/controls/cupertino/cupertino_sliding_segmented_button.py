@@ -15,7 +15,11 @@ from flet.utils.validation import V
 __all__ = ["CupertinoSlidingSegmentedButton"]
 
 
-@control("CupertinoSlidingSegmentedButton")
+@control(
+    "CupertinoSlidingSegmentedButton",
+    client_writable=("selected_index",),
+    enabled_only=("change", "selected_index"),
+)
 class CupertinoSlidingSegmentedButton(LayoutControl):
     """
     A cupertino sliding segmented button.

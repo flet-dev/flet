@@ -18,7 +18,7 @@ from flet.utils.validation import V
 __all__ = ["Banner"]
 
 
-@control("Banner")
+@control("Banner", client_writable=("open",))
 class Banner(DialogControl):
     """
     A banner displays an important, succinct message, and provides actions for users \

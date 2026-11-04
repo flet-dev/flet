@@ -20,7 +20,7 @@ from flet.controls.types import (
 __all__ = ["SearchBar"]
 
 
-@control("SearchBar")
+@control("SearchBar", client_writable=("value",))
 class SearchBar(LayoutControl):
     """
     Manages a "search view" route that allows the user to select one of the suggested \

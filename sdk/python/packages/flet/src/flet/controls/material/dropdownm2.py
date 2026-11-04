@@ -18,7 +18,7 @@ from flet.utils.validation import V, ValidationRules
 __all__ = ["DropdownM2", "Option"]
 
 
-@control("Option")
+@control("Option", enabled_only=("click",))
 class Option(Control):
     """
     Represents an item in a dropdown.
@@ -75,7 +75,9 @@ class Option(Control):
     )
 
 
-@control("DropdownM2")
+@control(
+    "DropdownM2", client_writable=("value",), enabled_only=("change", "click", "value")
+)
 class DropdownM2(FormFieldControl):
     """
     A dropdown lets the user select from a number of items. The dropdown shows the \

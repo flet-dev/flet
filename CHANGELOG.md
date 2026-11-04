@@ -1,3 +1,15 @@
+## 1.1.1
+
+### Breaking changes
+
+* A control's Python class must list the fields its Dart code sends with `updateProperties()` in `client_writable` of `@ft.control`, as Python ignores any other property a client sends. All controls that ship with Flet do; extensions whose Dart code sends values to Python need the same one-line change. See the [Extensions: properties sent from Dart must be declared](/docs/updates/breaking-changes/v1-1-1/client-writable-properties) guide by @ndonkoHenri.
+
+### Bug fixes
+
+* Fix a connected client being able to change control state that only Python should set, and to trigger events a real client can't send by @ndonkoHenri.
+* Fix a disabled `Checkbox`, `Switch`, `CupertinoCheckbox` or `CupertinoSwitch` toggling when its `ListTile` with `toggle_inputs=True` is clicked by @ndonkoHenri.
+* Fix `SnackBarAction` showing despite `visible=False` by @ndonkoHenri.
+
 ## 1.1.0
 
 ### Breaking changes

@@ -495,6 +495,31 @@ Common pitfalls:
 
 You can find source code for this example [here](https://github.com/flet-dev/flet-spinkit).
 
+### Sending values to Python
+
+When a user changes something in the widget, send the new value to the Python control
+with `updateProperties()`, then call `triggerEvent()` to run the `on_*` handler:
+
+```dart
+widget.control.updateProperties({"stars": stars});
+widget.control.triggerEvent("change", stars);
+```
+
+List each field the Dart code sends in the `client_writable` argument of the `@ft.control`
+decorator. If the widget holds back a value or an event while the control is disabled, list
+it in `enabled_only` too:
+
+```python
+@ft.control("Rating", client_writable=("stars",), enabled_only=("change", "stars"))
+class Rating(ft.LayoutControl):
+    stars: int = 0
+    on_change: Optional[ft.ControlEventHandler["Rating"]] = None
+```
+
+Python ignores any other property it receives, because a client can send anything. Treat
+a listed field as user input in the same way as the data of an event: it can hold any
+value, not only the ones the widget produces.
+
 ## Dedicated data channels
 
 Property updates and method calls between Python and Dart go over Flet's MsgPack-framed control protocol. That works well for widget state and small events but caps at ~1 GB/s with several allocations per frame. For widgets that need to move **bulk binary data** — image frames, audio buffers, file blobs, ML inference tensors — Flet provides **dedicated `DataChannel`s** that bypass MsgPack entirely and reach memory-bandwidth-class throughput on every supported platform.

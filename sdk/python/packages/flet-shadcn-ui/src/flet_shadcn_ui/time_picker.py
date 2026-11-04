@@ -6,7 +6,9 @@ import flet as ft
 __all__ = ["TimePicker"]
 
 
-@ft.control("ShadTimePicker")
+@ft.control(
+    "ShadTimePicker", client_writable=("value",), enabled_only=("change", "value")
+)
 class TimePicker(ft.LayoutControl):
     """
     A Shadcn time picker with hour and minute fields.

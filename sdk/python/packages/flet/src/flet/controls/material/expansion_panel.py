@@ -44,7 +44,7 @@ class ExpansionPanelListChangeEvent(Event["ExpansionPanelList"]):
     """
 
 
-@control("ExpansionPanel")
+@control("ExpansionPanel", client_writable=("expanded",))
 class ExpansionPanel(LayoutControl, AdaptiveControl):
     """
     A material expansion panel. It can either be expanded or collapsed. Its body is \
@@ -133,7 +133,7 @@ class ExpansionPanel(LayoutControl, AdaptiveControl):
     """
 
 
-@control("ExpansionPanelList")
+@control("ExpansionPanelList", enabled_only=("change",))
 class ExpansionPanelList(LayoutControl, ScrollableControl):
     """
     A material expansion panel list that lays out its children and animates \

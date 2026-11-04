@@ -22,7 +22,7 @@ from flet.utils.validation import V, ValidationRules
 __all__ = ["Button"]
 
 
-@control("Button")
+@control("Button", enabled_only=("click", "long_press"))
 class Button(LayoutControl, AdaptiveControl, ActionControl):
     """
     A material button.

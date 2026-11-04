@@ -6,7 +6,7 @@ import flet as ft
 __all__ = ["ContextMenu", "MenuItem", "Menubar", "MenubarItem"]
 
 
-@ft.control("ShadMenuItem")
+@ft.control("ShadMenuItem", enabled_only=("click",))
 class MenuItem(ft.Control):
     """
     An item in a :class:`~flet_shadcn_ui.ContextMenu` or a

@@ -71,7 +71,11 @@ class NavigationDrawerDestination(Control):
     """
 
 
-@control("NavigationDrawer")
+@control(
+    "NavigationDrawer",
+    client_writable=("selected_index",),
+    enabled_only=("change", "selected_index"),
+)
 class NavigationDrawer(AdaptiveControl):
     """
     Material Design Navigation Drawer component.

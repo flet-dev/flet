@@ -6,7 +6,9 @@ from flet.utils.validation import V
 __all__ = ["Calendar"]
 
 
-@ft.control("ShadCalendar")
+@ft.control(
+    "ShadCalendar", client_writable=("value",), enabled_only=("change", "value")
+)
 class Calendar(ft.LayoutControl):
     """
     A Shadcn calendar for picking one day.

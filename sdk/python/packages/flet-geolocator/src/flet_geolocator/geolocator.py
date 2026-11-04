@@ -12,7 +12,7 @@ from flet_geolocator.types import (
 __all__ = ["Geolocator"]
 
 
-@ft.control("Geolocator")
+@ft.control("Geolocator", client_writable=("position",))
 class Geolocator(ft.Service):
     """
     A control that allows you to fetch GPS data from your device.

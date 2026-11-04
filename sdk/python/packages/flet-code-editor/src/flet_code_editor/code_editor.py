@@ -13,7 +13,11 @@ from flet_code_editor.types import (
 __all__ = ["CodeEditor"]
 
 
-@ft.control("CodeEditor")
+@ft.control(
+    "CodeEditor",
+    client_writable=("selection", "value"),
+    enabled_only=("change", "value"),
+)
 class CodeEditor(ft.LayoutControl):
     """Edit and highlight source code."""
 

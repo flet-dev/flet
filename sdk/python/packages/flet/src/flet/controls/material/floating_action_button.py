@@ -21,7 +21,7 @@ from flet.utils.validation import V, ValidationRules
 __all__ = ["FloatingActionButton"]
 
 
-@control("FloatingActionButton")
+@control("FloatingActionButton", enabled_only=("click",))
 class FloatingActionButton(LayoutControl, ActionControl):
     """
     A floating action button is a circular icon button that hovers over content to \

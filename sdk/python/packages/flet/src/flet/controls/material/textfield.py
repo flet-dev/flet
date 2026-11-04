@@ -439,7 +439,11 @@ class TextOnlyInputFilter(InputFilter):
 
 
 @control(
-    "TextField", categories=("input", "form"), tags=("text", "editable", "validation")
+    "TextField",
+    categories=("input", "form"),
+    tags=("text", "editable", "validation"),
+    client_writable=("selection", "value"),
+    enabled_only=("change", "click", "submit", "value"),
 )
 class TextField(FormFieldControl, AdaptiveControl):
     """

@@ -83,7 +83,11 @@ class DropdownOption(Control):
 Option = DropdownOption
 
 
-@control("Dropdown")
+@control(
+    "Dropdown",
+    client_writable=("text", "value"),
+    enabled_only=("select", "value"),
+)
 class Dropdown(LayoutControl):
     """
     A dropdown control that allows users to select a single option from a list of \

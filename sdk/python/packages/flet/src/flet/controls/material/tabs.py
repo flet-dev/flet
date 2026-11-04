@@ -162,7 +162,12 @@ class UnderlineTabIndicator:
     """
 
 
-@control("Tabs", categories=("navigation", "layout"), tags=("tabbed", "switcher"))
+@control(
+    "Tabs",
+    categories=("navigation", "layout"),
+    tags=("tabbed", "switcher"),
+    client_writable=("selected_index",),
+)
 class Tabs(LayoutControl, AdaptiveControl):
     """
     Used for navigating frequently accessed, distinct content categories. Tabs allow \
@@ -355,7 +360,7 @@ class TabBarView(LayoutControl, AdaptiveControl):
     """
 
 
-@control("TabBar")
+@control("TabBar", enabled_only=("click",))
 class TabBar(LayoutControl, AdaptiveControl):
     """
     Used for navigating frequently accessed, distinct content categories. Tabs allow \

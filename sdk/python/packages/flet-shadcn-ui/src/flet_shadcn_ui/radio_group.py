@@ -35,7 +35,9 @@ class Radio(ft.Control):
     """
 
 
-@ft.control("ShadRadioGroup")
+@ft.control(
+    "ShadRadioGroup", client_writable=("value",), enabled_only=("change", "value")
+)
 class RadioGroup(ft.LayoutControl):
     """
     A Shadcn radio group: a set of options where only one can be selected.

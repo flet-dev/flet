@@ -1,3 +1,7 @@
+## 1.1.1
+
+* Python ignores a property sent by `Control.updateProperties()` unless the Python control lists it in `client_writable` of `@ft.control` by @ndonkoHenri.
+
 ## 1.1.0
 
 * Flutter updated to [3.47.9](https://github.com/flutter/flutter/blob/stable/CHANGELOG.md#3479).

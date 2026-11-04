@@ -5,7 +5,11 @@ import flet as ft
 __all__ = ["Input"]
 
 
-@ft.control("ShadInput")
+@ft.control(
+    "ShadInput",
+    client_writable=("value",),
+    enabled_only=("change", "click", "submit", "value"),
+)
 class Input(ft.LayoutControl):
     """
     A Shadcn text input.

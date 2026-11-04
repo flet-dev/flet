@@ -104,7 +104,11 @@ class NavigationBarDestination(AdaptiveControl):
     """
 
 
-@control("NavigationBar")
+@control(
+    "NavigationBar",
+    client_writable=("selected_index",),
+    enabled_only=("change", "selected_index"),
+)
 class NavigationBar(LayoutControl, AdaptiveControl):
     """
     Material 3 Navigation Bar component.

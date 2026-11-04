@@ -1,4 +1,5 @@
 import asyncio
+import copy
 import dataclasses
 import inspect
 import logging
@@ -9,9 +10,13 @@ from datetime import datetime, timedelta, timezone
 from typing import TYPE_CHECKING, Any, Optional
 
 from flet.controls.base_control import BaseControl
+from flet.controls.base_page import BasePage
 from flet.controls.context import _context_page, context
-from flet.controls.object_patch import ObjectPatch
+from flet.controls.core.window import Window
+from flet.controls.dialog_control import DialogControl
+from flet.controls.object_patch import ObjectPatch, Operation
 from flet.controls.page import Page
+from flet.controls.services.service import Service
 from flet.messaging.connection import Connection
 from flet.messaging.protocol import (
     InvokeMethodRequestBody,
@@ -34,6 +39,137 @@ logger = logging.getLogger("flet")
 patch_logger = logging.getLogger("flet_object_patch")
 
 __all__ = ["Session"]
+
+_PAGE_ENVIRONMENT_FIELDS = frozenset(
+    {
+        "debug",
+        "embedded",
+        "multi_view",
+        "platform",
+        "pwa",
+        "pyodide",
+        "test",
+        "wasm",
+        "web",
+    }
+)
+"""`Page` fields describing the client's environment, set when it first registers."""
+
+_PAGE_REGISTRATION_FIELDS = frozenset({"window"})
+"""`Page` fields a client sends only when it registers."""
+
+_PATCHABLE_WHEN_HIDDEN = frozenset({"open"})
+"""Fields a client can send for a hidden control: a dialog can be closing."""
+
+_HIDDEN_CONTROL_EVENTS = frozenset(
+    {
+        "animation_end",
+        "blur",
+        "dismiss",
+        "drag_complete",
+        "enter",
+        "exit",
+        "hover",
+        "size_change",
+    }
+)
+"""Events a client can send for a hidden control, as they end what a control was doing
+when it stopped rendering. A hidden control sends no others, as it isn't rendered."""
+
+_READ_ONLY_INPUTS = frozenset({"change", "value"})
+"""Events and fields a client doesn't send for a read-only control."""
+
+_REJECTED_VALUES_INTERVAL = 0.1
+"""Seconds between sends of the values rejected from a client, which bounds the traffic
+that small frames can cause when a field holds a large value."""
+
+_COMPONENT_CONTROL_TYPE = "C"
+"""`_c` of a `Component`, which renders no widget of its own: its `visible` has no
+effect on the client."""
+
+_warned_client_fields: set[tuple[type, str]] = set()
+"""Control fields already reported by `_warn_ignored_field`."""
+
+
+def _warn_ignored_field(control: BaseControl, name: str) -> None:
+    """
+    Logs once that a client's value for a field of a control was ignored.
+
+    A field the control's Dart code updates but `client_writable` doesn't list ends up
+    here, so a third-party control gets a message on how to fix it. Only names that are
+    fields of the control are reported, which bounds what a client can make the server
+    log.
+
+    Args:
+        control: The control the value was sent for.
+        name: The property name sent by the client.
+    """
+    cls = type(control)
+    if name not in cls.__dataclass_fields__ or (cls, name) in _warned_client_fields:
+        return
+    _warned_client_fields.add((cls, name))
+    logger.warning(
+        "Ignored a value a client sent for %s.%s. If the control's Dart code updates "
+        "this property, add it to `client_writable` in the @control decorator.",
+        cls.__qualname__,
+        name,
+    )
+
+
+def _is_hidden(control: BaseControl) -> bool:
+    """
+    Whether the client renders no widget for a control, because `visible` of the control
+    or of an ancestor is `False`, or an ancestor is a closed dialog.
+
+    The walk stops at the page, whose `visible` has no effect on the client.
+    """
+    current = control
+    while current is not None and not isinstance(current, BasePage):
+        if current._c != _COMPONENT_CONTROL_TYPE and (
+            getattr(current, "visible", True) is False
+        ):
+            return True
+        if (
+            current is not control
+            and isinstance(current, DialogControl)
+            and not current.open
+        ):
+            return True
+        current = current.parent
+    return False
+
+
+def _is_disabled(control: BaseControl) -> bool:
+    """Whether `control` or one of its ancestors has `disabled` set to `True`."""
+    while control is not None:
+        if getattr(control, "disabled", False) is True:
+            return True
+        control = control.parent
+    return False
+
+
+def _rendering_blocks_input(control: BaseControl, name: str, kept: frozenset) -> bool:
+    """
+    Whether the state of a control rules out a client's event or value.
+
+    Args:
+        control: The target control.
+        name: The event or field name sent by the client.
+        kept: The names a hidden control can receive.
+
+    Returns:
+        `True` if the name can't come from a real client in the control's state: it is
+            hidden, it is disabled and the control lists the name in `enabled_only`, or
+            it is read-only and the name is an edit. A service and the `Window` render
+            nothing of their own, so their state rules out nothing.
+    """
+    if isinstance(control, (Service, Window)):
+        return False
+    if name not in kept and _is_hidden(control):
+        return True
+    if name in control._enabled_only and _is_disabled(control):
+        return True
+    return name in _READ_ONLY_INPUTS and getattr(control, "read_only", False) is True
 
 
 class Session:
@@ -74,6 +210,13 @@ class Session:
         # global `context` singleton — so concurrent apps in one process
         # (e.g. an embedded FletApp) keep independent update behavior.
         self.__components_mode = False
+        self.__page_registered = False
+        """Whether a client has registered with this session, which sets the page's
+        environment fields once."""
+        self.__rejected_fields: dict[int, set[str]] = {}
+        """Names of the fields to send back to the client, by control ID."""
+        self.__rejected_fields_timer: Optional[asyncio.TimerHandle] = None
+        """The pending send of :attr:`__rejected_fields`, if any."""
 
         session_id = self.__id
         weakref.finalize(
@@ -185,7 +328,7 @@ class Session:
         """
         Dispatches the page-level `connect` event for this session.
         """
-        await self.dispatch_event(self.__page._i, "connect", None)
+        await self.__dispatch_page_event("connect")
 
     async def connect(self, conn: Connection) -> None:
         """
@@ -220,7 +363,7 @@ class Session:
         if self.__conn:
             self.__conn.dispose()
             self.__conn = None
-        await self.dispatch_event(self.__page._i, "disconnect", None)
+        await self.__dispatch_page_event("disconnect")
 
     def close(self):
         """
@@ -237,7 +380,7 @@ class Session:
             self.__updates_task.cancel()
         self.__pubsub_client.unsubscribe_all()
         self.__cancel_method_calls()
-        asyncio.create_task(self.dispatch_event(self.__page._i, "close", None))
+        asyncio.create_task(self.__dispatch_page_event("close"))
 
     def patch_control(
         self,
@@ -308,23 +451,149 @@ class Session:
 
     def apply_patch(self, control_id: int, patch: dict[str, Any]):
         """
-        Applies a partial property patch to a control in the session index.
+        Applies a partial property patch received from the client to a control in the
+        session index.
+
+        A client can send anything, so only the fields listed in `client_writable` of
+        the control's `@control` decorator are applied, and only if a real client could
+        change them in the control's current state. The rest of `patch` is ignored, and
+        the client gets back the value of a listed field it wasn't allowed to change.
 
         Args:
             control_id: Target control ID.
             patch: Property/value mapping to apply.
         """
         if control := self.__index.get(control_id):
-            patch_dataclass(control, patch)
+            self.__apply_client_patch(control, patch, control._client_writable)
 
     def apply_page_patch(self, patch: dict[str, Any]):
         """
-        Applies a partial patch to the root page control.
+        Applies the page state a client sends when it registers: the fields listed in
+        `client_writable` of `Page`, and `window`.
+
+        The fields describing the client's environment, such as `web` and `platform`,
+        are applied only the first time a client registers with this session. The rest
+        of `patch` is ignored.
 
         Args:
             patch: Property/value mapping to apply to the page.
         """
-        self.apply_patch(self.__page._i, patch)
+        writable = self.__page._client_writable | _PAGE_REGISTRATION_FIELDS
+        if not self.__page_registered:
+            self.__page_registered = True
+            writable |= _PAGE_ENVIRONMENT_FIELDS
+        self.__apply_client_patch(self.__page, patch, writable, warn=False)
+
+    def __apply_client_patch(
+        self,
+        control: BaseControl,
+        patch: Any,
+        writable: frozenset[str],
+        warn: bool = True,
+    ) -> None:
+        """
+        Applies the part of a client's patch that the client is allowed to change.
+
+        A field holding a control is patched by that control's own rules, in place. A
+        value can't replace the control. A dialog only accepts being closed.
+
+        Args:
+            control: The control to patch.
+            patch: Property/value mapping sent by the client.
+            writable: Names of the fields the client may change.
+            warn: Whether to report a field of the control that isn't in `writable`.
+        """
+        if not isinstance(patch, dict):
+            return
+
+        allowed = {}
+        rejected = []
+        for name, value in patch.items():
+            if name not in writable:
+                if warn:
+                    _warn_ignored_field(control, name)
+            elif _rendering_blocks_input(control, name, _PATCHABLE_WHEN_HIDDEN) or (
+                name == "open"
+                and value is not False
+                and isinstance(control, DialogControl)
+            ):
+                logger.debug("Ignored a client's value of %s.%s", control, name)
+                rejected.append(name)
+            elif isinstance(nested := getattr(control, name, None), BaseControl):
+                self.__apply_client_patch(
+                    nested, value, nested._client_writable, warn=False
+                )
+            else:
+                allowed[name] = value
+        patch_dataclass(control, allowed)
+
+        if rejected:
+            self.__schedule_field_values(control, rejected)
+
+    def __schedule_field_values(self, control: BaseControl, names: list[str]) -> None:
+        """
+        Schedules sending the current values of a control's fields to the client.
+
+        Values rejected in quick succession are sent once, at most once per
+        `_REJECTED_VALUES_INTERVAL`.
+
+        Args:
+            control: The control the fields belong to.
+            names: Names of the fields to send.
+        """
+        self.__rejected_fields.setdefault(control._i, set()).update(names)
+        if self.__rejected_fields_timer is not None:
+            return
+        try:
+            loop = asyncio.get_running_loop()
+        except RuntimeError:
+            self.__send_rejected_fields()
+        else:
+            self.__rejected_fields_timer = loop.call_later(
+                _REJECTED_VALUES_INTERVAL, self.__send_rejected_fields
+            )
+
+    def __send_rejected_fields(self) -> None:
+        """
+        Sends the current values of the scheduled fields to the client.
+
+        The client applies a value before sending it, so the widget shows a rejected
+        value until it gets this one, and a later write of the same value in Python
+        wouldn't produce a patch.
+        """
+        self.__rejected_fields_timer = None
+        rejected, self.__rejected_fields = self.__rejected_fields, {}
+        for control_id, names in rejected.items():
+            if control := self.__index.get(control_id):
+                self.__send_field_values(control, names)
+
+    def __send_field_values(self, control: BaseControl, names: set[str]) -> None:
+        """
+        Sends the current values of a control's fields to the client.
+
+        The diff snapshots of list and dict fields take the values too, so that the next
+        update doesn't apply a pending change to them a second time.
+
+        Args:
+            control: The control the fields belong to.
+            names: Names of the fields to send.
+        """
+        operations = []
+        for name in names:
+            value = getattr(control, name)
+            operations.append([Operation.Replace, 0, name, value])
+            for snapshots in (
+                getattr(control, "__prev_lists", {}),
+                getattr(control, "__prev_dicts", {}),
+            ):
+                if name in snapshots:
+                    snapshots[name] = copy.copy(value)
+        self.__send_message(
+            Message(
+                MessageAction.PATCH_CONTROL,
+                PatchControlBody(control._i, [[0], *operations]),
+            )
+        )
 
     def get_page_patch(self):
         """
@@ -451,7 +720,10 @@ class Session:
         event_data: Any,
     ):
         """
-        Dispatches an event to a control by ID.
+        Dispatches an event received from the client to a control by ID.
+
+        A client can send anything, so an event only Python code triggers is ignored,
+        and so is an event a real client can't send in the control's current state.
 
         Args:
             control_id: Target control ID.
@@ -470,6 +742,37 @@ class Session:
             logger.debug("Control with ID %s not found.", control_id)
             return
 
+        if (
+            not isinstance(event_name, str)
+            or event_name in control._server_events
+            or _rendering_blocks_input(control, event_name, _HIDDEN_CONTROL_EVENTS)
+        ):
+            logger.debug("Ignored client event %s of %s", event_name, control)
+            return
+
+        await self.__trigger_event(control, event_name, event_data)
+
+    async def __dispatch_page_event(self, event_name: str):
+        """
+        Dispatches a page-level event that this session originates.
+
+        Args:
+            event_name: Event name without the `on_` prefix.
+        """
+        _context_page.set(self.__page)
+        await self.__trigger_event(self.__page, event_name, None)
+
+    async def __trigger_event(
+        self, control: BaseControl, event_name: str, event_data: Any
+    ):
+        """
+        Runs a control's event handler and reports an error it raises to the client.
+
+        Args:
+            control: Target control.
+            event_name: Event name without the `on_` prefix.
+            event_data: Raw event payload.
+        """
         try:
             await control._trigger_event(event_name, event_data)
         except Exception as e:

@@ -17,7 +17,7 @@ from flet.controls.types import (
 __all__ = ["TextButton"]
 
 
-@control("TextButton")
+@control("TextButton", enabled_only=("click", "long_press"))
 class TextButton(LayoutControl, AdaptiveControl, ActionControl):
     """
     Text buttons are used for the lowest priority actions, especially when presenting \

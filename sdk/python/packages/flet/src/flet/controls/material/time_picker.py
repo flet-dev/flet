@@ -89,7 +89,7 @@ class TimePickerEntryModeChangeEvent(Event["TimePicker"]):
     """The new entry mode."""
 
 
-@control("TimePicker")
+@control("TimePicker", client_writable=("entry_mode", "open", "value"))
 class TimePicker(DialogControl):
     """
     A Material-style time picker dialog.

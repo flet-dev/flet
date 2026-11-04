@@ -14,7 +14,11 @@ from flet.utils.validation import V
 __all__ = ["RangeSlider"]
 
 
-@control("RangeSlider")
+@control(
+    "RangeSlider",
+    client_writable=("end_value", "start_value"),
+    enabled_only=("change", "change_end", "change_start", "end_value", "start_value"),
+)
 class RangeSlider(LayoutControl):
     """
     A Material Design range slider. Used to select a range from a range of values.

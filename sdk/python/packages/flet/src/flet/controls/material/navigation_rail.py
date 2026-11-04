@@ -99,7 +99,11 @@ class NavigationRailDestination(Control):
     """
 
 
-@control("NavigationRail")
+@control(
+    "NavigationRail",
+    client_writable=("selected_index",),
+    enabled_only=("change", "selected_index"),
+)
 class NavigationRail(LayoutControl):
     """
     A material widget that is meant to be displayed at the left or right of an app to \

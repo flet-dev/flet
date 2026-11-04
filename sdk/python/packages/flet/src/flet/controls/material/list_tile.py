@@ -91,7 +91,7 @@ class ListTileStyle(Enum):
     """
 
 
-@control("ListTile")
+@control("ListTile", enabled_only=("click", "long_press"))
 class ListTile(LayoutControl, AdaptiveControl, ActionControl):
     """
     A single fixed-height row that typically contains some text as well as a leading \

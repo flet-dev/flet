@@ -28,7 +28,7 @@ __all__ = [
 ]
 
 
-@control("IconButton")
+@control("IconButton", enabled_only=("click", "long_press"))
 class IconButton(LayoutControl, AdaptiveControl, ActionControl):
     """
     An icon button is a round button with an icon in the middle that reacts to touches \

@@ -35,7 +35,7 @@ if TYPE_CHECKING:
     from flet.controls.theme import Theme
 
 
-@control("Container")
+@control("Container", enabled_only=("click", "long_press", "tap_down"))
 class Container(LayoutControl, AdaptiveControl, ActionControl):
     """
     Allows to decorate a control with background color and border and position it with \

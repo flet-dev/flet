@@ -9,7 +9,7 @@ from flet.utils.validation import V
 __all__ = ["CupertinoContextMenuAction"]
 
 
-@control("CupertinoContextMenuAction")
+@control("CupertinoContextMenuAction", enabled_only=("click",))
 class CupertinoContextMenuAction(AdaptiveControl):
     """
     A cupertino context menu action.

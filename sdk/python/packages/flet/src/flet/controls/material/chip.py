@@ -23,7 +23,11 @@ from flet.utils.validation import V, ValidationRules
 __all__ = ["Chip"]
 
 
-@control("Chip")
+@control(
+    "Chip",
+    client_writable=("selected",),
+    enabled_only=("click", "delete", "select", "selected"),
+)
 class Chip(LayoutControl):
     """
     Chips are compact elements that represent an attribute, text, entity, or action.

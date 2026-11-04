@@ -6,7 +6,9 @@ from flet.utils.validation import V
 __all__ = ["DatePicker", "DateRangePicker"]
 
 
-@ft.control("ShadDatePicker")
+@ft.control(
+    "ShadDatePicker", client_writable=("value",), enabled_only=("change", "value")
+)
 class DatePicker(ft.LayoutControl):
     """
     A Shadcn date picker: a button that opens a calendar in a popover.
@@ -90,7 +92,11 @@ class DatePicker(ft.LayoutControl):
     """
 
 
-@ft.control("ShadDateRangePicker")
+@ft.control(
+    "ShadDateRangePicker",
+    client_writable=("end_value", "start_value"),
+    enabled_only=("change", "end_value", "start_value"),
+)
 class DateRangePicker(ft.LayoutControl):
     """
     A Shadcn date range picker: a button that opens a two-month calendar in a

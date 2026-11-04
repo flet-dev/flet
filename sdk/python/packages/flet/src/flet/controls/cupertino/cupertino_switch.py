@@ -14,7 +14,9 @@ from flet.controls.types import (
 __all__ = ["CupertinoSwitch"]
 
 
-@control("CupertinoSwitch")
+@control(
+    "CupertinoSwitch", client_writable=("value",), enabled_only=("change", "value")
+)
 class CupertinoSwitch(LayoutControl):
     """
     An iOS-style switch.

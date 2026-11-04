@@ -28,6 +28,12 @@ whole 0.70 - 0.86 pre-release series, so start with
 The following guides are available. They're sorted by release, with the most recent release first.
 Each guide explains the change, the reason for it, and how to migrate your code.
 
+### Released in Flet 1.1.1
+
+#### Breaking changes
+
+- [Extensions: properties sent from Dart must be declared](/docs/updates/breaking-changes/v1-1-1/client-writable-properties)
+
 ### Released in Flet 1.1.0
 
 #### Breaking changes

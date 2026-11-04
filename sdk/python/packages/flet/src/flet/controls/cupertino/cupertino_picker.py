@@ -15,7 +15,7 @@ from flet.utils.validation import V
 __all__ = ["CupertinoPicker"]
 
 
-@control("CupertinoPicker")
+@control("CupertinoPicker", client_writable=("selected_index",))
 class CupertinoPicker(LayoutControl):
     """
     An iOS-styled picker.

@@ -5,7 +5,7 @@ import flet as ft
 __all__ = ["Popover"]
 
 
-@ft.control("ShadPopover")
+@ft.control("ShadPopover", client_writable=("open",))
 class Popover(ft.LayoutControl):
     """
     A Shadcn popover: a floating panel attached to :attr:`content`, opened and

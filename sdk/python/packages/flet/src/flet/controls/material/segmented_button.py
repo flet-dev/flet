@@ -64,7 +64,11 @@ class Segment(Control):
     )
 
 
-@control("SegmentedButton")
+@control(
+    "SegmentedButton",
+    client_writable=("selected",),
+    enabled_only=("change", "selected"),
+)
 class SegmentedButton(LayoutControl):
     """
     A segmented button control.

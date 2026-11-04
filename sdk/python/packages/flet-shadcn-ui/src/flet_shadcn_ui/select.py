@@ -30,7 +30,7 @@ class SelectOption(ft.Control):
     """
 
 
-@ft.control("ShadSelect")
+@ft.control("ShadSelect", client_writable=("value",), enabled_only=("change", "value"))
 class Select(ft.LayoutControl):
     """
     A Shadcn select: a button that opens a list of options to choose one from.

@@ -6,7 +6,11 @@ from flet.utils.validation import V, ValidationRules
 __all__ = ["InputOTP"]
 
 
-@ft.control("ShadInputOTP")
+@ft.control(
+    "ShadInputOTP",
+    client_writable=("value",),
+    enabled_only=("change", "complete", "value"),
+)
 class InputOTP(ft.LayoutControl):
     """
     A Shadcn one-time password input: a row of single-character boxes.

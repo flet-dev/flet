@@ -6,7 +6,9 @@ from flet.utils.validation import V
 __all__ = ["Textarea"]
 
 
-@ft.control("ShadTextarea")
+@ft.control(
+    "ShadTextarea", client_writable=("value",), enabled_only=("change", "value")
+)
 class Textarea(ft.LayoutControl):
     """
     A Shadcn multi-line text input.

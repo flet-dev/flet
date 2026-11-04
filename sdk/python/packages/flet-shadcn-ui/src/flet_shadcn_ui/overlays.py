@@ -7,7 +7,7 @@ from flet_shadcn_ui.types import DialogVariant, SheetSide, ToastVariant
 __all__ = ["Dialog", "Sheet", "Sonner", "Toast"]
 
 
-@ft.control("ShadDialog")
+@ft.control("ShadDialog", client_writable=("open",))
 class Dialog(ft.DialogControl):
     """
     A Shadcn dialog: a window over the page that the user must deal with
@@ -61,7 +61,7 @@ class Dialog(ft.DialogControl):
     """
 
 
-@ft.control("ShadSheet")
+@ft.control("ShadSheet", client_writable=("open",))
 class Sheet(ft.DialogControl):
     """
     A Shadcn sheet: a panel that slides in from an edge of the screen.
@@ -113,7 +113,7 @@ class Sheet(ft.DialogControl):
     """
 
 
-@ft.control("ShadToast")
+@ft.control("ShadToast", client_writable=("open",))
 class Toast(ft.DialogControl):
     """
     A Shadcn toast: a short notification in a corner of the screen that
@@ -164,7 +164,7 @@ class Toast(ft.DialogControl):
     """
 
 
-@ft.control("ShadSonner")
+@ft.control("ShadSonner", client_writable=("open",))
 class Sonner(ft.DialogControl):
     """
     A Shadcn Sonner toast: a notification in the bottom-right corner that

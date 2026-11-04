@@ -76,6 +76,8 @@ docs:
     Migrating from 0.28 to 1.0: updates/migrate-to-1-0.md
     Breaking changes and deprecations:
       _index: updates/breaking-changes/index.md
+      v1.1.1:
+        "Extensions: properties sent from Dart must be declared": updates/breaking-changes/v1-1-1/client-writable-properties.md
       v1.1.0:
         "Android: every Audio now plays together by default": updates/breaking-changes/v1-1-0/android-audio-focus-default.md
         "Extensions: Material and Cupertino now come from material_ui and cupertino_ui": updates/breaking-changes/v1-1-0/material-ui-cupertino-ui.md

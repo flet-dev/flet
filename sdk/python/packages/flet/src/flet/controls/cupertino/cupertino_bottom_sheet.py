@@ -9,7 +9,7 @@ from flet.controls.types import ColorValue, Number
 __all__ = ["CupertinoBottomSheet"]
 
 
-@control("CupertinoBottomSheet")
+@control("CupertinoBottomSheet", client_writable=("open",))
 class CupertinoBottomSheet(DialogControl):
     """
     A Cupertino bottom sheet.

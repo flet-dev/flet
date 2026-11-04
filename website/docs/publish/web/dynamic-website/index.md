@@ -240,6 +240,29 @@ Custom icons should be placed in `assets/icons` directory:
 * `icon-maskable-192.png`, `icon-maskable-512.png` - app icons displayed in Android.
 * `apple-touch-icon-192.png` - app icon displayed in iOS.
 
+## Security
+
+A web app's event handlers run on your server, and anyone who can open the app can connect
+their own client instead of the Flet one. Such a client can send any event for any control
+it knows about, with any data, and any value for a field that the control takes from a
+client, such as `TextField.value`.
+
+Flet stops a client from doing much of what a real client can't. For example, it can't
+change `Control.data`, private attributes or `Page.client_ip`, or click a hidden or
+disabled button. See [the list of rules](../../../updates/breaking-changes/v1-1-1/client-writable-properties.md#other-changes).
+
+These rules don't cover what your app means by a value, so:
+
+- Check permissions in the handler, on the server, for every action that needs them. A
+  control being visible or enabled is not a permission check for everything a user can
+  reach, such as a button behind an open modal dialog.
+- Validate values before using them. A `Dropdown` value doesn't have to be one of its
+  options, a `Slider` value can be outside its range, and an event's data can hold anything.
+- Don't base a decision on `Page.web`, `Page.platform` or `Page.debug`, which the client
+  reports when it first connects.
+- Don't trust what a service returns, such as `SharedPreferences` values or a `Geolocator`
+  position: on the web it runs in the browser.
+
 ## Environment variables
 
 Every aspect of web app hosting can be additionally controlled
