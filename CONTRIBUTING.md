@@ -192,7 +192,7 @@ Making changes to the `<your-main.py>` will automatically trigger a hot reload.
 
 Now, switch to your flutter vscode instance and run the below command to start/connect the flet client:
 ```bash
-flutter run
+fvm flutter run
 ```
 then choose your device from the shown options.
 You will be able to see the debugging outputs of the flet client in this terminal.
@@ -201,7 +201,7 @@ You will be able to see the debugging outputs of the flet client in this termina
 
 - When you make changes to the flet **dart** files, you will need to restart/rerun the Flutter client for the changes to take effect in your playground. There are two ways to do this:
   - fastest: press the keyboard button `R` while in the client's terminal (press `h` to see all other possible options);
-  - slowest: use `flutter run` as seen previously.
+  - slowest: use `fvm flutter run` as seen previously.
 
 - When you make changes to the flet **python** files, you will need to restart/rerun the Python client for the changes to take effect in the opened flutter applications. This is done with the same command:
 

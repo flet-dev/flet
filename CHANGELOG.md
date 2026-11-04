@@ -134,6 +134,12 @@
 * Add a Distributing section to the Windows publishing guide: an Inno Setup installer script, a zip archive, code signing, and building the installer in GitHub Actions ([#6957](https://github.com/flet-dev/flet/pull/6957)) by @ndonkoHenri.
 * Add a Microsoft Store section to the Windows publishing guide: packaging the app as an MSIX, testing it locally and with the Windows App Certification Kit, and submitting it through Partner Center ([#6968](https://github.com/flet-dev/flet/pull/6968)) by @ndonkoHenri.
 
+## 1.0.5
+
+### Bug fixes
+
+* Fix `flet run --web` and other Flet web apps failing to start with FastAPI 0.145 or later, which removed the `openapi_prefix` argument ([#6984](https://github.com/flet-dev/flet/issues/6984), [#6988](https://github.com/flet-dev/flet/pull/6988)) by @FeodorFitsner.
+
 ## 1.0.4
 
 ### Improvements

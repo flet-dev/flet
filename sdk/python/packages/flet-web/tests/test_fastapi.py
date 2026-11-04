@@ -14,6 +14,7 @@ from flet_web.fastapi import FastAPI
     ],
 )
 def test_fastapi_root_path_and_lifecycle(kwargs, expected_root_path):
+    """`root_path` falls back to `openapi_prefix`, and lifecycle hooks run once."""
     events = []
     app = FastAPI(
         **kwargs,
