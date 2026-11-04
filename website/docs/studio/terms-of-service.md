@@ -157,7 +157,7 @@ To sign and publish your apps, you can store credentials in Flet Studio, such as
 
 ### 7.3 Builds
 
-Builds run on single-use build machines that we operate or rent, which are deleted after each build. A build receives your app's files, build settings, and the signing material it needs. We may stop a build that exceeds its time limit or its credits (Section 8.3), or that violates Section 4. Build logs and build files are kept for the period your plan provides and then deleted (see our [Privacy Policy](privacy-policy.md)). Keep your own copy of any build file you need to keep longer.
+Each build runs in its own virtual machine, on computers that we operate or rent, and the virtual machine is deleted when the build ends. A build receives your app's files, build settings, and the signing material it needs. We may stop a build that exceeds its time limit or its credits (Section 8.3), or that violates Section 4. Build logs and build files are kept for the period your plan provides and then deleted (see our [Privacy Policy](privacy-policy.md)). Keep your own copy of any build file you need to keep longer.
 
 ### 7.4 Download pages
 

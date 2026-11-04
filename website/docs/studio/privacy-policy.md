@@ -26,7 +26,7 @@ Separately, when you build a Flet application using Flet Studio and that applica
 
 ### 1.3 Scope
 
-This policy covers personal information processed by Flet Studio as currently implemented, including paid plans and free trials, credit purchases, AI-assisted development, building, signing, and publishing apps, download pages, GitHub sync, the status page, and email communications. If we add features that materially change how personal information is processed, we will update this policy as described in Section 12.
+This policy covers personal information processed by Flet Studio as currently implemented, including paid plans and free trials, credit purchases, AI-assisted development, building, signing, and publishing apps, download pages, GitHub sync, the status page, and email communications. If we add features that materially change how personal information is processed, we will update this policy as described in Section 13.
 
 ---
 
@@ -46,7 +46,7 @@ This policy covers personal information processed by Flet Studio as currently im
 
 **Content you create or upload.** When you use Flet Studio, we store the app source code, files, and versions that you create, edit, or upload to the Service, along with their metadata (file path, size, timestamps, app name, description, dependencies, tags). This content is stored in object storage hosted by our infrastructure provider, Railway.
 
-**AI conversations.** When you use the AI agent, we store your prompts, the AI's responses (including generated code and a record of the actions the AI took in your project), and any ratings you give on responses. Conversations are stored in our database, per app and per account, until you delete the conversation or the associated app, until your account is deleted, or until the conversation hasn't been used for 30 days (90 days on paid plans), when it is deleted.
+**AI conversations.** When you use the AI agent, we store your prompts, the AI's responses (including generated code and a record of the actions the AI took in your project), and any ratings you give on responses. Conversations are stored in our database, per app and per account, until you delete the conversation or the associated app, until your account is deleted, or until the conversation hasn't been used for 30 days (90 days on paid plans), when it is deleted. Each new message restarts that period for the whole conversation.
 
 **Builds.** When you build an app, we store its build settings (such as its name, version, bundle identifier, icons, and the options you choose), the build's log, steps, and annotations, the files it produces (app packages and installers, "build files"), and when it ran, how long it took, and what it cost. Your app's files, build settings, and the signing material the build needs are sent to the build machine that runs it.
 
@@ -70,7 +70,7 @@ This policy covers personal information processed by Flet Studio as currently im
 
 **Credit usage metering.** For each AI agent run, we record the model used, its token counts, and the resulting credit cost; for each build, we record the minutes charged and their credit cost. These records are kept in a usage ledger tied to your account. We use them to charge usage against your credits and to enforce quotas.
 
-**Server-side telemetry.** When telemetry is enabled, our server software emits operational traces and logs to a server-side observability tool (Pydantic Logfire) to help us diagnose errors, investigate incidents, and monitor performance. These traces may incidentally include account or request identifiers; we apply a PII-scrubbing rule to redact sensitive fields. Telemetry is configurable and is not enabled in all environments.
+**Server-side telemetry.** When telemetry is enabled, our server software emits operational traces and logs to a server-side observability tool (Pydantic Logfire) to help us diagnose errors, investigate incidents, and monitor performance. These traces include each request's IP address and browser user agent, and may include account or request identifiers; we apply a PII-scrubbing rule to redact sensitive fields such as tokens and passwords. Telemetry is configurable and is not enabled in all environments.
 
 We do **not** use client-side analytics services. We do not load Google Analytics, Mixpanel, Segment, advertising pixels, or any similar product into the Flet Studio web application or its download pages.
 
@@ -82,11 +82,11 @@ When you connect GitHub, you choose which repositories the Flet Studio GitHub Ap
 
 When you make a purchase, we receive payment and subscription status events from Stripe (for example, that a payment succeeded, a subscription renewed, a trial is about to end, or a subscription was cancelled). These events reference Stripe identifiers.
 
-When you publish an app, we receive information from the store or service you publish to through your account, such as app records, build and review status, and, for Apple, the list of registered devices.
+When you publish an app, we receive information from the store or service you publish to through your account, such as app records, build and review status, and, for Apple, the list of devices registered in your account, which we read when it's needed and don't store.
 
 ### 2.4 People who are not Flet Studio users
 
-**Download page visitors.** When someone opens a download page or downloads a build from it, we use their IP address briefly to limit the rate of requests, and we count how many times install and registration links are used. Download pages are served through Cloudflare (see Section 5.1).
+**Download page visitors.** When someone opens a download page or downloads a build from it, we use their IP address to limit the rate of requests, holding it for up to an hour, and we count how many times install and registration links are used. Download pages are served through Cloudflare (see Section 5.1).
 
 **Reports about download pages.** Anyone can report a download page. A report contains the reason, any details the reporter writes, the reporter's email address if they choose to give it, and a one-way hash of their IP address, which we use to recognize repeated reports from the same visitor without storing the address itself.
 
@@ -147,14 +147,14 @@ We rely on a small number of third-party service providers to operate Flet Studi
 | **Google Cloud (Compute Engine)** | Single-use build machines for Linux, Android, web, and Windows builds, in the United States | Your app's files, build settings, and the signing material the build needs, for the duration of the build |
 | **Dedicated Mac (dedicatedmac.io)** | Hosting for the Mac computers that run our macOS and iOS build machines, in a data center in Phoenix, Arizona, United States | Your app's files, build settings, and the signing material the build needs, for the duration of the build |
 | **Cloudflare** | DNS and network proxy for download pages (get.flet.app); hosting for the status page (status.flet.dev) | Visitors' IP addresses and request details; status page subscribers' email addresses while a subscription is confirmed |
-| **xAI** | AI model provider for the AI agent | Your prompts, conversation history, app source code and files (including images), and your name, email address, and username. Sent only when you use AI features; **not used to train models** |
+| **xAI** | AI model provider for the AI agent | Your prompts, conversation history, app source code and files (including images), and your name, email address, and username. Sent only when you use AI features; **not used to train models**; kept by the provider for a limited time (up to 30 days) to process requests and detect abuse; processed in the United States |
 | **OpenAI** | AI model provider for the AI agent | Same as xAI; **not used to train models** |
 | **Stripe** | Payment processing, subscription and trial management, and tax calculation | Email address, account identifier, plan, and, collected by Stripe directly at checkout, your billing address and payment card details; your purchase history; the card fingerprint used for free trials |
 | **Mailgun** | Email delivery: release emails, account and policy notices, free trial reminders; the status page mailing list | Email address, full name, and unsubscribe status; status page subscribers' email addresses |
 | **Pydantic Logfire** | Server-side observability and tracing | Request traces, query traces, and error spans; PII-scrubbed before transmission |
 | **Intuit QuickBooks Online** | Accounting and bookkeeping | Billing address, purchase and invoice records |
 
-Our agreements with our AI model providers do not permit them to use your data to train their models.
+Our AI model providers act as our service providers. Their terms for our use of their services do not permit them to use your data to train their models, and they keep requests only for a limited time (up to 30 days) to process them and to detect abuse.
 
 ### 5.2 Services you connect
 
@@ -169,7 +169,7 @@ These services act as independent controllers under their own privacy policies, 
 
 ### 5.3 Public content
 
-Content you make public can be seen by anyone: public apps (their source code and description) and download pages (their builds and the details shown on them, to anyone with the link).
+Content you make public can be seen by anyone: public apps (their source code and description) and download pages (their builds and the details shown on them, to anyone with the link). A download page has no sign-in or password: anyone who has its link can open it and download its builds.
 
 ### 5.4 Legal and safety disclosures
 
@@ -198,18 +198,19 @@ Download pages do not set cookies. We do **not** set any advertising cookies, an
 - **User content** (apps, files, versions) is retained for as long as your account is active or until you delete it.
 - **Sign-in metadata** (last sign-in timestamp, last sign-in IP) is overwritten on each new sign-in; older values are not kept. **Session records** are kept while the session can still be used (up to 7 days without activity) and are deleted after it is signed out or expires.
 - **Usage counters** are kept per day and are not retained beyond what is needed for quota enforcement and operational analysis.
-- **AI conversations** are deleted 30 days after the conversation was last used (90 days on paid plans), or earlier when you delete the conversation or the associated app, or your account is deleted. A conversation in active use keeps its earlier messages.
-- **Build logs** (a build's log, steps, and annotations) are deleted 30 days after the build (1 year on paid plans); a short record of each build (what was built, when, its status and cost) is kept with the app. **Build files** are deleted after 7 days (90 days on paid plans), and sooner when newer builds of the same kind replace them. **Download page releases** expire after 7 days (1 year on paid plans).
+- **AI conversations** are deleted 30 days after the conversation was last used (90 days on paid plans), or earlier when you delete the conversation or the associated app, or your account is deleted. Each new message restarts that period for the whole conversation, so a conversation in active use keeps its earlier messages.
+- **Build logs** (a build's log, steps, and annotations) are deleted 30 days after the build (1 year on paid plans); a short record of each build (what was built, when, its status and cost) is kept with the app. **Build files** are deleted after 7 days (90 days on paid plans), and sooner when newer builds of the same kind replace them. **Download page releases** expire after 7 days (1 year on paid plans); a build file published on a download page is kept for as long as its release is live, even past the build-file period.
 - **Signing and publishing credentials** and **GitHub tokens** are kept until you delete them or disconnect, or until your account is deleted.
-- **Free trial card fingerprints** are kept for as long as we offer free trials, including after the account that used the trial is deleted (without a link to that account), so that each card can be used for only one trial.
+- **Free trial card fingerprints** are kept for as long as we offer free trials, including after the account that used the trial is deleted (without a link to that account), so that each card can be used for only one trial. We store the fingerprint that Stripe provides; if we stop offering free trials, we delete them.
 - **Reports about download pages** are kept for 2 years.
 - **iOS device information** registered by testers is not kept by Flet Studio; it is kept by Apple in the app owner's account.
 - **Status page subscriptions** are kept by Mailgun until the subscriber unsubscribes.
 - **Billing records** (purchase and credit-usage ledgers, invoices) are retained for as long as required by applicable tax and accounting law, generally seven years in Canada, even after account deletion.
 - **Release email list membership** is maintained by Mailgun until you unsubscribe or your account is deleted; when we process an account-deletion request, we also remove your address from the list.
-- **Server-side telemetry** (Logfire traces and logs) is retained for a limited period configured with our observability provider.
+- **Server-side telemetry** (Logfire traces and logs) is retained for 30 days.
+- **Backups** of our database are kept for up to 90 days and then deleted, so information deleted from the Service disappears from backups within 90 days.
 - We may adopt shorter retention periods for specific data categories in the future; if we do, we will update this policy.
-- **Account deletion**: when you request deletion of your account, we delete or anonymize your account profile, content, credentials, GitHub connections, download pages, and associated records within 30 days, except where we are required to retain certain information to comply with legal obligations or to resolve disputes.
+- **Account deletion**: when you request deletion of your account, we delete or anonymize your account profile, content, credentials, GitHub connections, download pages, and associated records within 30 days, except where we are required to retain certain information to comply with legal obligations or to resolve disputes. Copies in backups are deleted as the backups expire, within 90 days.
 
 To request deletion, email privacy@flet.dev from the email address associated with your account.
 
@@ -222,7 +223,7 @@ We protect personal information using a combination of technical and organizatio
 - All traffic between your browser and Flet Studio is encrypted in transit using TLS.
 - Personal information is stored on infrastructure operated by Railway, which provides encryption at rest for managed databases and object storage.
 - Signing and publishing credentials and GitHub tokens are additionally encrypted with their own keys (AES-GCM envelope encryption), under master keys that are kept outside the database. They are decrypted only to perform an action you started.
-- Build machines are used for a single build and deleted afterwards. Each build can reach only its own files, using a token that works only for that build, and macOS build machines are isolated from each other on the network.
+- Each build runs in its own virtual machine, on Google Cloud or on our Mac computers, which is deleted when the build ends; the Mac computers are reused, but a build's virtual machine never is. Signing material is sent only to the virtual machine of the build that needs it and is deleted with it. Each build can reach only its own files, using a token that works only for that build, and macOS build machines are isolated from each other on the network.
 - Access to production systems is limited to personnel who require it for their role, authenticated using strong credentials.
 - Authentication tokens carry a version claim that allows us to revoke all of your active sessions immediately when needed.
 
@@ -232,7 +233,7 @@ No method of transmission or storage is perfectly secure, but we work to maintai
 
 ## 9. International Data Transfers
 
-Appveyor Systems Inc. and our infrastructure providers may store and process personal information in jurisdictions other than the one in which you reside. In particular, builds run on machines in the United States (Google Cloud, and Mac computers hosted in Phoenix, Arizona). Where personal information of users located in the European Economic Area, the United Kingdom, or Switzerland is transferred to a country that has not been recognized as providing an adequate level of data protection, we rely on appropriate safeguards, including the European Commission's Standard Contractual Clauses or equivalent mechanisms.
+Appveyor Systems Inc. and our infrastructure providers may store and process personal information in jurisdictions other than the one in which you reside. In particular, builds run on machines in the United States (Google Cloud, and Mac computers hosted in Phoenix, Arizona), and AI requests are processed by our AI model providers in the United States. Where personal information of users located in the European Economic Area, the United Kingdom, or Switzerland is transferred to a country that has not been recognized as providing an adequate level of data protection, we rely on appropriate safeguards, including the European Commission's Standard Contractual Clauses or equivalent mechanisms.
 
 ---
 
@@ -252,21 +253,36 @@ To exercise any of these rights, email **privacy@flet.dev** from the email addre
 
 ---
 
-## 11. Children's Privacy
+## 11. Your Rights (Canada)
+
+If you are in Canada, our handling of your personal information is subject to British Columbia's Personal Information Protection Act (PIPA) and, where it applies, the federal Personal Information Protection and Electronic Documents Act (PIPEDA). You can:
+
+- Ask whether we hold personal information about you, and receive a copy of it, together with how it has been used and to whom it has been disclosed
+- Ask us to correct personal information about you that is inaccurate or incomplete
+- Withdraw your consent where we rely on it, subject to legal or contractual restrictions; we will tell you what withdrawing means for the Service
+- Ask questions about, or make a complaint about, how we collect, use, or disclose your personal information
+
+Send your request or complaint to our Privacy Officer (see Section 14). We will respond within the time the law requires (generally 30 days). If you are not satisfied with our response, you can contact the Office of the Information and Privacy Commissioner for British Columbia (https://www.oipc.bc.ca) or the Office of the Privacy Commissioner of Canada (https://www.priv.gc.ca).
+
+---
+
+## 12. Children's Privacy
 
 Flet Studio is not directed to children under the age of 16, and we do not knowingly collect personal information from children under 16. If we become aware that we have collected personal information from a child under 16 without verified parental consent, we will take steps to delete that information. If you believe a child has provided us with personal information, please contact us at privacy@flet.dev.
 
 ---
 
-## 12. Changes to This Policy
+## 13. Changes to This Policy
 
 We may update this Privacy Policy from time to time to reflect changes to the Service or to our legal obligations. When we make material changes, we will update the "Effective date" at the top of this policy and, where appropriate, notify you through the Service or by email before the changes take effect. Your continued use of Flet Studio after a change takes effect constitutes acceptance of the revised policy.
 
 ---
 
-## 13. Contact Us
+## 14. Contact Us
 
-If you have questions about this Privacy Policy or about how Flet Studio handles your personal information, please contact us:
+If you have questions about this Privacy Policy or about how Flet Studio handles your personal information, or a request or complaint, please contact our Privacy Officer, who is responsible for our privacy practices:
 
-**Appveyor Systems Inc.**
+**Inesa Fitsner, Privacy Officer**
+Appveyor Systems Inc.
+5460 Alderley Rd, Victoria, BC V8Y 1X8, Canada
 Email: privacy@flet.dev
