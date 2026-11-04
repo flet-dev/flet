@@ -293,6 +293,51 @@ void main() {
     expect(platform.sources, hasLength(1));
     expect(platform.resumes, 1);
   });
+  for (final start in ['play', 'resume']) {
+    for (final stop in ['pause', 'release']) {
+      test('$stop cancels $start while the source is loading', () async {
+        final gate = Completer<void>();
+        platform.sourceGate = gate;
+        control.properties['src'] = 'https://example.com/slow.wav';
+        service.init();
+        await _settle();
+        final pending = control.invokeMethod(
+            start, {'position': null}, const Duration(seconds: 5));
+        await _settle();
+        await control.invokeMethod(stop, {}, const Duration(seconds: 5));
+        gate.complete();
+        await pending;
+        await _settle();
+        expect(platform.resumes, 0);
+        expect(service.player.state,
+            stop == 'pause' ? PlayerState.paused : PlayerState.stopped);
+
+        // Cancellation does not suppress later explicit requests.
+        await control.invokeMethod(
+            start, {'position': null}, const Duration(seconds: 5));
+        expect(platform.resumes, 1);
+      });
+    }
+  }
+
+  test('clearing the source cancels a play waiting for it', () async {
+    final gate = Completer<void>();
+    platform.sourceGate = gate;
+    control.properties['src'] = 'https://example.com/slow.wav';
+    service.init();
+    await _settle();
+    final play = control.invokeMethod(
+        'play', {'position': null}, const Duration(seconds: 5));
+    await _settle();
+    control.properties['src'] = null;
+    service.update();
+    await _settle();
+    gate.complete();
+    await play;
+    expect(platform.resumes, 0);
+    expect(service.player.state, PlayerState.paused);
+  });
+
   test('play reports a source that fails to load', () async {
     platform.failSources = true;
     runZonedGuarded(() {
@@ -390,6 +435,39 @@ void main() {
       await _settle();
       expect(platform.audioFocuses, hasLength(1));
     });
+
+    for (final focus in ['gain', null]) {
+      test(
+          'clearing an explicit iOS default ($focus) resets the shared session',
+          () async {
+        await createService(TargetPlatform.iOS);
+        control.properties['context'] = {'focus': focus};
+        service.update();
+        await _settle();
+        final other = _Control(backend, {
+          'context': {'focus': 'mixWithOthers', 'respect_silence': false}
+        });
+        final otherService = AudioService(control: other);
+        await otherService.player.creatingCompleter.future;
+        otherService.update();
+        await _settle();
+        control.properties['context'] = null;
+        service.update();
+        await _settle();
+        expect(platform.contexts.map((c) => c.iOS.options), [
+          <AVAudioSessionOptions>{},
+          {AVAudioSessionOptions.mixWithOthers},
+          <AVAudioSessionOptions>{},
+        ]);
+
+        // Reset only on the transition to None, not on unrelated updates.
+        control.properties['volume'] = 0.5;
+        service.update();
+        await _settle();
+        expect(platform.contexts, hasLength(3));
+        await otherService.player.dispose();
+      });
+    }
 
     test('applies a context equal to the default on iOS', () async {
       await createService(TargetPlatform.iOS);

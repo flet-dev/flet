@@ -29,6 +29,7 @@ class AudioService extends FletService {
   /// to the default.
   AudioContext? _audioContext =
       isAndroidMobile() ? parseAudioContext(null) : null;
+  bool _hasExplicitAudioContext = false;
 
   double? _volume;
   double? _balance;
@@ -39,6 +40,10 @@ class AudioService extends FletService {
   /// can tell that it was superseded.
   int _sourceVersion = 0;
   Future<void> _sourcePreparation = Future<void>.value();
+
+  /// Invalidates playback requests waiting for a source or seek when playback
+  /// is paused, released, or the source or service is removed.
+  int _playbackVersion = 0;
 
   /// The error from preparing the latest source, if that failed.
   Object? _sourceError;
@@ -122,6 +127,7 @@ class AudioService extends FletService {
           _src = null;
           _srcBytes = null;
           _sourceVersion++;
+          _playbackVersion++;
           await player.pause();
         }
       } else if (resolvedSrc.uri != null && resolvedSrc.uri != _src) {
@@ -214,9 +220,15 @@ class AudioService extends FletService {
   Future<void> _applyAudioContext() async {
     if (!isMobilePlatform()) return;
     final value = control.get("context");
+    final contextCleared = _hasExplicitAudioContext && value == null;
+    _hasExplicitAudioContext = value != null;
     if (value == null && _audioContext == null) return;
     final audioContext = parseAudioContext(value);
-    if (audioContext == _audioContext) return;
+    // On iOS, another player may have changed the shared session since this
+    // player last applied its context. Clearing it must restore the defaults.
+    if (audioContext == _audioContext && !(isIOSMobile() && contextCleared)) {
+      return;
+    }
     _audioContext = audioContext;
     await player.setAudioContext(audioContext);
     if (isIOSMobile()) await IosDucking.contextApplied(audioContext);
@@ -302,12 +314,17 @@ class AudioService extends FletService {
   /// again, so they either report its error at once or work once it is available.
   Future<dynamic> _invokeMethod(String name, dynamic args) async {
     debugPrint("Audio.$name($args)");
+    if (name == "pause" || name == "release") _playbackVersion++;
+    final playbackVersion = _playbackVersion;
+    final startsPlayback = name == "play" || name == "resume";
     if (const ["play", "resume", "seek"].contains(name)) {
       if (!_hasSource) {
         throw Exception("Audio must have \"src\" specified to $name.");
       }
       await _sourcePreparation;
+      if (startsPlayback && playbackVersion != _playbackVersion) return;
       if (_sourceError != null) await _reloadSource();
+      if (startsPlayback && playbackVersion != _playbackVersion) return;
     }
     switch (name) {
       case "play":
@@ -317,6 +334,7 @@ class AudioService extends FletService {
           // been freed, so re-prepare it before resuming.
           if ((_releaseMode ?? ReleaseMode.release) == ReleaseMode.release) {
             await _applySource();
+            if (playbackVersion != _playbackVersion) return;
           }
           // Position is already reset to the start after completion, so only
           // seek when a specific non-zero position was requested.
@@ -326,7 +344,7 @@ class AudioService extends FletService {
         } else if (position != null) {
           await player.seek(position);
         }
-        await _resume();
+        if (playbackVersion == _playbackVersion) await _resume();
         break;
       case "resume":
         await _resume();
@@ -362,6 +380,7 @@ class AudioService extends FletService {
   void dispose() {
     debugPrint("Audio(${control.id}).dispose()");
     _sourceVersion++;
+    _playbackVersion++;
     control.removeInvokeMethodListener(_invokeMethod);
     _onDurationChangedSubscription?.cancel();
     _onStateChangedSubscription?.cancel();
