@@ -59,7 +59,11 @@ class SliderInteraction(Enum):
     """
 
 
-@control("Slider")
+@control(
+    "Slider",
+    client_writable=("value",),
+    enabled_only=("change", "change_end", "change_start", "value"),
+)
 class Slider(LayoutControl, AdaptiveControl):
     """
     A slider provides a visual indication of adjustable content, as well as the \

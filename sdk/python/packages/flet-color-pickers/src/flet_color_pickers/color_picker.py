@@ -85,7 +85,7 @@ class HsvColor:
     """Value/brightness component in range `0.0..1.0`."""
 
 
-@ft.control("ColorPicker")
+@ft.control("ColorPicker", client_writable=("color_history", "hsv_color"))
 class ColorPicker(ft.LayoutControl):
     """
     A full-featured color picker with palette, sliders, labels, and optional

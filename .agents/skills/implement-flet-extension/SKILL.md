@@ -66,6 +66,10 @@ Properties with default values on the Python side are **not sent to Flutter** wh
 
 Without matching defaults, Dart receives `null` and either crashes or silently uses the wrong value. This applies to all property types: bools, numbers, strings, enums, durations, collections, and nested `@ft.value` types.
 
+## Sending values from Dart to Python
+
+List every field the Dart code sends with `updateProperties()` in the `client_writable` argument of the Python control's `@ft.control` decorator: Python ignores any other property, so the widget and the Python field drift apart with only one log warning. Use the `enabled_only` argument for the values and events the widget holds back while disabled, and `server_events` for events that only Python code triggers.
+
 ## Integration Checklist
 
 - Register in the Flet client app — two files:

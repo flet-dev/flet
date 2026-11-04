@@ -53,6 +53,9 @@ class _CupertinoSwitchControlState extends State<CupertinoSwitchControl> {
   }
 
   void _toggleValue() {
+    if (widget.control.disabled) {
+      return;
+    }
     _onChange(!_value);
   }
 

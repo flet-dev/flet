@@ -17,7 +17,7 @@ DEFAULT_ANIMATION_DURATION = Duration(seconds=1)
 DEFAULT_ANIMATION_CURVE = AnimationCurve.LINEAR
 
 
-@control("PageView")
+@control("PageView", client_writable=("selected_index",))
 class PageView(LayoutControl):
     """
     Displays its child :attr:`controls` one page at a time and lets users swipe

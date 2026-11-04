@@ -49,7 +49,7 @@ class TileAffinity(Enum):
     """
 
 
-@control("ExpansionTile")
+@control("ExpansionTile", client_writable=("expanded",))
 class ExpansionTile(LayoutControl, AdaptiveControl):
     """
     A single-line ListTile with an expansion arrow icon that expands or collapses the \

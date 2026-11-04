@@ -503,7 +503,20 @@ class MultiViewRemoveEvent(Event["Page"]):
     """
 
 
-@control("Page", isolated=True, post_init_args=2)
+@control(
+    "Page",
+    isolated=True,
+    post_init_args=2,
+    client_writable=("platform_brightness", "route"),
+    server_events=(
+        "close",
+        "connect",
+        "disconnect",
+        "login",
+        "logout",
+        "views_pop_until",
+    ),
+)
 class Page(BasePage):
     """
     Page is a container for :class:`~flet.View` controls.
@@ -907,6 +920,7 @@ class Page(BasePage):
             self.__last_route = e.route
 
         elif isinstance(e, ViewPopEvent | ViewsPopUntilEvent):
+            e.view = None
             for v in unwrap_component(self.views):
                 v = unwrap_component(v)
                 if v.route == e.route:

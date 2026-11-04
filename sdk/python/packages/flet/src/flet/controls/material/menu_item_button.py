@@ -11,7 +11,7 @@ from flet.controls.types import ClipBehavior, StrOrControl
 __all__ = ["MenuItemButton"]
 
 
-@control("MenuItemButton")
+@control("MenuItemButton", enabled_only=("click",))
 class MenuItemButton(LayoutControl):
     """
     A button for use in a MenuBar or on its own, that can be activated by click or \

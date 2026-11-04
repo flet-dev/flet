@@ -33,7 +33,7 @@ class Tab(ft.Control):
     """
 
 
-@ft.control("ShadTabs")
+@ft.control("ShadTabs", client_writable=("value",), enabled_only=("change", "value"))
 class Tabs(ft.LayoutControl):
     """
     Shadcn tabs: a bar of tab buttons, showing the content of the selected tab

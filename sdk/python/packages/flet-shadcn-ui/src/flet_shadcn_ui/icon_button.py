@@ -6,7 +6,7 @@ from flet_shadcn_ui.types import ButtonVariant
 __all__ = ["IconButton"]
 
 
-@ft.control("ShadIconButton")
+@ft.control("ShadIconButton", enabled_only=("click", "long_press"))
 class IconButton(ft.LayoutControl):
     """
     A Shadcn button that shows only an icon.

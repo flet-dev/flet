@@ -6,7 +6,7 @@ from flet_shadcn_ui.types import BadgeVariant
 __all__ = ["Badge"]
 
 
-@ft.control("ShadBadge")
+@ft.control("ShadBadge", enabled_only=("click",))
 class Badge(ft.LayoutControl):
     """
     A Shadcn badge: a small label for a status, a tag or a count.

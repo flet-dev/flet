@@ -15,7 +15,11 @@ from flet.utils.validation import V
 __all__ = ["CupertinoNavigationBar"]
 
 
-@control("CupertinoNavigationBar")
+@control(
+    "CupertinoNavigationBar",
+    client_writable=("selected_index",),
+    enabled_only=("change", "selected_index"),
+)
 class CupertinoNavigationBar(LayoutControl):
     """
     An iOS-styled bottom navigation tab bar.

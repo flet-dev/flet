@@ -40,7 +40,7 @@ class CupertinoTimerPickerMode(Enum):
     """
 
 
-@control("CupertinoTimerPicker")
+@control("CupertinoTimerPicker", client_writable=("value",))
 class CupertinoTimerPicker(LayoutControl):
     """
     A countdown timer picker in iOS style.

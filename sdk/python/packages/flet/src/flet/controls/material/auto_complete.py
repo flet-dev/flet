@@ -36,7 +36,7 @@ class AutoCompleteSelectEvent(Event["AutoComplete"]):
     """The selected suggestion."""
 
 
-@control("AutoComplete")
+@control("AutoComplete", client_writable=("_selected_index", "value"))
 class AutoComplete(LayoutControl):
     """
     Helps the user make a selection by entering some text and choosing from among a \
@@ -81,6 +81,13 @@ class AutoComplete(LayoutControl):
     Called when the input text changes.
     """
 
+    _selected_index: Optional[int] = field(
+        default=None, init=False, repr=False, compare=False, metadata={"skip": True}
+    )
+    """
+    The value of :attr:`selected_index`, which only the client sets.
+    """
+
     @property
     def selected_index(self) -> Optional[int]:
         """
@@ -91,4 +98,4 @@ class AutoComplete(LayoutControl):
         Note:
             This property is read-only.
         """
-        return getattr(self, "_selected_index", None)
+        return self._selected_index

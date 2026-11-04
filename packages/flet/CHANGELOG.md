@@ -1,3 +1,7 @@
+## 1.1.3
+
+* Python ignores a property sent by `Control.updateProperties()` unless the Python control lists it in `client_writable` of `@ft.control` by @ndonkoHenri.
+
 ## 1.1.2
 
 * Add `loadDeferredFonts(package)` (`DeferredFonts`): in a web app, loads the fonts of a Dart package that `flet build web` moved from `FontManifest.json` to `DeferredFontManifest.json`, once, with `FontLoader`; a failed load is retried by a later call after 5 s, doubling up to 5 min; a no-op elsewhere and when the package's fonts are in `FontManifest.json`. `Markdown` calls it for `flutter_math_fork` before drawing math ([#7054](https://github.com/flet-dev/flet/pull/7054)) by @FeodorFitsner.
@@ -6,7 +10,6 @@
 
 * Normalize byte views into independent buffers for Safari image decoding. `ResolvedAssetSource` reuses the normalized buffer for the same immutable source across rebuilds, preserving image and Lottie cache keys; direct `convertToUint8List()` calls, including clipboard writes, read the current input ([#7049](https://github.com/flet-dev/flet/pull/7049)) by @FeodorFitsner.
 * Pass `package_info_plus` the web app's absolute base URL, so `get_package_info` finds `version.json` instead of throwing for a path-only `assetBase`; a web app without `version.json` gets empty values ([#7052](https://github.com/flet-dev/flet/pull/7052)) by @FeodorFitsner.
-
 ## 1.1.0
 
 * Flutter updated to [3.47.9](https://github.com/flutter/flutter/blob/stable/CHANGELOG.md#3479).

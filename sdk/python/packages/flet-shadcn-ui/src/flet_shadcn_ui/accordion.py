@@ -28,7 +28,7 @@ class AccordionItem(ft.Control):
     """
 
 
-@ft.control("ShadAccordion")
+@ft.control("ShadAccordion", client_writable=("value",))
 class Accordion(ft.LayoutControl):
     """
     A Shadcn accordion: a vertical list of sections that expand to show their

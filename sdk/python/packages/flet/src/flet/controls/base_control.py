@@ -2,8 +2,17 @@ import asyncio
 import inspect
 import logging
 import sys
-from dataclasses import InitVar, dataclass, field
-from typing import TYPE_CHECKING, Any, Callable, Optional, TypeVar, Union, overload
+from dataclasses import InitVar, dataclass, field, fields
+from typing import (
+    TYPE_CHECKING,
+    Any,
+    Callable,
+    ClassVar,
+    Optional,
+    TypeVar,
+    Union,
+    overload,
+)
 
 from flet.controls.context import _context_page, context
 from flet.controls.control_event import ControlEvent, get_event_field_type
@@ -77,6 +86,9 @@ def control(
     post_init_args: int = 1,
     categories: Optional[tuple[str, ...]] = None,
     tags: Optional[tuple[str, ...]] = None,
+    client_writable: tuple[str, ...] = (),
+    enabled_only: tuple[str, ...] = (),
+    server_events: tuple[str, ...] = (),
     **dataclass_kwargs: Any,
 ) -> Callable[[type[T]], type[T]]:
     """
@@ -96,6 +108,9 @@ def control(
     post_init_args: int = 1,
     categories: Optional[tuple[str, ...]] = None,
     tags: Optional[tuple[str, ...]] = None,
+    client_writable: tuple[str, ...] = (),
+    enabled_only: tuple[str, ...] = (),
+    server_events: tuple[str, ...] = (),
     **dataclass_kwargs: Any,
 ) -> Union[type[T], Callable[[type[T]], type[T]]]:
     """
@@ -109,7 +124,27 @@ def control(
         post_init_args: Number of InitVar arguments to pass to __post_init__.
         categories: MCP metadata — control categories (e.g. `("input", "form")`).
         tags: MCP metadata — descriptive tags (e.g. `("text", "editable")`).
+        client_writable: Names of the fields a client may change. List every field the
+            control's Dart code sends to Python with `updateProperties()`: the server
+            ignores any other property it receives, because a client can send anything.
+            Inherited by subclasses and merged with their own.
+        enabled_only: Names of the events, without the `on_` prefix, and of the
+            `client_writable` fields that the control's Dart code only sends while the
+            control is enabled. The server ignores them while the control or one of its
+            ancestors is disabled, so list only what the Dart code really holds back.
+            Inherited by subclasses and merged with their own.
+        server_events: Names of the events, without the `on_` prefix, that only Python
+            code triggers. The server ignores these events when they come from a client.
+            Inherited by subclasses and merged with their own.
         dataclass_kwargs: Additional keyword arguments passed to `@dataclass`.
+
+    Raises:
+        ValueError: If `client_writable` names something that isn't a field of the
+            control, as a client could never change it.
+        ValueError: If `enabled_only` names something that isn't a field or an event of
+            the control, as the server would never apply the rule.
+        ValueError: If `server_events` names an event the control has no `on_` field
+            for, as a client could never trigger it anyway.
 
     Usage:
         - Supports `@control` (without parentheses)
@@ -118,6 +153,8 @@ def control(
             specify the number of `InitVar` arguments and isolation
         - Supports `@control("WidgetName", categories=("input",), tags=("text",))`
             to add MCP metadata for discovery
+        - Supports `@control("WidgetName", client_writable=("value",))` to accept the
+            values the control's Dart code sends to Python
     """
 
     # Case 1: If used as `@control` (without parentheses)
@@ -129,6 +166,9 @@ def control(
             post_init_args,
             categories=categories,
             tags=tags,
+            client_writable=client_writable,
+            enabled_only=enabled_only,
+            server_events=server_events,
             **dataclass_kwargs,
         )
 
@@ -141,10 +181,24 @@ def control(
             post_init_args,
             categories=categories,
             tags=tags,
+            client_writable=client_writable,
+            enabled_only=enabled_only,
+            server_events=server_events,
             **dataclass_kwargs,
         )
 
     return wrapper
+
+
+def _merge_inherited(
+    cls: type, attribute: str, names: tuple[str, ...]
+) -> frozenset[str]:
+    """
+    Merges `names` with the values the classes in the MRO of `cls` set for a class
+    `attribute`, keeping a declaration inherited through any base.
+    """
+    inherited = (vars(base).get(attribute, ()) for base in cls.__mro__)
+    return frozenset(names).union(*inherited)
 
 
 def _apply_control(
@@ -154,11 +208,38 @@ def _apply_control(
     post_init_args: int,
     categories: Optional[tuple[str, ...]] = None,
     tags: Optional[tuple[str, ...]] = None,
+    client_writable: tuple[str, ...] = (),
+    enabled_only: tuple[str, ...] = (),
+    server_events: tuple[str, ...] = (),
     **dataclass_kwargs,
 ) -> type[T]:
     """Applies @control logic, ensuring compatibility with @dataclass."""
     cls = dataclass(**dataclass_kwargs)(cls)  # Apply @dataclass first
     _install_props(cls)  # Install Prop descriptors for sparse tracking
+
+    field_names = {f.name for f in fields(cls)}
+    if unknown := set(client_writable) - field_names:
+        raise ValueError(
+            f"{cls.__qualname__} lists client_writable names that aren't fields: "
+            f"{sorted(unknown)}"
+        )
+    if unknown := {
+        name
+        for name in enabled_only
+        if name not in field_names and f"on_{name}" not in field_names
+    }:
+        raise ValueError(
+            f"{cls.__qualname__} lists enabled_only names that aren't fields or "
+            f"events: {sorted(unknown)}"
+        )
+    if unknown := {e for e in server_events if f"on_{e}" not in field_names}:
+        raise ValueError(
+            f"{cls.__qualname__} lists server_events it has no on_ field for: "
+            f"{sorted(unknown)}"
+        )
+    cls._client_writable = _merge_inherited(cls, "_client_writable", client_writable)
+    cls._enabled_only = _merge_inherited(cls, "_enabled_only", enabled_only)
+    cls._server_events = _merge_inherited(cls, "_server_events", server_events)
 
     # Store MCP metadata for discovery by Flet MCP server
     cls.__control_meta__ = {
@@ -187,6 +268,24 @@ def _apply_control(
 class BaseControl:
     """
     Base class for all Flet controls and services.
+    """
+
+    _client_writable: ClassVar[frozenset[str]] = frozenset()
+    """
+    Names of the fields a client may change, set by the `client_writable` argument of
+    the `@control` decorator.
+    """
+
+    _enabled_only: ClassVar[frozenset[str]] = frozenset()
+    """
+    Names of the events and fields a client only sends while this control is enabled,
+    set by the `enabled_only` argument of the `@control` decorator.
+    """
+
+    _server_events: ClassVar[frozenset[str]] = frozenset()
+    """
+    Names of the events a client may not trigger, set by the `server_events` argument of
+    the `@control` decorator.
     """
 
     # ------------------------------------------------------------------
@@ -490,9 +589,9 @@ class BaseControl:
             else:
                 # custom ControlEvent
                 args = {
+                    **(event_data or {}),
                     "control": self,
                     "name": event_name,
-                    **(event_data or {}),
                 }
                 e = from_dict(event_type, args)
 

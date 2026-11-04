@@ -38,7 +38,7 @@ class PopupMenuPosition(Enum):
     """
 
 
-@control("PopupMenuItem")
+@control("PopupMenuItem", enabled_only=("click",))
 class PopupMenuItem(Control):
     """
     A popup menu item.
@@ -98,7 +98,7 @@ class PopupMenuItem(Control):
     """
 
 
-@control("PopupMenuButton")
+@control("PopupMenuButton", enabled_only=("select",))
 class PopupMenuButton(LayoutControl):
     """
     An icon button which displays a menu when clicked.

@@ -20,7 +20,13 @@ from flet.controls.types import (
 __all__ = ["Checkbox"]
 
 
-@control("Checkbox", categories=("input", "selection"), tags=("form", "toggle"))
+@control(
+    "Checkbox",
+    categories=("input", "selection"),
+    tags=("form", "toggle"),
+    client_writable=("value",),
+    enabled_only=("change", "value"),
+)
 class Checkbox(LayoutControl, AdaptiveControl):
     """
     Checkbox allows to select one or more items from a group, or switch between two \

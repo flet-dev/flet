@@ -5,7 +5,7 @@ import flet as ft
 __all__ = ["MaterialPicker"]
 
 
-@ft.control("MaterialPicker")
+@ft.control("MaterialPicker", client_writable=("color",))
 class MaterialPicker(ft.LayoutControl):
     """
     A material palette picker for selecting primary and shade colors, with

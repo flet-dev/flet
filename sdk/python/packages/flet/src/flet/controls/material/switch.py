@@ -21,7 +21,7 @@ from flet.utils.validation import V
 __all__ = ["Switch"]
 
 
-@control("Switch")
+@control("Switch", client_writable=("value",), enabled_only=("change", "value"))
 class Switch(LayoutControl, AdaptiveControl):
     """
     A toggle represents a physical switch that allows someone to choose between two \

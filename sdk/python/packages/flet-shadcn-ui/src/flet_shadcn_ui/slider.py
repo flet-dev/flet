@@ -6,7 +6,11 @@ from flet.utils.validation import V
 __all__ = ["Slider"]
 
 
-@ft.control("ShadSlider")
+@ft.control(
+    "ShadSlider",
+    client_writable=("value",),
+    enabled_only=("change", "change_end", "change_start", "value"),
+)
 class Slider(ft.LayoutControl):
     """
     A Shadcn slider for picking a number from a range.

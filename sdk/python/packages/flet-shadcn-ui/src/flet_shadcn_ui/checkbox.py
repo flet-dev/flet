@@ -5,7 +5,9 @@ import flet as ft
 __all__ = ["Checkbox"]
 
 
-@ft.control("ShadCheckbox")
+@ft.control(
+    "ShadCheckbox", client_writable=("value",), enabled_only=("change", "value")
+)
 class Checkbox(ft.LayoutControl):
     """
     A Shadcn checkbox.

@@ -5,7 +5,7 @@ import flet as ft
 __all__ = ["BlockPicker"]
 
 
-@ft.control("BlockPicker")
+@ft.control("BlockPicker", client_writable=("color",))
 class BlockPicker(ft.LayoutControl):
     """
     A color picker that lets users choose a color from a grid of available

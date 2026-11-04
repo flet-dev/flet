@@ -12,7 +12,7 @@ from flet.utils.validation import V
 __all__ = ["BottomSheet"]
 
 
-@control("BottomSheet")
+@control("BottomSheet", client_writable=("open",))
 class BottomSheet(DialogControl):
     """
     A modal bottom sheet.

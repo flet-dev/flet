@@ -115,7 +115,34 @@ class WindowEvent(Event[EventControlType]):
 
 
 # TODO: raise FletExceptions when a method cant be called on the running platform
-@control("Window")
+@control(
+    "Window",
+    client_writable=(
+        "always_on_top",
+        "focused",
+        "frameless",
+        "full_screen",
+        "height",
+        "left",
+        "max_height",
+        "max_width",
+        "maximizable",
+        "maximized",
+        "min_height",
+        "min_width",
+        "minimizable",
+        "minimized",
+        "movable",
+        "opacity",
+        "prevent_close",
+        "resizable",
+        "title_bar_buttons_hidden",
+        "title_bar_hidden",
+        "top",
+        "visible",
+        "width",
+    ),
+)
 class Window(BaseControl):
     """
     Controls the app window.

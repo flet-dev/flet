@@ -1378,6 +1378,7 @@ class DiffBuilder:
                     old = src_vals.get(fname, default)
                     new = dst_vals.get(fname, default)
                     if old is new:
+                        self._set_retained_parent(new, dst)
                         continue
                     # A child control that compares equal to its predecessor
                     # is still a *different instance* that must be reconciled:
@@ -1524,6 +1525,23 @@ class DiffBuilder:
                     self._update_dict_snapshot(prev_dicts, key, dst)
                 if dataclasses.is_dataclass(dst) and key is not None:
                     prev_classes[key] = dst
+
+    def _set_retained_parent(self, value: Any, parent: Any) -> None:
+        """Make `parent` the parent of the controls in a value kept across a render."""
+        control_cls = self.control_cls
+        if control_cls is None:
+            return
+        if isinstance(value, control_cls):
+            value._parent = weakref.ref(parent)
+        elif isinstance(value, (list, tuple)):
+            for item in value:
+                self._set_retained_parent(item, parent)
+        elif isinstance(value, dict):
+            for item in value.values():
+                self._set_retained_parent(item, parent)
+        elif (values := getattr(value, "_values", None)) is not None:
+            for item in values.values():
+                self._set_retained_parent(item, parent)
 
     def _holds_control(self, value: Any) -> bool:
         """Return whether `value` is a control or a list/dict holding controls."""

@@ -12,7 +12,7 @@ from flet.utils.validation import V, ValidationRules
 __all__ = ["CupertinoAlertDialog"]
 
 
-@control("CupertinoAlertDialog")
+@control("CupertinoAlertDialog", client_writable=("open",))
 class CupertinoAlertDialog(DialogControl):
     """
     An iOS-style alert dialog.

@@ -10,7 +10,7 @@ from flet.utils.validation import V, ValidationRules
 __all__ = ["TextSpan"]
 
 
-@control("TextSpan")
+@control("TextSpan", enabled_only=("click",))
 class TextSpan(ActionControl):
     """
     A text span.

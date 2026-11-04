@@ -132,7 +132,12 @@ class PageResizeEvent(Event["BasePage"]):
     """
 
 
-@control("BasePage", isolated=True, kw_only=True)
+@control(
+    "BasePage",
+    isolated=True,
+    kw_only=True,
+    client_writable=("height", "media", "width"),
+)
 class BasePage(AdaptiveControl):
     """
     A visual container representing a top-level view in a Flet application.

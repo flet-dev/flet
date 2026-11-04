@@ -97,7 +97,7 @@ class CupertinoDatePickerDateOrder(Enum):
     """
 
 
-@control("CupertinoDatePicker")
+@control("CupertinoDatePicker", client_writable=("value",))
 class CupertinoDatePicker(LayoutControl):
     """
     An iOS-styled date picker.

@@ -20,7 +20,7 @@ from flet.utils.validation import V, ValidationRules
 __all__ = ["OutlinedButton"]
 
 
-@control("OutlinedButton")
+@control("OutlinedButton", enabled_only=("click", "long_press"))
 class OutlinedButton(LayoutControl, AdaptiveControl, ActionControl):
     """
     Outlined buttons are medium-emphasis buttons. They contain actions that are \

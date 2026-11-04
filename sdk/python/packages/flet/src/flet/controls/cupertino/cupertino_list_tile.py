@@ -17,7 +17,7 @@ from flet.utils.validation import V
 __all__ = ["CupertinoListTile"]
 
 
-@control("CupertinoListTile")
+@control("CupertinoListTile", enabled_only=("click",))
 class CupertinoListTile(LayoutControl, ActionControl):
     """
     An iOS-style list tile.

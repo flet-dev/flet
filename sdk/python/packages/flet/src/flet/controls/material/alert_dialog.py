@@ -20,7 +20,7 @@ from flet.utils.validation import V, ValidationRules
 __all__ = ["AlertDialog"]
 
 
-@control("AlertDialog")
+@control("AlertDialog", client_writable=("open",))
 class AlertDialog(DialogControl):
     """
     Can be used to inform the user about situations that require acknowledgement.

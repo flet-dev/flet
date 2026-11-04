@@ -10,7 +10,7 @@ from flet.utils.validation import V
 __all__ = ["CupertinoDialogAction"]
 
 
-@control("CupertinoDialogAction")
+@control("CupertinoDialogAction", enabled_only=("click",))
 class CupertinoDialogAction(Control):
     """
     A dialog action button.

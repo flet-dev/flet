@@ -77,7 +77,7 @@ class DatePickerEntryModeChangeEvent(Event["DatePicker"]):
     """The new date picker entry mode."""
 
 
-@control("DatePicker")
+@control("DatePicker", client_writable=("entry_mode", "open", "value"))
 class DatePicker(DialogControl):
     """
     A Material-style date picker dialog.

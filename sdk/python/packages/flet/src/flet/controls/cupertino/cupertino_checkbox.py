@@ -17,7 +17,9 @@ from flet.controls.types import (
 __all__ = ["CupertinoCheckbox"]
 
 
-@control("CupertinoCheckbox")
+@control(
+    "CupertinoCheckbox", client_writable=("value",), enabled_only=("change", "value")
+)
 class CupertinoCheckbox(LayoutControl):
     """
     A macOS style checkbox.

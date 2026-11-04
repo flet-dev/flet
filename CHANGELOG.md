@@ -1,3 +1,15 @@
+## 1.1.3
+
+### Breaking changes
+
+* A control's Python class must list the fields its Dart code sends with `updateProperties()` in `client_writable` of `@ft.control`, as Python ignores any other property a client sends. All controls that ship with Flet do; extensions whose Dart code sends values to Python need the same one-line change. See the [Extensions: properties sent from Dart must be declared](/docs/updates/breaking-changes/v1-1-3/client-writable-properties) guide by @ndonkoHenri.
+
+### Bug fixes
+
+* Fix a connected client being able to change control state that only Python should set, and to trigger events a real client can't send by @ndonkoHenri.
+* Fix a disabled `Checkbox`, `Switch`, `CupertinoCheckbox` or `CupertinoSwitch` toggling when its `ListTile` with `toggle_inputs=True` is clicked by @ndonkoHenri.
+* Fix `SnackBarAction` showing despite `visible=False` by @ndonkoHenri.
+
 ## 1.1.2
 
 ### Improvements
@@ -22,7 +34,6 @@
 * Fix `flet build`, `flet debug` and `flet publish` installing the newest `flet` and Flet extensions instead of the Flet CLI's version when the app's dependencies allow a range such as `flet>=1.0.5`; a requirement that excludes the CLI's version now stops the command ([#6894](https://github.com/flet-dev/flet/issues/6894), [#7047](https://github.com/flet-dev/flet/pull/7047)) by @ndonkoHenri.
 * Fix `flet publish` not installing `[tool.flet.web].dependencies` when the app's code is in a subdirectory set by `[tool.flet.app].path` ([#7047](https://github.com/flet-dev/flet/pull/7047)) by @ndonkoHenri.
 * Fix `flet build web` apps not loading the fonts of Dart packages, so the icons of `flet-shadcn-ui` drew as empty boxes ([#7050](https://github.com/flet-dev/flet/pull/7050)) by @FeodorFitsner.
-
 ## 1.1.0
 
 ### Breaking changes

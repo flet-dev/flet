@@ -8,7 +8,7 @@ from flet.utils.validation import V
 __all__ = ["RadioGroup"]
 
 
-@control("RadioGroup")
+@control("RadioGroup", client_writable=("value",), enabled_only=("change", "value"))
 class RadioGroup(Control):
     """
     Radio buttons let people select a single option from two or more choices.

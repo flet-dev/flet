@@ -20,7 +20,7 @@ from flet_video.types import (
 __all__ = ["Video"]
 
 
-@ft.control("Video")
+@ft.control("Video", client_writable=("fullscreen",))
 class Video(ft.LayoutControl):
     """
     A control that displays a video from a playlist.

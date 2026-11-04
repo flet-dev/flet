@@ -151,7 +151,7 @@ class SnackBarAction(Control):
     """
 
 
-@control("SnackBar")
+@control("SnackBar", client_writable=("open",))
 class SnackBar(DialogControl):
     """
     A lightweight message with an optional action which briefly displays at the bottom \

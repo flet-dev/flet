@@ -5,7 +5,7 @@ import flet as ft
 __all__ = ["HueRingPicker"]
 
 
-@ft.control("HueRingPicker")
+@ft.control("HueRingPicker", client_writable=("color",))
 class HueRingPicker(ft.LayoutControl):
     """
     A hue ring color picker that lets users select a hue on a circular ring,
