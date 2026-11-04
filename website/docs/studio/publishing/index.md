@@ -73,7 +73,7 @@ Then click the action's button. The run's details open and follow it live.
 
 Builds run on cloud machines and use **credits**, the same balance as the AI agent.
 Each kind of machine (Linux, Windows, Mac) has a price per minute, shown on the
-action's screen, and a 3-minute minimum.
+action's screen, and a 4-minute minimum.
 
 - A run starts only if your balance covers its minimum. Waiting in the queue and
   getting a machine ready are free.
