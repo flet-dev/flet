@@ -32,6 +32,7 @@ Each guide explains the change, the reason for it, and how to migrate your code.
 
 #### Breaking changes
 
+- [Android: every `Audio` now plays together by default](/docs/updates/breaking-changes/v1-1-0/android-audio-focus-default)
 - [Extensions: Material and Cupertino now come from `material_ui` and `cupertino_ui`](/docs/updates/breaking-changes/v1-1-0/material-ui-cupertino-ui)
 - [macOS and iOS: built apps now require macOS 12 and iOS 15](/docs/updates/breaking-changes/v1-1-0/minimum-macos-12-ios-15)
 - [macOS: the `.app` is named after the product name](/docs/updates/breaking-changes/v1-1-0/macos-app-named-after-product)
