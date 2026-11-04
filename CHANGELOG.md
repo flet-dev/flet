@@ -126,6 +126,8 @@
 * Fix `flet run` ignoring the `FLET_ASSETS_DIR` environment variable and the app's own `ft.run(assets_dir=...)` ([#5631](https://github.com/flet-dev/flet/issues/5631), [#6935](https://github.com/flet-dev/flet/pull/6935)) by @ndonkoHenri.
 * Fix `requests.Session` ignoring its `verify` setting in apps built with `flet build` ([#5695](https://github.com/flet-dev/flet/issues/5695), [#6936](https://github.com/flet-dev/flet/pull/6936)) by @ndonkoHenri.
 * Fix `ProgressBar.semantics_value` and `ProgressRing.semantics_value` being read with a trailing ".0" by screen readers; they now take strings, such as `"60%"` or `"Step 3 of 5"` ([#7013](https://github.com/flet-dev/flet/pull/7013)) by @ndonkoHenri.
+* Fix `flet build`, `flet debug` and `flet publish` installing the newest `flet` and Flet extensions instead of the Flet CLI's version when the app's dependencies allow a range such as `flet>=1.0.5`; a requirement that excludes the CLI's version now stops the command ([#6894](https://github.com/flet-dev/flet/issues/6894)) by @ndonkoHenri.
+* Fix `flet publish` not installing `[tool.flet.web].dependencies` when the app's code is in a subdirectory set by `[tool.flet.app].path` by @ndonkoHenri.
 
 ### Documentation
 

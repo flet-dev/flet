@@ -75,8 +75,11 @@ from flet_cli.utils.log_format import annotation_path
 from flet_cli.utils.merge import merge_dict
 from flet_cli.utils.plist import is_supported_plist_value, parse_cli_plist_value
 from flet_cli.utils.project_dependencies import (
+    FletVersionConflictError,
     get_poetry_dependencies,
     get_project_dependencies,
+    pin_flet_dependencies,
+    read_requirements,
     read_requirements_file_text,
 )
 from flet_cli.utils.pyproject_toml import load_pyproject_toml
@@ -2139,6 +2142,22 @@ class BaseBuildCommand(BaseFlutterCommand):
                 return True
         return False
 
+    def _pin_flet_dependencies(self, dependencies: list[str]) -> list[str]:
+        """
+        Pin the app's Flet packages to the CLI's version, or stop the build.
+
+        Args:
+            dependencies: The app's requirements.
+
+        Returns:
+            The pinned requirements.
+        """
+        try:
+            return pin_flet_dependencies(dependencies, flet.version.flet_version)
+        except FletVersionConflictError as e:
+            self.skip_flutter_doctor = True
+            self.cleanup(1, escape(str(e)))
+
     def _site_packages_missing(self) -> bool:
         """
         Whether any required platform package directory has no package files.
@@ -2477,6 +2496,7 @@ class BaseBuildCommand(BaseFlutterCommand):
                     if dev_packages_configured:
                         toml_dependencies.append("--no-cache-dir")
 
+                toml_dependencies = self._pin_flet_dependencies(toml_dependencies)
                 for toml_dep in toml_dependencies:
                     package_args.extend(["-r", toml_dep])
 
@@ -2492,6 +2512,16 @@ class BaseBuildCommand(BaseFlutterCommand):
                     )
                 hash.update(reqs_txt_contents)
                 package_args.extend(["-r", "-r", "-r", str(requirements_txt)])
+
+                # pip reads the file itself, so the pins go next to it. A file
+                # with hashes is only checked: pip rejects requirements that
+                # have no hash.
+                file_dependencies = read_requirements(requirements_txt)
+                pinned_dependencies = self._pin_flet_dependencies(file_dependencies)
+                if not re.search(r"--(hash|require-hashes)\b", reqs_txt_contents):
+                    for dep in pinned_dependencies:
+                        if dep not in file_dependencies:
+                            package_args.extend(["-r", dep])
             else:
                 package_args.extend(["-r", f"flet=={flet.version.flet_version}"])
 

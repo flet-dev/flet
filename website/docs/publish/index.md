@@ -769,6 +769,18 @@ If your app uses Flet extensions (third-party packages), list them in your
 Python dependencies so they are packaged with the app. Examples of extensions
 can be found in [Built-in extensions](../extend/built-in-extensions.md).
 
+#### Flet version
+
+Your app runs in a Flet client of the same version as the Flet CLI that builds it,
+so `flet` and the extensions released with it, such as `flet-charts`, are installed
+at that version: a range like `flet>=1.0` is narrowed to it. The command stops if a
+requirement excludes that version. Change the requirement, or use a Flet CLI version
+that it allows.
+
+The versions are left as declared if `flet` itself comes from a local path or a URL,
+for example through `dev_packages`. Files that use `--hash` are only checked, so list
+the CLI's version in them.
+
 #### Example
 
 <Tabs groupId="pyproject-toml">

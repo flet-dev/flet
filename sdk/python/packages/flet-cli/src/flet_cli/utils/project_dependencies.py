@@ -1,4 +1,4 @@
-"""Convert a pyproject.toml file to a requirements.txt file."""
+"""Read the Python dependencies of a Flet app and pin its Flet packages."""
 
 # Based on: https://pypi.org/project/toml-to-requirements/
 
@@ -9,7 +9,46 @@ from collections.abc import Iterator
 from pathlib import Path
 from typing import Any, Optional
 
-from packaging.requirements import Requirement
+from packaging.requirements import InvalidRequirement, Requirement
+from packaging.specifiers import SpecifierSet
+from packaging.utils import canonicalize_name
+
+FLET_PACKAGES = frozenset(
+    {
+        "flet",
+        "flet-ads",
+        "flet-audio",
+        "flet-audio-recorder",
+        "flet-camera",
+        "flet-charts",
+        "flet-cli",
+        "flet-code-editor",
+        "flet-color-pickers",
+        "flet-datatable2",
+        "flet-desktop",
+        "flet-flashlight",
+        "flet-geolocator",
+        "flet-local-auth",
+        "flet-lottie",
+        "flet-map",
+        "flet-mcp",
+        "flet-notifications",
+        "flet-permission-handler",
+        "flet-platform-assets",
+        "flet-rive",
+        "flet-secure-storage",
+        "flet-shadcn-ui",
+        "flet-spinkit",
+        "flet-video",
+        "flet-web",
+        "flet-webview",
+    }
+)
+"""The packages released with `flet`, at its version."""
+
+
+class FletVersionConflictError(ValueError):
+    """Raised when an app's requirements exclude the version of the Flet CLI."""
 
 
 def _windows_safe(req_str: str) -> str:
@@ -137,8 +176,110 @@ def get_project_dependencies(
     return sorted(dependencies)
 
 
-def _requirements_includes(text: str) -> Iterator[str]:
-    """Yield include paths after pip-style line and option preprocessing."""
+def pin_flet_dependencies(dependencies: list[str], flet_version: str) -> list[str]:
+    """
+    Pin `flet` and the packages released with it to the version of the Flet CLI.
+
+    An app runs in a Flet client of the CLI's version, so its Python packages must
+    have that version too. A range such as `flet>=1.0` would install the newest
+    release instead. The extensions are pinned as well because each one requires
+    its own version of `flet` exactly, and `micropip` can't step back to an older
+    extension the way pip does.
+
+    `flet==<flet_version>` is added when no requirement installs `flet` on every
+    platform, unless an entry installs a path or URL, which may provide `flet`.
+
+    Args:
+        dependencies: The app's requirements. Pip options are kept as they are.
+        flet_version: The version of the Flet CLI.
+
+    Returns:
+        The pinned requirements, or `dependencies` as they are when `flet` itself
+        comes from a path or URL, such as the one `dev_packages` sets.
+
+    Raises:
+        FletVersionConflictError: If a requirement excludes `flet_version`.
+    """
+    requirements = [_parse_requirement(dep) for dep in dependencies]
+    if any(
+        _is_flet_location(dep)
+        if req is None
+        else canonicalize_name(req.name) == "flet" and req.url
+        for dep, req in zip(dependencies, requirements)
+    ):
+        return list(dependencies)
+
+    pinned = []
+    installs_flet = False
+    may_install_flet = False
+    for dep, req in zip(dependencies, requirements):
+        if req is None:
+            may_install_flet = may_install_flet or not dep.startswith("-")
+        elif canonicalize_name(req.name) in FLET_PACKAGES and not req.url:
+            if not req.specifier.contains(flet_version, prereleases=True):
+                raise FletVersionConflictError(
+                    f"The app requires `{req}`, but this Flet CLI is version "
+                    f"{flet_version}, and the app runs in a Flet client of that "
+                    "version. Change the requirement, or use a Flet CLI version "
+                    "that it allows."
+                )
+            req.specifier = SpecifierSet(f"=={flet_version}")
+            dep = _windows_safe(str(req))
+            installs_flet = installs_flet or (
+                canonicalize_name(req.name) == "flet" and req.marker is None
+            )
+        pinned.append(dep)
+    if not installs_flet and not may_install_flet:
+        pinned.append(f"flet=={flet_version}")
+    return pinned
+
+
+def override_dependencies(dependencies: list[str], overrides: list[str]) -> list[str]:
+    """
+    Append `overrides` to `dependencies`, replacing requirements of the same packages.
+
+    Args:
+        dependencies: The requirements to override.
+        overrides: The requirements that take precedence.
+
+    Returns:
+        The combined requirements.
+    """
+    names = {
+        canonicalize_name(req.name)
+        for req in map(_parse_requirement, overrides)
+        if req is not None
+    }
+    kept = [
+        dep
+        for dep in dependencies
+        if (req := _parse_requirement(dep)) is None
+        or canonicalize_name(req.name) not in names
+    ]
+    return kept + overrides
+
+
+def _parse_requirement(dep: str) -> Optional[Requirement]:
+    """Parse a PEP 508 requirement, or return `None` for any other entry."""
+    try:
+        return Requirement(dep)
+    except InvalidRequirement:
+        return None
+
+
+def _is_flet_location(entry: str) -> bool:
+    """Whether a path or URL is a `flet` wheel, a `flet` sdist or has `#egg=flet`."""
+    return bool(
+        re.search(
+            r"[#&]egg=flet(&|$)|(^|[/\\])flet-\d[^/\\]*\.(whl|tar\.gz|zip)([#?]|$)",
+            entry,
+            re.IGNORECASE,
+        )
+    )
+
+
+def _requirements_lines(text: str) -> Iterator[str]:
+    """Yield the lines of a requirements file, preprocessed the way pip does."""
     pending = ""
     for line in [*text.splitlines(), ""]:
         # Join before stripping comments, as pip does. Comment lines themselves
@@ -148,39 +289,73 @@ def _requirements_includes(text: str) -> Iterator[str]:
             continue
         line, pending = pending + line, ""
         line = re.sub(r"(^|\s+)#.*$", "", line).strip()
-        if not line.startswith("-"):
+        if line:
+            yield re.sub(
+                r"\$\{([A-Z0-9_]+)\}",
+                lambda match: os.environ.get(match[1]) or match[0],
+                line,
+            )
+
+
+def _requirements_options(line: str) -> Iterator[tuple[str, str]]:
+    """Yield the `-r`, `-c` and `-e` options of a line, as (letter, value) pairs."""
+    try:
+        options = iter(shlex.split(line))
+    except ValueError:
+        # Leave malformed options for pip to report during installation.
+        return
+    for option in options:
+        if option in ("-r", "--requirement", "-c", "--constraint", "-e", "--editable"):
+            letter, value = option.lstrip("-")[0], next(options, "")
+        elif option.startswith(("--requirement=", "--constraint=", "--editable=")):
+            letter, value = option[2], option.partition("=")[2]
+        elif option.startswith(("-r", "-c", "-e")):
+            letter, value = option[1], option[2:]
+        else:
             continue
-        line = re.sub(
-            r"\$\{([A-Z0-9_]+)\}",
-            lambda match: os.environ.get(match[1]) or match[0],
-            line,
-        )
-        try:
-            options = iter(shlex.split(line))
-        except ValueError:
-            # Leave malformed options for pip to report during installation.
-            continue
-        for option in options:
-            if option in ("-r", "--requirement", "-c", "--constraint"):
-                include = next(options, "")
-            elif option.startswith(("--requirement=", "--constraint=")):
-                include = option.partition("=")[2]
-            elif option.startswith(("-r", "-c")):
-                include = option[2:]
-            else:
+        if value:
+            yield letter, value
+
+
+def _requirements_files(path: Path) -> Iterator[tuple[str, bool]]:
+    """
+    Yield the text of a requirements file and of the files it includes.
+
+    Includes are relative to the file that includes them. URLs and missing files
+    are skipped.
+
+    Args:
+        path: The path of the requirements file.
+
+    Yields:
+        The text of a file, and whether it was reached through a constraints file.
+    """
+    visited: set[Path] = set()
+
+    def read(file: Path, constraint: bool) -> Iterator[tuple[str, bool]]:
+        resolved = file.resolve()
+        if resolved in visited or not file.is_file():
+            return
+        visited.add(resolved)
+        text = file.read_text(encoding="utf-8", errors="replace")
+        yield text, constraint
+        for line in _requirements_lines(text):
+            if not line.startswith("-"):
                 continue
-            if include:
-                yield include
+            for letter, value in _requirements_options(line):
+                if letter != "e" and not re.match(
+                    r"^[a-z][a-z0-9+.-]*://", value, re.IGNORECASE
+                ):
+                    yield from read(file.parent / value, constraint or letter == "c")
+
+    yield from read(Path(path), False)
 
 
 def read_requirements_file_text(path: Path) -> str:
     """
     Return the text of a `requirements.txt` file and of the files it includes.
 
-    Files included with `-r`/`--requirement` or `-c`/`--constraint` are read
-    too, relative to the file that includes them, so a change to any of them
-    changes the result. Includes support quoted paths, line continuations and
-    pip's `${NAME}` environment variables. URLs and missing files are skipped.
+    A change to any of the files changes the result.
 
     Args:
         path: The path of the `requirements.txt` file.
@@ -188,21 +363,30 @@ def read_requirements_file_text(path: Path) -> str:
     Returns:
         The concatenated text of the file and of the files it includes.
     """
+    return "".join(text for text, _ in _requirements_files(path))
 
-    parts: list[str] = []
-    visited: set[Path] = set()
 
-    def read(file: Path) -> None:
-        resolved = file.resolve()
-        if resolved in visited or not file.is_file():
-            return
-        visited.add(resolved)
-        text = file.read_text(encoding="utf-8", errors="replace")
-        parts.append(text)
-        for include in _requirements_includes(text):
-            if re.match(r"^[a-z][a-z0-9+.-]*://", include, re.I):
-                continue
-            read(file.parent / include)
+def read_requirements(path: Path) -> list[str]:
+    """
+    Return the requirements of a `requirements.txt` file and of its `-r` includes.
 
-    read(Path(path))
-    return "".join(parts)
+    Args:
+        path: The path of the `requirements.txt` file.
+
+    Returns:
+        The requirements without their options, and the targets of `-e` options.
+    """
+    requirements = []
+    for text, constraint in _requirements_files(path):
+        if constraint:
+            continue
+        for line in _requirements_lines(text):
+            if line.startswith("-"):
+                requirements.extend(
+                    value
+                    for letter, value in _requirements_options(line)
+                    if letter == "e"
+                )
+            else:
+                requirements.append(re.split(r"\s+-", line, maxsplit=1)[0])
+    return requirements
