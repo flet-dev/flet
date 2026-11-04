@@ -77,6 +77,7 @@ docs:
     Breaking changes and deprecations:
       _index: updates/breaking-changes/index.md
       v1.1.0:
+        "Android: every Audio now plays together by default": updates/breaking-changes/v1-1-0/android-audio-focus-default.md
         "Extensions: Material and Cupertino now come from material_ui and cupertino_ui": updates/breaking-changes/v1-1-0/material-ui-cupertino-ui.md
         "macOS and iOS: built apps now require macOS 12 and iOS 15": updates/breaking-changes/v1-1-0/minimum-macos-12-ios-15.md
         "macOS: the .app is named after the product name": updates/breaking-changes/v1-1-0/macos-app-named-after-product.md
@@ -506,9 +507,8 @@ docs:
       - types/animationstyle.md
       - Audio:
         - services/audio/types/audiocontext.md
-        - services/audio/types/audiocontextfocus.md
-        - services/audio/types/audiocontextroute.md
         - services/audio/types/audiodurationchangeevent.md
+        - services/audio/types/audiofocus.md
         - services/audio/types/audiopositionchangeevent.md
         - services/audio/types/audiostatechangeevent.md
         - services/audio/types/audiostate.md

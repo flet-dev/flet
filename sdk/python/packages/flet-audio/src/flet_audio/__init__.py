@@ -1,9 +1,8 @@
 from flet_audio.audio import Audio
 from flet_audio.types import (
     AudioContext,
-    AudioContextFocus,
-    AudioContextRoute,
     AudioDurationChangeEvent,
+    AudioFocus,
     AudioPositionChangeEvent,
     AudioState,
     AudioStateChangeEvent,
@@ -13,9 +12,8 @@ from flet_audio.types import (
 __all__ = [
     "Audio",
     "AudioContext",
-    "AudioContextFocus",
-    "AudioContextRoute",
     "AudioDurationChangeEvent",
+    "AudioFocus",
     "AudioPositionChangeEvent",
     "AudioState",
     "AudioStateChangeEvent",
