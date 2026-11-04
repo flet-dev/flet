@@ -60,7 +60,7 @@ Information you provide when creating and using an account is processed in accor
 
 ### 3.6 Communications
 
-We send service and transactional emails about your account and the Service (for example, security notices, billing communications, and free trial reminders); you cannot opt out of these while you hold an account. Account holders are also subscribed to the Flet Studio newsletter with product news and updates. You can unsubscribe from the newsletter at any time using the toggle in your account settings or the unsubscribe link included in every newsletter email.
+We send service and transactional emails about your account and the Service (for example, security notices, billing communications, free trial reminders, and notices of changes to these Terms and our Privacy Policy); you cannot opt out of these while you hold an account. We also email account holders about new Flet Studio releases. You can unsubscribe from release emails at any time using the unsubscribe link included in each of them.
 
 ---
 

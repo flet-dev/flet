@@ -60,7 +60,7 @@ This policy covers personal information processed by Flet Studio as currently im
 
 **Billing information.** When you purchase a paid plan or credits, Stripe collects your payment card details and billing address at checkout. We store your Stripe customer and subscription identifiers, your plan status and trial dates, and records of your purchases, credit grants, and credit charges, and we retain billing addresses and purchase records for bookkeeping in QuickBooks Online. When you start a free trial, we also store the card fingerprint Stripe provides for your card (an identifier of the card, not its number), so that each card can be used for only one trial.
 
-**Newsletter subscription.** When you create an account, your email address and name are added to the Flet Studio newsletter mailing list, operated by Mailgun. Your subscription and unsubscribe status is maintained by Mailgun, not in our database. You can unsubscribe at any time using the toggle in account settings, the unsubscribe link in every newsletter email, or your mail client's unsubscribe function.
+**Emails we send you.** We email account holders, at the name and address on their account, about new Flet Studio releases and about changes to our terms and policies. These emails are factual updates about the Service you use; we don't send advertising or offers. Each release email includes an unsubscribe link, and you can also use your mail client's unsubscribe function; your unsubscribe status is kept by Mailgun, which sends these emails for us. Notices about your account, your plan, our terms and policies, and security are sent regardless, because they are part of providing the Service.
 
 ### 2.2 Information collected automatically
 
@@ -107,7 +107,7 @@ We use personal information to:
 - Improve the Service: we may review AI conversations to diagnose problems with the AI features and improve their quality (for example, refining prompts, tooling, and agent behavior)
 - Process payments, charge AI and build usage against your credits, maintain billing and credit-usage records, and calculate applicable taxes
 - Check eligibility for free trials, and prevent repeat trials
-- Send the Flet Studio newsletter with product news and updates; you can opt out at any time (see Section 2.1)
+- Email account holders about new Flet Studio releases and changes to our terms and policies; you can unsubscribe from release emails at any time (see Section 2.1)
 - Send status page updates to people who subscribed
 - Enforce per-account limits, handle reports about download pages, and prevent abuse of the Service
 - Maintain the security and integrity of the Service, including investigating fraud, abuse, or unauthorized access
@@ -124,7 +124,7 @@ We do **not** use your personal information or User Content for advertising, for
 If you are located in the European Economic Area, the United Kingdom, or Switzerland, we rely on the following legal bases under the GDPR (or its UK equivalent) when we process your personal information:
 
 - **Performance of a contract**: to provide the Service you have signed up for. This covers account creation, authentication, storage of your content, quota enforcement, paid subscriptions, free trials, and credit purchases, the AI features you invoke, and the builds, signing, publishing, download pages, and GitHub sync you request.
-- **Legitimate interests**: to keep the Service secure, prevent abuse (including repeat free trials and abuse of download pages), handle reports, debug and improve the Service, maintain operational telemetry, and send the Flet Studio newsletter to existing account holders with product news and updates (with an easy opt-out at any time and the right to object described in Section 10).
+- **Legitimate interests**: to keep the Service secure, prevent abuse (including repeat free trials and abuse of download pages), handle reports, debug and improve the Service, maintain operational telemetry, and email account holders about new releases of the Service (with an unsubscribe link in every release email and the right to object described in Section 10).
 - **Compliance with a legal obligation**: when we are required to retain, disclose, or process personal information to comply with applicable law (for example, retaining billing records for tax purposes).
 - **Consent**: for status page subscriptions, which you confirm by email and can withdraw at any time with the unsubscribe link. If we introduce other features that require consent, we will request it separately and you will be able to withdraw it at any time.
 
@@ -150,7 +150,7 @@ We rely on a small number of third-party service providers to operate Flet Studi
 | **xAI** | AI model provider for the AI agent | Your prompts, conversation history, app source code and files (including images), and your name, email address, and username. Sent only when you use AI features; **not used to train models** |
 | **OpenAI** | AI model provider for the AI agent | Same as xAI; **not used to train models** |
 | **Stripe** | Payment processing, subscription and trial management, and tax calculation | Email address, account identifier, plan, and, collected by Stripe directly at checkout, your billing address and payment card details; your purchase history; the card fingerprint used for free trials |
-| **Mailgun** | Newsletter and email delivery, including free trial reminders; the status page mailing list | Email address, full name, and newsletter subscription/suppression status; status page subscribers' email addresses |
+| **Mailgun** | Email delivery: release emails, account and policy notices, free trial reminders; the status page mailing list | Email address, full name, and unsubscribe status; status page subscribers' email addresses |
 | **Pydantic Logfire** | Server-side observability and tracing | Request traces, query traces, and error spans; PII-scrubbed before transmission |
 | **Intuit QuickBooks Online** | Accounting and bookkeeping | Billing address, purchase and invoice records |
 
@@ -206,7 +206,7 @@ Download pages do not set cookies. We do **not** set any advertising cookies, an
 - **iOS device information** registered by testers is not kept by Flet Studio; it is kept by Apple in the app owner's account.
 - **Status page subscriptions** are kept by Mailgun until the subscriber unsubscribes.
 - **Billing records** (purchase and credit-usage ledgers, invoices) are retained for as long as required by applicable tax and accounting law, generally seven years in Canada, even after account deletion.
-- **Newsletter list membership** is maintained by Mailgun until you unsubscribe; when we process an account-deletion request, we also remove your address from the mailing list.
+- **Release email list membership** is maintained by Mailgun until you unsubscribe or your account is deleted; when we process an account-deletion request, we also remove your address from the list.
 - **Server-side telemetry** (Logfire traces and logs) is retained for a limited period configured with our observability provider.
 - We may adopt shorter retention periods for specific data categories in the future; if we do, we will update this policy.
 - **Account deletion**: when you request deletion of your account, we delete or anonymize your account profile, content, credentials, GitHub connections, download pages, and associated records within 30 days, except where we are required to retain certain information to comply with legal obligations or to resolve disputes.
