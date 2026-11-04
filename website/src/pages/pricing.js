@@ -10,10 +10,13 @@ const plans = [
     price: 'Free',
     features: [
       '10 public apps',
-      '1 user',
+      '500 credits a month for the agent and builds',
+      'Build for Android, iOS (your own devices), web, Windows, macOS and Linux',
+      'Shareable download pages, kept 7 days',
+      '1 build at a time',
+      'Pro agent',
+      'Buy more credits any time ($20 for 10,000)',
       '20 MB storage',
-      '1,000 AI credits / month',
-      'Pro AI agent',
       'Community support',
     ],
     action: 'Start building',
@@ -26,17 +29,21 @@ const plans = [
       annual: {price: '$25', note: 'USD · $300 billed annually'},
       monthly: {price: '$30', note: 'USD · billed monthly'},
     },
+    trial: '7-day free trial',
+    featuresHeading: 'Everything in Explorer, plus:',
     features: [
-      'Unlimited public apps',
-      'Unlimited private apps',
-      '1 user',
+      '10,000 credits a month',
+      'Unlimited public and private apps',
+      'Publish to Google Play, the App Store and Microsoft Store',
+      'Code signing and notarization for Windows and macOS',
+      'GitHub sync',
+      'Expert agent',
+      '2 builds at a time',
+      'Download pages kept 1 year, with named links',
       '100 MB storage',
-      '10,000 AI credits / month',
-      'On-demand AI credit top-ups',
-      'Pro & Expert AI agents',
       'Flet support',
     ],
-    action: 'Start building',
+    action: 'Start free trial',
     href: 'https://studio.flet.dev/pricing',
     featured: true,
   },
@@ -64,7 +71,7 @@ function PlanCard({plan, billingPeriod}) {
   return (
     <article className={`${styles.card} ${plan.featured ? styles.featured : ''}`} aria-labelledby={`plan-${plan.name.toLowerCase()}`}>
       <div className={styles.cardHeader}>
-        <h2 id={`plan-${plan.name.toLowerCase()}`}>{plan.name}</h2>
+        <h2 id={`plan-${plan.name.toLowerCase()}`}>{plan.name}{plan.trial && <span className={`${styles.badge} ${styles.trialBadge}`}>{plan.trial}</span>}</h2>
         <p className={styles.planDescription}>{plan.description}</p>
         <div aria-live={plan.billing ? 'polite' : undefined} aria-atomic="true">
           <p className={`${styles.price} ${plan.upcoming ? styles.upcomingPrice : ''}`}>
@@ -73,9 +80,9 @@ function PlanCard({plan, billingPeriod}) {
           <p className={styles.priceNote}>{billing?.note ?? (plan.upcoming ? 'Pricing and full details to be announced.' : 'Build at your own pace.')}</p>
         </div>
       </div>
+      {plan.featuresHeading && <p className={styles.featuresHeading}>{plan.featuresHeading}</p>}
       <ul className={styles.features}>
         {plan.features.map((feature) => <li key={feature}>{feature}</li>)}
-        <li><span>Packaging & publishing <span className={styles.badge}>Coming soon</span></span></li>
       </ul>
       {plan.upcoming ? (
         <p className={styles.teaser}>Built for creating together. Stay tuned.</p>
@@ -92,7 +99,7 @@ export default function Pricing() {
   const [billingPeriod, setBillingPeriod] = useState('annual');
 
   return (
-    <Layout title="Pricing" description="Explore Flet Studio plans: start free with Explorer, grow with Creator, and discover the upcoming Studio plan for teams. The Flet framework is free, forever.">
+    <Layout title="Pricing" description="Explore Flet Studio plans: start free with Explorer, build and publish your apps with Creator, and discover the upcoming Studio plan for teams. The Flet framework is free, forever.">
       <main className={styles.page}>
         <header className={styles.hero}>
           <span className={styles.eyebrow}>Pricing</span>
@@ -132,10 +139,10 @@ export default function Pricing() {
             </div>
           </details>
           <details className={styles.question} open>
-            <summary>How do AI credits work?</summary>
+            <summary>How do credits work?</summary>
             <div className={styles.answer}>
-              <p>AI credits pay for the work the AI agent does in Flet Studio. Each request uses credits based on the model, the context it reads, and the output it generates. A prompt can involve several steps, so its cost is not fixed by the number of words you type.</p>
-              <p>Explorer includes 1,000 credits per month and the Pro agent. Creator includes 10,000 credits per month and access to both Pro and Expert. Pro and Expert are AI agent tiers, separate from your subscription plan.</p>
+              <p>Credits pay for the work the AI agent does in Flet Studio and for building your apps. Each agent request uses credits based on the model, the context it reads, and the output it generates. A prompt can involve several steps, so its cost is not fixed by the number of words you type.</p>
+              <p>Explorer includes 500 credits per month and the Pro agent. Creator includes 10,000 credits per month and access to both Pro and Expert. Pro and Expert are AI agent tiers, separate from your subscription plan.</p>
               <div className={styles.tableWrapper} role="region" aria-label="Illustrative AI credit costs" tabIndex={0}>
                 <table className={styles.creditTable}>
                   <caption>Illustrative costs in credits — actual usage varies.</caption>
@@ -148,7 +155,20 @@ export default function Pricing() {
                 </table>
               </div>
               <p className={styles.estimateNote}>These are worked examples, not measured averages or quotes. They assume, respectively, {creditExamples.map((example) => `${example.input} input / ${example.output} output`).join('; ')} tokens across the agent’s work, with no cached input or long-context surcharge, using September 2026 default rates. Tokens are the small pieces of text the AI processes. Larger projects, longer conversations, and extra steps can increase the cost; reused context can reduce it. Check Studio for current rates and your actual usage.</p>
-              <p>Monthly plan credits reset each month and do not roll over. Need more? You can buy additional credits in Studio. Wallet AI credits expire 12 months after purchase.</p>
+              <p>Monthly plan credits reset each month and do not roll over. Need more? On any plan you can buy more credits in Studio, $20 for 10,000. Purchased credits expire 12 months after purchase.</p>
+            </div>
+          </details>
+          <details className={styles.question} open>
+            <summary>How much does a build cost?</summary>
+            <div className={styles.answer}>
+              <p>Builds are charged by the minute while the build machine works on your app: 10 credits a minute on Linux (Android, web and Linux apps), 20 on Windows and 40 on macOS (iOS and macOS apps). Each build is charged at least 4 minutes. Time spent waiting in the queue or preparing the machine is free.</p>
+              <p>Studio shows the rate before you start, and the credits used while the build runs.</p>
+            </div>
+          </details>
+          <details className={styles.question} open>
+            <summary>How does the free trial work?</summary>
+            <div className={styles.answer}>
+              <p>Try Creator free for 7 days, with every Creator feature and 500 bonus credits. A card is required. At the end of the trial your plan starts and the card is charged, unless you cancel before. Cancelling during the trial costs nothing. One trial per account, for accounts that haven't subscribed before.</p>
             </div>
           </details>
           <details className={styles.question} open>

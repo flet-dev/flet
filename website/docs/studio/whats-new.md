@@ -8,8 +8,7 @@ New features, improvements, and bug fixes in Flet Studio, listed in
 reverse-chronological order. Flet Studio ships independently of the Flet SDK — see
 [Flet release notes](../updates/release-notes.md) for SDK changes.
 
-{/* TODO: set the date when Studio publishing ships. */}
-## Publishing
+## November 5, 2026: Flet Studio 2.0
 
 * **Build your app in the cloud.** Publish builds your app for Windows, macOS,
   Linux, Android, iOS (Simulator) and the web, with nothing to install, and shows
