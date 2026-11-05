@@ -95,7 +95,8 @@ the Creator plan. On Explorer, Windows and Mac apps are built unsigned. See
 Signed, Windows shows your name as the app's publisher instead of "Unknown publisher",
 the app runs with Smart App Control on, and SmartScreen builds up a reputation for it.
 Studio signs with your own
-[Azure Artifact Signing](https://learn.microsoft.com/azure/artifact-signing/) account:
+[Azure Artifact Signing](https://learn.microsoft.com/azure/artifact-signing/) account. The
+[step-by-step guide](azure-artifact-signing.md) covers the setup in Azure; in short:
 
 1. In the Azure portal, create an Artifact Signing account, validate your identity and
    create a certificate profile (Public Trust). Note the account's region and name, and
@@ -104,8 +105,8 @@ Studio signs with your own
    signing*). Copy its **Application (client) ID** and **Directory (tenant) ID**.
 3. Under the app's **Certificates & secrets**, add a client secret. Copy its **Value**
    (Azure shows it once) and note when it expires.
-4. On the certificate profile, open **Access control (IAM) › Add role assignment** and
-   give the app registration the **Artifact Signing Certificate Profile Signer** role.
+4. On the Artifact Signing account, open **Access control (IAM) › Add role assignment**
+   and give the app registration the **Artifact Signing Certificate Profile Signer** role.
 5. In Studio, open **Publish › Windows › Settings › Code signing › Connect Azure
    Artifact Signing**, and enter all of the above.
 
@@ -118,9 +119,11 @@ The client secret stays on Studio's servers: a build only gets an access token t
 expires within the hour and can only sign. Studio warns on the **Code signing** card a month
 before the secret expires; make a new one in the app registration and connect again.
 
-Each signed file is one signature on your Azure bill: a Python app has dozens to hundreds
-of files. Artifact Signing is available to organizations in the US, Canada, the EU and the
-UK, and to individual developers in the US and Canada.
+Each signed file is one signature on your Azure bill: a typical app signs about 50 files
+per build, and the Basic tier includes 5,000 signatures a month. Artifact Signing is
+available to organizations in the US, Canada, the EU, the UK, Australia, New Zealand,
+Japan, South Korea, Singapore, Switzerland, Norway and Israel, and to individual developers
+in the US and Canada ([who can sign](azure-artifact-signing.md#before-you-start)).
 
 ## Mac app
 

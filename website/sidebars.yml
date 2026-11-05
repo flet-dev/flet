@@ -1120,6 +1120,7 @@ studio:
       Store listing: studio/publishing/google-play/store-listing.md
     Desktop apps: studio/publishing/desktop.md
     Microsoft Store: studio/publishing/microsoft-store.md
+    Azure Artifact Signing: studio/publishing/azure-artifact-signing.md
     Web apps: studio/publishing/web.md
     Download page: studio/publishing/download-page.md
     Signing keys and store accounts: studio/publishing/signing-keys-and-store-accounts.md
