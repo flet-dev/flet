@@ -65,11 +65,11 @@ the file without sharing the link.
 
 | | Explorer | Creator |
 |---|---|---|
-| Link | Unlisted: `get.flet.app/` and a random code | The unlisted link, plus a custom one: `get.flet.app/your-app` |
+| Link | Unlisted: `get.flet.app/` and a random code | The unlisted link, plus a custom address: `get.flet.app/your-app` |
 | How long a release stays up | 7 days after its build: update the APK to keep the app up | 1 year after its build: a new version starts the year again |
 | Run downloads in Studio | 7 days | 90 days |
 
-Set a custom link under **Custom link** on **Publish › Download page** (✎, then ✓):
+Set a custom address under **Page settings › Custom address** on **Publish › Download page** (✎, then ✓):
 lowercase letters, digits and hyphens. If you rename it, the old name keeps redirecting
 for 30 days.
 
@@ -77,11 +77,11 @@ for 30 days.
 
 **Publish › Download page** lists each platform with the build it has on the page and
 until when it stays up. **Remove** takes one platform off the page; the others stay.
-Under **Settings › More settings**:
+Under **Page settings**:
 
 - **Unlisted link › Replace**: the link with the random code stops working at once (a
-  custom link keeps working). Use it if the link reached people it shouldn't have.
-- **Take offline**: every platform's build comes off the page until you publish again.
+  custom address keeps working). Use it if the link reached people it shouldn't have.
+- **Take page offline**: every platform's build comes off the page until you publish again.
   The link keeps working and shows "Nothing to download yet".
 
 ### What your users see
