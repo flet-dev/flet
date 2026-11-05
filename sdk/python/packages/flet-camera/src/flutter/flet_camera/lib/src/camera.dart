@@ -4,7 +4,7 @@ import 'dart:typed_data';
 
 import 'package:camera/camera.dart';
 import 'package:flet/flet.dart';
-import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 
 import 'utils/camera.dart';
 

@@ -12,6 +12,7 @@ dev = ["flet-cli", "flet-desktop", "flet-web"]
 
 [tool.flet.gallery]
 categories = ["Navigation/Router"]
+platforms = ["web"]
 
 [tool.flet.metadata]
 title = "Auth dialog"
@@ -21,7 +22,6 @@ complexity = "intermediate"
 features = ["auth guard", "modal dialog", "context", "observable state", "use_effect"]
 
 [tool.flet]
-platforms = ["web"]
 org = "dev.flet"
 company = "Flet"
 copyright = "Copyright (C) 2023-2026 by Flet"

@@ -7,8 +7,6 @@ import sys
 from pathlib import Path
 from typing import Optional
 
-from rich.console import Group
-from rich.live import Live
 from rich.markup import escape
 
 from flet_cli.commands.build_base import BaseBuildCommand, console
@@ -47,6 +45,7 @@ def _provision_steps(cmd: "BaseBuildCommand") -> Path:
     cmd.register_flutter_extensions()
     if cmd.create_flutter_project(second_pass=True):
         cmd.update_flutter_dependencies()
+    cmd.copy_android_resources()
     return cmd.flutter_dir
 
 
@@ -120,6 +119,7 @@ class Command(BaseBuildCommand):
         self.device_id: Optional[str] = None
         self.tests_dir = "tests"
         self.update_goldens = False
+        self.update_failed_goldens = False
         self.pytest_args: list[str] = []
         self.flutter_test_host: Optional[str] = None
 
@@ -157,6 +157,14 @@ class Command(BaseBuildCommand):
             help="Capture/update golden screenshots instead of comparing.",
         )
         parser.add_argument(
+            "--update-failed-goldens",
+            dest="update_failed_goldens",
+            action="store_true",
+            default=False,
+            help="Compare screenshots and overwrite only golden images that "
+            "are missing or don't match.",
+        )
+        parser.add_argument(
             "--flutter-test-host",
             dest="flutter_test_host",
             default=None,
@@ -187,6 +195,7 @@ class Command(BaseBuildCommand):
         )
         self.tests_dir = options.tests_dir
         self.update_goldens = options.update_goldens
+        self.update_failed_goldens = options.update_failed_goldens
         self.flutter_test_host = options.flutter_test_host
 
         self.pytest_args = []
@@ -220,18 +229,13 @@ class Command(BaseBuildCommand):
             flutter_dir = Path(self.flutter_test_host).resolve()
             # Still need python_app_path/env for pytest; run a light init.
             self.test_mode = True
-            self.status = console.status(
-                "[bold blue]Preparing tests...", spinner="bouncingBall"
-            )
-            with Live(Group(self.status, self.progress), console=console) as self.live:
+            with self.live_status("[bold blue]Preparing tests..."):
                 self.initialize_command()
                 self.validate_entry_point()
         else:
-            self.status = console.status(
-                f"[bold blue]Provisioning {self.target_platform} test host...",
-                spinner="bouncingBall",
-            )
-            with Live(Group(self.status, self.progress), console=console) as self.live:
+            with self.live_status(
+                f"[bold blue]Provisioning {self.target_platform} test host..."
+            ):
                 flutter_dir = _provision_steps(self)
                 self.update_status("[bold blue]Test host ready. Starting tests...")
 
@@ -248,6 +252,8 @@ class Command(BaseBuildCommand):
             env["FLET_TEST_DEVICE"] = self.device_id
         if self.update_goldens:
             env["FLET_TEST_GOLDEN"] = "1"
+        elif self.update_failed_goldens:
+            env["FLET_TEST_GOLDEN"] = "failed"
 
         pytest_args = list(self.pytest_args)
         if self.verbose > 0:
@@ -298,11 +304,7 @@ def provision_test_host(
     cmd.test_platform_name = plat
     cmd.target_platform = TEST_PLATFORMS[plat]["target_platform"]
 
-    cmd.status = console.status(
-        f"[bold blue]Provisioning {cmd.target_platform} test host...",
-        spinner="bouncingBall",
-    )
-    with Live(Group(cmd.status, cmd.progress), console=console) as cmd.live:
+    with cmd.live_status(f"[bold blue]Provisioning {cmd.target_platform} test host..."):
         flutter_dir = _provision_steps(cmd)
 
     # Make the SDK discoverable for the FletTestApp-spawned `flutter test` and

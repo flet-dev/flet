@@ -1,0 +1,27 @@
+[project]
+name = "notifications-scheduling"
+version = "1.0.0"
+description = "Schedules one-off, daily and hourly notifications, and lists and cancels pending ones."
+requires-python = ">=3.10"
+keywords = ["services", "notifications", "scheduling", "recurrence", "pending notifications", "async"]
+authors = [{ name = "Flet team", email = "hello@flet.dev" }]
+dependencies = ["flet", "flet-notifications"]
+
+[dependency-groups]
+dev = ["flet-cli", "flet-desktop", "flet-web"]
+
+[tool.flet.gallery]
+categories = ["Utility/Notifications"]
+
+[tool.flet.metadata]
+title = "Scheduling"
+docs_intro = "A naive `datetime` is device time; attach a `ZoneInfo` to [`when`][flet_notifications.Notifications.schedule] to schedule in a specific time zone. Windows schedules one-off notifications only, so the recurring buttons are hidden there. Android delivers these inexactly; see the exact alarms example for on-the-dot timing."
+controls = ["SafeArea", "Column", "Button", "Text", "Notifications"]
+layout_pattern = "inline-actions"
+complexity = "intermediate"
+features = ["scheduled notifications", "daily recurrence", "periodic notifications", "pending notifications"]
+
+[tool.flet]
+org = "dev.flet"
+company = "Flet"
+copyright = "Copyright (C) 2023-2026 by Flet"

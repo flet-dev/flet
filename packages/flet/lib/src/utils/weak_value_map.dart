@@ -1,6 +1,6 @@
 import 'dart:core';
 
-import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 
 class WeakValueMap<K, V extends Object> {
   final Map<K, _TrackedValue<V>> _map = {};

@@ -20,4 +20,8 @@ std::vector<std::string> GetCommandLineArguments();
 // to an empty value.
 bool HasEnvironmentVariable(const wchar_t* name);
 
+// Returns true when the given environment variable is set to "1", "true" or
+// "yes", in any case.
+bool IsEnvironmentVariableTrue(const wchar_t* name);
+
 #endif  // RUNNER_UTILS_H_

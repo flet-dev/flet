@@ -32,6 +32,8 @@ import {ClassMembers, ClassSummary, CodeExample, Image} from '@site/src/componen
 
 <Image src={frontMatter.example_images + '/multiline.gif'} alt="multiline" width="55%" />
 
+<CodeExample path={frontMatter.examples + '/keyboard_actions/main.py'} language="python" />
+
 <CodeExample path={frontMatter.examples + '/underlined_and_borderless/main.py'} language="python" />
 
 <Image src={frontMatter.example_images + '/underlined_and_borderless.gif'} alt="underlined-and-borderless" width="55%" />

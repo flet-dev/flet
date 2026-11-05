@@ -90,6 +90,7 @@ def _run_flet_cli_partials(
     permissions_script = _FLET_CLI_SCRIPT_DIR / "cross_platform_permissions.py"
     linux_deps_script = _FLET_CLI_SCRIPT_DIR / "linux_dependencies.py"
     python_versions_script = _FLET_CLI_SCRIPT_DIR / "python_versions.py"
+    compile_options_script = _FLET_CLI_SCRIPT_DIR / "android_compile_options.py"
     script = f"""
 import importlib.util, json, sys
 
@@ -103,6 +104,7 @@ cli_mod = _load("cli_to_md", {str(cli_script)!r})
 perm_mod = _load("cross_platform_permissions", {str(permissions_script)!r})
 linux_deps_mod = _load("linux_dependencies", {str(linux_deps_script)!r})
 python_versions_mod = _load("python_versions_table", {str(python_versions_script)!r})
+compile_options_mod = _load("android_compile_options", {str(compile_options_script)!r})
 
 requests = json.loads({json.dumps(requests)!r})
 results = {{}}
@@ -117,6 +119,10 @@ for key, params in requests.items():
         results[key] = linux_deps_mod.linux_dependencies_block()
     elif params.get("type") == "python_versions":
         results[key] = python_versions_mod.python_versions_table(web=params["web"])
+    elif params.get("type") == "android_compile_options":
+        results[key] = compile_options_mod.android_compile_options_defaults()
+    elif params.get("type") == "android_compile_options_example":
+        results[key] = compile_options_mod.android_compile_options_example()
 print(json.dumps(results))
 """
     repo_root = config.project_root.parent.parent
@@ -238,6 +244,10 @@ def render_partials(config: CrocoDocsConfig, filenames: set[str]) -> dict[str, s
             flet_cli_requests[filename] = {"type": "permissions"}
         elif filename == "linux-dependencies.mdx":
             flet_cli_requests[filename] = {"type": "linux_deps"}
+        elif filename == "android-compile-options-defaults.mdx":
+            flet_cli_requests[filename] = {"type": "android_compile_options"}
+        elif filename == "android-compile-options-example.mdx":
+            flet_cli_requests[filename] = {"type": "android_compile_options_example"}
         elif filename in ("python-versions.mdx", "python-versions-web.mdx"):
             flet_cli_requests[filename] = {
                 "type": "python_versions",

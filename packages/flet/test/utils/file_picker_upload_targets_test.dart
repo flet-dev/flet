@@ -1,6 +1,36 @@
+import 'dart:typed_data';
+
+import 'package:cross_file/cross_file.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:flet/src/utils/file_picker.dart';
 import 'package:flutter_test/flutter_test.dart';
+
+/// A picked file for the tests (file_picker's PlatformFile is abstract).
+final class _File extends PlatformFile {
+  _File(this.name, this.size);
+
+  @override
+  final String name;
+  final int size;
+
+  @override
+  Uri get uri => Uri.file("/tmp/$name");
+
+  @override
+  XFile get xFile => XFile(uri.toFilePath());
+
+  @override
+  int? lengthSync() => size;
+
+  @override
+  Future<int?> length() async => size;
+
+  @override
+  Future<Uint8List> readAsBytes() async => Uint8List(size);
+
+  @override
+  Stream<Uint8List> readAsByteStream() => Stream.value(Uint8List(size));
+}
 
 FilePickerUploadFile upload(int? id, String? name) => FilePickerUploadFile(
     id: id, name: name, uploadUrl: "https://x/$name", method: "PUT");
@@ -10,9 +40,9 @@ void main() {
 
   setUp(() {
     picked = {
-      0: PlatformFile(name: "a.png", size: 1),
-      1: PlatformFile(name: "b.png", size: 1),
-      2: PlatformFile(name: "c.png", size: 1),
+      0: _File("a.png", 1),
+      1: _File("b.png", 1),
+      2: _File("c.png", 1),
     };
   });
 
@@ -68,8 +98,8 @@ void main() {
   });
 
   test("IDs distinguish files with the same name", () {
-    final a = PlatformFile(name: "same.png", size: 1);
-    final b = PlatformFile(name: "same.png", size: 2);
+    final a = _File("same.png", 1);
+    final b = _File("same.png", 2);
     picked = {0: a, 1: b};
     expect(
         takeUploadTargets([upload(1, "same.png")], picked).single.$2, same(b));

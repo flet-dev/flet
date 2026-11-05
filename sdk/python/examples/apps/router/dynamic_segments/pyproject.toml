@@ -12,6 +12,7 @@ dev = ["flet-cli", "flet-desktop", "flet-web"]
 
 [tool.flet.gallery]
 categories = ["Navigation/Router"]
+platforms = ["web"]
 
 [tool.flet.metadata]
 title = "Dynamic segments"
@@ -21,7 +22,6 @@ complexity = "basic"
 features = ["dynamic segments", "use_route_params", "nested params"]
 
 [tool.flet]
-platforms = ["web"]
 org = "dev.flet"
 company = "Flet"
 copyright = "Copyright (C) 2023-2026 by Flet"

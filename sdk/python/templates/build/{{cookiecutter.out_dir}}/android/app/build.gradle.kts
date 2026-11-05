@@ -44,7 +44,7 @@ android {
             // only opens a hole for the matching glob; any other future duplicate-native-lib conflict still fails loudly.
             pickFirsts += listOf("**/libc++_shared.so")
 
-// flet: legacy_packaging {% if cookiecutter.options.android_legacy_packaging %}
+// flet: legacy_packaging {% if cookiecutter._options.android_legacy_packaging %}
             // Legacy native-library packaging (opt-in via `--android-legacy-packaging` /
             // `[tool.flet.android].legacy_packaging`). The installer extracts every `.so`
             // to nativeLibraryDir on install instead of the app memory-mapping them
@@ -53,18 +53,19 @@ android {
             useLegacyPackaging = true
 // flet: end of legacy_packaging {% endif %}
 
-// flet: excluded_abis {% if cookiecutter.options.android_excluded_abis %}
+// flet: excluded_abis {% if cookiecutter._options.android_excluded_abis %}
             // Strip native libs of ABIs not requested via `target_arch`.
             // `ndk.abiFilters` alone can't do this: the Flutter Gradle plugin adds all default
             // ABIs as buildType-level filters and AGP merges the two levels as a union.
-            excludes += listOf({% for abi in cookiecutter.options.android_excluded_abis %}"lib/{{ abi }}/**"{% if not loop.last %}, {% endif %}{% endfor %})
+            excludes += listOf({% for abi in cookiecutter._options.android_excluded_abis %}"lib/{{ abi }}/**"{% if not loop.last %}, {% endif %}{% endfor %})
 // flet: end of excluded_abis {% endif %}
         }
     }
 
     compileOptions {
-        sourceCompatibility = JavaVersion.VERSION_17
-        targetCompatibility = JavaVersion.VERSION_17
+// flet: compile_options {% for name, expression in cookiecutter._options.android_compile_options.items() %}
+        {{ name }} = {{ expression }}
+// flet: end of compile_options {% endfor %}
     }
 
     sourceSets["main"].java.srcDir("src/main/kotlin")
@@ -89,8 +90,8 @@ android {
 
 // flet: split_per_abi {% if not cookiecutter.split_per_abi %}
         ndk {
-            {% if cookiecutter.options.target_arch %}
-            abiFilters += listOf({% for arch in cookiecutter.options.target_arch %}"{{ arch }}"{% if not loop.last %}, {% endif %}{% endfor %})
+            {% if cookiecutter._options.target_arch %}
+            abiFilters += listOf({% for arch in cookiecutter._options.target_arch %}"{{ arch }}"{% if not loop.last %}, {% endif %}{% endfor %})
             {% else %}
             abiFilters += listOf("arm64-v8a", "armeabi-v7a", "x86_64")
             {% endif %}
@@ -98,7 +99,7 @@ android {
 // flet: end of split_per_abi {% endif %}
     }
 
-// flet: android_signing {% if cookiecutter.options.android_signing %}
+// flet: android_signing {% if cookiecutter._options.android_signing %}
     signingConfigs {
         create("release") {
             keyAlias = System.getenv("FLET_ANDROID_SIGNING_KEY_ALIAS")
@@ -111,7 +112,7 @@ android {
 
     buildTypes {
         release {
-// flet: android_signing {% if cookiecutter.options.android_signing %}
+// flet: android_signing {% if cookiecutter._options.android_signing %}
             signingConfig = signingConfigs.getByName("release")
 // {% else %}
             signingConfig = signingConfigs.getByName("debug")
@@ -130,4 +131,9 @@ flutter {
     source = "../.."
 }
 
-dependencies {}
+dependencies {
+// flet: dependencies {
+// flet: dependencies {% if cookiecutter._options.android_gradle_dependencies %}
+{{ cookiecutter._options.android_gradle_dependencies | indent(4, first=True) }}
+// flet: end of dependencies {% endif %}
+}

@@ -103,3 +103,35 @@ def test_docs_codepoints_cover_every_icon(json_file, codepoints_file):
 
     assert packed.keys() == codepoints.keys()
     assert all(isinstance(value, int) and value > 0 for value in codepoints.values())
+
+
+def test_lucide_packed_value_indexes_the_dart_list():
+    """Same guarantee as above for the Lucide set shipped by flet-shadcn-ui.
+
+    Lucide member names are camelCase, so the Python name is compared after the
+    generator's snake-case conversion rather than a plain `.upper()`.
+    """
+    import flet_shadcn_ui as shad
+
+    package = REPO / "sdk/python/packages/flet-shadcn-ui/src"
+    packed = json.loads(
+        (package / "flet_shadcn_ui/lucide_icons.json").read_text(encoding="utf-8")
+    )
+    dart_names = re.findall(
+        r"^\s*LucideIcons\.(\w+),$",
+        (package / "flutter/flet_shadcn_ui/lib/src/utils/lucide_icons.dart").read_text(
+            encoding="utf-8"
+        ),
+        re.MULTILINE,
+    )
+
+    def python_name(dart_name: str) -> str:
+        name = re.sub(r"(?<=[a-z0-9])(?=[A-Z])", "_", dart_name)
+        return re.sub(r"(?<=[A-Za-z])(?=[0-9])", "_", name).upper()
+
+    assert len(packed) == len(dart_names) == len(shad.LucideIcons)
+    for name, value in packed.items():
+        assert value >> 16 == 3
+        assert python_name(dart_names[value & 0xFFFF]) == name
+    assert isinstance(shad.LucideIcons.HOUSE, ft.IconData)
+    assert packed["HOUSE"] == shad.LucideIcons.HOUSE

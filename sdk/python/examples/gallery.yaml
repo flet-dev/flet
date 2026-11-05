@@ -153,6 +153,10 @@ categories:
     RadarChart:
     ScatterChart:
 
+  Shadcn:
+    _icon: widgets
+    _description: Shadcn UI components
+
   Declarative:
     _icon: code
     _description: Examples of declarative UI style and patterns
@@ -201,6 +205,7 @@ categories:
     InteractiveViewer:
     Keyboard:
     Localization:
+    Notifications:
     Page:
     PermissionHandler:
     SecureStorage:

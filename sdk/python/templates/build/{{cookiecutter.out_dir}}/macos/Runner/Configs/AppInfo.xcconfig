@@ -11,4 +11,4 @@ PRODUCT_NAME = {{ cookiecutter.artifact_name }}
 PRODUCT_BUNDLE_IDENTIFIER = {{ cookiecutter.bundle_id }}
 
 // The copyright displayed in application information
-PRODUCT_COPYRIGHT = {{ cookiecutter.copyright }}. All rights reserved.
+PRODUCT_COPYRIGHT = {{ cookiecutter.copyright | replace("//", "/$()/") }}

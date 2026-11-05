@@ -12,6 +12,7 @@ dev = ["flet-cli", "flet-desktop", "flet-web"]
 
 [tool.flet.gallery]
 categories = ["Utility/PermissionHandler"]
+platforms = ["windows", "ios", "android", "web"]
 
 [tool.flet.metadata]
 title = "Permission Handler"
@@ -24,4 +25,3 @@ features = ["permission request", "settings shortcut"]
 org = "dev.flet"
 company = "Flet"
 copyright = "Copyright (C) 2023-2026 by Flet"
-platforms = ["windows", "ios", "android", "web"]

@@ -13,7 +13,7 @@
 		<key>CFBundleInfoDictionaryVersion</key>
 		<string>6.0</string>
 		<key>CFBundleDisplayName</key>
-		<string>{{ cookiecutter.product_name }}</string>
+		<string>{{ cookiecutter.product_name | e }}</string>
 		<key>CFBundleName</key>
 		<string>$(PRODUCT_NAME)</string>
 		<key>CFBundlePackageType</key>
@@ -33,7 +33,7 @@
 
 		{% macro render_value(value) -%}
 		{% if value is string -%}
-		<string>{{ value }}</string>
+		<string>{{ value | e }}</string>
 		{% elif value is boolean -%}
 		<{{ "true" if value else "false" }}/>
 		{% elif value is integer -%}
@@ -54,10 +54,10 @@
 		{% endmacro -%}
 		{% macro render_dict(d) -%}
 		{% for key, value in d.items() -%}
-		<key>{{ key }}</key>
+		<key>{{ key | e }}</key>
 		{{ render_value(value) }}
 		{% endfor -%}
 		{% endmacro -%}
-		{{ render_dict(cookiecutter.options.info_plist) }}
+		{{ render_dict(cookiecutter._options.info_plist) }}
 	</dict>
 </plist>

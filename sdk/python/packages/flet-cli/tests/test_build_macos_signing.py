@@ -65,7 +65,7 @@ def make_command(
     cmd.options = argparse.Namespace(**defaults)
     config = pyproject or {}
     cmd.get_pyproject = lambda key=None: config.get(key)
-    cmd.template_data = {"options": {"info_plist": info_plist or {}}}
+    cmd.template_data = {"_options": {"info_plist": info_plist or {}}}
     cmd.python_app_path = tmp_path
     cmd.out_dir = tmp_path / "out"
     cmd.out_dir.mkdir(exist_ok=True)

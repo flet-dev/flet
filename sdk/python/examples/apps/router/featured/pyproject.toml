@@ -12,6 +12,7 @@ dev = ["flet-cli", "flet-desktop", "flet-web"]
 
 [tool.flet.gallery]
 categories = ["Navigation/Router", "Featured"]
+platforms = ["web"]
 screenshots = ["packages/flet/integration_tests/examples/apps/golden/macos/router/featured_logged_in.png"]
 
 [tool.flet.metadata]
@@ -22,7 +23,6 @@ complexity = "advanced"
 features = ["nested routes", "layout outlet", "auth guard", "route loaders", "active links", "dynamic segments", "context", "observable state"]
 
 [tool.flet]
-platforms = ["web"]
 org = "dev.flet"
 company = "Flet"
 copyright = "Copyright (C) 2023-2026 by Flet"

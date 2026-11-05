@@ -43,6 +43,8 @@ class RowControl extends StatelessWidget {
                 "alignment", MainAxisAlignment.start)!,
             crossAxisAlignment: control.getCrossAxisAlignment(
                 "vertical_alignment", CrossAxisAlignment.center)!,
+            // Required by `CrossAxisAlignment.baseline`, ignored otherwise.
+            textBaseline: TextBaseline.alphabetic,
             children: controls,
           );
 

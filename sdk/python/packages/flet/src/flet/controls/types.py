@@ -1486,6 +1486,24 @@ class StrokeJoin(Enum):
     """
 
 
+class MaterialTapTargetSize(Enum):
+    """
+    How large a Material control's tappable area is, relative to what it draws.
+    """
+
+    PADDED = "padded"
+    """
+    Expands the tappable area to at least 48x48 - Material's minimum
+    interactive dimension. The default.
+    """
+
+    SHRINK_WRAP = "shrinkWrap"
+    """
+    Shrinks the tappable area to the size of what the control draws, e.g. a
+    switch's track - for dense layouts such as desktop settings rows.
+    """
+
+
 class VisualDensity(Enum):
     """
     Defines the visual density of user interface components.

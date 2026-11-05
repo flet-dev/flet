@@ -39,17 +39,17 @@ Ensure each runnable example is a standalone project containing:
 - Infer from path and code.
 - Create missing `pyproject.toml` files for existing project folders.
 - Update obviously stale metadata when migrating existing examples (for example wrong title/description/categories).
-- Verify platform support before adding or omitting `[tool.flet].platforms`:
+- Verify platform support before adding or omitting `[tool.flet.gallery].platforms`:
   - Check the local implementation and docs for explicit platform guards, support tables, or platform-specific exceptions.
-  - If support is limited, add `[tool.flet].platforms` with only the supported platforms.
-  - If support is broad/all-platform, omit `[tool.flet].platforms`.
+  - If support is limited, add `[tool.flet.gallery].platforms` with only the supported platforms.
+  - If support is broad/all-platform, omit `[tool.flet.gallery].platforms`.
 - Required fields:
   - `[project]`: `name`, `version`, `description`, `requires-python`, `keywords`, `authors`, `dependencies`
   - `[dependency-groups].dev`: include `flet-cli`, `flet-desktop`, `flet-web`
   - `[tool.flet.gallery].categories`
   - `[tool.flet.metadata]`: `title`, `controls`, `layout_pattern`, `complexity`, `features`
   - `[tool.flet]`: `org`, `company`, `copyright`
-- Add `[tool.flet].platforms` only when the example is platform-limited.
+- Add `[tool.flet.gallery].platforms` only when the example is platform-limited.
 - Add permissions blocks only when code actually needs them.
 
 4. Infer metadata.

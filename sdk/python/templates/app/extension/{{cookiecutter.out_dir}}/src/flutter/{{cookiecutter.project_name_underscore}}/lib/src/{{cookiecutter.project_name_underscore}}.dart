@@ -1,5 +1,5 @@
 import 'package:flet/flet.dart';
-import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 
 class {{cookiecutter.control_name}}Control extends StatelessWidget {
   final Control control;

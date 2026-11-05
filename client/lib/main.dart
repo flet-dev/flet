@@ -16,6 +16,8 @@ import 'package:flet_geolocator/flet_geolocator.dart' as flet_geolocator;
 import 'package:flet_lottie/flet_lottie.dart' as flet_lottie;
 import 'package:flet_local_auth/flet_local_auth.dart' as flet_local_auth;
 import 'package:flet_map/flet_map.dart' as flet_map;
+import 'package:flet_notifications/flet_notifications.dart'
+    as flet_notifications;
 import 'package:flet_permission_handler/flet_permission_handler.dart'
     as flet_permission_handler;
 // --FAT_CLIENT_START--
@@ -25,13 +27,14 @@ import 'package:flet_rive/flet_rive.dart' as flet_rive;
 // --FAT_CLIENT_END--
 import 'package:flet_secure_storage/flet_secure_storage.dart'
     as flet_secure_storage;
+import 'package:flet_shadcn_ui/flet_shadcn_ui.dart' as flet_shadcn_ui;
 import 'package:flet_spinkit/flet_spinkit.dart' as flet_spinkit;
 // --FAT_CLIENT_START--
 import 'package:flet_video/flet_video.dart' as flet_video;
 // --FAT_CLIENT_END--
 import 'package:flet_webview/flet_webview.dart' as flet_webview;
 import 'package:flutter/foundation.dart';
-import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 import 'package:flutter_web_plugins/url_strategy.dart';
 
 const bool isProduction = bool.fromEnvironment('dart.vm.product');
@@ -60,8 +63,10 @@ void main([List<String>? args]) async {
     flet_lottie.Extension(),
     flet_local_auth.Extension(),
     flet_map.Extension(),
+    flet_notifications.Extension(),
     flet_permission_handler.Extension(),
     flet_secure_storage.Extension(),
+    flet_shadcn_ui.Extension(),
     flet_spinkit.Extension(),
     flet_webview.Extension(),
 

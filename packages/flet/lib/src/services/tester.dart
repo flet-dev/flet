@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 
 import '../flet_service.dart';
 import '../testing/test_finder.dart';
@@ -50,20 +50,9 @@ class TesterService extends FletService {
 
       case "find_by_key":
         var controlKey = parseKey(args["key"])!;
-        // Preserve the concrete value type so the constructed ValueKey<T>
-        // matches the one ControlWidget assigned to the rendered widget.
-        // ValueKey's `==` is runtimeType-strict — `ValueKey<Object>('foo')`
-        // never equals `ValueKey<String>('foo')`, which would make
-        // `find.byKey(...)` miss every Flet control.
         Key? key = controlKey is ControlScrollKey
             ? control.backend.globalKeys[controlKey.toString()]
-            : switch (controlKey.value) {
-                String v => ValueKey<String>(v),
-                int v => ValueKey<int>(v),
-                double v => ValueKey<double>(v),
-                bool v => ValueKey<bool>(v),
-                _ => ValueKey(controlKey.value),
-              };
+            : valueKeyFromValue(controlKey.value);
         if (key == null) {
           throw Exception("Key not found: $key");
         }

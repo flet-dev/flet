@@ -73,7 +73,15 @@ int APIENTRY wWinMain(_In_ HINSTANCE instance, _In_opt_ HINSTANCE prev,
   // plugins.
   ::CoInitializeEx(nullptr, COINIT_APARTMENTTHREADED);
 
+  // `flet build --no-impeller` renders with Skia instead of Flutter's default,
+  // Impeller; FLET_NO_IMPELLER does the same when the app starts.
   flutter::DartProject project(L"data");
+  const bool no_impeller =
+      {{ "false" if cookiecutter._options.impeller else "true" }} ||
+      IsEnvironmentVariableTrue(L"FLET_NO_IMPELLER");
+  if (no_impeller) {
+    project.set_impeller_switch(flutter::ImpellerSwitch::Disabled);
+  }
 
   std::vector<std::string> command_line_arguments =
       GetCommandLineArguments();
@@ -83,7 +91,7 @@ int APIENTRY wWinMain(_In_ HINSTANCE instance, _In_opt_ HINSTANCE prev,
   FlutterWindow window(project);
   Win32Window::Point origin(10, 10);
   Win32Window::Size size(1280, 720);
-  if (!window.Create(L"{{ cookiecutter.product_name }}", origin, size)) {
+  if (!window.Create(L"{{ cookiecutter.product_name | replace("\\", "\\\\") | replace('"', '\\"') }}", origin, size)) {
     return EXIT_FAILURE;
   }
   window.SetQuitOnClose(true);

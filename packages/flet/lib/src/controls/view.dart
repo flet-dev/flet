@@ -1,7 +1,7 @@
 import 'dart:async';
 
-import 'package:flutter/cupertino.dart';
-import 'package:flutter/material.dart';
+import 'package:cupertino_ui/cupertino_ui.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
 
@@ -162,10 +162,13 @@ class _ViewControlState extends State<ViewControl> {
     var drawer = widget.control.child("drawer");
     var endDrawer = widget.control.child("end_drawer");
 
-    var isRootView = control.id == pageViews.first.id;
+    // `views` can be momentarily empty while the page swaps its view stack
+    // (e.g. a deep link that opens a modal view); treat this view as the
+    // root/top one rather than throwing.
+    var isRootView = pageViews.isEmpty || control.id == pageViews.first.id;
 
     if (overlayControls != null && dialogControls != null) {
-      if (control.id == pageViews.last.id) {
+      if (pageViews.isEmpty || control.id == pageViews.last.id) {
         // Key each ControlWidget by id so Flutter preserves Element identity
         // when the list length changes.  Without keys, adding or removing an
         // entry can reconstruct the AlertDialogControl Element mid-dismiss

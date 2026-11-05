@@ -12,6 +12,7 @@ dev = ["flet-cli", "flet-desktop", "flet-web"]
 
 [tool.flet.gallery]
 categories = ["Marketing/Ads"]
+platforms = ["ios", "android"]
 
 [tool.flet.metadata]
 title = "BannerAd and InterstitialAd"
@@ -21,7 +22,6 @@ complexity = "basic"
 features = ["banner ad loading", "interstitial ad loading", "ad lifecycle callbacks", "platform-specific ad units"]
 
 [tool.flet]
-platforms = ["ios", "android"]
 org = "dev.flet"
 company = "Flet"
 copyright = "Copyright (C) 2023-2026 by Flet"

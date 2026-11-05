@@ -5,6 +5,7 @@ import pytest
 from flet_cli.utils.project_dependencies import (
     get_poetry_dependencies,
     get_project_dependencies,
+    read_requirements_file_text,
 )
 
 # ---------------------------------------------------------------------------
@@ -239,3 +240,146 @@ class TestGetProjectDependencies:
         for dep in result:
             req = Requirement(dep)
             assert req.name  # must parse without error
+
+
+# ---------------------------------------------------------------------------
+# read_requirements_file_text
+# ---------------------------------------------------------------------------
+
+
+class TestReadRequirementsFileText:
+    def test_plain_file(self, tmp_path):
+        """Returns the file's text when it includes no other files."""
+        reqs = tmp_path / "requirements.txt"
+        reqs.write_text("flet\nhttpx==0.28.1\n")
+        assert read_requirements_file_text(reqs) == "flet\nhttpx==0.28.1\n"
+
+    def test_follows_requirement_and_constraint_includes(self, tmp_path):
+        """Reads files included with every `-r`/`-c` spelling, relative paths."""
+        (tmp_path / "sub").mkdir()
+        reqs = tmp_path / "requirements.txt"
+        reqs.write_text(
+            "flet\n-r sub/a.txt\n--requirement=b.txt\n-cc.txt\n--constraint d.txt\n"
+        )
+        (tmp_path / "sub" / "a.txt").write_text("pkg-a\n-r nested.txt\n")
+        (tmp_path / "sub" / "nested.txt").write_text("pkg-nested\n")
+        (tmp_path / "b.txt").write_text("pkg-b\n")
+        (tmp_path / "c.txt").write_text("pkg-c<2\n")
+        (tmp_path / "d.txt").write_text("pkg-d<3\n")
+
+        text = read_requirements_file_text(reqs)
+
+        for name in ["pkg-a", "pkg-nested", "pkg-b", "pkg-c<2", "pkg-d<3"]:
+            assert name in text
+
+    def test_include_cycle_read_once(self, tmp_path):
+        """Reads each file once when files include each other."""
+        reqs = tmp_path / "requirements.txt"
+        reqs.write_text("flet\n-r other.txt\n")
+        (tmp_path / "other.txt").write_text("httpx\n-r requirements.txt\n")
+        text = read_requirements_file_text(reqs)
+        assert text.count("flet\n") == 1
+        assert text.count("httpx\n") == 1
+
+    def test_urls_and_missing_files_skipped(self, tmp_path):
+        """Skips included URLs and files that don't exist."""
+        reqs = tmp_path / "requirements.txt"
+        reqs.write_text("flet\n-r https://example.com/r.txt\n-r missing.txt\n")
+        assert read_requirements_file_text(reqs) == reqs.read_text()
+
+    def test_editing_an_included_file_changes_text(self, tmp_path):
+        """Changes when only an included file is edited."""
+        reqs = tmp_path / "requirements.txt"
+        reqs.write_text("flet\n-r more.txt\n")
+        more = tmp_path / "more.txt"
+        more.write_text("httpx\n")
+        before = read_requirements_file_text(reqs)
+        more.write_text("httpx\ntabulate\n")
+        assert read_requirements_file_text(reqs) != before
+
+    @pytest.mark.parametrize(
+        "include",
+        [
+            '-r "more requirements.txt"',
+            "-c 'more requirements.txt'",
+            '--requirement="more requirements.txt"',
+            "--constraint='more requirements.txt'",
+            '-r"more requirements.txt"',
+            '-r \\\n  "more requirements.txt"',
+            '--constraint=\\\n"more requirements.txt"',
+            '-r "more requirements.txt"\\',
+        ],
+    )
+    def test_editing_pip_style_include_changes_text(self, tmp_path, include):
+        reqs = tmp_path / "requirements.txt"
+        reqs.write_text(f"flet\n{include}\n")
+        more = tmp_path / "more requirements.txt"
+        more.write_text("httpx==0.27.0\n")
+        before = read_requirements_file_text(reqs)
+
+        more.write_text("httpx==0.28.1\n")
+
+        after = read_requirements_file_text(reqs)
+        assert "httpx==0.27.0" in before
+        assert "httpx==0.28.1" in after
+        assert before != after
+
+    def test_environment_variable_include(self, tmp_path, monkeypatch):
+        reqs = tmp_path / "requirements.txt"
+        reqs.write_text('-r "${REQUIREMENTS_DIR}/more.txt"\n')
+        directory = tmp_path / "requirements files"
+        directory.mkdir()
+        monkeypatch.setenv("REQUIREMENTS_DIR", str(directory))
+        more = directory / "more.txt"
+        more.write_text("httpx==0.27.0\n")
+        before = read_requirements_file_text(reqs)
+
+        more.write_text("httpx==0.28.1\n")
+
+        assert "httpx==0.28.1" in read_requirements_file_text(reqs)
+        assert read_requirements_file_text(reqs) != before
+
+    def test_changing_environment_include_target_changes_text(
+        self, tmp_path, monkeypatch
+    ):
+        reqs = tmp_path / "requirements.txt"
+        reqs.write_text("-r ${REQUIREMENTS_FILE}\n")
+        for name, package in [("a.txt", "httpx"), ("b.txt", "tabulate")]:
+            (tmp_path / name).write_text(package)
+        monkeypatch.setenv("REQUIREMENTS_FILE", "a.txt")
+        before = read_requirements_file_text(reqs)
+
+        monkeypatch.setenv("REQUIREMENTS_FILE", "b.txt")
+
+        assert read_requirements_file_text(reqs) != before
+
+    def test_comment_continuation_does_not_hide_include(self, tmp_path):
+        reqs = tmp_path / "requirements.txt"
+        reqs.write_text('# comment \\\n-r "more.txt" # inline comment\n')
+        (tmp_path / "more.txt").write_text("httpx\n")
+
+        assert "httpx\n" in read_requirements_file_text(reqs)
+
+    def test_multiple_includes_on_one_option_line(self, tmp_path):
+        reqs = tmp_path / "requirements.txt"
+        reqs.write_text("-r more.txt -c constraints.txt\n")
+        (tmp_path / "more.txt").write_text("httpx\n")
+        (tmp_path / "constraints.txt").write_text("httpx<1\n")
+
+        text = read_requirements_file_text(reqs)
+        assert "httpx\n" in text
+        assert "httpx<1\n" in text
+
+    def test_symlink_includes_are_relative_to_supplied_path(self, tmp_path):
+        directory = tmp_path / "shared"
+        directory.mkdir()
+        shared = directory / "requirements.txt"
+        shared.write_text("-r more.txt\n")
+        reqs = tmp_path / "requirements.txt"
+        try:
+            reqs.symlink_to(shared)
+        except OSError:
+            pytest.skip("Creating symlinks is unavailable")
+        (tmp_path / "more.txt").write_text("httpx\n")
+
+        assert "httpx\n" in read_requirements_file_text(reqs)

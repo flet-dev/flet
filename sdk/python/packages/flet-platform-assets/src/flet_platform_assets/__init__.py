@@ -14,7 +14,13 @@ how to surface it.
     >>> result = render_icons(source, platform="web", pre_rendered=pre_rendered)
     >>> [a.relative_path for a in result.assets][:2]
     ['web/favicon.png', 'web/icons/Icon-192.png']
+
+An app that supplies no icon gets icons rendered from :data:`DEFAULT_ICON`,
+the Flet logo, so every platform's icons come from the same pipeline whether
+or not the author provided artwork.
 """
+
+from pathlib import Path
 
 from ._icons import (
     ANDROID_ADAPTIVE_SIZES,
@@ -47,12 +53,19 @@ from ._splash import (
 )
 from ._write import write
 
+DEFAULT_ICON = Path(__file__).with_name("default_icon.svg")
+"""The Flet logo: the icon and splash source for an app that supplies none.
+
+A generic icon, so render it with `derived=True`.
+"""
+
 __all__ = [
     "ANDROID_12_VISIBLE_FRACTION",
     "ANDROID_ADAPTIVE_SIZES",
     "ANDROID_DENSITIES",
     "ANDROID_MIPMAP_SIZES",
     "AssetSpec",
+    "DEFAULT_ICON",
     "DEFAULT_SPECS",
     "FRAMING",
     "FRAMING_TOLERANCE",

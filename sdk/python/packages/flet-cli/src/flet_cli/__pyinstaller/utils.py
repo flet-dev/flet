@@ -3,12 +3,13 @@ import tarfile
 import tempfile
 import uuid
 from pathlib import Path
+from typing import Optional
 
 from flet.utils import copy_tree
 from flet_desktop import ensure_client_cached
 
 
-def get_flet_bin_path():
+def get_flet_bin_path() -> Optional[str]:
     """
     Return path to Flet desktop binaries, if available.
 
@@ -52,7 +53,7 @@ def normalize_tar_entry(tarinfo: tarfile.TarInfo) -> tarfile.TarInfo:
     return tarinfo
 
 
-def copy_flet_bin():
+def copy_flet_bin() -> Optional[str]:
     """
     Copy packaged Flet desktop binaries into a temporary directory.
 

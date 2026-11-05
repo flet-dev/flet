@@ -4,7 +4,7 @@ version = "0.1.0"
 description = ""
 authors = [{name = "Appveyor Systems Inc.", email ="hello@flet.dev"}]
 license = "Apache-2.0"
-requires-python = ">=3.10,<3.15"
+requires-python = ">=3.10,<3.16"
 dependencies = [
     "flet",
     "flet-cli",
@@ -25,9 +25,11 @@ dependencies = [
     "flet-local-auth",
     "flet-map",
     "flet-mcp",
+    "flet-notifications",
     "flet-permission-handler",
     "flet-rive",
     "flet-secure-storage",
+    "flet-shadcn-ui",
     "flet-spinkit",
     "flet-video",
     "flet-webview",
@@ -53,9 +55,11 @@ flet-lottie = { workspace = true }
 flet-local-auth = { workspace = true }
 flet-map = { workspace = true }
 flet-mcp = { workspace = true }
+flet-notifications = { workspace = true }
 flet-permission-handler = { workspace = true }
 flet-rive = { workspace = true }
 flet-secure-storage = { workspace = true }
+flet-shadcn-ui = { workspace = true }
 flet-spinkit = { workspace = true }
 flet-video = { workspace = true }
 flet-webview = { workspace = true }
@@ -128,6 +132,7 @@ isort = { known-first-party = [
     "flet_local_auth",
     "flet_map",
     "flet_mcp",
+    "flet_notifications",
     "flet_permission_handler",
     "flet_rive",
     "flet_secure_storage",

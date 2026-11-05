@@ -160,7 +160,12 @@ class Semantics(Control):
 
     heading_level: Optional[int] = None
     """
-    The heading level in the DOM document structure.
+    The heading level in the document structure.
+
+    A level of `1` usually marks the main heading of a page, `2` its first
+    subsection, and so on. Screen readers use it to navigate between sections: on
+    web it sets the `aria-level` attribute, and on iOS and Android 9 (API 28) or
+    later any level marks the node as a heading for VoiceOver and TalkBack.
     """
 
     exclude_semantics: bool = False
@@ -208,7 +213,12 @@ class Semantics(Control):
 
     header: Optional[bool] = None
     """
-    Whether this subtree represents a header.
+    Whether this subtree represents a header, such as a page title or an app bar
+    title.
+
+    Note:
+        VoiceOver on iOS announces a node as a heading only when
+        :attr:`heading_level` is set.
     """
 
     image: Optional[bool] = None

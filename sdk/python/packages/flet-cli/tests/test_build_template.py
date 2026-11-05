@@ -1,5 +1,8 @@
 """Invariants of the `flet build` cookiecutter template itself."""
 
+import argparse
+import datetime
+import importlib.util
 import json
 import re
 from pathlib import Path
@@ -8,8 +11,10 @@ from typing import Any
 import pytest
 import yaml
 from jinja2 import Environment, StrictUndefined
+from rich.text import Text
 
 from flet_cli.commands.build_base import BaseBuildCommand
+from flet_cli.utils.pyproject_toml import load_pyproject_toml
 
 BUILD_TEMPLATE_DIR = (
     Path(__file__).resolve().parents[3]
@@ -34,6 +39,85 @@ def _render_template(path: Path, **context: Any) -> str:
 
     env = Environment(keep_trailing_newline=True, undefined=StrictUndefined)
     return env.from_string(path.read_text()).render(cookiecutter=context)
+
+
+@pytest.mark.parametrize(
+    ("template", "platform"),
+    [
+        ("lib/flet_generated.dart", "windows"),
+        ("lib/flet_generated.dart", "macos"),
+        ("lib/flet_generated.dart", "linux"),
+        ("windows/runner/flutter_window.cpp", "windows"),
+    ],
+)
+@pytest.mark.parametrize(
+    ("global_value", "platform_value", "expected"),
+    [
+        (None, None, False),
+        (True, None, True),
+        (False, None, False),
+        (True, False, False),
+        (False, True, True),
+        (None, True, True),
+        (None, False, False),
+    ],
+)
+def test_hide_window_on_start_precedence(
+    tmp_path, template, platform, global_value, platform_value, expected
+):
+    """An explicit platform false keeps the generated window visible."""
+    settings = {
+        "tool.flet.app": global_value,
+        f"tool.flet.{platform}.app": platform_value,
+    }
+    (tmp_path / "pyproject.toml").write_text(
+        "\n".join(
+            f"[{table}]\nhide_window_on_start = {str(value).lower()}\n"
+            for table, value in settings.items()
+            if value is not None
+        ),
+        encoding="utf-8",
+    )
+    rendered = (
+        Environment(undefined=StrictUndefined)
+        .from_string((BUILD_TEMPLATE_DIR / template).read_text())
+        .render(
+            get_pyproject=load_pyproject_toml(tmp_path),
+            cookiecutter={
+                "_options": {"config_platform": platform},
+                "flutter": {"dependencies": []},
+                "python_module_name": "main",
+                "boot_screen": {"name": "flet", "options_b64": "e30="},
+            },
+        )
+    )
+    pattern = (
+        r'bool.tryParse\("([^"]+)"'
+        if template.endswith(".dart")
+        else r"const bool hide_window_on_start =\s+(true|false)"
+    )
+    match = re.search(pattern, rendered)
+    assert match is not None
+    assert (match.group(1).lower() == "true") is expected
+
+
+def test_get_pyproject_reads_the_app_pyproject_flet_build_passes():
+    """The template's `get_pyproject()` finds settings in `cookiecutter._pyproject`."""
+    spec = importlib.util.spec_from_file_location(
+        "cookiecutter_extensions",
+        BUILD_TEMPLATE_DIR.parent / "cookiecutter_extensions.py",
+    )
+    extensions = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(extensions)
+    env = Environment(extensions=[extensions.FletJinjaExtension])
+    rendered = env.from_string(
+        "{{ get_pyproject('tool.flet.android.min_sdk_version') }}"
+    ).render(
+        cookiecutter={
+            "_pyproject": {"tool": {"flet": {"android": {"min_sdk_version": 23}}}}
+        }
+    )
+    assert rendered == "23"
 
 
 class TestBuildTemplateContract:
@@ -65,7 +149,7 @@ class TestBuildTemplateContract:
             try:
                 text = path.read_text()
             except UnicodeDecodeError:
-                continue  # binary asset, e.g. images/icon.png
+                continue  # binary asset, e.g. an icon
             # The negative lookahead skips method calls such as
             # `cookiecutter.items()` in .vars, which are not context keys.
             for key in re.findall(
@@ -140,3 +224,244 @@ class TestBuildTemplateContract:
         manifest = json.loads(rendered)
         assert manifest["name"] == "Flet Studio"
         assert manifest["short_name"] == "Studio"
+
+
+class TestDefaultArtifactName:
+    """The `.app` name is what macOS users see (Finder, Dock, app menu), so it
+    defaults to the product name there; executables elsewhere keep the
+    project name (#6966)."""
+
+    def test_macos_uses_the_product_name(self):
+        assert (
+            BaseBuildCommand.default_artifact_name("macos", "Acme Notes", "acme_notes")
+            == "Acme Notes"
+        )
+
+    def test_macos_replaces_characters_file_names_cannot_hold(self):
+        assert (
+            BaseBuildCommand.default_artifact_name("macos", "Notes: A/B", "notes")
+            == "Notes- A-B"
+        )
+
+    def test_macos_falls_back_to_the_project_name(self):
+        assert BaseBuildCommand.default_artifact_name("macos", " ", "notes") == "notes"
+
+    @pytest.mark.parametrize("platform", ["windows", "linux", "android", "ios", "web"])
+    def test_other_platforms_use_the_project_name(self, platform):
+        assert (
+            BaseBuildCommand.default_artifact_name(platform, "Acme Notes", "acme_notes")
+            == "acme_notes"
+        )
+
+
+class TestResolvePermissions:
+    """Permission bundles follow the per-platform override rule: a platform
+    list replaces the common one; `[]` applies none."""
+
+    @staticmethod
+    def _command(platform: str, pyproject: dict, cli=None) -> BaseBuildCommand:
+        cmd = BaseBuildCommand.__new__(BaseBuildCommand)
+        cmd.config_platform = platform
+        cmd.options = argparse.Namespace(permissions=cli)
+
+        def get(path):
+            node = pyproject
+            for part in path.split("."):
+                if not isinstance(node, dict) or part not in node:
+                    return None
+                node = node[part]
+            return node
+
+        cmd.get_pyproject = get
+        return cmd
+
+    def test_common_list(self):
+        project = {"tool": {"flet": {"permissions": ["location", "camera"]}}}
+        assert self._command("ios", project).resolve_permissions() == [
+            "location",
+            "camera",
+        ]
+
+    def test_platform_list_replaces_the_common_one(self):
+        project = {
+            "tool": {
+                "flet": {
+                    "permissions": ["location", "camera"],
+                    "macos": {"permissions": ["microphone"]},
+                }
+            }
+        }
+        assert self._command("macos", project).resolve_permissions() == ["microphone"]
+        assert self._command("ios", project).resolve_permissions() == [
+            "location",
+            "camera",
+        ]
+
+    def test_empty_platform_list_applies_none(self):
+        project = {
+            "tool": {
+                "flet": {"permissions": ["camera"], "android": {"permissions": []}}
+            }
+        }
+        assert self._command("android", project).resolve_permissions() == []
+
+    def test_cli_wins(self):
+        project = {"tool": {"flet": {"permissions": ["camera"]}}}
+        assert self._command(
+            "ios", project, cli=["biometric"]
+        ).resolve_permissions() == ["biometric"]
+
+
+class TestCopyright:
+    @staticmethod
+    def _command(settings=None, argv=()):
+        """Create a build command with the real options parsed from `argv`."""
+        parser = argparse.ArgumentParser(add_help=False)
+        cmd = BaseBuildCommand(parser)
+        cmd.options = parser.parse_args(list(argv))
+        cmd.get_pyproject = lambda key=None: (settings or {}).get(key)
+        return cmd
+
+    def test_cli_overrides_pyproject(self):
+        """`--copyright` overrides `[tool.flet].copyright`."""
+        cmd = self._command(
+            {"tool.flet.copyright": "From pyproject"}, ["--copyright", "From CLI"]
+        )
+        assert cmd.get_copyright() == "From CLI"
+
+    def test_empty_cli_copyright_overrides_pyproject(self):
+        """An empty CLI value clears the copyright despite configured defaults."""
+        cmd = self._command(
+            {"tool.flet.copyright": "From pyproject", "tool.flet.company": "Acme"},
+            ["--copyright", ""],
+        )
+        assert cmd.get_copyright() == ""
+
+    @pytest.mark.parametrize("argv", [(), ("--company", "Other")])
+    def test_empty_pyproject_copyright_overrides_company(self, argv):
+        """An empty TOML value suppresses generation from either company source."""
+        cmd = self._command(
+            {"tool.flet.copyright": "", "tool.flet.company": "Acme"}, argv
+        )
+        assert cmd.get_copyright() == ""
+
+    def test_pyproject_is_used_as_written(self):
+        """`[tool.flet].copyright` wins over the company and isn't changed."""
+        cmd = self._command(
+            {"tool.flet.copyright": "(c) Acme.", "tool.flet.company": "Other"}
+        )
+        assert cmd.get_copyright() == "(c) Acme."
+
+    @pytest.mark.parametrize(
+        ("settings", "argv"),
+        [({"tool.flet.company": "Acme Inc."}, ()), ({}, ("--company", "Acme Inc."))],
+    )
+    def test_generated_from_the_company(self, settings, argv):
+        """Without a copyright, it names the company and the current year."""
+        year = datetime.date.today().year
+        assert (
+            self._command(settings, argv).get_copyright()
+            == f"Copyright © {year} Acme Inc."
+        )
+
+    def test_template_default_without_a_company(self):
+        """Without a copyright or company, the build template's default applies."""
+        assert self._command().get_copyright() is None
+
+    def test_template_defaults(self):
+        """The template has no placeholder copyright, and keeps the default company,
+        which names the Windows app's data folder: changing it would leave the
+        data of already released apps behind."""
+        defaults = json.loads(
+            (BUILD_TEMPLATE_DIR.parent / "cookiecutter.json").read_text()
+        )
+        assert defaults["copyright"] == ""
+        assert defaults["company_name"] == "Your Company"
+
+    @pytest.mark.parametrize(
+        ("value", "written"),
+        [
+            ("Copyright © 2026 Acme & Sons", "Copyright © 2026 Acme & Sons"),
+            ("", ""),
+            ('Tom "T" Jerry', 'Tom ""T"" Jerry'),
+            (r"Acme\new", r"Acme\\new"),
+        ],
+    )
+    def test_windows_resource_strings_are_escaped(self, value, written):
+        """Values in the Windows resource file follow its string rules: an unescaped
+        `"` fails the build, and an unescaped `\\n` becomes a line break."""
+        rendered = (
+            Environment(undefined=StrictUndefined)
+            .from_string(
+                (BUILD_TEMPLATE_DIR / "windows/runner/Runner.rc").read_text(
+                    encoding="utf-8"
+                )
+            )
+            .render(
+                cookiecutter={
+                    "company_name": value,
+                    "product_name": value,
+                    "artifact_name": value,
+                    "copyright": value,
+                }
+            )
+        )
+        for key in ("CompanyName", "FileDescription", "InternalName", "LegalCopyright"):
+            assert f'VALUE "{key}", "{written}" "\\0"' in rendered
+        assert f'VALUE "OriginalFilename", "{written}.exe" "\\0"' in rendered
+        assert f'VALUE "ProductName", "{written}" "\\0"' in rendered
+
+    @pytest.mark.parametrize(
+        ("value", "written"),
+        [
+            ("Acme & Sons", "Acme & Sons"),
+            ('Tom "T" Jerry', 'Tom \\"T\\" Jerry'),
+            (r"Acme\new", r"Acme\\new"),
+        ],
+    )
+    def test_windows_window_title_is_escaped(self, value, written):
+        """The product name follows C++ string rules in the Windows runner: an
+        unescaped `"` fails the build, and an unescaped `\\n` becomes a line break."""
+        rendered = (
+            Environment(undefined=StrictUndefined)
+            .from_string(
+                (BUILD_TEMPLATE_DIR / "windows/runner/main.cpp").read_text(
+                    encoding="utf-8"
+                )
+            )
+            .render(
+                cookiecutter={"product_name": value, "_options": {"impeller": True}}
+            )
+        )
+        assert f'window.Create(L"{written}", origin, size)' in rendered
+
+
+class TestArtifactName:
+    @staticmethod
+    def _validate(config_platform, artifact_name):
+        """Validate `artifact_name`, returning the `cleanup` calls it causes."""
+        cmd = BaseBuildCommand(argparse.ArgumentParser(add_help=False))
+        cmd.config_platform = config_platform
+        calls = []
+        cmd.cleanup = lambda code, message=None, **kwargs: calls.append((code, message))
+        cmd.validate_artifact_name(artifact_name)
+        return calls
+
+    @pytest.mark.parametrize("name", ["acme_notes", "Acme Notes", "Acme & Sons", "é"])
+    def test_valid_names_pass_on_windows(self, name):
+        """Spaces, accents and `&` are valid in a Windows file name."""
+        assert self._validate("windows", name) == []
+
+    @pytest.mark.parametrize("char", list('<>:"/\\|?*'))
+    def test_reserved_characters_stop_a_windows_build(self, char):
+        """A character that a Windows file name can't contain fails with its name."""
+        [(code, message)] = self._validate("windows", f"acme{char}notes")
+        shown = Text.from_markup(message).plain
+        assert code == 1
+        assert f"contain {char}." in shown
+        assert "`artifact` in [tool.flet]." in shown
+
+    @pytest.mark.parametrize("config_platform", ["macos", "linux", "android", "ios"])
+    def test_other_platforms_are_not_checked(self, config_platform):
+        """The Windows file name rules apply only to Windows builds."""
+        assert self._validate(config_platform, 'acme"notes') == []

@@ -1,17 +1,22 @@
 import argparse
 import base64
+import contextlib
 import copy
+import datetime
 import glob
+import hashlib
 import json
 import os
 import platform
 import re
 import shutil
+import textwrap
 from pathlib import Path
-from typing import Optional, cast
+from typing import Any, Optional, cast
 
 import yaml
 from flet_platform_assets import (
+    DEFAULT_ICON,
     DEFAULT_SPECS,
     AssetSpec,
     IconOptions,
@@ -29,7 +34,6 @@ from flet_platform_assets import (
 )
 from packaging.requirements import Requirement
 from rich.markup import escape
-from rich.panel import Panel
 from rich.table import Column, Table
 
 import flet.version
@@ -41,22 +45,39 @@ from flet_cli.commands.flutter_base import (
     error_style,
     verbose1_style,
     verbose2_style,
-    warning_style,
 )
 from flet_cli.commands.options import PassThroughArgsAction
 from flet_cli.utils.android import (
     ANDROID_ARCH_TO_FLUTTER_TARGET_PLATFORM,
+    ANDROID_RESOURCES_KEEP_FILE,
+    android_resource_clashes,
+    android_resource_files,
+    android_resources_keep_xml,
     excluded_android_abis,
+    normalize_android_activity,
+    normalize_android_application_attributes,
+    normalize_android_queries,
+    normalize_android_receivers,
+    normalize_android_services,
 )
 from flet_cli.utils.app_excludes import find_default_excludes
 from flet_cli.utils.cli import parse_cli_bool_value
+from flet_cli.utils.extension_settings import (
+    ExtensionSettings,
+    contributed_settings,
+    find_extension_settings,
+    merge_compile_options,
+    merge_gradle_dependencies,
+)
 from flet_cli.utils.flutter import get_flutter_dir
 from flet_cli.utils.hash_stamp import HashStamp
+from flet_cli.utils.log_format import annotation_path
 from flet_cli.utils.merge import merge_dict
 from flet_cli.utils.plist import is_supported_plist_value, parse_cli_plist_value
 from flet_cli.utils.project_dependencies import (
     get_poetry_dependencies,
     get_project_dependencies,
+    read_requirements_file_text,
 )
 from flet_cli.utils.pyproject_toml import load_pyproject_toml
 from flet_cli.utils.python_versions import (
@@ -68,6 +89,11 @@ DEFAULT_TEMPLATE_URL = (
     "https://github.com/flet-dev/flet/releases/download/"
     "v{version}/flet-build-template.zip"
 )
+
+DEFAULT_ANDROID_COMPILE_OPTIONS = {
+    "sourceCompatibility": "JavaVersion.VERSION_17",
+    "targetCompatibility": "JavaVersion.VERSION_17",
+}
 
 # Android (serious_python native-mmap packaging): pure Python ships in stored zips
 # read via zipimport, which breaks packages that read bundled data through a real
@@ -81,12 +107,96 @@ DEFAULT_TEMPLATE_URL = (
 # real offenders here as they are found.
 ANDROID_DEFAULT_EXTRACT_PACKAGES: list[str] = []
 
+CROSS_PLATFORM_PERMISSIONS = {
+    "location": {
+        "ios_info_plist": {
+            "NSLocationWhenInUseUsageDescription": "This app uses location service when in use.",  # noqa: E501
+            "NSLocationAlwaysAndWhenInUseUsageDescription": "This app uses location service.",  # noqa: E501
+        },
+        "macos_info_plist": {
+            "NSLocationUsageDescription": "This app needs access to your location.",  # noqa: E501
+        },
+        "macos_entitlements": {
+            "com.apple.security.personal-information.location": True
+        },
+        "android_permissions": {
+            "android.permission.ACCESS_FINE_LOCATION": True,
+            "android.permission.ACCESS_COARSE_LOCATION": True,
+            "android.permission.ACCESS_BACKGROUND_LOCATION": True,
+        },
+        "android_features": {
+            "android.hardware.location.network": False,
+            "android.hardware.location.gps": False,
+        },
+    },
+    "camera": {
+        "ios_info_plist": {
+            "NSCameraUsageDescription": "This app uses the camera to capture photos and videos."  # noqa: E501
+        },
+        "macos_info_plist": {
+            "NSCameraUsageDescription": "This app uses the camera to capture photos and videos."  # noqa: E501
+        },
+        "macos_entitlements": {"com.apple.security.device.camera": True},
+        "android_permissions": {"android.permission.CAMERA": True},
+        "android_features": {
+            "android.hardware.camera": False,
+            "android.hardware.camera.any": False,
+            "android.hardware.camera.front": False,
+            "android.hardware.camera.external": False,
+            "android.hardware.camera.autofocus": False,
+        },
+    },
+    "microphone": {
+        "ios_info_plist": {
+            "NSMicrophoneUsageDescription": "This app uses microphone to record sounds.",  # noqa: E501
+        },
+        "macos_info_plist": {
+            "NSMicrophoneUsageDescription": "This app uses microphone to record sounds.",  # noqa: E501
+        },
+        "macos_entitlements": {"com.apple.security.device.audio-input": True},
+        # Recording itself only needs RECORD_AUDIO: recordings are written
+        # to app-scoped storage, which requires no permission. Do not add
+        # READ/WRITE_EXTERNAL_STORAGE here — Google Play's Photo and Video
+        # Permissions policy rejects apps that request broad media/storage
+        # access without a qualifying use case, and this group is opt-in
+        # for the microphone, not for the user's media library.
+        "android_permissions": {"android.permission.RECORD_AUDIO": True},
+        "android_features": {},
+    },
+    "photo_library": {
+        "ios_info_plist": {
+            "NSPhotoLibraryUsageDescription": "This app saves photos and videos to the photo library."  # noqa: E501
+        },
+        "macos_info_plist": {
+            "NSPhotoLibraryUsageDescription": "This app saves photos and videos to the photo library."  # noqa: E501
+        },
+        "macos_entitlements": {
+            "com.apple.security.personal-information.photos-library": True
+        },
+        "android_permissions": {
+            "android.permission.READ_MEDIA_VISUAL_USER_SELECTED": True
+        },
+        "android_features": {},
+    },
+    "biometric": {
+        "ios_info_plist": {
+            "NSFaceIDUsageDescription": "This app uses biometrics to authenticate you."  # noqa: E501
+        },
+        "macos_info_plist": {
+            "NSFaceIDUsageDescription": "This app uses biometrics to authenticate you."  # noqa: E501
+        },
+        "macos_entitlements": {},
+        "android_permissions": {},
+        "android_features": {},
+    },
+}
+
 # Bumped whenever a change to flet-platform-assets alters the pixels it
 # produces. Both stamps hash it, so upgrading flet-cli regenerates rather
 # than leaving a user with output from the previous implementation. Nothing
 # else encodes the generator's identity now that the pubspec no longer does.
-ICONS_GENERATOR_VERSION = 1
-SPLASH_GENERATOR_VERSION = 3
+ICONS_GENERATOR_VERSION = 2
+SPLASH_GENERATOR_VERSION = 4
 
 # `flet build` target platform -> the platform name flet-platform-assets uses.
 # A target absent here generates no icons at all.
@@ -148,6 +258,8 @@ class BaseBuildCommand(BaseFlutterCommand):
         self.out_dir = None
         self.python_module_name = None
         self.get_pyproject = None
+        self.extensions: list[ExtensionSettings] = []
+        """Build settings of installed extensions, read after packaging."""
         self.python_app_path = None
         self.build_dir = None
         self.flutter_dir: Optional[Path] = None
@@ -226,90 +338,6 @@ class BaseBuildCommand(BaseFlutterCommand):
                 "outputs": ["build/ios/iphonesimulator/*"],
                 "dist": "ios-simulator",
                 "can_be_run_on": ["Darwin"],
-            },
-        }
-
-        self.cross_platform_permissions = {
-            "location": {
-                "ios_info_plist": {
-                    "NSLocationWhenInUseUsageDescription": "This app uses location service when in use.",  # noqa: E501
-                    "NSLocationAlwaysAndWhenInUseUsageDescription": "This app uses location service.",  # noqa: E501
-                },
-                "macos_info_plist": {
-                    "NSLocationUsageDescription": "This app needs access to your location.",  # noqa: E501
-                },
-                "macos_entitlements": {
-                    "com.apple.security.personal-information.location": True
-                },
-                "android_permissions": {
-                    "android.permission.ACCESS_FINE_LOCATION": True,
-                    "android.permission.ACCESS_COARSE_LOCATION": True,
-                    "android.permission.ACCESS_BACKGROUND_LOCATION": True,
-                },
-                "android_features": {
-                    "android.hardware.location.network": False,
-                    "android.hardware.location.gps": False,
-                },
-            },
-            "camera": {
-                "ios_info_plist": {
-                    "NSCameraUsageDescription": "This app uses the camera to capture photos and videos."  # noqa: E501
-                },
-                "macos_info_plist": {
-                    "NSCameraUsageDescription": "This app uses the camera to capture photos and videos."  # noqa: E501
-                },
-                "macos_entitlements": {"com.apple.security.device.camera": True},
-                "android_permissions": {"android.permission.CAMERA": True},
-                "android_features": {
-                    "android.hardware.camera": False,
-                    "android.hardware.camera.any": False,
-                    "android.hardware.camera.front": False,
-                    "android.hardware.camera.external": False,
-                    "android.hardware.camera.autofocus": False,
-                },
-            },
-            "microphone": {
-                "ios_info_plist": {
-                    "NSMicrophoneUsageDescription": "This app uses microphone to record sounds.",  # noqa: E501
-                },
-                "macos_info_plist": {
-                    "NSMicrophoneUsageDescription": "This app uses microphone to record sounds.",  # noqa: E501
-                },
-                "macos_entitlements": {"com.apple.security.device.audio-input": True},
-                # Recording itself only needs RECORD_AUDIO: recordings are written
-                # to app-scoped storage, which requires no permission. Do not add
-                # READ/WRITE_EXTERNAL_STORAGE here — Google Play's Photo and Video
-                # Permissions policy rejects apps that request broad media/storage
-                # access without a qualifying use case, and this group is opt-in
-                # for the microphone, not for the user's media library.
-                "android_permissions": {"android.permission.RECORD_AUDIO": True},
-                "android_features": {},
-            },
-            "photo_library": {
-                "ios_info_plist": {
-                    "NSPhotoLibraryUsageDescription": "This app saves photos and videos to the photo library."  # noqa: E501
-                },
-                "macos_info_plist": {
-                    "NSPhotoLibraryUsageDescription": "This app saves photos and videos to the photo library."  # noqa: E501
-                },
-                "macos_entitlements": {
-                    "com.apple.security.personal-information.photos-library": True
-                },
-                "android_permissions": {
-                    "android.permission.READ_MEDIA_VISUAL_USER_SELECTED": True
-                },
-                "android_features": {},
-            },
-            "biometric": {
-                "ios_info_plist": {
-                    "NSFaceIDUsageDescription": "This app uses biometrics to authenticate you."  # noqa: E501
-                },
-                "macos_info_plist": {
-                    "NSFaceIDUsageDescription": "This app uses biometrics to authenticate you."  # noqa: E501
-                },
-                "macos_entitlements": {},
-                "android_permissions": {},
-                "android_features": {},
             },
         }
 
@@ -618,6 +646,16 @@ class BaseBuildCommand(BaseFlutterCommand):
             "disabled Swift Package Manager in Flutter.",
         )
         parser.add_argument(
+            "--impeller",
+            dest="impeller",
+            action=argparse.BooleanOptionalAction,
+            default=None,
+            help="Render with Impeller, Flutter's default renderer (on by "
+            "default). Use --no-impeller (or `impeller = false` under [tool.flet]) "
+            "to render with Skia on macOS, Windows, Linux and Android; iOS always "
+            "uses Impeller and web always uses Skia",
+        )
+        parser.add_argument(
             "--cleanup-app",
             dest="cleanup_app",
             action="store_true",
@@ -702,6 +740,16 @@ class BaseBuildCommand(BaseFlutterCommand):
             "(macos only); can be used multiple times",
         )
         parser.add_argument(
+            "--ios-entitlements",
+            dest="ios_entitlements",
+            action="extend",
+            nargs="+",
+            default=[],
+            help="The list of `<key>=<value>` entitlements. Values can be booleans, "
+            "strings, numbers, TOML arrays, or TOML inline tables "
+            "(ipa and ios-simulator only); can be used multiple times",
+        )
+        parser.add_argument(
             "--android-features",
             dest="android_features",
             action="extend",
@@ -735,7 +783,7 @@ class BaseBuildCommand(BaseFlutterCommand):
             action="extend",
             nargs="+",
             default=[],
-            choices=["location", "camera", "microphone", "photo_library"],
+            choices=list(CROSS_PLATFORM_PERMISSIONS),
             help="The list of pre-defined cross-platform permissions for iOS, Android "
             "and macOS builds",
         )
@@ -743,12 +791,13 @@ class BaseBuildCommand(BaseFlutterCommand):
             "--deep-linking-scheme",
             dest="deep_linking_scheme",
             help="Deep linking URL scheme to configure for iOS and Android builds, "
-            "i.g. `https` or `myapp`",
+            "e.g. `myapp` or `https`",
         )
         parser.add_argument(
             "--deep-linking-host",
             dest="deep_linking_host",
-            help="Deep linking URL host for iOS and Android builds",
+            help="Deep linking URL host for iOS and Android builds; optional except "
+            "for `http` and `https` schemes. Requires --deep-linking-scheme",
         )
         parser.add_argument(
             "--android-signing-key-store",
@@ -989,6 +1038,29 @@ class BaseBuildCommand(BaseFlutterCommand):
             f"[magenta]{self.current_platform}[/]."
             self.cleanup(1, message)
 
+    def validate_artifact_name(self, artifact_name: Any):
+        """
+        Stop the build if the artifact name can't name a file on the target platform.
+
+        A Windows app's artifact name names its `.exe` file, which can't contain
+        any of `< > : " / \\ | ? *`.
+
+        Args:
+            artifact_name: The resolved artifact name.
+        """
+        if self.config_platform != "windows":
+            return
+        invalid = sorted(set(str(artifact_name)) & set('<>:"/\\|?*'))
+        if invalid:
+            self.skip_flutter_doctor = True
+            self.cleanup(
+                1,
+                f"Artifact name {escape(repr(str(artifact_name)))} can't be used on "
+                f"Windows, where a file name can't contain {' '.join(invalid)}. "
+                "Set a different name with --artifact or "
+                f"{escape('`artifact` in [tool.flet]')}.",
+            )
+
     def validate_entry_point(self):
         """
         Resolve app entry-point module and ensure corresponding Python file exists.
@@ -1046,13 +1118,17 @@ class BaseBuildCommand(BaseFlutterCommand):
         )
         project_name_slug = slugify(cast(str, project_name_raw))
         project_name = project_name_slug.replace("-", "_")
+        product_name = (
+            self.options.product_name
+            or self.get_pyproject("tool.flet.product")
+            or project_name_raw
+        )
         artifact_name = (
             self.options.artifact_name
-            or self.get_pyproject(f"tool.flet.{self.config_platform}.artifact")
-            or self.get_pyproject("tool.flet.artifact")
-            or self.options.project_name
-            or self.get_pyproject("project.name")
-            or self.python_app_path.name
+            or self.get_platform_setting("artifact")
+            or self.default_artifact_name(
+                self.config_platform, product_name, project_name_raw
+            )
         )
         # Under integration test, `flutter test -d <desktop>` launches the built
         # binary by the project name (the Flutter pubspec `name`), but the
@@ -1061,13 +1137,7 @@ class BaseBuildCommand(BaseFlutterCommand):
         # test host can't find the binary. Pin them equal in test mode.
         if getattr(self, "test_mode", False):
             artifact_name = project_name
-        product_name = (
-            self.options.product_name
-            or self.get_pyproject("tool.flet.product")
-            or self.options.project_name
-            or self.get_pyproject("project.name")
-            or self.python_app_path.name
-        )
+        self.validate_artifact_name(artifact_name)
 
         split_per_abi = (
             self.options.split_per_abi
@@ -1089,79 +1159,1753 @@ class BaseBuildCommand(BaseFlutterCommand):
             )
         )
 
-        info_plist = {}
-        macos_entitlements = {
-            "com.apple.security.app-sandbox": False,
-            "com.apple.security.cs.allow-jit": True,
-            "com.apple.security.cs.allow-unsigned-executable-memory": True,
-            "com.apple.security.network.client": True,
-            "com.apple.security.network.server": True,
-            "com.apple.security.files.user-selected.read-write": True,
-        }
-        android_permissions = {"android.permission.INTERNET": True}
-        android_features = {
-            "android.software.leanback": False,
-            "android.hardware.touchscreen": False,
-        }
-        android_meta_data = {}
-        android_providers = {}
-        # Gradle properties for the generated Android project. These were
-        # hardcoded in the template; the defaults below reproduce them exactly,
-        # and `[tool.flet.android.gradle_properties]` can override any entry or
-        # add new ones. The memory settings in particular are too large for some
-        # CI runners (a standard GitHub-hosted runner has ~7 GB of RAM, less
-        # than -Xmx8G alone), which previously could not be changed at all.
-        android_gradle_properties = {
-            "org.gradle.jvmargs": (
-                "-Xmx8G -XX:MaxMetaspaceSize=4G "
-                "-XX:ReservedCodeCacheSize=512m -XX:+HeapDumpOnOutOfMemoryError"
-            ),
-            "android.useAndroidX": "true",
-        }
-        # ProGuard/R8 rules for the generated Android project. Like
-        # gradle_properties above, these were a fixed template file and the
-        # defaults reproduce it exactly. R8 renames classes in release builds
-        # while pyjnius resolves them by name, so an app that reaches into a
-        # bundled AAR needs a keep rule and had no way to add one.
-        #
-        # `proguard_rules` appends, since R8 has no directive that undoes a
-        # keep. Removing a default therefore needs its own switch:
-        # `proguard_default_rules = false` drops them, which is the only way to
-        # shed `-keepnames class * { *; }`. Keeping the two separate stops
-        # users pasting today's defaults into pyproject.toml and silently
-        # holding them after the defaults change.
-        keep_defaults = (
-            self.get_pyproject("tool.flet.android.proguard_default_rules") is not False
+        impeller = bool(self.get_bool_setting(self.options.impeller, "impeller", True))
+        if self.package_platform in ("iOS", "Emscripten") and (
+            self.options.impeller is False
+            or self.get_pyproject(f"tool.flet.{self.config_platform}.impeller") is False
+        ):
+            self.warn(
+                "turning Impeller off has no effect on "
+                f"{'iOS' if self.package_platform == 'iOS' else 'web'}.",
+                title="Impeller",
+            )
+
+        android_permissions = self.get_android_permissions()
+        android_features = self.get_android_features()
+        android_meta_data = self.get_android_meta_data(impeller)
+        android_providers = self.get_android_providers()
+        android_gradle_properties = self.get_android_gradle_properties()
+        android_proguard_rules = self.get_android_proguard_rules()
+
+        deep_linking = self.get_deep_linking()
+
+        target_arch = self.options.target_arch or self.get_platform_setting(
+            "target_arch"
         )
-        android_proguard_rules = (
-            [
-                "-keep class com.flet.serious_python_android.** { *; }",
-                "-keepnames class * { *; }",
-            ]
-            if keep_defaults
+        target_arch = (
+            target_arch
+            if isinstance(target_arch, list)
+            else [target_arch]
+            if isinstance(target_arch, str)
             else []
+        )
+        if self.package_platform == "Android":
+            invalid_archs = [
+                arch
+                for arch in target_arch
+                if arch not in ANDROID_ARCH_TO_FLUTTER_TARGET_PLATFORM
+            ]
+            if invalid_archs:
+                self.cleanup(
+                    1,
+                    f"Invalid Android architecture(s): {', '.join(invalid_archs)}.\n"
+                    f"Supported: "
+                    f"{', '.join(ANDROID_ARCH_TO_FLUTTER_TARGET_PLATFORM)}.\n"
+                    f"Docs: https://flet.dev/docs/publish/android#supported-target-architectures",
+                )
+            python_abis = list(self.python_release.android_abis)
+            unsupported_archs = [a for a in target_arch if a not in python_abis]
+            if unsupported_archs:
+                self.cleanup(
+                    1,
+                    f"Architecture(s) not supported by Python "
+                    f"{self.python_release.short}: {', '.join(unsupported_archs)}.\n"
+                    f"Supported: {', '.join(python_abis)}.\n"
+                    f"Docs: https://flet.dev/docs/publish/android#supported-target-architectures",
+                )
+            if not target_arch:
+                # Build only for the ABIs the bundled Python supports.
+                target_arch = python_abis
+
+        ios_signing = self.get_ios_signing()
+
+        if (
+            self.target_platform in ["ipa"]
+            and not ios_signing["provisioning_profile"]
+            and not self.debug_platform
+            and not getattr(self, "test_mode", False)
+        ):
+            self.warn(
+                "This build will generate an .xcarchive (Xcode Archive). "
+                "To produce an .ipa (iOS App Package), please specify "
+                "a Provisioning Profile.",
+                title="iOS signing",
+                panel=True,
+            )
+
+        assert self.flutter_dir
+        project_description = (
+            self.options.description
+            or self.get_pyproject("project.description")
+            or self.get_pyproject("tool.poetry.description")
+            or ""
+        )
+        linux_categories = self.escape_linux_desktop_categories(["Utility"])
+        if self.target_platform == "linux":
+            try:
+                # Desktop entry values are escaped here rather than in the template:
+                # the rules differ per key and getting them wrong yields an entry the
+                # desktop environment silently discards.
+                linux_categories = self.escape_linux_desktop_categories(
+                    self.options.linux_categories
+                    or self.get_pyproject("tool.flet.linux.categories")
+                    or ["Utility"]
+                )
+            except ValueError as e:
+                self.cleanup(1, f"Invalid tool.flet.linux.categories: {e}")
+        # Resolved before the context, because the PWA background falls
+        # through to it.
+        splash = self._resolve_splash()
+        org_name = (
+            self.options.org_name or self.get_platform_setting("org") or "com.flet"
+        )
+
+        self.template_data = {
+            "out_dir": self.flutter_dir.name,
+            "sep": os.sep,
+            "python_module_name": self.python_module_name,
+            "route_url_strategy": (
+                self.options.route_url_strategy
+                or self.get_pyproject("tool.flet.web.route_url_strategy")
+                or os.getenv("FLET_WEB_ROUTE_URL_STRATEGY")
+                or "path"
+            ).lower(),
+            # "canvaskit" (dart2js), not "auto": with "auto" Chromium browsers
+            # select the dart2wasm/skwasm build, where every JS <-> Dart byte
+            # buffer crossing pays a WasmGC boundary conversion instead of a
+            # memcpy. Pyodide apps stream bytes constantly (protocol frames,
+            # DataChannels) — measured ~6-7x slower frame display vs canvaskit.
+            "web_renderer": (
+                self.options.web_renderer
+                or self.get_pyproject("tool.flet.web.renderer")
+                or os.getenv("FLET_WEB_RENDERER")
+                or "canvaskit"
+            ).lower(),
+            "pwa_background_color": (
+                self.options.pwa_background_color
+                or self.get_pyproject("tool.flet.web.pwa_background_color")
+                # Falls through to the splash colour. An installed PWA paints
+                # its launch screen from the manifest rather than from the
+                # page, so leaving this on its own default gave a white flash
+                # in front of a splash the user had already coloured.
+                or splash["color"]
+            ),
+            "pwa_theme_color": (
+                self.options.pwa_theme_color
+                or self.get_pyproject("tool.flet.web.pwa_theme_color")
+            ),
+            # The label an installed PWA gets under its icon. It used to be
+            # the project name, a slug such as `my_app`, and iOS shows it on
+            # the Home Screen instead of the `apple-mobile-web-app-title` meta.
+            "pwa_short_name": (
+                self.options.pwa_short_name
+                or self.get_pyproject("tool.flet.web.pwa_short_name")
+                or product_name
+            ),
+            "no_wasm": (
+                self.options.no_wasm
+                or self.get_pyproject("tool.flet.web.wasm") == False  # noqa: E712
+            ),
+            "no_cdn": self.resolve_no_cdn(),
+            # Surface the resolved Pyodide release to the cookiecutter
+            # context so the web template's index.html can wire the
+            # correct jsdelivr URL when CDN mode is on.
+            "pyodide_version": self.python_release.pyodide,
+            "base_url": f"/{base_url}/" if base_url else "/",
+            **self._resolve_web_runtime_js(
+                self.resolve_no_cdn(),
+                f"/{base_url}/" if base_url else "/",
+                self.python_release.pyodide,
+            ),
+            "split_per_abi": split_per_abi,
+            # Enabled by `flet test` to scaffold integration-test wiring
+            # (integration_test/ + flutter_test dev deps). Default False so
+            # normal `flet build`/`flet debug` output is unaffected.
+            "test_mode": getattr(self, "test_mode", False),
+            "project_name": project_name,
+            "project_name_slug": project_name_slug,
+            "artifact_name": artifact_name,
+            "product_name": product_name,
+            "project_description": project_description,
+            # pubspec.yaml is read as YAML while still unrendered, so its
+            # description is escaped for the single quotes the template
+            # provides rather than carrying quotes of its own.
+            "pubspec_description": self.escape_single_quoted_yaml(project_description),
+            # Pre-escaped Linux desktop entry values.
+            "linux_desktop_exec": self.escape_linux_desktop_exec(str(artifact_name)),
+            "linux_categories": linux_categories,
+            "org_name": org_name,
+            # The template derives nothing from these: the build names files
+            # after the bundle ID too, such as the app's Linux icons.
+            "bundle_id": self.options.bundle_id
+            or self.get_platform_setting("bundle_id")
+            or f"{org_name}.{project_name_slug}",
+            "company_name": (
+                self.options.company_name or self.get_pyproject("tool.flet.company")
+            ),
+            "copyright": self.get_copyright(),
+            "ios_export_method": ios_signing["export_method"],
+            "ios_provisioning_profile": ios_signing["provisioning_profile"],
+            "ios_signing_certificate": ios_signing["signing_certificate"],
+            "ios_team_id": ios_signing["team_id"],
+            # `_` makes `_options` and `_pyproject` private cookiecutter
+            # variables, which reach the template unchanged. Cookiecutter
+            # renders other values as Jinja and turns them into strings.
+            "_options": {
+                "package_platform": self.package_platform,
+                "config_platform": self.config_platform,
+                "python_version": self.python_release.short,
+                "target_arch": target_arch,
+                "android_excluded_abis": (
+                    excluded_android_abis(target_arch)
+                    if self.package_platform == "Android"
+                    else []
+                ),
+                "info_plist": self.get_info_plist(impeller),
+                "macos_entitlements": self.get_macos_entitlements(),
+                "ios_entitlements": self.get_ios_entitlements(),
+                "ios_export_options": ios_signing["export_options"],
+                "android_permissions": android_permissions,
+                "android_features": android_features,
+                "android_meta_data": android_meta_data,
+                "android_gradle_properties": android_gradle_properties,
+                "android_compile_options": self.get_android_compile_options(),
+                "android_gradle_dependencies": self.get_android_gradle_dependencies(),
+                "android_proguard_rules": android_proguard_rules,
+                "android_providers": android_providers,
+                "android_application_attributes": (
+                    self.get_android_application_attributes(product_name)
+                ),
+                "android_activity": self.get_android_activity(),
+                "android_queries": self.get_android_queries(),
+                "android_receivers": self.get_android_receivers(),
+                "android_services": self.get_android_services(),
+                "deep_linking": deep_linking,
+                "android_signing": bool(
+                    self.options.android_signing_key_store
+                    or self.get_pyproject("tool.flet.android.signing.key_store")
+                    or os.getenv("FLET_ANDROID_SIGNING_KEY_STORE")
+                ),
+                "android_legacy_packaging": bool(android_legacy_packaging),
+                "impeller": impeller,
+            },
+            "flutter": {"dependencies": list(self.flutter_dependencies.keys())},
+            "boot_screen": self._resolve_boot_screen(),
+            "splash": splash,
+            # The adaptive-icon background is a colour resource, not pixels, so
+            # it is authored by the template like the splash colours are.
+            "adaptive_icon_background": (
+                self.options.android_adaptive_icon_background
+                or self.get_pyproject("tool.flet.android.adaptive_icon_background")
+                # Falls through to the shared key, so one colour covers every
+                # platform. Without this, setting `icon_background` alone gave
+                # a dark iOS and macOS and left Android stubbornly white.
+                or self.icon_background_value("android")
+                or "#ffffff"
+            ),
+            "_pyproject": self.get_pyproject(),
+        }
+
+    @staticmethod
+    def _resolve_web_runtime_js(
+        no_cdn: bool, base_url: str, pyodide_version: str
+    ) -> dict:
+        """
+        Build the runtime URLs the web template emits as JS literals.
+
+        `index.html` used to carry three separate `{% if no_cdn %}` blocks on
+        the same condition, interleaved into a JavaScript object literal, plus
+        a `"{{ no_cdn }}".toLowerCase() == "true"` round-trip through a string.
+        Deciding here instead leaves the template flat substitution, and puts
+        the quoting and escaping in one place that can be tested.
+
+        Args:
+            no_cdn: Whether the build bundles its own runtime copies.
+            base_url: The app's base URL, with leading and trailing slashes.
+            pyodide_version: Resolved Pyodide release, for the jsdelivr URL.
+
+        Returns:
+            Ready-to-emit JavaScript literals - `null`, `true`/`false`, or a
+                quoted string - keyed by their cookiecutter name.
+        """
+
+        return {
+            "no_cdn_js": json.dumps(bool(no_cdn)),
+            "canvas_kit_base_url_js": json.dumps(
+                f"{base_url}canvaskit/" if no_cdn else None
+            ),
+            "pyodide_url_js": json.dumps(
+                f"{base_url}pyodide/pyodide.mjs"
+                if no_cdn
+                else f"https://cdn.jsdelivr.net/pyodide/v{pyodide_version}/full/pyodide.mjs"
+            ),
+            "font_fallback_base_url_js": json.dumps(
+                "assets/fonts/" if no_cdn else None
+            ),
+        }
+
+    def splash_setting(self, key: str):
+        """
+        One splash setting, platform-specific over global.
+
+        Uses the precedence of `get_platform_setting`, so every key under
+        `[tool.flet.splash]` can be overridden per platform, even with an empty
+        value, without each one spelling the lookup out again. A key that was
+        renamed is read under its former name too, so existing configuration
+        keeps working.
+
+        Args:
+            key: Setting name below the `splash` table.
+
+        Returns:
+            The configured value, or `None`.
+        """
+
+        for name in (key, SPLASH_KEY_ALIASES.get(key)):
+            if name is None:
+                continue
+            value = self.get_platform_setting(f"splash.{name}")
+            if value is not None:
+                return value
+        return None
+
+    def _resolve_splash(self) -> dict:
+        """
+        Resolve splash colours and per-platform toggles from the options.
+
+        The colours and toggles reach the *template* from here, and the same
+        dict drives pixel generation later, so the XML that names a colour and
+        the PNG rendered beside it cannot disagree. `create_flutter_project`
+        hashes `template_data`, so changing a colour correctly re-renders.
+
+        Returns:
+            A dict with `android`, `ios`, `web`, `color` and `dark_color`.
+            Never `None` and never containing `None`: `create_flutter_project`
+            filters `None` values out of the context, which would leave the
+            template referencing an undefined key.
+        """
+
+        assert self.options
+        assert self.get_pyproject
+
+        def enabled(no_option, key: str) -> bool:
+            if no_option is not None:
+                return not no_option
+            configured = self.get_pyproject(f"tool.flet.splash.{key}")
+            return True if configured is None else bool(configured)
+
+        def color(option, key: str, default: str) -> str:
+            return option or self.splash_setting(key) or default
+
+        return {
+            "android": enabled(self.options.no_android_splash, "android"),
+            "ios": enabled(self.options.no_ios_splash, "ios"),
+            "web": enabled(self.options.no_web_splash, "web"),
+            "color": color(self.options.splash_color, "color", "#ffffff"),
+            "dark_color": color(
+                self.options.splash_dark_color, "dark_color", "#121212"
+            ),
+        }
+
+    def _resolve_boot_screen(self):
+        """
+        Resolve the boot screen configuration from pyproject.toml.
+
+        Merges the global `[tool.flet.boot_screen]` with the platform-specific
+        `[tool.flet.<platform>.boot_screen]` (platform wins per key), resolves
+        the selected screen `name` (default "flet") and its options table.
+
+        Falls back to the legacy `[tool.flet[.<platform>].app.boot_screen]` /
+        `app.startup_screen` (`show`/`message`) settings, mapping them onto the
+        built-in "flet" screen with a deprecation warning.
+
+        Returns a dict with `name` and `options_b64` (base64-encoded JSON of the
+        options table) for the cookiecutter template.
+        """
+        config_platform = self.config_platform
+
+        def merged(key):
+            result = {}
+            merge_dict(
+                result, copy.deepcopy(self.get_pyproject(f"tool.flet.{key}") or {})
+            )
+            merge_dict(
+                result,
+                copy.deepcopy(
+                    self.get_pyproject(f"tool.flet.{config_platform}.{key}") or {}
+                ),
+            )
+            return result
+
+        boot_screen = merged("boot_screen")
+
+        if boot_screen:
+            name = boot_screen.get("name", "flet")
+            options = boot_screen.get(name) or {}
+        else:
+            name = "flet"
+            options = {}
+
+        return {
+            "name": name,
+            "options_b64": base64.b64encode(json.dumps(options).encode("utf-8")).decode(
+                "ascii"
+            ),
+        }
+
+    def _clear_dart_tool_on_flutter_change(self):
+        """
+        Delete `.dart_tool` from the Flutter project when the required Flutter
+        version differs from the one the project was last built with.
+
+        `dart run` reuses the build hook binaries in `.dart_tool`, and a Dart SDK
+        can't load binaries compiled by a version with a different kernel format.
+        A project with no recorded version counts as changed.
+        """
+
+        hash = HashStamp(self.build_dir / ".hash" / "flutter")
+        hash.update(self.required_flutter_version)
+        if hash.has_changed():
+            shutil.rmtree(self.flutter_dir / ".dart_tool", ignore_errors=True)
+            hash.commit()
+
+    def create_flutter_project(self, second_pass=False):
+        """
+        Render Flutter bootstrap project from template if template inputs changed.
+
+        Args:
+            second_pass: Whether this render happens after extension registration.
+
+        Returns:
+            `True` when template output changed and files were regenerated,
+            otherwise `False`.
+        """
+
+        assert self.options
+        assert self.get_pyproject
+        assert self.flutter_dir
+        assert self.template_data
+        assert self.build_dir
+        assert self.pubspec_path
+
+        # A deleted extension in build/flutter-packages would make this build
+        # fail before it could reinstall it: start over with a fresh project,
+        # fresh packages, and regenerated icons and splash images.
+        if not second_pass and self._flutter_packages_missing():
+            for stamp in ("template-1", "template-2", "package", "icons", "splashes"):
+                (self.build_dir / ".hash" / stamp).unlink(missing_ok=True)
+
+        if not second_pass:
+            self._clear_dart_tool_on_flutter_change()
+
+        hash = HashStamp(
+            self.build_dir / ".hash" / f"template-{'2' if second_pass else '1'}"
+        )
+
+        template_url = self.options.template or self.get_pyproject(
+            "tool.flet.template.url"
+        )
+
+        template_ref = self.options.template_ref or self.get_pyproject(
+            "tool.flet.template.ref"
+        )
+        if not template_ref:
+            template_ref = flet.version.flet_version
+
+        is_local_dev = False
+        # Identity logged / hashed for invalidation; may differ from
+        # the path cookiecutter actually reads when caching kicks in below.
+        template_source = template_url
+        if template_url:
+            # User-provided template (git repo or local path) — use checkout
+            checkout = template_ref
+        else:
+            # Check for local dev templates first (running from source checkout)
+            local_tpl = Path(__file__).resolve().parents[5] / "templates" / "build"
+            if local_tpl.is_dir():
+                template_url = str(local_tpl)
+                template_source = template_url
+                checkout = None
+                is_local_dev = True
+            else:
+                from flet_cli.utils.template_cache import get_cached_template_zip
+
+                template_source = DEFAULT_TEMPLATE_URL.format(version=template_ref)
+                template_url = str(
+                    get_cached_template_zip(template_source, template_ref)
+                )
+                checkout = None
+
+        hash.update(template_source)
+        hash.update(template_ref)
+
+        template_dir = self.options.template_dir or self.get_pyproject(
+            "tool.flet.template.dir"
+        )
+        hash.update(template_dir)
+        hash.update(self.template_data)
+
+        # Handed to the icon and splash stamps. Cookiecutter re-renders with
+        # `overwrite_if_exists=True`, so a re-render restores the template's
+        # placeholder assets over generated ones; without this the downstream
+        # stamps would be unchanged, generation would be skipped, and the
+        # artifacts would silently stay reverted.
+        self.template_digest = hash.digest()
+
+        hash_changed = hash.has_changed()
+
+        if hash_changed:
+            # create a new Flutter bootstrap project directory, if non-existent
+            status = None
+            if not second_pass:
+                self.flutter_dir.mkdir(parents=True, exist_ok=True)
+                status = "[bold blue]Creating app shell..."
+
+            with self.step(status) if status else contextlib.nullcontext():
+                if not second_pass and self.verbose > 0:
+                    details = f"Template: {template_source}"
+                    if checkout:
+                        details += f' with ref "{template_ref}"'
+                    console.log(details, style=verbose1_style, markup=False)
+                try:
+                    from cookiecutter.main import cookiecutter
+
+                    cookiecutter(
+                        template=template_url,
+                        checkout=checkout,
+                        directory=template_dir,
+                        output_dir=str(self.flutter_dir.parent),
+                        no_input=True,
+                        overwrite_if_exists=True,
+                        extra_context={
+                            k: v for k, v in self.template_data.items() if v is not None
+                        },
+                    )
+                except Exception as e:
+                    rmtree(self.flutter_dir)
+                    self.cleanup(1, f"{e}")
+
+                # For local development, override flet dependency with path
+                repo_root = None
+                pubspec = None
+                if is_local_dev:
+                    repo_root = flet.version.find_repo_root(
+                        Path(__file__).resolve().parent
+                    )
+                    if repo_root:
+                        flet_pkg_path = str(repo_root / "packages" / "flet")
+                        pubspec = self.load_yaml(self.pubspec_path)
+                        pubspec["dependencies"]["flet"] = {"path": flet_pkg_path}
+                        pubspec.setdefault("dependency_overrides", {})["flet"] = {
+                            "path": flet_pkg_path
+                        }
+
+                # In test mode, inject the integration-test driver (and flutter_test)
+                # as dev dependencies. They are intentionally NOT in the template
+                # pubspec: that keeps it valid YAML for the release patch tooling and
+                # ensures a normal `flet build` never pulls them. flet_integration_test
+                # is publish_to:none, so for local dev it resolves to the in-repo
+                # package by path, and for an end user it is a git dependency pinned to
+                # this flet version's tag.
+                if getattr(self, "test_mode", False):
+                    if pubspec is None:
+                        pubspec = self.load_yaml(self.pubspec_path)
+                    dev_deps = pubspec.setdefault("dev_dependencies", {})
+                    dev_deps["flutter_test"] = {"sdk": "flutter"}
+                    if is_local_dev and repo_root:
+                        fit_pkg_path = str(
+                            repo_root / "packages" / "flet_integration_test"
+                        )
+                        dev_deps["flet_integration_test"] = {"path": fit_pkg_path}
+                        pubspec.setdefault("dependency_overrides", {})[
+                            "flet_integration_test"
+                        ] = {"path": fit_pkg_path}
+                    else:
+                        dev_deps["flet_integration_test"] = {
+                            "git": {
+                                "url": "https://github.com/flet-dev/flet.git",
+                                "ref": f"v{flet.version.flet_version}",
+                                "path": "packages/flet_integration_test",
+                            }
+                        }
+
+                # Only the web (Pyodide) build loads the packaged app as a Flutter
+                # asset; on native platforms serious_python places it inside the
+                # bundle, and a missing app/app.zip asset would fail the build.
+                if self.config_platform == "web":
+                    if pubspec is None:
+                        pubspec = self.load_yaml(self.pubspec_path)
+                    assets = pubspec.setdefault("flutter", {}).setdefault("assets", [])
+                    for asset in ["app/app.zip", "app/app.zip.hash"]:
+                        if asset not in assets:
+                            assets.append(asset)
+
+                if pubspec is not None:
+                    self.save_yaml(self.pubspec_path, pubspec)
+
+                pyproject_pubspec = self.get_pyproject("tool.flet.flutter.pubspec")
+
+                if pyproject_pubspec:
+                    pyproject_pubspec = copy.deepcopy(pyproject_pubspec)
+                    pubspec = self.load_yaml(self.pubspec_path)
+                    # Replace individual dependency entries from pyproject rather
+                    # than deep-merging them — a Dart dependency can only have one
+                    # source, so merging {"path":…} with {"git":…} is invalid.
+                    for section in (
+                        "dependencies",
+                        "dependency_overrides",
+                        "dev_dependencies",
+                    ):
+                        if section in pyproject_pubspec:
+                            pubspec.setdefault(section, {}).update(
+                                pyproject_pubspec.pop(section)
+                            )
+                    pubspec = merge_dict(pubspec, pyproject_pubspec)
+                    self.save_yaml(self.pubspec_path, pubspec)
+
+                # make backup of pubspec.yaml
+                shutil.copyfile(self.pubspec_path, f"{self.pubspec_path}.orig")
+
+                if not second_pass:
+                    console.log(f"Created app shell {self.emojis['checkmark']}")
+
+        hash.commit()
+
+        return hash_changed
+
+    def register_flutter_extensions(self):
+        """
+        Discover local Flutter extension packages and inject them into dependencies.
+        """
+
+        assert self.flutter_packages_dir
+        assert self.flutter_packages_temp_dir
+        assert isinstance(self.flutter_dependencies, dict)
+        assert self.template_data
+        assert self.build_dir
+
+        # Replace the permanent flutter-packages copy with this build's set. The
+        # temp dir is populated by serious_python's package step and is ABSENT
+        # when the app has no Flutter extensions — so always clear the old copy
+        # first, otherwise an extension removed since the previous build (e.g.
+        # dropping flet-video) would linger here and stay in the built app.
+        #
+        # Skip this when the package step ran with --skip-site-packages: in that
+        # mode serious_python does not repopulate the temp dir, so an absent temp
+        # dir means "unchanged" rather than "no extensions". Wiping here would
+        # delete the previous build's extensions and never restore them, breaking
+        # the Flutter build (unresolved web plugins). A removed extension changes
+        # the package requirements, flips the package hash, and takes the full
+        # (non-skip) path above instead.
+        if not self.site_packages_skipped:
+            if self.flutter_packages_dir.exists():
+                shutil.rmtree(self.flutter_packages_dir, ignore_errors=True)
+            if self.flutter_packages_temp_dir.exists():
+                # copy packages from temp to permanent location
+                shutil.move(self.flutter_packages_temp_dir, self.flutter_packages_dir)
+
+        if self.flutter_packages_dir.exists():
+            with self.step("[bold blue]Registering app user extensions..."):
+                for fp in os.listdir(self.flutter_packages_dir):
+                    if (self.flutter_packages_dir / fp / "pubspec.yaml").exists():
+                        ext_dir = str(self.flutter_packages_dir / fp)
+                        if self.verbose > 0:
+                            console.log(f"Found app user extension at {ext_dir}")
+                        self.flutter_dependencies[fp] = {"path": ext_dir}
+
+                self.template_data["flutter"]["dependencies"] = list(
+                    self.flutter_dependencies.keys()
+                )
+
+                console.log(
+                    f"Registered app user extensions {self.emojis['checkmark']}"
+                )
+
+        self.apply_extension_settings()
+
+    def apply_extension_settings(self):
+        """
+        Apply the build settings installed extensions declare in their
+        `flet-extension.toml`, under the app's own settings.
+
+        Settings an extension changes are recomputed for the second template pass.
+        """
+
+        assert self.build_dir
+        assert self.flutter_dir
+        assert self.get_pyproject
+        assert self.template_data
+
+        # serious_python installs web packages in its own default location, the
+        # `build/site-packages` directory of the Flutter project it runs in.
+        site_packages_dir = (
+            self.flutter_dir / "build" / "site-packages"
+            if self.package_platform == "Emscripten"
+            else self.build_dir / "site-packages"
+        )
+        try:
+            self.extensions, warnings = find_extension_settings(
+                site_packages_dir, self.flutter_packages_dir
+            )
+        except ValueError as e:
+            self.cleanup(1, str(e))
+        for warning in warnings:
+            self.warn(warning)
+        for extension in self.extensions:
+            contributed = contributed_settings(extension)
+            if not contributed:
+                continue
+            console.log(
+                f"Applied build settings from {extension.label}: "
+                f"{', '.join(contributed)}",
+                style=verbose1_style,
+                markup=False,
+            )
+
+        # Android settings only apply to Android builds, so other builds don't
+        # fail on extensions' conflicting compile options.
+        if self.package_platform == "Android":
+            options = self.template_data["_options"]
+            options["android_compile_options"] = self.get_android_compile_options()
+            options["android_gradle_dependencies"] = (
+                self.get_android_gradle_dependencies()
+            )
+
+    def update_flutter_dependencies(self):
+        """
+        Merge resolved Flutter extension dependencies into `pubspec.yaml`.
+        """
+
+        assert self.pubspec_path
+        assert self.template_data
+        assert self.get_pyproject
+        assert self.build_dir
+        assert isinstance(self.flutter_dependencies, dict)
+
+        pubspec = self.load_yaml(self.pubspec_path)
+
+        # merge dependencies to a dest pubspec.yaml
+        for k, v in self.flutter_dependencies.items():
+            pubspec["dependencies"][k] = v
+
+        # make sure project_name is not named as any of the dependencies
+        for dep in pubspec["dependencies"]:
+            if dep == self.template_data["project_name"]:
+                self.cleanup(
+                    1,
+                    f"Project name cannot have the same name as one of its "
+                    f"dependencies: {dep}. Use --project option to specify "
+                    "a different project name.",
+                )
+
+        self.save_yaml(self.pubspec_path, pubspec)
+
+    def customize_icons(self):
+        """
+        Resolve the app icon for the target platform and generate every size.
+        """
+
+        assert self.package_app_path
+        assert self.flutter_dir
+        assert self.options
+        assert self.get_pyproject
+        assert self.build_dir
+        assert self.target_platform
+
+        platform = ICON_PLATFORMS.get(self.target_platform)
+        if platform is None:
+            return
+
+        with self.step("[bold blue]Generating app icons..."):
+            hash = HashStamp(self.build_dir / ".hash" / "icons")
+            hash.update(ICONS_GENERATOR_VERSION)
+            hash.update(self.template_digest)
+
+            self.assets_path = self.package_app_path.joinpath("assets")
+
+            source_name = None
+            # Whether the source is a generic `icon.png` rather than artwork the
+            # author framed for this platform. A generic icon gets the platform's
+            # margin computed for it; `icon_<platform>.png` is a finished
+            # composition and is used exactly as supplied.
+            derived = False
+            if self.assets_path.exists():
+                # Only the target platform's chain is resolved; the other five
+                # lookups produced nothing this build could use.
+                source_name = self.find_platform_image(
+                    self.assets_path, f"icon_{platform}", hash
+                )
+                if source_name is None:
+                    source_name = self.find_platform_image(
+                        self.assets_path, "icon", hash
+                    )
+                    derived = source_name is not None
+
+            options = IconOptions(
+                background=self._resolve_icon_background(),
+                macos_style=self.get_pyproject("tool.flet.macos.icon_style") or "auto",
+                application_id=self.template_data["bundle_id"],
+            )
+            hash.update(options)
+
+            # With no icon of its own, an app gets icons generated from the Flet
+            # logo the same way, so the template's committed icons are only
+            # placeholders and every build's icons come from one pipeline.
+            source_path = (
+                self.assets_path.joinpath(source_name) if source_name else DEFAULT_ICON
+            )
+            if source_name is None:
+                derived = True
+            hash.update(str(source_path))
+            hash.update(derived)
+            hash.update(source_path.stat().st_mtime)
+
+            if not hash.has_changed() and not self._icons_missing(platform):
+                hash.commit()
+                console.log(f"App icons are up to date {self.emojis['checkmark']}")
+                return
+
+            try:
+                source, pre_rendered = load_source(source_path)
+            except SourceError as e:
+                if source_path.suffix.lower() == ".svg":
+                    self.cleanup(1, f"Could not generate app icons: {e}")
+                self.warn(
+                    f"{e}. Using the default Flet icon.",
+                    title="App icon",
+                    file=annotation_path(source_path),
+                )
+                source_path, derived = DEFAULT_ICON, True
+                source, pre_rendered = load_source(source_path)
+
+            # Deliberately not squared first. Every icon is composed by centring
+            # the artwork on a square canvas anyway, so padding here would be
+            # redundant - and worse, it replaces the empty space with transparency,
+            # which makes finished opaque artwork look like a glyph and gets it
+            # reframed on top of being letterboxed.
+            if source.width != source.height:
+                self.warn(
+                    f"icon source is {source.width}x{source.height}, not "
+                    "square. It is centred on each icon, with the remaining space "
+                    "filled by icon_background where a platform needs an opaque "
+                    "icon and left transparent elsewhere. Supply a square image to "
+                    "frame it yourself.",
+                    title="App icon",
+                    file=annotation_path(source_path),
+                )
+
+            result = render_icons(
+                source,
+                options,
+                self._icon_spec(platform),
+                platform=platform,
+                pre_rendered=pre_rendered,
+                derived=derived,
+            )
+            for message in result.warnings:
+                self.warn(message, title="App icon", file=annotation_path(source_path))
+
+            write(
+                result,
+                self.flutter_dir,
+                declared_only=platform not in ICONS_CREATED_FRESH,
+            )
+            console.log(
+                f"Generated {'default ' if source_path == DEFAULT_ICON else ''}"
+                f"app icons {self.emojis['checkmark']}"
+            )
+
+            hash.commit()
+
+    def icon_background_value(self, platform: str) -> Optional[str]:
+        """
+        The configured colour behind a transparent icon, as written.
+
+        Kept separate from :meth:`_resolve_icon_background` because Android
+        needs the string: its background is a colour *resource* rather than
+        pixels, so it reaches the icon through the template.
+
+        Args:
+            platform: Platform whose key overrides the global one.
+
+        Returns:
+            The colour string, or `None` when nothing is configured.
+        """
+
+        return self.get_platform_setting("icon_background", platform=platform)
+
+    def _resolve_icon_background(self) -> tuple[int, int, int]:
+        """
+        Resolve the colour that sits behind artwork where alpha cannot survive.
+
+        `assets/icon.png` is expected to be transparent, so this is what the
+        user actually sees on Apple platforms: iOS has to be flattened because
+        the App Store rejects an alpha channel, and the macOS tile has to be
+        opaque to read as a tile at all. Until now both were hardcoded white
+        while Android's equivalent was configurable, so a dark-brand app had
+        no way to avoid a white square.
+
+        Resolves platform-specific over global, matching how the splash
+        colours already resolve.
+
+        Returns:
+            The colour as an RGB triple, defaulting to white.
+        """
+
+        assert self.get_pyproject
+
+        value = self.icon_background_value(self.config_platform)
+        if not value:
+            return (255, 255, 255)
+        try:
+            return parse_hex_color(value)
+        except ValueError:
+            # A typo in a colour must not stop a build that would otherwise
+            # succeed; say what was ignored and carry on with the default.
+            self.warn(
+                f'icon_background "{value}" is not a valid colour '
+                "(expected #rrggbb); using white.",
+                title="App icon",
+            )
+            return (255, 255, 255)
+
+    def _icon_spec(self, platform: str):
+        """
+        Build the icon target list from what the rendered project declares.
+
+        A project states which icons it uses in its asset catalogs and web
+        manifest. Following that is what keeps generation from inventing
+        files nothing references.
+
+        Args:
+            platform: The `flet_platform_assets` platform name.
+
+        Returns:
+            An `AssetSpec`, or `None` to use the package defaults.
+        """
+
+        assert self.flutter_dir
+
+        if platform == "web":
+            manifest = self.flutter_dir / "web" / "manifest.json"
+            if manifest.is_file():
+                try:
+                    return web_targets_from_manifest(
+                        json.loads(manifest.read_text(encoding="utf-8"))
+                    )
+                except (json.JSONDecodeError, OSError):
+                    pass
+        if platform == "linux":
+            # Named after the desktop entry id, so the list is per-app.
+            return linux_targets(self.template_data["bundle_id"])
+        if platform == "windows":
+            existing = (
+                self.flutter_dir / "windows" / "runner" / "resources" / "app_icon.ico"
+            )
+            sizes = self.get_ico_sizes(existing)
+            if sizes:
+                return AssetSpec(ico_sizes=sizes)
+        return None
+
+    def _flutter_packages_missing(self) -> bool:
+        """
+        Whether the Flutter project depends on an extension that is gone.
+
+        The previous build's `pubspec.yaml` lists the Flutter packages of the
+        app's extensions by their path in `build/flutter-packages`. If one of
+        them was deleted since, resolving that `pubspec.yaml` fails, and it is
+        resolved before the packages could be installed again, so the build
+        can't recover on its own. The build then starts over: the Flutter
+        project is rendered again, which also restores the template's icons
+        and splash images, so those are generated again too.
+
+        Returns:
+            `True` when a dependency's path is inside `build/flutter-packages`
+                and has no `pubspec.yaml`.
+        """
+
+        assert self.pubspec_path
+        assert self.build_dir
+
+        if not os.path.exists(self.pubspec_path):
+            return False
+        pubspec = self.load_yaml(self.pubspec_path) or {}
+        packages_dir = (self.build_dir / "flutter-packages").resolve()
+        for dependency in (pubspec.get("dependencies") or {}).values():
+            if not isinstance(dependency, dict) or "path" not in dependency:
+                continue
+            path = (Path(self.pubspec_path).parent / dependency["path"]).resolve()
+            if packages_dir in path.parents and not (path / "pubspec.yaml").exists():
+                return True
+        return False
+
+    def _site_packages_missing(self) -> bool:
+        """
+        Whether any required platform package directory has no package files.
+
+        Check every requested mobile architecture. Empty directories and hidden
+        staging metadata such as Darwin's `.pod` symlink do not count as packages.
+        Darwin's architecture directories are merged into the root by packaging.
+
+        Returns:
+            `True` when any required package directory is missing or empty.
+        """
+
+        assert self.flutter_dir
+        assert self.build_dir
+        assert self.template_data
+
+        if self.package_platform == "Emscripten":
+            site_packages = self.flutter_dir / "build" / "site-packages"
+        else:
+            site_packages = self.build_dir / "site-packages"
+
+        architectures = self.template_data["_options"]["target_arch"]
+        if self.package_platform == "Android":
+            architectures = architectures or self.python_release.android_abis
+        elif self.package_platform == "iOS":
+            architectures = architectures or (
+                "iphoneos.arm64",
+                "iphonesimulator.arm64",
+                "iphonesimulator.x86_64",
+            )
+        else:
+            architectures = ("",)
+
+        def has_package_files(directory: Path) -> bool:
+            for _, directories, files in os.walk(directory):
+                directories[:] = [d for d in directories if not d.startswith(".")]
+                if any(not name.startswith(".") for name in files):
+                    return True
+            return False
+
+        return any(
+            not has_package_files(site_packages / arch) for arch in architectures
+        )
+
+    def _icons_missing(self, platform: str) -> bool:
+        """
+        Whether any icon this build should have produced is absent.
+
+        Guards the case where an unchanged stamp would skip generation but a
+        template re-render has already removed the output.
+
+        Args:
+            platform: The `flet_platform_assets` platform name.
+
+        Returns:
+            `True` when at least one expected file is missing.
+        """
+
+        assert self.flutter_dir
+
+        spec = self._icon_spec(platform) or DEFAULT_SPECS[platform]
+        for target in spec.targets:
+            if not (self.flutter_dir / target.relative_path).is_file():
+                return True
+        return False
+
+    def customize_splash_images(self):
+        """
+        Resolve splash artwork for the target platform and generate every size.
+        """
+
+        assert self.package_app_path
+        assert self.flutter_dir
+        assert self.options
+        assert self.get_pyproject
+        assert self.build_dir
+        assert self.target_platform
+        assert self.template_data
+
+        platform = SPLASH_PLATFORMS.get(self.target_platform)
+        if platform is None:
+            return
+
+        splash = self.template_data["splash"]
+        if not splash[platform]:
+            return
+
+        with self.step("[bold blue]Generating splash screens..."):
+            hash = HashStamp(self.build_dir / ".hash" / "splashes")
+            hash.update(SPLASH_GENERATOR_VERSION)
+            hash.update(self.template_digest)
+            hash.update(splash)
+
+            self.assets_path = self.package_app_path.joinpath("assets")
+
+            light_name = dark_name = None
+            derived = False
+            if self.assets_path.exists():
+
+                def resolve(*names):
+                    for name in names:
+                        found = self.find_platform_image(self.assets_path, name, hash)
+                        if found:
+                            return found
+                    return None
+
+                # The documented fallback chain, resolved for this platform only.
+                # Unlike icons, splash terminates at the icon, so every app gets a
+                # splash even with no splash asset of its own.
+                light_name = resolve(f"splash_{platform}", "splash")
+                if light_name is None:
+                    # Fell through to the app icon. An icon fills its canvas by
+                    # design, so it is framed rather than drawn at splash size.
+                    light_name = resolve("icon")
+                    derived = light_name is not None
+                dark_name = resolve(f"splash_dark_{platform}", "splash_dark")
+
+            options = SplashOptions(
+                color=splash["color"],
+                dark_color=splash["dark_color"],
+                icon_background=self.splash_setting("icon_background"),
+                icon_dark_background=self.splash_setting("icon_dark_background"),
+                icon_fit=self.splash_setting("icon_fit") or "contain",
+            )
+            hash.update(options)
+            hash.update(derived)
+
+            light_path = (
+                self.assets_path.joinpath(light_name) if light_name else DEFAULT_ICON
+            )
+            if light_name is None:
+                # The Flet logo, the same default the app icons fall back to.
+                derived = True
+
+            dark_path = self.assets_path.joinpath(dark_name) if dark_name else None
+            for path in (light_path, dark_path):
+                if path is not None:
+                    hash.update(str(path))
+                    hash.update(path.stat().st_mtime)
+
+            if not hash.has_changed():
+                hash.commit()
+                console.log(f"Splash screens are up to date {self.emojis['checkmark']}")
+                return
+
+            try:
+                # Splash sizes are derived from source pixels / 4. Use a 1024px
+                # SVG canvas to match the recommended PNG's 256dp/pt/CSS px size.
+                light, _ = load_source(light_path, svg_size=1024)
+                dark = (
+                    load_source(dark_path, svg_size=1024)[0]
+                    if dark_path is not None
+                    else None
+                )
+            except SourceError as e:
+                if any(
+                    path is not None and path.suffix.lower() == ".svg"
+                    for path in (light_path, dark_path)
+                ):
+                    self.cleanup(1, f"Could not generate splash screens: {e}")
+                self.warn(e, title="Splash screen")
+                hash.commit()
+                return
+
+            light, warning = square(light)
+            if warning:
+                self.warn(
+                    warning, title="Splash screen", file=annotation_path(light_path)
+                )
+            if dark is not None:
+                dark = square(dark)[0]
+
+            result = render_splash(
+                light, dark, options, platform=platform, derived=derived
+            )
+            for message in result.warnings:
+                self.warn(message, title="Splash screen")
+
+            write(result, self.flutter_dir, declared_only=False)
+            if platform == "ios":
+                self.patch_launch_storyboard(light)
+            console.log(f"Generated splash screens {self.emojis['checkmark']}")
+
+            hash.commit()
+
+    def patch_launch_storyboard(self, image) -> None:
+        """
+        Correct the launch storyboard's size hint for the 1x launch image.
+
+        Interface Builder records the natural size of each referenced image.
+        Left at the template's placeholder value, Xcode warns on every build
+        that the asset does not match.
+
+        `ElementTree` is deliberately not used: it would reserialise the whole
+        document and mangle a declaration Xcode is particular about.
+
+        Args:
+            image: The light-mode artwork, at its full source size.
+        """
+
+        assert self.flutter_dir
+
+        storyboard = (
+            self.flutter_dir
+            / "ios"
+            / "Runner"
+            / "Base.lproj"
+            / "LaunchScreen.storyboard"
+        )
+        if not storyboard.is_file():
+            return
+
+        width, height = density_size(image.width, image.height, 1)
+        text = storyboard.read_text(encoding="utf-8")
+        patched, count = re.subn(
+            r'<image name="LaunchImage" width="\d+" height="\d+"/>',
+            f'<image name="LaunchImage" width="{width}" height="{height}"/>',
+            text,
+        )
+        if count != 1:
+            self.warn(
+                "could not update the launch storyboard's image size "
+                f"({count} matches). The splash still renders; Xcode may warn.",
+                title="Splash screen",
+            )
+            return
+        storyboard.write_text(patched, encoding="utf-8")
+
+    def _darwin_spm_active(self) -> bool:
+        """Whether to stage serious_python for Swift Package Manager (vs CocoaPods).
+
+        On by default, matching Flutter 3.44+ (SPM enabled by default). Because
+        `serious_python_darwin` ships a `Package.swift`, Flutter always builds it
+        as an SPM plugin when SPM is enabled — even in a hybrid app where other,
+        non-SPM plugins (e.g. `flet-video`/media_kit) build with CocoaPods at the
+        same time. So serious_python must stage for SPM to match; it is NOT tied
+        to whether the app also pulls in non-SPM plugins. Users force CocoaPods
+        with `--no-swift-package-manager` (or `swift_package_manager = false` under
+        `[tool.flet]`) only when they've disabled SPM in Flutter itself. Flet does
+        not change Flutter's global SPM configuration.
+        """
+        if self.package_platform not in ("iOS", "Darwin"):
+            return False
+        return self.get_bool_setting(
+            self.options.swift_package_manager, "swift_package_manager", True
+        )
+
+    def package_python_app(self):
+        """
+        Package Python app and dependencies into Flutter-consumable app archive.
+
+        Handles dependency resolution, cleanup/compile flags, cache checks, and
+        invokes `serious_python` packaging command.
+        """
+
+        assert self.options
+        assert self.get_pyproject
+        assert self.python_app_path
+        assert self.package_app_path
+        assert self.build_dir
+        assert self.flutter_dir
+        assert self.flutter_packages_dir
+        assert self.flutter_packages_temp_dir
+        assert self.template_data
+
+        hash = HashStamp(self.build_dir / ".hash" / "package")
+
+        with self.step("[bold blue]Packaging Python app..."):
+            package_args = [
+                self.dart_exe,
+                "run",
+                "--suppress-analytics",
+                "serious_python:main",
+                "package",
+                str(self.package_app_path),
+                "--platform",
+                self.package_platform,
+                "--python-version",
+                self.python_release.short,
+            ]
+
+            if self.template_data["_options"]["target_arch"]:
+                # serious_python's --arch is a Dart multi-option: values must be
+                # comma-separated or the flag repeated. Space-separated values
+                # after the first are silently treated as positional arguments.
+                package_args.extend(
+                    ["--arch", ",".join(self.template_data["_options"]["target_arch"])]
+                )
+
+            # Only the short version is passed; serious_python derives the full
+            # version, python-build date, and dart_bridge version from its own
+            # committed snapshot of the manifest.
+            package_env = {
+                "SERIOUS_PYTHON_VERSION": self.python_release.short,
+            }
+
+            # requirements
+            requirements_txt = self.python_app_path.joinpath("requirements.txt")
+
+            toml_dependencies = (
+                get_poetry_dependencies(self.get_pyproject("tool.poetry.dependencies"))
+                or get_project_dependencies(self.get_pyproject("project.dependencies"))
+                or []
+            )
+
+            platform_dependencies = get_project_dependencies(
+                self.get_pyproject(f"tool.flet.{self.config_platform}.dependencies")
+            )
+            if platform_dependencies:
+                toml_dependencies.extend(platform_dependencies)
+
+            dev_packages_configured = False
+            if len(toml_dependencies) > 0:
+                dev_packages = self.get_platform_setting("dev_packages", {})
+                if len(dev_packages) > 0:
+                    for i in range(0, len(toml_dependencies)):
+                        package_name = Requirement(toml_dependencies[i]).name
+                        if package_name in dev_packages:
+                            package_location = dev_packages[package_name]
+                            dev_path = Path(package_location)
+                            if not dev_path.is_absolute():
+                                dev_path = (self.python_app_path / dev_path).resolve()
+                            if dev_path.exists():
+                                # Use Path.as_uri() so Windows drive paths render as
+                                # `file:///D:/a/...` rather than `file://D:\a\...`,
+                                # which pip otherwise treats as a UNC path and fails
+                                # to resolve.
+                                toml_dependencies[i] = (
+                                    f"{package_name} @ {dev_path.as_uri()}"
+                                )
+                            else:
+                                toml_dependencies[i] = (
+                                    f"{package_name} @ {package_location}"
+                                )
+                            dev_packages_configured = True
+                    if dev_packages_configured:
+                        toml_dependencies.append("--no-cache-dir")
+
+                for toml_dep in toml_dependencies:
+                    package_args.extend(["-r", toml_dep])
+
+            elif requirements_txt.exists():
+                # pip reads the file itself, so only its path is in
+                # package_args: hash its text, and that of the files it
+                # includes, so editing them reinstalls the packages.
+                reqs_txt_contents = read_requirements_file_text(requirements_txt)
+                if self.verbose > 1:
+                    console.log(
+                        f"Contents of requirements.txt: {escape(reqs_txt_contents)}",
+                        style=verbose2_style,
+                    )
+                hash.update(reqs_txt_contents)
+                package_args.extend(["-r", "-r", "-r", str(requirements_txt)])
+            else:
+                package_args.extend(["-r", f"flet=={flet.version.flet_version}"])
+
+            # site-packages variable
+            if self.package_platform != "Emscripten":
+                package_env["SERIOUS_PYTHON_SITE_PACKAGES"] = str(
+                    self.build_dir / "site-packages"
+                )
+                # app staging dir: serious_python's `package` places the processed
+                # app here (no app.zip on native); the platform native build copies
+                # it into the bundle (Android zips it as a stored asset).
+                package_env["SERIOUS_PYTHON_APP"] = str(self.build_dir / "python-app")
+                # app bundle id: serious_python (>= 4.4.2) namespaces the generated
+                # iOS framework bundle identifiers under it. Without it they keep a
+                # shared `org.python.*` default that is byte-identical in every Flet
+                # app — see flet-dev/flet#6724.
+                bundle_id = (self.template_data or {}).get("bundle_id")
+                if bundle_id:
+                    package_env["SERIOUS_PYTHON_BUNDLE_ID"] = bundle_id
+
+            # Swift Package Manager (darwin): tell serious_python's package command to
+            # do the host-side SPM staging (the podspec prepare_command doesn't run
+            # under SPM) and write the SP_NATIVE_SET cache-bust key to this file.
+            # serious_python defaults to SPM staging, so be explicit either way — set
+            # it false for the CocoaPods cases (e.g. an app using flet-video).
+            if self.package_platform in ("iOS", "Darwin"):
+                spm = self._darwin_spm_active()
+                package_env["SERIOUS_PYTHON_DARWIN_SPM"] = "true" if spm else "false"
+                if spm:
+                    package_env["SERIOUS_PYTHON_SPM_KEY_FILE"] = str(
+                        self.build_dir / ".serious_python_spm_key"
+                    )
+
+            # flutter-packages variable
+            if self.flutter_packages_temp_dir.exists():
+                rmtree(self.flutter_packages_temp_dir)
+
+            package_env["SERIOUS_PYTHON_FLUTTER_PACKAGES"] = str(
+                self.flutter_packages_temp_dir
+            )
+
+            # exclude
+            app_exclude = self.options.exclude or self.get_platform_setting(
+                "app.exclude", []
+            )
+            explicit_excludes = [
+                "build",
+                *app_exclude,
+                *(["assets"] if self.target_platform == "web" else []),
+            ]
+
+            default_excludes: list[str] = []
+            if self.get_bool_setting(
+                self.options.default_excludes, "app.default_excludes", True
+            ):
+                app_include = self.options.include or self.get_platform_setting(
+                    "app.include", []
+                )
+                default_excludes = find_default_excludes(
+                    self.package_app_path, app_include, explicit_excludes
+                )
+
+            exclude_list = list(dict.fromkeys(explicit_excludes + default_excludes))
+            # one flag per path: serious_python (>= 5.0.0) doesn't split values on
+            # commas, so paths containing `,` survive
+            for path in exclude_list:
+                package_args.extend(["--exclude", path])
+
+            if default_excludes:
+                if self.verbose > 0:
+                    console.log(
+                        "Excluded from app package by default: "
+                        f"{', '.join(default_excludes)} "
+                        "(use --include <path> or --no-default-excludes "
+                        "to package them)",
+                        style=verbose1_style,
+                        markup=False,
+                    )
+                env_files = [
+                    p for p in default_excludes if p == ".env" or p.startswith(".env.")
+                ]
+                if env_files:
+                    it = "it" if len(env_files) == 1 else "them"
+                    self.warn(
+                        f"{', '.join(env_files)} not packaged. If the app "
+                        f"loads {it} at runtime (e.g. with python-dotenv), package "
+                        f"{it} with `--include {' '.join(env_files)}` or "
+                        f"`include = {json.dumps(env_files)}` under [tool.flet.app] "
+                        "in pyproject.toml.",
+                        title="App package",
+                        markup=False,
+                    )
+            if self.verbose > 0:
+                console.log(
+                    f"App package exclude list: {exclude_list}",
+                    style=verbose1_style,
+                    markup=False,
+                )
+
+            # source-packages
+            source_packages = self.options.source_packages or self.get_platform_setting(
+                "source_packages"
+            )
+            if source_packages:
+                package_env["SERIOUS_PYTHON_ALLOW_SOURCE_DISTRIBUTIONS"] = ",".join(
+                    source_packages
+                )
+
+            # android-extract-packages: path-hungry packages shipped extracted to disk
+            # instead of inside the zip (serious_python Android native-mmap packaging).
+            # A built-in default set covers commonly-broken packages; the user list
+            # (CLI / pyproject) is merged on top. Consumed by the serious_python_android
+            # Gradle split during `flutter build`, so the env var is set on build_env
+            # (see _run_flutter_command), not on the package step.
+            self.android_extract_packages: list[str] = (
+                self.get_android_extract_packages()
+                if self.package_platform == "Android"
+                else []
+            )
+
+            if self.get_bool_setting(self.options.compile_app, "compile.app", True):
+                package_args.append("--compile-app")
+
+            if self.get_bool_setting(
+                self.options.compile_packages, "compile.packages", True
+            ):
+                package_args.append("--compile-packages")
+
+            cleanup_app = self.get_bool_setting(
+                self.options.cleanup_app, "cleanup.app", False
+            )
+            cleanup_packages = self.get_bool_setting(
+                self.options.cleanup_packages, "cleanup.packages", True
+            )
+
+            if cleanup_app_files := (
+                self.options.cleanup_app_files
+                or self.get_platform_setting("cleanup.app_files")
+            ):
+                if isinstance(cleanup_app_files, str):
+                    cleanup_app_files = [
+                        value.strip() for value in cleanup_app_files.split(",")
+                    ]
+                if isinstance(cleanup_app_files, list):
+                    for glob_pattern in cleanup_app_files:
+                        if glob_pattern.strip():
+                            package_args.extend(
+                                ["--cleanup-app-files", glob_pattern.strip()]
+                            )
+                    cleanup_app = True
+
+            if cleanup_package_files := (
+                self.options.cleanup_package_files
+                or self.get_platform_setting("cleanup.package_files")
+            ):
+                if isinstance(cleanup_package_files, str):
+                    cleanup_package_files = [
+                        value for value in cleanup_package_files.split(",")
+                    ]
+                if isinstance(cleanup_package_files, list):
+                    for glob_pattern in cleanup_package_files:
+                        if glob_pattern.strip():
+                            package_args.extend(
+                                ["--cleanup-package-files", glob_pattern.strip()]
+                            )
+                    cleanup_packages = True
+
+            if cleanup_app:
+                package_args.append("--cleanup-app")
+
+            if cleanup_packages:
+                package_args.append("--cleanup-packages")
+
+            if self.verbose > 0:
+                console.log(
+                    f"Compile app: {'--compile-app' in package_args}, "
+                    f"cleanup app: {cleanup_app}, cleanup packages: {cleanup_packages} "
+                    "(cleanup removes serious_python's default junk globs plus any "
+                    "--cleanup-app-files/--cleanup-package-files)",
+                    style=verbose1_style,
+                )
+
+            if self.verbose > 1:
+                package_args.append("--verbose")
+
+            # check if site-packages installation could be skipped
+            for arg in package_args:
+                hash.update(arg)
+
+            if (
+                not dev_packages_configured
+                and not hash.has_changed()
+                and not self._site_packages_missing()
+            ):
+                package_args.append("--skip-site-packages")
+                # serious_python skips copying Flutter packages to the temp dir
+                # under --skip-site-packages, so register_flutter_extensions must
+                # keep (not wipe) the permanent flutter-packages copy from the
+                # previous build.
+                self.site_packages_skipped = True
+
+            package_result = self.run(
+                package_args,
+                cwd=str(self.flutter_dir),
+                env=package_env,
+                capture_output=self.verbose < 1,
+            )
+
+            if package_result.returncode != 0:
+                if isinstance(package_result.stdout, str):
+                    console.log(package_result.stdout, style=verbose1_style)
+                if isinstance(package_result.stderr, str):
+                    console.log(package_result.stderr, style=error_style)
+                self.cleanup(package_result.returncode)
+
+            hash.commit()
+
+            # verify the package output: web ships app/app.zip; native platforms
+            # stage the unpacked app to build/app for the native build to bundle.
+            if self.package_platform == "Emscripten":
+                app_zip_path = self.flutter_dir.joinpath("app", "app.zip")
+                if not os.path.exists(app_zip_path):
+                    self.cleanup(1, "Flet app package app/app.zip was not created.")
+            else:
+                app_staging_dir = self.build_dir / "python-app"
+                if not app_staging_dir.exists():
+                    self.cleanup(
+                        1, f"Flet app package was not staged to {app_staging_dir}."
+                    )
+
+            console.log(f"Packaged Python app {self.emojis['checkmark']}")
+
+        # Drop the matching Pyodide runtime into the Flutter project's web/
+        # directory so it ships in `flutter build web` output. Cached
+        # per-version under ~/.flet/pyodide/<version>/ so subsequent builds
+        # are no-ops.
+        #
+        # Skipped in CDN mode: `patch_index.py` then points `flet.pyodideUrl`
+        # at jsdelivr, so a bundled copy would add ~15 MB to the build that
+        # the browser never requests.
+        if self.package_platform == "Emscripten":
+            pyodide_dest = self.flutter_dir / "web" / "pyodide"
+            if self.resolve_no_cdn():
+                from flet_cli.utils.pyodide import ensure_pyodide
+
+                with self.step("[bold blue]Preparing Pyodide runtime..."):
+                    ensure_pyodide(self.python_release.pyodide, pyodide_dest)
+                    console.log(
+                        f"Pyodide {self.python_release.pyodide} ready "
+                        f"{self.emojis['checkmark']}"
+                    )
+            elif pyodide_dest.exists():
+                # The Flutter project is reused across builds, so a copy left
+                # by an earlier `--no-cdn` build would otherwise still ship.
+                shutil.rmtree(pyodide_dest, ignore_errors=True)
+
+    def resolve_no_cdn(self) -> bool:
+        """
+        Whether CanvasKit, Pyodide and fallback fonts should be bundled with
+        the app instead of loaded from their CDNs.
+
+        Returns:
+            True when `--no-cdn` was passed or `tool.flet.web.cdn` is `false`.
+        """
+        return bool(
+            self.options.no_cdn or self.get_pyproject("tool.flet.web.cdn") == False  # noqa: E712
+        )
+
+    def build_wasm(self) -> bool:
+        """
+        Whether to add Flutter's `--wasm` target to the web build.
+
+        Flutter emits the dart2wasm output for the `skwasm` renderer, and the
+        generated `flutter_bootstrap.js` pins `flutterConfig.renderer` to the
+        resolved `web_renderer`. Pinning `canvaskit` makes Flutter's loader
+        skip the dart2wasm build, so it is worth compiling only when the
+        renderer leaves it selectable.
+
+        Returns:
+            True when the resolved renderer is `auto` or `skwasm` and the wasm
+                target was not turned off.
+        """
+        return not self.template_data["no_wasm"] and self.template_data[
+            "web_renderer"
+        ] in ("auto", "skwasm")
+
+    def get_bool_setting(self, cli_option, pyproj_setting, default_value):
+        """
+        Resolve a boolean setting with precedence: CLI option, pyproject, default.
+
+        Args:
+            cli_option: Value from CLI argument.
+            pyproj_setting: Relative key under `tool.flet.<platform>.` and
+                `tool.flet.`.
+            default_value: Fallback value when no override is defined.
+
+        Returns:
+            Resolved boolean-like setting value.
+        """
+
+        return (
+            cli_option
+            if cli_option is not None
+            else self.get_platform_setting(pyproj_setting, default_value)
+        )
+
+    def get_deep_linking(self) -> dict:
+        """
+        Resolve the deep-linking scheme and optional host.
+
+        The CLI options replace the project settings when a scheme is passed.
+        Otherwise, on Android and iOS the platform's own deep-linking table
+        overrides the common one per key, so it may set just one of them;
+        other platforms read only the common table. On Android and iOS a host
+        needs a scheme, and `http` and `https` need a host: without one, the
+        Android app would offer to open every web link.
+
+        Returns:
+            A table with `scheme` and `host`, each `None` when not set.
+        """
+
+        assert self.get_pyproject
+        if self.options.deep_linking_host and not self.options.deep_linking_scheme:
+            self.cleanup(
+                1, "--deep-linking-host needs --deep-linking-scheme to be set too."
+            )
+        platform = {"Android": "android", "iOS": "ios"}.get(self.package_platform)
+        values = {}
+        for key in ("scheme", "host"):
+            if self.options.deep_linking_scheme:
+                value = getattr(self.options, f"deep_linking_{key}")
+            else:
+                value = None
+                if platform:
+                    value = self.get_pyproject(
+                        f"tool.flet.{platform}.deep_linking.{key}"
+                    )
+                if value is None:
+                    value = self.get_pyproject(f"tool.flet.deep_linking.{key}")
+            if value is not None and not isinstance(value, str):
+                self.cleanup(
+                    1, f"Invalid deep linking {key}: expected a string, got {value!r}."
+                )
+            values[key] = (value.strip() or None) if value else None
+
+        if platform:
+            if values["host"] and not values["scheme"]:
+                self.cleanup(
+                    1,
+                    f"Deep linking host {values['host']!r} needs a scheme, "
+                    'such as "myapp" or "https".',
+                )
+            scheme = (values["scheme"] or "").lower()
+            if scheme in ("http", "https") and not values["host"]:
+                self.cleanup(
+                    1,
+                    f"Deep linking scheme {values['scheme']!r} needs a host: "
+                    "without one, the app would open every web link.",
+                )
+        return values
+
+    def get_copyright(self) -> Optional[str]:
+        """
+        Resolve the app's copyright text.
+
+        Comes from `--copyright`, else `[tool.flet].copyright`.
+        An explicitly empty value leaves the copyright blank.
+        Without either, it's generated from the company set with
+        `--company` or `[tool.flet].company`.
+
+        Returns:
+            The copyright text, or `None` to use the build template's default.
+        """
+        assert self.get_pyproject
+        assert self.options
+        if self.options.copyright is not None:
+            return self.options.copyright
+        copyright = self.get_pyproject("tool.flet.copyright")
+        if copyright is not None:
+            return copyright
+        company = self.options.company_name or self.get_pyproject("tool.flet.company")
+        return (
+            f"Copyright © {datetime.date.today().year} {company}" if company else None
+        )
+
+    def get_info_plist(self, impeller: bool) -> dict:
+        """
+        Resolve the entries added to the iOS or macOS app's `Info.plist`.
+
+        Entries of `--info-plist` override those of `[tool.flet.ios.info]` or
+        `[tool.flet.macos.info]`, which override those of the permission bundles.
+
+        Args:
+            impeller: Whether the app uses Impeller. When it doesn't, macOS apps
+                get `FLTEnableImpeller = false`; iOS has no such switch.
+
+        Returns:
+            The entries, with their plist value types.
+        """
+        assert self.get_pyproject
+        assert self.options
+        info_plist = (
+            {"FLTEnableImpeller": False}
+            if self.package_platform == "Darwin" and not impeller
+            else {}
         )
 
         # merge values from "--permissions" arg:
-        for p in (
-            self.options.permissions
-            or self.get_pyproject("tool.flet.permissions")
-            or []
-        ):
-            if p in self.cross_platform_permissions:
-                permission_config = self.cross_platform_permissions[p]
+        for p in self.resolve_permissions():
+            if p in CROSS_PLATFORM_PERMISSIONS:
+                permission_config = CROSS_PLATFORM_PERMISSIONS[p]
                 info_plist.update(
                     permission_config.get(f"{self.config_platform}_info_plist", {})
                     or permission_config.get("info_plist", {})
-                )
-                macos_entitlements.update(
-                    self.cross_platform_permissions[p]["macos_entitlements"]
-                )
-                android_permissions.update(
-                    self.cross_platform_permissions[p]["android_permissions"]
-                )
-                android_features.update(
-                    self.cross_platform_permissions[p]["android_features"]
                 )
 
         info_plist = merge_dict(
@@ -1193,6 +2937,36 @@ class BaseBuildCommand(BaseFlutterCommand):
                     "string, boolean, integer, float, dictionary, and arrays "
                     "containing those values.",
                 )
+        return info_plist
+
+    def get_macos_entitlements(self) -> dict:
+        """
+        Resolve the macOS app's entitlements.
+
+        Entries of `--macos-entitlements` override those of
+        `[tool.flet.macos.entitlement]`, which override those of the permission
+        bundles and Flet's defaults.
+
+        Returns:
+            The entitlements, with their plist value types.
+        """
+        assert self.get_pyproject
+        assert self.options
+        macos_entitlements = {
+            "com.apple.security.app-sandbox": False,
+            "com.apple.security.cs.allow-jit": True,
+            "com.apple.security.cs.allow-unsigned-executable-memory": True,
+            "com.apple.security.network.client": True,
+            "com.apple.security.network.server": True,
+            "com.apple.security.files.user-selected.read-write": True,
+        }
+
+        # merge values from "--permissions" arg:
+        for p in self.resolve_permissions():
+            if p in CROSS_PLATFORM_PERMISSIONS:
+                macos_entitlements.update(
+                    CROSS_PLATFORM_PERMISSIONS[p]["macos_entitlements"]
+                )
 
         macos_entitlements = merge_dict(
             macos_entitlements,
@@ -1216,21 +2990,198 @@ class BaseBuildCommand(BaseFlutterCommand):
                     "string, boolean, integer, float, dictionary, and arrays "
                     "containing those values.",
                 )
+        return macos_entitlements
 
+    def get_ios_signing(self) -> dict:
+        """
+        Resolve how the iOS app is signed and exported.
+
+        The export method comes from `--ios-export-method`, else
+        `[tool.flet.ios].export_method`, else `debugging`. Each other setting comes
+        from its CLI option if it has one, else the table of that export method
+        under `[tool.flet.ios.export_methods]`, else `[tool.flet.ios]`.
+
+        Returns:
+            A table with `export_method`, `provisioning_profile`,
+                `signing_certificate`, `team_id` and `export_options`.
+        """
+        assert self.get_pyproject
+        assert self.options
+        export_method = (
+            self.options.ios_export_method
+            or self.get_pyproject("tool.flet.ios.export_method")
+            or "debugging"
+        )
+
+        export_method_opts = (
+            self.get_pyproject("tool.flet.ios.export_methods").get(export_method)
+            if self.get_pyproject("tool.flet.ios.export_methods")
+            else {}
+        ) or {}
+
+        export_options = (
+            export_method_opts.get("export_options")
+            or self.get_pyproject("tool.flet.ios.export_options")
+            or {}
+        )
+        if not isinstance(export_options, dict):
+            self.cleanup(
+                1,
+                "Invalid iOS export options: expected a table, "
+                f"got {export_options!r}.",
+            )
+        for key, value in export_options.items():
+            if not is_supported_plist_value(value):
+                self.cleanup(
+                    1,
+                    "Unsupported iOS export option value type for "
+                    f"{key}: {type(value).__name__}. Supported types are "
+                    "string, boolean, integer, float, dictionary, and arrays "
+                    "containing those values.",
+                )
+
+        return {
+            "export_method": export_method,
+            "provisioning_profile": (
+                self.options.ios_provisioning_profile
+                or export_method_opts.get("provisioning_profile")
+                or self.get_pyproject("tool.flet.ios.provisioning_profile")
+            ),
+            "signing_certificate": (
+                self.options.ios_signing_certificate
+                or export_method_opts.get("signing_certificate")
+                or self.get_pyproject("tool.flet.ios.signing_certificate")
+            ),
+            "team_id": (
+                self.options.ios_team_id
+                or export_method_opts.get("team_id")
+                or self.get_pyproject("tool.flet.ios.team_id")
+            ),
+            "export_options": export_options,
+        }
+
+    def get_ios_entitlements(self) -> dict:
+        """
+        Resolve the iOS app's entitlements.
+
+        Entries of `--ios-entitlements` override those of `[tool.flet.ios.entitlement]`.
+        Values are written to `Runner.entitlements` with their plist types.
+        """
+        assert self.get_pyproject
+        assert self.options
+        ios_entitlements = dict(self.get_pyproject("tool.flet.ios.entitlement") or {})
+
+        # parse --ios-entitlements
+        for p in self.options.ios_entitlements:
+            i = p.find("=")
+            if i > -1:
+                ios_entitlements[p[:i]] = parse_cli_plist_value(p[i + 1 :])
+            else:
+                self.cleanup(1, f"Invalid iOS entitlement option: {p}")
+
+        for key, value in ios_entitlements.items():
+            if not is_supported_plist_value(value):
+                self.cleanup(
+                    1,
+                    "Unsupported iOS entitlement value type for "
+                    f"{key}: {type(value).__name__}. Supported types are "
+                    "string, boolean, integer, float, dictionary, and arrays "
+                    "containing those values.",
+                )
+        return ios_entitlements
+
+    def get_android_compile_options(self) -> dict[str, str]:
+        """Merge Android compiler expressions over installed extensions' and
+        Flet's Java 17 defaults.
+
+        Keys are Gradle property identifiers; values are Kotlin expressions
+        rendered verbatim inside `android.compileOptions`.
+        """
+        assert self.get_pyproject
+        setting = "tool.flet.android.compile_options"
+        try:
+            configured = merge_compile_options(
+                self.get_pyproject(setting), self.extensions
+            )
+        except ValueError as e:
+            self.cleanup(1, str(e))
+        if configured is None:
+            configured = {}
+        if not isinstance(configured, dict):
+            self.cleanup(
+                1, f"Invalid {setting}: expected a table of Kotlin expressions."
+            )
+
+        resolved = DEFAULT_ANDROID_COMPILE_OPTIONS.copy()
+        for name, expression in configured.items():
+            if not isinstance(name, str) or not re.fullmatch(
+                r"[A-Za-z_][A-Za-z0-9_]*", name
+            ):
+                self.cleanup(
+                    1,
+                    f"Invalid {setting} key {name!r}: expected a property identifier.",
+                )
+            if not isinstance(expression, str) or not expression.strip():
+                self.cleanup(
+                    1,
+                    f"Invalid {setting}.{name}: expected a nonempty Kotlin expression "
+                    "string.",
+                )
+            resolved[name] = expression.strip()
+        return resolved
+
+    def get_android_gradle_dependencies(self) -> str:
+        """Read Kotlin declarations for the body of Gradle's dependencies block,
+        after those of installed extensions."""
+        assert self.get_pyproject
+        setting = "tool.flet.android.gradle_dependencies"
+        configured = merge_gradle_dependencies(
+            self.get_pyproject(setting), self.extensions
+        )
+        if configured is None:
+            return ""
+        if not isinstance(configured, str):
+            self.cleanup(
+                1, f"Invalid {setting}: expected a string of Kotlin declarations."
+            )
+        return textwrap.dedent(configured).strip()
+
+    def get_android_application_attributes(self, product_name: str) -> dict:
+        """Resolve the manifest's `<application>` attributes: Flet's defaults with
+        the app's own attributes on top."""
+        assert self.get_pyproject
+        try:
+            return normalize_android_application_attributes(
+                self.get_pyproject("tool.flet.android.manifest_application"),
+                product_name,
+            )
+        except ValueError as exc:
+            self.cleanup(1, str(exc))
+
+    def get_android_permissions(self) -> dict:
+        """
+        Resolve the app's `<uses-permission>` entries.
+
+        `INTERNET` is on by default. The cross-platform permission bundles,
+        the project settings and then the CLI options are applied on top; a
+        value of `False` removes the permission, even one a plugin adds.
+
+        Returns:
+            Permission names mapped to `True`, `False`, or a table of extra
+            attributes.
+        """
+
+        assert self.get_pyproject
+        android_permissions = {"android.permission.INTERNET": True}
+        for p in self.resolve_permissions():
+            if p in CROSS_PLATFORM_PERMISSIONS:
+                android_permissions.update(
+                    CROSS_PLATFORM_PERMISSIONS[p]["android_permissions"]
+                )
         android_permissions = merge_dict(
             android_permissions,
             self.get_pyproject("tool.flet.android.permission") or {},
         )
-
-        android_gradle_properties = merge_dict(
-            android_gradle_properties,
-            self.get_pyproject("tool.flet.android.gradle_properties") or {},
-        )
-
-        android_proguard_rules = android_proguard_rules + [
-            str(rule)
-            for rule in (self.get_pyproject("tool.flet.android.proguard_rules") or [])
-        ]
 
         # parse --android-permissions
         for p in self.options.android_permissions:
@@ -1265,7 +3216,31 @@ class BaseBuildCommand(BaseFlutterCommand):
                 f"Invalid Android permission value for {key}: "
                 f"{type(value).__name__}. Expected boolean or inline table.",
             )
+        return android_permissions
 
+    def get_android_features(self) -> dict:
+        """
+        Resolve the app's `<uses-feature>` entries.
+
+        Leanback and touchscreen are declared as not required by default, so
+        the app installs on TVs and devices without a touchscreen. The
+        cross-platform permission bundles, the project settings and then the
+        CLI options are applied on top.
+
+        Returns:
+            Feature names mapped to whether the feature is required.
+        """
+
+        assert self.get_pyproject
+        android_features = {
+            "android.software.leanback": False,
+            "android.hardware.touchscreen": False,
+        }
+        for p in self.resolve_permissions():
+            if p in CROSS_PLATFORM_PERMISSIONS:
+                android_features.update(
+                    CROSS_PLATFORM_PERMISSIONS[p]["android_features"]
+                )
         android_features = merge_dict(
             android_features,
             self.get_pyproject("tool.flet.android.feature") or {},
@@ -1285,7 +3260,29 @@ class BaseBuildCommand(BaseFlutterCommand):
                     )
             else:
                 self.cleanup(1, f"Invalid Android feature option: {p}")
+        return android_features
 
+    def get_android_meta_data(self, impeller: bool) -> dict:
+        """
+        Resolve the `<meta-data>` entries of the app's `<application>`.
+
+        Without Impeller, `io.flutter.embedding.android.EnableImpeller` is set
+        to `"false"`; the project settings and then the CLI options are
+        applied on top and may override it.
+
+        Args:
+            impeller: Whether the app is built with the Impeller renderer.
+
+        Returns:
+            Meta-data names mapped to their values.
+        """
+
+        assert self.get_pyproject
+        android_meta_data = (
+            {"io.flutter.embedding.android.EnableImpeller": "false"}
+            if not impeller
+            else {}
+        )
         android_meta_data = merge_dict(
             android_meta_data,
             self.get_pyproject("tool.flet.android.meta_data") or {},
@@ -1298,10 +3295,23 @@ class BaseBuildCommand(BaseFlutterCommand):
                 android_meta_data[p[:i]] = p[i + 1 :]
             else:
                 self.cleanup(1, f"Invalid Android meta-data option: {p}")
+        return android_meta_data
 
+    def get_android_providers(self) -> dict:
+        """
+        Resolve the app's own `<provider>` entries from project settings.
+
+        A provider set to `False` or an empty table is skipped. Booleans are
+        written as lowercase `true` or `false`.
+
+        Returns:
+            Provider class names mapped to their attributes, with an optional
+            `meta_data` table.
+        """
+
+        assert self.get_pyproject
         android_providers = merge_dict(
-            android_providers,
-            self.get_pyproject("tool.flet.android.provider") or {},
+            {}, self.get_pyproject("tool.flet.android.provider") or {}
         )
 
         def _xml_attr_value(v):
@@ -1379,1561 +3389,289 @@ class BaseBuildCommand(BaseFlutterCommand):
                     )
                 normalized[ak] = _xml_attr_value(av)
             normalized_providers[key] = normalized
-        android_providers = normalized_providers
+        return normalized_providers
 
-        deep_linking_scheme = (
-            self.get_pyproject("tool.flet.ios.deep_linking.scheme")
-            if self.package_platform == "iOS"
-            else (
-                self.get_pyproject("tool.flet.android.deep_linking.scheme")
-                if self.package_platform == "Android"
-                else self.get_pyproject("tool.flet.deep_linking.scheme")
-            )
+    def get_android_gradle_properties(self) -> dict:
+        """
+        Resolve the generated Android project's `gradle.properties`.
+
+        The defaults reproduce the file the template used to hardcode; project
+        settings override any entry or add new ones. The memory settings in
+        particular are too large for some CI runners (a standard GitHub-hosted
+        runner has about 7 GB of RAM, less than `-Xmx8G` alone).
+        `kotlin.incremental` is off because Kotlin's incremental compiler
+        stores plugin sources relative to the Android project and fails the
+        build when they sit on another Windows drive, e.g. the pub cache on
+        `C:` and the app on `D:`.
+
+        Returns:
+            Property names mapped to their values.
+        """
+
+        assert self.get_pyproject
+        return merge_dict(
+            {
+                "org.gradle.jvmargs": (
+                    "-Xmx8G -XX:MaxMetaspaceSize=4G "
+                    "-XX:ReservedCodeCacheSize=512m -XX:+HeapDumpOnOutOfMemoryError"
+                ),
+                "android.useAndroidX": "true",
+                "kotlin.incremental": "false",
+            },
+            self.get_pyproject("tool.flet.android.gradle_properties") or {},
         )
 
-        deep_linking_host = (
-            self.get_pyproject("tool.flet.ios.deep_linking.host")
-            if self.package_platform == "iOS"
-            else (
-                self.get_pyproject("tool.flet.android.deep_linking.host")
-                if self.package_platform == "Android"
-                else self.get_pyproject("tool.flet.deep_linking.host")
-            )
-        )
+    def get_android_proguard_rules(self) -> list[str]:
+        """
+        Resolve the generated Android project's ProGuard/R8 rules.
 
-        if self.options.deep_linking_scheme and self.options.deep_linking_host:
-            deep_linking_scheme = self.options.deep_linking_scheme
-            deep_linking_host = self.options.deep_linking_host
+        R8 renames classes in release builds while pyjnius resolves them by
+        name, so an app that reaches into a bundled AAR needs keep rules. The
+        project's rules are appended to the defaults, since R8 has no directive
+        that undoes a keep; `proguard_default_rules = false` drops the
+        defaults, the only way to shed `-keepnames class * { *; }`. Keeping
+        the two settings separate stops users from copying today's defaults
+        into `pyproject.toml` and silently keeping them after they change.
 
-        target_arch = self.options.target_arch or self.get_platform_setting(
-            "target_arch"
+        Returns:
+            The rules, one per line of `proguard-rules.pro`.
+        """
+
+        assert self.get_pyproject
+        keep_defaults = (
+            self.get_pyproject("tool.flet.android.proguard_default_rules") is not False
         )
-        target_arch = (
-            target_arch
-            if isinstance(target_arch, list)
-            else [target_arch]
-            if isinstance(target_arch, str)
+        defaults = (
+            [
+                "-keep class com.flet.serious_python_android.** { *; }",
+                "-keepnames class * { *; }",
+            ]
+            if keep_defaults
             else []
         )
-        if self.package_platform == "Android":
-            invalid_archs = [
-                arch
-                for arch in target_arch
-                if arch not in ANDROID_ARCH_TO_FLUTTER_TARGET_PLATFORM
-            ]
-            if invalid_archs:
-                self.cleanup(
-                    1,
-                    f"Invalid Android architecture(s): {', '.join(invalid_archs)}.\n"
-                    f"Supported: "
-                    f"{', '.join(ANDROID_ARCH_TO_FLUTTER_TARGET_PLATFORM)}.\n"
-                    f"Docs: https://flet.dev/docs/publish/android#supported-target-architectures",
-                )
-            python_abis = list(self.python_release.android_abis)
-            unsupported_archs = [a for a in target_arch if a not in python_abis]
-            if unsupported_archs:
-                self.cleanup(
-                    1,
-                    f"Architecture(s) not supported by Python "
-                    f"{self.python_release.short}: {', '.join(unsupported_archs)}.\n"
-                    f"Supported: {', '.join(python_abis)}.\n"
-                    f"Docs: https://flet.dev/docs/publish/android#supported-target-architectures",
-                )
-            if not target_arch:
-                # Build only for the ABIs the bundled Python supports.
-                target_arch = python_abis
+        return defaults + [
+            str(rule)
+            for rule in (self.get_pyproject("tool.flet.android.proguard_rules") or [])
+        ]
 
-        ios_export_method = (
-            self.options.ios_export_method
-            or self.get_pyproject("tool.flet.ios.export_method")
-            or "debugging"
-        )
-
-        ios_export_method_opts = (
-            self.get_pyproject("tool.flet.ios.export_methods").get(ios_export_method)
-            if self.get_pyproject("tool.flet.ios.export_methods")
-            else {}
-        ) or {}
-
-        ios_provisioning_profile = (
-            self.options.ios_provisioning_profile
-            or ios_export_method_opts.get("provisioning_profile")
-            or self.get_pyproject("tool.flet.ios.provisioning_profile")
-        )
-
-        ios_signing_certificate = (
-            self.options.ios_signing_certificate
-            or ios_export_method_opts.get("signing_certificate")
-            or self.get_pyproject("tool.flet.ios.signing_certificate")
-        )
-
-        ios_export_options = (
-            ios_export_method_opts.get("export_options")
-            or self.get_pyproject("tool.flet.ios.export_options")
-            or {}
-        )
-
-        ios_team_id = (
-            self.options.ios_team_id
-            or ios_export_method_opts.get("team_id")
-            or self.get_pyproject("tool.flet.ios.team_id")
-        )
-
-        if (
-            self.target_platform in ["ipa"]
-            and not ios_provisioning_profile
-            and not self.debug_platform
-            and not getattr(self, "test_mode", False)
-        ):
-            console.print(
-                Panel(
-                    "This build will generate an .xcarchive (Xcode Archive). "
-                    "To produce an .ipa (iOS App Package), please specify "
-                    "a Provisioning Profile.",
-                    style=warning_style,
-                )
-            )
-
-        assert self.flutter_dir
-        project_description = (
-            self.options.description
-            or self.get_pyproject("project.description")
-            or self.get_pyproject("tool.poetry.description")
-            or ""
-        )
-        linux_categories = self.escape_linux_desktop_categories(["Utility"])
-        if self.target_platform == "linux":
-            try:
-                # Desktop entry values are escaped here rather than in the template:
-                # the rules differ per key and getting them wrong yields an entry the
-                # desktop environment silently discards.
-                linux_categories = self.escape_linux_desktop_categories(
-                    self.options.linux_categories
-                    or self.get_pyproject("tool.flet.linux.categories")
-                    or ["Utility"]
-                )
-            except ValueError as e:
-                self.cleanup(1, f"Invalid tool.flet.linux.categories: {e}")
-        # Resolved before the context, because the PWA background falls
-        # through to it.
-        splash = self._resolve_splash()
-
-        self.template_data = {
-            "out_dir": self.flutter_dir.name,
-            "sep": os.sep,
-            "python_module_name": self.python_module_name,
-            "route_url_strategy": (
-                self.options.route_url_strategy
-                or self.get_pyproject("tool.flet.web.route_url_strategy")
-                or os.getenv("FLET_WEB_ROUTE_URL_STRATEGY")
-                or "path"
-            ).lower(),
-            # "canvaskit" (dart2js), not "auto": with "auto" Chromium browsers
-            # select the dart2wasm/skwasm build, where every JS <-> Dart byte
-            # buffer crossing pays a WasmGC boundary conversion instead of a
-            # memcpy. Pyodide apps stream bytes constantly (protocol frames,
-            # DataChannels) — measured ~6-7x slower frame display vs canvaskit.
-            "web_renderer": (
-                self.options.web_renderer
-                or self.get_pyproject("tool.flet.web.renderer")
-                or os.getenv("FLET_WEB_RENDERER")
-                or "canvaskit"
-            ).lower(),
-            "pwa_background_color": (
-                self.options.pwa_background_color
-                or self.get_pyproject("tool.flet.web.pwa_background_color")
-                # Falls through to the splash colour. An installed PWA paints
-                # its launch screen from the manifest rather than from the
-                # page, so leaving this on its own default gave a white flash
-                # in front of a splash the user had already coloured.
-                or splash["color"]
-            ),
-            "pwa_theme_color": (
-                self.options.pwa_theme_color
-                or self.get_pyproject("tool.flet.web.pwa_theme_color")
-            ),
-            # The label an installed PWA gets under its icon. It used to be
-            # the project name, a slug such as `my_app`, and iOS shows it on
-            # the Home Screen instead of the `apple-mobile-web-app-title` meta.
-            "pwa_short_name": (
-                self.options.pwa_short_name
-                or self.get_pyproject("tool.flet.web.pwa_short_name")
-                or product_name
-            ),
-            "no_wasm": (
-                self.options.no_wasm
-                or self.get_pyproject("tool.flet.web.wasm") == False  # noqa: E712
-            ),
-            "no_cdn": self.resolve_no_cdn(),
-            # Surface the resolved Pyodide release to the cookiecutter
-            # context so the web template's index.html can wire the
-            # correct jsdelivr URL when CDN mode is on.
-            "pyodide_version": self.python_release.pyodide,
-            "base_url": f"/{base_url}/" if base_url else "/",
-            **self._resolve_web_runtime_js(
-                self.resolve_no_cdn(),
-                f"/{base_url}/" if base_url else "/",
-                self.python_release.pyodide,
-            ),
-            "split_per_abi": split_per_abi,
-            # Enabled by `flet test` to scaffold integration-test wiring
-            # (integration_test/ + flutter_test dev deps). Default False so
-            # normal `flet build`/`flet debug` output is unaffected.
-            "test_mode": getattr(self, "test_mode", False),
-            "project_name": project_name,
-            "project_name_slug": project_name_slug,
-            "artifact_name": artifact_name,
-            "product_name": product_name,
-            "project_description": project_description,
-            # pubspec.yaml is read as YAML while still unrendered, so its
-            # description is escaped for the single quotes the template
-            # provides rather than carrying quotes of its own.
-            "pubspec_description": self.escape_single_quoted_yaml(project_description),
-            # Pre-escaped Linux desktop entry values.
-            "linux_desktop_exec": self.escape_linux_desktop_exec(str(artifact_name)),
-            "linux_categories": linux_categories,
-            "org_name": self.options.org_name
-            or self.get_pyproject(f"tool.flet.{self.config_platform}.org")
-            or self.get_pyproject("tool.flet.org"),
-            "bundle_id": self.options.bundle_id
-            or self.get_pyproject(f"tool.flet.{self.config_platform}.bundle_id")
-            or self.get_pyproject("tool.flet.bundle_id"),
-            "company_name": (
-                self.options.company_name or self.get_pyproject("tool.flet.company")
-            ),
-            "copyright": self.options.copyright
-            or self.get_pyproject("tool.flet.copyright"),
-            "ios_export_method": ios_export_method,
-            "ios_provisioning_profile": ios_provisioning_profile,
-            "ios_signing_certificate": ios_signing_certificate,
-            "ios_export_options": ios_export_options,
-            "ios_team_id": ios_team_id,
-            "options": {
-                "package_platform": self.package_platform,
-                "config_platform": self.config_platform,
-                "python_version": self.python_release.short,
-                "target_arch": target_arch,
-                "android_excluded_abis": (
-                    excluded_android_abis(target_arch)
-                    if self.package_platform == "Android"
-                    else []
-                ),
-                "info_plist": info_plist,
-                "macos_entitlements": macos_entitlements,
-                "android_permissions": android_permissions,
-                "android_features": android_features,
-                "android_meta_data": android_meta_data,
-                "android_gradle_properties": android_gradle_properties,
-                "android_proguard_rules": android_proguard_rules,
-                "android_providers": android_providers,
-                "deep_linking": {
-                    "scheme": deep_linking_scheme,
-                    "host": deep_linking_host,
-                },
-                "android_signing": bool(
-                    self.options.android_signing_key_store
-                    or self.get_pyproject("tool.flet.android.signing.key_store")
-                    or os.getenv("FLET_ANDROID_SIGNING_KEY_STORE")
-                ),
-                "android_legacy_packaging": bool(android_legacy_packaging),
-            },
-            "flutter": {"dependencies": list(self.flutter_dependencies.keys())},
-            "boot_screen": self._resolve_boot_screen(),
-            "splash": splash,
-            # The adaptive-icon background is a colour resource, not pixels, so
-            # it is authored by the template like the splash colours are.
-            "adaptive_icon_background": (
-                self.options.android_adaptive_icon_background
-                or self.get_pyproject("tool.flet.android.adaptive_icon_background")
-                # Falls through to the shared key, so one colour covers every
-                # platform. Without this, setting `icon_background` alone gave
-                # a dark iOS and macOS and left Android stubbornly white.
-                or self.icon_background_value("android")
-                or "#ffffff"
-            ),
-            "pyproject": self.get_pyproject(),
-        }
-
-    @staticmethod
-    def _resolve_web_runtime_js(
-        no_cdn: bool, base_url: str, pyodide_version: str
-    ) -> dict:
+    def get_android_signing_env(self) -> dict:
         """
-        Build the runtime URLs the web template emits as JS literals.
+        Resolve the environment variables that sign the Android build.
 
-        `index.html` used to carry three separate `{% if no_cdn %}` blocks on
-        the same condition, interleaved into a JavaScript object literal, plus
-        a `"{{ no_cdn }}".toLowerCase() == "true"` round-trip through a string.
-        Deciding here instead leaves the template flat substitution, and puts
-        the quoting and escaping in one place that can be tested.
-
-        Args:
-            no_cdn: Whether the build bundles its own runtime copies.
-            base_url: The app's base URL, with leading and trailing slashes.
-            pyodide_version: Resolved Pyodide release, for the jsdelivr URL.
+        The key store comes from the CLI option, the project settings or the
+        `FLET_ANDROID_SIGNING_KEY_STORE` environment variable. The passwords
+        come from the CLI options or their environment variables only, never
+        from `pyproject.toml`; when just one of them is given, it is used for
+        both. The key alias, `upload` by default, is set only with a key store.
 
         Returns:
-            Ready-to-emit JavaScript literals - `null`, `true`/`false`, or a
-                quoted string - keyed by their cookiecutter name.
+            The `FLET_ANDROID_SIGNING_*` variables to pass to the build.
         """
 
-        return {
-            "no_cdn_js": json.dumps(bool(no_cdn)),
-            "canvas_kit_base_url_js": json.dumps(
-                f"{base_url}canvaskit/" if no_cdn else None
-            ),
-            "pyodide_url_js": json.dumps(
-                f"{base_url}pyodide/pyodide.mjs"
-                if no_cdn
-                else f"https://cdn.jsdelivr.net/pyodide/v{pyodide_version}/full/pyodide.mjs"
-            ),
-            "font_fallback_base_url_js": json.dumps(
-                "assets/fonts/" if no_cdn else None
-            ),
-        }
+        assert self.get_pyproject
+        env = {}
+        key_store = (
+            self.options.android_signing_key_store
+            or self.get_pyproject("tool.flet.android.signing.key_store")
+            or os.getenv("FLET_ANDROID_SIGNING_KEY_STORE")
+        )
+        if key_store:
+            env["FLET_ANDROID_SIGNING_KEY_STORE"] = key_store
 
-    def splash_setting(self, key: str):
+        key_store_password = (
+            self.options.android_signing_key_store_password
+            or os.getenv("FLET_ANDROID_SIGNING_KEY_STORE_PASSWORD")
+        )
+        key_password = self.options.android_signing_key_password or os.getenv(
+            "FLET_ANDROID_SIGNING_KEY_PASSWORD"
+        )
+        if key_store_password or key_password:
+            env["FLET_ANDROID_SIGNING_KEY_STORE_PASSWORD"] = (
+                key_store_password if key_store_password else key_password
+            )
+            env["FLET_ANDROID_SIGNING_KEY_PASSWORD"] = (
+                key_password if key_password else key_store_password
+            )
+
+        if key_store:
+            env["FLET_ANDROID_SIGNING_KEY_ALIAS"] = (
+                self.options.android_signing_key_alias
+                or self.get_pyproject("tool.flet.android.signing.key_alias")
+                or os.getenv("FLET_ANDROID_SIGNING_KEY_ALIAS")
+                or "upload"
+            )
+        return env
+
+    def get_android_extract_packages(self) -> list[str]:
         """
-        One splash setting, platform-specific over global.
+        Resolve the Python packages shipped extracted to disk on Android
+        instead of in the zip Python imports from, for packages that read
+        their data through a real file path.
 
-        The same precedence the splash colours use, so every key under
-        `[tool.flet.splash]` can be overridden per platform without each one
-        spelling the lookup out again. A key that was renamed is read under
-        its former name too, so existing configuration keeps working.
-
-        Args:
-            key: Setting name below the `splash` table.
+        Flet's defaults come first, followed by the CLI option or else the
+        project settings; duplicates are dropped.
 
         Returns:
-            The configured value, or `None`.
+            Package names, in order.
         """
 
-        assert self.get_pyproject
-
-        for name in (key, SPLASH_KEY_ALIASES.get(key)):
-            if name is None:
-                continue
-            value = self.get_pyproject(
-                f"tool.flet.{self.config_platform}.splash.{name}"
-            ) or self.get_pyproject(f"tool.flet.splash.{name}")
-            if value is not None:
-                return value
-        return None
-
-    def _resolve_splash(self) -> dict:
-        """
-        Resolve splash colours and per-platform toggles from the options.
-
-        The colours and toggles reach the *template* from here, and the same
-        dict drives pixel generation later, so the XML that names a colour and
-        the PNG rendered beside it cannot disagree. `create_flutter_project`
-        hashes `template_data`, so changing a colour correctly re-renders.
-
-        Returns:
-            A dict with `android`, `ios`, `web`, `color` and `dark_color`.
-            Never `None` and never containing `None`: `create_flutter_project`
-            filters `None` values out of the context, which would leave the
-            template referencing an undefined key.
-        """
-
-        assert self.options
-        assert self.get_pyproject
-
-        def enabled(no_option, key: str) -> bool:
-            if no_option is not None:
-                return not no_option
-            configured = self.get_pyproject(f"tool.flet.splash.{key}")
-            return True if configured is None else bool(configured)
-
-        def color(option, key: str, default: str) -> str:
-            return option or self.splash_setting(key) or default
-
-        return {
-            "android": enabled(self.options.no_android_splash, "android"),
-            "ios": enabled(self.options.no_ios_splash, "ios"),
-            "web": enabled(self.options.no_web_splash, "web"),
-            "color": color(self.options.splash_color, "color", "#ffffff"),
-            "dark_color": color(
-                self.options.splash_dark_color, "dark_color", "#222222"
-            ),
-        }
-
-    def _resolve_boot_screen(self):
-        """
-        Resolve the boot screen configuration from pyproject.toml.
-
-        Merges the global `[tool.flet.boot_screen]` with the platform-specific
-        `[tool.flet.<platform>.boot_screen]` (platform wins per key), resolves
-        the selected screen `name` (default "flet") and its options table.
-
-        Falls back to the legacy `[tool.flet[.<platform>].app.boot_screen]` /
-        `app.startup_screen` (`show`/`message`) settings, mapping them onto the
-        built-in "flet" screen with a deprecation warning.
-
-        Returns a dict with `name` and `options_b64` (base64-encoded JSON of the
-        options table) for the cookiecutter template.
-        """
-        config_platform = self.config_platform
-
-        def merged(key):
-            result = {}
-            merge_dict(
-                result, copy.deepcopy(self.get_pyproject(f"tool.flet.{key}") or {})
-            )
-            merge_dict(
-                result,
-                copy.deepcopy(
-                    self.get_pyproject(f"tool.flet.{config_platform}.{key}") or {}
-                ),
-            )
-            return result
-
-        boot_screen = merged("boot_screen")
-
-        if boot_screen:
-            name = boot_screen.get("name", "flet")
-            options = boot_screen.get(name) or {}
-        else:
-            name = "flet"
-            options = {}
-
-        return {
-            "name": name,
-            "options_b64": base64.b64encode(json.dumps(options).encode("utf-8")).decode(
-                "ascii"
-            ),
-        }
-
-    def create_flutter_project(self, second_pass=False):
-        """
-        Render Flutter bootstrap project from template if template inputs changed.
-
-        Args:
-            second_pass: Whether this render happens after extension registration.
-
-        Returns:
-            `True` when template output changed and files were regenerated,
-            otherwise `False`.
-        """
-
-        assert self.options
-        assert self.get_pyproject
-        assert self.flutter_dir
-        assert self.template_data
-        assert self.build_dir
-        assert self.pubspec_path
-
-        hash = HashStamp(
-            self.build_dir / ".hash" / f"template-{'2' if second_pass else '1'}"
+        user_extract_packages = (
+            self.options.android_extract_packages
+            or self.get_platform_setting("extract_packages", [])
+        )
+        return list(
+            dict.fromkeys(ANDROID_DEFAULT_EXTRACT_PACKAGES + user_extract_packages)
         )
 
-        template_url = self.options.template or self.get_pyproject(
-            "tool.flet.template.url"
-        )
-
-        template_ref = self.options.template_ref or self.get_pyproject(
-            "tool.flet.template.ref"
-        )
-        if not template_ref:
-            template_ref = flet.version.flet_version
-
-        is_local_dev = False
-        # Identity printed in status / hashed for invalidation; may differ from
-        # the path cookiecutter actually reads when caching kicks in below.
-        template_source = template_url
-        if template_url:
-            # User-provided template (git repo or local path) — use checkout
-            checkout = template_ref
-        else:
-            # Check for local dev templates first (running from source checkout)
-            local_tpl = Path(__file__).resolve().parents[5] / "templates" / "build"
-            if local_tpl.is_dir():
-                template_url = str(local_tpl)
-                template_source = template_url
-                checkout = None
-                is_local_dev = True
-            else:
-                from flet_cli.utils.template_cache import get_cached_template_zip
-
-                template_source = DEFAULT_TEMPLATE_URL.format(version=template_ref)
-                template_url = str(
-                    get_cached_template_zip(template_source, template_ref)
-                )
-                checkout = None
-
-        hash.update(template_source)
-        hash.update(template_ref)
-
-        template_dir = self.options.template_dir or self.get_pyproject(
-            "tool.flet.template.dir"
-        )
-        hash.update(template_dir)
-        hash.update(self.template_data)
-
-        # Handed to the icon and splash stamps. Cookiecutter re-renders with
-        # `overwrite_if_exists=True`, so a re-render restores the template's
-        # placeholder assets over generated ones; without this the downstream
-        # stamps would be unchanged, generation would be skipped, and the
-        # artifacts would silently stay reverted.
-        self.template_digest = hash.digest()
-
-        hash_changed = hash.has_changed()
-
-        if hash_changed:
-            # create a new Flutter bootstrap project directory, if non-existent
-            if not second_pass:
-                self.flutter_dir.mkdir(parents=True, exist_ok=True)
-                status = f"[bold blue]Creating app shell from {template_source}"
-                if checkout:
-                    status += f' with ref "{template_ref}"'
-                status += "..."
-                self.update_status(status)
-
-            try:
-                from cookiecutter.main import cookiecutter
-
-                cookiecutter(
-                    template=template_url,
-                    checkout=checkout,
-                    directory=template_dir,
-                    output_dir=str(self.flutter_dir.parent),
-                    no_input=True,
-                    overwrite_if_exists=True,
-                    extra_context={
-                        k: v for k, v in self.template_data.items() if v is not None
-                    },
-                )
-            except Exception as e:
-                rmtree(self.flutter_dir)
-                self.cleanup(1, f"{e}")
-
-            # For local development, override flet dependency with path
-            repo_root = None
-            pubspec = None
-            if is_local_dev:
-                repo_root = flet.version.find_repo_root(Path(__file__).resolve().parent)
-                if repo_root:
-                    flet_pkg_path = str(repo_root / "packages" / "flet")
-                    pubspec = self.load_yaml(self.pubspec_path)
-                    pubspec["dependencies"]["flet"] = {"path": flet_pkg_path}
-                    pubspec.setdefault("dependency_overrides", {})["flet"] = {
-                        "path": flet_pkg_path
-                    }
-
-            # In test mode, inject the integration-test driver (and flutter_test)
-            # as dev dependencies. They are intentionally NOT in the template
-            # pubspec: that keeps it valid YAML for the release patch tooling and
-            # ensures a normal `flet build` never pulls them. flet_integration_test
-            # is publish_to:none, so for local dev it resolves to the in-repo
-            # package by path, and for an end user it is a git dependency pinned to
-            # this flet version's tag.
-            if getattr(self, "test_mode", False):
-                if pubspec is None:
-                    pubspec = self.load_yaml(self.pubspec_path)
-                dev_deps = pubspec.setdefault("dev_dependencies", {})
-                dev_deps["flutter_test"] = {"sdk": "flutter"}
-                if is_local_dev and repo_root:
-                    fit_pkg_path = str(repo_root / "packages" / "flet_integration_test")
-                    dev_deps["flet_integration_test"] = {"path": fit_pkg_path}
-                    pubspec.setdefault("dependency_overrides", {})[
-                        "flet_integration_test"
-                    ] = {"path": fit_pkg_path}
-                else:
-                    dev_deps["flet_integration_test"] = {
-                        "git": {
-                            "url": "https://github.com/flet-dev/flet.git",
-                            "ref": f"v{flet.version.flet_version}",
-                            "path": "packages/flet_integration_test",
-                        }
-                    }
-
-            # Only the web (Pyodide) build loads the packaged app as a Flutter
-            # asset; on native platforms serious_python places it inside the
-            # bundle, and a missing app/app.zip asset would fail the build.
-            if self.config_platform == "web":
-                if pubspec is None:
-                    pubspec = self.load_yaml(self.pubspec_path)
-                assets = pubspec.setdefault("flutter", {}).setdefault("assets", [])
-                for asset in ["app/app.zip", "app/app.zip.hash"]:
-                    if asset not in assets:
-                        assets.append(asset)
-
-            if pubspec is not None:
-                self.save_yaml(self.pubspec_path, pubspec)
-
-            pyproject_pubspec = self.get_pyproject("tool.flet.flutter.pubspec")
-
-            if pyproject_pubspec:
-                pyproject_pubspec = copy.deepcopy(pyproject_pubspec)
-                pubspec = self.load_yaml(self.pubspec_path)
-                # Replace individual dependency entries from pyproject rather
-                # than deep-merging them — a Dart dependency can only have one
-                # source, so merging {"path":…} with {"git":…} is invalid.
-                for section in (
-                    "dependencies",
-                    "dependency_overrides",
-                    "dev_dependencies",
-                ):
-                    if section in pyproject_pubspec:
-                        pubspec.setdefault(section, {}).update(
-                            pyproject_pubspec.pop(section)
-                        )
-                pubspec = merge_dict(pubspec, pyproject_pubspec)
-                self.save_yaml(self.pubspec_path, pubspec)
-
-            # make backup of pubspec.yaml
-            shutil.copyfile(self.pubspec_path, f"{self.pubspec_path}.orig")
-
-            if not second_pass:
-                console.log(f"Created app shell {self.emojis['checkmark']}")
-
-        hash.commit()
-
-        return hash_changed
-
-    def register_flutter_extensions(self):
-        """
-        Discover local Flutter extension packages and inject them into dependencies.
-        """
-
-        assert self.flutter_packages_dir
-        assert self.flutter_packages_temp_dir
-        assert isinstance(self.flutter_dependencies, dict)
-        assert self.template_data
-        assert self.build_dir
-
-        # Replace the permanent flutter-packages copy with this build's set. The
-        # temp dir is populated by serious_python's package step and is ABSENT
-        # when the app has no Flutter extensions — so always clear the old copy
-        # first, otherwise an extension removed since the previous build (e.g.
-        # dropping flet-video) would linger here and stay in the built app.
-        #
-        # Skip this when the package step ran with --skip-site-packages: in that
-        # mode serious_python does not repopulate the temp dir, so an absent temp
-        # dir means "unchanged" rather than "no extensions". Wiping here would
-        # delete the previous build's extensions and never restore them, breaking
-        # the Flutter build (unresolved web plugins). A removed extension changes
-        # the package requirements, flips the package hash, and takes the full
-        # (non-skip) path above instead.
-        if not self.site_packages_skipped:
-            if self.flutter_packages_dir.exists():
-                shutil.rmtree(self.flutter_packages_dir, ignore_errors=True)
-            if self.flutter_packages_temp_dir.exists():
-                # copy packages from temp to permanent location
-                shutil.move(self.flutter_packages_temp_dir, self.flutter_packages_dir)
-
-        if self.flutter_packages_dir.exists():
-            self.update_status("[bold blue]Registering Flutter user extensions...")
-
-            for fp in os.listdir(self.flutter_packages_dir):
-                if (self.flutter_packages_dir / fp / "pubspec.yaml").exists():
-                    ext_dir = str(self.flutter_packages_dir / fp)
-                    if self.verbose > 0:
-                        console.log(f"Found Flutter extension at {ext_dir}")
-                    self.flutter_dependencies[fp] = {"path": ext_dir}
-
-            self.template_data["flutter"]["dependencies"] = list(
-                self.flutter_dependencies.keys()
-            )
-
-            console.log(
-                f"Registered Flutter user extensions {self.emojis['checkmark']}"
-            )
-
-    def update_flutter_dependencies(self):
-        """
-        Merge resolved Flutter extension dependencies into `pubspec.yaml`.
-        """
-
-        assert self.pubspec_path
-        assert self.template_data
+    def get_android_activity(self) -> dict:
+        """Resolve what the app adds to its main activity, such as intent
+        filters, from project settings."""
         assert self.get_pyproject
-        assert self.build_dir
-        assert isinstance(self.flutter_dependencies, dict)
-
-        pubspec = self.load_yaml(self.pubspec_path)
-
-        # merge dependencies to a dest pubspec.yaml
-        for k, v in self.flutter_dependencies.items():
-            pubspec["dependencies"][k] = v
-
-        # make sure project_name is not named as any of the dependencies
-        for dep in pubspec["dependencies"]:
-            if dep == self.template_data["project_name"]:
-                self.cleanup(
-                    1,
-                    f"Project name cannot have the same name as one of its "
-                    f"dependencies: {dep}. Use --project option to specify "
-                    "a different project name.",
-                )
-
-        self.save_yaml(self.pubspec_path, pubspec)
-
-    def customize_icons(self):
-        """
-        Resolve the app icon for the target platform and generate every size.
-        """
-
-        assert self.package_app_path
-        assert self.flutter_dir
-        assert self.options
-        assert self.get_pyproject
-        assert self.build_dir
-        assert self.target_platform
-
-        platform = ICON_PLATFORMS.get(self.target_platform)
-        if platform is None:
-            return
-
-        hash = HashStamp(self.build_dir / ".hash" / "icons")
-        hash.update(ICONS_GENERATOR_VERSION)
-        hash.update(self.template_digest)
-
-        self.assets_path = self.package_app_path.joinpath("assets")
-
-        source_name = None
-        # Whether the source is a generic `icon.png` rather than artwork the
-        # author framed for this platform. A generic icon gets the platform's
-        # margin computed for it; `icon_<platform>.png` is a finished
-        # composition and is used exactly as supplied.
-        derived = False
-        if self.assets_path.exists():
-            # Only the target platform's chain is resolved; the other five
-            # lookups produced nothing this build could use.
-            source_name = self.find_platform_image(
-                self.assets_path, f"icon_{platform}", hash
-            )
-            if source_name is None:
-                source_name = self.find_platform_image(self.assets_path, "icon", hash)
-                derived = source_name is not None
-        hash.update(derived)
-
-        options = IconOptions(
-            background=self._resolve_icon_background(),
-            macos_style=self.get_pyproject("tool.flet.macos.icon_style") or "auto",
-            application_id=self.template_data["bundle_id"],
-        )
-        hash.update(options)
-
-        if source_name is None:
-            # Rule 2: with no user icon there is nothing to improve on. The
-            # template's committed icons are better than anything derivable
-            # from a finished `images/icon.png`, and flutter_launcher_icons
-            # overwrote them on every build.
-            self._restore_generated_icons()
-            hash.commit()
-            return
-
-        source_path = self.assets_path.joinpath(source_name)
-        hash.update(source_path.stat().st_mtime)
-
-        if not hash.has_changed() and not self._icons_missing(platform):
-            hash.commit()
-            return
-
-        self.update_status("[bold blue]Generating app icons...")
-
         try:
-            source, pre_rendered = load_source(source_path)
-        except SourceError as e:
-            console.log(f"Warning: {e}", style=warning_style)
-            hash.commit()
-            return
-
-        # Deliberately not squared first. Every icon is composed by centring
-        # the artwork on a square canvas anyway, so padding here would be
-        # redundant - and worse, it replaces the empty space with transparency,
-        # which makes finished opaque artwork look like a glyph and gets it
-        # reframed on top of being letterboxed.
-        if source.width != source.height:
-            console.log(
-                f"Warning: icon source is {source.width}x{source.height}, not "
-                "square. It is centred on each icon, with the remaining space "
-                "filled by icon_background where a platform needs an opaque "
-                "icon and left transparent elsewhere. Supply a square image to "
-                "frame it yourself.",
-                style=warning_style,
+            return normalize_android_activity(
+                self.get_pyproject("tool.flet.android.activity")
             )
+        except ValueError as exc:
+            self.cleanup(1, str(exc))
 
-        result = render_icons(
-            source,
-            options,
-            self._icon_spec(platform),
-            platform=platform,
-            pre_rendered=pre_rendered,
-            derived=derived,
-        )
-        for message in result.warnings:
-            console.log(f"Warning: {message}", style=warning_style)
-
-        self._backup_generated_icons(result)
-        write(
-            result, self.flutter_dir, declared_only=platform not in ICONS_CREATED_FRESH
-        )
-        console.log(f"Generated app icons {self.emojis['checkmark']}")
-
-        hash.commit()
-
-    def icon_background_value(self, platform: str) -> Optional[str]:
-        """
-        The configured colour behind a transparent icon, as written.
-
-        Kept separate from :meth:`_resolve_icon_background` because Android
-        needs the string: its background is a colour *resource* rather than
-        pixels, so it reaches the icon through the template.
-
-        Args:
-            platform: Platform whose key overrides the global one.
-
-        Returns:
-            The colour string, or `None` when nothing is configured.
-        """
-
+    def get_android_queries(self) -> dict:
+        """Resolve the apps, intents, and providers declared in the manifest's
+        `<queries>` from project settings."""
         assert self.get_pyproject
-
-        return self.get_pyproject(
-            f"tool.flet.{platform}.icon_background"
-        ) or self.get_pyproject("tool.flet.icon_background")
-
-    def _resolve_icon_background(self) -> tuple[int, int, int]:
-        """
-        Resolve the colour that sits behind artwork where alpha cannot survive.
-
-        `assets/icon.png` is expected to be transparent, so this is what the
-        user actually sees on Apple platforms: iOS has to be flattened because
-        the App Store rejects an alpha channel, and the macOS tile has to be
-        opaque to read as a tile at all. Until now both were hardcoded white
-        while Android's equivalent was configurable, so a dark-brand app had
-        no way to avoid a white square.
-
-        Resolves platform-specific over global, matching how the splash
-        colours already resolve.
-
-        Returns:
-            The colour as an RGB triple, defaulting to white.
-        """
-
-        assert self.get_pyproject
-
-        value = self.icon_background_value(self.config_platform)
-        if not value:
-            return (255, 255, 255)
         try:
-            return parse_hex_color(value)
-        except ValueError:
-            # A typo in a colour must not stop a build that would otherwise
-            # succeed; say what was ignored and carry on with the default.
-            console.log(
-                f'Warning: icon_background "{value}" is not a valid colour '
-                "(expected #rrggbb); using white.",
-                style=warning_style,
+            return normalize_android_queries(
+                self.get_pyproject("tool.flet.android.queries")
             )
-            return (255, 255, 255)
+        except ValueError as exc:
+            self.cleanup(1, str(exc))
 
-    def _icon_spec(self, platform: str):
-        """
-        Build the icon target list from what the rendered project declares.
-
-        A project states which icons it uses in its asset catalogs and web
-        manifest. Following that is what keeps generation from inventing
-        files nothing references.
-
-        Args:
-            platform: The `flet_platform_assets` platform name.
-
-        Returns:
-            An `AssetSpec`, or `None` to use the package defaults.
-        """
-
-        assert self.flutter_dir
-
-        if platform == "web":
-            manifest = self.flutter_dir / "web" / "manifest.json"
-            if manifest.is_file():
-                try:
-                    return web_targets_from_manifest(
-                        json.loads(manifest.read_text(encoding="utf-8"))
-                    )
-                except (json.JSONDecodeError, OSError):
-                    pass
-        if platform == "linux":
-            # Named after the desktop entry id, so the list is per-app.
-            return linux_targets(self.template_data["bundle_id"])
-        if platform == "windows":
-            existing = (
-                self.flutter_dir / "windows" / "runner" / "resources" / "app_icon.ico"
-            )
-            sizes = self.get_ico_sizes(existing)
-            if sizes:
-                return AssetSpec(ico_sizes=sizes)
-        return None
-
-    def _icons_missing(self, platform: str) -> bool:
-        """
-        Whether any icon this build should have produced is absent.
-
-        Guards the case where an unchanged stamp would skip generation but a
-        template re-render has already removed the output.
-
-        Args:
-            platform: The `flet_platform_assets` platform name.
-
-        Returns:
-            `True` when at least one expected file is missing.
-        """
-
-        assert self.flutter_dir
-
-        spec = self._icon_spec(platform) or DEFAULT_SPECS[platform]
-        for target in spec.targets:
-            if not (self.flutter_dir / target.relative_path).is_file():
-                return True
-        return False
-
-    def _backup_generated_icons(self, result) -> None:
-        """
-        Keep the template's own icon under `.icons-orig` before overwriting it.
-
-        A user who deletes their `assets/icon.png` should get the template's
-        icon back, not keep the one generated from an asset that no longer
-        exists.
-
-        Args:
-            result: The render whose targets are about to be written.
-        """
-
-        assert self.build_dir
-        assert self.flutter_dir
-
-        backup_dir = self.build_dir / ".icons-orig"
-        paths = [asset.relative_path for asset in result.assets] + list(result.ico)
-        for relative_path in paths:
-            target = self.flutter_dir / relative_path
-            saved = backup_dir / relative_path
-            if target.is_file() and not saved.exists():
-                saved.parent.mkdir(parents=True, exist_ok=True)
-                shutil.copy(target, saved)
-
-    def _restore_generated_icons(self) -> None:
-        """
-        Put back every icon a previous build overwrote.
-
-        Called when no user icon resolves, so that removing `assets/icon.png`
-        returns the app to the template's committed icons.
-        """
-
-        assert self.build_dir
-        assert self.flutter_dir
-
-        backup_dir = self.build_dir / ".icons-orig"
-        if not backup_dir.is_dir():
-            return
-        for saved in backup_dir.rglob("*"):
-            if saved.is_file():
-                target = self.flutter_dir / saved.relative_to(backup_dir)
-                target.parent.mkdir(parents=True, exist_ok=True)
-                shutil.copy(saved, target)
-
-    def customize_splash_images(self):
-        """
-        Resolve splash artwork for the target platform and generate every size.
-        """
-
-        assert self.package_app_path
-        assert self.flutter_dir
-        assert self.options
+    def get_android_receivers(self) -> dict:
+        """Resolve Android manifest receiver declarations from project settings."""
         assert self.get_pyproject
-        assert self.build_dir
-        assert self.target_platform
-        assert self.template_data
-
-        platform = SPLASH_PLATFORMS.get(self.target_platform)
-        if platform is None:
-            return
-
-        splash = self.template_data["splash"]
-        if not splash[platform]:
-            return
-
-        hash = HashStamp(self.build_dir / ".hash" / "splashes")
-        hash.update(SPLASH_GENERATOR_VERSION)
-        hash.update(self.template_digest)
-        hash.update(splash)
-
-        self.assets_path = self.package_app_path.joinpath("assets")
-
-        light_name = dark_name = None
-        derived = False
-        if self.assets_path.exists():
-
-            def resolve(*names):
-                for name in names:
-                    found = self.find_platform_image(self.assets_path, name, hash)
-                    if found:
-                        return found
-                return None
-
-            # The documented fallback chain, resolved for this platform only.
-            # Unlike icons, splash terminates at the icon, so every app gets a
-            # splash even with no splash asset of its own.
-            light_name = resolve(f"splash_{platform}", "splash")
-            if light_name is None:
-                # Fell through to the app icon. An icon fills its canvas by
-                # design, so it is framed rather than drawn at splash size.
-                light_name = resolve("icon")
-                derived = light_name is not None
-            dark_name = resolve(f"splash_dark_{platform}", "splash_dark")
-
-        options = SplashOptions(
-            color=splash["color"],
-            dark_color=splash["dark_color"],
-            icon_background=self.splash_setting("icon_background"),
-            icon_dark_background=self.splash_setting("icon_dark_background"),
-            icon_fit=self.splash_setting("icon_fit") or "contain",
-        )
-        hash.update(options)
-        hash.update(derived)
-
-        light_path = (
-            self.assets_path.joinpath(light_name)
-            if light_name
-            else self.flutter_dir.joinpath("images", "icon.png")
-        )
-        if light_name is None:
-            # The template's own icon, which is an icon like any other.
-            derived = True
-        if not light_path.is_file():
-            # A custom build template may ship no `images/icon.png`, leaving
-            # nothing to derive a splash from. The template ships 1x1
-            # transparent `drawable/splash.png` and `drawable/android12splash.png`
-            # so `@drawable/splash` and the Android 12 theme still resolve;
-            # without them this path fails resource linking outright rather
-            # than degrading to a plain background.
-            hash.commit()
-            return
-
-        dark_path = self.assets_path.joinpath(dark_name) if dark_name else None
-        for path in (light_path, dark_path):
-            if path is not None:
-                hash.update(str(path))
-                hash.update(path.stat().st_mtime)
-
-        if not hash.has_changed():
-            hash.commit()
-            return
-
-        self.update_status("[bold blue]Generating splash screens...")
-
         try:
-            light, _ = load_source(light_path)
-            dark = load_source(dark_path)[0] if dark_path is not None else None
-        except SourceError as e:
-            console.log(f"Warning: {e}", style=warning_style)
-            hash.commit()
-            return
-
-        light, warning = square(light)
-        if warning:
-            console.log(f"Warning: {warning}", style=warning_style)
-        if dark is not None:
-            dark = square(dark)[0]
-
-        result = render_splash(light, dark, options, platform=platform, derived=derived)
-        for message in result.warnings:
-            console.log(f"Warning: {message}", style=warning_style)
-
-        write(result, self.flutter_dir, declared_only=False)
-        if platform == "ios":
-            self.patch_launch_storyboard(light)
-        console.log(f"Generated splash screens {self.emojis['checkmark']}")
-
-        hash.commit()
-
-    def patch_launch_storyboard(self, image) -> None:
-        """
-        Correct the launch storyboard's size hint for the 1x launch image.
-
-        Interface Builder records the natural size of each referenced image.
-        Left at the template's placeholder value, Xcode warns on every build
-        that the asset does not match.
-
-        `ElementTree` is deliberately not used: it would reserialise the whole
-        document and mangle a declaration Xcode is particular about.
-
-        Args:
-            image: The light-mode artwork, at its full source size.
-        """
-
-        assert self.flutter_dir
-
-        storyboard = (
-            self.flutter_dir
-            / "ios"
-            / "Runner"
-            / "Base.lproj"
-            / "LaunchScreen.storyboard"
-        )
-        if not storyboard.is_file():
-            return
-
-        width, height = density_size(image.width, image.height, 1)
-        text = storyboard.read_text(encoding="utf-8")
-        patched, count = re.subn(
-            r'<image name="LaunchImage" width="\d+" height="\d+"/>',
-            f'<image name="LaunchImage" width="{width}" height="{height}"/>',
-            text,
-        )
-        if count != 1:
-            console.log(
-                "Warning: could not update the launch storyboard's image size "
-                f"({count} matches). The splash still renders; Xcode may warn.",
-                style=warning_style,
+            return normalize_android_receivers(
+                self.get_pyproject("tool.flet.android.receiver")
             )
-            return
-        storyboard.write_text(patched, encoding="utf-8")
+        except ValueError as exc:
+            self.cleanup(1, str(exc))
 
-    def _darwin_spm_active(self) -> bool:
-        """Whether to stage serious_python for Swift Package Manager (vs CocoaPods).
+    def get_android_services(self) -> dict:
+        """Resolve Android manifest service declarations from project settings."""
+        assert self.get_pyproject
+        try:
+            return normalize_android_services(
+                self.get_pyproject("tool.flet.android.service")
+            )
+        except ValueError as exc:
+            self.cleanup(1, str(exc))
 
-        On by default, matching Flutter 3.44+ (SPM enabled by default). Because
-        `serious_python_darwin` ships a `Package.swift`, Flutter always builds it
-        as an SPM plugin when SPM is enabled — even in a hybrid app where other,
-        non-SPM plugins (e.g. `flet-video`/media_kit) build with CocoaPods at the
-        same time. So serious_python must stage for SPM to match; it is NOT tied
-        to whether the app also pulls in non-SPM plugins. Users force CocoaPods
-        with `--no-swift-package-manager` (or `swift_package_manager = false` under
-        `[tool.flet]`) only when they've disabled SPM in Flutter itself. Flet does
-        not change Flutter's global SPM configuration.
+    def copy_android_resources(self):
         """
-        if self.package_platform not in ("iOS", "Darwin"):
-            return False
-        return self.get_bool_setting(
-            self.options.swift_package_manager, "swift_package_manager", True
-        )
+        Copy the app's own Android resources into the generated project.
 
-    def package_python_app(self):
-        """
-        Package Python app and dependencies into Flutter-consumable app archive.
-
-        Handles dependency resolution, cleanup/compile flags, cache checks, and
-        invokes `serious_python` packaging command.
+        `tool.flet.android.res_dir` names a directory, relative to the project,
+        laid out like Android's `res` directory, such as `drawable/ic_stat.png`
+        or `raw/alert.mp3`. Files copied by the previous build are removed first,
+        so deleting a resource from the directory also removes it from the app.
+        A keep rule protects the copied resources from release-build resource
+        shrinking, because Python code can refer to them only by name.
         """
 
-        assert self.options
         assert self.get_pyproject
         assert self.python_app_path
-        assert self.package_app_path
         assert self.build_dir
         assert self.flutter_dir
-        assert self.flutter_packages_dir
-        assert self.flutter_packages_temp_dir
-        assert self.template_data
 
-        hash = HashStamp(self.build_dir / ".hash" / "package")
+        if self.package_platform != "Android":
+            return
 
-        self.update_status("[bold blue]Packaging Python app...")
-        package_args = [
-            self.dart_exe,
-            "run",
-            "--suppress-analytics",
-            "serious_python:main",
-            "package",
-            str(self.package_app_path),
-            "--platform",
-            self.package_platform,
-            "--python-version",
-            self.python_release.short,
-        ]
-
-        if self.template_data["options"]["target_arch"]:
-            # serious_python's --arch is a Dart multi-option: values must be
-            # comma-separated or the flag repeated. Space-separated values
-            # after the first are silently treated as positional arguments.
-            package_args.extend(
-                ["--arch", ",".join(self.template_data["options"]["target_arch"])]
-            )
-
-        # Only the short version is passed; serious_python derives the full
-        # version, python-build date, and dart_bridge version from its own
-        # committed snapshot of the manifest.
-        package_env = {
-            "SERIOUS_PYTHON_VERSION": self.python_release.short,
-        }
-
-        # requirements
-        requirements_txt = self.python_app_path.joinpath("requirements.txt")
-
-        toml_dependencies = (
-            get_poetry_dependencies(self.get_pyproject("tool.poetry.dependencies"))
-            or get_project_dependencies(self.get_pyproject("project.dependencies"))
-            or []
+        res_path = self.flutter_dir / "android" / "app" / "src" / "main" / "res"
+        manifest_path = self.build_dir / ".hash" / "android-resources"
+        previous = (
+            manifest_path.read_text().splitlines() if manifest_path.exists() else []
         )
+        for relative in previous:
+            (res_path / relative).unlink(missing_ok=True)
 
-        platform_dependencies = get_project_dependencies(
-            self.get_pyproject(f"tool.flet.{self.config_platform}.dependencies")
-        )
-        if platform_dependencies:
-            toml_dependencies.extend(platform_dependencies)
-
-        dev_packages_configured = False
-        if len(toml_dependencies) > 0:
-            dev_packages = self.get_platform_setting("dev_packages", {})
-            if len(dev_packages) > 0:
-                for i in range(0, len(toml_dependencies)):
-                    package_name = Requirement(toml_dependencies[i]).name
-                    if package_name in dev_packages:
-                        package_location = dev_packages[package_name]
-                        dev_path = Path(package_location)
-                        if not dev_path.is_absolute():
-                            dev_path = (self.python_app_path / dev_path).resolve()
-                        if dev_path.exists():
-                            # Use Path.as_uri() so Windows drive paths render as
-                            # `file:///D:/a/...` rather than `file://D:\a\...`,
-                            # which pip otherwise treats as a UNC path and fails
-                            # to resolve.
-                            toml_dependencies[i] = (
-                                f"{package_name} @ {dev_path.as_uri()}"
-                            )
-                        else:
-                            toml_dependencies[i] = (
-                                f"{package_name} @ {package_location}"
-                            )
-                        dev_packages_configured = True
-                if dev_packages_configured:
-                    toml_dependencies.append("--no-cache-dir")
-
-            for toml_dep in toml_dependencies:
-                package_args.extend(["-r", toml_dep])
-
-        elif requirements_txt.exists():
-            if self.verbose > 1:
-                with open(requirements_txt, encoding="utf-8") as f:
-                    reqs_txt_contents = f.read()
-                    console.log(
-                        f"Contents of requirements.txt: {reqs_txt_contents}",
-                        style=verbose2_style,
-                    )
-                    hash.update(reqs_txt_contents)
-            package_args.extend(["-r", "-r", "-r", str(requirements_txt)])
-        else:
-            package_args.extend(["-r", f"flet=={flet.version.flet_version}"])
-
-        # site-packages variable
-        if self.package_platform != "Emscripten":
-            package_env["SERIOUS_PYTHON_SITE_PACKAGES"] = str(
-                self.build_dir / "site-packages"
+        setting = self.get_pyproject("tool.flet.android.res_dir")
+        if setting is None:
+            manifest_path.unlink(missing_ok=True)
+            return
+        if not isinstance(setting, str):
+            self.cleanup(
+                1, "Invalid tool.flet.android.res_dir: expected a directory path."
             )
-            # app staging dir: serious_python's `package` places the processed
-            # app here (no app.zip on native); the platform native build copies
-            # it into the bundle (Android zips it as a stored asset).
-            package_env["SERIOUS_PYTHON_APP"] = str(self.build_dir / "python-app")
-            # app bundle id: serious_python (>= 4.4.2) namespaces the generated
-            # iOS framework bundle identifiers under it. Without it they keep a
-            # shared `org.python.*` default that is byte-identical in every Flet
-            # app — see flet-dev/flet#6724.
-            bundle_id = (self.template_data or {}).get("bundle_id")
-            if bundle_id:
-                package_env["SERIOUS_PYTHON_BUNDLE_ID"] = bundle_id
-
-        # Swift Package Manager (darwin): tell serious_python's package command to
-        # do the host-side SPM staging (the podspec prepare_command doesn't run
-        # under SPM) and write the SP_NATIVE_SET cache-bust key to this file.
-        # serious_python defaults to SPM staging, so be explicit either way — set
-        # it false for the CocoaPods cases (e.g. an app using flet-video).
-        if self.package_platform in ("iOS", "Darwin"):
-            spm = self._darwin_spm_active()
-            package_env["SERIOUS_PYTHON_DARWIN_SPM"] = "true" if spm else "false"
-            if spm:
-                package_env["SERIOUS_PYTHON_SPM_KEY_FILE"] = str(
-                    self.build_dir / ".serious_python_spm_key"
-                )
-
-        # flutter-packages variable
-        if self.flutter_packages_temp_dir.exists():
-            rmtree(self.flutter_packages_temp_dir)
-
-        package_env["SERIOUS_PYTHON_FLUTTER_PACKAGES"] = str(
-            self.flutter_packages_temp_dir
-        )
-
-        # exclude
-        app_exclude = self.options.exclude or self.get_platform_setting(
-            "app.exclude", []
-        )
-        explicit_excludes = [
-            "build",
-            *app_exclude,
-            *(["assets"] if self.target_platform == "web" else []),
-        ]
-
-        default_excludes: list[str] = []
-        if self.get_bool_setting(
-            self.options.default_excludes, "app.default_excludes", True
-        ):
-            app_include = self.options.include or self.get_platform_setting(
-                "app.include", []
+        res_dir = self.python_app_path / setting
+        if not res_dir.is_dir():
+            self.cleanup(
+                1, f"Invalid tool.flet.android.res_dir: {res_dir} is not a directory."
             )
-            default_excludes = find_default_excludes(
-                self.package_app_path, app_include, explicit_excludes
+        try:
+            files = android_resource_files(res_dir)
+        except ValueError as exc:
+            self.cleanup(1, f"Invalid tool.flet.android.res_dir entry {exc}")
+
+        clashes = android_resource_clashes(files, res_path)
+        if clashes:
+            self.cleanup(
+                1,
+                "Android resources in tool.flet.android.res_dir clash with "
+                "resources Flet generates; rename them:\n"
+                + "\n".join(
+                    f"  {file.as_posix()} (Flet's {generated.as_posix()})"
+                    for file, generated in clashes
+                ),
             )
 
-        exclude_list = list(dict.fromkeys(explicit_excludes + default_excludes))
-        # one flag per path: serious_python (>= 5.0.0) doesn't split values on
-        # commas, so paths containing `,` survive
-        for path in exclude_list:
-            package_args.extend(["--exclude", path])
+        with self.step("[bold blue]Copying Android resources..."):
+            copied = []
+            for relative in files:
+                target = res_path / relative
+                target.parent.mkdir(parents=True, exist_ok=True)
+                shutil.copy2(res_dir / relative, target)
+                copied.append(relative.as_posix())
 
-        if default_excludes:
-            console.log(
-                "Excluded from app package by default: "
-                f"{', '.join(default_excludes)} "
-                "(use --include <path> or --no-default-excludes to package them)",
-                markup=False,
-            )
-            env_files = [
-                p for p in default_excludes if p == ".env" or p.startswith(".env.")
-            ]
-            if env_files:
-                it = "it" if len(env_files) == 1 else "them"
-                console.log(
-                    f"Warning: {', '.join(env_files)} not packaged. If the app "
-                    f"loads {it} at runtime (e.g. with python-dotenv), package "
-                    f"{it} with `--include {' '.join(env_files)}` or "
-                    f"`include = {json.dumps(env_files)}` under [tool.flet.app] "
-                    "in pyproject.toml.",
-                    style=warning_style,
-                    markup=False,
-                )
-        if self.verbose > 0:
-            console.log(
-                f"App package exclude list: {exclude_list}",
-                style=verbose1_style,
-                markup=False,
-            )
+            keep_xml = android_resources_keep_xml(files)
+            if keep_xml is not None:
+                keep_path = res_path / ANDROID_RESOURCES_KEEP_FILE
+                keep_path.parent.mkdir(parents=True, exist_ok=True)
+                keep_path.write_text(keep_xml)
+                copied.append(ANDROID_RESOURCES_KEEP_FILE.as_posix())
 
-        # source-packages
-        source_packages = self.options.source_packages or self.get_platform_setting(
-            "source_packages"
-        )
-        if source_packages:
-            package_env["SERIOUS_PYTHON_ALLOW_SOURCE_DISTRIBUTIONS"] = ",".join(
-                source_packages
-            )
+            manifest_path.parent.mkdir(parents=True, exist_ok=True)
+            manifest_path.write_text("\n".join(copied))
 
-        # android-extract-packages: path-hungry packages shipped extracted to disk
-        # instead of inside the zip (serious_python Android native-mmap packaging).
-        # A built-in default set covers commonly-broken packages; the user list
-        # (CLI / pyproject) is merged on top. Consumed by the serious_python_android
-        # Gradle split during `flutter build`, so the env var is set on build_env
-        # (see _run_flutter_command), not on the package step.
-        self.android_extract_packages: list[str] = []
-        if self.package_platform == "Android":
-            user_extract_packages = (
-                self.options.android_extract_packages
-                or self.get_platform_setting("extract_packages", [])
-            )
-            self.android_extract_packages = list(
-                dict.fromkeys(ANDROID_DEFAULT_EXTRACT_PACKAGES + user_extract_packages)
-            )
-
-        if self.get_bool_setting(self.options.compile_app, "compile.app", True):
-            package_args.append("--compile-app")
-
-        if self.get_bool_setting(
-            self.options.compile_packages, "compile.packages", True
-        ):
-            package_args.append("--compile-packages")
-
-        cleanup_app = self.get_bool_setting(
-            self.options.cleanup_app, "cleanup.app", False
-        )
-        cleanup_packages = self.get_bool_setting(
-            self.options.cleanup_packages, "cleanup.packages", True
-        )
-
-        if cleanup_app_files := (
-            self.options.cleanup_app_files
-            or self.get_platform_setting("cleanup.app_files")
-        ):
-            if isinstance(cleanup_app_files, str):
-                cleanup_app_files = [
-                    value.strip() for value in cleanup_app_files.split(",")
-                ]
-            if isinstance(cleanup_app_files, list):
-                for glob_pattern in cleanup_app_files:
-                    if glob_pattern.strip():
-                        package_args.extend(
-                            ["--cleanup-app-files", glob_pattern.strip()]
-                        )
-                cleanup_app = True
-
-        if cleanup_package_files := (
-            self.options.cleanup_package_files
-            or self.get_platform_setting("cleanup.package_files")
-        ):
-            if isinstance(cleanup_package_files, str):
-                cleanup_package_files = [
-                    value for value in cleanup_package_files.split(",")
-                ]
-            if isinstance(cleanup_package_files, list):
-                for glob_pattern in cleanup_package_files:
-                    if glob_pattern.strip():
-                        package_args.extend(
-                            ["--cleanup-package-files", glob_pattern.strip()]
-                        )
-                cleanup_packages = True
-
-        if cleanup_app:
-            package_args.append("--cleanup-app")
-
-        if cleanup_packages:
-            package_args.append("--cleanup-packages")
-
-        if self.verbose > 0:
-            console.log(
-                f"Compile app: {'--compile-app' in package_args}, "
-                f"cleanup app: {cleanup_app}, cleanup packages: {cleanup_packages} "
-                "(cleanup removes serious_python's default junk globs plus any "
-                "--cleanup-app-files/--cleanup-package-files)",
-                style=verbose1_style,
-            )
-
-        if self.verbose > 1:
-            package_args.append("--verbose")
-
-        # check if site-packages installation could be skipped
-        for arg in package_args:
-            hash.update(arg)
-
-        if not dev_packages_configured:
-            if not hash.has_changed():
-                package_args.append("--skip-site-packages")
-                # serious_python skips copying Flutter packages to the temp dir
-                # under --skip-site-packages, so register_flutter_extensions must
-                # keep (not wipe) the permanent flutter-packages copy from the
-                # previous build.
-                self.site_packages_skipped = True
-            else:
-                if self.flutter_packages_dir.exists():
-                    shutil.rmtree(self.flutter_packages_dir, ignore_errors=True)
-
-        package_result = self.run(
-            package_args,
-            cwd=str(self.flutter_dir),
-            env=package_env,
-            capture_output=self.verbose < 1,
-        )
-
-        if package_result.returncode != 0:
-            if isinstance(package_result.stdout, str):
-                console.log(package_result.stdout, style=verbose1_style)
-            if isinstance(package_result.stderr, str):
-                console.log(package_result.stderr, style=error_style)
-            self.cleanup(package_result.returncode)
-
-        hash.commit()
-
-        # verify the package output: web ships app/app.zip; native platforms
-        # stage the unpacked app to build/app for the native build to bundle.
-        if self.package_platform == "Emscripten":
-            app_zip_path = self.flutter_dir.joinpath("app", "app.zip")
-            if not os.path.exists(app_zip_path):
-                self.cleanup(1, "Flet app package app/app.zip was not created.")
-        else:
-            app_staging_dir = self.build_dir / "python-app"
-            if not app_staging_dir.exists():
-                self.cleanup(
-                    1, f"Flet app package was not staged to {app_staging_dir}."
-                )
-
-        console.log(f"Packaged Python app {self.emojis['checkmark']}")
-
-        # Drop the matching Pyodide runtime into the Flutter project's web/
-        # directory so it ships in `flutter build web` output. Cached
-        # per-version under ~/.flet/pyodide/<version>/ so subsequent builds
-        # are no-ops.
-        #
-        # Skipped in CDN mode: `patch_index.py` then points `flet.pyodideUrl`
-        # at jsdelivr, so a bundled copy would add ~15 MB to the build that
-        # the browser never requests.
-        if self.package_platform == "Emscripten":
-            pyodide_dest = self.flutter_dir / "web" / "pyodide"
-            if self.resolve_no_cdn():
-                from flet_cli.utils.pyodide import ensure_pyodide
-
-                self.update_status("[bold blue]Preparing Pyodide runtime...")
-                ensure_pyodide(self.python_release.pyodide, pyodide_dest)
-                console.log(
-                    f"Pyodide {self.python_release.pyodide} ready "
-                    f"{self.emojis['checkmark']}"
-                )
-            elif pyodide_dest.exists():
-                # The Flutter project is reused across builds, so a copy left
-                # by an earlier `--no-cdn` build would otherwise still ship.
-                shutil.rmtree(pyodide_dest, ignore_errors=True)
-
-    def resolve_no_cdn(self) -> bool:
+    def resolve_permissions(self) -> list[str]:
         """
-        Whether CanvasKit, Pyodide and fallback fonts should be bundled with
-        the app instead of loaded from their CDNs.
+        The cross-platform permission bundles to apply: `--permissions`, else
+        `[tool.flet.<platform>].permissions`, else `[tool.flet].permissions`.
+
+        A platform list replaces the common one, so `[]` applies none on that
+        platform.
 
         Returns:
-            True when `--no-cdn` was passed or `tool.flet.web.cdn` is `false`.
+            Bundle names, e.g. `["location", "camera"]`.
         """
-        return bool(
-            self.options.no_cdn or self.get_pyproject("tool.flet.web.cdn") == False  # noqa: E712
+
+        assert self.options
+        return list(
+            self.options.permissions or self.get_platform_setting("permissions") or []
         )
 
-    def build_wasm(self) -> bool:
-        """
-        Whether to add Flutter's `--wasm` target to the web build.
-
-        Flutter emits the dart2wasm output for the `skwasm` renderer, and the
-        generated `flutter_bootstrap.js` pins `flutterConfig.renderer` to the
-        resolved `web_renderer`. Pinning `canvaskit` makes Flutter's loader
-        skip the dart2wasm build, so it is worth compiling only when the
-        renderer leaves it selectable.
-
-        Returns:
-            True when the resolved renderer is `auto` or `skwasm` and the wasm
-                target was not turned off.
-        """
-        return not self.template_data["no_wasm"] and self.template_data[
-            "web_renderer"
-        ] in ("auto", "skwasm")
-
-    def get_bool_setting(self, cli_option, pyproj_setting, default_value):
-        """
-        Resolve a boolean setting with precedence: CLI option, pyproject, default.
-
-        Args:
-            cli_option: Value from CLI argument.
-            pyproj_setting: Relative key under `tool.flet.<platform>.` and
-                `tool.flet.`.
-            default_value: Fallback value when no override is defined.
-
-        Returns:
-            Resolved boolean-like setting value.
-        """
-
-        return (
-            cli_option
-            if cli_option is not None
-            else self.get_platform_setting(pyproj_setting, default_value)
-        )
-
-    def get_platform_setting(self, pyproj_setting, default_value=None):
+    def get_platform_setting(self, pyproj_setting, default_value=None, platform=None):
         """
         Resolve a pyproject setting with precedence: platform, global, default.
 
-        The platform value wins whenever it is set, even when it is empty, so
-        `[]` or `{}` under `tool.flet.<platform>.` clears a global list or table
-        for that platform.
+        The platform value wins whenever it is set, even when it is empty or
+        false, so `[]`, `{}` or `""` under `tool.flet.<platform>.` clears a
+        global value for that platform.
 
         Args:
             pyproj_setting: Relative key under `tool.flet.<platform>.` and
                 `tool.flet.`.
             default_value: Fallback value when neither key is defined.
+            platform: Platform whose table overrides the global one. Defaults
+                to the platform being built.
 
         Returns:
             Resolved setting value.
@@ -2941,7 +3679,7 @@ class BaseBuildCommand(BaseFlutterCommand):
 
         assert self.get_pyproject
         for key in (
-            f"tool.flet.{self.config_platform}.{pyproj_setting}",
+            f"tool.flet.{platform or self.config_platform}.{pyproj_setting}",
             f"tool.flet.{pyproj_setting}",
         ):
             value = self.get_pyproject(key)
@@ -3058,37 +3796,7 @@ class BaseBuildCommand(BaseFlutterCommand):
         if self.package_platform == "Emscripten" and self.build_wasm():
             build_args.append("--wasm")
 
-        android_signing_key_store = (
-            self.options.android_signing_key_store
-            or self.get_pyproject("tool.flet.android.signing.key_store")
-            or os.getenv("FLET_ANDROID_SIGNING_KEY_STORE")
-        )
-        if android_signing_key_store:
-            build_env["FLET_ANDROID_SIGNING_KEY_STORE"] = android_signing_key_store
-
-        key_store_password = (
-            self.options.android_signing_key_store_password
-            or os.getenv("FLET_ANDROID_SIGNING_KEY_STORE_PASSWORD")
-        )
-        key_password = self.options.android_signing_key_password or os.getenv(
-            "FLET_ANDROID_SIGNING_KEY_PASSWORD"
-        )
-        if key_store_password or key_password:
-            build_env["FLET_ANDROID_SIGNING_KEY_STORE_PASSWORD"] = (
-                key_store_password if key_store_password else key_password
-            )
-            build_env["FLET_ANDROID_SIGNING_KEY_PASSWORD"] = (
-                key_password if key_password else key_store_password
-            )
-
-        if android_signing_key_store:
-            android_signing_key_alias = (
-                self.options.android_signing_key_alias
-                or self.get_pyproject("tool.flet.android.signing.key_alias")
-                or os.getenv("FLET_ANDROID_SIGNING_KEY_ALIAS")
-                or "upload"
-            )
-            build_env["FLET_ANDROID_SIGNING_KEY_ALIAS"] = android_signing_key_alias
+        build_env.update(self.get_android_signing_env())
 
         flutter_build_args = (
             self.options.flutter_build_args
@@ -3176,12 +3884,13 @@ class BaseBuildCommand(BaseFlutterCommand):
                 "Flutter SDK.",
             )
 
-        console.log(
+        self.warn(
             f"The Flutter SDK at {escape(str(self.flutter_exe))} builds ARM64 "
             "Windows apps, but Flet's Python runtime for Windows is x64-only. "
             f"Flet will use its own Flutter {self.required_flutter_version} (x64) "
             "to build an x64 app, which runs on Windows on ARM.",
-            style=warning_style,
+            title="Flutter SDK",
+            prefix="",
         )
         return False
 
@@ -3227,76 +3936,78 @@ class BaseBuildCommand(BaseFlutterCommand):
         assert self.assets_path
         assert self.target_platform
 
-        self.update_status(
-            f"[bold blue]Copying build to [cyan]{self.rel_out_dir}[/cyan] directory...",
-        )
-
-        def make_ignore_fn(out_dir, out_glob):
-            """
-            Create a shutil ignore callback that keeps only one selected output glob.
-            """
-
-            def ignore(path, names):
-                """
-                Filter sibling entries at `out_dir` so only `out_glob` is copied.
-                """
-
-                if path == out_dir and out_glob != "*":
-                    return [f for f in os.listdir(path) if f != out_glob]
-                return []
-
-            return ignore
-
-        searched_outputs = []
-        copied = False
-        for build_output in self.platforms[self.target_platform]["outputs"]:
-            build_output_dir = self.resolve_output_path(build_output)
-            searched_outputs.append(build_output_dir)
-
+        with self.step("[bold blue]Preparing build output..."):
             if self.verbose > 0:
                 console.log(
-                    "Copying build output from: " + build_output_dir,
+                    f"Output directory: {self.rel_out_dir}",
                     style=verbose1_style,
+                    markup=False,
                 )
 
-            build_output_glob = os.path.basename(build_output_dir)
-            build_output_dir = os.path.dirname(build_output_dir)
-            if not os.path.isdir(build_output_dir) or not any(
-                build_output_glob in ("*", f) for f in os.listdir(build_output_dir)
-            ):
-                continue
-            copied = True
+            def make_ignore_fn(out_dir, out_glob):
+                """
+                Create a shutil ignore callback that keeps only one selected
+                output glob.
+                """
 
-            if self.out_dir.exists():
-                rmtree(str(self.out_dir))
-            self.out_dir.mkdir(parents=True, exist_ok=True)
+                def ignore(path, names):
+                    """
+                    Filter sibling entries at `out_dir` so only `out_glob` is copied.
+                    """
 
-            # copy build result to out_dir
-            copy_tree(
-                build_output_dir,
-                str(self.out_dir),
-                ignore=make_ignore_fn(build_output_dir, build_output_glob),
-            )
+                    if path == out_dir and out_glob != "*":
+                        return [f for f in os.listdir(path) if f != out_glob]
+                    return []
 
-        if not copied:
-            self.cleanup(
-                1,
-                "Build output not found in "
-                + ", ".join(escape(path) for path in searched_outputs),
-            )
+                return ignore
 
-        if self.target_platform == "web":
-            self.prune_cdn_assets()
-            if self.assets_path.exists():
-                # copy `assets` directory contents to the output directory
-                copy_tree(str(self.assets_path), str(self.out_dir))
-        elif self.target_platform in {"apk", "aab"}:
-            self.rename_android_build_outputs()
+            searched_outputs = []
+            copied = False
+            for build_output in self.platforms[self.target_platform]["outputs"]:
+                build_output_dir = self.resolve_output_path(build_output)
+                searched_outputs.append(build_output_dir)
 
-        console.log(
-            f"Copied build to [cyan]{self.rel_out_dir}[/cyan] "
-            f"directory {self.emojis['checkmark']}"
-        )
+                if self.verbose > 0:
+                    console.log(
+                        "Copying build output from: " + build_output_dir,
+                        style=verbose1_style,
+                    )
+
+                build_output_glob = os.path.basename(build_output_dir)
+                build_output_dir = os.path.dirname(build_output_dir)
+                if not os.path.isdir(build_output_dir) or not any(
+                    build_output_glob in ("*", f) for f in os.listdir(build_output_dir)
+                ):
+                    continue
+                copied = True
+
+                if self.out_dir.exists():
+                    rmtree(str(self.out_dir))
+                self.out_dir.mkdir(parents=True, exist_ok=True)
+
+                # copy build result to out_dir
+                copy_tree(
+                    build_output_dir,
+                    str(self.out_dir),
+                    ignore=make_ignore_fn(build_output_dir, build_output_glob),
+                )
+
+            if not copied:
+                self.cleanup(
+                    1,
+                    "Build output not found in "
+                    + ", ".join(escape(path) for path in searched_outputs),
+                )
+
+            if self.target_platform == "web":
+                self.prune_cdn_assets()
+                if self.assets_path.exists():
+                    # copy `assets` directory contents to the output directory
+                    copy_tree(str(self.assets_path), str(self.out_dir))
+            elif self.target_platform in {"apk", "aab"}:
+                self.rename_android_build_outputs()
+
+            console.log(f"Copied build {self.emojis['checkmark']}")
 
     def prune_cdn_assets(self):
         """
@@ -3369,10 +4080,11 @@ class BaseBuildCommand(BaseFlutterCommand):
 
             renamed_path = output_file.with_name(renamed)
             if renamed_path.exists():
-                console.log(
+                self.warn(
                     f"Skipping rename of [cyan]{name}[/cyan] because "
                     f"[cyan]{renamed}[/cyan] already exists.",
-                    style=warning_style,
+                    title="Build output",
+                    prefix="",
                 )
                 continue
 
@@ -3383,6 +4095,35 @@ class BaseBuildCommand(BaseFlutterCommand):
                     f"[cyan]{renamed}[/cyan].",
                     style=verbose1_style,
                 )
+
+    @staticmethod
+    def default_artifact_name(
+        config_platform: Optional[str], product_name: Any, project_name: Any
+    ) -> str:
+        """
+        The artifact name when none is set.
+
+        On macOS the `.app` name is what users see: Finder, Launchpad,
+        Spotlight and the Dock show it, and `CFBundleName` (the app menu,
+        "About …", "Quit …") is `$(PRODUCT_NAME)`, the artifact name. So it
+        defaults to the product name there, without the `/` and `:` a macOS
+        file name can't contain. Elsewhere it names an executable and
+        defaults to the project name.
+
+        Args:
+            config_platform: The `[tool.flet.<platform>]` section in use.
+            product_name: The resolved product name.
+            project_name: The project name as given (not slugified).
+
+        Returns:
+            The artifact name to build with.
+        """
+
+        if config_platform == "macos":
+            name = str(product_name).replace("/", "-").replace(":", "-").strip()
+            if name:
+                return name
+        return str(project_name)
 
     @staticmethod
     def escape_single_quoted_yaml(value: Optional[str]) -> str:
@@ -3511,12 +4252,10 @@ class BaseBuildCommand(BaseFlutterCommand):
 
         When multiple files share the same base name (e.g. `icon.png` and
         `icon.svg`), incompatible formats are filtered out and the rest are
-        ranked so a raster image (`.png` first) always wins, making the
-        choice deterministic regardless of filesystem ordering. Formats the
-        generator cannot use are dropped: `.svg` (vector, never decoded),
-        `.icns` (macOS-only) and `.ico` (Windows-only). If
-        the only candidate is a vector image, a warning is logged and `None`
-        is returned so the default icon is used.
+        ranked so existing raster images (`.png` first) win over SVG, making
+        the choice deterministic regardless of filesystem ordering. SVG is
+        rendered by the source loader. `.icns` is macOS-only and `.ico` is
+        Windows-only.
 
         Args:
             src_path: Source assets directory.
@@ -3527,18 +4266,15 @@ class BaseBuildCommand(BaseFlutterCommand):
             File name of matched image, or `None` if not found.
         """
 
-        # Drop candidates that cannot serve this target: .svg is vector and
-        # is never decoded, while .icns and .ico are container formats that
-        # only make sense for the platform that defines them. Pillow reads
+        # Drop candidates that cannot serve this target: .icns and .ico are
+        # container formats for the platform that defines them. Pillow reads
         # both, and `load_source` takes their largest frame, but using a
         # macOS icon set as an Android launcher icon is not what the file
         # name asked for.
         def _incompatible(p: str) -> bool:
             ext = Path(p).suffix.lower()
-            return (
-                ext == ".svg"
-                or (ext == ".icns" and self.target_platform != "macos")
-                or (ext == ".ico" and self.target_platform != "windows")
+            return (ext == ".icns" and self.target_platform != "macos") or (
+                ext == ".ico" and self.target_platform != "windows"
             )
 
         # glob order is filesystem-dependent — sort so the choice is
@@ -3556,6 +4292,7 @@ class BaseBuildCommand(BaseFlutterCommand):
             ".tiff": 5,
             ".ico": 6,
             ".icns": 6,
+            ".svg": 7,
         }
         candidates = sorted(glob.glob(str(src_path.joinpath(f"{image_name}.*"))))
         images = sorted(
@@ -3564,20 +4301,6 @@ class BaseBuildCommand(BaseFlutterCommand):
         )
 
         if not images:
-            # Nothing usable. If the only candidate was a vector image (e.g.
-            # an icon.svg with no raster sibling), say why it's ignored
-            # instead of silently falling back to the default icon.
-            svg = next(
-                (p for p in candidates if Path(p).suffix.lower() == ".svg"), None
-            )
-            if svg:
-                console.log(
-                    f'Warning: "{Path(svg).name}" is a vector (SVG) image and '
-                    f'cannot be used for "{image_name}". Provide a raster '
-                    f'"{image_name}.png" to customize it — using the default '
-                    f"for now.",
-                    style=warning_style,
-                )
             return None
 
         best = images[0]
@@ -3585,6 +4308,9 @@ class BaseBuildCommand(BaseFlutterCommand):
             console.log(f'Found "{image_name}" image at {best}', style=verbose1_style)
         hash.update(best)
         hash.update(Path(best).stat().st_mtime)
+        if Path(best).suffix.lower() == ".svg":
+            # SVG is often rewritten by generators that preserve timestamps.
+            hash.update(hashlib.sha256(Path(best).read_bytes()).hexdigest())
         return Path(best).name
 
     def run(self, args, cwd, env: Optional[dict] = None, capture_output=True):

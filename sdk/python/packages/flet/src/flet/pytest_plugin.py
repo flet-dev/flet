@@ -24,6 +24,28 @@ try:
 except ImportError:  # pragma: no cover - plugin degrades to a no-op
     _HAS_ASYNCIO = False
 
+_config = None
+
+
+def pytest_configure(config):
+    global _config
+    _config = config
+
+
+def ensure_newline() -> None:
+    """
+    End pytest's progress line (`tests/test_app.py ..`) so that output written
+    next starts on its own line.
+
+    Does nothing outside pytest, or when pytest captures output: captured
+    output is reported separately and must not break the progress line.
+    """
+    if _config is None or _config.getoption("capture", None) != "no":
+        return
+    reporter = _config.pluginmanager.get_plugin("terminalreporter")
+    if reporter is not None:
+        reporter.ensure_newline()
+
 
 def _is_device_mode() -> bool:
     # Device mode (app under test runs on-device with embedded Python) is the

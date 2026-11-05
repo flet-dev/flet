@@ -216,7 +216,6 @@ ex = None
 try:
     import certifi
 
-    os.environ["REQUESTS_CA_BUNDLE"] = certifi.where()
     os.environ["SSL_CERT_FILE"] = certifi.where()
 
     if os.getenv("FLET_PLATFORM") == "android":

@@ -1,0 +1,27 @@
+[project]
+name = "refresh-indicator-pull-to-refresh"
+version = "1.0.0"
+description = "Prepends a new message to a list when it is pulled down."
+requires-python = ">=3.10"
+keywords = ["refresh", "pull to refresh", "list"]
+authors = [{ name = "Flet team", email = "hello@flet.dev" }]
+dependencies = ["flet"]
+
+[dependency-groups]
+dev = ["flet-cli", "flet-desktop", "flet-web"]
+
+[tool.flet.gallery]
+categories = ["Layout/RefreshIndicator"]
+
+[tool.flet.metadata]
+title = "Pull to refresh"
+docs_intro = """Pull the list down from its top to load a new message. The indicator spins until the async `on_refresh` handler returns:"""
+controls = ["SafeArea", "RefreshIndicator", "ListView", "ListTile", "Text"]
+layout_pattern = "single-panel"
+complexity = "basic"
+features = ["pull to refresh", "async refresh handler"]
+
+[tool.flet]
+org = "dev.flet"
+company = "Flet"
+copyright = "Copyright (C) 2023-2026 by Flet"

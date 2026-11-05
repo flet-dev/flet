@@ -1,7 +1,7 @@
 import 'package:data_table_2/data_table_2.dart';
 import 'package:flet/flet.dart' as ft;
 import 'package:flet/flet.dart';
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 
 import 'utils/datatable.dart';
 
