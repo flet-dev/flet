@@ -43,8 +43,8 @@ const plans = [
       '100 MB storage',
       'Flet support',
     ],
-    action: 'Start free trial',
-    href: 'https://studio.flet.dev/pricing',
+    action: 'Start building',
+    href: 'https://studio.flet.dev',
     featured: true,
   },
   {
