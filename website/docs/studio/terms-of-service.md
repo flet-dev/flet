@@ -93,7 +93,7 @@ We may, but are not obligated to, investigate suspected violations and may take 
 
 ### 5.2 License to AppVeyor
 
-You grant AppVeyor a worldwide, non-exclusive, royalty-free, fully paid license to host, store, transmit, display, copy, build, sign, and execute your User Content **solely as needed to operate and provide the Service to you**, including making backups, performing maintenance, and enabling features you have requested, such as building your apps, signing them, uploading them to the stores you choose, publishing them on download pages, and committing them to the GitHub repositories you connect. The license is limited to these operational purposes; it is not a license to publish, monetize, or repurpose your User Content.
+You grant AppVeyor, and the service providers acting on our behalf, a worldwide, non-exclusive, royalty-free, fully paid license to host, store, transmit, display, copy, build, sign, and execute your User Content **solely as needed to operate and provide the Service to you**, including making backups, performing maintenance, and enabling features you have requested, such as building your apps, signing them, uploading them to the stores you choose, publishing them on download pages, and committing them to the GitHub repositories you connect. The license is limited to these operational purposes; it is not a license to publish, monetize, or repurpose your User Content.
 
 This license terminates when you delete the relevant User Content or close your account, except that we may retain copies in routine backups for a limited period and as required by law, as described in our [Privacy Policy](privacy-policy.md).
 
@@ -151,7 +151,7 @@ Publishing uses your own accounts with Apple, Google, Microsoft, and GitHub, and
 
 ### 7.2 Your credentials
 
-To sign and publish your apps, you can store credentials in Flet Studio, such as Android keystores and their passwords, Apple API keys and certificates, Google Play service accounts, Microsoft app secrets, and GitHub authorizations. You authorize us to store them and to use them only to perform the actions you request. We encrypt them as described in our [Privacy Policy](privacy-policy.md). You can delete them at any time, and they are deleted with your account. You can also revoke them with the provider that issued them.
+To sign and publish your apps, you can store credentials in Flet Studio, such as Android keystores and their passwords, Apple API keys and certificates, Google Play service accounts, Microsoft app secrets, and GitHub authorizations. You authorize us to store them and to use them only to perform the actions you request. We encrypt them as described in our [Privacy Policy](privacy-policy.md). You can delete them at any time, and they are deleted with your account. A deleted credential stops being used right away; encrypted copies can remain in our backups for up to 90 days. You can also revoke them with the provider that issued them.
 
 **Keep your own backup of your Android upload keystores**, including any keystore Flet Studio created for you, and of any other signing key you cannot easily replace. If a key is lost, you may be unable to publish updates to an app, and AppVeyor is not liable for that loss (see Section 12).
 
@@ -161,13 +161,13 @@ Each build runs in its own virtual machine, on computers that we operate or rent
 
 ### 7.4 Download pages
 
-A download page is public: anyone with its link can open it and download the builds published on it. Releases on a download page expire after the period your plan provides. Anyone can report a download page to us. We may disable or remove a download page, or a release on it, that we believe violates these Terms.
+A download page is public: anyone with its link can open it and download the builds published on it. Releases on a download page expire after the period your plan provides; an expired release can no longer be downloaded. A download link is not access control: anyone who has it can use it. Anyone can report a download page to us. We may disable or remove a download page, or a release on it, that we believe violates these Terms.
 
 When you send device registration links to iOS testers, the identifiers of the devices they register (UDID, model, and name) are sent to your Apple Developer account. You are responsible to your testers for that use of their information.
 
 ### 7.5 GitHub sync
 
-When you connect an app to a GitHub repository, changes are synced in both directions: changes you make in Flet Studio are committed to the repository, and changes pushed to the repository are brought into Flet Studio. A change from GitHub can replace edits in Flet Studio to the same files that have not been committed yet. AppVeyor is not responsible for changes made to your repository by others, or for edits replaced in this way.
+When you connect an app to a GitHub repository, changes are synced in both directions: changes you make in Flet Studio are committed to the repository, and changes pushed to the repository are brought into Flet Studio. A change from GitHub can replace edits in Flet Studio to the same files that have not been committed yet. Edits replaced in this way cannot be recovered in Flet Studio, so commit work you want to keep and keep your own backups of your repositories. AppVeyor is not responsible for changes made to your repository by others, or for edits replaced in this way.
 
 ### 7.6 Third-party platforms
 
@@ -179,13 +179,13 @@ App stores, developer programs, and GitHub are operated by third parties that ma
 
 ### 8.1 Plans
 
-Flet Studio is offered under a free plan (Explorer) and one or more paid plans (currently Creator). Paid plans can be billed monthly or annually. Some features are available only on paid plans, such as private apps, store publishing, paid code signing, and GitHub sync. The current plans, their features, limits, and retention periods, and their prices, together with the price of credit packs, are listed on our [pricing page](https://studio.flet.dev/pricing). We may change plan limits and pricing with reasonable advance notice; where we materially reduce a limit, we will provide notice through the Service or by email. A price change for a subscription takes effect at the start of a subsequent billing period.
+Flet Studio is offered under a free plan (Explorer) and one or more paid plans (currently Creator). Paid plans can be billed monthly or annually. Some features are available only on paid plans, such as private apps, store publishing, paid code signing, and GitHub sync. The current plans, their features, limits, and retention periods, and their prices, together with the price of credit packs, are listed on our [pricing page](https://studio.flet.dev/pricing). We may change plan limits and pricing with reasonable advance notice; where we materially reduce a limit, we will provide notice through the Service or by email. A price change for a subscription takes effect at the start of a subsequent billing period, never during a period you have already paid for; for annual subscriptions, the renewal notice (Section 8.5) states the new price.
 
 ### 8.2 Credits and credit packs
 
-Credits pay for AI usage (Section 6) and for builds (Section 8.3). Your plan includes a monthly credit allowance. Monthly plan credits reset each month, including on annual billing, and do not roll over.
+Credits are one balance that pays for both AI usage (Section 6) and builds (Section 8.3). Your plan includes a monthly credit allowance. Monthly plan credits reset each month, including on annual billing, and do not roll over.
 
-Credit packs are one-time purchases available on every plan. Credits purchased or granted on or after September 24, 2026 expire 12 months after they are added to your account, unless a shorter period is stated when they are granted (for example, for bonus or promotional credits); credits added before that date do not expire while your account remains active. When you use credits, those closest to expiry are used first. Credits have no cash value and are not transferable.
+Credit packs are one-time purchases available on every plan. Credits purchased or granted on or after September 24, 2026 expire 12 months after they are added to your account, unless a shorter period is stated when they are granted (for example, for bonus or promotional credits); credits added before that date do not expire while your account remains active. When you use credits, those closest to expiry are used first. Credits have no cash value and are not transferable. Purchased credits stay in your account when you change plans. Unused credits end when your account is closed, except as provided in Section 8.7.
 
 ### 8.3 Build charges
 
@@ -193,7 +193,7 @@ Each type of build machine has a rate in credits per minute, shown in the Servic
 
 - Starting a build requires enough credits for its minimum charge (currently 4 minutes).
 - The minimum is charged when the build machine starts working on your build. Time spent waiting in the queue and preparing the machine is not charged, so a build cancelled before it starts costs nothing.
-- After the minimum, each minute is charged as it begins.
+- After the minimum, each minute is charged as it begins. For example, a build that runs for 6 minutes and 10 seconds is charged 7 minutes.
 - If a minute cannot be paid, the build is stopped. Credits already charged for it are not returned.
 
 Charges for builds that have started are not refunded, including builds that fail because of the app, its settings, or a third-party service. If you believe a build failed because of our infrastructure, contact us at hello@flet.dev; we may, at our discretion, return the credits it used.
@@ -204,7 +204,7 @@ We may offer a free trial of a paid plan. The current trial gives 7 days of Crea
 
 - One free trial is available per account and per payment card, and not to accounts that have had a paid subscription before.
 - During the trial you have every Creator feature, plus any bonus credits stated with the offer. Your monthly credit allowance stays at Explorer's until your first payment.
-- **At the end of the trial, it turns into a paid subscription and your card is charged, unless you cancel before the trial ends.** Cancelling during the trial costs nothing.
+- **At the end of the trial, it turns into a paid subscription and your card is charged, unless you cancel before the trial ends.** The subscription is the plan and billing period (monthly or annual) you chose when you started the trial, at the price shown at checkout. Cancelling during the trial, in the billing portal in your account settings, costs nothing.
 - If you choose to start your plan before the trial ends, the trial ends at that moment and your card is charged right away.
 - We email you a reminder before the trial ends.
 
@@ -212,7 +212,7 @@ We may refuse or end a free trial that we believe abuses this offer, for example
 
 ### 8.5 Payment processing
 
-Payments are processed by our third-party payment processor, **Stripe**. By making a purchase you agree to Stripe's terms applicable to the payment. Your card details are collected by Stripe directly and are not received or stored by AppVeyor. Paid plans are billed in advance and **renew automatically at the end of each billing period (monthly or annual) until cancelled**. You can manage or cancel your subscription at any time through the billing portal in your account settings; cancellation takes effect at the end of the current billing period, and you retain paid-plan features until then. Switching from monthly to annual billing takes effect immediately, with the unused part of your current month credited toward the annual charge; switching from annual to monthly billing takes effect at the end of the paid annual period. When a subscription ends, your account reverts to the free plan and its limits.
+Payments are processed by our third-party payment processor, **Stripe**. By making a purchase you agree to Stripe's terms applicable to the payment. Your card details are collected by Stripe directly and are not received or stored by AppVeyor. Paid plans are billed in advance and **renew automatically at the end of each billing period (monthly or annual) until cancelled**. You can manage or cancel your subscription at any time, without any fee, through the billing portal in your account settings; cancellation takes effect at the end of the current billing period, and you retain paid-plan features until then. Before an annual subscription renews, we email you a renewal notice 30 to 60 days ahead, with the renewal date and price, how to cancel, and the fact that it renews if you do nothing. Switching from monthly to annual billing takes effect immediately, with the unused part of your current month credited toward the annual charge; switching from annual to monthly billing takes effect at the end of the paid annual period. When a subscription ends, your account reverts to the free plan and its limits.
 
 ### 8.6 Taxes
 
@@ -220,11 +220,16 @@ Prices shown do not include taxes. Applicable sales tax will be calculated based
 
 ### 8.7 Refunds
 
-**We do not refund monthly or annual subscription payments.** This applies when you cancel, downgrade, or switch billing periods before the end of a paid period: no money is returned, and you keep paid-plan features until that period ends. Credit packs and build charges are likewise non-refundable. We do not provide credits or prorated refunds for partial billing periods, and unused or expired credits are not redeemable for cash. A free trial cancelled before it ends is never charged. The only other exception is where applicable law requires a refund.
+**We do not refund monthly or annual subscription payments, except as described in this section.** When you cancel, downgrade, or switch billing periods before the end of a paid period, no money is returned and you keep paid-plan features until that period ends. Credit packs and build charges are likewise non-refundable, and unused or expired credits are not redeemable for cash. The exceptions are:
+
+- **A free trial** cancelled before it ends is never charged.
+- **Cancelling after an annual renewal:** if you cancel an annual subscription after it has renewed automatically, we refund the unused part of the renewed year, prorated by days, within 15 days of your cancellation. The first year of an annual subscription is not refunded.
+- **If we end the Service or your account without cause:** if we discontinue the Service, or close your account under Section 10.2 for a reason other than your breach of these Terms, abuse, a security risk, or a legal requirement, we refund the unused part of your prepaid subscription, prorated by days, and the price of unused purchased credits.
+- **Where applicable law requires a refund**, including consumer protection law where you live.
 
 ### 8.8 Non-payment and plan changes
 
-If a payment for your subscription fails and cannot be collected after our payment processor's retries, your subscription is cancelled and your account moves to the free plan.
+If a payment for your subscription fails, our payment processor retries it over the following days and you are notified by email. If it still cannot be collected, your subscription is cancelled and your account moves to the free plan.
 
 When your account moves to a plan with fewer features, your content is kept, but features of the previous plan stop: for example, GitHub sync pauses and store publishing becomes unavailable. The new plan's limits and retention periods apply from then on, so older build logs, build files, and download page releases may be deleted sooner.
 
@@ -234,7 +239,7 @@ When your account moves to a plan with fewer features, your content is kept, but
 
 We strive to keep Flet Studio available and performant, but the Service is provided **without any uptime or availability guarantee**. We may perform scheduled or emergency maintenance, suspend access to all or part of the Service, or modify, deprecate, or discontinue features at any time.
 
-Where a change materially and adversely affects how you use the Service, we will use commercially reasonable efforts to provide advance notice through the Service or by email.
+Where a change materially and adversely affects how you use the Service, we will use commercially reasonable efforts to provide advance notice through the Service or by email. If we discontinue the Service, Section 8.7 describes the refund.
 
 ---
 
@@ -249,7 +254,7 @@ You may stop using Flet Studio at any time. You may delete your account by email
 We may suspend or terminate your access to all or part of the Service:
 
 - Immediately, if we reasonably believe you have breached these Terms, your account presents a security risk, you are abusing the Service, or we are required to do so by law
-- With reasonable notice, for any other reason
+- With reasonable notice, for any other reason, in which case Section 8.7 describes the refund
 
 ### 10.3 Effect of termination
 
@@ -277,7 +282,7 @@ TO THE MAXIMUM EXTENT PERMITTED BY APPLICABLE LAW:
 
 - **No indirect damages.** APPVEYOR WILL NOT BE LIABLE FOR ANY INDIRECT, INCIDENTAL, SPECIAL, CONSEQUENTIAL, EXEMPLARY, OR PUNITIVE DAMAGES, OR FOR ANY LOSS OF PROFITS, REVENUE, GOODWILL, OR DATA, ARISING OUT OF OR IN CONNECTION WITH THESE TERMS OR THE SERVICE, EVEN IF APPVEYOR HAS BEEN ADVISED OF THE POSSIBILITY OF SUCH DAMAGES.
 - **Aggregate cap.** APPVEYOR'S TOTAL AGGREGATE LIABILITY ARISING OUT OF OR IN CONNECTION WITH THESE TERMS OR THE SERVICE WILL NOT EXCEED THE GREATER OF (a) THE AMOUNTS YOU PAID TO APPVEYOR FOR THE SERVICE IN THE TWELVE (12) MONTHS PRECEDING THE EVENT GIVING RISE TO THE CLAIM, OR (b) ONE HUNDRED CANADIAN DOLLARS (CA$100).
-- **Data-loss exclusion.** APPVEYOR IS NOT LIABLE FOR ANY LOSS, ALTERATION, OR DESTRUCTION OF YOUR USER CONTENT, BUILD FILES, OR STORED CREDENTIALS (INCLUDING SIGNING KEYS). YOU ARE RESPONSIBLE FOR MAINTAINING YOUR OWN INDEPENDENT BACKUPS.
+- **Data loss.** APPVEYOR IS NOT LIABLE FOR ANY LOSS, ALTERATION, OR DESTRUCTION OF YOUR USER CONTENT, BUILD FILES, OR STORED CREDENTIALS (INCLUDING SIGNING KEYS), EXCEPT TO THE EXTENT CAUSED BY APPVEYOR'S BREACH OF THESE TERMS, GROSS NEGLIGENCE, OR WILFUL MISCONDUCT, OR WHERE THAT LIABILITY CANNOT LAWFULLY BE EXCLUDED. YOU ARE RESPONSIBLE FOR MAINTAINING YOUR OWN INDEPENDENT BACKUPS.
 
 These limitations apply regardless of the legal theory on which a claim is based (contract, tort, statute, or otherwise) and apply even if a remedy fails of its essential purpose. Some jurisdictions do not allow the exclusion or limitation of certain damages; in those jurisdictions, the above limitations apply to the maximum extent permitted by law.
 
@@ -285,15 +290,15 @@ These limitations apply regardless of the legal theory on which a claim is based
 
 ## 13. Indemnification
 
-You agree to defend, indemnify, and hold harmless Appveyor Systems Inc., its affiliates, and their respective officers, directors, employees, and agents from and against any and all claims, damages, losses, liabilities, costs, and expenses (including reasonable legal fees) arising out of or related to:
+You agree to defend, indemnify, and hold harmless Appveyor Systems Inc., its affiliates, and their respective officers, directors, employees, and agents from and against third-party claims, and the resulting damages, losses, liabilities, costs, and expenses (including reasonable legal fees), arising out of or related to:
 
 - Your User Content
 - The apps you build, sign, publish, or distribute with the Service
-- Your use of or access to the Service
+- Your use of the Service in violation of these Terms or applicable law
 - Your breach of these Terms or of the terms of a third-party platform you publish to
-- Your violation of any applicable law or any rights of a third party
+- Your violation of any intellectual property, privacy, or other rights of a third party
 
-We may, at our option, assume the exclusive defense and control of any matter subject to indemnification by you, in which case you agree to cooperate with our defense.
+We will notify you promptly of a claim covered by this section and give you reasonable cooperation, at your expense. You may not settle a claim in a way that admits fault for us or imposes obligations on us without our written consent. We may, at our option, assume the exclusive defense and control of any such matter, in which case you agree to cooperate with our defense.
 
 ---
 
@@ -323,7 +328,7 @@ Our failure to enforce any right or provision of these Terms will not be deemed 
 
 ### 15.4 Changes to these Terms
 
-We may modify these Terms from time to time. When we make material changes, we will update the "Effective date" above and, where appropriate, notify you through the Service or by email before the changes take effect. Your continued use of the Service after the new Terms take effect constitutes acceptance.
+We may modify these Terms from time to time, including the Service's features, plan features and limits, prices, credit and build rates, and retention periods. When we make material changes, we will update the "Effective date" above and notify you by email, and through the Service, at least 30 days before the changes take effect, except for changes required by law or to address security risks. A change will not take away a cancellation or refund right for a billing period you have already paid for; for a paid subscription, it applies from your next billing period. If you do not agree to a change, you can cancel your subscription and stop using the Service before it takes effect. Otherwise, your continued use of the Service after the new Terms take effect constitutes acceptance.
 
 ### 15.5 Assignment
 
@@ -339,7 +344,7 @@ Neither party will be liable for failure or delay in performance caused by event
 
 ### 15.8 Notices
 
-We may give notices to you through the Service, by posting on our website, or by email to the address associated with your account. You must give notices to us in writing at **legal@flet.dev**.
+We may give notices to you through the Service, by posting on our website, or by email to the address associated with your account. Renewal notices, notices of changes to these Terms, and other notices the law requires us to deliver to you are sent by email. You must give notices to us in writing at **legal@flet.dev**.
 
 ### 15.9 Contact
 
