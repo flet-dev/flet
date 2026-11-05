@@ -209,12 +209,14 @@ and link as its [Android APK](android.md#download-page). Each visitor sees their
 system's download first (**Download for Windows**, **Download for Mac**…), with the
 others listed under it, and who signed each one.
 
-- **Also publish to the download page** on **Create Windows app**, **Create Mac app**
+- **Put it on the download page** on **Create Windows app**, **Create Mac app**
   and **Create Linux app** publishes the build when it's done. It's ticked by default
   once the page has a release.
-- **Publish** on the card's **Download page** puts a build that isn't there yet on it,
-  with no new build and no credits.
-- The card's **⋯** takes this platform off the page; the others stay.
+- **Publish** on the card's **Download page** line, or on the platform's row in
+  **Publish › Download page**, puts a build that isn't there yet on it, with no new
+  build and no credits.
+- **Remove** on the platform's row in **Publish › Download page** takes it off the page;
+  the others stay.
 
 Only signed builds go on the page:
 

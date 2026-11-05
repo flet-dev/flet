@@ -27,7 +27,10 @@ across updates: share it once (on your website, in an email, as a QR code on a
 flyer) and each update replaces the app behind it.
 
 It's the app's one download page: [Windows, Mac and Linux builds](desktop.md#download-page)
-can go on it too, and each visitor sees their own system's download first.
+can go on it too, and each visitor sees their own system's download first. Manage it
+under **Publish › Download page** in the sidebar: its link is there from the start,
+before anything is published, so you can share it early. Until a build is on it,
+visitors see "Nothing to download yet".
 
 {/* SCREENSHOT: /img/docs/studio/publishing/download-page.png — the public download page on a phone */}
 
@@ -37,9 +40,9 @@ can go on it too, and each visitor sees their own system's download first.
 2. Optionally write **What's new**, and pick the [architectures](#why-is-my-apk-so-big).
 3. Click **Create APK**. When the run finishes, the app is on the page.
 
-**Also publish to the download page** is ticked by default; untick it for an APK just
+**Put it on the download page** is ticked by default; untick it for an APK just
 to try on your own phone (**Download APK** on the card gets it). **Publish** on the
-card's **Download page** puts a build that isn't there yet on it, with no new build.
+card's **Download page** line puts a build that isn't there yet on it, with no new build.
 
 The first Android run makes the app's [signing key](#signing-key). Back it up when
 the card asks: every update has to be signed with it.
@@ -51,28 +54,30 @@ page. Your users install it over the version they have and keep their data.
 
 ### Share the link
 
-The card has the page's link with **Open**, **Copy**, **QR code** and **Share**.
-**Download APK** gives you the file without sharing the link.
+**Publish › Download page** has the page's link with **Open**, **Copy**, **QR code** and
+**Share**, and so does the card while the APK is on the page. **Download APK** gives you
+the file without sharing the link.
 
 | | Explorer | Creator |
 |---|---|---|
-| Link | Private: `get.flet.app/` and a random code | The private link, plus a readable one: `get.flet.app/your-app` |
+| Link | Private: `get.flet.app/` and a random code | The private link, plus a custom one: `get.flet.app/your-app` |
 | How long a release stays up | 7 days after its build: update the APK to keep the app up | 1 year after its build: a new version starts the year again |
 | Run downloads in Studio | 7 days | 90 days |
 
-Set a readable link under **Readable name** in **Download page settings** (✎, then ✓):
+Set a custom link under **Custom link** on **Publish › Download page** (✎, then ✓):
 lowercase letters, digits and hyphens. If you rename it, the old name keeps redirecting
 for 30 days.
 
 ### New link, take offline
 
-The card's **Download page ⋯** has **Take Android off the page** (the other platforms
-stay) and **Download page settings**, which shows the page link, what's on the page,
-the readable name, and:
+**Publish › Download page** lists each platform with the build it has on the page and
+until when it stays up. **Remove** takes one platform off the page; the others stay.
+Under **Settings**:
 
 - **Private link › Replace**: the current private link stops working at once. Use it if
   a link reached people it shouldn't have.
 - **Take offline**: every platform's build comes off the page until you publish again.
+  The link keeps working and shows "Nothing to download yet".
 
 ### What your users see
 
