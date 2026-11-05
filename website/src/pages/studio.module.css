@@ -19,9 +19,9 @@
 .heroSupertitle {
   display: block;
   margin-bottom: 24px;
-  font-size: 11px;
+  font-size: 14px;
   font-weight: 700;
-  letter-spacing: 1.6px;
+  letter-spacing: 2px;
   text-transform: uppercase;
   color: var(--flet-accent);
 }

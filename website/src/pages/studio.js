@@ -127,7 +127,7 @@ function Studio() {
       <main>
         <section className={styles.heroBand}>
           <div className={styles.heroInner}>
-            <span className={styles.heroSupertitle}>Flet Studio</span>
+            <span className={styles.heroSupertitle}>New · Flet Studio 2.0</span>
             <h1 className={styles.heroTitle}>From idea to app store, <span>in your browser.</span></h1>
             <p className={styles.heroSubtitle}>
               Describe your app to the AI agent, try it live, then build it for Android, iOS, Windows,
