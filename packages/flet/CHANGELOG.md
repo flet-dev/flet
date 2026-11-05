@@ -1,3 +1,7 @@
+## 1.1.1
+
+* `convertToUint8List()` copies a `Uint8List` that is a view into a larger buffer (bytes decoded from a message) into one of its own: Safari's CanvasKit image codecs drew nothing for such a view, so `Image` with bytes `src` was blank there by @FeodorFitsner.
+
 ## 1.1.0
 
 * Flutter updated to [3.47.9](https://github.com/flutter/flutter/blob/stable/CHANGELOG.md#3479).

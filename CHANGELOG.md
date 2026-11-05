@@ -1,3 +1,9 @@
+## 1.1.1
+
+### Bug fixes
+
+* `Image` (and other images) given raw bytes as `src` now show in Safari: the bytes reach Flutter as a view into the whole message's buffer, which Safari's image decoding drew as nothing (Chrome, which decodes with the browser's `ImageDecoder`, was unaffected); they now get a buffer of their own. A base64 string `src` already worked by @FeodorFitsner.
+
 ## 1.1.0
 
 ### Breaking changes

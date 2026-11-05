@@ -415,7 +415,13 @@ class ResolvedAssetSource {
 /// or returns null if unsupported.
 Uint8List? convertToUint8List(dynamic value) {
   if (value is Uint8List) {
-    return value;
+    // Bytes from a message are a view into the whole message's buffer.
+    // Safari's image decoding (CanvasKit's own codecs, used where the
+    // browser's ImageDecoder isn't) draws nothing for such a view, so
+    // give the bytes a buffer of their own.
+    final isView = value.offsetInBytes != 0 ||
+        value.lengthInBytes != value.buffer.lengthInBytes;
+    return isView ? Uint8List.fromList(value) : value;
   } else if (value is List<int>) {
     return Uint8List.fromList(value);
   } else if (value is List && value.every((e) => e is int)) {
