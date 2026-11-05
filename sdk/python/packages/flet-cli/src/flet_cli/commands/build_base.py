@@ -81,6 +81,7 @@ from flet_cli.utils.project_dependencies import (
     pin_flet_dependencies,
     read_requirements,
     read_requirements_file_text,
+    requirements_use_hashes,
 )
 from flet_cli.utils.pyproject_toml import load_pyproject_toml
 from flet_cli.utils.python_versions import (
@@ -2518,7 +2519,7 @@ class BaseBuildCommand(BaseFlutterCommand):
                 # have no hash.
                 file_dependencies = read_requirements(requirements_txt)
                 pinned_dependencies = self._pin_flet_dependencies(file_dependencies)
-                if not re.search(r"--(hash|require-hashes)\b", reqs_txt_contents):
+                if not requirements_use_hashes(reqs_txt_contents):
                     for dep in pinned_dependencies:
                         if dep not in file_dependencies:
                             package_args.extend(["-r", dep])

@@ -2,12 +2,15 @@
 
 # Based on: https://pypi.org/project/toml-to-requirements/
 
+import codecs
 import os
 import re
 import shlex
 from collections.abc import Iterator
 from pathlib import Path
 from typing import Any, Optional
+from urllib.parse import urlparse
+from urllib.request import url2pathname
 
 from packaging.requirements import InvalidRequirement, Requirement
 from packaging.specifiers import SpecifierSet
@@ -198,13 +201,13 @@ def pin_flet_dependencies(dependencies: list[str], flet_version: str) -> list[st
         comes from a path or URL, such as the one `dev_packages` sets.
 
     Raises:
-        FletVersionConflictError: If a requirement excludes `flet_version`.
+        FletVersionConflictError: If a requirement without an environment marker
+            excludes `flet_version`.
     """
     requirements = [_parse_requirement(dep) for dep in dependencies]
     if any(
         _is_flet_location(dep)
-        if req is None
-        else canonicalize_name(req.name) == "flet" and req.url
+        or (req is not None and canonicalize_name(req.name) == "flet" and req.url)
         for dep, req in zip(dependencies, requirements)
     ):
         return list(dependencies)
@@ -217,6 +220,10 @@ def pin_flet_dependencies(dependencies: list[str], flet_version: str) -> list[st
             may_install_flet = may_install_flet or not dep.startswith("-")
         elif canonicalize_name(req.name) in FLET_PACKAGES and not req.url:
             if not req.specifier.contains(flet_version, prereleases=True):
+                if req.marker is not None:
+                    # It may not apply to the target, so pip decides.
+                    pinned.append(dep)
+                    continue
                 raise FletVersionConflictError(
                     f"The app requires `{req}`, but this Flet CLI is version "
                     f"{flet_version}, and the app runs in a Flet client of that "
@@ -268,10 +275,12 @@ def _parse_requirement(dep: str) -> Optional[Requirement]:
 
 
 def _is_flet_location(entry: str) -> bool:
-    """Whether a path or URL is a `flet` wheel, a `flet` sdist or has `#egg=flet`."""
+    """Whether a path or URL names `flet`: a checkout, wheel, sdist or `#egg=flet`."""
     return bool(
         re.search(
-            r"[#&]egg=flet(&|$)|(^|[/\\])flet-\d[^/\\]*\.(whl|tar\.gz|zip)([#?]|$)",
+            r"[#&]egg=flet(&|$)"
+            r"|[/\\]flet[/\\]?(\[[^\]]*\])?\s*([#?&;]|$)"
+            r"|(^|[/\\])flet-\d[^/\\]*\.(whl|tar\.gz|zip)(\[[^\]]*\])?\s*([#?;]|$)",
             entry,
             re.IGNORECASE,
         )
@@ -317,36 +326,49 @@ def _requirements_options(line: str) -> Iterator[tuple[str, str]]:
             yield letter, value
 
 
+def _is_remote_url(value: str) -> bool:
+    """Whether a value from a requirements file is a URL other than `file:`."""
+    return re.match(
+        r"^[a-z][a-z0-9+.-]*://", value, re.IGNORECASE
+    ) is not None and not value.lower().startswith("file:")
+
+
 def _requirements_files(path: Path) -> Iterator[tuple[str, bool]]:
     """
     Yield the text of a requirements file and of the files it includes.
 
-    Includes are relative to the file that includes them. URLs and missing files
-    are skipped.
+    Includes are relative to the file that includes them. `file:` URLs are read;
+    other URLs and missing files are skipped.
 
     Args:
         path: The path of the requirements file.
 
     Yields:
-        The text of a file, and whether it was reached through a constraints file.
+        The text of a file, and whether it was included as a constraints file.
     """
-    visited: set[Path] = set()
+    visited: set[tuple[Path, bool]] = set()
 
     def read(file: Path, constraint: bool) -> Iterator[tuple[str, bool]]:
-        resolved = file.resolve()
-        if resolved in visited or not file.is_file():
+        key = (file.resolve(), constraint)
+        if key in visited or not file.is_file():
             return
-        visited.add(resolved)
-        text = file.read_text(encoding="utf-8", errors="replace")
+        visited.add(key)
+        data = file.read_bytes()
+        encoding = (
+            "utf-16"
+            if data.startswith((codecs.BOM_UTF16_LE, codecs.BOM_UTF16_BE))
+            else "utf-8-sig"
+        )
+        text = data.decode(encoding, errors="replace").replace("\r\n", "\n")
         yield text, constraint
         for line in _requirements_lines(text):
             if not line.startswith("-"):
                 continue
             for letter, value in _requirements_options(line):
-                if letter != "e" and not re.match(
-                    r"^[a-z][a-z0-9+.-]*://", value, re.IGNORECASE
-                ):
-                    yield from read(file.parent / value, constraint or letter == "c")
+                if value.lower().startswith("file:"):
+                    value = url2pathname(urlparse(value).path)
+                if letter != "e" and not _is_remote_url(value):
+                    yield from read(file.parent / value, letter == "c")
 
     yield from read(Path(path), False)
 
@@ -374,7 +396,8 @@ def read_requirements(path: Path) -> list[str]:
         path: The path of the `requirements.txt` file.
 
     Returns:
-        The requirements without their options, and the targets of `-e` options.
+        The requirements without their options, the targets of `-e` options, and
+        the URLs of `-r` includes, whose requirements can't be read here.
     """
     requirements = []
     for text, constraint in _requirements_files(path):
@@ -385,8 +408,24 @@ def read_requirements(path: Path) -> list[str]:
                 requirements.extend(
                     value
                     for letter, value in _requirements_options(line)
-                    if letter == "e"
+                    if letter == "e" or (letter == "r" and _is_remote_url(value))
                 )
             else:
                 requirements.append(re.split(r"\s+-", line, maxsplit=1)[0])
     return requirements
+
+
+def requirements_use_hashes(text: str) -> bool:
+    """
+    Whether the text of a requirements file uses hash-checking mode.
+
+    Args:
+        text: The text, as `read_requirements_file_text` returns it.
+
+    Returns:
+        `True` when a line has a `--hash` or `--require-hashes` option.
+    """
+    return any(
+        re.search(r"(^|\s)--(hash|require-hashes)\b", line)
+        for line in _requirements_lines(text)
+    )
