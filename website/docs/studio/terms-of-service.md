@@ -223,7 +223,7 @@ Prices shown do not include taxes. Applicable sales tax will be calculated based
 **We do not refund monthly or annual subscription payments, except as described in this section.** When you cancel, downgrade, or switch billing periods before the end of a paid period, no money is returned and you keep paid-plan features until that period ends. Credit packs and build charges are likewise non-refundable, and unused or expired credits are not redeemable for cash. The exceptions are:
 
 - **A free trial** cancelled before it ends is never charged.
-- **Cancelling after an annual renewal:** if you cancel an annual subscription after it has renewed automatically, we refund the unused part of the renewed year, prorated by days, within 15 days of your cancellation. The first year of an annual subscription is not refunded.
+- **Cancelling soon after an annual renewal:** if you cancel an annual subscription within 30 days after it renews automatically, we refund the unused part of the renewed year, prorated by days, within 15 days of your cancellation. Later cancellations, and the first year of an annual subscription, are not refunded unless applicable law requires it.
 - **If we end the Service or your account without cause:** if we discontinue the Service, or close your account under Section 10.2 for a reason other than your breach of these Terms, abuse, a security risk, or a legal requirement, we refund the unused part of your prepaid subscription, prorated by days, and the price of unused purchased credits.
 - **Where applicable law requires a refund**, including consumer protection law where you live.
 
