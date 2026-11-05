@@ -14,6 +14,10 @@ Controls styled after [Shadcn](https://ui.shadcn.com), built on the Flutter
 [`shadcn_ui`](https://pub.dev/packages/shadcn_ui) package, plus the
 [Lucide](https://lucide.dev) icon set.
 
+<img src="/img/docs/controls/shadcnui/showcase.png" className="screenshot" style={{borderRadius: '7px'}} alt="A dashboard built with Shadcn controls in the VIOLET color scheme: cards, inputs, selects, a calendar, a table, a slider, switches and an OTP input" />
+
+See the [full source](https://github.com/flet-dev/flet/tree/main/sdk/python/examples/apps/shadcn_showcase/main.py) of this dashboard.
+
 ## Usage
 
 Add `flet-shadcn-ui` to your project dependencies:
