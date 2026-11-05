@@ -9,6 +9,10 @@
 }
 
 .heroInner {
+  max-width: 1440px;
+}
+
+.heroInner {
   text-align: center;
 }
 
@@ -23,23 +27,30 @@
 }
 
 .heroTitle {
-  max-width: 960px;
+  max-width: none;
   margin: 0 auto 26px;
   font-size: clamp(44px, 5.5vw, 72px);
   font-weight: 750;
   line-height: 1.06;
   letter-spacing: -.05em;
+  text-wrap: balance;
 }
 
 .heroTitle span {
-  display: block;
   color: var(--flet-accent);
 }
 
+@media (max-width: 1399px) {
+  .heroTitle span {
+    display: block;
+  }
+}
+
 .heroSubtitle {
-  max-width: 600px;
+  max-width: 860px;
   margin: 0 auto 28px;
   font-size: 20px;
+  text-wrap: balance;
   line-height: 1.65;
   color: var(--flet-muted);
 }
