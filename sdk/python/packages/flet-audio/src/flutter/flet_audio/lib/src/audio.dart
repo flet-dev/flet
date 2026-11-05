@@ -29,6 +29,12 @@ class AudioService extends FletService {
   /// to the default.
   AudioContext? _audioContext =
       isAndroidMobile() ? parseAudioContext(null) : null;
+
+  /// Whether `context` was set the last time it was read.
+  ///
+  /// On iOS, another player may have changed the shared session since this one
+  /// last applied its context, so setting or clearing `context` applies it even
+  /// when it equals [_audioContext].
   bool _hasExplicitAudioContext = false;
 
   double? _volume;
@@ -41,12 +47,16 @@ class AudioService extends FletService {
   int _sourceVersion = 0;
   Future<void> _sourcePreparation = Future<void>.value();
 
-  /// Invalidates playback requests waiting for a source or seek when playback
-  /// is paused, released, or the source or service is removed.
+  /// Invalidates playback requests, `autoplay` included, waiting for a source,
+  /// seek or session change when playback is paused, released, or the source or
+  /// service is removed.
   int _playbackVersion = 0;
 
   /// The error from preparing the latest source, if that failed.
   Object? _sourceError;
+
+  /// Whether the source was released, so it must be prepared again to play.
+  bool _sourceReleased = false;
 
   @override
   void init() {
@@ -97,7 +107,8 @@ class AudioService extends FletService {
   /// `src` again would leave nothing to play.
   ///
   /// When `src` changes again while a source is still being prepared, the
-  /// earlier preparation neither triggers `loaded` nor starts autoplay.
+  /// earlier preparation neither triggers `loaded` nor starts autoplay. Pausing
+  /// or releasing while a source is being prepared also cancels its autoplay.
   ///
   /// Volume, balance and playback rate are applied again after a new source
   /// is loaded, and before `loaded` is triggered, since loading can reset
@@ -144,6 +155,7 @@ class AudioService extends FletService {
       }
 
       final sourceVersion = srcChanged ? ++_sourceVersion : _sourceVersion;
+      final playbackVersion = _playbackVersion;
       final contextApplied = _applyAudioContext();
       if (!srcChanged) {
         await contextApplied;
@@ -166,7 +178,7 @@ class AudioService extends FletService {
       if (srcChanged && sourceVersion == _sourceVersion) {
         control.triggerEvent("loaded");
         if (control.getBool("autoplay", false)!) {
-          await _resume();
+          await _resume(playbackVersion);
         }
       }
     }();
@@ -204,10 +216,14 @@ class AudioService extends FletService {
     }
   }
 
-  /// Loads a source that failed to load again, then does what [update] couldn't
-  /// do after the failure.
+  /// Loads a source that failed to load or was released again, then does what
+  /// [update] couldn't do after the failure.
+  ///
+  /// When `src` changes in the meantime, what it changed to is left to [update].
   Future<void> _reloadSource() async {
+    final sourceVersion = _sourceVersion;
     await _applySource();
+    if (sourceVersion != _sourceVersion) return;
     _volume = null;
     _balance = null;
     _playbackRate = null;
@@ -220,13 +236,11 @@ class AudioService extends FletService {
   Future<void> _applyAudioContext() async {
     if (!isMobilePlatform()) return;
     final value = control.get("context");
-    final contextCleared = _hasExplicitAudioContext && value == null;
+    final explicitChanged = _hasExplicitAudioContext != (value != null);
     _hasExplicitAudioContext = value != null;
     if (value == null && _audioContext == null) return;
     final audioContext = parseAudioContext(value);
-    // On iOS, another player may have changed the shared session since this
-    // player last applied its context. Clearing it must restore the defaults.
-    if (audioContext == _audioContext && !(isIOSMobile() && contextCleared)) {
+    if (audioContext == _audioContext && !(isIOSMobile() && explicitChanged)) {
       return;
     }
     _audioContext = audioContext;
@@ -234,11 +248,17 @@ class AudioService extends FletService {
     if (isIOSMobile()) await IosDucking.contextApplied(audioContext);
   }
 
-  /// Starts [player], after restoring any context [IosDucking] released.
-  Future<void> _resume() async {
+  /// Starts [player], after restoring any context [IosDucking] released, unless
+  /// the request made at [playbackVersion] was cancelled.
+  Future<void> _resume(int playbackVersion) async {
+    if (playbackVersion != _playbackVersion) return;
     if (!isIOSMobile()) return player.resume();
     try {
       await IosDucking.startPlaying(this);
+      if (playbackVersion != _playbackVersion) {
+        await IosDucking.stopPlaying(this);
+        return;
+      }
       await player.resume();
     } catch (_) {
       await IosDucking.stopPlaying(this);
@@ -262,6 +282,39 @@ class AudioService extends FletService {
   /// Whether a source is set, in [_src] or [_srcBytes].
   bool get _hasSource => _src != null || _srcBytes != null;
 
+  /// Throws if no source is set, for the method called [name].
+  void _requireSource(String name) {
+    if (!_hasSource) {
+      throw Exception("Audio must have \"src\" specified to $name.");
+    }
+  }
+
+  /// Releases [player] once any source being prepared is ready, without making
+  /// the caller wait for that.
+  ///
+  /// Releasing during a load leaves it unfinished: iOS never completes it, and
+  /// Android only when it times out, which would hold up all that is queued
+  /// behind it.
+  void _release() {
+    _sourceReleased = true;
+    _sourcePreparation = _sourcePreparation.then((_) async {
+      try {
+        await player.release();
+      } catch (error) {
+        debugPrint("Audio could not be released: $error");
+      }
+    });
+  }
+
+  /// Waits for the latest source preparation, including any queued meanwhile.
+  Future<void> _sourcePrepared() async {
+    Future<void> preparation;
+    do {
+      preparation = _sourcePreparation;
+      await preparation;
+    } while (preparation != _sourcePreparation);
+  }
+
   /// Pushes the currently tracked source ([_src] or [_srcBytes]) to the native
   /// [player], preparing it for playback.
   ///
@@ -275,6 +328,7 @@ class AudioService extends FletService {
   /// The source is set once [after] completes, while the preparation is queued
   /// right away, so that a method call received in the meantime waits for it.
   Future<void> _applySource({Future<void>? after}) {
+    _sourceReleased = false;
     final src = _src;
     final srcBytes = _srcBytes;
     final sourceVersion = _sourceVersion;
@@ -310,21 +364,27 @@ class AudioService extends FletService {
   /// a `resume` and start playing as soon as a source is set.
   ///
   /// They also wait for a source that is still being prepared, because a seek
-  /// before that never completes on iOS. A source that failed to load is loaded
-  /// again, so they either report its error at once or work once it is available.
+  /// before that never completes on iOS. A source that failed to load or was
+  /// released is loaded again, so they either report its error at once or work
+  /// once it is available. A `seek` throws if the source is cleared during the
+  /// wait.
+  ///
+  /// `pause` and `release` cancel a `play` or `resume` that is still waiting, and
+  /// so does clearing the source. A cancelled call returns without an error.
   Future<dynamic> _invokeMethod(String name, dynamic args) async {
     debugPrint("Audio.$name($args)");
     if (name == "pause" || name == "release") _playbackVersion++;
     final playbackVersion = _playbackVersion;
     final startsPlayback = name == "play" || name == "resume";
     if (const ["play", "resume", "seek"].contains(name)) {
-      if (!_hasSource) {
-        throw Exception("Audio must have \"src\" specified to $name.");
+      _requireSource(name);
+      await _sourcePrepared();
+      if (startsPlayback && playbackVersion != _playbackVersion) return;
+      if ((_sourceError != null || _sourceReleased) && _hasSource) {
+        await _reloadSource();
       }
-      await _sourcePreparation;
       if (startsPlayback && playbackVersion != _playbackVersion) return;
-      if (_sourceError != null) await _reloadSource();
-      if (startsPlayback && playbackVersion != _playbackVersion) return;
+      _requireSource(name);
     }
     switch (name) {
       case "play":
@@ -344,16 +404,16 @@ class AudioService extends FletService {
         } else if (position != null) {
           await player.seek(position);
         }
-        if (playbackVersion == _playbackVersion) await _resume();
+        await _resume(playbackVersion);
         break;
       case "resume":
-        await _resume();
+        await _resume(playbackVersion);
         break;
       case "pause":
         await player.pause();
         break;
       case "release":
-        await player.release();
+        _release();
         break;
       case "seek":
         final position = parseDuration(args["position"]);

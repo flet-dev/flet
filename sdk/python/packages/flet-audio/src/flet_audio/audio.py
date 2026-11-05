@@ -177,6 +177,10 @@ class Audio(ft.Service):
 
         If you call :meth:`flet_audio.Audio.resume` later,
         the audio will resume from the point that it has been paused.
+
+        A :meth:`flet_audio.Audio.play`, :meth:`flet_audio.Audio.resume` or
+        :attr:`flet_audio.Audio.autoplay` still waiting for the audio to load is
+        cancelled.
         """
         await self._invoke_method("pause")
 
@@ -190,7 +194,13 @@ class Audio(ft.Service):
         """
         Releases the resources associated with this media player.
         These are going to be fetched or buffered again as soon as
-        you change the source or call :meth:`flet_audio.Audio.resume`.
+        you change the source or call :meth:`flet_audio.Audio.play`,
+        :meth:`flet_audio.Audio.resume` or :meth:`flet_audio.Audio.seek`.
+
+        Audio that is still loading is released once it has loaded. A
+        :meth:`flet_audio.Audio.play`, :meth:`flet_audio.Audio.resume` or
+        :attr:`flet_audio.Audio.autoplay` still waiting for the audio to load is
+        cancelled.
         """
         await self._invoke_method("release")
 

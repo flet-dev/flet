@@ -18,6 +18,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 ### Fixed
 
 - `Audio` failing to play when it is created without `src` and `src` is set later ([#6133](https://github.com/flet-dev/flet/issues/6133), [#6956](https://github.com/flet-dev/flet/pull/6956)).
+- `Audio` with `autoplay` starting to play after `pause()` or `release()` when they are called while its source is loading ([#7043](https://github.com/flet-dev/flet/pull/7043)).
 - `Audio` ignoring `playback_rate` after `src` changes on web ([#6956](https://github.com/flet-dev/flet/pull/6956)).
 - `Audio.play()`, `resume()` and `seek()` timing out on iOS when called right after creating an `Audio` with a `context`, or after `src` failed to load ([#7043](https://github.com/flet-dev/flet/pull/7043)).
 
