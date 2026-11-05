@@ -1,9 +1,7 @@
 """Icon/splash image selection in `flet build`.
 
-`find_platform_image` must pick a *decodable* image deterministically when
-several files share a base name — otherwise the choice depends on filesystem
-glob order and an `icon.svg` can slip through to the generator, which cannot
-decode it and would fall back to no icon at all.
+`find_platform_image` must pick an image deterministically when several files
+share a base name, preserving raster precedence while accepting SVG sources.
 """
 
 from types import SimpleNamespace
@@ -37,10 +35,20 @@ def test_png_preferred_over_other_raster(tmp_path):
     assert _find(tmp_path, ["icon.jpg", "icon.png"]) == "icon.png"
 
 
-def test_svg_only_returns_none_with_warning(tmp_path, capsys):
-    assert _find(tmp_path, ["icon.svg"]) is None
+def test_svg_only_is_selected_without_warning(tmp_path, capsys):
+    assert _find(tmp_path, ["icon.svg"]) == "icon.svg"
     combined = capsys.readouterr()
-    assert "icon.svg" in (combined.out + combined.err)
+    assert "Warning" not in (combined.out + combined.err)
+
+
+def test_platform_specific_svg_is_selected(tmp_path):
+    assert (
+        _find(tmp_path, ["icon_linux.svg"], image_name="icon_linux") == "icon_linux.svg"
+    )
+
+
+def test_uppercase_svg_extension_is_selected(tmp_path):
+    assert _find(tmp_path, ["icon.SVG"]) == "icon.SVG"
 
 
 def test_no_candidates_is_silent_none(tmp_path, capsys):

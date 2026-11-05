@@ -22,9 +22,11 @@ dependencies = [
     "flet-lottie",
     "flet-local-auth",
     "flet-map",
+    "flet-notifications",
     "flet-permission-handler",
     "flet-rive",
     "flet-secure-storage",
+    "flet-shadcn-ui",
     "flet-spinkit",
     "flet-video",
     "flet-webview",
@@ -55,9 +57,11 @@ flet-geolocator = { path = "../../../packages/flet-geolocator", editable = true 
 flet-lottie = { path = "../../../packages/flet-lottie", editable = true }
 flet-local-auth = { path = "../../../packages/flet-local-auth", editable = true }
 flet-map = { path = "../../../packages/flet-map", editable = true }
+flet-notifications = { path = "../../../packages/flet-notifications", editable = true }
 flet-permission-handler = { path = "../../../packages/flet-permission-handler", editable = true }
 flet-rive = { path = "../../../packages/flet-rive", editable = true }
 flet-secure-storage = { path = "../../../packages/flet-secure-storage", editable = true }
+flet-shadcn-ui = { path = "../../../packages/flet-shadcn-ui", editable = true }
 flet-spinkit = { path = "../../../packages/flet-spinkit", editable = true }
 flet-video = { path = "../../../packages/flet-video", editable = true }
 flet-webview = { path = "../../../packages/flet-webview", editable = true }
@@ -77,9 +81,11 @@ flet-geolocator = "../../../packages/flet-geolocator"
 flet-lottie = "../../../packages/flet-lottie"
 flet-local-auth = "../../../packages/flet-local-auth"
 flet-map = "../../../packages/flet-map"
+flet-notifications = "../../../packages/flet-notifications"
 flet-permission-handler = "../../../packages/flet-permission-handler"
 flet-rive = "../../../packages/flet-rive"
 flet-secure-storage = "../../../packages/flet-secure-storage"
+flet-shadcn-ui = "../../../packages/flet-shadcn-ui"
 flet-spinkit = "../../../packages/flet-spinkit"
 flet-video = "../../../packages/flet-video"
 flet-webview = "../../../packages/flet-webview"

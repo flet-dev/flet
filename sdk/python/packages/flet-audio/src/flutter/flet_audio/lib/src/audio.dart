@@ -20,9 +20,43 @@ class AudioService extends FletService {
   String? _src;
   Uint8List? _srcBytes;
   ReleaseMode? _releaseMode;
+
+  /// The context last applied to [player].
+  ///
+  /// On Android, it starts as the default that `Extension.ensureInitialized`
+  /// gives every player. On iOS, it starts as `null`: a context applies to the
+  /// whole app there, so any context that is set must be applied, even one equal
+  /// to the default.
+  AudioContext? _audioContext =
+      isAndroidMobile() ? parseAudioContext(null) : null;
+
+  /// Whether `context` was set the last time it was read.
+  ///
+  /// On iOS, another player may have changed the shared session since this one
+  /// last applied its context, so setting or clearing `context` applies it even
+  /// when it equals [_audioContext].
+  bool _hasExplicitAudioContext = false;
+
   double? _volume;
   double? _balance;
   double? _playbackRate;
+
+  /// Incremented whenever the source is set, cleared or the service is
+  /// disposed, so that an [update] that is still preparing an earlier source
+  /// can tell that it was superseded.
+  int _sourceVersion = 0;
+  Future<void> _sourcePreparation = Future<void>.value();
+
+  /// Invalidates playback requests, `autoplay` included, waiting for a source,
+  /// seek or session change when playback is paused, released, or the source or
+  /// service is removed.
+  int _playbackVersion = 0;
+
+  /// The error from preparing the latest source, if that failed.
+  Object? _sourceError;
+
+  /// Whether the source was released, so it must be prepared again to play.
+  bool _sourceReleased = false;
 
   @override
   void init() {
@@ -39,6 +73,7 @@ class AudioService extends FletService {
     _onStateChangedSubscription =
         player.onPlayerStateChanged.listen((PlayerState state) {
       control.triggerEvent("state_change", {"state": state.name});
+      _trackIosDucking(state);
     });
 
     _onPositionChangedSubscription =
@@ -61,73 +96,223 @@ class AudioService extends FletService {
     update();
   }
 
+  /// Applies the control's properties to [player].
+  ///
+  /// A missing or empty `src` means there is no source yet, e.g. until the
+  /// user picks a file: the other properties are still applied, and playback
+  /// of a source set earlier stops.
+  ///
+  /// The player is paused rather than released: the web player keeps the URL
+  /// of a released source and skips loading it again, so setting the same
+  /// `src` again would leave nothing to play.
+  ///
+  /// When `src` changes again while a source is still being prepared, the
+  /// earlier preparation neither triggers `loaded` nor starts autoplay. Pausing
+  /// or releasing while a source is being prepared also cancels its autoplay.
+  ///
+  /// Volume, balance and playback rate are applied again after a new source
+  /// is loaded, and before `loaded` is triggered, since loading can reset
+  /// them: a web media element resets its playback rate when it loads.
+  ///
+  /// Settings, `autoplay` included, are read from the control when they are
+  /// applied, not when [update] is called, so an update that finishes loading
+  /// a source after a later update never applies outdated values.
+  ///
+  /// The audio context is applied before the source, because changing it later
+  /// makes the Android player prepare its source again.
   @override
   void update() {
     debugPrint("Audio(${control.id}).update: ${control.properties}");
 
-    final resolvedSrc = control.getSrc("src");
+    final resolvedSrc = control.get("src") != null
+        ? control.getSrc("src")
+        : const ResolvedAssetSource();
     if (resolvedSrc.error != null) {
       throw Exception("Audio src decode error: ${resolvedSrc.error}");
     }
-    if (resolvedSrc.isEmpty) {
-      throw Exception("Audio must have \"src\" specified.");
-    }
-    var autoplay = control.getBool("autoplay", false)!;
-    var volume = control.getDouble("volume", 1.0)!;
-    var balance = control.getDouble("balance", 0.0)!;
-    var playbackRate = control.getDouble("playback_rate", 1)!;
-    var releaseMode = parseReleaseMode(control.getString("release_mode"));
-
     () async {
       bool srcChanged = false;
-      // URL or file
-      if (resolvedSrc.uri != null && resolvedSrc.uri != _src) {
+      if (resolvedSrc.isEmpty) {
+        // no source
+        if (_hasSource) {
+          _src = null;
+          _srcBytes = null;
+          _sourceVersion++;
+          _playbackVersion++;
+          await player.pause();
+        }
+      } else if (resolvedSrc.uri != null && resolvedSrc.uri != _src) {
+        // URL or file
         _src = resolvedSrc.uri;
         _srcBytes = null;
         srcChanged = true;
-        await _applySource();
       } else if (resolvedSrc.bytes != null &&
           (_srcBytes == null || !listEquals(_srcBytes, resolvedSrc.bytes))) {
         // bytes
         _srcBytes = resolvedSrc.bytes;
         _src = null;
         srcChanged = true;
-        await _applySource();
       }
 
-      if (srcChanged) {
+      final sourceVersion = srcChanged ? ++_sourceVersion : _sourceVersion;
+      final playbackVersion = _playbackVersion;
+      final contextApplied = _applyAudioContext();
+      if (!srcChanged) {
+        await contextApplied;
+        if (sourceVersion != _sourceVersion) return;
+      } else {
+        try {
+          await _applySource(after: contextApplied);
+        } catch (_) {
+          if (sourceVersion != _sourceVersion) return;
+          rethrow;
+        }
+        if (sourceVersion != _sourceVersion) return;
+        _volume = null;
+        _balance = null;
+        _playbackRate = null;
+      }
+
+      await _applySettings();
+
+      if (srcChanged && sourceVersion == _sourceVersion) {
         control.triggerEvent("loaded");
-      }
-
-      // releaseMode
-      if (releaseMode != null && releaseMode != _releaseMode) {
-        _releaseMode = releaseMode;
-        await player.setReleaseMode(releaseMode);
-      }
-
-      // volume
-      if (volume != _volume && volume >= 0 && volume <= 1) {
-        _volume = volume;
-        await player.setVolume(volume);
-      }
-
-      // playbackRate
-      if (playbackRate != _playbackRate) {
-        _playbackRate = playbackRate;
-        await player.setPlaybackRate(playbackRate);
-      }
-
-      // balance
-      if (!kIsWeb && balance != _balance && balance >= -1 && balance <= 1) {
-        _balance = balance;
-        await player.setBalance(balance);
-      }
-
-      // autoplay
-      if (srcChanged && autoplay) {
-        await player.resume();
+        if (control.getBool("autoplay", false)!) {
+          await _resume(playbackVersion);
+        }
       }
     }();
+  }
+
+  /// Applies the control's release mode, volume, playback rate and balance to
+  /// [player], when they changed.
+  Future<void> _applySettings() async {
+    // releaseMode
+    final releaseMode = parseReleaseMode(control.getString("release_mode"));
+    if (releaseMode != null && releaseMode != _releaseMode) {
+      _releaseMode = releaseMode;
+      await player.setReleaseMode(releaseMode);
+    }
+
+    // volume
+    final volume = control.getDouble("volume", 1.0)!;
+    if (volume != _volume && volume >= 0 && volume <= 1) {
+      _volume = volume;
+      await player.setVolume(volume);
+    }
+
+    // playbackRate
+    final playbackRate = control.getDouble("playback_rate", 1)!;
+    if (playbackRate != _playbackRate) {
+      _playbackRate = playbackRate;
+      await player.setPlaybackRate(playbackRate);
+    }
+
+    // balance
+    final balance = control.getDouble("balance", 0.0)!;
+    if (!kIsWeb && balance != _balance && balance >= -1 && balance <= 1) {
+      _balance = balance;
+      await player.setBalance(balance);
+    }
+  }
+
+  /// Loads a source that failed to load or was released again, then does what
+  /// [update] couldn't do after the failure.
+  ///
+  /// When `src` changes in the meantime, what it changed to is left to [update].
+  Future<void> _reloadSource() async {
+    final sourceVersion = _sourceVersion;
+    await _applySource();
+    if (sourceVersion != _sourceVersion) return;
+    _volume = null;
+    _balance = null;
+    _playbackRate = null;
+    await _applySettings();
+    control.triggerEvent("loaded");
+  }
+
+  /// Applies the control's `context` to [player] on the platforms that
+  /// support audio contexts.
+  Future<void> _applyAudioContext() async {
+    if (!isMobilePlatform()) return;
+    final value = control.get("context");
+    final explicitChanged = _hasExplicitAudioContext != (value != null);
+    _hasExplicitAudioContext = value != null;
+    if (value == null && _audioContext == null) return;
+    final audioContext = parseAudioContext(value);
+    if (audioContext == _audioContext && !(isIOSMobile() && explicitChanged)) {
+      return;
+    }
+    _audioContext = audioContext;
+    await player.setAudioContext(audioContext);
+    if (isIOSMobile()) await IosDucking.contextApplied(audioContext);
+  }
+
+  /// Starts [player], after restoring any context [IosDucking] released, unless
+  /// the request made at [playbackVersion] was cancelled.
+  Future<void> _resume(int playbackVersion) async {
+    if (playbackVersion != _playbackVersion) return;
+    if (!isIOSMobile()) return player.resume();
+    try {
+      await IosDucking.startPlaying(this);
+      if (playbackVersion != _playbackVersion) {
+        await IosDucking.stopPlaying(this);
+        return;
+      }
+      await player.resume();
+    } catch (_) {
+      await IosDucking.stopPlaying(this);
+      rethrow;
+    }
+  }
+
+  /// Tells [IosDucking] when [player] stops playing.
+  ///
+  /// iOS reports [PlayerState.completed] each time audio under
+  /// [ReleaseMode.loop] restarts, while it keeps playing.
+  void _trackIosDucking(PlayerState state) {
+    if (!isIOSMobile() ||
+        state == PlayerState.playing ||
+        (state == PlayerState.completed && _releaseMode == ReleaseMode.loop)) {
+      return;
+    }
+    IosDucking.stopPlaying(this);
+  }
+
+  /// Whether a source is set, in [_src] or [_srcBytes].
+  bool get _hasSource => _src != null || _srcBytes != null;
+
+  /// Throws if no source is set, for the method called [name].
+  void _requireSource(String name) {
+    if (!_hasSource) {
+      throw Exception("Audio must have \"src\" specified to $name.");
+    }
+  }
+
+  /// Releases [player] once any source being prepared is ready, without making
+  /// the caller wait for that.
+  ///
+  /// Releasing during a load leaves it unfinished: iOS never completes it, and
+  /// Android only when it times out, which would hold up all that is queued
+  /// behind it.
+  void _release() {
+    _sourceReleased = true;
+    _sourcePreparation = _sourcePreparation.then((_) async {
+      try {
+        await player.release();
+      } catch (error) {
+        debugPrint("Audio could not be released: $error");
+      }
+    });
+  }
+
+  /// Waits for the latest source preparation, including any queued meanwhile.
+  Future<void> _sourcePrepared() async {
+    Future<void> preparation;
+    do {
+      preparation = _sourcePreparation;
+      await preparation;
+    } while (preparation != _sourcePreparation);
   }
 
   /// Pushes the currently tracked source ([_src] or [_srcBytes]) to the native
@@ -136,21 +321,71 @@ class AudioService extends FletService {
   /// Used both when the source changes (from [update]) and to re-prepare
   /// playback after the player has reached [PlayerState.completed] under
   /// [ReleaseMode.release], where the native source has already been freed.
-  Future<void> _applySource() async {
-    if (_src != null) {
-      final assetSrc = control.backend.getAssetSource(_src!);
-      if (assetSrc.isFile) {
-        await player.setSourceDeviceFile(assetSrc.path);
-      } else {
-        await player.setSourceUrl(assetSrc.path);
+  /// Preparations run in order because setting a byte source may first write
+  /// a temporary file. A superseded preparation must finish before the latest
+  /// source is installed, otherwise its delayed write could replace that source.
+  ///
+  /// The source is set once [after] completes, while the preparation is queued
+  /// right away, so that a method call received in the meantime waits for it.
+  Future<void> _applySource({Future<void>? after}) {
+    _sourceReleased = false;
+    final src = _src;
+    final srcBytes = _srcBytes;
+    final sourceVersion = _sourceVersion;
+    final preparation = _sourcePreparation.then((_) async {
+      await after;
+      if (sourceVersion != _sourceVersion) return;
+      if (src != null) {
+        final assetSrc = control.backend.getAssetSource(src);
+        if (assetSrc.isFile) {
+          await player.setSourceDeviceFile(assetSrc.path);
+        } else {
+          await player.setSourceUrl(assetSrc.path);
+        }
+      } else if (srcBytes != null) {
+        await player.setSourceBytes(srcBytes);
       }
-    } else if (_srcBytes != null) {
-      await player.setSourceBytes(_srcBytes!);
-    }
+    });
+    // Keep the queue usable after a failed load. The caller still receives the
+    // original error and decides whether this preparation was superseded.
+    _sourcePreparation = preparation.then<void>((_) {
+      _sourceError = null;
+    }, onError: (Object error, StackTrace stackTrace) {
+      _sourceError = error;
+    });
+    return preparation;
   }
 
+  /// Handles a method call from Python.
+  ///
+  /// `play`, `resume` and `seek` throw while no source is set. The native
+  /// players don't reject them: a seek never reports completion, so the call
+  /// would only fail after timing out, and the web and Linux players remember
+  /// a `resume` and start playing as soon as a source is set.
+  ///
+  /// They also wait for a source that is still being prepared, because a seek
+  /// before that never completes on iOS. A source that failed to load or was
+  /// released is loaded again, so they either report its error at once or work
+  /// once it is available. A `seek` throws if the source is cleared during the
+  /// wait.
+  ///
+  /// `pause` and `release` cancel a `play` or `resume` that is still waiting, and
+  /// so does clearing the source. A cancelled call returns without an error.
   Future<dynamic> _invokeMethod(String name, dynamic args) async {
     debugPrint("Audio.$name($args)");
+    if (name == "pause" || name == "release") _playbackVersion++;
+    final playbackVersion = _playbackVersion;
+    final startsPlayback = name == "play" || name == "resume";
+    if (const ["play", "resume", "seek"].contains(name)) {
+      _requireSource(name);
+      await _sourcePrepared();
+      if (startsPlayback && playbackVersion != _playbackVersion) return;
+      if ((_sourceError != null || _sourceReleased) && _hasSource) {
+        await _reloadSource();
+      }
+      if (startsPlayback && playbackVersion != _playbackVersion) return;
+      _requireSource(name);
+    }
     switch (name) {
       case "play":
         final position = parseDuration(args["position"]);
@@ -159,6 +394,7 @@ class AudioService extends FletService {
           // been freed, so re-prepare it before resuming.
           if ((_releaseMode ?? ReleaseMode.release) == ReleaseMode.release) {
             await _applySource();
+            if (playbackVersion != _playbackVersion) return;
           }
           // Position is already reset to the start after completion, so only
           // seek when a specific non-zero position was requested.
@@ -168,16 +404,16 @@ class AudioService extends FletService {
         } else if (position != null) {
           await player.seek(position);
         }
-        await player.resume();
+        await _resume(playbackVersion);
         break;
       case "resume":
-        await player.resume();
+        await _resume(playbackVersion);
         break;
       case "pause":
         await player.pause();
         break;
       case "release":
-        await player.release();
+        _release();
         break;
       case "seek":
         final position = parseDuration(args["position"]);
@@ -203,12 +439,15 @@ class AudioService extends FletService {
   @override
   void dispose() {
     debugPrint("Audio(${control.id}).dispose()");
+    _sourceVersion++;
+    _playbackVersion++;
     control.removeInvokeMethodListener(_invokeMethod);
     _onDurationChangedSubscription?.cancel();
     _onStateChangedSubscription?.cancel();
     _onPositionChangedSubscription?.cancel();
     _onSeekCompleteSubscription?.cancel();
     player.dispose();
+    if (isIOSMobile()) IosDucking.stopPlaying(this);
     super.dispose();
   }
 }

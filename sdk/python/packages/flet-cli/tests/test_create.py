@@ -51,6 +51,18 @@ class TestNextSteps:
         """The printed lines that are commands, not prose."""
         return [ln for ln in lines if ln.startswith(("cd ", "flet "))]
 
+    def test_created_app_has_a_renderable_svg_icon(self, tmp_path, monkeypatch, capsys):
+        from flet_platform_assets import load_source
+
+        create_app("sample", tmp_path, monkeypatch, capsys)
+        assets = tmp_path / "sample" / "src" / "assets"
+        assert (assets / "icon.svg").is_file()
+        assert not (assets / "icon.png").exists()
+        image, pre_rendered = load_source(assets / "icon.svg")
+        assert image.size == (2048, 2048)
+        assert image.getbbox() is not None
+        assert pre_rendered is False
+
     def test_printed_flet_commands_parse(self, tmp_path, monkeypatch, capsys):
         """Every `flet ...` line printed as a next step is a valid command."""
         lines = create_app("sample", tmp_path, monkeypatch, capsys)

@@ -11,6 +11,7 @@
 // of `kIsWeb` runtime gates.
 
 import 'dart:async';
+import 'dart:collection';
 import 'dart:convert';
 import 'dart:io';
 import 'dart:typed_data';
@@ -212,6 +213,10 @@ class _DartBridgeBackendChannel implements FletBackendChannel {
   final FletBackendChannelOnDisconnectCallback _onDisconnect;
   StreamSubscription<Uint8List>? _subscription;
 
+  /// Packets waiting for Python's handler, in send order.
+  final Queue<Uint8List> _pending = Queue();
+  Timer? _retryTimer;
+
   @override
   Future connect() async {
     _subscription = _bridge.messages.listen(
@@ -234,25 +239,39 @@ class _DartBridgeBackendChannel implements FletBackendChannel {
     // called `dart_bridge.set_enqueue_handler_func` — bridge.send returns
     // false in that case. Once Flet's app.py registers the handler (which
     // happens before `runpy.run_module` is dispatched), bridge.send returns
-    // true synchronously.
-    if (_bridge.send(packet)) return;
-    _retrySend(packet);
+    // true synchronously. Waiting packets go first, so none is overtaken.
+    if (_pending.isEmpty && _bridge.send(packet)) return;
+    _pending.add(packet);
+    _retryTimer ??= _retryPending();
   }
 
-  void _retrySend(Uint8List packet) {
+  Timer _retryPending() {
     const interval = Duration(milliseconds: 50);
-    const deadline = Duration(seconds: 30);
-    final start = DateTime.now();
-    Timer.periodic(interval, (timer) {
-      if (_bridge.send(packet)) {
-        timer.cancel();
-      } else if (DateTime.now().difference(start) > deadline) {
-        timer.cancel();
+    // Counts attempts, not wall time: a suspended app, such as one iOS
+    // launches in the background for a notification action, makes none, so
+    // the wait covers 30 seconds of running time.
+    const maxAttempts = 600;
+    var attempts = 0;
+    return Timer.periodic(interval, (timer) {
+      while (_pending.isNotEmpty && _bridge.send(_pending.first)) {
+        _pending.removeFirst();
+      }
+      if (_pending.isEmpty) {
+        _stopRetrying();
+      } else if (++attempts >= maxAttempts) {
+        _stopRetrying();
         debugPrint(
           "PythonBridge send timed out: Python handler never registered.",
         );
       }
     });
+  }
+
+  /// Cancels the retry timer and drops the packets still waiting.
+  void _stopRetrying() {
+    _retryTimer?.cancel();
+    _retryTimer = null;
+    _pending.clear();
   }
 
   @override
@@ -263,6 +282,7 @@ class _DartBridgeBackendChannel implements FletBackendChannel {
 
   @override
   void disconnect() {
+    _stopRetrying();
     _subscription?.cancel();
     _subscription = null;
   }

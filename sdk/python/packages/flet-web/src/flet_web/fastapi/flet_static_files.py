@@ -1,12 +1,19 @@
+import hashlib
 import logging
 import mimetypes
 import os
 import shutil
 import tempfile
+from email.utils import parsedate
 from pathlib import Path
-from typing import Optional
+from typing import Optional, Union
 
+import anyio
+import anyio.to_thread
 from fastapi.staticfiles import StaticFiles
+from starlette.datastructures import Headers
+from starlette.responses import FileResponse, Response
+from starlette.staticfiles import NotModifiedResponse
 from starlette.types import Receive, Scope, Send
 
 import flet_web.fastapi as flet_fastapi
@@ -18,6 +25,7 @@ from flet_web import (
     patch_index_html,
     patch_manifest_json,
 )
+from flet_web.compression import accepts_gzip, is_compressible, write_gzip
 from flet_web.fastapi.flet_app_manager import app_manager
 
 logger = logging.getLogger(flet_fastapi.__name__)
@@ -63,14 +71,23 @@ class FletStaticFiles(StaticFiles):
     """
     Serve Flet app static files.
 
+    Text and WebAssembly files, like the web client's `main.dart.wasm` and
+    `main.dart.js`, are sent gzip-compressed to browsers that accept it, which
+    makes them about 3x smaller to download. Each file is compressed once, in a
+    worker thread, on its first request, and the compressed copy is kept in a
+    temporary directory until the server exits. Byte range requests get the
+    uncompressed file.
+
     Args:
         assets_dir: Path to app's assets directory. A relative path is resolved
             against the current working directory.
         app_name: PWA application name.
         app_short_name: PWA application short name.
         app_description: PWA application description.
-        web_renderer: Type of web renderer.
-        route_url_strategy: Routing URL strategy.
+        web_renderer: Type of web renderer, as a `WebRenderer` or its value, e.g.
+            `"canvaskit"`.
+        route_url_strategy: Routing URL strategy, as a `RouteUrlStrategy` or its
+            value, e.g. `"hash"`.
         no_cdn: Whether not load CanvasKit, Pyodide, and fonts from CDN.
         websocket_endpoint_path: Path of Flet app WebSocket handler. A path
             without a leading `/` is resolved against the app mount path.
@@ -97,11 +114,14 @@ class FletStaticFiles(StaticFiles):
         self.__app_name = app_name
         self.__app_short_name = app_short_name
         self.__app_description = app_description
-        self.__web_renderer = web_renderer
-        self.__route_url_strategy = route_url_strategy
+        self.__web_renderer = WebRenderer(web_renderer)
+        self.__route_url_strategy = RouteUrlStrategy(route_url_strategy)
         self.__no_cdn = no_cdn
         self.__websocket_endpoint_path = websocket_endpoint_path
         self.__once = Once()
+        self.__gzip_dir: Optional[str] = None
+        self.__gzip_locks: dict[str, anyio.Lock] = {}
+        self.__gzip_failures: set[str] = set()
 
         env_web_renderer = os.getenv("FLET_WEB_RENDERER")
         if env_web_renderer:
@@ -119,16 +139,192 @@ class FletStaticFiles(StaticFiles):
         logger.info(f"Route URL strategy configured: {self.__route_url_strategy}")
         logger.info(f"No CDN configured: {self.__no_cdn}")
 
+    @property
+    def route_url_strategy(self) -> RouteUrlStrategy:
+        """
+        The route URL strategy written into the served `index.html`: the
+        `route_url_strategy` argument, or `FLET_WEB_ROUTE_URL_STRATEGY` if set.
+        """
+        return self.__route_url_strategy
+
     async def __call__(self, scope: Scope, receive: Receive, send: Send) -> None:
         await self.__once.do(self.__config, scope["root_path"])
         await super().__call__(scope, receive, send)
 
+    def file_response(
+        self,
+        full_path: Union[str, os.PathLike[str]],
+        stat_result: os.stat_result,
+        scope: Scope,
+        status_code: int = 200,
+    ) -> Response:
+        """
+        Respond with a static file, adding `Vary: Accept-Encoding` to
+        compressible ones.
+
+        Unlike `StaticFiles`, this never responds with `304 Not Modified`:
+        `get_response()` checks the browser's cached copy once it has picked
+        the plain or compressed file.
+        """
+        response = FileResponse(
+            full_path, status_code=status_code, stat_result=stat_result
+        )
+        if is_compressible(str(full_path), stat_result):
+            # Tells caches that the response depends on the browser's
+            # `Accept-Encoding`, so they keep the plain and gzip versions apart.
+            response.headers["Vary"] = "Accept-Encoding"
+        return response
+
+    async def get_response(self, path: str, scope: Scope) -> Response:
+        """
+        Respond with a static file, gzip-compressed if the browser accepts it.
+
+        Args:
+            path: Requested path, relative to the mounted static root.
+            scope: ASGI request scope.
+
+        Returns:
+            The compressed file for a `200` response of a compressible file to a
+                request that accepts gzip and has no `Range` header; otherwise
+                the response of `StaticFiles`. Either is `304 Not Modified` if
+                the browser has that same file cached.
+        """
+
+        response = await super().get_response(path, scope)
+        if response.status_code != 200 or not isinstance(response, FileResponse):
+            return response
+
+        request_headers = Headers(scope=scope)
+        if (
+            response.stat_result is not None
+            and is_compressible(str(response.path), response.stat_result)
+            and "range" not in request_headers
+            and accepts_gzip(request_headers.get("accept-encoding", ""))
+        ):
+            # Derived from the plain file's `ETag`, so it changes whenever the
+            # file does, and never equals it.
+            etag = response.headers["etag"].removesuffix('"') + '-gzip"'
+            gzip_headers = Headers(
+                {
+                    "etag": etag,
+                    "last-modified": response.headers["last-modified"],
+                    "vary": "Accept-Encoding",
+                }
+            )
+            # Checked before compressing, so a browser revalidating its copy
+            # after a server restart doesn't wait for the file to be compressed.
+            if self.is_not_modified(gzip_headers, request_headers):
+                return NotModifiedResponse(gzip_headers)
+
+            compressed = await self.__compress(str(response.path), response.stat_result)
+            if compressed:
+                gzip_path, gzip_stat = compressed
+                response = FileResponse(
+                    gzip_path,
+                    stat_result=gzip_stat,
+                    media_type=response.media_type,
+                    headers={
+                        "Content-Encoding": "gzip",
+                        "ETag": etag,
+                        "Vary": "Accept-Encoding",
+                    },
+                )
+
+        if self.is_not_modified(response.headers, request_headers):
+            return NotModifiedResponse(response.headers)
+        return response
+
+    def is_not_modified(
+        self, response_headers: Headers, request_headers: Headers
+    ) -> bool:
+        """
+        Whether the browser's cached copy of a file is still current.
+
+        `If-None-Match`, when sent, decides alone, so a cached copy in the
+        other encoding, which has the same `Last-Modified`, is never taken as
+        current.
+
+        Args:
+            response_headers: Headers of the response that would be sent.
+            request_headers: Headers of the request.
+        """
+
+        if if_none_match := request_headers.get("if-none-match"):
+            tags = [tag.strip().removeprefix("W/") for tag in if_none_match.split(",")]
+            return response_headers["etag"] in tags or "*" in tags
+
+        if_modified_since = parsedate(request_headers.get("if-modified-since", ""))
+        last_modified = parsedate(response_headers.get("last-modified", ""))
+        return (
+            if_modified_since is not None
+            and last_modified is not None
+            and if_modified_since >= last_modified
+        )
+
+    async def __compress(
+        self, path: str, stat_result: os.stat_result
+    ) -> Optional[tuple[str, os.stat_result]]:
+        """
+        Get the gzip-compressed copy of a file, compressing it first if needed.
+
+        Copies are keyed by the file's identity on disk, size and modification
+        time: a file changed while the server runs is compressed again, and
+        paths that name the same file, such as differently cased ones on a
+        case-insensitive file system, share one copy. Concurrent requests for
+        the same file wait for one compression. A file that fails to compress
+        is logged and not tried again until it changes.
+
+        Args:
+            path: Path of the file.
+            stat_result: The file's `os.stat()` result.
+
+        Returns:
+            The path and `os.stat()` result of the compressed copy, or `None` if
+                the file could not be compressed.
+        """
+
+        assert self.__gzip_dir
+        identity = (
+            f"{stat_result.st_dev}:{stat_result.st_ino}"
+            if stat_result.st_ino
+            else os.path.normcase(os.path.realpath(path))
+        )
+        key = hashlib.sha256(
+            f"{identity}\0{stat_result.st_size}\0{stat_result.st_mtime_ns}".encode()
+        ).hexdigest()
+        if key in self.__gzip_failures:
+            return None
+        gzip_path = os.path.join(self.__gzip_dir, f"{key}.gz")
+
+        def compress() -> os.stat_result:
+            if not os.path.exists(gzip_path):
+                write_gzip(path, gzip_path, stat_result)
+            return os.stat(gzip_path)
+
+        lock = self.__gzip_locks.setdefault(key, anyio.Lock())
+        async with lock:
+            if key in self.__gzip_failures:
+                return None
+            try:
+                return gzip_path, await anyio.to_thread.run_sync(compress)
+            except OSError as e:
+                logger.warning(f"Could not compress {path}: {e}")
+                self.__gzip_failures.add(key)
+                return None
+
     def lookup_path(self, path: str) -> tuple[str, Optional[os.stat_result]]:
         """Resolve a static file path, with SPA fallback for client-side routes.
 
-        Route-like paths (no extension, or `.html`) that don't match a file
-        fall back to `index.html` so the Flutter client can handle routing.
-        Asset-like paths (any other extension) resolve to a real `404`.
+        With the `path` route URL strategy, route-like paths (no extension, or
+        `.html`) that don't match a file fall back to `index.html` so the
+        Flutter client can handle routing. Asset-like paths (any other
+        extension) resolve to a real `404`.
+
+        With the `hash` strategy, routes live in the URL fragment and never
+        reach the server, so there is no fallback: any path that doesn't match
+        a file resolves to a real `404` (with a `404.html` from the assets
+        directory as its body, if there is one), while the mount root still
+        serves `index.html`.
 
         Args:
             path: Requested path, relative to the mounted static root
@@ -141,7 +337,10 @@ class FletStaticFiles(StaticFiles):
         logger.debug(f"StaticFiles.lookup_path: {self.__app_mount_path} {path}")
         full_path, stat_result = super().lookup_path(path)
 
-        if stat_result is not None:
+        if (
+            stat_result is not None
+            or self.__route_url_strategy == RouteUrlStrategy.HASH
+        ):
             return full_path, stat_result
 
         # Not found: SPA fallback only for route-like paths.
@@ -174,6 +373,11 @@ class FletStaticFiles(StaticFiles):
         temp_dir = tempfile.mkdtemp()
         app_manager.add_temp_dir(temp_dir)
         logger.info(f"Temp dir created for patched index and manifest: {temp_dir}")
+
+        # where gzip-compressed copies of served files are stored; outside
+        # temp_dir, which is served
+        self.__gzip_dir = tempfile.mkdtemp()
+        app_manager.add_temp_dir(self.__gzip_dir)
 
         # "standard" web files
         web_dir = get_package_web_dir()

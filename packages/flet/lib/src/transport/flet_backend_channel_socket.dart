@@ -20,6 +20,7 @@ class FletSocketBackendChannel implements FletBackendChannel {
   FletBackendChannelOnPacketCallback onPacket;
   FletBackendChannelOnDisconnectCallback onDisconnect;
   Socket? _socket;
+  bool _disconnected = false;
   late final bool _isLocalConnection;
   late final int _defaultReconnectIntervalMs;
 
@@ -62,15 +63,27 @@ class FletSocketBackendChannel implements FletBackendChannel {
       _onBytes,
       onError: (error) {
         debugPrint("Error: $error");
-        _socket?.destroy();
-        onDisconnect();
+        _onClosed();
       },
       onDone: () {
         debugPrint('Server disconnected.');
-        _socket?.destroy();
-        onDisconnect();
+        _onClosed();
       },
     );
+  }
+
+  /// Releases the socket and reports the disconnect to [onDisconnect] once.
+  ///
+  /// A socket error, such as a connection reset, is delivered as an `onError`
+  /// event immediately followed by `onDone`. Each [onDisconnect] call makes
+  /// [FletBackend] schedule a reconnect, and two overlapping reconnects keep
+  /// replacing each other's connection on the server, which restarts the
+  /// session over and over.
+  void _onClosed() {
+    _socket?.destroy();
+    if (_disconnected) return;
+    _disconnected = true;
+    onDisconnect();
   }
 
   void _onBytes(Uint8List chunk) {

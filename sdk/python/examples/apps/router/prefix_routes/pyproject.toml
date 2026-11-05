@@ -12,6 +12,7 @@ dev = ["flet-cli", "flet-desktop", "flet-web"]
 
 [tool.flet.gallery]
 categories = ["Navigation/Router"]
+platforms = ["web"]
 
 [tool.flet.metadata]
 title = "Prefix routes"
@@ -21,7 +22,6 @@ complexity = "basic"
 features = ["pathless layouts", "path-only grouping", "use_route_outlet"]
 
 [tool.flet]
-platforms = ["web"]
 org = "dev.flet"
 company = "Flet"
 copyright = "Copyright (C) 2023-2026 by Flet"

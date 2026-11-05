@@ -3,6 +3,7 @@
 #include <flutter_windows.h>
 #include <io.h>
 #include <stdio.h>
+#include <wchar.h>
 #include <windows.h>
 
 #include <iostream>
@@ -45,6 +46,17 @@ bool HasEnvironmentVariable(const wchar_t* name) {
   ::SetLastError(ERROR_SUCCESS);
   const DWORD value_length = ::GetEnvironmentVariableW(name, nullptr, 0);
   return value_length > 0 || ::GetLastError() != ERROR_ENVVAR_NOT_FOUND;
+}
+
+bool IsEnvironmentVariableTrue(const wchar_t* name) {
+  wchar_t value[8];
+  const DWORD value_length =
+      ::GetEnvironmentVariableW(name, value, ARRAYSIZE(value));
+  if (value_length == 0 || value_length >= ARRAYSIZE(value)) {
+    return false;
+  }
+  return _wcsicmp(value, L"1") == 0 || _wcsicmp(value, L"true") == 0 ||
+         _wcsicmp(value, L"yes") == 0;
 }
 
 std::string Utf8FromUtf16(const wchar_t* utf16_string) {

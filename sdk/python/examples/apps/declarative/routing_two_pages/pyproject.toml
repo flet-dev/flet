@@ -12,6 +12,7 @@ dev = ["flet-cli", "flet-desktop", "flet-web"]
 
 [tool.flet.gallery]
 categories = ["Declarative", "Navigation/Routing", "Featured"]
+platforms = ["web"]
 screenshots = ["packages/flet/integration_tests/examples/apps/golden/macos/declarative_routing_two_pages/declarative_routing_two_pages.png"]
 
 [tool.flet.metadata]
@@ -22,7 +23,6 @@ complexity = "intermediate"
 features = ["routing", "context", "theme switching"]
 
 [tool.flet]
-platforms = ["web"]
 org = "dev.flet"
 company = "Flet"
 copyright = "Copyright (C) 2023-2026 by Flet"

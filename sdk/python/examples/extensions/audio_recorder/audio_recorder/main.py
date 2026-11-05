@@ -6,14 +6,20 @@ def main(page: ft.Page):
     page.horizontal_alignment = ft.CrossAxisAlignment.CENTER
     page.appbar = ft.AppBar(title=ft.Text("Audio Recorder"), center_title=True)
 
-    path = "test-audio-file.wav"
-
     def show_snackbar(message):
         page.show_dialog(ft.SnackBar(ft.Text(message)))
 
     async def handle_recording_start(e: ft.Event[ft.Button]):
-        show_snackbar("Starting recording...")
-        await recorder.start_recording(output_path=path)
+        if page.web:
+            # The browser keeps the recording; stop_recording() returns its URL.
+            output_path = None
+        else:
+            directory = await ft.StoragePaths().get_application_documents_directory()
+            output_path = f"{directory}/test-audio-file.wav"
+        if await recorder.start_recording(output_path=output_path):
+            show_snackbar("Recording...")
+        else:
+            show_snackbar("Could not start recording.")
 
     async def handle_recording_stop(e: ft.Event[ft.Button]):
         output_path = await recorder.stop_recording()

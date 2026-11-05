@@ -13,6 +13,7 @@ __all__ = [
     "DragUpdateEvent",
     "ForcePressEvent",
     "HoverEvent",
+    "InteractiveViewerTransformEvent",
     "LongPressDownEvent",
     "LongPressEndEvent",
     "LongPressMoveUpdateEvent",
@@ -463,6 +464,41 @@ class ScaleUpdateEvent(Event[EventControlType]):
     Recorded timestamp of the source pointer event that triggered the scale event.
 
     Could be `None` if triggered from proxied events such as accessibility.
+    """
+
+
+@dataclass(kw_only=True)
+class InteractiveViewerTransformEvent(Event[EventControlType]):
+    """
+    Effective transform of an ``InteractiveViewer`` after a change.
+
+    ``scale`` is the clamped scale (``1.0`` is identity). ``matrix`` is the
+    column-major 4x4 matrix. This is not the relative scale from a gesture.
+    """
+
+    scale: float = field(metadata={"data_field": "s"})
+    """
+    Maximum scale factor along the matrix axes. ``1.0`` is identity.
+    """
+
+    translation_x: float = field(metadata={"data_field": "tx"})
+    """
+    Horizontal translation, in logical pixels.
+    """
+
+    translation_y: float = field(metadata={"data_field": "ty"})
+    """
+    Vertical translation, in logical pixels.
+    """
+
+    translation_z: float = field(metadata={"data_field": "tz"})
+    """
+    Z translation stored on the matrix.
+    """
+
+    matrix: list[float] = field(metadata={"data_field": "m"})
+    """
+    Column-major 4x4 matrix. Length is 16.
     """
 
 

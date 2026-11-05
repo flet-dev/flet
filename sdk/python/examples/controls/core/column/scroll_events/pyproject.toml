@@ -12,6 +12,7 @@ dev = ["flet-cli", "flet-desktop", "flet-web"]
 
 [tool.flet.gallery]
 categories = ["Layout/Column"]
+platforms = ["web", "macos", "windows", "linux"]
 
 [tool.flet.metadata]
 title = "Column scroll events"
@@ -24,4 +25,3 @@ features = ["on_scroll callback", "scroll event inspection"]
 org = "dev.flet"
 company = "Flet"
 copyright = "Copyright (C) 2023-2026 by Flet"
-platforms = ["web", "macos", "windows", "linux"]

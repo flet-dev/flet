@@ -12,9 +12,11 @@ dev = ["flet-cli", "flet-desktop", "flet-web"]
 
 [tool.flet.gallery]
 categories = ["Utility/FilePicker"]
+platforms = ["web"]
 
 [tool.flet.metadata]
 title = "Pick and upload files"
+docs_intro = "Pick multiple files with [`pick_files()`][flet.FilePicker.pick_files] and upload them with [`upload()`][flet.FilePicker.upload]."
 controls = ["SafeArea", "Column", "FilePicker", "FilePickerFile", "Page", "Text", "ProgressRing", "FilePickerUploadEvent"]
 layout_pattern = "inline-actions"
 complexity = "basic"
@@ -24,4 +26,3 @@ features = ["file upload", "upload progress"]
 org = "dev.flet"
 company = "Flet"
 copyright = "Copyright (C) 2023-2026 by Flet"
-platforms = ["web"]

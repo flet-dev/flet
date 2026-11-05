@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 
 import '../extensions/control.dart';
 import '../models/control.dart';
@@ -224,7 +224,7 @@ class TabControl extends Tab {
   static Key? _keyFromControl(Control control) {
     final controlKey = control.getKey("key");
     if (controlKey is ControlValueKey) {
-      return ValueKey(controlKey.value);
+      return valueKeyFromValue(controlKey.value);
     }
     return null;
   }

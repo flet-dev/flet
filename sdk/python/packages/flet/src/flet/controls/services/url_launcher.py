@@ -112,9 +112,11 @@ class UrlLauncher(Service):
                 `False` if there is no handler available,
                 or the application does not have permission to check. For example:
 
-                - On recent versions of Android and iOS, this will always return `False`
-                    unless the application has been configuration to allow querying the
-                    system for launch support.
+                - On Android 11+ and iOS, this returns `False` for URLs whose scheme
+                    the app doesn't declare: on Android in
+                    [`[tool.flet.android.queries]`](https://flet.dev/docs/publish/android#queries),
+                    on iOS in `LSApplicationQueriesSchemes` of
+                    [`[tool.flet.ios.info]`](https://flet.dev/docs/publish/ios#infoplist).
                 - On web, this will always return `False` except for a few specific
                     schemes that are always assumed to be supported (such as http(s)),
                     as web pages are never allowed to query installed applications.

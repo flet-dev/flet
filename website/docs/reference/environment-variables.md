@@ -171,12 +171,22 @@ before the app starts or at the very top of your `main.py` — to get the same b
 
 ### `FLET_ASSETS_DIR`
 
-Absolute path to the app's assets directory.
+Absolute path to the app's assets directory. When it is set, it takes precedence over the
+`assets_dir` argument of [`ft.run()`][flet.run].
 
-In production apps built with [`flet build`](../publish/index.md), this environment-variable points to the bundled assets absolute location at runtime.
-Use it when your code needs a filesystem path to bundled files (for example, JSON configs, databases, or model files).
+Where it is set:
 
-For local runs, it may be unset depending on how the app is started, so use a fallback:
+- In apps built with [`flet build`](../publish/index.md) (except `web`), it points to the
+  bundled assets at runtime.
+- [`flet run`](../cli/flet-run.md) sets it for your app only when you pass `--assets` or set
+  `FLET_ASSETS_DIR` yourself. Otherwise your app uses its own
+  [`ft.run(assets_dir=...)`][flet.run], `"assets"` next to your script by default. So with
+  `flet run` the order is `--assets`, then `FLET_ASSETS_DIR`, then `ft.run(assets_dir=...)`,
+  then `"assets"`.
+- When you start the script with `python`, it is set only if you set it.
+
+Use it when your code needs a filesystem path to bundled files (for example, JSON configs,
+databases, or model files). As it is often unset in local runs, use a fallback:
 
 ```python
 import os
@@ -195,9 +205,19 @@ ft.run(main, assets_dir="assets")
 For control properties like [`Image.src`](../controls/image.md#flet.Image.src), continue using paths relative
 to the `ft.run(assets_dir=...)`, as described in the [assets cookbook](../cookbook/assets.md).
 
+### `FLET_CLI_LOG_FORMAT`
+
+Output format of `flet build`, `flet debug`, `flet test`, `flet devices` and
+`flet emulators`: `rich`, `plain` or `github`.
+Same as the `--log-format` option, which takes precedence. See
+[`flet build`](../cli/flet-build.md#log-formats).
+
+Defaults to `"github"` when `GITHUB_ACTIONS=true`, otherwise `"rich"`.
+
 ### `FLET_CLI_NO_RICH_OUTPUT`
 
-Whether to disable rich output in the console.
+Whether to disable rich output in the console. Selects `plain` unless
+`--log-format` or `FLET_CLI_LOG_FORMAT` explicitly selects `plain` or `github`.
 
 Defaults to `"false"`.
 
@@ -206,6 +226,21 @@ Defaults to `"false"`.
 Whether to skip running `flutter doctor` when a build fails.
 
 Defaults to `False`.
+
+### `FLET_DESKTOP_FLAVOR`
+
+Flavor of the Flet desktop client on Linux: `full` or `light`. See
+[Linux](../getting-started/installation.md#linux) for what each includes. It
+is read when a desktop app starts the Flet client, and by
+[`flet pack`](../publish/using-pyinstaller.md#linux-client-flavor) to choose
+the client it bundles. It wins over `desktop_flavor` in the `[tool.flet]` table
+of the `pyproject.toml` in the current folder, or else of the nearest one at or above
+the app's script, so an app started from another folder uses its own setting.
+
+Apps packaged with `flet pack` use their bundled client's flavor unless this
+variable overrides it; nearby `pyproject.toml` files are ignored.
+
+Defaults to `light`.
 
 ### `FLET_FORCE_WEB_SERVER`
 
@@ -216,6 +251,30 @@ Set to `true` to force running app as a web app. Automatically set on headless L
 Set to `true` to start app with the main window hidden.
 
 Defaults to `False`.
+
+### `FLET_LINUX_DISTRO`
+
+Linux build of the Flet desktop client to download, for example `debian12`. It is used
+as is, instead of the build Flet picks from the system's glibc version: the newest one
+the system can run.
+
+| Build | Needs glibc | Architectures | [Full flavor](#flet_desktop_flavor) loads |
+|---|---|---|---|
+| `debian10` | 2.28 | x86-64 | `libmpv.so.1` |
+| `ubuntu20.04` | 2.31 | x86-64, ARM64 | `libmpv.so.1` |
+| `ubuntu22.04` | 2.35 | x86-64, ARM64 | `libmpv.so.1` |
+| `debian12` | 2.36 | x86-64, ARM64 | `libmpv.so.2` |
+| `ubuntu24.04` | 2.39 | x86-64, ARM64 | `libmpv.so.2` |
+
+Set it when the picked build expects a different `libmpv` than the system ships,
+or when Flet can't detect the glibc version. The selected build must still be
+compatible with the system's glibc and architecture. For example, `debian12`
+requires glibc 2.36 and cannot run on Rocky Linux or AlmaLinux 9 (glibc 2.34);
+see [Video](../controls/video/index.md#linux) for local build guidance.
+
+Each build is cached in its own folder in `~/.flet/client`, so after an OS upgrade or a
+change of this variable, Flet downloads the matching build instead of reusing the
+previous one.
 
 ### `FLET_LOG_LEVEL`
 
@@ -268,6 +327,16 @@ keychain holds exactly one.
 Maximum allowed size (in bytes) of uploaded files.
 
 Default is unlimited.
+
+### `FLET_NO_IMPELLER`
+
+Set to `true` to render a desktop app (macOS, Windows or Linux) with Skia
+instead of Impeller, Flutter's default renderer. It is read when the app
+starts, by the desktop app that [`flet run`](../cli/flet-run.md) opens and by
+apps built with [`flet build`](../publish/index.md#renderer).
+[`flet run --no-impeller`](../cli/flet-run.md#--no-impeller) sets it.
+
+Defaults to `False`.
 
 ### `FLET_OAUTH_CALLBACK_HANDLER_ENDPOINT`
 

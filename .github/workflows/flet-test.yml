@@ -38,7 +38,8 @@ env:
   PYTHONUTF8: 1
 
   # https://flet.dev/docs/reference/environment-variables
-  FLET_CLI_NO_RICH_OUTPUT: 1
+  # Override automatic GitHub Actions groups/annotations for on-device tests.
+  FLET_CLI_LOG_FORMAT: plain
   # Use the Flutter the setup action puts on PATH, not fvm.
   FLET_TEST_DISABLE_FVM: 1
 
@@ -65,7 +66,7 @@ jobs:
             test_cmd: uv run flet test macos --python-version ${PYTHON_VERSION} --yes -v
 
           - platform: ios
-            runner: macos-26
+            runner: xcode-27
             test_cmd: uv run flet test ios -d "$IOS_UDID" --python-version ${PYTHON_VERSION} --yes -v
 
           - platform: windows
@@ -133,19 +134,32 @@ jobs:
             $LINUX_DEPS xvfb libgl1-mesa-dri
           sudo apt-get clean
 
-      # -------- iOS: boot a simulator, capture its UDID --------
-      - name: Boot iOS simulator
+      # -------- iOS: boot an iOS 27 simulator, capture its UDID --------
+      - name: Boot iOS 27 simulator
         if: matrix.platform == 'ios'
         shell: bash
         run: |
+          xcodebuild -version
+          RUNTIME=$(xcrun simctl list runtimes -j | jq -r '
+            [.runtimes[] | select(.isAvailable and
+              (.identifier | startswith("com.apple.CoreSimulator.SimRuntime.iOS-27-")))]
+            | sort_by(.version | split(".") | map(tonumber))
+            | last | .identifier // empty')
+          if [ -z "$RUNTIME" ]; then
+            echo "No available iOS 27 simulator runtime found" >&2
+            xcrun simctl list runtimes
+            exit 1
+          fi
           UDID=$(xcrun simctl list devices available -j \
-            | jq -r '[.devices[][] | select(.name | startswith("iPhone"))][0].udid')
-          if [ -z "$UDID" ] || [ "$UDID" = "null" ]; then
-            echo "No available iPhone simulator found" >&2
+            | jq -r --arg runtime "$RUNTIME" \
+              '[.devices[$runtime][]? | select(.name | startswith("iPhone"))][0].udid // empty')
+          if [ -z "$UDID" ]; then
+            echo "No available iPhone simulator found for $RUNTIME" >&2
             xcrun simctl list devices available
             exit 1
           fi
-          echo "Using iOS simulator $UDID"
+          echo "Using iOS simulator runtime $RUNTIME"
+          xcrun simctl list devices available "$RUNTIME"
           xcrun simctl boot "$UDID" || true
           xcrun simctl bootstatus "$UDID" -b
           echo "IOS_UDID=$UDID" >> "$GITHUB_ENV"

@@ -1,6 +1,6 @@
 from dataclasses import dataclass
 from enum import Enum
-from typing import TYPE_CHECKING
+from typing import TYPE_CHECKING, Optional
 
 import flet as ft
 
@@ -8,7 +8,9 @@ if TYPE_CHECKING:
     from flet_audio.audio import Audio  # noqa
 
 __all__ = [
+    "AudioContext",
     "AudioDurationChangeEvent",
+    "AudioFocus",
     "AudioPositionChangeEvent",
     "AudioState",
     "AudioStateChangeEvent",
@@ -117,3 +119,93 @@ class AudioDurationChangeEvent(ft.Event["Audio"]):
 
     duration: ft.Duration
     """The duration of the audio."""
+
+
+class AudioFocus(Enum):
+    """
+    How an :class:`~flet_audio.Audio` shares audio with other audio on mobile platforms.
+
+    On Android, focus belongs to each player, so an :class:`~flet_audio.Audio` competes
+    with others of the same app as it does with other apps. On iOS, it only decides how
+    the app treats other apps, because all audio of an app always plays together.
+    """
+
+    GAIN = "gain"
+    """
+    Plays as the only audio.
+
+    On Android, any other audio that is playing, including another
+    :class:`~flet_audio.Audio` of the same app, is paused and doesn't resume on its
+    own. On iOS, other apps' audio is interrupted and doesn't resume on its own. If
+    the app has already played audio, this happens as soon as the context is applied,
+    even before this audio plays.
+
+    Best for music players.
+    """
+
+    DUCK_OTHERS = "duckOthers"
+    """
+    Lowers the volume of other apps' audio while this audio plays.
+
+    On Android, another :class:`~flet_audio.Audio` of the same app keeps playing at
+    its own volume. An app can choose to pause its audio instead of having it lowered,
+    which some do for speech. Other apps' audio also stays lowered while this audio is
+    paused, until it is released or finishes after resuming.
+
+    On iOS, other apps' audio returns to its volume once no
+    :class:`~flet_audio.Audio` of the app is playing. An
+    :class:`~flet_audio.Audio` that something else paused still counts as playing until
+    it is paused or released, or finishes after resuming.
+
+    Warning:
+        On iOS, can't be combined with :attr:`flet_audio.AudioContext.respect_silence`.
+    """
+
+    MIX_WITH_OTHERS = "mixWithOthers"
+    """
+    Plays over other audio, which isn't affected.
+
+    On Android, nothing else pauses this audio, though Android still mutes it while a
+    phone call is ringing, during which its position keeps advancing.
+
+    Best for short sound effects that shouldn't lower the volume of other apps.
+
+    Warning:
+        On iOS, can't be combined with :attr:`flet_audio.AudioContext.respect_silence`.
+    """
+
+
+@ft.value(kw_only=True)
+class AudioContext:
+    """
+    How an :class:`~flet_audio.Audio` interacts with the device and with other audio.
+
+    Applies on Android and iOS. Other platforms ignore it.
+
+    Note:
+        On iOS, it applies to the whole app rather than to one
+        :class:`~flet_audio.Audio`, so the one that applied it last decides for all
+        others.
+    """
+
+    focus: Optional[AudioFocus] = None
+    """
+    How the audio shares with other audio.
+
+    If `None`, :attr:`flet_audio.AudioFocus.DUCK_OTHERS` applies on Android, so
+    every :class:`~flet_audio.Audio` of an app plays together, and
+    :attr:`flet_audio.AudioFocus.GAIN` applies on iOS.
+    """
+
+    respect_silence: bool = False
+    """
+    Whether the audio follows the device's silent mode.
+
+    On Android, this plays the audio as a ringtone, so it also follows the ringer
+    volume instead of the media volume.
+
+    Warning:
+        On iOS, can't be combined with :attr:`focus` set to
+        :attr:`flet_audio.AudioFocus.DUCK_OTHERS` or
+        :attr:`flet_audio.AudioFocus.MIX_WITH_OTHERS`.
+    """

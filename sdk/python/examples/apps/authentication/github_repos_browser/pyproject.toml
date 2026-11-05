@@ -10,6 +10,9 @@ dependencies = ["flet", "httpx"]
 [dependency-groups]
 dev = ["flet-cli", "flet-desktop", "flet-web"]
 
+[tool.flet.gallery]
+platforms = ["web"]
+
 [tool.flet.metadata]
 title = "GitHub repos browser"
 controls = ["SafeArea", "Column", "Row", "Text", "Button", "ListView", "ListTile", "GitHubOAuthProvider"]
@@ -21,4 +24,3 @@ features = ["oauth login", "saved token restore", "github api request"]
 org = "dev.flet"
 company = "Flet"
 copyright = "Copyright (C) 2023-2026 by Flet"
-platforms = ["web"]

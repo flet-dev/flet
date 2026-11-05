@@ -1,0 +1,27 @@
+[project]
+name = "notifications-progress"
+version = "1.0.0"
+description = "Shows a download's progress in a notification and updates it as the download advances."
+requires-python = ">=3.10"
+keywords = ["services", "notifications", "progress", "updates", "windows", "android", "async"]
+authors = [{ name = "Flet team", email = "hello@flet.dev" }]
+dependencies = ["flet", "flet-notifications"]
+
+[dependency-groups]
+dev = ["flet-cli", "flet-desktop", "flet-web"]
+
+[tool.flet.gallery]
+categories = ["Utility/Notifications"]
+
+[tool.flet.metadata]
+title = "Progress"
+docs_intro = "On Android, showing the same ID again updates the notification. On Windows, [`update_windows_progress()`][flet_notifications.Notifications.update_windows_progress] updates the bar in place, and returns `False` once the user has dismissed the notification. Android and Windows only."
+controls = ["SafeArea", "Button", "SnackBar", "Notifications"]
+layout_pattern = "inline-actions"
+complexity = "intermediate"
+features = ["progress notifications", "in-place updates"]
+
+[tool.flet]
+org = "dev.flet"
+company = "Flet"
+copyright = "Copyright (C) 2023-2026 by Flet"

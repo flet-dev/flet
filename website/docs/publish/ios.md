@@ -352,12 +352,10 @@ Both simple and complex structures are supported:
 
 - string
 - boolean
+- integer
+- float
 - dictionary (nested key-value object)
-- array of strings
-- array of booleans
-- array of dictionaries (including dictionaries that contain arrays)
-
-Numbers are not yet supported.
+- array of any of these values
 </TabItem>
 </Tabs>
 ##### Example
@@ -384,21 +382,25 @@ In the [`ios/exportOptions.plist`](index.md#build-template),
 the example above will be translated accordingly into this:
 
 ```xml
-<key>uploadSymbols</key>
-<false/>
-<key>compileBitcode</key>
-<false/>
-<key>thinning</key>
-<string>&lt;none&gt;</string>
-<key>manifest</key>
-<dict>
-    <key>appURL</key>
-    <string>https://example.com/app.ipa</string>
-    <key>displayImageURL</key>
-    <string>https://example.com/icon57.png</string>
-    <key>fullSizeImageURL</key>
-    <string>https://example.com/icon512.png</string>
-</dict>
+<plist version="1.0">
+    <dict>
+        <key>uploadSymbols</key>
+        <false/>
+        <key>compileBitcode</key>
+        <false/>
+        <key>thinning</key>
+        <string>&lt;none&gt;</string>
+        <key>manifest</key>
+        <dict>
+            <key>appURL</key>
+            <string>https://example.com/app.ipa</string>
+            <key>displayImageURL</key>
+            <string>https://example.com/icon57.png</string>
+            <key>fullSizeImageURL</key>
+            <string>https://example.com/icon512.png</string>
+        </dict>
+    </dict>
+</plist>
 ```
 </details>
 
@@ -568,52 +570,42 @@ example above will be translated accordingly into this:
 
 ```xml
 <plist version="1.0">
-	<dict>
-
+    <dict>
         <key>NSCameraUsageDescription</key>
         <string>This app needs camera access.</string>
-
         <key>UIFileSharingEnabled</key>
         <true/>
-
         <key>ExampleInteger</key>
         <integer>32</integer>
-
         <key>ExampleReal</key>
         <real>0.5</real>
-
         <key>LSApplicationQueriesSchemes</key>
         <array>
             <string>myapp</string>
             <string>myapp-beta</string>
         </array>
-
         <key>FeatureFlags</key>
         <array>
             <true/>
             <false/>
         </array>
-
         <key>RetryDelays</key>
         <array>
             <integer>1</integer>
             <integer>2</integer>
             <integer>3</integer>
         </array>
-
         <key>OpacitySteps</key>
         <array>
             <real>0.25</real>
             <real>0.5</real>
             <real>0.75</real>
         </array>
-
         <key>NSAppTransportSecurity</key>
         <dict>
             <key>NSAllowsArbitraryLoads</key>
             <false/>
         </dict>
-
         <key>CFBundleURLTypes</key>
         <array>
             <dict>
@@ -637,11 +629,125 @@ example above will be translated accordingly into this:
                 </array>
             </dict>
         </array>
-
-	</dict>
+    </dict>
 </plist>
 ```
 </details>
+
+### Entitlements
+
+Entitlements are property-list key-value pairs that grant an app permission to use
+a service or technology, such as push notifications
+(`aps-environment`), universal links
+(`com.apple.developer.associated-domains`), App Groups, or critical alerts
+(`com.apple.developer.usernotifications.critical-alerts`). The supported value type
+depends on the entitlement key defined in the
+[Apple Developer Entitlements Reference](https://developer.apple.com/documentation/bundleresources/entitlements).
+
+Entitlements are written to `ios/Runner/Runner.entitlements` in the
+[build template](index.md#build-template), which the app is signed with. Without
+entitlements, the app is signed without an entitlements file.
+
+:::note
+Declaring an entitlement is not enough on its own. Most entitlements must also be
+enabled as a capability on the app's [App ID](#application-identifier-app-id) and be
+included in its [provisioning profile](#provisioning-profile); regenerate the
+profile after enabling a capability. Some, such as critical alerts, are only
+available after Apple approves a request for your app.
+:::
+
+#### Resolution order
+
+Its value is determined in the following order of precedence:
+
+1. [`--ios-entitlements`](../cli/flet-build.md#--ios-entitlements)
+2. `[tool.flet.ios.entitlement]`
+
+There are no default entitlements.
+
+#### Supported value forms
+
+<Tabs groupId="flet-build--pyproject-toml">
+<TabItem value="flet-build" label="flet build">
+Accepts repeated `<key>=<value>` entries.
+The `<value>` can be in one of the following forms:
+
+- `true` or `false` (case-insensitive) for boolean values
+- integer and real number literals, for example `32` or `0.5`
+- TOML array literals, for example `["group.example.one", "group.example.two"]`
+- TOML inline tables, for example `{ "key" = ["value"] }`
+- any other value is treated as a string
+</TabItem>
+<TabItem value="pyproject-toml" label="pyproject.toml">
+Both simple and complex structures are supported:
+
+- string
+- boolean
+- integer
+- real
+- dictionary (nested key-value object)
+- array of strings
+- array of booleans
+- array of integers
+- array of reals
+- array of dictionaries (including dictionaries that contain arrays)
+</TabItem>
+</Tabs>
+
+#### Example
+
+<Tabs groupId="flet-build--pyproject-toml">
+<TabItem value="flet-build" label="flet build">
+```bash
+flet build ipa \
+  --ios-entitlements aps-environment=production \
+  --ios-entitlements 'com.apple.developer.associated-domains=["applinks:example.com"]' \
+  --ios-entitlements 'com.apple.security.application-groups=["group.dev.example.myapp"]'
+```
+</TabItem>
+<TabItem value="pyproject-toml" label="pyproject.toml">
+```toml
+[tool.flet.ios.entitlement]
+aps-environment = "production"
+"com.apple.developer.associated-domains" = ["applinks:example.com"]
+"com.apple.security.application-groups" = ["group.dev.example.myapp"]
+```
+</TabItem>
+</Tabs>
+<details>
+<summary>Template translation</summary>
+
+In [`ios/Runner/Runner.entitlements`](index.md#build-template), the example above
+will be translated accordingly into this:
+
+```xml
+<plist version="1.0">
+    <dict>
+        <key>aps-environment</key>
+        <string>production</string>
+        <key>com.apple.developer.associated-domains</key>
+        <array>
+            <string>applinks:example.com</string>
+        </array>
+        <key>com.apple.security.application-groups</key>
+        <array>
+            <string>group.dev.example.myapp</string>
+        </array>
+    </dict>
+</plist>
+```
+
+</details>
+
+## Minimum iOS version
+
+Apps built with `flet build ipa` and `flet build ios-simulator` run on iOS and
+iPadOS 15 or later, on devices and in the iOS Simulator. This is the lowest
+version that Xcode 27 can build for.
+
+The [build template](index.md#build-template) sets it with
+`IPHONEOS_DEPLOYMENT_TARGET` in the Xcode project and `platform :ios` in the
+`Podfile`. It can't be configured in `pyproject.toml`.
 
 ## Deploying an App to an Apple Device for Testing
 

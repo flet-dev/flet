@@ -1,5 +1,6 @@
 """Tests concerning the Flutter SDK the Flet CLI provisions and drives."""
 
+import contextlib
 import os
 from types import SimpleNamespace
 from unittest.mock import patch
@@ -33,6 +34,7 @@ def _install_flutter(monkeypatch, path_env, flutter_dir="/opt/flutter/3.32.0"):
         required_flutter_version="3.32.0",
         emojis={"checkmark": ""},
         update_status=lambda *_, **__: None,
+        step=lambda *_, **__: contextlib.nullcontext(),
         log_stdout=lambda *_, **__: None,
         progress=None,
         run=lambda *_, **__: SimpleNamespace(returncode=0, stdout="", stderr=""),

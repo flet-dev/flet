@@ -2,7 +2,7 @@ import 'dart:async';
 import 'dart:io';
 import 'dart:ui' as ui;
 
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:flutter/services.dart';
 import 'package:http/http.dart' as http;
 
@@ -526,7 +526,7 @@ class FletCustomPainter extends CustomPainter {
             parseDouble(elem["cp1y"], 0)!,
             parseDouble(elem["x"], 0)!,
             parseDouble(elem["y"], 0)!,
-            parseDouble(elem["w"], 0)!);
+            parseDouble(elem["w"], 1)!);
       } else if (type == "CubicTo") {
         path.cubicTo(
             parseDouble(elem["cp1x"], 0)!,

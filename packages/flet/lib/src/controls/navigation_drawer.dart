@@ -1,5 +1,5 @@
 import 'package:flet/src/extensions/control.dart';
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 
 import '../models/control.dart';
 import '../utils/borders.dart';

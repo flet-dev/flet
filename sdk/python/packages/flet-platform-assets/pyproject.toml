@@ -8,12 +8,16 @@ readme = "README.md"
 requires-python = ">=3.10"
 dependencies = [
     "pillow >=11.3.0",
+    "resvg_py >=0.5.0,<0.6",
 ]
 
 [project.urls]
 Homepage = "https://flet.dev"
 Repository = "https://github.com/flet-dev/flet"
 Documentation = "https://flet.dev/docs"
+
+[tool.setuptools.package-data]
+flet_platform_assets = ["default_icon.svg"]
 
 [build-system]
 requires = ["setuptools"]

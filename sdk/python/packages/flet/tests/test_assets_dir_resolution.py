@@ -115,3 +115,34 @@ class TestUnsetAndEnvOverride:
         missing = str(tmp_path / "nope")
         monkeypatch.setenv("FLET_ASSETS_DIR", missing)
         assert get_assets_dir_path(None) == missing
+
+
+class TestOnlyTheDirectoryInUseIsReported:
+    """With `FLET_ASSETS_DIR` set, the logs name it, not the `assets_dir` argument."""
+
+    def test_override_is_logged_instead_of_the_argument(
+        self, tmp_path, monkeypatch, caplog
+    ):
+        """The info log names the overriding directory, not the argument's."""
+        (tmp_path / "images").mkdir()
+        (tmp_path / "other").mkdir()
+        monkeypatch.setenv("FLET_ASSETS_DIR", str(tmp_path / "other"))
+        with caplog.at_level(logging.INFO, logger="flet"):
+            assert get_assets_dir_path(str(tmp_path / "images")) == str(
+                tmp_path / "other"
+            )
+        messages = [r.getMessage() for r in caplog.records]
+        assert any(str(tmp_path / "other") in m for m in messages)
+        assert not any(str(tmp_path / "images") in m for m in messages)
+
+    def test_overridden_missing_argument_does_not_warn(
+        self, tmp_path, monkeypatch, caplog
+    ):
+        """A missing `assets_dir` that the override replaces is not warned about."""
+        (tmp_path / "other").mkdir()
+        monkeypatch.setenv("FLET_ASSETS_DIR", str(tmp_path / "other"))
+        with caplog.at_level(logging.WARNING, logger="flet"):
+            assert get_assets_dir_path(str(tmp_path / "typo")) == str(
+                tmp_path / "other"
+            )
+        assert caplog.records == []

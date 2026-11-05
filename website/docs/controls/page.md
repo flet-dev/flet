@@ -26,4 +26,6 @@ If you need this feature when packaging a desktop app using
 
 <CodeExample path={frontMatter.examples + '/device_locale/main.py'} language="python" />
 
+<CodeExample path={frontMatter.examples + '/package_info/main.py'} language="python" />
+
 <ClassMembers name={frontMatter.class_name} />

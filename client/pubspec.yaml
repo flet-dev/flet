@@ -79,11 +79,17 @@ dependencies:
   flet_map:
     path: ../sdk/python/packages/flet-map/src/flutter/flet_map
 
+  flet_notifications:
+    path: ../sdk/python/packages/flet-notifications/src/flutter/flet_notifications
+
   flet_permission_handler:
     path: ../sdk/python/packages/flet-permission-handler/src/flutter/flet_permission_handler
 
   flet_secure_storage:
     path: ../sdk/python/packages/flet-secure-storage/src/flutter/flet_secure_storage
+
+  flet_shadcn_ui:
+    path: ../sdk/python/packages/flet-shadcn-ui/src/flutter/flet_shadcn_ui
 
   flet_spinkit:
     path: ../sdk/python/packages/flet-spinkit/src/flutter/flet_spinkit

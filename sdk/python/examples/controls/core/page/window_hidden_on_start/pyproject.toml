@@ -12,6 +12,7 @@ dev = ["flet-cli", "flet-desktop", "flet-web"]
 
 [tool.flet.gallery]
 categories = ["Pages/Page"]
+platforms = ["macos", "windows", "linux"]
 
 [tool.flet.metadata]
 title = "Window hidden on start"
@@ -25,7 +26,6 @@ complexity = "basic"
 features = ["hidden startup", "window configuration"]
 
 [tool.flet]
-platforms = ["macos", "windows", "linux"]
 org = "dev.flet"
 company = "Flet"
 copyright = "Copyright (C) 2023-2026 by Flet"

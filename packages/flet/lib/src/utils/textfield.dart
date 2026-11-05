@@ -15,8 +15,8 @@ class CustomFilteringTextInputFormatter extends FilteringTextInputFormatter {
   final RegExp _pattern;
 
   CustomFilteringTextInputFormatter._(this._pattern,
-      {bool allow = true, String replacementString = ""})
-      : super(_pattern, allow: allow, replacementString: replacementString);
+      {super.allow = true, super.replacementString})
+      : super(_pattern);
 
   // Factory constructor to create an instance from a map
   factory CustomFilteringTextInputFormatter.fromMap(

@@ -4,7 +4,7 @@ import 'dart:ui';
 
 import 'package:flet/flet.dart';
 import 'package:flutter/foundation.dart';
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:path/path.dart' as path;
 import 'package:path_provider/path_provider.dart' as path_provider;
 import 'package:flutter_web_plugins/url_strategy.dart';
@@ -58,6 +58,13 @@ void main(List<String> args) async {
   }
 
   FletDeepLinkingBootstrap.install();
+
+  // Windows adds `-Embedding` when it starts the app because the user clicked
+  // one of its notifications. Drop it, so it isn't taken as a page URL below;
+  // the click itself reaches the notifications extension once that starts.
+  if (!kIsWeb && Platform.isWindows) {
+    args = [for (final arg in args) if (arg != "-Embedding") arg];
+  }
 
   _args = List<String>.from(args);
 

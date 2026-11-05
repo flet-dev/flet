@@ -59,13 +59,12 @@ class AudioRecorderService extends FletService {
             return await _startStreamingRecording(config, upload, stream);
           }
 
-          final out = control.backend.getAssetSource(args["output_path"] ?? "");
-          if (!isWebPlatform() && !out.isFile) {
-            // on non-web platforms, the output path must be a valid file path
+          final path = await _prepareOutputPath(args["output_path"]);
+          if (path == null) {
             return false;
           }
 
-          await recorder!.start(config, path: out.path);
+          await recorder!.start(config, path: path);
           return true;
         }
         return false;
@@ -124,6 +123,29 @@ class AudioRecorderService extends FletService {
     recorder?.dispose();
     control.removeInvokeMethodListener(_invokeMethod);
     super.dispose();
+  }
+
+  /// Returns the path a file recording is written to, or `null` when
+  /// [outputPath] is missing on a platform other than web.
+  ///
+  /// On web, [outputPath] is passed through: the browser keeps the recording
+  /// and `stop_recording` returns its Blob URL.
+  ///
+  /// On other platforms, [outputPath] is a file to create on the device that
+  /// runs the client, not an asset, so the assets directory plays no part.
+  /// A relative path is resolved against the working directory, and missing
+  /// parent directories are created, since the platform recorders cannot
+  /// open a file in a directory that does not exist.
+  Future<String?> _prepareOutputPath(String? outputPath) async {
+    if (isWebPlatform()) {
+      return outputPath ?? "";
+    }
+    if (outputPath == null || outputPath.isEmpty) {
+      return null;
+    }
+    final file = File(outputPath).absolute;
+    await file.parent.create(recursive: true);
+    return file.path;
   }
 
   /// Starts a streaming recording.
