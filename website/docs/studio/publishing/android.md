@@ -40,17 +40,22 @@ visitors see "Nothing to download yet".
 2. Optionally write **What's new**, and pick the [architectures](#why-is-my-apk-so-big).
 3. Click **Create APK**. When the run finishes, the app is on the page.
 
-**Put it on the download page** is ticked by default; untick it for an APK just
-to try on your own phone (**Download APK** on the card gets it). **Publish** on the
-card's **Download page** line puts a build that isn't there yet on it, with no new build.
+**Add this APK to the download page** is ticked by default (**Replace the Android
+download with this APK** once the page has one); untick it for an APK just to try on
+your own phone (**Download APK** on the card gets it). **Add to page** on the card's
+**Download page** line puts a build that isn't there yet on it, with no new build.
 
 The first Android run makes the app's [signing key](#signing-key). Back it up when
 the card asks: every update has to be signed with it.
 
 ### Update it
 
-**Update APK** on the card builds the app as it is now and replaces the one on the
-page. Your users install it over the version they have and keep their data.
+**Create new version** on the card builds the app as it is now and replaces the one on
+the page. Your users install it over the version they have and keep their data.
+
+To go back to an earlier build, use **Change version…** on the Android row of
+**Publish › Download page**: it lists the builds that can still go on the page, and puts
+the one you pick back on it, with no new build.
 
 ### Share the link
 
@@ -60,7 +65,7 @@ the file without sharing the link.
 
 | | Explorer | Creator |
 |---|---|---|
-| Link | Private: `get.flet.app/` and a random code | The private link, plus a custom one: `get.flet.app/your-app` |
+| Link | Unlisted: `get.flet.app/` and a random code | The unlisted link, plus a custom one: `get.flet.app/your-app` |
 | How long a release stays up | 7 days after its build: update the APK to keep the app up | 1 year after its build: a new version starts the year again |
 | Run downloads in Studio | 7 days | 90 days |
 
@@ -72,10 +77,10 @@ for 30 days.
 
 **Publish › Download page** lists each platform with the build it has on the page and
 until when it stays up. **Remove** takes one platform off the page; the others stay.
-Under **Settings**:
+Under **Settings › More settings**:
 
-- **Private link › Replace**: the current private link stops working at once. Use it if
-  a link reached people it shouldn't have.
+- **Unlisted link › Replace**: the link with the random code stops working at once (a
+  custom link keeps working). Use it if the link reached people it shouldn't have.
 - **Take offline**: every platform's build comes off the page until you publish again.
   The link keeps working and shows "Nothing to download yet".
 

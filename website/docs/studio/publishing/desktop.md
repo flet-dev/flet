@@ -209,12 +209,15 @@ and link as its [Android APK](android.md#download-page). Each visitor sees their
 system's download first (**Download for Windows**, **Download for Mac**…), with the
 others listed under it, and who signed each one.
 
-- **Put it on the download page** on **Create Windows app**, **Create Mac app**
-  and **Create Linux app** publishes the build when it's done. It's ticked by default
-  once the page has a release.
-- **Publish** on the card's **Download page** line, or on the platform's row in
+- **Add this installer** (or disk image, or app) **to the download page** on **Create
+  Windows app**, **Create Mac app** and **Create Linux app** publishes the build when
+  it's done. It's ticked by default once the page has a release, or when you start the
+  build from **Publish › Download page**.
+- **Add to page** on the card's **Download page** line, or on the platform's row in
   **Publish › Download page**, puts a build that isn't there yet on it, with no new
-  build and no credits.
+  build and no credits. **Change version…** there puts an earlier build back.
+- A row that can't take a build yet says why: **Set up signing** for an unsigned
+  Windows or Mac build, **Why?** for Linux (below).
 - **Remove** on the platform's row in **Publish › Download page** takes it off the page;
   the others stay.
 
