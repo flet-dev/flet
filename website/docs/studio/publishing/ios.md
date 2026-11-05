@@ -216,10 +216,11 @@ for it. Testers need nothing but the link: no TestFlight, no App Store review.
 
 1. Register the devices: **View devices** on the card opens
    [Settings › Apple devices](#devices).
-2. Click **Create install link**. When the run finishes, the card shows the link with
-   **Open**, **Copy**, **QR code** and **Share**.
-3. **Update** builds the app again for the devices registered now. The link stays the
-   same: testers who have it install the new build.
+2. Click **Build for your devices**. The form shows at the top how many registered
+   devices can install it (**Manage devices** opens Settings › Apple devices). When the
+   run finishes, the card shows the link with **Open**, **Copy**, **QR code** and **Share**.
+3. **Build new version** builds the app again for the devices registered now. The link
+   stays the same: testers who have it install the new build.
 
 Apple only installs these builds on registered devices, which is why the card needs App
 Store Connect even though nothing goes to the App Store.
@@ -241,9 +242,9 @@ Apple never deletes devices. Each kind of device (iPhone, iPad, …) has **100 s
 membership year**, and a disabled device still uses its slot until your membership
 renews. The page shows how many you've used.
 
-A device registered after a build won't install that build. Click **Update** on the
-**Test on your devices** card: the new build's profile includes it, and the card says
-when devices were registered since the last build.
+A device registered after a build won't install that build. Click **Build new version**
+on the **Test on your devices** card: the new build's profile includes it, and the card
+says when devices were registered since the last build.
 
 ## Install links
 
