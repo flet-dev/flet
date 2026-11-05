@@ -37,13 +37,8 @@
 }
 
 .heroTitle span {
+  display: block;
   color: var(--flet-accent);
-}
-
-@media (max-width: 1399px) {
-  .heroTitle span {
-    display: block;
-  }
 }
 
 .heroSubtitle {
