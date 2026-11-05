@@ -43,7 +43,7 @@ platform, sign it, and publish it to the stores, with nothing to install.
   [Google Play store listing](publishing/google-play/store-listing.md).
 * **Download pages.** Every app gets one public page at get.flet.app with its latest
   Android, Windows, Mac and Linux builds, a QR code, and the visitor's system first.
-  See [Download page](publishing/android.md#download-page).
+  See [Download page](publishing/download-page.md).
 * **Build settings without editing files.** Each platform's **Settings** tab sets the
   app's name, version, icon (any shape, previewed per platform), splash and boot
   screens, permissions, deep linking and Python packages. Studio keeps them in

@@ -204,51 +204,22 @@ your team's Apple Distribution certificate (the same one as iOS), and the packag
 
 ## Download page
 
-Your Windows, Mac and Linux builds can go on the app's download page, the same page
-and link as its [Android APK](android.md#download-page). Each visitor sees their own
-system's download first (**Download for Windows**, **Download for Mac**…), with the
-others listed under it, and who signed each one.
+Your Windows, Mac and Linux builds can go on the app's [download page](download-page.md),
+the same page and link as its Android APK. Each visitor sees their own system's download
+first, with who signed it.
 
 - **Add this installer** (or disk image, or app) **to the download page** on **Create
   Windows app**, **Create Mac app** and **Create Linux app** publishes the build when
   it's done. It's ticked by default once the page has a release, or when you start the
   build from **Publish › Download page**.
-- **Add to page** on the card's **Download page** line, or on the platform's row in
-  **Publish › Download page**, puts a build that isn't there yet on it, with no new
-  build and no credits. **Change version…** there puts an earlier build back.
-- A row that can't take a build yet says why: **Set up signing** for an unsigned
-  Windows or Mac build, **Why?** for Linux (below).
-- **Remove** on the platform's row in **Publish › Download page** takes it off the page;
-  the others stay.
+- Only signed builds go on it: the Windows installer
+  [signed with Azure Artifact Signing](#sign-the-windows-app), the Mac disk image
+  [signed with Developer ID and notarized](#sign-and-notarize-the-mac-app). A Linux build
+  goes on next to a signed Windows or Mac one
+  ([why](download-page.md#why-linux-needs-a-signed-windows-or-mac-build)).
 
-Only signed builds go on the page:
-
-| Platform | What goes on the page |
-|---|---|
-| Windows | The installer, [signed with Azure Artifact Signing](#sign-the-windows-app) |
-| macOS | The disk image, [signed with Developer ID and notarized](#sign-and-notarize-the-mac-app) |
-| Linux | The `.tar.gz`, while the page has a signed Windows or Mac build ([why](#why-linux-needs-a-signed-windows-or-mac-build)) |
-
-A build made with **Skip signing for this run** can't go on the page. Releases stay up
-as long as your plan keeps them ([how long](android.md#share-the-link)), counted from
-their build.
-
-### Why Linux needs a signed Windows or Mac build
-
-Your download page lives on Flet's domain (`get.flet.app`), so people trust that a file
-there comes from a real, accountable developer. Windows and Mac builds prove it: they're
-signed with a certificate Microsoft or Apple issued after checking who you are, and the
-page shows the name they verified.
-
-Linux apps have no signing like that, so a Linux file on its own says nothing about who
-made it. Without a rule, the page would let anyone host an anonymous program on Flet's
-domain, which is how malware spreads. So a Linux build goes on the page only next to a
-signed Windows or Mac build of the same app: visitors see the verified publisher, and the
-Linux download comes from the same developer.
-
-If you take the last signed Windows or Mac build off the page, the Linux one comes off with
-it. To share a Linux build without that, download it from its run (**Download** on the
-**Linux app** card) and host it yourself.
+Adding an existing build, changing the version, the link and the page's settings are on
+[Download page](download-page.md).
 
 ## Questions
 

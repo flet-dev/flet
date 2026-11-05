@@ -10,7 +10,7 @@ goes:
 | Card | What it does |
 |---|---|
 | **Google Play** | Publishes the app to Google Play's testing tracks and to Production. See [Publishing to Google Play](google-play/index.md). |
-| **Android app (APK)** | Builds an APK and puts it on your app's own [download page](#download-page): a link anyone can open on their phone. |
+| **Android app (APK)** | Builds an APK and puts it on your app's [download page](download-page.md): a link anyone can open on their phone. |
 
 Each card shows its next step while it isn't set up yet, then what's live, with
 **Update** to publish a new version. **Activity** lists the platform's runs, and
@@ -20,19 +20,10 @@ Each card shows its next step while it isn't set up yet, then what's live, with
 
 ## Download page
 
-**Create APK** builds a signed APK and puts it on a page your users can open: a link
-like `get.flet.app/…`, with a **Download APK** button, the app's icon, version and
-"What's new", install steps, and a QR code on computers. The link stays the same
-across updates: share it once (on your website, in an email, as a QR code on a
-flyer) and each update replaces the app behind it.
-
-It's the app's one download page: [Windows, Mac and Linux builds](desktop.md#download-page)
-can go on it too, and each visitor sees their own system's download first. Manage it
-under **Publish › Download page** in the sidebar: its link is there from the start,
-before anything is published, so you can share it early. Until a build is on it,
-visitors see "Nothing to download yet".
-
-{/* SCREENSHOT: /img/docs/studio/publishing/download-page.png — the public download page on a phone */}
+**Create APK** builds a signed APK and puts it on the app's
+[download page](download-page.md): a link like `get.flet.app/…` with a **Download APK**
+button, install steps and a QR code. The link stays the same across updates, and the
+app's Windows, Mac and Linux builds can go on the same page.
 
 ### Create the APK
 
@@ -42,57 +33,17 @@ visitors see "Nothing to download yet".
 
 **Add this APK to the download page** is ticked by default (**Replace the Android
 download with this APK** once the page has one); untick it for an APK just to try on
-your own phone (**Download APK** on the card gets it). **Add to page** on the card's
-**Download page** line puts a build that isn't there yet on it, with no new build.
+your own phone (**Download APK** on the card gets it).
 
 The first Android run makes the app's [signing key](#signing-key). Back it up when
 the card asks: every update has to be signed with it.
 
 ### Update it
 
-**Create new version** on the card builds the app as it is now and replaces the one on
-the page. Your users install it over the version they have and keep their data.
-
-To go back to an earlier build, use **Change version…** on the Android row of
-**Publish › Download page**: it lists the builds that can still go on the page, and puts
-the one you pick back on it, with no new build.
-
-### Share the link
-
-**Publish › Download page** has the page's link with **Open**, **Copy**, **QR code** and
-**Share**, and so does the card while the APK is on the page. **Download APK** gives you
-the file without sharing the link.
-
-| | Explorer | Creator |
-|---|---|---|
-| Link | Unlisted: `get.flet.app/` and a random code | The unlisted link, plus a custom address: `get.flet.app/your-app` |
-| How long a release stays up | 7 days after its build: update the APK to keep the app up | 1 year after its build: a new version starts the year again |
-| Run downloads in Studio | 7 days | 90 days |
-
-Set a custom address under **Page settings › Custom address** on **Publish › Download page** (✎, then ✓):
-lowercase letters, digits and hyphens. If you rename it, the old name keeps redirecting
-for 30 days.
-
-### New link, take offline
-
-**Publish › Download page** lists each platform with the build it has on the page and
-until when it stays up. **Remove** takes one platform off the page; the others stay.
-Under **Page settings**:
-
-- **Unlisted link › Replace**: the link with the random code stops working at once (a
-  custom address keeps working). Use it if the link reached people it shouldn't have.
-- **Take page offline**: every platform's build comes off the page until you publish again.
-  The link keeps working and shows "Nothing to download yet".
-
-### What your users see
-
-The page shows the **Download APK** button and the steps to install: Android asks
-them to allow their browser to install unknown apps the first time. Installing a
-newer version later keeps their data, because every update is signed with the same
-key.
-
-Each page has a **Report this app** link. Flet reviews reports and can take a page
-down; you'll see that in Studio.
+**Create new version** on the card builds the app as it is now and replaces the APK on
+the page. Your users install it over the version they have and keep their data. To go
+back to an earlier build, or to share and manage the link, see
+[Download page](download-page.md).
 
 ## Share an APK outside Google Play
 

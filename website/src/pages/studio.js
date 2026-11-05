@@ -66,7 +66,7 @@ const GROUPS = [
         icon: 'img/pages/studio/download-page.svg',
         title: 'Download pages',
         description: 'Every app gets a public page at get.flet.app with its latest builds and a QR code, so anyone can install it.',
-        to: '/docs/studio/publishing/android#download-page',
+        to: '/docs/studio/publishing/download-page',
       },
       {
         icon: 'img/pages/studio/github-sync.svg',

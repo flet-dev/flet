@@ -13,9 +13,10 @@ install. Open it with the **Publish** button in the app bar, or **Publish** in t
 
 ## Publish at a glance
 
-**Publish** is organized by platform. Its menu lists **All platforms**, then Android,
-iOS, Windows, macOS, Linux and Web, each with its state (✓ published, ! needs you,
-✕ the last run failed) or how many runs are going.
+**Publish** is organized by platform. Its menu lists **All platforms** and the app's
+[**Download page**](download-page.md), then Android, iOS, Windows, macOS, Linux and Web,
+each with its state (✓ published to a store or the download page, a grey ✓ built,
+! needs you, ✕ the last run failed) or how many runs are going.
 
 **All platforms** shows every platform with its state; open one to publish or update
 it. A platform's page, and All platforms too, has three tabs:
@@ -32,9 +33,9 @@ Each card is a place the app goes:
 
 | Platform | Cards |
 |---|---|
-| Android | **Google Play** (its testing tracks and Production, and the store listing) and **Android app (APK)** (an APK, and the app's download page). See [Android apps](android.md) and [Google Play](google-play/index.md) |
+| Android | **Google Play** (its testing tracks and Production, and the store listing) and **Android app (APK)** (an APK, and the app's [download page](download-page.md)). See [Android apps](android.md) and [Google Play](google-play/index.md) |
 | iOS | **App Store & TestFlight**, **Test on your devices** (an install link for your registered iPhones and iPads) and **iOS Simulator**. See [iOS apps](ios.md) |
-| Windows, macOS, Linux | **The app** for that system (Windows: an installer and a portable `.zip`; macOS: a disk image; Linux: a `.tar.gz`), and the app's download page. Windows has the **Microsoft Store** too. See [Desktop apps](desktop.md) |
+| Windows, macOS, Linux | **The app** for that system (Windows: an installer and a portable `.zip`; macOS: a disk image; Linux: a `.tar.gz`), and the app's [download page](download-page.md). Windows has the **Microsoft Store** too. See [Desktop apps](desktop.md) |
 | Web | **The app's files**, to host on your own server. See [Web apps](web.md) |
 
 A card shows its **next step** until it's set up: **Connect Google Play**, **Create
@@ -104,7 +105,7 @@ bonus credits. Checkout brings you back to the same screen.
 | [GitHub](../github.md) sync | — | Yes |
 | Builds at a time | 1 | 2 |
 | Longest build | 15 minutes | 30 minutes |
-| [Download page](android.md#download-page) releases kept | 7 days | 1 year |
+| [Download page](download-page.md) releases kept | 7 days | 1 year |
 | Run files kept | 7 days | 90 days |
 | Run logs and steps kept | 30 days | 1 year |
 | Agent chats kept | 30 days after their last use | 90 days after their last use |
@@ -160,7 +161,7 @@ the card says **Download expired**: **Update** to get the files again. A run's l
 and steps are kept **30 days** on Explorer and **1 year** on Creator; the run itself
 stays in Activity.
 What's on a store stays there, and so does the app on its
-[download page](android.md#download-page) while it's up.
+[download page](download-page.md) while it's up.
 
 ### Queued runs
 
