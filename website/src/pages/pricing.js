@@ -39,7 +39,7 @@ const plans = [
       'GitHub sync',
       'Expert agent',
       '2 builds at a time',
-      'Download pages kept 1 year, with named links',
+      'Download pages kept 1 year, with a custom address',
       '100 MB storage',
       'Flet support',
     ],

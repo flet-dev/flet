@@ -57,7 +57,8 @@ as you edit:
   the texts — the listing updates as it edits these files.
 - **Coming from fastlane?** Studio also reads fastlane `supply`'s folder names
   (`featureGraphic.png`, `phoneScreenshots/`, `tenInchScreenshots/`), so a
-  `metadata/android` folder copied into `.store/google-play/` works; Studio moves
+  copying the contents of fastlane's `metadata/android` folder into `.store/google-play/`
+  works; Studio moves
   a set to its own names when it next changes it.
 
 ## Languages
@@ -107,8 +108,8 @@ that order.
 
 **Use the app's icon** makes the listing icon from the icon your Android builds
 use (Android's own icon if set, else the app's icon, else Flet's): 512 × 512,
-centred, with transparent areas filled with the app's **Icon background** colour
-(white if it has none). Use it again after changing the app's icon. An icon
+centred, with transparent areas filled with the app's **Adaptive icon background**
+color, else its **Icon background** (white if neither is set). Use it again after changing the app's icon. An icon
 smaller than 512 px is upscaled and may look blurry: a 1024 px icon works best.
 
 ### Take screenshots in the Preview

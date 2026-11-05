@@ -23,12 +23,15 @@ installation is required.
   Open an example, fork it, and adapt it to your idea.
 - **Sharing.** Share public apps with a link so others can run them and explore
   the code.
-- **Private projects.** Keep your apps and source code private while you work.
+- **Private projects.** Keep your apps and source code private while you work
+  (Creator plan).
 - **GitHub.** Keep an app in a GitHub repository: push from your computer, and
   every change made in Studio is committed back. See [GitHub](github.md).
 - **Cloud packaging and publishing.** Build your app for Windows, macOS, Linux,
   Android, iOS and the web in the cloud, without a local build environment, and
-  publish Android apps to Google Play. See [Publishing](publishing/index.md).
+  publish it to Google Play, the App Store and TestFlight, the Mac App Store, the
+  Microsoft Store, or its own [download page](publishing/download-page.md). See
+  [Publishing](publishing/index.md).
 
 See [what's new](whats-new.md) for the latest improvements.
 
@@ -52,7 +55,7 @@ It uses the same browser-based Flet runtime as a
 [published static Flet website](../publish/web/static-website/index.md).
 
 Studio's hosted services handle accounts, project files, version history, billing,
-and AI assistance. When you use the AI agent, your prompts, conversation history,
+AI assistance, cloud builds and publishing, and GitHub sync. When you use the AI agent, your prompts, conversation history,
 and relevant project context are sent to AI model providers to generate a
 response. Running an app preview and using the AI agent are separate operations;
 browser-based execution does not mean all project data stays on your device.
@@ -74,8 +77,8 @@ and [pricing](/pricing).
 ### Do I have to use AI?
 
 No. You can write and edit Python yourself, run your app, and use Studio's project
-and sharing tools without asking the AI agent. AI credits are used when you run
-the agent, not when you manually edit code or run an app preview.
+and sharing tools without asking the AI agent. Credits are used when you run the
+agent or a build, not when you manually edit code or run an app preview.
 
 <a id="limitations"></a>
 
@@ -108,8 +111,8 @@ AI assistance, and shareable previews.
 
 Use local development when you need a native desktop or mobile runtime, packages
 that do not work with Pyodide, local tools and hardware, or your preferred IDE and
-debugger. Cloud packaging and publishing in Studio are still coming soon; for
-now, use `flet run` and `flet build` locally for those workflows. See
+debugger. Studio builds and publishes your app in the cloud (see
+[Publishing](publishing/index.md)); `flet run` and `flet build` work locally too. See
 [installation](../getting-started/installation.md) to get started.
 
 The Flet framework is free and open source. You do not need a paid Studio plan to

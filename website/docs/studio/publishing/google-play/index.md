@@ -109,7 +109,7 @@ to happen in Play Console. Once connected, the card shows **Finish Google Play
 setup** with the app's name and package name to copy:
 
 1. **Create the app in Play Console.** **Open Play Console**, then **Create app**
-   with the name shown: its language and type, and accept the declarations.
+   with the name shown, choose its language and type, and accept the declarations.
 2. **Upload the first app bundle.** Click **Create app bundle**: Studio builds a
    signed `.aab`. When it's done, **Download .aab**, and in Play Console go to **Test
    and release › Internal testing › Create new release**, upload it and roll the

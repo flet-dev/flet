@@ -4,20 +4,20 @@ title: "Desktop apps (Windows, macOS, Linux)"
 
 # Desktop apps: Windows, macOS and Linux
 
-Open **Publish › Windows**, **macOS** or **Linux**. Each has one card with the app,
-packaged for that system:
+Open **Publish › Windows**, **macOS** or **Linux**. Each has a card with the app,
+packaged for that system (Windows and macOS also have a store card):
 
-| Platform | Card | What you get |
+| Platform | Card and button | What you get |
 |---|---|---|
-| Windows | **Create Windows app** | An installer (`setup.exe`), and a portable `.zip` with the app's folder and its `.exe` |
-| macOS | **Create Mac app** | A disk image (`.dmg`) with the app and an Applications shortcut, [signed and notarized](#sign-and-notarize-the-mac-app) when signing is set up |
-| Linux | **Create Linux app** | A `.tar.gz` with the app's folder and its executable |
+| Windows | **Windows app** › **Create Windows app** | An installer (`<app>-setup.exe`), and a portable `.zip` with the app's folder and its `.exe` |
+| macOS | **Mac app** › **Create Mac app** | A disk image (`.dmg`) with the app and an Applications shortcut, [signed and notarized](#sign-and-notarize-the-mac-app) when signing is set up |
+| Linux | **Linux app** › **Create Linux app** | A `.tar.gz` with the app's folder and its executable |
 
 When the run finishes, the card shows the build with **Download** (on Windows,
-**Download › Installer** or **Portable**). **Update** builds
-the app as it is now. Downloads are kept for a while (see
+**Download › Installer** or **Portable**). **Create new version** builds the app as it
+is now. Downloads are kept for a while (see
 [Downloads expire](index.md#downloads-expire)); after that the card says **Download
-expired** and **Update** builds it again.
+expired** and **Create new version** builds it again.
 
 The settings for each platform (the app's name, icon, version, …) are on its
 **Settings** tab, with the defaults in **All platforms › Settings**.
@@ -32,19 +32,19 @@ time.
 
 ### Windows
 
-**Download › Installer (setup.exe)** is what to give your users:
+**Download › Installer (.exe)** is what to give your users:
 
-1. Run the `setup.exe`.
+1. Run the installer (`<app>-setup.exe`).
 2. If **Windows protected your PC** (SmartScreen) appears, click **More info ›
    Run anyway**.
 
 That's it: Setup asks nothing, installs the app for the current user in a few seconds
 (no administrator rights needed) and opens it. The app is then in the Start menu, and
 in **Settings › Apps** to uninstall it. To install it for every user of the PC instead,
-run `setup.exe /ALLUSERS` from an administrator's command prompt. Running
-the `setup.exe` of a newer build upgrades it in place, keeping the app's data, as
+run `<app>-setup.exe /ALLUSERS` from an administrator's command prompt. Running
+the installer of a newer build upgrades it in place, keeping the app's data, as
 long as the app's [bundle ID](../../publish/index.md#bundle-id) stays the same: Setup
-finds the installed app by it. Running the `setup.exe` of the build that's installed,
+finds the installed app by it. Running the installer of the build that's installed,
 or of an older one, just opens the installed app: to go back to an older build,
 uninstall the app first.
 
@@ -115,8 +115,8 @@ From the next run, every file of the app that isn't signed yet (the `.exe`, `.dl
 The run fails if any of them isn't validly signed.
 
 The client secret stays on Studio's servers: a build only gets an access token that
-expires within the hour and can only sign. Studio warns on the card a month before the
-secret expires; make a new one in the app registration and connect again.
+expires within the hour and can only sign. Studio warns on the **Code signing** card a month
+before the secret expires; make a new one in the app registration and connect again.
 
 Each signed file is one signature on your Azure bill: a Python app has dozens to hundreds
 of files. Artifact Signing is available to organizations in the US, Canada, the EU and the
@@ -125,7 +125,7 @@ UK, and to individual developers in the US and Canada.
 ## Mac app
 
 **Create Mac app** on **Publish › macOS** makes a disk image: open it and drag the app
-to **Applications**. Then **Download** and **Update**, as the other cards.
+to **Applications**. Then **Download** and **Create new version**, as the other cards.
 
 Macs open an app downloaded from the internet only when it's signed with a
 **Developer ID** certificate and notarized by Apple; otherwise macOS blocks opening it
@@ -156,8 +156,9 @@ you imported it):
    under it (the arrow next to it): a certificate without its key can't sign.
 3. Right-click it › **Export…**, choose **Personal Information Exchange (.p12)** and set
    a password.
-4. In Studio, select **Add Developer ID certificate** on the card (or **Publish › macOS ›
-   Settings › Signing**), choose the `.p12` and enter its password.
+4. In Studio, click **Set up signing** on the **Mac app** card (it opens **Publish › macOS ›
+   Settings › Signing**), then **Add Developer ID certificate…**, choose the `.p12` and
+   enter its password.
 
 No Developer ID certificate yet? The team's Account Holder creates one in
 [Certificates, Identifiers & Profiles](https://developer.apple.com/account/resources/certificates/list)
@@ -210,8 +211,9 @@ first, with who signed it.
 
 - **Add this installer** (or disk image, or app) **to the download page** on **Create
   Windows app**, **Create Mac app** and **Create Linux app** publishes the build when
-  it's done. It's ticked by default once the page has a release, or when you start the
-  build from **Publish › Download page**.
+  it's done (**Replace the Windows download with this installer**, and so on, once the
+  page has one). It's ticked by default once the page has a release, or when you start
+  the build from **Publish › Download page**.
 - Only signed builds go on it: the Windows installer
   [signed with Azure Artifact Signing](#sign-the-windows-app), the Mac disk image
   [signed with Developer ID and notarized](#sign-and-notarize-the-mac-app). A Linux build

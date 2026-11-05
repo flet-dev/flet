@@ -20,13 +20,14 @@ certificate** is your Apple team's: Studio makes it on the first iOS build and r
 it for all your apps.
 
 You find them where they're used: the **Signing** card on **Publish › Android ›
-Settings** and **Publish › iOS › Settings**.
+Settings**, **Publish › iOS › Settings** and **Publish › macOS › Settings** (Developer
+ID), and the **Code signing** card on **Publish › Windows › Settings**.
 
 {/* SCREENSHOT: /img/docs/studio/publishing/signing-card.png — the Signing card on Publish › Android › Settings */}
 
-- **What signs the builds**: **Made by Studio** (with **not backed up yet** until
-  you've downloaded a backup), **Your key** for one you imported, or **Managed by
-  Studio** for the Apple certificate.
+- **What signs the builds**: **Managed by Studio** (with **not backed up yet** for an
+  Android key until you've downloaded a backup; a build's screen says **Made by
+  Studio**), or **Your key “…”** / **Your certificate “…”** for one you imported.
 - **Download backup** (Android) or **Download (.p12)** (Apple): the keystore and its
   passwords, or the certificate and its password, as a `.zip`. Only the Studio
   account's owner can download it, and each download is recorded. See
@@ -82,7 +83,7 @@ Select an account to open its page:
   flagged 30 days before.
 - **Update credentials…** gives the same connection a new key or client secret, for
   example after rotating one or when a secret expires. The apps that use it keep it.
-  An App Store Connect key must be of the same team.
+  An App Store Connect key must belong to the same team.
 - **Rename**, and **Disconnect**, which lists the apps it affects and what stops
   working for them before you confirm.
 

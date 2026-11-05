@@ -30,8 +30,9 @@ Studio reaches GitHub through the **Flet Studio** GitHub App:
    already done. Otherwise, **Manage › GitHub › Connect GitHub** asks GitHub to
    authorize Studio once.
 2. **Install the Flet Studio app** on your account or organization, and choose the
-   repositories it may use. **Add an account or organization on GitHub** in
-   **Manage › GitHub** opens GitHub's installation page and brings you back.
+   repositories it may use. **Install the Flet Studio app** in **Manage › GitHub** (once
+   it's installed, **Add an account or organization on GitHub**) opens GitHub's
+   installation page and brings you back.
 
 Studio lists only repositories you can push to yourself. An installation on an
 organization doesn't let anyone in Studio use a repository they couldn't push to on
@@ -129,13 +130,13 @@ Files outside the app's folder are never touched.
 
 ## Disconnect
 
-**Manage › GitHub › Disconnect** stops committing and following pushes. The app
+**Manage › GitHub › Disconnect…** stops committing and following pushes. The app
 keeps its files, and the repository stays as it is.
 
 ## Troubleshooting
 
 **Manage › GitHub** shows whether the app is in sync. When Studio can't sync, it says
-why. Fix the cause, then use **Sync now**. Common causes:
+why. Fix the cause, then use **Try again**. Common causes:
 
 - **The Flet Studio app was uninstalled**, or the repository was removed from its
   access: install it again or give it the repository on GitHub.

@@ -23,10 +23,10 @@ shows its link and which platforms are live on it, and each platform's card has 
 
 ## Put a build on it
 
-A platform's build form has a **Download page** box, ticked by default:
+A platform's build form has a **Download page** box:
 
 - **Android:** **Create APK** on the **Android app (APK)** card, with **Add this APK to
-  the download page**. See [Android apps](android.md#download-page).
+  the download page**, ticked by default. See [Android apps](android.md#download-page).
 - **Windows, macOS, Linux:** **Create Windows app**, **Create Mac app** or **Create Linux
   app**, with **Add this installer** (or disk image, or app) **to the download page**.
   It's ticked once the page has a release, or when you start the build from **Publish ›
@@ -57,8 +57,8 @@ iOS and web apps don't go on the page: iOS builds install from their own
 [install links](ios.md#install-links), and a web app is hosted.
 
 An unsigned Windows or Mac build can't go on the page, including one made with **Skip
-signing for this run**. The platform's row says **Needs a signed build** with **Set up
-signing**.
+signing for this run**. The platform's row says **Needs a signed build** (Mac: **Needs a
+signed, notarized build**) with **Set up signing**.
 
 ### Why Linux needs a signed Windows or Mac build
 
@@ -74,8 +74,8 @@ signed Windows or Mac build of the same app: visitors see the verified publisher
 Linux download comes from the same developer.
 
 If you take the last signed Windows or Mac build off the page, the Linux one comes off with
-it. To share a Linux build without that, download it from its run (**Download** on the
-**Linux app** card) and host it yourself.
+it. To share a Linux build without that, download it from its run (**Download .tar.gz**
+on the **Linux app** card) and host it yourself.
 
 ## Update it
 

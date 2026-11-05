@@ -12,9 +12,10 @@ Open **Publish › iOS**. Its **Overview** has a card for each place an iOS app 
 | **Test on your devices** | Builds the app for your registered iPhones and iPads and gives you an [install link](#install-links) | The same |
 | **iOS Simulator** | A [Simulator app](#ios-simulator-app) to try on a Mac | No Apple account |
 
-Each card shows its next step while it isn't set up yet, then what's live, with
-**Update** to publish a new version. **Activity** lists the platform's runs, and
-**Settings** has the app's [signing certificate](#signing-certificate) and settings.
+Each card shows its next step while it isn't set up yet, then what's live, with a
+button to publish a new version (**Update**, **Build new version** or **Create new
+version**). **Activity** lists the platform's runs, and **Settings** has the app's
+[signing certificate](#signing-certificate) and settings.
 
 {/* SCREENSHOT: /img/docs/studio/publishing/ios-overview.png — Publish › iOS with its three cards */}
 
@@ -132,8 +133,8 @@ Apple rejects a build whose code can access the camera, photos, location and sim
 data unless the app explains why in its `Info.plist`. It applies even when your app
 never uses that feature, as long as a library in the app could. If App Store Connect
 reports **ITMS-90683**, add the purpose strings in **Publish › iOS › Settings**:
-**Permissions** for camera, photo library, microphone or location, or **Info.plist
-entries** for any other key Apple names. Then publish again.
+**Permissions** for camera, photo library, microphone or location, or **Info.plist**
+for any other key Apple names. Then publish again.
 
 ## App Store listing
 
@@ -214,7 +215,7 @@ The **Test on your devices** card builds the app for the iPhones and iPads regis
 with your Apple team (an **Ad hoc** build) and gives you an [install link](#install-links)
 for it. Testers need nothing but the link: no TestFlight, no App Store review.
 
-1. Register the devices: **View devices** on the card opens
+1. Register the devices: **View N devices** (or **Add a device**) on the card opens
    [Settings › Apple devices](#devices).
 2. Click **Build for your devices**. The form shows at the top how many registered
    devices can install it (**Manage devices** opens Settings › Apple devices). When the
@@ -257,7 +258,7 @@ keeps the build's `.ipa` for as long as the link works. The card shows how many 
 the build was installed.
 
 If iOS says it's **unable to install** the app, the device isn't in that build. Register
-it, then click **Update** on the card.
+it, then click **Build new version** on the card.
 
 ## iOS Simulator app
 

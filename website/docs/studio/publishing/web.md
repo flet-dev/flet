@@ -4,12 +4,12 @@ title: "Web apps"
 
 # Web apps
 
-Open **Publish › Web**. Its card, **Create web app**, builds the app as a website:
+Open **Publish › Web**. **Create web app** on its **Web app** card builds the app as a website:
 static files that run your Python app in the visitor's browser, with no server of
 your own needed to run it.
 
-When the run finishes, **Download** the `.zip`. **Update** builds the app as it is
-now. The web settings (base URL, routing, the installed app's colors, …) are on the
+When the run finishes, **Download** the `.zip`. **Create new version** builds the app
+as it is now. The web settings (base URL, routing, the installed app's colors, …) are on the
 **Settings** tab.
 
 {/* SCREENSHOT: /img/docs/studio/publishing/web-card.png — Publish › Web with the built app */}
@@ -32,7 +32,7 @@ To try it on your computer first, serve the folder locally, e.g.
 
 If the app isn't at the root of its site (e.g. `https://example.com/my-app/`), set
 **Base URL** to that path (`/my-app/`) in **Publish › Web › Settings** and
-**Update** the app.
+build the app again (**Create new version**).
 
 ### Page addresses
 

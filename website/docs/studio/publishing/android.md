@@ -12,11 +12,12 @@ goes:
 | **Google Play** | Publishes the app to Google Play's testing tracks and to Production. See [Publishing to Google Play](google-play/index.md). |
 | **Android app (APK)** | Builds an APK and puts it on your app's [download page](download-page.md): a link anyone can open on their phone. |
 
-Each card shows its next step while it isn't set up yet, then what's live, with
-**Update** to publish a new version. **Activity** lists the platform's runs, and
+Each card shows its next step while it isn't set up yet, then what's live, with a
+button to publish a new version (**Update** on Google Play, **Create new version** on the
+APK card). **Activity** lists the platform's runs, and
 **Settings** has its [signing key](#signing-key) and settings.
 
-{/* SCREENSHOT: /img/docs/studio/publishing/android-overview.png — Publish › Android with the Google Play and Direct download cards */}
+{/* SCREENSHOT: /img/docs/studio/publishing/android-overview.png — Publish › Android with the Google Play and Android app (APK) cards */}
 
 ## Download page
 
@@ -85,10 +86,12 @@ bundle after that.
 
 Find it on **Publish › Android › Settings**, in the **Signing** card:
 
-- what the key is: **Made by Studio** (with **not backed up yet** until you've
-  downloaded a backup), or **Your key** for one you imported;
+- what the key is: **Managed by Studio** (with **not backed up yet** until you've
+  downloaded a backup; a build's screen says **Made by Studio**), or **Your key “…”** for
+  one you imported;
 - **Download backup** and **Use your own key…**;
-- **App registration details**: the package name and fingerprints Google asks for.
+- **App registration details** (once the key exists, after the first Android run): the
+  package name and fingerprints Google asks for.
 
 Action screens show the same card with **Manage**, which opens it.
 

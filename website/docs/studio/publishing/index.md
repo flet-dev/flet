@@ -16,7 +16,7 @@ install. Open it with the **Publish** button in the app bar, or **Publish** in t
 **Publish** is organized by platform. Its menu lists **All platforms** and the app's
 [**Download page**](download-page.md), then Android, iOS, Windows, macOS, Linux and Web,
 each with its state (✓ published to a store or the download page, a grey ✓ built,
-! needs you, ✕ the last run failed) or how many runs are going.
+✕ the last run failed) or how many runs are going.
 
 **All platforms** shows every platform with its state; open one to publish or update
 it. A platform's page, and All platforms too, has three tabs:
@@ -35,16 +35,17 @@ Each card is a place the app goes:
 |---|---|
 | Android | **Google Play** (its testing tracks and Production, and the store listing) and **Android app (APK)** (an APK, and the app's [download page](download-page.md)). See [Android apps](android.md) and [Google Play](google-play/index.md) |
 | iOS | **App Store & TestFlight**, **Test on your devices** (an install link for your registered iPhones and iPads) and **iOS Simulator**. See [iOS apps](ios.md) |
-| Windows, macOS, Linux | **The app** for that system (Windows: an installer and a portable `.zip`; macOS: a disk image; Linux: a `.tar.gz`), and the app's [download page](download-page.md). Windows has the **Microsoft Store** too. See [Desktop apps](desktop.md) |
-| Web | **The app's files**, to host on your own server. See [Web apps](web.md) |
+| Windows, macOS, Linux | **Windows app**, **Mac app** or **Linux app** (Windows: an installer and a portable `.zip`; macOS: a disk image; Linux: a `.tar.gz`), and the app's [download page](download-page.md). Windows has the **Microsoft Store** too, and macOS **App Store & TestFlight** (the Mac App Store). See [Desktop apps](desktop.md) |
+| Web | **Web app**: the app's files, to host on your own server. See [Web apps](web.md) |
 
 A card shows its **next step** until it's set up: **Connect Google Play**, **Create
 APK**, **Create Windows app**, … Once something is published, it shows **what's
-live**, with **Update** to publish the app as it is now: **Create** (or **Publish**) the
-first time, **Update** after that.
+live**, with a button to publish the app as it is now: **Create** (or **Publish**) the
+first time, then **Update** on a store's card and **Create new version** on the others
+(**Build new version** for your iPhones and iPads).
 
-While a run is going, its card shows what it's doing ("Building Version 1.0.0 ·
-Build 13…") and its button waits. Open the line for the run's details.
+While a run is going, its card shows what it's doing ("Building 1.0.0 (13)…") and its
+button waits. Open the line for the run's details.
 
 ## Start a run
 
@@ -118,7 +119,7 @@ are always signed, and iOS install links work on Explorer.
 **Free trial.** Try Creator for 7 days, monthly or annual: a card is required, and you
 get 500 bonus credits on top of Explorer's 500 a month (the 10,000 start with your
 first payment). **Start plan now** in **Settings › Usage & billing** ends the trial early
-and gives you the 10,000 credits at once; cancelling before the trial ends costs
+and gives you the 10,000 credits at once; canceling before the trial ends costs
 nothing, and you keep the bonus. Each account, and each card, can have one trial.
 
 ## Build settings
@@ -145,8 +146,9 @@ Open a run from its card or from Activity:
 
 - **Status**, cost, version and duration. A run can be canceled while it waits or
   builds.
-- **Artifacts**: the files it produced, to download.
-- **Errors and warnings**, each linked to the step it came from.
+- **Files**: the files it produced, to download.
+- **Errors and warnings** (on a successful run, **Warnings** or **Notes**), each linked
+  to the step it came from.
 - **Steps**: what the build did, each with its own log. Times are shown in your
   local time. **Download log** saves the whole log as a text file, with the steps'
   titles as headers and times in UTC.
@@ -157,7 +159,7 @@ Open a run from its card or from Activity:
 
 Studio keeps a run's files for **7 days** on the Explorer plan and **90 days** on
 Creator, and at most the last three successful runs of each action. After that,
-the card says **Download expired**: **Update** to get the files again. A run's log
+the card says **Download expired**: **Create new version** to get the files again. A run's log
 and steps are kept **30 days** on Explorer and **1 year** on Creator; the run itself
 stays in Activity.
 What's on a store stays there, and so does the app on its
@@ -193,6 +195,6 @@ Android and iOS.
 
 ### Can I build on my own computer instead?
 
-Yes. Download the app with **Download app as .zip file** in the app bar, then use
+Yes. Download the app with **Download .zip** in **Manage › General**, then use
 [`flet build`](../../publish/index.md). It reads the same `pyproject.toml`
 settings.

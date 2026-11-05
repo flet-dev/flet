@@ -56,8 +56,8 @@ platform, sign it, and publish it to the stores, with nothing to install.
 ### GitHub
 
 * **Sync an app with a GitHub repository.** Changes you or the agent make in Studio
-  are committed, with a message the agent writes, and pushes to the repository
-  show up in Studio. Commits appear in **Versions**. See [GitHub](github.md).
+  are committed (an agent turn with a message the agent writes), and pushes to the
+  repository show up in Studio. Commits appear in **Versions**. See [GitHub](github.md).
 
 ### The agent
 
@@ -78,7 +78,7 @@ platform, sign it, and publish it to the stores, with nothing to install.
   while the build machine works on your app, with a 4-minute minimum. The composer
   shows one number: the credits you can spend.
 * **Try Creator free for 7 days**, with every Creator feature and 500 bonus credits.
-  A card is required, and cancelling during the trial costs nothing.
+  A card is required, and canceling during the trial costs nothing.
 * **Creator** adds store publishing, code signing for Windows and macOS, GitHub sync,
   private apps, the Expert agent, 2 builds at a time and download pages kept for a
   year.
