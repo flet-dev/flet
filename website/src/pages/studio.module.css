@@ -32,6 +32,7 @@
 }
 
 .heroTitle span {
+  display: block;
   color: var(--flet-accent);
 }
 
@@ -51,7 +52,13 @@
 }
 
 .heroCtas {
-  margin-bottom: 52px;
+  margin-bottom: 18px;
+}
+
+.heroNote {
+  margin: 0 0 44px;
+  font-size: 14px;
+  color: var(--flet-muted);
 }
 
 .primaryCta, .secondaryCta {
@@ -103,8 +110,61 @@
   margin-inline: auto;
 }
 
+.stepsSection {
+  padding: 95px 32px 0;
+}
+
+.steps {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 24px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.step {
+  margin: 0;
+  padding: 28px 30px 30px;
+  border: 1px solid var(--flet-line);
+  border-radius: 14px;
+}
+
+.stepNumber {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 34px;
+  height: 34px;
+  margin-bottom: 18px;
+  border-radius: 50%;
+  font-size: 15px;
+  font-weight: 700;
+  color: var(--flet-accent);
+  background: var(--flet-accent-soft);
+}
+
+.stepTitle {
+  margin-bottom: 10px;
+  font-size: 21px;
+  letter-spacing: -.35px;
+}
+
 .featuresSection {
   padding: 95px 32px;
+}
+
+.featureGroup + .featureGroup {
+  margin-top: 48px;
+}
+
+.groupHeading {
+  margin: 0 0 18px;
+  font-size: 13px;
+  font-weight: 700;
+  letter-spacing: 1.2px;
+  text-transform: uppercase;
+  color: var(--flet-muted);
 }
 
 .featuresHeading {
@@ -116,7 +176,7 @@
 
 .featureGrid {
   display: grid;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
+  grid-template-columns: repeat(4, minmax(0, 1fr));
   border-top: 1px solid var(--flet-line);
   border-left: 1px solid var(--flet-line);
 }
@@ -151,7 +211,15 @@
   margin: 0;
 }
 
-.comingSoonBadge {
+.featureTitle a {
+  color: inherit;
+}
+
+.featureTitle a:hover {
+  color: var(--flet-accent);
+}
+
+.planBadge {
   padding: 3px 8px;
   border-radius: 20px;
   font-size: 10px;
@@ -159,6 +227,38 @@
   letter-spacing: 0;
   color: var(--flet-accent);
   background: var(--flet-accent-soft);
+}
+
+.pricingSection {
+  padding: 0 32px 80px;
+}
+
+.pricingBand {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 32px;
+  padding: 36px 40px;
+  border: 1px solid var(--flet-line);
+  border-radius: 20px;
+}
+
+.pricingHeading {
+  margin-bottom: 10px;
+  font-size: clamp(26px, 2.6vw, 34px);
+  letter-spacing: -.03em;
+}
+
+.pricingText {
+  max-width: 720px;
+  margin: 0;
+  font-size: 17px;
+  line-height: 1.65;
+  color: var(--flet-muted);
+}
+
+.pricingBand .secondaryCta {
+  flex-shrink: 0;
 }
 
 .closingBand {
@@ -194,6 +294,17 @@
   }
 }
 
+@media (max-width: 900px) {
+  .steps {
+    grid-template-columns: 1fr;
+    gap: 14px;
+  }
+  .pricingBand {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+}
+
 @media (max-width: 760px) {
   .heroBand {
     padding: 45px 20px 0;
@@ -204,8 +315,20 @@
   .heroCtas {
     margin-bottom: 35px;
   }
+  .stepsSection {
+    padding: 60px 20px 0;
+  }
   .featuresSection {
     padding: 60px 20px;
+  }
+  .pricingSection {
+    padding: 0 20px 60px;
+  }
+  .pricingBand {
+    padding: 28px 24px;
+  }
+  .heroNote {
+    margin-bottom: 32px;
   }
   .featureCard {
     padding: 24px;
