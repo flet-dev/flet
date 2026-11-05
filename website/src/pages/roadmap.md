@@ -23,19 +23,18 @@ slug: roadmap
 
 ### Flet Studio
 
+* ✅ Packaging for web, desktop and mobile platforms.
+* ✅ Publishing to App Store, Google Play and Microsoft Store.
+* ✅ Integration with GitHub.
+* ✅ Gallery improvements.
+* Hosting for Flet static web apps.
 * MCP for Flet Studio.
-* Integration with GitHub.
 * Flet Studio for desktop.
 * Drag-n-Drop UI editor.
-* Gallery improvements.
 
 ### Fletbase
 
 Backend service for Flet apps:
-
-* Packaging for web, desktop and mobile platforms.
-* Publishing to App Store, Google Play and Microsoft Store.
-* Hosting for Flet static web apps.
 * Database.
 * Files.
 * Authentication.
