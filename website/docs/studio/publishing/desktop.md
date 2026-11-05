@@ -227,11 +227,28 @@ Only signed builds go on the page:
 |---|---|
 | Windows | The installer, [signed with Azure Artifact Signing](#sign-the-windows-app) |
 | macOS | The disk image, [signed with Developer ID and notarized](#sign-and-notarize-the-mac-app) |
-| Linux | The `.tar.gz`, while the page has a signed Windows or Mac build: Linux has no signing of its own, so it comes from a publisher Microsoft or Apple verified. It comes off the page with the last of those |
+| Linux | The `.tar.gz`, while the page has a signed Windows or Mac build ([why](#why-linux-needs-a-signed-windows-or-mac-build)) |
 
 A build made with **Skip signing for this run** can't go on the page. Releases stay up
 as long as your plan keeps them ([how long](android.md#share-the-link)), counted from
 their build.
+
+### Why Linux needs a signed Windows or Mac build
+
+Your download page lives on Flet's domain (`get.flet.app`), so people trust that a file
+there comes from a real, accountable developer. Windows and Mac builds prove it: they're
+signed with a certificate Microsoft or Apple issued after checking who you are, and the
+page shows the name they verified.
+
+Linux apps have no signing like that, so a Linux file on its own says nothing about who
+made it. Without a rule, the page would let anyone host an anonymous program on Flet's
+domain, which is how malware spreads. So a Linux build goes on the page only next to a
+signed Windows or Mac build of the same app: visitors see the verified publisher, and the
+Linux download comes from the same developer.
+
+If you take the last signed Windows or Mac build off the page, the Linux one comes off with
+it. To share a Linux build without that, download it from its run (**Download** on the
+**Linux app** card) and host it yourself.
 
 ## Questions
 
