@@ -1,0 +1,56 @@
+[project]
+name = "shadcn-showcase"
+version = "1.0.0"
+description = "Dashboard showcasing Shadcn UI controls: cards, forms, table, calendar and more."
+requires-python = ">=3.10"
+keywords = ["apps", "shadcn", "dashboard", "showcase"]
+authors = [{ name = "Flet team", email = "hello@flet.dev" }]
+dependencies = ["flet", "flet-shadcn-ui"]
+
+[dependency-groups]
+dev = ["flet-cli", "flet-desktop", "flet-web"]
+
+[tool.flet.gallery]
+categories = ["Shadcn"]
+
+[tool.flet.metadata]
+title = "Shadcn Showcase"
+controls = [
+    "SafeArea",
+    "Column",
+    "Row",
+    "ResponsiveRow",
+    "Container",
+    "Text",
+    "Icon",
+    "Theme",
+    "Card",
+    "Alert",
+    "Badge",
+    "Button",
+    "IconButton",
+    "Input",
+    "Select",
+    "Separator",
+    "Avatar",
+    "Calendar",
+    "Slider",
+    "Switch",
+    "Checkbox",
+    "Table",
+    "InputOTP",
+    "Tabs",
+]
+layout_pattern = "dashboard"
+complexity = "intermediate"
+features = [
+    "shadcn color schemes",
+    "light and dark mode",
+    "responsive card grid",
+    "Lucide icons",
+]
+
+[tool.flet]
+org = "dev.flet"
+company = "Flet"
+copyright = "Copyright (C) 2023-2026 by Flet"

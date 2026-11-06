@@ -9,10 +9,14 @@ slug: roadmap
 
 ### Flet Framework
 
-* Flutter 3.47 (Impeller for desktop, material_ui, cupertino_ui)
+* ✅ Flutter 3.47 (Impeller for desktop, material_ui, cupertino_ui) - shipped in [Flet 1.1](/blog/flet-v-1-1-release-announcement).
 * Python 3.15.
-* UI libraries: [shadcn_ui](https://pub.dev/packages/shadcn_ui), [fluent_ui](https://pub.dev/packages/fluent_ui), [macos_ui](https://pub.dev/packages/macos_ui),
-  [yaru](https://pub.dev/packages/yaru)
+* UI libraries:
+  * ✅ [shadcn_ui](https://pub.dev/packages/shadcn_ui) - shipped in [Flet 1.1](/blog/flet-v-1-1-release-announcement) as [`flet-shadcn-ui`](/docs/controls/shadcnui).
+  * [fluent_ui](https://pub.dev/packages/fluent_ui)
+  * [macos_ui](https://pub.dev/packages/macos_ui)
+  * [yaru](https://pub.dev/packages/yaru)
+* ✅ Local notifications - shipped in [Flet 1.1](/blog/flet-v-1-1-release-announcement) as [`flet-notifications`](/docs/services/notifications).
 * Bluetooth Low Energy (BLE), Near Field Communication (NFC), sensors examples.
 * Flet CLI for Studio (cloud builds, stores management, Fletbase, etc.)
 * Documentation improvements.

@@ -13,9 +13,13 @@ class _AudioPlatform extends AudioplayersPlatformInterface {
   final sources = <String>[];
   int sourcesWhenFocusApplied = -1;
   int resumes = 0;
+  final calls = <String>[];
+  final seeks = <Duration>[];
   double rate = 1;
   Completer<void>? volumeGate;
   Completer<void>? sourceGate;
+  Completer<void>? seekGate;
+  bool failRelease = false;
   Completer<void>? contextGate;
   bool failNextSource = false;
   bool failSources = false;
@@ -60,6 +64,7 @@ class _AudioPlatform extends AudioplayersPlatformInterface {
       return;
     }
     sources.add(url);
+    calls.add(url);
     prepared = true;
     events[id]!.add(
         const AudioEvent(eventType: AudioEventType.prepared, isPrepared: true));
@@ -91,6 +96,16 @@ class _AudioPlatform extends AudioplayersPlatformInterface {
   @override
   Future<void> resume(String id) async {
     resumes++;
+    calls.add('resume');
+  }
+
+  @override
+  Future<void> seek(String id, Duration position) async {
+    seeks.add(position);
+    final gate = seekGate;
+    seekGate = null;
+    if (gate != null) await gate.future;
+    events[id]!.add(const AudioEvent(eventType: AudioEventType.seekComplete));
   }
 
   @override
@@ -98,7 +113,12 @@ class _AudioPlatform extends AudioplayersPlatformInterface {
   @override
   Future<void> stop(String id) async {}
   @override
-  Future<void> release(String id) async {}
+  Future<void> release(String id) async {
+    if (failRelease) throw StateError('release failed');
+    prepared = false;
+    calls.add('release');
+  }
+
   @override
   Future<void> dispose(String id) async {
     await events.remove(id)?.close();
@@ -112,6 +132,7 @@ class _GlobalPlatform extends GlobalAudioplayersPlatformInterface {
   final audioFocuses = <AndroidAudioFocus>[];
   final iosOptions = <Set<AVAudioSessionOptions>>[];
   bool failNext = false;
+  Completer<void>? gate;
   @override
   Future<void> setGlobalAudioContext(AudioContext context) async {
     if (failNext) {
@@ -120,6 +141,10 @@ class _GlobalPlatform extends GlobalAudioplayersPlatformInterface {
     }
     audioFocuses.add(context.android.audioFocus);
     iosOptions.add(context.iOS.options);
+    // Platform calls run in order, so only the reply is delayed.
+    final currentGate = gate;
+    gate = null;
+    if (currentGate != null) await currentGate.future;
   }
 
   @override
@@ -320,6 +345,202 @@ void main() {
     }
   }
 
+  for (final stop in ['pause', 'release']) {
+    test('$stop cancels autoplay while the source is loading', () async {
+      control.properties['autoplay'] = true;
+      control.properties['src'] = 'https://example.com/slow.wav';
+      final gate = Completer<void>();
+      platform.sourceGate = gate;
+      service.init();
+      await _settle();
+      await control.invokeMethod(stop, {}, const Duration(seconds: 5));
+      gate.complete();
+      await _settle();
+      expect(platform.resumes, 0);
+      expect(control.events, contains('loaded'));
+    });
+  }
+
+  test('release waits for the source being loaded', () async {
+    final gate = Completer<void>();
+    platform.sourceGate = gate;
+    control.properties['src'] = 'https://example.com/slow.wav';
+    service.init();
+    await _settle();
+    await control.invokeMethod('release', {}, const Duration(seconds: 5));
+    expect(platform.calls, isEmpty);
+    gate.complete();
+    await _settle();
+    expect(platform.calls, ['https://example.com/slow.wav', 'release']);
+  });
+
+  for (final method in ['play', 'resume', 'seek']) {
+    test('$method loads a released source again', () async {
+      control.properties['src'] = 'https://example.com/a.wav';
+      service.init();
+      await _settle();
+      await control.invokeMethod('release', {}, const Duration(seconds: 5));
+      await control.invokeMethod(
+          method, {'position': 1000}, const Duration(seconds: 5));
+      await _settle();
+      expect(platform.sources, hasLength(2));
+      expect(platform.calls.indexOf('release'), 1);
+      expect(control.events.where((e) => e == 'loaded'), hasLength(2));
+    });
+  }
+
+  test('play after a failed release still works', () async {
+    control.properties['src'] = 'https://example.com/a.wav';
+    service.init();
+    await _settle();
+    platform.failRelease = true;
+    await control.invokeMethod('release', {}, const Duration(seconds: 5));
+    await _settle();
+    platform.failRelease = false;
+    await control.invokeMethod(
+        'play', {'position': null}, const Duration(seconds: 5));
+    expect(platform.resumes, 1);
+  });
+
+  test('setting a new source after release needs no second load', () async {
+    control.properties['src'] = 'https://example.com/a.wav';
+    service.init();
+    await _settle();
+    await control.invokeMethod('release', {}, const Duration(seconds: 5));
+    control.properties['src'] = 'https://example.com/b.wav';
+    service.update();
+    await _settle();
+    await control.invokeMethod(
+        'play', {'position': null}, const Duration(seconds: 5));
+    expect(platform.calls, [
+      'https://example.com/a.wav',
+      'release',
+      'https://example.com/b.wav',
+      'resume',
+    ]);
+  });
+
+  test('autoplay starts a source set after an earlier pause', () async {
+    control.properties['autoplay'] = true;
+    control.properties['src'] = 'https://example.com/first.wav';
+    service.init();
+    await _settle();
+    expect(platform.resumes, 1);
+    await control.invokeMethod('pause', {}, const Duration(seconds: 5));
+    control.properties['src'] = 'https://example.com/second.wav';
+    service.update();
+    await _settle();
+    expect(platform.resumes, 2);
+  });
+
+  test('pause cancels a play waiting for its seek', () async {
+    control.properties['src'] = 'https://example.com/a.wav';
+    service.init();
+    await _settle();
+    final gate = Completer<void>();
+    platform.seekGate = gate;
+    final play = control.invokeMethod(
+        'play', {'position': 1000}, const Duration(seconds: 5));
+    await _settle();
+    expect(platform.seeks, hasLength(1));
+    await control.invokeMethod('pause', {}, const Duration(seconds: 5));
+    gate.complete();
+    await play;
+    await _settle();
+    expect(platform.resumes, 0);
+  });
+
+  test('pause cancels a play reloading a source that failed', () async {
+    control.properties['src'] = 'https://example.com/a.wav';
+    platform.failNextSource = true;
+    runZonedGuarded(() {
+      service.init();
+    }, (error, stackTrace) {});
+    await _settle();
+    final gate = Completer<void>();
+    platform.sourceGate = gate;
+    final play = control.invokeMethod(
+        'play', {'position': null}, const Duration(seconds: 5));
+    await _settle();
+    await control.invokeMethod('pause', {}, const Duration(seconds: 5));
+    gate.complete();
+    await play;
+    await _settle();
+    expect(platform.resumes, 0);
+  });
+
+  test('pause does not cancel a seek waiting for the source', () async {
+    final gate = Completer<void>();
+    platform.sourceGate = gate;
+    control.properties['src'] = 'https://example.com/slow.wav';
+    service.init();
+    await _settle();
+    final seek = control.invokeMethod(
+        'seek', {'position': 1000}, const Duration(seconds: 5));
+    await _settle();
+    await control.invokeMethod('pause', {}, const Duration(seconds: 5));
+    gate.complete();
+    await seek;
+    expect(platform.seeks, [const Duration(seconds: 1)]);
+  });
+
+  test('a seek waiting for a source that gets cleared throws', () async {
+    final gate = Completer<void>();
+    platform.sourceGate = gate;
+    control.properties['src'] = 'https://example.com/slow.wav';
+    service.init();
+    await _settle();
+    final seek = control.invokeMethod(
+        'seek', {'position': 1000}, const Duration(seconds: 5));
+    await _settle();
+    control.properties['src'] = null;
+    service.update();
+    await _settle();
+    gate.complete();
+    await expectLater(seek, throwsException);
+    expect(platform.seeks, isEmpty);
+  });
+
+  test('clearing a source that failed to load triggers no loaded event',
+      () async {
+    final gate = Completer<void>();
+    platform.sourceGate = gate;
+    platform.failNextSource = true;
+    control.properties['src'] = 'https://example.com/slow.wav';
+    runZonedGuarded(() {
+      service.init();
+    }, (error, stackTrace) {});
+    await _settle();
+    final seek = control.invokeMethod(
+        'seek', {'position': 1000}, const Duration(seconds: 5));
+    await _settle();
+    control.properties['src'] = null;
+    service.update();
+    await _settle();
+    gate.complete();
+    await expectLater(seek, throwsException);
+    await _settle();
+    expect(control.events, isNot(contains('loaded')));
+  });
+
+  test('play waiting for a source starts after a newer source', () async {
+    final gate = Completer<void>();
+    platform.sourceGate = gate;
+    control.properties['src'] = 'https://example.com/a.wav';
+    service.init();
+    await _settle();
+    final play = control.invokeMethod(
+        'play', {'position': null}, const Duration(seconds: 5));
+    await _settle();
+    control.properties['src'] = 'https://example.com/b.wav';
+    service.update();
+    await _settle();
+    gate.complete();
+    await play;
+    expect(platform.calls.last, 'resume');
+    expect(platform.calls, contains('https://example.com/b.wav'));
+  });
+
   test('clearing the source cancels a play waiting for it', () async {
     final gate = Completer<void>();
     platform.sourceGate = gate;
@@ -468,6 +689,54 @@ void main() {
         await otherService.player.dispose();
       });
     }
+
+    test('setting an iOS default after another player changed the session',
+        () async {
+      await createService(TargetPlatform.iOS);
+      control.properties['context'] = {'focus': 'gain'};
+      service.update();
+      await _settle();
+      control.properties['context'] = null;
+      service.update();
+      await _settle();
+      final other = _Control(backend, {
+        'context': {'focus': 'mixWithOthers', 'respect_silence': false}
+      });
+      final otherService = AudioService(control: other);
+      await otherService.player.creatingCompleter.future;
+      otherService.update();
+      await _settle();
+      control.properties['context'] = {'focus': 'gain'};
+      service.update();
+      await _settle();
+      await otherService.player.dispose();
+      expect(platform.contexts.last.iOS.options, <AVAudioSessionOptions>{});
+    });
+
+    test('pause during the iOS session restore cancels the play', () async {
+      await createService(TargetPlatform.iOS);
+      control.properties['src'] = 'https://example.com/a.wav';
+      control.properties['context'] = {'focus': 'duckOthers'};
+      service.init();
+      await _settle();
+      expect(globalPlatform.iosOptions.last, {
+        AVAudioSessionOptions.mixWithOthers,
+      });
+      final gate = Completer<void>();
+      globalPlatform.gate = gate;
+      final play = control.invokeMethod(
+          'play', {'position': null}, const Duration(seconds: 5));
+      await _settle();
+      await control.invokeMethod('pause', {}, const Duration(seconds: 5));
+      gate.complete();
+      await play;
+      await _settle();
+      expect(platform.resumes, 0);
+      // The lowering ends again, because nothing started playing.
+      expect(globalPlatform.iosOptions.last, {
+        AVAudioSessionOptions.mixWithOthers,
+      });
+    });
 
     test('applies a context equal to the default on iOS', () async {
       await createService(TargetPlatform.iOS);
