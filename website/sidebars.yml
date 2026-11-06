@@ -1110,7 +1110,11 @@ docs:
 
 studio:
   Introduction: studio/index
-  GitHub: studio/github
+  AI agent:
+    _index: studio/agent/index.md
+    Writing good requests: studio/agent/requests.md
+    Credits, limits and gotchas: studio/agent/limits.md
+  GitHub sync: studio/github
   Publishing:
     _index: studio/publishing/index.md
     Android:

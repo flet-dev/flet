@@ -12,8 +12,8 @@ installation is required.
 ## Highlights
 
 - **AI-assisted development.** Describe an app, ask for a feature, or get help
-  fixing a bug. The agent can read and edit project files, and its activity list
-  shows code changes as inline diffs.
+  fixing a bug. The agent can read and edit project files, run and check your app,
+  and its activity list shows code changes as inline diffs. See [AI agent](agent/index.md).
 - **A browser IDE.** Edit Python, manage files in multi-file projects, and restore
   previous versions. Sign in to save your projects and access them across devices.
 - **Live preview.** Run your app next to the editor and try out changes as you
@@ -26,7 +26,7 @@ installation is required.
 - **Private projects.** Keep your apps and source code private while you work
   (Creator plan).
 - **GitHub.** Keep an app in a GitHub repository: push from your computer, and
-  every change made in Studio is committed back. See [GitHub](github.md).
+  every change made in Studio is committed back. See [GitHub sync](github.md).
 - **Cloud packaging and publishing.** Build your app for Windows, macOS, Linux,
   Android, iOS and the web in the cloud, without a local build environment, and
   publish it to Google Play, the App Store and TestFlight, the Mac App Store, the

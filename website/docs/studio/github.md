@@ -1,8 +1,8 @@
 ---
-title: "GitHub"
+title: "GitHub sync"
 ---
 
-# GitHub
+# GitHub sync
 
 Keep an app in a GitHub repository. Work on it locally in your own editor, push,
 and come back to Studio to run, change and [publish](publishing/index.md) it. Studio

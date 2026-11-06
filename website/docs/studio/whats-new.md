@@ -62,7 +62,7 @@ platform, sign it, and publish it to the stores, with nothing to install.
 
 * **Sync an app with a GitHub repository.** Changes you or the agent make in Studio
   are committed (an agent turn with a message the agent writes), and pushes to the
-  repository show up in Studio. Commits appear in **Versions**. See [GitHub](github.md).
+  repository show up in Studio. Commits appear in **Versions**. See [GitHub sync](github.md).
 
 ### The agent
 
@@ -76,6 +76,8 @@ platform, sign it, and publish it to the stores, with nothing to install.
   chat** can carry a summary of the old one over.
 * Screenshots can be taken on any Preview device, in portrait or landscape.
 * No credits are charged when a turn fails because of the AI provider.
+* **New guides:** [working with the agent](agent/index.md),
+  [writing good requests](agent/requests.md), and [credits, limits and gotchas](agent/limits.md).
 
 ### Plans and credits
 

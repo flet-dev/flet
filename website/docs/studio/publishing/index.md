@@ -105,7 +105,7 @@ bonus credits. Checkout brings you back to the same screen.
 | Build for Android (APK), iOS (your own devices), web, Windows, macOS, Linux | Yes | Yes |
 | Google Play, App Store and TestFlight, Mac App Store, Microsoft Store | — | Yes |
 | Code signing and notarization (Windows, the Mac disk image, an App Store .ipa) | — | Yes |
-| [GitHub](../github.md) sync | — | Yes |
+| [GitHub sync](../github.md) | — | Yes |
 | Builds at a time | 1 | 2 |
 | Longest build | 15 minutes | 30 minutes |
 | [Download page](download-page.md) releases kept | 7 days | 1 year |
