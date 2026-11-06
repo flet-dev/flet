@@ -1,3 +1,9 @@
+## 1.1.2
+
+### Bug fixes
+
+* Fix web apps served by Flet (`flet run --web`, FastAPI) logging `AttributeError: 'NoneType' object has no attribute 'after_event'` when the browser reloads or closes the page while `main()` is still running ([#PR](https://github.com/flet-dev/flet/pull/PR)) by @FeodorFitsner.
+
 ## 1.1.1
 
 ### Improvements
