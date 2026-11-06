@@ -101,6 +101,8 @@
 .cardHeader { min-height: 188px; }
 .card h2 { font-size: 26px; margin-bottom: 8px; }
 .planDescription { min-height: 48px; font-size: 15px; color: var(--flet-muted); }
+.trialBadge { margin-left: 10px; vertical-align: middle; font-size: 12px; letter-spacing: 0; font-weight: 500; }
+.featuresHeading { margin: 22px 0 -10px; font-size: 14px; font-weight: 600; }
 .price { margin: 22px 0 4px; font-size: 42px; font-weight: 750; line-height: 1.2; letter-spacing: -.04em; }
 .price span { font-size: 16px; font-weight: 400; letter-spacing: 0; color: var(--flet-muted); }
 .upcomingPrice { font-size: 30px; line-height: 1.68; }

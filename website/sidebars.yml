@@ -1110,6 +1110,36 @@ docs:
 
 studio:
   Introduction: studio/index
+  AI agent:
+    _index: studio/agent/index.md
+    Writing good requests: studio/agent/requests.md
+    Credits, limits and gotchas: studio/agent/limits.md
+  GitHub sync: studio/github
+  Publishing:
+    _index: studio/publishing/index.md
+    Android:
+      _index: studio/publishing/android.md
+      Google Play:
+        _index: studio/publishing/google-play/index.md
+        Store listing: studio/publishing/google-play/store-listing.md
+    iOS:
+      _index: studio/publishing/ios.md
+      App Store and TestFlight:
+        _index: studio/publishing/app-store/index.md
+        Store listing: studio/publishing/app-store/store-listing.md
+    Windows:
+      _index: studio/publishing/windows.md
+      Azure Artifact Signing: studio/publishing/azure-artifact-signing.md
+      Microsoft Store:
+        _index: studio/publishing/microsoft-store/index.md
+        Store listing: studio/publishing/microsoft-store/store-listing.md
+    macOS:
+      _index: studio/publishing/macos.md
+      Mac App Store and TestFlight: studio/publishing/mac-app-store.md
+    Linux: studio/publishing/linux.md
+    Web: studio/publishing/web.md
+    Download page: studio/publishing/download-page.md
+    Signing keys and store accounts: studio/publishing/signing-keys-and-store-accounts.md
   What's new: studio/whats-new
   Terms of Service: studio/terms-of-service
   Privacy Policy: studio/privacy-policy

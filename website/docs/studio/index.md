@@ -12,8 +12,8 @@ installation is required.
 ## Highlights
 
 - **AI-assisted development.** Describe an app, ask for a feature, or get help
-  fixing a bug. The agent can read and edit project files, and its activity list
-  shows code changes as inline diffs.
+  fixing a bug. The agent can read and edit project files, run and check your app,
+  and its activity list shows code changes as inline diffs. See [AI agent](agent/index.md).
 - **A browser IDE.** Edit Python, manage files in multi-file projects, and restore
   previous versions. Sign in to save your projects and access them across devices.
 - **Live preview.** Run your app next to the editor and try out changes as you
@@ -23,9 +23,15 @@ installation is required.
   Open an example, fork it, and adapt it to your idea.
 - **Sharing.** Share public apps with a link so others can run them and explore
   the code.
-- **Private projects.** Keep your apps and source code private while you work.
-- **Cloud packaging and publishing — coming soon.** Build app packages and
-  publish them from Studio without a local build environment.
+- **Private projects.** Keep your apps and source code private while you work
+  (Creator plan).
+- **GitHub.** Keep an app in a GitHub repository: push from your computer, and
+  every change made in Studio is committed back. See [GitHub sync](github.md).
+- **Cloud packaging and publishing.** Build your app for Windows, macOS, Linux,
+  Android, iOS and the web in the cloud, without a local build environment, and
+  publish it to Google Play, the App Store and TestFlight, the Mac App Store, the
+  Microsoft Store, or its own [download page](publishing/download-page.md). See
+  [Publishing](publishing/index.md).
 
 See [what's new](whats-new.md) for the latest improvements.
 
@@ -49,7 +55,7 @@ It uses the same browser-based Flet runtime as a
 [published static Flet website](../publish/web/static-website/index.md).
 
 Studio's hosted services handle accounts, project files, version history, billing,
-and AI assistance. When you use the AI agent, your prompts, conversation history,
+AI assistance, cloud builds and publishing, and GitHub sync. When you use the AI agent, your prompts, conversation history,
 and relevant project context are sent to AI model providers to generate a
 response. Running an app preview and using the AI agent are separate operations;
 browser-based execution does not mean all project data stays on your device.
@@ -60,16 +66,19 @@ See the [Privacy Policy](privacy-policy.md) for details.
 ### Do I need an account or a paid plan?
 
 You can try Studio and run shared public apps without an account. Sign in to save
-projects and use the AI agent. Explorer is free and includes monthly AI credits
-and access to the Pro agent. Creator adds private apps, more credits, Expert agent
-access, and on-demand credit top-ups. Accounts with an existing wallet credit
-balance can also access Expert. See [pricing](/pricing) for current allowances.
+projects, use the AI agent and build your apps. Explorer is free: 500 credits a
+month for the agent and builds, the Pro agent, and builds for Android, iOS (your
+own devices), web, Windows, macOS and Linux. Creator adds 10,000 credits a month,
+private apps, publishing to Google Play, the App Store and Microsoft Store, code
+signing and notarization, GitHub sync and the Expert agent. You can try Creator free
+for 7 days, and anyone can buy credit packs. See [Plans](publishing/index.md#plans)
+and [pricing](/pricing).
 
 ### Do I have to use AI?
 
 No. You can write and edit Python yourself, run your app, and use Studio's project
-and sharing tools without asking the AI agent. AI credits are used when you run
-the agent, not when you manually edit code or run an app preview.
+and sharing tools without asking the AI agent. Credits are used when you run the
+agent or a build, not when you manually edit code or run an app preview.
 
 <a id="limitations"></a>
 
@@ -102,8 +111,8 @@ AI assistance, and shareable previews.
 
 Use local development when you need a native desktop or mobile runtime, packages
 that do not work with Pyodide, local tools and hardware, or your preferred IDE and
-debugger. Cloud packaging and publishing in Studio are still coming soon; for
-now, use `flet run` and `flet build` locally for those workflows. See
+debugger. Studio builds and publishes your app in the cloud (see
+[Publishing](publishing/index.md)); `flet run` and `flet build` work locally too. See
 [installation](../getting-started/installation.md) to get started.
 
 The Flet framework is free and open source. You do not need a paid Studio plan to
