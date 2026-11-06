@@ -1,3 +1,9 @@
+## 1.1.1
+
+### Bug fixes
+
+* Fix images with raw bytes sources rendering blank in Safari ([#7049](https://github.com/flet-dev/flet/pull/7049)) by @FeodorFitsner.
+
 ## 1.1.0
 
 ### Breaking changes

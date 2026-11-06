@@ -349,6 +349,11 @@ class ImageFadeConfig {
 class ResolvedAssetSource {
   const ResolvedAssetSource({this.bytes, this.uri, this.error});
 
+  // Asset byte sources are immutable. Keep each view's normalized buffer stable
+  // across rebuilds so identity-based image and Lottie caches can reuse it.
+  // Weak keys let the copy be collected when the source is no longer used.
+  static final _normalizedByteViews = Expando<Uint8List>();
+
   /// Raw bytes (ex: base64-decoded payload).
   final Uint8List? bytes;
 
@@ -370,13 +375,21 @@ class ResolvedAssetSource {
   /// Factory that normalizes any supported image source into
   /// a [ResolvedAssetSource].
   ///
+  /// Byte sources are treated as immutable. Supply a new source to change
+  /// the asset after resolution.
+  ///
   /// Supports:
   /// - `Uint8List`, `List<int>` → interpreted as raw bytes
   /// - `String` → URL, asset path, or Base64-encoded data
   factory ResolvedAssetSource.from(dynamic src) {
     // bytes
-    final listBytes = convertToUint8List(src);
+    final listBytes = src is Uint8List
+        ? _normalizedByteViews[src] ?? convertToUint8List(src)
+        : convertToUint8List(src);
     if (listBytes != null) {
+      if (src is Uint8List && !identical(src, listBytes)) {
+        _normalizedByteViews[src] = listBytes;
+      }
       return listBytes.isEmpty
           ? const ResolvedAssetSource()
           : ResolvedAssetSource(bytes: listBytes);
@@ -415,7 +428,13 @@ class ResolvedAssetSource {
 /// or returns null if unsupported.
 Uint8List? convertToUint8List(dynamic value) {
   if (value is Uint8List) {
-    return value;
+    // Bytes from a message are a view into the whole message's buffer.
+    // Safari's image decoding (CanvasKit's own codecs, used where the
+    // browser's ImageDecoder isn't) draws nothing for such a view, so
+    // give the bytes a buffer of their own.
+    final isView = value.offsetInBytes != 0 ||
+        value.lengthInBytes != value.buffer.lengthInBytes;
+    return isView ? Uint8List.fromList(value) : value;
   } else if (value is List<int>) {
     return Uint8List.fromList(value);
   } else if (value is List && value.every((e) => e is int)) {
