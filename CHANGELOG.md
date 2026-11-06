@@ -1,5 +1,9 @@
 ## 1.1.1
 
+### Improvements
+
+* Start Python 2–3× faster in web apps: they load the standard library Pyodide publishes precompiled to `.pyc`, from the CDN or bundled with `--no-cdn` ([#7051](https://github.com/flet-dev/flet/pull/7051)) by @FeodorFitsner.
+
 ### Bug fixes
 
 * Fix images with raw bytes sources rendering blank in Safari ([#7049](https://github.com/flet-dev/flet/pull/7049)) by @FeodorFitsner.
