@@ -1,6 +1,7 @@
 ## 1.1.1
 
 * Normalize byte views into independent buffers for Safari image decoding. `ResolvedAssetSource` reuses the normalized buffer for the same immutable source across rebuilds, preserving image and Lottie cache keys; direct `convertToUint8List()` calls, including clipboard writes, read the current input ([#7049](https://github.com/flet-dev/flet/pull/7049)) by @FeodorFitsner.
+* Pass `package_info_plus` the web app's absolute base URL, so `get_package_info` finds `version.json` instead of throwing for a path-only `assetBase`; a web app without `version.json` gets empty values ([#7052](https://github.com/flet-dev/flet/pull/7052)) by @FeodorFitsner.
 
 ## 1.1.0
 

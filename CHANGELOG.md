@@ -7,6 +7,7 @@
 ### Bug fixes
 
 * Fix images with raw bytes sources rendering blank in Safari ([#7049](https://github.com/flet-dev/flet/pull/7049)) by @FeodorFitsner.
+* Fix `page.get_package_info()` failing in web apps with "Cannot use origin without a scheme" ([#7052](https://github.com/flet-dev/flet/pull/7052)) by @FeodorFitsner.
 * Fix `flet build web --no-cdn` and `flet publish` downloading Pyodide again on every run for Python 3.13 and 3.14 ([#7051](https://github.com/flet-dev/flet/pull/7051)) by @FeodorFitsner.
 * Fix `flet build`, `flet debug` and `flet publish` installing the newest `flet` and Flet extensions instead of the Flet CLI's version when the app's dependencies allow a range such as `flet>=1.0.5`; a requirement that excludes the CLI's version now stops the command ([#6894](https://github.com/flet-dev/flet/issues/6894), [#7047](https://github.com/flet-dev/flet/pull/7047)) by @ndonkoHenri.
 * Fix `flet publish` not installing `[tool.flet.web].dependencies` when the app's code is in a subdirectory set by `[tool.flet.app].path` ([#7047](https://github.com/flet-dev/flet/pull/7047)) by @ndonkoHenri.

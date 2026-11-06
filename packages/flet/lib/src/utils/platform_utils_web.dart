@@ -24,6 +24,17 @@ String getAssetsDir() {
   return fletJS?.assetsDir ?? "";
 }
 
+/// The web app's base URL as an absolute URL, such as `https://example.com/app/`:
+/// where the build put `index.html`, `version.json` and `assets/`. Resolved
+/// from the engine's asset base (`assetBase`, `"/"` by default) against the
+/// page's address.
+String getWebAppBaseUrl() {
+  final base = assetManager
+      .getAssetUrl("")
+      .replaceAll("${assetManager.assetsDir}/", "");
+  return Uri.base.resolve(base).toString();
+}
+
 bool isPyodideMode() {
   return fletJS?.pyodide == true;
 }
