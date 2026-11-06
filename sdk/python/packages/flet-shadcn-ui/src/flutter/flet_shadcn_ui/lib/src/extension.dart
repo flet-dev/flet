@@ -38,6 +38,17 @@ const _lucideIconSetId = 3;
 class Extension extends FletExtension {
   @override
   Widget? createWidget(Key? key, Control control) {
+    final widget = _createWidget(key, control);
+    if (widget != null) {
+      // shadcn's controls draw Lucide icons and Geist text: a web build
+      // loads those fonts on first use.
+      loadDeferredFonts("lucide_icons_flutter");
+      loadDeferredFonts("shadcn_ui");
+    }
+    return widget;
+  }
+
+  Widget? _createWidget(Key? key, Control control) {
     switch (control.type) {
       case "ShadTimePicker":
         return ShadTimePickerControl(key: key, control: control);
@@ -132,6 +143,8 @@ class Extension extends FletExtension {
   IconData? createIconData(int iconCode) {
     if ((iconCode >> 16) & 0xFF != _lucideIconSetId) return null;
     final index = iconCode & 0xFFFF;
-    return index < lucideIcons.length ? lucideIcons[index] : null;
+    if (index >= lucideIcons.length) return null;
+    loadDeferredFonts("lucide_icons_flutter");
+    return lucideIcons[index];
   }
 }

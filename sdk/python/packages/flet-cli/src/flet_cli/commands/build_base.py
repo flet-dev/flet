@@ -88,6 +88,7 @@ from flet_cli.utils.python_versions import (
     UnsupportedPythonVersionError,
     resolve_python_version,
 )
+from flet_cli.utils.web_fonts import defer_web_fonts
 
 DEFAULT_TEMPLATE_URL = (
     "https://github.com/flet-dev/flet/releases/download/"
@@ -4055,6 +4056,7 @@ class BaseBuildCommand(BaseFlutterCommand):
 
             if self.target_platform == "web":
                 self.prune_cdn_assets()
+                self.defer_web_fonts()
                 if self.assets_path.exists():
                     # copy `assets` directory contents to the output directory
                     copy_tree(str(self.assets_path), str(self.out_dir))
@@ -4062,6 +4064,20 @@ class BaseBuildCommand(BaseFlutterCommand):
                 self.rename_android_build_outputs()
 
             console.log(f"Copied build {self.emojis['checkmark']}")
+
+    def defer_web_fonts(self):
+        """
+        Load the fonts only some controls need on first use, and drop the
+        unused ones (see `flet_cli.utils.web_fonts`).
+        """
+        deferred, unused = defer_web_fonts(self.out_dir)
+        if self.verbose > 0 and (deferred or unused):
+            console.log(
+                f"Fonts loaded on first use: {', '.join(deferred) or 'none'}; "
+                f"removed: {', '.join(unused) or 'none'}",
+                style=verbose1_style,
+                markup=False,
+            )
 
     def prune_cdn_assets(self):
         """

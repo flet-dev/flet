@@ -5,6 +5,12 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
+## 1.1.2
+
+### Changed
+
+- Web apps load Lucide's and Geist's fonts when the first shadcn control or Lucide icon is built, not before the app's first frame; `flet build web` leaves out Lucide's unused weight fonts ([#7054](https://github.com/flet-dev/flet/pull/7054)) by @FeodorFitsner.
+
 ## 1.1.0
 
 ### Added

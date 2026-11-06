@@ -7,6 +7,7 @@ import 'package:markdown/markdown.dart' as md;
 
 import '../extensions/control.dart';
 import '../models/control.dart';
+import '../utils/deferred_fonts.dart';
 import '../utils/images.dart';
 import '../utils/launch_url.dart';
 import '../utils/markdown.dart';
@@ -175,6 +176,8 @@ class _LatexElementBuilder extends MarkdownElementBuilder {
       TextStyle? preferredStyle, TextStyle? parentStyle) {
     final text = element.textContent;
     if (text.isEmpty) return const SizedBox();
+    // KaTeX's fonts: a web build loads them on first use.
+    loadDeferredFonts("flutter_math_fork");
 
     return SingleChildScrollView(
       scrollDirection: Axis.horizontal,

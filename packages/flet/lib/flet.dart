@@ -37,6 +37,7 @@ export 'src/utils/control.dart';
 export 'src/utils/colors.dart';
 export 'src/utils/dash_path.dart';
 export 'src/utils/debouncer.dart';
+export 'src/utils/deferred_fonts.dart';
 export 'src/utils/desktop.dart';
 export 'src/utils/device_info.dart';
 export 'src/utils/dismissible.dart';

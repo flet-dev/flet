@@ -1,3 +1,7 @@
+## 1.1.2
+
+* Add `loadDeferredFonts(package)` (`DeferredFonts`): in a web app, loads the fonts of a Dart package that `flet build web` moved from `FontManifest.json` to `DeferredFontManifest.json`, once, with `FontLoader`; a failed load is retried by a later call after 5 s, doubling up to 5 min; a no-op elsewhere and when the package's fonts are in `FontManifest.json`. `Markdown` calls it for `flutter_math_fork` before drawing math ([#7054](https://github.com/flet-dev/flet/pull/7054)) by @FeodorFitsner.
+
 ## 1.1.1
 
 * Normalize byte views into independent buffers for Safari image decoding. `ResolvedAssetSource` reuses the normalized buffer for the same immutable source across rebuilds, preserving image and Lottie cache keys; direct `convertToUint8List()` calls, including clipboard writes, read the current input ([#7049](https://github.com/flet-dev/flet/pull/7049)) by @FeodorFitsner.
