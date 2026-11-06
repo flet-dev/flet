@@ -30,14 +30,21 @@ class DeferredFonts {
   final FontFamilyLoader _loadFamily;
   final bool _web;
   final _packages = <String, Future<void>>{};
+  final _loadedFamilies = <String>{};
   Future<List<Map<String, dynamic>>>? _deferred;
 
   /// Loads the deferred fonts of Dart package [package], once. Does nothing
   /// outside the web, or when the package's fonts are in `FontManifest.json`
   /// (`flet debug` and web builds made before Flet 1.1.2).
+  /// Failed downloads are retried on the next call.
   Future<void> load(String package) {
     if (!_web) return Future.value();
-    return _packages[package] ??= _load(package);
+    return _packages[package] ??= _load(package).catchError((Object error) {
+      // Controls need not await this call. Keep failures handled, but allow
+      // the next control build to retry after connectivity recovers.
+      _packages.remove(package);
+      debugPrint("Error loading deferred fonts for $package: $error");
+    });
   }
 
   Future<void> _load(String package) async {
@@ -48,22 +55,30 @@ class DeferredFonts {
     // Fetched by the engine at startup, so usually from the browser's cache.
     if ((await _readManifest("FontManifest.json")).any(ofPackage)) return;
     final families =
-        (await (_deferred ??= _readManifest(deferredFontManifest)))
-            .where(ofPackage);
+        (await (_deferred ??= _readDeferredManifest())).where(ofPackage);
     await Future.wait(families.map((f) async {
       final family = f["family"] as String;
-      try {
-        await _loadFamily(family, [
-          for (final font in (f["fonts"] as List? ?? const []))
-            // The manifest has the path URL-encoded (`Geist%5Bwght%5D.ttf`,
-            // a file of that name) and the asset bundle encodes its key
-            // again: decoded, the request is the engine's for the font.
-            _bundle.load(Uri.decodeFull(font["asset"] as String))
-        ]);
-      } catch (e) {
-        debugPrint("Error loading font $family: $e");
-      }
+      if (_loadedFamilies.contains(family)) return;
+      await _loadFamily(family, [
+        for (final font in (f["fonts"] as List? ?? const []))
+          // The manifest has the path URL-encoded (`Geist%5Bwght%5D.ttf`,
+          // a file of that name) and the asset bundle encodes its key
+          // again: decoded, the request is the engine's for the font.
+          _bundle.load(Uri.decodeFull(font["asset"] as String))
+      ]);
+      // Other families may have failed. Retain successful registrations so
+      // retrying the package doesn't register these families a second time.
+      _loadedFamilies.add(family);
     }));
+  }
+
+  Future<List<Map<String, dynamic>>> _readDeferredManifest() async {
+    try {
+      return await _readManifest(deferredFontManifest);
+    } catch (_) {
+      _deferred = null;
+      rethrow;
+    }
   }
 
   Future<List<Map<String, dynamic>>> _readManifest(String name) async {
@@ -71,15 +86,20 @@ class DeferredFonts {
       final json = jsonDecode(await _bundle.loadString(name));
       return (json as List).cast<Map<String, dynamic>>();
     } catch (_) {
-      return const [];
+      // CachingAssetBundle also caches failed loadString futures.
+      _bundle.evict(name);
+      rethrow;
     }
   }
 
   static Future<void> _loadWithFontLoader(
-      String family, List<Future<ByteData>> fonts) {
+      String family, List<Future<ByteData>> fonts) async {
+    // FontLoader awaits its futures sequentially. Handle every download now
+    // so a later failure cannot escape while an earlier font is pending.
+    final bytes = await Future.wait(fonts);
     final loader = FontLoader(family);
-    for (final font in fonts) {
-      loader.addFont(font);
+    for (final font in bytes) {
+      loader.addFont(Future.value(font));
     }
     return loader.load();
   }

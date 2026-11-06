@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:convert';
 
 import 'package:flet/src/utils/deferred_fonts.dart';
@@ -9,18 +10,16 @@ class _Bundle extends CachingAssetBundle {
 
   final Map<String, String> files;
   final loaded = <String>[];
+  final pending = <String, Completer<ByteData>>{};
 
   @override
   Future<ByteData> load(String key) async {
     loaded.add(key);
+    if (pending.containsKey(key)) return pending[key]!.future;
     final text = files[key];
     if (text == null) throw Exception("404 $key");
     return ByteData.sublistView(utf8.encode(text));
   }
-
-  @override
-  Future<String> loadString(String key, {bool cache = true}) async =>
-      utf8.decode((await load(key)).buffer.asUint8List());
 }
 
 Map<String, dynamic> _family(String name, List<String> assets) => {
@@ -36,8 +35,7 @@ final _katex = _family("packages/flutter_math_fork/KaTeX_Main", [
 ]);
 final _lucide = _family("packages/lucide_icons_flutter/Lucide",
     ["packages/lucide_icons_flutter/assets/lucide.ttf"]);
-final _material =
-    _family("MaterialIcons", ["fonts/MaterialIcons-Regular.otf"]);
+final _material = _family("MaterialIcons", ["fonts/MaterialIcons-Regular.otf"]);
 
 void main() {
   late Map<String, List<String>> loadedFamilies;
@@ -55,7 +53,8 @@ void main() {
         "FontManifest.json": jsonEncode(fontManifest ?? [_material]),
         if (deferred != null) deferredFontManifest: jsonEncode(deferred),
         for (final f in [_katex, _lucide])
-          for (final font in f["fonts"]) font["asset"]: "bytes of ${font["asset"]}",
+          for (final font in f["fonts"])
+            font["asset"]: "bytes of ${font["asset"]}",
       });
 
   test("loads only the requested package's deferred families, once", () async {
@@ -76,7 +75,8 @@ void main() {
     expect(b.loaded.where((k) => k == deferredFontManifest).length, 1);
 
     await fonts.load("lucide_icons_flutter");
-    expect(loadedFamilies.keys, contains("packages/lucide_icons_flutter/Lucide"));
+    expect(
+        loadedFamilies.keys, contains("packages/lucide_icons_flutter/Lucide"));
     // The deferred manifest is read once for all packages.
     expect(b.loaded.where((k) => k == deferredFontManifest).length, 1);
   });
@@ -100,12 +100,93 @@ void main() {
 
     final missingFont = DeferredFonts(
         bundle: bundle(deferred: [
-          _family("packages/shadcn_ui/Geist", ["packages/shadcn_ui/missing.ttf"])
+          _family(
+              "packages/shadcn_ui/Geist", ["packages/shadcn_ui/missing.ttf"])
         ]),
         loadFamily: loadFamily,
         web: true);
     await missingFont.load("shadcn_ui");
     expect(loadedFamilies, isEmpty);
+  });
+
+  test("retries a failed deferred manifest for all packages", () async {
+    final b = bundle();
+    final fonts = DeferredFonts(bundle: b, loadFamily: loadFamily, web: true);
+
+    await Future.wait([
+      fonts.load("flutter_math_fork"),
+      fonts.load("lucide_icons_flutter"),
+    ]);
+    expect(loadedFamilies, isEmpty);
+
+    b.files[deferredFontManifest] = jsonEncode([_katex, _lucide]);
+    await Future.wait([
+      fonts.load("flutter_math_fork"),
+      fonts.load("lucide_icons_flutter"),
+    ]);
+
+    expect(loadedFamilies.keys,
+        containsAll([_katex["family"], _lucide["family"]]));
+    expect(b.loaded.where((k) => k == deferredFontManifest).length, 2);
+  });
+
+  test("retries a failed startup manifest", () async {
+    final b = bundle(deferred: [_katex])..files.remove("FontManifest.json");
+    final fonts = DeferredFonts(bundle: b, loadFamily: loadFamily, web: true);
+
+    await fonts.load("flutter_math_fork");
+    expect(loadedFamilies, isEmpty);
+    expect(b.loaded, isNot(contains(deferredFontManifest)));
+
+    b.files["FontManifest.json"] = jsonEncode([_material]);
+    await fonts.load("flutter_math_fork");
+
+    expect(loadedFamilies.keys, [_katex["family"]]);
+    expect(b.loaded.where((k) => k == "FontManifest.json").length, 2);
+  });
+
+  test("retries failed families without loading successful ones again",
+      () async {
+    const asset = "packages/flutter_math_fork/fonts/KaTeX_Math-Italic.ttf";
+    final math = _family("packages/flutter_math_fork/KaTeX_Math", [asset]);
+    final b = bundle(deferred: [_katex, math]);
+    final fonts = DeferredFonts(bundle: b, loadFamily: loadFamily, web: true);
+
+    await fonts.load("flutter_math_fork");
+    expect(loadedFamilies.keys, [_katex["family"]]);
+
+    b.files[asset] = "math";
+    await Future.wait([
+      fonts.load("flutter_math_fork"),
+      fonts.load("flutter_math_fork"),
+    ]);
+    await fonts.load("flutter_math_fork");
+
+    expect(loadedFamilies[math["family"]], ["math"]);
+    expect(b.loaded.where((k) => k == asset).length, 2);
+    for (final font in _katex["fonts"]) {
+      expect(b.loaded.where((k) => k == font["asset"]).length, 1);
+    }
+    expect(b.loaded.where((k) => k == deferredFontManifest).length, 1);
+  });
+
+  test("catches later font failures while an earlier font is pending",
+      () async {
+    final b = bundle(deferred: [_katex]);
+    final first = Completer<ByteData>();
+    final second = Completer<ByteData>();
+    b.pending[_katex["fonts"][0]["asset"]] = first;
+    b.pending[_katex["fonts"][1]["asset"]] = second;
+    // Use the real FontLoader: a Future.wait mock hides its sequential awaits.
+    final fonts = DeferredFonts(bundle: b, web: true);
+    final loading = fonts.load("flutter_math_fork");
+    await Future<void>.delayed(Duration.zero);
+    expect(b.loaded, containsAll(b.pending.keys));
+
+    second.completeError(Exception("bold download failed"));
+    await Future<void>.delayed(Duration.zero);
+    first.completeError(Exception("regular download failed"));
+    await loading;
   });
 
   test("decodes the manifest's URL-encoded paths for the asset bundle",
