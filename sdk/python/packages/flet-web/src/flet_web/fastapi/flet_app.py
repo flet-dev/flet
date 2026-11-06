@@ -163,9 +163,8 @@ class FletApp(Connection):
         post-event updates.
         """
 
-        # `main` runs as a task of its own: when the client disconnects while
-        # it runs, `dispose()` clears `self.__session`. The session lives on,
-        # buffering updates until the client reconnects or it expires.
+        # `main` runs in its own task. Disconnecting clears `self.__session`,
+        # so retain the session for post-event housekeeping and error handling.
         session = self.__session
         assert session
         logger.info(f"Start session: {session.id}")
