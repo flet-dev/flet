@@ -16,6 +16,8 @@ String getAssetsDir() {
   return "";
 }
 
+String? getWebAppBaseUrl() => null;
+
 bool isPyodideMode() {
   return false;
 }
