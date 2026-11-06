@@ -1,3 +1,9 @@
+## 1.1.2
+
+### Improvements
+
+* Start web apps up to 2 MB lighter: `flet build web` leaves out the six Lucide weight fonts no Flet icon uses (2.9 MB), and loads the fonts of math in `Markdown` (KaTeX) and of `flet-shadcn-ui` (Lucide, Geist) the first time a control needs them, instead of before the first frame ([#PR](https://github.com/flet-dev/flet/pull/PR)) by @FeodorFitsner.
+
 ## 1.1.1
 
 ### Improvements
