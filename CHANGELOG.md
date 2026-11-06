@@ -3,6 +3,7 @@
 ### Bug fixes
 
 * Fix images with raw bytes sources rendering blank in Safari ([#7049](https://github.com/flet-dev/flet/pull/7049)) by @FeodorFitsner.
+* Fix `flet build web` apps not loading the fonts of Dart packages, so the icons of `flet-shadcn-ui` drew as empty boxes ([#7050](https://github.com/flet-dev/flet/pull/7050)) by @FeodorFitsner.
 
 ## 1.1.0
 
