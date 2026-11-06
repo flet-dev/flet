@@ -1,11 +1,19 @@
 """Tests for project_dependencies module."""
 
+from pathlib import Path
+
 import pytest
 
 from flet_cli.utils.project_dependencies import (
+    FLET_PACKAGES,
+    FletVersionConflictError,
     get_poetry_dependencies,
     get_project_dependencies,
+    override_dependencies,
+    pin_flet_dependencies,
+    read_requirements,
     read_requirements_file_text,
+    requirements_use_hashes,
 )
 
 # ---------------------------------------------------------------------------
@@ -383,3 +391,231 @@ class TestReadRequirementsFileText:
         (tmp_path / "more.txt").write_text("httpx\n")
 
         assert "httpx\n" in read_requirements_file_text(reqs)
+
+
+# ---------------------------------------------------------------------------
+# read_requirements
+# ---------------------------------------------------------------------------
+
+
+class TestReadRequirements:
+    def test_comments_and_blank_lines_skipped(self, tmp_path):
+        """Returns only the requirements."""
+        reqs = tmp_path / "requirements.txt"
+        reqs.write_text("# comment\n\nflet>=1.0  # inline\nhttpx\n")
+        assert read_requirements(reqs) == ["flet>=1.0", "httpx"]
+
+    def test_hash_options_removed(self, tmp_path):
+        """Drops the options of a requirement, across continued lines."""
+        reqs = tmp_path / "requirements.txt"
+        reqs.write_text("flet==1.0 \\\n  --hash=sha256:abc\n")
+        assert read_requirements(reqs) == ["flet==1.0"]
+
+    def test_requirement_includes_read_and_constraints_skipped(self, tmp_path):
+        """Follows `-r` includes, but constraints don't install anything."""
+        reqs = tmp_path / "requirements.txt"
+        reqs.write_text("flet\n-r more.txt\n-c constraints.txt\n")
+        (tmp_path / "more.txt").write_text("httpx")
+        (tmp_path / "constraints.txt").write_text("tabulate<1\n")
+        assert read_requirements(reqs) == ["flet", "httpx"]
+
+    def test_requirement_include_of_a_constraints_file_read(self, tmp_path):
+        """Treats a `-r` include as requirements even inside a constraints file."""
+        reqs = tmp_path / "requirements.txt"
+        reqs.write_text("-c constraints.txt\n")
+        (tmp_path / "constraints.txt").write_text("-r local.txt\n")
+        (tmp_path / "local.txt").write_text("flet @ file:///work/flet\n")
+        assert read_requirements(reqs) == ["flet @ file:///work/flet"]
+
+    def test_file_included_as_constraint_and_requirement_read(self, tmp_path):
+        """Keeps the requirements of a file that is also a constraints file."""
+        reqs = tmp_path / "requirements.txt"
+        reqs.write_text("-c shared.txt\n-r shared.txt\n")
+        (tmp_path / "shared.txt").write_text("httpx\n")
+        assert read_requirements(reqs) == ["httpx"]
+
+    @pytest.mark.parametrize("encoding", ["utf-8-sig", "utf-16"])
+    def test_byte_order_mark_decoded(self, tmp_path, encoding):
+        """Reads files saved with a byte order mark, as pip does."""
+        reqs = tmp_path / "requirements.txt"
+        reqs.write_bytes("flet>=1\nhttpx\n".encode(encoding))
+        assert read_requirements(reqs) == ["flet>=1", "httpx"]
+
+    def test_url_includes(self, tmp_path):
+        """Reads `file:` includes, and returns the URL of any other include."""
+        (tmp_path / "local.txt").write_text("httpx\n")
+        reqs = tmp_path / "requirements.txt"
+        reqs.write_text(
+            f"-r {(tmp_path / 'local.txt').as_uri()}\n-r https://example.com/r.txt\n"
+        )
+        assert read_requirements(reqs) == ["https://example.com/r.txt", "httpx"]
+
+    def test_windows_line_endings_normalized(self, tmp_path):
+        """Gives the same text for a file with Windows line endings."""
+        reqs = tmp_path / "requirements.txt"
+        reqs.write_bytes(b"flet>=1\r\nhttpx\r\n")
+        assert read_requirements_file_text(reqs) == "flet>=1\nhttpx\n"
+        assert read_requirements(reqs) == ["flet>=1", "httpx"]
+
+    def test_editable_target_returned(self, tmp_path):
+        """Returns the targets of `-e` options, and drops other options."""
+        reqs = tmp_path / "requirements.txt"
+        reqs.write_text("--no-cache-dir\n-e ../lib\n--editable=../other\n")
+        assert read_requirements(reqs) == ["../lib", "../other"]
+
+
+# ---------------------------------------------------------------------------
+# pin_flet_dependencies
+# ---------------------------------------------------------------------------
+
+
+class TestPinFletDependencies:
+    def test_range_pinned(self):
+        """Narrows a range that allows the CLI's version."""
+        assert pin_flet_dependencies(["flet >=1.0.5"], "1.1.0") == ["flet==1.1.0"]
+
+    def test_extensions_pinned_and_others_untouched(self):
+        """Pins packages released with `flet`, and no others."""
+        result = pin_flet_dependencies(
+            ["flet", "flet-charts", "flet_map>=1", "flet-third-party", "httpx<1"],
+            "1.1.0",
+        )
+        assert result == [
+            "flet==1.1.0",
+            "flet-charts==1.1.0",
+            "flet_map==1.1.0",
+            "flet-third-party",
+            "httpx<1",
+        ]
+
+    def test_extras_and_markers_kept(self):
+        """Keeps what a requirement says besides its version."""
+        result = pin_flet_dependencies(
+            ["flet[all]>=1", "flet-audio; sys_platform == 'win32'"], "1.1.0"
+        )
+        assert result == [
+            "flet[all]==1.1.0",
+            'flet-audio==1.1.0; sys_platform == "win32"',
+        ]
+
+    @pytest.mark.parametrize(
+        "dep", ["flet==0.86.3", "flet<1", "flet-charts==1.0.5", "flet!=1.1.0"]
+    )
+    def test_excluded_version_raises(self, dep):
+        """Fails when a requirement rules out the CLI's version."""
+        with pytest.raises(FletVersionConflictError, match="1.1.0"):
+            pin_flet_dependencies([dep], "1.1.0")
+
+    def test_excluded_version_with_marker_left_to_pip(self):
+        """Keeps a conflicting requirement that may not apply to the target."""
+        result = pin_flet_dependencies(
+            ["flet>=1", "flet-audio<1; sys_platform == 'win32'"], "1.1.0"
+        )
+        assert result == ["flet==1.1.0", "flet-audio<1; sys_platform == 'win32'"]
+
+    def test_prerelease_cli_version_allowed(self):
+        """Treats the version of a pre-release CLI like any other."""
+        assert pin_flet_dependencies(["flet>=1"], "1.1.0.dev4") == ["flet==1.1.0.dev4"]
+
+    @pytest.mark.parametrize(
+        "deps",
+        [
+            [],
+            ["httpx"],
+            ["flet-charts"],
+            ["flet; sys_platform == 'win32'"],
+            ["--no-cache-dir"],
+        ],
+    )
+    def test_flet_added_when_not_installed_everywhere(self, deps):
+        """Adds `flet` when no requirement installs it on every platform."""
+        assert pin_flet_dependencies(deps, "1.1.0")[-1] == "flet==1.1.0"
+
+    @pytest.mark.parametrize(
+        "deps",
+        [
+            ["flet @ file:///src/flet", "flet-charts"],
+            ["git+https://github.com/flet-dev/flet#egg=flet", "flet-charts"],
+            ["../dist/flet-1.1.0.dev1-py3-none-any.whl", "flet-charts"],
+            ["flet-1.0.5-py3-none-any.whl", "flet-charts"],
+            ["../flet", "flet-charts"],
+            ["..\\packages\\flet\\", "flet-charts"],
+            [
+                "git+https://github.com/flet-dev/flet@main"
+                "#subdirectory=sdk/python/packages/flet",
+                "flet-charts",
+            ],
+            ["https://example.com/flet-1.1.0.tar.gz?x=1", "flet-charts"],
+        ],
+    )
+    def test_flet_from_a_location_left_alone(self, deps):
+        """Doesn't touch the requirements when `flet` comes from a path or URL."""
+        assert pin_flet_dependencies(deps, "1.1.0") == deps
+
+    def test_flet_location_with_extras_or_marker_left_alone(self):
+        """Recognizes a `flet` location followed by extras or a marker."""
+        for entry in [
+            "flet-1.0.5-py3-none-any.whl[all]",
+            "../flet[all]",
+            "./flet-1.0.5.tar.gz ; python_version >= '3.10'",
+        ]:
+            assert pin_flet_dependencies([entry], "1.1.0") == [entry]
+
+    def test_url_include_may_provide_flet(self):
+        """Doesn't add `flet` next to an include that can't be read."""
+        deps = ["https://example.com/r.txt"]
+        assert pin_flet_dependencies(deps, "1.1.0") == deps
+
+    def test_other_location_may_provide_flet(self):
+        """Doesn't add `flet` next to a path, which may install it."""
+        assert pin_flet_dependencies(["../lib"], "1.1.0") == ["../lib"]
+
+    def test_flet_prefixed_location_is_not_flet(self):
+        """Doesn't mistake a path to another `flet-*` package for `flet`."""
+        result = pin_flet_dependencies(["../flet-foo", "flet"], "1.1.0")
+        assert result == ["../flet-foo", "flet==1.1.0"]
+
+    def test_extension_from_a_location_kept(self):
+        """Keeps an extension's own direct reference."""
+        result = pin_flet_dependencies(["flet-charts @ file:///x", "flet"], "1.1.0")
+        assert result == ["flet-charts @ file:///x", "flet==1.1.0"]
+
+    def test_flet_packages_lists_every_package(self):
+        """Lists every package in the repository's `packages` directory."""
+        packages = Path(__file__).parents[2]
+        assert {
+            path.parent.name for path in packages.glob("*/pyproject.toml")
+        } == FLET_PACKAGES
+
+
+# ---------------------------------------------------------------------------
+# requirements_use_hashes
+# ---------------------------------------------------------------------------
+
+
+class TestRequirementsUseHashes:
+    @pytest.mark.parametrize(
+        "text",
+        ["flet==1.0 --hash=sha256:abc\n", "--require-hashes\nflet==1.0\n"],
+    )
+    def test_hash_options_detected(self, text):
+        """Detects both ways of turning on hash-checking mode."""
+        assert requirements_use_hashes(text)
+
+    @pytest.mark.parametrize("text", ["flet>=1\n# add --hash later\n", "flet>=1\n"])
+    def test_comments_ignored(self, text):
+        """Doesn't take a comment for an option."""
+        assert not requirements_use_hashes(text)
+
+
+# ---------------------------------------------------------------------------
+# override_dependencies
+# ---------------------------------------------------------------------------
+
+
+class TestOverrideDependencies:
+    def test_same_package_replaced(self):
+        """Replaces requirements of the same package, whatever its spelling."""
+        assert override_dependencies(
+            ["flet_charts>=1", "httpx", "../lib"], ["flet-charts", "rich"]
+        ) == ["httpx", "../lib", "flet-charts", "rich"]

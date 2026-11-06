@@ -78,6 +78,7 @@ Without matching defaults, Dart receives `null` and either crashes or silently u
 - Add extension to `.github/workflows/ci.yml` in both places:
   - `build_flet_extensions` -> `PACKAGES` list.
   - `py_publish` -> `for pkg in ...` publish loop.
+- Add the extension's PyPI name to `FLET_PACKAGES` in `sdk/python/packages/flet-cli/src/flet_cli/utils/project_dependencies.py`, so `flet build`, `flet debug` and `flet publish` pin it to the Flet CLI version. A test fails if a folder in `sdk/python/packages` is missing from it.
 - Add `.gitignore` to Flutter extension project if missing.
 - Remove `[tool.uv.sources]` local path overrides from example `pyproject.toml` files before opening a PR (they are development-only conveniences).
 
