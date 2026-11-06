@@ -26,11 +26,12 @@ shows its link and which platforms are live on it, and each platform's card has 
 A platform's build form has a **Download page** box:
 
 - **Android:** **Create APK** on the **Android app (APK)** card, with **Add this APK to
-  the download page**, ticked by default. See [Android apps](android.md#download-page).
+  the download page**, ticked by default. See [Android](android.md#download-page).
 - **Windows, macOS, Linux:** **Create Windows app**, **Create Mac app** or **Create Linux
   app**, with **Add this installer** (or disk image, or app) **to the download page**.
   It's ticked once the page has a release, or when you start the build from **Publish ›
-  Download page**. See [Desktop apps](desktop.md#download-page).
+  Download page**. See [Windows](windows.md#download-page), [macOS](macos.md#download-page)
+  and [Linux](linux.md#download-page).
 
 Once the page has that platform's build, the box reads **Replace the … download with
 this …** and says which version is on the page now. Untick it for a build just to try
@@ -49,8 +50,8 @@ A build that's already made can go on without building again, and without credit
 | Platform | What goes on the page |
 |---|---|
 | Android | The APK, signed with the app's [signing key](android.md#signing-key) |
-| Windows | The installer, [signed with Azure Artifact Signing](desktop.md#sign-the-windows-app) |
-| macOS | The disk image, [signed with Developer ID and notarized](desktop.md#sign-and-notarize-the-mac-app) |
+| Windows | The installer, [signed with Azure Artifact Signing](windows.md#sign-the-windows-app) |
+| macOS | The disk image, [signed with Developer ID and notarized](macos.md#sign-and-notarize-the-mac-app) |
 | Linux | The `.tar.gz`, next to a signed Windows or Mac build ([why](#why-linux-needs-a-signed-windows-or-mac-build)) |
 
 iOS and web apps don't go on the page: iOS builds install from their own

@@ -119,7 +119,7 @@ setup** with the app's name and package name to copy:
 Google Play now knows the app and remembers the key it was signed with as the app's
 **upload key**. Google re-signs the copies it delivers with its own key (Play App
 Signing), which is why your key must never change. See
-[Android apps](../android.md#apks-and-google-play-installs).
+[APKs and Google Play installs](../android.md#apks-and-google-play-installs).
 
 {/* SCREENSHOT: /img/docs/studio/publishing/play-console-first-release.png — Play Console › Internal testing › Create new release, with the .aab uploaded */}
 
@@ -317,7 +317,7 @@ Play's latest; Studio starts above it automatically.
 Yes, but not over a copy installed from Google Play, and the other way round:
 Google Play re-signs its copies with Google's key, and Android only updates an app
 with one signed by the same key. See
-[Android apps](../android.md#apks-and-google-play-installs).
+[APKs and Google Play installs](../android.md#apks-and-google-play-installs).
 
 ### What can't Studio do on Google Play yet?
 

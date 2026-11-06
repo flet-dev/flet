@@ -309,7 +309,7 @@ which Artifact Signing is.
 
 Not with Public Trust yet: Microsoft decides who it can validate. You can still build your
 app unsigned (Windows shows "Unknown publisher" and SmartScreen warns before it runs), or
-publish it on the [Microsoft Store](microsoft-store.md), where Microsoft signs it and no
+publish it on the [Microsoft Store](microsoft-store/index.md), where Microsoft signs it and no
 code-signing certificate is needed.
 
 ### Do I need an EV certificate?

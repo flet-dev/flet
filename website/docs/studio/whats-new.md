@@ -22,25 +22,30 @@ platform, sign it, and publish it to the stores, with nothing to install.
 * **Android.** Share an APK on a download page, or publish an app bundle to
   **Google Play** on any track. Studio makes the app's signing key and reminds you to
   back it up. Choose which phones an APK supports to keep it small. See
-  [Android apps](publishing/android.md) and
+  [Android](publishing/android.md) and
   [Publishing to Google Play](publishing/google-play/index.md).
 * **iOS.** Connect App Store Connect once and Studio prepares the bundle ID,
   certificate and profile for you. Publish to **TestFlight** and the **App Store**,
   install Ad hoc builds on your own devices from an install link, and let testers
-  register their iPhones from a link. See [iOS apps](publishing/ios.md).
+  register their iPhones from a link. See [iOS](publishing/ios.md) and
+  [App Store and TestFlight](publishing/app-store/index.md).
 * **Windows.** Each build makes a one-click **setup.exe** installer beside the
   portable .zip. Sign it with **Azure Artifact Signing**, and publish to the
-  **Microsoft Store**. See [Desktop apps](publishing/desktop.md) and
-  [Microsoft Store](publishing/microsoft-store.md).
+  **Microsoft Store**. See [Windows](publishing/windows.md),
+  [Azure Artifact Signing](publishing/azure-artifact-signing.md) and
+  [Microsoft Store](publishing/microsoft-store/index.md).
 * **macOS.** Create a Mac app as a .dmg, signed with your Developer ID and notarized
-  by Apple, or publish to the **Mac App Store** and TestFlight for Mac.
+  by Apple, or publish to the **Mac App Store** and TestFlight for Mac. See
+  [macOS](publishing/macos.md) and [Mac App Store and TestFlight](publishing/mac-app-store.md).
 * **Linux and web.** A .tar.gz for Linux, and a .zip of the web app to host anywhere.
-  See [Web apps](publishing/web.md).
+  See [Linux](publishing/linux.md) and [Web](publishing/web.md).
 * **Store listings.** Write your listing for Google Play, the App Store and the
   Microsoft Store in Studio, or ask the agent to write and translate it. Take
   store-sized screenshots from the Preview's devices, import an existing listing,
-  and send it with a release or on its own. See
-  [Google Play store listing](publishing/google-play/store-listing.md).
+  and send it with a release or on its own. See the
+  [Google Play](publishing/google-play/store-listing.md),
+  [App Store](publishing/app-store/store-listing.md) and
+  [Microsoft Store](publishing/microsoft-store/store-listing.md) listings.
 * **Download pages.** Every app gets one public page at get.flet.app with its latest
   Android, Windows, Mac and Linux builds, a QR code, and the visitor's system first.
   See [Download page](publishing/download-page.md).

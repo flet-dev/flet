@@ -14,7 +14,7 @@ and companies: start it at [storedeveloper.microsoft.com](https://storedeveloper
 
 :::note[Creator plan]
 Publishing to the Microsoft Store is part of the Creator plan. On Explorer, the **Free trial** link on its
-card opens the plans, where you can start a free 7-day Creator trial with 500 bonus credits. See [Plans](index.md#plans).
+card opens the plans, where you can start a free 7-day Creator trial with 500 bonus credits. See [Plans](../index.md#plans).
 :::
 
 ## Connect Microsoft Store
@@ -81,7 +81,7 @@ updates.
 Select **Update** on the card. Studio builds the app, packages it, and submits it
 to Partner Center: a new submission that keeps your listing, pricing and age rating
 from the last one, with the new package. Tick **Also send the store listing** to send
-your [store listing](#store-listing) in the same submission. Certification takes up to three business days;
+your [store listing](store-listing.md) in the same submission. Certification takes up to three business days;
 the card shows where it is (**In certification**, **Published**) and why when it fails,
 with a link to the certification report.
 
@@ -93,44 +93,16 @@ Publish screen says which version the Store has and offers the next one.
 
 ## Store listing
 
-The card's **Store listing** row opens the listing: its texts and screenshots, kept in
-the app's `.store/microsoft-store/` folder (never packaged into the app). **Import from
-Partner Center** fills it from the published listing.
-
-| Field | Limit |
-|---|---|
-| Description | 10,000 characters (required) |
-| Short description | 1,000; shown at the top of the listing, best under 270 |
-| Product features | One per line: up to 20, 200 characters each |
-| What's new in this version | 1,500 |
-| Keywords | One per line: up to 7, 40 characters each, 21 words in all (not shown) |
-| Screenshots | 1 to 10 PNG files, 1366 × 768 or larger |
-| App tile icon | Optional, 300 × 300 PNG |
-
-The app-wide **Details** are the copyright and trademark info, **Developed by**, and
-additional license terms. The product name is always the name you reserved.
-
-Take screenshots in the Preview: choose **Windows 11**, open the preview options, turn on
-**Pin to 1280×720**, then **Add to the Microsoft Store listing › Screen** (1920 × 1080).
-
-Every listing change is a submission that Microsoft certifies, like a new package. Send
-it on its own with **Send to the Microsoft Store** on the listing screen (no build, no
-credits), or with the next **Update**.
-
-A few things to know:
-
-- **Screenshots stay in Partner Center until you add your own.** The Store can't send
-  images back, so an import brings the texts only, and a language without screenshots
-  keeps the ones in Partner Center. Once you add screenshots, they replace those.
-- A language without its own screenshots or tile icon uses the default language's.
-- Languages that Partner Center has and Studio doesn't are left as they are.
+The card's **Store listing** row opens the app's listing: its descriptions, product
+features, keywords, screenshots and details, written and kept in Studio and sent with an
+update or on its own. See [Microsoft Store listing](store-listing.md).
 
 ## Questions
 
 ### Is the Store app signed with my Artifact Signing certificate?
 
 No. Microsoft signs Store packages itself, so Studio doesn't sign the files inside
-them either, even if you [sign your Windows app](desktop.md#sign-the-windows-app): Store
+them either, even if you [sign your Windows app](../azure-artifact-signing.md): Store
 packages don't use up your Artifact Signing signatures.
 
 ### Can I publish an update while one is in certification?

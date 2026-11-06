@@ -1,8 +1,8 @@
 ---
-title: "Android apps"
+title: "Android"
 ---
 
-# Android apps
+# Android
 
 Open **Publish › Android**. Its **Overview** has a card for each place an Android app
 goes:

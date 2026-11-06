@@ -56,20 +56,19 @@ as you edit:
   box; review it and send. Or just ask the agent to write, shorten or translate
   the texts — the listing updates as it edits these files.
 - **Coming from fastlane?** Studio also reads fastlane `supply`'s folder names
-  (`featureGraphic.png`, `phoneScreenshots/`, `tenInchScreenshots/`), so a
-  copying the contents of fastlane's `metadata/android` folder into `.store/google-play/`
-  works; Studio moves
-  a set to its own names when it next changes it.
+  (`featureGraphic.png`, `phoneScreenshots/`, `tenInchScreenshots/`), so copying the
+  contents of fastlane's `metadata/android` folder into `.store/google-play/` works.
+  Studio moves a set to its own names when it next changes it.
 
 ## Languages
 
 A listing has one or more languages, each with its own texts and graphics. The
 **default language** is what Google Play shows people whose language isn't listed.
 
-- **Add a language** (**+** next to the language) with its code, such as `de-DE`
-  or `pt-BR`, optionally starting from another language's texts.
-- A language without graphics uses the default language's, as on Google Play — so
-  one set of screenshots usually covers them all.
+- **Add a language** (**+** next to the language): choose it from Google Play's
+  languages, and start from empty texts or from another language's.
+- A language without graphics uses the default language's, as on Google Play, so one
+  set of screenshots usually covers them all.
 - Removing a language removes it from the files. Google Play keeps its copy until
   you remove the language in Play Console: sending the listing only adds and
   updates languages.

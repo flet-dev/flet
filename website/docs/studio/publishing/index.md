@@ -33,10 +33,12 @@ Each card is a place the app goes:
 
 | Platform | Cards |
 |---|---|
-| Android | **Google Play** (its testing tracks and Production, and the store listing) and **Android app (APK)** (an APK, and the app's [download page](download-page.md)). See [Android apps](android.md) and [Google Play](google-play/index.md) |
-| iOS | **App Store & TestFlight**, **Test on your devices** (an install link for your registered iPhones and iPads) and **iOS Simulator**. See [iOS apps](ios.md) |
-| Windows, macOS, Linux | **Windows app**, **Mac app** or **Linux app** (Windows: an installer and a portable `.zip`; macOS: a disk image; Linux: a `.tar.gz`), and the app's [download page](download-page.md). Windows has the **Microsoft Store** too, and macOS **App Store & TestFlight** (the Mac App Store). See [Desktop apps](desktop.md) |
-| Web | **Web app**: the app's files, to host on your own server. See [Web apps](web.md) |
+| Android | **Google Play** (its testing tracks and Production, and the store listing) and **Android app (APK)** (an APK, and the app's [download page](download-page.md)). See [Android](android.md) and [Google Play](google-play/index.md) |
+| iOS | **App Store & TestFlight**, **Test on your devices** (an install link for your registered iPhones and iPads) and **iOS Simulator**. See [iOS](ios.md) and [App Store and TestFlight](app-store/index.md) |
+| Windows | **Windows app** (an installer and a portable `.zip`) and **Microsoft Store**. See [Windows](windows.md) and [Microsoft Store](microsoft-store/index.md) |
+| macOS | **Mac app** (a disk image) and **App Store & TestFlight** (the Mac App Store). See [macOS](macos.md) and [Mac App Store and TestFlight](mac-app-store.md) |
+| Linux | **Linux app** (a `.tar.gz`). See [Linux](linux.md) |
+| Web | **Web app**: the app's files, to host on your own server. See [Web](web.md) |
 
 A card shows its **next step** until it's set up: **Connect Google Play**, **Create
 APK**, **Create Windows app**, … Once something is published, it shows **what's
@@ -113,7 +115,7 @@ bonus credits. Checkout brings you back to the same screen.
 | Agent | Pro | Pro and Expert |
 
 On Explorer, Windows and Mac apps are built **unsigned**: they open with a warning
-(see [Open the app](desktop.md#open-the-app)) and can't go on the download page. APKs
+(see [Windows](windows.md#open-the-app) and [macOS](macos.md#open-the-app)) and can't go on the download page. APKs
 are always signed, and iOS install links work on Explorer.
 
 **Free trial.** Try Creator for 7 days, monthly or annual: a card is required, and you

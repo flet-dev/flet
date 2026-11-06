@@ -1,8 +1,8 @@
 ---
-title: "Web apps"
+title: "Web"
 ---
 
-# Web apps
+# Web
 
 Open **Publish › Web**. **Create web app** on its **Web app** card builds the app as a website:
 static files that run your Python app in the visitor's browser, with no server of
