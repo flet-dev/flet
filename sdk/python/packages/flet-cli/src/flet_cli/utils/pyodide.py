@@ -5,6 +5,10 @@ python_stdlib.zip / pyodide-lock.json / ...) but not the micropip+packaging
 wheels that `loadPackage("micropip")` needs at runtime. We supplement the core
 tarball with those two wheels (filenames resolved from pyodide-lock.json) so
 the bundle works in `--no-cdn` deployments too.
+
+Its `python_stdlib.zip` is replaced with the precompiled one Pyodide publishes
+on its CDN (`pyc/python_stdlib.zip`): `.pyc` files instead of sources, so
+Python doesn't compile the modules it imports when the app starts.
 """
 
 from __future__ import annotations
@@ -12,6 +16,7 @@ from __future__ import annotations
 import json
 import shutil
 import tarfile
+import zipfile
 from collections.abc import Iterable
 from pathlib import Path
 
@@ -22,6 +27,10 @@ from flet_cli.utils.template_cache import get_cache_root
 
 _GITHUB_TARBALL_URL = "https://github.com/pyodide/pyodide/releases/download/{version}/pyodide-core-{version}.tar.bz2"
 _CDN_FILE_URL = "https://cdn.jsdelivr.net/pyodide/v{version}/full/{filename}"
+_CDN_PYC_STDLIB_URL = (
+    "https://cdn.jsdelivr.net/pyodide/v{version}/pyc/python_stdlib.zip"
+)
+_STDLIB = "python_stdlib.zip"
 
 # Wheels that pyodide loads from disk/CDN at runtime via loadPackage().
 # Without them in dest_dir, `--no-cdn` builds break.
@@ -89,6 +98,12 @@ def _populate_cache(version: str, cache_dir: Path) -> None:
     if not lock_json.exists():
         raise RuntimeError(f"pyodide-core-{version} did not contain pyodide-lock.json")
     with Progress(transient=True) as progress:
+        _download(
+            _CDN_PYC_STDLIB_URL.format(version=version),
+            cache_dir / _STDLIB,
+            progress,
+            "Downloading precompiled Python standard library...",
+        )
         for wheel in _resolve_runtime_wheel_filenames(
             lock_json, _EXTRA_RUNTIME_PACKAGES
         ):
@@ -103,7 +118,23 @@ def _populate_cache(version: str, cache_dir: Path) -> None:
             )
 
 
+def _stdlib_is_compiled(cache_dir: Path) -> bool:
+    """Whether `python_stdlib.zip` holds `.pyc` files and no sources."""
+    try:
+        with zipfile.ZipFile(cache_dir / _STDLIB) as zf:
+            names = zf.namelist()
+    except (OSError, zipfile.BadZipFile):
+        return False
+    return any(n.endswith(".pyc") for n in names) and not any(
+        n.endswith(".py") for n in names
+    )
+
+
 def _cache_matches_version(cache_dir: Path, version: str) -> bool:
+    if not _stdlib_is_compiled(cache_dir):
+        # Missing, or the source standard library of a cache made before the
+        # precompiled one.
+        return False
     lock_json = cache_dir / "pyodide-lock.json"
     if not lock_json.exists():
         return False
