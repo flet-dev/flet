@@ -34,7 +34,7 @@ class DeferredFonts {
 
   /// Loads the deferred fonts of Dart package [package], once. Does nothing
   /// outside the web, or when the package's fonts are in `FontManifest.json`
-  /// (`flet debug`, `flet run --web` and builds before Flet 1.1.2).
+  /// (`flet debug` and web builds made before Flet 1.1.2).
   Future<void> load(String package) {
     if (!_web) return Future.value();
     return _packages[package] ??= _load(package);

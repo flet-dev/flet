@@ -755,6 +755,10 @@ jobs:
 
           flutter build web --wasm
 
+          # Load KaTeX's, Lucide's and Geist's fonts on first use and drop
+          # Lucide's unused weights, as `flet build web` does
+          uv run --project "${SDK_PYTHON}" python -c "from pathlib import Path; from flet_cli.utils.web_fonts import defer_web_fonts; print(defer_web_fonts(Path('build/web')))"
+
           cp -R "build/web" "${FLET_WEB}"
 
           # Safari mobile workaround: https://github.com/flutter/flutter/issues/145111#issuecomment-2714599139

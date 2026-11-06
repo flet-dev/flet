@@ -82,7 +82,7 @@ void main() {
   });
 
   test("does nothing when the fonts are in FontManifest.json", () async {
-    // `flet debug`, `flet run --web` and builds before 1.1.2.
+    // `flet debug` and web builds made before 1.1.2.
     final b = bundle(fontManifest: [_material, _katex]);
     final fonts = DeferredFonts(bundle: b, loadFamily: loadFamily, web: true);
 

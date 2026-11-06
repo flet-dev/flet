@@ -6,6 +6,9 @@ their families move to `assets/DeferredFontManifest.json` (the same format),
 and the flet package loads them the first time such a control is built
 (`packages/flet/lib/src/utils/deferred_fonts.dart`). Families no Flet control
 uses are left out of the build.
+
+Run by `flet build web`, and by CI on Flet's built-in web client (flet-web,
+served by `flet run --web` and copied by `flet publish`).
 """
 
 import json
