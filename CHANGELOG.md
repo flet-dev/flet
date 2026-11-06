@@ -4,6 +4,10 @@
 
 * Start web apps up to 2 MB lighter: `flet build web` and Flet's built-in web client (`flet run --web`, `flet publish`) leave out the six Lucide weight fonts no Flet icon uses (2.9 MB), and load the fonts of math in `Markdown` (KaTeX) and of `flet-shadcn-ui` (Lucide, Geist) the first time a control needs them, instead of before the first frame ([#7054](https://github.com/flet-dev/flet/pull/7054)) by @FeodorFitsner.
 
+### Bug fixes
+
+* Fix web apps served by Flet (`flet run --web`, FastAPI) logging `AttributeError: 'NoneType' object has no attribute 'after_event'` when the browser reloads or closes the page while `main()` is still running ([#7055](https://github.com/flet-dev/flet/pull/7055)) by @FeodorFitsner.
+
 ## 1.1.1
 
 ### Improvements
