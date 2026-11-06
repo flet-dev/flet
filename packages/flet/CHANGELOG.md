@@ -1,6 +1,6 @@
 ## 1.1.1
 
-* `convertToUint8List()` copies a `Uint8List` that is a view into a larger buffer (bytes decoded from a message) into one of its own: Safari's CanvasKit image codecs drew nothing for such a view, so `Image` with bytes `src` was blank there by @FeodorFitsner.
+* Normalize byte views into independent buffers for Safari image decoding. `ResolvedAssetSource` reuses the normalized buffer for the same immutable source across rebuilds, preserving image and Lottie cache keys; direct `convertToUint8List()` calls, including clipboard writes, read the current input ([#7049](https://github.com/flet-dev/flet/pull/7049)) by @FeodorFitsner.
 
 ## 1.1.0
 

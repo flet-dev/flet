@@ -349,6 +349,11 @@ class ImageFadeConfig {
 class ResolvedAssetSource {
   const ResolvedAssetSource({this.bytes, this.uri, this.error});
 
+  // Asset byte sources are immutable. Keep each view's normalized buffer stable
+  // across rebuilds so identity-based image and Lottie caches can reuse it.
+  // Weak keys let the copy be collected when the source is no longer used.
+  static final _normalizedByteViews = Expando<Uint8List>();
+
   /// Raw bytes (ex: base64-decoded payload).
   final Uint8List? bytes;
 
@@ -370,13 +375,21 @@ class ResolvedAssetSource {
   /// Factory that normalizes any supported image source into
   /// a [ResolvedAssetSource].
   ///
+  /// Byte sources are treated as immutable. Supply a new source to change
+  /// the asset after resolution.
+  ///
   /// Supports:
   /// - `Uint8List`, `List<int>` → interpreted as raw bytes
   /// - `String` → URL, asset path, or Base64-encoded data
   factory ResolvedAssetSource.from(dynamic src) {
     // bytes
-    final listBytes = convertToUint8List(src);
+    final listBytes = src is Uint8List
+        ? _normalizedByteViews[src] ?? convertToUint8List(src)
+        : convertToUint8List(src);
     if (listBytes != null) {
+      if (src is Uint8List && !identical(src, listBytes)) {
+        _normalizedByteViews[src] = listBytes;
+      }
       return listBytes.isEmpty
           ? const ResolvedAssetSource()
           : ResolvedAssetSource(bytes: listBytes);
