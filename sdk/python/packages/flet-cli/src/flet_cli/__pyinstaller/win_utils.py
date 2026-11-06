@@ -127,9 +127,18 @@ def update_flet_view_version_info(
     with open(version_info_path, "w", encoding="utf-8") as f:
         f.write(str(vs))
 
-    # Remember overlay
+    # Remember the data appended after the image (overlay), which the resource
+    # update drops. The client's Authenticode signature is stored there as
+    # well; it is left out, as changing the resources invalidates it.
     pe = pefile.PE(exe_path, fast_load=True)
     overlay_before = pe.get_overlay()
+    signature = pe.OPTIONAL_HEADER.DATA_DIRECTORY[
+        pefile.DIRECTORY_ENTRY["IMAGE_DIRECTORY_ENTRY_SECURITY"]
+    ]
+    if overlay_before and signature.Size:
+        overlay_start = pe.get_overlay_data_start_offset()
+        if signature.VirtualAddress >= overlay_start:
+            overlay_before = overlay_before[: signature.VirtualAddress - overlay_start]
     pe.close()
 
     hdst = win32api.BeginUpdateResource(exe_path, 0)
@@ -146,7 +155,7 @@ def update_flet_view_version_info(
 
         # If the update removed the overlay data, re-append it
         if not overlay_after:
-            with open(exe_path, "ab", encoding="utf-8") as exef:
+            with open(exe_path, "ab") as exef:
                 exef.write(overlay_before)
 
     return version_info_path
