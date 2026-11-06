@@ -1667,6 +1667,15 @@ class BaseBuildCommand(BaseFlutterCommand):
                     if checkout:
                         details += f' with ref "{template_ref}"'
                     console.log(details, style=verbose1_style, markup=False)
+                if not second_pass:
+                    # Templates before 1.1.1 shipped a FontManifest.json that
+                    # replaced the one Flutter generates, so the fonts of
+                    # Dart packages were never loaded. Re-rendering keeps
+                    # files the template no longer has; a template that
+                    # still has one writes it back.
+                    (self.flutter_dir / "web" / "assets" / "FontManifest.json").unlink(
+                        missing_ok=True
+                    )
                 try:
                     from cookiecutter.main import cookiecutter
 
@@ -4001,6 +4010,7 @@ class BaseBuildCommand(BaseFlutterCommand):
 
             if self.target_platform == "web":
                 self.prune_cdn_assets()
+                self.add_bundled_roboto_font()
                 if self.assets_path.exists():
                     # copy `assets` directory contents to the output directory
                     copy_tree(str(self.assets_path), str(self.out_dir))
@@ -4030,6 +4040,29 @@ class BaseBuildCommand(BaseFlutterCommand):
                 "Removed canvaskit/ from build output (loaded from CDN)",
                 style=verbose1_style,
             )
+
+    def add_bundled_roboto_font(self):
+        """
+        List the bundled Roboto in a no-CDN web build's `FontManifest.json`.
+
+        Flutter generates the manifest with every font the app's Dart packages
+        declare. Roboto, the default text font, isn't one of them: listed, it's
+        loaded from `assets/fonts/roboto.woff2` instead of Google Fonts.
+        """
+        if not self.resolve_no_cdn():
+            return
+
+        manifest_path = self.out_dir / "assets" / "FontManifest.json"
+        if not manifest_path.exists():
+            return
+
+        manifest = json.loads(manifest_path.read_text(encoding="utf-8"))
+        if any(font.get("family") == "Roboto" for font in manifest):
+            return
+        manifest.append(
+            {"family": "Roboto", "fonts": [{"asset": "fonts/roboto.woff2"}]}
+        )
+        manifest_path.write_text(json.dumps(manifest), encoding="utf-8")
 
     def rename_android_build_outputs(self):
         """
