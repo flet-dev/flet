@@ -163,45 +163,42 @@ class FletApp(Connection):
         post-event updates.
         """
 
-        assert self.__session
-        logger.info(f"Start session: {self.__session.id}")
+        # `main` runs in its own task. Disconnecting clears `self.__session`,
+        # so retain the session for post-event housekeeping and error handling.
+        session = self.__session
+        assert session
+        logger.info(f"Start session: {session.id}")
         try:
             assert self.__main is not None
-            _context_page.set(self.__session.page)
+            _context_page.set(session.page)
             context.reset_auto_update()
 
             if inspect.iscoroutinefunction(self.__main):
-                await self.__main(self.__session.page)
+                await self.__main(session.page)
 
             elif inspect.isasyncgenfunction(self.__main):
-                async for _ in self.__main(self.__session.page):
-                    await self.__session.after_event(self.__session.page)
+                async for _ in self.__main(session.page):
+                    await session.after_event(session.page)
 
             elif inspect.isgeneratorfunction(self.__main):
-                for _ in self.__main(self.__session.page):
-                    await self.__session.after_event(self.__session.page)
+                for _ in self.__main(session.page):
+                    await session.after_event(session.page)
             else:
-                self.__main(self.__session.page)
+                self.__main(session.page)
 
-            await self.__session.after_event(self.__session.page)
+            await session.after_event(session.page)
         except FletPageDisconnectedException:
             logger.debug(
-                "Session handler attempted to update disconnected page: "
-                f"{self.__session.id}"
+                f"Session handler attempted to update disconnected page: {session.id}"
             )
         except BrokenPipeError:
-            logger.info(
-                "Session handler terminated: "
-                f"{self.__session.id if self.__session else ''}"
-            )
+            logger.info(f"Session handler terminated: {session.id}")
         except Exception as e:
             logger.error(
-                "Unhandled error processing page session: "
-                f"{self.__session.id if self.__session else ''}",
+                f"Unhandled error processing page session: {session.id}",
                 exc_info=True,
             )
-            if self.__session:
-                self.__session.error(str(e))
+            session.error(str(e))
 
     async def __send_loop(self):
         """
