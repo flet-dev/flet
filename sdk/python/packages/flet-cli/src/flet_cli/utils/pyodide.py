@@ -135,22 +135,37 @@ def _cache_matches_version(cache_dir: Path, version: str) -> bool:
         # Missing, or the source standard library of a cache made before the
         # precompiled one.
         return False
-    lock_json = cache_dir / "pyodide-lock.json"
-    if not lock_json.exists():
+    if not (cache_dir / "pyodide-lock.json").exists():
         return False
-    try:
-        with lock_json.open("r", encoding="utf-8") as f:
-            lock = json.load(f)
-    except (OSError, json.JSONDecodeError):
-        return False
-    return lock.get("info", {}).get("version") == version
+    return _runtime_version(cache_dir) == version
+
+
+def _runtime_version(cache_dir: Path) -> str | None:
+    """The Pyodide version of a runtime: `package.json`'s `version`, which every
+    release has, else `pyodide-lock.json`'s `info.version`, which only 0.27 and
+    earlier write."""
+    for name, keys in (
+        ("package.json", ("version",)),
+        ("pyodide-lock.json", ("info", "version")),
+    ):
+        try:
+            with (cache_dir / name).open("r", encoding="utf-8") as f:
+                value = json.load(f)
+        except (OSError, json.JSONDecodeError):
+            continue
+        for key in keys:
+            value = value.get(key) if isinstance(value, dict) else None
+        if isinstance(value, str):
+            return value
+    return None
 
 
 def ensure_pyodide(version: str, dest_dir: Path) -> None:
     """Ensure a working Pyodide runtime of `version` exists at `dest_dir`.
 
     Cached per version under `~/.flet/cache/pyodide/<version>/`. Idempotent: if
-    `dest_dir/pyodide-lock.json` already pins `version`, no work is done.
+    `dest_dir` already has that version with the precompiled standard library, no
+    work is done.
     """
 
     dest_dir = Path(dest_dir)

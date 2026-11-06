@@ -30,11 +30,37 @@ def _stdlib(compiled: bool) -> bytes:
     return buffer.getvalue()
 
 
+# `pyodide-lock.json`'s `info` as Pyodide 0.29 and 314 write it: no `version`.
+LOCK_INFO = {
+    "abi_version": "2026_0",
+    "arch": "wasm32",
+    "platform": "emscripten_5_0_3",
+    "python": "3.14.2",
+}
+
+
+def _lock(**info) -> bytes:
+    return json.dumps(
+        {
+            "info": {**LOCK_INFO, **info},
+            "packages": {
+                "micropip": {
+                    "name": "micropip",
+                    "file_name": "micropip-0.11.1-py3-none-any.whl",
+                }
+            },
+        }
+    ).encode()
+
+
+def _package_json(version: str = VERSION) -> bytes:
+    return json.dumps({"name": "pyodide", "version": version}).encode()
+
+
 def _write_runtime(directory: Path, version: str = VERSION, compiled: bool = True):
     directory.mkdir(parents=True, exist_ok=True)
-    (directory / "pyodide-lock.json").write_text(
-        json.dumps({"info": {"version": version}, "packages": {}})
-    )
+    (directory / "pyodide-lock.json").write_bytes(_lock())
+    (directory / "package.json").write_bytes(_package_json(version))
     (directory / "python_stdlib.zip").write_bytes(_stdlib(compiled))
 
 
@@ -48,6 +74,14 @@ class TestCacheMatches:
     def test_source_standard_library_is_out_of_date(self, tmp_path):
         """A cache made before the precompiled standard library is refreshed."""
         _write_runtime(tmp_path, compiled=False)
+        assert not pyodide._cache_matches_version(tmp_path, VERSION)
+
+    def test_version_from_an_older_lockfile(self, tmp_path):
+        """Pyodide 0.27 and earlier: `info.version` in the lockfile."""
+        _write_runtime(tmp_path)
+        (tmp_path / "package.json").unlink()
+        (tmp_path / "pyodide-lock.json").write_bytes(_lock(version="0.27.8"))
+        assert pyodide._cache_matches_version(tmp_path, "0.27.8")
         assert not pyodide._cache_matches_version(tmp_path, VERSION)
 
     def test_other_version_or_missing_files(self, tmp_path):
@@ -70,20 +104,8 @@ def downloads(monkeypatch, tmp_path):
         if url.endswith(".tar.bz2"):
             with tarfile.open(dest, "w:bz2") as tf:
                 for name, data in (
-                    (
-                        "pyodide/pyodide-lock.json",
-                        json.dumps(
-                            {
-                                "info": {"version": VERSION},
-                                "packages": {
-                                    "micropip": {
-                                        "name": "micropip",
-                                        "file_name": "micropip-0.11.1-py3-none-any.whl",
-                                    }
-                                },
-                            }
-                        ).encode(),
-                    ),
+                    ("pyodide/pyodide-lock.json", _lock()),
+                    ("pyodide/package.json", _package_json()),
                     ("pyodide/python_stdlib.zip", _stdlib(compiled=False)),
                     ("pyodide/pyodide.mjs", b"//"),
                 ):
@@ -123,6 +145,18 @@ class TestEnsurePyodide:
 
         assert PYC_URL in downloads
         assert pyodide._stdlib_is_compiled(dest)
+
+    def test_second_build_downloads_nothing(self, downloads, tmp_path):
+        """The cache made by the first build is used by the next one."""
+        pyodide.ensure_pyodide(VERSION, tmp_path / "first")
+        first = list(downloads)
+        downloads.clear()
+
+        pyodide.ensure_pyodide(VERSION, tmp_path / "second")
+
+        assert PYC_URL in first
+        assert downloads == []
+        assert pyodide._stdlib_is_compiled(tmp_path / "second")
 
     def test_up_to_date_bundle_downloads_nothing(self, downloads, tmp_path):
         dest = tmp_path / "web" / "pyodide"
