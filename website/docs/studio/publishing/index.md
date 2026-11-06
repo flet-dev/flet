@@ -112,6 +112,7 @@ bonus credits. Checkout brings you back to the same screen.
 | Run files kept | 7 days | 90 days |
 | Run logs and steps kept | 30 days | 1 year |
 | Agent chats kept | 30 days after their last use | 90 days after their last use |
+| [Versions](../agent/index.md#versions-and-undo) per app | 20 | 200 |
 | Agent | Pro | Pro and Expert |
 
 On Explorer, Windows and Mac apps are built **unsigned**: they open with a warning
