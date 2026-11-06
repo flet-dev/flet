@@ -14,6 +14,18 @@ self.userAppRunning = false;
 self.flet_js.userAppStarting = function () {
     self.userAppRunning = true;
 };
+// Pyodide from its CDN: load the precompiled standard library published
+// next to it (`pyc/python_stdlib.zip`, `.pyc` files instead of sources), so
+// Python doesn't compile the modules it imports at startup. A bundled
+// runtime (`--no-cdn`) already has it, and any other URL is left alone: a
+// mirror may not have it.
+const PYODIDE_CDN_RE = /^https:\/\/cdn\.jsdelivr\.net\/pyodide\/v[^/]+\/full\/pyodide\.mjs$/;
+function pycStdLib(pyodideUrl) {
+    return PYODIDE_CDN_RE.test(pyodideUrl || "")
+        ? { stdLibURL: pyodideUrl.replace(/\/full\/pyodide\.mjs$/, "/pyc/python_stdlib.zip") }
+        : {};
+}
+
 self.sendPythonOutput = function (text, isStderr) {
     // No bridge yet, or not in user-code mode — surface in dev console.
     // The boot script registers `flet_js.send_python_output` after the
@@ -47,6 +59,7 @@ self.initPyodide = async function () {
         const pyodideModule = await import(self.pyodideUrl);
         const loadPyodide = pyodideModule.loadPyodide || self.loadPyodide;
         self.pyodide = await loadPyodide({
+            ...pycStdLib(self.pyodideUrl),
             stdout: (text) => self.sendPythonOutput(text, false),
             stderr: (text) => self.sendPythonOutput(text, true),
         });
