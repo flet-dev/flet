@@ -14,8 +14,12 @@ from flet.utils import (
 )
 from flet_cli.commands.base import BaseCommand
 from flet_cli.utils.project_dependencies import (
+    FletVersionConflictError,
     get_poetry_dependencies,
     get_project_dependencies,
+    override_dependencies,
+    pin_flet_dependencies,
+    read_requirements,
 )
 from flet_cli.utils.pyodide import ensure_pyodide
 from flet_cli.utils.pyproject_toml import load_pyproject_toml
@@ -214,6 +218,28 @@ class Command(BaseCommand):
                 os.path.basename(script_path),
             )
 
+        requirements_txt = project_dir.joinpath(reqs_filename)
+        deps = (
+            get_poetry_dependencies(get_pyproject("tool.poetry.dependencies"))
+            or get_project_dependencies(get_pyproject("project.dependencies"))
+            or (
+                read_requirements(requirements_txt) if requirements_txt.exists() else []
+            )
+        )
+        # The web client installs these from the archive's pyproject.toml, which an
+        # app in a subdirectory doesn't have, and without the pins below an
+        # extension listed only here would ask for a newer `flet`.
+        deps = override_dependencies(
+            deps,
+            get_project_dependencies(get_pyproject("tool.flet.web.dependencies")) or [],
+        )
+        try:
+            deps = pin_flet_dependencies(deps, flet.version.flet_version)
+        except FletVersionConflictError as e:
+            print(e)
+            sys.exit(1)
+        print(f"App dependencies: {deps}")
+
         # delete "dist" directory
         if options.distpath:
             dist_dir = Path(options.distpath)
@@ -255,29 +281,6 @@ class Command(BaseCommand):
             assets_dir = str(script_dir / assets_name)
         if os.path.exists(assets_dir):
             copy_tree(assets_dir, str(dist_dir))
-
-        deps = []
-        requirements_txt = project_dir.joinpath(reqs_filename)
-
-        toml_dependencies = get_poetry_dependencies(
-            get_pyproject("tool.poetry.dependencies")
-        ) or get_project_dependencies(get_pyproject("project.dependencies"))
-
-        if toml_dependencies:
-            deps = toml_dependencies
-            print(f"pyproject.toml dependencies: {deps}")
-        elif requirements_txt.exists():
-            with open(requirements_txt, encoding="utf-8") as f:
-                deps = list(
-                    filter(
-                        lambda dep: not dep.startswith("#"),
-                        [line.rstrip() for line in f],
-                    )
-                )
-                print(f"{reqs_filename} dependencies: {deps}")
-
-        if len(deps) == 0:
-            deps = [f"flet=={flet.version.flet_version}"]
 
         temp_reqs_txt = Path(tempfile.gettempdir()).joinpath(random_string(10))
         with open(temp_reqs_txt, "w", encoding="utf-8") as f:
