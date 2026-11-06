@@ -5,6 +5,7 @@
 * Fix images with raw bytes sources rendering blank in Safari ([#7049](https://github.com/flet-dev/flet/pull/7049)) by @FeodorFitsner.
 * Fix `flet build`, `flet debug` and `flet publish` installing the newest `flet` and Flet extensions instead of the Flet CLI's version when the app's dependencies allow a range such as `flet>=1.0.5`; a requirement that excludes the CLI's version now stops the command ([#6894](https://github.com/flet-dev/flet/issues/6894), [#7047](https://github.com/flet-dev/flet/pull/7047)) by @ndonkoHenri.
 * Fix `flet publish` not installing `[tool.flet.web].dependencies` when the app's code is in a subdirectory set by `[tool.flet.app].path` ([#7047](https://github.com/flet-dev/flet/pull/7047)) by @ndonkoHenri.
+* Fix `flet build web` apps not loading the fonts of Dart packages, so the icons of `flet-shadcn-ui` drew as empty boxes ([#7050](https://github.com/flet-dev/flet/pull/7050)) by @FeodorFitsner.
 
 ## 1.1.0
 
