@@ -1776,6 +1776,20 @@ class BaseBuildCommand(BaseFlutterCommand):
                     pubspec = merge_dict(pubspec, pyproject_pubspec)
                     self.save_yaml(self.pubspec_path, pubspec)
 
+                if self.config_platform == "web" and self.template_data.get("no_cdn"):
+                    # Declare Roboto before Flutter runs so both build and debug
+                    # include it in the generated manifest alongside package fonts.
+                    # An app's own Roboto declaration takes precedence.
+                    fonts = pubspec.setdefault("flutter", {}).setdefault("fonts", [])
+                    if not any(font.get("family") == "Roboto" for font in fonts):
+                        fonts.append(
+                            {
+                                "family": "Roboto",
+                                "fonts": [{"asset": "web/assets/fonts/roboto.woff2"}],
+                            }
+                        )
+                        self.save_yaml(self.pubspec_path, pubspec)
+
                 # make backup of pubspec.yaml
                 shutil.copyfile(self.pubspec_path, f"{self.pubspec_path}.orig")
 
@@ -4041,7 +4055,6 @@ class BaseBuildCommand(BaseFlutterCommand):
 
             if self.target_platform == "web":
                 self.prune_cdn_assets()
-                self.add_bundled_roboto_font()
                 if self.assets_path.exists():
                     # copy `assets` directory contents to the output directory
                     copy_tree(str(self.assets_path), str(self.out_dir))
@@ -4071,29 +4084,6 @@ class BaseBuildCommand(BaseFlutterCommand):
                 "Removed canvaskit/ from build output (loaded from CDN)",
                 style=verbose1_style,
             )
-
-    def add_bundled_roboto_font(self):
-        """
-        List the bundled Roboto in a no-CDN web build's `FontManifest.json`.
-
-        Flutter generates the manifest with every font the app's Dart packages
-        declare. Roboto, the default text font, isn't one of them: listed, it's
-        loaded from `assets/fonts/roboto.woff2` instead of Google Fonts.
-        """
-        if not self.resolve_no_cdn():
-            return
-
-        manifest_path = self.out_dir / "assets" / "FontManifest.json"
-        if not manifest_path.exists():
-            return
-
-        manifest = json.loads(manifest_path.read_text(encoding="utf-8"))
-        if any(font.get("family") == "Roboto" for font in manifest):
-            return
-        manifest.append(
-            {"family": "Roboto", "fonts": [{"asset": "fonts/roboto.woff2"}]}
-        )
-        manifest_path.write_text(json.dumps(manifest), encoding="utf-8")
 
     def rename_android_build_outputs(self):
         """

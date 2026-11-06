@@ -1,14 +1,13 @@
-"""The fonts a `flet build web` app loads: Flutter's generated `FontManifest.json`."""
+"""Web build and debug leave font manifests to Flutter and declare local Roboto."""
 
-import argparse
 import contextlib
-import json
 from pathlib import Path
 from types import SimpleNamespace
 
 import pytest
 
-from flet_cli.commands.build_base import BaseBuildCommand
+from flet_cli.commands.build import Command as BuildCommand
+from flet_cli.commands.debug import Command as DebugCommand
 
 TEMPLATE = (
     Path(__file__).resolve().parents[3]
@@ -16,7 +15,7 @@ TEMPLATE = (
     / "build"
     / "{{cookiecutter.out_dir}}"
 )
-ROBOTO = {"family": "Roboto", "fonts": [{"asset": "fonts/roboto.woff2"}]}
+ROBOTO = {"family": "Roboto", "fonts": [{"asset": "web/assets/fonts/roboto.woff2"}]}
 LUCIDE = {
     "family": "packages/lucide_icons_flutter/Lucide",
     "fonts": [{"asset": "packages/lucide_icons_flutter/assets/lucide.ttf"}],
@@ -29,95 +28,120 @@ def test_template_leaves_the_manifest_to_flutter():
     assert not (TEMPLATE / "web" / "assets" / "FontManifest.json").exists()
 
 
-@pytest.fixture
-def web_command(tmp_path):
-    cmd = BaseBuildCommand(argparse.ArgumentParser())
-    cmd.options = argparse.Namespace(no_cdn=False)
+@pytest.fixture(params=[BuildCommand, DebugCommand], ids=["build", "debug-release"])
+def command(request, tmp_path, monkeypatch):
+    import cookiecutter.main
+
+    cmd = request.param.__new__(request.param)
+    cmd.build_dir = tmp_path / "build"
+    cmd.flutter_dir = cmd.build_dir / "flutter"
+    cmd.pubspec_path = str(cmd.flutter_dir / "pubspec.yaml")
+    cmd.options = SimpleNamespace(
+        template=str(tmp_path / "template"),
+        template_ref=None,
+        template_dir=None,
+        no_cdn=False,
+        release=True,
+    )
+    cmd.template_data = {"project_name": "test_app", "no_cdn": False}
     cmd.get_pyproject = lambda *_: None
-    cmd.out_dir = tmp_path / "out"
-    (cmd.out_dir / "assets").mkdir(parents=True)
+    cmd.config_platform = "web"
+    cmd.required_flutter_version = "3.47.9"
+    cmd.emojis = {"checkmark": ""}
+    cmd.verbose = 0
+    cmd.step = lambda *_: contextlib.nullcontext()
+    cmd.rendered = {}
+
+    def render(**_):
+        cmd.flutter_dir.mkdir(parents=True, exist_ok=True)
+        Path(cmd.pubspec_path).write_text("name: test_app\ndependencies: {}\n")
+        for rel, text in cmd.rendered.items():
+            path = cmd.flutter_dir / rel
+            path.parent.mkdir(parents=True, exist_ok=True)
+            path.write_text(text)
+        font = cmd.flutter_dir / "web/assets/fonts/roboto.woff2"
+        font.parent.mkdir(parents=True, exist_ok=True)
+        font.write_bytes((TEMPLATE / "web/assets/fonts/roboto.woff2").read_bytes())
+
+    monkeypatch.setattr(cookiecutter.main, "cookiecutter", render)
     return cmd
 
 
-def _write_manifest(cmd, fonts):
-    (cmd.out_dir / "assets" / "FontManifest.json").write_text(json.dumps(fonts))
-
-
-def _manifest(cmd):
-    return json.loads((cmd.out_dir / "assets" / "FontManifest.json").read_text())
+def _fonts(command):
+    return command.load_yaml(command.pubspec_path).get("flutter", {}).get("fonts", [])
 
 
 class TestBundledRoboto:
-    """`add_bundled_roboto_font()` adding Roboto to Flutter's manifest."""
+    """Roboto must be declared before Flutter runs, including in debug mode."""
 
-    def test_no_cdn_adds_roboto_after_the_package_fonts(self, web_command):
-        web_command.options.no_cdn = True
-        _write_manifest(web_command, [LUCIDE])
-
-        web_command.add_bundled_roboto_font()
-        web_command.add_bundled_roboto_font()
-
-        assert _manifest(web_command) == [LUCIDE, ROBOTO]
-
-    def test_pyproject_cdn_false_adds_roboto(self, web_command):
-        web_command.get_pyproject = (
-            lambda key: False if key == "tool.flet.web.cdn" else None
+    @pytest.mark.parametrize("setting", ["cli", "pyproject"])
+    def test_no_cdn_declares_bundled_roboto(self, command, setting):
+        command.options.no_cdn = setting == "cli"
+        command.get_pyproject = lambda key: (
+            False if setting == "pyproject" and key == "tool.flet.web.cdn" else None
         )
-        _write_manifest(web_command, [LUCIDE])
+        command.template_data["no_cdn"] = command.resolve_no_cdn()
 
-        web_command.add_bundled_roboto_font()
+        assert command.create_flutter_project()
+        assert command.create_flutter_project(second_pass=True)
+        assert not command.create_flutter_project()
 
-        assert _manifest(web_command) == [LUCIDE, ROBOTO]
+        assert _fonts(command) == [ROBOTO]
+        assert (command.flutter_dir / ROBOTO["fonts"][0]["asset"]).is_file()
+        assert command.load_yaml(f"{command.pubspec_path}.orig")["flutter"][
+            "fonts"
+        ] == [ROBOTO]
 
-    def test_cdn_build_keeps_flutters_manifest(self, web_command):
-        _write_manifest(web_command, [LUCIDE])
+    def test_preserves_configured_fonts(self, command):
+        command.template_data["no_cdn"] = True
+        command.get_pyproject = lambda key: (
+            {"flutter": {"fonts": [LUCIDE]}}
+            if key == "tool.flet.flutter.pubspec"
+            else None
+        )
 
-        web_command.add_bundled_roboto_font()
+        assert command.create_flutter_project()
 
-        assert _manifest(web_command) == [LUCIDE]
+        assert _fonts(command) == [LUCIDE, ROBOTO]
 
-    def test_no_manifest_is_left_alone(self, web_command):
-        web_command.options.no_cdn = True
+    def test_keeps_custom_roboto(self, command):
+        command.template_data["no_cdn"] = True
+        custom = {"family": "Roboto", "fonts": [{"asset": "fonts/custom.ttf"}]}
+        command.get_pyproject = lambda key: (
+            {"flutter": {"fonts": [custom]}}
+            if key == "tool.flet.flutter.pubspec"
+            else None
+        )
 
-        web_command.add_bundled_roboto_font()
+        assert command.create_flutter_project()
 
-        assert not (web_command.out_dir / "assets" / "FontManifest.json").exists()
+        assert _fonts(command) == [custom]
+
+    def test_switching_back_to_cdn_removes_bundled_roboto(self, command):
+        command.template_data["no_cdn"] = True
+        assert command.create_flutter_project()
+
+        command.template_data["no_cdn"] = False
+        assert command.create_flutter_project()
+
+        assert _fonts(command) == []
+
+    def test_cdn_leaves_roboto_to_flutter(self, command):
+        assert command.create_flutter_project()
+
+        assert _fonts(command) == []
+
+    def test_native_does_not_bundle_roboto(self, command):
+        command.config_platform = "macos"
+        command.template_data["no_cdn"] = True
+
+        assert command.create_flutter_project()
+
+        assert _fonts(command) == []
 
 
 class TestStaleManifest:
     """A manifest an older template left in the reused Flutter project."""
-
-    @pytest.fixture
-    def command(self, tmp_path, monkeypatch):
-        import cookiecutter.main
-
-        cmd = BaseBuildCommand.__new__(BaseBuildCommand)
-        cmd.build_dir = tmp_path / "build"
-        cmd.flutter_dir = cmd.build_dir / "flutter"
-        cmd.pubspec_path = str(cmd.flutter_dir / "pubspec.yaml")
-        cmd.options = SimpleNamespace(
-            template=str(tmp_path / "template"), template_ref=None, template_dir=None
-        )
-        cmd.template_data = {"project_name": "test_app"}
-        cmd.get_pyproject = lambda *_: None
-        cmd.config_platform = "web"
-        cmd.required_flutter_version = "3.47.9"
-        cmd.emojis = {"checkmark": ""}
-        cmd.verbose = 0
-        cmd.step = lambda *_: contextlib.nullcontext()
-        cmd.rendered = {}
-
-        def render(**_):
-            # Writes the template's files, then a manifest if it has one.
-            cmd.flutter_dir.mkdir(parents=True, exist_ok=True)
-            Path(cmd.pubspec_path).write_text("name: test_app\ndependencies: {}\n")
-            for rel, text in cmd.rendered.items():
-                path = cmd.flutter_dir / rel
-                path.parent.mkdir(parents=True, exist_ok=True)
-                path.write_text(text)
-
-        monkeypatch.setattr(cookiecutter.main, "cookiecutter", render)
-        return cmd
 
     def test_render_removes_a_manifest_the_template_no_longer_has(self, command):
         stale = command.flutter_dir / "web" / "assets" / "FontManifest.json"
