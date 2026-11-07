@@ -17,9 +17,8 @@ globalThis.jsConnect = async function(appId, args, dartOnMessage) {
     // runtime throws "Classic web workers are not supported" inside any
     // worker where `importScripts` is callable. Module workers don't have
     // `importScripts`, so the check passes. Older Pyodide lines (0.27.x)
-    // accept module workers too, so this is forward-compatible across all
-    // supported Python versions (3.12 → Pyodide 0.27.7, 3.13 → 0.29.4,
-    // 3.14 → 314.0.0).
+    // accept module workers too, so this works for every supported Python
+    // version's Pyodide line (0.27.x for 3.12 through 315.x for 3.15).
     app.worker = new Worker("python-worker.js", { type: "module" });
 
     var error;

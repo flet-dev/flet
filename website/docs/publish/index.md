@@ -153,16 +153,25 @@ listing the versions you can choose from.
 
 For web builds (`flet build web` / `flet publish`), the matching Pyodide
 runtime is downloaded into the build output and cached under
-`~/.flet/pyodide/<version>/` on first use, so subsequent builds reuse it. The
+`~/.flet/cache/pyodide/<version>/` on first use, so subsequent builds reuse it. The
 older `0.27.5` bundle that used to ship inside the build template has been
 removed in favour of this per-build, versioned download.
 
 :::note[Pre-release Python (3.15 etc.)]
-To bundle a pre-release Python, name it explicitly — `--python-version 3.15`
-or `requires-python = "==3.15.*"`. There is **no separate `--pre` flag** for
-this. The `--pre` flag on [`flet publish`](../cli/flet-publish.md) is a
+A version marked `pre-release` in the table is never picked by default or by
+an open-ended `requires-python` such as `">=3.13"`. To bundle it, name it
+explicitly: `--python-version 3.15`, `requires-python = ">=3.15"` or
+`requires-python = "==3.15.*"`.
+
+Python 3.15 is a pre-release line because its ecosystem is still catching up.
+CPython 3.15 is final, but its Pyodide (web) is an alpha, and Android and iOS
+builds need cp315 wheels for packages with native code (including `msgpack`,
+which Flet depends on). [pypi.flet.dev](https://pypi.flet.dev) doesn't have those
+yet.
+
+The `--pre` flag on [`flet publish`](../cli/flet-publish.md) is a
 different, unrelated option for allowing **micropip** to install pre-release
-Python *packages* at runtime.
+Python *packages* at runtime; there is no `--pre` flag for the Python version.
 :::
 
 ## How it works

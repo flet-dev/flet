@@ -1,3 +1,14 @@
+## 1.2.0
+
+### New features
+
+* Bundle Python 3.15 (3.15.2) into apps built with `flet build` and `flet publish` as a pre-release line: select it with `--python-version 3.15` or `requires-python = ">=3.15"`; 3.14 stays the default, see [Choosing a Python version](https://flet.dev/docs/publish/#choosing-a-python-version) by @ndonkoHenri.
+
+### Bug fixes
+
+* Fix `flet build web --no-cdn` and `flet publish` downloading a pre-release Pyodide, such as Python 3.15's `315.0.0a2`, again on every run by @ndonkoHenri.
+* Fix the path check guarding Flet's tar extraction (desktop client unpacking, `flet pack` on macOS) accepting archive members that land in a sibling directory whose name starts with the destination's, such as `/app-evil` for `/app` by @ndonkoHenri.
+
 ## 1.1.2
 
 ### Improvements

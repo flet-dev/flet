@@ -20,6 +20,7 @@ import zipfile
 from collections.abc import Iterable
 from pathlib import Path
 
+from packaging.version import InvalidVersion, Version
 from rich.progress import Progress
 
 from flet_cli.utils.distros import download_with_progress
@@ -137,7 +138,21 @@ def _cache_matches_version(cache_dir: Path, version: str) -> bool:
         return False
     if not (cache_dir / "pyodide-lock.json").exists():
         return False
-    return _runtime_version(cache_dir) == version
+    runtime_version = _runtime_version(cache_dir)
+    return runtime_version is not None and _same_version(runtime_version, version)
+
+
+def _same_version(a: str, b: str) -> bool:
+    """Whether two Pyodide version strings name the same release.
+
+    Pre-releases are spelled differently in different places: the release tag
+    (and python-build's manifest) say `315.0.0a2`, while the runtime's
+    `package.json` says `315.0.0-alpha.2`.
+    """
+    try:
+        return Version(a) == Version(b)
+    except InvalidVersion:
+        return a == b
 
 
 def _runtime_version(cache_dir: Path) -> str | None:

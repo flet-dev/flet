@@ -85,8 +85,8 @@ def patch_index_html(
     # loads it via dynamic `import()`. We can no longer use `.js` because
     # Pyodide >= 0.29 throws "Classic web workers are not supported" inside
     # any worker that has `importScripts` available — only classic workers
-    # have it. All supported Pyodide versions (0.27.8 / 0.29.5 / 314.0.7)
-    # ship `pyodide.mjs`.
+    # have it. Every supported Pyodide line (0.27.x for Python 3.12 through
+    # 315.x for 3.15) ships `pyodide.mjs`.
     if pyodide_version:
         if no_cdn:
             pyodide_url = "pyodide/pyodide.mjs"

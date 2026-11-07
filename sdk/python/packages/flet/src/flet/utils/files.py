@@ -18,9 +18,13 @@ def is_within_directory(directory, target):
     abs_directory = os.path.abspath(directory)
     abs_target = os.path.abspath(target)
 
-    prefix = os.path.commonprefix([abs_directory, abs_target])
-
-    return prefix == abs_directory
+    # Compare whole path components: a character prefix would accept
+    # `/dest-evil/x` as inside `/dest`.
+    try:
+        return os.path.commonpath([abs_directory, abs_target]) == abs_directory
+    except ValueError:
+        # Paths on different drives (Windows) share no common path.
+        return False
 
 
 def safe_tar_extractall(tar, path=".", members=None, *, numeric_owner=False):
