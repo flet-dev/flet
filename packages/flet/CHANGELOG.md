@@ -1,3 +1,7 @@
+## 1.1.3
+
+* Add `isSvgSource(src, {isUrl})`: whether an image source names an SVG, by its path in any letter case, ignoring a URL's query and fragment. `Image` uses it for files and URLs, so `icon.svg?v=2` is drawn as SVG instead of blank ([#7057](https://github.com/flet-dev/flet/pull/7057)) by @FeodorFitsner.
+
 ## 1.1.2
 
 * Add `loadDeferredFonts(package)` (`DeferredFonts`): in a web app, loads the fonts of a Dart package that `flet build web` moved from `FontManifest.json` to `DeferredFontManifest.json`, once, with `FontLoader`; a failed load is retried by a later call after 5 s, doubling up to 5 min; a no-op elsewhere and when the package's fonts are in `FontManifest.json`. `Markdown` calls it for `flutter_math_fork` before drawing math ([#7054](https://github.com/flet-dev/flet/pull/7054)) by @FeodorFitsner.
