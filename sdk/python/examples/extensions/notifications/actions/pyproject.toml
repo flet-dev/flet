@@ -15,7 +15,7 @@ categories = ["Utility/Notifications"]
 
 [tool.flet.metadata]
 title = "Action buttons and replies"
-docs_intro = "Button presses arrive in [`on_action`][flet_notifications.Notifications.on_action], with the typed reply in [`input`][flet_notifications.NotificationActionEvent.input]. The Archive button uses [`foreground=False`][flet_notifications.NotificationAction.foreground], so it is handled without opening the app. Inline replies need Android, iOS, macOS or Windows, and Delete asks to unlock the device on iOS."
+docs_intro = "Button presses arrive in [`on_action`][flet_notifications.Notifications.on_action], with the typed reply in [`input`][flet_notifications.NotificationActionEvent.input]. On Android, Reply keeps the notification with [`cancel_notification=False`][flet_notifications.NotificationAction.cancel_notification], and `on_action` updates it with [`only_alert_once`][flet_notifications.AndroidOptions.only_alert_once], which ends the spinner Android shows after a reply without alerting again. The Archive button uses [`foreground=False`][flet_notifications.NotificationAction.foreground], so it is handled without opening the app. Inline replies need Android, iOS, macOS or Windows, and Delete asks to unlock the device on iOS."
 controls = ["SafeArea", "Column", "Button", "Text", "SnackBar", "Notifications"]
 layout_pattern = "inline-actions"
 complexity = "intermediate"
