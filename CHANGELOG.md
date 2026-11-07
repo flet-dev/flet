@@ -2,7 +2,7 @@
 
 ### Documentation
 
-* flet-notifications: Show how to stop the progress spinner Android shows after an inline reply, by updating the notification from `on_action`, and fix the "Action buttons and replies" example, whose notification stayed stuck after a reply ([#7058](https://github.com/flet-dev/flet/discussions/7058)) by @ItsRenjiii.
+* flet-notifications: Show how to stop the progress spinner Android shows after an inline reply, by updating the notification from `on_action`, and fix the "Action buttons and replies" example, whose notification stayed stuck after a reply ([#7058](https://github.com/flet-dev/flet/discussions/7058), [#7060](https://github.com/flet-dev/flet/pull/7060)) by @ItsRenjiii.
 
 ## 1.1.2
 
