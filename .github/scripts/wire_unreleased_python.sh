@@ -78,7 +78,7 @@ if [ "$platform" = android ] || [ "$platform" = ios ]; then
     mkdir -p "$wheels"
     for run in ${MOBILE_FORGE_RUN_IDS:?}; do
         gh run download "$run" --repo flet-dev/mobile-forge \
-            --pattern 'wheels-msgpack*' --dir "$tmp/wheel-artifacts/$run"
+            --pattern 'wheels-*-msgpack-*' --dir "$tmp/wheel-artifacts/$run"
     done
     find "$tmp/wheel-artifacts" -name "msgpack-*-cp${SERIOUS_PYTHON_VERSION//./}-*.whl" \
         -exec cp {} "$wheels/" \;
