@@ -7,12 +7,18 @@ def main(page: ft.Page):
         log.controls.append(ft.Text(f"Opened {e.payload}"))
         log.update()
 
-    def handle_action(e: ftn.NotificationActionEvent):
+    async def handle_action(e: ftn.NotificationActionEvent):
         message = f"{e.action_id} on {e.payload}"
         if e.input is not None:
             message += f": {e.input!r}"
         log.controls.append(ft.Text(message))
         log.update()
+        if e.action_id == "reply" and e.id is not None:
+            # Android keeps an inline reply's notification, with a spinner, until
+            # the app updates it. Showing it again with the same ID does that.
+            await notifications.show(
+                id=e.id, title="Ada", body=f"You: {e.input}", payload=e.payload
+            )
 
     notifications = ftn.Notifications(on_tap=handle_tap, on_action=handle_action)
 

@@ -85,6 +85,12 @@ class NotificationActionInput:
         Android supports reply choices, free-form text, and MIME-type hints. iOS/macOS
         use a text-input action; Windows uses a separate text box associated with the
         action ID. Linux and Web show the action as a regular button without an input.
+
+        On Android, after the user sends a reply, the notification stays with a
+        progress spinner until the app updates it: call
+        :meth:`flet_notifications.Notifications.show` again with the same `id` from
+        :attr:`flet_notifications.Notifications.on_action`. Until then, cancelling
+        the notification has no effect. To remove it, cancel it after that update.
     """
 
     label: str | None = None
@@ -207,7 +213,9 @@ class NotificationAction:
     Whether to dismiss the notification when this action is selected.
 
     Note:
-        Supported only on Android.
+        Supported only on Android. Has no effect on an action with an :attr:`input`:
+        Android keeps the notification until the app updates it. See
+        :class:`flet_notifications.NotificationActionInput`.
     """
 
     input: NotificationActionInput | None = None
