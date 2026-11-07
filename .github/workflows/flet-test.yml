@@ -43,6 +43,17 @@ env:
   # Use the Flutter the setup action puts on PATH, not fvm.
   FLET_TEST_DISABLE_FVM: 1
 
+  # Python 3.15 isn't released through python-build / serious-python / pypi.flet.dev
+  # yet: its matrix entries take everything from these refs and Actions runs
+  # (.github/scripts/wire_unreleased_python.sh). Remove with that script once
+  # PYTHON_BUILD_RELEASE_DATE and the template's serious_python pin include 3.15.
+  UNRELEASED_PYTHON: "3.15"
+  PYTHON_BUILD_REF: support-py3.15
+  SERIOUS_PYTHON_REF: support-py3.15
+  PYTHON_BUILD_RUN_ID: "42319861949"
+  DART_BRIDGE_RUN_ID: "42321036158"
+  MOBILE_FORGE_RUN_IDS: "42324957944"
+
 jobs:
   flet-test:
     name: ${{ matrix.platform }} (py${{ matrix.python_version }})
@@ -58,7 +69,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        python_version: ["3.12", "3.13", "3.14"]
+        python_version: ["3.12", "3.13", "3.14", "3.15"]
         platform: [macos, ios, windows, linux, linux-arm64, android]
         include:
           - platform: macos
@@ -120,6 +131,14 @@ jobs:
           uv --version
           uv run --project sdk/python/packages/flet-cli python --version
           flutter --version || echo "Flutter not on PATH yet (flet test will install it)."
+
+      - name: Wire unreleased Python ${{ matrix.python_version }}
+        if: matrix.python_version == env.UNRELEASED_PYTHON
+        shell: bash
+        env:
+          SERIOUS_PYTHON_VERSION: ${{ matrix.python_version }}
+          GH_TOKEN: ${{ github.token }}
+        run: bash .github/scripts/wire_unreleased_python.sh "${{ matrix.platform }}"
 
       # -------- Linux: build deps + virtual display (x64 and arm64) --------
       - name: Install Linux dependencies
