@@ -46,10 +46,11 @@ class PythonRelease:
     # Android ABIs python-build publishes distributions for this minor
     # (per the manifest's per-minor `android_abis`).
     android_abis: tuple[str, ...]
-    # When True, this release is supported via `--python-version` (and an
-    # explicit `requires-python = "==X.Y.*"` specifier) but is not picked
-    # automatically by the default or by open-ended `requires-python`
-    # specifiers like `>=3.14`. Use for beta CPython lines.
+    # When True, this release is supported via `--python-version` (and a
+    # `requires-python` that only it satisfies, such as `>=3.15` or
+    # `==3.15.*`) but is not picked automatically by the default or by
+    # open-ended specifiers like `>=3.14`. Set for CPython pre-releases, and
+    # for final lines whose ecosystem (Pyodide, mobile wheels) isn't ready.
     prerelease: bool
 
 
@@ -136,6 +137,12 @@ class UnsupportedPythonVersionError(ValueError):
     pass
 
 
+def _release_version(release: PythonRelease) -> Version:
+    """The release part of a row's CPython version, without any pre-release
+    suffix: `3.15.0` for `3.15.0a2`, `3.15.2` for `3.15.2`."""
+    return Version(Version(release.standalone).base_version)
+
+
 def resolve_python_version(
     cli_arg: Optional[str],
     get_pyproject: Optional[Callable[[Optional[str]], object]] = None,
@@ -182,25 +189,22 @@ def resolve_python_version(
                 if stable_matching:
                     return max(stable_matching, key=lambda r: Version(r.standalone))
 
-                # Fall back: match pre-release rows against the short
-                # version (e.g. `3.15`) rather than the standalone (e.g.
-                # `3.15.0a2`). Without this, `>=3.15` would skip the 3.15
-                # alpha because `3.15.0a2` sorts before `3.15.0`. Comparing
-                # by short version expresses "this Python line is supported"
-                # — which is what the registry represents — and preserves
-                # the "explicit opt-in" path for beta lines without exposing
-                # a CLI flag.
+                # Fall back to pre-release rows: lines that are only opt-in,
+                # either because CPython itself is a pre-release (e.g.
+                # `3.15.0a2`) or because the line's ecosystem is (e.g. a final
+                # `3.15.2` whose Pyodide is still an alpha). Match the
+                # standalone's release part (`3.15.0` for `3.15.0a2`, `3.15.2`
+                # for `3.15.2`): `>=3.15` must not skip an alpha just because
+                # `3.15.0a2` sorts before `3.15.0`, and patch-level specifiers
+                # such as `>=3.15.1` or `!=3.15.2` still apply.
                 spec_with_pre = SpecifierSet(requires, prereleases=True)
                 prerelease_matching = [
                     r
                     for r in supported
-                    if r.prerelease and Version(r.short) in spec_with_pre
+                    if r.prerelease and _release_version(r) in spec_with_pre
                 ]
                 if prerelease_matching:
-                    return max(
-                        prerelease_matching,
-                        key=lambda r: Version(r.short),
-                    )
+                    return max(prerelease_matching, key=_release_version)
 
                 raise UnsupportedPythonVersionError(
                     f"`requires-python = {requires!r}` does not match any "
