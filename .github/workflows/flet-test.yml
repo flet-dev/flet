@@ -10,6 +10,7 @@ on:
   pull_request:
     paths:
       - '.github/workflows/flet-test.yml'
+      - '.github/scripts/wire_unreleased_python.sh'
       - '.fvmrc'
       - 'packages/flet/**'
       - 'packages/flet_integration_test/**'
