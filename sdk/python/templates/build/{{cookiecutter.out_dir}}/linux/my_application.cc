@@ -419,7 +419,13 @@ static void my_application_activate(GApplication* application) {
     }
   }
 
-  gtk_window_set_default_size(window, 1280, 720);
+  // The initial size is a one-shot resize request rather than a default size:
+  // GTK never lets a non-resizable window be smaller than its default size, so
+  // a 1280x720 default would override any smaller window.width/height the app
+  // sets together with window.resizable = False. A 0x0 default still gives GTK
+  // a size to fix such a window at, which is then the window's current size.
+  gtk_window_set_default_size(window, 0, 0);
+  gtk_window_resize(window, 1280, 720);
   // A window can only be transparent if its surface carries an alpha channel,
   // which means selecting an RGBA visual. GTK only applies a visual before the
   // widget is realized, and without a compositor there is nothing to blend the
