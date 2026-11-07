@@ -1,5 +1,9 @@
 ## 1.1.3
 
+### Improvements
+
+* Start web apps that use `flet-rive` 1 MB lighter when they don't show a `Rive` control: the Rive engine (`rive_native.wasm`) now loads when the first `Rive` control loads its file, instead of at startup ([#7057](https://github.com/flet-dev/flet/pull/7057)) by @FeodorFitsner.
+
 ### Bug fixes
 
 * Fix SVG images drawing blank when their URL has a query string or fragment, such as a cache-busting `icon.svg?v=2`: `Image` now recognizes an SVG by the URL's path, in any letter case ([#7057](https://github.com/flet-dev/flet/pull/7057)) by @FeodorFitsner.
