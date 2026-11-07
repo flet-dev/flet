@@ -2,7 +2,7 @@
 
 ### Bug fixes
 
-* Fix `page.window.resizable = False` locking the window at 1280×720 instead of the set `width` and `height` on Linux ([#1375](https://github.com/flet-dev/flet/issues/1375)) by @ndonkoHenri.
+* Fix `page.window.resizable = False` locking the window at 1280×720 instead of the set `width` and `height` on Linux ([#1375](https://github.com/flet-dev/flet/issues/1375), [#7062](https://github.com/flet-dev/flet/pull/7062)) by @ndonkoHenri.
 
 ## 1.1.2
 
