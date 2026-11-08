@@ -5,7 +5,7 @@ import flet as ft
 from flet_charts.bar_chart_rod_stack_item import BarChartRodStackItem
 from flet_charts.types import ChartDataPointTooltip
 
-__all__ = ["BarChartRod", "BarChartRodTooltip"]
+__all__ = ["BarChartRod", "BarChartRodLabel", "BarChartRodTooltip"]
 
 
 @ft.value
@@ -43,6 +43,37 @@ class BarChartRodTooltip(ChartDataPointTooltip):
             else (self.text_spans.copy() if self.text_spans is not None else None),
             rtl=rtl if rtl is not None else self.rtl,
         )
+
+
+@ft.value
+class BarChartRodLabel:
+    """
+    A text label drawn past the tip of a :class:`~flet_charts.BarChartRod`.
+    """
+
+    text: str = ""
+    """
+    The text of the label.
+
+    If empty, no label is drawn.
+    """
+
+    text_style: Optional[ft.TextStyle] = None
+    """
+    The text style of the label.
+    """
+
+    angle: ft.Number = 0
+    """
+    The rotation of the label, in degrees.
+    """
+
+    offset: ft.Offset = field(default_factory=lambda: ft.Offset(0, 8))
+    """
+    The position of the label relative to the tip of the rod, in logical pixels.
+
+    `x` moves the label sideways, and `y` moves it away from the rod.
+    """
 
 
 @ft.control("BarChartRod")
@@ -128,6 +159,14 @@ class BarChartRod(ft.BaseControl):
     show_tooltip: bool = True
     """
     Whether a tooltip should be shown on top of hovered bar.
+    """
+
+    label: Optional[Union[str, BarChartRodLabel]] = None
+    """
+    The label drawn past the tip of this rod, such as its value.
+
+    A string is drawn with the default :class:`~flet_charts.BarChartRodLabel`
+    settings.
     """
 
     def before_update(self):

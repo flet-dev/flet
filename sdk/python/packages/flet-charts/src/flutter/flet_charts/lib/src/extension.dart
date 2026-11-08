@@ -3,6 +3,7 @@ import 'package:flutter/widgets.dart';
 
 import 'bar_chart.dart';
 import 'candlestick_chart.dart';
+import 'gauge_chart.dart';
 import 'line_chart.dart';
 import 'matplotlib_chart_canvas.dart';
 import 'radar_chart.dart';
@@ -17,6 +18,8 @@ class Extension extends FletExtension {
         return BarChartControl(key: key, control: control);
       case "CandlestickChart":
         return CandlestickChartControl(key: key, control: control);
+      case "GaugeChart":
+        return GaugeChartControl(key: key, control: control);
       case "LineChart":
         return LineChartControl(key: key, control: control);
       case "MatplotlibChartCanvas":

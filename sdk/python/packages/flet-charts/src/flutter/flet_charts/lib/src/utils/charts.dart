@@ -147,6 +147,8 @@ AxisTitles parseAxisTitles(Control? control) {
   return AxisTitles(
       axisNameWidget: control.buildWidget("title"),
       axisNameSize: control.getDouble("title_size", 16)!,
+      sideTitleAlignment: parseEnum(SideTitleAlignment.values,
+          control.getString("label_alignment"), SideTitleAlignment.outside)!,
       sideTitles: SideTitles(
         showTitles: control.getBool("show_labels", true)!,
         reservedSize: control.getDouble("label_size", 22)!,
@@ -198,5 +200,13 @@ String resolveFlTouchEventType(FlTouchEvent event) {
   if (event is FlTapCancelEvent) return "tapCancel";
   if (event is FlTapDownEvent) return "tapDown";
   if (event is FlTapUpEvent) return "tapUp";
+  if (event is FlSecondaryTapDownEvent) return "secondaryTapDown";
+  if (event is FlSecondaryTapUpEvent) return "secondaryTapUp";
+  if (event is FlSecondaryTapCancelEvent) return "secondaryTapCancel";
+  if (event is FlSecondaryLongPressStart) return "secondaryLongPressStart";
+  if (event is FlSecondaryLongPressMoveUpdate) {
+    return "secondaryLongPressMoveUpdate";
+  }
+  if (event is FlSecondaryLongPressEnd) return "secondaryLongPressEnd";
   return "undefined";
 }

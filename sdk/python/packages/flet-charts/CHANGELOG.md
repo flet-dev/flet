@@ -5,6 +5,13 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
+## 1.2.0
+
+### Added
+
+- Added `GaugeChart` for progress gauges, activity rings and speedometers, built from progress and zone rings with ticks, labels, markers and needle or circle pointers by @ndonkoHenri.
+- Added `PieChartSection.corner_radius` and stacked `PieChartSection.segments`, `BarChartRod.label`, `label`, `label_style` and `gradient` on `BarChartRodStackItem`, `ChartAxis.label_alignment`, `LineChartData.gradient_area`, and `ChartEventType` values for secondary-button (right-click) events by @ndonkoHenri.
+
 ## 1.0.2
 
 ### Fixed

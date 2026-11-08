@@ -1,11 +1,29 @@
 from dataclasses import field
+from enum import Enum
 from typing import Optional, Union
 
 import flet as ft
 from flet_charts.line_chart_data_point import LineChartDataPoint
 from flet_charts.types import ChartPointLine, ChartPointShape
 
-__all__ = ["LineChartData"]
+__all__ = ["LineChartData", "LineChartGradientArea"]
+
+
+class LineChartGradientArea(Enum):
+    """
+    The area a :attr:`flet_charts.LineChartData.gradient` is spread over.
+    """
+
+    AROUND_LINE = "rectAroundTheLine"
+    """
+    The rectangle enclosing the line, so the whole gradient spans the line.
+    """
+
+    WHOLE_CHART = "wholeChart"
+    """
+    The whole chart area, so the colors along the line depend on where it sits in
+    the chart.
+    """
 
 
 @ft.control("LineChartData")
@@ -33,6 +51,11 @@ class LineChartData(ft.BaseControl):
     gradient: Optional[ft.Gradient] = None
     """
     Gradient to draw line's background.
+    """
+
+    gradient_area: LineChartGradientArea = LineChartGradientArea.AROUND_LINE
+    """
+    The area the :attr:`gradient` is spread over.
     """
 
     stroke_width: ft.Number = 2.0

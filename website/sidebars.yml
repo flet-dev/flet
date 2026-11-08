@@ -349,6 +349,7 @@ docs:
           _index: controls/charts/index.md
           BarChart: controls/charts/barchart.md
           CandlestickChart: controls/charts/candlestickchart.md
+          GaugeChart: controls/charts/gaugechart.md
           LineChart: controls/charts/linechart.md
           MatplotlibChart: controls/charts/matplotlibchart.md
           MatplotlibChartWithToolbar: controls/charts/matplotlibchartwithtoolbar.md
@@ -551,6 +552,7 @@ docs:
         - controls/charts/types/barchartevent.md
         - controls/charts/types/barchartgroup.md
         - controls/charts/types/barchartrod.md
+        - controls/charts/types/barchartrodlabel.md
         - controls/charts/types/barchartrodstackitem.md
         - controls/charts/types/barchartrodtooltip.md
         - controls/charts/types/barcharttooltip.md
@@ -561,6 +563,7 @@ docs:
         - controls/charts/types/candlestickcharttooltip.md
         - controls/charts/types/chartaxis.md
         - controls/charts/types/chartaxislabel.md
+        - controls/charts/types/chartaxislabelalignment.md
         - controls/charts/types/chartcirclepoint.md
         - controls/charts/types/chartcrosspoint.md
         - controls/charts/types/chartdatapointtooltip.md
@@ -570,15 +573,33 @@ docs:
         - controls/charts/types/chartpointline.md
         - controls/charts/types/chartpointshape.md
         - controls/charts/types/chartsquarepoint.md
+        - controls/charts/types/gaugechartevent.md
+        - controls/charts/types/gaugecirclepointer.md
+        - controls/charts/types/gaugecircleticks.md
+        - controls/charts/types/gaugedirection.md
+        - controls/charts/types/gaugelineticks.md
+        - controls/charts/types/gaugemarker.md
+        - controls/charts/types/gaugemarkeralignment.md
+        - controls/charts/types/gaugemarkerlabelside.md
+        - controls/charts/types/gaugeneedlepointer.md
+        - controls/charts/types/gaugepointer.md
+        - controls/charts/types/gaugeprogressring.md
+        - controls/charts/types/gaugering.md
+        - controls/charts/types/gaugetickposition.md
+        - controls/charts/types/gaugeticks.md
+        - controls/charts/types/gaugezone.md
+        - controls/charts/types/gaugezonesring.md
         - controls/charts/types/horizontalalignment.md
         - controls/charts/types/linechartdata.md
         - controls/charts/types/linechartdatapoint.md
         - controls/charts/types/linechartdatapointtooltip.md
         - controls/charts/types/linechartevent.md
         - controls/charts/types/linecharteventspot.md
+        - controls/charts/types/linechartgradientarea.md
         - controls/charts/types/linecharttooltip.md
         - controls/charts/types/piechartevent.md
         - controls/charts/types/piechartsection.md
+        - controls/charts/types/piechartsectionsegment.md
         - controls/charts/types/radarchartevent.md
         - controls/charts/types/radarcharttitle.md
         - controls/charts/types/radardataset.md

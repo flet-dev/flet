@@ -49,6 +49,7 @@ For examples, see [these](https://github.com/flet-dev/flet/tree/main/sdk/python/
 
 - [`BarChart`](https://flet.dev/docs/controls/charts/barchart)
 - [`CandlestickChart`](https://flet.dev/docs/controls/charts/candlestickchart)
+- [`GaugeChart`](https://flet.dev/docs/controls/charts/gaugechart)
 - [`LineChart`](https://flet.dev/docs/controls/charts/linechart)
 - [`MatplotlibChart`](https://flet.dev/docs/controls/charts/matplotlibchart)
 - [`PieChart`](https://flet.dev/docs/controls/charts/piechart)
