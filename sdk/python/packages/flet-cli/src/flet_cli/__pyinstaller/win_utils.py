@@ -14,6 +14,39 @@ from PyInstaller.utils.win32.icon import IconFile, normalize_icon_type
 import flet_cli.__pyinstaller.config as hook_config
 
 
+def remove_signature(exe_path: str) -> None:
+    """
+    Remove the Authenticode signature from a Windows executable.
+
+    Changing an executable's resources invalidates its signature. Windows then
+    drops the signature's bytes but keeps the header entry that points to them,
+    which leaves an executable that signing tools reject. Removing both first
+    leaves an unsigned executable that can be patched and signed again.
+
+    Args:
+        exe_path: Path to the executable; left unchanged when it isn't signed.
+    """
+
+    pe = pefile.PE(exe_path, fast_load=True)
+    security = pe.OPTIONAL_HEADER.DATA_DIRECTORY[
+        pefile.DIRECTORY_ENTRY["IMAGE_DIRECTORY_ENTRY_SECURITY"]
+    ]
+    if not security.Size:
+        pe.close()
+        return
+
+    # The entry holds a file offset, not a virtual address.
+    start, end = security.VirtualAddress, security.VirtualAddress + security.Size
+    security.VirtualAddress = security.Size = 0
+    pe.OPTIONAL_HEADER.CheckSum = 0
+    data = pe.write()
+    pe.close()
+
+    hook_config.log_progress("Removing the signature of", exe_path)
+    with open(exe_path, "wb") as f:
+        f.write(data[:start] + data[end:])
+
+
 def update_flet_view_icon(exe_path: str, icon_path: str) -> None:
     """
     Replace icon resources in a Windows executable.
@@ -127,18 +160,9 @@ def update_flet_view_version_info(
     with open(version_info_path, "w", encoding="utf-8") as f:
         f.write(str(vs))
 
-    # Remember the data appended after the image (overlay), which the resource
-    # update drops. The client's Authenticode signature is stored there as
-    # well; it is left out, as changing the resources invalidates it.
+    # Remember overlay
     pe = pefile.PE(exe_path, fast_load=True)
     overlay_before = pe.get_overlay()
-    signature = pe.OPTIONAL_HEADER.DATA_DIRECTORY[
-        pefile.DIRECTORY_ENTRY["IMAGE_DIRECTORY_ENTRY_SECURITY"]
-    ]
-    if overlay_before and signature.Size:
-        overlay_start = pe.get_overlay_data_start_offset()
-        if signature.VirtualAddress >= overlay_start:
-            overlay_before = overlay_before[: signature.VirtualAddress - overlay_start]
     pe.close()
 
     hdst = win32api.BeginUpdateResource(exe_path, 0)

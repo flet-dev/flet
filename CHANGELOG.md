@@ -1,3 +1,9 @@
+## 1.1.3
+
+### Bug fixes
+
+* Fix `flet pack` failing on Windows with `ValueError: binary mode doesn't take an encoding argument`, and leaving a client that signing tools reject, since the desktop client is signed (1.1.0) by @ndonkoHenri.
+
 ## 1.1.2
 
 ### Improvements
@@ -6,7 +12,6 @@
 
 ### Bug fixes
 
-* Fix `flet pack` failing on Windows with `ValueError: binary mode doesn't take an encoding argument` since the desktop client is signed (1.1.0) by @ndonkoHenri.
 * Fix web apps served by Flet (`flet run --web`, FastAPI) logging `AttributeError: 'NoneType' object has no attribute 'after_event'` when the browser reloads or closes the page while `main()` is still running ([#7055](https://github.com/flet-dev/flet/pull/7055)) by @FeodorFitsner.
 
 ## 1.1.1
