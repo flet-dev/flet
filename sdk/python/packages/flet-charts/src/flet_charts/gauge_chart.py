@@ -3,7 +3,7 @@ from enum import Enum
 from typing import Annotated, Optional
 
 import flet as ft
-from flet.utils.validation import V, ValidationRules
+from flet.utils.validation import V, ValidationRules, validate
 from flet_charts.gauge_marker import GaugeMarker
 from flet_charts.gauge_pointer import GaugePointer
 from flet_charts.gauge_ring import GaugeProgressRing, GaugeRing, GaugeZonesRing
@@ -80,7 +80,7 @@ class GaugeChartEvent(ft.Event["GaugeChart"]):
     `None` if the touch is outside the arc.
     """
 
-    on_value: bool = False
+    is_on_value: bool = False
     """
     Whether the touch is on the filled part of a
     :class:`~flet_charts.GaugeProgressRing`.
@@ -113,6 +113,7 @@ class GaugeChart(ft.LayoutControl):
     It can be drawn as a progress indicator, an activity-style set of concentric
     rings, or a speedometer with colored zones and a needle.
 
+    Example:
     ```python
     fch.GaugeChart(
         min_value=0,
@@ -135,17 +136,28 @@ class GaugeChart(ft.LayoutControl):
     :attr:`min_value` and :attr:`max_value`.
 
     Raises:
-        ValueError: If the :attr:`~flet_charts.GaugeProgressRing.value` of a
-            :class:`~flet_charts.GaugeProgressRing` is not between :attr:`min_value`
-            and :attr:`max_value`, inclusive.
-        ValueError: If a :class:`~flet_charts.GaugeZone` of a
-            :class:`~flet_charts.GaugeZonesRing` starts before :attr:`min_value` or
-            ends after :attr:`max_value`.
+        ValueError: If an item of the list is a :class:`flet_charts.GaugeProgressRing`
+            and its :attr:`~flet_charts.GaugeProgressRing.value` is not
+            between :attr:`min_value` and :attr:`max_value`, inclusive.
+        ValueError: If an item of the list is a :class:`flet_charts.GaugeZonesRing`
+            and one of its :attr:`~flet_charts.GaugeZonesRing.zones` starts before
+            :attr:`min_value`.
+        ValueError: If an item of the list is a :class:`flet_charts.GaugeZonesRing`
+            and one of its :attr:`~flet_charts.GaugeZonesRing.zones` ends after
+            :attr:`max_value`.
     """
 
     min_value: ft.Number = 0.0
     """
     The lowest value of the gauge's scale, at the start of the arc.
+
+    Raises:
+        ValueError: If it is not strictly less than :attr:`max_value`.
+        ValueError: If it is greater than the
+            :attr:`~flet_charts.GaugeProgressRing.value` of a
+            :class:`flet_charts.GaugeProgressRing` in :attr:`rings`.
+        ValueError: If it is greater than the :attr:`~flet_charts.GaugeZone.start`
+            of a :class:`flet_charts.GaugeZone` in :attr:`rings`.
     """
 
     max_value: Annotated[ft.Number, V.gt_field("min_value")] = 1.0
@@ -154,6 +166,11 @@ class GaugeChart(ft.LayoutControl):
 
     Raises:
         ValueError: If it is not strictly greater than :attr:`min_value`.
+        ValueError: If it is less than the
+            :attr:`~flet_charts.GaugeProgressRing.value` of a
+            :class:`flet_charts.GaugeProgressRing` in :attr:`rings`.
+        ValueError: If it is less than the :attr:`~flet_charts.GaugeZone.end` of a
+            :class:`flet_charts.GaugeZone` in :attr:`rings`.
     """
 
     start_degree_offset: ft.Number = -225.0
@@ -181,7 +198,7 @@ class GaugeChart(ft.LayoutControl):
 
     default_ring_width: ft.Number = 10.0
     """
-    The width of the rings whose :attr:`~flet_charts.GaugeRing.width` isn't set,
+    The width of the rings whose :attr:`flet_charts.GaugeRing.width` isn't set,
     in logical pixels.
     """
 
@@ -259,3 +276,22 @@ class GaugeChart(ft.LayoutControl):
             ),
         ),
     )
+
+    def before_update(self):
+        super().before_update()
+        # manually validate non-Control classes before update
+        parts = [
+            *self.rings,
+            *(
+                zone
+                for ring in self.rings
+                if isinstance(ring, GaugeZonesRing)
+                for zone in ring.zones
+            ),
+            *self.markers,
+            *self.pointers,
+        ]
+        if self.ticks is not None:
+            parts.append(self.ticks)
+        for part in parts:
+            validate(part, suppress_repeated_errors=True)

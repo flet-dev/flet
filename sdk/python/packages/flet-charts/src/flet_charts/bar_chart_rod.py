@@ -61,6 +61,8 @@ class BarChartRodLabel:
     text_style: Optional[ft.TextStyle] = None
     """
     The text style of the label.
+
+    Defaults to the theme's :attr:`flet.TextTheme.body_medium`.
     """
 
     angle: ft.Number = 0

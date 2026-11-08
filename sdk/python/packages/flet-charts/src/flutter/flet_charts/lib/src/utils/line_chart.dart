@@ -161,8 +161,7 @@ LineChartBarData parseLineChartBarData(
               (dp) => !interactiveChart && dp.value.getBool("selected", false)!)
           .map((e) => e.key)
           .toList(),
-      gradientArea: parseEnum(
-          LineChartGradientArea.values,
+      gradientArea: parseLineChartGradientArea(
           chartData.getString("gradient_area"),
           LineChartGradientArea.rectAroundTheLine)!,
       isCurved: chartData.getBool("curved", false)!,
@@ -221,4 +220,9 @@ LineChartBarData parseLineChartBarData(
           : null,
       color: barColor,
       gradient: barGradient);
+}
+
+LineChartGradientArea? parseLineChartGradientArea(String? value,
+    [LineChartGradientArea? defaultValue]) {
+  return parseEnum(LineChartGradientArea.values, value, defaultValue);
 }

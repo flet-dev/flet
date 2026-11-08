@@ -1,3 +1,4 @@
+from dataclasses import field
 from typing import Annotated, Optional
 
 import flet as ft
@@ -6,8 +7,8 @@ from flet.utils.validation import V
 __all__ = ["GaugeProgressRing", "GaugeRing", "GaugeZone", "GaugeZonesRing"]
 
 
-@ft.control(kw_only=True)
-class GaugeRing(ft.BaseControl):
+@ft.value(kw_only=True)
+class GaugeRing:
     """
     Base class for the rings of a :class:`~flet_charts.GaugeChart`.
 
@@ -27,8 +28,10 @@ class GaugeRing(ft.BaseControl):
         ValueError: If it is not strictly greater than `0`, when set.
     """
 
+    _type: Optional[str] = field(init=False, repr=False, compare=False, default=None)
 
-@ft.control("GaugeProgressRing")
+
+@ft.value(kw_only=True)
 class GaugeProgressRing(GaugeRing):
     """
     A ring filled from :attr:`flet_charts.GaugeChart.min_value` up to its
@@ -62,9 +65,12 @@ class GaugeProgressRing(GaugeRing):
     The shape of the ends of the filled part and of the background track.
     """
 
+    def __post_init__(self):
+        self._type = "GaugeProgressRing"
 
-@ft.control("GaugeZone")
-class GaugeZone(ft.BaseControl):
+
+@ft.value
+class GaugeZone:
     """
     A colored band of a :class:`~flet_charts.GaugeZonesRing`, spanning the scale from
     :attr:`start` to :attr:`end`.
@@ -75,6 +81,9 @@ class GaugeZone(ft.BaseControl):
     The value at which this zone starts.
 
     Must be greater than or equal to :attr:`flet_charts.GaugeChart.min_value`.
+
+    Raises:
+        ValueError: If it is greater than :attr:`end`.
     """
 
     end: Annotated[ft.Number, V.ge_field("start")]
@@ -98,7 +107,7 @@ class GaugeZone(ft.BaseControl):
     """
 
 
-@ft.control("GaugeZonesRing")
+@ft.value(kw_only=True)
 class GaugeZonesRing(GaugeRing):
     """
     A ring made of colored zones, such as the red, amber and green bands of a
@@ -127,3 +136,6 @@ class GaugeZonesRing(GaugeRing):
     Raises:
         ValueError: If it is not greater than or equal to `0`.
     """
+
+    def __post_init__(self):
+        self._type = "GaugeZonesRing"

@@ -35,9 +35,8 @@ class _GaugeChartControlState extends State<GaugeChartControl> {
 
     final chart = GaugeChart(
       GaugeChartData(
-        rings: widget.control
-            .children("rings")
-            .map((ring) => parseGaugeRing(ring, context))
+        rings: (widget.control.get<List>("rings") ?? [])
+            .map((ring) => parseGaugeRing(ring, theme))
             .nonNulls
             .toList(),
         minValue: minValue,
@@ -45,19 +44,18 @@ class _GaugeChartControlState extends State<GaugeChartControl> {
         startDegreeOffset:
             widget.control.getDouble("start_degree_offset", -225)!,
         sweepAngle: widget.control.getDouble("sweep_angle", 270)!,
-        direction: parseEnum(GaugeDirection.values,
+        direction: parseGaugeDirection(
             widget.control.getString("direction"), GaugeDirection.clockwise)!,
         defaultRingWidth: widget.control.getDouble("default_ring_width", 10)!,
         ringsSpace: widget.control.getDouble("rings_space", 0)!,
         ticks: parseGaugeTicks(
-            widget.control.child("ticks"), minValue, maxValue, context),
-        markers: widget.control
-            .children("markers")
-            .map((marker) => parseGaugeMarker(marker, context))
+            widget.control.get("ticks"), minValue, maxValue, theme),
+        markers: (widget.control.get<List>("markers") ?? [])
+            .map((marker) => parseGaugeMarker(marker, theme))
+            .nonNulls
             .toList(),
-        pointers: widget.control
-            .children("pointers")
-            .map((pointer) => parseGaugePointer(pointer, context))
+        pointers: (widget.control.get<List>("pointers") ?? [])
+            .map((pointer) => parseGaugePointer(pointer, theme))
             .nonNulls
             .toList(),
         borderData: FlBorderData(show: border != null, border: border),

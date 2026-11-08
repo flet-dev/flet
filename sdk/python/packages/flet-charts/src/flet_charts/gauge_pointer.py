@@ -1,3 +1,4 @@
+from dataclasses import field
 from typing import Annotated, Optional
 
 import flet as ft
@@ -6,8 +7,8 @@ from flet.utils.validation import V
 __all__ = ["GaugeCirclePointer", "GaugeNeedlePointer", "GaugePointer"]
 
 
-@ft.control(kw_only=True)
-class GaugePointer(ft.BaseControl):
+@ft.value(kw_only=True)
+class GaugePointer:
     """
     Base class for the pointers of a :class:`~flet_charts.GaugeChart`.
 
@@ -29,8 +30,10 @@ class GaugePointer(ft.BaseControl):
     :attr:`flet_charts.GaugeChart.max_value` points past the ends of the arc.
     """
 
+    _type: Optional[str] = field(init=False, repr=False, compare=False, default=None)
 
-@ft.control("GaugeNeedlePointer")
+
+@ft.value(kw_only=True)
 class GaugeNeedlePointer(GaugePointer):
     """
     A needle that starts at the center of the gauge and narrows to a tip.
@@ -69,8 +72,11 @@ class GaugeNeedlePointer(GaugePointer):
     Defaults to :attr:`flet.ColorScheme.on_surface`.
     """
 
+    def __post_init__(self):
+        self._type = "GaugeNeedlePointer"
 
-@ft.control("GaugeCirclePointer")
+
+@ft.value(kw_only=True)
 class GaugeCirclePointer(GaugePointer):
     """
     A filled circle placed at :attr:`anchor_radius` from the center of the gauge,
@@ -121,3 +127,6 @@ class GaugeCirclePointer(GaugePointer):
 
     Defaults to :attr:`flet.ColorScheme.on_surface`.
     """
+
+    def __post_init__(self):
+        self._type = "GaugeCirclePointer"

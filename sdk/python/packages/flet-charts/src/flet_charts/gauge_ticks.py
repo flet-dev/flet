@@ -1,3 +1,4 @@
+from dataclasses import field
 from typing import Annotated, Optional
 
 import flet as ft
@@ -7,8 +8,8 @@ from flet_charts.types import GaugeTickPosition
 __all__ = ["GaugeCircleTicks", "GaugeLineTicks", "GaugeTicks"]
 
 
-@ft.control(kw_only=True)
-class GaugeTicks(ft.BaseControl):
+@ft.value(kw_only=True)
+class GaugeTicks:
     """
     Base class for the tick marks of a :class:`~flet_charts.GaugeChart`.
 
@@ -28,6 +29,8 @@ class GaugeTicks(ft.BaseControl):
 
     Raises:
         ValueError: If it is not greater than or equal to `2`.
+        ValueError: If it is not equal to the length of :attr:`labels`, when
+            :attr:`labels` is set.
     """
 
     position: GaugeTickPosition = GaugeTickPosition.OUTER
@@ -69,6 +72,8 @@ class GaugeTicks(ft.BaseControl):
     label_style: Optional[ft.TextStyle] = None
     """
     The text style of the :attr:`labels`.
+
+    Defaults to the theme's :attr:`flet.TextTheme.body_medium`.
     """
 
     label_offset: ft.Number = 0
@@ -78,6 +83,8 @@ class GaugeTicks(ft.BaseControl):
     Negative values pull the label toward, or across, the tick.
     """
 
+    _type: Optional[str] = field(init=False, repr=False, compare=False, default=None)
+
     __validation_rules__: ValidationRules = (
         V.ensure(
             lambda ticks: ticks.labels is None or len(ticks.labels) == ticks.count,
@@ -86,7 +93,7 @@ class GaugeTicks(ft.BaseControl):
     )
 
 
-@ft.control("GaugeLineTicks")
+@ft.value(kw_only=True)
 class GaugeLineTicks(GaugeTicks):
     """
     Draws each tick as a straight line pointing away from the gauge's rings.
@@ -115,8 +122,11 @@ class GaugeLineTicks(GaugeTicks):
     Defaults to :attr:`flet.ColorScheme.on_surface`.
     """
 
+    def __post_init__(self):
+        self._type = "GaugeLineTicks"
 
-@ft.control("GaugeCircleTicks")
+
+@ft.value(kw_only=True)
 class GaugeCircleTicks(GaugeTicks):
     """
     Draws each tick as a filled circle, with an optional outline.
@@ -150,3 +160,6 @@ class GaugeCircleTicks(GaugeTicks):
 
     Defaults to :attr:`flet.ColorScheme.on_surface`.
     """
+
+    def __post_init__(self):
+        self._type = "GaugeCircleTicks"

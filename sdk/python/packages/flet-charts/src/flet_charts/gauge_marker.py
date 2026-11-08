@@ -53,8 +53,8 @@ class GaugeMarkerLabelSide(Enum):
     """
 
 
-@ft.control("GaugeMarker")
-class GaugeMarker(ft.BaseControl):
+@ft.value(kw_only=True)
+class GaugeMarker:
     """
     A line, with an optional label, that marks a single value on the arc of a
     :class:`~flet_charts.GaugeChart`, such as a threshold or a target.

@@ -5,6 +5,26 @@ import 'package:material_ui/material_ui.dart';
 
 import 'charts.dart';
 
+GaugeDirection? parseGaugeDirection(String? value,
+    [GaugeDirection? defaultValue]) {
+  return parseEnum(GaugeDirection.values, value, defaultValue);
+}
+
+GaugeTickPosition? parseGaugeTickPosition(String? value,
+    [GaugeTickPosition? defaultValue]) {
+  return parseEnum(GaugeTickPosition.values, value, defaultValue);
+}
+
+GaugeMarkerLineAlignment? parseGaugeMarkerLineAlignment(String? value,
+    [GaugeMarkerLineAlignment? defaultValue]) {
+  return parseEnum(GaugeMarkerLineAlignment.values, value, defaultValue);
+}
+
+GaugeMarkerLabelSide? parseGaugeMarkerLabelSide(String? value,
+    [GaugeMarkerLabelSide? defaultValue]) {
+  return parseEnum(GaugeMarkerLabelSide.values, value, defaultValue);
+}
+
 class GaugeChartEventData extends Equatable {
   final String eventType;
   final int? ringIndex;
@@ -12,7 +32,7 @@ class GaugeChartEventData extends Equatable {
   final double? value;
   final double? angle;
   final double? radius;
-  final bool onValue;
+  final bool isOnValue;
 
   const GaugeChartEventData({
     required this.eventType,
@@ -21,7 +41,7 @@ class GaugeChartEventData extends Equatable {
     this.value,
     this.angle,
     this.radius,
-    this.onValue = false,
+    this.isOnValue = false,
   });
 
   factory GaugeChartEventData.fromDetails(
@@ -37,7 +57,7 @@ class GaugeChartEventData extends Equatable {
       value: touchedRing?.touchValue,
       angle: touchedRing?.touchAngle,
       radius: touchedRing?.touchRadius,
-      onValue: touchedRing?.isOnValue ?? false,
+      isOnValue: touchedRing?.isOnValue ?? false,
     );
   }
 
@@ -48,41 +68,38 @@ class GaugeChartEventData extends Equatable {
         'value': value,
         'angle': angle,
         'radius': radius,
-        'on_value': onValue,
+        'is_on_value': isOnValue,
       };
 
   @override
   List<Object?> get props =>
-      [eventType, ringIndex, zoneIndex, value, angle, radius, onValue];
+      [eventType, ringIndex, zoneIndex, value, angle, radius, isOnValue];
 }
 
-GaugeRing? parseGaugeRing(Control ring, BuildContext context) {
-  ring.notifyParent = true;
-  final width = ring.getDouble("width");
-  switch (ring.type) {
+GaugeRing? parseGaugeRing(dynamic ring, ThemeData theme) {
+  if (ring == null) return null;
+  final width = parseDouble(ring["width"]);
+  switch (ring["_type"]) {
     case "GaugeProgressRing":
       return GaugeProgressRing(
-        value: ring.getDouble("value", 0)!,
-        color: ring.getColor(
-            "color", context, Theme.of(context).colorScheme.primary)!,
-        backgroundColor: ring.getColor("bgcolor", context),
-        strokeCap:
-            parseStrokeCap(ring.getString("stroke_cap"), StrokeCap.butt)!,
+        value: parseDouble(ring["value"], 0)!,
+        color: parseColor(ring["color"], theme, theme.colorScheme.primary)!,
+        backgroundColor: parseColor(ring["bgcolor"], theme),
+        strokeCap: parseStrokeCap(ring["stroke_cap"], StrokeCap.butt)!,
         width: width,
       );
     case "GaugeZonesRing":
       return GaugeZonesRing(
-        zones: ring.children("zones").map((zone) {
-          zone.notifyParent = true;
-          return GaugeZone(
-            from: zone.getDouble("start", 0)!,
-            to: zone.getDouble("end", 0)!,
-            color: zone.getColor("color", context, Colors.transparent)!,
-            strokeCap:
-                parseStrokeCap(zone.getString("stroke_cap"), StrokeCap.butt)!,
-          );
-        }).toList(),
-        zonesSpace: ring.getDouble("zones_space", 0)!,
+        zones: (ring["zones"] as List? ?? [])
+            .map((zone) => GaugeZone(
+                  from: parseDouble(zone["start"], 0)!,
+                  to: parseDouble(zone["end"], 0)!,
+                  color: parseColor(zone["color"], theme, Colors.transparent)!,
+                  strokeCap:
+                      parseStrokeCap(zone["stroke_cap"], StrokeCap.butt)!,
+                ))
+            .toList(),
+        zonesSpace: parseDouble(ring["zones_space"], 0)!,
         width: width,
       );
   }
@@ -92,38 +109,36 @@ GaugeRing? parseGaugeRing(Control ring, BuildContext context) {
 /// Python can't pass a label builder, so labels arrive as a list with one entry
 /// per tick and each tick's value is mapped back to its index.
 GaugeTicks? parseGaugeTicks(
-    Control? ticks, double minValue, double maxValue, BuildContext context) {
+    dynamic ticks, double minValue, double maxValue, ThemeData theme) {
   if (ticks == null) return null;
-  ticks.notifyParent = true;
-  final theme = Theme.of(context);
   final defaultColor = theme.colorScheme.onSurface;
-  final count = ticks.getInt("count", 3)!;
-  final labels = ticks.get<List>("labels")?.map((e) => e.toString()).toList();
+  final count = parseInt(ticks["count"], 3)!;
+  final labels = (ticks["labels"] as List?)?.map((e) => e.toString()).toList();
 
   final GaugeTickPainter painter;
-  switch (ticks.type) {
+  switch (ticks["_type"]) {
     case "GaugeCircleTicks":
       painter = GaugeTickCirclePainter(
-        radius: ticks.getDouble("radius", 3)!,
-        color: ticks.getColor("color", context, defaultColor)!,
-        strokeWidth: ticks.getDouble("stroke_width", 0)!,
-        strokeColor: ticks.getColor("stroke_color", context, defaultColor)!,
+        radius: parseDouble(ticks["radius"], 3)!,
+        color: parseColor(ticks["color"], theme, defaultColor)!,
+        strokeWidth: parseDouble(ticks["stroke_width"], 0)!,
+        strokeColor: parseColor(ticks["stroke_color"], theme, defaultColor)!,
       );
     default:
       painter = GaugeTickLinePainter(
-        length: ticks.getDouble("length", 6)!,
-        thickness: ticks.getDouble("thickness", 2)!,
-        color: ticks.getColor("color", context, defaultColor)!,
+        length: parseDouble(ticks["length"], 6)!,
+        thickness: parseDouble(ticks["thickness"], 2)!,
+        color: parseColor(ticks["color"], theme, defaultColor)!,
       );
   }
 
   return GaugeTicks(
     count: count,
-    position: parseEnum(GaugeTickPosition.values, ticks.getString("position"),
-        GaugeTickPosition.outer)!,
-    offset: ticks.getDouble("offset", 0)!,
+    position:
+        parseGaugeTickPosition(ticks["position"], GaugeTickPosition.outer)!,
+    offset: parseDouble(ticks["offset"], 0)!,
     painter: painter,
-    checkToShowTick: ticks.getBool("show_endpoints", true)!
+    checkToShowTick: parseBool(ticks["show_endpoints"], true)!
         ? GaugeTicks.showAll
         : GaugeTicks.hideEndpoints,
     labelBuilder: labels == null
@@ -134,35 +149,36 @@ GaugeTicks? parseGaugeTicks(
                     .round();
             return index >= 0 && index < labels.length ? labels[index] : "";
           },
-    labelStyle: ticks.getTextStyle("label_style", theme),
-    labelOffset: ticks.getDouble("label_offset", 0)!,
+    labelStyle: parseTextStyle(ticks["label_style"], theme),
+    labelOffset: parseDouble(ticks["label_offset"], 0)!,
   );
 }
 
-GaugePointer? parseGaugePointer(Control pointer, BuildContext context) {
-  pointer.notifyParent = true;
-  final defaultColor = Theme.of(context).colorScheme.onSurface;
-  final value = pointer.getDouble("value", 0)!;
-  switch (pointer.type) {
+GaugePointer? parseGaugePointer(dynamic pointer, ThemeData theme) {
+  if (pointer == null) return null;
+  final defaultColor = theme.colorScheme.onSurface;
+  final value = parseDouble(pointer["value"], 0)!;
+  switch (pointer["_type"]) {
     case "GaugeNeedlePointer":
       return GaugePointer(
         value: value,
         painter: GaugePointerNeedlePainter(
-          length: pointer.getDouble("length", 60)!,
-          width: pointer.getDouble("width", 8)!,
-          tailLength: pointer.getDouble("tail_length", 0)!,
-          color: pointer.getColor("color", context, defaultColor)!,
+          length: parseDouble(pointer["length"], 60)!,
+          width: parseDouble(pointer["width"], 8)!,
+          tailLength: parseDouble(pointer["tail_length"], 0)!,
+          color: parseColor(pointer["color"], theme, defaultColor)!,
         ),
       );
     case "GaugeCirclePointer":
       return GaugePointer(
         value: value,
         painter: GaugePointerCirclePainter(
-          radius: pointer.getDouble("radius", 6)!,
-          anchorRadius: pointer.getDouble("anchor_radius", 0)!,
-          color: pointer.getColor("color", context, defaultColor)!,
-          strokeWidth: pointer.getDouble("stroke_width", 0)!,
-          strokeColor: pointer.getColor("stroke_color", context, defaultColor)!,
+          radius: parseDouble(pointer["radius"], 6)!,
+          anchorRadius: parseDouble(pointer["anchor_radius"], 0)!,
+          color: parseColor(pointer["color"], theme, defaultColor)!,
+          strokeWidth: parseDouble(pointer["stroke_width"], 0)!,
+          strokeColor:
+              parseColor(pointer["stroke_color"], theme, defaultColor)!,
         ),
       );
   }
@@ -171,30 +187,29 @@ GaugePointer? parseGaugePointer(Control pointer, BuildContext context) {
 
 /// fl_chart draws a marker label only when it has a style, so a label without
 /// one gets small text in the marker's color.
-GaugeMarker parseGaugeMarker(Control marker, BuildContext context) {
-  marker.notifyParent = true;
-  final theme = Theme.of(context);
-  final color = marker.getColor("color", context, theme.colorScheme.onSurface)!;
+GaugeMarker? parseGaugeMarker(dynamic marker, ThemeData theme) {
+  if (marker == null) return null;
+  final color =
+      parseColor(marker["color"], theme, theme.colorScheme.onSurface)!;
 
   return GaugeMarker(
-    value: marker.getDouble("value", 0)!,
-    position: parseEnum(GaugeTickPosition.values, marker.getString("position"),
-        GaugeTickPosition.outer)!,
-    offset: marker.getDouble("offset", 0)!,
+    value: parseDouble(marker["value"], 0)!,
+    position:
+        parseGaugeTickPosition(marker["position"], GaugeTickPosition.outer)!,
+    offset: parseDouble(marker["offset"], 0)!,
     painter: GaugeMarkerLinePainter(
-      length: marker.getDouble("length", 10)!,
-      thickness: marker.getDouble("thickness", 2)!,
+      length: parseDouble(marker["length"], 10)!,
+      thickness: parseDouble(marker["thickness"], 2)!,
       color: color,
-      strokeCap:
-          parseStrokeCap(marker.getString("stroke_cap"), StrokeCap.round)!,
-      alignment: parseEnum(GaugeMarkerLineAlignment.values,
-          marker.getString("alignment"), GaugeMarkerLineAlignment.centered)!,
-      label: marker.getString("label"),
-      labelStyle: marker.getTextStyle(
-          "label_style", theme, TextStyle(color: color, fontSize: 12)),
-      labelOffset: marker.getDouble("label_offset", 6)!,
-      labelSide: parseEnum(GaugeMarkerLabelSide.values,
-          marker.getString("label_side"), GaugeMarkerLabelSide.outward)!,
+      strokeCap: parseStrokeCap(marker["stroke_cap"], StrokeCap.round)!,
+      alignment: parseGaugeMarkerLineAlignment(
+          marker["alignment"], GaugeMarkerLineAlignment.centered)!,
+      label: marker["label"],
+      labelStyle: parseTextStyle(
+          marker["label_style"], theme, TextStyle(color: color, fontSize: 12)),
+      labelOffset: parseDouble(marker["label_offset"], 6)!,
+      labelSide: parseGaugeMarkerLabelSide(
+          marker["label_side"], GaugeMarkerLabelSide.outward)!,
     ),
   );
 }

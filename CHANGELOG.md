@@ -6,7 +6,12 @@
 
 ### Improvements
 
-* flet-charts: Add `PieChartSection.corner_radius` and stacked `PieChartSection.segments`, `BarChartRod.label`, `label`, `label_style` and `gradient` on `BarChartRodStackItem`, `ChartAxis.label_alignment`, `LineChartData.gradient_area`, and `ChartEventType` values for secondary-button (right-click) events by @ndonkoHenri.
+* flet-charts: Add fl_chart features to the existing charts by @ndonkoHenri:
+  * `PieChart`: `PieChartSection.corner_radius` and stacked `PieChartSection.segments`.
+  * `BarChart`: `BarChartRod.label`, and `label`, `label_style` and `gradient` on `BarChartRodStackItem`.
+  * `LineChart`: `LineChartData.gradient_area`.
+  * Axes: `ChartAxis.label_alignment`.
+  * Events: `ChartEventType` values for secondary-button (right-click) taps and long presses.
 
 ## 1.1.2
 

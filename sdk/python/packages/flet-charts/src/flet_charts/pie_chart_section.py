@@ -21,7 +21,7 @@ class PieChartSectionSegment(ft.BaseControl):
     segment.
 
     It is clamped between `0` and the section's
-    :attr:`~flet_charts.PieChartSection.radius`.
+    :attr:`flet_charts.PieChartSection.radius`.
     """
 
     from_radius: ft.Number = 0
@@ -30,7 +30,7 @@ class PieChartSectionSegment(ft.BaseControl):
     segment.
 
     It is clamped between `0` and the section's
-    :attr:`~flet_charts.PieChartSection.radius`. If it is not smaller than
+    :attr:`flet_charts.PieChartSection.radius`. If it is not smaller than
     :attr:`to_radius`, this segment is not drawn.
     """
 
