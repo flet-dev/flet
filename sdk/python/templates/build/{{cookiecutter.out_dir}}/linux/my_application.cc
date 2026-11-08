@@ -19,6 +19,15 @@
 struct _MyApplication {
   GtkApplication parent_instance;
   char** dart_entrypoint_arguments;
+  GtkWindow* window;
+  // Applies `page.window` size limits; see window_method_call_cb().
+  FlMethodChannel* window_channel;
+  // The size limits the app set, in content size, and which of them are set.
+  GdkGeometry size_limits;
+  GdkWindowHints size_limit_hints;
+  // The decoration size last added to `size_limits` for GTK.
+  gint applied_decoration_width;
+  gint applied_decoration_height;
 };
 
 G_DEFINE_TYPE(MyApplication, my_application, GTK_TYPE_APPLICATION)
@@ -332,6 +341,132 @@ static void install_desktop_entry(const gchar* exe_path) {
   }
 }
 
+// Maximum width or height of a window without a maximum on that axis. GDK
+// multiplies hints by the display scale for X11, so G_MAXINT would overflow
+// there and leave a 1 px limit.
+#define NO_MAX_WINDOW_SIZE G_MAXSHORT
+
+// Returns how much larger the window is than its content: the header bar and
+// shadow GTK draws around a window with client-side decorations, or nothing.
+// Only known once the window is shown.
+static void get_decoration_size(GtkWindow* window, gint* width, gint* height) {
+  *width = 0;
+  *height = 0;
+  GdkWindow* gdk_window = gtk_widget_get_window(GTK_WIDGET(window));
+  if (gdk_window == nullptr || !gtk_widget_get_mapped(GTK_WIDGET(window))) {
+    return;
+  }
+  gint content_width, content_height;
+  gtk_window_get_size(window, &content_width, &content_height);
+  *width = MAX(0, gdk_window_get_width(gdk_window) - content_width);
+  *height = MAX(0, gdk_window_get_height(gdk_window) - content_height);
+}
+
+// Hands the app's size limits to GTK.
+//
+// GTK reads geometry hints in window size, decorations included, while
+// `page.window.width`/`height` and the limits are content size, so the
+// decoration size is added to them. Hints go through GtkWindow, which would
+// replace any set directly on its GdkWindow the next time it computes its own.
+static void apply_size_limits(MyApplication* self) {
+  if (self->window == nullptr) {
+    return;
+  }
+  gint decoration_width, decoration_height;
+  get_decoration_size(self->window, &decoration_width, &decoration_height);
+  GdkGeometry geometry = self->size_limits;
+  if (self->size_limit_hints & GDK_HINT_MIN_SIZE) {
+    geometry.min_width += decoration_width;
+    geometry.min_height += decoration_height;
+  }
+  if (self->size_limit_hints & GDK_HINT_MAX_SIZE) {
+    geometry.max_width += decoration_width;
+    geometry.max_height += decoration_height;
+  }
+  self->applied_decoration_width = decoration_width;
+  self->applied_decoration_height = decoration_height;
+  gtk_window_set_geometry_hints(self->window, nullptr, &geometry,
+                                self->size_limit_hints);
+}
+
+// Re-applies the size limits when the decoration size changes: when the
+// window is first shown, its title bar is hidden or shown, or it is
+// maximized, tiled or restored.
+static void on_window_size_allocate(GtkWidget* widget,
+                                    GdkRectangle* allocation,
+                                    gpointer user_data) {
+  MyApplication* self = MY_APPLICATION(user_data);
+  if (!(self->size_limit_hints & (GDK_HINT_MIN_SIZE | GDK_HINT_MAX_SIZE))) {
+    return;
+  }
+  gint decoration_width, decoration_height;
+  get_decoration_size(GTK_WINDOW(widget), &decoration_width,
+                      &decoration_height);
+  if (decoration_width != self->applied_decoration_width ||
+      decoration_height != self->applied_decoration_height) {
+    apply_size_limits(self);
+  }
+}
+
+// Reads the size `key` of a method call's arguments, or returns -1 when it is
+// missing or null.
+static gint get_size_arg(FlValue* args, const gchar* key) {
+  FlValue* value = fl_value_get_type(args) == FL_VALUE_TYPE_MAP
+                       ? fl_value_lookup_string(args, key)
+                       : nullptr;
+  if (value == nullptr) {
+    return -1;
+  }
+  switch (fl_value_get_type(value)) {
+    case FL_VALUE_TYPE_FLOAT:
+      return (gint)CLAMP(fl_value_get_float(value), 0.0,
+                         (gdouble)NO_MAX_WINDOW_SIZE);
+    case FL_VALUE_TYPE_INT:
+      return (gint)CLAMP(fl_value_get_int(value), 0,
+                         (gint64)NO_MAX_WINDOW_SIZE);
+    default:
+      return -1;
+  }
+}
+
+// Handles the "flet/window" channel, which sets the window's minimum and
+// maximum content size. window_manager hands its limits to the GdkWindow,
+// where GtkWindow replaces them, so they would not apply. A width or height
+// that is null has no limit; both null clears the limit.
+static void window_method_call_cb(FlMethodChannel* channel,
+                                  FlMethodCall* method_call,
+                                  gpointer user_data) {
+  MyApplication* self = MY_APPLICATION(user_data);
+  const gchar* method = fl_method_call_get_name(method_call);
+  FlValue* args = fl_method_call_get_args(method_call);
+  gboolean is_min = strcmp(method, "setMinimumSize") == 0;
+  gboolean is_max = strcmp(method, "setMaximumSize") == 0;
+  if (!is_min && !is_max) {
+    fl_method_call_respond_not_implemented(method_call, nullptr);
+    return;
+  }
+
+  gint width = get_size_arg(args, "width");
+  gint height = get_size_arg(args, "height");
+  GdkWindowHints hint = is_min ? GDK_HINT_MIN_SIZE : GDK_HINT_MAX_SIZE;
+  if (width < 0 && height < 0) {
+    self->size_limit_hints =
+        static_cast<GdkWindowHints>(self->size_limit_hints & ~hint);
+  } else {
+    self->size_limit_hints =
+        static_cast<GdkWindowHints>(self->size_limit_hints | hint);
+  }
+  if (is_min) {
+    self->size_limits.min_width = MAX(width, 0);
+    self->size_limits.min_height = MAX(height, 0);
+  } else {
+    self->size_limits.max_width = width < 0 ? NO_MAX_WINDOW_SIZE : width;
+    self->size_limits.max_height = height < 0 ? NO_MAX_WINDOW_SIZE : height;
+  }
+  apply_size_limits(self);
+  fl_method_call_respond_success(method_call, nullptr, nullptr);
+}
+
 // Implements GApplication::activate.
 static void my_application_activate(GApplication* application) {
   MyApplication* self = MY_APPLICATION(application);
@@ -466,6 +601,18 @@ static void my_application_activate(GApplication* application) {
 
   fl_register_plugins(FL_PLUGIN_REGISTRY(view));
 
+  self->window = window;
+  g_object_add_weak_pointer(G_OBJECT(window),
+                            reinterpret_cast<gpointer*>(&self->window));
+  g_autoptr(FlStandardMethodCodec) codec = fl_standard_method_codec_new();
+  self->window_channel = fl_method_channel_new(
+      fl_engine_get_binary_messenger(fl_view_get_engine(view)), "flet/window",
+      FL_METHOD_CODEC(codec));
+  fl_method_channel_set_method_call_handler(
+      self->window_channel, window_method_call_cb, self, nullptr);
+  g_signal_connect(window, "size-allocate",
+                   G_CALLBACK(on_window_size_allocate), self);
+
   gtk_widget_grab_focus(GTK_WIDGET(view));
 }
 
@@ -511,6 +658,12 @@ static void my_application_shutdown(GApplication* application) {
 static void my_application_dispose(GObject* object) {
   MyApplication* self = MY_APPLICATION(object);
   g_clear_pointer(&self->dart_entrypoint_arguments, g_strfreev);
+  g_clear_object(&self->window_channel);
+  if (self->window != nullptr) {
+    g_object_remove_weak_pointer(G_OBJECT(self->window),
+                                 reinterpret_cast<gpointer*>(&self->window));
+    self->window = nullptr;
+  }
   G_OBJECT_CLASS(my_application_parent_class)->dispose(object);
 }
 
