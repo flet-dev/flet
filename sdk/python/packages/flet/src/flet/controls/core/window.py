@@ -163,22 +163,34 @@ class Window(BaseControl):
 
     max_width: Optional[Number] = None
     """
-    Defines the maximum width of the app window.
+    Defines the maximum width of the app window, measured like
+    :attr:`flet.Window.width`.
+
+    `None` means no limit.
     """
 
     max_height: Optional[Number] = None
     """
-    Defines the maximum height of the app window.
+    Defines the maximum height of the app window, measured like
+    :attr:`flet.Window.height`.
+
+    `None` means no limit.
     """
 
     min_width: Optional[Number] = None
     """
-    Defines the minimum width of the app window.
+    Defines the minimum width of the app window, measured like
+    :attr:`flet.Window.width`.
+
+    `None` means no limit.
     """
 
     min_height: Optional[Number] = None
     """
-    Defines the minimum height of the app window.
+    Defines the minimum height of the app window, measured like
+    :attr:`flet.Window.height`.
+
+    `None` means no limit.
     """
 
     opacity: Number = 1.0
