@@ -9,8 +9,8 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ### Added
 
-- Added `GaugeChart` for progress gauges, activity rings and speedometers, built from progress and zone rings with ticks, labels, markers and needle or circle pointers by @ndonkoHenri.
-- Added fl_chart features to the existing charts by @ndonkoHenri:
+- Added `GaugeChart` for progress gauges, activity rings and speedometers, built from progress and zone rings with ticks, labels, markers and needle or circle pointers ([#7066](https://github.com/flet-dev/flet/pull/7066)) by @ndonkoHenri.
+- Added fl_chart features to the existing charts ([#7066](https://github.com/flet-dev/flet/pull/7066)) by @ndonkoHenri:
   - `PieChart`: `PieChartSection.corner_radius` and stacked `PieChartSection.segments`.
   - `BarChart`: `BarChartRod.label`, and `label`, `label_style` and `gradient` on `BarChartRodStackItem`.
   - `LineChart`: `LineChartData.gradient_area`.
