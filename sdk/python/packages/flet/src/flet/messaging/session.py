@@ -523,7 +523,7 @@ class Session:
 
             try:
                 await asyncio.wait_for(evt.wait(), timeout=timeout)
-            except TimeoutError:
+            except asyncio.TimeoutError:
                 raise TimeoutError(
                     f"Timeout waiting for invokeMethod {method_name}({args}) call"
                 ) from None

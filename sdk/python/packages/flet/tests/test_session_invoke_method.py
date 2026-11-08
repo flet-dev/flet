@@ -25,6 +25,7 @@ class _Result(dict):
 @pytest.mark.asyncio
 @pytest.mark.parametrize("response_before_cancel", [False, True])
 async def test_cancelled_call_does_not_retain_response(response_before_cancel):
+    """Cancelled calls drop their response, whether it arrives before or after."""
     conn = _RecordingConnection()
     conn.pubsubhub = PubSubHub()
     conn.loop = asyncio.get_running_loop()
@@ -60,6 +61,7 @@ async def test_cancelled_call_does_not_retain_response(response_before_cancel):
 @pytest.mark.asyncio
 @pytest.mark.parametrize("close_session", [False, True])
 async def test_failed_call_does_not_retain_late_response(close_session):
+    """Timed-out and session-closed calls drop a response that arrives later."""
     conn = _RecordingConnection()
     conn.pubsubhub = PubSubHub()
     conn.loop = asyncio.get_running_loop()
@@ -81,7 +83,7 @@ async def test_failed_call_does_not_retain_late_response(close_session):
             with pytest.raises(RuntimeError, match="Session closed"):
                 await call
         else:
-            with pytest.raises((TimeoutError, asyncio.TimeoutError)):
+            with pytest.raises(TimeoutError, match="Timeout waiting for invokeMethod"):
                 await call
 
         result = _Result(app_name="My App", version="1.0.0")

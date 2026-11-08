@@ -1,3 +1,9 @@
+## 1.1.3
+
+### Bug fixes
+
+* Fix cancelled client method calls keeping their responses in memory for the rest of the session, and `invoke_method()` timeouts on Python 3.10 skipping the "Timeout waiting for invokeMethod" message ([#7065](https://github.com/flet-dev/flet/pull/7065)) by @remote-controlled-man.
+
 ## 1.1.2
 
 ### Improvements
@@ -6,7 +12,6 @@
 
 ### Bug fixes
 
-* Fix cancelled client method calls retaining pending requests and response data in long-lived sessions by @remote-controlled-man.
 * Fix web apps served by Flet (`flet run --web`, FastAPI) logging `AttributeError: 'NoneType' object has no attribute 'after_event'` when the browser reloads or closes the page while `main()` is still running ([#7055](https://github.com/flet-dev/flet/pull/7055)) by @FeodorFitsner.
 
 ## 1.1.1
