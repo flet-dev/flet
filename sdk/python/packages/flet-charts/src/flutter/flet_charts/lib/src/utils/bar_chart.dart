@@ -221,7 +221,7 @@ BarChartRodStackItem parseBarChartRodStackItem(
 ) {
   rodStackItem.notifyParent = true;
   return BarChartRodStackItem(
-    rodStackItem.getDouble("from_y")!,
+    rodStackItem.getDouble("from_y", 0)!,
     rodStackItem.getDouble("to_y", 0)!,
     rodStackItem.getColor("color", context)!,
     borderSide: rodStackItem.getBorderSide(

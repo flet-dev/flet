@@ -34,22 +34,16 @@ class _LineChartControlState extends State<LineChartControl> {
     super.dispose();
   }
 
+  /// Builds a new spots list on every update: the chart's implicit animation
+  /// tweens from the previous `LineChartData`, which must keep its own spots.
   _chartUpdated() {
     setState(() {
       for (var lineBar in widget.control.children("data_series")) {
         lineBar.notifyParent = true;
-        List<FlSpot> spots = [];
-        if (_barSpots.containsKey(lineBar.id)) {
-          spots = _barSpots[lineBar.id]!;
-        } else {
-          _barSpots[lineBar.id] = spots;
-        }
-
-        spots.clear();
-        for (var spot in lineBar.children("points")) {
+        _barSpots[lineBar.id] = lineBar.children("points").map((spot) {
           spot.notifyParent = true;
-          spots.add(FlSpot(spot.getDouble("x")!, spot.getDouble("y")!));
-        }
+          return FlSpot(spot.getDouble("x")!, spot.getDouble("y")!);
+        }).toList();
       }
 
       // removed data series

@@ -1,3 +1,10 @@
+## 1.1.3
+
+### Bug fixes
+
+* flet-charts: Fix `BarChart` failing to render when a `BarChartRodStackItem` has no `from_y` by @ndonkoHenri.
+* flet-charts: Fix `LineChart` jumping instead of animating when the points of a data series change ([flet-charts#8](https://github.com/flet-dev/flet-charts/issues/8)) by @ndonkoHenri.
+
 ## 1.1.2
 
 ### Improvements
