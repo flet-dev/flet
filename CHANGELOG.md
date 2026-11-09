@@ -1,3 +1,13 @@
+## 1.2.0
+
+### Breaking changes
+
+* The `full` flavor of the prebuilt Linux desktop client now needs `libwebkit2gtk-4.1-0` (Debian 12, Ubuntu 22.04 and newer) to start, even for apps that don't use `WebView`: install it with `sudo apt install libwebkit2gtk-4.1-0`. The default `light` flavor has no `WebView` and doesn't need it ([#6530](https://github.com/flet-dev/flet/issues/6530)) by @ndonkoHenri.
+
+### New features
+
+* Add `WebView` support on Windows (Edge WebView2) and Linux (WebKitGTK), and make its methods and events work on web for same-origin pages and HTML loaded with `load_html()`: `flet-webview` is now built on the [`webview_all`](https://pub.dev/packages/webview_all) Flutter package; on Linux it needs `libwebkit2gtk-4.1-0` (Debian 12, Ubuntu 22.04 and newer), so the prebuilt Linux desktop client has `WebView` only in its `full` flavor ([#6530](https://github.com/flet-dev/flet/issues/6530), [#5934](https://github.com/flet-dev/flet/issues/5934)) by @ndonkoHenri.
+
 ## 1.1.3
 
 ### Documentation
@@ -73,7 +83,6 @@
 * `flet build windows` now escapes the company and product names itself: remove any `""` or `\\` added by hand to work around the old behavior, otherwise the app looks for its data in a different folder ([#7038](https://github.com/flet-dev/flet/pull/7038)) by @ndonkoHenri.
 * The Flet desktop client is no longer built for Debian 10 on ARM64: `flet run` on an ARM64 Linux system with glibc older than 2.31 (Debian 10 and other glibc 2.28 distros) now stops with an error naming the glibc it needs. Debian 10 on x86-64 is still supported by @FeodorFitsner.
 * flet-audio: On Android, every `Audio` of an app now plays together by default, where one used to pause the others for good, and other apps' audio gets quieter instead of pausing. Set `context=AudioContext(focus=AudioFocus.GAIN)` on a music player to keep pausing other audio. See the [Android: every Audio now plays together by default](/docs/updates/breaking-changes/v1-1-0/android-audio-focus-default) guide ([#7034](https://github.com/flet-dev/flet/issues/7034), [#7043](https://github.com/flet-dev/flet/pull/7043)) by @ndonkoHenri.
-* The `full` flavor of the prebuilt Linux desktop client now needs `libwebkit2gtk-4.1-0` (Debian 12, Ubuntu 22.04 and newer) to start, even for apps that don't use `WebView`: install it with `sudo apt install libwebkit2gtk-4.1-0`. The default `light` flavor has no `WebView` and doesn't need it ([#6530](https://github.com/flet-dev/flet/issues/6530)) by @ndonkoHenri.
 
 ### New features
 
@@ -92,10 +101,6 @@
 * `flet build`: add `[tool.flet.android]` settings for the app's [Java compile options](/docs/publish/android#java-compile-options) (`compile_options`), [Gradle dependencies](/docs/publish/android#gradle-dependencies) (`gradle_dependencies`), and manifest [receivers](/docs/publish/android#receivers) (`receiver`) and [services](/docs/publish/android#services) (`service`) ([#6999](https://github.com/flet-dev/flet/pull/6999)) by @ndonkoHenri.
 * Add `text_input_action` to `TextField` and `CupertinoTextField`, with the `TextInputAction` enum, to choose the action button of the onscreen keyboard: `TextInputAction.NEXT` moves focus to the next focusable control, keeping the keyboard open when that is another text field ([#6962](https://github.com/flet-dev/flet/issues/6962), [#7021](https://github.com/flet-dev/flet/pull/7021)) by @ndonkoHenri.
 * flet-audio: Add `Audio.context` (`AudioContext`, `AudioFocus`) to configure mobile audio focus and silent mode ([#7034](https://github.com/flet-dev/flet/issues/7034), [#7041](https://github.com/flet-dev/flet/pull/7041), [#7043](https://github.com/flet-dev/flet/pull/7043)) by @BartoszKog and @ndonkoHenri.
-
-* **`WebView` on Windows and Linux, and on every platform through `webview_all`.** `flet-webview` is now built on the [`webview_all`](https://pub.dev/packages/webview_all) Flutter package instead of `webview_flutter`, which adds Windows (Edge WebView2) and Linux (WebKitGTK) support. On web, its methods and events now work for same-origin pages and HTML loaded with `load_html()`, instead of only showing the initial `url`. Linux requires `libwebkit2gtk-4.1-0` (Debian 12, Ubuntu 22.04 and newer), so the prebuilt Linux desktop client includes `WebView` only in its `full` flavor ([#6530](https://github.com/flet-dev/flet/issues/6530), [#5934](https://github.com/flet-dev/flet/issues/5934)) by @ndonkoHenri.
-
-  **Compatibility:** on Debian 12, Ubuntu 22.04 and newer, the `full` Linux desktop client does not start unless `libwebkit2gtk-4.1-0` is installed, even for apps that do not use `WebView`. `flet build linux` of an app using `flet-webview` needs `libwebkit2gtk-4.1-dev` on the build machine.
 
 ### Improvements
 
