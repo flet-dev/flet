@@ -2,7 +2,7 @@
 
 ### Bug fixes
 
-* Fix apps packaged with plain `pyinstaller` downloading the Flet desktop client on their first start, and failing to build on macOS ([#7053](https://github.com/flet-dev/flet/issues/7053)) by @ndonkoHenri.
+* Fix apps packaged with plain `pyinstaller` downloading the Flet desktop client on their first start, and failing to build on macOS ([#7053](https://github.com/flet-dev/flet/issues/7053), [#7068](https://github.com/flet-dev/flet/pull/7068)) by @ndonkoHenri.
 
 ## 1.1.2
 
