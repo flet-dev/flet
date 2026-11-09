@@ -1,3 +1,9 @@
+## 1.1.3
+
+### Bug fixes
+
+* Fix apps packaged with plain `pyinstaller` downloading the Flet desktop client on their first start, and failing to build on macOS ([#7053](https://github.com/flet-dev/flet/issues/7053)) by @ndonkoHenri.
+
 ## 1.1.2
 
 ### Improvements
@@ -6,7 +12,6 @@
 
 ### Bug fixes
 
-* Fix apps packaged with plain `pyinstaller` downloading the Flet desktop client on their first start, and failing to build on macOS ([#7053](https://github.com/flet-dev/flet/issues/7053)) by @ndonkoHenri.
 * Fix web apps served by Flet (`flet run --web`, FastAPI) logging `AttributeError: 'NoneType' object has no attribute 'after_event'` when the browser reloads or closes the page while `main()` is still running ([#7055](https://github.com/flet-dev/flet/pull/7055)) by @FeodorFitsner.
 
 ## 1.1.1
