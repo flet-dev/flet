@@ -200,7 +200,7 @@ CROSS_PLATFORM_PERMISSIONS = {
 # produces. Both stamps hash it, so upgrading flet-cli regenerates rather
 # than leaving a user with output from the previous implementation. Nothing
 # else encodes the generator's identity now that the pubspec no longer does.
-ICONS_GENERATOR_VERSION = 2
+ICONS_GENERATOR_VERSION = 3
 SPLASH_GENERATOR_VERSION = 4
 
 # `flet build` target platform -> the platform name flet-platform-assets uses.
@@ -1955,7 +1955,9 @@ class BaseBuildCommand(BaseFlutterCommand):
             # Whether the source is a generic `icon.png` rather than artwork the
             # author framed for this platform. A generic icon gets the platform's
             # margin computed for it; `icon_<platform>.png` is a finished
-            # composition and is used exactly as supplied.
+            # composition and is used exactly as supplied. A `.ico` goes one
+            # step further: on Windows it is copied whole, every size it holds
+            # included, rather than rendered from its largest image.
             derived = False
             if self.assets_path.exists():
                 # Only the target platform's chain is resolved; the other five
@@ -1991,6 +1993,11 @@ class BaseBuildCommand(BaseFlutterCommand):
             if not hash.has_changed() and not self._icons_missing(platform):
                 hash.commit()
                 console.log(f"App icons are up to date {self.emojis['checkmark']}")
+                return
+
+            if platform == "windows" and self._copy_windows_ico(source_path):
+                console.log(f"Copied app icon as supplied {self.emojis['checkmark']}")
+                hash.commit()
                 return
 
             try:
@@ -2096,6 +2103,40 @@ class BaseBuildCommand(BaseFlutterCommand):
                 title="App icon",
             )
             return (255, 255, 255)
+
+    def _copy_windows_ico(self, source_path: Path) -> bool:
+        """
+        Copy a supplied `.ico` into the Windows runner as it is.
+
+        A `.ico` is already a Windows icon: its author chose the sizes it
+        holds and drew each of them, so there is nothing for the generator to
+        add. Rendering it instead keeps only its largest image, resamples the
+        other sizes from that and swaps its size list for the one the
+        template's placeholder declares, which discards any artwork made for
+        the small sizes - the very thing a `.ico` is supplied for.
+
+        Mirrors `write()` in only overwriting an icon the project declares:
+        if the template ships no `app_icon.ico`, none is created, since
+        nothing would reference it.
+
+        Args:
+            source_path: The resolved icon source.
+
+        Returns:
+            `True` when `source_path` is a `.ico` and has been dealt with,
+                `False` when it is another kind of image, or no Windows icon
+                at all, so the caller renders it as usual and reports what
+                Pillow makes of it.
+        """
+
+        assert self.flutter_dir
+
+        if source_path.suffix.lower() != ".ico" or not self.get_ico_sizes(source_path):
+            return False
+        target = self.flutter_dir / "windows" / "runner" / "resources" / "app_icon.ico"
+        if target.is_file():
+            shutil.copyfile(source_path, target)
+        return True
 
     def _icon_spec(self, platform: str):
         """
@@ -4338,9 +4379,9 @@ class BaseBuildCommand(BaseFlutterCommand):
 
         # Drop candidates that cannot serve this target: .icns and .ico are
         # container formats for the platform that defines them. Pillow reads
-        # both, and `load_source` takes their largest frame, but using a
-        # macOS icon set as an Android launcher icon is not what the file
-        # name asked for.
+        # both, and `load_source` takes their largest frame (on Windows a
+        # `.ico` is copied whole instead), but using a macOS icon set as an
+        # Android launcher icon is not what the file name asked for.
         def _incompatible(p: str) -> bool:
             ext = Path(p).suffix.lower()
             return (ext == ".icns" and self.target_platform != "macos") or (

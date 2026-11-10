@@ -1005,6 +1005,10 @@ percentages match Flet's automatic framing for transparent artwork:
 | `icon_windows.png` or `icon_windows.ico` | 256 × 256 or larger | Can fill the canvas. |
 | `icon_linux.png` | 512 × 512 or larger | Can fill the canvas. |
 
+A `.ico` is used as it is: every size it contains goes into the app unchanged,
+so you can draw the small sizes by hand instead of having them scaled down from
+the largest. A `.png` is rendered to each size from the one image.
+
 For the circular areas, keep the entire logo inside the circle, including its
 corners. A logo that fits a square of the same width can still extend outside it.
 

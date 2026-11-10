@@ -1,3 +1,9 @@
+## 1.1.3
+
+### Bug fixes
+
+* Fix `flet build windows` rendering a supplied `assets/icon_windows.ico` from its largest image, which dropped the other sizes it held and replaced its size list with the template's. The file is now copied into the app as it is, as documented, so artwork drawn for the small sizes is what Windows shows by @arthur-tacca.
+
 ## 1.1.2
 
 ### Improvements
