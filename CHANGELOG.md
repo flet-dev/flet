@@ -2,11 +2,11 @@
 
 ### Improvements
 
-* Scroll long pages and tables smoothly: every control used to get its own compositing layer, so a page of thousands of controls, like a `DataTable` with thousands of rows, stuttered on every scroll frame; controls now add a layer only while their `opacity` is between 0 and 1, and a `DataTable` no longer repaints all of its rows as it scrolls by @FeodorFitsner.
+* Scroll long pages and tables smoothly: every control used to get its own compositing layer, so a page of thousands of controls, like a `DataTable` with thousands of rows, stuttered on every scroll frame; controls now add a layer only while their `opacity` is between 0 and 1, and a `DataTable` no longer repaints all of its rows as it scrolls ([#7076](https://github.com/flet-dev/flet/pull/7076)) by @FeodorFitsner.
 
 ### Bug fixes
 
-* Fix `DataTable.horizontal_lines` having no effect by @FeodorFitsner.
+* Fix `DataTable.horizontal_lines` having no effect ([#7076](https://github.com/flet-dev/flet/pull/7076)) by @FeodorFitsner.
 
 ## 1.1.2
 

@@ -1,7 +1,7 @@
 ## 1.1.3
 
-* `LayoutControl` and `BaseControl` wrap a control in `_ControlOpacity` instead of `Opacity`: it keeps the always-present wrapper (stable tree shape) but adds no layer at opacity 1.0 or 0.0 and pushes an `OpacityLayer` only in between. Flutter's `RenderOpacity` is a repaint boundary with its own `OpacityLayer` at any opacity above 0, so every control had its own layer, and on web a page of thousands of controls spent each frame walking them by @FeodorFitsner.
-* `DataTableControl` paints the table behind a `RepaintBoundary`, so a scrolling parent moves its recorded picture instead of repainting every row each frame, and reads `horizontal_lines` (it read `horizontal_lLines`, so the lines never showed) by @FeodorFitsner.
+* `LayoutControl` and `BaseControl` wrap a control in `_ControlOpacity` instead of `Opacity`: it keeps the always-present wrapper (stable tree shape) but adds no layer at opacity 1.0 or 0.0 and pushes an `OpacityLayer` only in between. Flutter's `RenderOpacity` is a repaint boundary with its own `OpacityLayer` at any opacity above 0, so every control had its own layer, and on web a page of thousands of controls spent each frame walking them ([#7076](https://github.com/flet-dev/flet/pull/7076)) by @FeodorFitsner.
+* `DataTableControl` paints the table behind a `RepaintBoundary`, so a scrolling parent moves its recorded picture instead of repainting every row each frame, and reads `horizontal_lines` (it read `horizontal_lLines`, so the lines never showed) ([#7076](https://github.com/flet-dev/flet/pull/7076)) by @FeodorFitsner.
 
 ## 1.1.2
 
