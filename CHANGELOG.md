@@ -1,3 +1,18 @@
+## 1.2.0
+
+### New features
+
+* flet-charts: Add `GaugeChart` for progress gauges, activity rings and speedometers, built from progress and zone rings with ticks, labels, markers and needle or circle pointers. See [GaugeChart](https://flet.dev/docs/controls/charts/gaugechart) ([#7066](https://github.com/flet-dev/flet/pull/7066)) by @ndonkoHenri.
+
+### Improvements
+
+* flet-charts: Add fl_chart features to the existing charts ([#7066](https://github.com/flet-dev/flet/pull/7066)) by @ndonkoHenri:
+  * `PieChart`: `PieChartSection.corner_radius` and stacked `PieChartSection.segments`.
+  * `BarChart`: `BarChartRod.label`, and `label`, `label_style` and `gradient` on `BarChartRodStackItem`.
+  * `LineChart`: `LineChartData.gradient_area`.
+  * Axes: `ChartAxis.label_alignment`.
+  * Events: `ChartEventType` values for secondary-button (right-click) taps and long presses.
+
 ## 1.1.2
 
 ### Improvements

@@ -161,6 +161,9 @@ LineChartBarData parseLineChartBarData(
               (dp) => !interactiveChart && dp.value.getBool("selected", false)!)
           .map((e) => e.key)
           .toList(),
+      gradientArea: parseLineChartGradientArea(
+          chartData.getString("gradient_area"),
+          LineChartGradientArea.rectAroundTheLine)!,
       isCurved: chartData.getBool("curved", false)!,
       isStrokeCapRound: chartData.getBool("rounded_stroke_cap", false)!,
       isStrokeJoinRound: chartData.getBool("rounded_stroke_join", false)!,
@@ -217,4 +220,9 @@ LineChartBarData parseLineChartBarData(
           : null,
       color: barColor,
       gradient: barGradient);
+}
+
+LineChartGradientArea? parseLineChartGradientArea(String? value,
+    [LineChartGradientArea? defaultValue]) {
+  return parseEnum(LineChartGradientArea.values, value, defaultValue);
 }

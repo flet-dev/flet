@@ -147,6 +147,8 @@ AxisTitles parseAxisTitles(Control? control) {
   return AxisTitles(
       axisNameWidget: control.buildWidget("title"),
       axisNameSize: control.getDouble("title_size", 16)!,
+      sideTitleAlignment: parseSideTitleAlignment(
+          control.getString("label_alignment"), SideTitleAlignment.outside)!,
       sideTitles: SideTitles(
         showTitles: control.getBool("show_labels", true)!,
         reservedSize: control.getDouble("label_size", 22)!,
@@ -175,6 +177,11 @@ FlErrorRange? parseFlErrorRange(dynamic value, [FlErrorRange? defaultValue]) {
   );
 }
 
+SideTitleAlignment? parseSideTitleAlignment(String? value,
+    [SideTitleAlignment? defaultValue]) {
+  return parseEnum(SideTitleAlignment.values, value, defaultValue);
+}
+
 FLHorizontalAlignment? parseFLHorizontalAlignment(String? value,
     [FLHorizontalAlignment? defaultValue]) {
   if (value == null) return defaultValue;
@@ -183,20 +190,26 @@ FLHorizontalAlignment? parseFLHorizontalAlignment(String? value,
       defaultValue;
 }
 
-String resolveFlTouchEventType(FlTouchEvent event) {
-  if (event is FlPointerEnterEvent) return "pointerEnter";
-  if (event is FlPointerExitEvent) return "pointerExit";
-  if (event is FlPointerHoverEvent) return "pointerHover";
-  if (event is FlPanCancelEvent) return "panCancel";
-  if (event is FlPanDownEvent) return "panDown";
-  if (event is FlPanEndEvent) return "panEnd";
-  if (event is FlPanStartEvent) return "panStart";
-  if (event is FlPanUpdateEvent) return "panUpdate";
-  if (event is FlLongPressEnd) return "longPressEnd";
-  if (event is FlLongPressMoveUpdate) return "longPressMoveUpdate";
-  if (event is FlLongPressStart) return "longPressStart";
-  if (event is FlTapCancelEvent) return "tapCancel";
-  if (event is FlTapDownEvent) return "tapDown";
-  if (event is FlTapUpEvent) return "tapUp";
-  return "undefined";
-}
+String resolveFlTouchEventType(FlTouchEvent event) => switch (event) {
+      FlPointerEnterEvent() => "pointerEnter",
+      FlPointerExitEvent() => "pointerExit",
+      FlPointerHoverEvent() => "pointerHover",
+      FlPanCancelEvent() => "panCancel",
+      FlPanDownEvent() => "panDown",
+      FlPanEndEvent() => "panEnd",
+      FlPanStartEvent() => "panStart",
+      FlPanUpdateEvent() => "panUpdate",
+      FlLongPressEnd() => "longPressEnd",
+      FlLongPressMoveUpdate() => "longPressMoveUpdate",
+      FlLongPressStart() => "longPressStart",
+      FlTapCancelEvent() => "tapCancel",
+      FlTapDownEvent() => "tapDown",
+      FlTapUpEvent() => "tapUp",
+      FlSecondaryTapDownEvent() => "secondaryTapDown",
+      FlSecondaryTapUpEvent() => "secondaryTapUp",
+      FlSecondaryTapCancelEvent() => "secondaryTapCancel",
+      FlSecondaryLongPressStart() => "secondaryLongPressStart",
+      FlSecondaryLongPressMoveUpdate() => "secondaryLongPressMoveUpdate",
+      FlSecondaryLongPressEnd() => "secondaryLongPressEnd",
+      _ => "undefined",
+    };

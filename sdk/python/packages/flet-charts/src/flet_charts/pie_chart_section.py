@@ -3,7 +3,48 @@ from typing import Optional
 
 import flet as ft
 
-__all__ = ["PieChartSection"]
+__all__ = ["PieChartSection", "PieChartSectionSegment"]
+
+
+@ft.control("PieChartSectionSegment")
+class PieChartSectionSegment(ft.BaseControl):
+    """
+    A band of a :class:`~flet_charts.PieChartSection`, drawn over the section from
+    :attr:`from_radius` to :attr:`to_radius`.
+
+    Segments split a section into concentric layers, as in a stacked pie chart.
+    """
+
+    to_radius: ft.Number
+    """
+    The distance from the inner edge of the section to the outer edge of this
+    segment.
+
+    It is clamped between `0` and the section's
+    :attr:`flet_charts.PieChartSection.radius`.
+    """
+
+    from_radius: ft.Number = 0
+    """
+    The distance from the inner edge of the section to the inner edge of this
+    segment.
+
+    It is clamped between `0` and the section's
+    :attr:`flet_charts.PieChartSection.radius`. If it is not smaller than
+    :attr:`to_radius`, this segment is not drawn.
+    """
+
+    color: ft.ColorValue = ft.Colors.PURPLE
+    """
+    The color of this segment.
+    """
+
+    gradient: Optional[ft.Gradient] = None
+    """
+    The gradient this segment is filled with.
+
+    Takes precedence over :attr:`color`.
+    """
 
 
 @ft.control("PieChartSection")
@@ -71,6 +112,18 @@ class PieChartSection(ft.BaseControl):
     gradient: Optional[ft.Gradient] = None
     """
     Defines the gradient of section. If specified, overrides the color setting.
+    """
+
+    corner_radius: ft.Number = 0
+    """
+    The radius of the rounded corners of the section.
+
+    Negative values are treated as `0`.
+    """
+
+    segments: list[PieChartSectionSegment] = field(default_factory=list)
+    """
+    The segments drawn over this section, in order.
     """
 
     def init(self):

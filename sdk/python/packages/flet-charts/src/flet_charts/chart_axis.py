@@ -1,9 +1,35 @@
 from dataclasses import field
+from enum import Enum
 from typing import Optional
 
 import flet as ft
 
-__all__ = ["ChartAxis", "ChartAxisLabel"]
+__all__ = ["ChartAxis", "ChartAxisLabel", "ChartAxisLabelAlignment"]
+
+
+class ChartAxisLabelAlignment(Enum):
+    """
+    Where the labels of a :class:`~flet_charts.ChartAxis` are drawn, relative to
+    the border of the chart.
+    """
+
+    OUTSIDE = "outside"
+    """
+    Outside the chart area, in the space reserved by
+    :attr:`flet_charts.ChartAxis.label_size`.
+    """
+
+    BORDER = "border"
+    """
+    Straddling the border of the chart area, with half of
+    :attr:`flet_charts.ChartAxis.label_size` reserved outside it.
+    """
+
+    INSIDE = "inside"
+    """
+    Inside the chart area, over the chart's content, with no space reserved
+    outside it.
+    """
 
 
 @ft.control("ChartAxisLabel")
@@ -76,6 +102,11 @@ class ChartAxis(ft.BaseControl):
     """
     Whether to display a label for the maximum value
     independent of the sampling interval.
+    """
+
+    label_alignment: ChartAxisLabelAlignment = ChartAxisLabelAlignment.OUTSIDE
+    """
+    Where the labels are drawn, relative to the border of the chart.
     """
 
     def before_update(self):

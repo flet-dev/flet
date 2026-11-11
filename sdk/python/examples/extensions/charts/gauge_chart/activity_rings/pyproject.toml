@@ -1,0 +1,27 @@
+[project]
+name = "charts-gauge-chart-activity-rings"
+version = "1.0.0"
+description = "Concentric activity rings that highlight the hovered ring and show its progress."
+requires-python = ">=3.10"
+keywords = ["charts", "gauge-chart", "activity-rings", "flet"]
+authors = [{ name = "Flet team", email = "hello@flet.dev" }]
+dependencies = ["flet", "flet-charts"]
+
+[dependency-groups]
+dev = ["flet-cli", "flet-desktop", "flet-web"]
+
+[tool.flet.gallery]
+categories = ["Charts/GaugeChart"]
+
+[tool.flet.metadata]
+title = "Activity rings"
+docs_intro = "Three full-circle progress rings share one scale. Hovering or tapping a ring highlights it and shows its progress below the chart."
+controls = ["SafeArea", "Column", "GaugeChart", "Text"]
+layout_pattern = "single-chart"
+complexity = "basic"
+features = ["chart visualization", "hover effects", "event handling"]
+
+[tool.flet]
+org = "dev.flet"
+company = "Flet"
+copyright = "Copyright (C) 2023-2026 by Flet"

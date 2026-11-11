@@ -5,7 +5,11 @@ from flet_charts.bar_chart import (
     BarChartTooltipDirection,
 )
 from flet_charts.bar_chart_group import BarChartGroup
-from flet_charts.bar_chart_rod import BarChartRod, BarChartRodTooltip
+from flet_charts.bar_chart_rod import (
+    BarChartRod,
+    BarChartRodLabel,
+    BarChartRodTooltip,
+)
 from flet_charts.bar_chart_rod_stack_item import BarChartRodStackItem
 from flet_charts.candlestick_chart import (
     CandlestickChart,
@@ -16,14 +20,36 @@ from flet_charts.candlestick_chart_spot import (
     CandlestickChartSpot,
     CandlestickChartSpotTooltip,
 )
-from flet_charts.chart_axis import ChartAxis, ChartAxisLabel
+from flet_charts.chart_axis import (
+    ChartAxis,
+    ChartAxisLabel,
+    ChartAxisLabelAlignment,
+)
+from flet_charts.gauge_chart import GaugeChart, GaugeChartEvent, GaugeDirection
+from flet_charts.gauge_marker import (
+    GaugeMarker,
+    GaugeMarkerAlignment,
+    GaugeMarkerLabelSide,
+)
+from flet_charts.gauge_pointer import (
+    GaugeCirclePointer,
+    GaugeNeedlePointer,
+    GaugePointer,
+)
+from flet_charts.gauge_ring import (
+    GaugeProgressRing,
+    GaugeRing,
+    GaugeZone,
+    GaugeZonesRing,
+)
+from flet_charts.gauge_ticks import GaugeCircleTicks, GaugeLineTicks, GaugeTicks
 from flet_charts.line_chart import (
     LineChart,
     LineChartEvent,
     LineChartEventSpot,
     LineChartTooltip,
 )
-from flet_charts.line_chart_data import LineChartData
+from flet_charts.line_chart_data import LineChartData, LineChartGradientArea
 from flet_charts.line_chart_data_point import (
     LineChartDataPoint,
     LineChartDataPointTooltip,
@@ -39,7 +65,7 @@ from flet_charts.matplotlib_chart_canvas import (
 )
 from flet_charts.matplotlib_chart_with_toolbar import MatplotlibChartWithToolbar
 from flet_charts.pie_chart import PieChart, PieChartEvent
-from flet_charts.pie_chart_section import PieChartSection
+from flet_charts.pie_chart_section import PieChartSection, PieChartSectionSegment
 from flet_charts.plotly_chart import PlotlyChart
 from flet_charts.radar_chart import (
     RadarChart,
@@ -64,6 +90,7 @@ from flet_charts.types import (
     ChartPointLine,
     ChartPointShape,
     ChartSquarePoint,
+    GaugeTickPosition,
     HorizontalAlignment,
 )
 
@@ -72,6 +99,7 @@ __all__ = [
     "BarChartEvent",
     "BarChartGroup",
     "BarChartRod",
+    "BarChartRodLabel",
     "BarChartRodStackItem",
     "BarChartRodTooltip",
     "BarChartTooltip",
@@ -83,6 +111,7 @@ __all__ = [
     "CandlestickChartTooltip",
     "ChartAxis",
     "ChartAxisLabel",
+    "ChartAxisLabelAlignment",
     "ChartCirclePoint",
     "ChartCrossPoint",
     "ChartDataPointTooltip",
@@ -92,6 +121,23 @@ __all__ = [
     "ChartPointLine",
     "ChartPointShape",
     "ChartSquarePoint",
+    "GaugeChart",
+    "GaugeChartEvent",
+    "GaugeCirclePointer",
+    "GaugeCircleTicks",
+    "GaugeDirection",
+    "GaugeLineTicks",
+    "GaugeMarker",
+    "GaugeMarkerAlignment",
+    "GaugeMarkerLabelSide",
+    "GaugeNeedlePointer",
+    "GaugePointer",
+    "GaugeProgressRing",
+    "GaugeRing",
+    "GaugeTickPosition",
+    "GaugeTicks",
+    "GaugeZone",
+    "GaugeZonesRing",
     "HorizontalAlignment",
     "LineChart",
     "LineChartData",
@@ -99,6 +145,7 @@ __all__ = [
     "LineChartDataPointTooltip",
     "LineChartEvent",
     "LineChartEventSpot",
+    "LineChartGradientArea",
     "LineChartTooltip",
     "MatplotlibChart",
     "MatplotlibChartCanvas",
@@ -109,6 +156,7 @@ __all__ = [
     "PieChart",
     "PieChartEvent",
     "PieChartSection",
+    "PieChartSectionSegment",
     "PlotlyChart",
     "RadarChart",
     "RadarChartEvent",
