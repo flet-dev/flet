@@ -43,7 +43,7 @@ from ._models import (
     SplashOptions,
     Target,
 )
-from ._source import SourceError, load_source, square
+from ._source import SourceError, ico_sizes, load_source, square
 from ._splash import (
     ANDROID_12_VISIBLE_FRACTION,
     ANDROID_DENSITIES,
@@ -80,6 +80,7 @@ __all__ = [
     "WEB_SCALES",
     "WINDOWS_ICO_SIZES",
     "density_size",
+    "ico_sizes",
     "linux_targets",
     "load_source",
     "parse_hex_color",

@@ -5,7 +5,7 @@ photo, a palette PNG, an animated GIF, a banner that is not square.
 """
 
 import pytest
-from flet_platform_assets import SourceError, load_source, square
+from flet_platform_assets import SourceError, ico_sizes, load_source, square
 from flet_platform_assets._source import MAX_SOURCE_SIZE
 from PIL import Image
 
@@ -13,6 +13,36 @@ from PIL import Image
 def save(img: Image.Image, path, **kwargs) -> str:
     img.save(path, **kwargs)
     return str(path)
+
+
+class TestIcoSizes:
+    """`ico_sizes` proves a `.ico` whole, not just that it has a directory."""
+
+    def _ico(self, tmp_path, sizes):
+        path = tmp_path / "i.ico"
+        save(
+            Image.new("RGBA", (256, 256), (255, 0, 85, 255)),
+            path,
+            sizes=[(size, size) for size in sizes],
+        )
+        return path
+
+    def test_reports_the_sizes_of_a_whole_file(self, tmp_path):
+        assert ico_sizes(self._ico(tmp_path, (48, 16, 256))) == (16, 48, 256)
+
+    def test_truncated_file_is_empty(self, tmp_path):
+        """The directory is intact, so only decoding the images finds this."""
+        path = self._ico(tmp_path, (16, 256))
+        data = path.read_bytes()
+        path.write_bytes(data[: len(data) // 2])
+        assert ico_sizes(path) == ()
+
+    def test_not_an_icon_is_empty(self, tmp_path):
+        garbage = tmp_path / "i.ico"
+        garbage.write_bytes(b"not-actually-an-ico")
+        assert ico_sizes(garbage) == ()
+        png = save(Image.new("RGBA", (64, 64), (255, 0, 85, 255)), tmp_path / "p.png")
+        assert ico_sizes(png) == ()
 
 
 class TestLoadSource:

@@ -23,6 +23,7 @@ from flet_platform_assets import (
     SourceError,
     SplashOptions,
     density_size,
+    ico_sizes,
     linux_targets,
     load_source,
     parse_hex_color,
@@ -2115,6 +2116,13 @@ class BaseBuildCommand(BaseFlutterCommand):
         template's placeholder declares, which discards any artwork made for
         the small sizes - the very thing a `.ico` is supplied for.
 
+        The file is decoded in full first, so a damaged one is not copied
+        only to fail the Windows resource compiler later: it is rendered like
+        any other image, which reports it and falls back to the default icon.
+        A file whose largest image is smaller than the largest icon the
+        project declares is copied with a warning, as the render path warns
+        of a small source.
+
         Mirrors `write()` in only overwriting an icon the project declares:
         if the template ships no `app_icon.ico`, none is created, since
         nothing would reference it.
@@ -2125,14 +2133,30 @@ class BaseBuildCommand(BaseFlutterCommand):
         Returns:
             `True` when `source_path` is a `.ico` and has been dealt with,
                 `False` when it is another kind of image, or no Windows icon
-                at all, so the caller renders it as usual and reports what
-                Pillow makes of it.
+                that can be read in full, so the caller renders it as usual
+                and reports what Pillow makes of it.
         """
 
         assert self.flutter_dir
 
-        if source_path.suffix.lower() != ".ico" or not self.get_ico_sizes(source_path):
+        if source_path.suffix.lower() != ".ico":
             return False
+        sizes = ico_sizes(source_path)
+        if not sizes:
+            return False
+
+        # Read, and so record, the placeholder's sizes before it is overwritten.
+        spec = self._icon_spec("windows") or DEFAULT_SPECS["windows"]
+        declared = max(spec.ico_sizes, default=0)
+        if max(sizes) < declared:
+            self.warn(
+                f"icon source's largest image is {max(sizes)}px, but this project "
+                f"uses icons up to {declared}px. Windows enlarges it for those "
+                f"sizes and they will look soft. Add a {declared}x{declared} image "
+                "to the .ico.",
+                title="App icon",
+                file=annotation_path(source_path),
+            )
         target = self.flutter_dir / "windows" / "runner" / "resources" / "app_icon.ico"
         if target.is_file():
             shutil.copyfile(source_path, target)
@@ -2168,13 +2192,48 @@ class BaseBuildCommand(BaseFlutterCommand):
             # Named after the desktop entry id, so the list is per-app.
             return linux_targets(self.template_data["bundle_id"])
         if platform == "windows":
-            existing = (
-                self.flutter_dir / "windows" / "runner" / "resources" / "app_icon.ico"
-            )
-            sizes = self.get_ico_sizes(existing)
+            sizes = self._template_ico_sizes()
             if sizes:
                 return AssetSpec(ico_sizes=sizes)
         return None
+
+    def _template_ico_sizes(self) -> tuple[int, ...]:
+        """
+        The entry sizes of the template's `app_icon.ico`.
+
+        The rendered file states which sizes the project wants, but it is
+        also where a supplied `.ico` is copied to, after which it states what
+        that file's author wanted instead. So the sizes are recorded the
+        first time they are read for a render of the template, and read back
+        from the record after that. A re-render restores the placeholder and
+        changes `template_digest`, which retires the record.
+
+        Returns:
+            The square entry sizes, or an empty tuple when neither the record
+                nor the file can be read.
+        """
+
+        assert self.flutter_dir
+        assert self.build_dir
+
+        record_path = self.build_dir / ".hash" / "windows-ico-sizes"
+        try:
+            record = json.loads(record_path.read_text(encoding="utf-8"))
+            if record["template_digest"] == self.template_digest:
+                return tuple(record["sizes"])
+        except (OSError, ValueError, KeyError, TypeError):
+            pass
+
+        sizes = self.get_ico_sizes(
+            self.flutter_dir / "windows" / "runner" / "resources" / "app_icon.ico"
+        )
+        if sizes:
+            record_path.parent.mkdir(parents=True, exist_ok=True)
+            record_path.write_text(
+                json.dumps({"template_digest": self.template_digest, "sizes": sizes}),
+                encoding="utf-8",
+            )
+        return sizes
 
     def _flutter_packages_missing(self) -> bool:
         """

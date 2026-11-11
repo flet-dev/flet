@@ -5,9 +5,9 @@ from __future__ import annotations
 from io import BytesIO
 from pathlib import Path
 
-from PIL import Image, ImageOps, UnidentifiedImageError
+from PIL import IcoImagePlugin, Image, ImageOps, UnidentifiedImageError
 
-__all__ = ["MAX_SOURCE_SIZE", "SourceError", "load_source"]
+__all__ = ["MAX_SOURCE_SIZE", "SourceError", "ico_sizes", "load_source"]
 
 MAX_SOURCE_SIZE = 2048
 """Sources larger than this are reduced once, rather than per output.
@@ -95,6 +95,34 @@ def load_source(
         )
 
     return img, pre_rendered
+
+
+def ico_sizes(path: str | Path) -> tuple[int, ...]:
+    """Read a Windows `.ico` in full and report the square sizes it holds.
+
+    Every image in the file is decoded, not just its directory read, so a
+    truncated or otherwise damaged file comes back empty here rather than
+    failing the Windows resource compiler much later, with no useful message.
+
+    Args:
+        path: The `.ico` to read.
+
+    Returns:
+        The square image sizes in the file, ascending, or an empty tuple when
+            the file is not a Windows icon that can be read in full.
+    """
+
+    try:
+        with Image.open(path) as img:
+            if not isinstance(img, IcoImagePlugin.IcoImageFile):
+                return ()
+            sizes = sorted(img.info["sizes"])
+            for size in sizes:
+                img.size = size
+                img.load()
+    except Exception:  # noqa: BLE001 - a damaged file can fail anywhere in Pillow
+        return ()
+    return tuple(sorted({width for width, height in sizes if width == height}))
 
 
 def square(img: Image.Image) -> tuple[Image.Image, str | None]:

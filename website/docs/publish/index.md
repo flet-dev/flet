@@ -1007,7 +1007,8 @@ percentages match Flet's automatic framing for transparent artwork:
 
 A `.ico` is used as it is: every size it contains goes into the app unchanged,
 so you can draw the small sizes by hand instead of having them scaled down from
-the largest. A `.png` is rendered to each size from the one image.
+the largest. Flet checks that the file is whole, and warns if its largest image
+is smaller than 256 × 256. A `.png` is rendered to each size from the one image.
 
 For the circular areas, keep the entire logo inside the circle, including its
 corners. A logo that fits a square of the same width can still extend outside it.

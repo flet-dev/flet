@@ -7,6 +7,9 @@ from PIL import IcoImagePlugin, Image
 
 from flet_cli.commands.build_base import BaseBuildCommand
 
+TEMPLATE_SIZES = (16, 32, 48, 256)
+"""The entry sizes of the build template's `app_icon.ico` placeholder."""
+
 
 class Build(NamedTuple):
     """A Windows build set up for `customize_icons`."""
@@ -37,7 +40,7 @@ def _build(tmp_path: Path, placeholder: bool = True) -> Build:
     target = flutter_dir / "windows" / "runner" / "resources" / "app_icon.ico"
     target.parent.mkdir(parents=True)
     if placeholder:
-        Image.new("RGBA", (256, 256), "blue").save(target)
+        _write_ico(target, dict.fromkeys(TEMPLATE_SIZES, "blue"))
 
     cmd = BaseBuildCommand.__new__(BaseBuildCommand)
     cmd.package_app_path = assets.parent
@@ -80,6 +83,20 @@ def _write_ico(path: Path, colours: dict[int, str]) -> bytes:
     return path.read_bytes()
 
 
+def _sizes(path: Path) -> tuple[int, ...]:
+    """
+    The entry sizes a `.ico` declares.
+
+    Args:
+        path: The `.ico` to read.
+
+    Returns:
+        The square sizes, ascending.
+    """
+
+    return BaseBuildCommand.get_ico_sizes(path)
+
+
 def _frames(path: Path) -> dict[int, Any]:
     """
     Read a `.ico` as pixel size -> colour of its top-left pixel.
@@ -117,6 +134,23 @@ def _distinct_colours(path: Path) -> int:
         colours = ico.convert("RGBA").getcolors(256 * 256)
     assert colours is not None
     return len(colours)
+
+
+def _console_output(capsys) -> str:
+    """
+    Everything logged so far, with whitespace normalised.
+
+    The console wraps long lines, so a phrase may be split across two.
+
+    Args:
+        capsys: pytest's capture fixture.
+
+    Returns:
+        The captured output as one line.
+    """
+
+    captured = capsys.readouterr()
+    return " ".join((captured.out + captured.err).split())
 
 
 def test_removing_windows_icon_regenerates_default_icon(tmp_path):
@@ -195,6 +229,76 @@ def test_ico_is_not_invented_for_a_template_without_one(tmp_path):
     assert not build.target.exists()
 
 
+def test_ico_sizes_do_not_leak_into_later_renders(tmp_path):
+    """The rendered icon's sizes guide later renders, so a copied `.ico`
+    must not replace them with its own: a PNG supplied after it, and the
+    default icon after that, still get the template's sizes."""
+    build = _build(tmp_path)
+    source = build.assets / "icon_windows.ico"
+    _write_ico(source, {64: "red", 256: "blue"})
+    build.cmd.customize_icons()
+    assert _sizes(build.target) == (64, 256)
+
+    source.unlink()
+    png = build.assets / "icon_windows.png"
+    Image.new("RGBA", (256, 256), "red").save(png)
+    build.cmd.customize_icons()
+    assert _sizes(build.target) == TEMPLATE_SIZES
+
+    png.unlink()
+    build.cmd.customize_icons()
+    assert _sizes(build.target) == TEMPLATE_SIZES
+
+
+def test_template_sizes_follow_a_re_render(tmp_path):
+    """A re-rendered template may declare other sizes. Its digest changes
+    with it, so the sizes recorded from the previous placeholder give way."""
+    build = _build(tmp_path)
+    source = build.assets / "icon_windows.ico"
+    _write_ico(source, {64: "red", 256: "blue"})
+    build.cmd.customize_icons()
+
+    # A re-render restores the placeholder, here one that wants other sizes.
+    _write_ico(build.target, {32: "blue", 256: "blue"})
+    build.cmd.template_digest = "another-template-digest"
+    source.unlink()
+    Image.new("RGBA", (256, 256), "red").save(build.assets / "icon_windows.png")
+    build.cmd.customize_icons()
+
+    assert _sizes(build.target) == (32, 256)
+
+
+def test_small_ico_is_copied_with_a_warning(tmp_path, capsys):
+    """A `.ico` with no image as large as the project's largest icon is
+    still its author's choice, but Windows will enlarge it, so say so."""
+    build = _build(tmp_path)
+    supplied = _write_ico(build.assets / "icon_windows.ico", {16: "red", 48: "blue"})
+
+    build.cmd.customize_icons()
+
+    assert build.target.read_bytes() == supplied
+    output = _console_output(capsys)
+    assert "largest image is 48px" in output
+    assert "Add a 256x256 image" in output
+
+
+def test_truncated_ico_warns_and_falls_back_to_default_icon(tmp_path, capsys):
+    """A damaged `.ico` must not be copied to fail the resource compiler
+    later: like any unreadable source, it warns and gives the default icon."""
+    build = _build(tmp_path)
+    source = build.assets / "icon_windows.ico"
+    whole = _write_ico(source, {16: "red", 256: "blue"})
+    source.write_bytes(whole[: len(whole) // 2])
+
+    build.cmd.customize_icons()
+
+    assert build.target.read_bytes() != whole[: len(whole) // 2]
+    assert _distinct_colours(build.target) > 2
+    output = _console_output(capsys)
+    assert "could not read image icon_windows.ico" in output
+    assert "Using the default Flet icon" in output
+
+
 def test_unreadable_ico_warns_and_falls_back_to_default_icon(tmp_path, capsys):
     """A file that is not a Windows icon is not copied as one: the build
     warns and the app gets the default icon, as for any unreadable source."""
@@ -207,8 +311,6 @@ def test_unreadable_ico_warns_and_falls_back_to_default_icon(tmp_path, capsys):
     generated = build.target.read_bytes()
     assert generated not in (placeholder, b"not-actually-an-ico")
     assert _distinct_colours(build.target) > 2
-    # The console wraps long lines, so compare with whitespace normalised.
-    captured = capsys.readouterr()
-    combined = " ".join((captured.out + captured.err).split())
-    assert "could not read image icon_windows.ico" in combined
-    assert "Using the default Flet icon" in combined
+    output = _console_output(capsys)
+    assert "could not read image icon_windows.ico" in output
+    assert "Using the default Flet icon" in output
