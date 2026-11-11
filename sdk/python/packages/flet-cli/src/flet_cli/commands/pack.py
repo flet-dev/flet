@@ -562,6 +562,7 @@ class Command(BaseCommand):
 
                 if is_windows():
                     from flet_cli.__pyinstaller.win_utils import (
+                        remove_signature,
                         update_flet_view_icon,
                         update_flet_view_version_info,
                     )
@@ -577,6 +578,10 @@ class Command(BaseCommand):
                         hook_config.temp_bin_dir, "flet", "flet.exe"
                     )
                     if os.path.exists(exe_path):
+                        # The released client is signed, and patching it below
+                        # invalidates the signature.
+                        remove_signature(exe_path)
+
                         # icon
                         if options.icon:
                             icon_path = options.icon

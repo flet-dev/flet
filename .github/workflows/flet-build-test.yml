@@ -136,6 +136,16 @@ jobs:
           sudo apt-get install -y --no-install-recommends $LINUX_DEPS
           sudo apt-get clean
 
+      # The released Windows client is signed, and `flet pack` must patch a
+      # signed client. A throwaway certificate stands in for the release one:
+      # `flet pack` handles any signature the same way, trusted or not.
+      - name: Create a test code-signing certificate
+        if: matrix.name == 'windows'
+        shell: pwsh
+        run: |
+          $cert = New-SelfSignedCertificate -Type CodeSigningCert -Subject "CN=Flet CI test" -CertStoreLocation Cert:\CurrentUser\My
+          "TEST_CERT_THUMBPRINT=$($cert.Thumbprint)" >> $env:GITHUB_ENV
+
       - name: Prepare local desktop client archive
         shell: bash
         run: |
@@ -165,6 +175,7 @@ jobs:
               cp "${WINDIR}/system32/vcruntime140_1.dll" "$RELEASE_DIR"
               rm -rf "${RUNNER_DIR}/flet"
               mv "$RELEASE_DIR" "${RUNNER_DIR}/flet"
+              FLET_EXE="$(cygpath -w "${RUNNER_DIR}/flet/flet.exe")" pwsh -NoProfile -File "${SCRIPTS}/sign_with_test_cert.ps1"
               pushd "${RUNNER_DIR}"
               7z a "${APP_DIR}/flet-windows.zip" "flet"
               popd
@@ -178,6 +189,15 @@ jobs:
         run: |
           echo "FLET_PACK_EXTRA_ARGS='${FLET_PACK_EXTRA_ARGS}'"
           uv run --with pyinstaller flet pack src/main.py --yes --name flet-pack-test --distpath dist $FLET_PACK_EXTRA_ARGS
+
+      - name: Check that the packed client can be signed
+        if: matrix.name == 'windows'
+        shell: bash
+        working-directory: sdk/python/examples/apps/flet_build_test
+        run: |
+          set -euo pipefail
+          uv run --with pyinstaller python "${SCRIPTS}/extract_packed_client.py" dist flet-pack-test "${RUNNER_TEMP}/packed-client"
+          FLET_EXE="$(cygpath -w "${RUNNER_TEMP}/packed-client/flet/flet.exe")" pwsh -NoProfile -File "${SCRIPTS}/sign_with_test_cert.ps1"
 
       - name: Upload Artifact
         uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1

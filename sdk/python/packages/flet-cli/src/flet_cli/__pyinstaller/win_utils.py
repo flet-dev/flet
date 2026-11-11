@@ -14,6 +14,39 @@ from PyInstaller.utils.win32.icon import IconFile, normalize_icon_type
 import flet_cli.__pyinstaller.config as hook_config
 
 
+def remove_signature(exe_path: str) -> None:
+    """
+    Remove the Authenticode signature from a Windows executable.
+
+    Changing an executable's resources invalidates its signature. Windows then
+    drops the signature's bytes but keeps the header entry that points to them,
+    which leaves an executable that signing tools reject. Removing both first
+    leaves an unsigned executable that can be patched and signed again.
+
+    Args:
+        exe_path: Path to the executable; left unchanged when it isn't signed.
+    """
+
+    pe = pefile.PE(exe_path, fast_load=True)
+    security = pe.OPTIONAL_HEADER.DATA_DIRECTORY[
+        pefile.DIRECTORY_ENTRY["IMAGE_DIRECTORY_ENTRY_SECURITY"]
+    ]
+    if not security.Size:
+        pe.close()
+        return
+
+    # The entry holds a file offset, not a virtual address.
+    start, end = security.VirtualAddress, security.VirtualAddress + security.Size
+    security.VirtualAddress = security.Size = 0
+    pe.OPTIONAL_HEADER.CheckSum = 0
+    data = pe.write()
+    pe.close()
+
+    hook_config.log_progress("Removing the signature of", exe_path)
+    with open(exe_path, "wb") as f:
+        f.write(data[:start] + data[end:])
+
+
 def update_flet_view_icon(exe_path: str, icon_path: str) -> None:
     """
     Replace icon resources in a Windows executable.
@@ -146,7 +179,7 @@ def update_flet_view_version_info(
 
         # If the update removed the overlay data, re-append it
         if not overlay_after:
-            with open(exe_path, "ab", encoding="utf-8") as exef:
+            with open(exe_path, "ab") as exef:
                 exef.write(overlay_before)
 
     return version_info_path
