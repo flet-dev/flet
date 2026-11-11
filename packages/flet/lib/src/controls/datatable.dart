@@ -27,7 +27,7 @@ class DataTableControl extends StatelessWidget {
     var border = control.getBorder("border", theme);
     var borderRadius = control.getBorderRadius("border_radius");
     var gradient = control.getGradient("gradient", theme);
-    var horizontalLines = control.getBorderSide("horizontal_lLines", theme);
+    var horizontalLines = control.getBorderSide("horizontal_lines", theme);
     var verticalLines = control.getBorderSide("vertical_lines", theme);
     var defaultDecoration = theme.dataTableTheme.decoration as BoxDecoration? ??
         const BoxDecoration();
@@ -128,6 +128,10 @@ class DataTableControl extends StatelessWidget {
       }).toList(),
     );
 
-    return LayoutControl(control: control, child: datatable);
+    // DataTable paints every row on each paint, with no culling. Inside a
+    // scrolling parent, every scroll frame would repaint the whole table;
+    // the boundary keeps its recorded picture and only moves it.
+    return LayoutControl(
+        control: control, child: RepaintBoundary(child: datatable));
   }
 }

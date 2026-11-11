@@ -1,3 +1,8 @@
+## 1.1.3
+
+* `LayoutControl` and `BaseControl` wrap a control in `_ControlOpacity` instead of `Opacity`: it keeps the always-present wrapper (stable tree shape) but adds no layer at opacity 1.0 or 0.0 and pushes an `OpacityLayer` only in between. Flutter's `RenderOpacity` is a repaint boundary with its own `OpacityLayer` at any opacity above 0, so every control had its own layer, and on web a page of thousands of controls spent each frame walking them by @FeodorFitsner.
+* `DataTableControl` paints the table behind a `RepaintBoundary`, so a scrolling parent moves its recorded picture instead of repainting every row each frame, and reads `horizontal_lines` (it read `horizontal_lLines`, so the lines never showed) by @FeodorFitsner.
+
 ## 1.1.2
 
 * Add `loadDeferredFonts(package)` (`DeferredFonts`): in a web app, loads the fonts of a Dart package that `flet build web` moved from `FontManifest.json` to `DeferredFontManifest.json`, once, with `FontLoader`; a failed load is retried by a later call after 5 s, doubling up to 5 min; a no-op elsewhere and when the package's fonts are in `FontManifest.json`. `Markdown` calls it for `flutter_math_fork` before drawing math ([#7054](https://github.com/flet-dev/flet/pull/7054)) by @FeodorFitsner.

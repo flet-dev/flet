@@ -129,12 +129,81 @@ Widget _opacity(BuildContext context, Widget widget, Control control) {
   // Always wrapped, also at the default 1.0 (not sent from Python): adding
   // or removing the wrapper when opacity flips between 1 and something else
   // changed the tree's shape, and Flutter rebuilt the whole subtree - an
-  // embedded app restarted, a text field lost its focus. Opacity at 1.0
-  // paints its child directly, without a layer.
-  return Opacity(
+  // embedded app restarted, a text field lost its focus.
+  return _ControlOpacity(
     opacity: opacity ?? 1.0,
     child: widget,
   );
+}
+
+/// [Opacity] without a layer at 1.0 or 0.0.
+///
+/// Flutter's [RenderOpacity] is a repaint boundary with its own
+/// [OpacityLayer] at any opacity above 0, 1.0 included. Wrapping every
+/// control in one gave each control a layer: a page of thousands of controls
+/// (a long DataTable) had thousands of layers, and the web engine walks all
+/// of them on every frame, so scrolling stuttered.
+class _ControlOpacity extends SingleChildRenderObjectWidget {
+  const _ControlOpacity({required this.opacity, super.child});
+
+  final double opacity;
+
+  @override
+  RenderObject createRenderObject(BuildContext context) =>
+      _RenderControlOpacity(opacity);
+
+  @override
+  void updateRenderObject(
+      BuildContext context, _RenderControlOpacity renderObject) {
+    renderObject.opacity = opacity;
+  }
+}
+
+class _RenderControlOpacity extends RenderProxyBox {
+  _RenderControlOpacity(double opacity)
+      : _alpha = Color.getAlphaFromOpacity(opacity);
+
+  int _alpha;
+
+  set opacity(double value) {
+    final alpha = Color.getAlphaFromOpacity(value);
+    if (alpha == _alpha) return;
+    final didNeedCompositing = alwaysNeedsCompositing;
+    final wasVisible = _alpha != 0;
+    _alpha = alpha;
+    if (didNeedCompositing != alwaysNeedsCompositing) {
+      markNeedsCompositingBitsUpdate();
+    }
+    markNeedsPaint();
+    if (wasVisible != (_alpha != 0)) markNeedsSemanticsUpdate();
+  }
+
+  @override
+  bool get alwaysNeedsCompositing =>
+      child != null && _alpha != 0 && _alpha != 255;
+
+  @override
+  bool paintsChild(RenderBox child) => _alpha != 0;
+
+  @override
+  void paint(PaintingContext context, Offset offset) {
+    if (child == null || _alpha == 0) {
+      layer = null;
+      return;
+    }
+    if (_alpha == 255) {
+      layer = null;
+      context.paintChild(child!, offset);
+      return;
+    }
+    layer = context.pushOpacity(offset, _alpha, super.paint,
+        oldLayer: layer as OpacityLayer?);
+  }
+
+  @override
+  void visitChildrenForSemantics(RenderObjectVisitor visitor) {
+    if (child != null && _alpha != 0) visitor(child!);
+  }
 }
 
 Widget _rotatedControl(BuildContext context, Widget widget, Control control) {
