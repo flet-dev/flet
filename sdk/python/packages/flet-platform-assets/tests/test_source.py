@@ -4,6 +4,9 @@ These cover the awkward inputs a real user supplies - an EXIF-rotated phone
 photo, a palette PNG, an animated GIF, a banner that is not square.
 """
 
+import struct
+from io import BytesIO
+
 import pytest
 from flet_platform_assets import SourceError, ico_sizes, load_source, square
 from flet_platform_assets._source import MAX_SOURCE_SIZE
@@ -36,6 +39,20 @@ class TestIcoSizes:
         path = self._ico(tmp_path, (16, 256))
         data = path.read_bytes()
         path.write_bytes(data[: len(data) // 2])
+        assert ico_sizes(path) == ()
+
+    def test_damaged_image_sharing_a_size_is_empty(self, tmp_path):
+        """A damaged image next to a whole one of the same size gives nothing."""
+        whole = BytesIO()
+        Image.new("RGBA", (32, 32), (255, 0, 85, 255)).save(whole, "PNG")
+        images = [whole.getvalue(), whole.getvalue()[:20] + bytes(40)]
+        offset = 6 + 16 * len(images)
+        header = struct.pack("<HHH", 0, 1, len(images))
+        for data in images:
+            header += struct.pack("<BBBBHHII", 32, 32, 0, 0, 1, 32, len(data), offset)
+            offset += len(data)
+        path = tmp_path / "i.ico"
+        path.write_bytes(header + b"".join(images))
         assert ico_sizes(path) == ()
 
     def test_not_an_icon_is_empty(self, tmp_path):

@@ -112,13 +112,11 @@ def ico_sizes(path: str | Path) -> tuple[int, ...]:
         with Image.open(path) as img:
             if not isinstance(img, IcoImagePlugin.IcoImageFile):
                 return ()
-            sizes = sorted(img.info["sizes"])
-            for size in sizes:
-                img.size = size
-                img.load()
+            # By index, not by size: a file can hold several images of one size.
+            sizes = {img.ico.frame(i).size for i in range(len(img.ico.entry))}
     except Exception:  # noqa: BLE001 - a damaged file can fail anywhere in Pillow
         return ()
-    return tuple(sorted({width for width, height in sizes if width == height}))
+    return tuple(sorted(width for width, height in sizes if width == height))
 
 
 def square(img: Image.Image) -> tuple[Image.Image, str | None]:
