@@ -97,7 +97,7 @@ platform, sign it, and publish it to the stores, with nothing to install.
   reset, and every payment.
 * **Retention.** Agent chats are deleted after 30 days without use (90 days on
   Creator), starting November 19, 2026. Build logs are kept 30 days (1 year on
-  Creator) and build files 7 days (90 days on Creator). See [Pricing](https://studio.flet.dev/pricing).
+  Creator) and build files 7 days (90 days on Creator). See [Pricing](https://studio.flet.dev/pricing?utm_source=flet.dev&utm_medium=docs&utm_campaign=studio-whats-new).
 
 ### Studio
 

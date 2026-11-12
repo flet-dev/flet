@@ -78,7 +78,7 @@ module.exports = {
           position: 'left',
         },
         {
-          to: 'https://studio.flet.dev/gallery',
+          to: 'https://studio.flet.dev/gallery?utm_source=flet.dev&utm_medium=site&utm_campaign=navbar',
           label: 'Gallery',
           position: 'left',
         },
@@ -139,7 +139,7 @@ module.exports = {
           items: [
             {
               label: 'Flet Studio app',
-              href: 'https://studio.flet.dev',
+              href: 'https://studio.flet.dev/?utm_source=flet.dev&utm_medium=site&utm_campaign=footer',
             },
             {
               label: 'Pricing',

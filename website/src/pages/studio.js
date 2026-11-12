@@ -111,7 +111,7 @@ function PrimaryCta() {
   return (
     <a
       className={styles.primaryCta}
-      href="https://studio.flet.dev"
+      href="https://studio.flet.dev/?utm_source=flet.dev&utm_medium=site&utm_campaign=studio-page"
       target="_blank"
       rel="noopener noreferrer">
       Start free <span aria-hidden="true">↗</span>

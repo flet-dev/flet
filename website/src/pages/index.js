@@ -168,7 +168,7 @@ export default function Home() {
             <h1 id="hero-title">Your next app.<br />Built in <span>Python.</span></h1>
             <p className={styles.heroDescription}>Build beautiful web, desktop, and mobile apps from one Python codebase.</p>
             <div className={styles.actions}>
-              <Link className={styles.primaryButton} to="https://studio.flet.dev">Try online <Arrow /></Link>
+              <Link className={styles.primaryButton} to="https://studio.flet.dev/?utm_source=flet.dev&utm_medium=site&utm_campaign=home&utm_content=hero">Try online <Arrow /></Link>
               <Link className={styles.secondaryButton} to="/docs">Read the docs <span aria-hidden="true">→</span></Link>
             </div>
             <p className={styles.heroNote}>No frontend experience required. Just Python.</p>
@@ -201,7 +201,7 @@ export default function Home() {
               <span>TRY IT YOURSELF</span>
               <div className={styles.tryOptions}>
                 <div>
-                  <Link className={styles.textLink} to="https://studio.flet.dev/gallery/getting-started/example/apps/templates/basic_counter">Try online <Arrow /></Link>
+                  <Link className={styles.textLink} to="https://studio.flet.dev/gallery/getting-started/example/apps/templates/basic_counter?utm_source=flet.dev&utm_medium=site&utm_campaign=home&utm_content=counter">Try online <Arrow /></Link>
                   <p>Open Flet Studio.<br />No installation needed.</p>
                 </div>
                 <div>
@@ -220,10 +220,10 @@ export default function Home() {
         </section>
 
         <section className={clsx(styles.shell, styles.studioSection)} aria-labelledby="studio-title">
-          <div className={styles.studioIntro}><span className={styles.eyebrow}>MEET FLET STUDIO</span><h2 id="studio-title">An idea is a<br />great place to start.</h2><p>Open your browser. Pick an example, write some Python, or ask the AI agent for a hand. Run your app and share what you make.</p><Link className={styles.primaryButton} to="https://studio.flet.dev">Create in Studio <Arrow /></Link><span className={styles.studioNote}>No installation required.</span></div>
+          <div className={styles.studioIntro}><span className={styles.eyebrow}>MEET FLET STUDIO</span><h2 id="studio-title">An idea is a<br />great place to start.</h2><p>Open your browser. Pick an example, write some Python, or ask the AI agent for a hand. Run your app and share what you make.</p><Link className={styles.primaryButton} to="https://studio.flet.dev/?utm_source=flet.dev&utm_medium=site&utm_campaign=home&utm_content=studio-section">Create in Studio <Arrow /></Link><span className={styles.studioNote}>No installation required.</span></div>
           <div className={styles.studioSteps}>
             {[['01', 'Find your starting point', 'Explore the Gallery and make an example your own.'], ['02', 'Make it work your way', 'Edit the code, get help from AI, and see your app run.'], ['03', 'Share what you made', 'Send a link, or download your project and keep building locally.']].map(([number, title, text]) => <div key={number}><span>{number}</span><div><h3>{title}</h3><p>{text}</p></div></div>)}
-            <Link to="https://studio.flet.dev/gallery">Explore the Gallery <Arrow /></Link>
+            <Link to="https://studio.flet.dev/gallery?utm_source=flet.dev&utm_medium=site&utm_campaign=home&utm_content=gallery">Explore the Gallery <Arrow /></Link>
           </div>
         </section>
 

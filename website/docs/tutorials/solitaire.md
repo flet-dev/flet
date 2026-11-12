@@ -8,7 +8,7 @@ In this tutorial we will show you step-by-step creation of a famous Klondike sol
 
 This tutorial is aimed at beginner/intermediate level Python developers who have basic knowledge of Python and object oriented programming.
 
-You can find a live demo [here](https://studio.flet.dev/gallery/run/tutorials/solitaire_declarative/solitaire_final/).
+You can find a live demo [here](https://studio.flet.dev/gallery/run/tutorials/solitaire_declarative/solitaire_final/?utm_source=flet.dev&utm_medium=docs&utm_campaign=tutorials-solitaire).
 
 <Image src="examples/tutorials/solitaire/media/part1-final.gif" alt="solitaire" width="55%" />
 
