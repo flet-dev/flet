@@ -1956,9 +1956,8 @@ class BaseBuildCommand(BaseFlutterCommand):
             # Whether the source is a generic `icon.png` rather than artwork the
             # author framed for this platform. A generic icon gets the platform's
             # margin computed for it; `icon_<platform>.png` is a finished
-            # composition and is used exactly as supplied. A `.ico` goes one
-            # step further: on Windows it is copied whole, every size it holds
-            # included, rather than rendered from its largest image.
+            # composition and is used exactly as supplied. On Windows, a `.ico`
+            # is copied into the app whole, with every size it holds.
             derived = False
             if self.assets_path.exists():
                 # Only the target platform's chain is resolved; the other five
@@ -2107,34 +2106,18 @@ class BaseBuildCommand(BaseFlutterCommand):
 
     def _copy_windows_ico(self, source_path: Path) -> bool:
         """
-        Copy a supplied `.ico` into the Windows runner as it is.
+        Copy a supplied `.ico` over the runner's `app_icon.ico` unchanged.
 
-        A `.ico` is already a Windows icon: its author chose the sizes it
-        holds and drew each of them, so there is nothing for the generator to
-        add. Rendering it instead keeps only its largest image, resamples the
-        other sizes from that and swaps its size list for the one the
-        template's placeholder declares, which discards any artwork made for
-        the small sizes - the very thing a `.ico` is supplied for.
-
-        The file is decoded in full first, so a damaged one is not copied
-        only to fail the Windows resource compiler later: it is rendered like
-        any other image, which reports it and falls back to the default icon.
-        A file whose largest image is smaller than the largest icon the
-        project declares is copied with a warning, as the render path warns
-        of a small source.
-
-        Mirrors `write()` in only overwriting an icon the project declares:
-        if the template ships no `app_icon.ico`, none is created, since
-        nothing would reference it.
+        Warns when its largest image is smaller than the largest size the
+        project declares. Nothing is copied when the template has no
+        `app_icon.ico`.
 
         Args:
             source_path: The resolved icon source.
 
         Returns:
-            `True` when `source_path` is a `.ico` and has been dealt with,
-                `False` when it is another kind of image, or no Windows icon
-                that can be read in full, so the caller renders it as usual
-                and reports what Pillow makes of it.
+            `True` when `source_path` is a readable `.ico`, `False` otherwise,
+                in which case the caller renders it like any other image.
         """
 
         assert self.flutter_dir
@@ -2201,12 +2184,8 @@ class BaseBuildCommand(BaseFlutterCommand):
         """
         The entry sizes of the template's `app_icon.ico`.
 
-        The rendered file states which sizes the project wants, but it is
-        also where a supplied `.ico` is copied to, after which it states what
-        that file's author wanted instead. So the sizes are recorded the
-        first time they are read for a render of the template, and read back
-        from the record after that. A re-render restores the placeholder and
-        changes `template_digest`, which retires the record.
+        A supplied `.ico` is copied over the placeholder, so its sizes are
+        recorded on first read, per `template_digest`.
 
         Returns:
             The square entry sizes, or an empty tuple when neither the record
@@ -2224,7 +2203,7 @@ class BaseBuildCommand(BaseFlutterCommand):
         except (OSError, ValueError, KeyError, TypeError):
             pass
 
-        sizes = self.get_ico_sizes(
+        sizes = ico_sizes(
             self.flutter_dir / "windows" / "runner" / "resources" / "app_icon.ico"
         )
         if sizes:
@@ -4377,40 +4356,6 @@ class BaseBuildCommand(BaseFlutterCommand):
         ]
         return ";".join(escaped or ["Utility"]) + ";"
 
-    @staticmethod
-    def get_ico_sizes(path: Path) -> tuple[int, ...]:
-        """
-        Read the entry sizes of an existing Windows `.ico`.
-
-        A project that ships its own icon states which sizes it wants by
-        which entries it contains, so a regenerated file keeps them rather
-        than imposing a fixed list.
-
-        Args:
-            path: Path to the `.ico` file.
-
-        Returns:
-            The square entry sizes, or an empty tuple when the file cannot be
-                read. Windows stores 256 as 0 in the directory entry.
-        """
-
-        try:
-            with open(path, "rb") as f:
-                header = f.read(6)
-                if header[:4] != b"\x00\x00\x01\x00":
-                    return ()
-                count = int.from_bytes(header[4:6], "little")
-                entries = f.read(16 * count)
-        except OSError:
-            return ()
-        sizes = []
-        for i in range(count):
-            width = entries[i * 16] or 256
-            height = entries[i * 16 + 1] or 256
-            if width == height:
-                sizes.append(width)
-        return tuple(sorted(set(sizes)))
-
     def find_platform_image(
         self,
         src_path: Path,
@@ -4438,8 +4383,8 @@ class BaseBuildCommand(BaseFlutterCommand):
 
         # Drop candidates that cannot serve this target: .icns and .ico are
         # container formats for the platform that defines them. Pillow reads
-        # both, and `load_source` takes their largest frame (on Windows a
-        # `.ico` is copied whole instead), but using a macOS icon set as an
+        # both, and `load_source` takes their largest frame (a Windows build
+        # copies a `.ico` whole), but using a macOS icon set as an
         # Android launcher icon is not what the file name asked for.
         def _incompatible(p: str) -> bool:
             ext = Path(p).suffix.lower()

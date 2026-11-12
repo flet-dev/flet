@@ -3,6 +3,7 @@ from pathlib import Path
 from types import SimpleNamespace
 from typing import Any, NamedTuple
 
+from flet_platform_assets import ico_sizes
 from PIL import IcoImagePlugin, Image
 
 from flet_cli.commands.build_base import BaseBuildCommand
@@ -83,20 +84,6 @@ def _write_ico(path: Path, colours: dict[int, str]) -> bytes:
     return path.read_bytes()
 
 
-def _sizes(path: Path) -> tuple[int, ...]:
-    """
-    The entry sizes a `.ico` declares.
-
-    Args:
-        path: The `.ico` to read.
-
-    Returns:
-        The square sizes, ascending.
-    """
-
-    return BaseBuildCommand.get_ico_sizes(path)
-
-
 def _frames(path: Path) -> dict[int, Any]:
     """
     Read a `.ico` as pixel size -> colour of its top-left pixel.
@@ -153,164 +140,164 @@ def _console_output(capsys) -> str:
     return " ".join((captured.out + captured.err).split())
 
 
-def test_removing_windows_icon_regenerates_default_icon(tmp_path):
-    build = _build(tmp_path)
-    source = build.assets / "icon.png"
-    Image.new("RGBA", (256, 256), "red").save(source)
-    placeholder = build.target.read_bytes()
+class TestDefaultIcon:
+    """The Flet logo icon used when the app supplies none."""
 
-    build.cmd.customize_icons()
-    user_icon = build.target.read_bytes()
-    assert user_icon != placeholder
+    def test_removing_source_regenerates_default_icon(self, tmp_path):
+        """Removing the icon source generates the default icon from the Flet logo."""
+        build = _build(tmp_path)
+        source = build.assets / "icon.png"
+        Image.new("RGBA", (256, 256), "red").save(source)
+        placeholder = build.target.read_bytes()
 
-    # Without a user icon, the icon is generated from the Flet logo rather
-    # than left as the template's placeholder or the last user icon.
-    source.unlink()
-    build.cmd.customize_icons()
-    default_icon = build.target.read_bytes()
-    assert default_icon not in (placeholder, user_icon)
-    # The Flet logo is pink and blue on transparency, not a flat colour.
-    assert _distinct_colours(build.target) > 2
+        build.cmd.customize_icons()
+        user_icon = build.target.read_bytes()
+        assert user_icon != placeholder
 
-
-def test_windows_ico_is_copied_as_supplied(tmp_path):
-    """A `.ico` holds artwork its author drew for each size, so none of it
-    is rendered from the largest image, and its own size list stands in for
-    the template's."""
-    build = _build(tmp_path)
-    source = build.assets / "icon_windows.ico"
-    supplied = _write_ico(source, {16: "red", 24: "green", 256: "blue"})
-
-    build.cmd.customize_icons()
-
-    assert build.target.read_bytes() == supplied
-    assert _frames(build.target) == {
-        16: (255, 0, 0, 255),
-        24: (0, 128, 0, 255),
-        256: (0, 0, 255, 255),
-    }
+        # Without a user icon, the icon is generated from the Flet logo rather
+        # than left as the template's placeholder or the last user icon.
+        source.unlink()
+        build.cmd.customize_icons()
+        default_icon = build.target.read_bytes()
+        assert default_icon not in (placeholder, user_icon)
+        # The Flet logo is pink and blue on transparency, not a flat colour.
+        assert _distinct_colours(build.target) > 2
 
 
-def test_generic_ico_is_copied_on_windows(tmp_path):
-    """A `.ico` is a Windows icon whatever it is called; only Windows builds
-    see it at all, since `find_platform_image` drops it elsewhere."""
-    build = _build(tmp_path)
-    supplied = _write_ico(build.assets / "icon.ico", {32: "red", 256: "blue"})
+class TestWindowsIcoCopy:
+    """A supplied `.ico` copied into a Windows build unchanged."""
 
-    build.cmd.customize_icons()
+    def test_copied_as_supplied(self, tmp_path):
+        """A `.ico` is copied byte for byte, with its own images and size list."""
+        build = _build(tmp_path)
+        source = build.assets / "icon_windows.ico"
+        supplied = _write_ico(source, {16: "red", 24: "green", 256: "blue"})
 
-    assert build.target.read_bytes() == supplied
+        build.cmd.customize_icons()
 
+        assert build.target.read_bytes() == supplied
+        assert _frames(build.target) == {
+            16: (255, 0, 0, 255),
+            24: (0, 128, 0, 255),
+            256: (0, 0, 255, 255),
+        }
 
-def test_changed_ico_is_copied_again(tmp_path):
-    build = _build(tmp_path)
-    source = build.assets / "icon_windows.ico"
-    _write_ico(source, {16: "red", 256: "blue"})
-    build.cmd.customize_icons()
+    def test_generic_icon_ico_is_copied(self, tmp_path):
+        """A generic `icon.ico` is copied on Windows like `icon_windows.ico`."""
+        build = _build(tmp_path)
+        supplied = _write_ico(build.assets / "icon.ico", {32: "red", 256: "blue"})
 
-    replacement = _write_ico(source, {16: "green", 256: "white"})
-    # Change detection keys on mtime; bump it explicitly so the test does
-    # not depend on filesystem timestamp granularity.
-    stat = source.stat()
-    os.utime(source, (stat.st_atime, stat.st_mtime + 10))
-    build.cmd.customize_icons()
+        build.cmd.customize_icons()
 
-    assert build.target.read_bytes() == replacement
+        assert build.target.read_bytes() == supplied
 
+    def test_changed_ico_is_copied_again(self, tmp_path):
+        """A `.ico` changed after a build is copied again on the next one."""
+        build = _build(tmp_path)
+        source = build.assets / "icon_windows.ico"
+        _write_ico(source, {16: "red", 256: "blue"})
+        build.cmd.customize_icons()
 
-def test_ico_is_not_invented_for_a_template_without_one(tmp_path):
-    """Like `write()`, copying only overwrites an icon the rendered project
-    declares; a template that ships no `app_icon.ico` references none."""
-    build = _build(tmp_path, placeholder=False)
-    _write_ico(build.assets / "icon_windows.ico", {16: "red", 256: "blue"})
+        replacement = _write_ico(source, {16: "green", 256: "white"})
+        # Change detection keys on mtime; bump it explicitly so the test does
+        # not depend on filesystem timestamp granularity.
+        stat = source.stat()
+        os.utime(source, (stat.st_atime, stat.st_mtime + 10))
+        build.cmd.customize_icons()
 
-    build.cmd.customize_icons()
+        assert build.target.read_bytes() == replacement
 
-    assert not build.target.exists()
+    def test_not_created_for_a_template_without_one(self, tmp_path):
+        """No `app_icon.ico` is created when the template ships none."""
+        build = _build(tmp_path, placeholder=False)
+        _write_ico(build.assets / "icon_windows.ico", {16: "red", 256: "blue"})
 
+        build.cmd.customize_icons()
 
-def test_ico_sizes_do_not_leak_into_later_renders(tmp_path):
-    """The rendered icon's sizes guide later renders, so a copied `.ico`
-    must not replace them with its own: a PNG supplied after it, and the
-    default icon after that, still get the template's sizes."""
-    build = _build(tmp_path)
-    source = build.assets / "icon_windows.ico"
-    _write_ico(source, {64: "red", 256: "blue"})
-    build.cmd.customize_icons()
-    assert _sizes(build.target) == (64, 256)
+        assert not build.target.exists()
 
-    source.unlink()
-    png = build.assets / "icon_windows.png"
-    Image.new("RGBA", (256, 256), "red").save(png)
-    build.cmd.customize_icons()
-    assert _sizes(build.target) == TEMPLATE_SIZES
+    def test_small_ico_is_copied_with_a_warning(self, tmp_path, capsys):
+        """A `.ico` smaller than the project's largest icon is copied with a warning."""
+        build = _build(tmp_path)
+        supplied = _write_ico(
+            build.assets / "icon_windows.ico", {16: "red", 48: "blue"}
+        )
 
-    png.unlink()
-    build.cmd.customize_icons()
-    assert _sizes(build.target) == TEMPLATE_SIZES
+        build.cmd.customize_icons()
 
-
-def test_template_sizes_follow_a_re_render(tmp_path):
-    """A re-rendered template may declare other sizes. Its digest changes
-    with it, so the sizes recorded from the previous placeholder give way."""
-    build = _build(tmp_path)
-    source = build.assets / "icon_windows.ico"
-    _write_ico(source, {64: "red", 256: "blue"})
-    build.cmd.customize_icons()
-
-    # A re-render restores the placeholder, here one that wants other sizes.
-    _write_ico(build.target, {32: "blue", 256: "blue"})
-    build.cmd.template_digest = "another-template-digest"
-    source.unlink()
-    Image.new("RGBA", (256, 256), "red").save(build.assets / "icon_windows.png")
-    build.cmd.customize_icons()
-
-    assert _sizes(build.target) == (32, 256)
+        assert build.target.read_bytes() == supplied
+        output = _console_output(capsys)
+        assert "largest image is 48px" in output
+        assert "Add a 256x256 image" in output
 
 
-def test_small_ico_is_copied_with_a_warning(tmp_path, capsys):
-    """A `.ico` with no image as large as the project's largest icon is
-    still its author's choice, but Windows will enlarge it, so say so."""
-    build = _build(tmp_path)
-    supplied = _write_ico(build.assets / "icon_windows.ico", {16: "red", 48: "blue"})
+class TestWindowsIcoFallback:
+    """A `.ico` that cannot be read in full gets the default icon."""
 
-    build.cmd.customize_icons()
+    def test_truncated_ico(self, tmp_path, capsys):
+        """A truncated `.ico` is not copied; the default icon is used."""
+        build = _build(tmp_path)
+        source = build.assets / "icon_windows.ico"
+        whole = _write_ico(source, {16: "red", 256: "blue"})
+        source.write_bytes(whole[: len(whole) // 2])
 
-    assert build.target.read_bytes() == supplied
-    output = _console_output(capsys)
-    assert "largest image is 48px" in output
-    assert "Add a 256x256 image" in output
+        build.cmd.customize_icons()
+
+        assert build.target.read_bytes() != whole[: len(whole) // 2]
+        assert _distinct_colours(build.target) > 2
+        output = _console_output(capsys)
+        assert "could not read image icon_windows.ico" in output
+        assert "Using the default Flet icon" in output
+
+    def test_file_that_is_not_an_icon(self, tmp_path, capsys):
+        """A `.ico` that is not an icon is not copied; the default icon is used."""
+        build = _build(tmp_path)
+        placeholder = build.target.read_bytes()
+        (build.assets / "icon_windows.ico").write_bytes(b"not-actually-an-ico")
+
+        build.cmd.customize_icons()
+
+        generated = build.target.read_bytes()
+        assert generated not in (placeholder, b"not-actually-an-ico")
+        assert _distinct_colours(build.target) > 2
+        output = _console_output(capsys)
+        assert "could not read image icon_windows.ico" in output
+        assert "Using the default Flet icon" in output
 
 
-def test_truncated_ico_warns_and_falls_back_to_default_icon(tmp_path, capsys):
-    """A damaged `.ico` must not be copied to fail the resource compiler
-    later: like any unreadable source, it warns and gives the default icon."""
-    build = _build(tmp_path)
-    source = build.assets / "icon_windows.ico"
-    whole = _write_ico(source, {16: "red", 256: "blue"})
-    source.write_bytes(whole[: len(whole) // 2])
+class TestWindowsIconSizes:
+    """The icon sizes a Windows build renders."""
 
-    build.cmd.customize_icons()
+    def test_ico_sizes_do_not_leak_into_later_renders(self, tmp_path):
+        """Renders after a copied `.ico` use the template's sizes, not the `.ico`'s."""
+        build = _build(tmp_path)
+        source = build.assets / "icon_windows.ico"
+        _write_ico(source, {64: "red", 256: "blue"})
+        build.cmd.customize_icons()
+        assert ico_sizes(build.target) == (64, 256)
 
-    assert build.target.read_bytes() != whole[: len(whole) // 2]
-    assert _distinct_colours(build.target) > 2
-    output = _console_output(capsys)
-    assert "could not read image icon_windows.ico" in output
-    assert "Using the default Flet icon" in output
+        source.unlink()
+        png = build.assets / "icon_windows.png"
+        Image.new("RGBA", (256, 256), "red").save(png)
+        build.cmd.customize_icons()
+        assert ico_sizes(build.target) == TEMPLATE_SIZES
 
+        png.unlink()
+        build.cmd.customize_icons()
+        assert ico_sizes(build.target) == TEMPLATE_SIZES
 
-def test_unreadable_ico_warns_and_falls_back_to_default_icon(tmp_path, capsys):
-    """A file that is not a Windows icon is not copied as one: the build
-    warns and the app gets the default icon, as for any unreadable source."""
-    build = _build(tmp_path)
-    placeholder = build.target.read_bytes()
-    (build.assets / "icon_windows.ico").write_bytes(b"not-actually-an-ico")
+    def test_template_sizes_follow_a_re_render(self, tmp_path):
+        """A re-rendered template's placeholder sizes replace the recorded ones."""
+        build = _build(tmp_path)
+        source = build.assets / "icon_windows.ico"
+        _write_ico(source, {64: "red", 256: "blue"})
+        build.cmd.customize_icons()
 
-    build.cmd.customize_icons()
+        # A re-render restores the placeholder, here one that wants other sizes.
+        _write_ico(build.target, {32: "blue", 256: "blue"})
+        build.cmd.template_digest = "another-template-digest"
+        source.unlink()
+        Image.new("RGBA", (256, 256), "red").save(build.assets / "icon_windows.png")
+        build.cmd.customize_icons()
 
-    generated = build.target.read_bytes()
-    assert generated not in (placeholder, b"not-actually-an-ico")
-    assert _distinct_colours(build.target) > 2
-    output = _console_output(capsys)
-    assert "could not read image icon_windows.ico" in output
-    assert "Using the default Flet icon" in output
+        assert ico_sizes(build.target) == (32, 256)

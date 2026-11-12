@@ -16,7 +16,7 @@ def save(img: Image.Image, path, **kwargs) -> str:
 
 
 class TestIcoSizes:
-    """`ico_sizes` proves a `.ico` whole, not just that it has a directory."""
+    """`ico_sizes` reports the sizes only of a `.ico` that decodes in full."""
 
     def _ico(self, tmp_path, sizes):
         path = tmp_path / "i.ico"
@@ -28,16 +28,18 @@ class TestIcoSizes:
         return path
 
     def test_reports_the_sizes_of_a_whole_file(self, tmp_path):
+        """A whole file gives its square sizes in ascending order."""
         assert ico_sizes(self._ico(tmp_path, (48, 16, 256))) == (16, 48, 256)
 
     def test_truncated_file_is_empty(self, tmp_path):
-        """The directory is intact, so only decoding the images finds this."""
+        """A file with an intact directory but truncated images gives nothing."""
         path = self._ico(tmp_path, (16, 256))
         data = path.read_bytes()
         path.write_bytes(data[: len(data) // 2])
         assert ico_sizes(path) == ()
 
     def test_not_an_icon_is_empty(self, tmp_path):
+        """Garbage bytes in a `.ico` and a PNG give nothing."""
         garbage = tmp_path / "i.ico"
         garbage.write_bytes(b"not-actually-an-ico")
         assert ico_sizes(garbage) == ()

@@ -98,11 +98,7 @@ def load_source(
 
 
 def ico_sizes(path: str | Path) -> tuple[int, ...]:
-    """Read a Windows `.ico` in full and report the square sizes it holds.
-
-    Every image in the file is decoded, not just its directory read, so a
-    truncated or otherwise damaged file comes back empty here rather than
-    failing the Windows resource compiler much later, with no useful message.
+    """Decode every image of a Windows `.ico` and report its square sizes.
 
     Args:
         path: The `.ico` to read.

@@ -2,7 +2,7 @@
 
 ### Bug fixes
 
-* Fix `flet build windows` rendering a supplied `assets/icon_windows.ico` from its largest image, which dropped the other sizes it held and replaced its size list with the template's. The file is now copied into the app as it is, as documented, so artwork drawn for the small sizes is what Windows shows. It is checked to be whole first, and a warning is given when its largest image is smaller than the project's largest icon by @arthur-tacca.
+* Fix `flet build windows` replacing the images in a supplied `.ico` app icon with ones resampled from its largest image; the file is now copied into the app unchanged ([#7074](https://github.com/flet-dev/flet/pull/7074)) by @arthur-tacca.
 
 ## 1.1.2
 
