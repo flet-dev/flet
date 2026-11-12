@@ -1,3 +1,9 @@
+## 1.1.3
+
+### Bug fixes
+
+* Fix cancelled client method calls keeping their responses in memory for the rest of the session, and `invoke_method()` timeouts on Python 3.10 skipping the "Timeout waiting for invokeMethod" message ([#7065](https://github.com/flet-dev/flet/pull/7065)) by @remote-controlled-man.
+
 ## 1.1.2
 
 ### Improvements

@@ -507,29 +507,36 @@ class Session:
         evt = asyncio.Event()
         self.__method_calls[call_id] = evt
 
-        # call method
-        self.__send_message(
-            Message(
-                MessageAction.INVOKE_METHOD,
-                InvokeMethodRequestBody(
-                    control_id=control_id, call_id=call_id, name=method_name, args=args
-                ),
-            )
-        )
-
         try:
-            await asyncio.wait_for(evt.wait(), timeout=timeout)
-        except TimeoutError:
-            if call_id in self.__method_calls:
-                del self.__method_calls[call_id]
-            raise TimeoutError(
-                f"Timeout waiting for invokeMethod {method_name}({args}) call"
-            ) from None
+            # call method
+            self.__send_message(
+                Message(
+                    MessageAction.INVOKE_METHOD,
+                    InvokeMethodRequestBody(
+                        control_id=control_id,
+                        call_id=call_id,
+                        name=method_name,
+                        args=args,
+                    ),
+                )
+            )
 
-        result, err = self.__method_call_results.pop(evt)
-        if err:
-            raise RuntimeError(err)
-        return result
+            try:
+                await asyncio.wait_for(evt.wait(), timeout=timeout)
+            except asyncio.TimeoutError:
+                raise TimeoutError(
+                    f"Timeout waiting for invokeMethod {method_name}({args}) call"
+                ) from None
+
+            result, err = self.__method_call_results.pop(evt)
+            if err:
+                raise RuntimeError(err)
+            return result
+        finally:
+            self.__method_calls.pop(call_id, None)
+            # Cancellation can arrive after the response was stored but before
+            # the waiting coroutine resumes to consume it.
+            self.__method_call_results.pop(evt, None)
 
     def handle_invoke_method_results(
         self, control_id: int, call_id: str, result: Any, error: Optional[str]
