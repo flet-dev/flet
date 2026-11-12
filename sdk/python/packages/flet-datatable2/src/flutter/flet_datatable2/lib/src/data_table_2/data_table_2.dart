@@ -5,6 +5,9 @@
 // Copyright 2021 Maxim Saplin - changes and modifications to original Flutter implementation of DataTable
 
 // Copied from data_table_2 3.0.0 (https://pub.dev/packages/data_table_2), BSD 3-Clause, see LICENSE.
+// Flet changes, marked "Flet:": a table of [_lazyMinRows] or more rows builds
+// its data rows as they scroll into view (see [_LazyRows]) instead of all at
+// once, and the per-row parts of build() are methods both paths share.
 
 import 'dart:math' as math;
 
@@ -14,6 +17,13 @@ import 'package:material_ui/material_ui.dart';
 part 'data_table_2_resizable.dart';
 
 bool dataTableShowLogs = true;
+
+/// Flet: a table with at least this many rows builds only the rows near the
+/// viewport. See [_LazyRows].
+const int _lazyMinRows = 100;
+
+/// Flet: rows per [Table] in a lazy table.
+const int _chunkRows = 10;
 
 /// Relative size of a column determines the share of total table width allocated
 /// to each individual column. When determining column widths ratios between S, M and L
@@ -653,6 +663,85 @@ class DataTable2 extends DataTable {
     return label;
   }
 
+  /// Flet: the cell of [row] in data column [dataColumnIndex], as build()
+  /// makes it for both one table of every row and a lazy table.
+  Widget _buildRowCell(
+      BuildContext context,
+      DataRow row,
+      int dataColumnIndex,
+      EdgeInsetsGeometry padding,
+      WidgetStateProperty<Color?>? effectiveDataRowColor) {
+    final DataTableThemeData dataTableTheme = DataTableTheme.of(context);
+    final DataColumn column = columns[dataColumnIndex];
+    final DataCell cell = row.cells[dataColumnIndex];
+    final states = <WidgetState>{
+      if (row.selected) WidgetState.selected,
+    };
+    return _buildDataCell(
+        context: context,
+        padding: padding,
+        specificRowHeight:
+            row is DataRow2 ? row.specificRowHeight : null,
+        label: cell.child,
+        numeric: column.numeric,
+        placeholder: cell.placeholder,
+        showEditIcon: cell.showEditIcon,
+        onTap: cell.onTap,
+        onDoubleTap: cell.onDoubleTap,
+        onLongPress: cell.onLongPress,
+        onTapDown: cell.onTapDown,
+        onTapCancel: cell.onTapCancel,
+        onRowTap: row is DataRow2 ? row.onTap : null,
+        onRowDoubleTap: row is DataRow2 ? row.onDoubleTap : null,
+        onRowLongPress: row.onLongPress,
+        onRowSecondaryTap:
+            row is DataRow2 ? row.onSecondaryTap : null,
+        onRowSecondaryTapDown:
+            row is DataRow2 ? row.onSecondaryTapDown : null,
+        onSelectChanged: row.onSelectChanged != null
+            ? () => row.onSelectChanged!(!row.selected)
+            : null,
+        onRowHover: row.onHover,
+        mouseCursor: row.mouseCursor?.resolve(states) ??
+            dataTableTheme.dataRowCursor?.resolve(states),
+        overlayColor: row.color ?? effectiveDataRowColor);
+  }
+
+  /// Flet: the checkbox cell of [row].
+  Widget _buildRowCheckbox(BuildContext context, DataRow row,
+      WidgetStateProperty<Color?>? effectiveDataRowColor) {
+    final dataTableTheme = DataTableTheme.of(context);
+    final states = <WidgetState>{if (row.selected) WidgetState.selected};
+    return _buildCheckbox(
+        context: context,
+        checked: row.selected,
+        onRowTap: () {
+          if (row is DataRow2 && row.onTap != null) {
+            row.onTap?.call();
+          } else {
+            row.onSelectChanged?.call(!row.selected);
+          }
+        },
+        onCheckboxChanged: row.onSelectChanged,
+        overlayColor: row.color ?? effectiveDataRowColor,
+        checkboxTheme: datarowCheckboxTheme,
+        tristate: false,
+        rowHeight: row is DataRow2 ? row.specificRowHeight : null,
+        onHover: row.onHover,
+        mouseCursor: row.mouseCursor?.resolve(states) ??
+            dataTableTheme.dataRowCursor?.resolve(states));
+  }
+
+  /// Flet: whether [border] only draws lines between rows and columns, which
+  /// a table split into several [Table]s can draw the same way.
+  static bool _hasInsideLinesOnly(TableBorder? border) =>
+      border == null ||
+      (border.top == BorderSide.none &&
+          border.right == BorderSide.none &&
+          border.bottom == BorderSide.none &&
+          border.left == BorderSide.none &&
+          border.borderRadius == BorderRadius.zero);
+
   @override
   Widget build(BuildContext context) {
     var sw = Stopwatch();
@@ -711,7 +800,16 @@ class DataTable2 extends DataTable {
             : math.min(fixedLeftColumns,
                 columns.length + (showCheckboxColumn ? 1 : 0)));
 
-    List<TableRow>? coreRows = rows.isEmpty ||
+    // Flet: a long table builds its data rows as they scroll into view, so
+    // the rows built here are only the data rows fixed at the top. Needs the
+    // heading row fixed, and no outer border that only one big Table draws.
+    final lazy = rows.length >= _lazyMinRows &&
+        actualFixedRows >= 1 &&
+        _hasInsideLinesOnly(border);
+    final eagerRows = lazy ? rows.sublist(0, actualFixedRows - 1) : rows;
+
+    List<TableRow>? coreRows = lazy ||
+            rows.isEmpty ||
             actualFixedColumns >= columns.length + (showCheckboxColumn ? 1 : 0)
         ? null
         : _buildTableRows(
@@ -727,7 +825,7 @@ class DataTable2 extends DataTable {
                 : null,
             actualFixedRows > 0 ? actualFixedRows - 1 : 0);
 
-    List<TableRow>? fixedColumnsRows = rows.isEmpty
+    List<TableRow>? fixedColumnsRows = lazy || rows.isEmpty
         ? null
         : actualFixedColumns > 0
             ? (actualFixedRows < 1
@@ -846,7 +944,7 @@ class DataTable2 extends DataTable {
         fixedRows,
         fixedCornerRows,
         fixedColumnsRows,
-        rows,
+        eagerRows,
         actualFixedRows,
         effectiveDataRowColor);
 
@@ -872,6 +970,8 @@ class DataTable2 extends DataTable {
             // size data columns
             final widths = _calculateDataColumnSizes(
                 constraints, checkBoxWidth, effectiveHorizontalMargin, cdc);
+            final paddings = List<EdgeInsetsGeometry>.filled(
+                columns.length, EdgeInsets.zero);
 
             // File empty cells in created rows with actual widgets
             for (int dataColumnIndex = 0;
@@ -899,6 +999,7 @@ class DataTable2 extends DataTable {
                 start: paddingStart,
                 end: paddingEnd,
               );
+              paddings[dataColumnIndex] = padding;
 
               tableColumnWidths[displayColumnIndex] =
                   FixedColumnWidth(widths[dataColumnIndex]);
@@ -956,41 +1057,9 @@ class DataTable2 extends DataTable {
                       ? actualFixedRows - 1
                       : -1;
 
-              for (final DataRow row in rows) {
-                final DataCell cell = row.cells[dataColumnIndex];
-                final states = <WidgetState>{
-                  if (row.selected) WidgetState.selected,
-                };
-                //dataRows[rowIndex].children![displayColumnIndex]
-
-                var c = _buildDataCell(
-                    context: context,
-                    padding: padding,
-                    specificRowHeight:
-                        row is DataRow2 ? row.specificRowHeight : null,
-                    label: cell.child,
-                    numeric: column.numeric,
-                    placeholder: cell.placeholder,
-                    showEditIcon: cell.showEditIcon,
-                    onTap: cell.onTap,
-                    onDoubleTap: cell.onDoubleTap,
-                    onLongPress: cell.onLongPress,
-                    onTapDown: cell.onTapDown,
-                    onTapCancel: cell.onTapCancel,
-                    onRowTap: row is DataRow2 ? row.onTap : null,
-                    onRowDoubleTap: row is DataRow2 ? row.onDoubleTap : null,
-                    onRowLongPress: row.onLongPress,
-                    onRowSecondaryTap:
-                        row is DataRow2 ? row.onSecondaryTap : null,
-                    onRowSecondaryTapDown:
-                        row is DataRow2 ? row.onSecondaryTapDown : null,
-                    onSelectChanged: row.onSelectChanged != null
-                        ? () => row.onSelectChanged!(!row.selected)
-                        : null,
-                    onRowHover: row.onHover,
-                    mouseCursor: row.mouseCursor?.resolve(states) ??
-                        dataTableTheme.dataRowCursor?.resolve(states),
-                    overlayColor: row.color ?? effectiveDataRowColor);
+              for (final DataRow row in eagerRows) {
+                var c = _buildRowCell(context, row, dataColumnIndex, padding,
+                    effectiveDataRowColor);
 
                 if (displayColumnIndex < actualFixedColumns) {
                   if (rowIndex + 1 < actualFixedRows) {
@@ -1125,6 +1194,65 @@ class DataTable2 extends DataTable {
                           children: [t, SizedBox(height: bottomMargin!)])
                       : t;
 
+              // Flet: in a lazy table, the row [r] of display columns [from]
+              // to [to], built when its chunk scrolls into view.
+              TableRow lazyRow(int r, int from, int to,
+                  WidgetStateProperty<Color?>? rowColor, bool fixedColumns) {
+                final row = rows[r];
+                final tableRow = _buildTableRow(row, anyRowSelectable, rowColor,
+                    context, theme, to - from, defaultRowColor, fixedColumns);
+                for (var d = from; d < to; d++) {
+                  final dataColumnIndex = d - (displayCheckboxColumn ? 1 : 0);
+                  tableRow.children[d - from] = dataColumnIndex < 0
+                      ? _buildRowCheckbox(context, row, effectiveDataRowColor)
+                      : _buildRowCell(context, row, dataColumnIndex,
+                          paddings[dataColumnIndex], effectiveDataRowColor);
+                }
+                return tableRow;
+              }
+
+              // Flet: the data rows of display columns [from] to [to] in a
+              // lazy table, scrolled by [controller].
+              Widget lazyRows(ScrollController controller, int from, int to,
+                  {required bool fixedColumns}) {
+                final rowColor = fixedColumns && fixedColumnsColor != null
+                    ? WidgetStatePropertyAll(fixedColumnsColor)
+                    : effectiveDataRowColor;
+                final rowHeight =
+                    getMinMaxRowHeight(DataTableTheme.of(context)).$1;
+                final columnWidths = {
+                  for (var d = from; d < to; d++) d - from: tableColumnWidths[d]
+                };
+                return _LazyRows(
+                  controller: controller,
+                  firstRow: actualFixedRows - 1,
+                  rowCount: rows.length,
+                  rowHeight: (r) =>
+                      (rows[r] is DataRow2
+                          ? (rows[r] as DataRow2).specificRowHeight
+                          : null) ??
+                      rowHeight,
+                  width: [
+                    for (var d = from; d < to; d++)
+                      (tableColumnWidths[d] as FixedColumnWidth).value
+                  ].fold(0.0, (a, b) => a + b),
+                  bottomMargin: bottomMargin ?? 0,
+                  line: border?.horizontalInside ?? BorderSide.none,
+                  buildChunk: (start, end) => Table(
+                    columnWidths: columnWidths,
+                    border: border == null
+                        ? null
+                        : TableBorder(
+                            horizontalInside: border!.horizontalInside,
+                            verticalInside: border!.verticalInside),
+                    children: [
+                      for (var r = start; r < end; r++)
+                        lazyRow(r, from, to, rowColor, fixedColumns)
+                    ],
+                  ),
+                );
+              }
+
               var scrollBarTheme = Theme.of(context).scrollbarTheme;
               // flutter/lib/src/material/scrollbar.dart, scrollbar decides whther to create  Cupertino or Material scrollbar, Cupertino ignores themes
               var isiOS = Theme.of(context).platform == TargetPlatform.iOS;
@@ -1170,18 +1298,51 @@ class DataTable2 extends DataTable {
                                     ?.resolve({WidgetState.hovered})
                                 : null),
                             controller: coreVerticalController,
-                            child: SingleChildScrollView(
-                                controller: coreVerticalController,
-                                scrollDirection: Axis.vertical,
-                                child: SingleChildScrollView(
+                            // Flet: a lazy table scrolls its rows vertically
+                            // inside the horizontal scroll, one level down.
+                            notificationPredicate: lazy
+                                ? (n) =>
+                                    n.depth == 1 &&
+                                    n.metrics.axis == Axis.vertical
+                                : defaultScrollNotificationPredicate,
+                            child: lazy
+                                ? SingleChildScrollView(
                                     controller: coreHorizontalController,
                                     scrollDirection: Axis.horizontal,
-                                    child: addBottomMargin(coreTable)))))
+                                    child: ScrollConfiguration(
+                                        behavior: ScrollConfiguration.of(context)
+                                            .copyWith(scrollbars: false),
+                                        child: lazyRows(
+                                            coreVerticalController,
+                                            actualFixedColumns,
+                                            tableColumnWidths.length,
+                                            fixedColumns: false)))
+                                : SingleChildScrollView(
+                                    controller: coreVerticalController,
+                                    scrollDirection: Axis.vertical,
+                                    child: SingleChildScrollView(
+                                        controller: coreHorizontalController,
+                                        scrollDirection: Axis.horizontal,
+                                        child: addBottomMargin(coreTable)))))
                   ]));
 
-              fixedColumnAndCornerCol = fixedTopLeftCornerTable == null &&
-                      fixedColumnsTable == null
-                  ? null
+              fixedColumnAndCornerCol = lazy
+                  ? (actualFixedColumns == 0
+                      ? null
+                      : Column(mainAxisSize: MainAxisSize.min, children: [
+                          ?fixedTopLeftCornerTable,
+                          Flexible(
+                              fit: FlexFit.loose,
+                              child: ScrollConfiguration(
+                                  behavior: ScrollConfiguration.of(context)
+                                      .copyWith(scrollbars: false),
+                                  child: lazyRows(leftColumnVerticalContoller,
+                                      0, actualFixedColumns,
+                                      fixedColumns: true)))
+                        ]))
+                  : fixedTopLeftCornerTable == null &&
+                          fixedColumnsTable == null
+                      ? null
                   : Column(mainAxisSize: MainAxisSize.min, children: [
                       ?fixedTopLeftCornerTable,
                       if (fixedColumnsTable != null)
@@ -1298,29 +1459,8 @@ class DataTable2 extends DataTable {
               : -1;
 
       var rowIndex = 0;
-      final dataTableTheme = DataTableTheme.of(context);
       for (final DataRow row in rows) {
-        final states = <WidgetState>{if (row.selected) WidgetState.selected};
-        var x = _buildCheckbox(
-            context: context,
-            checked: row.selected,
-            onRowTap: () {
-              if (row is DataRow2 && row.onTap != null) {
-                row.onTap?.call();
-              } else {
-                row.onSelectChanged?.call(!row.selected);
-              }
-            },
-            onCheckboxChanged: row.onSelectChanged,
-            overlayColor: row.color ?? effectiveDataRowColor,
-            checkboxTheme: datarowCheckboxTheme,
-            tristate: false,
-            rowHeight: rows[rowIndex] is DataRow2
-                ? (rows[rowIndex] as DataRow2).specificRowHeight
-                : null,
-            onHover: row.onHover,
-            mouseCursor: row.mouseCursor?.resolve(states) ??
-                dataTableTheme.dataRowCursor?.resolve(states));
+        var x = _buildRowCheckbox(context, row, effectiveDataRowColor);
 
         if (fixedCornerRows != null && rowIndex < fixedCornerRows.length - 1) {
           fixedCornerRows[rowIndex + 1].children[0] = x;
@@ -1473,55 +1613,76 @@ class DataTable2 extends DataTable {
         if (headingRow != null && index == 0) {
           return headingRow;
         } else {
-          final bool isSelected = rows[rowStartIndex + actualIndex].selected;
-          final bool isDisabled = anyRowSelectable &&
-              rows[rowStartIndex + actualIndex].onSelectChanged == null;
-          final Set<WidgetState> states = <WidgetState>{
-            if (isSelected) WidgetState.selected,
-            if (isDisabled) WidgetState.disabled,
-          };
-          final Color? resolvedDataRowColor = (forceEffectiveDataRowColor
-                  ? effectiveDataRowColor
-                  : (rows[rowStartIndex + actualIndex].color ??
-                      effectiveDataRowColor))
-              ?.resolve(states);
-          final Color? rowColor = resolvedDataRowColor;
-
-          final BorderSide borderSide = Divider.createBorderSide(
-            context,
-            width: dividerThickness ??
-                theme.dataTableTheme.dividerThickness ??
-                _dividerThickness,
-          );
-          final Border border = showBottomBorder
-              ? Border(bottom: borderSide)
-              : Border(top: borderSide);
-
-          Decoration? rowDecoration =
-              rows[rowStartIndex + actualIndex] is DataRow2
-                  ? (rows[rowStartIndex + actualIndex] as DataRow2).decoration
-                  : null;
-
-          return TableRow(
-            key: rows[rowStartIndex + actualIndex].key,
-            decoration: rowDecoration ??
-                BoxDecoration(
-                  // Changed standard behaviour to never add border should the thickness be 0
-                  border: dividerThickness == null ||
-                          (dividerThickness != null && dividerThickness != 0.0)
-                      ? border
-                      : null,
-                  color: rowColor ?? defaultRowColor.resolve(states),
-                ),
-            children: List<Widget>.filled(
-                numberOfCols <= 0 ? numberOfCols : numberOfCols,
-                const _NullWidget()),
-          );
+          return _buildTableRow(
+              rows[rowStartIndex + actualIndex],
+              anyRowSelectable,
+              effectiveDataRowColor,
+              context,
+              theme,
+              numberOfCols,
+              defaultRowColor,
+              forceEffectiveDataRowColor);
         }
       },
     );
 
     return tableRows;
+  }
+
+  /// Flet: the [TableRow] of [row], with every cell still to fill in.
+  TableRow _buildTableRow(
+      DataRow row,
+      bool anyRowSelectable,
+      WidgetStateProperty<Color?>? effectiveDataRowColor,
+      BuildContext context,
+      ThemeData theme,
+      int numberOfCols,
+      WidgetStateProperty<Color?> defaultRowColor,
+      bool forceEffectiveDataRowColor) {
+    final bool isSelected = row.selected;
+    final bool isDisabled = anyRowSelectable &&
+        row.onSelectChanged == null;
+    final Set<WidgetState> states = <WidgetState>{
+      if (isSelected) WidgetState.selected,
+      if (isDisabled) WidgetState.disabled,
+    };
+    final Color? resolvedDataRowColor = (forceEffectiveDataRowColor
+            ? effectiveDataRowColor
+            : (row.color ??
+                effectiveDataRowColor))
+        ?.resolve(states);
+    final Color? rowColor = resolvedDataRowColor;
+
+    final BorderSide borderSide = Divider.createBorderSide(
+      context,
+      width: dividerThickness ??
+          theme.dataTableTheme.dividerThickness ??
+          _dividerThickness,
+    );
+    final Border border = showBottomBorder
+        ? Border(bottom: borderSide)
+        : Border(top: borderSide);
+
+    Decoration? rowDecoration =
+        row is DataRow2
+            ? row.decoration
+            : null;
+
+    return TableRow(
+      key: row.key,
+      decoration: rowDecoration ??
+          BoxDecoration(
+            // Changed standard behaviour to never add border should the thickness be 0
+            border: dividerThickness == null ||
+                    (dividerThickness != null && dividerThickness != 0.0)
+                ? border
+                : null,
+            color: rowColor ?? defaultRowColor.resolve(states),
+          ),
+      children: List<Widget>.filled(
+          numberOfCols <= 0 ? numberOfCols : numberOfCols,
+          const _NullWidget()),
+    );
   }
 
   TableRow _buildHeadingRow(BuildContext context, ThemeData theme,
@@ -1557,6 +1718,90 @@ class DataTable2 extends DataTable {
     );
     return headingRow;
   }
+}
+
+/// Flet: the data rows of a long [DataTable2], in [Table]s of [_chunkRows]
+/// rows that a [ListView] builds as they scroll into view, in place of one
+/// [Table] that builds and lays out every cell.
+class _LazyRows extends StatelessWidget {
+  const _LazyRows({
+    required this.controller,
+    required this.firstRow,
+    required this.rowCount,
+    required this.rowHeight,
+    required this.width,
+    required this.bottomMargin,
+    required this.line,
+    required this.buildChunk,
+  });
+
+  final ScrollController controller;
+  final int firstRow;
+  final int rowCount;
+  final double Function(int row) rowHeight;
+  final double width;
+  final double bottomMargin;
+
+  /// The line between rows, which a chunk draws above its first row.
+  final BorderSide line;
+  final Table Function(int start, int end) buildChunk;
+
+  @override
+  Widget build(BuildContext context) {
+    final chunks = (rowCount - firstRow + _chunkRows - 1) ~/ _chunkRows;
+    final extents = [
+      for (var i = 0; i < chunks; i++)
+        [
+          for (var r = firstRow + i * _chunkRows;
+              r < math.min(rowCount, firstRow + (i + 1) * _chunkRows);
+              r++)
+            rowHeight(r)
+        ].fold(0.0, (a, b) => a + b)
+    ];
+    return SizedBox(
+      width: width,
+      child: ListView.builder(
+        controller: controller,
+        padding: EdgeInsets.zero,
+        itemCount: chunks + (bottomMargin > 0 ? 1 : 0),
+        itemExtentBuilder: (i, _) => i < chunks ? extents[i] : bottomMargin,
+        itemBuilder: (context, i) {
+          if (i >= chunks) return const SizedBox.shrink();
+          final start = firstRow + i * _chunkRows;
+          Widget table =
+              buildChunk(start, math.min(rowCount, start + _chunkRows));
+          // A Table strokes the line between two rows centered on their
+          // boundary; the line above a chunk's first row is drawn the same way.
+          if (i > 0 && line.style != BorderStyle.none) {
+            table = CustomPaint(
+                foregroundPainter: _LinePainter(line), child: table);
+          }
+          return table;
+        },
+      ),
+    );
+  }
+}
+
+class _LinePainter extends CustomPainter {
+  const _LinePainter(this.side);
+
+  final BorderSide side;
+
+  @override
+  void paint(Canvas canvas, Size size) {
+    canvas.drawPath(
+        Path()
+          ..moveTo(0, 0)
+          ..lineTo(size.width, 0),
+        Paint()
+          ..color = side.color
+          ..strokeWidth = side.width
+          ..style = PaintingStyle.stroke);
+  }
+
+  @override
+  bool shouldRepaint(_LinePainter oldDelegate) => oldDelegate.side != side;
 }
 
 class _SortArrow extends StatefulWidget {
