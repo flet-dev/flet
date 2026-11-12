@@ -8,7 +8,7 @@ iOS and macOS asset catalogs, Android mipmaps and adaptive layers, a multi-size
 Windows `.ico`, the Linux hicolor tree, and web favicons, maskable icons and
 splash images.
 
-> **[Try Flet online in Flet Studio](https://studio.flet.dev)**
+> **[Try Flet online in Flet Studio](https://studio.flet.dev/?utm_source=pypi&utm_medium=readme&utm_campaign=flet-platform-assets)**
 >
 > Start your next Flet app in the browser, then use this package locally to prepare its icons and splash screens. Write your own Python code or get help from the AI agent.
 

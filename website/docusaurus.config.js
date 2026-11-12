@@ -27,6 +27,16 @@ module.exports = {
     mermaid: true,
   },
   plugins: ['@docsearch/docusaurus-adapter'],
+  scripts: [
+    // Umami analytics (dashboard: analytics.flet.dev); `data-domains`
+    // keeps local dev and preview deploys out of the stats.
+    {
+      src: 'https://e.flet.dev/p.js',
+      defer: true,
+      'data-website-id': '8bbd0281-610a-4a45-ba5d-763cf698bd16',
+      'data-domains': 'flet.dev',
+    },
+  ],
   themeConfig: {
     docsearch: {
       appId: 'ESNSJEY7OD',
@@ -78,7 +88,7 @@ module.exports = {
           position: 'left',
         },
         {
-          to: 'https://studio.flet.dev/gallery',
+          to: 'https://studio.flet.dev/gallery?utm_source=flet.dev&utm_medium=site&utm_campaign=navbar',
           label: 'Gallery',
           position: 'left',
         },
@@ -139,7 +149,7 @@ module.exports = {
           items: [
             {
               label: 'Flet Studio app',
-              href: 'https://studio.flet.dev',
+              href: 'https://studio.flet.dev/?utm_source=flet.dev&utm_medium=site&utm_campaign=footer',
             },
             {
               label: 'Pricing',
