@@ -2,6 +2,7 @@
 
 ### Improvements
 
+* Load a `DataTable` of thousands of rows without freezing the app: a table with 100 or more rows of one height builds only the rows near the visible part of the page, so a 3,470-row table loads in one 0.2 s frame instead of a 4 s freeze, and selecting a row no longer freezes the app for a second ([#7076](https://github.com/flet-dev/flet/pull/7076)) by @FeodorFitsner.
 * Scroll long pages and tables smoothly: every control used to get its own compositing layer, so a page of thousands of controls, like a `DataTable` with thousands of rows, stuttered on every scroll frame; controls now add a layer only while their `opacity` is between 0 and 1, and a `DataTable` no longer repaints all of its rows as it scrolls ([#7076](https://github.com/flet-dev/flet/pull/7076)) by @FeodorFitsner.
 
 ### Bug fixes
