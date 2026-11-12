@@ -23,6 +23,7 @@ from flet_platform_assets import (
     SourceError,
     SplashOptions,
     density_size,
+    ico_sizes,
     linux_targets,
     load_source,
     parse_hex_color,
@@ -200,7 +201,7 @@ CROSS_PLATFORM_PERMISSIONS = {
 # produces. Both stamps hash it, so upgrading flet-cli regenerates rather
 # than leaving a user with output from the previous implementation. Nothing
 # else encodes the generator's identity now that the pubspec no longer does.
-ICONS_GENERATOR_VERSION = 2
+ICONS_GENERATOR_VERSION = 3
 SPLASH_GENERATOR_VERSION = 4
 
 # `flet build` target platform -> the platform name flet-platform-assets uses.
@@ -1955,7 +1956,8 @@ class BaseBuildCommand(BaseFlutterCommand):
             # Whether the source is a generic `icon.png` rather than artwork the
             # author framed for this platform. A generic icon gets the platform's
             # margin computed for it; `icon_<platform>.png` is a finished
-            # composition and is used exactly as supplied.
+            # composition and is used exactly as supplied. On Windows, a `.ico`
+            # is copied into the app whole, with every size it holds.
             derived = False
             if self.assets_path.exists():
                 # Only the target platform's chain is resolved; the other five
@@ -1991,6 +1993,11 @@ class BaseBuildCommand(BaseFlutterCommand):
             if not hash.has_changed() and not self._icons_missing(platform):
                 hash.commit()
                 console.log(f"App icons are up to date {self.emojis['checkmark']}")
+                return
+
+            if platform == "windows" and self._copy_windows_ico(source_path):
+                console.log(f"Copied app icon as supplied {self.emojis['checkmark']}")
+                hash.commit()
                 return
 
             try:
@@ -2097,6 +2104,47 @@ class BaseBuildCommand(BaseFlutterCommand):
             )
             return (255, 255, 255)
 
+    def _copy_windows_ico(self, source_path: Path) -> bool:
+        """
+        Copy a supplied `.ico` over the runner's `app_icon.ico` unchanged.
+
+        Warns when its largest image is smaller than the largest size the
+        project declares. Nothing is copied when the template has no
+        `app_icon.ico`.
+
+        Args:
+            source_path: The resolved icon source.
+
+        Returns:
+            `True` when `source_path` is a readable `.ico`, `False` otherwise,
+                in which case the caller renders it like any other image.
+        """
+
+        assert self.flutter_dir
+
+        if source_path.suffix.lower() != ".ico":
+            return False
+        sizes = ico_sizes(source_path)
+        if not sizes:
+            return False
+
+        # Read, and so record, the placeholder's sizes before it is overwritten.
+        spec = self._icon_spec("windows") or DEFAULT_SPECS["windows"]
+        declared = max(spec.ico_sizes, default=0)
+        if max(sizes) < declared:
+            self.warn(
+                f"icon source's largest image is {max(sizes)}px, but this project "
+                f"uses icons up to {declared}px. Windows enlarges it for those "
+                f"sizes and they will look soft. Add a {declared}x{declared} image "
+                "to the .ico.",
+                title="App icon",
+                file=annotation_path(source_path),
+            )
+        target = self.flutter_dir / "windows" / "runner" / "resources" / "app_icon.ico"
+        if target.is_file():
+            shutil.copyfile(source_path, target)
+        return True
+
     def _icon_spec(self, platform: str):
         """
         Build the icon target list from what the rendered project declares.
@@ -2127,13 +2175,44 @@ class BaseBuildCommand(BaseFlutterCommand):
             # Named after the desktop entry id, so the list is per-app.
             return linux_targets(self.template_data["bundle_id"])
         if platform == "windows":
-            existing = (
-                self.flutter_dir / "windows" / "runner" / "resources" / "app_icon.ico"
-            )
-            sizes = self.get_ico_sizes(existing)
+            sizes = self._template_ico_sizes()
             if sizes:
                 return AssetSpec(ico_sizes=sizes)
         return None
+
+    def _template_ico_sizes(self) -> tuple[int, ...]:
+        """
+        The entry sizes of the template's `app_icon.ico`.
+
+        A supplied `.ico` is copied over the placeholder, so its sizes are
+        recorded on first read, per `template_digest`.
+
+        Returns:
+            The square entry sizes, or an empty tuple when neither the record
+                nor the file can be read.
+        """
+
+        assert self.flutter_dir
+        assert self.build_dir
+
+        record_path = self.build_dir / ".hash" / "windows-ico-sizes"
+        try:
+            record = json.loads(record_path.read_text(encoding="utf-8"))
+            if record["template_digest"] == self.template_digest:
+                return tuple(record["sizes"])
+        except (OSError, ValueError, KeyError, TypeError):
+            pass
+
+        sizes = ico_sizes(
+            self.flutter_dir / "windows" / "runner" / "resources" / "app_icon.ico"
+        )
+        if sizes:
+            record_path.parent.mkdir(parents=True, exist_ok=True)
+            record_path.write_text(
+                json.dumps({"template_digest": self.template_digest, "sizes": sizes}),
+                encoding="utf-8",
+            )
+        return sizes
 
     def _flutter_packages_missing(self) -> bool:
         """
@@ -4277,40 +4356,6 @@ class BaseBuildCommand(BaseFlutterCommand):
         ]
         return ";".join(escaped or ["Utility"]) + ";"
 
-    @staticmethod
-    def get_ico_sizes(path: Path) -> tuple[int, ...]:
-        """
-        Read the entry sizes of an existing Windows `.ico`.
-
-        A project that ships its own icon states which sizes it wants by
-        which entries it contains, so a regenerated file keeps them rather
-        than imposing a fixed list.
-
-        Args:
-            path: Path to the `.ico` file.
-
-        Returns:
-            The square entry sizes, or an empty tuple when the file cannot be
-                read. Windows stores 256 as 0 in the directory entry.
-        """
-
-        try:
-            with open(path, "rb") as f:
-                header = f.read(6)
-                if header[:4] != b"\x00\x00\x01\x00":
-                    return ()
-                count = int.from_bytes(header[4:6], "little")
-                entries = f.read(16 * count)
-        except OSError:
-            return ()
-        sizes = []
-        for i in range(count):
-            width = entries[i * 16] or 256
-            height = entries[i * 16 + 1] or 256
-            if width == height:
-                sizes.append(width)
-        return tuple(sorted(set(sizes)))
-
     def find_platform_image(
         self,
         src_path: Path,
@@ -4338,9 +4383,9 @@ class BaseBuildCommand(BaseFlutterCommand):
 
         # Drop candidates that cannot serve this target: .icns and .ico are
         # container formats for the platform that defines them. Pillow reads
-        # both, and `load_source` takes their largest frame, but using a
-        # macOS icon set as an Android launcher icon is not what the file
-        # name asked for.
+        # both, and `load_source` takes their largest frame (a Windows build
+        # copies a `.ico` whole), but using a macOS icon set as an
+        # Android launcher icon is not what the file name asked for.
         def _incompatible(p: str) -> bool:
             ext = Path(p).suffix.lower()
             return (ext == ".icns" and self.target_platform != "macos") or (

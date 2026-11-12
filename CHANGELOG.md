@@ -1,3 +1,9 @@
+## 1.1.3
+
+### Bug fixes
+
+* Fix `flet build windows` replacing the images in a supplied `.ico` app icon with ones resampled from its largest image; the file is now copied into the app unchanged ([#7074](https://github.com/flet-dev/flet/pull/7074)) by @arthur-tacca.
+
 ## 1.1.2
 
 ### Improvements
