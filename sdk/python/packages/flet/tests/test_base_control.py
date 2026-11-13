@@ -43,10 +43,7 @@ def test_keys():
     sys.version_info < (3, 11), reason="typing.get_overloads requires Python 3.11+"
 )
 def test_control_args_overload_accepts_only_str_name():
-    """
-    `@control("Name")` must not match a `type[T]` parameter: T would stay
-    unbound and mypy would infer the returned decorator as `type[Never]`.
-    """
+    """The `@control(...)` overload accepts only a string `dart_widget_name`."""
     _, with_args = typing.get_overloads(control)
     hints = typing.get_type_hints(with_args)
     assert hints["dart_widget_name"] == typing.Optional[str]
