@@ -131,3 +131,42 @@ def test_observable_repr():
     foo.prop_b = "value2"
     updated_repr_2 = repr(foo)
     assert "version=2" in updated_repr_2
+
+
+def test_list_inplace_operators_notify():
+    changes = []
+
+    def subscriber(sender, field):
+        changes.append(field)
+
+    baz = Baz(f=1)
+    baz.subscribe(subscriber)
+
+    baz.prop_d += [4]
+    assert baz.prop_d == [1, 2, 3, 4]
+    assert changes == ["prop_d"]
+
+    baz.prop_d *= 2
+    assert baz.prop_d == [1, 2, 3, 4, 1, 2, 3, 4]
+    assert changes == ["prop_d", "prop_d"]
+
+
+def test_list_iadd_with_itself():
+    baz = Baz(f=1)
+
+    baz.prop_d += baz.prop_d
+    assert baz.prop_d == [1, 2, 3, 1, 2, 3]
+
+
+def test_dict_inplace_union_notifies():
+    changes = []
+
+    def subscriber(sender, field):
+        changes.append(field)
+
+    qux = Qux()
+    qux.subscribe(subscriber)
+
+    qux.prop_e |= {"key1": "value1"}
+    assert qux.prop_e == {"key1": "value1"}
+    assert changes == ["prop_e"]

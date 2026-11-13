@@ -275,6 +275,24 @@ class ObservableList(list):
         super().extend(self._wrap(v) for v in it)
         self._touch()
 
+    def __iadd__(self, other):
+        """
+        Extend list in place (`+=`) and notify observers.
+        """
+
+        # Snapshot first: `items += items` must not iterate a list that grows.
+        self.extend(list(other))
+        return self
+
+    def __imul__(self, n):
+        """
+        Repeat list items in place (`*=`) and notify observers.
+        """
+
+        super().__imul__(n)
+        self._touch()
+        return self
+
     def insert(self, i, x):
         """
         Insert an item at a specific index and notify observers.
@@ -400,6 +418,14 @@ class ObservableDict(dict):
 
         super().update(*a, **{kk: self._wrap(vv) for kk, vv in k.items()})
         self._touch()
+
+    def __ior__(self, other):
+        """
+        Merge a mapping in place (`|=`) and notify observers.
+        """
+
+        self.update(other)
+        return self
 
     def pop(self, k, *d):
         """
