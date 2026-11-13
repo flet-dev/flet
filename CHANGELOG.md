@@ -1,3 +1,9 @@
+## 1.1.3
+
+### Bug fixes
+
+* Fix mypy inferring `type[Never]` for classes decorated with `@control("Name")`: the overload that takes arguments now accepts only a string `dart_widget_name` ([#7085](https://github.com/flet-dev/flet/issues/7085), [#7087](https://github.com/flet-dev/flet/pull/7087)) by @joaoaracheski.
+
 ## 1.1.2
 
 ### Improvements
