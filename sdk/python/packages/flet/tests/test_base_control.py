@@ -38,8 +38,10 @@ def test_keys():
 
 
 def test_dataclass_transforms_declare_field_specifiers():
-    # Type checkers only honor `dataclasses.field()` arguments (e.g. `init=False`)
-    # on `@control` and `@value` classes when `field` is a declared field specifier.
+    """
+    Type checkers only honor `dataclasses.field()` arguments (e.g. `init=False`)
+    on `@control` and `@value` classes when `field` is a declared field specifier.
+    """
     for decorator in (control, value):
         transform = decorator.__dataclass_transform__
         assert dataclasses.field in transform["field_specifiers"]

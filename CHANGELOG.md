@@ -1,3 +1,9 @@
+## 1.1.3
+
+### Bug fixes
+
+* Fix type checkers ignoring `dataclasses.field()` arguments such as `init=False` on `@control` and `@value` classes, by declaring `dataclasses.field` as a field specifier ([#6377](https://github.com/flet-dev/flet/issues/6377), [#7084](https://github.com/flet-dev/flet/pull/7084)) by @joaoaracheski.
+
 ## 1.1.2
 
 ### Improvements
