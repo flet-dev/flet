@@ -135,6 +135,14 @@ class FletTestApp:
             `flutter test`, which builds the app on every run. Used in host
             mode on desktop only. Env override: `FLET_TEST_APP_BINARY`.
 
+        start_timeout:
+            Seconds `start()` waits for the Flutter app to connect before it
+            stops the Flutter test process and raises `TimeoutError`. Defaults
+            to 60 seconds when `app_binary` is launched, which connects within
+            seconds, and to no limit when `flutter test` builds the app
+            before it starts, which can take minutes. `0` disables the limit.
+            Env override: `FLET_TEST_START_TIMEOUT`.
+
         skip_pump_and_settle:
             If `True`, the initial `pump_and_settle` after app start is skipped.
 
@@ -156,6 +164,7 @@ class FletTestApp:
         - `FLET_TEST_USE_HTTP`: Enables HTTP transport when set to `1`.
         - `FLET_TEST_DISABLE_FVM`: Disables `fvm` usage when set to `1`.
         - `FLET_TEST_APP_BINARY`: Overrides `app_binary`.
+        - `FLET_TEST_START_TIMEOUT`: Overrides `start_timeout`.
     """
 
     def __init__(
@@ -173,6 +182,7 @@ class FletTestApp:
         use_http: bool = False,
         disable_fvm: bool = False,
         app_binary: Optional[os.PathLike] = None,
+        start_timeout: Optional[float] = None,
         skip_pump_and_settle: bool = False,
         device_mode: bool = False,
     ):
@@ -197,6 +207,12 @@ class FletTestApp:
         self.__app_binary = os.getenv("FLET_TEST_APP_BINARY") or app_binary
         self.__use_http = get_bool_env_var("FLET_TEST_USE_HTTP") or use_http
         self.__device_mode = get_bool_env_var("FLET_TEST_DEVICE_MODE") or device_mode
+        env_start_timeout = os.getenv("FLET_TEST_START_TIMEOUT")
+        if env_start_timeout:
+            start_timeout = float(env_start_timeout)
+        elif start_timeout is None and self.__app_binary and not self.__device_mode:
+            start_timeout = self.__app_binary_start_timeout
+        self.__start_timeout = start_timeout or None
         self.__test_path = test_path
         self.__flet_app_main = flet_app_main
         self.__skip_pump_and_settle = skip_pump_and_settle
@@ -383,9 +399,15 @@ class FletTestApp:
         def connected() -> bool:
             if self.__device_mode:
                 return self.__tester is not None and self.__tester.is_connected()
-            return ready.is_set()
+            return self.__page is not None
 
-        while not connected():
+        def started() -> bool:
+            return connected() if self.__device_mode else ready.is_set()
+
+        loop = asyncio.get_running_loop()
+        deadline = loop.time() + self.__start_timeout if self.__start_timeout else None
+
+        while not started():
             await asyncio.sleep(0.2)
             if self.__flutter_process.returncode is not None:
                 self.__dump_flutter_output()
@@ -404,6 +426,14 @@ class FletTestApp:
                     f"Flet app server on port {self.__tcp_port} stopped before "
                     f"the Flutter app connected: {error!r}"
                 ) from error
+            if deadline and loop.time() > deadline and not connected():
+                await self.__stop_flutter_process()
+                self.__dump_flutter_output()
+                raise TimeoutError(
+                    f"Flutter app did not connect to {app_url} in "
+                    f"{self.__start_timeout:g} seconds and was stopped. "
+                    "Set FLET_TEST_START_TIMEOUT to change the limit."
+                )
 
     async def __stop_flutter_process(self):
         """
@@ -1107,5 +1137,6 @@ class FletTestApp:
             return min(similarities), None
 
     __pump_and_settle_timeout = 10.0
+    __app_binary_start_timeout = 60.0
     __flutter_output_limit = 262144
     __flutter_output_line_limit = 2048
