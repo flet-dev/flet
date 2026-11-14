@@ -234,42 +234,18 @@ class Observable:
 _MISSING = object()
 
 
-def _is_written_back(container, current: Any, value: Any) -> bool:
+class _ObservableCollection:
     """
-    Tell whether `value` is the observable child already stored in a slot.
+    Base for collections that report changes to a field of an observable.
 
-    Python writes the result of an augmented assignment such as
-    `d["items"] += [1]` back into the slot. The child has notified already, so
-    writing the identical child back to the same owner and field is a no-op.
-
-    Args:
-        container: Observable list or dict that holds the slot.
-        current: Value in the slot, or `_MISSING` when the slot is empty.
-        value: Value being written into the slot.
-
-    Returns:
-        `True` when `value` is `current` and reports to the same owner and field.
+    Subclasses store a weak reference to the owning observable in `_owner_ref`
+    and the field's name in `_field`, both declared in their `__slots__`.
     """
 
-    return (
-        value is current
-        and isinstance(value, (ObservableList, ObservableDict))
-        and value._owner_ref() is container._owner_ref()
-        and value._field == container._field
-    )
+    __slots__ = ()
 
-
-class ObservableList(list):
-    """
-    List wrapper that reports mutating operations to its owning observable.
-    """
-
-    __slots__ = ("_owner_ref", "_field")
-
-    def __init__(self, owner: Observable, field: str, iterable=()):
-        super().__init__(iterable)
-        self._owner_ref = weakref.ref(owner)
-        self._field = field
+    _owner_ref: weakref.ref
+    _field: str
 
     def _touch(self):
         """
@@ -285,7 +261,7 @@ class ObservableList(list):
         Wrap nested collections into observable variants before storing.
 
         Args:
-            v: Value being inserted into the list.
+            v: Value being inserted into the collection.
 
         Returns:
             Wrapped value when applicable.
@@ -293,6 +269,44 @@ class ObservableList(list):
 
         owner = self._owner_ref()
         return owner._wrap_if_collection(self._field, v) if owner else v
+
+    def _is_written_back(self, current: Any, value: Any) -> bool:
+        """
+        Tell whether `value` is the observable child already stored in a slot.
+
+        Python writes the result of an augmented assignment such as
+        `d["items"] += [1]` back into the slot. The child has notified already,
+        so writing the identical child back to the same owner and field is a
+        no-op.
+
+        Args:
+            current: Value in the slot, or `_MISSING` when the slot is empty.
+            value: Value being written into the slot.
+
+        Returns:
+            `True` when `value` is `current` and reports to the same owner and
+                field.
+        """
+
+        return (
+            value is current
+            and isinstance(value, _ObservableCollection)
+            and value._owner_ref() is self._owner_ref()
+            and value._field == self._field
+        )
+
+
+class ObservableList(_ObservableCollection, list):
+    """
+    List wrapper that reports mutating operations to its owning observable.
+    """
+
+    __slots__ = ("_owner_ref", "_field")
+
+    def __init__(self, owner: Observable, field: str, iterable=()):
+        super().__init__(iterable)
+        self._owner_ref = weakref.ref(owner)
+        self._field = field
 
     def append(self, x):
         """
@@ -424,7 +438,7 @@ class ObservableList(list):
                     if -len(self) <= i < len(self)
                     else _MISSING
                 )
-                if _is_written_back(self, current, v):
+                if self._is_written_back(current, v):
                     return
         super().__setitem__(i, self._wrap(v))
         self._touch()
@@ -434,7 +448,7 @@ class ObservableList(list):
         self._touch()
 
 
-class ObservableDict(dict):
+class ObservableDict(_ObservableCollection, dict):
     """
     Dict wrapper that reports mutating operations to its owning observable.
     """
@@ -446,29 +460,6 @@ class ObservableDict(dict):
         self._owner_ref = weakref.ref(owner)
         self._field = field
 
-    def _touch(self):
-        """
-        Emit a change notification for the parent field.
-        """
-
-        owner = self._owner_ref()
-        if owner:
-            owner._notify(self._field)
-
-    def _wrap(self, v):
-        """
-        Wrap nested collections into observable variants before storing.
-
-        Args:
-            v: Value being inserted into the dict.
-
-        Returns:
-            Wrapped value when applicable.
-        """
-
-        owner = self._owner_ref()
-        return owner._wrap_if_collection(self._field, v) if owner else v
-
     def __setitem__(self, k, v):
         """
         Set a key and notify observers.
@@ -477,7 +468,7 @@ class ObservableDict(dict):
         `d["items"] += [1]`, changes nothing and doesn't notify again.
         """
 
-        if _is_written_back(self, dict.get(self, k, _MISSING), v):
+        if self._is_written_back(dict.get(self, k, _MISSING), v):
             return
         super().__setitem__(k, self._wrap(v))
         self._touch()
