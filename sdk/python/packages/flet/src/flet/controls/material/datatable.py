@@ -316,6 +316,16 @@ class DataTable(LayoutControl):
     )
     ```
 
+    Note:
+        A table with 100 or more rows builds only the rows near the visible part
+        of the page, so it loads and scrolls quickly with thousands of rows. This
+        needs every row to be the same height, which is the default (when
+        :attr:`data_row_min_height` equals :attr:`data_row_max_height`), and
+        either all rows or none to handle :attr:`~flet.DataRow.on_select_change`.
+        Its columns are as wide as the header, the widest texts of each column,
+        and the rows shown so far: a column whose widest cell isn't a `Text`
+        widens when that cell scrolls into view.
+
     Tip:
         Outgrown this table? Its beefier cousin, `DataTable2` (from the
         `flet-datatable2` extension package), adds sticky headers, fixed

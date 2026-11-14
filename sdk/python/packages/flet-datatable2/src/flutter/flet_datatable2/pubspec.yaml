@@ -4,12 +4,10 @@ version: 0.1.0
 publish_to: none
 
 environment:
-  sdk: '>=3.3.0 <4.0.0'
+  sdk: '>=3.8.0 <4.0.0'
   flutter: ">=3.47.0"
 
 dependencies:
-  data_table_2: ^3.0.0
-
   flet:
     path: ../../../../../../../packages/flet
   material_ui: ^1.6.0
@@ -20,4 +18,5 @@ dependencies:
 dev_dependencies:
   flutter_test:
     sdk: flutter
+  provider: ^6.1.2
   flutter_lints: ^3.0.0

@@ -590,9 +590,23 @@ jobs:
               'deb mirror+file:/etc/apt/mirrors-debian-security.txt buster/updates main' \
               > /etc/apt/sources.list
             echo 'Acquire::Check-Valid-Until "false";' > /etc/apt/apt.conf.d/99no-check-valid-until
+            # Archive mirrors sometimes serve a truncated file or stall
+            # mid-download. Give up on a stalled download after 30 s and retry
+            # failed files, so apt moves on to the next mirror instead of
+            # hanging until the step times out.
+            printf '%s\n' 'Acquire::Retries "5";' 'Acquire::http::Timeout "30";' \
+              > /etc/apt/apt.conf.d/99retries
           fi
-          apt-get update
-          apt-get install -y git curl unzip xz-utils zip ca-certificates jq tzdata
+          retry() {
+            for attempt in 1 2 3; do
+              "$@" && return
+              echo "::warning::'$*' failed (attempt $attempt of 3)"
+              sleep 10
+            done
+            return 1
+          }
+          retry apt-get update
+          retry apt-get install -y git curl unzip xz-utils zip ca-certificates jq tzdata
 
       - name: Checkout repository
         uses: actions/checkout@df4cb1c069e1874edd31b4311f1884172cec0e10 # v6.0.3
@@ -632,10 +646,19 @@ jobs:
           if [[ -f /etc/apt/sources.list ]]; then
             sed -i.bak '/apt.postgresql.org/s/^/# /' /etc/apt/sources.list
           fi
-          apt-get update --allow-releaseinfo-change
+          # A flaky mirror can fail a run of hundreds of downloads; try again.
+          retry() {
+            for attempt in 1 2 3; do
+              "$@" && return
+              echo "::warning::'$*' failed (attempt $attempt of 3)"
+              sleep 10
+            done
+            return 1
+          }
+          retry apt-get update --allow-releaseinfo-change
           LINUX_DEPS="$(uv run --project sdk/python/packages/flet-cli flet --version --json | jq -r '.linux_dependencies | join(" ")')"
           read -r -a linux_deps <<< "$LINUX_DEPS"
-          apt-get install -y "${linux_deps[@]}"
+          retry apt-get install -y "${linux_deps[@]}"
 
       - name: Build Flutter Linux clients
         shell: bash
