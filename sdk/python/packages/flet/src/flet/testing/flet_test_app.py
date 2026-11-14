@@ -278,6 +278,24 @@ class FletTestApp:
                 await self.__pump_and_settle_with_timeout("start")
             ready.set()
 
+        main_error: Optional[Exception] = None
+
+        async def guarded_main(page: ft.Page):
+            """
+            Runs `main` and keeps an exception it raises for `start()` to
+            re-raise: the session only logs it, and `start()` would otherwise
+            wait for a start that cannot complete.
+
+            Args:
+                page: Connected app :class:`~flet.Page` instance.
+            """
+            nonlocal main_error
+            try:
+                await main(page)
+            except Exception as e:
+                main_error = e
+                raise
+
         if not self.__tcp_port:
             self.__tcp_port = get_free_tcp_port()
 
@@ -296,7 +314,7 @@ class FletTestApp:
 
             self.__server_task = asyncio.create_task(
                 ft.run_async(
-                    main,
+                    guarded_main,
                     port=self.__tcp_port,
                     assets_dir=str(self.__assets_dir),
                     view=None,
@@ -407,7 +425,7 @@ class FletTestApp:
         loop = asyncio.get_running_loop()
         deadline = loop.time() + self.__start_timeout if self.__start_timeout else None
 
-        while not started():
+        while not started() and main_error is None:
             await asyncio.sleep(0.2)
             if self.__flutter_process.returncode is not None:
                 self.__dump_flutter_output()
@@ -434,6 +452,11 @@ class FletTestApp:
                     f"{self.__start_timeout:g} seconds and was stopped. "
                     "Set FLET_TEST_START_TIMEOUT to change the limit."
                 )
+
+        if main_error is not None:
+            await self.__stop_flutter_process()
+            self.__dump_flutter_output()
+            raise main_error
 
     async def __stop_flutter_process(self):
         """
