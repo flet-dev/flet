@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import contextlib
+import operator
 import weakref
 from dataclasses import InitVar, dataclass
 from typing import TYPE_CHECKING, Any, Callable, Optional
@@ -409,15 +410,22 @@ class ObservableList(list):
 
         Writing the item's own observable child back to its index, as Python
         does after `xs[0] += [1]`, changes nothing and doesn't notify again.
+        An index object's `__index__()` is called once, as with `list`.
         """
 
         if not isinstance(i, slice):
             try:
-                current = list.__getitem__(self, i)
-            except (IndexError, TypeError):
-                current = _MISSING
-            if _is_written_back(self, current, v):
-                return
+                i = operator.index(i)
+            except TypeError:
+                pass
+            else:
+                current = (
+                    list.__getitem__(self, i)
+                    if -len(self) <= i < len(self)
+                    else _MISSING
+                )
+                if _is_written_back(self, current, v):
+                    return
         super().__setitem__(i, self._wrap(v))
         self._touch()
 

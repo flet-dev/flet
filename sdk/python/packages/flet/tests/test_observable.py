@@ -173,6 +173,26 @@ class TestObservableList:
         baz.prop_d += baz.prop_d
         assert baz.prop_d == [1, 2, 3, 1, 2, 3]
 
+    def test_set_item_reads_custom_index_once(self):
+        """Setting an item calls the index object's `__index__()` once."""
+
+        class Index:
+            def __init__(self):
+                self.calls = 0
+
+            def __index__(self):
+                self.calls += 1
+                return self.calls - 1
+
+        store = Store(items=[10, 20])
+        changes = _watch(store)
+        index = Index()
+
+        store.items[index] = 99
+        assert store.items == [99, 20]
+        assert index.calls == 1
+        assert changes == ["items"]
+
     def test_extend_with_itself(self):
         """`extend` with the list itself appends its items once, as the same objects."""
         store = Store(items=[[1], 2])
@@ -288,8 +308,9 @@ class TestObservableDict:
             lambda d: d.update([("items", [])]),
             lambda d: d.update(items=[]),
             lambda d: d.__ior__({"items": []}),
+            lambda d: d.__ior__([("items", [])]),
         ],
-        ids=["mapping", "pairs", "keywords", "ior"],
+        ids=["mapping", "pairs", "keywords", "ior", "ior-pairs"],
     )
     def test_merge_wraps_nested_values(self, merge):
         """Lists merged into the dict notify when they change later."""
@@ -326,6 +347,29 @@ class TestObservableDict:
 
         store.mapping.update({"a": 1, "b": 2}, b=3)
         assert store.mapping == {"a": 1, "b": 3}
+
+    def test_update_reads_mapping_keys(self):
+        """`update` takes a mapping's entries from `keys()`, as `dict.update` does."""
+
+        class Mapping:
+            def keys(self):
+                return ["a"]
+
+            def __getitem__(self, key):
+                return [key]
+
+            def __iter__(self):
+                return iter(["ignored"])
+
+        store = Store()
+        changes = _watch(store)
+
+        store.mapping.update(Mapping())
+        assert store.mapping == {"a": ["a"]}
+        assert changes == ["mapping"]
+        changes.clear()
+        store.mapping["a"].append(1)
+        assert changes == ["mapping"]
 
     def test_update_notifies_when_input_fails_partway(self):
         """`update` notifies about entries inserted before the input raised."""
