@@ -118,6 +118,9 @@ class TextControl extends StatelessWidget {
                 maxLines: maxLines,
                 softWrap: !noWrap,
                 textAlign: textAlign,
+                // `Text` reads `overflow` from its own style, which a rich
+                // text doesn't have (the style is on the span), so pass it.
+                overflow: style.overflow,
               )
             : Text(
                 text,
