@@ -43,6 +43,15 @@ class Qux(ft.Observable):
         self.prop_e[key] = value
 
 
+@dataclass
+class Quux(ft.Observable):
+    """Observable dataclass with collections nested in its fields."""
+
+    mapping: dict = field(default_factory=dict)
+    grid: list = field(default_factory=list)
+    rows: list = field(default_factory=lambda: [[1], [2]])
+
+
 class TestObservable:
     """Notifications and versioning of observable objects."""
 
@@ -157,6 +166,26 @@ class TestObservableList:
         baz.prop_d.extend(baz.prop_d)
         assert baz.prop_d == [1, 2, 3, 1, 2, 3]
 
+    def test_extend_with_itself_keeps_references(self):
+        """`extend` with the list itself appends the same nested objects."""
+        quux = Quux()
+
+        quux.rows.extend(quux.rows)
+        assert quux.rows == [[1], [2], [1], [2]]
+        assert quux.rows[2] is quux.rows[0]
+        assert quux.rows[3] is quux.rows[1]
+
+    def test_extend_appends_items_one_at_a_time(self):
+        """A generator passed to `extend` sees the items it already yielded."""
+        baz = Baz(f=1)
+
+        def following():
+            for _ in range(2):
+                yield baz.prop_d[-1] + 1
+
+        baz.prop_d.extend(following())
+        assert baz.prop_d == [1, 2, 3, 4, 5]
+
 
 class TestObservableDict:
     """Notifications from dict fields of observable objects."""
@@ -227,3 +256,94 @@ class TestObservableDict:
         qux.prop_e["items"].append(1)
         assert qux.prop_e == {"items": [1]}
         assert changes == ["prop_e"]
+
+    def test_update_inserts_entries_one_at_a_time(self):
+        """A generator passed to `update` sees the entries it already yielded."""
+        changes = []
+
+        def subscriber(sender, field):
+            changes.append(field)
+
+        qux = Qux()
+        qux.subscribe(subscriber)
+
+        def pairs():
+            yield "a", len(qux.prop_e)
+            yield "b", len(qux.prop_e)
+
+        qux.prop_e.update(pairs())
+        assert qux.prop_e == {"a": 0, "b": 1}
+        assert changes == ["prop_e"]
+
+
+class TestNestedCollections:
+    """Notifications from collections nested in observable fields."""
+
+    @pytest.mark.parametrize(
+        ("container", "slot", "child", "operation", "expected"),
+        [
+            ("mapping", "items", [1], "iadd", [1, 2]),
+            ("mapping", "items", [1], "imul", [1, 1]),
+            ("mapping", "sub", {}, "ior", {"a": 1}),
+            ("grid", 0, [1], "iadd", [1, 2]),
+            ("grid", 0, [1], "imul", [1, 1]),
+            ("grid", 0, {}, "ior", {"a": 1}),
+        ],
+        ids=[
+            "dict-iadd",
+            "dict-imul",
+            "dict-ior",
+            "list-iadd",
+            "list-imul",
+            "list-ior",
+        ],
+    )
+    def test_augmented_assignment_notifies_once(
+        self, container, slot, child, operation, expected
+    ):
+        """`+=`, `*=` and `|=` on a nested collection notify once."""
+        changes = []
+
+        def subscriber(sender, field):
+            changes.append(field)
+
+        quux = Quux()
+        outer = getattr(quux, container)
+        if isinstance(outer, list):
+            outer.append(child)
+        else:
+            outer[slot] = child
+        quux.subscribe(subscriber)
+
+        if operation == "iadd":
+            outer[slot] += [2]
+        elif operation == "imul":
+            outer[slot] *= 2
+        else:
+            outer[slot] |= {"a": 1}
+
+        assert outer[slot] == expected
+        assert changes == [container]
+
+    @pytest.mark.parametrize(
+        ("container", "slot"), [("mapping", "items"), ("grid", 0)], ids=["dict", "list"]
+    )
+    def test_same_child_assignment_is_noop(self, container, slot):
+        """Assigning a nested collection back to its own slot does not notify."""
+        changes = []
+
+        def subscriber(sender, field):
+            changes.append(field)
+
+        quux = Quux()
+        outer = getattr(quux, container)
+        if isinstance(outer, list):
+            outer.append([1])
+        else:
+            outer[slot] = [1]
+        child = outer[slot]
+        quux.subscribe(subscriber)
+
+        outer[slot] = outer[slot]
+        assert outer[slot] is child
+        assert changes == []

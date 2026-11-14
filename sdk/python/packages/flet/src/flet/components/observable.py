@@ -34,6 +34,13 @@ def observable(cls):
             x: int
             y: int
         ```
+
+    Note:
+        Listeners are called synchronously. With augmented assignments such as
+        `obj.items += [x]`, `*=` on lists and `|=` on dicts, they run before
+        Python assigns the result back to the field, so a listener that
+        replaces `obj.items` at that moment is overwritten. Direct calls such
+        as `obj.items.extend([x])` keep the listener's replacement.
     """
     if Observable in cls.__mro__:
         return cls
@@ -271,16 +278,24 @@ class ObservableList(list):
         """
         Extend list with iterable items and notify observers.
 
-        The items are read before the list grows, so `xs.extend(xs)` appends
-        one copy of the list's items.
+        Items are appended one at a time, like `list.extend()`. `xs.extend(xs)`
+        appends one copy of the list's items, keeping their references.
         """
 
-        super().extend([self._wrap(v) for v in it])
+        if it is self:
+            super().extend(self)
+        else:
+            super().extend(self._wrap(v) for v in it)
         self._touch()
 
     def __iadd__(self, other):
         """
         Extend list in place (`+=`) and notify observers.
+
+        Observers are notified before Python assigns the result back to the
+        field, so a listener that replaces the field during `obj.items += [x]`
+        is overwritten by that assignment. Call `obj.items.extend([x])` instead
+        to keep such a replacement.
         """
 
         self.extend(other)
@@ -289,6 +304,9 @@ class ObservableList(list):
     def __imul__(self, n):
         """
         Repeat list items in place (`*=`) and notify observers.
+
+        Observers are notified before Python assigns the result back, as with
+        `+=`.
         """
 
         super().__imul__(n)
@@ -351,12 +369,45 @@ class ObservableList(list):
         return v
 
     def __setitem__(self, i, v):
+        # `items[0] += [x]` writes the same child back after it already notified.
+        if (
+            isinstance(i, int)
+            and -len(self) <= i < len(self)
+            and _is_written_back(self, super().__getitem__(i), v)
+        ):
+            return
         super().__setitem__(i, self._wrap(v))
         self._touch()
 
     def __delitem__(self, i):
         super().__delitem__(i)
         self._touch()
+
+
+def _is_written_back(container, current, value) -> bool:
+    """
+    Tell whether `value` is the observable child already stored in that slot.
+
+    Python ends an augmented assignment on an item, such as
+    `obj.mapping["items"] *= 2`, by writing the result back into the
+    container. The child already notified, so that write must not notify again.
+
+    Args:
+        container: Observable list or dict receiving the write.
+        current: Value currently stored in the slot.
+        value: Value being written.
+
+    Returns:
+        `True` when `value` is `current` and both wrappers report to the same
+        owner and field.
+    """
+
+    return (
+        value is current
+        and isinstance(value, (ObservableList, ObservableDict))
+        and value._owner_ref() is container._owner_ref()
+        and value._field == container._field
+    )
 
 
 class ObservableDict(dict):
@@ -395,6 +446,9 @@ class ObservableDict(dict):
         return owner._wrap_if_collection(self._field, v) if owner else v
 
     def __setitem__(self, k, v):
+        # `d["items"] += [x]` writes the same child back after it already notified.
+        if k in self and _is_written_back(self, super().__getitem__(k), v):
+            return
         super().__setitem__(k, self._wrap(v))
         self._touch()
 
@@ -412,18 +466,35 @@ class ObservableDict(dict):
 
     def update(self, *a, **k):
         """
-        Update mapping with values and notify observers.
+        Update mapping with values and notify observers once.
 
-        Takes the same arguments as `dict.update()`. List and dict values are
-        wrapped, whether they come from a mapping, key-value pairs or keywords.
+        Takes the same arguments as `dict.update()`: a mapping or an iterable of
+        key-value pairs, then keywords. Entries are inserted one at a time and
+        list and dict values are wrapped as they are inserted.
         """
 
-        super().update({kk: self._wrap(vv) for kk, vv in dict(*a, **k).items()})
+        if len(a) > 1:
+            raise TypeError(f"update expected at most 1 argument, got {len(a)}")
+        if a:
+            other = a[0]
+            if hasattr(other, "keys"):
+                # `dict.update()` reads `keys()`, which a mapping may define
+                # differently from iteration.
+                for kk in other.keys():  # noqa: SIM118
+                    super().__setitem__(kk, self._wrap(other[kk]))
+            else:
+                for kk, vv in other:
+                    super().__setitem__(kk, self._wrap(vv))
+        for kk, vv in k.items():
+            super().__setitem__(kk, self._wrap(vv))
         self._touch()
 
     def __ior__(self, other):
         """
         Merge a mapping in place (`|=`) and notify observers.
+
+        Observers are notified before Python assigns the result back, as with
+        `ObservableList`'s `+=`.
         """
 
         self.update(other)

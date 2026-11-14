@@ -2,7 +2,7 @@
 
 ### Bug fixes
 
-* Fix `@ft.observable` not refreshing the UI after `+=` and `*=` on lists and `|=` on dicts, `extend()` never returning when given the list itself, and lists or dicts merged into a dict with `update()` or `|=` not notifying when changed later ([#6293](https://github.com/flet-dev/flet/issues/6293), [#7086](https://github.com/flet-dev/flet/pull/7086)) by @joaoaracheski.
+* Fix `@ft.observable` not refreshing the UI after `+=` and `*=` on lists and `|=` on dicts, `extend()` never returning when given the list itself, lists or dicts merged into a dict with `update()` or `|=` not notifying when changed later, and `+=`, `*=` and `|=` on a nested list or dict notifying twice ([#6293](https://github.com/flet-dev/flet/issues/6293), [#7086](https://github.com/flet-dev/flet/pull/7086)) by @joaoaracheski.
 
 ## 1.1.2
 
