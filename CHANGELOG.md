@@ -3,6 +3,7 @@
 ### Bug fixes
 
 * Fix apps packaged with plain `pyinstaller` downloading the Flet desktop client on their first start, and failing to build on macOS ([#7053](https://github.com/flet-dev/flet/issues/7053), [#7068](https://github.com/flet-dev/flet/pull/7068)) by @ndonkoHenri.
+* Fix Linux apps made with `flet pack` or `pyinstaller` that run on a newer distro than they were built on downloading the light client instead of using the bundled one, and switching from the full to the light client ([#7068](https://github.com/flet-dev/flet/pull/7068)) by @ndonkoHenri.
 
 ## 1.1.2
 

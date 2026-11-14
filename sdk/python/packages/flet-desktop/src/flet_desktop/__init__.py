@@ -6,6 +6,7 @@ import functools
 import hashlib
 import logging
 import os
+import re
 import shutil
 import signal
 import stat
@@ -50,6 +51,11 @@ _GLIBC_DISTRO_TABLE = [
     ((2, 36), "debian12", ("amd64", "arm64")),
     ((2, 39), "ubuntu24.04", ("amd64", "arm64")),
 ]
+
+# Name of a Linux client archive: `flet-linux-{distro}[-light]-{arch}.tar.gz`.
+_LINUX_ARCHIVE_RE = re.compile(
+    r"flet-linux-(?P<distro>[^-]+)(?P<light>-light)?-(?P<arch>[^-]+)\.tar\.gz"
+)
 
 
 def get_package_bin_dir():
@@ -121,14 +127,9 @@ def __get_configured_desktop_flavor() -> str | None:
         return env_flavor
     if getattr(sys, "frozen", False):
         if is_linux():
-            arch = get_arch()
-            distro = __get_linux_distro_id(arch)
-            for flavor, suffix in (("full", ""), ("light", "-light")):
-                archive = Path(get_package_bin_dir()) / (
-                    f"flet-linux-{distro}{suffix}-{arch}.tar.gz"
-                )
-                if archive.is_file():
-                    return flavor
+            flavors = {flavor for _, flavor in __get_bundled_linux_archives(get_arch())}
+            if flavors:
+                return "full" if "full" in flavors else "light"
         return None
 
     candidates = [Path(os.getcwd()) / "pyproject.toml"]
@@ -280,11 +281,13 @@ def __get_system_glibc_version():
 
 def __get_linux_distro_id(arch: str):
     """
-    Return the distro id to use for downloading the Linux binary archive.
+    Return the distro id of the Linux client to use.
 
-    Uses glibc version detection to pick the best matching build target
-    for `arch` (highest glibc requirement that is <= system glibc).  Can be
-    overridden via the `FLET_LINUX_DISTRO` environment variable.
+    A frozen app uses the distro of a bundled light client this system can run
+    (see `__get_bundled_linux_distro_id()`). Otherwise glibc version detection
+    picks the best matching build target for `arch` (highest glibc requirement
+    that is <= system glibc). Can be overridden via the `FLET_LINUX_DISTRO`
+    environment variable.
 
     Raises:
         RuntimeError: If the system glibc is older than every build for `arch`.
@@ -293,7 +296,59 @@ def __get_linux_distro_id(arch: str):
     override = os.environ.get("FLET_LINUX_DISTRO", "").strip()
     if override:
         return override
-    return __get_glibc_distro_id(arch)
+    return __get_bundled_linux_distro_id(arch) or __get_glibc_distro_id(arch)
+
+
+def __get_bundled_linux_archives(arch: str) -> list[tuple[str, str]]:
+    """
+    Return the `(distro_id, flavor)` of each Linux client archive bundled for
+    `arch`.
+
+    Only a frozen app, such as one made with `flet pack` or PyInstaller,
+    bundles a client archive; otherwise the list is empty.
+    """
+
+    if not getattr(sys, "frozen", False):
+        return []
+    try:
+        names = sorted(os.listdir(get_package_bin_dir()))
+    except OSError:
+        return []
+    archives = []
+    for name in names:
+        match = _LINUX_ARCHIVE_RE.fullmatch(name)
+        if match and match["arch"] == arch:
+            archives.append((match["distro"], "light" if match["light"] else "full"))
+    return archives
+
+
+def __get_bundled_linux_distro_id(arch: str) -> str | None:
+    """
+    Return the distro id of a bundled light client this system can run, or
+    `None`.
+
+    A frozen app bundles the client built for the distro it was packaged on,
+    which may differ from the distro it runs on. The light client runs on any
+    system whose glibc is at least as new as its build's, so the newest such
+    bundled build is used instead of downloading another one. The full client
+    links the `libmpv` of its own distro, so it is used only when it is the
+    build this system would download anyway.
+    """
+
+    if __get_desktop_flavor() != "light":
+        return None
+    sys_glibc = __get_system_glibc_version()
+    required = {
+        distro_id: required_glibc
+        for required_glibc, distro_id, arches in _GLIBC_DISTRO_TABLE
+        if arch in arches
+    }
+    usable = [
+        (required[distro], distro)
+        for distro, flavor in __get_bundled_linux_archives(arch)
+        if flavor == "light" and distro in required and sys_glibc >= required[distro]
+    ]
+    return max(usable)[1] if usable else None
 
 
 def __get_glibc_distro_id(arch: str):
@@ -555,6 +610,15 @@ def ensure_client_cached():
         return cache_dir
 
     if archive_path is None:
+        bundled_archives = (
+            __get_bundled_linux_archives(get_arch()) if is_linux() else []
+        )
+        if bundled_archives:
+            logger.warning(
+                "The bundled Flet client was built for "
+                f"{', '.join(distro for distro, _ in bundled_archives)}, "
+                f"which this system can't use; downloading {artifact} instead."
+            )
         archive_path = __download_flet_client(artifact)
 
     # Extract to a temp directory first, then atomically rename to the cache
