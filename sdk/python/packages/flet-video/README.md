@@ -8,7 +8,7 @@
 
 A cross-platform video player for [Flet](https://flet.dev) apps.
 
-> **[Try flet-video in Flet Studio](https://studio.flet.dev/gallery/media/video/example/extensions/video/video)**
+> **[Try flet-video in Flet Studio](https://studio.flet.dev/gallery/media/video/example/extensions/video/video?utm_source=pypi&utm_medium=readme&utm_campaign=flet-video)**
 >
 > Create, run, and share Python apps in your browser. Start from an example, write your own code, or get help from the AI agent. No installation required.
 
