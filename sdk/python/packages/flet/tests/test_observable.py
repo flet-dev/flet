@@ -44,12 +44,26 @@ class Qux(ft.Observable):
 
 
 @dataclass
-class Quux(ft.Observable):
-    """Observable dataclass with collections nested in its fields."""
+class Store(ft.Observable):
+    """Observable dataclass with a list field and a dict field."""
 
+    items: list = field(default_factory=list)
     mapping: dict = field(default_factory=dict)
-    grid: list = field(default_factory=list)
-    rows: list = field(default_factory=lambda: [[1], [2]])
+
+
+def _watch(obj):
+    """Subscribes to `obj` and returns the list of changed field names.
+
+    The listener is stored on `obj`, because observables hold listeners weakly.
+    """
+    changes = []
+
+    def listener(sender, field):
+        changes.append(field)
+
+    obj._test_listener = listener
+    obj.subscribe(listener)
+    return changes
 
 
 class TestObservable:
@@ -160,31 +174,67 @@ class TestObservableList:
         assert baz.prop_d == [1, 2, 3, 1, 2, 3]
 
     def test_extend_with_itself(self):
-        """`extend` with the list itself appends one copy of its items."""
-        baz = Baz(f=1)
+        """`extend` with the list itself appends its items once, as the same objects."""
+        store = Store(items=[[1], 2])
+        changes = _watch(store)
 
-        baz.prop_d.extend(baz.prop_d)
-        assert baz.prop_d == [1, 2, 3, 1, 2, 3]
+        store.items.extend(store.items)
+        assert store.items == [[1], 2, [1], 2]
+        assert store.items[2] is store.items[0]
+        assert changes == ["items"]
 
-    def test_extend_with_itself_keeps_references(self):
-        """`extend` with the list itself appends the same nested objects."""
-        quux = Quux()
+    def test_extend_reads_iterable_lazily(self):
+        """`extend` appends each item before reading the next one."""
+        store = Store(items=[0])
 
-        quux.rows.extend(quux.rows)
-        assert quux.rows == [[1], [2], [1], [2]]
-        assert quux.rows[2] is quux.rows[0]
-        assert quux.rows[3] is quux.rows[1]
-
-    def test_extend_appends_items_one_at_a_time(self):
-        """A generator passed to `extend` sees the items it already yielded."""
-        baz = Baz(f=1)
-
-        def following():
+        def gen():
             for _ in range(2):
-                yield baz.prop_d[-1] + 1
+                yield store.items[-1] + 1
 
-        baz.prop_d.extend(following())
-        assert baz.prop_d == [1, 2, 3, 4, 5]
+        store.items.extend(gen())
+        assert store.items == [0, 1, 2]
+
+    def test_extend_notifies_when_iterable_fails_partway(self):
+        """`extend` notifies about items appended before the iterable raised."""
+        store = Store(items=[0])
+        changes = _watch(store)
+
+        def gen():
+            yield 1
+            raise RuntimeError("boom")
+
+        with pytest.raises(RuntimeError):
+            store.items.extend(gen())
+        assert store.items == [0, 1]
+        assert changes == ["items"]
+
+    def test_extend_keeps_subscriber_replacement(self):
+        """A subscriber that replaces the field during `extend` keeps its value."""
+        store = Store(items=[1])
+        replaced = []
+
+        def listener(sender, field):
+            if not replaced:
+                replaced.append(True)
+                sender.items = [99]
+
+        store.subscribe(listener)
+        store.items.extend([2])
+        assert store.items == [99]
+
+    def test_same_child_assignment_is_noop(self):
+        """Writing an item's own observable child back to its index doesn't notify."""
+        store = Store(items=[[1]])
+        store.items[0] = [1]
+        changes = _watch(store)
+
+        store.items[0] = store.items[0]
+        store.items[-1] = store.items[-1]
+        assert changes == []
+
+        store.items[0] = [2]
+        store.items[0:1] = store.items[0:1]
+        assert changes == ["items", "items"]
 
 
 class TestObservableDict:
@@ -257,93 +307,108 @@ class TestObservableDict:
         assert qux.prop_e == {"items": [1]}
         assert changes == ["prop_e"]
 
-    def test_update_inserts_entries_one_at_a_time(self):
-        """A generator passed to `update` sees the entries it already yielded."""
-        changes = []
-
-        def subscriber(sender, field):
-            changes.append(field)
-
-        qux = Qux()
-        qux.subscribe(subscriber)
+    def test_update_reads_input_lazily(self):
+        """`update` inserts each pair before reading the next one."""
+        store = Store()
+        changes = _watch(store)
 
         def pairs():
-            yield "a", len(qux.prop_e)
-            yield "b", len(qux.prop_e)
+            for key in ("x", "y"):
+                yield key, len(store.mapping)
 
-        qux.prop_e.update(pairs())
-        assert qux.prop_e == {"a": 0, "b": 1}
-        assert changes == ["prop_e"]
+        store.mapping.update(pairs())
+        assert store.mapping == {"x": 0, "y": 1}
+        assert changes == ["mapping"]
 
+    def test_update_applies_keywords_last(self):
+        """Keyword values override the mapping's values for the same key."""
+        store = Store()
 
-class TestNestedCollections:
-    """Notifications from collections nested in observable fields."""
+        store.mapping.update({"a": 1, "b": 2}, b=3)
+        assert store.mapping == {"a": 1, "b": 3}
 
-    @pytest.mark.parametrize(
-        ("container", "slot", "child", "operation", "expected"),
-        [
-            ("mapping", "items", [1], "iadd", [1, 2]),
-            ("mapping", "items", [1], "imul", [1, 1]),
-            ("mapping", "sub", {}, "ior", {"a": 1}),
-            ("grid", 0, [1], "iadd", [1, 2]),
-            ("grid", 0, [1], "imul", [1, 1]),
-            ("grid", 0, {}, "ior", {"a": 1}),
-        ],
-        ids=[
-            "dict-iadd",
-            "dict-imul",
-            "dict-ior",
-            "list-iadd",
-            "list-imul",
-            "list-ior",
-        ],
-    )
-    def test_augmented_assignment_notifies_once(
-        self, container, slot, child, operation, expected
-    ):
-        """`+=`, `*=` and `|=` on a nested collection notify once."""
-        changes = []
+    def test_update_notifies_when_input_fails_partway(self):
+        """`update` notifies about entries inserted before the input raised."""
+        store = Store()
+        changes = _watch(store)
 
-        def subscriber(sender, field):
-            changes.append(field)
+        with pytest.raises(ValueError):
+            store.mapping.update([("a", 1), ("b", 2, 3)])
+        assert store.mapping == {"a": 1}
+        assert changes == ["mapping"]
 
-        quux = Quux()
-        outer = getattr(quux, container)
-        if isinstance(outer, list):
-            outer.append(child)
-        else:
-            outer[slot] = child
-        quux.subscribe(subscriber)
+    def test_update_rejects_extra_arguments(self):
+        """`update` with two positional arguments raises without notifying."""
+        store = Store()
+        changes = _watch(store)
 
-        if operation == "iadd":
-            outer[slot] += [2]
-        elif operation == "imul":
-            outer[slot] *= 2
-        else:
-            outer[slot] |= {"a": 1}
-
-        assert outer[slot] == expected
-        assert changes == [container]
-
-    @pytest.mark.parametrize(
-        ("container", "slot"), [("mapping", "items"), ("grid", 0)], ids=["dict", "list"]
-    )
-    def test_same_child_assignment_is_noop(self, container, slot):
-        """Assigning a nested collection back to its own slot does not notify."""
-        changes = []
-
-        def subscriber(sender, field):
-            changes.append(field)
-
-        quux = Quux()
-        outer = getattr(quux, container)
-        if isinstance(outer, list):
-            outer.append([1])
-        else:
-            outer[slot] = [1]
-        child = outer[slot]
-        quux.subscribe(subscriber)
-
-        outer[slot] = outer[slot]
-        assert outer[slot] is child
+        with pytest.raises(TypeError):
+            store.mapping.update({"a": 1}, {"b": 2})
+        assert store.mapping == {}
         assert changes == []
+
+    def test_same_child_assignment_is_noop(self):
+        """Writing a key's own observable child back doesn't notify."""
+        store = Store()
+        store.mapping["items"] = []
+        changes = _watch(store)
+
+        store.mapping["items"] = store.mapping["items"]
+        assert changes == []
+
+        store.mapping["items"] = []
+        assert changes == ["mapping"]
+
+
+def _iadd_list_in_dict(store):
+    store.mapping["list"] += [1]
+
+
+def _imul_list_in_dict(store):
+    store.mapping["list"] *= 2
+
+
+def _ior_dict_in_dict(store):
+    store.mapping["dict"] |= {"a": 1}
+
+
+def _iadd_list_in_list(store):
+    store.items[0] += [1]
+
+
+def _imul_list_in_list(store):
+    store.items[-2] *= 2
+
+
+def _ior_dict_in_list(store):
+    store.items[1] |= {"a": 1}
+
+
+class TestNestedInplaceOperators:
+    """In-place operators on collections nested in observable collections."""
+
+    @pytest.mark.parametrize(
+        "op, field, child, expected",
+        [
+            (_iadd_list_in_dict, "mapping", lambda s: s.mapping["list"], [0, 1]),
+            (_imul_list_in_dict, "mapping", lambda s: s.mapping["list"], [0, 0]),
+            (_ior_dict_in_dict, "mapping", lambda s: s.mapping["dict"], {"a": 1}),
+            (_iadd_list_in_list, "items", lambda s: s.items[0], [0, 1]),
+            (_imul_list_in_list, "items", lambda s: s.items[0], [0, 0]),
+            (_ior_dict_in_list, "items", lambda s: s.items[1], {"a": 1}),
+        ],
+        ids=["dict+=", "dict*=", "dict|=", "list+=", "list*=", "list|="],
+    )
+    def test_notifies_once(self, op, field, child, expected):
+        """The nested collection notifies once; writing it back adds nothing."""
+        store = Store()
+        store.mapping["list"] = [0]
+        store.mapping["dict"] = {}
+        store.items.extend([[0], {}])
+        before = child(store)
+        changes = _watch(store)
+
+        op(store)
+        assert child(store) is before
+        assert child(store) == expected
+        assert changes == [field]
