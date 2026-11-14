@@ -83,3 +83,11 @@ server, but if integration tests use assets they could be inaccessible via TCP f
 Android device or simulator.
 
 `FLET_TEST_DISABLE_FVM` - `True` to launch Flutter process directly, without `fvm`. This setting could be on in CI environment. Locally we normally want to run with `fvm`.
+
+`FLET_TEST_APP_BINARY` - path to the executable of a test app built once with the integration test as its entry point. When set, every test launches that executable directly, which takes a few seconds; `flutter test` builds the app again for every launch. Desktop only. Rebuild the app after changing Dart code:
+
+```bash
+cd client
+flutter build macos --debug -t integration_test/app_test.dart
+export FLET_TEST_APP_BINARY=$PWD/build/macos/Build/Products/Debug/Flet.app/Contents/MacOS/Flet
+```

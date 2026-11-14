@@ -72,6 +72,12 @@ jobs:
           screencapture /tmp/screen.png
           sips -g pixelWidth -g pixelHeight /tmp/screen.png
 
+      - name: Build integration test app
+        working-directory: client
+        run: |
+          flutter build macos --debug -t integration_test/app_test.dart
+          echo "FLET_TEST_APP_BINARY=$PWD/build/macos/Build/Products/Debug/Flet.app/Contents/MacOS/Flet" >> "$GITHUB_ENV"
+
       - name: Run integration tests (${{ matrix.suite }})
         working-directory: sdk/python
         run: |

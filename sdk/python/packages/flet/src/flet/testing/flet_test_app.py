@@ -127,6 +127,14 @@ class FletTestApp:
             If `True`, do not invoke `fvm` when running the Flutter test
             process. Env override: `FLET_TEST_DISABLE_FVM=1`.
 
+        app_binary:
+            Path to the executable of a Flutter app built once with the
+            integration test as its entry point, for example
+            `flutter build macos --debug -t integration_test/app_test.dart`.
+            When set, it is launched directly for each test run in place of
+            `flutter test`, which builds the app on every run. Used in host
+            mode on desktop only. Env override: `FLET_TEST_APP_BINARY`.
+
         skip_pump_and_settle:
             If `True`, the initial `pump_and_settle` after app start is skipped.
 
@@ -147,6 +155,7 @@ class FletTestApp:
             Overrides `screenshots_similarity_threshold`.
         - `FLET_TEST_USE_HTTP`: Enables HTTP transport when set to `1`.
         - `FLET_TEST_DISABLE_FVM`: Disables `fvm` usage when set to `1`.
+        - `FLET_TEST_APP_BINARY`: Overrides `app_binary`.
     """
 
     def __init__(
@@ -163,6 +172,7 @@ class FletTestApp:
         screenshots_similarity_threshold: float = 99.0,
         use_http: bool = False,
         disable_fvm: bool = False,
+        app_binary: Optional[os.PathLike] = None,
         skip_pump_and_settle: bool = False,
         device_mode: bool = False,
     ):
@@ -184,6 +194,7 @@ class FletTestApp:
             )
         )
         self.__disable_fvm = get_bool_env_var("FLET_TEST_DISABLE_FVM") or disable_fvm
+        self.__app_binary = os.getenv("FLET_TEST_APP_BINARY") or app_binary
         self.__use_http = get_bool_env_var("FLET_TEST_USE_HTTP") or use_http
         self.__device_mode = get_bool_env_var("FLET_TEST_DEVICE_MODE") or device_mode
         self.__test_path = test_path
@@ -313,8 +324,21 @@ class FletTestApp:
             flutter_args += ["-d", self.test_device]
 
         app_url = f"{protocol}://{tcp_addr}:{self.__tcp_port}"
+        flutter_env = without_host_python_config()
 
-        if self.__device_mode:
+        if self.__app_binary and not self.__device_mode:
+            # Run-time equivalents of the dart-defines given to `flutter test`.
+            flutter_args = [str(self.__app_binary)]
+            flutter_env.pop("FLET_TEST_PID_FILE_PATH", None)
+            flutter_env.pop("FLET_TEST_ASSETS_DIR", None)
+            flutter_env["FLET_TEST_APP_URL"] = app_url
+            if not self.__use_http:
+                flutter_env["FLET_TEST_PID_FILE_PATH"] = str(
+                    Path(tempfile.gettempdir()) / "flet_app_pid.txt"
+                )
+                if self.__assets_dir:
+                    flutter_env["FLET_TEST_ASSETS_DIR"] = str(self.__assets_dir)
+        elif self.__device_mode:
             # The app under test runs on-device over dart_bridge and ships its
             # own assets in app.zip. The RemoteWidgetTester connects to our
             # RemoteTester server over an independent socket. FLET_TEST=true lets
@@ -344,7 +368,7 @@ class FletTestApp:
             # its own interpreter - the host's Python configuration must not
             # reach it. PATH and the FLET_*/SERIOUS_PYTHON_* variables that
             # `flet test` sets for the native build phase are preserved.
-            env=without_host_python_config(),
+            env=flutter_env,
         )
 
         if self.__flutter_process.stdout is not None:
