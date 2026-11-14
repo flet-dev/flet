@@ -8,7 +8,7 @@
 
 A [Flet](https://flet.dev) extension package for playing audio.
 
-> **[Try flet-audio in Flet Studio](https://studio.flet.dev/gallery/media/audio/example/extensions/audio/audio_playback_controls)**
+> **[Try flet-audio in Flet Studio](https://studio.flet.dev/gallery/media/audio/example/extensions/audio/audio_playback_controls?utm_source=pypi&utm_medium=readme&utm_campaign=flet-audio)**
 >
 > Create, run, and share Python apps in your browser. Start from an example, write your own code, or get help from the AI agent. No installation required.
 

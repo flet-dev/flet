@@ -26,7 +26,7 @@
 
 Flet is a Python framework for building web, desktop, and mobile apps without prior experience in frontend development.
 
-> **[Try Flet online in Flet Studio](https://studio.flet.dev)**
+> **[Try Flet online in Flet Studio](https://studio.flet.dev/?utm_source=pypi&utm_medium=readme&utm_campaign=flet)**
 >
 > Create, run, and share Python apps in your browser. Start from an example, write your own code, or get help from the AI agent. No installation required.
 
@@ -132,7 +132,7 @@ flet run --web counter.py
 * [Website](https://flet.dev)
 * [Documentation](https://flet.dev/docs/)
 * [Roadmap](https://flet.dev/roadmap)
-* [Apps Gallery](https://studio.flet.dev/gallery)
+* [Apps Gallery](https://studio.flet.dev/gallery?utm_source=pypi&utm_medium=readme&utm_campaign=flet)
 
 ## Community
 

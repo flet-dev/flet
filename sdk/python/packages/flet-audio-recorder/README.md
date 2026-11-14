@@ -8,7 +8,7 @@
 
 Adds audio recording support to [Flet](https://flet.dev) apps.
 
-> **[Try flet-audio-recorder in Flet Studio](https://studio.flet.dev/gallery/media/audiorecorder/example/extensions/audio_recorder/audio_recorder)**
+> **[Try flet-audio-recorder in Flet Studio](https://studio.flet.dev/gallery/media/audiorecorder/example/extensions/audio_recorder/audio_recorder?utm_source=pypi&utm_medium=readme&utm_campaign=flet-audio-recorder)**
 >
 > Create, run, and share Python apps in your browser. Start from an example, write your own code, or get help from the AI agent. No installation required.
 
