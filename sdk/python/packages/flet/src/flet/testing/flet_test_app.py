@@ -548,6 +548,11 @@ class FletTestApp:
     async def teardown(self):
         """
         Teardown Flutter integration test process.
+
+        The process gets 10 seconds to exit after the tester's teardown and is
+        terminated when it does not. An app launched from `app_binary` ends its
+        own process with the test result as exit code, so having to terminate
+        it raises `RuntimeError`: its test result is unknown.
         """
         try:
             await self.tester.teardown(timeout=10)
@@ -555,6 +560,7 @@ class FletTestApp:
             _print(f"Tester teardown failed: {e}")
 
         flutter_returncode: Optional[int] = None
+        terminated = False
         if self.__flutter_process:
             _print("Waiting for Flutter test process to exit...")
             try:
@@ -563,6 +569,7 @@ class FletTestApp:
                 _print(f"Flutter test process has exited (code {flutter_returncode}).")
             except asyncio.TimeoutError:
                 _print("Flutter test process did not exit in time, terminating it...")
+                terminated = True
 
         await self.__stop_flutter_process()
 
@@ -579,6 +586,14 @@ class FletTestApp:
             raise RuntimeError(
                 f"Flutter integration test process failed with exit code "
                 f"{flutter_returncode}. See the Flutter test output above."
+            )
+
+        if terminated and self.__app_binary and not self.__device_mode:
+            self.__dump_flutter_output()
+            raise RuntimeError(
+                "Flutter integration test app did not exit within 10 seconds "
+                "of teardown and was terminated, so its test result is unknown. "
+                "See the Flutter test output above."
             )
 
     def resize_page(self, width: float, height: float):
