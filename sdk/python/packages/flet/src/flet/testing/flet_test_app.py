@@ -3,6 +3,7 @@ import inspect
 import logging
 import os
 import platform
+import shutil
 import tempfile
 from collections.abc import Iterable, Sequence
 from enum import Enum
@@ -224,6 +225,7 @@ class FletTestApp:
         self.__echo_flutter_output = False
         self.__flutter_output_task: Optional[asyncio.Task] = None
         self.__server_task: Optional[asyncio.Task] = None
+        self.__app_temp_dir: Optional[str] = None
         self.__page = None
         self.__tester: Union[Tester, RemoteTester, None] = None
 
@@ -367,6 +369,10 @@ class FletTestApp:
             flutter_env.pop("FLET_TEST_PID_FILE_PATH", None)
             flutter_env.pop("FLET_TEST_ASSETS_DIR", None)
             flutter_env["FLET_TEST_APP_URL"] = app_url
+            # A temporary directory of its own, see `__stop_flutter_process()`.
+            self.__app_temp_dir = tempfile.mkdtemp(prefix="flet_test_app_")
+            for name in ("TMPDIR", "TEMP", "TMP"):
+                flutter_env[name] = self.__app_temp_dir
             if not self.__use_http:
                 flutter_env["FLET_TEST_PID_FILE_PATH"] = str(
                     Path(tempfile.gettempdir()) / "flet_app_pid.txt"
@@ -394,17 +400,22 @@ class FletTestApp:
                         f"--dart-define=FLET_TEST_ASSETS_DIR={self.__assets_dir}"
                     ]
 
-        self.__flutter_process = await asyncio.create_subprocess_exec(
-            *flutter_args,
-            cwd=str(self.__flutter_app_dir),
-            stdout=stdout,
-            stderr=stderr,
-            # `flutter test` builds and runs the app under test, which embeds
-            # its own interpreter - the host's Python configuration must not
-            # reach it. PATH and the FLET_*/SERIOUS_PYTHON_* variables that
-            # `flet test` sets for the native build phase are preserved.
-            env=flutter_env,
-        )
+        try:
+            self.__flutter_process = await asyncio.create_subprocess_exec(
+                *flutter_args,
+                cwd=str(self.__flutter_app_dir),
+                stdout=stdout,
+                stderr=stderr,
+                # `flutter test` builds and runs the app under test, which
+                # embeds its own interpreter - the host's Python configuration
+                # must not reach it. PATH and the FLET_*/SERIOUS_PYTHON_*
+                # variables that `flet test` sets for the native build phase
+                # are preserved.
+                env=flutter_env,
+            )
+        except OSError:
+            await self.__stop_flutter_process()
+            raise
 
         if self.__flutter_process.stdout is not None:
             self.__flutter_output_task = asyncio.create_task(
@@ -428,6 +439,7 @@ class FletTestApp:
         while not started() and main_error is None:
             await asyncio.sleep(0.2)
             if self.__flutter_process.returncode is not None:
+                await self.__stop_flutter_process()
                 self.__dump_flutter_output()
                 raise RuntimeError(
                     "Flutter process exited early with code "
@@ -462,6 +474,12 @@ class FletTestApp:
         """
         Terminates the Flutter test process if it is running, kills it if it \
         does not end in 5 seconds, and waits for its output to be read.
+
+        Removes the temporary directory of an app launched from `app_binary`.
+        Each such launch gets its own: plugins keep per-process files in the
+        system temporary directory under the process ID (`media_kit` stores a
+        native pointer there in debug builds), nothing removes them, and a
+        later app that is given the same process ID would read the stale file.
         """
         if self.__flutter_process and self.__flutter_process.returncode is None:
             self.__flutter_process.terminate()
@@ -477,6 +495,10 @@ class FletTestApp:
                 await asyncio.wait_for(self.__flutter_output_task, timeout=5)
             except asyncio.TimeoutError:
                 self.__flutter_output_task.cancel()
+
+        if self.__app_temp_dir:
+            shutil.rmtree(self.__app_temp_dir, ignore_errors=True)
+            self.__app_temp_dir = None
 
     async def __read_flutter_output(self, stream: asyncio.StreamReader):
         # Read in chunks, not lines: the Flet client's debug output includes
