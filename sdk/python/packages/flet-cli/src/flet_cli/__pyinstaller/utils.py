@@ -9,7 +9,7 @@ import zipfile
 from pathlib import Path
 from typing import Optional
 
-from flet.utils import copy_tree, is_macos
+from flet.utils import copy_tree, is_macos, is_windows
 from flet_desktop import (
     ensure_client_cached,
     find_macos_app_bundle,
@@ -150,26 +150,43 @@ def archive_flet_bin() -> Optional[str]:
     plain `pyinstaller` run bundles; `flet pack` builds its own archive from
     the client it customizes.
 
+    The cached client keeps the client in a `flet` subdirectory, while
+    `FLET_VIEW_PATH` names the client directory itself. The client must hold
+    its executable (`flet.exe` on Windows, `flet` on Linux, a `.app` bundle
+    on macOS): the app trusts a bundled archive and doesn't download the
+    client, so an archive without one would fail on every start.
+
     Returns:
         Path to a new temporary directory holding only the archive and its
             fingerprint sidecar, or `None` when no client is available.
+
+    Raises:
+        RuntimeError: If the client directory holds no client executable.
     """
 
     bin_path = get_flet_bin_path()
     if not bin_path:
         return None
 
+    if bin_path == os.environ.get("FLET_VIEW_PATH"):
+        source = f"FLET_VIEW_PATH ({bin_path})"
+        hint = "Point FLET_VIEW_PATH at a Flet client directory, or unset it."
+    else:
+        source = f"The cached Flet client ({bin_path})"
+        hint = "Delete that directory and run PyInstaller again."
+
     if is_macos():
         app_path = find_macos_app_bundle(bin_path)
         if app_path is None:
-            return None
+            raise RuntimeError(f"{source} holds no .app bundle. {hint}")
         src_dir, arcname = str(app_path), app_path.name
     else:
-        # The cached client keeps it in a `flet` subdirectory, while
-        # `FLET_VIEW_PATH` names the client directory itself.
         client_dir = os.path.join(bin_path, "flet")
         src_dir = client_dir if os.path.isdir(client_dir) else bin_path
         arcname = "flet"
+        exe = "flet.exe" if is_windows() else "flet"
+        if not os.path.isfile(os.path.join(src_dir, exe)):
+            raise RuntimeError(f"{source} holds no {exe}. {hint}")
 
     temp_dir = Path(tempfile.gettempdir()).joinpath(str(uuid.uuid4()))
     temp_dir.mkdir()
