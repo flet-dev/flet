@@ -3,6 +3,7 @@ import 'package:screenshot/screenshot.dart';
 
 import '../extensions/control.dart';
 import '../models/control.dart';
+import '../utils/numbers.dart';
 import '../utils/time.dart';
 import 'base_controls.dart';
 
@@ -30,7 +31,7 @@ class _InteractiveViewerControlState extends State<ScreenshotControl> {
     switch (name) {
       case "capture":
         return await _screenshotController.capture(
-            pixelRatio: args["pixel_ratio"],
+            pixelRatio: parseDouble(args["pixel_ratio"]),
             delay: parseDuration(
                 args["delay"], const Duration(milliseconds: 20))!);
       default:

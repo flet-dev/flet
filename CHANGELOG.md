@@ -15,6 +15,7 @@
 * Fix mypy inferring `type[Never]` for classes decorated with `@control("Name")`: the overload that takes arguments now accepts only a string `dart_widget_name` ([#7085](https://github.com/flet-dev/flet/issues/7085), [#7087](https://github.com/flet-dev/flet/pull/7087)) by @joaoaracheski.
 * Fix type checkers ignoring `dataclasses.field()` arguments such as `init=False` on `@control` and `@value` classes, by declaring `dataclasses.field` as a field specifier ([#6377](https://github.com/flet-dev/flet/issues/6377), [#7084](https://github.com/flet-dev/flet/pull/7084)) by @joaoaracheski.
 * Fix changes to a control's `theme`, `dark_theme` or `theme_mode`, such as toggling `Container.theme_mode`, not being applied until its parent was updated by @ndonkoHenri.
+* Fix `Screenshot.capture()` failing with a type error when `pixel_ratio` is a whole number, such as `pixel_ratio=1` by @ndonkoHenri.
 
 ## 1.1.2
 
