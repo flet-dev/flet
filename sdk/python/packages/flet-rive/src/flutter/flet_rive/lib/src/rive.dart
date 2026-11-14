@@ -196,6 +196,11 @@ class _RiveControlState extends State<RiveControl> {
     bool isFile,
     Map<String, String>? headers,
   ) async {
+    // Started here, not at app startup, so an app downloads the engine only
+    // when it shows a Rive control. Later calls return the same future.
+    if (!await rive.RiveNative.init()) {
+      throw Exception("Rive engine failed to initialize.");
+    }
     if (isFile) {
       return rive.File.path(
         path,

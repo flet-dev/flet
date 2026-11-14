@@ -98,6 +98,17 @@ ImageProvider? parseImageProvider(dynamic src, BuildContext context) {
   return null;
 }
 
+/// Whether [src] names an SVG image: its path ends in `.svg`, in any letter
+/// case. For a URL ([isUrl]) only the path counts, not a query or fragment,
+/// so a cache-busting `icon.svg?v=2` is still drawn as SVG.
+bool isSvgSource(String src, {bool isUrl = false}) {
+  var path = src;
+  if (isUrl) {
+    path = Uri.tryParse(src)?.path ?? src;
+  }
+  return path.toLowerCase().endsWith(".svg");
+}
+
 /// Builds the correct image widget ([Image] or [SvgPicture])
 /// for any supported `src`.
 Widget buildImage({
@@ -193,7 +204,7 @@ Widget buildImage({
       var assetSrc = FletBackend.of(context).getAssetSource(stringSrc);
       if (assetSrc.isFile) {
         // SVG File
-        if (assetSrc.path.endsWith(".svg")) {
+        if (isSvgSource(assetSrc.path)) {
           return getSvgPictureFromFile(
               src: assetSrc.path,
               width: width,
@@ -232,7 +243,7 @@ Widget buildImage({
         }
       } else {
         // SVG URL
-        if (assetSrc.path.endsWith(".svg")) {
+        if (isSvgSource(assetSrc.path, isUrl: true)) {
           return SvgPicture.network(
             assetSrc.path,
             width: width,

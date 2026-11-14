@@ -1,7 +1,13 @@
 ## 1.1.3
 
+### Improvements
+
+* Start web apps that use `flet-rive` 1 MB lighter when they don't show a `Rive` control: the Rive engine (`rive_native.wasm`) now loads when the first `Rive` control loads its file, instead of at startup ([#7057](https://github.com/flet-dev/flet/pull/7057)) by @FeodorFitsner.
+
 ### Bug fixes
 
+* Fix SVG images drawing blank when their URL has a query string or fragment, such as a cache-busting `icon.svg?v=2`: `Image` now recognizes an SVG by the URL's path, in any letter case ([#7057](https://github.com/flet-dev/flet/pull/7057)) by @FeodorFitsner.
+* Fix `Text` with `spans` ignoring `overflow`: a rich text cut off by `max_lines` now ends in an ellipsis with `overflow=TextOverflow.ELLIPSIS`, as plain text does, instead of being clipped at a word ([#7057](https://github.com/flet-dev/flet/pull/7057)) by @FeodorFitsner.
 * Fix mypy inferring `type[Never]` for classes decorated with `@control("Name")`: the overload that takes arguments now accepts only a string `dart_widget_name` ([#7085](https://github.com/flet-dev/flet/issues/7085), [#7087](https://github.com/flet-dev/flet/pull/7087)) by @joaoaracheski.
 * Fix type checkers ignoring `dataclasses.field()` arguments such as `init=False` on `@control` and `@value` classes, by declaring `dataclasses.field` as a field specifier ([#6377](https://github.com/flet-dev/flet/issues/6377), [#7084](https://github.com/flet-dev/flet/pull/7084)) by @joaoaracheski.
 
