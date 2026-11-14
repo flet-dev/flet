@@ -1,3 +1,9 @@
+## 1.1.3
+
+### Bug fixes
+
+* Fix `@ft.observable` not refreshing the UI after in-place operators: `+=` and `*=` on `ObservableList` and `|=` on `ObservableDict` now notify observers ([#6293](https://github.com/flet-dev/flet/issues/6293), [#7086](https://github.com/flet-dev/flet/pull/7086)) by @joaoaracheski.
+
 ## 1.1.2
 
 ### Improvements
