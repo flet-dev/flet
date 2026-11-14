@@ -1,7 +1,11 @@
+import 'dart:ui' show SemanticsAction, SemanticsFlag;
+
+import 'package:flet/src/controls/control_widget.dart';
 import 'package:flet/src/controls/datatable.dart';
 import 'package:flet/src/flet_backend.dart';
 import 'package:flet/src/flet_core_extension.dart';
 import 'package:flet/src/models/control.dart';
+import 'package:flutter/semantics.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:material_ui/material_ui.dart';
 import 'package:provider/provider.dart';
@@ -35,42 +39,49 @@ class _Table {
 Future<_Table> _pumpTable(WidgetTester tester, Map<String, dynamic> props,
     {int rows = 3,
     String Function(int row, int column)? text,
+    Object? Function(int row, int column)? content,
+    Object? heading,
     bool textControls = false,
     Map<String, dynamic> rowProps = const {},
     Set<int> selected = const {}}) async {
   final backend = _Backend();
   var id = 1;
-  Control control(String type, Map<String, dynamic> properties) =>
-      Control(id: id++, type: type, properties: properties, backend: backend);
+  Map<String, dynamic> control(String type, Map<String, dynamic> properties) =>
+      {'_c': type, '_i': id++, ...properties};
 
-  final table = control('DataTable', {
-    ...props,
-    'columns': [
-      for (final label in ['A', 'B']) control('DataColumn', {'label': label})
-    ],
-    'rows': [
-      for (var r = 0; r < rows; r++)
-        control('DataRow', {
-          ...rowProps,
-          if (selected.contains(r)) 'selected': true,
-          'cells': [
-            for (var c = 0; c < 2; c++)
-              control('DataCell', {
-                'content': textControls
-                    ? control('Text', {'value': text?.call(r, c) ?? 'r$r c$c'})
-                    : text?.call(r, c) ?? 'r$r c$c'
-              })
-          ]
-        })
-    ],
-  });
+  final table = Control.fromMap(
+      control('DataTable', {
+        ...props,
+        'columns': [
+          control('DataColumn', {'label': heading ?? 'A'}),
+          control('DataColumn', {'label': 'B'}),
+        ],
+        'rows': [
+          for (var r = 0; r < rows; r++)
+            control('DataRow', {
+              ...rowProps,
+              if (selected.contains(r)) 'selected': true,
+              'cells': [
+                for (var c = 0; c < 2; c++)
+                  control('DataCell', {
+                    'content': content?.call(r, c) ??
+                        (textControls
+                            ? control('Text',
+                                {'value': text?.call(r, c) ?? 'r$r c$c'})
+                            : text?.call(r, c) ?? 'r$r c$c')
+                  })
+              ]
+            })
+        ],
+      }),
+      backend);
 
   await tester.pumpWidget(ChangeNotifierProvider<FletBackend>.value(
       value: backend,
       child: MaterialApp(
           home: Scaffold(
               body: SingleChildScrollView(
-                  child: DataTableControl(control: table))))));
+                  child: ControlWidget(control: table))))));
   await tester.pump();
   expect(tester.takeException(), isNull);
   return _Table(backend, table);
@@ -208,5 +219,149 @@ void main() {
     await _pumpTable(tester, {'show_checkbox_column': true},
         rows: 300, rowProps: {'on_select_change': true}, selected: {250});
     expect(tester.widget<Checkbox>(_headerCheckbox()).value, isNull);
+  });
+
+  testWidgets('zero-height rows use the eager table', (tester) async {
+    await _pumpTable(
+        tester,
+        {
+          'data_row_min_height': 0.0,
+          'data_row_max_height': 0.0,
+        },
+        rows: 100);
+
+    expect(
+        tester.widget<DataTable>(find.byType(DataTable)).rows, hasLength(100));
+  });
+
+  testWidgets('scaled tables build rows in the visible viewport',
+      (tester) async {
+    await _pumpTable(
+        tester,
+        {
+          'scale': {
+            'scale': 0.5,
+            'alignment': {'x': -1.0, 'y': -1.0},
+          },
+        },
+        rows: 1000);
+
+    expect(
+        tester.getTopLeft(find.text('r10 c0')).dy -
+            tester.getTopLeft(find.text('r0 c0')).dy,
+        240);
+    await _scrollTo(tester, 5000);
+    final row = find.text('r215 c0');
+    expect(row, findsOneWidget);
+    expect(tester.getTopLeft(row).dy, inInclusiveRange(0, 600));
+  });
+
+  testWidgets('long tables remeasure offscreen and visible text edits',
+      (tester) async {
+    final table = await _pumpTable(tester, {}, rows: 1000, textControls: true);
+    final original = tester.getTopLeft(find.text('B')).dx;
+    final content = table.rows[700].children('cells').first.child('content')!;
+    const long = 'A much longer value in row 700';
+    expect(find.text('r700 c0'), findsNothing);
+
+    content.update({'value': long}, shouldNotify: true);
+    await tester.pumpAndSettle();
+    expect(find.text(long), findsNothing);
+    final expanded = tester.getTopLeft(find.text('B')).dx;
+    expect(expanded, greaterThan(original));
+
+    await _scrollTo(tester, 56 + 700 * 48);
+    expect(find.text(long), findsOneWidget);
+    content.update({'value': 'r700 c0'}, shouldNotify: true);
+    await tester.pumpAndSettle();
+    expect(find.text('r700 c0'), findsOneWidget);
+    expect(tester.getTopLeft(find.text('B')).dx, original);
+    expect(tester.getTopLeft(find.text('r700 c1')).dx, original);
+  });
+
+  testWidgets('long tables remeasure when heading text shrinks',
+      (tester) async {
+    final table = await _pumpTable(tester, {},
+        rows: 100,
+        heading: {
+          '_c': 'Text',
+          '_i': 100000,
+          'value': 'A long column heading'
+        });
+    final before = tester.getTopLeft(find.text('B')).dx;
+    table.control
+        .children('columns')
+        .first
+        .child('label')!
+        .update({'value': 'A'}, shouldNotify: true);
+    await tester.pumpAndSettle();
+    final after = tester.getTopLeft(find.text('B')).dx;
+    expect(after, lessThan(before));
+    expect(tester.getTopLeft(find.text('r0 c1')).dx, after);
+  });
+
+  testWidgets('chunks realign when only a minimum column width grows',
+      (tester) async {
+    await tester.binding.setSurfaceSize(const Size(500, 600));
+    addTearDown(() => tester.binding.setSurfaceSize(null));
+    await _pumpTable(tester, {},
+        rows: 1000,
+        text: (r, c) => '${List.filled(9, 'word').join(' ')} r$r c$c',
+        content: (r, c) => r == 700 && c == 0
+            ? {'_c': 'Container', '_i': 100000, 'width': 340.0, 'height': 10.0}
+            : null);
+    final before = tester.getTopLeft(find.text('B')).dx;
+    await _scrollTo(tester, 56 + 690 * 48);
+    await tester.pumpAndSettle();
+
+    final header = tester.getTopLeft(find.text('B')).dx;
+    expect(header, greaterThan(before));
+    for (final row in [690, 700]) {
+      expect(tester.getTopLeft(find.textContaining('r$row c1')).dx, header);
+    }
+  });
+
+  testWidgets('clipped table checkboxes are absent from accessibility',
+      (tester) async {
+    final semantics = tester.ensureSemantics();
+    try {
+      final table = await _pumpTable(
+          tester,
+          {
+            'show_checkbox_column': true,
+            'horizontal_lines': {'width': 2.0, 'color': 'red'},
+          },
+          rows: 100,
+          rowProps: {'on_select_change': true});
+      final header = find.descendant(
+          of: find.byType(DataTable).last, matching: find.byType(Checkbox));
+      final chunk = find.descendant(
+          of: find.byType(DataTable).first, matching: find.byType(Checkbox));
+
+      final owner = tester.binding.pipelineOwner.semanticsOwner!;
+      final actionableNodes = <int>{};
+      bool collectActions(SemanticsNode node) {
+        final data = node.getSemanticsData();
+        if (data.hasFlag(SemanticsFlag.isHidden)) return true;
+        if (data.hasAction(SemanticsAction.tap)) actionableNodes.add(node.id);
+        node.visitChildren(collectActions);
+        return true;
+      }
+
+      collectActions(owner.rootSemanticsNode!);
+      bool hasTap(Finder finder) =>
+          actionableNodes.contains(tester.getSemantics(finder).id);
+
+      expect(hasTap(header.first), isTrue);
+      expect(hasTap(chunk.at(1)), isTrue);
+      expect(hasTap(header.at(1)), isFalse);
+      expect(hasTap(header.at(2)), isFalse);
+      expect(hasTap(chunk.first), isFalse);
+      owner.performAction(
+          tester.getSemantics(header.first).id, SemanticsAction.tap);
+      expect(table.backend.events, hasLength(100));
+    } finally {
+      semantics.dispose();
+    }
   });
 }

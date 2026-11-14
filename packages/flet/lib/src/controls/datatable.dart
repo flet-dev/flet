@@ -135,12 +135,12 @@ class DataTableControl extends StatelessWidget {
                 .triggerEvent("sort", {"ci": columnIndex, "asc": ascending})
             : null,
         label: label
-            ? column.buildTextOrWidget("label")!
+            ? column.buildTextOrWidget("label", notifyParent: width != null)!
             : const SizedBox.shrink(),
       );
     }
 
-    DataRow buildRow(Control row) {
+    DataRow buildRow(Control row, {bool notifyContentChanges = false}) {
       row.notifyParent = true;
       return DataRow(
         key: ValueKey(row.id),
@@ -155,7 +155,8 @@ class DataTableControl extends StatelessWidget {
         cells: row.children("cells").map((cell) {
           cell.notifyParent = true;
           return DataCell(
-            cell.buildTextOrWidget("content")!,
+            cell.buildTextOrWidget("content",
+                notifyParent: notifyContentChanges)!,
             placeholder: cell.getBool("placeholder", false)!,
             showEditIcon: cell.getBool("show_edit_icon", false)!,
             onDoubleTap: cell.hasEventHandler("double_tap")
@@ -195,6 +196,8 @@ class DataTableControl extends StatelessWidget {
     // Every chunk must draw the same columns and row states as one big table
     // would, so rows that mix selectable and not fall back to one table.
     if (rowControls.length < _lazyMinRows ||
+        !rowHeight.isFinite ||
+        rowHeight <= 0 ||
         rowHeight != maxRowHeight ||
         (selectableCount != 0 && selectableCount != rowControls.length)) {
       // DataTable paints every row on each paint, with no culling. Inside a
@@ -238,6 +241,8 @@ class DataTableControl extends StatelessWidget {
       var cells = row.children("cells");
       for (var c = 0; c < cells.length; c++) {
         var cell = cells[c]..notifyParent = true;
+        // A cell can change while its widget is unmounted.
+        cell.child("content", visibleOnly: false)?.notifyParent = true;
         var text = _cellText(cell);
         if (text == null || c >= widest.length) continue;
         var (width, word) = glyphs.estimate(text);
@@ -271,7 +276,6 @@ class DataTableControl extends StatelessWidget {
           child: _LazyDataTable(
             rowCount: rowControls.length,
             columnCount: columnControls.length,
-            rowsKey: Object.hashAll(rowControls.map((row) => row.id)),
             flexColumn: _onlyTextColumn(columnControls),
             rowHeight: rowHeight,
             headingRowHeight: headingRowHeight ??
@@ -327,7 +331,8 @@ class DataTableControl extends StatelessWidget {
               headingRowColor: const WidgetStatePropertyAll(Colors.transparent),
               columns: hiddenColumns(widths),
               rows: [
-                for (var r = start; r < end; r++) buildRow(rowControls[r])
+                for (var r = start; r < end; r++)
+                  buildRow(rowControls[r], notifyContentChanges: true)
               ],
             ),
             buildSeed: (widths) => buildTable(
@@ -474,7 +479,6 @@ class _LazyDataTable extends StatefulWidget {
   const _LazyDataTable({
     required this.rowCount,
     required this.columnCount,
-    required this.rowsKey,
     required this.flexColumn,
     required this.rowHeight,
     required this.headingRowHeight,
@@ -487,8 +491,6 @@ class _LazyDataTable extends StatefulWidget {
   final int rowCount;
   final int columnCount;
 
-  /// Changes when the rows are replaced; column widths are then measured anew.
-  final int rowsKey;
   final int? flexColumn;
   final double rowHeight;
   final double headingRowHeight;
@@ -513,7 +515,7 @@ class _LazyDataTableState extends State<_LazyDataTable> {
   Widget? _seed;
   int _first = 0;
   int _last = -1;
-  double _viewHeight = 0;
+  Size _viewSize = Size.zero;
   ScrollableState? _scrollable;
   bool _checkScheduled = false;
 
@@ -540,11 +542,9 @@ class _LazyDataTableState extends State<_LazyDataTable> {
     super.didUpdateWidget(oldWidget);
     _chunks.clear();
     _seed = null;
-    if (widget.rowsKey != oldWidget.rowsKey ||
-        widget.columnCount != oldWidget.columnCount ||
-        widget.flexColumn != oldWidget.flexColumn) {
-      _widths.reset(widget.columnCount, widget.flexColumn);
-    }
+    // Cell content and heading changes can shrink a column without replacing
+    // any rows. Scroll-driven rebuilds keep the measurements for unmounted rows.
+    _widths.reset(widget.columnCount, widget.flexColumn);
     if (_last >= _chunkCount) {
       _last = _chunkCount - 1;
       _first = math.min(_first, _last);
@@ -577,15 +577,19 @@ class _LazyDataTableState extends State<_LazyDataTable> {
     if (!mounted) return;
     var box = _tableKey.currentContext?.findRenderObject();
     if (box is! RenderBox || !box.attached || !box.hasSize) return;
-    var top = -box.localToGlobal(Offset.zero).dy;
-    var bottom = top + _viewHeight;
+    var screenToTable = box.getTransformTo(null);
+    if (screenToTable.invert() == 0) return;
+    var visible =
+        MatrixUtils.transformRect(screenToTable, Offset.zero & _viewSize);
     var viewport = _scrollable?.context.findRenderObject();
     if (viewport is RenderBox && viewport.attached && viewport.hasSize) {
-      var dy = box.getTransformTo(viewport).getTranslation().y;
-      top = math.max(top, -dy);
-      bottom = math.min(bottom, viewport.size.height - dy);
+      var viewportToTable = box.getTransformTo(viewport);
+      if (viewportToTable.invert() == 0) return;
+      visible = visible.intersect(MatrixUtils.transformRect(
+          viewportToTable, Offset.zero & viewport.size));
     }
-    if (bottom <= top) return;
+    if (!visible.isFinite || visible.isEmpty) return;
+    var top = visible.top, bottom = visible.bottom;
     var extent = bottom - top;
     if (_chunkAt(top - extent / 2) >= _first &&
         _chunkAt(bottom + extent / 2) <= _last) {
@@ -600,10 +604,10 @@ class _LazyDataTableState extends State<_LazyDataTable> {
   @override
   Widget build(BuildContext context) {
     var view = View.of(context);
-    _viewHeight = view.physicalSize.height / view.devicePixelRatio;
+    _viewSize = view.physicalSize / view.devicePixelRatio;
     if (_last < 0) {
       _first = 0;
-      _last = _chunkAt(2 * _viewHeight);
+      _last = _chunkAt(2 * _viewSize.height);
     }
     _chunks.removeWhere((i, _) => i < _first || i > _last);
     _scheduleCheck();
@@ -648,8 +652,10 @@ class _ColumnWidths extends ChangeNotifier {
   late List<double> _min;
   late List<double> _max;
 
-  /// The narrowest width each column was laid out at since the last notice.
-  late List<double> _given;
+  /// The smallest intrinsic widths given to a visible table since the last
+  /// relayout was scheduled.
+  late List<double> _givenMin;
+  late List<double> _givenMax;
   int? _flexColumn;
   late List<TableColumnWidth> columns;
 
@@ -662,7 +668,8 @@ class _ColumnWidths extends ChangeNotifier {
   void reset(int count, int? flexColumn) {
     _min = List.filled(count, 0);
     _max = List.filled(count, 0);
-    _given = List.filled(count, double.infinity);
+    _givenMin = List.filled(count, double.infinity);
+    _givenMax = List.filled(count, double.infinity);
     _flexColumn = flexColumn;
     columns = [for (var i = 0; i < count; i++) _SharedColumnWidth(this, i)];
     seedColumns = [
@@ -678,17 +685,20 @@ class _ColumnWidths extends ChangeNotifier {
     _max[index] = width;
     // A table already laid out narrower than this is out of line now; lay
     // them all out again once this frame is done.
-    if (_given[index] < width) _scheduleNotify();
-    if (shown) _given[index] = math.min(_given[index], width);
+    if (_givenMax[index] < width) _scheduleNotify();
+    if (shown) _givenMax[index] = math.min(_givenMax[index], width);
     return width;
   }
 
-  double _measureMin(int index, Iterable<RenderBox> cells) {
+  double _measureMin(int index, Iterable<RenderBox> cells, bool shown) {
     var width = _min[index];
     for (var cell in cells) {
       width = math.max(width, cell.getMinIntrinsicWidth(double.infinity));
     }
-    return _min[index] = width;
+    _min[index] = width;
+    if (_givenMin[index] < width) _scheduleNotify();
+    if (shown) _givenMin[index] = math.min(_givenMin[index], width);
+    return width;
   }
 
   void _scheduleNotify() {
@@ -697,7 +707,8 @@ class _ColumnWidths extends ChangeNotifier {
     SchedulerBinding.instance.addPostFrameCallback((_) {
       _notifyScheduled = false;
       if (_disposed) return;
-      _given.fillRange(0, _given.length, double.infinity);
+      _givenMin.fillRange(0, _givenMin.length, double.infinity);
+      _givenMax.fillRange(0, _givenMax.length, double.infinity);
       notifyListeners();
     });
   }
@@ -718,7 +729,7 @@ class _SharedColumnWidth extends TableColumnWidth {
 
   @override
   double minIntrinsicWidth(Iterable<RenderBox> cells, double containerWidth) =>
-      widths._measureMin(index, cells);
+      widths._measureMin(index, cells, shown);
 
   @override
   double maxIntrinsicWidth(Iterable<RenderBox> cells, double containerWidth) =>
@@ -757,6 +768,7 @@ class _ChunkedTableParentData extends ContainerBoxParentData<RenderBox> {
 
   /// The part of the child that shows, in the child's coordinates.
   Rect visible = Rect.zero;
+  double? bodyTop;
   final clipLayer = LayerHandle<ClipRectLayer>();
 }
 
@@ -924,6 +936,7 @@ class _RenderChunkedTable extends RenderBox
       var size = child.size;
       if (data.slot == _TableSlot.header) {
         data.offset = Offset.zero;
+        data.bodyTop = null;
         data.visible = Rect.fromLTRB(
             -_sideOverdraw, 0, size.width + _sideOverdraw, headingRowHeight);
         width = size.width;
@@ -934,6 +947,7 @@ class _RenderChunkedTable extends RenderBox
         // hard clip through a half-pixel would cut the line's edge off.
         var rows = math.min(_chunkRows, rowCount - data.slot * _chunkRows);
         var hidden = size.height - rows * rowHeight;
+        data.bodyTop = hidden;
         data.offset = Offset(
             0, headingRowHeight + data.slot * _chunkRows * rowHeight - hidden);
         // Below, a cell that overflows its row still shows over the next
@@ -973,6 +987,24 @@ class _RenderChunkedTable extends RenderBox
       }
     }
     return false;
+  }
+
+  @override
+  Rect describeApproximatePaintClip(RenderBox child) {
+    var data = child.parentData! as _ChunkedTableParentData;
+    return data.visible.shift(data.offset);
+  }
+
+  @override
+  Rect? describeSemanticsClip(RenderBox child) {
+    var data = child.parentData! as _ChunkedTableParentData;
+    var bodyTop = data.bodyTop;
+    if (bodyTop == null) return describeApproximatePaintClip(child);
+    // The paint clip includes the grid line above the chunk's first row.
+    // Exclude the dummy heading even when that line extends into it.
+    return Rect.fromLTRB(
+            data.visible.left, bodyTop, data.visible.right, data.visible.bottom)
+        .shift(data.offset);
   }
 
   @override
