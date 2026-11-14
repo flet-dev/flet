@@ -207,6 +207,7 @@ class FletTestApp:
         self.__flutter_output = bytearray()
         self.__echo_flutter_output = False
         self.__flutter_output_task: Optional[asyncio.Task] = None
+        self.__server_task: Optional[asyncio.Task] = None
         self.__page = None
         self.__tester: Union[Tester, RemoteTester, None] = None
 
@@ -277,7 +278,7 @@ class FletTestApp:
             if self.__use_http:
                 os.environ["FLET_FORCE_WEB_SERVER"] = "true"
 
-            asyncio.create_task(
+            self.__server_task = asyncio.create_task(
                 ft.run_async(
                     main,
                     port=self.__tcp_port,
@@ -392,6 +393,37 @@ class FletTestApp:
                     "Flutter process exited early with code "
                     f"{self.__flutter_process.returncode}"
                 )
+            if self.__server_task is not None and self.__server_task.done():
+                await self.__stop_flutter_process()
+                error = (
+                    None
+                    if self.__server_task.cancelled()
+                    else self.__server_task.exception()
+                )
+                raise RuntimeError(
+                    f"Flet app server on port {self.__tcp_port} stopped before "
+                    f"the Flutter app connected: {error!r}"
+                ) from error
+
+    async def __stop_flutter_process(self):
+        """
+        Terminates the Flutter test process if it is running, kills it if it \
+        does not end in 5 seconds, and waits for its output to be read.
+        """
+        if self.__flutter_process and self.__flutter_process.returncode is None:
+            self.__flutter_process.terminate()
+            try:
+                await asyncio.wait_for(self.__flutter_process.wait(), timeout=5)
+            except asyncio.TimeoutError:
+                _print("Force killing Flutter test process...")
+                self.__flutter_process.kill()
+                await self.__flutter_process.wait()
+
+        if self.__flutter_output_task:
+            try:
+                await asyncio.wait_for(self.__flutter_output_task, timeout=5)
+            except asyncio.TimeoutError:
+                self.__flutter_output_task.cancel()
 
     async def __read_flutter_output(self, stream: asyncio.StreamReader):
         # Read in chunks, not lines: the Flet client's debug output includes
@@ -478,19 +510,8 @@ class FletTestApp:
                 _print(f"Flutter test process has exited (code {flutter_returncode}).")
             except asyncio.TimeoutError:
                 _print("Flutter test process did not exit in time, terminating it...")
-                self.__flutter_process.terminate()
-                # Optionally ensure it terminates
-                try:
-                    await asyncio.wait_for(self.__flutter_process.wait(), timeout=5)
-                except asyncio.TimeoutError:
-                    _print("Force killing Flutter test process...")
-                    self.__flutter_process.kill()
 
-        if self.__flutter_output_task:
-            try:
-                await asyncio.wait_for(self.__flutter_output_task, timeout=5)
-            except asyncio.TimeoutError:
-                self.__flutter_output_task.cancel()
+        await self.__stop_flutter_process()
 
         # Stop the RemoteTester socket server (device mode).
         if isinstance(self.__tester, RemoteTester):
