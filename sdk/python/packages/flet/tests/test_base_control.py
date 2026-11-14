@@ -1,4 +1,10 @@
+import sys
+import typing
+
+import pytest
+
 import flet as ft
+from flet.controls.base_control import control
 
 
 def test_controls_equality():
@@ -31,3 +37,13 @@ def test_keys():
     t1 = ft.Text("A", key=ft.ValueKey("1"))
     t2 = ft.Text("A", key=ft.ValueKey("1"))
     assert t1 == t2
+
+
+@pytest.mark.skipif(
+    sys.version_info < (3, 11), reason="typing.get_overloads requires Python 3.11+"
+)
+def test_control_args_overload_accepts_only_str_name():
+    """The `@control(...)` overload accepts only a string `dart_widget_name`."""
+    _, with_args = typing.get_overloads(control)
+    hints = typing.get_type_hints(with_args)
+    assert hints["dart_widget_name"] == typing.Optional[str]
