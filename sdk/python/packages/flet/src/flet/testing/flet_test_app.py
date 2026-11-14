@@ -574,12 +574,17 @@ class FletTestApp:
         The process gets 10 seconds to exit after the tester's teardown and is
         terminated when it does not. An app launched from `app_binary` ends its
         own process with the test result as exit code, so having to terminate
-        it raises `RuntimeError`: its test result is unknown.
+        it raises `RuntimeError`: its test result is unknown. So does an app
+        that did not acknowledge the tester's teardown: it ended before its
+        test completed, and exit code 0 then comes from the app closing, not
+        from a passed test.
         """
+        teardown_error: Optional[Exception] = None
         try:
             await self.tester.teardown(timeout=10)
         except (RuntimeError, TimeoutError) as e:
             _print(f"Tester teardown failed: {e}")
+            teardown_error = e
 
         flutter_returncode: Optional[int] = None
         terminated = False
@@ -617,6 +622,14 @@ class FletTestApp:
                 "of teardown and was terminated, so its test result is unknown. "
                 "See the Flutter test output above."
             )
+
+        if teardown_error and self.__app_binary and not self.__device_mode:
+            self.__dump_flutter_output()
+            raise RuntimeError(
+                "Flutter integration test app ended before its test completed: "
+                f"it did not acknowledge teardown ({teardown_error}) and exited "
+                f"with code {flutter_returncode}. See the Flutter test output above."
+            ) from teardown_error
 
     def resize_page(self, width: float, height: float):
         """
