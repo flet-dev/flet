@@ -270,9 +270,12 @@ class ObservableList(list):
     def extend(self, it):
         """
         Extend list with iterable items and notify observers.
+
+        The items are read before the list grows, so `xs.extend(xs)` appends
+        one copy of the list's items.
         """
 
-        super().extend(self._wrap(v) for v in it)
+        super().extend([self._wrap(v) for v in it])
         self._touch()
 
     def __iadd__(self, other):
@@ -280,8 +283,7 @@ class ObservableList(list):
         Extend list in place (`+=`) and notify observers.
         """
 
-        # Snapshot first: `items += items` must not iterate a list that grows.
-        self.extend(list(other))
+        self.extend(other)
         return self
 
     def __imul__(self, n):
@@ -412,11 +414,11 @@ class ObservableDict(dict):
         """
         Update mapping with values and notify observers.
 
-        Positional mapping/iterable arguments are forwarded to `dict.update()`;
-        keyword values are wrapped when needed.
+        Takes the same arguments as `dict.update()`. List and dict values are
+        wrapped, whether they come from a mapping, key-value pairs or keywords.
         """
 
-        super().update(*a, **{kk: self._wrap(vv) for kk, vv in k.items()})
+        super().update({kk: self._wrap(vv) for kk, vv in dict(*a, **k).items()})
         self._touch()
 
     def __ior__(self, other):

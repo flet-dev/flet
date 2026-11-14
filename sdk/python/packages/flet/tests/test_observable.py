@@ -1,5 +1,7 @@
 from dataclasses import dataclass, field
 
+import pytest
+
 import flet as ft
 
 
@@ -169,4 +171,39 @@ def test_dict_inplace_union_notifies():
 
     qux.prop_e |= {"key1": "value1"}
     assert qux.prop_e == {"key1": "value1"}
+    assert changes == ["prop_e"]
+
+
+def test_list_extend_with_itself():
+    """`extend` with the list itself appends one copy of its items."""
+    baz = Baz(f=1)
+
+    baz.prop_d.extend(baz.prop_d)
+    assert baz.prop_d == [1, 2, 3, 1, 2, 3]
+
+
+@pytest.mark.parametrize(
+    "merge",
+    [
+        lambda d: d.update({"items": []}),
+        lambda d: d.update([("items", [])]),
+        lambda d: d.update(items=[]),
+        lambda d: d.__ior__({"items": []}),
+    ],
+    ids=["mapping", "pairs", "keywords", "ior"],
+)
+def test_dict_merge_wraps_nested_values(merge):
+    """Lists merged into an observable dict notify when they change later."""
+    changes = []
+
+    def subscriber(sender, field):
+        changes.append(field)
+
+    qux = Qux()
+    qux.subscribe(subscriber)
+
+    merge(qux.prop_e)
+    changes.clear()
+    qux.prop_e["items"].append(1)
+    assert qux.prop_e == {"items": [1]}
     assert changes == ["prop_e"]
