@@ -71,7 +71,7 @@ def control(cls: type[T]) -> type[T]:
 
 @overload
 def control(
-    dart_widget_name: Optional[Union[type[T], str]] = None,
+    dart_widget_name: Optional[str] = None,
     *,
     isolated: Optional[bool] = None,
     post_init_args: int = 1,
