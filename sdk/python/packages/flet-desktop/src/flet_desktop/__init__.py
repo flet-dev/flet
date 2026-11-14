@@ -614,10 +614,19 @@ def ensure_client_cached():
             __get_bundled_linux_archives(get_arch()) if is_linux() else []
         )
         if bundled_archives:
+            flavor = __get_desktop_flavor()
+            distros = [d for d, f in bundled_archives if f == flavor]
+            if distros:
+                reason = (
+                    f"was built for {', '.join(distros)}, which this system can't use"
+                )
+            else:
+                reason = (
+                    f"is the {bundled_archives[0][1]} client, "
+                    f"but the {flavor} client is selected"
+                )
             logger.warning(
-                "The bundled Flet client was built for "
-                f"{', '.join(distro for distro, _ in bundled_archives)}, "
-                f"which this system can't use; downloading {artifact} instead."
+                f"The bundled Flet client {reason}; downloading {artifact} instead."
             )
         archive_path = __download_flet_client(artifact)
 

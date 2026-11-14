@@ -152,6 +152,20 @@ class TestBundledClientFromAnotherDistro:
             "flet-linux-debian12-amd64.tar.gz"
         )
 
+    def test_flavor_override_download_names_the_flavor_mismatch(
+        self, frozen_linux, monkeypatch, caplog
+    ):
+        """The warning blames the selected flavor when it differs from the bundle."""
+        _bundle(frozen_linux, "flet-linux-ubuntu20.04-light-amd64.tar.gz")
+        monkeypatch.setenv("FLET_DESKTOP_FLAVOR", "full")
+
+        with (
+            caplog.at_level(logging.WARNING, logger=flet_desktop.__name__),
+            pytest.raises(_Downloaded),
+        ):
+            flet_desktop.ensure_client_cached()
+        assert "is the light client, but the full client is selected" in caplog.text
+
     def test_unfrozen_app_ignores_bundle_dir(self, frozen_linux, monkeypatch):
         """Outside a frozen app the client is picked from the system glibc only."""
         _bundle(frozen_linux, "flet-linux-ubuntu20.04-light-amd64.tar.gz")
