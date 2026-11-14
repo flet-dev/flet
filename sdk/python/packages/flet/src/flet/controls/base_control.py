@@ -88,7 +88,7 @@ def control(
     ...
 
 
-@dataclass_transform()
+@dataclass_transform(field_specifiers=(field,))
 def control(
     dart_widget_name: Optional[Union[type[T], str]] = None,
     *,
