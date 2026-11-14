@@ -57,8 +57,7 @@ class DateTimeComponents(Enum):
 
     Note:
         Calendar recurrence is supported only on Android, iOS, and macOS. Windows
-        ignores
-        these components and schedules a single delivery.
+        ignores these components and schedules a single delivery.
     """
 
     TIME = "time"
@@ -82,9 +81,53 @@ class NotificationActionInput:
     Used by :attr:`flet_notifications.NotificationAction.input`.
 
     Note:
-        Android supports reply choices, free-form text, and MIME-type hints. iOS/macOS
-        use a text-input action; Windows uses a separate text box associated with the
-        action ID. Linux and Web show the action as a regular button without an input.
+        - Android supports reply choices, free-form text, and MIME-type hints. iOS/macOS
+          use a text-input action; Windows uses a separate text box associated with the
+          action ID. Linux and Web show the action as a regular button without an input.
+
+        - On Android, a notification the user replied to that isn't dismissed shows a
+          progress spinner until the app updates it. With
+          :attr:`flet_notifications.NotificationAction.cancel_notification` set to
+          `True`, Android 15 and earlier dismiss it after the reply, so updating it
+          posts a new notification that alerts again, while Android 16 and later
+          keep it, spinning. To get the same result on every version, set
+          `cancel_notification` to `False`, so no version dismisses it, and update
+          the notification from :attr:`flet_notifications.Notifications.on_action`:
+
+          ```python
+          import flet as ft
+          import flet_notifications as ftn
+
+          reply = ftn.NotificationAction(
+              id="reply",
+              title="Reply",
+              input=ftn.NotificationActionInput(label="Message"),
+              cancel_notification=False,
+          )
+
+
+          async def handle_action(e: ftn.NotificationActionEvent):
+              if (
+                  e.page.platform == ft.PagePlatform.ANDROID
+                  and e.action_id == "reply"
+                  and e.id is not None
+              ):
+                  await notifications.show(
+                      id=e.id,
+                      title="Ada",
+                      body=f"You: {e.input}",
+                      payload=e.payload,
+                      options=ftn.NotificationOptions(
+                          android=ftn.AndroidOptions(
+                              # Doesn't alert again for the update.
+                              only_alert_once=True,
+                              # Removes it after a second; leave out to keep it.
+                              # Cancelling right after the update can be refused.
+                              timeout_after=ft.Duration(seconds=1),
+                          )
+                      ),
+                  )
+          ```
     """
 
     label: str | None = None
@@ -204,10 +247,14 @@ class NotificationAction:
 
     cancel_notification: bool = True
     """
-    Whether to dismiss the notification when this action is selected.
+    Whether to automatically dismiss the notification when this action is selected.
 
     Note:
-        Supported only on Android.
+        - Supported only on Android.
+        - For an action with an :attr:`input`, set it to `False` and update the
+          notification instead, as :class:`flet_notifications.NotificationActionInput`
+          shows: Android 16 and later don't dismiss a notification the user replied
+          to.
     """
 
     input: NotificationActionInput | None = None
