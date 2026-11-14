@@ -9,12 +9,24 @@ import '../utils/numbers.dart';
 import '../utils/text.dart';
 import 'transforms.dart';
 
+/// A key per control with a badge, stable while the control lives.
+///
+/// [Badge] places its child alone while the label is hidden and inside a
+/// [Stack] while the label is shown. The child is keyed with a
+/// [GlobalObjectKey] made from this object, so it keeps its state when the
+/// label is shown or hidden, or the badge is replaced.
+final Expando<Object> _badgedChildKeys = Expando('badged child keys');
+
 extension BadgeParsers on Control {
   Widget wrapWithBadge(String propertyName, Widget child, ThemeData theme) {
     var badge = get(propertyName);
     if (badge == null) {
       return child;
-    } else if (badge is Control) {
+    }
+    child = KeyedSubtree(
+        key: GlobalObjectKey(_badgedChildKeys[this] ??= Object()),
+        child: child);
+    if (badge is Control) {
       badge.notifyParent = true;
       return Badge(
         label: badge.buildTextOrWidget("label"),
@@ -29,8 +41,7 @@ extension BadgeParsers on Control {
         textStyle: badge.getTextStyle("text_style", theme),
         child: child,
       );
-    } else {
-      return Badge(label: Text(badge.toString()), child: child);
     }
+    return Badge(label: Text(badge.toString()), child: child);
   }
 }
