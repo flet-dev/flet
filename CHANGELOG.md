@@ -14,6 +14,8 @@
 * Fix `Text` with `spans` ignoring `overflow`: a rich text cut off by `max_lines` now ends in an ellipsis with `overflow=TextOverflow.ELLIPSIS`, as plain text does, instead of being clipped at a word ([#7057](https://github.com/flet-dev/flet/pull/7057)) by @FeodorFitsner.
 * Fix mypy inferring `type[Never]` for classes decorated with `@control("Name")`: the overload that takes arguments now accepts only a string `dart_widget_name` ([#7085](https://github.com/flet-dev/flet/issues/7085), [#7087](https://github.com/flet-dev/flet/pull/7087)) by @joaoaracheski.
 * Fix type checkers ignoring `dataclasses.field()` arguments such as `init=False` on `@control` and `@value` classes, by declaring `dataclasses.field` as a field specifier ([#6377](https://github.com/flet-dev/flet/issues/6377), [#7084](https://github.com/flet-dev/flet/pull/7084)) by @joaoaracheski.
+* Fix apps packaged with plain `pyinstaller` downloading the Flet desktop client on their first start, and failing to build on macOS ([#7053](https://github.com/flet-dev/flet/issues/7053), [#7068](https://github.com/flet-dev/flet/pull/7068)) by @ndonkoHenri.
+* Fix Linux apps made with `flet pack` or `pyinstaller` that run on a newer distro than they were built on downloading the light client instead of using the bundled one, and switching from the full to the light client ([#7068](https://github.com/flet-dev/flet/pull/7068)) by @ndonkoHenri.
 
 ## 1.1.2
 
