@@ -10,7 +10,7 @@ Building an AI agent is exciting. Seeing people actually use it and get the resu
 is even more exciting. And seeing early adopters go beyond the free plan and subscribe to the
 Creator plan is the best part! Thank you for your support! :)
 
-Today's release of [Flet Studio](https://studio.flet.dev) gives the agent eyes and ears:
+Today's release of [Flet Studio](https://studio.flet.dev/?utm_source=flet.dev&utm_medium=blog&utm_campaign=flet-agent-got-eyes-and-ears) gives the agent eyes and ears:
 it can now **run your app, take a screenshot of it and read its console** while it's working. You can also attach pictures, PDFs and code files to your
 messages, or just paste a screenshot.
 
@@ -283,7 +283,7 @@ your production database.
 
 A self-learning agent with memory is another thing we could tackle in future releases.
 
-That's all for today! Open [Flet Studio](https://studio.flet.dev) and give the new agent a try.
+That's all for today! Open [Flet Studio](https://studio.flet.dev/?utm_source=flet.dev&utm_medium=blog&utm_campaign=flet-agent-got-eyes-and-ears) and give the new agent a try.
 If you have an interesting story to share - what you built or tried to build with the Flet
 agent, challenges, obstacles - tell us in
 [GitHub Discussions](https://github.com/flet-dev/flet/discussions) or on

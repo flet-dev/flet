@@ -8,7 +8,7 @@
 
 A service for safely storing sensitive key–value data using the platform’s native secure storage mechanisms—Keychain on iOS/macOS, Windows Credential Manager, libsecret on Linux, and Keystore on Android.
 
-> **[Try flet-secure-storage in Flet Studio](https://studio.flet.dev/gallery/utility/securestorage/example/extensions/secure_storage/secure_storage)**
+> **[Try flet-secure-storage in Flet Studio](https://studio.flet.dev/gallery/utility/securestorage/example/extensions/secure_storage/secure_storage?utm_source=pypi&utm_medium=readme&utm_campaign=flet-secure-storage)**
 >
 > Prototype your Flet app interface in the browser, then integrate secure storage in your local project. Write your own Python code or get help from the AI agent.
 

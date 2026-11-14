@@ -5,7 +5,7 @@
 
 Flet CLI is a command-line interface tool for Flet, a framework for building interactive multi-platform applications using Python.
 
-> **[Try Flet online in Flet Studio](https://studio.flet.dev)**
+> **[Try Flet online in Flet Studio](https://studio.flet.dev/?utm_source=pypi&utm_medium=readme&utm_campaign=flet-cli)**
 >
 > Try an idea in your browser with no installation, then use the Flet CLI locally to develop and package your app. Write your own Python code or get help from the AI agent.
 
