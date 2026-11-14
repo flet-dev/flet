@@ -49,9 +49,12 @@ Widget withControlInheritedNotifier(Control control, WidgetBuilder builder) {
   );
 }
 
-/// Convenience wrapper that applies both:
-/// - [withControlInheritedNotifier]
-/// - [withControlTheme]
+/// Wraps [builder] in the control's [ControlInheritedNotifier], with the
+/// control's [Theme] (see [withControlTheme]) inside it, so theme changes
+/// rebuild like any other property change.
+///
+/// [builder] runs below that [Theme], so `Theme.of(context)` returns the
+/// control's theme.
 Widget withControlContext(
   Control control,
   WidgetBuilder builder,
@@ -62,10 +65,10 @@ Widget withControlContext(
     return Builder(builder: builder);
   }
 
-  return Builder(builder: (context) {
-    final child = withControlInheritedNotifier(control, builder);
-    return withControlTheme(control, context, child);
-  });
+  return withControlInheritedNotifier(
+    control,
+    (context) => withControlTheme(control, context, Builder(builder: builder)),
+  );
 }
 
 /// Applies per-control theming (`theme`, `dark_theme`, `theme_mode`) to `child`.
