@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import contextlib
+import operator
 import weakref
 from dataclasses import InitVar, dataclass
 from typing import TYPE_CHECKING, Any, Callable, Optional
@@ -34,6 +35,13 @@ def observable(cls):
             x: int
             y: int
         ```
+
+    Note:
+        Listeners are called synchronously. With augmented assignments such as
+        `obj.items += [x]`, `*=` on lists and `|=` on dicts, they run before
+        Python assigns the result back to the field, so a listener that
+        replaces `obj.items` at that moment is overwritten. Direct calls such
+        as `obj.items.extend([x])` keep the listener's replacement.
     """
     if Observable in cls.__mro__:
         return cls
@@ -223,18 +231,21 @@ class Observable:
 
 # Observable collections -----------------------------------------
 
+_MISSING = object()
 
-class ObservableList(list):
+
+class _ObservableCollection:
     """
-    List wrapper that reports mutating operations to its owning observable.
+    Base for collections that report changes to a field of an observable.
+
+    Subclasses store a weak reference to the owning observable in `_owner_ref`
+    and the field's name in `_field`, both declared in their `__slots__`.
     """
 
-    __slots__ = ("_owner_ref", "_field")
+    __slots__ = ()
 
-    def __init__(self, owner: Observable, field: str, iterable=()):
-        super().__init__(iterable)
-        self._owner_ref = weakref.ref(owner)
-        self._field = field
+    _owner_ref: weakref.ref
+    _field: str
 
     def _touch(self):
         """
@@ -250,7 +261,7 @@ class ObservableList(list):
         Wrap nested collections into observable variants before storing.
 
         Args:
-            v: Value being inserted into the list.
+            v: Value being inserted into the collection.
 
         Returns:
             Wrapped value when applicable.
@@ -258,6 +269,44 @@ class ObservableList(list):
 
         owner = self._owner_ref()
         return owner._wrap_if_collection(self._field, v) if owner else v
+
+    def _is_written_back(self, current: Any, value: Any) -> bool:
+        """
+        Tell whether `value` is the observable child already stored in a slot.
+
+        Python writes the result of an augmented assignment such as
+        `d["items"] += [1]` back into the slot. The child has notified already,
+        so writing the identical child back to the same owner and field is a
+        no-op.
+
+        Args:
+            current: Value in the slot, or `_MISSING` when the slot is empty.
+            value: Value being written into the slot.
+
+        Returns:
+            `True` when `value` is `current` and reports to the same owner and
+                field.
+        """
+
+        return (
+            value is current
+            and isinstance(value, _ObservableCollection)
+            and value._owner_ref() is self._owner_ref()
+            and value._field == self._field
+        )
+
+
+class ObservableList(_ObservableCollection, list):
+    """
+    List wrapper that reports mutating operations to its owning observable.
+    """
+
+    __slots__ = ("_owner_ref", "_field")
+
+    def __init__(self, owner: Observable, field: str, iterable=()):
+        super().__init__(iterable)
+        self._owner_ref = weakref.ref(owner)
+        self._field = field
 
     def append(self, x):
         """
@@ -270,10 +319,49 @@ class ObservableList(list):
     def extend(self, it):
         """
         Extend list with iterable items and notify observers.
+
+        Items are appended one at a time, as with `list.extend()`.
+        `xs.extend(xs)` appends the list's current items once, as the same
+        objects. If the iterable raises after some items were appended,
+        observers are still notified before the error propagates.
         """
 
-        super().extend(self._wrap(v) for v in it)
+        size = len(self)
+        try:
+            if it is self:
+                super().extend(self)
+            else:
+                super().extend(self._wrap(v) for v in it)
+        except BaseException:
+            if len(self) != size:
+                self._touch()
+            raise
         self._touch()
+
+    def __iadd__(self, other):
+        """
+        Extend list in place (`+=`) and notify observers.
+
+        Observers are notified before Python assigns the list back to its
+        field, so a subscriber that replaces the field during `+=` has its
+        replacement overwritten. Call `extend()` to keep such a replacement.
+        """
+
+        self.extend(other)
+        return self
+
+    def __imul__(self, n):
+        """
+        Repeat list items in place (`*=`) and notify observers.
+
+        Observers are notified before Python assigns the list back to its
+        field, so a subscriber that replaces the field during `*=` has its
+        replacement overwritten.
+        """
+
+        super().__imul__(n)
+        self._touch()
+        return self
 
     def insert(self, i, x):
         """
@@ -331,6 +419,27 @@ class ObservableList(list):
         return v
 
     def __setitem__(self, i, v):
+        """
+        Set an item or a slice and notify observers.
+
+        Writing the item's own observable child back to its index, as Python
+        does after `xs[0] += [1]`, changes nothing and doesn't notify again.
+        An index object's `__index__()` is called once, as with `list`.
+        """
+
+        if not isinstance(i, slice):
+            try:
+                i = operator.index(i)
+            except TypeError:
+                pass
+            else:
+                current = (
+                    list.__getitem__(self, i)
+                    if -len(self) <= i < len(self)
+                    else _MISSING
+                )
+                if self._is_written_back(current, v):
+                    return
         super().__setitem__(i, self._wrap(v))
         self._touch()
 
@@ -339,7 +448,7 @@ class ObservableList(list):
         self._touch()
 
 
-class ObservableDict(dict):
+class ObservableDict(_ObservableCollection, dict):
     """
     Dict wrapper that reports mutating operations to its owning observable.
     """
@@ -351,30 +460,16 @@ class ObservableDict(dict):
         self._owner_ref = weakref.ref(owner)
         self._field = field
 
-    def _touch(self):
-        """
-        Emit a change notification for the parent field.
-        """
-
-        owner = self._owner_ref()
-        if owner:
-            owner._notify(self._field)
-
-    def _wrap(self, v):
-        """
-        Wrap nested collections into observable variants before storing.
-
-        Args:
-            v: Value being inserted into the dict.
-
-        Returns:
-            Wrapped value when applicable.
-        """
-
-        owner = self._owner_ref()
-        return owner._wrap_if_collection(self._field, v) if owner else v
-
     def __setitem__(self, k, v):
+        """
+        Set a key and notify observers.
+
+        Writing the key's own observable child back, as Python does after
+        `d["items"] += [1]`, changes nothing and doesn't notify again.
+        """
+
+        if self._is_written_back(dict.get(self, k, _MISSING), v):
+            return
         super().__setitem__(k, self._wrap(v))
         self._touch()
 
@@ -394,12 +489,47 @@ class ObservableDict(dict):
         """
         Update mapping with values and notify observers.
 
-        Positional mapping/iterable arguments are forwarded to `dict.update()`;
-        keyword values are wrapped when needed.
+        Takes the same arguments as `dict.update()` and inserts entries in the
+        same order: the mapping's keys or the key-value pairs first, one at a
+        time, then the keywords. List and dict values are wrapped as they are
+        inserted. Observers are notified once; if the input raises after some
+        entries were inserted, they are notified before the error propagates.
         """
 
-        super().update(*a, **{kk: self._wrap(vv) for kk, vv in k.items()})
+        if len(a) > 1:
+            raise TypeError(f"update expected at most 1 argument, got {len(a)}")
+        changed = False
+        try:
+            if a:
+                other = a[0]
+                if hasattr(other, "keys"):
+                    for kk in other.keys():  # noqa: SIM118
+                        dict.__setitem__(self, kk, self._wrap(other[kk]))
+                        changed = True
+                else:
+                    for kk, vv in other:
+                        dict.__setitem__(self, kk, self._wrap(vv))
+                        changed = True
+            for kk, vv in k.items():
+                dict.__setitem__(self, kk, self._wrap(vv))
+                changed = True
+        except BaseException:
+            if changed:
+                self._touch()
+            raise
         self._touch()
+
+    def __ior__(self, other):
+        """
+        Merge a mapping in place (`|=`) and notify observers.
+
+        Observers are notified before Python assigns the dict back to its
+        field, so a subscriber that replaces the field during `|=` has its
+        replacement overwritten. Call `update()` to keep such a replacement.
+        """
+
+        self.update(other)
+        return self
 
     def pop(self, k, *d):
         """
