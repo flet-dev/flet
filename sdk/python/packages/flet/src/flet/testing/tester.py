@@ -1,4 +1,4 @@
-from typing import Optional
+from typing import Any, Optional
 
 from flet.controls.base_control import control
 from flet.controls.duration import DurationValue
@@ -16,6 +16,20 @@ class Tester(Service):
     """
     Class that programmatically interacts with page controls and the test environment.
     """
+
+    async def _invoke_method(
+        self,
+        method_name: str,
+        arguments: Optional[dict[str, Any]] = None,
+        timeout: Optional[float] = 60,
+    ) -> Any:
+        """
+        Invokes a tester method in the app under test.
+
+        A call gets 60 seconds unless it names its own `timeout`, so a test
+        fails with `TimeoutError` when the app stops answering.
+        """
+        return await super()._invoke_method(method_name, arguments, timeout)
 
     async def pump(self, duration: Optional[DurationValue] = None):
         """
