@@ -2,6 +2,7 @@ from typing import Optional
 
 from flet.controls.base_control import control
 from flet.controls.control_event import ControlEventHandler
+from flet.controls.exceptions import FletUnsupportedPlatformException
 from flet.controls.services.service import Service
 from flet.controls.types import Number
 
@@ -15,11 +16,9 @@ class ShakeDetector(Service):
 
     Note:
         * Supported platforms: Android, iOS and web.
-        * The detector asks for an accelerometer reading every 20 ms. All readers of
-          the accelerometer share one rate. On Android and iOS the last request sets
-          it: an :class:`~flet.Accelerometer` added after the detector changes the rate
-          to its own `interval`, and the detector changes the rate of one added before
-          it to 20 ms. On web the first request sets it and later ones are ignored.
+        * The detector reads the accelerometer every 20 ms. An app has a single
+          accelerometer rate, shared with any :class:`~flet.Accelerometer`: on
+          Android and iOS the one added last sets it, on web the one added first.
     """
 
     minimum_shake_count: int = 1
@@ -46,3 +45,9 @@ class ShakeDetector(Service):
     """
     Called when a shake is detected.
     """
+
+    def before_update(self):
+        if not (self.page.web or self.page.platform.is_mobile()):
+            raise FletUnsupportedPlatformException(
+                f"{self.__class__.__name__} is only supported on Android, iOS and web."
+            )
