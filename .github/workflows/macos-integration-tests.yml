@@ -134,6 +134,17 @@ jobs:
             exit 1
           fi
 
+      # One app start through `flutter test`, the launch path used when no
+      # prebuilt app is set, so that path stays covered.
+      - name: Run a smoke test through flutter test
+        if: matrix.group == 'apps-extensions'
+        timeout-minutes: 15
+        working-directory: sdk/python
+        env:
+          FLET_TEST_APP_BINARY: ""
+        run: |
+          uv run pytest -s -o log_cli=true -o log_cli_level=INFO packages/flet/integration_tests/controls/services/test_package_info.py
+
       - name: Upload artifact
         if: failure()
         uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
