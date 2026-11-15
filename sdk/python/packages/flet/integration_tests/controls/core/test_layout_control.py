@@ -1,3 +1,4 @@
+import asyncio
 from math import pi
 
 import pytest
@@ -431,3 +432,69 @@ async def test_matrix4_multiply_chain(flet_app: ftt.FletTestApp, request):
         request.node.name,
         _matrix_card("Multiply chain", ft.Colors.LIGHT_GREEN_300, matrix),
     )
+
+
+async def _wait_for(flet_app: ftt.FletTestApp, condition, timeout: float = 5.0):
+    """Pumps frames until `condition()` holds, as events reach Python later."""
+    loop = asyncio.get_running_loop()
+    deadline = loop.time() + timeout
+    while not condition() and loop.time() < deadline:
+        await flet_app.tester.pump(duration=ft.Duration(milliseconds=100))
+        await asyncio.sleep(0.05)
+    return condition()
+
+
+@pytest.mark.asyncio(loop_scope="module")
+async def test_animate_size(flet_app: ftt.FletTestApp):
+    """`Container.animate_size` animates height changes, to and from `None`."""
+    heights = []
+    box = ft.Container(
+        width=100,
+        height=40,
+        bgcolor=ft.Colors.CYAN_300,
+        content=ft.Container(width=100, height=200),
+        animate_size=ft.Animation(400),
+        size_change_interval=0,
+        on_size_change=lambda e: heights.append(e.height),
+    )
+    flet_app.page.clean()
+    flet_app.page.add(box)
+    await flet_app.tester.pump_and_settle()
+    assert await _wait_for(flet_app, lambda: heights and heights[-1] == 40)
+
+    heights.clear()
+    box.height = None
+    box.update()
+    await flet_app.tester.pump_and_settle()
+    assert await _wait_for(flet_app, lambda: heights and heights[-1] == 200)
+    assert any(40 < h < 200 for h in heights), f"no animation: {heights}"
+
+    heights.clear()
+    box.height = 40
+    box.update()
+    await flet_app.tester.pump_and_settle()
+    assert await _wait_for(flet_app, lambda: heights and heights[-1] == 40)
+    assert any(40 < h < 200 for h in heights), f"no animation: {heights}"
+
+
+@pytest.mark.asyncio(loop_scope="module")
+async def test_animate_false(flet_app: ftt.FletTestApp):
+    """`False` turns an animation off, and the control still renders."""
+    flet_app.page.clean()
+    flet_app.page.add(
+        ft.Container(
+            content=ft.Text("no animation"),
+            opacity=0.5,
+            animate=False,
+            animate_opacity=False,
+            animate_size=False,
+            animate_scale=False,
+            animate_rotation=False,
+            animate_offset=False,
+            animate_margin=False,
+        )
+    )
+    await flet_app.tester.pump_and_settle()
+
+    finder = await flet_app.tester.find_by_text("no animation")
+    assert finder.count == 1
