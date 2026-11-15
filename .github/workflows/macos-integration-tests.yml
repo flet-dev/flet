@@ -50,8 +50,7 @@ jobs:
       fail-fast: false
       matrix:
         # Every job builds the test app once, so the test directories are
-        # grouped into three jobs of similar duration. Not run: `tutorials`
-        # and `examples/cookbook`.
+        # grouped into three jobs of similar duration. Not run: `tutorials`.
         include:
           - group: controls
             dirs: >-
@@ -71,6 +70,7 @@ jobs:
               examples/apps
               extensions
               examples/extensions
+              examples/cookbook
 
     name: ${{ matrix.group }} Integration Tests
     steps:
