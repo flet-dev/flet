@@ -1,7 +1,7 @@
 from typing import Any, Optional
 
 from flet.controls.base_control import control
-from flet.controls.duration import DurationValue
+from flet.controls.duration import Duration, DurationValue
 from flet.controls.keys import KeyValue
 from flet.controls.services.service import Service
 from flet.controls.transform import Offset
@@ -28,6 +28,7 @@ class Tester(Service):
 
         A call gets 60 seconds unless it names its own `timeout`, so a test
         fails with `TimeoutError` when the app stops answering.
+        `pump` adds its `duration` to that limit.
         """
         return await super()._invoke_method(method_name, arguments, timeout)
 
@@ -38,7 +39,14 @@ class Tester(Service):
         Args:
             duration: A duration after which to trigger a frame.
         """
-        return await self._invoke_method("pump", {"duration": duration})
+        wait = (
+            Duration(milliseconds=duration) if isinstance(duration, int) else duration
+        )
+        return await self._invoke_method(
+            "pump",
+            {"duration": duration},
+            timeout=60 + (wait.in_seconds if wait else 0),
+        )
 
     async def pump_and_settle(
         self, duration: Optional[DurationValue] = None, timeout: Optional[float] = 10

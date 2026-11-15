@@ -4,8 +4,12 @@ on:
   pull_request:
     paths:
       - '.github/workflows/docs.yml'
+      - '.github/scripts/check_docs.*'
+      - 'sdk/python/pyproject.toml'
       - 'sdk/python/examples/**'
+      - 'sdk/python/packages/*/pyproject.toml'
       - 'sdk/python/packages/*/src/**'
+      - 'sdk/python/packages/*/integration_tests/**'
       - 'tools/crocodocs/**'
       - 'website/**'
   workflow_call:

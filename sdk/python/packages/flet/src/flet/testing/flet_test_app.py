@@ -1,4 +1,5 @@
 import asyncio
+import contextlib
 import inspect
 import logging
 import os
@@ -480,6 +481,8 @@ class FletTestApp:
         Terminates the Flutter test process if it is running, kills it if it \
         does not end in 5 seconds, and waits for its output to be read.
 
+        Stops the Flet app server of this test app, which frees its port.
+
         Removes the temporary directory of an app launched from `app_binary`.
         Each such launch gets its own: plugins keep per-process files in the
         system temporary directory under the process ID (`media_kit` stores a
@@ -504,6 +507,12 @@ class FletTestApp:
         if self.__app_temp_dir:
             shutil.rmtree(self.__app_temp_dir, ignore_errors=True)
             self.__app_temp_dir = None
+
+        if self.__server_task:
+            self.__server_task.cancel()
+            with contextlib.suppress(asyncio.CancelledError, Exception):
+                await self.__server_task
+            self.__server_task = None
 
     async def __read_flutter_output(self, stream: asyncio.StreamReader):
         # Read in chunks, not lines: the Flet client's debug output includes
@@ -591,7 +600,7 @@ class FletTestApp:
         teardown_error: Optional[Exception] = None
         try:
             await self.tester.teardown(timeout=10)
-        except (RuntimeError, TimeoutError) as e:
+        except (RuntimeError, TimeoutError, asyncio.TimeoutError) as e:
             _print(f"Tester teardown failed: {e}")
             teardown_error = e
 

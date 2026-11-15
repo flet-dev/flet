@@ -519,7 +519,7 @@ class Session:
 
         try:
             await asyncio.wait_for(evt.wait(), timeout=timeout)
-        except TimeoutError:
+        except asyncio.TimeoutError:
             if call_id in self.__method_calls:
                 del self.__method_calls[call_id]
             raise TimeoutError(

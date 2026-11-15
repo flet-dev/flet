@@ -70,7 +70,7 @@ Running tests with a test app built once (macOS). `flutter test` builds the app 
 
 ```bash
 cd client
-flutter build macos --debug -t integration_test/app_test.dart
+fvm flutter build macos --debug -t integration_test/app_test.dart
 export FLET_TEST_APP_BINARY=$PWD/build/macos/Build/Products/Debug/Flet.app/Contents/MacOS/Flet
 cd ../sdk/python
 uv run pytest -s -o log_cli=true -o log_cli_level=INFO packages/flet/integration_tests/controls/material
