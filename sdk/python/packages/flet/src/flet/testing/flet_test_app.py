@@ -1,5 +1,4 @@
 import asyncio
-import contextlib
 import inspect
 import logging
 import os
@@ -452,12 +451,12 @@ class FletTestApp:
                     f"{self.__flutter_process.returncode}"
                 )
             if self.__server_task is not None and self.__server_task.done():
-                await self.__stop_flutter_process()
                 error = (
                     None
                     if self.__server_task.cancelled()
                     else self.__server_task.exception()
                 )
+                await self.__stop_flutter_process()
                 raise RuntimeError(
                     f"Flet app server on port {self.__tcp_port} stopped before "
                     f"the Flutter app connected: {error!r}"
@@ -481,7 +480,9 @@ class FletTestApp:
         Terminates the Flutter test process if it is running, kills it if it \
         does not end in 5 seconds, and waits for its output to be read.
 
-        Stops the Flet app server of this test app, which frees its port.
+        Stops the Flet app server of this test app, which frees its port. A
+        web server started for HTTP transport is left running: stopping it
+        shuts down state it shares with the other test apps of the process.
 
         Removes the temporary directory of an app launched from `app_binary`.
         Each such launch gets its own: plugins keep per-process files in the
@@ -503,15 +504,15 @@ class FletTestApp:
                 await asyncio.wait_for(self.__flutter_output_task, timeout=5)
             except asyncio.TimeoutError:
                 self.__flutter_output_task.cancel()
+            self.__flutter_output_task = None
 
         if self.__app_temp_dir:
             shutil.rmtree(self.__app_temp_dir, ignore_errors=True)
             self.__app_temp_dir = None
 
-        if self.__server_task:
+        if self.__server_task and not self.__use_http:
             self.__server_task.cancel()
-            with contextlib.suppress(asyncio.CancelledError, Exception):
-                await self.__server_task
+            await asyncio.wait({self.__server_task}, timeout=5)
             self.__server_task = None
 
     async def __read_flutter_output(self, stream: asyncio.StreamReader):

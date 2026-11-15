@@ -20,6 +20,7 @@ on:
       - 'website/src/fonts/**'
       - 'website/src/data/*-icon-codepoints.json'
       - 'packages/flet/**'
+      - 'media/logo/**'
       - '.fvmrc'
   pull_request:
     paths:
@@ -35,6 +36,7 @@ on:
       - 'website/src/fonts/**'
       - 'website/src/data/*-icon-codepoints.json'
       - 'packages/flet/**'
+      - 'media/logo/**'
       - '.fvmrc'
   workflow_dispatch:
 

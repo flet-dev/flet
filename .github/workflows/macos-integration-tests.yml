@@ -43,7 +43,7 @@ env:
 jobs:
   test-macos:
     runs-on: macos-26
-    timeout-minutes: 75
+    timeout-minutes: 80
     permissions:
       contents: read
     strategy:

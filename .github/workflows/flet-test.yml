@@ -20,6 +20,7 @@ on:
       - 'sdk/python/packages/flet/**'
       - 'sdk/python/packages/flet-cli/**'
       - 'sdk/python/packages/flet-desktop/**'
+      - 'sdk/python/packages/flet-platform-assets/**'
       - '!sdk/python/packages/*/integration_tests/**'
       - '!sdk/python/packages/*/tests/**'
       - 'sdk/python/templates/**'
