@@ -388,11 +388,26 @@ Widget _positionedControl(
   return widget;
 }
 
+/// Applies the control's size, its size animation and its min/max constraints
+/// to [widget].
+///
+/// A control that sizes itself (it lists `width` or `height` in
+/// `skip_properties`) gets only the size animation: an [AnimatedSize] that
+/// follows whatever size the control lays out at.
 Widget _sizedControl(Widget widget, Control control) {
   final skipProps =
       (control.internals?['skip_properties'] as List?) ?? const [];
   if (!['width', 'height'].any(skipProps.contains)) {
     widget = _fixedSizeControl(widget, control);
+  } else {
+    final animationSize = control.getAnimation("animate_size");
+    if (animationSize != null) {
+      widget = AnimatedSize(
+        duration: animationSize.duration,
+        curve: animationSize.curve,
+        child: widget,
+      );
+    }
   }
   return _constrainedControl(widget, control, skipProps);
 }
