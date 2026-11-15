@@ -1,12 +1,12 @@
 import pytest
-from example_apps import load_example
 
+import examples.extensions.charts.line_chart.multi_series_line_chart.main as example_1
 import flet as ft
 import flet.testing as ftt
 import flet_charts as fch
-
-example_1 = load_example("line_chart/multi_series_line_chart")
-example_2 = load_example("line_chart/line_chart_with_custom_axes")
+from examples.extensions.charts.line_chart.line_chart_with_custom_axes import (
+    main as example_2,
+)
 
 
 @pytest.mark.asyncio(loop_scope="function")

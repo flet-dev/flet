@@ -1,11 +1,9 @@
 import pytest
-from example_apps import load_example
 
+import examples.extensions.charts.radar_chart.radar_chart.main as example_1
 import flet as ft
 import flet.testing as ftt
 import flet_charts as fch
-
-example_1 = load_example("radar_chart/radar_chart")
 
 
 @pytest.mark.asyncio(loop_scope="function")

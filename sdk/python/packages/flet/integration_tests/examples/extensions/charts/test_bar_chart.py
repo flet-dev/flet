@@ -1,12 +1,10 @@
 import pytest
-from example_apps import load_example
 
+import examples.extensions.charts.bar_chart.bar_chart_with_hover.main as example_2
+import examples.extensions.charts.bar_chart.interactive_bar_chart.main as example_1
 import flet as ft
 import flet.testing as ftt
 import flet_charts as fch
-
-example_1 = load_example("bar_chart/interactive_bar_chart")
-example_2 = load_example("bar_chart/bar_chart_with_hover")
 
 
 @pytest.mark.asyncio(loop_scope="function")

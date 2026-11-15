@@ -1,11 +1,25 @@
+import plotly.express as px
 import pytest
-from example_apps import load_example
 
+import examples.extensions.charts.plotly_chart.plotly_bar_chart.main as example_2
+import examples.extensions.charts.plotly_chart.plotly_box_plot.main as example_4
+import examples.extensions.charts.plotly_chart.plotly_line_chart.main as example_1
+import examples.extensions.charts.plotly_chart.plotly_pie_chart.main as example_3
+import flet as ft
 import flet.testing as ftt
+import flet_charts as fch
 
-example_1 = load_example("pie_chart/pie_chart_with_hover_borders")
-example_2 = load_example("pie_chart/pie_chart_with_hover_sections")
-example_3 = load_example("pie_chart/pie_chart_with_icon_badges")
+
+@pytest.mark.asyncio(loop_scope="function")
+async def test_image_for_docs(flet_app_function: ftt.FletTestApp, request):
+    flet_app_function.page.theme_mode = ft.ThemeMode.LIGHT
+    flet_app_function.page.padding = 20
+    flet_app_function.page.update()
+    data_canada = px.data.gapminder().query("country == 'Canada'")
+    fig = px.bar(data_canada, x="year", y="pop")
+    await flet_app_function.assert_control_screenshot(
+        request.node.name, fch.PlotlyChart(figure=fig, expand=True)
+    )
 
 
 @pytest.mark.parametrize(
@@ -52,5 +66,21 @@ async def test_example_3(flet_app_function: ftt.FletTestApp):
     await flet_app_function.tester.pump_and_settle()
     flet_app_function.assert_screenshot(
         "example_3",
+        await flet_app_function.page.take_screenshot(),
+    )
+
+
+@pytest.mark.parametrize(
+    "flet_app_function",
+    [{"flet_app_main": example_4.main}],
+    indirect=True,
+)
+@pytest.mark.asyncio(loop_scope="function")
+async def test_example_4(flet_app_function: ftt.FletTestApp):
+    flet_app_function.page.enable_screenshots = True
+    flet_app_function.page.update()
+    await flet_app_function.tester.pump_and_settle()
+    flet_app_function.assert_screenshot(
+        "example_4",
         await flet_app_function.page.take_screenshot(),
     )

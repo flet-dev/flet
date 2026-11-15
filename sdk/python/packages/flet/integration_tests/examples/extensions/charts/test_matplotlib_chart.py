@@ -1,12 +1,10 @@
 import pytest
-from example_apps import load_example
 
+import examples.extensions.charts.matplotlib_chart.bar_chart.main as bar_chart
+import examples.extensions.charts.matplotlib_chart.handle_events.main as handle_events
+import examples.extensions.charts.matplotlib_chart.three_d.main as three_d
+import examples.extensions.charts.matplotlib_chart.toolbar.main as toolbar
 import flet.testing as ftt
-
-bar_chart = load_example("matplotlib_chart/bar_chart")
-handle_events = load_example("matplotlib_chart/handle_events")
-three_d = load_example("matplotlib_chart/three_d")
-toolbar = load_example("matplotlib_chart/toolbar")
 
 
 @pytest.mark.parametrize(

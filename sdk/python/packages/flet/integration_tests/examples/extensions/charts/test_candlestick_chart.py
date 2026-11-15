@@ -1,44 +1,38 @@
 import pytest
-from example_apps import load_example
 
+import examples.extensions.charts.candlestick_chart.candlestick_chart.main as example_1
 import flet as ft
 import flet.testing as ftt
 import flet_charts as fch
-
-example_1 = load_example("scatter_chart/scatter_chart")
 
 
 @pytest.mark.asyncio(loop_scope="function")
 async def test_image_for_docs(flet_app_function: ftt.FletTestApp, request):
     flet_app_function.page.theme_mode = ft.ThemeMode.LIGHT
-    chart_spots = [
-        fch.ScatterChartSpot(
-            x=i * 2,
-            y=i * 3,
-        )
-        for i in range(10)
-    ]
-    chart_spots += [
-        fch.ScatterChartSpot(
-            x=i,
-            y=i,
-        )
-        for i in range(10)
-    ]
-
-    chart_spots += [
-        fch.ScatterChartSpot(
-            x=i + 2,
-            y=i + 10,
-        )
-        for i in range(10)
-    ]
-
     await flet_app_function.assert_control_screenshot(
         request.node.name,
-        fch.ScatterChart(
-            aspect_ratio=1.0,
-            spots=chart_spots,
+        fch.CandlestickChart(
+            min_x=-1,
+            max_x=2,
+            min_y=20,
+            max_y=30,
+            bgcolor=ft.Colors.AMBER_200,
+            spots=[
+                fch.CandlestickChartSpot(
+                    x=0,
+                    open=22.6,
+                    high=28.3,
+                    low=21.4,
+                    close=24.1,
+                ),
+                fch.CandlestickChartSpot(
+                    x=1,
+                    open=25.4,
+                    high=27.6,
+                    low=22.3,
+                    close=23.9,
+                ),
+            ],
         ),
     )
 
