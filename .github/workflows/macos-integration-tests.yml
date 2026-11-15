@@ -50,7 +50,8 @@ jobs:
       fail-fast: false
       matrix:
         # Every job builds the test app once, so the test directories are
-        # grouped into three jobs of similar duration.
+        # grouped into three jobs of similar duration. Not run: `tutorials`
+        # and `examples/cookbook`.
         include:
           - group: controls
             dirs: >-
@@ -112,7 +113,10 @@ jobs:
 
       # Test file names repeat across directories, so each directory gets its
       # own pytest run. A failing directory does not stop the ones after it.
+      # The step limit is below the job limit: a step that times out fails,
+      # so the uploads below still run.
       - name: Run integration tests (${{ matrix.group }})
+        timeout-minutes: 50
         working-directory: sdk/python
         env:
           TEST_DIRS: ${{ matrix.dirs }}
