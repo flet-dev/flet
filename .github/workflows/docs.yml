@@ -1,14 +1,26 @@
 name: Build docs
 
 on:
+  pull_request:
+    paths:
+      - '.github/workflows/docs.yml'
+      - 'sdk/python/examples/**'
+      - 'sdk/python/packages/*/src/**'
+      - 'tools/crocodocs/**'
+      - 'website/**'
+  workflow_call:
   workflow_dispatch:
+
+concurrency:
+  group: docs-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: ${{ github.event_name == 'pull_request' }}
 
 permissions:
   contents: read
 
 jobs:
   build:
-    name: Build Documentation
+    name: Build Docs
     runs-on: ubuntu-latest
     steps:
       - name: Checkout repository
