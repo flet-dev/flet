@@ -2,15 +2,26 @@ name: Flet Build Test
 
 on:
   pull_request:
+    # What `flet build` and `flet pack` are built from. A `!` pattern takes
+    # back files matched by the patterns above it.
     paths:
       - '.github/workflows/flet-build-test.yml'
       - '.github/workflows/flet-build-test-matrix.yml'
+      - '.github/scripts/**'
       - '.fvmrc'
       - 'client/**'
+      - '!client/android/**'
+      - '!client/ios/**'
+      - '!client/web/**'
+      - '!client/integration_test/**'
       - 'sdk/python/packages/**'
+      - '!sdk/python/packages/*/integration_tests/**'
+      - '!sdk/python/packages/*/tests/**'
       - 'sdk/python/templates/**'
       - 'packages/flet/**'
+      - '!packages/flet/test/**'
       - 'sdk/python/examples/apps/flet_build_test/**'
+      - '!**.md'
   workflow_dispatch:
     inputs:
       python_version:
