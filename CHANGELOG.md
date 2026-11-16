@@ -17,6 +17,8 @@
 * Fix `page.window.resizable = False` locking the window at 1280×720 instead of the set `width` and `height` on Linux ([#1375](https://github.com/flet-dev/flet/issues/1375), [#7062](https://github.com/flet-dev/flet/pull/7062)) by @ndonkoHenri.
 * Fix `page.window.min_width`, `min_height`, `max_width` and `max_height` not limiting the window size on Linux ([#1735](https://github.com/flet-dev/flet/issues/1735), [#7063](https://github.com/flet-dev/flet/pull/7063)) by @ndonkoHenri.
 * Fix `page.window` size limits that are cleared by setting them to `None`, or a `max_width` or `max_height` set without the other, being ignored on Windows and Linux ([#7063](https://github.com/flet-dev/flet/pull/7063)) by @ndonkoHenri.
+* flet-charts: Fix `BarChart` failing to render when a `BarChartRodStackItem` has no `from_y` or `color`; an item without a color now uses its rod's color ([#7064](https://github.com/flet-dev/flet/pull/7064)) by @ndonkoHenri.
+* flet-charts: Fix `LineChart` jumping instead of animating when the points of a data series change ([flet-charts#8](https://github.com/flet-dev/flet-charts/issues/8), [#7064](https://github.com/flet-dev/flet/pull/7064)) by @ndonkoHenri.
 * Fix cancelled client method calls keeping their responses in memory for the rest of the session, and client method calls made after the session closed waiting forever instead of failing with "Session closed" ([#7065](https://github.com/flet-dev/flet/pull/7065)) by @remote-controlled-man.
 
 ## 1.1.2
