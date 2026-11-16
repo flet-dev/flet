@@ -8,7 +8,7 @@
 
 Adds geolocation capabilities to your [Flet](https://flet.dev) apps.
 
-> **[Try flet-geolocator in Flet Studio](https://studio.flet.dev/gallery/sensors/geolocator/example/extensions/geolocator/geolocator)**
+> **[Try flet-geolocator in Flet Studio](https://studio.flet.dev/gallery/sensors/geolocator/example/extensions/geolocator/geolocator?utm_source=pypi&utm_medium=readme&utm_campaign=flet-geolocator)**
 >
 > Create, run, and share Python apps in your browser. Start from an example, write your own code, or get help from the AI agent. No installation required.
 

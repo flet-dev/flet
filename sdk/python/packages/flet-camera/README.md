@@ -8,7 +8,7 @@
 
 A camera control for [Flet](https://flet.dev) apps.
 
-> **[Try flet-camera in Flet Studio](https://studio.flet.dev/gallery/media/camera/example/extensions/camera/camera_playground)**
+> **[Try flet-camera in Flet Studio](https://studio.flet.dev/gallery/media/camera/example/extensions/camera/camera_playground?utm_source=pypi&utm_medium=readme&utm_campaign=flet-camera)**
 >
 > Create, run, and share Python apps in your browser. Start from an example, write your own code, or get help from the AI agent. No installation required.
 

@@ -21,7 +21,7 @@ const plans = [
       'Community support',
     ],
     action: 'Start building',
-    href: 'https://studio.flet.dev',
+    href: 'https://studio.flet.dev/?utm_source=flet.dev&utm_medium=site&utm_campaign=pricing&utm_content=explorer',
   },
   {
     name: 'Creator',
@@ -46,7 +46,7 @@ const plans = [
       'Flet support',
     ],
     action: 'Start building',
-    href: 'https://studio.flet.dev',
+    href: 'https://studio.flet.dev/?utm_source=flet.dev&utm_medium=site&utm_campaign=pricing&utm_content=creator',
     featured: true,
   },
   {

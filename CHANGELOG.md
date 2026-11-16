@@ -1,9 +1,24 @@
 ## 1.1.3
 
+### Documentation
+
+* flet-notifications: Document how to update a notification after an inline reply on Android, and fix the "Action buttons and replies" example's notification staying stuck with a spinner after a reply ([#7058](https://github.com/flet-dev/flet/discussions/7058), [#7060](https://github.com/flet-dev/flet/pull/7060)) by @ItsRenjiii.
+
+### Improvements
+
+* Start web apps that use `flet-rive` 1 MB lighter when they don't show a `Rive` control: the Rive engine (`rive_native.wasm`) now loads when the first `Rive` control loads its file, instead of at startup ([#7057](https://github.com/flet-dev/flet/pull/7057)) by @FeodorFitsner.
+
 ### Bug fixes
 
-* flet-charts: Fix `BarChart` failing to render when a `BarChartRodStackItem` has no `from_y` by @ndonkoHenri.
-* flet-charts: Fix `LineChart` jumping instead of animating when the points of a data series change ([flet-charts#8](https://github.com/flet-dev/flet-charts/issues/8)) by @ndonkoHenri.
+* Fix SVG images drawing blank when their URL has a query string or fragment, such as a cache-busting `icon.svg?v=2`: `Image` now recognizes an SVG by the URL's path, in any letter case ([#7057](https://github.com/flet-dev/flet/pull/7057)) by @FeodorFitsner.
+* Fix `Text` with `spans` ignoring `overflow`: a rich text cut off by `max_lines` now ends in an ellipsis with `overflow=TextOverflow.ELLIPSIS`, as plain text does, instead of being clipped at a word ([#7057](https://github.com/flet-dev/flet/pull/7057)) by @FeodorFitsner.
+* Fix mypy inferring `type[Never]` for classes decorated with `@control("Name")`: the overload that takes arguments now accepts only a string `dart_widget_name` ([#7085](https://github.com/flet-dev/flet/issues/7085), [#7087](https://github.com/flet-dev/flet/pull/7087)) by @joaoaracheski.
+* Fix type checkers ignoring `dataclasses.field()` arguments such as `init=False` on `@control` and `@value` classes, by declaring `dataclasses.field` as a field specifier ([#6377](https://github.com/flet-dev/flet/issues/6377), [#7084](https://github.com/flet-dev/flet/pull/7084)) by @joaoaracheski.
+* Fix `page.window.resizable = False` locking the window at 1280×720 instead of the set `width` and `height` on Linux ([#1375](https://github.com/flet-dev/flet/issues/1375), [#7062](https://github.com/flet-dev/flet/pull/7062)) by @ndonkoHenri.
+* Fix `page.window.min_width`, `min_height`, `max_width` and `max_height` not limiting the window size on Linux ([#1735](https://github.com/flet-dev/flet/issues/1735), [#7063](https://github.com/flet-dev/flet/pull/7063)) by @ndonkoHenri.
+* Fix `page.window` size limits that are cleared by setting them to `None`, or a `max_width` or `max_height` set without the other, being ignored on Windows and Linux ([#7063](https://github.com/flet-dev/flet/pull/7063)) by @ndonkoHenri.
+* flet-charts: Fix `BarChart` failing to render when a `BarChartRodStackItem` has no `from_y` ([#7064](https://github.com/flet-dev/flet/pull/7064)) by @ndonkoHenri.
+* flet-charts: Fix `LineChart` jumping instead of animating when the points of a data series change ([flet-charts#8](https://github.com/flet-dev/flet-charts/issues/8), [#7064](https://github.com/flet-dev/flet/pull/7064)) by @ndonkoHenri.
 
 ## 1.1.2
 
