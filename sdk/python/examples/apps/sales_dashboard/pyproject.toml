@@ -1,0 +1,29 @@
+[project]
+name = "sales-dashboard"
+version = "1.0.0"
+description = "Loads monthly sales from a CSV with pandas, computes growth with NumPy, and charts revenue with a 3-month moving average in matplotlib."
+requires-python = ">=3.10"
+keywords = ["apps", "dashboard", "charts", "matplotlib", "pandas", "numpy", "csv"]
+authors = [{ name = "Flet team", email = "hello@flet.dev" }]
+dependencies = ["flet", "flet-charts", "matplotlib", "numpy", "pandas"]
+
+[dependency-groups]
+dev = ["flet-cli", "flet-desktop", "flet-web"]
+
+[tool.flet.gallery]
+categories = ["Featured", "Charts/MatplotlibChart"]
+
+[tool.flet.metadata]
+title = "Sales Dashboard"
+controls = ["SafeArea", "Column", "Row", "ResponsiveRow", "Container", "Text", "Icon", "MatplotlibChart"]
+layout_pattern = "dashboard"
+complexity = "intermediate"
+features = ["CSV loading with pandas", "NumPy calculations", "matplotlib chart", "responsive layout"]
+
+[tool.flet]
+org = "dev.flet"
+company = "Flet"
+copyright = "Copyright (C) 2023-2026 by Flet"
+
+[tool.flet.app]
+path = "src"

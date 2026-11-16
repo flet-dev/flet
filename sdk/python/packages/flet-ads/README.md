@@ -8,7 +8,7 @@
 
 Display Google Ads in [Flet](https://flet.dev) apps.
 
-> **[Try Flet online in Flet Studio](https://studio.flet.dev)**
+> **[Try Flet online in Flet Studio](https://studio.flet.dev/?utm_source=pypi&utm_medium=readme&utm_campaign=flet-ads)**
 >
 > Prototype your Flet app interface in the browser, then add mobile ads in your local project. Write your own Python code or get help from the AI agent.
 

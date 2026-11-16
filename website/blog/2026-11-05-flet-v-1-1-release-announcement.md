@@ -97,7 +97,7 @@ Building forms is simpler too: value controls such as `Input`, `Select`, `DatePi
 
 <img src="/img/blog/flet-1-1/shadcn.png" className="screenshot screenshot-70" style={{borderRadius: '7px'}} alt="Shadcn Card, Input, Select, Switch, Button, Calendar and Badge controls in a Flet app" />
 
-You can try every shadcn control in the Gallery of [Flet Studio](https://studio.flet.dev/gallery/shadcn). Big thanks to [@InesaFitsner](https://github.com/InesaFitsner) for building this extension!
+You can try every shadcn control in the Gallery of [Flet Studio](https://studio.flet.dev/gallery/shadcn?utm_source=flet.dev&utm_medium=blog&utm_campaign=flet-v-1-1-release-announcement). Big thanks to [@InesaFitsner](https://github.com/InesaFitsner) for building this extension!
 
 More info:
 
