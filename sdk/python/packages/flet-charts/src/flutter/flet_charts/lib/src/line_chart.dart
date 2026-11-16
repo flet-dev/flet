@@ -7,6 +7,8 @@ import 'package:material_ui/material_ui.dart';
 import 'utils/charts.dart';
 import 'utils/line_chart.dart';
 
+typedef _LineSeries = ({List<Control> points, List<FlSpot> spots});
+
 class LineChartControl extends StatefulWidget {
   final Control control;
 
@@ -20,7 +22,7 @@ class LineChartControl extends StatefulWidget {
 class _LineChartControlState extends State<LineChartControl> {
   LineChartEventData? _eventData;
 
-  final _series = <int, ({List<Control> points, List<FlSpot> spots})>{};
+  final _series = <int, _LineSeries>{};
   double? _minX;
   double? _maxX;
 
@@ -43,6 +45,29 @@ class _LineChartControlState extends State<LineChartControl> {
   void _updateSeries(List<Control> dataSeries, double? minX, double? maxX) {
     // A single patch can notify separately for point changes and axis bounds.
     // Compare complete frames after all of those operations have landed.
+    final nextSeries = <int, _LineSeries>{};
+    for (final lineBar in dataSeries) {
+      lineBar.notifyParent = true;
+      final points = lineBar.children("points");
+      final spots = points.map((spot) {
+        spot.notifyParent = true;
+        return FlSpot(spot.getDouble("x")!, spot.getDouble("y")!);
+      }).toList();
+      nextSeries[lineBar.id] = (points: points, spots: spots);
+    }
+
+    // When a bound is omitted, fl_chart uses the X extent of the series.
+    final inferMinX = minX?.isNaN ?? true;
+    final inferMaxX = maxX?.isNaN ?? true;
+    if (inferMinX || inferMaxX) {
+      final xs = nextSeries.values
+          .expand((series) => series.spots)
+          .map((spot) => spot.x)
+          .where((x) => x.isFinite);
+      if (inferMinX) minX = xs.minOrNull;
+      if (inferMaxX) maxX = xs.maxOrNull;
+    }
+
     final previousMinX = _minX;
     final previousMaxX = _maxX;
     final shift =
@@ -52,31 +77,24 @@ class _LineChartControlState extends State<LineChartControl> {
         previousMaxX != null &&
         (maxX - previousMaxX - shift).abs() < precisionErrorTolerance;
 
-    for (final lineBar in dataSeries) {
-      lineBar.notifyParent = true;
-      final points = lineBar.children("points");
-      final spots = points.map((spot) {
-        spot.notifyParent = true;
-        return FlSpot(spot.getDouble("x")!, spot.getDouble("y")!);
-      }).toList();
-
-      final previous = _series[lineBar.id];
+    for (final MapEntry(key: id, value: next) in nextSeries.entries) {
+      final previous = _series[id];
       if (scrolls &&
           previous != null &&
           (shift > 0
-              ? _hasRollingOverlap(previous.spots, spots)
-              : _hasRollingOverlap(spots, previous.spots))) {
+              ? _hasRollingOverlap(previous.spots, next.spots)
+              : _hasRollingOverlap(next.spots, previous.spots))) {
         // Use the same samples on both ends of the tween while the X axis
         // slides. fl_chart otherwise interpolates by index, which would
         // morph each retained sample into a different one.
-        previous.spots.setAll(0, spots);
-        previous.points.setAll(0, points);
+        previous.spots.setAll(0, next.spots);
+        previous.points.setAll(0, next.points);
       } else {
         // Preserve the previous coordinates for ordinary point animations.
-        _series[lineBar.id] = (points: points, spots: spots);
+        _series[id] = next;
       }
     }
-    _series.removeWhere((id, _) => !dataSeries.any((bar) => bar.id == id));
+    _series.removeWhere((id, _) => !nextSeries.containsKey(id));
     _minX = minX;
     _maxX = maxX;
   }
