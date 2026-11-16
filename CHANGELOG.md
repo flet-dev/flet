@@ -15,6 +15,8 @@
 * Fix mypy inferring `type[Never]` for classes decorated with `@control("Name")`: the overload that takes arguments now accepts only a string `dart_widget_name` ([#7085](https://github.com/flet-dev/flet/issues/7085), [#7087](https://github.com/flet-dev/flet/pull/7087)) by @joaoaracheski.
 * Fix type checkers ignoring `dataclasses.field()` arguments such as `init=False` on `@control` and `@value` classes, by declaring `dataclasses.field` as a field specifier ([#6377](https://github.com/flet-dev/flet/issues/6377), [#7084](https://github.com/flet-dev/flet/pull/7084)) by @joaoaracheski.
 * Fix `page.window.resizable = False` locking the window at 1280×720 instead of the set `width` and `height` on Linux ([#1375](https://github.com/flet-dev/flet/issues/1375), [#7062](https://github.com/flet-dev/flet/pull/7062)) by @ndonkoHenri.
+* Fix `page.window.min_width`, `min_height`, `max_width` and `max_height` not limiting the window size on Linux ([#1735](https://github.com/flet-dev/flet/issues/1735), [#7063](https://github.com/flet-dev/flet/pull/7063)) by @ndonkoHenri.
+* Fix `page.window` size limits that are cleared by setting them to `None`, or a `max_width` or `max_height` set without the other, being ignored on Windows and Linux ([#7063](https://github.com/flet-dev/flet/pull/7063)) by @ndonkoHenri.
 
 ## 1.1.2
 
