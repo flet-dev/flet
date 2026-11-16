@@ -255,7 +255,10 @@ class DataTableControl extends StatelessWidget {
         var content = cell.child("content", visibleOnly: false)
           ?..notifyParent = true;
         var text = _cellText(cell);
-        key = Object.hash(key, cell.id, content?.id, text);
+        // Any change to the cell or its content since the last build, shown
+        // or not, may have changed what the chunk measured.
+        key = Object.hash(key, cell.id, cell.changeCount, content?.id,
+            content?.changeCount, text);
         if (text == null || c >= widest.length) continue;
         var (width, word) = glyphs.estimate(text);
         widest[c].add(width, cell);

@@ -551,4 +551,47 @@ void main() {
     expect(content(700).notifyParent, isFalse);
     expect(content(0).notifyParent, isTrue);
   });
+
+  testWidgets('long table forgets widths of content that shrank out of view',
+      (tester) async {
+    await tester.binding.setSurfaceSize(const Size(500, 600));
+    addTearDown(() => tester.binding.setSurfaceSize(null));
+    final table = await _pumpTable(tester, {},
+        rows: 1000,
+        content: (r, c) => r == 700 && c == 0
+            ? {'_c': 'Container', '_i': 100000, 'width': 340.0, 'height': 10.0}
+            : null);
+    final before = tester.getTopLeft(find.text('B')).dx;
+    await _scrollTo(tester, 56 + 690 * 48);
+    await tester.pumpAndSettle();
+    expect(tester.getTopLeft(find.text('B')).dx, greaterThan(before));
+    await _scrollTo(tester, 0);
+    await tester.pumpAndSettle();
+
+    table.rows[700]
+        .children('cells')
+        .first
+        .child('content')!
+        .update({'width': 10.0}, shouldNotify: true);
+    await tester.pumpAndSettle();
+    expect(tester.getTopLeft(find.text('B')).dx, before);
+    expect(tester.getTopLeft(find.text('r0 c1')).dx, before);
+  });
+
+  testWidgets('long table forgets widths of text restored out of view',
+      (tester) async {
+    final table = await _pumpTable(tester, {}, rows: 1000, textControls: true);
+    final content = table.rows[0].children('cells').first.child('content')!;
+    final original = tester.getTopLeft(find.text('B')).dx;
+    content
+        .update({'value': 'A much longer value in row 0'}, shouldNotify: true);
+    await tester.pumpAndSettle();
+    expect(tester.getTopLeft(find.text('B')).dx, greaterThan(original));
+
+    await _scrollTo(tester, 56 + 500 * 48);
+    content.update({'value': 'r0 c0'}, shouldNotify: true);
+    await tester.pumpAndSettle();
+    expect(tester.getTopLeft(find.text('B')).dx, original);
+    expect(tester.getTopLeft(find.text('r500 c1')).dx, original);
+  });
 }
