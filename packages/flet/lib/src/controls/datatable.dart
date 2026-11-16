@@ -240,31 +240,21 @@ class DataTableControl extends StatelessWidget {
     var widestWords = [
       for (var _ in columnControls) _Widest<Control>(_seedWidestWords)
     ];
-    // What each chunk's rows show, as far as it changes their widths: a chunk
-    // that shows the same keeps the widths it measured while it was built.
-    var chunkKeys =
-        List.filled((rowControls.length + _chunkRows - 1) ~/ _chunkRows, 0);
-    for (var r = 0; r < rowControls.length; r++) {
-      var row = rowControls[r]..notifyParent = true;
-      var key = Object.hash(chunkKeys[r ~/ _chunkRows], row.id);
+    for (var row in rowControls) {
+      row.notifyParent = true;
       var cells = row.children("cells");
       for (var c = 0; c < cells.length; c++) {
         var cell = cells[c]..notifyParent = true;
         // The content of a row that isn't built has no widget to rebuild, so
         // its changes rebuild the table instead. Built rows turn this off.
-        var content = cell.child("content", visibleOnly: false)
-          ?..notifyParent = true;
+        var content = cell.child("content", visibleOnly: false);
+        if (content != null) _notifyTable(content);
         var text = _cellText(cell);
-        // Any change to the cell or its content since the last build, shown
-        // or not, may have changed what the chunk measured.
-        key = Object.hash(key, cell.id, cell.changeCount, content?.id,
-            content?.changeCount, text);
         if (text == null || c >= widest.length) continue;
         var (width, word) = glyphs.estimate(text);
         widest[c].add(width, cell);
         widestWords[c].add(word, cell);
       }
-      chunkKeys[r ~/ _chunkRows] = key;
     }
     // What changes every column's width at once: the columns, the text style
     // and the spacing. A change starts the measurements over.
@@ -306,7 +296,21 @@ class DataTableControl extends StatelessWidget {
             rowCount: rowControls.length,
             columnCount: columnControls.length,
             flexColumn: _onlyTextColumn(columnControls),
-            chunkKeys: chunkKeys,
+            chunkKey: (start, end) {
+              var key = 0;
+              for (var r = start; r < math.min(end, rowControls.length); r++) {
+                var row = rowControls[r];
+                key = Object.hash(key, row.id);
+                for (var cell in row.children("cells")) {
+                  // A change anywhere in a cell of a row that isn't built
+                  // reaches the cell and its content: see _notifyTable.
+                  var content = cell.child("content", visibleOnly: false);
+                  key = Object.hash(key, cell.id, cell.changeCount, content?.id,
+                      content?.changeCount);
+                }
+              }
+              return key;
+            },
             widthsKey: widthsKey,
             rowHeight: rowHeight,
             headingRowHeight: headingRowHeight ??
@@ -372,8 +376,8 @@ class DataTableControl extends StatelessWidget {
             releaseRows: (start, end) {
               for (var r = start; r < math.min(end, rowControls.length); r++) {
                 for (var cell in rowControls[r].children("cells")) {
-                  cell.child("content", visibleOnly: false)?.notifyParent =
-                      true;
+                  var content = cell.child("content", visibleOnly: false);
+                  if (content != null) _notifyTable(content);
                 }
               }
             },
@@ -403,6 +407,32 @@ class DataTableControl extends StatelessWidget {
         ),
       ),
     );
+  }
+}
+
+/// Makes [control], and every control inside it, notify its parent of a
+/// change instead of its own widget, which it doesn't have while its row isn't
+/// built. A change anywhere in a cell's content then counts as a change of
+/// the content and the cell, and rebuilds the table. Building the row turns
+/// this off again, as each control builds its children.
+void _notifyTable(Control control) {
+  control.notifyParent = true;
+  for (var value in control.properties.values) {
+    _notifyTableIn(value);
+  }
+}
+
+void _notifyTableIn(Object? value) {
+  if (value is Control) {
+    _notifyTable(value);
+  } else if (value is List) {
+    for (var item in value) {
+      _notifyTableIn(item);
+    }
+  } else if (value is Map) {
+    for (var item in value.values) {
+      _notifyTableIn(item);
+    }
   }
 }
 
@@ -588,7 +618,7 @@ class _LazyDataTable extends StatefulWidget {
     required this.rowCount,
     required this.columnCount,
     required this.flexColumn,
-    required this.chunkKeys,
+    required this.chunkKey,
     required this.widthsKey,
     required this.rowHeight,
     required this.headingRowHeight,
@@ -604,8 +634,9 @@ class _LazyDataTable extends StatefulWidget {
 
   final int? flexColumn;
 
-  /// What each chunk's rows show, as far as it changes their widths.
-  final List<int> chunkKeys;
+  /// What the rows from start to end show, as far as it changes their
+  /// widths: their ids, and how often their cells and content changed.
+  final int Function(int start, int end) chunkKey;
 
   /// What changes the width of every column at once.
   final Object widthsKey;
@@ -636,6 +667,11 @@ class _LazyDataTableState extends State<_LazyDataTable> {
 
   /// The chunks the last build built, from first to last.
   (int, int) _built = (0, -1);
+
+  /// For each chunk measured and no longer built, its [_LazyDataTable.chunkKey]
+  /// when it stopped being built. A built chunk measures again whenever its
+  /// cells change size, so this is what its measurement saw.
+  final _releasedKeys = <int, int>{};
   Size _viewSize = Size.zero;
   ScrollableState? _scrollable;
 
@@ -645,6 +681,10 @@ class _LazyDataTableState extends State<_LazyDataTable> {
   bool _checkScheduled = false;
 
   int get _chunkCount => (widget.rowCount + _chunkRows - 1) ~/ _chunkRows;
+
+  int _chunkStart(int chunk) => chunk * _chunkRows;
+  int _chunkEnd(int chunk) =>
+      math.min(widget.rowCount, (chunk + 1) * _chunkRows);
 
   int _chunkAt(double y) =>
       ((y - widget.headingRowHeight) / (_chunkRows * widget.rowHeight))
@@ -677,15 +717,18 @@ class _LazyDataTableState extends State<_LazyDataTable> {
         widget.flexColumn != oldWidget.flexColumn) {
       _widths.dispose();
       _widths = _newWidths();
+      _releasedKeys.clear();
     } else {
       // A chunk that isn't built keeps the widths it measured, unless its
-      // rows show something else now. The ones built measure again.
-      var keys = widget.chunkKeys, oldKeys = oldWidget.chunkKeys;
+      // rows changed since. The ones built measure again.
+      _releasedKeys.removeWhere((i, key) =>
+          i >= _chunkCount ||
+          widget.chunkKey(_chunkStart(i), _chunkEnd(i)) != key);
       _widths.forget((slot) =>
           slot >= 0 &&
-          (slot >= keys.length ||
-              slot >= oldKeys.length ||
-              keys[slot] != oldKeys[slot]));
+          (slot >= _chunkCount ||
+              (!_releasedKeys.containsKey(slot) &&
+                  (slot < _built.$1 || slot > _built.$2))));
       // Every shown table is built again, so laid out again.
       _widths.relayout();
     }
@@ -754,9 +797,13 @@ class _LazyDataTableState extends State<_LazyDataTable> {
       _last = _chunkAt(2 * _viewSize.height);
     }
     for (var i = _built.$1; i <= _built.$2; i++) {
-      if (i < _first || i > _last) {
-        widget.releaseRows(i * _chunkRows, (i + 1) * _chunkRows);
+      if ((i < _first || i > _last) && i < _chunkCount) {
+        widget.releaseRows(_chunkStart(i), _chunkEnd(i));
+        _releasedKeys[i] = widget.chunkKey(_chunkStart(i), _chunkEnd(i));
       }
+    }
+    for (var i = _first; i <= _last; i++) {
+      _releasedKeys.remove(i);
     }
     _built = (_first, _last);
     _chunks.removeWhere((i, _) => i < _first || i > _last);

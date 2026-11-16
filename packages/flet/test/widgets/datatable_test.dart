@@ -594,4 +594,63 @@ void main() {
     expect(tester.getTopLeft(find.text('B')).dx, original);
     expect(tester.getTopLeft(find.text('r500 c1')).dx, original);
   });
+
+  testWidgets('long table keeps widths measured after a shown edit',
+      (tester) async {
+    await tester.binding.setSurfaceSize(const Size(500, 600));
+    addTearDown(() => tester.binding.setSurfaceSize(null));
+    final table = await _pumpTable(tester, {},
+        rows: 1000,
+        rowProps: {'on_select_change': true},
+        content: (r, c) => r == 5 && c == 0
+            ? {'_c': 'Container', '_i': 100000, 'width': 10.0, 'height': 10.0}
+            : null);
+    final before = tester.getTopLeft(find.text('B')).dx;
+    table.rows[5]
+        .children('cells')
+        .first
+        .child('content')!
+        .update({'width': 340.0}, shouldNotify: true);
+    await tester.pumpAndSettle();
+    final wide = tester.getTopLeft(find.text('B')).dx;
+    expect(wide, greaterThan(before));
+
+    // Row 5 scrolls away, then the table rebuilds.
+    await _scrollTo(tester, 56 + 500 * 48);
+    await tester.pumpAndSettle();
+    table.rows[500].update({'selected': true}, shouldNotify: true);
+    await tester.pumpAndSettle();
+    expect(tester.getTopLeft(find.text('B')).dx, wide);
+    expect(tester.getTopLeft(find.text('r500 c1')).dx, wide);
+  });
+
+  testWidgets('long table forgets widths of nested content out of view',
+      (tester) async {
+    const long = 'a much, much longer value nested in row 700';
+    final table = await _pumpTable(tester, {},
+        rows: 1000,
+        content: (r, c) => r == 700 && c == 0
+            ? {
+                '_c': 'Container',
+                '_i': 100000,
+                'content': {'_c': 'Text', '_i': 100001, 'value': long},
+              }
+            : null);
+    final before = tester.getTopLeft(find.text('B')).dx;
+    await _scrollTo(tester, 56 + 690 * 48);
+    await tester.pumpAndSettle();
+    expect(tester.getTopLeft(find.text('B')).dx, greaterThan(before));
+    await _scrollTo(tester, 0);
+    await tester.pumpAndSettle();
+
+    table.rows[700]
+        .children('cells')
+        .first
+        .child('content')!
+        .child('content')!
+        .update({'value': 'r700 c0'}, shouldNotify: true);
+    await tester.pumpAndSettle();
+    expect(tester.getTopLeft(find.text('B')).dx, before);
+    expect(tester.getTopLeft(find.text('r0 c1')).dx, before);
+  });
 }
