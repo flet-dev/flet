@@ -9,8 +9,8 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ### Fixed
 
-- Fixed `BarChart` failing to render when a `BarChartRodStackItem` has no `from_y` by @ndonkoHenri.
-- Fixed `LineChart` jumping instead of animating when the points of a data series change ([flet-charts#8](https://github.com/flet-dev/flet-charts/issues/8)) by @ndonkoHenri.
+- Fixed `BarChart` failing to render when a `BarChartRodStackItem` has no `from_y` ([#7064](https://github.com/flet-dev/flet/pull/7064)) by @ndonkoHenri.
+- Fixed `LineChart` jumping instead of animating when the points of a data series change ([flet-charts#8](https://github.com/flet-dev/flet-charts/issues/8), [#7064](https://github.com/flet-dev/flet/pull/7064)) by @ndonkoHenri.
 
 ## 1.0.2
 

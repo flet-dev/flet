@@ -12,7 +12,7 @@ class BarChartRodStackItem(ft.BaseControl):
     Colored segment used to build a stacked bar rod.
     """
 
-    from_y: ft.Number = 0
+    from_y: Optional[ft.Number] = 0
     """
     The starting position of this item inside a bar rod.
     """
