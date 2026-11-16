@@ -118,12 +118,8 @@ LineTouchTooltipData? parseLineTouchTooltipData(
   );
 }
 
-LineChartBarData parseLineChartBarData(
-    Control chartData,
-    bool interactiveChart,
-    BuildContext context,
-    List<Control> points,
-    List<FlSpot> spots) {
+LineChartBarData parseLineChartBarData(Control chartData, bool interactiveChart,
+    BuildContext context, List<Control> points, List<FlSpot> spots) {
   final theme = Theme.of(context);
 
   var aboveLineBgcolor = chartData.getColor("above_line_bgcolor", context);
@@ -183,8 +179,8 @@ LineChartBarData parseLineChartBarData(
               gradient: aboveLineGradient,
               applyCutOffY: aboveLineCutoffY != null,
               cutOffY: aboveLineCutoffY ?? 0,
-              spotsLine:
-                  _parseAreaSpotsLine(aboveLine, points, "show_above_line"))
+              spotsLine: _parseAreaSpotsLine(
+                  aboveLine, points, spots, "show_above_line"))
           : null,
       belowBarData: belowLineBgcolor != null ||
               belowLineGradient != null ||
@@ -195,28 +191,50 @@ LineChartBarData parseLineChartBarData(
               gradient: belowLineGradient,
               applyCutOffY: belowLineCutoffY != null,
               cutOffY: belowLineCutoffY ?? 0,
-              spotsLine:
-                  _parseAreaSpotsLine(belowLine, points, "show_below_line"))
+              spotsLine: _parseAreaSpotsLine(
+                  belowLine, points, spots, "show_below_line"))
           : null,
       color: barColor,
       gradient: barGradient);
 }
 
-BarAreaSpotsLine _parseAreaSpotsLine(
-    FlLine? style, List<Control> points, String visibilityProperty) {
-  if (style == null) return const BarAreaSpotsLine();
+/// Builds the spots of a series from its point controls.
+List<FlSpot> parseLineChartSpots(List<Control> points) => [
+      for (final point in points)
+        FlSpot(point.getDouble("x")!, point.getDouble("y")!)
+    ];
 
-  var index = 0;
+BarAreaSpotsLine _parseAreaSpotsLine(FlLine? style, List<Control> points,
+    List<FlSpot> spots, String visibilityProperty) {
+  if (style == null) return const BarAreaSpotsLine();
+  if (points.every((point) => point.getBool(visibilityProperty, true)!)) {
+    return BarAreaSpotsLine(
+      show: true,
+      flLineStyle: style,
+      checkToShowSpotLine: (spot) => spot.isNotNull(),
+    );
+  }
+
+  // Only built when some point hides its line, to keep streaming cheap.
+  final indexes = Map<FlSpot, int>.identity();
+  for (final (index, spot) in spots.indexed) {
+    indexes[spot] = index;
+  }
+  var next = 0;
   return BarAreaSpotsLine(
     show: true,
     flLineStyle: style,
     checkToShowSpotLine: (spot) {
-      // fl_chart visits the entire spot list in order for each area-line
-      // pass. Its tween pairs spots by index and keeps the destination length,
-      // so each visit uses the matching flag even as coordinates change.
-      final visible = points[index].getBool(visibilityProperty, true)!;
-      index = (index + 1) % points.length;
-      return visible && spot.isNotNull();
+      // Spots of a settled chart are the ones parsed from the points, so their
+      // index is known. While an animation runs, fl_chart paints interpolated
+      // copies, in list order and paired by index with the destination list,
+      // so count on from the last spot seen. The count resyncs on every known
+      // spot, so a missed or extra call cannot misplace flags for good.
+      final index = indexes[spot] ?? next % points.length;
+      next = index + 1;
+      return index < points.length &&
+          points[index].getBool(visibilityProperty, true)! &&
+          spot.isNotNull();
     },
   );
 }
