@@ -123,4 +123,10 @@ void main() {
     expect(find.text('r19 c2', skipOffstage: false), findsOneWidget);
     expect(find.byType(ListView), findsNothing);
   });
+
+  testWidgets('build_rows_on_demand false builds every row', (tester) async {
+    await _pumpTable(tester, {'build_rows_on_demand': false});
+    expect(find.text('r999 c2', skipOffstage: false), findsOneWidget);
+    expect(find.byType(ListView), findsNothing);
+  });
 }

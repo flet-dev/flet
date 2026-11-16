@@ -26,8 +26,8 @@ class DataTable2(ft.DataTable):
         A table with 100 or more rows builds only the rows near the visible part
         of the table, so it loads and scrolls quickly with thousands of rows. This
         needs the heading row fixed (:attr:`fixed_top_rows` of 1 or more, the
-        default) and no outer border: only :attr:`~flet.DataTable.horizontal_lines`
-        and :attr:`~flet.DataTable.vertical_lines`.
+        default). Set :attr:`~flet.DataTable.build_rows_on_demand` to `False` to
+        build every row, so that controls in rows out of view have a widget too.
     """
 
     columns: list[Union[DataColumn2, ft.DataColumn]]

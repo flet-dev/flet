@@ -6,6 +6,7 @@ import 'package:flet/src/flet_backend.dart';
 import 'package:flet/src/flet_core_extension.dart';
 import 'package:flet/src/models/control.dart';
 import 'package:flutter/semantics.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:material_ui/material_ui.dart';
 import 'package:provider/provider.dart';
@@ -43,7 +44,8 @@ Future<_Table> _pumpTable(WidgetTester tester, Map<String, dynamic> props,
     Object? heading,
     bool textControls = false,
     Map<String, dynamic> rowProps = const {},
-    Set<int> selected = const {}}) async {
+    Set<int> selected = const {},
+    Widget Function(Widget table)? scrollView}) async {
   final backend = _Backend();
   var id = 1;
   Map<String, dynamic> control(String type, Map<String, dynamic> properties) =>
@@ -80,8 +82,9 @@ Future<_Table> _pumpTable(WidgetTester tester, Map<String, dynamic> props,
       value: backend,
       child: MaterialApp(
           home: Scaffold(
-              body: SingleChildScrollView(
-                  child: ControlWidget(control: table))))));
+              body: (scrollView ??
+                      (table) => SingleChildScrollView(child: table))(
+                  ControlWidget(control: table))))));
   await tester.pump();
   expect(tester.takeException(), isNull);
   return _Table(backend, table);
@@ -96,10 +99,16 @@ Future<void> _scrollTo(WidgetTester tester, double offset) async {
   await tester.pump();
 }
 
+/// The [FocusNode] of a [Checkbox].
+FocusNode _checkboxFocus(WidgetTester tester, Finder checkbox) =>
+    Focus.of(tester.element(find
+        .descendant(of: checkbox, matching: find.byType(CustomPaint))
+        .first));
+
 /// The header's select-all checkbox: the header is the last table.
 Finder _headerCheckbox() => find
     .descendant(
-        of: find.byType(DataTable).last, matching: find.byType(Checkbox))
+        of: find.bySubtype<DataTable>().last, matching: find.byType(Checkbox))
     .first;
 
 void main() {
@@ -108,7 +117,8 @@ void main() {
     await _pumpTable(tester, {});
     expect(
         find.ancestor(
-            of: find.byType(DataTable), matching: find.byType(RepaintBoundary)),
+            of: find.bySubtype<DataTable>(),
+            matching: find.byType(RepaintBoundary)),
         findsWidgets);
     expect(
         find.descendant(
@@ -125,7 +135,8 @@ void main() {
       'horizontal_lines': {'width': 2.0, 'color': 'red'},
       'vertical_lines': {'width': 3.0, 'color': 'blue'},
     });
-    final border = tester.widget<DataTable>(find.byType(DataTable)).border!;
+    final border =
+        tester.widget<DataTable>(find.bySubtype<DataTable>()).border!;
     expect(border.horizontalInside.width, 2.0);
     expect(border.horizontalInside.color, Colors.red);
     expect(border.verticalInside.width, 3.0);
@@ -230,8 +241,8 @@ void main() {
         },
         rows: 100);
 
-    expect(
-        tester.widget<DataTable>(find.byType(DataTable)).rows, hasLength(100));
+    expect(tester.widget<DataTable>(find.bySubtype<DataTable>()).rows,
+        hasLength(100));
   });
 
   testWidgets('scaled tables build rows in the visible viewport',
@@ -334,9 +345,11 @@ void main() {
           rows: 100,
           rowProps: {'on_select_change': true});
       final header = find.descendant(
-          of: find.byType(DataTable).last, matching: find.byType(Checkbox));
+          of: find.bySubtype<DataTable>().last,
+          matching: find.byType(Checkbox));
       final chunk = find.descendant(
-          of: find.byType(DataTable).first, matching: find.byType(Checkbox));
+          of: find.bySubtype<DataTable>().first,
+          matching: find.byType(Checkbox));
 
       final owner = tester.binding.pipelineOwner.semanticsOwner!;
       final actionableNodes = <int>{};
@@ -363,5 +376,179 @@ void main() {
     } finally {
       semantics.dispose();
     }
+  });
+  testWidgets('build_rows_on_demand false builds every row', (tester) async {
+    await _pumpTable(tester, {'build_rows_on_demand': false}, rows: 300);
+    expect(tester.widget<DataTable>(find.bySubtype<DataTable>()).rows,
+        hasLength(300));
+    expect(find.text('r299 c0', skipOffstage: false), findsOneWidget);
+  });
+
+  testWidgets('long table follows a scroll position swapped in',
+      (tester) async {
+    ScrollPhysics? physics;
+    late StateSetter setPhysics;
+    await _pumpTable(tester, {},
+        rows: 1000,
+        // The boundary keeps scrolling from painting the table, so only the
+        // scroll position's listener can bring in new rows.
+        scrollView: (table) => StatefulBuilder(builder: (context, setState) {
+              setPhysics = setState;
+              return SingleChildScrollView(
+                  physics: physics, child: RepaintBoundary(child: table));
+            }));
+    final before =
+        tester.state<ScrollableState>(find.byType(Scrollable)).position;
+    setPhysics(() => physics = const BouncingScrollPhysics());
+    await tester.pump();
+    final after =
+        tester.state<ScrollableState>(find.byType(Scrollable)).position;
+    expect(after, isNot(same(before)));
+
+    after.jumpTo(56 + 500 * 48);
+    await tester.pump();
+    await tester.pump();
+    expect(find.text('r500 c0'), findsOneWidget);
+  });
+
+  testWidgets('hidden checkboxes of a long table take no keyboard focus',
+      (tester) async {
+    final table = await _pumpTable(tester, {'show_checkbox_column': true},
+        rows: 100, rowProps: {'on_select_change': true});
+    final header = find.descendant(
+        of: find.bySubtype<DataTable>().last, matching: find.byType(Checkbox));
+    final chunk = find.descendant(
+        of: find.bySubtype<DataTable>().first, matching: find.byType(Checkbox));
+    final seed = find.descendant(
+        of: find.byType(Offstage, skipOffstage: false),
+        matching: find.byType(Checkbox, skipOffstage: false));
+
+    expect(_checkboxFocus(tester, header.first).canRequestFocus, isTrue);
+    expect(_checkboxFocus(tester, chunk.at(1)).canRequestFocus, isTrue);
+    // The header's stand-in rows, a chunk's hidden heading, the seed table.
+    expect(_checkboxFocus(tester, header.at(1)).canRequestFocus, isFalse);
+    expect(_checkboxFocus(tester, header.at(2)).canRequestFocus, isFalse);
+    expect(_checkboxFocus(tester, chunk.first).canRequestFocus, isFalse);
+    expect(seed, findsWidgets);
+    expect(_checkboxFocus(tester, seed.first).canRequestFocus, isFalse);
+
+    // Tab across the first chunks: focus never lands on a hidden checkbox.
+    final hidden = {
+      _checkboxFocus(tester, header.at(1)),
+      _checkboxFocus(tester, header.at(2)),
+      for (var i = 0; i < 3; i++)
+        _checkboxFocus(
+            tester,
+            find
+                .descendant(
+                    of: find.bySubtype<DataTable>().at(i),
+                    matching: find.byType(Checkbox))
+                .first),
+    };
+    final row10 = _checkboxFocus(
+        tester,
+        find
+            .descendant(
+                of: find.bySubtype<DataTable>().at(1),
+                matching: find.byType(Checkbox))
+            .at(1));
+    var reachedRow10 = false;
+    for (var i = 0; i < 60 && !reachedRow10; i++) {
+      await tester.sendKeyEvent(LogicalKeyboardKey.tab);
+      await tester.pump();
+      final focused = FocusManager.instance.primaryFocus;
+      expect(hidden, isNot(contains(focused)));
+      reachedRow10 = focused == row10;
+    }
+    expect(reachedRow10, isTrue);
+    expect(table.backend.events, isEmpty);
+  });
+
+  testWidgets('a tap on the bottom of a row above a chunk goes to that row',
+      (tester) async {
+    final table = await _pumpTable(
+        tester,
+        {
+          'show_checkbox_column': true,
+          'horizontal_lines': {'width': 6.0, 'color': 'red'},
+        },
+        rows: 100,
+        rowProps: {'on_select_change': true});
+    final top = tester.getTopLeft(find.byType(DataTableControl)).dy;
+    final x = tester.getCenter(_headerCheckbox()).dx;
+    // Row 9, the last of the first chunk, 2 px above its bottom: under the
+    // line that the next chunk draws.
+    await tester.tapAt(Offset(x, top + 56 + 10 * 48 - 2));
+    expect(table.backend.events, [(table.rows[9].id, 'select_change', true)]);
+  });
+
+  testWidgets('long table keeps widths of rows scrolled away on a rebuild',
+      (tester) async {
+    await tester.binding.setSurfaceSize(const Size(500, 600));
+    addTearDown(() => tester.binding.setSurfaceSize(null));
+    final table = await _pumpTable(tester, {},
+        rows: 1000,
+        rowProps: {'on_select_change': true},
+        content: (r, c) => r == 700 && c == 0
+            ? {'_c': 'Container', '_i': 100000, 'width': 340.0, 'height': 10.0}
+            : null);
+    final before = tester.getTopLeft(find.text('B')).dx;
+    await _scrollTo(tester, 56 + 690 * 48);
+    await tester.pumpAndSettle();
+    final wide = tester.getTopLeft(find.text('B')).dx;
+    expect(wide, greaterThan(before));
+
+    await _scrollTo(tester, 0);
+    await tester.pumpAndSettle();
+    expect(find.text('r700 c1'), findsNothing);
+    table.rows[0].update({'selected': true}, shouldNotify: true);
+    await tester.pumpAndSettle();
+    expect(tester.getTopLeft(find.text('B')).dx, wide);
+    expect(tester.getTopLeft(find.text('r0 c1')).dx, wide);
+  });
+
+  testWidgets('long table forgets widths of rows that changed', (tester) async {
+    await tester.binding.setSurfaceSize(const Size(500, 600));
+    addTearDown(() => tester.binding.setSurfaceSize(null));
+    final table = await _pumpTable(tester, {},
+        rows: 1000,
+        content: (r, c) => r == 700 && c == 0
+            ? {'_c': 'Container', '_i': 100000, 'width': 340.0, 'height': 10.0}
+            : null);
+    final before = tester.getTopLeft(find.text('B')).dx;
+    await _scrollTo(tester, 56 + 690 * 48);
+    await tester.pumpAndSettle();
+    expect(tester.getTopLeft(find.text('B')).dx, greaterThan(before));
+    await _scrollTo(tester, 0);
+    await tester.pumpAndSettle();
+
+    table.rows[700]
+        .children('cells')
+        .first
+        .update({'content': 'r700 c0'}, shouldNotify: true);
+    await tester.pumpAndSettle();
+    expect(tester.getTopLeft(find.text('B')).dx, before);
+  });
+
+  testWidgets('only the content of rows not built rebuilds a long table',
+      (tester) async {
+    final table = await _pumpTable(tester, {}, rows: 1000, textControls: true);
+    Control content(int row) =>
+        table.rows[row].children('cells').first.child('content')!;
+    expect(content(0).notifyParent, isFalse);
+    expect(content(700).notifyParent, isTrue);
+
+    // A shown Text that grows widens its column by itself.
+    final original = tester.getTopLeft(find.text('B')).dx;
+    const long = 'A much longer value in row 0';
+    content(0).update({'value': long}, shouldNotify: true);
+    await tester.pumpAndSettle();
+    final wide = tester.getTopLeft(find.text('B')).dx;
+    expect(wide, greaterThan(original));
+    expect(tester.getTopLeft(find.text('r1 c1')).dx, wide);
+
+    await _scrollTo(tester, 56 + 700 * 48);
+    expect(content(700).notifyParent, isFalse);
+    expect(content(0).notifyParent, isTrue);
   });
 }

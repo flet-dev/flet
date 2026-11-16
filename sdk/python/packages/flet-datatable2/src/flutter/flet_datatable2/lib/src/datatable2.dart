@@ -77,6 +77,8 @@ class _DataTable2ControlState extends State<DataTable2Control> {
           widget.control.getBool("visible_vertical_scroll_bar"),
       fixedLeftColumns: widget.control.getInt("fixed_left_columns", 0)!,
       fixedTopRows: widget.control.getInt("fixed_top_rows", 1)!,
+      buildRowsOnDemand:
+          widget.control.getBool("build_rows_on_demand", true)!,
       fixedColumnsColor:
           widget.control.getColor("fixed_columns_color", context),
       fixedCornerColor: widget.control.getColor("fixed_corner_color", context),

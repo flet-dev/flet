@@ -90,8 +90,10 @@ class DataTableControl extends StatelessWidget {
       WidgetStateProperty<Color?>? headingRowColor,
       int? sortColumnIndex,
       ValueSetter<bool?>? onSelectAll,
+      bool? showsHeading,
     }) {
-      return DataTable(
+      return _DataTable(
+        showsHeading: showsHeading,
         decoration: decoration,
         border: border,
         clipBehavior: clipBehavior,
@@ -140,7 +142,7 @@ class DataTableControl extends StatelessWidget {
       );
     }
 
-    DataRow buildRow(Control row, {bool notifyContentChanges = false}) {
+    DataRow buildRow(Control row) {
       row.notifyParent = true;
       return DataRow(
         key: ValueKey(row.id),
@@ -154,9 +156,10 @@ class DataTableControl extends StatelessWidget {
             : null,
         cells: row.children("cells").map((cell) {
           cell.notifyParent = true;
+          // A built cell's content rebuilds only itself when it changes; its
+          // table measures it again as it lays out.
           return DataCell(
-            cell.buildTextOrWidget("content",
-                notifyParent: notifyContentChanges)!,
+            cell.buildTextOrWidget("content")!,
             placeholder: cell.getBool("placeholder", false)!,
             showEditIcon: cell.getBool("show_edit_icon", false)!,
             onDoubleTap: cell.hasEventHandler("double_tap")
@@ -195,7 +198,8 @@ class DataTableControl extends StatelessWidget {
 
     // Every chunk must draw the same columns and row states as one big table
     // would, so rows that mix selectable and not fall back to one table.
-    if (rowControls.length < _lazyMinRows ||
+    if (!control.getBool("build_rows_on_demand", true)! ||
+        rowControls.length < _lazyMinRows ||
         !rowHeight.isFinite ||
         rowHeight <= 0 ||
         rowHeight != maxRowHeight ||
@@ -236,20 +240,42 @@ class DataTableControl extends StatelessWidget {
     var widestWords = [
       for (var _ in columnControls) _Widest<Control>(_seedWidestWords)
     ];
-    for (var row in rowControls) {
-      row.notifyParent = true;
+    // What each chunk's rows show, as far as it changes their widths: a chunk
+    // that shows the same keeps the widths it measured while it was built.
+    var chunkKeys =
+        List.filled((rowControls.length + _chunkRows - 1) ~/ _chunkRows, 0);
+    for (var r = 0; r < rowControls.length; r++) {
+      var row = rowControls[r]..notifyParent = true;
+      var key = Object.hash(chunkKeys[r ~/ _chunkRows], row.id);
       var cells = row.children("cells");
       for (var c = 0; c < cells.length; c++) {
         var cell = cells[c]..notifyParent = true;
-        // A cell can change while its widget is unmounted.
-        cell.child("content", visibleOnly: false)?.notifyParent = true;
+        // The content of a row that isn't built has no widget to rebuild, so
+        // its changes rebuild the table instead. Built rows turn this off.
+        var content = cell.child("content", visibleOnly: false)
+          ?..notifyParent = true;
         var text = _cellText(cell);
+        key = Object.hash(key, cell.id, content?.id, text);
         if (text == null || c >= widest.length) continue;
         var (width, word) = glyphs.estimate(text);
         widest[c].add(width, cell);
         widestWords[c].add(word, cell);
       }
+      chunkKeys[r ~/ _chunkRows] = key;
     }
+    // What changes every column's width at once: the columns, the text style
+    // and the spacing. A change starts the measurements over.
+    var widthsKey = Object.hash(
+        Object.hashAll(columnControls.map((column) => column.id)),
+        glyphs.style,
+        glyphs.textScaler,
+        dataTableTheme,
+        theme.dataTableTheme,
+        control.getTextStyle("heading_text_style", theme),
+        control.getDouble("checkbox_horizontal_margin"),
+        control.getDouble("column_spacing"),
+        control.getDouble("horizontal_margin"),
+        showCheckboxColumn);
     // Each column's candidates, a few rows deep: the table that measures them
     // only needs each column's cells, not whole rows.
     var seedCells = [
@@ -277,6 +303,8 @@ class DataTableControl extends StatelessWidget {
             rowCount: rowControls.length,
             columnCount: columnControls.length,
             flexColumn: _onlyTextColumn(columnControls),
+            chunkKeys: chunkKeys,
+            widthsKey: widthsKey,
             rowHeight: rowHeight,
             headingRowHeight: headingRowHeight ??
                 dataTableTheme.headingRowHeight ??
@@ -284,6 +312,7 @@ class DataTableControl extends StatelessWidget {
                 56.0,
             lineWidth: horizontalLines?.width ?? 0,
             buildHeader: (widths) => buildTable(
+              showsHeading: true,
               decoration: const BoxDecoration(),
               border: verticalLines != null
                   ? TableBorder(verticalInside: verticalLines)
@@ -325,16 +354,26 @@ class DataTableControl extends StatelessWidget {
               ],
             ),
             buildChunk: (start, end, widths) => buildTable(
+              showsHeading: false,
               decoration: const BoxDecoration(),
               border: tableBorder,
               headingRowHeight: kMinInteractiveDimension,
               headingRowColor: const WidgetStatePropertyAll(Colors.transparent),
+              // The hidden heading's checkbox would select only this chunk.
+              onSelectAll: (_) {},
               columns: hiddenColumns(widths),
               rows: [
-                for (var r = start; r < end; r++)
-                  buildRow(rowControls[r], notifyContentChanges: true)
+                for (var r = start; r < end; r++) buildRow(rowControls[r])
               ],
             ),
+            releaseRows: (start, end) {
+              for (var r = start; r < math.min(end, rowControls.length); r++) {
+                for (var cell in rowControls[r].children("cells")) {
+                  cell.child("content", visibleOnly: false)?.notifyParent =
+                      true;
+                }
+              }
+            },
             buildSeed: (widths) => buildTable(
               decoration: const BoxDecoration(),
               columns: hiddenColumns(widths),
@@ -380,9 +419,75 @@ Widget _seedContent(Control cell) {
   var content = cell.get("content");
   if (content is String) return Text(content);
   if (content is Control && content.type == "Text" && content.visible) {
-    return TextControl(control: content);
+    // The Text of a built row changes without rebuilding the table, so the
+    // copy follows the control itself.
+    return ListenableBuilder(
+        listenable: content,
+        builder: (context, _) => TextControl(control: content));
   }
   return const SizedBox.shrink();
+}
+
+/// A [DataTable] of which a lazy table shows only part: just the heading row
+/// of the header ([showsHeading] true), or just the data rows of a chunk
+/// (false). The rows that don't show still hold checkboxes and ink wells, so
+/// they are kept out of keyboard focus. With [showsHeading] null, every row
+/// shows, as in a plain [DataTable].
+class _DataTable extends DataTable {
+  _DataTable({
+    required this.showsHeading,
+    super.decoration,
+    super.border,
+    super.clipBehavior,
+    super.checkboxHorizontalMargin,
+    super.columnSpacing,
+    super.dataRowColor,
+    super.dataRowMinHeight,
+    super.dataRowMaxHeight,
+    super.dataTextStyle,
+    super.headingRowColor,
+    super.headingRowHeight,
+    super.headingTextStyle,
+    super.dividerThickness,
+    super.horizontalMargin,
+    super.showBottomBorder,
+    super.showCheckboxColumn,
+    super.sortAscending,
+    super.sortColumnIndex,
+    super.onSelectAll,
+    required super.columns,
+    required super.rows,
+  });
+
+  final bool? showsHeading;
+
+  @override
+  Widget build(BuildContext context) {
+    var built = super.build(context);
+    var showsHeading = this.showsHeading;
+    if (showsHeading == null) return built;
+    var table = _tableIn(built);
+    assert(table != null, "DataTable no longer builds its Table as expected");
+    if (table == null) return built;
+    for (var r = 0; r < table.children.length; r++) {
+      if ((r == 0) == showsHeading) continue;
+      var cells = table.children[r].children;
+      for (var c = 0; c < cells.length; c++) {
+        // ExcludeFocus adds no render object, so each cell stays a direct
+        // child of the Table.
+        cells[c] = ExcludeFocus(child: cells[c]);
+      }
+    }
+    return built;
+  }
+
+  /// The [Table] that [DataTable.build] returns, inside its decoration.
+  static Table? _tableIn(Widget widget) => switch (widget) {
+        Table() => widget,
+        Container(:var child?) => _tableIn(child),
+        Material(:var child?) => _tableIn(child),
+        _ => null,
+      };
 }
 
 /// Estimates how wide a text lays out by adding up the advance of each
@@ -480,11 +585,14 @@ class _LazyDataTable extends StatefulWidget {
     required this.rowCount,
     required this.columnCount,
     required this.flexColumn,
+    required this.chunkKeys,
+    required this.widthsKey,
     required this.rowHeight,
     required this.headingRowHeight,
     required this.lineWidth,
     required this.buildHeader,
     required this.buildChunk,
+    required this.releaseRows,
     required this.buildSeed,
   });
 
@@ -492,6 +600,12 @@ class _LazyDataTable extends StatefulWidget {
   final int columnCount;
 
   final int? flexColumn;
+
+  /// What each chunk's rows show, as far as it changes their widths.
+  final List<int> chunkKeys;
+
+  /// What changes the width of every column at once.
+  final Object widthsKey;
   final double rowHeight;
   final double headingRowHeight;
 
@@ -500,6 +614,9 @@ class _LazyDataTable extends StatefulWidget {
   final DataTable Function(List<TableColumnWidth> widths) buildHeader;
   final DataTable Function(int start, int end, List<TableColumnWidth> widths)
       buildChunk;
+
+  /// Called for the rows of a chunk that is no longer built.
+  final void Function(int start, int end) releaseRows;
   final DataTable Function(List<TableColumnWidth> widths) buildSeed;
 
   @override
@@ -507,16 +624,21 @@ class _LazyDataTable extends StatefulWidget {
 }
 
 class _LazyDataTableState extends State<_LazyDataTable> {
-  late final _ColumnWidths _widths =
-      _ColumnWidths(widget.columnCount, widget.flexColumn)
-        ..addListener(_onWidthsChanged);
+  late _ColumnWidths _widths = _newWidths();
   final _tableKey = GlobalKey();
   final _chunks = <int, Widget>{};
   Widget? _seed;
   int _first = 0;
   int _last = -1;
+
+  /// The chunks the last build built, from first to last.
+  (int, int) _built = (0, -1);
   Size _viewSize = Size.zero;
   ScrollableState? _scrollable;
+
+  /// The position [_check] listens to. A [Scrollable] can swap in a new one,
+  /// so it's kept apart from [_scrollable].
+  ScrollPosition? _position;
   bool _checkScheduled = false;
 
   int get _chunkCount => (widget.rowCount + _chunkRows - 1) ~/ _chunkRows;
@@ -526,15 +648,20 @@ class _LazyDataTableState extends State<_LazyDataTable> {
           .floor()
           .clamp(0, _chunkCount - 1);
 
+  _ColumnWidths _newWidths() =>
+      _ColumnWidths(widget.columnCount, widget.flexColumn)
+        ..addListener(_onWidthsChanged);
+
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
-    var scrollable = Scrollable.maybeOf(context, axis: Axis.vertical);
-    if (scrollable?.position != _scrollable?.position) {
-      _scrollable?.position.removeListener(_check);
-      scrollable?.position.addListener(_check);
+    _scrollable = Scrollable.maybeOf(context, axis: Axis.vertical);
+    var position = _scrollable?.position;
+    if (position != _position) {
+      _position?.removeListener(_check);
+      position?.addListener(_check);
+      _position = position;
     }
-    _scrollable = scrollable;
   }
 
   @override
@@ -542,9 +669,23 @@ class _LazyDataTableState extends State<_LazyDataTable> {
     super.didUpdateWidget(oldWidget);
     _chunks.clear();
     _seed = null;
-    // Cell content and heading changes can shrink a column without replacing
-    // any rows. Scroll-driven rebuilds keep the measurements for unmounted rows.
-    _widths.reset(widget.columnCount, widget.flexColumn);
+    if (widget.widthsKey != oldWidget.widthsKey ||
+        widget.columnCount != oldWidget.columnCount ||
+        widget.flexColumn != oldWidget.flexColumn) {
+      _widths.dispose();
+      _widths = _newWidths();
+    } else {
+      // A chunk that isn't built keeps the widths it measured, unless its
+      // rows show something else now. The ones built measure again.
+      var keys = widget.chunkKeys, oldKeys = oldWidget.chunkKeys;
+      _widths.forget((slot) =>
+          slot >= 0 &&
+          (slot >= keys.length ||
+              slot >= oldKeys.length ||
+              keys[slot] != oldKeys[slot]));
+      // Every shown table is built again, so laid out again.
+      _widths.relayout();
+    }
     if (_last >= _chunkCount) {
       _last = _chunkCount - 1;
       _first = math.min(_first, _last);
@@ -553,7 +694,7 @@ class _LazyDataTableState extends State<_LazyDataTable> {
 
   @override
   void dispose() {
-    _scrollable?.position.removeListener(_check);
+    _position?.removeListener(_check);
     _widths.dispose();
     super.dispose();
   }
@@ -609,6 +750,12 @@ class _LazyDataTableState extends State<_LazyDataTable> {
       _first = 0;
       _last = _chunkAt(2 * _viewSize.height);
     }
+    for (var i = _built.$1; i <= _built.$2; i++) {
+      if (i < _first || i > _last) {
+        widget.releaseRows(i * _chunkRows, (i + 1) * _chunkRows);
+      }
+    }
+    _built = (_first, _last);
     _chunks.removeWhere((i, _) => i < _first || i > _last);
     _scheduleCheck();
 
@@ -623,7 +770,9 @@ class _LazyDataTableState extends State<_LazyDataTable> {
         _seed ??= _TableSlot(
             key: const ValueKey(_TableSlot.seed),
             slot: _TableSlot.seed,
-            child: Offstage(child: widget.buildSeed(_widths.seedColumns))),
+            child: Offstage(
+                child: ExcludeFocus(
+                    child: widget.buildSeed(_widths.of(_TableSlot.seed))))),
         for (var i = _first; i <= _last; i++)
           _chunks[i] ??= _TableSlot(
               key: ValueKey(i),
@@ -632,83 +781,72 @@ class _LazyDataTableState extends State<_LazyDataTable> {
                   child: widget.buildChunk(
                       i * _chunkRows,
                       math.min(widget.rowCount, (i + 1) * _chunkRows),
-                      _widths.columns))),
+                      _widths.of(i)))),
         _TableSlot(
             key: const ValueKey(_TableSlot.header),
             slot: _TableSlot.header,
-            child: RepaintBoundary(child: widget.buildHeader(_widths.columns))),
+            child: RepaintBoundary(
+                child: widget.buildHeader(_widths.of(_TableSlot.header)))),
       ],
     );
   }
 }
 
 /// Column widths shared by the tables of a [_LazyDataTable]: each column is as
-/// wide as the widest of its cells laid out so far.
+/// wide as the widest of its cells that any table measured, the chunks that
+/// are no longer built included.
 class _ColumnWidths extends ChangeNotifier {
-  _ColumnWidths(int count, int? flexColumn) {
-    reset(count, flexColumn);
-  }
+  _ColumnWidths(int count, this.flexColumn)
+      : _min = [for (var i = 0; i < count; i++) _ColumnMeasure()],
+        _max = [for (var i = 0; i < count; i++) _ColumnMeasure()];
 
-  late List<double> _min;
-  late List<double> _max;
-
-  /// The smallest intrinsic widths given to a visible table since the last
-  /// relayout was scheduled.
-  late List<double> _givenMin;
-  late List<double> _givenMax;
-  int? _flexColumn;
-  late List<TableColumnWidth> columns;
-
-  /// Widths for the table that measures each column's widest texts. It is
-  /// never shown, so a column that grows past it doesn't need a relayout.
-  late List<TableColumnWidth> seedColumns;
+  final int? flexColumn;
+  final List<_ColumnMeasure> _min;
+  final List<_ColumnMeasure> _max;
   bool _notifyScheduled = false;
   bool _disposed = false;
 
-  void reset(int count, int? flexColumn) {
-    _min = List.filled(count, 0);
-    _max = List.filled(count, 0);
-    _givenMin = List.filled(count, double.infinity);
-    _givenMax = List.filled(count, double.infinity);
-    _flexColumn = flexColumn;
-    columns = [for (var i = 0; i < count; i++) _SharedColumnWidth(this, i)];
-    seedColumns = [
-      for (var i = 0; i < count; i++) _SharedColumnWidth(this, i, shown: false)
-    ];
-  }
+  /// The column widths of the table in [slot].
+  List<TableColumnWidth> of(int slot) =>
+      [for (var i = 0; i < _min.length; i++) _SharedColumnWidth(this, i, slot)];
 
-  double _measureMax(int index, Iterable<RenderBox> cells, bool shown) {
-    var width = _max[index];
+  double _measure(_ColumnMeasure measure, int slot, Iterable<RenderBox> cells,
+      double Function(RenderBox cell) width) {
+    var measured = 0.0;
     for (var cell in cells) {
-      width = math.max(width, cell.getMaxIntrinsicWidth(double.infinity));
+      measured = math.max(measured, width(cell));
     }
-    _max[index] = width;
-    // A table already laid out narrower than this is out of line now; lay
-    // them all out again once this frame is done.
-    if (_givenMax[index] < width) _scheduleNotify();
-    if (shown) _givenMax[index] = math.min(_givenMax[index], width);
-    return width;
+    // The seed table is never shown, so it can't be out of line.
+    if (measure.update(slot, measured, shown: slot != _TableSlot.seed)) {
+      _scheduleNotify();
+    }
+    return measure.width;
   }
 
-  double _measureMin(int index, Iterable<RenderBox> cells, bool shown) {
-    var width = _min[index];
-    for (var cell in cells) {
-      width = math.max(width, cell.getMinIntrinsicWidth(double.infinity));
+  /// Drops what the tables in the slots [test] picks measured.
+  void forget(bool Function(int slot) test) {
+    for (var measure in [..._min, ..._max]) {
+      measure.forget(test);
     }
-    _min[index] = width;
-    if (_givenMin[index] < width) _scheduleNotify();
-    if (shown) _givenMin[index] = math.min(_givenMin[index], width);
-    return width;
   }
 
+  /// Starts over tracking the widths given to shown tables, as all of them
+  /// are about to be laid out again.
+  void relayout() {
+    for (var measure in [..._min, ..._max]) {
+      measure.relayout();
+    }
+  }
+
+  /// A table was laid out with a width that no longer fits the column: lay
+  /// them all out again once this frame is done.
   void _scheduleNotify() {
     if (_notifyScheduled) return;
     _notifyScheduled = true;
     SchedulerBinding.instance.addPostFrameCallback((_) {
       _notifyScheduled = false;
       if (_disposed) return;
-      _givenMin.fillRange(0, _givenMin.length, double.infinity);
-      _givenMax.fillRange(0, _givenMax.length, double.infinity);
+      relayout();
       notifyListeners();
     });
   }
@@ -720,24 +858,72 @@ class _ColumnWidths extends ChangeNotifier {
   }
 }
 
+/// One intrinsic width of one column: the largest that the tables measured,
+/// each table's last measurement counting.
+class _ColumnMeasure {
+  final _bySlot = <int, double>{};
+  double width = 0;
+
+  /// The narrowest and widest [width] given to a shown table since all of
+  /// them were last laid out again.
+  double _givenLo = double.infinity;
+  double _givenHi = double.negativeInfinity;
+
+  /// Records what the table in [slot] measured. Returns whether a shown
+  /// table was given a width other than [width].
+  bool update(int slot, double measured, {required bool shown}) {
+    var old = _bySlot[slot];
+    _bySlot[slot] = measured;
+    if (measured >= width) {
+      width = measured;
+    } else if (old != null && old >= width) {
+      _recompute();
+    }
+    var stale = _givenLo < width || _givenHi > width;
+    if (shown) {
+      _givenLo = math.min(_givenLo, width);
+      _givenHi = math.max(_givenHi, width);
+    }
+    return stale;
+  }
+
+  void forget(bool Function(int slot) test) {
+    var before = _bySlot.length;
+    _bySlot.removeWhere((slot, _) => test(slot));
+    if (_bySlot.length != before) _recompute();
+  }
+
+  void relayout() {
+    _givenLo = double.infinity;
+    _givenHi = double.negativeInfinity;
+  }
+
+  void _recompute() =>
+      width = _bySlot.values.fold(0.0, (a, b) => math.max(a, b));
+}
+
 class _SharedColumnWidth extends TableColumnWidth {
-  const _SharedColumnWidth(this.widths, this.index, {this.shown = true});
+  const _SharedColumnWidth(this.widths, this.index, this.slot);
 
   final _ColumnWidths widths;
   final int index;
-  final bool shown;
+
+  /// The [_TableSlot] of the table this width is for.
+  final int slot;
 
   @override
   double minIntrinsicWidth(Iterable<RenderBox> cells, double containerWidth) =>
-      widths._measureMin(index, cells, shown);
+      widths._measure(widths._min[index], slot, cells,
+          (cell) => cell.getMinIntrinsicWidth(double.infinity));
 
   @override
   double maxIntrinsicWidth(Iterable<RenderBox> cells, double containerWidth) =>
-      widths._measureMax(index, cells, shown);
+      widths._measure(widths._max[index], slot, cells,
+          (cell) => cell.getMaxIntrinsicWidth(double.infinity));
 
   @override
   double? flex(Iterable<RenderBox> cells) =>
-      index == widths._flexColumn ? 1.0 : null;
+      index == widths.flexColumn ? 1.0 : null;
 }
 
 /// Places a child of [_ChunkedTable]: the header, a chunk of rows by index,
@@ -973,11 +1159,21 @@ class _RenderChunkedTable extends RenderBox
     }
   }
 
+  /// The part of the child that takes taps and shows to accessibility, in
+  /// the child's coordinates: what shows, less the line above a chunk's rows,
+  /// which is drawn over the row above.
+  static Rect _body(_ChunkedTableParentData data) {
+    var bodyTop = data.bodyTop;
+    if (bodyTop == null) return data.visible;
+    return Rect.fromLTRB(
+        data.visible.left, bodyTop, data.visible.right, data.visible.bottom);
+  }
+
   @override
   bool hitTestChildren(BoxHitTestResult result, {required Offset position}) {
     for (var child in _shown.reversed) {
       var data = child.parentData! as _ChunkedTableParentData;
-      if (!data.visible.shift(data.offset).contains(position)) continue;
+      if (!_body(data).shift(data.offset).contains(position)) continue;
       if (result.addWithPaintOffset(
           offset: data.offset,
           position: position,
@@ -998,13 +1194,7 @@ class _RenderChunkedTable extends RenderBox
   @override
   Rect? describeSemanticsClip(RenderBox child) {
     var data = child.parentData! as _ChunkedTableParentData;
-    var bodyTop = data.bodyTop;
-    if (bodyTop == null) return describeApproximatePaintClip(child);
-    // The paint clip includes the grid line above the chunk's first row.
-    // Exclude the dummy heading even when that line extends into it.
-    return Rect.fromLTRB(
-            data.visible.left, bodyTop, data.visible.right, data.visible.bottom)
-        .shift(data.offset);
+    return _body(data).shift(data.offset);
   }
 
   @override

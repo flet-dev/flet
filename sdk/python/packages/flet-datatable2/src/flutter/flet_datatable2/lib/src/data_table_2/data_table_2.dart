@@ -215,6 +215,7 @@ class DataTable2 extends DataTable {
     this.smRatio = 0.67,
     this.fixedTopRows = 1,
     this.fixedLeftColumns = 0,
+    this.buildRowsOnDemand = true,
     this.lmRatio = 1.2,
     this.columnResizingParameters,
     this.sortArrowAnimationDuration = const Duration(milliseconds: 150),
@@ -362,6 +363,10 @@ class DataTable2 extends DataTable {
   /// set to >1 in order to fix data rows
   /// (i.e. in order to fix both header and the first data row use value of 2)
   final int fixedTopRows;
+
+  /// Flet: whether a table of [_lazyMinRows] or more rows builds only the
+  /// data rows near the viewport. See [_LazyRows].
+  final bool buildRowsOnDemand;
 
   /// Number of sticky columns fixed at the left side of the table.
   /// Check box column (if enabled) is also counted
@@ -670,8 +675,8 @@ class DataTable2 extends DataTable {
       DataRow row,
       int dataColumnIndex,
       EdgeInsetsGeometry padding,
-      WidgetStateProperty<Color?>? effectiveDataRowColor) {
-    final DataTableThemeData dataTableTheme = DataTableTheme.of(context);
+      WidgetStateProperty<Color?>? effectiveDataRowColor,
+      DataTableThemeData dataTableTheme) {
     final DataColumn column = columns[dataColumnIndex];
     final DataCell cell = row.cells[dataColumnIndex];
     final states = <WidgetState>{
@@ -708,9 +713,11 @@ class DataTable2 extends DataTable {
   }
 
   /// Flet: the checkbox cell of [row].
-  Widget _buildRowCheckbox(BuildContext context, DataRow row,
-      WidgetStateProperty<Color?>? effectiveDataRowColor) {
-    final dataTableTheme = DataTableTheme.of(context);
+  Widget _buildRowCheckbox(
+      BuildContext context,
+      DataRow row,
+      WidgetStateProperty<Color?>? effectiveDataRowColor,
+      DataTableThemeData dataTableTheme) {
     final states = <WidgetState>{if (row.selected) WidgetState.selected};
     return _buildCheckbox(
         context: context,
@@ -803,7 +810,8 @@ class DataTable2 extends DataTable {
     // Flet: a long table builds its data rows as they scroll into view, so
     // the rows built here are only the data rows fixed at the top. Needs the
     // heading row fixed, and no outer border that only one big Table draws.
-    final lazy = rows.length >= _lazyMinRows &&
+    final lazy = buildRowsOnDemand &&
+        rows.length >= _lazyMinRows &&
         actualFixedRows >= 1 &&
         _hasInsideLinesOnly(border);
     final eagerRows = lazy ? rows.sublist(0, actualFixedRows - 1) : rows;
@@ -1059,7 +1067,7 @@ class DataTable2 extends DataTable {
 
               for (final DataRow row in eagerRows) {
                 var c = _buildRowCell(context, row, dataColumnIndex, padding,
-                    effectiveDataRowColor);
+                    effectiveDataRowColor, dataTableTheme);
 
                 if (displayColumnIndex < actualFixedColumns) {
                   if (rowIndex + 1 < actualFixedRows) {
@@ -1204,9 +1212,15 @@ class DataTable2 extends DataTable {
                 for (var d = from; d < to; d++) {
                   final dataColumnIndex = d - (displayCheckboxColumn ? 1 : 0);
                   tableRow.children[d - from] = dataColumnIndex < 0
-                      ? _buildRowCheckbox(context, row, effectiveDataRowColor)
-                      : _buildRowCell(context, row, dataColumnIndex,
-                          paddings[dataColumnIndex], effectiveDataRowColor);
+                      ? _buildRowCheckbox(
+                          context, row, effectiveDataRowColor, dataTableTheme)
+                      : _buildRowCell(
+                          context,
+                          row,
+                          dataColumnIndex,
+                          paddings[dataColumnIndex],
+                          effectiveDataRowColor,
+                          dataTableTheme);
                 }
                 return tableRow;
               }
@@ -1218,8 +1232,7 @@ class DataTable2 extends DataTable {
                 final rowColor = fixedColumns && fixedColumnsColor != null
                     ? WidgetStatePropertyAll(fixedColumnsColor)
                     : effectiveDataRowColor;
-                final rowHeight =
-                    getMinMaxRowHeight(DataTableTheme.of(context)).$1;
+                final rowHeight = getMinMaxRowHeight(dataTableTheme).$1;
                 final columnWidths = {
                   for (var d = from; d < to; d++) d - from: tableColumnWidths[d]
                 };
@@ -1459,8 +1472,10 @@ class DataTable2 extends DataTable {
               : -1;
 
       var rowIndex = 0;
+      final dataTableTheme = DataTableTheme.of(context);
       for (final DataRow row in rows) {
-        var x = _buildRowCheckbox(context, row, effectiveDataRowColor);
+        var x = _buildRowCheckbox(
+            context, row, effectiveDataRowColor, dataTableTheme);
 
         if (fixedCornerRows != null && rowIndex < fixedCornerRows.length - 1) {
           fixedCornerRows[rowIndex + 1].children[0] = x;
@@ -1680,7 +1695,7 @@ class DataTable2 extends DataTable {
             color: rowColor ?? defaultRowColor.resolve(states),
           ),
       children: List<Widget>.filled(
-          numberOfCols <= 0 ? numberOfCols : numberOfCols,
+          math.max(0, numberOfCols),
           const _NullWidget()),
     );
   }
