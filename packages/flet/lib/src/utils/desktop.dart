@@ -30,8 +30,7 @@ Future setWindowSize(double? width, double? height) async {
   }
 }
 
-/// Channel of Flet's Linux runner, which applies window size limits that
-/// window_manager can't apply on Linux.
+/// Channel of Flet's Linux runner for window geometry hints.
 const _linuxWindowChannel = MethodChannel("flet/window");
 
 /// Maximum window width or height that stands for "no limit".
@@ -44,7 +43,10 @@ const double _noMaxWindowSize = 100000;
 Future setWindowMinSize(double? minWidth, double? minHeight) async {
   if (isDesktopPlatform()) {
     debugPrint("setWindowMinSize($minWidth, $minHeight)");
-    if (await _setLinuxWindowSizeLimit("setMinimumSize", minWidth, minHeight)) {
+    if (await _invokeLinuxWindowMethod("setMinimumSize", {
+      "width": minWidth,
+      "height": minHeight,
+    })) {
       return;
     }
     await windowManager.setMinimumSize(Size(minWidth ?? 0, minHeight ?? 0));
@@ -55,7 +57,10 @@ Future setWindowMinSize(double? minWidth, double? minHeight) async {
 Future setWindowMaxSize(double? maxWidth, double? maxHeight) async {
   if (isDesktopPlatform()) {
     debugPrint("setWindowMaxSize($maxWidth, $maxHeight)");
-    if (await _setLinuxWindowSizeLimit("setMaximumSize", maxWidth, maxHeight)) {
+    if (await _invokeLinuxWindowMethod("setMaximumSize", {
+      "width": maxWidth,
+      "height": maxHeight,
+    })) {
       return;
     }
     await windowManager.setMaximumSize(
@@ -63,18 +68,19 @@ Future setWindowMaxSize(double? maxWidth, double? maxHeight) async {
   }
 }
 
-/// Sets a window size limit through Flet's Linux runner.
+/// Invokes a method on Flet's Linux runner.
 ///
 /// Returns `false` when not on Linux, or when the app's runner doesn't handle
 /// the channel, such as one from a custom build template.
-Future<bool> _setLinuxWindowSizeLimit(
-    String method, double? width, double? height) async {
+Future<bool> _invokeLinuxWindowMethod(
+  String method,
+  Map<String, double?> arguments,
+) async {
   if (!isLinuxDesktop()) {
     return false;
   }
   try {
-    await _linuxWindowChannel
-        .invokeMethod(method, {"width": width, "height": height});
+    await _linuxWindowChannel.invokeMethod<void>(method, arguments);
     return true;
   } on MissingPluginException {
     return false;
@@ -229,6 +235,11 @@ Future setWindowAlignment(Alignment alignment, [bool animate = true]) async {
 
 Future setWindowAspectRatio(double value) async {
   if (isDesktopPlatform()) {
+    if (await _invokeLinuxWindowMethod("setAspectRatio", {
+      "aspectRatio": value,
+    })) {
+      return;
+    }
     await windowManager.setAspectRatio(value);
   }
 }

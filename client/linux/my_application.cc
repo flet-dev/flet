@@ -1,5 +1,6 @@
 #include "my_application.h"
 
+#include <cmath>
 #include <flutter_linux/flutter_linux.h>
 #include <string.h>
 #ifdef GDK_WINDOWING_X11
@@ -12,12 +13,12 @@ struct _MyApplication {
   GtkApplication parent_instance;
   char** dart_entrypoint_arguments;
   GtkWindow* window;
-  // Applies `page.window` size limits; see window_method_call_cb().
+  // Applies `page.window` geometry hints; see window_method_call_cb().
   FlMethodChannel* window_channel;
-  // The size limits the app set, in content size, and which of them are set.
-  GdkGeometry size_limits;
-  GdkWindowHints size_limit_hints;
-  // The decoration size last added to `size_limits` for GTK.
+  // Requested geometry hints, with size limits in content coordinates.
+  GdkGeometry geometry;
+  GdkWindowHints geometry_hints;
+  // The decoration size last added to the limits for GTK.
   gint applied_decoration_width;
   gint applied_decoration_height;
 };
@@ -47,12 +48,7 @@ static gboolean no_impeller_requested() {
 // shadow GTK draws around a window with client-side decorations, or nothing.
 // Only known once the window is shown.
 static void get_decoration_size(GtkWindow* window, gint* width, gint* height) {
-  *width = 0;
-  *height = 0;
   GdkWindow* gdk_window = gtk_widget_get_window(GTK_WIDGET(window));
-  if (gdk_window == nullptr || !gtk_widget_get_mapped(GTK_WIDGET(window))) {
-    return;
-  }
   gint content_width, content_height;
   gtk_window_get_size(window, &content_width, &content_height);
   *width = MAX(0, gdk_window_get_width(gdk_window) - content_width);
@@ -65,35 +61,51 @@ static void get_decoration_size(GtkWindow* window, gint* width, gint* height) {
 // `page.window.width`/`height` and the limits are content size, so the
 // decoration size is added to them. Hints go through GtkWindow, which would
 // replace any set directly on its GdkWindow the next time it computes its own.
-static void apply_size_limits(MyApplication* self) {
-  if (self->window == nullptr) {
+static void apply_geometry_hints(MyApplication* self) {
+  if (self->window == nullptr ||
+      !gtk_widget_get_mapped(GTK_WIDGET(self->window))) {
     return;
   }
   gint decoration_width, decoration_height;
   get_decoration_size(self->window, &decoration_width, &decoration_height);
-  GdkGeometry geometry = self->size_limits;
-  if (self->size_limit_hints & GDK_HINT_MIN_SIZE) {
+  GdkGeometry geometry = self->geometry;
+  if (self->geometry_hints & GDK_HINT_MIN_SIZE) {
     geometry.min_width += decoration_width;
     geometry.min_height += decoration_height;
   }
-  if (self->size_limit_hints & GDK_HINT_MAX_SIZE) {
+  if (self->geometry_hints & GDK_HINT_MAX_SIZE) {
     geometry.max_width += decoration_width;
     geometry.max_height += decoration_height;
   }
   self->applied_decoration_width = decoration_width;
   self->applied_decoration_height = decoration_height;
   gtk_window_set_geometry_hints(self->window, nullptr, &geometry,
-                                self->size_limit_hints);
+                                self->geometry_hints);
 }
 
-// Re-applies the size limits when the decoration size changes: when the
-// window is first shown, its title bar is hidden or shown, or it is
-// maximized, tiled or restored.
+// GTK computes the initial size before mapping, when we cannot yet measure
+// the decorations. Wait for map before applying limits, and remove the
+// applied hints on unmap so the next show cannot use stale decoration sizes.
+static void on_window_mapping_changed(GtkWidget* widget, gpointer user_data) {
+  MyApplication* self = MY_APPLICATION(user_data);
+  if (self->geometry_hints == 0) {
+    return;
+  }
+  if (gtk_widget_get_mapped(widget)) {
+    apply_geometry_hints(self);
+  } else {
+    gtk_window_set_geometry_hints(GTK_WINDOW(widget), nullptr, nullptr,
+                                  static_cast<GdkWindowHints>(0));
+  }
+}
+
+// Re-apply the size limits when a mapped window's decorations change.
 static void on_window_size_allocate(GtkWidget* widget,
                                     GdkRectangle* allocation,
                                     gpointer user_data) {
   MyApplication* self = MY_APPLICATION(user_data);
-  if (!(self->size_limit_hints & (GDK_HINT_MIN_SIZE | GDK_HINT_MAX_SIZE))) {
+  if (!gtk_widget_get_mapped(widget) ||
+      !(self->geometry_hints & (GDK_HINT_MIN_SIZE | GDK_HINT_MAX_SIZE))) {
     return;
   }
   gint decoration_width, decoration_height;
@@ -101,7 +113,7 @@ static void on_window_size_allocate(GtkWidget* widget,
                       &decoration_height);
   if (decoration_width != self->applied_decoration_width ||
       decoration_height != self->applied_decoration_height) {
-    apply_size_limits(self);
+    apply_geometry_hints(self);
   }
 }
 
@@ -126,41 +138,48 @@ static gint get_size_arg(FlValue* args, const gchar* key) {
   }
 }
 
-// Handles the "flet/window" channel, which sets the window's minimum and
-// maximum content size. window_manager hands its limits to the GdkWindow,
-// where GtkWindow replaces them, so they would not apply. A width or height
-// that is null has no limit; both null clears the limit.
+// Keep size limits and aspect ratio in one GTK hint set. Writing either
+// separately to the GdkWindow would overwrite the other hints.
 static void window_method_call_cb(FlMethodChannel* channel,
                                   FlMethodCall* method_call,
                                   gpointer user_data) {
   MyApplication* self = MY_APPLICATION(user_data);
   const gchar* method = fl_method_call_get_name(method_call);
   FlValue* args = fl_method_call_get_args(method_call);
-  gboolean is_min = strcmp(method, "setMinimumSize") == 0;
-  gboolean is_max = strcmp(method, "setMaximumSize") == 0;
-  if (!is_min && !is_max) {
-    fl_method_call_respond_not_implemented(method_call, nullptr);
-    return;
+  GdkWindowHints hint;
+  gboolean enabled;
+
+  if (strcmp(method, "setAspectRatio") == 0) {
+    gdouble ratio =
+        fl_value_get_float(fl_value_lookup_string(args, "aspectRatio"));
+    hint = GDK_HINT_ASPECT;
+    enabled = std::isfinite(ratio) && ratio > 0.0;
+    self->geometry.min_aspect = ratio;
+    self->geometry.max_aspect = ratio;
+  } else {
+    gboolean is_min = strcmp(method, "setMinimumSize") == 0;
+    if (!is_min && strcmp(method, "setMaximumSize") != 0) {
+      fl_method_call_respond_not_implemented(method_call, nullptr);
+      return;
+    }
+
+    // A null axis is unconstrained. Two null axes clear this hint.
+    gint width = get_size_arg(args, "width");
+    gint height = get_size_arg(args, "height");
+    hint = is_min ? GDK_HINT_MIN_SIZE : GDK_HINT_MAX_SIZE;
+    enabled = width >= 0 || height >= 0;
+    if (is_min) {
+      self->geometry.min_width = MAX(width, 0);
+      self->geometry.min_height = MAX(height, 0);
+    } else {
+      self->geometry.max_width = width < 0 ? NO_MAX_WINDOW_SIZE : width;
+      self->geometry.max_height = height < 0 ? NO_MAX_WINDOW_SIZE : height;
+    }
   }
 
-  gint width = get_size_arg(args, "width");
-  gint height = get_size_arg(args, "height");
-  GdkWindowHints hint = is_min ? GDK_HINT_MIN_SIZE : GDK_HINT_MAX_SIZE;
-  if (width < 0 && height < 0) {
-    self->size_limit_hints =
-        static_cast<GdkWindowHints>(self->size_limit_hints & ~hint);
-  } else {
-    self->size_limit_hints =
-        static_cast<GdkWindowHints>(self->size_limit_hints | hint);
-  }
-  if (is_min) {
-    self->size_limits.min_width = MAX(width, 0);
-    self->size_limits.min_height = MAX(height, 0);
-  } else {
-    self->size_limits.max_width = width < 0 ? NO_MAX_WINDOW_SIZE : width;
-    self->size_limits.max_height = height < 0 ? NO_MAX_WINDOW_SIZE : height;
-  }
-  apply_size_limits(self);
+  self->geometry_hints = static_cast<GdkWindowHints>(
+      enabled ? self->geometry_hints | hint : self->geometry_hints & ~hint);
+  apply_geometry_hints(self);
   fl_method_call_respond_success(method_call, nullptr, nullptr);
 }
 
@@ -300,6 +319,10 @@ static void my_application_activate(GApplication* application) {
       FL_METHOD_CODEC(codec));
   fl_method_channel_set_method_call_handler(
       self->window_channel, window_method_call_cb, self, nullptr);
+  g_signal_connect_after(window, "map",
+                         G_CALLBACK(on_window_mapping_changed), self);
+  g_signal_connect_after(window, "unmap",
+                         G_CALLBACK(on_window_mapping_changed), self);
   g_signal_connect(window, "size-allocate",
                    G_CALLBACK(on_window_size_allocate), self);
 
