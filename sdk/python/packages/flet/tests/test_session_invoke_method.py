@@ -18,6 +18,17 @@ class _RecordingConnection(Connection):
         self.messages.append(message)
 
 
+class _FailingConnection(Connection):
+    def send_message(self, message):
+        raise ConnectionError("connection lost")
+
+
+def _create_session(conn: Connection) -> Session:
+    conn.pubsubhub = PubSubHub()
+    conn.loop = asyncio.get_running_loop()
+    return Session(conn)
+
+
 class _Result(dict):
     """A response whose lifetime can be observed without inspecting the session."""
 
@@ -27,9 +38,7 @@ class _Result(dict):
 async def test_cancelled_call_does_not_retain_response(response_before_cancel):
     """Cancelled calls drop their response, whether it arrives before or after."""
     conn = _RecordingConnection()
-    conn.pubsubhub = PubSubHub()
-    conn.loop = asyncio.get_running_loop()
-    session = Session(conn)
+    session = _create_session(conn)
     try:
         call = asyncio.create_task(session.page.get_package_info())
         await asyncio.sleep(0)
@@ -50,12 +59,16 @@ async def test_cancelled_call_does_not_retain_response(response_before_cancel):
             session.handle_invoke_method_results(
                 request.control_id, request.call_id, result, None
             )
-        del result
+        # The finished task and its CancelledError still reference the call's
+        # frames until released, like any local; the session must not.
+        del call, result
+        await asyncio.sleep(0)
         gc.collect()
 
         assert result_ref() is None
     finally:
         session.close()
+        await asyncio.sleep(0)
 
 
 @pytest.mark.asyncio
@@ -63,9 +76,7 @@ async def test_cancelled_call_does_not_retain_response(response_before_cancel):
 async def test_failed_call_does_not_retain_late_response(close_session):
     """Timed-out and session-closed calls drop a response that arrives later."""
     conn = _RecordingConnection()
-    conn.pubsubhub = PubSubHub()
-    conn.loop = asyncio.get_running_loop()
-    session = Session(conn)
+    session = _create_session(conn)
     try:
         call = asyncio.create_task(
             session.invoke_method(
@@ -96,4 +107,59 @@ async def test_failed_call_does_not_retain_late_response(close_session):
 
         assert result_ref() is None
     finally:
+        if not close_session:
+            session.close()
+        await asyncio.sleep(0)
+
+
+@pytest.mark.asyncio
+async def test_failed_send_does_not_register_call():
+    """A call whose request can't be sent leaves nothing pending."""
+    session = _create_session(_FailingConnection())
+    try:
+        with pytest.raises(ConnectionError):
+            await session.invoke_method(session.page._i, "get_package_info", {})
+
+        assert session._Session__method_calls == {}
+    finally:
         session.close()
+        await asyncio.sleep(0)
+
+
+@pytest.mark.asyncio
+async def test_call_after_close_fails_immediately():
+    """A call made on a closed session fails instead of waiting forever."""
+    conn = _RecordingConnection()
+    session = _create_session(conn)
+    session.close()
+    await asyncio.sleep(0)
+
+    with pytest.raises(RuntimeError, match="Session closed"):
+        await asyncio.wait_for(
+            session.invoke_method(session.page._i, "get_package_info", {}),
+            timeout=1,
+        )
+
+    assert conn.messages == []
+    assert session._Session__method_calls == {}
+
+
+@pytest.mark.asyncio
+async def test_response_after_close_does_not_override_closure_error():
+    """A response that races session close can't turn the failure into success."""
+    conn = _RecordingConnection()
+    session = _create_session(conn)
+    call = asyncio.create_task(
+        session.invoke_method(session.page._i, "get_package_info", {})
+    )
+    await asyncio.sleep(0)
+    request = conn.messages[-1].body
+
+    session.close()
+    session.handle_invoke_method_results(
+        request.control_id, request.call_id, {"app_name": "My App"}, None
+    )
+
+    with pytest.raises(RuntimeError, match="Session closed"):
+        await call
+    await asyncio.sleep(0)

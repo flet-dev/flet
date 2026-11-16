@@ -57,8 +57,7 @@ class Session:
         self.__index[self.__page._i] = self.__page
         self.__store: SessionStore = SessionStore()
         self.__pubsub_client = PubSubClient(conn.pubsubhub, self.__id)
-        self.__method_calls: dict[str, asyncio.Event] = {}
-        self.__method_call_results: dict[asyncio.Event, tuple[Any, Optional[str]]] = {}
+        self.__method_calls: dict[str, asyncio.Future] = {}
         self.__updates_ready: asyncio.Event = asyncio.Event()
         self.__pending_updates: set[BaseControl] = set()
         self.__pending_effects: list[
@@ -499,13 +498,19 @@ class Session:
 
         Raises:
             TimeoutError: If no invoke-method response is received before timeout.
-            RuntimeError: If the client reports an invocation error.
+            RuntimeError: If the client reports an invocation error, or the
+                session is closed before or while waiting for the response.
+            asyncio.CancelledError: If the calling task is cancelled while
+                waiting; a response that arrives afterwards is dropped.
         """
+        if self.__closed:
+            raise RuntimeError("Session closed")
+
         call_id = random_string(10)
 
         # register callback
-        evt = asyncio.Event()
-        self.__method_calls[call_id] = evt
+        fut = asyncio.get_running_loop().create_future()
+        self.__method_calls[call_id] = fut
 
         try:
             # call method
@@ -522,21 +527,13 @@ class Session:
             )
 
             try:
-                await asyncio.wait_for(evt.wait(), timeout=timeout)
+                return await asyncio.wait_for(fut, timeout=timeout)
             except asyncio.TimeoutError:
                 raise TimeoutError(
                     f"Timeout waiting for invokeMethod {method_name}({args}) call"
                 ) from None
-
-            result, err = self.__method_call_results.pop(evt)
-            if err:
-                raise RuntimeError(err)
-            return result
         finally:
             self.__method_calls.pop(call_id, None)
-            # Cancellation can arrive after the response was stored but before
-            # the waiting coroutine resumes to consume it.
-            self.__method_call_results.pop(evt, None)
 
     def handle_invoke_method_results(
         self, control_id: int, call_id: str, result: Any, error: Optional[str]
@@ -557,8 +554,8 @@ class Session:
         the connection's receive loop and froze the whole app. A result
         nobody is waiting for is dropped.
         """
-        evt = self.__method_calls.pop(call_id, None)
-        if evt is None:
+        fut = self.__method_calls.pop(call_id, None)
+        if fut is None or fut.done():
             logger.debug(
                 "Dropping invoke method result for call %s (control %s): "
                 "nobody is waiting for it.",
@@ -573,16 +570,20 @@ class Session:
                 call_id,
                 control_id,
             )
-        self.__method_call_results[evt] = (result, error)
-        evt.set()
+        if error:
+            fut.set_exception(RuntimeError(error))
+        else:
+            fut.set_result(result)
 
     def __cancel_method_calls(self):
         """
         Resolves all pending invoke-method waits with a session-closed error.
         """
-        for evt in list(self.__method_calls.values()):
-            self.__method_call_results[evt] = (None, "Session closed")
-            evt.set()
+        method_calls = list(self.__method_calls.values())
+        self.__method_calls.clear()
+        for fut in method_calls:
+            if not fut.done():
+                fut.set_exception(RuntimeError("Session closed"))
 
     async def after_event(self, control: BaseControl | None):
         """

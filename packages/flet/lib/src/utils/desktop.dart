@@ -1,4 +1,5 @@
 import 'package:flutter/foundation.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter/widgets.dart';
 import 'package:window_manager/window_manager.dart';
 
@@ -29,17 +30,60 @@ Future setWindowSize(double? width, double? height) async {
   }
 }
 
+/// Channel of Flet's Linux runner for window geometry hints.
+const _linuxWindowChannel = MethodChannel("flet/window");
+
+/// Maximum window width or height that stands for "no limit".
+///
+/// window_manager ignores a negative maximum on Windows unless both are set,
+/// so an axis without a limit gets this instead.
+const double _noMaxWindowSize = 100000;
+
+/// Sets the window's minimum size; a `null` width or height has no limit.
 Future setWindowMinSize(double? minWidth, double? minHeight) async {
   if (isDesktopPlatform()) {
     debugPrint("setWindowMinSize($minWidth, $minHeight)");
+    if (await _invokeLinuxWindowMethod("setMinimumSize", {
+      "width": minWidth,
+      "height": minHeight,
+    })) {
+      return;
+    }
     await windowManager.setMinimumSize(Size(minWidth ?? 0, minHeight ?? 0));
   }
 }
 
+/// Sets the window's maximum size; a `null` width or height has no limit.
 Future setWindowMaxSize(double? maxWidth, double? maxHeight) async {
   if (isDesktopPlatform()) {
     debugPrint("setWindowMaxSize($maxWidth, $maxHeight)");
-    await windowManager.setMaximumSize(Size(maxWidth ?? -1, maxHeight ?? -1));
+    if (await _invokeLinuxWindowMethod("setMaximumSize", {
+      "width": maxWidth,
+      "height": maxHeight,
+    })) {
+      return;
+    }
+    await windowManager.setMaximumSize(
+        Size(maxWidth ?? _noMaxWindowSize, maxHeight ?? _noMaxWindowSize));
+  }
+}
+
+/// Invokes a method on Flet's Linux runner.
+///
+/// Returns `false` when not on Linux, or when the app's runner doesn't handle
+/// the channel, such as one from a custom build template.
+Future<bool> _invokeLinuxWindowMethod(
+  String method,
+  Map<String, double?> arguments,
+) async {
+  if (!isLinuxDesktop()) {
+    return false;
+  }
+  try {
+    await _linuxWindowChannel.invokeMethod<void>(method, arguments);
+    return true;
+  } on MissingPluginException {
+    return false;
   }
 }
 
@@ -191,6 +235,11 @@ Future setWindowAlignment(Alignment alignment, [bool animate = true]) async {
 
 Future setWindowAspectRatio(double value) async {
   if (isDesktopPlatform()) {
+    if (await _invokeLinuxWindowMethod("setAspectRatio", {
+      "aspectRatio": value,
+    })) {
+      return;
+    }
     await windowManager.setAspectRatio(value);
   }
 }
