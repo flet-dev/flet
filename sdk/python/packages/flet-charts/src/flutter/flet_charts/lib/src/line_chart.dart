@@ -1,6 +1,7 @@
 import 'package:collection/collection.dart';
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flet/flet.dart';
+import 'package:flutter/foundation.dart' show precisionErrorTolerance;
 import 'package:material_ui/material_ui.dart';
 
 import 'utils/charts.dart';
@@ -19,13 +20,14 @@ class LineChartControl extends StatefulWidget {
 class _LineChartControlState extends State<LineChartControl> {
   LineChartEventData? _eventData;
 
-  final Map<int, List<FlSpot>> _barSpots = {};
+  final _series = <int, ({List<Control> points, List<FlSpot> spots})>{};
+  double? _minX;
+  double? _maxX;
 
   @override
   void initState() {
     super.initState();
     widget.control.addListener(_chartUpdated);
-    _chartUpdated();
   }
 
   @override
@@ -34,27 +36,60 @@ class _LineChartControlState extends State<LineChartControl> {
     super.dispose();
   }
 
-  /// Builds a new spots list on every update: the chart's implicit animation
-  /// tweens from the previous `LineChartData`, which must keep its own spots.
-  _chartUpdated() {
-    setState(() {
-      for (var lineBar in widget.control.children("data_series")) {
-        lineBar.notifyParent = true;
-        _barSpots[lineBar.id] = lineBar.children("points").map((spot) {
-          spot.notifyParent = true;
-          return FlSpot(spot.getDouble("x")!, spot.getDouble("y")!);
-        }).toList();
-      }
+  void _chartUpdated() {
+    setState(() {});
+  }
 
-      // removed data series
-      for (var lineBarId in _barSpots.keys.toList()) {
-        if (!widget.control
-            .children("data_series")
-            .any((bar) => bar.id == lineBarId)) {
-          _barSpots.remove(lineBarId);
-        }
+  void _updateSeries(List<Control> dataSeries, double? minX, double? maxX) {
+    // A single patch can notify separately for point changes and axis bounds.
+    // Compare complete frames after all of those operations have landed.
+    final previousMinX = _minX;
+    final previousMaxX = _maxX;
+    final shift =
+        minX != null && previousMinX != null ? minX - previousMinX : 0.0;
+    final scrolls = shift != 0 &&
+        maxX != null &&
+        previousMaxX != null &&
+        (maxX - previousMaxX - shift).abs() < precisionErrorTolerance;
+
+    for (final lineBar in dataSeries) {
+      lineBar.notifyParent = true;
+      final points = lineBar.children("points");
+      final spots = points.map((spot) {
+        spot.notifyParent = true;
+        return FlSpot(spot.getDouble("x")!, spot.getDouble("y")!);
+      }).toList();
+
+      final previous = _series[lineBar.id];
+      if (scrolls &&
+          previous != null &&
+          (shift > 0
+              ? _hasRollingOverlap(previous.spots, spots)
+              : _hasRollingOverlap(spots, previous.spots))) {
+        // Use the same samples on both ends of the tween while the X axis
+        // slides. fl_chart otherwise interpolates by index, which would
+        // morph each retained sample into a different one.
+        previous.spots.setAll(0, spots);
+        previous.points.setAll(0, points);
+      } else {
+        // Preserve the previous coordinates for ordinary point animations.
+        _series[lineBar.id] = (points: points, spots: spots);
       }
-    });
+    }
+    _series.removeWhere((id, _) => !dataSeries.any((bar) => bar.id == id));
+    _minX = minX;
+    _maxX = maxX;
+  }
+
+  bool _hasRollingOverlap(List<FlSpot> previous, List<FlSpot> next) {
+    if (previous.length != next.length || next.isEmpty) return false;
+    final dropped = previous.indexOf(next.first);
+    if (dropped <= 0) return false;
+
+    for (var i = dropped; i < previous.length; i++) {
+      if (previous[i] != next[i - dropped]) return false;
+    }
+    return true;
   }
 
   @override
@@ -74,18 +109,24 @@ class _LineChartControlState extends State<LineChartControl> {
     var interactive = widget.control.getBool("interactive", true)!;
     var pointLineStart = widget.control.getDouble("point_line_start");
     var pointLineEnd = widget.control.getDouble("point_line_end");
+    final minX = widget.control.getDouble("min_x");
+    final maxX = widget.control.getDouble("max_x");
+    final dataSeries = widget.control.children("data_series");
+    _updateSeries(dataSeries, minX, maxX);
 
     List<LineChartBarData> barsData = [];
     List<LineBarSpot> selectedPoints = [];
 
     var barIndex = 0;
-    for (var ds in widget.control.children("data_series")) {
+    for (var ds in dataSeries) {
+      final series = _series[ds.id]!;
+      final points = series.points;
       var barData = parseLineChartBarData(
-          widget.control, ds, interactive, context, _barSpots);
+          ds, interactive, context, points, series.spots);
       barsData.add(barData);
 
       var spotIndex = 0;
-      for (var p in ds.children("points")) {
+      for (var p in points) {
         if (!interactive && p.getBool("selected", false)!) {
           selectedPoints
               .add(LineBarSpot(barData, barIndex, barData.spots[spotIndex]));
@@ -99,8 +140,8 @@ class _LineChartControlState extends State<LineChartControl> {
     var chart = LineChart(
       LineChartData(
           backgroundColor: widget.control.getColor("bgcolor", context),
-          minX: widget.control.getDouble("min_x"),
-          maxX: widget.control.getDouble("max_x"),
+          minX: minX,
+          maxX: maxX,
           minY: widget.control.getDouble("min_y"),
           maxY: widget.control.getDouble("max_y"),
           baselineX: widget.control.getDouble("baseline_x"),

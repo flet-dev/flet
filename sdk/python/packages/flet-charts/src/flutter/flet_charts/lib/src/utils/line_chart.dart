@@ -119,11 +119,11 @@ LineTouchTooltipData? parseLineTouchTooltipData(
 }
 
 LineChartBarData parseLineChartBarData(
-    Control parent,
     Control chartData,
     bool interactiveChart,
     BuildContext context,
-    Map<int, List<FlSpot>> barSpots) {
+    List<Control> points,
+    List<FlSpot> spots) {
   final theme = Theme.of(context);
 
   var aboveLineBgcolor = chartData.getColor("above_line_bgcolor", context);
@@ -139,13 +139,12 @@ LineChartBarData parseLineChartBarData(
   var belowLineCutoffY = chartData.getDouble("below_line_cutoff_y");
   var stepDirection = chartData.getDouble("step_direction");
 
-  final points = chartData.children("points");
   return LineChartBarData(
       preventCurveOverShooting:
           chartData.getBool("prevent_curve_over_shooting", false)!,
       preventCurveOvershootingThreshold:
           chartData.getDouble("prevent_curve_over_shooting_threshold", 10.0)!,
-      spots: barSpots[chartData.id] ?? [],
+      spots: spots,
       curveSmoothness: chartData.getDouble("curve_smoothness", 0.35)!,
       show: chartData.visible,
       isStepLineChart: stepDirection != null,
@@ -207,9 +206,6 @@ BarAreaSpotsLine _parseAreaSpotsLine(
     FlLine? style, List<Control> points, String visibilityProperty) {
   if (style == null) return const BarAreaSpotsLine();
 
-  final visibility = points
-      .map((point) => point.getBool(visibilityProperty, true)!)
-      .toList(growable: false);
   var index = 0;
   return BarAreaSpotsLine(
     show: true,
@@ -218,8 +214,8 @@ BarAreaSpotsLine _parseAreaSpotsLine(
       // fl_chart visits the entire spot list in order for each area-line
       // pass. Its tween pairs spots by index and keeps the destination length,
       // so each visit uses the matching flag even as coordinates change.
-      final visible = visibility[index];
-      index = (index + 1) % visibility.length;
+      final visible = points[index].getBool(visibilityProperty, true)!;
+      index = (index + 1) % points.length;
       return visible && spot.isNotNull();
     },
   );
