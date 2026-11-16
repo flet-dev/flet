@@ -3,6 +3,7 @@ import inspect
 import logging
 import os
 import platform
+import shutil
 import tempfile
 from collections.abc import Iterable, Sequence
 from enum import Enum
@@ -138,6 +139,21 @@ class FletTestApp:
             (host mode) against the dev `client` shell.
             Env override: `FLET_TEST_DEVICE_MODE=1`.
 
+        app_binary:
+            Path to the executable of a Flutter app built with the integration
+            test as its entry point. When set, `start()` launches it directly;
+            otherwise it runs `flutter test`, which builds the app on every
+            start. Used only when the tests run on the host desktop platform
+            and not in device mode. Env override: `FLET_TEST_APP_BINARY`.
+
+        start_timeout:
+            Seconds `start()` waits for the Flutter app to connect before it
+            stops the Flutter test process and raises `TimeoutError`. Defaults
+            to 60 seconds when `app_binary` is launched, which connects within
+            seconds, and to no limit when `flutter test` builds the app
+            before it starts, which can take minutes. `0` disables the limit.
+            Env override: `FLET_TEST_START_TIMEOUT`.
+
     Environment Variables:
         - `FLET_TEST_PLATFORM`: Overrides `test_platform`.
         - `FLET_TEST_DEVICE`: Overrides `test_device`.
@@ -147,6 +163,8 @@ class FletTestApp:
             Overrides `screenshots_similarity_threshold`.
         - `FLET_TEST_USE_HTTP`: Enables HTTP transport when set to `1`.
         - `FLET_TEST_DISABLE_FVM`: Disables `fvm` usage when set to `1`.
+        - `FLET_TEST_APP_BINARY`: Overrides `app_binary`.
+        - `FLET_TEST_START_TIMEOUT`: Overrides `start_timeout`.
     """
 
     def __init__(
@@ -165,6 +183,8 @@ class FletTestApp:
         disable_fvm: bool = False,
         skip_pump_and_settle: bool = False,
         device_mode: bool = False,
+        app_binary: Optional[os.PathLike] = None,
+        start_timeout: Optional[float] = None,
     ):
         self.test_platform = os.getenv("FLET_TEST_PLATFORM", test_platform)
         self.test_device = os.getenv("FLET_TEST_DEVICE", test_device)
@@ -184,8 +204,15 @@ class FletTestApp:
             )
         )
         self.__disable_fvm = get_bool_env_var("FLET_TEST_DISABLE_FVM") or disable_fvm
+        app_binary = os.getenv("FLET_TEST_APP_BINARY") or app_binary
+        self.__app_binary = os.path.abspath(app_binary) if app_binary else None
+        self.__launch_app_binary = False
         self.__use_http = get_bool_env_var("FLET_TEST_USE_HTTP") or use_http
         self.__device_mode = get_bool_env_var("FLET_TEST_DEVICE_MODE") or device_mode
+        env_start_timeout = os.getenv("FLET_TEST_START_TIMEOUT")
+        self.__start_timeout = (
+            float(env_start_timeout) if env_start_timeout else start_timeout
+        )
         self.__test_path = test_path
         self.__flet_app_main = flet_app_main
         self.__skip_pump_and_settle = skip_pump_and_settle
@@ -196,6 +223,8 @@ class FletTestApp:
         self.__flutter_output = bytearray()
         self.__echo_flutter_output = False
         self.__flutter_output_task: Optional[asyncio.Task] = None
+        self.__server_task: Optional[asyncio.Task] = None
+        self.__app_temp_dir: Optional[str] = None
         self.__page = None
         self.__tester: Union[Tester, RemoteTester, None] = None
 
@@ -222,32 +251,51 @@ class FletTestApp:
     async def start(self):
         """
         Starts Flet app and Flutter integration test process.
+
+        Raises:
+            TimeoutError: If the Flutter app has not connected within
+                `start_timeout`.
+            RuntimeError: If the Flutter process exits, or the Flet app server
+                stops, before the app has started.
+            Exception: The exception raised by the app's `main` or by its
+                first `pump_and_settle`.
         """
 
         ready = asyncio.Event()
+        main_error: Optional[Exception] = None
 
         async def main(page: ft.Page):
             """
             Initializes the test page and runs the user-provided Flet app entry point.
 
+            An exception raised here is kept for `start()` to re-raise: the
+            session only logs it, and `start()` would otherwise wait for a
+            start that cannot complete.
+
             Args:
                 page: Connected app :class:`~flet.Page` instance.
             """
-            self.__page = page
-            self.__tester = Tester()
-            page.theme_mode = ft.ThemeMode.LIGHT
-            page.update()
+            nonlocal main_error
+            try:
+                self.__page = page
+                self.__tester = Tester()
+                page.theme_mode = ft.ThemeMode.LIGHT
+                page.update()
 
-            # In device mode the app under test runs on-device (embedded Python
-            # over dart_bridge); this session is tester-only and must NOT run
-            # the user's app. In host mode the app runs here in-process.
-            if not self.__device_mode:
-                if inspect.iscoroutinefunction(self.__flet_app_main):
-                    await self.__flet_app_main(page)
-                elif callable(self.__flet_app_main):
-                    self.__flet_app_main(page)
-            if not self.__skip_pump_and_settle:
-                await self.__pump_and_settle_with_timeout("start")
+                # In device mode the app under test runs on-device (embedded
+                # Python over dart_bridge); this session is tester-only and
+                # must NOT run the user's app. In host mode the app runs here
+                # in-process.
+                if not self.__device_mode:
+                    if inspect.iscoroutinefunction(self.__flet_app_main):
+                        await self.__flet_app_main(page)
+                    elif callable(self.__flet_app_main):
+                        self.__flet_app_main(page)
+                if not self.__skip_pump_and_settle:
+                    await self.__pump_and_settle_with_timeout("start")
+            except Exception as e:
+                main_error = e
+                raise
             ready.set()
 
         if not self.__tcp_port:
@@ -266,7 +314,7 @@ class FletTestApp:
             if self.__use_http:
                 os.environ["FLET_FORCE_WEB_SERVER"] = "true"
 
-            asyncio.create_task(
+            self.__server_task = asyncio.create_task(
                 ft.run_async(
                     main,
                     port=self.__tcp_port,
@@ -313,8 +361,32 @@ class FletTestApp:
             flutter_args += ["-d", self.test_device]
 
         app_url = f"{protocol}://{tcp_addr}:{self.__tcp_port}"
+        # The host's Python configuration must not reach the app under test.
+        flutter_env = without_host_python_config()
+        self.__launch_app_binary = (
+            bool(self.__app_binary)
+            and not self.__device_mode
+            and self.test_platform in ("macos", "windows", "linux")
+            and self.test_device == self.test_platform
+        )
 
-        if self.__device_mode:
+        if self.__launch_app_binary:
+            # Run-time equivalents of the dart-defines given to `flutter test`.
+            flutter_args = [str(self.__app_binary)]
+            flutter_env.pop("FLET_TEST_PID_FILE_PATH", None)
+            flutter_env.pop("FLET_TEST_ASSETS_DIR", None)
+            flutter_env["FLET_TEST_APP_URL"] = app_url
+            # A temporary directory of its own, see `__stop_flutter_process()`.
+            self.__app_temp_dir = tempfile.mkdtemp(prefix="flet_test_app_")
+            for name in ("TMPDIR", "TEMP", "TMP"):
+                flutter_env[name] = self.__app_temp_dir
+            if not self.__use_http:
+                flutter_env["FLET_TEST_PID_FILE_PATH"] = str(
+                    Path(tempfile.gettempdir()) / "flet_app_pid.txt"
+                )
+                if self.__assets_dir:
+                    flutter_env["FLET_TEST_ASSETS_DIR"] = str(self.__assets_dir)
+        elif self.__device_mode:
             # The app under test runs on-device over dart_bridge and ships its
             # own assets in app.zip. The RemoteWidgetTester connects to our
             # RemoteTester server over an independent socket. FLET_TEST=true lets
@@ -335,17 +407,17 @@ class FletTestApp:
                         f"--dart-define=FLET_TEST_ASSETS_DIR={self.__assets_dir}"
                     ]
 
-        self.__flutter_process = await asyncio.create_subprocess_exec(
-            *flutter_args,
-            cwd=str(self.__flutter_app_dir),
-            stdout=stdout,
-            stderr=stderr,
-            # `flutter test` builds and runs the app under test, which embeds
-            # its own interpreter - the host's Python configuration must not
-            # reach it. PATH and the FLET_*/SERIOUS_PYTHON_* variables that
-            # `flet test` sets for the native build phase are preserved.
-            env=without_host_python_config(),
-        )
+        try:
+            self.__flutter_process = await asyncio.create_subprocess_exec(
+                *flutter_args,
+                cwd=str(self.__flutter_app_dir),
+                stdout=stdout,
+                stderr=stderr,
+                env=flutter_env,
+            )
+        except OSError:
+            await self.__stop_flutter_process()
+            raise
 
         if self.__flutter_process.stdout is not None:
             self.__flutter_output_task = asyncio.create_task(
@@ -358,16 +430,90 @@ class FletTestApp:
         def connected() -> bool:
             if self.__device_mode:
                 return self.__tester is not None and self.__tester.is_connected()
-            return ready.is_set()
+            return self.__page is not None
 
-        while not connected():
+        def started() -> bool:
+            return connected() if self.__device_mode else ready.is_set()
+
+        start_timeout = self.__start_timeout
+        if start_timeout is None and self.__launch_app_binary:
+            start_timeout = self.__app_binary_start_timeout
+        loop = asyncio.get_running_loop()
+        deadline = loop.time() + start_timeout if start_timeout else None
+
+        while not started() and main_error is None:
             await asyncio.sleep(0.2)
             if self.__flutter_process.returncode is not None:
+                await self.__stop_flutter_process()
                 self.__dump_flutter_output()
                 raise RuntimeError(
                     "Flutter process exited early with code "
                     f"{self.__flutter_process.returncode}"
                 )
+            if self.__server_task is not None and self.__server_task.done():
+                error = (
+                    None
+                    if self.__server_task.cancelled()
+                    else self.__server_task.exception()
+                )
+                await self.__stop_flutter_process()
+                raise RuntimeError(
+                    f"Flet app server on port {self.__tcp_port} stopped before "
+                    f"the Flutter app connected: {error!r}"
+                ) from error
+            if deadline and loop.time() > deadline and not connected():
+                await self.__stop_flutter_process()
+                self.__dump_flutter_output()
+                raise TimeoutError(
+                    f"Flutter app did not connect to {app_url} in "
+                    f"{start_timeout:g} seconds and was stopped. "
+                    "Set FLET_TEST_START_TIMEOUT to change the limit."
+                )
+
+        if main_error is not None:
+            await self.__stop_flutter_process()
+            self.__dump_flutter_output()
+            raise main_error
+
+    async def __stop_flutter_process(self):
+        """
+        Terminates the Flutter test process if it is running, kills it if it \
+        does not end in 5 seconds, and waits for its output to be read.
+
+        Stops the Flet app server of this test app, which frees its port. A
+        web server started for HTTP transport is left running: stopping it
+        shuts down state it shares with the other test apps of the process.
+
+        Removes the temporary directory of an app launched from `app_binary`.
+        Each such launch gets its own: plugins keep per-process files in the
+        system temporary directory under the process ID (`media_kit` stores a
+        native pointer there in debug builds), nothing removes them, and a
+        later app that is given the same process ID would read the stale file.
+        """
+        if self.__flutter_process and self.__flutter_process.returncode is None:
+            self.__flutter_process.terminate()
+            try:
+                await asyncio.wait_for(self.__flutter_process.wait(), timeout=5)
+            except asyncio.TimeoutError:
+                _print("Force killing Flutter test process...")
+                self.__flutter_process.kill()
+                await self.__flutter_process.wait()
+
+        if self.__flutter_output_task:
+            try:
+                await asyncio.wait_for(self.__flutter_output_task, timeout=5)
+            except asyncio.TimeoutError:
+                self.__flutter_output_task.cancel()
+            self.__flutter_output_task = None
+
+        if self.__app_temp_dir:
+            shutil.rmtree(self.__app_temp_dir, ignore_errors=True)
+            self.__app_temp_dir = None
+
+        if self.__server_task and not self.__use_http:
+            self.__server_task.cancel()
+            await asyncio.wait({self.__server_task}, timeout=5)
+            self.__server_task = None
 
     async def __read_flutter_output(self, stream: asyncio.StreamReader):
         # Read in chunks, not lines: the Flet client's debug output includes
@@ -439,13 +585,28 @@ class FletTestApp:
     async def teardown(self):
         """
         Teardown Flutter integration test process.
+
+        The process gets 10 seconds to exit after the tester's teardown and is
+        terminated when it does not. An app launched from `app_binary` ends its
+        own process with the test result as exit code, so its result is
+        unknown when it has to be terminated, and when it did not acknowledge
+        the tester's teardown: it ended before its test completed, and exit
+        code 0 then comes from the app closing, not from a passed test.
+
+        Raises:
+            RuntimeError: If the Flutter test process exited with a non-zero
+                code, or an app launched from `app_binary` had to be
+                terminated or did not acknowledge teardown.
         """
+        teardown_error: Optional[Exception] = None
         try:
             await self.tester.teardown(timeout=10)
-        except (RuntimeError, TimeoutError) as e:
+        except (RuntimeError, TimeoutError, asyncio.TimeoutError) as e:
             _print(f"Tester teardown failed: {e}")
+            teardown_error = e
 
         flutter_returncode: Optional[int] = None
+        terminated = False
         if self.__flutter_process:
             _print("Waiting for Flutter test process to exit...")
             try:
@@ -454,19 +615,9 @@ class FletTestApp:
                 _print(f"Flutter test process has exited (code {flutter_returncode}).")
             except asyncio.TimeoutError:
                 _print("Flutter test process did not exit in time, terminating it...")
-                self.__flutter_process.terminate()
-                # Optionally ensure it terminates
-                try:
-                    await asyncio.wait_for(self.__flutter_process.wait(), timeout=5)
-                except asyncio.TimeoutError:
-                    _print("Force killing Flutter test process...")
-                    self.__flutter_process.kill()
+                terminated = True
 
-        if self.__flutter_output_task:
-            try:
-                await asyncio.wait_for(self.__flutter_output_task, timeout=5)
-            except asyncio.TimeoutError:
-                self.__flutter_output_task.cancel()
+        await self.__stop_flutter_process()
 
         # Stop the RemoteTester socket server (device mode).
         if isinstance(self.__tester, RemoteTester):
@@ -482,6 +633,22 @@ class FletTestApp:
                 f"Flutter integration test process failed with exit code "
                 f"{flutter_returncode}. See the Flutter test output above."
             )
+
+        if terminated and self.__launch_app_binary:
+            self.__dump_flutter_output()
+            raise RuntimeError(
+                "Flutter integration test app did not exit within 10 seconds "
+                "of teardown and was terminated, so its test result is unknown. "
+                "See the Flutter test output above."
+            )
+
+        if teardown_error and self.__launch_app_binary:
+            self.__dump_flutter_output()
+            raise RuntimeError(
+                "Flutter integration test app ended before its test completed: "
+                f"it did not acknowledge teardown ({teardown_error}) and exited "
+                f"with code {flutter_returncode}. See the Flutter test output above."
+            ) from teardown_error
 
     def resize_page(self, width: float, height: float):
         """
@@ -1062,5 +1229,6 @@ class FletTestApp:
             return min(similarities), None
 
     __pump_and_settle_timeout = 10.0
+    __app_binary_start_timeout = 60.0
     __flutter_output_limit = 262144
     __flutter_output_line_limit = 2048
