@@ -526,14 +526,21 @@ class Session:
                 )
             )
 
-            try:
-                return await asyncio.wait_for(fut, timeout=timeout)
-            except asyncio.TimeoutError:
+            # Not `asyncio.wait_for()`: on Python < 3.12 it returns the result
+            # instead of raising CancelledError if the response arrives in the
+            # same event-loop turn as the cancellation.
+            done, _ = await asyncio.wait((fut,), timeout=timeout)
+            if not done:
                 raise TimeoutError(
                     f"Timeout waiting for invokeMethod {method_name}({args}) call"
-                ) from None
+                )
+            return fut.result()
         finally:
             self.__method_calls.pop(call_id, None)
+            if not fut.cancel() and not fut.cancelled():
+                # Done but not consumed (cancelled or failed caller): mark an
+                # error as retrieved so it isn't logged as never retrieved.
+                fut.exception()
 
     def handle_invoke_method_results(
         self, control_id: int, call_id: str, result: Any, error: Optional[str]

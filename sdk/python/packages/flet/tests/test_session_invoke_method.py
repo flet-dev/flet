@@ -34,34 +34,54 @@ class _Result(dict):
 
 
 @pytest.mark.asyncio
-@pytest.mark.parametrize("response_before_cancel", [False, True])
-async def test_cancelled_call_does_not_retain_response(response_before_cancel):
-    """Cancelled calls drop their response, whether it arrives before or after."""
+@pytest.mark.parametrize("timeout", [None, 5])
+@pytest.mark.parametrize(
+    "order",
+    [
+        "response_then_cancel",
+        "cancel_then_response",  # same event-loop turn, before the call resumes
+        "response_after_cancelled",
+    ],
+)
+async def test_cancelled_call_does_not_retain_response(order, timeout):
+    """Cancelled calls raise CancelledError and drop their response, whenever
+    it arrives."""
     conn = _RecordingConnection()
     session = _create_session(conn)
     try:
-        call = asyncio.create_task(session.page.get_package_info())
+        call = asyncio.create_task(
+            session.invoke_method(
+                session.page._i, "get_package_info", {}, timeout=timeout
+            )
+        )
         await asyncio.sleep(0)
         request = conn.messages[-1].body
 
         result = _Result(app_name="My App", version="1.0.0")
         result_ref = weakref.ref(result)
-        if response_before_cancel:
+
+        def respond(response):
             session.handle_invoke_method_results(
-                request.control_id, request.call_id, result, None
+                request.control_id, request.call_id, response, None
             )
 
-        call.cancel()
+        if order == "response_then_cancel":
+            respond(result)
+            call.cancel()
+        elif order == "cancel_then_response":
+            call.cancel()
+            respond(result)
+        else:
+            call.cancel()
+
         with pytest.raises(asyncio.CancelledError):
             await call
 
-        if not response_before_cancel:
-            session.handle_invoke_method_results(
-                request.control_id, request.call_id, result, None
-            )
+        if order == "response_after_cancelled":
+            respond(result)
         # The finished task and its CancelledError still reference the call's
         # frames until released, like any local; the session must not.
-        del call, result
+        del call, result, respond
         await asyncio.sleep(0)
         gc.collect()
 
