@@ -509,8 +509,18 @@ class Session:
         call_id = random_string(10)
 
         # register callback
-        fut = asyncio.get_running_loop().create_future()
+        loop = asyncio.get_running_loop()
+        fut = loop.create_future()
         self.__method_calls[call_id] = fut
+        timeout_handle: Optional[asyncio.TimerHandle] = None
+
+        def expire():
+            if not fut.done():
+                fut.set_exception(
+                    TimeoutError(
+                        f"Timeout waiting for invokeMethod {method_name}({args}) call"
+                    )
+                )
 
         try:
             # call method
@@ -526,16 +536,18 @@ class Session:
                 )
             )
 
-            # Not `asyncio.wait_for()`: on Python < 3.12 it returns the result
-            # instead of raising CancelledError if the response arrives in the
-            # same event-loop turn as the cancellation.
-            done, _ = await asyncio.wait((fut,), timeout=timeout)
-            if not done:
-                raise TimeoutError(
-                    f"Timeout waiting for invokeMethod {method_name}({args}) call"
-                )
-            return fut.result()
+            # The response, the timeout and session close all complete the
+            # same future, so whichever comes first wins. The future is
+            # awaited directly (not via `asyncio.wait_for()` or
+            # `asyncio.wait()`) so that cancelling the calling task always
+            # raises CancelledError, even if the future completes in the same
+            # event-loop turn.
+            if timeout is not None:
+                timeout_handle = loop.call_later(timeout, expire)
+            return await fut
         finally:
+            if timeout_handle is not None:
+                timeout_handle.cancel()
             self.__method_calls.pop(call_id, None)
             if not fut.cancel() and not fut.cancelled():
                 # Done but not consumed (cancelled or failed caller): mark an

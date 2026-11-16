@@ -1,5 +1,6 @@
 import asyncio
 import gc
+import time
 import weakref
 
 import pytest
@@ -183,3 +184,36 @@ async def test_response_after_close_does_not_override_closure_error():
     with pytest.raises(RuntimeError, match="Session closed"):
         await call
     await asyncio.sleep(0)
+
+
+@pytest.mark.asyncio
+async def test_reply_after_timeout_fires_does_not_override_timeout():
+    """A reply arriving after the timeout fired, but before the call resumes,
+    doesn't turn the timeout into success."""
+    conn = _RecordingConnection()
+    session = _create_session(conn)
+    loop = asyncio.get_running_loop()
+    try:
+        call = asyncio.create_task(
+            session.invoke_method(session.page._i, "get_package_info", {}, timeout=0.01)
+        )
+        await asyncio.sleep(0)
+        request = conn.messages[-1].body
+
+        # Due right after the call's timeout, so both run in the same
+        # event-loop turn once the loop is unblocked - timeout first.
+        loop.call_later(
+            0.01,
+            session.handle_invoke_method_results,
+            request.control_id,
+            request.call_id,
+            {"app_name": "My App"},
+            None,
+        )
+        time.sleep(0.05)
+
+        with pytest.raises(TimeoutError, match="Timeout waiting for invokeMethod"):
+            await call
+    finally:
+        session.close()
+        await asyncio.sleep(0)
