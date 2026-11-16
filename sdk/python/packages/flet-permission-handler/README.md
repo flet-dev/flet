@@ -8,7 +8,7 @@
 
 A [Flet](https://flet.dev) extension that simplifies working with device permissions.
 
-> **[Try flet-permission-handler in Flet Studio](https://studio.flet.dev/gallery/utility/permissionhandler/example/extensions/permission_handler/permission_handler)**
+> **[Try flet-permission-handler in Flet Studio](https://studio.flet.dev/gallery/utility/permissionhandler/example/extensions/permission_handler/permission_handler?utm_source=pypi&utm_medium=readme&utm_campaign=flet-permission-handler)**
 >
 > Prototype your Flet app interface in the browser, then configure and test device permissions in your local project. Write your own Python code or get help from the AI agent.
 
