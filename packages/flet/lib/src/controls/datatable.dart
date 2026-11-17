@@ -691,6 +691,29 @@ class _LazyDataTableState extends State<_LazyDataTable> {
           .floor()
           .clamp(0, _chunkCount - 1);
 
+  /// Whether a widget in the chunk [i] still has to rebuild. A cell that
+  /// changes marks its widget to rebuild; every widget built is laid out in
+  /// the same frame, so without one, the chunk's last measurement is current.
+  bool _hasPendingBuild(int i) {
+    var table = _tableKey.currentContext as Element?;
+    if (table == null) return false;
+    var pending = false;
+    void visit(Element element) {
+      if (pending) return;
+      if (element.dirty) {
+        pending = true;
+        return;
+      }
+      element.visitChildren(visit);
+    }
+
+    table.visitChildren((slot) {
+      var widget = slot.widget;
+      if (widget is _TableSlot && widget.slot == i) visit(slot);
+    });
+    return pending;
+  }
+
   _ColumnWidths _newWidths() =>
       _ColumnWidths(widget.columnCount, widget.flexColumn)
         ..addListener(_onWidthsChanged);
@@ -799,7 +822,14 @@ class _LazyDataTableState extends State<_LazyDataTable> {
     for (var i = _built.$1; i <= _built.$2; i++) {
       if ((i < _first || i > _last) && i < _chunkCount) {
         widget.releaseRows(_chunkStart(i), _chunkEnd(i));
-        _releasedKeys[i] = widget.chunkKey(_chunkStart(i), _chunkEnd(i));
+        if (_hasPendingBuild(i)) {
+          // A cell changed since the chunk was last laid out, and its
+          // widget goes before it is: what the chunk measured is out of date.
+          _releasedKeys.remove(i);
+          _widths.forget((slot) => slot == i);
+        } else {
+          _releasedKeys[i] = widget.chunkKey(_chunkStart(i), _chunkEnd(i));
+        }
       }
     }
     for (var i = _first; i <= _last; i++) {
