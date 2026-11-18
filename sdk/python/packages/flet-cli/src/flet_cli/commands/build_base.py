@@ -18,7 +18,7 @@ import yaml
 from flet_platform_assets import (
     DEFAULT_ICON,
     DEFAULT_SPECS,
-    AssetSpec,
+    WINDOWS_ICO_SIZES,
     IconOptions,
     SourceError,
     SplashOptions,
@@ -1995,10 +1995,13 @@ class BaseBuildCommand(BaseFlutterCommand):
                 console.log(f"App icons are up to date {self.emojis['checkmark']}")
                 return
 
-            if platform == "windows" and self._copy_windows_ico(source_path):
-                console.log(f"Copied app icon as supplied {self.emojis['checkmark']}")
-                hash.commit()
-                return
+            if platform == "windows" and source_path.suffix.lower() == ".ico":
+                if self._copy_windows_ico(source_path):
+                    hash.commit()
+                    return
+                # Resampling the file's largest image would throw away the
+                # images drawn for each size, which is what a `.ico` is for.
+                source_path, derived = DEFAULT_ICON, True
 
             try:
                 source, pre_rendered = load_source(source_path)
@@ -2108,32 +2111,35 @@ class BaseBuildCommand(BaseFlutterCommand):
         """
         Copy a supplied `.ico` over the runner's `app_icon.ico` unchanged.
 
-        Warns when its largest image is smaller than the largest size the
-        project declares. Nothing is copied when the template has no
-        `app_icon.ico`.
+        Warns when its largest image is smaller than the largest Windows icon
+        size, and when it cannot be read in full. Nothing is copied when the
+        template has no `app_icon.ico`.
 
         Args:
-            source_path: The resolved icon source.
+            source_path: The resolved icon source, a `.ico`.
 
         Returns:
-            `True` when `source_path` is a readable `.ico`, `False` otherwise,
-                in which case the caller renders it like any other image.
+            `True` when `source_path` is a readable `.ico`, `False` after
+                warning that it is not, in which case the caller uses the
+                default icon.
         """
 
         assert self.flutter_dir
 
-        if source_path.suffix.lower() != ".ico":
-            return False
         sizes = ico_sizes(source_path)
         if not sizes:
+            self.warn(
+                f"{source_path.name} is not a Windows icon that can be read in "
+                "full, or holds no square image. Using the default Flet icon.",
+                title="App icon",
+                file=annotation_path(source_path),
+            )
             return False
 
-        # Read, and so record, the placeholder's sizes before it is overwritten.
-        spec = self._icon_spec("windows") or DEFAULT_SPECS["windows"]
-        declared = max(spec.ico_sizes, default=0)
+        declared = max(WINDOWS_ICO_SIZES)
         if max(sizes) < declared:
             self.warn(
-                f"icon source's largest image is {max(sizes)}px, but this project "
+                f"icon source's largest image is {max(sizes)}px, but Windows "
                 f"uses icons up to {declared}px. Windows enlarges it for those "
                 f"sizes and they will look soft. Add a {declared}x{declared} image "
                 "to the .ico.",
@@ -2143,6 +2149,13 @@ class BaseBuildCommand(BaseFlutterCommand):
         target = self.flutter_dir / "windows" / "runner" / "resources" / "app_icon.ico"
         if target.is_file():
             shutil.copyfile(source_path, target)
+            console.log(f"Copied app icon as supplied {self.emojis['checkmark']}")
+        elif self.verbose > 0:
+            console.log(
+                "The template has no windows/runner/resources/app_icon.ico; "
+                "the app icon was not copied.",
+                style=verbose1_style,
+            )
         return True
 
     def _icon_spec(self, platform: str):
@@ -2174,45 +2187,11 @@ class BaseBuildCommand(BaseFlutterCommand):
         if platform == "linux":
             # Named after the desktop entry id, so the list is per-app.
             return linux_targets(self.template_data["bundle_id"])
-        if platform == "windows":
-            sizes = self._template_ico_sizes()
-            if sizes:
-                return AssetSpec(ico_sizes=sizes)
+        # Windows always gets `WINDOWS_ICO_SIZES`. The sizes are not read from
+        # the rendered `app_icon.ico`: it holds a supplied `.ico` as copied, so
+        # its sizes are the app's, not the template's. An app that wants other
+        # sizes supplies a `.ico` with them.
         return None
-
-    def _template_ico_sizes(self) -> tuple[int, ...]:
-        """
-        The entry sizes of the template's `app_icon.ico`.
-
-        A supplied `.ico` is copied over the placeholder, so its sizes are
-        recorded on first read, per `template_digest`.
-
-        Returns:
-            The square entry sizes, or an empty tuple when neither the record
-                nor the file can be read.
-        """
-
-        assert self.flutter_dir
-        assert self.build_dir
-
-        record_path = self.build_dir / ".hash" / "windows-ico-sizes"
-        try:
-            record = json.loads(record_path.read_text(encoding="utf-8"))
-            if record["template_digest"] == self.template_digest:
-                return tuple(record["sizes"])
-        except (OSError, ValueError, KeyError, TypeError):
-            pass
-
-        sizes = ico_sizes(
-            self.flutter_dir / "windows" / "runner" / "resources" / "app_icon.ico"
-        )
-        if sizes:
-            record_path.parent.mkdir(parents=True, exist_ok=True)
-            record_path.write_text(
-                json.dumps({"template_digest": self.template_digest, "sizes": sizes}),
-                encoding="utf-8",
-            )
-        return sizes
 
     def _flutter_packages_missing(self) -> bool:
         """
@@ -4370,7 +4349,8 @@ class BaseBuildCommand(BaseFlutterCommand):
         ranked so existing raster images (`.png` first) win over SVG, making
         the choice deterministic regardless of filesystem ordering. SVG is
         rendered by the source loader. `.icns` is macOS-only and `.ico` is
-        Windows-only.
+        Windows-only; on Windows a `.ico` wins over every other format, since
+        it is copied into the app with the images drawn for each size.
 
         Args:
             src_path: Source assets directory.
@@ -4383,9 +4363,9 @@ class BaseBuildCommand(BaseFlutterCommand):
 
         # Drop candidates that cannot serve this target: .icns and .ico are
         # container formats for the platform that defines them. Pillow reads
-        # both, and `load_source` takes their largest frame (a Windows build
-        # copies a `.ico` whole), but using a macOS icon set as an
-        # Android launcher icon is not what the file name asked for.
+        # both, and `load_source` takes the largest frame of a `.icns` (a
+        # Windows build copies a `.ico` whole), but using a macOS icon set as
+        # an Android launcher icon is not what the file name asked for.
         def _incompatible(p: str) -> bool:
             ext = Path(p).suffix.lower()
             return (ext == ".icns" and self.target_platform != "macos") or (
@@ -4409,6 +4389,8 @@ class BaseBuildCommand(BaseFlutterCommand):
             ".icns": 6,
             ".svg": 7,
         }
+        if self.target_platform == "windows":
+            ext_priority[".ico"] = -1
         candidates = sorted(glob.glob(str(src_path.joinpath(f"{image_name}.*"))))
         images = sorted(
             (p for p in candidates if not _incompatible(p)),

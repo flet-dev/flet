@@ -55,6 +55,19 @@ class TestIcoSizes:
         path.write_bytes(header + b"".join(images))
         assert ico_sizes(path) == ()
 
+    def test_damaged_png_image_is_empty(self, tmp_path):
+        """A PNG image with an intact header but damaged pixels gives nothing."""
+        path = tmp_path / "i.ico"
+        images = [Image.effect_noise((s, s), 60).convert("RGBA") for s in (48, 256)]
+        images[1].save(path, sizes=[(48, 48), (256, 256)], append_images=images[:1])
+        with Image.open(path) as ico:
+            entry = next(e for e in ico.ico.entry if e.width == 48)
+        data = bytearray(path.read_bytes())
+        start = entry.offset + entry.size // 2
+        data[start : start + 100] = bytes(100)
+        path.write_bytes(bytes(data))
+        assert ico_sizes(path) == ()
+
     def test_not_an_icon_is_empty(self, tmp_path):
         """Garbage bytes in a `.ico` and a PNG give nothing."""
         garbage = tmp_path / "i.ico"

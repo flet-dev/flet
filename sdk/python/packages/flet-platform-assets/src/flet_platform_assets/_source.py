@@ -113,7 +113,14 @@ def ico_sizes(path: str | Path) -> tuple[int, ...]:
             if not isinstance(img, IcoImagePlugin.IcoImageFile):
                 return ()
             # By index, not by size: a file can hold several images of one size.
-            sizes = {img.ico.frame(i).size for i in range(len(img.ico.entry))}
+            # `frame()` decodes only 32bpp BMP images itself; PNG and other BMP
+            # images are read lazily, so load each one before the next frame
+            # moves the shared file position.
+            sizes = set()
+            for i in range(len(img.ico.entry)):
+                frame = img.ico.frame(i)
+                frame.load()
+                sizes.add(frame.size)
     except Exception:  # noqa: BLE001 - a damaged file can fail anywhere in Pillow
         return ()
     return tuple(sorted(width for width, height in sizes if width == height))

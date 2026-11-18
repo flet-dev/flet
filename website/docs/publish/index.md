@@ -1007,9 +1007,10 @@ percentages match Flet's automatic framing for transparent artwork:
 
 On Windows, a `.png` is scaled to each icon size the app needs. A `.ico` is used
 as it is: every image it contains goes into the app unchanged, so each size can
-have its own artwork, such as a simplified design for the smallest ones. A
-damaged `.ico` is replaced by the default Flet icon, and one whose largest image
-is smaller than 256 × 256 is used as it is; both print a warning.
+have its own artwork, such as a simplified design for the smallest ones. When
+both exist, the `.ico` is used for Windows. A `.ico` that can't be read in full is
+replaced by the default Flet icon, and one whose largest image is smaller than
+256 × 256 is used as it is; both print a warning.
 
 For the circular areas, keep the entire logo inside the circle, including its
 corners. A logo that fits a square of the same width can still extend outside it.
