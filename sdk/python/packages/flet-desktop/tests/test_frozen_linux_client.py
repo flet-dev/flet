@@ -36,6 +36,7 @@ def frozen_linux(tmp_path, monkeypatch):
     monkeypatch.setattr(Path, "home", lambda: tmp_path / "home")
     monkeypatch.setattr(flet_desktop, "get_package_bin_dir", lambda: str(tmp_path))
     monkeypatch.chdir(tmp_path)
+    getattr(flet_desktop, "__warn_once").cache_clear()
 
     def download(artifact):
         raise _Downloaded(artifact)
@@ -140,6 +141,7 @@ class TestBundledClientFromAnotherDistro:
         ):
             flet_desktop.ensure_client_cached()
         assert "built for ubuntu20.04" in caplog.text
+        assert "only runs on the distro it was built for" in caplog.text
 
     def test_flavor_from_environment_skips_bundled_light_client(
         self, frozen_linux, monkeypatch
@@ -174,3 +176,55 @@ class TestBundledClientFromAnotherDistro:
         assert flet_desktop.get_artifact_filename() == (
             "flet-linux-debian12-light-amd64.tar.gz"
         )
+
+    def test_light_client_from_newer_distro_names_the_glibc(self, frozen_linux, caplog):
+        """The warning names the glibc the bundled light client needs."""
+        _bundle(frozen_linux, "flet-linux-ubuntu24.04-light-amd64.tar.gz")
+
+        with (
+            caplog.at_level(logging.WARNING, logger=flet_desktop.__name__),
+            pytest.raises(_Downloaded),
+        ):
+            flet_desktop.ensure_client_cached()
+        assert "needs glibc 2.39 or newer, but this system has glibc 2.36" in (
+            caplog.text
+        )
+
+    def test_distro_override_download_names_the_override(
+        self, frozen_linux, monkeypatch, caplog
+    ):
+        """The warning blames `FLET_LINUX_DISTRO`, not the system."""
+        _bundle(frozen_linux, "flet-linux-debian12-light-amd64.tar.gz")
+        monkeypatch.setenv("FLET_LINUX_DISTRO", "ubuntu20.04")
+
+        with (
+            caplog.at_level(logging.WARNING, logger=flet_desktop.__name__),
+            pytest.raises(_Downloaded, match="flet-linux-ubuntu20.04-light-amd64"),
+        ):
+            flet_desktop.ensure_client_cached()
+        assert "FLET_LINUX_DISTRO selects ubuntu20.04" in caplog.text
+
+
+class TestUndetectedGlibc:
+    """Without a known system glibc, the bundled client is used, not downloaded."""
+
+    @pytest.mark.parametrize("suffix", ["-light", ""])
+    def test_bundled_client_is_used(self, frozen_linux, monkeypatch, caplog, suffix):
+        """The bundled client of either flavor works offline."""
+        monkeypatch.setattr(flet_desktop, "__get_system_glibc_version", lambda: (0, 0))
+        artifact = f"flet-linux-debian12{suffix}-amd64.tar.gz"
+        _bundle(frozen_linux, artifact)
+
+        with caplog.at_level(logging.WARNING, logger=flet_desktop.__name__):
+            assert flet_desktop.get_artifact_filename() == artifact
+            cache = flet_desktop.ensure_client_cached()
+        assert (cache / "flet" / "flet").read_bytes() == b"bundled client"
+        assert caplog.text.count("using the bundled debian12 client") == 1
+
+
+def test_distro_id_with_a_dash_is_recognized(frozen_linux):
+    """A distro id holding a `-` still names a bundled light client."""
+    _bundle(frozen_linux, "flet-linux-my-distro-light-amd64.tar.gz")
+
+    archives = getattr(flet_desktop, "__get_bundled_linux_archives")("amd64")
+    assert archives == [("my-distro", "light")]
