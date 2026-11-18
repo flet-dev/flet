@@ -20,6 +20,7 @@
 * flet-charts: Fix `BarChart` failing to render when a `BarChartRodStackItem` has no `from_y` or `color`; an item without a color now uses its rod's color ([#7064](https://github.com/flet-dev/flet/pull/7064)) by @ndonkoHenri.
 * flet-charts: Fix `LineChart` jumping instead of animating when the points of a data series change ([flet-charts#8](https://github.com/flet-dev/flet-charts/issues/8), [#7064](https://github.com/flet-dev/flet/pull/7064)) by @ndonkoHenri.
 * Fix cancelled client method calls keeping their responses in memory for the rest of the session, and client method calls made after the session closed waiting forever instead of failing with "Session closed" ([#7065](https://github.com/flet-dev/flet/pull/7065)) by @remote-controlled-man.
+* Fix `flet pack` failing on Windows with `ValueError: binary mode doesn't take an encoding argument`, and leaving a client that signing tools reject, since the desktop client is signed (1.1.0) ([#7067](https://github.com/flet-dev/flet/pull/7067)) by @ndonkoHenri.
 
 ## 1.1.2
 
