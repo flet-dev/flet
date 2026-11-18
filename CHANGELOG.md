@@ -23,6 +23,7 @@
 * Fix `flet pack` failing on Windows with `ValueError: binary mode doesn't take an encoding argument`, and leaving a client that signing tools reject, since the desktop client is signed (1.1.0) ([#7067](https://github.com/flet-dev/flet/pull/7067)) by @ndonkoHenri.
 * Fix apps packaged with plain `pyinstaller` downloading the Flet desktop client on their first start, or after a rebuild, and failing to build on macOS, and apps made with `flet pack` from a `FLET_VIEW_PATH` that holds the client itself downloading it too ([#7053](https://github.com/flet-dev/flet/issues/7053), [#7068](https://github.com/flet-dev/flet/pull/7068)) by @ndonkoHenri.
 * Fix Linux apps made with `flet pack` or `pyinstaller` that run on a newer distro than they were built on downloading the light client instead of using the bundled one, and switching from the full to the light client ([#7068](https://github.com/flet-dev/flet/pull/7068)) by @ndonkoHenri.
+* Fix `flet build windows` replacing the images in a supplied `.ico` app icon with ones resampled from its largest image; the file is now copied into the app unchanged, and is used over a `.png` of the same name ([#6007](https://github.com/flet-dev/flet/issues/6007), [#7074](https://github.com/flet-dev/flet/pull/7074)) by @arthur-tacca.
 
 ## 1.1.2
 
