@@ -45,10 +45,12 @@ class Qux(ft.Observable):
 
 @dataclass
 class Store(ft.Observable):
-    """Observable dataclass with a list field and a dict field."""
+    """Observable dataclass with list, dict and set fields."""
 
     items: list = field(default_factory=list)
     mapping: dict = field(default_factory=dict)
+    tags: set = field(default_factory=set)
+    count: int = 0
 
 
 def _watch(obj):
@@ -242,19 +244,138 @@ class TestObservableList:
         store.items.extend([2])
         assert store.items == [99]
 
-    def test_same_child_assignment_is_noop(self):
-        """Writing an item's own observable child back to its index doesn't notify."""
+    def test_item_write_back_notifies(self):
+        """Writing an item back to its index notifies and keeps the same object."""
         store = Store(items=[[1]])
-        store.items[0] = [1]
+        child = store.items[0]
         changes = _watch(store)
 
         store.items[0] = store.items[0]
         store.items[-1] = store.items[-1]
+        assert store.items[0] is child
+        assert changes == ["items", "items"]
+
+    def test_slice_assignment_wraps_items(self):
+        """Lists set through a slice notify when they change later."""
+        store = Store(items=[0, 1])
+        store.items[0:1] = [[1]]
+        changes = _watch(store)
+
+        store.items[0].append(2)
+        assert store.items == [[1, 2], 1]
+        assert changes == ["items"]
+
+    def test_initial_nested_values_notify(self):
+        """Lists nested in a field's initial value notify when they change."""
+        store = Store(items=[[1], {"a": [2]}])
+        changes = _watch(store)
+
+        store.items[0].append(2)
+        store.items[1]["a"].append(3)
+        assert store.items == [[1, 2], {"a": [2, 3]}]
+        assert changes == ["items", "items"]
+
+    def test_self_containing_value_is_wrapped_once(self):
+        """A list inside itself, or twice in a value, becomes one observable list."""
+        shared = [1]
+        cyclic = [shared, shared]
+        cyclic.append(cyclic)
+        store = Store(items=cyclic)
+        changes = _watch(store)
+
+        assert store.items[2] is store.items
+        assert store.items[0] is store.items[1]
+        store.items[0].append(2)
+        assert store.items[1] == [1, 2]
+        assert changes == ["items"]
+
+    def test_deeply_nested_values_notify(self):
+        """Lists nested more than one level deep in added items notify."""
+        store = Store()
+        store.items.extend([[[1]]])
+        store.items.append([[2]])
+        changes = _watch(store)
+
+        store.items[0][0].append(3)
+        store.items[1][0].append(4)
+        assert store.items == [[[1, 3]], [[2, 4]]]
+        assert changes == ["items", "items"]
+
+    def test_field_from_another_observable_notifies_own_field(self):
+        """A list taken from another observable notifies the field it's set to."""
+        source = Store(items=[1])
+        target = Store()
+        source_changes = _watch(source)
+        target_changes = _watch(target)
+
+        target.items = source.items
+        target.items += [2]
+        target.mapping["x"] = source.items
+        target.mapping["x"].append(3)
+        assert target.items == [1, 2]
+        assert target.mapping == {"x": [1, 3]}
+        assert source.items == [1]
+        assert target_changes == ["items", "items", "mapping", "mapping"]
+        assert source_changes == []
+
+    def test_noop_inplace_operators_dont_notify(self):
+        """`+= []` and `*= 1` leave the list unchanged and don't notify."""
+        store = Store(items=[1])
+        changes = _watch(store)
+
+        store.items += []
+        store.items *= 1
+        store.items.extend(())
+        assert store.items == [1]
         assert changes == []
 
-        store.items[0] = [2]
-        store.items[0:1] = store.items[0:1]
-        assert changes == ["items", "items"]
+    def test_inplace_operators_defer_to_reflected_operand(self):
+        """`+=` and `*=` use the operand's `__radd__`/`__rmul__`, as `list` does."""
+
+        class Operand:
+            def __radd__(self, other):
+                return ("radd", list(other))
+
+            def __rmul__(self, other):
+                return ("rmul", list(other))
+
+        store = Store(items=[1])
+        store.items += Operand()
+        assert store.items == ("radd", [1])
+
+        store.items = [2]
+        store.items *= Operand()
+        assert store.items == ("rmul", [2])
+
+
+class TestSameValueAssignment:
+    """Assigning a field the object it already holds."""
+
+    def test_inplace_operator_on_mutable_value_notifies(self):
+        """`|=` on a set field changes it in place and notifies."""
+        store = Store()
+        changes = _watch(store)
+
+        store.tags |= {"a"}
+        assert store.tags == {"a"}
+        assert changes == ["tags"]
+
+    def test_same_immutable_value_doesnt_notify(self):
+        """Assigning the same number again doesn't notify."""
+        store = Store(count=5)
+        changes = _watch(store)
+
+        store.count = store.count
+        store.count += 0
+        assert changes == []
+
+    def test_same_observable_collection_doesnt_notify(self):
+        """Assigning a list field to itself doesn't notify."""
+        store = Store(items=[1])
+        changes = _watch(store)
+
+        store.items = store.items
+        assert changes == []
 
 
 class TestObservableDict:
@@ -391,17 +512,46 @@ class TestObservableDict:
         assert store.mapping == {}
         assert changes == []
 
-    def test_same_child_assignment_is_noop(self):
-        """Writing a key's own observable child back doesn't notify."""
+    def test_item_write_back_notifies(self):
+        """Writing a key's value back notifies and keeps the same object."""
         store = Store()
         store.mapping["items"] = []
+        child = store.mapping["items"]
         changes = _watch(store)
 
         store.mapping["items"] = store.mapping["items"]
+        assert store.mapping["items"] is child
+        assert changes == ["mapping"]
+
+    def test_merged_collection_from_another_observable_notifies_own_field(self):
+        """A list merged from another observable notifies the dict's field."""
+        source = Store(items=[1])
+        target = Store()
+        source_changes = _watch(source)
+
+        target.mapping.update({"x": source.items})
+        target_changes = _watch(target)
+        target.mapping["x"].append(9)
+        assert target_changes == ["mapping"]
+        assert source_changes == []
+        assert source.items == [1]
+
+    def test_noop_merge_doesnt_notify(self):
+        """`|= {}` and `update()` without entries don't notify."""
+        store = Store(mapping={"a": 1})
+        changes = _watch(store)
+
+        store.mapping |= {}
+        store.mapping.update()
+        store.mapping.update([])
         assert changes == []
 
-        store.mapping["items"] = []
-        assert changes == ["mapping"]
+    def test_update_accepts_self_keyword(self):
+        """`update(self=...)` sets the key `self`, as `dict.update` does."""
+        store = Store()
+
+        store.mapping.update(self=1)
+        assert store.mapping == {"self": 1}
 
 
 def _iadd_list_in_dict(store):
@@ -443,8 +593,8 @@ class TestNestedInplaceOperators:
         ],
         ids=["dict+=", "dict*=", "dict|=", "list+=", "list*=", "list|="],
     )
-    def test_notifies_once(self, op, field, child, expected):
-        """The nested collection notifies once; writing it back adds nothing."""
+    def test_notifies_and_keeps_child(self, op, field, child, expected):
+        """The nested collection changes in place and notifies its field."""
         store = Store()
         store.mapping["list"] = [0]
         store.mapping["dict"] = {}
@@ -455,4 +605,5 @@ class TestNestedInplaceOperators:
         op(store)
         assert child(store) is before
         assert child(store) == expected
-        assert changes == [field]
+        # One notification from the child, one from Python writing it back.
+        assert changes == [field, field]
