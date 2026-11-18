@@ -8,7 +8,7 @@
 
 A [Flet](https://flet.dev) extension package for picking colors.
 
-> **[Try flet-color-pickers in Flet Studio](https://studio.flet.dev/gallery/utility/color-pickers/example/extensions/color_pickers/color_picker)**
+> **[Try flet-color-pickers in Flet Studio](https://studio.flet.dev/gallery/utility/color-pickers/example/extensions/color_pickers/color_picker?utm_source=pypi&utm_medium=readme&utm_campaign=flet-color-pickers)**
 >
 > Create, run, and share Python apps in your browser. Start from an example, write your own code, or get help from the AI agent. No installation required.
 

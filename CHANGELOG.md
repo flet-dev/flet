@@ -1,8 +1,29 @@
 ## 1.1.3
 
+### Documentation
+
+* flet-notifications: Document how to update a notification after an inline reply on Android, and fix the "Action buttons and replies" example's notification staying stuck with a spinner after a reply ([#7058](https://github.com/flet-dev/flet/discussions/7058), [#7060](https://github.com/flet-dev/flet/pull/7060)) by @ItsRenjiii.
+
+### Improvements
+
+* Start web apps that use `flet-rive` 1 MB lighter when they don't show a `Rive` control: the Rive engine (`rive_native.wasm`) now loads when the first `Rive` control loads its file, instead of at startup ([#7057](https://github.com/flet-dev/flet/pull/7057)) by @FeodorFitsner.
+
 ### Bug fixes
 
-* Fix `flet build windows` replacing the images in a supplied `.ico` app icon with ones resampled from its largest image; the file is now copied into the app unchanged ([#7074](https://github.com/flet-dev/flet/pull/7074)) by @arthur-tacca.
+* Fix SVG images drawing blank when their URL has a query string or fragment, such as a cache-busting `icon.svg?v=2`: `Image` now recognizes an SVG by the URL's path, in any letter case ([#7057](https://github.com/flet-dev/flet/pull/7057)) by @FeodorFitsner.
+* Fix `Text` with `spans` ignoring `overflow`: a rich text cut off by `max_lines` now ends in an ellipsis with `overflow=TextOverflow.ELLIPSIS`, as plain text does, instead of being clipped at a word ([#7057](https://github.com/flet-dev/flet/pull/7057)) by @FeodorFitsner.
+* Fix mypy inferring `type[Never]` for classes decorated with `@control("Name")`: the overload that takes arguments now accepts only a string `dart_widget_name` ([#7085](https://github.com/flet-dev/flet/issues/7085), [#7087](https://github.com/flet-dev/flet/pull/7087)) by @joaoaracheski.
+* Fix type checkers ignoring `dataclasses.field()` arguments such as `init=False` on `@control` and `@value` classes, by declaring `dataclasses.field` as a field specifier ([#6377](https://github.com/flet-dev/flet/issues/6377), [#7084](https://github.com/flet-dev/flet/pull/7084)) by @joaoaracheski.
+* Fix `page.window.resizable = False` locking the window at 1280×720 instead of the set `width` and `height` on Linux ([#1375](https://github.com/flet-dev/flet/issues/1375), [#7062](https://github.com/flet-dev/flet/pull/7062)) by @ndonkoHenri.
+* Fix `page.window.min_width`, `min_height`, `max_width` and `max_height` not limiting the window size on Linux ([#1735](https://github.com/flet-dev/flet/issues/1735), [#7063](https://github.com/flet-dev/flet/pull/7063)) by @ndonkoHenri.
+* Fix `page.window` size limits that are cleared by setting them to `None`, or a `max_width` or `max_height` set without the other, being ignored on Windows and Linux ([#7063](https://github.com/flet-dev/flet/pull/7063)) by @ndonkoHenri.
+* flet-charts: Fix `BarChart` failing to render when a `BarChartRodStackItem` has no `from_y` or `color`; an item without a color now uses its rod's color ([#7064](https://github.com/flet-dev/flet/pull/7064)) by @ndonkoHenri.
+* flet-charts: Fix `LineChart` jumping instead of animating when the points of a data series change ([flet-charts#8](https://github.com/flet-dev/flet-charts/issues/8), [#7064](https://github.com/flet-dev/flet/pull/7064)) by @ndonkoHenri.
+* Fix cancelled client method calls keeping their responses in memory for the rest of the session, and client method calls made after the session closed waiting forever instead of failing with "Session closed" ([#7065](https://github.com/flet-dev/flet/pull/7065)) by @remote-controlled-man.
+* Fix `flet pack` failing on Windows with `ValueError: binary mode doesn't take an encoding argument`, and leaving a client that signing tools reject, since the desktop client is signed (1.1.0) ([#7067](https://github.com/flet-dev/flet/pull/7067)) by @ndonkoHenri.
+* Fix apps packaged with plain `pyinstaller` downloading the Flet desktop client on their first start, or after a rebuild, and failing to build on macOS, and apps made with `flet pack` from a `FLET_VIEW_PATH` that holds the client itself downloading it too ([#7053](https://github.com/flet-dev/flet/issues/7053), [#7068](https://github.com/flet-dev/flet/pull/7068)) by @ndonkoHenri.
+* Fix Linux apps made with `flet pack` or `pyinstaller` that run on a newer distro than they were built on downloading the light client instead of using the bundled one, and switching from the full to the light client ([#7068](https://github.com/flet-dev/flet/pull/7068)) by @ndonkoHenri.
+* Fix `flet build windows` replacing the images in a supplied `.ico` app icon with ones resampled from its largest image; the file is now copied into the app unchanged, and is used over a `.png` of the same name ([#6007](https://github.com/flet-dev/flet/issues/6007), [#7074](https://github.com/flet-dev/flet/pull/7074)) by @arthur-tacca.
 
 ## 1.1.2
 

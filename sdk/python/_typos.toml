@@ -42,3 +42,5 @@ ITMS = "ITMS"
 # distinguish it from "RGBA" (`Image.convert("RGBa")`). typos splits that on
 # the case boundary and reads the trailing "Ba" as a misspelling of "By".
 Ba = "Ba"
+# The variable a PyInstaller hook module must define for its data files.
+datas = "datas"

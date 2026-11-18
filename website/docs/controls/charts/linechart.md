@@ -1,7 +1,7 @@
 ---
 class_name: "flet_charts.line_chart.LineChart"
 examples: "extensions/charts/line_chart"
-example_images: "test-images-charts/examples/golden/macos/line_chart"
+example_images: "test-images/examples/extensions/charts/golden/macos/line_chart"
 diagram: "/docs/assets/controls/charts/line-chart-diagram.svg"
 title: "LineChart"
 ---
