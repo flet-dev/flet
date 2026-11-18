@@ -3,9 +3,9 @@ Extract the desktop client bundled by `flet pack` into a directory.
 
 Usage: extract_packed_client.py <dist dir> <app name> <output dir>
 
-Reads `flet_desktop/app/flet-windows.zip` from a one-file executable
-(`<dist>/<name>.exe`) or a one-folder bundle (`<dist>/<name>/_internal`) and
-unzips it into the output directory.
+Reads `flet_desktop/app/flet-windows.zip` from a one-folder bundle
+(`<dist>/<name>/`, in any contents directory) or a one-file executable
+(`<dist>/<name>.exe`) and unzips it into the output directory.
 """
 
 import io
@@ -17,9 +17,18 @@ ARCHIVE = "flet_desktop/app/flet-windows.zip"
 
 
 def read_archive(dist: Path, name: str) -> bytes:
-    onedir = dist / name / "_internal" / ARCHIVE
-    if onedir.exists():
-        return onedir.read_bytes()
+    onedir = dist / name
+    if onedir.is_dir():
+        # PyInstaller's contents directory is `_internal` unless
+        # `--contents-directory` changes it, so search the whole bundle.
+        found = [
+            p
+            for p in onedir.rglob("flet-windows.zip")
+            if p.as_posix().endswith(ARCHIVE)
+        ]
+        if not found:
+            raise SystemExit(f"{ARCHIVE} not found in {onedir}")
+        return found[0].read_bytes()
 
     from PyInstaller.archive.readers import CArchiveReader
 
