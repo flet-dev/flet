@@ -6,7 +6,7 @@
 
 A [Flet](https://flet.dev) extension for editing and highlighting source code.
 
-> **[Try flet-code-editor in Flet Studio](https://studio.flet.dev/gallery/input/codeeditor/example/extensions/code_editor/code_editor)**
+> **[Try flet-code-editor in Flet Studio](https://studio.flet.dev/gallery/input/codeeditor/example/extensions/code_editor/code_editor?utm_source=pypi&utm_medium=readme&utm_campaign=flet-code-editor)**
 >
 > Create, run, and share Python apps in your browser. Start from an example, write your own code, or get help from the AI agent. No installation required.
 

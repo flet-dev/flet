@@ -276,15 +276,13 @@ class WindowService extends FletService with WindowListener {
         _height = height;
       }
 
-      if ((minWidth != null || minHeight != null) &&
-          (minWidth != _minWidth || minHeight != _minHeight)) {
+      if (minWidth != _minWidth || minHeight != _minHeight) {
         await setWindowMinSize(minWidth, minHeight);
         _minWidth = minWidth;
         _minHeight = minHeight;
       }
 
-      if ((maxWidth != null || maxHeight != null) &&
-          (maxWidth != _maxWidth || maxHeight != _maxHeight)) {
+      if (maxWidth != _maxWidth || maxHeight != _maxHeight) {
         await setWindowMaxSize(maxWidth, maxHeight);
         _maxWidth = maxWidth;
         _maxHeight = maxHeight;

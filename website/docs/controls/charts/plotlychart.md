@@ -1,7 +1,7 @@
 ---
 class_name: "flet_charts.plotly_chart.PlotlyChart"
 examples: "extensions/charts/plotly_chart"
-example_images: "test-images-charts/examples/golden/macos/plotly_chart"
+example_images: "test-images/examples/extensions/charts/golden/macos/plotly_chart"
 title: "PlotlyChart"
 ---
 

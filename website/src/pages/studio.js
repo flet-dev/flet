@@ -100,7 +100,7 @@ function HeroScreenshot() {
     <img
       className={styles.heroScreenshot}
       src={colorMode === 'dark' ? heroImageDark : heroImageLight}
-      alt="Flet Studio with the AI agent, the code editor, and a live preview of the app"
+      alt="Flet Studio: the AI agent adds a pandas moving average to a matplotlib chart, with the app previewed on an Android phone"
       loading="eager"
       fetchPriority="high"
     />
@@ -111,7 +111,7 @@ function PrimaryCta() {
   return (
     <a
       className={styles.primaryCta}
-      href="https://studio.flet.dev"
+      href="https://studio.flet.dev/?utm_source=flet.dev&utm_medium=site&utm_campaign=studio-page"
       target="_blank"
       rel="noopener noreferrer">
       Start free <span aria-hidden="true">↗</span>
