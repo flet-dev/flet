@@ -14,6 +14,69 @@ from PyInstaller.utils.win32.icon import IconFile, normalize_icon_type
 import flet_cli.__pyinstaller.config as hook_config
 
 
+def remove_signature(exe_path: str) -> None:
+    """
+    Remove the Authenticode signature from a Windows executable.
+
+    Changing an executable's resources invalidates its signature. Windows then
+    drops the signature's bytes but keeps the header entry that points to them,
+    which leaves an executable that signing tools reject. Removing both first
+    leaves an unsigned executable that can be patched and signed again.
+
+    Args:
+        exe_path: Path to the executable; left unchanged when it isn't signed.
+    """
+
+    with pefile.PE(exe_path, fast_load=True) as pe:
+        security = pe.OPTIONAL_HEADER.DATA_DIRECTORY[
+            pefile.DIRECTORY_ENTRY["IMAGE_DIRECTORY_ENTRY_SECURITY"]
+        ]
+        if not security.Size:
+            return
+
+        # The entry holds a file offset, not a virtual address.
+        start, end = security.VirtualAddress, security.VirtualAddress + security.Size
+        image_end = pe.get_overlay_data_start_offset()
+        signature_found = (
+            image_end is not None
+            and image_end <= start < end <= len(pe.__data__)
+            and _is_certificate_table(pe.__data__[start:end])
+        )
+        security.VirtualAddress = security.Size = 0
+        pe.OPTIONAL_HEADER.CheckSum = 0
+        data = pe.write()
+
+    if signature_found:
+        hook_config.log_progress("Removing the signature of", exe_path)
+        data = data[:start] + data[end:]
+    else:
+        # The entry doesn't point at a signature after the image, e.g. it went
+        # stale when an earlier patch dropped the signature's bytes: clear the
+        # entry and keep the file's bytes.
+        hook_config.log_progress("Clearing a stale signature entry of", exe_path)
+
+    with open(exe_path, "wb") as f:
+        f.write(data)
+
+
+def _is_certificate_table(table: bytes) -> bool:
+    """
+    Check that bytes start with a WIN_CERTIFICATE header: a length that fits in
+    the table, revision 1.0 or 2.0, and a known certificate type.
+    """
+
+    if len(table) < 8:
+        return False
+    length = int.from_bytes(table[0:4], "little")
+    revision = int.from_bytes(table[4:6], "little")
+    cert_type = int.from_bytes(table[6:8], "little")
+    return (
+        8 <= length <= len(table)
+        and revision in (0x0100, 0x0200)
+        and (cert_type in (0x0001, 0x0002, 0x0003, 0x0004))
+    )
+
+
 def update_flet_view_icon(exe_path: str, icon_path: str) -> None:
     """
     Replace icon resources in a Windows executable.
@@ -127,26 +190,10 @@ def update_flet_view_version_info(
     with open(version_info_path, "w", encoding="utf-8") as f:
         f.write(str(vs))
 
-    # Remember overlay
-    pe = pefile.PE(exe_path, fast_load=True)
-    overlay_before = pe.get_overlay()
-    pe.close()
-
     hdst = win32api.BeginUpdateResource(exe_path, 0)
     win32api.UpdateResource(
         hdst, pefile.RESOURCE_TYPE["RT_VERSION"], 1, vs.toRaw(), 1033
     )
     win32api.EndUpdateResource(hdst, 0)
-
-    if overlay_before:
-        # Check if the overlay is still present
-        pe = pefile.PE(exe_path, fast_load=True)
-        overlay_after = pe.get_overlay()
-        pe.close()
-
-        # If the update removed the overlay data, re-append it
-        if not overlay_after:
-            with open(exe_path, "ab", encoding="utf-8") as exef:
-                exef.write(overlay_before)
 
     return version_info_path

@@ -1,37 +1,13 @@
-import gzip
 import os
 import plistlib
 import shutil
 import subprocess
-import tarfile
 from pathlib import Path
 from typing import Any, Optional
 
 from PyInstaller.building.icon import normalize_icon_type
 
 import flet_cli.__pyinstaller.config as hook_config
-from flet.utils import safe_tar_extractall
-from flet_cli.__pyinstaller.utils import normalize_tar_entry
-
-
-def unpack_app_bundle(tar_path: str) -> str:
-    """
-    Extract a macOS app bundle archive and remove the source tarball.
-
-    Args:
-        tar_path: Path to a `*.tar.gz` archive containing `Flet.app`.
-
-    Returns:
-        Path to extracted `Flet.app`.
-    """
-
-    bin_dir = str(Path(tar_path).parent)
-
-    with tarfile.open(tar_path, "r:gz") as tar_arch:
-        safe_tar_extractall(tar_arch, bin_dir)
-    os.remove(tar_path)
-
-    return os.path.join(bin_dir, "Flet.app")
 
 
 def update_flet_view_icon(app_path: str, icon_path: str) -> None:
@@ -111,19 +87,17 @@ def update_flet_view_version_info(
     return app_path
 
 
-def assemble_app_bundle(app_path: str, tar_path: str) -> None:
+def sign_app_bundle(app_path: str) -> None:
     """
-    Code-sign a macOS app bundle, package it as tar.gz, and remove unpacked bundle.
+    Ad-hoc code-sign a macOS app bundle, after its icon or metadata changed.
 
     Args:
         app_path: Path to app bundle directory.
-        tar_path: Destination tar.gz path.
 
     Raises:
         SystemError: If `codesign` fails.
     """
 
-    # sign app bundle
     hook_config.log_progress(f"Signing file {app_path}")
     cmd_args = [
         "codesign",
@@ -146,22 +120,6 @@ def assemble_app_bundle(app_path: str, tar_path: str) -> None:
             f"codesign command ({cmd_args}) failed with "
             f"error code {p.returncode}!\noutput: {p.stdout}"
         )
-
-    # Pack tar with fixed timestamps, so archives of identical content are
-    # byte-identical and the runtime cache fingerprint stays stable
-    with (
-        open(tar_path, "wb") as raw,
-        gzip.GzipFile(fileobj=raw, mode="wb", mtime=0) as gz,
-        tarfile.open(fileobj=gz, mode="w") as tar,
-    ):
-        tar.add(
-            app_path,
-            arcname=os.path.basename(app_path),
-            filter=normalize_tar_entry,
-        )
-
-    # cleanup
-    shutil.rmtree(app_path, ignore_errors=True)
 
 
 def __load_info_plist(app_path: str) -> dict[str, Any]:

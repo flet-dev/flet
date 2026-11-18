@@ -86,7 +86,7 @@ def Gauge(
         max_y=1,
         width=width,
         height=height,
-        animation=ft.Animation(duration=0),
+        animation=ft.Animation(duration=100),
     )
 
 
