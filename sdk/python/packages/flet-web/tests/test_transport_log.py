@@ -40,8 +40,10 @@ async def send(caplog, level):
 
 @pytest.mark.asyncio
 async def test_send_message_skips_formatting_without_debug(caplog):
-    # A big page patch takes minutes and gigabytes to turn into text, so it must
-    # only happen when someone reads the debug log.
+    """
+    With debug logging off, the message is sent without being turned into text:
+    for a large page patch that text takes seconds and megabytes per message.
+    """
     body, packet = await send(caplog, logging.INFO)
 
     assert body.reprs == 0
@@ -51,6 +53,7 @@ async def test_send_message_skips_formatting_without_debug(caplog):
 
 @pytest.mark.asyncio
 async def test_send_message_logs_with_debug(caplog):
+    """With debug logging on, the message is still logged and sent as before."""
     body, packet = await send(caplog, logging.DEBUG)
 
     assert body.reprs > 0
