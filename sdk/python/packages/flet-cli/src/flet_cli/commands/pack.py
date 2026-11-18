@@ -504,6 +504,7 @@ class Command(BaseCommand):
             if temp_bin_dir is not None:
                 if is_windows():
                     from flet_cli.__pyinstaller.win_utils import (
+                        remove_signature,
                         update_flet_view_icon,
                         update_flet_view_version_info,
                     )
@@ -513,7 +514,12 @@ class Command(BaseCommand):
                         options, os.path.join(client_dir, "data", "app.so")
                     )
 
+                    # copy_flet_bin() checked that the client holds flet.exe.
                     exe_path = os.path.join(client_dir, "flet.exe")
+                    # The released client is signed, and patching it below
+                    # invalidates the signature.
+                    remove_signature(exe_path)
+
                     # icon
                     if options.icon:
                         icon_path = options.icon

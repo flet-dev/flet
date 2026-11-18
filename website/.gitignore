@@ -33,7 +33,5 @@ yarn-error.log*
 /docs/assets/
 /docs/examples/
 /docs/test-images/
-/docs/test-images-charts/
 /static/docs/examples/
 /static/docs/test-images/
-/static/docs/test-images-charts/

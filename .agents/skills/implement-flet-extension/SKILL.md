@@ -143,6 +143,6 @@ Every example gets an integration test, and the goldens it produces are the docs
 
 ### Temporary CI narrowing on the feature branch
 
-- While developing an extension, the maintainer may narrow `.github/workflows/macos-integration-tests.yml` on purpose so CI runs only the new extension's suites: every entry of the `suite:` matrix is commented out and only the extension's suites are added (for example `- examples/extensions/<name>` and `- extensions/<name>`).
+- While developing an extension, the maintainer may narrow `.github/workflows/macos-integration-tests.yml` on purpose so CI runs only the new extension's tests: the `include:` list of the matrix is cut to one group whose `dirs` lists only the extension's directories (for example `examples/extensions/<name>` and `extensions/<name>`).
 - This is intentional. Do NOT revert, "fix", or restore that matrix while working on the branch, and keep it when committing unless told otherwise.
-- Before the branch is merged (when the user says the work is done), restore the original matrix: uncomment every suite and remove the extension-specific entries. The regular `examples/extensions` and `extensions` suites already include the new tests.
+- Before the branch is merged (when the user says the work is done), restore the original matrix with its three groups. The `apps-extensions` group already includes the new tests through `examples/extensions` and `extensions`.
