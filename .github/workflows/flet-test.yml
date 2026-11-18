@@ -8,16 +8,24 @@ name: Flet Test (on-device)
 
 on:
   pull_request:
+    # What `flet test` builds and runs. A `!` pattern takes back files
+    # matched by the patterns above it.
     paths:
       - '.github/workflows/flet-test.yml'
+      - '.github/scripts/**'
       - '.fvmrc'
       - 'packages/flet/**'
+      - '!packages/flet/test/**'
       - 'packages/flet_integration_test/**'
       - 'sdk/python/packages/flet/**'
       - 'sdk/python/packages/flet-cli/**'
       - 'sdk/python/packages/flet-desktop/**'
+      - 'sdk/python/packages/flet-platform-assets/**'
+      - '!sdk/python/packages/*/integration_tests/**'
+      - '!sdk/python/packages/*/tests/**'
       - 'sdk/python/templates/**'
       - 'sdk/python/examples/apps/flet_test_counter/**'
+      - '!**.md'
   workflow_dispatch:
 
 # Ensure only one run per ref (pull request or manual dispatch), cancel older ones

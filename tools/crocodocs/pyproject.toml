@@ -50,11 +50,6 @@ source_path = "../../sdk/python/packages/flet/integration_tests"
 static_subpath = "docs/test-images"
 include_exts = [".png", ".gif", ".svg"]
 
-[tool.crocodocs.asset_mappings."test-images-charts"]
-source_path = "../../sdk/python/packages/flet-charts/integration_tests"
-static_subpath = "docs/test-images-charts"
-include_exts = [".png", ".gif", ".svg"]
-
 [tool.crocodocs.packages]
 flet = "../../sdk/python/packages/flet/src"
 flet_ads = "../../sdk/python/packages/flet-ads/src"
