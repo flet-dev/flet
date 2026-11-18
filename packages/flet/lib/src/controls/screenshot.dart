@@ -14,10 +14,10 @@ class ScreenshotControl extends StatefulWidget {
       : super(key: key ?? ValueKey("control_${control.id}"));
 
   @override
-  State<ScreenshotControl> createState() => _InteractiveViewerControlState();
+  State<ScreenshotControl> createState() => _ScreenshotControlState();
 }
 
-class _InteractiveViewerControlState extends State<ScreenshotControl> {
+class _ScreenshotControlState extends State<ScreenshotControl> {
   final ScreenshotController _screenshotController = ScreenshotController();
 
   @override
