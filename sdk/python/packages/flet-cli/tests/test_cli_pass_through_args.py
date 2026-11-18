@@ -220,7 +220,11 @@ class TestProgramCommand:
         monkeypatch.setitem(
             sys.modules,
             "flet_cli.__pyinstaller.utils",
-            types.SimpleNamespace(copy_flet_bin=lambda: None),
+            types.SimpleNamespace(
+                copy_flet_bin=lambda: None,
+                get_client_archive_name=lambda client_dir: None,
+                stage_client_archive=lambda *args: [],
+            ),
         )
         monkeypatch.setattr(
             flet.utils.pip, "ensure_flet_desktop_package_installed", lambda: None

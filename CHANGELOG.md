@@ -21,6 +21,8 @@
 * flet-charts: Fix `LineChart` jumping instead of animating when the points of a data series change ([flet-charts#8](https://github.com/flet-dev/flet-charts/issues/8), [#7064](https://github.com/flet-dev/flet/pull/7064)) by @ndonkoHenri.
 * Fix cancelled client method calls keeping their responses in memory for the rest of the session, and client method calls made after the session closed waiting forever instead of failing with "Session closed" ([#7065](https://github.com/flet-dev/flet/pull/7065)) by @remote-controlled-man.
 * Fix `flet pack` failing on Windows with `ValueError: binary mode doesn't take an encoding argument`, and leaving a client that signing tools reject, since the desktop client is signed (1.1.0) ([#7067](https://github.com/flet-dev/flet/pull/7067)) by @ndonkoHenri.
+* Fix apps packaged with plain `pyinstaller` downloading the Flet desktop client on their first start, or after a rebuild, and failing to build on macOS, and apps made with `flet pack` from a `FLET_VIEW_PATH` that holds the client itself downloading it too ([#7053](https://github.com/flet-dev/flet/issues/7053), [#7068](https://github.com/flet-dev/flet/pull/7068)) by @ndonkoHenri.
+* Fix Linux apps made with `flet pack` or `pyinstaller` that run on a newer distro than they were built on downloading the light client instead of using the bundled one, and switching from the full to the light client ([#7068](https://github.com/flet-dev/flet/pull/7068)) by @ndonkoHenri.
 
 ## 1.1.2
 
