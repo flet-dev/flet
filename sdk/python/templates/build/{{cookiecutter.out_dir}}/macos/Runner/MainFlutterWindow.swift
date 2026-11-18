@@ -46,4 +46,17 @@ class MainFlutterWindow: NSWindow {
     super.order(place, relativeTo: otherWin)
     hiddenWindowAtLaunch()
   }
+
+  /// Silences the system alert sound for key presses that no responder handled.
+  ///
+  /// Flutter passes keys that no widget handles to the next responder, and the window is the
+  /// last one in the chain. Keys the app only listens to, for example through
+  /// `page.on_keyboard_event`, end up here, where `NSResponder` would beep. Text input, IME
+  /// composition and enabled menu key equivalents are handled before a key gets here.
+  override func noResponder(for eventSelector: Selector) {
+    if eventSelector == #selector(NSResponder.keyDown(with:)) {
+      return
+    }
+    super.noResponder(for: eventSelector)
+  }
 }
