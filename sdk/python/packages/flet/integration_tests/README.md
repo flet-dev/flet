@@ -66,6 +66,16 @@ Running tests to update only golden images that don't match (or are missing) - u
 FLET_TEST_GOLDEN=failed uv run pytest -s -o log_cli=true -o log_cli_level=INFO packages/flet/integration_tests/controls/material
 ```
 
+Running tests with a test app built once (macOS). `flutter test` builds the app again for every app start; a prebuilt app starts in a few seconds. Rebuild it after changing Dart code:
+
+```bash
+cd client
+fvm flutter build macos --debug -t integration_test/app_test.dart
+export FLET_TEST_APP_BINARY=$PWD/build/macos/Build/Products/Debug/Flet.app/Contents/MacOS/Flet
+cd ../sdk/python
+uv run pytest -s -o log_cli=true -o log_cli_level=INFO packages/flet/integration_tests/controls/material
+```
+
 ## Environment variables
 
 `FLET_TEST_PLATFORM` - The platform on which tests are running: `macos`, `windows`, `linux`, `android` or `ios`. Desktop platforms are detected automatically if not specified.
@@ -83,3 +93,7 @@ server, but if integration tests use assets they could be inaccessible via TCP f
 Android device or simulator.
 
 `FLET_TEST_DISABLE_FVM` - `True` to launch Flutter process directly, without `fvm`. This setting could be on in CI environment. Locally we normally want to run with `fvm`.
+
+`FLET_TEST_APP_BINARY` - path to the executable of a test app built with the integration test as its entry point. When set, every app start launches that executable in place of `flutter test`. Used only when the tests run on the host desktop platform; unset it to go back to `flutter test`.
+
+`FLET_TEST_START_TIMEOUT` - seconds to wait for the Flutter app to connect before the test fails. Default is 60 when `FLET_TEST_APP_BINARY` is used and no limit otherwise; `0` turns the limit off.

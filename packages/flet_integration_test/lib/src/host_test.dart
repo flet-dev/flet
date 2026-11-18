@@ -19,6 +19,14 @@ import 'flutter_tester.dart';
 /// [appMain] is the host app's `main(args)` entry point. [assignTester] is
 /// called with the constructed [Tester] before `appMain` runs so the host can
 /// wire it into its `FletApp(tester: ...)`.
+///
+/// The app URL, PID file path and assets directory come from the
+/// `FLET_TEST_APP_URL`, `FLET_TEST_PID_FILE_PATH` and `FLET_TEST_ASSETS_DIR`
+/// `--dart-define`s that `flutter test` passes. An app built once with this
+/// test as its entry point and launched directly, with no `flutter` tool
+/// attached, reads them from environment variables of the same names and
+/// ends the process when the test completes: exit code 0 if it passed, 1 if
+/// it failed.
 void runFletHostTest({
   required void Function(List<String>) appMain,
   required void Function(Tester) assignTester,
@@ -38,6 +46,13 @@ void runFletHostTest({
   };
   debugPrint("Flet host test: exception reporter installed");
 
+  final launchedDirectly =
+      const String.fromEnvironment("FLET_TEST_APP_URL") == "" &&
+          (Platform.environment["FLET_TEST_APP_URL"] ?? "") != "";
+  if (launchedDirectly) {
+    binding.allTestsPassed.future.then((passed) => exit(passed ? 0 : 1));
+  }
+
   tearDownAll(() async {
     // Exceptions are reported when the test body completes, moments before
     // the app process exits; give the device-log relay time to flush them so
@@ -54,17 +69,23 @@ void runFletHostTest({
       assignTester(fletTester);
 
       List<String> args = [];
-      const fletTestAppUrl = String.fromEnvironment("FLET_TEST_APP_URL");
+      final fletTestAppUrl = launchedDirectly
+          ? Platform.environment["FLET_TEST_APP_URL"]!
+          : const String.fromEnvironment("FLET_TEST_APP_URL");
       if (fletTestAppUrl != "") {
         args.add(fletTestAppUrl);
       }
 
-      const fletTestPidFile = String.fromEnvironment("FLET_TEST_PID_FILE_PATH");
+      final fletTestPidFile = launchedDirectly
+          ? Platform.environment["FLET_TEST_PID_FILE_PATH"] ?? ""
+          : const String.fromEnvironment("FLET_TEST_PID_FILE_PATH");
       if (fletTestPidFile != "") {
         args.add(fletTestPidFile);
       }
 
-      const fletTestAssetsDir = String.fromEnvironment("FLET_TEST_ASSETS_DIR");
+      final fletTestAssetsDir = launchedDirectly
+          ? Platform.environment["FLET_TEST_ASSETS_DIR"] ?? ""
+          : const String.fromEnvironment("FLET_TEST_ASSETS_DIR");
       if (fletTestAssetsDir != "") {
         args.add(fletTestAssetsDir);
       }

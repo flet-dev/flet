@@ -124,7 +124,6 @@ Current mappings:
 
 - `examples` — `sdk/python/examples` (screenshots alongside code examples)
 - `test-images` — `sdk/python/packages/flet/integration_tests` (golden test images)
-- `test-images-charts` — `sdk/python/packages/flet-charts/integration_tests`
 
 ### `[tool.crocodocs.member_filters]`
 
@@ -283,7 +282,7 @@ This scans all built HTML for `<img>` tags pointing to missing files and for unr
 
 ## CI Integration
 
-The `docs_build` job in [.github/workflows/ci.yml](../../.github/workflows/ci.yml) runs the full build and verification on every push. It gates the publishing jobs — no release can proceed with broken documentation.
+[.github/workflows/docs.yml](../../.github/workflows/docs.yml) runs the full build and verification for pull requests, and the `docs_build` job in [.github/workflows/ci.yml](../../.github/workflows/ci.yml) calls it for pushes to `main` and tags. It gates the publishing jobs — no release can proceed with broken documentation.
 
 Cloudflare Pages runs the same build via `pip install uv && yarn build` with root directory set to `website/`.
 
