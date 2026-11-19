@@ -31,6 +31,7 @@
 * Fix `flet --version --json` printing invalid JSON when `flet-cli` is not installed yet: the on-the-fly install's progress messages now go to stderr ([flet-build-action#2](https://github.com/flet-dev/flet-build-action/issues/2), [#7099](https://github.com/flet-dev/flet/pull/7099)) by @ndonkoHenri.
 * Fix changes to a control's `theme`, `dark_theme` or `theme_mode`, such as toggling `Container.theme_mode`, not being applied until its parent was updated ([#7090](https://github.com/flet-dev/flet/pull/7090)) by @ndonkoHenri.
 * Fix `Screenshot.capture()` failing with a type error when `pixel_ratio` is a whole number, such as `pixel_ratio=1` ([#7090](https://github.com/flet-dev/flet/pull/7090)) by @ndonkoHenri.
+* Fix unhandled exceptions in `page.run_thread()` functions and PubSub subscribers not being reported, and in `page.run_task()` tasks being logged under `concurrent.futures` even when awaited; all are now logged on the `flet` logger, a task's only when nothing awaits it ([#7109](https://github.com/flet-dev/flet/issues/7109)) by @ndonkoHenri.
 
 ## 1.1.2
 

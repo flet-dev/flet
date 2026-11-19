@@ -3,13 +3,37 @@ import inspect
 import logging
 import threading
 from collections.abc import Awaitable, Iterable
-from concurrent.futures import ThreadPoolExecutor
+from concurrent.futures import Future, ThreadPoolExecutor
+from functools import partial
 from typing import Any, Callable, Optional, Union
 
 from flet.utils import is_pyodide
 from flet.utils.locks import NopeLock
 
 logger = logging.getLogger("flet")
+
+
+def _log_subscriber_error(handler: Callable, exception: BaseException) -> None:
+    """Log an exception raised by a subscriber on the `flet` logger."""
+    logger.error(
+        "Unhandled error in PubSub subscriber %s",
+        getattr(handler, "__qualname__", None) or repr(handler),
+        exc_info=exception,
+    )
+
+
+def _on_async_subscriber_done(handler: Callable, future: Future) -> None:
+    """Log the exception an async subscriber raised, if any."""
+    if not future.cancelled() and (exception := future.exception()) is not None:
+        _log_subscriber_error(handler, exception)
+
+
+def _call_subscriber(handler: Callable, *args: Any) -> None:
+    """Call a sync subscriber, logging an exception it raises."""
+    try:
+        handler(*args)
+    except Exception as e:
+        _log_subscriber_error(handler, e)
 
 
 class PubSubHub:
@@ -276,11 +300,13 @@ class PubSubHub:
             raise RuntimeError("PubSub event loop is not set")
 
         if inspect.iscoroutinefunction(handler):
-            asyncio.run_coroutine_threadsafe(handler(*args), self.__loop)
+            future = asyncio.run_coroutine_threadsafe(handler(*args), self.__loop)
+            future.add_done_callback(partial(_on_async_subscriber_done, handler))
         else:
+            call = partial(_call_subscriber, handler, *args)
             if self.__executor:
                 self.__loop.call_soon_threadsafe(
-                    self.__loop.run_in_executor, self.__executor, handler, *args
+                    self.__loop.run_in_executor, self.__executor, call
                 )
             else:
-                handler(*args)
+                call()

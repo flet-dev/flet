@@ -87,6 +87,11 @@ def _default_authorization_impl() -> "type[Authorization]":
 logger = logging.getLogger("flet")
 
 
+def _callable_name(fn: Callable[..., Any]) -> str:
+    """Return a readable name of `fn` for log messages."""
+    return getattr(fn, "__qualname__", None) or repr(fn)
+
+
 AT = TypeVar("AT", bound="Authorization")
 InputT = ParamSpec("InputT")
 RetT = TypeVar("RetT")
@@ -105,10 +110,17 @@ class TaskFuture(Future[RetT]):
     `asyncio.Task`; await `asyncio.shield()` of it to keep the task running.
     `result()` blocks, so call it on the page's event loop thread only once the
     task is done.
+
+    If the task raises while nothing awaits the future, the exception is logged
+    on the `flet` logger.
     """
+
+    _awaited: bool = False
+    """Whether something awaits the future."""
 
     def __await__(self) -> Generator[Any, None, RetT]:
         """Wait for the task to finish without blocking the event loop."""
+        self._awaited = True
         return asyncio.wrap_future(self).__await__()
 
 
@@ -1004,25 +1016,21 @@ class Page(BasePage):
         )
         future.__class__ = TaskFuture
 
-        def _on_completion(f):
+        def _on_completion(f: TaskFuture[RetT]):
             """
-            Log the exception of a task nobody awaits.
-
-            `concurrent.futures` logs an `Exception` raised from a done callback
-            and runs the next one. The task's outcome is stored on the future
-            and reaches awaiters through their own callback, so raising here is
-            only for the log. A `BaseException` is not re-raised: it would skip
-            the remaining callbacks and leave awaiters waiting forever.
+            Log the exception of a task nothing is awaiting.
 
             Args:
                 f: Completed future returned by `run_coroutine_threadsafe()`.
             """
-
-            if f.cancelled():
+            if f._awaited or f.cancelled():
                 return
-            exception = f.exception()
-            if isinstance(exception, Exception):
-                raise exception
+            if (exception := f.exception()) is not None:
+                logger.error(
+                    "Unhandled error in run_task() task %s",
+                    _callable_name(handler),
+                    exc_info=exception,
+                )
 
         future.add_done_callback(_on_completion)
 
@@ -1049,7 +1057,14 @@ class Page(BasePage):
             """
 
             _context_page.set(self)
-            handler(*args, **kwargs)
+            try:
+                handler(*args, **kwargs)
+            except Exception:
+                logger.error(
+                    "Unhandled error in run_thread() function %s",
+                    _callable_name(handler),
+                    exc_info=True,
+                )
 
         return wrapper
 
