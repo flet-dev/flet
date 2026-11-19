@@ -28,6 +28,12 @@ whole 0.70 - 0.86 pre-release series, so start with
 The following guides are available. They're sorted by release, with the most recent release first.
 Each guide explains the change, the reason for it, and how to migrate your code.
 
+### Released in Flet 1.2.0
+
+#### Deprecations
+
+- [`View`: layout properties are deprecated](/docs/updates/breaking-changes/v1-2-0/view-layout-properties)
+
 ### Released in Flet 1.1.0
 
 #### Breaking changes

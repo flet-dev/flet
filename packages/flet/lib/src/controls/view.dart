@@ -40,6 +40,7 @@ class ViewControl extends StatefulWidget {
 class _ViewControlState extends State<ViewControl> {
   final _materialScaffoldKey = GlobalKey<ScaffoldState>();
   final _cupertinoPageScaffoldKey = GlobalKey();
+  final _bodyKey = GlobalKey();
   Control? _overlay;
   Control? _dialogs;
   Completer<bool>? _popCompleter;
@@ -183,13 +184,24 @@ class _ViewControlState extends State<ViewControl> {
       }
     }
 
-    Widget body = Stack(children: [
-      SizedBox.expand(
-          child: Container(
-              padding: control.getPadding("padding", const EdgeInsets.all(10))!,
-              child: child)),
-      ...overlayWidgets
-    ]);
+    Widget body = KeyedSubtree(
+        key: _bodyKey,
+        child: Stack(children: [
+          SizedBox.expand(
+              child: Container(
+                  padding:
+                      control.getPadding("padding", const EdgeInsets.all(10))!,
+                  child: child)),
+          ...overlayWidgets
+        ]));
+
+    // The body's global key keeps its state when this wrapper is added or removed.
+    if (control.hasEventHandler("size_change")) {
+      body = SizeChangeObserver(
+          control: control,
+          interval: control.getInt("size_change_interval", 10)!,
+          child: body);
+    }
 
     var materialTheme = pageData?.themeMode == ThemeMode.light ||
             ((pageData?.themeMode == null ||
@@ -333,6 +345,6 @@ class _ViewControlState extends State<ViewControl> {
           }).onError((e, st) {/* do nothing */});
         },
         child: result);
-    return LayoutControl(control: control, child: result);
+    return result;
   }
 }

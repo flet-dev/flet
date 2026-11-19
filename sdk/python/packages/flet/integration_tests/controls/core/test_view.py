@@ -25,7 +25,10 @@ async def _wait_for(flet_app: ftt.FletTestApp, condition, timeout: float = 5.0):
 
 @pytest.mark.asyncio(loop_scope="function")
 async def test_on_size_change(flet_app: ftt.FletTestApp):
-    """`View.on_size_change` reports the view's size when shown and after a resize."""
+    """`View.on_size_change` reports the body size when shown and after a resize."""
+    if flet_app.page.web or not flet_app.page.platform.is_desktop():
+        pytest.skip("Desktop only: resizes the window")
+
     sizes = []
 
     flet_app.resize_page(600, 450)
@@ -41,10 +44,10 @@ async def test_on_size_change(flet_app: ftt.FletTestApp):
     flet_app.page.update()
     await flet_app.tester.pump_and_settle()
 
-    assert await _wait_for(flet_app, lambda: len(sizes) > 0), (
-        "on_size_change didn't fire when the view was shown"
+    shown = (pytest.approx(600), pytest.approx(450))
+    assert await _wait_for(flet_app, lambda: bool(sizes) and sizes[-1] == shown), (
+        f"on_size_change didn't report the shown view's size, got {sizes}"
     )
-    assert sizes[-1] == (pytest.approx(600), pytest.approx(450))
 
     width, height = sizes[-1]
     flet_app.page.window.width -= 100

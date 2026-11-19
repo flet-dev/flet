@@ -1,3 +1,13 @@
+## 1.2.0
+
+### Deprecations
+
+* The layout properties `View` inherited from `LayoutControl`, such as `width`, `left`, `align`, `margin` and the transforms, are deprecated: a view always fills its page, so they never had an effect. `View` keeps `on_size_change` and `size_change_interval` ([#6363](https://github.com/flet-dev/flet/issues/6363), [#7088](https://github.com/flet-dev/flet/pull/7088)) by @ndonkoHenri.
+
+### Bug fixes
+
+* Fix `View.on_size_change` never firing; it reports the size of the view's body, the area between the app bar and the bottom navigation bar ([#6363](https://github.com/flet-dev/flet/issues/6363), [#7088](https://github.com/flet-dev/flet/pull/7088)) by @ndonkoHenri.
+
 ## 1.1.3
 
 ### Documentation
@@ -31,7 +41,6 @@
 * Fix `flet --version --json` printing invalid JSON when `flet-cli` is not installed yet: the on-the-fly install's progress messages now go to stderr ([flet-build-action#2](https://github.com/flet-dev/flet-build-action/issues/2), [#7099](https://github.com/flet-dev/flet/pull/7099)) by @ndonkoHenri.
 * Fix changes to a control's `theme`, `dark_theme` or `theme_mode`, such as toggling `Container.theme_mode`, not being applied until its parent was updated ([#7090](https://github.com/flet-dev/flet/pull/7090)) by @ndonkoHenri.
 * Fix `Screenshot.capture()` failing with a type error when `pixel_ratio` is a whole number, such as `pixel_ratio=1` ([#7090](https://github.com/flet-dev/flet/pull/7090)) by @ndonkoHenri.
-* Fix `View.on_size_change` never firing and the layout properties `View` inherits from `LayoutControl`, such as `margin` and `opacity`, having no effect ([#6363](https://github.com/flet-dev/flet/issues/6363), [#7088](https://github.com/flet-dev/flet/pull/7088)) by @ndonkoHenri.
 
 ## 1.1.2
 

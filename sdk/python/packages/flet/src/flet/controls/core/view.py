@@ -1,11 +1,14 @@
 from dataclasses import field
-from typing import TYPE_CHECKING, Optional, Union
+from typing import TYPE_CHECKING, Annotated, Optional, Union
 
+from flet.controls.alignment import Alignment
+from flet.controls.animation import AnimationValue
 from flet.controls.base_control import BaseControl, control
 from flet.controls.box import BoxDecoration
 from flet.controls.control import Control
-from flet.controls.control_event import ControlEventHandler
-from flet.controls.layout_control import LayoutControl
+from flet.controls.control_event import ControlEventHandler, EventHandler
+from flet.controls.layout_control import LayoutSizeChangeEvent
+from flet.controls.margin import MarginValue
 from flet.controls.material.app_bar import AppBar
 from flet.controls.material.bottom_app_bar import BottomAppBar
 from flet.controls.material.floating_action_button import FloatingActionButton
@@ -14,7 +17,13 @@ from flet.controls.material.navigation_drawer import NavigationDrawer
 from flet.controls.padding import Padding, PaddingValue
 from flet.controls.scrollable_control import ScrollableControl
 from flet.controls.services.service import Service
-from flet.controls.transform import OffsetValue
+from flet.controls.transform import (
+    Flip,
+    OffsetValue,
+    RotateValue,
+    ScaleValue,
+    Transform,
+)
 from flet.controls.types import (
     ColorValue,
     CrossAxisAlignment,
@@ -22,6 +31,7 @@ from flet.controls.types import (
     MainAxisAlignment,
     Number,
 )
+from flet.utils.validation import V
 
 if TYPE_CHECKING:
     # Annotation-only (quoted below): deferred so a View doesn't eagerly pull the
@@ -35,7 +45,7 @@ __all__ = ["View"]
 
 
 @control("View")
-class View(ScrollableControl, LayoutControl):
+class View(ScrollableControl):
     """
     View is the top most container for all other controls.
 
@@ -156,6 +166,349 @@ class View(ScrollableControl, LayoutControl):
     An event handler that is called when the view is about to be popped.
     You can use this event to confirm or cancel the pop action by calling
     :meth:`confirm_pop` method.
+    """
+
+    size_change_interval: int = 10
+    """
+    Sampling interval in milliseconds for :attr:`on_size_change` event.
+
+    Setting to `0` calls :attr:`on_size_change` immediately on every change.
+    """
+
+    on_size_change: Optional[EventHandler[LayoutSizeChangeEvent["View"]]] = None
+    """
+    Called when the size of this view's body changes.
+
+    The body is the area between the app bar and the bottom navigation bar or
+    bottom app bar, including :attr:`padding`. It shrinks while the on-screen
+    keyboard is shown. For the size of the whole window, use
+    :attr:`flet.Page.on_resize`.
+
+    :attr:`size_change_interval` defines how often this event is called.
+    """
+
+    width: Annotated[
+        Optional[Number],
+        V.deprecated(
+            version="1.2.0",
+            delete_version="1.5.0",
+            reason="A View always fills its page, so this property has no effect.",
+        ),
+    ] = None
+    """
+    Has no effect.
+    """
+
+    height: Annotated[
+        Optional[Number],
+        V.deprecated(
+            version="1.2.0",
+            delete_version="1.5.0",
+            reason="A View always fills its page, so this property has no effect.",
+        ),
+    ] = None
+    """
+    Has no effect.
+    """
+
+    min_width: Annotated[
+        Optional[Number],
+        V.deprecated(
+            version="1.2.0",
+            delete_version="1.5.0",
+            reason="A View always fills its page, so this property has no effect.",
+        ),
+    ] = None
+    """
+    Has no effect.
+    """
+
+    max_width: Annotated[
+        Optional[Number],
+        V.deprecated(
+            version="1.2.0",
+            delete_version="1.5.0",
+            reason="A View always fills its page, so this property has no effect.",
+        ),
+    ] = None
+    """
+    Has no effect.
+    """
+
+    min_height: Annotated[
+        Optional[Number],
+        V.deprecated(
+            version="1.2.0",
+            delete_version="1.5.0",
+            reason="A View always fills its page, so this property has no effect.",
+        ),
+    ] = None
+    """
+    Has no effect.
+    """
+
+    max_height: Annotated[
+        Optional[Number],
+        V.deprecated(
+            version="1.2.0",
+            delete_version="1.5.0",
+            reason="A View always fills its page, so this property has no effect.",
+        ),
+    ] = None
+    """
+    Has no effect.
+    """
+
+    left: Annotated[
+        Optional[Number],
+        V.deprecated(
+            version="1.2.0",
+            delete_version="1.5.0",
+            reason="A View always fills its page, so this property has no effect.",
+        ),
+    ] = None
+    """
+    Has no effect.
+    """
+
+    top: Annotated[
+        Optional[Number],
+        V.deprecated(
+            version="1.2.0",
+            delete_version="1.5.0",
+            reason="A View always fills its page, so this property has no effect.",
+        ),
+    ] = None
+    """
+    Has no effect.
+    """
+
+    right: Annotated[
+        Optional[Number],
+        V.deprecated(
+            version="1.2.0",
+            delete_version="1.5.0",
+            reason="A View always fills its page, so this property has no effect.",
+        ),
+    ] = None
+    """
+    Has no effect.
+    """
+
+    bottom: Annotated[
+        Optional[Number],
+        V.deprecated(
+            version="1.2.0",
+            delete_version="1.5.0",
+            reason="A View always fills its page, so this property has no effect.",
+        ),
+    ] = None
+    """
+    Has no effect.
+    """
+
+    align: Annotated[
+        Optional[Alignment],
+        V.deprecated(
+            version="1.2.0",
+            delete_version="1.5.0",
+            reason="A View always fills its page, so this property has no effect.",
+        ),
+    ] = None
+    """
+    Has no effect.
+    """
+
+    margin: Annotated[
+        Optional[MarginValue],
+        V.deprecated(
+            version="1.2.0",
+            delete_version="1.5.0",
+            reason="A View always fills its page, so this property has no effect.",
+        ),
+    ] = None
+    """
+    Has no effect.
+    """
+
+    rotate: Annotated[
+        Optional[RotateValue],
+        V.deprecated(
+            version="1.2.0",
+            delete_version="1.5.0",
+            reason="A View always fills its page, so this property has no effect.",
+        ),
+    ] = None
+    """
+    Has no effect.
+    """
+
+    scale: Annotated[
+        Optional[ScaleValue],
+        V.deprecated(
+            version="1.2.0",
+            delete_version="1.5.0",
+            reason="A View always fills its page, so this property has no effect.",
+        ),
+    ] = None
+    """
+    Has no effect.
+    """
+
+    offset: Annotated[
+        Optional[OffsetValue],
+        V.deprecated(
+            version="1.2.0",
+            delete_version="1.5.0",
+            reason="A View always fills its page, so this property has no effect.",
+        ),
+    ] = None
+    """
+    Has no effect.
+    """
+
+    flip: Annotated[
+        Optional[Flip],
+        V.deprecated(
+            version="1.2.0",
+            delete_version="1.5.0",
+            reason="A View always fills its page, so this property has no effect.",
+        ),
+    ] = None
+    """
+    Has no effect.
+    """
+
+    transform: Annotated[
+        Optional[Transform],
+        V.deprecated(
+            version="1.2.0",
+            delete_version="1.5.0",
+            reason="A View always fills its page, so this property has no effect.",
+        ),
+    ] = None
+    """
+    Has no effect.
+    """
+
+    aspect_ratio: Annotated[
+        Optional[Number],
+        V.deprecated(
+            version="1.2.0",
+            delete_version="1.5.0",
+            reason="A View always fills its page, so this property has no effect.",
+        ),
+    ] = None
+    """
+    Has no effect.
+    """
+
+    animate_opacity: Annotated[
+        Optional[AnimationValue],
+        V.deprecated(
+            version="1.2.0",
+            delete_version="1.5.0",
+            reason="A View always fills its page, so this property has no effect.",
+        ),
+    ] = None
+    """
+    Has no effect.
+    """
+
+    animate_size: Annotated[
+        Optional[AnimationValue],
+        V.deprecated(
+            version="1.2.0",
+            delete_version="1.5.0",
+            reason="A View always fills its page, so this property has no effect.",
+        ),
+    ] = None
+    """
+    Has no effect.
+    """
+
+    animate_position: Annotated[
+        Optional[AnimationValue],
+        V.deprecated(
+            version="1.2.0",
+            delete_version="1.5.0",
+            reason="A View always fills its page, so this property has no effect.",
+        ),
+    ] = None
+    """
+    Has no effect.
+    """
+
+    animate_align: Annotated[
+        Optional[AnimationValue],
+        V.deprecated(
+            version="1.2.0",
+            delete_version="1.5.0",
+            reason="A View always fills its page, so this property has no effect.",
+        ),
+    ] = None
+    """
+    Has no effect.
+    """
+
+    animate_margin: Annotated[
+        Optional[AnimationValue],
+        V.deprecated(
+            version="1.2.0",
+            delete_version="1.5.0",
+            reason="A View always fills its page, so this property has no effect.",
+        ),
+    ] = None
+    """
+    Has no effect.
+    """
+
+    animate_rotation: Annotated[
+        Optional[AnimationValue],
+        V.deprecated(
+            version="1.2.0",
+            delete_version="1.5.0",
+            reason="A View always fills its page, so this property has no effect.",
+        ),
+    ] = None
+    """
+    Has no effect.
+    """
+
+    animate_scale: Annotated[
+        Optional[AnimationValue],
+        V.deprecated(
+            version="1.2.0",
+            delete_version="1.5.0",
+            reason="A View always fills its page, so this property has no effect.",
+        ),
+    ] = None
+    """
+    Has no effect.
+    """
+
+    animate_offset: Annotated[
+        Optional[AnimationValue],
+        V.deprecated(
+            version="1.2.0",
+            delete_version="1.5.0",
+            reason="A View always fills its page, so this property has no effect.",
+        ),
+    ] = None
+    """
+    Has no effect.
+    """
+
+    on_animation_end: Annotated[
+        Optional[ControlEventHandler["View"]],
+        V.deprecated(
+            version="1.2.0",
+            delete_version="1.5.0",
+            reason="A View always fills its page, so this property has no effect.",
+        ),
+    ] = None
+    """
+    Has no effect.
     """
 
     def init(self):

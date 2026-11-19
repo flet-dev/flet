@@ -1,3 +1,4 @@
+import 'package:flet/src/controls/scrollable_control.dart';
 import 'package:flet/src/controls/view.dart';
 import 'package:flet/src/flet_backend.dart';
 import 'package:flet/src/flet_core_extension.dart';
@@ -45,6 +46,7 @@ List<Control> _buildViews(
   ];
   page.properties['views'] = views;
   _pages.add(page);
+  addTearDown(() => _pages.remove(page));
   return views;
 }
 
@@ -59,7 +61,7 @@ Future<void> _setSurfaceSize(WidgetTester tester, Size size) async {
 
 void main() {
   group('View', () {
-    testWidgets('reports its size through on_size_change', (tester) async {
+    testWidgets('reports its body size through on_size_change', (tester) async {
       await _setSurfaceSize(tester, const Size(800, 600));
       final backend = _EventBackend();
       final view = _buildViews(backend, [
@@ -90,6 +92,28 @@ void main() {
       ]);
     });
 
+    testWidgets('reports the body size without the app bar', (tester) async {
+      await _setSurfaceSize(tester, const Size(800, 600));
+      final backend = _EventBackend();
+      final view = _buildViews(backend, [
+        {'on_size_change': true, 'size_change_interval': 0}
+      ]).first;
+      view.properties['appbar'] = Control.fromMap(
+          {'_c': 'AppBar', '_i': 20, 'toolbar_height': 50.0}, backend,
+          parent: view);
+
+      await tester.pumpWidget(_app(backend, ViewControl(control: view)));
+      await tester.pump();
+      expect(tester.takeException(), isNull);
+      expect(backend.events, [
+        [
+          10,
+          'size_change',
+          {'w': 800.0, 'h': 550.0}
+        ]
+      ]);
+    });
+
     testWidgets('sends no size events without on_size_change', (tester) async {
       await _setSurfaceSize(tester, const Size(800, 600));
       final backend = _EventBackend();
@@ -103,23 +127,7 @@ void main() {
       expect(backend.events, isEmpty);
     });
 
-    testWidgets('applies inherited layout properties', (tester) async {
-      await _setSurfaceSize(tester, const Size(800, 600));
-      final backend = _EventBackend();
-      final view = _buildViews(backend, [
-        {
-          'margin': {'left': 20.0, 'top': 30.0, 'right': 20.0, 'bottom': 30.0},
-          'opacity': 0.5,
-        }
-      ]).first;
-
-      await tester.pumpWidget(_app(backend, ViewControl(control: view)));
-      expect(tester.takeException(), isNull);
-      expect(tester.getSize(find.byType(Scaffold)), const Size(760, 540));
-      expect(tester.widget<Opacity>(find.byType(Opacity)).opacity, 0.5);
-    });
-
-    testWidgets('keeps its scaffold state when on_size_change is toggled',
+    testWidgets('keeps its state when on_size_change is toggled',
         (tester) async {
       await _setSurfaceSize(tester, const Size(800, 600));
       final backend = _EventBackend();
@@ -127,6 +135,7 @@ void main() {
 
       await tester.pumpWidget(_app(backend, ViewControl(control: view)));
       final scaffoldState = tester.state<ScaffoldState>(find.byType(Scaffold));
+      final bodyState = tester.state(find.byType(ScrollableControl));
 
       view.properties['on_size_change'] = true;
       view.properties['size_change_interval'] = 0;
@@ -135,6 +144,7 @@ void main() {
       expect(tester.takeException(), isNull);
       expect(tester.state<ScaffoldState>(find.byType(Scaffold)),
           same(scaffoldState));
+      expect(tester.state(find.byType(ScrollableControl)), same(bodyState));
       expect(backend.events.map((e) => e[1]), ['size_change']);
 
       view.properties['on_size_change'] = false;
@@ -147,6 +157,7 @@ void main() {
       expect(backend.events, isEmpty);
       expect(tester.state<ScaffoldState>(find.byType(Scaffold)),
           same(scaffoldState));
+      expect(tester.state(find.byType(ScrollableControl)), same(bodyState));
     });
 
     testWidgets('a covered view reports the new size once uncovered',
