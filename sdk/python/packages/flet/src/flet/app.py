@@ -399,18 +399,14 @@ def __get_on_session_created(
                 async for _ in main(session.page):
                     await session.after_event(session.page)
                     mark_test_ready()
-                    # A `yield` asks for an intermediate UI update, such as a
-                    # splash screen, so give the connection's send loop a turn
-                    # to flush the patch before `main()` resumes. Without it,
-                    # blocking work right after the `yield` keeps the patch
-                    # from reaching the client until `main()` is done.
+                    # Let the send loop flush the patch before `main()` resumes.
                     await asyncio.sleep(0)
 
             elif inspect.isgeneratorfunction(main):
                 for _ in main(session.page):
                     await session.after_event(session.page)
                     mark_test_ready()
-                    # See the note in the async generator branch above.
+                    # Let the send loop flush the patch before `main()` resumes.
                     await asyncio.sleep(0)
             else:
                 # run synchronously
