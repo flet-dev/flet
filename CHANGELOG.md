@@ -31,6 +31,9 @@
 * Fix `flet --version --json` printing invalid JSON when `flet-cli` is not installed yet: the on-the-fly install's progress messages now go to stderr ([flet-build-action#2](https://github.com/flet-dev/flet-build-action/issues/2), [#7099](https://github.com/flet-dev/flet/pull/7099)) by @ndonkoHenri.
 * Fix changes to a control's `theme`, `dark_theme` or `theme_mode`, such as toggling `Container.theme_mode`, not being applied until its parent was updated ([#7090](https://github.com/flet-dev/flet/pull/7090)) by @ndonkoHenri.
 * Fix `Screenshot.capture()` failing with a type error when `pixel_ratio` is a whole number, such as `pixel_ratio=1` ([#7090](https://github.com/flet-dev/flet/pull/7090)) by @ndonkoHenri.
+* Fix `animate_size` on `Container` and `Image` and emit `on_animation_end` with `e.data == "size"` when their size animation completes ([#5766](https://github.com/flet-dev/flet/issues/5766), [#7091](https://github.com/flet-dev/flet/pull/7091)) by @ndonkoHenri.
+* Report the final size for each frame in `on_size_change` when a control is laid out multiple times in that frame ([#7091](https://github.com/flet-dev/flet/pull/7091)) by @ndonkoHenri.
+* Fix controls failing to render when an animation property such as `animate`, `animate_opacity` or `animate_scale` is `False`: `False` now turns that animation off ([#7091](https://github.com/flet-dev/flet/pull/7091)) by @ndonkoHenri.
 
 ## 1.1.2
 

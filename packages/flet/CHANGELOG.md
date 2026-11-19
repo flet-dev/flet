@@ -1,5 +1,6 @@
 ## 1.1.3
 
+* `parseAnimation(false)` returns `null`. When the caller supplies a default animation, it returns a zero-duration animation with the default curve ([#7091](https://github.com/flet-dev/flet/pull/7091)) by @ndonkoHenri.
 * Add `isSvgSource(src, {isUrl})`: whether an image source names an SVG, by its path in any letter case, ignoring a URL's query and fragment. `Image` uses it for files and URLs, so `icon.svg?v=2` is drawn as SVG instead of blank ([#7057](https://github.com/flet-dev/flet/pull/7057)) by @FeodorFitsner.
 * `Text` with `spans` passes `overflow` to `Text.rich`, which reads it from its own style, not the span's, so `TextOverflow.ELLIPSIS` showed no ellipsis ([#7057](https://github.com/flet-dev/flet/pull/7057)) by @FeodorFitsner.
 
