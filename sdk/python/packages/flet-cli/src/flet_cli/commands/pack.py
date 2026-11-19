@@ -1,14 +1,10 @@
 import argparse
-import gzip
-import hashlib
 import logging
 import os
 import re
 import shutil
 import sys
-import tarfile
 import tempfile
-import zipfile
 from pathlib import Path
 
 import flet_cli.__pyinstaller.config as hook_config
@@ -172,68 +168,6 @@ class Command(BaseCommand):
             help="Enable non-interactive mode. All prompts will be skipped",
         )
 
-    def compress_flet_client_dir(self, temp_bin_dir: str, archive_name: str) -> None:
-        """Compress the flet/ directory into an archive and remove the original.
-
-        Args:
-            temp_bin_dir: Path to the temporary directory containing the flet/
-                subdirectory with client binaries.
-            archive_name: Target archive filename. Uses zip for `.zip`
-                extensions and gzipped tar for everything else.
-        """
-        from flet_cli.__pyinstaller.utils import normalize_tar_entry
-
-        flet_dir = os.path.join(temp_bin_dir, "flet")
-        if not os.path.isdir(flet_dir):
-            return
-        archive_path = os.path.join(temp_bin_dir, archive_name)
-        # Fixed timestamps and sorted entries make the archive deterministic
-        # for identical inputs, so the runtime cache fingerprint (and thus the
-        # client cache directory) only changes when content actually changes.
-        if archive_name.endswith(".zip"):  # windows
-            with zipfile.ZipFile(archive_path, "w", zipfile.ZIP_DEFLATED) as zf:
-                for root, dirs, files in os.walk(flet_dir):
-                    dirs.sort()
-                    for f in sorted(files):
-                        full = os.path.join(root, f)
-                        arcname = os.path.relpath(full, temp_bin_dir)
-                        zi = zipfile.ZipInfo(
-                            arcname.replace(os.sep, "/"),
-                            date_time=(1980, 1, 1, 0, 0, 0),
-                        )
-                        zi.compress_type = zipfile.ZIP_DEFLATED
-                        zi.external_attr = (os.stat(full).st_mode & 0xFFFF) << 16
-                        with open(full, "rb") as src, zf.open(zi, "w") as dest:
-                            shutil.copyfileobj(src, dest)
-        else:
-            with (
-                open(archive_path, "wb") as raw,
-                gzip.GzipFile(fileobj=raw, mode="wb", mtime=0) as gz,
-                tarfile.open(fileobj=gz, mode="w") as tar,
-            ):
-                tar.add(flet_dir, arcname="flet", filter=normalize_tar_entry)
-        shutil.rmtree(flet_dir)
-        self.write_archive_fingerprint(archive_path)
-
-    def write_archive_fingerprint(self, archive_path: str) -> None:
-        """Write a `<archive>.sha256` sidecar holding `<hash> <size>`.
-
-        `flet_desktop.ensure_client_cached()` uses it at runtime to key the
-        client cache directory by content, so this patched client doesn't
-        collide with the vanilla client or other apps' patched clients. The
-        size lets the runtime detect a stale sidecar next to a replaced
-        archive and re-hash instead of trusting it.
-
-        Args:
-            archive_path: Path of the client archive to fingerprint.
-        """
-        h = hashlib.sha256()
-        with open(archive_path, "rb") as f:
-            while chunk := f.read(1024 * 1024):
-                h.update(chunk)
-        with open(archive_path + ".sha256", "w") as f:
-            f.write(f"{h.hexdigest()} {os.path.getsize(archive_path)}")
-
     @staticmethod
     def warn_missing_extensions(options, snapshot_path: str) -> None:
         """
@@ -247,7 +181,7 @@ class Command(BaseCommand):
             options: Parsed command-line options.
             snapshot_path: Path to the client's AOT snapshot.
         """
-        from flet_desktop import get_artifact_filename
+        from flet_cli.__pyinstaller.utils import get_linux_client_flavor
         from flet_desktop.extensions import (
             find_missing_extensions,
             get_client_extensions,
@@ -256,7 +190,12 @@ class Command(BaseCommand):
         client_extensions = get_client_extensions(snapshot_path)
         if client_extensions is None:
             return
-        light = is_linux() and "-light-" in get_artifact_filename()
+        # On Linux the snapshot is `<client>/lib/libapp.so`.
+        light = (
+            is_linux()
+            and get_linux_client_flavor(str(Path(snapshot_path).parent.parent))
+            == "light"
+        )
         app_dir = Path(options.script).resolve().parent
         for extension in find_missing_extensions(app_dir, client_extensions):
             source = (
@@ -485,11 +424,16 @@ class Command(BaseCommand):
         # Set only on Linux with --bundle-id; the cleanup below reads it
         # either way, so it has to exist before anything can fail.
         identity_dir = None
+        temp_bin_dir = None
 
         try:
             import PyInstaller.__main__
 
-            from flet_cli.__pyinstaller.utils import copy_flet_bin
+            from flet_cli.__pyinstaller.utils import (
+                copy_flet_bin,
+                get_client_archive_name,
+                stage_client_archive,
+            )
 
             hook_config.verbose = options.verbose
             if not options.verbose:
@@ -549,96 +493,68 @@ class Command(BaseCommand):
                 for pyinstaller_build_arg_arr in options.pyinstaller_build_args:
                     pyi_args.extend(pyinstaller_build_arg_arr)
 
-            # copy "bin"
-            hook_config.temp_bin_dir = copy_flet_bin()
+            # Copy the client, so its icon and metadata can be customized.
+            try:
+                temp_bin_dir = copy_flet_bin()
+            except RuntimeError as e:
+                print(f"Error: {e}")
+                sys.exit(1)
 
-            if hook_config.temp_bin_dir is not None:
-                # delete fletd/fletd.exe
-                fletd_path = os.path.join(
-                    hook_config.temp_bin_dir, "fletd.exe" if is_windows() else "fletd"
-                )
-                if os.path.exists(fletd_path):
-                    os.remove(fletd_path)
-
+            hook_config.client_files = []
+            if temp_bin_dir is not None:
                 if is_windows():
                     from flet_cli.__pyinstaller.win_utils import (
+                        remove_signature,
                         update_flet_view_icon,
                         update_flet_view_version_info,
                     )
 
+                    client_dir = os.path.join(temp_bin_dir, "flet")
                     self.warn_missing_extensions(
-                        options,
-                        os.path.join(
-                            hook_config.temp_bin_dir, "flet", "data", "app.so"
-                        ),
+                        options, os.path.join(client_dir, "data", "app.so")
                     )
 
-                    exe_path = os.path.join(
-                        hook_config.temp_bin_dir, "flet", "flet.exe"
+                    # copy_flet_bin() checked that the client holds flet.exe.
+                    exe_path = os.path.join(client_dir, "flet.exe")
+                    # The released client is signed, and patching it below
+                    # invalidates the signature.
+                    remove_signature(exe_path)
+
+                    # icon
+                    if options.icon:
+                        icon_path = options.icon
+                        if not Path(icon_path).is_absolute():
+                            icon_path = str(Path(os.getcwd()).joinpath(icon_path))
+                        update_flet_view_icon(exe_path, icon_path)
+
+                    # version info
+                    version_info_path = update_flet_view_version_info(
+                        exe_path=exe_path,
+                        product_name=options.product_name,
+                        file_description=options.file_description,
+                        product_version=options.product_version,
+                        file_version=options.file_version,
+                        company_name=options.company_name,
+                        copyright=options.copyright,
                     )
-                    if os.path.exists(exe_path):
-                        # icon
-                        if options.icon:
-                            icon_path = options.icon
-                            if not Path(icon_path).is_absolute():
-                                icon_path = str(Path(os.getcwd()).joinpath(icon_path))
-                            update_flet_view_icon(exe_path, icon_path)
 
-                        # version info
-                        version_info_path = update_flet_view_version_info(
-                            exe_path=exe_path,
-                            product_name=options.product_name,
-                            file_description=options.file_description,
-                            product_version=options.product_version,
-                            file_version=options.file_version,
-                            company_name=options.company_name,
-                            copyright=options.copyright,
-                        )
-
-                        pyi_args.extend(["--version-file", version_info_path])
-
-                    # Compress the patched flet/ directory into flet-windows.zip
-                    # so ensure_client_cached() finds it at runtime.
-                    self.compress_flet_client_dir(
-                        hook_config.temp_bin_dir, "flet-windows.zip"
-                    )
+                    pyi_args.extend(["--version-file", version_info_path])
 
                 elif is_macos():
                     from flet_cli.__pyinstaller.macos_utils import (
-                        assemble_app_bundle,
-                        unpack_app_bundle,
+                        sign_app_bundle,
                         update_flet_view_icon,
                         update_flet_view_version_info,
                     )
 
-                    tar_path = os.path.join(
-                        hook_config.temp_bin_dir, "flet-macos.tar.gz"
-                    )
-
-                    # Find the .app bundle: either unpack from tar.gz or
-                    # locate an already-extracted bundle (GitHub releases cache).
-                    app_path = None
-                    if os.path.exists(tar_path):
-                        app_path = unpack_app_bundle(tar_path)
-                    else:
-                        for entry in os.listdir(hook_config.temp_bin_dir):
-                            if entry.endswith(".app"):
-                                app_path = os.path.join(hook_config.temp_bin_dir, entry)
-                                break
-
-                    if not app_path:
-                        print(
-                            "Error: macOS app bundle not found in "
-                            f"{hook_config.temp_bin_dir}. "
-                            "Set FLET_VIEW_PATH to the directory "
-                            "containing your Flet.app."
-                        )
-                        sys.exit(1)
+                    # copy_flet_bin() leaves only the .app bundle there.
+                    (app_name,) = os.listdir(temp_bin_dir)
+                    client_dir = os.path.join(temp_bin_dir, app_name)
 
                     self.warn_missing_extensions(
                         options,
                         os.path.join(
-                            app_path, "Contents", "Frameworks", "App.framework", "App"
+                            client_dir, "Contents", "Frameworks", "App.framework", "App"
                         ),
                     )
 
@@ -647,47 +563,35 @@ class Command(BaseCommand):
                         icon_path = options.icon
                         if not Path(icon_path).is_absolute():
                             icon_path = str(Path(os.getcwd()).joinpath(icon_path))
-                        update_flet_view_icon(app_path, icon_path)
+                        update_flet_view_icon(client_dir, icon_path)
 
-                    # version info
-                    app_path = update_flet_view_version_info(
-                        app_path=app_path,
+                    # version info, which may rename the bundle
+                    client_dir = update_flet_view_version_info(
+                        app_path=client_dir,
                         bundle_id=options.bundle_id,
                         product_name=options.product_name,
                         product_version=options.product_version,
                         copyright=options.copyright,
                     )
+                    sign_app_bundle(client_dir)
 
-                    # Compress the patched .app bundle back into flet-macos.tar.gz so
-                    # ensure_client_cached() finds it at runtime.
-                    assemble_app_bundle(app_path, tar_path)
-                    self.write_archive_fingerprint(tar_path)
-
-                    # Remove everything except the tar.gz and its fingerprint so
-                    # PyInstaller doesn't try to process loose framework binaries.
-                    for entry in os.listdir(hook_config.temp_bin_dir):
-                        entry_path = os.path.join(hook_config.temp_bin_dir, entry)
-                        if entry_path in (tar_path, tar_path + ".sha256"):
-                            continue
-                        if os.path.isdir(entry_path):
-                            shutil.rmtree(entry_path, ignore_errors=True)
-                        else:
-                            os.remove(entry_path)
-
-                elif is_linux():
-                    from flet_desktop import get_artifact_filename
-
+                else:
+                    client_dir = os.path.join(temp_bin_dir, "flet")
                     self.warn_missing_extensions(
-                        options,
-                        os.path.join(
-                            hook_config.temp_bin_dir, "flet", "lib", "libapp.so"
-                        ),
+                        options, os.path.join(client_dir, "lib", "libapp.so")
                     )
 
-                    # Compress the flet/ directory into a tar.gz
-                    # so ensure_client_cached() finds it at runtime.
-                    self.compress_flet_client_dir(
-                        hook_config.temp_bin_dir, get_artifact_filename()
+                # Archive the client the way ensure_client_cached() finds it
+                # at runtime. It goes into the "build" directory emptied
+                # above rather than the temp dir, since PyInstaller may reuse
+                # a cached analysis listing it when given another --workpath.
+                archive_name = get_client_archive_name(client_dir)
+                if archive_name:
+                    hook_config.client_files = stage_client_archive(
+                        client_dir,
+                        os.path.basename(client_dir),
+                        archive_name,
+                        os.path.join(build_dir, ".flet-client"),
                     )
 
             # run PyInstaller
@@ -711,12 +615,9 @@ class Command(BaseCommand):
             # In `finally` because a failed build leaks these otherwise: the
             # only handler above catches ImportError, so anything PyInstaller
             # raises would skip the cleanup entirely.
-            if hook_config.temp_bin_dir is not None and os.path.exists(
-                hook_config.temp_bin_dir
-            ):
-                hook_config.log_progress(
-                    "Deleting temp directory:", hook_config.temp_bin_dir
-                )
-                shutil.rmtree(hook_config.temp_bin_dir, ignore_errors=True)
+            hook_config.client_files = None
+            if temp_bin_dir is not None and os.path.exists(temp_bin_dir):
+                hook_config.log_progress("Deleting temp directory:", temp_bin_dir)
+                shutil.rmtree(temp_bin_dir, ignore_errors=True)
             if identity_dir is not None:
                 shutil.rmtree(identity_dir, ignore_errors=True)

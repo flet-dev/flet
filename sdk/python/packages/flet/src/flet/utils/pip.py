@@ -65,7 +65,12 @@ def install_flet_package(name: str):
         SystemExit: If package installation fails with both installers.
     """
     package_spec = f"{name}=={flet.version.flet_version}"
-    print(f"Installing {name} {flet.version.flet_version} package...", end="")
+    print(
+        f"Installing {name} {flet.version.flet_version} package...",
+        end="",
+        file=sys.stderr,
+        flush=True,
+    )
     if os.environ.get("UV"):
         retcode = _install_with_uv(package_spec)
         if retcode != 0:
@@ -75,13 +80,14 @@ def install_flet_package(name: str):
         if retcode != 0:
             retcode = _install_with_uv(package_spec)
     if retcode == 0:
-        print("OK")
+        print("OK", file=sys.stderr)
     else:
         print(
             f'Unable to install "{name}" package. Please run '
             f'"pip install {package_spec} --upgrade" '
             f'or "uv pip install {package_spec} --upgrade" '
-            f"command."
+            f"command.",
+            file=sys.stderr,
         )
         exit(1)
 

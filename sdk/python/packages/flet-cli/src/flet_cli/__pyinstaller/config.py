@@ -1,4 +1,9 @@
-temp_bin_dir = None
+client_files = None
+"""
+Files of the client archive `flet pack` bundles, set before it runs
+PyInstaller. `None` in a plain `pyinstaller` run, where the hook archives the
+client itself.
+"""
 
 verbose = 0
 """

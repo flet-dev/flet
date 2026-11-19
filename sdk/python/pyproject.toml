@@ -84,7 +84,7 @@ dev = [
     "ruff >=0.13.1",
     "matplotlib>=3.10.7",
     "plotly>=6.4.0",
-    "kaleido>=1.2.0",
+    "kaleido>=1.2.0,!=1.5.1",
     { include-group = 'test' },
 ]
 docs-coverage = [
