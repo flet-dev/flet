@@ -3,6 +3,7 @@
 ### Documentation
 
 * flet-notifications: Document how to update a notification after an inline reply on Android, and fix the "Action buttons and replies" example's notification staying stuck with a spinner after a reply ([#7058](https://github.com/flet-dev/flet/discussions/7058), [#7060](https://github.com/flet-dev/flet/pull/7060)) by @ItsRenjiii.
+* Document how to show a loading screen while `main()` starts up, and where unhandled exceptions from handlers, tasks and threads end up, in the Async apps guide ([#7100](https://github.com/flet-dev/flet/issues/7100), [#7101](https://github.com/flet-dev/flet/pull/7101)) by @daneeller.
 
 ### Improvements
 

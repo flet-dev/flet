@@ -10,9 +10,9 @@ That single loop is also what sends UI updates to the client, which leads to the
 one rule that matters most:
 
 :::warning[Never block the event loop]
-While your handler runs, nothing else does - no other events are dispatched, and
-no updates reach the screen. A blocking call such as `time.sleep()` or
-`requests.get()` freezes the UI for as long as it takes.
+While a handler or `main()` runs, nothing else does - no other events are
+dispatched, and no updates reach the screen. A blocking call such as
+`time.sleep()` or `requests.get()` freezes the UI for as long as it takes.
 
 This applies on every platform, not just the web.
 :::
@@ -95,8 +95,7 @@ ft.Button(content="Reload", on_click=lambda e: asyncio.create_task(reload(e)))
 [`page.run_task()`][flet.Page.run_task] is usually the better version of this
 trick. It takes the coroutine function and its arguments rather than a called
 coroutine, keeps a reference to the task so it cannot be garbage-collected
-mid-flight, and reports exceptions through Flet's error handling instead of
-discarding them:
+mid-flight, and logs an exception nobody awaits instead of discarding it:
 
 ```python
 ft.Button(content="Reload", on_click=lambda e: page.run_task(reload, e))
@@ -138,9 +137,10 @@ ft.run(main)
 
 ### Yielding for intermediate updates
 
-Updates are sent after a handler finishes. To show progress part-way through, make
-the handler a generator - each `yield` flushes pending updates and gives the loop
-a chance to run:
+Updates, including explicit `update()` calls, reach the screen once the handler
+gives the loop a turn: when it finishes, or when it awaits something. To show
+progress part-way through, make the handler a generator - each `yield` sends
+pending updates and gives the loop a chance to run:
 
 ```python
 def handle_click(e):
@@ -153,35 +153,36 @@ def handle_click(e):
 The work still runs on the event loop, so keep each chunk short. For heavy chunks,
 offload them instead (see below).
 
-### First-frame updates
+### Showing a first screen at startup
 
-The same rule applies during startup. Calling `page.update()` does not paint
-immediately - the update is dispatched to the client by the event loop. If the
-code right after it keeps the loop busy (for example, building a large control
-tree or loading data synchronously), the first frame never reaches the screen
-and the user sees a blank window followed by the finished UI.
+`main()` follows the same rule. If it does slow work, such as loading data or
+building a large UI, nothing reaches the screen until that work is done. To show
+a loading screen first, `yield` before the slow part:
 
-In an async `main()`, yield after the first `update()` and before the expensive
-work:
+```python
+def main(page: ft.Page):
+    loading = ft.ProgressRing()
+    page.add(loading)
+    yield  # sends the loading screen
+
+    data = load_data()  # slow
+    page.controls.remove(loading)
+    page.add(build_ui(data))
+```
+
+The app does not respond to events while `load_data()` runs. In an async `main()`,
+run the slow work in a thread instead (see [Threading](#threading)): awaiting it
+sends the loading screen and keeps the app responsive:
 
 ```python
 async def main(page: ft.Page):
-    page.add(ft.Text("Loading..."))
-    page.update()
-    await asyncio.sleep(0)  # let the first frame reach the client
-    page.add(build_full_ui(page))
+    loading = ft.ProgressRing()
+    page.add(loading)
+
+    data = await asyncio.to_thread(load_data)
+    page.controls.remove(loading)
+    page.add(build_ui(data))
 ```
-
-`asyncio.sleep(0)` only yields once. If the initial screen should stay visible
-for a minimum amount of time, use a short finite delay, or start the build with
-`page.run_task()` so the loop stays free. The generator pattern above works for
-startup too.
-
-:::note
-This is the same mechanism as the "handler finishes before the task does"
-warning above: updates are flushed by the event loop, not at the moment
-`update()` is called.
-:::
 
 ## Background tasks
 
@@ -282,42 +283,37 @@ async def handle_click(e):
 
 Flet's own shared pool is available as [`page.executor`][flet.Page.executor].
 
-#### Exceptions in worker threads
+## Exceptions
 
-Exceptions raised in a coroutine started with `page.run_task()` are logged by
-Flet when nobody awaits the future. Exceptions raised in plain worker threads -
-`asyncio.to_thread()`, `page.run_thread()`, or a thread you created yourself -
-do **not** go through Flet's error handling; by default Python only prints them
-to stderr. In a packaged desktop app there may be no console, so the failure can
-look like a silent exit or a UI that simply stops updating.
+Where an unhandled exception ends up depends on where it is raised:
 
-Catch exceptions in the worker and report them explicitly:
+| Raised in | What happens |
+|---|---|
+| `main()` or an event handler | Flet logs it with its traceback and shows the error in the app. |
+| A [`page.run_task()`][flet.Page.run_task] coroutine | It is raised where the future is awaited, or logged if nobody awaits it. |
+| `asyncio.to_thread()` or `page.loop.run_in_executor()` | It is raised where the call is awaited, so a handler that awaits it reports it as above. |
+| A [`threading.Thread`](https://docs.python.org/3/library/threading.html#threading.Thread) you start | It goes to [`threading.excepthook`](https://docs.python.org/3/library/threading.html#threading.excepthook), which prints it to stderr. |
+
+So catch exceptions inside a function you run in your own thread, and handle or
+log them there:
 
 ```python
-def write_log_file(path):
+def poll_device():
     try:
         ...
     except Exception:
-        logger.exception("background work failed")
+        logging.exception("Polling the device failed")
 ```
 
-For threads you did not start yourself, `threading.excepthook` is a useful
-last-resort hook:
+Logged messages and stderr go to your terminal, or to the
+[console log](../publish/index.md#console-output) of an app built with
+[`flet build`](../cli/flet-build.md). An app packaged with
+[`flet pack`](../publish/using-pyinstaller.md) or PyInstaller has no console, so
+log to a file to keep them:
 
 ```python
-def _on_thread_exception(args):
-    logger.error(
-        "Unhandled thread exception",
-        exc_info=(args.exc_type, args.exc_value, args.exc_traceback),
-    )
-
-threading.excepthook = _on_thread_exception
+logging.basicConfig(filename="app.log", level=logging.INFO)
 ```
-
-:::warning
-A global hook is a diagnostic aid, not a replacement for handling errors where
-they happen: it cannot update the UI or recover the operation.
-:::
 
 ## CPU-bound work
 
