@@ -961,6 +961,11 @@ class _LazyDataTableState extends State<_LazyDataTable>
           // widget goes before it is: what the chunk measured is out of date.
           _measuredKeys.remove(i);
           _widths.forget((slot) => slot == i);
+        } else if (_measuredKeys.containsKey(i)) {
+          // Nothing changed since the chunk was last laid out, so what it
+          // measured holds for its rows as they are now, paint-only edits
+          // included.
+          _measuredKeys[i] = widget.chunkKey(_chunkStart(i), _chunkEnd(i));
         }
       }
     }
