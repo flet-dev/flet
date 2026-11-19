@@ -3,6 +3,7 @@
 ### Documentation
 
 * flet-notifications: Document how to update a notification after an inline reply on Android, and fix the "Action buttons and replies" example's notification staying stuck with a spinner after a reply ([#7058](https://github.com/flet-dev/flet/discussions/7058), [#7060](https://github.com/flet-dev/flet/pull/7060)) by @ItsRenjiii.
+* Document how to show a loading screen while `main()` starts up, and where unhandled exceptions from handlers, tasks and threads end up, in the Async apps guide ([#7100](https://github.com/flet-dev/flet/issues/7100), [#7101](https://github.com/flet-dev/flet/pull/7101)) by @daneeller.
 
 ### Improvements
 
@@ -27,6 +28,7 @@
 * Fix `flet build windows` replacing the images in a supplied `.ico` app icon with ones resampled from its largest image; the file is now copied into the app unchanged, and is used over a `.png` of the same name ([#6007](https://github.com/flet-dev/flet/issues/6007), [#7074](https://github.com/flet-dev/flet/pull/7074)) by @arthur-tacca.
 * Fix `ShakeDetector` never calling `on_shake` with its default settings, and missing most shakes because it sampled the accelerometer only every 200 ms; on desktop it now raises `FletUnsupportedPlatformException`, like `Accelerometer` ([#6456](https://github.com/flet-dev/flet/issues/6456), [#7093](https://github.com/flet-dev/flet/pull/7093)) by @ndonkoHenri.
 * Fix `@ft.observable` not refreshing the UI after in-place changes such as `+=` on a list field ([#6293](https://github.com/flet-dev/flet/issues/6293), [#7086](https://github.com/flet-dev/flet/pull/7086)) by @joaoaracheski.
+* Fix a generator `main()` not showing the updates made before a `yield`, such as a splash screen, until the blocking work after it finished ([#7100](https://github.com/flet-dev/flet/issues/7100), [#7106](https://github.com/flet-dev/flet/pull/7106)) by @ndonkoHenri.
 
 ## 1.1.2
 
