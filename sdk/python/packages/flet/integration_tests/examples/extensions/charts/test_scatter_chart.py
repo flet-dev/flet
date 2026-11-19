@@ -1,11 +1,9 @@
 import pytest
-from example_apps import load_example
 
+import examples.extensions.charts.scatter_chart.scatter_chart.main as example_1
 import flet as ft
 import flet.testing as ftt
 import flet_charts as fch
-
-example_1 = load_example("scatter_chart/scatter_chart")
 
 
 @pytest.mark.asyncio(loop_scope="function")
@@ -55,5 +53,7 @@ async def test_example_1(flet_app_function: ftt.FletTestApp):
     await flet_app_function.tester.pump_and_settle()
     flet_app_function.assert_screenshot(
         "example_1",
-        await flet_app_function.page.take_screenshot(),
+        await flet_app_function.page.take_screenshot(
+            pixel_ratio=flet_app_function.screenshots_pixel_ratio
+        ),
     )

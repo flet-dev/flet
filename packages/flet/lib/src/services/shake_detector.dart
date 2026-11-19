@@ -6,6 +6,7 @@ import 'package:sensors_plus/sensors_plus.dart';
 
 import '../flet_service.dart';
 import '../utils/numbers.dart';
+import '../utils/platform.dart';
 
 class ShakeDetectorService extends FletService {
   ShakeDetectorService({required super.control});
@@ -24,14 +25,21 @@ class ShakeDetectorService extends FletService {
   void init() {
     debugPrint("ShakeDetectorService(${control.id}).init()");
     super.init();
-    update();
+    _updateConfig(forceRestart: true);
   }
 
   @override
   void update() {
     debugPrint(
         "ShakeDetectorService(${control.id}).update: ${control.properties}");
+    _updateConfig();
+  }
 
+  /// Reads the shake settings and restarts listening when they change.
+  ///
+  /// [forceRestart] starts listening even if the settings equal the current
+  /// ones, which is the case on `init()` for a detector with default settings.
+  void _updateConfig({bool forceRestart = false}) {
     var minimumShakeCount = control.getInt("minimum_shake_count", 1)!;
     var shakeSlopTimeMs = control.getInt("shake_slop_time_ms", 500)!;
     var shakeCountResetTimeMs =
@@ -39,8 +47,8 @@ class ShakeDetectorService extends FletService {
     var shakeThresholdGravity =
         control.getDouble("shake_threshold_gravity", 2.7)!;
 
-    // Update config if changed
-    if (minimumShakeCount != _minimumShakeCount ||
+    if (forceRestart ||
+        minimumShakeCount != _minimumShakeCount ||
         shakeSlopTimeMs != _shakeSlopTimeMs ||
         shakeCountResetTimeMs != _shakeCountResetTimeMs ||
         shakeThresholdGravity != _shakeThresholdGravity) {
@@ -54,8 +62,23 @@ class ShakeDetectorService extends FletService {
     }
   }
 
+  /// Listens to the accelerometer at the game rate (every 20 ms).
+  ///
+  /// The peaks of a shake are short, so the default rate of `sensors_plus`
+  /// (every 200 ms) often misses them and the threshold is never passed.
+  ///
+  /// `sensors_plus` has an accelerometer on Android, iOS and web only, so on
+  /// any other platform this does nothing.
+  ///
+  /// All readers of the accelerometer share one sampling rate. On Android and
+  /// iOS the last stream request sets it; on web the first one does and later
+  /// ones are ignored.
   void _startListening() {
-    _subscription = accelerometerEventStream().listen((event) {
+    if (!isWebPlatform() && !isMobilePlatform()) return;
+
+    _subscription =
+        accelerometerEventStream(samplingPeriod: SensorInterval.gameInterval)
+            .listen((event) {
       final gX = event.x / 9.80665;
       final gY = event.y / 9.80665;
       final gZ = event.z / 9.80665;
