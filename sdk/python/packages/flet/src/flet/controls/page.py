@@ -1,4 +1,5 @@
 import asyncio
+import contextlib
 import inspect
 import logging
 import sys
@@ -60,6 +61,7 @@ from flet.controls.types import (
 )
 from flet.utils import is_pyodide
 from flet.utils.from_dict import from_dict
+from flet.utils.object_model import callable_name
 from flet.utils.strings import random_string
 
 if TYPE_CHECKING:
@@ -85,11 +87,6 @@ def _default_authorization_impl() -> "type[Authorization]":
 
 
 logger = logging.getLogger("flet")
-
-
-def _callable_name(fn: Callable[..., Any]) -> str:
-    """Return a readable name of `fn` for log messages."""
-    return getattr(fn, "__qualname__", None) or repr(fn)
 
 
 AT = TypeVar("AT", bound="Authorization")
@@ -121,8 +118,8 @@ class TaskFuture(Future[RetT]):
     _awaited: bool = False
     """Whether something awaits the future."""
 
-    _retrieved: bool = False
-    """Whether the outcome was retrieved or logged."""
+    _handled: bool = False
+    """Whether the outcome reached an awaiter, or the exception was logged."""
 
     _task_name: str = ""
     """Name of the coroutine function, for log messages."""
@@ -130,47 +127,35 @@ class TaskFuture(Future[RetT]):
     def __await__(self) -> Generator[Any, None, RetT]:
         """Wait for the task to finish without blocking the event loop."""
         self._awaited = True
-        return asyncio.wrap_future(self).__await__()
+        return self.__wait().__await__()
 
-    def result(self, timeout: Optional[float] = None) -> RetT:
-        """
-        Return the task's value, or raise its exception.
-
-        Args:
-            timeout: Seconds to wait for the task, or `None` to wait as long as
-                it takes.
-        """
+    async def __wait(self) -> RetT:
+        """Wait for the outcome, and record it as handled once it's delivered."""
         try:
-            return super().result(timeout)
-        finally:
-            if self.done():
-                self._retrieved = True
+            value = await asyncio.wrap_future(self)
+        except asyncio.CancelledError:
+            raise
+        except BaseException:
+            self._handled = True
+            raise
+        self._handled = True
+        return value
 
-    def exception(self, timeout: Optional[float] = None) -> Optional[BaseException]:
-        """
-        Return the task's exception, or `None` if it returned a value.
-
-        Args:
-            timeout: Seconds to wait for the task, or `None` to wait as long as
-                it takes.
-        """
-        exception = super().exception(timeout)
-        self._retrieved = True
-        return exception
+    def _log_exception(self) -> None:
+        """Log the task's exception, if any, on the `flet` logger."""
+        if (exception := self.exception(0)) is not None:
+            self._handled = True
+            logger.error(
+                "Unhandled error in run_task() task %s",
+                self._task_name,
+                exc_info=exception,
+            )
 
     def __del__(self):
-        if not self._awaited or self._retrieved or not self.done() or self.cancelled():
-            return
-        try:
-            if (exception := Future.exception(self, 0)) is not None:
-                logger.error(
-                    "Unhandled error in run_task() task %s",
-                    self._task_name,
-                    exc_info=exception,
-                )
-        except Exception:
-            # The interpreter may be shutting down, with logging torn down.
-            pass
+        if self._awaited and not self._handled and self.done() and not self.cancelled():
+            # Logging may already be torn down at interpreter shutdown.
+            with contextlib.suppress(Exception):
+                self._log_exception()
 
 
 @control("ServiceRegistry")
@@ -1064,27 +1049,17 @@ class Page(BasePage):
             handler(*args, **kwargs), self.session.connection.loop
         )
         future.__class__ = TaskFuture
-        future._task_name = _callable_name(handler)
+        future._task_name = callable_name(handler)
 
         def _on_completion(f: TaskFuture[RetT]):
             """
             Log the exception of a task nothing is awaiting.
 
-            The exception is read with the base `Future.exception()`, which
-            doesn't count as retrieving it.
-
             Args:
                 f: Completed future returned by `run_coroutine_threadsafe()`.
             """
-            if f._awaited or f.cancelled():
-                return
-            if (exception := Future.exception(f)) is not None:
-                f._retrieved = True
-                logger.error(
-                    "Unhandled error in run_task() task %s",
-                    f._task_name,
-                    exc_info=exception,
-                )
+            if not f._awaited and not f.cancelled():
+                f._log_exception()
 
         future.add_done_callback(_on_completion)
 
@@ -1116,7 +1091,7 @@ class Page(BasePage):
             except Exception:
                 logger.error(
                     "Unhandled error in run_thread() function %s",
-                    _callable_name(handler),
+                    callable_name(handler),
                     exc_info=True,
                 )
 

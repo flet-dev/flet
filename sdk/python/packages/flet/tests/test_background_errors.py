@@ -2,6 +2,7 @@
 PubSub subscribers."""
 
 import asyncio
+import functools
 import gc
 import logging
 import threading
@@ -63,6 +64,40 @@ async def failing_task():
     raise ValueError("task failed")
 
 
+async def failing_task_with(token):
+    raise ValueError("task failed")
+
+
+async def _cancel_awaiter_as_task_fails(page, caplog) -> bool:
+    """
+    Cancel a task's awaiter right after the task's exception is handed to it,
+    before it resumes.
+
+    Runs in its own coroutine so its references to the future are gone once it
+    returns. Returns whether the awaiter was cancelled with nothing logged.
+    """
+    fail = asyncio.Event()
+
+    async def task():
+        await fail.wait()
+        raise ValueError("task failed")
+
+    async def wait_for(future):
+        return await future
+
+    future = page.run_task(task)
+    awaiter = asyncio.create_task(wait_for(future))
+    await asyncio.sleep(0)
+    future.add_done_callback(lambda _: awaiter.cancel())
+    fail.set()
+    cancelled = False
+    try:
+        await awaiter
+    except asyncio.CancelledError:
+        cancelled = True
+    return cancelled and _errors(caplog) == []
+
+
 class TestRunTaskErrors:
     """`page.run_task()` logs the exception of a task nothing awaits."""
 
@@ -75,6 +110,17 @@ class TestRunTaskErrors:
         [record] = _errors(caplog)
         assert "failing_task" in record.getMessage()
         assert isinstance(record.exc_info[1], ValueError)
+
+    @pytest.mark.asyncio
+    async def test_partial_task_is_named_without_its_arguments(self, page, caplog):
+        """A task given as a `functools.partial` is named after its function,
+        without its arguments."""
+        page.run_task(functools.partial(failing_task_with, "secret-token"))
+
+        assert await _until(lambda: _errors(caplog))
+        [record] = _errors(caplog)
+        assert "failing_task_with" in record.getMessage()
+        assert "secret-token" not in record.getMessage()
 
     @pytest.mark.asyncio
     async def test_exception_of_an_awaited_task_is_not_logged(self, page, caplog):
@@ -92,20 +138,17 @@ class TestRunTaskErrors:
     async def test_exception_an_awaiter_never_gets_is_logged_on_discard(
         self, page, caplog
     ):
-        """An awaited task's exception that isn't retrieved is logged once the
-        future is discarded."""
-        future = page.run_task(failing_task)
-        # Stands in for an awaiter cancelled, or whose loop closed, just as the
-        # task failed: it started waiting but never got the outcome.
-        future._awaited = True
-        assert await _until(future.done)
-        assert _errors(caplog) == []
-
-        del future
+        """An exception that reaches an awaiter just as it's cancelled is logged
+        once the future is discarded."""
+        assert await _cancel_awaiter_as_task_fails(page, caplog)
+        # The loop's current callback holds the cancelled awaiter until it
+        # returns.
+        await asyncio.sleep(0)
         gc.collect()
 
         [record] = _errors(caplog)
-        assert "failing_task" in record.getMessage()
+        assert "task" in record.getMessage()
+        assert str(record.exc_info[1]) == "task failed"
 
     @pytest.mark.asyncio
     async def test_cancelled_task_is_not_logged(self, page, caplog):
@@ -206,6 +249,29 @@ class TestPubSubSubscriberErrors:
         assert await _until(lambda: _errors(caplog) and received.is_set())
         [record] = _errors(caplog)
         assert "failing_subscriber" in record.getMessage()
+        assert str(record.exc_info[1]) == "failed on hello"
+
+    @pytest.mark.asyncio
+    async def test_subscriber_with_failing_repr_is_logged(self, caplog):
+        """A failing subscriber whose `repr()` raises is still logged by name, and
+        the others still get the message."""
+        hub = PubSubHub(loop=asyncio.get_running_loop())
+        received = []
+
+        class Subscriber:
+            def __call__(self, message):
+                raise ValueError(f"failed on {message}")
+
+            def __repr__(self):
+                raise RuntimeError("no repr")
+
+        hub.subscribe("session 1", Subscriber())
+        hub.subscribe("session 2", received.append)
+        hub.send_all("hello")
+
+        assert await _until(lambda: _errors(caplog) and received)
+        [record] = _errors(caplog)
+        assert "Subscriber" in record.getMessage()
         assert str(record.exc_info[1]) == "failed on hello"
 
     @pytest.mark.asyncio
