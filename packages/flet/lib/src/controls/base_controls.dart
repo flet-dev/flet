@@ -390,24 +390,11 @@ Widget _positionedControl(
 
 /// Applies the control's size, its size animation and its min/max constraints
 /// to [widget].
-///
-/// A control that sizes itself (it lists `width` or `height` in
-/// `skip_properties`) gets only the size animation: an [AnimatedSize] that
-/// follows whatever size the control lays out at.
 Widget _sizedControl(Widget widget, Control control) {
   final skipProps =
       (control.internals?['skip_properties'] as List?) ?? const [];
   if (!['width', 'height'].any(skipProps.contains)) {
     widget = _fixedSizeControl(widget, control);
-  } else {
-    final animationSize = control.getAnimation("animate_size");
-    if (animationSize != null) {
-      widget = AnimatedSize(
-        duration: animationSize.duration,
-        curve: animationSize.curve,
-        child: widget,
-      );
-    }
   }
   return _constrainedControl(widget, control, skipProps);
 }
@@ -602,21 +589,23 @@ class MeasureSize extends SingleChildRenderObjectWidget {
 
 class _MeasureSizeRenderObject extends RenderProxyBox {
   ValueChanged<Size> onChange;
-  Size? _lastSize;
+  Size? _reportedSize;
+  bool _reportScheduled = false;
 
   _MeasureSizeRenderObject(this.onChange);
 
   @override
   void performLayout() {
     super.performLayout();
-    // Post-frame to avoid re-entrant layout callbacks.
-    final newSize = child?.size ?? size;
-    if (_lastSize == newSize) {
-      return;
-    }
-    _lastSize = newSize;
+    // A parent can measure the child and lay it out again in the same frame.
+    // Report the size that was actually painted.
+    if (_reportScheduled || size == _reportedSize) return;
+    _reportScheduled = true;
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      onChange(newSize);
+      _reportScheduled = false;
+      if (!attached || size == _reportedSize) return;
+      _reportedSize = size;
+      onChange(size);
     });
   }
 }

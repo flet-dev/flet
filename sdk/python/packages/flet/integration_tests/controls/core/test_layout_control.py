@@ -452,10 +452,13 @@ async def test_animate_size(flet_app: ftt.FletTestApp):
         width=100,
         height=40,
         bgcolor=ft.Colors.CYAN_300,
-        content=ft.Container(width=100, height=200),
+        content=ft.Container(
+            width=100,
+            height=200,
+            size_change_interval=0,
+            on_size_change=lambda e: heights.append(e.height),
+        ),
         animate_size=ft.Animation(400),
-        size_change_interval=0,
-        on_size_change=lambda e: heights.append(e.height),
     )
     flet_app.page.clean()
     flet_app.page.add(box)
@@ -468,6 +471,7 @@ async def test_animate_size(flet_app: ftt.FletTestApp):
     await flet_app.tester.pump_and_settle()
     assert await _wait_for(flet_app, lambda: heights and heights[-1] == 200)
     assert any(40 < h < 200 for h in heights), f"no animation: {heights}"
+    assert heights == sorted(heights)
 
     heights.clear()
     box.height = 40
@@ -475,6 +479,7 @@ async def test_animate_size(flet_app: ftt.FletTestApp):
     await flet_app.tester.pump_and_settle()
     assert await _wait_for(flet_app, lambda: heights and heights[-1] == 40)
     assert any(40 < h < 200 for h in heights), f"no animation: {heights}"
+    assert heights == sorted(heights, reverse=True)
 
 
 @pytest.mark.asyncio(loop_scope="module")
