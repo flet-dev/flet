@@ -77,9 +77,8 @@ class PubSubHub:
         """
         logger.debug("pubsub.send_all(%s)", message)
         with self.__lock:
-            for handlers in self.__subscribers.values():
-                for handler in handlers:
-                    self.__send(handler, [message])
+            handlers = [h for hs in self.__subscribers.values() for h in hs]
+        self.__send_to(handlers, [message])
 
     def send_all_on_topic(self, topic: str, message: Any):
         """
@@ -91,10 +90,10 @@ class PubSubHub:
         """
         logger.debug("pubsub.send_all_on_topic(%s, %s)", topic, message)
         with self.__lock:
-            if topic in self.__topic_subscribers:
-                for handlers in self.__topic_subscribers[topic].values():
-                    for handler in handlers:
-                        self.__send(handler, [topic, message])
+            handlers = [
+                h for hs in self.__topic_subscribers.get(topic, {}).values() for h in hs
+            ]
+        self.__send_to(handlers, [topic, message])
 
     def send_others(self, except_session_id: str, message: Any):
         """
@@ -106,10 +105,13 @@ class PubSubHub:
         """
         logger.debug("pubsub.send_others(%s, %s)", except_session_id, message)
         with self.__lock:
-            for session_id, handlers in self.__subscribers.items():
-                if except_session_id != session_id:
-                    for handler in handlers:
-                        self.__send(handler, [message])
+            handlers = [
+                h
+                for session_id, hs in self.__subscribers.items()
+                if session_id != except_session_id
+                for h in hs
+            ]
+        self.__send_to(handlers, [message])
 
     def send_others_on_topic(self, except_session_id: str, topic: str, message: Any):
         """
@@ -124,11 +126,13 @@ class PubSubHub:
             "pubsub.send_others_on_topic(%s, %s, %s)", except_session_id, topic, message
         )
         with self.__lock:
-            if topic in self.__topic_subscribers:
-                for session_id, handlers in self.__topic_subscribers[topic].items():
-                    if except_session_id != session_id:
-                        for handler in handlers:
-                            self.__send(handler, [topic, message])
+            handlers = [
+                h
+                for session_id, hs in self.__topic_subscribers.get(topic, {}).items()
+                if session_id != except_session_id
+                for h in hs
+            ]
+        self.__send_to(handlers, [topic, message])
 
     def subscribe(self, session_id: str, handler: Callable):
         """
@@ -279,6 +283,24 @@ class PubSubHub:
             if len(subscriber_topics) == 0:
                 self.__subscriber_topics.pop(session_id, None)
 
+    def __send_to(
+        self,
+        handlers: list[Union[Callable, Callable[..., Awaitable[Any]]]],
+        args: Iterable,
+    ):
+        """
+        Dispatches a message to each of `handlers`.
+
+        Called after releasing the hub lock, so subscribers and the logging of
+        their errors can subscribe and unsubscribe.
+
+        Args:
+            handlers: Subscriber callbacks to invoke.
+            args: Positional arguments to pass to each callback.
+        """
+        for handler in handlers:
+            self.__send(handler, args)
+
     def __send(
         self, handler: Union[Callable, Callable[..., Awaitable[Any]]], args: Iterable
     ):
@@ -300,7 +322,13 @@ class PubSubHub:
             raise RuntimeError("PubSub event loop is not set")
 
         if inspect.iscoroutinefunction(handler):
-            future = asyncio.run_coroutine_threadsafe(handler(*args), self.__loop)
+            try:
+                coroutine = handler(*args)
+            except Exception as e:
+                # E.g. a subscriber that takes other arguments than it's sent.
+                _log_subscriber_error(handler, e)
+                return
+            future = asyncio.run_coroutine_threadsafe(coroutine, self.__loop)
             future.add_done_callback(partial(_on_async_subscriber_done, handler))
         else:
             call = partial(_call_subscriber, handler, *args)

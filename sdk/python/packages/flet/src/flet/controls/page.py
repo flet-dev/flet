@@ -111,17 +111,66 @@ class TaskFuture(Future[RetT]):
     `result()` blocks, so call it on the page's event loop thread only once the
     task is done.
 
-    If the task raises while nothing awaits the future, the exception is logged
-    on the `flet` logger.
+    An exception the task raises while nothing awaits the future is logged on
+    the `flet` logger right away, even if the future is awaited later; await the
+    future itself, before the task can fail, to handle the exception instead. An
+    exception that an awaiter never gets, for example because the awaiter was
+    cancelled as the task failed, is logged when the future is discarded.
     """
 
     _awaited: bool = False
     """Whether something awaits the future."""
 
+    _retrieved: bool = False
+    """Whether the outcome was retrieved or logged."""
+
+    _task_name: str = ""
+    """Name of the coroutine function, for log messages."""
+
     def __await__(self) -> Generator[Any, None, RetT]:
         """Wait for the task to finish without blocking the event loop."""
         self._awaited = True
         return asyncio.wrap_future(self).__await__()
+
+    def result(self, timeout: Optional[float] = None) -> RetT:
+        """
+        Return the task's value, or raise its exception.
+
+        Args:
+            timeout: Seconds to wait for the task, or `None` to wait as long as
+                it takes.
+        """
+        try:
+            return super().result(timeout)
+        finally:
+            if self.done():
+                self._retrieved = True
+
+    def exception(self, timeout: Optional[float] = None) -> Optional[BaseException]:
+        """
+        Return the task's exception, or `None` if it returned a value.
+
+        Args:
+            timeout: Seconds to wait for the task, or `None` to wait as long as
+                it takes.
+        """
+        exception = super().exception(timeout)
+        self._retrieved = True
+        return exception
+
+    def __del__(self):
+        if not self._awaited or self._retrieved or not self.done() or self.cancelled():
+            return
+        try:
+            if (exception := Future.exception(self, 0)) is not None:
+                logger.error(
+                    "Unhandled error in run_task() task %s",
+                    self._task_name,
+                    exc_info=exception,
+                )
+        except Exception:
+            # The interpreter may be shutting down, with logging torn down.
+            pass
 
 
 @control("ServiceRegistry")
@@ -1015,20 +1064,25 @@ class Page(BasePage):
             handler(*args, **kwargs), self.session.connection.loop
         )
         future.__class__ = TaskFuture
+        future._task_name = _callable_name(handler)
 
         def _on_completion(f: TaskFuture[RetT]):
             """
             Log the exception of a task nothing is awaiting.
+
+            The exception is read with the base `Future.exception()`, which
+            doesn't count as retrieving it.
 
             Args:
                 f: Completed future returned by `run_coroutine_threadsafe()`.
             """
             if f._awaited or f.cancelled():
                 return
-            if (exception := f.exception()) is not None:
+            if (exception := Future.exception(f)) is not None:
+                f._retrieved = True
                 logger.error(
                     "Unhandled error in run_task() task %s",
-                    _callable_name(handler),
+                    f._task_name,
                     exc_info=exception,
                 )
 
