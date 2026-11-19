@@ -276,8 +276,7 @@ class TestPubSubSubscriberErrors:
 
     @pytest.mark.asyncio
     async def test_subscriber_can_unsubscribe_while_receiving(self):
-        """A subscriber called inline can unsubscribe without blocking the
-        publish."""
+        """A subscriber called inline can unsubscribe without blocking the publish."""
         hub = PubSubHub(loop=asyncio.get_running_loop())
         received = []
 
