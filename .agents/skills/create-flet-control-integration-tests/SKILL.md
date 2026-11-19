@@ -28,21 +28,16 @@ Pick the closest existing suite first:
 
 Prefer adding tests to an existing file for the same control. Create a new test file only when no suitable file exists.
 
-### Scope split rule (required)
+### One file per control
 
-Do not mix `loop_scope="module"` and `loop_scope="function"` tests in the same file.
-
-Naming convention:
-
-- `test_<control>.py` for module-scoped visual/stable tests (uses `flet_app`)
-- `test_<control>_isolated.py` for function-scoped tests that require a fresh app per test (uses `flet_app_function`)
+Keep all tests for a control in `test_<control>.py`, whatever their scope. Module-scoped (`flet_app`) and function-scoped (`flet_app_function`) tests can share the file; pytest-asyncio runs each on its own event loop.
 
 ## Fixture choice
 
 Use fixtures from `integration_tests/conftest.py`:
 
-- `flet_app` (`loop_scope="module"`): best for stable visual tests and bulk screenshot tests.
-- `flet_app_function` (`loop_scope="function"`): best for tests that mutate state and must run in a separate app each.
+- `flet_app` (`loop_scope="module"`): the default. One app is shared by every module-scoped test in the file, so use it for tests that only add controls and check them, such as screenshot tests.
+- `flet_app_function` (`loop_scope="function"`): launches a separate client for the test. That costs a few seconds per test with a prebuilt test app (`FLET_TEST_APP_BINARY`) and a full app build per test without one. Use it only when a test changes state that would leak into later tests, such as `page.theme_mode`, page-level properties, `ft.context.page` or auto-update behavior.
 
 ## Authoring workflow
 
@@ -51,7 +46,7 @@ Use fixtures from `integration_tests/conftest.py`:
 - set `theme_mode` explicitly when visuals matter
 - set fixed sizes/padding/spacing
 - avoid random or time-varying content
-3. Choose file by scope rule before writing tests.
+3. Choose the fixture: `flet_app` unless the test needs a fresh app.
 4. Write test using async pytest.
 5. Use screenshot assertion for UI behavior, functional assertion for non-visual behavior.
 6. Name test so `request.node.name` can be used as screenshot key.
@@ -87,9 +82,9 @@ finder = await flet_app_function.tester.find_by_tooltip("Info tooltip")
 assert finder.count == 1
 ```
 
-## Minimal templates
+## Minimal template
 
-### Template: module-scope file (`test_<control>.py`)
+A `test_<control>.py` file with one test of each scope:
 
 ```python
 import pytest
@@ -105,19 +100,10 @@ async def test_<behavior>(flet_app: ftt.FletTestApp, request):
         request.node.name,
         ft.Container(width=240, height=80, alignment=ft.Alignment.CENTER),
     )
-```
-
-### Template: function-scope file (`test_<control>_isolated.py`)
-
-```python
-import pytest
-
-import flet as ft
-import flet.testing as ftt
 
 
 @pytest.mark.asyncio(loop_scope="function")
-async def test_<behavior>(flet_app_function: ftt.FletTestApp):
+async def test_<other_behavior>(flet_app_function: ftt.FletTestApp):
     flet_app_function.page.add(ft.IconButton(icon=ft.Icons.INFO, tooltip="Info"))
     await flet_app_function.tester.pump_and_settle()
 
@@ -148,9 +134,8 @@ FLET_TEST_GOLDEN=1 uv run pytest -s -o log_cli=true -o log_cli_level=INFO packag
 ## Quality checklist
 
 - Test file location matches control area.
-- `module` and `function` scope tests are in separate files.
-- Function-scoped files use the `test_<control>_isolated.py` naming convention.
-- Fixture scope matches test intent.
+- All tests for a control are in one `test_<control>.py` file.
+- `flet_app_function` is used only by tests that need a fresh app.
 - Screenshot keys are stable (`request.node.name` preferred).
 - Visual tests are deterministic (theme/size/content).
 - Goldens are updated only for intentional visual changes.
@@ -161,7 +146,6 @@ FLET_TEST_GOLDEN=1 uv run pytest -s -o log_cli=true -o log_cli_level=INFO packag
 - `sdk/python/packages/flet/integration_tests/README.md`
 - `sdk/python/packages/flet/integration_tests/conftest.py`
 - `sdk/python/packages/flet/integration_tests/controls/core/test_control.py`
-- `sdk/python/packages/flet/integration_tests/controls/core/test_control_isolated.py`
 - `sdk/python/packages/flet/integration_tests/controls/core/test_layout_control.py`
 - `sdk/python/packages/flet/integration_tests/examples/core/test_control.py`
 - `sdk/python/examples/controls/control`
