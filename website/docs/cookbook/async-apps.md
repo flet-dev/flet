@@ -153,6 +153,36 @@ def handle_click(e):
 The work still runs on the event loop, so keep each chunk short. For heavy chunks,
 offload them instead (see below).
 
+### First-frame updates
+
+The same rule applies during startup. Calling `page.update()` does not paint
+immediately - the update is dispatched to the client by the event loop. If the
+code right after it keeps the loop busy (for example, building a large control
+tree or loading data synchronously), the first frame never reaches the screen
+and the user sees a blank window followed by the finished UI.
+
+In an async `main()`, yield after the first `update()` and before the expensive
+work:
+
+```python
+async def main(page: ft.Page):
+    page.add(ft.Text("Loading..."))
+    page.update()
+    await asyncio.sleep(0)  # let the first frame reach the client
+    page.add(build_full_ui(page))
+```
+
+`asyncio.sleep(0)` only yields once. If the initial screen should stay visible
+for a minimum amount of time, use a short finite delay, or start the build with
+`page.run_task()` so the loop stays free. The generator pattern above works for
+startup too.
+
+:::note
+This is the same mechanism as the "handler finishes before the task does"
+warning above: updates are flushed by the event loop, not at the moment
+`update()` is called.
+:::
+
 ## Background tasks
 
 Use [`page.run_task()`][flet.Page.run_task] to start a coroutine that outlives the
@@ -251,6 +281,43 @@ async def handle_click(e):
 ```
 
 Flet's own shared pool is available as [`page.executor`][flet.Page.executor].
+
+#### Exceptions in worker threads
+
+Exceptions raised in a coroutine started with `page.run_task()` are logged by
+Flet when nobody awaits the future. Exceptions raised in plain worker threads -
+`asyncio.to_thread()`, `page.run_thread()`, or a thread you created yourself -
+do **not** go through Flet's error handling; by default Python only prints them
+to stderr. In a packaged desktop app there may be no console, so the failure can
+look like a silent exit or a UI that simply stops updating.
+
+Catch exceptions in the worker and report them explicitly:
+
+```python
+def write_log_file(path):
+    try:
+        ...
+    except Exception:
+        logger.exception("background work failed")
+```
+
+For threads you did not start yourself, `threading.excepthook` is a useful
+last-resort hook:
+
+```python
+def _on_thread_exception(args):
+    logger.error(
+        "Unhandled thread exception",
+        exc_info=(args.exc_type, args.exc_value, args.exc_traceback),
+    )
+
+threading.excepthook = _on_thread_exception
+```
+
+:::warning
+A global hook is a diagnostic aid, not a replacement for handling errors where
+they happen: it cannot update the UI or recover the operation.
+:::
 
 ## CPU-bound work
 
