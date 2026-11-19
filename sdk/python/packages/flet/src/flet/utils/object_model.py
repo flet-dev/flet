@@ -1,4 +1,5 @@
 import dataclasses
+import functools
 import inspect
 import sys
 from enum import Enum
@@ -126,6 +127,23 @@ def is_enum(tp: Any) -> bool:
         `True` if `tp` is a subclass of `enum.Enum`, otherwise `False`.
     """
     return isinstance(tp, type) and issubclass(tp, Enum)
+
+
+def callable_name(fn: Any) -> str:
+    """
+    Return the qualified name of `fn` for log messages.
+
+    The function a `functools.partial` wraps is named, and an object without
+    a `__qualname__` is named after its type, so no arguments or `repr()` end
+    up in the message.
+
+    Args:
+        fn: The callable to name.
+    """
+    while isinstance(fn, functools.partial):
+        fn = fn.func
+    name = getattr(fn, "__qualname__", None)
+    return name if isinstance(name, str) else type(fn).__qualname__
 
 
 def get_param_count(fn):
