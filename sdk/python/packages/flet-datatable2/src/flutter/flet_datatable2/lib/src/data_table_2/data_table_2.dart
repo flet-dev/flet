@@ -804,8 +804,7 @@ class DataTable2 extends DataTable {
         0,
         rows.isEmpty
             ? 0
-            : math.min(fixedLeftColumns,
-                columns.length + (showCheckboxColumn ? 1 : 0)));
+            : math.min(fixedLeftColumns, tableColumnWidths.length));
 
     // Flet: a long table builds its data rows as they scroll into view, so
     // the rows built here are only the data rows fixed at the top. Needs the
@@ -818,7 +817,7 @@ class DataTable2 extends DataTable {
 
     List<TableRow>? coreRows = lazy ||
             rows.isEmpty ||
-            actualFixedColumns >= columns.length + (showCheckboxColumn ? 1 : 0)
+            actualFixedColumns >= tableColumnWidths.length
         ? null
         : _buildTableRows(
             anyRowSelectable,
@@ -1150,8 +1149,7 @@ class DataTable2 extends DataTable {
             if (rows.isNotEmpty) {
               if (fixedRows != null &&
                   !isRowsEmpty(fixedRows) &&
-                  actualFixedColumns <
-                      columns.length + (showCheckboxColumn ? 1 : 0)) {
+                  actualFixedColumns < tableColumnWidths.length) {
                 fixedRowsTabel = Table(
                     columnWidths:
                         actualFixedColumns > 0 ? rightWidthsAsMap : widthsAsMap,
@@ -1781,7 +1779,9 @@ class _LazyRows extends StatelessWidget {
         itemCount: chunks + (bottomMargin > 0 ? 1 : 0),
         itemExtentBuilder: (i, _) => i < chunks ? extents[i] : bottomMargin,
         itemBuilder: (context, i) {
-          if (i >= chunks) return const SizedBox.shrink();
+          // With all columns fixed the linked body still needs scroll extents,
+          // but has no cells from which to build a Table.
+          if (i >= chunks || width == 0) return const SizedBox.shrink();
           final start = firstRow + i * _chunkRows;
           Widget table =
               buildChunk(start, math.min(rowCount, start + _chunkRows));

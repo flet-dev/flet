@@ -129,4 +129,18 @@ void main() {
     expect(find.text('r999 c2', skipOffstage: false), findsOneWidget);
     expect(find.byType(ListView), findsNothing);
   });
+
+  testWidgets('a long table scrolls with every column fixed', (tester) async {
+    // The optional checkbox column has no selectable rows and is hidden.
+    await _pumpTable(tester, {
+      'fixed_left_columns': 4,
+      'show_checkbox_column': true,
+    }, rows: 120);
+    expect(find.text('r0 c0'), findsOneWidget);
+    expect(find.text('r119 c2'), findsNothing);
+    await _scrollBody(tester, 120 * 48);
+    await tester.pumpAndSettle();
+    expect(find.text('r119 c2'), findsOneWidget);
+    expect(tester.takeException(), isNull);
+  });
 }

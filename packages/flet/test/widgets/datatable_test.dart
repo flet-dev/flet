@@ -1,4 +1,4 @@
-import 'dart:ui' show SemanticsAction, SemanticsFlag;
+import 'dart:collection';
 
 import 'package:flet/src/controls/control_widget.dart';
 import 'package:flet/src/controls/datatable.dart';
@@ -110,6 +110,22 @@ Finder _headerCheckbox() => find
     .descendant(
         of: find.bySubtype<DataTable>().last, matching: find.byType(Checkbox))
     .first;
+
+// Fails deterministically if traversing nested controls reads a binary payload.
+class _UnreadableBytes extends ListBase<int> {
+  @override
+  int get length => 512;
+
+  @override
+  set length(int value) => throw UnsupportedError('read-only');
+
+  @override
+  int operator [](int index) => throw StateError('Visited a payload byte');
+
+  @override
+  void operator []=(int index, int value) =>
+      throw UnsupportedError('read-only');
+}
 
 void main() {
   testWidgets('DataTable paints behind its own repaint boundary',
@@ -351,11 +367,11 @@ void main() {
           of: find.bySubtype<DataTable>().first,
           matching: find.byType(Checkbox));
 
-      final owner = tester.binding.pipelineOwner.semanticsOwner!;
+      final owner = tester.getSemantics(header.first).owner!;
       final actionableNodes = <int>{};
       bool collectActions(SemanticsNode node) {
         final data = node.getSemanticsData();
-        if (data.hasFlag(SemanticsFlag.isHidden)) return true;
+        if (data.flagsCollection.isHidden) return true;
         if (data.hasAction(SemanticsAction.tap)) actionableNodes.add(node.id);
         node.visitChildren(collectActions);
         return true;
@@ -377,6 +393,7 @@ void main() {
       semantics.dispose();
     }
   });
+
   testWidgets('build_rows_on_demand false builds every row', (tester) async {
     await _pumpTable(tester, {'build_rows_on_demand': false}, rows: 300);
     expect(tester.widget<DataTable>(find.bySubtype<DataTable>()).rows,
@@ -682,5 +699,132 @@ void main() {
     await tester.pumpAndSettle();
     expect(tester.getTopLeft(find.text('B')).dx, before);
     expect(tester.getTopLeft(find.text('r500 c1')).dx, before);
+  });
+
+  testWidgets('width measurement leaves size events to the visible Text',
+      (tester) async {
+    final table = await _pumpTable(tester, {},
+        rows: 120,
+        content: (r, c) => r == 0 && c == 0
+            ? {
+                '_c': 'Text',
+                '_i': 120001,
+                'value': 'longest text in the table',
+                'on_size_change': true,
+                'size_change_interval': 0
+              }
+            : null);
+    await tester.pumpAndSettle();
+    final events = table.backend.events
+        .where((e) => e.$1 == 120001 && e.$2 == 'size_change')
+        .toList();
+    expect(events, hasLength(1));
+  });
+
+  testWidgets('table fills enlarged window', (tester) async {
+    tester.view.devicePixelRatio = 1.0;
+    tester.view.physicalSize = const Size(800, 240);
+    addTearDown(tester.view.resetPhysicalSize);
+    addTearDown(tester.view.resetDevicePixelRatio);
+    await _pumpTable(tester, {}, rows: 300);
+    await tester.pumpAndSettle();
+    tester.view.physicalSize = const Size(800, 1700);
+    await tester.pumpAndSettle();
+    expect(tester.getSize(find.byType(Scrollable)).height, 1700);
+    expect(find.text('r32 c0'), findsOneWidget);
+  });
+
+  testWidgets('a cell replaced just before eviction drops its old width',
+      (tester) async {
+    final table = await _pumpTable(tester, {},
+        rows: 1000,
+        content: (r, c) => r == 5 && c == 0
+            ? {'_c': 'Container', '_i': 110000, 'width': 340.0, 'height': 10.0}
+            : null);
+    final wide = tester.getTopLeft(find.text('B')).dx;
+    tester
+        .state<ScrollableState>(find.byType(Scrollable))
+        .position
+        .jumpTo(56 + 500 * 48);
+    table.rows[5]
+        .children('cells')
+        .first
+        .update({'content': 'x'}, shouldNotify: true);
+    await tester.pumpAndSettle();
+    expect(tester.getTopLeft(find.text('B')).dx, lessThan(wide));
+  });
+
+  testWidgets(
+      'lazy rows share one semantic table and keep their absolute indices',
+      (tester) async {
+    await _pumpTable(tester, {}, rows: 300);
+
+    SemanticsNode ancestorWithRole(SemanticsNode? node, SemanticsRole role) {
+      while (node != null && node.role != role) {
+        node = node.parent;
+      }
+      expect(node, isNotNull, reason: 'missing $role');
+      return node!;
+    }
+
+    SemanticsNode checkCell(String text, int row, int column) {
+      final node = tester.getSemantics(find.text(text));
+      final semanticRow = ancestorWithRole(node, SemanticsRole.row);
+      expect(semanticRow.indexInParent, row);
+      final cell = ancestorWithRole(node, SemanticsRole.cell);
+      expect(cell.indexInParent, column);
+      expect(semanticRow.parent!.role, SemanticsRole.table);
+      return semanticRow.parent!;
+    }
+
+    final table = checkCell('r0 c0', 1, 0);
+    expect(checkCell('r10 c1', 11, 1), same(table));
+    final heading = tester.getSemantics(find.text('A'));
+    expect(ancestorWithRole(heading, SemanticsRole.columnHeader), isNotNull);
+    expect(ancestorWithRole(heading, SemanticsRole.row).indexInParent, 0);
+    expect(ancestorWithRole(heading, SemanticsRole.table), same(table));
+
+    await _scrollTo(tester, 200 * 48 + 56);
+    expect(find.text('r0 c0'), findsNothing);
+    expect(checkCell('r200 c1', 201, 1), same(table));
+    final rows = <int>[];
+    table.visitChildren((node) {
+      expect(node.role, SemanticsRole.row);
+      rows.add(node.indexInParent!);
+      return true;
+    });
+    expect(rows, contains(201));
+    expect(rows, isNot(contains(1)));
+  });
+
+  testWidgets('list view scroll brings rows of nested table into view',
+      (tester) async {
+    final outer = ScrollController();
+    addTearDown(outer.dispose);
+    await _pumpTable(tester, {},
+        rows: 300,
+        scrollView: (table) => ListView(controller: outer, children: [
+              SizedBox(
+                  height: 6000,
+                  child: SingleChildScrollView(primary: false, child: table))
+            ]));
+    await tester.pumpAndSettle();
+    outer.jumpTo(4500);
+    await tester.pumpAndSettle();
+    expect(find.text('r95 c0'), findsOneWidget);
+  });
+
+  testWidgets('row selection skips numeric payloads in offscreen cells',
+      (tester) async {
+    final table = await _pumpTable(tester, {},
+        rows: 120,
+        content: (r, c) => r == 119 && c == 0
+            ? {'_c': 'Image', '_i': 120001, 'src': 'offscreen.png'}
+            : null);
+    final image = table.rows.last.children('cells').first.child('content')!;
+    image.properties['src'] = _UnreadableBytes();
+    table.rows.first.update({'selected': true}, shouldNotify: true);
+    await tester.pumpAndSettle();
+    expect(tester.takeException(), isNull);
   });
 }

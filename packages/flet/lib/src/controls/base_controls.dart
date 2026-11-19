@@ -40,6 +40,14 @@ class LayoutControl extends StatelessWidget {
     required this.child,
   });
 
+  /// Applies the size-affecting properties to an offstage measurement copy.
+  static Widget measure(Control control, Widget child) {
+    var widget = _directionality(child, control);
+    widget = _sizedControl(widget, control, animate: false);
+    widget = _aspectRatio(widget, control);
+    return _marginControl(widget, control, animate: false);
+  }
+
   @override
   Widget build(BuildContext context) {
     Widget w = _opacity(context, child, control);
@@ -53,7 +61,7 @@ class LayoutControl extends StatelessWidget {
     w = _transformedControl(w, control);
     w = _aspectRatio(w, control);
     w = _alignedControl(context, w, control);
-    w = _marginControl(context, w, control);
+    w = _marginControl(w, control);
     w = _positionedControl(context, w, control);
     w = _badge(w, Theme.of(context), control);
     w = _sizeChangeObserver(w, control);
@@ -384,13 +392,13 @@ Widget _alignedControl(BuildContext context, Widget widget, Control control) {
   return widget;
 }
 
-Widget _marginControl(BuildContext context, Widget widget, Control control) {
+Widget _marginControl(Widget widget, Control control, {bool animate = true}) {
   final skipProps = control.internals?["skip_properties"] as List?;
   if (skipProps?.contains("margin") == true) return widget;
 
   var margin = control.getEdgeInsets("margin");
   var animation = control.getAnimation("animate_margin");
-  if (margin != null && animation != null) {
+  if (animate && margin != null && animation != null) {
     return AnimatedContainer(
       margin: margin,
       duration: animation.duration,
@@ -457,11 +465,11 @@ Widget _positionedControl(
   return widget;
 }
 
-Widget _sizedControl(Widget widget, Control control) {
+Widget _sizedControl(Widget widget, Control control, {bool animate = true}) {
   final skipProps =
       (control.internals?['skip_properties'] as List?) ?? const [];
   if (!['width', 'height'].any(skipProps.contains)) {
-    widget = _fixedSizeControl(widget, control);
+    widget = _fixedSizeControl(widget, control, animate: animate);
   }
   return _constrainedControl(widget, control, skipProps);
 }
@@ -505,14 +513,15 @@ Widget _constrainedControl(Widget widget, Control control, List skipProps) {
   );
 }
 
-Widget _fixedSizeControl(Widget widget, Control control) {
+Widget _fixedSizeControl(Widget widget, Control control,
+    {required bool animate}) {
   final width = control.getDouble("width");
   final height = control.getDouble("height");
   final animationSize = control.getAnimation("animate_size");
 
   final hasFixedSize = width != null || height != null;
 
-  if (animationSize != null) {
+  if (animate && animationSize != null) {
     return hasFixedSize
         ? AnimatedContainer(
             duration: animationSize.duration,

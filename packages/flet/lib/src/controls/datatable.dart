@@ -90,10 +90,10 @@ class DataTableControl extends StatelessWidget {
       WidgetStateProperty<Color?>? headingRowColor,
       int? sortColumnIndex,
       ValueSetter<bool?>? onSelectAll,
-      bool? showsHeading,
+      int? firstSemanticRow,
     }) {
       return _DataTable(
-        showsHeading: showsHeading,
+        firstSemanticRow: firstSemanticRow,
         decoration: decoration,
         border: border,
         clipBehavior: clipBehavior,
@@ -319,7 +319,7 @@ class DataTableControl extends StatelessWidget {
                 56.0,
             lineWidth: horizontalLines?.width ?? 0,
             buildHeader: (widths) => buildTable(
-              showsHeading: true,
+              firstSemanticRow: 0,
               decoration: const BoxDecoration(),
               border: verticalLines != null
                   ? TableBorder(verticalInside: verticalLines)
@@ -361,7 +361,7 @@ class DataTableControl extends StatelessWidget {
               ],
             ),
             buildChunk: (start, end, widths) => buildTable(
-              showsHeading: false,
+              firstSemanticRow: start + 1,
               decoration: const BoxDecoration(),
               border: tableBorder,
               headingRowHeight: kMinInteractiveDimension,
@@ -425,7 +425,8 @@ void _notifyTable(Control control) {
 void _notifyTableIn(Object? value) {
   if (value is Control) {
     _notifyTable(value);
-  } else if (value is List) {
+  } else if (value is List && value is! List<num>) {
+    // Numeric payloads (including Uint8List image sources) cannot hold controls.
     for (var item in value) {
       _notifyTableIn(item);
     }
@@ -456,19 +457,15 @@ Widget _seedContent(Control cell) {
     // copy follows the control itself.
     return ListenableBuilder(
         listenable: content,
-        builder: (context, _) => TextControl(control: content));
+        builder: (context, _) => TextControl.forMeasurement(control: content));
   }
   return const SizedBox.shrink();
 }
 
-/// A [DataTable] of which a lazy table shows only part: just the heading row
-/// of the header ([showsHeading] true), or just the data rows of a chunk
-/// (false). The rows that don't show still hold checkboxes and ink wells, so
-/// they are kept out of keyboard focus. With [showsHeading] null, every row
-/// shows, as in a plain [DataTable].
+/// A native table used eagerly or to paint part of one logical lazy table.
 class _DataTable extends DataTable {
   _DataTable({
-    required this.showsHeading,
+    required this.firstSemanticRow,
     super.decoration,
     super.border,
     super.clipBehavior,
@@ -492,35 +489,144 @@ class _DataTable extends DataTable {
     required super.rows,
   });
 
-  final bool? showsHeading;
+  // Null for a whole table, zero for the heading, one-based for body rows.
+  final int? firstSemanticRow;
 
   @override
   Widget build(BuildContext context) {
-    var built = super.build(context);
-    var showsHeading = this.showsHeading;
-    if (showsHeading == null) return built;
-    var table = _tableIn(built);
-    assert(table != null, "DataTable no longer builds its Table as expected");
+    final built = super.build(context);
+    final first = firstSemanticRow;
+    if (first == null) return built;
+    // Material DataTable builds a decorated Container around a Material/Table.
+    final table = switch (built) {
+      Container(child: Material(child: final Table table)) => table,
+      _ => null,
+    };
+    assert(table != null, 'DataTable no longer builds its Table as expected');
     if (table == null) return built;
     for (var r = 0; r < table.children.length; r++) {
-      if ((r == 0) == showsHeading) continue;
-      var cells = table.children[r].children;
+      final cells = table.children[r].children;
+      final visible = (r == 0) == (first == 0);
       for (var c = 0; c < cells.length; c++) {
-        // ExcludeFocus adds no render object, so each cell stays a direct
-        // child of the Table.
-        cells[c] = ExcludeFocus(child: cells[c]);
+        final cell = cells[c];
+        final alignment = cell is TableCell ? cell.verticalAlignment : null;
+        Widget child = cell is TableCell ? cell.child : cell;
+        if (child is TableRowInkWell) child = _PartialRowInkWell(child);
+        cells[c] = visible
+            ? _AccessibleCell(
+                first == 0 ? 0 : first + r - 1, c, alignment, child)
+            : ExcludeFocus(
+                child: TableCell(verticalAlignment: alignment, child: child));
       }
     }
-    return built;
+    return Material(
+      type: MaterialType.transparency,
+      clipBehavior: clipBehavior,
+      borderRadius: border?.borderRadius,
+      child: _PartialTable(table, heading: first == 0),
+    );
+  }
+}
+
+/// A partial table supplies individual cells to the enclosing table's
+/// semantics tree. Its hidden rows still participate in visual layout.
+class _PartialTable extends Table {
+  _PartialTable(Table table, {required this.heading})
+      : super(
+            children: table.children,
+            columnWidths: table.columnWidths,
+            defaultVerticalAlignment: table.defaultVerticalAlignment,
+            border: table.border);
+
+  final bool heading;
+
+  @override
+  RenderTable createRenderObject(BuildContext context) {
+    final render = _RenderPartialTable(
+        heading: heading,
+        columns: children.first.children.length,
+        rows: children.length,
+        textDirection: Directionality.of(context));
+    super.updateRenderObject(context, render);
+    return render;
+  }
+}
+
+class _RenderPartialTable extends RenderTable {
+  _RenderPartialTable(
+      {required this.heading,
+      required super.columns,
+      required super.rows,
+      required super.textDirection});
+
+  final bool heading;
+
+  @override
+  void describeSemanticsConfiguration(SemanticsConfiguration config) {
+    // The enclosing _RenderChunkedTable owns the table and row semantics.
   }
 
-  /// The [Table] that [DataTable.build] returns, inside its decoration.
-  static Table? _tableIn(Widget widget) => switch (widget) {
-        Table() => widget,
-        Container(:var child?) => _tableIn(child),
-        Material(:var child?) => _tableIn(child),
-        _ => null,
-      };
+  @override
+  void visitChildrenForSemantics(RenderObjectVisitor visitor) {
+    visitChildren((child) {
+      final data = child.parentData! as TableCellParentData;
+      if ((data.y == 0) == heading) visitor(child);
+    });
+  }
+}
+
+/// Use the native row splash geometry with the partial table's RenderTable.
+/// TableRowInkWell itself requires an exact Table widget ancestor.
+class _PartialRowInkWell extends InkResponse {
+  _PartialRowInkWell(this.ink)
+      : super(
+            containedInkWell: true,
+            highlightShape: BoxShape.rectangle,
+            onTap: ink.onTap,
+            onDoubleTap: ink.onDoubleTap,
+            onLongPress: ink.onLongPress,
+            onHighlightChanged: ink.onHighlightChanged,
+            onHover: ink.onHover,
+            onSecondaryTap: ink.onSecondaryTap,
+            onSecondaryTapDown: ink.onSecondaryTapDown,
+            overlayColor: ink.overlayColor,
+            mouseCursor: ink.mouseCursor,
+            child: ink.child);
+
+  final TableRowInkWell ink;
+
+  @override
+  RectCallback getRectCallback(RenderBox referenceBox) =>
+      ink.getRectCallback(referenceBox);
+}
+
+class _CellAddress extends SemanticsTag {
+  const _CellAddress(this.row, this.column) : super('DataTable cell');
+  final int row;
+  final int column;
+}
+
+class _AccessibleCell extends ParentDataWidget<TableCellParentData> {
+  _AccessibleCell(int row, int column, this.alignment, Widget cell)
+      : super(
+            child: Semantics(
+          tagForChildren: _CellAddress(row, column),
+          child:
+              Semantics(container: true, role: SemanticsRole.cell, child: cell),
+        ));
+
+  final TableCellVerticalAlignment? alignment;
+
+  @override
+  void applyParentData(RenderObject renderObject) {
+    final data = renderObject.parentData! as TableCellParentData;
+    if (data.verticalAlignment == alignment) return;
+    data.verticalAlignment = alignment;
+    renderObject.parent?.markNeedsLayout();
+  }
+
+  @override
+  Type get debugTypicalAncestorWidgetClass => Table;
 }
 
 /// Estimates how wide a text lays out by adding up the advance of each
@@ -657,7 +763,8 @@ class _LazyDataTable extends StatefulWidget {
   State<_LazyDataTable> createState() => _LazyDataTableState();
 }
 
-class _LazyDataTableState extends State<_LazyDataTable> {
+class _LazyDataTableState extends State<_LazyDataTable>
+    with WidgetsBindingObserver {
   late _ColumnWidths _widths = _newWidths();
   final _tableKey = GlobalKey();
   final _chunks = <int, Widget>{};
@@ -668,16 +775,10 @@ class _LazyDataTableState extends State<_LazyDataTable> {
   /// The chunks the last build built, from first to last.
   (int, int) _built = (0, -1);
 
-  /// For each chunk measured and no longer built, its [_LazyDataTable.chunkKey]
-  /// when it stopped being built. A built chunk measures again whenever its
-  /// cells change size, so this is what its measurement saw.
-  final _releasedKeys = <int, int>{};
-  Size _viewSize = Size.zero;
-  ScrollableState? _scrollable;
-
-  /// The position [_check] listens to. A [Scrollable] can swap in a new one,
-  /// so it's kept apart from [_scrollable].
-  ScrollPosition? _position;
+  // Captured during intrinsic measurement, while the measured cells are mounted.
+  final _measuredKeys = <int, int>{};
+  final _scrollables = <ScrollableState>[];
+  final _positions = <ScrollPosition>{};
   bool _checkScheduled = false;
 
   int get _chunkCount => (widget.rowCount + _chunkRows - 1) ~/ _chunkRows;
@@ -715,19 +816,42 @@ class _LazyDataTableState extends State<_LazyDataTable> {
   }
 
   _ColumnWidths _newWidths() =>
-      _ColumnWidths(widget.columnCount, widget.flexColumn)
+      _ColumnWidths(widget.columnCount, widget.flexColumn, (slot) {
+        _measuredKeys[slot] =
+            widget.chunkKey(_chunkStart(slot), _chunkEnd(slot));
+      })
         ..addListener(_onWidthsChanged);
+
+  @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addObserver(this);
+  }
+
+  @override
+  void didChangeMetrics() => _scheduleCheck();
 
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
-    _scrollable = Scrollable.maybeOf(context, axis: Axis.vertical);
-    var position = _scrollable?.position;
-    if (position != _position) {
-      _position?.removeListener(_check);
-      position?.addListener(_check);
-      _position = position;
+    _scrollables.clear();
+    // Each enclosing viewport can move the visible rows, even when the
+    // inner viewport retains its painted child.
+    var ancestor = Scrollable.maybeOf(context);
+    while (ancestor != null) {
+      _scrollables.add(ancestor);
+      ancestor = Scrollable.maybeOf(ancestor.context);
     }
+    final current = _scrollables.map((ancestor) => ancestor.position).toSet();
+    for (var old in _positions.difference(current)) {
+      old.removeListener(_onScroll);
+    }
+    for (var added in current.difference(_positions)) {
+      added.addListener(_onScroll);
+    }
+    _positions
+      ..clear()
+      ..addAll(current);
   }
 
   @override
@@ -740,18 +864,12 @@ class _LazyDataTableState extends State<_LazyDataTable> {
         widget.flexColumn != oldWidget.flexColumn) {
       _widths.dispose();
       _widths = _newWidths();
-      _releasedKeys.clear();
+      _measuredKeys.clear();
     } else {
-      // A chunk that isn't built keeps the widths it measured, unless its
-      // rows changed since. The ones built measure again.
-      _releasedKeys.removeWhere((i, key) =>
+      _measuredKeys.removeWhere((i, key) =>
           i >= _chunkCount ||
           widget.chunkKey(_chunkStart(i), _chunkEnd(i)) != key);
-      _widths.forget((slot) =>
-          slot >= 0 &&
-          (slot >= _chunkCount ||
-              (!_releasedKeys.containsKey(slot) &&
-                  (slot < _built.$1 || slot > _built.$2))));
+      _widths.forget((slot) => slot >= 0 && !_measuredKeys.containsKey(slot));
       // Every shown table is built again, so laid out again.
       _widths.relayout();
     }
@@ -763,13 +881,26 @@ class _LazyDataTableState extends State<_LazyDataTable> {
 
   @override
   void dispose() {
-    _position?.removeListener(_check);
+    WidgetsBinding.instance.removeObserver(this);
+    for (var listener in _positions) {
+      listener.removeListener(_onScroll);
+    }
     _widths.dispose();
     super.dispose();
   }
 
   void _onWidthsChanged() {
     if (mounted) setState(_chunks.clear);
+  }
+
+  void _onScroll() {
+    if (SchedulerBinding.instance.schedulerPhase !=
+        SchedulerPhase.persistentCallbacks) {
+      _check();
+    }
+    // A sliver viewport applies its new paint transform during layout.
+    // A retained repaint boundary may keep the table from painting again.
+    _scheduleCheck();
   }
 
   void _scheduleCheck() {
@@ -789,10 +920,14 @@ class _LazyDataTableState extends State<_LazyDataTable> {
     if (box is! RenderBox || !box.attached || !box.hasSize) return;
     var screenToTable = box.getTransformTo(null);
     if (screenToTable.invert() == 0) return;
-    var visible =
-        MatrixUtils.transformRect(screenToTable, Offset.zero & _viewSize);
-    var viewport = _scrollable?.context.findRenderObject();
-    if (viewport is RenderBox && viewport.attached && viewport.hasSize) {
+    var view = View.of(context);
+    var visible = MatrixUtils.transformRect(screenToTable,
+        Offset.zero & (view.physicalSize / view.devicePixelRatio));
+    for (var ancestor in _scrollables) {
+      var viewport = ancestor.context.findRenderObject();
+      if (viewport is! RenderBox || !viewport.attached || !viewport.hasSize) {
+        continue;
+      }
       var viewportToTable = box.getTransformTo(viewport);
       if (viewportToTable.invert() == 0) return;
       visible = visible.intersect(MatrixUtils.transformRect(
@@ -813,11 +948,10 @@ class _LazyDataTableState extends State<_LazyDataTable> {
 
   @override
   Widget build(BuildContext context) {
-    var view = View.of(context);
-    _viewSize = view.physicalSize / view.devicePixelRatio;
     if (_last < 0) {
+      var view = View.of(context);
       _first = 0;
-      _last = _chunkAt(2 * _viewSize.height);
+      _last = _chunkAt(2 * view.physicalSize.height / view.devicePixelRatio);
     }
     for (var i = _built.$1; i <= _built.$2; i++) {
       if ((i < _first || i > _last) && i < _chunkCount) {
@@ -825,15 +959,10 @@ class _LazyDataTableState extends State<_LazyDataTable> {
         if (_hasPendingBuild(i)) {
           // A cell changed since the chunk was last laid out, and its
           // widget goes before it is: what the chunk measured is out of date.
-          _releasedKeys.remove(i);
+          _measuredKeys.remove(i);
           _widths.forget((slot) => slot == i);
-        } else {
-          _releasedKeys[i] = widget.chunkKey(_chunkStart(i), _chunkEnd(i));
         }
       }
-    }
-    for (var i = _first; i <= _last; i++) {
-      _releasedKeys.remove(i);
     }
     _built = (_first, _last);
     _chunks.removeWhere((i, _) => i < _first || i > _last);
@@ -876,11 +1005,12 @@ class _LazyDataTableState extends State<_LazyDataTable> {
 /// wide as the widest of its cells that any table measured, the chunks that
 /// are no longer built included.
 class _ColumnWidths extends ChangeNotifier {
-  _ColumnWidths(int count, this.flexColumn)
+  _ColumnWidths(int count, this.flexColumn, this.onMeasured)
       : _min = [for (var i = 0; i < count; i++) _ColumnMeasure()],
         _max = [for (var i = 0; i < count; i++) _ColumnMeasure()];
 
   final int? flexColumn;
+  final ValueChanged<int> onMeasured;
   final List<_ColumnMeasure> _min;
   final List<_ColumnMeasure> _max;
   bool _notifyScheduled = false;
@@ -997,9 +1127,11 @@ class _SharedColumnWidth extends TableColumnWidth {
           (cell) => cell.getMinIntrinsicWidth(double.infinity));
 
   @override
-  double maxIntrinsicWidth(Iterable<RenderBox> cells, double containerWidth) =>
-      widths._measure(widths._max[index], slot, cells,
-          (cell) => cell.getMaxIntrinsicWidth(double.infinity));
+  double maxIntrinsicWidth(Iterable<RenderBox> cells, double containerWidth) {
+    if (slot >= 0 && index == 0) widths.onMeasured(slot);
+    return widths._measure(widths._max[index], slot, cells,
+        (cell) => cell.getMaxIntrinsicWidth(double.infinity));
+  }
 
   @override
   double? flex(Iterable<RenderBox> cells) =>
@@ -1275,6 +1407,59 @@ class _RenderChunkedTable extends RenderBox
   Rect? describeSemanticsClip(RenderBox child) {
     var data = child.parentData! as _ChunkedTableParentData;
     return _body(data).shift(data.offset);
+  }
+
+  final _semanticRows = <int, SemanticsNode>{};
+
+  @override
+  void clearSemantics() {
+    super.clearSemantics();
+    _semanticRows.clear();
+  }
+
+  @override
+  void describeSemanticsConfiguration(SemanticsConfiguration config) {
+    super.describeSemanticsConfiguration(config);
+    config
+      ..isSemanticBoundary = true
+      ..explicitChildNodes = true
+      ..role = SemanticsRole.table;
+  }
+
+  @override
+  void assembleSemanticsNode(SemanticsNode node, SemanticsConfiguration config,
+      Iterable<SemanticsNode> children) {
+    final cellsByRow = <int, List<SemanticsNode>>{};
+    for (final cell in children) {
+      final address = cell.tags?.whereType<_CellAddress>().firstOrNull;
+      if (address == null) continue;
+      cell.indexInParent = address.column;
+      (cellsByRow[address.row] ??= []).add(cell);
+    }
+    _semanticRows.removeWhere((r, _) => !cellsByRow.containsKey(r));
+    final rows = <SemanticsNode>[];
+    for (final r in cellsByRow.keys.toList()..sort()) {
+      // Cells already have transforms relative to the whole table. Keep the
+      // synthetic row in that same coordinate system.
+      final rect = Rect.fromLTWH(
+          0,
+          r == 0 ? 0 : headingRowHeight + (r - 1) * rowHeight,
+          size.width,
+          r == 0 ? headingRowHeight : rowHeight);
+      final row = _semanticRows[r] ??= SemanticsNode(
+          showOnScreen: () =>
+              showOnScreen(descendant: this, rect: _semanticRows[r]?.rect));
+      row
+        ..rect = rect
+        ..updateWith(
+            config: SemanticsConfiguration()
+              ..role = SemanticsRole.row
+              ..indexInParent = r,
+            childrenInInversePaintOrder: cellsByRow[r]!);
+      rows.add(row);
+    }
+    node.updateWith(
+        config: config, childrenInInversePaintOrder: rows.reversed.toList());
   }
 
   @override
