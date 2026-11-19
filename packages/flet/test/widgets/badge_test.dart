@@ -23,6 +23,14 @@ class _EventBackend extends FletBackend {
   }
 }
 
+/// Shows [control] in an app backed by [backend].
+Future<void> _pump(WidgetTester tester, FletBackend backend, Control control) =>
+    tester.pumpWidget(ChangeNotifierProvider<FletBackend>.value(
+        value: backend,
+        child: MaterialApp(
+            home: Scaffold(
+                body: Center(child: ControlWidget(control: control))))));
+
 /// Shows a `PopupMenuButton` with a `Badge`, opens its menu, applies
 /// [changeBadge] while the menu is open, then closes the menu by selecting
 /// its item or tapping outside, and returns the events the button sent.
@@ -44,10 +52,7 @@ Future<List<String>> _openChangeAndClose(
       {'_c': 'PopupMenuItem', '_i': 3, 'content': 'Item'}
     ],
   }, backend);
-  await tester.pumpWidget(ChangeNotifierProvider<FletBackend>.value(
-      value: backend,
-      child: MaterialApp(
-          home: Scaffold(body: Center(child: ControlWidget(control: popup))))));
+  await _pump(tester, backend, popup);
 
   await tester.tap(find.byType(PopupMenuButton<String>));
   await tester.pumpAndSettle();
@@ -62,6 +67,16 @@ Future<List<String>> _openChangeAndClose(
   expect(tester.takeException(), isNull);
   return backend.events;
 }
+
+/// A `Container` with a text badge.
+Map<String, dynamic> _badgedContainer(int id) => {
+      '_c': 'Container',
+      '_i': id,
+      'width': 50,
+      'height': 50,
+      'badge': '1',
+      'content': {'_c': 'Text', '_i': id + 1, 'value': 'Badged'},
+    };
 
 void main() {
   group('Badge keeps the state of the control it decorates', () {
@@ -103,5 +118,137 @@ void main() {
           select: false);
       expect(events, ['open', 'cancel']);
     });
+  });
+
+  // These widgets mount the same content twice at once.
+  group('Badged content shown twice at once', () {
+    testWidgets('Draggable with the default feedback', (tester) async {
+      final backend = _EventBackend();
+      final draggable = Control.fromMap({
+        '_c': 'Draggable',
+        '_i': 1,
+        'content': _badgedContainer(2),
+      }, backend);
+      await _pump(tester, backend, draggable);
+
+      final gesture =
+          await tester.startGesture(tester.getCenter(find.text('Badged')));
+      await gesture.moveBy(const Offset(40, 40));
+      await tester.pump();
+      expect(tester.takeException(), isNull);
+      // At the source and in the feedback.
+      expect(find.text('Badged'), findsNWidgets(2));
+      await gesture.up();
+      await tester.pumpAndSettle();
+      expect(tester.takeException(), isNull);
+    });
+
+    testWidgets('DropdownM2 option', (tester) async {
+      final backend = _EventBackend();
+      final dropdown = Control.fromMap({
+        '_c': 'DropdownM2',
+        '_i': 1,
+        'value': 'a',
+        'options': [
+          {'_c': 'Option', '_i': 2, 'key': 'a', 'content': _badgedContainer(3)}
+        ],
+      }, backend);
+      await _pump(tester, backend, dropdown);
+
+      await tester.tap(find.text('Badged'));
+      await tester.pumpAndSettle();
+      expect(tester.takeException(), isNull);
+      // In the button and in the open menu.
+      expect(find.text('Badged'), findsNWidgets(2));
+    });
+
+    testWidgets('Dropdown option', (tester) async {
+      final backend = _EventBackend();
+      final dropdown = Control.fromMap({
+        '_c': 'Dropdown',
+        '_i': 1,
+        'options': [
+          {
+            '_c': 'DropdownOption',
+            '_i': 2,
+            'key': 'a',
+            'content': _badgedContainer(3)
+          }
+        ],
+      }, backend);
+      await _pump(tester, backend, dropdown);
+
+      await tester.tap(find.byType(TextField));
+      await tester.pumpAndSettle();
+      expect(tester.takeException(), isNull);
+    });
+
+    testWidgets('CupertinoContextMenu', (tester) async {
+      final backend = _EventBackend();
+      final menu = Control.fromMap({
+        '_c': 'CupertinoContextMenu',
+        '_i': 1,
+        'content': _badgedContainer(2),
+        'actions': [
+          {'_c': 'CupertinoContextMenuAction', '_i': 4, 'content': 'Action'}
+        ],
+      }, backend);
+      await _pump(tester, backend, menu);
+
+      // Hold until the menu opens.
+      final gesture =
+          await tester.startGesture(tester.getCenter(find.text('Badged')));
+      for (var i = 0; i < 20; i++) {
+        await tester.pump(const Duration(milliseconds: 100));
+      }
+      expect(tester.takeException(), isNull);
+      await gesture.up();
+      await tester.pumpAndSettle();
+      expect(tester.takeException(), isNull);
+      expect(find.text('Action'), findsOneWidget);
+    });
+  });
+
+  group('Badged control positioned in a Stack', () {
+    for (final visible in [true, false]) {
+      testWidgets('label_visible: $visible', (tester) async {
+        final backend = _EventBackend();
+        final stack = Control.fromMap({
+          '_c': 'Stack',
+          '_i': 1,
+          '_internals': {'host_positioned': true},
+          'width': 200,
+          'height': 200,
+          'controls': [
+            {
+              '_c': 'Text',
+              '_i': 2,
+              'value': 'Positioned',
+              'left': 10,
+              'top': 20,
+              'badge': {
+                '_c': 'Badge',
+                '_i': 3,
+                'label': 'L',
+                'label_visible': visible
+              },
+            }
+          ],
+        }, backend);
+        await _pump(tester, backend, stack);
+
+        expect(tester.takeException(), isNull);
+        final origin = tester.getTopLeft(find.byType(Stack).first);
+        final text = tester.getRect(find.text('Positioned'));
+        expect(text.topLeft, origin + const Offset(10, 20));
+        if (visible) {
+          // At the top end of the text, not of the whole Stack.
+          final label = tester.getCenter(find.text('L'));
+          expect((label - text.topRight).distance, lessThan(20));
+        } else {
+          expect(find.text('L'), findsNothing);
+        }
+      });
+    }
   });
 }

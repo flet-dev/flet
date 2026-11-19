@@ -9,13 +9,19 @@ import '../utils/numbers.dart';
 import '../utils/text.dart';
 import 'transforms.dart';
 
-/// A key per control with a badge, stable while the control lives.
+/// Keys the child of a [Badge] with the [BuildContext] of a `Builder`
+/// around it.
 ///
 /// [Badge] places its child alone while the label is hidden and inside a
-/// [Stack] while the label is shown. The child is keyed with a
-/// [GlobalObjectKey] made from this object, so it keeps its state when the
-/// label is shown or hidden, or the badge is replaced.
-final Expando<Object> _badgedChildKeys = Expando('badged child keys');
+/// [Stack] while the label is shown, so the child moves when `label_visible`
+/// changes. The key, stable while the `Builder` lives, lets Flutter move the
+/// child with its state instead of rebuilding it - an open `PopupMenuButton`
+/// then still reports `on_cancel` or `on_select`. Each mounted copy of the
+/// control gets its own key: widgets like `Draggable` or `DropdownButton`
+/// mount the same content twice at once.
+class _BadgeChildKey extends GlobalObjectKey {
+  const _BadgeChildKey(BuildContext super.value);
+}
 
 extension BadgeParsers on Control {
   Widget wrapWithBadge(String propertyName, Widget child, ThemeData theme) {
@@ -23,9 +29,12 @@ extension BadgeParsers on Control {
     if (badge == null) {
       return child;
     }
-    child = KeyedSubtree(
-        key: GlobalObjectKey(_badgedChildKeys[this] ??= Object()),
-        child: child);
+    return Builder(
+        builder: (context) => _buildBadge(badge,
+            KeyedSubtree(key: _BadgeChildKey(context), child: child), theme));
+  }
+
+  Widget _buildBadge(dynamic badge, Widget child, ThemeData theme) {
     if (badge is Control) {
       badge.notifyParent = true;
       return Badge(
