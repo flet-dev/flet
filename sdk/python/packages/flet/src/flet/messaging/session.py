@@ -36,6 +36,14 @@ patch_logger = logging.getLogger("flet_object_patch")
 __all__ = ["Session"]
 
 
+def _running_loop() -> Optional[asyncio.AbstractEventLoop]:
+    """The event loop running in the calling thread, or `None` if there's none."""
+    try:
+        return asyncio.get_running_loop()
+    except RuntimeError:
+        return None
+
+
 class Session:
     """
     Represents a server-side Flet session.
@@ -67,6 +75,9 @@ class Session:
         """Tasks awaiting `async` effect cleanups, held until they finish so they
         aren't garbage collected while pending."""
         self.__updates_task: Optional[asyncio.Task] = None
+        self.__updates_loop: Optional[asyncio.AbstractEventLoop] = None
+        """Loop the updates scheduler runs on: the only thread allowed to touch the
+        pending queues and `__updates_ready`."""
         self.__closed = False
         # Whether this session's app renders via the declarative components
         # API (page.render/render_views). Tracked per-session — not on the
@@ -717,18 +728,26 @@ class Session:
         """
         Queues a control for update by the background scheduler.
 
+        Safe to call from any thread, e.g. when state changes in a
+        :meth:`flet.Page.run_thread` worker.
+
         Args:
             control: Control to update.
         """
         logger.debug("Schedule_update(%s)", control)
         if self.__conn is None and self.__expires_at is not None:
             return
+        self.__call_on_updates_loop(self.__queue_update, control)
+
+    def __queue_update(self, control: BaseControl):
         self.__pending_updates.add(control)
         self.__updates_ready.set()
 
     def schedule_effect(self, hook: "EffectHook", is_cleanup: bool):
         """
         Queues an effect hook setup/cleanup operation for scheduler execution.
+
+        Safe to call from any thread.
 
         Args:
             hook: Effect hook to process.
@@ -740,8 +759,37 @@ class Session:
         # Hold a strong reference to the hook until it runs.  A weakref would
         # get cleared when the owning component unmounts and clears
         # `_state.hooks` — dropping queued cleanup effects on the floor.
-        self.__pending_effects.append((hook, None if is_cleanup else hook.setup))
+        self.__call_on_updates_loop(
+            self.__queue_effect, hook, None if is_cleanup else hook.setup
+        )
+
+    def __queue_effect(
+        self,
+        hook: "EffectHook",
+        setup: Callable[[], Any | Awaitable[Any]] | None,
+    ):
+        self.__pending_effects.append((hook, setup))
         self.__updates_ready.set()
+
+    def __call_on_updates_loop(self, callback: Callable[..., None], *args: Any):
+        """
+        Runs `callback` on the updates scheduler's loop.
+
+        The pending queues and `asyncio.Event` aren't thread-safe: `Event.set()`
+        from another thread may not wake the loop, and a queue changed there can
+        race with the scheduler draining it. So a call from another thread is
+        handed to the loop with `call_soon_threadsafe()`; on the loop thread, or
+        before the scheduler has started, `callback` runs at once.
+        """
+        loop = self.__updates_loop
+        if loop is None or _running_loop() is loop:
+            callback(*args)
+            return
+        try:
+            loop.call_soon_threadsafe(callback, *args)
+        except RuntimeError:
+            # The loop is closed: the session is gone, so there's nothing to update.
+            logger.debug("Updates loop is closed, dropping %s%s", callback, args)
 
     def start_updates_scheduler(self):
         """
@@ -750,6 +798,7 @@ class Session:
         logger.debug("Starting updates scheduler: %s", self.id)
         if self.__updates_task and not self.__updates_task.done():
             return
+        self.__updates_loop = asyncio.get_running_loop()
         self.__updates_task = asyncio.create_task(self.__updates_scheduler())
 
     async def __updates_scheduler(self):
