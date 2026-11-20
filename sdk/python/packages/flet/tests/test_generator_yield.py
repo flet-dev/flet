@@ -227,4 +227,5 @@ class TestGeneratorMainYield:
 
         await _start_session(main, log)
 
-        assert log[0] == "blocked"
+        # One patch per `page.add()`, both sent after `main()` returns.
+        assert log == ["blocked", "sent", "sent"]

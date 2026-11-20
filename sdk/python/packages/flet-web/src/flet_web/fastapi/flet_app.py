@@ -179,10 +179,14 @@ class FletApp(Connection):
             elif inspect.isasyncgenfunction(self.__main):
                 async for _ in self.__main(session.page):
                     await session.after_event(session.page)
+                    # Let the send loop flush the patch before `main()` resumes.
+                    await asyncio.sleep(0)
 
             elif inspect.isgeneratorfunction(self.__main):
                 for _ in self.__main(session.page):
                     await session.after_event(session.page)
+                    # Let the send loop flush the patch before `main()` resumes.
+                    await asyncio.sleep(0)
             else:
                 self.__main(session.page)
 
