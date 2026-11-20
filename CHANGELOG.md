@@ -31,6 +31,8 @@
 * Fix `flet --version --json` printing invalid JSON when `flet-cli` is not installed yet: the on-the-fly install's progress messages now go to stderr ([flet-build-action#2](https://github.com/flet-dev/flet-build-action/issues/2), [#7099](https://github.com/flet-dev/flet/pull/7099)) by @ndonkoHenri.
 * Fix changes to a control's `theme`, `dark_theme` or `theme_mode`, such as toggling `Container.theme_mode`, not being applied until its parent was updated ([#7090](https://github.com/flet-dev/flet/pull/7090)) by @ndonkoHenri.
 * Fix `Screenshot.capture()` failing with a type error when `pixel_ratio` is a whole number, such as `pixel_ratio=1` ([#7090](https://github.com/flet-dev/flet/pull/7090)) by @ndonkoHenri.
+* Fix controls with a `badge` losing their state when the badge's `label_visible` changes or the badge is replaced, such as an open `PopupMenuButton` never calling `on_cancel` or `on_select` ([#7080](https://github.com/flet-dev/flet/issues/7080), [#7089](https://github.com/flet-dev/flet/pull/7089)) by @ndonkoHenri.
+* Fix the `badge` of a control positioned with `left`/`top`/`right`/`bottom` in a `Stack` being drawn away from the control ([#7089](https://github.com/flet-dev/flet/pull/7089)) by @ndonkoHenri.
 
 ## 1.1.2
 
