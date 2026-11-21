@@ -71,6 +71,21 @@ class _IconsProxy:
         except KeyError:
             raise AttributeError(name) from None
 
+    def __getitem__(self, name: str) -> IconData:
+        """Look up an icon by its name, such as `"HOME"`, like an enum member."""
+        try:
+            return self._get_member(name)
+        except KeyError:
+            raise KeyError(name) from None
+
+    def __contains__(self, item: object) -> bool:
+        """`"HOME" in Icons` checks a name; `icon in Icons` checks an icon."""
+        if isinstance(item, str):
+            self._load()
+            assert self._map is not None
+            return item in self._map
+        return item in self._get_values()
+
     def __dir__(self) -> list[str]:
         self._load()
         assert self._map is not None
