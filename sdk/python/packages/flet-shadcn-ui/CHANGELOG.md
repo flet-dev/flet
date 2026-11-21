@@ -9,7 +9,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ### Added
 
-- Look up Lucide icons by name, as with enum members: `LucideIcons["HOUSE"]`, and check a name with `"HOUSE" in LucideIcons` (PRLINK) by @FeodorFitsner.
+- Look up Lucide icons by name, as with enum members: `LucideIcons["HOUSE"]`, and check a name with `"HOUSE" in LucideIcons` ([#7114](https://github.com/flet-dev/flet/pull/7114)) by @FeodorFitsner.
 
 ## 1.1.2
 
