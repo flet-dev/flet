@@ -6,6 +6,7 @@ import enum
 import numbers
 import threading
 import weakref
+from collections.abc import Sequence
 from dataclasses import InitVar, dataclass
 from typing import TYPE_CHECKING, Any, Callable, Optional
 
@@ -191,8 +192,32 @@ class Observable:
         """
 
         self.__version__ += 1
+        versions = self.__field_versions
+        versions[field] = versions.get(field, 0) + 1
         for fn in list(self.__listeners):
             fn(self, field)
+
+    @property
+    def __field_versions(self) -> dict[str | None, int]:
+        """
+        Lazily initialized change counters by field name (`None` for `notify()`).
+        """
+
+        storage_name = "_Observable__field_versions_storage"
+        try:
+            return object.__getattribute__(self, storage_name)
+        except AttributeError:
+            versions: dict[str | None, int] = {}
+            object.__setattr__(self, storage_name, versions)
+            return versions
+
+    def _field_version(self, field: str) -> tuple[int, int]:
+        """
+        Change counters of a field: its own and the one `notify()` bumps.
+        """
+
+        versions = self.__field_versions
+        return versions.get(field, 0), versions.get(None, 0)
 
     def notify(self):
         """
@@ -327,6 +352,15 @@ class _ObservableCollection:
         owner = self._owner_ref()
         if owner:
             owner._notify(self._field)
+
+    def _version(self) -> Any:
+        """
+        A value that changes whenever this collection, or a collection nested in
+        it, changes in place.
+        """
+
+        owner = self._owner_ref()
+        return owner._field_version(self._field) if owner else None
 
     def _wrapper(self) -> Callable[[Any], Any]:
         """
@@ -654,3 +688,46 @@ class ObservableDict(_ObservableCollection, dict):
             super().__setitem__(k, self._wrap(d))
             self._touch()
         return dict.__getitem__(self, k)
+
+
+# Hook dependencies ---------------------------------------------
+
+
+class _CollectionDependency:
+    """
+    An observable collection in a hook's dependencies, with its version when the
+    dependencies were captured.
+
+    The same collection is unchanged only while its version stays the same, so
+    `use_memo` and `use_effect` see in-place changes such as `items.append(x)`.
+    Different collections compare by their items, as plain lists and dicts do.
+    """
+
+    __slots__ = ("collection", "version")
+
+    def __init__(self, collection: _ObservableCollection):
+        self.collection = collection
+        self.version = collection._version()
+
+    def __eq__(self, other: object) -> bool:
+        if not isinstance(other, _CollectionDependency):
+            return NotImplemented
+        if self.collection is other.collection:
+            return self.version == other.version
+        return self.collection == other.collection
+
+    __hash__ = None  # type: ignore[assignment]
+
+
+def capture_dependencies(dependencies: Sequence[Any]) -> list[Any]:
+    """
+    Snapshot hook dependencies for comparison on the next render.
+
+    Observable lists and dicts are recorded with their version, since they stay
+    the same object when they change in place.
+    """
+
+    return [
+        _CollectionDependency(d) if isinstance(d, _ObservableCollection) else d
+        for d in dependencies
+    ]
