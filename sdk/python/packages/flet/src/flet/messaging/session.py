@@ -735,11 +735,25 @@ class Session:
             control: Control to update.
         """
         logger.debug("Schedule_update(%s)", control)
-        if self.__conn is None and self.__expires_at is not None:
+        if not self.__accepts_updates():
             return
         self.__call_on_updates_loop(self.__queue_update, control)
 
+    def __accepts_updates(self) -> bool:
+        """
+        Whether queued updates and effects will still be processed: `False` once the
+        session is closed, or while it is disconnected.
+        """
+        return not self.__closed and not (
+            self.__conn is None and self.__expires_at is not None
+        )
+
     def __queue_update(self, control: BaseControl):
+        # Checked again here, on the loop thread: the session may have been closed
+        # or disconnected after a worker thread passed the check in
+        # `schedule_update()`, and the queue must stay empty then.
+        if not self.__accepts_updates():
+            return
         self.__pending_updates.add(control)
         self.__updates_ready.set()
 
@@ -754,7 +768,7 @@ class Session:
             is_cleanup: `True` to run cleanup, `False` to run setup.
         """
         logger.debug("Schedule_effect(%s, %s)", hook, is_cleanup)
-        if self.__conn is None and self.__expires_at is not None:
+        if not self.__accepts_updates():
             return
         # Hold a strong reference to the hook until it runs.  A weakref would
         # get cleared when the owning component unmounts and clears
@@ -768,6 +782,9 @@ class Session:
         hook: "EffectHook",
         setup: Callable[[], Any | Awaitable[Any]] | None,
     ):
+        # See `__queue_update()`.
+        if not self.__accepts_updates():
+            return
         self.__pending_effects.append((hook, setup))
         self.__updates_ready.set()
 

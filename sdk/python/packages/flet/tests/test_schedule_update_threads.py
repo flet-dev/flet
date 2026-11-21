@@ -180,3 +180,54 @@ def test_update_from_a_thread_after_the_loop_closed_is_ignored():
     errors = _run_in_threads(lambda i: session.schedule_update(_FakeControl()), 1)
 
     assert errors == []
+
+
+@pytest.mark.asyncio
+async def test_update_from_a_thread_after_close_is_not_queued():
+    """After `close()` nobody drains the queues, so nothing must pile up in them."""
+    session = _create_session()
+    session.start_updates_scheduler()
+    await asyncio.sleep(0)
+    session.close()
+    await asyncio.sleep(0)
+
+    errors = _run_in_threads(lambda i: session.schedule_update(_FakeControl()), 1)
+    await asyncio.sleep(0.05)
+
+    assert errors == []
+    assert not session._Session__pending_updates
+
+
+@pytest.mark.asyncio
+async def test_effect_from_a_thread_after_close_is_not_queued():
+    session = _create_session()
+    session.start_updates_scheduler()
+    await asyncio.sleep(0)
+    session.close()
+    await asyncio.sleep(0)
+
+    class _Hook:
+        setup = None
+
+    errors = _run_in_threads(lambda i: session.schedule_effect(_Hook(), False), 1)
+    await asyncio.sleep(0.05)
+
+    assert errors == []
+    assert not session._Session__pending_effects
+
+
+@pytest.mark.asyncio
+async def test_update_handed_to_the_loop_before_disconnect_is_dropped(session):
+    """A worker passes the check in `schedule_update()` and hands the update to the
+    loop, but `disconnect()` runs first and clears the queues: the update must not
+    put the control back and get applied on a disconnected session."""
+    control = _FakeControl()
+
+    # The thread is joined without yielding, so the update waits on the loop.
+    errors = _run_in_threads(lambda i: session.schedule_update(control), 1)
+    await session.disconnect(60)
+    await asyncio.sleep(0.05)
+
+    assert errors == []
+    assert control.updates == 0
+    assert not session._Session__pending_updates
