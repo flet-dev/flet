@@ -1,3 +1,13 @@
+## 1.2.0
+
+### New features
+
+* Add `ft.use_page_size()`, a hook that returns the page size and re-renders the component when it changes; `ft.use_page_size(lambda size: size.width < 600)` re-renders only when the selected value changes, for layouts that switch at a breakpoint. Any number of components can use it, and `page.on_resize` stays free for the app ([#7115](https://github.com/flet-dev/flet/pull/7115)) by @FeodorFitsner.
+
+### Improvements
+
+* `Dropdown` without a `width` fills the width when its parent stretches it, in a `Column` or `View` with `horizontal_alignment=STRETCH` or in a vertical `ListView`, as `TextField` does, instead of keeping the width of its widest option ([#7115](https://github.com/flet-dev/flet/pull/7115)) by @FeodorFitsner.
+
 ## 1.1.3
 
 ### Documentation
