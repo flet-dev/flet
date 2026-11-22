@@ -22,7 +22,7 @@ from flet.messaging.protocol import (
 )
 from flet.messaging.session_store import SessionStore
 from flet.pubsub.pubsub_client import PubSubClient
-from flet.utils.object_model import patch_dataclass
+from flet.utils.object_model import is_coroutine_result, patch_dataclass
 from flet.utils.strings import random_string
 
 if TYPE_CHECKING:
@@ -811,11 +811,12 @@ class Session:
             if setup is not None:
                 hook._active = True
                 res = setup()
-                if inspect.iscoroutine(res):
+                if is_coroutine_result(res):
                     # An `async` setup, or a plain function that returns a
                     # coroutine (`lambda: load(item_id)` with an `async` `load`):
                     # either way it runs as the effect's task.
-                    hook._setup_task = asyncio.create_task(res)
+                    # ensure_future also schedules awaitable generators.
+                    hook._setup_task = asyncio.ensure_future(res)
                 else:
                     hook._returned_cleanup = res if callable(res) else None
                 if not hook.is_live():

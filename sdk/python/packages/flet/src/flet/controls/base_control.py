@@ -11,7 +11,7 @@ from flet.controls.id_counter import ControlId
 from flet.controls.ref import Ref
 from flet.controls.value_types import Prop, Value, _install_props, value
 from flet.utils.from_dict import from_dict
-from flet.utils.object_model import get_param_count
+from flet.utils.object_model import get_param_count, is_coroutine_result
 from flet.utils.validation import validate
 
 logger = logging.getLogger("flet")
@@ -523,7 +523,9 @@ class BaseControl:
                     if get_param_count(event_handler) == 0
                     else event_handler(e)
                 )
-                if inspect.iscoroutine(res):
+                if is_coroutine_result(res) or inspect.iscoroutinefunction(
+                    event_handler
+                ):
                     await res
 
                 elif inspect.isasyncgen(res):

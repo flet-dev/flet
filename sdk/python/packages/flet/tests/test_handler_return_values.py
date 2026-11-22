@@ -6,6 +6,8 @@ it without running. A task or a future the handler started is left to run on its
 """
 
 import asyncio
+import inspect
+import types
 
 import msgpack
 import pytest
@@ -69,6 +71,66 @@ async def test_lambda_returning_a_coroutine_is_awaited():
 
     assert log == ["a"]
     assert text.value == "saved a"
+
+
+@pytest.mark.asyncio
+@pytest.mark.parametrize("marked", [False, True], ids=["plain", "marked"])
+async def test_handler_advances_async_generator(marked):
+    text = Text("start")
+
+    async def values():
+        text.value = "advanced"
+        yield
+
+    stream = values()
+
+    def advance():
+        return stream.__anext__()
+
+    if marked:
+        if not hasattr(inspect, "markcoroutinefunction"):
+            pytest.skip("markcoroutinefunction requires Python 3.12")
+        advance = inspect.markcoroutinefunction(advance)
+
+    try:
+        text.on_tap = advance
+        await _tap(text)
+        assert text.value == "advanced"
+    finally:
+        await stream.aclose()
+
+
+@pytest.mark.asyncio
+@pytest.mark.skipif(
+    not hasattr(inspect, "markcoroutinefunction"),
+    reason="markcoroutinefunction requires Python 3.12",
+)
+async def test_marked_handler_awaits_returned_future():
+    future = asyncio.get_running_loop().create_future()
+    future.set_exception(ValueError("handler future failed"))
+
+    @inspect.markcoroutinefunction
+    def handler():
+        return future
+
+    session = await _tap(Text("start", on_tap=handler))
+    assert len(session.errors) == 1
+    assert "handler future failed" in session.errors[0]
+
+
+@pytest.mark.asyncio
+async def test_handler_awaits_generator_based_coroutine():
+    text = Text("start")
+
+    @types.coroutine
+    def update():
+        # The task suspends once before it has a result to send back.
+        ready = asyncio.create_task(asyncio.sleep(0, result="done"))
+        text.value = yield from ready
+
+    text.on_tap = lambda: update()
+    await _tap(text)
+    assert text.value == "done"
 
 
 @pytest.mark.asyncio
