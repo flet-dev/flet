@@ -183,33 +183,6 @@ class WebView(ft.LayoutControl):
           opens the browser's dialog.
     """
 
-    def _check_platform_support(
-        self, method: str, *, web: bool = True, macos: bool = True
-    ):
-        """
-        Checks that `method` can be called on the current platform.
-
-        Args:
-            method: The name of the method, used in the error message.
-            web: Whether the method is supported on web.
-            macos: Whether the method is supported on macOS.
-
-        Raises:
-            RuntimeError: If this control has not been added to a page yet.
-            FletUnsupportedPlatformException: If `method` is not supported on the
-                current platform.
-        """
-        page = self.page
-        if page.web:
-            if not web:
-                raise ft.FletUnsupportedPlatformException(
-                    f"{method} is not supported on web"
-                )
-        elif not macos and page.platform == ft.PagePlatform.MACOS:
-            raise ft.FletUnsupportedPlatformException(
-                f"{method} is not supported on macOS"
-            )
-
     async def reload(self):
         """
         Reloads the current URL.
@@ -218,7 +191,6 @@ class WebView(ft.LayoutControl):
             On web, after a link was followed to another origin, this reloads
             the page the app last loaded instead.
         """
-        self._check_platform_support("reload")
         await self._invoke_method("reload")
 
     async def can_go_back(self) -> bool:
@@ -231,7 +203,6 @@ class WebView(ft.LayoutControl):
         Returns:
             `True` if there is a back history item, `False` otherwise.
         """
-        self._check_platform_support("can_go_back")
         return await self._invoke_method("can_go_back")
 
     async def can_go_forward(self) -> bool:
@@ -244,7 +215,6 @@ class WebView(ft.LayoutControl):
         Returns:
             `True` if there is a forward history item, `False` otherwise.
         """
-        self._check_platform_support("can_go_forward")
         return await self._invoke_method("can_go_forward")
 
     async def go_back(self):
@@ -254,7 +224,6 @@ class WebView(ft.LayoutControl):
         Note:
             On web the history contains only the pages the app loaded itself.
         """
-        self._check_platform_support("go_back")
         await self._invoke_method("go_back")
 
     async def go_forward(self):
@@ -265,21 +234,18 @@ class WebView(ft.LayoutControl):
         Note:
             On web the history contains only the pages the app loaded itself.
         """
-        self._check_platform_support("go_forward")
         await self._invoke_method("go_forward")
 
     async def enable_zoom(self):
         """
         Enables zooming using the on-screen zoom controls and gestures.
         """
-        self._check_platform_support("enable_zoom")
         await self._invoke_method("enable_zoom")
 
     async def disable_zoom(self):
         """
         Disables zooming using the on-screen zoom controls and gestures.
         """
-        self._check_platform_support("disable_zoom")
         await self._invoke_method("disable_zoom")
 
     async def clear_cache(self):
@@ -299,7 +265,10 @@ class WebView(ft.LayoutControl):
         Raises:
             FletUnsupportedPlatformException: If invoked on web.
         """
-        self._check_platform_support("clear_cache", web=False)
+        if self.page.web:
+            raise ft.FletUnsupportedPlatformException(
+                "clear_cache is not supported on web"
+            )
         await self._invoke_method("clear_cache")
 
     async def clear_local_storage(self):
@@ -315,7 +284,10 @@ class WebView(ft.LayoutControl):
         Raises:
             FletUnsupportedPlatformException: If invoked on web.
         """
-        self._check_platform_support("clear_local_storage", web=False)
+        if self.page.web:
+            raise ft.FletUnsupportedPlatformException(
+                "clear_local_storage is not supported on web"
+            )
         await self._invoke_method("clear_local_storage")
 
     async def get_current_url(self) -> Optional[str]:
@@ -332,7 +304,6 @@ class WebView(ft.LayoutControl):
             The current URL that the WebView is displaying or `None`
                 if no URL was ever loaded.
         """
-        self._check_platform_support("get_current_url")
         return await self._invoke_method("get_current_url")
 
     async def get_title(self) -> Optional[str]:
@@ -345,7 +316,6 @@ class WebView(ft.LayoutControl):
         Returns:
             The title of the currently loaded page.
         """
-        self._check_platform_support("get_title")
         return await self._invoke_method("get_title")
 
     async def get_user_agent(self) -> Optional[str]:
@@ -358,7 +328,6 @@ class WebView(ft.LayoutControl):
         Returns:
             The value used for the HTTP `User-Agent:` request header.
         """
-        self._check_platform_support("get_user_agent")
         return await self._invoke_method("get_user_agent")
 
     async def load_file(self, path: str):
@@ -378,7 +347,10 @@ class WebView(ft.LayoutControl):
         Raises:
             FletUnsupportedPlatformException: If invoked on web.
         """
-        self._check_platform_support("load_file", web=False)
+        if self.page.web:
+            raise ft.FletUnsupportedPlatformException(
+                "load_file is not supported on web"
+            )
         await self._invoke_method(
             method_name="load_file",
             arguments={"path": path},
@@ -405,7 +377,6 @@ class WebView(ft.LayoutControl):
               and fires :attr:`on_web_resource_error`, because it is sent without
               a body.
         """
-        self._check_platform_support("load_request")
         await self._invoke_method(
             "load_request", arguments={"url": url, "method": method}
         )
@@ -421,7 +392,6 @@ class WebView(ft.LayoutControl):
             On web this works only for a same-origin page or HTML loaded with
             :meth:`load_html`.
         """
-        self._check_platform_support("run_javascript")
         await self._invoke_method(
             method_name="run_javascript",
             arguments={"value": value},
@@ -442,7 +412,6 @@ class WebView(ft.LayoutControl):
                 May be a `file://` URL, in which case the referenced local files are
                 made readable to the webview, except on Windows and web.
         """
-        self._check_platform_support("load_html")
         await self._invoke_method(
             "load_html", arguments={"value": value, "base_url": base_url}
         )
@@ -467,7 +436,10 @@ class WebView(ft.LayoutControl):
         Raises:
             FletUnsupportedPlatformException: If invoked on macOS.
         """
-        self._check_platform_support("scroll_to", macos=False)
+        if not self.page.web and self.page.platform == ft.PagePlatform.MACOS:
+            raise ft.FletUnsupportedPlatformException(
+                "scroll_to is not supported on macOS"
+            )
         await self._invoke_method(
             method_name="scroll_to",
             arguments={"x": x, "y": y},
@@ -491,7 +463,10 @@ class WebView(ft.LayoutControl):
         Raises:
             FletUnsupportedPlatformException: If invoked on macOS.
         """
-        self._check_platform_support("scroll_by", macos=False)
+        if not self.page.web and self.page.platform == ft.PagePlatform.MACOS:
+            raise ft.FletUnsupportedPlatformException(
+                "scroll_by is not supported on macOS"
+            )
         await self._invoke_method(
             method_name="scroll_by",
             arguments={"x": x, "y": y},
@@ -512,7 +487,6 @@ class WebView(ft.LayoutControl):
         Args:
             mode: The JavaScript mode to set.
         """
-        self._check_platform_support("set_javascript_mode")
         await self._invoke_method(
             method_name="set_javascript_mode",
             arguments={"mode": mode},
