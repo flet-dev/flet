@@ -1,0 +1,28 @@
+# Python
+__pycache__/
+*.py[cod]
+
+# Virtual environments
+.venv/
+venv/
+env/
+
+# Environments / secrets
+.env
+
+# Tool caches
+.mypy_cache/
+.ruff_cache/
+.pytest_cache/
+
+# Flet
+.flet/
+build/
+storage/
+
+# IDE
+.idea/
+.vscode/
+
+# macOS
+.DS_Store

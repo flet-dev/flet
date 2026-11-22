@@ -288,7 +288,7 @@ class FletApp(Connection):
 
         action = MessageAction(data[0])
         body = data[1]
-        transport_log.debug(f"_on_message: {action} {body}")
+        transport_log.debug("_on_message: %s %s", action, body)
         task = None
         if action == MessageAction.REGISTER_CLIENT:
             req = RegisterClientRequestBody(**body)
@@ -433,7 +433,7 @@ class FletApp(Connection):
             message: Outbound protocol message.
         """
 
-        transport_log.debug(f"send_message: {message}")
+        transport_log.debug("send_message: %s", message)
         body = msgpack.packb(
             [message.action, message.body],
             default=configure_encode_object_for_msgpack(BaseControl),

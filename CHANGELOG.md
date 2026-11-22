@@ -7,10 +7,14 @@
 
 ### Improvements
 
+* Look up icons by name, as with enum members: `ft.Icons["HOME"]`, `ft.CupertinoIcons["ADD"]` and `LucideIcons[...]`, and check a name with `"HOME" in ft.Icons` ([#7114](https://github.com/flet-dev/flet/pull/7114)) by @FeodorFitsner.
+* `ft.use_dialog()` raises a `TypeError` for a dialog returned from an `@ft.component` function, or any other control that isn't a dialog, instead of silently never opening it ([#7114](https://github.com/flet-dev/flet/pull/7114)) by @FeodorFitsner.
 * Start web apps that use `flet-rive` 1 MB lighter when they don't show a `Rive` control: the Rive engine (`rive_native.wasm`) now loads when the first `Rive` control loads its file, instead of at startup ([#7057](https://github.com/flet-dev/flet/pull/7057)) by @FeodorFitsner.
 
 ### Bug fixes
 
+* Fix event handlers and `use_effect` setups that call an async function from a plain function, such as `on_click=lambda: save(item)` or `ft.use_effect(lambda: load(item_id), [item_id])`, silently doing nothing: Flet now awaits the coroutine they return as it would an `async def` handler or setup, and runs a returned generator as a generator handler. A task or future they start is still left to run on its own ([#7117](https://github.com/flet-dev/flet/pull/7117)) by @FeodorFitsner.
+* Fix `ft.use_memo()` and `ft.use_effect()` ignoring in-place changes to an observable's list or dict passed as a dependency, such as `state.items.append(x)`: the value is now recomputed and the effect re-run ([#7114](https://github.com/flet-dev/flet/pull/7114)) by @FeodorFitsner.
 * Fix SVG images drawing blank when their URL has a query string or fragment, such as a cache-busting `icon.svg?v=2`: `Image` now recognizes an SVG by the URL's path, in any letter case ([#7057](https://github.com/flet-dev/flet/pull/7057)) by @FeodorFitsner.
 * Fix `Text` with `spans` ignoring `overflow`: a rich text cut off by `max_lines` now ends in an ellipsis with `overflow=TextOverflow.ELLIPSIS`, as plain text does, instead of being clipped at a word ([#7057](https://github.com/flet-dev/flet/pull/7057)) by @FeodorFitsner.
 * Fix mypy inferring `type[Never]` for classes decorated with `@control("Name")`: the overload that takes arguments now accepts only a string `dart_widget_name` ([#7085](https://github.com/flet-dev/flet/issues/7085), [#7087](https://github.com/flet-dev/flet/pull/7087)) by @joaoaracheski.
@@ -28,6 +32,13 @@
 * Fix `flet build windows` replacing the images in a supplied `.ico` app icon with ones resampled from its largest image; the file is now copied into the app unchanged, and is used over a `.png` of the same name ([#6007](https://github.com/flet-dev/flet/issues/6007), [#7074](https://github.com/flet-dev/flet/pull/7074)) by @arthur-tacca.
 * Fix `ShakeDetector` never calling `on_shake` with its default settings, and missing most shakes because it sampled the accelerometer only every 200 ms; on desktop it now raises `FletUnsupportedPlatformException`, like `Accelerometer` ([#6456](https://github.com/flet-dev/flet/issues/6456), [#7093](https://github.com/flet-dev/flet/pull/7093)) by @ndonkoHenri.
 * Fix `@ft.observable` not refreshing the UI after in-place changes such as `+=` on a list field ([#6293](https://github.com/flet-dev/flet/issues/6293), [#7086](https://github.com/flet-dev/flet/pull/7086)) by @joaoaracheski.
+* Fix web apps freezing every session while sending a large page update, such as a theme switch on a page with a big `DataTable`: the transport no longer turns each message into debug text when debug logging is off ([#7097](https://github.com/flet-dev/flet/pull/7097)) by @joaoaracheski.
+* Fix web apps serving FastAPI's `/docs`, `/redoc` and `/openapi.json`, which took those routes from the app and loaded Swagger UI and ReDoc from a CDN even with `no_cdn=True`: apps made by `flet_web.fastapi.app()` and `flet run --web` no longer register them ([#7111](https://github.com/flet-dev/flet/issues/7111), [#7112](https://github.com/flet-dev/flet/pull/7112)) by @joaoaracheski.
+* Fix `flet --version --json` printing invalid JSON when `flet-cli` is not installed yet: the on-the-fly install's progress messages now go to stderr ([flet-build-action#2](https://github.com/flet-dev/flet-build-action/issues/2), [#7099](https://github.com/flet-dev/flet/pull/7099)) by @ndonkoHenri.
+* Fix changes to a control's `theme`, `dark_theme` or `theme_mode`, such as toggling `Container.theme_mode`, not being applied until its parent was updated ([#7090](https://github.com/flet-dev/flet/pull/7090)) by @ndonkoHenri.
+* Fix `Screenshot.capture()` failing with a type error when `pixel_ratio` is a whole number, such as `pixel_ratio=1` ([#7090](https://github.com/flet-dev/flet/pull/7090)) by @ndonkoHenri.
+* Fix controls with a `badge` losing their state when the badge's `label_visible` changes or the badge is replaced, such as an open `PopupMenuButton` never calling `on_cancel` or `on_select` ([#7080](https://github.com/flet-dev/flet/issues/7080), [#7089](https://github.com/flet-dev/flet/pull/7089)) by @ndonkoHenri.
+* Fix the `badge` of a control positioned with `left`/`top`/`right`/`bottom` in a `Stack` being drawn away from the control ([#7089](https://github.com/flet-dev/flet/pull/7089)) by @ndonkoHenri.
 * Fix a generator `main()` not showing the updates made before a `yield`, such as a splash screen, until the blocking work after it finished ([#7100](https://github.com/flet-dev/flet/issues/7100), [#7106](https://github.com/flet-dev/flet/pull/7106)) by @ndonkoHenri.
 
 ## 1.1.2
