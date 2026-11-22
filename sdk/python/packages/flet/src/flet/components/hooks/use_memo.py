@@ -67,6 +67,6 @@ def use_memo(
     deps = capture_dependencies(dependencies)
     if hook.prev_deps is None or not shallow_compare_args(hook.prev_deps, deps):
         hook.value = calculate_value()
-        hook.prev_deps = deps
+    hook.prev_deps = deps
 
     return hook.value  # type: ignore[return-value]

@@ -151,3 +151,18 @@ def test_icons_membership_by_name_and_value():
     assert "NOT_AN_ICON" not in ft.Icons
     assert ft.Icons.HOME in ft.Icons
     assert "ADD" in ft.CupertinoIcons
+
+
+def test_icon_lookup_requires_a_published_name():
+    from flet_shadcn_ui import LucideIcons
+
+    for icons, name in [
+        (ft.Icons, "HOME"),
+        (ft.CupertinoIcons, "ADD"),
+        (LucideIcons, "HOUSE"),
+    ]:
+        assert name in icons
+        assert icons[name] is getattr(icons, name)
+        assert "_DUMMY" not in icons
+        with pytest.raises(KeyError):
+            icons["_DUMMY"]

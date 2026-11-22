@@ -126,6 +126,7 @@ def delete_dialog(name: str, on_confirm, on_cancel) -> ft.AlertDialog:
             ft.TextButton("Cancel", on_click=on_cancel),
             ft.FilledButton("Delete", on_click=on_confirm),
         ],
+        on_dismiss=on_cancel,
     )
 
 

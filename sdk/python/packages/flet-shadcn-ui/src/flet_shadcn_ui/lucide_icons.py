@@ -48,10 +48,10 @@ class _LucideIconsProxy:
         self._load()
         assert self._map is not None
         cls = _LucideIconData
+        value = self._map[name]
         existing = cls._member_map_.get(name)
         if existing is not None:
             return existing
-        value = self._map[name]
         member = int.__new__(cls, value)
         member._value_ = value
         member._name_ = name
@@ -75,10 +75,7 @@ class _LucideIconsProxy:
 
     def __getitem__(self, name: str) -> IconData:
         """Look up an icon by its name, such as `"HOME"`, like an enum member."""
-        try:
-            return self._get_member(name)
-        except KeyError:
-            raise KeyError(name) from None
+        return self._get_member(name)
 
     def __contains__(self, item: object) -> bool:
         """`"HOME" in Icons` checks a name; `icon in Icons` checks an icon."""

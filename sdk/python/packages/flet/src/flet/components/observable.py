@@ -8,7 +8,7 @@ import threading
 import weakref
 from collections.abc import Sequence
 from dataclasses import InitVar, dataclass
-from typing import TYPE_CHECKING, Any, Callable, Optional
+from typing import TYPE_CHECKING, Any, Callable, Optional, cast
 
 from flet.components.utils import value_equal
 
@@ -144,6 +144,7 @@ class Observable:
     """
 
     __version__ = 0  # optional version counter
+    _manual_version = 0
 
     # listeners store (lazy)
     @property
@@ -192,32 +193,10 @@ class Observable:
         """
 
         self.__version__ += 1
-        versions = self.__field_versions
-        versions[field] = versions.get(field, 0) + 1
+        if field is None:
+            self._manual_version += 1
         for fn in list(self.__listeners):
             fn(self, field)
-
-    @property
-    def __field_versions(self) -> dict[str | None, int]:
-        """
-        Lazily initialized change counters by field name (`None` for `notify()`).
-        """
-
-        storage_name = "_Observable__field_versions_storage"
-        try:
-            return object.__getattribute__(self, storage_name)
-        except AttributeError:
-            versions: dict[str | None, int] = {}
-            object.__setattr__(self, storage_name, versions)
-            return versions
-
-    def _field_version(self, field: str) -> tuple[int, int]:
-        """
-        Change counters of a field: its own and the one `notify()` bumps.
-        """
-
-        versions = self.__field_versions
-        return versions.get(field, 0), versions.get(None, 0)
 
     def notify(self):
         """
@@ -327,16 +306,21 @@ def _register_wrapping(source: Any, wrapped: _ObservableCollection):
         memo[id(source)] = wrapped
 
 
-def _identity(v):
-    return v
+class _CollectionRevision:
+    """Shared by hook snapshots until the watched collection tree changes."""
+
+    __slots__ = ("__weakref__", "current")
+
+    def __init__(self):
+        self.current = True
 
 
 class _ObservableCollection:
     """
     Base for collections that report changes to a field of an observable.
 
-    Subclasses store a weak reference to the owning observable in `_owner_ref`
-    and the field's name in `_field`, both declared in their `__slots__`.
+    Hook snapshots share a revision until this collection or a descendant
+    changes. Descendants hold weak references to watched ancestor revisions.
     """
 
     __slots__ = ()
@@ -344,23 +328,57 @@ class _ObservableCollection:
     _owner_ref: weakref.ref
     _field: str
 
-    def _touch(self):
-        """
-        Emit a change notification for the parent field.
-        """
+    _revision: _CollectionRevision | None
+    _ancestor_revisions: weakref.WeakSet[_CollectionRevision] | None
+    _has_nested: bool
 
+    def _init_collection(self, owner: Observable, field: str, source: Any):
+        self._owner_ref = weakref.ref(owner)
+        self._field = field
+        self._revision = None
+        self._ancestor_revisions = None
+        self._has_nested = False
+        _register_wrapping(source, self)
+
+    def _touch(self):
+        """Invalidate snapshots of this collection and notify its owner."""
+        if self._revision is not None:
+            self._revision.current = False
+        if self._ancestor_revisions:
+            for revision in self._ancestor_revisions:
+                revision.current = False
+            self._ancestor_revisions.clear()
         owner = self._owner_ref()
-        if owner:
+        if owner is not None:
             owner._notify(self._field)
 
-    def _version(self) -> Any:
-        """
-        A value that changes whenever this collection, or a collection nested in
-        it, changes in place.
-        """
+    def _capture_revision(self) -> _CollectionRevision:
+        if self._revision is not None and self._revision.current:
+            return self._revision
 
-        owner = self._owner_ref()
-        return owner._field_version(self._field) if owner else None
+        revision = _CollectionRevision()
+        self._revision = revision
+        if self._has_nested:
+            # Register only reachable descendants. A structural edit invalidates
+            # this revision, so the next capture follows the updated tree.
+            pending = [self]
+            seen = {id(self)}
+            while pending:
+                node = pending.pop()
+                values = node.values() if isinstance(node, dict) else cast(list, node)
+                for child in values:
+                    if (
+                        not isinstance(child, _ObservableCollection)
+                        or id(child) in seen
+                    ):
+                        continue
+                    seen.add(id(child))
+                    if child._ancestor_revisions is None:
+                        child._ancestor_revisions = weakref.WeakSet()
+                    child._ancestor_revisions.add(revision)
+                    if child._has_nested:
+                        pending.append(child)
+        return revision
 
     def _wrapper(self) -> Callable[[Any], Any]:
         """
@@ -372,12 +390,15 @@ class _ObservableCollection:
 
         owner = self._owner_ref()
         if owner is None:
-            return _identity
+            return self._wrap
         field = self._field
         wrap = owner._wrap_if_collection
 
         def wrapper(v):
-            return wrap(field, v) if isinstance(v, (list, dict)) else v
+            if isinstance(v, (list, dict)):
+                self._has_nested = True
+                return wrap(field, v)
+            return v
 
         return wrapper
 
@@ -395,7 +416,8 @@ class _ObservableCollection:
         if not isinstance(v, (list, dict)):
             return v
         owner = self._owner_ref()
-        return owner._wrap_if_collection(self._field, v) if owner else v
+        self._has_nested = True
+        return owner._wrap_if_collection(self._field, v) if owner is not None else v
 
 
 class ObservableList(_ObservableCollection, list):
@@ -403,12 +425,16 @@ class ObservableList(_ObservableCollection, list):
     List wrapper that reports mutating operations to its owning observable.
     """
 
-    __slots__ = ("_owner_ref", "_field")
+    __slots__ = (
+        "_ancestor_revisions",
+        "_field",
+        "_has_nested",
+        "_owner_ref",
+        "_revision",
+    )
 
     def __init__(self, owner: Observable, field: str, iterable=()):
-        self._owner_ref = weakref.ref(owner)
-        self._field = field
-        _register_wrapping(iterable, self)
+        self._init_collection(owner, field, iterable)
         super().__init__(map(self._wrapper(), iterable))
 
     def append(self, x):
@@ -559,12 +585,16 @@ class ObservableDict(_ObservableCollection, dict):
     Dict wrapper that reports mutating operations to its owning observable.
     """
 
-    __slots__ = ("_owner_ref", "_field")
+    __slots__ = (
+        "_ancestor_revisions",
+        "_field",
+        "_has_nested",
+        "_owner_ref",
+        "_revision",
+    )
 
     def __init__(self, owner: Observable, field: str, mapping=()):
-        self._owner_ref = weakref.ref(owner)
-        self._field = field
-        _register_wrapping(mapping, self)
+        self._init_collection(owner, field, mapping)
         super().__init__(mapping)
         wrap = self._wrapper()
         for k, v in list(dict.items(self)):
@@ -703,18 +733,32 @@ class _CollectionDependency:
     Different collections compare by their items, as plain lists and dicts do.
     """
 
-    __slots__ = ("collection", "version")
+    __slots__ = ("collection", "manual_version", "revision")
 
     def __init__(self, collection: _ObservableCollection):
         self.collection = collection
-        self.version = collection._version()
+        self.revision = collection._capture_revision()
+        self.manual_version = self._owner_version()
+
+    def _owner_version(self) -> int:
+        owner = self.collection._owner_ref()
+        return owner._manual_version if owner is not None else 0
+
+    def _is_current(self) -> bool:
+        return self.revision.current and self.manual_version == self._owner_version()
 
     def __eq__(self, other: object) -> bool:
-        if not isinstance(other, _CollectionDependency):
-            return NotImplemented
-        if self.collection is other.collection:
-            return self.version == other.version
-        return self.collection == other.collection
+        if isinstance(other, _CollectionDependency):
+            if self.collection is other.collection:
+                return (
+                    self.revision is other.revision
+                    and self.manual_version == other.manual_version
+                )
+            if not other._is_current():
+                return False
+            other = other.collection
+        # Item equality is meaningful only while the captured contents survive.
+        return self._is_current() and value_equal(self.collection, other)
 
     __hash__ = None  # type: ignore[assignment]
 

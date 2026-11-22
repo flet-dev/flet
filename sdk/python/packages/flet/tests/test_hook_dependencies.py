@@ -1,5 +1,7 @@
 """Observable lists and dicts as `use_memo` and `use_effect` dependencies."""
 
+import pytest
+
 import flet as ft
 from flet.components.component import Component, Renderer
 
@@ -140,3 +142,112 @@ def test_effect_reruns_after_list_changes_in_place():
     render(component)
     component._run_render_effects()
     assert scheduled == [False]
+
+
+@pytest.fixture(params=["memo", "effect"])
+def render_hook(request):
+    """Return a render function that counts memo calculations or effect setups."""
+
+    def create(dependency):
+        runs = []
+
+        def body():
+            hook = ft.use_memo if request.param == "memo" else ft.use_effect
+            hook(lambda: runs.append(1), [dependency()])
+
+        component = Component(fn=body, args=(), kwargs={})
+        component._schedule_effect = lambda hook, is_cleanup=False: hook.setup()
+
+        def render_and_count():
+            render(component)
+            if component._state.mounted:
+                component._run_render_effects()
+            else:
+                component._state.mounted = True
+                component._run_mount_effects()
+            return len(runs)
+
+        return render_and_count
+
+    return create
+
+
+def test_mutation_followed_by_equal_copy(render_hook):
+    store = Store()
+    count = render_hook(lambda: store.items)
+    assert count() == 1
+    store.items.append(3)
+    store.items = list(store.items)
+    assert count() == 2
+    assert count() == 2
+
+
+def test_equal_replacement_becomes_the_watched_collection(render_hook):
+    store = Store()
+    count = render_hook(lambda: store.items)
+    assert count() == 1
+    old_items = store.items
+    store.items = list(old_items)
+    assert count() == 1
+    old_items.append(3)
+    assert count() == 1
+    store.notify()
+    assert count() == 2
+
+
+@pytest.mark.parametrize("field", ["items", "totals"])
+def test_equal_plain_and_observable_dependencies(render_hook, field):
+    store = Store()
+    value = getattr(store, field)
+    count = render_hook(lambda: value)
+    assert count() == 1
+    value = value.copy()
+    assert count() == 1
+    value = getattr(store, field)
+    assert count() == 1
+
+
+def test_nested_dependency_tracks_only_reachable_collections(render_hook):
+    store = Store()
+    shared = []
+    group = {"left": shared, "right": shared}
+    group["cycle"] = group
+    store.groups = [group, []]
+    count = render_hook(lambda: store.groups[0])
+    assert count() == 1
+    store.groups[1].append(1)
+    assert count() == 1
+    watched = store.groups[0]
+    detached = watched.pop("left")
+    assert count() == 2
+    detached.append(1)  # still reachable through "right"
+    assert count() == 3
+    del watched["right"]
+    assert count() == 4
+    detached.append(2)
+    assert count() == 4
+
+
+def test_false_valued_owner_notifies_and_invalidates_nested_hooks(render_hook):
+    @ft.observable
+    class EmptyStore:
+        def __bool__(self):
+            return False
+
+    store = EmptyStore()
+    store.items = []
+    count = render_hook(lambda: store.items)
+    changes = []
+
+    def listener(sender, field):
+        changes.append(field)
+
+    store.subscribe(listener)
+    assert count() == 1
+    store.items.append({})
+    assert count() == 2
+    store.items[0]["a"] = 1
+    assert count() == 3
+    store.notify()
+    assert count() == 4
+    assert changes == ["items", "items", None]
