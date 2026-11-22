@@ -4,6 +4,7 @@ from dataclasses import dataclass, field
 from typing import Any
 
 from flet.components.hooks.hook import Hook
+from flet.components.observable import capture_dependencies
 from flet.components.utils import current_component
 
 
@@ -147,7 +148,9 @@ def use_effect(
         dependencies: Values the effect depends on. The effect always runs after the
             component mounts. If absent, it also re-runs after every render. If
             empty, it runs only on mount. Otherwise, it re-runs only when one of the
-            dependencies has changed.
+            dependencies has changed. A list or dict field of an
+            :func:`~flet.observable` counts as changed when it is changed in place,
+            such as by `items.append(x)`.
         cleanup: A function that cleans up after the effect, run after the cleanup
             the setup returned. It may be `async`.
 
@@ -177,7 +180,7 @@ def use_effect(
         ```
     """
     component = current_component()
-    deps = list(dependencies) if dependencies is not None else None
+    deps = capture_dependencies(dependencies) if dependencies is not None else None
 
     # get or create effect hook
     hook = component.use_hook(
