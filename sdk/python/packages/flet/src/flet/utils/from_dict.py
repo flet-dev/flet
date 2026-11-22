@@ -1,5 +1,6 @@
 import dataclasses
 import sys
+import types
 from enum import Enum
 from typing import (
     Any,
@@ -84,7 +85,8 @@ def from_dict(cls: type[T], data: Any) -> T:
 def convert_value(field_type: type, value: Any) -> Any:
     """
     Converts a value to its appropriate type based on the field_type.
-    Handles nested dataclasses, enums, lists, dicts, and optionals.
+    Handles nested dataclasses, enums, lists, dicts, optionals and unions,
+    written with `Union`/`Optional` or with `|`.
 
     Args:
         field_type: The type to convert the value to.
@@ -96,8 +98,11 @@ def convert_value(field_type: type, value: Any) -> Any:
     origin = get_origin(field_type)
     args = get_args(field_type)
 
-    # Optional[T]
-    if origin is Union and type(None) in args:
+    # `Union[A, B]` and `A | B` have different origins
+    is_union = origin is Union or origin is types.UnionType
+
+    # Optional[T], T | None
+    if is_union and type(None) in args:
         inner_types = tuple(arg for arg in args if arg is not type(None))
         inner_type = (
             inner_types[0] if len(inner_types) == 1 else Union[inner_types]  # noqa: UP007
@@ -106,8 +111,9 @@ def convert_value(field_type: type, value: Any) -> Any:
             return None
         return convert_value(inner_type, value)
 
-    # Union[SomeEnum, T]: the enum member when one has this value, else the value
-    if origin is Union:
+    # Union[SomeEnum, T], SomeEnum | T: the enum member when one has this value,
+    # else the value
+    if is_union:
         for arg in args:
             if isinstance(arg, type) and issubclass(arg, Enum):
                 try:
