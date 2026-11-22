@@ -114,14 +114,43 @@ def test_select_rerenders_only_when_selected_value_changes():
     assert h.render() is True
 
 
-def test_new_select_applies_without_a_resize():
+def test_new_select_applies_on_render_and_on_the_next_resize():
     page = create_page(700, 800)
     breakpoint = 600
-    h = Harness(page, lambda: ft.use_page_size(lambda s: s.width < breakpoint))
+
+    def layout(limit):
+        return ft.use_page_size(lambda s: s.width < limit)
+
+    h = Harness(page, lambda: layout(breakpoint))
     assert h.mount() is False
 
     breakpoint = 800
     assert h.render() is True
+
+    resize(page, 900, 800)
+    assert h.updates == 1
+    assert h.render() is False
+
+
+def test_select_can_return_a_callback():
+    def compact():
+        pytest.fail("The hook invoked the compact callback")
+
+    def wide():
+        pytest.fail("The hook invoked the wide callback")
+
+    def select(size):
+        return compact if size.width < 600 else wide
+
+    page = create_page(700, 800)
+    h = Harness(page, lambda: ft.use_page_size(select))
+    assert h.mount() is wide
+    resize(page, 650, 800)
+    assert h.updates == 0
+
+    resize(page, 500, 800)
+    assert h.updates == 1
+    assert h.render() is compact
 
 
 @pytest.mark.asyncio

@@ -313,12 +313,12 @@ class _DropdownControlState extends State<DropdownControl> {
   }
 }
 
-/// Whether [control]'s parent gives it the full width: a `Column` or `View`
-/// with `horizontal_alignment=STRETCH`, or a vertical `ListView`.
+/// A vertical ListView and a stretch-aligned View or non-wrapping Column
+/// give their children the full width.
 bool _parentStretchesWidth(Control control) {
   var parent = control.parent;
   switch (parent?.type) {
-    case "Column":
+    case "Column" when !parent!.getBool("wrap", false)!:
     case "View":
       return parent!.getString("horizontal_alignment") == "stretch";
     case "ListView":

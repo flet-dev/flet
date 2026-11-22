@@ -90,10 +90,10 @@ class Dropdown(LayoutControl):
     :attr:`options`.
 
     Without a :attr:`width`, a dropdown is as wide as its widest option, except
-    when its parent stretches it: in a :class:`~flet.Column` or :class:`~flet.View`
-    with `horizontal_alignment=CrossAxisAlignment.STRETCH`, or in a vertical
-    :class:`~flet.ListView`, it fills the width, as a :class:`~flet.TextField`
-    does.
+    when its parent stretches it. It fills the width of a non-wrapping
+    :class:`~flet.Column` or a :class:`~flet.View` with
+    `horizontal_alignment=CrossAxisAlignment.STRETCH`, and the width of a
+    vertical :class:`~flet.ListView`.
 
     Example:
     ```python

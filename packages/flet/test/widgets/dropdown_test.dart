@@ -1,8 +1,10 @@
+import 'package:flet/src/controls/control_widget.dart';
 import 'package:flet/src/controls/dropdown.dart';
 import 'package:flet/src/flet_backend.dart';
 import 'package:flet/src/models/control.dart';
 import 'package:material_ui/material_ui.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:provider/provider.dart';
 
 class _TestBackend extends FletBackend {
   _TestBackend()
@@ -14,6 +16,34 @@ class _TestBackend extends FletBackend {
 }
 
 void main() {
+  for (final wrap in [false, true]) {
+    testWidgets('Dropdown width in a stretch-aligned Column with wrap=$wrap',
+        (tester) async {
+      final backend = _TestBackend();
+      final column = Control.fromMap({
+        '_c': 'Column',
+        '_i': 1,
+        'wrap': wrap,
+        'horizontal_alignment': 'stretch',
+        'controls': [
+          {'_c': 'Dropdown', '_i': 2, 'options': []},
+        ],
+      }, backend);
+      await tester.pumpWidget(ChangeNotifierProvider<FletBackend>.value(
+        value: backend,
+        child: MaterialApp(
+          home: Scaffold(
+            body: SizedBox(width: 400, child: ControlWidget(control: column)),
+          ),
+        ),
+      ));
+
+      expect(tester.takeException(), isNull);
+      final fieldWidth = tester.getSize(find.byType(TextField)).width;
+      expect(fieldWidth, wrap ? lessThan(400) : equals(400));
+    });
+  }
+
   testWidgets('Dropdown.expanded_insets is applied when expand is set',
       (tester) async {
     final backend = _TestBackend();

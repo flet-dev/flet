@@ -5,7 +5,7 @@ from typing import Any, TypeVar, overload
 
 from flet.components.hooks.use_effect import use_effect
 from flet.components.hooks.use_ref import use_ref
-from flet.components.hooks.use_state import use_state
+from flet.components.utils import current_component
 from flet.controls.context import context
 from flet.controls.geometry import Size
 
@@ -57,6 +57,7 @@ def use_page_size(select: Callable[[Size], Any] | None = None) -> Any:
         ```
     """
     page = context.page
+    component = current_component()
     select_ref = use_ref()
     select_ref.current = select
 
@@ -65,12 +66,17 @@ def use_page_size(select: Callable[[Size], Any] | None = None) -> Any:
         return fn(size) if fn is not None else size
 
     size_ref = use_ref(lambda: _page_size(page))
-    _, set_selected = use_state(lambda: selected(size_ref.current))
+    selected_ref = use_ref()
+    # A new selector can change the rendered value even without a resize.
+    selected_ref.current = selected(size_ref.current)
 
     def subscribe():
         def on_resize(size: Size):
             size_ref.current = size
-            set_selected(selected(size))
+            value = selected(size)
+            if value != selected_ref.current:
+                selected_ref.current = value
+                component._schedule_update()
 
         # Catch up with a resize between the first render and this effect.
         on_resize(_page_size(page))
@@ -78,4 +84,4 @@ def use_page_size(select: Callable[[Size], Any] | None = None) -> Any:
 
     use_effect(subscribe, [])
 
-    return selected(size_ref.current)
+    return selected_ref.current

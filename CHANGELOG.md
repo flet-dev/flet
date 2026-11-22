@@ -6,7 +6,7 @@
 
 ### Improvements
 
-* `Dropdown` without a `width` fills the width when its parent stretches it, in a `Column` or `View` with `horizontal_alignment=STRETCH` or in a vertical `ListView`, as `TextField` does, instead of keeping the width of its widest option ([#7115](https://github.com/flet-dev/flet/pull/7115)) by @FeodorFitsner.
+* A `Dropdown` without a `width` fills a non-wrapping `Column` or a `View` with `horizontal_alignment=STRETCH`. It also fills a vertical `ListView` ([#7115](https://github.com/flet-dev/flet/pull/7115)) by @FeodorFitsner.
 
 ## 1.1.3
 
