@@ -40,6 +40,7 @@
 * Fix controls with a `badge` losing their state when the badge's `label_visible` changes or the badge is replaced, such as an open `PopupMenuButton` never calling `on_cancel` or `on_select` ([#7080](https://github.com/flet-dev/flet/issues/7080), [#7089](https://github.com/flet-dev/flet/pull/7089)) by @ndonkoHenri.
 * Fix the `badge` of a control positioned with `left`/`top`/`right`/`bottom` in a `Stack` being drawn away from the control ([#7089](https://github.com/flet-dev/flet/pull/7089)) by @ndonkoHenri.
 * Fix a generator `main()` not showing the updates made before a `yield`, such as a splash screen, until the blocking work after it finished ([#7100](https://github.com/flet-dev/flet/issues/7100), [#7106](https://github.com/flet-dev/flet/pull/7106)) by @ndonkoHenri.
+* Fix unhandled exceptions in `page.run_thread()` functions and PubSub subscribers not being reported, and in `page.run_task()` tasks being logged under `concurrent.futures` even when awaited; all are now logged on the `flet` logger, a task's only when nothing awaits it ([#7109](https://github.com/flet-dev/flet/issues/7109), [#7110](https://github.com/flet-dev/flet/pull/7110)) by @ndonkoHenri.
 
 ## 1.1.2
 
