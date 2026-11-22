@@ -8,7 +8,7 @@
 
 A [Flet](https://flet.dev) extension for displaying interactive maps.
 
-> **[Try flet-map in Flet Studio](https://studio.flet.dev/gallery/displays/map/example/extensions/map/map)**
+> **[Try flet-map in Flet Studio](https://studio.flet.dev/gallery/displays/map/example/extensions/map/map?utm_source=pypi&utm_medium=readme&utm_campaign=flet-map)**
 >
 > Create, run, and share Python apps in your browser. Start from an example, write your own code, or get help from the AI agent. No installation required.
 

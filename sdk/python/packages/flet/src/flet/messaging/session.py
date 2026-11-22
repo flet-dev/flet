@@ -22,7 +22,7 @@ from flet.messaging.protocol import (
 )
 from flet.messaging.session_store import SessionStore
 from flet.pubsub.pubsub_client import PubSubClient
-from flet.utils.object_model import patch_dataclass
+from flet.utils.object_model import is_coroutine_result, patch_dataclass
 from flet.utils.strings import random_string
 
 if TYPE_CHECKING:
@@ -57,8 +57,7 @@ class Session:
         self.__index[self.__page._i] = self.__page
         self.__store: SessionStore = SessionStore()
         self.__pubsub_client = PubSubClient(conn.pubsubhub, self.__id)
-        self.__method_calls: dict[str, asyncio.Event] = {}
-        self.__method_call_results: dict[asyncio.Event, tuple[Any, Optional[str]]] = {}
+        self.__method_calls: dict[str, asyncio.Future] = {}
         self.__updates_ready: asyncio.Event = asyncio.Event()
         self.__pending_updates: set[BaseControl] = set()
         self.__pending_effects: list[
@@ -499,37 +498,61 @@ class Session:
 
         Raises:
             TimeoutError: If no invoke-method response is received before timeout.
-            RuntimeError: If the client reports an invocation error.
+            RuntimeError: If the client reports an invocation error, or the
+                session is closed before or while waiting for the response.
+            asyncio.CancelledError: If the calling task is cancelled while
+                waiting; a response that arrives afterwards is dropped.
         """
+        if self.__closed:
+            raise RuntimeError("Session closed")
+
         call_id = random_string(10)
 
         # register callback
-        evt = asyncio.Event()
-        self.__method_calls[call_id] = evt
+        loop = asyncio.get_running_loop()
+        fut = loop.create_future()
+        self.__method_calls[call_id] = fut
+        timeout_handle: Optional[asyncio.TimerHandle] = None
 
-        # call method
-        self.__send_message(
-            Message(
-                MessageAction.INVOKE_METHOD,
-                InvokeMethodRequestBody(
-                    control_id=control_id, call_id=call_id, name=method_name, args=args
-                ),
-            )
-        )
+        def expire():
+            if not fut.done():
+                fut.set_exception(
+                    TimeoutError(
+                        f"Timeout waiting for invokeMethod {method_name}({args}) call"
+                    )
+                )
 
         try:
-            await asyncio.wait_for(evt.wait(), timeout=timeout)
-        except TimeoutError:
-            if call_id in self.__method_calls:
-                del self.__method_calls[call_id]
-            raise TimeoutError(
-                f"Timeout waiting for invokeMethod {method_name}({args}) call"
-            ) from None
+            # call method
+            self.__send_message(
+                Message(
+                    MessageAction.INVOKE_METHOD,
+                    InvokeMethodRequestBody(
+                        control_id=control_id,
+                        call_id=call_id,
+                        name=method_name,
+                        args=args,
+                    ),
+                )
+            )
 
-        result, err = self.__method_call_results.pop(evt)
-        if err:
-            raise RuntimeError(err)
-        return result
+            # The response, the timeout and session close all complete the
+            # same future, so whichever comes first wins. The future is
+            # awaited directly (not via `asyncio.wait_for()` or
+            # `asyncio.wait()`) so that cancelling the calling task always
+            # raises CancelledError, even if the future completes in the same
+            # event-loop turn.
+            if timeout is not None:
+                timeout_handle = loop.call_later(timeout, expire)
+            return await fut
+        finally:
+            if timeout_handle is not None:
+                timeout_handle.cancel()
+            self.__method_calls.pop(call_id, None)
+            if not fut.cancel() and not fut.cancelled():
+                # Done but not consumed (cancelled or failed caller): mark an
+                # error as retrieved so it isn't logged as never retrieved.
+                fut.exception()
 
     def handle_invoke_method_results(
         self, control_id: int, call_id: str, result: Any, error: Optional[str]
@@ -550,8 +573,8 @@ class Session:
         the connection's receive loop and froze the whole app. A result
         nobody is waiting for is dropped.
         """
-        evt = self.__method_calls.pop(call_id, None)
-        if evt is None:
+        fut = self.__method_calls.pop(call_id, None)
+        if fut is None or fut.done():
             logger.debug(
                 "Dropping invoke method result for call %s (control %s): "
                 "nobody is waiting for it.",
@@ -566,16 +589,20 @@ class Session:
                 call_id,
                 control_id,
             )
-        self.__method_call_results[evt] = (result, error)
-        evt.set()
+        if error:
+            fut.set_exception(RuntimeError(error))
+        else:
+            fut.set_result(result)
 
     def __cancel_method_calls(self):
         """
         Resolves all pending invoke-method waits with a session-closed error.
         """
-        for evt in list(self.__method_calls.values()):
-            self.__method_call_results[evt] = (None, "Session closed")
-            evt.set()
+        method_calls = list(self.__method_calls.values())
+        self.__method_calls.clear()
+        for fut in method_calls:
+            if not fut.done():
+                fut.set_exception(RuntimeError("Session closed"))
 
     async def after_event(self, control: BaseControl | None):
         """
@@ -783,10 +810,14 @@ class Session:
                     return
             if setup is not None:
                 hook._active = True
-                if inspect.iscoroutinefunction(setup):
-                    hook._setup_task = asyncio.create_task(setup())
+                res = setup()
+                if is_coroutine_result(res):
+                    # An `async` setup, or a plain function that returns a
+                    # coroutine (`lambda: load(item_id)` with an `async` `load`):
+                    # either way it runs as the effect's task.
+                    # ensure_future also schedules awaitable generators.
+                    hook._setup_task = asyncio.ensure_future(res)
                 else:
-                    res = setup()
                     hook._returned_cleanup = res if callable(res) else None
                 if not hook.is_live():
                     hook.cancel_setup()

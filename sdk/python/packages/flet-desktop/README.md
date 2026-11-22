@@ -5,6 +5,6 @@
 
 This package contains a compiled Flutter Flet desktop client.
 
-> **[Try Flet online in Flet Studio](https://studio.flet.dev)**
+> **[Try Flet online in Flet Studio](https://studio.flet.dev/?utm_source=pypi&utm_medium=readme&utm_campaign=flet-desktop)**
 >
 > Try Flet in your browser with no installation, then bring your Python app to the desktop. Write your own Python code or get help from the AI agent.
