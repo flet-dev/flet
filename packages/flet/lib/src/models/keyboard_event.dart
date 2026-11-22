@@ -1,5 +1,6 @@
 class KeyboardEvent {
   final String key;
+  final int physicalKey;
   final bool isShiftPressed;
   final bool isControlPressed;
   final bool isAltPressed;
@@ -7,6 +8,7 @@ class KeyboardEvent {
 
   KeyboardEvent(
       {required this.key,
+      required this.physicalKey,
       required this.isShiftPressed,
       required this.isControlPressed,
       required this.isAltPressed,
@@ -14,6 +16,7 @@ class KeyboardEvent {
 
   Map<String, dynamic> toMap() => <String, dynamic>{
         'key': key,
+        'physical_key': physicalKey,
         'shift': isShiftPressed,
         'ctrl': isControlPressed,
         'alt': isAltPressed,

@@ -524,6 +524,7 @@ class _PageControlState extends State<PageControl> with WidgetsBindingObserver {
             "keyboard_event",
             KeyboardEvent(
                     key: k.keyLabel,
+                    physicalKey: e.physicalKey.usbHidUsage,
                     isAltPressed: HardwareKeyboard.instance.isAltPressed,
                     isControlPressed:
                         HardwareKeyboard.instance.isControlPressed,

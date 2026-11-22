@@ -3,6 +3,7 @@
 ### New features
 
 * Add `KeyboardKey`, so keyboard handlers can compare `e.key == ft.KeyboardKey.ARROW_RIGHT` instead of `"Arrow Right"`; comparisons with plain strings keep working ([#7123](https://github.com/flet-dev/flet/pull/7123)) by @ndonkoHenri.
+* Add `physical_key` to keyboard events and `PhysicalKeyboardKey`, so games and other position-based controls can read keys by their place on the keyboard, such as WASD that stays in place on AZERTY keyboards ([#7125](https://github.com/flet-dev/flet/pull/7125)) by @ndonkoHenri.
 
 ## 1.1.3
 

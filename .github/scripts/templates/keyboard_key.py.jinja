@@ -6,7 +6,7 @@ To generate/update this file run from the root of the repository:
 
 from enum import Enum
 
-__all__ = ["KeyboardKey"]
+__all__ = ["KeyboardKey", "PhysicalKeyboardKey"]
 
 
 class KeyboardKey(str, Enum):
@@ -26,5 +26,33 @@ class KeyboardKey(str, Enum):
     def __str__(self) -> str:
         return self.value
 
-{% for name, value in keys %}    {{ name }} = {{ value }}
+{% for name, value in logical_keys %}    {{ name }} = {{ value }}
+{% endfor %}
+
+class PhysicalKeyboardKey(int, Enum):
+    """
+    Physical keys reported by keyboard events, such as
+    :attr:`flet.KeyboardEvent.physical_key` and
+    :attr:`flet.KeyDownEvent.physical_key`.
+
+    A physical key is a position on the keyboard, named after the key at that
+    position on a US QWERTY layout, whatever the active layout. Use it for
+    controls that depend on where keys are, such as moving with
+    <kbd>W</kbd>, <kbd>A</kbd>, <kbd>S</kbd> and <kbd>D</kbd>, which stays
+    the same cluster on an AZERTY keyboard, where it reads Z, Q, S and D.
+    For shortcuts and text, use :class:`~flet.KeyboardKey`, which follows
+    the layout.
+
+    Each member is also an integer equal to the key's USB HID usage code,
+    the value the client sends, and `str()` and f-strings give the member's
+    name, such as `"W"`.
+
+    A key that has no member here is reported as its USB HID usage code.
+    Software keyboards on mobile devices may not report physical keys.
+    """
+
+    def __str__(self) -> str:
+        return self.name
+
+{% for name, value in physical_keys %}    {{ name }} = {{ value }}
 {% endfor %}

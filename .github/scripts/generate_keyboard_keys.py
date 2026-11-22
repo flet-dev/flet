@@ -4,7 +4,7 @@
 #   "Jinja2",
 # ]
 # ///
-"""Generate `flet.KeyboardKey` from Flutter's logical keyboard keys.
+"""Generate `flet.KeyboardKey` and `flet.PhysicalKeyboardKey` from Flutter's keys.
 
 Run from the root of the repository:
 
@@ -18,6 +18,10 @@ SDK the client is built with, so the labels match what the client sends.
 
 `keyLabel` is the upper-cased character for printable keys, whose ids are their
 Unicode code points, and an entry of the `_keyLabels` map for the others.
+
+Each `PhysicalKeyboardKey` constant becomes a member whose value is the key's
+`usbHidUsage`, the USB HID usage code the client sends. Physical keys have no
+label outside debug builds, so the code is what identifies them.
 """
 
 import argparse
@@ -32,8 +36,11 @@ from jinja2 import Environment, FileSystemLoader
 REPO = Path(__file__).resolve().parents[2]
 OUTPUT_FILE = "sdk/python/packages/flet/src/flet/controls/keyboard_key.py"
 
-KEY_PATTERN = re.compile(
+LOGICAL_KEY_PATTERN = re.compile(
     r"static const LogicalKeyboardKey (\w+) = LogicalKeyboardKey\((0x[0-9a-f]+)\);"
+)
+PHYSICAL_KEY_PATTERN = re.compile(
+    r"static const PhysicalKeyboardKey (\w+) = PhysicalKeyboardKey\((0x[0-9a-f]+)\);"
 )
 LABEL_PATTERN = re.compile(r"(0x[0-9a-f]+): '([^']*)'")
 
@@ -90,31 +97,48 @@ def python_string(value: str) -> str:
     return '"' + value.replace("\\", "\\\\").replace('"', '\\"') + '"'
 
 
-def parse_keys(dart_content: str) -> list[tuple[str, str]]:
+def check_unique(keys: list[tuple[str, object, str]]) -> list[tuple[str, str]]:
+    """Return `(member name, value literal)` pairs, failing on a repeated name or value.
+
+    A repeated value would make the member an alias of another one.
+    """
+    names = [name for name, _, _ in keys]
+    values = [value for _, value, _ in keys]
+    if len(set(names)) != len(names) or len(set(values)) != len(values):
+        raise SystemExit("duplicate key name or value")
+    return [
+        (name, literal + ("  # noqa: E741" if name in AMBIGUOUS_NAMES else ""))
+        for name, _, literal in keys
+    ]
+
+
+def parse_logical_keys(dart_content: str) -> list[tuple[str, str]]:
     """Return `(member name, value literal)` for each logical key, in Flutter's order."""
     start = dart_content.index("class LogicalKeyboardKey")
     logical = dart_content[start : dart_content.index("class PhysicalKeyboardKey")]
     labels = {int(k, 16): v for k, v in LABEL_PATTERN.findall(logical)}
 
     keys = []
-    names = set()
-    values = set()
-    for dart_name, key_id in KEY_PATTERN.findall(logical):
+    for dart_name, key_id in LOGICAL_KEY_PATTERN.findall(logical):
         key_id = int(key_id, 16)
         label = chr(key_id).upper() if key_id <= UNICODE_MAX_ID else labels[key_id]
-        name = python_name(dart_name)
-        # A repeated value would make the member an alias of another one.
-        if name in names or label in values:
-            raise SystemExit(f"duplicate key name or label: {name} = {label!r}")
-        names.add(name)
-        values.add(label)
-        literal = python_string(label)
-        if name in AMBIGUOUS_NAMES:
-            literal += "  # noqa: E741"
-        keys.append((name, literal))
+        keys.append((python_name(dart_name), label, python_string(label)))
 
-    print(f"🔍 Found {len(keys)} keyboard keys.")
-    return keys
+    print(f"🔍 Found {len(keys)} logical keyboard keys.")
+    return check_unique(keys)
+
+
+def parse_physical_keys(dart_content: str) -> list[tuple[str, str]]:
+    """Return `(member name, value literal)` for each physical key, in Flutter's order."""
+    physical = dart_content[dart_content.index("class PhysicalKeyboardKey") :]
+
+    keys = [
+        (python_name(dart_name), int(usage, 16), f"0x{int(usage, 16):08X}")
+        for dart_name, usage in PHYSICAL_KEY_PATTERN.findall(physical)
+    ]
+
+    print(f"🔍 Found {len(keys)} physical keyboard keys.")
+    return check_unique(keys)
 
 
 def main() -> int:
@@ -124,8 +148,11 @@ def main() -> int:
     )
     args = parser.parse_args()
 
-    keys = parse_keys(download_keyboard_keys())
-    content = templates.get_template("keyboard_key.py.jinja").render(keys=keys)
+    dart_content = download_keyboard_keys()
+    content = templates.get_template("keyboard_key.py.jinja").render(
+        logical_keys=parse_logical_keys(dart_content),
+        physical_keys=parse_physical_keys(dart_content),
+    )
     path = REPO / OUTPUT_FILE
 
     if args.verify:
