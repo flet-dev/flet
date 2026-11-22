@@ -14,6 +14,7 @@ import '../utils/gradient.dart';
 import '../utils/images.dart';
 import '../utils/misc.dart';
 import '../utils/numbers.dart';
+import '../widgets/animated_control_size.dart';
 import '../widgets/flet_store_mixin.dart';
 import 'base_controls.dart';
 
@@ -63,33 +64,26 @@ class ContainerControl extends StatelessWidget with FletStoreMixin {
     );
     var boxForegroundDecoration =
         control.getBoxDecoration("foreground_decoration", context);
-    Widget? container;
 
+    var sizeAnimation = control.getAnimation("animate_size");
     var onAnimationEnd = control.hasEventHandler("animation_end")
         ? () => control.triggerEvent("animation_end", "container")
         : null;
-    if ((onClick || hasActions || onLongPress || onHover || onTapDown) &&
-        ink &&
-        !control.disabled) {
-      // `padding` and `alignment` are applied inside the `InkWell` only, so that
-      // ink effects cover the entire area of this container.
+    final interactive = !control.disabled &&
+        (onClick || hasActions || onLongPress || onHover || onTapDown);
+    final useInk = interactive && ink;
+    Widget? surfaceContent = content;
+    if (useInk) {
+      // Keep padding and alignment inside the InkWell so the entire box responds.
       var inkContent = animation == null
-          ? Container(
-              padding: padding,
-              alignment: alignment,
-              clipBehavior: Clip.none,
-              child: content,
-            )
+          ? Container(padding: padding, alignment: alignment, child: content)
           : AnimatedContainer(
               duration: animation.duration,
               curve: animation.curve,
               padding: padding,
               alignment: alignment,
-              clipBehavior: Clip.none,
-              child: content,
-            );
-
-      var ink = Material(
+              child: content);
+      surfaceContent = Material(
           color: Colors.transparent,
           borderRadius: boxDecoration!.borderRadius,
           child: InkWell(
@@ -118,93 +112,67 @@ class ContainerControl extends StatelessWidget with FletStoreMixin {
             splashColor: control.getColor("ink_color", context),
             child: inkContent,
           ));
+    }
 
-      container = animation == null
-          ? Container(
-              width: width,
-              height: height,
-              margin: margin,
-              clipBehavior: clipBehavior,
-              decoration: boxDecoration,
-              foregroundDecoration: boxForegroundDecoration,
-              child: ink,
-            )
-          : AnimatedContainer(
-              duration: animation.duration,
-              curve: animation.curve,
-              width: width,
-              height: height,
-              margin: margin,
-              decoration: boxDecoration,
-              foregroundDecoration: boxForegroundDecoration,
-              clipBehavior: clipBehavior,
-              onEnd: onAnimationEnd,
-              child: ink);
-    } else {
-      container = animation == null
-          ? Container(
-              width: width,
-              height: height,
-              margin: margin,
-              padding: padding,
-              alignment: alignment,
-              decoration: boxDecoration,
-              foregroundDecoration: boxForegroundDecoration,
-              clipBehavior: clipBehavior,
-              child: content)
-          : AnimatedContainer(
-              duration: animation.duration,
-              curve: animation.curve,
-              width: width,
-              height: height,
-              margin: margin,
-              padding: padding,
-              alignment: alignment,
-              decoration: boxDecoration,
-              foregroundDecoration: boxForegroundDecoration,
-              clipBehavior: clipBehavior,
-              onEnd: onAnimationEnd,
-              child: content);
-
-      if ((onClick || onLongPress || onHover || onTapDown || hasActions) &&
-          !control.disabled) {
-        container = MouseRegion(
-          cursor: onClick || onTapDown || hasActions
-              ? SystemMouseCursors.click
-              : MouseCursor.defer,
-          onEnter: onHover
-              ? (value) {
-                  control.triggerEvent("hover", true);
+    final surface = _ContainerSurface(
+      width: width,
+      height: height,
+      margin: margin,
+      padding: useInk ? null : padding,
+      alignment: useInk ? null : alignment,
+      decoration: boxDecoration,
+      foregroundDecoration: boxForegroundDecoration,
+      sizeAnimation: sizeAnimation,
+      onSizeEnd: control.hasEventHandler("animation_end")
+          ? () => control.triggerEvent("animation_end", "size")
+          : null,
+      clipBehavior: clipBehavior,
+      child: surfaceContent,
+    );
+    Widget container = animation == null
+        ? surface.build()
+        : _AnimatedSurface(
+            target: surface,
+            duration: animation.duration,
+            curve: animation.curve,
+            onEnd: onAnimationEnd);
+    if (interactive && !useInk) {
+      container = MouseRegion(
+        cursor: onClick || onTapDown || hasActions
+            ? SystemMouseCursors.click
+            : MouseCursor.defer,
+        onEnter: onHover
+            ? (value) {
+                control.triggerEvent("hover", true);
+              }
+            : null,
+        onExit: onHover
+            ? (value) {
+                control.triggerEvent("hover", false);
+              }
+            : null,
+        child: GestureDetector(
+          onTap: onClick || hasActions
+              ? () {
+                  runControlActions(context, control);
+                  if (onClick) {
+                    control.triggerEvent("click");
+                  }
                 }
               : null,
-          onExit: onHover
-              ? (value) {
-                  control.triggerEvent("hover", false);
+          onTapDown: onTapDown
+              ? (TapDownDetails details) {
+                  control.triggerEvent("tap_down", details.toMap());
                 }
               : null,
-          child: GestureDetector(
-            onTap: onClick || hasActions
-                ? () {
-                    runControlActions(context, control);
-                    if (onClick) {
-                      control.triggerEvent("click");
-                    }
-                  }
-                : null,
-            onTapDown: onTapDown
-                ? (TapDownDetails details) {
-                    control.triggerEvent("tap_down", details.toMap());
-                  }
-                : null,
-            onLongPress: onLongPress
-                ? () {
-                    control.triggerEvent("long_press");
-                  }
-                : null,
-            child: container,
-          ),
-        );
-      }
+          onLongPress: onLongPress
+              ? () {
+                  control.triggerEvent("long_press");
+                }
+              : null,
+          child: container,
+        ),
+      );
     }
 
     if (blur != null) {
@@ -223,5 +191,127 @@ class ContainerControl extends StatelessWidget with FletStoreMixin {
     container = IgnorePointer(ignoring: ignoreInteractions, child: container);
 
     return LayoutControl(control: control, child: container);
+  }
+}
+
+// The margin is outside the dimensions. Padding, decoration, ink and clipping
+// all receive the constraints for the current animation frame.
+class _ContainerSurface {
+  final double? width, height;
+  final EdgeInsetsGeometry? margin, padding;
+  final AlignmentGeometry? alignment;
+  final Decoration? decoration, foregroundDecoration;
+  final Clip clipBehavior;
+  final ImplicitAnimationDetails? sizeAnimation;
+  final VoidCallback? onSizeEnd;
+  final Widget? child;
+
+  const _ContainerSurface(
+      {this.width,
+      this.height,
+      this.margin,
+      this.padding,
+      this.alignment,
+      this.decoration,
+      this.foregroundDecoration,
+      required this.clipBehavior,
+      this.sizeAnimation,
+      this.onSizeEnd,
+      this.child});
+
+  Widget build({
+    double? width,
+    double? height,
+    EdgeInsetsGeometry? margin,
+    EdgeInsetsGeometry? padding,
+    AlignmentGeometry? alignment,
+    Decoration? decoration,
+    Decoration? foregroundDecoration,
+  }) {
+    final sized = AnimatedControlSize(
+      width: width ?? this.width,
+      height: height ?? this.height,
+      animation: sizeAnimation,
+      onEnd: onSizeEnd,
+      child: Container(
+        padding: padding ?? this.padding,
+        alignment: alignment ?? this.alignment,
+        decoration: decoration ?? this.decoration,
+        foregroundDecoration: foregroundDecoration ?? this.foregroundDecoration,
+        clipBehavior: clipBehavior,
+        child: child,
+      ),
+    );
+    final outerMargin = margin ?? this.margin;
+    return outerMargin == null
+        ? sized
+        : Padding(padding: outerMargin, child: sized);
+  }
+}
+
+// All properties owned by Container.animate share one controller and one
+// "container" completion, including when size and margin change together.
+class _AnimatedSurface extends ImplicitlyAnimatedWidget {
+  final _ContainerSurface target;
+
+  const _AnimatedSurface(
+      {required this.target,
+      required super.duration,
+      required super.curve,
+      super.onEnd});
+
+  @override
+  AnimatedWidgetBaseState<_AnimatedSurface> createState() =>
+      _AnimatedSurfaceState();
+}
+
+class _AnimatedSurfaceState extends AnimatedWidgetBaseState<_AnimatedSurface> {
+  Tween<double>? _width, _height;
+  EdgeInsetsGeometryTween? _margin, _padding;
+  AlignmentGeometryTween? _alignment;
+  DecorationTween? _decoration, _foreground;
+
+  @override
+  void forEachTween(TweenVisitor<dynamic> visitor) {
+    Tween<double> dimension(dynamic value) =>
+        Tween<double>(begin: value as double);
+    EdgeInsetsGeometryTween inset(dynamic value) =>
+        EdgeInsetsGeometryTween(begin: value as EdgeInsetsGeometry);
+    DecorationTween decoration(dynamic value) =>
+        DecorationTween(begin: value as Decoration);
+    final target = widget.target;
+    _width = visitor(_width, target.sizeAnimation == null ? target.width : null,
+        dimension) as Tween<double>?;
+    _height = visitor(
+        _height,
+        target.sizeAnimation == null ? target.height : null,
+        dimension) as Tween<double>?;
+    _margin =
+        visitor(_margin, target.margin, inset) as EdgeInsetsGeometryTween?;
+    _padding =
+        visitor(_padding, target.padding, inset) as EdgeInsetsGeometryTween?;
+    _alignment = visitor(
+            _alignment,
+            target.alignment,
+            (dynamic value) =>
+                AlignmentGeometryTween(begin: value as AlignmentGeometry))
+        as AlignmentGeometryTween?;
+    _decoration =
+        visitor(_decoration, target.decoration, decoration) as DecorationTween?;
+    _foreground = visitor(_foreground, target.foregroundDecoration, decoration)
+        as DecorationTween?;
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final target = widget.target;
+    return target.build(
+        width: _width?.evaluate(animation),
+        height: _height?.evaluate(animation),
+        margin: _margin?.evaluate(animation),
+        padding: _padding?.evaluate(animation),
+        alignment: _alignment?.evaluate(animation),
+        decoration: _decoration?.evaluate(animation),
+        foregroundDecoration: _foreground?.evaluate(animation));
   }
 }
