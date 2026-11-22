@@ -1104,8 +1104,20 @@ class Page(BasePage):
         **kwargs: InputT.kwargs,
     ) -> None:
         """
-        Run `handler` function as a new Thread in the executor associated with the \
-        current page.
+        Run `handler` in a thread of [`executor`][flet.Page.executor], with this page
+        as the current page.
+
+        In a static website, which runs on Pyodide and has no threads, `handler`
+        runs before this method returns.
+
+        Args:
+            handler: The function to run.
+            *args: Positional arguments to call `handler` with.
+            **kwargs: Keyword arguments to call `handler` with.
+
+        Note:
+            The value `handler` returns is discarded. To get the value or the
+            exception back, await `asyncio.to_thread()` instead.
         """
         handler_with_context = self.__context_wrapper(handler)
         if is_pyodide():

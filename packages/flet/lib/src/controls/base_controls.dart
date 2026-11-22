@@ -54,8 +54,10 @@ class LayoutControl extends StatelessWidget {
     w = _aspectRatio(w, control);
     w = _alignedControl(context, w, control);
     w = _marginControl(context, w, control);
-    w = _positionedControl(context, w, control);
+    // Inside the positioning: `Positioned` must be the direct child of the
+    // parent `Stack`, not of the badge's own one.
     w = _badge(w, Theme.of(context), control);
+    w = _positionedControl(context, w, control);
     w = _sizeChangeObserver(w, control);
     return _expandable(w, control);
   }
