@@ -1,6 +1,7 @@
 import dataclasses
 import inspect
 import sys
+from collections.abc import Coroutine
 from enum import Enum
 from typing import Any, Union, get_args, get_origin, get_type_hints
 
@@ -126,6 +127,13 @@ def is_enum(tp: Any) -> bool:
         `True` if `tp` is a subclass of `enum.Enum`, otherwise `False`.
     """
     return isinstance(tp, type) and issubclass(tp, Enum)
+
+
+def is_coroutine_result(value: object) -> bool:
+    """Recognize coroutine objects, including awaitable generators."""
+    return isinstance(value, Coroutine) or (
+        inspect.isgenerator(value) and inspect.isawaitable(value)
+    )
 
 
 def get_param_count(fn):
