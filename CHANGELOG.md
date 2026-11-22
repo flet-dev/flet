@@ -3,6 +3,7 @@
 ### Documentation
 
 * flet-notifications: Document how to update a notification after an inline reply on Android, and fix the "Action buttons and replies" example's notification staying stuck with a spinner after a reply ([#7058](https://github.com/flet-dev/flet/discussions/7058), [#7060](https://github.com/flet-dev/flet/pull/7060)) by @ItsRenjiii.
+* Document how to show a loading screen while `main()` starts up, and where unhandled exceptions from handlers, tasks and threads end up, in the Async apps guide ([#7100](https://github.com/flet-dev/flet/issues/7100), [#7101](https://github.com/flet-dev/flet/pull/7101)) by @daneeller.
 
 ### Improvements
 
@@ -38,6 +39,7 @@
 * Fix `Screenshot.capture()` failing with a type error when `pixel_ratio` is a whole number, such as `pixel_ratio=1` ([#7090](https://github.com/flet-dev/flet/pull/7090)) by @ndonkoHenri.
 * Fix controls with a `badge` losing their state when the badge's `label_visible` changes or the badge is replaced, such as an open `PopupMenuButton` never calling `on_cancel` or `on_select` ([#7080](https://github.com/flet-dev/flet/issues/7080), [#7089](https://github.com/flet-dev/flet/pull/7089)) by @ndonkoHenri.
 * Fix the `badge` of a control positioned with `left`/`top`/`right`/`bottom` in a `Stack` being drawn away from the control ([#7089](https://github.com/flet-dev/flet/pull/7089)) by @ndonkoHenri.
+* Fix a generator `main()` not showing the updates made before a `yield`, such as a splash screen, until the blocking work after it finished ([#7100](https://github.com/flet-dev/flet/issues/7100), [#7106](https://github.com/flet-dev/flet/pull/7106)) by @ndonkoHenri.
 
 ## 1.1.2
 
