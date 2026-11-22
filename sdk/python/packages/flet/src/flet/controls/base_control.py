@@ -511,45 +511,37 @@ class BaseControl:
                 )
             session = self.page.session
 
-            # Handle async and sync event handlers accordingly
+            # Call the handler, then run what calling it started: a coroutine, an
+            # async generator or a generator. Checking the result rather than the
+            # handler also runs one that a plain function returns, such as
+            # `lambda: save(item)` with an `async` `save`, which would otherwise be
+            # dropped without running.
             event_handler = getattr(self, field_name)
-            if inspect.iscoroutinefunction(event_handler):
-                if get_param_count(event_handler) == 0:
-                    await event_handler()
-                else:
-                    await event_handler(e)
-
-            elif inspect.isasyncgenfunction(event_handler):
-                agen = (
+            if callable(event_handler):
+                res = (
                     event_handler()
                     if get_param_count(event_handler) == 0
                     else event_handler(e)
                 )
-                async for _ in agen:
-                    await session.after_event(session.index.get(self._i))
-                    # A `yield` asks for an intermediate UI update, so give the
-                    # connection's send loop a turn to flush the patch before the
-                    # handler resumes. Without it a handler that blocks right after
-                    # the `yield` (e.g. `time.sleep()`) keeps the queued patch from
-                    # reaching the client until the whole handler is done.
-                    await asyncio.sleep(0)
+                if inspect.iscoroutine(res):
+                    await res
 
-            elif inspect.isgeneratorfunction(event_handler):
-                gen = (
-                    event_handler()
-                    if get_param_count(event_handler) == 0
-                    else event_handler(e)
-                )
-                for _ in gen:
-                    await session.after_event(session.index.get(self._i))
-                    # See the note in the async generator branch above.
-                    await asyncio.sleep(0)
+                elif inspect.isasyncgen(res):
+                    async for _ in res:
+                        await session.after_event(session.index.get(self._i))
+                        # A `yield` asks for an intermediate UI update, so give the
+                        # connection's send loop a turn to flush the patch before the
+                        # handler resumes. Without it a handler that blocks right
+                        # after the `yield` (e.g. `time.sleep()`) keeps the queued
+                        # patch from reaching the client until the whole handler is
+                        # done.
+                        await asyncio.sleep(0)
 
-            elif callable(event_handler):
-                if get_param_count(event_handler) == 0:
-                    event_handler()
-                else:
-                    event_handler(e)
+                elif inspect.isgenerator(res):
+                    for _ in res:
+                        await session.after_event(session.index.get(self._i))
+                        # See the note in the async generator branch above.
+                        await asyncio.sleep(0)
 
             await session.after_event(session.index.get(self._i))
 

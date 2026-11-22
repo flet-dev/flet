@@ -810,10 +810,13 @@ class Session:
                     return
             if setup is not None:
                 hook._active = True
-                if inspect.iscoroutinefunction(setup):
-                    hook._setup_task = asyncio.create_task(setup())
+                res = setup()
+                if inspect.iscoroutine(res):
+                    # An `async` setup, or a plain function that returns a
+                    # coroutine (`lambda: load(item_id)` with an `async` `load`):
+                    # either way it runs as the effect's task.
+                    hook._setup_task = asyncio.create_task(res)
                 else:
-                    res = setup()
                     hook._returned_cleanup = res if callable(res) else None
                 if not hook.is_live():
                     hook.cancel_setup()

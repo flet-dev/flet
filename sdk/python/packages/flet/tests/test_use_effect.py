@@ -779,3 +779,62 @@ class TestEffectLoop:
         await runner.unmount()
 
         assert log == ["cancelled"]
+
+    @pytest.mark.asyncio
+    async def test_coroutine_returned_by_a_plain_setup_runs(self, runner):
+        """A plain setup that returns a coroutine (`lambda: load(1)`) runs it."""
+        log: list[str] = []
+
+        async def load(item_id: int):
+            await asyncio.sleep(0)
+            log.append(f"loaded {item_id}")
+
+        def body():
+            use_effect_module.use_effect(lambda: load(1), [])
+
+        await runner.mount(body)
+
+        assert log == ["loaded 1"]
+        assert runner.errors == []
+
+    @pytest.mark.asyncio
+    async def test_coroutine_returned_by_a_plain_setup_is_cancelled_on_unmount(
+        self, runner
+    ):
+        """The returned coroutine runs as the effect's task: unmounting cancels it."""
+        log: list[str] = []
+
+        async def watch():
+            try:
+                await asyncio.sleep(10)
+            except asyncio.CancelledError:
+                log.append("cancelled")
+                raise
+
+        def body():
+            use_effect_module.use_effect(lambda: watch(), [])
+
+        await runner.mount(body)
+        await runner.unmount()
+
+        assert log == ["cancelled"]
+
+    @pytest.mark.asyncio
+    async def test_task_returned_by_a_plain_setup_is_left_alone(self, runner):
+        """A setup that starts a task and returns it keeps owning it: it isn't
+        taken for the effect's task or its cleanup."""
+        log: list[str] = []
+
+        async def work():
+            await asyncio.sleep(0.02)
+            log.append("done")
+
+        def body():
+            use_effect_module.use_effect(lambda: asyncio.create_task(work()), [])
+
+        await runner.mount(body)
+        await runner.unmount()
+        await asyncio.sleep(0.05)
+
+        assert log == ["done"]
+        assert runner.errors == []

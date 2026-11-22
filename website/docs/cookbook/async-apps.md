@@ -84,9 +84,20 @@ work:
 page.on_error = lambda e: print("Page error:", e.data)
 ```
 
-A lambda can still *start* async work. Handlers run on the event loop, so there is
-always a running loop to schedule a task on - the lambda kicks the coroutine off
-instead of awaiting it:
+A lambda can call an async function, too. It returns the coroutine, and Flet
+awaits it as it would an `async def` handler, so the automatic update includes
+what the coroutine changes:
+
+```python
+ft.Button(content="Delete", on_click=lambda: delete_item(item.id))
+```
+
+The same goes for [`use_effect`](../types/useeffect.md): `ft.use_effect(lambda:
+load(item_id), [item_id])` runs `load` as an async setup.
+
+A lambda can also *start* async work without waiting for it. Handlers run on the
+event loop, so there is always a running loop to schedule a task on - the lambda
+kicks the coroutine off instead of awaiting it:
 
 ```python
 ft.Button(content="Reload", on_click=lambda e: asyncio.create_task(reload(e)))

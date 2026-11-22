@@ -140,8 +140,10 @@ def use_effect(
     you want.
 
     Args:
-        setup: A function that performs the side effect. It may be `async`. A
-            non-`async` setup may return a cleanup function. An `async` setup's
+        setup: A function that performs the side effect. It may be `async`, or a
+            plain function that returns a coroutine (`lambda: load(item_id)`),
+            which runs as an `async` setup would. A non-`async` setup may return a
+            cleanup function. An `async` setup's
             return value is not used: pass `cleanup` instead. An `async` setup still
             running when the effect re-runs or the component unmounts is cancelled.
         dependencies: Values the effect depends on. The effect always runs after the
