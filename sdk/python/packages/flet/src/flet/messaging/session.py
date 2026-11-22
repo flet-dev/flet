@@ -6,6 +6,7 @@ import traceback
 import weakref
 from collections.abc import Awaitable, Callable
 from datetime import datetime, timedelta, timezone
+from threading import Lock
 from typing import TYPE_CHECKING, Any, Optional
 
 from flet.controls.base_control import BaseControl
@@ -66,6 +67,7 @@ class Session:
         self.__store: SessionStore = SessionStore()
         self.__pubsub_client = PubSubClient(conn.pubsubhub, self.__id)
         self.__method_calls: dict[str, asyncio.Future] = {}
+        self.__updates_lock = Lock()
         self.__updates_ready: asyncio.Event = asyncio.Event()
         self.__pending_updates: set[BaseControl] = set()
         self.__pending_effects: list[
@@ -76,8 +78,6 @@ class Session:
         aren't garbage collected while pending."""
         self.__updates_task: Optional[asyncio.Task] = None
         self.__updates_loop: Optional[asyncio.AbstractEventLoop] = None
-        """Loop the updates scheduler runs on: the only thread allowed to touch the
-        pending queues and `__updates_ready`."""
         self.__closed = False
         # Whether this session's app renders via the declarative components
         # API (page.render/render_views). Tracked per-session — not on the
@@ -185,8 +185,9 @@ class Session:
         """
         logger.debug("Connect session: %s", self.id)
         _context_page.set(self.__page)
-        self.__conn = conn
-        self.__expires_at = None
+        with self.__updates_lock:
+            self.__conn = conn
+            self.__expires_at = None
         for message in self.__send_buffer:
             self.__send_message(message)
         self.__send_buffer.clear()
@@ -220,12 +221,13 @@ class Session:
                 considered expired.
         """
         logger.debug("Disconnect session: %s", self.id)
-        self.__expires_at = datetime.now(timezone.utc) + timedelta(
-            seconds=session_timeout_seconds
-        )
+        with self.__updates_lock:
+            self.__expires_at = datetime.now(timezone.utc) + timedelta(
+                seconds=session_timeout_seconds
+            )
+            self.__pending_updates.clear()
+            self.__pending_effects.clear()
         self.__send_buffer.clear()
-        self.__pending_updates.clear()
-        self.__pending_effects.clear()
         self.__updates_ready.clear()
         if self.__conn:
             self.__conn.dispose()
@@ -241,7 +243,10 @@ class Session:
         a closure error, and dispatches the page-level `close` event.
         """
         logger.debug("Closing expired session: %s", self.id)
-        self.__closed = True
+        with self.__updates_lock:
+            self.__closed = True
+            self.__pending_updates.clear()
+            self.__pending_effects.clear()
         self.__updates_ready.set()
         if self.__updates_task and not self.__updates_task.done():
             self.__updates_task.cancel()
@@ -735,27 +740,9 @@ class Session:
             control: Control to update.
         """
         logger.debug("Schedule_update(%s)", control)
-        if not self.__accepts_updates():
-            return
-        self.__call_on_updates_loop(self.__queue_update, control)
-
-    def __accepts_updates(self) -> bool:
-        """
-        Whether queued updates and effects will still be processed: `False` once the
-        session is closed, or while it is disconnected.
-        """
-        return not self.__closed and not (
-            self.__conn is None and self.__expires_at is not None
-        )
-
-    def __queue_update(self, control: BaseControl):
-        # Checked again here, on the loop thread: the session may have been closed
-        # or disconnected after a worker thread passed the check in
-        # `schedule_update()`, and the queue must stay empty then.
-        if not self.__accepts_updates():
-            return
-        self.__pending_updates.add(control)
-        self.__updates_ready.set()
+        with self.__updates_lock:
+            if self.__request_scheduler_wakeup():
+                self.__pending_updates.add(control)
 
     def schedule_effect(self, hook: "EffectHook", is_cleanup: bool):
         """
@@ -768,45 +755,29 @@ class Session:
             is_cleanup: `True` to run cleanup, `False` to run setup.
         """
         logger.debug("Schedule_effect(%s, %s)", hook, is_cleanup)
-        if not self.__accepts_updates():
-            return
-        # Hold a strong reference to the hook until it runs.  A weakref would
-        # get cleared when the owning component unmounts and clears
-        # `_state.hooks` — dropping queued cleanup effects on the floor.
-        self.__call_on_updates_loop(
-            self.__queue_effect, hook, None if is_cleanup else hook.setup
-        )
+        with self.__updates_lock:
+            if self.__request_scheduler_wakeup():
+                # Keep the hook alive until cleanup and capture this render's setup.
+                setup = None if is_cleanup else hook.setup
+                self.__pending_effects.append((hook, setup))
 
-    def __queue_effect(
-        self,
-        hook: "EffectHook",
-        setup: Callable[[], Any | Awaitable[Any]] | None,
-    ):
-        # See `__queue_update()`.
-        if not self.__accepts_updates():
-            return
-        self.__pending_effects.append((hook, setup))
-        self.__updates_ready.set()
-
-    def __call_on_updates_loop(self, callback: Callable[..., None], *args: Any):
+    def __request_scheduler_wakeup(self) -> bool:
+        """Called under the queue lock. Only the wakeup crosses threads, so a
+        delayed callback cannot reorder effects or restore work after disconnect.
         """
-        Runs `callback` on the updates scheduler's loop.
-
-        The pending queues and `asyncio.Event` aren't thread-safe: `Event.set()`
-        from another thread may not wake the loop, and a queue changed there can
-        race with the scheduler draining it. So a call from another thread is
-        handed to the loop with `call_soon_threadsafe()`; on the loop thread, or
-        before the scheduler has started, `callback` runs at once.
-        """
+        if self.__closed or self.__expires_at is not None:
+            return False
         loop = self.__updates_loop
-        if loop is None or _running_loop() is loop:
-            callback(*args)
-            return
-        try:
-            loop.call_soon_threadsafe(callback, *args)
-        except RuntimeError:
-            # The loop is closed: the session is gone, so there's nothing to update.
-            logger.debug("Updates loop is closed, dropping %s%s", callback, args)
+        if loop is None:
+            return True  # Startup will wake the scheduler for pending work.
+        if _running_loop() is loop:
+            self.__updates_ready.set()
+        else:
+            try:
+                loop.call_soon_threadsafe(self.__updates_ready.set)
+            except RuntimeError:
+                return False  # A worker outlived the event loop.
+        return True
 
     def start_updates_scheduler(self):
         """
@@ -815,7 +786,10 @@ class Session:
         logger.debug("Starting updates scheduler: %s", self.id)
         if self.__updates_task and not self.__updates_task.done():
             return
-        self.__updates_loop = asyncio.get_running_loop()
+        with self.__updates_lock:
+            self.__updates_loop = asyncio.get_running_loop()
+            if self.__pending_updates or self.__pending_effects:
+                self.__updates_ready.set()
         self.__updates_task = asyncio.create_task(self.__updates_scheduler())
 
     async def __updates_scheduler(self):
@@ -832,15 +806,17 @@ class Session:
                 self.__updates_ready.clear()
 
                 # Process pending updates
-                pending_updates = list(self.__pending_updates)
-                self.__pending_updates.clear()
+                with self.__updates_lock:
+                    pending_updates = self.__pending_updates
+                    self.__pending_updates = set()
 
                 for control in pending_updates:
                     control.update()
 
                 # Process pending effects
-                pending_effects = list(self.__pending_effects)
-                self.__pending_effects.clear()
+                with self.__updates_lock:
+                    pending_effects = self.__pending_effects
+                    self.__pending_effects = []
 
                 for hook, setup in pending_effects:
                     if hook:

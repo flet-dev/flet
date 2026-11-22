@@ -1,9 +1,4 @@
-"""`Session.schedule_update()` and `schedule_effect()` called from worker threads.
-
-The pending queues and the `asyncio.Event` that wakes the updates scheduler are only
-safe on the event loop thread, so calls from other threads (e.g. state changed in a
-`page.run_thread()` worker) must be handed to the loop.
-"""
+"""Worker-thread scheduling and session lifecycle for component updates and effects."""
 
 import asyncio
 import threading
@@ -12,6 +7,8 @@ import time
 import pytest
 import pytest_asyncio
 
+from flet.components.component import Component
+from flet.components.hooks.use_effect import EffectHook
 from flet.messaging.connection import Connection
 from flet.messaging.session import Session
 from flet.pubsub.pubsub_hub import PubSubHub
@@ -36,11 +33,15 @@ class _FakeControl:
         self.updates += 1
 
 
-def _create_session() -> Session:
+def _create_connection() -> Connection:
     conn = _RecordingConnection()
     conn.pubsubhub = PubSubHub()
     conn.loop = asyncio.get_running_loop()
-    return Session(conn)
+    return conn
+
+
+def _create_session() -> Session:
+    return Session(_create_connection())
 
 
 def _run_in_threads(target, count):
@@ -128,7 +129,7 @@ async def test_no_update_is_lost_when_many_threads_schedule_at_once(session):
         for control in controls[i * 100 : (i + 1) * 100]:
             session.schedule_update(control)
 
-    errors = _run_in_threads(worker, 8)
+    errors = await asyncio.to_thread(_run_in_threads, worker, 8)
 
     assert errors == []
     assert await _wait_for(lambda: all(c.updates >= 1 for c in controls))
@@ -217,17 +218,81 @@ async def test_effect_from_a_thread_after_close_is_not_queued():
 
 
 @pytest.mark.asyncio
-async def test_update_handed_to_the_loop_before_disconnect_is_dropped(session):
-    """A worker passes the check in `schedule_update()` and hands the update to the
-    loop, but `disconnect()` runs first and clears the queues: the update must not
-    put the control back and get applied on a disconnected session."""
+async def test_pending_worker_update_is_discarded_on_disconnect(session):
     control = _FakeControl()
 
-    # The thread is joined without yielding, so the update waits on the loop.
+    # Join before yielding so the scheduler cannot process the update yet.
     errors = _run_in_threads(lambda i: session.schedule_update(control), 1)
     await session.disconnect(60)
-    await asyncio.sleep(0.05)
+    await asyncio.sleep(0)
 
     assert errors == []
     assert control.updates == 0
     assert not session._Session__pending_updates
+
+
+@pytest.mark.asyncio
+async def test_worker_effect_precedes_later_loop_effect(session):
+    events = []
+    component = Component(fn=lambda: None)
+    component._state.mounted = True
+
+    def first_setup():
+        events.append("first setup")
+        return lambda: events.append("first cleanup")
+
+    hook = EffectHook(component, setup=first_setup)
+    component._state.hooks.append(hook)
+    assert _run_in_threads(lambda i: session.schedule_effect(hook, False), 1) == []
+    hook.setup = lambda: events.append("second setup")
+    session.schedule_effect(hook, False)
+
+    assert await _wait_for(lambda: "first setup" in events and "second setup" in events)
+    assert events == ["first setup", "first cleanup", "second setup"]
+
+
+@pytest.mark.asyncio
+async def test_reconnect_discards_pending_worker_updates_and_effects(session):
+    old_control, new_control = _FakeControl(), _FakeControl()
+    events = []
+    component = Component(fn=lambda: None)
+    component._state.mounted = True
+    hook = EffectHook(component, setup=lambda: events.append("old"))
+    component._state.hooks.append(hook)
+
+    def submit_old_work(i):
+        session.schedule_update(old_control)
+        session.schedule_effect(hook, False)
+
+    assert _run_in_threads(submit_old_work, 1) == []
+    await session.disconnect(60)
+    session.attach_connection(_create_connection())
+    hook.setup = lambda: events.append("new")
+    session.schedule_effect(hook, False)
+    session.schedule_update(new_control)
+
+    assert await _wait_for(lambda: new_control.updates == 1)
+    assert old_control.updates == 0
+    assert events == ["new"]
+
+
+@pytest.mark.asyncio
+async def test_worker_submission_before_startup_leaves_wakeup_to_loop(monkeypatch):
+    session = _create_session()
+    control = _FakeControl()
+    owner = threading.current_thread()
+    ready = session._Session__updates_ready
+    set_ready = ready.set
+
+    def set_on_loop():
+        assert threading.current_thread() is owner
+        set_ready()
+
+    monkeypatch.setattr(ready, "set", set_on_loop)
+    try:
+        assert _run_in_threads(lambda i: session.schedule_update(control), 1) == []
+        session.start_updates_scheduler()
+        assert await _wait_for(lambda: control.updates == 1)
+    finally:
+        session.close()
+        await asyncio.sleep(0)
