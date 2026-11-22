@@ -7,12 +7,16 @@
 
 ### Improvements
 
+* Load a `DataTable` of thousands of rows without freezing the app: a table with 100 or more rows of one height builds only the rows near the visible part of the page, so a 3,470-row table loads in one 0.2 s frame instead of a 4 s freeze, and selecting a row no longer freezes the app for a second; set the new `build_rows_on_demand` to `False` to build every row ([#7076](https://github.com/flet-dev/flet/pull/7076)) by @FeodorFitsner.
+* Load a `DataTable2` (`flet-datatable2`) of thousands of rows without freezing the app: a table with 100 or more rows builds only the rows near the visible part of the table, so a 3,470-row table loads in one 0.3 s frame instead of a 2.5 s freeze. `flet-datatable2` now carries its own copy of `data_table_2`'s `DataTable2` to do this, and honors `build_rows_on_demand` too ([#7076](https://github.com/flet-dev/flet/pull/7076)) by @FeodorFitsner.
+* Scroll long pages and tables smoothly: every control used to get its own compositing layer, so a page of thousands of controls, like a `DataTable` with thousands of rows, stuttered on every scroll frame; controls now add a layer only while their `opacity` is between 0 and 1, and a `DataTable` no longer repaints all of its rows as it scrolls ([#7076](https://github.com/flet-dev/flet/pull/7076)) by @FeodorFitsner.
 * Look up icons by name, as with enum members: `ft.Icons["HOME"]`, `ft.CupertinoIcons["ADD"]` and `LucideIcons[...]`, and check a name with `"HOME" in ft.Icons` ([#7114](https://github.com/flet-dev/flet/pull/7114)) by @FeodorFitsner.
 * `ft.use_dialog()` raises a `TypeError` for a dialog returned from an `@ft.component` function, or any other control that isn't a dialog, instead of silently never opening it ([#7114](https://github.com/flet-dev/flet/pull/7114)) by @FeodorFitsner.
 * Start web apps that use `flet-rive` 1 MB lighter when they don't show a `Rive` control: the Rive engine (`rive_native.wasm`) now loads when the first `Rive` control loads its file, instead of at startup ([#7057](https://github.com/flet-dev/flet/pull/7057)) by @FeodorFitsner.
 
 ### Bug fixes
 
+* Fix `DataTable.horizontal_lines` having no effect ([#7076](https://github.com/flet-dev/flet/pull/7076)) by @FeodorFitsner.
 * Fix event handlers and `use_effect` setups that call an async function from a plain function, such as `on_click=lambda: save(item)` or `ft.use_effect(lambda: load(item_id), [item_id])`, silently doing nothing: Flet now awaits the coroutine they return as it would an `async def` handler or setup, and runs a returned generator as a generator handler. A task or future they start is still left to run on its own ([#7117](https://github.com/flet-dev/flet/pull/7117)) by @FeodorFitsner.
 * Fix `ft.use_memo()` and `ft.use_effect()` ignoring in-place changes to an observable's list or dict passed as a dependency, such as `state.items.append(x)`: the value is now recomputed and the effect re-run ([#7114](https://github.com/flet-dev/flet/pull/7114)) by @FeodorFitsner.
 * Fix SVG images drawing blank when their URL has a query string or fragment, such as a cache-busting `icon.svg?v=2`: `Image` now recognizes an SVG by the URL's path, in any letter case ([#7057](https://github.com/flet-dev/flet/pull/7057)) by @FeodorFitsner.
