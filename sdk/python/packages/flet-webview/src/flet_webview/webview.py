@@ -24,23 +24,22 @@ class WebView(ft.LayoutControl):
     Easily load webpages while allowing user interaction.
 
     Note:
-        On Windows this control requires the Edge WebView2 runtime, which ships
-        with Windows 11 and is present on most Windows 10 installations.
-
-        On Linux it requires `libwebkit2gtk-4.1-0`, which is available from
-        Debian 12 and Ubuntu 22.04 (with current updates) onward. The WebView is
-        a native GTK widget rather than a Flutter texture there: other controls
-        cannot be drawn over it, and a scale, rotation or skew transform, or a
-        non-rectangular clip such as a `Container` with `border_radius`, hides it
-        entirely.
-
-        On web the page is shown in an `<iframe>`. Pages that forbid being
-        embedded, and pages from another origin that do not allow embedding
-        under the `Cross-Origin-Embedder-Policy: require-corp` header Flet's
-        web server sends, stay blank. The browser also keeps the app from
-        scripting or observing pages from another origin, so JavaScript, the
-        page title, scrolling, console messages and alerts are available only
-        for same-origin pages and for HTML loaded with :meth:`load_html`.
+        - On Windows this control requires the Edge WebView2 runtime, which
+          ships with Windows 11 and is present on most Windows 10 installations.
+        - On Linux it requires `libwebkit2gtk-4.1-0`, which is available from
+          Debian 12 and Ubuntu 22.04 (with current updates) onward.
+        - On Linux the WebView is a native GTK widget rather than a Flutter
+          texture: other controls cannot be drawn over it, and a scale, rotation
+          or skew transform, or a non-rectangular clip such as a `Container`
+          with `border_radius`, hides it entirely.
+        - On web the page is shown in an `<iframe>`. Pages that forbid being
+          embedded, and pages from another origin that do not allow embedding
+          under the `Cross-Origin-Embedder-Policy: require-corp` header Flet's
+          web server sends, stay blank.
+        - On web the browser keeps the app from scripting or observing pages
+          from another origin, so JavaScript, the page title, scrolling, console
+          messages and alerts are available only for same-origin pages and for
+          HTML loaded with :meth:`load_html`.
     """
 
     url: Optional[str] = None
