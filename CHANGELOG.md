@@ -2,7 +2,7 @@
 
 ### New features
 
-* Add `KeyboardKey`, so keyboard handlers can compare `e.key == ft.KeyboardKey.ARROW_RIGHT` instead of `"Arrow Right"`; comparisons with plain strings keep working by @ndonkoHenri.
+* Add `KeyboardKey`, so keyboard handlers can compare `e.key == ft.KeyboardKey.ARROW_RIGHT` instead of `"Arrow Right"`; comparisons with plain strings keep working ([#7123](https://github.com/flet-dev/flet/pull/7123)) by @ndonkoHenri.
 
 ## 1.1.3
 
