@@ -1,3 +1,9 @@
+## 1.2.0
+
+### New features
+
+* Add `KeyboardKey`, so keyboard handlers can compare `e.key == ft.KeyboardKey.ARROW_RIGHT` instead of `"Arrow Right"`; comparisons with plain strings keep working by @ndonkoHenri.
+
 ## 1.1.3
 
 ### Documentation

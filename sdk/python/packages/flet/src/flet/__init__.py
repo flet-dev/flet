@@ -332,6 +332,7 @@ if TYPE_CHECKING:
     )
     from flet.controls.icon_data import IconData
     from flet.controls.id_counter import IdCounter
+    from flet.controls.keyboard_key import KeyboardKey
     from flet.controls.keys import (
         Key,
         KeyValue,
@@ -996,6 +997,7 @@ __all__ = [
     "KeyUpEvent",
     "KeyValue",
     "KeyboardEvent",
+    "KeyboardKey",
     "KeyboardListener",
     "KeyboardType",
     "LabelPosition",
@@ -1550,6 +1552,7 @@ _LAZY = {
     "KeyUpEvent": "flet.controls.core.keyboard_listener",
     "KeyValue": "flet.controls.keys",
     "KeyboardEvent": "flet.controls.page",
+    "KeyboardKey": "flet.controls.keyboard_key",
     "KeyboardListener": "flet.controls.core.keyboard_listener",
     "KeyboardType": "flet.controls.material.textfield",
     "LabelPosition": "flet.controls.types",

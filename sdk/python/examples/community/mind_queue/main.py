@@ -34,7 +34,7 @@ def main(page: ft.Page):
     current_system: str | None = None
 
     def handle_keyboard_event(e: ft.KeyboardEvent):
-        if e.key == "Escape" and current_system is not None:
+        if e.key == ft.KeyboardKey.ESCAPE and current_system is not None:
             show_dashboard()
 
     page.on_keyboard_event = handle_keyboard_event

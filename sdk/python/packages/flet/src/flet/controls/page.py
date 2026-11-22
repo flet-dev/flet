@@ -16,6 +16,7 @@ from typing import (
     Optional,
     ParamSpec,
     TypeVar,
+    Union,
     cast,
 )
 from urllib.parse import urlparse
@@ -43,6 +44,7 @@ from flet.controls.device_info import (
     WindowsDeviceInfo,
 )
 from flet.controls.exceptions import FletUnsupportedPlatformException
+from flet.controls.keyboard_key import KeyboardKey
 from flet.controls.multi_view import MultiView
 from flet.controls.package_info import PackageInfo
 from flet.controls.query_string import QueryString
@@ -384,9 +386,13 @@ class KeyboardEvent(Event["Page"]):
     Delivered to :attr:`flet.Page.on_keyboard_event`.
     """
 
-    key: str
+    key: Union[KeyboardKey, str]
     """
-    Human-readable key label for the pressed key.
+    The pressed key, such as :attr:`~flet.KeyboardKey.A`,
+    :attr:`~flet.KeyboardKey.ENTER` or :attr:`~flet.KeyboardKey.F5`.
+
+    A key that has no :class:`~flet.KeyboardKey` member is a plain string,
+    such as `"Ü"`.
     """
 
     shift: bool

@@ -66,10 +66,10 @@ def main(page: ft.Page):
     schemes = list(shad.ColorScheme)
 
     def handle_key(e: ft.KeyboardEvent):
-        if e.key == "D":
+        if e.key == ft.KeyboardKey.D:
             dark = page.theme_mode == ft.ThemeMode.DARK
             page.theme_mode = ft.ThemeMode.LIGHT if dark else ft.ThemeMode.DARK
-        elif e.key == "C":
+        elif e.key == ft.KeyboardKey.C:
             i = schemes.index(theme.color_scheme)
             theme.color_scheme = schemes[(i + 1) % len(schemes)]
             page.title = f"Shadcn UI for Flet - {theme.color_scheme.name.title()}"

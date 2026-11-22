@@ -10,7 +10,7 @@ In addition to form controls' `.autofocus` property and [`TextField.focus()`](..
 
 To capture all keystrokes implement `page.on_keyboard_event` handler. Event handler parameter `e` is an instance of `KeyboardEvent` class with the following properties:
 
-* `key` - a textual representation of a pressed key, e.g. `A`, `Enter` or `F5`.
+* `key` - the pressed key, a [`KeyboardKey`][flet.KeyboardKey] such as `KeyboardKey.A`, `KeyboardKey.ENTER` or `KeyboardKey.F5`.
 * `shift` - `True` if "Shift" key is pressed.
 * `ctrl` - `True` if "Control" key is pressed.
 * `alt` - `True` if "Alt" ("Option") key is pressed.
@@ -38,6 +38,18 @@ ft.run(main)
 ```
 
 <Image src="assets/cookbook/keyboard/shortcuts.png" alt="Keyboard shortcuts" />
+
+To react to a specific key, compare `e.key` with a [`KeyboardKey`][flet.KeyboardKey] member:
+
+```python
+def on_keyboard(e: ft.KeyboardEvent):
+    if e.key == ft.KeyboardKey.ARROW_RIGHT:
+        move_right()
+    elif e.ctrl and e.key == ft.KeyboardKey.S:
+        save()
+```
+
+Letter keys are reported in upper case, whether or not Shift is pressed.
 
 Below is a more advanced example:
 

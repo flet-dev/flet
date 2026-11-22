@@ -104,12 +104,13 @@ jobs:
         run: |
           uv run .github/scripts/generate_icon_docs_images.py --verify
 
-      - name: Check icons are up to date
+      - name: Check icons and keyboard keys are up to date
         if: matrix.python-version == '3.12'
         shell: bash
         run: |
           uv run .github/scripts/generate_icons.py --verify
           uv run .github/scripts/generate_icon_fonts.py --verify
+          uv run .github/scripts/generate_keyboard_keys.py --verify
 
       - name: Run docs-coverage
         if: matrix.python-version == '3.12'

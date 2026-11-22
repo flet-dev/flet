@@ -98,10 +98,23 @@ def convert_value(field_type: type, value: Any) -> Any:
 
     # Optional[T]
     if origin is Union and type(None) in args:
-        inner_type = [arg for arg in args if arg is not type(None)][0]
+        inner_types = tuple(arg for arg in args if arg is not type(None))
+        inner_type = (
+            inner_types[0] if len(inner_types) == 1 else Union[inner_types]  # noqa: UP007
+        )
         if value is None:
             return None
         return convert_value(inner_type, value)
+
+    # Union[SomeEnum, T]: the enum member when one has this value, else the value
+    if origin is Union:
+        for arg in args:
+            if isinstance(arg, type) and issubclass(arg, Enum):
+                try:
+                    return arg(value)
+                except ValueError:
+                    pass
+        return value
 
     # Enum
     if isinstance(field_type, type) and issubclass(field_type, Enum):
