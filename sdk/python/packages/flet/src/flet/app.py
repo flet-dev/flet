@@ -399,11 +399,15 @@ def __get_on_session_created(
                 async for _ in main(session.page):
                     await session.after_event(session.page)
                     mark_test_ready()
+                    # Let the send loop flush the patch before `main()` resumes.
+                    await asyncio.sleep(0)
 
             elif inspect.isgeneratorfunction(main):
                 for _ in main(session.page):
                     await session.after_event(session.page)
                     mark_test_ready()
+                    # Let the send loop flush the patch before `main()` resumes.
+                    await asyncio.sleep(0)
             else:
                 # run synchronously
                 main(session.page)
