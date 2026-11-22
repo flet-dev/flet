@@ -10,7 +10,7 @@
 
 ### Bug fixes
 
-* Fix event handlers and `use_effect` setups that call an async function from a plain function, such as `on_click=lambda: save(item)` or `ft.use_effect(lambda: load(item_id), [item_id])`, silently doing nothing: Flet now awaits the coroutine they return as it would an `async def` handler or setup, and runs a returned generator as a generator handler. A task or future they start is still left to run on its own by @FeodorFitsner.
+* Fix event handlers and `use_effect` setups that call an async function from a plain function, such as `on_click=lambda: save(item)` or `ft.use_effect(lambda: load(item_id), [item_id])`, silently doing nothing: Flet now awaits the coroutine they return as it would an `async def` handler or setup, and runs a returned generator as a generator handler. A task or future they start is still left to run on its own ([#7117](https://github.com/flet-dev/flet/pull/7117)) by @FeodorFitsner.
 * Fix SVG images drawing blank when their URL has a query string or fragment, such as a cache-busting `icon.svg?v=2`: `Image` now recognizes an SVG by the URL's path, in any letter case ([#7057](https://github.com/flet-dev/flet/pull/7057)) by @FeodorFitsner.
 * Fix `Text` with `spans` ignoring `overflow`: a rich text cut off by `max_lines` now ends in an ellipsis with `overflow=TextOverflow.ELLIPSIS`, as plain text does, instead of being clipped at a word ([#7057](https://github.com/flet-dev/flet/pull/7057)) by @FeodorFitsner.
 * Fix mypy inferring `type[Never]` for classes decorated with `@control("Name")`: the overload that takes arguments now accepts only a string `dart_widget_name` ([#7085](https://github.com/flet-dev/flet/issues/7085), [#7087](https://github.com/flet-dev/flet/pull/7087)) by @joaoaracheski.
