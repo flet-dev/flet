@@ -33,6 +33,10 @@ if TYPE_CHECKING:
 logger = logging.getLogger("flet")
 patch_logger = logging.getLogger("flet_object_patch")
 
+# Private props the Flutter client sends back on purpose
+# (`AutoComplete.selected_index`, dismissed `Banner`/`SnackBar`).
+CLIENT_PRIVATE_PROPS = frozenset({"_selected_index", "_dismissed"})
+
 __all__ = ["Session"]
 
 
@@ -314,7 +318,25 @@ class Session:
             patch: Property/value mapping to apply.
         """
         if control := self.__index.get(control_id):
-            patch_dataclass(control, patch)
+            patch_dataclass(control, self.__client_writable(control, patch))
+
+    def __client_writable(self, control: Any, patch: dict[str, Any]) -> dict[str, Any]:
+        """
+        Drops keys a client must not set: private names (`_`, except the ones
+        the client reports, see `CLIENT_PRIVATE_PROPS`), event handlers (`on_`)
+        and fields marked with `skip` metadata (e.g. `data`).
+        """
+        skip = {f.name for f in dataclasses.fields(control) if f.metadata.get("skip")}
+        allowed = {}
+        for name, value in patch.items():
+            private = name.startswith("_") and name not in CLIENT_PRIVATE_PROPS
+            if private or name.startswith("on_") or name in skip:
+                logger.warning(
+                    "Ignoring client patch of %s.%s", type(control).__name__, name
+                )
+                continue
+            allowed[name] = value
+        return allowed
 
     def apply_page_patch(self, patch: dict[str, Any]):
         """
