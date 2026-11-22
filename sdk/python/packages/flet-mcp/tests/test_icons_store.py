@@ -111,3 +111,18 @@ def test_golden_queries(query: str, expected: str):
     store = IconStore(material=list(meta), cupertino=[], material_meta=meta)
     top3 = store.find(query, family="material", limit=3)
     assert expected in top3, f"{query!r} -> {top3}"
+
+
+def test_lucide_family_is_opt_in():
+    """Lucide icons (flet-shadcn-ui) come back only with family="lucide": an
+    app without flet-shadcn-ui can't use them."""
+    s = IconStore(
+        material=MATERIAL,
+        cupertino=CUPERTINO,
+        material_meta=META,
+        lucide=["HOUSE", "TRASH_2"],
+    )
+    assert s.find("house") == []
+    assert all(not r.startswith("LucideIcons.") for r in s.find("trash"))
+    assert s.find("house", family="lucide") == ["LucideIcons.HOUSE"]
+    assert s.find("trash", family="lucide") == ["LucideIcons.TRASH_2"]

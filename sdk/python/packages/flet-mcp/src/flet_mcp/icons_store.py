@@ -1,4 +1,4 @@
-"""In-memory icon search across Material and Cupertino icon sets.
+"""In-memory icon search across the Material, Cupertino and Lucide icon sets.
 
 Icon names come from the bundled api.json enums; Material synonym tags
 and popularity come from the committed `data/icons.json` (Google's own
@@ -19,13 +19,16 @@ class IconStore:
         material: Iterable[str],
         cupertino: Iterable[str],
         material_meta: dict[str, dict] | None = None,
+        lucide: Iterable[str] = (),
     ):
-        """`material` / `cupertino` are icon member names (ADD, TRASH, …).
-        `material_meta` maps NAME -> {"tags": [...], "popularity": int}
-        (the icons.json payload); missing/empty degrades gracefully to
-        name-token search."""
+        """`material` / `cupertino` / `lucide` are icon member names (ADD,
+        TRASH, …). `material_meta` maps NAME -> {"tags": [...], "popularity":
+        int} (the icons.json payload); missing/empty degrades gracefully to
+        name-token search. Lucide icons (flet-shadcn-ui's set) are searched only
+        with `family="lucide"`: an app without flet-shadcn-ui can't use them."""
         self._material: list[str] = list(material)
         self._cupertino: list[str] = list(cupertino)
+        self._lucide: list[str] = list(lucide)
         self._meta: dict[str, dict] = material_meta or {}
 
         # Inverted index: keyword -> set of (family, icon_name). Name
@@ -42,6 +45,8 @@ class IconStore:
             self._index_icon("material", icon_name)
         for icon_name in self._cupertino:
             self._index_icon("cupertino", icon_name)
+        for icon_name in self._lucide:
+            self._index_icon("lucide", icon_name)
 
     def _popularity(self, family: str, icon_name: str) -> int:
         if family != "material":
@@ -75,12 +80,13 @@ class IconStore:
 
         Args:
             query: Space-separated search terms.
-            family: Optional filter — "material" or "cupertino".
+            family: Optional filter — "material", "cupertino" or "lucide".
+                Without one, Material and Cupertino icons are searched.
             limit: Maximum number of results to return.
 
         Returns:
-            List of qualified icon names like "Icons.ARROW_BACK"
-            or "CupertinoIcons.BACK".
+            List of qualified icon names like "Icons.ARROW_BACK",
+            "CupertinoIcons.BACK" or "LucideIcons.ARROW_LEFT".
         """
         query_tokens = [t for t in query.lower().split() if t]
         if not query_tokens:
@@ -93,6 +99,8 @@ class IconStore:
             for entry in self._index.get(token, set()):
                 fam, icon_name = entry
                 if family and fam != family:
+                    continue
+                if not family and fam == "lucide":  # opt-in: needs flet-shadcn-ui
                     continue
                 candidates[entry] += 10
 
@@ -126,10 +134,10 @@ class IconStore:
             base = _base_name(icon_name)
             if base != icon_name and (fam, base) in candidates:
                 continue
-            if fam == "material":
-                results.append(f"Icons.{icon_name}")
-            else:
-                results.append(f"CupertinoIcons.{icon_name}")
+            prefix = {"material": "Icons", "cupertino": "CupertinoIcons"}.get(
+                fam, "LucideIcons"
+            )
+            results.append(f"{prefix}.{icon_name}")
 
         return results
 
