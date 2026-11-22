@@ -106,7 +106,8 @@ ft.Button(content="Reload", on_click=lambda e: asyncio.create_task(reload(e)))
 [`page.run_task()`][flet.Page.run_task] is usually the better version of this
 trick. It takes the coroutine function and its arguments rather than a called
 coroutine, keeps a reference to the task so it cannot be garbage-collected
-mid-flight, and logs an exception the task raises instead of discarding it:
+mid-flight, and logs the traceback on the `flet` logger if the task fails
+while nobody is awaiting its future:
 
 ```python
 ft.Button(content="Reload", on_click=lambda e: page.run_task(reload, e))
@@ -263,9 +264,11 @@ The future keeps the outcome after you await it, so keep a reference to it if yo
 also need to cancel the task or check it later. As with `asyncio` tasks,
 cancelling the coroutine that awaits the future also cancels the task.
 
-An exception raised by the task is logged, in your terminal or in the
-[console log](../publish/index.md#console-output) of a built app, whether or not
-anyone awaits the future, so it is never lost.
+If you are already awaiting the future when the task fails, you can catch the
+exception at the `await` without a duplicate log entry from `run_task()`.
+If nobody is awaiting the future when the task fails, Flet immediately logs
+the traceback on the `flet` logger. Awaiting the future later still raises
+the same exception.
 
 ## Threading
 
@@ -286,9 +289,10 @@ async def handle_click(e):
     output.value = response.text
 ```
 
-[`page.run_thread()`][flet.Page.run_thread] does not return a result, but it
-re-establishes the page context inside the thread and runs its callable inline on
-the web, where there are no threads:
+[`page.run_thread()`][flet.Page.run_thread] runs the function with the current
+page context and discards its return value. Flet catches exceptions from the
+function and logs their tracebacks on the `flet` logger. This also applies
+on static websites, where Pyodide runs the function inline.
 
 ```python
 def handle_click(e):
@@ -314,9 +318,9 @@ Where an unhandled exception ends up depends on where it is raised:
 | Raised in | What happens |
 |---|---|
 | `main()` or an event handler | Flet logs it with its traceback and shows the error in the app. |
-| A [`page.run_task()`][flet.Page.run_task] coroutine | It is logged, and also raised where the future is awaited. |
+| A [`page.run_task()`][flet.Page.run_task] coroutine | Awaiting the future raises the exception. If nobody is awaiting it when the task fails, Flet also logs the traceback on the `flet` logger. |
 | `asyncio.to_thread()` or `page.loop.run_in_executor()` | It is raised where the call is awaited, so a handler that awaits it reports it as above. |
-| A [`page.run_thread()`][flet.Page.run_thread] function | `asyncio` logs it as "Future exception was never retrieved". On the web, where the function runs inline, it is raised in the caller. |
+| A [`page.run_thread()`][flet.Page.run_thread] function | Flet catches the exception and logs the traceback on the `flet` logger, including on Pyodide. |
 | A [`threading.Thread`](https://docs.python.org/3/library/threading.html#threading.Thread) you start | It goes to [`threading.excepthook`](https://docs.python.org/3/library/threading.html#threading.excepthook), which prints it to stderr. |
 
 So catch exceptions inside a function you run in your own thread, and handle or
