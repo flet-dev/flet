@@ -467,6 +467,8 @@ Widget _positionedControl(
   return widget;
 }
 
+/// Applies the control's size, its size animation and its min/max constraints
+/// to [widget].
 Widget _sizedControl(Widget widget, Control control, {bool animate = true}) {
   final skipProps =
       (control.internals?['skip_properties'] as List?) ?? const [];
@@ -667,21 +669,23 @@ class MeasureSize extends SingleChildRenderObjectWidget {
 
 class _MeasureSizeRenderObject extends RenderProxyBox {
   ValueChanged<Size> onChange;
-  Size? _lastSize;
+  Size? _reportedSize;
+  bool _reportScheduled = false;
 
   _MeasureSizeRenderObject(this.onChange);
 
   @override
   void performLayout() {
     super.performLayout();
-    // Post-frame to avoid re-entrant layout callbacks.
-    final newSize = child?.size ?? size;
-    if (_lastSize == newSize) {
-      return;
-    }
-    _lastSize = newSize;
+    // A parent can measure the child and lay it out again in the same frame.
+    // Report the size that was actually painted.
+    if (_reportScheduled || size == _reportedSize) return;
+    _reportScheduled = true;
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      onChange(newSize);
+      _reportScheduled = false;
+      if (!attached || size == _reportedSize) return;
+      _reportedSize = size;
+      onChange(size);
     });
   }
 }
