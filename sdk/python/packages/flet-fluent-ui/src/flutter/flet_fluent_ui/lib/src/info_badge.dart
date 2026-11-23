@@ -12,12 +12,29 @@ class FluentInfoBadgeControl extends StatelessWidget {
   Widget build(BuildContext context) {
     debugPrint("FluentInfoBadge build: ${control.id}");
 
+    final content = control.buildTextOrWidget("content");
+
     return LayoutControl(
       control: control,
       child: withFluentTheme(
         context,
         InfoBadge(
-          source: control.buildTextOrWidget("content"),
+          // fluent_ui centres the text's line box, whose descender space
+          // pushes digits below the middle; a line as tall as the font
+          // keeps them centred.
+          source: content == null
+              ? null
+              : Align(
+                  widthFactor: 1,
+                  heightFactor: 1,
+                  child: DefaultTextStyle.merge(
+                    style: const TextStyle(
+                      height: 1,
+                      leadingDistribution: TextLeadingDistribution.even,
+                    ),
+                    child: content,
+                  ),
+                ),
           severity: parseEnum(
             InfoBarSeverity.values,
             control.getString("severity"),
