@@ -53,10 +53,11 @@ class _CupertinoTextFieldControlState extends State<CupertinoTextFieldControl> {
       return KeyEventResult.handled;
     }
 
-    // submit on Enter if flag is set and shift is not pressed
+    // submit on Enter if flag is set, shift is not pressed, and no IME is composing
     if (submitOnEnter &&
         event is KeyDownEvent &&
         !HardwareKeyboard.instance.isShiftPressed &&
+        !_controller.value.composing.isValid &&
         (event.logicalKey == LogicalKeyboardKey.enter ||
             event.logicalKey == LogicalKeyboardKey.numpadEnter)) {
       widget.control.triggerEvent("submit");
