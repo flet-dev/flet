@@ -86,12 +86,14 @@ sudo dnf install mpv-libs gstreamer1-plugins-base
 ```
 
 These releases have glibc 2.34. The compatible prebuilt full client expects
-`libmpv.so.1`, while their repositories ship `libmpv.so.2`. Build the client
-locally with [`flet build linux`](../publish/linux.md#prerequisites) against the
-installed libraries. Setting
+`libmpv.so.1`, while their repositories ship `libmpv.so.2`. To use audio or video,
+build your app with [`flet build linux`](../publish/linux.md#prerequisites)
+against the installed libraries. Setting
 [`FLET_LINUX_DISTRO=debian12`](environment-variables.md#flet_linux_distro) does
 not resolve this mismatch: that build requires glibc 2.36 and cannot run on these
 systems.
+
+`WebView` isn't available on these releases: they have no WebKitGTK 4.1.
 </TabItem>
 </Tabs>
 
