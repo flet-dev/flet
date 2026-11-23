@@ -2,7 +2,7 @@
 
 ### New features
 
-* Add the `flet-fluent-ui` extension: controls styled after Microsoft's Fluent Design for Windows, built on the Flutter [`fluent_ui`](https://pub.dev/packages/fluent_ui) package, with `Theme` accent colors and the `FluentIcons` icon set. It includes `Button`, `FilledButton`, `OutlinedButton`, `HyperlinkButton`, `IconButton`, `ToggleButton`, `Checkbox`, `ToggleSwitch`, `RadioGroup`, `Slider`, `TextBox`, `ComboBox`, `ProgressBar`, `ProgressRing`, `InfoBar`, `Expander`, `Card`, `Tooltip` and `ContentDialog` by @InesaFitsner.
+* Add the `flet-fluent-ui` extension: controls styled after Microsoft's Fluent Design for Windows, built on the Flutter [`fluent_ui`](https://pub.dev/packages/fluent_ui) package, with `Theme` accent colors and the `FluentIcons` icon set. It includes `Button`, `FilledButton`, `OutlinedButton`, `HyperlinkButton`, `IconButton`, `ToggleButton`, `Checkbox`, `ToggleSwitch`, `RadioGroup`, `Slider`, `TextBox`, `ComboBox`, `ProgressBar`, `ProgressRing`, `InfoBar`, `Expander`, `Card`, `Tooltip`, `ContentDialog`, `PasswordBox`, `NumberBox`, `AutoSuggestBox`, `InfoLabel`, `RatingBar`, `Divider`, `ListTile` and `InfoBadge` by @InesaFitsner.
 
 ### Documentation
 

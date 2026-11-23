@@ -1,14 +1,22 @@
 import 'package:flet/flet.dart';
 import 'package:fluent_ui/fluent_ui.dart';
 
+import 'auto_suggest_box.dart';
 import 'button.dart';
 import 'card.dart';
 import 'combo_box.dart';
 import 'content_dialog.dart';
+import 'divider.dart';
 import 'expander.dart';
+import 'info_badge.dart';
 import 'info_bar.dart';
+import 'info_label.dart';
+import 'list_tile.dart';
+import 'number_box.dart';
+import 'password_box.dart';
 import 'progress.dart';
 import 'radio_group.dart';
+import 'rating_bar.dart';
 import 'slider.dart';
 import 'text_box.dart';
 import 'theme.dart';
@@ -71,6 +79,22 @@ class Extension extends FletExtension {
         return FluentTooltipControl(key: key, control: control);
       case "FluentContentDialog":
         return FluentContentDialogControl(key: key, control: control);
+      case "FluentPasswordBox":
+        return FluentPasswordBoxControl(key: key, control: control);
+      case "FluentNumberBox":
+        return FluentNumberBoxControl(key: key, control: control);
+      case "FluentAutoSuggestBox":
+        return FluentAutoSuggestBoxControl(key: key, control: control);
+      case "FluentInfoLabel":
+        return FluentInfoLabelControl(key: key, control: control);
+      case "FluentRatingBar":
+        return FluentRatingBarControl(key: key, control: control);
+      case "FluentDivider":
+        return FluentDividerControl(key: key, control: control);
+      case "FluentListTile":
+        return FluentListTileControl(key: key, control: control);
+      case "FluentInfoBadge":
+        return FluentInfoBadgeControl(key: key, control: control);
       default:
         return null;
     }

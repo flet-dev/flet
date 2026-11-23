@@ -1,0 +1,26 @@
+[project]
+name = "fluent-ui-info-badge"
+version = "1.0.0"
+description = "Unread count and attention dot badges, cleared by a button."
+requires-python = ">=3.10"
+keywords = ["fluent", "badge", "notification", "count"]
+authors = [{ name = "Flet team", email = "hello@flet.dev" }]
+dependencies = ["flet", "flet-fluent-ui"]
+
+[dependency-groups]
+dev = ["flet-cli", "flet-desktop", "flet-web"]
+
+[tool.flet.gallery]
+categories = ["Fluent"]
+
+[tool.flet.metadata]
+title = "Fluent InfoBadge"
+controls = ["SafeArea", "Column", "Row", "Text", "InfoBadge", "Button"]
+layout_pattern = "inline-actions"
+complexity = "basic"
+features = ["count badge", "dot badge", "severity"]
+
+[tool.flet]
+org = "dev.flet"
+company = "Flet"
+copyright = "Copyright (C) 2023-2026 by Flet"
