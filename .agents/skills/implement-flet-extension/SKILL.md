@@ -142,7 +142,7 @@ Every example gets an integration test, and the goldens it produces are the docs
 4. Reference the images in each control page:
    - front matter: `example_images: "test-images/examples/extensions/<name>/golden/macos/<control>"` (crocodocs' `test-images` mapping already serves `integration_tests`);
    - `<ClassSummary name={frontMatter.class_name} image={frontMatter.example_images + '/image_for_docs.png'} imageCaption="<ClassName>" imageWidth="30%"/>`, with the width derived from the image so controls appear at the same scale on every page (with 2x screenshots, about one percent per 16 image pixels);
-   - under each `<CodeExample>`: `<Image src={frontMatter.example_images + '/<example>.png'} alt="<example>" width="45%" caption="<what the user did>" />`, pointing to the `_flow.gif` for flows; import `Image` from `@site/src/components/crocodocs`.
+   - under each `<CodeExample>`: `<Image src={frontMatter.example_images + '/<example>.png'} alt="<example>" width="45%" caption="<what the user did>" />`, pointing to the `_flow.gif` for flows; import `Image` from `@site/src/components/crocodocs`. Derive `width` from the image's pixel width with the same scale as the `<ClassSummary>` image (about one percent per 16 pixels), never a fixed percentage: a small GIF at a fixed 40% is shown 2-3 times its size and gets cut off on the page.
 5. Run `uv --directory ./tools/crocodocs run crocodocs generate` from the repo root and check that the images appear under `website/static/docs/test-images/...` (generated, not committed).
 
 ## Upgrade and Compatibility Guardrails

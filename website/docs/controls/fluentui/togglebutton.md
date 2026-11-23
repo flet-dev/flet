@@ -13,6 +13,6 @@ import {ClassMembers, ClassSummary, CodeExample, Image} from '@site/src/componen
 
 <CodeExample path={frontMatter.examples + '/toggle_button/main.py'} language="python" />
 
-<Image src={frontMatter.example_images + '/toggle_button_flow.gif'} alt="toggle_button" width="40%" caption="Turning bold on" />
+<Image src={frontMatter.example_images + '/toggle_button_flow.gif'} alt="toggle_button" width="25%" caption="Turning bold on" />
 
 <ClassMembers name={frontMatter.class_name} />
