@@ -30,8 +30,9 @@ class WebView(ft.LayoutControl):
           Debian 12 and Ubuntu 22.04 (with current updates) onward.
         - On Linux the WebView is a native GTK widget rather than a Flutter
           texture: other controls cannot be drawn over it, and a scale, rotation
-          or skew transform, or a non-rectangular clip such as a `Container`
-          with `border_radius`, hides it entirely.
+          or skew transform hides it entirely. Rectangular clips and the rounded
+          corners of a `Card` apply to it, but other clips, such as a `Container`
+          with `border_radius` or a circular `shape`, hide it entirely.
         - On web the page is shown in an `<iframe>`. Pages that forbid being
           embedded, and pages from another origin that do not allow embedding
           under the `Cross-Origin-Embedder-Policy: require-corp` header Flet's
@@ -94,7 +95,11 @@ class WebView(ft.LayoutControl):
     `str` and contains the URL.
 
     Note:
-        On web this also fires when the browser refused to show the page.
+        - On web this also fires when the browser refused to show the page.
+        - On web with the
+          [`canvaskit` renderer](https://flet.dev/docs/publish/web/static-website/#web-renderer),
+          while :attr:`on_scroll` is set, this does not fire for a page from
+          another origin or for a `POST` response.
     """
 
     on_web_resource_error: Optional[ft.ControlEventHandler["WebView"]] = None
@@ -119,8 +124,10 @@ class WebView(ft.LayoutControl):
 
     Note:
         - On Windows and web the progress is only ever `0` or `100`.
-        - In web apps compiled to JavaScript (not WebAssembly), while
-          :attr:`on_scroll` is set, a page from another origin reports only `0`.
+        - On web with the
+          [`canvaskit` renderer](https://flet.dev/docs/publish/web/static-website/#web-renderer),
+          while :attr:`on_scroll` is set, a page from another origin reports
+          only `0`, and :attr:`on_page_ended` does not fire for it.
     """
 
     on_url_change: Optional[ft.ControlEventHandler["WebView"]] = None
@@ -131,9 +138,8 @@ class WebView(ft.LayoutControl):
     `str` and contains the new URL.
 
     Note:
-        On web, after a link is followed to another origin, or from HTML loaded
-        with :meth:`load_html` or a `POST` response, this reports the URL the app
-        last loaded.
+        On web, after a link is followed to another origin, this reports the last
+        URL it could read, usually that of the page the app last loaded.
     """
 
     on_scroll: Optional[ft.EventHandler[WebViewScrollEvent]] = None
@@ -142,9 +148,14 @@ class WebView(ft.LayoutControl):
 
     Note:
         - Not supported on macOS.
-        - On Windows a handler set after the control was added to the page fires
-          from the next page loaded.
-        - On web it fires only for the first same-origin page shown.
+        - On web it fires only for same-origin pages and HTML loaded with
+          :meth:`load_html`.
+        - On web with the
+          [`canvaskit` renderer](https://flet.dev/docs/publish/web/static-website/#web-renderer),
+          setting this handler keeps :attr:`on_page_ended` from firing for pages
+          from another origin and for `POST` responses. `canvaskit` is the
+          default for static web apps, and the renderer `auto` picks in browsers
+          not based on Chromium.
         - On Android :attr:`~flet_webview.WebViewScrollEvent.x` and
           :attr:`~flet_webview.WebViewScrollEvent.y` are physical pixels: the
           page's `window.scrollX` and `window.scrollY` multiplied by
@@ -188,7 +199,7 @@ class WebView(ft.LayoutControl):
 
         Note:
             On web, after a link was followed to another origin, this reloads
-            the page the app last loaded instead.
+            the last page whose URL it could read instead.
         """
         await self._invoke_method("reload")
 
@@ -295,9 +306,9 @@ class WebView(ft.LayoutControl):
         if no URL was ever loaded.
 
         Note:
-            On web, after a link is followed to another origin, or from HTML
-            loaded with :meth:`load_html` or a `POST` response, this returns the
-            URL the app last loaded.
+            On web, after a link is followed to another origin, this returns the
+            last URL it could read, usually that of the page the app last
+            loaded.
 
         Returns:
             The current URL that the WebView is displaying or `None`
@@ -366,9 +377,9 @@ class WebView(ft.LayoutControl):
 
         Note:
             - On Linux a :attr:`~flet_webview.RequestMethod.POST` request is sent
-              outside the WebView: it carries none of the WebView's cookies, the
-              cookies it sets are not kept, and a failed request raises an error
-              rather than firing :attr:`on_web_resource_error`.
+              outside the WebView and its response is then shown in it, so a
+              failed request raises an error rather than firing
+              :attr:`on_web_resource_error`.
             - On web a :attr:`~flet_webview.RequestMethod.POST` request is sent
               by the app itself, so the browser's cross-origin (CORS) rules apply
               to it.
