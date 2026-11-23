@@ -54,11 +54,9 @@ access to it.
 
 `libwebkit2gtk-4.1-0` must be installed on the machine running the app, and
 `libwebkit2gtk-4.1-dev` on the machine building it. Both are available from Debian 12
-and Ubuntu 22.04 (with current updates) onward:
-
-```bash
-sudo apt install libwebkit2gtk-4.1-dev
-```
+and Ubuntu 22.04 (with current updates) onward, so apps using this control do not run
+on older releases. See [Linux system libraries](../../reference/linux-system-libraries.md)
+for the other packages and distributions.
 
 When running an app with `flet run`, select the
 [full desktop flavor](../../getting-started/installation.md#linux): the default

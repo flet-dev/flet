@@ -262,15 +262,15 @@ the system can run.
 |---|---|---|---|
 | `debian10` | 2.28 | x86-64 | `libmpv.so.1` |
 | `ubuntu20.04` | 2.31 | x86-64, ARM64 | `libmpv.so.1` |
-| `ubuntu22.04` | 2.35 | x86-64, ARM64 | `libmpv.so.1` |
-| `debian12` | 2.36 | x86-64, ARM64 | `libmpv.so.2` |
-| `ubuntu24.04` | 2.39 | x86-64, ARM64 | `libmpv.so.2` |
+| `ubuntu22.04` | 2.35 | x86-64, ARM64 | `libmpv.so.1`, `libwebkit2gtk-4.1.so.0` |
+| `debian12` | 2.36 | x86-64, ARM64 | `libmpv.so.2`, `libwebkit2gtk-4.1.so.0` |
+| `ubuntu24.04` | 2.39 | x86-64, ARM64 | `libmpv.so.2`, `libwebkit2gtk-4.1.so.0` |
 
 Set it when the picked build expects a different `libmpv` than the system ships,
 or when Flet can't detect the glibc version. The selected build must still be
 compatible with the system's glibc and architecture. For example, `debian12`
 requires glibc 2.36 and cannot run on Rocky Linux or AlmaLinux 9 (glibc 2.34);
-see [Video](../controls/video/index.md#linux) for local build guidance.
+see [Linux system libraries](linux-system-libraries.md#full-desktop-client) for local build guidance.
 
 Each build is cached in its own folder in `~/.flet/client`, so after an OS upgrade or a
 change of this variable, Flet downloads the matching build instead of reusing the

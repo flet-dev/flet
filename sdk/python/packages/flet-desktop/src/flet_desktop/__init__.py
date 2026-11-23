@@ -900,8 +900,8 @@ def explain_client_exit(returncode: int | None) -> None:
 
     On Linux the dynamic loader exits with status 127 when a shared library the
     client links against is missing or too old, and prints a one-line error that
-    names only the library. With the full flavor, the usual cause is `libmpv` or
-    GStreamer, which only that flavor links.
+    names only the library. With the full flavor, the usual cause is `libmpv`,
+    GStreamer or WebKitGTK, which only that flavor links.
 
     Args:
         returncode: Exit status of the client process, or `None` if it is
@@ -916,12 +916,13 @@ def explain_client_exit(returncode: int | None) -> None:
     )
     if __get_desktop_flavor() == "full":
         message += (
-            " The full client needs libmpv and GStreamer: on Debian 12+ and "
-            "Ubuntu 24.04+ run `sudo apt install libmpv2 "
-            "libgstreamer-plugins-base1.0-0` (libmpv1 on older releases). Apps "
-            "that need none of the extensions only the full client includes can "
-            "use the light client by setting FLET_DESKTOP_FLAVOR=light. See "
-            "https://flet.dev/docs/getting-started/installation#linux"
+            " The full client needs libmpv, GStreamer and, on Debian 12+ and "
+            "Ubuntu 22.04+, WebKitGTK: on Debian 12+ and Ubuntu 24.04+ run "
+            "`sudo apt install libmpv2 libgstreamer-plugins-base1.0-0 "
+            "libwebkit2gtk-4.1-0`. Apps that need none of the extensions only the "
+            "full client includes can use the light client by setting "
+            "FLET_DESKTOP_FLAVOR=light. See https://flet.dev/docs/reference/"
+            "linux-system-libraries#full-desktop-client for other releases."
         )
     else:
         message += " Install the system package that provides it."

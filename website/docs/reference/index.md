@@ -10,3 +10,4 @@ title: "Overview"
 - [Types](../types/index.md) - Core types, enums, events, exceptions, and utilities shared across the SDK.
 - [Built-in binary Python packages for Android and iOS](../reference/binary-packages-android-ios.md) - Prebuilt wheels available from `https://pypi.flet.dev` for mobile targets.
 - [Environment Variables](../reference/environment-variables.md) - Runtime configuration toggles for apps and the CLI.
+- [Linux system libraries](../reference/linux-system-libraries.md) - The system packages Linux apps, the desktop client and `flet build linux` need, by extension.

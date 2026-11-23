@@ -3,10 +3,16 @@
 ### Breaking changes
 
 * The `full` flavor of the prebuilt Linux desktop client now needs `libwebkit2gtk-4.1-0` (Debian 12, Ubuntu 22.04 and newer) to start, even for apps that don't use `WebView`: install it with `sudo apt install libwebkit2gtk-4.1-0`. The default `light` flavor has no `WebView` and doesn't need it ([#6530](https://github.com/flet-dev/flet/issues/6530)) by @ndonkoHenri.
+* Linux apps built with `flet build linux` that include `flet-webview` need `libwebkit2gtk-4.1-dev` to build and `libwebkit2gtk-4.1-0` to run, so they no longer run before Debian 12 and Ubuntu 22.04, even when they show a `WebView` only on other platforms ([#6530](https://github.com/flet-dev/flet/issues/6530)) by @ndonkoHenri.
+* `WebView.scroll_to()` and `WebView.scroll_by()` raise `FletUnsupportedPlatformException` on macOS, which doesn't support them ([#6530](https://github.com/flet-dev/flet/issues/6530)) by @ndonkoHenri.
 
 ### New features
 
 * Add `WebView` support on Windows (Edge WebView2) and Linux (WebKitGTK), and make its methods and events work on web for same-origin pages and HTML loaded with `load_html()`: `flet-webview` is now built on the [`webview_all`](https://pub.dev/packages/webview_all) Flutter package; on Linux it needs `libwebkit2gtk-4.1-0` (Debian 12, Ubuntu 22.04 and newer), so the prebuilt Linux desktop client has `WebView` only in its `full` flavor ([#6530](https://github.com/flet-dev/flet/issues/6530), [#5934](https://github.com/flet-dev/flet/issues/5934)) by @ndonkoHenri.
+
+### Documentation
+
+* Add a [Linux system libraries](https://flet.dev/docs/reference/linux-system-libraries) page listing the packages each extension needs to build and run on Linux, and the ones the full desktop client needs on each distribution ([#6530](https://github.com/flet-dev/flet/issues/6530)) by @ndonkoHenri.
 
 ## 1.1.3
 

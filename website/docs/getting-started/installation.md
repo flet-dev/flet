@@ -40,16 +40,15 @@ Flet supports Debian 10, 11 and 12 and Ubuntu 20.04, 22.04 and 24.04 LTS. On ARM
 
 On Linux, the Flet desktop client is available in two flavors: **full** and **light**.
 
-The **light** flavor (default on Linux) does not include the audio, video, Rive and WebView
-extensions, resulting in a smaller download. The **full** flavor bundles audio and video support
-out of the box, Rive on Ubuntu 24.04 x86-64, and on Debian 12, Ubuntu 22.04 and newer also the
-[WebView](../controls/webview/index.md) control.
+The **light** flavor (default on Linux) leaves out the audio, video, Rive and
+[WebView](../controls/webview/index.md) extensions, for a smaller download. The **full** flavor
+includes audio and video, WebView on Debian 12+ and Ubuntu 22.04+, and Rive on Ubuntu 24.04
+x86-64.
 
-On those distributions the **full** flavor does not start unless `libwebkit2gtk-4.1-0` is installed, even for apps that do not use `WebView`:
-
-```bash
-sudo apt install libwebkit2gtk-4.1-0
-```
+The **full** flavor does not start until the system libraries of all of these extensions are
+installed, even for apps that use none of them. See
+[Linux system libraries](../reference/linux-system-libraries.md#full-desktop-client) for the
+packages to install on your distribution.
 
 To select the flavor, either set the
 [`FLET_DESKTOP_FLAVOR`](../reference/environment-variables.md#flet_desktop_flavor)
@@ -66,11 +65,9 @@ or add the setting to your project's `pyproject.toml`:
 desktop_flavor = "full"
 ```
 
-Installing system libraries doesn't add audio or video to the **light** flavor: with it, a
+Installing system libraries doesn't add these extensions to the **light** flavor: with it, a
 `Video` control shows `Unknown control: Video` and `Audio` calls time out. Use the **full**
-flavor instead. It needs the system's `libmpv` and GStreamer libraries to start; see the
-[Video](../controls/video/index.md#linux) setup guide for the packages to install.
-When your app uses an extension that the client it starts doesn't include, Flet logs a
+flavor instead. When your app uses an extension that the client it starts doesn't include, Flet logs a
 warning that names the extension.
 
 Flet downloads the client build that matches your system's glibc version. To pick a build
