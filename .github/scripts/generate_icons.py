@@ -63,6 +63,19 @@ LUCIDE_PUBSPEC = (
     "sdk/python/packages/flet-shadcn-ui/src/flutter/flet_shadcn_ui/pubspec.yaml"
 )
 
+# fluent_ui's `FluentIcons` declares every icon as
+# `static const IconData name = IconData(0x..., fontFamily: 'FluentIcons',
+# fontPackage: 'fluent_ui');`, with the arguments wrapped onto following lines.
+FLUENT_ICON_PATTERN = re.compile(
+    r"""static const IconData\s+(\w+)\s*=\s*IconData\(\s*(0x[0-9a-fA-F]+),\s*"""
+    r"""fontFamily:\s*'FluentIcons'\s*,\s*fontPackage:\s*'fluent_ui'\s*,?\s*\)""",
+)
+
+FLUENT_SET_ID = 4
+FLUENT_PUBSPEC = (
+    "sdk/python/packages/flet-fluent-ui/src/flutter/flet_fluent_ui/pubspec.yaml"
+)
+
 file_loader = FileSystemLoader(Path(__file__).parent / "templates")
 templates = Environment(loader=file_loader)
 
@@ -238,6 +251,54 @@ def parse_lucide_icons(dart_content: str):
     return icons, python_names
 
 
+def fluent_version() -> str:
+    """Return the exact `fluent_ui` version pinned by flet-fluent-ui.
+
+    The generated Dart list names every icon, so the list has to be built from
+    the same release the client compiles against.
+    """
+    pubspec = (REPO / FLUENT_PUBSPEC).read_text(encoding="utf-8")
+    match = re.search(r"^\s*fluent_ui:\s*([0-9.]+)\s*$", pubspec, re.M)
+    if not match:
+        raise SystemExit(f"exact fluent_ui version not found in {FLUENT_PUBSPEC}")
+    return match.group(1)
+
+
+def download_fluent_icons() -> str:
+    """Return `lib/src/icons.dart` from the pinned fluent_ui pub.dev archive."""
+    url = f"https://pub.dev/api/archives/fluent_ui-{fluent_version()}.tar.gz"
+    print(f"Downloading Fluent icons from: {url}")
+    response = requests.get(url)
+    response.raise_for_status()
+    with tarfile.open(fileobj=io.BytesIO(response.content), mode="r:gz") as archive:
+        member = archive.extractfile("lib/src/icons.dart")
+        if member is None:
+            raise SystemExit("lib/src/icons.dart not found in the archive")
+        return member.read().decode("utf-8")
+
+
+def parse_fluent_icons(dart_content: str):
+    """Return `(icons, python_names)` for the Fluent set.
+
+    Like `parse_dart_icons`, the packed value is the alphabetical index of the
+    Dart member name. Member names are lower snake case, so the Python name is
+    the upper-cased member name.
+    """
+    matches = FLUENT_ICON_PATTERN.findall(dart_content)
+    names = sorted(dict(matches))
+    if len(names) != len(matches):
+        raise SystemExit("duplicate Fluent icon names")
+    declared = len(re.findall(r"static const IconData\s+\w+", dart_content))
+    if declared != len(names):
+        raise SystemExit(
+            f"matched {len(names)} of {declared} Fluent icon declarations"
+        )
+    icons = [(name, (FLUENT_SET_ID << 16) | i) for i, name in enumerate(names)]
+    python_names = [name.upper() for name in names]
+    print(f"🔍 Found {len(icons)} icons for set ID {FLUENT_SET_ID} (sorted).")
+    return icons, python_names
+
+
 def main() -> int:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument(
@@ -285,6 +346,26 @@ def main() -> int:
             {py: value for py, (_, value) in zip(lucide_names, lucide_icons)}
         ),
         f"{lucide_dir}/flet_shadcn_ui/lucide_icons.json",
+        args.verify,
+    )
+
+    fluent_icons, fluent_names = parse_fluent_icons(download_fluent_icons())
+    fluent_dir = "sdk/python/packages/flet-fluent-ui/src"
+    failures += emit(
+        render_file(fluent_icons, "fluent_icons.dart"),
+        f"{fluent_dir}/flutter/flet_fluent_ui/lib/src/utils/fluent_icons.dart",
+        args.verify,
+    )
+    failures += emit(
+        render_file(fluent_names, "fluent_icons.pyi"),
+        f"{fluent_dir}/flet_fluent_ui/fluent_icons.pyi",
+        args.verify,
+    )
+    failures += emit(
+        render_json(
+            {py: value for py, (_, value) in zip(fluent_names, fluent_icons)}
+        ),
+        f"{fluent_dir}/flet_fluent_ui/fluent_icons.json",
         args.verify,
     )
 

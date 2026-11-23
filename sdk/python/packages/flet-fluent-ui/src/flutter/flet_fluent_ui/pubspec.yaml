@@ -1,0 +1,25 @@
+name: flet_fluent_ui
+description: Flet Fluent UI controls
+version: 0.1.0
+publish_to: none
+
+environment:
+  sdk: '>=3.11.0 <4.0.0'
+  flutter: ">=3.47.0"
+
+dependencies:
+  flutter:
+    sdk: flutter
+
+  # Exact pin: lib/src/utils/fluent_icons.dart is generated from this release
+  # by .github/scripts/generate_icons.py.
+  fluent_ui: 4.17.0
+  material_ui: ^1.6.0
+
+  flet:
+    path: ../../../../../../../packages/flet
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  flutter_lints: ^3.0.0

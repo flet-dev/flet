@@ -1,0 +1,26 @@
+[project]
+name = "fluent-ui-card"
+version = "1.0.0"
+description = "Storage card with a progress bar and an action."
+requires-python = ">=3.10"
+keywords = ["fluent", "card", "surface"]
+authors = [{ name = "Flet team", email = "hello@flet.dev" }]
+dependencies = ["flet", "flet-fluent-ui"]
+
+[dependency-groups]
+dev = ["flet-cli", "flet-desktop", "flet-web"]
+
+[tool.flet.gallery]
+categories = ["Fluent"]
+
+[tool.flet.metadata]
+title = "Fluent Card"
+controls = ["SafeArea", "Column", "Row", "Text", "Card", "ProgressBar", "Button"]
+layout_pattern = "single-panel"
+complexity = "basic"
+features = ["layout"]
+
+[tool.flet]
+org = "dev.flet"
+company = "Flet"
+copyright = "Copyright (C) 2023-2026 by Flet"

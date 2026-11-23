@@ -1,0 +1,26 @@
+[project]
+name = "fluent-ui-tooltip"
+version = "1.0.0"
+description = "Icon buttons that show tooltips on hover."
+requires-python = ">=3.10"
+keywords = ["fluent", "tooltip", "hover"]
+authors = [{ name = "Flet team", email = "hello@flet.dev" }]
+dependencies = ["flet", "flet-fluent-ui"]
+
+[dependency-groups]
+dev = ["flet-cli", "flet-desktop", "flet-web"]
+
+[tool.flet.gallery]
+categories = ["Fluent"]
+
+[tool.flet.metadata]
+title = "Fluent Tooltip"
+controls = ["SafeArea", "Row", "Tooltip", "IconButton"]
+layout_pattern = "inline-actions"
+complexity = "basic"
+features = ["hover", "icons"]
+
+[tool.flet]
+org = "dev.flet"
+company = "Flet"
+copyright = "Copyright (C) 2023-2026 by Flet"

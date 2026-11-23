@@ -1,0 +1,26 @@
+[project]
+name = "fluent-ui-slider"
+version = "1.0.0"
+description = "Volume slider with a drag label and a stepped slider."
+requires-python = ">=3.10"
+keywords = ["fluent", "slider", "range"]
+authors = [{ name = "Flet team", email = "hello@flet.dev" }]
+dependencies = ["flet", "flet-fluent-ui"]
+
+[dependency-groups]
+dev = ["flet-cli", "flet-desktop", "flet-web"]
+
+[tool.flet.gallery]
+categories = ["Fluent"]
+
+[tool.flet.metadata]
+title = "Fluent Slider"
+controls = ["SafeArea", "Column", "Text", "Slider"]
+layout_pattern = "form"
+complexity = "basic"
+features = ["change handling", "divisions", "label"]
+
+[tool.flet]
+org = "dev.flet"
+company = "Flet"
+copyright = "Copyright (C) 2023-2026 by Flet"

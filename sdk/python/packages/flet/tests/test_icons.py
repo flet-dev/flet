@@ -135,3 +135,27 @@ def test_lucide_packed_value_indexes_the_dart_list():
         assert python_name(dart_names[value & 0xFFFF]) == name
     assert isinstance(shad.LucideIcons.HOUSE, ft.IconData)
     assert packed["HOUSE"] == shad.LucideIcons.HOUSE
+
+
+def test_fluent_packed_value_indexes_the_dart_list():
+    """Same guarantee as above for the Fluent set shipped by flet-fluent-ui."""
+    import flet_fluent_ui as fluent
+
+    package = REPO / "sdk/python/packages/flet-fluent-ui/src"
+    packed = json.loads(
+        (package / "flet_fluent_ui/fluent_icons.json").read_text(encoding="utf-8")
+    )
+    dart_names = re.findall(
+        r"^\s*FluentIcons\.(\w+),$",
+        (package / "flutter/flet_fluent_ui/lib/src/utils/fluent_icons.dart").read_text(
+            encoding="utf-8"
+        ),
+        re.MULTILINE,
+    )
+
+    assert len(packed) == len(dart_names) == len(fluent.FluentIcons)
+    for name, value in packed.items():
+        assert value >> 16 == 4
+        assert dart_names[value & 0xFFFF].upper() == name
+    assert isinstance(fluent.FluentIcons.SETTINGS, ft.IconData)
+    assert packed["SETTINGS"] == fluent.FluentIcons.SETTINGS

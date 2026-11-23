@@ -1,0 +1,26 @@
+[project]
+name = "fluent-ui-info-bar"
+version = "1.0.0"
+description = "Info bars of every severity, one with an action and one closable."
+requires-python = ">=3.10"
+keywords = ["fluent", "info bar", "alert", "notification"]
+authors = [{ name = "Flet team", email = "hello@flet.dev" }]
+dependencies = ["flet", "flet-fluent-ui"]
+
+[dependency-groups]
+dev = ["flet-cli", "flet-desktop", "flet-web"]
+
+[tool.flet.gallery]
+categories = ["Fluent"]
+
+[tool.flet.metadata]
+title = "Fluent InfoBar"
+controls = ["SafeArea", "Column", "InfoBar", "Button"]
+layout_pattern = "stacked-sections"
+complexity = "basic"
+features = ["severity", "close handling", "action"]
+
+[tool.flet]
+org = "dev.flet"
+company = "Flet"
+copyright = "Copyright (C) 2023-2026 by Flet"

@@ -20,6 +20,7 @@ dependencies = [
     "flet-color-pickers",
     "flet-datatable2",
     "flet-flashlight",
+    "flet-fluent-ui",
     "flet-geolocator",
     "flet-lottie",
     "flet-local-auth",
@@ -50,6 +51,7 @@ flet-code-editor = { workspace = true }
 flet-color-pickers = { workspace = true }
 flet-datatable2 = { workspace = true }
 flet-flashlight = { workspace = true }
+flet-fluent-ui = { workspace = true }
 flet-geolocator = { workspace = true }
 flet-lottie = { workspace = true }
 flet-local-auth = { workspace = true }

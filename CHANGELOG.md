@@ -1,5 +1,9 @@
 ## 1.1.3
 
+### New features
+
+* Add the `flet-fluent-ui` extension: controls styled after Microsoft's Fluent Design for Windows, built on the Flutter [`fluent_ui`](https://pub.dev/packages/fluent_ui) package, with `Theme` accent colors and the `FluentIcons` icon set. It includes `Button`, `FilledButton`, `OutlinedButton`, `HyperlinkButton`, `IconButton`, `ToggleButton`, `Checkbox`, `ToggleSwitch`, `RadioGroup`, `Slider`, `TextBox`, `ComboBox`, `ProgressBar`, `ProgressRing`, `InfoBar`, `Expander`, `Card`, `Tooltip` and `ContentDialog` by @InesaFitsner.
+
 ### Documentation
 
 * flet-notifications: Document how to update a notification after an inline reply on Android, and fix the "Action buttons and replies" example's notification staying stuck with a spinner after a reply ([#7058](https://github.com/flet-dev/flet/discussions/7058), [#7060](https://github.com/flet-dev/flet/pull/7060)) by @ItsRenjiii.

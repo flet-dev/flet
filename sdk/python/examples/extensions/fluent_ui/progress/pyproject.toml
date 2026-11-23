@@ -1,0 +1,26 @@
+[project]
+name = "fluent-ui-progress"
+version = "1.0.0"
+description = "Progress bar and ring advanced by a button."
+requires-python = ">=3.10"
+keywords = ["fluent", "progress", "progress bar", "progress ring"]
+authors = [{ name = "Flet team", email = "hello@flet.dev" }]
+dependencies = ["flet", "flet-fluent-ui"]
+
+[dependency-groups]
+dev = ["flet-cli", "flet-desktop", "flet-web"]
+
+[tool.flet.gallery]
+categories = ["Fluent"]
+
+[tool.flet.metadata]
+title = "Fluent ProgressBar and ProgressRing"
+controls = ["SafeArea", "Column", "Text", "ProgressBar", "ProgressRing", "Button"]
+layout_pattern = "dashboard"
+complexity = "basic"
+features = ["progress", "click handling"]
+
+[tool.flet]
+org = "dev.flet"
+company = "Flet"
+copyright = "Copyright (C) 2023-2026 by Flet"

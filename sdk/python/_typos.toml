@@ -18,6 +18,9 @@ extend-exclude = [
     "*/flet_shadcn_ui/lucide_icons.json",
     "*/flet_shadcn_ui/lucide_icons.pyi",
     "*/flet_shadcn_ui/lib/src/utils/lucide_icons.dart",
+    "*/flet_fluent_ui/fluent_icons.json",
+    "*/flet_fluent_ui/fluent_icons.pyi",
+    "*/flet_fluent_ui/lib/src/utils/fluent_icons.dart",
 ]
 
 [default.extend-identifiers]

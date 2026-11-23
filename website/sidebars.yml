@@ -333,6 +333,32 @@ docs:
         TimePicker: controls/shadcnui/timepicker.md
         Toast: controls/shadcnui/toast.md
         Tooltip: controls/shadcnui/tooltip.md
+      Fluent:
+        _index: controls/fluentui/index.md
+        Theme: controls/fluentui/theme.md
+        Button: controls/fluentui/button.md
+        Card: controls/fluentui/card.md
+        Checkbox: controls/fluentui/checkbox.md
+        ComboBox:
+          _index: controls/fluentui/combobox.md
+          ComboBoxItem: controls/fluentui/comboboxitem.md
+        ContentDialog: controls/fluentui/contentdialog.md
+        Expander: controls/fluentui/expander.md
+        FilledButton: controls/fluentui/filledbutton.md
+        HyperlinkButton: controls/fluentui/hyperlinkbutton.md
+        IconButton: controls/fluentui/iconbutton.md
+        InfoBar: controls/fluentui/infobar.md
+        OutlinedButton: controls/fluentui/outlinedbutton.md
+        ProgressBar: controls/fluentui/progressbar.md
+        ProgressRing: controls/fluentui/progressring.md
+        RadioGroup:
+          _index: controls/fluentui/radiogroup.md
+          RadioButton: controls/fluentui/radiobutton.md
+        Slider: controls/fluentui/slider.md
+        TextBox: controls/fluentui/textbox.md
+        ToggleButton: controls/fluentui/togglebutton.md
+        ToggleSwitch: controls/fluentui/toggleswitch.md
+        Tooltip: controls/fluentui/tooltip.md
       Extensions:
         _generated_index:
           title: Extension controls
@@ -605,6 +631,10 @@ docs:
       - types/filepickerfile.md
       - types/filepickeruploadfile.md
       - types/flip.md
+      - Fluent:
+        - controls/fluentui/types/expanderdirection.md
+        - controls/fluentui/types/infobarseverity.md
+        - controls/fluentui/types/fluenticons.md
       - Geolocator:
         - services/geolocator/types/foregroundnotificationconfiguration.md
         - services/geolocator/types/geolocatorandroidconfiguration.md
