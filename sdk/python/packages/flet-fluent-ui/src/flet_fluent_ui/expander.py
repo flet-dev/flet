@@ -17,6 +17,7 @@ class Expander(ft.LayoutControl):
     fluent.Expander(
         header="Advanced options",
         content=fluent.Checkbox(label="Enable logging"),
+        expanded=True,
     )
     ```
     """

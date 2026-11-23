@@ -20,17 +20,12 @@ async def test_image_for_docs(flet_app_function: ftt.FletTestApp, request):
     await flet_app_function.assert_control_screenshot(
         request.node.name,
         bgcolor=ft.Colors.SURFACE,
-        control=ft.Column(
-            intrinsic_width=True,
-            controls=[
-                fluent.ComboBox(
-                    placeholder="Placeholder",
-                    items=[fluent.ComboBoxItem(value="a", text="Option A")],
-                ),
-                fluent.ComboBox(
-                    value="a",
-                    items=[fluent.ComboBoxItem(value="a", text="Option A")],
-                ),
+        control=fluent.ComboBox(
+            placeholder="Pick a color",
+            items=[
+                fluent.ComboBoxItem(value="red", text="Red"),
+                fluent.ComboBoxItem(value="green", text="Green"),
+                fluent.ComboBoxItem(value="blue", text="Blue"),
             ],
         ),
     )

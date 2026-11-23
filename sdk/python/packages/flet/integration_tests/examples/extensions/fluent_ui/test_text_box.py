@@ -15,10 +15,10 @@ async def test_image_for_docs(flet_app_function: ftt.FletTestApp, request):
         control=ft.Column(
             width=260,
             controls=[
-                fluent.TextBox(placeholder="Placeholder"),
-                fluent.TextBox(value="With value"),
-                fluent.TextBox(placeholder="Search", suffix=fluent.FluentIcons.SEARCH),
-                fluent.TextBox(placeholder="Disabled", disabled=True),
+                fluent.TextBox(
+                    placeholder="Email", keyboard_type=ft.KeyboardType.EMAIL
+                ),
+                fluent.TextBox(placeholder="Password", password=True),
             ],
         ),
     )

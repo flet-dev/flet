@@ -7,7 +7,7 @@ title: "ProgressRing"
 
 import {ClassMembers, ClassSummary, CodeExample, Image} from '@site/src/components/crocodocs';
 
-<ClassSummary name={frontMatter.class_name} image={frontMatter.example_images + '/progress_ring_for_docs.png'} imageCaption="ProgressRing" imageWidth="15%"/>
+<ClassSummary name={frontMatter.class_name} image={frontMatter.example_images + '/progress_ring_for_docs.png'} imageCaption="ProgressRing" imageWidth="7%"/>
 
 ## Example
 

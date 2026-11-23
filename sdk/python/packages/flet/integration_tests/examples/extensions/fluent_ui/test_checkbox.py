@@ -15,9 +15,8 @@ async def test_image_for_docs(flet_app_function: ftt.FletTestApp, request):
         control=ft.Column(
             intrinsic_width=True,
             controls=[
-                fluent.Checkbox(label="Unchecked"),
-                fluent.Checkbox(label="Checked", value=True),
-                fluent.Checkbox(label="Indeterminate", tristate=True, value=None),
+                fluent.Checkbox(label="Remember me", value=True),
+                fluent.Checkbox(label="Select all", tristate=True),
                 fluent.Checkbox(label="Disabled", disabled=True),
             ],
         ),

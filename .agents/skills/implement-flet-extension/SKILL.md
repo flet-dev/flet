@@ -20,6 +20,9 @@ Implement a Flet extension around an external Flutter package using existing `fl
 - Pin exact version when behavior stability is critical.
 - Use bounded ranges when required by ecosystem constraints.
 5. Record key constraints and reasons in PR notes/commit message.
+6. Read the package source from its pub.dev archive (`https://pub.dev/api/archives/<pkg>-<version>.tar.gz`). Extract it into the scratchpad, or stream single files with `tar -xzO <path>`. Never run `tar -xz`/`-xzv` without `-O` from inside the repo: it unpacks the whole package into the current directory.
+7. Check which ancestors the widgets need. Design-system packages usually expect their app widget (`ShadApp`, `FluentApp`) to provide a theme and localizations, and throw or assert without them (`FluentTheme.of` uses `!`; many fluent_ui widgets call `debugCheckHasFluentLocalizations`). Flet can't put anything above the page and `FletExtension` has no hook for localization delegates, so plan a per-control fallback (see "Required ancestors" below).
+8. If the package needs a newer version of a dependency Flet already locks (for example `material_ui`), move `client/pubspec.lock` to the **lowest** compatible version with `fvm flutter pub downgrade <dep>`. `pub get` jumps to the newest release, which changes Flet's own dependency more than needed.
 
 ## Control/Service Classification
 
@@ -42,6 +45,7 @@ Implement a Flet extension around an external Flutter package using existing `fl
 - Use `LayoutControl`, base `Control`, or Service base class according to classification.
 - Implement typed properties, methods, and events exactly for chosen public API.
 - Reuse existing serialization/event patterns from sibling controls/services.
+- A field whose `None` means something must default to `None`. On first render the protocol omits every `None` field, so `None` can't override a non-`None` default: `max_lines: Optional[int] = 1` set to `None` reaches Dart as "not sent", which reads as `1`. Either default to `None` and give `None` the "off" meaning (fluent `Checkbox.value`: `None` is unchecked, or indeterminate with `tristate`), or add a separate flag (`TextBox.multiline: bool = False` with `max_lines: Optional[int] = None`, like core `TextField`). Later diffs do send `null`, so the bug only shows on the first render.
 
 ## Flutter-side Rules
 
@@ -54,6 +58,16 @@ Implement a Flet extension around an external Flutter package using existing `fl
 - Prefer `parse`-prefixed helper names when converting input to Flutter structures.
 - Avoid single-use local variables.
 - When wrapping a widget in conditional decoration (a label or error text that appears and disappears), keep the widget tree the same shape (always wrap, key the children). Otherwise toggling the decoration rebuilds the inner widget and drops its state, for example focus while typing. Don't decorate by putting the widget in a `Column`: it loosens a fixed `width`, which shrinks button-like widgets.
+
+### Required ancestors (theme, localizations)
+
+When the wrapped widgets need ancestors that a `*App` widget would normally provide, give each control a fallback wrapper, like `withShadTheme` in flet-shadcn-ui or `withFluentTheme` in flet-fluent-ui (`lib/src/utils/theme.dart`):
+
+- Wrap only when the ancestor is missing (`XTheme.maybeOf(context) == null`), deriving brightness from the Material `Theme.of(context)` so the control follows the page's light/dark mode. Cache fallback theme data per brightness if building it is expensive.
+- Missing localizations: add `Localizations.override(context: context, delegates: [...])` with a delegate that falls back to English for unsupported locales. Check that the package's delegate loads with a `SynchronousFuture`, or the first frame renders without it.
+- Widgets that push a **route** (dialogs, sheets) build outside the control's tree: wrap the route builder's content again. Widgets that use `OverlayPortal` (most popups, menus, tooltips) inherit the control's context and need nothing extra. Grep the package for `Navigator.of`/`showDialog` versus `OverlayPortal` to tell which is which.
+- Code that reads the theme (a custom `ButtonStyle`, for example) must take its `BuildContext` from **below** the wrapper. Put a `Builder` inside the wrapped child; the control's own `context` is above the fallback theme, and `XTheme.of(context)` throws there.
+- Look at disabled and other non-default states in the generated images. Upstream styles sometimes leave them indistinguishable (fluent_ui's disabled `OutlinedButton` and `HyperlinkButton`); patch only that state with a style that keeps upstream's values for the others, and say why in a comment.
 
 ### Default Value Matching (Critical)
 
@@ -95,7 +109,9 @@ Without matching defaults, Dart receives `null` and either crashes or silently u
 - In the `## Examples` section, do NOT add `###` subtitles above `<CodeExample>` blocks — titles are injected automatically from the example file itself.
 - Add all custom enums/types docs and update `website/sidebars.yml` navigation. List new extension controls under `Reference → Controls → Extensions` (alphabetically). Only an extension that brings its own design system gets its own folder next to Core/Material/Cupertino/Extensions, like `Shadcn` and `Fluent`. See the "Sidebar Navigation" section of `.agents/skills/docs-conventions/SKILL.md`.
 - Use markdown filenames without underscores (`codeeditor.md`, not `code_editor.md`).
-- Add examples under `sdk/python/examples/extensions/<name>/` for extension controls.
+- Add examples under `sdk/python/examples/extensions/<name>/` for extension controls, **one example per control page**, including sibling controls that share one Python base class or Dart widget (FilledButton, OutlinedButton, HyperlinkButton and IconButton each get their own example, not one shared "buttons" example). Each example uses the control in a realistic situation, not a list of every variant.
+- Make sure every code sample, in docstrings too, uses the current Flet API and runs (for example, URLs open through `await ft.UrlLauncher().launch_url(url)`; there is no `page.launch_url`).
+- In an event handler that calls `page.pop_dialog()`, call `.update()` on any other control you change: `pop_dialog()` sends its own update, so the page is not auto-updated after that handler.
 - Use `import flet_<ext> as <short_alias>` in examples (e.g., `import flet_spinkit as spins`). Keep alias short but readable.
 - Use `ft.Colors.SURFACE_CONTAINER_HIGHEST` for card/cell backgrounds in showcase examples — it adapts to light and dark system themes automatically.
 - Do NOT set an explicit dark theme in examples; let the app use system theme (no `page.theme_mode`).
@@ -115,7 +131,7 @@ Every example gets an integration test, and the goldens it produces are the docs
 
 1. Create **one test file per control** in `sdk/python/packages/flet/integration_tests/examples/extensions/<name>/test_<control>.py`. The file stem picks the golden folder (`golden/macos/<control>/`), so each control's images stay together.
 2. In each file:
-   - `test_image_for_docs` (uses `flet_app_function`): set `page.theme_mode = ft.ThemeMode.LIGHT` and call `assert_control_screenshot(request.node.name, bgcolor=ft.Colors.SURFACE, control=...)` with a compact showcase of the control (a few states/variants). Wrap rows in `ft.Column(intrinsic_width=True, ...)` so the image is not stretched to the page width.
+   - `test_image_for_docs` (uses `flet_app_function`): set `page.theme_mode = ft.ThemeMode.LIGHT` and call `assert_control_screenshot(request.node.name, bgcolor=ft.Colors.SURFACE, control=...)`. **The image must render exactly the code in the class docstring's `Example:`**, because `<ClassSummary>` shows that code right above the image. Copy the docstring's controls with the same labels and values, leaving out only event handlers. Add layout wrappers only: `ft.Row(tight=True)` or `ft.Column(intrinsic_width=True)` so the image is not stretched to the page width, or a fixed-width `ft.Column` (with `horizontal_alignment=STRETCH` for bars) for controls that need a width. To show more states (disabled, checked, indeterminate), add them to the docstring example first. Keep docstring examples screenshot-able: no indeterminate or otherwise endlessly animating controls.
    - One test per example, parametrized with `{"flet_app_main": example.main}` and `indirect=True`:
      - set `page.theme_mode = ft.ThemeMode.LIGHT` and `page.update()` (examples do not set a theme);
      - **interact like a user** (`tap`, `enter_text`, `mouse_hover`) and assert the example's visible result (`find_by_text(...).count == 1`);
@@ -125,7 +141,7 @@ Every example gets an integration test, and the goldens it produces are the docs
 3. Generate goldens from `sdk/python`: `FLET_TEST_GOLDEN=1 uv run pytest -s packages/flet/integration_tests/examples/extensions/<name>`. **Open and review every PNG and GIF** (dark or transparent background, stretched rows, cramped spacing, oversized icons, clipping), fix the test or example, regenerate, then re-run without `FLET_TEST_GOLDEN` to confirm the comparisons pass. Commit the `golden/macos/<control>/*` files.
 4. Reference the images in each control page:
    - front matter: `example_images: "test-images/examples/extensions/<name>/golden/macos/<control>"` (crocodocs' `test-images` mapping already serves `integration_tests`);
-   - `<ClassSummary name={frontMatter.class_name} image={frontMatter.example_images + '/image_for_docs.png'} imageCaption="<ClassName>" imageWidth="30%"/>`, with the width tuned to the image;
+   - `<ClassSummary name={frontMatter.class_name} image={frontMatter.example_images + '/image_for_docs.png'} imageCaption="<ClassName>" imageWidth="30%"/>`, with the width derived from the image so controls appear at the same scale on every page (with 2x screenshots, about one percent per 16 image pixels);
    - under each `<CodeExample>`: `<Image src={frontMatter.example_images + '/<example>.png'} alt="<example>" width="45%" caption="<what the user did>" />`, pointing to the `_flow.gif` for flows; import `Image` from `@site/src/components/crocodocs`.
 5. Run `uv --directory ./tools/crocodocs run crocodocs generate` from the repo root and check that the images appear under `website/static/docs/test-images/...` (generated, not committed).
 
@@ -140,6 +156,8 @@ Every example gets an integration test, and the goldens it produces are the docs
 - Run relevant Python and integration tests for touched areas.
 - Verify Python import paths, client runtime registration, and docs navigation.
 - Verify dependency resolution and lockfile updates are intentional.
+- Run ruff from `sdk/python` on paths inside it only, with `--no-fix` to check. The config sets `fix = true`, and mixing in a path outside the project (for example `.github/scripts/...`) resolves different settings and rewrites `Optional[X]` to `X | None` across the files.
+- On macOS, build the test app once (`fvm flutter build macos --debug -t integration_test/app_test.dart` in `client`, then set `FLET_TEST_APP_BINARY`) and rebuild after every Dart change. A test that fails with "Timed out during start: tester.pump_and_settle()" is usually the intermittent app-start hang; rerun that file before debugging it.
 
 ### Temporary CI narrowing on the feature branch
 

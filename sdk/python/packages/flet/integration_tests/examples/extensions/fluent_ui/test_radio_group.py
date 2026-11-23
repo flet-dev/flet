@@ -13,11 +13,11 @@ async def test_image_for_docs(flet_app_function: ftt.FletTestApp, request):
         request.node.name,
         bgcolor=ft.Colors.SURFACE,
         control=fluent.RadioGroup(
-            value="b",
+            value="medium",
             items=[
-                fluent.RadioButton(value="a", label="Option A"),
-                fluent.RadioButton(value="b", label="Option B"),
-                fluent.RadioButton(value="c", label="Option C"),
+                fluent.RadioButton(value="small", label="Small"),
+                fluent.RadioButton(value="medium", label="Medium"),
+                fluent.RadioButton(value="large", label="Large"),
             ],
         ),
     )

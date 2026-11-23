@@ -12,10 +12,7 @@ async def test_image_for_docs(flet_app_function: ftt.FletTestApp, request):
     await flet_app_function.assert_control_screenshot(
         request.node.name,
         bgcolor=ft.Colors.SURFACE,
-        control=fluent.Card(
-            width=240,
-            content=ft.Text("Content inside a card"),
-        ),
+        control=fluent.Card(content=ft.Text("Card content")),
     )
 
 

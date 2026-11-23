@@ -7,7 +7,7 @@ title: "Checkbox"
 
 import {ClassMembers, ClassSummary, CodeExample, Image} from '@site/src/components/crocodocs';
 
-<ClassSummary name={frontMatter.class_name} image={frontMatter.example_images + '/image_for_docs.png'} imageCaption="Checkbox" imageWidth="20%"/>
+<ClassSummary name={frontMatter.class_name} image={frontMatter.example_images + '/image_for_docs.png'} imageCaption="Checkbox" imageWidth="18%"/>
 
 ## Example
 

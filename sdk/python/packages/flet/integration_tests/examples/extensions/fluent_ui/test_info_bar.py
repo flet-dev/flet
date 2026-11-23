@@ -12,16 +12,10 @@ async def test_image_for_docs(flet_app_function: ftt.FletTestApp, request):
     await flet_app_function.assert_control_screenshot(
         request.node.name,
         bgcolor=ft.Colors.SURFACE,
-        control=ft.Column(
-            width=360,
-            controls=[
-                fluent.InfoBar(title="Info", content="A neutral message."),
-                fluent.InfoBar(
-                    title="Success",
-                    content="It worked.",
-                    severity=fluent.InfoBarSeverity.SUCCESS,
-                ),
-            ],
+        control=fluent.InfoBar(
+            title="Update available",
+            content="Restart the app to install it.",
+            severity=fluent.InfoBarSeverity.WARNING,
         ),
     )
 

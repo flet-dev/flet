@@ -27,9 +27,9 @@ async def test_image_for_docs(flet_app_function: ftt.FletTestApp, request):
     await _prepare(flet_app_function, 560, 320)
     flet_app_function.page.show_dialog(
         fluent.ContentDialog(
-            title="Save changes?",
-            content="Your changes will be lost if you don't save them.",
-            actions=[fluent.FilledButton("Save"), fluent.Button("Don't save")],
+            title="Delete file?",
+            content="The file will be deleted permanently.",
+            actions=[fluent.FilledButton("Delete"), fluent.Button("Cancel")],
         )
     )
     await flet_app_function.tester.pump_and_settle()

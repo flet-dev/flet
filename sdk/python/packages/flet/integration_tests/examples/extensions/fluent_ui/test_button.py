@@ -15,29 +15,10 @@ async def test_image_for_docs(flet_app_function: ftt.FletTestApp, request):
         control=ft.Row(
             tight=True,
             controls=[
-                fluent.Button("Button"),
-                fluent.Button("Disabled", disabled=True),
+                fluent.Button("Save"),
+                fluent.Button("Save", disabled=True),
             ],
         ),
-    )
-
-
-@pytest.mark.parametrize(
-    ("name", "control"),
-    [
-        ("filled_button", fluent.FilledButton("Filled")),
-        ("outlined_button", fluent.OutlinedButton("Outlined")),
-        ("hyperlink_button", fluent.HyperlinkButton("Hyperlink")),
-        ("icon_button", fluent.IconButton(fluent.FluentIcons.SETTINGS)),
-    ],
-)
-@pytest.mark.asyncio(loop_scope="function")
-async def test_variant_for_docs(
-    flet_app_function: ftt.FletTestApp, name: str, control: ft.Control
-):
-    flet_app_function.page.theme_mode = ft.ThemeMode.LIGHT
-    await flet_app_function.assert_control_screenshot(
-        f"{name}_for_docs", bgcolor=ft.Colors.SURFACE, control=control
     )
 
 
@@ -57,11 +38,11 @@ async def test_button(flet_app_function: ftt.FletTestApp):
     )
 
     await flet_app_function.tester.tap(
-        await flet_app_function.tester.find_by_text("Save")
+        await flet_app_function.tester.find_by_text("Discard changes")
     )
     await flet_app_function.tester.pump_and_settle()
 
-    assert (await flet_app_function.tester.find_by_text("Clicked: Save")).count == 1
+    assert (await flet_app_function.tester.find_by_text("Changes discarded")).count == 1
     flet_app_function.assert_screenshot(
         "button",
         await scr.capture(pixel_ratio=flet_app_function.screenshots_pixel_ratio),

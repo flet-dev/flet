@@ -7,7 +7,7 @@ title: "ProgressBar"
 
 import {ClassMembers, ClassSummary, CodeExample, Image} from '@site/src/components/crocodocs';
 
-<ClassSummary name={frontMatter.class_name} image={frontMatter.example_images + '/progress_bar_for_docs.png'} imageCaption="ProgressBar" imageWidth="30%"/>
+<ClassSummary name={frontMatter.class_name} image={frontMatter.example_images + '/progress_bar_for_docs.png'} imageCaption="ProgressBar" imageWidth="32%"/>
 
 ## Example
 

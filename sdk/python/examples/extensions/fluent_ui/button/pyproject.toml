@@ -1,9 +1,9 @@
 [project]
 name = "fluent-ui-button"
 version = "1.0.0"
-description = "Button, FilledButton, OutlinedButton, HyperlinkButton and IconButton with click handling."
+description = "Standard button that discards changes, next to a disabled one."
 requires-python = ">=3.10"
-keywords = ["fluent", "button", "icon button", "hyperlink"]
+keywords = ["fluent", "button"]
 authors = [{ name = "Flet team", email = "hello@flet.dev" }]
 dependencies = ["flet", "flet-fluent-ui"]
 
@@ -15,10 +15,10 @@ categories = ["Fluent"]
 
 [tool.flet.metadata]
 title = "Fluent Button"
-controls = ["SafeArea", "Column", "Row", "Text", "Button", "FilledButton", "OutlinedButton", "HyperlinkButton", "IconButton"]
+controls = ["SafeArea", "Column", "Row", "Text", "Button"]
 layout_pattern = "inline-actions"
 complexity = "basic"
-features = ["click handling", "button variants", "icons", "disabled state"]
+features = ["click handling", "disabled state"]
 
 [tool.flet]
 org = "dev.flet"

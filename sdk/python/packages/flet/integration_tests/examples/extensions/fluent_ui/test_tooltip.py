@@ -27,15 +27,15 @@ async def test_image_for_docs(flet_app_function: ftt.FletTestApp, request):
         ft.Container(
             padding=ft.Padding.only(left=40),
             content=fluent.Tooltip(
-                message="Add to library",
-                content=fluent.Button("Hover me"),
+                message="Save the document",
+                content=fluent.IconButton(fluent.FluentIcons.SAVE),
             ),
         )
     )
     await flet_app_function.tester.pump_and_settle()
     await _hover_and_capture(
         flet_app_function,
-        await flet_app_function.tester.find_by_text("Hover me"),
+        await flet_app_function.tester.find_by_icon(fluent.FluentIcons.SAVE),
         request.node.name,
     )
 

@@ -13,7 +13,6 @@ class ProgressBar(ft.LayoutControl):
     Example:
     ```python
     fluent.ProgressBar(value=60)
-    fluent.ProgressBar()  # indeterminate
     ```
     """
 
@@ -51,7 +50,6 @@ class ProgressRing(ft.LayoutControl):
     Example:
     ```python
     fluent.ProgressRing(value=60)
-    fluent.ProgressRing()  # indeterminate
     ```
     """
 

@@ -1,0 +1,26 @@
+[project]
+name = "fluent-ui-filled-button"
+version = "1.0.0"
+description = "Accent-filled Save button for the main action, next to Cancel."
+requires-python = ">=3.10"
+keywords = ["fluent", "filled button", "primary action"]
+authors = [{ name = "Flet team", email = "hello@flet.dev" }]
+dependencies = ["flet", "flet-fluent-ui"]
+
+[dependency-groups]
+dev = ["flet-cli", "flet-desktop", "flet-web"]
+
+[tool.flet.gallery]
+categories = ["Fluent"]
+
+[tool.flet.metadata]
+title = "Fluent FilledButton"
+controls = ["SafeArea", "Column", "Row", "Text", "FilledButton", "Button"]
+layout_pattern = "inline-actions"
+complexity = "basic"
+features = ["click handling", "primary action"]
+
+[tool.flet]
+org = "dev.flet"
+company = "Flet"
+copyright = "Copyright (C) 2023-2026 by Flet"

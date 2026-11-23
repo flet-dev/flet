@@ -7,7 +7,7 @@ title: "ToggleSwitch"
 
 import {ClassMembers, ClassSummary, CodeExample, Image} from '@site/src/components/crocodocs';
 
-<ClassSummary name={frontMatter.class_name} image={frontMatter.example_images + '/image_for_docs.png'} imageCaption="ToggleSwitch" imageWidth="15%"/>
+<ClassSummary name={frontMatter.class_name} image={frontMatter.example_images + '/image_for_docs.png'} imageCaption="ToggleSwitch" imageWidth="17%"/>
 
 ## Example
 

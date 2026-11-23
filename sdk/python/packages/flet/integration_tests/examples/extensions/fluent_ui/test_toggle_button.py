@@ -12,12 +12,11 @@ async def test_image_for_docs(flet_app_function: ftt.FletTestApp, request):
     await flet_app_function.assert_control_screenshot(
         request.node.name,
         bgcolor=ft.Colors.SURFACE,
-        control=ft.Column(
-            intrinsic_width=True,
+        control=ft.Row(
+            tight=True,
             controls=[
-                fluent.ToggleButton("Off"),
-                fluent.ToggleButton("On", checked=True),
-                fluent.ToggleButton("Disabled", disabled=True),
+                fluent.ToggleButton("Bold"),
+                fluent.ToggleButton("Italic", checked=True),
             ],
         ),
     )

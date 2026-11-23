@@ -14,6 +14,7 @@ class ToggleButton(ft.LayoutControl):
     Example:
     ```python
     fluent.ToggleButton("Bold", on_change=lambda e: print(e.data))
+    fluent.ToggleButton("Italic", checked=True)
     ```
     """
 
@@ -51,6 +52,8 @@ class Checkbox(ft.LayoutControl):
     Example:
     ```python
     fluent.Checkbox(label="Remember me", value=True)
+    fluent.Checkbox(label="Select all", tristate=True)  # indeterminate
+    fluent.Checkbox(label="Disabled", disabled=True)
     ```
     """
 
@@ -96,6 +99,7 @@ class ToggleSwitch(ft.LayoutControl):
     Example:
     ```python
     fluent.ToggleSwitch(label="Wi-Fi", value=True)
+    fluent.ToggleSwitch(label="Bluetooth")
     ```
     """
 

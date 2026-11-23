@@ -13,12 +13,13 @@ async def test_image_for_docs(flet_app_function: ftt.FletTestApp, request):
         request.node.name,
         bgcolor=ft.Colors.SURFACE,
         control=ft.Column(
-            width=320,
+            width=360,
             controls=[
-                fluent.Expander(header="Collapsed", content=ft.Text("Content")),
                 fluent.Expander(
-                    header="Expanded", expanded=True, content=ft.Text("Content")
-                ),
+                    header="Advanced options",
+                    content=fluent.Checkbox(label="Enable logging"),
+                    expanded=True,
+                )
             ],
         ),
     )

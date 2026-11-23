@@ -13,14 +13,7 @@ async def test_image_for_docs(flet_app_function: ftt.FletTestApp, request):
         request.node.name,
         bgcolor=ft.Colors.SURFACE,
         control=fluent.Theme(
-            accent_color=ft.Colors.TEAL,
-            content=ft.Column(
-                intrinsic_width=True,
-                controls=[
-                    fluent.FilledButton("Accent"),
-                    fluent.ToggleSwitch(label="On", value=True),
-                ],
-            ),
+            accent_color=ft.Colors.PURPLE, content=fluent.FilledButton("Themed")
         ),
     )
 

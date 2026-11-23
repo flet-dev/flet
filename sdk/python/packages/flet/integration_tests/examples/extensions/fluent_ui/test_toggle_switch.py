@@ -15,9 +15,8 @@ async def test_image_for_docs(flet_app_function: ftt.FletTestApp, request):
         control=ft.Column(
             intrinsic_width=True,
             controls=[
-                fluent.ToggleSwitch(label="Off"),
-                fluent.ToggleSwitch(label="On", value=True),
-                fluent.ToggleSwitch(label="Disabled", disabled=True),
+                fluent.ToggleSwitch(label="Wi-Fi", value=True),
+                fluent.ToggleSwitch(label="Bluetooth"),
             ],
         ),
     )

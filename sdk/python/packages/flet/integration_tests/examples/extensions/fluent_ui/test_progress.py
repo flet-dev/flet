@@ -14,11 +14,8 @@ async def test_progress_bar_for_docs(flet_app_function: ftt.FletTestApp, request
         bgcolor=ft.Colors.SURFACE,
         control=ft.Column(
             width=240,
-            spacing=16,
-            controls=[
-                fluent.ProgressBar(value=30),
-                fluent.ProgressBar(value=70, color=ft.Colors.GREEN),
-            ],
+            horizontal_alignment=ft.CrossAxisAlignment.STRETCH,
+            controls=[fluent.ProgressBar(value=60)],
         ),
     )
 
@@ -29,14 +26,7 @@ async def test_progress_ring_for_docs(flet_app_function: ftt.FletTestApp, reques
     await flet_app_function.assert_control_screenshot(
         request.node.name,
         bgcolor=ft.Colors.SURFACE,
-        control=ft.Row(
-            tight=True,
-            spacing=16,
-            controls=[
-                fluent.ProgressRing(value=30),
-                fluent.ProgressRing(value=70, color=ft.Colors.GREEN),
-            ],
-        ),
+        control=fluent.ProgressRing(value=60),
     )
 
 

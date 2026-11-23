@@ -12,14 +12,7 @@ async def test_image_for_docs(flet_app_function: ftt.FletTestApp, request):
     await flet_app_function.assert_control_screenshot(
         request.node.name,
         bgcolor=ft.Colors.SURFACE,
-        control=ft.Column(
-            width=240,
-            controls=[
-                fluent.Slider(value=30),
-                fluent.Slider(value=2, max=4, divisions=4),
-                fluent.Slider(value=70, disabled=True),
-            ],
-        ),
+        control=ft.Column(width=240, controls=[fluent.Slider(value=40)]),
     )
 
 

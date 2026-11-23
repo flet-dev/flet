@@ -24,6 +24,7 @@ class Button(ft.LayoutControl):
     Example:
     ```python
     fluent.Button("Save", on_click=lambda e: print("saved"))
+    fluent.Button("Save", disabled=True)
     ```
     """
 
@@ -75,6 +76,7 @@ class FilledButton(Button):
     Example:
     ```python
     fluent.FilledButton("Continue", on_click=lambda e: print("continue"))
+    fluent.FilledButton("Continue", disabled=True)
     ```
     """
 
@@ -87,6 +89,7 @@ class OutlinedButton(Button):
     Example:
     ```python
     fluent.OutlinedButton("Cancel")
+    fluent.OutlinedButton("Cancel", disabled=True)
     ```
     """
 
@@ -99,9 +102,12 @@ class HyperlinkButton(Button):
 
     Example:
     ```python
-    fluent.HyperlinkButton(
-        "Open docs", on_click=lambda e: e.page.launch_url("https://flet.dev")
-    )
+    async def open_docs(e: ft.Event[fluent.HyperlinkButton]):
+        await ft.UrlLauncher().launch_url("https://flet.dev")
+
+
+    fluent.HyperlinkButton("Open docs", on_click=open_docs)
+    fluent.HyperlinkButton("Open docs", disabled=True)
     ```
     """
 
@@ -114,6 +120,7 @@ class IconButton(ft.LayoutControl):
     Example:
     ```python
     fluent.IconButton(fluent.FluentIcons.SETTINGS, tooltip="Settings")
+    fluent.IconButton(fluent.FluentIcons.SETTINGS, disabled=True)
     ```
     """
 
