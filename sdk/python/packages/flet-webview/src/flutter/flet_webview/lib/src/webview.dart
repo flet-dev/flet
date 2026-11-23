@@ -35,6 +35,13 @@ class _WebViewControlState extends State<WebViewControl> {
   /// that it cannot make every later method call fail with the same error.
   Future<void>? _ready;
   bool _initialized = false;
+
+  /// The last property update, which each update waits for, so that updates
+  /// are applied in order and a method call sees the latest one.
+  Future<void> _propertiesApplied = Future.value();
+
+  /// The `url` value last loaded.
+  String? _url;
   bool? _navigationRequestsEnabled;
   bool _scrollHandlerRegistered = false;
   bool _consoleHandlerRegistered = false;
@@ -78,21 +85,52 @@ class _WebViewControlState extends State<WebViewControl> {
   /// JavaScript is enabled before the first load because Android's
   /// `WebSettings.javaScriptEnabled` defaults to `false`, unlike every other
   /// platform. `set_javascript_mode` can turn it back off.
+  ///
+  /// A `url` that cannot be loaded is reported with `on_web_resource_error`.
   Future<void> _initialize(WebViewController controller) async {
-    await _updateNavigationDelegate(controller);
-    await _updateEventHandlers(controller);
+    await _applyProperties(controller);
     if (isMacOSDesktop()) {
       await controller.enableZoom(false);
     }
     await controller.setJavaScriptMode(JavaScriptMode.unrestricted);
-    await _load(
+    await _loadUrl(
       controller,
       widget.control.getString("url", "https://flet.dev")!,
-      parseLoadRequestMethod(
-        widget.control.getString("method"),
-        LoadRequestMethod.get,
-      )!,
     );
+  }
+
+  /// Loads the `url` property value [url] and reports a failure with
+  /// `on_web_resource_error`.
+  Future<void> _loadUrl(WebViewController controller, String url) async {
+    _url = url;
+    try {
+      await _load(controller, url, LoadRequestMethod.get);
+    } catch (e) {
+      widget.control.triggerEvent(
+        "web_resource_error",
+        "Could not load $url: $e",
+      );
+    }
+  }
+
+  /// Applies `prevent_links`, the event subscriptions and, once the initial
+  /// load has started, a changed `url` to [controller].
+  ///
+  /// Each call runs after the previous one, and failures are logged or
+  /// reported, so the returned future never completes with an error.
+  Future<void> _applyProperties(WebViewController controller) {
+    return _propertiesApplied = _propertiesApplied.then((_) async {
+      try {
+        await _updateNavigationDelegate(controller);
+      } catch (e) {
+        debugPrint("WebView.prevent_links could not be applied: $e");
+      }
+      await _updateEventHandlers(controller);
+      final url = widget.control.getString("url");
+      if (_url != null && url != null && url != _url) {
+        await _loadUrl(controller, url);
+      }
+    });
   }
 
   /// Sets a navigation delegate that intercepts navigation requests only
@@ -100,6 +138,9 @@ class _WebViewControlState extends State<WebViewControl> {
   ///
   /// On Windows an intercepted navigation is cancelled and, once allowed,
   /// started again as a plain GET, which drops the body of a submitted form.
+  ///
+  /// A certificate error is reported with `on_web_resource_error`, and the
+  /// load is cancelled.
   Future<void> _updateNavigationDelegate(WebViewController controller) async {
     final enabled = _preventLinks.isNotEmpty;
     if (enabled == _navigationRequestsEnabled) return;
@@ -119,6 +160,13 @@ class _WebViewControlState extends State<WebViewControl> {
             "web_resource_error",
             error.description,
           ),
+          onSslAuthError: (error) {
+            widget.control.triggerEvent(
+              "web_resource_error",
+              error.platform.description,
+            );
+            error.cancel();
+          },
           onNavigationRequest: enabled
               ? (request) =>
                     _preventLinks.any((link) => request.url.startsWith(link))
@@ -138,23 +186,29 @@ class _WebViewControlState extends State<WebViewControl> {
   /// The alert handler in particular must stay unset until then: setting it
   /// tells Android, WebKitGTK and the web implementation that the app shows
   /// alerts itself, which suppresses their built-in dialog. The scroll handler
-  /// is skipped on macOS, where WKWebView reports no scroll position.
+  /// is skipped on macOS, where WKWebView reports no scroll position, and is
+  /// removed again when Python unsubscribes, since observing scrolling costs
+  /// a listener in every page.
   ///
   /// A handler that fails to attach is logged rather than rethrown, so that it
   /// cannot keep the initial `url` from loading.
   Future<void> _updateEventHandlers(WebViewController controller) async {
-    if (!isMacOSDesktop() &&
-        !_scrollHandlerRegistered &&
-        widget.control.hasEventHandler("scroll")) {
-      _scrollHandlerRegistered = true;
+    final scroll =
+        !isMacOSDesktop() && widget.control.hasEventHandler("scroll");
+    if (scroll != _scrollHandlerRegistered) {
+      _scrollHandlerRegistered = scroll;
       await _attachHandler(
         "scroll",
-        () => controller.setOnScrollPositionChange((position) {
-          widget.control.triggerEvent("scroll", {
-            "x": position.x,
-            "y": position.y,
-          });
-        }),
+        () => controller.setOnScrollPositionChange(
+          scroll
+              ? (position) {
+                  widget.control.triggerEvent("scroll", {
+                    "x": position.x,
+                    "y": position.y,
+                  });
+                }
+              : null,
+        ),
       );
     }
     if (!_consoleHandlerRegistered &&
@@ -210,11 +264,16 @@ class _WebViewControlState extends State<WebViewControl> {
   /// fragment or, outside Windows, any authority), or when [loadLocalFile]
   /// throws an [ArgumentError] for a relative or missing path on Windows or
   /// Linux. The web has no local files.
+  ///
+  /// A [url] matching `prevent_links` is not loaded. The navigation delegate
+  /// does not see these loads on Android, where `loadUrl` skips
+  /// `shouldOverrideUrlLoading`.
   Future<void> _load(
     WebViewController controller,
     String url,
     LoadRequestMethod method,
   ) async {
+    if (_preventLinks.any(url.startsWith)) return;
     final uri = Uri.parse(url);
     if (uri.scheme == "file" && !kIsWeb) {
       try {
@@ -236,6 +295,10 @@ class _WebViewControlState extends State<WebViewControl> {
       throw Exception("WebView is not available on this platform.");
     }
     await _ready;
+    if (!mounted) {
+      throw Exception("WebView was removed from the page.");
+    }
+    await _applyProperties(controller);
     switch (name) {
       case "reload":
         await controller.reload();
@@ -350,12 +413,7 @@ class _WebViewControlState extends State<WebViewControl> {
     }
 
     if (_initialized) {
-      _updateNavigationDelegate(controller).catchError((Object e) {
-        debugPrint("WebView.prevent_links could not be applied: $e");
-      });
-      _updateEventHandlers(controller).catchError((Object e) {
-        debugPrint("WebView event handler could not be attached: $e");
-      });
+      _applyProperties(controller);
     }
 
     var bgcolor = widget.control.getColor("bgcolor", context);

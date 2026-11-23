@@ -10,6 +10,8 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 ### Added
 
 - Windows and Linux support. On web, the methods and events now work for same-origin pages and HTML loaded with `load_html()` ([#6530](https://github.com/flet-dev/flet/issues/6530), [#5934](https://github.com/flet-dev/flet/issues/5934), [#7124](https://github.com/flet-dev/flet/pull/7124)) by @ndonkoHenri.
+- Changing `url` loads the new URL ([#7124](https://github.com/flet-dev/flet/pull/7124)) by @ndonkoHenri.
+- `on_web_resource_error` also fires for a `url` that can't be loaded and for a certificate error, which cancels the load ([#7124](https://github.com/flet-dev/flet/pull/7124)) by @ndonkoHenri.
 
 ### Changed
 

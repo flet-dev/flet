@@ -14,4 +14,7 @@ Future<void> loadLocalFile(
   String absoluteFilePath,
 ) => controller.loadFile(absoluteFilePath);
 
-Future<void> disposePlatformController(WebViewController controller) async {}
+/// Closes the iframe session behind [controller]: its window message
+/// listener, pending requests and document observers.
+Future<void> disposePlatformController(WebViewController controller) =>
+    controller.platform.closeWebViewSession();

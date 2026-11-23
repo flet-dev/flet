@@ -47,6 +47,9 @@ class WebView(ft.LayoutControl):
     """
     The URL of the web page to load.
 
+    Changing it loads the new URL. To load the same URL again, call
+    :meth:`reload` or :meth:`load_request`.
+
     Note:
         A `file://` URL pointing to a local file loads that file's sibling
         assets (scripts, stylesheets, images) as well, and is equivalent to
@@ -110,9 +113,13 @@ class WebView(ft.LayoutControl):
     `str` and contains the error message.
 
     Note:
-        On web this fires only for requests made with
-        :attr:`~flet_webview.RequestMethod.POST`. The browser does not report
-        why a page shown in an `<iframe>` failed to load.
+        - It also fires when :attr:`url` cannot be loaded, for example a URL
+          without a scheme.
+        - It also fires for a certificate error, and the page is not loaded.
+          On web the browser handles certificate errors itself.
+        - On web it otherwise fires only for requests made with
+          :attr:`~flet_webview.RequestMethod.POST`. The browser does not report
+          why a page shown in an `<iframe>` failed to load.
     """
 
     on_progress: Optional[ft.ControlEventHandler["WebView"]] = None

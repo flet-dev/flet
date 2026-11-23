@@ -8,7 +8,8 @@
 
 ### New features
 
-* Add `WebView` support on Windows (Edge WebView2) and Linux (WebKitGTK), and make its methods and events work on web for same-origin pages and HTML loaded with `load_html()`: `flet-webview` is now built on the [`webview_all`](https://pub.dev/packages/webview_all) Flutter package; on Linux it needs `libwebkit2gtk-4.1-0` (Debian 12, Ubuntu 22.04 and newer), so the prebuilt Linux desktop client has `WebView` only in its `full` flavor ([#6530](https://github.com/flet-dev/flet/issues/6530), [#5934](https://github.com/flet-dev/flet/issues/5934), [#7124](https://github.com/flet-dev/flet/pull/7124)) by @ndonkoHenri.
+* Add `WebView` support on Windows (Edge WebView2) and Linux (WebKitGTK), and make its methods and events work on web for same-origin pages and HTML loaded with `load_html()` ([#6530](https://github.com/flet-dev/flet/issues/6530), [#5934](https://github.com/flet-dev/flet/issues/5934), [#7124](https://github.com/flet-dev/flet/pull/7124)) by @ndonkoHenri.
+* `WebView`: changing `url` loads the new URL, and a page that can't be loaded because of its `url` or a certificate error fires `on_web_resource_error` ([#7124](https://github.com/flet-dev/flet/pull/7124)) by @ndonkoHenri.
 
 ### Documentation
 
