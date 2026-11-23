@@ -5,6 +5,7 @@ import '../flet_app.dart';
 import '../flet_app_errors_handler.dart';
 import '../flet_backend.dart';
 import '../models/control.dart';
+import '../utils/app_driver.dart';
 import '../utils/edge_insets.dart';
 import '../utils/numbers.dart';
 import '../utils/theme.dart';
@@ -25,6 +26,9 @@ class _FletAppControlState extends State<FletAppControl> {
   final _errorsHandler = FletAppErrorsHandler();
   EmbeddedDartBridge? _dartBridge;
   FletBackend? _backend;
+  // The embedded app's element: its subtree is the guest UI and its box is
+  // the guest page, so `describe`/`act` coordinates are guest pixels.
+  final _appKey = GlobalKey();
 
   @override
   void initState() {
@@ -62,6 +66,36 @@ class _FletAppControlState extends State<FletAppControl> {
         return backend.waitIdle(
             idleMs: parseInt(args["idle_ms"], 300)!,
             timeoutMs: parseInt(args["timeout_ms"], 30000)!);
+      case "describe":
+        final app = _appKey.currentContext as Element?;
+        if (app == null) {
+          return {"status": "error", "error": "The embedded app isn't on screen."};
+        }
+        return {
+          "status": "ok",
+          ...AppDriver(app).describe(maxItems: parseInt(args["max_items"], 100)!)
+        };
+      case "act":
+        final app = _appKey.currentContext as Element?;
+        final backend = _backend;
+        if (app == null || backend == null) {
+          return {"status": "error", "error": "The embedded app isn't running."};
+        }
+        final result = await AppDriver(app).act(
+            args["steps"] is List ? args["steps"] : const [],
+            pointer: args["pointer"] == "mouse" ? "mouse" : "touch");
+        // Then wait for the app to react: the handlers run in Python and
+        // their UI updates arrive afterwards. A tap that changes nothing
+        // counts as idle too.
+        final idle = await backend.waitIdle(
+            idleMs: parseInt(args["idle_ms"], 500)!,
+            timeoutMs: parseInt(args["timeout_ms"], 5000)!,
+            requireUpdate: false);
+        return {
+          "status": idle["status"],
+          if (idle["error"] != null) "error": idle["error"],
+          ...result,
+        };
       default:
         throw Exception("Unknown FletApp method: $name");
     }
@@ -89,6 +123,7 @@ class _FletAppControlState extends State<FletAppControl> {
     var appErrorMessage = widget.control.getString("app_error_message");
 
     Widget app = FletApp(
+        key: _appKey,
         controlId: widget.control.id,
         reconnectIntervalMs: reconnectIntervalMs,
         reconnectTimeoutMs: reconnectTimeoutMs,

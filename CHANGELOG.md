@@ -1,3 +1,9 @@
+## 1.2.0
+
+### New features
+
+* Add `FletApp.describe()` and `FletApp.act()`, so a host can see and use the app it embeds the way a person would: `describe()` lists the controls on screen (type, `key`, text, value, events, position, and whether a dialog covers them), and `act()` taps them by key, text, tooltip or type, types into text fields (firing `on_change`, and `on_submit` with `submit`), long-presses, taps a point, then waits until the app has reacted. A disabled or covered control fails the step instead of tapping whatever is on top. For previews and galleries, for example an AI agent checking an app it just built by @FeodorFitsner.
+
 ## 1.1.3
 
 ### Documentation

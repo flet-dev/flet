@@ -249,3 +249,93 @@ class FletApp(LayoutControl):
             arguments={"idle_ms": idle_ms, "timeout_ms": timeout_ms},
             timeout=timeout_ms / 1000 + 5,
         )
+
+    async def describe(self, max_items: int = 100) -> dict[str, Any]:
+        """
+        Lists the controls the embedded app shows right now.
+
+        For a host that lets someone (for example an AI agent) see and use the
+        embedded app without a screenshot. Use [`act()`][(c).act] to tap and
+        type.
+
+        Only controls a person can see or use are listed: text, inputs, and
+        controls with event handlers, a `key` or a tooltip. Layout controls
+        (`Row`, `Column`, `Container` without events) are left out, and so is
+        anything off screen or behind an opaque route.
+
+        Args:
+            max_items: The most controls to return.
+
+        Returns:
+            A dict with `status` (`"ok"` or `"error"`), `width` and `height`
+            (the embedded page's size in logical pixels), `controls` and
+            `truncated`. Each control has `id`, `type`, `key`, `text` (its
+            label or the first `Text` in it), `value` (a field's text or a
+            checkbox's state; never a password), `tooltip`, `disabled`,
+            `events` (its `on_*` handlers, without the prefix), `rect`
+            (`[x, y, width, height]` of its visible part, in the embedded
+            page's logical pixels), `covered` (something such as a dialog is
+            on top of its centre) and `layer` (`"dialog"` for dialogs, sheets
+            and snack bars). Keys without a value are left out. Text drawn by
+            a control without a `Text` control of its own, such as a
+            navigation bar's labels, is listed with `type` `"label"` and `in`,
+            the id of the control around it.
+        """
+        return await self._invoke_method("describe", arguments={"max_items": max_items})
+
+    async def act(
+        self,
+        steps: list[dict[str, Any]],
+        pointer: str = "touch",
+        idle_ms: int = 500,
+        timeout_ms: int = 5000,
+    ) -> dict[str, Any]:
+        """
+        Taps and types in the embedded app, like a person would.
+
+        Each step is a dict with an `action`:
+
+        - `{"action": "tap", "target": ...}`, and `"long_press"` the same way.
+        - `{"action": "enter_text", "target": ..., "text": "Ada"}` replaces a
+          text field's text (its `on_change` fires). With `"submit": True`
+          the field is then submitted, as when pressing Enter.
+        - `{"action": "tap_at", "x": 120, "y": 300}` taps a point, in the
+          embedded page's logical pixels. For games and drawing.
+        - `{"action": "wait", "ms": 500}`.
+
+        A target picks a control the way [`describe()`][(c).describe]
+        reports it: `{"key": "email"}`, `{"text": "Save"}` (exact, then
+        case-insensitive containing), `{"tooltip": "Delete"}`,
+        `{"type": "Checkbox"}` or `{"id": 42}`, with an optional `"index"`
+        among the matches. Dialogs come first, so with one open,
+        `{"text": "OK"}` is its button.
+
+        A tap on a control that is disabled or covered (by a dialog, say)
+        fails instead of tapping whatever is on top. Steps stop at the first
+        failure.
+
+        Args:
+            steps: The steps, run in order.
+            pointer: `"touch"` or `"mouse"`. Mouse also sends hover events.
+            idle_ms: After the last step, wait until the app sent no UI
+                update for this long, so the result shows the app's reaction.
+            timeout_ms: Stop waiting after this long.
+
+        Returns:
+            A dict with `status` (`"idle"`, `"timeout"` or `"error"`, from
+            the wait after the steps; `error` holds the message) and `steps`:
+            one result per step that ran, with `action`, `status` (`"ok"`,
+            `"not_found"`, `"covered"`, `"disabled"`, `"not_a_text_field"` or
+            `"error"`), the `target` used, the tap `point` and, when nothing
+            matched, a few `candidates`.
+        """
+        return await self._invoke_method(
+            "act",
+            arguments={
+                "steps": steps,
+                "pointer": pointer,
+                "idle_ms": idle_ms,
+                "timeout_ms": timeout_ms,
+            },
+            timeout=timeout_ms / 1000 + 30,
+        )

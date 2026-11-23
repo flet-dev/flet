@@ -1,3 +1,7 @@
+## 1.2.0
+
+* Add `AppDriver`, which lists the `ControlWidget`s on screen under an element (skipping offstage routes, clipped to scrolling viewports, `covered` by a hit test at their centre) and runs steps against them: taps and long presses as synthetic `PointerEvent`s through `GestureBinding.handlePointerEvent`, text through `EditableTextState.userUpdateTextEditingValue`, and points in the element's coordinates. `FletAppControl` serves it as the `describe` and `act` methods, `act` followed by `FletBackend.waitIdle(requireUpdate: false)`, which counts a quiet period without any update as idle by @FeodorFitsner.
+
 ## 1.1.3
 
 * Add `isSvgSource(src, {isUrl})`: whether an image source names an SVG, by its path in any letter case, ignoring a URL's query and fragment. `Image` uses it for files and URLs, so `icon.svg?v=2` is drawn as SVG instead of blank ([#7057](https://github.com/flet-dev/flet/pull/7057)) by @FeodorFitsner.

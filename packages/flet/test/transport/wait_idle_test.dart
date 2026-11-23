@@ -101,6 +101,30 @@ void main() {
     parent.dispose();
   });
 
+  testWidgets('requireUpdate: false is idle after a quiet period alone',
+      (tester) async {
+    final parent = _root();
+    final app = _embedded(parent);
+    await tester.pump();
+
+    Map<String, dynamic>? result;
+    app.backend
+        .waitIdle(idleMs: 300, timeoutMs: 10000, requireUpdate: false)
+        .then((r) => result = r);
+
+    await tester.pump(const Duration(milliseconds: 200));
+    app.channel.patch(); // an update still restarts the quiet period
+    await tester.pump(const Duration(milliseconds: 200));
+    expect(result, isNull);
+
+    await tester.pump(const Duration(milliseconds: 150));
+    await tester.pump();
+    expect(result, {"status": "idle", "error": null});
+
+    app.backend.dispose();
+    parent.dispose();
+  });
+
   testWidgets('a crash resolves error and reaches the host', (tester) async {
     final parent = _root();
     final app = _embedded(parent);
