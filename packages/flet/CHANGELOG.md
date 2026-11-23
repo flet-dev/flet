@@ -1,6 +1,6 @@
 ## 1.2.0
 
-* Add `AppDriver`, which lists the `ControlWidget`s on screen under an element (skipping offstage routes, clipped to scrolling viewports, `covered` by a hit test at their centre) and runs steps against them: taps and long presses as synthetic `PointerEvent`s through `GestureBinding.handlePointerEvent`, text through `EditableTextState.userUpdateTextEditingValue`, and points in the element's coordinates. `FletAppControl` serves it as the `describe` and `act` methods, `act` followed by `FletBackend.waitIdle(requireUpdate: false)`, which counts a quiet period without any update as idle by @FeodorFitsner.
+* Add `AppDriver`, which lists the `ControlWidget`s on screen under an element (skipping offstage routes, clipped to scrolling viewports, `covered` by a hit test at their centre) and runs steps against them: taps and long presses as synthetic `PointerEvent`s through `GestureBinding.handlePointerEvent`, text through `EditableTextState.userUpdateTextEditingValue`, and points in the element's coordinates. `FletAppControl` serves it as the `describe` and `act` methods, `act` followed by `FletBackend.waitIdle(requireUpdate: false)`, which counts a quiet period without any update as idle ([#7131](https://github.com/flet-dev/flet/pull/7131)) by @FeodorFitsner.
 
 ## 1.1.3
 
