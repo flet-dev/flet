@@ -72,6 +72,9 @@ class AppDriver {
     "ContextMenu",
   };
 
+  /// The page and its views fill the app: listing them is only noise.
+  static const _containerTypes = {"Page", "View"};
+
   static const _maxText = 80;
 
   /// Returns the controls on screen, in tree order.
@@ -181,7 +184,7 @@ class AppDriver {
         }
         final local = item.rect.center;
         final global = _rootBox!.localToGlobal(local);
-        if (!_hits(item.box, global)) {
+        if (!_hits(item.hitBox, global)) {
           return {"status": "covered", "target": item.summary()};
         }
         await _tap(
@@ -245,11 +248,14 @@ class AppDriver {
     final bounds = Offset.zero & rootBox.size;
     final items = <_Item>[];
 
-    void visit(Element e, Control? around, _Item? reported) {
+    void visit(
+        Element e, Control? around, RenderBox? aroundBox, _Item? reported) {
       final widget = e.widget;
       if (widget is ControlWidget) {
         final control = widget.control;
         around = control;
+        final r = e.findRenderObject();
+        aroundBox = r is RenderBox ? r : aroundBox;
         // A Text that only repeats the label of the control around it (a
         // button's or a list tile's) isn't listed again.
         final repeats = control.type == "Text" &&
@@ -283,19 +289,24 @@ class AppDriver {
             view,
             text: text,
             around: around,
+            aroundBox: aroundBox,
           );
           if (item != null) items.add(item);
         }
         return; // a Text's subtree is a RichText
       }
-      e.debugVisitOnstageChildren((child) => visit(child, around, reported));
+      e.debugVisitOnstageChildren(
+          (child) => visit(child, around, aroundBox, reported));
     }
 
-    root.debugVisitOnstageChildren((child) => visit(child, null, null));
+    root.debugVisitOnstageChildren((child) => visit(child, null, null, null));
     return items;
   }
 
   bool _interesting(Control c) =>
+      _containerTypes.contains(c.type) ? c.getKey("key") != null : _listed(c);
+
+  bool _listed(Control c) =>
       c.type == "Text" ||
       _inputTypes.contains(c.type) ||
       _events(c).isNotEmpty ||
@@ -310,6 +321,7 @@ class AppDriver {
     _View? view, {
     String? text,
     Control? around,
+    RenderBox? aroundBox,
   }) {
     final r = e.findRenderObject();
     if (r is! RenderBox || !r.attached || !r.hasSize) return null;
@@ -341,8 +353,12 @@ class AppDriver {
       text: _clip(text ?? (control != null ? _textOf(control) : null)),
       around: control == null ? around?.id : null,
       layer: _inDialog(owner) ? "dialog" : "page",
+      // Text inside a control (a field's hint, a tab's label) often isn't
+      // hit-testable itself: it's covered when its control is.
+      hitBox: control == null ? aroundBox ?? r : r,
     );
-    item.covered = !_hits(r, rootBox.localToGlobal(rect.center), view);
+    item.covered =
+        !_hits(item.hitBox, rootBox.localToGlobal(rect.center), view);
     return item;
   }
 
@@ -625,6 +641,7 @@ class _Item {
     required this.text,
     required this.around,
     required this.layer,
+    required this.hitBox,
   });
 
   final Control? control; // null for a label
@@ -634,6 +651,7 @@ class _Item {
   final String? text;
   final int? around;
   final String layer;
+  final RenderBox hitBox;
   bool covered = false;
 
   String? get key => control?.getKey("key")?.value.toString();

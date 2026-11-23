@@ -266,4 +266,20 @@ void main() {
     expect(controls.map((c) => c['id']), [2, 3]);
     expect(controls.last['text'], 'Row 0');
   });
+
+  testWidgets('a hint inside a field is covered only when the field is',
+      (tester) async {
+    await _pump(tester, {
+      '_c': 'TextField',
+      '_i': 1,
+      'label': 'Amount',
+      'hint_text': '0.00',
+      'on_change': true,
+    });
+    final controls = _driver().describe()['controls'] as List;
+    final hint = controls.where((c) => c['text'] == '0.00');
+    for (final c in hint) {
+      expect(c['covered'], isNull);
+    }
+  });
 }
