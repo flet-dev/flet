@@ -1,0 +1,37 @@
+[project]
+name = "expense-tracker"
+version = "1.0.0"
+description = "Tracks everyday expenses by category with monthly totals, budgets, charts and receipt photos, saved on the device."
+requires-python = ">=3.10"
+keywords = ["apps", "expenses", "budget", "forms", "charts", "camera", "routing", "declarative"]
+authors = [{ name = "Flet team", email = "hello@flet.dev" }]
+dependencies = ["flet", "flet-charts", "flet-camera"]
+
+[dependency-groups]
+dev = ["flet-cli", "flet-desktop", "flet-web", "pytest", "pytest-asyncio"]
+
+[tool.flet.gallery]
+categories = ["Featured", "Declarative"]
+
+[tool.flet.metadata]
+title = "Expense Tracker"
+controls = ["View", "AppBar", "NavigationBar", "NavigationRail", "FloatingActionButton", "ListView", "TextField", "Dropdown", "DatePicker", "AlertDialog", "SnackBar", "BarChart", "PieChart", "Camera", "FilePicker", "SharedPreferences"]
+layout_pattern = "list-detail"
+complexity = "advanced"
+features = ["declarative components", "routing with modal forms", "observable app state", "versioned local storage", "undo", "budgets and charts", "receipt photos", "responsive navigation"]
+
+[tool.flet]
+org = "dev.flet"
+company = "Flet"
+copyright = "Copyright (C) 2026 by Flet"
+product = "Expense Tracker"
+permissions = ["camera", "photo_library"]
+
+[tool.flet.app]
+path = "src"
+
+[tool.pytest.ini_options]
+pythonpath = ["src"]
+testpaths = ["tests"]
+asyncio_mode = "auto"
+asyncio_default_fixture_loop_scope = "function"
