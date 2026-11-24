@@ -480,6 +480,7 @@ nav:
           - Clipboard: services/clipboard.md
           - Connectivity: services/connectivity.md
           - FilePicker: services/filepicker.md
+          - AppAuth: appauth/index.md
           - Flashlight: flashlight/index.md
           - Geolocator: geolocator/index.md
           - Gyroscope: services/gyroscope.md

@@ -906,6 +906,31 @@ host = "mydomain.com"
 ```
 ///
 
+### AppAuth redirect scheme (OAuth / `flet-appauth`)
+
+For native mobile OAuth (`page.login` + [`flet-appauth`](../appauth/index.md)), configure an
+**AppAuth-specific** redirect scheme. This is separate from [Deep linking](#deep-linking).
+
+- **redirect_scheme**: custom URL scheme registered with AppAuth (Android
+  `appAuthRedirectScheme` / iOS URL types), e.g. `"myapp"`.
+
+#### Resolution order
+
+1. [`--appauth-redirect-scheme`](../cli/flet-build.md#-appauth-redirect-scheme)
+2. `[tool.flet.<PLATFORM>.appauth].redirect_scheme` (`android` or `ios`)
+3. `[tool.flet.appauth].redirect_scheme`
+
+If `flet-appauth` is a dependency and the scheme is unset, `flet build` prints a warning.
+
+#### Example
+
+```toml
+[tool.flet.appauth]
+redirect_scheme = "myapp"
+```
+
+Match `OAuthProvider.redirect_url` to the same scheme (e.g. `myapp://oauth-callback`).
+
 ### Target Architecture
 
 /// admonition | Note
