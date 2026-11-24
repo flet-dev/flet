@@ -62,7 +62,7 @@ def with_fake_flet_desktop(monkeypatch):
 def run_flet(monkeypatch, tmp_path):
     from flet_cli.commands import run as run_module
 
-    def invoke(*argv, pid_file=None):
+    def invoke(*argv, pid_file=None, error=None):
         ensured = []
         monkeypatch.setattr(
             "flet.utils.pip.ensure_flet_web_package_installed",
@@ -88,6 +88,7 @@ def run_flet(monkeypatch, tmp_path):
                 real_signature.bind(self, **kwargs)
                 self.kwargs = kwargs
                 self.pid_file = pid_file
+                self.error = error
                 # Return control to `handle()` immediately.
                 self.terminate = threading.Event()
                 self.terminate.set()
@@ -231,6 +232,36 @@ class TestTheImportIsNeverReachedUnnecessarily:
         assert result.returncode == 0, result.stderr
 
 
+class _FakeAppProcess:
+    """Stands in for the app subprocess `open_flet_view_and_wait` terminates."""
+
+    def __init__(self):
+        self.signals = []
+
+    def send_signal(self, sig):
+        self.signals.append(sig)
+
+    def wait(self, timeout=None):
+        return 0
+
+    def kill(self): ...
+
+
+def _bare_handler():
+    from flet_cli.commands import run as run_module
+
+    handler = run_module.Handler.__new__(run_module.Handler)
+    handler.terminate = threading.Event()
+    handler.error = None
+    handler.page_url = "http://127.0.0.1:8550"
+    handler.assets_dir = None
+    handler.hidden = False
+    handler.no_impeller = False
+    handler.script_path = "main.py"
+    handler.p = _FakeAppProcess()
+    return handler
+
+
 class TestAFailedDesktopViewEndsTheRun:
     """
     `open_flet_view_and_wait` holds the only `terminate.set()` there is, so a
@@ -238,17 +269,38 @@ class TestAFailedDesktopViewEndsTheRun:
     """
 
     def test_unimportable_client(self, monkeypatch):
-        """`terminate` is set even when the import raises."""
-        from flet_cli.commands import run as run_module
-
-        handler = run_module.Handler.__new__(run_module.Handler)
-        handler.terminate = threading.Event()
-        handler.page_url = "http://127.0.0.1:8550"
-        handler.assets_dir = None
-        handler.hidden = False
+        """`terminate` is set and the app stopped even when the import raises."""
+        handler = _bare_handler()
         monkeypatch.setitem(sys.modules, "flet_desktop", None)
 
         with pytest.raises(ImportError):
             handler.open_flet_view_and_wait()
 
         assert handler.terminate.is_set()
+        assert handler.p.signals
+
+    def test_client_unavailable_for_the_system(self, monkeypatch):
+        """A desktop client that can't be opened is recorded, and the app stopped."""
+        handler = _bare_handler()
+        module = types.ModuleType("flet_desktop")
+        module.explain_client_exit = lambda returncode: None
+
+        def open_flet_view(*args, **kwargs):
+            raise RuntimeError("requires glibc 2.31 or newer")
+
+        module.open_flet_view = open_flet_view
+        monkeypatch.setitem(sys.modules, "flet_desktop", module)
+
+        handler.open_flet_view_and_wait()
+
+        assert handler.error == "requires glibc 2.31 or newer"
+        assert handler.terminate.is_set()
+        assert handler.p.signals
+
+    def test_run_exits_with_the_error(self, run_flet, with_fake_flet_desktop, capsys):
+        """`flet run` prints the recorded error and exits with status 1."""
+        with pytest.raises(SystemExit) as exit_info:
+            run_flet(error="requires glibc 2.31 or newer")
+
+        assert exit_info.value.code == 1
+        assert "Error: requires glibc 2.31 or newer" in capsys.readouterr().out

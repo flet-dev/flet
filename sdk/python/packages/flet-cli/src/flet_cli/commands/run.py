@@ -474,6 +474,10 @@ class Command(BaseCommand):
             my_observer.stop()
             my_observer.join()
 
+        if my_event_handler.error:
+            print(f"Error: {my_event_handler.error}")
+            sys.exit(1)
+
 
 class Handler(FileSystemEventHandler):
     """
@@ -533,6 +537,8 @@ class Handler(FileSystemEventHandler):
         self.flet_app_temp_dir = flet_app_temp_dir
         self.verbose = verbose
         self.terminate = threading.Event()
+        # Why the desktop view could not be opened, if it could not.
+        self.error = None
 
     def start_process(self):
         """
@@ -688,8 +694,10 @@ class Handler(FileSystemEventHandler):
         """
         Open desktop view for the current page URL and block until it exits.
 
-        After the desktop view process exits, the child app process is
-        terminated and the handler termination event is set.
+        After the desktop view process exits, or when it cannot be opened, the
+        child app process is terminated and the handler termination event is
+        set. A desktop view that cannot be opened, such as on a system without
+        a Flet desktop client build, is recorded in `error`.
         """
 
         try:
@@ -703,12 +711,14 @@ class Handler(FileSystemEventHandler):
                 app_dir=os.path.dirname(self.script_path),
             )
             explain_client_exit(self.fvp.wait())
+        except RuntimeError as e:
+            self.error = str(e)
+        finally:
             self.p.send_signal(signal.SIGTERM)
             try:
                 self.p.wait(2)
             except subprocess.TimeoutExpired:
                 self.p.kill()
-        finally:
             self.terminate.set()
 
     def restart_program(self):

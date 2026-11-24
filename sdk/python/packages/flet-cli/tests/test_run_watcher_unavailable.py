@@ -44,6 +44,7 @@ def run_flet(monkeypatch, tmp_path):
             def __init__(self, **kwargs):
                 real_signature.bind(self, **kwargs)
                 self.pid_file = None
+                self.error = None
                 # Return control to `handle()` immediately.
                 self.terminate = threading.Event()
                 self.terminate.set()
