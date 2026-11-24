@@ -2,7 +2,8 @@
 
 ### Breaking changes
 
-* The `full` flavor of the prebuilt Linux desktop client now needs `libwebkit2gtk-4.1-0` (Debian 12, Ubuntu 22.04 and newer) to start, even for apps that don't use `WebView`: install it with `sudo apt install libwebkit2gtk-4.1-0`. The default `light` flavor has no `WebView` and doesn't need it ([#6530](https://github.com/flet-dev/flet/issues/6530), [#7124](https://github.com/flet-dev/flet/pull/7124)) by @ndonkoHenri.
+* The prebuilt Linux desktop client needs glibc 2.31 or newer (Debian 11, Ubuntu 20.04): it is no longer built for Debian 10 ([#7124](https://github.com/flet-dev/flet/pull/7124)) by @ndonkoHenri.
+* On Debian 12, Ubuntu 22.04 and newer, the `full` flavor of the prebuilt Linux desktop client now needs `libwebkit2gtk-4.1-0` to start, even for apps that don't use `WebView`: install it with `sudo apt install libwebkit2gtk-4.1-0`. The default `light` flavor has no `WebView` and doesn't need it ([#6530](https://github.com/flet-dev/flet/issues/6530), [#7124](https://github.com/flet-dev/flet/pull/7124)) by @ndonkoHenri.
 * Linux apps built with `flet build linux` that include `flet-webview` need `libwebkit2gtk-4.1-dev` to build and `libwebkit2gtk-4.1-0` to run, so they no longer run before Debian 12 and Ubuntu 22.04, even when they show a `WebView` only on other platforms ([#6530](https://github.com/flet-dev/flet/issues/6530), [#7124](https://github.com/flet-dev/flet/pull/7124)) by @ndonkoHenri.
 * `WebView.scroll_to()` and `WebView.scroll_by()` raise `FletUnsupportedPlatformException` on macOS, which doesn't support them ([#6530](https://github.com/flet-dev/flet/issues/6530), [#7124](https://github.com/flet-dev/flet/pull/7124)) by @ndonkoHenri.
 

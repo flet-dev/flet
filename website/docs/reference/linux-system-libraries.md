@@ -97,9 +97,10 @@ systems.
 </TabItem>
 </Tabs>
 
-Flet downloads the client build that matches your system's glibc version, and that
-build expects the `libmpv` version your distribution ships, so no `libmpv.so.1`
-symlink is needed. If you created one for an older Flet version, remove it.
+Flet downloads the client build that matches your system's glibc version. On the
+Debian, Ubuntu, Fedora and openSUSE releases above, that build expects the `libmpv`
+version the distribution ships, so no `libmpv.so.1` symlink is needed. If you created
+one for an older Flet version, remove it.
 
 ## When a library is missing
 

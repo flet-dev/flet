@@ -45,7 +45,6 @@ logger = logging.getLogger(flet_desktop.__name__)
 # Each entry maps a minimum glibc (major, minor) to a distro_id used in
 # release artifact filenames, and the architectures it is built for.
 _GLIBC_DISTRO_TABLE = [
-    ((2, 28), "debian10", ("amd64",)),
     ((2, 31), "ubuntu20.04", ("amd64", "arm64")),
     ((2, 35), "ubuntu22.04", ("amd64", "arm64")),
     ((2, 36), "debian12", ("amd64", "arm64")),
@@ -288,14 +287,22 @@ def __get_linux_distro_id(arch: str):
     (see `__get_bundled_linux_distro_id()`). Otherwise glibc version detection
     picks the best matching build target for `arch` (highest glibc requirement
     that is <= system glibc). Can be overridden via the `FLET_LINUX_DISTRO`
-    environment variable.
+    environment variable, which must name a build published for `arch`.
 
     Raises:
-        RuntimeError: If the system glibc is older than every build for `arch`.
+        RuntimeError: If `FLET_LINUX_DISTRO` names no build for `arch`, or the
+            system glibc is older than every build for `arch`.
     """
 
     override = os.environ.get("FLET_LINUX_DISTRO", "").strip()
     if override:
+        builds = __get_required_glibc(arch)
+        if override not in builds:
+            raise RuntimeError(
+                f"FLET_LINUX_DISTRO={override} is not a Flet desktop client build "
+                f"for Linux {arch}. Set it to one of {', '.join(builds)}, or unset "
+                "it to pick the build from the system's glibc version."
+            )
         return override
     return __get_bundled_linux_distro_id(arch) or __get_glibc_distro_id(arch)
 
