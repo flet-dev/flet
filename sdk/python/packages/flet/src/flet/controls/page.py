@@ -916,6 +916,19 @@ class Page(BasePage):
         """
         return self.session.connection.get_upload_url(file_name, expires)
 
+    def _is_appauth_login_platform(self) -> bool:
+        """
+        Whether this page should complete OAuth via native AppAuth (Android/iOS).
+        """
+        if self.web:
+            return False
+        platform = self.platform
+        if platform is None:
+            return False
+        if isinstance(platform, PagePlatform):
+            return platform in {PagePlatform.ANDROID, PagePlatform.IOS}
+        return platform in {"android", "ios"}
+
     async def login(
         self,
         provider: OAuthProvider,
@@ -933,6 +946,13 @@ class Page(BasePage):
         """
         Starts OAuth flow.
 
+        On web, uses the HTTP OAuth callback path. On Android/iOS, requires
+        [`flet-appauth`](https://pypi.org/project/flet-appauth/) and completes
+        authorization via native AppAuth (Custom Tabs /
+        ASWebAuthenticationSession). Parameters `on_open_authorization_url`,
+        `complete_page_html`, and `redirect_to_page` apply to **web only** and
+        are ignored on Android/iOS.
+
         See [Authentication](https://docs.flet.dev/cookbook/authentication)
         guide for more information and examples.
         """
@@ -943,33 +963,125 @@ class Page(BasePage):
             scope=scope,
         )
         if saved_token is None:
-            authorization_url, state = self.__authorization.get_authorization_data()
-            auth_attrs = {"state": state}
-            if complete_page_html:
-                auth_attrs["completePageHtml"] = complete_page_html
-            if redirect_to_page:
-                up = urlparse(provider.redirect_url)
-                auth_attrs["completePageUrl"] = up._replace(
-                    path=f"{self.session.connection.page_name}{self.route}"
-                ).geturl()
-            self.session.connection.oauth_authorize(auth_attrs)
-            if on_open_authorization_url:
-                await on_open_authorization_url(authorization_url)
-            else:
-                if self.web:
+            if self._is_appauth_login_platform():
+                await self.__login_with_appauth(provider)
+            elif self.web:
+                authorization_url, state = self.__authorization.get_authorization_data()
+                auth_attrs = {"state": state}
+                if complete_page_html:
+                    auth_attrs["completePageHtml"] = complete_page_html
+                if redirect_to_page:
+                    up = urlparse(provider.redirect_url)
+                    auth_attrs["completePageUrl"] = up._replace(
+                        path=f"{self.session.connection.page_name}{self.route}"
+                    ).geturl()
+                self.session.connection.oauth_authorize(auth_attrs)
+                if on_open_authorization_url:
+                    await on_open_authorization_url(authorization_url)
+                else:
                     await UrlLauncher().open_window(
                         authorization_url, title="flet_oauth_signin"
                     )
-                else:
-                    await UrlLauncher().launch_url(authorization_url)
+            else:
+                raise RuntimeError(
+                    "page.login() OAuth is not supported on this platform. "
+                    "Use web, or Android/iOS with flet-appauth "
+                    "(pip install 'flet[appauth]')."
+                )
         else:
             await self.__authorization.dehydrate_token(saved_token)
-
-            e = LoginEvent(name="login", control=self, error="", error_description="")
-            if self.on_login:
-                asyncio.create_task(self._trigger_event("login", event_data=None, e=e))
+            await self._emit_login_event(error="", error_description="")
 
         return self.__authorization
+
+    async def __login_with_appauth(self, provider: OAuthProvider) -> None:
+        """
+        Complete mobile OAuth using the flet-appauth AppAuth service.
+        """
+        try:
+            import flet_appauth
+        except ModuleNotFoundError as ex:
+            raise RuntimeError(
+                "Mobile OAuth via page.login() requires the flet-appauth package. "
+                "Install with: pip install flet-appauth  "
+                "or: pip install 'flet[appauth]'"
+            ) from ex
+
+        # AppAuth owns PKCE on native; do not clear provider PKCE fields (web may
+        # reuse the same OAuthProvider). Temporarily set code_verifier only for
+        # the Python token exchange below.
+        app_auth = flet_appauth.AppAuth()
+        result = await app_auth.authorize(
+            client_id=provider.client_id,
+            redirect_url=provider.redirect_url,
+            authorization_endpoint=provider.authorization_endpoint,
+            token_endpoint=provider.token_endpoint,
+            scopes=list(self.__authorization.scope),
+            additional_parameters=dict(provider.authorization_params or {}),
+        )
+
+        if isinstance(result, dict):
+            error = result.get("error")
+            error_description = result.get("error_description")
+            code = result.get("authorization_code")
+            code_verifier = result.get("code_verifier")
+        else:
+            error = getattr(result, "error", None)
+            error_description = getattr(result, "error_description", None)
+            code = getattr(result, "authorization_code", None)
+            code_verifier = getattr(result, "code_verifier", None)
+
+        if error:
+            await self._emit_login_event(
+                error=error, error_description=error_description
+            )
+            return
+
+        if code in (None, ""):
+            await self._emit_login_event(
+                error="missing_authorization_code",
+                error_description=error_description
+                or "Authorization completed without an authorization code.",
+            )
+            return
+
+        previous_verifier = provider.code_verifier
+        try:
+            if code_verifier:
+                provider.code_verifier = code_verifier
+            await self._emit_login_event(
+                error=None,
+                error_description=None,
+                code=code,
+            )
+        finally:
+            provider.code_verifier = previous_verifier
+
+    async def _emit_login_event(
+        self,
+        *,
+        error: Optional[str],
+        error_description: Optional[str] = None,
+        code: Optional[str] = None,
+    ) -> None:
+        """
+        Exchange authorization code when needed and emit `on_login`.
+        """
+        assert self.__authorization
+        e = LoginEvent(
+            error=error,
+            error_description=error_description,
+            control=self,
+            name="login",
+        )
+        if not e.error:
+            if code not in [None, ""]:
+                try:
+                    await self.__authorization.request_token(code)
+                except Exception as ex:
+                    e.error = str(ex)
+        if self.on_login:
+            asyncio.create_task(self._trigger_event("login", event_data=None, e=e))
 
     async def _authorize_callback(self, data: dict[str, Optional[str]]) -> None:
         """
@@ -989,29 +1101,20 @@ class Page(BasePage):
         assert state == self.__authorization.state
 
         if not self.web:
-            if self.platform in ["ios", "android"]:
+            if self.platform in ["ios", "android"] or self.platform in {
+                PagePlatform.IOS,
+                PagePlatform.ANDROID,
+            }:
                 # close web view on mobile
                 await self.close_in_app_web_view()
             else:
                 # activate desktop window
                 await self.window.to_front()
-        e = LoginEvent(
+        await self._emit_login_event(
             error=data.get("error"),
             error_description=data.get("error_description"),
-            control=self,
-            name="login",
+            code=data.get("code"),
         )
-        if not e.error:
-            # perform token request
-
-            code = data.get("code")
-            assert code not in [None, ""]
-            try:
-                await self.__authorization.request_token(code)
-            except Exception as ex:
-                e.error = str(ex)
-        if self.on_login:
-            asyncio.create_task(self._trigger_event("login", event_data=None, e=e))
 
     def logout(self) -> None:
         """
