@@ -7,20 +7,27 @@ import re
 from pathlib import Path
 from typing import Callable, Optional
 
+# Used when flet-appauth is a dependency and no scheme is configured.
+# Match OAuthProvider.redirect_url to e.g. flet://oauth-callback, or override.
+DEFAULT_APPAUTH_REDIRECT_SCHEME = "flet"
+
 
 def resolve_appauth_redirect_scheme(
     *,
     cli_scheme: Optional[str],
     get_pyproject: Callable[..., Optional[str]],
     config_platform: Optional[str] = None,
+    default: Optional[str] = DEFAULT_APPAUTH_REDIRECT_SCHEME,
 ) -> Optional[str]:
     """
-    Resolve AppAuth redirect scheme (lowercase) from CLI or pyproject.
+    Resolve AppAuth redirect scheme (lowercase) from CLI, pyproject, or default.
 
     Precedence:
     1. CLI `--appauth-redirect-scheme`
     2. `tool.flet.<android|ios>.appauth.redirect_scheme` for the build platform
     3. `tool.flet.appauth.redirect_scheme`
+    4. `default` (``flet`` when building with flet-appauth; pass ``None`` to
+       skip defaulting)
     """
     if cli_scheme:
         return str(cli_scheme).strip().lower() or None
@@ -35,6 +42,9 @@ def resolve_appauth_redirect_scheme(
     value = get_pyproject("tool.flet.appauth.redirect_scheme")
     if value:
         return str(value).strip().lower() or None
+
+    if default:
+        return str(default).strip().lower() or None
     return None
 
 

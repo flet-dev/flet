@@ -908,28 +908,34 @@ host = "mydomain.com"
 
 ### AppAuth redirect scheme (OAuth / `flet-appauth`)
 
-For native mobile OAuth (`page.login` + [`flet-appauth`](../appauth/index.md)), configure an
-**AppAuth-specific** redirect scheme. This is separate from [Deep linking](#deep-linking).
+For native mobile OAuth (`page.login` + [`flet-appauth`](../appauth/index.md)), Flet
+registers an **AppAuth-specific** redirect scheme (separate from
+[Deep linking](#deep-linking)).
 
-- **redirect_scheme**: custom URL scheme registered with AppAuth (Android
-  `appAuthRedirectScheme` / iOS URL types), e.g. `"myapp"`.
+**Default:** `flet` when `flet-appauth` is a project dependency. Use
+`flet://oauth-callback` (or similar) as `OAuthProvider.redirect_url` and register
+the same URI with your IdP. No `pyproject.toml` entry is required.
+
+Override when you need a custom scheme:
+
+- **redirect_scheme**: custom URL scheme for AppAuth (Android
+  `appAuthRedirectScheme` / iOS URL types).
 
 #### Resolution order
 
 1. [`--appauth-redirect-scheme`](../cli/flet-build.md#-appauth-redirect-scheme)
 2. `[tool.flet.<PLATFORM>.appauth].redirect_scheme` (`android` or `ios`)
 3. `[tool.flet.appauth].redirect_scheme`
+4. Default `flet` (only when `flet-appauth` is a dependency)
 
-If `flet-appauth` is a dependency and the scheme is unset, `flet build` prints a warning.
-
-#### Example
+#### Optional override
 
 ```toml
 [tool.flet.appauth]
 redirect_scheme = "myapp"
 ```
 
-Match `OAuthProvider.redirect_url` to the same scheme (e.g. `myapp://oauth-callback`).
+Then match `OAuthProvider.redirect_url` (e.g. `myapp://oauth-callback`).
 
 ### Target Architecture
 

@@ -1,10 +1,15 @@
 from pathlib import Path
 
 from flet_cli.utils.appauth_redirect import (
+    DEFAULT_APPAUTH_REDIRECT_SCHEME,
     patch_android_appauth_scheme,
     patch_ios_appauth_scheme,
     resolve_appauth_redirect_scheme,
 )
+
+
+def test_default_scheme_constant():
+    assert DEFAULT_APPAUTH_REDIRECT_SCHEME == "flet"
 
 
 def test_resolve_prefers_cli_scheme():
@@ -21,6 +26,7 @@ def test_resolve_from_pyproject():
     scheme = resolve_appauth_redirect_scheme(
         cli_scheme=None,
         get_pyproject=lambda key: values.get(key),
+        default=None,
     )
     assert scheme == "com.example"
 
@@ -59,14 +65,29 @@ def test_resolve_falls_back_to_shared_when_platform_unset():
             cli_scheme=None,
             get_pyproject=lambda key: values.get(key),
             config_platform="ios",
+            default=None,
         )
         == "shared-scheme"
     )
 
 
-def test_resolve_missing():
+def test_resolve_defaults_to_flet():
     assert (
-        resolve_appauth_redirect_scheme(cli_scheme=None, get_pyproject=lambda key: None)
+        resolve_appauth_redirect_scheme(
+            cli_scheme=None,
+            get_pyproject=lambda key: None,
+        )
+        == "flet"
+    )
+
+
+def test_resolve_no_default_when_disabled():
+    assert (
+        resolve_appauth_redirect_scheme(
+            cli_scheme=None,
+            get_pyproject=lambda key: None,
+            default=None,
+        )
         is None
     )
 

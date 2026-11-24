@@ -3,7 +3,7 @@ Mobile GitHub OAuth via page.login + flet-appauth.
 
 Requires:
   - flet-appauth installed
-  - [tool.flet.appauth] redirect_scheme matching provider.redirect_url
+  - IdP redirect URI matching the AppAuth scheme (default: flet://oauth-callback)
   - GITHUB_CLIENT_ID / GITHUB_CLIENT_SECRET env vars
 """
 
@@ -22,8 +22,8 @@ def main(page: ft.Page):
     provider = GitHubOAuthProvider(
         client_id=GITHUB_CLIENT_ID,
         client_secret=GITHUB_CLIENT_SECRET,
-        # Must match tool.flet.appauth.redirect_scheme + path registered with GitHub
-        redirect_url="myapp://oauth-callback",
+        # Default AppAuth scheme is "flet" (override via tool.flet.appauth.redirect_scheme)
+        redirect_url="flet://oauth-callback",
     )
 
     async def on_login(e: ft.LoginEvent):

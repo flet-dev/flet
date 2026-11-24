@@ -554,8 +554,8 @@ class BaseBuildCommand(BaseFlutterCommand):
             "--appauth-redirect-scheme",
             dest="appauth_redirect_scheme",
             help="OAuth AppAuth redirect URL scheme for Android/iOS "
-            "(e.g. `myapp`). Used by flet-appauth / page.login on mobile. "
-            "Config: tool.flet.appauth.redirect_scheme",
+            "(e.g. `myapp`). Defaults to `flet` when flet-appauth is a "
+            "dependency. Config: tool.flet.appauth.redirect_scheme",
         )
         parser.add_argument(
             "--android-signing-key-store",
@@ -987,15 +987,21 @@ class BaseBuildCommand(BaseFlutterCommand):
 
         assert self.flutter_dir
 
-        appauth_redirect_scheme = (
-            self.options.appauth_redirect_scheme
-            or self.get_pyproject(
-                f"tool.flet.{self.config_platform}.appauth.redirect_scheme"
-            )
-            or self.get_pyproject("tool.flet.appauth.redirect_scheme")
+        from flet_cli.utils.appauth_redirect import (
+            DEFAULT_APPAUTH_REDIRECT_SCHEME,
+            resolve_appauth_redirect_scheme,
         )
-        if appauth_redirect_scheme:
-            appauth_redirect_scheme = str(appauth_redirect_scheme).strip().lower()
+
+        uses_appauth = (
+            isinstance(self.flutter_dependencies, dict)
+            and "flet_appauth" in self.flutter_dependencies
+        )
+        appauth_redirect_scheme = resolve_appauth_redirect_scheme(
+            cli_scheme=self.options.appauth_redirect_scheme,
+            get_pyproject=self.get_pyproject,
+            config_platform=self.config_platform,
+            default=DEFAULT_APPAUTH_REDIRECT_SCHEME if uses_appauth else None,
+        )
 
         self.template_data = {
             "out_dir": self.flutter_dir.name,
@@ -1254,10 +1260,11 @@ class BaseBuildCommand(BaseFlutterCommand):
         Wire AppAuth OAuth redirect scheme into Android/iOS project files.
 
         Uses AppAuth-specific config (`tool.flet.appauth.redirect_scheme` /
-        `--appauth-redirect-scheme`), not deep linking. Warns when
-        `flet_appauth` is a Flutter dependency but the scheme is unset.
+        `--appauth-redirect-scheme`), not deep linking. When `flet-appauth`
+        is a dependency and no scheme is configured, defaults to ``flet``.
         """
         from flet_cli.utils.appauth_redirect import (
+            DEFAULT_APPAUTH_REDIRECT_SCHEME,
             patch_android_appauth_scheme,
             patch_ios_appauth_scheme,
             resolve_appauth_redirect_scheme,
@@ -1268,26 +1275,13 @@ class BaseBuildCommand(BaseFlutterCommand):
         assert self.get_pyproject
         assert isinstance(self.flutter_dependencies, dict)
 
+        uses_appauth = "flet_appauth" in self.flutter_dependencies
         scheme = resolve_appauth_redirect_scheme(
             cli_scheme=getattr(self.options, "appauth_redirect_scheme", None),
             get_pyproject=self.get_pyproject,
             config_platform=self.config_platform,
+            default=DEFAULT_APPAUTH_REDIRECT_SCHEME if uses_appauth else None,
         )
-
-        uses_appauth = "flet_appauth" in self.flutter_dependencies
-        if uses_appauth and not scheme:
-            console.print(
-                Panel(
-                    "flet-appauth is a project dependency but "
-                    "[cyan]tool.flet.appauth.redirect_scheme[/cyan] (or "
-                    "[cyan]--appauth-redirect-scheme[/cyan]) is not set. "
-                    "Native OAuth redirect will fail until the scheme matches "
-                    "OAuthProvider.redirect_url.",
-                    style=warning_style,
-                    expand=False,
-                )
-            )
-            return
 
         if not scheme:
             return
