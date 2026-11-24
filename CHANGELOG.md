@@ -7,7 +7,7 @@
 
 ### Improvements
 
-* `page.logout()` makes the next `page.login()` force interactive re-authentication for any IdP (ephemeral AppAuth/Auth Tab session when supported, plus OIDC `prompt=login` / `max_age=0`), so sign-out is not undone by a shared browser SSO cookie.
+* `page.logout()` makes the next `page.login()` force interactive re-authentication for any IdP (ephemeral AppAuth/Auth Tab session on mobile; OIDC `prompt=login` / `max_age=0` on web), so sign-out is not undone by a shared browser SSO cookie.
 
 ## 1.1.3
 

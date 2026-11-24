@@ -75,9 +75,17 @@ class AppAuthService extends FletService {
     final authorizationEndpoint = args["authorization_endpoint"] as String;
     final tokenEndpoint = args["token_endpoint"] as String;
     final scopes = (args["scopes"] as List?)?.map((e) => e.toString()).toList();
-    final additionalParameters = (args["additional_parameters"] as Map?)?.map(
-      (key, value) => MapEntry(key.toString(), value.toString()),
+    final additionalParameters = Map<String, String>.from(
+      (args["additional_parameters"] as Map?)?.map(
+            (key, value) => MapEntry(key.toString(), value.toString()),
+          ) ??
+          {},
     );
+    // Built-in OAuth fields must not go through additionalParameters on
+    // AppAuth platforms (Android rejects them; iOS prefers dedicated args).
+    final prompt = additionalParameters.remove("prompt");
+    additionalParameters.remove("max_age");
+    additionalParameters.remove("login_hint");
     final preferEphemeralSession =
         args["prefer_ephemeral_session"] == true;
 
@@ -91,7 +99,11 @@ class AppAuthService extends FletService {
             tokenEndpoint: tokenEndpoint,
           ),
           scopes: scopes,
-          additionalParameters: additionalParameters,
+          promptValues: prompt == null || prompt.isEmpty
+              ? null
+              : prompt.split(RegExp(r'\s+')),
+          additionalParameters:
+              additionalParameters.isEmpty ? null : additionalParameters,
           externalUserAgent: preferEphemeralSession
               ? ExternalUserAgent.ephemeralAsWebAuthenticationSession
               : ExternalUserAgent.asWebAuthenticationSession,

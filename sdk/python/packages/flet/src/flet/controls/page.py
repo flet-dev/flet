@@ -1412,19 +1412,21 @@ class Page(BasePage):
             scope=scope,
         )
         if saved_token is None:
-            # After logout, force interactive re-auth for any IdP: ephemeral
-            # browser session (no shared SSO cookies) + OIDC prompt=login /
-            # max_age=0 when the provider honors them. Not provider-specific.
+            # After logout, force interactive re-auth for any IdP.
+            # Mobile: ephemeral AppAuth/Auth Tab session (no shared SSO cookies).
+            # Do NOT stuff prompt/max_age into AppAuth additional_parameters —
+            # AppAuth-Android rejects those as built-in builder fields.
+            # Web: OIDC prompt=login / max_age=0 on the authorize URL.
             prefer_ephemeral = False
             previous_params = None
             if self.__reauth_after_logout:
-                self.__reauth_after_logout = False
                 prefer_ephemeral = True
-                previous_params = provider.authorization_params
-                merged = dict(previous_params or {})
-                merged.setdefault("prompt", "login")
-                merged.setdefault("max_age", "0")
-                provider.authorization_params = merged
+                if self.web:
+                    previous_params = provider.authorization_params
+                    merged = dict(previous_params or {})
+                    merged.setdefault("prompt", "login")
+                    merged.setdefault("max_age", "0")
+                    provider.authorization_params = merged
             try:
                 if self._is_appauth_login_platform():
                     await self.__login_with_appauth(
@@ -1472,7 +1474,6 @@ class Page(BasePage):
                     provider.authorization_params = previous_params
         else:
             # Restore the saved sign-in; there is no redirect to wait for.
-            self.__reauth_after_logout = False
             await self.__authorization.dehydrate_token(saved_token)
             await self._emit_login_event(error="", error_description="")
 
@@ -1570,6 +1571,10 @@ class Page(BasePage):
                     await self.__authorization.request_token(code)
                 except Exception as ex:
                     e.error = str(ex)
+        # Consume post-logout reauth only after a successful sign-in. An
+        # authorize_failed / cancel must keep ephemeral for the next attempt.
+        if not e.error:
+            self.__reauth_after_logout = False
         if self.on_login:
             asyncio.create_task(self._trigger_event("login", event_data=None, e=e))
 
@@ -1611,10 +1616,11 @@ class Page(BasePage):
         Clears current authentication context.
 
         Also marks the next interactive [`login`][flet.Page.login] so it cannot
-        silently reuse an identity-provider browser SSO session (ephemeral
-        AppAuth session when supported, plus OIDC ``prompt=login`` /
-        ``max_age=0``). Clear any tokens you persisted yourself (for example
-        with SharedPreferences) before or after calling this.
+        silently reuse an identity-provider browser SSO session: on Android/iOS
+        the next authorize uses an ephemeral AppAuth/Auth Tab session; on web
+        it adds OIDC ``prompt=login`` / ``max_age=0``. Clear any tokens you
+        persisted yourself (for example with SharedPreferences) before or
+        after calling this.
 
         See [Authentication](https://flet.dev/docs/cookbook/authentication#signing-out)
         guide for more information and examples.
