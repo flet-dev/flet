@@ -14,10 +14,7 @@ dependencies:
   collection: ^1.16.0
 
   # The webview_all packages depend on each other with caret constraints, so
-  # every one of them is pinned here to keep the whole set on a tested
-  # release. 1.4.0 is the oldest release that can share an app with
-  # webview_flutter (pulled in by google_mobile_ads via flet_ads): earlier
-  # releases register the same platform view type and channel names.
+  # every one of them is pinned here to keep the whole set on a tested release.
   webview_all: 1.5.2
   webview_all_android: 1.5.2
   webview_all_linux: 1.5.2
