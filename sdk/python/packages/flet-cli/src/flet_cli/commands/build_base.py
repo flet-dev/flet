@@ -551,6 +551,13 @@ class BaseBuildCommand(BaseFlutterCommand):
             help="Deep linking URL host for iOS and Android builds",
         )
         parser.add_argument(
+            "--appauth-redirect-scheme",
+            dest="appauth_redirect_scheme",
+            help="OAuth AppAuth redirect URL scheme for Android/iOS "
+            "(e.g. `myapp`). Used by flet-appauth / page.login on mobile. "
+            "Config: tool.flet.appauth.redirect_scheme",
+        )
+        parser.add_argument(
             "--android-signing-key-store",
             dest="android_signing_key_store",
             help="path to an upload keystore `.jks` file for Android apps "
@@ -979,6 +986,17 @@ class BaseBuildCommand(BaseFlutterCommand):
             )
 
         assert self.flutter_dir
+
+        appauth_redirect_scheme = (
+            self.options.appauth_redirect_scheme
+            or self.get_pyproject(
+                f"tool.flet.{self.config_platform}.appauth.redirect_scheme"
+            )
+            or self.get_pyproject("tool.flet.appauth.redirect_scheme")
+        )
+        if appauth_redirect_scheme:
+            appauth_redirect_scheme = str(appauth_redirect_scheme).strip().lower()
+
         self.template_data = {
             "out_dir": self.flutter_dir.name,
             "sep": os.sep,
@@ -1053,6 +1071,9 @@ class BaseBuildCommand(BaseFlutterCommand):
                 "deep_linking": {
                     "scheme": deep_linking_scheme,
                     "host": deep_linking_host,
+                },
+                "appauth": {
+                    "redirect_scheme": appauth_redirect_scheme,
                 },
                 "android_signing": bool(
                     self.options.android_signing_key_store
@@ -1227,6 +1248,85 @@ class BaseBuildCommand(BaseFlutterCommand):
                 )
 
         self.save_yaml(self.pubspec_path, pubspec)
+
+    def ensure_appauth_redirect_config(self):
+        """
+        Wire AppAuth OAuth redirect scheme into Android/iOS project files.
+
+        Uses AppAuth-specific config (`tool.flet.appauth.redirect_scheme` /
+        `--appauth-redirect-scheme`), not deep linking. Warns when
+        `flet_appauth` is a Flutter dependency but the scheme is unset.
+        """
+        from flet_cli.utils.appauth_redirect import (
+            patch_android_appauth_scheme,
+            patch_ios_appauth_scheme,
+            resolve_appauth_redirect_scheme,
+        )
+
+        assert self.options
+        assert self.flutter_dir
+        assert self.get_pyproject
+        assert isinstance(self.flutter_dependencies, dict)
+
+        scheme = resolve_appauth_redirect_scheme(
+            cli_scheme=getattr(self.options, "appauth_redirect_scheme", None),
+            get_pyproject=self.get_pyproject,
+            config_platform=self.config_platform,
+        )
+
+        uses_appauth = "flet_appauth" in self.flutter_dependencies
+        if uses_appauth and not scheme:
+            console.print(
+                Panel(
+                    "flet-appauth is a project dependency but "
+                    "[cyan]tool.flet.appauth.redirect_scheme[/cyan] (or "
+                    "[cyan]--appauth-redirect-scheme[/cyan]) is not set. "
+                    "Native OAuth redirect will fail until the scheme matches "
+                    "OAuthProvider.redirect_url.",
+                    style=warning_style,
+                    expand=False,
+                )
+            )
+            return
+
+        if not scheme:
+            return
+
+        if self.package_platform in {"Android"}:
+            if patch_android_appauth_scheme(self.flutter_dir, scheme):
+                console.log(
+                    f"Configured Android appAuthRedirectScheme={scheme}",
+                    style=verbose1_style,
+                )
+            else:
+                console.print(
+                    Panel(
+                        "Could not set [cyan]appAuthRedirectScheme[/cyan] in "
+                        "android/app/build.gradle(.kts). Add "
+                        f'manifestPlaceholders += [appAuthRedirectScheme: "{scheme}"] '
+                        "under defaultConfig, or ensure the file exists after "
+                        "flutter create.",
+                        style=warning_style,
+                        expand=False,
+                    )
+                )
+        if self.package_platform in {"iOS"}:
+            if patch_ios_appauth_scheme(self.flutter_dir, scheme):
+                console.log(
+                    f"Configured iOS AppAuth URL scheme={scheme}",
+                    style=verbose1_style,
+                )
+            else:
+                console.print(
+                    Panel(
+                        "Could not set AppAuth URL scheme in "
+                        "ios/Runner/Info.plist. Add a CFBundleURLTypes entry "
+                        f"for scheme [cyan]{scheme}[/cyan], or ensure the "
+                        "plist exists after flutter create.",
+                        style=warning_style,
+                        expand=False,
+                    )
+                )
 
     def customize_icons(self):
         """
