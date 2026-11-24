@@ -1,4 +1,8 @@
+import 'dart:io' show Platform;
+
 import 'package:flet/flet.dart';
+import 'package:flutter/foundation.dart' show kIsWeb;
+import 'package:flutter/services.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_appauth/flutter_appauth.dart';
 
@@ -6,6 +10,8 @@ class AppAuthService extends FletService {
   AppAuthService({required super.control});
 
   final FlutterAppAuth _appAuth = FlutterAppAuth();
+  static const MethodChannel _androidChannel =
+      MethodChannel('dev.flet/flet_appauth');
 
   @override
   void init() {
@@ -28,6 +34,42 @@ class AppAuthService extends FletService {
   }
 
   Future<Map<String, dynamic>> _authorize(Map args) async {
+    // Android: Chrome Auth Tab (custom-scheme redirect via callback).
+    // iOS: flutter_appauth / ASWebAuthenticationSession.
+    if (!kIsWeb && Platform.isAndroid) {
+      return await _authorizeAndroidAuthTab(args);
+    }
+    return await _authorizeFlutterAppAuth(args);
+  }
+
+  Future<Map<String, dynamic>> _authorizeAndroidAuthTab(Map args) async {
+    try {
+      final raw = await _androidChannel.invokeMethod<dynamic>("authorize", {
+        "client_id": args["client_id"],
+        "redirect_url": args["redirect_url"],
+        "authorization_endpoint": args["authorization_endpoint"],
+        "token_endpoint": args["token_endpoint"],
+        "scopes": args["scopes"] ?? [],
+        "additional_parameters": args["additional_parameters"] ?? {},
+        "prefer_ephemeral_session": args["prefer_ephemeral_session"] == true,
+      });
+      if (raw is Map) {
+        return Map<String, dynamic>.from(raw);
+      }
+      return {
+        "error": "invalid_response",
+        "error_description":
+            "Unexpected Android AppAuth result type: ${raw.runtimeType}",
+      };
+    } on PlatformException catch (e) {
+      return {
+        "error": e.code,
+        "error_description": e.message,
+      };
+    }
+  }
+
+  Future<Map<String, dynamic>> _authorizeFlutterAppAuth(Map args) async {
     final clientId = args["client_id"] as String;
     final redirectUrl = args["redirect_url"] as String;
     final authorizationEndpoint = args["authorization_endpoint"] as String;

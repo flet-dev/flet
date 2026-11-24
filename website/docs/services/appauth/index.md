@@ -8,12 +8,18 @@ import Tabs from '@theme/Tabs';
 import {ClassAll, CodeExample} from '@site/src/components/crocodocs';
 
 Native OAuth 2.0 authorization-code + PKCE for Android and iOS via the
-`flet-appauth` extension, wrapping
-[`flutter_appauth`](https://pub.dev/packages/flutter_appauth).
+`flet-appauth` extension.
 
 `AppAuth` performs **authorize + redirect capture only**. Token exchange,
 user/group loading, and `Page.on_login` remain in Python (`Page.login` /
 [`AuthorizationService`](../../types/auth/authorizationservice.md)).
+
+On **Android**, authorize uses Chrome [Auth Tab](https://developer.chrome.com/docs/android/custom-tabs/guide-auth-tab)
+when available so custom-scheme redirects (for example `flet://oauth-callback`)
+are returned to the app via callback. If Auth Tab is not supported, it falls
+back to a full external browser (not a Custom Tab). On **iOS**, authorize uses
+[`flutter_appauth`](https://pub.dev/packages/flutter_appauth) /
+ASWebAuthenticationSession.
 
 On Android/iOS, `page.login()` soft-imports this package automatically.
 Install it before calling `page.login` on mobile.

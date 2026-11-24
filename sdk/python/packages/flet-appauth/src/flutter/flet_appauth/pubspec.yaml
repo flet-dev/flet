@@ -12,10 +12,18 @@ dependencies:
     sdk: flutter
 
   # Requires Dart >=3.12 (Flutter 3.44+). Flet currently pins Flutter 3.47.9.
+  # Used on iOS; Android authorize uses Chrome Auth Tab in this plugin.
   flutter_appauth: 13.0.0
 
   flet:
     path: ../../../../../../../packages/flet
+
+flutter:
+  plugin:
+    platforms:
+      android:
+        package: dev.flet.flet_appauth
+        pluginClass: FletAppauthPlugin
 
 dev_dependencies:
   flutter_test:

@@ -54,7 +54,12 @@ class AppAuth(ft.Service):
                 service configuration even when Python exchanges the code).
             scopes: OAuth scopes to request.
             additional_parameters: Extra authorize query parameters.
-            prefer_ephemeral_session: iOS/macOS ephemeral browser session.
+            prefer_ephemeral_session: Use an ephemeral auth browser session
+                when supported (iOS ASWebAuthenticationSession;
+                Android Auth Tab via ``setEphemeralBrowsingEnabled``). The
+                session does not share cookies with the user's normal browser
+                profile, so IdP SSO cannot silently re-authenticate after
+                sign-out.
 
         Returns:
             [`AppAuthAuthorizationResult`][(p).] with code + PKCE verifier,
