@@ -134,7 +134,7 @@ class _GridViewControlState extends State<GridViewControl> {
             scrollController: _controller,
             child: child);
 
-        if (widget.control.getBool("on_scroll", false)!) {
+        if (widget.control.hasEventHandler("scroll")) {
           child =
               ScrollNotificationControl(control: widget.control, child: child);
         }

@@ -12,7 +12,11 @@ from flet.controls.icon_data import IconData
 
 __all__ = ["CupertinoIcons"]
 
-class CupertinoIcons:
+class _CupertinoIconsMeta(type):
+    def __getitem__(cls, name: str) -> IconData: ...
+    def __contains__(cls, item: object) -> bool: ...
+
+class CupertinoIcons(metaclass=_CupertinoIconsMeta):
     ADD: IconData
     ADD_CIRCLED: IconData
     ADD_CIRCLED_SOLID: IconData

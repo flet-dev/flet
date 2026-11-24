@@ -1,5 +1,5 @@
 from dataclasses import field
-from typing import Optional
+from typing import Annotated, Optional
 
 from flet.controls.base_control import control
 from flet.controls.border_radius import BorderRadiusValue
@@ -20,6 +20,7 @@ from flet.controls.types import (
     StrOrControl,
     TextAlign,
 )
+from flet.utils.validation import V, ValidationRules
 
 __all__ = ["Dropdown", "DropdownOption"]
 
@@ -34,20 +35,20 @@ class DropdownOption(Control):
     """
     Option's key.
 
-    If not specified [`text`][(c).] will be used as fallback.
+    If not specified :attr:`text` will be used as fallback.
 
     Raises:
-        ValueError: If neither `key` nor [`text`][(c).] are provided.
+        ValueError: If neither `key` nor :attr:`text` is provided.
     """
 
     text: Optional[str] = None
     """
     Option's display text.
 
-    If not specified [`key`][(c).] will be used as fallback.
+    If not specified :attr:`key` will be used as fallback.
 
     Raises:
-        ValueError: If neither [`key`][(c).] nor `text` are provided.
+        ValueError: If neither :attr:`key` nor `text` is provided.
     """
 
     content: Optional[Control] = None
@@ -71,10 +72,12 @@ class DropdownOption(Control):
     Customizes this menu item's appearance.
     """
 
-    def before_update(self):
-        super().before_update()
-        if self.key is None and self.text is None:
-            raise ValueError("key or text must be specified")
+    __validation_rules__: ValidationRules = (
+        V.ensure(
+            lambda ctrl: ctrl.key is not None or ctrl.text is not None,
+            message="key or text must be specified",
+        ),
+    )
 
 
 Option = DropdownOption
@@ -84,7 +87,7 @@ Option = DropdownOption
 class Dropdown(LayoutControl):
     """
     A dropdown control that allows users to select a single option from a list of \
-    [`options`][(c).].
+    :attr:`options`.
 
     Example:
     ```python
@@ -101,7 +104,7 @@ class Dropdown(LayoutControl):
 
     value: Optional[str] = None
     """
-    The [`key`][flet.DropdownOption.] of the dropdown [`options`][(c).]
+    The :attr:`flet.DropdownOption.key` of the dropdown :attr:`options`
     corresponding to the selected option.
     """
 
@@ -129,7 +132,7 @@ class Dropdown(LayoutControl):
 
     elevation: Optional[ControlStateValue[Optional[Number]]] = 8
     """
-    The dropdown's menu elevation in various [`ControlState`][flet.]
+    The dropdown's menu elevation in various :class:`~flet.ControlState`
     states.
     """
 
@@ -216,7 +219,7 @@ class Dropdown(LayoutControl):
 
     bgcolor: Optional[ControlStateValue[ColorValue]] = None
     """
-    The background color of the dropdown menu in various [`ControlState`][flet.]
+    The background color of the dropdown menu in various :class:`~flet.ControlState`
     states.
     """
 
@@ -227,7 +230,7 @@ class Dropdown(LayoutControl):
 
     on_text_change: Optional[ControlEventHandler["Dropdown"]] = None
     """
-    Called when the [`text`][(c).] input of this dropdown has changed.
+    Called when the :attr:`text` input of this dropdown has changed.
     """
 
     on_focus: Optional[ControlEventHandler["Dropdown"]] = None
@@ -244,14 +247,14 @@ class Dropdown(LayoutControl):
 
     error_style: Optional[TextStyle] = None
     """
-    The [`TextStyle`][flet.] to use for [`error_text`][(c).].
+    The :class:`~flet.TextStyle` to use for :attr:`error_text`.
     """
 
     error_text: Optional[str] = None
     """
     Text that appears below the input border.
 
-    If non-null, the border's color animates to red and the [`helper_text`][(c).] is
+    If non-null, the border's color animates to red and the :attr:`helper_text` is
     not shown.
     """
 
@@ -262,7 +265,7 @@ class Dropdown(LayoutControl):
 
     text_style: Optional[TextStyle] = None
     """
-    The [`TextStyle`][flet.] to use for text in input text field.
+    The :class:`~flet.TextStyle` to use for text in input text field.
     """
 
     label: Optional[StrOrControl] = None
@@ -278,52 +281,108 @@ class Dropdown(LayoutControl):
 
     label_style: Optional[TextStyle] = None
     """
-    The [`label`][(c).]'s text style.
+    The :attr:`label`'s text style.
     """
 
-    border: Optional[InputBorder] = None
+    border: Optional[ControlStateValue[InputBorder]] = None
     """
-    Border around input.
+    The border drawn around the decorated input area.
 
-    Defaults to `InputBorder.OUTLINE`.
+    Accepts a single :class:`~flet.InputBorder` or a dictionary mapping
+    :class:`~flet.ControlState`s to :class:`~flet.InputBorder`s. Supported
+    state keys are :attr:`flet.ControlState.DEFAULT`,
+    :attr:`flet.ControlState.FOCUSED`, :attr:`flet.ControlState.ERROR`,
+    and :attr:`flet.ControlState.DISABLED`.
+
+    A single border defines the shape for all states. If its `side` is unset,
+    the Material theme resolves the border color and weight per state (for
+    example, the focused border uses the theme's primary color); an explicit
+    `side` applies to the enabled state while the other states remain
+    theme-resolved.
+
+    In the dictionary form, the `DEFAULT` entry behaves like the single form,
+    and each state entry without an explicit `side` falls back to the `DEFAULT`
+    entry's `side`, if set.
+    """
+
+    border_radius: Annotated[
+        Optional[BorderRadiusValue],
+        V.deprecated(
+            "border",
+            version="1.0.0",
+            delete_version="1.3.0",
+            reason="Use border=OutlineInputBorder(border_radius=...) instead.",
+            docs_reason="Use :attr:`border` with an "
+            ":class:`~flet.OutlineInputBorder` instead.",
+        ),
+    ] = None
+    """
+    Rounds the corners of an outlined border.
+    """
+
+    border_width: Annotated[
+        Optional[Number],
+        V.deprecated(
+            "border",
+            version="1.0.0",
+            delete_version="1.3.0",
+            reason="Use border=OutlineInputBorder(side=BorderSide(width=...)) instead.",
+            docs_reason="Use :attr:`border` with a :class:`~flet.BorderSide` instead.",
+        ),
+    ] = None
+    """
+    The width of the border in virtual pixels.
+    """
+
+    border_color: Annotated[
+        Optional[ColorValue],
+        V.deprecated(
+            "border",
+            version="1.0.0",
+            delete_version="1.3.0",
+            reason="Use border=OutlineInputBorder(side=BorderSide(color=...)) instead.",
+            docs_reason="Use :attr:`border` with a :class:`~flet.BorderSide` instead.",
+        ),
+    ] = None
+    """
+    The border color.
+    """
+
+    focused_border_width: Annotated[
+        Optional[Number],
+        V.deprecated(
+            "border",
+            version="1.0.0",
+            delete_version="1.3.0",
+            reason="Use border={ControlState.FOCUSED: OutlineInputBorder(...)} "
+            "instead.",
+            docs_reason="Use :attr:`border` with a "
+            ":attr:`flet.ControlState.FOCUSED` entry instead.",
+        ),
+    ] = None
+    """
+    Border width in focused state.
+    """
+
+    focused_border_color: Annotated[
+        Optional[ColorValue],
+        V.deprecated(
+            "border",
+            version="1.0.0",
+            delete_version="1.3.0",
+            reason="Use border={ControlState.FOCUSED: OutlineInputBorder(...)} "
+            "instead.",
+            docs_reason="Use :attr:`border` with a "
+            ":attr:`flet.ControlState.FOCUSED` entry instead.",
+        ),
+    ] = None
+    """
+    Border color in focused state.
     """
 
     color: Optional[ColorValue] = None
     """
     Text color.
-    """
-
-    border_width: Number = 1
-    """
-    The width of the border in virtual pixels.
-
-    Tip:
-        Set to `0` to completely remove the border.
-    """
-
-    border_color: Optional[ColorValue] = None
-    """
-    Border color.
-
-    Tip:
-        Set to [`Colors.TRANSPARENT`][flet.] to hide the border.
-    """
-
-    border_radius: Optional[BorderRadiusValue] = None
-    """
-    The border radius applied to the corners of the dropdown input field.
-    Accepts a value in virtual pixels or a `BorderRadiusValue` object.
-    If set to `None`, the default border radius defined by the theme or system is used.
-    """
-
-    focused_border_width: Optional[Number] = None
-    """
-    Border width in focused state.
-    """
-
-    focused_border_color: Optional[ColorValue] = None
-    """
-    Border color in focused state.
     """
 
     content_padding: Optional[PaddingValue] = None
@@ -338,7 +397,7 @@ class Dropdown(LayoutControl):
 
     filled: bool = False
     """
-    Whether the decoration's container is filled with theme [`fill_color`][(c).].
+    Whether the decoration's container is filled with theme :attr:`fill_color`.
     """
 
     fill_color: Optional[ColorValue] = None
@@ -364,7 +423,7 @@ class Dropdown(LayoutControl):
 
     hint_style: Optional[TextStyle] = None
     """
-    The [`TextStyle`][flet.] to use for [`hint_text`][(c).].
+    The :class:`~flet.TextStyle` to use for :attr:`hint_text`.
     """
 
     helper_text: Optional[str] = None
@@ -379,7 +438,7 @@ class Dropdown(LayoutControl):
 
     helper_style: Optional[TextStyle] = None
     """
-    The [`TextStyle`][flet.] to use for [`helper_text`][(c).].
+    The :class:`~flet.TextStyle` to use for :attr:`helper_text`.
     """
 
     def __contains__(self, item):

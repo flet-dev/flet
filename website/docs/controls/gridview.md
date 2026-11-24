@@ -1,0 +1,19 @@
+---
+class_name: "flet.GridView"
+examples: "controls/core/grid_view"
+example_images: "test-images/examples/controls/core/golden/macos/grid_view"
+example_media: "examples/controls/core/grid_view/media"
+title: "GridView"
+---
+
+import {ClassMembers, ClassSummary, CodeExample, Image} from '@site/src/components/crocodocs';
+
+<ClassSummary name={frontMatter.class_name} image={frontMatter.example_images + '/image_for_docs.png'} imageCaption="GridView" imageWidth="20%"/>
+
+## Examples
+
+<CodeExample path={frontMatter.examples + '/photo_gallery/main.py'} language="python" />
+
+<Image src={frontMatter.example_media + '/photo_gallery.png'} alt="photo-gallery" width="55%" />
+
+<ClassMembers name={frontMatter.class_name} />

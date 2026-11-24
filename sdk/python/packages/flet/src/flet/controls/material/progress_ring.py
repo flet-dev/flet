@@ -57,7 +57,7 @@ class ProgressRing(LayoutControl):
 
     A value of 0 (center stroke) will center the border on the edge of the control.
 
-    If [`ProgressRing.year_2023`][flet.] is `True`, then the
+    If :attr:`flet.ProgressRing.year_2023` is `True`, then the
     default value is `0`. Otherwise, the default value is `-1`.
     """
 
@@ -71,23 +71,40 @@ class ProgressRing(LayoutControl):
     Used to identify the purpose of this progress bar for screen reading software.
     """
 
-    semantics_value: Optional[Number] = None
+    semantics_value: Optional[str] = None
     """
-    Used for determinate progress indicators to indicate how much progress has been \
-    made.
+    The progress made, as read by screen reading software.
+
+    What it can hold depends on :attr:`value`:
+
+    - When :attr:`value` is set, the indicator is announced as a progress bar from
+      `0` to `100`, so this should be a number in that range or a percentage, for
+      example `"60"` or `"60%"`. Defaults to the percentage of progress made, for
+      example `"60"` for a `value` of `0.6`.
+    - When :attr:`value` is not set, the indicator is announced as a loading
+      spinner, so this can be any text, for example `"Step 3 of 5"`.
+
+    To describe a determinate indicator in words, such as `"Step 3 of 5"`, use
+    :attr:`semantics_label` instead: screen readers read the label, then this
+    value.
+
+    Note:
+        In debug builds, such as `flet debug`, a determinate indicator whose
+        `semantics_value` is not a number or a percentage raises an error. Release
+        builds pass it through as is, but platforms may not read it as expected.
     """
 
     track_gap: Optional[Number] = None
     """
     The gap between the active indicator and the background track.
 
-    If [`year_2023`][(c).] is `True` or `Theme.use_material3` is
+    If :attr:`year_2023` is `True` or `Theme.use_material3` is
     `False`, then no track gap will be drawn.
 
     Set `track_gap` to `0` to hide this track gap.
 
     If `None`,
-    [`ProgressIndicatorTheme.track_gap`][flet.] is used.
+    :attr:`flet.ProgressIndicatorTheme.track_gap` is used.
 
     If that's is also `None`, defaults to `4.0`.
     """
@@ -97,7 +114,7 @@ class ProgressRing(LayoutControl):
     Defines the minimum and maximum size of the progress indicator.
 
     If `None`,
-    [`ProgressIndicatorTheme.size_constraints`][flet.]
+    :attr:`flet.ProgressIndicatorTheme.size_constraints`
     is used.
 
     If that's is also `None`, defaults to a minimum width and height of `36`.
@@ -108,10 +125,10 @@ class ProgressRing(LayoutControl):
     The padding around the indicator track.
 
     If `None`,
-    [`ProgressIndicatorTheme.circular_track_padding`][flet.]
+    :attr:`flet.ProgressIndicatorTheme.circular_track_padding`
     is used.
 
-    If that's is also `None` and [`year_2023`][(c).] is `False`,
+    If that's is also `None` and :attr:`year_2023` is `False`,
     defaults to `Padding.all(4.0)`.
 
     Otherwise, defaults to `Padding.all(0.0)`.
@@ -125,9 +142,9 @@ class ProgressRing(LayoutControl):
     When `True`, the `ProgressRing` will use the 2023 Material Design 3 appearance.
 
     If not set, then the
-    [`ProgressIndicatorTheme.year_2023`][flet.] will be
+    :attr:`flet.ProgressIndicatorTheme.year_2023` will be
     used, which is `False` by default.
 
-    If [`Theme.use_material3`][flet.] is `False`, then this property
+    If :attr:`flet.Theme.use_material3` is `False`, then this property
     is ignored.
     """

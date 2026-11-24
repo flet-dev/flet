@@ -10,7 +10,7 @@ class OAuthProvider:
 
     Instances describe OAuth endpoints, client credentials, optional PKCE
     parameters, and optional user/group retrieval behavior used by
-    [`AuthorizationService`][(p).].
+    :class:`~flet.auth.AuthorizationService`.
 
     Args:
         client_id: OAuth client/application ID issued by the provider.
@@ -85,7 +85,8 @@ class OAuthProvider:
             access_token: OAuth access token.
 
         Returns:
-            A list of [`Group`][(p).]. The base implementation returns an empty list.
+            A list of :class:`~flet.auth.Group`. The base implementation
+                returns an empty list.
         """
         return []
 
@@ -97,7 +98,7 @@ class OAuthProvider:
             access_token: OAuth access token.
 
         Returns:
-            A [`User`][(p).] instance, or `None` to let authorization
+            A :class:`~flet.auth.User` instance, or `None` to let authorization
                 fallback logic use `user_endpoint` / `user_id_fn`.
         """
         return None

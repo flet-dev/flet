@@ -49,7 +49,6 @@ IosRecordConfig? parseIosRecordConfig(dynamic value,
       .nonNulls
       .toList();
   return IosRecordConfig(
-    manageAudioSession: parseBool(value["manage_audio_session"], true)!,
     categoryOptions: options,
   );
 }

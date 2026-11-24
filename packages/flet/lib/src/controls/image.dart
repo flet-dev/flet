@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 
 import '../extensions/control.dart';
 import '../models/control.dart';
@@ -7,6 +7,7 @@ import '../utils/borders.dart';
 import '../utils/colors.dart';
 import '../utils/images.dart';
 import '../utils/numbers.dart';
+import '../widgets/animated_control_size.dart';
 import '../widgets/error.dart';
 import 'base_controls.dart';
 
@@ -33,7 +34,7 @@ class ImageControl extends StatelessWidget {
     final color = control.getColor("color", context);
     final colorBlendMode = control.getBlendMode("color_blend_mode");
     final semanticsLabel = control.getString("semantics_label");
-    final gaplessPlayback = control.getBool("gapless_playback");
+    final gaplessPlayback = control.getBool("gapless_playback", false)!;
     final excludeFromSemantics =
         control.getBool("exclude_from_semantics", false)!;
     final filterQuality =
@@ -93,9 +94,18 @@ class ImageControl extends StatelessWidget {
       errorCtrl: errorContent,
       fadeConfig: fadeConfig.enabled ? fadeConfig : null,
     );
+    final sizeAnimation = control.getAnimation("animate_size");
     return LayoutControl(
         control: control,
-        child: _clipCorners(image, control.getBorderRadius("border_radius")));
+        child: AnimatedControlSize(
+          width: sizeAnimation == null ? null : width,
+          height: sizeAnimation == null ? null : height,
+          animation: sizeAnimation,
+          onEnd: control.hasEventHandler("animation_end")
+              ? () => control.triggerEvent("animation_end", "size")
+              : null,
+          child: _clipCorners(image, control.getBorderRadius("border_radius")),
+        ));
   }
 
   Widget _clipCorners(Widget image, BorderRadius? borderRadius) {

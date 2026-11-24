@@ -1,3 +1,5 @@
+import 'package:flutter/foundation.dart';
+
 import '../models/control.dart';
 
 abstract class ControlKey {
@@ -29,6 +31,15 @@ class ControlScrollKey extends ControlKey {
 class ControlValueKey extends ControlKey {
   const ControlValueKey(super.value);
 }
+
+/// Preserves the value type because ValueKey equality is runtimeType-strict.
+Key valueKeyFromValue(Object value) => switch (value) {
+      String v => ValueKey<String>(v),
+      int v => ValueKey<int>(v),
+      double v => ValueKey<double>(v),
+      bool v => ValueKey<bool>(v),
+      _ => ValueKey(value),
+    };
 
 ControlKey? parseKey(dynamic value) {
   if (value == null) return null;

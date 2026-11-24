@@ -1,0 +1,26 @@
+[project]
+name = "types-theme-animation-style-showcase"
+version = "1.0.0"
+description = "Demonstrates Page.theme_animation_style by switching between default, custom, and disabled theme transitions."
+requires-python = ">=3.10"
+keywords = ["theme animation style", "showcase"]
+authors = [{ name = "Flet team", email = "hello@flet.dev" }]
+dependencies = ["flet"]
+
+[dependency-groups]
+dev = ["flet-cli", "flet-desktop", "flet-web"]
+
+[tool.flet.gallery]
+categories = ["Utility/Types"]
+
+[tool.flet.metadata]
+title = "Theme Animation Style showcase"
+controls = ["SafeArea", "Column", "SegmentedButton", "Segment", "Button", "Page", "Icon"]
+layout_pattern = "single-panel"
+complexity = "basic"
+features = ["theme switching", "animation override"]
+
+[tool.flet]
+org = "dev.flet"
+company = "Flet"
+copyright = "Copyright (C) 2023-2026 by Flet"

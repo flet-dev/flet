@@ -7,6 +7,7 @@ class State:
 
 def main(page: ft.Page):
     state = State()
+    counter = ft.Text("0", size=50)
 
     def add_click(e):
         state.counter += 1
@@ -18,13 +19,14 @@ def main(page: ft.Page):
     )
     page.add(
         ft.SafeArea(
-            ft.Container(
-                counter := ft.Text("0", size=50),
-                alignment=ft.Alignment.CENTER,
-            ),
             expand=True,
+            content=ft.Container(
+                alignment=ft.Alignment.CENTER,
+                content=counter,
+            ),
         )
     )
 
 
-ft.run(main)
+if __name__ == "__main__":
+    ft.run(main)

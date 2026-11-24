@@ -1,0 +1,16 @@
+---
+class_name: "flet_color_pickers.MaterialPicker"
+examples: "extensions/color_pickers"
+example_images: "test-images/examples/extensions/color_pickers/golden/macos/color_pickers"
+title: "MaterialPicker"
+---
+
+import {ClassMembers, ClassSummary, CodeExample} from '@site/src/components/crocodocs';
+
+<ClassSummary name={frontMatter.class_name} image={frontMatter.example_images + '/material_picker.png'} imageCaption="MaterialPicker" imageWidth="55%"/>
+
+## Example
+
+<CodeExample path={frontMatter.examples + '/material_picker/main.py'} language="python" />
+
+<ClassMembers name={frontMatter.class_name} />

@@ -1,0 +1,26 @@
+[project]
+name = "layout-control-bursting-flet"
+version = "1.0.0"
+description = "Creates a burst effect by rapidly scaling and fading the Flet icon image."
+requires-python = ">=3.10"
+keywords = ["layout control", "image", "scale", "opacity", "animation"]
+authors = [{ name = "Flet team", email = "hello@flet.dev" }]
+dependencies = ["flet"]
+
+[dependency-groups]
+dev = ["flet-cli", "flet-desktop", "flet-web"]
+
+[tool.flet.gallery]
+categories = ["Layout/LayoutControl"]
+
+[tool.flet.metadata]
+title = "Bursting flet"
+controls = ["SafeArea", "Column", "Image", "Button", "Animation"]
+layout_pattern = "single-panel"
+complexity = "basic"
+features = ["combined scale and opacity animations", "asset image animation"]
+
+[tool.flet]
+org = "dev.flet"
+company = "Flet"
+copyright = "Copyright (C) 2023-2026 by Flet"

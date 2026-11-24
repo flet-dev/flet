@@ -3,7 +3,8 @@ from asyncio import AbstractEventLoop
 from concurrent.futures import ThreadPoolExecutor
 from typing import Any, Optional
 
-from flet.messaging.protocol import ClientMessage
+from flet.controls.types import RouteUrlStrategy
+from flet.messaging.protocol import Message
 from flet.pubsub.pubsub_hub import PubSubHub
 
 logger = logging.getLogger("flet")
@@ -21,6 +22,16 @@ class Connection:
     def __init__(self):
         self.page_name: str = ""
         self.page_url: Optional[str] = None
+        self.page_base_path: str = "/"
+        """Base path of the page in the browser URL, e.g. `/sub-app/`, which is the
+        `<base href>` of the served web client."""
+        self.route_url_strategy: RouteUrlStrategy = RouteUrlStrategy.PATH
+        """Whether the client keeps routes in the URL path (`/store`)
+        or after `#` (`/#/store`)."""
+        self.local_data_transport: bool = False
+        """`True` when the connected client runs on the same machine (or in the
+        same process), so DataChannel bytes move at local-IPC / memcpy speed.
+        Widgets may use this to prefer uncompressed payloads over encoded ones."""
         self.__pubsubhub = None
         self.__loop: Optional[AbstractEventLoop] = None
         self.__executor: Optional[ThreadPoolExecutor] = None
@@ -82,7 +93,7 @@ class Connection:
     def pubsubhub(self, value: PubSubHub):
         self.__pubsubhub = value
 
-    def send_message(self, message: ClientMessage):
+    def send_message(self, message: Message):
         """
         Sends a message to the connected Flet client.
 
@@ -118,5 +129,41 @@ class Connection:
         Releases connection resources associated with the current session.
 
         Subclasses can override this method to clean up transport-specific state.
+        """
+        pass
+
+    # ------------------------------------------------------------------
+    # DataChannel transport hooks. Subclasses implement these for the
+    # transports that carry widget byte channels: dart_bridge mode (each
+    # channel = a dedicated PythonBridge port), socket / WebSocket modes
+    # (channel frames muxed over the same protocol transport).
+    # ------------------------------------------------------------------
+
+    def data_channel_for(self, channel_id: int):
+        """Return the `DataChannel` for `channel_id` allocated on the Dart
+        side. Idempotent — subsequent calls with the same id return the
+        same instance within the session.
+
+        Called by `Control.get_data_channel(id)` after a `data_channel_open`
+        event arrives.
+        """
+        raise NotImplementedError(
+            f"{type(self).__name__} does not support DataChannel "
+            "(transport-specific implementation missing)."
+        )
+
+    def send_data_channel_frame(self, channel_id: int, payload: bytes) -> None:
+        """Send a raw DataChannel frame for `channel_id`. Used by the
+        protocol-muxed implementation only — dart_bridge channels go
+        through their own dedicated `dart_bridge.send_bytes(port, ...)`
+        call instead.
+        """
+        raise NotImplementedError(
+            f"{type(self).__name__} does not implement send_data_channel_frame."
+        )
+
+    def unregister_data_channel(self, channel_id: int) -> None:
+        """Best-effort drop of `channel_id` from the mux registry. Default
+        is a no-op so subclasses that don't keep one don't need to override.
         """
         pass

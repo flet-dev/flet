@@ -24,7 +24,7 @@ class Card(ft.GestureDetector):
         self.content = ft.Container(
             width=CARD_WIDTH,
             height=CARD_HEIGHT,
-            border_radius=ft.border_radius.all(6),
+            border_radius=ft.BorderRadius.all(6),
             content=ft.Image(src="/images/card_back.png"),
         )
         self.draggable_pile = [self]
@@ -90,10 +90,10 @@ class Card(ft.GestureDetector):
     def drag(self, e: ft.DragUpdateEvent):
         for card in self.draggable_pile:
             card.top = (
-                max(0, self.top + e.delta_y)
+                max(0, self.top + e.local_delta.y)
                 + self.draggable_pile.index(card) * CARD_OFFSET
             )
-            card.left = max(0, self.left + e.delta_x)
+            card.left = max(0, self.left + e.local_delta.x)
             self.solitaire.update()
 
     def drop(self, e: ft.DragEndEvent):

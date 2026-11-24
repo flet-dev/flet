@@ -1,0 +1,26 @@
+[project]
+name = "button-shapes"
+version = "1.0.0"
+description = "Button examples demonstrating different shape styles."
+requires-python = ">=3.10"
+keywords = ["button", "shape", "styling", "material"]
+authors = [{ name = "Flet team", email = "hello@flet.dev" }]
+dependencies = ["flet"]
+
+[dependency-groups]
+dev = ["flet-cli", "flet-desktop", "flet-web"]
+
+[tool.flet.gallery]
+categories = ["Buttons/Button"]
+
+[tool.flet.metadata]
+title = "Button shapes"
+controls = ["SafeArea", "Column", "Button", "ButtonStyle"]
+layout_pattern = "inline-actions"
+complexity = "basic"
+features = ["shape styling", "multiple border types"]
+
+[tool.flet]
+org = "dev.flet"
+company = "Flet"
+copyright = "Copyright (C) 2023-2026 by Flet"

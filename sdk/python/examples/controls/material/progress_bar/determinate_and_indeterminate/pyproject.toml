@@ -1,0 +1,26 @@
+[project]
+name = "progress-bar-determinate-and-indeterminate"
+version = "1.0.0"
+description = "Animates a determinate and an indeterminate linear ProgressBar."
+requires-python = ">=3.10"
+keywords = ["progress bar", "progress", "linear progress", "async", "loading"]
+authors = [{ name = "Flet team", email = "hello@flet.dev" }]
+dependencies = ["flet"]
+
+[dependency-groups]
+dev = ["flet-cli", "flet-desktop", "flet-web"]
+
+[tool.flet.gallery]
+categories = ["Displays/ProgressBar"]
+
+[tool.flet.metadata]
+title = "Determinate and Indeterminate"
+controls = ["ProgressBar", "SafeArea", "Column", "Text"]
+layout_pattern = "status-dashboard"
+complexity = "basic"
+features = ["linear progress animation", "determinate updates", "indeterminate progress", "async"]
+
+[tool.flet]
+org = "dev.flet"
+company = "Flet"
+copyright = "Copyright (C) 2023-2026 by Flet"

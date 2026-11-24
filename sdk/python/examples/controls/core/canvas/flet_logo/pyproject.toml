@@ -1,0 +1,26 @@
+[project]
+name = "canvas-flet-logo"
+version = "1.0.0"
+description = "Canvas drawing of the Flet logo using quadratic paths."
+requires-python = ">=3.10"
+keywords = ["canvas", "logo", "path", "quadratic"]
+authors = [{ name = "Flet team", email = "hello@flet.dev" }]
+dependencies = ["flet"]
+
+[dependency-groups]
+dev = ["flet-cli", "flet-desktop", "flet-web"]
+
+[tool.flet.gallery]
+categories = ["Displays/Canvas"]
+
+[tool.flet.metadata]
+title = "Flet logo"
+controls = ["SafeArea", "Canvas", "Path"]
+layout_pattern = "free-canvas"
+complexity = "basic"
+features = ["path drawing", "filled vector shapes"]
+
+[tool.flet]
+org = "dev.flet"
+company = "Flet"
+copyright = "Copyright (C) 2023-2026 by Flet"

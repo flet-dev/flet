@@ -1,11 +1,14 @@
+import 'dart:async';
 import 'dart:math' as math;
 
-import 'package:flutter/foundation.dart' show clampDouble;
-import 'package:flutter/material.dart';
+import 'package:flutter/foundation.dart' show clampDouble, visibleForTesting;
+import 'package:flutter/gestures.dart';
+import 'package:flutter/widgets.dart';
 import 'package:vector_math/vector_math_64.dart' show Matrix4, Quad, Vector3;
 
 import '../extensions/control.dart';
 import '../models/control.dart';
+import '../utils/alignment.dart';
 import '../utils/edge_insets.dart';
 import '../utils/events.dart';
 import '../utils/misc.dart';
@@ -13,6 +16,78 @@ import '../utils/numbers.dart';
 import '../utils/time.dart';
 import '../widgets/error.dart';
 import 'base_controls.dart';
+
+/// Delivers `transform_changed` at most once per interval, plus one trailing
+/// event. The trailing timer reads the matrix when it fires, so the event
+/// after updates stop is the matrix still applied, not the one from when the
+/// timer was scheduled. An immediate delivery cancels that timer, and the
+/// timer does not repeat a matrix already delivered.
+@visibleForTesting
+class InteractiveViewerTransformGate {
+  Timer? _timer;
+  int? _lastEmitMillis;
+  List<double>? _lastMatrix;
+
+  void dispose() {
+    _timer?.cancel();
+    _timer = null;
+  }
+
+  void onTransform({
+    required int Function() now,
+    required int intervalMillis,
+    required bool Function() enabled,
+    required List<double> Function() matrix,
+    required void Function() emit,
+  }) {
+    if (!enabled()) {
+      return;
+    }
+    final int nowMillis = now();
+    final int? lastEmitMillis = _lastEmitMillis;
+    if (intervalMillis <= 0 ||
+        lastEmitMillis == null ||
+        nowMillis - lastEmitMillis >= intervalMillis) {
+      _timer?.cancel();
+      _timer = null;
+      _emit(nowMillis, matrix(), emit);
+      return;
+    }
+    _timer ??= Timer(
+      Duration(milliseconds: intervalMillis - (nowMillis - lastEmitMillis)),
+      () {
+        _timer = null;
+        if (!enabled()) {
+          return;
+        }
+        final List<double> current = matrix();
+        if (_matches(current)) {
+          return;
+        }
+        _emit(now(), current, emit);
+      },
+    );
+  }
+
+  void _emit(int nowMillis, List<double> matrix, void Function() emit) {
+    _lastEmitMillis = nowMillis;
+    _lastMatrix = List<double>.from(matrix);
+    emit();
+  }
+
+  bool _matches(List<double> matrix) {
+    final List<double>? last = _lastMatrix;
+    if (last == null || last.length != matrix.length) {
+      return false;
+    }
+    for (int i = 0; i < last.length; i++) {
+      if (last[i] != matrix[i]) {
+        return false;
+      }
+    }
+    return true;
+  }
+}
 
 class InteractiveViewerControl extends StatefulWidget {
   final Control control;
@@ -43,7 +118,20 @@ class _InteractiveViewerControlState extends State<InteractiveViewerControl>
   Animation<Matrix4>? _animation;
   Matrix4? _savedMatrix;
   int _interactionUpdateTimestamp = DateTime.now().millisecondsSinceEpoch;
+  final InteractiveViewerTransformGate _transformGate =
+      InteractiveViewerTransformGate();
   final double _currentRotation = 0.0;
+
+  /// Gesture settings the viewer was last built with, mirrored here so the
+  /// pointer signal handlers can tell what the viewer does with an event.
+  bool _panEnabled = true;
+  bool _scaleEnabled = true;
+  bool _trackpadScrollCausesScale = false;
+
+  /// The transform as it was just before the pointer signal identified by
+  /// [_signalTransformKey] reached [InteractiveViewer].
+  Object? _signalTransformKey;
+  Matrix4? _transformBeforeSignal;
 
   @override
   void initState() {
@@ -51,6 +139,7 @@ class _InteractiveViewerControlState extends State<InteractiveViewerControl>
     _animationController =
         AnimationController(vsync: this, duration: Duration.zero);
     widget.control.addInvokeMethodListener(_invokeMethod);
+    _transformationController.addListener(_onTransformChanged);
   }
 
   /// Handles method channel calls from the Python side, mirroring the
@@ -102,13 +191,49 @@ class _InteractiveViewerControlState extends State<InteractiveViewerControl>
           _transformationController.value = _savedMatrix!;
         }
         break;
+      case "get_scale":
+        return _transformationController.value.getMaxScaleOnAxis();
+      case "get_transform":
+        return _transformPayload();
       default:
         throw Exception("Unknown InteractiveViewer method: $name");
     }
   }
 
+  /// Scale, translation and column-major matrix currently applied.
+  Map<String, dynamic> _transformPayload() {
+    final Matrix4 matrix = _transformationController.value;
+    final Vector3 translation = matrix.getTranslation();
+    return <String, dynamic>{
+      "s": matrix.getMaxScaleOnAxis(),
+      "tx": translation.x,
+      "ty": translation.y,
+      "tz": translation.z,
+      "m": matrix.storage.toList(),
+    };
+  }
+
+  /// Notifies Python of the effective transform.
+  ///
+  /// Gesture, wheel and programmatic updates all write the same controller,
+  /// so one listener covers them.
+  void _onTransformChanged() {
+    _transformGate.onTransform(
+      now: () => DateTime.now().millisecondsSinceEpoch,
+      intervalMillis:
+          widget.control.getInt("interaction_update_interval", 200)!,
+      enabled: () =>
+          mounted && widget.control.hasEventHandler("transform_changed"),
+      matrix: () => _transformationController.value.storage,
+      emit: () =>
+          widget.control.triggerEvent("transform_changed", _transformPayload()),
+    );
+  }
+
   @override
   void dispose() {
+    _transformGate.dispose();
+    _transformationController.removeListener(_onTransformChanged);
     _transformationController.dispose();
     _animationController.dispose();
     widget.control.removeInvokeMethodListener(_invokeMethod);
@@ -125,13 +250,58 @@ class _InteractiveViewerControlState extends State<InteractiveViewerControl>
           "InteractiveViewer.content must be provided and visible");
     }
 
-    var interactiveViewer = InteractiveViewer(
+    // Also read by the pointer signal handlers below, which must agree with
+    // what the viewer was actually built with.
+    _panEnabled = widget.control.getBool("pan_enabled", true)!;
+    _scaleEnabled = widget.control.getBool("scale_enabled", true)!;
+    _trackpadScrollCausesScale =
+        widget.control.getBool("trackpad_scroll_causes_scale", false)!;
+
+    // With every interaction off there is nothing for the viewer to handle,
+    // yet InteractiveViewer still installs its scale gesture recognizer,
+    // which competes in the gesture arena with - and can swallow - taps meant
+    // for the content. Build the same layout it would (clip, optional
+    // unbounded constraints, transform) without any gesture handling. The
+    // transformation controller still drives the transform, so programmatic
+    // zoom/pan keeps working.
+    if (!_panEnabled && !_scaleEnabled && !_trackpadScrollCausesScale) {
+      Widget child = ListenableBuilder(
+        listenable: _transformationController,
+        builder: (context, child) => Transform(
+          transform: _transformationController.value,
+          alignment: widget.control.getAlignment("alignment"),
+          child: child,
+        ),
+        child: KeyedSubtree(key: _childKey, child: content),
+      );
+      if (!widget.control.getBool("constrained", true)!) {
+        child = OverflowBox(
+          alignment: Alignment.topLeft,
+          minWidth: 0.0,
+          minHeight: 0.0,
+          maxWidth: double.infinity,
+          maxHeight: double.infinity,
+          child: child,
+        );
+      }
+      return LayoutControl(
+        control: widget.control,
+        child: ClipRect(
+          // The viewport the zoom/pan methods measure (_currentViewportRect).
+          key: _viewerKey,
+          clipBehavior:
+              widget.control.getClipBehavior("clip_behavior", Clip.hardEdge)!,
+          child: child,
+        ),
+      );
+    }
+
+    Widget interactiveViewer = InteractiveViewer(
       key: _viewerKey,
       transformationController: _transformationController,
-      panEnabled: widget.control.getBool("pan_enabled", true)!,
-      scaleEnabled: widget.control.getBool("scale_enabled", true)!,
-      trackpadScrollCausesScale:
-          widget.control.getBool("trackpad_scroll_causes_scale", false)!,
+      panEnabled: _panEnabled,
+      scaleEnabled: _scaleEnabled,
+      trackpadScrollCausesScale: _trackpadScrollCausesScale,
       constrained: widget.control.getBool("constrained", true)!,
       maxScale: widget.control.getDouble("max_scale", 2.5)!,
       minScale: widget.control.getDouble("min_scale", 0.8)!,
@@ -139,8 +309,8 @@ class _InteractiveViewerControlState extends State<InteractiveViewerControl>
           .getDouble("interaction_end_friction_coefficient", 0.0000135)!,
       scaleFactor: widget.control.getDouble("scale_factor", 200)!,
       clipBehavior:
-          parseClip(widget.control.getString("clip_behavior"), Clip.hardEdge)!,
-      alignment: widget.control.get("alignment"),
+          widget.control.getClipBehavior("clip_behavior", Clip.hardEdge)!,
+      alignment: widget.control.getAlignment("alignment"),
       boundaryMargin:
           widget.control.getMargin("boundary_margin", EdgeInsets.zero)!,
       onInteractionStart: !widget.control.disabled
@@ -166,10 +336,72 @@ class _InteractiveViewerControlState extends State<InteractiveViewerControl>
               }
             }
           : null,
-      child: KeyedSubtree(key: _childKey, child: content),
+      // Sits below InteractiveViewer's own Listener, so it is dispatched
+      // first and can record the transform before the viewer changes it.
+      child: Listener(
+        onPointerSignal: _recordTransformBeforePointerSignal,
+        child: KeyedSubtree(key: _childKey, child: content),
+      ),
+    );
+
+    // Flutter's InteractiveViewer applies pointer signals (mouse wheel,
+    // trackpad scroll) straight from its own Listener and never claims them
+    // through the PointerSignalResolver, while Scrollable does claim them.
+    // With no one claiming first, an enclosing scrollable handled the same
+    // event, so a wheel tick over the viewer zoomed *and* scrolled the page.
+    // Registering a no-op first wins the resolver - the first registration
+    // for an event wins - which leaves the ancestor scrollable out of it.
+    interactiveViewer = Listener(
+      onPointerSignal: _claimHandledPointerSignal,
+      child: interactiveViewer,
     );
 
     return LayoutControl(control: widget.control, child: interactiveViewer);
+  }
+
+  /// Snapshots the transform before [InteractiveViewer] reacts to [event],
+  /// keyed by the event so [_claimHandledPointerSignal] only trusts a
+  /// snapshot taken for the very signal it is resolving.
+  void _recordTransformBeforePointerSignal(PointerSignalEvent event) {
+    _signalTransformKey = event.original ?? event;
+    _transformBeforeSignal = _transformationController.value.clone();
+  }
+
+  /// Claims [event] so that scrollables above this control ignore it.
+  void _claimHandledPointerSignal(PointerSignalEvent event) {
+    if (!_handlesPointerSignal(event)) return;
+
+    // Runs after the viewer has already transformed itself. When the
+    // transform came out unchanged - a zoom that is already at min/max
+    // scale, or a trackpad pan clamped at the boundary - the viewer did
+    // nothing with the event, so let it through to the enclosing scrollable
+    // instead of swallowing it into a dead zone. The snapshot is missing
+    // when the pointer is over a part of the viewport the content does not
+    // cover; the event is then claimed, as it is the viewer's to handle.
+    if (identical(_signalTransformKey, event.original ?? event) &&
+        _transformBeforeSignal == _transformationController.value) {
+      return;
+    }
+
+    GestureBinding.instance.pointerSignalResolver.register(event, (_) {});
+  }
+
+  /// Whether [InteractiveViewer] acts on [event], mirroring the branches of
+  /// its private `_receivedPointerSignal`.
+  bool _handlesPointerSignal(PointerSignalEvent event) {
+    if (event is PointerScaleEvent) {
+      return _scaleEnabled;
+    }
+    if (event is! PointerScrollEvent) {
+      return false;
+    }
+    // A trackpad scroll pans instead of scaling, unless configured otherwise.
+    if (event.kind == PointerDeviceKind.trackpad &&
+        !_trackpadScrollCausesScale) {
+      return _panEnabled;
+    }
+    // Horizontal-only wheel scroll is ignored by the viewer.
+    return event.scrollDelta.dy != 0.0 && _scaleEnabled;
   }
 
   /// Returns a copy of [matrix] scaled by [scale] while honoring the viewer's

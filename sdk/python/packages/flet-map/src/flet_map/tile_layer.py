@@ -18,9 +18,9 @@ __all__ = ["TileLayer"]
 class TileLayer(MapLayer):
     """
     Displays square raster images in a continuous grid,
-    sourced from the provided [`url_template`][(c).] and [`fallback_url`][(c).].
+    sourced from the provided :attr:`url_template` and :attr:`fallback_url`.
 
-    Typically, the first layer to be added to a [`Map`][(p).],
+    Typically, the first layer to be added to a :class:`~flet_map.Map`,
     as it provides the tiles on which other layers are displayed.
 
     Info: Caching
@@ -56,16 +56,16 @@ class TileLayer(MapLayer):
         - Slippy Map/CARTO (XYZ): This is the most common format for raster tiles,
             although many satellite tiles will instead use WMS.
             Typically, a URL with placeholders for X, Y, and Z values. Set the
-            [`url_template`][(c).] to the template provided by the tile server -
+            :attr:`url_template` to the template provided by the tile server -
             usually it can be copied directly from an account portal or documentation.
             Additional information, like API/access keys, can be passed in using the
-            [`additional_options`][(c).] property. It's also possible to specify a
-            [`fallback_url`][(c).] template, used if fetching a tile from the primary
-            [`url_template`][(c).] fails.
+            :attr:`additional_options` property. It's also possible to specify a
+            :attr:`fallback_url` template, used if fetching a tile from the primary
+            :attr:`url_template` fails.
         - Tile Map Service (TMS): This is also supported. Follow the instructions for
-            the XYZ source above, then set the [`enable_tms`][(c).] property to `True`.
+            the XYZ source above, then set the :attr:`enable_tms` property to `True`.
             Read more on WMS [here](https://en.wikipedia.org/wiki/Tile_Map_Service).
-        - Web Map Services (WMS): This is also supported. Use [`wms_configuration`][(c).]
+        - Web Map Services (WMS): This is also supported. Use :attr:`wms_configuration`
             to specify the necessary configuration for WMS tile servers.
             Read more on WMS [here](https://www.mngeo.state.mn.us/chouse/wms/index.html).
 
@@ -85,19 +85,19 @@ class TileLayer(MapLayer):
 
     Provider Examples: https://wiki.openstreetmap.org/wiki/Raster_tile_providers
 
-    Info: Placeholders
+    Placeholders:
         As well as the standard XYZ placeholders in the template, the following
         placeholders may also be used:
 
-        - `{s}`: see [`subdomains`][(c).] property
+        - `{s}`: see :attr:`subdomains` property
         - `{r}`: retina scaling factor (2 or 1)
-        - `{d}`: reflects the [`tile_size`][(c).] property
+        - `{d}`: reflects the :attr:`tile_size` property
 
         Additional placeholders can also be added freely to the template,
-        and are filled in with the specified values in [`additional_options`][(c).].
+        and are filled in with the specified values in :attr:`additional_options`.
         This can be used to easier add switchable styles or access tokens.
 
-    Danger: Compliance with tile server requirements
+    Compliance with tile server requirements:
         It is your own responsibility to comply with any appropriate restrictions and
         requirements set by your chosen tile server/provider. Always read their terms
         of service. Failure to do so may lead to any punishment,
@@ -107,8 +107,7 @@ class TileLayer(MapLayer):
         other projects, libraries, and packages suggesting that OpenStreetMap provides
         free-to-use map tiles are incorrect.
 
-        /// admonition | Case Example: OpenStreetMap (direct)
-            type: example
+    Case Example - OpenStreetMap (direct):
         OpenStreetMap (OSM) is one of the most popular sources for map tiles and
         data. Their data is free for everyone to use (under
         [ODbL](https://opendatacommons.org/licenses/odbl/)), but their public
@@ -120,26 +119,25 @@ class TileLayer(MapLayer):
 
         For example: on non-web platforms (ex: desktop), they require a proper
         [User-Agent](https://en.wikipedia.org/wiki/User-Agent_header) header
-        to be set. See the [`user_agent_package_name`][(c).] property for
+        to be set. See the :attr:`user_agent_package_name` property for
         details and recommended best practices. This does not apply to the web
         platform, because you cannot set a User-Agent header different to what is
         provided by the browser.
 
         Read more on their tile usage policy
         [here](https://operations.osmfoundation.org/policies/tiles/).
-        ///
     """
 
     fallback_url: Optional[str] = None
     """
-    Fallback URL template used if fetching tiles from [`url_template`][(c).] fails.
+    Fallback URL template used if fetching tiles from :attr:`url_template` fails.
 
     The template must follow the same format and support the same placeholders
-    as [`url_template`][(c).].
+    as :attr:`url_template`.
 
     Note:
         When this is specified, tiles will not be cached in memory, to prevent
-        inconsistencies when [`url_template`][(c).] is unreliable, avoiding
+        inconsistencies when :attr:`url_template` is unreliable, avoiding
         situations where tiles from different sources are displayed simultaneously.
         Disabling caching may negatively impact performance and efficiency, hence the
         recommendation to only specify a fallback URL when really necessary.
@@ -150,7 +148,7 @@ class TileLayer(MapLayer):
     List of subdomains used in the URL template.
 
     To use subdomains, add the `{s}` placeholder to the URL
-    template ([`url_template`][(c).] and [`fallback_url`][(c).])
+    template (:attr:`url_template` and :attr:`fallback_url`)
 
     Note:
         Subdomains are now usually considered redundant due to the usage of HTTP/2
@@ -161,8 +159,8 @@ class TileLayer(MapLayer):
         avoid using subdomains.
 
     Example:
-        If [`subdomains`][(c).] is set to `["a", "b", "c"]`
-        and the [`url_template`][(c).] is
+        If :attr:`subdomains` is set to `["a", "b", "c"]`
+        and the :attr:`url_template` is
         `"https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"`,
         the resulting tile URLs will be:
 
@@ -212,11 +210,11 @@ class TileLayer(MapLayer):
 
         To use these tiles, set `tile_size` to the actual dimensions of the tiles
         (otherwise they will appear to small), such as `512`. Also set
-        [`zoom_offset`][(c).] to the result of `-((d/256) - 1)` - ie. `-1` for
+        :attr:`zoom_offset` to the result of `-((d/256) - 1)` - ie. `-1` for
         x512px tiles (otherwise they will appear at the wrong geographical locations).
 
         The `{d}` placeholder may also be used in the URL template
-        ([`url_template`][(c).] and [`fallback_url`][(c).]) to pass through the
+        (:attr:`url_template` and :attr:`fallback_url`) to pass through the
         value of `tile_size`.
 
     Raises:
@@ -247,7 +245,7 @@ class TileLayer(MapLayer):
     Most tile servers support up to zoom level `19`, which is the default.
     Otherwise, this should be specified.
 
-    You can also set [`max_zoom`][(c).], which is an absolute zoom limit for users.
+    You can also set :attr:`max_zoom`, which is an absolute zoom limit for users.
     It is recommended to set it to a few levels greater than the maximum zoom level
     covered by any of your tile layers.
 
@@ -299,7 +297,7 @@ class TileLayer(MapLayer):
 
     additional_options: dict[str, str] = field(default_factory=dict)
     """
-    Static information that should replace placeholders in the [`url_template`][(c).].
+    Static information that should replace placeholders in the :attr:`url_template`.
     Applying API keys, for example, is a good usecase of this parameter.
 
     Example:
@@ -320,7 +318,7 @@ class TileLayer(MapLayer):
     The main usage for this property is to display a different `TileLayer`
     when zoomed far in.
 
-    Prefer [`max_native_zoom`][(c).] for setting the maximum zoom level supported by the
+    Prefer :attr:`max_native_zoom` for setting the maximum zoom level supported by the
     tile source.
 
     Typically set to infinity so that there are tiles always displayed.
@@ -343,7 +341,7 @@ class TileLayer(MapLayer):
     """
     The source of the tile image to show in place of the tile that failed to load.
 
-    See [`on_image_error`][(c).] property for details on the error.
+    See :attr:`on_image_error` property for details on the error.
     """
 
     evict_error_tile_strategy: Optional[TileLayerEvictErrorTileStrategy] = (
@@ -369,7 +367,7 @@ class TileLayer(MapLayer):
     """
     Fires if an error occurs when fetching the tiles.
 
-    Event handler argument [`data`][flet.Event.] property contains
+    Event handler argument :attr:`~flet.Event.data` property contains
     information about the error.
     """
 

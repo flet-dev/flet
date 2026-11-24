@@ -1,0 +1,22 @@
+---
+class_name: "flet.BottomSheet"
+examples: "controls/material/bottom_sheet"
+example_images: "test-images/examples/controls/material/golden/macos/bottom_sheet"
+title: "BottomSheet"
+---
+
+import {ClassMembers, ClassSummary, CodeExample, Image} from '@site/src/components/crocodocs';
+
+<ClassSummary name={frontMatter.class_name} image={frontMatter.example_images + '/image_for_docs.png'} imageCaption="BottomSheet" imageWidth="30%"/>
+
+## Examples
+
+<CodeExample path={frontMatter.examples + '/bottom_sheet/main.py'} language="python" />
+
+<Image src={frontMatter.example_images + '/basic.gif'} width="40%" />
+
+<CodeExample path={frontMatter.examples + '/fullscreen/main.py'} language="python" />
+
+<Image src={frontMatter.example_images + '/fullscreen.gif'} width="40%" />
+
+<ClassMembers name={frontMatter.class_name} />

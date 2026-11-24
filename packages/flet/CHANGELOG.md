@@ -1,9 +1,208 @@
-## 0.82.0
+## Unreleased
 
 ### New features
 
 * Add `flet-appauth` service (`flutter_appauth`) and Android/iOS `page.login()` path with native AppAuth + PKCE.
 * Add `flet build --appauth-redirect-scheme` / `tool.flet.appauth.redirect_scheme` for mobile OAuth redirects (defaults to `flet` when `flet-appauth` is present).
+
+### Other changes
+
+* Pin `flutter_appauth` to 13.0.0 for Flutter 3.47 / Dart 3.12+.
+
+## 1.1.3
+
+* `parseAnimation(false)` returns `null`. When the caller supplies a default animation, it returns a zero-duration animation with the default curve ([#7091](https://github.com/flet-dev/flet/pull/7091)) by @ndonkoHenri.
+* `LayoutControl` and `BaseControl` wrap a control in `_ControlOpacity` instead of `Opacity`: it keeps the always-present wrapper (stable tree shape) but adds no layer at opacity 1.0 or 0.0 and pushes an `OpacityLayer` only in between. Flutter's `RenderOpacity` is a repaint boundary with its own `OpacityLayer` at any opacity above 0, so every control had its own layer, and on web a page of thousands of controls spent each frame walking them ([#7076](https://github.com/flet-dev/flet/pull/7076)) by @FeodorFitsner.
+* `DataTableControl` renders a table of 100 or more rows of one fixed height lazily (`_LazyDataTable`): the rows go into `DataTable`s of 10 rows each, with their heading row clipped off, under a header `DataTable`, and only the chunks near the nearest vertical `Scrollable`'s viewport are built, so the table still scrolls with its parent. The tables share column widths through a `TableColumnWidth` that keeps each column's widest measured cell; an offstage table seeds them with each column's widest texts, picked by summing per-character advances, so a long value far down sizes its column before it shows. Each table keeps its own measurement, so a chunk that is no longer built keeps sizing its columns until its rows change; a chunk's hidden heading row, the header's stand-in rows and the offstage table take no keyboard focus or taps; cell content in built rows rebuilds only itself. Smaller tables, rows of varying height, rows that mix selectable and not, and `build_rows_on_demand=False` still use one `DataTable` ([#7076](https://github.com/flet-dev/flet/pull/7076)) by @FeodorFitsner.
+* `DataTableControl` paints the table behind a `RepaintBoundary`, so a scrolling parent moves its recorded picture instead of repainting every row each frame, and reads `horizontal_lines` (it read `horizontal_lLines`, so the lines never showed) ([#7076](https://github.com/flet-dev/flet/pull/7076)) by @FeodorFitsner.
+* Add `isSvgSource(src, {isUrl})`: whether an image source names an SVG, by its path in any letter case, ignoring a URL's query and fragment. `Image` uses it for files and URLs, so `icon.svg?v=2` is drawn as SVG instead of blank ([#7057](https://github.com/flet-dev/flet/pull/7057)) by @FeodorFitsner.
+* `Text` with `spans` passes `overflow` to `Text.rich`, which reads it from its own style, not the span's, so `TextOverflow.ELLIPSIS` showed no ellipsis ([#7057](https://github.com/flet-dev/flet/pull/7057)) by @FeodorFitsner.
+
+## 1.1.2
+
+* Add `loadDeferredFonts(package)` (`DeferredFonts`): in a web app, loads the fonts of a Dart package that `flet build web` moved from `FontManifest.json` to `DeferredFontManifest.json`, once, with `FontLoader`; a failed load is retried by a later call after 5 s, doubling up to 5 min; a no-op elsewhere and when the package's fonts are in `FontManifest.json`. `Markdown` calls it for `flutter_math_fork` before drawing math ([#7054](https://github.com/flet-dev/flet/pull/7054)) by @FeodorFitsner.
+
+## 1.1.1
+
+* Normalize byte views into independent buffers for Safari image decoding. `ResolvedAssetSource` reuses the normalized buffer for the same immutable source across rebuilds, preserving image and Lottie cache keys; direct `convertToUint8List()` calls, including clipboard writes, read the current input ([#7049](https://github.com/flet-dev/flet/pull/7049)) by @FeodorFitsner.
+* Pass `package_info_plus` the web app's absolute base URL, so `get_package_info` finds `version.json` instead of throwing for a path-only `assetBase`; a web app without `version.json` gets empty values ([#7052](https://github.com/flet-dev/flet/pull/7052)) by @FeodorFitsner.
+
+## 1.1.0
+
+* Flutter updated to [3.47.9](https://github.com/flutter/flutter/blob/stable/CHANGELOG.md#3479).
+* `BottomAppBarControl` shifts its notch by the bar's margin, following an `animate_margin` animation frame by frame, also for a notch shape from `BottomAppBarTheme`. `parseTheme()` reads the bottom app bar theme from `bottom_appbar_theme` and its color from `bgcolor`, the keys the Python `Theme` sends ([#6986](https://github.com/flet-dev/flet/issues/6986), [#7024](https://github.com/flet-dev/flet/pull/7024)) by @ndonkoHenri.
+* Update `file_picker` to 13.x (federated; iOS picks media with `PHPickerViewController`, dropping DKImagePickerController, whose camera and photo-library references made App Store Connect demand purpose strings). `FilePickerService` uses `pickFile()`/`pickFiles()`, reads bytes and uploads through `PlatformFile.readAsBytes()`/`readAsByteStream()`, passes `lockParentWindow` through `WindowsOptions`/`LinuxOptions` and `cancel_upload_on_window_blur` through `file_picker_web`'s `FilePickerWebOptions` (imported only on web). `saveFile()` always writes the file, so desktop saves without `src_bytes` create it empty. Bump `device_info_plus` to ^13.3.0, `package_info_plus` to ^10.2.2 and `share_plus` to ^13.3.1 (`win32` 6, required by file_picker 13's Windows implementation) by @FeodorFitsner.
+* Apply `min_width`/`max_width`/`min_height`/`max_height` to every `LayoutControl` as a `ConstrainedBox` around the control (outside any fixed size). A control that implements one of these names itself lists it in `skip_properties` (`ListTile.min_height`, `NavigationRail.min_width`) by @FeodorFitsner.
+* Pass `material_tap_target_size` to `Switch` and `ThemeData` (`parseMaterialTapTargetSize()`) by @FeodorFitsner.
+* Map `Dropdown` `height` to the `DropdownMenu`'s `InputDecorationTheme`: field `constraints` plus `prefixIconConstraints`/`suffixIconConstraints`, so the field can be shorter than 48px by @FeodorFitsner.
+* Pass `PopupMenuButton` `border_radius` to the `InkWell` around custom `content` by @FeodorFitsner.
+* `SizeChangeObserver` reports the current size once when its widget is reused for a different control (`didUpdateWidget`); previously it only reported size changes, so the new control never heard its size by @FeodorFitsner.
+* `InteractiveViewer` with `pan_enabled`, `scale_enabled` and `trackpad_scroll_causes_scale` all off builds the same clip/transform/unbounded layout without the `InteractiveViewer` widget, whose scale recognizer swallowed taps on the content by @FeodorFitsner.
+* Parse `input_decoration_theme` into `ThemeData.inputDecorationTheme`; its `border` becomes a `WidgetStateInputBorder` that falls back to the Material 3 side for each unset state. `parseFormFieldBorders()` leaves the border slots empty when a control has no `border` and the theme has one, and `filled`/`dense` stay unset unless given, so the theme applies. `Dropdown` derives its `inputDecorationTheme` from the app's instead of replacing it by @FeodorFitsner.
+* Add a `TextFieldTheme` theme extension (`text_field_theme.text_style`), merged under a `TextField`'s own style by @FeodorFitsner.
+* Fix `SystemUiOverlayStyleTheme.==` throwing a type error when compared with another theme extension by @FeodorFitsner.
+* An embedded page passes `title: null` to its `MaterialApp`/`CupertinoApp`, so on the web `WidgetsApp` doesn't install a `Title` widget that overwrote the host page's `document.title`; the title still goes to the host through `EmbeddedAppScope.onTitleChanged` by @FeodorFitsner.
+* `FletApp` applies `platform_brightness` to the embedded app's `MediaQuery`, which its `PageMedia` reports as the platform brightness by @FeodorFitsner.
+* An embedded page no longer inherits its host's theme mode through `PageContext`; an unset `theme_mode` means system by @FeodorFitsner.
+* `Markdown` always builds its style sheet from the theme: a `MarkdownTheme` extension (`markdown_theme`) underneath the control's `md_style_sheet`; link and blockquote defaults use the color scheme instead of `Colors.blue` by @FeodorFitsner.
+* `PopupMenuButton` falls back to a `PopupMenuButtonTheme` extension (`popup_menu_theme.border_radius`) for its ink radius by @FeodorFitsner.
+* `Control.invokeMethod` iterates a snapshot of its listeners, so a listener added or removed while an awaited call is in progress no longer throws `ConcurrentModificationError` by @FeodorFitsner.
+* Fix `View` throwing `Bad state: No element` when it rebuilds while the page's `views` list is empty (e.g. the route matches no view); it is treated as the root and top view instead by @FeodorFitsner.
+* Controls are always wrapped in `Opacity` (`1.0` when unset) and `Container` always in `IgnorePointer`, so toggling `opacity` or `ignore_interactions` no longer changes the widget tree's shape and remounts the subtree by @FeodorFitsner.
+* Auto-scroll treats a position within its threshold of the end as pinned before checking whether pixels decreased, so a position clamped by content shrinking at the end no longer unpins it by @FeodorFitsner.
+* An embedded page builds its `Navigator` with `requestFocus: false`, so pushing its routes doesn't move the focus out of the host app by @FeodorFitsner.
+* `PageControl` wraps an embedded page's app in a `CupertinoTheme` derived from the page's own Material theme (top-level pages are unchanged). Flutter's `Theme` reuses an ambient `CupertinoTheme` when one exists above it instead of deriving one from its `ThemeData`, so an embedded page's Cupertino widgets took the host app's colors by @FeodorFitsner.
+* `CupertinoButtonControl` falls back to the `ButtonStyle` in `internals["style"]` - what an adaptive Material `Button` sends - for background, foreground and padding when `bgcolor`/`color`/`padding` are absent by @FeodorFitsner.
+* **Breaking:** `parseTheme()` now builds themes from a seed with neutral surfaces by default (`#ffffff` / `#121212` and a neutral grey ramp for surface containers, `onSurface`, `outline` and inverse surfaces); the seed still drives accent colors. A theme's `surfaces: "tonal"` restores the seed-tinted Material 3 surfaces. Adds the `ThemeSurfaces` enum, `parseThemeSurfaces()` and `neutralizeSurfaces()` ([#6921](https://github.com/flet-dev/flet/issues/6921)) by @FeodorFitsner.
+* Import Material and Cupertino from the `material_ui` and `cupertino_ui` packages instead of `package:flutter/material.dart` and `package:flutter/cupertino.dart`. Helpers that take or return Material or Cupertino types, such as `parseColor()`, `parseTextStyle()` and `parseButtonStyle()`, now use those packages' types, and `flet.dart` no longer re-exports `Icons` and `CupertinoIcons`. Requires Flutter 3.47 or later.
+* Add `markdownStyleSheetFromTheme()`, which builds the default `MarkdownStyleSheet` from a `material_ui` theme. `MarkdownStyleSheet.fromTheme()` from `flutter_markdown_plus` only accepts the Flutter SDK's `ThemeData`.
+* Add `text_input_action` to `TextField` and `CupertinoTextField`, with `parseTextInputAction()` and `Control.getTextInputAction()` to parse Flutter's `TextInputAction` ([#6962](https://github.com/flet-dev/flet/issues/6962)) by @ndonkoHenri.
+* Fix `FletBackend` running two competing reconnects when a connection reports its disconnect twice, such as a socket reset after a `flet run` hot reload ([#6913](https://github.com/flet-dev/flet/issues/6913), [#6945](https://github.com/flet-dev/flet/pull/6945)) by @ndonkoHenri.
+
+## 1.0.5
+
+_No changes in the `flet` Dart package; version bumped for release coordination with the fix for Flet web apps failing to start with FastAPI 0.145 or later ([#6984](https://github.com/flet-dev/flet/issues/6984), [#6988](https://github.com/flet-dev/flet/pull/6988))._
+
+## 1.0.4
+
+* Depend on `screen_brightness_platform_interface`, `screen_brightness_android` and `screen_brightness_ios` instead of `screen_brightness`, and drive `ScreenBrightnessService` through `ScreenBrightnessPlatform.instance`: apps embedding `flet` no longer register the Windows, macOS and OHOS `screen_brightness` plugins, whose Windows one talks to monitors over DDC/CI while the app runs ([#6629](https://github.com/flet-dev/flet/issues/6629), [#6493](https://github.com/flet-dev/flet/issues/6493), [#6925](https://github.com/flet-dev/flet/pull/6925)) by @ndonkoHenri.
+
+## 1.0.3
+
+* Add `FletBackend.waitIdle()` for embedded backends: completes with `idle` once the app has rendered and gone quiet, `error` if it crashes or fails to start, or `timeout`. `FletApp` gains `onBackendCreated` to reach the embedded backend, and the `FletApp` control answers a `wait_idle` method call. A crash in an embedded backend is now also reported to the host's `errorsHandler` ([#6901](https://github.com/flet-dev/flet/pull/6901)) by @FeodorFitsner.
+* Add a `paste_files` event to `TextField`: while a field with a handler is focused, files pasted into it are read from the browser's `paste` event on the web (`listenPastedFiles()`), or from the clipboard image on `Ctrl`/`Cmd`+`V` on desktop, and sent as `name`, `mime_type` and `bytes` ([#6901](https://github.com/flet-dev/flet/pull/6901)) by @FeodorFitsner.
+* Key each child `ControlWidget` built by `Control.buildWidgets()` with a new `ControlIdKey(control.id)`, so Flutter matches children by identity instead of position: a sibling inserted before a control, or one whose visibility changes, no longer rebuilds it and resets its state ([#6901](https://github.com/flet-dev/flet/pull/6901)) by @FeodorFitsner.
+* Fix `TabsControl` recreating its `TabController` at the old index when `length` and `selected_index` change in the same update ([#6901](https://github.com/flet-dev/flet/pull/6901)) by @FeodorFitsner.
+* Fix `FilePickerService` uploading picked files to the wrong URLs: picked files are kept by their selection id across `upload` calls, and each file is claimed before any upload starts (`takeUploadTargets()`). A file that can't be found reports an upload error ([#6901](https://github.com/flet-dev/flet/pull/6901)) by @FeodorFitsner.
+
+## 1.0.2
+
+* Pass `Semantics.identifier` through to Flutter's `Semantics` widget and add `Tester.findBySemanticsIdentifier()` so tests can match nodes by native accessibility identifier ([#6832](https://github.com/flet-dev/flet/pull/6832)) by @mccre110.
+* Fix `Button`, `FilledButton`, `FilledTonalButton`, `OutlinedButton` and `TextButton` rendering an error box when `icon` is set without `content`. `ButtonControl` now uses the `.icon(...)` constructors only when both `icon` and `content` are provided; otherwise it builds the plain button with whichever one is set as its child, so icon-only buttons render the icon centered ([#6886](https://github.com/flet-dev/flet/issues/6886), [#6889](https://github.com/flet-dev/flet/pull/6889)) by @FeodorFitsner.
+
+## 1.0.1
+
+_No changes in the `flet` Dart package; version bumped for release coordination with the Python-side fix for child components losing click events after wrapper re-renders ([#6857](https://github.com/flet-dev/flet/issues/6857), [#6859](https://github.com/flet-dev/flet/pull/6859))._
+
+## 1.0.0
+
+* Add `runClientActions()` and `runControlActions()` in `utils/client_actions.dart`, which perform a control's `url` and `action` properties on the client, synchronously, from inside the gesture callback that triggered them. `runClientActions()` resolves each action's target service through `FletBackend.controlsIndex` and calls `Control.invokeMethod()` on it without awaiting, because browsers grant gesture-gated APIs - opening a file picker, writing to the clipboard, `navigator.share`, `window.open` - only while user activation is live, and activation does not survive an async gap. The new `Control.hasInvokeMethodListeners` getter guards that path: `Control.invokeMethod()` waits for a listener when the target service is not mounted yet, and awaiting that wait would silently consume the gesture, so an unresolvable action is skipped and logged instead. A new `Control.hasControlActions` extension getter reports whether a control has anything to run, for controls that only install a tap handler when something is wired to them. `openWebBrowser()` is no longer called directly by `Button`, `Container`, `IconButton`, `ListTile`, `CupertinoListTile`, `CupertinoButton` and `FloatingActionButton`, which now dispatch through `runControlActions()`; `parseTextSpans()` and `parseInlineSpan()` take an optional trailing `BuildContext` so a `TextSpan` can carry actions too.
+* Client actions add `"_from_gesture": true` to the arguments they invoke a service method with, so a service can tell the two entry points apart. `FilePickerService` uses it to emit a `result` event only for the gesture path - a gesture-triggered pick has no caller to return to - and to skip the new `isGestureGatedDialogBlocked()` check, added to `utils/platform_utils_web.dart` and its non-web counterpart. That check reports `true` only for an Apple/WebKit browser whose `navigator.userActivation` says no activation is live, so a `pick_files()` call that cannot possibly open a dialog fails immediately instead of waiting out its timeout; Chrome and Firefox permit programmatic file input clicks outside a gesture and are never reported as blocked.
+* Replace the `FormFieldInputBorder` enum and its `parseFormFieldInputBorder()` / `Control.getFormFieldInputBorder()` helpers with `parseInputBorder()`, which builds an `InputBorder` from a serialized border object. `parseFormFieldBorders()` maps a control's `border` property — a single border or a map of control states — onto the `InputDecoration` border slots, including `errorBorder`, `focusedErrorBorder` and `disabledBorder`, and `parseFormFieldBoxBorder()` translates the same property for controls decorated with a `BoxDecoration` instead ([#6773](https://github.com/flet-dev/flet/pull/6773)) by @ndonkoHenri.
+* `_onPatchControl` now reports a `PATCH_CONTROL` whose target id is missing from `controlsIndex` instead of silently discarding it. A dropped patch means the client and server have diverged and the screen is stale from that point on; previously nothing was logged anywhere, making the resulting "app stopped responding" impossible to diagnose. Uses `print` rather than `debugPrint`, which `main.dart` nulls in release builds - exactly where the message needs to be visible.
+* `FletJS.canvasKitBaseUrl` is now `String?`. `flutter_bootstrap.js` applies `flet.canvasKitBaseUrl` and `flet.fontFallbackBaseUrl` whenever they are set rather than only when `flet.noCdn` is true, and both default to `null` in CDN mode — so a host serving its own copy of the runtime can point them anywhere without also claiming a no-CDN build. The getter has no readers in this package; the annotation now matches the value it can carry.
+* Fix `Container` applying its `padding` twice, and confining ink/hover effects to the size of its content, when `ink` is enabled together with `animate`. `padding` and `alignment` were passed both to the outer `AnimatedContainer` and to the inner `Container` under the `InkWell`, so the effective padding doubled; the duplicated `alignment` also made the `Material`/`InkWell` shrink-wrap to the content, so splashes and the hover overlay no longer reached the container's edges even though `bgcolor` filled it. Both properties now live only on the inner container - an `AnimatedContainer` when `animate` is set, so they still animate - matching the non-animated ink path.
+
+## 0.86.5
+
+_No changes in the `flet` Dart package; version bumped for release coordination with configurable Android `gradle.properties` on the Python side ([#6733](https://github.com/flet-dev/flet/pull/6733))._
+
+## 0.86.4
+
+* Isolate per-service failures when building the page's service registry. `ServiceBinding` throws `Unknown service` for a control type no extension can build, and that exception escaping `ServiceRegistry._onServicesUpdated()` aborted the whole loop, so every service after the offending entry was silently never bound and later `invokeMethod` calls on them hung until they timed out. Each binding is now built independently and a failure is logged and skipped. Also rebuilds the registry when the `_services` control instance is replaced (not just when its uid changes), matching how the `window` service tracks its control by identity.
+
+## 0.86.3
+
+* Fix a system/edge-swipe back gesture exiting the whole host app instead of navigating back when it lands on an embedded `FletApp` (an app rendered inside another Flet app — e.g. a gallery host running example apps in-process). The embedded app's `WidgetsApp` (`MaterialApp`/`CupertinoApp`) ran the default `NavigationNotification` handler, which reported `SystemNavigator.setFrameworkHandlesBack(false)` for a nested app that couldn't pop (typically a single-view example) and swallowed the notification, so the OS finished the whole activity on back and the host never got to report that it could pop. An embedded page now lets that notification bubble to the host (which re-reports `canHandlePop`) and chains a `ChildBackButtonDispatcher` to the host Router, so a system back propagates to the host and pops the view that embeds it.
+* Fix modal controls (`AlertDialog`, `CupertinoAlertDialog`, `BottomSheet`, `CupertinoBottomSheet`) throwing "setState()/markNeedsBuild() called during build" and blanking the screen when closed in the same frame another route/overlay opens (e.g. a `SnackBar`). Each modal now tracks its own `ModalRoute` and closes it via a post-frame `closeModalRoute()` that pops that specific route; `View`'s confirm-pop pops its own route too, removing the wrong-route race between a dismissing modal and a view pop.
+
+## 0.86.2
+
+* Flutter updated to [3.44.7](https://github.com/flutter/flutter/blob/stable/CHANGELOG.md#3447).
+
+## 0.86.1
+
+_No changes in the `flet` Dart package; version bumped for release coordination with the web client's readable app-package download errors ([#6680](https://github.com/flet-dev/flet/pull/6680))._
+
+## 0.86.0
+
+_No changes in the `flet` Dart package; version bumped for release coordination with the multi-version bundled CPython support on the Python side ([#6577](https://github.com/flet-dev/flet/pull/6577))._
+
+## 0.85.3
+
+### Bug fixes
+
+* Defer pre-show window placement on Linux (`centerWindow()`, `setWindowAlignment()`) until the window first becomes visible, so `page.window.center()` / `page.window.alignment` set before `page.window.visible = True` no longer flash the window during startup. Also preserve the `focused` state when a `prevent_close` handler cancels a close attempt ([#5897](https://github.com/flet-dev/flet/issues/5897), [#5914](https://github.com/flet-dev/flet/issues/5914), [#6527](https://github.com/flet-dev/flet/pull/6527)) by @ihmily.
+
+## 0.85.2
+
+_No changes in the `flet` Dart package; version bumped for release coordination with `flet.Router` enhancements on the Python side (modal/recursive route flags, chain-based default pop)._
+
+## 0.85.1
+
+_No changes in the `flet` Dart package; version bumped for release coordination with `flet-geolocator` fixes on the Python side._
+
+## 0.85.0
+
+### New features
+
+* Add `parseControlWidget()` and `parseControlWidgets()` utilities for converting Flet controls in protocol values to Flutter widgets ([#6463](https://github.com/flet-dev/flet/pull/6463)) by @ndonkoHenri.
+
+### Bug fixes
+
+* Preserve viewport minimum constraints for short scrollable `View`, `Column`, and `Row` content so main-axis alignment still applies ([#6446](https://github.com/flet-dev/flet/issues/6446), [#6450](https://github.com/flet-dev/flet/pull/6450)) by @ndonkoHenri.
+* Handle unbounded width in `ResponsiveRow` with an explicit error and treat child controls with `col=0` as hidden at the current breakpoint ([#1951](https://github.com/flet-dev/flet/issues/1951), [#3805](https://github.com/flet-dev/flet/issues/3805), [#6354](https://github.com/flet-dev/flet/pull/6354)) by @ndonkoHenri.
+* Fix `page.window.destroy()` taking several seconds to close Windows desktop apps when `prevent_close` is enabled ([#5459](https://github.com/flet-dev/flet/issues/5459), [#6428](https://github.com/flet-dev/flet/pull/6428)) by @ndonkoHenri.
+* Fix `flet pack` desktop packaging so Windows and Linux bundles include the expected client archive, and Windows taskbar pins point to the packed app instead of the cached `flet.exe` ([#5151](https://github.com/flet-dev/flet/issues/5151), [#6403](https://github.com/flet-dev/flet/pull/6403)) by @ndonkoHenri.
+* Resolve absolute-path `src` (e.g. `Image(src="/images/foo.svg")`) against `assets_dir` on web so embedded apps mounted at non-root URLs load assets correctly, pass `data:`/`blob:` URIs through unchanged, preserve origin-relative semantics when `assets_dir` is unset, and add a `window.flet.assetsDir` JS-interop bridge so embedding hosts can supply `assets_dir` to the top-level `FletApp` ([#6470](https://github.com/flet-dev/flet/pull/6470)) by @FeodorFitsner.
+* Coerce `double` to `int` in `parseInt` so float values passed into `int`-typed protocol fields (e.g. `Duration(seconds: 2.0)`) decode correctly instead of falling back to the default ([#6478](https://github.com/flet-dev/flet/issues/6478), [#6480](https://github.com/flet-dev/flet/pull/6480)) by @FeodorFitsner.
+
+## 0.84.0
+
+### Improvements
+
+* Migrate Flet docs from MkDocs to Docusaurus for a more maintainable documentation pipeline ([#6359](https://github.com/flet-dev/flet/pull/6359)) by @FeodorFitsner.
+* Migrate examples into standalone projects with metadata, dependencies, and assets to improve discovery and make every sample runnable as-is ([#6281](https://github.com/flet-dev/flet/issues/6281), [#6355](https://github.com/flet-dev/flet/pull/6355)) by @InesaFitsner.
+
+### Bug fixes
+
+* Fix `flet pack` on macOS after the move to GitHub Releases by handling extracted app bundles, matching the cached tarball name, and cleaning up loose frameworks during packaging ([#6358](https://github.com/flet-dev/flet/issues/6358), [#6361](https://github.com/flet-dev/flet/pull/6361)) by @FeodorFitsner.
+
+## 0.83.1
+
+### Bug fixes
+
+* Fix solitaire tutorial and drag examples to use `local_delta.x` and `local_delta.y` instead of removed `delta_x` and `delta_y` ([#6317](https://github.com/flet-dev/flet/issues/6317), [#6344](https://github.com/flet-dev/flet/pull/6344)) by @Krishnachaitanyakc.
+* Fix inherited dataclass field validation rules applying to overridden subclass fields and breaking `flet-datatable2` on `0.83.0` ([#6349](https://github.com/flet-dev/flet/issues/6349), [#6350](https://github.com/flet-dev/flet/pull/6350)) by @ndonkoHenri.
+
+## 0.83.0
+
+### New features
+
+* Add customizable scrollbars for scrollable controls and pages ([#5912](https://github.com/flet-dev/flet/issues/5912), [#6282](https://github.com/flet-dev/flet/pull/6282)) by [@ndonkoHenri](https://github.com/ndonkoHenri).
+* Add scrolling support and richer change events to `ExpansionPanelList` ([#6294](https://github.com/flet-dev/flet/pull/6294)) by [@ndonkoHenri](https://github.com/ndonkoHenri).
+* Expand `SharedPreferences` to support `int`, `float`, `bool`, and `list[str]` values ([#6304](https://github.com/flet-dev/flet/issues/6304), [#6267](https://github.com/flet-dev/flet/pull/6267)) by [@ndonkoHenri](https://github.com/ndonkoHenri).
+
+### Improvements
+
+* Speed up control diffing and nested value tracking with sparse `Prop` updates and `@value` types ([#6098](https://github.com/flet-dev/flet/issues/6098), [#6270](https://github.com/flet-dev/flet/issues/6270), [#6117](https://github.com/flet-dev/flet/issues/6117), [#6296](https://github.com/flet-dev/flet/pull/6296)) by [@FeodorFitsner](https://github.com/FeodorFitsner).
+* Consolidate app/build templates into the monorepo and publish pre-release `flet` packages and template artifacts from CI ([#6306](https://github.com/flet-dev/flet/issues/6306), [#6331](https://github.com/flet-dev/flet/pull/6331)) by [@FeodorFitsner](https://github.com/FeodorFitsner).
+* Move desktop client binaries from PyPI wheels to GitHub Releases and unify desktop packaging around `flet-desktop` ([#6290](https://github.com/flet-dev/flet/issues/6290), [#6309](https://github.com/flet-dev/flet/pull/6309)) by [@FeodorFitsner](https://github.com/FeodorFitsner).
+
+### Bug fixes
+
+* Align Dart-side default values with Python across core and extension packages ([#6329](https://github.com/flet-dev/flet/issues/6329), [#6330](https://github.com/flet-dev/flet/pull/6330)) by [@FeodorFitsner](https://github.com/FeodorFitsner).
+* Skip redundant page auto-updates after handlers call `.update()` explicitly ([#6236](https://github.com/flet-dev/flet/issues/6236), [#6298](https://github.com/flet-dev/flet/pull/6298)) by [@FeodorFitsner](https://github.com/FeodorFitsner).
+* Fix `ReorderableListView` reorder event deserialization for start/end callbacks ([#6177](https://github.com/flet-dev/flet/issues/6177), [#6315](https://github.com/flet-dev/flet/pull/6315)) by [@ndonkoHenri](https://github.com/ndonkoHenri).
+* Skip loading `micropip` for Pyodide apps that already define dependencies in `pyproject.toml` ([#6259](https://github.com/flet-dev/flet/issues/6259), [#6300](https://github.com/flet-dev/flet/pull/6300)) by [@FeodorFitsner](https://github.com/FeodorFitsner).
+
+## 0.82.2
+
+### Bug fixes
+
+* Lazy-load optional auth dependencies to avoid import-time failures in web/Pyodide startup ([#6258](https://github.com/flet-dev/flet/issues/6258), [#6280](https://github.com/flet-dev/flet/pull/6280)) by [@ndonkoHenri](https://github.com/ndonkoHenri).
+* Pin `binaryornot` below `0.5` to fix build-template UTF-8 decode errors ([#6276](https://github.com/flet-dev/flet/issues/6276), [#6279](https://github.com/flet-dev/flet/pull/6279)) by [@ndonkoHenri](https://github.com/ndonkoHenri).
+
+## 0.82.0
+
+### Improvements
+
+* Refactor ads controls: `InterstitialAd` is now a `Service`, and `BannerAd` is now a `LayoutControl` ([#6194](https://github.com/flet-dev/flet/issues/6194), [#6235](https://github.com/flet-dev/flet/pull/6235)).
+* Improve `CodeEditor` with Chinese pinyin input support and aligned gutter rendering ([#6211](https://github.com/flet-dev/flet/issues/6211), [#6243](https://github.com/flet-dev/flet/issues/6243), [#6244](https://github.com/flet-dev/flet/pull/6244)).
+
+### Bug fixes
+
+* Fix disabled-state handling across `Tabs`, `TabBar`, `Tab`, and `TabBarView` ([#6220](https://github.com/flet-dev/flet/issues/6220), [#6224](https://github.com/flet-dev/flet/pull/6224)).
 
 ## 0.81.0
 
@@ -808,7 +1007,7 @@ from flet.auth.providers import GitHubOAuthProvider
 * Pyodide publishing fixes and improvements ([#953](https://github.com/flet-dev/flet/issues/953))
 * feat: Add PaddingValue to __init__.py ([#936](https://github.com/flet-dev/flet/issues/936))
 * Standalone Flet web apps with Pyodide ([#913](https://github.com/flet-dev/flet/issues/913))
-* modified `tooltip` attribute from `prefere*` to `prefer*` ([#909](https://github.com/flet-dev/flet/issues/909))
+* modified `tooltip` attribute from `prefer*` to `preferred*` ([#909](https://github.com/flet-dev/flet/issues/909))
 * Fix unicode encoding in `FletTcpSocketServerProtocol`
 * Fix relative assets path in desktop app
 * PDM changed to Poetry

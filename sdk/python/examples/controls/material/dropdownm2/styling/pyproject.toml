@@ -1,0 +1,26 @@
+[project]
+name = "dropdownm2-styling"
+version = "1.0.0"
+description = "Styles the DropdownM2 input field border and the open menu shape independently."
+requires-python = ">=3.10"
+keywords = ["dropdownm2", "input border", "menu border radius", "styling"]
+authors = [{ name = "Flet team", email = "hello@flet.dev" }]
+dependencies = ["flet"]
+
+[dependency-groups]
+dev = ["flet-cli", "flet-desktop", "flet-web"]
+
+[tool.flet.gallery]
+categories = ["Input/Dropdown"]
+
+[tool.flet.metadata]
+title = "DropdownM2 styling"
+controls = ["SafeArea", "Column", "DropdownM2"]
+layout_pattern = "gallery"
+complexity = "basic"
+features = ["input border", "menu border radius"]
+
+[tool.flet]
+org = "dev.flet"
+company = "Flet"
+copyright = "Copyright (C) 2023-2026 by Flet"

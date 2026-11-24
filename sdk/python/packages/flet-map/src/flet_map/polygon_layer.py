@@ -8,9 +8,9 @@ __all__ = ["PolygonLayer", "PolygonMarker"]
 
 
 @ft.control("PolygonMarker")
-class PolygonMarker(ft.Control):
+class PolygonMarker(ft.BaseControl):
     """
-    A marker for the [`PolygonLayer`][(p).].
+    A marker for the :class:`~flet_map.PolygonLayer`.
     """
 
     coordinates: list[MapLatitudeLongitude]
@@ -26,7 +26,8 @@ class PolygonMarker(ft.Control):
         Specifying a label will reduce performance, as the internal
         canvas must be drawn to and 'saved' more frequently to ensure the proper
         stacking order is maintained. This can be avoided, potentially at the
-        expense of appearance, by setting [`PolygonLayer.draw_labels_last`][(p).].
+        expense of appearance, by setting \
+        :attr:`flet_map.PolygonLayer.draw_labels_last`.
     """
 
     label_text_style: Optional[ft.TextStyle] = None
@@ -73,6 +74,11 @@ class PolygonMarker(ft.Control):
     Style to use for line segment joins.
     """
 
+    visible: bool = True
+    """
+    Whether this marker is rendered on the map.
+    """
+
     def before_update(self):
         super().before_update()
         if self.border_stroke_width < 0:
@@ -90,7 +96,7 @@ class PolygonLayer(MapLayer):
 
     polygons: list[PolygonMarker]
     """
-    A list of [`PolygonMarker`][(p).]s to display.
+    A list of :class:`~flet_map.PolygonMarker`s to display.
     """
 
     polygon_culling: bool = True

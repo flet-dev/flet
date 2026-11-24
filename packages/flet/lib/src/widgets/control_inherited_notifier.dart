@@ -1,4 +1,5 @@
-import 'package:flutter/material.dart';
+import 'package:collection/collection.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:provider/provider.dart';
 
 import '../extensions/control.dart';
@@ -31,93 +32,118 @@ class ControlInheritedNotifier extends InheritedNotifier<Control> {
   }
 }
 
-/// Wraps [builder] with [ControlInheritedNotifier], unless the control opts out.
+/// Wraps [builder] in the control's [ControlInheritedNotifier], with the
+/// control's [Theme] (`theme`, `dark_theme`, `theme_mode`) inside it, so theme
+/// changes rebuild like any other property change.
 ///
-/// If `"skip_inherited_notifier"` internal is `true`, this returns
-/// [builder] without a [ControlInheritedNotifier] wrapper.
-Widget withControlInheritedNotifier(Control control, WidgetBuilder builder) {
+/// [builder] runs below that [Theme], so `Theme.of(context)` returns the
+/// control's theme.
+///
+/// Controls with the `"skip_inherited_notifier"` internal set to `true` get
+/// neither the notifier nor the per-control theme.
+Widget withControlContext(Control control, WidgetBuilder builder) {
   if (control.internals?["skip_inherited_notifier"] == true) {
     return Builder(builder: builder);
   }
 
   return ControlInheritedNotifier(
     notifier: control,
-    child: Builder(builder: (context) {
-      ControlInheritedNotifier.of(context);
-      return builder(context);
-    }),
+    child: _ControlContext(control: control, builder: builder),
   );
 }
 
-/// Convenience wrapper that applies both:
-/// - [withControlInheritedNotifier]
-/// - [withControlTheme]
-Widget withControlContext(
-  Control control,
-  WidgetBuilder builder,
-) {
-  // Avoid stacking Builders for controls that opt out of the inherited notifier
-  // pattern. `withControlTheme()` is also a no-op for these controls.
-  if (control.internals?["skip_inherited_notifier"] == true) {
-    return Builder(builder: builder);
-  }
+/// Rebuilds on every change of [control] and applies its per-control theme.
+class _ControlContext extends StatefulWidget {
+  final Control control;
+  final WidgetBuilder builder;
 
-  return Builder(builder: (context) {
-    final child = withControlInheritedNotifier(control, builder);
-    return withControlTheme(control, context, child);
-  });
+  const _ControlContext({required this.control, required this.builder});
+
+  @override
+  State<_ControlContext> createState() => _ControlContextState();
 }
 
-/// Applies per-control theming (`theme`, `dark_theme`, `theme_mode`) to `child`.
-///
-/// Returns `child` unchanged when:
-/// - `control` is the page/root control
-/// - `"skip_inherited_notifier"` internal is `true`
-/// - no `theme`/`dark_theme` is set and `theme_mode` is `null`
-///
-/// Parameters:
-/// - `control`: the control whose per-control theme (if any) will be applied.
-/// - `context`: used to access `FletBackend` and the ambient `Theme`.
-/// - `child`: the widget subtree to wrap with the per-control `Theme`.
-Widget withControlTheme(Control control, BuildContext context, Widget child) {
-  if (control == FletBackend.of(context).page) return child;
+class _ControlContextState extends State<_ControlContext> {
+  /// Keeps the control's subtree (focus, scroll position, animations, ...)
+  /// when its [Theme] wrapper is added or removed: the keyed [Builder] is
+  /// moved under or out of the [Theme] instead of being rebuilt from scratch.
+  final _childKey = GlobalKey();
 
-  if (control.internals?["skip_inherited_notifier"] == true) return child;
+  // Last parsed theme and the inputs it was parsed from.
+  ThemeData? _themeData;
+  dynamic _themeValue;
+  Brightness? _brightness;
+  ThemeData? _ambientTheme;
+  bool _inheritsAmbientTheme = false;
 
-  final hasNoThemes =
-      control.get("theme") == null && control.get("dark_theme") == null;
-  final themeMode = control.getThemeMode("theme_mode");
-  if (hasNoThemes && themeMode == null) return child;
+  static const _equality = DeepCollectionEquality();
 
-  final ThemeData? parentTheme = (themeMode == null) ? Theme.of(context) : null;
+  @override
+  Widget build(BuildContext context) {
+    ControlInheritedNotifier.of(context);
+    final child = Builder(key: _childKey, builder: widget.builder);
+    final themeData = _resolveTheme(context);
+    return themeData != null ? Theme(data: themeData, child: child) : child;
+  }
 
-  /// Converts [ThemeMode] to [Brightness] used by [Control.getTheme].
-  Brightness? themeModeToBrightness(ThemeMode? mode) {
-    switch (mode) {
-      case ThemeMode.light:
-        return Brightness.light;
-      case ThemeMode.dark:
-        return Brightness.dark;
-      case ThemeMode.system:
-        return context.select<FletBackend, Brightness>(
-          (backend) => backend.platformBrightness,
-        );
-      case null:
-        return parentTheme?.brightness;
+  /// Returns the control's [ThemeData], or `null` when it has no per-control
+  /// theme (no `theme`/`dark_theme` and no `theme_mode`) or is the page.
+  ///
+  /// The parsed theme is reused while the theme property, brightness and
+  /// ambient theme stay the same, so updates of other properties don't parse
+  /// the theme again.
+  ThemeData? _resolveTheme(BuildContext context) {
+    final control = widget.control;
+    if (control == FletBackend.of(context).page) return null;
+
+    final themeMode = control.getThemeMode("theme_mode");
+    if (themeMode == null &&
+        control.get("theme") == null &&
+        control.get("dark_theme") == null) {
+      _themeData = null;
+      return null;
     }
+
+    final ambientTheme = Theme.of(context);
+    final brightness = switch (themeMode) {
+      ThemeMode.light => Brightness.light,
+      ThemeMode.dark => Brightness.dark,
+      ThemeMode.system => context.select<FletBackend, Brightness>(
+          (backend) => backend.platformBrightness),
+      null => ambientTheme.brightness,
+    };
+    final propertyName = brightness == Brightness.dark ? "dark_theme" : "theme";
+    final themeValue = control.get(propertyName);
+    final inheritsAmbientTheme = themeMode == null;
+
+    // Theme maps are patched in place, so compare against a copy by value.
+    final cached = _themeData;
+    if (cached != null &&
+        brightness == _brightness &&
+        inheritsAmbientTheme == _inheritsAmbientTheme &&
+        (identical(ambientTheme, _ambientTheme) ||
+            ambientTheme == _ambientTheme) &&
+        _equality.equals(themeValue, _themeValue)) {
+      return cached;
+    }
+
+    _brightness = brightness;
+    _inheritsAmbientTheme = inheritsAmbientTheme;
+    _ambientTheme = ambientTheme;
+    _themeValue = _deepCopy(themeValue);
+    return _themeData = parseTheme(themeValue, context, brightness,
+        parentTheme: inheritsAmbientTheme ? ambientTheme : null);
   }
 
-  Widget buildTheme(Brightness? brightness) {
-    final themeData = control.getTheme(
-      brightness == Brightness.dark ? "dark_theme" : "theme",
-      context,
-      brightness,
-      parentTheme: parentTheme,
-    );
-    return Theme(data: themeData, child: child);
+  static dynamic _deepCopy(dynamic value) {
+    if (value is Map) {
+      return value.map((k, v) => MapEntry(k, _deepCopy(v)));
+    }
+    if (value is List) {
+      return value.map(_deepCopy).toList();
+    }
+    return value;
   }
-
-  return buildTheme(themeModeToBrightness(themeMode));
 }
 
 extension ControlContextBuilder on Control {

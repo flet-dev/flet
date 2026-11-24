@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 
 import '../extensions/control.dart';
 import '../models/control.dart';
@@ -57,8 +57,8 @@ class _MenuItemButtonControlState extends State<MenuItemButtonControl> {
             ? const StadiumBorder()
             : RoundedRectangleBorder(borderRadius: BorderRadius.circular(4)));
 
-    bool onClick = widget.control.getBool("on_click", false)!;
-    bool onHover = widget.control.getBool("on_hover", false)!;
+    bool onClick = widget.control.hasEventHandler("click");
+    bool onHover = widget.control.hasEventHandler("hover");
 
     var menuItem = MenuItemButton(
       focusNode: _focusNode,

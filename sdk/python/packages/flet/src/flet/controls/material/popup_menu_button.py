@@ -4,6 +4,7 @@ from typing import Optional
 
 from flet.controls.animation import AnimationStyle
 from flet.controls.base_control import control
+from flet.controls.border_radius import BorderRadiusValue
 from flet.controls.box import BoxConstraints
 from flet.controls.buttons import ButtonStyle, OutlinedBorder
 from flet.controls.control import Control
@@ -23,7 +24,7 @@ from flet.controls.types import (
 
 class PopupMenuPosition(Enum):
     """
-    Used to configure how the [`PopupMenuButton`][flet.] positions its popup menu.
+    Used to configure how the :class:`~flet.PopupMenuButton` positions its popup menu.
     """
 
     OVER = "over"
@@ -58,7 +59,7 @@ class PopupMenuItem(Control):
     Whether this menu item is checked.
 
     If set to `True`, a checkmark will be shown on the left of the
-    [`content`][(c).].
+    :attr:`content`.
     """
 
     height: Number = 48.0
@@ -73,11 +74,11 @@ class PopupMenuItem(Control):
     Defaults to `Padding.symmetric(horizontal=12)`.
 
     Note:
-        The [`height`][(c).] value of this menu item may
+        The :attr:`height` value of this menu item may
         influence the applied padding.
 
         For example, if a `height` greater than the height of the sum of the padding
-        and a [`content`][(c).] is provided, then the padding's
+        and a :attr:`content` is provided, then the padding's
         effect will not be visible.
     """
 
@@ -191,29 +192,50 @@ class PopupMenuButton(LayoutControl):
     Defaults to `CircleBorder(radius=10.0)`.
     """
 
+    border_radius: Optional[BorderRadiusValue] = None
+    """
+    The corner radius of the button's hover/splash highlight when it shows a
+    custom :attr:`content` (rather than an :attr:`icon`).
+
+    Without it the highlight is a sharp-cornered rectangle, which shows past
+    a rounded `content`.
+    """
+
     padding: PaddingValue = 8
     """
-    TBD
+    The padding around the button's tappable area.
+
+    This affects the button itself, not the spacing inside the popup menu.
     """
 
     menu_padding: Optional[PaddingValue] = None
     """
-    TBD
+    The padding around the menu's contents.
+
+    Use this to inset the list of popup menu entries from the menu's outer boundary.
     """
 
     style: Optional[ButtonStyle] = None
     """
-    TBD
+    The button style used for the popup menu button itself.
+
+    This customizes the appearance and interactive states of the anchor button, not
+    the popup menu entries.
     """
 
     popup_animation_style: Optional[AnimationStyle] = None
     """
-    TBD
+    The animation style used when the popup menu opens and closes.
+
+    Use this to customize the menu's motion timing, curves, and related animation
+    behavior.
     """
 
     size_constraints: Optional[BoxConstraints] = None
     """
-    TBD
+    Size constraints applied to the popup menu.
+
+    Use this to control the minimum and maximum size of the menu when it is shown.
     """
 
     on_open: Optional[ControlEventHandler["PopupMenuButton"]] = None
@@ -228,7 +250,10 @@ class PopupMenuButton(LayoutControl):
 
     on_select: Optional[ControlEventHandler["PopupMenuButton"]] = None
     """
-    TBD
+    Called when the user selects a popup menu item.
+
+    The :attr:`flet.Event.data` property of the event handler argument contains the
+    selected :class:`~flet.PopupMenuItem` control's ID as a string.
     """
 
     def __contains__(self, item):

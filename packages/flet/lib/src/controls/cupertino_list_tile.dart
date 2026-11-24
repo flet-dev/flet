@@ -1,10 +1,10 @@
-import 'package:flutter/cupertino.dart';
+import 'package:cupertino_ui/cupertino_ui.dart';
 
 import '../extensions/control.dart';
 import '../models/control.dart';
+import '../utils/client_actions.dart';
 import '../utils/colors.dart';
 import '../utils/edge_insets.dart';
-import '../utils/launch_url.dart';
 import '../utils/numbers.dart';
 import '../widgets/error.dart';
 import 'base_controls.dart';
@@ -36,19 +36,16 @@ class CupertinoListTileControl extends StatelessWidget {
     var leadingSize = control.getDouble("leading_size", notched ? 30.0 : 28.0)!;
     var leadingToTitle =
         control.getDouble("leading_to_title", notched ? 12.0 : 16.0)!;
-    var onclick = control.getBool("on_click", false)!;
+    var onclick = control.hasEventHandler("click");
     var toggleInputs = control.getBool("toggle_inputs", false)!;
-    var url = control.getUrl("url");
-
     Function()? onPressed =
-        (onclick || toggleInputs || url != null) && !control.disabled
+        (onclick || toggleInputs || control.hasControlActions) &&
+                !control.disabled
             ? () {
                 if (toggleInputs) {
                   _clickNotifier.onClick();
                 }
-                if (url != null) {
-                  openWebBrowser(url);
-                }
+                runControlActions(context, control);
                 if (onclick) {
                   control.triggerEvent("click");
                 }

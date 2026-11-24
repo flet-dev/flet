@@ -1,8 +1,7 @@
-from dataclasses import dataclass
 from enum import Enum
 from typing import Optional, Union
 
-from flet.controls.base_control import control
+from flet.controls.base_control import control, value
 from flet.controls.box import BoxDecoration
 from flet.controls.control import Control
 from flet.controls.control_event import ControlEventHandler, EventHandler
@@ -28,10 +27,10 @@ __all__ = [
 
 class MarkdownExtensionSet(Enum):
     """
-    Preset markdown syntax extension bundles for [`Markdown`][flet.].
+    Preset markdown syntax extension bundles for :class:`~flet.Markdown`.
 
     The selected set controls which block/inline syntaxes are enabled while
-    parsing [`Markdown.value`][flet.].
+    parsing :attr:`flet.Markdown.value`.
     """
 
     NONE = "none"
@@ -55,7 +54,7 @@ class MarkdownExtensionSet(Enum):
     """
 
 
-@dataclass
+@value
 class MarkdownStyleSheet:
     """
     Style overrides for markdown element rendering.
@@ -310,7 +309,7 @@ class MarkdownCodeTheme(Enum):
     """
     Built-in code highlighting themes for markdown code blocks.
 
-    Use with [`Markdown.code_theme`][flet.] to choose
+    Use with :attr:`flet.Markdown.code_theme` to choose
     a predefined syntax highlighting palette by name.
     """
 
@@ -676,14 +675,14 @@ class MarkdownCodeTheme(Enum):
     """
 
 
-@dataclass
+@value
 class MarkdownCustomCodeTheme:
     """
     Custom text-style mapping for code token highlighting.
 
-    Use this as [`Markdown.code_theme`][flet.] when you
+    Use this as :attr:`flet.Markdown.code_theme` when you
     need per-token styling instead of a built-in
-    [`MarkdownCodeTheme`][flet.].
+    :class:`~flet.MarkdownCodeTheme`.
 
     Field names correspond to code token kinds (for example `keyword`,
     `string`, `comment`). Unspecified fields keep default token styling.
@@ -1033,7 +1032,7 @@ class Markdown(LayoutControl):
     """
     Called when a link within Markdown document is clicked/tapped.
 
-    The [`data`][flet.Event.] property of the event handler argument
+    The :attr:`~flet.Event.data` property of the event handler argument
     contains the clickedURL.
 
     Example:

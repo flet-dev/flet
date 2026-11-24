@@ -28,7 +28,7 @@ class ControlState(Enum):
     The state when the user navigates with the keyboard to a given control.
 
     This can also sometimes be triggered when a control is tapped. For example,
-    when a [`TextField`] is tapped, it becomes [`FOCUSED`][(c).].
+    when a [`TextField`] is tapped, it becomes :attr:`FOCUSED`.
 
     See [material docs](https://material.io/design/interaction/states.html#focus).
     """
@@ -61,7 +61,7 @@ class ControlState(Enum):
     """
     The state when this control overlaps the content of a scrollable below.
 
-    Used by [`AppBar`][flet.] to indicate that the primary scrollable's
+    Used by :class:`~flet.AppBar` to indicate that the primary scrollable's
     content has scrolled up and behind the app bar.
     """
 
@@ -94,5 +94,5 @@ ControlStateValue = Union[T, dict[ControlState, T]]
 
 Represents either:
 - a single value applied to all (supported) states,
-- or a mapping from [`ControlState`][flet.] to per-state values.
+- or a mapping from :class:`~flet.ControlState` to per-state values.
 """

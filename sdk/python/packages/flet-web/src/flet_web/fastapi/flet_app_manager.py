@@ -48,7 +48,7 @@ class FletAppManager:
             loop: Event loop for new hub creation.
 
         Returns:
-            Existing or newly created [`PubSubHub`][flet.pubsub.pubsub_hub.].
+            Existing or newly created :class:`~flet.pubsub.PubSubHub`.
         """
 
         psh = self.__pubsubhubs.get(session_handler, None)

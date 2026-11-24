@@ -35,8 +35,8 @@ def main(page: ft.Page):
         solitaire.start_left = e.control.left
 
     def drag(e: ft.DragUpdateEvent):
-        e.control.top = max(0, e.control.top + e.delta_y)
-        e.control.left = max(0, e.control.left + e.delta_x)
+        e.control.top = max(0, e.control.top + e.local_delta.y)
+        e.control.left = max(0, e.control.left + e.local_delta.x)
         e.control.update()
 
     def drop(e: ft.DragEndEvent):
@@ -52,11 +52,11 @@ def main(page: ft.Page):
         bounce_back(solitaire, e.control)
         e.control.update()
 
-    slot0 = ft.Container(width=70, height=100, left=0, top=0, border=ft.border.all(1))
+    slot0 = ft.Container(width=70, height=100, left=0, top=0, border=ft.Border.all(1))
 
-    slot1 = ft.Container(width=70, height=100, left=200, top=0, border=ft.border.all(1))
+    slot1 = ft.Container(width=70, height=100, left=200, top=0, border=ft.Border.all(1))
 
-    slot2 = ft.Container(width=70, height=100, left=300, top=0, border=ft.border.all(1))
+    slot2 = ft.Container(width=70, height=100, left=300, top=0, border=ft.Border.all(1))
 
     slots = [slot0, slot1, slot2]
 

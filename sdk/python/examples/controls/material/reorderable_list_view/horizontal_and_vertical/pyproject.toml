@@ -1,0 +1,26 @@
+[project]
+name = "reorderable-list-view-horizontal-and-vertical"
+version = "1.0.0"
+description = "Horizontal and vertical ReorderableListView shown side by side."
+requires-python = ">=3.10"
+keywords = ["reorderable list view", "reorderable", "list", "horizontal", "vertical"]
+authors = [{ name = "Flet team", email = "hello@flet.dev" }]
+dependencies = ["flet"]
+
+[dependency-groups]
+dev = ["flet-cli", "flet-desktop", "flet-web"]
+
+[tool.flet.gallery]
+categories = ["Input/Reorderable"]
+
+[tool.flet.metadata]
+title = "Horizontal and vertical"
+controls = ["ReorderableListView", "ListTile", "Container", "Column", "SafeArea"]
+layout_pattern = "draggable-list"
+complexity = "basic"
+features = ["horizontal reorder", "vertical reorder"]
+
+[tool.flet]
+org = "dev.flet"
+company = "Flet"
+copyright = "Copyright (C) 2023-2026 by Flet"

@@ -1,0 +1,46 @@
+[project]
+name = "flet_test_counter"
+version = "0.1.0"
+description = "Counter app used by the flet-test CI workflow to exercise `flet test` on-device."
+requires-python = ">=3.10"
+authors = [{ name = "Appveyor Systems Inc.", email = "hello@flet.dev" }]
+dependencies = ["flet"]
+
+[dependency-groups]
+dev = [
+    "flet-cli",
+    "flet-desktop",
+    # Integration testing with `flet test` / pytest. The `test` extra brings in
+    # pytest, pytest-asyncio and the screenshot-comparison dependencies used by
+    # flet.testing.
+    "flet[test]",
+]
+
+[tool.uv.sources]
+flet = { path = "../../../packages/flet", editable = true }
+flet-cli = { path = "../../../packages/flet-cli", editable = true }
+flet-desktop = { path = "../../../packages/flet-desktop", editable = true }
+
+[tool.pytest.ini_options]
+asyncio_mode = "auto"
+testpaths = ["tests"]
+
+# Docs: https://flet.dev/docs/publish/
+[tool.flet]
+product = "Flet Test Counter"
+artifact = "flet-test-counter"
+project = "flet_test_counter"
+company = "Flet"
+org = "com.flet"
+copyright = "Copyright (C) 2026 by Flet"
+
+[tool.flet.app]
+path = "src"
+
+# Embedded Python flet = in-repo source (not pub.dev).
+[tool.flet.dev_packages]
+flet = "../../../packages/flet"
+
+# Dart flet = in-repo source (relative to the provisioned build/flutter dir).
+[tool.flet.flutter.pubspec.dependency_overrides]
+flet = { path = "../../../../../../../packages/flet" }

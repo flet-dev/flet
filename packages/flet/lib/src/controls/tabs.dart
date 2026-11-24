@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 
 import '../extensions/control.dart';
 import '../models/control.dart';
@@ -59,19 +59,16 @@ class _TabsControlState extends State<TabsControl>
     // Clamp the index to ensure it's within [0, length - 1]
     final selectedIndex = resolvedIndex.clamp(0, newLength - 1);
 
-    // If the number of tabs has changed, we must recreate the controller
+    // If the number of tabs has changed, we must recreate the controller.
+    // Start it at the incoming selected_index, not the old controller's
+    // index: user taps already sync selected_index, so it only differs when
+    // the app changed the selection in the same update - e.g. inserting a tab
+    // before the selected one and moving selected_index to follow it. Keeping
+    // the old index there selected the inserted tab instead.
     if (newLength != _tabController.length) {
-      // Save the current index before disposing the controller
-      int currentIndex = _tabController.index;
-
-      // Dispose of the old controller
       _tabController.dispose();
-
-      // Update selected_index so we can preserve the current selection
-      widget.control.updateProperties({"selected_index": currentIndex});
-
-      // Re-initialize the TabController with the new length
-      _initTabController(currentIndex);
+      widget.control.updateProperties({"selected_index": selectedIndex});
+      _initTabController(selectedIndex);
     }
 
     // If the selected tab has changed, animate to the new tab
@@ -175,6 +172,8 @@ class TabBarViewControl extends StatelessWidget {
             clipBehavior:
                 control.getClipBehavior("clip_behavior", Clip.hardEdge)!,
             viewportFraction: control.getDouble("viewport_fraction", 1.0)!,
+            physics:
+                control.disabled ? const NeverScrollableScrollPhysics() : null,
             children: control.buildWidgets("controls"),
           ));
     }
@@ -225,7 +224,7 @@ class TabControl extends Tab {
   static Key? _keyFromControl(Control control) {
     final controlKey = control.getKey("key");
     if (controlKey is ControlValueKey) {
-      return ValueKey(controlKey.value);
+      return valueKeyFromValue(controlKey.value);
     }
     return null;
   }
@@ -285,8 +284,7 @@ class _TabBarControlState extends State<TabBarControl> {
           widget.control.getDouble("indicator_thickness", 2.0)!;
       var tabAlignment = widget.control.getTabAlignment("tab_alignment",
           scrollable ? TabAlignment.start : TabAlignment.fill)!;
-      var mouseCursor =
-          parseMouseCursor(widget.control.getString("mouse_cursor"));
+      var mouseCursor = widget.control.getMouseCursor("mouse_cursor");
       var padding = parseEdgeInsets(widget.control.getPadding("padding"));
       var labelPadding = widget.control.getPadding("label_padding");
       var labelStyle =
@@ -295,7 +293,10 @@ class _TabBarControlState extends State<TabBarControl> {
           .getTextStyle("unselected_label_text_style", Theme.of(context));
       var splashBorderRadius =
           widget.control.getBorderRadius("splash_border_radius");
-      final tabs = widget.control.children("tabs").map((tab) {
+
+      final tabBarDisabled = widget.control.disabled;
+      final tabControls = widget.control.children("tabs");
+      final tabs = tabControls.map((tab) {
         // Ensure parent gets rebuilt when a tab becomes visible/invisible.
         tab.notifyParent = true;
 
@@ -310,10 +311,32 @@ class _TabBarControlState extends State<TabBarControl> {
       }).toList();
 
       void onTap(int index) {
+        if (tabBarDisabled ||
+            (index >= 0 &&
+                index < tabControls.length &&
+                tabControls[index].disabled)) {
+          final fallbackIndex = tabController.previousIndex
+              .clamp(0, tabController.length - 1)
+              .toInt();
+          if (fallbackIndex != tabController.index) {
+            // TabBar already requested the tap target via controller.animateTo().
+            // Restore the previous index so disabled tabs cannot be selected.
+            tabController.index = fallbackIndex;
+          }
+          return;
+        }
+
         widget.control.triggerEvent("click", index);
       }
 
       void onHover(bool hovering, int? index) {
+        if (tabBarDisabled ||
+            (index != null &&
+                index >= 0 &&
+                index < tabControls.length &&
+                tabControls[index].disabled)) {
+          return;
+        }
         widget.control
             .triggerEvent("hover", {"hovering": hovering, "index": index});
       }
@@ -383,7 +406,10 @@ class _TabBarControlState extends State<TabBarControl> {
             onHover: onHover);
       }
 
-      return BaseControl(control: widget.control, child: tabBar);
+      return BaseControl(
+        control: widget.control,
+        child: IgnorePointer(ignoring: tabBarDisabled, child: tabBar),
+      );
     } else {
       return const ErrorControl("TabBar must be used within a Tabs control");
     }

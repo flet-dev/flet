@@ -1,0 +1,253 @@
+# Curated catalog for the Flet gallery.
+#
+# Top-level `categories:` is a map of name -> entry. An entry is either
+# `null` (bare name, no metadata, no children) or a map. Inside an
+# entry, `_`-prefixed keys are metadata (`_icon`, `_description`); all
+# other keys are child categories with the same recursive shape.
+#
+# Insertion order = display order. Slugs are derived from names.
+# Examples whose `[tool.flet.gallery].categories` reference a path not
+# in this file will be skipped at scan time.
+
+categories:
+
+  Getting Started:
+    _icon: rocket_launch
+    _description: Quick-start examples and tutorials
+    Declarative:
+
+  Layout:
+    _icon: dashboard
+    _description: Layout primitives and containers
+    Card:
+    Column:
+    Container:
+    Control:
+    CupertinoListTile:
+    DataTable:
+    DataTable2:
+    Dismissible:
+    Divider:
+    ExpansionPanelList:
+    ExpansionTile:
+    GridView:
+    LayoutControl:
+    ListTile:
+    ListView:
+    Pagelet:
+    PageView:
+    Placeholder:
+    ResponsiveRow:
+    RotatedBox:
+    Row:
+    SafeArea:
+    Stack:
+    Tabs:
+    VerticalDivider:
+    #WindowDragArea:
+
+  Buttons:
+    _icon: smart_button
+    _description: Material and Cupertino buttons
+    Button:
+    FilledButton:
+    FilledTonalButton:
+    OutlinedButton:
+    TextButton:
+    IconButton:
+    FloatingActionButton:
+    MenuItemButton:
+    PopupMenuButton:
+    CupertinoButton:
+    CupertinoFilledButton:
+    CupertinoSegmentedButton:
+    CupertinoSlidingSegmentedButton:
+
+  Input:
+    _icon: input
+    _description: Form controls and pickers
+    AutoComplete:
+    AutofillGroup:
+    Checkbox:
+    Chip:
+    CodeEditor:
+    ContextMenu:
+    Dropdown:
+    DropdownM2:
+    Radio:
+    RangeSlider:
+    Reorderable:
+    SearchBar:
+    SegmentedButton:
+    Slider:
+    Switch:
+    TextField:
+    TransparentPointer:
+    CupertinoCheckbox:
+    CupertinoContextMenu:
+    CupertinoDatePicker:
+    CupertinoPicker:
+    CupertinoRadio:
+    CupertinoSlider:
+    CupertinoSwitch:
+    CupertinoTextField:
+    CupertinoTimerPicker:
+
+  Displays:
+    _icon: image
+    _description: Visual indicators and media displays
+    Badge:
+    Canvas:
+    CircleAvatar:
+    CupertinoActivityIndicator:
+    Icon:
+    Image:
+    Map:
+    Markdown:
+    ProgressBar:
+    ProgressRing:
+    RawImage:
+    Text:
+    Tooltip:
+    WebView:
+
+  Dialogs:
+    _icon: chat_bubble_outline
+    _description: Modals, sheets, and notifications
+    AlertDialog:
+    Banner:
+    BottomSheet:
+    DatePicker:
+    DateRangePicker:
+    SnackBar:
+    TimePicker:
+    CupertinoActionSheet:
+    CupertinoAlertDialog:
+
+  Navigation:
+    _icon: navigation
+    _description: AppBars, drawers, and routing
+    AppBar:
+    BottomAppBar:
+    Hero:
+    MenuBar:
+    NavigationBar:
+    NavigationDrawer:
+    NavigationRail:
+    Router:
+    Routing:
+    SubmenuButton:
+    Tabs:
+    CupertinoAppBar:
+    CupertinoNavigationBar:
+
+  Charts:
+    _icon: bar_chart
+    _description: Plotting and data viz
+    BarChart:
+    CandlestickChart:
+    LineChart:
+    MatplotlibChart:
+    PieChart:
+    PlotlyChart:
+    RadarChart:
+    ScatterChart:
+
+  Shadcn:
+    _icon: widgets
+    _description: Shadcn UI components
+
+  Declarative:
+    _icon: code
+    _description: Examples of declarative UI style and patterns
+
+  Games:
+    _icon: sports_esports
+    _description: Game examples and demos
+
+  Animations:
+    _icon: animation
+    _description: Animation controls
+    Apps:
+    AnimatedSwitcher:
+
+  Effects:
+    _icon: auto_awesome
+    _description: Visual effects and shaders
+    ShaderMask:
+    Shimmer:
+
+  Media:
+    _icon: movie
+    _description: Audio, video, Lottie, Rive
+    Audio: # download audio to assets - CORS preventing from github
+    AudioRecorder:
+    Lottie:
+    Rive:
+    Video:
+    Camera:
+
+  Accessibility:
+    _icon: accessibility
+    _description: Accessibility features and examples
+
+  Utility:
+    _icon: build
+    _description: Gestures, drag/drop, screenshots
+    BrowserContextMenu:
+    Clipboard: # Clipboard files gives 404 on https://studio.flet.dev/api/gallery/apps/services/clipboard/files/package.zip?v=0, warn about Safari and iOS
+    Color pickers:
+    Connectivity:
+    Draggable:
+    FilePicker:
+    Flashlight:
+    GestureDetector:
+    InteractiveViewer:
+    Keyboard:
+    Localization:
+    Notifications:
+    Page:
+    PermissionHandler:
+    SecureStorage:
+    ScreenBrightness:
+    Screenshot:
+    SelectionArea:
+    Share:
+    SharedPreferences:
+    Storagepaths:
+    Types:
+    UrlLauncher:
+    Wakelock:
+    Window:
+
+  Sensors:
+    _icon: sensors
+    _description: Device sensors and hardware features
+    Accelerometer:
+    Barometer:
+    Battery:
+    Geolocator: # Geolocator.request_permission() got an unexpected keyword argument 'timeout'
+    Gyroscope:
+    HapticFeedback:
+    Magnetometer:
+    ShakeDetector:
+    UserAccelerometer:
+
+  Marketing:
+    _icon: campaign
+    _description: Examples of marketing and monetization features
+    Ads:
+    InAppPurchase:
+
+  Tools:
+    _icon: handyman
+    _description: Development tools and utilities
+
+  Cookbook:
+    _icon: interests
+    _description: Recipes and patterns for common app features
+    7GUIs:
+
+  Community:
+    _icon: people
+    _description: Examples contributed by the community

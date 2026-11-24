@@ -1,0 +1,926 @@
+---
+title: "Packaging app for iOS"
+---
+
+import TabItem from '@theme/TabItem';
+import Tabs from '@theme/Tabs';
+
+Instructions for packaging a Flet app into an Xcode archive and, when signing
+is configured, an IPA for distribution.
+
+:::tip[Info]
+This guide provides detailed on iOS-specific information.
+Complementary and more general information is available [here](index.md).
+:::
+
+## Prerequisites
+
+### Rosetta 2
+
+Some Flutter tooling and dependencies still ship as Intel binaries. Install
+[Rosetta 2](https://support.apple.com/en-us/HT211861) on Apple Silicon if Flutter
+or CocoaPods prompts for it:
+
+```bash
+sudo softwareupdate --install-rosetta --agree-to-license
+```
+
+### Xcode
+
+[Xcode](https://developer.apple.com/xcode/) 15 or later to compile native Swift or Objective-C code.
+Open Xcode once after installation to accept the license and install additional components.
+
+### CocoaPods
+
+[CocoaPods](https://cocoapods.org/) 1.16 or later to compile and enable Flutter plugins.
+
+### iOS wheels for binary Python packages
+
+Binary Python packages (vs "pure" Python packages written in Python only)
+are packages that are partially written in C, Rust, or other languages producing native code.
+Example packages are `numpy`, `cryptography`, or `pydantic-core`.
+
+Make sure all non-pure (binary) packages used in your Flet app have
+[pre-built wheels for iOS](../reference/binary-packages-android-ios.md).
+
+## `flet build ios-simulator`
+
+:::caution[Supported host platforms]
+This command can be run on **macOS only**.
+:::
+
+Builds an (unsigned) iOS Simulator `.app` bundle, intended for testing on iOS Simulator
+and does **not** require a signing certificate, provisioning profile, or Apple Developer Program setup.
+
+## `flet build ipa`
+
+:::caution[Supported host platforms]
+This command can be run on **macOS only**.
+:::
+
+Builds an iOS app archive (`.xcarchive`) and, when [signing](#provisioning-profile) is configured,
+exports an `.ipa` for testing or distribution.
+
+To generate an `.ipa` for testing on your device or uploading to App Store Connect
+for distribution, you will need the following:
+
+- [Apple Developer Program](https://developer.apple.com/programs/) subscription with
+  access to [App Store Connect](https://appstoreconnect.apple.com/)
+- [Application Identifier](#application-identifier-app-id)
+- [Bundle ID](index.md#bundle-id) configured in your Flet project (must match the App ID)
+- [Signing Certificate](#signing-certificate)
+- [Provisioning Profile](#provisioning-profile)
+
+## Configuration options
+
+### Application Identifier (App ID)
+
+A unique string that identifies your app within the Apple ecosystem.
+It is required to sign and distribute an iOS app and is used for various services like
+Push Notifications, App Groups, iCloud, and In-App Purchases.
+
+It consists of two parts:
+
+1. [**Team ID**](#team-id): A unique 10-character string assigned by Apple to your developer account.
+2. [**Bundle ID**](index.md#bundle-id): A reverse domain-style identifier for your app (e.g., `com.example.myapp`).
+
+```mermaid
+graph TD
+    A[App ID: ABCDEFE234.com.example.myapp] --> B[Team ID: ABCDEFE234]
+    A --> C[Bundle ID: com.example.myapp]
+```
+
+The [Bundle ID](index.md#bundle-id) in your Flet configuration must match the Bundle ID registered
+in the App ID.
+
+#### Creating a new App ID
+
+1. Visit [Apple Developer Portal](https://developer.apple.com/account/resources/identifiers/list).
+2. Sign in with your **Apple Developer Account**.
+3. Click the **"+"** button to add a new identifier.
+4. Select **"App IDs"** and click **Continue**.
+5. **Enter a Description** – This is just for reference (e.g., "MyApp Identifier").
+6. **Choose the App ID Type:**
+    - Select **"App"** for a standard iOS/macOS app.
+    - If you need an identifier for services like Apple Pay or Passbook, select the appropriate option.
+7. **Bundle ID** – Choose:
+    - **Explicit Bundle ID** (`com.example.myapp`) – Recommended for most apps.
+    - **Wildcard Bundle ID** (`com.example.*`) – Allows multiple apps to use the same identifier (rarely used).
+8. **Enable App Services** – Check the boxes for any services your app needs (e.g., Push Notifications, Sign in with Apple, etc.).
+9. Click **Continue** and **Register**.
+
+Now you have **Bundle ID** and **Team ID** that will be used to identify your app.
+
+#### Team ID
+
+The developer team ID to include in export options.
+
+##### Resolution order
+
+Its value is determined in the following order of precedence:
+
+1. [`--ios-team-id`](../cli/flet-build.md#--ios-team-id)
+2. `[tool.flet.ios.export_methods.EXPORT_METHOD].team_id`
+3. `[tool.flet.ios].team_id`
+
+##### Example
+
+<Tabs groupId="flet-build--pyproject-toml">
+<TabItem value="flet-build" label="flet build">
+```bash
+flet build ipa --ios-team-id ABCDEFE234
+```
+</TabItem>
+<TabItem value="pyproject-toml" label="pyproject.toml">
+```toml
+[tool.flet.ios]
+team_id = "ABCDEFE234"
+```
+</TabItem>
+</Tabs>
+### Signing Certificate
+
+The certificate name, SHA-1 hash, or automatic selector to use for signing the iOS app bundle.
+Automatic selectors allow Xcode to pick the newest installed certificate of a particular type.
+
+The available automatic selectors are:
+
+- `"Apple Development"`
+- `"Apple Distribution"`
+- `"Developer ID Application"`
+- `"iOS Developer"`
+- `"iOS Distribution"`
+- `"Mac App Distribution"`
+- `"Mac Developer"`
+
+#### Generating a Certificate Signing Request (CSR)
+
+Before creating a development or distribution certificate, you need a **CSR (Certificate Signing Request)**.
+
+1. **Open Keychain Access** on your Mac (++cmd+space++, then search for "Keychain Access").
+2. In the top menu, go to **Keychain Access → Certificate Assistant → Request a Certificate From a Certificate Authority…**
+3. Fill in:
+   - **User Email Address:** Your Apple Developer email.
+   - **Common Name:** A descriptive name (e.g., "My App Distribution").
+   - **CA Email Address:** Leave this blank.
+   - **Request is for:** Select "**Saved to disk**".
+4. Click **Continue**, choose a location to save the `.certSigningRequest` file, and click **Save**.
+
+#### Creating a Certificate in Apple Developer Portal
+
+1. Go to the [Apple Developer Certificates Page](https://developer.apple.com/account/resources/certificates/list).
+2. Click the **"+"** button to create a new certificate.
+3. Select **"Apple Distribution"** (for App Store & Ad Hoc) or **"Apple Development"**
+   (for development) and click **Continue**.
+4. Upload the **CSR file** you created earlier and click **Continue**.
+5. Apple will generate the certificate. Click **Download** to get the `.cer` file.
+6. Double-click the downloaded `.cer` file to install it in **Keychain Access**.
+7. Open the **Keychain Access** app and ensure the certificate is installed under **"login"** keychain.
+   The name of the development certificate usually starts with **"Apple development:"** and the name of
+    the distribution certificate starts with **"Apple distribution:"**.
+
+#### Resolution order
+
+Its value is determined in the following order of precedence:
+
+1. [`--ios-signing-certificate`](../cli/flet-build.md#--ios-signing-certificate)
+2. `[tool.flet.ios.export_methods.EXPORT_METHOD].signing_certificate`
+3. `[tool.flet.ios].signing_certificate`
+
+#### Example
+
+<Tabs groupId="flet-build--pyproject-toml">
+<TabItem value="flet-build" label="flet build">
+```bash
+flet build ipa --ios-signing-certificate "Apple Distribution"
+```
+</TabItem>
+<TabItem value="pyproject-toml" label="pyproject.toml">
+```toml
+[tool.flet.ios]
+signing_certificate = "Apple Distribution"
+```
+</TabItem>
+</Tabs>
+### Provisioning Profile
+
+A **Provisioning Profile** is a file that allows an iOS app to run on physical devices and be
+distributed through the App Store or internally. It links your **App ID**,
+**Developer/Distribution Certificate**, and **Registered Devices**.
+
+There are different types of provisioning profiles:
+
+1. **Development Profile** – Used for testing on physical devices.
+2. **Ad Hoc Profile** – Used for distributing an app outside the App Store to specific devices.
+3. **App Store Profile** – Used for submitting an app to the App Store.
+4. **Enterprise Profile** – Used for internal distribution within an organization.
+
+#### Creating a New Provisioning Profile
+
+Follow these steps to create a provisioning profile via the Apple Developer Portal:
+
+##### Step 1: Go to Apple Developer Portal
+
+- Visit the [Apple Developer Portal](https://developer.apple.com/account/resources/profiles/list);
+- Sign in with your **Apple Developer Account**
+
+##### Step 2: Create a New Provisioning Profile
+
+- Click the **"+"** button to add a new provisioning profile;
+- Choose the **type of profile**:
+    - **iOS App Development** – for testing on devices
+    - **Ad Hoc** – for distributing to specific devices
+    - **App Store** – for submitting an app to the App Store
+    - **In-House** – for internal distribution (Enterprise accounts only)
+- Click **Continue**
+
+##### Step 3: Select an App ID
+
+- Choose the **App ID** that matches your app;
+- Click **Continue**.
+
+##### Step 4: Select a Distribution Certificate
+
+- Choose the appropriate certificate:
+    - **iOS Development Certificate** - for **iOS App Development** profile
+    - **iOS Distribution Certificate** - for **Ad Hoc** or **App Store** profiles
+- Click **Continue**.
+
+##### Step 5: Select Registered Devices (for Development & Ad Hoc)
+
+- If you selected an **iOS App Development** or **Ad Hoc** profile, select the devices to include;
+- Click **Continue**.
+
+##### Step 6: Name and Generate the Profile
+
+- Enter a **Profile Name** (e.g., `MyApp Development Profile`);
+- Click **Generate**;
+- Click **Download** to get the `.mobileprovision` file.
+
+#### Installing Provisioning Profile
+
+Provisioning profiles are stored in `~/Library/MobileDevice/Provisioning Profiles`, with
+Xcode 16 and later keeping the ones they manage themselves in
+`~/Library/Developer/Xcode/UserData/Provisioning Profiles` — `flet build ipa` reads both.
+
+To install a downloaded provisioning profile, copy it to `~/Library/MobileDevice/Provisioning\ Profiles`
+directory with a new `{UUID}.mobileprovision` name.
+
+Run the following command to get profile UUID:
+
+```bash
+profile_uuid=$(security cms -D -i ~/Downloads/{profile-name}.mobileprovision | xmllint --xpath "string(//key[.='UUID']/following-sibling::string[1])" -)
+echo $profile_uuid
+```
+
+Run this command to copy profile to `~/Library/MobileDevice/Provisioning Profiles` with a new name `{UUID}.mobileprovision`:
+
+```bash
+cp ~/Downloads/{profile-name}.mobileprovision ~/Library/MobileDevice/Provisioning\ Profiles/${profile_uuid}.mobileprovision
+```
+
+:::note[Note]
+If the copied profile disappears from the `~/Library/MobileDevice/Provisioning Profiles` directory,
+ensure that the Xcode process is not running in the background.
+:::
+
+Finally, you can use the command below to list all installed provisioning profiles, with their names and UUIDs:
+
+```bash
+for profile in ~/Library/MobileDevice/Provisioning\ Profiles/*.mobileprovision; do security cms -D -i "$profile" | grep -E -A1 '<key>(Name|UUID)</key>' | sed -n 's/.*<string>\(.*\)<\/string>/\1/p' | paste -d ' | ' - -; done
+```
+
+#### Resolution order
+
+Its value is determined in the following order of precedence:
+
+1. [`--ios-provisioning-profile`](../cli/flet-build.md#--ios-provisioning-profile)
+2. `[tool.flet.ios.export_methods.EXPORT_METHOD].provisioning_profile`
+3. `[tool.flet.ios].provisioning_profile`
+
+The profile must match your [Bundle ID](index.md#bundle-id).
+
+Give the profile's **name** — exactly as the Apple Developer portal shows it —
+or its **UUID**; Xcode accepts either form. The value is resolved before the
+build starts, so a profile that is not installed, has expired, belongs to
+another team, or does not cover the app's Bundle ID fails in seconds, listing
+the installed profiles instead of failing later inside Xcode.
+
+#### Example
+
+<Tabs groupId="flet-build--pyproject-toml">
+<TabItem value="flet-build" label="flet build">
+```bash
+flet build ipa --ios-provisioning-profile "release-testing com.mycompany.example-app"
+```
+</TabItem>
+<TabItem value="pyproject-toml" label="pyproject.toml">
+```toml
+[tool.flet.ios]
+provisioning_profile = "release-testing com.mycompany.example-app"
+```
+</TabItem>
+</Tabs>
+### Export configuration
+
+#### Export options
+
+Additional keys to include in the generated `exportOptions.plist`
+of the [build template](index.md#build-template).
+
+For a complete list of supported keys and values, run the following command:
+
+```bash
+xcodebuild -help
+```
+
+and find the section titled **"Available keys for -exportOptionsPlist"**.
+
+##### Resolution order
+
+Its value is determined in the following order of precedence:
+
+1. `[tool.flet.ios.export_methods.EXPORT_METHOD].export_options` (see [export methods](#export-methods))
+2. `[tool.flet.ios].export_options`
+3. `{}` (no extra keys)
+
+##### Supported value forms
+
+<Tabs groupId="pyproject-toml">
+<TabItem value="pyproject-toml" label="pyproject.toml">
+Both simple and complex structures are supported:
+
+- string
+- boolean
+- integer
+- float
+- dictionary (nested key-value object)
+- array of any of these values
+</TabItem>
+</Tabs>
+##### Example
+
+<Tabs groupId="pyproject-toml">
+<TabItem value="pyproject-toml" label="pyproject.toml">
+```toml
+[tool.flet.ios.export_options]
+uploadSymbols = false
+compileBitcode = false
+thinning = "<none>"
+
+[tool.flet.ios.export_options.manifest]
+appURL = "https://example.com/app.ipa"
+displayImageURL = "https://example.com/icon57.png"
+fullSizeImageURL = "https://example.com/icon512.png"
+```
+</TabItem>
+</Tabs>
+<details>
+<summary>Template translation</summary>
+
+In the [`ios/exportOptions.plist`](index.md#build-template),
+the example above will be translated accordingly into this:
+
+```xml
+<plist version="1.0">
+    <dict>
+        <key>uploadSymbols</key>
+        <false/>
+        <key>compileBitcode</key>
+        <false/>
+        <key>thinning</key>
+        <string>&lt;none&gt;</string>
+        <key>manifest</key>
+        <dict>
+            <key>appURL</key>
+            <string>https://example.com/app.ipa</string>
+            <key>displayImageURL</key>
+            <string>https://example.com/icon57.png</string>
+            <key>fullSizeImageURL</key>
+            <string>https://example.com/icon512.png</string>
+        </dict>
+    </dict>
+</plist>
+```
+</details>
+
+#### Export method
+
+Defines how the app should be packaged when exporting the `.ipa` file.
+
+Can be one of the following:
+
+- `debugging` (or deprecated `development`): used for debugging and testing on development devices.
+- `release-testing` (or deprecated `ad-hoc`): used for distributing the app outside the App Store to specific registered devices.
+- `app-store-connect` (or deprecated `app-store`): used for submitting the app to the App Store.
+- `enterprise`: used for internal distribution within an organization (requires an enterprise account).
+
+To configure individual settings for one or more export methods, see [export methods](#export-methods).
+
+##### Resolution order
+
+Its value is determined in the following order of precedence:
+
+1. [`--ios-export-method`](../cli/flet-build.md#--ios-export-method)
+2. `[tool.flet.ios].export_method`
+3. `"debugging"`
+
+##### Example
+
+<Tabs groupId="flet-build--pyproject-toml">
+<TabItem value="flet-build" label="flet build">
+```bash
+flet build ipa --ios-export-method debugging
+```
+</TabItem>
+<TabItem value="pyproject-toml" label="pyproject.toml">
+```toml
+[tool.flet.ios]
+export_method = "debugging"
+```
+</TabItem>
+</Tabs>
+#### Export methods
+
+Signing settings can be configured individually per [export method](#export-method).
+
+A per-method value overrides the corresponding top-level `[tool.flet.ios]`
+setting when its method is built — the top-level key is the shared
+fallback. The method key must match the `export_method` value exactly.
+
+Supported keys (same as the top-level settings):
+
+- [`provisioning_profile`](#provisioning-profile)
+- [`signing_certificate`](#signing-certificate)
+- [`export_options`](#export-options)
+- [`team_id`](#team-id)
+
+##### Example
+
+<Tabs groupId="pyproject-toml">
+<TabItem value="pyproject-toml" label="pyproject.toml">
+```toml
+[tool.flet.ios.export_methods.debugging]
+provisioning_profile = "debugging com.mycompany.example-app"
+signing_certificate = "Apple Development"
+
+[tool.flet.ios.export_methods.release-testing]
+provisioning_profile = "release-testing com.mycompany.example-app"
+team_id = "ABCDEFE234"
+signing_certificate = "Apple Distribution"
+export_options = { uploadSymbols = false }
+
+[tool.flet.ios.export_methods.app-store-connect]
+provisioning_profile = "app-store-connect com.mycompany.example-app"
+team_id = "ABCDEFE234"
+signing_certificate = "Apple Distribution"
+export_options = { uploadSymbols = true }
+```
+</TabItem>
+</Tabs>
+### Permissions
+
+iOS permissions are declared through [`Info.plist`](#infoplist) privacy usage strings.
+You can also use the [cross-platform permission bundles](index.md#predefined-cross-platform-permission-bundles)
+to inject common entries, then override or extend them with platform-specific values.
+
+#### Info.plist
+
+Add or override `Info.plist` entries for iOS builds.
+These values are written to `ios/Runner/Info.plist` of the [build project](index.md#build-template).
+
+##### Resolution order
+
+Its value is determined in the following order of precedence:
+
+1. [`--info-plist`](../cli/flet-build.md#--info-plist)
+2. `[tool.flet.ios.info]`
+3. Values injected by [cross-platform permission bundles](index.md#permissions), if any.
+
+#### Supported value forms
+
+<Tabs groupId="flet-build--pyproject-toml">
+<TabItem value="flet-build" label="flet build">
+Accepts repeated `<key>=<value>` entries.
+The `<value>` can be in one of the following forms:
+
+- `true` or `false` (case-insensitive) for boolean values
+- integer and real number literals, for example `32` or `0.5`
+- TOML array literals, for example `["myapp", "myapp-beta"]`
+- TOML inline tables, for example `{ NSAllowsArbitraryLoads = false }`
+- any other value is treated as a string
+</TabItem>
+<TabItem value="pyproject-toml" label="pyproject.toml">
+Both simple and complex structures are supported:
+
+- string
+- boolean
+- integer
+- real
+- dictionary (nested key-value object)
+- array of strings
+- array of booleans
+- array of integers
+- array of reals
+- array of dictionaries (including dictionaries that contain arrays)
+</TabItem>
+</Tabs>
+##### Example
+
+<Tabs groupId="flet-build--pyproject-toml">
+<TabItem value="flet-build" label="flet build">
+```bash
+flet build ipa \
+  --info-plist NSCameraUsageDescription="This app needs camera access." \
+  --info-plist UIFileSharingEnabled=true \
+  --info-plist ExampleInteger=32 \
+  --info-plist ExampleReal=0.5 \
+  --info-plist 'LSApplicationQueriesSchemes=["myapp", "myapp-beta"]' \
+  --info-plist 'FeatureFlags=[true, false]' \
+  --info-plist 'RetryDelays=[1, 2, 3]' \
+  --info-plist 'OpacitySteps=[0.25, 0.5, 0.75]' \
+  --info-plist 'NSAppTransportSecurity={ NSAllowsArbitraryLoads = false }' \
+  --info-plist 'CFBundleURLTypes=[{ CFBundleTypeRole = "Editor", CFBundleURLName = "example.com", CFBundleURLSchemes = ["myapp"] }, { CFBundleTypeRole = "Viewer", CFBundleURLName = "example.org", CFBundleURLSchemes = ["myapp-beta"] }]'
+```
+</TabItem>
+<TabItem value="pyproject-toml" label="pyproject.toml">
+```toml
+[tool.flet.ios.info]
+NSCameraUsageDescription = "This app needs camera access."
+UIFileSharingEnabled = true
+ExampleInteger = 32
+ExampleReal = 0.5
+LSApplicationQueriesSchemes = ["myapp", "myapp-beta"]
+FeatureFlags = [true, false]
+RetryDelays = [1, 2, 3]
+OpacitySteps = [0.25, 0.5, 0.75]
+NSAppTransportSecurity = { NSAllowsArbitraryLoads = false }
+CFBundleURLTypes = [
+  { CFBundleTypeRole = "Editor", CFBundleURLName = "example.com", CFBundleURLSchemes = ["myapp"] },
+  { CFBundleTypeRole = "Viewer", CFBundleURLName = "example.org", CFBundleURLSchemes = ["myapp-beta"] },
+]
+```
+</TabItem>
+</Tabs>
+<details>
+<summary>Template translation</summary>
+
+In the [`ios/Runner/Info.plist`](index.md#build-template), the
+example above will be translated accordingly into this:
+
+```xml
+<plist version="1.0">
+    <dict>
+        <key>NSCameraUsageDescription</key>
+        <string>This app needs camera access.</string>
+        <key>UIFileSharingEnabled</key>
+        <true/>
+        <key>ExampleInteger</key>
+        <integer>32</integer>
+        <key>ExampleReal</key>
+        <real>0.5</real>
+        <key>LSApplicationQueriesSchemes</key>
+        <array>
+            <string>myapp</string>
+            <string>myapp-beta</string>
+        </array>
+        <key>FeatureFlags</key>
+        <array>
+            <true/>
+            <false/>
+        </array>
+        <key>RetryDelays</key>
+        <array>
+            <integer>1</integer>
+            <integer>2</integer>
+            <integer>3</integer>
+        </array>
+        <key>OpacitySteps</key>
+        <array>
+            <real>0.25</real>
+            <real>0.5</real>
+            <real>0.75</real>
+        </array>
+        <key>NSAppTransportSecurity</key>
+        <dict>
+            <key>NSAllowsArbitraryLoads</key>
+            <false/>
+        </dict>
+        <key>CFBundleURLTypes</key>
+        <array>
+            <dict>
+                <key>CFBundleTypeRole</key>
+                <string>Editor</string>
+                <key>CFBundleURLName</key>
+                <string>example.com</string>
+                <key>CFBundleURLSchemes</key>
+                <array>
+                    <string>myapp</string>
+                </array>
+            </dict>
+            <dict>
+                <key>CFBundleTypeRole</key>
+                <string>Viewer</string>
+                <key>CFBundleURLName</key>
+                <string>example.org</string>
+                <key>CFBundleURLSchemes</key>
+                <array>
+                    <string>myapp-beta</string>
+                </array>
+            </dict>
+        </array>
+    </dict>
+</plist>
+```
+</details>
+
+### Entitlements
+
+Entitlements are property-list key-value pairs that grant an app permission to use
+a service or technology, such as push notifications
+(`aps-environment`), universal links
+(`com.apple.developer.associated-domains`), App Groups, or critical alerts
+(`com.apple.developer.usernotifications.critical-alerts`). The supported value type
+depends on the entitlement key defined in the
+[Apple Developer Entitlements Reference](https://developer.apple.com/documentation/bundleresources/entitlements).
+
+Entitlements are written to `ios/Runner/Runner.entitlements` in the
+[build template](index.md#build-template), which the app is signed with. Without
+entitlements, the app is signed without an entitlements file.
+
+:::note
+Declaring an entitlement is not enough on its own. Most entitlements must also be
+enabled as a capability on the app's [App ID](#application-identifier-app-id) and be
+included in its [provisioning profile](#provisioning-profile); regenerate the
+profile after enabling a capability. Some, such as critical alerts, are only
+available after Apple approves a request for your app.
+:::
+
+#### Resolution order
+
+Its value is determined in the following order of precedence:
+
+1. [`--ios-entitlements`](../cli/flet-build.md#--ios-entitlements)
+2. `[tool.flet.ios.entitlement]`
+
+There are no default entitlements.
+
+#### Supported value forms
+
+<Tabs groupId="flet-build--pyproject-toml">
+<TabItem value="flet-build" label="flet build">
+Accepts repeated `<key>=<value>` entries.
+The `<value>` can be in one of the following forms:
+
+- `true` or `false` (case-insensitive) for boolean values
+- integer and real number literals, for example `32` or `0.5`
+- TOML array literals, for example `["group.example.one", "group.example.two"]`
+- TOML inline tables, for example `{ "key" = ["value"] }`
+- any other value is treated as a string
+</TabItem>
+<TabItem value="pyproject-toml" label="pyproject.toml">
+Both simple and complex structures are supported:
+
+- string
+- boolean
+- integer
+- real
+- dictionary (nested key-value object)
+- array of strings
+- array of booleans
+- array of integers
+- array of reals
+- array of dictionaries (including dictionaries that contain arrays)
+</TabItem>
+</Tabs>
+
+#### Example
+
+<Tabs groupId="flet-build--pyproject-toml">
+<TabItem value="flet-build" label="flet build">
+```bash
+flet build ipa \
+  --ios-entitlements aps-environment=production \
+  --ios-entitlements 'com.apple.developer.associated-domains=["applinks:example.com"]' \
+  --ios-entitlements 'com.apple.security.application-groups=["group.dev.example.myapp"]'
+```
+</TabItem>
+<TabItem value="pyproject-toml" label="pyproject.toml">
+```toml
+[tool.flet.ios.entitlement]
+aps-environment = "production"
+"com.apple.developer.associated-domains" = ["applinks:example.com"]
+"com.apple.security.application-groups" = ["group.dev.example.myapp"]
+```
+</TabItem>
+</Tabs>
+<details>
+<summary>Template translation</summary>
+
+In [`ios/Runner/Runner.entitlements`](index.md#build-template), the example above
+will be translated accordingly into this:
+
+```xml
+<plist version="1.0">
+    <dict>
+        <key>aps-environment</key>
+        <string>production</string>
+        <key>com.apple.developer.associated-domains</key>
+        <array>
+            <string>applinks:example.com</string>
+        </array>
+        <key>com.apple.security.application-groups</key>
+        <array>
+            <string>group.dev.example.myapp</string>
+        </array>
+    </dict>
+</plist>
+```
+
+</details>
+
+## Minimum iOS version
+
+Apps built with `flet build ipa` and `flet build ios-simulator` run on iOS and
+iPadOS 15 or later, on devices and in the iOS Simulator. This is the lowest
+version that Xcode 27 can build for.
+
+The [build template](index.md#build-template) sets it with
+`IPHONEOS_DEPLOYMENT_TARGET` in the Xcode project and `platform :ios` in the
+`Podfile`. It can't be configured in `pyproject.toml`.
+
+## Deploying an App to an Apple Device for Testing
+
+You can deploy `.ipa` files directly to an iPhone or iPad on macOS—ideal for
+internal testing without publishing to the App Store.
+
+Follow these steps:
+
+#### Install and Launch Apple Configurator
+
+- Install [Apple Configurator](https://apps.apple.com/ca/app/apple-configurator/id1037126344?mt=12) from App Store;
+- Find and open it from your Applications folder.
+
+#### Connect Your iOS Device
+
+- Connect your device (iPhone or iPad) to your Mac via USB;
+- Unlock the connected device, and tap **Trust This Computer**, if prompted;
+- Wait for this device to appear in the Apple Configurator.
+
+#### Add the `.ipa` File
+
+- Either drag the `.ipa` file onto the connected device in Apple Configurator;
+- Or click **Add → Apps**, then browse and select the `.ipa` file from your Mac.
+
+#### Install the App
+
+- Click **Prepare** or **Install** to begin the deployment/installation;
+- Apple Configurator will install the app on the connected device.
+
+#### Trust the Developer (for Ad Hoc or Enterprise apps)
+
+If your app is signed with an **Ad Hoc** or **Enterprise** [provisioning profile](#provisioning-profile),
+you'll need to manually trust the developer:
+
+- On the iOS device, go to **Settings → General → VPN & Device Management**;
+- Under **Developer App**, tap your **Developer Profile**;
+- Tap **Trust [Your Developer Name]**, then confirm.
+
+## Uploading app to App Store Connect for distribution
+
+#### Install and Sign in to Transporter
+
+- Install and open [**Transporter**](https://apps.apple.com/us/app/transporter/id1450874784) from the Mac App Store.
+- Sign in using your **Apple Developer Account** credentials (the same account used for App Store Connect).
+
+#### Prepare Your `.ipa` File
+
+- Build your app and export an `.ipa` file using the **app-store-connect** export method.
+  (**release-testing** is for Ad Hoc device distribution, not App Store Connect.)
+
+#### Upload the `.ipa` File in Transporter
+
+- Drag and drop the `.ipa` file directly into the Transporter window, or click "Add App" and select your `.ipa` file from your Mac.
+- Click the "..." button next to "Deliver", and select "Verify".
+- Wait for Transporter to complete the verification process.
+- After successful verification, click "Deliver" to upload your `.ipa` file to App Store Connect.
+
+#### Check Upload Status
+
+- Transporter will display a success message upon completion.
+- If errors occur, carefully review the details provided, correct the issues, and repeat the upload process.
+
+#### Confirm Upload in App Store Connect
+
+- Go to [App Store Connect](https://appstoreconnect.apple.com/).
+- Navigate to **Apps → Your App → TestFlight or App Store Version**.
+- Your newly uploaded build will initially appear under **Processing** (processing typically takes a few minutes to an hour).
+- Once processing completes, your build will become available for submission. You can now **submit the app for review**.
+
+## Reading your app's output
+
+Flet redirects the app's `stdout` and `stderr` — everything it `print()`s, plus any
+traceback — to Apple's unified log, and also writes them to a `console.log` file inside
+the app's container.
+
+On a **simulator**, stream the unified log while the app runs:
+
+```bash
+xcrun simctl spawn booted log stream --style compact --predicate 'sender == "dart_bridge"'
+```
+
+`sender == "dart_bridge"` narrows the log to the Python output alone — filtering by process
+instead buries it under UIKit chatter. Use `log show --last 5m` in place of `log stream` to
+read output the app has already produced:
+
+```bash
+xcrun simctl spawn booted log show --style compact --last 5m --predicate 'sender == "dart_bridge"'
+```
+
+The same lines are in `console.log`, which is easier to grep for a crash that happens before
+you can attach:
+
+```bash
+DATA=$(xcrun simctl get_app_container booted <bundleId> data)
+cat "$DATA/Library/Caches/console.log"
+```
+
+On a **physical device**, open **Console.app**, select the device in the sidebar, and filter
+on your app's process — or download the app container from Xcode's **Window → Devices and
+Simulators → Download Container** and read `console.log` inside it.
+
+To read the same output from *inside* your app — or to show it on screen — see
+[Console output](index.md#console-output).
+
+## Building and signing in CI
+
+A CI runner has neither a signing certificate nor a provisioning profile, so
+both must be installed before `flet build ipa` runs.
+
+:::note
+The steps below cover only signing — graft them onto a complete build workflow
+such as the one in the [CI/CD guide](index.md#github-actions).
+:::
+
+Export the [signing certificate](#signing-certificate) together with its private
+key as a `.p12` and store it, base64-encoded, as a repository secret — the same
+one-time procedure as for [macOS](macos.md#github-actions). The provisioning
+profile needs no secret of its own: it is downloaded from the Apple Developer
+portal on every run with the same [App Store Connect API
+key](macos.md#creating-a-credential) used to upload the build, so a regenerated
+profile never leaves a stale copy behind.
+
+```yaml
+- name: Import signing certificate
+  uses: apple-actions/import-codesign-certs@v7
+  with:
+    p12-file-base64: ${{ secrets.IOS_CERTIFICATE_P12 }}
+    p12-password: ${{ secrets.IOS_CERTIFICATE_PASSWORD }}
+
+- name: Install provisioning profile
+  uses: apple-actions/download-provisioning-profiles@v6 # (1)!
+  with:
+    bundle-id: com.mycompany.example-app
+    profile-type: IOS_APP_STORE # (2)!
+    issuer-id: ${{ secrets.APPLE_API_ISSUER }}
+    api-key-id: ${{ secrets.APPLE_API_KEY_ID }}
+    api-private-key: ${{ secrets.APPLE_API_KEY_P8 }}
+
+- name: Build
+  run: uv run flet build ipa --build-number ${{ github.run_number }} # (3)!
+
+- name: Upload to App Store Connect
+  run: |
+    mkdir -p ~/.appstoreconnect/private_keys # (4)!
+    printf '%s' "${{ secrets.APPLE_API_KEY_P8 }}" \
+      > ~/.appstoreconnect/private_keys/AuthKey_${{ secrets.APPLE_API_KEY_ID }}.p8
+    xcrun altool --upload-package build/ipa/*.ipa -t ios \
+      --apiKey ${{ secrets.APPLE_API_KEY_ID }} \
+      --apiIssuer ${{ secrets.APPLE_API_ISSUER }} \
+      --apple-id ${{ secrets.APPSTORE_APP_ID }} # (5)!
+```
+
+1. Downloads the profiles matching the bundle id into the directory Xcode reads,
+   so nothing about them is stored in a secret. View its docs
+   [here](https://github.com/apple-actions/download-provisioning-profiles).
+2. Match the [export method](#export-method) the build uses:
+   `IOS_APP_STORE` for `app-store-connect`, `IOS_APP_ADHOC` for
+   `release-testing`, `IOS_APP_DEVELOPMENT` for `debugging`.
+3. The [profile](#provisioning-profile) and [certificate](#signing-certificate)
+   come from `pyproject.toml` as usual. If the profile step above did not
+   install what the project asks for, the build stops immediately and lists the
+   profiles that *are* installed, instead of failing later inside Xcode.
+4. `altool` reads the API key from this directory, by the
+   `AuthKey_<KEY_ID>.p8` name.
+5. The app record's numeric Apple ID, from **App Information → General
+   Information** in App Store Connect.
+
+## Troubleshooting
+
+| Symptom                                                        | Cause and fix                                                                                                                                                                                                                                                                                                                                  |
+|----------------------------------------------------------------|------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| The build succeeds but there is no `.ipa`, only an `.xcarchive` | The app was built unsigned, which is all Xcode can export without signing. Configure a [provisioning profile](#provisioning-profile) and a [signing certificate](#signing-certificate) to get an uploadable bundle.                                                                                                                        |
+| Build hangs at `Running Xcode build...` (`codesign` at 0% CPU) | macOS is waiting on a keychain prompt — possibly hidden behind other windows — for permission to use the signing key, common after importing a key from the terminal. Click **Always Allow** on the prompt, or pre-authorize `codesign` with `security set-key-partition-list -S apple-tool:,apple: -s -k <login-password> login.keychain-db`. |
+| `No valid code signing certificates were found`                | No signing certificate and matching profile are installed for the selected team — walk through [Signing Certificate](#signing-certificate) and [Provisioning Profile](#provisioning-profile).                                                                                                                                                  |
+| A manually copied provisioning profile keeps disappearing      | A running Xcode process removes profiles copied into `~/Library/MobileDevice/Provisioning Profiles` — quit Xcode before [installing the profile](#provisioning-profile).                                                                                                                                                                       |
+| `Provisioning profile '<name>' is not installed`               | The configured name or UUID matches nothing installed. Compare it with the profiles the message lists — the portal's name is often not what it is assumed to be — and [install the profile](#installing-provisioning-profile) if it is missing.                                                                                             |

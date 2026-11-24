@@ -2,35 +2,15 @@ import os
 import plistlib
 import shutil
 import subprocess
-import tarfile
 from pathlib import Path
+from typing import Any, Optional
 
 from PyInstaller.building.icon import normalize_icon_type
 
-from flet.utils import safe_tar_extractall
+import flet_cli.__pyinstaller.config as hook_config
 
 
-def unpack_app_bundle(tar_path):
-    """
-    Extract a macOS app bundle archive and remove the source tarball.
-
-    Args:
-        tar_path: Path to a `*.tar.gz` archive containing `Flet.app`.
-
-    Returns:
-        Path to extracted `Flet.app`.
-    """
-
-    bin_dir = str(Path(tar_path).parent)
-
-    with tarfile.open(tar_path, "r:gz") as tar_arch:
-        safe_tar_extractall(tar_arch, bin_dir)
-    os.remove(tar_path)
-
-    return os.path.join(bin_dir, "Flet.app")
-
-
-def update_flet_view_icon(app_path, icon_path):
+def update_flet_view_icon(app_path: str, icon_path: str) -> None:
     """
     Replace app icon in a macOS app bundle and update Info.plist metadata.
 
@@ -39,7 +19,7 @@ def update_flet_view_icon(app_path, icon_path):
         icon_path: Path to source icon file.
     """
 
-    print("Updating Flet View icon", app_path, icon_path)
+    hook_config.log_progress("Updating Flet View icon", app_path, icon_path)
 
     icon_file = "AppIcon.icns"
 
@@ -49,7 +29,7 @@ def update_flet_view_icon(app_path, icon_path):
     )
 
     # patch icon
-    print("Copying icons from", normalized_icon_path)
+    hook_config.log_progress("Copying icons from", normalized_icon_path)
     shutil.copy(
         normalized_icon_path,
         os.path.join(app_path, "Contents", "Resources", icon_file),
@@ -63,12 +43,12 @@ def update_flet_view_icon(app_path, icon_path):
 
 
 def update_flet_view_version_info(
-    app_path,
-    bundle_id,
-    product_name,
-    product_version,
-    copyright,
-):
+    app_path: str,
+    bundle_id: Optional[str],
+    product_name: Optional[str],
+    product_version: Optional[str],
+    copyright: Optional[str],
+) -> str:
     """
     Update selected Info.plist metadata fields in a macOS app bundle.
 
@@ -83,7 +63,7 @@ def update_flet_view_version_info(
         Final app bundle path (may change when app bundle is renamed).
     """
 
-    print("Updating Flet View plist", app_path)
+    hook_config.log_progress("Updating Flet View plist", app_path)
 
     pl = __load_info_plist(app_path)
 
@@ -107,20 +87,18 @@ def update_flet_view_version_info(
     return app_path
 
 
-def assemble_app_bundle(app_path, tar_path):
+def sign_app_bundle(app_path: str) -> None:
     """
-    Code-sign a macOS app bundle, package it as tar.gz, and remove unpacked bundle.
+    Ad-hoc code-sign a macOS app bundle, after its icon or metadata changed.
 
     Args:
         app_path: Path to app bundle directory.
-        tar_path: Destination tar.gz path.
 
     Raises:
         SystemError: If `codesign` fails.
     """
 
-    # sign app bundle
-    print(f"Signing file {app_path}")
+    hook_config.log_progress(f"Signing file {app_path}")
     cmd_args = [
         "codesign",
         "-s",
@@ -143,15 +121,8 @@ def assemble_app_bundle(app_path, tar_path):
             f"error code {p.returncode}!\noutput: {p.stdout}"
         )
 
-    # pack tar
-    with tarfile.open(tar_path, "w:gz") as tar:
-        tar.add(app_path, arcname=os.path.basename(app_path))
 
-    # cleanup
-    shutil.rmtree(app_path, ignore_errors=True)
-
-
-def __load_info_plist(app_path):
+def __load_info_plist(app_path: str) -> dict[str, Any]:
     """
     Load Info.plist content from a macOS app bundle.
     """
@@ -160,7 +131,7 @@ def __load_info_plist(app_path):
         return plistlib.load(fp)
 
 
-def __save_info_plist(app_path, pl):
+def __save_info_plist(app_path: str, pl: dict[str, Any]) -> None:
     """
     Save Info.plist content to a macOS app bundle.
 
@@ -173,7 +144,7 @@ def __save_info_plist(app_path, pl):
         plistlib.dump(pl, fp)
 
 
-def __get_plist_path(app_path):
+def __get_plist_path(app_path: str) -> str:
     """
     Return path to `Info.plist` inside a macOS app bundle.
     """

@@ -1,7 +1,7 @@
-from dataclasses import dataclass
 from enum import Enum
 from typing import ClassVar, Optional
 
+from flet.controls.base_control import value
 from flet.controls.types import Number
 
 __all__ = [
@@ -29,15 +29,11 @@ class Axis(Enum):
     """
 
 
-@dataclass
+@value
 class Alignment:
     """
     Defines an alignment relative to the center.
-
-    ![overview](https://raw.githubusercontent.com/flet-dev/examples/v1-docs/python/controls/types/alignment/media/overview.png){width="80%"}
-    /// caption
-    ///
-    """  # noqa: E501
+    """
 
     x: Number
     """
@@ -114,7 +110,7 @@ class Alignment:
 
 
 class AlignmentProperty:
-    """Descriptor used to expose predefined [`Alignment`][flet.] constants."""
+    """Descriptor used to expose predefined :class:`~flet.Alignment` constants."""
 
     def __init__(self, factory):
         self.factory = factory

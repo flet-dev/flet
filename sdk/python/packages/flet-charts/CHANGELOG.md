@@ -5,13 +5,41 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
+## 1.1.3
+
+### Fixed
+
+- Fixed `BarChart` failing to render when a `BarChartRodStackItem` has no `from_y` or `color`; an item without a color now uses its rod's color ([#7064](https://github.com/flet-dev/flet/pull/7064)) by @ndonkoHenri.
+- Fixed `LineChart` jumping instead of animating when the points of a data series change ([flet-charts#8](https://github.com/flet-dev/flet-charts/issues/8), [#7064](https://github.com/flet-dev/flet/pull/7064)) by @ndonkoHenri.
+
+## 1.0.2
+
+### Fixed
+
+- Fixed `ScatterChart` failing to render when a `ScatterChartSpot` has `x_error` or `y_error` set. Error ranges are now set with the new `ChartErrorRange` type and drawn as error bars in the color of their spot ([#6885](https://github.com/flet-dev/flet/pull/6885)) by @ndonkoHenri.
+
+## 1.0.0
+
+### Fixed
+
+- Fixed `MatplotlibChartWithToolbar` controls being cropped on narrow screens by allowing the toolbar to wrap onto additional rows ([#6845](https://github.com/flet-dev/flet/pull/6845)) by @FeodorFitsner.
+- Fixed `import flet_charts` crashing when `matplotlib` (or `plotly`) is installed but fails to import. The optional-dependency guards caught only `ImportError`, so any other failure propagated and took the whole package down — notably on Android, where Flet ships site-packages inside a zip and matplotlib reading `mpl-data/matplotlibrc` through a real `__file__` path raises `NotADirectoryError`. Apps that merely imported `flet_charts` crashed at startup even if they never drew a matplotlib chart. The guards now degrade to "unavailable" for any import-time failure, and the deferred `ModuleNotFoundError` names the underlying cause by @ndonkoHenri.
+
+## 0.85.0
+
+### Fixed
+
+- Fixed `LineChartEvent.spots` returning undecoded MessagePack extension values instead of `LineChartEventSpot` objects ([#6443](https://github.com/flet-dev/flet/issues/6443), [#6468](https://github.com/flet-dev/flet/pull/6468)) by @ndonkoHenri.
+- Fixed `LineChart` (and other charts) silently dropping custom `ChartAxisLabel` entries whose `value` matched a tick only after floating-point rounding (e.g. `0.1`, `0.2`, `0.3`) by switching label lookup to a tolerance-based comparison scaled to the axis interval ([#6445](https://github.com/flet-dev/flet/issues/6445), [#6459](https://github.com/flet-dev/flet/pull/6459)) by @KangZhaoKui.
+- Fixed unbounded browser memory growth in `MatplotlibChart` on Flutter web (CanvasKit/WASM) during animations by replacing the generic `Canvas` + `capture()` rendering flow with a dedicated `MatplotlibChartCanvas` widget that composites matplotlib diff frames in CPU memory; also fixes Safari async PNG decode (`EncodingError: Loading error.`), a render/`figure.savefig()` race that crashed the toolbar Download, and pan/zoom playback lag from buffered pointer events ([#6473](https://github.com/flet-dev/flet/pull/6473)) by @FeodorFitsner.
+
 ## 0.80.0
 
 Initial release.
 
 ### Added
 
-- Deployed online documentation: https://docs.flet.dev/charts/
+- Deployed online documentation: https://flet.dev/docs/charts/
 - New Chart control: `ScatterChart`
 - New Chart control: `CandlestickChart`
 

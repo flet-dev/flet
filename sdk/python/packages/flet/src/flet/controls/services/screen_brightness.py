@@ -30,15 +30,12 @@ class ScreenBrightness(Service):
     Note:
         * Supported platforms: Android, iOS.
 
-    /// admonition | Running on Android
-        type: warning
     To adjust the system brightness on Android, add the following permission
     in your `pyproject.toml` file:
     ```toml
     [tool.flet.android.permission]
     "android.permission.WRITE_SETTINGS" = true
     ```
-    ///
     """
 
     on_system_screen_brightness_change: Optional[

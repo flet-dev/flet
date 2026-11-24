@@ -1,7 +1,7 @@
 import 'package:collection/collection.dart';
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flet/flet.dart';
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 
 FlDotPainter invisibleDotPainter =
     FlDotCirclePainter(radius: 0, strokeWidth: 0);
@@ -156,12 +156,23 @@ AxisTitles parseAxisTitles(Control? control) {
         getTitlesWidget: labels.isEmpty
             ? defaultGetTitle
             : (double value, TitleMeta meta) {
-                var label = labels
-                    .firstWhereOrNull((l) => l.getDouble("value") == value);
+                final epsilon = meta.appliedInterval * 1e-3;
+                final label = labels.firstWhereOrNull((l) {
+                  final v = l.getDouble("value");
+                  return v != null && (v - value).abs() < epsilon;
+                });
                 return label?.buildTextOrWidget("label") ??
                     const SizedBox.shrink();
               },
       ));
+}
+
+FlErrorRange? parseFlErrorRange(dynamic value, [FlErrorRange? defaultValue]) {
+  if (value == null) return defaultValue;
+  return FlErrorRange(
+    lowerBy: parseDouble(value["lower_by"], 0)!,
+    upperBy: parseDouble(value["upper_by"], 0)!,
+  );
 }
 
 FLHorizontalAlignment? parseFLHorizontalAlignment(String? value,

@@ -1,0 +1,26 @@
+[project]
+name = "bottom-sheet-fullscreen"
+version = "1.0.0"
+description = "BottomSheet with fullscreen toggle and drag handle."
+requires-python = ">=3.10"
+keywords = ["bottom sheet", "dialog", "fullscreen", "switch", "drag handle"]
+authors = [{ name = "Flet team", email = "hello@flet.dev" }]
+dependencies = ["flet"]
+
+[dependency-groups]
+dev = ["flet-cli", "flet-desktop", "flet-web"]
+
+[tool.flet.gallery]
+categories = ["Dialogs/BottomSheet"]
+
+[tool.flet.metadata]
+title = "BottomSheet fullscreen"
+controls = ["SafeArea", "Column", "Button", "Switch", "BottomSheet", "Container", "Text"]
+layout_pattern = "dialog-flow"
+complexity = "basic"
+features = ["fullscreen toggle", "bottom sheet dialog", "drag handle"]
+
+[tool.flet]
+org = "dev.flet"
+company = "Flet"
+copyright = "Copyright (C) 2023-2026 by Flet"

@@ -4,7 +4,9 @@ from typing import Optional
 
 from flet.controls.base_control import control
 from flet.controls.box import BoxShadowValue, DecorationImage
+from flet.controls.control_state import ControlStateValue
 from flet.controls.gradients import Gradient
+from flet.controls.material.form_field_control import InputBorder
 from flet.controls.material.textfield import TextField
 from flet.controls.padding import Padding, PaddingValue
 from flet.controls.text_style import TextStyle
@@ -50,6 +52,7 @@ class CupertinoTextField(TextField):
     """
     An iOS-style text field.
 
+    Example:
     ```python
     ft.CupertinoTextField(placeholder_text="Search")
     ```
@@ -65,7 +68,7 @@ class CupertinoTextField(TextField):
 
     placeholder_style: Optional[TextStyle] = None
     """
-    The [`TextStyle`][flet.] to use for [`placeholder_text`][(c).].
+    The :class:`~flet.TextStyle` to use for :attr:`placeholder_text`.
     """
 
     gradient: Optional[Gradient] = None
@@ -75,8 +78,8 @@ class CupertinoTextField(TextField):
 
     blend_mode: Optional[BlendMode] = None
     """
-    The blend mode applied to the [`bgcolor`][flet.FormFieldControl.]
-    or [`gradient`][(c).] background.
+    The blend mode applied to the :attr:`flet.FormFieldControl.bgcolor`
+    or :attr:`gradient` background.
     """
 
     shadows: Optional[BoxShadowValue] = None
@@ -86,23 +89,23 @@ class CupertinoTextField(TextField):
 
     prefix_visibility_mode: OverlayVisibilityMode = OverlayVisibilityMode.ALWAYS
     """
-    Defines the visibility of the [`prefix`][flet.FormFieldControl.]
+    Defines the visibility of the :attr:`flet.FormFieldControl.prefix`
     control based on the state of text entry.
 
     Note:
         Has no effect if
-        [`prefix`][flet.FormFieldControl.]
+        :attr:`flet.FormFieldControl.prefix`
         is not specified.
     """
 
     suffix_visibility_mode: OverlayVisibilityMode = OverlayVisibilityMode.ALWAYS
     """
-    Defines the visibility of the [`suffix`][flet.FormFieldControl.]
+    Defines the visibility of the :attr:`flet.FormFieldControl.suffix`
     control based on the state of text entry.
 
     Note:
         Has no effect if
-        [`suffix`][flet.FormFieldControl.]
+        :attr:`flet.FormFieldControl.suffix`
         is not specified.
     """
 
@@ -110,9 +113,7 @@ class CupertinoTextField(TextField):
     """
     Defines the visibility of the clear button based on the state of text entry.
 
-    Will appear only if no
-    [`suffix`][flet.FormFieldControl.]
-    is provided.
+    Will appear only if no :attr:`flet.FormFieldControl.suffix` is provided.
     """
 
     clear_button_semantics_label: Optional[str] = "Clear"
@@ -124,15 +125,32 @@ class CupertinoTextField(TextField):
 
     image: Optional[DecorationImage] = None
     """
-    An image to paint above the [`bgcolor`][flet.FormFieldControl.]
-    or [`gradient`][(c).] background.
+    An image to paint above the :attr:`flet.FormFieldControl.bgcolor`
+    or :attr:`gradient` background.
     """
 
     padding: PaddingValue = field(default_factory=lambda: Padding.all(7))
     """
     The padding around the text entry area between the \
-    [`prefix`][flet.FormFieldControl.]
-    and [`suffix`][flet.FormFieldControl.]
-    or the clear button when [`clear_button_visibility_mode`][(c).]
-    is not [`OverlayVisibilityMode.NEVER`][flet.].
+    :attr:`flet.FormFieldControl.prefix`
+    and :attr:`flet.FormFieldControl.suffix`
+    or the clear button when :attr:`clear_button_visibility_mode`
+    is not :attr:`flet.OverlayVisibilityMode.NEVER`.
+    """
+
+    border: Optional[ControlStateValue[InputBorder]] = field(default=None, kw_only=True)
+    """
+    The border drawn around this text field.
+
+    Accepts a single :class:`~flet.InputBorder` or a dictionary mapping
+    :class:`~flet.ControlState`s to :class:`~flet.InputBorder`s. The
+    :attr:`flet.ControlState.DEFAULT`, :attr:`flet.ControlState.FOCUSED` and
+    :attr:`flet.ControlState.DISABLED` entries apply;
+    :attr:`flet.ControlState.ERROR` is ignored, as this control does not
+    render an error state.
+
+    An :class:`~flet.OutlineInputBorder` without a `side` keeps the native iOS
+    border; give it a `side` to draw your own on all four edges. An
+    :class:`~flet.UnderlineInputBorder` draws the bottom edge only, and
+    :class:`~flet.NoInputBorder` removes the border entirely.
     """

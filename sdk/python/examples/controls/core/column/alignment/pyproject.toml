@@ -1,0 +1,26 @@
+[project]
+name = "column-alignment"
+version = "1.0.0"
+description = "Column vertical alignment modes demonstrated side by side."
+requires-python = ">=3.10"
+keywords = ["column", "layout", "alignment", "mainaxisalignment", "scroll"]
+authors = [{ name = "Flet team", email = "hello@flet.dev" }]
+dependencies = ["flet"]
+
+[dependency-groups]
+dev = ["flet-cli", "flet-desktop", "flet-web"]
+
+[tool.flet.gallery]
+categories = ["Layout/Column"]
+
+[tool.flet.metadata]
+title = "Column vertical alignment"
+controls = ["Row", "Column", "Container", "Text"]
+layout_pattern = "comparison-grid"
+complexity = "basic"
+features = ["main axis alignment", "layout comparison", "horizontal scrolling"]
+
+[tool.flet]
+org = "dev.flet"
+company = "Flet"
+copyright = "Copyright (C) 2023-2026 by Flet"

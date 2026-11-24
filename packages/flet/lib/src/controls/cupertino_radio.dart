@@ -1,5 +1,5 @@
-import 'package:flutter/cupertino.dart';
-import 'package:flutter/material.dart';
+import 'package:cupertino_ui/cupertino_ui.dart';
+import 'package:material_ui/material_ui.dart';
 
 import '../models/control.dart';
 import '../utils/colors.dart';
@@ -55,6 +55,7 @@ class _CupertinoRadioControlState extends State<CupertinoRadioControl>
     var value = widget.control.getString("value", "")!;
 
     var cupertinoRadio = CupertinoRadio<String>(
+      enabled: !widget.control.disabled,
       autofocus: widget.control.getBool("autofocus", false)!,
       focusNode: _focusNode,
       value: value,

@@ -1,4 +1,4 @@
-from typing import Optional
+from typing import Annotated, Optional
 
 from flet.controls.adaptive_control import AdaptiveControl
 from flet.controls.base_control import control
@@ -12,6 +12,7 @@ from flet.controls.types import (
     Number,
     StrOrControl,
 )
+from flet.utils.validation import V
 
 
 @control("AppBar")
@@ -35,23 +36,23 @@ class AppBar(AdaptiveControl):
 
     leading: Optional[Control] = None
     """
-    A control to display before the toolbar's [`title`][(c).].
+    A control to display before the toolbar's :attr:`title`.
 
-    Typically an [`Icon`][flet.] or [`IconButton`][flet.] control.
+    Typically an :class:`~flet.Icon` or :class:`~flet.IconButton` control.
     """
 
     leading_width: Optional[Number] = None
     """
-    Defines the width of the [`leading`][(c).] control.
+    Defines the width of the :attr:`leading` control.
     """
 
     automatically_imply_leading: bool = True
     """
-    Whether we should try to imply the [`leading`][(c).] control if it is `None`.
+    Whether we should try to imply the :attr:`leading` control if it is `None`.
 
     - If `True` and `leading` is `None`, this app bar will automatically determine
         an appropriate leading control.
-    - If `False` and `leading` is `None`, the space is allocated to the [`title`][(c).].
+    - If `False` and `leading` is `None`, the space is allocated to the :attr:`title`.
     - If a `leading` control is provided, this parameter has no effect.
     """
 
@@ -59,21 +60,21 @@ class AppBar(AdaptiveControl):
     """
     The primary Control displayed in this app bar.
 
-    Typically a [`Text`][flet.]
+    Typically a :class:`~flet.Text`
     control that contains a description of the current contents of this app.
 
     Note:
-        If [`AppBar.adaptive=True`][flet.AdaptiveControl.adaptive]
+        If :attr:`flet.AdaptiveControl.adaptive`
         and this app is opened on an iOS or macOS device,
-        this [`title`][(c).] control will be
-        automatically centered, independent of the value of [`center_title`][(c).].
+        this :attr:`title` control will be
+        automatically centered, independent of the value of :attr:`center_title`.
     """
 
     center_title: Optional[bool] = None
     """
-    Whether the [`title`][(c).] should be centered.
+    Whether the :attr:`title` should be centered.
 
-    Default value is defined by [`AppBarTheme.center_title`][flet.]
+    Default value is defined by :attr:`flet.AppBarTheme.center_title`
     """
 
     toolbar_height: Optional[Number] = None
@@ -83,44 +84,50 @@ class AppBar(AdaptiveControl):
 
     color: Optional[ColorValue] = None
     """
-    The default color for [`Text`][flet.]
-    and [`Icon`][flet.] controls within this app bar.
+    The default color for :class:`~flet.Text`
+    and :class:`~flet.Icon` controls within this app bar.
 
-    Default color is defined by [`AppBarTheme.color`][flet.]
+    Default color is defined by :attr:`flet.AppBarTheme.color`
     """
 
     bgcolor: Optional[ColorValue] = None
     """
     The fill color to use for this app bar.
 
-    Default color is defined by [`AppBarTheme.bgcolor`][flet.]
+    Default color is defined by :attr:`flet.AppBarTheme.bgcolor`
     """
 
-    elevation: Optional[Number] = None
+    elevation: Annotated[
+        Optional[Number],
+        V.ge(0),
+    ] = None
     """
     The app bar's elevation.
 
     Note:
         This effect is only visible when using the Material 2 design
-        (when [`Theme.use_material3`][flet.] is `False`).
+        (when :attr:`flet.Theme.use_material3` is `False`).
 
     Raises:
-        ValueError: If it is less than `0.0`.
+        ValueError: If it is not greater than or equal to `0`.
     """
 
-    elevation_on_scroll: Optional[Number] = None
+    elevation_on_scroll: Annotated[
+        Optional[Number],
+        V.ge(0),
+    ] = None
     """
     The elevation to be used if this app bar has something scrolled underneath it.
 
     Raises:
-        ValueError: If it is less than `0.0`.
+        ValueError: If it is not greater than or equal to `0`.
     """
 
     shadow_color: Optional[ColorValue] = None
     """
     The color of the shadow below this app bar.
 
-    A shadow is only visible and displayed if the [`elevation`][(c).]
+    A shadow is only visible and displayed if the :attr:`elevation`
     is greater than zero.
     """
 
@@ -133,8 +140,8 @@ class AppBar(AdaptiveControl):
     """
     Forces this app bar to be transparent (instead of Material's default type).
 
-    This will also remove the visual display of [`bgcolor`][(c).]
-    and [`elevation`][(c).], and affect other characteristics of this app bar.
+    This will also remove the visual display of :attr:`bgcolor`
+    and :attr:`elevation`, and affect other characteristics of this app bar.
     """
 
     secondary: bool = False
@@ -144,44 +151,47 @@ class AppBar(AdaptiveControl):
 
     title_spacing: Optional[Number] = None
     """
-    The spacing around [`title`][(c).] on the horizontal axis.
+    The spacing around :attr:`title` on the horizontal axis.
     It is applied even if there are
-    no [`leading`][(c).] or [`actions`][(c).] controls.
+    no :attr:`leading` or :attr:`actions` controls.
 
     Tip:
-        If you want [`title`][(c).] to take all the space available,
+        If you want :attr:`title` to take all the space available,
         set `title_spacing` to `0.0`.
     """
 
     exclude_header_semantics: bool = False
     """
-    Whether the [`title`][(c).] should be wrapped with header [`Semantics`][flet.].
+    Whether the :attr:`title` should be wrapped with header :class:`~flet.Semantics`.
     """
 
     actions: Optional[list[Control]] = None
     """
     A list of `Control`s to display in a row after the title control.
 
-    Typically, these controls are [`IconButton`][flet.]s
+    Typically, these controls are :class:`~flet.IconButton`s
     representing common operations. For less common operations, consider using a
-    [`PopupMenuButton`][flet.] as the last
+    :class:`~flet.PopupMenuButton` as the last
     action.
 
     Info:
-        If [`AppBar.adaptive`][flet.AdaptiveControl.adaptive] is `True`
+        If :attr:`flet.AdaptiveControl.adaptive` is `True`
         and this app is opened on an iOS or macOS device,
         these `actions` will be automatically placed in a
-        [`Row`][flet.].
-        This is because [`CupertinoAppBar.trailing`][flet.]
+        :class:`~flet.Row`.
+        This is because :attr:`flet.CupertinoAppBar.trailing`
         (which is the counterpart property of `actions`) takes only a single `Control`.
     """
 
     actions_padding: Optional[PaddingValue] = None
     """
-    The padding between the [`actions`][(c).] and the end of this app bar.
+    The padding between the :attr:`actions` and the end of this app bar.
     """
 
-    toolbar_opacity: Number = 1.0
+    toolbar_opacity: Annotated[
+        Number,
+        V.between(0.0, 1.0),
+    ] = 1.0
     """
     The opacity of the toolbar.
 
@@ -189,38 +199,21 @@ class AppBar(AdaptiveControl):
     - `1.0`: fully opaque
 
     Raises:
-        ValueError: If it is not between `0.0` and `1.0` inclusive.
+        ValueError: If it is not between `0.0` and `1.0`, inclusive.
     """
 
     title_text_style: Optional[TextStyle] = None
     """
-    The style to be used for the [`Text`][flet.] controls in the [`title`][(c).].
+    The style to be used for the :class:`~flet.Text` controls in the :attr:`title`.
     """
 
     toolbar_text_style: Optional[TextStyle] = None
     """
-    The style to be used for the [`Text`][flet.] controls in the app bar's \
-    [`leading`][(c).] and [`actions`][(c).].
+    The style to be used for the :class:`~flet.Text` controls in the app bar's \
+    :attr:`leading` and :attr:`actions`.
     """
 
     shape: Optional[OutlinedBorder] = None
     """
     The shape of this app bar's Material as well as its shadow.
     """
-
-    def before_update(self):
-        super().before_update()
-        if self.elevation is not None and self.elevation < 0:
-            raise ValueError(
-                f"elevation must be greater than or equal to 0, got {self.elevation}"
-            )
-        if self.elevation_on_scroll is not None and self.elevation_on_scroll < 0:
-            raise ValueError(
-                "elevation_on_scroll must be greater than or equal to 0, "
-                f"got {self.elevation_on_scroll}"
-            )
-        if not (0 <= self.toolbar_opacity <= 1):
-            raise ValueError(
-                "toolbar_opacity must be between 0.0 and 1.0 inclusive, "
-                f"got {self.toolbar_opacity}"
-            )

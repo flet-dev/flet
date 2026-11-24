@@ -4,12 +4,39 @@ import logging
 import threading
 from collections.abc import Awaitable, Iterable
 from concurrent.futures import ThreadPoolExecutor
+from functools import partial
 from typing import Any, Callable, Optional, Union
 
 from flet.utils import is_pyodide
 from flet.utils.locks import NopeLock
+from flet.utils.object_model import callable_name
 
 logger = logging.getLogger("flet")
+
+
+def _log_subscriber_error(handler: Callable, exception: BaseException) -> None:
+    """Log an exception raised by a subscriber on the `flet` logger."""
+    logger.error(
+        "Unhandled error in PubSub subscriber %s",
+        callable_name(handler),
+        exc_info=exception,
+    )
+
+
+def _call_subscriber(handler: Callable, *args: Any) -> None:
+    """Call a sync subscriber, logging an exception it raises."""
+    try:
+        handler(*args)
+    except Exception as e:
+        _log_subscriber_error(handler, e)
+
+
+async def _call_async_subscriber(handler: Callable, *args: Any) -> None:
+    """Call an async subscriber, logging an exception it raises."""
+    try:
+        await handler(*args)
+    except Exception as e:
+        _log_subscriber_error(handler, e)
 
 
 class PubSubHub:
@@ -21,7 +48,7 @@ class PubSubHub:
     - global subscribers receive `(message)`;
     - topic subscribers receive `(topic, message)`.
 
-    This hub is used by session-scoped [`PubSubClient`][flet.PubSubClient]
+    This hub is used by session-scoped `PubSubClient`
     instances to fan out messages between connected sessions.
     """
 
@@ -51,11 +78,8 @@ class PubSubHub:
         Args:
             message: Payload to deliver.
         """
-        logger.debug(f"pubsub.send_all({message})")
-        with self.__lock:
-            for handlers in self.__subscribers.values():
-                for handler in handlers:
-                    self.__send(handler, [message])
+        logger.debug("pubsub.send_all(%s)", message)
+        self.__publish([message])
 
     def send_all_on_topic(self, topic: str, message: Any):
         """
@@ -65,12 +89,8 @@ class PubSubHub:
             topic: Topic name to broadcast on.
             message: Payload to deliver.
         """
-        logger.debug(f"pubsub.send_all_on_topic({topic}, {message})")
-        with self.__lock:
-            if topic in self.__topic_subscribers:
-                for handlers in self.__topic_subscribers[topic].values():
-                    for handler in handlers:
-                        self.__send(handler, [topic, message])
+        logger.debug("pubsub.send_all_on_topic(%s, %s)", topic, message)
+        self.__publish([topic, message], topic=topic)
 
     def send_others(self, except_session_id: str, message: Any):
         """
@@ -80,12 +100,8 @@ class PubSubHub:
             except_session_id: Session ID to exclude from delivery.
             message: Payload to deliver.
         """
-        logger.debug(f"pubsub.send_others({except_session_id}, {message})")
-        with self.__lock:
-            for session_id, handlers in self.__subscribers.items():
-                if except_session_id != session_id:
-                    for handler in handlers:
-                        self.__send(handler, [message])
+        logger.debug("pubsub.send_others(%s, %s)", except_session_id, message)
+        self.__publish([message], exclude=except_session_id)
 
     def send_others_on_topic(self, except_session_id: str, topic: str, message: Any):
         """
@@ -97,14 +113,9 @@ class PubSubHub:
             message: Payload to deliver.
         """
         logger.debug(
-            f"pubsub.send_others_on_topic({except_session_id}, {topic}, {message})"
+            "pubsub.send_others_on_topic(%s, %s, %s)", except_session_id, topic, message
         )
-        with self.__lock:
-            if topic in self.__topic_subscribers:
-                for session_id, handlers in self.__topic_subscribers[topic].items():
-                    if except_session_id != session_id:
-                        for handler in handlers:
-                            self.__send(handler, [topic, message])
+        self.__publish([topic, message], topic=topic, exclude=except_session_id)
 
     def subscribe(self, session_id: str, handler: Callable):
         """
@@ -118,7 +129,7 @@ class PubSubHub:
             session_id: Session identifier that owns this subscription.
             handler: Sync or async callback invoked for global messages.
         """
-        logger.debug(f"pubsub.subscribe({session_id})")
+        logger.debug("pubsub.subscribe(%s)", session_id)
         with self.__lock:
             handlers = self.__subscribers.get(session_id)
             if handlers is None:
@@ -142,7 +153,7 @@ class PubSubHub:
             topic: Topic name to subscribe to.
             handler: Sync or async callback invoked for topic messages.
         """
-        logger.debug(f"pubsub.subscribe_topic({session_id}, {topic})")
+        logger.debug("pubsub.subscribe_topic(%s, %s)", session_id, topic)
         with self.__lock:
             self.__subscribe_topic(session_id, topic, handler)
 
@@ -188,12 +199,12 @@ class PubSubHub:
         Removes all global subscribers for a session.
 
         This does not remove topic subscriptions; use
-        [`unsubscribe_all()`][(c).unsubscribe_all] to remove both.
+        :meth:`unsubscribe_all` to remove both.
 
         Args:
             session_id: Session identifier to remove.
         """
-        logger.debug(f"pubsub.unsubscribe({session_id})")
+        logger.debug("pubsub.unsubscribe(%s)", session_id)
         with self.__lock:
             self.__unsubscribe(session_id)
 
@@ -205,7 +216,7 @@ class PubSubHub:
             session_id: Session identifier to remove from the topic.
             topic: Topic to unsubscribe from.
         """
-        logger.debug(f"pubsub.unsubscribe({session_id}, {topic})")
+        logger.debug("pubsub.unsubscribe(%s, %s)", session_id, topic)
         with self.__lock:
             self.__unsubscribe_topic(session_id, topic)
 
@@ -216,7 +227,7 @@ class PubSubHub:
         Args:
             session_id: Session identifier to fully unsubscribe.
         """
-        logger.debug(f"pubsub.unsubscribe_all({session_id})")
+        logger.debug("pubsub.unsubscribe_all(%s)", session_id)
         with self.__lock:
             self.__unsubscribe(session_id)
             if session_id in self.__subscriber_topics:
@@ -230,7 +241,7 @@ class PubSubHub:
         Args:
             session_id: Session identifier to remove.
         """
-        logger.debug(f"pubsub.__unsubscribe({session_id})")
+        logger.debug("pubsub.__unsubscribe(%s)", session_id)
         self.__subscribers.pop(session_id, None)
 
     def __unsubscribe_topic(self, session_id: str, topic: str):
@@ -243,7 +254,7 @@ class PubSubHub:
             session_id: Session identifier to remove from the topic.
             topic: Topic to unsubscribe from.
         """
-        logger.debug(f"pubsub.__unsubscribe_topic({session_id}, {topic})")
+        logger.debug("pubsub.__unsubscribe_topic(%s, %s)", session_id, topic)
         topic_subscribers = self.__topic_subscribers.get(topic)
         if topic_subscribers is not None:
             topic_subscribers.pop(session_id, None)
@@ -254,6 +265,40 @@ class PubSubHub:
             subscriber_topics.pop(topic, None)
             if len(subscriber_topics) == 0:
                 self.__subscriber_topics.pop(session_id, None)
+
+    def __publish(
+        self,
+        args: list[Any],
+        topic: Optional[str] = None,
+        exclude: Optional[str] = None,
+    ):
+        """
+        Sends `args` to the global subscribers, or to those of `topic`.
+
+        The subscribers are collected under the hub lock and called after it is
+        released, so they, and the logging of their errors, can subscribe and
+        unsubscribe.
+
+        Args:
+            args: Positional arguments to pass to each subscriber.
+            topic: Topic whose subscribers get the message, or `None` for the
+                global subscribers.
+            exclude: Session ID whose subscribers are skipped.
+        """
+        with self.__lock:
+            groups = (
+                self.__subscribers
+                if topic is None
+                else self.__topic_subscribers.get(topic, {})
+            )
+            handlers = [
+                h
+                for session_id, hs in groups.items()
+                if session_id != exclude
+                for h in hs
+            ]
+        for handler in handlers:
+            self.__send(handler, args)
 
     def __send(
         self, handler: Union[Callable, Callable[..., Awaitable[Any]]], args: Iterable
@@ -276,11 +321,14 @@ class PubSubHub:
             raise RuntimeError("PubSub event loop is not set")
 
         if inspect.iscoroutinefunction(handler):
-            asyncio.run_coroutine_threadsafe(handler(*args), self.__loop)
+            asyncio.run_coroutine_threadsafe(
+                _call_async_subscriber(handler, *args), self.__loop
+            )
         else:
+            call = partial(_call_subscriber, handler, *args)
             if self.__executor:
                 self.__loop.call_soon_threadsafe(
-                    self.__loop.run_in_executor, self.__executor, handler, *args
+                    self.__loop.run_in_executor, self.__executor, call
                 )
             else:
-                handler(*args)
+                call()

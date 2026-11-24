@@ -1,0 +1,26 @@
+[project]
+name = "canvas-smiling-face"
+version = "1.0.0"
+description = "Canvas drawing example of a smiling face."
+requires-python = ">=3.10"
+keywords = ["canvas", "drawing", "shapes", "arc", "circle"]
+authors = [{ name = "Flet team", email = "hello@flet.dev" }]
+dependencies = ["flet"]
+
+[dependency-groups]
+dev = ["flet-cli", "flet-desktop", "flet-web"]
+
+[tool.flet.gallery]
+categories = ["Displays/Canvas"]
+
+[tool.flet.metadata]
+title = "Smiling face"
+controls = ["SafeArea", "Canvas", "Circle", "Arc"]
+layout_pattern = "free-canvas"
+complexity = "basic"
+features = ["shape drawing", "stroke and fill paints"]
+
+[tool.flet]
+org = "dev.flet"
+company = "Flet"
+copyright = "Copyright (C) 2023-2026 by Flet"

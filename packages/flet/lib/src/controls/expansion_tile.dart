@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:flutter/scheduler.dart';
 
 import '../extensions/control.dart';
@@ -107,7 +107,7 @@ class _ExpansionTileControlState extends State<ExpansionTileControl> {
         widget.control.triggerEvent("change", expanded);
       },
       visualDensity: widget.control.getVisualDensity("visual_density"),
-      enableFeedback: widget.control.getBool("enable_feedback"),
+      enableFeedback: widget.control.getBool("enable_feedback", true),
       showTrailingIcon: widget.control.getBool("show_trailing_icon", true)!,
       enabled: !widget.control.disabled,
       minTileHeight: widget.control.getDouble("min_tile_height"),

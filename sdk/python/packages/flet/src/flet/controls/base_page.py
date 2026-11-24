@@ -1,4 +1,5 @@
 import logging
+import weakref
 from dataclasses import dataclass, field
 from typing import (
     TYPE_CHECKING,
@@ -6,8 +7,9 @@ from typing import (
     Union,
 )
 
+from flet.components.public_utils import unwrap_component
 from flet.controls.adaptive_control import AdaptiveControl
-from flet.controls.animation import AnimationCurve
+from flet.controls.animation import AnimationCurve, AnimationStyle
 from flet.controls.base_control import BaseControl, control
 from flet.controls.box import BoxDecoration
 from flet.controls.control import Control
@@ -16,8 +18,6 @@ from flet.controls.control_event import (
     EventHandler,
 )
 from flet.controls.core.view import View
-from flet.controls.cupertino.cupertino_app_bar import CupertinoAppBar
-from flet.controls.cupertino.cupertino_navigation_bar import CupertinoNavigationBar
 from flet.controls.dialog_control import DialogControl
 from flet.controls.duration import DurationValue
 from flet.controls.keys import ScrollKey
@@ -27,6 +27,7 @@ from flet.controls.material.floating_action_button import FloatingActionButton
 from flet.controls.material.navigation_bar import NavigationBar
 from flet.controls.material.navigation_drawer import NavigationDrawer
 from flet.controls.padding import Padding, PaddingValue
+from flet.controls.scrollable_control import Scrollbar
 from flet.controls.services.service import Service
 from flet.controls.transform import OffsetValue
 from flet.controls.types import (
@@ -43,7 +44,16 @@ from flet.controls.types import (
 
 logger = logging.getLogger("flet")
 
+_MANAGED_DIALOG_DISMISS_ORIGINAL = "_managed_dialog_dismiss_original"
+_MANAGED_DIALOG_DISMISS_WRAPPER = "_managed_dialog_dismiss_wrapper"
+
 if TYPE_CHECKING:
+    # Annotation-only (quoted at use sites): deferred so a Page doesn't eagerly
+    # pull the Cupertino controls (cold-start import cost).
+    from flet.controls.cupertino.cupertino_app_bar import CupertinoAppBar
+    from flet.controls.cupertino.cupertino_navigation_bar import (
+        CupertinoNavigationBar,
+    )
     from flet.controls.theme import Theme
 
 
@@ -65,7 +75,7 @@ class PageMediaData:
 
     view_padding: Padding
     """
-    Similar to [`padding`][(c).], but includes padding that is always reserved (even \
+    Similar to :attr:`padding`, but includes padding that is always reserved (even \
     when the system UI is hidden).
     """
 
@@ -127,21 +137,22 @@ class BasePage(AdaptiveControl):
     """
     A visual container representing a top-level view in a Flet application.
 
-    `BasePage` serves as the base class for [Page][flet.] and [`MultiView`][flet.],
+    `BasePage` serves as the base class for :class:`~flet.Page` and \
+    :class:`~flet.MultiView`,
     and provides a unified surface for rendering application content, app bars,
     navigation elements, dialogs, overlays, and more. It manages one or more
-    [`View`][flet.] instances and exposes high-level layout,
+    :class:`~flet.View` instances and exposes high-level layout,
     scrolling, and theming properties.
 
-    Unlike lower-level layout controls (e.g., [`Column`][flet.],
-    [`Container`][flet.]), [`BasePage`][flet.] represents
+    Unlike lower-level layout controls (e.g., :class:`~flet.Column`,
+    :class:`~flet.Container`), :class:`~flet.BasePage` represents
     an entire logical view or screen of the app. It provides direct access
-    to view-level controls such as [`AppBar`][flet.], [`NavigationBar`][flet.],
-    [`FloatingActionButton`][flet.], and supports system-level events like window
+    to view-level controls such as :class:`~flet.AppBar`, :class:`~flet.NavigationBar`,
+    :class:`~flet.FloatingActionButton`, and supports system-level events like window
     resizing and media changes.
 
     This class is not intended to be used directly in most apps; instead,
-    use [`Page`][flet.] or [`MultiView`][flet.], which extend this base
+    use :class:`~flet.Page` or :class:`~flet.MultiView`, which extend this base
     functionality.
     """
 
@@ -149,7 +160,7 @@ class BasePage(AdaptiveControl):
     """
     A list of views managed by the page.
 
-    Each [`View`][flet.] represents a distinct navigation state or screen
+    Each :class:`~flet.View` represents a distinct navigation state or screen
     in the application.
 
     The first view in the list is considered the active one by default.
@@ -172,12 +183,23 @@ class BasePage(AdaptiveControl):
     Customizes the theme of the application when in dark theme mode.
     """
 
+    theme_animation_style: Optional[AnimationStyle] = None
+    """
+    Overrides the default animation style used when the application's theme
+    is changed (for example, when :attr:`theme_mode` switches between light
+    and dark).
+
+    Tip:
+        Use :meth:`flet.AnimationStyle.no_animation` to disable the theme
+        transition entirely.
+    """
+
     locale_configuration: Optional[LocaleConfiguration] = None
     """
     Configures supported locales and the current locale.
     """
 
-    show_semantics_debugger: Optional[bool] = None
+    show_semantics_debugger: bool = False
     """
     Whether to turn on an overlay that shows the accessibility information reported by \
     the framework.
@@ -209,7 +231,7 @@ class BasePage(AdaptiveControl):
 
     on_media_change: Optional[EventHandler[PageMediaData]] = None
     """
-    Called when [`media`][(c).] has changed.
+    Called when :attr:`media` has changed.
     """
 
     media: PageMediaData = field(
@@ -238,7 +260,8 @@ class BasePage(AdaptiveControl):
         - This property is read-only.
         - To get or set the full window height including window chrome (e.g.,
             title bar and borders) when running a Flet app on desktop,
-            use the [`width`][flet.Window.] property of [`Page.window`][flet.] instead.
+            use the :attr:`flet.Window.width` property of :attr:`flet.Page.window` \
+            instead.
     """
 
     height: Optional[Number] = None
@@ -249,42 +272,50 @@ class BasePage(AdaptiveControl):
         - This property is read-only.
         - To get or set the full window height including window chrome (e.g.,
             title bar and borders) when running a Flet app on desktop,
-            use the [`height`][flet.Window.] property of
-            [`Page.window`][flet.] instead.
+            use the :attr:`flet.Window.height` property of
+            :attr:`flet.Page.window` instead.
     """
 
     _overlay: "Overlay" = field(default_factory=lambda: Overlay())
     _dialogs: "Dialogs" = field(default_factory=lambda: Dialogs())
+
+    def __resolved_views(self) -> list[View]:
+        views = unwrap_component(self.views)
+        if isinstance(views, View):
+            return [views]
+        return [unwrap_component(v) for v in views]
 
     def __root_view(self) -> View:
         """
         Return the root view of this page container.
 
         Returns:
-            The first [`View`][flet.] in [`views`][(c).].
+            The first :class:`~flet.View` in :attr:`views`.
 
         Raises:
             RuntimeError: If no views are available.
         """
 
-        if len(self.views) == 0:
+        views = self.__resolved_views()
+        if len(views) == 0:
             raise RuntimeError("views list is empty.")
-        return self.views[0]
+        return views[0]
 
     def __top_view(self) -> View:
         """
         Return the top-most (active) view in the view stack.
 
         Returns:
-            The last [`View`][flet.] in [`views`][(c).].
+            The last :class:`~flet.View` in :attr:`views`.
 
         Raises:
             RuntimeError: If no views are available.
         """
 
-        if len(self.views) == 0:
+        views = self.__resolved_views()
+        if len(views) == 0:
             raise RuntimeError("views list is empty.")
-        return self.views[-1]
+        return views[-1]
 
     def update(self, *controls: Control) -> None:
         """
@@ -357,7 +388,7 @@ class BasePage(AdaptiveControl):
         Moves scroll position to either absolute `offset`, relative `delta` or jump to \
         the control with specified `scroll_key`.
 
-        See [`Column.scroll_to()`][flet.Column.scroll_to] for method details
+        See :meth:`flet.Column.scroll_to` for method details
         and examples.
         """
         await self.__root_view().scroll_to(
@@ -374,7 +405,7 @@ class BasePage(AdaptiveControl):
 
         This method adds the specified `dialog` to the active dialog stack
         and renders it on the page.
-        The [`on_dismiss`][flet.DialogControl.] handler of the dialog
+        The :attr:`flet.DialogControl.on_dismiss` handler of the dialog
         is temporarily wrapped to ensure the dialog is removed from the stack and
         its dismissal event is triggered appropriately.
 
@@ -387,30 +418,8 @@ class BasePage(AdaptiveControl):
         if dialog in self._dialogs.controls:
             raise RuntimeError("Dialog is already opened")
 
-        original_on_dismiss = dialog.on_dismiss
-
-        async def wrapped_on_dismiss(*args):
-            """
-            Remove dialog from stack and forward dismiss event to original handler.
-
-            Args:
-                *args: Dismiss event arguments passed by the framework.
-            """
-
-            if dialog in self._dialogs.controls:
-                self._dialogs.controls.remove(dialog)
-                self._dialogs.update()
-            dialog.on_dismiss = original_on_dismiss
-            e = args[0]
-            if (
-                original_on_dismiss and (e.data is None or e.data)  # e.data == True for
-                # TimePicker and DatePicker if they were dismissed without
-                # changing the value
-            ):
-                await dialog._trigger_event("dismiss", e)
-
         dialog.open = True
-        dialog.on_dismiss = wrapped_on_dismiss
+        self._prepare_dialog(dialog)
 
         self._dialogs.controls.append(dialog)
         self._dialogs.update()
@@ -435,12 +444,58 @@ class BasePage(AdaptiveControl):
         dialog.update()
         return dialog
 
+    def _prepare_dialog(self, dialog: DialogControl) -> None:
+        self._set_dialog_parent(dialog)
+        self._wrap_dialog_on_dismiss(dialog)
+
+    def _set_dialog_parent(self, dialog: DialogControl) -> None:
+        dialog._parent = weakref.ref(self._dialogs)
+
+    def _get_original_dialog_on_dismiss(self, dialog: DialogControl):
+        wrapper = getattr(dialog, _MANAGED_DIALOG_DISMISS_WRAPPER, None)
+        if wrapper is not None and dialog.on_dismiss is wrapper:
+            return getattr(dialog, _MANAGED_DIALOG_DISMISS_ORIGINAL, None)
+        return dialog.on_dismiss
+
+    def _wrap_dialog_on_dismiss(self, dialog: DialogControl) -> None:
+        original_on_dismiss = self._get_original_dialog_on_dismiss(dialog)
+
+        async def wrapped_on_dismiss(*args):
+            # Keep the dialog mounted until Flutter reports dismiss. Removing it
+            # earlier can drop the post-animation dismiss callback entirely.
+            self._restore_dialog_on_dismiss(dialog)
+            self._remove_dialog(dialog)
+            e = args[0]
+            if (
+                original_on_dismiss and (e.data is None or e.data)
+                # e.data == True for TimePicker and DatePicker if they were
+                # dismissed without changing the value
+            ):
+                await dialog._trigger_event("dismiss", e)
+
+        setattr(dialog, _MANAGED_DIALOG_DISMISS_ORIGINAL, original_on_dismiss)
+        setattr(dialog, _MANAGED_DIALOG_DISMISS_WRAPPER, wrapped_on_dismiss)
+        dialog.on_dismiss = wrapped_on_dismiss
+
+    def _restore_dialog_on_dismiss(self, dialog: DialogControl) -> None:
+        original_on_dismiss = getattr(dialog, _MANAGED_DIALOG_DISMISS_ORIGINAL, None)
+        if hasattr(dialog, _MANAGED_DIALOG_DISMISS_ORIGINAL):
+            delattr(dialog, _MANAGED_DIALOG_DISMISS_ORIGINAL)
+        if hasattr(dialog, _MANAGED_DIALOG_DISMISS_WRAPPER):
+            delattr(dialog, _MANAGED_DIALOG_DISMISS_WRAPPER)
+        dialog.on_dismiss = original_on_dismiss
+
+    def _remove_dialog(self, dialog: DialogControl) -> None:
+        if dialog in self._dialogs.controls:
+            self._dialogs.controls.remove(dialog)
+            self._dialogs.update()
+
     async def show_drawer(self):
         """
         Show the drawer.
 
         Raises:
-            ValueError: If no [`drawer`][(c).] is defined.
+            ValueError: If no :attr:`drawer` is defined.
         """
         await self.__top_view().show_drawer()
 
@@ -455,7 +510,7 @@ class BasePage(AdaptiveControl):
         Show the end drawer.
 
         Raises:
-            ValueError: If no [`end_drawer`][(c).] is defined.
+            ValueError: If no :attr:`end_drawer` is defined.
         """
         await self.__top_view().show_end_drawer()
 
@@ -486,6 +541,41 @@ class BasePage(AdaptiveControl):
             "take_screenshot", arguments={"pixel_ratio": pixel_ratio, "delay": delay}
         )
 
+    async def take_animation(
+        self,
+        name: str,
+        frame_delays_ms: list[int],
+        pixel_ratio: Optional[Number] = None,
+    ) -> list[bytes]:
+        """
+        Captures an animated sequence of page screenshots in a single
+        round-trip. Each entry in `frame_delays_ms` is the delay in
+        milliseconds to wait before capturing that frame. The wait and
+        capture loop runs entirely on the Flutter side, so animation
+        timing isn't distorted by Python-Flutter RPC latency the way it
+        is with a Python-driven `take_screenshot` loop.
+
+        Requires `enable_screenshots` = `True`.
+
+        Args:
+            name: Name prefix for the captured frames (for debugging).
+            frame_delays_ms: Per-frame delays in milliseconds. The list
+                length determines the number of frames captured.
+            pixel_ratio: A pixel ratio of the captured frames.
+                If `None`, device-specific pixel ratio will be used.
+
+        Returns:
+            List of PNG-encoded frames, one per entry in `frame_delays_ms`.
+        """
+        return await self._invoke_method(
+            "take_animation",
+            arguments={
+                "name": name,
+                "frame_delays_ms": frame_delays_ms,
+                "pixel_ratio": pixel_ratio,
+            },
+        )
+
     # overlay
     @property
     def overlay(self) -> list[BaseControl]:
@@ -510,10 +600,10 @@ class BasePage(AdaptiveControl):
 
     # appbar
     @property
-    def appbar(self) -> Union[AppBar, CupertinoAppBar, None]:
+    def appbar(self) -> "Union[AppBar, CupertinoAppBar, None]":
         """
-        Gets or sets the top application bar ([AppBar][flet.AppBar] or \
-        [CupertinoAppBar][flet.CupertinoAppBar]) for the view.
+        Gets or sets the top application bar (:class:`~flet.AppBar` or \
+        :class:`~flet.CupertinoAppBar`) for the view.
 
         The app bar typically displays the page title and optional actions
         such as navigation icons, menus, or other interactive elements.
@@ -521,7 +611,7 @@ class BasePage(AdaptiveControl):
         return self.__root_view().appbar
 
     @appbar.setter
-    def appbar(self, value: Union[AppBar, CupertinoAppBar, None]):
+    def appbar(self, value: "Union[AppBar, CupertinoAppBar, None]"):
         self.__root_view().appbar = value
 
     # bottom_appbar
@@ -539,7 +629,9 @@ class BasePage(AdaptiveControl):
 
     # navigation_bar
     @property
-    def navigation_bar(self) -> Optional[Union[NavigationBar, CupertinoNavigationBar]]:
+    def navigation_bar(
+        self,
+    ) -> "Optional[Union[NavigationBar, CupertinoNavigationBar]]":
         """
         Bottom navigation bar for the root view.
         """
@@ -549,7 +641,7 @@ class BasePage(AdaptiveControl):
     @navigation_bar.setter
     def navigation_bar(
         self,
-        value: Optional[Union[NavigationBar, CupertinoNavigationBar]],
+        value: "Optional[Union[NavigationBar, CupertinoNavigationBar]]",
     ):
         self.__root_view().navigation_bar = value
 
@@ -702,7 +794,7 @@ class BasePage(AdaptiveControl):
 
     # scroll
     @property
-    def scroll(self) -> Optional[ScrollMode]:
+    def scroll(self) -> Optional[Union[ScrollMode, Scrollbar]]:
         """
         Scroll behavior mode for root view content.
         """
@@ -710,7 +802,7 @@ class BasePage(AdaptiveControl):
         return self.__root_view().scroll
 
     @scroll.setter
-    def scroll(self, value: Optional[ScrollMode]):
+    def scroll(self, value: Optional[Union[ScrollMode, Scrollbar]]):
         self.__root_view().scroll = value
 
     # auto_scroll

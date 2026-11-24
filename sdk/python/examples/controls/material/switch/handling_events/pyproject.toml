@@ -1,0 +1,26 @@
+[project]
+name = "switch-handling-events"
+version = "1.0.0"
+description = "Toggles page theme mode and updates the label when a Switch value changes."
+requires-python = ">=3.10"
+keywords = ["switch", "events", "theme", "toggle", "input"]
+authors = [{ name = "Flet team", email = "hello@flet.dev" }]
+dependencies = ["flet"]
+
+[dependency-groups]
+dev = ["flet-cli", "flet-desktop", "flet-web"]
+
+[tool.flet.gallery]
+categories = ["Input/Switch"]
+
+[tool.flet.metadata]
+title = "Handling events"
+controls = ["SafeArea", "Switch"]
+layout_pattern = "inline-actions"
+complexity = "basic"
+features = ["change events", "theme toggle"]
+
+[tool.flet]
+org = "dev.flet"
+company = "Flet"
+copyright = "Copyright (C) 2023-2026 by Flet"

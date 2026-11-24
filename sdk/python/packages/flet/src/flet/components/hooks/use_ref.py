@@ -2,7 +2,7 @@ from __future__ import annotations
 
 from collections.abc import Callable
 from dataclasses import dataclass
-from typing import Generic, TypeVar
+from typing import Any, Generic, TypeVar, overload
 
 from flet.components.hooks.hook import Hook
 from flet.components.utils import current_component
@@ -21,17 +21,32 @@ class MutableRef(Generic[RefValueT]):
         self.current = initial_value
 
 
-@dataclass
+# eq=False: see ComponentOwned - lifecycle objects compare by identity.
+@dataclass(eq=False)
 class RefHook(Hook, Generic[RefValueT]):
     """
-    Hook state container backing [`use_ref()`][flet.use_ref].
+    Hook state container backing :func:`~flet.use_ref`.
 
-    Stores the stable [`MutableRef`][flet.MutableRef] instance for a component so
+    Stores the stable `MutableRef` instance for a component so
     it can be reused across renders without triggering updates when `.current`
     changes.
     """
 
     ref: MutableRef[RefValueT]
+
+
+@overload
+def use_ref(initial_value: None = None) -> MutableRef[Any]: ...
+
+
+@overload
+def use_ref(initial_value: Callable[[], RefValueT]) -> MutableRef[RefValueT]: ...
+
+
+@overload
+def use_ref(
+    initial_value: RefValueT | Callable[[], RefValueT],
+) -> MutableRef[RefValueT]: ...
 
 
 def use_ref(

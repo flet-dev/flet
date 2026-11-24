@@ -1,0 +1,19 @@
+---
+class_name: "flet.Banner"
+examples: "controls/material/banner"
+example_images: "test-images/examples/controls/material/golden/macos/banner"
+example_media: "examples/controls/material/banner/media"
+title: "Banner"
+---
+
+import {ClassMembers, ClassSummary, CodeExample, Image} from '@site/src/components/crocodocs';
+
+<ClassSummary name={frontMatter.class_name} image={frontMatter.example_images + '/image_for_docs.png'} imageCaption="Banner" />
+
+## Examples
+
+<CodeExample path={frontMatter.examples + '/banner/main.py'} language="python" />
+
+<Image src={frontMatter.example_images + '/banner_flow.gif'} alt="basic" width="50%" />
+
+<ClassMembers name={frontMatter.class_name} />

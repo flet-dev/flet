@@ -6,6 +6,7 @@ from typing import Any
 import msgpack
 
 from flet.controls.duration import Duration
+from flet.controls.value_types import _UNSET, Value
 
 
 def _get_root_dataclass_field(cls, field_name):
@@ -28,7 +29,7 @@ def configure_encode_object_for_msgpack(control_cls):
 
     The returned function is passed to `msgpack.packb(..., default=...)` and handles
     protocol-specific serialization rules for dataclasses, enums, date/time objects,
-    [`Duration`][flet.], and extension values exchanged with Dart.
+    :class:`~flet.Duration`, and extension values exchanged with Dart.
 
     Encoding behavior highlights:
     - dataclasses are converted to dictionaries with control-aware default pruning;
@@ -53,45 +54,135 @@ def configure_encode_object_for_msgpack(control_cls):
             prev_lists = {}
             prev_dicts = {}
             prev_classes = {}
-            for field in fields(obj):
-                if "skip" in field.metadata:  # or hasattr(obj, f"_prev_{field.name}"):
-                    continue
-                v = getattr(obj, field.name)
-                if isinstance(v, list):
-                    v = v[:]
-                    if len(v) > 0:
-                        r[field.name] = v
-                    prev_lists[field.name] = v
-                elif isinstance(v, dict):
-                    v = v.copy()
-                    if len(v) > 0:
-                        r[field.name] = v
-                    prev_dicts[field.name] = v
-                elif field.name.startswith("on_") and field.metadata.get("event", True):
-                    v = v is not None
-                    if v:
-                        r[field.name] = v
-                elif is_dataclass(v):
-                    r[field.name] = v
-                    prev_classes[field.name] = v
-                else:
-                    default_value = field.default
-                    if isinstance(obj, control_cls):
-                        root_field = _get_root_dataclass_field(
-                            obj.__class__, field.name
-                        )
+
+            _values = getattr(obj, "_values", None)
+            _structural_fields = getattr(type(obj), "_structural_fields", None)
+            is_control = isinstance(obj, control_cls)
+
+            if (
+                _values is not None
+                and _structural_fields is not None
+                and (is_control or isinstance(obj, Value))
+            ):
+                # ── Fast path for @control / @value types ────────────────────
+                # Only non-default values are in _values; structural fields
+                # (lists, dicts, nested dataclasses, and internal scalars like
+                # _i / _c) are iterated separately — there are typically very
+                # few of them.
+                _event_fields = getattr(type(obj), "_event_fields", frozenset())
+                _root_defaults = getattr(type(obj), "_root_defaults", {})
+
+                # 1. Emit sparse non-default Prop values.
+                #    Even though these are Prop-tracked scalars, their runtime
+                #    value may be a dataclass, list, or dict (e.g. content=…).
+                #    Those must be added to the prev_* snapshots so that the
+                #    next diff can compare old vs new correctly.
+                for fname, v in _values.items():
+                    if v is None:
+                        continue
+                    # Skip if the value happens to equal the Dart-side root
+                    # default (e.g. a subclass Prop was set to the base value).
+                    root_def = _root_defaults.get(fname, _UNSET)
+                    if root_def is not _UNSET and v == root_def:
+                        continue
+                    if is_dataclass(v):
+                        r[fname] = v
+                        prev_classes[fname] = v
+                    elif isinstance(v, list):
+                        v = v[:]
+                        # Values stored in _values were assigned explicitly, so
+                        # an empty list is a meaningful override, not a default
+                        # structural field to omit.
+                        r[fname] = v
+                        prev_lists[fname] = v
+                    elif isinstance(v, dict):
+                        v = v.copy()
+                        # Same reasoning as lists above: preserve explicit empty
+                        # dictionaries while keeping structural defaults sparse.
+                        r[fname] = v
+                        prev_dicts[fname] = v
+                    else:
+                        r[fname] = True if fname in _event_fields else v
+
+                # 2. Emit subclass-overridden defaults that are absent from
+                #    _values because they equal the subclass Prop.default.
+                for fname, v in getattr(type(obj), "_override_props", {}).items():
+                    if fname not in r and v is not None:
+                        r[fname] = v
+
+                # 3. Structural fields: lists, dicts, nested dataclasses, and
+                #    fixed-scalar internals (_i, _c, …).
+                obj_dc_fields = type(obj).__dataclass_fields__
+                for fname in _structural_fields:
+                    v = getattr(obj, fname)
+                    if isinstance(v, list):
+                        v = v[:]
+                        if len(v) > 0:
+                            r[fname] = v
+                        prev_lists[fname] = v
+                    elif isinstance(v, dict):
+                        v = v.copy()
+                        if len(v) > 0:
+                            r[fname] = v
+                        prev_dicts[fname] = v
+                    elif is_dataclass(v):
+                        # Emitted unconditionally, even when equal to the
+                        # field's default_factory product: the differ patches
+                        # nested fields in place with nested-path ops, which
+                        # requires the client to already hold the parent key.
+                        # Pruning here would only be safe together with a differ
+                        # that emits whole-value replaces for pruned fields.
+                        r[fname] = v
+                        prev_classes[fname] = v
+                    elif v is not None:
+                        # Scalar structural field (e.g. _i, _c).
+                        fmeta = obj_dc_fields.get(fname)
+                        default_value = fmeta.default if fmeta is not None else _UNSET
+                        root_field = _get_root_dataclass_field(type(obj), fname)
                         if root_field is not None:
                             default_value = root_field.default
-                    if v is not None and (
-                        v != default_value or not isinstance(obj, control_cls)
+                        if v != default_value:
+                            r[fname] = v
+            else:
+                # ── Slow path for plain @dataclass types ─────────────────────
+                for field in fields(obj):
+                    if "skip" in field.metadata:
+                        continue
+                    v = getattr(obj, field.name)
+                    if isinstance(v, list):
+                        v = v[:]
+                        if len(v) > 0:
+                            r[field.name] = v
+                        prev_lists[field.name] = v
+                    elif isinstance(v, dict):
+                        v = v.copy()
+                        if len(v) > 0:
+                            r[field.name] = v
+                        prev_dicts[field.name] = v
+                    elif field.name.startswith("on_") and field.metadata.get(
+                        "event", True
                     ):
+                        v = v is not None
+                        if v:
+                            r[field.name] = v
+                    elif is_dataclass(v):
                         r[field.name] = v
+                        prev_classes[field.name] = v
+                    else:
+                        default_value = field.default
+                        if is_control:
+                            root_field = _get_root_dataclass_field(
+                                type(obj), field.name
+                            )
+                            if root_field is not None:
+                                default_value = root_field.default
+                        if v is not None and (v != default_value or not is_control):
+                            r[field.name] = v
 
             if not hasattr(obj, "_frozen"):
                 setattr(obj, "__prev_lists", prev_lists)
                 setattr(obj, "__prev_dicts", prev_dicts)
                 setattr(obj, "__prev_classes", prev_classes)
-            # print("__prev_cols", obj.__class__.__name__, prev_cols.keys())
 
             return r
         elif isinstance(obj, Enum):
@@ -137,12 +228,13 @@ def decode_ext_from_msgpack(code, data):
     return msgpack.ExtType(code, data)
 
 
-class ClientAction(Enum):
+class MessageAction(Enum):
     """
     Wire-level action codes exchanged between Python and Dart clients.
 
-    Integer values must stay in sync with Dart `MessageAction` values because
-    protocol frames are encoded as `[action_code, body]`.
+    Integer values must stay in sync with the Dart enum of the same name
+    (`protocol/message.dart`) because protocol frames are encoded as
+    `[action_code, body]`.
     """
 
     REGISTER_CLIENT = 1
@@ -175,16 +267,24 @@ class ClientAction(Enum):
     Server-to-client fatal session error notification.
     """
 
+    PYTHON_OUTPUT = 7
+    """
+    Worker-to-Dart stdout/stderr line from an embedded Pyodide app
+    (only emitted when the host wires `loadPyodide({stdout, stderr})`).
+    Body shape: `{text: str, is_stderr: bool}`.
+    """
+
 
 @dataclass
-class ClientMessage:
+class Message:
     """
-    Top-level protocol frame with action and payload.
+    Top-level protocol frame, mirroring the Dart class of the same name
+    (`protocol/message.dart`).
 
-    Messages are serialized as a two-item sequence: `[action_code, body]`.
+    Serialized as a two-item sequence: `[action_code, body]`.
     """
 
-    action: ClientAction
+    action: MessageAction
     """
     Action discriminator for this message.
     """

@@ -1,10 +1,10 @@
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 
 import '../extensions/control.dart';
 import '../models/control.dart';
 import '../utils/borders.dart';
+import '../utils/client_actions.dart';
 import '../utils/colors.dart';
-import '../utils/launch_url.dart';
 import '../utils/misc.dart';
 import '../utils/mouse.dart';
 import '../utils/numbers.dart';
@@ -25,7 +25,6 @@ class FloatingActionButtonControl extends StatelessWidget {
 
     var content = control.buildTextOrWidget("content");
     var icon = control.buildIconOrWidget("icon");
-    var url = control.getUrl("url");
     var disabledElevation = control.getDouble("disabled_elevation");
     var elevation = control.getDouble("elevation");
     var hoverElevation = control.getDouble("hover_elevation");
@@ -37,8 +36,7 @@ class FloatingActionButtonControl extends StatelessWidget {
     var hoverColor = control.getColor("hover_color", context);
     var focusColor = control.getColor("focus_color", context);
     var shape = control.getShape("shape", Theme.of(context));
-    var clipBehavior =
-        parseClip(control.getString("clip_behavior"), Clip.none)!;
+    var clipBehavior = control.getClipBehavior("clip_behavior", Clip.none)!;
     var autofocus = control.getBool("autofocus", false)!;
     var mini = control.getBool("mini", false)!;
     var enableFeedback = control.getBool("enable_feedback");
@@ -47,9 +45,7 @@ class FloatingActionButtonControl extends StatelessWidget {
     Function()? onPressed = control.disabled
         ? null
         : () {
-            if (url != null) {
-              openWebBrowser(url);
-            }
+            runControlActions(context, control);
             control.triggerEvent("click");
           };
 

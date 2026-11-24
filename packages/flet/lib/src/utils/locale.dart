@@ -1,5 +1,4 @@
-import 'package:flutter/material.dart';
-import 'package:flutter_localizations/flutter_localizations.dart';
+import 'package:material_ui/material_ui.dart';
 
 import '../models/control.dart';
 
@@ -65,11 +64,8 @@ extension LocaleParsers on Control {
 
 extension LocaleExtention on Locale {
   bool isSupportedByDelegates(
-      [List<LocalizationsDelegate<dynamic>> delegates = const [
-        GlobalMaterialLocalizations.delegate,
-        GlobalWidgetsLocalizations.delegate,
-        GlobalCupertinoLocalizations.delegate
-      ]]) {
+      [List<LocalizationsDelegate<dynamic>> delegates =
+          GlobalMaterialLocalizations.delegates]) {
     return delegates.every((d) => d.isSupported(this));
   }
 

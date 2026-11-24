@@ -1,0 +1,185 @@
+---
+title: "Navigation and Routing"
+---
+
+import {CodeExample} from '@site/src/components/crocodocs';
+
+Navigation and routing is the core of building multi-screen Flet apps.
+It lets you organize your UI into virtual pages ([`View`][flet.View] objects),
+keep URL/history in sync, and support deep links to specific app states.
+
+This page focuses on the current routing model and maintained examples.
+
+## Routing model in Flet
+
+A [`Page`][flet.Page] is a container of views ([`page.views`][flet.BasePage.views]), where each view represents one route-level screen.
+
+- [`page.route`][flet.Page.route] is the current route string (for example `/`, `/store`, `/settings/mail`).
+- [`page.views`][flet.BasePage.views] is the active navigation stack.
+- [`page.on_route_change`][flet.Page.on_route_change] rebuilds the stack when route changes.
+- [`page.on_view_pop`][flet.Page.on_view_pop] handles Back navigation (system Back, AppBar Back, browser Back).
+
+A reliable setup uses a single source of truth: derive [`page.views`][flet.BasePage.views] from [`page.route`][flet.Page.route].
+
+## Route basics
+
+The default route is `/` when no route is provided.
+
+<CodeExample path="apps/routing_navigation/initial_route/main.py" language="python" />
+
+All routes should start with `/`, for example `/store`, `/products/42`, `/settings/mail`.
+
+## Handling route changes
+
+Whenever route changes (URL edit, browser Back/Forward, app navigation, or a
+[deep link](#deep-links) opening the running app),
+[`page.on_route_change`][flet.Page.on_route_change] event is triggered.
+Use this event as the place where you decide which views must exist for the current route.
+
+<CodeExample path="apps/routing_navigation/route_change_event/main.py" language="python" />
+
+## Building views from route
+
+The pattern below is the baseline for most apps:
+
+1. Clear [`page.views`][flet.BasePage.views].
+2. Add root view (`/`).
+3. Add extra views conditionally based on [`page.route`][flet.Page.route].
+4. Handle Back in [`page.on_view_pop`][flet.Page.on_view_pop] and navigate to the new top view.
+
+:::tip[Why is this pattern important?]
+- Keeps URL, history stack, and visible UI synchronized.
+- Supports deep links and reloads naturally.
+- Makes navigation deterministic and easier to debug.
+:::
+
+<CodeExample path="apps/routing_navigation/building_views_on_route_change/main.py" language="python" />
+
+## Deep links
+
+In an Android or iOS app built with `flet build`, a
+[deep link](../publish/index.md#deep-linking) that opens the app becomes a route:
+its path and query, without its scheme and host. For example,
+`myapp://pay/result?id=42` starts the app with [`page.route`][flet.Page.route]
+set to `/result?id=42`, and while the app is running it triggers
+[`page.on_route_change`][flet.Page.on_route_change] with that route.
+
+Handle it like any other route: build [`page.views`][flet.BasePage.views] from
+[`page.route`][flet.Page.route] when the app starts and in
+[`page.on_route_change`][flet.Page.on_route_change], as shown above, and the app
+opens on the screen the link points to in both cases.
+
+## Programmatic navigation
+
+Use [`page.navigate()`][flet.Page.navigate] to navigate from synchronous callbacks
+(e.g. `on_click`), or [`page.push_route()`][flet.Page.push_route] in async contexts:
+
+```python
+# Sync (on_click, etc.)
+page.navigate("/search", q="shoes", limit=20)
+
+# Async
+await page.push_route("/search", q="shoes", limit=20)
+```
+
+## Query strings
+
+[`page.route`][flet.Page.route] includes the query string, for example `/search?q=shoes&limit=20`.
+Read its parameters with [`page.query`][flet.Page.query]:
+
+```python
+page.query.get("q")  # "shoes"
+page.query.to_dict  # {"q": "shoes", "limit": "20"}
+page.query.path  # "/search"
+```
+
+`page.query` is parsed from the current route every time you read it, so it also works in `main()`,
+for example in a web app opened at `https://example.com/search?q=shoes`.
+Values are decoded and always strings: once `page.navigate("/search", q="salt & pepper", limit=20)` has changed the route,
+for example in [`page.on_route_change`][flet.Page.on_route_change],
+`page.query.get("q")` returns `"salt & pepper"` and `page.query.get("limit")` returns `"20"`.
+Parameters without a value, such as `?debug`, are left out.
+[`get()`][flet.QueryString.get] raises `KeyError` for a missing parameter; use `page.query.to_dict.get("q")` for an optional one.
+
+## Back navigation and pop confirmation
+
+When users go back, Flet triggers [`page.on_view_pop`][flet.Page.on_view_pop].
+For flows requiring confirmation (for example, unsaved changes), disable automatic pop
+and confirm manually with [`View.can_pop`][flet.View.can_pop] + [`View.on_confirm_pop`][flet.View.on_confirm_pop].
+
+<CodeExample path="apps/routing_navigation/pop_view_confirm/main.py" language="python" />
+
+## Pop multiple views with a result
+
+When a multi-step flow finishes deep in the view stack, use
+[`page.pop_views_until()`][flet.Page.pop_views_until]
+to jump back to a target route and deliver a result to the destination view
+via [`page.on_views_pop_until`][flet.Page.on_views_pop_until].
+
+<CodeExample path="apps/routing_navigation/pop_views_until/main.py" language="python" />
+
+## Navigation UI patterns
+
+Routing composes well with navigation controls such as drawer, rail, and tabs.
+This example shows route-driven drawer navigation with multiple top-level destinations:
+
+<CodeExample path="apps/routing_navigation/drawer_navigation/main.py" language="python" />
+
+## Route templates (parameterized routes)
+
+Use [`TemplateRoute`][flet.TemplateRoute] to match and parse route parameters, for example `/books/:id`.
+Template syntax is provided by [repath](https://github.com/nickcoutsos/python-repath#parameters).
+
+```python
+import flet as ft
+
+troute = ft.TemplateRoute(page.route)
+
+if troute.match("/books/:id"):
+    print("Book ID:", troute.id)
+elif troute.match("/account/:account_id/orders/:order_id"):
+    print("Account:", troute.account_id, "Order:", troute.order_id)
+else:
+    print("Unknown route")
+```
+
+Only the path is matched, so a query string or fragment doesn't affect the result: `/books/42?tab=reviews`
+matches `/books/:id` with `troute.id == "42"`. Read the query string with [`page.query`](#query-strings).
+
+## Web URL strategy
+
+Flet web apps support two URL strategies :
+
+- `"path"` (default): in the form `https://myapp.dev/store`
+- `"hash"`: `https://myapp.dev/#/store`
+
+It can be set via `route_url_strategy` in `ft.run()`
+```python
+import flet as ft
+ft.run(main, route_url_strategy="hash")
+```
+
+For Flet server deployments, you can also set the [`FLET_WEB_ROUTE_URL_STRATEGY`](../reference/environment-variables.md#flet_web_route_url_strategy)
+environment variable.
+
+## Declarative Router
+
+For declarative apps using `@component`, Flet provides a
+[**Router**](router.md) system inspired by React Router. It handles
+nested routes, layout routes with outlets, dynamic segments, data loaders,
+and active link detection — all without manual route matching.
+
+With `manage_views=True`, Router can also manage the view stack directly,
+enabling swipe-back gestures and AppBar back buttons on mobile. Route
+components return [`View`][flet.View] objects with their own
+[`AppBar`][flet.AppBar], and navigating deeper pushes views
+onto the stack.
+
+See the [Router cookbook](router.md) for a complete guide.
+
+## Practical recommendations
+
+- Always keep a root `/` view in [`page.views`][flet.BasePage.views].
+- Keep route handling centralized in [`page.on_route_change`][flet.Page.on_route_change]; avoid mutating [`page.views`][flet.BasePage.views] from many places.
+- When adding new routes, test these cases: direct deep link, browser Back/Forward, app Back button, and reload.
+- Use route templates for dynamic segments instead of manual string splitting.

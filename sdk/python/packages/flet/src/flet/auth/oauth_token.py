@@ -36,7 +36,7 @@ class OAuthToken:
 
         Returns:
             JSON representation suitable for persistence and later hydration via
-                [`from_json()`][(c).from_json].
+                :meth:`from_json`.
         """
         return json.dumps(self, cls=EmbedJsonEncoder, separators=(",", ":"))
 
@@ -46,7 +46,7 @@ class OAuthToken:
         Deserializes a token from JSON.
 
         Args:
-            data: JSON produced by [`to_json()`][(c).to_json].
+            data: JSON produced by :meth:`to_json`.
 
         Returns:
             A new `OAuthToken` instance.

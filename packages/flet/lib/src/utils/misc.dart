@@ -1,12 +1,17 @@
 import 'dart:ui';
 
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:flutter/rendering.dart';
 
 import '../models/control.dart';
 import 'borders.dart';
 import 'enums.dart';
 import 'numbers.dart';
+
+MaterialTapTargetSize? parseMaterialTapTargetSize(String? value,
+    [MaterialTapTargetSize? defaultValue]) {
+  return parseEnum(MaterialTapTargetSize.values, value, defaultValue);
+}
 
 Clip? parseClip(String? value, [Clip? defaultValue]) {
   return parseEnum(Clip.values, value, defaultValue);
@@ -64,13 +69,6 @@ enum CardVariant { elevated, filled, outlined }
 
 CardVariant? parseCardVariant(String? value, [CardVariant? defaultValue]) {
   return parseEnum(CardVariant.values, value, defaultValue);
-}
-
-enum ScrollMode { none, auto, adaptive, always, hidden }
-
-ScrollMode? parseScrollMode(String? value,
-    [ScrollMode? defaultValue = ScrollMode.none]) {
-  return parseEnum(ScrollMode.values, value, defaultValue);
 }
 
 enum LabelPosition { right, left }
@@ -135,6 +133,11 @@ FloatingLabelBehavior? parseFloatingLabelBehavior(String? value,
   return parseEnum(FloatingLabelBehavior.values, value, defaultValue);
 }
 
+RefreshIndicatorTriggerMode? parseRefreshIndicatorTriggerMode(String? value,
+    [RefreshIndicatorTriggerMode? defaultValue]) {
+  return parseEnum(RefreshIndicatorTriggerMode.values, value, defaultValue);
+}
+
 extension MiscParsers on Control {
   Clip? getClipBehavior(String propertyName, [Clip? defaultValue]) {
     return parseClip(get(propertyName), defaultValue);
@@ -179,11 +182,6 @@ extension MiscParsers on Control {
   CardVariant? getCardVariant(String propertyName,
       [CardVariant? defaultValue]) {
     return parseCardVariant(get(propertyName), defaultValue);
-  }
-
-  ScrollMode? getScrollMode(String propertyName,
-      [ScrollMode? defaultValue = ScrollMode.none]) {
-    return parseScrollMode(get(propertyName), defaultValue);
   }
 
   LabelPosition? getLabelPosition(String propertyName,
@@ -244,5 +242,33 @@ extension MiscParsers on Control {
   FloatingLabelBehavior? getFloatingLabelBehavior(String propertyName,
       [FloatingLabelBehavior? defaultValue]) {
     return parseFloatingLabelBehavior(get(propertyName), defaultValue);
+  }
+
+  RefreshIndicatorTriggerMode? getRefreshIndicatorTriggerMode(
+      String propertyName,
+      [RefreshIndicatorTriggerMode? defaultValue]) {
+    return parseRefreshIndicatorTriggerMode(get(propertyName), defaultValue);
+  }
+}
+
+/// Closes a modal [route] that a control pushed (bottom sheets, dialogs),
+/// targeting exactly that route rather than the topmost one.
+///
+/// Call this from a post-frame callback, never during `build` — popping a
+/// route during build throws "setState()/markNeedsBuild() called during build"
+/// if the same frame also opens another route or overlay (e.g. a SnackBar).
+///
+/// When the route is still the current (topmost) route it is popped with the
+/// normal exit animation (passing [result], if any); otherwise it is removed
+/// directly, so a route pushed on top of it (or a concurrent `Navigator.pop`
+/// targeting the topmost route) can't dismiss the wrong route.
+void closeModalRoute(ModalRoute route, [dynamic result]) {
+  if (!route.isActive) return;
+  final navigator = route.navigator;
+  if (navigator == null) return;
+  if (route.isCurrent) {
+    navigator.pop(result);
+  } else {
+    navigator.removeRoute(route);
   }
 }

@@ -1,0 +1,31 @@
+[project]
+name = "flet-mcp"
+version = "0.1.0"
+description = "Flet MCP server for LLM agents"
+authors = [{ name = "Appveyor Systems Inc.", email = "hello@flet.dev" }]
+license = "Apache-2.0"
+readme = "README.md"
+requires-python = ">=3.10"
+dependencies = [
+    "fastmcp >=2.0.0",
+]
+
+[project.optional-dependencies]
+build = [
+    "markdownify >=0.14.1",
+    "griffe >=1.6.2",
+    "flet",
+    "flet-cli",
+]
+
+[project.urls]
+Homepage = "https://flet.dev"
+Repository = "https://github.com/flet-dev/flet"
+Documentation = "https://flet.dev/docs"
+
+[build-system]
+requires = ["setuptools"]
+build-backend = "setuptools.build_meta"
+
+[tool.setuptools.package-data]
+flet_mcp = ["data/*"]

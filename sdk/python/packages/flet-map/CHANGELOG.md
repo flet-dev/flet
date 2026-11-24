@@ -4,6 +4,13 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/) and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## 0.85.0
+
+### Added
+
+- Added image overlay support for maps with `OverlayImageLayer`, `OverlayImage`, and `RotatedOverlayImage` ([#6319](https://github.com/flet-dev/flet/issues/6319), [#6421](https://github.com/flet-dev/flet/pull/6421)) by @ndonkoHenri.
+- Added `SimpleAttribution.text_style` for styling simple map attribution text by @ndonkoHenri.
+
 ## 0.81.1
 
 ### Added
@@ -22,7 +29,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/) 
 
 - Added configuration helpers for cameras, interaction flags, and stroke patterns.
 - Introduced attribution controls and additional layer types for circles, polygons, and polylines.
-- Published hosted documentation: https://docs.flet.dev/map/
+- Published hosted documentation: https://flet.dev/docs/map/
 
 ## 0.1.0
 

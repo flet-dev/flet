@@ -1,0 +1,26 @@
+[project]
+name = "shimmer-custom-gradient"
+version = "1.0.0"
+description = "Use a custom gradient Shimmer animation over a dashboard-style stat card."
+requires-python = ">=3.10"
+keywords = ["shimmer", "gradient", "animation", "dashboard", "card"]
+authors = [{ name = "Flet team", email = "hello@flet.dev" }]
+dependencies = ["flet"]
+
+[dependency-groups]
+dev = ["flet-cli", "flet-desktop", "flet-web"]
+
+[tool.flet.gallery]
+categories = ["Effects/Shimmer"]
+
+[tool.flet.metadata]
+title = "Shimmer custom gradient"
+controls = ["Shimmer", "Row", "Column", "Container", "Text", "SafeArea"]
+layout_pattern = "dashboard"
+complexity = "basic"
+features = ["custom gradient", "animated highlight", "dashboard card"]
+
+[tool.flet]
+org = "dev.flet"
+company = "Flet"
+copyright = "Copyright (C) 2023-2026 by Flet"

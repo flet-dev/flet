@@ -1,0 +1,26 @@
+[project]
+name = "canvas-resize"
+version = "1.0.0"
+description = "Canvas resize handling with dynamic shape updates."
+requires-python = ">=3.10"
+keywords = ["canvas", "resize", "events", "responsive"]
+authors = [{ name = "Flet team", email = "hello@flet.dev" }]
+dependencies = ["flet"]
+
+[dependency-groups]
+dev = ["flet-cli", "flet-desktop", "flet-web"]
+
+[tool.flet.gallery]
+categories = ["Displays/Canvas"]
+
+[tool.flet.metadata]
+title = "Canvas resize"
+controls = ["SafeArea", "Container", "Canvas", "Line"]
+layout_pattern = "free-canvas"
+complexity = "basic"
+features = ["on_resize event", "responsive line drawing"]
+
+[tool.flet]
+org = "dev.flet"
+company = "Flet"
+copyright = "Copyright (C) 2023-2026 by Flet"

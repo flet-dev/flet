@@ -1,0 +1,26 @@
+[project]
+name = "column-horizontal-alignment"
+version = "1.0.0"
+description = "Column cross-axis alignment modes with visual comparison."
+requires-python = ">=3.10"
+keywords = ["column", "layout", "crossaxisalignment", "alignment"]
+authors = [{ name = "Flet team", email = "hello@flet.dev" }]
+dependencies = ["flet"]
+
+[dependency-groups]
+dev = ["flet-cli", "flet-desktop", "flet-web"]
+
+[tool.flet.gallery]
+categories = ["Layout/Column"]
+
+[tool.flet.metadata]
+title = "Column horizontal alignment"
+controls = ["Row", "Column", "Container", "Text"]
+layout_pattern = "comparison-grid"
+complexity = "basic"
+features = ["cross axis alignment", "layout comparison"]
+
+[tool.flet]
+org = "dev.flet"
+company = "Flet"
+copyright = "Copyright (C) 2023-2026 by Flet"

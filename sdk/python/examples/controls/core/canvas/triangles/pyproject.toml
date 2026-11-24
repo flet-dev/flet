@@ -1,0 +1,26 @@
+[project]
+name = "canvas-triangles"
+version = "1.0.0"
+description = "Canvas triangles with fill and stroke path styles."
+requires-python = ">=3.10"
+keywords = ["canvas", "triangles", "path", "stroke", "fill"]
+authors = [{ name = "Flet team", email = "hello@flet.dev" }]
+dependencies = ["flet"]
+
+[dependency-groups]
+dev = ["flet-cli", "flet-desktop", "flet-web"]
+
+[tool.flet.gallery]
+categories = ["Displays/Canvas"]
+
+[tool.flet.metadata]
+title = "Triangles"
+controls = ["SafeArea", "Canvas", "Path"]
+layout_pattern = "free-canvas"
+complexity = "basic"
+features = ["path drawing", "filled and outlined shapes"]
+
+[tool.flet]
+org = "dev.flet"
+company = "Flet"
+copyright = "Copyright (C) 2023-2026 by Flet"

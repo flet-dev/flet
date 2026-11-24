@@ -1,0 +1,26 @@
+[project]
+name = "image-dynamic-svg"
+version = "1.0.0"
+description = "Animates an inline SVG image by updating ellipse dimensions over time."
+requires-python = ">=3.10"
+keywords = ["image", "svg", "dynamic svg", "animation", "async"]
+authors = [{ name = "Flet team", email = "hello@flet.dev" }]
+dependencies = ["flet"]
+
+[dependency-groups]
+dev = ["flet-cli", "flet-desktop", "flet-web"]
+
+[tool.flet.gallery]
+categories = ["Displays/Image"]
+
+[tool.flet.metadata]
+title = "Displaying a dynamic SVG image"
+controls = ["SafeArea", "Image"]
+layout_pattern = "single-panel"
+complexity = "basic"
+features = ["inline svg generation", "async animation loop", "dynamic image updates"]
+
+[tool.flet]
+org = "dev.flet"
+company = "Flet"
+copyright = "Copyright (C) 2023-2026 by Flet"

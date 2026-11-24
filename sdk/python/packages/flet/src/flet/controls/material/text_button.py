@@ -1,5 +1,6 @@
 from typing import Optional, Union
 
+from flet.controls.action_control import ActionControl
 from flet.controls.adaptive_control import AdaptiveControl
 from flet.controls.base_control import control
 from flet.controls.buttons import ButtonStyle
@@ -17,7 +18,7 @@ __all__ = ["TextButton"]
 
 
 @control("TextButton")
-class TextButton(LayoutControl, AdaptiveControl):
+class TextButton(LayoutControl, AdaptiveControl, ActionControl):
     """
     Text buttons are used for the lowest priority actions, especially when presenting \
     multiple options. Text buttons can be placed on a variety of backgrounds. Until \
@@ -64,7 +65,7 @@ class TextButton(LayoutControl, AdaptiveControl):
     """
     The URL to open when this button is clicked.
 
-    Additionally, if [`on_click`][(c).] event callback is
+    Additionally, if :attr:`on_click` event callback is
     provided, it is fired after that.
     """
 
@@ -87,7 +88,7 @@ class TextButton(LayoutControl, AdaptiveControl):
     """
     Called when a mouse pointer enters or exists this button's response area.
 
-    The [`data`][flet.Event.] property of the event handler argument is `True` when
+    The :attr:`flet.Event.data` property of the event handler argument is `True` when
     cursor enters and `False` when it exits.
     """
 

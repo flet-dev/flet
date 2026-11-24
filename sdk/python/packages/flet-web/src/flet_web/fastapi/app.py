@@ -43,10 +43,11 @@ def app(
     Args:
         main: Application entry point. It is called for newly connected users.
             Handler (function or coroutine) must have 1 parameter of
-            instance [`Page`][flet.Page].
+            instance :class:`~flet.Page`.
         before_main: Called after `Page` was created, but before calling `main`.
         proxy_path: URL prefix when the app is mounted under a proxy.
-        assets_dir: an absolute path to app's assets directory.
+        assets_dir: path to app's assets directory. A relative path is resolved
+            against the current working directory.
         app_name: PWA application name.
         app_short_name: PWA application short name.
         app_description: PWA application description.
@@ -63,6 +64,10 @@ def app(
             which is the maximum allowed time between starting OAuth flow and
             redirecting to OAuth callback URL.
     """
+
+    env_assets_dir = os.getenv("FLET_ASSETS_DIR")
+    if env_assets_dir:
+        assets_dir = env_assets_dir
 
     env_upload_dir = os.getenv("FLET_UPLOAD_DIR")
     if env_upload_dir:
@@ -85,14 +90,28 @@ def app(
         else env_oauth_callback_endpoint.strip("/")
     )
 
-    fastapi_app = FastAPI()
+    # No interactive docs: their routes would be matched before the static files
+    # mounted at "/" below, taking app routes like "/docs" away from the app.
+    fastapi_app = FastAPI(docs_url=None, redoc_url=None, openapi_url=None)
+
+    static_files = FletStaticFiles(
+        proxy_path=proxy_path,
+        assets_dir=assets_dir,
+        app_name=app_name,
+        app_short_name=app_short_name,
+        app_description=app_description,
+        web_renderer=web_renderer,
+        route_url_strategy=route_url_strategy,
+        websocket_endpoint_path=websocket_endpoint,
+        no_cdn=no_cdn,
+    )
 
     @fastapi_app.websocket(f"/{websocket_endpoint}")
     async def app_handler(websocket: WebSocket):
         """
         Handles Flet WebSocket session lifecycle for one client connection.
 
-        The handler creates a new [`FletApp`][flet_web.fastapi.flet_app.]
+        The handler creates a new `FletApp`
         instance and delegates message send/receive processing to it.
         """
         await FletApp(
@@ -104,6 +123,8 @@ def app(
             oauth_state_timeout_seconds=oauth_state_timeout_seconds,
             upload_endpoint_path=upload_endpoint_path,
             secret_key=secret_key,
+            route_url_strategy=static_files.route_url_strategy,
+            proxy_path=proxy_path,
         ).handle(websocket)
 
     if upload_dir:
@@ -128,20 +149,7 @@ def app(
         """
         return await FletOAuth().handle(request)
 
-    fastapi_app.mount(
-        path="/",
-        app=FletStaticFiles(
-            proxy_path=proxy_path,
-            assets_dir=assets_dir,
-            app_name=app_name,
-            app_short_name=app_short_name,
-            app_description=app_description,
-            web_renderer=web_renderer,
-            route_url_strategy=route_url_strategy,
-            websocket_endpoint_path=websocket_endpoint,
-            no_cdn=no_cdn,
-        ),
-    )
+    fastapi_app.mount(path="/", app=static_files)
 
     # Add middleware for custom headers
     class CustomHeadersMiddleware(BaseHTTPMiddleware):

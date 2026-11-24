@@ -1,13 +1,10 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android">
     <uses-permission android:name="android.permission.INTERNET" />
-    <!-- Media access permissions.
-    Android 13 or higher.
-    https://developer.android.com/about/versions/13/behavior-changes-13#granular-media-permissions -->
-    <uses-permission android:name="android.permission.READ_MEDIA_AUDIO" />
-    <uses-permission android:name="android.permission.READ_MEDIA_VIDEO" />
-    <!-- Storage access permissions. Android 12 or lower. -->
-    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
-    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <!-- NOTE: no READ_MEDIA_IMAGES/READ_MEDIA_VIDEO/READ_MEDIA_AUDIO or
+    *_EXTERNAL_STORAGE here. Google Play's Photo and Video Permissions policy
+    rejects apps targeting API 33+ that request broad media access when the
+    system pickers suffice. File access goes through the storage access
+    framework (file_picker), which needs no permission. -->
     <uses-permission android:name="android.permission.RECORD_AUDIO" />
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />

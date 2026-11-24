@@ -3,12 +3,15 @@ Video control definition for the flet-video package.
 """
 
 from dataclasses import field
-from typing import Optional
+from typing import Optional, Union
 
 import flet as ft
 from flet_video.types import (
+    AdaptiveVideoControls,
     PlaylistMode,
     VideoConfiguration,
+    VideoControls,
+    VideoControlsMode,
     VideoMedia,
     VideoSubtitleConfiguration,
     VideoSubtitleTrack,
@@ -56,9 +59,28 @@ class Video(ft.LayoutControl):
     Whether the video should start playing automatically.
     """
 
-    show_controls: bool = True
+    controls: Optional[
+        Union[
+            VideoControls,
+            ft.Control,
+            dict[VideoControlsMode, Optional[Union[VideoControls, ft.Control]]],
+        ]
+    ] = field(default_factory=lambda: AdaptiveVideoControls())
     """
-    Whether to show the video player controls.
+    Controls displayed over the video.
+
+    Set to a :class:`VideoControls` object to use built-in controls, a
+    :class:`flet.Control` object to use custom Flet controls, or `None` to hide
+    controls.
+
+    To use different controls outside and inside fullscreen, set this property
+    to a dictionary keyed by :class:`VideoControlsMode`. The
+    :attr:`VideoControlsMode.DEFAULT` value is used when
+    :attr:`VideoControlsMode.NORMAL` controls are not provided. If
+    :attr:`VideoControlsMode.FULLSCREEN` controls are not provided,
+    :attr:`VideoControlsMode.NORMAL` controls are reused before
+    falling back to :attr:`VideoControlsMode.DEFAULT`. A mode value of
+    `None` hides controls for that mode only.
     """
 
     fullscreen: bool = False
@@ -112,8 +134,8 @@ class Video(ft.LayoutControl):
 
     Note:
         Android was reported to show blurry images when using
-        [`FilterQuality.HIGH`][flet.FilterQuality.HIGH].
-        Prefer the usage of [`FilterQuality.MEDIUM`][flet.FilterQuality.MEDIUM]
+        :attr:`flet.FilterQuality.HIGH`.
+        Prefer the usage of :attr:`flet.FilterQuality.MEDIUM`
         on this platform.
     """
 
@@ -125,7 +147,7 @@ class Video(ft.LayoutControl):
     resume_upon_entering_foreground_mode: bool = False
     """
     Whether to resume the video when application enters foreground mode.
-    Has effect only if [`pause_upon_entering_background_mode`][(c).] is also set to
+    Has effect only if :attr:`pause_upon_entering_background_mode` is also set to
     `True`.
     """
 
@@ -166,7 +188,7 @@ class Video(ft.LayoutControl):
     """
     Fires when an error occurs.
 
-    Event handler argument's [`data`][flet.Event.data] property contains
+    Event handler argument's :attr:`~flet.Event.data` property contains
     information about the error.
     """
 
@@ -177,8 +199,24 @@ class Video(ft.LayoutControl):
     """
     Fires when a video track changes.
 
-    Event handler argument's [`data`][flet.Event.data] property contains
+    Event handler argument's :attr:`~flet.Event.data` property contains
     the index of the new track.
+    """
+
+    on_position_change: Optional[ft.ControlEventHandler["Video"]] = None
+    """
+    Fires when the current playback position changes.
+
+    Event handler argument's :attr:`~flet.Event.data` property contains
+    the current position as a :class:`flet.Duration`.
+    """
+
+    on_duration_change: Optional[ft.ControlEventHandler["Video"]] = None
+    """
+    Fires when the current media duration changes.
+
+    Event handler argument's :attr:`~flet.Event.data` property contains
+    the current duration as a :class:`flet.Duration`.
     """
 
     def before_update(self):
@@ -208,17 +246,17 @@ class Video(ft.LayoutControl):
         await self._invoke_method("stop")
 
     async def next(self):
-        """Jumps to the next `VideoMedia` in the [`playlist`][(c).]."""
+        """Jumps to the next `VideoMedia` in the :attr:`playlist`."""
         await self._invoke_method("next")
 
     async def previous(self):
-        """Jumps to the previous `VideoMedia` in the [`playlist`][(c).]."""
+        """Jumps to the previous `VideoMedia` in the :attr:`playlist`."""
         await self._invoke_method("previous")
 
     async def seek(self, position: ft.DurationValue):
         """
         Seeks the currently playing `VideoMedia` from the
-        [`playlist`][(c).] at the specified `position`.
+        :attr:`playlist` at the specified `position`.
         """
         await self._invoke_method(
             "seek",
@@ -228,7 +266,7 @@ class Video(ft.LayoutControl):
     async def jump_to(self, media_index: int):
         """
         Jumps to the `VideoMedia` at the specified `media_index`
-        in the [`playlist`][(c).].
+        in the :attr:`playlist`.
         """
         if not (-len(self.playlist) <= media_index < len(self.playlist)):
             raise IndexError("media_index is out of range")
@@ -239,29 +277,6 @@ class Video(ft.LayoutControl):
             method_name="jump_to",
             arguments={"media_index": media_index},
         )
-
-    async def playlist_add(self, media: VideoMedia):
-        """Appends/Adds the provided `media` to the `playlist`."""
-        if not media.resource:
-            raise ValueError("media has no resource")
-        await self._invoke_method(
-            method_name="playlist_add",
-            arguments={"media": media},
-        )
-        self.playlist.append(media)
-
-    async def playlist_remove(self, media_index: int):
-        """Removes the provided `media` from the `playlist`."""
-        playlist_length = len(self.playlist)
-        if not (-playlist_length <= media_index < playlist_length):
-            raise IndexError("media_index is out of range")
-        if media_index < 0:
-            media_index = playlist_length + media_index
-        await self._invoke_method(
-            method_name="playlist_remove",
-            arguments={"media_index": media_index},
-        )
-        self.playlist.pop(media_index)
 
     async def is_playing(self) -> bool:
         """
@@ -291,3 +306,39 @@ class Video(ft.LayoutControl):
             The current position of the currently playing media.
         """
         return await self._invoke_method("get_current_position")
+
+    async def take_screenshot(
+        self,
+        format: Optional[str] = "image/png",
+        include_libass_subtitles: bool = False,
+    ) -> Optional[bytes]:
+        """
+        Captures a screenshot of the current video frame.
+
+        Args:
+            format: The image format to return. Supported values are `"image/png"`
+                (PNG encoded image), `"image/jpeg"` (JPEG encoded image),
+                and `None` (raw BGRA pixel buffer on native backends).
+            include_libass_subtitles: Whether to include libass subtitles in the
+                screenshot on native backends. This requires libass support in the
+                underlying player and is ignored on the web backend.
+
+        Returns:
+            Encoded image bytes, or `None` if the current backend cannot capture a
+                video frame.
+
+        Raises:
+            ValueError: If `format` is not supported.
+        """
+        supported_formats = ("image/png", "image/jpeg", None)
+        if format not in supported_formats:
+            raise ValueError(
+                f"format must be one of {supported_formats}, got {format!r}"
+            )
+        return await self._invoke_method(
+            "take_screenshot",
+            arguments={
+                "format": format,
+                "include_libass_subtitles": include_libass_subtitles,
+            },
+        )

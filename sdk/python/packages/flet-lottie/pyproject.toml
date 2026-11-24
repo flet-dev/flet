@@ -12,12 +12,15 @@ dependencies = [
 
 [project.urls]
 Homepage = "https://flet.dev"
-Documentation = "https://docs.flet.dev/lottie"
+Documentation = "https://flet.dev/docs/controls/lottie"
 Repository = "https://github.com/flet-dev/flet/tree/main/sdk/python/packages/flet-lottie"
 Issues = "https://github.com/flet-dev/flet/issues"
 
 [tool.setuptools.package-data]
-"flutter.flet_lottie" = ["**/*"]
+"flutter.flet_lottie" = [
+    "pubspec.yaml",
+    "lib/**",
+]
 
 [build-system]
 requires = ["setuptools"]

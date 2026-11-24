@@ -1,0 +1,26 @@
+[project]
+name = "open-url-action"
+version = "1.0.0"
+description = "Opens URLs from a button using a client action, so new tabs are not blocked on iOS Safari."
+requires-python = ">=3.10"
+keywords = ["urllauncher", "clientaction", "basic", "services"]
+authors = [{ name = "Flet team", email = "hello@flet.dev" }]
+dependencies = ["flet"]
+
+[dependency-groups]
+dev = ["flet-cli", "flet-desktop", "flet-web"]
+
+[tool.flet.gallery]
+categories = ["Utility/UrlLauncher", "Navigation/Routing"]
+
+[tool.flet.metadata]
+title = "Open URL action"
+controls = ["SafeArea", "Column", "Page", "Button", "Text", "OpenUrl", "UrlTarget", "SnackBar"]
+layout_pattern = "inline-actions"
+complexity = "basic"
+features = ["client actions", "URL launching"]
+
+[tool.flet]
+org = "dev.flet"
+company = "Flet"
+copyright = "Copyright (C) 2023-2026 by Flet"

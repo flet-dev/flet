@@ -1,5 +1,6 @@
-const defaultPyodideUrl = "https://cdn.jsdelivr.net/pyodide/v0.27.7/full/pyodide.js";
-
+// Pyodide URL is injected per build by flet-web's patch_index.py
+// (sets flet.pyodideUrl). Falls back to the local pyodide/ directory that
+// flet build web / flet publish drop next to the page.
 let _apps = {};
 let _documentUrl = document.URL;
 
@@ -12,8 +13,17 @@ globalThis.jsConnect = async function (appId, args, dartOnMessage) {
     };
     console.log(`Starting up Python worker: ${appId}, args: ${args}`);
     _apps[appId] = app;
-    app.worker = new Worker((flet.entrypointBaseUrl.endsWith("/") ?
-        flet.entrypointBaseUrl.slice(0, -1) : flet.entrypointBaseUrl) + "/python-worker.js");
+    // Module worker (type: "module") is required by Pyodide >= 0.29 — the
+    // runtime throws "Classic web workers are not supported" inside any
+    // worker where `importScripts` is callable. Module workers don't have
+    // `importScripts`, so the check passes. Older Pyodide lines (0.27.x)
+    // accept module workers too, so this is forward-compatible across all
+    // supported Python versions (3.12 → Pyodide 0.27.7, 3.13 → 0.29.4,
+    // 3.14 → 314.0.0).
+    app.worker = new Worker(
+        (flet.entrypointBaseUrl.endsWith("/") ?
+            flet.entrypointBaseUrl.slice(0, -1) : flet.entrypointBaseUrl) + "/python-worker.js",
+        { type: "module" });
 
     var error;
     app.worker.onmessage = (event) => {
@@ -31,7 +41,11 @@ globalThis.jsConnect = async function (appId, args, dartOnMessage) {
 
     // initialize worker
     app.worker.postMessage({
-        pyodideUrl: flet.noCdn ? flet.pyodideUrl : defaultPyodideUrl,
+        // `.mjs` is the ES-module variant. python-worker.js (now a module
+        // worker) loads it via dynamic `import()`. The legacy `.js`
+        // variant relied on `importScripts`, which doesn't exist in a
+        // module worker.
+        pyodideUrl: flet.pyodideUrl || "pyodide/pyodide.mjs",
         args: args,
         documentUrl: _documentUrl,
         appPackageUrl: flet.appPackageUrl,
@@ -42,7 +56,8 @@ globalThis.jsConnect = async function (appId, args, dartOnMessage) {
     await pythonInitialized;
 
     if (error) {
-        console.log("Python worker init error:", error);
+        console.error("Python worker init error:", error);
+        await jsDisconnect(appId);
         throw error;
     } else {
         console.log(`Python worker initialized: ${appId}`);
@@ -54,7 +69,10 @@ globalThis.jsConnect = async function (appId, args, dartOnMessage) {
 globalThis.jsSend = async function (appId, data) {
     if (appId in _apps) {
         const app = _apps[appId];
-        app.worker.postMessage(data);
+        // Transfer the converted array's actual buffer. On Wasm, converting
+        // the Dart packet's buffer separately would produce a different copy.
+        // The sender must not access data after this call.
+        app.worker.postMessage(data, [data.buffer]);
     }
 }
 

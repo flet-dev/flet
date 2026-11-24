@@ -15,7 +15,7 @@ publish_to: "none" # Remove this line if you wish to publish to pub.dev
 # In iOS, build-name is used as CFBundleShortVersionString while build-number used as CFBundleVersion.
 # Read more about iOS versioning at
 # https://developer.apple.com/library/archive/documentation/General/Reference/InfoPlistKeyReference/Articles/CoreFoundationKeys.html
-version: 1.0.0+1
+version: 1.1.0
 
 environment:
   sdk: '>=3.0.0 <4.0.0'
@@ -73,8 +73,14 @@ dependencies:
   flet_lottie:
     path: ../sdk/python/packages/flet-lottie/src/flutter/flet_lottie
 
+  flet_local_auth:
+    path: ../sdk/python/packages/flet-local-auth/src/flutter/flet_local_auth
+
   flet_map:
     path: ../sdk/python/packages/flet-map/src/flutter/flet_map
+
+  flet_notifications:
+    path: ../sdk/python/packages/flet-notifications/src/flutter/flet_notifications
 
   flet_permission_handler:
     path: ../sdk/python/packages/flet-permission-handler/src/flutter/flet_permission_handler
@@ -82,15 +88,17 @@ dependencies:
   flet_secure_storage:
     path: ../sdk/python/packages/flet-secure-storage/src/flutter/flet_secure_storage
 
+  flet_shadcn_ui:
+    path: ../sdk/python/packages/flet-shadcn-ui/src/flutter/flet_shadcn_ui
+
+  flet_spinkit:
+    path: ../sdk/python/packages/flet-spinkit/src/flutter/flet_spinkit
+
   flet_webview:
     path: ../sdk/python/packages/flet-webview/src/flutter/flet_webview
 
   flet_code_editor:
     path: ../sdk/python/packages/flet-code-editor/src/flutter/flet_code_editor
-
-  cupertino_icons: ^1.0.6
-  wakelock_plus: ^1.4.0
-  package_info_plus: ^9.0.0
 
   integration_test:
     sdk: flutter
@@ -98,11 +106,14 @@ dependencies:
 dependency_overrides:
   flet:
     path: ../packages/flet
-  package_info_plus: ^9.0.0
 
 dev_dependencies:
   flutter_test:
     sdk: flutter
+
+  # Flet integration-test driver (used by integration_test/app_test.dart).
+  flet_integration_test:
+    path: ../packages/flet_integration_test
 
   # The "flutter_lints" package below contains a set of recommended lints to
   # encourage good coding practices. The lint set provided by the package is

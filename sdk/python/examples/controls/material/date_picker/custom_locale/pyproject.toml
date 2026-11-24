@@ -1,0 +1,26 @@
+[project]
+name = "date-picker-custom-locale"
+version = "1.0.0"
+description = "Opens DatePicker with zh_Hans locale to demonstrate localized calendar UI."
+requires-python = ">=3.10"
+keywords = ["date picker", "custom locale", "locale", "internationalization", "zh_Hans"]
+authors = [{ name = "Flet team", email = "hello@flet.dev" }]
+dependencies = ["flet"]
+
+[dependency-groups]
+dev = ["flet-cli", "flet-desktop", "flet-web"]
+
+[tool.flet.gallery]
+categories = ["Dialogs/DatePicker"]
+
+[tool.flet.metadata]
+title = "Custom locale"
+controls = ["SafeArea", "Button", "DatePicker", "Locale"]
+layout_pattern = "single-panel"
+complexity = "basic"
+features = ["localized date picker", "dialog open action"]
+
+[tool.flet]
+org = "dev.flet"
+company = "Flet"
+copyright = "Copyright (C) 2023-2026 by Flet"

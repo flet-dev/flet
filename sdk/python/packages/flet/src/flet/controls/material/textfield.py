@@ -1,10 +1,10 @@
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 from enum import Enum
-from typing import Optional, Union
+from typing import Annotated, Optional, Union
 
 from flet.controls.adaptive_control import AdaptiveControl
-from flet.controls.base_control import BaseControl, control
-from flet.controls.control_event import ControlEventHandler, EventHandler
+from flet.controls.base_control import BaseControl, control, value
+from flet.controls.control_event import ControlEventHandler, Event, EventHandler
 from flet.controls.core.autofill_group import AutofillHint
 from flet.controls.core.text import TextSelection, TextSelectionChangeEvent
 from flet.controls.material.form_field_control import FormFieldControl
@@ -18,15 +18,53 @@ from flet.controls.types import (
     Number,
     TextAlign,
 )
+from flet.utils.validation import V
 
 __all__ = [
     "InputFilter",
     "KeyboardType",
     "NumbersOnlyInputFilter",
+    "PastedFile",
     "TextCapitalization",
     "TextField",
+    "TextFieldPasteFilesEvent",
+    "TextInputAction",
     "TextOnlyInputFilter",
 ]
+
+
+@dataclass
+class PastedFile:
+    """
+    A file pasted into a :class:`~flet.TextField`.
+    """
+
+    name: str
+    """
+    File name, e.g. `"image.png"`. A pasted screenshot gets a generic name.
+    """
+
+    mime_type: str
+    """
+    MIME type reported by the platform, e.g. `"image/png"`; can be empty.
+    """
+
+    bytes: bytes
+    """
+    File contents.
+    """
+
+
+@dataclass
+class TextFieldPasteFilesEvent(Event["TextField"]):
+    """
+    Event emitted when files are pasted into a :class:`~flet.TextField`.
+    """
+
+    files: list[PastedFile]
+    """
+    The pasted files.
+    """
 
 
 class KeyboardType(Enum):
@@ -128,8 +166,8 @@ class KeyboardType(Enum):
     Requests a keyboard that includes keys useful for web searches as well as URLs.
 
     - On iOS, requests a default keyboard with ready access to the `"."` key.
-        In contrast to [`URL`][(c).], a space bar is available.
-    - On Android this is remapped to the [`URL`][(c).] keyboard type as it always
+        In contrast to :attr:`URL`, a space bar is available.
+    - On Android this is remapped to the :attr:`URL` keyboard type as it always
         shows a space bar.
     """
 
@@ -140,14 +178,14 @@ class KeyboardType(Enum):
     Requests a keyboard that includes keys useful for handles and tags.
 
     - On iOS, requests a default keyboard with ready access to the `"@"` and `"#"` keys.
-    - On Android this is remapped to the [`EMAIL`][(c).] keyboard type as it
+    - On Android this is remapped to the :attr:`EMAIL` keyboard type as it
         always shows the `"@"` key.
     """
 
 
 class TextCapitalization(Enum):
     """
-    Configures how the platform keyboard will select an uppercase or lowercase \
+    Configures how the platform keyboard will select an uppercase or lowercase
     keyboard.
 
     Only supports text keyboards, other keyboard types will ignore this
@@ -187,10 +225,144 @@ class TextCapitalization(Enum):
     """
 
 
-@dataclass
+class TextInputAction(Enum):
+    """
+    The action button of the onscreen keyboard, and what pressing it or `Enter` does.
+
+    Each action lists the mobile platforms whose keyboards support it. In debug
+    builds on Android and iOS, such as an app running on the iOS Simulator, a field
+    with an action that the platform doesn't support gets focus without showing the
+    keyboard, and no error is reported. On Android, release builds show the
+    keyboard with its default action button instead.
+    """
+
+    NONE = "none"
+    """
+    No action specific to the field; the platform decides how the keyboard looks.
+
+    Pressing the action button removes focus from the field, which closes the
+    keyboard. In a multiline field it inserts a new line instead.
+
+    Note:
+        Supported on Android only.
+    """
+
+    UNSPECIFIED = "unspecified"
+    """
+    Lets the platform choose the most appropriate action.
+
+    Keeps focus in the field, so the keyboard stays open.
+
+    Supported on Android and iOS.
+    """
+
+    DONE = "done"
+    """
+    The user is done entering input, such as at the end of a form.
+
+    Removes focus from the field, which closes the keyboard.
+
+    Supported on Android and iOS.
+    """
+
+    GO = "go"
+    """
+    Takes the user to the destination they typed, such as a URL.
+
+    Removes focus from the field, which closes the keyboard.
+
+    Supported on Android and iOS.
+    """
+
+    SEARCH = "search"
+    """
+    Runs a search for the typed text.
+
+    Removes focus from the field, which closes the keyboard.
+
+    Supported on Android and iOS.
+    """
+
+    SEND = "send"
+    """
+    Sends what the user typed, such as a message.
+
+    Removes focus from the field, which closes the keyboard.
+
+    Supported on Android and iOS.
+    """
+
+    NEXT = "next"
+    """
+    Moves focus to the next focusable control, keeping the keyboard open when it's
+    another text field.
+
+    Supported on Android and iOS.
+    """
+
+    PREVIOUS = "previous"
+    """
+    Moves focus to the previous focusable control, keeping the keyboard open when
+    it's another text field.
+
+    Note:
+        Supported on Android only.
+    """
+
+    CONTINUE_ACTION = "continueAction"
+    """
+    Continues to the next step, such as the next page of a sign-up flow.
+
+    Doesn't move focus: the field keeps it, so the keyboard stays open.
+
+    Note:
+        Supported on iOS only.
+    """
+
+    JOIN = "join"
+    """
+    Joins something, such as a wireless network.
+
+    Keeps focus in the field, so the keyboard stays open.
+
+    Note:
+        Supported on iOS only.
+    """
+
+    ROUTE = "route"
+    """
+    Shows routing options, such as driving directions.
+
+    Keeps focus in the field, so the keyboard stays open.
+
+    Note:
+        Supported on iOS only.
+    """
+
+    EMERGENCY_CALL = "emergencyCall"
+    """
+    Calls emergency services.
+
+    Keeps focus in the field, so the keyboard stays open.
+
+    Note:
+        Supported on iOS only.
+    """
+
+    NEWLINE = "newline"
+    """
+    Inserts a new line into a multiline field.
+
+    On a single-line field, it removes focus from the field like :attr:`DONE`.
+
+    Supported on Android and iOS.
+    """
+
+
+@value
 class InputFilter:
     """
-    An input filter that uses a regular expression to allow or deny/block certain \
+    An input filter that uses a regular expression to allow or deny/block certain
     patterns in the input.
     """
 
@@ -210,8 +382,6 @@ class InputFilter:
     replacement_string: str = ""
     """
     A string used to replace banned/denied patterns.
-
-    Defaults to an empty string.
     """
 
     multiline: bool = False
@@ -268,12 +438,15 @@ class TextOnlyInputFilter(InputFilter):
         super().__init__(regex_string=r"^[a-zA-Z]*$", allow=True, replacement_string="")
 
 
-@control("TextField")
+@control(
+    "TextField", categories=("input", "form"), tags=("text", "editable", "validation")
+)
 class TextField(FormFieldControl, AdaptiveControl):
     """
-    A text field lets the user enter text, either with hardware keyboard or with an \
+    A text field lets the user enter text, either with hardware keyboard or with an
     onscreen keyboard.
 
+    Example:
     ```python
     ft.TextField(label="Name", hint_text="Jane Doe")
     ```
@@ -281,7 +454,7 @@ class TextField(FormFieldControl, AdaptiveControl):
 
     value: str = ""
     """
-    Current value of the TextField.
+    Current value of this text field.
     """
 
     selection: Optional[TextSelection] = None
@@ -292,9 +465,9 @@ class TextField(FormFieldControl, AdaptiveControl):
     If no text is selected, it contains an empty range indicating the caret position.
 
     Setting this property visually updates the field's selection to match the given
-    value, and hence leads to the [`on_selection_change`][(c).] event being triggered.
+    value, and hence leads to the :attr:`on_selection_change` event being triggered.
     To ensure the selection is visible and the event is fired, the text field must
-    be focused. Call [`focus()`][flet.FormFieldControl.focus]
+    be focused. Call :meth:`flet.FormFieldControl.focus`
     on the field before setting this property.
     """
 
@@ -308,7 +481,11 @@ class TextField(FormFieldControl, AdaptiveControl):
     Whether this field can contain multiple lines of text.
     """
 
-    min_lines: Optional[int] = None
+    min_lines: Annotated[
+        Optional[int],
+        V.gt(0),
+        V.le_field("max_lines"),
+    ] = None
     """
     The minimum number of lines to occupy when the content spans fewer lines.
 
@@ -318,11 +495,16 @@ class TextField(FormFieldControl, AdaptiveControl):
     Defaults to `1`.
 
     Raises:
-        ValueError: If [`min_lines`][(c).] is not positive or exceeds
-            [`max_lines`][(c).] when both are set.
+        ValueError: If it is not strictly greater than `0`.
+        ValueError: If it is not less than or equal to :attr:`max_lines` when both
+            are set.
     """
 
-    max_lines: Optional[int] = None
+    max_lines: Annotated[
+        Optional[int],
+        V.gt(0),
+        V.ge_field("min_lines"),
+    ] = None
     """
     The maximum number of lines to show at one time, wrapping if necessary.
 
@@ -333,33 +515,39 @@ class TextField(FormFieldControl, AdaptiveControl):
     instead.
 
     Raises:
-        ValueError: If [`max_lines`][(c).] is not positive or is less than
-            [`min_lines`][(c).].
+        ValueError: If it is not strictly greater than `0`.
+        ValueError: If it is not greater than or equal to :attr:`min_lines` when
+            both are set.
     """
 
-    max_length: Optional[int] = None
+    max_length: Annotated[
+        Optional[int],
+        V.or_(
+            V.gt(0),
+            V.eq(-1),
+            message="max_length must be either strictly greater than 0 or equal to -1",
+        ),
+    ] = None
     """
     Limits a maximum number of characters that can be entered into TextField.
 
     Raises:
-        ValueError: If [`max_length`][(c).] is neither `-1` nor a positive integer.
+        ValueError: If it is not strictly greater than `0` or equal to `-1`.
     """
 
     password: bool = False
     """
     Whether to hide the text being edited.
-
-    Defaults to `False`.
     """
 
     can_reveal_password: bool = False
     """
-    Displays a toggle icon button that allows revealing the entered password. Is shown \
-    if both `password` and `can_reveal_password` are `True`.
+    Displays a toggle icon button that allows revealing the entered password. Is shown
+    if both :attr:`password` and `can_reveal_password` are `True`.
 
-    The icon is displayed in the same location as `suffix` and in case both
-    `can_reveal_password`/`password` and `suffix` are provided, then the `suffix` is
-    not shown.
+    The icon is displayed in the same location as :attr:`flet.FormFieldControl.suffix`
+    and in case both `can_reveal_password`/:attr:`password` and `suffix` are
+    provided, then the :attr:`flet.FormFieldControl.suffix` won't be shown.
     """
 
     read_only: bool = False
@@ -368,15 +556,13 @@ class TextField(FormFieldControl, AdaptiveControl):
 
     When this is set to `True`, the text cannot be modified by any shortcut or keyboard
     operation. The text is still selectable.
-
-    Defaults to `False`.
     """
 
     shift_enter: bool = False
     """
-    Changes the behavior of `Enter` button in `multiline` TextField to be chat-like, \
-    i.e. new line can be added with `Shift`+`Enter` and pressing just `Enter` fires \
-    `on_submit` event.
+    Changes the behavior of `Enter` button in :attr:`multiline` textfield to be
+    chat-like, i.e. new line can be added with `Shift`+`Enter` and pressing just
+    `Enter` fires :attr:`on_submit` event.
     """
 
     ignore_up_down_keys: bool = False
@@ -391,7 +577,7 @@ class TextField(FormFieldControl, AdaptiveControl):
     """
     How the text should be aligned horizontally.
 
-    Defaults to `TextAlign.LEFT`.
+    Defaults to :attr:`flet.TextAlign.LEFT`.
     """
 
     autofocus: bool = False
@@ -405,14 +591,12 @@ class TextField(FormFieldControl, AdaptiveControl):
     """
     Enables automatic on-the-fly capitalization of entered text.
 
-    Defaults to `TextCapitalization.NONE`.
+    Defaults to :attr:`flet.TextCapitalization.NONE`.
     """
 
     autocorrect: bool = True
     """
     Whether to enable autocorrection.
-
-    Defaults to `True`.
     """
 
     enable_suggestions: bool = True
@@ -422,8 +606,6 @@ class TextField(FormFieldControl, AdaptiveControl):
     This flag only affects Android. On iOS, suggestions are tied directly to
     `autocorrect`, so that suggestions are only shown when `autocorrect` is `True`.
     On Android autocorrection and suggestion are controlled separately.
-
-    Defaults to `True`.
     """
 
     smart_dashes_type: bool = True
@@ -433,8 +615,6 @@ class TextField(FormFieldControl, AdaptiveControl):
     This flag only affects iOS versions 11 and above. As an example of what this does,
     two consecutive hyphen characters will be automatically replaced with one en dash,
     and three consecutive hyphens will become one em dash.
-
-    Defaults to `True`.
     """
 
     smart_quotes_type: bool = True
@@ -444,15 +624,11 @@ class TextField(FormFieldControl, AdaptiveControl):
     This flag only affects iOS. As an example of what this does, a standard vertical
     double quote character will be automatically replaced by a left or right double
     quote depending on its position in a word.
-
-    Defaults to `True`.
     """
 
     show_cursor: bool = True
     """
     Whether the field's cursor is to be shown.
-
-    Defaults to `True`.
     """
 
     cursor_color: Optional[ColorValue] = None
@@ -462,7 +638,10 @@ class TextField(FormFieldControl, AdaptiveControl):
 
     cursor_error_color: Optional[ColorValue] = None
     """
-    TBD
+    The color of the text cursor while the field is showing an error.
+
+    If not set, the cursor color falls back to the error text style and then to the
+    theme's error color.
     """
 
     cursor_width: Number = 2.0
@@ -489,73 +668,104 @@ class TextField(FormFieldControl, AdaptiveControl):
     """
     Provides as-you-type filtering/validation.
 
-    Similar to the `on_change` callback, the input filters are not applied when the
-    content of the field is changed programmatically.
+    Similar to the :attr:`on_change` callback, the input filters are not applied
+    when the content of the field is changed programmatically.
     """
 
     obscuring_character: str = "•"
     """
-    TBD
+    The single character used to mask the text when :attr:`password` is `True`.
     """
 
     enable_interactive_selection: bool = True
     """
-    TBD
+    Whether interactive text selection is enabled.
+
+    When enabled, users can move the caret, select text, and use the cut/copy/paste
+    menu. When disabled, selection cannot be adjusted interactively and editing
+    shortcuts for cut/copy/paste are suppressed.
     """
 
     enable_ime_personalized_learning: bool = True
     """
-    TBD
+    Whether the input method is allowed to learn from what the user types.
+
+    This affects Android only and controls personalized data such as typing history
+    and user dictionary entries.
     """
 
     can_request_focus: bool = True
     """
-    TBD
+    Whether this field can request focus.
+
+    If set to `False`, the field does not request focus when tapped or when its
+    context menu is shown, and it cannot be reached with keyboard focus traversal.
     """
 
     ignore_pointers: bool = False
     """
-    TBD
+    Whether this field ignores pointer events.
     """
 
     enable_stylus_handwriting: bool = True
     """
-    TBD
+    Whether this field supports stylus handwriting input.
+
+    On supported devices, the user can write directly on top of the field with a
+    stylus instead of typing from the keyboard.
     """
 
     animate_cursor_opacity: Optional[bool] = None
     """
-    TBD
+    Whether the text cursor animates between transparent and opaque during each blink.
+
+    If not set, the default follows the platform behavior used by Flet.
     """
 
     always_call_on_tap: bool = False
     """
-    TBD
+    Whether :attr:`on_click` should be called for every tap.
+
+    By default, only the first tap in a tap sequence triggers :attr:`on_click`.
+    When enabled, consecutive taps trigger it as well.
     """
 
     scroll_padding: PaddingValue = 20
     """
-    TBD
+    Padding to keep around the field when a surrounding scrollable scrolls it into view.
+
+    When the field receives focus and is partly hidden, for example by the onscreen
+    keyboard, this padding helps keep space between the field and the edges of the
+    surrounding scrollable after scrolling.
     """
 
     clip_behavior: ClipBehavior = ClipBehavior.HARD_EDGE
     """
-    TBD
+    How the field's contents should be clipped.
+
+    See :class:`~flet.ClipBehavior` for the available clipping modes.
     """
 
     keyboard_brightness: Optional[Brightness] = None
     """
-    TBD
+    The brightness to use for the onscreen keyboard.
+
+    This setting is honored on iOS only.
     """
 
     mouse_cursor: Optional[MouseCursor] = None
     """
-    TBD
+    The mouse pointer to show while hovering over the field.
+
+    If not set, the standard text cursor is used.
     """
 
     strut_style: Optional[StrutStyle] = None
     """
-    TBD
+    The :class:`~flet.StrutStyle` used for vertical text layout.
+
+    Strut style establishes a predictable minimum line height, which is useful when
+    entered text may vary in font metrics or script.
     """
 
     autofill_hints: Optional[Union[AutofillHint, list[AutofillHint]]] = None
@@ -578,12 +788,29 @@ class TextField(FormFieldControl, AdaptiveControl):
     Called when the text selection or caret position changes.
 
     This can be triggered either by user interaction (selecting text or moving
-    the caret) or programmatically (through the [`selection`][(c).] property).
+    the caret) or programmatically (through the :attr:`selection` property).
+    """
+
+    on_paste_files: Optional[EventHandler[TextFieldPasteFilesEvent]] = None
+    """
+    Called when the user pastes files into the field, such as a screenshot or
+    an image copied from a web page or the OS file manager.
+
+    - Web: works in every browser, with no clipboard permission prompt. A
+      paste that carries files doesn't also insert text into the field.
+    - Desktop: `Ctrl`/`Cmd`+`V` reports an image on the clipboard; text is
+      pasted as usual.
+
+    Useful for attaching images to a chat message. Only the focused field
+    receives pasted files.
     """
 
     on_click: Optional[ControlEventHandler["TextField"]] = None
     """
-    TBD
+    Called when the field is tapped.
+
+    If :attr:`always_call_on_tap` is `True`, this event is also triggered for
+    consecutive taps.
     """
 
     on_submit: Optional[ControlEventHandler["TextField"]] = None
@@ -603,7 +830,45 @@ class TextField(FormFieldControl, AdaptiveControl):
 
     on_tap_outside: Optional[ControlEventHandler["TextField"]] = None
     """
-    TBD
+    Called when a pointer-down event occurs outside the field while it is focused.
+
+    Use this to react when the user taps away from the field.
+
+    Note:
+        This callback is a notification only and does not include the pointer event
+        details.
+    """
+
+    text_input_action: Optional[TextInputAction] = field(default=None, kw_only=True)
+    """
+    The action button of the onscreen keyboard, and what pressing it or `Enter` does.
+
+    :attr:`~flet.TextInputAction.NEXT` and :attr:`~flet.TextInputAction.PREVIOUS`
+    move focus to the next or previous focusable control in reading order, which
+    can be a button in this field's :attr:`~flet.FormFieldControl.suffix`. When
+    that control is another text field, the keyboard stays open.
+    See :class:`~flet.TextInputAction` for what the other actions do and the
+    platforms that support them.
+
+    On a single-line field, every action also calls :attr:`on_submit`.
+    On a :attr:`multiline` field, the action doesn't call :attr:`on_submit`, and
+    with an action other than :attr:`~flet.TextInputAction.NEWLINE`, `Enter` and
+    the keyboard's action key usually perform the action instead of inserting a
+    new line. On the web, that includes `Shift+Enter` on a :attr:`shift_enter`
+    field.
+
+    If not set, a single-line field uses :attr:`~flet.TextInputAction.DONE` and a
+    :attr:`multiline` field uses :attr:`~flet.TextInputAction.NEWLINE`.
+
+    A change made while this field has focus applies the next time it gets focus.
+
+    Example:
+        ```python
+        page.add(
+            ft.TextField(label="Name", text_input_action=ft.TextInputAction.NEXT),
+            ft.TextField(label="Email", text_input_action=ft.TextInputAction.DONE),
+        )
+        ```
     """
 
     def _migrate_state(self, other: BaseControl):
@@ -617,22 +882,6 @@ class TextField(FormFieldControl, AdaptiveControl):
 
     def before_update(self):
         super().before_update()
-        if self.min_lines is not None and self.min_lines <= 0:
-            raise ValueError("min_lines must be greater than 0")
-        if self.max_lines is not None and self.max_lines <= 0:
-            raise ValueError("max_lines must be greater than 0")
-        if (
-            self.max_lines is not None
-            and self.min_lines is not None
-            and self.min_lines > self.max_lines
-        ):
-            raise ValueError("min_lines can't be greater than max_lines")
-        if (
-            self.max_length is not None
-            and self.max_length != -1
-            and self.max_length <= 0
-        ):
-            raise ValueError("max_length must be either equal to -1 or greater than 0")
         if (
             self.bgcolor is not None
             or self.fill_color is not None

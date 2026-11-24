@@ -113,6 +113,6 @@ class SlidePicker(ft.LayoutControl):
     """
     Called when the picker color is changed.
 
-    The [`data`][flet.Event.data] property of the event handler argument contains
+    The :attr:`~flet.Event.data` property of the event handler argument contains
     the color value as a hex string.
     """

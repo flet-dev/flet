@@ -1,0 +1,26 @@
+[project]
+name = "cupertino-app-bar-theme-mode-toggle"
+version = "1.0.0"
+description = "Toggles page theme mode from a CupertinoAppBar trailing icon button."
+requires-python = ">=3.10"
+keywords = ["cupertino", "app bar", "theme", "toggle", "icon button"]
+authors = [{ name = "Flet team", email = "hello@flet.dev" }]
+dependencies = ["flet"]
+
+[dependency-groups]
+dev = ["flet-cli", "flet-desktop", "flet-web"]
+
+[tool.flet.gallery]
+categories = ["Navigation/CupertinoAppBar"]
+
+[tool.flet.metadata]
+title = "Theme mode toggle"
+controls = ["CupertinoAppBar", "Icon", "IconButton", "Text", "SafeArea"]
+layout_pattern = "toolbar-actions"
+complexity = "basic"
+features = ["theme mode toggle", "dynamic icon update"]
+
+[tool.flet]
+org = "dev.flet"
+company = "Flet"
+copyright = "Copyright (C) 2023-2026 by Flet"

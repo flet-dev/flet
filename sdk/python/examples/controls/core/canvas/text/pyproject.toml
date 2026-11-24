@@ -1,0 +1,26 @@
+[project]
+name = "canvas-text"
+version = "1.0.0"
+description = "Canvas text rendering with transforms, spans, and paint effects."
+requires-python = ">=3.10"
+keywords = ["canvas", "text", "rotation", "gradient", "spans"]
+authors = [{ name = "Flet team", email = "hello@flet.dev" }]
+dependencies = ["flet"]
+
+[dependency-groups]
+dev = ["flet-cli", "flet-desktop", "flet-web"]
+
+[tool.flet.gallery]
+categories = ["Displays/Canvas"]
+
+[tool.flet.metadata]
+title = "Canvas text"
+controls = ["SafeArea", "Canvas", "Text", "TextStyle", "TextSpan", "Circle"]
+layout_pattern = "free-canvas"
+complexity = "basic"
+features = ["rotated text", "text spans", "stroke and gradient paint"]
+
+[tool.flet]
+org = "dev.flet"
+company = "Flet"
+copyright = "Copyright (C) 2023-2026 by Flet"

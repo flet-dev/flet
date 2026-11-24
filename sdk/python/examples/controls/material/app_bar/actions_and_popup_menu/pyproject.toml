@@ -1,0 +1,26 @@
+[project]
+name = "app-bar-actions-and-popup-menu"
+version = "1.0.0"
+description = "AppBar with action icons and popup menu interactions."
+requires-python = ">=3.10"
+keywords = ["appbar", "navigation", "popup menu", "actions", "material"]
+authors = [{ name = "Flet team", email = "hello@flet.dev" }]
+dependencies = ["flet"]
+
+[dependency-groups]
+dev = ["flet-cli", "flet-desktop", "flet-web"]
+
+[tool.flet.gallery]
+categories = ["Navigation/AppBar"]
+
+[tool.flet.metadata]
+title = "Actions and popup menu"
+controls = ["AppBar", "Icon", "IconButton", "PopupMenuButton", "PopupMenuItem", "SafeArea", "Column", "Text"]
+layout_pattern = "toolbar-actions"
+complexity = "basic"
+features = ["popup menu actions", "checked state toggle", "app bar actions"]
+
+[tool.flet]
+org = "dev.flet"
+company = "Flet"
+copyright = "Copyright (C) 2023-2026 by Flet"

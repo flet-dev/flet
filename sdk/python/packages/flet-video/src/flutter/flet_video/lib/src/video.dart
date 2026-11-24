@@ -1,7 +1,8 @@
 import 'dart:async';
 
+import 'package:collection/collection.dart';
 import 'package:flet/flet.dart';
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:media_kit/media_kit.dart';
 import 'package:media_kit_video/media_kit_video.dart';
 
@@ -21,9 +22,121 @@ class _VideoControlState extends State<VideoControl> with FletStoreMixin {
   StreamSubscription<String?>? _errorSub;
   StreamSubscription<bool>? _completedSub;
   StreamSubscription<Playlist>? _playlistSub;
+  StreamSubscription<Duration>? _positionSub;
+  StreamSubscription<Duration>? _durationSub;
   late Player _player;
   late VideoController _controller;
   bool _initialized = false;
+  Future<void>? _openFuture;
+
+  /// Last values applied to the current [_player]. They share the player's
+  /// lifetime (both are (re)created in [_setup]), so [build] diffs against them
+  /// to avoid re-applying unchanged properties.
+  ///
+  /// [_setup] resets them to `null` whenever it creates a new player so [build]
+  /// re-applies every property to it. This is required on the `didUpdateWidget`
+  /// control-swap path, where the same State instance is reused with a fresh
+  /// player; on the `visible` off/on path the whole State (and these fields) is
+  /// recreated anyway, so they already start as `null`.
+  ///
+  /// Keep this list in lockstep with the property diffs in [build].
+  double? _volume;
+  double? _pitch;
+  double? _playbackRate;
+  bool? _shufflePlaylist;
+  PlaylistMode? _playlistMode;
+  SubtitleTrack? _subtitleTrack;
+
+  /// Snapshot of the last-known playlist, used to diff against incoming
+  /// updates so single add/remove changes can be applied without a full reload.
+  dynamic _playlist;
+
+  /// Deep equality used to compare playlist entries (lists of media maps).
+  static const _playlistEquality = DeepCollectionEquality();
+
+  /// Returns a deep copy of [value] so the snapshot is decoupled from the
+  /// source and won't be mutated by reference.
+  dynamic _copyPlaylist(dynamic value) {
+    if (value is List) {
+      return value.map(_copyPlaylist).toList();
+    }
+    if (value is Map) {
+      return value.map((key, value) => MapEntry(key, _copyPlaylist(value)));
+    }
+    return value;
+  }
+
+  /// Returns the appended media if [current] differs from [previous] only by
+  /// a single trailing item, otherwise `null`.
+  dynamic _appendedPlaylistMedia(List previous, List current) {
+    if (current.length != previous.length + 1) {
+      return null;
+    }
+    for (var i = 0; i < previous.length; i++) {
+      if (!_playlistEquality.equals(previous[i], current[i])) {
+        return null;
+      }
+    }
+    return current.last;
+  }
+
+  /// Returns the removed index if [current] differs from [previous] only by
+  /// a single removed item, otherwise `null`.
+  int? _removedPlaylistIndex(List previous, List current) {
+    if (previous.length != current.length + 1) {
+      return null;
+    }
+
+    int? removedIndex;
+    var currentIndex = 0;
+    for (var previousIndex = 0;
+        previousIndex < previous.length;
+        previousIndex++) {
+      if (currentIndex < current.length &&
+          _playlistEquality.equals(
+              previous[previousIndex], current[currentIndex])) {
+        currentIndex++;
+      } else if (removedIndex == null) {
+        removedIndex = previousIndex;
+      } else {
+        return null;
+      }
+    }
+    return removedIndex;
+  }
+
+  /// Applies an updated [playlist] by issuing a single `add` or `remove` when
+  /// the diff is a one-item append/removal; otherwise falls back to reopening
+  /// the player with the full playlist (preserving play state).
+  Future<void> _updatePlaylist(dynamic playlist) async {
+    final previousPlaylist = _playlist;
+    _playlist = _copyPlaylist(playlist);
+
+    if (previousPlaylist is List && playlist is List) {
+      // add
+      final addedMedia = _appendedPlaylistMedia(previousPlaylist, playlist);
+      if (addedMedia != null) {
+        final media = parseVideoMedia(addedMedia, widget.control.backend);
+        if (media != null) {
+          await _player.add(media);
+          return;
+        }
+      }
+
+      // remove
+      final removedIndex = _removedPlaylistIndex(previousPlaylist, playlist);
+      if (removedIndex != null) {
+        await _player.remove(removedIndex);
+        return;
+      }
+    }
+
+    final play =
+        widget.control.getBool("autoplay", false)! || _player.state.playing;
+    await _player.open(
+        Playlist(parseVideoMedias(playlist, widget.control.backend, [])!),
+        play: play);
+  }
 
   Future<void> _applyMpvProperties(Control control) async {
     final cfg = control.get("configuration");
@@ -57,6 +170,15 @@ class _VideoControlState extends State<VideoControl> with FletStoreMixin {
 
     _player = Player(configuration: playerConfig);
 
+    // The new player starts with default settings, so forget what was applied
+    // to the previous one and let build() re-apply everything.
+    _volume = null;
+    _pitch = null;
+    _playbackRate = null;
+    _shufflePlaylist = null;
+    _playlistMode = null;
+    _subtitleTrack = null;
+
     final videoControllerConfiguration = parseControllerConfiguration(
         control.get("configuration"), const VideoControllerConfiguration())!;
     _controller =
@@ -66,28 +188,42 @@ class _VideoControlState extends State<VideoControl> with FletStoreMixin {
 
     control.addInvokeMethodListener(_invokeMethod);
 
-    if (control.getBool("on_error", false)!) {
+    if (control.hasEventHandler("error")) {
       _errorSub = _player.stream.error.listen((message) {
         control.triggerEvent("error", message);
       });
     }
 
-    if (control.getBool("on_complete", false)!) {
+    if (control.hasEventHandler("complete")) {
       _completedSub = _player.stream.completed.listen((completed) {
         control.triggerEvent("complete", completed);
       });
     }
 
-    if (control.getBool("on_track_change", false)!) {
+    if (control.hasEventHandler("track_change")) {
       _playlistSub = _player.stream.playlist.listen((playlist) {
         control.triggerEvent("track_change", playlist.index);
       });
     }
 
-    final playlist = Playlist(parseVideoMedias(control.get("playlist"), [])!);
-    final autoplay = control.getBool("autoplay", false)!;
+    if (control.hasEventHandler("position_change")) {
+      _positionSub = _player.stream.position.listen((position) {
+        control.triggerEvent("position_change", position);
+      });
+    }
 
-    () async {
+    if (control.hasEventHandler("duration_change")) {
+      _durationSub = _player.stream.duration.listen((duration) {
+        control.triggerEvent("duration_change", duration);
+      });
+    }
+
+    final playlist =
+        Playlist(parseVideoMedias(control.get("playlist"), control.backend, [])!);
+    final autoplay = control.getBool("autoplay", false)!;
+    _playlist = _copyPlaylist(control.get("playlist"));
+
+    _openFuture = () async {
       await _applyMpvProperties(control);
       await _player.open(playlist, play: autoplay);
     }();
@@ -106,8 +242,13 @@ class _VideoControlState extends State<VideoControl> with FletStoreMixin {
     _completedSub = null;
     _playlistSub?.cancel();
     _playlistSub = null;
+    _positionSub?.cancel();
+    _positionSub = null;
+    _durationSub?.cancel();
+    _durationSub = null;
 
     _player.dispose();
+    _openFuture = null;
     _initialized = false;
   }
 
@@ -167,7 +308,8 @@ class _VideoControlState extends State<VideoControl> with FletStoreMixin {
       case "stop":
         await _player.stop();
         _player.open(
-            Playlist(parseVideoMedias(widget.control.get("playlist"), [])!),
+            Playlist(parseVideoMedias(
+                widget.control.get("playlist"), widget.control.backend, [])!),
             play: false);
         break;
       case "seek":
@@ -184,14 +326,6 @@ class _VideoControlState extends State<VideoControl> with FletStoreMixin {
         final mediaIndex = parseInt(args["media_index"]);
         if (mediaIndex != null) await _player.jump(mediaIndex);
         break;
-      case "playlist_add":
-        var media = parseVideoMedia(args["media"]);
-        if (media != null) await _player.add(media);
-        break;
-      case "playlist_remove":
-        final mediaIndex = parseInt(args["media_index"]);
-        if (mediaIndex != null) await _player.remove(mediaIndex);
-        break;
       case "is_playing":
         return _player.state.playing;
       case "is_completed":
@@ -200,6 +334,15 @@ class _VideoControlState extends State<VideoControl> with FletStoreMixin {
         return _player.state.duration;
       case "get_current_position":
         return _player.state.position;
+      case "take_screenshot":
+        await _openFuture;
+        if (!_initialized) return null;
+        final format =
+            args.containsKey("format") ? args["format"] : "image/png";
+        return await _player.screenshot(
+          format: format,
+          includeLibassSubtitles: args["include_libass_subtitles"] == true,
+        );
       default:
         throw Exception("Unknown Video method: $name");
     }
@@ -219,27 +362,29 @@ class _VideoControlState extends State<VideoControl> with FletStoreMixin {
     var volume = widget.control.getDouble("volume");
     var pitch = widget.control.getDouble("pitch");
     var playbackRate = widget.control.getDouble("playback_rate");
+    var playlist = widget.control.get("playlist");
     var shufflePlaylist = widget.control.getBool("shuffle_playlist");
-    var showControls = widget.control.getBool("show_controls", true)!;
+    var controls = widget.control.get("controls");
     var playlistMode =
         parsePlaylistMode(widget.control.getString("playlist_mode"));
     var fullscreen = widget.control.getBool("fullscreen", false)!;
 
-    // previous values
-    final prevVolume = widget.control.getDouble("_volume");
-    final prevPitch = widget.control.getDouble("_pitch");
-    final prevPlaybackRate = widget.control.getDouble("_playback_rate");
-    final prevShufflePlaylist = widget.control.getBool("_shuffle_playlist");
-    final PlaylistMode? prevPlaylistMode = widget.control.get("_playlist_mode");
-    final SubtitleTrack? prevSubtitleTrack =
-        widget.control.get("_subtitle_track");
+    // previous values (tracked per-player; see field docs)
+    final prevVolume = _volume;
+    final prevPitch = _pitch;
+    final prevPlaybackRate = _playbackRate;
+    final prevShufflePlaylist = _shufflePlaylist;
+    final PlaylistMode? prevPlaylistMode = _playlistMode;
+    final SubtitleTrack? prevSubtitleTrack = _subtitleTrack;
+    // Fullscreen is Video-widget UI state (not a player property), so it stays
+    // on the control model and is intentionally not reset with the player.
     final prevFullscreen = widget.control.getBool("_fullscreen", false)!;
 
     Video video = Video(
       key: _videoKey,
       controller: _controller,
       wakelock: widget.control.getBool("wakelock", true)!,
-      controls: showControls ? AdaptiveVideoControls : null,
+      controls: parseVideoControls(controls),
       pauseUponEnteringBackgroundMode:
           widget.control.getBool("pause_upon_entering_background_mode", true)!,
       resumeUponEnteringForegroundMode: widget.control
@@ -254,47 +399,53 @@ class _VideoControlState extends State<VideoControl> with FletStoreMixin {
       onExitFullscreen: _handleExitFullscreen,
     );
 
+    final themedVideo =
+        wrapVideoControlsTheme(video, controls, Theme.of(context));
+
     () async {
       // volume
       if (volume != null &&
           volume != prevVolume &&
           volume >= 0 &&
           volume <= 100) {
-        widget.control.updateProperties({"_volume": volume}, python: false);
+        _volume = volume;
         await _player.setVolume(volume);
       }
 
       // pitch
       if (pitch != null && pitch != prevPitch) {
-        widget.control.updateProperties({"_pitch": pitch}, python: false);
+        _pitch = pitch;
         await _player.setPitch(pitch);
       }
 
       // playbackRate
       if (playbackRate != null && playbackRate != prevPlaybackRate) {
-        widget.control
-            .updateProperties({"_playback_rate": playbackRate}, python: false);
+        _playbackRate = playbackRate;
         await _player.setRate(playbackRate);
+      }
+
+      // playlist
+      if (!_playlistEquality.equals(playlist, _playlist)) {
+        await _updatePlaylist(playlist);
       }
 
       // shufflePlaylist
       if (shufflePlaylist != null && shufflePlaylist != prevShufflePlaylist) {
-        widget.control.updateProperties({"_shuffle_playlist": shufflePlaylist},
-            python: false);
+        _shufflePlaylist = shufflePlaylist;
         await _player.setShuffle(shufflePlaylist);
       }
 
       // playlistMode
       if (playlistMode != null && playlistMode != prevPlaylistMode) {
-        widget.control
-            .updateProperties({"_playlist_mode": playlistMode}, python: false);
+        _playlistMode = playlistMode;
         await _player.setPlaylistMode(playlistMode);
       }
 
       // subtitleTrack
       if (subtitleTrack != null && subtitleTrack != prevSubtitleTrack) {
-        widget.control.updateProperties({"_subtitle_track": subtitleTrack},
-            python: false);
+        await _openFuture;
+        if (!_initialized) return;
+        _subtitleTrack = subtitleTrack;
         await _player.setSubtitleTrack(subtitleTrack);
       }
 
@@ -317,6 +468,6 @@ class _VideoControlState extends State<VideoControl> with FletStoreMixin {
       }
     }();
 
-    return LayoutControl(control: widget.control, child: video);
+    return LayoutControl(control: widget.control, child: themedVideo);
   }
 }

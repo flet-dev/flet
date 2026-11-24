@@ -63,7 +63,7 @@ def main(page: ft.Page):
 
     def join_chat_click(e):
         if not join_user_name.value:
-            join_user_name.error_text = "Name cannot be blank!"
+            join_user_name.error = "Name cannot be blank!"
             join_user_name.update()
         else:
             page.session.store.set("user_name", join_user_name.value)
@@ -93,7 +93,9 @@ def main(page: ft.Page):
         if message.message_type == "chat_message":
             m = ChatMessage(message)
         elif message.message_type == "login_message":
-            m = ft.Text(message.text, italic=True, color=ft.Colors.BLACK_45, size=12)
+            m = ft.Text(
+                message.text, italic=True, color=ft.Colors.ON_SURFACE_VARIANT, size=12
+            )
         chat.controls.append(m)
         page.update()
 

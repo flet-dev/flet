@@ -1,0 +1,26 @@
+[project]
+name = "tabs-move-to"
+version = "1.0.0"
+description = "Animates programmatic tab switching to a random tab using Tabs.move_to."
+requires-python = ">=3.10"
+keywords = ["tabs", "move_to", "animation", "async", "navigation"]
+authors = [{ name = "Flet team", email = "hello@flet.dev" }]
+dependencies = ["flet"]
+
+[dependency-groups]
+dev = ["flet-cli", "flet-desktop", "flet-web"]
+
+[tool.flet.gallery]
+categories = ["Layout/Tabs"]
+
+[tool.flet.metadata]
+title = "Programmatic tab switch"
+controls = ["SafeArea", "Tabs", "Column", "TabBar", "TabBarView", "Tab", "FloatingActionButton", "Container", "Text"]
+layout_pattern = "single-panel"
+complexity = "basic"
+features = ["programmatic tab switching", "animated transitions"]
+
+[tool.flet]
+org = "dev.flet"
+company = "Flet"
+copyright = "Copyright (C) 2023-2026 by Flet"

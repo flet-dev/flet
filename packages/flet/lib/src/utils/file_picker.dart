@@ -1,5 +1,6 @@
 import 'dart:typed_data';
 
+import 'package:collection/collection.dart';
 import 'package:file_picker/file_picker.dart';
 import 'enums.dart';
 
@@ -76,4 +77,22 @@ extension FilePickerParsers on Control {
   FileType? getFileType(String propertyName, [FileType? defaultValue]) {
     return parseFileType(get(propertyName), defaultValue);
   }
+}
+
+/// Reserves picked files for upload using their original selection IDs, falling
+/// back to names. Removes each target before any asynchronous upload starts:
+/// streams can only be consumed once, including after a failed upload, and must
+/// not be shared by duplicate requests or overlapping upload calls.
+List<(FilePickerUploadFile, PlatformFile?)> takeUploadTargets(
+    List<FilePickerUploadFile> uploads, Map<int, PlatformFile> picked) {
+  return [
+    for (var uf in uploads)
+      (
+        uf,
+        picked.remove(uf.id) ??
+            picked.remove(picked.entries
+                .firstWhereOrNull((entry) => entry.value.name == uf.name)
+                ?.key)
+      )
+  ];
 }

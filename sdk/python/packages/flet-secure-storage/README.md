@@ -3,10 +3,14 @@
 [![pypi](https://img.shields.io/pypi/v/flet-secure-storage.svg)](https://pypi.python.org/pypi/flet-secure-storage)
 [![downloads](https://static.pepy.tech/badge/flet-secure-storage/month)](https://pepy.tech/project/flet-secure-storage)
 [![python](https://img.shields.io/badge/python-%3E%3D3.10-%2334D058)](https://pypi.org/project/flet-secure-storage)
-[![docstring coverage](https://docs.flet.dev/assets/badges/docs-coverage/flet-secure-storage.svg)](https://docs.flet.dev/assets/badges/docs-coverage/flet-secure-storage.svg)
+[![docstring coverage](https://flet.dev/docs/assets/badges/docs-coverage/flet-secure-storage.svg)](https://flet.dev/docs/assets/badges/docs-coverage/flet-secure-storage.svg)
 [![license](https://img.shields.io/badge/License-Apache_2.0-green.svg)](https://github.com/flet-dev/flet/blob/main/sdk/python/packages/flet-secure-storage/LICENSE)
 
 A service for safely storing sensitive key–value data using the platform’s native secure storage mechanisms—Keychain on iOS/macOS, Windows Credential Manager, libsecret on Linux, and Keystore on Android.
+
+> **[Try flet-secure-storage in Flet Studio](https://studio.flet.dev/gallery/utility/securestorage/example/extensions/secure_storage/secure_storage?utm_source=pypi&utm_medium=readme&utm_campaign=flet-secure-storage)**
+>
+> Prototype your Flet app interface in the browser, then integrate secure storage in your local project. Write your own Python code or get help from the AI agent.
 
 Powered by Flutter's [`flutter_secure_storage`](https://pub.dev/packages/flutter_secure_storage) package.
 
@@ -20,7 +24,7 @@ sudo apt-get install libsecret-1-dev libsecret-1-0
 
 ## Documentation
 
-Detailed documentation to this package can be found [here](https://docs.flet.dev/secure_storage/).
+Detailed documentation to this package can be found [here](https://flet.dev/docs/services/securestorage/).
 
 ## Platform Support
 
@@ -47,4 +51,4 @@ To install the `flet-secure-storage` package and add it to your project dependen
 
 ### Examples
 
-For examples, see [these](https://github.com/flet-dev/flet/tree/main/sdk/python/examples/services/secure_storage).
+For examples, see [these](https://github.com/flet-dev/flet/tree/main/sdk/python/examples/extensions/secure_storage).

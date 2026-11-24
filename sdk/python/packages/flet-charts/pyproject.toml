@@ -12,12 +12,15 @@ dependencies = [
 
 [project.urls]
 Homepage = "https://flet.dev"
-Documentation = "https://docs.flet.dev/charts"
+Documentation = "https://flet.dev/docs/controls/charts"
 Repository = "https://github.com/flet-dev/flet/tree/main/sdk/python/packages/flet-charts"
 Issues = "https://github.com/flet-dev/flet/issues"
 
 [tool.setuptools.package-data]
-"flutter.flet_charts" = ["**/*"]
+"flutter.flet_charts" = [
+    "pubspec.yaml",
+    "lib/**",
+]
 
 [build-system]
 requires = ["setuptools"]

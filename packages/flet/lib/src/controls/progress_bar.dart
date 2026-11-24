@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 
 import '../models/control.dart';
 import '../utils/borders.dart';
@@ -23,7 +23,7 @@ class ProgressBarControl extends StatelessWidget {
       color: control.getColor("color", context),
       backgroundColor: control.getColor("bgcolor", context),
       semanticsLabel: control.getString("semantics_label"),
-      semanticsValue: control.getDouble("semantics_value")?.toString(),
+      semanticsValue: control.getString("semantics_value"),
       borderRadius: control.getBorderRadius("border_radius"),
       stopIndicatorColor: control.getColor("stop_indicator_color", context),
       stopIndicatorRadius: control.getDouble("stop_indicator_radius"),

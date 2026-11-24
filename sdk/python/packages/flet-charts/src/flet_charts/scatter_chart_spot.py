@@ -1,23 +1,23 @@
-from dataclasses import dataclass, field
-from typing import Any, Optional, Union
+from dataclasses import field
+from typing import Optional, Union
 
 import flet as ft
-from flet_charts.types import ChartDataPointTooltip, ChartPointShape
+from flet_charts.types import ChartDataPointTooltip, ChartErrorRange, ChartPointShape
 
 __all__ = ["ScatterChartSpot", "ScatterChartSpotTooltip"]
 
 
-@dataclass
+@ft.value
 class ScatterChartSpotTooltip(ChartDataPointTooltip):
     """
-    Tooltip configuration for the [`ScatterChartSpot`][(p).].
+    Tooltip configuration for the :class:`~flet_charts.ScatterChartSpot`.
     """
 
     text: Optional[str] = None
     """
     The text to display in the tooltip.
 
-    When `None`, defaults to [`ScatterChartSpot.y`][(p).].
+    When `None`, defaults to :attr:`flet_charts.ScatterChartSpot.y`.
     """
 
     bottom_margin: ft.Number = 8
@@ -68,7 +68,7 @@ class ScatterChartSpot(ft.BaseControl):
 
     visible: bool = True
     """
-    Determines wether to show or hide the spot.
+    Determines whether to show or hide the spot.
     """
 
     radius: Optional[ft.Number] = None
@@ -86,18 +86,24 @@ class ScatterChartSpot(ft.BaseControl):
     Sort by this to manage overlap.
     """
 
-    x_error: Optional[Any] = None
+    x_error: Optional[ChartErrorRange] = None
     """
-    Determines the error range of the data point using
-    [FlErrorRange](https://github.com/imaNNeo/fl_chart/blob/main/repo_files/documentations/base_chart.md#flerrorrange)
-    (which contains lowerBy and upperValue) for the `X` axis.
+    The error range of this spot on the `X` axis, drawn as a horizontal error bar
+    in the color of this spot.
+
+    Automatic axis bounds cover spot positions only, so set
+    :attr:`flet_charts.ScatterChart.min_x` and
+    :attr:`flet_charts.ScatterChart.max_x` to keep the error bar inside the chart.
     """
 
-    y_error: Optional[Any] = None
+    y_error: Optional[ChartErrorRange] = None
     """
-    Determines the error range of the data point using
-    [FlErrorRange](https://github.com/imaNNeo/fl_chart/blob/main/repo_files/documentations/base_chart.md#flerrorrange)
-    (which contains lowerBy and upperValue) for the `Y` axis.
+    The error range of this spot on the `Y` axis, drawn as a vertical error bar
+    in the color of this spot.
+
+    Automatic axis bounds cover spot positions only, so set
+    :attr:`flet_charts.ScatterChart.min_y` and
+    :attr:`flet_charts.ScatterChart.max_y` to keep the error bar inside the chart.
     """
 
     selected: bool = False
@@ -114,7 +120,7 @@ class ScatterChartSpot(ft.BaseControl):
 
     show_tooltip: bool = True
     """
-    Wether to show the tooltip.
+    Whether to show the tooltip.
     """
 
     label_text: str = ""

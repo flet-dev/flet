@@ -1,0 +1,26 @@
+[project]
+name = "context-menu-custom-trigger"
+version = "1.0.0"
+description = "Opens ContextMenu from a custom double-tap gesture with precise pointer position."
+requires-python = ">=3.10"
+keywords = ["context menu", "custom trigger", "gesture", "double tap"]
+authors = [{ name = "Flet team", email = "hello@flet.dev" }]
+dependencies = ["flet"]
+
+[dependency-groups]
+dev = ["flet-cli", "flet-desktop", "flet-web"]
+
+[tool.flet.gallery]
+categories = ["Input/ContextMenu"]
+
+[tool.flet.metadata]
+title = "Custom trigger"
+controls = ["SafeArea", "ContextMenu", "PopupMenuItem", "GestureDetector", "Container", "Text"]
+layout_pattern = "single-panel"
+complexity = "basic"
+features = ["custom open trigger", "position-based menu opening"]
+
+[tool.flet]
+org = "dev.flet"
+company = "Flet"
+copyright = "Copyright (C) 2023-2026 by Flet"

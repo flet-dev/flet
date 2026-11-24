@@ -13,7 +13,7 @@ class AdaptiveControl(Control):
     adjust their appearance and behavior based on the target platform (ex: Material \
     design on Android/Windows/Linux, Cupertino design on iOS/macOS).
 
-    The [`adaptive`][(c).] property is applicable in two common scenarios:
+    The :attr:`adaptive` property is applicable in two common scenarios:
 
     1. **Platform-adaptive controls**:
         These controls have a corresponding version on both Material and Cupertino
@@ -21,7 +21,8 @@ class AdaptiveControl(Control):
         appropriate platform-specific implementation.
 
     2. **Container controls**:
-        Controls that contain children (ex: [`Row`][flet.], [`Column`][flet.]) can pass
+        Controls that contain children (ex: :class:`~flet.Row`, :class:`~flet.Column`) \
+        can pass
         the `adaptive` value down to their children that do not explicitly define it
         themselves. This enables nested adaptive behavior in complex layouts.
 
@@ -30,7 +31,7 @@ class AdaptiveControl(Control):
 
     Note:
         This class does not implement any platform-specific rendering itself.
-        It is up to the control inheriting from it to interpret the [`adaptive`][(c).]
+        It is up to the control inheriting from it to interpret the :attr:`adaptive`
         flag and render accordingly.
     """
 

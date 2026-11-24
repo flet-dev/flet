@@ -1,0 +1,26 @@
+[project]
+name = "charts-scatter-chart-with-error-bars"
+version = "1.0.0"
+description = "Scatter chart of pendulum measurements with horizontal and vertical error bars showing the uncertainty of each point."
+requires-python = ">=3.10"
+keywords = ["charts", "scatter-chart", "error-bars", "flet"]
+authors = [{ name = "Flet team", email = "hello@flet.dev" }]
+dependencies = ["flet", "flet-charts"]
+
+[dependency-groups]
+dev = ["flet-cli", "flet-desktop", "flet-web"]
+
+[tool.flet.gallery]
+categories = ["Charts/ScatterChart"]
+
+[tool.flet.metadata]
+title = "Scatter chart with error bars"
+controls = ["SafeArea", "ScatterChart"]
+layout_pattern = "single-chart"
+complexity = "basic"
+features = ["chart visualization", "error bars"]
+
+[tool.flet]
+org = "dev.flet"
+company = "Flet"
+copyright = "Copyright (C) 2023-2026 by Flet"

@@ -3,12 +3,14 @@ from enum import Enum
 from typing import Optional, Union
 
 from flet.controls.base_control import control
+from flet.controls.client_action import ClientAction, action_field, shared_service
 from flet.controls.services.service import Service
-from flet.controls.types import Url
+from flet.controls.types import Url, UrlTarget
 
 __all__ = [
     "BrowserConfiguration",
     "LaunchMode",
+    "OpenUrl",
     "UrlLauncher",
     "WebViewConfiguration",
 ]
@@ -110,9 +112,11 @@ class UrlLauncher(Service):
                 `False` if there is no handler available,
                 or the application does not have permission to check. For example:
 
-                - On recent versions of Android and iOS, this will always return `False`
-                    unless the application has been configuration to allow querying the
-                    system for launch support.
+                - On Android 11+ and iOS, this returns `False` for URLs whose scheme
+                    the app doesn't declare: on Android in
+                    [`[tool.flet.android.queries]`](https://flet.dev/docs/publish/android#queries),
+                    on iOS in `LSApplicationQueriesSchemes` of
+                    [`[tool.flet.ios.info]`](https://flet.dev/docs/publish/ios#infoplist).
                 - On web, this will always return `False` except for a few specific
                     schemes that are always assumed to be supported (such as http(s)),
                     as web pages are never allowed to query installed applications.
@@ -179,4 +183,42 @@ class UrlLauncher(Service):
         """
         return await self._invoke_method(
             "supports_close_for_launch_mode", {"mode": mode}
+        )
+
+
+@dataclass
+class OpenUrl(ClientAction):
+    """
+    Opens a URL when the control is activated.
+
+    Equivalent to :meth:`flet.UrlLauncher.launch_url`, but performed by the
+    client inside the user's gesture, so that opening a new tab is not blocked as
+    an unsolicited popup.
+
+    Example:
+        ```python
+        ft.Button(
+            "Open flet.dev",
+            action=ft.OpenUrl("https://flet.dev", target=ft.UrlTarget.BLANK),
+        )
+        ```
+    """
+
+    url: str = action_field()
+    """
+    The URL to open.
+    """
+
+    target: Optional[Union[UrlTarget, str]] = action_field(None)
+    """
+    Where to open the URL, for example :attr:`flet.UrlTarget.BLANK` for a new tab.
+
+    Web-only; ignored on other platforms.
+    """
+
+    def __post_init__(self) -> None:
+        self._bind(
+            shared_service(UrlLauncher),
+            "launch_url",
+            {"url": Url(url=self.url, target=self.target)},
         )

@@ -1,4 +1,4 @@
-from dataclasses import dataclass, field
+from dataclasses import field
 from enum import Enum
 from typing import Optional
 
@@ -8,6 +8,7 @@ __all__ = [
     "ChartCirclePoint",
     "ChartCrossPoint",
     "ChartDataPointTooltip",
+    "ChartErrorRange",
     "ChartEventType",
     "ChartGridLines",
     "ChartPointLine",
@@ -17,7 +18,7 @@ __all__ = [
 ]
 
 
-@dataclass
+@ft.value
 class ChartGridLines:
     """
     Configures the appearance of horizontal and vertical grid lines within the chart.
@@ -66,22 +67,22 @@ class ChartGridLines:
         )
 
 
-@dataclass
+@ft.value
 class ChartPointShape:
     """
     Base class for chart point shapes.
 
     See usable subclasses:
 
-    * [`ChartCirclePoint`][(p).]
-    * [`ChartCrossPoint`][(p).]
-    * [`ChartSquarePoint`][(p).]
+    * :class:`~flet_charts.ChartCirclePoint`
+    * :class:`~flet_charts.ChartCrossPoint`
+    * :class:`~flet_charts.ChartSquarePoint`
     """
 
     _type: Optional[str] = field(init=False, repr=False, compare=False, default=None)
 
 
-@dataclass
+@ft.value
 class ChartCirclePoint(ChartPointShape):
     """Draws a circle."""
 
@@ -131,7 +132,7 @@ class ChartCirclePoint(ChartPointShape):
         )
 
 
-@dataclass
+@ft.value
 class ChartSquarePoint(ChartPointShape):
     """Draws a square."""
 
@@ -181,7 +182,7 @@ class ChartSquarePoint(ChartPointShape):
         )
 
 
-@dataclass
+@ft.value
 class ChartCrossPoint(ChartPointShape):
     """Draws a cross-mark (X)."""
 
@@ -221,7 +222,7 @@ class ChartCrossPoint(ChartPointShape):
         )
 
 
-@dataclass
+@ft.value
 class ChartPointLine:
     """Defines style of a line."""
 
@@ -358,7 +359,7 @@ class ChartEventType(Enum):
     """
 
 
-@dataclass
+@ft.value
 class ChartDataPointTooltip:
     """
     Configuration of the tooltip for data points in charts.
@@ -411,6 +412,66 @@ class ChartDataPointTooltip:
             if self.text_spans is not None
             else None,
             rtl=rtl if rtl is not None else self.rtl,
+        )
+
+
+@ft.value
+class ChartErrorRange:
+    """
+    The uncertainty of a data point's value on one axis, drawn as an error bar.
+
+    Both bounds are measured from the value, so the range spans from
+    `value - lower_by` to `value + upper_by`.
+    """
+
+    lower_by: ft.Number
+    """
+    How far the range extends below the value.
+
+    Raises:
+        ValueError: If it is not greater than or equal to `0`.
+    """
+
+    upper_by: ft.Number
+    """
+    How far the range extends above the value.
+
+    Raises:
+        ValueError: If it is not greater than or equal to `0`.
+    """
+
+    def __post_init__(self):
+        if not self.lower_by >= 0:
+            raise ValueError(
+                f"lower_by must be greater than or equal to 0, got {self.lower_by}"
+            )
+        if not self.upper_by >= 0:
+            raise ValueError(
+                f"upper_by must be greater than or equal to 0, got {self.upper_by}"
+            )
+
+    @classmethod
+    def symmetric(cls, value: ft.Number) -> "ChartErrorRange":
+        """
+        Creates a range that extends equally below and above the value.
+
+        Args:
+            value: The distance of both bounds from the value.
+        """
+        return cls(lower_by=value, upper_by=value)
+
+    def copy(
+        self,
+        *,
+        lower_by: Optional[ft.Number] = None,
+        upper_by: Optional[ft.Number] = None,
+    ) -> "ChartErrorRange":
+        """
+        Returns a copy of this object with the specified properties overridden.
+        """
+        return ChartErrorRange(
+            lower_by=lower_by if lower_by is not None else self.lower_by,
+            upper_by=upper_by if upper_by is not None else self.upper_by,
         )
 
 

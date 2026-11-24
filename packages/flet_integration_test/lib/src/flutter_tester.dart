@@ -1,0 +1,221 @@
+// ignore_for_file: depend_on_referenced_packages
+import 'dart:async';
+
+import 'package:flutter/foundation.dart';
+import 'package:flutter/gestures.dart';
+import 'package:flutter/semantics.dart';
+import 'package:flutter/widgets.dart';
+import 'package:flutter_test/flutter_test.dart';
+import 'package:integration_test/integration_test.dart';
+
+import 'package:flet/flet.dart';
+import 'flutter_test_finder.dart';
+
+class FlutterWidgetTester implements Tester {
+  final WidgetTester _tester;
+  final IntegrationTestWidgetsFlutterBinding _binding;
+  final lock = Lock();
+  final Completer _teardown = Completer();
+  TestGesture? _gesture;
+  SemanticsHandle? _semanticsHandle;
+
+  FlutterWidgetTester(this._tester, this._binding);
+
+  /// The integration-test binding, exposed for subclasses (e.g.
+  /// `RemoteWidgetTester`).
+  @protected
+  IntegrationTestWidgetsFlutterBinding get binding => _binding;
+
+  @override
+  Future<void> pumpAndSettle({Duration? duration}) async {
+    await lock.acquire();
+    try {
+      await _tester.pumpAndSettle(
+        duration ?? const Duration(milliseconds: 100),
+      );
+    } finally {
+      lock.release();
+    }
+  }
+
+  @override
+  Future<void> pump({Duration? duration}) async {
+    await lock.acquire();
+    try {
+      await _tester.pump(duration);
+    } finally {
+      lock.release();
+    }
+  }
+
+  @override
+  TestFinder findByText(String text) => FlutterTestFinder(find.text(text));
+
+  @override
+  TestFinder findByTextContaining(String pattern) =>
+      FlutterTestFinder(find.textContaining(RegExp(pattern)));
+
+  @override
+  TestFinder findByKey(Key key) => FlutterTestFinder(find.byKey(key));
+
+  @override
+  TestFinder findByTooltip(String value) =>
+      FlutterTestFinder(find.byTooltip(value));
+
+  @override
+  TestFinder findByIcon(IconData icon) => FlutterTestFinder(find.byIcon(icon));
+
+  @override
+  TestFinder findBySemanticsIdentifier(String identifier) {
+    // find.bySemanticsIdentifier reads the semantics tree, which is off
+    // until a handle is held — keep it for the life of the tester.
+    _semanticsHandle ??= _tester.ensureSemantics();
+    return FlutterTestFinder(find.bySemanticsIdentifier(identifier));
+  }
+
+  @override
+  Future<Uint8List> takeScreenshot(String name) async {
+    if (defaultTargetPlatform != TargetPlatform.android &&
+        defaultTargetPlatform != TargetPlatform.iOS) {
+      throw Exception(
+        "Full app screenshots are only available on Android and iOS.",
+      );
+    }
+    if (defaultTargetPlatform == TargetPlatform.android) {
+      await _binding.convertFlutterSurfaceToImage();
+      await _tester.pump();
+    }
+    var bytes = await _binding.takeScreenshot(name);
+    return Uint8List.fromList(bytes);
+  }
+
+  @override
+  Future<void> tap(TestFinder finder, int finderIndex) =>
+      _tester.tap((finder as FlutterTestFinder).raw.at(finderIndex));
+
+  @override
+  Future<void> mouseClick(TestFinder finder, int finderIndex) async {
+    final center = _tester.getCenter(
+      (finder as FlutterTestFinder).raw.at(finderIndex),
+    );
+    await _mouseClickAt(center, kPrimaryButton);
+  }
+
+  @override
+  Future<void> mouseDoubleClick(TestFinder finder, int finderIndex) async {
+    final center = _tester.getCenter(
+      (finder as FlutterTestFinder).raw.at(finderIndex),
+    );
+    await _mouseDoubleClickAt(center);
+  }
+
+  @override
+  Future<void> rightMouseClick(TestFinder finder, int finderIndex) async {
+    final center = _tester.getCenter(
+      (finder as FlutterTestFinder).raw.at(finderIndex),
+    );
+    await _mouseClickAt(center, kSecondaryButton);
+  }
+
+  @override
+  Future<void> tapAt(Offset offset) => _tester.tapAt(offset);
+
+  @override
+  Future<void> mouseClickAt(Offset offset) =>
+      _mouseClickAt(offset, kPrimaryButton);
+
+  @override
+  Future<void> mouseDoubleClickAt(Offset offset) =>
+      _mouseDoubleClickAt(offset);
+
+  @override
+  Future<void> rightMouseClickAt(Offset offset) =>
+      _mouseClickAt(offset, kSecondaryButton);
+
+  @override
+  Future<void> drag(TestFinder finder, int finderIndex, Offset offset) async {
+    final center = _tester.getCenter(
+      (finder as FlutterTestFinder).raw.at(finderIndex),
+    );
+    await _dragFrom(center, offset);
+  }
+
+  @override
+  Future<void> dragFrom(Offset start, Offset offset) => _dragFrom(start, offset);
+
+  @override
+  Future<void> longPress(TestFinder finder, int finderIndex) =>
+      _tester.longPress((finder as FlutterTestFinder).raw.at(finderIndex));
+
+  @override
+  Future<void> enterText(TestFinder finder, int finderIndex, String text) =>
+      _tester.enterText(
+        (finder as FlutterTestFinder).raw.at(finderIndex),
+        text,
+      );
+
+  @override
+  Future<void> mouseHover(TestFinder finder, int finderIndex) async {
+    final center = _tester.getCenter(
+      (finder as FlutterTestFinder).raw.at(finderIndex),
+    );
+
+    await _mouseExit();
+    _gesture = await _tester.createGesture(kind: PointerDeviceKind.mouse);
+    await _gesture?.addPointer();
+    await _gesture?.moveTo(center);
+  }
+
+  Future<void> _mouseClickAt(Offset offset, int buttons) async {
+    await _mouseExit();
+    _gesture = await _tester.createGesture(
+      kind: PointerDeviceKind.mouse,
+      buttons: buttons,
+    );
+    await _gesture?.addPointer();
+    await _gesture?.moveTo(offset);
+    await _gesture?.down(offset);
+    await _gesture?.up();
+    await _mouseExit();
+  }
+
+  Future<void> _mouseDoubleClickAt(Offset offset) async {
+    await _mouseExit();
+    _gesture = await _tester.createGesture(
+      kind: PointerDeviceKind.mouse,
+      buttons: kPrimaryButton,
+    );
+    await _gesture?.addPointer();
+    await _gesture?.moveTo(offset);
+    await _gesture?.down(offset);
+    await _gesture?.up();
+    await _tester.pump(const Duration(milliseconds: 50));
+    await _gesture?.down(offset);
+    await _gesture?.up();
+    await _mouseExit();
+  }
+
+  Future<void> _dragFrom(Offset start, Offset offset) async {
+    await _mouseExit();
+    await _tester.dragFrom(start, offset);
+  }
+
+  @override
+  void teardown() {
+    _semanticsHandle?.dispose();
+    _semanticsHandle = null;
+    if (!_teardown.isCompleted) {
+      _teardown.complete();
+    }
+  }
+
+  @override
+  Future waitForTeardown() => _teardown.future;
+
+  Future<void> _mouseExit() async {
+    if (_gesture != null) {
+      await _gesture?.removePointer();
+      _gesture = null;
+    }
+  }
+}

@@ -12,12 +12,15 @@ dependencies = [
 
 [project.urls]
 Homepage = "https://flet.dev"
-Documentation = "https://docs.flet.dev/geolocator"
+Documentation = "https://flet.dev/docs/services/geolocator"
 Repository = "https://github.com/flet-dev/flet/tree/main/sdk/python/packages/flet-geolocator"
 Issues = "https://github.com/flet-dev/flet/issues"
 
 [tool.setuptools.package-data]
-"flutter.flet_geolocator" = ["**/*"]
+"flutter.flet_geolocator" = [
+    "pubspec.yaml",
+    "lib/**",
+]
 
 [build-system]
 requires = ["setuptools"]

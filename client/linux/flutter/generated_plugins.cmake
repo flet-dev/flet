@@ -5,6 +5,7 @@
 list(APPEND FLUTTER_PLUGIN_LIST
   audioplayers_linux
   flutter_secure_storage_linux
+  flutter_timezone
   media_kit_libs_linux
   media_kit_video
   pasteboard
@@ -13,10 +14,10 @@ list(APPEND FLUTTER_PLUGIN_LIST
   screen_retriever_linux
   url_launcher_linux
   window_manager
-  window_to_front
 )
 
 list(APPEND FLUTTER_FFI_PLUGIN_LIST
+  jni
 )
 
 set(PLUGIN_BUNDLED_LIBRARIES)

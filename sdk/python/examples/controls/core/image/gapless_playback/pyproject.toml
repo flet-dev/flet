@@ -1,0 +1,28 @@
+[project]
+name = "image-gapless-playback"
+version = "1.0.0"
+description = "Compares Image gapless playback enabled vs disabled while switching sources."
+requires-python = ">=3.10"
+keywords = ["image", "gapless playback", "comparison", "network images"]
+authors = [{ name = "Flet team", email = "hello@flet.dev" }]
+dependencies = ["flet"]
+
+[dependency-groups]
+dev = ["flet-cli", "flet-desktop", "flet-web"]
+
+[tool.flet.gallery]
+categories = ["Displays/Image"]
+
+[tool.flet.metadata]
+title = "Gapless playback when changing image sources"
+docs_intro = """
+This example updates both images to a new network URL on each click. With [`gapless_playback`](image.md#flet.Image.gapless_playback) set to `True`, the previous frame remains visible while the next image loads. With [`gapless_playback`](image.md#flet.Image.gapless_playback) set to `False`, the image area can briefly be empty, causing a flicker/blink effect."""
+controls = ["SafeArea", "Column", "Row", "Container", "Text", "Image", "FilledButton", "AppBar"]
+layout_pattern = "comparison"
+complexity = "basic"
+features = ["gapless playback comparison", "dynamic image source switching"]
+
+[tool.flet]
+org = "dev.flet"
+company = "Flet"
+copyright = "Copyright (C) 2023-2026 by Flet"

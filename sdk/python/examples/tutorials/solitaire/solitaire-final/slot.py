@@ -11,7 +11,7 @@ class Slot(ft.Container):
         self.height = 100
         self.left = left
         self.top = top
-        self.border_radius = ft.border_radius.all(6)
+        self.border_radius = ft.BorderRadius.all(6)
         self.border = border
         self.on_click = self.click
 

@@ -1,0 +1,26 @@
+[project]
+name = "cupertino-text-field-selection-change"
+version = "1.0.0"
+description = "Handles CupertinoTextField text selection changes and provides buttons to select text or move caret."
+requires-python = ">=3.10"
+keywords = ["cupertino", "text field", "selection", "caret", "events"]
+authors = [{ name = "Flet team", email = "hello@flet.dev" }]
+dependencies = ["flet"]
+
+[dependency-groups]
+dev = ["flet-cli", "flet-desktop", "flet-web"]
+
+[tool.flet.gallery]
+categories = ["Input/CupertinoTextField"]
+
+[tool.flet.metadata]
+title = "Selection change"
+controls = ["SafeArea", "Column", "CupertinoTextField", "Text", "Button", "TextSelection"]
+layout_pattern = "form"
+complexity = "basic"
+features = ["selection change callback", "programmatic selection", "caret control"]
+
+[tool.flet]
+org = "dev.flet"
+company = "Flet"
+copyright = "Copyright (C) 2023-2026 by Flet"

@@ -2,7 +2,7 @@ import 'dart:async';
 import 'dart:io';
 import 'dart:ui' as ui;
 
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:flutter/services.dart';
 import 'package:http/http.dart' as http;
 
@@ -58,6 +58,8 @@ class _CanvasControlState extends State<CanvasControl> {
   @override
   void dispose() {
     widget.control.removeInvokeMethodListener(_invokeMethod);
+    _capturedImage?.dispose();
+    _capturedImage = null;
     super.dispose();
   }
 
@@ -115,11 +117,19 @@ class _CanvasControlState extends State<CanvasControl> {
         painter.paint(canvas, _lastSize);
 
         final picture = recorder.endRecording();
-        _capturedImage = await picture.toImage(
+        final newImage = await picture.toImage(
           (_lastSize.width * dpr).toInt(),
           (_lastSize.height * dpr).toInt(),
         );
+        picture.dispose();
+        final oldImage = _capturedImage;
+        _capturedImage = newImage;
         _capturedSize = _lastSize;
+        if (oldImage != null) {
+          WidgetsBinding.instance.addPostFrameCallback((_) {
+            oldImage.dispose();
+          });
+        }
         return;
 
       case "get_capture":
@@ -333,13 +343,12 @@ class FletCustomPainter extends CustomPainter {
 
   void drawColor(Canvas canvas, Control shape) {
     var color = shape.getColor("color", context, Colors.black)!;
-    var blendMode =
-        parseBlendMode(shape.getString("blend_mode"), BlendMode.srcOver)!;
+    var blendMode = shape.getBlendMode("blend_mode", BlendMode.srcOver)!;
     canvas.drawColor(color, blendMode);
   }
 
   void drawPoints(Canvas canvas, Control shape) {
-    var points = parseOffsetList(shape.get("points"))!;
+    var points = shape.getOffsetList("points")!;
     var pointMode = ui.PointMode.values.firstWhere(
         (e) =>
             e.name.toLowerCase() ==
@@ -445,10 +454,14 @@ class FletCustomPainter extends CustomPainter {
     final width = shape.getDouble("width");
     final height = shape.getDouble("height");
 
-    // Check if image is already loaded and stored
-    if (shape.get("_image") != null &&
-        shape.get("_hash") == getImageHash(shape)) {
-      final img = shape.get("_image")!;
+    final img = shape.get("_image") as ui.Image?;
+    final hashMatch = img != null && shape.get("_hash") == getImageHash(shape);
+
+    // Gapless playback: if we have a cached image, draw it even when the hash
+    // is stale. Without this, src updates leave a blank frame on screen while
+    // the new bytes decode asynchronously, causing visible flicker during
+    // rapid updates (e.g. matplotlib animations).
+    if (img != null) {
       final srcRect =
           Rect.fromLTWH(0, 0, img.width.toDouble(), img.height.toDouble());
       final dstRect = width != null && height != null
@@ -456,7 +469,8 @@ class FletCustomPainter extends CustomPainter {
           : Offset(x, y) & Size(img.width.toDouble(), img.height.toDouble());
       debugPrint("canvas.drawImageRect($srcRect, $dstRect)");
       canvas.drawImageRect(img, srcRect, dstRect, paint);
-    } else {
+    }
+    if (!hashMatch) {
       loadCanvasImage(shape);
     }
   }
@@ -512,7 +526,7 @@ class FletCustomPainter extends CustomPainter {
             parseDouble(elem["cp1y"], 0)!,
             parseDouble(elem["x"], 0)!,
             parseDouble(elem["y"], 0)!,
-            parseDouble(elem["w"], 0)!);
+            parseDouble(elem["w"], 1)!);
       } else if (type == "CubicTo") {
         path.cubicTo(
             parseDouble(elem["cp1x"], 0)!,
@@ -567,9 +581,16 @@ Future<void> loadCanvasImage(Control shape) async {
 
     final codec = await ui.instantiateImageCodec(bytes, allowUpscaling: false);
     final frame = await codec.getNextFrame();
+    codec.dispose();
+    final oldImage = shape.get("_image") as ui.Image?;
     shape.properties["_image"] = frame.image;
     shape.updateProperties({"_hash": getImageHash(shape)},
         python: false, notify: true);
+    if (oldImage != null) {
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        oldImage.dispose();
+      });
+    }
     completer.complete();
   } catch (e) {
     shape.properties["_image_error"] = e;

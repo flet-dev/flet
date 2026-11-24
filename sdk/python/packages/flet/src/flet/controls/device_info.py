@@ -1,7 +1,8 @@
-from dataclasses import dataclass
 from datetime import datetime
 from enum import Enum
 from typing import Optional
+
+from flet.controls.base_control import value
 
 __all__ = [
     "AndroidBuildVersion",
@@ -19,18 +20,18 @@ __all__ = [
 from flet.controls.types import Locale
 
 
-@dataclass(kw_only=True)
+@value(kw_only=True)
 class DeviceInfo:
     """
     Base class for device information.
 
     Platform-specific classes include:
-    - [`AndroidDeviceInfo`][flet.]
-    - [`IosDeviceInfo`][flet.]
-    - [`LinuxDeviceInfo`][flet.]
-    - [`MacOsDeviceInfo`][flet.]
-    - [`WebDeviceInfo`][flet.]
-    - [`WindowsDeviceInfo`][flet.]
+    - :class:`~flet.AndroidDeviceInfo`
+    - :class:`~flet.IosDeviceInfo`
+    - :class:`~flet.LinuxDeviceInfo`
+    - :class:`~flet.MacOsDeviceInfo`
+    - :class:`~flet.WebDeviceInfo`
+    - :class:`~flet.WindowsDeviceInfo`
     """
 
     locales: list[Locale]
@@ -43,17 +44,17 @@ class DeviceInfo:
     The list is ordered in order of priority, with lower-indexed locales being
     preferred over higher-indexed ones. The first element is the primary locale.
 
-    The [`Page.on_locale_change`][flet.] event is called
+    The :attr:`flet.Page.on_locale_change` event is called
     whenever this value changes.
     """
 
 
-@dataclass(kw_only=True)
+@value(kw_only=True)
 class MacOsDeviceInfo(DeviceInfo):
     """
     Device information snapshot for macOS hosts.
 
-    Returned by [`Page.get_device_info()`][flet.Page.get_device_info] when the
+    Returned by :meth:`flet.Page.get_device_info` when the
     current platform is macOS. Includes CPU, memory, model, and OS version
     fields collected from native system APIs.
     """
@@ -146,7 +147,7 @@ class WebBrowserName(Enum):
     """Unknown web browser"""
 
 
-@dataclass(kw_only=True)
+@value(kw_only=True)
 class WebDeviceInfo(DeviceInfo):
     """
     Information derived from `navigator`.
@@ -273,12 +274,12 @@ class WebDeviceInfo(DeviceInfo):
     """
 
 
-@dataclass(kw_only=True)
+@value(kw_only=True)
 class AndroidBuildVersion:
     """
     Android OS version details derived from `android.os.Build.VERSION`.
 
-    This object is exposed as [`AndroidDeviceInfo.version`][flet.].
+    This object is exposed as :attr:`flet.AndroidDeviceInfo.version`.
     """
 
     code_name: str
@@ -322,12 +323,12 @@ class AndroidBuildVersion:
     """
 
 
-@dataclass(kw_only=True)
+@value(kw_only=True)
 class AndroidDeviceInfo(DeviceInfo):
     """
     Device information snapshot for Android devices and emulators.
 
-    Returned by [`Page.get_device_info()`][flet.Page.get_device_info] on Android.
+    Returned by :meth:`flet.Page.get_device_info` on Android.
     """
 
     available_ram_size: int
@@ -482,7 +483,7 @@ class AndroidDeviceInfo(DeviceInfo):
     """
 
 
-@dataclass(kw_only=True)
+@value(kw_only=True)
 class LinuxDeviceInfo(DeviceInfo):
     """
     Device information for a Linux system.
@@ -617,12 +618,12 @@ class LinuxDeviceInfo(DeviceInfo):
     """
 
 
-@dataclass(kw_only=True)
+@value(kw_only=True)
 class WindowsDeviceInfo(DeviceInfo):
     """
     Device information snapshot for Windows systems.
 
-    Returned by [`Page.get_device_info()`][flet.Page.get_device_info] on Windows.
+    Returned by :meth:`flet.Page.get_device_info` on Windows.
     """
 
     computer_name: str
@@ -638,6 +639,9 @@ class WindowsDeviceInfo(DeviceInfo):
     """
 
     user_name: str
+    """
+    The name of the current user.
+    """
 
     major_version: int
     """The major version number of the operating system.
@@ -713,7 +717,7 @@ class WindowsDeviceInfo(DeviceInfo):
     build_lab_ex: str
     """Value of `HKEY_LOCAL_MACHINE\\SOFTWARE\\Microsoft\\Windows NT\\CurrentVersion\\BuildLabEx` registry key.
 
-    For example: `"22000.1.amd64fre.co_release.210604-1628"`.
+    For example: `"22000.1.amd64free.co_release.210604-1628"`.
     """  # noqa: E501
 
     # digital_product_id: str
@@ -768,7 +772,7 @@ class WindowsDeviceInfo(DeviceInfo):
     """
 
 
-@dataclass
+@value
 class IosUtsname:
     """
     Information derived from `utsname`.
@@ -792,12 +796,12 @@ class IosUtsname:
     """Version level."""
 
 
-@dataclass(kw_only=True)
+@value(kw_only=True)
 class IosDeviceInfo(DeviceInfo):
     """
     Device information snapshot for iOS/iPadOS runtimes.
 
-    Returned by [`Page.get_device_info()`][flet.Page.get_device_info] on iOS.
+    Returned by :meth:`flet.Page.get_device_info` on iOS.
     """
 
     available_ram_size: int

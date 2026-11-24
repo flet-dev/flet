@@ -10,9 +10,9 @@ __all__ = ["RotatedBox"]
 @control("RotatedBox")
 class RotatedBox(LayoutControl):
     """
-    Rotates its [`content`][(c).] by an integral number of quarter turns.
+    Rotates its :attr:`content` by an integral number of quarter turns.
 
-    Unlike [`LayoutControl.rotate`][flet.LayoutControl.rotate] (which uses
+    Unlike :attr:`flet.LayoutControl.rotate` (which uses
     `Transform.rotate` and applies the rotation only at paint time),
     `RotatedBox` applies the rotation before layout. This means the control's
     rotated dimensions participate in layout and can affect surrounding

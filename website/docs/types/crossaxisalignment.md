@@ -1,0 +1,15 @@
+---
+class_name: "flet.CrossAxisAlignment"
+examples: "controls/core/types/cross_axis_alignment"
+title: "CrossAxisAlignment"
+---
+
+import {ClassMembers, ClassSummary, CodeExample} from '@site/src/components/crocodocs';
+
+<ClassSummary name={frontMatter.class_name} />
+
+## Examples
+
+<CodeExample path={frontMatter.examples + '/showcase/main.py'} language="python" />
+
+<ClassMembers name={frontMatter.class_name} separateSignature={false} />

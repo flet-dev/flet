@@ -1,5 +1,7 @@
 import sys
 
+import flet_code_editor  # noqa: F401
+import flet_spinkit  # noqa: F401
 import numpy
 import PIL
 from modules.utils import greet
@@ -10,11 +12,13 @@ import flet_ads  # noqa: F401
 import flet_audio  # noqa: F401
 import flet_audio_recorder  # noqa: F401
 import flet_charts  # noqa: F401
+import flet_color_pickers  # noqa: F401
 import flet_datatable2  # noqa: F401
 import flet_flashlight  # noqa: F401
 import flet_geolocator  # noqa: F401
 import flet_lottie  # noqa: F401
 import flet_map  # noqa: F401
+import flet_notifications  # noqa: F401
 import flet_permission_handler  # noqa: F401
 import flet_rive  # noqa: F401
 import flet_secure_storage  # noqa: F401

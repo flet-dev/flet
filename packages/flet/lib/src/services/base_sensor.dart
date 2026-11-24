@@ -43,8 +43,8 @@ abstract class BaseSensorService<T> extends FletService {
     if (interval.isNegative) {
       interval = defaultInterval;
     }
-    var hasReadingSubscribers = control.getBool("on_$eventName") == true;
-    var hasErrorSubscribers = control.getBool("on_error") == true;
+    var hasReadingSubscribers = control.hasEventHandler(eventName);
+    var hasErrorSubscribers = control.hasEventHandler("error");
     var cancelOnError = control.getBool("cancel_on_error", true) ?? true;
 
     if (forceRestart ||

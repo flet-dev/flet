@@ -1,0 +1,23 @@
+---
+class_name: "flet.AppBar"
+examples: "controls/material/app_bar"
+example_images: "test-images/examples/controls/material/golden/macos/app_bar"
+example_media: "examples/controls/material/app_bar/media"
+title: "AppBar"
+---
+
+import {ClassMembers, ClassSummary, CodeExample, Image} from '@site/src/components/crocodocs';
+
+<ClassSummary name={frontMatter.class_name} image={frontMatter.example_images + '/image_for_docs.png'} imageCaption="AppBar" imageWidth="65%" />
+
+## Examples
+
+<CodeExample path={frontMatter.examples + '/actions_and_popup_menu/main.py'} language="python" />
+
+<Image src={frontMatter.example_images + '/app_bar_flow.gif'} alt="actions-and-popup-menu" width="55%" />
+
+<CodeExample path={frontMatter.examples + '/theme_mode_toggle/main.py'} language="python" />
+
+<Image src={frontMatter.example_images + '/theme_mode_toggle_flow.gif'} alt="theme-and-material-mode-toggles" width="55%" />
+
+<ClassMembers name={frontMatter.class_name} />

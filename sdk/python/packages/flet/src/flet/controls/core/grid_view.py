@@ -18,8 +18,8 @@ class GridView(LayoutControl, ScrollableControl, AdaptiveControl):
     A scrollable, 2D array of controls.
 
     It is very effective for large lists (thousands of items).
-    Prefer it over wrapping [`Column`][flet.]s or
-    [`Row`][flet.]s for smooth scrolling.
+    Prefer it over wrapping :class:`~flet.Column`s or
+    :class:`~flet.Row`s for smooth scrolling.
 
     ```python
     ft.GridView(
@@ -96,7 +96,7 @@ class GridView(LayoutControl, ScrollableControl, AdaptiveControl):
     The amount of space by which to inset the children.
     """
 
-    clip_behavior: Optional[ClipBehavior] = None
+    clip_behavior: ClipBehavior = ClipBehavior.HARD_EDGE
     """
     The content will be clipped (or not) according to this option.
     """
@@ -122,7 +122,13 @@ class GridView(LayoutControl, ScrollableControl, AdaptiveControl):
 
     build_controls_on_demand: bool = True
     """
-    TBD
+    Whether grid children should be built lazily as they become visible.
+
+    When `True`, the grid uses a builder-based implementation and creates child
+    controls on demand while scrolling. This is the recommended setting for large
+    collections.
+
+    When `False`, all child controls are built eagerly when the grid is built.
     """
 
     def __contains__(self, item):

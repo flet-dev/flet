@@ -1,5 +1,5 @@
 from enum import Enum
-from typing import Optional
+from typing import Annotated, Optional
 
 from flet.controls.adaptive_control import AdaptiveControl
 from flet.controls.base_control import control
@@ -12,13 +12,14 @@ from flet.controls.types import (
     MouseCursor,
     Number,
 )
+from flet.utils.validation import V
 
 __all__ = ["Slider", "SliderInteraction"]
 
 
 class SliderInteraction(Enum):
     """
-    Defines how users can interact with a [`Slider`][flet.] to change its value.
+    Defines how users can interact with a :class:`~flet.Slider` to change its value.
 
     Each mode controls whether taps and drag gestures on the slider track are
     accepted, and whether interaction is restricted to dragging the thumb.
@@ -26,12 +27,12 @@ class SliderInteraction(Enum):
 
     TAP_AND_SLIDE = "tapAndSlide"
     """
-    Allows the user to interact with a slider by tapping or \
-    sliding anywhere on the track.
+    Allows the user to interact with a slider by tapping or sliding anywhere on the \
+    track.
 
     Essentially all possible interactions are allowed.
 
-    It is different from [`SLIDE_ONLY`][(c).], in that when you try
+    It is different from :attr:`SLIDE_ONLY`, in that when you try
     to slide anywhere other than the thumb, the thumb will move to the first
     point of contact.
     """
@@ -74,16 +75,21 @@ class Slider(LayoutControl, AdaptiveControl):
     ```
     """
 
-    value: Optional[Number] = None
+    value: Annotated[
+        Optional[Number],
+        V.ge_field("min"),
+        V.le_field("max"),
+    ] = None
     """
     The currently selected value for this slider.
 
     The slider's thumb is drawn at a position that corresponds to this value.
 
-    Defaults to value of [`min`][(c).].
+    Defaults to value of :attr:`min`.
 
     Raises:
-        ValueError: If it is less than [`min`][(c).] or greater than [`max`][(c).].
+        ValueError: If it is not greater than or equal to :attr:`min`.
+        ValueError: If it is not less than or equal to :attr:`max`.
     """
 
     label: Optional[str] = None
@@ -98,45 +104,51 @@ class Slider(LayoutControl, AdaptiveControl):
     If not set, then the value indicator will not be displayed.
     """
 
-    min: Number = 0.0
+    min: Annotated[
+        Number,
+        V.le_field("max"),
+        V.le_field("value"),
+    ] = 0.0
     """
     The minimum value the user can select.
 
-    Note:
-        - Must be less than or equal to [`max`][(c).].
-        - If the [`max`][(c).] is equal to the `min`, then this slider
-            is disabled.
+    If the :attr:`max` is equal to the `min`, then this slider is disabled.
 
     Raises:
-        ValueError: If it is greater than [`max`][(c).].
+        ValueError: If it is not less than or equal to :attr:`max`.
+        ValueError: If it is not less than or equal to :attr:`value`,
+            when :attr:`value` is set.
     """
 
-    max: Number = 1.0
+    max: Annotated[
+        Number,
+        V.ge_field("min"),
+        V.ge_field("value"),
+    ] = 1.0
     """
     The maximum value the user can select.
 
-    Note:
-        - Must be greater than or equal to [`min`][(c).].
-        - If the [`min`][(c).] is equal to the `max`, then this slider
-            is disabled.
+    If the :attr:`min` is equal to the `max`, then this slider is disabled.
 
     Raises:
-        ValueError: If it is less than [`min`][(c).].
+        ValueError: If it is not greater than or equal to :attr:`min`.
+        ValueError: If it is not greater than or equal to :attr:`value`,
+            when :attr:`value` is set.
     """
 
     divisions: Optional[int] = None
     """
     The number of discrete divisions.
 
-    Typically used with [`label`][(c).] to show the current discrete value.
+    Typically used with :attr:`label` to show the current discrete value.
 
     If `None`, this slider is continuous.
     """
 
     round: int = 0
     """
-    The number of decimals displayed on the [`label`][(c).]
-    containing [`value`][(c).].
+    The number of decimals displayed on the :attr:`label`
+    containing :attr:`value`.
 
     Defaults to `0`, which displays value rounded to the nearest integer.
     """
@@ -173,20 +185,21 @@ class Slider(LayoutControl, AdaptiveControl):
     """
     The allowed way for the user to interact with this slider.
 
-    If `None`, [`SliderTheme.interaction`][flet.] is used.
-    If that's is also `None`, defaults to [`SliderInteraction.TAP_AND_SLIDE`][flet.].
+    If `None`, :attr:`flet.SliderTheme.interaction` is used.
+    If that's is also `None`, defaults to :attr:`flet.SliderInteraction.TAP_AND_SLIDE`.
     """
 
     secondary_active_color: Optional[ColorValue] = None
     """
     The color to use for the portion of the slider track between the thumb and the \
-    [`secondary_track_value`][(c).].
+    :attr:`secondary_track_value`.
     """
 
     overlay_color: Optional[ControlStateValue[ColorValue]] = None
     """
     The highlight color that's typically used to indicate that the range slider thumb \
-    is in [`ControlState.HOVERED`][flet.] or [`ControlState.DRAGGED`][flet.] states.
+    is in :attr:`flet.ControlState.HOVERED` or :attr:`flet.ControlState.DRAGGED` \
+    states.
     """
 
     secondary_track_value: Optional[Number] = None
@@ -219,10 +232,10 @@ class Slider(LayoutControl, AdaptiveControl):
 
     When `True`, the Slider will use the 2023 Material Design 3 appearance.
 
-    If not set, then the [`SliderTheme.year_2023`][flet.] will be used, which is
+    If not set, then the :attr:`flet.SliderTheme.year_2023` will be used, which is
     `False` by default.
 
-    If [`Theme.use_material3`][flet.] is `False`, then this property is ignored.
+    If :attr:`flet.Theme.use_material3` is `False`, then this property is ignored.
     """
 
     on_change: Optional[ControlEventHandler["Slider"]] = None
@@ -249,19 +262,3 @@ class Slider(LayoutControl, AdaptiveControl):
     """
     Called when this slider has lost focus.
     """
-
-    def before_update(self):
-        super().before_update()
-        if self.max is not None and self.min > self.max:
-            raise ValueError(
-                f"min ({self.min}) must be less than or equal to max ({self.max})"
-            )
-        if self.value is not None and self.value < self.min:
-            raise ValueError(
-                f"value ({self.value}) must be greater than or "
-                f"equal to min ({self.min})"
-            )
-        if self.value is not None and self.value > self.max:
-            raise ValueError(
-                f"value ({self.value}) must be less than or equal to max ({self.max})"
-            )

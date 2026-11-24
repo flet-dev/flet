@@ -18,11 +18,14 @@ def use_callback(
 
     Args:
         fn: A function to memoize.
-        dependencies: If present, fn is only re-memoized when one of the dependencies
-            has changed. If absent, fn is only memoized on initial render.
+        dependencies: Values the function depends on. If absent, the `fn` passed on
+            each render is returned as is. If empty, the `fn` from the first render
+            is kept. Otherwise, it is replaced only when one of the dependencies has
+            changed.
 
     Returns:
-        A memoized version of the function whose identity is stable between renders.
+        The memoized function. The same function object is returned on every render
+            until it is replaced.
     """
     # Just memoize the function object itself
     return use_memo(lambda: fn, dependencies)

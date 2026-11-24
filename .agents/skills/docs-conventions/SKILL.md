@@ -1,0 +1,233 @@
+---
+name: docs-conventions
+description: Use when writing or reviewing Flet documentation, including Python docstrings (Google style, reST roles, admonitions), Markdown docs (cross-references, images, code examples), and sidebar navigation.
+---
+
+# Documentation Conventions
+
+Docs live in `website/docs/`. Docusaurus renders them as the website.
+
+## Python Docstrings
+
+Use **Google style** docstrings with sections: `Args:`, `Returns:`, `Raises:`, `Note:`, `Example:`, `Warning:`.
+
+## Cross-references
+
+### reST roles
+
+Prefer these in Python docstrings. CrocoDocs renders them as links in
+the API docs and they keep authoring terse when the auto-derived label is acceptable.
+
+**Supported roles:** `:class:`, `:attr:`, `:meth:`, `:func:`, `:data:`, `:mod:`
+
+```python
+"""
+If a parent is a :class:`~flet.ResponsiveRow`, this property determines
+how many virtual columns the control spans.
+
+See :attr:`value` or :attr:`flet.Text.size` for the current selection.
+
+Calls :meth:`flet.Page.update` after modifying controls.
+"""
+```
+
+**Rules:**
+
+- **Qualified reference:** `:attr:`flet.Page.route`` — links to the member, displays inline code `Page.route`
+- **Extension reference:** `:attr:`flet_map.Map.animation_curve`` — links to the extension member, displays inline code `Map.animation_curve`
+- **Avoid `~` on members (`:attr:`, `:meth:`, etc.):** `:attr:`~flet.Page.route`` displays only `route`, hiding the class in the docs and IDE tooltips. On `:class:` it makes no difference
+  - **Exception:** use it for a member the documented class inherits, where showing the parent would mislead. In `TextField`, `:attr:`~flet.FormFieldControl.label`` displays `label`, which is a `TextField` property too
+- **Local member (same class):** `:attr:`value`` — no qualifier needed
+- **Method with parens:** `:meth:`update`` — do NOT include `()` in the target
+
+For plain class references like `:class:`flet.Page`` and extension references like
+`:class:`flet_map.Map``, the website strips leading public package aliases automatically,
+so they display as inline code `Page` and `Map`.
+
+**Not supported:**
+
+- Custom labels like `:class:`my label <flet.Page>`` — the label is always auto-derived from the target
+- Roles for symbols not in CrocoDocs API data degrade to inline code
+
+### Xrefs
+
+Reference-style Markdown links of the form `[label][key]`, where `key` is the
+fully-qualified dotted symbol path (same form as reST role targets).
+
+Use as the default form for linking to API symbols from Markdown docs
+(`.md` / `.mdx`).
+
+Examples:
+
+```markdown
+Class: [`Page`][flet.Page]
+Attribute: [`route`][flet.Page.route]
+Method: [`Page.update()`][flet.Page.update]
+Extension: [`Video.controls`][flet_video.Video.controls]
+Plain text: [the route attribute][flet.Page.route]
+```
+
+**When to prefer over the other forms:**
+
+- **Flexible labels** — the first `[ ]` accepts any text or inline code, unlike reST roles whose label is always auto-derived from the target
+- **Path-independent** — keys are dotted symbol paths, so links don't break when source files are moved, renamed, or restructured (unlike Markdown link paths with `../` and `#flet.X.y` anchors)
+- **Terser** than Markdown links to the same symbol — no relative path or anchor to maintain
+- **Greppable** — searching for the dotted key finds every reference to that symbol across all docs
+
+**Rules:**
+
+- The label (inside the first `[ ]`) is the rendered text — inline code or plain text
+- The key (inside the second `[ ]`) is the fully-qualified dotted path; do NOT include `()` for methods
+- Unresolved keys render as broken reference-style links (silent fallback) — verify with a build or `yarn crocodocs:generate`
+
+### Markdown links
+
+Fallback for cases xrefs cannot cover:
+
+- docs-only Python strings — the `docs_reason` parameter of `@deprecated`, extracted validation messages, or short admonition text
+- links to non-API content (other doc pages, external URLs, anchors that aren't API symbols)
+- when the xref entry is missing and you need a working link before regenerating
+
+Use relative `.md` paths with dot-format anchors.
+
+Examples:
+
+```markdown
+Control: [`Page`](../controls/page.md)
+Type: [`DragTargetEvent.global_position`](../types/dragtargetevent.md#flet.DragTargetEvent.global_position)
+Plain text: [route](../controls/page.md#flet.Page.route)
+Method: [`Page.update()`](../controls/page.md#flet.Page.update)
+```
+
+## Admonitions in docstrings
+
+Google-style section headers render as Docusaurus admonitions:
+
+```python
+"""
+Note:
+    Has effect only if the direct parent is a :class:`~flet.Column`.
+
+Warning:
+    This property is deprecated. Use :attr:`new_prop` instead.
+
+Example:
+    Setting up a basic layout:
+    ``ft.Column(controls=[ft.Text("Hello")])``
+"""
+```
+
+Supported kinds: `Note`, `Warning`, `Danger`, `Tip`, `Info`.
+Unsupported kinds (e.g. `Limitation`, `Example`) are normalized to `note`.
+Empty admonitions are skipped.
+
+## Admonitions
+
+```markdown
+:::note
+Basic note without title.
+:::
+
+:::warning[Important]
+Warning with a custom title.
+:::
+```
+
+Supported types: `note`, `info`, `tip`, `warning`, `danger`.
+
+## Front matter
+
+```yaml
+---
+class_name: "flet.Container"
+examples: "controls/container"
+example_images: "test-images/examples/material/golden/macos/container"
+example_media: "examples/controls/container/media"
+title: "Container"
+---
+```
+
+- `examples` — root-relative path under `sdk/python/examples/`
+- `example_images` / `example_media` — root-relative under `website/static/docs/`
+
+## Images
+
+Use the CrocoDocs `Image` component. Paths without `../` are resolved against `/docs/`:
+
+```jsx
+import {Image} from '@site/src/components/crocodocs';
+
+<Image src={frontMatter.example_images + '/image_for_docs.png'} width="55%" />
+```
+
+For absolute paths (one-off assets in `static/`):
+
+```jsx
+<Image src="/docs/assets/controls/charts/bar-chart-diagram.svg" width="65%" />
+```
+
+## Code examples
+
+```jsx
+import {CodeExample} from '@site/src/components/crocodocs';
+
+<CodeExample path={frontMatter.examples + '/example_1.py'} />
+```
+
+Paths are relative to the configured `examples_root` (`sdk/python/examples/`).
+
+## Inline HTML
+
+Use `<kbd>...</kbd>` in Python docstrings for keyboard keys, for example
+`<kbd>Enter</kbd>` or `<kbd>Shift</kbd>`. CrocoDocs preserves this tag in API
+docs.
+
+## Sidebar Navigation
+
+Edit `website/sidebars.yml` to change navigation structure:
+
+```yaml
+docs:
+  Reference:
+    Controls:
+      _generated_index:
+        title: Controls
+        slug: /controls
+        description: Browse the complete catalog of controls available in Flet.
+      Core:
+        _generated_index:
+          title: Core controls
+          slug: /controls/core
+          description: ...
+        Column: controls/column.md
+      Material:
+        _generated_index: ...
+        AlertDialog: controls/alertdialog.md
+      Cupertino:
+        _generated_index: ...
+        CupertinoButton: controls/cupertinobutton.md
+      Shadcn:
+        _index: controls/shadcnui/index.md
+        Button: controls/shadcnui/button.md
+      Extensions:
+        _generated_index: ...
+        Charts: ...
+```
+
+Reference → Controls has five folders, in this order: **Core**, **Material**, **Cupertino**, **Shadcn** and **Extensions** (Extensions always last). Core, Material, Cupertino and Extensions use `_generated_index` (a card grid); Shadcn has its own overview page via `_index`. When adding a control, keep entries alphabetical inside the folder and pick the folder from where the control's Python class lives:
+
+- `flet/controls/core` → **Core**; `flet/controls/material` → **Material**; `flet/controls/cupertino` → **Cupertino**.
+- Built-in controls outside those packages (`Page`, `MultiView`, `Router`) → **Core**.
+- Controls from extension packages (`flet-charts`, `flet-map`, `flet-datatable2`, ...) → **Extensions**, even when they look Material (for example DataTable2).
+- `flet-shadcn-ui` controls → **Shadcn** (label is capitalized "Shadcn").
+- Exception: `Container` lives in `flet/controls/material` but is listed under **Core**.
+
+Sub-controls (controls that can only be used inside a specific parent control, e.g. `DataCell`, `TableColumn`, `MenuItem`) get their own page, nested under the parent's entry with `_index` pointing at the parent page. One page documents exactly one class; never add a second class's `ClassSummary`/`ClassMembers` to a page.
+
+Sidebar folders only affect navigation: doc URLs come from file paths, so a page stays at `/docs/controls/<name>` whichever folder lists it. Do not move doc files into `core/`, `material/` or `cupertino/` subdirectories.
+
+After editing, regenerate `sidebars.js`:
+
+```bash
+cd website && yarn crocodocs:generate
+```

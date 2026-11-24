@@ -36,7 +36,7 @@ class ListView(LayoutControl, ScrollableControl, AdaptiveControl):
 
     horizontal: bool = False
     """
-    Whether to layout the [`controls`][(c).] horizontally.
+    Whether the :attr:`controls` should be laid out horizontally.
     """
 
     reverse: bool = False
@@ -44,7 +44,7 @@ class ListView(LayoutControl, ScrollableControl, AdaptiveControl):
     Whether the scroll view scrolls in the reading direction.
 
     For example, if the reading direction is left-to-right and
-    [`horizontal`][(c).] is `True`,
+    :attr:`horizontal` is `True`,
     then the scroll view scrolls from left to right when `reverse` is `False`
     and from right to left when `reverse` is `True`.
 
@@ -54,24 +54,25 @@ class ListView(LayoutControl, ScrollableControl, AdaptiveControl):
 
     spacing: Number = 0
     """
-    The height of divider between the [`controls`][(c).].
+    The height of divider between the :attr:`controls`.
     """
 
     item_extent: Optional[Number] = None
     """
-    A fixed height or width (when [`horizontal`][(c).] is `True`) of an item to \
-    optimize rendering.
+    A fixed height or width (when :attr:`horizontal` is `True`) of an item to optimize \
+    rendering.
 
     Note:
-        This property has effect only when [`build_controls_on_demand`][(c).]
-        is `True` or [`spacing`][(c).] is `0`.
+        This property has effect only when :attr:`build_controls_on_demand`
+        is `True` or :attr:`spacing` is `0`.
     """
 
     first_item_prototype: bool = False
     """
-    Whether the dimensions of the first item of [`controls`][(c).]
-    should be used as a "prototype" for all other items,
-    i.e. their `height` or `width` will be the same as the first item.
+    Whether the dimensions of the first item should be used as a "prototype" for all \
+    other items.
+
+    If `True`, their `height` or `width` will be the same as the first item.
     """
 
     prototype_item: Optional[Control] = None
@@ -80,8 +81,8 @@ class ListView(LayoutControl, ScrollableControl, AdaptiveControl):
     `width` will be the same as the `prototype_item`.
 
     Note:
-        This property has effect only when [`build_controls_on_demand`][(c).]
-        is `True` or [`spacing`][(c).] is `0`.
+        This property has effect only when :attr:`build_controls_on_demand`
+        is `True` or :attr:`spacing` is `0`.
     """
 
     divider_thickness: Number = 0
@@ -91,12 +92,12 @@ class ListView(LayoutControl, ScrollableControl, AdaptiveControl):
 
     padding: Optional[PaddingValue] = None
     """
-    The amount of space by which to inset the children.
+    The amount of space by which to inset the :attr:`controls`.
     """
 
     clip_behavior: ClipBehavior = ClipBehavior.HARD_EDGE
     """
-    How to clip the [`controls`][(c).]
+    Defines how to clip the :attr:`controls`.
     """
 
     semantic_child_count: Optional[int] = None
@@ -106,20 +107,27 @@ class ListView(LayoutControl, ScrollableControl, AdaptiveControl):
 
     cache_extent: Optional[Number] = None
     """
-    Items that fall in the cache area (before or after the visible area that are about \
-    to become visible when the user scrolls) are laid out even though they are not yet \
-    visible on screen.
+    The viewport has an area before and after the visible area to cache items that are \
+    about to become visible when the user scrolls.
 
-    The `cache_extent` describes how many pixels the cache area extends before the
-    leading edge and after the trailing edge of the viewport.
+    Items that fall in this cache area are laid out even though they are not (yet)
+    visible on screen. The `cache_extent` describes how many pixels the cache area
+    extends before the leading edge and after the trailing edge of the viewport.
 
-    The total extent covered is:
-    `cache_extent` before + main axis extent + `cache_extent` after.
+    The total extent, which the viewport will try to cover with children, is
+    `cache_extent` before the leading edge + extent of the main axis + `cache_extent`
+    after the trailing edge.
+
+    The cache area is also used to implement implicit accessibility scrolling on iOS:
+    When the accessibility focus moves from an item in the visible viewport to an
+    invisible item in the cache area, the framework will bring that item into view
+    with an (implicit) scroll action.
     """
 
     build_controls_on_demand: bool = True
     """
-    Whether the [`controls`][(c).] should be built lazily/on-demand.
+    Whether the :attr:`controls` should be built lazily/on-demand, i.e. only when they \
+    are about to become visible.
 
     This is particularly useful when dealing with a large number of controls.
     """

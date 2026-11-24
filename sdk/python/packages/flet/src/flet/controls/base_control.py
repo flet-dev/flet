@@ -1,3 +1,4 @@
+import asyncio
 import inspect
 import logging
 import sys
@@ -7,10 +8,11 @@ from typing import TYPE_CHECKING, Any, Callable, Optional, TypeVar, Union, overl
 from flet.controls.context import _context_page, context
 from flet.controls.control_event import ControlEvent, get_event_field_type
 from flet.controls.id_counter import ControlId
-from flet.controls.keys import KeyValue
 from flet.controls.ref import Ref
+from flet.controls.value_types import Prop, Value, _install_props, value
 from flet.utils.from_dict import from_dict
-from flet.utils.object_model import get_param_count
+from flet.utils.object_model import get_param_count, is_coroutine_result
+from flet.utils.validation import validate
 
 logger = logging.getLogger("flet")
 controls_log = logging.getLogger("flet_controls")
@@ -22,14 +24,25 @@ else:
 
 
 if TYPE_CHECKING:
-    from .base_page import BasePage
+    from .keys import KeyValue
     from .page import Page
 
 __all__ = [
     "BaseControl",
+    "Prop",
+    "Value",
     "control",
     "skip_field",
+    "value",
 ]
+
+# ---------------------------------------------------------------------------
+# Sparse property tracking is defined in value_types.py to avoid circular
+# imports: value types (Duration, Alignment, etc.) need @value but are
+# imported transitively by this module.
+# Prop, Value, _install_props and value are re-exported from here
+# for backwards compatibility.
+# ---------------------------------------------------------------------------
 
 
 def skip_field():
@@ -58,10 +71,12 @@ def control(cls: type[T]) -> type[T]:
 
 @overload
 def control(
-    dart_widget_name: Optional[Union[type[T], str]] = None,
+    dart_widget_name: Optional[str] = None,
     *,
     isolated: Optional[bool] = None,
     post_init_args: int = 1,
+    categories: Optional[tuple[str, ...]] = None,
+    tags: Optional[tuple[str, ...]] = None,
     **dataclass_kwargs: Any,
 ) -> Callable[[type[T]], type[T]]:
     """
@@ -73,23 +88,27 @@ def control(
     ...
 
 
-@dataclass_transform()
+@dataclass_transform(field_specifiers=(field,))
 def control(
     dart_widget_name: Optional[Union[type[T], str]] = None,
     *,
     isolated: Optional[bool] = None,
     post_init_args: int = 1,
+    categories: Optional[tuple[str, ...]] = None,
+    tags: Optional[tuple[str, ...]] = None,
     **dataclass_kwargs: Any,
 ) -> Union[type[T], Callable[[type[T]], type[T]]]:
     """
     Decorator to optionally set widget name and 'isolated' while behaving like \
-    [`@dataclass`][dataclasses.dataclass].
+    `dataclasses.dataclass`.
 
     Parameters:
         dart_widget_name: The name of widget on Dart side.
         isolated: If `True`, marks the control as isolated. An isolated control
             is excluded from page updates when its parent control is updated.
         post_init_args: Number of InitVar arguments to pass to __post_init__.
+        categories: MCP metadata — control categories (e.g. `("input", "form")`).
+        tags: MCP metadata — descriptive tags (e.g. `("text", "editable")`).
         dataclass_kwargs: Additional keyword arguments passed to `@dataclass`.
 
     Usage:
@@ -97,18 +116,32 @@ def control(
         - Supports `@control("WidgetName")` (with optional arguments)
         - Supports `@control("WidgetName", post_init_args=1, isolated=True)` to
             specify the number of `InitVar` arguments and isolation
+        - Supports `@control("WidgetName", categories=("input",), tags=("text",))`
+            to add MCP metadata for discovery
     """
 
     # Case 1: If used as `@control` (without parentheses)
     if isinstance(dart_widget_name, type):
         return _apply_control(
-            dart_widget_name, None, isolated, post_init_args, **dataclass_kwargs
+            dart_widget_name,
+            None,
+            isolated,
+            post_init_args,
+            categories=categories,
+            tags=tags,
+            **dataclass_kwargs,
         )
 
     # Case 2: If used as `@control("custom_type", post_init_args=N, isolated=True)`
     def wrapper(cls: type[T]) -> type[T]:
         return _apply_control(
-            cls, dart_widget_name, isolated, post_init_args, **dataclass_kwargs
+            cls,
+            dart_widget_name,
+            isolated,
+            post_init_args,
+            categories=categories,
+            tags=tags,
+            **dataclass_kwargs,
         )
 
     return wrapper
@@ -119,10 +152,19 @@ def _apply_control(
     type_name: Optional[str],
     isolated: Optional[bool],
     post_init_args: int,
+    categories: Optional[tuple[str, ...]] = None,
+    tags: Optional[tuple[str, ...]] = None,
     **dataclass_kwargs,
 ) -> type[T]:
     """Applies @control logic, ensuring compatibility with @dataclass."""
     cls = dataclass(**dataclass_kwargs)(cls)  # Apply @dataclass first
+    _install_props(cls)  # Install Prop descriptors for sparse tracking
+
+    # Store MCP metadata for discovery by Flet MCP server
+    cls.__control_meta__ = {
+        "categories": tuple(categories) if categories else (),
+        "tags": tuple(tags) if tags else (),
+    }
 
     orig_post_init = getattr(cls, "__post_init__", lambda self, *args: None)
 
@@ -147,6 +189,26 @@ class BaseControl:
     Base class for all Flet controls and services.
     """
 
+    # ------------------------------------------------------------------
+    # Sparse property tracking — MUST be the first two init=False fields
+    # so the dataclass-generated __init__ initialises them before any
+    # Prop.__set__ call for init=True fields.
+    # ------------------------------------------------------------------
+    _values: dict = field(
+        default_factory=dict,
+        init=False,
+        repr=False,
+        compare=False,
+        metadata={"skip": True},
+    )
+    _dirty: dict = field(
+        default_factory=dict,
+        init=False,
+        repr=False,
+        compare=False,
+        metadata={"skip": True},
+    )
+
     _i: int = field(init=False, compare=False)
     """
     Runtime-generated internal control id used by the session protocol.
@@ -162,7 +224,10 @@ class BaseControl:
     Arbitrary data of any type.
     """
 
-    key: Optional[KeyValue] = None
+    key: Optional["KeyValue"] = None
+    """
+    A stable key used to preserve control identity across updates.
+    """
 
     ref: InitVar[Optional[Ref["BaseControl"]]] = None
     """A reference to this control."""
@@ -195,6 +260,9 @@ class BaseControl:
             ref.current = self
 
         self.init()
+        # Construction is not a mutation: clear dirty tracking so only
+        # post-construction mutations are visible to the non-frozen diff.
+        self._dirty.clear()
 
         # control_id = self._i
         # object_id = id(self)
@@ -228,7 +296,7 @@ class BaseControl:
         return parent_ref() if parent_ref else None
 
     @property
-    def page(self) -> Union["Page", "BasePage"]:
+    def page(self) -> "Page":
         """
         The page to which this control belongs to.
         """
@@ -260,6 +328,9 @@ class BaseControl:
 
         Override this hook to perform lightweight setup that depends on initialized
         fields. Do not call `update()` here.
+
+        See :class:`~flet.Service` for service registration timing and page access
+        during this hook.
         """
         pass
 
@@ -291,6 +362,7 @@ class BaseControl:
             del self._frozen
 
         self.before_update()
+        validate(self, suppress_repeated_errors=True)
 
         if frozen is not None:
             self._frozen = frozen
@@ -311,7 +383,7 @@ class BaseControl:
         Override to start resources that require an attached page, for example
         subscriptions, timers, or service listeners.
         """
-        controls_log.debug(f"{self}.did_mount()")
+        controls_log.debug("%s.did_mount()", self)
         pass
 
     def will_unmount(self):
@@ -321,8 +393,40 @@ class BaseControl:
         Override to dispose resources created in `did_mount()`, such as
         subscriptions, timers, or external handles.
         """
-        controls_log.debug(f"{self}.will_unmount()")
+        controls_log.debug("%s.will_unmount()", self)
         pass
+
+    def get_data_channel(self, channel_id: int):
+        """
+        Resolve the :class:`~flet.DataChannel` allocated on the Dart side for this
+        control or service.
+
+        Example:
+            A custom service whose Dart implementation opens a data channel and
+            raises `data_channel_open` can capture it during initialization:
+
+            ```python
+            import flet as ft
+
+
+            @ft.control("MyService")
+            class MyService(ft.Service):
+                on_data_channel_open: ft.EventHandler[ft.DataChannelOpenEvent] | None = None
+
+                def init(self):
+                    super().init()
+                    self.on_data_channel_open = self._on_open
+
+                def _on_open(self, e: ft.DataChannelOpenEvent):
+                    self._channel = self.get_data_channel(e.channel_id)
+            ```
+
+        Idempotent — the underlying Connection caches DataChannels by id,
+        so repeated calls return the same instance. No error path: the id
+        always comes from a framework-fired event, so by the time this
+        runs the channel exists on both sides.
+        """  # noqa: E501
+        return self.page.session.connection.data_channel_for(channel_id)
 
     # public methods
     def update(self) -> None:
@@ -398,7 +502,7 @@ class BaseControl:
             _context_page.set(self.page)
             context.reset_auto_update()
 
-            controls_log.debug(f"Trigger event {self}.{field_name} {e}")
+            controls_log.debug("Trigger event %s.%s %s", self, field_name, e)
 
             if not self.page:
                 raise RuntimeError(
@@ -407,37 +511,39 @@ class BaseControl:
                 )
             session = self.page.session
 
-            # Handle async and sync event handlers accordingly
+            # Call the handler, then run what calling it started: a coroutine, an
+            # async generator or a generator. Checking the result rather than the
+            # handler also runs one that a plain function returns, such as
+            # `lambda: save(item)` with an `async` `save`, which would otherwise be
+            # dropped without running.
             event_handler = getattr(self, field_name)
-            if inspect.iscoroutinefunction(event_handler):
-                if get_param_count(event_handler) == 0:
-                    await event_handler()
-                else:
-                    await event_handler(e)
-
-            elif inspect.isasyncgenfunction(event_handler):
-                if get_param_count(event_handler) == 0:
-                    async for _ in event_handler():
-                        await session.after_event(session.index.get(self._i))
-                else:
-                    async for _ in event_handler(e):
-                        await session.after_event(session.index.get(self._i))
-                return
-
-            elif inspect.isgeneratorfunction(event_handler):
-                if get_param_count(event_handler) == 0:
-                    for _ in event_handler():
-                        await session.after_event(session.index.get(self._i))
-                else:
-                    for _ in event_handler(e):
-                        await session.after_event(session.index.get(self._i))
-                return
-
-            elif callable(event_handler):
-                if get_param_count(event_handler) == 0:
+            if callable(event_handler):
+                res = (
                     event_handler()
-                else:
-                    event_handler(e)
+                    if get_param_count(event_handler) == 0
+                    else event_handler(e)
+                )
+                if is_coroutine_result(res) or inspect.iscoroutinefunction(
+                    event_handler
+                ):
+                    await res
+
+                elif inspect.isasyncgen(res):
+                    async for _ in res:
+                        await session.after_event(session.index.get(self._i))
+                        # A `yield` asks for an intermediate UI update, so give the
+                        # connection's send loop a turn to flush the patch before the
+                        # handler resumes. Without it a handler that blocks right
+                        # after the `yield` (e.g. `time.sleep()`) keeps the queued
+                        # patch from reaching the client until the whole handler is
+                        # done.
+                        await asyncio.sleep(0)
+
+                elif inspect.isgenerator(res):
+                    for _ in res:
+                        await session.after_event(session.index.get(self._i))
+                        # See the note in the async generator branch above.
+                        await asyncio.sleep(0)
 
             await session.after_event(session.index.get(self._i))
 
@@ -460,3 +566,8 @@ class BaseControl:
         Return a debug-friendly control identifier string.
         """
         return f"{self._c}({self._i} - {id(self)})"
+
+
+# Install Prop descriptors for BaseControl's own public fields (key).
+# Subclasses decorated with @control get this called via _apply_control.
+_install_props(BaseControl)

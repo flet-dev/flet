@@ -15,10 +15,10 @@ import msgpack
 from flet.controls.base_control import BaseControl
 from flet.messaging.connection import Connection
 from flet.messaging.protocol import (
-    ClientAction,
-    ClientMessage,
     ControlEventBody,
     InvokeMethodResponseBody,
+    Message,
+    MessageAction,
     RegisterClientRequestBody,
     RegisterClientResponseBody,
     UpdateControlPropsBody,
@@ -71,6 +71,12 @@ class FletSocketServer(Connection):
         self.__before_main = before_main
         self.__blocking = blocking
         self.__running_tasks = set()
+        # DataChannel mux registry. Keyed by channel_id minted on the Dart
+        # side; populated lazily on the first Control.get_data_channel(id)
+        # call. Frames for unknown ids are silently dropped.
+        self._data_channels: dict[int, Any] = {}
+        # UDS or localhost TCP only — always same-machine.
+        self.local_data_transport = True
         self.loop = loop
         self.executor = executor
         self.pubsubhub = PubSubHub(loop=loop, executor=executor)
@@ -96,7 +102,7 @@ class FletSocketServer(Connection):
             host = "localhost"
             port = self.__port if self.__port > 0 else get_free_tcp_port()
             self.page_url = f"tcp://{host}:{port}"
-            logger.info(f"Starting up TCP server on {host}:{port}")
+            logger.info("Starting up TCP server on %s:%s", host, port)
             self.__server = await asyncio.start_server(
                 self.handle_connection, host, port
             )
@@ -109,7 +115,7 @@ class FletSocketServer(Connection):
             if os.path.exists(self.__uds_path):
                 os.remove(self.__uds_path)
             self.page_url = self.__uds_path
-            logger.info(f"Starting up UDS server on {self.__uds_path}")
+            logger.info("Starting up UDS server on %s", self.__uds_path)
             self.__server = await asyncio.start_unix_server(
                 self.handle_connection, self.__uds_path
             )
@@ -202,7 +208,7 @@ class FletSocketServer(Connection):
             logger.debug("No active connection to terminate.")
             return
 
-        logger.debug(f"Terminating existing connection ({reason}).")
+        logger.debug("Terminating existing connection (%s).", reason)
 
         session_to_close = self.session
         self.session = None
@@ -244,7 +250,12 @@ class FletSocketServer(Connection):
 
     async def __receive_loop(self, reader: asyncio.StreamReader, connection_token: int):
         """
-        Reads and dispatches inbound MsgPack frames from the socket.
+        Reads and dispatches inbound packets from the socket.
+
+        Wire format on the byte stream: each packet is prefixed with a 4-byte
+        little-endian length, then `[type:u8][payload]`. type=0x00 is a
+        MsgPack-encoded Flet protocol frame; type=0x01 is a raw DataChannel
+        frame (`[channel_id:u32 LE][bytes]`).
 
         The loop exits when:
         - socket EOF is reached;
@@ -255,23 +266,55 @@ class FletSocketServer(Connection):
             reader: Socket stream reader to consume bytes from.
             connection_token: Token identifying the connection generation.
         """
-        unpacker = msgpack.Unpacker(ext_hook=decode_ext_from_msgpack)
         try:
             while True:
-                buf = await reader.read(1024 * 1024)
-                if not buf:
+                try:
+                    header = await reader.readexactly(4)
+                except asyncio.IncompleteReadError:
+                    break  # EOF mid-stream or clean close
+                length = int.from_bytes(header, "little", signed=False)
+                if length == 0:
+                    continue
+                try:
+                    packet = await reader.readexactly(length)
+                except asyncio.IncompleteReadError:
+                    logger.debug("Truncated packet read; aborting receive loop.")
                     break
-                unpacker.feed(buf)
-                for msg in unpacker:
-                    if self.__connection_token != connection_token:
-                        return
-                    await self.__on_message(msg)
+                if self.__connection_token != connection_token:
+                    return
+                ptype = packet[0]
+                if ptype == 0x00:
+                    # One bad message must not end the loop: nothing would be
+                    # received after it and the app would freeze.
+                    try:
+                        msg = msgpack.unpackb(
+                            packet[1:], ext_hook=decode_ext_from_msgpack
+                        )
+                        await self.__on_message(msg)
+                    except Exception:
+                        logger.exception("Error handling a message from the client.")
+                elif ptype == 0x01:
+                    if len(packet) < 5:
+                        logger.debug("Dropping malformed data-channel frame.")
+                        continue
+                    channel_id = int.from_bytes(packet[1:5], "little", signed=False)
+                    self.__on_data_channel_frame(channel_id, packet[5:])
+                else:
+                    logger.debug("Dropping packet with unknown type 0x%02x", ptype)
         except asyncio.CancelledError:
             logger.debug("Receive loop cancelled.")
         except Exception as e:
-            logger.debug(f"Error receiving socket data from Flet client: {e}")
+            logger.debug("Error receiving socket data from Flet client: %s", e)
         finally:
             logger.debug("Receive loop exiting.")
+
+    def __on_data_channel_frame(self, channel_id: int, payload: bytes) -> None:
+        """Routes an inbound `[0x01][channel_id][payload]` frame to its
+        registered DataChannel. Silently drops frames for unknown ids
+        (handles unmount races)."""
+        channel = self._data_channels.get(channel_id)
+        if channel is not None:
+            channel._deliver(payload)
 
     async def __send_loop(
         self,
@@ -300,7 +343,7 @@ class FletSocketServer(Connection):
         except asyncio.CancelledError:
             logger.debug("Send loop cancelled.")
         except Exception as e:
-            logger.debug(f"Error in send loop: {e}")
+            logger.debug("Error in send loop: %s", e)
         finally:
             logger.debug("Send loop exiting.")
 
@@ -321,11 +364,11 @@ class FletSocketServer(Connection):
         Raises:
             RuntimeError: If the action code is unknown.
         """
-        action = ClientAction(data[0])
+        action = MessageAction(data[0])
         body = data[1]
-        transport_log.debug(f"_on_message: {action} {body}")
+        transport_log.debug("_on_message: %s %s", action, body)
         task = None
-        if action == ClientAction.REGISTER_CLIENT:
+        if action == MessageAction.REGISTER_CLIENT:
             req = RegisterClientRequestBody(**body)
 
             # create new session
@@ -347,8 +390,8 @@ class FletSocketServer(Connection):
 
             # register response
             self.send_message(
-                ClientMessage(
-                    ClientAction.REGISTER_CLIENT,
+                Message(
+                    MessageAction.REGISTER_CLIENT,
                     RegisterClientResponseBody(
                         session_id=self.session.id,
                         page_patch=self.session.get_page_patch(),
@@ -362,17 +405,17 @@ class FletSocketServer(Connection):
             elif self.__on_session_created is not None:
                 task = asyncio.create_task(self.__on_session_created(self.session))
 
-        elif action == ClientAction.CONTROL_EVENT:
+        elif action == MessageAction.CONTROL_EVENT:
             req = ControlEventBody(**body)
             task = asyncio.create_task(
                 self.session.dispatch_event(req.target, req.name, req.data)
             )
 
-        elif action == ClientAction.UPDATE_CONTROL_PROPS:
+        elif action == MessageAction.UPDATE_CONTROL_PROPS:
             req = UpdateControlPropsBody(**body)
             self.session.apply_patch(req.id, req.props)
 
-        elif action == ClientAction.INVOKE_METHOD:
+        elif action == MessageAction.INVOKE_METHOD:
             req = InvokeMethodResponseBody(**body)
             self.session.handle_invoke_method_results(
                 req.control_id, req.call_id, req.result, req.error
@@ -386,22 +429,60 @@ class FletSocketServer(Connection):
             self.__running_tasks.add(task)
             task.add_done_callback(self.__running_tasks.discard)
 
-    def send_message(self, message: ClientMessage):
+    def send_message(self, message: Message):
         """
         Encodes and queues an outbound message for the active connection.
+
+        Wire format: `[length:u32 LE][0x00][msgpack body]`. The send loop
+        writes the bytes verbatim to the socket.
 
         If no active send queue exists (no connected client), the message is dropped.
 
         Args:
             message: Protocol message to send.
         """
-        transport_log.debug(f"send_message: {message}")
-        m = msgpack.packb(
+        transport_log.debug("send_message: %s", message)
+        body = msgpack.packb(
             [message.action, message.body],
             default=configure_encode_object_for_msgpack(BaseControl),
         )
+        packet = b"\x00" + body
+        framed = len(packet).to_bytes(4, "little", signed=False) + packet
         if self.__send_queue is not None:
-            self.__send_queue.put_nowait(m)
+            self.__send_queue.put_nowait(framed)
+
+    def send_data_channel_frame(self, channel_id: int, payload: bytes) -> None:
+        """Send a raw DataChannel frame `[length][0x01][channel_id:u32 LE][bytes]`.
+        Called by `_ProtocolMuxedDataChannel.send` on the Python side."""
+        # Single-copy assembly — sequential concats would copy the
+        # (potentially multi-MB) payload twice.
+        framed = b"".join(
+            [
+                (5 + len(payload)).to_bytes(4, "little", signed=False),
+                b"\x01",
+                channel_id.to_bytes(4, "little", signed=False),
+                payload,
+            ]
+        )
+        if self.__send_queue is not None:
+            self.__send_queue.put_nowait(framed)
+
+    def data_channel_for(self, channel_id: int):
+        """Resolve or construct the muxed DataChannel for `channel_id`.
+        Idempotent — returns the same instance per id within the session.
+        Called from `Control.get_data_channel(id)`.
+        """
+        from flet.data_channel import _ProtocolMuxedDataChannel
+
+        existing = self._data_channels.get(channel_id)
+        if existing is not None:
+            return existing
+        channel = _ProtocolMuxedDataChannel(channel_id, self)
+        self._data_channels[channel_id] = channel
+        return channel
+
+    def unregister_data_channel(self, channel_id: int) -> None:
+        self._data_channels.pop(channel_id, None)
 
     async def close(self):
         """

@@ -1,8 +1,11 @@
+from typing import Annotated
+
 from flet.controls.adaptive_control import AdaptiveControl
 from flet.controls.base_control import control
 from flet.controls.control import Control
 from flet.controls.layout_control import LayoutControl
 from flet.controls.padding import PaddingValue
+from flet.utils.validation import V
 
 __all__ = ["SafeArea"]
 
@@ -10,7 +13,7 @@ __all__ = ["SafeArea"]
 @control("SafeArea")
 class SafeArea(LayoutControl, AdaptiveControl):
     """
-    A control that insets its [`content`][(c).] by sufficient padding to avoid \
+    A control that insets its :attr:`content` by sufficient padding to avoid \
     intrusions by the operating system.
 
     For example, this will indent the `content` by enough to avoid the status bar at
@@ -19,18 +22,19 @@ class SafeArea(LayoutControl, AdaptiveControl):
     It will also indent the `content` by the amount necessary to avoid the Notch on the
     iPhone X, or other similar creative physical features of the display.
 
-    When a [`minimum_padding`][(c).] is specified, the greater of the minimum padding
+    When a :attr:`minimum_padding` is specified, the greater of the minimum padding
     or the safe area padding will be applied.
     """
 
-    content: Control
+    content: Annotated[
+        Control,
+        V.visible_control(),
+    ]
     """
     The control to display.
 
-    Must be visible.
-
     Raises:
-        ValueError: If [`content`][(c).] is not visible.
+        ValueError: If it is not visible.
     """
 
     avoid_intrusions_left: bool = True
@@ -70,8 +74,3 @@ class SafeArea(LayoutControl, AdaptiveControl):
 
     The greater of the minimum insets and the media padding will be applied.
     """
-
-    def before_update(self):
-        super().before_update()
-        if not self.content.visible:
-            raise ValueError("content must be visible")

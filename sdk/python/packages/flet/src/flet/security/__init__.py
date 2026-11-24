@@ -74,13 +74,13 @@ def encrypt(plain_text: str, secret_key: str) -> str:
 
 def decrypt(encrypted_data: str, secret_key: str) -> str:
     """
-    Decrypts data produced by [`encrypt()`][(m).encrypt].
+    Decrypts data produced by `encrypt()`.
 
     Input format must be `base64url(salt + token)`, where the first 16 bytes are
     the PBKDF2 salt and the remaining bytes are a Fernet token.
 
     Args:
-        encrypted_data: URL-safe Base64 payload returned by [`encrypt()`][(m).encrypt].
+        encrypted_data: URL-safe Base64 payload returned by `encrypt()`.
         secret_key: Secret used to derive the decryption key.
 
     Returns:
@@ -109,7 +109,7 @@ def encrypt_aes_gcm_256(plain_text: str, secret_key: str) -> str:
 
     Key derivation:
     1. derive a salted key with
-        [`__generate_fernet_key_kdf()`][(m).__generate_fernet_key_kdf];
+        `__generate_fernet_key_kdf()`;
     2. hash that value with SHA-256;
     3. use the first 32 bytes of the hex digest text as the AES key.
 
@@ -132,14 +132,14 @@ def encrypt_aes_gcm_256(plain_text: str, secret_key: str) -> str:
 
 def decrypt_aes_gcm_256(encrypted_data: str, secret_key: str) -> str:
     """
-    Decrypts data produced by [`encrypt_aes_gcm_256()`][(m).encrypt_aes_gcm_256].
+    Decrypts data produced by `encrypt_aes_gcm_256()`.
 
     Input format must be `base64url(salt + nonce + ciphertext_and_tag)`, where the
     first 16 bytes are salt and the next 32 bytes are AES-GCM nonce.
 
     Args:
         encrypted_data: URL-safe Base64 payload returned by
-            [`encrypt_aes_gcm_256()`][(m).encrypt_aes_gcm_256].
+            `encrypt_aes_gcm_256()`.
         secret_key: Secret used to derive the decryption key.
 
     Returns:

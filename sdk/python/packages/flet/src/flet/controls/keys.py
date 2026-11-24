@@ -1,4 +1,4 @@
-from dataclasses import dataclass, field
+from dataclasses import field
 from typing import Optional, Union
 
 __all__ = [
@@ -9,14 +9,25 @@ __all__ = [
 ]
 
 
-@dataclass()
+def _lazy_value(cls=None, **kwargs):
+    """Deferred proxy for `value` to avoid circular import with base_control."""
+    from flet.controls.base_control import value as _v
+
+    if cls is not None:
+        return _v(cls)
+    if kwargs:
+        return _v(**kwargs)
+    return _v()
+
+
+@_lazy_value
 class Key:
     """
     Base class for control keys.
 
     Concrete subclasses define `_type` and therefore behavior on the Flutter
-    side. Use [`ValueKey`][flet.] for general control identity and
-    [`ScrollKey`][flet.] for scroll-target lookups.
+    side. Use :class:`~flet.ValueKey` for general control identity and
+    :class:`~flet.ScrollKey` for scroll-target lookups.
     """
 
     value: Union[str, int, float, bool]
@@ -31,7 +42,7 @@ class Key:
         return str(self.value)
 
 
-@dataclass
+@_lazy_value
 class ValueKey(Key):
     """
     General-purpose key for control identity.
@@ -44,13 +55,13 @@ class ValueKey(Key):
         self._type = "value"
 
 
-@dataclass
+@_lazy_value
 class ScrollKey(Key):
     """
     Key type used for imperative scroll targeting.
 
     Use this key to identify an item when calling
-    [`ScrollableControl.scroll_to()`][flet.ScrollableControl.scroll_to] with
+    :meth:`flet.ScrollableControl.scroll_to` with
     `scroll_key`.
     """
 
@@ -62,6 +73,6 @@ KeyValue = Union[ValueKey, ScrollKey, str, int, float, bool]
 """Type alias for control key values.
 
 Represents keys as either:
-- a [`ValueKey`][flet.] or [`ScrollKey`][flet.] object,
+- a :class:`~flet.ValueKey` or :class:`~flet.ScrollKey` object,
 - or a primitive `str`, `int`, `float`, or `bool` value.
 """

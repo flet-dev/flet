@@ -1,0 +1,26 @@
+[project]
+name = "map-attribution"
+version = "1.0.0"
+description = "Compares simple and rich flet-map attribution layers with clickable text and image source attributions."
+requires-python = ">=3.10"
+keywords = ["map", "attribution", "rich attribution", "source attribution", "flet-map"]
+authors = [{ name = "Flet team", email = "hello@flet.dev" }]
+dependencies = ["flet", "flet-map"]
+
+[dependency-groups]
+dev = ["flet-cli", "flet-desktop", "flet-web"]
+
+[tool.flet.gallery]
+categories = ["Extensions/Map"]
+
+[tool.flet.metadata]
+title = "Attribution"
+controls = ["SafeArea", "Image", "Map", "TileLayer", "SimpleAttribution", "RichAttribution", "TextSourceAttribution", "ImageSourceAttribution"]
+layout_pattern = "single-panel"
+complexity = "basic"
+features = ["simple attribution layer", "rich attribution popup", "text and image source attributions", "attribution click handlers"]
+
+[tool.flet]
+org = "dev.flet"
+company = "Flet"
+copyright = "Copyright (C) 2023-2026 by Flet"

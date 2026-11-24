@@ -4,11 +4,11 @@ from typing import Any, Optional
 import flet as ft
 import flet_charts
 
-_MATPLOTLIB_IMPORT_ERROR: Optional[ImportError] = None
+_MATPLOTLIB_IMPORT_ERROR: Optional[Exception] = None
 
 try:
     from matplotlib.figure import Figure  # type: ignore
-except ImportError as e:  # pragma: no cover - depends on optional dependency
+except Exception as e:  # pragma: no cover - depends on optional dependency
     Figure = Any  # type: ignore[assignment]
     _MATPLOTLIB_IMPORT_ERROR = e
 
@@ -31,12 +31,14 @@ def _require_matplotlib() -> None:
     Ensure matplotlib dependency is available.
 
     Raises:
-        ModuleNotFoundError: If `matplotlib` is not installed.
+        ModuleNotFoundError: If `matplotlib` is not installed, or is installed
+            but could not be imported.
     """
 
     if _MATPLOTLIB_IMPORT_ERROR is not None:
         raise ModuleNotFoundError(
-            'Install "matplotlib" Python package to use MatplotlibChart control.'
+            'MatplotlibChartWithToolbar requires the "matplotlib" Python package, '
+            f"which could not be imported: {_MATPLOTLIB_IMPORT_ERROR!r}"
         ) from _MATPLOTLIB_IMPORT_ERROR
 
 
@@ -95,6 +97,7 @@ class MatplotlibChartWithToolbar(ft.Column):
         self.msg = ft.Text()
         self.controls = [
             ft.Row(
+                wrap=True,
                 controls=[
                     self.home_btn,
                     self.back_btn,
@@ -104,7 +107,7 @@ class MatplotlibChartWithToolbar(ft.Column):
                     self.download_btn,
                     self.download_fmt,
                     self.msg,
-                ]
+                ],
             ),
             self.mpl,
         ]
@@ -119,7 +122,7 @@ class MatplotlibChartWithToolbar(ft.Column):
         Show status text produced by the underlying chart toolbar backend.
 
         Args:
-            e: Message event emitted by [`MatplotlibChart`][flet_charts.].
+            e: Message event emitted by :class:`~flet_charts.MatplotlibChart`.
         """
 
         self.msg.value = e.message
@@ -133,7 +136,7 @@ class MatplotlibChartWithToolbar(ft.Column):
 
         Args:
             e: Toolbar state update event from
-                [`MatplotlibChart`][flet_charts.MatplotlibChart].
+                :class:`~flet_charts.MatplotlibChart`.
         """
 
         self.back_btn.disabled = not e.back_enabled

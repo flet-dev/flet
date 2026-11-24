@@ -1,7 +1,9 @@
-import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 
 import '../models/control.dart';
 import 'widget_state.dart';
+
+typedef ListValueMapper<T> = T Function(dynamic value);
 
 double? parseDouble(dynamic value, [double? defaultValue]) {
   if (value is double) {
@@ -27,6 +29,8 @@ WidgetStateProperty<double?>? parseWidgetStateDouble(dynamic value,
 int? parseInt(dynamic value, [int? defaultValue]) {
   if (value is int) {
     return value;
+  } else if (value is double) {
+    return value.toInt();
   } else if (value == null) {
     return defaultValue;
   } else {
@@ -57,6 +61,13 @@ WidgetStateProperty<bool?>? parseWidgetStateBool(dynamic value,
       value, (jv) => parseBool(jv), defaultBool);
 }
 
+List<T>? parseList<T>(dynamic value, ListValueMapper<T> map,
+    {List<T>? defaultValue}) {
+  if (value == null) return defaultValue;
+  if (value is! List) return defaultValue;
+  return value.map(map).toList();
+}
+
 extension LiteralParsers on Control {
   bool? getBool(String propertyName, [bool? defaultValue]) {
     return get<bool>(propertyName, defaultValue);
@@ -72,6 +83,11 @@ extension LiteralParsers on Control {
 
   double? getDouble(String propertyName, [double? defaultValue]) {
     return get<double>(propertyName, defaultValue);
+  }
+
+  List<T>? getList<T>(String propertyName, ListValueMapper<T> map,
+      {List<T>? defaultValue}) {
+    return parseList<T>(get(propertyName), map, defaultValue: defaultValue);
   }
 
   WidgetStateProperty<double?>? getWidgetStateDouble(String propertyName,

@@ -3,16 +3,20 @@
 [![pypi](https://img.shields.io/pypi/v/flet-map.svg)](https://pypi.python.org/pypi/flet-map)
 [![downloads](https://static.pepy.tech/badge/flet-map/month)](https://pepy.tech/project/flet-map)
 [![python](https://img.shields.io/badge/python-%3E%3D3.10-%2334D058)](https://pypi.org/project/flet-map)
-[![docstring coverage](https://docs.flet.dev/assets/badges/docs-coverage/flet-map.svg)](https://docs.flet.dev/assets/badges/docs-coverage/flet-map.svg)
+[![docstring coverage](https://flet.dev/docs/assets/badges/docs-coverage/flet-map.svg)](https://flet.dev/docs/assets/badges/docs-coverage/flet-map.svg)
 [![license](https://img.shields.io/badge/License-Apache_2.0-green.svg)](https://github.com/flet-dev/flet/blob/main/sdk/python/packages/flet-map/LICENSE)
 
 A [Flet](https://flet.dev) extension for displaying interactive maps.
+
+> **[Try flet-map in Flet Studio](https://studio.flet.dev/gallery/displays/map/example/extensions/map/map?utm_source=pypi&utm_medium=readme&utm_campaign=flet-map)**
+>
+> Create, run, and share Python apps in your browser. Start from an example, write your own code, or get help from the AI agent. No installation required.
 
 It is based on the [flutter_map](https://pub.dev/packages/flutter_map) Flutter package.
 
 ## Documentation
 
-Detailed documentation to this package can be found [here](https://docs.flet.dev/map/).
+Detailed documentation to this package can be found [here](https://flet.dev/docs/controls/map/).
 
 ## Platform Support
 
@@ -39,4 +43,4 @@ To install the `flet-map` package and add it to your project dependencies:
 
 ### Examples
 
-For examples, see [these](https://github.com/flet-dev/flet/tree/main/sdk/python/examples/controls/map).
+For examples, see [these](https://github.com/flet-dev/flet/tree/main/sdk/python/examples/extensions/map).

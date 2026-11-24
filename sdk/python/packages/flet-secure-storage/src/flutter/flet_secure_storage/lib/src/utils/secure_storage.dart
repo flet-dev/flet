@@ -76,8 +76,8 @@ WindowsOptions? parseWindowsOptions(dynamic value, [WindowsOptions? defaultValue
 WebOptions? parseWebOptions(dynamic value, [WebOptions? defaultValue]) {
   if (value == null) return defaultValue;
   return WebOptions(
-    dbName: value["db_name"] ?? "FlutterEncryptedStorage",
-    publicKey: value["public_key"] ?? "FlutterSecureStorage",
+    dbName: value["db_name"] ?? "FletEncryptedStorage",
+    publicKey: value["public_key"] ?? "FletSecureStorage",
     wrapKey: value["wrap_key"] ?? "",
     wrapKeyIv: value["wrap_key_iv"] ?? "",
     useSessionStorage: parseBool(value["use_session_storage"], false)!,

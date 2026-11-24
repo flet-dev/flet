@@ -1,0 +1,26 @@
+[project]
+name = "layout-control-switcher"
+version = "1.0.0"
+description = "Animates ShaderMask rotation and scale over an image with gradient shader."
+requires-python = ">=3.10"
+keywords = ["layout control", "shader mask", "rotation", "scale", "image"]
+authors = [{ name = "Flet team", email = "hello@flet.dev" }]
+dependencies = ["flet"]
+
+[dependency-groups]
+dev = ["flet-cli", "flet-desktop", "flet-web"]
+
+[tool.flet.gallery]
+categories = ["Layout/LayoutControl"]
+
+[tool.flet.metadata]
+title = "Switcher"
+controls = ["SafeArea", "Column", "Stack", "ShaderMask", "Image", "Button", "RadialGradient"]
+layout_pattern = "single-panel"
+complexity = "basic"
+features = ["shader mask animation", "rotation and scale animation"]
+
+[tool.flet]
+org = "dev.flet"
+company = "Flet"
+copyright = "Copyright (C) 2023-2026 by Flet"

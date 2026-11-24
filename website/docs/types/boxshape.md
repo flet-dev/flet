@@ -1,0 +1,15 @@
+---
+class_name: "flet.BoxShape"
+examples: "controls/core/types/box_shape"
+title: "BoxShape"
+---
+
+import {ClassMembers, ClassSummary, CodeExample} from '@site/src/components/crocodocs';
+
+<ClassSummary name={frontMatter.class_name} />
+
+## Examples
+
+<CodeExample path={frontMatter.examples + '/showcase/main.py'} language="python" />
+
+<ClassMembers name={frontMatter.class_name} separateSignature={false} />

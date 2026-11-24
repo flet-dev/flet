@@ -4,7 +4,6 @@ import 'package:battery_plus/battery_plus.dart';
 import 'package:flutter/foundation.dart';
 
 import '../flet_service.dart';
-import '../utils/numbers.dart';
 
 class BatteryService extends FletService {
   final Battery _battery = Battery();
@@ -46,7 +45,7 @@ class BatteryService extends FletService {
   }
 
   void _updateListeners() {
-    final listenState = control.getBool("on_state_change") == true;
+    final listenState = control.hasEventHandler("state_change");
     if (listenState && _stateSub == null) {
       _stateSub = _battery.onBatteryStateChanged.listen((state) {
         control.triggerEvent("state_change", {"state": state.name});

@@ -16,7 +16,7 @@ class NativeAd(BannerAd):
     An identifier for the factory that creates the Platform view.
 
     Raises:
-        ValueError: When neither `factory_id` nor [`template_style`][(c).] is set.
+        ValueError: When neither `factory_id` nor :attr:`template_style` is set.
     """
 
     template_style: NativeAdTemplateStyle = None
@@ -24,10 +24,10 @@ class NativeAd(BannerAd):
     A style for the native ad template.
 
     Raises:
-        ValueError: When neither [`factory_id`][(c).] nor `template_style` is set.
+        ValueError: When neither :attr:`factory_id` nor `template_style` is set.
     """
 
-    def before_update(self):
-        super().before_update()
+    def init(self):
+        super().init()
         if self.factory_id is None and self.template_style is None:
             raise ValueError("factory_id or template_style must be set")

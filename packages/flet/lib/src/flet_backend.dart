@@ -3,13 +3,15 @@ import 'dart:convert';
 
 import 'package:device_info_plus/device_info_plus.dart';
 import 'package:flutter/foundation.dart';
-import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
+import 'package:msgpack_dart/msgpack_dart.dart' as msgpack;
 import 'package:provider/provider.dart';
 
 import 'flet_app_errors_handler.dart';
 import 'flet_core_extension.dart';
 import 'flet_extension.dart';
 import 'models/asset_source.dart';
+import 'models/boot_status.dart';
 import 'models/control.dart';
 import 'models/window_state.dart';
 import 'protocol/control_event_body.dart';
@@ -18,12 +20,17 @@ import 'protocol/invoke_method_response_body.dart';
 import 'protocol/message.dart';
 import 'protocol/page_media_data.dart';
 import 'protocol/patch_control_request_body.dart';
+import 'protocol/python_output_body.dart';
 import 'protocol/register_client_request_body.dart';
 import 'protocol/register_client_response_body.dart';
 import 'protocol/session_crashed_body.dart';
 import 'protocol/update_control_body.dart';
 import 'testing/tester.dart';
+import 'transport/data_channel.dart';
 import 'transport/flet_backend_channel.dart';
+import 'transport/flet_msgpack_decoder.dart';
+import 'transport/flet_msgpack_encoder.dart';
+import 'transport/protocol_muxed_data_channel.dart';
 import 'utils/desktop.dart';
 import 'utils/images.dart';
 import 'utils/numbers.dart';
@@ -36,6 +43,16 @@ import 'utils/uri.dart';
 import 'utils/weak_value_map.dart';
 
 /// FletBackend - Handles business logic, provides data, and acts as ChangeNotifier
+/// A pending [FletBackend.waitIdle] call. Embedded backends only.
+class _IdleWaiter {
+  _IdleWaiter(this.idleMs);
+
+  final int idleMs;
+  final completer = Completer<Map<String, dynamic>>();
+  Timer? quietTimer;
+  Timer? timeoutTimer;
+}
+
 class FletBackend extends ChangeNotifier {
   static const String defaultAppErrorMessageTemplate =
       "The application encountered an error: {message}\n\n{details}";
@@ -44,10 +61,19 @@ class FletBackend extends ChangeNotifier {
   final WeakReference<FletBackend>? _parentFletBackend;
   final Uri pageUri;
   final String assetsDir;
-  final bool? showAppStartupScreen;
-  final String? appStartupScreenMessage;
+  final String bootScreenName;
+  final Map<String, dynamic> bootScreenOptions;
   final String? appErrorMessage;
   final int? controlId;
+
+  /// Notifies the boot screen of the current [BootStatus] (stage, any startup
+  /// error, and whether boot is done). Kept in sync with [isLoading]/[error].
+  ///
+  /// May be injected by the embedder (e.g. a persistent boot overlay in the
+  /// app bootstrap that needs the same notifier across both boot phases). When
+  /// injected, this backend updates but does not own/dispose it.
+  late final ValueNotifier<BootStatus> bootStatus;
+  final bool _ownsBootStatus;
   final FletAppErrorsHandler? errorsHandler;
   late final List<FletExtension> extensions;
   final Map<String, dynamic>? args;
@@ -60,10 +86,24 @@ class FletBackend extends ChangeNotifier {
   final int? _reconnectTimeoutMs;
   int _reconnectStarted = 0;
   int _reconnectDelayMs = 0;
+  int _connectionId = 0;
+  bool _reconnectScheduled = false;
   FletBackendChannel? _backendChannel;
+  final FletBackendChannelBuilder? _channelBuilder;
+  late final DataChannelFactory _dataChannelFactory;
+  final DataChannelFactory? _injectedDataChannelFactory;
+  // Inbound mux registry for ProtocolMuxedDataChannel — type-byte 0x01
+  // frames are routed by channel_id to the matching channel's deliver hook.
+  // PythonBridge-backed DataChannels do NOT live in this registry (their
+  // bytes arrive on their own native port, never on the Flet transport).
+  final Map<int, ProtocolMuxedDataChannel> _dataChannels = {};
   final List<Message> _sendQueue = [];
   String route = "";
   bool isLoading = true;
+
+  // At most one pending waitIdle() call. Null almost always: the patch path
+  // then does a single null check and no timer, frame or message work.
+  _IdleWaiter? _idleWaiter;
   final Completer<void> pageSizeUpdated = Completer<void>();
   String error = "";
   Size pageSize = Size.zero;
@@ -95,19 +135,29 @@ class FletBackend extends ChangeNotifier {
       int? reconnectIntervalMs,
       int? reconnectTimeoutMs,
       this.errorsHandler,
-      this.showAppStartupScreen,
-      this.appStartupScreenMessage,
+      this.bootScreenName = "flet",
+      this.bootScreenOptions = const {},
       this.appErrorMessage,
       this.controlId,
       this.args,
       this.forcePyodide,
       this.tester,
       required extensions,
+      ValueNotifier<BootStatus>? bootStatus,
+      FletBackendChannelBuilder? channelBuilder,
+      DataChannelFactory? dataChannelFactory,
       FletBackend? parentFletBackend})
       : _parentFletBackend =
             parentFletBackend != null ? WeakReference(parentFletBackend) : null,
         _reconnectTimeoutMs = reconnectTimeoutMs,
-        _reconnectIntervalMs = reconnectIntervalMs {
+        _reconnectIntervalMs = reconnectIntervalMs,
+        _channelBuilder = channelBuilder,
+        _ownsBootStatus = bootStatus == null,
+        _injectedDataChannelFactory = dataChannelFactory {
+    this.bootStatus = bootStatus ??
+        ValueNotifier<BootStatus>(const BootStatus(BootStage.startingUp));
+    _dataChannelFactory =
+        _injectedDataChannelFactory ?? ProtocolMuxedDataChannelFactory(this);
     // add Flet extension with core controls and services
     this.extensions = [...extensions, FletCoreExtension()];
 
@@ -119,7 +169,7 @@ class FletBackend extends ChangeNotifier {
       "web": kIsWeb,
       "debug": kDebugMode,
       "wasm": const bool.fromEnvironment('dart.tool.dart2wasm'),
-      "test": tester != null,
+      "test": tester != null || const bool.fromEnvironment("FLET_TEST"),
       "multi_view": multiView,
       "pyodide": isPyodideMode(),
       "window": {
@@ -163,32 +213,162 @@ class FletBackend extends ChangeNotifier {
     }
   }
 
+  bool get _isEmbedded => controlId != null && _parentFletBackend != null;
+
+  /// Waits until this embedded app has rendered its UI and stayed quiet.
+  ///
+  /// Resolves `{"status": "idle"}` once at least one page update arrived and
+  /// no further updates came for [idleMs] (after the next frame, so the UI is
+  /// on screen); `{"status": "error", "error": ...}` when the app fails to
+  /// start or crashes; `{"status": "timeout"}` after [timeoutMs] — e.g. an
+  /// app that keeps updating continuously. A new call supersedes a pending
+  /// one, which resolves with `timeout`.
+  ///
+  /// Only for embedded apps (a [FletApp] control inside another Flet app):
+  /// it lets the host know when the embedded app is ready, e.g. before a
+  /// screenshot. Costs nothing unless a call is pending.
+  Future<Map<String, dynamic>> waitIdle(
+      {int idleMs = 300, int timeoutMs = 30000}) {
+    if (!_isEmbedded) {
+      return Future.value({
+        "status": "error",
+        "error": "wait_idle is only available for embedded apps."
+      });
+    }
+    final previous = _idleWaiter;
+    if (previous != null) {
+      _completeIdle(previous, "timeout");
+    }
+    final waiter = _IdleWaiter(idleMs);
+    _idleWaiter = waiter;
+    waiter.timeoutTimer = Timer(
+        Duration(milliseconds: timeoutMs), () => _completeIdle(waiter, "timeout"));
+    if (!isLoading && error.isNotEmpty) {
+      _completeIdle(waiter, "error", error);
+    }
+    return waiter.completer.future;
+  }
+
+  void _restartIdleTimer(_IdleWaiter waiter) {
+    waiter.quietTimer?.cancel();
+    waiter.quietTimer = Timer(Duration(milliseconds: waiter.idleMs), () {
+      if (_idleWaiter != waiter) {
+        return;
+      }
+      // Complete after the next frame, so the last update is on screen.
+      WidgetsBinding.instance
+          .addPostFrameCallback((_) => _completeIdle(waiter, "idle"));
+      WidgetsBinding.instance.scheduleFrame();
+    });
+  }
+
+  void _completeIdle(_IdleWaiter waiter, String status, [String? message]) {
+    waiter.quietTimer?.cancel();
+    waiter.timeoutTimer?.cancel();
+    if (_idleWaiter == waiter) {
+      _idleWaiter = null;
+    }
+    if (!waiter.completer.isCompleted) {
+      waiter.completer.complete({"status": status, "error": message});
+    }
+  }
+
+  void _failIdle(String message) {
+    final waiter = _idleWaiter;
+    if (waiter != null) {
+      _completeIdle(waiter, "error", message);
+    }
+  }
+
   @override
   void dispose() {
     debugPrint("Disposing Flet backend.");
+    _failIdle("The embedded app was closed.");
     _disposed = true;
     _page.removeListener(_onPageUpdated);
     _page.dispose();
     _backendChannel?.disconnect();
+    if (_ownsBootStatus) {
+      bootStatus.dispose();
+    }
     super.dispose();
   }
 
   Future<void> connect() async {
     debugPrint("Connecting to Flet backend $pageUri...");
+    // A newer connection attempt makes every earlier channel stale: only the
+    // channel of the latest attempt may trigger a reconnect.
+    final connectionId = ++_connectionId;
+    _reconnectScheduled = false;
+    void onChannelDisconnect() {
+      if (connectionId == _connectionId) _onDisconnect();
+    }
+
     try {
-      _backendChannel = FletBackendChannel(
-          address: pageUri.toString(),
-          args: args ?? {},
-          forcePyodide: forcePyodide == true,
-          onDisconnect: _onDisconnect,
-          onMessage: _onMessage);
+      final builder = _channelBuilder;
+      if (builder != null) {
+        // Embedder-supplied transport (e.g. serious_python's in-process FFI
+        // bridge). The builder is responsible for the entire transport
+        // lifecycle; we just wire its callbacks to ours.
+        _backendChannel =
+            builder(onDisconnect: onChannelDisconnect, onPacket: _onPacket);
+      } else {
+        _backendChannel = FletBackendChannel(
+            address: pageUri.toString(),
+            args: args ?? {},
+            forcePyodide: forcePyodide == true,
+            embedded: controlId != null,
+            onDisconnect: onChannelDisconnect,
+            onPacket: _onPacket);
+      }
       await _backendChannel!.connect();
       _registerClient();
+    } on FletAppStartupException catch (e) {
+      debugPrint("Flet app failed to start: $e");
+      isLoading = false;
+      error = e.toString();
+      notifyListeners();
+      errorsHandler?.onError(error);
+      _failIdle(error);
     } catch (e) {
       debugPrint("Error connecting to Flet backend: $e");
       error = e.toString();
       _onDisconnect();
     }
+  }
+
+  /// Opens a dedicated [DataChannel] for high-throughput byte traffic from a
+  /// widget. In embedded mode this is backed by a fresh `PythonBridge`; in
+  /// dev / web modes it is a logical channel multiplexed over the active
+  /// [FletBackendChannel] (see [ProtocolMuxedDataChannelFactory]).
+  ///
+  /// Must be called from the main Isolate (it doesn't escape there, but
+  /// the returned channel is main-Isolate-bound either way).
+  DataChannel openDataChannel() => _dataChannelFactory.open();
+
+  // ---------------------------------------------------------------------
+  // Mux registry — used by ProtocolMuxedDataChannel only.
+  // ---------------------------------------------------------------------
+
+  /// Registers a muxed data channel so inbound 0x01 frames for [id] are
+  /// routed to it. Called from [ProtocolMuxedDataChannel.<ctor>].
+  void registerDataChannel(int id, ProtocolMuxedDataChannel channel) {
+    assert(!_dataChannels.containsKey(id), "duplicate data channel id $id");
+    _dataChannels[id] = channel;
+  }
+
+  /// Removes [id] from the routing table. Called from
+  /// [ProtocolMuxedDataChannel.close]. Idempotent — frames for an
+  /// unregistered id are silently dropped.
+  void unregisterDataChannel(int id) {
+    _dataChannels.remove(id);
+  }
+
+  /// Sends a fully-formed packet on the active transport. Used by
+  /// [ProtocolMuxedDataChannel] to ship `[0x01][channel_id:u32 LE][bytes]`
+  /// alongside regular protocol traffic.
+  void sendRawPacket(Uint8List packet) {
+    _backendChannel?.send(packet);
   }
 
   _registerClient() {
@@ -212,6 +392,9 @@ class FletBackend extends ChangeNotifier {
                   "width": page.get("width"),
                   "height": page.get("height"),
                   "platform": page.get("platform"),
+                  // Explicit key list: a value set on the Dart page control
+                  // reaches Python only if it is named here.
+                  "embedded": controlId != null,
                   "window": page.child("window", visibleOnly: false)!.toMap(),
                   "media": page.get("media"),
                 }).toMap()),
@@ -269,7 +452,15 @@ class FletBackend extends ChangeNotifier {
         }
 
         // update page details
-        page.update({"route": newRoute, "platform": platform},
+        // `embedded` lets the app's own code know it is running as a guest
+        // inside another Flet app, so it can skip things the host owns -
+        // window management above all. The framework keys off it too.
+        page.update(
+            {
+              "route": newRoute,
+              "platform": platform,
+              "embedded": controlId != null
+            },
             shouldNotify: false);
 
         // connect to the server
@@ -331,9 +522,20 @@ class FletBackend extends ChangeNotifier {
     var newProps = {"width": newSize.width, "height": newSize.height};
     var ctrl = view ?? page;
     updateControl(ctrl.id, newProps);
-    triggerControlEvent(ctrl, "resize", newProps);
 
-    if (isDesktopPlatform()) {
+    // Initial page sizing should only hydrate Python state. Later size changes
+    // must reach Python even if no explicit "on_resize" handler is set.
+    if (pageSizeUpdated.isCompleted) {
+      triggerControlEventById(ctrl.id, "resize", newProps);
+    }
+
+    // Only a root app owns the OS window. For a guest (`controlId != null`)
+    // this would read the *host's* real window and stamp it over the window
+    // state the host is simulating - reporting the host's geometry as the
+    // guest's, undoing maximize/restore on the next resize, and firing a
+    // `resized` event for a window the app is not in. Its window is driven by
+    // EmbeddedWindowService instead.
+    if (isDesktopPlatform() && controlId == null) {
       var windowState = await getWindowState();
       debugPrint("Window state updated: $windowState");
       var window = page.child("window", visibleOnly: false)!;
@@ -361,7 +563,11 @@ class FletBackend extends ChangeNotifier {
     media = newMedia;
     var ctrl = view ?? page;
     updateControl(ctrl.id, {"media": newMedia.toMap()});
-    triggerControlEvent(ctrl, "media_change", newMedia.toMap());
+    // Initial page media should only hydrate Python state. Later media changes
+    // must reach Python even if no explicit "on_media_change" handler is set.
+    if (pageSizeUpdated.isCompleted) {
+      triggerControlEventById(ctrl.id, "media_change", newMedia.toMap());
+    }
     notifyListeners();
   }
 
@@ -406,9 +612,43 @@ class FletBackend extends ChangeNotifier {
     return getAssetSrc(src, pageUri, assetsDir);
   }
 
-  _onMessage(Message message) {
+  /// Inbound transport dispatcher. Every packet starts with a 1-byte type
+  /// discriminator:
+  ///   0x00 → MsgPack-encoded Flet control frame (the existing protocol).
+  ///   0x01 → raw DataChannel frame `[channel_id:u32 LE][payload]`.
+  void _onPacket(Uint8List packet) {
+    if (packet.isEmpty) {
+      debugPrint("Dropping empty packet");
+      return;
+    }
+    final type = packet[0];
+    if (type == 0x00) {
+      // Decode the MsgPack body and dispatch as a Flet protocol message.
+      final body = msgpack.deserialize(Uint8List.sublistView(packet, 1),
+          extDecoder: FletMsgpackDecoder());
+      _onMessage(Message.fromList(body));
+    } else if (type == 0x01) {
+      if (packet.length < 5) {
+        debugPrint(
+            "Dropping malformed data channel frame (len=${packet.length})");
+        return;
+      }
+      final channelId =
+          ByteData.sublistView(packet, 1, 5).getUint32(0, Endian.little);
+      final channel = _dataChannels[channelId];
+      if (channel == null) {
+        // Stale frame after channel.close() — silently drop.
+        return;
+      }
+      channel.deliver(Uint8List.sublistView(packet, 5));
+    } else {
+      debugPrint(
+          "Dropping packet with unknown type byte 0x${type.toRadixString(16)}");
+    }
+  }
+
+  void _onMessage(Message message) {
     debugPrint("Received message: ${message.toList()}");
-    //debugPrint("message.payload: ${message.payload}");
     switch (message.action) {
       case MessageAction.registerClient:
         _onClientRegistered(
@@ -423,16 +663,63 @@ class FletBackend extends ChangeNotifier {
       case MessageAction.invokeControlMethod:
         _onInvokeMethod(InvokeMethodRequestBody.fromJson(message.payload));
         break;
+      case MessageAction.pythonOutput:
+        _onPythonOutput(PythonOutputBody.fromJson(message.payload));
+        break;
       default:
+    }
+  }
+
+  void _onPythonOutput(PythonOutputBody body) {
+    // Nested FletApp: bubble the line to the outer backend so the
+    // host page can render it (same shape as errorsHandler bubbling
+    // at lines 135-148). Root FletApp: nothing to bubble to, so fall
+    // back to the browser console — preserves Pyodide's default
+    // visibility now that we've taken over its stdout/stderr hooks.
+    if (controlId != null && _parentFletBackend != null) {
+      _parentFletBackend?.target?.triggerControlEventById(
+        controlId!,
+        "python_output",
+        {"text": body.text, "is_stderr": body.isStderr},
+      );
+    } else {
+      // Use `print` rather than `debugPrint` — main.dart silences
+      // debugPrint in release builds, which would swallow this fallback.
+      final line = body.text.endsWith('\n')
+          ? body.text.substring(0, body.text.length - 1)
+          : body.text;
+      if (body.isStderr) {
+        // ignore: avoid_print
+        print("[stderr] $line");
+      } else {
+        // ignore: avoid_print
+        print(line);
+      }
     }
   }
 
   _onPatchControl(PatchControlRequestBody req) {
     var control = controlsIndex.get(req.id);
+    final idleWaiter = _idleWaiter;
+    if (idleWaiter != null) {
+      _restartIdleTimer(idleWaiter);
+    }
     if (control != null) {
       control.applyPatch(req.patch, this);
       //debugPrint("patched control: $control");
       //debugPrint("_controlsIndex.length: ${_controlsIndex.length}");
+    } else {
+      // The server sent an update for a control this client cannot resolve, so
+      // the two have diverged and this screen is now silently stale. Report it
+      // rather than dropping it: from the user's side the app simply stops
+      // responding, with nothing logged anywhere to explain why.
+      //
+      // Use `print` rather than `debugPrint` - main.dart nulls debugPrint in
+      // release builds, which is exactly where this needs to be visible.
+      //
+      // ignore: avoid_print
+      print("Flet: dropped a patch for unknown control ${req.id} - "
+          "the client is out of sync with the server and needs a reload.");
     }
   }
 
@@ -464,6 +751,28 @@ class FletBackend extends ChangeNotifier {
   _onSessionCrashed(SessionCrashedBody body) {
     error = body.message;
     notifyListeners();
+    if (_isEmbedded) {
+      // Let the host know too (FletApp.on_error): an exception in the
+      // embedded app's main() or an event handler otherwise only shows in
+      // the embedded app's own error screen.
+      errorsHandler?.onError(body.message);
+      _failIdle(body.message);
+    }
+  }
+
+  @override
+  void notifyListeners() {
+    // Keep the boot screen status in sync with the loading/error state.
+    // While loading (incl. reconnecting) show the loading state; show the
+    // error only once loading has settled with an error present.
+    final err =
+        (!isLoading && error.isNotEmpty) ? formatAppErrorMessage(error) : null;
+    final newStatus = BootStatus(BootStage.startingUp,
+        error: err, done: !isLoading && error.isEmpty);
+    if (bootStatus.value != newStatus) {
+      bootStatus.value = newStatus;
+    }
+    super.notifyListeners();
   }
 
   String formatAppErrorMessage(String rawError) {
@@ -483,15 +792,16 @@ class FletBackend extends ChangeNotifier {
     return template.trimRight();
   }
 
-  _reconnect(String message, int reconnectDelayMs) {
+  _reconnect(int reconnectDelayMs) {
     isLoading = true;
-    error = message;
     _reconnectDelayMs = reconnectDelayMs;
     notifyListeners();
   }
 
   _onDisconnect() {
-    if (_disposed) {
+    // One reconnect at a time: a second disconnect report for the same
+    // connection must not start a second, competing reconnect chain.
+    if (_disposed || _reconnectScheduled) {
       return;
     }
 
@@ -509,25 +819,34 @@ class FletBackend extends ChangeNotifier {
     if (_reconnectTimeoutMs == null ||
         (DateTime.now().millisecondsSinceEpoch - _reconnectStarted) <
             _reconnectTimeoutMs!) {
-      // re-connect
-      _reconnect(isUdsPath(pageUri) ? "" : "Loading...", nextReconnectDelayMs);
+      // re-connect, keeping any error we captured: the boot screen hides it
+      // while loading, but it is what we report if the retries run out.
+      _reconnect(nextReconnectDelayMs);
 
       debugPrint("Reconnect in $nextReconnectDelayMs milliseconds");
+      _reconnectScheduled = true;
       Future.delayed(Duration(milliseconds: nextReconnectDelayMs))
           .then((value) async {
         await connect();
       });
     } else {
-      errorsHandler?.onError(error != ""
+      final message = error != ""
           ? error
-          : "Error connecting to a Flet service in a timely manner.");
+          : "Error connecting to a Flet service in a timely manner.";
+      errorsHandler?.onError(message);
+      _failIdle(message);
     }
   }
 
   _send(Message message, {bool unbuffered = false}) {
     if (unbuffered || !isLoading) {
       debugPrint("_send: ${message.action} ${message.payload}");
-      _backendChannel?.send(message);
+      final encoded =
+          msgpack.serialize(message.toList(), extEncoder: FletMsgpackEncoder());
+      final packet = Uint8List(1 + encoded.length);
+      packet[0] = 0x00;
+      packet.setRange(1, packet.length, encoded);
+      _backendChannel?.send(packet);
     } else {
       _sendQueue.add(message);
     }

@@ -1,0 +1,30 @@
+[project]
+name = "notifications-exact-alarms"
+version = "1.0.0"
+description = "Checks and requests Android's exact alarm permission, then schedules a notification for an exact time."
+requires-python = ">=3.10"
+keywords = ["services", "notifications", "scheduling", "exact alarms", "android", "async"]
+authors = [{ name = "Flet team", email = "hello@flet.dev" }]
+dependencies = ["flet", "flet-notifications"]
+
+[dependency-groups]
+dev = ["flet-cli", "flet-desktop", "flet-web"]
+
+[tool.flet.gallery]
+categories = ["Utility/Notifications"]
+
+[tool.flet.metadata]
+title = "Exact alarms"
+docs_intro = "Exact [schedule modes][flet_notifications.AndroidScheduleMode] need the `SCHEDULE_EXACT_ALARM` permission, which Android 14+ denies by default. [`request_exact_alarm_permission()`][flet_notifications.Notifications.request_exact_alarm_permission] opens the system page where the user allows it, and the example checks again when the app comes back to the foreground. Android only."
+controls = ["SafeArea", "Column", "Text", "Button", "SnackBar", "Notifications"]
+layout_pattern = "inline-actions"
+complexity = "intermediate"
+features = ["exact alarms", "exact alarm permission", "app lifecycle"]
+
+[tool.flet]
+org = "dev.flet"
+company = "Flet"
+copyright = "Copyright (C) 2023-2026 by Flet"
+
+[tool.flet.android.permission]
+"android.permission.SCHEDULE_EXACT_ALARM" = true

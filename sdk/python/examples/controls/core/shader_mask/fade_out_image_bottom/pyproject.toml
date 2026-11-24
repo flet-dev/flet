@@ -1,0 +1,26 @@
+[project]
+name = "shader-mask-fade-out-image-bottom"
+version = "1.0.0"
+description = "Fade the bottom of an image using a linear ShaderMask transparency gradient."
+requires-python = ">=3.10"
+keywords = ["shadermask", "image", "lineargradient", "fade", "transparency"]
+authors = [{ name = "Flet team", email = "hello@flet.dev" }]
+dependencies = ["flet"]
+
+[dependency-groups]
+dev = ["flet-cli", "flet-desktop", "flet-web"]
+
+[tool.flet.gallery]
+categories = ["Effects/ShaderMask"]
+
+[tool.flet.metadata]
+title = "ShaderMask fade out image bottom"
+controls = ["ShaderMask", "Image", "Row", "SafeArea"]
+layout_pattern = "single-focus"
+complexity = "basic"
+features = ["linear gradient", "image fade", "blend mode"]
+
+[tool.flet]
+org = "dev.flet"
+company = "Flet"
+copyright = "Copyright (C) 2023-2026 by Flet"

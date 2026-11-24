@@ -74,10 +74,10 @@ class Card(ft.GestureDetector):
     def drag(self, e: ft.DragUpdateEvent):
         for card in self.draggable_pile:
             card.top = (
-                max(0, self.top + e.delta_y)
+                max(0, self.top + e.local_delta.y)
                 + self.draggable_pile.index(card) * CARD_OFFSET
             )
-            card.left = max(0, self.left + e.delta_x)
+            card.left = max(0, self.left + e.local_delta.x)
             self.solitaire.update()
 
     def drop(self, e: ft.DragEndEvent):

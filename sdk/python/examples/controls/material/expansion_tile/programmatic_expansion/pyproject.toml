@@ -1,0 +1,26 @@
+[project]
+name = "expansion-tile-programmatic-expansion"
+version = "1.0.0"
+description = "Controls ExpansionTile expanded state programmatically with dedicated expand and collapse buttons."
+requires-python = ">=3.10"
+keywords = ["expansion tile", "programmatic", "expand", "collapse", "buttons"]
+authors = [{ name = "Flet team", email = "hello@flet.dev" }]
+dependencies = ["flet"]
+
+[dependency-groups]
+dev = ["flet-cli", "flet-desktop", "flet-web"]
+
+[tool.flet.gallery]
+categories = ["Layout/ExpansionTile"]
+
+[tool.flet.metadata]
+title = "Programmatic expansion"
+controls = ["SafeArea", "Column", "Row", "ExpansionTile", "FilledButton", "OutlinedButton", "Text"]
+layout_pattern = "single-panel"
+complexity = "basic"
+features = ["programmatic expansion", "programmatic collapse"]
+
+[tool.flet]
+org = "dev.flet"
+company = "Flet"
+copyright = "Copyright (C) 2023-2026 by Flet"

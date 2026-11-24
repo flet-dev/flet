@@ -1,0 +1,15 @@
+---
+class_name: "flet.TabAlignment"
+examples: "controls/core/types/tab_alignment"
+title: "TabAlignment"
+---
+
+import {ClassMembers, ClassSummary, CodeExample} from '@site/src/components/crocodocs';
+
+<ClassSummary name={frontMatter.class_name} />
+
+## Examples
+
+<CodeExample path={frontMatter.examples + '/showcase/main.py'} language="python" />
+
+<ClassMembers name={frontMatter.class_name} separateSignature={false} />

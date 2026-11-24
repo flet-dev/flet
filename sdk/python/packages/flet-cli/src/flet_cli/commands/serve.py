@@ -79,7 +79,7 @@ class Command(BaseCommand):
 
         def handler(*args, **kwargs):
             """
-            Factory that binds [`CustomHandler`][(m).] to `directory`.
+            Factory that binds `CustomHandler` to `directory`.
             """
 
             return CustomHandler(

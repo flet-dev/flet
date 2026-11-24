@@ -12,12 +12,15 @@ dependencies = [
 
 [project.urls]
 Homepage = "https://flet.dev"
-Documentation = "https://docs.flet.dev/rive"
+Documentation = "https://flet.dev/docs/controls/rive"
 Repository = "https://github.com/flet-dev/flet/tree/main/sdk/python/packages/flet-rive"
 Issues = "https://github.com/flet-dev/flet/issues"
 
 [tool.setuptools.package-data]
-"flutter.flet_rive" = ["**/*"]
+"flutter.flet_rive" = [
+    "pubspec.yaml",
+    "lib/**",
+]
 
 [build-system]
 requires = ["setuptools"]

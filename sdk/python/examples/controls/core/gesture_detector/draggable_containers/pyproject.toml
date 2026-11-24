@@ -1,0 +1,30 @@
+[project]
+name = "gesture-detector-draggable-containers"
+version = "1.0.0"
+description = "Drags nested and standalone GestureDetector controls inside a Stack using pan updates."
+requires-python = ">=3.10"
+keywords = ["gesture detector", "drag", "pan update", "stack", "container"]
+authors = [{ name = "Flet team", email = "hello@flet.dev" }]
+dependencies = ["flet"]
+
+[dependency-groups]
+dev = ["flet-cli", "flet-desktop", "flet-web"]
+
+[tool.flet.gallery]
+categories = ["Utility/GestureDetector"]
+
+[tool.flet.metadata]
+title = "Draggable containers"
+docs_intro = """
+The following example demonstrates how a control can be freely dragged inside a Stack.
+
+The sample also shows that GestureDetector can have a child control (blue container) as well as be nested inside another control (yellow container) giving the same results."""
+controls = ["SafeArea", "Stack", "Container", "GestureDetector"]
+layout_pattern = "canvas"
+complexity = "basic"
+features = ["free dragging", "nested gesture detector", "position updates"]
+
+[tool.flet]
+org = "dev.flet"
+company = "Flet"
+copyright = "Copyright (C) 2023-2026 by Flet"

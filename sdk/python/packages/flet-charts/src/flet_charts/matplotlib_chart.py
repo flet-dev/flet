@@ -5,19 +5,22 @@ from io import BytesIO
 from typing import Any, Optional
 
 import flet as ft
-import flet.canvas as fc
+from flet_charts.matplotlib_chart_canvas import (
+    MatplotlibChartCanvas,
+    MatplotlibChartCanvasResizeEvent,
+)
 
-_MATPLOTLIB_IMPORT_ERROR: Optional[ImportError] = None
+_MATPLOTLIB_IMPORT_ERROR: Optional[Exception] = None
 
 try:
     import matplotlib  # type: ignore[import]
     from matplotlib.figure import Figure  # type: ignore[import]
-except ImportError as e:  # pragma: no cover - depends on optional dependency
+
+    matplotlib.use("module://flet_charts.matplotlib_backends.backend_flet_agg")
+except Exception as e:  # pragma: no cover - depends on optional dependency
     matplotlib = None  # type: ignore[assignment]
     Figure = Any  # type: ignore[assignment]
     _MATPLOTLIB_IMPORT_ERROR = e
-else:
-    matplotlib.use("module://flet_charts.matplotlib_backends.backend_flet_agg")
 
 __all__ = [
     "MatplotlibChart",
@@ -43,12 +46,14 @@ def _require_matplotlib() -> None:
     Ensure optional matplotlib dependency is available.
 
     Raises:
-        ModuleNotFoundError: If `matplotlib` is not installed.
+        ModuleNotFoundError: If `matplotlib` is not installed, or is installed
+            but could not be imported.
     """
 
     if matplotlib is None:
         raise ModuleNotFoundError(
-            'Install "matplotlib" Python package to use MatplotlibChart control.'
+            'MatplotlibChart requires the "matplotlib" Python package, which '
+            f"could not be imported: {_MATPLOTLIB_IMPORT_ERROR!r}"
         ) from _MATPLOTLIB_IMPORT_ERROR
 
 
@@ -86,7 +91,7 @@ class MatplotlibChart(ft.GestureDetector):
     Displays a [Matplotlib](https://matplotlib.org/) chart.
 
     To display a Matplotlib figure with a built-in toolbar UI, use
-    [`MatplotlibChartWithToolbar`][flet_charts.matplotlib_chart_with_toolbar.].
+    :class:`~flet_charts.MatplotlibChartWithToolbar`.
 
     Warning:
         This control requires the [`matplotlib`](https://matplotlib.org/)
@@ -123,14 +128,30 @@ class MatplotlibChart(ft.GestureDetector):
         self.__dpr = self.page.media.device_pixel_ratio
         logger.debug(f"DPR: {self.__dpr}")
         self.__image_mode = "full"
+        # Local transports (embedded native, Pyodide, dev socket) move
+        # DataChannel bytes at memcpy speed, so skip diffing + PNG encoding
+        # and stream raw RGBA full frames instead. Remote WebSocket clients
+        # keep the compact PNG full/diff pipeline.
+        self.wants_raw_frames = getattr(
+            self.page.session.connection, "local_data_transport", False
+        )
+        logger.debug(f"wants_raw_frames: {self.wants_raw_frames}")
 
-        self.canvas = fc.Canvas(
-            # resize_interval=10,
+        self.mpl_canvas = MatplotlibChartCanvas(
             on_resize=self._on_canvas_resize,
             expand=True,
         )
+        # Rubberband (zoom selection) overlay drawn on top of the chart image.
+        self._rubberband = ft.Container(
+            visible=False,
+            border=ft.Border.all(1, ft.Colors.with_opacity(0.6, ft.Colors.GREY)),
+        )
+        self._stack = ft.Stack(
+            controls=[self.mpl_canvas, self._rubberband],
+            expand=True,
+        )
         self.keyboard_listener = ft.KeyboardListener(
-            self.canvas,
+            self._stack,
             autofocus=True,
             on_key_down=self._on_key_down,
             on_key_up=self._on_key_up,
@@ -152,7 +173,7 @@ class MatplotlibChart(ft.GestureDetector):
         self._height = 0
         self._waiting = False
 
-    def _on_key_down(self, e):
+    def _on_key_down(self, e: ft.KeyboardEvent) -> None:
         """
         Handle key-down notifications from keyboard listener.
 
@@ -162,7 +183,7 @@ class MatplotlibChart(ft.GestureDetector):
 
         logger.debug(f"ON KEY DOWN: {e}")
 
-    def _on_key_up(self, e):
+    def _on_key_up(self, e: ft.KeyboardEvent) -> None:
         """
         Handle key-up notifications from keyboard listener.
 
@@ -412,81 +433,103 @@ class MatplotlibChart(ft.GestureDetector):
         """
         Consume backend messages and apply canvas/state updates.
 
-        The loop handles both binary image frames and JSON control messages
-        (cursor updates, draw requests, rubber-band overlays, status text, and
-        toolbar history state).
+        Message handling is guarded: applying a frame, and Matplotlib's own
+        rendering (which `send_message` runs synchronously, in this task),
+        can both raise. Letting that escape would end the loop - nothing
+        would drain `_receive_queue` again, so the chart would freeze
+        silently and the traceback would only surface later, as an
+        unretrieved task exception when the task is garbage-collected.
         """
 
         while True:
             is_binary, content = await self._receive_queue.get()
-            if is_binary:
-                logger.debug(f"receive_binary({len(content)})")
-                if self.__image_mode == "full":
-                    await self.canvas.clear_capture()
-
-                self.canvas.shapes = [
-                    fc.Image(
-                        src=content,
-                        x=0,
-                        y=0,
-                        width=self.figure.bbox.size[0] / self.__dpr,
-                        height=self.figure.bbox.size[1] / self.__dpr,
-                    )
-                ]
-                ft.context.disable_auto_update()
-                self.canvas.update()
-                await self.canvas.capture()
-                self.img_count += 1
+            try:
+                await self._handle_message(is_binary, content)
+            except asyncio.CancelledError:
+                raise
+            except Exception:
+                logger.exception("Error handling Matplotlib backend message")
+                # A draw that raised never produces the frame that clears
+                # this gate, so clear it here or no further draw is ever
+                # requested.
                 self._waiting = False
+
+    async def _handle_message(self, is_binary: bool, content: Any) -> None:
+        """
+        Apply a single message from the Matplotlib backend.
+
+        Handles both binary image frames and JSON control messages (cursor
+        updates, draw requests, rubber-band overlays, status text, and
+        toolbar history state).
+
+        Args:
+            is_binary: Whether `content` is an image frame rather than JSON.
+            content: Frame payload or JSON control message.
+        """
+
+        if is_binary:
+            # Hand the frame to the client widget — a raw RGBA frame
+            # (pre-encoded 0x04 packet) or full PNG replaces the
+            # backbuffer, diff PNG composites onto it. `await`
+            # here serialises this receive loop on the Dart-side
+            # frame-applied ack: matplotlib "draw" notifications that
+            # arrive during the round-trip stay queued in
+            # `_receive_queue` and are processed after the ack returns,
+            # instead of being eagerly dropped against a stale
+            # `_waiting=True` gate. This is the same backpressure shape
+            # the 0.85 `_invoke_method` round-trip used to provide.
+            if isinstance(content, tuple) and content[0] == "raw":
+                logger.debug(f"receive_binary(raw, {len(content[1])})")
+                await self.mpl_canvas.apply_raw_packet(content[1])
+            elif self.__image_mode == "full":
+                logger.debug(f"receive_binary(full, {len(content)})")
+                await self.mpl_canvas.apply_full(bytes(content))
             else:
-                logger.debug(f"receive_json({content})")
-                if content["type"] == "image_mode":
-                    self.__image_mode = content["mode"]
-                elif content["type"] == "cursor":
-                    self.mouse_cursor = figure_cursors[content["cursor"]]
-                    self.update()
-                elif content["type"] == "draw" and not self._waiting:
-                    self._waiting = True
-                    self.send_message({"type": "draw"})
-                elif content["type"] == "rubberband":
-                    if len(self.canvas.shapes) == 2:
-                        self.canvas.shapes.pop()
-                    if (
-                        content["x0"] != -1
-                        and content["y0"] != -1
-                        and content["x1"] != -1
-                        and content["y1"] != -1
-                    ):
-                        x0 = content["x0"] / self.__dpr
-                        y0 = self._height - content["y0"] / self.__dpr
-                        x1 = content["x1"] / self.__dpr
-                        y1 = self._height - content["y1"] / self.__dpr
-                        self.canvas.shapes.append(
-                            fc.Rect(
-                                x=x0,
-                                y=y0,
-                                width=x1 - x0,
-                                height=y1 - y0,
-                                paint=ft.Paint(
-                                    stroke_width=1, style=ft.PaintingStyle.STROKE
-                                ),
-                            )
-                        )
-                    self.canvas.update()
-                elif content["type"] == "resize":
-                    self.send_message({"type": "refresh"})
-                elif content["type"] == "message":
-                    await self._trigger_event(
-                        "message", {"message": content["message"]}
-                    )
-                elif content["type"] == "history_buttons":
-                    await self._trigger_event(
-                        "toolbar_buttons_update",
-                        {
-                            "back_enabled": content["Back"],
-                            "forward_enabled": content["Forward"],
-                        },
-                    )
+                logger.debug(f"receive_binary(diff, {len(content)})")
+                await self.mpl_canvas.apply_diff(bytes(content))
+            self.img_count += 1
+            self._waiting = False
+        else:
+            logger.debug(f"receive_json({content})")
+            if content["type"] == "image_mode":
+                self.__image_mode = content["mode"]
+            elif content["type"] == "cursor":
+                self.mouse_cursor = figure_cursors[content["cursor"]]
+                self.update()
+            elif content["type"] == "draw" and not self._waiting:
+                self._waiting = True
+                self.send_message({"type": "draw"})
+            elif content["type"] == "rubberband":
+                if (
+                    content["x0"] != -1
+                    and content["y0"] != -1
+                    and content["x1"] != -1
+                    and content["y1"] != -1
+                ):
+                    x0 = content["x0"] / self.__dpr
+                    y0 = self._height - content["y0"] / self.__dpr
+                    x1 = content["x1"] / self.__dpr
+                    y1 = self._height - content["y1"] / self.__dpr
+                    self._rubberband.left = min(x0, x1)
+                    self._rubberband.top = min(y0, y1)
+                    self._rubberband.width = abs(x1 - x0)
+                    self._rubberband.height = abs(y1 - y0)
+                    self._rubberband.visible = True
+                else:
+                    self._rubberband.visible = False
+                self._rubberband.update()
+            elif content["type"] == "resize":
+                self.send_message({"type": "refresh"})
+            elif content["type"] == "message":
+                await self._trigger_event("message", {"message": content["message"]})
+            elif content["type"] == "history_buttons":
+                await self._trigger_event(
+                    "toolbar_buttons_update",
+                    {
+                        "back_enabled": content["Back"],
+                        "forward_enabled": content["Forward"],
+                    },
+                )
 
     def send_message(self, message):
         """Sends a message to the figure's canvas manager."""
@@ -503,12 +546,23 @@ class MatplotlibChart(ft.GestureDetector):
         )
 
     def send_binary(self, blob):
-        """Sends a binary message to the front end."""
+        """Sends a binary message to the front end.
+
+        Receives PNG `bytes` from matplotlib's stock full/diff path, or a
+        `(width, height, rgba)` tuple from `FigureManagerFletAgg.refresh_all`
+        in raw mode. This method runs synchronously inside `refresh_all()`
+        (same stack as `draw()`), which is the last safe moment to copy the
+        raw buffer — it aliases the live Agg buffer that the next draw
+        mutates in place. `encode_raw_frame` performs that one copy while
+        assembling the wire packet.
+        """
+        if isinstance(blob, tuple):
+            blob = ("raw", MatplotlibChartCanvas.encode_raw_frame(*blob))
         self._main_loop.call_soon_threadsafe(
             lambda: self._receive_queue.put_nowait((True, blob))
         )
 
-    async def _on_canvas_resize(self, e: fc.CanvasResizeEvent):
+    async def _on_canvas_resize(self, e: MatplotlibChartCanvasResizeEvent):
         """
         Handle canvas resize and initialize backend session on first resize.
 

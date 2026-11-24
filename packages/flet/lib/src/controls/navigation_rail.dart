@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 
 import '../extensions/control.dart';
 import '../models/control.dart';
@@ -83,14 +83,23 @@ class _NavigationRailControlState extends State<NavigationRailControl>
           backgroundColor: widget.control.getColor("bgcolor", context),
           indicatorColor: widget.control.getColor("indicator_color", context),
           leading: widget.control.buildWidget("leading"),
+          leadingAtTop: widget.control.getBool("pin_leading_to_top", true)!,
           trailing: widget.control.buildWidget("trailing"),
+          trailingAtBottom:
+              widget.control.getBool("pin_trailing_to_bottom", false)!,
+          scrollable: widget.control.getBool("scrollable", false)!,
           selectedIndex: _selectedIndex,
           useIndicator: widget.control.getBool("use_indicator"),
           onDestinationSelected: _destinationChanged,
           destinations:
               widget.control.children("destinations").map((destinationControl) {
             destinationControl.notifyParent = true;
-            var icon = destinationControl.buildIconOrWidget("icon")!;
+            var icon = destinationControl.buildIconOrWidget("icon",
+                required: true,
+                errorWidget: const ErrorControl(
+                    "Error displaying NavigationRailDestination.icon",
+                    description:
+                        "Must be a valid IconData or visible Control"))!;
             Widget? selectedIcon =
                 destinationControl.buildIconOrWidget("selected_icon");
             return NavigationRailDestination(

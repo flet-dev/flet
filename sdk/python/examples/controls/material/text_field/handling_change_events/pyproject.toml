@@ -1,0 +1,26 @@
+[project]
+name = "text-field-handling-change-events"
+version = "1.0.0"
+description = "Echoes TextField input live as the value changes."
+requires-python = ">=3.10"
+keywords = ["text field", "events", "change", "input", "live"]
+authors = [{ name = "Flet team", email = "hello@flet.dev" }]
+dependencies = ["flet"]
+
+[dependency-groups]
+dev = ["flet-cli", "flet-desktop", "flet-web"]
+
+[tool.flet.gallery]
+categories = ["Input/TextField"]
+
+[tool.flet.metadata]
+title = "Handling change events"
+controls = ["SafeArea", "Column", "TextField", "Text"]
+layout_pattern = "stacked-actions"
+complexity = "basic"
+features = ["change events", "live updates"]
+
+[tool.flet]
+org = "dev.flet"
+company = "Flet"
+copyright = "Copyright (C) 2023-2026 by Flet"

@@ -1,0 +1,26 @@
+[project]
+name = "gesture-detector-handling-events"
+version = "1.0.0"
+description = "Logs tap, press, pan, hover, and enter/exit callbacks from a single GestureDetector."
+requires-python = ">=3.10"
+keywords = ["gesture detector", "events", "tap", "pan", "hover"]
+authors = [{ name = "Flet team", email = "hello@flet.dev" }]
+dependencies = ["flet"]
+
+[dependency-groups]
+dev = ["flet-cli", "flet-desktop", "flet-web"]
+
+[tool.flet.gallery]
+categories = ["Utility/GestureDetector"]
+
+[tool.flet.metadata]
+title = "Handling events"
+controls = ["SafeArea", "GestureDetector", "Container"]
+layout_pattern = "single-panel"
+complexity = "basic"
+features = ["multi-gesture callbacks", "hover and pointer callbacks"]
+
+[tool.flet]
+org = "dev.flet"
+company = "Flet"
+copyright = "Copyright (C) 2023-2026 by Flet"

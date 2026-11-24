@@ -3,12 +3,11 @@ import 'dart:ui' as ui;
 import 'dart:ui';
 
 import 'package:collection/collection.dart';
-import 'package:flutter/cupertino.dart';
+import 'package:cupertino_ui/cupertino_ui.dart';
 import 'package:flutter/foundation.dart';
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:provider/provider.dart';
 
 import '../extensions/control.dart';
@@ -22,11 +21,14 @@ import '../routing/route_information_provider.dart';
 import '../routing/route_parser.dart';
 import '../routing/route_state.dart';
 import '../routing/router_delegate.dart';
+import '../services/embedded_window.dart';
 import '../services/service_binding.dart';
 import '../services/service_registry.dart';
+import '../utils/animations.dart';
 import '../utils/device_info.dart';
 import '../utils/locale.dart';
 import '../utils/numbers.dart';
+import '../utils/package_info.dart';
 import '../utils/platform.dart';
 import '../utils/platform_utils_web.dart'
     if (dart.library.io) "../utils/platform_utils_non_web.dart";
@@ -36,8 +38,9 @@ import '../utils/theme.dart';
 import '../utils/time.dart';
 import '../utils/user_fonts.dart';
 import '../widgets/animated_transition_page.dart';
-import '../widgets/loading_page.dart';
+import '../widgets/boot_screen.dart';
 import '../widgets/page_context.dart';
+import '../widgets/embedded_app_scope.dart';
 import '../widgets/page_media.dart';
 import 'control_widget.dart';
 
@@ -61,6 +64,7 @@ class _PageControlState extends State<PageControl> with WidgetsBindingObserver {
   late final AppLifecycleListener _appLifecycleListener;
   ServiceRegistry? _services;
   String? _servicesUid;
+  Control? _servicesControl;
   ServiceBinding? _windowService;
   Control? _windowControl;
   bool? _prevOnKeyboardEvent;
@@ -73,6 +77,22 @@ class _PageControlState extends State<PageControl> with WidgetsBindingObserver {
   final Map<int, MultiView> _multiViews = <int, MultiView>{};
   bool _registeredFromMultiViews = false;
 
+  // True when this page is a nested/embedded app (hosted inside another Flet
+  // app via FletApp, so its backend has a controlId). Embedded pages chain
+  // their system back handling to the host through [_childBackButtonDispatcher].
+  bool _isEmbedded = false;
+  EmbeddedAppScope? _embeddedScope;
+  String? _reportedTitle;
+  EmbeddedWindowService? _embeddedWindow;
+
+  // For an embedded page, a child of the host Router's back button dispatcher.
+  // Without it, MaterialApp.router/CupertinoApp.router would install their own
+  // RootBackButtonDispatcher, and a system/edge-swipe back that the embedded
+  // app can't handle (e.g. it has a single view) would call SystemNavigator.pop()
+  // and exit the whole host app instead of propagating to the host, which would
+  // pop the view embedding this app.
+  ChildBackButtonDispatcher? _childBackButtonDispatcher;
+
   @override
   void initState() {
     debugPrint("Page.initState: ${widget.control.id}");
@@ -83,7 +103,8 @@ class _PageControlState extends State<PageControl> with WidgetsBindingObserver {
 
     _routeParser = RouteParser();
     final backend = FletBackend.of(context);
-    final isEmbedded = backend.controlId != null;
+    _isEmbedded = backend.controlId != null;
+    final isEmbedded = _isEmbedded;
     final defaultRouteName =
         WidgetsBinding.instance.platformDispatcher.defaultRouteName;
     final pendingInitial = isEmbedded
@@ -133,8 +154,43 @@ class _PageControlState extends State<PageControl> with WidgetsBindingObserver {
   void didChangeDependencies() {
     debugPrint("Page.didChangeDependencies: ${widget.control.id}");
     super.didChangeDependencies();
+
+    // Resolve the host scope *before* the services, not after: the embedded
+    // window service is built from it, so looking it up later leaves that
+    // service with nothing to apply on the pass that creates it.
+    //
+    // Reading it here rather than in initState both registers the dependency
+    // and re-runs this method whenever the host changes what it wants.
+    if (_isEmbedded) {
+      _embeddedScope = EmbeddedAppScope.maybeOf(context);
+    }
+
     _ensureServiceRegistries();
     _loadFontsIfNeeded(FletBackend.of(context));
+
+    // Take the route the host wants, and tell it our title.
+    if (_isEmbedded) {
+      var wanted = _embeddedScope?.route;
+      if (wanted != null && wanted.isNotEmpty && wanted != _routeState.route) {
+        // Push through the local provider so the Router parses it and updates
+        // RouteState - the same path a self-navigation takes.
+        (_routeInformationProvider as FletLocalRouteInformationProvider)
+            .didPushRouteInformation(RouteInformation(uri: Uri.parse(wanted)));
+      }
+      _reportTitleToHost();
+    }
+
+    // Hook this page's system back handling into the host Router so an
+    // unhandled back propagates to the host (which pops the embedding view)
+    // instead of exiting the whole app.
+    if (_isEmbedded && _childBackButtonDispatcher == null) {
+      final parentBackButtonDispatcher =
+          Router.maybeOf(context)?.backButtonDispatcher;
+      if (parentBackButtonDispatcher != null) {
+        _childBackButtonDispatcher =
+            parentBackButtonDispatcher.createChildBackButtonDispatcher();
+      }
+    }
   }
 
   @override
@@ -187,7 +243,16 @@ class _PageControlState extends State<PageControl> with WidgetsBindingObserver {
     super.dispose();
   }
 
+  void _reportTitleToHost() {
+    var title = widget.control.getString("title");
+    if (title != null && title != _reportedTitle) {
+      _reportedTitle = title;
+      _embeddedScope?.onTitleChanged(title);
+    }
+  }
+
   void _onPageControlChanged() {
+    _reportTitleToHost();
     _ensureServiceRegistries();
   }
 
@@ -200,21 +265,54 @@ class _PageControlState extends State<PageControl> with WidgetsBindingObserver {
     var servicesControl = widget.control.child("_services");
     if (servicesControl != null) {
       var uid = servicesControl.internals?["uid"];
-      if (_services == null || _servicesUid != uid) {
+      // Rebuild the registry when the uid changes OR when the Control instance
+      // itself is replaced. The uid identifies the Python-side ServiceRegistry,
+      // which outlives individual patches, so it stays the same when a REPLACE
+      // swaps in a fresh Control object — and ServiceRegistry listens to the
+      // object it was handed. Keying on uid alone left the registry subscribed
+      // to a detached Control: services registered afterwards were never built,
+      // and invoking one timed out with "Timeout waiting for invoke method
+      // listener for <Service>(id).<method>". Matches how `window` below tracks
+      // its control by identity.
+      if (_services == null ||
+          _servicesUid != uid ||
+          !identical(servicesControl, _servicesControl)) {
         _services?.dispose();
         _services = ServiceRegistry(
             control: servicesControl,
             propertyName: "_services",
             backend: backend);
         _servicesUid = uid;
+        _servicesControl = servicesControl;
       }
     } else if (_services != null) {
       _services?.dispose();
       _services = null;
       _servicesUid = null;
+      _servicesControl = null;
     }
 
-    var windowControl = widget.control.child("window", visibleOnly: false);
+    // An embedded app must never drive the real OS window: the window service
+    // applies `page.window.*` *and* `page.title` to the actual host window
+    // (services/window.dart), so a guest setting a title would rename the app
+    // hosting it. It gets a simulated window wired to its host instead.
+    var pageWindow = widget.control.child("window", visibleOnly: false);
+    if (_isEmbedded) {
+      if (pageWindow != null && _embeddedWindow?.control != pageWindow) {
+        _embeddedWindow?.dispose();
+        _embeddedWindow = EmbeddedWindowService(
+          control: pageWindow,
+          onAction: (name, args) =>
+              _embeddedScope?.onWindowAction(name, args),
+        );
+      } else if (pageWindow == null && _embeddedWindow != null) {
+        _embeddedWindow?.dispose();
+        _embeddedWindow = null;
+      }
+      _embeddedWindow?.apply(_embeddedScope?.window);
+    }
+
+    var windowControl = _isEmbedded ? null : pageWindow;
     if (windowControl != null) {
       if (!identical(windowControl, _windowControl)) {
         _windowService?.dispose();
@@ -260,11 +358,45 @@ class _PageControlState extends State<PageControl> with WidgetsBindingObserver {
           return data?.buffer.asUint8List();
         }
 
+      case "take_animation":
+        {
+          final frameDelaysMs =
+              List<int>.from(args["frame_delays_ms"] ?? const []);
+          final frames = <Uint8List>[];
+          // In integration tests the scheduler doesn't advance animations on
+          // its own during Future.delayed — WidgetTester.pump is what drives
+          // the clock. Use it when available so in-flight animations progress
+          // between captures; fall back to Future.delayed outside test mode.
+          final tester = FletBackend.of(context).tester;
+          for (final delayMs in frameDelaysMs) {
+            final delay = Duration(milliseconds: delayMs);
+            if (tester != null) {
+              await tester.pump(duration: delay);
+            } else {
+              await Future.delayed(delay);
+            }
+            final ctx = _rootKey.currentContext;
+            if (ctx == null || !ctx.mounted) return frames;
+            final boundary = ctx.findRenderObject() as RenderRepaintBoundary?;
+            if (boundary == null) return frames;
+            final pixelRatio = parseDouble(
+                args["pixel_ratio"], MediaQuery.of(ctx).devicePixelRatio)!;
+            final image = await boundary.toImage(pixelRatio: pixelRatio);
+            final data = await image.toByteData(format: ui.ImageByteFormat.png);
+            image.dispose();
+            if (data == null) return frames;
+            frames.add(data.buffer.asUint8List());
+          }
+          return frames;
+        }
+
       case "push_route":
         _routeState.route = args["route"];
         break;
       case "get_device_info":
         return await getDeviceInfo();
+      case "get_package_info":
+        return await getPackageInfo();
       case "set_allowed_device_orientations":
         if (isMobilePlatform()) {
           var orientations = args["orientations"]
@@ -332,6 +464,8 @@ class _PageControlState extends State<PageControl> with WidgetsBindingObserver {
 
   void _routeChanged() {
     FletBackend.of(context).onRouteUpdated(_routeState.route);
+    // Let the hosting FletApp control mirror the route and raise its event.
+    _embeddedScope?.onRouteChanged(_routeState.route);
   }
 
   void _markViewAsPopped(String routeStr) {
@@ -353,7 +487,7 @@ class _PageControlState extends State<PageControl> with WidgetsBindingObserver {
 
     final topView = views.last;
     final canPop = topView.getBool("can_pop", true) ?? true;
-    final requiresConfirm = topView.getBool("on_confirm_pop", false) ?? false;
+    final requiresConfirm = topView.hasEventHandler("confirm_pop");
     if (!canPop || requiresConfirm) {
       return null;
     }
@@ -402,12 +536,12 @@ class _PageControlState extends State<PageControl> with WidgetsBindingObserver {
   }
 
   void _attachKeyboardListenerIfNeeded() {
-    var onKeyboardEvent = widget.control.getBool("on_keyboard_event", false);
+    var onKeyboardEvent = widget.control.hasEventHandler("keyboard_event");
     if (onKeyboardEvent != _prevOnKeyboardEvent) {
-      if (onKeyboardEvent == true && !_keyboardHandlerSubscribed) {
+      if (onKeyboardEvent && !_keyboardHandlerSubscribed) {
         HardwareKeyboard.instance.addHandler(_handleKeyDown);
         _keyboardHandlerSubscribed = true;
-      } else if (onKeyboardEvent == false && _keyboardHandlerSubscribed) {
+      } else if (!onKeyboardEvent && _keyboardHandlerSubscribed) {
         HardwareKeyboard.instance.removeHandler(_handleKeyDown);
         _keyboardHandlerSubscribed = false;
       }
@@ -446,13 +580,6 @@ class _PageControlState extends State<PageControl> with WidgetsBindingObserver {
       return _buildApp(widget.control, null);
     } else {
       // multi-view mode
-      var appStatus = context
-          .select<FletBackend, ({bool isLoading, String error})>((backend) =>
-              (isLoading: backend.isLoading, error: backend.error));
-      var appStartupScreenMessage = backend.appStartupScreenMessage ?? "";
-      var formattedErrorMessage =
-          backend.formatAppErrorMessage(appStatus.error);
-
       List<Widget> views = [];
       for (var view in _multiViews.entries) {
         var multiViewControl = widget.control
@@ -468,12 +595,12 @@ class _PageControlState extends State<PageControl> with WidgetsBindingObserver {
               ? ControlWidget(control: viewControl)
               : Stack(children: [
                   PageMedia(view: multiViewControl),
-                  LoadingPage(
-                    isLoading: appStatus.isLoading,
-                    message: appStatus.isLoading
-                        ? appStartupScreenMessage
-                        : formattedErrorMessage,
-                  )
+                  resolveBootScreen(
+                    name: backend.bootScreenName,
+                    options: backend.bootScreenOptions,
+                    extensions: backend.extensions,
+                    status: backend.bootStatus,
+                  ),
                 ]),
         );
 
@@ -497,22 +624,31 @@ class _PageControlState extends State<PageControl> with WidgetsBindingObserver {
         : PageDesign.material;
 
     // theme
+    // An embedded page does not inherit its host's theme mode: it is a
+    // separate app, and an unset `theme_mode` means SYSTEM - following the
+    // platform brightness its host gives it (`FletApp.platform_brightness`),
+    // not whatever theme the host app itself is in.
     var themeMode = control.getThemeMode("theme_mode") ??
-        PageContext.of(context)?.themeMode;
+        (_isEmbedded ? null : PageContext.of(context)?.themeMode);
+
+    var themeAnimationStyle =
+        control.getAnimationStyle("theme_animation_style");
 
     var localeConfiguration =
         control.getLocaleConfiguration("locale_configuration");
 
-    var localizationsDelegates = const [
-      GlobalMaterialLocalizations.delegate,
-      GlobalWidgetsLocalizations.delegate,
-      GlobalCupertinoLocalizations.delegate,
-    ];
+    var localizationsDelegates = GlobalMaterialLocalizations.delegates;
 
     var brightness = context.select<FletBackend, Brightness>(
         (backend) => backend.platformBrightness);
 
-    var windowTitle = control.getString("title", "")!;
+    // An embedded page leaves the real window/tab title alone: its title
+    // goes to the host (`EmbeddedAppScope.onTitleChanged`), which shows it in
+    // the window it draws - or nowhere. `null` makes WidgetsApp skip its
+    // `Title` widget on the web, which would otherwise overwrite the host
+    // page's browser tab title.
+    String? windowTitle =
+        _isEmbedded ? null : control.getString("title", "")!;
 
     var newLightTheme = control.getTheme("theme", context, Brightness.light);
     var newDarkTheme = control.getString("dark_theme") == null
@@ -554,11 +690,26 @@ class _PageControlState extends State<PageControl> with WidgetsBindingObserver {
     var showSemanticsDebugger =
         control.getBool("show_semantics_debugger", false)!;
 
+    // Claim back-button priority for the embedded page so its Router (and, on a
+    // fall-through, the host Router) receives system back events. Re-asserted on
+    // every build, matching Flutter's nested-Router guidance.
+    _childBackButtonDispatcher?.takePriority();
+
+    // For an embedded page, do NOT let WidgetsApp's default NavigationNotification
+    // handler run: it would call SystemNavigator.setFrameworkHandlesBack(false)
+    // (this nested app's single view can't pop) and stop the notification, so the
+    // OS finishes the whole activity on a system/edge-swipe back. Returning false
+    // lets the notification bubble to the host app, whose Navigator re-reports
+    // canHandlePop=true when the host can pop the view embedding this app.
+    final NotificationListenerCallback<NavigationNotification>?
+        onNavigationNotification = _isEmbedded ? (_) => false : null;
+
     Widget? app = widgetsDesign == PageDesign.cupertino
         ? home != null
             ? CupertinoApp(
                 debugShowCheckedModeBanner: false,
                 showSemanticsDebugger: showSemanticsDebugger,
+                onNavigationNotification: onNavigationNotification,
                 title: windowTitle,
                 theme: cupertinoTheme,
                 builder: scaffoldMessengerBuilder,
@@ -570,9 +721,11 @@ class _PageControlState extends State<PageControl> with WidgetsBindingObserver {
             : CupertinoApp.router(
                 debugShowCheckedModeBanner: false,
                 showSemanticsDebugger: showSemanticsDebugger,
+                onNavigationNotification: onNavigationNotification,
                 routerDelegate: _routerDelegate,
                 routeInformationParser: _routeParser,
                 routeInformationProvider: _routeInformationProvider,
+                backButtonDispatcher: _childBackButtonDispatcher,
                 title: windowTitle,
                 theme: cupertinoTheme,
                 builder: scaffoldMessengerBuilder,
@@ -584,10 +737,12 @@ class _PageControlState extends State<PageControl> with WidgetsBindingObserver {
             ? MaterialApp(
                 debugShowCheckedModeBanner: false,
                 showSemanticsDebugger: showSemanticsDebugger,
+                onNavigationNotification: onNavigationNotification,
                 title: windowTitle,
                 theme: lightTheme,
                 darkTheme: darkTheme,
                 themeMode: themeMode,
+                themeAnimationStyle: themeAnimationStyle,
                 supportedLocales: localeConfiguration.supportedLocales,
                 locale: localeConfiguration.locale,
                 localizationsDelegates: localizationsDelegates,
@@ -596,17 +751,32 @@ class _PageControlState extends State<PageControl> with WidgetsBindingObserver {
             : MaterialApp.router(
                 debugShowCheckedModeBanner: false,
                 showSemanticsDebugger: showSemanticsDebugger,
+                onNavigationNotification: onNavigationNotification,
                 routerDelegate: _routerDelegate,
                 routeInformationParser: _routeParser,
                 routeInformationProvider: _routeInformationProvider,
+                backButtonDispatcher: _childBackButtonDispatcher,
                 title: windowTitle,
                 theme: lightTheme,
                 darkTheme: darkTheme,
                 themeMode: themeMode,
+                themeAnimationStyle: themeAnimationStyle,
                 localizationsDelegates: localizationsDelegates,
                 supportedLocales: localeConfiguration.supportedLocales,
                 locale: localeConfiguration.locale,
               );
+
+    // An embedded page's own Cupertino theme, placed above its app. Flutter's
+    // `Theme` (which MaterialApp applies) reuses an ambient CupertinoTheme if
+    // one exists above it and only derives one from its ThemeData otherwise -
+    // so an embedded page's Cupertino widgets took their colors from the host
+    // app's theme. The theme here derives from this page's Material theme,
+    // which is what a top-level app gets on its own. Top-level pages are left
+    // alone: there their Cupertino colors also animate with MaterialApp's
+    // theme changes, which an ambient theme would cut short.
+    if (_isEmbedded && cupertinoTheme != null) {
+      app = CupertinoTheme(data: cupertinoTheme, child: app);
+    }
 
     if (control.getBool("enable_screenshots") == true) {
       app = RepaintBoundary(key: _rootKey, child: app);
@@ -625,13 +795,6 @@ class _PageControlState extends State<PageControl> with WidgetsBindingObserver {
     debugPrint("Page navigator build: ${widget.control.id}");
 
     var backend = FletBackend.of(context);
-    var showAppStartupScreen = backend.showAppStartupScreen ?? false;
-    var appStartupScreenMessage = backend.appStartupScreenMessage ?? "";
-
-    var appStatus =
-        context.select<FletBackend, ({bool isLoading, String error})>(
-            (backend) => (isLoading: backend.isLoading, error: backend.error));
-    var formattedErrorMessage = backend.formatAppErrorMessage(appStatus.error);
 
     var views = widget.control.children("views");
     final viewRouteValues = views
@@ -655,19 +818,15 @@ class _PageControlState extends State<PageControl> with WidgetsBindingObserver {
       pages.add(AnimatedTransitionPage(
           fadeTransition: true,
           duration: Duration.zero,
-          child: showAppStartupScreen
-              ? Stack(children: [
-                  const PageMedia(),
-                  LoadingPage(
-                    isLoading: appStatus.isLoading,
-                    message: appStatus.isLoading
-                        ? appStartupScreenMessage
-                        : formattedErrorMessage,
-                  )
-                ])
-              : const Scaffold(
-                  body: PageMedia(),
-                )));
+          child: Stack(children: [
+            const PageMedia(),
+            resolveBootScreen(
+              name: backend.bootScreenName,
+              options: backend.bootScreenOptions,
+              extensions: backend.extensions,
+              status: backend.bootStatus,
+            ),
+          ])));
     } else {
       String viewRoutes = effectiveViews
           .map((v) => v.getString("route", v.id.toString()))
@@ -698,6 +857,12 @@ class _PageControlState extends State<PageControl> with WidgetsBindingObserver {
     return Navigator(
       key: navigatorKey,
       pages: pages,
+      // A route pushed onto a Navigator takes the focus by default. An
+      // embedded app pushes one when it starts (its boot screen, then its
+      // views) and on every restart, which pulled the focus out of whatever
+      // the host app had focused - e.g. a text field being typed in. It
+      // gets the focus when the user clicks or taps into it instead.
+      requestFocus: !_isEmbedded,
       onDidRemovePage: (page) {
         if (pages.length <= 1) {
           return;

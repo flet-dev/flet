@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Painted behind the launch splash, and behind the Android 12+ splash
+         icon. flutter_native_splash used a 1x1 PNG stretched to fill for this;
+         a colour resource needs no asset and no regeneration when it changes. -->
+    <color name="flet_splash_background">{{ cookiecutter.splash.color }}</color>
+</resources>

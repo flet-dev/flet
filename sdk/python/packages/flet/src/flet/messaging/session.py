@@ -1,28 +1,37 @@
 import asyncio
+import contextlib
+import dataclasses
 import inspect
 import logging
 import traceback
 import weakref
+from collections.abc import Awaitable, Callable
 from datetime import datetime, timedelta, timezone
-from typing import Any, Optional
+from threading import Lock
+from typing import TYPE_CHECKING, Any, Optional
 
-from flet.components.hooks.use_effect import EffectHook
 from flet.controls.base_control import BaseControl
 from flet.controls.context import _context_page, context
 from flet.controls.object_patch import ObjectPatch
 from flet.controls.page import Page
 from flet.messaging.connection import Connection
 from flet.messaging.protocol import (
-    ClientAction,
-    ClientMessage,
     InvokeMethodRequestBody,
+    Message,
+    MessageAction,
     PatchControlBody,
     SessionCrashedBody,
 )
 from flet.messaging.session_store import SessionStore
 from flet.pubsub.pubsub_client import PubSubClient
-from flet.utils.object_model import patch_dataclass
+from flet.utils.event_loop import running_loop
+from flet.utils.object_model import is_coroutine_result, patch_dataclass
 from flet.utils.strings import random_string
+
+if TYPE_CHECKING:
+    # Annotation-only (quoted at use site): deferred so a Session doesn't eagerly
+    # pull the components/hooks subsystem (cold-start import cost).
+    from flet.components.hooks.use_effect import EffectHook
 
 logger = logging.getLogger("flet")
 patch_logger = logging.getLogger("flet_object_patch")
@@ -34,14 +43,14 @@ class Session:
     """
     Represents a server-side Flet session.
 
-    A session owns the root [`Page`][flet.], tracks mounted controls, dispatches
+    A session owns the root :class:`~flet.Page`, tracks mounted controls, dispatches
     control events, synchronizes UI patches with the client connection, and coordinates
     deferred updates/effects.
     """
 
     def __init__(self, conn: Connection):
         self.__conn = conn
-        self.__send_buffer: list[ClientMessage] = []
+        self.__send_buffer: list[Message] = []
         self.__id = random_string(16)
         self.__expires_at = None
         self.__index: weakref.WeakValueDictionary[int, BaseControl] = (
@@ -51,18 +60,50 @@ class Session:
         self.__index[self.__page._i] = self.__page
         self.__store: SessionStore = SessionStore()
         self.__pubsub_client = PubSubClient(conn.pubsubhub, self.__id)
-        self.__method_calls: dict[str, asyncio.Event] = {}
-        self.__method_call_results: dict[asyncio.Event, tuple[Any, Optional[str]]] = {}
+        self.__method_calls: dict[str, asyncio.Future] = {}
+        self.__updates_lock = Lock()
+        """Guards the update and effect queues and the state that decides whether
+        they accept work (`conn`, `expires_at`, `closed`), which worker threads
+        read when they queue work."""
+        self.__wakeup_pending = False
+        """Whether a worker thread posted a scheduler wakeup to the event loop that
+        hasn't run yet, so later workers don't post another one."""
         self.__updates_ready: asyncio.Event = asyncio.Event()
         self.__pending_updates: set[BaseControl] = set()
-        self.__pending_effects: list[tuple[weakref.ref[EffectHook], bool]] = []
+        self.__pending_effects: list[
+            tuple[EffectHook, Callable[[], Any | Awaitable[Any]] | None]
+        ] = []
+        self.__effect_cleanup_tasks: set[asyncio.Task] = set()
+        """Tasks awaiting `async` effect cleanups, held until they finish so they
+        aren't garbage collected while pending."""
         self.__updates_task: Optional[asyncio.Task] = None
         self.__closed = False
+        # Whether this session's app renders via the declarative components
+        # API (page.render/render_views). Tracked per-session — not on the
+        # global `context` singleton — so concurrent apps in one process
+        # (e.g. an embedded FletApp) keep independent update behavior.
+        self.__components_mode = False
 
         session_id = self.__id
         weakref.finalize(
-            self, lambda: logger.info(f"Session was garbage collected: {session_id}")
+            self,
+            lambda: logger.info("Session was garbage collected: %s", session_id),
         )
+
+    @property
+    def components_mode(self) -> bool:
+        """
+        Whether this session's app uses the declarative components API.
+
+        Set by `Page.render`/`render_views` and read by
+        :meth:`flet.context.auto_update_enabled`. Kept on the session so that
+        multiple apps sharing one process do not interfere.
+        """
+        return self.__components_mode
+
+    @components_mode.setter
+    def components_mode(self, value: bool) -> None:
+        self.__components_mode = value
 
     @property
     def connection(self) -> Connection:
@@ -71,7 +112,7 @@ class Session:
 
         Returns:
             Active `Connection` instance. It may be `None` after
-            [`disconnect()`][(c).disconnect] until a reconnect occurs.
+            :meth:`disconnect` until a reconnect occurs.
         """
         return self.__conn
 
@@ -101,14 +142,14 @@ class Session:
         Returns the live control index for this session.
 
         Returns:
-            Weak mapping of control IDs to mounted [`BaseControl`][flet.] instances.
+            Weak mapping of control IDs to mounted :class:`~flet.BaseControl` instances.
         """
         return self.__index
 
     @property
     def page(self):
         """
-        Returns the root [`Page`][flet.] associated with this session.
+        Returns the root :class:`~flet.Page` associated with this session.
         """
         return self.__page
 
@@ -141,10 +182,11 @@ class Session:
         Args:
             conn: Active connection to bind to this session.
         """
-        logger.debug(f"Connect session: {self.id}")
+        logger.debug("Connect session: %s", self.id)
         _context_page.set(self.__page)
-        self.__conn = conn
-        self.__expires_at = None
+        with self.__updates_lock:
+            self.__conn = conn
+            self.__expires_at = None
         for message in self.__send_buffer:
             self.__send_message(message)
         self.__send_buffer.clear()
@@ -177,17 +219,18 @@ class Session:
             session_timeout_seconds: Grace period before the disconnected session is
                 considered expired.
         """
-        logger.debug(f"Disconnect session: {self.id}")
-        self.__expires_at = datetime.now(timezone.utc) + timedelta(
-            seconds=session_timeout_seconds
-        )
+        logger.debug("Disconnect session: %s", self.id)
+        with self.__updates_lock:
+            self.__expires_at = datetime.now(timezone.utc) + timedelta(
+                seconds=session_timeout_seconds
+            )
+            conn, self.__conn = self.__conn, None
+            discarded = self.__take_pending()
+        del discarded
         self.__send_buffer.clear()
-        self.__pending_updates.clear()
-        self.__pending_effects.clear()
         self.__updates_ready.clear()
-        if self.__conn:
-            self.__conn.dispose()
-            self.__conn = None
+        if conn:
+            conn.dispose()
         await self.dispatch_event(self.__page._i, "disconnect", None)
 
     def close(self):
@@ -198,8 +241,11 @@ class Session:
         unsubscribes pub/sub handlers, resolves pending invoke-method calls with
         a closure error, and dispatches the page-level `close` event.
         """
-        logger.debug(f"Closing expired session: {self.id}")
-        self.__closed = True
+        logger.debug("Closing expired session: %s", self.id)
+        with self.__updates_lock:
+            self.__closed = True
+            discarded = self.__take_pending()
+        del discarded
         self.__updates_ready.set()
         if self.__updates_task and not self.__updates_task.done():
             self.__updates_task.cancel()
@@ -222,6 +268,9 @@ class Session:
         and then applied to the local session index by unmounting removed controls and
         mounting added controls.
 
+        Every added control is indexed before any of them runs `did_mount()`, so the
+        index includes all additions in the submitted patch even if a callback raises.
+
         Args:
             control: Current control state to patch from.
             prev_control: Previous control snapshot. If `None`, `control` is used.
@@ -237,30 +286,38 @@ class Session:
             frozen=frozen,
         )
 
-        patch_logger.debug(f"\npatch removed_controls ({len(removed_controls)}):")
+        patch_logger.debug("\npatch removed_controls (%s):", len(removed_controls))
         for c in removed_controls:
             patch_logger.debug("   %s", c)
 
-        for removed_control in removed_controls:
-            if not any(added._i == removed_control._i for added in added_controls):
-                removed_control.will_unmount()
-            self.__index.pop(removed_control._i, None)
-
         if len(patch) > 1:
             self.__send_message(
-                ClientMessage(
-                    ClientAction.PATCH_CONTROL,
+                Message(
+                    MessageAction.PATCH_CONTROL,
                     PatchControlBody(parent._i if parent else control._i, patch),
                 )
             )
 
-        patch_logger.debug(f"\npatch added_controls: ({len(added_controls)})")
+        patch_logger.debug("\npatch added_controls: (%s)", len(added_controls))
         for ac in added_controls:
             patch_logger.debug("   %s", ac)
 
+        # Commit the entire index before lifecycle callbacks. A failed send must
+        # neither unmount existing controls nor remove them from the index, and
+        # a failed callback must not roll back an already-submitted service.
+        for removed_control in removed_controls:
+            self.__index.pop(removed_control._i, None)
         for added_control in added_controls:
             self.__index[added_control._i] = added_control
-            if not any(removed._i == added_control._i for removed in removed_controls):
+
+        added_ids = {added_control._i for added_control in added_controls}
+        for removed_control in removed_controls:
+            if removed_control._i not in added_ids:
+                removed_control.will_unmount()
+
+        removed_ids = {removed_control._i for removed_control in removed_controls}
+        for added_control in added_controls:
+            if added_control._i not in removed_ids:
                 added_control.did_mount()
 
     def apply_patch(self, control_id: int, patch: dict[str, Any]):
@@ -305,6 +362,96 @@ class Session:
         # <operation> := [<type>, <tree_node_index>, <property|index>, <value>]
         return patch[1][3]  # [1] - 1st operation -> [3] - Page
 
+    def __is_mounted_control(self, control: BaseControl) -> bool:
+        try:
+            return control.page is self.__page
+        except RuntimeError:
+            return False
+
+    def __find_live_control(
+        self,
+        value: Any,
+        control_id: int,
+        parent: Optional[BaseControl] = None,
+        visited: Optional[set[int]] = None,
+    ) -> Optional[BaseControl]:
+        if value is None:
+            return None
+
+        if visited is None:
+            visited = set()
+
+        value_id = id(value)
+        if value_id in visited:
+            return None
+
+        current_parent = parent
+        if isinstance(value, BaseControl):
+            visited.add(value_id)
+            if parent is not None and parent is not value:
+                value._parent = weakref.ref(parent)
+            if value._i == control_id:
+                return value
+            current_parent = value
+        elif dataclasses.is_dataclass(value) or isinstance(value, (list, tuple, dict)):
+            visited.add(value_id)
+
+        if dataclasses.is_dataclass(value):
+            for field in dataclasses.fields(value):
+                if field.metadata.get("skip", False) or field.name == "_parent":
+                    continue
+                found = self.__find_live_control(
+                    getattr(value, field.name, None),
+                    control_id,
+                    current_parent,
+                    visited,
+                )
+                if found is not None:
+                    return found
+        elif isinstance(value, dict):
+            for item in value.values():
+                found = self.__find_live_control(
+                    item, control_id, current_parent, visited
+                )
+                if found is not None:
+                    return found
+        elif isinstance(value, (list, tuple)):
+            for item in value:
+                found = self.__find_live_control(
+                    item, control_id, current_parent, visited
+                )
+                if found is not None:
+                    return found
+
+        return None
+
+    def __resolve_event_control(self, control_id: int) -> Optional[BaseControl]:
+        control = self.__index.get(control_id)
+        if control is not None and self.__is_mounted_control(control):
+            return control
+
+        live_control = self.__find_live_control(self.__page, control_id)
+        if live_control is not None:
+            if control is not None and control is not live_control:
+                logger.debug(
+                    "Recovered stale control %s -> %s for event dispatch",
+                    control,
+                    live_control,
+                )
+            self.__index[control_id] = live_control
+            return live_control
+
+        if control is not None:
+            # The control was removed from the page after the client queued
+            # the event (e.g. a size_change from a widget that was just torn
+            # down). There is no page to run the handler against, so drop it
+            # rather than failing with "Control must be added to the page
+            # first".
+            logger.debug(
+                "Dropping event for detached control %s (%s)", control, control_id
+            )
+        return None
+
     # optimizations:
     # - disable auto-update
     # - auto-update to skip already updated items
@@ -325,15 +472,24 @@ class Session:
             event_name: Event name without the `on_` prefix.
             event_data: Raw event payload.
         """
-        control = self.__index.get(control_id)
+        # Bind the page context to THIS session for the duration of the event.
+        # Event dispatch runs in a fresh task whose context var may otherwise
+        # carry another session's page (e.g. when a host app embeds a FletApp),
+        # which would make context-derived state such as auto-update mode
+        # resolve against the wrong session.
+        _context_page.set(self.__page)
+
+        control = self.__resolve_event_control(control_id)
         if not control:
-            logger.debug(f"Control with ID {control_id} not found.")
+            logger.debug("Control with ID %s not found.", control_id)
             return
 
         try:
             await control._trigger_event(event_name, event_data)
         except Exception as e:
-            logger.error(f"Unhandled error in 'on_{event_name}' handler", exc_info=True)
+            logger.error(
+                "Unhandled error in 'on_%s' handler", event_name, exc_info=True
+            )
             self.error(f"{e}\n{traceback.format_exc()}")
 
     async def invoke_method(
@@ -357,37 +513,61 @@ class Session:
 
         Raises:
             TimeoutError: If no invoke-method response is received before timeout.
-            RuntimeError: If the client reports an invocation error.
+            RuntimeError: If the client reports an invocation error, or the
+                session is closed before or while waiting for the response.
+            asyncio.CancelledError: If the calling task is cancelled while
+                waiting; a response that arrives afterwards is dropped.
         """
+        if self.__closed:
+            raise RuntimeError("Session closed")
+
         call_id = random_string(10)
 
         # register callback
-        evt = asyncio.Event()
-        self.__method_calls[call_id] = evt
+        loop = asyncio.get_running_loop()
+        fut = loop.create_future()
+        self.__method_calls[call_id] = fut
+        timeout_handle: Optional[asyncio.TimerHandle] = None
 
-        # call method
-        self.__send_message(
-            ClientMessage(
-                ClientAction.INVOKE_METHOD,
-                InvokeMethodRequestBody(
-                    control_id=control_id, call_id=call_id, name=method_name, args=args
-                ),
-            )
-        )
+        def expire():
+            if not fut.done():
+                fut.set_exception(
+                    TimeoutError(
+                        f"Timeout waiting for invokeMethod {method_name}({args}) call"
+                    )
+                )
 
         try:
-            await asyncio.wait_for(evt.wait(), timeout=timeout)
-        except TimeoutError:
-            if call_id in self.__method_calls:
-                del self.__method_calls[call_id]
-            raise TimeoutError(
-                f"Timeout waiting for invokeMethod {method_name}({args}) call"
-            ) from None
+            # call method
+            self.__send_message(
+                Message(
+                    MessageAction.INVOKE_METHOD,
+                    InvokeMethodRequestBody(
+                        control_id=control_id,
+                        call_id=call_id,
+                        name=method_name,
+                        args=args,
+                    ),
+                )
+            )
 
-        result, err = self.__method_call_results.pop(evt)
-        if err:
-            raise RuntimeError(err)
-        return result
+            # The response, the timeout and session close all complete the
+            # same future, so whichever comes first wins. The future is
+            # awaited directly (not via `asyncio.wait_for()` or
+            # `asyncio.wait()`) so that cancelling the calling task always
+            # raises CancelledError, even if the future completes in the same
+            # event-loop turn.
+            if timeout is not None:
+                timeout_handle = loop.call_later(timeout, expire)
+            return await fut
+        finally:
+            if timeout_handle is not None:
+                timeout_handle.cancel()
+            self.__method_calls.pop(call_id, None)
+            if not fut.cancel() and not fut.cancelled():
+                # Done but not consumed (cancelled or failed caller): mark an
+                # error as retrieved so it isn't logged as never retrieved.
+                fut.exception()
 
     def handle_invoke_method_results(
         self, control_id: int, call_id: str, result: Any, error: Optional[str]
@@ -401,28 +581,43 @@ class Session:
             result: Returned result payload.
             error: Optional error message returned by the client.
 
-        Raises:
-            RuntimeError: If the referenced control is not registered in the session.
+        The result goes to the waiting call (matched by `call_id`) even if
+        the control has been removed from the page in the meantime - e.g. an
+        embedded app replaced while its `wait_idle()` was pending. It's a
+        legitimate answer to a legitimate call; raising here instead killed
+        the connection's receive loop and froze the whole app. A result
+        nobody is waiting for is dropped.
         """
-        if control_id in self.__index:
-            evt = self.__method_calls.pop(call_id, None)
-            if evt is None:
-                return
-            self.__method_call_results[evt] = (result, error)
-            evt.set()
-        else:
-            raise RuntimeError(
-                f"Error handling invoke method results. Control with ID {control_id} "
-                "is not registered."
+        fut = self.__method_calls.pop(call_id, None)
+        if fut is None or fut.done():
+            logger.debug(
+                "Dropping invoke method result for call %s (control %s): "
+                "nobody is waiting for it.",
+                call_id,
+                control_id,
             )
+            return
+        if control_id not in self.__index:
+            logger.debug(
+                "Invoke method result for call %s arrived after control %s "
+                "was removed; delivering it anyway.",
+                call_id,
+                control_id,
+            )
+        if error:
+            fut.set_exception(RuntimeError(error))
+        else:
+            fut.set_result(result)
 
     def __cancel_method_calls(self):
         """
         Resolves all pending invoke-method waits with a session-closed error.
         """
-        for evt in list(self.__method_calls.values()):
-            self.__method_call_results[evt] = (None, "Session closed")
-            evt.set()
+        method_calls = list(self.__method_calls.values())
+        self.__method_calls.clear()
+        for fut in method_calls:
+            if not fut.done():
+                fut.set_exception(RuntimeError("Session closed"))
 
     async def after_event(self, control: BaseControl | None):
         """
@@ -435,8 +630,9 @@ class Session:
             control: Control that handled the event, or `None`.
         """
         # call auto-update
-        if context.auto_update_enabled():
+        if context.auto_update_enabled() and not context.was_update_called():
             await self.__auto_update(control)
+        context.reset_update_called()
 
         # unregister unreferenced services
         self.page._services.unregister_services()
@@ -469,10 +665,10 @@ class Session:
             message: Error message to report.
         """
         self.__send_message(
-            ClientMessage(ClientAction.SESSION_CRASHED, SessionCrashedBody(message))
+            Message(MessageAction.SESSION_CRASHED, SessionCrashedBody(message))
         )
 
-    def __send_message(self, message: ClientMessage):
+    def __send_message(self, message: Message):
         """
         Sends a message immediately or buffers it until reconnection.
 
@@ -536,37 +732,129 @@ class Session:
         """
         Queues a control for update by the background scheduler.
 
+        Safe to call from any thread, e.g. when state changes in a
+        :meth:`flet.Page.run_thread` worker.
+
         Args:
             control: Control to update.
         """
         logger.debug("Schedule_update(%s)", control)
-        if self.__conn is None and self.__expires_at is not None:
-            return
-        self.__pending_updates.add(control)
-        self.__updates_ready.set()
+        self.__enqueue(update=control)
 
-    def schedule_effect(self, hook: EffectHook, is_cleanup: bool):
+    def schedule_effect(self, hook: "EffectHook", is_cleanup: bool):
         """
         Queues an effect hook setup/cleanup operation for scheduler execution.
+
+        Safe to call from any thread.
 
         Args:
             hook: Effect hook to process.
             is_cleanup: `True` to run cleanup, `False` to run setup.
         """
         logger.debug("Schedule_effect(%s, %s)", hook, is_cleanup)
-        if self.__conn is None and self.__expires_at is not None:
-            return
-        self.__pending_effects.append((weakref.ref(hook), is_cleanup))
-        self.__updates_ready.set()
+        # Keep the hook alive until cleanup and capture this render's setup.
+        self.__enqueue(effect=(hook, None if is_cleanup else hook.setup))
 
     def start_updates_scheduler(self):
         """
         Starts the deferred updates/effects scheduler task if not already running.
+
+        Work queued on the event loop also starts it, so calling this is only
+        needed to start it before anything is queued.
         """
-        logger.debug(f"Starting updates scheduler: {self.id}")
         if self.__updates_task and not self.__updates_task.done():
             return
+        logger.debug("Starting updates scheduler: %s", self.id)
         self.__updates_task = asyncio.create_task(self.__updates_scheduler())
+
+    def __accepting_work(self) -> bool:
+        """
+        Whether the session takes new updates and effects: it's neither closed nor
+        disconnected. Worker threads call it under the queue lock.
+        """
+        return not self.__closed and self.__expires_at is None
+
+    def __event_loop(self) -> Optional[asyncio.AbstractEventLoop]:
+        """
+        The connection's event loop, called under the queue lock. `None` if the
+        session is disconnected or its connection has no loop.
+        """
+        try:
+            return self.__conn.loop if self.__conn else None
+        except RuntimeError:
+            return None
+
+    def __enqueue(
+        self,
+        update: Optional[BaseControl] = None,
+        effect: Optional[
+            tuple["EffectHook", Callable[[], Any | Awaitable[Any]] | None]
+        ] = None,
+    ):
+        """
+        Queues a control to update or an effect operation if the session accepts
+        work, then wakes the scheduler.
+
+        On the event loop it wakes the scheduler right away, unless it's already
+        woken. A worker thread posts the wakeup to the loop instead, unless another
+        worker's wakeup is still on its way: that one drains this work too.
+        """
+        running = running_loop()
+        with self.__updates_lock:
+            if not self.__accepting_work():
+                return
+            loop = self.__event_loop()
+            from_worker = loop is not None and running is not loop
+            if from_worker and loop.is_closed():
+                return  # A worker outlived the app's event loop.
+            if effect is None:
+                self.__pending_updates.add(update)
+            else:
+                self.__pending_effects.append(effect)
+            if from_worker:
+                if self.__wakeup_pending:
+                    return
+                self.__wakeup_pending = True
+        if not from_worker:
+            if not self.__updates_ready.is_set():
+                self.__wake_scheduler()
+            return
+        # RuntimeError: the loop closed after the check above.
+        with contextlib.suppress(RuntimeError):
+            loop.call_soon_threadsafe(self.__on_posted_wakeup)
+
+    def __on_posted_wakeup(self):
+        """Runs on the event loop the wakeup a worker thread posted."""
+        with self.__updates_lock:
+            self.__wakeup_pending = False
+        self.__wake_scheduler()
+
+    def __wake_scheduler(self):
+        """
+        Wakes the scheduler, starting it if needed, unless the session no longer
+        accepts work. Runs on the event loop.
+
+        Without a running loop, as in synchronous tests, only the wakeup is
+        recorded and the scheduler drains the queues once it starts.
+        """
+        if not self.__accepting_work():
+            return
+        if running_loop() is not None:
+            self.start_updates_scheduler()
+        self.__updates_ready.set()
+
+    def __take_pending(self) -> tuple[set, list]:
+        """
+        Empties the queues, called under the queue lock, and returns what they held.
+
+        The caller drops the result after releasing the lock: releasing the last
+        reference to a control or hook can run a finalizer that queues work, which
+        takes the lock again.
+        """
+        pending = (self.__pending_updates, self.__pending_effects)
+        self.__pending_updates = set()
+        self.__pending_effects = []
+        return pending
 
     async def __updates_scheduler(self):
         """
@@ -574,7 +862,7 @@ class Session:
 
         The scheduler waits for work signals, updates pending controls, then executes
         pending effect hook setup/cleanup callbacks. Errors inside effect processing
-        are reported to the client via [`error()`][(c).error].
+        are reported to the client via :meth:`error`.
         """
         try:
             while not self.__closed:
@@ -582,38 +870,155 @@ class Session:
                 self.__updates_ready.clear()
 
                 # Process pending updates
-                pending_updates = list(self.__pending_updates)
-                self.__pending_updates.clear()
+                with self.__updates_lock:
+                    pending_updates = self.__pending_updates
+                    self.__pending_updates = set()
 
                 for control in pending_updates:
                     control.update()
 
                 # Process pending effects
-                pending_effects = list(self.__pending_effects)
-                self.__pending_effects.clear()
+                with self.__updates_lock:
+                    pending_effects = self.__pending_effects
+                    self.__pending_effects = []
 
-                for effect in pending_effects:
-                    try:
-                        hook = effect[0]()
-                        is_cleanup = effect[1]
-                        # print(f"**** Running effect: {hook} {is_cleanup}")
-                        if hook and hook.setup and not is_cleanup:
-                            hook.cancel()
-                            res = None
-                            if inspect.iscoroutinefunction(hook.setup):
-                                hook._setup_task = asyncio.create_task(hook.setup())
-                            else:
-                                res = hook.setup()
-                            if callable(res):
-                                hook.cleanup = res
-                        elif hook and hook.cleanup and is_cleanup:
-                            hook.cancel()
-                            if inspect.iscoroutinefunction(hook.cleanup):
-                                hook._cleanup_task = asyncio.create_task(hook.cleanup())
-                            else:
-                                hook.cleanup()
-                    except Exception as ex:
-                        tb = traceback.format_exc()
-                        self.error(f"Exception in effect: {ex}\n{tb}")
+                for hook, setup in pending_effects:
+                    if hook:
+                        self.__run_effect(hook, setup)
         except asyncio.CancelledError:
             pass
+
+    def __run_effect(
+        self, hook: "EffectHook", setup: Callable[[], Any | Awaitable[Any]] | None
+    ):
+        """
+        Runs an effect's `setup`, the setup function it was scheduled with, or its
+        cleanups when `setup` is `None`. Queues it while the effect's previous
+        cleanups are still finishing.
+
+        Cleanups run only if a setup ran since the last ones, and always before the
+        next setup, even when that setup was scheduled without them. A setup that
+        runs after its component unmounted is cleaned up right away. A
+        `CancelledError` the effect raises itself means it was cancelled, which
+        isn't an error: running an effect never awaits, so it can't come from the
+        scheduler being cancelled. Other errors are reported.
+        """
+        try:
+            if hook.running_cleanup():
+                hook._queued.append(setup)
+                return
+            hook.cancel_setup()
+            if hook._active and (setup is None or hook.has_cleanup()):
+                hook._active = False
+                self.__run_effect_cleanups(hook, hook.take_cleanups())
+                if hook.running_cleanup() and setup is not None:
+                    hook._queued.append(setup)
+                    return
+            if setup is not None:
+                hook._active = True
+                res = setup()
+                if is_coroutine_result(res):
+                    # An `async` setup, or a plain function that returns a
+                    # coroutine (`lambda: load(item_id)` with an `async` `load`):
+                    # either way it runs as the effect's task.
+                    # ensure_future also schedules awaitable generators.
+                    hook._setup_task = asyncio.ensure_future(res)
+                else:
+                    hook._returned_cleanup = res if callable(res) else None
+                if not hook.is_live():
+                    hook.cancel_setup()
+                    hook._active = False
+                    self.__run_effect_cleanups(hook, hook.take_cleanups())
+        except asyncio.CancelledError:
+            pass
+        except Exception as ex:
+            self.__report_effect_error(ex)
+
+    def __run_effect_cleanups(
+        self,
+        hook: "EffectHook",
+        cleanups: list[Callable[[], Any | Awaitable[Any]]],
+    ):
+        """
+        Runs an effect's cleanups in order.
+
+        Non-`async` cleanups run right away, up to the first `async` one. That one
+        and the rest are finished in a task. Until it finishes, the effect's next
+        setups and cleanups wait. Then they run right away, before anything
+        scheduled later, unless the session has closed or disconnected.
+        """
+        started = None
+        for i, cleanup in enumerate(cleanups):
+            if inspect.iscoroutinefunction(cleanup):
+                break
+            started = self.__call_effect_cleanup(cleanup)
+            if started is not None:
+                i += 1
+                break
+        else:
+            return
+        task = asyncio.create_task(self.__finish_effect_cleanups(cleanups[i:], started))
+        hook._cleanup_task = task
+        self.__effect_cleanup_tasks.add(task)
+
+        def done(task: asyncio.Task):
+            self.__effect_cleanup_tasks.discard(task)
+            hook._cleanup_task = None
+            queued = hook.take_queued()
+            if not self.__accepting_work():
+                return
+            for setup in queued:
+                self.__run_effect(hook, setup)
+
+        task.add_done_callback(done)
+
+    def __call_effect_cleanup(
+        self, cleanup: Callable[[], Any | Awaitable[Any]]
+    ) -> Awaitable[Any] | None:
+        """
+        Calls a cleanup and returns what it returned if that is awaitable.
+
+        A cleanup that raises is reported; one that raises `CancelledError` was
+        cancelled, which isn't an error.
+        """
+        try:
+            res = cleanup()
+            return res if inspect.isawaitable(res) else None
+        except asyncio.CancelledError:
+            return None
+        except Exception as ex:
+            self.__report_effect_error(ex)
+            return None
+
+    async def __finish_effect_cleanups(
+        self,
+        cleanups: list[Callable[[], Any | Awaitable[Any]]],
+        started: Awaitable[Any] | None,
+    ):
+        """
+        Finishes an effect's cleanups in order: awaits `started`, then calls and
+        awaits each of `cleanups`.
+
+        One that raises is reported, and one that raises or is cancelled doesn't
+        keep the others from running. If this task itself is cancelled, the
+        cleanups not reached are skipped. Telling that apart from a cleanup
+        cancelled on its own needs `Task.cancelling()`, so on Python 3.10 they
+        still run.
+        """
+        pending = [started] if started is not None else []
+        for item in pending + cleanups:
+            try:
+                res = item if inspect.isawaitable(item) else item()
+                if inspect.isawaitable(res):
+                    await res
+            except asyncio.CancelledError:
+                task = asyncio.current_task()
+                if task is not None and getattr(task, "cancelling", lambda: 0)():
+                    raise
+            except Exception as ex:
+                self.__report_effect_error(ex)
+
+    def __report_effect_error(self, ex: Exception):
+        """Reports an exception raised by an effect setup or cleanup."""
+        tb = "".join(traceback.format_exception(type(ex), ex, ex.__traceback__))
+        self.error(f"Exception in effect: {ex}\n{tb}")

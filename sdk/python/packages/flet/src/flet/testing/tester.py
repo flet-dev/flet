@@ -1,7 +1,7 @@
-from typing import Optional
+from typing import Any, Optional
 
 from flet.controls.base_control import control
-from flet.controls.duration import DurationValue
+from flet.controls.duration import Duration, DurationValue
 from flet.controls.keys import KeyValue
 from flet.controls.services.service import Service
 from flet.controls.transform import Offset
@@ -17,6 +17,21 @@ class Tester(Service):
     Class that programmatically interacts with page controls and the test environment.
     """
 
+    async def _invoke_method(
+        self,
+        method_name: str,
+        arguments: Optional[dict[str, Any]] = None,
+        timeout: Optional[float] = 60,
+    ) -> Any:
+        """
+        Invokes a tester method in the app under test.
+
+        A call gets 60 seconds unless it names its own `timeout`, so a test
+        fails with `TimeoutError` when the app stops answering.
+        `pump` adds its `duration` to that limit.
+        """
+        return await super()._invoke_method(method_name, arguments, timeout)
+
     async def pump(self, duration: Optional[DurationValue] = None):
         """
         Triggers a frame after duration amount of time.
@@ -24,7 +39,14 @@ class Tester(Service):
         Args:
             duration: A duration after which to trigger a frame.
         """
-        return await self._invoke_method("pump", {"duration": duration})
+        wait = (
+            Duration(milliseconds=duration) if isinstance(duration, int) else duration
+        )
+        return await self._invoke_method(
+            "pump",
+            {"duration": duration},
+            timeout=60 + (wait.in_seconds if wait else 0),
+        )
 
     async def pump_and_settle(
         self, duration: Optional[DurationValue] = None, timeout: Optional[float] = 10
@@ -69,7 +91,7 @@ class Tester(Service):
 
     async def find_by_key(self, key: KeyValue) -> Finder:
         """
-        Finds controls by a [Key][flet.Key] instance or key name.
+        Finds controls by a :class:`~flet.Key` instance or key name.
 
         Args:
             key: A key instance or its name.
@@ -97,6 +119,21 @@ class Tester(Service):
         finder = await self._invoke_method("find_by_icon", {"icon": icon})
         return Finder(**finder)
 
+    async def find_by_semantics_identifier(self, identifier: str) -> Finder:
+        """
+        Finds controls by their :attr:`~flet.Semantics.identifier`.
+
+        The identifier is independent of visible text, so tests stay stable
+        when labels are translated or copy changes.
+
+        Args:
+            identifier: Exact semantics identifier to match.
+        """
+        finder = await self._invoke_method(
+            "find_by_semantics_identifier", {"identifier": identifier}
+        )
+        return Finder(**finder)
+
     async def take_screenshot(self, name: str) -> bytes:
         """
         Takes a screenshot of the entire application window.
@@ -122,6 +159,41 @@ class Tester(Service):
             "tap", {"finder_id": finder.id, "finder_index": finder.index}
         )
 
+    async def mouse_click(self, finder: Finder):
+        """
+        Dispatch a primary mouse click at the center of the given control.
+
+        Args:
+            finder: Finder to search for a control.
+        """
+        await self._invoke_method(
+            "mouse_click", {"finder_id": finder.id, "finder_index": finder.index}
+        )
+
+    async def right_mouse_click(self, finder: Finder):
+        """
+        Dispatch a secondary mouse click at the center of the given control.
+
+        Args:
+            finder: Finder to search for a control.
+        """
+        await self._invoke_method(
+            "right_mouse_click",
+            {"finder_id": finder.id, "finder_index": finder.index},
+        )
+
+    async def mouse_double_click(self, finder: Finder):
+        """
+        Dispatch a primary mouse double click at the center of the given control.
+
+        Args:
+            finder: Finder to search for a control.
+        """
+        await self._invoke_method(
+            "mouse_double_click",
+            {"finder_id": finder.id, "finder_index": finder.index},
+        )
+
     async def tap_at(self, offset: Offset):
         """
         Dispatch a pointer down / pointer up sequence at the given offset.
@@ -130,6 +202,56 @@ class Tester(Service):
             offset: Offset value at which tap will occur.
         """
         await self._invoke_method("tap_at", {"offset": offset})
+
+    async def mouse_click_at(self, offset: Offset):
+        """
+        Dispatch a primary mouse click at the given offset.
+
+        Args:
+            offset: Offset value at which the click will occur.
+        """
+        await self._invoke_method("mouse_click_at", {"offset": offset})
+
+    async def right_mouse_click_at(self, offset: Offset):
+        """
+        Dispatch a secondary mouse click at the given offset.
+
+        Args:
+            offset: Offset value at which the click will occur.
+        """
+        await self._invoke_method("right_mouse_click_at", {"offset": offset})
+
+    async def mouse_double_click_at(self, offset: Offset):
+        """
+        Dispatch a primary mouse double click at the given offset.
+
+        Args:
+            offset: Offset value at which the double click will occur.
+        """
+        await self._invoke_method("mouse_double_click_at", {"offset": offset})
+
+    async def drag(self, finder: Finder, offset: Offset):
+        """
+        Drag from the center of the given control by the provided offset.
+
+        Args:
+            finder: Finder to search for a control.
+            offset: Offset delta to drag by.
+        """
+        await self._invoke_method(
+            "drag",
+            {"finder_id": finder.id, "finder_index": finder.index, "offset": offset},
+        )
+
+    async def drag_from(self, start: Offset, offset: Offset):
+        """
+        Drag from the given start offset by the provided offset delta.
+
+        Args:
+            start: Initial pointer location.
+            offset: Offset delta to drag by.
+        """
+        await self._invoke_method("drag_from", {"start": start, "offset": offset})
 
     async def long_press(self, finder: Finder):
         """

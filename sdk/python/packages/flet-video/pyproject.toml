@@ -12,12 +12,15 @@ dependencies = [
 
 [project.urls]
 Homepage = "https://flet.dev"
-Documentation = "https://docs.flet.dev/video"
+Documentation = "https://flet.dev/docs/controls/video"
 Repository = "https://github.com/flet-dev/flet/tree/main/sdk/python/packages/flet-video"
 Issues = "https://github.com/flet-dev/flet/issues"
 
 [tool.setuptools.package-data]
-"flutter.flet_video" = ["**/*"]
+"flutter.flet_video" = [
+    "pubspec.yaml",
+    "lib/**",
+]
 
 [build-system]
 requires = ["setuptools"]

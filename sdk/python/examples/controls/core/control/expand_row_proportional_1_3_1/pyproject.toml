@@ -1,0 +1,26 @@
+[project]
+name = "control-expand-row-proportional-1-3-1"
+version = "1.0.0"
+description = "Row example using proportional expand values (1:3:1) for responsive width distribution."
+requires-python = ">=3.10"
+keywords = ["control", "expand", "row", "proportional", "layout"]
+authors = [{ name = "Flet team", email = "hello@flet.dev" }]
+dependencies = ["flet"]
+
+[dependency-groups]
+dev = ["flet-cli", "flet-desktop", "flet-web"]
+
+[tool.flet.gallery]
+categories = ["Layout/Control"]
+
+[tool.flet.metadata]
+title = "Expand row proportional 1 3 1"
+controls = ["SafeArea", "Container", "Row", "Text"]
+layout_pattern = "single-panel"
+complexity = "basic"
+features = ["proportional expand", "row space distribution"]
+
+[tool.flet]
+org = "dev.flet"
+company = "Flet"
+copyright = "Copyright (C) 2023-2026 by Flet"

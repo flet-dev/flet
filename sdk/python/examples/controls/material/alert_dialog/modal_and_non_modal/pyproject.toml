@@ -1,0 +1,26 @@
+[project]
+name = "alert-dialog-modal-and-non-modal"
+version = "1.0.0"
+description = "AlertDialog example showing modal and non-modal dialog behavior."
+requires-python = ">=3.10"
+keywords = ["alertdialog", "dialog", "modal", "material", "actions"]
+authors = [{ name = "Flet team", email = "hello@flet.dev" }]
+dependencies = ["flet"]
+
+[dependency-groups]
+dev = ["flet-cli", "flet-desktop", "flet-web"]
+
+[tool.flet.gallery]
+categories = ["Dialogs/AlertDialog"]
+
+[tool.flet.metadata]
+title = "Modal and non-modal dialogs"
+controls = ["SafeArea", "Column", "Button", "AlertDialog", "Text", "TextButton"]
+layout_pattern = "dialog-flow"
+complexity = "basic"
+features = ["modal dialog", "non-modal dialog", "dialog actions", "dismiss events"]
+
+[tool.flet]
+org = "dev.flet"
+company = "Flet"
+copyright = "Copyright (C) 2023-2026 by Flet"

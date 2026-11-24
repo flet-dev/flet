@@ -5,8 +5,8 @@ class Once:
     """
     Async helper that runs a coroutine function only once.
 
-    Concurrent callers are synchronized with an [`asyncio.Lock`][asyncio.Lock] so the
-    wrapped function executes at most one time per [`Once`][(c)] instance.
+    Concurrent callers are synchronized with an `asyncio.Lock` so the
+    wrapped function executes at most one time per :class:`Once` instance.
     """
 
     def __init__(self):

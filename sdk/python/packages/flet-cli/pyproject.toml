@@ -8,12 +8,19 @@ readme = "README.md"
 requires-python = ">=3.10"
 dependencies = [
     "flet",
+    "flet-platform-assets",
     "watchdog >=4.0.0",
     "packaging >=25.0",
     "qrcode >=7.4.2",
     "tomli >= 1.1.0 ; python_version < '3.11'",
-    "cookiecutter >=2.6.0"
+    "cookiecutter >=2.6.0",
+    "binaryornot <0.5",
+    "chardet <6",
+    "rich >=13.0.0"
 ]
+
+[project.optional-dependencies]
+mcp = ["flet-mcp"]
 
 [project.urls]
 Homepage = "https://flet.dev"
@@ -22,6 +29,9 @@ Documentation = "https://flet.dev/docs"
 
 [project.entry-points."pyinstaller40"]
 hook-dirs = "flet_cli.__pyinstaller:get_hook_dirs"
+
+[tool.setuptools.package-data]
+"flet_cli.__pyinstaller" = ["rthooks.dat", "rthooks/*.py"]
 
 [build-system]
 requires = ["setuptools"]

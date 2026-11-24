@@ -1,0 +1,27 @@
+[project]
+name = "file-picker-pick-and-save-text-content"
+version = "1.0.0"
+description = "Loads text file contents from picked files and saves or downloads edited text output."
+requires-python = ">=3.10"
+keywords = ["file picker", "pick and save text content", "services", "async"]
+authors = [{ name = "Flet team", email = "hello@flet.dev" }]
+dependencies = ["flet"]
+
+[dependency-groups]
+dev = ["flet-cli", "flet-desktop", "flet-web"]
+
+[tool.flet.gallery]
+categories = ["Utility/FilePicker"]
+
+[tool.flet.metadata]
+title = "Pick and save text content"
+docs_intro = "Use [`pick_files()`][flet.FilePicker.pick_files] with `with_data=True` when you need file contents directly, such as in web apps where [`FilePickerFile.path`][flet.FilePickerFile.path] is not available."
+controls = ["SafeArea", "Column", "Page", "Text", "TextField", "Button", "FilePicker"]
+layout_pattern = "inline-actions"
+complexity = "basic"
+features = ["file picking", "save to file"]
+
+[tool.flet]
+org = "dev.flet"
+company = "Flet"
+copyright = "Copyright (C) 2023-2026 by Flet"

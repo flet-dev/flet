@@ -1,0 +1,26 @@
+[project]
+name = "shimmer-basic-placeholder"
+version = "1.0.0"
+description = "Animate card-style loading placeholders with a Shimmer effect."
+requires-python = ">=3.10"
+keywords = ["shimmer", "placeholder", "loading", "card", "skeleton"]
+authors = [{ name = "Flet team", email = "hello@flet.dev" }]
+dependencies = ["flet"]
+
+[dependency-groups]
+dev = ["flet-cli", "flet-desktop", "flet-web"]
+
+[tool.flet.gallery]
+categories = ["Effects/Shimmer"]
+
+[tool.flet.metadata]
+title = "Shimmer basic placeholder"
+controls = ["Shimmer", "Column", "Row", "Container", "Icon", "SafeArea"]
+layout_pattern = "list-detail"
+complexity = "basic"
+features = ["skeleton placeholders", "animated highlight", "card layout"]
+
+[tool.flet]
+org = "dev.flet"
+company = "Flet"
+copyright = "Copyright (C) 2023-2026 by Flet"

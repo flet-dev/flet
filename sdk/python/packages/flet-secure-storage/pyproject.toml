@@ -11,12 +11,15 @@ dependencies = [
 
 [project.urls]
 Homepage = "https://flet.dev"
-Documentation = "https://docs.flet.dev/secure-storage"
+Documentation = "https://flet.dev/docs/services/securestorage"
 Repository = "https://github.com/flet-dev/flet/tree/main/sdk/python/packages/flet-secure-storage"
 Issues = "https://github.com/flet-dev/flet/issues"
 
 [tool.setuptools.package-data]
-"flutter.flet_secure_storage" = ["**/*"]
+"flutter.flet_secure_storage" = [
+    "pubspec.yaml",
+    "lib/**",
+]
 
 [build-system]
 requires = ["setuptools"]

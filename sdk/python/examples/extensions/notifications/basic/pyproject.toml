@@ -1,0 +1,26 @@
+[project]
+name = "notifications-basic"
+version = "1.0.0"
+description = "Asks for permission, shows a notification, and handles a tap on it."
+requires-python = ">=3.10"
+keywords = ["services", "notifications", "permissions", "tap handlers", "async"]
+authors = [{ name = "Flet team", email = "hello@flet.dev" }]
+dependencies = ["flet", "flet-notifications"]
+
+[dependency-groups]
+dev = ["flet-cli", "flet-desktop", "flet-web"]
+
+[tool.flet.gallery]
+categories = ["Utility/Notifications"]
+
+[tool.flet.metadata]
+title = "Basic notifications"
+controls = ["SafeArea", "Button", "SnackBar", "Notifications"]
+layout_pattern = "inline-actions"
+complexity = "basic"
+features = ["notification permissions", "local notifications", "notification tap handling"]
+
+[tool.flet]
+org = "dev.flet"
+company = "Flet"
+copyright = "Copyright (C) 2023-2026 by Flet"

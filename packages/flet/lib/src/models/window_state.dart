@@ -9,7 +9,7 @@ class WindowState {
   bool maximizable;
   bool resizable;
   bool preventClose;
-  bool skipTaskBar;
+  bool? skipTaskBar;
   double width;
   double height;
   double top;

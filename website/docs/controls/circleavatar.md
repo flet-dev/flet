@@ -1,0 +1,19 @@
+---
+class_name: "flet.CircleAvatar"
+examples: "controls/material/circle_avatar"
+example_images: "test-images/examples/controls/material/golden/macos/circle_avatar"
+example_media: "examples/controls/material/circle_avatar/media"
+title: "CircleAvatar"
+---
+
+import {ClassMembers, ClassSummary, CodeExample, Image} from '@site/src/components/crocodocs';
+
+<ClassSummary name={frontMatter.class_name} image={frontMatter.example_images + '/image_for_docs.png'} imageCaption="CircleAvatar" imageWidth="5%"/>
+
+## Examples
+
+<CodeExample path={frontMatter.examples + '/user_avatars/main.py'} language="python" />
+
+<Image src={frontMatter.example_images + '/user_avatars.png'} alt="user-avatars" width="20%" />
+
+<ClassMembers name={frontMatter.class_name} />

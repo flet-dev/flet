@@ -1,0 +1,26 @@
+[project]
+name = "drag-and-drop-containers-declarative"
+version = "1.0.0"
+description = "Builds declarative drag-and-drop containers with observable target state and hover feedback."
+requires-python = ">=3.10"
+keywords = ["draggable", "drag target", "drag and drop", "declarative", "state"]
+authors = [{ name = "Flet team", email = "hello@flet.dev" }]
+dependencies = ["flet"]
+
+[dependency-groups]
+dev = ["flet-cli", "flet-desktop", "flet-web"]
+
+[tool.flet.gallery]
+categories = ["Utility/Draggable"]
+
+[tool.flet.metadata]
+title = "Drag and drop containers declarative"
+controls = ["SafeArea", "Row", "Column", "Draggable", "DragTarget", "Container"]
+layout_pattern = "single-panel"
+complexity = "basic"
+features = ["declarative state", "drag and drop", "hover border feedback"]
+
+[tool.flet]
+org = "dev.flet"
+company = "Flet"
+copyright = "Copyright (C) 2023-2026 by Flet"

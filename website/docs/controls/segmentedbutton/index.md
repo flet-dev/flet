@@ -1,0 +1,20 @@
+---
+class_name: "flet.SegmentedButton"
+examples: "controls/material/segmented_button"
+example_images: "test-images/examples/controls/material/golden/macos/segmented_button"
+title: "SegmentedButton"
+---
+
+import {ClassMembers, ClassSummary, CodeExample, Image} from '@site/src/components/crocodocs';
+
+# SegmentedButton
+
+<ClassSummary name={frontMatter.class_name} image={frontMatter.example_images + '/image_for_docs.png'} imageCaption="SegmentedButton" />
+
+## Examples
+
+<CodeExample path={frontMatter.examples + '/single_multiple_selection/main.py'} language="python" />
+
+<Image src={frontMatter.example_images + '/single_multiple_selection.png'} width="55%" />
+
+<ClassMembers name={frontMatter.class_name} />

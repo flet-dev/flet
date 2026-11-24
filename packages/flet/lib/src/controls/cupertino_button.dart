@@ -1,14 +1,15 @@
-import 'package:flutter/cupertino.dart';
+import 'package:cupertino_ui/cupertino_ui.dart';
+import 'package:material_ui/material_ui.dart' show Theme;
 
 import '../extensions/control.dart';
 import '../models/control.dart';
 import '../utils/alignment.dart';
 import '../utils/borders.dart';
 import '../utils/buttons.dart';
+import '../utils/client_actions.dart';
 import '../utils/colors.dart';
 import '../utils/edge_insets.dart';
 import '../utils/geometry.dart';
-import '../utils/launch_url.dart';
 import '../utils/mouse.dart';
 import '../utils/numbers.dart';
 import 'base_controls.dart';
@@ -96,6 +97,19 @@ class _CupertinoButtonControlState extends State<CupertinoButtonControl> {
     bool isTintedButton = {"CupertinoTintedButton", "FilledTonalButton"}
         .contains(widget.control.type);
 
+    // An adaptive Material button (`Button(adaptive=True)` on iOS/macOS)
+    // sends no `bgcolor`/`color`/`padding` of its own: it folds them into a
+    // `ButtonStyle` (see Button.before_update), which only the Material
+    // control read - so `bgcolor=...` was lost here. Take them from the
+    // style's default state when the Cupertino properties are absent.
+    var style = parseButtonStyle(
+        widget.control.internals?["style"] ?? widget.control.get("style"),
+        Theme.of(context));
+    if (style != null) {
+      bgColor ??= style.backgroundColor?.resolve({});
+      padding ??= style.padding?.resolve({})?.resolve(TextDirection.ltr);
+    }
+
     // var style = widget.control.getButtonStyle("style", Theme.of(context),
     //     defaultForegroundColor: theme.colorScheme.primary,
     //     defaultBackgroundColor: Colors.transparent,
@@ -125,7 +139,8 @@ class _CupertinoButtonControlState extends State<CupertinoButtonControl> {
     //   bgColor = style.backgroundColor?.resolve(widgetStates);
     //   padding = style.padding?.resolve({}) as EdgeInsets?;
     // }
-    var color = widget.control.getColor("color", context);
+    var color = widget.control.getColor("color", context) ??
+        style?.foregroundColor?.resolve({});
     var disabledColor = widget.control.getColor(
         "disabled_bgcolor", context, CupertinoColors.tertiarySystemFill)!;
     if (color != null) {
@@ -136,12 +151,9 @@ class _CupertinoButtonControlState extends State<CupertinoButtonControl> {
               .copyWith(color: color),
           child: child);
     }
-    var url = widget.control.getUrl("url");
     Function()? onPressed = !widget.control.disabled
         ? () {
-            if (url != null) {
-              openWebBrowser(url);
-            }
+            runControlActions(context, widget.control);
             widget.control.triggerEvent("click");
           }
         : null;

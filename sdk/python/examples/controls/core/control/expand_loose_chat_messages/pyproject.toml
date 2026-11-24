@@ -1,0 +1,26 @@
+[project]
+name = "control-expand-loose-chat-messages"
+version = "1.0.0"
+description = "Chat message layout demo using expand_loose for flexible message bubble sizing in rows."
+requires-python = ">=3.10"
+keywords = ["control", "expand_loose", "chat", "row", "layout"]
+authors = [{ name = "Flet team", email = "hello@flet.dev" }]
+dependencies = ["flet"]
+
+[dependency-groups]
+dev = ["flet-cli", "flet-desktop", "flet-web"]
+
+[tool.flet.gallery]
+categories = ["Layout/Control"]
+
+[tool.flet.metadata]
+title = "Expand loose chat messages"
+controls = ["SafeArea", "Container", "ListView", "Row", "Text", "Column"]
+layout_pattern = "chat"
+complexity = "basic"
+features = ["expand_loose behavior", "chat message bubbles"]
+
+[tool.flet]
+org = "dev.flet"
+company = "Flet"
+copyright = "Copyright (C) 2023-2026 by Flet"

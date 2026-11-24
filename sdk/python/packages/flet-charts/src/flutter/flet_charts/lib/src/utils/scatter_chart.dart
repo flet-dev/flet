@@ -1,7 +1,7 @@
 import 'package:equatable/equatable.dart';
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flet/flet.dart';
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 
 import 'charts.dart';
 
@@ -23,6 +23,14 @@ class ScatterChartEventData extends Equatable {
   @override
   List<Object?> get props => [eventType, spotIndex];
 }
+
+/// Draws the error bars of a spot in the color of that spot.
+///
+/// The default painter of fl_chart draws them in white, which is invisible on
+/// light backgrounds.
+FlSpotErrorRangePainter getScatterSpotErrorPainter(
+        ScatterChartSpotErrorRangeCallbackInput input) =>
+    FlSimpleErrorPainter(lineColor: input.spot.dotPainter.mainColor);
 
 ScatterTouchTooltipData parseScatterTouchTooltipData(
     BuildContext context, Control control, List<ScatterSpot> spots) {

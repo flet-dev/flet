@@ -1,19 +1,20 @@
-from typing import Optional
+from typing import Annotated, Optional
 
 from flet.controls.adaptive_control import AdaptiveControl
 from flet.controls.base_control import control
 from flet.controls.control import Control
 from flet.controls.layout_control import LayoutControl
 from flet.controls.types import MouseCursor
+from flet.utils.validation import V
 
 
 @control("ReorderableDragHandle")
 class ReorderableDragHandle(LayoutControl, AdaptiveControl):
     """
-    Used to drag an item in a [`ReorderableListView`][flet.].
+    Used to drag an item in a :class:`~flet.ReorderableListView`.
 
     It creates a listener for a drag immediately following a pointer down
-    event over the given [`content`][(c).] control.
+    event over the given :attr:`content` control.
 
     Example:
     ```python
@@ -33,23 +34,19 @@ class ReorderableDragHandle(LayoutControl, AdaptiveControl):
     ```
     """
 
-    content: Control
+    content: Annotated[
+        Control,
+        V.visible_control(),
+    ]
     """
     The control for which the application would like to respond to a tap and drag \
     gesture by starting a reordering drag on a reorderable list.
 
-    Must be visible.
-
     Raises:
-        ValueError: If [`content`][(c).] is not visible.
+        ValueError: If it is not visible.
     """
 
     mouse_cursor: Optional[MouseCursor] = None
     """
     The mouse cursor for mouse pointers that are hovering over the control.
     """
-
-    def before_update(self):
-        super().before_update()
-        if not self.content.visible:
-            raise ValueError("content must be visible")

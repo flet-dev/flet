@@ -11,8 +11,8 @@ dependencies:
   flutter:
     sdk: flutter
 
-  # 13.x needs Dart >=3.12 (Flutter 3.44+); Flet currently pins Flutter 3.41.2.
-  flutter_appauth: 12.1.0
+  # Requires Dart >=3.12 (Flutter 3.44+). Flet currently pins Flutter 3.47.9.
+  flutter_appauth: 13.0.0
 
   flet:
     path: ../../../../../../../packages/flet

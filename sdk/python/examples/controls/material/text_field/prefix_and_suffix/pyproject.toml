@@ -1,0 +1,26 @@
+[project]
+name = "text-field-prefix-and-suffix"
+version = "1.0.0"
+description = "Adds prefixes, suffixes, counters, and helper text to TextField inputs."
+requires-python = ">=3.10"
+keywords = ["text field", "prefix", "suffix", "counter", "helper"]
+authors = [{ name = "Flet team", email = "hello@flet.dev" }]
+dependencies = ["flet"]
+
+[dependency-groups]
+dev = ["flet-cli", "flet-desktop", "flet-web"]
+
+[tool.flet.gallery]
+categories = ["Input/TextField"]
+
+[tool.flet.metadata]
+title = "Setting prefixes and suffixes"
+controls = ["SafeArea", "Column", "TextField", "Button", "Text"]
+layout_pattern = "stacked-actions"
+complexity = "basic"
+features = ["prefix and suffix text", "helper text", "counters"]
+
+[tool.flet]
+org = "dev.flet"
+company = "Flet"
+copyright = "Copyright (C) 2023-2026 by Flet"

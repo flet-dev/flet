@@ -1,4 +1,7 @@
 import argparse
+import contextlib
+import errno
+import logging
 import os
 import platform
 import signal
@@ -8,15 +11,18 @@ import tempfile
 import threading
 import time
 from pathlib import Path
+from typing import Optional
 from urllib.parse import quote, urlparse, urlunparse
 
 import qrcode
 from watchdog.events import FileSystemEventHandler
 from watchdog.observers import Observer
 
+from flet.app import DEFAULT_ASSETS_DIR, DISPLAY_ASSETS_DIR_SUFFIX
 from flet.utils import (
     get_free_tcp_port,
     get_local_ip,
+    is_linux,
     is_windows,
     open_in_browser,
     random_string,
@@ -25,9 +31,47 @@ from flet_cli.commands.base import BaseCommand
 from flet_cli.utils.pyproject_toml import load_pyproject_toml
 
 
+def resolve_assets_dir(script_dir: Path, assets_dir: Optional[str]) -> Optional[str]:
+    """
+    Resolve the assets directory to an existing absolute path.
+
+    A relative path is resolved against the app's script directory. A directory
+    that does not exist is dropped, because the desktop view opened with it
+    would have nothing to load.
+
+    Whether that is worth reporting depends on where the value came from.
+    The value falls back to `DEFAULT_ASSETS_DIR` when neither `--assets` nor
+    `FLET_ASSETS_DIR` is set, whether or not the app has such a directory, so a
+    missing one is unremarkable; any other value was set by the user, so a
+    missing one is a mistake worth a warning.
+
+    Args:
+        script_dir: Directory of the app being run.
+        assets_dir: The `--assets` or `FLET_ASSETS_DIR` value, or
+            `DEFAULT_ASSETS_DIR`, absolute or relative.
+
+    Returns:
+        The resolved absolute path, or `None` if it was not set or does not
+            exist.
+    """
+
+    if not assets_dir:
+        return None
+    requested = assets_dir
+    if not Path(assets_dir).is_absolute():
+        assets_dir = str(script_dir.joinpath(assets_dir).resolve())
+    if Path(assets_dir).is_dir():
+        return assets_dir
+    if requested != DEFAULT_ASSETS_DIR:
+        print(f"Warning: assets_dir does not exist: {assets_dir}")
+    return None
+
+
 class Command(BaseCommand):
     """
     Run a Flet application in hot reload mode.
+
+    Detailed usage guide: https://flet.dev/docs/getting-started/running-app
     """
 
     def add_arguments(self, parser: argparse.ArgumentParser) -> None:
@@ -44,6 +88,16 @@ class Command(BaseCommand):
             nargs="?",
             default=".",
             help="Path to the Python script that starts your Flet app",
+        )
+        parser.add_argument(
+            "script_args",
+            type=str,
+            nargs="*",
+            default=[],
+            metavar="args",
+            help="Arguments to pass to your app script, available there as "
+            "`sys.argv[1:]`. Separate them from Flet's own options with `--`, "
+            "e.g. `flet run --web app.py -- --verbose`",
         )
         parser.add_argument(
             "-p",
@@ -105,6 +159,15 @@ class Command(BaseCommand):
             help="Start the application with the window hidden",
         )
         parser.add_argument(
+            "--no-impeller",
+            dest="no_impeller",
+            action="store_true",
+            default=False,
+            help="Render the desktop app with Skia instead of Impeller, Flutter's "
+            "default renderer (or set `impeller = false` under [tool.flet]) "
+            "[env: FLET_NO_IMPELLER=]",
+        )
+        parser.add_argument(
             "-w",
             "--web",
             dest="web",
@@ -132,17 +195,19 @@ class Command(BaseCommand):
             "--assets",
             dest="assets_dir",
             type=str,
-            default="assets",
+            default=None,
             help="Path to a directory containing static assets "
-            "used by the app (e.g. images, fonts)",
+            "used by the app (e.g. images, fonts); overrides the app's own "
+            f"`assets_dir` (default: {DEFAULT_ASSETS_DIR}) [env: FLET_ASSETS_DIR=]",
         )
         parser.add_argument(
             "--ignore-dirs",
             dest="ignore_dirs",
             type=str,
             default=None,
-            help="Comma-separated list of directory names to ignore "
-            "when watching for file changes",
+            help="Comma-separated list of directories to ignore when watching for "
+            "file changes, relative to the script directory. The `.flet` directory "
+            "is always ignored",
         )
 
     def handle(self, options: argparse.Namespace) -> None:
@@ -151,23 +216,53 @@ class Command(BaseCommand):
 
         This method prepares the script/module path, selects transport
         configuration (port or UDS), resolves assets and ignore directories,
-        starts the child app process through [`Handler`][(m).], and keeps the
-        observer running until termination.
+        starts file watching, then starts the child app process through
+        `Handler`, and keeps the observer running until termination.
+
+        If starting the observer raises `OSError`, for example because the
+        Linux inotify watch or instance limit is reached, a warning is printed
+        and the app runs without reloading on changes.
+
+        The `.flet/` directory is always ignored by the file watcher: `flet run` starts
+        the app with its working directory set to `.flet/storage/data` and its temp
+        directory set to `.flet/storage/temp`, so files the app writes through relative
+        paths or `tempfile` are not code changes. Ignored directories are matched both
+        as given and with symlinks resolved, because events carry one form or the other
+        depending on the platform and on how the script path was given.
+
+        An assets directory set with `--assets` or `FLET_ASSETS_DIR` is exported
+        to the app as an absolute `FLET_ASSETS_DIR` even when it doesn't exist,
+        so the user's choice still overrides the app's own `assets_dir`, and a
+        warning names the missing directory. The `"assets"` default is not
+        exported, so the app's own `assets_dir` applies.
+
+        The desktop client is opened from this process, whose working directory
+        is where `flet run` was started, so `[tool.flet].desktop_flavor` of the
+        nearest `pyproject.toml` at or above the app's script is exported as
+        `FLET_DESKTOP_FLAVOR` when that variable is not set. That file may belong
+        to an enclosing project rather than the app, so if it can't be read or
+        parsed it is ignored instead of stopping the app.
 
         Args:
-            options: Parsed command options produced by [`add_arguments`][(c).].
+            options: Parsed command options produced by :meth:`add_arguments`.
         """
+
+        if options.verbose > 0:
+            logging.basicConfig(
+                level=logging.DEBUG if options.verbose > 1 else logging.INFO
+            )
 
         from flet.utils.pip import (
             ensure_flet_desktop_package_installed,
             ensure_flet_web_package_installed,
         )
 
-        if options.web:
+        # `--web`, `--ios` and `--android` all serve the app over the web server
+        # (and none of them opens a native window), so need only `flet-web`.
+        if options.web or options.ios or options.android:
             ensure_flet_web_package_installed()
         else:
             ensure_flet_desktop_package_installed()
-        from flet_desktop import close_flet_view
 
         if options.module:
             script_path = Path(options.script.replace(".", "/"))
@@ -186,6 +281,33 @@ class Command(BaseCommand):
         project_dir = Path(script_dir)
 
         get_pyproject = load_pyproject_toml(project_dir)
+
+        config_platform = {"Darwin": "macos", "Windows": "windows"}.get(
+            platform.system(), "linux"
+        )
+        impeller = get_pyproject(f"tool.flet.{config_platform}.impeller")
+        if impeller is None:
+            impeller = get_pyproject("tool.flet.impeller")
+        no_impeller = options.no_impeller or impeller is False
+        if options.no_impeller and (options.web or options.ios or options.android):
+            print("Warning: --no-impeller applies only to the desktop app.")
+
+        flavor_dir = next(
+            (
+                d
+                for d in [script_dir.resolve(), *script_dir.resolve().parents]
+                if d.joinpath("pyproject.toml").is_file()
+            ),
+            None,
+        )
+        desktop_flavor = None
+        if flavor_dir:
+            with contextlib.suppress(OSError, ValueError, AttributeError, TypeError):
+                desktop_flavor = load_pyproject_toml(flavor_dir)(
+                    "tool.flet.desktop_flavor"
+                )
+        if desktop_flavor and not os.environ.get("FLET_DESKTOP_FLAVOR"):
+            os.environ["FLET_DESKTOP_FLAVOR"] = str(desktop_flavor)
 
         if get_pyproject("tool.flet.app.path"):
             script_dir = script_dir.joinpath(get_pyproject("tool.flet.app.path"))
@@ -207,26 +329,94 @@ class Command(BaseCommand):
         if port is None and not is_windows():
             uds_path = str(Path(tempfile.gettempdir()).joinpath(random_string(10)))
 
-        assets_dir = options.assets_dir
-        if assets_dir and not Path(assets_dir).is_absolute():
-            assets_dir = str(script_dir.joinpath(assets_dir).resolve())
-
-        ignore_dirs = (
-            [
-                str(script_dir.joinpath(directory).resolve())
-                for directory in options.ignore_dirs.split(",")
-            ]
-            if options.ignore_dirs
-            else []
+        requested_assets_dir = options.assets_dir or os.getenv("FLET_ASSETS_DIR")
+        assets_dir = resolve_assets_dir(
+            script_dir, requested_assets_dir or DEFAULT_ASSETS_DIR
+        )
+        exported_assets_dir = (
+            str(script_dir.joinpath(requested_assets_dir).resolve())
+            if requested_assets_dir
+            else None
         )
 
-        flet_app_data_dir = project_dir / "storage" / "data"
-        flet_app_temp_dir = project_dir / "storage" / "temp"
+        ignore_dirs = []
+        for directory in options.ignore_dirs.split(",") if options.ignore_dirs else []:
+            ignore_dir = script_dir.joinpath(directory)
+            ignore_dirs.extend(
+                dict.fromkeys([os.path.abspath(ignore_dir), str(ignore_dir.resolve())])
+            )
+
+        # Dev-mode app storage under a hidden, Flet-namespaced `.flet/` dir so
+        # it stays out of the way and is git-ignored. Mirrors a built app: the
+        # data dir becomes the process cwd; data/cache/temp map to the three
+        # FLET_APP_STORAGE_* env vars.
+        flet_storage_dir = project_dir / ".flet" / "storage"
+        flet_app_data_dir = flet_storage_dir / "data"
+        flet_app_cache_dir = flet_storage_dir / "cache"
+        flet_app_temp_dir = flet_storage_dir / "temp"
+        for d in (flet_app_data_dir, flet_app_cache_dir, flet_app_temp_dir):
+            d.mkdir(parents=True, exist_ok=True)
+        # Self-ignore the whole `.flet/` dir in any repo, independent of the
+        # project's root .gitignore.
+        flet_dir = project_dir / ".flet"
+        flet_gitignore = flet_dir / ".gitignore"
+        if not flet_gitignore.exists():
+            flet_gitignore.write_text("*\n", encoding="utf-8")
+        # Drop a short note explaining what this dir is, next to .gitignore.
+        flet_readme = flet_dir / "README.md"
+        if not flet_readme.exists():
+            flet_readme.write_text(
+                "# `.flet/`\n"
+                "\n"
+                "This directory is created by `flet run` to hold per-project "
+                "development state. It is local to your machine, safe to delete "
+                "(it will be recreated on the next run), and git-ignored via the "
+                "`.gitignore` next to this file.\n"
+                "\n"
+                "While `flet run` is active, your app's working directory is "
+                "`storage/data` and the three storage locations are exposed to "
+                "your Python code through the `FLET_APP_STORAGE_*` environment "
+                "variables — matching how a packaged app behaves on a device.\n"
+                "\n"
+                "## `storage/`\n"
+                "\n"
+                "- **`data/`** (`FLET_APP_STORAGE_DATA`) — durable application "
+                "data: databases, settings, user files. This is also the "
+                "process current working directory, so relative paths "
+                '(e.g. `sqlite3.connect("my.db")`) land here. Persists across '
+                "runs; the equivalent of this dir is preserved across app "
+                "updates on a device.\n"
+                "- **`cache/`** (`FLET_APP_STORAGE_CACHE`) — regenerable cache "
+                "data. The OS may purge the equivalent dir on a device under "
+                "storage pressure, so only store things you can rebuild.\n"
+                "- **`temp/`** (`FLET_APP_STORAGE_TEMP`) — throwaway scratch "
+                "space. Python's `tempfile` is pointed here too. May be cleared "
+                "at any time.\n",
+                encoding="utf-8",
+            )
+        # On Windows a leading dot doesn't hide a dir (that's a POSIX
+        # convention); set the FILE_ATTRIBUTE_HIDDEN attribute explicitly so
+        # `.flet/` stays out of Explorer / file pickers like it does elsewhere.
+        if is_windows():
+            try:
+                import ctypes
+
+                FILE_ATTRIBUTE_HIDDEN = 0x02
+                ctypes.windll.kernel32.SetFileAttributesW(
+                    str(flet_dir), FILE_ATTRIBUTE_HIDDEN
+                )
+            except Exception:
+                pass
+
+        ignore_dirs.extend(
+            dict.fromkeys([os.path.abspath(flet_dir), str(flet_dir.resolve())])
+        )
 
         my_event_handler = Handler(
             args=[sys.executable, "-u"]
             + ["-m"] * options.module
-            + [options.script if options.module else script_path],
+            + [options.script if options.module else script_path]
+            + list(options.script_args),
             watch_directory=options.directory or options.recursive,
             script_path=str(script_path),
             port=port,
@@ -237,15 +427,34 @@ class Command(BaseCommand):
             ios=options.ios,
             android=options.android,
             hidden=options.hidden,
+            no_impeller=no_impeller,
             assets_dir=assets_dir,
+            exported_assets_dir=exported_assets_dir,
             ignore_dirs=ignore_dirs,
             flet_app_data_dir=str(flet_app_data_dir),
+            flet_app_cache_dir=str(flet_app_cache_dir),
             flet_app_temp_dir=str(flet_app_temp_dir),
+            verbose=options.verbose,
         )
 
         my_observer = Observer()
         my_observer.schedule(my_event_handler, script_dir, recursive=options.recursive)
-        my_observer.start()
+        try:
+            my_observer.start()
+        except OSError as e:
+            hint = (
+                " To enable it, raise the inotify limits: "
+                "https://flet.dev/docs/getting-started/running-app#linux-inotify-limits"
+                if is_linux() and e.errno in (errno.ENOSPC, errno.EMFILE)
+                else ""
+            )
+            print(
+                f"Warning: file watching is unavailable ({e.strerror or e}), "
+                f"so the app won't reload on changes.{hint}"
+            )
+            my_observer = None
+
+        my_event_handler.start_process()
 
         try:
             while True:
@@ -254,9 +463,16 @@ class Command(BaseCommand):
         except KeyboardInterrupt:
             pass
 
-        close_flet_view(my_event_handler.pid_file)
-        my_observer.stop()
-        my_observer.join()
+        # `pid_file` is set only by `Handler.open_flet_view_and_wait`, so it is
+        # `None` unless there is a window to close.
+        if my_event_handler.pid_file is not None:
+            from flet_desktop import close_flet_view
+
+            close_flet_view(my_event_handler.pid_file)
+
+        if my_observer is not None:
+            my_observer.stop()
+            my_observer.join()
 
 
 class Handler(FileSystemEventHandler):
@@ -281,10 +497,14 @@ class Handler(FileSystemEventHandler):
         ios,
         android,
         hidden,
+        no_impeller,
         assets_dir,
+        exported_assets_dir,
         ignore_dirs,
         flet_app_data_dir,
+        flet_app_cache_dir,
         flet_app_temp_dir,
+        verbose,
     ) -> None:
         super().__init__()
         self.args = args
@@ -298,7 +518,9 @@ class Handler(FileSystemEventHandler):
         self.ios = ios
         self.android = android
         self.hidden = hidden
+        self.no_impeller = no_impeller
         self.assets_dir = assets_dir
+        self.exported_assets_dir = exported_assets_dir
         self.ignore_dirs = ignore_dirs
         self.last_time = time.time()
         self.is_running = False
@@ -307,9 +529,10 @@ class Handler(FileSystemEventHandler):
         self.page_url_prefix = f"PAGE_URL_{time.time()}"
         self.page_url = None
         self.flet_app_data_dir = flet_app_data_dir
+        self.flet_app_cache_dir = flet_app_cache_dir
         self.flet_app_temp_dir = flet_app_temp_dir
+        self.verbose = verbose
         self.terminate = threading.Event()
-        self.start_process()
 
     def start_process(self):
         """
@@ -334,18 +557,51 @@ class Handler(FileSystemEventHandler):
             p_env["FLET_WEB_APP_PATH"] = self.page_name
         if self.uds_path is not None:
             p_env["FLET_SERVER_UDS_PATH"] = self.uds_path
-        if self.assets_dir is not None:
-            p_env["FLET_ASSETS_DIR"] = self.assets_dir
+        if self.exported_assets_dir is not None:
+            p_env["FLET_ASSETS_DIR"] = self.exported_assets_dir
+        # The app runs with its cwd set to the storage directory below, so a
+        # relative path the user typed in their shell has to be resolved here
+        # while that meaning still holds.
+        web_path = p_env.get("FLET_WEB_PATH")
+        if web_path and not Path(web_path).is_absolute():
+            p_env["FLET_WEB_PATH"] = str(Path(web_path).resolve())
+
         p_env["FLET_DISPLAY_URL_PREFIX"] = self.page_url_prefix
+        if self.verbose > 0:
+            p_env["FLET_LOG_LEVEL"] = "debug" if self.verbose > 1 else "info"
 
         p_env["FLET_APP_STORAGE_DATA"] = self.flet_app_data_dir
+        p_env["FLET_APP_STORAGE_CACHE"] = self.flet_app_cache_dir
         p_env["FLET_APP_STORAGE_TEMP"] = self.flet_app_temp_dir
+
+        # Point Python's temp machinery at the project-local temp dir so
+        # tempfile.gettempdir() agrees with FLET_APP_STORAGE_TEMP and dev scratch
+        # stays inside the git-ignored .flet/.
+        p_env["TMPDIR"] = self.flet_app_temp_dir
+        p_env["TEMP"] = self.flet_app_temp_dir
+        p_env["TMP"] = self.flet_app_temp_dir
+
+        # We launch the app with cwd = the data dir (matches a built app, where
+        # the app bundle is read-only and writes go to app-support). Keep the
+        # app importable by putting the original working directory — where
+        # `flet run` was invoked and where `-m` modules resolve — on PYTHONPATH.
+        invocation_cwd = os.getcwd()
+        existing_pythonpath = p_env.get("PYTHONPATH", "")
+        p_env["PYTHONPATH"] = (
+            invocation_cwd + os.pathsep + existing_pythonpath
+            if existing_pythonpath
+            else invocation_cwd
+        )
 
         p_env["PYTHONIOENCODING"] = "utf-8"
         p_env["PYTHONWARNINGS"] = "default::DeprecationWarning"
 
         self.p = subprocess.Popen(
-            self.args, env=p_env, stdout=subprocess.PIPE, encoding="utf-8"
+            self.args,
+            env=p_env,
+            cwd=self.flet_app_data_dir,
+            stdout=subprocess.PIPE,
+            encoding="utf-8",
         )
 
         self.is_running = True
@@ -356,17 +612,19 @@ class Handler(FileSystemEventHandler):
         """
         React to file-system events and trigger a debounced process restart.
 
-        Events coming from ignored directories are skipped. Restart is performed
-        for create/modify/delete/move events either on the target script or
-        within the watched directory tree.
+        Events coming from ignored directories are skipped; a path on another
+        drive than an ignored directory (Windows) is never inside it. Restart is
+        performed for create/modify/delete/move events either on the target
+        script or within the watched directory tree.
         """
 
+        child = os.path.abspath(event.src_path)
         for directory in self.ignore_dirs:
-            child = os.path.abspath(event.src_path)
-            # check if the file which triggered the reload is in the (ignored) directory
-            if os.path.commonpath([directory]) == os.path.commonpath(
-                [directory, child]
-            ):
+            try:
+                common = os.path.commonpath([directory, child])
+            except ValueError:
+                continue
+            if os.path.commonpath([directory]) == common:
                 return
 
         if (
@@ -386,6 +644,10 @@ class Handler(FileSystemEventHandler):
         renders a QR code for mobile mode, or opens desktop view and waits for
         that process to finish.
 
+        The app reports its resolved assets directory on a line of its own just
+        before the URL line. It replaces `assets_dir`, so the desktop view opens
+        with the directory the app uses, including one set with `ft.run()`.
+
         Args:
             p: Running child process whose stdout is consumed.
         """
@@ -395,9 +657,15 @@ class Handler(FileSystemEventHandler):
             if not line:
                 break
             line = line.rstrip("\r\n")
-            if line.startswith(self.page_url_prefix):
+            assets_line_prefix = self.page_url_prefix + DISPLAY_ASSETS_DIR_SUFFIX
+            if line.startswith(assets_line_prefix):
+                self.assets_dir = line[len(assets_line_prefix) + 1 :] or None
+            elif line.startswith(self.page_url_prefix):
                 if not self.page_url:
-                    self.page_url = line[len(self.page_url_prefix) + 1 :]
+                    parts = line[len(self.page_url_prefix) + 1 :].split(" ", 1)
+                    self.page_url = parts[0]
+                    if len(parts) > 1 and parts[1] == "flet_app_hidden":
+                        self.hidden = True
                     if (
                         self.page_url.startswith("http")
                         and not self.ios
@@ -424,18 +692,24 @@ class Handler(FileSystemEventHandler):
         terminated and the handler termination event is set.
         """
 
-        from flet_desktop import open_flet_view
-
-        self.fvp, self.pid_file = open_flet_view(
-            self.page_url, self.assets_dir, self.hidden
-        )
-        self.fvp.wait()
-        self.p.send_signal(signal.SIGTERM)
         try:
-            self.p.wait(2)
-        except subprocess.TimeoutExpired:
-            self.p.kill()
-        self.terminate.set()
+            from flet_desktop import explain_client_exit, open_flet_view
+
+            self.fvp, self.pid_file = open_flet_view(
+                self.page_url,
+                self.assets_dir,
+                self.hidden,
+                no_impeller=self.no_impeller,
+                app_dir=os.path.dirname(self.script_path),
+            )
+            explain_client_exit(self.fvp.wait())
+            self.p.send_signal(signal.SIGTERM)
+            try:
+                self.p.wait(2)
+            except subprocess.TimeoutExpired:
+                self.p.kill()
+        finally:
+            self.terminate.set()
 
     def restart_program(self):
         """

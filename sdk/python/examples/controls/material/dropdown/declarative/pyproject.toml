@@ -1,0 +1,26 @@
+[project]
+name = "dropdown-declarative"
+version = "1.0.0"
+description = "Uses a declarative component and observable state to keep Dropdown selection synchronized."
+requires-python = ">=3.10"
+keywords = ["dropdown", "declarative", "component", "state", "observable"]
+authors = [{ name = "Flet team", email = "hello@flet.dev" }]
+dependencies = ["flet"]
+
+[dependency-groups]
+dev = ["flet-cli", "flet-desktop", "flet-web"]
+
+[tool.flet.gallery]
+categories = ["Input/Dropdown"]
+
+[tool.flet.metadata]
+title = "Declarative"
+controls = ["SafeArea", "Column", "Dropdown", "DropdownOption", "Text"]
+layout_pattern = "form"
+complexity = "basic"
+features = ["declarative state", "selection binding", "component rendering"]
+
+[tool.flet]
+org = "dev.flet"
+company = "Flet"
+copyright = "Copyright (C) 2023-2026 by Flet"

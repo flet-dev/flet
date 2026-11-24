@@ -14,7 +14,7 @@ __all__ = [
 ]
 
 
-@dataclass
+@ft.value
 class LineChartEventSpot:
     """
     Identifies a concrete line/point pair involved in a chart interaction event.
@@ -59,12 +59,16 @@ class LineChartEvent(ft.Event["LineChart"]):
     spots: list[LineChartEventSpot]
     """
     Spots on which the event occurred.
+
+    Note:
+        This list is empty when the event does not target a concrete point, for
+        example when the pointer hovers over or taps empty chart space.
     """
 
 
-@dataclass
+@ft.value
 class LineChartTooltip:
-    """Configuration of the tooltip for [`LineChart`][(p).]s."""
+    """Configuration of the tooltip for :class:`~flet_charts.LineChart`s."""
 
     bgcolor: ft.ColorValue = "#FF607D8B"
     """
@@ -210,7 +214,7 @@ class LineChart(ft.LayoutControl):
 
     data_series: list[LineChartData] = field(default_factory=list)
     """
-    A list of [`LineChartData`][(p).]
+    A list of :class:`~flet_charts.LineChartData`
     controls drawn as separate lines on a chart.
     """
 

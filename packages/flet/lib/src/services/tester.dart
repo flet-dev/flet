@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 
 import '../flet_service.dart';
 import '../testing/test_finder.dart';
@@ -50,9 +50,9 @@ class TesterService extends FletService {
 
       case "find_by_key":
         var controlKey = parseKey(args["key"])!;
-        var key = controlKey is ControlScrollKey
+        Key? key = controlKey is ControlScrollKey
             ? control.backend.globalKeys[controlKey.toString()]
-            : ValueKey(controlKey.value);
+            : valueKeyFromValue(controlKey.value);
         if (key == null) {
           throw Exception("Key not found: $key");
         }
@@ -75,6 +75,12 @@ class TesterService extends FletService {
         _finders[finder.id] = finder;
         return finder.toMap();
 
+      case "find_by_semantics_identifier":
+        var finder = control.backend.tester!
+            .findBySemanticsIdentifier(args["identifier"]);
+        _finders[finder.id] = finder;
+        return finder.toMap();
+
       case "take_screenshot":
         return await control.backend.tester!.takeScreenshot(args["name"]);
 
@@ -84,10 +90,63 @@ class TesterService extends FletService {
           await control.backend.tester!.tap(finder, args["finder_index"]);
         }
 
+      case "mouse_click":
+        var finder = _finders[args["finder_id"]];
+        if (finder != null) {
+          await control.backend.tester!.mouseClick(finder, args["finder_index"]);
+        }
+
+      case "mouse_double_click":
+        var finder = _finders[args["finder_id"]];
+        if (finder != null) {
+          await control.backend.tester!
+              .mouseDoubleClick(finder, args["finder_index"]);
+        }
+
+      case "right_mouse_click":
+        var finder = _finders[args["finder_id"]];
+        if (finder != null) {
+          await control.backend.tester!
+              .rightMouseClick(finder, args["finder_index"]);
+        }
+
       case "tap_at":
         var offset = parseOffset(args["offset"]);
         if (offset != null) {
           await control.backend.tester!.tapAt(offset);
+        }
+
+      case "mouse_click_at":
+        var offset = parseOffset(args["offset"]);
+        if (offset != null) {
+          await control.backend.tester!.mouseClickAt(offset);
+        }
+
+      case "mouse_double_click_at":
+        var offset = parseOffset(args["offset"]);
+        if (offset != null) {
+          await control.backend.tester!.mouseDoubleClickAt(offset);
+        }
+
+      case "right_mouse_click_at":
+        var offset = parseOffset(args["offset"]);
+        if (offset != null) {
+          await control.backend.tester!.rightMouseClickAt(offset);
+        }
+
+      case "drag":
+        var finder = _finders[args["finder_id"]];
+        var offset = parseOffset(args["offset"]);
+        if (finder != null && offset != null) {
+          await control.backend.tester!
+              .drag(finder, args["finder_index"], offset);
+        }
+
+      case "drag_from":
+        var start = parseOffset(args["start"]);
+        var offset = parseOffset(args["offset"]);
+        if (start != null && offset != null) {
+          await control.backend.tester!.dragFrom(start, offset);
         }
 
       case "long_press":

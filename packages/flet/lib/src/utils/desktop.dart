@@ -1,7 +1,7 @@
 import 'package:flutter/foundation.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter/widgets.dart';
 import 'package:window_manager/window_manager.dart';
-import 'package:window_to_front/window_to_front.dart';
 
 import '../models/window_state.dart';
 import 'platform.dart';
@@ -30,17 +30,60 @@ Future setWindowSize(double? width, double? height) async {
   }
 }
 
+/// Channel of Flet's Linux runner for window geometry hints.
+const _linuxWindowChannel = MethodChannel("flet/window");
+
+/// Maximum window width or height that stands for "no limit".
+///
+/// window_manager ignores a negative maximum on Windows unless both are set,
+/// so an axis without a limit gets this instead.
+const double _noMaxWindowSize = 100000;
+
+/// Sets the window's minimum size; a `null` width or height has no limit.
 Future setWindowMinSize(double? minWidth, double? minHeight) async {
   if (isDesktopPlatform()) {
     debugPrint("setWindowMinSize($minWidth, $minHeight)");
+    if (await _invokeLinuxWindowMethod("setMinimumSize", {
+      "width": minWidth,
+      "height": minHeight,
+    })) {
+      return;
+    }
     await windowManager.setMinimumSize(Size(minWidth ?? 0, minHeight ?? 0));
   }
 }
 
+/// Sets the window's maximum size; a `null` width or height has no limit.
 Future setWindowMaxSize(double? maxWidth, double? maxHeight) async {
   if (isDesktopPlatform()) {
     debugPrint("setWindowMaxSize($maxWidth, $maxHeight)");
-    await windowManager.setMaximumSize(Size(maxWidth ?? -1, maxHeight ?? -1));
+    if (await _invokeLinuxWindowMethod("setMaximumSize", {
+      "width": maxWidth,
+      "height": maxHeight,
+    })) {
+      return;
+    }
+    await windowManager.setMaximumSize(
+        Size(maxWidth ?? _noMaxWindowSize, maxHeight ?? _noMaxWindowSize));
+  }
+}
+
+/// Invokes a method on Flet's Linux runner.
+///
+/// Returns `false` when not on Linux, or when the app's runner doesn't handle
+/// the channel, such as one from a custom build template.
+Future<bool> _invokeLinuxWindowMethod(
+  String method,
+  Map<String, double?> arguments,
+) async {
+  if (!isLinuxDesktop()) {
+    return false;
+  }
+  try {
+    await _linuxWindowChannel.invokeMethod<void>(method, arguments);
+    return true;
+  } on MissingPluginException {
+    return false;
   }
 }
 
@@ -128,10 +171,22 @@ Future setWindowTitleBarVisibility(
   }
 }
 
+/// Whether the window is hidden from the Windows taskbar, as last applied by
+/// [setWindowSkipTaskBar], or `null` until a value is applied.
+///
+/// On Windows, `window_manager`'s `isSkipTaskbar()` returns a flag that only
+/// its `setSkipTaskbar()` updates and that starts out `true`, although a new
+/// window has a taskbar button. [getWindowState] reports this value instead.
+/// It starts as unknown (null) rather than `false` because the native window can
+/// outlive it, e.g. across a Flutter hot restart, so the first requested
+/// value is always applied.
+bool? _windowsSkipTaskBar;
+
 Future setWindowSkipTaskBar(bool skipTaskBar) async {
   if (isDesktopPlatform()) {
     debugPrint("setWindowSkipTaskBar($skipTaskBar)");
     await windowManager.setSkipTaskbar(skipTaskBar);
+    _windowsSkipTaskBar = skipTaskBar;
   }
 }
 
@@ -180,6 +235,11 @@ Future setWindowAlignment(Alignment alignment, [bool animate = true]) async {
 
 Future setWindowAspectRatio(double value) async {
   if (isDesktopPlatform()) {
+    if (await _invokeLinuxWindowMethod("setAspectRatio", {
+      "aspectRatio": value,
+    })) {
+      return;
+    }
     await windowManager.setAspectRatio(value);
   }
 }
@@ -243,7 +303,9 @@ Future focusWindow() async {
 
 Future windowToFront() async {
   if (isDesktopPlatform()) {
-    await WindowToFront.activate();
+    // Bring the window to the front, activating the app over other apps
+    // (window_manager.show() calls NSApp.activate(ignoringOtherApps: true)).
+    await windowManager.show();
   }
 }
 
@@ -272,6 +334,15 @@ Future blurWindow() async {
 Future destroyWindow() async {
   if (isDesktopPlatform()) {
     debugPrint("destroyWindow()");
+    if (isWindowsDesktop()) {
+      // Work around window_manager.destroy() stalling on Windows:
+      // https://github.com/leanflutter/window_manager/issues/478#issuecomment-2423413104
+      if (await windowManager.isPreventClose()) {
+        await windowManager.setPreventClose(false);
+      }
+      await windowManager.close();
+      return;
+    }
     await windowManager.destroy();
   }
 }
@@ -331,7 +402,9 @@ Future<WindowState> getWindowState() async {
       maximizable: await windowManager.isMaximizable(),
       resizable: await windowManager.isResizable(),
       preventClose: await windowManager.isPreventClose(),
-      skipTaskBar: await windowManager.isSkipTaskbar(),
+      skipTaskBar: isWindowsDesktop()
+          ? _windowsSkipTaskBar
+          : await windowManager.isSkipTaskbar(),
       width: size.width.toDouble(),
       height: size.height.toDouble(),
       top: pos.dy.toDouble(),

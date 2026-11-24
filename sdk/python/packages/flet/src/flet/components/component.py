@@ -68,8 +68,20 @@ class Component(BaseControl):
     """
 
     fn: Callable[..., Any] = field(metadata={"skip": True})
+    """
+    Component function called to produce the rendered body.
+    """
+
     args: tuple[Any, ...] = field(default_factory=tuple, metadata={"skip": True})
+    """
+    Positional arguments passed to :attr:`fn`.
+    """
+
     kwargs: dict[str, Any] = field(default_factory=dict, metadata={"skip": True})
+    """
+    Keyword arguments passed to :attr:`fn`.
+    """
+
     _parent_component: weakref.ref[Component] | None = field(
         default=None, metadata={"skip": True}
     )
@@ -78,7 +90,13 @@ class Component(BaseControl):
     )
     _contexts: dict[object, Any] = field(default_factory=dict, metadata={"skip": True})
     memoized: bool = field(default=False, metadata={"skip": True})
+    """
+    Whether this component can skip rendering when arguments are unchanged.
+    """
+
     _stale: bool = field(default=False, metadata={"skip": True})
+
+    visible: bool = True
 
     _b: Any = None  # body
 
@@ -102,6 +120,14 @@ class Component(BaseControl):
 
         if self._stale:
             logger.debug("%s.update(): skipping (stale)", self)
+            return
+
+        # Don't re-render unmounted components.  A stale observable listener
+        # (or queued pending update) can fire after `will_unmount` — running
+        # the component body here would create a new render tree that is
+        # never attached, leaking fresh subscriptions and zombie children.
+        if not self._state.mounted:
+            logger.debug("%s.update(): skipping (unmounted)", self)
             return
 
         logger.debug(
@@ -182,6 +208,12 @@ class Component(BaseControl):
         """
         Mark component dirty and enqueue a session update.
         """
+
+        # Skip updates for unmounted components.  Stale observable listeners
+        # that fire after will_unmount must not resurrect a zombie control.
+        if not self._state.mounted:
+            logger.debug("%s.schedule_update(): skipping (unmounted)", self)
+            return
 
         logger.debug("%s.schedule_update()", self)
         self._state.is_dirty = True
@@ -309,7 +341,7 @@ class Component(BaseControl):
                     or hook.deps != hook.prev_deps
                 )
                 if deps_changed:
-                    if callable(hook.cleanup):
+                    if hook.has_cleanup():
                         self._schedule_effect(hook, is_cleanup=True)
                     self._schedule_effect(hook, is_cleanup=False)
 
@@ -322,7 +354,7 @@ class Component(BaseControl):
             logger.debug("%s._run_unmount_effects()", self)
         for hook in self._state.hooks:
             # all effects are running on unmount
-            if isinstance(hook, EffectHook) and callable(hook.cleanup):
+            if isinstance(hook, EffectHook) and hook.has_lifecycle_work():
                 self._schedule_effect(hook, is_cleanup=True)
         self._state.hooks.clear()
 

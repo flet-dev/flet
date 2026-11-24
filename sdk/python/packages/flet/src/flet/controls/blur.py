@@ -1,7 +1,7 @@
-from dataclasses import dataclass
 from enum import Enum
 from typing import Optional, Union
 
+from flet.controls.base_control import value
 from flet.controls.types import Number
 
 __all__ = [
@@ -37,7 +37,7 @@ class BlurTileMode(Enum):
     """
 
 
-@dataclass
+@value
 class Blur:
     """
     Gaussian blur configuration.
@@ -69,5 +69,5 @@ BlurValue = Union[Number, tuple[Number, Number], Blur]
 Represents blur as either:
 - a single sigma value applied to both axes,
 - a `(sigma_x, sigma_y)` tuple,
-- or an explicit [`Blur`][flet.] object.
+- or an explicit :class:`~flet.Blur` object.
 """

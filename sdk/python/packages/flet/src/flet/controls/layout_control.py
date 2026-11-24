@@ -20,9 +20,8 @@ from flet.controls.transform import (
     Transform,
 )
 from flet.controls.types import Number
-from flet.utils import deprecated_class
 
-__all__ = ["ConstrainedControl", "LayoutControl", "LayoutSizeChangeEvent"]
+__all__ = ["LayoutControl", "LayoutSizeChangeEvent"]
 
 
 @dataclass
@@ -47,21 +46,21 @@ class LayoutControl(Control):
     """
     Base class for visual controls that participate in page layout.
 
-    `LayoutControl` extends [`Control`][flet.] with common visual layout
+    `LayoutControl` extends :class:`~flet.Control` with common visual layout
     capabilities, including:
 
-    - explicit sizing ([`width`][(c).], [`height`][(c).], [`aspect_ratio`][(c).]);
-    - absolute positioning ([`left`][(c).], [`top`], [`right`][(c).], [`bottom`][(c).]);
-    - parent-space placement ([`align`][(c).], [`margin`][(c).]);
-    - 2D transforms ([`rotate`][(c).], [`scale`][(c).], [`offset`][(c).],
-      [`flip`][(c).], [`transform`][(c).]);
+    - explicit sizing (:attr:`width`, :attr:`height`, :attr:`aspect_ratio`);
+    - absolute positioning (:attr:`left`, :attr:`top`, :attr:`right`, :attr:`bottom`);
+    - parent-space placement (:attr:`align`, :attr:`margin`);
+    - 2D transforms (:attr:`rotate`, :attr:`scale`, :attr:`offset`,
+      :attr:`flip`, :attr:`transform`);
     - implicit animations for those properties (`animate_*`);
-    - layout/animation lifecycle events ([`on_size_change`][(c).],
-      [`on_animation_end`][(c).]).
+    - layout/animation lifecycle events (:attr:`on_size_change`,
+      :attr:`on_animation_end`).
 
     Use `LayoutControl` as the base for custom visual controls rendered on
-    the page surface. For popup controls, use [`DialogControl`][flet.];
-    for non-visual integrations, use [`Service`][flet.].
+    the page surface. For popup controls, use :class:`~flet.DialogControl`;
+    for non-visual integrations, use :class:`~flet.Service`.
     """
 
     width: Optional[Number] = None
@@ -74,13 +73,42 @@ class LayoutControl(Control):
     Imposed Control height in virtual pixels.
     """
 
+    min_width: Optional[Number] = None
+    """
+    The minimum width this control can be laid out at, in virtual pixels.
+
+    Applied by the client on every layout pass, so it holds while the window
+    resizes. A fixed :attr:`width` is clamped into
+    [`min_width`, `max_width`].
+    """
+
+    max_width: Optional[Number] = None
+    """
+    The maximum width this control can be laid out at, in virtual pixels.
+
+    Combine with an alignment on the parent to center a capped-width column,
+    e.g. a `Column(horizontal_alignment=CENTER)` holding a
+    `Container(max_width=760, content=...)` - the content fills the available
+    width up to 760 and stays centered as the window resizes.
+    """
+
+    min_height: Optional[Number] = None
+    """
+    The minimum height this control can be laid out at, in virtual pixels.
+    """
+
+    max_height: Optional[Number] = None
+    """
+    The maximum height this control can be laid out at, in virtual pixels.
+    """
+
     left: Optional[Number] = None
     """
     The distance that the child's left edge is inset from the left of the stack.
 
     Note:
         Effective only if this control is a descendant of one of the following:
-        [`Stack`][flet.] control, [`Page.overlay`][flet.] list.
+        :class:`~flet.Stack` control, :attr:`flet.Page.overlay` list.
     """
 
     top: Optional[Number] = None
@@ -89,7 +117,7 @@ class LayoutControl(Control):
 
     Note:
         Effective only if this control is a descendant of one of the following:
-        [`Stack`][flet.] control, [`Page.overlay`][flet.] list.
+        :class:`~flet.Stack` control, :attr:`flet.Page.overlay` list.
     """
 
     right: Optional[Number] = None
@@ -98,7 +126,7 @@ class LayoutControl(Control):
 
     Note:
         Effective only if this control is a descendant of one of the following:
-        [`Stack`][flet.] control, [`Page.overlay`][flet.] list.
+        :class:`~flet.Stack` control, :attr:`flet.Page.overlay` list.
     """
 
     bottom: Optional[Number] = None
@@ -107,7 +135,7 @@ class LayoutControl(Control):
 
     Note:
         Effective only if this control is a descendant of one of the following:
-        [`Stack`][flet.] control, [`Page.overlay`][flet.] list.
+        :class:`~flet.Stack` control, :attr:`flet.Page.overlay` list.
     """
 
     align: Optional[Alignment] = None
@@ -209,93 +237,111 @@ class LayoutControl(Control):
     """
     Flips this control horizontally and/or vertically.
 
-    Set to an instance of [`Flip`][flet.] to mirror across x-axis, y-axis, or both.
+    Set to an instance of :class:`~flet.Flip` to mirror across x-axis, y-axis, or both.
     """
 
     transform: Optional[Transform] = None
     """
     Applies a generic matrix transform to this control.
 
-    Set to an instance of [`Transform`][flet.] with a recorded
-    [`Matrix4`][flet.] to describe arbitrary transform sequences.
+    Set to an instance of :class:`~flet.Transform` with a recorded
+    :class:`~flet.Matrix4` to describe arbitrary transform sequences.
     """
     aspect_ratio: Optional[Number] = None
     """
     The aspect ratio of the control.
-    It is defined as the ratio of the width to the height.
+    It is defined as the ratio of :attr:`width` to :attr:`height`.
+
+    Note:
+        In current implementation, if :attr:`aspect_ratio` is set, :attr:`width`
+        and :attr:`height` on the same control are ignored for final rendered size.
     """
 
     animate_opacity: Optional[AnimationValue] = None
     """
-    Enables implicit animation of the [`opacity`][flet.Control.] property.
+    Enables implicit animation of the :attr:`flet.Control.opacity` property.
 
-    More information [here](https://docs.flet.dev/cookbook/animations).
+    More information [here](https://flet.dev/docs/cookbook/animations).
     """
 
     animate_size: Optional[AnimationValue] = None
     """
-    TBD
+    Enables implicit animation of this control's size.
+
+    If :attr:`width` or :attr:`height` is set, changes to those dimensions are
+    animated. If neither dimension is set, changes to the control's natural size are
+    animated instead.
+
+    To collapse a :class:`~flet.Container`, keep its content mounted and animate
+    its height to zero. The content is laid out at each intermediate height.
+    Fixed-size children can overflow during the collapse. Set
+    :attr:`flet.Container.clip_behavior` to :attr:`flet.ClipBehavior.HARD_EDGE`
+    to hide paint outside the container. Children still need enough room to
+    satisfy their layout constraints.
+
+    More information [here](https://flet.dev/docs/cookbook/animations).
     """
 
     animate_position: Optional[AnimationValue] = None
     """
     Enables implicit animation of the positioning properties \
-    ([`left`][flet.LayoutControl.], [`right`][flet.LayoutControl.], \
-    [`top`][flet.LayoutControl.] and [`bottom`][flet.LayoutControl.]).
+    (:attr:`flet.LayoutControl.left`, :attr:`flet.LayoutControl.right`, \
+    :attr:`flet.LayoutControl.top` and :attr:`flet.LayoutControl.bottom`).
 
-    More information [here](https://docs.flet.dev/cookbook/animations).
+    More information [here](https://flet.dev/docs/cookbook/animations).
     """
 
     animate_align: Optional[AnimationValue] = None
     """
-    Enables implicit animation of the [`align`][flet.LayoutControl.] property.
+    Enables implicit animation of the :attr:`flet.LayoutControl.align` property.
 
-    More information [here](https://docs.flet.dev/cookbook/animations).
+    More information [here](https://flet.dev/docs/cookbook/animations).
     """
 
     animate_margin: Optional[AnimationValue] = None
     """
-    Enables implicit animation of the [`margin`][flet.LayoutControl.] property.
+    Enables implicit animation of the :attr:`flet.LayoutControl.margin` property.
 
-    More information [here](https://docs.flet.dev/cookbook/animations).
+    More information [here](https://flet.dev/docs/cookbook/animations).
     """
 
     animate_rotation: Optional[AnimationValue] = None
     """
-    Enables implicit animation of the [`rotate`][flet.LayoutControl.] property.
+    Enables implicit animation of the :attr:`flet.LayoutControl.rotate` property.
 
-    More information [here](https://docs.flet.dev/cookbook/animations).
+    More information [here](https://flet.dev/docs/cookbook/animations).
     """
 
     animate_scale: Optional[AnimationValue] = None
     """
-    Enables implicit animation of the [`scale`][flet.LayoutControl.] property.
+    Enables implicit animation of the :attr:`flet.LayoutControl.scale` property.
 
-    More information [here](https://docs.flet.dev/cookbook/animations).
+    More information [here](https://flet.dev/docs/cookbook/animations).
     """
 
     animate_offset: Optional[AnimationValue] = None
     """
-    Enables implicit animation of the [`offset`][flet.LayoutControl.] property.
+    Enables implicit animation of the :attr:`flet.LayoutControl.offset` property.
 
-    More information [here](https://docs.flet.dev/cookbook/animations).
+    More information [here](https://flet.dev/docs/cookbook/animations).
     """
 
     size_change_interval: int = 10
     """
-    Sampling interval in milliseconds for [`on_size_change`][(c).] event.
+    Sampling interval in milliseconds for :attr:`on_size_change` event.
 
-    Setting to `0` calls [`on_size_change`][(c).] immediately
-    on every change.
+    Set to `0` to report every frame whose final size differs from the
+    previously reported size.
     """
 
     on_size_change: Optional[EventHandler[LayoutSizeChangeEvent["LayoutControl"]]] = (
         None
     )
     """
-    Called when the size of this control changes.
+    Called when the size of this control changes. If layout measures the
+    control more than once in a frame, the event reports its final size.
 
-    [`size_change_interval`][(c).] defines how often this event is called.
+    :attr:`size_change_interval` defines how often this event is called.
     """
 
     on_animation_end: Optional[ControlEventHandler["LayoutControl"]] = None
@@ -307,14 +353,5 @@ class LayoutControl(Control):
     The `data` property of the event handler argument contains the name
     of the animation.
 
-    More information [here](https://docs.flet.dev/cookbook/animations).
+    More information [here](https://flet.dev/docs/cookbook/animations).
     """
-
-
-@deprecated_class(
-    reason="Inherit from LayoutControl instead.",
-    version="0.80.0",
-    delete_version="1.0",
-)
-class ConstrainedControl(LayoutControl):
-    pass

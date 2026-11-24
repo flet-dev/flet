@@ -1,0 +1,26 @@
+[project]
+name = "button-icons"
+version = "1.0.0"
+description = "Button examples with default and custom icon colors."
+requires-python = ">=3.10"
+keywords = ["button", "icon", "material", "styling"]
+authors = [{ name = "Flet team", email = "hello@flet.dev" }]
+dependencies = ["flet"]
+
+[dependency-groups]
+dev = ["flet-cli", "flet-desktop", "flet-web"]
+
+[tool.flet.gallery]
+categories = ["Buttons/Button"]
+
+[tool.flet.metadata]
+title = "Buttons with icons"
+controls = ["SafeArea", "Column", "Button"]
+layout_pattern = "inline-actions"
+complexity = "basic"
+features = ["button icons", "custom icon color"]
+
+[tool.flet]
+org = "dev.flet"
+company = "Flet"
+copyright = "Copyright (C) 2023-2026 by Flet"

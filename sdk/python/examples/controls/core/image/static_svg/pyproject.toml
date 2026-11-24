@@ -1,0 +1,26 @@
+[project]
+name = "image-static-svg"
+version = "1.0.0"
+description = "Displays static SVG images from network and inline SVG strings with color overrides."
+requires-python = ">=3.10"
+keywords = ["image", "svg", "static svg", "inline svg", "color"]
+authors = [{ name = "Flet team", email = "hello@flet.dev" }]
+dependencies = ["flet"]
+
+[dependency-groups]
+dev = ["flet-cli", "flet-desktop", "flet-web"]
+
+[tool.flet.gallery]
+categories = ["Displays/Image"]
+
+[tool.flet.metadata]
+title = "Displaying a static SVG image"
+controls = ["SafeArea", "Column", "Image", "Container"]
+layout_pattern = "single-panel"
+complexity = "basic"
+features = ["network svg", "inline svg", "svg color tinting"]
+
+[tool.flet]
+org = "dev.flet"
+company = "Flet"
+copyright = "Copyright (C) 2023-2026 by Flet"

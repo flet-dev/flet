@@ -12,12 +12,15 @@ dependencies = [
 
 [project.urls]
 Homepage = "https://flet.dev"
-Documentation = "https://docs.flet.dev/datatable2"
+Documentation = "https://flet.dev/docs/controls/datatable2"
 Repository = "https://github.com/flet-dev/flet/tree/main/sdk/python/packages/flet-datatable2"
 Issues = "https://github.com/flet-dev/flet/issues"
 
 [tool.setuptools.package-data]
-"flutter.flet_datatable2" = ["**/*"]
+"flutter.flet_datatable2" = [
+    "pubspec.yaml",
+    "lib/**",
+]
 
 [build-system]
 requires = ["setuptools"]

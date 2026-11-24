@@ -43,6 +43,8 @@ class RowControl extends StatelessWidget {
                 "alignment", MainAxisAlignment.start)!,
             crossAxisAlignment: control.getCrossAxisAlignment(
                 "vertical_alignment", CrossAxisAlignment.center)!,
+            // Required by `CrossAxisAlignment.baseline`, ignored otherwise.
+            textBaseline: TextBaseline.alphabetic,
             children: controls,
           );
 
@@ -56,7 +58,7 @@ class RowControl extends StatelessWidget {
         wrapIntoScrollableView: true,
         child: child);
 
-    if (control.getBool("on_scroll", false)!) {
+    if (control.hasEventHandler("scroll")) {
       child = ScrollNotificationControl(control: control, child: child);
     }
 

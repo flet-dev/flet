@@ -1,0 +1,975 @@
+/* stylelint-disable docusaurus/copyright-header */
+/**
+ * Any CSS included here will be global. The classic template
+ * bundles Infima by default. Infima is a CSS framework designed to
+ * work well for content-centric websites.
+ */
+
+@import url("https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,200,1,200&icon_names=bolt,build,check,content_copy,deployed_code,play_arrow,terminal");
+
+/* You can override the default Infima variables here. */
+:root {
+  --flet-ink: #20212a;
+  --flet-muted: #62636f;
+  --flet-line: #e4e4eb;
+  --flet-soft: #f6f5f8;
+  --flet-accent: #e00050;
+  --flet-accent-soft: #fff0f6;
+  --flet-accent-line: #f0c9d9;
+  --flet-button: #e00050;
+  --flet-button-hover: #b80040;
+
+  --ifm-color-primary: #e00050;
+  --ifm-color-primary-dark: #ca0048;
+  --ifm-color-primary-darker: #be0044;
+  --ifm-color-primary-darkest: #9d0038;
+  --ifm-color-primary-light: #f60058;
+  --ifm-color-primary-lighter: #ff025c;
+  --ifm-color-primary-lightest: #ff2472;
+  --ifm-color-secondary: var(--flet-soft);
+  --ifm-font-color-base: var(--flet-ink);
+  --ifm-heading-color: var(--flet-ink);
+  --ifm-heading-font-weight: 700;
+  --flet-page-title-size: clamp(2.25rem, 1.5rem + 2vw, 3rem);
+  --ifm-background-color: #fff;
+  --ifm-background-surface-color: var(--flet-soft);
+  --ifm-footer-background-color: var(--flet-soft);
+  --ifm-footer-color: var(--flet-muted);
+  --ifm-footer-link-color: var(--flet-muted);
+  --ifm-footer-title-color: var(--flet-ink);
+  --ifm-toc-border-color: var(--flet-line);
+  --ifm-hr-background-color: var(--flet-line);
+  --ifm-global-radius: 8px;
+
+  --ifm-code-font-size: 95%;
+  --ifm-h4-font-size: 1.1rem;
+
+  --flet-link-color: var(--flet-accent);
+  --ifm-link-color: var(--flet-link-color);
+  --ifm-navbar-link-hover-color: var(--flet-link-color);
+
+  --docusaurus-highlighted-code-line-bg: rgb(220, 221, 223);
+
+  /* navbar */
+  /* --ifm-navbar-padding-vertical: 0.5rem;
+  --ifm-navbar-padding-horizontal: 0.7rem; */
+  --ifm-navbar-background-color: #fff;
+
+  /* menu */
+  --ifm-menu-color-active: var(--flet-link-color);
+  --ifm-tabs-color-active: var(--flet-link-color);
+}
+
+
+
+.navbar__logo {
+  /* Sizes the whole logo lockup (symbol + wordmark), not just the symbol -
+     the navbar has no separate `title` text. */
+  height: 26px;
+}
+
+/* Docusaurus renders a separate logo at the top of the docs sidebar when the
+   hide-on-scroll navbar is hidden. */
+.theme-doc-sidebar-container [class*='sidebarLogo_'] img {
+  height: 26px;
+}
+
+.flet-hero h1 {
+  color: var(--flet-accent);
+  font-size: 60px;
+  font-weight: 600;
+  margin-top: 2rem;
+}
+
+.hero__subtitle {
+  color: #555;
+  font-size: 27px;
+  font-weight: 400;
+}
+
+@media only screen and (max-width: 768px) {
+
+  /* For mobile phones: */
+  .flet-hero h1 {
+    font-size: 60px;
+    font-weight: 500;
+    margin: 1rem;
+    text-align: center;
+  }
+
+  .hero__subtitle {
+    font-size: 18px;
+  }
+}
+
+.header-github-link:hover {
+  opacity: 0.6;
+}
+
+.header-github-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.header-github-stars {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  min-width: 58px;
+  font-size: 13px;
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+}
+
+.header-github-stars > span {
+  font-size: 17px;
+}
+
+.header-github-link > svg {
+  display: none;
+}
+
+@media (max-width: 996px) {
+  .navbar__item.header-github-link {
+    display: none;
+  }
+}
+
+.header-github-link::before {
+  content: '';
+  width: 24px;
+  height: 24px;
+  display: flex;
+  background: url("data:image/svg+xml,%3Csvg viewBox='0 0 24 24' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M12 .297c-6.63 0-12 5.373-12 12 0 5.303 3.438 9.8 8.205 11.385.6.113.82-.258.82-.577 0-.285-.01-1.04-.015-2.04-3.338.724-4.042-1.61-4.042-1.61C4.422 18.07 3.633 17.7 3.633 17.7c-1.087-.744.084-.729.084-.729 1.205.084 1.838 1.236 1.838 1.236 1.07 1.835 2.809 1.305 3.495.998.108-.776.417-1.305.76-1.605-2.665-.3-5.466-1.332-5.466-5.93 0-1.31.465-2.38 1.235-3.22-.135-.303-.54-1.523.105-3.176 0 0 1.005-.322 3.3 1.23.96-.267 1.98-.399 3-.405 1.02.006 2.04.138 3 .405 2.28-1.552 3.285-1.23 3.285-1.23.645 1.653.24 2.873.12 3.176.765.84 1.23 1.91 1.23 3.22 0 4.61-2.805 5.625-5.475 5.92.42.36.81 1.096.81 2.22 0 1.606-.015 2.896-.015 3.286 0 .315.21.69.825.57C20.565 22.092 24 17.592 24 12.297c0-6.627-5.373-12-12-12'/%3E%3C/svg%3E") no-repeat;
+}
+
+[data-theme='dark'] .header-github-link::before {
+  background: url("data:image/svg+xml,%3Csvg viewBox='0 0 24 24' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath fill='white' d='M12 .297c-6.63 0-12 5.373-12 12 0 5.303 3.438 9.8 8.205 11.385.6.113.82-.258.82-.577 0-.285-.01-1.04-.015-2.04-3.338.724-4.042-1.61-4.042-1.61C4.422 18.07 3.633 17.7 3.633 17.7c-1.087-.744.084-.729.084-.729 1.205.084 1.838 1.236 1.838 1.236 1.07 1.835 2.809 1.305 3.495.998.108-.776.417-1.305.76-1.605-2.665-.3-5.466-1.332-5.466-5.93 0-1.31.465-2.38 1.235-3.22-.135-.303-.54-1.523.105-3.176 0 0 1.005-.322 3.3 1.23.96-.267 1.98-.399 3-.405 1.02.006 2.04.138 3 .405 2.28-1.552 3.285-1.23 3.285-1.23.645 1.653.24 2.873.12 3.176.765.84 1.23 1.91 1.23 3.22 0 4.61-2.805 5.625-5.475 5.92.42.36.81 1.096.81 2.22 0 1.606-.015 2.896-.015 3.286 0 .315.21.69.825.57C20.565 22.092 24 17.592 24 12.297c0-6.627-5.373-12-12-12'/%3E%3C/svg%3E") no-repeat;
+}
+
+.card {
+  height: 100%;
+}
+
+.gallery-grid {
+  display: grid;
+  gap: 24px;
+  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+}
+
+.gallery-footer {
+  display: flex;
+  flex-direction: row;
+}
+
+.gallery-github-link::before {
+  content: '';
+  background: url("data:image/svg+xml,%3Csvg viewBox='0 0 24 24' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M12 .297c-6.63 0-12 5.373-12 12 0 5.303 3.438 9.8 8.205 11.385.6.113.82-.258.82-.577 0-.285-.01-1.04-.015-2.04-3.338.724-4.042-1.61-4.042-1.61C4.422 18.07 3.633 17.7 3.633 17.7c-1.087-.744.084-.729.084-.729 1.205.084 1.838 1.236 1.838 1.236 1.07 1.835 2.809 1.305 3.495.998.108-.776.417-1.305.76-1.605-2.665-.3-5.466-1.332-5.466-5.93 0-1.31.465-2.38 1.235-3.22-.135-.303-.54-1.523.105-3.176 0 0 1.005-.322 3.3 1.23.96-.267 1.98-.399 3-.405 1.02.006 2.04.138 3 .405 2.28-1.552 3.285-1.23 3.285-1.23.645 1.653.24 2.873.12 3.176.765.84 1.23 1.91 1.23 3.22 0 4.61-2.805 5.625-5.475 5.92.42.36.81 1.096.81 2.22 0 1.606-.015 2.896-.015 3.286 0 .315.21.69.825.57C20.565 22.092 24 17.592 24 12.297c0-6.627-5.373-12-12-12'/%3E%3C/svg%3E") no-repeat;
+  background-size: 18px;
+  margin-top: 10px;
+  width: 20px;
+  height: 20px;
+  display: flex;
+  text-align: right;
+}
+
+.gallery-github-link:hover {
+  opacity: 0.6;
+}
+
+[data-theme='dark'] .gallery-github-link::before {
+  background: url("data:image/svg+xml,%3Csvg viewBox='0 0 24 24' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath fill='white' d='M12 .297c-6.63 0-12 5.373-12 12 0 5.303 3.438 9.8 8.205 11.385.6.113.82-.258.82-.577 0-.285-.01-1.04-.015-2.04-3.338.724-4.042-1.61-4.042-1.61C4.422 18.07 3.633 17.7 3.633 17.7c-1.087-.744.084-.729.084-.729 1.205.084 1.838 1.236 1.838 1.236 1.07 1.835 2.809 1.305 3.495.998.108-.776.417-1.305.76-1.605-2.665-.3-5.466-1.332-5.466-5.93 0-1.31.465-2.38 1.235-3.22-.135-.303-.54-1.523.105-3.176 0 0 1.005-.322 3.3 1.23.96-.267 1.98-.399 3-.405 1.02.006 2.04.138 3 .405 2.28-1.552 3.285-1.23 3.285-1.23.645 1.653.24 2.873.12 3.176.765.84 1.23 1.91 1.23 3.22 0 4.61-2.805 5.625-5.475 5.92.42.36.81 1.096.81 2.22 0 1.606-.015 2.896-.015 3.286 0 .315.21.69.825.57C20.565 22.092 24 17.592 24 12.297c0-6.627-5.373-12-12-12'/%3E%3C/svg%3E") no-repeat;
+}
+
+.gallery-live-link {
+  flex: 1;
+}
+
+.gallery-live-link img {
+  border-radius: 5px;
+  height: inherit !important;
+  max-width: inherit !important;
+  max-height: 200px;
+}
+
+.gallery-description {
+  font-size: 0.9rem;
+}
+
+/* h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  font-weight: 700;
+} */
+
+.icon-button {
+  vertical-align: text-bottom;
+  background-color: #eee;
+  border-radius: 2px;
+  padding: 1px;
+  width: 22px;
+}
+
+:not(pre) > code {
+  background: var(--ifm-code-background);
+  border: 0;
+  border-radius: var(--ifm-code-border-radius);
+  box-shadow: none;
+  padding: 0.1em 0.35em;
+}
+
+.crocodocs-member-heading {
+  align-items: center;
+  column-gap: 0.5rem;
+  display: inline-flex;
+  flex-wrap: wrap;
+}
+
+.material-symbols-outlined {
+  direction: ltr;
+  display: inline-block;
+  font-family: "Material Symbols Outlined";
+  font-size: 1em;
+  font-style: normal;
+  font-weight: normal;
+  letter-spacing: normal;
+  line-height: 1;
+  text-transform: none;
+  white-space: nowrap;
+  word-wrap: normal;
+  font-variation-settings: "FILL" 1, "GRAD" 200, "opsz" 24, "wght" 200;
+  -webkit-font-feature-settings: "liga";
+  -webkit-font-smoothing: antialiased;
+}
+
+.crocodocs-member-icon {
+  line-height: 1;
+  vertical-align: middle;
+}
+
+.crocodocs-member-icon--heading {
+  font-size: 1rem;
+  position: relative;
+  top: 0.12em;
+}
+
+.crocodocs-member-icon--toc {
+  font-size: 0.82rem;
+  position: relative;
+  top: 0.07em;
+}
+
+.crocodocs-member-toc-link {
+  align-items: center;
+  column-gap: 0.35rem;
+  display: inline-flex;
+  line-height: 1.2;
+}
+
+.crocodocs-member-icon--property {
+  color: #0b8dd9;
+}
+
+.crocodocs-member-icon--event {
+  color: #f8aa01;
+}
+
+.crocodocs-member-icon--method {
+  color: #7c4dff;
+}
+
+.crocodocs-member-badges {
+  align-items: center;
+  column-gap: 0.35rem;
+  display: inline-flex;
+  flex-wrap: wrap;
+  position: relative;
+  top: 0.08em;
+}
+
+.crocodocs-member-badge {
+  border: 1px solid var(--ifm-toc-border-color);
+  border-radius: 999px;
+  color: var(--ifm-color-emphasis-700);
+  display: inline-block;
+  font-size: 0.72rem;
+  font-weight: 500;
+  line-height: 1.2;
+  padding: 0.05rem 0.45rem;
+}
+
+.crocodocs-summary-name {
+  font-weight: 600;
+}
+
+.crocodocs-signature-box {
+  margin-bottom: var(--ifm-paragraph-margin-bottom);
+  position: relative;
+}
+
+.crocodocs-signature-copy {
+  background: var(--ifm-color-emphasis-200);
+  border: 0;
+  border-radius: 999px;
+  color: var(--ifm-font-color-base);
+  cursor: pointer;
+  font-size: 0.72rem;
+  line-height: 1;
+  opacity: 0;
+  padding: 0.35rem 0.55rem;
+  position: absolute;
+  right: 0.75rem;
+  top: 0.75rem;
+  transition: opacity 0.15s ease-in-out;
+  z-index: 1;
+}
+
+.crocodocs-signature-box:hover .crocodocs-signature-copy,
+.crocodocs-signature-copy:focus-visible {
+  opacity: 1;
+}
+
+.crocodocs-signature-pre {
+  background: var(--ifm-code-background);
+  border-radius: var(--ifm-code-border-radius);
+  margin: 0;
+  overflow-x: auto;
+  padding: 1rem 1.25rem;
+}
+
+.crocodocs-signature-content {
+  color: var(--ifm-font-color-base);
+  display: block;
+  font-family: var(--ifm-font-family-monospace);
+  font-size: 0.95rem;
+  line-height: 1.6;
+  white-space: pre;
+}
+
+.crocodocs-inline-code {
+  background: var(--ifm-code-background);
+  border-radius: var(--ifm-code-border-radius);
+  font-family: var(--ifm-font-family-monospace);
+  font-size: 0.95em;
+  padding: 0.1em 0.35em;
+}
+
+.crocodocs-code-link {
+  color: var(--ifm-link-color);
+  text-decoration: none;
+}
+
+.crocodocs-signature-content .crocodocs-code-link,
+.crocodocs-inline-code .crocodocs-code-link {
+  color: var(--ifm-link-color);
+}
+
+.crocodocs-code-link:hover,
+.crocodocs-code-link:focus-visible {
+  text-decoration: underline;
+}
+
+.doc-screenshot-figure,
+.screenshot,
+[class^='screenshot-'],
+[class*=' screenshot-'] {
+  display: block;
+  text-align: center;
+  margin: auto auto var(--ifm-paragraph-margin-bottom);
+}
+
+.doc-screenshot-figure {
+  padding: 0.5rem 0 1rem;
+}
+
+.doc-screenshot {
+  display: block;
+  margin: 0 auto;
+  max-width: 100%;
+}
+
+.doc-screenshot-figure figcaption {
+  margin-top: 0.75rem;
+}
+
+.doc-screenshot-figure img,
+.screenshot img,
+[class^='screenshot-'] img,
+[class*=' screenshot-'] img {
+  display: block;
+  margin: 0 auto;
+  max-width: 100%;
+}
+
+.screenshot {
+  width: 100%;
+}
+
+.screenshot-10 {
+  width: 10%;
+}
+
+.screenshot-20 {
+  width: 20%;
+}
+
+.screenshot-30 {
+  width: 30%;
+}
+
+.screenshot-40 {
+  width: 40%;
+}
+
+.screenshot-50 {
+  width: 50%;
+}
+
+.screenshot-60 {
+  width: 60%;
+}
+
+.screenshot-70 {
+  width: 70%;
+}
+
+.screenshot-80 {
+  width: 80%;
+}
+
+.screenshot-90 {
+  width: 90%;
+}
+
+.screenshot-100 {
+  width: 100%;
+}
+
+.screenshot-rounded {
+  border-radius: 7px;
+  box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
+}
+
+@media only screen and (max-width: 768px) {
+  .doc-screenshot-figure,
+  .screenshot,
+  [class^='screenshot-'],
+  [class*=' screenshot-'] {
+    width: 100% !important;
+    max-width: 100%;
+  }
+
+  .doc-screenshot,
+  .doc-screenshot-figure img,
+  .screenshot img,
+  [class^='screenshot-'] img,
+  [class*=' screenshot-'] img,
+  .screenshot-80,
+  .screenshot-90,
+  .screenshot-100 {
+    width: 100% !important;
+    max-width: 100%;
+    height: auto;
+  }
+}
+
+.control-demo {
+  color: var(--ifm-color-secondary-lightest);
+  text-decoration: none;
+  border-radius: 5px;
+  padding: 10px 20px;
+  background-color: var(--ifm-color-primary);
+  transition: background 0.6s;
+}
+
+.control-demo:hover {
+  color: var(--ifm-color-secondary-lightest);
+  text-decoration: none;
+  background-color: var(--ifm-color-primary-darkest);
+}
+
+.code-example {
+  position: relative;
+  margin-bottom: 1rem;
+}
+
+.code-example-try-online {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35em;
+  color: var(--ifm-color-secondary-lightest);
+  text-decoration: none;
+  border-radius: 5px;
+  padding: 6px 14px 6px 10px;
+  margin-bottom: 0.5rem;
+  background-color: var(--ifm-color-primary);
+  font-size: 0.875rem;
+  font-weight: 500;
+  transition: background 0.3s;
+}
+
+.code-example-try-online:hover {
+  color: var(--ifm-color-secondary-lightest);
+  text-decoration: none;
+  background-color: var(--ifm-color-primary-darkest);
+}
+
+.code-example-try-online .material-symbols-outlined {
+  font-size: 1.125rem;
+  font-variation-settings: "FILL" 1, "GRAD" 200, "opsz" 24, "wght" 400;
+}
+
+.code-example--project [class*="codeBlockTitle"] {
+  padding: 0 calc(var(--ifm-pre-padding) - 10px);
+}
+
+.code-example-tabs {
+  display: flex;
+  min-width: 0;
+  overflow-x: auto;
+  scrollbar-width: none;
+}
+
+.code-example-tab {
+  flex: none;
+  border: none;
+  border-bottom: 2px solid transparent;
+  margin-bottom: -1px;
+  padding: 0.6rem 10px calc(0.6rem - 1px);
+  background: none;
+  color: inherit;
+  opacity: 0.6;
+  font-family: var(--ifm-font-family-monospace);
+  font-size: var(--ifm-code-font-size);
+  font-weight: 500;
+  line-height: 1.2;
+  cursor: pointer;
+}
+
+.code-example-tab:hover {
+  opacity: 0.85;
+}
+
+.code-example-tab[aria-selected="true"] {
+  opacity: 1;
+  border-bottom-color: var(--ifm-color-primary);
+}
+
+.code-example-actions {
+  position: relative;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 0.375rem;
+  margin-bottom: 0.5rem;
+}
+
+.code-example-actions .code-example-try-online {
+  margin-bottom: 0;
+  border: 1px solid transparent;
+}
+
+.code-example-actions .code-example-action,
+.code-example-actions .code-example-try-online {
+  box-sizing: border-box;
+  height: 32px;
+  padding-top: 0;
+  padding-bottom: 0;
+  line-height: 1;
+}
+
+.code-example-action {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35em;
+  border: 1px solid var(--ifm-color-emphasis-300);
+  border-radius: 5px;
+  padding: 5px 10px;
+  background: none;
+  color: var(--ifm-color-emphasis-800);
+  font-size: 0.875rem;
+  font-weight: 500;
+  line-height: 1.2;
+  text-decoration: none;
+  cursor: pointer;
+}
+
+.code-example-action:hover {
+  color: var(--ifm-color-emphasis-900);
+  text-decoration: none;
+  background-color: var(--ifm-color-emphasis-100);
+}
+
+.code-example-action .material-symbols-outlined {
+  font-size: 1.125rem;
+}
+
+.code-example-create {
+  display: flex;
+}
+
+.code-example-create-popover {
+  position: absolute;
+  z-index: 10;
+  left: 0;
+  right: 0;
+  top: calc(100% + 6px);
+  border: 1px solid var(--ifm-color-emphasis-300);
+  border-radius: 8px;
+  padding: 0.75rem;
+  background-color: var(--ifm-background-surface-color);
+  box-shadow: var(--ifm-global-shadow-md);
+}
+
+.code-example-create-popover p {
+  margin: 0 0 0.5rem;
+  font-size: 0.875rem;
+}
+
+.code-example-create-command {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.code-example-create-command code {
+  flex: 1;
+  min-width: 0;
+  overflow-wrap: anywhere;
+  user-select: all;
+}
+
+.code-example-create-command button {
+  flex: none;
+  display: inline-flex;
+  border: none;
+  border-radius: 5px;
+  padding: 4px;
+  background: none;
+  color: var(--ifm-color-emphasis-700);
+  cursor: pointer;
+}
+
+.code-example-create-command button:hover {
+  background-color: var(--ifm-color-emphasis-200);
+}
+
+@media (max-width: 576px) {
+  .code-example-action-label {
+    display: none;
+  }
+}
+
+/* Dark theme */
+html[data-theme='dark']:root {
+  --flet-ink: #f0eef4;
+  --flet-muted: #aaa8b7;
+  --flet-line: #34323e;
+  --flet-soft: #282630;
+  --flet-accent: #ff4d91;
+  --flet-accent-soft: #301d2b;
+  --flet-accent-line: #613048;
+  --ifm-color-primary: #ff4d91;
+  --ifm-color-primary-dark: #ff2c7d;
+  --ifm-color-primary-darker: #ff1c73;
+  --ifm-color-primary-darkest: #e90059;
+  --ifm-color-primary-light: #ff6ea5;
+  --ifm-color-primary-lighter: #ff7eaf;
+  --ifm-color-primary-lightest: #ffafcd;
+  --ifm-background-color: #181a21;
+  --ifm-navbar-background-color: #181a21;
+  --ifm-footer-background-color: var(--flet-soft);
+  --ifm-color-secondary: var(--flet-soft);
+  --docusaurus-highlighted-code-line-bg: rgb(76, 81, 90);
+}
+
+html[data-theme='dark'] .navbar__title {
+  color: #f0f0f0;
+}
+
+html[data-theme='dark'] .flet-hero h1 {
+  color: var(--flet-accent);
+}
+
+html[data-theme='dark'] .hero__subtitle {
+  color: var(--ifm-color-emphasis-600);
+}
+
+html[data-theme='dark'] .docusaurus-highlight-code-line {
+  background-color: rgb(50, 52, 64);
+}
+
+.legal ol {
+  counter-reset: item;
+  list-style-type: none;
+}
+
+.legal>ol>li {
+  text-transform: uppercase;
+  font-size: 1.1rem;
+  margin: 1.5rem 0;
+}
+
+.legal ol li:before {
+  content: counters(item, ".") ". ";
+  counter-increment: item;
+}
+
+.legal ol ol ol li:before {
+  content: none;
+}
+
+.legal ol ol {
+  list-style-type: none;
+}
+
+.legal ol ol li {
+  text-transform: none;
+  margin: 0.5rem 0;
+}
+
+.legal ol ol ol {
+  list-style-type: lower-alpha;
+}
+
+.legal ol ol ol ol {
+  list-style-type: lower-roman;
+}
+
+.legal ol ol ol ol ol {
+  list-style-type: upper-alpha;
+}
+
+/* Compact card grid for generated-index pages (Controls, Services, Cookbook) */
+/* Compact card grid for generated-index pages (Controls, Services, Cookbook) */
+[class*="generatedIndexPage"] .card.padding--lg {
+  padding: 0.6rem 0.85rem !important;
+  box-shadow: none;
+  border: 1px solid var(--ifm-color-emphasis-200);
+  border-radius: 0.3rem;
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  min-height: 0;
+}
+
+[class*="generatedIndexPage"] .card.padding--lg:hover {
+  border-color: var(--ifm-color-primary);
+}
+
+[class*="generatedIndexPage"] [class*="cardTitle"] {
+  font-size: 0.95rem;
+  font-weight: 500;
+  margin: 0;
+  text-align: left;
+  width: 100%;
+}
+
+[class*="generatedIndexPage"] [class*="cardDescription"] {
+  display: none;
+}
+
+[class*="generatedIndexPage"] [class*="docCardListItem"] {
+  margin-bottom: 0.5rem;
+}
+
+[class*="generatedIndexPage"] .col--6 {
+  --ifm-col-width: 25%;
+  padding: 0 0.3rem;
+}
+
+@media (max-width: 1200px) {
+  [class*="generatedIndexPage"] .col--6 {
+    --ifm-col-width: 33.333%;
+  }
+}
+
+@media (max-width: 768px) {
+  [class*="generatedIndexPage"] .col--6 {
+    --ifm-col-width: 50%;
+  }
+}
+
+@media (max-width: 480px) {
+  [class*="generatedIndexPage"] .col--6 {
+    --ifm-col-width: 100%;
+  }
+}
+
+/* Icon and splash comparison tables.
+ *
+ * These are read across a row, so every picture in one has to render at the
+ * same size. A table column is otherwise sized by its content, which made
+ * "Web, Windows, Linux" wide and "iOS" narrow and drew identical 256px
+ * images at different sizes. `table-layout: fixed` gives every column an
+ * equal share, and the pictures then fill their cell.
+ *
+ * Docusaurus sets tables to `display: block` so wide ones can scroll; that
+ * also stops `width: 100%` doing anything, hence `display: table` here, with
+ * the scrolling moved out to the wrapper. */
+.icon-grid {
+  overflow-x: auto;
+}
+
+.icon-grid table {
+  display: table;
+  width: 100%;
+  table-layout: fixed;
+  min-width: 30rem;
+}
+
+.icon-grid table img {
+  display: block;
+  width: 100%;
+  height: auto;
+  margin: 0 auto;
+}
+
+/* Two-column comparisons are a pair, not a grid. Left full width each picture
+   renders around 440px from a 256px file - a visible upscale, and far larger
+   than it needs to be to be compared with the one beside it. */
+.icon-grid--pair table {
+  max-width: 34rem;
+}
+
+/* Shared site chrome follows the same palette as the landing pages. */
+.navbar {
+  border-bottom: 1px solid var(--flet-line);
+  box-shadow: none;
+}
+
+.navbar__link {
+  font-size: 15px;
+  font-weight: 550;
+}
+
+h1, h2 {
+  letter-spacing: -.035em;
+}
+
+.button--primary,
+.control-demo,
+.code-example-try-online {
+  --ifm-button-background-color: var(--flet-button);
+  --ifm-button-border-color: var(--flet-button);
+  background-color: var(--flet-button);
+  color: #fff;
+}
+
+.button--primary:hover,
+.control-demo:hover,
+.code-example-try-online:hover {
+  --ifm-button-border-color: var(--flet-button-hover);
+  background-color: var(--flet-button-hover);
+  color: #fff;
+}
+
+.footer {
+  padding: 32px 0 24px;
+  border-top: 1px solid var(--flet-line);
+}
+
+.footer > .container {
+  width: min(1180px, calc(100% - 64px));
+  max-width: none;
+  padding: 0;
+}
+
+.footer__links {
+  display: grid;
+  grid-template-columns: repeat(5, minmax(0, 1fr));
+  gap: 32px;
+  margin: 0 0 24px;
+}
+
+.footer__col {
+  padding: 0;
+  margin: 0;
+  max-width: none;
+}
+
+.footer__title {
+  margin-bottom: 12px;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 1.6px;
+  text-transform: uppercase;
+}
+
+.footer__item {
+  font-size: 14px;
+  line-height: 1.6;
+  margin-bottom: 4px;
+}
+
+.footer__link-item:hover {
+  color: var(--flet-accent);
+}
+
+.footer__bottom {
+  padding-top: 18px;
+  border-top: 1px solid var(--flet-line);
+  text-align: left;
+  font-size: 12px;
+  color: var(--flet-muted);
+}
+
+@media (max-width: 760px) {
+  .footer {
+    padding-top: 28px;
+  }
+  .footer > .container {
+    width: calc(100% - 40px);
+  }
+  .footer__links {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 24px;
+    margin-bottom: 24px;
+  }
+}
+
+/* Use one title scale for content pages, independent of hero typography. */
+.mdx-page main h1,
+.theme-doc-markdown h1,
+.blog-post-page main h1,
+[class*='generatedIndexPage'] h1 {
+  font-size: var(--flet-page-title-size);
+  font-weight: 700;
+  line-height: 1.15;
+  letter-spacing: -.035em;
+  margin-bottom: 1.5rem;
+}
+
+/* The icon gallery draws with the fonts the Flet client itself renders with -
+   Flutter's MaterialIcons and the cupertino_icons package - so the docs cannot
+   show a glyph the app does not draw. Both are built by
+   `.github/scripts/generate_icon_fonts.py`.
+
+   Deliberately not folded into `.material-symbols-outlined` above: that rule
+   enables `liga`, and these fonts carry a ligature table keyed by the SDK's own
+   icon spelling rather than the Dart member names. Rendering by name through it
+   resolves only 6,412 of 8,825 icons and leaves the rest blank with no error,
+   so the gallery addresses glyphs by codepoint instead.
+
+   `font-display: block` rather than `swap`: there is no meaningful fallback for
+   a Private Use Area codepoint, and swap would flash a grid of tofu. */
+@font-face {
+  font-family: "Flet Material Icons";
+  font-style: normal;
+  font-weight: 400;
+  font-display: block;
+  src: url("../fonts/MaterialIcons-Regular.woff2") format("woff2");
+}
+
+@font-face {
+  font-family: "Flet Cupertino Icons";
+  font-style: normal;
+  font-weight: 400;
+  font-display: block;
+  src: url("../fonts/CupertinoIcons.woff2") format("woff2");
+}

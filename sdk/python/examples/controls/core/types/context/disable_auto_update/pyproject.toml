@@ -1,0 +1,26 @@
+[project]
+name = "types-context-disable-auto-update"
+version = "1.0.0"
+description = "Shows how disabling automatic updates requires explicit control refreshes."
+requires-python = ">=3.10"
+keywords = ["context", "disable auto update"]
+authors = [{ name = "Flet team", email = "hello@flet.dev" }]
+dependencies = ["flet"]
+
+[dependency-groups]
+dev = ["flet-cli", "flet-desktop", "flet-web"]
+
+[tool.flet.gallery]
+categories = ["Utility/Types"]
+
+[tool.flet.metadata]
+title = "Disable auto update"
+controls = ["SafeArea", "Column", "Page", "Text", "Button"]
+layout_pattern = "inline-actions"
+complexity = "basic"
+features = ["manual updates", "context access"]
+
+[tool.flet]
+org = "dev.flet"
+company = "Flet"
+copyright = "Copyright (C) 2023-2026 by Flet"

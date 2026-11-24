@@ -9,12 +9,13 @@ __pycache__/
 # Distribution / packaging
 .Python
 build/
+!templates/build/
 develop-eggs/
 dist/
 downloads/
 eggs/
 .eggs/
-lib/
+/lib/
 lib64/
 parts/
 sdist/
@@ -113,9 +114,6 @@ venv.bak/
 
 # Rope project settings
 .ropeproject
-
-# mkdocs documentation
-/site
 
 # mypy
 .mypy_cache/

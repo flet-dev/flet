@@ -1,0 +1,78 @@
+---
+title: "Breaking changes and deprecations"
+---
+
+# Breaking changes and deprecations
+
+Breaking changes and deprecations are release changes that can require code,
+dependency, or configuration updates when you upgrade. Removed APIs are listed
+here as breaking changes. Deprecated APIs still work for now, but they are
+scheduled for removal.
+
+:::note
+These breaking change and deprecation guides are accurate as of the release that
+introduced the change. Later releases might add new APIs or additional migration
+paths.
+
+This page lists the guides created for each release.
+:::
+
+:::tip[Upgrading from 0.28.x?]
+The guides below cover one release each. Moving from **0.28.x** to 1.0 spans the
+whole 0.70 - 0.86 pre-release series, so start with
+[Migrating from Flet 0.28 to 1.0](../migrate-to-1-0.md) instead.
+:::
+
+## By release
+
+The following guides are available. They're sorted by release, with the most recent release first.
+Each guide explains the change, the reason for it, and how to migrate your code.
+
+### Released in Flet 1.1.0
+
+#### Breaking changes
+
+- [Android: every `Audio` now plays together by default](/docs/updates/breaking-changes/v1-1-0/android-audio-focus-default)
+- [Extensions: Material and Cupertino now come from `material_ui` and `cupertino_ui`](/docs/updates/breaking-changes/v1-1-0/material-ui-cupertino-ui)
+- [macOS and iOS: built apps now require macOS 12 and iOS 15](/docs/updates/breaking-changes/v1-1-0/minimum-macos-12-ios-15)
+- [macOS: the `.app` is named after the product name](/docs/updates/breaking-changes/v1-1-0/macos-app-named-after-product)
+- [Default theme surfaces are now neutral (white / near-black)](/docs/updates/breaking-changes/v1-1-0/neutral-default-surfaces)
+
+### Released in Flet 1.0.0
+
+#### Breaking changes
+
+- [All deprecated APIs removed](/docs/updates/breaking-changes/v1-0-0/removed-deprecated-apis)
+- [iOS: per-method signing settings now override top-level ones](/docs/updates/breaking-changes/v1-0-0/ios-per-method-signing-precedence)
+- [`InputBorder` is now a class hierarchy instead of an enum](/docs/updates/breaking-changes/v1-0-0/inputborder-class-hierarchy)
+
+#### Deprecations
+
+- [`InputBorder` enum members and the loose border properties deprecated](/docs/updates/breaking-changes/v1-0-0/inputborder-class-hierarchy)
+
+### Released in Flet 0.86.0
+
+#### Breaking changes
+
+- [App files ship unpacked in a read-only bundle; storage dirs reworked](/docs/updates/breaking-changes/v0-86-0/app-files-unpacked-read-only-bundle)
+- [Android: site-packages ship zipped; some packages need `extract_packages`](/docs/updates/breaking-changes/v0-86-0/android-extract-packages)
+- [Android: `x86` removed from target architectures](/docs/updates/breaking-changes/v0-86-0/android-x86-arch-removed)
+- [Default bundled Python version is now 3.14](/docs/updates/breaking-changes/v0-86-0/default-bundled-python-3-14)
+- [App and packages are compiled to `.pyc` by default](/docs/updates/breaking-changes/v0-86-0/compile-on-by-default)
+- [`flet.version.pyodide_version` and `PYODIDE_VERSION` removed](/docs/updates/breaking-changes/v0-86-0/removed-pyodide-version-export)
+- [Flet protocol framing upgraded for DataChannel support](/docs/updates/breaking-changes/v0-86-0/data-channel-protocol-upgrade)
+
+#### Deprecations
+
+- [`flet build --clear-cache` flag deprecated](/docs/updates/breaking-changes/v0-86-0/deprecated-clear-cache-flag)
+
+### Released in Flet 0.85.0
+
+#### Breaking changes
+
+- [Deprecated spacing and border helper functions removed](/docs/updates/breaking-changes/v0-85-0/removed-spacing-border-helpers)
+
+#### Deprecations
+
+- [`DragTargetEvent` coordinate fields deprecated](/docs/updates/breaking-changes/v0-85-0/deprecated-drag-target-event-coordinates)
+- [`Video` control APIs deprecated](/docs/updates/breaking-changes/v0-85-0/deprecated-video-apis)

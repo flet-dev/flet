@@ -1,0 +1,26 @@
+[project]
+name = "layout-control-animate-rotation"
+version = "1.0.0"
+description = "Rotates a container in quarter turns with animate_rotation and bounce curve."
+requires-python = ">=3.10"
+keywords = ["layout control", "animate rotation", "container", "animation"]
+authors = [{ name = "Flet team", email = "hello@flet.dev" }]
+dependencies = ["flet"]
+
+[dependency-groups]
+dev = ["flet-cli", "flet-desktop", "flet-web"]
+
+[tool.flet.gallery]
+categories = ["Layout/LayoutControl"]
+
+[tool.flet.metadata]
+title = "Animate rotation"
+controls = ["SafeArea", "Column", "Container", "Button", "Rotate", "Animation"]
+layout_pattern = "single-panel"
+complexity = "basic"
+features = ["rotation animation", "incremental angle updates"]
+
+[tool.flet]
+org = "dev.flet"
+company = "Flet"
+copyright = "Copyright (C) 2023-2026 by Flet"

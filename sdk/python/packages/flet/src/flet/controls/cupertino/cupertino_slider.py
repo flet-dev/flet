@@ -1,4 +1,4 @@
-from typing import Optional
+from typing import Annotated, Optional
 
 from flet.controls.base_control import control
 from flet.controls.control_event import ControlEventHandler
@@ -7,6 +7,7 @@ from flet.controls.types import (
     ColorValue,
     Number,
 )
+from flet.utils.validation import V
 
 __all__ = ["CupertinoSlider"]
 
@@ -23,44 +24,57 @@ class CupertinoSlider(LayoutControl):
     brightness), or when people would benefit from instant feedback on the effect of
     setting changes.
 
+    Example:
     ```python
     ft.CupertinoSlider(value=0.6)
     ```
     """
 
-    value: Optional[Number] = None
+    value: Annotated[
+        Optional[Number],
+        V.ge_field("min"),
+        V.le_field("max"),
+    ] = None
     """
     The currently selected value for this slider.
 
     The slider's thumb is drawn at a position that corresponds to this value.
 
     Raises:
-        ValueError: If [`value`][(c).] is less than [`min`][(c).] or greater than
-            [`max`][(c).].
+        ValueError: If it is not greater than or equal to :attr:`min`.
+        ValueError: If it is not less than or equal to :attr:`max`.
     """
 
-    min: Number = 0.0
+    min: Annotated[
+        Number,
+        V.le_field("max"),
+        V.le_field("value"),
+    ] = 0.0
     """
     The minimum value the user can select.
 
-    Note:
-        - Must be less than or equal to [`max`][(c).].
-        - If the [`max`][(c).] is equal to the `min`, then this slider is disabled.
+    If :attr:`max` is equal to the `min`, then this slider is disabled.
 
     Raises:
-        ValueError: If [`min`][(c).] is greater than [`max`][(c).].
+        ValueError: If it is not less than or equal to :attr:`max`.
+        ValueError: If it is not less than or equal to :attr:`value`, when
+            :attr:`value` is set.
     """
 
-    max: Number = 1.0
+    max: Annotated[
+        Number,
+        V.ge_field("min"),
+        V.ge_field("value"),
+    ] = 1.0
     """
     The maximum value the user can select.
 
-    Note:
-        - Must be greater than or equal to [`min`][(c).].
-        - If the [`min`][(c).] is equal to the `max`, then this slider is disabled.
+    If :attr:`min` is equal to the `max`, then this slider is disabled.
 
     Raises:
-        ValueError: If [`max`][(c).] is less than [`min`][(c).].
+        ValueError: If it is not greater than or equal to :attr:`min`.
+        ValueError: If it is not greater than or equal to :attr:`value`, when
+            :attr:`value` is set.
     """
 
     divisions: Optional[int] = None
@@ -111,16 +125,3 @@ class CupertinoSlider(LayoutControl):
     def before_update(self):
         super().before_update()
         self.value = self.value if self.value is not None else self.min
-        if self.min > self.max:
-            raise ValueError(
-                f"min ({self.min}) must be less than or equal to max ({self.max})"
-            )
-        if self.value is not None and self.value < self.min:
-            raise ValueError(
-                f"value ({self.value}) must be greater than or "
-                f"equal to min ({self.min})"
-            )
-        if self.value is not None and self.value > self.max:
-            raise ValueError(
-                f"value ({self.value}) must be less than or equal to max ({self.max})"
-            )

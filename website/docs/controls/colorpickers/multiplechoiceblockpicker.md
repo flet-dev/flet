@@ -1,0 +1,16 @@
+---
+class_name: "flet_color_pickers.MultipleChoiceBlockPicker"
+examples: "extensions/color_pickers"
+example_images: "test-images/examples/extensions/color_pickers/golden/macos/color_pickers"
+title: "MultipleChoiceBlockPicker"
+---
+
+import {ClassMembers, ClassSummary, CodeExample} from '@site/src/components/crocodocs';
+
+<ClassSummary name={frontMatter.class_name} image={frontMatter.example_images + '/multiple_choice_block_picker.png'} imageCaption="MultipleChoiceBlockPicker" imageWidth="35%"/>
+
+## Example
+
+<CodeExample path={frontMatter.examples + '/multiple_choice_block_picker/main.py'} language="python" />
+
+<ClassMembers name={frontMatter.class_name} />

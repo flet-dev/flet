@@ -1,0 +1,20 @@
+---
+class_name: "flet_charts.scatter_chart.ScatterChart"
+examples: "extensions/charts/scatter_chart"
+example_images: "test-images/examples/extensions/charts/golden/macos/scatter_chart"
+title: "ScatterChart"
+---
+
+import {ClassMembers, ClassSummary, CodeExample, Image} from '@site/src/components/crocodocs';
+
+<ClassSummary name={frontMatter.class_name} image={frontMatter.example_images + '/image_for_docs.png'} imageCaption="Scatter chart" imageWidth="55%" />
+
+## Examples
+
+<CodeExample path={frontMatter.examples + '/scatter_chart/main.py'} language="python" />
+
+<Image src={frontMatter.example_images + '/example_1.png'} width="65%" />
+
+<CodeExample path={frontMatter.examples + '/scatter_chart_with_error_bars/main.py'} language="python" />
+
+<ClassMembers name={frontMatter.class_name} />

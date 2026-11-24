@@ -3,15 +3,16 @@ import contextlib
 import os
 import platform
 
-from rich.console import Group
-from rich.live import Live
-
 from flet_cli.commands.build_base import BaseBuildCommand, console, verbose2_style
 
 
 class Command(BaseBuildCommand):
     """
     Run a Flet Python app in debug mode on a specified platform (desktop, web, mobile).
+
+    Arguments after `--` are passed down to the underlying `flutter run`.
+
+    Detailed usage guide: https://flet.dev/blog/flet-debug-the-new-cli-for-testing-flet-apps-on-mobile-devices
     """
 
     def __init__(self, parser: argparse.ArgumentParser) -> None:
@@ -96,11 +97,9 @@ class Command(BaseBuildCommand):
             if self.options.device_id:
                 self.device_id = self.options.device_id
 
-        self.status = console.status(
-            f"[bold blue]Initializing {self.target_platform} debug session...",
-            spinner="bouncingBall",
-        )
-        with Live(Group(self.status, self.progress), console=console) as self.live:
+        with self.live_status(
+            f"[bold blue]Initializing {self.target_platform} debug session..."
+        ):
             self.check_device_id()
             self.initialize_command()
             if self.options.show_devices:
@@ -118,6 +117,7 @@ class Command(BaseBuildCommand):
             self.ensure_appauth_redirect_config()
             self.customize_icons()
             self.customize_splash_images()
+            self.copy_android_resources()
             self.run_flutter()
             self.cleanup(0, message="Debug session ended.")
 

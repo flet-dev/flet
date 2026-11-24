@@ -1,8 +1,9 @@
-from dataclasses import dataclass, field
+from dataclasses import field
 from enum import Enum
 from typing import Optional, Union
 
 from flet.controls.alignment import Alignment
+from flet.controls.base_control import value
 from flet.controls.border import Border
 from flet.controls.border_radius import BorderRadiusValue
 from flet.controls.colors import Colors
@@ -29,7 +30,7 @@ __all__ = [
 ]
 
 
-@dataclass
+@value
 class ColorFilter:
     """
     Defines a color filter.
@@ -122,7 +123,7 @@ class BlurStyle(Enum):
     """
 
 
-@dataclass
+@value
 class BoxShadow:
     """
     Configuration for a box's shadow.
@@ -183,14 +184,15 @@ BoxShadowValue = Union[BoxShadow, list[BoxShadow]]
 """Type alias for box shadow values.
 
 Represents shadows as either:
-- a single [`BoxShadow`][flet.] object,
-- or a list of [`BoxShadow`][flet.] objects.
+- a single :class:`~flet.BoxShadow` object,
+- or a list of :class:`~flet.BoxShadow` objects.
 """
 
 
 class BoxShape(Enum):
     """
-    The shape to use when rendering a [`Border`][flet.] or [`BoxDecoration`][flet.].
+    The shape to use when rendering a :class:`~flet.Border` or \
+    :class:`~flet.BoxDecoration`.
     """
 
     RECTANGLE = "rectangle"
@@ -198,14 +200,14 @@ class BoxShape(Enum):
     An axis-aligned rectangle, optionally with rounded corners.
 
     The amount of corner rounding, if any, is determined by the border radius
-    specified by classes such as [`BoxDecoration`][flet.] or [`Border`][flet.].
+    specified by classes such as :class:`~flet.BoxDecoration` or :class:`~flet.Border`.
     The rectangle's edges match those of the box in which it is painted.
     """
 
     CIRCLE = "circle"
     """
-    A circle centered in the middle of the box into which the [`Border`][flet.] or
-    [`BoxDecoration`][flet.] is painted. The diameter of the circle is the shortest
+    A circle centered in the middle of the box into which the :class:`~flet.Border` or
+    :class:`~flet.BoxDecoration` is painted. The diameter of the circle is the shortest
     dimension of the box, either the width or the height, such that the circle
     touches the edges of the box.
     """
@@ -269,14 +271,14 @@ class BoxFit(Enum):
     Align the source within the target box (by default, centering) and, if
     necessary, scale the source down to ensure that the source fits within the box.
 
-    This is the same as [`CONTAIN`][(c).] if that would shrink the image, otherwise it
-    is the same as [`NONE`][(c).].
+    This is the same as :attr:`CONTAIN` if that would shrink the image, otherwise it
+    is the same as :attr:`NONE`.
 
     ![](https://flutter.github.io/assets-for-api-docs/assets/painting/box_fit_scaleDown.png)
     """  # noqa: E501
 
 
-@dataclass
+@value
 class DecorationImage:
     """
     An image for a box decoration.
@@ -381,7 +383,7 @@ class DecorationImage:
         )
 
 
-@dataclass
+@value
 class BoxDecoration:
     """
     BoxDecoration provides a description of how to paint a box.
@@ -395,13 +397,13 @@ class BoxDecoration:
 
     image: Optional[DecorationImage] = None
     """
-    An image to paint above the background [`bgcolor`][(c).] or [`gradient`][(c).].
+    An image to paint above the background :attr:`bgcolor` or :attr:`gradient`.
     """
 
     border: Optional[Border] = None
     """
-    A border to draw above the background [`bgcolor`][(c).], [`gradient`][(c).], and \
-    [`image`][(c).].
+    A border to draw above the background :attr:`bgcolor`, :attr:`gradient`, and \
+    :attr:`image`.
     """
 
     border_radius: Optional[BorderRadiusValue] = None
@@ -421,13 +423,13 @@ class BoxDecoration:
 
     shape: BoxShape = BoxShape.RECTANGLE
     """
-    The shape to fill the [`bgcolor`][(c).], [`gradient`][(c).], and [`image`][(c).]
-    into and to cast as the [`shadows`][(c).].
+    The shape to fill the :attr:`bgcolor`, :attr:`gradient`, and :attr:`image`
+    into and to cast as the :attr:`shadows`.
     """
 
     blend_mode: Optional[BlendMode] = None
     """
-    The blend mode to apply to the background [`bgcolor`][(c).] or [`gradient`][(c).].
+    The blend mode to apply to the background :attr:`bgcolor` or :attr:`gradient`.
     """
 
     def __post_init__(self):
@@ -470,12 +472,12 @@ class BoxDecoration:
         )
 
 
-@dataclass
+@value
 class BoxConstraints:
     """
     Constraints that must be respected by a size of a box.
 
-    A [`Size`][flet.] respects a BoxConstraints if, and only if,
+    A :class:`~flet.Size` respects a BoxConstraints if, and only if,
     all of the following relations hold:
 
         min_width <= Size.width <= max_width

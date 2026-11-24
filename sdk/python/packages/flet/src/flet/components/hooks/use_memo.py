@@ -3,15 +3,17 @@ from dataclasses import dataclass
 from typing import Any, Callable, Generic, TypeVar
 
 from flet.components.hooks.hook import Hook
+from flet.components.observable import capture_dependencies
 from flet.components.utils import current_component, shallow_compare_args
 
 MemoValueT = TypeVar("MemoValueT")
 
 
-@dataclass
+# eq=False: see ComponentOwned - lifecycle objects compare by identity.
+@dataclass(eq=False)
 class MemoHook(Hook, Generic[MemoValueT]):
     """
-    Hook state container used by [`use_memo()`][flet.use_memo].
+    Hook state container used by :func:`~flet.use_memo`.
 
     It stores the last computed memo value together with the dependency snapshot
     used to decide whether recomputation is required on subsequent renders.
@@ -29,12 +31,16 @@ def use_memo(
 
     Args:
         calculate_value: A function that computes the value to be memoized.
-        dependencies: If present, the value is only recomputed when one of
-            the dependencies has changed. If absent, the value is only computed
-            on the initial render.
+        dependencies: Values the computation depends on. If absent, the value is
+            recomputed on every render. If empty, it is computed only on the first
+            render. Otherwise, it is recomputed only when one of the dependencies
+            has changed. A list or dict field of an :func:`~flet.observable`
+            counts as changed when it is changed in place, such as by
+            `items.append(x)`.
 
     Returns:
-        A memoized value whose identity is stable between renders.
+        The memoized value. The same object is returned on every render until the
+            value is recomputed.
     """
     component = current_component()
 
@@ -58,8 +64,9 @@ def use_memo(
         hook.value = calculate_value()
         return hook.value  # type: ignore[return-value]
 
-    if hook.prev_deps is None or not shallow_compare_args(hook.prev_deps, dependencies):
+    deps = capture_dependencies(dependencies)
+    if hook.prev_deps is None or not shallow_compare_args(hook.prev_deps, deps):
         hook.value = calculate_value()
-        hook.prev_deps = list(dependencies)
+    hook.prev_deps = deps
 
     return hook.value  # type: ignore[return-value]

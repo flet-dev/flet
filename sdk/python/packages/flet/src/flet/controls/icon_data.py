@@ -30,7 +30,7 @@ class IconData(IntEnum):
     across multiple icon sets.
     """
 
-    def __new__(cls, value):
+    def __new__(cls: type[T], value: int) -> T:
         """
         Create a new IconData enum member.
 
@@ -45,13 +45,13 @@ class IconData(IntEnum):
         return obj
 
     @classmethod
-    def __init_subclass__(cls, **kwargs):
+    def __init_subclass__(cls, **kwargs) -> None:
         """
         Hook called when a subclass is defined. Used to attach metadata.
 
         Keyword Args:
-            package_name: The Flutter package where the icon set is defined.
-            class_name: The name of Flutter class with icon definitions.
+            package_name (str): The Flutter package where the icon set is defined.
+            class_name (str): The name of the Flutter class with icon definitions.
         """
         cls._package_name = kwargs.pop("package_name", "")
         cls._class_name = kwargs.pop("class_name", "")

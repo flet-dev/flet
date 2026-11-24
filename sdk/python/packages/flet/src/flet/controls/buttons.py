@@ -1,7 +1,8 @@
-from dataclasses import dataclass, field
+from dataclasses import field
 from typing import Optional
 
 from flet.controls.alignment import Alignment
+from flet.controls.base_control import value
 from flet.controls.border import BorderSide
 from flet.controls.border_radius import BorderRadiusValue
 from flet.controls.control_state import ControlStateValue
@@ -27,29 +28,29 @@ __all__ = [
 ]
 
 
-@dataclass
+@value
 class ShapeBorder:
     """
     Base class for shape outlines. Not intended to be used directly.
 
     See subclasses/implementations:
 
-    - [`OutlinedBorder`][flet.]
+    - :class:`~flet.OutlinedBorder`
     """
 
 
-@dataclass
+@value
 class OutlinedBorder(ShapeBorder):
     """
     An abstract class that can be used to create custom borders.
 
     See subclasses/implementations:
 
-    - [`BeveledRectangleBorder`][flet.]
-    - [`ContinuousRectangleBorder`][flet.]
-    - [`CircleBorder`][flet.]
-    - [`RoundedRectangleBorder`][flet.]
-    - [`StadiumBorder`][flet.]
+    - :class:`~flet.BeveledRectangleBorder`
+    - :class:`~flet.ContinuousRectangleBorder`
+    - :class:`~flet.CircleBorder`
+    - :class:`~flet.RoundedRectangleBorder`
+    - :class:`~flet.StadiumBorder`
     """
 
     side: Optional[BorderSide] = None
@@ -60,7 +61,7 @@ class OutlinedBorder(ShapeBorder):
     _type: Optional[str] = field(init=False, repr=False, compare=False, default=None)
 
 
-@dataclass
+@value
 class StadiumBorder(OutlinedBorder):
     """
     A border that looks like a stadium.
@@ -82,13 +83,13 @@ class StadiumBorder(OutlinedBorder):
         )
 
 
-@dataclass
+@value
 class RoundedRectangleBorder(OutlinedBorder):
     """
     A border with rounded rectangle corners.
     """
 
-    radius: Optional[BorderRadiusValue] = None
+    radius: BorderRadiusValue = 0
     """
     The radius for each corner.
     """
@@ -111,13 +112,19 @@ class RoundedRectangleBorder(OutlinedBorder):
         )
 
 
-@dataclass
+@value
 class CircleBorder(OutlinedBorder):
     """
     A border with a circle shape.
     """
 
     eccentricity: Number = 0.0
+    """
+    Defines how much the circle deforms to fit a rectangle.
+
+    `0.0` keeps the shape circular, touching at least two sides of the rectangle.
+    `1.0` fully deforms it into an oval touching all sides.
+    """
 
     def __post_init__(self):
         self._type = "circle"
@@ -139,7 +146,7 @@ class CircleBorder(OutlinedBorder):
         )
 
 
-@dataclass
+@value
 class BeveledRectangleBorder(RoundedRectangleBorder):
     """
     A border with beveled rectangle corners.
@@ -163,7 +170,7 @@ class BeveledRectangleBorder(RoundedRectangleBorder):
         )
 
 
-@dataclass
+@value
 class ContinuousRectangleBorder(RoundedRectangleBorder):
     """
     A border with continuous rectangle corners.
@@ -187,14 +194,14 @@ class ContinuousRectangleBorder(RoundedRectangleBorder):
         )
 
 
-@dataclass
+@value
 class ButtonStyle:
     """
     Allows controlling all visual aspects of a button, such as shape, foreground, \
     background and shadow colors, content padding, border width and radius.
 
     Most of these style attributes could be configured for all or particular
-    [`ControlState`][flet.] of a button,
+    :class:`~flet.ControlState` of a button,
     such as `HOVERED`, `FOCUSED`, `DISABLED` and others.
     """
 

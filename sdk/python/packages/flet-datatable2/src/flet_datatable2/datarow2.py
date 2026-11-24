@@ -8,10 +8,10 @@ __all__ = ["DataRow2"]
 @ft.control("DataRow2")
 class DataRow2(ft.DataRow):
     """
-    Extends [`flet.DataRow`][flet.DataRow], adding row-level `tap` events.
+    Extends :class:`flet.DataRow`, adding row-level `tap` events.
 
-    There are also [`on_secondary_tap`][(c).] and [`on_secondary_tap_down`][(c).],
-    which are not available in [`DataCell`][flet.DataCell]s and can be useful in
+    There are also :attr:`on_secondary_tap` and :attr:`on_secondary_tap_down`,
+    which are not available in :class:`~flet.DataCell`s and can be useful in
     desktop settings to handle right-click actions.
     """
 
@@ -21,7 +21,7 @@ class DataRow2(ft.DataRow):
 
     Note:
         If provided,
-        [`DataTable2.divider_thickness`][flet.DataTable.divider_thickness]
+        :attr:`flet.DataTable.divider_thickness`
         has no effect.
     """
 
@@ -29,7 +29,7 @@ class DataRow2(ft.DataRow):
     """
     Specific row height.
 
-    Falls back to [`DataTable2.data_row_height`][(p).] if not set.
+    Falls back to :attr:`flet_datatable2.DataTable2.data_row_height` if not set.
     """
 
     on_double_tap: Optional[ft.ControlEventHandler["DataRow2"]] = None
@@ -38,11 +38,11 @@ class DataRow2(ft.DataRow):
 
     Note:
         Won't be called if tapped cell has any tap event handlers
-        ([`on_tap`][flet.DataCell.on_tap],
-        [`on_double_tap`][flet.DataCell.on_double_tap],
-        [`on_long_press`][flet.DataCell.on_long_press],
-        [`on_tap_cancel`][flet.DataCell.on_tap_cancel],
-        [`on_tap_down`][flet.DataCell.on_tap_down]) set.
+        (:attr:`~flet.DataCell.on_tap`,
+        :attr:`~flet.DataCell.on_double_tap`,
+        :attr:`~flet.DataCell.on_long_press`,
+        :attr:`~flet.DataCell.on_tap_cancel`,
+        :attr:`~flet.DataCell.on_tap_down`) set.
     """
 
     on_secondary_tap: Optional[ft.ControlEventHandler["DataRow2"]] = None
@@ -51,11 +51,11 @@ class DataRow2(ft.DataRow):
 
     Note:
         Won't be called if tapped cell has any tap event handlers
-        ([`on_tap`][flet.DataCell.on_tap],
-        [`on_double_tap`][flet.DataCell.on_double_tap],
-        [`on_long_press`][flet.DataCell.on_long_press],
-        [`on_tap_cancel`][flet.DataCell.on_tap_cancel],
-        [`on_tap_down`][flet.DataCell.on_tap_down]) set.
+        (:attr:`~flet.DataCell.on_tap`,
+        :attr:`~flet.DataCell.on_double_tap`,
+        :attr:`~flet.DataCell.on_long_press`,
+        :attr:`~flet.DataCell.on_tap_cancel`,
+        :attr:`~flet.DataCell.on_tap_down`) set.
     """
 
     on_secondary_tap_down: Optional[ft.ControlEventHandler["DataRow2"]] = None
@@ -64,11 +64,11 @@ class DataRow2(ft.DataRow):
 
     Note:
         Won't be called if tapped cell has any tap event handlers
-        ([`on_tap`][flet.DataCell.on_tap],
-        [`on_double_tap`][flet.DataCell.on_double_tap],
-        [`on_long_press`][flet.DataCell.on_long_press],
-        [`on_tap_cancel`][flet.DataCell.on_tap_cancel],
-        [`on_tap_down`][flet.DataCell.on_tap_down]) set.
+        (:attr:`~flet.DataCell.on_tap`,
+        :attr:`~flet.DataCell.on_double_tap`,
+        :attr:`~flet.DataCell.on_long_press`,
+        :attr:`~flet.DataCell.on_tap_cancel`,
+        :attr:`~flet.DataCell.on_tap_down`) set.
     """
 
     on_tap: Optional[ft.EventHandler[ft.TapEvent["DataRow2"]]] = None
@@ -77,9 +77,9 @@ class DataRow2(ft.DataRow):
 
     Note:
         Won't be called if tapped cell has any tap event handlers
-        ([`on_tap`][flet.DataCell.on_tap],
-        [`on_double_tap`][flet.DataCell.on_double_tap],
-        [`on_long_press`][flet.DataCell.on_long_press],
-        [`on_tap_cancel`][flet.DataCell.on_tap_cancel],
-        [`on_tap_down`][flet.DataCell.on_tap_down]) set.
+        (:attr:`~flet.DataCell.on_tap`,
+        :attr:`~flet.DataCell.on_double_tap`,
+        :attr:`~flet.DataCell.on_long_press`,
+        :attr:`~flet.DataCell.on_tap_cancel`,
+        :attr:`~flet.DataCell.on_tap_down`) set.
     """

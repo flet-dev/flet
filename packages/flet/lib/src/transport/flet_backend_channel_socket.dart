@@ -1,36 +1,42 @@
 import 'dart:io';
+import 'dart:typed_data';
 
 import 'package:flutter/foundation.dart';
-import 'package:msgpack_dart/msgpack_dart.dart' as msgpack;
 
-import '../protocol/message.dart';
 import '../utils/networking.dart';
 import 'flet_backend_channel.dart';
-import 'flet_msgpack_decoder.dart';
-import 'flet_msgpack_encoder.dart';
-import 'streaming_msgpack_deserializer.dart';
 
 const int defaultLocalReconnectInterval = 200;
 const int defaultPublicReconnectInterval = 500;
 
+/// TCP / Unix-domain-socket transport.
+///
+/// Wire format: every packet on the wire is prefixed with its length as
+/// a 4-byte little-endian unsigned integer. The packet itself starts with
+/// the 1-byte type discriminator interpreted by [FletBackend]; we just
+/// deliver the payload bytes 1:1.
 class FletSocketBackendChannel implements FletBackendChannel {
   String address;
-  FletBackendChannelOnMessageCallback onMessage;
+  FletBackendChannelOnPacketCallback onPacket;
   FletBackendChannelOnDisconnectCallback onDisconnect;
   Socket? _socket;
+  bool _disconnected = false;
   late final bool _isLocalConnection;
   late final int _defaultReconnectIntervalMs;
 
-  // Create an instance of the StreamingDeserializer.
-  // This object buffers incoming chunks and decodes complete MessagePack objects.
-  final StreamingMsgpackDeserializer _streamingDeserializer;
+  // Inbound framing state: accumulate bytes, parse length-prefixed packets.
+  // The builder is only flattened when a complete packet (or the 4-byte
+  // length header) is available — never per incoming chunk, which would be
+  // quadratic in packet size (multi-MB raw image frames arrive in dozens
+  // of socket chunks).
+  final BytesBuilder _inboundBuffer = BytesBuilder(copy: false);
+  int? _pendingLen;
 
   FletSocketBackendChannel({
     required this.address,
     required this.onDisconnect,
-    required this.onMessage,
-  }) : _streamingDeserializer =
-            StreamingMsgpackDeserializer(extDecoder: FletMsgpackDecoder());
+    required this.onPacket,
+  });
 
   @override
   connect() async {
@@ -53,30 +59,59 @@ class FletSocketBackendChannel implements FletBackendChannel {
       debugPrint('Connected to: $udsPath');
     }
 
-    // Listen for incoming data.
     _socket!.listen(
-      (Uint8List data) {
-        debugPrint("Received packet: ${data.length}");
-        // Feed the incoming chunk into the streaming deserializer.
-        _streamingDeserializer.addChunk(data);
-        // Try to decode complete MessagePack messages from buffered data.
-        var messages = _streamingDeserializer.decodeMessages();
-        for (var message in messages) {
-          //debugPrint('Decoded message: ${message.toString()}');
-          _onMessage(message);
-        }
-      },
+      _onBytes,
       onError: (error) {
         debugPrint("Error: $error");
-        _socket?.destroy();
-        onDisconnect();
+        _onClosed();
       },
       onDone: () {
         debugPrint('Server disconnected.');
-        _socket?.destroy();
-        onDisconnect();
+        _onClosed();
       },
     );
+  }
+
+  /// Releases the socket and reports the disconnect to [onDisconnect] once.
+  ///
+  /// A socket error, such as a connection reset, is delivered as an `onError`
+  /// event immediately followed by `onDone`. Each [onDisconnect] call makes
+  /// [FletBackend] schedule a reconnect, and two overlapping reconnects keep
+  /// replacing each other's connection on the server, which restarts the
+  /// session over and over.
+  void _onClosed() {
+    _socket?.destroy();
+    if (_disconnected) return;
+    _disconnected = true;
+    onDisconnect();
+  }
+
+  void _onBytes(Uint8List chunk) {
+    _inboundBuffer.add(chunk);
+    // Parse as many complete packets as the buffer currently holds.
+    while (true) {
+      if (_pendingLen == null) {
+        if (_inboundBuffer.length < 4) return;
+        // Flatten to read the header. Cheap: at this point the buffer
+        // holds at most one packet's worth of unconsumed leading bytes,
+        // and with a single stored chunk takeBytes returns it as-is.
+        final bytes = _inboundBuffer.takeBytes();
+        _pendingLen =
+            ByteData.sublistView(bytes, 0, 4).getUint32(0, Endian.little);
+        if (bytes.length > 4) {
+          _inboundBuffer.add(Uint8List.sublistView(bytes, 4));
+        }
+      }
+      final len = _pendingLen!;
+      if (_inboundBuffer.length < len) return;
+      // Single flatten once the whole packet has arrived.
+      final bytes = _inboundBuffer.takeBytes();
+      _pendingLen = null;
+      onPacket(Uint8List.sublistView(bytes, 0, len));
+      if (bytes.length > len) {
+        _inboundBuffer.add(Uint8List.sublistView(bytes, len));
+      }
+    }
   }
 
   @override
@@ -85,16 +120,11 @@ class FletSocketBackendChannel implements FletBackendChannel {
   @override
   int get defaultReconnectIntervalMs => _defaultReconnectIntervalMs;
 
-  // Note: At this point, the incoming message is already a decoded MessagePack object.
-  _onMessage(dynamic message) {
-    onMessage(Message.fromList(message));
-  }
-
   @override
-  void send(Message message) {
-    // Serialize the message using MessagePack and send it.
-    _socket!.add(
-        msgpack.serialize(message.toList(), extEncoder: FletMsgpackEncoder()));
+  void send(Uint8List packet) {
+    final header = ByteData(4)..setUint32(0, packet.length, Endian.little);
+    _socket!.add(header.buffer.asUint8List());
+    _socket!.add(packet);
   }
 
   @override

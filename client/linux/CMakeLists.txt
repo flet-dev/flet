@@ -91,6 +91,15 @@ set_target_properties(${BINARY_NAME}
 # them to the application.
 include(flutter/generated_plugins.cmake)
 
+# Link mimalloc when media_kit_libs_linux exposes it. This must happen after
+# generated plugins are included so MIMALLOC_LIB is initialized.
+# mimalloc.o references pthread_*, so pair it with Threads::Threads — modern
+# ld --as-needed won't pull libpthread in transitively through other DSOs.
+if(MIMALLOC_LIB)
+  find_package(Threads REQUIRED)
+  target_link_libraries(${BINARY_NAME} PRIVATE ${MIMALLOC_LIB} Threads::Threads)
+endif()
+
 
 # === Installation ===
 # By default, "installing" just makes a relocatable bundle in the build
@@ -137,6 +146,16 @@ install(CODE "
   " COMPONENT Runtime)
 install(DIRECTORY "${PROJECT_BUILD_DIR}/${FLUTTER_ASSET_DIR_NAME}"
   DESTINATION "${INSTALL_BUNDLE_DATA_DIR}" COMPONENT Runtime)
+
+# The committed app icon. my_application.cc loads app_icon.png at startup to
+# set the X11/XWayland window icon; without it `flet run` on Linux shows a
+# generic placeholder. The hicolor tree is what a Wayland session resolves
+# from an installed desktop entry, and every file already matches the size
+# its directory claims.
+install(FILES "${CMAKE_CURRENT_SOURCE_DIR}/app_icon.png"
+  DESTINATION "${INSTALL_BUNDLE_DATA_DIR}" COMPONENT Runtime)
+install(DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}/icons"
+  DESTINATION "${CMAKE_INSTALL_PREFIX}/share" COMPONENT Runtime)
 
 # Install the AOT library on non-Debug builds only.
 if(NOT CMAKE_BUILD_TYPE MATCHES "Debug")

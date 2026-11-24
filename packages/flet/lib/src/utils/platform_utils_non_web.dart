@@ -1,20 +1,22 @@
-import 'strings.dart';
+import 'uri.dart';
 
 bool isProgressiveWebApp() {
   return false;
 }
 
 String getWebsocketEndpointPath(String uriPath) {
-  var pagePath = uriPath.trimSymbol("/");
-  if (pagePath != "") {
-    pagePath = "$pagePath/";
-  }
-  return "${pagePath}ws";
+  return getWebsocketEndpointPathFromUriPath(uriPath);
 }
 
 String getFletRouteUrlStrategy() {
   return "";
 }
+
+String getAssetsDir() {
+  return "";
+}
+
+String? getWebAppBaseUrl() => null;
 
 bool isPyodideMode() {
   return false;
@@ -30,3 +32,7 @@ Map<dynamic, dynamic> getViewInitialData(int viewId) {
 
 void openPopupBrowserWindow(
     String url, String windowName, int minWidth, int minHeight) {}
+
+bool isGestureGatedDialogBlocked() {
+  return false;
+}

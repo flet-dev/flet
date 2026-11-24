@@ -1,9 +1,11 @@
 import math
-from dataclasses import dataclass, field
+from dataclasses import field
 from enum import Enum
 from typing import Optional
 
+from flet.controls.base_control import value
 from flet.controls.blur import BlurValue
+from flet.controls.colors import Colors
 from flet.controls.gradients import GradientTileMode
 from flet.controls.transform import OffsetValue
 from flet.controls.types import (
@@ -26,7 +28,7 @@ __all__ = [
 
 class PaintingStyle(Enum):
     """
-    Strategy used by [`Paint.style`][flet.] when drawing geometry.
+    Strategy used by :attr:`flet.Paint.style` when drawing geometry.
 
     Determines whether a shape is rendered as a filled interior or as an
     outlined contour.
@@ -44,27 +46,27 @@ class PaintingStyle(Enum):
     Paint only the shape outline.
 
     Stroke thickness and joins/caps are controlled by properties such as
-    [`Paint.stroke_width`][flet.], [`Paint.stroke_join`][flet.], and
-    [`Paint.stroke_cap`][flet.].
+    :attr:`flet.Paint.stroke_width`, :attr:`flet.Paint.stroke_join`, and
+    :attr:`flet.Paint.stroke_cap`.
     """
 
 
-@dataclass(kw_only=True)
+@value(kw_only=True)
 class PaintGradient:
     """
-    Base class for gradients applied via [`Paint.gradient`][flet.].
+    Base class for gradients applied via :attr:`flet.Paint.gradient`.
 
     Use one of its concrete variants:
-    - [`PaintLinearGradient`][flet.]
-    - [`PaintRadialGradient`][flet.]
-    - [`PaintSweepGradient`][flet.]
+    - :class:`~flet.PaintLinearGradient`
+    - :class:`~flet.PaintRadialGradient`
+    - :class:`~flet.PaintSweepGradient`
     """
 
     _type: Optional[str] = field(init=False, repr=False, compare=False, default=None)
     """Internal gradient kind discriminator serialized to Flutter."""
 
 
-@dataclass
+@value
 class PaintLinearGradient(PaintGradient):
     """
     More information on Linear gradient
@@ -83,11 +85,11 @@ class PaintLinearGradient(PaintGradient):
 
     colors: list[ColorValue]
     """
-    The colors the gradient should obtain at each of \
-    the stops. This list must contain at least two colors.
+    The colors the gradient should obtain at each of the stops. This list must contain \
+    at least two colors.
 
     Note:
-        If [`color_stops`][(c).] is not `None`,
+        If :attr:`color_stops` is not `None`,
         this list must have the same length as `color_stops`.
     """
 
@@ -97,7 +99,7 @@ class PaintLinearGradient(PaintGradient):
 
     Note:
         If non-none, this list must have the same length as
-        [`colors`][(c).].
+        :attr:`colors`.
         If the first value is not `0.0`, then a stop with position `0.0` and a color
         equal to the first color in `colors` is implied. If the last value is not
         `1.0`, then a stop with position `1.0` and a color equal to the last color
@@ -106,8 +108,8 @@ class PaintLinearGradient(PaintGradient):
 
     tile_mode: GradientTileMode = GradientTileMode.CLAMP
     """
-    How this gradient should tile the plane beyond in the \
-    region before [`begin`][(c).] and after [`end`][(c).].
+    How this gradient should tile the plane beyond in the region before :attr:`begin` \
+    and after :attr:`end`.
     """
 
     def __post_init__(self):
@@ -136,7 +138,7 @@ class PaintLinearGradient(PaintGradient):
         )
 
 
-@dataclass
+@value
 class PaintRadialGradient(PaintGradient):
     """
     More information on Radial gradient \
@@ -225,7 +227,7 @@ class PaintRadialGradient(PaintGradient):
         )
 
 
-@dataclass
+@value
 class PaintSweepGradient(PaintGradient):
     """
     More information on Sweep gradient \
@@ -239,10 +241,10 @@ class PaintSweepGradient(PaintGradient):
 
     colors: list[str]
     """
-    The colors the gradient should obtain at each of \
-    the stops. This list must contain at least two colors.
+    The colors the gradient should obtain at each of the stops. This list must contain \
+    at least two colors.
 
-    If [`color_stops`][(c).color_stops] is provided, this list must have the same
+    If :attr:`color_stops` is provided, this list must have the same
     length as `color_stops`.
     """
 
@@ -310,24 +312,20 @@ class PaintSweepGradient(PaintGradient):
         )
 
 
-@dataclass
+@value
 class Paint:
     """
     A description of the style to use when drawing a shape on the canvas.
     """
 
-    color: Optional[ColorValue] = None
+    color: ColorValue = Colors.BLACK
     """
     The color to use when stroking or filling a shape.
-
-    Defaults to opaque black.
     """
 
-    blend_mode: Optional[BlendMode] = None
+    blend_mode: BlendMode = BlendMode.SRC_OVER
     """
     A blend mode to apply when a shape is drawn or a layer is composited.
-
-    Defaults to [`BlendMode.SRC_OVER`][flet.BlendMode.SRC_OVER].
     """
 
     blur_image: Optional[BlurValue] = None
@@ -335,11 +333,9 @@ class Paint:
     Blur image when drawing it on a canvas.
     """
 
-    anti_alias: Optional[bool] = None
+    anti_alias: bool = True
     """
     Whether to apply anti-aliasing to lines and images drawn on the canvas.
-
-    Defaults to `True`.
     """
 
     gradient: Optional[PaintGradient] = None
@@ -347,34 +343,55 @@ class Paint:
     Configures gradient paint.
     """
 
-    stroke_cap: Optional[StrokeCap] = None
+    stroke_cap: StrokeCap = StrokeCap.BUTT
     """
-    TBD
+    The kind of finish to place on the ends of stroked lines.
+
+    This applies when :attr:`style` is :attr:`flet.PaintingStyle.STROKE`.
     """
 
-    stroke_join: Optional[StrokeJoin] = None
+    stroke_join: StrokeJoin = StrokeJoin.MITER
     """
-    TBD
+    The kind of finish to place on joins between stroked segments.
+
+    This applies when :attr:`style` is :attr:`flet.PaintingStyle.STROKE`.
+
+    See also:
+        :attr:`stroke_miter_limit`
     """
 
-    stroke_miter_limit: Optional[Number] = None
+    stroke_miter_limit: Number = 4.0
     """
-    TBD
+    The limit for drawing miter joins when :attr:`stroke_join` is
+    :attr:`flet.StrokeJoin.MITER` and :attr:`style` is
+    :attr:`flet.PaintingStyle.STROKE`.
+
+    If this limit is exceeded, a bevel join is used instead.
     """
 
-    stroke_width: Optional[Number] = None
+    stroke_width: Number = 0.0
     """
-    TBD
+    How wide stroked edges should be, in logical pixels.
+
+    This applies when :attr:`style` is :attr:`flet.PaintingStyle.STROKE`.
+    A width of `0.0` corresponds to a hairline.
     """
 
     stroke_dash_pattern: Optional[list[Number]] = None
     """
-    TBD
+    Dash pattern used when painting stroked outlines.
+
+    Values alternate between painted dash lengths and unpainted gap lengths. For
+    example, `[5, 10]` paints a dash 5 logical pixels long, then leaves a gap 10
+    logical pixels long, repeating the pattern along the stroked path.
+
+    Note:
+        This applies only when :attr:`style` is :attr:`flet.PaintingStyle.STROKE`.
     """
 
-    style: Optional[PaintingStyle] = None
+    style: PaintingStyle = PaintingStyle.FILL
     """
-    TBD
+    Whether to paint filled interiors or only stroked outlines.
     """
 
     def copy(

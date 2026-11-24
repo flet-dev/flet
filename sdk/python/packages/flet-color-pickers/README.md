@@ -3,16 +3,20 @@
 [![pypi](https://img.shields.io/pypi/v/flet-color-pickers.svg)](https://pypi.python.org/pypi/flet-color-pickers)
 [![downloads](https://static.pepy.tech/badge/flet-color-pickers/month)](https://pepy.tech/project/flet-color-pickers)
 [![python](https://img.shields.io/badge/python-%3E%3D3.10-%2334D058)](https://pypi.org/project/flet-color-pickers)
-[![docstring coverage](https://docs.flet.dev/assets/badges/docs-coverage/flet-color-pickers.svg)](https://docs.flet.dev/assets/badges/docs-coverage/flet-color-pickers.svg)
+[![docstring coverage](https://flet.dev/docs/assets/badges/docs-coverage/flet-color-pickers.svg)](https://flet.dev/docs/assets/badges/docs-coverage/flet-color-pickers.svg)
 [![license](https://img.shields.io/badge/License-Apache_2.0-green.svg)](https://github.com/flet-dev/flet/blob/main/sdk/python/packages/flet-color-pickers/LICENSE)
 
 A [Flet](https://flet.dev) extension package for picking colors.
+
+> **[Try flet-color-pickers in Flet Studio](https://studio.flet.dev/gallery/utility/color-pickers/example/extensions/color_pickers/color_picker?utm_source=pypi&utm_medium=readme&utm_campaign=flet-color-pickers)**
+>
+> Create, run, and share Python apps in your browser. Start from an example, write your own code, or get help from the AI agent. No installation required.
 
 It is based on the [flutter_colorpicker](https://pub.dev/packages/flutter_colorpicker) Flutter package.
 
 ## Documentation
 
-Detailed documentation to this package can be found [here](https://docs.flet.dev/color_picker/).
+Detailed documentation to this package can be found [here](https://flet.dev/docs/controls/colorpickers/).
 
 ## Platform Support
 
@@ -39,4 +43,4 @@ To install the `flet-color-pickers` package and add it to your project dependenc
 
 ### Examples
 
-For examples, see [these](https://github.com/flet-dev/flet/tree/main/sdk/python/examples/controls/color_pickers).
+For examples, see [these](https://github.com/flet-dev/flet/tree/main/sdk/python/examples/extensions/color_pickers).

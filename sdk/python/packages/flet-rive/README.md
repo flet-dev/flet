@@ -3,16 +3,20 @@
 [![pypi](https://img.shields.io/pypi/v/flet-rive.svg)](https://pypi.python.org/pypi/flet-rive)
 [![downloads](https://static.pepy.tech/badge/flet-rive/month)](https://pepy.tech/project/flet-rive)
 [![python](https://img.shields.io/badge/python-%3E%3D3.10-%2334D058)](https://pypi.org/project/flet-rive)
-[![docstring coverage](https://docs.flet.dev/assets/badges/docs-coverage/flet-rive.svg)](https://docs.flet.dev/assets/badges/docs-coverage/flet-rive.svg)
+[![docstring coverage](https://flet.dev/docs/assets/badges/docs-coverage/flet-rive.svg)](https://flet.dev/docs/assets/badges/docs-coverage/flet-rive.svg)
 [![license](https://img.shields.io/badge/License-Apache_2.0-green.svg)](https://github.com/flet-dev/flet/blob/main/sdk/python/packages/flet-rive/LICENSE)
 
 A cross-platform [Flet](https://flet.dev) extension for displaying [Rive](https://rive.app/) animations.
+
+> **[Try flet-rive in Flet Studio](https://studio.flet.dev/gallery/media/rive/example/extensions/rive/rive_animations?utm_source=pypi&utm_medium=readme&utm_campaign=flet-rive)**
+>
+> Create, run, and share Python apps in your browser. Start from an example, write your own code, or get help from the AI agent. No installation required.
 
 It is based on the [rive](https://pub.dev/packages/rive) Flutter package.
 
 ## Documentation
 
-Detailed documentation to this package can be found [here](https://docs.flet.dev/rive/).
+Detailed documentation to this package can be found [here](https://flet.dev/docs/controls/rive/).
 
 ## Platform Support
 
@@ -39,4 +43,4 @@ To install the `flet-rive` package and add it to your project dependencies:
 
 ### Examples
 
-For examples, see [these](https://github.com/flet-dev/flet/tree/main/sdk/python/examples/controls/rive).
+For examples, see [these](https://github.com/flet-dev/flet/tree/main/sdk/python/examples/extensions/rive).

@@ -31,4 +31,4 @@ def main(page: ft.Page):
     page.add(solitaire)
 
 
-ft.run(target=main, assets_dir="assets")
+ft.run(main, assets_dir="assets")

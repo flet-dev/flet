@@ -1,0 +1,31 @@
+---
+class_name: "flet.SnackBar"
+examples: "controls/material/snack_bar"
+example_images: "test-images/examples/controls/material/golden/macos/snack_bar"
+snack_bar_action_class_name: "flet.SnackBarAction"
+title: "SnackBar"
+---
+
+import {ClassAll, ClassMembers, ClassSummary, CodeExample, Image} from '@site/src/components/crocodocs';
+
+<ClassSummary name={frontMatter.class_name} image={frontMatter.example_images + '/image_for_docs.png'} imageCaption="Opened snack bar" imageWidth="30%"/>
+
+## Examples
+
+<CodeExample path={frontMatter.examples + '/snack_bar/main.py'} language="python" />
+
+<Image src={frontMatter.example_images + '/basic.png'} alt="basic" width="30%" />
+
+<CodeExample path={frontMatter.examples + '/counter/main.py'} language="python" />
+
+<Image src={frontMatter.example_images + '/snack_bar_flow.gif'} alt="Snack bar with counter" width="30%" caption="Snack bar with counter" />
+
+<CodeExample path={frontMatter.examples + '/action/main.py'} language="python" />
+
+<Image src={frontMatter.example_images + '/action_simple.png'} alt="Snack bar with a simple action" width="50%" caption="Snack bar with a simple action" />
+
+<Image src={frontMatter.example_images + '/action_custom.png'} alt="Snack bar with a custom action" width="50%" caption="Snack bar with a custom action" />
+
+<ClassMembers name={frontMatter.class_name} />
+
+<ClassAll name={frontMatter.snack_bar_action_class_name} />

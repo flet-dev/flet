@@ -1,0 +1,19 @@
+---
+class_name: "flet.ReorderableDragHandle"
+examples: "controls/material/reorderable_drag_handle"
+example_images: "test-images/examples/controls/material/golden/macos/reorderable_drag_handle"
+example_media: "examples/controls/material/reorderable_drag_handle/media"
+title: "ReorderableDragHandle"
+---
+
+import {ClassMembers, ClassSummary, CodeExample, Image} from '@site/src/components/crocodocs';
+
+<ClassSummary name={frontMatter.class_name} image={frontMatter.example_images + '/image_for_docs.png'} imageCaption="Reorderable list with custom drag handles" imageWidth="40%"/>
+
+## Examples
+
+<CodeExample path={frontMatter.examples + '/custom_drag_handle/main.py'} language="python" />
+
+<Image src={frontMatter.example_media + '/basic.gif'} alt="basic" width="55%" />
+
+<ClassMembers name={frontMatter.class_name} />

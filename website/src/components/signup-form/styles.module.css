@@ -1,0 +1,109 @@
+.signupForm {
+  padding: 40px 44px;
+  border: 1px solid var(--home-line, #e4e4eb);
+  border-radius: 16px;
+  background: var(--home-soft, #f6f5f8);
+  color: var(--home-ink, #20212a);
+}
+
+.signupForm form {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  align-items: center;
+  gap: 40px;
+}
+
+.eyebrow {
+  display: block;
+  margin-bottom: 14px;
+  color: var(--home-pink, #e00050);
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 1.6px;
+}
+
+.signupForm h3 {
+  margin: 0 0 10px;
+  font-size: 28px;
+  line-height: 1.2;
+  letter-spacing: -.8px;
+}
+
+.intro p {
+  margin: 0;
+  color: var(--home-muted, #62636f);
+  font-size: 15px;
+}
+
+.fields {
+  min-width: 0;
+}
+
+.fields label {
+  display: block;
+  margin-bottom: 9px;
+  font-size: 13px;
+  font-weight: 600;
+}
+
+.inputRow {
+  display: flex;
+  gap: 8px;
+}
+
+.inputRow input {
+  min-width: 0;
+  width: 100%;
+  padding: 14px;
+  border: 1px solid var(--home-line, #e4e4eb);
+  border-radius: 8px;
+  background: var(--ifm-background-color);
+  color: inherit;
+  font: inherit;
+  font-size: 15px;
+}
+
+.inputRow button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 18px;
+  padding: 14px 20px;
+  border: 0;
+  border-radius: 8px;
+  background: #e00050;
+  color: white;
+  font: inherit;
+  font-size: 15px;
+  font-weight: 650;
+  cursor: pointer;
+}
+
+.inputRow button:hover {
+  background: #b80040;
+}
+
+.inputRow input:focus-visible,
+.inputRow button:focus-visible {
+  outline: 2px solid var(--home-pink, #e00050);
+  outline-offset: 3px;
+}
+
+@media (max-width: 1050px) {
+  .signupForm {
+    padding: 32px;
+  }
+  .signupForm form {
+    grid-template-columns: 1fr;
+    gap: 25px;
+  }
+}
+
+@media (max-width: 440px) {
+  .signupForm {
+    padding: 26px 22px;
+  }
+  .inputRow {
+    flex-direction: column;
+  }
+}

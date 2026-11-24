@@ -1,0 +1,26 @@
+[project]
+name = "radio-styled"
+version = "1.0.0"
+description = "Demonstrates styled Radio controls with static and state-based colors."
+requires-python = ">=3.10"
+keywords = ["radio", "styled controls", "control states", "input controls"]
+authors = [{ name = "Flet team", email = "hello@flet.dev" }]
+dependencies = ["flet"]
+
+[dependency-groups]
+dev = ["flet-cli", "flet-desktop", "flet-web"]
+
+[tool.flet.gallery]
+categories = ["Input/Radio"]
+
+[tool.flet.metadata]
+title = "Styled"
+controls = ["Radio", "RadioGroup", "SafeArea"]
+layout_pattern = "form"
+complexity = "basic"
+features = ["state-based styling", "radio group styling"]
+
+[tool.flet]
+org = "dev.flet"
+company = "Flet"
+copyright = "Copyright (C) 2023-2026 by Flet"

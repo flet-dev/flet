@@ -12,11 +12,11 @@ __all__ = ["Shadow"]
 @control("Shadow")
 class Shadow(Shape):
     """
-    Draws a shadow for a [`path`][(c).] representing the given material \
-    [`elevation`][(c).].
+    Draws a shadow for a :attr:`path` representing the given material \
+    :attr:`elevation`.
 
     Note:
-        The [`transparent_occluder`][(c).] argument should
+        The :attr:`transparent_occluder` argument should
         be `True` if the occluding object is not opaque.
     """
 

@@ -16,7 +16,7 @@ class LineChartData(ft.BaseControl):
 
     points: list[LineChartDataPoint] = field(default_factory=list)
     """
-    A list of points (dots) of [`LineChartDataPoint`][(p).]
+    A list of points (dots) of :class:`~flet_charts.LineChartDataPoint`
     type representing a single chart line.
     """
 
@@ -52,7 +52,7 @@ class LineChartData(ft.BaseControl):
 
     prevent_curve_over_shooting_threshold: ft.Number = 10.0
     """
-    Threshold for [`prevent_curve_over_shooting`][(c).] algorithm.
+    Threshold for :attr:`prevent_curve_over_shooting` algorithm.
     """
 
     dash_pattern: Optional[list[int]] = None
@@ -135,7 +135,7 @@ class LineChartData(ft.BaseControl):
     curve_smoothness: ft.Number = 0.35
     """
     Defines the smoothness of a curve line,
-    when [`curved`][(c).] is set to `True`.
+    when :attr:`curved` is set to `True`.
     """
 
     rounded_stroke_join: bool = False

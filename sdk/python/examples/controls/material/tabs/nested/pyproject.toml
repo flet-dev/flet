@@ -1,0 +1,26 @@
+[project]
+name = "tabs-nested"
+version = "1.0.0"
+description = "Embeds a secondary Tabs control inside a parent tab to demonstrate nested navigation."
+requires-python = ">=3.10"
+keywords = ["tabs", "nested", "secondary", "navigation", "layout"]
+authors = [{ name = "Flet team", email = "hello@flet.dev" }]
+dependencies = ["flet"]
+
+[dependency-groups]
+dev = ["flet-cli", "flet-desktop", "flet-web"]
+
+[tool.flet.gallery]
+categories = ["Layout/Tabs"]
+
+[tool.flet.metadata]
+title = "Nested tabs"
+controls = ["SafeArea", "Tabs", "Column", "TabBar", "TabBarView", "Tab", "Text"]
+layout_pattern = "single-panel"
+complexity = "basic"
+features = ["nested tabs", "secondary tab bar"]
+
+[tool.flet]
+org = "dev.flet"
+company = "Flet"
+copyright = "Copyright (C) 2023-2026 by Flet"

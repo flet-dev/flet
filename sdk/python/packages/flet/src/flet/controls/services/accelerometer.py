@@ -37,18 +37,17 @@ class AccelerometerReadingEvent(Event["Accelerometer"]):
 @control("Accelerometer")
 class Accelerometer(Service):
     """
-    Streams raw accelerometer [readings][flet.AccelerometerReadingEvent], which \
-    describe the acceleration of the device, in `m/s^2`, including the effects of \
-    gravity.
+    Streams raw accelerometer :class:`flet.AccelerometerReadingEvent`, which describe \
+    the acceleration of the device, in `m/s^2`, including the effects of gravity.
 
-    Unlike [UserAccelerometer][flet.],
+    Unlike :class:`~flet.UserAccelerometer`,
     this service reports raw data from the accelerometer (physical sensor
     embedded in the mobile device) without any post-processing.
 
     The accelerometer is unable to distinguish between the effect of an
     accelerated movement of the device and the effect of the surrounding
     gravitational field. This means that, at the surface of Earth,
-    even if the device is completely still, the reading of [`Accelerometer`][flet.]
+    even if the device is completely still, the reading of :class:`~flet.Accelerometer`
     is an acceleration of intensity 9.8 directed upwards (the opposite of
     the graviational acceleration). This can be used to infer information
     about the position of the device (horizontal/vertical/tilted).
@@ -66,7 +65,7 @@ class Accelerometer(Service):
 
     interval: Optional[Duration] = None
     """
-    Desired sampling interval provided as a [`Duration`][flet.Duration].
+    Desired sampling interval provided as a :class:`~flet.Duration`.
     Defaults to 200 ms.
 
     Note that mobile platforms treat this value as a suggestion and the actual

@@ -1,0 +1,26 @@
+[project]
+name = "column-scroll-to-key"
+version = "1.0.0"
+description = "Scroll a column to keyed sections using action buttons."
+requires-python = ">=3.10"
+keywords = ["column", "layout", "scroll_to", "scroll key", "sections"]
+authors = [{ name = "Flet team", email = "hello@flet.dev" }]
+dependencies = ["flet"]
+
+[dependency-groups]
+dev = ["flet-cli", "flet-desktop", "flet-web"]
+
+[tool.flet.gallery]
+categories = ["Layout/Column"]
+
+[tool.flet.metadata]
+title = "Column scroll to key"
+controls = ["Container", "Column", "Row", "Button", "Text"]
+layout_pattern = "list-detail"
+complexity = "basic"
+features = ["scroll key navigation", "async button actions", "section anchors"]
+
+[tool.flet]
+org = "dev.flet"
+company = "Flet"
+copyright = "Copyright (C) 2023-2026 by Flet"

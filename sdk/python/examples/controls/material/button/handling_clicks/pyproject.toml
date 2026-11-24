@@ -1,0 +1,26 @@
+[project]
+name = "button-handling-clicks"
+version = "1.0.0"
+description = "Button click handling with a live click counter."
+requires-python = ">=3.10"
+keywords = ["button", "events", "on_click", "counter"]
+authors = [{ name = "Flet team", email = "hello@flet.dev" }]
+dependencies = ["flet"]
+
+[dependency-groups]
+dev = ["flet-cli", "flet-desktop", "flet-web"]
+
+[tool.flet.gallery]
+categories = ["Buttons/Button"]
+
+[tool.flet.metadata]
+title = "Handling clicks"
+controls = ["SafeArea", "Column", "Button", "Text"]
+layout_pattern = "inline-actions"
+complexity = "basic"
+features = ["click event handling", "dynamic label updates"]
+
+[tool.flet]
+org = "dev.flet"
+company = "Flet"
+copyright = "Copyright (C) 2023-2026 by Flet"

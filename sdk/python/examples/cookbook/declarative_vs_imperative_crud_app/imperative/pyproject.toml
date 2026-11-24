@@ -1,0 +1,26 @@
+[project]
+name = "crud-app-imperative"
+version = "1.0.0"
+description = "Imperative CRUD 'User Manager' that mutates controls directly and calls page.update()."
+requires-python = ">=3.10"
+keywords = ["cookbook", "crud", "imperative", "controls", "page-update"]
+authors = [{ name = "Flet team", email = "hello@flet.dev" }]
+dependencies = ["flet"]
+
+[dependency-groups]
+dev = ["flet-cli", "flet-desktop", "flet-web"]
+
+[tool.flet.gallery]
+categories = ["Cookbook"]
+
+[tool.flet.metadata]
+title = "Imperative"
+controls = ["Row", "TextField", "Text", "Button"]
+layout_pattern = "inline-actions"
+complexity = "basic"
+features = ["control visibility toggling", "direct control mutation", "manual page.update()"]
+
+[tool.flet]
+org = "dev.flet"
+company = "Flet"
+copyright = "Copyright (C) 2023-2026 by Flet"

@@ -1,0 +1,15 @@
+---
+class_name: "flet.ScrollMode"
+examples: "controls/core/types/scroll_mode"
+title: "ScrollMode"
+---
+
+import {ClassMembers, ClassSummary, CodeExample} from '@site/src/components/crocodocs';
+
+<ClassSummary name={frontMatter.class_name} />
+
+## Examples
+
+<CodeExample path={frontMatter.examples + '/showcase/main.py'} language="python" />
+
+<ClassMembers name={frontMatter.class_name} separateSignature={false} />

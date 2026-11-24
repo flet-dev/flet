@@ -1,7 +1,9 @@
 {{flutter_js}}
 {{flutter_build_config}}
 
-var loading = document.querySelector('#loading');
+window.addEventListener('flutter-first-frame', () => {
+    document.getElementById('loading')?.remove();
+}, { once: true });
 
 var flutterConfig = {
     multiViewEnabled: flet.multiView,
@@ -11,8 +13,14 @@ var flutterConfig = {
 if (flet.webRenderer != "auto") {
     flutterConfig.renderer = flet.webRenderer;
 }
-if (flet.noCdn) {
+// Keyed off the values themselves, not off `flet.noCdn`: a host serving its
+// own copy of the runtime can point these anywhere without pretending the app
+// was built with `--no-cdn`. Left unset, Flutter falls back to gstatic for
+// CanvasKit and to Google Fonts for the Noto fallbacks.
+if (flet.canvasKitBaseUrl) {
     flutterConfig.canvasKitBaseUrl = flet.canvasKitBaseUrl;
+}
+if (flet.fontFallbackBaseUrl) {
     flutterConfig.fontFallbackBaseUrl = flet.fontFallbackBaseUrl;
 }
 
@@ -22,15 +30,9 @@ _flutter.loader.load({
         serviceWorkerVersion: {{flutter_service_worker_version}},
     },
     onEntrypointLoaded: async function (engineInitializer) {
-        loading.classList.add('main_done');
         const engine = await engineInitializer.initializeEngine(flutterConfig);
 
-        loading.classList.add('init_done');
         flet.flutterApp = await engine.runApp();
         flet.flutterAppResolve(flet.flutterApp);
-
-        window.setTimeout(function () {
-            loading.remove();
-        }, 200);
     }
 });

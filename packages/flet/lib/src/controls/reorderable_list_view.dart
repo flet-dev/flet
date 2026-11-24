@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 
 import '../extensions/control.dart';
 import '../models/control.dart';
@@ -177,7 +177,7 @@ class _ListViewControlState extends State<ReorderableListViewControl> {
             scrollController: _controller,
             child: child);
 
-        if (widget.control.getBool("on_scroll", false)!) {
+        if (widget.control.hasEventHandler("scroll")) {
           child =
               ScrollNotificationControl(control: widget.control, child: child);
         }

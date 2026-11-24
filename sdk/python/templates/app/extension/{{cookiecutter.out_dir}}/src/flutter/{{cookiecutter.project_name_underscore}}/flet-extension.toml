@@ -1,0 +1,13 @@
+# Build settings flet build applies to every app that installs this extension,
+# for requirements of its Flutter package that only the app can set.
+# Keys are those of the app's [tool.flet] table, without the tool.flet prefix;
+# the app's own settings take precedence.
+# See https://flet.dev/docs/extend/user-extensions#build-settings
+#
+# For example, for a Flutter package that requires core library desugaring:
+#
+# [android]
+# gradle_dependencies = 'coreLibraryDesugaring("com.android.tools:desugar_jdk_libs:2.1.4")'
+#
+# [android.compile_options]
+# isCoreLibraryDesugaringEnabled = "true"

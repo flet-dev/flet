@@ -1,0 +1,27 @@
+[project]
+name = "types-tab-bar-theme-showcase"
+version = "1.0.0"
+description = "Styles tab bars with an app-wide TabBarTheme, overrides it for one section with a nested theme, and shows TabBar properties taking precedence over both."
+requires-python = ">=3.10"
+keywords = ["tab bar theme", "theme", "tabs", "showcase"]
+authors = [{ name = "Flet team", email = "hello@flet.dev" }]
+dependencies = ["flet"]
+
+[dependency-groups]
+dev = ["flet-cli", "flet-desktop", "flet-web"]
+
+[tool.flet.gallery]
+categories = ["Navigation/Tabs"]
+
+[tool.flet.metadata]
+title = "Tab Bar Theme showcase"
+controls = ["SafeArea", "Column", "Container", "Text", "Tabs", "TabBar", "Tab", "TabBarView", "UnderlineTabIndicator", "AppBar"]
+layout_pattern = "gallery"
+complexity = "basic"
+features = ["theming", "nested theme", "live preview"]
+docs_intro = "Sets an app-wide [`tab_bar_theme`][flet.Theme.tab_bar_theme] on [`Page.theme`][flet.BasePage.theme], overrides part of it for one section with [`Container.theme`][flet.Container.theme], and sets properties directly on a [`TabBar`][flet.TabBar], which take precedence over both. `Page.theme` is the light theme, so the example sets [`theme_mode`][flet.BasePage.theme_mode] to [`LIGHT`][flet.ThemeMode.LIGHT]."
+
+[tool.flet]
+org = "dev.flet"
+company = "Flet"
+copyright = "Copyright (C) 2023-2026 by Flet"

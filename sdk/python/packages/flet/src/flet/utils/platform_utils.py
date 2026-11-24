@@ -152,7 +152,7 @@ def get_platform():
         One of: `windows`, `linux`, or `darwin`.
 
     Raises:
-        [`FletUnsupportedPlatformException`][flet.]: If the current platform is
+        :class:`~flet.FletUnsupportedPlatformException`: If the current platform is
             unsupported.
     """
     p = platform.system() if not is_mobile() else ""
@@ -174,7 +174,7 @@ def get_arch():
         One of: `amd64`, `arm64`, or `arm_7`.
 
     Raises:
-        [`FletUnsupportedPlatformException`][flet.]: If the current architecture is
+        :class:`~flet.FletUnsupportedPlatformException`: If the current architecture is
             unsupported.
     """
     a = platform.machine().lower() if not is_mobile() else ""

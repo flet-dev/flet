@@ -1,0 +1,23 @@
+---
+class_name: "flet.ReorderableListView"
+examples: "controls/material/reorderable_list_view"
+example_images: "test-images/examples/controls/material/golden/macos/reorderable_list_view"
+example_media: "examples/controls/material/reorderable_list_view/media"
+title: "ReorderableListView"
+---
+
+import {ClassMembers, ClassSummary, CodeExample, Image} from '@site/src/components/crocodocs';
+
+<ClassSummary name={frontMatter.class_name} image={frontMatter.example_images + '/image_for_docs.png'} imageCaption="Reorderable list view" imageWidth="70%"/>
+
+## Examples
+
+<CodeExample path={frontMatter.examples + '/horizontal_and_vertical/main.py'} language="python" />
+
+<Image src={frontMatter.example_media + '/horizontal_and_vertical.gif'} alt="horizontal-and-vertical" width="65%" />
+
+<CodeExample path={'controls/material/reorderable_drag_handle/custom_drag_handle/main.py'} language="python" />
+
+<Image src={'examples/controls/material/reorderable_drag_handle/media/basic.gif'} alt="custom-drag-handle" width="55%" />
+
+<ClassMembers name={frontMatter.class_name} />

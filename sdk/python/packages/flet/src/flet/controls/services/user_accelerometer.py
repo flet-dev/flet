@@ -15,9 +15,10 @@ __all__ = ["UserAccelerometer", "UserAccelerometerReadingEvent"]
 @dataclass(kw_only=True)
 class UserAccelerometerReadingEvent(Event["UserAccelerometer"]):
     """
-    Like [`AccelerometerReadingEvent`][flet.], this is a discrete reading from an \
+    Like :class:`~flet.AccelerometerReadingEvent`, this is a discrete reading from an \
     accelerometer and measures the velocity of the device. However, unlike \
-    [`AccelerometerReadingEvent`][flet.], this event does not include the effects of \
+    :class:`~flet.AccelerometerReadingEvent`, this event does not include the effects \
+    of \
     gravity.
     """
 
@@ -45,7 +46,7 @@ class UserAccelerometer(Service):
     if it is slowing down, the reported acceleration is towards south;
     if it is turning right, the reported acceleration is towards east.
     The data of this stream is obtained by filtering out the effect of gravity
-    from [`AccelerometerReadingEvent`][flet.].
+    from :class:`~flet.AccelerometerReadingEvent`.
 
     Note:
         * Supported platforms: Android, iOS and web.
@@ -59,7 +60,7 @@ class UserAccelerometer(Service):
 
     interval: Optional[Duration] = None
     """
-    Desired sampling interval provided as a [`Duration`][flet.Duration].
+    Desired sampling interval provided as a :class:`~flet.Duration`.
     Defaults to 200 ms.
     """
 

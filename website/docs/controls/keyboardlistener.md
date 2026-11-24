@@ -1,0 +1,15 @@
+---
+class_name: "flet.KeyboardListener"
+examples: "controls/core/keyboard_listener"
+title: "KeyboardListener"
+---
+
+import {ClassMembers, ClassSummary, CodeExample} from '@site/src/components/crocodocs';
+
+<ClassSummary name={frontMatter.class_name} />
+
+## Examples
+
+<CodeExample path={frontMatter.examples + '/detect_keys/main.py'} language="python" />
+
+<ClassMembers name={frontMatter.class_name} />

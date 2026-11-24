@@ -10,10 +10,10 @@ __all__ = ["Fill"]
 @control("Fill")
 class Fill(Shape):
     """
-    Fills the canvas with the given [`paint`][(c).].
+    Fills the canvas with the given :attr:`paint`.
 
     To fill the canvas with a solid color and blend mode,
-    consider [`Color`][(p).color.] shape instead.
+    consider :class:`~flet.canvas.Color` shape instead.
     """
 
     paint: Paint = field(default_factory=lambda: Paint())

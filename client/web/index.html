@@ -8,6 +8,12 @@
   <meta content="IE=Edge" http-equiv="X-UA-Compatible">
   <meta name="description" content="Flet application.">
 
+  <!-- Lays the loading screen out at the device width until the Flutter engine
+       starts and replaces this tag with its own. Without it a mobile browser
+       lays the page out at a 980px viewport, and a reload that keeps the
+       engine's 1.0 scale shows the logo off-center. -->
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+
   <!-- iOS meta tags & icons -->
   <meta name="mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="black">
@@ -21,6 +27,28 @@
   <link rel="manifest" href="manifest.json">
 
   <script>
+    // Reload when WebKit restores the page from the back/forward cache instead
+    // of resuming it. WebKit restores a Flutter app with its frame scheduling
+    // broken: pointer events, the websocket, and patch application all keep
+    // working, but scheduled frames never render, so the app silently freezes
+    // at its last painted state. A restore can paint one synchronous catch-up
+    // frame, so even re-registering with the server is not enough - the very
+    // next update wedges again. Only a fresh engine recovers reliably.
+    //
+    // For a hosted app the Flet session lives on the server and survives the
+    // reload, so state is preserved. Gated to WebKit (every browser on iOS,
+    // Safari on macOS) because other engines restore correctly - and for a
+    // published Pyodide app, where state lives in the page, an unnecessary
+    // reload would destroy it.
+    window.addEventListener('pageshow', (event) => {
+      if (event.persisted &&
+        navigator.vendor && navigator.vendor.startsWith('Apple')) {
+        window.location.reload();
+      }
+    });
+  </script>
+
+  <script>
     var flet = {
       pyodide: false,
       multiView: false,
@@ -29,10 +57,18 @@
       entrypointBaseUrl: "/",
       assetBase: "/",
       routeUrlStrategy: "path",
-      canvasKitBaseUrl: "/canvaskit/",
-      pyodideUrl: "/pyodide/pyodide.js",
+      // Left unset so Flutter resolves CanvasKit and the Noto fallback fonts
+      // from their CDNs. `patch_index.py` fills both in with local paths when
+      // building with `--no-cdn`, and a host serving its own copy of the
+      // runtime can assign them without also claiming a no-CDN build.
+      canvasKitBaseUrl: null,
+      // Default fallback only — `patch_index.py` overrides this with the
+      // resolved per-build URL (CDN or local) at deploy time. The `.mjs`
+      // suffix is required because python-worker.js is a module worker
+      // that loads the runtime via dynamic `import()`. See client/web/python.js.
+      pyodideUrl: "/pyodide/pyodide.mjs",
       webRenderer: "auto",
-      fontFallbackBaseUrl: "assets/fonts/", // for Noto Emoji, use Google CDN
+      fontFallbackBaseUrl: null,
       appPackageUrl: "app.tar.gz"
     }
 
@@ -42,34 +78,6 @@
 
     flet.flutterAppLoaded.then((flutterApp) => {
       console.log("Flutter app loaded");
-      if (flet.multiView) {
-        console.log(flutterApp.addView({
-          hostElement: document.querySelector('#view-1'),
-          initialData: {
-            script: 'print("Hello from view 1")',
-            randomValue: Math.floor(Math.random() * 100),
-          },
-          viewConstraints: {
-            //maxWidth: Infinity,
-            maxHeight: Infinity,
-            minHeight: 300,
-            minWidth: 620
-          }
-        }));
-        console.log(flutterApp.addView({
-          hostElement: document.querySelector('#view-2'),
-          initialData: {
-            script: 'print("Hello from view 2")',
-            bar: "baz"
-          },
-          viewConstraints: {
-            minWidth: 620,
-            //maxWidth: 320,
-            //minHeight: 400,
-            maxHeight: 400,
-          }
-        }));
-      }
     });
   </script>
 
@@ -79,68 +87,32 @@
 </head>
 
 <body>
-  <div id="loading">
+  <div id="loading" role="status" aria-label="Loading">
     <style>
-      body {
-        inset: 0;
-        overflow: hidden;
-        margin: 0;
-        padding: 0;
-        position: fixed;
-      }
-
       #loading {
-        align-items: center;
+        position: fixed;
+        inset: 0;
         display: flex;
-        height: 100%;
+        align-items: center;
         justify-content: center;
-        width: 100%;
+        background: #ffffff;
       }
 
       #loading img {
-        animation: 1s ease-in-out 0s infinite alternate breathe;
-        opacity: .66;
-        transition: opacity .4s;
+        width: 200px;
+        max-width: 50vw;
+        max-height: 50vh;
+        object-fit: contain;
       }
 
-      #loading.main_done img {
-        opacity: 1;
-      }
-
-      #loading.init_done img {
-        animation: .33s ease-in-out 0s 1 forwards zooooom;
-        opacity: .05;
-      }
-
-      @keyframes breathe {
-        from {
-          transform: scale(0.4);
-          opacity: 1.0;
-        }
-
-        to {
-          transform: scale(0.35);
-          opacity: .7;
-        }
-      }
-
-      @keyframes zooooom {
-        from {
-          transform: scale(0.4)
-        }
-
-        to {
-          transform: scale(10)
+      @media (prefers-color-scheme: dark) {
+        #loading {
+          background: #121212;
         }
       }
     </style>
-    <img src="icons/loading-animation.png" alt="Loading..." />
+    <img src="icons/loading-animation.png" alt="" />
   </div>
   <script src="flutter_bootstrap.js" async></script>
-
-  <!-- <h1>View 1</h1>
-  <div id="view-1" style="display: flex; justify-content: center;"></div>
-  <h1>View 2</h1>
-  <div id="view-2"></div> -->
 </body>
 </html>

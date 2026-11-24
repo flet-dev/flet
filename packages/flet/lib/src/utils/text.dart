@@ -1,12 +1,13 @@
 import 'dart:math';
 
 import 'package:flutter/gestures.dart';
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 
 import '../models/control.dart';
 import '../utils/box.dart';
 import '../utils/drawing.dart';
 import '../utils/numbers.dart';
+import 'client_actions.dart';
 import 'colors.dart';
 import 'enums.dart';
 import 'launch_url.dart';
@@ -53,42 +54,51 @@ FontWeight? parseFontWeight(String? weightName, [FontWeight? defaultWeight]) {
 }
 
 List<TextSpan> parseTextSpans(List<Control> spans, ThemeData theme,
-    [void Function(Control, String, [dynamic eventData])? sendControlEvent]) {
+    [void Function(Control, String, [dynamic eventData])? sendControlEvent,
+    BuildContext? context]) {
   return spans
-      .map((span) => parseInlineSpan(span, theme, sendControlEvent))
+      .map((span) => parseInlineSpan(span, theme, sendControlEvent, context))
       .nonNulls
       .toList();
 }
 
 TextSpan? parseInlineSpan(Control span, ThemeData theme,
-    [void Function(Control, String, [dynamic eventData])? sendControlEvent]) {
+    [void Function(Control, String, [dynamic eventData])? sendControlEvent,
+    BuildContext? context]) {
   span.notifyParent = true;
-  var onClick = span.getBool("on_click", false)!;
+  var onClick = span.hasEventHandler("click");
   var url = span.getUrl("url");
 
   return TextSpan(
     text: span.getString("text"),
-    style: parseTextStyle(span.get("style"), theme),
+    style: span.getTextStyle("style", theme),
     spellOut: span.getBool("spell_out"),
     semanticsLabel: span.getString("semantics_label"),
-    children: parseTextSpans(span.children("spans"), theme, sendControlEvent),
+    children: parseTextSpans(
+        span.children("spans"), theme, sendControlEvent, context),
     mouseCursor: onClick && !span.disabled && sendControlEvent != null
         ? SystemMouseCursors.click
         : null,
-    recognizer:
-        (onClick || url != null) && !span.disabled && sendControlEvent != null
-            ? (TapGestureRecognizer()
-              ..onTap = () {
-                if (url != null) openWebBrowser(url);
-                if (onClick) sendControlEvent(span, "click");
-              })
-            : null,
-    onEnter: span.getBool("on_enter", false)! &&
+    recognizer: (onClick || span.hasControlActions) &&
+            !span.disabled &&
+            sendControlEvent != null
+        ? (TapGestureRecognizer()
+          ..onTap = () {
+            if (url != null) openWebBrowser(url);
+            // Spans rendered outside a widget tree (e.g. on a Canvas) have no
+            // context to resolve the target service from; only `url` works there.
+            if (context != null) {
+              runClientActions(context, span.get("action"));
+            }
+            if (onClick) sendControlEvent(span, "click");
+          })
+        : null,
+    onEnter: span.hasEventHandler("enter") &&
             !span.disabled &&
             sendControlEvent != null
         ? (event) => sendControlEvent(span, "enter")
         : null,
-    onExit: span.getBool("on_exit", false)! &&
+    onExit: span.hasEventHandler("exit") &&
             !span.disabled &&
             sendControlEvent != null
         ? (event) => sendControlEvent(span, "exit")
@@ -160,6 +170,8 @@ TextStyle? parseTextStyle(dynamic value, ThemeData theme,
     fontWeight: parseFontWeight(fontWeight),
     fontStyle: parseBool(value["italic"], false)! ? FontStyle.italic : null,
     fontFamily: value["font_family"],
+    fontFamilyFallback:
+        parseList(value["font_family_fallback"], (e) => e.toString()),
     fontVariations: variations,
     height: parseDouble(value["height"]),
     decoration:

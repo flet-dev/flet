@@ -1,0 +1,26 @@
+[project]
+name = "row-wrap"
+version = "1.0.0"
+description = "Row wrapping behavior controlled by dynamic width."
+requires-python = ">=3.10"
+keywords = ["row", "layout", "wrap", "slider", "responsive"]
+authors = [{ name = "Flet team", email = "hello@flet.dev" }]
+dependencies = ["flet"]
+
+[dependency-groups]
+dev = ["flet-cli", "flet-desktop", "flet-web"]
+
+[tool.flet.gallery]
+categories = ["Layout/Row"]
+
+[tool.flet.metadata]
+title = "Row wrapping"
+controls = ["Column", "Row", "Container", "Text", "Slider"]
+layout_pattern = "control-panel"
+complexity = "basic"
+features = ["wrap behavior", "width-driven layout", "slider interaction"]
+
+[tool.flet]
+org = "dev.flet"
+company = "Flet"
+copyright = "Copyright (C) 2023-2026 by Flet"

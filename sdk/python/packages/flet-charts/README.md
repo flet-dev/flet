@@ -3,16 +3,20 @@
 [![pypi](https://img.shields.io/pypi/v/flet-charts.svg)](https://pypi.python.org/pypi/flet-charts)
 [![downloads](https://static.pepy.tech/badge/flet-charts/month)](https://pepy.tech/project/flet-charts)
 [![python](https://img.shields.io/badge/python-%3E%3D3.10-%2334D058)](https://pypi.org/project/flet-charts)
-[![docstring coverage](https://docs.flet.dev/assets/badges/docs-coverage/flet-charts.svg)](https://docs.flet.dev/assets/badges/docs-coverage/flet-charts.svg)
+[![docstring coverage](https://flet.dev/docs/assets/badges/docs-coverage/flet-charts.svg)](https://flet.dev/docs/assets/badges/docs-coverage/flet-charts.svg)
 [![license](https://img.shields.io/badge/License-Apache_2.0-green.svg)](https://github.com/flet-dev/flet/blob/main/sdk/python/packages/flet-charts/LICENSE)
 
 A [Flet](https://flet.dev) extension for creating interactive charts and graphs.
+
+> **[Try flet-charts in Flet Studio](https://studio.flet.dev/gallery/charts/barchart/example/extensions/charts/bar_chart/interactive_bar_chart?utm_source=pypi&utm_medium=readme&utm_campaign=flet-charts)**
+>
+> Create, run, and share Python apps in your browser. Start from an example, write your own code, or get help from the AI agent. No installation required.
 
 It is based on the [fl_chart](https://pub.dev/packages/fl_chart) Flutter package.
 
 ## Documentation
 
-Detailed documentation to this package can be found [here](https://docs.flet.dev/charts/).
+Detailed documentation to this package can be found [here](https://flet.dev/docs/controls/charts/).
 
 ## Platform Support
 
@@ -39,15 +43,15 @@ To install the `flet-charts` package and add it to your project dependencies:
 
 ### Examples
 
-For examples, see [these](https://github.com/flet-dev/flet/tree/main/sdk/python/examples/controls/charts).
+For examples, see [these](https://github.com/flet-dev/flet/tree/main/sdk/python/examples/extensions/charts).
 
 ### Available charts
 
-- [`BarChart`](https://docs.flet.dev/charts/bar_chart/)
-- [`CandlestickChart`](https://docs.flet.dev/charts/candlestick_chart/)
-- [`LineChart`](https://docs.flet.dev/charts/line_chart/)
-- [`MatplotlibChart`](https://docs.flet.dev/charts/matplotlib_chart/)
-- [`PieChart`](https://docs.flet.dev/charts/pie_chart/)
-- [`PlotlyChart`](https://docs.flet.dev/charts/plotly_chart/)
-- [`RadarChart`](https://docs.flet.dev/charts/radar_chart/)
-- [`ScatterChart`](https://docs.flet.dev/charts/scatter_chart/)
+- [`BarChart`](https://flet.dev/docs/controls/charts/barchart)
+- [`CandlestickChart`](https://flet.dev/docs/controls/charts/candlestickchart)
+- [`LineChart`](https://flet.dev/docs/controls/charts/linechart)
+- [`MatplotlibChart`](https://flet.dev/docs/controls/charts/matplotlibchart)
+- [`PieChart`](https://flet.dev/docs/controls/charts/piechart)
+- [`PlotlyChart`](https://flet.dev/docs/controls/charts/plotlychart)
+- [`RadarChart`](https://flet.dev/docs/controls/charts/radarchart)
+- [`ScatterChart`](https://flet.dev/docs/controls/charts/scatterchart)

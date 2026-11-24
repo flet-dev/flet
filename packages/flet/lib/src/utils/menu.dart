@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 
 import '../models/control.dart';
 import '../utils/theme.dart';
@@ -40,8 +40,7 @@ MenuStyle? parseMenuStyle(dynamic value, ThemeData theme,
         value["padding"], (jv) => parseEdgeInsets(jv), defaultPadding),
     side: getWidgetStateProperty<BorderSide?>(
         value["side"],
-        (jv) => parseBorderSide(jv, theme,
-            defaultSideColor: theme.colorScheme.outline),
+        (jv) => parseBorderSide(jv, theme, defaultSideColor: Colors.black),
         defaultBorderSide),
     shape: parseWidgetStateOutlinedBorder(value["shape"], theme,
         defaultOutlinedBorder: defaultShape),

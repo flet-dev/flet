@@ -7,6 +7,7 @@ from flet.controls.control import Control
 from flet.controls.dialog_control import DialogControl
 from flet.controls.duration import Duration
 from flet.controls.types import ColorValue, StrOrControl
+from flet.utils.validation import V, ValidationRules
 
 __all__ = ["CupertinoAlertDialog"]
 
@@ -30,7 +31,7 @@ class CupertinoAlertDialog(DialogControl):
     """
     The title of this dialog, displayed in a large font at the top of this dialog.
 
-    Typically a [`Text`][flet.] control.
+    Typically a :class:`~flet.Text` control.
     """
 
     content: Optional[Control] = None
@@ -38,15 +39,15 @@ class CupertinoAlertDialog(DialogControl):
     The content of this dialog, displayed in a light font at the center of this \
     dialog.
 
-    Typically a [`Column`][flet.] that contains
-    the dialog's [`Text`][flet.] message.
+    Typically a :class:`~flet.Column` that contains
+    the dialog's :class:`~flet.Text` message.
     """
 
     actions: list[Control] = field(default_factory=list)
     """
     A set of actions that are displayed at the bottom of the dialog.
 
-    Typically this is a list of [`CupertinoDialogAction`][flet.] controls.
+    Typically this is a list of :class:`~flet.CupertinoDialogAction` controls.
     """
 
     inset_animation: Animation = field(
@@ -63,18 +64,23 @@ class CupertinoAlertDialog(DialogControl):
     """
     The color of the modal barrier below this dialog.
 
-    If `None`, then [`DialogTheme.barrier_color`][flet.] is used.
+    If `None`, then :attr:`flet.DialogTheme.barrier_color` is used.
     If that is also `None`, the default is `Colors.BLACK_54`.
     """
 
-    def before_update(self):
-        super().before_update()
-        if not (
-            (isinstance(self.title, str) or self.title.visible)
-            or (self.content and self.content.visible)
-            or any(a.visible for a in self.actions)
-        ):
-            raise ValueError(
-                "AlertDialog has nothing to display. Provide at minimum one of the "
-                "following: title, content, actions"
-            )
+    __validation_rules__: ValidationRules = (
+        V.ensure(
+            lambda ctrl: (
+                (
+                    isinstance(ctrl.title, str)
+                    or (isinstance(ctrl.title, Control) and ctrl.title.visible)
+                )
+                or (isinstance(ctrl.content, Control) and ctrl.content.visible)
+                or any(action.visible for action in ctrl.actions)
+            ),
+            message=(
+                "CupertinoAlertDialog has nothing to display. Provide at minimum one "
+                "of the following: title, content, actions"
+            ),
+        ),
+    )

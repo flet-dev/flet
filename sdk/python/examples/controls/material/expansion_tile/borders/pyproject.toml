@@ -1,0 +1,26 @@
+[project]
+name = "expansion-tile-borders"
+version = "1.0.0"
+description = "Demonstrates ExpansionTile border and shape changes between collapsed and expanded states."
+requires-python = ">=3.10"
+keywords = ["expansion tile", "borders", "shape", "collapsed state", "expanded state"]
+authors = [{ name = "Flet team", email = "hello@flet.dev" }]
+dependencies = ["flet"]
+
+[dependency-groups]
+dev = ["flet-cli", "flet-desktop", "flet-web"]
+
+[tool.flet.gallery]
+categories = ["Layout/ExpansionTile"]
+
+[tool.flet.metadata]
+title = "Borders"
+controls = ["SafeArea", "ExpansionTile", "ListTile", "RoundedRectangleBorder", "StadiumBorder", "Text"]
+layout_pattern = "single-panel"
+complexity = "basic"
+features = ["collapsed vs expanded shapes", "custom borders", "tile background styling"]
+
+[tool.flet]
+org = "dev.flet"
+company = "Flet"
+copyright = "Copyright (C) 2023-2026 by Flet"

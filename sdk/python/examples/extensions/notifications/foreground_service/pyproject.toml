@@ -1,0 +1,35 @@
+[project]
+name = "notifications-foreground-service"
+version = "1.0.0"
+description = "Starts and stops an Android foreground service with its ongoing notification."
+requires-python = ">=3.10"
+keywords = ["services", "notifications", "foreground service", "android", "async"]
+authors = [{ name = "Flet team", email = "hello@flet.dev" }]
+dependencies = ["flet", "flet-notifications"]
+
+[dependency-groups]
+dev = ["flet-cli", "flet-desktop", "flet-web"]
+
+[tool.flet.gallery]
+categories = ["Utility/Notifications"]
+
+[tool.flet.metadata]
+title = "Foreground service"
+docs_intro = "Declares the plugin's service with the `dataSync` type, and the matching permissions, in `pyproject.toml`. See [`AndroidForegroundServiceType`][flet_notifications.AndroidForegroundServiceType] for the entries of other service types. Android only."
+controls = ["SafeArea", "Column", "Button", "Notifications"]
+layout_pattern = "inline-actions"
+complexity = "intermediate"
+features = ["foreground services"]
+
+[tool.flet]
+org = "dev.flet"
+company = "Flet"
+copyright = "Copyright (C) 2023-2026 by Flet"
+
+[tool.flet.android.service."com.dexterous.flutterlocalnotifications.ForegroundService"]
+exported = false
+foregroundServiceType = "dataSync"
+
+[tool.flet.android.permission]
+"android.permission.FOREGROUND_SERVICE" = true
+"android.permission.FOREGROUND_SERVICE_DATA_SYNC" = true

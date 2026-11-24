@@ -1,14 +1,17 @@
-from dataclasses import field
+from dataclasses import dataclass, field
 from typing import Optional
 
 import flet as ft
 from flet_ads.types import AdRequest
 
 
-@ft.control
-class BaseAd(ft.Control):
+@dataclass(kw_only=True)
+class BaseAd(ft.BaseControl):
     """
-    Base class for all ad controls in Flet Ads package.
+    Base class for all Ad controls.
+
+    This class defines shared ad request and lifecycle event properties for
+    concrete ad controls/services.
 
     Raises:
         FletUnsupportedPlatformException: When using this control on a web
@@ -34,7 +37,7 @@ class BaseAd(ft.Control):
     """
     Called when an ad request failed.
 
-    Event handler argument [`data`][flet.Event.data] property
+    Event handler argument :attr:`~flet.Event.data` property
     contains information about the error.
     """
 
@@ -50,7 +53,7 @@ class BaseAd(ft.Control):
     on_close: Optional[ft.ControlEventHandler["BaseAd"]] = None
     """
     Called when the full screen view has been closed. You should restart
-    anything paused while handling [`on_open`][flet_ads.BaseAd.on_open].
+    anything paused while handling :attr:`~flet_ads.BaseAd.on_open`.
     """
 
     on_impression: Optional[ft.ControlEventHandler["BaseAd"]] = None
@@ -64,6 +67,7 @@ class BaseAd(ft.Control):
     """
 
     def before_update(self):
+        super().before_update()
         if self.page.web or not self.page.platform.is_mobile():
             raise ft.FletUnsupportedPlatformException(
                 f"{self.__class__.__name__} is only supported on "

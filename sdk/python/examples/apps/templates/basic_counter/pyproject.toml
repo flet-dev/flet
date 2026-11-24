@@ -1,0 +1,32 @@
+[project]
+name = "flet-app"
+version = "1.0.0"
+description = "Tap the button, watch the number grow — the classic counter everyone starts with."
+requires-python = ">=3.10"
+authors = [
+    { name = "Flet developer", email = "you@example.com" }
+]
+dependencies = [
+    "flet"
+]
+
+[dependency-groups]
+dev = [
+    "flet-cli",
+    "flet-desktop",
+    "flet-web"
+]
+
+[tool.flet.metadata]
+title = "Counter"
+
+[tool.flet.gallery]
+categories = ["Getting Started"]
+
+[tool.flet]
+org = "dev.flet"
+company = "Flet"
+copyright = "Copyright (C) 2023-2026 by Flet"
+
+[tool.flet.app]
+path = "src"

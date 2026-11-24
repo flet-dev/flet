@@ -1,0 +1,26 @@
+[project]
+name = "gesture-detector-mouse-cursors"
+version = "1.0.0"
+description = "Randomizes GestureDetector mouse cursors and drags the target container in a Stack."
+requires-python = ">=3.10"
+keywords = ["gesture detector", "mouse cursor", "drag", "events"]
+authors = [{ name = "Flet team", email = "hello@flet.dev" }]
+dependencies = ["flet"]
+
+[dependency-groups]
+dev = ["flet-cli", "flet-desktop", "flet-web"]
+
+[tool.flet.gallery]
+categories = ["Utility/GestureDetector"]
+
+[tool.flet.metadata]
+title = "Mouse cursors"
+controls = ["SafeArea", "Column", "Stack", "Container", "GestureDetector", "Button", "Text"]
+layout_pattern = "single-panel"
+complexity = "basic"
+features = ["cursor switching", "drag interaction", "live status text"]
+
+[tool.flet]
+org = "dev.flet"
+company = "Flet"
+copyright = "Copyright (C) 2023-2026 by Flet"

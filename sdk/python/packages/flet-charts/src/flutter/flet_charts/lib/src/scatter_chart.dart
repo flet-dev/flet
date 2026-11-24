@@ -1,6 +1,6 @@
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flet/flet.dart';
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 
 import 'utils/charts.dart';
 import 'utils/scatter_chart.dart';
@@ -44,8 +44,8 @@ class _ScatterChartControlState extends State<ScatterChartControl> {
       return ScatterSpot(x, y,
           show: spot.visible,
           renderPriority: spot.getInt('render_priority', 0)!,
-          xError: spot.get('x_error'),
-          yError: spot.get('y_error'),
+          xError: parseFlErrorRange(spot.get('x_error')),
+          yError: parseFlErrorRange(spot.get('y_error')),
           dotPainter: spot.get("point") != null
               ? parseChartDotPainter(spot.get("point"), theme, 0, null, null)
               : FlDotCirclePainter(
@@ -122,7 +122,8 @@ class _ScatterChartControlState extends State<ScatterChartControl> {
             .toList(),
         rotationQuarterTurns:
             widget.control.getInt('rotation_quarter_turns', 0)!,
-        //errorIndicatorData: widget.control.get('error_indicator_data'),
+        errorIndicatorData:
+            const FlErrorIndicatorData(painter: getScatterSpotErrorPainter),
       ),
       duration: animation.duration,
       curve: animation.curve,

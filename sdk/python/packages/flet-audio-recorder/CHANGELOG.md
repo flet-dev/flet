@@ -5,11 +5,23 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
+## 1.1.0
+
+### Fixed
+
+- Fixed `AudioRecorder.start_recording()` not recording to `output_path` on desktop, Android and iOS, where it returned `False`, failed, wrote no file, or recorded into the assets directory ([#5999](https://github.com/flet-dev/flet/issues/5999), [#6955](https://github.com/flet-dev/flet/pull/6955)) by @ndonkoHenri.
+
+## 0.85.0
+
+### Added
+
+- Added PCM16 streaming to `AudioRecorder`, including `on_stream` chunks and direct upload support via `AudioRecorderUploadSettings` ([#5858](https://github.com/flet-dev/flet/issues/5858), [#6423](https://github.com/flet-dev/flet/pull/6423)) by @ndonkoHenri.
+
 ## 0.80.0
 
 ### Added
 
-- Deployed online documentation: https://docs.flet.dev/audio-recorder/
+- Deployed online documentation: https://flet.dev/docs/audio-recorder/
 - `AudioRecorder` control new property: `configuration`
 - New dataclasses:
     - `AudioRecorderConfiguration`

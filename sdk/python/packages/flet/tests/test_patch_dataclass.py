@@ -1,7 +1,8 @@
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 
 import msgpack
 
+import flet as ft
 from flet.controls.base_control import BaseControl, control
 from flet.controls.base_page import PageMediaData
 from flet.controls.object_patch import ObjectPatch
@@ -50,6 +51,103 @@ def test_encode_emits_overridden_defaults():
     encoded = encoder(ChildTestControl())
 
     assert encoded["foo"] == 5
+
+
+def test_value_decorator_registers_value_marker():
+    value = ft.Alignment(1, 2)
+
+    assert isinstance(value, ft.Value)
+    assert issubclass(type(value), ft.Value)
+
+
+def test_encode_uses_value_fast_path():
+    encoder = configure_encode_object_for_msgpack(BaseControl)
+    value = ft.Alignment(1, 2)
+
+    encoded = encoder(value)
+
+    assert encoded == {"x": 1, "y": 2}
+    assert hasattr(value, "__prev_classes")
+    assert getattr(value, "__prev_classes") == {}
+    assert hasattr(value, "__prev_lists")
+    assert getattr(value, "__prev_lists") == {}
+    assert hasattr(value, "__prev_dicts")
+    assert getattr(value, "__prev_dicts") == {}
+
+
+def test_encode_preserves_explicit_empty_value_lists_and_dicts():
+    """Explicit empty list/dict values should reach Dart as intentional overrides."""
+
+    @ft.value
+    class TestConfiguration:
+        items: list[int] | None = None
+        options: dict[str, int] | None = None
+
+    encoder = configure_encode_object_for_msgpack(BaseControl)
+    encoded = encoder(TestConfiguration(items=[], options={}))
+
+    assert encoded["items"] == []
+    assert encoded["options"] == {}
+
+
+def test_encode_keeps_default_structural_empty_lists_sparse():
+    """Default structural empty lists should remain omitted from protocol payloads."""
+
+    @ft.value
+    class TestConfiguration:
+        items: list[int] = field(default_factory=list)
+
+    encoder = configure_encode_object_for_msgpack(BaseControl)
+    encoded = encoder(TestConfiguration())
+
+    assert "items" not in encoded
+
+
+def test_encode_serializes_nested_controls_in_value_lists():
+    """Nested controls in value lists should serialize with control metadata."""
+
+    @ft.value
+    class TestConfiguration:
+        controls: list[ft.Control] | None = None
+
+    value = TestConfiguration(controls=[ft.Text("A")])
+    packed = msgpack.packb(
+        value,
+        default=configure_encode_object_for_msgpack(BaseControl),
+        use_bin_type=True,
+    )
+    encoded = msgpack.unpackb(packed, raw=False)
+
+    assert encoded["controls"][0]["_c"] == "Text"
+    assert encoded["controls"][0]["value"] == "A"
+
+
+def test_controls_inside_value_objects_keep_nearest_control_parent():
+    """Controls nested in value objects should still belong to their host control."""
+
+    @ft.value
+    class TestConfiguration:
+        controls: list[ft.Control] | None = None
+
+    @control("HostControl")
+    class HostControl(BaseControl):
+        configuration: TestConfiguration | None = None
+
+    nested = ft.IconButton(icon=ft.Icons.PLAY_ARROW, on_click=lambda _: None)
+    host = HostControl(configuration=TestConfiguration(controls=[nested]))
+
+    ObjectPatch.from_diff(None, host, control_cls=BaseControl)
+
+    assert nested.parent is host
+
+    host = HostControl()
+    ObjectPatch.from_diff(None, host, control_cls=BaseControl)
+    nested = ft.IconButton(icon=ft.Icons.PLAY_ARROW, on_click=lambda _: None)
+    host.configuration = TestConfiguration(controls=[nested])
+
+    ObjectPatch.from_diff(host, host, control_cls=BaseControl)
+
+    assert nested.parent is host
 
 
 def test_page_patch_dataclass():
@@ -157,7 +255,7 @@ def test_page_patch_dataclass():
     print("Message 2:", msg)
 
 
-def test_changes_track_original_value_without_tuple_growth():
+def test_dirty_tracks_changed_fields_and_clears_after_diff():
     @control("DirtyTrackControl")
     class DirtyTrackControl(BaseControl):
         value: int = 0
@@ -170,12 +268,11 @@ def test_changes_track_original_value_without_tuple_growth():
     c.value = 1
     c.value = 2
 
-    changes = getattr(c, "__changes")
-    assert changes["value"] == 0
+    assert "value" in c._dirty
 
     patch, _, _ = ObjectPatch.from_diff(c, c, control_cls=BaseControl)
 
-    assert changes == {}
+    assert len(c._dirty) == 0
     assert any(
         op["op"] == "replace" and op["path"] == ["value"] and op["value"] == 2
         for op in patch.patch

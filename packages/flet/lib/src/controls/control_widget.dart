@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 
 import '../flet_backend.dart';
 import '../models/control.dart';
@@ -14,6 +14,14 @@ import '../widgets/error.dart';
 /// - Delegates widget creation to registered extensions.
 /// - Builds the result in this control's standard "control context":
 ///   [ControlInheritedNotifier] (reactivity) and per-control theme overrides.
+/// Identifies a child [ControlWidget] among its siblings by control id.
+///
+/// Its own type, so it never equals a user's `key` (a `ValueKey<int>` with the
+/// same number), which Flet applies to the widget the control builds.
+class ControlIdKey extends ValueKey<int> {
+  const ControlIdKey(super.value);
+}
+
 class ControlWidget extends StatelessWidget {
   final Control control;
 
@@ -29,7 +37,7 @@ class ControlWidget extends StatelessWidget {
       FletBackend.of(context).globalKeys[controlKey.toString()] =
           key as GlobalKey;
     } else if (controlKey != null) {
-      key = ValueKey(controlKey.value);
+      key = valueKeyFromValue(controlKey.value);
     }
 
     return control.buildInControlContext((context) {

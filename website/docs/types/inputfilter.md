@@ -1,0 +1,28 @@
+---
+title: "InputFilter"
+---
+
+import {ClassAll} from '@site/src/components/crocodocs';
+
+<ClassAll name="flet.InputFilter" />
+
+## Predefined filters
+
+<ClassAll name="flet.NumbersOnlyInputFilter" showRootHeading={true} />
+<ClassAll name="flet.TextOnlyInputFilter" showRootHeading={true} />
+
+## Usage example
+
+```python
+ft.CupertinoTextField(
+    placeholder_text="Only numbers are allowed",
+    input_filter=ft.InputFilter(allow=True, regex_string=r"^[0-9]*$", replacement_string="")
+)
+```
+
+```python
+ft.TextField(
+    label="Only letters are allowed",
+    input_filter=ft.TextOnlyInputFilter()
+)
+```

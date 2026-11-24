@@ -1,0 +1,26 @@
+[project]
+name = "markdown-code-syntax-highlight"
+version = "1.0.0"
+description = "Displays Markdown with syntax-highlighted code blocks and custom monospace font style."
+requires-python = ">=3.10"
+keywords = ["markdown", "syntax highlight", "code theme", "fonts"]
+authors = [{ name = "Flet team", email = "hello@flet.dev" }]
+dependencies = ["flet"]
+
+[dependency-groups]
+dev = ["flet-cli", "flet-desktop", "flet-web"]
+
+[tool.flet.gallery]
+categories = ["Displays/Markdown"]
+
+[tool.flet.metadata]
+title = "Code syntax highlight"
+controls = ["SafeArea", "Markdown", "MarkdownStyleSheet", "TextStyle"]
+layout_pattern = "article"
+complexity = "basic"
+features = ["code syntax highlighting", "custom code font", "link tap callback"]
+
+[tool.flet]
+org = "dev.flet"
+company = "Flet"
+copyright = "Copyright (C) 2023-2026 by Flet"

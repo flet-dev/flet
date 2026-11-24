@@ -1,5 +1,4 @@
 import 'package:flet/flet.dart';
-import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_map/flutter_map.dart';
 
@@ -34,8 +33,8 @@ class TileLayerControl extends StatelessWidget {
           control.get<List>("subdomains")?.map((e) => e.toString()).toList() ??
               const ['a', 'b', 'c'],
       tileProvider: NetworkTileProvider(),
-      tileDisplay: parseTileDisplay(
-          control.get("display_mode"), const TileDisplay.fadeIn())!,
+      tileDisplay:
+          control.getTileDisplay("display_mode", const TileDisplay.fadeIn())!,
       tileDimension: control.getInt("tile_size", 256)!,
       userAgentPackageName:
           control.getString("user_agent_package_name", 'unknown')!,
@@ -46,13 +45,12 @@ class TileLayerControl extends StatelessWidget {
       keepBuffer: control.getInt("keep_buffer", 2)!,
       panBuffer: control.getInt("pan_buffer", 1)!,
       tms: control.getBool("enable_tms", false)!,
-      tileBounds: parseLatLngBounds(control.get("tile_bounds")),
+      tileBounds: control.getLatLngBounds("tile_bounds"),
       retinaMode: control.getBool("enable_retina_mode"),
       maxZoom: control.getDouble("max_zoom", double.infinity)!,
       minZoom: control.getDouble("min_zoom", 0)!,
-      evictErrorTileStrategy: parseEvictErrorTileStrategy(
-          control.getString("evict_error_tile_strategy"),
-          EvictErrorTileStrategy.none)!,
+      evictErrorTileStrategy: control.getEvictErrorTileStrategy(
+          "evict_error_tile_strategy", EvictErrorTileStrategy.none)!,
       errorImage: errorImage,
       errorTileCallback: (TileImage t, Object o, StackTrace? s) {
         control.triggerEvent("image_error", o.toString());
@@ -61,9 +59,9 @@ class TileLayerControl extends StatelessWidget {
               .get<Map>("additional_options")
               ?.map((k, v) => MapEntry(k.toString(), v.toString())) ??
           const {},
-      wmsOptions: parseWMSTileLayerOptions(control.get("wms_configuration")),
+      wmsOptions: control.getWMSTileLayerOptions("wms_configuration"),
     );
 
-    return LayoutControl(control: control, child: tileLayer);
+    return BaseControl(control: control, child: tileLayer);
   }
 }

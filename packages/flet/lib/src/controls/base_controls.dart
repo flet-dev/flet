@@ -1,6 +1,6 @@
 import 'dart:async';
 
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:flutter/rendering.dart';
 
 import '../extensions/control.dart';
@@ -40,6 +40,14 @@ class LayoutControl extends StatelessWidget {
     required this.child,
   });
 
+  /// Applies the size-affecting properties to an offstage measurement copy.
+  static Widget measure(Control control, Widget child) {
+    var widget = _directionality(child, control);
+    widget = _sizedControl(widget, control, animate: false);
+    widget = _aspectRatio(widget, control);
+    return _marginControl(widget, control, animate: false);
+  }
+
   @override
   Widget build(BuildContext context) {
     Widget w = _opacity(context, child, control);
@@ -53,9 +61,11 @@ class LayoutControl extends StatelessWidget {
     w = _transformedControl(w, control);
     w = _aspectRatio(w, control);
     w = _alignedControl(context, w, control);
-    w = _marginControl(context, w, control);
-    w = _positionedControl(context, w, control);
+    w = _marginControl(w, control);
+    // Inside the positioning: `Positioned` must be the direct child of the
+    // parent `Stack`, not of the badge's own one.
     w = _badge(w, Theme.of(context), control);
+    w = _positionedControl(context, w, control);
     w = _sizeChangeObserver(w, control);
     return _expandable(w, control);
   }
@@ -76,7 +86,7 @@ Widget _badge(Widget widget, ThemeData theme, Control control) {
 }
 
 Widget _sizeChangeObserver(Widget widget, Control control) {
-  if (!control.getBool("on_size_change", false)!) return widget;
+  if (!control.hasEventHandler("size_change")) return widget;
 
   // Opt-in size reporting to avoid extra layout work by default.
   return SizeChangeObserver(
@@ -118,20 +128,92 @@ Widget _opacity(BuildContext context, Widget widget, Control control) {
       duration: animation.duration,
       curve: animation.curve,
       opacity: opacity ?? 1.0,
-      onEnd: control.getBool("on_animation_end", false)!
+      onEnd: control.hasEventHandler("animation_end")
           ? () {
               control.triggerEvent("animation_end", "opacity");
             }
           : null,
       child: widget,
     );
-  } else if (opacity != null) {
-    return Opacity(
-      opacity: opacity,
-      child: widget,
-    );
   }
-  return widget;
+  // Always wrapped, also at the default 1.0 (not sent from Python): adding
+  // or removing the wrapper when opacity flips between 1 and something else
+  // changed the tree's shape, and Flutter rebuilt the whole subtree - an
+  // embedded app restarted, a text field lost its focus.
+  return _ControlOpacity(
+    opacity: opacity ?? 1.0,
+    child: widget,
+  );
+}
+
+/// [Opacity] without a layer at 1.0 or 0.0.
+///
+/// Flutter's [RenderOpacity] is a repaint boundary with its own
+/// [OpacityLayer] at any opacity above 0, 1.0 included. Wrapping every
+/// control in one gave each control a layer: a page of thousands of controls
+/// (a long DataTable) had thousands of layers, and the web engine walks all
+/// of them on every frame, so scrolling stuttered.
+class _ControlOpacity extends SingleChildRenderObjectWidget {
+  const _ControlOpacity({required this.opacity, super.child});
+
+  final double opacity;
+
+  @override
+  RenderObject createRenderObject(BuildContext context) =>
+      _RenderControlOpacity(opacity);
+
+  @override
+  void updateRenderObject(
+      BuildContext context, _RenderControlOpacity renderObject) {
+    renderObject.opacity = opacity;
+  }
+}
+
+class _RenderControlOpacity extends RenderProxyBox {
+  _RenderControlOpacity(double opacity)
+      : _alpha = Color.getAlphaFromOpacity(opacity);
+
+  int _alpha;
+
+  set opacity(double value) {
+    final alpha = Color.getAlphaFromOpacity(value);
+    if (alpha == _alpha) return;
+    final didNeedCompositing = alwaysNeedsCompositing;
+    final wasVisible = _alpha != 0;
+    _alpha = alpha;
+    if (didNeedCompositing != alwaysNeedsCompositing) {
+      markNeedsCompositingBitsUpdate();
+    }
+    markNeedsPaint();
+    if (wasVisible != (_alpha != 0)) markNeedsSemanticsUpdate();
+  }
+
+  @override
+  bool get alwaysNeedsCompositing =>
+      child != null && _alpha != 0 && _alpha != 255;
+
+  @override
+  bool paintsChild(RenderBox child) => _alpha != 0;
+
+  @override
+  void paint(PaintingContext context, Offset offset) {
+    if (child == null || _alpha == 0) {
+      layer = null;
+      return;
+    }
+    if (_alpha == 255) {
+      layer = null;
+      context.paintChild(child!, offset);
+      return;
+    }
+    layer = context.pushOpacity(offset, _alpha, super.paint,
+        oldLayer: layer as OpacityLayer?);
+  }
+
+  @override
+  void visitChildrenForSemantics(RenderObjectVisitor visitor) {
+    if (child != null && _alpha != 0) visitor(child!);
+  }
 }
 
 Widget _rotatedControl(BuildContext context, Widget widget, Control control) {
@@ -142,7 +224,7 @@ Widget _rotatedControl(BuildContext context, Widget widget, Control control) {
       tween: Tween<double>(end: rotationDetails?.angle ?? 0),
       duration: animation.duration,
       curve: animation.curve,
-      onEnd: control.getBool("on_animation_end", false)!
+      onEnd: control.hasEventHandler("animation_end")
           ? () {
               control.triggerEvent("animation_end", "rotation");
             }
@@ -178,7 +260,7 @@ Widget _scaledControl(BuildContext context, Widget widget, Control control) {
       tween: Tween<double>(end: scaleDetails?.scale ?? 1.0),
       duration: animation.duration,
       curve: animation.curve,
-      onEnd: control.getBool("on_animation_end", false)!
+      onEnd: control.hasEventHandler("animation_end")
           ? () {
               control.triggerEvent("animation_end", "scale");
             }
@@ -218,7 +300,7 @@ Widget _offsetControl(BuildContext context, Widget widget, Control control) {
       tween: Tween<Offset>(end: Offset(offsetDetails.x, offsetDetails.y)),
       duration: animation.duration,
       curve: animation.curve,
-      onEnd: control.getBool("on_animation_end", false)!
+      onEnd: control.hasEventHandler("animation_end")
           ? () {
               control.triggerEvent("animation_end", "offset");
             }
@@ -296,7 +378,7 @@ Widget _alignedControl(BuildContext context, Widget widget, Control control) {
       alignment: alignment,
       duration: animation.duration,
       curve: animation.curve,
-      onEnd: control.getBool("on_animation_end", false)!
+      onEnd: control.hasEventHandler("animation_end")
           ? () {
               control.triggerEvent("animation_end", "align");
             }
@@ -312,18 +394,18 @@ Widget _alignedControl(BuildContext context, Widget widget, Control control) {
   return widget;
 }
 
-Widget _marginControl(BuildContext context, Widget widget, Control control) {
+Widget _marginControl(Widget widget, Control control, {bool animate = true}) {
   final skipProps = control.internals?["skip_properties"] as List?;
   if (skipProps?.contains("margin") == true) return widget;
 
   var margin = control.getEdgeInsets("margin");
   var animation = control.getAnimation("animate_margin");
-  if (margin != null && animation != null) {
+  if (animate && margin != null && animation != null) {
     return AnimatedContainer(
       margin: margin,
       duration: animation.duration,
       curve: animation.curve,
-      onEnd: control.getBool("on_animation_end", false)!
+      onEnd: control.hasEventHandler("animation_end")
           ? () {
               control.triggerEvent("animation_end", "margin");
             }
@@ -385,19 +467,65 @@ Widget _positionedControl(
   return widget;
 }
 
-Widget _sizedControl(Widget widget, Control control) {
-  final skipProps = control.internals?['skip_properties'] as List?;
-  if (skipProps != null && ['width', 'height'].any(skipProps.contains)) {
+/// Applies the control's size, its size animation and its min/max constraints
+/// to [widget].
+Widget _sizedControl(Widget widget, Control control, {bool animate = true}) {
+  final skipProps =
+      (control.internals?['skip_properties'] as List?) ?? const [];
+  if (!['width', 'height'].any(skipProps.contains)) {
+    widget = _fixedSizeControl(widget, control, animate: animate);
+  }
+  return _constrainedControl(widget, control, skipProps);
+}
+
+/// Applies `min_width`/`max_width`/`min_height`/`max_height` as a
+/// [ConstrainedBox] around the control (outside any fixed size, so a fixed
+/// `width` is clamped into the range). Resolved by Flutter on every layout
+/// pass - unlike sizes computed in Python from `page.width`, it can't lag
+/// behind a resizing window. A control that implements one of these names
+/// itself lists it in `skip_properties`.
+Widget _constrainedControl(Widget widget, Control control, List skipProps) {
+  double? value(String name) =>
+      skipProps.contains(name) ? null : control.getDouble(name);
+
+  final minWidth = value("min_width");
+  final maxWidth = value("max_width");
+  final minHeight = value("min_height");
+  final maxHeight = value("max_height");
+  if (minWidth == null &&
+      maxWidth == null &&
+      minHeight == null &&
+      maxHeight == null) {
     return widget;
   }
 
+  final minW = minWidth ?? 0.0;
+  final minH = minHeight ?? 0.0;
+  return ConstrainedBox(
+    constraints: BoxConstraints(
+      minWidth: minW,
+      // A max below the min would be an invalid constraint; the min wins.
+      maxWidth: maxWidth == null
+          ? double.infinity
+          : (maxWidth < minW ? minW : maxWidth),
+      minHeight: minH,
+      maxHeight: maxHeight == null
+          ? double.infinity
+          : (maxHeight < minH ? minH : maxHeight),
+    ),
+    child: widget,
+  );
+}
+
+Widget _fixedSizeControl(Widget widget, Control control,
+    {required bool animate}) {
   final width = control.getDouble("width");
   final height = control.getDouble("height");
   final animationSize = control.getAnimation("animate_size");
 
   final hasFixedSize = width != null || height != null;
 
-  if (animationSize != null) {
+  if (animate && animationSize != null) {
     return hasFixedSize
         ? AnimatedContainer(
             duration: animationSize.duration,
@@ -441,7 +569,7 @@ class _SizeChangeObserverState extends State<SizeChangeObserver> {
   Timer? _timer;
 
   void _onSizeChanged(Size size) {
-    if (!mounted || widget.control.getBool("on_size_change", false) != true) {
+    if (!mounted || !widget.control.hasEventHandler("size_change")) {
       return;
     }
 
@@ -477,7 +605,7 @@ class _SizeChangeObserverState extends State<SizeChangeObserver> {
     final remaining = interval - (now - _lastDispatch);
     final delay = Duration(milliseconds: remaining > 0 ? remaining : 0);
     _timer = Timer(delay, () {
-      if (!mounted || !widget.control.getBool("on_size_change", false)!) {
+      if (!mounted || !widget.control.hasEventHandler("size_change")) {
         return;
       }
       final size = _pendingSize;
@@ -486,6 +614,27 @@ class _SizeChangeObserverState extends State<SizeChangeObserver> {
       }
       _dispatchSize(size, DateTime.now().millisecondsSinceEpoch);
     });
+  }
+
+  @override
+  void didUpdateWidget(covariant SizeChangeObserver oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    if (oldWidget.control.id != widget.control.id) {
+      // Flutter reused this widget for a different control (same type and
+      // position, e.g. a new page swapped into the same slot). The render
+      // object only reports when *its* size changes, so at an unchanged size
+      // the new control would never hear its size. Report it once.
+      _lastSize = null;
+      _pendingSize = null;
+      _timer?.cancel();
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        if (!mounted) return;
+        final box = context.findRenderObject();
+        if (box is RenderBox && box.hasSize) {
+          _onSizeChanged(box.size);
+        }
+      });
+    }
   }
 
   @override
@@ -520,21 +669,23 @@ class MeasureSize extends SingleChildRenderObjectWidget {
 
 class _MeasureSizeRenderObject extends RenderProxyBox {
   ValueChanged<Size> onChange;
-  Size? _lastSize;
+  Size? _reportedSize;
+  bool _reportScheduled = false;
 
   _MeasureSizeRenderObject(this.onChange);
 
   @override
   void performLayout() {
     super.performLayout();
-    // Post-frame to avoid re-entrant layout callbacks.
-    final newSize = child?.size ?? size;
-    if (_lastSize == newSize) {
-      return;
-    }
-    _lastSize = newSize;
+    // A parent can measure the child and lay it out again in the same frame.
+    // Report the size that was actually painted.
+    if (_reportScheduled || size == _reportedSize) return;
+    _reportScheduled = true;
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      onChange(newSize);
+      _reportScheduled = false;
+      if (!attached || size == _reportedSize) return;
+      _reportedSize = size;
+      onChange(size);
     });
   }
 }

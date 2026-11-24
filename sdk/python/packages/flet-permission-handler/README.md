@@ -3,10 +3,14 @@
 [![pypi](https://img.shields.io/pypi/v/flet-permission-handler.svg)](https://pypi.python.org/pypi/flet-permission-handler)
 [![downloads](https://static.pepy.tech/badge/flet-permission-handler/month)](https://pepy.tech/project/flet-permission-handler)
 [![python](https://img.shields.io/badge/python-%3E%3D3.10-%2334D058)](https://pypi.org/project/flet-permission-handler)
-[![docstring coverage](https://docs.flet.dev/assets/badges/docs-coverage/flet-permission-handler.svg)](https://docs.flet.dev/assets/badges/docs-coverage/flet-permission-handler.svg)
+[![docstring coverage](https://flet.dev/docs/assets/badges/docs-coverage/flet-permission-handler.svg)](https://flet.dev/docs/assets/badges/docs-coverage/flet-permission-handler.svg)
 [![license](https://img.shields.io/badge/License-Apache_2.0-green.svg)](https://github.com/flet-dev/flet/blob/main/sdk/python/packages/flet-permission-handler/LICENSE)
 
 A [Flet](https://flet.dev) extension that simplifies working with device permissions.
+
+> **[Try flet-permission-handler in Flet Studio](https://studio.flet.dev/gallery/utility/permissionhandler/example/extensions/permission_handler/permission_handler?utm_source=pypi&utm_medium=readme&utm_campaign=flet-permission-handler)**
+>
+> Prototype your Flet app interface in the browser, then configure and test device permissions in your local project. Write your own Python code or get help from the AI agent.
 
 It is based on the [permission_handler](https://pub.dev/packages/permission_handler) Flutter package
 and brings similar functionality to Flet, including:
@@ -17,7 +21,7 @@ and brings similar functionality to Flet, including:
 
 ## Documentation
 
-Detailed documentation to this package can be found [here](https://docs.flet.dev/permission-handler/).
+Detailed documentation to this package can be found [here](https://flet.dev/docs/services/permissionhandler/).
 
 ## Platform Support
 
@@ -44,4 +48,4 @@ To install the `flet-permission-handler` package and add it to your project depe
 
 ### Examples
 
-For examples, see [these](https://github.com/flet-dev/flet/tree/main/sdk/python/examples/services/permission_handler).
+For examples, see [these](https://github.com/flet-dev/flet/tree/main/sdk/python/examples/extensions/permission_handler).

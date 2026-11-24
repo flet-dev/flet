@@ -57,6 +57,62 @@ async def test_basic(flet_app: ftt.FletTestApp, request):
     )
 
 
+@pytest.mark.parametrize(
+    "key",
+    [
+        "menu-item-key",
+        42,
+        42.5,
+        True,
+        ft.ValueKey("menu-item-key"),
+        ft.ValueKey(42),
+        ft.ValueKey(42.5),
+        ft.ValueKey(True),
+    ],
+    ids=[
+        "str",
+        "int",
+        "float",
+        "bool",
+        "value-str",
+        "value-int",
+        "value-float",
+        "value-bool",
+    ],
+)
+@pytest.mark.parametrize(
+    "checked", [None, False, True], ids=["plain", "unchecked", "checked"]
+)
+@pytest.mark.asyncio(loop_scope="function")
+async def test_item_find_by_key(flet_app: ftt.FletTestApp, key, checked):
+    clicked = []
+    flet_app.page.add(
+        ft.PopupMenuButton(
+            key="keyed-menu",
+            items=[
+                ft.PopupMenuItem(
+                    content="Keyed item",
+                    key=key,
+                    checked=checked,
+                    on_click=lambda e: clicked.append(e.data),
+                )
+            ],
+        )
+    )
+    tester = flet_app.tester
+    await tester.pump_and_settle()
+    assert (await tester.find_by_key(key)).count == 0
+    await tester.tap(await tester.find_by_key("keyed-menu"))
+    await tester.pump_and_settle()
+
+    finder = await tester.find_by_key(key)
+    assert finder.count == 1
+    await tester.tap(finder)
+    await tester.pump_and_settle()
+    assert clicked == [None if checked is None else not checked]
+    assert (await tester.find_by_key(key)).count == 0
+
+
 @pytest.mark.asyncio(loop_scope="function")
 async def test_theme(flet_app: ftt.FletTestApp, request):
     pb = ft.PopupMenuButton(

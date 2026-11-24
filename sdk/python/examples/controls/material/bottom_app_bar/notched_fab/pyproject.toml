@@ -1,0 +1,26 @@
+[project]
+name = "bottom-app-bar-notched-fab"
+version = "1.0.0"
+description = "BottomAppBar with a notched centered FloatingActionButton."
+requires-python = ">=3.10"
+keywords = ["bottom app bar", "navigation", "floating action button", "notch", "material"]
+authors = [{ name = "Flet team", email = "hello@flet.dev" }]
+dependencies = ["flet"]
+
+[dependency-groups]
+dev = ["flet-cli", "flet-desktop", "flet-web"]
+
+[tool.flet.gallery]
+categories = ["Navigation/BottomAppBar"]
+
+[tool.flet.metadata]
+title = "Notched FloatingActionButton"
+controls = ["BottomAppBar", "FloatingActionButton", "Row", "IconButton", "Container", "SafeArea", "Column", "Text"]
+layout_pattern = "navigation"
+complexity = "basic"
+features = ["center docked FAB", "notched app bar", "app bar actions"]
+
+[tool.flet]
+org = "dev.flet"
+company = "Flet"
+copyright = "Copyright (C) 2023-2026 by Flet"

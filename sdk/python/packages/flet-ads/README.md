@@ -3,16 +3,20 @@
 [![pypi](https://img.shields.io/pypi/v/flet-ads.svg)](https://pypi.python.org/pypi/flet-ads)
 [![downloads](https://static.pepy.tech/badge/flet-ads/month)](https://pepy.tech/project/flet-ads)
 [![python](https://img.shields.io/badge/python-%3E%3D3.10-%2334D058)](https://pypi.org/project/flet-ads)
-[![docstring coverage](https://docs.flet.dev/assets/badges/docs-coverage/flet-ads.svg)](https://docs.flet.dev/assets/badges/docs-coverage/flet-ads.svg)
+[![docstring coverage](https://flet.dev/docs/assets/badges/docs-coverage/flet-ads.svg)](https://flet.dev/docs/assets/badges/docs-coverage/flet-ads.svg)
 [![license](https://img.shields.io/badge/License-Apache_2.0-green.svg)](https://github.com/flet-dev/flet/blob/main/sdk/python/packages/flet-ads/LICENSE)
 
 Display Google Ads in [Flet](https://flet.dev) apps.
+
+> **[Try Flet online in Flet Studio](https://studio.flet.dev/?utm_source=pypi&utm_medium=readme&utm_campaign=flet-ads)**
+>
+> Prototype your Flet app interface in the browser, then add mobile ads in your local project. Write your own Python code or get help from the AI agent.
 
 It is based on the [google_mobile_ads](https://pub.dev/packages/google_mobile_ads) Flutter package.
 
 ## Documentation
 
-Detailed documentation to this package can be found [here](https://docs.flet.dev/ads/).
+Detailed documentation to this package can be found [here](https://flet.dev/docs/controls/ads/).
 
 ## Platform Support
 
@@ -39,4 +43,4 @@ To install the `flet-ads` package and add it to your project dependencies:
 
 ### Examples
 
-For examples, see [these](https://github.com/flet-dev/flet/tree/main/sdk/python/examples/controls/ads).
+For examples, see [these](https://github.com/flet-dev/flet/tree/main/sdk/python/examples/extensions/ads).

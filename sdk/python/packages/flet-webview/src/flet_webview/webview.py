@@ -1,6 +1,10 @@
+import sys
 from typing import Optional
 
-from typing_extensions import Self
+if sys.version_info >= (3, 11):
+    from typing import Self
+else:
+    from typing_extensions import Self
 
 import flet as ft
 from flet_webview.types import (
@@ -26,7 +30,16 @@ class WebView(ft.LayoutControl):
     """
 
     url: Optional[str] = None
-    """The URL of the web page to load."""
+    """
+    The URL of the web page to load.
+
+    Note:
+        A `file://` URL pointing to a local file is supported on the following
+        platforms only: iOS, Android, and macOS. It loads that file's sibling
+        assets (scripts, stylesheets, images) as well, and is equivalent to
+        calling :meth:`load_file` with the same file once this control is
+        mounted. On web, only URLs the browser can load in an iframe work.
+    """
 
     prevent_links: Optional[list[str]] = None
     """List of url-prefixes that should not be followed/loaded/downloaded."""
@@ -38,7 +51,7 @@ class WebView(ft.LayoutControl):
     """
     Fires soon as the first loading process of the webview page is started.
 
-    The [`data`][flet.Event.] property of the event handler argument is of type
+    The :attr:`~flet.Event.data` property of the event handler argument is of type
     `str` and contains the URL.
 
     Note:
@@ -49,7 +62,7 @@ class WebView(ft.LayoutControl):
     """
     Fires when all the webview page loading processes are ended.
 
-    The [`data`][flet.Event.] property of the event handler argument is of type
+    The :attr:`~flet.Event.data` property of the event handler argument is of type
     `str` and contains the URL.
 
     Note:
@@ -60,7 +73,7 @@ class WebView(ft.LayoutControl):
     """
     Fires when there is error with loading a webview page resource.
 
-    The [`data`][flet.Event.] property of the event handler argument is of type
+    The :attr:`~flet.Event.data` property of the event handler argument is of type
     `str` and contains the error message.
 
     Note:
@@ -71,7 +84,7 @@ class WebView(ft.LayoutControl):
     """
     Fires when the progress of the webview page loading is changed.
 
-    The [`data`][flet.Event.] property of the event handler argument is of type
+    The :attr:`~flet.Event.data` property of the event handler argument is of type
     `int` and contains the progress value.
 
     Note:
@@ -82,7 +95,7 @@ class WebView(ft.LayoutControl):
     """
     Fires when the URL of the webview page is changed.
 
-    The [`data`][flet.Event.] property of the event handler argument is of type
+    The :attr:`~flet.Event.data` property of the event handler argument is of type
     `str` and contains the new URL.
 
     Note:
@@ -177,7 +190,7 @@ class WebView(ft.LayoutControl):
     async def go_forward(self):
         """
         Goes forward in the history of the webview,
-        if [`can_go_forward()`][(c).can_go_forward] is `True`.
+        if :meth:`can_go_forward` is `True`.
 
         Note:
             Works only on the following platforms: iOS, Android, and macOS.
@@ -292,8 +305,9 @@ class WebView(ft.LayoutControl):
         Makes an HTTP request and loads the response in the webview.
 
         Args:
-            url: The URL to load.
-            method: The HTTP method to use.
+            url: The URL to load. A `file://` URL is loaded as a local file,
+                the same way :meth:`load_file` does.
+            method: The HTTP method to use. Ignored for `file://` URLs.
 
         Note:
             Works only on the following platforms: iOS, Android, and macOS.
@@ -329,6 +343,8 @@ class WebView(ft.LayoutControl):
         Args:
             value: The HTML string to load.
             base_url: The base URL to use when resolving relative URLs within the value.
+                May be a `file://` URL, in which case the referenced local files are
+                made readable to the webview.
         """
         self._check_mobile_or_mac_platform()
         await self._invoke_method(
@@ -379,6 +395,8 @@ class WebView(ft.LayoutControl):
             - Works only on the following platforms: iOS, Android, and macOS.
             - Disabling the JavaScript execution on the page may result to
                 unexpected web page behaviour.
+            - Defaults to :attr:`flet_webview.JavaScriptMode.UNRESTRICTED`,
+                which is applied before the first page load.
 
         Args:
             mode: The JavaScript mode to set.

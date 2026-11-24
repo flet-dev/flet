@@ -9,9 +9,9 @@ __all__ = ["PolylineLayer", "PolylineMarker"]
 
 
 @ft.control("PolylineMarker")
-class PolylineMarker(ft.Control):
+class PolylineMarker(ft.BaseControl):
     """
-    A marker for the [`PolylineLayer`][(p).].
+    A marker for the :class:`~flet_map.PolylineLayer`.
     """
 
     coordinates: list[MapLatitudeLongitude]
@@ -21,7 +21,7 @@ class PolylineMarker(ft.Control):
 
     colors_stop: Optional[list[ft.Number]] = None
     """
-    The stops for the [`gradient_colors`][(c).].
+    The stops for the :attr:`gradient_colors`.
     """
 
     gradient_colors: Optional[list[ft.ColorValue]] = None
@@ -76,6 +76,11 @@ class PolylineMarker(ft.Control):
     Style to use for line segment joins.
     """
 
+    visible: bool = True
+    """
+    Whether this marker is rendered on the map.
+    """
+
     def before_update(self):
         super().before_update()
         if self.border_stroke_width < 0:
@@ -93,12 +98,12 @@ class PolylineMarker(ft.Control):
 @ft.control("PolylineLayer")
 class PolylineLayer(MapLayer):
     """
-    A layer to display [`PolylineMarker`][(p).]s.
+    A layer to display :class:`~flet_map.PolylineMarker`s.
     """
 
     polylines: list[PolylineMarker]
     """
-    List of [`PolylineMarker`][(p).]s to be drawn.
+    List of :class:`~flet_map.PolylineMarker`s to be drawn.
     """
 
     culling_margin: ft.Number = 10.0

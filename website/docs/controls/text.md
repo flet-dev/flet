@@ -1,0 +1,39 @@
+---
+class_name: "flet.Text"
+examples: "controls/core/text"
+example_images: "test-images/examples/controls/core/golden/macos/text"
+example_media: "examples/controls/core/text/media"
+title: "Text"
+---
+
+import {ClassMembers, ClassSummary, CodeExample, Image} from '@site/src/components/crocodocs';
+
+<ClassSummary name={frontMatter.class_name} image={frontMatter.example_images + '/image_for_docs.png'} imageCaption="Text" imageWidth="30%"/>
+
+## Examples
+
+<CodeExample path={frontMatter.examples + '/custom_styles/main.py'} language="python" />
+
+<Image src={frontMatter.example_media + '/custom_styles.gif'} width="40%" />
+
+<CodeExample path={frontMatter.examples + '/text_theme_styles/main.py'} language="python" />
+
+<Image src={frontMatter.example_media + '/text_theme_styles.png'} width="40%" />
+
+<CodeExample path={frontMatter.examples + '/variable_font_weight/main.py'} language="python" />
+
+<Image src={frontMatter.example_media + '/variable_font_weight.gif'} width="40%" />
+
+<CodeExample path={frontMatter.examples + '/rich_text/main.py'} language="python" />
+
+<Image src={frontMatter.example_media + '/rich_text_basic.png'} width="55%" />
+
+<CodeExample path={frontMatter.examples + '/rich_text_border_stroke/main.py'} language="python" />
+
+<Image src={frontMatter.example_media + '/rich_text_border_stroke.png'} width="55%" />
+
+<CodeExample path={frontMatter.examples + '/rich_text_gradient/main.py'} language="python" />
+
+<Image src={frontMatter.example_media + '/rich_text_gradient.png'} width="55%" />
+
+<ClassMembers name={frontMatter.class_name} />

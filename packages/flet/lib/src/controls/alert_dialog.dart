@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 
 import '../extensions/control.dart';
 import '../models/control.dart';
@@ -13,10 +13,24 @@ import '../widgets/control_inherited_notifier.dart';
 import '../widgets/error.dart';
 import 'base_controls.dart';
 
-class AlertDialogControl extends StatelessWidget {
+class AlertDialogControl extends StatefulWidget {
   final Control control;
 
   const AlertDialogControl({super.key, required this.control});
+
+  @override
+  State<AlertDialogControl> createState() => _AlertDialogControlState();
+}
+
+class _AlertDialogControlState extends State<AlertDialogControl> {
+  // Route this widget pushed via `showDialog`.  Kept as state so the
+  // dismiss path can pop *this* dialog specifically (via removeRoute)
+  // instead of relying on `Navigator.pop()` which targets the topmost
+  // route — that breaks when a sibling `use_dialog` host has already
+  // appended a newer dialog above ours.
+  ModalRoute? _dialogRoute;
+
+  Control get control => widget.control;
 
   Widget _createAlertDialog(BuildContext context) {
     return ControlInheritedNotifier(
@@ -43,8 +57,7 @@ class AlertDialogControl extends StatelessWidget {
           buttonPadding: control.getPadding("action_button_padding"),
           shadowColor: control.getColor("shadow_color", context),
           elevation: control.getDouble("elevation"),
-          clipBehavior:
-              parseClip(control.getString("clip_behavior"), Clip.none)!,
+          clipBehavior: control.getClipBehavior("clip_behavior", Clip.none)!,
           icon: control.buildIconOrWidget("icon"),
           iconColor: control.getColor("icon_color", context),
           scrollable: control.getBool("scrollable", false)!,
@@ -103,22 +116,38 @@ class AlertDialogControl extends StatelessWidget {
             useSafeArea: false,
             useRootNavigator: false,
             context: context,
-            builder: (context) => _createAlertDialog(context)).then((value) {
-          debugPrint("Dismissing AlertDialog(${control.id})");
-          control.updateProperties({"_open": false}, python: false);
-          control.updateProperties({"open": false});
-          control.triggerEvent("dismiss");
+            builder: (context) {
+              _dialogRoute ??= ModalRoute.of(context);
+              return _createAlertDialog(context);
+            }).then((value) {
+          final route = _dialogRoute;
+          _dialogRoute = null;
+          // showDialog future completes on pop() — before the exit animation
+          // finishes.  Wait for the route's transition to fully complete so
+          // the dismiss event fires after the closing animation ends.
+          (route?.completed ?? Future.value()).then((_) {
+            debugPrint("Dismissing AlertDialog(${control.id})");
+            control.updateProperties({"_open": false}, python: false);
+            control.updateProperties({"open": false});
+            control.triggerEvent("dismiss");
+          });
         });
       });
     } else if (!open && lastOpen) {
-      if (Navigator.of(context).canPop() == true) {
-        debugPrint(
-            "AlertDialog(${control.id}): Closing dialog managed by this widget.");
-        Navigator.of(context).pop();
-        control.updateProperties({"_open": false}, python: false);
-      } else {
-        debugPrint(
-            "AlertDialog(${control.id}): Dialog was not opened by this widget, skipping pop.");
+      // Mark closed now so this branch doesn't re-fire, then close this
+      // dialog's own route after the frame. Popping during build throws
+      // "setState() called during build" when the same frame opens another
+      // route/overlay (e.g. a SnackBar). Targeting `_dialogRoute` (not the
+      // topmost route) keeps this from racing `View`'s confirm-pop, which now
+      // also pops its own route — see `test_pop_view_confirm`. `_dialogRoute`
+      // is left set so the open path's `.then` still fires `dismiss` after the
+      // close animation completes.
+      control.updateProperties({"_open": false}, python: false);
+      final route = _dialogRoute;
+      if (route != null) {
+        WidgetsBinding.instance.addPostFrameCallback((_) {
+          closeModalRoute(route);
+        });
       }
     }
     return const SizedBox.shrink();

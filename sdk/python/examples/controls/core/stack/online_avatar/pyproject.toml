@@ -1,0 +1,26 @@
+[project]
+name = "stack-online-avatar"
+version = "1.0.0"
+description = "Overlays an online-status badge on top of a profile avatar using Stack."
+requires-python = ">=3.10"
+keywords = ["stack", "avatar", "status", "overlay", "badge"]
+authors = [{ name = "Flet team", email = "hello@flet.dev" }]
+dependencies = ["flet"]
+
+[dependency-groups]
+dev = ["flet-cli", "flet-desktop", "flet-web"]
+
+[tool.flet.gallery]
+categories = ["Layout/Stack"]
+
+[tool.flet.metadata]
+title = "Online avatar"
+controls = ["SafeArea", "Stack", "CircleAvatar", "Container"]
+layout_pattern = "overlay"
+complexity = "basic"
+features = ["status indicator"]
+
+[tool.flet]
+org = "dev.flet"
+company = "Flet"
+copyright = "Copyright (C) 2023-2026 by Flet"

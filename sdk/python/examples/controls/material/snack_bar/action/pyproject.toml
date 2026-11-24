@@ -1,0 +1,26 @@
+[project]
+name = "snack-bar-action"
+version = "1.0.0"
+description = "Compare simple and custom SnackBar actions opened from separate buttons."
+requires-python = ">=3.10"
+keywords = ["snackbar", "action", "button", "feedback"]
+authors = [{ name = "Flet team", email = "hello@flet.dev" }]
+dependencies = ["flet"]
+
+[dependency-groups]
+dev = ["flet-cli", "flet-desktop", "flet-web"]
+
+[tool.flet.gallery]
+categories = ["Dialogs/SnackBar"]
+
+[tool.flet.metadata]
+title = "SnackBar action"
+controls = ["SnackBar", "SnackBarAction", "Button", "Column", "SafeArea"]
+layout_pattern = "stacked-actions"
+complexity = "basic"
+features = ["simple action", "custom action"]
+
+[tool.flet]
+org = "dev.flet"
+company = "Flet"
+copyright = "Copyright (C) 2023-2026 by Flet"

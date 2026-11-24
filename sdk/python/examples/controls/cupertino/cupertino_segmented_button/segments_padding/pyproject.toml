@@ -1,0 +1,26 @@
+[project]
+name = "cupertino-segmented-button-segments-padding"
+version = "1.0.0"
+description = "Adjusts CupertinoSegmentedButton segment padding interactively using sliders."
+requires-python = ">=3.10"
+keywords = ["cupertino", "segmented button", "padding", "slider", "interactive"]
+authors = [{ name = "Flet team", email = "hello@flet.dev" }]
+dependencies = ["flet"]
+
+[dependency-groups]
+dev = ["flet-cli", "flet-desktop", "flet-web"]
+
+[tool.flet.gallery]
+categories = ["Buttons/CupertinoSegmentedButton"]
+
+[tool.flet.metadata]
+title = "Segments padding"
+controls = ["SafeArea", "Column", "CupertinoSegmentedButton", "Container", "Slider", "Text"]
+layout_pattern = "single-panel"
+complexity = "basic"
+features = ["interactive padding controls", "segment layout tuning", "selection callback"]
+
+[tool.flet]
+org = "dev.flet"
+company = "Flet"
+copyright = "Copyright (C) 2023-2026 by Flet"

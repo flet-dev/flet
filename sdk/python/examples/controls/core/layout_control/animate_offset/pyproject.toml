@@ -1,0 +1,26 @@
+[project]
+name = "layout-control-animate-offset"
+version = "1.0.0"
+description = "Reveals a container by animating its offset from off-screen to visible."
+requires-python = ">=3.10"
+keywords = ["layout control", "animate offset", "container", "animation"]
+authors = [{ name = "Flet team", email = "hello@flet.dev" }]
+dependencies = ["flet"]
+
+[dependency-groups]
+dev = ["flet-cli", "flet-desktop", "flet-web"]
+
+[tool.flet.gallery]
+categories = ["Layout/LayoutControl"]
+
+[tool.flet.metadata]
+title = "Animate offset"
+controls = ["SafeArea", "Column", "Container", "Button", "Animation"]
+layout_pattern = "single-panel"
+complexity = "basic"
+features = ["offset animation", "slide-in reveal"]
+
+[tool.flet]
+org = "dev.flet"
+company = "Flet"
+copyright = "Copyright (C) 2023-2026 by Flet"

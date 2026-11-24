@@ -1,0 +1,23 @@
+---
+class_name: "flet_charts.bar_chart.BarChart"
+examples: "extensions/charts/bar_chart"
+example_images: "test-images/examples/extensions/charts/golden/macos/bar_chart"
+diagram: "/docs/assets/controls/charts/bar-chart-diagram.svg"
+title: "BarChart"
+---
+
+import {ClassMembers, ClassSummary, CodeExample, Image} from '@site/src/components/crocodocs';
+
+<ClassSummary name={frontMatter.class_name} image={frontMatter.diagram} imageCaption="Bar chart" imageWidth="80%" />
+
+## Examples
+
+<CodeExample path={frontMatter.examples + '/interactive_bar_chart/main.py'} language="python" />
+
+<Image src={frontMatter.example_images + '/example_1.png'} width="65%" />
+
+<CodeExample path={frontMatter.examples + '/bar_chart_with_hover/main.py'} language="python" />
+
+<Image src={frontMatter.example_images + '/example_2.png'} width="65%" />
+
+<ClassMembers name={frontMatter.class_name} />

@@ -1,0 +1,26 @@
+---
+class_name: "flet.Checkbox"
+examples: "controls/material/checkbox"
+example_images: "test-images/examples/controls/material/golden/macos/checkbox"
+title: "Checkbox"
+---
+
+import {ClassMembers, ClassSummary, CodeExample, Image} from '@site/src/components/crocodocs';
+
+<ClassSummary name={frontMatter.class_name} image={frontMatter.example_images + '/image_for_docs.png'} imageCaption="Checkbox" imageWidth="12%"/>
+
+## Examples
+
+<CodeExample path={frontMatter.examples + '/checkbox/main.py'} language="python" />
+
+<Image src={frontMatter.example_images + '/basic.png'} alt="basic" width="50%" caption="After clicking Submit" />
+
+<CodeExample path={frontMatter.examples + '/handling_events/main.py'} language="python" />
+
+<Image src={frontMatter.example_images + '/handling_events.png'} alt="handling-events" width="35%" caption="After three clicks" />
+
+<CodeExample path={frontMatter.examples + '/styled/main.py'} language="python" />
+
+<Image src={frontMatter.example_images + '/styled_checkboxes_selected.png'} alt="Styled checkboxes" width="35%" />
+
+<ClassMembers name={frontMatter.class_name} />

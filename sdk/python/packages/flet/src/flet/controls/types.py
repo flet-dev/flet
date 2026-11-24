@@ -1,4 +1,4 @@
-from dataclasses import dataclass, field
+from dataclasses import field
 from enum import Enum
 from typing import (
     TYPE_CHECKING,
@@ -9,6 +9,7 @@ from typing import (
     Union,
 )
 
+from flet.controls.base_control import value
 from flet.controls.colors import Colors
 from flet.controls.cupertino.cupertino_colors import CupertinoColors
 from flet.controls.icon_data import IconData
@@ -20,32 +21,102 @@ if TYPE_CHECKING:
 
 class AppView(Enum):
     """
-    TBD
+    Defines how an app launched with :func:`flet.run` or :func:`flet.run_async`
+    should be displayed.
     """
 
     WEB_BROWSER = "web_browser"
+    """
+    Runs the app as a web server and opens it in the user's web browser.
+    """
+
     FLET_APP = "flet_app"
+    """
+    Runs the app in a Flet desktop window.
+    """
+
     FLET_APP_WEB = "flet_app_web"
+    """
+    Runs the app in a Flet desktop window backed by the web server mode.
+    """
+
     FLET_APP_HIDDEN = "flet_app_hidden"
+    """
+    Starts the Flet desktop window hidden.
+    """
 
 
 class WebRenderer(Enum):
     """
-    TBD
+    Selects which Flutter web renderer should be used for a web-hosted app.
+
+    Use this with the `web_renderer` argument of :func:`flet.run` or
+    :func:`flet.run_async`.
+
+    Note:
+        The available renderer choices depend on how the web frontend was built.
+        A default web build provides CanvasKit. A WebAssembly build can make both
+        CanvasKit and skwasm available.
     """
 
     AUTO = "auto"
+    """
+    Lets the runtime choose the renderer automatically.
+
+    In WebAssembly builds, Chromium-based browsers prefer skwasm and other
+    browsers fall back to CanvasKit; in default web builds, CanvasKit is used.
+    """
     CANVAS_KIT = "canvaskit"
+    """
+    Uses the CanvasKit renderer.
+
+    CanvasKit is broadly compatible with modern browsers and is the default
+    renderer for web builds. Compared to skwasm, it is significantly faster
+    at exchanging byte buffers between JavaScript and Dart, which Flet apps
+    do on every UI update.
+    """
     SKWASM = "skwasm"
+    """
+    Uses the skwasm renderer.
+
+    skwasm is available for WebAssembly web builds and can provide better
+    rendering performance, at the cost of slower byte-buffer exchange across
+    the JavaScript/Dart boundary. Browsers and servers must meet the
+    requirements for WebAssembly support, and multi-threaded rendering
+    additionally requires the necessary SharedArrayBuffer security setup.
+    """
 
 
 class RouteUrlStrategy(Enum):
     """
-    TBD
+    Controls how routes are represented in the browser URL for web apps.
+
+    Use this with the `route_url_strategy` argument of :func:`flet.run` or
+    :func:`flet.run_async`.
+
+    Note:
+        This setting affects web-hosted apps only.
     """
 
     PATH = "path"
+    """
+    Stores routes in the browser pathname.
+
+    URLs look like `https://example.com/store`.
+
+    Note:
+        This strategy usually requires the web server to rewrite unmatched requests to
+        `index.html` so deep links and page reloads continue to work.
+    """
     HASH = "hash"
+    """
+    Stores routes in the URL fragment after `#`.
+
+    URLs look like `https://example.com/#/store`.
+
+    This strategy is useful when you cannot configure the hosting server for
+    pathname-based routing.
+    """
 
 
 class UrlTarget(Enum):
@@ -53,7 +124,7 @@ class UrlTarget(Enum):
     Specifies where to open a URL.
     """
 
-    BLANK = "blank"
+    BLANK = "_blank"
     """
     Opens the URL in a new browser tab or window.
     """
@@ -74,7 +145,7 @@ class UrlTarget(Enum):
     """
 
 
-@dataclass
+@value
 class Url:
     """
     URL descriptor used by APIs that open links in a browser context.
@@ -152,26 +223,26 @@ class FontWeight(Enum):
     """
 
 
-@dataclass
+@value
 class NotchShape:
     """
     A shape with a notch in its outline.
 
     Typically used as the outline of a 'host' control to make a notch that
     accommodates a 'guest' control.
-    e.g the [`BottomAppBar`][flet.] may have a notch to accommodate
-    the [`FloatingActionButton`][flet.].
+    e.g the :class:`~flet.BottomAppBar` may have a notch to accommodate
+    the :class:`~flet.FloatingActionButton`.
 
     This class is not intended to be used directly. See usable derivatives:
 
-    - [`AutomaticNotchShape`][flet.]
-    - [`CircularRectangleNotchShape`][flet.]
+    - :class:`~flet.AutomaticNotchShape`
+    - :class:`~flet.CircularRectangleNotchShape`
     """
 
     _type: Optional[str] = field(init=False, repr=False, compare=False, default=None)
 
 
-@dataclass
+@value
 class CircularRectangleNotchShape(NotchShape):
     """
     A rectangle with a smooth circular notch.
@@ -186,14 +257,39 @@ class CircularRectangleNotchShape(NotchShape):
         self._type = "circular"
 
 
-@dataclass
+@value
 class AutomaticNotchShape(NotchShape):
     """
-    A notch sahpe created from [`ShapeBorder`][flet.]s.
+    A notch shape created from :class:`~flet.ShapeBorder` values.
+
+    It uses one shape as the outer outline and optionally subtracts a second shape
+    to form the notch. This is commonly used for controls such as
+    :class:`~flet.BottomAppBar` that need to make room for a floating action button.
     """
 
     host: "ShapeBorder"
+    """
+    The shape of the control that uses the notch.
+
+    This is typically the outer shape of the host control, such as a
+    :class:`~flet.BottomAppBar`.
+
+    Note:
+        The shape must not depend on text direction.
+    """
     guest: Optional["ShapeBorder"] = None
+    """
+    The shape to subtract from :attr:`host` to create the notch.
+
+    This is typically the shape of the control the notch should accommodate, such as
+    a :class:`~flet.FloatingActionButton`.
+
+    If this is `None`, no notch is cut out even when space for a guest control is
+    available.
+
+    Note:
+        The shape must not depend on text direction.
+    """
 
     def __post_init__(self):
         self._type = "auto"
@@ -201,10 +297,10 @@ class AutomaticNotchShape(NotchShape):
 
 class ResponsiveRowBreakpoint(Enum):
     """
-    Breakpoint names used by [`ResponsiveRow`][flet.] and responsive properties such \
-    as [`Control.col`][flet.].
+    Breakpoint names used by :class:`~flet.ResponsiveRow` and responsive properties \
+    such as :attr:`flet.Control.col`.
 
-    To define custom breakpoints, see [`ResponsiveRow.breakpoints`][flet.].
+    To define custom breakpoints, see :attr:`flet.ResponsiveRow.breakpoints`.
     """
 
     XS = "xs"
@@ -247,7 +343,7 @@ ResponsiveNumber = Union[dict[Union[str, ResponsiveRowBreakpoint], Number], Numb
 Represents either:
 - a single numeric value used for all breakpoints,
 - or a breakpoint-to-value mapping keyed by string or
-  [`ResponsiveRowBreakpoint`][flet.].
+  :class:`~flet.ResponsiveRowBreakpoint`.
 """
 
 
@@ -327,6 +423,9 @@ class VerticalAlignment(Enum):
     """
 
     NONE = None
+    """
+    Use the default vertical alignment.
+    """
 
     START = -1.0
     """
@@ -346,7 +445,8 @@ class VerticalAlignment(Enum):
 
 class LabelPosition(Enum):
     """
-    Position of label in a [`Checkbox`][flet.], [`Radio`][flet.] or [`Switch`][flet.]
+    Position of label in a :class:`~flet.Checkbox`, :class:`~flet.Radio` or
+    :class:`~flet.Switch`
     """
 
     RIGHT = "right"
@@ -362,40 +462,186 @@ class LabelPosition(Enum):
 
 class BlendMode(Enum):
     """
-    See [BlendMode](https://api.flutter.dev/flutter/dart-ui/BlendMode.html) from \
-    Flutter documentation for blend mode examples.
+    Algorithms used to combine source and destination pixels during painting.
+
+    The source is the content being drawn and the destination is the content already
+    present behind it.
     """
 
     CLEAR = "clear"
+    """
+    Drops both the source and destination, leaving a fully transparent result.
+    """
+
     COLOR = "color"
+    """
+    Takes the hue and saturation from the source and the luminosity from the
+    destination.
+    """
+
     COLOR_BURN = "colorBurn"
+    """
+    Darkens the destination by dividing the inverse destination by the source and
+    then inverting the result.
+    """
+
     COLOR_DODGE = "colorDodge"
+    """
+    Brightens the destination by dividing it by the inverse of the source.
+    """
+
     DARKEN = "darken"
+    """
+    Chooses the darker value from each source and destination color channel.
+    """
+
     DIFFERENCE = "difference"
+    """
+    Subtracts the smaller channel value from the larger one.
+
+    Compositing black has no effect, while compositing white inverts the other image.
+    """
+
     DST = "dst"
+    """
+    Drops the source and keeps only the destination.
+    """
+
     DST_A_TOP = "dstATop"
+    """
+    Draws the destination over the source, but only where they overlap.
+    """
+
     DST_IN = "dstIn"
+    """
+    Keeps the destination only where the source and destination overlap.
+
+    The source acts as an opacity mask.
+    """
+
     DST_OUT = "dstOut"
+    """
+    Keeps the destination only where the source and destination do not overlap.
+
+    The source acts as an opacity mask.
+    """
+
     DST_OVER = "dstOver"
+    """
+    Draws the source underneath the destination.
+    """
+
     EXCLUSION = "exclusion"
+    """
+    Produces an effect similar to :attr:`DIFFERENCE`, but softer.
+    """
+
     HARD_LIGHT = "hardLight"
+    """
+    Combines multiply and screen-style blending while favoring the source image.
+    """
+
     HUE = "hue"
+    """
+    Takes the hue from the source and the saturation and luminosity from the
+    destination.
+    """
+
     LIGHTEN = "lighten"
+    """
+    Chooses the lighter value from each source and destination color channel.
+    """
+
     LUMINOSITY = "luminosity"
+    """
+    Takes the luminosity from the source and the hue and saturation from the
+    destination.
+    """
+
     MODULATE = "modulate"
+    """
+    Multiplies the source and destination color channels without multiplying alpha.
+    """
+
     MULTIPLY = "multiply"
+    """
+    Multiplies the source and destination color channels, including alpha.
+    """
+
     OVERLAY = "overlay"
+    """
+    Combines multiply and screen-style blending while favoring the destination image.
+    """
+
     PLUS = "plus"
+    """
+    Adds the source and destination channel values together.
+
+    This is useful for cross-fading between two images.
+    """
+
     SATURATION = "saturation"
+    """
+    Takes the saturation from the source and the hue and luminosity from the
+    destination.
+    """
+
     SCREEN = "screen"
+    """
+    Multiplies the inverted source and destination values, then inverts the result.
+
+    This can only produce the same or lighter colors.
+    """
+
     SOFT_LIGHT = "softLight"
+    """
+    Applies a softer lighting effect than :attr:`OVERLAY`.
+    """
+
     SRC = "src"
+    """
+    Drops the destination and keeps only the source.
+    """
+
     SRC_A_TOP = "srcATop"
+    """
+    Draws the source over the destination, but only where they overlap.
+    """
+
     SRC_IN = "srcIn"
+    """
+    Keeps the source only where the source and destination overlap.
+
+    The destination acts as an opacity mask.
+    """
+
     SRC_OUT = "srcOut"
+    """
+    Keeps the source only where the source and destination do not overlap.
+
+    The destination acts as an opacity mask.
+    """
+
     SRC_OVER = "srcOver"
+    """
+    Draws the source over the destination.
+
+    This is the default painting behavior.
+    """
+
     VALUES = "values"
+    """
+    Not a usable blend mode.
+
+    Warning:
+        This member exists in the Python enum surface but does not map to a runtime
+        blend mode. Do not use it for painting or image composition.
+    """
+
     XOR = "xor"
+    """
+    Uses an exclusive-or composition so overlapping areas become transparent.
+    """
 
 
 class TextAlign(Enum):
@@ -437,28 +683,65 @@ class TextAlign(Enum):
 
 class ScrollMode(Enum):
     """
-    Weather scrolling is enabled and visibility of scroll bar options.
+    Defines scrolling behavior and scroll bar visibility for scrollable controls.
+
+    When assigned to :attr:`flet.ScrollableControl.scroll`, for example, each value
+    internally maps to a specific :class:`~flet.Scrollbar` configuration.
     """
 
     AUTO = "auto"
     """
     Scrolling is enabled and scroll bar is only shown when scrolling occurs.
+
+    :class:`~flet.Scrollbar` equivalent:
+
+    ```python
+    ft.Scrollbar(
+        thickness=4.0 if page.platform.is_mobile() and not page.web else None,
+    )
+    ```
     """
 
     ADAPTIVE = "adaptive"
     """
     Scrolling is enabled and scroll bar is always shown when running app as web or \
     desktop.
+
+    :class:`~flet.Scrollbar` equivalent:
+
+    ```python
+    ft.Scrollbar(
+        thumb_visibility=page.web or not page.platform.is_mobile(),
+        thickness=4.0 if page.platform.is_mobile() and not page.web else None,
+    )
+    ```
     """
 
     ALWAYS = "always"
     """
     Scrolling is enabled and scroll bar is always shown.
+
+    :class:`~flet.Scrollbar` equivalent:
+
+    ```python
+    ft.Scrollbar(
+        thumb_visibility=True,
+        thickness=4.0 if page.platform.is_mobile() and not page.web else None,
+    )
+    ```
     """
 
     HIDDEN = "hidden"
     """
     Scrolling is enabled, but scroll bar is always hidden.
+
+    :class:`~flet.Scrollbar` equivalent:
+
+    ```python
+    ft.Scrollbar(
+        thickness=0,
+    )
+    ```
     """
 
 
@@ -525,24 +808,51 @@ class PagePlatform(Enum):
     """
 
     IOS = "ios"
+    """
+    Apple iOS.
+    """
     ANDROID = "android"
+    """
+    Android phones and tablets.
+    """
     ANDROID_TV = "android_tv"
+    """
+    Android TV devices.
+    """
     MACOS = "macos"
+    """
+    Apple macOS.
+    """
     WINDOWS = "windows"
+    """
+    Microsoft Windows.
+    """
     LINUX = "linux"
+    """
+    Linux desktop environments.
+    """
 
     def is_apple(self) -> bool:
-        """Whether this PagePlatform instance is an Apple (iOS or macOS) platform."""
+        """
+        Whether this platform is one of Apple's platforms.
+
+        Returns `True` for :attr:`IOS` and :attr:`MACOS`.
+        """
         return self in {PagePlatform.IOS, PagePlatform.MACOS}
 
     def is_mobile(self) -> bool:
-        """Whether this PagePlatform instance is a mobile (iOS or Android) platform."""
+        """
+        Whether this platform is a mobile platform.
+
+        Returns `True` for :attr:`IOS` and :attr:`ANDROID`.
+        """
         return self in {PagePlatform.IOS, PagePlatform.ANDROID}
 
     def is_desktop(self) -> bool:
         """
-        Whether this PagePlatform instance is a desktop (macOS, Windows, Linux) \
-        platform.
+        Whether this platform is a desktop platform.
+
+        Returns `True` for :attr:`MACOS`, :attr:`WINDOWS`, and :attr:`LINUX`.
         """
         return self in {PagePlatform.MACOS, PagePlatform.WINDOWS, PagePlatform.LINUX}
 
@@ -635,31 +945,162 @@ class DeviceOrientation(Enum):
 
 class FloatingActionButtonLocation(Enum):
     """
-    Defines a position for the [`FloatingActionButton`][flet.].
-
-    See [FloatingActionButtonLocation](https://api.flutter.dev/flutter/material/FloatingActionButtonLocation-class.html)
-    from Flutter documentation for placement location examples.
+    Defines a position for the :class:`~flet.FloatingActionButton`.
     """  # noqa: E501
 
     CENTER_DOCKED = "centerDocked"
+    """
+    Centered :class:`~flet.FloatingActionButton`, floating over a bottom navigation \
+    control so the button's center lines up with the top of that control.
+
+    Not typically useful for apps without a bottom navigation control.
+    """
+
     CENTER_FLOAT = "centerFloat"
+    """
+    Centered :class:`~flet.FloatingActionButton`, floating at the bottom of the \
+    screen.
+
+    Use :attr:`MINI_CENTER_FLOAT` for mini buttons.
+    """
+
     CENTER_TOP = "centerTop"
+    """
+    Centered :class:`~flet.FloatingActionButton`, floating over the transition \
+    between the :class:`~flet.AppBar` and the page body.
+
+    Not typically useful for apps without a top :class:`~flet.AppBar`.
+    """
+
     END_CONTAINED = "endContained"
+    """
+    End-aligned :class:`~flet.FloatingActionButton`, floating over a bottom \
+    navigation control so the button lines up with that control's center.
+
+    Not typically useful for apps with a :class:`~flet.NavigationBar` or a \
+    non-Material 3 :class:`~flet.BottomAppBar`.
+    """
+
     END_DOCKED = "endDocked"
+    """
+    End-aligned :class:`~flet.FloatingActionButton`, floating over a bottom \
+    navigation control so the button's center lines up with the top of that control.
+
+    Not typically useful for apps without a bottom navigation control.
+    """
+
     END_FLOAT = "endFloat"
+    """
+    End-aligned :class:`~flet.FloatingActionButton`, floating at the bottom of the \
+    screen.
+
+    This is the default alignment in Material apps. Use :attr:`MINI_END_FLOAT` for \
+    mini buttons.
+    """
+
     END_TOP = "endTop"
+    """
+    End-aligned :class:`~flet.FloatingActionButton`, floating over the transition \
+    between the :class:`~flet.AppBar` and the page body.
+
+    Not typically useful for apps without a top :class:`~flet.AppBar`.
+    """
+
     MINI_CENTER_DOCKED = "miniCenterDocked"
+    """
+    Centered mini :class:`~flet.FloatingActionButton`, floating over a bottom \
+    navigation control so the button's center lines up with the top of that control.
+
+    Intended for use with mini buttons.
+    """
+
     MINI_CENTER_FLOAT = "miniCenterFloat"
+    """
+    Centered mini :class:`~flet.FloatingActionButton`, floating at the bottom of the \
+    screen.
+
+    Intended for use with mini buttons.
+    """
+
     MINI_CENTER_TOP = "miniCenterTop"
+    """
+    Centered mini :class:`~flet.FloatingActionButton`, floating over the transition \
+    between the :class:`~flet.AppBar` and the page body.
+
+    Intended for use with mini buttons.
+    """
+
     MINI_END_DOCKED = "miniEndDocked"
+    """
+    End-aligned mini :class:`~flet.FloatingActionButton`, floating over a bottom \
+    navigation control so the button's center lines up with the top of that control.
+
+    Intended for use with mini buttons.
+    """
+
     MINI_END_FLOAT = "miniEndFloat"
+    """
+    End-aligned mini :class:`~flet.FloatingActionButton`, floating at the bottom of \
+    the screen.
+
+    Intended for use with mini buttons.
+    """
+
     MINI_END_TOP = "miniEndTop"
+    """
+    End-aligned mini :class:`~flet.FloatingActionButton`, floating over the \
+    transition between the :class:`~flet.AppBar` and the page body.
+
+    Intended for use with mini buttons.
+    """
+
     MINI_START_DOCKED = "miniStartDocked"
+    """
+    Start-aligned mini :class:`~flet.FloatingActionButton`, floating over a bottom \
+    navigation control so the button's center lines up with the top of that control.
+
+    Intended for use with mini buttons.
+    """
+
     MINI_START_FLOAT = "miniStartFloat"
+    """
+    Start-aligned mini :class:`~flet.FloatingActionButton`, floating at the bottom \
+    of the screen.
+
+    Intended for use with mini buttons.
+    """
+
     MINI_START_TOP = "miniStartTop"
+    """
+    Start-aligned mini :class:`~flet.FloatingActionButton`, floating over the \
+    transition between the :class:`~flet.AppBar` and the page body.
+
+    Intended for use with mini buttons.
+    """
+
     START_DOCKED = "startDocked"
+    """
+    Start-aligned :class:`~flet.FloatingActionButton`, floating over a bottom \
+    navigation control so the button's center lines up with the top of that control.
+
+    Not typically useful for apps without a bottom navigation control.
+    """
+
     START_FLOAT = "startFloat"
+    """
+    Start-aligned :class:`~flet.FloatingActionButton`, floating at the bottom of the \
+    screen.
+
+    Use :attr:`MINI_START_FLOAT` for mini buttons.
+    """
+
     START_TOP = "startTop"
+    """
+    Start-aligned :class:`~flet.FloatingActionButton`, floating over the transition \
+    between the :class:`~flet.AppBar` and the page body.
+
+    Not typically useful for apps without a top :class:`~flet.AppBar`.
+    """
 
 
 class AppLifecycleState(Enum):
@@ -1045,6 +1486,24 @@ class StrokeJoin(Enum):
     """
 
 
+class MaterialTapTargetSize(Enum):
+    """
+    How large a Material control's tappable area is, relative to what it draws.
+    """
+
+    PADDED = "padded"
+    """
+    Expands the tappable area to at least 48x48 - Material's minimum
+    interactive dimension. The default.
+    """
+
+    SHRINK_WRAP = "shrinkWrap"
+    """
+    Shrinks the tappable area to the size of what the control draws, e.g. a
+    switch's track - for dense layouts such as desktop settings rows.
+    """
+
+
 class VisualDensity(Enum):
     """
     Defines the visual density of user interface components.
@@ -1055,7 +1514,7 @@ class VisualDensity(Enum):
     The default/standard profile for visual density.
 
     This default value represents a visual density that is less dense than
-    either [`COMFORTABLE`][(c).] or [`COMPACT`][(c).], and corresponds to
+    either :attr:`COMFORTABLE` or :attr:`COMPACT`, and corresponds to
     density values of zero in both axes.
     """
 
@@ -1064,9 +1523,9 @@ class VisualDensity(Enum):
     The profile for a "compact" interpretation of visual density.
 
     Individual components will interpret the density value independently, making
-    themselves more visually dense than [`STANDARD`][(c).] and [`COMFORTABLE`][(c).] to
+    themselves more visually dense than :attr:`STANDARD` and :attr:`COMFORTABLE` to
     different degrees based on the Material Design specification of the
-    [`COMFORTABLE`][(c).] setting for their particular use case.
+    :attr:`COMFORTABLE` setting for their particular use case.
 
     It corresponds to a density value of `-2` in both axes.
     """
@@ -1077,7 +1536,7 @@ class VisualDensity(Enum):
 
     Individual
     components will interpret the density value independently, making themselves more
-    visually dense than [`STANDARD`][(c).] and less dense than [`COMPACT`][(c).]
+    visually dense than :attr:`STANDARD` and less dense than :attr:`COMPACT`
     to different degrees based on the Material Design specification of the
     comfortable setting for their particular use case.
 
@@ -1088,12 +1547,12 @@ class VisualDensity(Enum):
     """
     Visual density that is adaptive based on the given platform.
 
-    For desktop platforms, this returns [`COMPACT`][(c).], and for other platforms,
+    For desktop platforms, this returns :attr:`COMPACT`, and for other platforms,
     it returns a default-constructed visual density.
     """
 
 
-@dataclass
+@value
 class Locale:
     """
     An identifier used to select a user's language and formatting preferences.
@@ -1181,7 +1640,7 @@ class Locale:
         return separator.join(out_parts)
 
 
-@dataclass
+@value
 class LocaleConfiguration:
     """
     Represents the configuration for supported locales and the current locale.
@@ -1246,9 +1705,9 @@ class LocaleConfiguration:
     The current locale.
 
     Note:
-        - Must be an item of [`supported_locales`][(c).] to take effect.
+        - Must be an item of :attr:`supported_locales` to take effect.
         - If `None` or invalid/unsupported, the first supported locale in
-            [`supported_locales`][(c).] is used.
+            :attr:`supported_locales` is used.
     """
 
     def __post_init__(self) -> None:
@@ -1265,10 +1724,10 @@ ColorValue = Union[str, Colors, CupertinoColors]
 
 Represents a color and can be:
 - a string (representing a color name or hex value),
-- a material color from the [`Colors`][flet.] enum,
-- or a Cupertino color from the [`CupertinoColors`][flet.] enum.
+- a material color from the :class:`~flet.Colors` enum,
+- or a Cupertino color from the :class:`~flet.CupertinoColors` enum.
 
-More information [here](https://docs.flet.dev/cookbook/cookbook/cookbook/colors).
+More information [here](https://flet.dev/docs/cookbook/colors).
 """
 
 # Icons
@@ -1276,9 +1735,9 @@ IconDataOrControl = Union[IconData, "Control"]
 """Type alias for icon-like values.
 
 Represents either:
-- an [`IconData`][flet.] value
-    (for example, a member of [`Icons`][flet.] or [`CupertinoIcons`][flet.]),
-- or a custom icon [`Control`][flet.].
+- an :class:`~flet.IconData` value
+    (for example, a member of :class:`~flet.Icons` or :class:`~flet.CupertinoIcons`),
+- or a custom icon :class:`~flet.Control`.
 """
 
 # Content
@@ -1287,7 +1746,7 @@ StrOrControl = Union[str, "Control"]
 Type alias for string or control values.
 
 Represents a string or a control and can be:
-- a string, which will be converted internally into a [`Text`][flet.] control,
+- a string, which will be converted internally into a :class:`~flet.Text` control,
 - or a control.
 """
 

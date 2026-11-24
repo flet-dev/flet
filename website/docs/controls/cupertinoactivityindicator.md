@@ -1,0 +1,19 @@
+---
+class_name: "flet.CupertinoActivityIndicator"
+examples: "controls/cupertino/cupertino_activity_indicator"
+example_images: "test-images/examples/controls/cupertino/golden/macos/cupertino_activity_indicator"
+example_media: "examples/controls/cupertino/cupertino_activity_indicator/media"
+title: "CupertinoActivityIndicator"
+---
+
+import {ClassMembers, ClassSummary, CodeExample, Image} from '@site/src/components/crocodocs';
+
+<ClassSummary name={frontMatter.class_name} image={frontMatter.example_images + '/image_for_docs.png'} imageCaption="CupertinoActivityIndicator" imageWidth="8%"/>
+
+## Examples
+
+<CodeExample path={frontMatter.examples + '/cupertino_activity_indicator/main.py'} language="python" />
+
+<Image src={frontMatter.example_media + '/basic.png'} alt="basic" width="25%" />
+
+<ClassMembers name={frontMatter.class_name} />

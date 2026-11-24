@@ -1,13 +1,24 @@
-import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 
 import '../models/control.dart';
 import 'time.dart';
 
+/// Parses an `AnimationValue`: `true`, `false`, a duration in milliseconds, or
+/// an `Animation` map.
+///
+/// `false` turns the animation off: it returns `null`, or an instant
+/// (zero-duration) animation when the caller animates by default
+/// ([defaultValue] is set).
 ImplicitAnimationDetails? parseAnimation(dynamic value,
     [ImplicitAnimationDetails? defaultValue]) {
   if (value == null) {
     return defaultValue;
-  } else if (value is bool && value == true) {
+  } else if (value == false) {
+    return defaultValue == null
+        ? null
+        : ImplicitAnimationDetails(
+            duration: Duration.zero, curve: defaultValue.curve);
+  } else if (value == true) {
     return ImplicitAnimationDetails(
         duration: const Duration(milliseconds: 1000), curve: Curves.linear);
   } else if (value is int) {

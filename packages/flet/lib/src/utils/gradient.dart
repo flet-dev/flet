@@ -1,7 +1,8 @@
+import 'dart:math' as math;
 import 'dart:typed_data';
 import 'enums.dart';
 
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 
 import '../models/control.dart';
 import 'alignment.dart';
@@ -39,7 +40,7 @@ Gradient? parseGradient(dynamic value, ThemeData theme,
         colors: colors,
         center: parseAlignment(value["center"], Alignment.center)!,
         startAngle: parseDouble(value["start_angle"], 0)!,
-        endAngle: parseDouble(value["end_angle"], 0)!,
+        endAngle: parseDouble(value["end_angle"], 2 * math.pi)!,
         stops: stops,
         tileMode: parseTileMode(value["tile_mode"], TileMode.clamp)!,
         transform: rotation);

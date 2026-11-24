@@ -1,11 +1,10 @@
 import 'package:collection/collection.dart';
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:flutter/services.dart';
 
 import '../extensions/control.dart';
 import '../models/control.dart';
-import '../utils/borders.dart';
 import '../utils/buttons.dart';
 import '../utils/colors.dart';
 import '../utils/edge_insets.dart';
@@ -104,77 +103,55 @@ class _DropdownControlState extends State<DropdownControl> {
     var textAlign = widget.control.getTextAlign("text_align", TextAlign.start)!;
 
     var fillColor = widget.control.getColor("fill_color", context);
-    var borderColor = widget.control.getColor("border_color", context);
-
-    var borderRadius = widget.control.getBorderRadius("border_radius");
-    var focusedBorderColor =
-        widget.control.getColor("focused_border_color", context);
-    var borderWidth = widget.control.getDouble("border_width");
-    var focusedBorderWidth = widget.control.getDouble("focused_border_width");
     var menuWidth = widget.control.getDouble("menu_width");
     var bgColor = widget.control.getWidgetStateColor("bgcolor", theme);
     var elevation = widget.control.getWidgetStateDouble("elevation");
 
-    var inputBorder = widget.control
-        .getFormFieldInputBorder("border", FormFieldInputBorder.outline)!;
+    var borders = parseFormFieldBorders(widget.control, theme);
 
-    InputBorder? border;
+    // `height` sizes the field itself. Wrapping it in a SizedBox (what
+    // `height` does for other controls) can't make it shorter than ~48px:
+    // the leading icon sits in an InputDecoration prefix slot with a 48x48
+    // minimum, and the trailing arrow is an IconButton with the same
+    // minimum. Constrain the decoration and both icon slots to the height.
+    var fieldHeight = widget.control.getDouble("height");
+    BoxConstraints? iconConstraints = fieldHeight == null
+        ? null
+        : BoxConstraints(
+            minWidth: fieldHeight,
+            maxWidth: fieldHeight,
+            minHeight: 0,
+            maxHeight: fieldHeight,
+          );
 
-    if (inputBorder == FormFieldInputBorder.underline) {
-      border = UnderlineInputBorder(
-          borderSide: BorderSide(
-              color: borderColor ?? const Color(0xFF000000),
-              width: borderWidth ?? 1.0));
-    } else if (inputBorder == FormFieldInputBorder.none) {
-      border = InputBorder.none;
-    } else if (inputBorder == FormFieldInputBorder.outline ||
-        borderRadius != null ||
-        borderColor != null ||
-        borderWidth != null) {
-      border = OutlineInputBorder(
-          borderSide: BorderSide(
-              color: borderColor ?? const Color(0xFF000000),
-              width: borderWidth ?? 1.0));
-      if (borderRadius != null) {
-        border =
-            (border as OutlineInputBorder).copyWith(borderRadius: borderRadius);
-      }
-      if (borderColor != null || borderWidth != null) {
-        border = (border as OutlineInputBorder).copyWith(
-            borderSide: borderWidth == 0
-                ? BorderSide.none
-                : BorderSide(
-                    color: borderColor ??
-                        theme.colorScheme.onSurface.withValues(alpha: 0.38),
-                    width: borderWidth ?? 1.0));
-      }
-    }
-
-    InputBorder? focusedBorder;
-    if (borderColor != null ||
-        borderWidth != null ||
-        focusedBorderColor != null ||
-        focusedBorderWidth != null) {
-      focusedBorder = border?.copyWith(
-          borderSide: borderWidth == 0
-              ? BorderSide.none
-              : BorderSide(
-                  color: focusedBorderColor ??
-                      borderColor ??
-                      theme.colorScheme.primary,
-                  width: focusedBorderWidth ?? borderWidth ?? 2.0));
-    }
-
-    InputDecorationTheme inputDecorationTheme = InputDecorationTheme(
-      filled: widget.control.getBool("filled", false)!,
+    // Start from the app's input decoration theme: DropdownMenu uses the
+    // theme it is given in place of the app's, so unset values must keep the
+    // app's (`Theme.input_decoration_theme`) rather than Material's.
+    InputDecorationThemeData inputDecorationTheme =
+        theme.inputDecorationTheme.copyWith(
+      constraints: fieldHeight == null
+          ? null
+          : BoxConstraints.tightFor(height: fieldHeight),
+      prefixIconConstraints: iconConstraints,
+      // The trailing IconButton sits inside 4px of padding on each side.
+      suffixIconConstraints: fieldHeight == null
+          ? null
+          : BoxConstraints.tightFor(
+              width: fieldHeight - 8 > 0 ? fieldHeight - 8 : fieldHeight,
+              height: fieldHeight - 8 > 0 ? fieldHeight - 8 : fieldHeight,
+            ),
+      filled: widget.control.getBool("filled"),
       fillColor: fillColor,
       hintStyle: widget.control.getTextStyle("hint_style", theme),
       errorStyle: widget.control.getTextStyle("error_style", theme),
       helperStyle: widget.control.getTextStyle("helper_style", theme),
-      border: border,
-      enabledBorder: border,
-      focusedBorder: focusedBorder,
-      isDense: widget.control.getBool("dense", false)!,
+      border: borders.border,
+      enabledBorder: borders.enabledBorder,
+      focusedBorder: borders.focusedBorder,
+      errorBorder: borders.errorBorder,
+      focusedErrorBorder: borders.focusedErrorBorder,
+      disabledBorder: borders.disabledBorder,
+      isDense: widget.control.getBool("dense"),
       contentPadding: widget.control.getPadding("content_padding"),
     );
 
@@ -279,7 +256,9 @@ class _DropdownControlState extends State<DropdownControl> {
     _focusNode.canRequestFocus = editable;
 
     int expand = widget.control.getExpand("expand", 0)!;
-    EdgeInsets? expandedInsets = expand > 0 ? EdgeInsets.zero : null;
+    EdgeInsets? expandedInsets = expand > 0
+        ? widget.control.getPadding("expanded_insets", EdgeInsets.zero)
+        : null;
 
     Widget dropDown = DropdownMenu<String>(
       key: dropdownMenuKey,

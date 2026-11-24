@@ -5,6 +5,18 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
+## 0.86.0
+
+### Added
+
+- New `ConsentManager` service for gathering and managing user consent for ads (e.g. GDPR/EEA) via Google's User Messaging Platform (UMP): request consent updates, present the consent and privacy options forms, and read the consent status before requesting ads ([#6569](https://github.com/flet-dev/flet/issues/6569), [#6615](https://github.com/flet-dev/flet/pull/6615)) by @ndonkoHenri.
+
+## 0.82.0
+
+### Changed
+
+- Refactored ads controls: `BaseAd` is now based on `flet.BaseControl`, `InterstitialAd` is now a `flet.Service`, `BannerAd` is now a `flet.LayoutControl`, and examples were updated ([#6194](https://github.com/flet-dev/flet/issues/6194), [#6235](https://github.com/flet-dev/flet/pull/6235)).
+
 ## 0.80.0
 
 ### Added

@@ -1,0 +1,26 @@
+[project]
+name = "icon-button-variants"
+version = "1.0.0"
+description = "Compares normal, disabled, and toggle variants across IconButton style families."
+requires-python = ">=3.10"
+keywords = ["icon button", "variants", "filled", "outlined", "toggle"]
+authors = [{ name = "Flet team", email = "hello@flet.dev" }]
+dependencies = ["flet"]
+
+[dependency-groups]
+dev = ["flet-cli", "flet-desktop", "flet-web"]
+
+[tool.flet.gallery]
+categories = ["Buttons/IconButton"]
+
+[tool.flet.metadata]
+title = "Variants"
+controls = ["SafeArea", "Row", "Column", "Text", "IconButton", "FilledIconButton", "FilledTonalIconButton", "OutlinedIconButton"]
+layout_pattern = "comparison"
+complexity = "basic"
+features = ["variant comparison", "disabled states", "toggle buttons"]
+
+[tool.flet]
+org = "dev.flet"
+company = "Flet"
+copyright = "Copyright (C) 2023-2026 by Flet"

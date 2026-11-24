@@ -1,0 +1,46 @@
+[project]
+name = "{{cookiecutter.project_name}}"
+version = "0.1.0"
+description = "{{cookiecutter.description}}"
+readme = "README.md"
+requires-python = ">=3.10"
+authors = [
+    { name = "Flet developer", email = "you@example.com" }
+]
+dependencies = [
+    "flet>={{cookiecutter.flet_version}}"
+]
+
+[dependency-groups]
+dev = [
+    "flet-cli>={{cookiecutter.flet_version}}",
+    "flet-desktop>={{cookiecutter.flet_version}}",
+    "flet-web>={{cookiecutter.flet_version}}",
+    # Integration testing with `flet test` / pytest. The `test` extra brings in
+    # pytest, pytest-asyncio and the screenshot-comparison dependencies.
+    "flet[test]>={{cookiecutter.flet_version}}",
+]
+
+[tool.pytest.ini_options]
+asyncio_mode = "auto"
+testpaths = ["tests"]
+pythonpath = ["src"]
+
+[tool.flet]
+{%- if cookiecutter.platform == "linux" %}
+desktop_flavor = "light"    # Change to "full" to use flet-audio and flet-video
+{%- endif %}
+org = "com.mycompany"
+product = "{{cookiecutter.project_name}}"
+company = "Flet"
+copyright = "Copyright (C) 2023-2026 by Flet"
+
+# src/assets/icon.png is the icon for every platform. Keep it transparent and
+# filling the whole canvas: web, Windows and Linux show it as-is, and Flet
+# shrinks it to the margin iOS, macOS and Android each mask away. This colour
+# is what sits behind it where transparency cannot survive - the iOS icon, the
+# macOS tile and the Android background layer. Defaults to white.
+# icon_background = "#ffffff"
+
+[tool.flet.app]
+path = "src"

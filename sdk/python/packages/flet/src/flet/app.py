@@ -23,7 +23,6 @@ from flet.utils import (
     is_pyodide,
     open_in_browser,
 )
-from flet.utils.deprecated import deprecated
 from flet.utils.pip import (
     ensure_flet_desktop_package_installed,
     ensure_flet_web_package_installed,
@@ -31,30 +30,50 @@ from flet.utils.pip import (
 
 logger = logging.getLogger("flet")
 
+DEFAULT_ASSETS_DIR = "assets"
+"""Conventional assets directory name, used as the default for `assets_dir`.
+
+A missing directory of this name is unremarkable; any other value was chosen
+deliberately, so a missing one is reported.
+"""
+
+DISPLAY_ASSETS_DIR_SUFFIX = "_ASSETS_DIR"
+"""Suffix of the line on which an app started by `flet run` reports its assets dir.
+
+Appended to `FLET_DISPLAY_URL_PREFIX`, it starts the line the app prints just
+before its page URL line, with its resolved assets directory (empty when it has
+none). `flet run` opens the desktop client with that directory, so the app's own
+`assets_dir` reaches it.
+"""
+
 AppCallable = Callable[[Page], Union[Any, Awaitable[Any]]]
 """Type alias for Flet app lifecycle callbacks.
 
 Represents a callable (synchronous or asynchronous) that accepts a single argument of
-type [`Page`][flet.]. The return value is ignored.
+type :class:`~flet.Page`. The return value is ignored.
 
 Used for both `main` and `before_main` handlers.
 """
 
 
-@deprecated("Use run() instead.", version="0.80.0", show_parentheses=True)
-def app(*args, **kwargs):
-    new_args = list(args)
-    if "target" in kwargs:
-        new_args.insert(0, kwargs["target"])
-    return run(*new_args, **kwargs)
+def __configure_logging_from_env() -> None:
+    """
+    Applies the log level named by the `FLET_LOG_LEVEL` environment variable.
 
+    `flet run -v` sets this so the framework's own logging reaches the console
+    without the app having to configure it. `basicConfig` does nothing once the
+    root logger has a handler, so an app that configures logging itself keeps
+    the setup it chose.
+    """
+    level = os.getenv("FLET_LOG_LEVEL")
+    if not level:
+        return
 
-@deprecated("Use run() instead.", version="0.80.0", show_parentheses=True)
-def app_async(*args, **kwargs):
-    new_args = list(args)
-    if "target" in kwargs:
-        new_args.insert(0, kwargs["target"])
-    return run_async(*new_args, **kwargs)
+    resolved = logging.getLevelName(level.strip().upper())
+    if isinstance(resolved, int):
+        logging.basicConfig(level=resolved)
+    else:
+        logger.warning("Unknown FLET_LOG_LEVEL: %s", level)
 
 
 def run(
@@ -64,20 +83,19 @@ def run(
     host: Optional[str] = None,
     port: int = 0,
     view: Optional[AppView] = AppView.FLET_APP,
-    assets_dir: Optional[str] = "assets",
+    assets_dir: Optional[str] = DEFAULT_ASSETS_DIR,
     upload_dir: Optional[str] = None,
     web_renderer: WebRenderer = WebRenderer.AUTO,
     route_url_strategy: RouteUrlStrategy = RouteUrlStrategy.PATH,
     no_cdn: Optional[bool] = False,
     export_asgi_app: Optional[bool] = False,
-    target=None,
 ):
     """
     Runs the Flet app.
 
     Args:
         main: Application entry point. Handler (function or coroutine) must
-            have 1 parameter of instance [`Page`][flet.Page].
+            have 1 parameter of instance :class:`~flet.Page`.
         before_main: Called after `Page` is created but before `main`.
         name: Page/app name used in web URL path when applicable.
         host: Host/IP to bind the web server to.
@@ -91,14 +109,15 @@ def run(
         no_cdn: Whether not load CanvasKit, Pyodide, or fonts from CDN.
         export_asgi_app: If `True`, returns a configured ASGI app instead of
             running an event loop.
-        target: Deprecated alias for `main`.
 
     Returns:
-        When `export_asgi_app=True`, returns a FastAPI ASGI app.
+        A FastAPI ASGI app when `export_asgi_app=True`.
             Otherwise, runs the app and returns `None`.
     """
+    __configure_logging_from_env()
+
     if is_pyodide():
-        __run_pyodide(main=main or target, before_main=before_main)
+        __run_pyodide(main=main, before_main=before_main)
         return
 
     if export_asgi_app:
@@ -106,7 +125,7 @@ def run(
         from flet_web.fastapi.serve_fastapi_web_app import get_fastapi_web_app
 
         return get_fastapi_web_app(
-            main=main or target,
+            main=main,
             before_main=before_main,
             page_name=__get_page_name(name),
             assets_dir=__get_assets_dir_path(assets_dir, relative_to_cwd=True),
@@ -124,7 +143,7 @@ def run(
 
     return asyncio.run(
         run_async(
-            main=main or target,
+            main=main,
             before_main=before_main,
             name=name,
             host=host,
@@ -146,19 +165,18 @@ async def run_async(
     host: Optional[str] = None,
     port: int = 0,
     view: Optional[AppView] = AppView.FLET_APP,
-    assets_dir: Optional[str] = "assets",
+    assets_dir: Optional[str] = DEFAULT_ASSETS_DIR,
     upload_dir: Optional[str] = None,
     web_renderer: WebRenderer = WebRenderer.AUTO,
     route_url_strategy: RouteUrlStrategy = RouteUrlStrategy.PATH,
     no_cdn: Optional[bool] = False,
-    target=None,
 ):
     """
     Asynchronously run a Flet app using socket or web server transport.
 
     Args:
         main: Application entry point. Handler (function or coroutine) must
-            have 1 parameter of instance [`Page`][flet.Page].
+            have 1 parameter of instance :class:`~flet.Page`.
         before_main: Called after `Page` is created but before `main`.
         name: Page/app name used in web URL path when applicable.
         host: Host/IP to bind the web server to.
@@ -169,11 +187,12 @@ async def run_async(
         web_renderer: Web renderer type for web-hosted mode.
         route_url_strategy: Route URL strategy (`path` or `hash`).
         no_cdn: Whether to avoid loading CanvasKit, Pyodide, and fonts from CDN.
-        target: Deprecated alias for `main`.
     """
 
+    __configure_logging_from_env()
+
     if is_pyodide():
-        __run_pyodide(main=main or target, before_main=before_main)
+        __run_pyodide(main=main, before_main=before_main)
         return
 
     if isinstance(view, str):
@@ -214,14 +233,21 @@ async def run_async(
         """
         Handle app-start notification by logging/printing URL and optional browser open.
 
+        When started by `flet run`, the resolved assets directory is printed on
+        its own line first, so `flet run` can open the desktop client with it.
+
         Args:
             page_url: Resolved URL of the running app.
         """
 
         if url_prefix is not None:
-            print(url_prefix, page_url)
+            print(f"{url_prefix}{DISPLAY_ASSETS_DIR_SUFFIX}", assets_dir or "")
+            parts = [url_prefix, page_url]
+            if view is not None:
+                parts.append(view.value)
+            print(*parts)
         else:
-            logger.info(f"App URL: {page_url}")
+            logger.info("App URL: %s", page_url)
 
         if view == AppView.WEB_BROWSER and url_prefix is None and not force_web_server:
             open_in_browser(page_url)
@@ -249,16 +275,27 @@ async def run_async(
         signal.signal(signal.SIGINT, exit_gracefully)
         signal.signal(signal.SIGTERM, exit_gracefully)
 
-    conn = (
-        await __run_socket_server(
+    # Embedded runtime can opt into the in-process dart_bridge transport
+    # (provided by libdart_bridge from flet-dev/serious-python) by setting
+    # FLET_DART_BRIDGE_PORT. Falls back to the existing socket / web
+    # transports when the env var is absent.
+    bridge_port_env = os.getenv("FLET_DART_BRIDGE_PORT")
+    if is_embedded() and bridge_port_env:
+        conn = await __run_dart_bridge_server(
+            port=int(bridge_port_env),
+            main=main,
+            before_main=before_main,
+        )
+    elif is_socket_server:
+        conn = await __run_socket_server(
             port=port,
-            main=main or target,
+            main=main,
             before_main=before_main,
             blocking=is_embedded(),
         )
-        if is_socket_server
-        else await __run_web_server(
-            main=main or target,
+    else:
+        conn = await __run_web_server(
+            main=main,
             before_main=before_main,
             host=host,
             port=port,
@@ -270,7 +307,6 @@ async def run_async(
             no_cdn=no_cdn,
             on_startup=on_app_startup,
         )
-    )
 
     logger.info("Flet app has started...")
 
@@ -282,7 +318,11 @@ async def run_async(
             and url_prefix is None
         ):
             ensure_flet_desktop_package_installed()
-            from flet_desktop import close_flet_view, open_flet_view_async
+            from flet_desktop import (
+                close_flet_view,
+                explain_client_exit,
+                open_flet_view_async,
+            )
 
             on_app_startup(conn.page_url)
 
@@ -293,12 +333,20 @@ async def run_async(
             )
             with contextlib.suppress(Exception):
                 await fvp.wait()
+            explain_client_exit(fvp.returncode)
 
             close_flet_view(pid_file)
 
         elif url_prefix and is_socket_server:
             on_app_startup(conn.page_url)
 
+            with contextlib.suppress(KeyboardInterrupt):
+                await terminate.wait()
+
+        elif is_embedded() and bridge_port_env:
+            # dart_bridge has no serve_forever (no socket accept loop) — the
+            # embedded interpreter would otherwise exit as soon as the user's
+            # main() returns. Park here until the host process tears us down.
             with contextlib.suppress(KeyboardInterrupt):
                 await terminate.wait()
 
@@ -331,6 +379,14 @@ def __get_on_session_created(
             session: Active page session.
         """
 
+        def mark_test_ready():
+            # Registration precedes main(). Send readiness in a page patch only
+            # after main's initial updates, including for an intentionally empty
+            # app. Generator apps are ready after their first yielded update.
+            if session.page.test and not session.page._internals.get("test_ready"):
+                session.page._internals["test_ready"] = True
+                session.page.update()
+
         logger.info("App session started")
         try:
             assert main is not None
@@ -342,15 +398,22 @@ def __get_on_session_created(
             elif inspect.isasyncgenfunction(main):
                 async for _ in main(session.page):
                     await session.after_event(session.page)
+                    mark_test_ready()
+                    # Let the send loop flush the patch before `main()` resumes.
+                    await asyncio.sleep(0)
 
             elif inspect.isgeneratorfunction(main):
                 for _ in main(session.page):
                     await session.after_event(session.page)
+                    mark_test_ready()
+                    # Let the send loop flush the patch before `main()` resumes.
+                    await asyncio.sleep(0)
             else:
                 # run synchronously
                 main(session.page)
 
             await session.after_event(session.page)
+            mark_test_ready()
 
         except Exception as e:
             logger.error("Unhandled error in main() handler", exc_info=True)
@@ -397,6 +460,158 @@ async def __run_socket_server(
     return conn
 
 
+class _DartBridgeServerHandle:
+    """
+    Forwarding facade over the currently-active `FletDartBridgeServer`.
+
+    On Android process reuse (libdart_bridge stays loaded, the Dart VM
+    restarts with fresh native port numbers), this handle replaces the
+    underlying connection in place via `_swap_to_port`. The outer caller
+    in `run_async` keeps holding the same handle through restarts, so
+    its `finally: await conn.close()` always closes whichever connection
+    is current at process-teardown time.
+    """
+
+    def __init__(self, build_conn):
+        # `build_conn` is a callable that creates a fresh
+        # FletDartBridgeServer for the given port — used both initially
+        # and on every restart so we don't capture stale args.
+        self._build_conn = build_conn
+        self._conn = None  # type: ignore[assignment]
+        # Pending swap-in tasks during a restart — tracked so close()
+        # can wait for an in-flight swap rather than racing.
+        self._swap_lock = asyncio.Lock()
+
+    @property
+    def page_url(self) -> str:
+        return self._conn.page_url if self._conn is not None else ""
+
+    @property
+    def pubsubhub(self):
+        # `flet.app.run_async` doesn't touch this, but keep parity in case
+        # downstream callers (tests, alternative entry points) do.
+        return self._conn.pubsubhub if self._conn is not None else None
+
+    async def start(self, port: int):
+        self._conn = self._build_conn(port)
+        await self._conn.start()
+
+    async def _swap_to_port(self, port: int):
+        """Close the current connection and bring up a new one on `port`."""
+        async with self._swap_lock:
+            old = self._conn
+            new = self._build_conn(port)
+            await new.start()
+            self._conn = new
+            if old is not None:
+                try:
+                    await old.close()
+                except Exception:
+                    logger.warning(
+                        "Error closing previous dart_bridge connection during "
+                        "session restart",
+                        exc_info=True,
+                    )
+
+    async def close(self):
+        async with self._swap_lock:
+            if self._conn is not None:
+                await self._conn.close()
+                self._conn = None
+
+
+async def __run_dart_bridge_server(
+    port: int,
+    main: Optional[AppCallable] = None,
+    before_main: Optional[AppCallable] = None,
+):
+    """
+    Start Flet dart_bridge transport and return active connection object.
+
+    This transport exchanges the same MsgPack-framed protocol as
+    `__run_socket_server`, but over the in-process `dart_bridge` byte channel
+    instead of a Unix socket — eliminating the socket file, kernel context
+    switches, and the connect/handshake retry loop for embedded apps.
+
+    The returned object is a `_DartBridgeServerHandle` that forwards to the
+    current `FletDartBridgeServer` and swaps it transparently on Android
+    process reuse — a `dart_bridge.add_session_restart_handler` callback
+    rebuilds the connection on the new Dart native port when the new Dart
+    VM signals fresh ports.
+
+    Args:
+        port: Dart native port (passed in via env var by the embedding side;
+            doubles as the keyed channel identifier).
+        main: User app entry handler.
+        before_main: Optional hook called before `main`.
+
+    Returns:
+        Started dart_bridge-server handle.
+    """
+    # Imported lazily so non-embedded runs (web server, native desktop) never
+    # try to load libdart_bridge.
+    from flet.messaging.flet_dart_bridge_server import FletDartBridgeServer
+
+    loop = asyncio.get_running_loop()
+    executor = concurrent.futures.ThreadPoolExecutor()
+
+    def _build_conn(p: int) -> FletDartBridgeServer:
+        return FletDartBridgeServer(
+            loop=loop,
+            port=p,
+            on_session_created=__get_on_session_created(main),
+            before_main=before_main,
+            executor=executor,
+        )
+
+    handle = _DartBridgeServerHandle(_build_conn)
+    await handle.start(port)
+
+    # Subscribe to Dart VM restart events. The C-side
+    # `dart_bridge_signal_dart_session` (libdart_bridge >= 1.3.0) fires
+    # every registered Python callback with `{label: new_port}`. On
+    # pre-1.3.0 binaries the symbol is absent and Dart-side
+    # `signalDartSession` is a no-op, so this handler never fires and the
+    # flow degrades to the existing "one-Dart-VM lifetime" behavior — no
+    # crash, no regression.
+    try:
+        import dart_bridge  # type: ignore[import-not-found]
+    except ImportError:
+        # Not running inside libdart_bridge (e.g. unit tests). Skip
+        # restart subscription; nothing to swap to.
+        return handle
+
+    add_handler = getattr(dart_bridge, "add_session_restart_handler", None)
+    if add_handler is None:
+        # Older libdart_bridge without the restart API. Same fallback as
+        # above — first session only.
+        logger.debug(
+            "dart_bridge.add_session_restart_handler not available; "
+            "process-reuse restarts will be unsupported"
+        )
+        return handle
+
+    def _on_session_restart(port_map):
+        # Called from libdart_bridge (under the GIL, possibly off the
+        # asyncio loop's thread). Marshal back onto the loop and run the
+        # swap as a regular asyncio task.
+        new_port = int(port_map.get("protocol", 0))
+        if new_port <= 0 or new_port == port:
+            return
+        logger.info(
+            "Dart VM restart detected; rebinding FletDartBridgeServer "
+            "from port %s → %s",
+            port,
+            new_port,
+        )
+        loop.call_soon_threadsafe(
+            lambda: asyncio.create_task(handle._swap_to_port(new_port))
+        )
+
+    add_handler(_on_session_restart)
+    return handle
+
+
 async def __run_web_server(
     main: Optional[AppCallable],
     before_main: Optional[AppCallable],
@@ -438,7 +653,7 @@ async def __run_web_server(
     if port == 0:
         port = get_free_tcp_port()
 
-    logger.info(f"Starting Flet web server on port {port}...")
+    logger.info("Starting Flet web server on port %s...", port)
 
     log_level = logging.getLogger("flet").getEffectiveLevel()
     if log_level == logging.CRITICAL or log_level == logging.NOTSET:
@@ -498,16 +713,38 @@ def __get_assets_dir_path(assets_dir: Optional[str], relative_to_cwd=False):
     """
     Resolve assets directory to an absolute path and apply env override.
 
+    A resolved directory that does not exist is dropped rather than passed on,
+    because a caller receiving it can only either ignore it silently (what the
+    desktop view does) or complain (what the web server does) - and the two
+    disagreeing is why the same app warned only under `--web`.
+
+    Whether that is worth reporting depends on where the value came from.
+    `assets_dir` defaults to `DEFAULT_ASSETS_DIR` whether or not the app has
+    such a directory, so a missing one is unremarkable; any other value was
+    chosen deliberately, so a missing one is a mistake worth a warning.
+
+    `FLET_ASSETS_DIR` takes precedence and is never dropped: it is always set
+    on purpose, so a bad value there is left for downstream to report. When it
+    is set, `assets_dir` is not checked, so nothing is logged about a
+    directory that isn't used.
+
     Args:
         assets_dir: Input assets directory path.
         relative_to_cwd: Resolve relative paths from current working directory
             instead of current script directory.
 
     Returns:
-        Resolved assets directory path or `None`.
+        Resolved assets directory path, or `None` if it was not set or does not
+            exist.
     """
 
+    env_assets_dir = os.getenv("FLET_ASSETS_DIR")
+    if env_assets_dir:
+        logger.info("Assets path configured: %s (FLET_ASSETS_DIR)", env_assets_dir)
+        return env_assets_dir
+
     if assets_dir:
+        requested = assets_dir
         if not Path(assets_dir).is_absolute():
             if "_MEI" in __file__:
                 # support for "onefile" PyInstaller
@@ -520,11 +757,14 @@ def __get_assets_dir_path(assets_dir: Optional[str], relative_to_cwd=False):
                     .joinpath(assets_dir)
                     .resolve()
                 )
-        logger.info(f"Assets path configured: {assets_dir}")
-
-    env_assets_dir = os.getenv("FLET_ASSETS_DIR")
-    if env_assets_dir:
-        assets_dir = env_assets_dir
+        if os.path.isdir(assets_dir):
+            logger.info("Assets path configured: %s", assets_dir)
+        else:
+            if requested == DEFAULT_ASSETS_DIR:
+                logger.debug("No assets directory at %s", assets_dir)
+            else:
+                logger.warning("assets_dir does not exist: %s", assets_dir)
+            assets_dir = None
     return assets_dir
 
 

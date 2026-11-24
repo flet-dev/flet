@@ -14,15 +14,21 @@ dependencies = [
     "flet-audio-recorder",
     "flet-camera",
     "flet-charts",
+    "flet-code-editor",
+    "flet-color-pickers",
     "flet-datatable2",
     "flet-appauth",
     "flet-flashlight",
     "flet-geolocator",
     "flet-lottie",
+    "flet-local-auth",
     "flet-map",
+    "flet-notifications",
     "flet-permission-handler",
     "flet-rive",
     "flet-secure-storage",
+    "flet-shadcn-ui",
+    "flet-spinkit",
     "flet-video",
     "flet-webview",
 ]
@@ -31,7 +37,6 @@ dependencies = [
 dev = [
     "flet-cli",
     "flet-desktop",
-    "flet-desktop-light",
     "flet-web",
 ]
 
@@ -39,22 +44,27 @@ dev = [
 flet = { path = "../../../packages/flet", editable = true }
 flet-cli = { path = "../../../packages/flet-cli", editable = true }
 flet-desktop = { path = "../../../packages/flet-desktop", editable = true }
-flet-desktop-light = { path = "../../../packages/flet-desktop-light", editable = true }
 flet-web = { path = "../../../packages/flet-web", editable = true }
 flet-ads = { path = "../../../packages/flet-ads", editable = true }
 flet-audio = { path = "../../../packages/flet-audio", editable = true }
 flet-audio-recorder = { path = "../../../packages/flet-audio-recorder", editable = true }
 flet-camera = { path = "../../../packages/flet-camera", editable = true }
 flet-charts = { path = "../../../packages/flet-charts", editable = true }
+flet-code-editor = { path = "../../../packages/flet-code-editor", editable = true }
+flet-color-pickers = { path = "../../../packages/flet-color-pickers", editable = true }
 flet-datatable2 = { path = "../../../packages/flet-datatable2", editable = true }
 flet-appauth = { path = "../../../packages/flet-appauth", editable = true }
 flet-flashlight = { path = "../../../packages/flet-flashlight", editable = true }
 flet-geolocator = { path = "../../../packages/flet-geolocator", editable = true }
 flet-lottie = { path = "../../../packages/flet-lottie", editable = true }
+flet-local-auth = { path = "../../../packages/flet-local-auth", editable = true }
 flet-map = { path = "../../../packages/flet-map", editable = true }
+flet-notifications = { path = "../../../packages/flet-notifications", editable = true }
 flet-permission-handler = { path = "../../../packages/flet-permission-handler", editable = true }
 flet-rive = { path = "../../../packages/flet-rive", editable = true }
 flet-secure-storage = { path = "../../../packages/flet-secure-storage", editable = true }
+flet-shadcn-ui = { path = "../../../packages/flet-shadcn-ui", editable = true }
+flet-spinkit = { path = "../../../packages/flet-spinkit", editable = true }
 flet-video = { path = "../../../packages/flet-video", editable = true }
 flet-webview = { path = "../../../packages/flet-webview", editable = true }
 
@@ -65,19 +75,25 @@ flet-audio = "../../../packages/flet-audio"
 flet-audio-recorder = "../../../packages/flet-audio-recorder"
 flet-camera = "../../../packages/flet-camera"
 flet-charts = "../../../packages/flet-charts"
+flet-code-editor = "../../../packages/flet-code-editor"
+flet-color-pickers = "../../../packages/flet-color-pickers"
 flet-datatable2 = "../../../packages/flet-datatable2"
 flet-appauth = "../../../packages/flet-appauth"
 flet-flashlight = "../../../packages/flet-flashlight"
 flet-geolocator = "../../../packages/flet-geolocator"
 flet-lottie = "../../../packages/flet-lottie"
+flet-local-auth = "../../../packages/flet-local-auth"
 flet-map = "../../../packages/flet-map"
+flet-notifications = "../../../packages/flet-notifications"
 flet-permission-handler = "../../../packages/flet-permission-handler"
 flet-rive = "../../../packages/flet-rive"
 flet-secure-storage = "../../../packages/flet-secure-storage"
+flet-shadcn-ui = "../../../packages/flet-shadcn-ui"
+flet-spinkit = "../../../packages/flet-spinkit"
 flet-video = "../../../packages/flet-video"
 flet-webview = "../../../packages/flet-webview"
 
-# Docs: https://docs.flet.dev/publish/
+# Docs: https://flet.dev/docs/publish/
 [tool.flet]
 product = "Flet Build Test"
 artifact = "flet-build-test"
@@ -90,8 +106,30 @@ build_number = 1
 [tool.flet.app]
 path = "src"
 
+[tool.flet.boot_screen]
+name = "spinkit"
+
+[tool.flet.boot_screen.spinkit]
+theme_mode = "auto"
+spinner = "ChasingDots"
+spinner_color_light = "#7c4dff"
+spinner_color_dark = "#b388ff"
+spinner_size = 60
+prepare_message = "Preparing your app..."
+startup_message = "Starting up..."
+fade_out_duration = 200
+
+[tool.flet.android.permission]
+"android.permission.CAMERA" = true
+"android.permission.RECORD_AUDIO" = true
+"android.permission.ACCESS_FINE_LOCATION" = { maxSdkVersion = "30" }
+"android.permission.BLUETOOTH_SCAN" = { usesPermissionFlags = "neverForLocation" }
+
 [tool.flet.android.meta_data]
 "com.google.android.gms.ads.APPLICATION_ID" = "ca-app-pub-3940256099942544~3347511713"
+
+# [tool.flet.android.provider]
+# "rikka.shizuku.ShizukuProvider" = { authorities = "${applicationId}.shizuku", multiprocess = "false", enabled = "true", exported = "true", permission = "android.permission.INTERACT_ACROSS_USERS_FULL" }
 
 [tool.flet.ios.info]
 GADApplicationIdentifier = "ca-app-pub-3940256099942544~3347511713"

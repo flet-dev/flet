@@ -27,7 +27,20 @@ class Semantics(Control):
 
     label: Optional[str] = None
     """
-    A textual description of the [`content`][(c).].
+    A textual description of the :attr:`content`.
+    """
+
+    identifier: Optional[str] = None
+    """
+    A stable identifier for this node in the native accessibility hierarchy.
+
+    Unlike :attr:`label`, this value is not announced to users. Native testing
+    tools use it as Android ``resource-id``, iOS ``accessibilityIdentifier``,
+    and the web ``flt-semantics-identifier`` DOM attribute. Widget tests can
+    match it with :meth:`flet.testing.Tester.find_by_semantics_identifier`.
+
+    Setting this property forces a dedicated semantics node, equivalent to
+    setting :attr:`container` to ``True``.
     """
 
     expanded: Optional[bool] = None
@@ -54,12 +67,12 @@ class Semantics(Control):
 
     obscured: Optional[bool] = None
     """
-    Whether [`value`][(c).] should be obscured.
+    Whether :attr:`value` should be obscured.
     """
 
     multiline: Optional[bool] = None
     """
-    Whether the [`value`][(c).] is coming from a field that supports multiline text \
+    Whether the :attr:`value` is coming from a field that supports multiline text \
     editing.
     """
 
@@ -133,7 +146,10 @@ class Semantics(Control):
 
     on_tap_hint_text: Optional[str] = None
     """
-    TBD
+    A hint describing what happens when the user activates :attr:`on_tap`.
+
+    Assistive technologies can announce this together with :attr:`hint_text` to make
+    the tap action more specific.
     """
 
     current_value_length: Optional[int] = None
@@ -144,12 +160,20 @@ class Semantics(Control):
 
     heading_level: Optional[int] = None
     """
-    The heading level in the DOM document structure.
+    The heading level in the document structure.
+
+    A level of `1` usually marks the main heading of a page, `2` its first
+    subsection, and so on. Screen readers use it to navigate between sections: on
+    web it sets the `aria-level` attribute, and on iOS and Android 9 (API 28) or
+    later any level marks the node as a heading for VoiceOver and TalkBack.
     """
 
     exclude_semantics: bool = False
     """
-    TBD
+    Whether the semantics information from :attr:`content` should be excluded.
+
+    When `True`, only the semantics configured on this :class:`~flet.Semantics`
+    wrapper are exposed.
     """
 
     mixed: Optional[bool] = None
@@ -161,12 +185,15 @@ class Semantics(Control):
 
     on_long_press_hint_text: Optional[str] = None
     """
-    TBD
+    A hint describing what happens when the user activates :attr:`on_long_press`.
     """
 
-    container: Optional[bool] = None
+    container: bool = False
     """
-    TBD
+    Whether this semantics node should introduce its own semantic container.
+
+    A container groups the semantics of its subtree into a distinct node instead of
+    always merging with surrounding semantics.
     """
 
     live_region: Optional[bool] = None
@@ -186,7 +213,12 @@ class Semantics(Control):
 
     header: Optional[bool] = None
     """
-    Whether this subtree represents a header.
+    Whether this subtree represents a header, such as a page title or an app bar
+    title.
+
+    Note:
+        VoiceOver on iOS announces a node as a heading only when
+        :attr:`heading_level` is set.
     """
 
     image: Optional[bool] = None
@@ -201,7 +233,11 @@ class Semantics(Control):
 
     on_double_tap: Optional[ControlEventHandler["Semantics"]] = None
     """
-    TBD
+    Reserved for a semantic double-tap action.
+
+    Warning:
+        This event is not wired by the current runtime implementation and will not
+        fire until the control implementation adds support for it.
     """
 
     on_increase: Optional[ControlEventHandler["Semantics"]] = None

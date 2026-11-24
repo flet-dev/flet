@@ -11,10 +11,10 @@ import msgpack
 from flet.controls.base_control import BaseControl
 from flet.messaging.connection import Connection
 from flet.messaging.protocol import (
-    ClientAction,
-    ClientMessage,
     ControlEventBody,
     InvokeMethodResponseBody,
+    Message,
+    MessageAction,
     RegisterClientRequestBody,
     RegisterClientResponseBody,
     UpdateControlPropsBody,
@@ -50,6 +50,12 @@ class PyodideConnection(Connection):
         self.__before_main = before_main
         flet_js.start_connection = self.connect
         self.__running_tasks = set()
+        # DataChannel mux registry. Pyodide mode has no dart_bridge, so
+        # DataChannels ride the same postMessage transport as the Flet
+        # protocol — disambiguated by the wire-format type byte.
+        self._data_channels: dict[int, Any] = {}
+        # postMessage inside the browser — same-machine, memcpy-class.
+        self.local_data_transport = True
         self.pubsubhub = PubSubHub()
         self.loop = asyncio.get_running_loop()
 
@@ -69,15 +75,39 @@ class PyodideConnection(Connection):
 
     async def receive_loop(self):
         """
-        Continuously receives, decodes, and dispatches inbound client messages.
+        Continuously receives, decodes, and dispatches inbound packets.
 
-        This loop waits for raw messages queued by `send_from_js()`, decodes MsgPack
-        payloads, and forwards parsed protocol frames to `__on_message()`.
+        Wire format on the postMessage transport: each packet from Dart is
+        `[type:u8][payload]`. type=0x00 is a MsgPack-encoded Flet protocol
+        frame; type=0x01 is a raw DataChannel frame
+        (`[channel_id:u32 LE][bytes]`).
         """
         while True:
             data = await self.__receive_queue.get()
-            message = msgpack.unpackb(data.to_py(), ext_hook=decode_ext_from_msgpack)
-            await self.__on_message(message)
+            packet = bytes(data.to_py())
+            if not packet:
+                continue
+            ptype = packet[0]
+            if ptype == 0x00:
+                # One bad message must not end the loop: nothing would be
+                # received after it and the app would freeze.
+                try:
+                    message = msgpack.unpackb(
+                        packet[1:], ext_hook=decode_ext_from_msgpack
+                    )
+                    await self.__on_message(message)
+                except Exception:
+                    logger.exception("Error handling a message from the client.")
+            elif ptype == 0x01:
+                if len(packet) < 5:
+                    logger.debug("Dropping malformed data-channel frame.")
+                    continue
+                channel_id = int.from_bytes(packet[1:5], "little", signed=False)
+                channel = self._data_channels.get(channel_id)
+                if channel is not None:
+                    channel._deliver(packet[5:])
+            else:
+                logger.debug("Dropping packet with unknown type 0x%02x", ptype)
 
     def send_from_js(self, message: Any):
         """
@@ -104,11 +134,11 @@ class PyodideConnection(Connection):
         Raises:
             RuntimeError: If the action type is unknown.
         """
-        action = ClientAction(data[0])
+        action = MessageAction(data[0])
         body = data[1]
-        transport_log.debug(f"_on_message: {action} {body}")
+        transport_log.debug("_on_message: %s %s", action, body)
         task = None
-        if action == ClientAction.REGISTER_CLIENT:
+        if action == MessageAction.REGISTER_CLIENT:
             req = RegisterClientRequestBody(**body)
 
             # create new session
@@ -129,8 +159,8 @@ class PyodideConnection(Connection):
 
             # register response
             self.send_message(
-                ClientMessage(
-                    ClientAction.REGISTER_CLIENT,
+                Message(
+                    MessageAction.REGISTER_CLIENT,
                     RegisterClientResponseBody(
                         session_id=self.session.id,
                         page_patch=self.session.get_page_patch(),
@@ -145,17 +175,17 @@ class PyodideConnection(Connection):
             elif register_error:
                 self.session.error(register_error)
 
-        elif action == ClientAction.CONTROL_EVENT:
+        elif action == MessageAction.CONTROL_EVENT:
             req = ControlEventBody(**body)
             task = asyncio.create_task(
                 self.session.dispatch_event(req.target, req.name, req.data)
             )
 
-        elif action == ClientAction.UPDATE_CONTROL_PROPS:
+        elif action == MessageAction.UPDATE_CONTROL_PROPS:
             req = UpdateControlPropsBody(**body)
             self.session.apply_patch(req.id, req.props)
 
-        elif action == ClientAction.INVOKE_METHOD:
+        elif action == MessageAction.INVOKE_METHOD:
             req = InvokeMethodResponseBody(**body)
             self.session.handle_invoke_method_results(
                 req.control_id, req.call_id, req.result, req.error
@@ -169,16 +199,41 @@ class PyodideConnection(Connection):
             self.__running_tasks.add(task)
             task.add_done_callback(self.__running_tasks.discard)
 
-    def send_message(self, message: ClientMessage):
+    def send_message(self, message: Message):
         """
         Serializes and sends an outbound protocol message to JavaScript.
+
+        Wire format: `[0x00][msgpack body]`. postMessage preserves message
+        boundaries, so no length prefix.
 
         Args:
             message: Client message to serialize with MsgPack and send.
         """
-        transport_log.debug(f"send_message: {message}")
-        m = msgpack.packb(
+        transport_log.debug("send_message: %s", message)
+        body = msgpack.packb(
             [message.action, message.body],
             default=configure_encode_object_for_msgpack(BaseControl),
         )
-        self.send_callback(m)
+        self.send_callback(b"\x00" + body)
+
+    def send_data_channel_frame(self, channel_id: int, payload: bytes) -> None:
+        """Send a raw DataChannel frame `[0x01][channel_id:u32 LE][bytes]`
+        over postMessage. Called by `_ProtocolMuxedDataChannel.send`."""
+        header = b"\x01" + channel_id.to_bytes(4, "little", signed=False)
+        self.send_callback(header + payload)
+
+    def data_channel_for(self, channel_id: int):
+        """Resolve or construct the muxed DataChannel for `channel_id`.
+        Idempotent — same id returns the same instance within the session.
+        """
+        from flet.data_channel import _ProtocolMuxedDataChannel
+
+        existing = self._data_channels.get(channel_id)
+        if existing is not None:
+            return existing
+        channel = _ProtocolMuxedDataChannel(channel_id, self)
+        self._data_channels[channel_id] = channel
+        return channel
+
+    def unregister_data_channel(self, channel_id: int) -> None:
+        self._data_channels.pop(channel_id, None)

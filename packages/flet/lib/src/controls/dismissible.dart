@@ -1,6 +1,6 @@
 import 'dart:async';
 
-import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 
 import '../extensions/control.dart';
 import '../models/control.dart';
@@ -60,14 +60,14 @@ class _DismissibleControlState extends State<DismissibleControl> {
             "dismiss_direction", DismissDirection.horizontal)!,
         background: widget.control.buildWidget("background"),
         secondaryBackground: widget.control.buildWidget("secondary_background"),
-        onDismissed: widget.control.getBool("on_dismiss", false)!
+        onDismissed: widget.control.hasEventHandler("dismiss")
             ? (DismissDirection direction) => widget.control
                 .triggerEvent("dismiss", {"direction": direction.name})
             : null,
-        onResize: widget.control.getBool("on_resize", false)!
+        onResize: widget.control.hasEventHandler("resize")
             ? () => widget.control.triggerEvent("resize")
             : null,
-        onUpdate: widget.control.getBool("on_update", false)!
+        onUpdate: widget.control.hasEventHandler("update")
             ? (DismissUpdateDetails details) {
                 widget.control.triggerEvent(
                     "update",
@@ -79,7 +79,7 @@ class _DismissibleControlState extends State<DismissibleControl> {
                         .toMap());
               }
             : null,
-        confirmDismiss: widget.control.getBool("on_confirm_dismiss", false)!
+        confirmDismiss: widget.control.hasEventHandler("confirm_dismiss")
             ? (DismissDirection direction) {
                 var completer = Completer<bool?>();
                 widget.control
@@ -92,10 +92,10 @@ class _DismissibleControlState extends State<DismissibleControl> {
                 );
               }
             : null,
-        movementDuration: widget.control
-            .getDuration("duration", const Duration(milliseconds: 200))!,
+        movementDuration: widget.control.getDuration(
+            "movement_duration", const Duration(milliseconds: 200))!,
         resizeDuration: widget.control
-            .getDuration("duration", const Duration(milliseconds: 300))!,
+            .getDuration("resize_duration", const Duration(milliseconds: 300))!,
         crossAxisEndOffset:
             widget.control.getDouble("cross_axis_end_offset", 0.0)!,
         dismissThresholds: widget.control

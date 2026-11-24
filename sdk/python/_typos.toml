@@ -1,0 +1,48 @@
+[files]
+# Generated Xcode project files contain random hex UUIDs that typos
+# misreads as misspelled words. flet-mcp's icons.json vendors Google's
+# icon search metadata, whose tags deliberately include common
+# misspellings for typo-tolerant search. The icon name lists are generated
+# from Flutter's own `icons.dart` and carry its spelling, including a handful
+# of upstream misspellings we cannot correct without breaking the API.
+extend-exclude = [
+    "*.pbxproj",
+    "sdk/python/packages/flet-mcp/src/flet_mcp/data/icons.json",
+    "*icon-codepoints.json",
+    "*/controls/material/icons.json",
+    "*/controls/cupertino/cupertino_icons.json",
+    "*/controls/material/icons.pyi",
+    "*/controls/cupertino/cupertino_icons.pyi",
+    "packages/flet/lib/src/utils/material_icons.dart",
+    "packages/flet/lib/src/utils/cupertino_icons.dart",
+    # Generated from lucide_icons_flutter; keeps Lucide's legacy aliases such
+    # as `astroid` and `sendHorizonal`.
+    "*/flet_shadcn_ui/lucide_icons.json",
+    "*/flet_shadcn_ui/lucide_icons.pyi",
+    "*/flet_shadcn_ui/lib/src/utils/lucide_icons.dart",
+]
+
+[default.extend-identifiers]
+# Public Dart extension name in packages/flet; renaming it would break
+# extensions that refer to it.
+LocaleExtention = "LocaleExtention"
+
+[default.extend-words]
+# AAC High Efficiency audio codec enum member name
+AACHE = "AACHE"
+ROUTEROS = "ROUTEROS"
+# OpenType variable font axis tag for width
+wdth = "wdth"
+# iOS Unique Device IDentifier (simctl `.udid` JSON field / shell var names)
+UDID = "UDID"
+udid = "udid"
+# Python package name (Mozilla CA bundle)
+certifi = "certifi"
+# Apple App Store Connect error-code prefix (e.g. ITMS-90889)
+ITMS = "ITMS"
+# Pillow's premultiplied-alpha mode is spelled "RGBa" with a lowercase "a" to
+# distinguish it from "RGBA" (`Image.convert("RGBa")`). typos splits that on
+# the case boundary and reads the trailing "Ba" as a misspelling of "By".
+Ba = "Ba"
+# The variable a PyInstaller hook module must define for its data files.
+datas = "datas"

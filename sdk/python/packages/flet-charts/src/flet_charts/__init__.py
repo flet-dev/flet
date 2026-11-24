@@ -33,6 +33,10 @@ from flet_charts.matplotlib_chart import (
     MatplotlibChartMessageEvent,
     MatplotlibChartToolbarButtonsUpdateEvent,
 )
+from flet_charts.matplotlib_chart_canvas import (
+    MatplotlibChartCanvas,
+    MatplotlibChartCanvasResizeEvent,
+)
 from flet_charts.matplotlib_chart_with_toolbar import MatplotlibChartWithToolbar
 from flet_charts.pie_chart import PieChart, PieChartEvent
 from flet_charts.pie_chart_section import PieChartSection
@@ -54,6 +58,7 @@ from flet_charts.types import (
     ChartCirclePoint,
     ChartCrossPoint,
     ChartDataPointTooltip,
+    ChartErrorRange,
     ChartEventType,
     ChartGridLines,
     ChartPointLine,
@@ -81,6 +86,7 @@ __all__ = [
     "ChartCirclePoint",
     "ChartCrossPoint",
     "ChartDataPointTooltip",
+    "ChartErrorRange",
     "ChartEventType",
     "ChartGridLines",
     "ChartPointLine",
@@ -95,6 +101,8 @@ __all__ = [
     "LineChartEventSpot",
     "LineChartTooltip",
     "MatplotlibChart",
+    "MatplotlibChartCanvas",
+    "MatplotlibChartCanvasResizeEvent",
     "MatplotlibChartMessageEvent",
     "MatplotlibChartToolbarButtonsUpdateEvent",
     "MatplotlibChartWithToolbar",

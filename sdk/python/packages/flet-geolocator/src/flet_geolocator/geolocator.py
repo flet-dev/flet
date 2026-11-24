@@ -32,7 +32,7 @@ class Geolocator(ft.Service):
     """
     Fires when an error occurs.
 
-    The [`data`][flet.Event.data] property of the event
+    The :attr:`~flet.Event.data` property of the event
     handler argument contains information on the error.
     """
 
@@ -55,17 +55,19 @@ class Geolocator(ft.Service):
         Note:
             Depending on the availability of different location services,
             this can take several seconds. It is recommended to call the
-            [`get_last_known_position`][(c).] method first to receive a
+            :meth:`get_last_known_position` method first to receive a
             known/cached position and update it with the result of the
-            [`get_current_position`][(c).] method.
+            :meth:`get_current_position` method.
 
         Args:
             configuration: Additional configuration for the location request.
-                If not specified, then the [`Geolocator.configuration`][(p).]
+                If not specified, then the \
+                :attr:`flet_geolocator.Geolocator.configuration`
                 property is used.
 
         Returns:
-            The current position of the device as a [`GeolocatorPosition`][(p).].
+            The current position of the device as a \
+            :class:`~flet_geolocator.GeolocatorPosition`.
         """
         r = await self._invoke_method(
             method_name="get_current_position",
@@ -73,17 +75,16 @@ class Geolocator(ft.Service):
         )
         return GeolocatorPosition(**r)
 
-    async def get_last_known_position(self) -> GeolocatorPosition:
+    async def get_last_known_position(self) -> Optional[GeolocatorPosition]:
         """
         Gets the last known position stored on the user's device.
         The accuracy can be defined using the
-        [`Geolocator.configuration`][(p).] property.
-
-        Note:
-            This method is not supported on web platform.
+        :attr:`~flet_geolocator.Geolocator.configuration` property.
 
         Returns:
-            The last known position of the device as a [`GeolocatorPosition`][(p).].
+            The last known position of the device as a \
+            :class:`~flet_geolocator.GeolocatorPosition`,
+            or `None` if no last known position is available.
 
         Raises:
             FletUnsupportedPlatformException: If invoked on a web platform.
@@ -92,10 +93,8 @@ class Geolocator(ft.Service):
             raise ft.FletUnsupportedPlatformException(
                 "get_last_known_position is not supported on web"
             )
-        r = await self._invoke_method(
-            "get_last_known_position",
-        )
-        return GeolocatorPosition(**r)
+        r = await self._invoke_method("get_last_known_position")
+        return GeolocatorPosition(**r) if r else None
 
     async def get_permission_status(self) -> GeolocatorPermissionStatus:
         """
@@ -116,9 +115,7 @@ class Geolocator(ft.Service):
         Returns:
             The status of the permission request.
         """
-        r = await self._invoke_method(
-            "request_permission",
-        )
+        r = await self._invoke_method("request_permission")
         return GeolocatorPermissionStatus(r)
 
     async def is_location_service_enabled(self) -> bool:
@@ -133,9 +130,6 @@ class Geolocator(ft.Service):
     async def open_app_settings(self) -> bool:
         """
         Attempts to open the app's settings.
-
-        Note:
-            This method is not supported on web platform.
 
         Returns:
             `True` if the app's settings were opened successfully, `False` otherwise.
@@ -155,9 +149,6 @@ class Geolocator(ft.Service):
         """
         Attempts to open the device's location settings.
 
-        Note:
-            This method is not supported on web platform.
-
         Returns:
             `True` if the device's settings were opened successfully, `False` otherwise.
 
@@ -168,9 +159,7 @@ class Geolocator(ft.Service):
             raise ft.FletUnsupportedPlatformException(
                 "open_location_settings is not supported on web"
             )
-        return await self._invoke_method(
-            "open_location_settings",
-        )
+        return await self._invoke_method("open_location_settings")
 
     async def distance_between(
         self,

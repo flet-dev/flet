@@ -1,0 +1,26 @@
+[project]
+name = "navigation-drawer-position-start"
+version = "1.0.0"
+description = "Demonstrates a start-position NavigationDrawer with labeled destinations and callbacks."
+requires-python = ">=3.10"
+keywords = ["navigation drawer", "drawer", "navigation", "start position", "async"]
+authors = [{ name = "Flet team", email = "hello@flet.dev" }]
+dependencies = ["flet"]
+
+[dependency-groups]
+dev = ["flet-cli", "flet-desktop", "flet-web"]
+
+[tool.flet.gallery]
+categories = ["Navigation/NavigationDrawer"]
+
+[tool.flet.metadata]
+title = "Start Position"
+controls = ["NavigationDrawer", "NavigationDrawerDestination", "Button", "SafeArea", "Container", "Divider", "Page"]
+layout_pattern = "drawer-navigation"
+complexity = "basic"
+features = ["start drawer", "navigation destinations", "selection and dismiss callbacks"]
+
+[tool.flet]
+org = "dev.flet"
+company = "Flet"
+copyright = "Copyright (C) 2023-2026 by Flet"

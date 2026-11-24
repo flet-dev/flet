@@ -1,0 +1,26 @@
+[project]
+name = "menu-bar-nested-submenus"
+version = "1.0.0"
+description = "Builds a MenuBar with nested submenus, hover callbacks, and click feedback."
+requires-python = ">=3.10"
+keywords = ["menu bar", "submenu", "nested menu", "events", "navigation"]
+authors = [{ name = "Flet team", email = "hello@flet.dev" }]
+dependencies = ["flet"]
+
+[dependency-groups]
+dev = ["flet-cli", "flet-desktop", "flet-web"]
+
+[tool.flet.gallery]
+categories = ["Navigation/MenuBar"]
+
+[tool.flet.metadata]
+title = "MenuBar with nested submenus"
+controls = ["SafeArea", "Row", "MenuBar", "SubmenuButton", "MenuItemButton", "AppBar", "SnackBar", "Text", "Icon"]
+layout_pattern = "single-panel"
+complexity = "basic"
+features = ["nested submenus", "menu open and close callbacks", "menu item click feedback"]
+
+[tool.flet]
+org = "dev.flet"
+company = "Flet"
+copyright = "Copyright (C) 2023-2026 by Flet"

@@ -1,0 +1,26 @@
+[project]
+name = "cupertino-checkbox-styled"
+version = "1.0.0"
+description = "Configures CupertinoCheckbox styles including fill states, shape, tristate, and label position."
+requires-python = ">=3.10"
+keywords = ["cupertino", "checkbox", "styling", "tristate", "shape"]
+authors = [{ name = "Flet team", email = "hello@flet.dev" }]
+dependencies = ["flet"]
+
+[dependency-groups]
+dev = ["flet-cli", "flet-desktop", "flet-web"]
+
+[tool.flet.gallery]
+categories = ["Input/CupertinoCheckbox"]
+
+[tool.flet.metadata]
+title = "Styled"
+controls = ["SafeArea", "Column", "CupertinoCheckbox", "CircleBorder"]
+layout_pattern = "form"
+complexity = "basic"
+features = ["tristate checkbox", "state-based fill colors", "custom shape", "left-side label"]
+
+[tool.flet]
+org = "dev.flet"
+company = "Flet"
+copyright = "Copyright (C) 2023-2026 by Flet"

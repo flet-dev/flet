@@ -1,8 +1,9 @@
-import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 import 'package:screenshot/screenshot.dart';
 
 import '../extensions/control.dart';
 import '../models/control.dart';
+import '../utils/numbers.dart';
 import '../utils/time.dart';
 import 'base_controls.dart';
 
@@ -13,10 +14,10 @@ class ScreenshotControl extends StatefulWidget {
       : super(key: key ?? ValueKey("control_${control.id}"));
 
   @override
-  State<ScreenshotControl> createState() => _InteractiveViewerControlState();
+  State<ScreenshotControl> createState() => _ScreenshotControlState();
 }
 
-class _InteractiveViewerControlState extends State<ScreenshotControl> {
+class _ScreenshotControlState extends State<ScreenshotControl> {
   final ScreenshotController _screenshotController = ScreenshotController();
 
   @override
@@ -30,7 +31,7 @@ class _InteractiveViewerControlState extends State<ScreenshotControl> {
     switch (name) {
       case "capture":
         return await _screenshotController.capture(
-            pixelRatio: args["pixel_ratio"],
+            pixelRatio: parseDouble(args["pixel_ratio"]),
             delay: parseDuration(
                 args["delay"], const Duration(milliseconds: 20))!);
       default:

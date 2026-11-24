@@ -1,0 +1,26 @@
+[project]
+name = "raw-image-plasma"
+version = "1.0.0"
+description = "Streams a procedurally generated plasma animation through RawImage with a live FPS counter."
+requires-python = ">=3.10"
+keywords = ["raw image", "plasma", "animation", "streaming", "numpy", "fps"]
+authors = [{ name = "Flet team", email = "hello@flet.dev" }]
+dependencies = ["flet", "numpy"]
+
+[dependency-groups]
+dev = ["flet-cli", "flet-desktop", "flet-web"]
+
+[tool.flet.gallery]
+categories = ["Displays/RawImage"]
+
+[tool.flet.metadata]
+title = "Plasma animation"
+controls = ["RawImage", "SafeArea", "Column", "Row", "Slider"]
+layout_pattern = "fullscreen canvas with status bar"
+complexity = "intermediate"
+features = ["raw frame streaming", "numpy-generated frames", "fps counter", "render resolution slider"]
+
+[tool.flet]
+org = "dev.flet"
+company = "Flet"
+copyright = "Copyright (C) 2023-2026 by Flet"

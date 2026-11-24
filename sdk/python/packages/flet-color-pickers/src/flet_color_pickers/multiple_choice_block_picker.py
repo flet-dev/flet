@@ -28,6 +28,6 @@ class MultipleChoiceBlockPicker(ft.LayoutControl):
     """
     Called when the picker colors are changed.
 
-    The [`data`][flet.Event.data] property of the event handler argument contains
+    The :attr:`~flet.Event.data` property of the event handler argument contains
     the list of color values as hex strings.
     """

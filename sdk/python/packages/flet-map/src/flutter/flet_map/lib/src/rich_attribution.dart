@@ -1,5 +1,5 @@
 import 'package:flet/flet.dart';
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:flutter_map/flutter_map.dart';
 
 import 'utils/attribution_alignment.dart';
@@ -44,19 +44,53 @@ class _RichAttributionControlState extends State<RichAttributionControl>
         .nonNulls
         .toList();
 
-    return RichAttributionWidget(
-        attributions: attributions,
-        permanentHeight: widget.control.getDouble("permanent_height", 24.0)!,
-        popupBackgroundColor: widget.control.getColor(
-            "popup_bgcolor", context, Theme.of(context).colorScheme.surface),
-        showFlutterMapAttribution:
-            widget.control.getBool("show_flutter_map_attribution", true)!,
-        alignment: parseAttributionAlignment(
-            widget.control.getString("alignment"),
-            AttributionAlignment.bottomRight)!,
-        popupBorderRadius:
-            widget.control.getBorderRadius("popup_border_radius"),
-        popupInitialDisplayDuration: widget.control
-            .getDuration("popup_initial_display_duration", Duration.zero)!);
+    var permanentHeight = widget.control.getDouble("permanent_height", 24.0)!;
+
+    return BaseControl(
+      control: widget.control,
+      child: RichAttributionWidget(
+          attributions: attributions,
+          permanentHeight: permanentHeight,
+          openButton: (context, open) => _openButton(open, permanentHeight),
+          closeButton: (context, close) =>
+              _closeButton(context, close, permanentHeight),
+          popupBackgroundColor: widget.control.getColor(
+              "popup_bgcolor", context, Theme.of(context).colorScheme.surface),
+          showFlutterMapAttribution:
+              widget.control.getBool("show_flutter_map_attribution", true)!,
+          alignment: widget.control.getAttributionAlignment(
+              "alignment", AttributionAlignment.bottomRight)!,
+          popupBorderRadius:
+              widget.control.getBorderRadius("popup_border_radius"),
+          popupInitialDisplayDuration: widget.control
+              .getDuration("popup_initial_display_duration", Duration.zero)!),
+    );
+  }
+
+  /// The button that opens the attributions popup.
+  ///
+  /// Same as `RichAttributionWidget`'s default, which flutter_map builds from
+  /// the Flutter SDK's Material library rather than `material_ui`.
+  Widget _openButton(VoidCallback open, double size) {
+    return IconButton(
+      onPressed: open,
+      tooltip: 'Attributions',
+      icon: Icon(Icons.info_outlined, color: Colors.black, size: size),
+    );
+  }
+
+  /// The button that closes the attributions popup.
+  ///
+  /// Same as `RichAttributionWidget`'s default, but colored from the app's
+  /// theme: the default reads the SDK's Material theme, which apps rendered
+  /// with `material_ui` don't provide, so it fell back to a dark icon on dark
+  /// popups.
+  Widget _closeButton(BuildContext context, VoidCallback close, double size) {
+    return IconButton(
+      onPressed: close,
+      icon: Icon(Icons.cancel_outlined,
+          color: Theme.of(context).textTheme.titleSmall?.color ?? Colors.black,
+          size: size),
+    );
   }
 }

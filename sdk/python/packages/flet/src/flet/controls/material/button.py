@@ -1,11 +1,13 @@
 from dataclasses import field
 from typing import Optional, Union
 
+from flet.controls.action_control import ActionControl
 from flet.controls.adaptive_control import AdaptiveControl
 from flet.controls.base_control import control
 from flet.controls.buttons import ButtonStyle
 from flet.controls.control import Control
 from flet.controls.control_event import ControlEventHandler
+from flet.controls.icon_data import IconData
 from flet.controls.layout_control import LayoutControl
 from flet.controls.types import (
     ClipBehavior,
@@ -15,12 +17,13 @@ from flet.controls.types import (
     StrOrControl,
     Url,
 )
+from flet.utils.validation import V, ValidationRules
 
 __all__ = ["Button"]
 
 
 @control("Button")
-class Button(LayoutControl, AdaptiveControl):
+class Button(LayoutControl, AdaptiveControl, ActionControl):
     """
     A material button.
 
@@ -37,22 +40,22 @@ class Button(LayoutControl, AdaptiveControl):
     content: Optional[StrOrControl] = None
     """
     The button's label.
-    Typically a [`Text`][flet.] control or a string.
-    If a string is provided, it will be wrapped in a [`Text`][flet.] control.
+    Typically a :class:`~flet.Text` control or a string.
+    If a string is provided, it will be wrapped in a :class:`~flet.Text` control.
 
     Raises:
-        ValueError: If neither [`icon`][(c).] nor [`content`][(c).]
+        ValueError: If neither `content` nor :attr:`icon`
             (string or visible control) is provided.
     """
 
     icon: Optional[IconDataOrControl] = None
     """
     The icon to display inside the button.
-    Typically an [`Icon`][flet.] control or an `IconData`.
-    If an `IconData` is provided, it will be wrapped in an [`Icon`][flet.] control.
+    Typically an :class:`~flet.Icon` control or an `IconData`.
+    If an `IconData` is provided, it will be wrapped in an :class:`~flet.Icon` control.
 
     Raises:
-        ValueError: If neither [`icon`][(c).] nor [`content`][(c).]
+        ValueError: If neither `icon` nor :attr:`content`
             (string or visible control) is provided.
     """
     icon_color: Optional[ColorValue] = None
@@ -84,7 +87,7 @@ class Button(LayoutControl, AdaptiveControl):
     The button's style.
     """
 
-    autofocus: Optional[bool] = None
+    autofocus: bool = False
     """
     Whether this button should be focused initially.
     """
@@ -124,17 +127,26 @@ class Button(LayoutControl, AdaptiveControl):
     Called when the button loses focus.
     """
 
+    __validation_rules__: ValidationRules = (
+        V.ensure(
+            lambda ctrl: (
+                (
+                    isinstance(ctrl.icon, IconData)
+                    or (isinstance(ctrl.icon, Control) and ctrl.icon.visible)
+                )
+                or (
+                    isinstance(ctrl.content, str)
+                    or (isinstance(ctrl.content, Control) and ctrl.content.visible)
+                )
+            ),
+            message=(
+                "at least icon or content (string or visible Control) must be provided"
+            ),
+        ),
+    )
+
     def before_update(self):
         super().before_update()
-        if not (
-            self.icon
-            or isinstance(self.content, str)
-            or (isinstance(self.content, Control) and self.content.visible)
-        ):
-            raise ValueError(
-                "At least icon or content (string or visible Control) must be provided"
-            )
-
         if (
             self.style is not None
             or self.color is not None

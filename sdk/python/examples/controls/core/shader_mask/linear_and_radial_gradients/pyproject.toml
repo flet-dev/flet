@@ -1,0 +1,26 @@
+[project]
+name = "shader-mask-linear-and-radial-gradients"
+version = "1.0.0"
+description = "Compare radial and linear ShaderMask gradients applied to images."
+requires-python = ">=3.10"
+keywords = ["shadermask", "image", "gradients", "lineargradient", "radialgradient"]
+authors = [{ name = "Flet team", email = "hello@flet.dev" }]
+dependencies = ["flet"]
+
+[dependency-groups]
+dev = ["flet-cli", "flet-desktop", "flet-web"]
+
+[tool.flet.gallery]
+categories = ["Effects/ShaderMask"]
+
+[tool.flet.metadata]
+title = "ShaderMask linear and radial gradients"
+controls = ["ShaderMask", "Image", "Row", "SafeArea"]
+layout_pattern = "comparison-grid"
+complexity = "basic"
+features = ["linear gradient", "radial gradient", "image masking"]
+
+[tool.flet]
+org = "dev.flet"
+company = "Flet"
+copyright = "Copyright (C) 2023-2026 by Flet"

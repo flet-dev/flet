@@ -17,7 +17,14 @@ Thank you for your interest in contributing to Flet!
   - [Building the Flutter client](#building-the-flutter-client)
   - [Running the Flutter client](#running-the-flutter-client)
   - [Restarting/Rebuilding](#restartingrebuilding)
-- [Releasing Flet](#releasing-flet)
+- [Development & Release Workflow](#development--release-workflow)
+  - [Branching strategy](#branching-strategy)
+  - [Contributor guidelines](#contributor-guidelines)
+  - [Starting a release cycle](#starting-a-release-cycle)
+  - [Publishing a pre-release](#publishing-a-pre-release)
+  - [Publishing a stable release](#publishing-a-stable-release)
+  - [Hotfixes](#hotfixes)
+  - [Release preparation steps](#release-preparation-steps)
 - [New macOS environment for Flet developer](#new-macos-environment-for-flet-developer)
 
 ## Clone repo
@@ -63,13 +70,12 @@ uv sync
 Create `hello.py` file with a minimal Flet program:
 
 ```python
-import flet
-from flet import Page, Text
+import flet as ft
 
-def main(page: Page):
-    page.add(Text("Hello, world!"))
+def main(page: ft.Page):
+    page.add(ft.Text("Hello, world!"))
 
-flet.app(target=main)
+ft.run(main)
 ```
 
 and then run it:
@@ -162,13 +168,13 @@ First, run `printenv | grep FLET` (or `gci env:* | findstr FLET` on Windows) in 
 
 -  To build the Flutter client for MacOS, run:
     ```
-    flutter build macos
+    fvm flutter build macos
     ```
     When the build is complete, you should see the Flet bundle in the `FLET_VIEW_PATH`. (Running it will open a blank window.)
 -  To build the Flutter client for Web, run the below command:
     ```
-    flutter build web
-    ```   
+    fvm flutter build web --wasm
+    ```
     When the build is complete, a directory `client/build/web` will be created.
 
 ### Running the Flutter client
@@ -186,7 +192,7 @@ Making changes to the `<your-main.py>` will automatically trigger a hot reload.
 
 Now, switch to your flutter vscode instance and run the below command to start/connect the flet client:
 ```bash
-flutter run
+fvm flutter run
 ```
 then choose your device from the shown options.
 You will be able to see the debugging outputs of the flet client in this terminal.
@@ -195,7 +201,7 @@ You will be able to see the debugging outputs of the flet client in this termina
 
 - When you make changes to the flet **dart** files, you will need to restart/rerun the Flutter client for the changes to take effect in your playground. There are two ways to do this:
   - fastest: press the keyboard button `R` while in the client's terminal (press `h` to see all other possible options);
-  - slowest: use `flutter run` as seen previously.
+  - slowest: use `fvm flutter run` as seen previously.
 
 - When you make changes to the flet **python** files, you will need to restart/rerun the Python client for the changes to take effect in the opened flutter applications. This is done with the same command:
 
@@ -203,97 +209,135 @@ You will be able to see the debugging outputs of the flet client in this termina
 uv run flet run -w -p 8550 playground/<your-main.py>
 ```
 
-## Releasing Flet
+## Development & Release Workflow
 
-* Create a new `prepare-{version}` branch in [flet-dev/flet](https://github.com/flet-dev/flet) repository.
-* For every package in `packages/flet*` directory:
-  * Update package version to `{version}` in `pubspec.yaml`.
-  * Add `# {version}` with new/changed/fixed items into `CHANGELOG.md`. Only `packages/flet/CHANGELOG.md` should contain real items; other packages could have just a stub.
-* Copy `# {version}` section from `packages/flet/CHANGELOG.md` to the root `CHANGELOG.md`.
+### Branching strategy
+
+* **`main`** — always contains the latest stable release. Protected branch.
+* **`release/v{version}`** — integration branch for the next release, for example `release/v0.85.0`. Created from `main` at the start of a release cycle.
+* **`feature/*`**, **`fix/*`** — short-lived branches created from the release branch and merged back into it via PR.
+
+### Contributor guidelines
+
+* Target your PRs to the active `release/v{version}` branch (not `main`).
+* Add a new changelog record to the active release section in the root `CHANGELOG.md` in every PR targeting `release/v{version}`.
+* Assign the release milestone to all related issues and PRs.
+
+### Starting a release cycle
+
+1. Create a new GitHub milestone for the version (e.g., `0.85.0`).
+2. Create a `release/v{version}` branch from `main`.
+3. Update package version to `{version}` in `packages/flet/pubspec.yaml`.
+4. Add `## {version}` into `CHANGELOG.md` and `packages/flet/CHANGELOG.md`.
+5. Require every PR targeting `release/v{version}` to append a new record to the active root changelog section.
+
+### Publishing a pre-release
+
+1. On the release branch, create and push a tag with the format `vX.Y.Z.devN` (start from `dev0`, e.g., `v0.85.0.dev0`).
+2. CI builds and runs all tests. If everything passes, it creates a pre-release GitHub Release and publishes pre-release packages to PyPI. Pre-releases are **not** published to pub.dev.
+3. Increment `N` for each subsequent pre-release (`dev1`, `dev2`, ...).
+
+### Publishing a stable release
+
+1. Prepare the release on the release branch (see [Release preparation steps](#release-preparation-steps) below).
+2. Create `Flet {version}` PR from `release/v{version}` into `main`.
+3. Merge into `main` using a **regular merge** (not squash).
+4. Create and push a `v{version}` tag on `main` (e.g., `v0.85.0`).
+5. CI publishes to PyPI, pub.dev, and creates a GitHub Release.
+6. Close the milestone — mark remaining issues as fixed.
+7. Delete the `release/v{version}` branch.
+8. Clean up pre-release GitHub Releases and pre-release versions on PyPI.
+
+### Hotfixes
+
+For patches to the current stable release, branch directly from `main`, fix, open a PR back to `main`, merge and tag.
+
+### Release preparation steps
+
+* Keep the `## {version}` section in `packages/flet/CHANGELOG.md` in sync with the root `CHANGELOG.md` before tagging the release.
+* Ensure every merged PR on `release/v{version}` added a new record to the active root `CHANGELOG.md` section.
 * Open terminal in `client` directory and run `flutter pub get` to update Flet dependency versions in `client/pubspec.lock`.
-* Create a new `{version}` branch in [flet-dev/flet-app-templates](https://github.com/flet-dev/flet-app-templates) repository from a previously released `{current-version}` branch.
-* Create a new `{version}` branch in [flet-dev/flet-build-template](https://github.com/flet-dev/flet-build-template) repository from a previously released `{current-version}` branch.
-* Create `Prepare Flet {version}` PR to merge into `main` branch.
-* In `Build Flet package for Flutter` job of [Flet CI build](https://ci.appveyor.com/project/flet-dev/flet) make sure analysis report of every `flet*` Flutter package has only 1 issue "Publishable packages can't have 'path' dependencies.".
-* Merge `Prepare Flet {version}` PR.
-* Create and push new `v{version}` tag (with `v` prefix).
-* Update release notes at `https://github.com/flet-dev/flet/releases/tag/v{version}`.
+* Templates are in `sdk/python/templates/` and automatically packaged as zip artifacts with the GitHub Release. No manual branch creation in external repos is needed.
+* The supported Python / Pyodide versions are loaded on demand from [python-build's](https://github.com/flet-dev/python-build) date-keyed `manifest.json`; flet pins one release via `PYTHON_BUILD_RELEASE_DATE` in `sdk/python/packages/flet-cli/src/flet_cli/utils/python_versions.py`. When bumping it, keep it aligned with serious_python's `pythonReleaseDate` (both should track the same python-build release).
 
 ## New macOS environment for Flet developer
 
-* **Homebrew**: https://brew.sh/
+This section outlines how to prepare a fresh macOS environment for Flet development.
 
-After installing homebrew, install xz libraries with it:
-```
-brew install xz
-```
-
-* **Pyenv**. Install with `brew`: https://github.com/pyenv/pyenv?tab=readme-ov-file#unixmacos
-  * Install and switch to the latest Python 3.12:
-```
-pyenv install 3.12.6
-pyenv global 3.12.6
-```
-
-Setup your shell environment: https://github.com/pyenv/pyenv#set-up-your-shell-environment-for-pyenv
-
-```
-echo 'export PYENV_ROOT="$HOME/.pyenv"' >> ~/.zprofile
-echo '[[ -d $PYENV_ROOT/bin ]] && export PATH="$PYENV_ROOT/bin:$PATH"' >> ~/.zprofile
-echo 'eval "$(pyenv init -)"' >> ~/.zprofile
-```
-
-Ensure Python version is 3.12.6 and location is `/Users/{user}/.pyenv/shims/python`:
-
-```
-python --version
-which python
-```
-
-* **Rbenv**. Install with `brew`: https://github.com/rbenv/rbenv?tab=readme-ov-file#homebrew
-  * Install and switch to the latest Ruby:
-```
-rbenv install 3.3.5
-rbenv global 3.3.5
-```
-
-Ensure Ruby version is 3.3.5 and location is `/Users/{user}/.rbenv/shims/ruby`:
-
-```
-ruby --version
-which ruby
-```
-
-* **VS Code**. Install "Apple silicon" release: https://code.visualstudio.com/download
-
-* **GitHub Desktop**: https://desktop.github.com/download/
-Open GitHub Desktop app, install Rosetta.
+### Prerequisites
 
 * **uv**: https://docs.astral.sh/uv/getting-started/installation/
-
-After installing uv, set PATH:
-```
-echo 'export PATH=$HOME/.local/bin:$PATH' >> ~/.zprofile
-```
-
-Check `uv` version and make sure it's in PATH:
-
-```
-uv --version
-```
-
-* **Android Studio** for Android SDK required by Flutter: https://developer.android.com/studio
-* **XCode** for macOS and iOS SDKs: https://apps.apple.com/ca/app/xcode/id497799835?mt=12
+* **git**: https://git-scm.com/downloads
+* **Flutter**: https://docs.flutter.dev/get-started/install/macos
+* **Xcode**: Install from the Mac App Store, then open it, agree to license, and install command line tools with `xcode-select --install`.
+* **Android Studio** (optional for Android development): https://developer.android.com/studio
 * **FVM** - Flutter Version Manager: https://fvm.app/documentation/getting-started/installation
-Install flutter with fvm:
-```
-fvm install 3.24.3
-fvm global 3.24.3
+* **CocoaPods**: `sudo gem install cocoapods`
+* **Visual Studio Code**: https://code.visualstudio.com/
+
+### Clone the repository
+
+```bash
+git clone https://github.com/flet-dev/flet.git
+cd flet
 ```
 
-Set PATH:
-```
-echo 'export PATH=$HOME/fvm/default/bin:$PATH' >> ~/.zprofile
+### Install Flutter
+
+Follow the [official guide](https://docs.flutter.dev/get-started/install/macos) to install Flutter. Ensure Flutter is in your PATH and run `fvm flutter doctor` to verify.
+
+### Install uv
+
+```bash
+curl -LsSf https://astral.sh/uv/install.sh | sh
 ```
 
-* **cocoapods**: https://guides.cocoapods.org/using/getting-started.html#installation
+### Set up Python SDK
+
+```bash
+cd sdk/python
+uv sync
+```
+
+### Set up Flutter client
+
+```bash
+cd client
+fvm flutter pub get
+```
+
+### Set environment variables
+
+Add the following to your shell profile (e.g., `~/.zshrc`):
+
+```bash
+export FLET_VIEW_PATH="$HOME/flet/client/build/macos/Build/Products/Release"
+export FLET_WEB_PATH="$HOME/flet/client/build/web"
+```
+
+Then reload: `source ~/.zshrc`
+
+### Build Flutter client
+
+```bash
+cd client
+fvm flutter build macos
+fvm flutter build web --wasm
+```
+
+### Verify installation
+
+Create a `hello.py` file with the updated example and run it with `uv run python hello.py`. You should see a window with "Hello, world!".
+
+### Running tests
+
+```bash
+cd sdk/python
+uv run pytest
+```
+
+### Additional notes
+
+* For Android development, set up an Android emulator or connect a physical device.
+* For iOS development, you need Xcode and a Mac with Apple Silicon or an Intel Mac.
+* Refer to the official Flutter documentation for any platform-specific setup.

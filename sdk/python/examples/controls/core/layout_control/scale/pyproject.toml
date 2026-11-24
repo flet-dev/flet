@@ -1,0 +1,26 @@
+[project]
+name = "layout-control-scale"
+version = "1.0.0"
+description = "Applies non-uniform scaling to a container using Scale transform."
+requires-python = ">=3.10"
+keywords = ["layout control", "scale", "transform", "container"]
+authors = [{ name = "Flet team", email = "hello@flet.dev" }]
+dependencies = ["flet"]
+
+[dependency-groups]
+dev = ["flet-cli", "flet-desktop", "flet-web"]
+
+[tool.flet.gallery]
+categories = ["Layout/LayoutControl"]
+
+[tool.flet.metadata]
+title = "Scale"
+controls = ["SafeArea", "Container", "Text", "Scale"]
+layout_pattern = "single-panel"
+complexity = "basic"
+features = ["static scale transform", "non-uniform scaling"]
+
+[tool.flet]
+org = "dev.flet"
+company = "Flet"
+copyright = "Copyright (C) 2023-2026 by Flet"

@@ -3,17 +3,21 @@
 [![pypi](https://img.shields.io/pypi/v/flet-datatable2.svg)](https://pypi.python.org/pypi/flet-datatable2)
 [![downloads](https://static.pepy.tech/badge/flet-datatable2/month)](https://pepy.tech/project/flet-datatable2)
 [![python](https://img.shields.io/badge/python-%3E%3D3.10-%2334D058)](https://pypi.org/project/flet-datatable2)
-[![docstring coverage](https://docs.flet.dev/assets/badges/docs-coverage/flet-datatable2.svg)](https://docs.flet.dev/assets/badges/docs-coverage/flet-datatable2.svg)
+[![docstring coverage](https://flet.dev/docs/assets/badges/docs-coverage/flet-datatable2.svg)](https://flet.dev/docs/assets/badges/docs-coverage/flet-datatable2.svg)
 [![license](https://img.shields.io/badge/License-Apache_2.0-green.svg)](https://github.com/flet-dev/flet/blob/main/sdk/python/packages/flet-datatable2/LICENSE)
 
 An enhanced data table for [Flet](https://flet.dev) apps that builds on the built-in component by adding sticky headers,
 fixed top rows, and fixed left columns while preserving all core features.
 
+> **[Try flet-datatable2 in Flet Studio](https://studio.flet.dev/gallery/layout/datatable2/example/extensions/datatable2/sortable_and_selectable?utm_source=pypi&utm_medium=readme&utm_campaign=flet-datatable2)**
+>
+> Create, run, and share Python apps in your browser. Start from an example, write your own code, or get help from the AI agent. No installation required.
+
 It is based on [data_table_2](https://pub.dev/packages/data_table_2) Flutter package.
 
 ## Documentation
 
-You can find its documentation [here](https://docs.flet.dev/datatable2/).
+You can find its documentation [here](https://flet.dev/docs/controls/datatable2/).
 
 ## Platform Support
 
@@ -42,4 +46,4 @@ To install the `flet-datatable2` package and add it to your project dependencies
 
 ### Examples
 
-For examples, see [these](https://github.com/flet-dev/flet/tree/main/examples/controls/datatable2).
+For examples, see [these](https://github.com/flet-dev/flet/tree/main/sdk/python/examples/extensions/datatable2).

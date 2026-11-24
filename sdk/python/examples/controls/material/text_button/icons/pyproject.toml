@@ -1,0 +1,26 @@
+[project]
+name = "text-button-icons"
+version = "1.0.0"
+description = "Adds standard and custom-colored icons to TextButton controls."
+requires-python = ">=3.10"
+keywords = ["text button", "icons", "button", "material", "styling"]
+authors = [{ name = "Flet team", email = "hello@flet.dev" }]
+dependencies = ["flet"]
+
+[dependency-groups]
+dev = ["flet-cli", "flet-desktop", "flet-web"]
+
+[tool.flet.gallery]
+categories = ["Buttons/TextButton"]
+
+[tool.flet.metadata]
+title = "TextButton icons"
+controls = ["SafeArea", "Column", "TextButton"]
+layout_pattern = "stacked-actions"
+complexity = "basic"
+features = ["icon buttons", "custom icon colors"]
+
+[tool.flet]
+org = "dev.flet"
+company = "Flet"
+copyright = "Copyright (C) 2023-2026 by Flet"

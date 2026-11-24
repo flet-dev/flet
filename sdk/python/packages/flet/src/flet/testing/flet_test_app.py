@@ -3,20 +3,24 @@ import inspect
 import logging
 import os
 import platform
+import shutil
 import tempfile
-from collections.abc import Iterable
+from collections.abc import Iterable, Sequence
 from enum import Enum
 from io import BytesIO
 from pathlib import Path
-from typing import TYPE_CHECKING, Optional
+from typing import TYPE_CHECKING, Optional, Union
 
 import numpy as np
-from PIL import Image
+from PIL import Image, ImageSequence
 from skimage.metrics import structural_similarity as ssim
 
 import flet as ft
 from flet.controls.control import Control
+from flet.pytest_plugin import ensure_newline
+from flet.testing.remote_tester import RemoteTester
 from flet.testing.tester import Tester
+from flet.utils.environment import without_host_python_config
 from flet.utils.network import get_free_tcp_port
 from flet.utils.platform_utils import get_bool_env_var
 
@@ -24,6 +28,16 @@ if TYPE_CHECKING:
     from flet.app import AppCallable
 
 __all__ = ["FletTestApp"]
+
+
+def _print(*args, **kwargs) -> None:
+    """
+    `print()` that starts on its own line when pytest streams output (`-s`)
+    rather than after its progress dots, so workflow commands such as Flutter's
+    `::group::` lines are still recognized by CI.
+    """
+    ensure_newline()
+    print(*args, **kwargs)
 
 
 class DisposalMode(Enum):
@@ -54,8 +68,8 @@ class DisposalMode(Enum):
 
 class FletTestApp:
     """
-    Flet app test controller coordinates running a Python-based Flet app alongside a \
-    Flutter integration test.
+    Flet app test controller coordinates running a Python-based Flet app alongside \
+    a Flutter integration test.
 
     This class launches the Python Flet app, starts the Flutter test process,
     and facilitates programmatic interaction with the app's controls for
@@ -68,7 +82,7 @@ class FletTestApp:
         flet_app_main:
             A callable or coroutine function representing the main entry point
             of the Flet app under test. This will be invoked with a
-            [`Page`][flet.] instance when the app starts.
+            :class:`~flet.Page` instance when the app starts.
 
         assets_dir:
             Path to the directory containing static assets for the Flet app.
@@ -94,6 +108,9 @@ class FletTestApp:
         capture_golden_screenshots:
             If `True`, screenshots taken during tests are stored as golden
             reference images. Env override: `FLET_TEST_GOLDEN=1`.
+            Set `FLET_TEST_GOLDEN=failed` to compare as usual and overwrite
+            only goldens that are missing, below the similarity threshold or
+            changed in color.
 
         screenshots_pixel_ratio:
             Device pixel ratio to use when capturing screenshots.
@@ -114,6 +131,29 @@ class FletTestApp:
         skip_pump_and_settle:
             If `True`, the initial `pump_and_settle` after app start is skipped.
 
+        device_mode:
+            If `True`, the app under test runs on-device with embedded Python
+            (over dart_bridge), as produced by `flet build`. This session then
+            hosts only the `Tester` over a dedicated channel and does not run
+            `flet_app_main`. If `False` (default), the app runs here in-process
+            (host mode) against the dev `client` shell.
+            Env override: `FLET_TEST_DEVICE_MODE=1`.
+
+        app_binary:
+            Path to the executable of a Flutter app built with the integration
+            test as its entry point. When set, `start()` launches it directly;
+            otherwise it runs `flutter test`, which builds the app on every
+            start. Used only when the tests run on the host desktop platform
+            and not in device mode. Env override: `FLET_TEST_APP_BINARY`.
+
+        start_timeout:
+            Seconds `start()` waits for the Flutter app to connect before it
+            stops the Flutter test process and raises `TimeoutError`. Defaults
+            to 60 seconds when `app_binary` is launched, which connects within
+            seconds, and to no limit when `flutter test` builds the app
+            before it starts, which can take minutes. `0` disables the limit.
+            Env override: `FLET_TEST_START_TIMEOUT`.
+
     Environment Variables:
         - `FLET_TEST_PLATFORM`: Overrides `test_platform`.
         - `FLET_TEST_DEVICE`: Overrides `test_device`.
@@ -123,6 +163,8 @@ class FletTestApp:
             Overrides `screenshots_similarity_threshold`.
         - `FLET_TEST_USE_HTTP`: Enables HTTP transport when set to `1`.
         - `FLET_TEST_DISABLE_FVM`: Disables `fvm` usage when set to `1`.
+        - `FLET_TEST_APP_BINARY`: Overrides `app_binary`.
+        - `FLET_TEST_START_TIMEOUT`: Overrides `start_timeout`.
     """
 
     def __init__(
@@ -140,11 +182,17 @@ class FletTestApp:
         use_http: bool = False,
         disable_fvm: bool = False,
         skip_pump_and_settle: bool = False,
+        device_mode: bool = False,
+        app_binary: Optional[os.PathLike] = None,
+        start_timeout: Optional[float] = None,
     ):
         self.test_platform = os.getenv("FLET_TEST_PLATFORM", test_platform)
         self.test_device = os.getenv("FLET_TEST_DEVICE", test_device)
         self.__golden = (
             get_bool_env_var("FLET_TEST_GOLDEN") or capture_golden_screenshots
+        )
+        self.__golden_failed = (
+            os.getenv("FLET_TEST_GOLDEN", "").strip().lower() == "failed"
         )
         self.screenshots_pixel_ratio = float(
             os.getenv("FLET_TEST_SCREENSHOTS_PIXEL_RATIO", screenshots_pixel_ratio)
@@ -156,7 +204,15 @@ class FletTestApp:
             )
         )
         self.__disable_fvm = get_bool_env_var("FLET_TEST_DISABLE_FVM") or disable_fvm
+        app_binary = os.getenv("FLET_TEST_APP_BINARY") or app_binary
+        self.__app_binary = os.path.abspath(app_binary) if app_binary else None
+        self.__launch_app_binary = False
         self.__use_http = get_bool_env_var("FLET_TEST_USE_HTTP") or use_http
+        self.__device_mode = get_bool_env_var("FLET_TEST_DEVICE_MODE") or device_mode
+        env_start_timeout = os.getenv("FLET_TEST_START_TIMEOUT")
+        self.__start_timeout = (
+            float(env_start_timeout) if env_start_timeout else start_timeout
+        )
         self.__test_path = test_path
         self.__flet_app_main = flet_app_main
         self.__skip_pump_and_settle = skip_pump_and_settle
@@ -164,23 +220,29 @@ class FletTestApp:
         self.__assets_dir = assets_dir or "assets"
         self.__tcp_port = tcp_port
         self.__flutter_process: Optional[asyncio.subprocess.Process] = None
+        self.__flutter_output = bytearray()
+        self.__echo_flutter_output = False
+        self.__flutter_output_task: Optional[asyncio.Task] = None
+        self.__server_task: Optional[asyncio.Task] = None
+        self.__app_temp_dir: Optional[str] = None
         self.__page = None
-        self.__tester: Tester | None = None
+        self.__tester: Union[Tester, RemoteTester, None] = None
 
     @property
     def page(self) -> ft.Page:
         """
-        Returns an instance of Flet's app [`Page`][flet.].
+        Returns an instance of Flet's app :class:`~flet.Page`.
         """
         if self.__page is None:
             raise RuntimeError("page is not initialized")
         return self.__page
 
     @property
-    def tester(self) -> Tester:
+    def tester(self) -> Union[Tester, RemoteTester]:
         """
-        Returns an instance of [`Tester`][flet.testing.] class that programmatically \
-        interacts with page controls and the test environment.
+        Returns the tester that programmatically interacts with page controls \
+        and the test environment. In device mode this is a `RemoteTester` \
+        driving the app over a socket.
         """
         if self.__tester is None:
             raise RuntimeError("tester is not initialized")
@@ -189,50 +251,95 @@ class FletTestApp:
     async def start(self):
         """
         Starts Flet app and Flutter integration test process.
+
+        Raises:
+            TimeoutError: If the Flutter app has not connected within
+                `start_timeout`.
+            RuntimeError: If the Flutter process exits, or the Flet app server
+                stops, before the app has started.
+            Exception: The exception raised by the app's `main` or by its
+                first `pump_and_settle`.
         """
 
         ready = asyncio.Event()
+        main_error: Optional[Exception] = None
 
         async def main(page: ft.Page):
             """
             Initializes the test page and runs the user-provided Flet app entry point.
 
-            Args:
-                page: Connected app [`Page`][flet.] instance.
-            """
-            self.__page = page
-            self.__tester = Tester()
-            page.theme_mode = ft.ThemeMode.LIGHT
-            page.update()
+            An exception raised here is kept for `start()` to re-raise: the
+            session only logs it, and `start()` would otherwise wait for a
+            start that cannot complete.
 
-            if inspect.iscoroutinefunction(self.__flet_app_main):
-                await self.__flet_app_main(page)
-            elif callable(self.__flet_app_main):
-                self.__flet_app_main(page)
-            if not self.__skip_pump_and_settle:
-                await self.__pump_and_settle_with_timeout("start")
+            Args:
+                page: Connected app :class:`~flet.Page` instance.
+            """
+            nonlocal main_error
+            try:
+                self.__page = page
+                self.__tester = Tester()
+                page.theme_mode = ft.ThemeMode.LIGHT
+                page.update()
+
+                # In device mode the app under test runs on-device (embedded
+                # Python over dart_bridge); this session is tester-only and
+                # must NOT run the user's app. In host mode the app runs here
+                # in-process.
+                if not self.__device_mode:
+                    if inspect.iscoroutinefunction(self.__flet_app_main):
+                        await self.__flet_app_main(page)
+                    elif callable(self.__flet_app_main):
+                        self.__flet_app_main(page)
+                if not self.__skip_pump_and_settle:
+                    await self.__pump_and_settle_with_timeout("start")
+            except Exception as e:
+                main_error = e
+                raise
             ready.set()
 
         if not self.__tcp_port:
             self.__tcp_port = get_free_tcp_port()
 
-        if self.__use_http:
-            os.environ["FLET_FORCE_WEB_SERVER"] = "true"
+        if self.__device_mode:
+            # Device mode: the app runs on-device (embedded Python over
+            # dart_bridge). This process only hosts the independent RemoteTester
+            # socket that drives the on-device WidgetTester — no Flet server,
+            # no app run here.
+            remote = RemoteTester()
+            self.__tcp_port = await remote.start(host="127.0.0.1", port=self.__tcp_port)
+            self.__tester = remote
+            _print(f"Started remote tester on 127.0.0.1:{self.__tcp_port}")
+        else:
+            if self.__use_http:
+                os.environ["FLET_FORCE_WEB_SERVER"] = "true"
 
-        asyncio.create_task(
-            ft.run_async(
-                main, port=self.__tcp_port, assets_dir=str(self.__assets_dir), view=None
+            self.__server_task = asyncio.create_task(
+                ft.run_async(
+                    main,
+                    port=self.__tcp_port,
+                    assets_dir=str(self.__assets_dir),
+                    view=None,
+                )
             )
+            _print("Started Flet app")
+
+        # Echo the Flutter test process output line by line when verbose (set
+        # by `flet test -v`) or when debug logging is on; otherwise capture it
+        # into a buffer so it can be dumped if the process fails. Echoed, not
+        # inherited: each line must start on its own line, not after pytest's
+        # progress dots.
+        self.__echo_flutter_output = (
+            get_bool_env_var("FLET_TEST_VERBOSE")
+            or logging.getLogger().getEffectiveLevel() == logging.DEBUG
         )
-        print("Started Flet app")
+        stdout = asyncio.subprocess.PIPE
+        stderr = asyncio.subprocess.STDOUT
 
-        stdout = asyncio.subprocess.DEVNULL
-        stderr = asyncio.subprocess.DEVNULL
-        if logging.getLogger().getEffectiveLevel() == logging.DEBUG:
-            stdout = None
-            stderr = None
-
-        flutter_args = ["fvm", "flutter", "test", "integration_test"]
+        # The resolved Flutter executable (full path, `flutter.bat` on Windows)
+        # is passed by `flet test`; fall back to a bare "flutter" on PATH.
+        flutter_exe = os.getenv("FLET_TEST_FLUTTER_EXE", "flutter")
+        flutter_args = ["fvm", flutter_exe, "test", self.__flutter_test_target()]
 
         if self.__disable_fvm:
             flutter_args.pop(0)
@@ -254,59 +361,296 @@ class FletTestApp:
             flutter_args += ["-d", self.test_device]
 
         app_url = f"{protocol}://{tcp_addr}:{self.__tcp_port}"
-        flutter_args += [f"--dart-define=FLET_TEST_APP_URL={app_url}"]
-
-        if not self.__use_http:
-            temp_path = Path(tempfile.gettempdir()) / "flet_app_pid.txt"
-            flutter_args += [f"--dart-define=FLET_TEST_PID_FILE_PATH={temp_path}"]
-            if self.__assets_dir:
-                flutter_args += [
-                    f"--dart-define=FLET_TEST_ASSETS_DIR={self.__assets_dir}"
-                ]
-
-        self.__flutter_process = await asyncio.create_subprocess_exec(
-            *flutter_args,
-            cwd=str(self.__flutter_app_dir),
-            stdout=stdout,
-            stderr=stderr,
+        # The host's Python configuration must not reach the app under test.
+        flutter_env = without_host_python_config()
+        self.__launch_app_binary = (
+            bool(self.__app_binary)
+            and not self.__device_mode
+            and self.test_platform in ("macos", "windows", "linux")
+            and self.test_device == self.test_platform
         )
 
-        print("Started Flutter test process.")
-        print("Waiting for a Flet client to connect...")
+        if self.__launch_app_binary:
+            # Run-time equivalents of the dart-defines given to `flutter test`.
+            flutter_args = [str(self.__app_binary)]
+            flutter_env.pop("FLET_TEST_PID_FILE_PATH", None)
+            flutter_env.pop("FLET_TEST_ASSETS_DIR", None)
+            flutter_env["FLET_TEST_APP_URL"] = app_url
+            # A temporary directory of its own, see `__stop_flutter_process()`.
+            self.__app_temp_dir = tempfile.mkdtemp(prefix="flet_test_app_")
+            for name in ("TMPDIR", "TEMP", "TMP"):
+                flutter_env[name] = self.__app_temp_dir
+            if not self.__use_http:
+                flutter_env["FLET_TEST_PID_FILE_PATH"] = str(
+                    Path(tempfile.gettempdir()) / "flet_app_pid.txt"
+                )
+                if self.__assets_dir:
+                    flutter_env["FLET_TEST_ASSETS_DIR"] = str(self.__assets_dir)
+        elif self.__device_mode:
+            # The app under test runs on-device over dart_bridge and ships its
+            # own assets in app.zip. The RemoteWidgetTester connects to our
+            # RemoteTester server over an independent socket. FLET_TEST=true lets
+            # the embedded app know it is running under test (page.test == True).
+            server_url = f"tcp://{tcp_addr}:{self.__tcp_port}"
+            flutter_args += [
+                f"--dart-define=FLET_TEST_SERVER_URL={server_url}",
+                "--dart-define=FLET_TEST=true",
+            ]
+        else:
+            flutter_args += [f"--dart-define=FLET_TEST_APP_URL={app_url}"]
 
-        while not ready.is_set():
+            if not self.__use_http:
+                temp_path = Path(tempfile.gettempdir()) / "flet_app_pid.txt"
+                flutter_args += [f"--dart-define=FLET_TEST_PID_FILE_PATH={temp_path}"]
+                if self.__assets_dir:
+                    flutter_args += [
+                        f"--dart-define=FLET_TEST_ASSETS_DIR={self.__assets_dir}"
+                    ]
+
+        try:
+            self.__flutter_process = await asyncio.create_subprocess_exec(
+                *flutter_args,
+                cwd=str(self.__flutter_app_dir),
+                stdout=stdout,
+                stderr=stderr,
+                env=flutter_env,
+            )
+        except OSError:
+            await self.__stop_flutter_process()
+            raise
+
+        if self.__flutter_process.stdout is not None:
+            self.__flutter_output_task = asyncio.create_task(
+                self.__read_flutter_output(self.__flutter_process.stdout)
+            )
+
+        _print("Started Flutter test process.")
+        _print("Waiting for the Flutter app to connect...")
+
+        def connected() -> bool:
+            if self.__device_mode:
+                return self.__tester is not None and self.__tester.is_connected()
+            return self.__page is not None
+
+        def started() -> bool:
+            return connected() if self.__device_mode else ready.is_set()
+
+        start_timeout = self.__start_timeout
+        if start_timeout is None and self.__launch_app_binary:
+            start_timeout = self.__app_binary_start_timeout
+        loop = asyncio.get_running_loop()
+        deadline = loop.time() + start_timeout if start_timeout else None
+
+        while not started() and main_error is None:
             await asyncio.sleep(0.2)
             if self.__flutter_process.returncode is not None:
+                await self.__stop_flutter_process()
+                self.__dump_flutter_output()
                 raise RuntimeError(
                     "Flutter process exited early with code "
                     f"{self.__flutter_process.returncode}"
                 )
+            if self.__server_task is not None and self.__server_task.done():
+                error = (
+                    None
+                    if self.__server_task.cancelled()
+                    else self.__server_task.exception()
+                )
+                await self.__stop_flutter_process()
+                raise RuntimeError(
+                    f"Flet app server on port {self.__tcp_port} stopped before "
+                    f"the Flutter app connected: {error!r}"
+                ) from error
+            if deadline and loop.time() > deadline and not connected():
+                await self.__stop_flutter_process()
+                self.__dump_flutter_output()
+                raise TimeoutError(
+                    f"Flutter app did not connect to {app_url} in "
+                    f"{start_timeout:g} seconds and was stopped. "
+                    "Set FLET_TEST_START_TIMEOUT to change the limit."
+                )
+
+        if main_error is not None:
+            await self.__stop_flutter_process()
+            self.__dump_flutter_output()
+            raise main_error
+
+    async def __stop_flutter_process(self):
+        """
+        Terminates the Flutter test process if it is running, kills it if it \
+        does not end in 5 seconds, and waits for its output to be read.
+
+        Stops the Flet app server of this test app, which frees its port. A
+        web server started for HTTP transport is left running: stopping it
+        shuts down state it shares with the other test apps of the process.
+
+        Removes the temporary directory of an app launched from `app_binary`.
+        Each such launch gets its own: plugins keep per-process files in the
+        system temporary directory under the process ID (`media_kit` stores a
+        native pointer there in debug builds), nothing removes them, and a
+        later app that is given the same process ID would read the stale file.
+        """
+        if self.__flutter_process and self.__flutter_process.returncode is None:
+            self.__flutter_process.terminate()
+            try:
+                await asyncio.wait_for(self.__flutter_process.wait(), timeout=5)
+            except asyncio.TimeoutError:
+                _print("Force killing Flutter test process...")
+                self.__flutter_process.kill()
+                await self.__flutter_process.wait()
+
+        if self.__flutter_output_task:
+            try:
+                await asyncio.wait_for(self.__flutter_output_task, timeout=5)
+            except asyncio.TimeoutError:
+                self.__flutter_output_task.cancel()
+            self.__flutter_output_task = None
+
+        if self.__app_temp_dir:
+            shutil.rmtree(self.__app_temp_dir, ignore_errors=True)
+            self.__app_temp_dir = None
+
+        if self.__server_task and not self.__use_http:
+            self.__server_task.cancel()
+            await asyncio.wait({self.__server_task}, timeout=5)
+            self.__server_task = None
+
+    async def __read_flutter_output(self, stream: asyncio.StreamReader):
+        # Read in chunks, not lines: the Flet client's debug output includes
+        # very long lines (e.g. screenshot bytes) that overflow StreamReader's
+        # per-line limit. Overlong lines are cut and only the output tail is
+        # kept to bound memory.
+        line = bytearray()
+        truncated = False
+        while True:
+            chunk = await stream.read(65536)
+            if not chunk:
+                break
+            for part in chunk.splitlines(keepends=True):
+                line.extend(part)
+                if line.endswith((b"\n", b"\r")):
+                    self.__append_flutter_output_line(line, truncated)
+                    line.clear()
+                    truncated = False
+                elif len(line) > self.__flutter_output_line_limit:
+                    del line[self.__flutter_output_line_limit :]
+                    truncated = True
+        if line:
+            self.__append_flutter_output_line(line, truncated)
+
+    def __append_flutter_output_line(self, line: bytearray, truncated: bool):
+        if len(line) > self.__flutter_output_line_limit:
+            line = line[: self.__flutter_output_line_limit]
+            truncated = True
+        text = bytes(line.rstrip(b"\r\n"))
+        if truncated:
+            text += b" ...<truncated>"
+        if self.__echo_flutter_output:
+            _print(text.decode(errors="replace"), flush=True)
+            return
+        self.__flutter_output.extend(text)
+        self.__flutter_output.extend(b"\n")
+        if len(self.__flutter_output) > self.__flutter_output_limit:
+            del self.__flutter_output[: -self.__flutter_output_limit]
+
+    def __dump_flutter_output(self):
+        if not self.__flutter_output:
+            return
+        output = self.__flutter_output.decode(errors="replace")
+        _print("---------- Flutter test process output (tail) ----------")
+        _print(output)
+        _print("---------- End of Flutter test process output ----------")
+
+    def __flutter_test_target(self) -> str:
+        # In device mode the driver (`integration_test/app_test.dart`) is
+        # generated from the template; validate it exists and is non-empty so a
+        # missing/empty driver surfaces as a clear error instead of a confusing
+        # "No tests were found" from `flutter test`. The directory target is
+        # used either way.
+        if self.__device_mode:
+            app_test_path = (
+                Path(self.__flutter_app_dir) / "integration_test" / "app_test.dart"
+            )
+            if not app_test_path.is_file():
+                raise RuntimeError(
+                    f"Flutter integration test driver was not generated: "
+                    f"{app_test_path}"
+                )
+            if not app_test_path.read_text(encoding="utf-8").strip():
+                raise RuntimeError(
+                    f"Flutter integration test driver is empty: {app_test_path}"
+                )
+        return "integration_test"
 
     async def teardown(self):
         """
         Teardown Flutter integration test process.
+
+        The process gets 10 seconds to exit after the tester's teardown and is
+        terminated when it does not. An app launched from `app_binary` ends its
+        own process with the test result as exit code, so its result is
+        unknown when it has to be terminated, and when it did not acknowledge
+        the tester's teardown: it ended before its test completed, and exit
+        code 0 then comes from the app closing, not from a passed test.
+
+        Raises:
+            RuntimeError: If the Flutter test process exited with a non-zero
+                code, or an app launched from `app_binary` had to be
+                terminated or did not acknowledge teardown.
         """
+        teardown_error: Optional[Exception] = None
         try:
             await self.tester.teardown(timeout=10)
-        except (RuntimeError, TimeoutError) as e:
-            print(f"Tester teardown failed: {e}")
+        except (RuntimeError, TimeoutError, asyncio.TimeoutError) as e:
+            _print(f"Tester teardown failed: {e}")
+            teardown_error = e
 
+        flutter_returncode: Optional[int] = None
+        terminated = False
         if self.__flutter_process:
-            print("\nWaiting for Flutter test process to exit...")
+            _print("Waiting for Flutter test process to exit...")
             try:
                 await asyncio.wait_for(self.__flutter_process.wait(), timeout=10)
-                print("Flutter test process has exited.")
+                flutter_returncode = self.__flutter_process.returncode
+                _print(f"Flutter test process has exited (code {flutter_returncode}).")
             except asyncio.TimeoutError:
-                print("Flutter test process did not exit in time, terminating it...")
-                self.__flutter_process.terminate()
-                # Optionally ensure it terminates
-                try:
-                    await asyncio.wait_for(self.__flutter_process.wait(), timeout=5)
-                except asyncio.TimeoutError:
-                    print("Force killing Flutter test process...")
-                    self.__flutter_process.kill()
+                _print("Flutter test process did not exit in time, terminating it...")
+                terminated = True
 
-    def resize_page(self, width: int, height: int):
+        await self.__stop_flutter_process()
+
+        # Stop the RemoteTester socket server (device mode).
+        if isinstance(self.__tester, RemoteTester):
+            await self.__tester.stop()
+
+        # The host-side commands can all succeed while the on-device Flutter
+        # integration test itself fails (e.g. a widget exception fails the
+        # `testWidgets` body even though our find/tap assertions passed). Surface
+        # that as a test failure — otherwise the run is falsely green.
+        if flutter_returncode is not None and flutter_returncode != 0:
+            self.__dump_flutter_output()
+            raise RuntimeError(
+                f"Flutter integration test process failed with exit code "
+                f"{flutter_returncode}. See the Flutter test output above."
+            )
+
+        if terminated and self.__launch_app_binary:
+            self.__dump_flutter_output()
+            raise RuntimeError(
+                "Flutter integration test app did not exit within 10 seconds "
+                "of teardown and was terminated, so its test result is unknown. "
+                "See the Flutter test output above."
+            )
+
+        if teardown_error and self.__launch_app_binary:
+            self.__dump_flutter_output()
+            raise RuntimeError(
+                "Flutter integration test app ended before its test completed: "
+                f"it did not acknowledge teardown ({teardown_error}) and exited "
+                f"with code {flutter_returncode}. See the Flutter test output above."
+            ) from teardown_error
+
+    def resize_page(self, width: float, height: float):
         """
         Resizes the page window to the specified width and height.
         """
@@ -323,16 +667,33 @@ class FletTestApp:
         margin=10,
         pump_times: int = 0,
         pump_duration: Optional[ft.DurationValue] = None,
+        bgcolor: Optional[ft.ColorValue] = None,
     ) -> ft.Screenshot:
         """
         Wraps provided controls in a Screenshot control.
+
+        Args:
+            margin: Space around the controls included in the screenshot.
+            bgcolor: Background color painted behind the controls and margin.
+                If `None`, the screenshot background is transparent.
         """
         controls = list(self.page.controls)
-        self.page.controls = [
-            scr := ft.Screenshot(
-                ft.Column(controls, margin=margin, intrinsic_width=True)
+        # Controls that expand need a bounded host to expand into: shrink-wrapping
+        # them (intrinsic width, scrollable height) is flex-in-unbounded and fails
+        # layout. Give those the whole page instead.
+        expand = True if any(c.expand for c in controls) else None
+        content = ft.Column(
+            controls,
+            margin=margin if bgcolor is None else None,
+            intrinsic_width=expand is None,
+            expand=expand,
+        )
+        if bgcolor is not None:
+            content = ft.Container(
+                content, bgcolor=bgcolor, padding=margin, expand=expand
             )
-        ]  # type: ignore
+        scr = ft.Screenshot(content, expand=expand)
+        self.page.controls = [scr if expand else self.__scrollable_screenshot_host(scr)]  # type: ignore
         self.page.update()
         await self.__pump_and_settle_with_timeout("wrap_page_controls_in_screenshot")
         for _ in range(0, pump_times):
@@ -344,12 +705,17 @@ class FletTestApp:
         pixel_ratio: Optional[float] = None,
         pump_times: int = 0,
         pump_duration: Optional[ft.DurationValue] = None,
+        bgcolor: Optional[ft.ColorValue] = None,
     ) -> bytes:
         """
         Takes a screenshot of all controls on the current page.
+
+        Args:
+            bgcolor: Background color of the screenshot. If `None`, it is
+                transparent.
         """
         scr = await self.wrap_page_controls_in_screenshot(
-            pump_times=pump_times, pump_duration=pump_duration
+            pump_times=pump_times, pump_duration=pump_duration, bgcolor=bgcolor
         )
         return await scr.capture(
             pixel_ratio=pixel_ratio or self.screenshots_pixel_ratio
@@ -363,6 +729,7 @@ class FletTestApp:
         pump_duration: Optional[ft.DurationValue] = None,
         expand_screenshot: bool = False,
         similarity_threshold: float = 0,
+        bgcolor: Optional[ft.ColorValue] = None,
     ):
         """
         Adds control to a clean page, takes a screenshot and compares it with a golden \
@@ -372,14 +739,26 @@ class FletTestApp:
         Args:
             name: Screenshot name - will be used as a base for a screenshot filename.
             control: Control to take a screenshot of.
+            bgcolor: Background color painted behind `control`, with a 10 pixel
+                margin. If `None`, the screenshot background is transparent.
+                Pass a light color such as `ft.Colors.SURFACE` (with a light
+                `theme_mode`) for images used in the docs.
         """
         # clean page
         self.page.clean()
         await self.__pump_and_settle_with_timeout("assert_control_screenshot-clean")
 
         # add control and take screenshot
+        if bgcolor is not None:
+            control = ft.Container(
+                control, bgcolor=bgcolor, padding=10, expand=expand_screenshot
+            )
         screenshot = ft.Screenshot(control, expand=expand_screenshot)
-        self.page.add(screenshot)
+        self.page.add(
+            screenshot
+            if expand_screenshot
+            else self.__scrollable_screenshot_host(screenshot)
+        )
         await self.__pump_and_settle_with_timeout("assert_control_screenshot-add")
         for _ in range(0, pump_times):
             await self.tester.pump(duration=pump_duration)
@@ -387,6 +766,24 @@ class FletTestApp:
             name,
             await screenshot.capture(pixel_ratio=self.screenshots_pixel_ratio),
             similarity_threshold=similarity_threshold,
+        )
+
+    def __scrollable_screenshot_host(
+        self, screenshot: ft.Screenshot
+    ) -> Union[ft.Screenshot, ft.Column]:
+        # A scrollable page cannot overflow; an expanded host inside it would
+        # be flex-in-unbounded-height and fail layout instead.
+        if self.page.scroll is not None:
+            return screenshot
+        # Host the screenshot in a scrollable column: content taller than the
+        # window then scrolls instead of overflowing the page (an overflow
+        # error fails the Flutter test process). The child sees the same
+        # unbounded-height constraints as in the page column, so captures are
+        # unaffected.
+        return ft.Column(
+            expand=True,
+            scroll=ft.ScrollMode.HIDDEN,
+            controls=[screenshot],
         )
 
     async def __pump_and_settle_with_timeout(self, stage: str):
@@ -432,15 +829,27 @@ class FletTestApp:
                 f.write(screenshot)
         else:
             if not golden_image_path.exists():
+                if self.__golden_failed:
+                    _print(f"Creating missing golden for {name}")
+                    golden_image_path.parent.mkdir(parents=True, exist_ok=True)
+                    golden_image_path.write_bytes(screenshot)
+                    return
                 raise RuntimeError(
                     f"Golden image for {name} not found: {golden_image_path}"
                 )
             golden_img = self._load_image_from_file(golden_image_path)
             img = self._load_image_from_bytes(screenshot)
             similarity = self._compare_images_rgb(golden_img, img)
-            print(f"Similarity for {name}: {similarity}%")
+            _print(f"Similarity for {name}: {similarity}%")
             if similarity_threshold == 0:
                 similarity_threshold = self.screenshots_similarity_threshold
+            if self.__golden_failed and (
+                similarity <= similarity_threshold
+                or self._pixels_differ(golden_img, img)
+            ):
+                _print(f"Updating failed golden for {name}")
+                golden_image_path.write_bytes(screenshot)
+                return
             if similarity <= similarity_threshold:
                 actual_image_path = (
                     golden_image_path.parent
@@ -453,7 +862,7 @@ class FletTestApp:
                 f"(similarity: {similarity}% <= {similarity_threshold}%)"
             )
 
-    def _load_image_from_file(self, file_name):
+    def _load_image_from_file(self, file_name: Union[str, Path]) -> Image.Image:
         """
         Loads an image from disk.
 
@@ -477,7 +886,40 @@ class FletTestApp:
         """
         return Image.open(BytesIO(data))
 
-    def _compare_images_rgb(self, img1, img2) -> float:
+    def _pixels_differ(
+        self,
+        img1: Image.Image,
+        img2: Image.Image,
+        channel_tolerance: int = 2,
+        max_changed_ratio: float = 0.001,
+    ) -> bool:
+        """
+        Checks whether two images differ in color, not just in structure.
+
+        Structural similarity barely reacts to a uniform color shift (e.g. a
+        tinted background becoming white), so `FLET_TEST_GOLDEN=failed` uses
+        this check on top of it to find goldens that need updating.
+
+        Args:
+            img1: Reference image.
+            img2: Image to compare.
+            channel_tolerance: Per-channel difference (0-255) a pixel may have
+                and still count as unchanged, to ignore anti-aliasing noise.
+            max_changed_ratio: Fraction of pixels allowed to change before the
+                images are considered different.
+
+        Returns:
+            `True` if sizes differ or more than `max_changed_ratio` of pixels
+            differ by more than `channel_tolerance` in any channel.
+        """
+        if img1.size != img2.size:
+            return True
+        arr1 = np.asarray(img1.convert("RGB"), dtype=np.int16)
+        arr2 = np.asarray(img2.convert("RGB"), dtype=np.int16)
+        changed = (np.abs(arr1 - arr2) > channel_tolerance).any(axis=-1)
+        return changed.mean() > max_changed_ratio
+
+    def _compare_images_rgb(self, img1: Image.Image, img2: Image.Image) -> float:
         """
         Calculates structural similarity between two RGB images.
 
@@ -500,29 +942,45 @@ class FletTestApp:
 
     def create_gif(
         self,
-        image_names: Iterable[str],
-        output_name: str,
+        image_names: Optional[Iterable[str]] = None,
+        output_name: str = "",
         *,
-        duration: int = 1000,
+        frames: Optional[Iterable[bytes]] = None,
+        duration: Union[int, Sequence[int]] = 1000,
         loop: int = 0,
         disposal: DisposalMode = DisposalMode.DEFAULT,
     ) -> Path:
-        """Create an animated GIF from a sequence of image files.
+        """Create an animated GIF from a sequence of PNG frames.
+
+        Exactly one of `image_names` or `frames` must be provided. Unlike
+        :meth:`assert_gif`, this method only writes the GIF and returns its
+        path; it does not compare against a golden file.
 
         Args:
-            image_names: Iterable of file name stems (without ``.png``) in the
-                order they should appear in the animation.
-            output_name: Base name for the resulting animation. The ``.gif``
+            image_names: Iterable of file name stems (without `.png`) in the
+                order they should appear in the animation. Frames are read from
+                disk under the test's golden directory.
+            output_name: Base name for the resulting animation. The `.gif`
                 extension is added automatically and the file is stored in the
-                same directory as the provided frames.
-            duration: Frame duration in milliseconds. Defaults to ``300``.
-            loop: Number of times the GIF should repeat (``0`` means infinite).
+                same directory as the source frames.
+            frames: Iterable of PNG-encoded frame bytes to use directly, in the
+                order they should appear in the animation. Typically paired
+                with :meth:`~flet.BasePage.take_animation`.
+            duration: Frame duration in milliseconds. Either a single `int`
+                applied to every frame, or a sequence of `int` with one
+                entry per frame. Pass the same list used for
+                `take_animation(frame_delays_ms=...)` to have the GIF play
+                at the same pace it was captured.
+            loop: Number of times the GIF should repeat (`0` means infinite).
+            disposal: Frame disposal mode.
 
         Returns:
             Path to the generated GIF file.
 
         Raises:
-            ValueError: If ``image_names`` is empty.
+            ValueError: If neither or both of `image_names` / `frames` are
+                given, the input is empty, or a `duration` sequence has a
+                different length than the frame count.
             FileNotFoundError: If any referenced image file does not exist.
         """
 
@@ -530,51 +988,247 @@ class FletTestApp:
             raise ValueError("test_path must be set to create GIF animations")
         if not self.test_platform:
             raise ValueError("test_platform must be set to create GIF animations")
+        if (image_names is None) == (frames is None):
+            raise ValueError("Exactly one of image_names or frames must be provided")
 
-        names = list(image_names)
-        if not names:
-            raise ValueError("image_names must contain at least one entry")
+        golden_dir = self._golden_dir()
+        output = golden_dir / f"{output_name}.gif"
+        output.parent.mkdir(parents=True, exist_ok=True)
 
-        stem = output_name
-        golden_dir = (
+        if image_names is not None:
+            names = list(image_names)
+            if not names:
+                raise ValueError("image_names must contain at least one entry")
+            frame_bytes_list: list[bytes] = []
+            for name in names:
+                path = golden_dir / f"{name}.png"
+                if not path.exists():
+                    raise FileNotFoundError(path)
+                frame_bytes_list.append(path.read_bytes())
+        else:
+            frame_bytes_list = list(frames or ())
+
+        gif_bytes = self._frames_to_gif_bytes(
+            frame_bytes_list, duration, loop, disposal
+        )
+        output.write_bytes(gif_bytes)
+        return output
+
+    def _golden_dir(self) -> Path:
+        return (
             Path(self.__test_path).parent
             / "golden"
             / self.test_platform
             / Path(self.__test_path).stem.removeprefix("test_")
         )
-        output = golden_dir / f"{stem}.gif"
-        output.parent.mkdir(parents=True, exist_ok=True)
 
-        frames: list[Image.Image] = []
+    def _frames_to_gif_bytes(
+        self,
+        frames: list[bytes],
+        duration: Union[int, Sequence[int]],
+        loop: int,
+        disposal: DisposalMode,
+    ) -> bytes:
+        if not frames:
+            raise ValueError("frames must contain at least one entry")
+        gif_frames: list[Image.Image] = []
         try:
-            for name in names:
-                path = golden_dir / f"{name}.png"
-                if not path.exists():
-                    raise FileNotFoundError(path)
-
-                frames.append(
-                    Image.open(path)
-                    .convert("RGB")
-                    .convert(
-                        "P",
-                        palette=Image.ADAPTIVE,
-                        colors=256,
+            for frame_bytes in frames:
+                with Image.open(BytesIO(frame_bytes)) as img:
+                    gif_frames.append(
+                        img.convert("RGB").convert(
+                            "P", palette=Image.ADAPTIVE, colors=256
+                        )
                     )
-                )
 
-            first, *rest = frames
+            if isinstance(duration, int):
+                save_duration: Union[int, list[int]] = duration
+            else:
+                save_duration = list(duration)
+                if len(save_duration) != len(gif_frames):
+                    raise ValueError(
+                        f"duration sequence length ({len(save_duration)}) must "
+                        f"match frame count ({len(gif_frames)})"
+                    )
+
+            first, *rest = gif_frames
+            out = BytesIO()
             first.save(
-                output,
+                out,
+                format="GIF",
                 save_all=True,
                 append_images=rest,
-                duration=duration,
+                duration=save_duration,
                 loop=loop,
                 optimize=True,
                 disposal=disposal.value,
             )
+            return out.getvalue()
         finally:
-            for frame in frames:
+            for frame in gif_frames:
                 frame.close()
 
-        return output
+    def _gif_frames_from_bytes(self, data: bytes) -> list[Image.Image]:
+        frames: list[Image.Image] = []
+        with Image.open(BytesIO(data)) as gif:
+            for frame in ImageSequence.Iterator(gif):
+                frames.append(frame.convert("RGBA"))
+        return frames
+
+    def _assert_gif_bytes(
+        self, name: str, golden_gif_bytes: bytes, actual_gif_bytes: bytes
+    ) -> None:
+        golden_frames = self._gif_frames_from_bytes(golden_gif_bytes)
+        actual_frames = self._gif_frames_from_bytes(actual_gif_bytes)
+        try:
+            assert len(golden_frames) == len(actual_frames), (
+                f"{name} GIF frame count differs "
+                f"({len(actual_frames)} != {len(golden_frames)})"
+            )
+            for index, (golden_frame, actual_frame) in enumerate(
+                zip(golden_frames, actual_frames, strict=True)
+            ):
+                similarity = self._compare_images_rgb(golden_frame, actual_frame)
+                _print(f"GIF similarity for {name} frame {index}: {similarity}%")
+                assert similarity > self.screenshots_similarity_threshold, (
+                    f"{name} GIF frame {index} differs "
+                    f"(similarity: {similarity}% <= "
+                    f"{self.screenshots_similarity_threshold}%)"
+                )
+        except AssertionError:
+            actual_gif_path = self._golden_dir() / f"{name}_actual.gif"
+            actual_gif_path.write_bytes(actual_gif_bytes)
+            raise
+        finally:
+            for frame in golden_frames:
+                frame.close()
+            for frame in actual_frames:
+                frame.close()
+
+    def assert_gif(
+        self,
+        name: str,
+        frames: Iterable[bytes],
+        *,
+        duration: Union[int, Sequence[int]] = 1000,
+        loop: int = 0,
+        disposal: DisposalMode = DisposalMode.DEFAULT,
+        similarity_threshold: float = 0,
+    ):
+        """Compare an animated GIF built from `frames` against a golden GIF.
+
+        Builds the GIF in memory from the provided frames. If the
+        `FLET_TEST_GOLDEN=1` environment variable is set, writes the GIF as
+        the golden reference. With `FLET_TEST_GOLDEN=failed`, the golden is
+        overwritten only when it is missing or doesn't match. Otherwise loads
+        the existing golden GIF from disk and compares frame-by-frame via
+        structural similarity, saving an `<name>_actual.gif` next to the
+        golden on mismatch.
+
+        Args:
+            name: GIF name - will be used as a base for the GIF file name.
+            frames: Iterable of PNG-encoded frame bytes. Typically the result
+                of `Page.take_animation(...)`.
+            duration: Frame duration in milliseconds. Either a single `int`
+                or a per-frame sequence matching the number of frames.
+            loop: Number of times the GIF should repeat (`0` means infinite).
+            disposal: Frame disposal mode.
+            similarity_threshold: Minimum acceptable per-frame SSIM (%). Uses
+                `screenshots_similarity_threshold` when `0`.
+        """
+        if not self.test_platform:
+            raise RuntimeError(
+                "FLET_TEST_PLATFORM environment variable must be set to test with GIFs"
+            )
+        if not self.__test_path:
+            raise RuntimeError("test_path must be set to test with GIFs")
+
+        gif_bytes = self._frames_to_gif_bytes(list(frames), duration, loop, disposal)
+
+        golden_gif_path = self._golden_dir() / f"{name.removeprefix('test_')}.gif"
+
+        if self.__golden:
+            golden_gif_path.parent.mkdir(parents=True, exist_ok=True)
+            golden_gif_path.write_bytes(gif_bytes)
+            return
+
+        if not golden_gif_path.exists():
+            if self.__golden_failed:
+                _print(f"Creating missing golden GIF for {name}")
+                golden_gif_path.parent.mkdir(parents=True, exist_ok=True)
+                golden_gif_path.write_bytes(gif_bytes)
+                return
+            raise RuntimeError(f"Golden GIF for {name} not found: {golden_gif_path}")
+
+        similarity, frame_count_mismatch = self._compare_gifs(
+            golden_gif_path, gif_bytes
+        )
+        _print(f"Similarity for {name}: {similarity}%")
+        if similarity_threshold == 0:
+            similarity_threshold = self.screenshots_similarity_threshold
+
+        if self.__golden_failed and (
+            frame_count_mismatch
+            or similarity <= similarity_threshold
+            or self._gif_pixels_differ(golden_gif_path, gif_bytes)
+        ):
+            _print(f"Updating failed golden GIF for {name}")
+            golden_gif_path.write_bytes(gif_bytes)
+            return
+
+        if frame_count_mismatch or similarity <= similarity_threshold:
+            actual_gif_path = (
+                golden_gif_path.parent
+                / f"{golden_gif_path.parent.stem}_{golden_gif_path.stem}_actual.gif"  # noqa: E501
+            )
+            actual_gif_path.write_bytes(gif_bytes)
+
+        if frame_count_mismatch:
+            raise AssertionError(frame_count_mismatch)
+        assert similarity > similarity_threshold, (
+            f"{name} GIFs are not identical "
+            f"(similarity: {similarity}% <= {similarity_threshold}%)"
+        )
+
+    def _gif_pixels_differ(self, golden_path: Path, current_bytes: bytes) -> bool:
+        """Returns `True` if any frame of two same-length GIFs differs in color."""
+        with (
+            Image.open(golden_path) as golden,
+            Image.open(BytesIO(current_bytes)) as current,
+        ):
+            for i in range(golden.n_frames):
+                golden.seek(i)
+                current.seek(i)
+                if self._pixels_differ(golden.convert("RGB"), current.convert("RGB")):
+                    return True
+        return False
+
+    def _compare_gifs(
+        self, golden_path: Path, current_bytes: bytes
+    ) -> tuple[float, Optional[str]]:
+        """Returns (min-per-frame similarity, frame-count-mismatch message)."""
+        with (
+            Image.open(golden_path) as golden,
+            Image.open(BytesIO(current_bytes)) as current,
+        ):
+            if golden.n_frames != current.n_frames:
+                return (
+                    0.0,
+                    f"GIF frame count mismatch: "
+                    f"golden={golden.n_frames}, current={current.n_frames}",
+                )
+            similarities: list[float] = []
+            for i in range(golden.n_frames):
+                golden.seek(i)
+                current.seek(i)
+                similarities.append(
+                    self._compare_images_rgb(
+                        golden.convert("RGB"), current.convert("RGB")
+                    )
+                )
+            return min(similarities), None
+
     __pump_and_settle_timeout = 10.0
+    __app_binary_start_timeout = 60.0
+    __flutter_output_limit = 262144
+    __flutter_output_line_limit = 2048

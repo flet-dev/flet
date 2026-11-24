@@ -1,0 +1,26 @@
+[project]
+name = "page-package-info"
+version = "1.0.0"
+description = "Displays the app name, version and build number of the running app, as set by flet build."
+requires-python = ">=3.10"
+keywords = ["page", "package info", "version", "build number", "about", "async"]
+authors = [{ name = "Flet team", email = "hello@flet.dev" }]
+dependencies = ["flet"]
+
+[dependency-groups]
+dev = ["flet-cli", "flet-desktop", "flet-web"]
+
+[tool.flet.gallery]
+categories = ["Utility/Page"]
+
+[tool.flet.metadata]
+title = "Package info"
+controls = ["SafeArea", "Column", "Text"]
+layout_pattern = "single-panel"
+complexity = "basic"
+features = ["async loading"]
+
+[tool.flet]
+org = "dev.flet"
+company = "Flet"
+copyright = "Copyright (C) 2023-2026 by Flet"

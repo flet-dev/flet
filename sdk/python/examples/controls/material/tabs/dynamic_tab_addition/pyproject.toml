@@ -1,0 +1,26 @@
+[project]
+name = "tabs-dynamic-tab-addition"
+version = "1.0.0"
+description = "Adds new tabs and matching content panels dynamically from a button click."
+requires-python = ">=3.10"
+keywords = ["tabs", "dynamic", "add tab", "button", "state"]
+authors = [{ name = "Flet team", email = "hello@flet.dev" }]
+dependencies = ["flet"]
+
+[dependency-groups]
+dev = ["flet-cli", "flet-desktop", "flet-web"]
+
+[tool.flet.gallery]
+categories = ["Layout/Tabs"]
+
+[tool.flet.metadata]
+title = "Dynamic tab addition"
+controls = ["SafeArea", "Tabs", "Column", "TabBar", "TabBarView", "Tab", "Row", "CupertinoFilledButton", "Container", "Text"]
+layout_pattern = "single-panel"
+complexity = "basic"
+features = ["dynamic tabs", "button-driven updates"]
+
+[tool.flet]
+org = "dev.flet"
+company = "Flet"
+copyright = "Copyright (C) 2023-2026 by Flet"

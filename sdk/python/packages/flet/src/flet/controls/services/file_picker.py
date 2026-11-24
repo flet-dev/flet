@@ -3,6 +3,7 @@ from enum import Enum
 from typing import Any, Optional
 
 from flet.controls.base_control import control
+from flet.controls.client_action import ClientAction, action_field
 from flet.controls.control_event import Event, EventHandler
 from flet.controls.exceptions import FletUnsupportedPlatformException
 from flet.controls.services.service import Service
@@ -11,14 +12,16 @@ __all__ = [
     "FilePicker",
     "FilePickerFile",
     "FilePickerFileType",
+    "FilePickerResultEvent",
     "FilePickerUploadEvent",
     "FilePickerUploadFile",
+    "PickFiles",
 ]
 
 
 class FilePickerFileType(Enum):
     """
-    Defines the file types that can be selected using the [`FilePicker`][flet.].
+    Defines the file types that can be selected using the :class:`~flet.FilePicker`.
     """
 
     ANY = "any"
@@ -28,7 +31,7 @@ class FilePickerFileType(Enum):
 
     MEDIA = "media"
     """
-    A combination of [`VIDEO`][(c).] and [`IMAGE`][(c).].
+    A combination of :attr:`VIDEO` and :attr:`IMAGE`.
     """
 
     IMAGE = "image"
@@ -55,13 +58,13 @@ class FilePickerFileType(Enum):
 @dataclass
 class FilePickerUploadFile:
     """
-    Upload descriptor for one file selected by [`FilePicker`][flet.].
+    Upload descriptor for one file selected by :class:`~flet.FilePicker`.
 
-    Instances are passed to [`FilePicker.upload()`][flet.FilePicker.upload].
-    During upload, Flet resolves the selected file by [`id`][(c).] first and,
-    when `id` is absent or not found, falls back to [`name`][(c).].
+    Instances are passed to :meth:`flet.FilePicker.upload`.
+    During upload, Flet resolves the selected file by :attr:`id` first and,
+    when `id` is absent or not found, falls back to :attr:`name`.
 
-    At least one of [`id`][(c).] or [`name`][(c).] should be provided.
+    At least one of :attr:`id` or :attr:`name` should be provided.
     """
 
     upload_url: str
@@ -69,7 +72,7 @@ class FilePickerUploadFile:
     Upload destination URL.
 
     Can be an absolute URL or a page-relative URL returned by
-    [`Page.get_upload_url()`][flet.Page.get_upload_url].
+    :meth:`flet.Page.get_upload_url`.
     """
 
     method: str = "PUT"
@@ -80,14 +83,14 @@ class FilePickerUploadFile:
     id: Optional[int] = None
     """
     Selected file identifier returned by
-    [`FilePicker.pick_files()`][flet.FilePicker.pick_files].
+    :meth:`flet.FilePicker.pick_files`.
 
     This is the preferred lookup key when both `id` and `name` are specified.
     """
 
     name: Optional[str] = None
     """
-    Selected file name used as fallback lookup when [`id`][(c).] is missing
+    Selected file name used as fallback lookup when :attr:`id` is missing
     or does not match any currently selected file.
     """
 
@@ -96,10 +99,10 @@ class FilePickerUploadFile:
 class FilePickerFile:
     """
     Metadata for a file selected via
-    [`FilePicker.pick_files()`][flet.FilePicker.pick_files].
+    :meth:`flet.FilePicker.pick_files`.
 
-    Returned by [`FilePicker.pick_files()`][flet.FilePicker.pick_files] and
-    used as input context for [`FilePickerUploadFile`][flet.FilePickerUploadFile]
+    Returned by :meth:`flet.FilePicker.pick_files` and
+    used as input context for :class:`~flet.FilePickerUploadFile`
     when uploading selected files.
     """
 
@@ -108,7 +111,7 @@ class FilePickerFile:
     Selection-scoped file identifier assigned by Flet.
 
     This value is stable for the current picker selection and is preferred for
-    upload matching in [`FilePickerUploadFile`][flet.FilePickerUploadFile].
+    upload matching in :class:`~flet.FilePickerUploadFile`.
     """
 
     name: str
@@ -135,8 +138,24 @@ class FilePickerFile:
     """
     File contents.
 
-    Returned only when [`pick_files()`][flet.FilePicker.pick_files] is called with
+    Returned only when :meth:`flet.FilePicker.pick_files` is called with
     `with_data=True`. Otherwise this value is `None`.
+    """
+
+
+@dataclass
+class FilePickerResultEvent(Event["FilePicker"]):
+    """
+    Event emitted when files are selected through a
+    :class:`~flet.PickFiles` action.
+
+    Not emitted by :meth:`flet.FilePicker.pick_files`, which returns the
+    selected files directly.
+    """
+
+    files: list[FilePickerFile]
+    """
+    The selected files, or an empty list if the user cancelled.
     """
 
 
@@ -144,7 +163,7 @@ class FilePickerFile:
 class FilePickerUploadEvent(Event["FilePicker"]):
     """
     Event emitted when a file is uploaded via \
-    [`FilePicker.upload()`][flet.FilePicker.upload] method.
+    :meth:`flet.FilePicker.upload` method.
     """
 
     file_name: str
@@ -180,13 +199,25 @@ class FilePicker(Service):
         ```
     """
 
+    on_result: Optional[EventHandler[FilePickerResultEvent]] = None
+    """
+    Called when files are selected through a :class:`~flet.PickFiles` action.
+
+    A `PickFiles` action opens the dialog on the client before your code sees
+    the click, so the selection cannot be returned to the caller the way
+    :meth:`pick_files` returns it - it arrives here instead.
+
+    The picked files stay associated with this `FilePicker`, so they can be
+    passed straight to :meth:`upload`.
+    """
+
     on_upload: Optional[EventHandler[FilePickerUploadEvent]] = None
     """
-    Called when a file is uploaded via [`upload()`][(c).upload] method.
+    Called when a file is uploaded via :meth:`upload` method.
 
     This callback is invoked at least twice for each uploaded file: once with `0.0`
-    [`progress`][flet.FilePickerUploadEvent.] before the upload starts, and once with
-    `1.0` [`progress`][flet.FilePickerUploadEvent.] when the upload completes.
+    :attr:`flet.FilePickerUploadEvent.progress` before the upload starts, and once with
+    `1.0` :attr:`flet.FilePickerUploadEvent.progress` when the upload completes.
 
     For files larger than 1 MB, additional progress events are emitted
     at every 10% increment (for example, `0.1`, `0.2`, ...).
@@ -196,14 +227,14 @@ class FilePicker(Service):
         """
         Uploads picked files to specified upload URLs.
 
-        Before calling this method, [`pick_files()`][(c).pick_files] first has to be
+        Before calling this method, :meth:`pick_files` first has to be
         called to ensure the internal file picker selection is not empty.
 
         Once called, Flet asynchronously starts uploading selected files
-        one-by-one and reports the progress via [`on_upload`][(c).] event.
+        one-by-one and reports the progress via :attr:`on_upload` event.
 
         Args:
-            files: A list of [`FilePickerUploadFile`][flet.], where
+            files: A list of :class:`~flet.FilePickerUploadFile`, where
                 each item specifies which file to upload, and where
                 (with `PUT` or `POST`).
         """
@@ -221,7 +252,7 @@ class FilePicker(Service):
         Selects a directory and returns its absolute path.
 
         Args:
-            dialog_title: The title of the dialog window. Defaults to [`FilePicker.
+            dialog_title: The title of the dialog window. Defaults to [`FilePicker`].
             initial_directory: The initial directory where the dialog should open.
 
         Returns:
@@ -241,7 +272,6 @@ class FilePicker(Service):
                 "dialog_title": dialog_title,
                 "initial_directory": initial_directory,
             },
-            timeout=3600,
         )
 
     async def save_file(
@@ -258,9 +288,10 @@ class FilePicker(Service):
         name to save a file.
 
         Note:
-            - On desktop this method only opens a dialog for the user to select
-                a location and file name, and returns the chosen path. The file
-                itself is not created or saved.
+            - On desktop, this method opens a dialog for the user to select a
+                location and file name. If `src_bytes` is provided, those bytes
+                are written to the selected file; otherwise the file is created
+                empty, for the app to write to the returned path.
 
         Args:
             dialog_title: The title of the dialog window.
@@ -270,8 +301,7 @@ class FilePicker(Service):
             src_bytes: The contents of a file. Must be provided in web,
                 iOS or Android modes.
             allowed_extensions: The allowed file extensions. Has effect only if
-                `file_type` is
-                [`FilePickerFileType.CUSTOM`][flet.].
+                `file_type` is :attr:`flet.FilePickerFileType.CUSTOM`.
 
         Raises:
             ValueError: If `src_bytes` is not provided, when called in web mode,
@@ -297,7 +327,6 @@ class FilePicker(Service):
                 "allowed_extensions": allowed_extensions,
                 "src_bytes": src_bytes,
             },
-            timeout=3600,
         )
 
     async def pick_files(
@@ -308,12 +337,14 @@ class FilePicker(Service):
         allowed_extensions: Optional[list[str]] = None,
         allow_multiple: bool = False,
         with_data: bool = False,
+        compression_quality: int = 0,
+        cancel_upload_on_window_blur: bool = True,
     ) -> list[FilePickerFile]:
         """
         Opens a pick file dialog.
 
         Tip:
-            To upload the picked files, pass them to [`upload()`][(c).upload] method,
+            To upload the picked files, pass them to :meth:`upload` method,
             along with their upload URLs.
 
         Args:
@@ -322,13 +353,27 @@ class FilePicker(Service):
             file_type: The file types allowed to be selected.
             allow_multiple: Allow the selection of multiple files at once.
             with_data: Read selected file contents into
-                [`bytes`][flet.FilePickerFile.].
+                :attr:`~flet.FilePickerFile.bytes`.
+            compression_quality: Image compression quality from `0` to `100`.
+                `0` disables compression.
+            cancel_upload_on_window_blur: Web-only. Whether to treat browser
+                window blur as a cancelled selection. Set to `False` to avoid
+                losing valid selections on slow networks or slow machines.
             allowed_extensions: The allowed file extensions. Has effect only if
-                `file_type` is [`FilePickerFileType.CUSTOM`][flet.].
+                `file_type` is :attr:`flet.FilePickerFileType.CUSTOM`.
 
         Returns:
             A list of selected files.
+
+        Raises:
+            ValueError: If `compression_quality` is not between
+                `0` and `100` inclusive.
         """
+        if not (0 <= compression_quality <= 100):
+            raise ValueError(
+                "compression_quality must be between 0 and 100 inclusive, "
+                f"got {compression_quality}."
+            )
         files = await self._invoke_method(
             "pick_files",
             {
@@ -338,8 +383,9 @@ class FilePicker(Service):
                 "allowed_extensions": allowed_extensions,
                 "allow_multiple": allow_multiple,
                 "with_data": with_data,
+                "compression_quality": compression_quality,
+                "cancel_upload_on_window_blur": cancel_upload_on_window_blur,
             },
-            timeout=3600,
         )
         return [FilePickerFile(**self._normalize_file(file)) for file in files]
 
@@ -348,3 +394,90 @@ class FilePicker(Service):
         if isinstance(value, list):
             file["bytes"] = bytes(value)
         return file
+
+
+@dataclass
+class PickFiles(ClientAction):
+    """
+    Opens a file picker dialog when the control is activated.
+
+    Equivalent to :meth:`flet.FilePicker.pick_files`, but performed by the
+    client inside the user's gesture, which is the only time a browser opens a
+    file picker. This is what makes file picking work in a web app on iOS.
+
+    Unlike `pick_files()`, the selection is not returned to the caller - it
+    arrives at :attr:`flet.FilePicker.on_result`. The files stay associated with
+    `file_picker`, so they can be passed straight to
+    :meth:`flet.FilePicker.upload`.
+
+    Example:
+        ```python
+        picker = ft.FilePicker(on_result=handle_result)
+        page.services.append(picker)
+
+        ft.Button("Upload", action=ft.PickFiles(picker, allow_multiple=True))
+        ```
+    """
+
+    file_picker: FilePicker = action_field()
+    """
+    The :class:`~flet.FilePicker` that opens the dialog and reports the result
+    through its :attr:`~flet.FilePicker.on_result` event.
+    """
+
+    dialog_title: Optional[str] = action_field(None)
+    """
+    The title of the dialog window.
+    """
+
+    initial_directory: Optional[str] = action_field(None)
+    """
+    The initial directory where the dialog should open.
+    """
+
+    file_type: Optional[FilePickerFileType] = action_field(None)
+    """
+    The file types allowed to be selected.
+    """
+
+    allowed_extensions: Optional[list[str]] = action_field(None)
+    """
+    The allowed file extensions. Has effect only if :attr:`file_type` is
+    :attr:`flet.FilePickerFileType.CUSTOM`.
+    """
+
+    allow_multiple: bool = action_field(False)
+    """
+    Allow the selection of multiple files at once.
+    """
+
+    with_data: bool = action_field(False)
+    """
+    Read selected file contents into :attr:`flet.FilePickerFile.bytes`.
+    """
+
+    compression_quality: int = action_field(0)
+    """
+    Image compression quality from `0` to `100`. `0` disables compression.
+    """
+
+    cancel_upload_on_window_blur: bool = action_field(True)
+    """
+    Web-only. Whether to treat browser window blur as a cancelled selection.
+    """
+
+    def __post_init__(self) -> None:
+        self._bind(
+            self.file_picker,
+            "pick_files",
+            {
+                "dialog_title": self.dialog_title,
+                "initial_directory": self.initial_directory,
+                "file_type": self.file_type or FilePickerFileType.ANY,
+                "allowed_extensions": self.allowed_extensions,
+                "allow_multiple": self.allow_multiple,
+                "with_data": self.with_data,
+                "compression_quality": self.compression_quality,
+                "cancel_upload_on_window_blur": self.cancel_upload_on_window_blur,
+            },
+        )

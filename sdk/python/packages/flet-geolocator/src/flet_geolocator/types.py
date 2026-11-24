@@ -95,7 +95,7 @@ class GeolocatorPermissionStatus(Enum):
     Permission to access the device's location is denied.
 
     The app should try to request permission using the
-    [`Geolocator.request_permission`][(p).] method.
+    :meth:`flet_geolocator.Geolocator.request_permission` method.
     """
 
     DENIED_FOREVER = "deniedForever"
@@ -121,7 +121,8 @@ class GeolocatorPermissionStatus(Enum):
     """
     Permission status cannot be determined.
 
-    This status is only returned by the [`Geolocator.request_permission`][(p).] method
+    This status is only returned by the \
+    :meth:`flet_geolocator.Geolocator.request_permission` method
     on the web platform for browsers that did not implement the Permissions API.
     See: https://developer.mozilla.org/en-US/docs/Web/API/Permissions_API
     """
@@ -160,7 +161,7 @@ class GeolocatorIosActivityType(Enum):
     """
 
 
-@dataclass
+@ft.value
 class GeolocatorPosition:
     """Detailed location information."""
 
@@ -256,7 +257,7 @@ class GeolocatorPosition:
     """
 
 
-@dataclass
+@ft.value
 class GeolocatorConfiguration:
     """
     Base configuration for position requests and position-stream updates.
@@ -287,7 +288,7 @@ class GeolocatorConfiguration:
     """
 
 
-@dataclass
+@ft.value
 class GeolocatorWebConfiguration(GeolocatorConfiguration):
     """Web specific settings."""
 
@@ -300,7 +301,7 @@ class GeolocatorWebConfiguration(GeolocatorConfiguration):
     """
 
 
-@dataclass
+@ft.value
 class GeolocatorIosConfiguration(GeolocatorConfiguration):
     """iOS specific settings."""
 
@@ -339,7 +340,7 @@ class GeolocatorIosConfiguration(GeolocatorConfiguration):
     """
 
 
-@dataclass
+@ft.value
 class ForegroundNotificationConfiguration:
     """
     Android foreground-service notification settings for background tracking.
@@ -397,7 +398,7 @@ class ForegroundNotificationConfiguration:
     # foreground_notification_color: Optional[ft.ColorValue] = None
 
 
-@dataclass
+@ft.value
 class GeolocatorAndroidConfiguration(GeolocatorConfiguration):
     """Android specific settings."""
 

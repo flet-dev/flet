@@ -5,6 +5,7 @@ import 'package:window_manager/window_manager.dart';
 
 import '../flet_backend.dart';
 import '../flet_service.dart';
+import '../models/window_state.dart';
 import '../utils/alignment.dart';
 import '../utils/colors.dart';
 import '../utils/desktop.dart';
@@ -16,6 +17,7 @@ import '../utils/window.dart';
 class WindowService extends FletService with WindowListener {
   final Completer<void> _initWindowStateCompleter = Completer<void>();
   Future<void> _pendingWindowUpdate = Future.value();
+  bool _updateScheduled = false;
   String? _title;
   Color? _bgColor;
   double? _width;
@@ -51,6 +53,10 @@ class WindowService extends FletService with WindowListener {
   bool? _skipTaskBar;
   double? _progressBar;
   bool? _ignoreMouseEvents;
+  Alignment? _deferredAlignmentOnShow;
+  bool _deferredCenterOnShow = false;
+  bool _isClosing = false;
+  bool _applyingDeferredPlacement = false;
   bool _listenersAttached = false;
 
   WindowService({required super.control});
@@ -68,22 +74,7 @@ class WindowService extends FletService with WindowListener {
   Future<void> _initWindowState() async {
     try {
       final windowState = await getWindowState();
-      _width = windowState.width;
-      _height = windowState.height;
-      _top = windowState.top;
-      _left = windowState.left;
-      _opacity = windowState.opacity;
-      _minimizable = windowState.minimizable;
-      _maximizable = windowState.maximizable;
-      _fullScreen = windowState.fullScreen;
-      _resizable = windowState.resizable;
-      _alwaysOnTop = windowState.alwaysOnTop;
-      _preventClose = windowState.preventClose;
-      _minimized = windowState.minimized;
-      _maximized = windowState.maximized;
-      _visible = windowState.visible;
-      _focused = windowState.focused;
-      _skipTaskBar = windowState.skipTaskBar;
+      _cacheWindowState(windowState);
 
       if (!_listenersAttached) {
         windowManager.addListener(this);
@@ -121,13 +112,102 @@ class WindowService extends FletService with WindowListener {
   }
 
   void _scheduleWindowUpdate() {
+    // Coalesce calls that land before the previously-scheduled run has
+    // actually started: both `update()` (the Window control's own patch)
+    // and `_onPageChanged()` (a title change on the *page*, a different
+    // control) call this method, and a single patch that changes both the
+    // window and the title fires both — `_updateWindow` re-reads every
+    // property live from `control`/`parent` when it runs, so a second run
+    // queued back-to-back before the first even starts would just re-apply
+    // the same already-current values. Without this, two runs execute in
+    // sequence for one patch, and if the first starts an animated native
+    // operation (e.g. macOS NSWindow.zoom for maximize/unmaximize), the
+    // second can reissue that same call while it's still animating —
+    // zoom: toggles, so a single `maximized = true` can silently animate
+    // back to unmaximized right after being applied.
+    if (_updateScheduled) {
+      return;
+    }
+    _updateScheduled = true;
     _pendingWindowUpdate = _pendingWindowUpdate.catchError((_) {}).then((_) {
+      _updateScheduled = false;
       if (_initWindowStateCompleter.isCompleted) {
         return _updateWindow(control.backend);
       }
       return _initWindowStateCompleter.future
           .then((_) => _updateWindow(control.backend));
     });
+  }
+
+  bool _shouldDeferPlacementUntilShow() {
+    return isLinuxDesktop() && (_visible == null || _visible == false);
+  }
+
+  void _cacheWindowState(WindowState state) {
+    _width = state.width;
+    _height = state.height;
+    _top = state.top;
+    _left = state.left;
+    _opacity = state.opacity;
+    _minimizable = state.minimizable;
+    _maximizable = state.maximizable;
+    _fullScreen = state.fullScreen;
+    _resizable = state.resizable;
+    _alwaysOnTop = state.alwaysOnTop;
+    _preventClose = state.preventClose;
+    _minimized = state.minimized;
+    _maximized = state.maximized;
+    _visible = state.visible;
+    _focused = state.focused;
+    _skipTaskBar = state.skipTaskBar;
+  }
+
+  WindowState _snapshotWindowState({bool? visible, bool? focused}) {
+    return WindowState(
+      maximized: _maximized ?? false,
+      minimized: _minimized ?? false,
+      fullScreen: _fullScreen ?? false,
+      alwaysOnTop: _alwaysOnTop ?? false,
+      focused: focused ?? _focused ?? false,
+      visible: visible ?? _visible ?? false,
+      minimizable: _minimizable ?? true,
+      maximizable: _maximizable ?? true,
+      resizable: _resizable ?? true,
+      preventClose: _preventClose ?? false,
+      skipTaskBar: _skipTaskBar ?? false,
+      width: _width ?? 0,
+      height: _height ?? 0,
+      top: _top ?? 0,
+      left: _left ?? 0,
+      opacity: _opacity ?? 1,
+    );
+  }
+
+  Future<void> _applyDeferredPlacementAfterShow() async {
+    if (!isLinuxDesktop() ||
+        _applyingDeferredPlacement ||
+        (_deferredAlignmentOnShow == null && !_deferredCenterOnShow)) {
+      return;
+    }
+
+    _applyingDeferredPlacement = true;
+    final deferredAlignment = _deferredAlignmentOnShow;
+    final deferredCenter = _deferredCenterOnShow;
+    _deferredAlignmentOnShow = null;
+    _deferredCenterOnShow = false;
+
+    try {
+      if (deferredAlignment != null) {
+        await setWindowAlignment(deferredAlignment, false);
+      }
+      if (deferredCenter) {
+        await centerWindow();
+      }
+    } catch (e) {
+      debugPrint("Error applying deferred window placement: $e");
+    } finally {
+      _applyingDeferredPlacement = false;
+    }
   }
 
   Future<void> _updateWindow(FletBackend backend) async {
@@ -196,15 +276,13 @@ class WindowService extends FletService with WindowListener {
         _height = height;
       }
 
-      if ((minWidth != null || minHeight != null) &&
-          (minWidth != _minWidth || minHeight != _minHeight)) {
+      if (minWidth != _minWidth || minHeight != _minHeight) {
         await setWindowMinSize(minWidth, minHeight);
         _minWidth = minWidth;
         _minHeight = minHeight;
       }
 
-      if ((maxWidth != null || maxHeight != null) &&
-          (maxWidth != _maxWidth || maxHeight != _maxHeight)) {
+      if (maxWidth != _maxWidth || maxHeight != _maxHeight) {
         await setWindowMaxSize(maxWidth, maxHeight);
         _maxWidth = maxWidth;
         _maxHeight = maxHeight;
@@ -264,7 +342,12 @@ class WindowService extends FletService with WindowListener {
       }
 
       if (alignment != null && alignment != _alignment) {
-        await setWindowAlignment(alignment);
+        if (_shouldDeferPlacementUntilShow()) {
+          _deferredAlignmentOnShow = alignment;
+        } else {
+          await setWindowAlignment(alignment);
+          _deferredAlignmentOnShow = null;
+        }
         _alignment = alignment;
       }
 
@@ -386,12 +469,18 @@ class WindowService extends FletService with WindowListener {
         break;
       case "center":
         await _pendingWindowUpdate;
-        await centerWindow();
+        if (_shouldDeferPlacementUntilShow()) {
+          _deferredAlignmentOnShow = null;
+          _deferredCenterOnShow = true;
+        } else {
+          await centerWindow();
+        }
         break;
       case "close":
         await closeWindow();
         break;
       case "destroy":
+        _isClosing = true;
         await destroyWindow();
         break;
       case "start_dragging":
@@ -427,25 +516,39 @@ class WindowService extends FletService with WindowListener {
     if (["resize", "resized", "move"].contains(eventName)) {
       return;
     }
-    getWindowState().then((state) {
-      _width = state.width;
-      _height = state.height;
-      _top = state.top;
-      _left = state.left;
-      _opacity = state.opacity;
-      _minimized = state.minimized;
-      _maximized = state.maximized;
-      _minimizable = state.minimizable;
-      _maximizable = state.maximizable;
-      _fullScreen = state.fullScreen;
-      _resizable = state.resizable;
-      _alwaysOnTop = state.alwaysOnTop;
-      _preventClose = state.preventClose;
-      _visible = state.visible;
-      _focused = state.focused;
-      _skipTaskBar = state.skipTaskBar;
+    if (eventName == "close") {
+      final preventClose = _preventClose ?? false;
+      _isClosing = !preventClose;
+      control.backend.onWindowEvent(
+          eventName,
+          _snapshotWindowState(focused: preventClose ? null : false));
+      return;
+    }
+    if (eventName == "hide") {
+      _visible = false;
+      _focused = false;
+      control.backend.onWindowEvent(
+          eventName, _snapshotWindowState(visible: false, focused: false));
+      return;
+    }
+    if (_isClosing) {
+      control.backend.onWindowEvent(eventName, _snapshotWindowState());
+      return;
+    }
 
-      control.backend.onWindowEvent(eventName, state);
-    });
+    () async {
+      try {
+        if (eventName == "show") {
+          _visible = true;
+          await _applyDeferredPlacementAfterShow();
+        }
+
+        final state = await getWindowState();
+        _cacheWindowState(state);
+        control.backend.onWindowEvent(eventName, state);
+      } catch (e) {
+        debugPrint("Error handling window event $eventName: $e");
+      }
+    }();
   }
 }

@@ -31,3 +31,11 @@
 vendor/
 /client/android/app/.cxx
 client/devtools_options.yaml
+/.claude/worktrees
+
+# Actual screenshots written by failed golden comparisons in integration tests
+*_actual.png
+
+# Files uploaded while running the file_picker examples, which pass
+# upload_dir="examples" to ft.run() and so write under the example's own folder
+sdk/python/examples/**/examples/

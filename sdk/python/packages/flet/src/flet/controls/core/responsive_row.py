@@ -5,6 +5,7 @@ from flet.controls.adaptive_control import AdaptiveControl
 from flet.controls.base_control import control
 from flet.controls.control import Control
 from flet.controls.layout_control import LayoutControl
+from flet.controls.scrollable_control import ScrollableControl
 from flet.controls.types import (
     CrossAxisAlignment,
     MainAxisAlignment,
@@ -12,20 +13,24 @@ from flet.controls.types import (
     ResponsiveNumber,
     ResponsiveRowBreakpoint,
 )
+from flet.utils.validation import V, ValidationRules
 
 __all__ = ["ResponsiveNumber", "ResponsiveRow", "ResponsiveRowBreakpoint"]
 
 
 @control("ResponsiveRow")
-class ResponsiveRow(LayoutControl, AdaptiveControl):
+class ResponsiveRow(LayoutControl, ScrollableControl, AdaptiveControl):
     """
     Allows aligning child controls to virtual columns.
 
     By default, a virtual grid has 12 columns, but that can be customized with
-    [`columns`][(c).] property.
+    :attr:`columns` property.
 
-    Similar to `expand` property, every control has [`col`][flet.Control.]
+    Similar to `expand` property, every control has :attr:`~flet.Control.col`
     property which allows specifying how many columns a control should span.
+
+    Use :attr:`~flet.ScrollableControl.scroll` to enable vertical scrolling when
+    the responsive content is taller than the available height.
 
     Example:
     ```python
@@ -44,7 +49,6 @@ class ResponsiveRow(LayoutControl, AdaptiveControl):
         ],
     )
     ```
-
     """
 
     controls: list[Control] = field(default_factory=list)
@@ -52,34 +56,80 @@ class ResponsiveRow(LayoutControl, AdaptiveControl):
     A list of Controls to display.
     """
 
+    __validation_rules__: ValidationRules = (
+        V.ensure(
+            lambda ctrl: (
+                ctrl.columns > 0
+                if isinstance(ctrl.columns, (int, float))
+                else all(v > 0 for v in ctrl.columns.values())
+            ),
+            message="columns must be greater than 0 for all breakpoints",
+        ),
+        V.ensure(
+            lambda ctrl: (
+                ctrl.spacing >= 0
+                if isinstance(ctrl.spacing, (int, float))
+                else all(v >= 0 for v in ctrl.spacing.values())
+            ),
+            message="spacing must be greater than or equal to 0 for all breakpoints",
+        ),
+        V.ensure(
+            lambda ctrl: (
+                ctrl.run_spacing >= 0
+                if isinstance(ctrl.run_spacing, (int, float))
+                else all(v >= 0 for v in ctrl.run_spacing.values())
+            ),
+            message=(
+                "run_spacing must be greater than or equal to 0 for all breakpoints"
+            ),
+        ),
+    )
+
     columns: ResponsiveNumber = 12
     """
     The number of virtual columns to layout children.
+
+    Raises:
+        ValueError: If it is not strictly greater than `0`.
+        ValueError: If any breakpoint-specific value is not strictly greater than `0`.
     """
 
     alignment: MainAxisAlignment = MainAxisAlignment.START
     """
-    Defines how the child [`controls`][(c).] should be placed horizontally.
+    Defines how the child :attr:`controls` should be placed horizontally.
+
+    When the controls don't fit on one line and wrap, it applies to each line
+    separately.
     """
 
     vertical_alignment: CrossAxisAlignment = CrossAxisAlignment.START
     """
-    Defines how the child [`controls`][(c).] should be placed vertically.
+    Defines how the child :attr:`controls` should be placed vertically.
+
+    When the controls don't fit on one line and wrap, only
+    :attr:`~flet.CrossAxisAlignment.START`, :attr:`~flet.CrossAxisAlignment.END`
+    and :attr:`~flet.CrossAxisAlignment.CENTER` apply, within each line;
+    :attr:`~flet.CrossAxisAlignment.STRETCH` and
+    :attr:`~flet.CrossAxisAlignment.BASELINE` behave like
+    :attr:`~flet.CrossAxisAlignment.START`.
     """
 
     spacing: ResponsiveNumber = 10
     """
-    The spacing between controls in a row in virtual pixels.
+    The horizontal spacing between controls, in logical pixels.
 
-    Note:
-        Has effect only when [`alignment`][(c).] is set to
-        [`MainAxisAlignment.START`][flet.], [`MainAxisAlignment.END`][flet.],
-        or [`MainAxisAlignment.CENTER`][flet.].
+    Raises:
+        ValueError: If it is negative.
+        ValueError: If any breakpoint-specific value is negative.
     """
 
     run_spacing: ResponsiveNumber = 10
     """
-    The spacing between runs.
+    The vertical spacing between lines when the controls wrap, in logical pixels.
+
+    Raises:
+        ValueError: If it is negative.
+        ValueError: If any breakpoint-specific value is negative.
     """
 
     breakpoints: dict[Union[ResponsiveRowBreakpoint, str], Number] = field(
@@ -94,10 +144,10 @@ class ResponsiveRow(LayoutControl, AdaptiveControl):
     )
     """
     Defines the minimum widths (in px) for each breakpoint key used by responsive \
-    properties such as [`col`][flet.Control.], [`spacing`][flet.ResponsiveRow.], and \
-    [`run_spacing`][flet.ResponsiveRow.].
+    properties such as :attr:`~flet.Control.col`, :attr:`~flet.ResponsiveRow.spacing`, \
+    and :attr:`~flet.ResponsiveRow.run_spacing`.
 
-    Keys can be [`ResponsiveRowBreakpoint`][flet.] values or custom strings.
+    Keys can be :class:`~flet.ResponsiveRowBreakpoint` values or custom strings.
     Breakpoint names in responsive values must match the names used here.
 
     The default mirrors Bootstrap breakpoints.

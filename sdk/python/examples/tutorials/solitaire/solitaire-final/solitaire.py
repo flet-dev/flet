@@ -1,9 +1,10 @@
 # from settings import Settings
 import random
 
-import flet as ft
 from card import Card
 from slot import Slot
+
+import flet as ft
 
 
 class Suite:
@@ -38,7 +39,7 @@ class Solitaire(ft.Stack):
 
     def create_slots(self):
         self.stock = Slot(
-            solitaire=self, slot_type="stock", top=0, left=0, border=ft.border.all(1)
+            solitaire=self, slot_type="stock", top=0, left=0, border=ft.Border.all(1)
         )
 
         self.waste = Slot(
@@ -54,7 +55,7 @@ class Solitaire(ft.Stack):
                     slot_type="foundation",
                     top=0,
                     left=x,
-                    border=ft.border.all(1, "outline"),
+                    border=ft.Border.all(1, "outline"),
                 )
             )
             x += 100
@@ -68,7 +69,7 @@ class Solitaire(ft.Stack):
                     slot_type="tableau",
                     top=150,
                     left=x,
-                    # border=ft.border.all(1),
+                    # border=ft.Border.all(1),
                     border=None,
                 )
             )

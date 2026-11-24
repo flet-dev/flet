@@ -1,7 +1,7 @@
-import 'package:data_table_2/data_table_2.dart';
+import 'data_table_2/data_table_2.dart';
 import 'package:flet/flet.dart' as ft;
 import 'package:flet/flet.dart';
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 
 import 'utils/datatable.dart';
 
@@ -77,6 +77,8 @@ class _DataTable2ControlState extends State<DataTable2Control> {
           widget.control.getBool("visible_vertical_scroll_bar"),
       fixedLeftColumns: widget.control.getInt("fixed_left_columns", 0)!,
       fixedTopRows: widget.control.getInt("fixed_top_rows", 1)!,
+      buildRowsOnDemand:
+          widget.control.getBool("build_rows_on_demand", true)!,
       fixedColumnsColor:
           widget.control.getColor("fixed_columns_color", context),
       fixedCornerColor: widget.control.getColor("fixed_corner_color", context),
@@ -85,7 +87,7 @@ class _DataTable2ControlState extends State<DataTable2Control> {
       sortArrowIcon:
           widget.control.getIconData("sort_arrow_icon") ?? Icons.arrow_upward,
       sortArrowAnimationDuration: widget.control.getDuration(
-          "sort_arrow_animation_duration", Duration(microseconds: 150))!,
+          "sort_arrow_animation_duration", Duration(milliseconds: 150))!,
       checkboxAlignment:
           widget.control.getAlignment("checkbox_alignment", Alignment.center)!,
       headingCheckboxTheme: widget.control

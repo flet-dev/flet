@@ -1,0 +1,367 @@
+.heroBand {
+  padding: 75px 32px 0;
+}
+
+.heroInner, .featuresInner {
+  width: 100%;
+  max-width: 1180px;
+  margin-inline: auto;
+}
+
+.heroInner {
+  max-width: 1440px;
+}
+
+.heroInner {
+  text-align: center;
+}
+
+.heroSupertitle {
+  display: block;
+  margin-bottom: 24px;
+  font-size: 14px;
+  font-weight: 700;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  color: var(--flet-accent);
+}
+
+.heroTitle {
+  max-width: none;
+  margin: 0 auto 26px;
+  font-size: clamp(44px, 5.5vw, 72px);
+  font-weight: 750;
+  line-height: 1.06;
+  letter-spacing: -.05em;
+  text-wrap: balance;
+}
+
+.heroTitle span {
+  display: block;
+  color: var(--flet-accent);
+}
+
+.heroSubtitle {
+  max-width: 860px;
+  margin: 0 auto 28px;
+  font-size: 20px;
+  text-wrap: balance;
+  line-height: 1.65;
+  color: var(--flet-muted);
+}
+
+.heroCtas, .closingCtas {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 12px;
+}
+
+.heroCtas {
+  margin-bottom: 18px;
+}
+
+.heroNote {
+  margin: 0 0 44px;
+  font-size: 14px;
+  color: var(--flet-muted);
+}
+
+.primaryCta, .secondaryCta {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 24px;
+  padding: 15px 22px;
+  border: 1px solid var(--flet-line);
+  border-radius: 9px;
+  font-size: 16px;
+  font-weight: 650;
+  text-decoration: none !important;
+  transition: background .15s, transform .15s;
+}
+
+.primaryCta {
+  background: var(--flet-button);
+  border-color: var(--flet-button);
+  color: white;
+}
+
+.primaryCta:hover {
+  background: var(--flet-button-hover);
+  border-color: var(--flet-button-hover);
+  color: white;
+  transform: translateY(-2px);
+}
+
+.secondaryCta {
+  color: var(--flet-ink);
+}
+
+.secondaryCta:hover {
+  background: var(--flet-soft);
+  color: var(--flet-ink);
+}
+
+.primaryCta:focus-visible, .secondaryCta:focus-visible {
+  outline: 2px solid var(--flet-accent);
+  outline-offset: 4px;
+}
+
+.heroScreenshot {
+  display: block;
+  width: 100%;
+  max-width: 1080px;
+  height: auto;
+  margin-inline: auto;
+}
+
+.stepsSection {
+  padding: 95px 32px 0;
+}
+
+.steps {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 24px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.step {
+  margin: 0;
+  padding: 28px 30px 30px;
+  border: 1px solid var(--flet-line);
+  border-radius: 14px;
+}
+
+.stepNumber {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 34px;
+  height: 34px;
+  margin-bottom: 18px;
+  border-radius: 50%;
+  font-size: 15px;
+  font-weight: 700;
+  color: var(--flet-accent);
+  background: var(--flet-accent-soft);
+}
+
+.stepTitle {
+  margin-bottom: 10px;
+  font-size: 21px;
+  letter-spacing: -.35px;
+}
+
+.featuresSection {
+  padding: 95px 32px;
+}
+
+.featureGroup + .featureGroup {
+  margin-top: 48px;
+}
+
+.groupHeading {
+  margin: 0 0 18px;
+  font-size: 13px;
+  font-weight: 700;
+  letter-spacing: 1.2px;
+  text-transform: uppercase;
+  color: var(--flet-muted);
+}
+
+.featuresHeading {
+  margin: 0 0 38px;
+  font-size: clamp(32px, 3.5vw, 46px);
+  line-height: 1.15;
+  letter-spacing: -.04em;
+}
+
+.featureGrid {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  border-top: 1px solid var(--flet-line);
+  border-left: 1px solid var(--flet-line);
+}
+
+.featureCard {
+  padding: 30px;
+  border-right: 1px solid var(--flet-line);
+  border-bottom: 1px solid var(--flet-line);
+}
+
+.featureIcon {
+  width: 48px;
+  height: 48px;
+  margin-bottom: 24px;
+}
+
+.featureTitle {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-bottom: 14px;
+  font-size: 19px;
+  line-height: 1.35;
+  letter-spacing: -.35px;
+}
+
+.featureDescription {
+  font-size: 15px;
+  line-height: 1.7;
+  color: var(--flet-muted);
+  margin: 0;
+}
+
+.featureTitle a {
+  color: inherit;
+}
+
+.featureTitle a:hover {
+  color: var(--flet-accent);
+}
+
+.planBadge {
+  padding: 3px 8px;
+  border-radius: 20px;
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: 0;
+  color: var(--flet-accent);
+  background: var(--flet-accent-soft);
+}
+
+.pricingSection {
+  padding: 0 32px 80px;
+}
+
+.pricingBand {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 32px;
+  padding: 36px 40px;
+  border: 1px solid var(--flet-line);
+  border-radius: 20px;
+}
+
+.pricingHeading {
+  margin-bottom: 10px;
+  font-size: clamp(26px, 2.6vw, 34px);
+  letter-spacing: -.03em;
+}
+
+.pricingText {
+  max-width: 720px;
+  margin: 0;
+  font-size: 17px;
+  line-height: 1.65;
+  color: var(--flet-muted);
+}
+
+.pricingBand .secondaryCta {
+  flex-shrink: 0;
+}
+
+.closingBand {
+  width: min(1180px, calc(100% - 64px));
+  margin: 0 auto 80px;
+  padding: 64px 32px;
+  border-radius: 20px;
+  text-align: center;
+  background: var(--flet-accent-soft);
+}
+
+.closingInner {
+  max-width: 720px;
+  margin-inline: auto;
+}
+
+.closingHeading {
+  margin-bottom: 20px;
+  font-size: clamp(32px, 3.5vw, 46px);
+  line-height: 1.15;
+  letter-spacing: -.04em;
+}
+
+.closingSubtitle {
+  margin-bottom: 28px;
+  font-size: 18px;
+  color: var(--flet-muted);
+}
+
+@media (max-width: 1050px) {
+  .featureGrid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 900px) {
+  .steps {
+    grid-template-columns: 1fr;
+    gap: 14px;
+  }
+  .pricingBand {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+}
+
+@media (max-width: 760px) {
+  .heroBand {
+    padding: 45px 20px 0;
+  }
+  .heroSubtitle {
+    font-size: 18px;
+  }
+  .heroCtas {
+    margin-bottom: 35px;
+  }
+  .stepsSection {
+    padding: 60px 20px 0;
+  }
+  .featuresSection {
+    padding: 60px 20px;
+  }
+  .pricingSection {
+    padding: 0 20px 60px;
+  }
+  .pricingBand {
+    padding: 28px 24px;
+  }
+  .heroNote {
+    margin-bottom: 32px;
+  }
+  .featureCard {
+    padding: 24px;
+  }
+  .closingBand {
+    width: calc(100% - 40px);
+    margin-bottom: 60px;
+    padding: 40px 24px;
+  }
+}
+
+@media (max-width: 440px) {
+  .featureGrid {
+    grid-template-columns: 1fr;
+  }
+  .primaryCta, .secondaryCta {
+    padding: 13px 15px;
+    gap: 12px;
+    font-size: 14px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .primaryCta, .secondaryCta {
+    transition: none;
+  }
+  .primaryCta:hover {
+    transform: none;
+  }
+}

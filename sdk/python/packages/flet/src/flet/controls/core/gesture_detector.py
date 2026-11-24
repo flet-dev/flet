@@ -36,7 +36,7 @@ class GestureDetector(LayoutControl, AdaptiveControl):
 
     Attempts to recognize gestures that correspond to its non-None callbacks.
 
-    If this control has a [`content`][(c).], it defers to that child control for
+    If this control has a :attr:`content`, it defers to that child control for
     its sizing behavior, else it grows to fit the parent instead.
     """
 
@@ -65,17 +65,21 @@ class GestureDetector(LayoutControl, AdaptiveControl):
 
     hover_interval: int = 0
     """
-    Throttling in milliseconds for [`on_hover`][(c).] event.
+    Throttling in milliseconds for :attr:`on_hover` event.
     """
 
     multi_tap_touches: int = 0
     """
-    The minimum number of pointers to trigger [`on_multi_tap`][(c).] event.
+    The minimum number of pointers to trigger :attr:`on_multi_tap` event.
     """
 
     exclude_from_semantics: bool = False
     """
-    TBD
+    Whether the gestures of this detector should be excluded from the semantics tree.
+
+    Set this to `True` when the wrapped content already exposes the appropriate
+    semantic actions and you do not want this detector to add duplicate accessibility
+    announcements.
     """
 
     on_force_press_start: Optional[EventHandler[ForcePressEvent["GestureDetector"]]] = (
@@ -109,12 +113,17 @@ class GestureDetector(LayoutControl, AdaptiveControl):
 
     trackpad_scroll_causes_scale: bool = False
     """
-    TBD
+    Whether trackpad scroll gestures should be interpreted as scale gestures.
+
+    When enabled, compatible trackpad pinch/scroll input can trigger
+    :attr:`on_scale_start`, :attr:`on_scale_update`, and :attr:`on_scale_end`.
     """
 
     allowed_devices: Optional[list[PointerDeviceType]] = None
     """
-    TBD
+    Restricts gesture recognition to the specified pointer device types.
+
+    If `None`, gestures from any supported input device can be recognized.
     """
 
     on_tap: Optional[EventHandler[TapEvent["GestureDetector"]]] = None
@@ -141,8 +150,8 @@ class GestureDetector(LayoutControl, AdaptiveControl):
 
     on_tap_cancel: Optional[ControlEventHandler["GestureDetector"]] = None
     """
-    The pointer that previously triggered [`on_tap_down`][(c).] will not end up \
-    causing a tap.
+    The pointer that previously triggered :attr:`on_tap_down` will not end up causing \
+    a tap.
     """
 
     on_multi_tap: Optional[EventHandler[TapEvent["GestureDetector"]]] = None
@@ -176,7 +185,7 @@ class GestureDetector(LayoutControl, AdaptiveControl):
 
     on_secondary_tap_cancel: Optional[ControlEventHandler["GestureDetector"]] = None
     """
-    The pointer that previously triggered [`on_secondary_tap_down`][(c).]
+    The pointer that previously triggered :attr:`on_secondary_tap_down`
     will not end up causing a tap.
     """
 
@@ -194,7 +203,7 @@ class GestureDetector(LayoutControl, AdaptiveControl):
 
     on_tertiary_tap_cancel: Optional[ControlEventHandler["GestureDetector"]] = None
     """
-    The pointer that previously triggered [`on_tertiary_tap_down`][(c).]
+    The pointer that previously triggered :attr:`on_tertiary_tap_down`
     will not end up causing a tap.
     """
 
@@ -208,7 +217,7 @@ class GestureDetector(LayoutControl, AdaptiveControl):
 
     on_long_press_cancel: Optional[ControlEventHandler["GestureDetector"]] = None
     """
-    The pointer that previously triggered [`on_long_press_down`][(c).]
+    The pointer that previously triggered :attr:`on_long_press_down`
     will not end up causing a long-press.
     """
 
@@ -258,7 +267,7 @@ class GestureDetector(LayoutControl, AdaptiveControl):
         None
     )
     """
-    The pointer that previously triggered [`on_secondary_long_press_down`][(c).]
+    The pointer that previously triggered :attr:`on_secondary_long_press_down`
     not end up causing a long-press.
     """
 
@@ -308,7 +317,7 @@ class GestureDetector(LayoutControl, AdaptiveControl):
         None
     )
     """
-    The pointer that previously triggered [`on_tertiary_long_press_down`][(c).]
+    The pointer that previously triggered :attr:`on_tertiary_long_press_down`
     will not end up causing a long-press.
     """
 
@@ -399,7 +408,7 @@ class GestureDetector(LayoutControl, AdaptiveControl):
 
     on_horizontal_drag_cancel: Optional[ControlEventHandler["GestureDetector"]] = None
     """
-    The pointer that previously triggered [`on_horizontal_drag_down`][(c).]
+    The pointer that previously triggered :attr:`on_horizontal_drag_down`
     will not end up causing a horizontal drag.
     """
 
@@ -432,7 +441,7 @@ class GestureDetector(LayoutControl, AdaptiveControl):
 
     on_vertical_drag_cancel: Optional[ControlEventHandler["GestureDetector"]] = None
     """
-    The pointer that previously triggered [`on_vertical_drag_down`][(c).]
+    The pointer that previously triggered :attr:`on_vertical_drag_down`
     will not end up causing a vertical drag.
     """
 
@@ -460,8 +469,8 @@ class GestureDetector(LayoutControl, AdaptiveControl):
 
     on_pan_cancel: Optional[ControlEventHandler["GestureDetector"]] = None
     """
-    The pointer that previously triggered [`on_pan_down`][(c).] will not end up \
-    causing a pan gesture.
+    The pointer that previously triggered :attr:`on_pan_down` will not end up causing \
+    a pan gesture.
     """
 
     on_right_pan_start: Optional[EventHandler[PointerEvent["GestureDetector"]]] = None
@@ -490,12 +499,13 @@ class GestureDetector(LayoutControl, AdaptiveControl):
 
     on_scale_update: Optional[EventHandler[ScaleUpdateEvent["GestureDetector"]]] = None
     """
-    TBD
+    Called when the focal point, scale factor, or rotation of an active scale gesture
+    changes.
     """
 
     on_scale_end: Optional[EventHandler[ScaleEndEvent["GestureDetector"]]] = None
     """
-    TBD
+    Called when an active scale gesture ends.
     """
 
     on_hover: Optional[EventHandler[HoverEvent["GestureDetector"]]] = None
@@ -515,5 +525,6 @@ class GestureDetector(LayoutControl, AdaptiveControl):
 
     on_scroll: Optional[EventHandler[ScrollEvent["GestureDetector"]]] = None
     """
-    TBD
+    Called when a pointer scroll event is received, such as a mouse wheel or trackpad
+    scroll.
     """

@@ -1,7 +1,9 @@
 import pytest
 
+import examples.extensions.code_editor.code_editor.main as example_1
+import examples.extensions.code_editor.folding_and_initial_selection.main as example_3
+import examples.extensions.code_editor.selection_handling.main as example_2
 import flet.testing as ftt
-from examples.controls.code_editor import example_1, example_2, example_3
 
 
 @pytest.mark.parametrize(

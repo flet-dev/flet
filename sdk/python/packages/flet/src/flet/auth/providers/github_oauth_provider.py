@@ -1,7 +1,4 @@
-import json
 from typing import Optional
-
-import httpx
 
 from flet.auth.group import Group
 from flet.auth.oauth_provider import OAuthProvider
@@ -9,6 +6,8 @@ from flet.auth.user import User
 from flet.version import flet_version
 
 __all__ = ["GitHubOAuthProvider"]
+
+GITHUB_API_BASE_URL = "https://api.github.com"
 
 
 class GitHubOAuthProvider(OAuthProvider):
@@ -38,20 +37,22 @@ class GitHubOAuthProvider(OAuthProvider):
             access_token: OAuth access token.
 
         Returns:
-            A list of [`Group`][flet.auth.] mapped from `/user/teams`.
+            A list of :class:`~flet.auth.Group` mapped from `/user/teams`.
         """
-        async with httpx.AsyncClient(follow_redirects=True) as client:
-            teams_resp = await client.send(
-                httpx.Request(
-                    "GET",
-                    "https://api.github.com/user/teams",
-                    headers=self.__get_client_headers(access_token),
-                )
+
+        import httpx
+
+        async with httpx.AsyncClient(
+            base_url=GITHUB_API_BASE_URL, follow_redirects=True
+        ) as client:
+
+            teams_resp = await client.get(
+                "/user/teams", headers=self.__get_client_headers(access_token)
             )
             teams_resp.raise_for_status()
             groups = []
-            tj = json.loads(teams_resp.text)
-            for t in tj:
+
+            for t in teams_resp.json():
                 groups.append(
                     Group(
                         t,
@@ -68,36 +69,35 @@ class GitHubOAuthProvider(OAuthProvider):
             access_token: OAuth access token.
 
         Returns:
-            A [`User`][flet.auth.] built from `/user`; its `email` is populated
+            A :class:`~flet.auth.User` built from `/user`; its `email` is populated
                 from the primary address in `/user/emails` when available.
         """
-        async with httpx.AsyncClient(follow_redirects=True) as client:
-            user_resp = await client.send(
-                httpx.Request(
-                    "GET",
-                    "https://api.github.com/user",
-                    headers=self.__get_client_headers(access_token),
-                )
+
+        import httpx
+
+        async with httpx.AsyncClient(
+            base_url=GITHUB_API_BASE_URL, follow_redirects=True
+        ) as client:
+
+            user_resp = await client.get(
+                "/user", headers=self.__get_client_headers(access_token)
             )
             user_resp.raise_for_status()
-            uj = json.loads(user_resp.text)
+            uj = user_resp.json()
 
-            emails_resp = await client.send(
-                httpx.Request(
-                    "GET",
-                    "https://api.github.com/user/emails",
-                    headers=self.__get_client_headers(access_token),
-                )
+            emails_resp = await client.get(
+                "/user/emails", headers=self.__get_client_headers(access_token)
             )
             emails_resp.raise_for_status()
-            ej = json.loads(emails_resp.text)
+            ej = emails_resp.json()
+
             for e in ej:
                 if e["primary"]:
                     uj["email"] = e["email"]
                     break
             return User(uj, id=str(uj["id"]))
 
-    def __get_client_headers(self, access_token):
+    def __get_client_headers(self, access_token: str) -> dict[str, str]:
         """
         Builds common GitHub API request headers.
 

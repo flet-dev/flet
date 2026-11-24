@@ -20,7 +20,7 @@ class BarChartGroup(ft.BaseControl):
 
     rods: list[BarChartRod] = field(default_factory=list)
     """
-    The list of [`BarChartRod`][(p).]
+    The list of :class:`~flet_charts.BarChartRod`
     objects to display in the group.
     """
 

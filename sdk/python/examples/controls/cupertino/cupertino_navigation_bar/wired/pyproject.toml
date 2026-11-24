@@ -1,0 +1,26 @@
+[project]
+name = "cupertino-navigation-bar-wired"
+version = "1.0.0"
+description = "Wires CupertinoNavigationBar selection to update the page body text for each destination."
+requires-python = ">=3.10"
+keywords = ["cupertino", "navigation bar", "state", "destinations", "events"]
+authors = [{ name = "Flet team", email = "hello@flet.dev" }]
+dependencies = ["flet"]
+
+[dependency-groups]
+dev = ["flet-cli", "flet-desktop", "flet-web"]
+
+[tool.flet.gallery]
+categories = ["Navigation/CupertinoNavigationBar"]
+
+[tool.flet.metadata]
+title = "Wired"
+controls = ["CupertinoNavigationBar", "NavigationBarDestination", "SafeArea", "Text"]
+layout_pattern = "tabbed-navigation"
+complexity = "basic"
+features = ["selection-driven content", "destination change handler"]
+
+[tool.flet]
+org = "dev.flet"
+company = "Flet"
+copyright = "Copyright (C) 2023-2026 by Flet"

@@ -1,0 +1,26 @@
+[project]
+name = "cupertino-checkbox-cupertino-material-and-adaptive"
+version = "1.0.0"
+description = "Shows Cupertino, Material, and adaptive checkbox behavior side by side."
+requires-python = ">=3.10"
+keywords = ["cupertino", "checkbox", "adaptive", "material", "input"]
+authors = [{ name = "Flet team", email = "hello@flet.dev" }]
+dependencies = ["flet"]
+
+[dependency-groups]
+dev = ["flet-cli", "flet-desktop", "flet-web"]
+
+[tool.flet.gallery]
+categories = ["Input/CupertinoCheckbox"]
+
+[tool.flet.metadata]
+title = "Cupertino, material and adaptive"
+controls = ["SafeArea", "Column", "CupertinoCheckbox", "Checkbox", "Text", "Container"]
+layout_pattern = "form"
+complexity = "basic"
+features = ["platform-adaptive checkbox", "cupertino and material comparison"]
+
+[tool.flet]
+org = "dev.flet"
+company = "Flet"
+copyright = "Copyright (C) 2023-2026 by Flet"

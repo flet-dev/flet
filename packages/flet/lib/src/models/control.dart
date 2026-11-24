@@ -34,7 +34,23 @@ class PatchTarget {
   final dynamic obj;
   final Control control;
 
-  const PatchTarget(this.obj, this.control);
+  /// The top-level property of [control] that holds [obj], or `null` when
+  /// [obj] is the properties map of [control] itself.
+  final String? property;
+
+  const PatchTarget(this.obj, this.control, [this.property]);
+
+  /// Notifies the parent of [control] when an op on [key] of [obj] changes a
+  /// property the parent depends on.
+  ///
+  /// An op on a nested value, such as a breakpoint of a `col` map, changes
+  /// the top-level [property] that holds it rather than [key].
+  void notifyParentIfPropertyChanged(dynamic key) {
+    final name = property ?? key;
+    if (name is String) {
+      control.notifyParentIfPropertyChanged(name);
+    }
+  }
 }
 
 /// Represents a node or control in the UI tree.
@@ -50,7 +66,16 @@ class Control extends ChangeNotifier {
   final String type;
   final Map<String, dynamic> properties;
   bool notifyParent = false;
-  final List<String> _notifyParentProperties = ["visible"];
+
+  /// How many times this control has notified of a change, whether to its
+  /// listeners or its parent. Lets a parent tell if a child changed since it
+  /// last looked, even while the child has no widget.
+  int changeCount = 0;
+
+  /// Properties whose change also notifies the parent, because the parent
+  /// reads them when it builds: `visible` (hidden children are skipped) and
+  /// `col` (`ResponsiveRow` sizes its children from it).
+  final List<String> _notifyParentProperties = ["visible", "col"];
   WeakReference<Control>? _parent;
   late final WeakReference<FletBackend> _backend;
   Completer<void>? _listenerAddedCompleter;
@@ -105,12 +130,19 @@ class Control extends ChangeNotifier {
     return defaultValue;
   }
 
-  Control unwrapComponent() {
+  /// Resolves this control to the control it ultimately renders, following the
+  /// body of nested components.
+  ///
+  /// Returns `null` when a component in the chain has no body yet. That state is
+  /// transient: a re-rendering component is patched to a null body first and
+  /// receives its new body in a follow-up message, so a frame drawn in between
+  /// must render nothing rather than crash.
+  Control? unwrapComponent() {
     dynamic v = this;
     while (v is Control && v.type == componentType) {
       v = v.get(componentBodyProp);
     }
-    return v;
+    return v is Control ? v : null;
   }
 
   /// Returns the [Control] for the given [propertyName], or `null` if not found, not a [Control],
@@ -126,6 +158,8 @@ class Control extends ChangeNotifier {
   /// If [visibleOnly] is `true` (default), only includes visible controls.
   ///
   /// Returns an empty list if the property is missing or null.
+  ///
+  /// Components that have no body yet are skipped - see [unwrapComponent].
   List<Control> children(String propertyName, {bool visibleOnly = true}) {
     var elems = get(propertyName);
     return List<Control>.from(elems is List
@@ -134,6 +168,7 @@ class Control extends ChangeNotifier {
                 ? [elems]
                 : [])
         .map((c) => c.unwrapComponent())
+        .nonNulls
         .where((c) => !visibleOnly || c.visible)
         .toList();
   }
@@ -345,8 +380,10 @@ class Control extends ChangeNotifier {
       var path = pathIndex[index]!;
       dynamic obj = this;
       Control? control = this;
+      String? property;
       for (var p in path) {
         if (obj is Control) {
+          property = p;
           obj = obj.properties[p];
         } else if (obj is Map) {
           obj = obj[p];
@@ -355,9 +392,11 @@ class Control extends ChangeNotifier {
         }
         if (obj is Control) {
           control = obj;
+          property = null;
         }
       }
-      return PatchTarget(obj is Control ? obj.properties : obj, control!);
+      return PatchTarget(
+          obj is Control ? obj.properties : obj, control!, property);
     }
 
     // apply patch commands
@@ -373,9 +412,7 @@ class Control extends ChangeNotifier {
         if (shouldNotify) {
           node.control.notify();
         }
-        if (key is String) {
-          node.control.notifyParentIfPropertyChanged(key);
-        }
+        node.notifyParentIfPropertyChanged(key);
       } else if (opType == OperationType.add) {
         // ADD
         var node = getPatchTarget(op[1]);
@@ -390,6 +427,7 @@ class Control extends ChangeNotifier {
           throw Exception("Add operation can be applied to lists or maps: $op");
         }
         if (shouldNotify) node.control.notify();
+        node.notifyParentIfPropertyChanged(index);
       } else if (opType == OperationType.remove) {
         // REMOVE
         var node = getPatchTarget(op[1]);
@@ -403,6 +441,7 @@ class Control extends ChangeNotifier {
               "Remove operation can be applied to lists or maps: $op");
         }
         if (shouldNotify) node.control.notify();
+        node.notifyParentIfPropertyChanged(index);
       } else if (opType == OperationType.move) {
         // MOVE
         var fromNode = getPatchTarget(op[1]);
@@ -425,6 +464,8 @@ class Control extends ChangeNotifier {
             toNode.control.notify();
           }
         }
+        fromNode.notifyParentIfPropertyChanged(fromIndex);
+        toNode.notifyParentIfPropertyChanged(toIndex);
       } else {
         throw Exception("Unknown patch operation: ${op[0]}");
       }
@@ -433,6 +474,7 @@ class Control extends ChangeNotifier {
 
   void notify() {
     debugPrint("Notify $type($id)");
+    changeCount++;
     if (notifyParent) {
       _parent?.target?.notify();
     } else {
@@ -481,6 +523,15 @@ class Control extends ChangeNotifier {
     _invokeMethodListeners.remove(listener);
   }
 
+  /// Whether a listener is already registered, i.e. whether [invokeMethod]
+  /// will dispatch synchronously instead of awaiting one.
+  ///
+  /// Callers that must not lose the browser's user activation - see
+  /// `runClientActions` in `utils/client_actions.dart` - check this first,
+  /// because the wait in [invokeMethod] is an async gap that silently discards
+  /// the gesture.
+  bool get hasInvokeMethodListeners => _invokeMethodListeners.isNotEmpty;
+
   Future<dynamic> invokeMethod(
       String name, dynamic args, Duration timeout) async {
     debugPrint("$type($id).$name($args)");
@@ -499,7 +550,11 @@ class Control extends ChangeNotifier {
       throw Exception("No invoke method listeners registered.");
     }
     List<dynamic> results = [];
-    for (var listener in _invokeMethodListeners) {
+    // Iterate a snapshot: a listener can take a while (e.g. FletApp's
+    // `wait_idle`), and the control's widget may rebuild in the meantime,
+    // removing and re-adding its listener - changing the live list mid-loop
+    // threw ConcurrentModificationError when the await resumed.
+    for (var listener in List.of(_invokeMethodListeners)) {
       results.add(await listener(name, args));
     }
     return results.length == 1 ? results[0] : results;

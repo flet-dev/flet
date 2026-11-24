@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 
 import '../controls/control_widget.dart';
 import '../models/control.dart';
@@ -18,7 +18,12 @@ extension WidgetFromControl on Control {
       {bool visibleOnly = true, bool notifyParent = false}) {
     return children(propertyName, visibleOnly: visibleOnly).map((child) {
       child.notifyParent = notifyParent;
-      return ControlWidget(control: child);
+      // Keyed by control id so Flutter matches children by identity, not
+      // position. Unkeyed, a sibling inserted or made visible before a
+      // control shifted it, and Flutter rebuilt it from scratch: a
+      // TextField lost focus when a row appeared above it, a list its
+      // scroll position.
+      return ControlWidget(key: ControlIdKey(child.id), control: child);
     }).toList();
   }
 
@@ -38,22 +43,36 @@ extension WidgetFromControl on Control {
     return ControlWidget(key: key, control: c);
   }
 
-  Widget? buildIconOrWidget(String propertyName,
-      {bool visibleOnly = true,
-      bool notifyParent = false,
-      Key? key,
-      Color? color}) {
+  Widget? buildIconOrWidget(
+    String propertyName, {
+    bool visibleOnly = true,
+    bool notifyParent = false,
+    Key? key,
+    Color? color,
+    bool required = false,
+    Widget? errorWidget,
+  }) {
     var icon = get(propertyName);
+
     if (icon is Control) {
-      Control? c;
-      c = child(propertyName, visibleOnly: visibleOnly);
-      if (c == null) return null;
-      c.notifyParent = notifyParent;
-      return ControlWidget(key: key, control: c);
+      final widget = buildWidget(
+        propertyName,
+        visibleOnly: visibleOnly,
+        notifyParent: notifyParent,
+        key: key,
+      );
+      if (widget != null) return widget;
     } else if (icon is int) {
       // Icon values are stored as raw integers (set_id << 16 | index) in this codebase.
       return Icon(getIconData(propertyName), color: color);
     }
+
+    if (required) {
+      return errorWidget ??
+          ErrorControl("Error displaying $type",
+              description: "$propertyName must be specified");
+    }
+
     return null;
   }
 
@@ -69,11 +88,13 @@ extension WidgetFromControl on Control {
     var content = get(propertyName);
 
     if (content is Control) {
-      return buildWidget(propertyName,
-          visibleOnly: visibleOnly, notifyParent: notifyParent, key: key);
-    }
-
-    if (content is String) {
+      return buildWidget(
+        propertyName,
+        visibleOnly: visibleOnly,
+        notifyParent: notifyParent,
+        key: key,
+      );
+    } else if (content is String) {
       return Text(content, style: textStyle);
     }
 

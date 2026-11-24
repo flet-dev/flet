@@ -1,13 +1,12 @@
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 
 import '../extensions/control.dart';
 import '../models/control.dart';
 import '../utils/buttons.dart';
 import '../utils/colors.dart';
-import '../utils/launch_url.dart';
+import '../utils/client_actions.dart';
 import '../utils/misc.dart';
 import '../utils/numbers.dart';
-import '../widgets/error.dart';
 import '../widgets/flet_store_mixin.dart';
 import 'base_controls.dart';
 
@@ -63,7 +62,6 @@ class _ButtonControlState extends State<ButtonControl> with FletStoreMixin {
     bool isTextButton = widget.control.type == "TextButton";
     bool isOutlinedButton = widget.control.type == "OutlinedButton";
 
-    var url = widget.control.getUrl("url");
     var iconColor = widget.control.getColor("icon_color", context);
     var clipBehavior =
         widget.control.getClipBehavior("clip_behavior", Clip.none)!;
@@ -74,9 +72,7 @@ class _ButtonControlState extends State<ButtonControl> with FletStoreMixin {
 
     Function()? onPressed = !widget.control.disabled
         ? () {
-            if (url != null) {
-              openWebBrowser(url);
-            }
+            runControlActions(context, widget.control);
             widget.control.triggerEvent("click");
           }
         : null;
@@ -115,10 +111,7 @@ class _ButtonControlState extends State<ButtonControl> with FletStoreMixin {
           : RoundedRectangleBorder(borderRadius: BorderRadius.circular(4)),
     );
 
-    Widget error = const ErrorControl("Error displaying Button",
-        description: "\"icon\" must be specified together with \"content\"");
-
-    if (icon != null) {
+    if (icon != null && content != null) {
       if (isFilledButton) {
         button = FilledButton.icon(
             style: style,
@@ -129,7 +122,7 @@ class _ButtonControlState extends State<ButtonControl> with FletStoreMixin {
             onHover: onHoverHandler,
             clipBehavior: clipBehavior,
             icon: icon,
-            label: content ?? error);
+            label: content);
       } else if (isFilledTonalButton) {
         button = FilledButton.tonalIcon(
             style: style,
@@ -140,7 +133,7 @@ class _ButtonControlState extends State<ButtonControl> with FletStoreMixin {
             onHover: onHoverHandler,
             clipBehavior: clipBehavior,
             icon: icon,
-            label: content ?? error);
+            label: content);
       } else if (isTextButton) {
         button = TextButton.icon(
           autofocus: autofocus,
@@ -151,7 +144,7 @@ class _ButtonControlState extends State<ButtonControl> with FletStoreMixin {
           style: style,
           clipBehavior: clipBehavior,
           icon: icon,
-          label: content ?? error,
+          label: content,
         );
       } else if (isOutlinedButton) {
         button = OutlinedButton.icon(
@@ -162,7 +155,7 @@ class _ButtonControlState extends State<ButtonControl> with FletStoreMixin {
             clipBehavior: clipBehavior,
             style: style,
             icon: icon,
-            label: content ?? error);
+            label: content);
       } else {
         button = ElevatedButton.icon(
             style: style,
@@ -173,7 +166,7 @@ class _ButtonControlState extends State<ButtonControl> with FletStoreMixin {
             onHover: onHoverHandler,
             clipBehavior: clipBehavior,
             icon: icon,
-            label: content ?? error);
+            label: content);
       }
     } else {
       if (isFilledButton) {
@@ -185,7 +178,7 @@ class _ButtonControlState extends State<ButtonControl> with FletStoreMixin {
             onLongPress: onLongPressHandler,
             onHover: onHoverHandler,
             clipBehavior: clipBehavior,
-            child: content);
+            child: content ?? icon);
       } else if (isFilledTonalButton) {
         button = FilledButton.tonal(
             style: style,
@@ -195,7 +188,7 @@ class _ButtonControlState extends State<ButtonControl> with FletStoreMixin {
             onLongPress: onLongPressHandler,
             onHover: onHoverHandler,
             clipBehavior: clipBehavior,
-            child: content);
+            child: content ?? icon);
       } else if (isTextButton) {
         button = TextButton(
             autofocus: autofocus,
@@ -205,7 +198,7 @@ class _ButtonControlState extends State<ButtonControl> with FletStoreMixin {
             onLongPress: onLongPressHandler,
             onHover: onHoverHandler,
             clipBehavior: clipBehavior,
-            child: content ?? const Text(""));
+            child: content ?? icon ?? const Text(""));
       } else if (isOutlinedButton) {
         button = OutlinedButton(
             autofocus: autofocus,
@@ -215,7 +208,7 @@ class _ButtonControlState extends State<ButtonControl> with FletStoreMixin {
             clipBehavior: clipBehavior,
             onHover: onHoverHandler,
             style: style,
-            child: content);
+            child: content ?? icon);
       } else {
         button = ElevatedButton(
             style: style,
@@ -225,7 +218,7 @@ class _ButtonControlState extends State<ButtonControl> with FletStoreMixin {
             onLongPress: onLongPressHandler,
             onHover: onHoverHandler,
             clipBehavior: clipBehavior,
-            child: content);
+            child: content ?? icon);
       }
     }
 

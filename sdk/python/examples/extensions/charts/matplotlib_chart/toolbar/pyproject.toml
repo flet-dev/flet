@@ -1,0 +1,27 @@
+[project]
+name = "charts-matplotlib-chart-toolbar"
+version = "1.0.0"
+description = "Matplotlib chart with built-in toolbar for panning, zooming, and data exploration."
+requires-python = ">=3.10"
+keywords = ["charts", "matplotlib-chart", "flet"]
+authors = [{ name = "Flet team", email = "hello@flet.dev" }]
+dependencies = ["flet", "flet-charts", "matplotlib", "numpy"]
+
+[dependency-groups]
+dev = ["flet-cli", "flet-desktop", "flet-web"]
+
+[tool.flet.gallery]
+categories = ["Charts/MatplotlibChart"]
+
+[tool.flet.metadata]
+title = "Toolbar"
+docs_intro = "Based on an official [Matplotlib example](https://matplotlib.org/stable/gallery/lines_bars_and_markers/cohere.html#sphx-glr-gallery-lines-bars-and-markers-cohere-py)."
+controls = ["SafeArea", "MatplotlibChart"]
+layout_pattern = "single-chart"
+complexity = "basic"
+features = ["chart visualization", "interactive toolbar", "save to file"]
+
+[tool.flet]
+org = "dev.flet"
+company = "Flet"
+copyright = "Copyright (C) 2023-2026 by Flet"

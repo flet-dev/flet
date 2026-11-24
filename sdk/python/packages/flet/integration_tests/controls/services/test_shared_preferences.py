@@ -16,23 +16,54 @@ def flet_app(flet_app_function):
 @pytest.mark.asyncio(loop_scope="function")
 async def test_crud_flow(flet_app: ftt.FletTestApp):
     prefs = ft.SharedPreferences()
-    prefix = f"it_sp_{uuid4().hex}_"
-    key_1 = f"{prefix}key_1"
-    key_2 = f"{prefix}key_2"
+    prefix = f"it_sp_{uuid4().hex}"
 
-    assert await prefs.contains_key(key_1) is False
-    assert await prefs.set(key_1, "value-1") is True
-    assert await prefs.set(key_2, "value-2") is True
-    assert await prefs.get(key_1) == "value-1"
-    assert await prefs.contains_key(key_1) is True
+    values = {
+        f"{prefix}_str": "hello",
+        f"{prefix}_int": 123,
+        f"{prefix}_float": 123.25,
+        f"{prefix}_bool": True,
+        f"{prefix}_list": ["a", "b", "c"],
+    }
 
+    # initially keys should not exist
+    for key in values:
+        assert await prefs.contains_key(key) is False
+
+    # set values
+    for key, value in values.items():
+        assert await prefs.set(key, value) is True
+
+    # get values
+    for key, value in values.items():
+        assert await prefs.get(key) == value
+        assert await prefs.contains_key(key) is True
+
+    # keys with prefix should be returned
     keys = await prefs.get_keys(prefix)
-    assert key_1 in keys
-    assert key_2 in keys
+    for key in values:
+        assert key in keys
 
-    assert await prefs.remove(key_1) is True
-    assert await prefs.contains_key(key_1) is False
-    assert await prefs.get(key_1) is None
+    # remove one key
+    first_key = next(iter(values))
+    assert await prefs.remove(first_key) is True
+    assert await prefs.contains_key(first_key) is False
+    assert await prefs.get(first_key) is None
 
+    # clear everything
     assert await prefs.clear() is True
-    assert await prefs.get(key_2) is None
+    for key in values:
+        assert await prefs.contains_key(key) is False
+        assert await prefs.get(key) is None
+
+    # unsupported types should fail
+    unsupported_values = {
+        f"{prefix}_dict": {"a": 1},
+        f"{prefix}_tuple": ("a", "b"),
+        f"{prefix}_list_int": [1, 2, 3],
+        f"{prefix}_none": None,
+    }
+    for key, value in unsupported_values.items():
+        with pytest.raises(ValueError, match="Unsupported value type"):
+            await prefs.set(key, value)  # type: ignore[arg-type]
+        assert await prefs.contains_key(key) is False

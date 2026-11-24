@@ -1,29 +1,37 @@
 name: macOS Integration Tests
 
 on:
-  push:
-    branches-ignore:
-      - main
-    paths:
-      - '.github/workflows/macos-integration-tests.yml'
-      - 'sdk/python/packages/flet/src/**'
-      - 'sdk/python/packages/flet/integration_tests/**'
-      - 'packages/flet/**'
-      - 'client/**'
-      - '.fvmrc'
   pull_request:
+    # What the macOS test app is built from and what the tests import.
+    # A `!` pattern takes back files matched by the patterns above it.
     paths:
       - '.github/workflows/macos-integration-tests.yml'
+      - '.fvmrc'
+      - 'client/**'
+      - '!client/android/**'
+      - '!client/ios/**'
+      - '!client/linux/**'
+      - '!client/web/**'
+      - '!client/windows/**'
+      - 'packages/flet/**'
+      - 'packages/flet_integration_test/**'
+      - 'sdk/python/pyproject.toml'
+      - 'sdk/python/examples/**'
+      - 'sdk/python/packages/flet/pyproject.toml'
       - 'sdk/python/packages/flet/src/**'
       - 'sdk/python/packages/flet/integration_tests/**'
-      - 'packages/flet/**'
-      - 'client/**'
-      - '.fvmrc'
+      - 'sdk/python/packages/flet-*/**'
+      - '!sdk/python/packages/flet-cli/**'
+      - '!sdk/python/packages/flet-desktop/**'
+      - '!sdk/python/packages/flet-mcp/**'
+      - '!sdk/python/packages/flet-platform-assets/**'
+      - '!sdk/python/packages/flet-web/**'
+      - '!**.md'
   workflow_dispatch:
 
-# Ensure only one run per branch (PR or push), cancel older ones
+# Ensure only one run per ref (pull request or manual dispatch), cancel older ones
 concurrency:
-  group: macos-integration-tests-${{ github.workflow }}-${{ github.event.pull_request.head.ref || github.ref_name }}
+  group: macos-integration-tests-${{ github.workflow }}-${{ github.ref }}
   cancel-in-progress: true
 
 env:
@@ -35,59 +43,122 @@ env:
 jobs:
   test-macos:
     runs-on: macos-26
+    timeout-minutes: 80
+    permissions:
+      contents: read
     strategy:
       fail-fast: false
       matrix:
-        suite:
-        - apps
-        - examples/apps
-        - examples/core
-        - examples/cupertino
-        - examples/extensions
-        - examples/material
-        - controls/core
-        - controls/cupertino
-        - controls/material
-        - controls/services
-        - controls/theme
-        - controls/types
-        - extensions
+        # Every job builds the test app once, so the test directories are
+        # grouped into three jobs of similar duration. Not run: `tutorials`.
+        include:
+          - group: controls
+            dirs: >-
+              controls/core
+              controls/cupertino
+              controls/material
+              controls/services
+              controls/theme
+          - group: examples-controls
+            dirs: >-
+              examples/controls/core
+              examples/controls/cupertino
+              examples/controls/material
+          - group: apps-extensions
+            dirs: >-
+              apps
+              examples/apps
+              extensions
+              examples/extensions
+              examples/cookbook
 
-    name: ${{ matrix.suite }} Integration Tests
+    name: ${{ matrix.group }} Integration Tests
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v4
+        uses: actions/checkout@df4cb1c069e1874edd31b4311f1884172cec0e10 # v6.0.3
+        with:
+          persist-credentials: false
 
       - name: Setup uv
-        uses: astral-sh/setup-uv@v6
+        uses: astral-sh/setup-uv@fac544c07dec837d0ccb6301d7b5580bf5edae39 # v8.2.0
+        with:
+          enable-cache: ${{ !startsWith(github.ref, 'refs/tags/') }}
 
       - name: Setup Flutter
-        uses: kuhnroyal/flutter-fvm-config-action/setup@v3
+        uses: kuhnroyal/flutter-fvm-config-action/setup@c378498f1d1962d33039c3989411093ef8a17b2c # v3.3
         with:
           path: '.fvmrc'
-          cache: true
+          cache: ${{ !startsWith(github.ref, 'refs/tags/') }}
 
       - name: Show tool versions
         run: |
           uv --version && uv run python --version && pod --version && flutter --version
 
-      - name: Run integration tests (${{ matrix.suite }})
-        working-directory: sdk/python
+      - name: Show macOS display resolution
         run: |
-          uv run pytest -s -o log_cli=true -o log_cli_level=INFO packages/flet/integration_tests/${{ matrix.suite }}
+          system_profiler SPDisplaysDataType | grep Resolution || true
+          screencapture /tmp/screen.png
+          sips -g pixelWidth -g pixelHeight /tmp/screen.png
 
-      - name: Prepare failure screenshots
-        if: failure()
+      # A crashed app otherwise leaves a "quit unexpectedly" dialog on the
+      # screen, in front of the apps of the tests that follow.
+      - name: Disable the crash report dialog
+        run: defaults write com.apple.CrashReporter DialogType none
+
+      - name: Build integration test app
+        working-directory: client
         run: |
-          SAFE_SUITE="${MATRIX_SUITE//\//-}"
-          echo "SAFE_SUITE=$SAFE_SUITE" >> $GITHUB_ENV
+          flutter build macos --debug -t integration_test/app_test.dart
+          echo "FLET_TEST_APP_BINARY=$PWD/build/macos/Build/Products/Debug/Flet.app/Contents/MacOS/Flet" >> "$GITHUB_ENV"
+
+      # Test file names repeat across directories, so each directory gets its
+      # own pytest run. A failing directory does not stop the ones after it.
+      # The step limit is below the job limit: a step that times out fails,
+      # so the uploads below still run.
+      - name: Run integration tests (${{ matrix.group }})
+        timeout-minutes: 50
+        working-directory: sdk/python
         env:
-          MATRIX_SUITE: ${{ matrix.suite }}
+          TEST_DIRS: ${{ matrix.dirs }}
+        run: |
+          set -o pipefail
+          failed=()
+          for dir in $TEST_DIRS; do
+            echo "::group::$dir"
+            uv run pytest -s -o log_cli=true -o log_cli_level=INFO "packages/flet/integration_tests/$dir" 2>&1 | tee "$RUNNER_TEMP/pytest.log" || failed+=("$dir")
+            echo "::endgroup::"
+            echo "$dir: $(grep -E '^=+ .* in [0-9.]+s' "$RUNNER_TEMP/pytest.log" | tail -n 1 | sed -E 's/^=+ //; s/ =+$//')"
+          done
+          if [ ${#failed[@]} -gt 0 ]; then
+            echo "::error::Failed directories: ${failed[*]}"
+            exit 1
+          fi
+
+      # One app start through `flutter test`, the launch path used when no
+      # prebuilt app is set, so that path stays covered.
+      - name: Run a smoke test through flutter test
+        if: matrix.group == 'apps-extensions'
+        timeout-minutes: 15
+        working-directory: sdk/python
+        env:
+          FLET_TEST_APP_BINARY: ""
+        run: |
+          uv run pytest -s -o log_cli=true -o log_cli_level=INFO packages/flet/integration_tests/controls/services/test_package_info.py
 
       - name: Upload artifact
         if: failure()
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
         with:
-          name: integration-test-failures-macos-${{ env.SAFE_SUITE }}
-          path: sdk/python/packages/flet/integration_tests/${{ matrix.suite }}/**/*_actual.png
+          name: integration-test-failures-macos-${{ matrix.group }}
+          path: |
+            sdk/python/packages/flet/integration_tests/**/*_actual.png
+            sdk/python/packages/flet/integration_tests/**/*_actual.gif
+          if-no-files-found: ignore
+
+      - name: Upload crash reports
+        if: failure()
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
+        with:
+          name: integration-test-crash-reports-macos-${{ matrix.group }}
+          path: ~/Library/Logs/DiagnosticReports/
           if-no-files-found: ignore

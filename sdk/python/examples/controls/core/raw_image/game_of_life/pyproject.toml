@@ -1,0 +1,26 @@
+[project]
+name = "raw-image-game-of-life"
+version = "1.0.0"
+description = "Conway's Game of Life with pointer drawing, play/pause and speed control, rendered through RawImage."
+requires-python = ">=3.10"
+keywords = ["raw image", "game of life", "cellular automaton", "numpy", "interactive"]
+authors = [{ name = "Flet team", email = "hello@flet.dev" }]
+dependencies = ["flet", "numpy"]
+
+[dependency-groups]
+dev = ["flet-cli", "flet-desktop", "flet-web"]
+
+[tool.flet.gallery]
+categories = ["Displays/RawImage"]
+
+[tool.flet.metadata]
+title = "Game of Life"
+controls = ["RawImage", "GestureDetector", "Row", "Slider", "IconButton", "OutlinedButton"]
+layout_pattern = "toolbar above canvas"
+complexity = "intermediate"
+features = ["cellular automaton", "nearest-neighbor upscaling", "pointer cell drawing", "play/pause", "speed slider", "fps counter"]
+
+[tool.flet]
+org = "dev.flet"
+company = "Flet"
+copyright = "Copyright (C) 2023-2026 by Flet"

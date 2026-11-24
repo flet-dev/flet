@@ -12,12 +12,15 @@ dependencies = [
 
 [project.urls]
 Homepage = "https://flet.dev"
-Documentation = "https://docs.flet.dev/permission-handler"
+Documentation = "https://flet.dev/docs/services/permissionhandler"
 Repository = "https://github.com/flet-dev/flet/tree/main/sdk/python/packages/flet-permission-handler"
 Issues = "https://github.com/flet-dev/flet/issues"
 
 [tool.setuptools.package-data]
-"flutter.flet_permission_handler" = ["**/*"]
+"flutter.flet_permission_handler" = [
+    "pubspec.yaml",
+    "lib/**",
+]
 
 [build-system]
 requires = ["setuptools"]

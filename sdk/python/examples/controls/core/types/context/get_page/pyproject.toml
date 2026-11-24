@@ -1,0 +1,26 @@
+[project]
+name = "types-context-get-page"
+version = "1.0.0"
+description = "Reads the current page from ft.context inside an event handler."
+requires-python = ">=3.10"
+keywords = ["context", "get page"]
+authors = [{ name = "Flet team", email = "hello@flet.dev" }]
+dependencies = ["flet"]
+
+[dependency-groups]
+dev = ["flet-cli", "flet-desktop", "flet-web"]
+
+[tool.flet.gallery]
+categories = ["Utility/Types"]
+
+[tool.flet.metadata]
+title = "Get page from context"
+controls = ["SafeArea", "Column", "Page", "Button"]
+layout_pattern = "inline-actions"
+complexity = "basic"
+features = ["context access", "event handling"]
+
+[tool.flet]
+org = "dev.flet"
+company = "Flet"
+copyright = "Copyright (C) 2023-2026 by Flet"

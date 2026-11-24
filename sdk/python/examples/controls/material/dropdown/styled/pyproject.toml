@@ -1,0 +1,26 @@
+[project]
+name = "dropdown-styled"
+version = "1.0.0"
+description = "Showcases multiple Dropdown visual styles including borders, fills, and per-option button styles."
+requires-python = ">=3.10"
+keywords = ["dropdown", "styling", "theming", "options", "input"]
+authors = [{ name = "Flet team", email = "hello@flet.dev" }]
+dependencies = ["flet"]
+
+[dependency-groups]
+dev = ["flet-cli", "flet-desktop", "flet-web"]
+
+[tool.flet.gallery]
+categories = ["Input/Dropdown"]
+
+[tool.flet.metadata]
+title = "Styled"
+controls = ["SafeArea", "Column", "Container", "Dropdown", "DropdownOption", "ButtonStyle"]
+layout_pattern = "form"
+complexity = "basic"
+features = ["custom borders", "filled styles", "option style customization"]
+
+[tool.flet]
+org = "dev.flet"
+company = "Flet"
+copyright = "Copyright (C) 2023-2026 by Flet"

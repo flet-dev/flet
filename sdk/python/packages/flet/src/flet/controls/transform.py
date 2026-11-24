@@ -1,7 +1,8 @@
-from dataclasses import dataclass, field
+from dataclasses import field
 from typing import TYPE_CHECKING, Any, Optional, Union
 
 from flet.controls.alignment import Alignment
+from flet.controls.base_control import value
 from flet.controls.types import Number
 
 if TYPE_CHECKING:
@@ -20,7 +21,7 @@ __all__ = [
 ]
 
 
-@dataclass
+@value
 class Scale:
     """
     Scaling configuration for an object.
@@ -93,7 +94,7 @@ class Scale:
         )
 
 
-@dataclass
+@value
 class Rotate:
     """
     Rotation configuration of an object.
@@ -152,7 +153,7 @@ class Rotate:
         )
 
 
-@dataclass
+@value
 class Offset:
     """
     A 2D floating-point offset.
@@ -208,10 +209,10 @@ class Offset:
         )
 
 
-@dataclass
+@value
 class Flip:
     """
-    Configuration for [`LayoutControl.flip`][flet.LayoutControl.flip].
+    Configuration for :attr:`flet.LayoutControl.flip`.
 
     Mirrors a control across its x and/or y axis.
     """
@@ -242,24 +243,24 @@ class Flip:
     """
 
 
-@dataclass
+@value
 class _Matrix4Call:
     """
-    Internal serialized operation descriptor for [`Matrix4`][flet.].
+    Internal serialized operation descriptor for :class:`~flet.Matrix4`.
     """
 
     name: str
     args: list[Any] = field(default_factory=list)
 
 
-@dataclass
+@value
 class Matrix4:
     """
     A recorded, replayable Matrix4 transform intent.
 
     This class records constructors and mutating method calls, then Flet replays
     them in Flutter to build a real `Matrix4` for
-    [`Transform.matrix`][flet.Transform.matrix].
+    :attr:`flet.Transform.matrix`.
     """
 
     ctor: _Matrix4Call = field(default_factory=lambda: _Matrix4Call(name="identity"))
@@ -405,12 +406,12 @@ class Matrix4:
         return cloned
 
 
-@dataclass
+@value
 class Transform:
     """
-    Configuration for [`LayoutControl.transform`][flet.LayoutControl.transform].
+    Configuration for :attr:`flet.LayoutControl.transform`.
 
-    Applies a generic matrix transform backed by recorded [`Matrix4`][flet.].
+    Applies a generic matrix transform backed by recorded :class:`~flet.Matrix4`.
     """
 
     matrix: Matrix4
@@ -445,7 +446,7 @@ RotateValue = Union[Number, Rotate]
 
 Represents rotation as either:
 - a numeric angle in radians,
-- or an explicit [`Rotate`][flet.] transform.
+- or an explicit :class:`~flet.Rotate` transform.
 """
 
 ScaleValue = Union[Number, Scale]
@@ -453,13 +454,13 @@ ScaleValue = Union[Number, Scale]
 
 Represents scale as either:
 - a numeric uniform scale factor,
-- or an explicit [`Scale`][flet.] transform.
+- or an explicit :class:`~flet.Scale` transform.
 """
 
 OffsetValue = Union[Offset, tuple[Number, Number]]
 """Type alias for offset values.
 
 Represents offset as either:
-- an [`Offset`][flet.] object,
+- an :class:`~flet.Offset` object,
 - or an `(x, y)` tuple.
 """

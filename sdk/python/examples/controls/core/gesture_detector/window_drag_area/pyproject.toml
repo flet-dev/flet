@@ -1,0 +1,26 @@
+[project]
+name = "gesture-detector-window-drag-area"
+version = "1.0.0"
+description = "Moves the app window by dragging a GestureDetector handle control."
+requires-python = ">=3.10"
+keywords = ["gesture detector", "window", "drag", "desktop"]
+authors = [{ name = "Flet team", email = "hello@flet.dev" }]
+dependencies = ["flet"]
+
+[dependency-groups]
+dev = ["flet-cli", "flet-desktop", "flet-web"]
+
+[tool.flet.gallery]
+categories = ["Utility/GestureDetector"]
+
+[tool.flet.metadata]
+title = "Window drag area"
+controls = ["SafeArea", "Stack", "GestureDetector", "Container"]
+layout_pattern = "canvas"
+complexity = "basic"
+features = ["window dragging", "global drag delta"]
+
+[tool.flet]
+org = "dev.flet"
+company = "Flet"
+copyright = "Copyright (C) 2023-2026 by Flet"

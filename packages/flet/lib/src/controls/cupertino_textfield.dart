@@ -1,5 +1,5 @@
-import 'package:flutter/cupertino.dart';
-import 'package:flutter/material.dart';
+import 'package:cupertino_ui/cupertino_ui.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:flutter/services.dart';
 
 import '../extensions/control.dart';
@@ -164,7 +164,7 @@ class _CupertinoTextFieldControlState extends State<CupertinoTextFieldControl> {
 
     var readOnly = widget.control.getBool("read_only", false)!;
     var password = widget.control.getBool("password", false)!;
-    var onChange = widget.control.getBool("on_change", false)!;
+    var onChange = widget.control.hasEventHandler("change");
 
     var cursorColor = widget.control.getColor("cursor_color", context);
     var selectionColor = widget.control.getColor("selection_color", context);
@@ -217,30 +217,8 @@ class _CupertinoTextFieldControlState extends State<CupertinoTextFieldControl> {
       _selection = selection;
     }
 
-    var borderRadius = widget.control.getBorderRadius("border_radius");
-
-    BoxBorder? border;
-    var borderWidth = widget.control.getDouble("border_width", 1.0)!;
-    var borderColor = widget.control.getColor("border_color", context) ??
-        const Color(0xFF000000);
-
-    try {
-      border = widget.control.getBorder("border", Theme.of(context));
-      // adaptive TextField is being created
-    } catch (e) {
-      FormFieldInputBorder inputBorder = parseFormFieldInputBorder(
-        widget.control.getString("border"),
-        FormFieldInputBorder.outline,
-      )!;
-
-      if (inputBorder == FormFieldInputBorder.outline) {
-        border = Border.all(color: borderColor, width: borderWidth);
-      } else if (inputBorder == FormFieldInputBorder.underline) {
-        border =
-            Border(bottom: BorderSide(color: borderColor, width: borderWidth));
-        borderRadius = BorderRadius.zero;
-      }
-    }
+    var boxBorder = parseFormFieldBoxBorder(widget.control, Theme.of(context),
+        focused: _focused);
 
     var canRevealPassword =
         widget.control.getBool("can_reveal_password", false)!;
@@ -294,8 +272,8 @@ class _CupertinoTextFieldControlState extends State<CupertinoTextFieldControl> {
             image: widget.control.getDecorationImage("image", context),
             backgroundBlendMode:
                 bgcolor != null || gradient != null ? blendMode : null,
-            border: border,
-            borderRadius: borderRadius,
+            border: boxBorder.border,
+            borderRadius: boxBorder.borderRadius,
             boxShadow:
                 widget.control.getBoxShadows("shadows", Theme.of(context))),
         cursorHeight: widget.control.getDouble("cursor_height"),
@@ -307,6 +285,7 @@ class _CupertinoTextFieldControlState extends State<CupertinoTextFieldControl> {
             ? TextInputType.multiline
             : widget.control
                 .getTextInputType("keyboard_type", TextInputType.text)!,
+        textInputAction: widget.control.getTextInputAction("text_input_action"),
         clearButtonSemanticLabel:
             widget.control.getString("clear_button_semantics_label"),
         autocorrect: autocorrect,
@@ -357,7 +336,7 @@ class _CupertinoTextFieldControlState extends State<CupertinoTextFieldControl> {
         onTap: () => widget.control.triggerEvent("click"),
         controller: _controller,
         focusNode: focusNode,
-        onTapOutside: widget.control.getBool("on_tap_outside", false)!
+        onTapOutside: widget.control.hasEventHandler("tap_outside")
             ? (PointerDownEvent? event) {
                 widget.control.triggerEvent("tap_outside");
               }

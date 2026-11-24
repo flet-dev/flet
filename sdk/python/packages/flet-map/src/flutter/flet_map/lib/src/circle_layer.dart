@@ -1,5 +1,4 @@
 import 'package:flet/flet.dart';
-import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_map/flutter_map.dart';
 
@@ -20,7 +19,7 @@ class CircleLayerControl extends StatelessWidget with FletStoreMixin {
         .map((circle) {
       circle.notifyParent = true;
       return CircleMarker(
-          point: parseLatLng(circle.get("coordinates"))!,
+          point: circle.getLatLng("coordinates")!,
           color: circle.getColor("color", context, const Color(0xFF00FF00))!,
           borderColor: circle.getColor(
               "border_color", context, const Color(0xFFFFFF00))!,
@@ -29,6 +28,6 @@ class CircleLayerControl extends StatelessWidget with FletStoreMixin {
           radius: circle.getDouble("radius", 10)!);
     }).toList();
 
-    return CircleLayer(circles: circles);
+    return BaseControl(control: control, child: CircleLayer(circles: circles));
   }
 }

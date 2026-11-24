@@ -8,16 +8,20 @@ license = "Apache-2.0"
 requires-python = ">=3.10"
 dependencies = [
     "flet",
+    "typing-extensions; python_version < '3.11'",
 ]
 
 [project.urls]
 Homepage = "https://flet.dev"
-Documentation = "https://docs.flet.dev/webview"
+Documentation = "https://flet.dev/docs/controls/webview"
 Repository = "https://github.com/flet-dev/flet/tree/main/sdk/python/packages/flet-webview"
 Issues = "https://github.com/flet-dev/flet/issues"
 
 [tool.setuptools.package-data]
-"flutter.flet_webview" = ["**/*"]
+"flutter.flet_webview" = [
+    "pubspec.yaml",
+    "lib/**",
+]
 
 [build-system]
 requires = ["setuptools"]

@@ -1,0 +1,27 @@
+[project]
+name = "data-table-sortable-and-selectable"
+version = "1.0.0"
+description = "Implements sortable DataTable columns and selectable rows while preserving selection across sorts."
+requires-python = ">=3.10"
+keywords = ["data table", "sorting", "selection", "checkbox", "events"]
+authors = [{ name = "Flet team", email = "hello@flet.dev" }]
+dependencies = ["flet"]
+
+[dependency-groups]
+dev = ["flet-cli", "flet-desktop", "flet-web"]
+
+[tool.flet.gallery]
+categories = ["Layout/DataTable"]
+
+[tool.flet.metadata]
+title = "Sortable columns and selectable rows"
+docs_intro = "This example demonstrates row selection (including select-all), sortable string and numeric columns, and stable selection across sorts and refreshes."
+controls = ["SafeArea", "DataTable", "DataColumn", "DataRow", "DataCell", "Text"]
+layout_pattern = "table-view"
+complexity = "intermediate"
+features = ["column sorting", "row selection", "select all", "stable selection across sorts"]
+
+[tool.flet]
+org = "dev.flet"
+company = "Flet"
+copyright = "Copyright (C) 2023-2026 by Flet"

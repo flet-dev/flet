@@ -1,0 +1,26 @@
+[project]
+name = "expansion-tile-custom-animations"
+version = "1.0.0"
+description = "Switches ExpansionTile animation behavior between default, custom curve, and no animation."
+requires-python = ">=3.10"
+keywords = ["expansion tile", "animation", "cupertino sliding segmented button", "curve"]
+authors = [{ name = "Flet team", email = "hello@flet.dev" }]
+dependencies = ["flet"]
+
+[dependency-groups]
+dev = ["flet-cli", "flet-desktop", "flet-web"]
+
+[tool.flet.gallery]
+categories = ["Layout/ExpansionTile"]
+
+[tool.flet.metadata]
+title = "Custom animations"
+controls = ["SafeArea", "Column", "ExpansionTile", "ListTile", "CupertinoSlidingSegmentedButton", "AnimationStyle", "Text"]
+layout_pattern = "single-panel"
+complexity = "basic"
+features = ["animation style switching", "custom animation curve", "disable animations"]
+
+[tool.flet]
+org = "dev.flet"
+company = "Flet"
+copyright = "Copyright (C) 2023-2026 by Flet"

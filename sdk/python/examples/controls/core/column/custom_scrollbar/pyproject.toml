@@ -1,0 +1,26 @@
+[project]
+name = "column-custom-scrollbar"
+version = "1.0.0"
+description = "Column with a customized scrollbar theme and styled message list."
+requires-python = ">=3.10"
+keywords = ["column", "layout", "scrollbar", "theme", "scroll"]
+authors = [{ name = "Flet team", email = "hello@flet.dev" }]
+dependencies = ["flet"]
+
+[dependency-groups]
+dev = ["flet-cli", "flet-desktop", "flet-web"]
+
+[tool.flet.gallery]
+categories = ["Layout/Column"]
+
+[tool.flet.metadata]
+title = "Column custom scrollbar"
+controls = ["Theme", "ScrollbarTheme", "Row", "Column", "Container", "Text"]
+layout_pattern = "chat-list"
+complexity = "basic"
+features = ["custom scrollbar styling", "themed scroll behavior", "scrollable message list"]
+
+[tool.flet]
+org = "dev.flet"
+company = "Flet"
+copyright = "Copyright (C) 2023-2026 by Flet"

@@ -1,0 +1,30 @@
+[project]
+name = "flet-notifications"
+version = "0.1.0"
+description = "Local notifications service for Flet"
+authors = [{name = "Appveyor Systems Inc.", email = "hello@flet.dev"}]
+readme = "README.md"
+license = "Apache-2.0"
+requires-python = ">=3.10"
+dependencies = [
+    "flet",
+    "tzdata",
+]
+
+[project.urls]
+Homepage = "https://flet.dev"
+Documentation = "https://flet.dev/docs/services/notifications"
+Repository = "https://github.com/flet-dev/flet/tree/main/sdk/python/packages/flet-notifications"
+Issues = "https://github.com/flet-dev/flet/issues"
+
+[tool.setuptools.package-data]
+"flutter.flet_notifications" = [
+    "pubspec.yaml",
+    "lib/**",
+    "android/**",
+    "flet-extension.toml",
+]
+
+[build-system]
+requires = ["setuptools"]
+build-backend = "setuptools.build_meta"

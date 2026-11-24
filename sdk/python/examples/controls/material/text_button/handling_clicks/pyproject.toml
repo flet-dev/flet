@@ -1,0 +1,26 @@
+[project]
+name = "text-button-handling-clicks"
+version = "1.0.0"
+description = "Updates a counter message each time a TextButton click event fires."
+requires-python = ">=3.10"
+keywords = ["text button", "events", "click", "counter", "button"]
+authors = [{ name = "Flet team", email = "hello@flet.dev" }]
+dependencies = ["flet"]
+
+[dependency-groups]
+dev = ["flet-cli", "flet-desktop", "flet-web"]
+
+[tool.flet.gallery]
+categories = ["Buttons/TextButton"]
+
+[tool.flet.metadata]
+title = "TextButton handling clicks"
+controls = ["SafeArea", "Column", "TextButton", "Container", "Text"]
+layout_pattern = "stacked-actions"
+complexity = "basic"
+features = ["click handling", "live counter updates"]
+
+[tool.flet]
+org = "dev.flet"
+company = "Flet"
+copyright = "Copyright (C) 2023-2026 by Flet"

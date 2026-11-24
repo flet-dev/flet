@@ -1,0 +1,253 @@
+---
+title: "Running a Flet app (Hot Reload)"
+---
+
+import TabItem from '@theme/TabItem';
+import Tabs from '@theme/Tabs';
+import {Image} from '@site/src/components/crocodocs';
+
+Flet apps can be executed as either desktop or web applications using the [`flet run`](../cli/flet-run.md) command.
+Doing so will start the app in a native OS window or a web browser, respectively, with hot reload enabled to view changes in real-time.
+
+## Desktop app
+
+To run Flet app as a desktop app, use the following command:
+
+<Tabs groupId="uv--pip">
+<TabItem value="uv" label="uv">
+```bash
+uv run flet run
+```
+</TabItem>
+<TabItem value="pip" label="pip">
+```bash
+flet run
+```
+</TabItem>
+</Tabs>
+When you run the command without any arguments, `main.py` script in the current directory will be executed, by default.
+
+If you need to provide a different path, use the following command:
+
+<Tabs groupId="uv--pip">
+<TabItem value="uv" label="uv">
+```bash
+uv run flet run [script]
+```
+</TabItem>
+<TabItem value="pip" label="pip">
+```bash
+flet run [script]
+```
+</TabItem>
+</Tabs>
+Where `[script]` is a relative (ex: `counter.py`) or absolute (ex: `/Users/john/projects/flet-app/main.py`) path to the Python script you want to run.
+
+The app will be started in a native OS window:
+
+<div class="grid cards" markdown>
+
+-   **macOS**
+
+    ---
+    <Image src="assets/getting-started/counter-app/macos.png" alt="macOS" width="65%" />
+
+-   **Windows**
+
+    ---
+    <Image src="assets/getting-started/counter-app/windows.png" alt="windows" width="65%" />
+
+</div>
+
+<details>
+<summary>How the desktop client is selected</summary>
+
+A desktop Flet app has two parts: your Python code and a Flutter client that
+displays the UI. When you run `flet run` or start a script with `python main.py`
+that calls `ft.run(main)`, Flet looks for a desktop client in this order:
+
+1. A client from a previous [`flet build`](../cli/flet-build.md) in
+   `build/<platform>` under the current working directory, such as
+   `build/windows`, `build/macos`, or `build/linux`.
+2. A client in the directory specified by
+   [`FLET_VIEW_PATH`](../reference/environment-variables.md#flet_view_path).
+3. The standard pre-built Flet client cached in `~/.flet/client/`, downloading it
+   if needed.
+
+Reusing a locally built client lets you run an app with custom Flutter extensions.
+Your current Python source still runs: Flet launches the client and connects it
+to that Python process. For example, after `flet build windows`, you can edit
+`main.py` and run `flet run main.py` without rebuilding. The executable in
+`build/windows` supplies the UI client; the Python code bundled during the build
+is not used in this mode.
+
+Rebuild when you add or change Flutter extensions. Python-only changes do not
+require rebuilding the client. See
+[Creating an Extension](../extend/user-extensions.md#change-python-files) for an
+example of this workflow.
+
+When Flet uses a client from `build/<platform>`, it prints a warning with the
+client's path. To use the standard client again, move, rename or delete the
+corresponding `build/<platform>` directory and unset `FLET_VIEW_PATH` if it is
+set. Setting `FLET_VIEW_PATH` alone does not override a client found in
+`build/<platform>`.
+
+:::note
+Opening the built executable directly runs the packaged app, including the Python
+code from the build. Rebuild to include Python changes in that packaged app.
+:::
+
+</details>
+
+## Web app
+
+To run Flet app as a web app, use the `--web` (or `-w`) option:
+<Tabs groupId="uv--pip">
+<TabItem value="uv" label="uv">
+```bash
+uv run flet run --web [script]  # (1)!
+```
+
+1. A fixed port can be specified using `--port` ( or `-p`) option, followed by the port number.
+</TabItem>
+<TabItem value="pip" label="pip">
+```bash
+flet run --web [script]  # (1)!
+```
+
+1. A fixed port can be specified using `--port` ( or `-p`) option, followed by the port number.
+</TabItem>
+</Tabs>
+A new browser window/tab will be opened and the app will be using a random TCP port:
+
+<Image src="assets/getting-started/counter-app/safari.png" alt="Web" width="45%" caption="Running Flet app as a web app" />
+
+## Passing arguments to your app
+
+Anything after a `--` separator is passed through to your app script instead of being
+interpreted by Flet, and shows up there as `sys.argv[1:]`:
+
+<Tabs groupId="uv--pip">
+<TabItem value="uv" label="uv">
+```bash
+uv run flet run --web [script] -- --dataset big.csv --verbose
+```
+</TabItem>
+<TabItem value="pip" label="pip">
+```bash
+flet run --web [script] -- --dataset big.csv --verbose
+```
+</TabItem>
+</Tabs>
+
+Your app reads them as it would when started with `python`:
+
+```python title="main.py"
+import argparse
+import sys
+
+import flet as ft
+
+parser = argparse.ArgumentParser()
+parser.add_argument("--dataset", default="small.csv")
+parser.add_argument("--verbose", action="store_true")
+options = parser.parse_args(sys.argv[1:])
+
+
+def main(page: ft.Page):
+    page.add(ft.Text(f"Dataset: {options.dataset}"))
+
+
+ft.run(main)
+```
+
+The `--` separator is what keeps your app's arguments from being read as Flet's own -
+without it, `flet run main.py --verbose` fails because `--verbose` is not a
+[`flet run`](../cli/flet-run.md) option. Arguments that don't start with a `-` can be
+passed without a separator, e.g. `flet run main.py big.csv`.
+
+:::note
+The same arguments are re-applied every time the app is hot reloaded, and they are
+passed through in all run modes: desktop, `--web`, `--ios` and `--android`.
+:::
+
+## Watching for changes
+
+By default, Flet will watch the script file that was run and reload the app whenever the contents
+of this file are modified+saved, but will **not** watch for changes in other files.
+
+To modify this behavior, you can use one or more of these [`flet run`](../cli/flet-run.md) options:
+
+* `-d` or `--directory` to watch for changes in the directory of `[script]` only
+* `-r` or `--recursive` to watch for changes in the directory of `[script]` and all its sub-directories
+* `--ignore-dirs` to skip directories while watching: a comma-separated list of paths relative to the
+  directory of `[script]`, for example `--ignore-dirs logs,data`
+
+A reload restarts your app's process. In desktop mode the window stays open, and it keeps
+the assets directory it was opened with: after changing `assets_dir` in [`ft.run()`][flet.run],
+stop and restart `flet run` to load assets from the new directory. With `--web`, a reload
+picks up the new directory. If you pass `--assets` or set
+[`FLET_ASSETS_DIR`](../reference/environment-variables.md#flet_assets_dir), that directory
+is used instead, and changing `assets_dir` has no effect.
+
+:::note[Example]
+
+<Tabs groupId="uv--pip">
+<TabItem value="uv" label="uv">
+```bash
+uv run flet run --recursive [script]
+```
+</TabItem>
+<TabItem value="pip" label="pip">
+```bash
+flet run --recursive [script]
+```
+</TabItem>
+</Tabs>
+:::
+
+## Troubleshooting
+
+### Hot reload is unavailable on Linux \{#linux-inotify-limits}
+
+On Linux, `flet run` watches for changes with inotify, which limits how many
+directories and files each user can watch at once. That limit is shared by all
+programs the user runs, so editors and IDEs can use up most of it, and
+`--recursive` needs one watch for every sub-directory, including `.venv`,
+`node_modules` and `build`. When the limit is reached, `flet run` prints a
+warning such as:
+
+```
+Warning: file watching is unavailable (inotify watch limit reached), so the app won't reload on changes.
+```
+
+The app still runs, but saving a file doesn't reload it.
+
+Check the current limits:
+
+```bash
+grep . /proc/sys/fs/inotify/max_user_watches /proc/sys/fs/inotify/max_user_instances
+```
+
+If either value is lower than the one below, raise it until the next reboot.
+Leave out a setting that's already higher, here and in the next step:
+
+```bash
+sudo sysctl fs.inotify.max_user_watches=524288 fs.inotify.max_user_instances=512
+```
+
+To keep the new values after a reboot, save them to a sysctl configuration file
+and load it:
+
+```bash
+printf 'fs.inotify.max_user_watches=524288\nfs.inotify.max_user_instances=512\n' | sudo tee /etc/sysctl.d/90-inotify.conf
+sudo sysctl --system
+```
+
+Then restart `flet run`.
+
+With `--recursive`, keep large directories such as `.venv` outside the watched
+directory, for example by keeping your app code in `src/` as
+[`flet create`](../cli/flet-create.md) does. `--ignore-dirs` doesn't reduce the
+number of watches: it only stops changes in those directories from reloading the
+app.

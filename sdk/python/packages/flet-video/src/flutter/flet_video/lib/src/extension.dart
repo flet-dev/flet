@@ -1,5 +1,5 @@
 import 'package:flet/flet.dart';
-import 'package:flutter/cupertino.dart';
+import 'package:flutter/widgets.dart';
 import 'package:media_kit/media_kit.dart';
 
 import 'video.dart';

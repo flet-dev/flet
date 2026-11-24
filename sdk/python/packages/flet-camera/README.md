@@ -3,16 +3,20 @@
 [![pypi](https://img.shields.io/pypi/v/flet-camera.svg)](https://pypi.python.org/pypi/flet-camera)
 [![downloads](https://static.pepy.tech/badge/flet-camera/month)](https://pepy.tech/project/flet-camera)
 [![python](https://img.shields.io/badge/python-%3E%3D3.10-%2334D058)](https://pypi.org/project/flet-camera)
-[![docstring coverage](https://docs.flet.dev/assets/badges/docs-coverage/flet-camera.svg)](https://docs.flet.dev/assets/badges/docs-coverage/flet-camera.svg)
+[![docstring coverage](https://flet.dev/docs/assets/badges/docs-coverage/flet-camera.svg)](https://flet.dev/docs/assets/badges/docs-coverage/flet-camera.svg)
 [![license](https://img.shields.io/badge/License-Apache_2.0-green.svg)](https://github.com/flet-dev/flet/blob/main/sdk/python/packages/flet-camera/LICENSE)
 
 A camera control for [Flet](https://flet.dev) apps.
+
+> **[Try flet-camera in Flet Studio](https://studio.flet.dev/gallery/media/camera/example/extensions/camera/camera_playground?utm_source=pypi&utm_medium=readme&utm_campaign=flet-camera)**
+>
+> Create, run, and share Python apps in your browser. Start from an example, write your own code, or get help from the AI agent. No installation required.
 
 It is powered by the [camera](https://pub.dev/packages/camera) Flutter package.
 
 ## Documentation
 
-Detailed documentation for this package can be found [here](https://docs.flet.dev/camera/).
+Detailed documentation for this package can be found [here](https://flet.dev/docs/controls/camera/).
 
 ## Platform Support
 

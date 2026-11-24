@@ -20,8 +20,8 @@ class RichAttribution(MapLayer):
     """
     List of attributions to display.
 
-    [`TextSourceAttribution`][(p).]s are shown in a popup box,
-    unlike [`ImageSourceAttribution`][(p).], which are visible permanently.
+    :class:`~flet_map.TextSourceAttribution`s are shown in a popup box,
+    unlike :class:`~flet_map.ImageSourceAttribution`, which are visible permanently.
     """
 
     alignment: Optional[AttributionAlignment] = None
@@ -48,7 +48,7 @@ class RichAttribution(MapLayer):
 
     This is useful with certain sources/tile servers that make immediate
     attribution mandatory and are not attributed with a permanently
-    visible [`ImageSourceAttribution`][(p).].
+    visible :class:`~flet_map.ImageSourceAttribution`.
     """
 
     permanent_height: ft.Number = 24.0

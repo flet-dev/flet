@@ -1,18 +1,26 @@
 import argparse
+import logging
 import os
+import re
 import shutil
 import sys
+import tempfile
 from pathlib import Path
 
 import flet_cli.__pyinstaller.config as hook_config
-from flet.utils import is_macos, is_windows
+from flet.utils import is_linux, is_macos, is_windows
 from flet_cli.commands.base import BaseCommand
+from flet_cli.commands.options import PassThroughArgsAction
 
 
 class Command(BaseCommand):
     """
     Package a Flet application into a standalone desktop executable or app bundle
     using PyInstaller.
+
+    Arguments after `--` are passed down to PyInstaller.
+
+    Detailed usage guide: https://flet.dev/docs/publish/using-pyinstaller
     """
 
     def add_arguments(self, parser: argparse.ArgumentParser) -> None:
@@ -33,7 +41,9 @@ class Command(BaseCommand):
             "--icon",
             dest="icon",
             help="Path to an icon file for your executable or app bundle. "
-            "Supported formats: `.ico` (Windows), `.png` (Linux) and `.icns` (macOS)",
+            "Supported formats: `.ico` (Windows), `.icns` (macOS) and `.png` "
+            "(Linux, where it is written alongside the generated desktop "
+            "entry rather than embedded in the executable)",
         )
         parser.add_argument(
             "-n",
@@ -120,7 +130,10 @@ class Command(BaseCommand):
         parser.add_argument(
             "--bundle-id",
             dest="bundle_id",
-            help="Bundle identifier used for macOS app packaging",
+            help="Bundle identifier for the app. Used for macOS app "
+            "packaging, and on Linux as the app's taskbar identity — match it "
+            "with the `StartupWMClass` key of your desktop entry. Defaults on "
+            "Linux to the executable's name.",
         )
         parser.add_argument(
             "--debug-console",
@@ -139,9 +152,12 @@ class Command(BaseCommand):
         parser.add_argument(
             "--pyinstaller-build-args",
             dest="pyinstaller_build_args",
-            action="append",
+            action=PassThroughArgsAction,
+            example="--clean",
             nargs="*",
-            help="Additional raw arguments to the underlying pyinstaller build command",
+            help="Additional raw arguments to the underlying pyinstaller build "
+            "command. Attach an argument that starts with `-` using `=`, e.g. "
+            "`--pyinstaller-build-args=--clean`, or pass the arguments after `--`",
         )
         parser.add_argument(
             "-y",
@@ -151,6 +167,206 @@ class Command(BaseCommand):
             action="store_true",
             help="Enable non-interactive mode. All prompts will be skipped",
         )
+
+    @staticmethod
+    def warn_missing_extensions(options, snapshot_path: str) -> None:
+        """
+        Warn about the extensions the app imports that the client doesn't include.
+
+        Their controls show as unknown controls in the packed app. With the light
+        Linux client, the full client is suggested too, as it includes more
+        extensions. Nothing is printed when the client's extensions can't be read.
+
+        Args:
+            options: Parsed command-line options.
+            snapshot_path: Path to the client's AOT snapshot.
+        """
+        from flet_cli.__pyinstaller.utils import get_linux_client_flavor
+        from flet_desktop.extensions import (
+            find_missing_extensions,
+            get_client_extensions,
+        )
+
+        client_extensions = get_client_extensions(snapshot_path)
+        if client_extensions is None:
+            return
+        # On Linux the snapshot is `<client>/lib/libapp.so`.
+        light = (
+            is_linux()
+            and get_linux_client_flavor(str(Path(snapshot_path).parent.parent))
+            == "light"
+        )
+        app_dir = Path(options.script).resolve().parent
+        for extension in find_missing_extensions(app_dir, client_extensions):
+            source = (
+                f" (from {extension.distribution})" if extension.distribution else ""
+            )
+            if light:
+                fix = (
+                    "Pack with the full Linux client if it includes the extension "
+                    "(https://flet.dev/docs/publish/using-pyinstaller"
+                    "#linux-client-flavor), or package the app with flet build: "
+                    "https://flet.dev/docs/publish"
+                )
+            else:
+                fix = (
+                    "Package apps that use it with flet build instead: "
+                    "https://flet.dev/docs/publish"
+                )
+            print(
+                f"Warning: the {'light ' if light else ''}Flet client that flet pack "
+                f"bundles doesn't include the {extension.package} extension{source}, "
+                f"so its controls will show as unknown controls. {fix}"
+            )
+
+    @staticmethod
+    def resolve_linux_app_id(options) -> str:
+        """
+        The identity the packed app will report to the desktop.
+
+        Must stay in step with the PyInstaller runtime hook, which reads a
+        bundled `--bundle-id` when there is one and otherwise falls back to
+        the executable's own name. The entry written here is useless if the
+        two disagree, since `StartupWMClass` would then match nothing.
+
+        Args:
+            options: Parsed command-line options.
+
+        Returns:
+            The app id, for both `StartupWMClass` and `Icon`.
+        """
+
+        app_id = options.bundle_id or (options.name or Path(options.script).stem)
+        return app_id.strip()
+
+    @staticmethod
+    def escape_desktop_exec(value: str) -> str:
+        """
+        Escape a path for the quoted `Exec` key of a desktop entry.
+
+        The value crosses two layers: the entry file, where backslash is the
+        escape character, and the shell-like parsing of `Exec`, where `"`,
+        `` ` ``, `$` and `\\` are reserved inside double quotes. Escape for
+        the inner layer first, then the outer one, so a path containing any
+        of them still launches.
+
+        Args:
+            value: Absolute path to the executable.
+
+        Returns:
+            The value, ready to sit between double quotes.
+        """
+
+        value = re.sub(r"[\x00-\x1f]", " ", value)
+        shell_escaped = re.sub(r'(["`$\\])', r"\\\1", value)
+        entry_escaped = shell_escaped.replace("\\", "\\\\")
+        # `%` introduces a field code, so a literal one has to be doubled or
+        # the desktop silently drops it along with the character after it.
+        return entry_escaped.replace("%", "%%")
+
+    @staticmethod
+    def escape_desktop_value(value: str) -> str:
+        """
+        Escape a string for a desktop entry value.
+
+        Desktop entry values are a single line, and backslash is the escape
+        character, so escape it first and then flatten every control
+        character that would end the line early.
+
+        Args:
+            value: Raw value, such as a product name or description.
+
+        Returns:
+            The value, safe to write after `Key=`.
+        """
+
+        value = value.replace("\\", "\\\\")
+        for ch in ("\r", "\n", "\t"):
+            value = value.replace(ch, " ")
+        return value.strip()
+
+    def write_linux_desktop_entry(self, options, dist_dir: str, app_id: str) -> None:
+        """
+        Write a desktop entry, and the icon it names, next to the executable.
+
+        The Linux desktop takes an app's launcher name and icon from an
+        installed desktop entry, which it matches to the window through
+        `StartupWMClass`. Getting that key to equal the app's identity is the
+        part that is easy to get wrong and impossible to guess, so `flet pack`
+        writes the file rather than describing it.
+
+        Nothing is installed: the entry sits in the dist directory until the
+        user copies it into place. Installing it here would change the user's
+        application menu as a side effect of building, and leave an entry
+        behind pointing at a binary that may since have moved.
+
+        Args:
+            options: Parsed command-line options.
+            dist_dir: Directory PyInstaller wrote the executable into.
+            app_id: The identity the app reports to the desktop.
+        """
+
+        # The runtime refuses an id containing a path separator, because GLib
+        # would silently reduce it to its last segment. Refuse it here too,
+        # rather than crash writing an entry into a directory that does not
+        # exist and would not have matched anything anyway.
+        # A path separator would make the filename a directory that does not
+        # exist, and a control character would break the line it is written
+        # on -- Icon= and StartupWMClass= interpolate this value raw.
+        if not app_id or "/" in app_id or re.search(r"[\x00-\x1f]", app_id):
+            print(
+                f"Skipping the desktop entry: {app_id!r} is empty, or contains "
+                "a path separator or a control character, none of which can be "
+                "an app identity."
+            )
+            return
+
+        exe_name = options.name or Path(options.script).stem
+        # PyInstaller's COLLECT step puts a one-folder build's executable
+        # inside a directory named after it, so `dist/<name>` is the folder
+        # and `dist/<name>/<name>` is the thing to launch.
+        exe_path = Path(dist_dir).joinpath(exe_name)
+        if options.onedir:
+            exe_path = exe_path.joinpath(exe_name)
+        name = options.product_name or exe_name
+
+        lines = [
+            "[Desktop Entry]",
+            "Type=Application",
+            f"Name={self.escape_desktop_value(name)}",
+        ]
+        if options.file_description:
+            lines.append(
+                f"Comment={self.escape_desktop_value(options.file_description)}"
+            )
+        lines += [
+            # Absolute, because the desktop resolves nothing against $PATH,
+            # and quoted so a path containing spaces stays one argument.
+            f'Exec="{self.escape_desktop_exec(str(exe_path))}"',
+            f"Icon={app_id}",
+            "Terminal=false",
+            "Categories=Utility;",
+            # The whole point: this is what ties the window to this entry.
+            f"StartupWMClass={app_id}",
+            "",
+        ]
+        entry_path = Path(dist_dir).joinpath(f"{app_id}.desktop")
+        entry_path.write_text("\n".join(lines), encoding="utf-8")
+        print(f"Wrote desktop entry: {entry_path}")
+
+        if options.icon:
+            icon_src = Path(options.icon)
+            if not icon_src.is_absolute():
+                icon_src = Path(os.getcwd()).joinpath(icon_src)
+            if icon_src.suffix.lower() != ".png":
+                print(
+                    f"Note: {icon_src.name} is not a PNG, so it was not copied "
+                    "for the desktop entry. Linux icon themes want a .png."
+                )
+            elif icon_src.is_file():
+                icon_dst = Path(dist_dir).joinpath(f"{app_id}.png")
+                shutil.copyfile(icon_src, icon_dst)
+                print(f"Wrote desktop entry icon: {icon_dst}")
 
     def handle(self, options: argparse.Namespace) -> None:
         """
@@ -205,12 +421,27 @@ class Command(BaseCommand):
                     )
                     exit(1)
 
+        # Set only on Linux with --bundle-id; the cleanup below reads it
+        # either way, so it has to exist before anything can fail.
+        identity_dir = None
+        temp_bin_dir = None
+
         try:
             import PyInstaller.__main__
 
-            from flet_cli.__pyinstaller.utils import copy_flet_bin
+            from flet_cli.__pyinstaller.utils import (
+                copy_flet_bin,
+                get_client_archive_name,
+                stage_client_archive,
+            )
 
-            pyi_args = [options.script, "--noconfirm"]
+            hook_config.verbose = options.verbose
+            if not options.verbose:
+                logging.getLogger("flet_desktop").setLevel(logging.WARNING)
+
+            # Arguments passed after `--` come later, so their --log-level wins.
+            pyi_log_level = ("WARN", "INFO", "DEBUG")[min(options.verbose, 2)]
+            pyi_args = [options.script, "--noconfirm", "--log-level", pyi_log_level]
             if not options.debug_console:
                 pyi_args.extend(["--noconsole"])
             if options.icon:
@@ -223,6 +454,16 @@ class Command(BaseCommand):
                 for add_data_arr in options.add_data:
                     for add_data_item in add_data_arr:
                         pyi_args.extend(["--add-data", add_data_item])
+
+            # The Linux taskbar identity is chosen here but applied at launch,
+            # so carry it into the bundle for the runtime hook to read. Only
+            # when asked for: without it the hook falls back to the
+            # executable's name, which needs nothing bundled.
+            if is_linux() and options.bundle_id:
+                identity_dir = tempfile.mkdtemp()
+                identity_file = Path(identity_dir).joinpath("flet_app_id")
+                identity_file.write_text(options.bundle_id, encoding="utf-8")
+                pyi_args.extend(["--add-data", f"{identity_file}{os.pathsep}."])
             if options.add_binary:
                 for add_binary_arr in options.add_binary:
                     for add_binary_item in add_binary_arr:
@@ -233,7 +474,7 @@ class Command(BaseCommand):
                         pyi_args.extend(["--hidden-import", hidden_import_item])
             if options.codesign_identity:
                 pyi_args.extend(["--codesign-identity", options.codesign_identity])
-            if options.bundle_id:
+            if is_macos() and options.bundle_id:
                 pyi_args.extend(["--osx-bundle-identifier", options.bundle_id])
             if options.uac_admin:
                 if is_macos():
@@ -252,91 +493,131 @@ class Command(BaseCommand):
                 for pyinstaller_build_arg_arr in options.pyinstaller_build_args:
                     pyi_args.extend(pyinstaller_build_arg_arr)
 
-            # copy "bin"
-            hook_config.temp_bin_dir = copy_flet_bin()
+            # Copy the client, so its icon and metadata can be customized.
+            try:
+                temp_bin_dir = copy_flet_bin()
+            except RuntimeError as e:
+                print(f"Error: {e}")
+                sys.exit(1)
 
-            if hook_config.temp_bin_dir is not None:
-                # delete fletd/fletd.exe
-                fletd_path = os.path.join(
-                    hook_config.temp_bin_dir, "fletd.exe" if is_windows() else "fletd"
-                )
-                if os.path.exists(fletd_path):
-                    os.remove(fletd_path)
-
+            hook_config.client_files = []
+            if temp_bin_dir is not None:
                 if is_windows():
                     from flet_cli.__pyinstaller.win_utils import (
+                        remove_signature,
                         update_flet_view_icon,
                         update_flet_view_version_info,
                     )
 
-                    exe_path = os.path.join(
-                        hook_config.temp_bin_dir, "flet", "flet.exe"
+                    client_dir = os.path.join(temp_bin_dir, "flet")
+                    self.warn_missing_extensions(
+                        options, os.path.join(client_dir, "data", "app.so")
                     )
-                    if os.path.exists(exe_path):
-                        # icon
-                        if options.icon:
-                            icon_path = options.icon
-                            if not Path(icon_path).is_absolute():
-                                icon_path = str(Path(os.getcwd()).joinpath(icon_path))
-                            update_flet_view_icon(exe_path, icon_path)
 
-                        # version info
-                        version_info_path = update_flet_view_version_info(
-                            exe_path=exe_path,
-                            product_name=options.product_name,
-                            file_description=options.file_description,
-                            product_version=options.product_version,
-                            file_version=options.file_version,
-                            company_name=options.company_name,
-                            copyright=options.copyright,
-                        )
+                    # copy_flet_bin() checked that the client holds flet.exe.
+                    exe_path = os.path.join(client_dir, "flet.exe")
+                    # The released client is signed, and patching it below
+                    # invalidates the signature.
+                    remove_signature(exe_path)
 
-                        pyi_args.extend(["--version-file", version_info_path])
+                    # icon
+                    if options.icon:
+                        icon_path = options.icon
+                        if not Path(icon_path).is_absolute():
+                            icon_path = str(Path(os.getcwd()).joinpath(icon_path))
+                        update_flet_view_icon(exe_path, icon_path)
+
+                    # version info
+                    version_info_path = update_flet_view_version_info(
+                        exe_path=exe_path,
+                        product_name=options.product_name,
+                        file_description=options.file_description,
+                        product_version=options.product_version,
+                        file_version=options.file_version,
+                        company_name=options.company_name,
+                        copyright=options.copyright,
+                    )
+
+                    pyi_args.extend(["--version-file", version_info_path])
 
                 elif is_macos():
                     from flet_cli.__pyinstaller.macos_utils import (
-                        assemble_app_bundle,
-                        unpack_app_bundle,
+                        sign_app_bundle,
                         update_flet_view_icon,
                         update_flet_view_version_info,
                     )
 
-                    tar_path = os.path.join(
-                        hook_config.temp_bin_dir, "flet-macos-amd64.tar.gz"
+                    # copy_flet_bin() leaves only the .app bundle there.
+                    (app_name,) = os.listdir(temp_bin_dir)
+                    client_dir = os.path.join(temp_bin_dir, app_name)
+
+                    self.warn_missing_extensions(
+                        options,
+                        os.path.join(
+                            client_dir, "Contents", "Frameworks", "App.framework", "App"
+                        ),
                     )
-                    if os.path.exists(tar_path):
-                        # unpack
-                        app_path = unpack_app_bundle(tar_path)
 
-                        # icon
-                        if options.icon:
-                            icon_path = options.icon
-                            if not Path(icon_path).is_absolute():
-                                icon_path = str(Path(os.getcwd()).joinpath(icon_path))
-                            update_flet_view_icon(app_path, icon_path)
+                    # icon
+                    if options.icon:
+                        icon_path = options.icon
+                        if not Path(icon_path).is_absolute():
+                            icon_path = str(Path(os.getcwd()).joinpath(icon_path))
+                        update_flet_view_icon(client_dir, icon_path)
 
-                        # version info
-                        app_path = update_flet_view_version_info(
-                            app_path=app_path,
-                            bundle_id=options.bundle_id,
-                            product_name=options.product_name,
-                            product_version=options.product_version,
-                            copyright=options.copyright,
-                        )
+                    # version info, which may rename the bundle
+                    client_dir = update_flet_view_version_info(
+                        app_path=client_dir,
+                        bundle_id=options.bundle_id,
+                        product_name=options.product_name,
+                        product_version=options.product_version,
+                        copyright=options.copyright,
+                    )
+                    sign_app_bundle(client_dir)
 
-                        # assemble
-                        assemble_app_bundle(app_path, tar_path)
+                else:
+                    client_dir = os.path.join(temp_bin_dir, "flet")
+                    self.warn_missing_extensions(
+                        options, os.path.join(client_dir, "lib", "libapp.so")
+                    )
 
-            # run PyInstaller!
-            print("Running PyInstaller:", pyi_args)
+                # Archive the client the way ensure_client_cached() finds it
+                # at runtime. It goes into the "build" directory emptied
+                # above rather than the temp dir, since PyInstaller may reuse
+                # a cached analysis listing it when given another --workpath.
+                archive_name = get_client_archive_name(client_dir)
+                if archive_name:
+                    hook_config.client_files = stage_client_archive(
+                        client_dir,
+                        os.path.basename(client_dir),
+                        archive_name,
+                        os.path.join(build_dir, ".flet-client"),
+                    )
+
+            # run PyInstaller
+            print("Packaging the app with PyInstaller...")
+            hook_config.log_progress("Running PyInstaller:", pyi_args)
             PyInstaller.__main__.run(pyi_args)
 
-            # cleanup
-            if hook_config.temp_bin_dir is not None and os.path.exists(
-                hook_config.temp_bin_dir
-            ):
-                print("Deleting temp directory:", hook_config.temp_bin_dir)
-                shutil.rmtree(hook_config.temp_bin_dir, ignore_errors=True)
+            # Written after the build, because the entry's Exec= needs the
+            # path PyInstaller just produced.
+            if is_linux():
+                self.write_linux_desktop_entry(
+                    options, dist_dir, self.resolve_linux_app_id(options)
+                )
+
+            print(f"Packaged the app into {dist_dir}")
+
         except ImportError as e:
             print("Please install PyInstaller module to use flet pack command:", e)
             sys.exit(1)
+        finally:
+            # In `finally` because a failed build leaks these otherwise: the
+            # only handler above catches ImportError, so anything PyInstaller
+            # raises would skip the cleanup entirely.
+            hook_config.client_files = None
+            if temp_bin_dir is not None and os.path.exists(temp_bin_dir):
+                hook_config.log_progress("Deleting temp directory:", temp_bin_dir)
+                shutil.rmtree(temp_bin_dir, ignore_errors=True)
+            if identity_dir is not None:
+                shutil.rmtree(identity_dir, ignore_errors=True)

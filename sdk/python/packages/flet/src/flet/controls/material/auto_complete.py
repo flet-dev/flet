@@ -2,17 +2,17 @@ from dataclasses import dataclass, field
 from typing import Optional
 
 from flet import LayoutControl
-from flet.controls.base_control import control
+from flet.controls.base_control import control, value
 from flet.controls.control_event import ControlEventHandler, Event, EventHandler
 from flet.controls.types import Number
 
 __all__ = ["AutoComplete", "AutoCompleteSelectEvent", "AutoCompleteSuggestion"]
 
 
-@dataclass
+@value
 class AutoCompleteSuggestion:
     """
-    Represents a suggestion item for the [`AutoComplete`][flet.] control.
+    Represents a suggestion item for the :class:`~flet.AutoComplete` control.
     """
 
     key: str
@@ -29,7 +29,7 @@ class AutoCompleteSelectEvent(Event["AutoComplete"]):
     index: int
     """
     The index of the selected suggestion from the corresponding \
-    [`AutoComplete.suggestions`][flet.] list.
+    :attr:`flet.AutoComplete.suggestions` list.
     """
 
     selection: AutoCompleteSuggestion
@@ -52,13 +52,13 @@ class AutoComplete(LayoutControl):
 
     suggestions: list[AutoCompleteSuggestion] = field(default_factory=list)
     """
-    A list of [`AutoCompleteSuggestion`][flet.]
+    A list of :class:`~flet.AutoCompleteSuggestion`
     controls representing the suggestions to be displayed.
 
     Note:
-        - A valid [`AutoCompleteSuggestion`][flet.] must have at least a
-            [`key`][flet.AutoCompleteSuggestion.] or
-            [`value`][flet.AutoCompleteSuggestion.] specified, else it will be
+        - A valid :class:`~flet.AutoCompleteSuggestion` must have at least a
+            :attr:`flet.AutoCompleteSuggestion.key` or
+            :attr:`flet.AutoCompleteSuggestion.value` specified, else it will be
             ignored. If only `key` is provided, `value` will be set to `key` as
             fallback and vice versa.
         - The internal filtration process of the suggestions (based on their `key`s)

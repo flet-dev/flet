@@ -1,10 +1,10 @@
+import importlib
 import os
 import subprocess
 import sys
 from importlib.util import find_spec
 
 import flet.version
-from flet.utils import is_linux
 
 
 def _install_with_pip(package_spec: str) -> int:
@@ -65,7 +65,12 @@ def install_flet_package(name: str):
         SystemExit: If package installation fails with both installers.
     """
     package_spec = f"{name}=={flet.version.flet_version}"
-    print(f"Installing {name} {flet.version.flet_version} package...", end="")
+    print(
+        f"Installing {name} {flet.version.flet_version} package...",
+        end="",
+        file=sys.stderr,
+        flush=True,
+    )
     if os.environ.get("UV"):
         retcode = _install_with_uv(package_spec)
         if retcode != 0:
@@ -75,13 +80,14 @@ def install_flet_package(name: str):
         if retcode != 0:
             retcode = _install_with_uv(package_spec)
     if retcode == 0:
-        print("OK")
+        print("OK", file=sys.stderr)
     else:
         print(
             f'Unable to install "{name}" package. Please run '
             f'"pip install {package_spec} --upgrade" '
             f'or "uv pip install {package_spec} --upgrade" '
-            f"command."
+            f"command.",
+            file=sys.stderr,
         )
         exit(1)
 
@@ -90,9 +96,11 @@ def ensure_flet_desktop_package_installed():
     """
     Ensures a compatible desktop runtime package is installed.
 
-    If `flet-desktop` (or `flet-desktop-light` on Linux) is missing or its version
-    differs from the current Flet SDK version, this function installs the expected
-    package via [`install_flet_package()`][(m).install_flet_package].
+    If `flet-desktop` is missing or its version differs from the current Flet SDK
+    version, this function installs the expected package via
+    `install_flet_package()`. The `flet_desktop` modules loaded by the version
+    check are then dropped from `sys.modules`, so the caller's next import loads
+    the installed package rather than the one it replaced.
     """
     try:
         import flet_desktop.version
@@ -103,8 +111,10 @@ def ensure_flet_desktop_package_installed():
         ):
             raise RuntimeError("flet-desktop version mismatch")
     except Exception:
-        package_name = "flet-desktop-light" if is_linux() else "flet-desktop"
-        install_flet_package(package_name)
+        install_flet_package("flet-desktop")
+        for name in [m for m in sys.modules if m.split(".")[0] == "flet_desktop"]:
+            del sys.modules[name]
+        importlib.invalidate_caches()
 
 
 def ensure_flet_web_package_installed():
@@ -113,7 +123,7 @@ def ensure_flet_web_package_installed():
 
     If `flet-web` is missing or its version differs from the current Flet SDK
     version, this function installs it via
-    [`install_flet_package()`][(m).install_flet_package].
+    `install_flet_package()`.
     """
     try:
         import flet_web.version
@@ -133,7 +143,7 @@ def ensure_flet_cli_package_installed():
 
     If `flet-cli` is missing or its version differs from the current Flet SDK
     version, this function installs it via
-    [`install_flet_package()`][(m).install_flet_package].
+    `install_flet_package()`.
     """
     try:
         import flet_cli.version

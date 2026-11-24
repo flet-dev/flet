@@ -1,0 +1,26 @@
+[project]
+name = "text-field-multiline"
+version = "1.0.0"
+description = "Compares multiline TextField configurations including disabled and auto-sized fields."
+requires-python = ">=3.10"
+keywords = ["text field", "multiline", "input", "disabled", "autosize"]
+authors = [{ name = "Flet team", email = "hello@flet.dev" }]
+dependencies = ["flet"]
+
+[dependency-groups]
+dev = ["flet-cli", "flet-desktop", "flet-web"]
+
+[tool.flet.gallery]
+categories = ["Input/TextField"]
+
+[tool.flet.metadata]
+title = "Multiline fields"
+controls = ["SafeArea", "Column", "TextField"]
+layout_pattern = "stacked-actions"
+complexity = "basic"
+features = ["multiline input", "auto-sized height"]
+
+[tool.flet]
+org = "dev.flet"
+company = "Flet"
+copyright = "Copyright (C) 2023-2026 by Flet"

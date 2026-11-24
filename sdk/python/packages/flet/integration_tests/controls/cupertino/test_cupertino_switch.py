@@ -46,7 +46,7 @@ async def test_active_thumb_image_src(flet_app: ftt.FletTestApp, request):
                 ),
                 ft.CupertinoSwitch(
                     value=True,
-                    active_thumb_image_src="https://avatars.githubusercontent.com/u/5041459?s=88&v=4",  # noqa: E501
+                    active_thumb_image_src="https://raw.githubusercontent.com/flet-dev/media/98b6df65ba919f2afef284ba04feb2d78f28e1d1/pictures/avatar-user.png",  # noqa: E501
                 ),
             ],
         ),
@@ -69,7 +69,7 @@ async def test_inactive_thumb_image_src(flet_app: ftt.FletTestApp, request):
                 ),
                 ft.CupertinoSwitch(
                     value=False,
-                    inactive_thumb_image_src="https://avatars.githubusercontent.com/u/5041459?s=88&v=4",  # noqa: E501
+                    inactive_thumb_image_src="https://raw.githubusercontent.com/flet-dev/media/98b6df65ba919f2afef284ba04feb2d78f28e1d1/pictures/avatar-user.png",  # noqa: E501
                 ),
             ],
         ),

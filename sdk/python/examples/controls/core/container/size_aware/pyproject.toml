@@ -1,0 +1,26 @@
+[project]
+name = "container-size-aware"
+version = "1.0.0"
+description = "Size-aware container displaying live width and height updates on resize events."
+requires-python = ">=3.10"
+keywords = ["container", "layout", "flet"]
+authors = [{ name = "Flet team", email = "hello@flet.dev" }]
+dependencies = ["flet"]
+
+[dependency-groups]
+dev = ["flet-cli", "flet-desktop", "flet-web"]
+
+[tool.flet.gallery]
+categories = ["Layout/Container"]
+
+[tool.flet.metadata]
+title = "Size aware"
+controls = ["SafeArea", "Container", "Text"]
+layout_pattern = "single-panel"
+complexity = "basic"
+features = ["on_size_change", "responsive text"]
+
+[tool.flet]
+org = "dev.flet"
+company = "Flet"
+copyright = "Copyright (C) 2023-2026 by Flet"

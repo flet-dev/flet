@@ -1,0 +1,26 @@
+[project]
+name = "button-styling"
+version = "1.0.0"
+description = "Button style customization by control states."
+requires-python = ">=3.10"
+keywords = ["button", "styling", "control state", "animation", "hover"]
+authors = [{ name = "Flet team", email = "hello@flet.dev" }]
+dependencies = ["flet"]
+
+[dependency-groups]
+dev = ["flet-cli", "flet-desktop", "flet-web"]
+
+[tool.flet.gallery]
+categories = ["Buttons/Button"]
+
+[tool.flet.metadata]
+title = "Button styling"
+controls = ["SafeArea", "Column", "Button", "ButtonStyle", "BorderSide"]
+layout_pattern = "inline-actions"
+complexity = "basic"
+features = ["state-based styling", "hover effects", "animated style transitions"]
+
+[tool.flet]
+org = "dev.flet"
+company = "Flet"
+copyright = "Copyright (C) 2023-2026 by Flet"

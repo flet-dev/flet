@@ -20,7 +20,7 @@ def current_renderer() -> "Renderer":
     inside `Renderer.render(...)` or `Renderer.with_context(...)`.
 
     Returns:
-        The current [`Renderer`][flet.Renderer].
+        The current `Renderer`.
 
     Raises:
         RuntimeError: If no renderer is currently bound.
@@ -42,7 +42,7 @@ def current_component() -> "Component":
     hooks to access component-local state.
 
     Returns:
-        The currently rendering [`Component`][flet.Component].
+        The currently rendering `Component`.
 
     Raises:
         RuntimeError: If called outside an active component render frame.

@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <base href="{{ cookiecutter.base_url }}">
+  <meta charset="UTF-8">
+  <meta content="IE=Edge" http-equiv="X-UA-Compatible">
+  <meta name="description" content="{{ cookiecutter.project_description | e }}">
+
+  <!-- Unconditional, and not part of the splash block below: this tag used to
+       arrive only because flutter_native_splash injected it. Without it a
+       mobile browser lays the page out at a 980px viewport and scales it
+       down, so the whole app renders tiny. -->
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+
+  <!-- iOS meta tags & icons -->
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black">
+  <meta name="apple-mobile-web-app-title" content="{{ cookiecutter.product_name }}">
+  <link rel="apple-touch-icon" href="icons/apple-touch-icon-192.png">
+
+  <!-- Favicon -->
+  <link rel="icon" type="image/png" href="favicon.png" />
+
+  <title>{{ cookiecutter.product_name }}</title>
+  <link rel="manifest" href="manifest.json">
+
+  <script>
+    // Reload when WebKit restores the page from the back/forward cache instead
+    // of resuming it. WebKit restores a Flutter app with its frame scheduling
+    // broken: input and script keep running, but scheduled frames never
+    // render, so the app silently freezes at its last painted state.
+    //
+    // In a packaged (Pyodide) app, Python state lives in the page and is lost
+    // on reload - but WebKit's alternative is an app frozen at its last
+    // painted frame, so a fresh start is still strictly better. Gated to
+    // WebKit (every browser on iOS, Safari on macOS) because other engines
+    // restore correctly and get to keep their state.
+    window.addEventListener('pageshow', (event) => {
+      if (event.persisted &&
+        navigator.vendor && navigator.vendor.startsWith('Apple')) {
+        window.location.reload();
+      }
+    });
+  </script>
+
+  <script>
+    var flet = {
+      pyodide: true,
+      noCdn: {{ cookiecutter.no_cdn_js }},
+      webSocketEndpoint: "/ws",
+      entrypointBaseUrl: "{{ cookiecutter.base_url }}",
+      assetBase: "{{ cookiecutter.base_url }}",
+      routeUrlStrategy: "{{ cookiecutter.route_url_strategy }}",
+      // Only pinned when bundling. Left null, Flutter resolves CanvasKit from
+      // gstatic and the Noto fallback fonts from Google Fonts, and the build
+      // skips shipping local copies. A host serving its own runtime can assign
+      // these without also claiming a no-CDN build.
+      canvasKitBaseUrl: {{ cookiecutter.canvas_kit_base_url_js }},
+      // .mjs is required: python-worker.js is a module worker and loads
+      // the runtime via dynamic `import()`. Pyodide >= 0.29 also refuses
+      // to run in classic workers. Use the local copy that `flet build`
+      // drops into web/pyodide/ when --no-cdn is set; otherwise pull
+      // from jsdelivr so the build artifact can stay slim.
+      pyodideUrl: {{ cookiecutter.pyodide_url_js }},
+      pythonModuleName: "{{ cookiecutter.python_module_name }}",
+      webRenderer: "{{ cookiecutter.web_renderer }}",
+      // "assets/fonts/" is the bundled Noto Emoji; null pulls it from Google Fonts.
+      fontFallbackBaseUrl: {{ cookiecutter.font_fallback_base_url_js }},
+      appPackageUrl: "assets/app/app.zip"
+    }
+
+    flet.flutterAppLoaded = new Promise((resolve) => {
+      flet.flutterAppResolve = resolve;
+    });
+
+    flet.flutterAppLoaded.then((flutterApp) => {
+      console.log("Flutter app loaded");
+    });
+  </script>
+
+  <!-- fletAppConfig -->
+
+  <script src="python.js"></script>
+{%- if cookiecutter.splash.web %}
+
+  <style id="splash-screen-style">
+    html {
+      height: 100%
+    }
+
+    body {
+      margin: 0;
+      min-height: 100%;
+      background-color: {{ cookiecutter.splash.color }};
+      background-size: 100% 100%;
+    }
+
+    .center {
+      margin: 0;
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      -ms-transform: translate(-50%, -50%);
+      transform: translate(-50%, -50%);
+    }
+
+    @media (prefers-color-scheme: dark) {
+      body {
+        background-color: {{ cookiecutter.splash.dark_color }};
+      }
+    }
+  </style>
+  <script id="splash-screen-script">
+    function removeSplashFromWeb() {
+      document.getElementById("splash")?.remove();
+      document.getElementById("splash-branding")?.remove();
+      document.body.style.background = "transparent";
+    }
+  </script>
+{%- endif %}
+</head>
+
+<body>
+{%- if cookiecutter.splash.web %}
+  <picture id="splash">
+    <source srcset="splash/img/light-1x.png 1x, splash/img/light-2x.png 2x, splash/img/light-3x.png 3x, splash/img/light-4x.png 4x" media="(prefers-color-scheme: light)">
+    <source srcset="splash/img/dark-1x.png 1x, splash/img/dark-2x.png 2x, splash/img/dark-3x.png 3x, splash/img/dark-4x.png 4x" media="(prefers-color-scheme: dark)">
+    <img class="center" aria-hidden="true" src="splash/img/light-1x.png" alt="">
+  </picture>
+{%- endif %}
+  <script src="flutter_bootstrap.js" async></script>
+</body>
+
+</html>

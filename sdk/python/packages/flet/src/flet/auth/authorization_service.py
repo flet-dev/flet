@@ -1,11 +1,7 @@
-import json
 import secrets
 import time
-from typing import Optional
-
-import httpx
-from oauthlib.oauth2 import WebApplicationClient
-from oauthlib.oauth2.rfc6749.tokens import OAuth2Token
+from collections.abc import Mapping
+from typing import Any, Optional
 
 from flet.auth.authorization import Authorization
 from flet.auth.oauth_provider import OAuthProvider
@@ -18,14 +14,14 @@ __all__ = ["AuthorizationService"]
 
 class AuthorizationService(Authorization):
     """
-    OAuth authorization implementation used by [`Page.login()`][flet.Page.login].
+    OAuth authorization implementation used by :meth:`flet.Page.login`.
 
     The service coordinates authorization URL generation, token exchange,
     token refresh, and optional user/group resolution using the configured
-    [`OAuthProvider`][(p).oauth_provider.].
+    :class:`~flet.auth.OAuthProvider`.
 
     Args:
-        provider: Configured [`OAuthProvider`][(p).oauth_provider.]
+        provider: Configured :class:`~flet.auth.OAuthProvider`
             describing OAuth endpoints, credentials, and optional user/group APIs.
         fetch_user: Whether to request provider user profile information.
         fetch_groups: Whether to request user groups/roles.
@@ -68,19 +64,19 @@ class AuthorizationService(Authorization):
 
         Args:
             saved_token: JSON-serialized token data produced by
-                [`OAuthToken.to_json()`][(p).oauth_token.OAuthToken.to_json].
+                :meth:`flet.auth.oauth_token.OAuthToken.to_json`.
         """
 
         self.__token = OAuthToken.from_json(saved_token)
         await self.__refresh_token()
         await self.__fetch_user_and_groups()
 
-    async def get_token(self):
+    async def get_token(self) -> Optional[OAuthToken]:
         """
         Return current token after applying refresh logic when required.
 
         Returns:
-            Current [`OAuthToken`][(p).oauth_token.], or `None`
+            Current :class:`~flet.auth.OAuthToken`, or `None`
                 if no token is available yet.
         """
 
@@ -94,6 +90,7 @@ class AuthorizationService(Authorization):
         Returns:
             A tuple of `(authorization_url, state)`.
         """
+        from oauthlib.oauth2 import WebApplicationClient
 
         self.state = secrets.token_urlsafe(16)
         client = WebApplicationClient(self.provider.client_id)
@@ -119,6 +116,9 @@ class AuthorizationService(Authorization):
             httpx.HTTPStatusError: If token endpoint returns a non-success status.
         """
 
+        import httpx
+        from oauthlib.oauth2 import WebApplicationClient
+
         client = WebApplicationClient(self.provider.client_id)
         data = client.prepare_request_body(
             code=code,
@@ -129,11 +129,11 @@ class AuthorizationService(Authorization):
         )
         headers = self.__get_default_headers()
         headers["content-type"] = "application/x-www-form-urlencoded"
-        req = httpx.Request(
-            "POST", self.provider.token_endpoint, content=data, headers=headers
-        )
+
         async with httpx.AsyncClient(follow_redirects=True) as client:
-            resp = await client.send(req)
+            resp = await client.post(
+                self.provider.token_endpoint, content=data, headers=headers
+            )
             resp.raise_for_status()
             client = WebApplicationClient(self.provider.client_id)
             t = client.parse_request_body_response(resp.text)
@@ -165,9 +165,9 @@ class AuthorizationService(Authorization):
                     self.__token.access_token
                 )
 
-    def __convert_token(self, t: OAuth2Token):
+    def __convert_token(self, t: Mapping[str, Any]) -> OAuthToken:
         """
-        Convert oauthlib token mapping to [`OAuthToken`][(p).oauth_token.].
+        Convert oauthlib token mapping to :class:`~flet.auth.OAuthToken`.
 
         Args:
             t: Token dictionary returned by oauthlib client parsing.
@@ -204,6 +204,9 @@ class AuthorizationService(Authorization):
         ):
             return None
 
+        import httpx
+        from oauthlib.oauth2 import WebApplicationClient
+
         assert self.__token is not None
         client = WebApplicationClient(self.provider.client_id)
         data = client.prepare_refresh_body(
@@ -214,45 +217,50 @@ class AuthorizationService(Authorization):
         )
         headers = self.__get_default_headers()
         headers["content-type"] = "application/x-www-form-urlencoded"
-        refresh_req = httpx.Request(
-            "POST", url=self.provider.token_endpoint, content=data, headers=headers
-        )
-        if refresh_req:
-            async with httpx.AsyncClient(follow_redirects=True) as client:
-                refresh_resp = await client.send(refresh_req)
-                refresh_resp.raise_for_status()
-                assert self.__token is not None
-                client = WebApplicationClient(self.provider.client_id)
-                t = client.parse_request_body_response(refresh_resp.text)
-                if t.get("refresh_token") is None:
-                    t["refresh_token"] = self.__token.refresh_token
-                self.__token = self.__convert_token(t)
 
-    async def __get_user(self):
+        async with httpx.AsyncClient(follow_redirects=True) as client:
+            refresh_resp = await client.post(
+                self.provider.token_endpoint, content=data, headers=headers
+            )
+            refresh_resp.raise_for_status()
+            assert self.__token is not None
+
+            client = WebApplicationClient(self.provider.client_id)
+            t = client.parse_request_body_response(refresh_resp.text)
+
+            if t.get("refresh_token") is None:
+                t["refresh_token"] = self.__token.refresh_token
+
+            self.__token = self.__convert_token(t)
+
+    async def __get_user(self) -> User:
         """
         Fetch user profile from provider `user_endpoint`.
 
         Returns:
-            A [`User`][(p).user.] built from response payload and
+            A :class:`~flet.auth.User` built from response payload and
                 `provider.user_id_fn`.
 
         Raises:
             httpx.HTTPStatusError: If user endpoint request fails.
         """
 
+        import httpx
+
         assert self.__token is not None
         assert self.provider.user_endpoint is not None
+
         headers = self.__get_default_headers()
         headers["Authorization"] = f"Bearer {self.__token.access_token}"
-        user_req = httpx.Request("GET", self.provider.user_endpoint, headers=headers)
+
         async with httpx.AsyncClient(follow_redirects=True) as client:
-            user_resp = await client.send(user_req)
+            user_resp = await client.get(self.provider.user_endpoint, headers=headers)
             user_resp.raise_for_status()
             assert self.provider.user_id_fn is not None
-            uj = json.loads(user_resp.text)
+            uj = user_resp.json()
             return User(uj, str(self.provider.user_id_fn(uj)))
 
-    def __get_default_headers(self):
+    def __get_default_headers(self) -> dict[str, str]:
         """
         Build default HTTP headers for OAuth-related requests.
 

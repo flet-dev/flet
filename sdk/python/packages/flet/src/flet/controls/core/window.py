@@ -18,8 +18,8 @@ class WindowEventType(Enum):
     """
     Type of native desktop window event.
 
-    Values are reported in [`WindowEvent.type`][flet.] and
-    delivered by [`Window.on_event`][flet.]. Event availability
+    Values are reported in :attr:`flet.WindowEvent.type` and
+    delivered by :attr:`flet.Window.on_event`. Event availability
     depends on the operating system and underlying window manager.
     """
 
@@ -71,7 +71,7 @@ class WindowEventType(Enum):
 
 class WindowResizeEdge(Enum):
     """
-    Edge or corner used by [`Window.start_resizing()`][flet.Window.start_resizing].
+    Edge or corner used by :meth:`flet.Window.start_resizing`.
 
     The selected value defines which resize handle is used when initiating
     native window resizing programmatically.
@@ -105,7 +105,7 @@ class WindowResizeEdge(Enum):
 @dataclass
 class WindowEvent(Event[EventControlType]):
     """
-    Payload for [`Window.on_event`][flet.] callbacks.
+    Payload for :attr:`flet.Window.on_event` callbacks.
     """
 
     type: WindowEventType
@@ -129,8 +129,14 @@ class Window(BaseControl):
     Sets background color of an application window.
 
     Tip:
-        Can be used together with [`Page.bgcolor`][flet.] to make
+        Can be used together with :attr:`flet.Page.bgcolor` to make
         a window transparent.
+
+    Limitation:
+        On Linux, a compositor must already be running when the app starts.
+        The window's visual is chosen once before the window is created and
+        cannot be swapped afterwards, so an app that starts before its
+        compositor stays opaque until it is restarted.
     """
 
     width: Optional[Number] = None
@@ -157,22 +163,34 @@ class Window(BaseControl):
 
     max_width: Optional[Number] = None
     """
-    Defines the maximum width of the app window.
+    Defines the maximum width of the app window, measured like
+    :attr:`flet.Window.width`.
+
+    `None` means no limit.
     """
 
     max_height: Optional[Number] = None
     """
-    Defines the maximum height of the app window.
+    Defines the maximum height of the app window, measured like
+    :attr:`flet.Window.height`.
+
+    `None` means no limit.
     """
 
     min_width: Optional[Number] = None
     """
-    Defines the minimum width of the app window.
+    Defines the minimum width of the app window, measured like
+    :attr:`flet.Window.width`.
+
+    `None` means no limit.
     """
 
     min_height: Optional[Number] = None
     """
-    Defines the minimum height of the app window.
+    Defines the minimum height of the app window, measured like
+    :attr:`flet.Window.height`.
+
+    `None` means no limit.
     """
 
     opacity: Number = 1.0
@@ -257,8 +275,13 @@ class Window(BaseControl):
 
     skip_task_bar: bool = False
     """
-    Whether the app window should be hidden from the Task Bar (on Windows) or Dock (on \
-    macOS).
+    Whether the app window should be hidden from the
+    Task Bar (on Windows) or Dock (on macOS).
+
+    Note:
+        On Windows 11, the window is also hidden from the Alt+Tab switcher, so a
+        window that is minimized while hidden can only be restored by the app itself.
+        Keep a way to bring it back, such as a tray icon.
     """
 
     title_bar_hidden: bool = False
@@ -369,9 +392,9 @@ class Window(BaseControl):
         Requests graceful closing of the app window.
 
         This sends a native close request equivalent to pressing the window
-        close button. If [`prevent_close`][(c).] is enabled, the close may be
-        intercepted and reported via [`on_event`][(c).] with
-        [`WindowEventType.CLOSE`][flet.].
+        close button. If :attr:`prevent_close` is enabled, the close may be
+        intercepted and reported via :attr:`on_event` with
+        :attr:`flet.WindowEventType.CLOSE`.
         """
         await self._invoke_method("close")
 

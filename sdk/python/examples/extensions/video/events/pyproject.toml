@@ -1,0 +1,27 @@
+[project]
+name = "video-events"
+version = "1.0.0"
+description = "React to video events: load, complete, track change, error, etc."
+requires-python = ">=3.10"
+keywords = ["video", "events", "load", "complete", "track change"]
+authors = [{ name = "Flet team", email = "hello@flet.dev" }]
+dependencies = ["flet", "flet-video"]
+
+[dependency-groups]
+dev = ["flet-cli", "flet-desktop", "flet-web"]
+
+[tool.flet.gallery]
+categories = ["Media/Video"]
+
+[tool.flet.metadata]
+title = "Events"
+docs_intro = "Listen for player [events](#flet_video.Video-events) like [`on_load`][flet_video.Video.on_load], [`on_complete`][flet_video.Video.on_complete], [`on_track_change`][flet_video.Video.on_track_change], etc."
+controls = ["SafeArea", "Video"]
+layout_pattern = "dashboard"
+complexity = "basic"
+features = ["event handling"]
+
+[tool.flet]
+org = "dev.flet"
+company = "Flet"
+copyright = "Copyright (C) 2023-2026 by Flet"

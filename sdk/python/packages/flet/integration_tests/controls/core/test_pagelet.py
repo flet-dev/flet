@@ -111,3 +111,19 @@ async def test_cupertino_adaptive(flet_app: ftt.FletTestApp, request):
             ),
         ),
     )
+
+
+@pytest.mark.asyncio(loop_scope="function")
+async def test_unbounded_height(flet_app: ftt.FletTestApp, request):
+    flet_app.page.theme_mode = ft.ThemeMode.LIGHT
+    await flet_app.assert_control_screenshot(
+        request.node.name,
+        ft.Column(
+            controls=[
+                ft.Pagelet(
+                    appbar=ft.AppBar(title="Pagelet AppBar"),
+                    content=ft.Text("Pagelet Content"),
+                )
+            ]
+        ),
+    )

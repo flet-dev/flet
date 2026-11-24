@@ -1,0 +1,26 @@
+[project]
+name = "cupertino-alert-dialog-cupertino-material-and-adaptive"
+version = "1.0.0"
+description = "Compares Material, Cupertino, and adaptive alert dialogs with platform-aware action sets."
+requires-python = ">=3.10"
+keywords = ["cupertino", "material", "adaptive", "alert dialog", "platform"]
+authors = [{ name = "Flet team", email = "hello@flet.dev" }]
+dependencies = ["flet"]
+
+[dependency-groups]
+dev = ["flet-cli", "flet-desktop", "flet-web"]
+
+[tool.flet.gallery]
+categories = ["Dialogs/CupertinoAlertDialog"]
+
+[tool.flet.metadata]
+title = "Cupertino, material and adaptive"
+controls = ["SafeArea", "Column", "FilledButton", "CupertinoFilledButton", "AlertDialog", "CupertinoAlertDialog", "TextButton", "CupertinoDialogAction", "Text"]
+layout_pattern = "single-panel"
+complexity = "basic"
+features = ["platform-adaptive dialog", "material and cupertino comparison", "action callbacks"]
+
+[tool.flet]
+org = "dev.flet"
+company = "Flet"
+copyright = "Copyright (C) 2023-2026 by Flet"

@@ -1,6 +1,6 @@
 import 'package:flet/flet.dart';
 import 'package:flutter/gestures.dart';
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_map/flutter_map.dart';
 import 'package:latlong2/latlong.dart';
@@ -60,8 +60,8 @@ TileDisplay? parseTileDisplay(dynamic value, [TileDisplay? defaultValue]) {
     );
   } else if (type == 'fadein') {
     return TileDisplay.fadeIn(
-      startOpacity: parseDouble(value['start_opacity'], 1.0)!,
-      reloadStartOpacity: parseDouble(value['reload_start_opacity'], 1.0)!,
+      startOpacity: parseDouble(value['start_opacity'], 0.0)!,
+      reloadStartOpacity: parseDouble(value['reload_start_opacity'], 0.0)!,
       duration:
           parseDuration(value['duration'], const Duration(milliseconds: 100))!,
     );
@@ -75,9 +75,7 @@ InteractionOptions? parseInteractionOptions(dynamic value,
   return InteractionOptions(
     enableMultiFingerGestureRace:
         parseBool(value["enable_multi_finger_gesture_race"], false)!,
-    pinchMoveThreshold: parseDouble(
-      value["pinch_move_threshold"],
-    )!,
+    pinchMoveThreshold: parseDouble(value["pinch_move_threshold"], 40.0)!,
     scrollWheelVelocity: parseDouble(value["scroll_wheel_velocity"], 0.005)!,
     pinchZoomThreshold: parseDouble(value["pinch_zoom_threshold"], 0.5)!,
     rotationThreshold: parseDouble(value["rotation_threshold"], 20.0)!,
@@ -155,10 +153,12 @@ KeyboardOptions? parseKeyboardOptions(dynamic value,
           parseDouble(value["rotate_leap_velocity_multiplier"], 3)!,
       zoomLeapVelocityMultiplier:
           parseDouble(value["zoom_leap_velocity_multiplier"], 3)!,
-      performLeapTriggerDuration:
-          parseDuration(value["perform_leap_trigger_duration"]),
-      animationCurveReverseDuration:
-          parseDuration(value["animation_curve_reverse_duration"]));
+      performLeapTriggerDuration: parseDuration(
+          value["perform_leap_trigger_duration"],
+          const Duration(milliseconds: 100))!,
+      animationCurveReverseDuration: parseDuration(
+          value["animation_curve_reverse_duration"],
+          const Duration(milliseconds: 600))!);
 }
 
 CursorRotationBehaviour? parseCursorRotationBehaviour(String? value,
@@ -173,9 +173,11 @@ CursorKeyboardRotationOptions? parseCursorKeyboardRotationOptions(dynamic value,
       setNorthOnClick: parseBool(value["set_north_on_click"], true)!,
       behaviour: parseCursorRotationBehaviour(
           value["behaviour"], CursorRotationBehaviour.offset)!,
-      isKeyTrigger: (LogicalKeyboardKey key) {
-        return (value["trigger_keys"] as List).contains(key);
-      });
+      isKeyTrigger: value["trigger_keys"] != null
+          ? (LogicalKeyboardKey key) {
+              return (value["trigger_keys"] as List).contains(key);
+            }
+          : null);
 }
 
 // Crs? parseCrs(dynamic value, [Crs? defaultValue]) {
@@ -239,8 +241,8 @@ WMSTileLayerOptions? parseWMSTileLayerOptions(dynamic value,
   if (value == null) return defaultValue;
   return WMSTileLayerOptions(
     baseUrl: value["base_url"],
-    format: value["format"],
-    version: value["version"],
+    format: value["format"] ?? 'image/png',
+    version: value["version"] ?? '1.1.1',
     uppercaseBoolValue: parseBool(value["uppercase_bool_value"], false)!,
     transparent: parseBool(value["transparent"], true)!,
     layers: (value["layers"] as List?)?.map((e) => e.toString()).toList() ??
@@ -257,16 +259,16 @@ MapOptions? parseConfiguration(Control control, BuildContext context,
     [MapOptions? defaultValue]) {
   return MapOptions(
     initialCenter:
-        parseLatLng(control.get("initial_center"), const LatLng(50.5, 30.51))!,
-    interactionOptions: parseInteractionOptions(
-        control.get("interaction_configuration"), const InteractionOptions())!,
+        control.getLatLng("initial_center", const LatLng(50.5, 30.51))!,
+    interactionOptions: control.getInteractionOptions(
+        "interaction_configuration", const InteractionOptions())!,
     backgroundColor: control.getColor("bgcolor", context, Colors.grey[300])!,
     initialRotation: control.getDouble("initial_rotation", 0.0)!,
     initialZoom: control.getDouble("initial_zoom", 13.0)!,
     keepAlive: control.getBool("keep_alive", false)!,
     maxZoom: control.getDouble("max_zoom"),
     minZoom: control.getDouble("min_zoom"),
-    initialCameraFit: parseCameraFit(control.get("initial_camera_fit")),
+    initialCameraFit: control.getCameraFit("initial_camera_fit"),
     onPointerHover: control.hasEventHandler("hover")
         ? (PointerHoverEvent e, LatLng latlng) {
             control.triggerEvent("hover", {
@@ -391,5 +393,65 @@ extension MapEventExtension on MapEvent {
       "coordinates": getMapEventCoordinates(this)?.toMap(),
       "id": getMapEventId(this),
     };
+  }
+}
+
+extension MapParsersControlExtension on Control {
+  LatLng? getLatLng(String propertyName, [LatLng? defaultValue]) {
+    return parseLatLng(get(propertyName), defaultValue);
+  }
+
+  LatLngBounds? getLatLngBounds(String propertyName,
+      [LatLngBounds? defaultValue]) {
+    return parseLatLngBounds(get(propertyName), defaultValue);
+  }
+
+  List<LatLng> getLatLngList(String propertyName,
+      [List<LatLng> defaultValue = const []]) {
+    return get<List>(propertyName)
+            ?.map((c) => parseLatLng(c))
+            .nonNulls
+            .toList() ??
+        defaultValue;
+  }
+
+  StrokePattern? getStrokePattern(String propertyName,
+      [StrokePattern? defaultValue]) {
+    return parseStrokePattern(get(propertyName), defaultValue);
+  }
+
+  TileDisplay? getTileDisplay(String propertyName,
+      [TileDisplay? defaultValue]) {
+    return parseTileDisplay(get(propertyName), defaultValue);
+  }
+
+  InteractionOptions? getInteractionOptions(String propertyName,
+      [InteractionOptions? defaultValue]) {
+    return parseInteractionOptions(get(propertyName), defaultValue);
+  }
+
+  CameraFit? getCameraFit(String propertyName, [CameraFit? defaultValue]) {
+    return parseCameraFit(get(propertyName), defaultValue);
+  }
+
+  KeyboardOptions? getKeyboardOptions(String propertyName,
+      [KeyboardOptions? defaultValue]) {
+    return parseKeyboardOptions(get(propertyName), defaultValue);
+  }
+
+  CursorKeyboardRotationOptions? getCursorKeyboardRotationOptions(
+      String propertyName,
+      [CursorKeyboardRotationOptions? defaultValue]) {
+    return parseCursorKeyboardRotationOptions(get(propertyName), defaultValue);
+  }
+
+  EvictErrorTileStrategy? getEvictErrorTileStrategy(String propertyName,
+      [EvictErrorTileStrategy? defaultValue]) {
+    return parseEvictErrorTileStrategy(getString(propertyName), defaultValue);
+  }
+
+  WMSTileLayerOptions? getWMSTileLayerOptions(String propertyName,
+      [WMSTileLayerOptions? defaultValue]) {
+    return parseWMSTileLayerOptions(get(propertyName), defaultValue);
   }
 }

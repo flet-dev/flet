@@ -1,0 +1,26 @@
+[project]
+name = "slider-handling-events"
+version = "1.0.0"
+description = "Update a text label live when a Slider value changes."
+requires-python = ">=3.10"
+keywords = ["slider", "events", "on_change", "text"]
+authors = [{ name = "Flet team", email = "hello@flet.dev" }]
+dependencies = ["flet"]
+
+[dependency-groups]
+dev = ["flet-cli", "flet-desktop", "flet-web"]
+
+[tool.flet.gallery]
+categories = ["Input/Slider"]
+
+[tool.flet.metadata]
+title = "Slider handling events"
+controls = ["Slider", "Text", "Column", "SafeArea"]
+layout_pattern = "stacked-actions"
+complexity = "basic"
+features = ["value change handling", "live updates"]
+
+[tool.flet]
+org = "dev.flet"
+company = "Flet"
+copyright = "Copyright (C) 2023-2026 by Flet"

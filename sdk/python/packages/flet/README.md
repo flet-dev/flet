@@ -1,9 +1,12 @@
 <p align="center">
-  <a href="https://flet.dev"><img src="https://raw.githubusercontent.com/flet-dev/flet/refs/heads/main/media/logo/flet-logo.svg" height="150" alt="Flet logo"></a>
+  <a href="https://flet.dev"><picture>
+    <source media="(prefers-color-scheme: dark)" srcset="https://raw.githubusercontent.com/flet-dev/flet/refs/heads/main/media/logo/flet-logo-dark.svg">
+    <img src="https://raw.githubusercontent.com/flet-dev/flet/refs/heads/main/media/logo/flet-logo.svg" height="150" alt="Flet logo">
+  </picture></a>
 </p>
 
 <p align="center">
-    <em>Build multi-platform apps in Python. No frontend experience required.</em>
+    <em>Build cross-platform apps in Python. No frontend experience required.</em>
 </p>
 
 <p align="center">
@@ -17,14 +20,15 @@
         <img src="https://img.shields.io/badge/python-%3E%3D3.10-%2334D058" alt="Python >= 3.10" /></a>
     <a href="https://github.com/flet-dev/flet/actions/workflows/ci.yml" target="_blank">
         <img src="https://github.com/flet-dev/flet/actions/workflows/ci.yml/badge.svg" alt="Build status" /></a>
-    <a href="https://docs.flet.dev/assets/badges/docs-coverage/flet.svg" target="_blank">
-        <img src="https://docs.flet.dev/assets/badges/docs-coverage/flet.svg" alt="Docstring coverage" /></a>
+    <a href="https://flet.dev/docs/assets/badges/docs-coverage/flet.svg" target="_blank">
+        <img src="https://flet.dev/docs/assets/badges/docs-coverage/flet.svg" alt="Docstring coverage" /></a>
 </p>
 
----
+Flet is a Python framework for building web, desktop, and mobile apps without prior experience in frontend development.
 
-Flet is a framework that allows building mobile, desktop and web applications
-in Python only without prior experience in frontend development.
+> **[Try Flet online in Flet Studio](https://studio.flet.dev/?utm_source=pypi&utm_medium=readme&utm_campaign=flet)**
+>
+> Create, run, and share Python apps in your browser. Start from an example, write your own code, or get help from the AI agent. No installation required.
 
 ### <img src="https://flet.dev/img/pages/home/single-code-base.svg" width="25" align="top" />&nbsp;&nbsp;&nbsp;Single code base for any device
 
@@ -110,7 +114,7 @@ flet run counter.py
 This will open the app in a native OS window - what a nice alternative to Electron! 🙂
 
 <p align="center">
-    <img src="https://docs.flet.dev/assets/getting-started/counter-app/macos.png" width="45%" />
+    <img src="https://flet.dev/docs/assets/getting-started/counter-app/macos.png" width="45%" />
 </p>
 
 To run the same app as a web app use `--web` option with `flet run` command:
@@ -120,15 +124,15 @@ flet run --web counter.py
 ```
 
 <p align="center">
-    <img src="https://docs.flet.dev/assets/getting-started/counter-app/safari.png" width="60%" />
+    <img src="https://flet.dev/docs/assets/getting-started/counter-app/safari.png" width="60%" />
 </p>
 
 ## Learn more
 
 * [Website](https://flet.dev)
-* [Documentation](https://docs.flet.dev)
+* [Documentation](https://flet.dev/docs/)
 * [Roadmap](https://flet.dev/roadmap)
-* [Apps Gallery](https://flet.dev/gallery)
+* [Apps Gallery](https://studio.flet.dev/gallery?utm_source=pypi&utm_medium=readme&utm_campaign=flet)
 
 ## Community
 
@@ -140,4 +144,4 @@ flet run --web counter.py
 
 ## Contributing
 
-Want to help improve Flet? Check out the [contribution guide](https://docs.flet.dev/contributing).
+Want to help improve Flet? Check out the [contribution guide](https://flet.dev/docs/contributing).

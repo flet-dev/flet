@@ -1,0 +1,26 @@
+[project]
+name = "raw-image-paint"
+version = "1.0.0"
+description = "Interactive paint app drawing brush strokes with Pillow and streaming the canvas through RawImage."
+requires-python = ">=3.10"
+keywords = ["raw image", "paint", "pillow", "drawing", "gesture detector"]
+authors = [{ name = "Flet team", email = "hello@flet.dev" }]
+dependencies = ["flet", "pillow"]
+
+[dependency-groups]
+dev = ["flet-cli", "flet-desktop", "flet-web"]
+
+[tool.flet.gallery]
+categories = ["Displays/RawImage"]
+
+[tool.flet.metadata]
+title = "Pillow paint"
+controls = ["RawImage", "GestureDetector", "Row", "Slider", "Container", "OutlinedButton"]
+layout_pattern = "toolbar above canvas"
+complexity = "intermediate"
+features = ["pillow image streaming", "pan gesture drawing", "color palette", "brush size", "dirty-flag render loop", "supersampled anti-aliasing"]
+
+[tool.flet]
+org = "dev.flet"
+company = "Flet"
+copyright = "Copyright (C) 2023-2026 by Flet"

@@ -1,19 +1,15 @@
-from dataclasses import dataclass
 from typing import Union
 
+from flet.controls.base_control import value
 from flet.controls.types import Number
-from flet.utils import deprecated
 
 __all__ = [
     "Padding",
     "PaddingValue",
-    "all",
-    "only",
-    "symmetric",
 ]
 
 
-@dataclass
+@value
 class Padding:
     """
     Defines padding for all sides of a rectangle.
@@ -68,42 +64,10 @@ class Padding:
         return Padding.only()
 
 
-@deprecated(
-    reason="Use Padding.all() instead",
-    version="0.80.0",
-    delete_version="0.83.0",
-    show_parentheses=True,
-)
-def all(value: float) -> Padding:
-    return Padding(left=value, top=value, right=value, bottom=value)
-
-
-@deprecated(
-    reason="Use Padding.symmetric() instead",
-    version="0.80.0",
-    delete_version="0.83.0",
-    show_parentheses=True,
-)
-def symmetric(vertical: float = 0, horizontal: float = 0) -> Padding:
-    return Padding(left=horizontal, top=vertical, right=horizontal, bottom=vertical)
-
-
-@deprecated(
-    reason="Use Padding.only() instead",
-    version="0.80.0",
-    delete_version="0.83.0",
-    show_parentheses=True,
-)
-def only(
-    left: float = 0, top: float = 0, right: float = 0, bottom: float = 0
-) -> Padding:
-    return Padding(left=left, top=top, right=right, bottom=bottom)
-
-
 PaddingValue = Union[Number, Padding]
 """Type alias for padding values.
 
 Represents padding as either:
 - a single numeric value applied to all sides,
-- or an explicit [`Padding`][flet.] configuration.
+- or an explicit :class:`~flet.Padding` configuration.
 """

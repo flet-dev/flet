@@ -1,0 +1,26 @@
+[project]
+name = "slider-random-values"
+version = "1.0.0"
+description = "Animate a Slider with random values and mirror each update in a text label."
+requires-python = ">=3.10"
+keywords = ["slider", "random", "animation", "events", "async"]
+authors = [{ name = "Flet team", email = "hello@flet.dev" }]
+dependencies = ["flet"]
+
+[dependency-groups]
+dev = ["flet-cli", "flet-desktop", "flet-web"]
+
+[tool.flet.gallery]
+categories = ["Input/Slider"]
+
+[tool.flet.metadata]
+title = "Slider random values"
+controls = ["Slider", "Text", "Column", "SafeArea"]
+layout_pattern = "stacked-actions"
+complexity = "basic"
+features = ["async updates", "random values", "live updates"]
+
+[tool.flet]
+org = "dev.flet"
+company = "Flet"
+copyright = "Copyright (C) 2023-2026 by Flet"

@@ -1,0 +1,29 @@
+[project]
+name = "flet-app"
+version = "1.0.0"
+description = "A simple Flet app."
+requires-python = ">=3.12"
+authors = [
+    { name = "Your name", email = "you@example.com" }
+]
+dependencies = [
+    "flet"
+]
+
+[dependency-groups]
+dev = [
+    "flet-cli",
+    "flet-desktop",
+    "flet-web"
+]
+
+[tool.flet.metadata]
+title = "AI Template"
+
+[tool.flet]
+org = "dev.flet"
+company = "Flet"
+copyright = "Copyright (C) 2023-2026 by Flet"
+
+[tool.flet.app]
+path = "src"

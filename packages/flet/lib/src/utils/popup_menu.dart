@@ -1,8 +1,9 @@
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 
 import '../extensions/control.dart';
 import '../models/control.dart';
 import 'edge_insets.dart';
+import 'keys.dart';
 import 'mouse.dart';
 import 'numbers.dart';
 import 'text.dart';
@@ -14,6 +15,10 @@ import 'text.dart';
 List<PopupMenuEntry<String>> buildPopupMenuEntries(
     Iterable<Control> items, BuildContext context) {
   return items.where((item) => item.type == "PopupMenuItem").map((item) {
+    final controlKey = item.getKey("key");
+    final key = controlKey is ControlValueKey
+        ? valueKeyFromValue(controlKey.value)
+        : null;
     var checked = item.getBool("checked");
     var height = item.getDouble("height", 48.0)!;
     var padding = item.getPadding("padding");
@@ -38,6 +43,7 @@ List<PopupMenuEntry<String>> buildPopupMenuEntries(
 
     var entry = checked != null
         ? CheckedPopupMenuItem<String>(
+            key: key,
             value: item.id.toString(),
             checked: checked,
             height: height,
@@ -49,6 +55,7 @@ List<PopupMenuEntry<String>> buildPopupMenuEntries(
             child: child,
           )
         : PopupMenuItem<String>(
+            key: key,
             value: item.id.toString(),
             height: height,
             padding: padding,

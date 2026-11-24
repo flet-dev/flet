@@ -1,7 +1,7 @@
 import os
 
 
-def get_hook_dirs():
+def get_hook_dirs() -> list[str]:
     """
     Return directories containing PyInstaller hook modules for `flet-cli`.
     """

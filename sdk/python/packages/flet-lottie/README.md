@@ -3,16 +3,20 @@
 [![pypi](https://img.shields.io/pypi/v/flet-lottie.svg)](https://pypi.python.org/pypi/flet-lottie)
 [![downloads](https://static.pepy.tech/badge/flet-lottie/month)](https://pepy.tech/project/flet-lottie)
 [![python](https://img.shields.io/badge/python-%3E%3D3.10-%2334D058)](https://pypi.org/project/flet-lottie)
-[![docstring coverage](https://docs.flet.dev/assets/badges/docs-coverage/flet-lottie.svg)](https://docs.flet.dev/assets/badges/docs-coverage/flet-lottie.svg)
+[![docstring coverage](https://flet.dev/docs/assets/badges/docs-coverage/flet-lottie.svg)](https://flet.dev/docs/assets/badges/docs-coverage/flet-lottie.svg)
 [![license](https://img.shields.io/badge/License-Apache_2.0-green.svg)](https://github.com/flet-dev/flet/blob/main/sdk/python/packages/flet-lottie/LICENSE)
 
 A [Flet](https://flet.dev) extension package for displaying Lottie animations.
+
+> **[Try flet-lottie in Flet Studio](https://studio.flet.dev/gallery/media/lottie/example/extensions/lottie/lottie_animations?utm_source=pypi&utm_medium=readme&utm_campaign=flet-lottie)**
+>
+> Create, run, and share Python apps in your browser. Start from an example, write your own code, or get help from the AI agent. No installation required.
 
 It is based on the [lottie](https://pub.dev/packages/lottie) Flutter package.
 
 ## Documentation
 
-Detailed documentation to this package can be found [here](https://docs.flet.dev/lottie/).
+Detailed documentation to this package can be found [here](https://flet.dev/docs/controls/lottie/).
 
 ## Platform Support
 
@@ -39,4 +43,4 @@ To install the `flet-lottie` package and add it to your project dependencies:
 
 ### Examples
 
-For examples, see [these](https://github.com/flet-dev/flet/tree/main/sdk/python/examples/controls/lottie).
+For examples, see [these](https://github.com/flet-dev/flet/tree/main/sdk/python/examples/extensions/lottie).

@@ -1,0 +1,220 @@
+.gallery {
+  margin-bottom: 2rem;
+}
+
+.toolbar {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+  align-items: flex-end;
+  margin-bottom: 0.75rem;
+}
+
+.searchField {
+  display: flex;
+  flex-direction: column;
+  flex: 1 1 260px;
+  gap: 0.25rem;
+}
+
+.searchLabel {
+  font-size: 0.8125rem;
+  font-weight: 600;
+  color: var(--ifm-color-emphasis-700);
+}
+
+.search {
+  width: 100%;
+  padding: 0.5rem 0.75rem;
+  font-size: 1rem;
+  font-family: inherit;
+  color: var(--ifm-font-color-base);
+  background: var(--ifm-background-color);
+  border: 1px solid var(--ifm-color-emphasis-300);
+  border-radius: var(--ifm-global-radius);
+}
+
+.search:focus {
+  outline: none;
+  border-color: var(--ifm-color-primary);
+  box-shadow: 0 0 0 2px var(--ifm-color-primary-lightest);
+}
+
+.chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.375rem;
+}
+
+.chip {
+  padding: 0.375rem 0.75rem;
+  font-size: 0.8125rem;
+  font-family: inherit;
+  color: var(--ifm-font-color-base);
+  background: var(--ifm-background-color);
+  border: 1px solid var(--ifm-color-emphasis-300);
+  border-radius: 999px;
+  cursor: pointer;
+  transition: background 0.15s, color 0.15s, border-color 0.15s;
+}
+
+.chip:hover {
+  border-color: var(--ifm-color-primary);
+}
+
+.chip[aria-pressed="true"] {
+  color: var(--ifm-color-primary-contrast-background);
+  background: var(--ifm-color-primary);
+  border-color: var(--ifm-color-primary);
+}
+
+.hint {
+  margin: 0 0 0.25rem;
+  font-size: 0.8125rem;
+  color: var(--ifm-color-emphasis-600);
+}
+
+.status {
+  margin-bottom: 0.75rem;
+  font-size: 0.8125rem;
+  color: var(--ifm-color-emphasis-600);
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(128px, 1fr));
+  gap: 0.5rem;
+}
+
+.tile {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.875rem 0.375rem 0.625rem;
+  font-family: inherit;
+  color: var(--ifm-font-color-base);
+  background: var(--ifm-background-color);
+  border: 1px solid var(--ifm-color-emphasis-200);
+  border-radius: var(--ifm-global-radius);
+  cursor: pointer;
+  overflow: hidden;
+  transition: background 0.15s, border-color 0.15s;
+
+  /* The window grows as the reader scrolls, so tiles left behind above the
+     viewport skip layout and paint. `contain-intrinsic-size` keeps the
+     scrollbar stable while they do - without it each skipped tile collapses to
+     zero height and the page jumps. */
+  content-visibility: auto;
+  contain-intrinsic-size: auto 92px;
+}
+
+.tile:hover {
+  background: var(--ifm-hover-overlay);
+  border-color: var(--ifm-color-primary);
+}
+
+.tile:focus-visible {
+  outline: 2px solid var(--ifm-color-primary);
+  outline-offset: 2px;
+}
+
+/* Deep links of the form #flet.Icons.NAME land on a tile; `#` plus a dotted id
+   is not a valid bare CSS selector, so the highlight has to come from :target. */
+.tile:target {
+  background: var(--ifm-hover-overlay);
+  border-color: var(--ifm-color-primary);
+  box-shadow: 0 0 0 2px var(--ifm-color-primary-lighter);
+}
+
+.glyph {
+  font-size: 30px;
+  line-height: 1;
+  font-weight: normal;
+  font-style: normal;
+  letter-spacing: normal;
+  text-transform: none;
+  white-space: nowrap;
+  direction: ltr;
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+
+  /* The glyphs are Private Use Area codepoints: they mean nothing to a screen
+     reader and copying one gives the reader an unpaired surrogate rather than
+     the icon name, which is what the tile's click handler is for. */
+  user-select: none;
+}
+
+.glyphMaterial {
+  font-family: "Flet Material Icons";
+}
+
+.glyphCupertino {
+  font-family: "Flet Cupertino Icons";
+}
+
+.label {
+  font-size: 0.6875rem;
+  line-height: 1.3;
+  text-align: center;
+  word-break: break-word;
+  color: var(--ifm-color-emphasis-700);
+  font-family: var(--ifm-font-family-monospace);
+}
+
+.toast {
+  position: fixed;
+  left: 50%;
+  bottom: 2rem;
+  transform: translateX(-50%);
+  z-index: 400;
+  padding: 0.5rem 1rem;
+  font-size: 0.875rem;
+  color: var(--ifm-color-primary-contrast-background);
+  background: var(--ifm-color-primary);
+  border-radius: var(--ifm-global-radius);
+  box-shadow: var(--ifm-global-shadow-md);
+}
+
+.toast code {
+  color: inherit;
+  background: rgb(0 0 0 / 20%);
+  border: none;
+  vertical-align: baseline;
+}
+
+.toastError {
+  background: var(--ifm-color-warning-dark);
+}
+
+.empty {
+  margin: 1rem 0;
+  color: var(--ifm-color-emphasis-600);
+}
+
+/* Both the "load more" trigger and the honest statement of what is on screen -
+   an infinite list that silently stops at 300 reads as "that is all there is". */
+.sentinel {
+  display: block;
+  width: 100%;
+  margin-top: 0.5rem;
+  padding: 1.25rem 0;
+  text-align: center;
+  font-size: 0.8125rem;
+  font-family: inherit;
+  color: var(--ifm-color-emphasis-600);
+  background: none;
+  border: 1px solid transparent;
+  border-radius: var(--ifm-global-radius);
+  cursor: pointer;
+}
+
+.sentinel:hover {
+  color: var(--ifm-color-primary);
+  border-color: var(--ifm-color-emphasis-300);
+}
+
+.sentinel:focus-visible {
+  outline: 2px solid var(--ifm-color-primary);
+  outline-offset: 2px;
+}

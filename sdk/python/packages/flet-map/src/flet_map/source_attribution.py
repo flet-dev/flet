@@ -11,8 +11,8 @@ class SourceAttribution(ft.BaseControl):
     """
     Abstract class for source attribution controls:
 
-    - [`ImageSourceAttribution`][(p).]
-    - [`TextSourceAttribution`][(p).]
+    - :class:`~flet_map.ImageSourceAttribution`
+    - :class:`~flet_map.TextSourceAttribution`
     """
 
 
@@ -20,14 +20,14 @@ class SourceAttribution(ft.BaseControl):
 class ImageSourceAttribution(SourceAttribution):
     """
     An image attribution permanently displayed adjacent to the
-    open/close icon of a [`RichAttribution`][(p).] control.
+    open/close icon of a :class:`~flet_map.RichAttribution` control.
     For it to be displayed, it should be part of a
-    [`RichAttribution.attributions`][(p).] list.
+    :attr:`flet_map.RichAttribution.attributions` list.
     """
 
     image: ft.Image
     """
-    The [`Image`][flet.] to be displayed.
+    The :class:`~flet.Image` to be displayed.
 
     Raises:
         ValueError: If the image is not visible.
@@ -36,7 +36,7 @@ class ImageSourceAttribution(SourceAttribution):
     height: ft.Number = 24.0
     """
     The height of the image.
-    Should be the same as [`RichAttribution.permanent_height`][(p).],
+    Should be the same as :attr:`flet_map.RichAttribution.permanent_height`,
     otherwise layout issues may occur.
     """
 
@@ -57,18 +57,18 @@ class TextSourceAttribution(SourceAttribution):
     """
     A text source attribution displayed on the Map.
     For it to be displayed, it should be part of a
-    [`RichAttribution.attributions`][(p).] list.
+    :attr:`flet_map.RichAttribution.attributions` list.
     """
 
     text: str
-    """The text to display as attribution, styled with [`text_style`][(c).]."""
+    """The text to display as attribution, styled with :attr:`text_style`."""
 
     text_style: Optional[ft.TextStyle] = None
-    """Style used to display the [`text`][(c).]."""
+    """Style used to display the :attr:`text`."""
 
     prepend_copyright: bool = True
     """
-    Whether to add the '©' character to the start of [`text`][(c).] automatically.
+    Whether to add the '©' character to the start of :attr:`text` automatically.
     """
 
     on_click: Optional[ft.ControlEventHandler["TextSourceAttribution"]] = None

@@ -22,7 +22,7 @@ class RadarShape(Enum):
 @ft.control("RadarChartTitle")
 class RadarChartTitle(ft.BaseControl):
     """
-    Custom title configuration displayed around a [`RadarChart`][(p).].
+    Custom title configuration displayed around a :class:`~flet_charts.RadarChart`.
     """
 
     text: str = ""
@@ -46,7 +46,7 @@ class RadarChartTitle(ft.BaseControl):
 
     Note:
         If set, it takes precedence over the parent
-        [`RadarChart.title_position_percentage_offset`][flet_charts.radar_chart.RadarChart.title_position_percentage_offset]
+        :attr:`flet_charts.RadarChart.title_position_percentage_offset`
         value.
     """
 
@@ -59,7 +59,7 @@ class RadarChartTitle(ft.BaseControl):
 @dataclass
 class RadarChartEvent(ft.Event["RadarChart"]):
     """
-    Event raised for interactions with a [`RadarChart`][(p).].
+    Event raised for interactions with a :class:`~flet_charts.RadarChart`.
     """
 
     type: ChartEventType
@@ -106,7 +106,7 @@ class RadarChart(ft.LayoutControl):
 
     data_sets: list[RadarDataSet] = field(default_factory=list)
     """
-    A list of [`RadarDataSet`][(p).] controls rendered on the chart.
+    A list of :class:`~flet_charts.RadarDataSet` controls rendered on the chart.
     """
 
     titles: list[RadarChartTitle] = field(default_factory=list)

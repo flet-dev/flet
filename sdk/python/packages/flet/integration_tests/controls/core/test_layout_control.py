@@ -1,9 +1,220 @@
+import asyncio
 from math import pi
 
 import pytest
 
 import flet as ft
 import flet.testing as ftt
+
+
+@pytest.mark.asyncio(loop_scope="module")
+async def test_align_inside_stack(flet_app: ftt.FletTestApp, request):
+    flet_app.page.theme_mode = ft.ThemeMode.LIGHT
+    await flet_app.assert_control_screenshot(
+        request.node.name,
+        ft.Stack(
+            [
+                ft.Button("A", align=ft.Alignment(0, 0)),
+                ft.Button("B", align=ft.Alignment(0.9, 0.9)),
+                ft.Button("C", align=ft.Alignment.BOTTOM_LEFT),
+            ],
+            width=200,
+            height=200,
+        ),
+    )
+
+
+@pytest.mark.asyncio(loop_scope="module")
+async def test_align_inside_container(flet_app: ftt.FletTestApp, request):
+    flet_app.page.theme_mode = ft.ThemeMode.LIGHT
+    await flet_app.assert_control_screenshot(
+        request.node.name,
+        ft.Container(
+            ft.Button("B", align=ft.Alignment(0.9, 0.9)),
+            width=200,
+            height=200,
+        ),
+    )
+
+
+@pytest.mark.asyncio(loop_scope="module")
+async def test_margin_around(flet_app: ftt.FletTestApp, request):
+    flet_app.page.theme_mode = ft.ThemeMode.LIGHT
+    await flet_app.assert_control_screenshot(
+        request.node.name,
+        ft.Button(
+            "Button with margin",
+            margin=ft.Margin.all(20),
+        ),
+    )
+
+
+@pytest.mark.asyncio(loop_scope="module")
+async def test_margin_bottom_right(flet_app: ftt.FletTestApp, request):
+    flet_app.page.theme_mode = ft.ThemeMode.LIGHT
+    await flet_app.assert_control_screenshot(
+        request.node.name,
+        ft.Button(
+            "Button with margin",
+            margin=ft.Margin.only(bottom=20, right=20),
+        ),
+    )
+
+
+@pytest.mark.asyncio(loop_scope="module")
+async def test_position_right_bottom(flet_app: ftt.FletTestApp, request):
+    await flet_app.assert_control_screenshot(
+        request.node.name,
+        ft.Stack(
+            width=420,
+            height=240,
+            controls=[
+                ft.Container(
+                    border=ft.Border.all(2, ft.Colors.BLUE_GREY_200),
+                    border_radius=12,
+                ),
+                ft.Container(
+                    width=120,
+                    height=70,
+                    right=24,
+                    bottom=20,
+                    border_radius=12,
+                    bgcolor=ft.Colors.CYAN_300,
+                    alignment=ft.Alignment.CENTER,
+                    content=ft.Text("right+bottom", size=14, weight=ft.FontWeight.BOLD),
+                ),
+            ],
+        ),
+    )
+
+
+@pytest.mark.asyncio(loop_scope="module")
+async def test_position_constraint_combinations(flet_app: ftt.FletTestApp, request):
+    await flet_app.assert_control_screenshot(
+        request.node.name,
+        ft.Stack(
+            width=440,
+            height=280,
+            controls=[
+                ft.Container(
+                    border=ft.Border.all(2, ft.Colors.BLUE_GREY_200),
+                    border_radius=12,
+                ),
+                ft.Container(
+                    left=40,
+                    right=40,
+                    top=42,
+                    height=62,
+                    border_radius=10,
+                    bgcolor=ft.Colors.AMBER_300,
+                    alignment=ft.Alignment.CENTER,
+                    content=ft.Text("left + right", weight=ft.FontWeight.BOLD),
+                ),
+                ft.Container(
+                    top=118,
+                    bottom=38,
+                    left=164,
+                    width=110,
+                    border_radius=10,
+                    bgcolor=ft.Colors.GREEN_300,
+                    alignment=ft.Alignment.CENTER,
+                    content=ft.Text("top + bottom", weight=ft.FontWeight.BOLD),
+                ),
+            ],
+        ),
+    )
+
+
+@pytest.mark.asyncio(loop_scope="module")
+async def test_animate_position(flet_app: ftt.FletTestApp, request):
+    # TODO(Feodor): Test framework needs improvement to correctly capture
+    # multiple animation screenshots.
+    animated = ft.Container(
+        width=90,
+        height=64,
+        left=18,
+        top=24,
+        border_radius=10,
+        bgcolor=ft.Colors.CYAN_300,
+        alignment=ft.Alignment.CENTER,
+        content=ft.Text("move", weight=ft.FontWeight.BOLD),
+        animate_position=ft.Animation(600, ft.AnimationCurve.EASE_IN_OUT),
+    )
+    root = ft.Stack(
+        width=320,
+        height=180,
+        controls=[
+            ft.Container(
+                border=ft.Border.all(2, ft.Colors.BLUE_GREY_200),
+                border_radius=12,
+            ),
+            animated,
+        ],
+    )
+    screenshot = ft.Screenshot(root)
+
+    flet_app.page.clean()
+    flet_app.page.add(screenshot)
+    await flet_app.tester.pump_and_settle()
+
+    animated.left = 196
+    animated.top = 98
+    animated.update()
+    await flet_app.tester.pump_and_settle()
+
+    flet_app.assert_screenshot(
+        request.node.name,
+        await screenshot.capture(pixel_ratio=flet_app.screenshots_pixel_ratio),
+    )
+
+
+@pytest.mark.asyncio(loop_scope="module")
+async def test_aspect_ratio(flet_app: ftt.FletTestApp, request):
+    await flet_app.assert_control_screenshot(
+        request.node.name,
+        ft.Container(
+            width=100,
+            height=280,
+            border=ft.Border.all(2, ft.Colors.BLUE_GREY_200),
+            border_radius=12,
+            alignment=ft.Alignment.TOP_LEFT,
+            padding=12,
+            content=ft.Column(
+                spacing=12,
+                controls=[
+                    ft.Container(
+                        aspect_ratio=2,
+                        border_radius=12,
+                        bgcolor=ft.Colors.CYAN_300,
+                        alignment=ft.Alignment.CENTER,
+                        content=ft.Text(
+                            "ratio 2.0", weight=ft.FontWeight.BOLD, size=13
+                        ),
+                    ),
+                    ft.Container(
+                        aspect_ratio=0.5,
+                        border_radius=12,
+                        bgcolor=ft.Colors.ORANGE_300,
+                        alignment=ft.Alignment.CENTER,
+                        content=ft.Text(
+                            "ratio 0.5", weight=ft.FontWeight.BOLD, size=13
+                        ),
+                    ),
+                    ft.Container(
+                        width=50,
+                        height=50,
+                        aspect_ratio=3,
+                        border_radius=12,
+                        bgcolor=ft.Colors.PINK_200,
+                        alignment=ft.Alignment.CENTER,
+                        content=ft.Text(
+                            "ratio wins", weight=ft.FontWeight.BOLD, size=13
+                        ),
+                    ),
+                ],
+            ),
+        ),
+    )
 
 
 @pytest.mark.asyncio(loop_scope="module")
@@ -47,6 +258,22 @@ async def test_rotate(flet_app: ftt.FletTestApp, request):
 
 
 @pytest.mark.asyncio(loop_scope="module")
+async def test_rotate_numeric_value(flet_app: ftt.FletTestApp, request):
+    await flet_app.assert_control_screenshot(
+        request.node.name,
+        ft.Container(
+            width=220,
+            height=120,
+            bgcolor=ft.Colors.BLUE_300,
+            border_radius=16,
+            alignment=ft.Alignment.CENTER,
+            content=ft.Text("Rotate", size=28, weight=ft.FontWeight.BOLD),
+            rotate=pi / 10,
+        ),
+    )
+
+
+@pytest.mark.asyncio(loop_scope="module")
 async def test_scale(flet_app: ftt.FletTestApp, request):
     await flet_app.assert_control_screenshot(
         request.node.name,
@@ -63,6 +290,22 @@ async def test_scale(flet_app: ftt.FletTestApp, request):
                 alignment=ft.Alignment.CENTER,
                 filter_quality=ft.FilterQuality.MEDIUM,
             ),
+        ),
+    )
+
+
+@pytest.mark.asyncio(loop_scope="module")
+async def test_scale_numeric_value(flet_app: ftt.FletTestApp, request):
+    await flet_app.assert_control_screenshot(
+        request.node.name,
+        ft.Container(
+            width=220,
+            height=120,
+            bgcolor=ft.Colors.GREEN_300,
+            border_radius=16,
+            alignment=ft.Alignment.CENTER,
+            content=ft.Text("Scale", size=28, weight=ft.FontWeight.BOLD),
+            scale=2.5,
         ),
     )
 
@@ -189,3 +432,74 @@ async def test_matrix4_multiply_chain(flet_app: ftt.FletTestApp, request):
         request.node.name,
         _matrix_card("Multiply chain", ft.Colors.LIGHT_GREEN_300, matrix),
     )
+
+
+async def _wait_for(flet_app: ftt.FletTestApp, condition, timeout: float = 5.0):
+    """Pumps frames until `condition()` holds, as events reach Python later."""
+    loop = asyncio.get_running_loop()
+    deadline = loop.time() + timeout
+    while not condition() and loop.time() < deadline:
+        await flet_app.tester.pump(duration=ft.Duration(milliseconds=100))
+        await asyncio.sleep(0.05)
+    return condition()
+
+
+@pytest.mark.asyncio(loop_scope="module")
+async def test_animate_size(flet_app: ftt.FletTestApp):
+    """`Container.animate_size` animates height changes, to and from `None`."""
+    heights = []
+    box = ft.Container(
+        width=100,
+        height=40,
+        bgcolor=ft.Colors.CYAN_300,
+        content=ft.Container(
+            width=100,
+            height=200,
+            size_change_interval=0,
+            on_size_change=lambda e: heights.append(e.height),
+        ),
+        animate_size=ft.Animation(400),
+    )
+    flet_app.page.clean()
+    flet_app.page.add(box)
+    await flet_app.tester.pump_and_settle()
+    assert await _wait_for(flet_app, lambda: heights and heights[-1] == 40)
+
+    heights.clear()
+    box.height = None
+    box.update()
+    await flet_app.tester.pump_and_settle()
+    assert await _wait_for(flet_app, lambda: heights and heights[-1] == 200)
+    assert any(40 < h < 200 for h in heights), f"no animation: {heights}"
+    assert heights == sorted(heights)
+
+    heights.clear()
+    box.height = 40
+    box.update()
+    await flet_app.tester.pump_and_settle()
+    assert await _wait_for(flet_app, lambda: heights and heights[-1] == 40)
+    assert any(40 < h < 200 for h in heights), f"no animation: {heights}"
+    assert heights == sorted(heights, reverse=True)
+
+
+@pytest.mark.asyncio(loop_scope="module")
+async def test_animate_false(flet_app: ftt.FletTestApp):
+    """`False` turns an animation off, and the control still renders."""
+    flet_app.page.clean()
+    flet_app.page.add(
+        ft.Container(
+            content=ft.Text("no animation"),
+            opacity=0.5,
+            animate=False,
+            animate_opacity=False,
+            animate_size=False,
+            animate_scale=False,
+            animate_rotation=False,
+            animate_offset=False,
+            animate_margin=False,
+        )
+    )
+    await flet_app.tester.pump_and_settle()
+
+    finder = await flet_app.tester.find_by_text("no animation")
+    assert finder.count == 1

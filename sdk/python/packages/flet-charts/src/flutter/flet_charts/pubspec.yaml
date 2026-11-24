@@ -5,7 +5,7 @@ publish_to: none
 
 environment:
   sdk: '>=3.2.3 <4.0.0'
-  flutter: ">=1.17.0"
+  flutter: ">=3.47.0"
 
 dependencies:
   flutter:
@@ -14,8 +14,9 @@ dependencies:
 
   collection: ^1.16.0
   equatable: ^2.0.3
-  fl_chart: 1.1.1
+  fl_chart: ^1.2.0
 
+  material_ui: ^1.6.0
   flet:
     path: ../../../../../../../packages/flet
 

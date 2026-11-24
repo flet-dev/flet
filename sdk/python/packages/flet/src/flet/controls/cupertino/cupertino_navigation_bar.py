@@ -1,4 +1,4 @@
-from typing import Optional
+from typing import Annotated, Optional
 
 from flet.controls.base_control import control
 from flet.controls.border import Border
@@ -10,6 +10,7 @@ from flet.controls.types import (
     ColorValue,
     Number,
 )
+from flet.utils.validation import V
 
 __all__ = ["CupertinoNavigationBar"]
 
@@ -23,30 +24,27 @@ class CupertinoNavigationBar(LayoutControl):
     destinations in an app.
     """
 
-    destinations: list[NavigationBarDestination]
+    destinations: Annotated[
+        list[NavigationBarDestination],
+        V.visible_controls(min_count=2),
+    ]
     """
     The destinations of this navigation bar.
 
-    Note:
-        Must be a list of two or more [`NavigationBarDestination`][flet.]s.
-
     Raises:
-        ValueError: If [`destinations`][(c).] does not contain at least two visible
-            [`NavigationBarDestination`][flet.]s.
+        ValueError: If it does not contain at least
+            two visible `NavigationBarDestination`s.
     """
 
     selected_index: int = 0
     """
-    The index into [`destinations`][(c).] for the currently selected \
-    [`NavigationBarDestination`][flet.].
-
-    Note:
-        Must be a value between `0` and the length of visible
-        [`destinations`][(c).], inclusive.
+    The index into :attr:`destinations` for the currently selected \
+    :class:`~flet.NavigationBarDestination`.
 
     Raises:
-        IndexError: If [`selected_index`][(c).] is out of range relative to the
-            visible destinations.
+        IndexError: If it is not greater than or equal to `0`.
+        IndexError: If it is not less than the length of visible
+            :attr:`destinations`.
     """
 
     bgcolor: Optional[ColorValue] = None
@@ -56,14 +54,12 @@ class CupertinoNavigationBar(LayoutControl):
 
     active_color: Optional[ColorValue] = None
     """
-    The foreground color of the icon and title of the selected \
-    [`destination`][(c).destinations].
+    The foreground color of the icon and title of the selected     :attr:`destinations`.
     """
 
     inactive_color: ColorValue = CupertinoColors.INACTIVE_GRAY
     """
-    The foreground color of the icon and title of the unselected \
-    [`destinations`][(c).].
+    The foreground color of the icon and title of the unselected :attr:`destinations`.
     """
 
     border: Optional[Border] = None
@@ -84,12 +80,9 @@ class CupertinoNavigationBar(LayoutControl):
     def before_update(self):
         super().before_update()
         visible_destinations_count = len([d for d in self.destinations if d.visible])
-        if visible_destinations_count < 2:
-            raise ValueError(
-                f"destinations must contain at minimum two visible controls, "
-                f"got {visible_destinations_count}"
-            )
-        if not (0 <= self.selected_index < visible_destinations_count):
+        if visible_destinations_count >= 2 and not (
+            0 <= self.selected_index < visible_destinations_count
+        ):
             raise IndexError(
                 f"selected_index ({self.selected_index}) is out of range. "
                 f"Expected a value between 0 and {visible_destinations_count - 1} "

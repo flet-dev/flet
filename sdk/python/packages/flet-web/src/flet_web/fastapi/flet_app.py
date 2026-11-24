@@ -16,12 +16,13 @@ from flet.app import AppCallable
 from flet.controls.base_control import BaseControl
 from flet.controls.context import _context_page, context
 from flet.controls.exceptions import FletPageDisconnectedException
+from flet.controls.types import RouteUrlStrategy
 from flet.messaging.connection import Connection
 from flet.messaging.protocol import (
-    ClientAction,
-    ClientMessage,
     ControlEventBody,
     InvokeMethodResponseBody,
+    Message,
+    MessageAction,
     RegisterClientRequestBody,
     RegisterClientResponseBody,
     UpdateControlPropsBody,
@@ -59,6 +60,9 @@ class FletApp(Connection):
             and redirecting to OAuth callback URL.
         upload_endpoint_path: Absolute URL of upload endpoint, e.g. `/upload`.
         secret_key: Secret key to sign upload requests.
+        route_url_strategy: Route URL strategy of the served web client.
+        proxy_path: URL prefix that a proxy in front of the app strips, as given
+            to `flet_web.fastapi.app()`; part of the page's base path.
     """
 
     def __init__(
@@ -71,8 +75,12 @@ class FletApp(Connection):
         oauth_state_timeout_seconds: int = DEFAULT_FLET_OAUTH_STATE_TIMEOUT,
         upload_endpoint_path: Optional[str] = None,
         secret_key: Optional[str] = None,
+        route_url_strategy: RouteUrlStrategy = RouteUrlStrategy.PATH,
+        proxy_path: Optional[str] = None,
     ):
         super().__init__()
+        self.route_url_strategy = route_url_strategy
+        self.__proxy_path = proxy_path
         self.__id = random_string(8)
         logger.info(f"New FletApp: {self.__id}")
 
@@ -95,6 +103,11 @@ class FletApp(Connection):
 
         self.__upload_endpoint_path = upload_endpoint_path
         self.__secret_key = secret_key
+
+        # DataChannel mux registry keyed by channel_id minted on the Dart
+        # side. Populated lazily on the first Control.get_data_channel(id)
+        # call. Frames for unknown ids are silently dropped.
+        self._data_channels: dict[int, Any] = {}
 
         app_id = self.__id
         weakref.finalize(
@@ -119,6 +132,10 @@ class FletApp(Connection):
         self.pubsubhub = app_manager.get_pubsubhub(self.__main, loop=self.loop)
         self.page_url = str(websocket.url).rsplit("/", 1)[0]
         self.page_name = websocket.url.path.rsplit("/", 1)[0].lstrip("/")
+        mount_path = (
+            (self.__proxy_path or "") + websocket.scope.get("root_path", "")
+        ).strip("/")
+        self.page_base_path = f"/{mount_path}/" if mount_path else "/"
 
         if not self.__upload_endpoint_path:
             self.__upload_endpoint_path = (
@@ -146,45 +163,46 @@ class FletApp(Connection):
         post-event updates.
         """
 
-        assert self.__session
-        logger.info(f"Start session: {self.__session.id}")
+        # `main` runs in its own task. Disconnecting clears `self.__session`,
+        # so retain the session for post-event housekeeping and error handling.
+        session = self.__session
+        assert session
+        logger.info(f"Start session: {session.id}")
         try:
             assert self.__main is not None
-            _context_page.set(self.__session.page)
+            _context_page.set(session.page)
             context.reset_auto_update()
 
             if inspect.iscoroutinefunction(self.__main):
-                await self.__main(self.__session.page)
+                await self.__main(session.page)
 
             elif inspect.isasyncgenfunction(self.__main):
-                async for _ in self.__main(self.__session.page):
-                    await self.__session.after_event(self.__session.page)
+                async for _ in self.__main(session.page):
+                    await session.after_event(session.page)
+                    # Let the send loop flush the patch before `main()` resumes.
+                    await asyncio.sleep(0)
 
             elif inspect.isgeneratorfunction(self.__main):
-                for _ in self.__main(self.__session.page):
-                    await self.__session.after_event(self.__session.page)
+                for _ in self.__main(session.page):
+                    await session.after_event(session.page)
+                    # Let the send loop flush the patch before `main()` resumes.
+                    await asyncio.sleep(0)
             else:
-                self.__main(self.__session.page)
+                self.__main(session.page)
 
-            await self.__session.after_event(self.__session.page)
+            await session.after_event(session.page)
         except FletPageDisconnectedException:
             logger.debug(
-                "Session handler attempted to update disconnected page: "
-                f"{self.__session.id}"
+                f"Session handler attempted to update disconnected page: {session.id}"
             )
         except BrokenPipeError:
-            logger.info(
-                "Session handler terminated: "
-                f"{self.__session.id if self.__session else ''}"
-            )
+            logger.info(f"Session handler terminated: {session.id}")
         except Exception as e:
             logger.error(
-                "Unhandled error processing page session: "
-                f"{self.__session.id if self.__session else ''}",
+                f"Unhandled error processing page session: {session.id}",
                 exc_info=True,
             )
-            if self.__session:
-                self.__session.error(str(e))
+            session.error(str(e))
 
     async def __send_loop(self):
         """
@@ -214,6 +232,11 @@ class FletApp(Connection):
         """
         Receive binary frames from WebSocket and dispatch decoded client messages.
 
+        Wire format: each WebSocket binary frame is one packet —
+        `[type:u8][payload]`. type=0x00 is a MsgPack-encoded Flet protocol
+        frame; type=0x01 is a raw DataChannel frame
+        (`[channel_id:u32 LE][bytes]`).
+
         On disconnect/error, terminates send loop via queue sentinel when a
         session is active.
         """
@@ -222,9 +245,28 @@ class FletApp(Connection):
         try:
             while True:
                 data = await self.__websocket.receive_bytes()
-                await self.__on_message(
-                    msgpack.unpackb(data, ext_hook=decode_ext_from_msgpack)
-                )
+                if not data:
+                    continue
+                ptype = data[0]
+                if ptype == 0x00:
+                    # One bad message must not end the loop: nothing would be
+                    # received after it and the app would freeze.
+                    try:
+                        await self.__on_message(
+                            msgpack.unpackb(data[1:], ext_hook=decode_ext_from_msgpack)
+                        )
+                    except Exception:
+                        logger.exception("Error handling a message from the client.")
+                elif ptype == 0x01:
+                    if len(data) < 5:
+                        logger.debug("Dropping malformed data-channel frame.")
+                        continue
+                    channel_id = int.from_bytes(data[1:5], "little", signed=False)
+                    channel = self._data_channels.get(channel_id)
+                    if channel is not None:
+                        channel._deliver(data[5:])
+                else:
+                    logger.debug("Dropping packet with unknown type 0x%02x", ptype)
         except Exception as e:
             if not isinstance(e, WebSocketDisconnect):
                 logger.warning(f"Receive loop error: {e}", exc_info=True)
@@ -235,7 +277,7 @@ class FletApp(Connection):
     async def __on_message(self, data: Any):
         """
         Handle one decoded client message and dispatch
-        by `ClientAction`.
+        by `MessageAction`.
 
         Args:
             data: Decoded message payload from msgpack transport.
@@ -244,20 +286,24 @@ class FletApp(Connection):
             RuntimeError: If message action is unknown.
         """
 
-        action = ClientAction(data[0])
+        action = MessageAction(data[0])
         body = data[1]
-        transport_log.debug(f"_on_message: {action} {body}")
+        transport_log.debug("_on_message: %s %s", action, body)
         task = None
-        if action == ClientAction.REGISTER_CLIENT:
+        if action == MessageAction.REGISTER_CLIENT:
             req = RegisterClientRequestBody(**body)
 
             new_session = False
 
             # try to retrieve existing session
             if req.session_id:
-                self.__session = await app_manager.get_session(
+                candidate = await app_manager.get_session(
                     self.__get_unique_session_id(req.session_id)
                 )
+                if candidate is not None and candidate.connection is None:
+                    self.__session = candidate
+                else:
+                    self.__session = None
 
             oauth_state = None
             if self.__oauth_state_id:
@@ -307,8 +353,8 @@ class FletApp(Connection):
 
             # register response
             self.send_message(
-                ClientMessage(
-                    ClientAction.REGISTER_CLIENT,
+                Message(
+                    MessageAction.REGISTER_CLIENT,
                     RegisterClientResponseBody(
                         session_id=self.__session.id,
                         page_patch=self.__session.get_page_patch()
@@ -351,17 +397,17 @@ class FletApp(Connection):
                         }
                     )
 
-        elif action == ClientAction.CONTROL_EVENT:
+        elif action == MessageAction.CONTROL_EVENT:
             req = ControlEventBody(**body)
             task = asyncio.create_task(
                 self.__session.dispatch_event(req.target, req.name, req.data)
             )
 
-        elif action == ClientAction.UPDATE_CONTROL_PROPS:
+        elif action == MessageAction.UPDATE_CONTROL_PROPS:
             req = UpdateControlPropsBody(**body)
             self.__session.apply_patch(req.id, req.props)
 
-        elif action == ClientAction.INVOKE_METHOD:
+        elif action == MessageAction.INVOKE_METHOD:
             req = InvokeMethodResponseBody(**body)
             self.__session.handle_invoke_method_results(
                 req.control_id, req.call_id, req.result, req.error
@@ -375,20 +421,46 @@ class FletApp(Connection):
             self.__running_tasks.add(task)
             task.add_done_callback(self.__running_tasks.discard)
 
-    def send_message(self, message: ClientMessage):
+    def send_message(self, message: Message):
         """
         Serialize and enqueue a server message for transport to the client.
+
+        Wire format: one packet per `send_bytes` call —
+        `[0x00][msgpack body]`. WebSocket preserves message boundaries so
+        no length prefix is needed.
 
         Args:
             message: Outbound protocol message.
         """
 
-        transport_log.debug(f"send_message: {message}")
-        m = msgpack.packb(
+        transport_log.debug("send_message: %s", message)
+        body = msgpack.packb(
             [message.action, message.body],
             default=configure_encode_object_for_msgpack(BaseControl),
         )
-        self.__send_queue.put_nowait(m)
+        self.__send_queue.put_nowait(b"\x00" + body)
+
+    def send_data_channel_frame(self, channel_id: int, payload: bytes) -> None:
+        """Send a raw DataChannel frame `[0x01][channel_id:u32 LE][bytes]`
+        over the WebSocket. Called by `_ProtocolMuxedDataChannel.send`."""
+        if self.__send_queue is None:
+            return  # client disconnected — the frame is moot
+        header = b"\x01" + channel_id.to_bytes(4, "little", signed=False)
+        self.__send_queue.put_nowait(header + payload)
+
+    def data_channel_for(self, channel_id: int):
+        """Resolve or construct the muxed DataChannel for `channel_id`."""
+        from flet.data_channel import _ProtocolMuxedDataChannel
+
+        existing = self._data_channels.get(channel_id)
+        if existing is not None:
+            return existing
+        channel = _ProtocolMuxedDataChannel(channel_id, self)
+        self._data_channels[channel_id] = channel
+        return channel
+
+    def unregister_data_channel(self, channel_id: int) -> None:
+        self._data_channels.pop(channel_id, None)
 
     def get_upload_url(self, file_name: str, expires: int) -> str:
         """
@@ -433,7 +505,7 @@ class FletApp(Connection):
         )
         app_manager.store_state(state_id, state)
 
-    def __get_unique_session_id(self, session_id: str):
+    def __get_unique_session_id(self, session_id: str) -> str:
         """
         Compose a stable unique session key scoped to page and client identity.
 

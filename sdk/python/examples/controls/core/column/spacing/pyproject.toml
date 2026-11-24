@@ -1,0 +1,26 @@
+[project]
+name = "column-spacing"
+version = "1.0.0"
+description = "Adjust column spacing interactively with a slider."
+requires-python = ">=3.10"
+keywords = ["column", "layout", "spacing", "slider", "interactive"]
+authors = [{ name = "Flet team", email = "hello@flet.dev" }]
+dependencies = ["flet"]
+
+[dependency-groups]
+dev = ["flet-cli", "flet-desktop", "flet-web"]
+
+[tool.flet.gallery]
+categories = ["Layout/Column"]
+
+[tool.flet.metadata]
+title = "Column spacing"
+controls = ["Column", "Container", "Text", "Slider"]
+layout_pattern = "control-panel"
+complexity = "basic"
+features = ["slider-driven spacing", "dynamic layout updates"]
+
+[tool.flet]
+org = "dev.flet"
+company = "Flet"
+copyright = "Copyright (C) 2023-2026 by Flet"
