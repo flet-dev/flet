@@ -305,14 +305,11 @@ public class FletAppauthPlugin
           additional.put(entry.getKey().toString(), entry.getValue().toString());
         }
       }
-      // AppAuth-Android forbids built-in OAuth fields in additionalParameters.
+      // AppAuth-Android forbids built-in OAuth fields in additionalParameters
+      // (prompt, login_hint, …). max_age is NOT built-in in 0.11.1 — leave it.
       String prompt = additional.remove("prompt");
       if (prompt != null && !prompt.isEmpty()) {
         builder.setPrompt(prompt);
-      }
-      String maxAge = additional.remove("max_age");
-      if (maxAge != null && !maxAge.isEmpty()) {
-        builder.setMaxAge(Integer.parseInt(maxAge));
       }
       String loginHint = additional.remove("login_hint");
       if (loginHint != null && !loginHint.isEmpty()) {
