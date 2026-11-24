@@ -807,6 +807,9 @@ class Page(BasePage):
         self.__last_route = None
         self.__query: QueryString = QueryString(self)
         self.__authorization: Optional[Authorization] = None
+        # After logout(), the next interactive login must not silently reuse an
+        # IdP browser SSO cookie (Auth Tab / Custom Tabs share Chrome state).
+        self.__reauth_after_logout: bool = False
         # App/window visibility, driven by `on_app_lifecycle_state_change`.
         # Producer loops (e.g. `RawImage.render`) await `wait_until_visible`
         # to park while the tab is backgrounded instead of streaming frames a
@@ -1409,53 +1412,78 @@ class Page(BasePage):
             scope=scope,
         )
         if saved_token is None:
-            if self._is_appauth_login_platform():
-                await self.__login_with_appauth(provider)
-            elif self.web:
-                # The server keeps the state and completion options until the
-                # provider redirects back, then calls _authorize_callback().
-                authorization_url, state = (
-                    self.__authorization.get_authorization_data()
-                )
-                auth_attrs = {"state": state}
-                if complete_page_html:
-                    auth_attrs["completePageHtml"] = complete_page_html
-                if redirect_to_page:
-                    # The current page on the redirect URL's host, with the
-                    # route in the URL path or after `#`, as the client expects.
-                    connection = self.session.connection
-                    base_path = connection.page_base_path
-                    redirect_url = urlparse(provider.redirect_url)
-                    if connection.route_url_strategy == RouteUrlStrategy.HASH:
-                        complete_page_url = redirect_url._replace(
-                            path=base_path, query="", fragment=self.route
-                        )
-                    else:
-                        complete_page_url = redirect_url._replace(
-                            path=base_path.rstrip("/") + self.route
-                        )
-                    auth_attrs["completePageUrl"] = complete_page_url.geturl()
-                self.session.connection.oauth_authorize(auth_attrs)
-                if on_open_authorization_url:
-                    await on_open_authorization_url(authorization_url)
-                else:
-                    await UrlLauncher().open_window(
-                        authorization_url, title="flet_oauth_signin"
+            # After logout, force interactive re-auth for any IdP: ephemeral
+            # browser session (no shared SSO cookies) + OIDC prompt=login /
+            # max_age=0 when the provider honors them. Not provider-specific.
+            prefer_ephemeral = False
+            previous_params = None
+            if self.__reauth_after_logout:
+                self.__reauth_after_logout = False
+                prefer_ephemeral = True
+                previous_params = provider.authorization_params
+                merged = dict(previous_params or {})
+                merged.setdefault("prompt", "login")
+                merged.setdefault("max_age", "0")
+                provider.authorization_params = merged
+            try:
+                if self._is_appauth_login_platform():
+                    await self.__login_with_appauth(
+                        provider, prefer_ephemeral_session=prefer_ephemeral
                     )
-            else:
-                raise RuntimeError(
-                    "page.login() OAuth is not supported on this platform. "
-                    "Use web, or Android/iOS with flet-appauth "
-                    "(pip install 'flet[appauth]')."
-                )
+                elif self.web:
+                    # The server keeps the state and completion options until the
+                    # provider redirects back, then calls _authorize_callback().
+                    authorization_url, state = (
+                        self.__authorization.get_authorization_data()
+                    )
+                    auth_attrs = {"state": state}
+                    if complete_page_html:
+                        auth_attrs["completePageHtml"] = complete_page_html
+                    if redirect_to_page:
+                        # The current page on the redirect URL's host, with the
+                        # route in the URL path or after `#`, as the client expects.
+                        connection = self.session.connection
+                        base_path = connection.page_base_path
+                        redirect_url = urlparse(provider.redirect_url)
+                        if connection.route_url_strategy == RouteUrlStrategy.HASH:
+                            complete_page_url = redirect_url._replace(
+                                path=base_path, query="", fragment=self.route
+                            )
+                        else:
+                            complete_page_url = redirect_url._replace(
+                                path=base_path.rstrip("/") + self.route
+                            )
+                        auth_attrs["completePageUrl"] = complete_page_url.geturl()
+                    self.session.connection.oauth_authorize(auth_attrs)
+                    if on_open_authorization_url:
+                        await on_open_authorization_url(authorization_url)
+                    else:
+                        await UrlLauncher().open_window(
+                            authorization_url, title="flet_oauth_signin"
+                        )
+                else:
+                    raise RuntimeError(
+                        "page.login() OAuth is not supported on this platform. "
+                        "Use web, or Android/iOS with flet-appauth "
+                        "(pip install 'flet[appauth]')."
+                    )
+            finally:
+                if previous_params is not None:
+                    provider.authorization_params = previous_params
         else:
             # Restore the saved sign-in; there is no redirect to wait for.
+            self.__reauth_after_logout = False
             await self.__authorization.dehydrate_token(saved_token)
             await self._emit_login_event(error="", error_description="")
 
         return self.__authorization
 
-    async def __login_with_appauth(self, provider: "OAuthProvider") -> None:
+    async def __login_with_appauth(
+        self,
+        provider: "OAuthProvider",
+        *,
+        prefer_ephemeral_session: bool = False,
+    ) -> None:
         """
         Complete mobile OAuth using the flet-appauth AppAuth service.
         """
@@ -1479,6 +1507,7 @@ class Page(BasePage):
             token_endpoint=provider.token_endpoint,
             scopes=list(self.__authorization.scope),
             additional_parameters=dict(provider.authorization_params or {}),
+            prefer_ephemeral_session=prefer_ephemeral_session,
         )
 
         if isinstance(result, dict):
@@ -1579,11 +1608,19 @@ class Page(BasePage):
 
     def logout(self) -> None:
         """
-        Clears current authentication context. See \
-        [Authentication](https://flet.dev/docs/cookbook/authentication#signing-out) \
+        Clears current authentication context.
+
+        Also marks the next interactive [`login`][flet.Page.login] so it cannot
+        silently reuse an identity-provider browser SSO session (ephemeral
+        AppAuth session when supported, plus OIDC ``prompt=login`` /
+        ``max_age=0``). Clear any tokens you persisted yourself (for example
+        with SharedPreferences) before or after calling this.
+
+        See [Authentication](https://flet.dev/docs/cookbook/authentication#signing-out)
         guide for more information and examples.
         """  # noqa: E501
         self.__authorization = None
+        self.__reauth_after_logout = True
         e = ControlEvent(name="logout", control=self)
         if self.on_logout:
             asyncio.create_task(self._trigger_event("logout", event_data=None, e=e))

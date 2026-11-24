@@ -5,6 +5,10 @@
 * Add `flet-appauth` service (`flutter_appauth`) and Android/iOS `page.login()` path with native AppAuth + PKCE.
 * Add `flet build --appauth-redirect-scheme` / `tool.flet.appauth.redirect_scheme` for mobile OAuth redirects (defaults to `flet` when `flet-appauth` is present).
 
+### Improvements
+
+* `page.logout()` makes the next `page.login()` force interactive re-authentication for any IdP (ephemeral AppAuth/Auth Tab session when supported, plus OIDC `prompt=login` / `max_age=0`), so sign-out is not undone by a shared browser SSO cookie.
+
 ## 1.1.3
 
 ### Documentation
