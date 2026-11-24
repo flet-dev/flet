@@ -19,6 +19,7 @@ dependencies = [
     "flet-code-editor",
     "flet-color-pickers",
     "flet-datatable2",
+    "flet-appauth",
     "flet-flashlight",
     "flet-geolocator",
     "flet-lottie",
@@ -42,6 +43,7 @@ flet-audio-recorder = { workspace = true }
 flet-camera = { workspace = true }
 flet-charts = { workspace = true }
 flet-datatable2 = { workspace = true }
+flet-appauth = { workspace = true }
 flet-flashlight = { workspace = true }
 flet-geolocator = { workspace = true }
 flet-lottie = { workspace = true }

@@ -34,6 +34,7 @@ desktop = [
     "flet-desktop-light; platform_system == 'Linux'",
 ]
 web = ["flet-web"]
+appauth = ["flet-appauth"]
 
 [project.scripts]
 flet = "flet.cli:main"
@@ -48,6 +49,7 @@ extensions = [
     "flet-code-editor",
     "flet-color-pickers",
     "flet-datatable2",
+    "flet-appauth",
     "flet-flashlight",
     "flet-geolocator",
     "flet-lottie",

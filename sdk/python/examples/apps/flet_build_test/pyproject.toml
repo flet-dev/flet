@@ -15,6 +15,7 @@ dependencies = [
     "flet-camera",
     "flet-charts",
     "flet-datatable2",
+    "flet-appauth",
     "flet-flashlight",
     "flet-geolocator",
     "flet-lottie",
@@ -46,6 +47,7 @@ flet-audio-recorder = { path = "../../../packages/flet-audio-recorder", editable
 flet-camera = { path = "../../../packages/flet-camera", editable = true }
 flet-charts = { path = "../../../packages/flet-charts", editable = true }
 flet-datatable2 = { path = "../../../packages/flet-datatable2", editable = true }
+flet-appauth = { path = "../../../packages/flet-appauth", editable = true }
 flet-flashlight = { path = "../../../packages/flet-flashlight", editable = true }
 flet-geolocator = { path = "../../../packages/flet-geolocator", editable = true }
 flet-lottie = { path = "../../../packages/flet-lottie", editable = true }
@@ -64,6 +66,7 @@ flet-audio-recorder = "../../../packages/flet-audio-recorder"
 flet-camera = "../../../packages/flet-camera"
 flet-charts = "../../../packages/flet-charts"
 flet-datatable2 = "../../../packages/flet-datatable2"
+flet-appauth = "../../../packages/flet-appauth"
 flet-flashlight = "../../../packages/flet-flashlight"
 flet-geolocator = "../../../packages/flet-geolocator"
 flet-lottie = "../../../packages/flet-lottie"

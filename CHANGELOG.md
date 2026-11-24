@@ -1,3 +1,10 @@
+## 0.82.0
+
+### New features
+
+* Add `flet-appauth` service (`flutter_appauth`) and Android/iOS `page.login()` path with native AppAuth + PKCE.
+* Add `flet build --appauth-redirect-scheme` / `tool.flet.appauth.redirect_scheme` for mobile OAuth redirects.
+
 ## 0.81.0
 
 ### New features
