@@ -1565,18 +1565,26 @@ For native mobile OAuth (`page.login` + [`flet-appauth`](../services/appauth/ind
 Flet registers an **AppAuth-specific** redirect scheme (separate from
 [Deep linking](#deep-linking)).
 
-**Default:** `flet` when `flet-appauth` is a project dependency. Use
-`flet://oauth-callback` (or similar) as `OAuthProvider.redirect_url` and
-register the same URI with your IdP. No `pyproject.toml` entry is required.
+**Default** (when `flet-appauth` is a dependency and you set no scheme): a
+sanitized app name from `pyproject.toml` — first of `tool.flet.project`,
+`tool.flet.artifact`, `tool.flet.product`, `project.name`. If none yields a
+valid scheme, fallback is `flet`.
 
-Override when you need a custom scheme:
+[`page.title`][flet.Page.title] is **not** used: the scheme is written into
+Android/iOS project files at build time. `flet build` / `flet debug` logs the
+chosen scheme and its source, e.g.
+`AppAuth redirect scheme: appauth (from app name (tool.flet.project=…))`.
+
+Use that scheme in `OAuthProvider.redirect_url` and your IdP
+(e.g. `appauth://oauth-callback`).
 
 #### Resolution order
 
 1. `--appauth-redirect-scheme` on `flet build` / `flet debug`
 2. `[tool.flet.<PLATFORM>.appauth].redirect_scheme` (`android` or `ios`)
 3. `[tool.flet.appauth].redirect_scheme`
-4. Default `flet` (only when `flet-appauth` is a dependency)
+4. Sanitized app name from pyproject (only when `flet-appauth` is a dependency)
+5. Fallback `flet` (only when `flet-appauth` is a dependency)
 
 #### Optional override
 
@@ -1586,6 +1594,9 @@ redirect_scheme = "myapp"
 ```
 
 Then match `OAuthProvider.redirect_url` (e.g. `myapp://oauth-callback`).
+
+Auth0 Native + PKCE walkthrough:
+[AppAuth — Auth0 native](../services/appauth/index.md#auth0-native-pkce-on-android--ios).
 
 ### Target Architecture
 
