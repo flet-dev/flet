@@ -1413,69 +1413,66 @@ class Page(BasePage):
         )
         if saved_token is None:
             # After logout, force interactive re-auth for any IdP.
-            # Mobile: ephemeral AppAuth/Auth Tab session (no shared SSO cookies).
-            # Do NOT stuff prompt/max_age into AppAuth additional_parameters —
-            # AppAuth-Android rejects those as built-in builder fields.
-            # Web: OIDC prompt=login / max_age=0 on the authorize URL.
-            prefer_ephemeral = False
-            previous_params = None
-            if self.__reauth_after_logout:
-                prefer_ephemeral = True
-                if self.web:
-                    previous_params = provider.authorization_params
-                    merged = dict(previous_params or {})
-                    merged.setdefault("prompt", "login")
-                    merged.setdefault("max_age", "0")
-                    provider.authorization_params = merged
-            try:
-                if self._is_appauth_login_platform():
-                    await self.__login_with_appauth(
-                        provider, prefer_ephemeral_session=prefer_ephemeral
+            # Mobile: ephemeral session + prompt=login (native peels prompt to
+            # the AppAuth builder; covers browsers that ignore ephemeral).
+            # Web: prompt=login / max_age=0 on the authorize URL only (no
+            # mutation of the shared OAuthProvider).
+            prefer_ephemeral = bool(self.__reauth_after_logout)
+            reauth_params: dict[str, str] = {}
+            if prefer_ephemeral:
+                reauth_params = {"prompt": "login", "max_age": "0"}
+            if self._is_appauth_login_platform():
+                await self.__login_with_appauth(
+                    provider,
+                    prefer_ephemeral_session=prefer_ephemeral,
+                    reauth_params=reauth_params,
+                )
+            elif self.web:
+                # The server keeps the state and completion options until the
+                # provider redirects back, then calls _authorize_callback().
+                authorization_url, state = (
+                    self.__authorization.get_authorization_data(
+                        extra_authorization_params=reauth_params or None
                     )
-                elif self.web:
-                    # The server keeps the state and completion options until the
-                    # provider redirects back, then calls _authorize_callback().
-                    authorization_url, state = (
-                        self.__authorization.get_authorization_data()
-                    )
-                    auth_attrs = {"state": state}
-                    if complete_page_html:
-                        auth_attrs["completePageHtml"] = complete_page_html
-                    if redirect_to_page:
-                        # The current page on the redirect URL's host, with the
-                        # route in the URL path or after `#`, as the client expects.
-                        connection = self.session.connection
-                        base_path = connection.page_base_path
-                        redirect_url = urlparse(provider.redirect_url)
-                        if connection.route_url_strategy == RouteUrlStrategy.HASH:
-                            complete_page_url = redirect_url._replace(
-                                path=base_path, query="", fragment=self.route
-                            )
-                        else:
-                            complete_page_url = redirect_url._replace(
-                                path=base_path.rstrip("/") + self.route
-                            )
-                        auth_attrs["completePageUrl"] = complete_page_url.geturl()
-                    self.session.connection.oauth_authorize(auth_attrs)
-                    if on_open_authorization_url:
-                        await on_open_authorization_url(authorization_url)
-                    else:
-                        await UrlLauncher().open_window(
-                            authorization_url, title="flet_oauth_signin"
+                )
+                auth_attrs = {"state": state}
+                if complete_page_html:
+                    auth_attrs["completePageHtml"] = complete_page_html
+                if redirect_to_page:
+                    # The current page on the redirect URL's host, with the
+                    # route in the URL path or after `#`, as the client expects.
+                    connection = self.session.connection
+                    base_path = connection.page_base_path
+                    redirect_url = urlparse(provider.redirect_url)
+                    if connection.route_url_strategy == RouteUrlStrategy.HASH:
+                        complete_page_url = redirect_url._replace(
+                            path=base_path, query="", fragment=self.route
                         )
+                    else:
+                        complete_page_url = redirect_url._replace(
+                            path=base_path.rstrip("/") + self.route
+                        )
+                    auth_attrs["completePageUrl"] = complete_page_url.geturl()
+                self.session.connection.oauth_authorize(auth_attrs)
+                if on_open_authorization_url:
+                    await on_open_authorization_url(authorization_url)
                 else:
-                    raise RuntimeError(
-                        "page.login() OAuth is not supported on this platform. "
-                        "Use web, or Android/iOS with flet-appauth "
-                        "(pip install 'flet[appauth]')."
+                    await UrlLauncher().open_window(
+                        authorization_url, title="flet_oauth_signin"
                     )
-            finally:
-                if previous_params is not None:
-                    provider.authorization_params = previous_params
+            else:
+                raise RuntimeError(
+                    "page.login() OAuth is not supported on this platform. "
+                    "Use web, or Android/iOS with flet-appauth "
+                    "(pip install 'flet[appauth]')."
+                )
         else:
             # Restore the saved sign-in; there is no redirect to wait for.
+            # Do not clear __reauth_after_logout — no interactive authorize ran.
             await self.__authorization.dehydrate_token(saved_token)
-            await self._emit_login_event(error="", error_description="")
+            await self._emit_login_event(
+                error="", error_description="", interactive=False
+            )
 
         return self.__authorization
 
@@ -1484,6 +1481,7 @@ class Page(BasePage):
         provider: "OAuthProvider",
         *,
         prefer_ephemeral_session: bool = False,
+        reauth_params: Optional[dict[str, str]] = None,
     ) -> None:
         """
         Complete mobile OAuth using the flet-appauth AppAuth service.
@@ -1497,19 +1495,31 @@ class Page(BasePage):
                 "or: pip install 'flet[appauth]'"
             ) from ex
 
-        # AppAuth owns PKCE on native; do not clear provider PKCE fields (web may
-        # reuse the same OAuthProvider). Temporarily set code_verifier only for
-        # the Python token exchange below.
+        # Per-call param copy — never mutate a shared OAuthProvider.
+        additional = dict(provider.authorization_params or {})
+        if reauth_params:
+            for key, value in reauth_params.items():
+                additional.setdefault(key, value)
+
+        # AppAuth owns PKCE on native; pass AppAuth's verifier into request_token
+        # without writing it onto the shared provider.
         app_auth = flet_appauth.AppAuth()
-        result = await app_auth.authorize(
-            client_id=provider.client_id,
-            redirect_url=provider.redirect_url,
-            authorization_endpoint=provider.authorization_endpoint,
-            token_endpoint=provider.token_endpoint,
-            scopes=list(self.__authorization.scope),
-            additional_parameters=dict(provider.authorization_params or {}),
-            prefer_ephemeral_session=prefer_ephemeral_session,
-        )
+        try:
+            result = await app_auth.authorize(
+                client_id=provider.client_id,
+                redirect_url=provider.redirect_url,
+                authorization_endpoint=provider.authorization_endpoint,
+                token_endpoint=provider.token_endpoint,
+                scopes=list(self.__authorization.scope),
+                additional_parameters=additional,
+                prefer_ephemeral_session=prefer_ephemeral_session,
+            )
+        except Exception as ex:
+            await self._emit_login_event(
+                error="authorize_failed",
+                error_description=str(ex),
+            )
+            return
 
         if isinstance(result, dict):
             error = result.get("error")
@@ -1536,17 +1546,12 @@ class Page(BasePage):
             )
             return
 
-        previous_verifier = provider.code_verifier
-        try:
-            if code_verifier:
-                provider.code_verifier = code_verifier
-            await self._emit_login_event(
-                error=None,
-                error_description=None,
-                code=code,
-            )
-        finally:
-            provider.code_verifier = previous_verifier
+        await self._emit_login_event(
+            error=None,
+            error_description=None,
+            code=code,
+            code_verifier=code_verifier if code_verifier else None,
+        )
 
     async def _emit_login_event(
         self,
@@ -1554,6 +1559,8 @@ class Page(BasePage):
         error: Optional[str],
         error_description: Optional[str] = None,
         code: Optional[str] = None,
+        code_verifier: Optional[str] = None,
+        interactive: bool = True,
     ) -> None:
         """
         Exchange authorization code when needed and emit `on_login`.
@@ -1568,12 +1575,14 @@ class Page(BasePage):
         if not e.error:
             if code not in [None, ""]:
                 try:
-                    await self.__authorization.request_token(code)
+                    await self.__authorization.request_token(
+                        code, code_verifier=code_verifier
+                    )
                 except Exception as ex:
                     e.error = str(ex)
-        # Consume post-logout reauth only after a successful sign-in. An
-        # authorize_failed / cancel must keep ephemeral for the next attempt.
-        if not e.error:
+        # Consume post-logout reauth only after a successful *interactive*
+        # sign-in (authorization code). saved_token restore must not clear it.
+        if interactive and not e.error and code not in [None, ""]:
             self.__reauth_after_logout = False
         if self.on_login:
             asyncio.create_task(self._trigger_event("login", event_data=None, e=e))
@@ -1617,10 +1626,10 @@ class Page(BasePage):
 
         Also marks the next interactive [`login`][flet.Page.login] so it cannot
         silently reuse an identity-provider browser SSO session: on Android/iOS
-        the next authorize uses an ephemeral AppAuth/Auth Tab session; on web
-        it adds OIDC ``prompt=login`` / ``max_age=0``. Clear any tokens you
-        persisted yourself (for example with SharedPreferences) before or
-        after calling this.
+        the next authorize uses an ephemeral AppAuth/Auth Tab session and
+        ``prompt=login``; on web it adds OIDC ``prompt=login`` / ``max_age=0``.
+        Clear any tokens you persisted yourself (for example with
+        SharedPreferences) before or after calling this.
 
         See [Authentication](https://flet.dev/docs/cookbook/authentication#signing-out)
         guide for more information and examples.

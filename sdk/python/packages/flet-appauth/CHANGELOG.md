@@ -12,3 +12,8 @@
 * Android Auth Tab honors `prefer_ephemeral_session` via
   `AuthTabIntent.setEphemeralBrowsingEnabled` so post-logout authorize cannot
   reuse Chrome IdP cookies (works with any provider).
+* Android Auth Tab requires OAuth `state` on the redirect; peels `prompt` /
+  `login_hint` into AppAuth builder methods; forces `prompt=login` when
+  ephemeral reauth is requested (covers external-browser fallback).
+* iOS keeps `max_age` in additional parameters and maps `login_hint` to the
+  dedicated AppAuth field.

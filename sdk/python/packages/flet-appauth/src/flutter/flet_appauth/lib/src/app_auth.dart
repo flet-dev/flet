@@ -1,7 +1,7 @@
 import 'dart:io' show Platform;
 
 import 'package:flet/flet.dart';
-import 'package:flutter/foundation.dart' show kIsWeb;
+import 'package:flutter/foundation.dart' show kDebugMode, kIsWeb;
 import 'package:flutter/services.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_appauth/flutter_appauth.dart';
@@ -16,12 +16,16 @@ class AppAuthService extends FletService {
   @override
   void init() {
     super.init();
-    debugPrint("AppAuthService(${control.id}).init: ${control.properties}");
+    if (kDebugMode) {
+      debugPrint("AppAuthService(${control.id}).init");
+    }
     control.addInvokeMethodListener(_invokeMethod);
   }
 
   Future<dynamic> _invokeMethod(String name, dynamic args) async {
-    debugPrint("AppAuthService.$name($args)");
+    if (kDebugMode) {
+      debugPrint("AppAuthService.$name");
+    }
     if (!isMobilePlatform()) {
       throw Exception("AppAuth is supported on Android and iOS only.");
     }
@@ -81,13 +85,23 @@ class AppAuthService extends FletService {
           ) ??
           {},
     );
-    // Built-in OAuth fields must not go through additionalParameters on
-    // AppAuth platforms (Android rejects them; iOS prefers dedicated args).
+    // prompt / login_hint are dedicated AuthorizationRequest fields on iOS.
+    // max_age is not built-in — keep it in additionalParameters.
     final prompt = additionalParameters.remove("prompt");
-    additionalParameters.remove("max_age");
-    additionalParameters.remove("login_hint");
+    final loginHint = additionalParameters.remove("login_hint");
     final preferEphemeralSession =
         args["prefer_ephemeral_session"] == true;
+
+    // Post-logout reauth: force interactive login when ephemeral was requested.
+    final promptValues = () {
+      if (prompt != null && prompt.isNotEmpty) {
+        return prompt.split(RegExp(r'\s+'));
+      }
+      if (preferEphemeralSession) {
+        return <String>['login'];
+      }
+      return null;
+    }();
 
     try {
       final result = await _appAuth.authorize(
@@ -99,9 +113,8 @@ class AppAuthService extends FletService {
             tokenEndpoint: tokenEndpoint,
           ),
           scopes: scopes,
-          promptValues: prompt == null || prompt.isEmpty
-              ? null
-              : prompt.split(RegExp(r'\s+')),
+          loginHint: loginHint == null || loginHint.isEmpty ? null : loginHint,
+          promptValues: promptValues,
           additionalParameters:
               additionalParameters.isEmpty ? null : additionalParameters,
           externalUserAgent: preferEphemeralSession
@@ -138,7 +151,9 @@ class AppAuthService extends FletService {
 
   @override
   void dispose() {
-    debugPrint("AppAuthService(${control.id}).dispose");
+    if (kDebugMode) {
+      debugPrint("AppAuthService(${control.id}).dispose");
+    }
     control.removeInvokeMethodListener(_invokeMethod);
     super.dispose();
   }

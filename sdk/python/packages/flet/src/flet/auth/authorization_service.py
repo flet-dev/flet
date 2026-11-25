@@ -83,9 +83,19 @@ class AuthorizationService(Authorization):
         await self.__refresh_token()
         return self.__token
 
-    def get_authorization_data(self) -> tuple[str, str]:
+    def get_authorization_data(
+        self,
+        extra_authorization_params: Optional[Mapping[str, str]] = None,
+    ) -> tuple[str, str]:
         """
         Generate authorization URL and CSRF state for OAuth redirect flow.
+
+        Args:
+            extra_authorization_params: Optional query params merged over
+                `provider.authorization_params` for this request only (does not
+                mutate the shared provider). Existing provider keys win over
+                extras when both set the same name — pass extras that should
+                only fill gaps via the caller's own merge.
 
         Returns:
             A tuple of `(authorization_url, state)`.
@@ -94,6 +104,11 @@ class AuthorizationService(Authorization):
 
         self.state = secrets.token_urlsafe(16)
         client = WebApplicationClient(self.provider.client_id)
+        params = dict(self.provider.authorization_params or {})
+        if extra_authorization_params:
+            # Caller-supplied extras fill gaps only; explicit provider params win.
+            for key, value in extra_authorization_params.items():
+                params.setdefault(key, value)
         authorization_url = client.prepare_request_uri(
             self.provider.authorization_endpoint,
             self.provider.redirect_url,
@@ -101,16 +116,21 @@ class AuthorizationService(Authorization):
             state=self.state,
             code_challenge=self.provider.code_challenge,
             code_challenge_method=self.provider.code_challenge_method,
-            **self.provider.authorization_params,
+            **params,
         )
         return authorization_url, self.state
 
-    async def request_token(self, code: str):
+    async def request_token(
+        self, code: str, *, code_verifier: Optional[str] = None
+    ):
         """
         Exchange authorization code for access token and optional profile data.
 
         Args:
             code: Provider-issued authorization code returned to redirect URL.
+            code_verifier: Optional PKCE verifier for this exchange. When set,
+                used instead of `provider.code_verifier` so a shared provider
+                is not mutated across concurrent logins.
 
         Raises:
             httpx.HTTPStatusError: If token endpoint returns a non-success status.
@@ -119,13 +139,18 @@ class AuthorizationService(Authorization):
         import httpx
         from oauthlib.oauth2 import WebApplicationClient
 
+        verifier = (
+            code_verifier
+            if code_verifier is not None
+            else self.provider.code_verifier
+        )
         client = WebApplicationClient(self.provider.client_id)
         data = client.prepare_request_body(
             code=code,
             redirect_uri=self.provider.redirect_url,
             client_secret=self.provider.client_secret,
             include_client_id=True,
-            code_verifier=self.provider.code_verifier,
+            code_verifier=verifier,
         )
         headers = self.__get_default_headers()
         headers["content-type"] = "application/x-www-form-urlencoded"

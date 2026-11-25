@@ -108,9 +108,11 @@ async def test_login_android_appauth_success_skips_oauth_authorize(monkeypatch):
         },
     )
 
-    async def fake_request_token(self, code: str):
+    async def fake_request_token(self, code: str, *, code_verifier=None):
         assert code == "auth-code"
-        assert self.provider.code_verifier == "appauth-verifier"
+        assert code_verifier == "appauth-verifier"
+        # Shared provider must not be mutated for the exchange.
+        assert self.provider.code_verifier == "python-verifier-should-be-ignored"
 
     monkeypatch.setattr(AuthorizationService, "request_token", fake_request_token)
 
@@ -278,18 +280,20 @@ async def test_logout_forces_ephemeral_reauth_on_next_login(monkeypatch):
     page.logout()
     assert page.auth is None
 
-    # Second login after logout: ephemeral only (no prompt in additional —
-    # AppAuth-Android rejects built-in prompt there).
+    # Second login after logout: ephemeral + prompt/max_age (native peels
+    # prompt to the AppAuth builder; shared provider stays untouched).
     await page.login(provider)
     call = fake_appauth.authorize_calls[-1]
     assert call["prefer_ephemeral_session"] is True
-    assert call["additional_parameters"] == {"resource": "api"}
-    assert "prompt" not in call["additional_parameters"]
+    assert call["additional_parameters"]["resource"] == "api"
+    assert call["additional_parameters"]["prompt"] == "login"
+    assert call["additional_parameters"]["max_age"] == "0"
     assert provider.authorization_params == {"resource": "api"}
 
     # Third login: flag consumed; back to non-ephemeral.
     await page.login(provider)
     assert fake_appauth.authorize_calls[-1]["prefer_ephemeral_session"] is False
+    assert "prompt" not in fake_appauth.authorize_calls[-1]["additional_parameters"]
 
 
 @pytest.mark.asyncio
@@ -314,6 +318,7 @@ async def test_logout_reauth_flag_survives_authorize_error(monkeypatch):
     page.logout()
     await page.login(provider)
     assert fake_appauth.authorize_calls[-1]["prefer_ephemeral_session"] is True
+    assert fake_appauth.authorize_calls[-1]["additional_parameters"]["prompt"] == "login"
 
     # Flag still set — retry stays ephemeral.
     fake_ok = _install_fake_appauth(
@@ -328,3 +333,93 @@ async def test_logout_reauth_flag_survives_authorize_error(monkeypatch):
     )
     await page.login(provider)
     assert fake_ok.authorize_calls[-1]["prefer_ephemeral_session"] is True
+
+
+@pytest.mark.asyncio
+async def test_saved_token_restore_does_not_clear_reauth_flag(monkeypatch):
+    """saved_token hydrate must not consume the post-logout reauth flag."""
+    conn = _Conn()
+    session = Session(conn)
+    page = session.page
+    page.web = False
+    page.platform = PagePlatform.ANDROID
+    page.on_login = AsyncMock()
+
+    monkeypatch.setattr(
+        AuthorizationService, "dehydrate_token", AsyncMock(return_value=None)
+    )
+
+    page.logout()
+    await page.login(_make_provider(), saved_token='{"access_token":"t"}')
+
+    fake_appauth = _install_fake_appauth(
+        monkeypatch,
+        {
+            "authorization_code": "auth-code",
+            "code_verifier": "appauth-verifier",
+        },
+    )
+    monkeypatch.setattr(
+        AuthorizationService, "request_token", AsyncMock(return_value=None)
+    )
+    await page.login(_make_provider())
+    assert fake_appauth.authorize_calls[-1]["prefer_ephemeral_session"] is True
+
+
+@pytest.mark.asyncio
+async def test_web_logout_reauth_does_not_mutate_provider(monkeypatch):
+    conn = _Conn()
+    session = Session(conn)
+    page = session.page
+    page.web = True
+    page.platform = PagePlatform.ANDROID
+
+    opened: list[str] = []
+
+    async def fake_open_window(self, url, **kwargs):
+        opened.append(url)
+
+    monkeypatch.setattr(
+        "flet.controls.page.UrlLauncher.open_window",
+        fake_open_window,
+    )
+
+    provider = _make_provider(authorization_params={"resource": "api"})
+    page.logout()
+    await page.login(provider)
+
+    assert provider.authorization_params == {"resource": "api"}
+    assert opened
+    assert "prompt=login" in opened[0]
+    assert "max_age=0" in opened[0]
+    assert "resource=api" in opened[0]
+
+
+@pytest.mark.asyncio
+async def test_logout_does_not_override_explicit_provider_prompt(monkeypatch):
+    conn = _Conn()
+    session = Session(conn)
+    page = session.page
+    page.web = False
+    page.platform = PagePlatform.ANDROID
+
+    fake_appauth = _install_fake_appauth(
+        monkeypatch,
+        {
+            "authorization_code": "auth-code",
+            "code_verifier": "appauth-verifier",
+        },
+    )
+    monkeypatch.setattr(
+        AuthorizationService, "request_token", AsyncMock(return_value=None)
+    )
+
+    provider = _make_provider(authorization_params={"prompt": "consent"})
+    page.logout()
+    await page.login(provider)
+
+    call = fake_appauth.authorize_calls[-1]
+    assert call["prefer_ephemeral_session"] is True
+    assert call["additional_parameters"]["prompt"] == "consent"
+    assert call["additional_parameters"]["max_age"] == "0"
+    assert provider.authorization_params == {"prompt": "consent"}

@@ -106,6 +106,10 @@ public class FletAppauthPlugin
     }
     activity = null;
     authTabLauncher = null;
+    // Drop in-flight authorize so a later call is not stuck on concurrent_authorize.
+    if (pending != null) {
+      finishPending(errorMap("cancelled", "Activity detached during authorization."));
+    }
     disposeExternalBrowserService();
   }
 
@@ -126,7 +130,8 @@ public class FletAppauthPlugin
 
     Map<String, Object> args = call.arguments();
     try {
-      AuthorizationRequest request = buildAuthorizationRequest(args);
+      boolean preferEphemeral = Boolean.TRUE.equals(args.get("prefer_ephemeral_session"));
+      AuthorizationRequest request = buildAuthorizationRequest(args, preferEphemeral);
       String redirectScheme = Uri.parse(request.redirectUri.toString()).getScheme();
       if (redirectScheme == null || redirectScheme.isEmpty()) {
         result.success(errorMap("invalid_redirect_url", "redirect_url must include a URI scheme."));
@@ -140,7 +145,7 @@ public class FletAppauthPlugin
         // browser profile — required for provider-agnostic sign-out so the
         // next authorize cannot silently reuse an IdP SSO session.
         AuthTabIntent.Builder builder = new AuthTabIntent.Builder();
-        if (Boolean.TRUE.equals(args.get("prefer_ephemeral_session"))) {
+        if (preferEphemeral) {
           builder.setEphemeralBrowsingEnabled(true);
         }
         AuthTabIntent authTabIntent = builder.build();
@@ -148,6 +153,8 @@ public class FletAppauthPlugin
         return;
       }
 
+      // External browser cannot use ephemeral browsing; prompt=login is already
+      // on the request when preferEphemeral was set (see buildAuthorizationRequest).
       launchExternalBrowserAuthorize(request);
     } catch (Exception ex) {
       pending = null;
@@ -260,8 +267,11 @@ public class FletAppauthPlugin
       return errorMap("missing_authorization_code", "Redirect URI contained no authorization code.");
     }
     String state = resultUri.getQueryParameter("state");
-    if (request.state != null && state != null && !request.state.equals(state)) {
-      return errorMap("invalid_state", "OAuth state mismatch in Auth Tab redirect.");
+    // Require state whenever the request sent one (AppAuth always generates it).
+    if (request.state != null) {
+      if (state == null || state.isEmpty() || !request.state.equals(state)) {
+        return errorMap("invalid_state", "OAuth state missing or mismatched in Auth Tab redirect.");
+      }
     }
     Map<String, Object> map = new HashMap<>();
     map.put("authorization_code", code);
@@ -270,7 +280,8 @@ public class FletAppauthPlugin
   }
 
   @SuppressWarnings("unchecked")
-  private AuthorizationRequest buildAuthorizationRequest(Map<String, Object> args) {
+  private AuthorizationRequest buildAuthorizationRequest(
+      Map<String, Object> args, boolean preferEphemeral) {
     String clientId = requireString(args, "client_id");
     String redirectUrl = requireString(args, "redirect_url");
     String authorizationEndpoint = requireString(args, "authorization_endpoint");
@@ -297,6 +308,7 @@ public class FletAppauthPlugin
       }
     }
 
+    String prompt = null;
     Object additionalObj = args.get("additional_parameters");
     if (additionalObj instanceof Map) {
       Map<String, String> additional = new HashMap<>();
@@ -307,10 +319,7 @@ public class FletAppauthPlugin
       }
       // AppAuth-Android forbids built-in OAuth fields in additionalParameters
       // (prompt, login_hint, …). max_age is NOT built-in in 0.11.1 — leave it.
-      String prompt = additional.remove("prompt");
-      if (prompt != null && !prompt.isEmpty()) {
-        builder.setPrompt(prompt);
-      }
+      prompt = additional.remove("prompt");
       String loginHint = additional.remove("login_hint");
       if (loginHint != null && !loginHint.isEmpty()) {
         builder.setLoginHint(loginHint);
@@ -318,6 +327,14 @@ public class FletAppauthPlugin
       if (!additional.isEmpty()) {
         builder.setAdditionalParameters(additional);
       }
+    }
+    // Post-logout reauth: always force interactive login. Covers external-browser
+    // fallback and browsers that ignore Auth Tab ephemeral browsing.
+    if (preferEphemeral && (prompt == null || prompt.isEmpty())) {
+      prompt = AuthorizationRequest.Prompt.LOGIN;
+    }
+    if (prompt != null && !prompt.isEmpty()) {
+      builder.setPrompt(prompt);
     }
 
     return builder.build();

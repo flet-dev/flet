@@ -24,6 +24,10 @@ ASWebAuthenticationSession.
 On Android/iOS, `page.login()` soft-imports this package automatically.
 Install it before calling `page.login` on mobile.
 
+**`flet run` on a stock Flet Android/iOS client** does not include this
+extension. Use a packed app (`flet build apk` / `ipa`) that depends on
+`flet-appauth`, or a custom Flutter client that registers the plugin.
+
 ## Platform Support
 
 | Platform  | Windows | macOS | Linux | iOS | Android | Web |
@@ -54,8 +58,9 @@ pip install 'flet[appauth]'
 When `flet-appauth` is a dependency, the AppAuth redirect scheme defaults to
 **`flet`**. Use that in your IdP and provider, e.g. `flet://oauth-callback`.
 
-Override only if you need a custom scheme (not
-[`tool.flet.deep_linking`](../../publish/index.md#deep-linking)):
+The default scheme is **shared by every app** that keeps it. On a device with
+more than one such app, redirects can collide. For production, set a unique
+scheme (not [`tool.flet.deep_linking`](../../publish/index.md#deep-linking)):
 
 ```toml
 [tool.flet.appauth]
