@@ -5,7 +5,7 @@ title: "AppAuth"
 
 import TabItem from '@theme/TabItem';
 import Tabs from '@theme/Tabs';
-import {ClassAll, CodeExample} from '@site/src/components/crocodocs';
+import {ClassAll, CodeExample, Image} from '@site/src/components/crocodocs';
 
 Native OAuth 2.0 authorization-code + PKCE for Android and iOS via the
 `flet-appauth` extension.
@@ -66,10 +66,15 @@ derives one from your app name in `pyproject.toml` (first match wins):
 The value is sanitized to a URL scheme (lowercase; letters, digits, `+`, `-`,
 `.`). If nothing usable remains, the fallback is **`flet`**.
 
+:::note
+[`page.title`][flet.Page.title] cannot drive the scheme. The Android/iOS
+project files are patched at **build** time, before the app runs.
+:::
+
 `flet build` / `flet debug` always logs the chosen value, for example:
 
 ```text
-AppAuth redirect scheme: appauth (from app name (tool.flet.project='appauth' → appauth))
+AppAuth redirect scheme: appauth (from app name (tool.flet.project='appauth' -> appauth))
 ```
 
 Use that scheme in your IdP callback URI and
@@ -104,14 +109,39 @@ Web-only `page.login` parameters (`on_open_authorization_url`,
 Use an Auth0 **Native** application (public client). Do **not** put a
 client secret in a packaged APK/IPA.
 
-1. In Auth0: **Applications → Create Application → Native**.
-2. Note **Domain** and **Client ID**.
-3. Under **URLs**, add an **Allowed Callback URL**
-   that matches your AppAuth scheme, e.g. `appauth://oauth-callback`
-   (see [Build redirect scheme](#build-redirect-scheme)). Add the same URI
-   under **Allowed Logout URLs** if you use logout redirects.
-4. In the app, set env vars (recommended: `python-dotenv` + `.env` next to
-   `main.py`):
+### 1. Create a Native application
+
+In Auth0: **Applications → Create Application**. Choose **Native**, then
+**Create**.
+
+<Image src="/docs/assets/services/appauth/auth0-create-native.png" width="85%" caption="Create a Native Auth0 application" />
+
+### 2. Copy Domain and Client ID
+
+Open the app **Settings** tab. Copy **Domain** and **Client ID** into your
+app env (see below). Leave the client secret unused — this is a public
+native client.
+
+<Image src="/docs/assets/services/appauth/auth0-settings-credentials.png" width="85%" caption="Domain and Client ID on the Settings tab" />
+
+### 3. Register callback URLs (URLs tab)
+
+Open the **URLs** tab (not Settings). Add the same URI to **Allowed Callback
+URLs** and **Allowed Logout URLs**. It must match your AppAuth redirect
+scheme and `OAuthProvider.redirect_url` (see [Build redirect
+scheme](#build-redirect-scheme)).
+
+For the packaged example (`tool.flet.project = "appauth"`):
+
+```text
+appauth://oauth-callback
+```
+
+<Image src="/docs/assets/services/appauth/auth0-urls-callbacks.png" width="85%" caption="Allowed Callback / Logout URLs on the URLs tab" />
+
+### 4. Configure the Flet app
+
+Set env vars (recommended: `python-dotenv` + `.env` next to `main.py`):
 
 ```text
 AUTH0_DOMAIN=your-tenant.us.auth0.com
@@ -119,8 +149,8 @@ AUTH0_CLIENT_ID=your-native-app-client-id
 # AUTH0_REDIRECT_URL=appauth://oauth-callback   # optional override
 ```
 
-6. Package `.env` — it is a **default exclusion** (dotfile). Keep it with
-   `include` or `--include`:
+Package `.env` — it is a **default exclusion** (dotfile). Keep it with
+`include` or `--include`:
 
 ```toml
 [tool.flet.app]

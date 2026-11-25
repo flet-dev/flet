@@ -53,7 +53,8 @@ Flet authentication features:
   with `[tool.flet.appauth] redirect_scheme` or `--appauth-redirect-scheme`.
   Register the same URI with the IdP (e.g. `myapp://oauth-callback`).
 * For Auth0, create a **Native** (public) app and use PKCE with empty
-  `client_secret` — see [AppAuth — Auth0 native](../services/appauth/index.md#auth0-native-pkce-on-android--ios).
+  `client_secret`. Register callback URIs on the Auth0 **URLs** tab —
+  see [AppAuth — Auth0 native](../services/appauth/index.md#auth0-native-pkce-on-android--ios).
 * Ship IdP config via `.env` + `python-dotenv` if you like; package the file with
   `include = [".env"]` or `flet build apk --include .env` (dotfiles are excluded
   by default — [Publishing](../publish/index.md#default-exclusions)).
