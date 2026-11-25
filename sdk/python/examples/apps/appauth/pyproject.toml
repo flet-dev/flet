@@ -1,7 +1,7 @@
 [project]
 name = "appauth"
 version = "0.1.0"
-description = "Public OIDC + flet-appauth mobile example (PKCE, no client secret)"
+description = "Auth0 native + flet-appauth mobile example (PKCE, no client secret)"
 requires-python = ">=3.10"
 dependencies = [
     "flet",
@@ -31,8 +31,8 @@ copyright = "Copyright (C) Flet"
 
 [tool.flet.app]
 path = "src"
-# Ship .env into the APK (excluded by default). Do not commit real secrets;
-# public clients only need issuer + client_id.
+# Ship .env into the APK (excluded by default). Auth0 Native apps are public
+# clients — only domain + client_id (no secret).
 include = [".env"]
 
 [tool.flet.dev_packages]

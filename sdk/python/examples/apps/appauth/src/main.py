@@ -1,9 +1,8 @@
 """
-Public native OAuth (PKCE, no client secret) via page.login + flet-appauth.
+Auth0 native OAuth (PKCE, no client secret) via page.login + flet-appauth.
 
-Uses a generic OIDC provider (e.g. Pocket ID) registered as a public native
-client. GitHub is not used here — GitHub still requires a client secret for
-token exchange, which must not ship inside a packaged app.
+Create a Native application in Auth0 (public client). Register the callback
+URI below. Do not use a Regular Web Application that requires a client secret.
 
 Build (from this directory):
 
@@ -11,7 +10,7 @@ Build (from this directory):
   uv pip install -e ../../../packages/flet -e ../../../packages/flet-cli \\
     -e ../../../packages/flet-desktop -e ../../../packages/flet-appauth \\
     -e ../../../packages/flet-platform-assets
-  # Copy .env.example → .env and fill AUTH_ISSUER_URL / OIDC_CLIENT_ID
+  # Copy .env.example → .env and fill AUTH0_DOMAIN / AUTH0_CLIENT_ID
   .venv/Scripts/flet.exe build apk -v --yes   # Windows
   # .venv/bin/flet build apk -v --yes         # macOS/Linux
 
@@ -22,10 +21,9 @@ from __future__ import annotations
 
 import os
 from pathlib import Path
-from urllib.parse import urljoin
 
 import flet as ft
-from flet.auth import OAuthProvider
+from flet.auth.providers import Auth0OAuthProvider
 
 REDIRECT_URL = "flet://oauth-callback"
 
@@ -48,23 +46,21 @@ def _load_dotenv() -> None:
 _load_dotenv()
 
 
-def build_provider() -> OAuthProvider:
-    issuer = os.environ.get("AUTH_ISSUER_URL", "").rstrip("/")
-    client_id = os.environ.get("OIDC_CLIENT_ID", "").strip()
-    if not issuer or not client_id:
+def build_provider() -> Auth0OAuthProvider:
+    domain = os.environ.get("AUTH0_DOMAIN", "").strip().removeprefix("https://").rstrip("/")
+    client_id = os.environ.get("AUTH0_CLIENT_ID", "").strip()
+    if not domain or not client_id:
         raise RuntimeError(
-            "Set AUTH_ISSUER_URL and OIDC_CLIENT_ID in .env "
-            "(public native client; no client secret)."
+            "Set AUTH0_DOMAIN and AUTH0_CLIENT_ID in .env "
+            "(Auth0 Native app; no client secret)."
         )
-    return OAuthProvider(
+    audience = os.environ.get("AUTH0_AUDIENCE", "").strip() or None
+    return Auth0OAuthProvider(
+        domain=domain,
         client_id=client_id,
         client_secret="",  # public native client + PKCE
-        authorization_endpoint=urljoin(issuer + "/", "authorize"),
-        token_endpoint=urljoin(issuer + "/", "api/oidc/token"),
-        redirect_url=os.environ.get("OIDC_ANDROID_REDIRECT", REDIRECT_URL),
-        scopes=os.environ.get("OIDC_SCOPES", "openid profile email").split(),
-        user_endpoint=urljoin(issuer + "/", "api/oidc/userinfo"),
-        user_id_fn=lambda u: u.get("sub") or u.get("id") or "",
+        redirect_url=os.environ.get("AUTH0_REDIRECT_URL", REDIRECT_URL),
+        audience=audience,
     )
 
 
@@ -73,7 +69,7 @@ async def main(page: ft.Page) -> None:
     page.horizontal_alignment = ft.CrossAxisAlignment.CENTER
     page.vertical_alignment = ft.MainAxisAlignment.CENTER
 
-    status = ft.Text("Sign in with a public OIDC client", size=16)
+    status = ft.Text("Sign in with Auth0", size=16)
     error = ft.Text("", color=ft.Colors.RED)
 
     async def on_login(e: ft.LoginEvent) -> None:
@@ -102,24 +98,24 @@ async def main(page: ft.Page) -> None:
 
     def logout_click(_e: ft.ControlEvent) -> None:
         page.logout()
-        status.value = "Sign in with a public OIDC client"
+        status.value = "Sign in with Auth0"
         login_btn.visible = True
         logout_btn.visible = False
         page.update()
 
     page.on_login = on_login
-    login_btn = ft.FilledButton(content="Sign in", on_click=login_click)
+    login_btn = ft.FilledButton(content="Sign in with Auth0", on_click=login_click)
     logout_btn = ft.OutlinedButton(
         content="Sign out", on_click=logout_click, visible=False
     )
     page.add(
-        ft.Text("AppAuth (public PKCE client)", size=20, weight=ft.FontWeight.BOLD),
+        ft.Text("AppAuth (Auth0 native)", size=20, weight=ft.FontWeight.BOLD),
         status,
         login_btn,
         logout_btn,
         error,
         ft.Text(
-            f"redirect={os.environ.get('OIDC_ANDROID_REDIRECT', REDIRECT_URL)}",
+            f"redirect={os.environ.get('AUTH0_REDIRECT_URL', REDIRECT_URL)}",
             size=11,
             color=ft.Colors.ON_SURFACE_VARIANT,
         ),
