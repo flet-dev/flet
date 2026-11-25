@@ -1,0 +1,6 @@
+.venv/
+build/
+src/.env
+uv.lock
+*.apk
+*.apk.sha1

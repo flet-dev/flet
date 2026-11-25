@@ -85,7 +85,15 @@ Web-only `page.login` parameters (`on_open_authorization_url`,
 
 ## Example
 
-<CodeExample path="services/appauth/github_mobile.py" language="python" />
+Public native client + PKCE (no client secret). Prefer an IdP that supports
+public clients (Pocket ID, Auth0 public/native app, etc.). Do **not** embed a
+GitHub client secret in a packaged app — GitHub still requires a secret for
+token exchange.
+
+<CodeExample path="services/appauth/oidc_mobile.py" language="python" />
+
+Packaged app example: `sdk/python/examples/apps/appauth` (ships `.env` via
+`[tool.flet.app] include = [".env"]`).
 
 ## Description
 

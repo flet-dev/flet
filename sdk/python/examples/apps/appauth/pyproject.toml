@@ -1,0 +1,40 @@
+[project]
+name = "appauth"
+version = "0.1.0"
+description = "Public OIDC + flet-appauth mobile example (PKCE, no client secret)"
+requires-python = ">=3.10"
+dependencies = [
+    "flet",
+    "flet-appauth",
+]
+
+[dependency-groups]
+dev = [
+    "flet-cli",
+    "flet-desktop",
+]
+
+[tool.uv.sources]
+flet = { path = "../../../packages/flet", editable = true }
+flet-cli = { path = "../../../packages/flet-cli", editable = true }
+flet-desktop = { path = "../../../packages/flet-desktop", editable = true }
+flet-appauth = { path = "../../../packages/flet-appauth", editable = true }
+flet-platform-assets = { path = "../../../packages/flet-platform-assets", editable = true }
+
+[tool.flet]
+product = "AppAuth"
+artifact = "appauth"
+project = "appauth"
+company = "Flet"
+org = "com.flet"
+copyright = "Copyright (C) Flet"
+
+[tool.flet.app]
+path = "src"
+# Ship .env into the APK (excluded by default). Do not commit real secrets;
+# public clients only need issuer + client_id.
+include = [".env"]
+
+[tool.flet.dev_packages]
+flet = "../../../packages/flet"
+flet-appauth = "../../../packages/flet-appauth"
