@@ -3,7 +3,7 @@ name = "flet-appauth"
 version = "0.1.0"
 description = "OAuth AppAuth service for Flet Android and iOS apps."
 readme = "README.md"
-authors = [{ name = "Flet contributors", email = "hello@flet.dev" }]
+authors = [{ name = "Gopal Parashar", email = "gopal.parashar421@gmail.com" }]
 license = "Apache-2.0"
 requires-python = ">=3.10"
 dependencies = [

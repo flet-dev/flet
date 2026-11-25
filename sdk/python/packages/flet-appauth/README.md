@@ -5,7 +5,7 @@
 [![license](https://img.shields.io/badge/License-Apache_2.0-green.svg)](https://github.com/flet-dev/flet/blob/main/sdk/python/packages/flet-appauth/LICENSE)
 
 A [Flet](https://flet.dev) service that wraps
-[`flutter_appauth`](https://pub.dev/packages/flutter_appauth) for native
+[flutter_appauth](https://pub.dev/packages/flutter_appauth) for native
 OAuth 2.0 authorization-code + PKCE on Android and iOS.
 
 Used by [`page.login()`](https://docs.flet.dev/cookbook/authentication) on
