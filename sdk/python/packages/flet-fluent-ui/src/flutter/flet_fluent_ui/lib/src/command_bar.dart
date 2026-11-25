@@ -55,24 +55,28 @@ class FluentCommandBarControl extends StatelessWidget {
   Widget build(BuildContext context) {
     debugPrint("FluentCommandBar build: ${control.id}");
 
+    final commandBar = CommandBar(
+      primaryItems: _buildItems(control, "primary_items"),
+      secondaryItems: _buildItems(control, "secondary_items"),
+      overflowBehavior: parseEnum(
+        CommandBarOverflowBehavior.values,
+        control.getString("overflow_behavior"),
+        CommandBarOverflowBehavior.dynamicOverflow,
+      )!,
+      isCompact: control.getBool("compact", false)!,
+      mainAxisAlignment: control.getMainAxisAlignment(
+        "alignment",
+        MainAxisAlignment.start,
+      )!,
+    );
+
     return LayoutControl(
       control: control,
       child: withFluentTheme(
         context,
-        CommandBar(
-          primaryItems: _buildItems(control, "primary_items"),
-          secondaryItems: _buildItems(control, "secondary_items"),
-          overflowBehavior: parseEnum(
-            CommandBarOverflowBehavior.values,
-            control.getString("overflow_behavior"),
-            CommandBarOverflowBehavior.dynamicOverflow,
-          )!,
-          isCompact: control.getBool("compact", false)!,
-          mainAxisAlignment: control.getMainAxisAlignment(
-            "alignment",
-            MainAxisAlignment.start,
-          )!,
-        ),
+        control.getBool("card", false)!
+            ? CommandBarCard(child: commandBar)
+            : commandBar,
       ),
     );
   }

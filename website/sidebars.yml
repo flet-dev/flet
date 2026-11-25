@@ -360,10 +360,12 @@ docs:
           _index: controls/fluentui/contextmenu.md
           MenuFlyoutItem: controls/fluentui/menuflyoutitem.md
           MenuFlyoutSeparator: controls/fluentui/menuflyoutseparator.md
+          RadioMenuFlyoutItem: controls/fluentui/radiomenuflyoutitem.md
           ToggleMenuFlyoutItem: controls/fluentui/togglemenuflyoutitem.md
         DatePicker: controls/fluentui/datepicker.md
         Divider: controls/fluentui/divider.md
         DropDownButton: controls/fluentui/dropdownbutton.md
+        EditableComboBox: controls/fluentui/editablecombobox.md
         Expander: controls/fluentui/expander.md
         FilledButton: controls/fluentui/filledbutton.md
         Flyout: controls/fluentui/flyout.md

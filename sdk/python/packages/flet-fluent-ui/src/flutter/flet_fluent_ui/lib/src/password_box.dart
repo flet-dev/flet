@@ -2,6 +2,7 @@ import 'package:flet/flet.dart';
 import 'package:fluent_ui/fluent_ui.dart';
 
 import 'utils/fields.dart';
+import 'utils/field_layout.dart';
 import 'utils/theme.dart';
 
 class FluentPasswordBoxControl extends StatefulWidget {
@@ -45,21 +46,30 @@ class _FluentPasswordBoxControlState extends State<FluentPasswordBoxControl>
       control: control,
       child: withFluentTheme(
         context,
-        PasswordBox(
-          controller: textController,
-          focusNode: focusNode,
-          enabled: !control.disabled,
-          placeholder: control.getString("placeholder"),
-          revealMode: parseEnum(
-            PasswordRevealMode.values,
-            control.getString("reveal_mode"),
-            PasswordRevealMode.peek,
-          )!,
-          readOnly: control.getBool("read_only", false)!,
-          leadingIcon: buildFieldPrefix(control),
-          autofocus: control.getBool("autofocus", false)!,
-          onChanged: onTextChanged,
-          onSubmitted: (value) => control.triggerEvent("submit", value),
+        Builder(
+          // The context below the Fluent theme, which the field reads.
+          builder: (context) => buildFluentField(
+            context,
+            control,
+            (errorColor) => PasswordBox(
+              controller: textController,
+              focusNode: focusNode,
+              enabled: !control.disabled,
+              placeholder: control.getString("placeholder"),
+              revealMode: parseEnum(
+                PasswordRevealMode.values,
+                control.getString("reveal_mode"),
+                PasswordRevealMode.peek,
+              )!,
+              readOnly: control.getBool("read_only", false)!,
+              leadingIcon: buildFieldPrefix(control),
+              autofocus: control.getBool("autofocus", false)!,
+              onChanged: onTextChanged,
+              onSubmitted: (value) => control.triggerEvent("submit", value),
+              highlightColor: errorColor,
+              unfocusedColor: errorColor,
+            ),
+          ),
         ),
       ),
     );

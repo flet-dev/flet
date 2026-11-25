@@ -14,7 +14,7 @@ from flet_fluent_ui.calendar import (
 )
 from flet_fluent_ui.card import Card
 from flet_fluent_ui.color_picker import ColorPicker
-from flet_fluent_ui.combo_box import ComboBox, ComboBoxItem
+from flet_fluent_ui.combo_box import ComboBox, ComboBoxItem, EditableComboBox
 from flet_fluent_ui.command_bar import (
     CommandBar,
     CommandBarButton,
@@ -37,6 +37,7 @@ from flet_fluent_ui.menu import (
     MenuBarItem,
     MenuFlyoutItem,
     MenuFlyoutSeparator,
+    RadioMenuFlyoutItem,
     ToggleMenuFlyoutItem,
 )
 from flet_fluent_ui.navigation_view import (
@@ -102,6 +103,7 @@ __all__ = [
     "DatePicker",
     "Divider",
     "DropDownButton",
+    "EditableComboBox",
     "Expander",
     "ExpanderDirection",
     "FilledButton",
@@ -134,6 +136,7 @@ __all__ = [
     "ProgressRing",
     "RadioButton",
     "RadioGroup",
+    "RadioMenuFlyoutItem",
     "RatingBar",
     "ScaffoldPage",
     "Slider",

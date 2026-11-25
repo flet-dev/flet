@@ -2,7 +2,8 @@ import 'package:flet/flet.dart';
 import 'package:fluent_ui/fluent_ui.dart';
 
 /// Builds fluent_ui menu items from the `MenuFlyoutItem`,
-/// `ToggleMenuFlyoutItem` and `MenuFlyoutSeparator` children of [parent]
+/// `ToggleMenuFlyoutItem`, `RadioMenuFlyoutItem` and `MenuFlyoutSeparator`
+/// children of [parent]
 /// under [propertyName].
 ///
 /// fluent_ui menus take [MenuFlyoutItemBase] objects, not widgets, and check
@@ -37,6 +38,30 @@ List<MenuFlyoutItemBase> buildMenuFlyoutItems(
     switch (item.type) {
       case "FluentMenuFlyoutSeparator":
         return MenuFlyoutSeparator(key: key);
+      case "FluentRadioMenuFlyoutItem":
+        final group = item.getString("group");
+        return RadioMenuFlyoutItem<bool>(
+          text: item.buildTextOrWidget("content", required: true)!,
+          value: true,
+          groupValue: item.getBool("checked", false)!,
+          trailing: _buildTrailing(item),
+          closeAfterClick: item.getBool("close_on_click", true)!,
+          onChanged: item.disabled
+              ? null
+              : (_) {
+                  // Unchecks the other items of the group in this menu.
+                  for (final other in parent.children(propertyName)) {
+                    if (other != item &&
+                        other.type == "FluentRadioMenuFlyoutItem" &&
+                        other.getString("group") == group &&
+                        other.getBool("checked", false)!) {
+                      other.updateProperties({"checked": false});
+                    }
+                  }
+                  item.updateProperties({"checked": true}, notify: true);
+                  item.triggerEvent("change", true);
+                },
+        );
       case "FluentToggleMenuFlyoutItem":
         final value = item.getBool("value", false)!;
         return ToggleMenuFlyoutItem(

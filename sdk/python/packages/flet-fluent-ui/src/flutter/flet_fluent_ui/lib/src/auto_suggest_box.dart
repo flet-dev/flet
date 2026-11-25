@@ -2,6 +2,7 @@ import 'package:flet/flet.dart';
 import 'package:fluent_ui/fluent_ui.dart';
 
 import 'utils/fields.dart';
+import 'utils/field_layout.dart';
 import 'utils/theme.dart';
 
 class FluentAutoSuggestBoxControl extends StatefulWidget {
@@ -15,7 +16,8 @@ class FluentAutoSuggestBoxControl extends StatefulWidget {
 }
 
 class _FluentAutoSuggestBoxControlState
-    extends State<FluentAutoSuggestBoxControl> with FluentTextFieldState {
+    extends State<FluentAutoSuggestBoxControl>
+    with FluentTextFieldState {
   @override
   Control get control => widget.control;
 
@@ -52,18 +54,27 @@ class _FluentAutoSuggestBoxControlState
       control: control,
       child: withFluentTheme(
         context,
-        AutoSuggestBox<String>(
-          items: items,
-          controller: textController,
-          focusNode: focusNode,
-          enabled: !control.disabled,
-          placeholder: control.getString("placeholder"),
-          leadingIcon: buildFieldPrefix(control),
-          clearButtonEnabled: control.getBool("clear_button", true)!,
-          maxPopupHeight: control.getDouble("max_popup_height", 380)!,
-          autofocus: control.getBool("autofocus", false)!,
-          onChanged: (text, reason) => onTextChanged(text),
-          onSelected: (item) => control.triggerEvent("select", item.value),
+        Builder(
+          // The context below the Fluent theme, which the field reads.
+          builder: (context) => buildFluentField(
+            context,
+            control,
+            (errorColor) => AutoSuggestBox<String>(
+              items: items,
+              controller: textController,
+              focusNode: focusNode,
+              enabled: !control.disabled,
+              placeholder: control.getString("placeholder"),
+              leadingIcon: buildFieldPrefix(control),
+              clearButtonEnabled: control.getBool("clear_button", true)!,
+              maxPopupHeight: control.getDouble("max_popup_height", 380)!,
+              autofocus: control.getBool("autofocus", false)!,
+              onChanged: (text, reason) => onTextChanged(text),
+              onSelected: (item) => control.triggerEvent("select", item.value),
+              highlightColor: errorColor,
+              unfocusedColor: errorColor,
+            ),
+          ),
         ),
       ),
     );

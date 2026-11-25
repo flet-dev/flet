@@ -91,6 +91,8 @@ class Extension extends FletExtension {
         return FluentTextBoxControl(key: key, control: control);
       case "FluentComboBox":
         return FluentComboBoxControl(key: key, control: control);
+      case "FluentEditableComboBox":
+        return FluentEditableComboBoxControl(key: key, control: control);
       case "FluentProgressBar":
         return FluentProgressControl(key: key, control: control, ring: false);
       case "FluentProgressRing":

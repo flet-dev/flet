@@ -122,3 +122,8 @@ class CommandBar(ft.LayoutControl):
     """
     How the commands are placed along the bar.
     """
+
+    card: bool = False
+    """
+    Whether the bar is shown on a card: a rounded background with a border.
+    """

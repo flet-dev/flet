@@ -117,6 +117,7 @@ ft.Row(
 - [DatePicker](datepicker.md)
 - [Divider](divider.md)
 - [DropDownButton](dropdownbutton.md)
+- [EditableComboBox](editablecombobox.md)
 - [Expander](expander.md)
 - [FilledButton](filledbutton.md)
 - [Flyout](flyout.md)

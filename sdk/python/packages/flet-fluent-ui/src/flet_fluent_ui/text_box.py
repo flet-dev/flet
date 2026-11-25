@@ -87,6 +87,14 @@ class TextBox(ft.LayoutControl):
     Whether this text box should be focused on initial display.
     """
 
+    error_text: Optional[str] = None
+    """
+    An error message shown in red below the box, which also gets a red underline.
+
+    Set it to tell the user that the value is not valid, and set it to `None`
+    to hide it.
+    """
+
     on_change: Optional[ft.ControlEventHandler["TextBox"]] = None
     """
     Called when the text changes.

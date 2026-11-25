@@ -65,10 +65,19 @@ async def test_menu_bar(flet_app_function: ftt.FletTestApp):
     assert (await tester.find_by_text("Copy clicked")).count == 1
     await _capture(flet_app_function, "menu_bar_clicked")
 
-    # Turning off the status bar hides the status text.
+    # Choosing large text enlarges the status text.
     await tester.tap(await tester.find_by_text("View"))
     await tester.pump_and_settle()
     await _capture(flet_app_function, "menu_bar_view")
+    await tester.tap(await tester.find_by_text("Large text"))
+    await tester.pump_and_settle()
+    await _capture(flet_app_function, "menu_bar_large")
+
+    # The radio items show the choice; turning off the status bar hides the
+    # status text.
+    await tester.tap(await tester.find_by_text("View"))
+    await tester.pump_and_settle()
+    await _capture(flet_app_function, "menu_bar_view_large")
     await tester.tap(await tester.find_by_text("Status bar"))
     await tester.pump_and_settle()
     assert (await tester.find_by_text("Copy clicked")).count == 0
@@ -79,6 +88,8 @@ async def test_menu_bar(flet_app_function: ftt.FletTestApp):
             "menu_bar_open",
             "menu_bar_clicked",
             "menu_bar_view",
+            "menu_bar_large",
+            "menu_bar_view_large",
             "menu_bar",
         ],
         "menu_bar_flow",

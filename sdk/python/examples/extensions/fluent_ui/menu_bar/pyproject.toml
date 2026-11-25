@@ -15,10 +15,10 @@ categories = ["Fluent"]
 
 [tool.flet.metadata]
 title = "Fluent MenuBar"
-controls = ["SafeArea", "Column", "Text", "MenuBar", "MenuBarItem", "MenuFlyoutItem", "ToggleMenuFlyoutItem", "MenuFlyoutSeparator"]
+controls = ["SafeArea", "Column", "Text", "MenuBar", "MenuBarItem", "MenuFlyoutItem", "ToggleMenuFlyoutItem", "MenuFlyoutSeparator", "RadioMenuFlyoutItem"]
 layout_pattern = "toolbar"
 complexity = "basic"
-features = ["menus", "toggle items", "click handling"]
+features = ["menus", "toggle items", "radio items", "click handling"]
 
 [tool.flet]
 org = "dev.flet"

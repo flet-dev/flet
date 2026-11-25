@@ -34,7 +34,8 @@ class DropDownButton(ft.LayoutControl):
     items: list[ft.Control] = field(default_factory=list)
     """
     The menu items: :class:`~flet_fluent_ui.MenuFlyoutItem`,
-    :class:`~flet_fluent_ui.ToggleMenuFlyoutItem` and
+    :class:`~flet_fluent_ui.ToggleMenuFlyoutItem`,
+    :class:`~flet_fluent_ui.RadioMenuFlyoutItem` and
     :class:`~flet_fluent_ui.MenuFlyoutSeparator` controls.
 
     The button is disabled while there are none.
@@ -94,7 +95,8 @@ class SplitButton(ft.LayoutControl):
     items: list[ft.Control] = field(default_factory=list)
     """
     The menu items: :class:`~flet_fluent_ui.MenuFlyoutItem`,
-    :class:`~flet_fluent_ui.ToggleMenuFlyoutItem` and
+    :class:`~flet_fluent_ui.ToggleMenuFlyoutItem`,
+    :class:`~flet_fluent_ui.RadioMenuFlyoutItem` and
     :class:`~flet_fluent_ui.MenuFlyoutSeparator` controls.
     """
 

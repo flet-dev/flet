@@ -51,6 +51,14 @@ class PasswordBox(ft.LayoutControl):
     Whether this password box should be focused on initial display.
     """
 
+    error_text: Optional[str] = None
+    """
+    An error message shown in red below the box, which also gets a red underline.
+
+    Set it to tell the user that the value is not valid, and set it to `None`
+    to hide it.
+    """
+
     on_change: Optional[ft.ControlEventHandler["PasswordBox"]] = None
     """
     Called when the password changes.

@@ -12,7 +12,10 @@ def main(page: ft.Page):
     def toggle_status_bar(e: ft.Event[fluent.ToggleMenuFlyoutItem]):
         status.visible = e.control.value
 
-    status = ft.Text("Pick a command")
+    def set_text_size(e: ft.Event[fluent.RadioMenuFlyoutItem]):
+        status.size = e.control.data
+
+    status = ft.Text("Pick a command", size=14)
 
     page.add(
         ft.SafeArea(
@@ -73,6 +76,18 @@ def main(page: ft.Page):
                                         "Status bar",
                                         value=True,
                                         on_change=toggle_status_bar,
+                                    ),
+                                    fluent.MenuFlyoutSeparator(),
+                                    fluent.RadioMenuFlyoutItem(
+                                        "Small text",
+                                        checked=True,
+                                        data=14,
+                                        on_change=set_text_size,
+                                    ),
+                                    fluent.RadioMenuFlyoutItem(
+                                        "Large text",
+                                        data=20,
+                                        on_change=set_text_size,
                                     ),
                                 ],
                             ),

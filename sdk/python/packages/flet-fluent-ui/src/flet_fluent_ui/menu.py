@@ -9,6 +9,7 @@ __all__ = [
     "MenuBarItem",
     "MenuFlyoutItem",
     "MenuFlyoutSeparator",
+    "RadioMenuFlyoutItem",
     "ToggleMenuFlyoutItem",
 ]
 
@@ -59,7 +60,8 @@ class MenuFlyoutItem(ft.Control):
     """
     The items of a submenu that opens when this item is hovered or clicked:
     :class:`~flet_fluent_ui.MenuFlyoutItem`,
-    :class:`~flet_fluent_ui.ToggleMenuFlyoutItem` and
+    :class:`~flet_fluent_ui.ToggleMenuFlyoutItem`,
+    :class:`~flet_fluent_ui.RadioMenuFlyoutItem` and
     :class:`~flet_fluent_ui.MenuFlyoutSeparator` controls.
     """
 
@@ -120,6 +122,66 @@ class ToggleMenuFlyoutItem(ft.Control):
     """
 
 
+@ft.control("FluentRadioMenuFlyoutItem")
+class RadioMenuFlyoutItem(ft.Control):
+    """
+    A menu item for one of several options, of which only one can be chosen:
+    the chosen one shows a dot.
+
+    Clicking it checks it and unchecks the other radio items of the same
+    :attr:`group` in the same menu.
+
+    Example:
+    ```python
+    fluent.MenuFlyoutItem(
+        "View",
+        items=[
+            fluent.RadioMenuFlyoutItem("Large icons"),
+            fluent.RadioMenuFlyoutItem("Small icons", checked=True),
+            fluent.RadioMenuFlyoutItem("List"),
+        ],
+    )
+    ```
+    """
+
+    content: ft.StrOrControl
+    """
+    The label of this item.
+    """
+
+    checked: bool = False
+    """
+    Whether this option is chosen.
+    """
+
+    group: Optional[str] = None
+    """
+    The name of the group of options this item belongs to.
+
+    Items with the same group in the same menu, including `None`, form one
+    group. Use different groups for several sets of options in one menu.
+    """
+
+    trailing: Optional[ft.StrOrControl] = None
+    """
+    Text or a control shown at the end of this item, typically a keyboard
+    shortcut.
+    """
+
+    close_on_click: bool = True
+    """
+    Whether clicking this item closes the menu.
+    """
+
+    on_change: Optional[ft.ControlEventHandler["RadioMenuFlyoutItem"]] = None
+    """
+    Called when the user chooses this option.
+
+    :attr:`checked` is `True`, and the other items of the group are
+    unchecked, before this is called.
+    """
+
+
 @ft.control("FluentMenuFlyoutSeparator")
 class MenuFlyoutSeparator(ft.Control):
     """
@@ -153,7 +215,8 @@ class ContextMenu(ft.LayoutControl):
     items: list[ft.Control] = field(default_factory=list)
     """
     The menu items: :class:`~flet_fluent_ui.MenuFlyoutItem`,
-    :class:`~flet_fluent_ui.ToggleMenuFlyoutItem` and
+    :class:`~flet_fluent_ui.ToggleMenuFlyoutItem`,
+    :class:`~flet_fluent_ui.RadioMenuFlyoutItem` and
     :class:`~flet_fluent_ui.MenuFlyoutSeparator` controls.
     """
 
@@ -183,7 +246,8 @@ class MenuBarItem(ft.Control):
     items: list[ft.Control] = field(default_factory=list)
     """
     The menu items: :class:`~flet_fluent_ui.MenuFlyoutItem`,
-    :class:`~flet_fluent_ui.ToggleMenuFlyoutItem` and
+    :class:`~flet_fluent_ui.ToggleMenuFlyoutItem`,
+    :class:`~flet_fluent_ui.RadioMenuFlyoutItem` and
     :class:`~flet_fluent_ui.MenuFlyoutSeparator` controls.
     """
 

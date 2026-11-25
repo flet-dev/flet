@@ -567,3 +567,78 @@ async def test_breadcrumb_click(flet_app: ftt.FletTestApp):
     await flet_app.tester.tap(await flet_app.tester.find_by_text("Home"))
     await flet_app.tester.pump_and_settle()
     assert clicked == ["Home"]
+
+
+@pytest.mark.asyncio(loop_scope="module")
+async def test_error_text(flet_app: ftt.FletTestApp, request):
+    flet_app.page.theme_mode = ft.ThemeMode.LIGHT
+    await flet_app.assert_control_screenshot(
+        request.node.name,
+        ft.Column(
+            width=240,
+            controls=[
+                fluent.TextBox(value="jo", error_text="Enter at least 3 letters"),
+                fluent.PasswordBox(value="abc", error_text="Too short"),
+                fluent.NumberBox(value=120, error_text="Enter 1 to 100"),
+                fluent.AutoSuggestBox(error_text="Pick a city from the list"),
+                fluent.ComboBox(
+                    placeholder="Country",
+                    items=[fluent.ComboBoxItem("cz", text="Czechia")],
+                    error_text="Required",
+                ),
+            ],
+        ),
+        bgcolor=ft.Colors.SURFACE,
+    )
+
+
+@pytest.mark.asyncio(loop_scope="module")
+async def test_error_text_keeps_focus(flet_app: ftt.FletTestApp):
+    def validate(e):
+        box.error_text = None if len(box.value) >= 3 else "Too short"
+
+    box = fluent.TextBox(key="name", width=200, on_change=validate)
+    flet_app.page.controls = [box]
+    flet_app.page.update()
+    await flet_app.tester.pump_and_settle()
+
+    # The error appears and disappears while typing, without losing the
+    # typed text or focus.
+    finder = await flet_app.tester.find_by_key("name")
+    await flet_app.tester.enter_text(finder, "ab")
+    await flet_app.tester.pump_and_settle()
+    assert (await flet_app.tester.find_by_text("Too short")).count == 1
+    await flet_app.tester.enter_text(finder, "abc")
+    await flet_app.tester.pump_and_settle()
+    assert (await flet_app.tester.find_by_text("Too short")).count == 0
+    assert box.value == "abc"
+
+
+@pytest.mark.asyncio(loop_scope="module")
+async def test_radio_menu_items(flet_app: ftt.FletTestApp):
+    small = fluent.RadioMenuFlyoutItem("Small", checked=True)
+    large = fluent.RadioMenuFlyoutItem("Large")
+    left = fluent.RadioMenuFlyoutItem("Left", group="align", checked=True)
+    right = fluent.RadioMenuFlyoutItem("Right", group="align")
+    flet_app.page.controls = [
+        fluent.DropDownButton(
+            "View",
+            items=[small, large, fluent.MenuFlyoutSeparator(), left, right],
+        )
+    ]
+    flet_app.page.update()
+    await flet_app.tester.pump_and_settle()
+
+    async def choose(text):
+        await flet_app.tester.tap(await flet_app.tester.find_by_text("View"))
+        await flet_app.tester.pump_and_settle()
+        await flet_app.tester.tap(await flet_app.tester.find_by_text(text))
+        await flet_app.tester.pump_and_settle()
+
+    # Choosing an option unchecks the others of its group only.
+    await choose("Large")
+    assert (small.checked, large.checked) == (False, True)
+    assert (left.checked, right.checked) == (True, False)
+    await choose("Right")
+    assert (small.checked, large.checked) == (False, True)
+    assert (left.checked, right.checked) == (False, True)

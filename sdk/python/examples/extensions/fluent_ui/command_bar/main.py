@@ -16,6 +16,7 @@ def main(page: ft.Page):
             content=ft.Column(
                 controls=[
                     fluent.CommandBar(
+                        card=True,
                         primary_items=[
                             fluent.CommandBarButton(
                                 icon=fluent.FluentIcons.MAIL_REPLY,
