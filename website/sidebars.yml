@@ -339,6 +339,9 @@ docs:
         AutoSuggestBox:
           _index: controls/fluentui/autosuggestbox.md
           AutoSuggestBoxItem: controls/fluentui/autosuggestboxitem.md
+        BreadcrumbBar:
+          _index: controls/fluentui/breadcrumbbar.md
+          BreadcrumbItem: controls/fluentui/breadcrumbitem.md
         Button: controls/fluentui/button.md
         CalendarDatePicker: controls/fluentui/calendardatepicker.md
         CalendarView: controls/fluentui/calendarview.md
@@ -373,6 +376,11 @@ docs:
         MenuBar:
           _index: controls/fluentui/menubar.md
           MenuBarItem: controls/fluentui/menubaritem.md
+        NavigationView:
+          _index: controls/fluentui/navigationview.md
+          PaneItem: controls/fluentui/paneitem.md
+          PaneItemHeader: controls/fluentui/paneitemheader.md
+          PaneItemSeparator: controls/fluentui/paneitemseparator.md
         NumberBox: controls/fluentui/numberbox.md
         OutlinedButton: controls/fluentui/outlinedbutton.md
         PasswordBox: controls/fluentui/passwordbox.md
@@ -382,14 +390,23 @@ docs:
           _index: controls/fluentui/radiogroup.md
           RadioButton: controls/fluentui/radiobutton.md
         RatingBar: controls/fluentui/ratingbar.md
+        ScaffoldPage:
+          _index: controls/fluentui/scaffoldpage.md
+          PageHeader: controls/fluentui/pageheader.md
         Slider: controls/fluentui/slider.md
         SplitButton: controls/fluentui/splitbutton.md
+        TabView:
+          _index: controls/fluentui/tabview.md
+          Tab: controls/fluentui/tab.md
         TeachingTip: controls/fluentui/teachingtip.md
         TextBox: controls/fluentui/textbox.md
         TimePicker: controls/fluentui/timepicker.md
         ToggleButton: controls/fluentui/togglebutton.md
         ToggleSwitch: controls/fluentui/toggleswitch.md
         Tooltip: controls/fluentui/tooltip.md
+        TreeView:
+          _index: controls/fluentui/treeview.md
+          TreeViewItem: controls/fluentui/treeviewitem.md
       Extensions:
         _generated_index:
           title: Extension controls
@@ -666,13 +683,17 @@ docs:
         - controls/fluentui/types/calendardisplaymode.md
         - controls/fluentui/types/calendarselectionmode.md
         - controls/fluentui/types/calendarviewchangeevent.md
+        - controls/fluentui/types/closebuttonvisibilitymode.md
         - controls/fluentui/types/colorspectrumshape.md
         - controls/fluentui/types/commandbaroverflowbehavior.md
         - controls/fluentui/types/expanderdirection.md
         - controls/fluentui/types/flyoutplacementmode.md
         - controls/fluentui/types/infobarseverity.md
         - controls/fluentui/types/listtileselectionmode.md
+        - controls/fluentui/types/panedisplaymode.md
         - controls/fluentui/types/passwordrevealmode.md
+        - controls/fluentui/types/tabwidthbehavior.md
+        - controls/fluentui/types/treeviewselectionmode.md
         - controls/fluentui/types/fluenticons.md
       - Geolocator:
         - services/geolocator/types/foregroundnotificationconfiguration.md

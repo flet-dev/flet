@@ -3,13 +3,17 @@ from enum import Enum
 __all__ = [
     "CalendarDisplayMode",
     "CalendarSelectionMode",
+    "CloseButtonVisibilityMode",
     "ColorSpectrumShape",
     "CommandBarOverflowBehavior",
     "ExpanderDirection",
     "FlyoutPlacementMode",
     "InfoBarSeverity",
     "ListTileSelectionMode",
+    "PaneDisplayMode",
     "PasswordRevealMode",
+    "TabWidthBehavior",
+    "TreeViewSelectionMode",
 ]
 
 
@@ -215,4 +219,91 @@ class CommandBarOverflowBehavior(Enum):
     """
     The items stay on one line, and the bar is as wide as they need, even if
     that is wider than the space it has.
+    """
+
+
+class TabWidthBehavior(Enum):
+    """
+    How wide the tabs of a :class:`~flet_fluent_ui.TabView` are.
+    """
+
+    EQUAL = "equal"
+    """All tabs have the same width, which shrinks as tabs are added."""
+
+    SIZE_TO_CONTENT = "sizeToContent"
+    """Each tab is as wide as its label."""
+
+    COMPACT = "compact"
+    """
+    The selected tab is as wide as its label, and the other tabs show only
+    their icon.
+    """
+
+
+class CloseButtonVisibilityMode(Enum):
+    """
+    When the close buttons of the tabs of a :class:`~flet_fluent_ui.TabView`
+    are shown.
+    """
+
+    ALWAYS = "always"
+    """On every tab."""
+
+    ON_HOVER = "onHover"
+    """On the tab under the mouse pointer."""
+
+    NEVER = "never"
+    """
+    Never: the selected tab can still be closed with Ctrl+W (Cmd+W on
+    macOS).
+    """
+
+
+class TreeViewSelectionMode(Enum):
+    """
+    How the items of a :class:`~flet_fluent_ui.TreeView` can be selected.
+    """
+
+    NONE = "none"
+    """Items can't be selected."""
+
+    SINGLE = "single"
+    """One item can be selected."""
+
+    MULTIPLE = "multiple"
+    """
+    Items have checkboxes, and any number of them can be selected. Selecting
+    an item selects its subitems.
+    """
+
+
+class PaneDisplayMode(Enum):
+    """
+    How the pane of a :class:`~flet_fluent_ui.NavigationView` is shown.
+    """
+
+    AUTO = "auto"
+    """
+    Depends on the width of the view: :attr:`EXPANDED` when it is wide,
+    :attr:`COMPACT` when it is medium and :attr:`MINIMAL` when it is narrow.
+    """
+
+    EXPANDED = "expanded"
+    """A pane on the left, with the icons and titles of the items."""
+
+    COMPACT = "compact"
+    """
+    A narrow pane on the left with only icons, which the menu button opens
+    over the content.
+    """
+
+    MINIMAL = "minimal"
+    """
+    No pane, only a menu button, which opens the pane over the content.
+    """
+
+    TOP = "top"
+    """
+    The items in a row above the content; the items that don't fit go into a
+    "More" menu.
     """

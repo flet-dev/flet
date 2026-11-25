@@ -432,3 +432,138 @@ async def test_toggle_split_button(flet_app: ftt.FletTestApp):
         await flet_app.tester.pump_and_settle()
     assert events == [True, False]
     assert button.checked is False
+
+
+@pytest.mark.asyncio(loop_scope="module")
+async def test_tab_view_keeps_tab_state(flet_app: ftt.FletTestApp):
+    # Earlier tests leave the window too small for the controls below.
+    flet_app.resize_page(700, 420)
+    tabs = fluent.TabView(
+        height=200,
+        tabs=[
+            fluent.Tab("Notes", content=fluent.TextBox(key="notes")),
+            fluent.Tab("Other", content=ft.Text("Other tab")),
+        ],
+    )
+    flet_app.page.controls = [tabs]
+    flet_app.page.update()
+    await flet_app.tester.pump_and_settle()
+    await flet_app.tester.enter_text(
+        await flet_app.tester.find_by_key("notes"), "Draft"
+    )
+    await flet_app.tester.pump_and_settle()
+
+    # Adding a tab and renaming one keep the typed text of the first tab.
+    tabs.tabs.append(fluent.Tab("New", content=ft.Text("New tab")))
+    tabs.tabs[1].text = "Renamed"
+    tabs.update()
+    await flet_app.tester.pump_and_settle()
+    assert (await flet_app.tester.find_by_text("Renamed")).count == 1
+    assert (await flet_app.tester.find_by_text("Draft")).count == 1
+
+    # Selecting from Python and by clicking.
+    tabs.selected_index = 2
+    tabs.update()
+    await flet_app.tester.pump_and_settle()
+    assert (await flet_app.tester.find_by_text("New tab")).count == 1
+    await flet_app.tester.tap(await flet_app.tester.find_by_text("Notes"))
+    await flet_app.tester.pump_and_settle()
+    assert tabs.selected_index == 0
+    assert (await flet_app.tester.find_by_text("Draft")).count == 1
+
+
+@pytest.mark.asyncio(loop_scope="module")
+async def test_tree_view_expand_and_select(flet_app: ftt.FletTestApp):
+    expanded = []
+    child = fluent.TreeViewItem("Child")
+    parent = fluent.TreeViewItem(
+        "Parent",
+        items=[child],
+        on_expand_change=lambda e: expanded.append(e.control.expanded),
+    )
+    tree = fluent.TreeView(
+        width=240,
+        selection_mode=fluent.TreeViewSelectionMode.SINGLE,
+        items=[parent, fluent.TreeViewItem("Other")],
+    )
+    flet_app.page.controls = [tree]
+    flet_app.page.update()
+    await flet_app.tester.pump_and_settle()
+    assert (await flet_app.tester.find_by_text("Child")).count == 0
+
+    # Expanded from Python, then selected by the user.
+    parent.expanded = True
+    parent.update()
+    await flet_app.tester.pump_and_settle()
+    await flet_app.tester.tap(await flet_app.tester.find_by_text("Child"))
+    await flet_app.tester.pump_and_settle()
+    assert child.selected is True
+    assert parent.selected is False
+
+    # Selecting another item deselects the first one.
+    await flet_app.tester.tap(await flet_app.tester.find_by_text("Other"))
+    await flet_app.tester.pump_and_settle()
+    assert child.selected is False
+    assert expanded == []
+
+
+@pytest.mark.asyncio(loop_scope="module")
+async def test_navigation_view_selection(flet_app: ftt.FletTestApp):
+    changes = []
+    view = fluent.NavigationView(
+        height=300,
+        display_mode=fluent.PaneDisplayMode.EXPANDED,
+        selected_index=0,
+        on_change=lambda e: changes.append(e.control.selected_index),
+        items=[
+            fluent.PaneItem("First", content=ft.Text("First page")),
+            fluent.PaneItemHeader("Group"),
+            fluent.PaneItem(
+                "Expander",
+                expanded=True,
+                items=[fluent.PaneItem("Nested", content=ft.Text("Nested page"))],
+            ),
+        ],
+        footer_items=[fluent.PaneItem("Last", content=ft.Text("Last page"))],
+    )
+    flet_app.page.controls = [view]
+    flet_app.page.update()
+    await flet_app.tester.pump_and_settle()
+    assert (await flet_app.tester.find_by_text("First page")).count == 1
+
+    # Pages are counted across expanders and footer items.
+    await flet_app.tester.tap(await flet_app.tester.find_by_text("Nested"))
+    await flet_app.tester.pump_and_settle()
+    assert (await flet_app.tester.find_by_text("Nested page")).count == 1
+    assert changes == [1]
+
+    view.selected_index = 2
+    view.update()
+    await flet_app.tester.pump_and_settle()
+    assert (await flet_app.tester.find_by_text("Last page")).count == 1
+
+    # An index past the last page selects nothing rather than failing.
+    view.selected_index = 5
+    view.update()
+    await flet_app.tester.pump_and_settle()
+    assert (await flet_app.tester.find_by_text("Last page")).count == 0
+
+
+@pytest.mark.asyncio(loop_scope="module")
+async def test_breadcrumb_click(flet_app: ftt.FletTestApp):
+    clicked = []
+    flet_app.page.controls = [
+        fluent.BreadcrumbBar(
+            items=[
+                fluent.BreadcrumbItem(
+                    name, on_click=lambda e: clicked.append(e.control.content)
+                )
+                for name in ["Home", "Music"]
+            ]
+        )
+    ]
+    flet_app.page.update()
+    await flet_app.tester.pump_and_settle()
+    await flet_app.tester.tap(await flet_app.tester.find_by_text("Home"))
+    await flet_app.tester.pump_and_settle()
+    assert clicked == ["Home"]

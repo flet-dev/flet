@@ -1,0 +1,26 @@
+[project]
+name = "fluent-ui-tab-view"
+version = "1.0.0"
+description = "Open, close and reorder document tabs."
+requires-python = ">=3.10"
+keywords = ["fluent", "tabs", "tab view"]
+authors = [{ name = "Flet team", email = "hello@flet.dev" }]
+dependencies = ["flet", "flet-fluent-ui"]
+
+[dependency-groups]
+dev = ["flet-cli", "flet-desktop", "flet-web"]
+
+[tool.flet.gallery]
+categories = ["Fluent"]
+
+[tool.flet.metadata]
+title = "Fluent TabView"
+controls = ["SafeArea", "Column", "Text", "TabView", "Tab"]
+layout_pattern = "single-panel"
+complexity = "basic"
+features = ["add tabs", "close tabs", "reorder tabs"]
+
+[tool.flet]
+org = "dev.flet"
+company = "Flet"
+copyright = "Copyright (C) 2023-2026 by Flet"

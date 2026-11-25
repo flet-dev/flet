@@ -1,0 +1,26 @@
+[project]
+name = "fluent-ui-scaffold-page"
+version = "1.0.0"
+description = "A photos page with a header, commands and content."
+requires-python = ">=3.10"
+keywords = ["fluent", "page", "scaffold", "header"]
+authors = [{ name = "Flet team", email = "hello@flet.dev" }]
+dependencies = ["flet", "flet-fluent-ui"]
+
+[dependency-groups]
+dev = ["flet-cli", "flet-desktop", "flet-web"]
+
+[tool.flet.gallery]
+categories = ["Fluent"]
+
+[tool.flet.metadata]
+title = "Fluent ScaffoldPage"
+controls = ["ScaffoldPage", "PageHeader", "CommandBar", "CommandBarButton", "Text"]
+layout_pattern = "single-panel"
+complexity = "basic"
+features = ["page header", "commands"]
+
+[tool.flet]
+org = "dev.flet"
+company = "Flet"
+copyright = "Copyright (C) 2023-2026 by Flet"

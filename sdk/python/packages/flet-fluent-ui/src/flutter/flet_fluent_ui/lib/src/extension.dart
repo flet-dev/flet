@@ -2,6 +2,7 @@ import 'package:flet/flet.dart';
 import 'package:fluent_ui/fluent_ui.dart';
 
 import 'auto_suggest_box.dart';
+import 'breadcrumb_bar.dart';
 import 'button.dart';
 import 'calendar.dart';
 import 'card.dart';
@@ -19,16 +20,19 @@ import 'info_bar.dart';
 import 'info_label.dart';
 import 'list_tile.dart';
 import 'menu_bar.dart';
+import 'navigation_view.dart';
 import 'number_box.dart';
 import 'password_box.dart';
 import 'progress.dart';
 import 'radio_group.dart';
 import 'rating_bar.dart';
 import 'slider.dart';
+import 'tab_view.dart';
 import 'text_box.dart';
 import 'theme.dart';
 import 'toggles.dart';
 import 'tooltip.dart';
+import 'tree_view.dart';
 import 'utils/fluent_icons.dart';
 import 'utils/theme.dart';
 
@@ -135,6 +139,18 @@ class Extension extends FletExtension {
         return FluentMenuBarControl(key: key, control: control);
       case "FluentCommandBar":
         return FluentCommandBarControl(key: key, control: control);
+      case "FluentTabView":
+        return FluentTabViewControl(key: key, control: control);
+      case "FluentTreeView":
+        return FluentTreeViewControl(key: key, control: control);
+      case "FluentBreadcrumbBar":
+        return FluentBreadcrumbBarControl(key: key, control: control);
+      case "FluentNavigationView":
+        return FluentNavigationViewControl(key: key, control: control);
+      case "FluentScaffoldPage":
+        return FluentScaffoldPageControl(key: key, control: control);
+      case "FluentPageHeader":
+        return FluentPageHeaderControl(key: key, control: control);
       default:
         return null;
     }

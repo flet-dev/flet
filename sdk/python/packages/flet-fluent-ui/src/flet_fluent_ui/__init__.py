@@ -1,4 +1,5 @@
 from flet_fluent_ui.auto_suggest_box import AutoSuggestBox, AutoSuggestBoxItem
+from flet_fluent_ui.breadcrumb_bar import BreadcrumbBar, BreadcrumbItem
 from flet_fluent_ui.button import (
     Button,
     FilledButton,
@@ -38,31 +39,47 @@ from flet_fluent_ui.menu import (
     MenuFlyoutSeparator,
     ToggleMenuFlyoutItem,
 )
+from flet_fluent_ui.navigation_view import (
+    NavigationView,
+    PageHeader,
+    PaneItem,
+    PaneItemHeader,
+    PaneItemSeparator,
+    ScaffoldPage,
+)
 from flet_fluent_ui.number_box import NumberBox
 from flet_fluent_ui.password_box import PasswordBox
 from flet_fluent_ui.progress import ProgressBar, ProgressRing
 from flet_fluent_ui.radio_group import RadioButton, RadioGroup
 from flet_fluent_ui.rating_bar import RatingBar
 from flet_fluent_ui.slider import Slider
+from flet_fluent_ui.tab_view import Tab, TabView
 from flet_fluent_ui.text_box import TextBox
 from flet_fluent_ui.theme import Theme
 from flet_fluent_ui.toggles import Checkbox, ToggleButton, ToggleSwitch
 from flet_fluent_ui.tooltip import Tooltip
+from flet_fluent_ui.tree_view import TreeView, TreeViewItem
 from flet_fluent_ui.types import (
     CalendarDisplayMode,
     CalendarSelectionMode,
+    CloseButtonVisibilityMode,
     ColorSpectrumShape,
     CommandBarOverflowBehavior,
     ExpanderDirection,
     FlyoutPlacementMode,
     InfoBarSeverity,
     ListTileSelectionMode,
+    PaneDisplayMode,
     PasswordRevealMode,
+    TabWidthBehavior,
+    TreeViewSelectionMode,
 )
 
 __all__ = [
     "AutoSuggestBox",
     "AutoSuggestBoxItem",
+    "BreadcrumbBar",
+    "BreadcrumbItem",
     "Button",
     "CalendarDatePicker",
     "CalendarDisplayMode",
@@ -71,6 +88,7 @@ __all__ = [
     "CalendarViewChangeEvent",
     "Card",
     "Checkbox",
+    "CloseButtonVisibilityMode",
     "ColorPicker",
     "ColorSpectrumShape",
     "ComboBox",
@@ -102,8 +120,14 @@ __all__ = [
     "MenuBarItem",
     "MenuFlyoutItem",
     "MenuFlyoutSeparator",
+    "NavigationView",
     "NumberBox",
     "OutlinedButton",
+    "PageHeader",
+    "PaneDisplayMode",
+    "PaneItem",
+    "PaneItemHeader",
+    "PaneItemSeparator",
     "PasswordBox",
     "PasswordRevealMode",
     "ProgressBar",
@@ -111,8 +135,12 @@ __all__ = [
     "RadioButton",
     "RadioGroup",
     "RatingBar",
+    "ScaffoldPage",
     "Slider",
     "SplitButton",
+    "Tab",
+    "TabView",
+    "TabWidthBehavior",
     "TeachingTip",
     "TextBox",
     "Theme",
@@ -121,4 +149,7 @@ __all__ = [
     "ToggleMenuFlyoutItem",
     "ToggleSwitch",
     "Tooltip",
+    "TreeView",
+    "TreeViewItem",
+    "TreeViewSelectionMode",
 ]

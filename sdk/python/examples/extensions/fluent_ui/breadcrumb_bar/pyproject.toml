@@ -1,0 +1,26 @@
+[project]
+name = "fluent-ui-breadcrumb-bar"
+version = "1.0.0"
+description = "Navigate folders with a breadcrumb bar."
+requires-python = ">=3.10"
+keywords = ["fluent", "breadcrumb", "navigation", "path"]
+authors = [{ name = "Flet team", email = "hello@flet.dev" }]
+dependencies = ["flet", "flet-fluent-ui"]
+
+[dependency-groups]
+dev = ["flet-cli", "flet-desktop", "flet-web"]
+
+[tool.flet.gallery]
+categories = ["Fluent"]
+
+[tool.flet.metadata]
+title = "Fluent BreadcrumbBar"
+controls = ["SafeArea", "Column", "Text", "BreadcrumbBar", "BreadcrumbItem", "HyperlinkButton"]
+layout_pattern = "list"
+complexity = "basic"
+features = ["navigation", "click handling"]
+
+[tool.flet]
+org = "dev.flet"
+company = "Flet"
+copyright = "Copyright (C) 2023-2026 by Flet"
