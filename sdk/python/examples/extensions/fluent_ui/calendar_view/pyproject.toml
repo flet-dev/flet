@@ -1,0 +1,26 @@
+[project]
+name = "fluent-ui-calendar-view"
+version = "1.0.0"
+description = "Select a range of dates in an always visible calendar."
+requires-python = ">=3.10"
+keywords = ["fluent", "calendar", "date", "range"]
+authors = [{ name = "Flet team", email = "hello@flet.dev" }]
+dependencies = ["flet", "flet-fluent-ui"]
+
+[dependency-groups]
+dev = ["flet-cli", "flet-desktop", "flet-web"]
+
+[tool.flet.gallery]
+categories = ["Fluent"]
+
+[tool.flet.metadata]
+title = "Fluent CalendarView"
+controls = ["SafeArea", "Column", "Text", "CalendarView"]
+layout_pattern = "form"
+complexity = "basic"
+features = ["change handling", "range selection", "blackout dates"]
+
+[tool.flet]
+org = "dev.flet"
+company = "Flet"
+copyright = "Copyright (C) 2023-2026 by Flet"

@@ -340,12 +340,16 @@ docs:
           _index: controls/fluentui/autosuggestbox.md
           AutoSuggestBoxItem: controls/fluentui/autosuggestboxitem.md
         Button: controls/fluentui/button.md
+        CalendarDatePicker: controls/fluentui/calendardatepicker.md
+        CalendarView: controls/fluentui/calendarview.md
         Card: controls/fluentui/card.md
         Checkbox: controls/fluentui/checkbox.md
+        ColorPicker: controls/fluentui/colorpicker.md
         ComboBox:
           _index: controls/fluentui/combobox.md
           ComboBoxItem: controls/fluentui/comboboxitem.md
         ContentDialog: controls/fluentui/contentdialog.md
+        DatePicker: controls/fluentui/datepicker.md
         Divider: controls/fluentui/divider.md
         Expander: controls/fluentui/expander.md
         FilledButton: controls/fluentui/filledbutton.md
@@ -366,6 +370,7 @@ docs:
         RatingBar: controls/fluentui/ratingbar.md
         Slider: controls/fluentui/slider.md
         TextBox: controls/fluentui/textbox.md
+        TimePicker: controls/fluentui/timepicker.md
         ToggleButton: controls/fluentui/togglebutton.md
         ToggleSwitch: controls/fluentui/toggleswitch.md
         Tooltip: controls/fluentui/tooltip.md
@@ -642,6 +647,10 @@ docs:
       - types/filepickeruploadfile.md
       - types/flip.md
       - Fluent:
+        - controls/fluentui/types/calendardisplaymode.md
+        - controls/fluentui/types/calendarselectionmode.md
+        - controls/fluentui/types/calendarviewchangeevent.md
+        - controls/fluentui/types/colorspectrumshape.md
         - controls/fluentui/types/expanderdirection.md
         - controls/fluentui/types/infobarseverity.md
         - controls/fluentui/types/listtileselectionmode.md

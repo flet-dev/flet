@@ -19,20 +19,46 @@ FluentThemeData parseFluentThemeData(Control control, BuildContext context) {
 // themes are built once per brightness.
 final _fallbackThemes = <Brightness, FluentThemeData>{};
 
-/// Wraps [child] in a default [FluentTheme] and [FluentLocalizations] if
-/// [context] has none.
+FluentThemeData _fallbackTheme(Brightness brightness) =>
+    _fallbackThemes[brightness] ??= FluentThemeData(brightness: brightness);
+
+/// Provides a default [FluentTheme] and [FluentLocalizations] to the whole
+/// app, from `Extension.wrapApp`.
+///
+/// Fluent popups (picker lists, flyouts) open on the app's navigator, above
+/// any control, and look the theme up there. The theme matches the page
+/// brightness.
+///
+/// [FluentTheme] also sets a text style and an icon theme for its
+/// descendants. The text style stays: at this level, the app has only
+/// Flutter's fallback style (pages and Material dialogs set their own), and
+/// Fluent popups need Fluent's. The icon theme is reset to the app's, which
+/// is the one Flet's own controls use.
+Widget wrapAppWithFluentTheme(BuildContext context, Widget child) {
+  return Localizations.override(
+    context: context,
+    delegates: const [_FluentLocalizationsDelegate()],
+    child: FluentTheme(
+      data: _fallbackTheme(Theme.of(context).brightness),
+      child: IconTheme(data: IconTheme.of(context), child: child),
+    ),
+  );
+}
+
+/// Wraps [child] in a default [FluentTheme] and [FluentLocalizations] unless
+/// a `flet_fluent_ui.Theme` (or another Fluent theme) is above it.
 ///
 /// Fluent widgets look up [FluentTheme.of] and [FluentLocalizations.of] and
-/// throw without them. Flet has no way to put either above the page, so each
-/// control provides a blue-accented theme matching the page brightness and the
-/// Fluent localizations for the app's locale as a fallback.
+/// throw without them. A control outside a `Theme` gets a blue-accented theme
+/// matching the brightness of the enclosing Material theme (which can differ
+/// from the page's, see [wrapAppWithFluentTheme]), along with the Fluent
+/// text style and icon theme.
 Widget withFluentTheme(BuildContext context, Widget child) {
   var result = child;
-  if (FluentTheme.maybeOf(context) == null) {
-    final brightness = Theme.of(context).brightness;
+  final theme = FluentTheme.maybeOf(context);
+  if (theme == null || _fallbackThemes.values.any((t) => identical(t, theme))) {
     result = FluentTheme(
-      data: _fallbackThemes[brightness] ??=
-          FluentThemeData(brightness: brightness),
+      data: _fallbackTheme(Theme.of(context).brightness),
       child: result,
     );
   }

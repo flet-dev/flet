@@ -6,9 +6,16 @@ from flet_fluent_ui.button import (
     IconButton,
     OutlinedButton,
 )
+from flet_fluent_ui.calendar import (
+    CalendarDatePicker,
+    CalendarView,
+    CalendarViewChangeEvent,
+)
 from flet_fluent_ui.card import Card
+from flet_fluent_ui.color_picker import ColorPicker
 from flet_fluent_ui.combo_box import ComboBox, ComboBoxItem
 from flet_fluent_ui.content_dialog import ContentDialog
+from flet_fluent_ui.date_picker import DatePicker, TimePicker
 from flet_fluent_ui.divider import Divider
 from flet_fluent_ui.expander import Expander
 from flet_fluent_ui.fluent_icons import FluentIcons
@@ -27,6 +34,9 @@ from flet_fluent_ui.theme import Theme
 from flet_fluent_ui.toggles import Checkbox, ToggleButton, ToggleSwitch
 from flet_fluent_ui.tooltip import Tooltip
 from flet_fluent_ui.types import (
+    CalendarDisplayMode,
+    CalendarSelectionMode,
+    ColorSpectrumShape,
     ExpanderDirection,
     InfoBarSeverity,
     ListTileSelectionMode,
@@ -37,11 +47,19 @@ __all__ = [
     "AutoSuggestBox",
     "AutoSuggestBoxItem",
     "Button",
+    "CalendarDatePicker",
+    "CalendarDisplayMode",
+    "CalendarSelectionMode",
+    "CalendarView",
+    "CalendarViewChangeEvent",
     "Card",
     "Checkbox",
+    "ColorPicker",
+    "ColorSpectrumShape",
     "ComboBox",
     "ComboBoxItem",
     "ContentDialog",
+    "DatePicker",
     "Divider",
     "Expander",
     "ExpanderDirection",
@@ -67,6 +85,7 @@ __all__ = [
     "Slider",
     "TextBox",
     "Theme",
+    "TimePicker",
     "ToggleButton",
     "ToggleSwitch",
     "Tooltip",

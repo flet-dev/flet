@@ -681,10 +681,24 @@ class _PageControlState extends State<PageControl> with WidgetsBindingObserver {
         ? darkTheme
         : lightTheme;
 
+    final extensions = FletBackend.of(context).extensions;
+
+    // Lets extensions wrap the navigator, so that what they provide (for
+    // example a design system's theme) reaches routes and popups too.
+    Widget extensionsBuilder(BuildContext context, Widget? child) {
+      var result = child ?? const SizedBox.shrink();
+      for (final extension in extensions) {
+        result = extension.wrapApp(context, result);
+      }
+      return result;
+    }
+
     Widget scaffoldMessengerBuilder(BuildContext context, Widget? child) {
       return Theme(
           data: materialTheme ?? lightTheme ?? ThemeData(),
-          child: ScaffoldMessenger(child: child ?? const SizedBox.shrink()));
+          child: ScaffoldMessenger(
+              child: Builder(
+                  builder: (context) => extensionsBuilder(context, child))));
     }
 
     var showSemanticsDebugger =
@@ -743,6 +757,7 @@ class _PageControlState extends State<PageControl> with WidgetsBindingObserver {
                 darkTheme: darkTheme,
                 themeMode: themeMode,
                 themeAnimationStyle: themeAnimationStyle,
+                builder: extensionsBuilder,
                 supportedLocales: localeConfiguration.supportedLocales,
                 locale: localeConfiguration.locale,
                 localizationsDelegates: localizationsDelegates,
@@ -761,6 +776,7 @@ class _PageControlState extends State<PageControl> with WidgetsBindingObserver {
                 darkTheme: darkTheme,
                 themeMode: themeMode,
                 themeAnimationStyle: themeAnimationStyle,
+                builder: extensionsBuilder,
                 localizationsDelegates: localizationsDelegates,
                 supportedLocales: localeConfiguration.supportedLocales,
                 locale: localeConfiguration.locale,

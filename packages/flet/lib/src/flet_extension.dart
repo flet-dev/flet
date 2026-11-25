@@ -20,6 +20,17 @@ abstract class FletExtension {
     return null;
   }
 
+  /// Wraps the app's content, below the app's theme and localizations and
+  /// above its navigator. Widgets the extension provides here, such as an
+  /// inherited theme, can be found by everything the app shows, including
+  /// routes and overlays that the navigator opens (dialogs and popups), which
+  /// widgets placed around a single control can't reach.
+  ///
+  /// Returns [child] unchanged by default.
+  Widget wrapApp(BuildContext context, Widget child) {
+    return child;
+  }
+
   /// Creates a custom boot screen identified by [name].
   ///
   /// A single extension can provide multiple named boot screens. Return null

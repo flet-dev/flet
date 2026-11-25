@@ -901,6 +901,41 @@ complete `spinkit` boot screen built exactly this way — see
 and its [`extension.dart`](https://github.com/flet-dev/flet/blob/main/sdk/python/packages/flet-spinkit/src/flutter/flet_spinkit/lib/src/extension.dart).
 :::
 
+## App-wide widgets
+
+Some Flutter packages expect an ancestor that a whole app provides, such as a
+design system's theme or its localizations. A widget placed around a single
+control is enough for the control itself, but not for the dialogs and popups
+the package opens: they are shown on the app's navigator, above every control.
+
+Override `wrapApp` on your `FletExtension` to wrap the app's content. It is
+called with a context below the app's Material theme and localizations, and its
+result goes above the navigator, so everything the app shows can find the
+widgets it adds:
+
+```dart
+class Extension extends FletExtension {
+  @override
+  Widget wrapApp(BuildContext context, Widget child) {
+    return MyDesignTheme(
+      data: MyDesignThemeData(brightness: Theme.of(context).brightness),
+      child: child,
+    );
+  }
+}
+```
+
+Every page of every app built with your extension is wrapped, whether or not it
+uses your controls, so keep the wrapper cheap and make sure it doesn't change how
+other controls look: an inherited theme is fine, but a widget that sets the
+default text style or icon theme would restyle Flet's own controls.
+
+:::tip[Real-world example]
+The [`flet-fluent-ui`](../controls/fluentui/index.md) extension provides a Fluent
+theme and localizations this way, so that its date and time picker popups work;
+see its [`utils/theme.dart`](https://github.com/flet-dev/flet/blob/main/sdk/python/packages/flet-fluent-ui/src/flutter/flet_fluent_ui/lib/src/utils/theme.dart).
+:::
+
 ## Examples
 
 Flet has controls that are implemented as [built-in extensions](built-in-extensions.md) and could serve as a starting point for your own controls.

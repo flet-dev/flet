@@ -3,9 +3,12 @@ import 'package:fluent_ui/fluent_ui.dart';
 
 import 'auto_suggest_box.dart';
 import 'button.dart';
+import 'calendar.dart';
 import 'card.dart';
+import 'color_picker.dart';
 import 'combo_box.dart';
 import 'content_dialog.dart';
+import 'date_picker.dart';
 import 'divider.dart';
 import 'expander.dart';
 import 'info_badge.dart';
@@ -23,11 +26,16 @@ import 'theme.dart';
 import 'toggles.dart';
 import 'tooltip.dart';
 import 'utils/fluent_icons.dart';
+import 'utils/theme.dart';
 
 /// Icon set ID of Fluent icons, see `flet_fluent_ui.FluentIcons`.
 const _fluentIconSetId = 4;
 
 class Extension extends FletExtension {
+  @override
+  Widget wrapApp(BuildContext context, Widget child) =>
+      wrapAppWithFluentTheme(context, child);
+
   @override
   Widget? createWidget(Key? key, Control control) {
     final widget = _createWidget(key, control);
@@ -43,6 +51,16 @@ class Extension extends FletExtension {
     switch (control.type) {
       case "FluentTheme":
         return FluentThemeControl(key: key, control: control);
+      case "FluentDatePicker":
+        return FluentDatePickerControl(key: key, control: control);
+      case "FluentTimePicker":
+        return FluentTimePickerControl(key: key, control: control);
+      case "FluentCalendarView":
+        return FluentCalendarControl(key: key, control: control);
+      case "FluentCalendarDatePicker":
+        return FluentCalendarControl(key: key, control: control, picker: true);
+      case "FluentColorPicker":
+        return FluentColorPickerControl(key: key, control: control);
       case "FluentButton":
       case "FluentFilledButton":
       case "FluentOutlinedButton":

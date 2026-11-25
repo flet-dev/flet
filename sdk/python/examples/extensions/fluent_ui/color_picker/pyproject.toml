@@ -1,0 +1,26 @@
+[project]
+name = "fluent-ui-color-picker"
+version = "1.0.0"
+description = "Pick a color and preview it on a swatch."
+requires-python = ">=3.10"
+keywords = ["fluent", "color", "picker"]
+authors = [{ name = "Flet team", email = "hello@flet.dev" }]
+dependencies = ["flet", "flet-fluent-ui"]
+
+[dependency-groups]
+dev = ["flet-cli", "flet-desktop", "flet-web"]
+
+[tool.flet.gallery]
+categories = ["Fluent"]
+
+[tool.flet.metadata]
+title = "Fluent ColorPicker"
+controls = ["SafeArea", "Row", "Column", "Container", "Text", "ColorPicker"]
+layout_pattern = "form"
+complexity = "basic"
+features = ["change handling"]
+
+[tool.flet]
+org = "dev.flet"
+company = "Flet"
+copyright = "Copyright (C) 2023-2026 by Flet"
