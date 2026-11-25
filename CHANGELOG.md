@@ -3,11 +3,13 @@
 ### New features
 
 * Add `flet-appauth` service (`flutter_appauth`) and Android/iOS `page.login()` path with native AppAuth + PKCE.
-* Add `flet build --appauth-redirect-scheme` / `tool.flet.appauth.redirect_scheme` for mobile OAuth redirects (defaults to `flet` when `flet-appauth` is present).
+* Add `flet build --appauth-redirect-scheme` / `tool.flet.appauth.redirect_scheme` for mobile OAuth redirects (defaults to a sanitized app name from pyproject when `flet-appauth` is present, else `flet`).
 
 ### Improvements
 
 * `page.logout()` makes the next `page.login()` force interactive re-authentication for any IdP (ephemeral AppAuth/Auth Tab session plus `prompt=login` on mobile; OIDC `prompt=login` / `max_age=0` on web), without mutating a shared `OAuthProvider`.
+* `flet build` / `flet debug` log the resolved AppAuth redirect scheme and its source; default scheme prefers `tool.flet.project` / `artifact` / `product` / `project.name` over the shared `flet` fallback.
+* Fix Android AppAuth builds on Windows: scheme log no longer uses a non-cp1252 character that aborted before `appAuthRedirectScheme` was written; bake the placeholder into the build template when a scheme is set.
 
 ## 1.1.3
 

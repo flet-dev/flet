@@ -33,8 +33,10 @@ from flet_platform_assets import (
     web_targets_from_manifest,
     write,
 )
-from packaging.requirements import Requirement
+from packaging.requirements import InvalidRequirement, Requirement
+from packaging.utils import canonicalize_name
 from rich.markup import escape
+from rich.panel import Panel
 from rich.table import Column, Table
 
 import flet.version
@@ -46,6 +48,7 @@ from flet_cli.commands.flutter_base import (
     error_style,
     verbose1_style,
     verbose2_style,
+    warning_style,
 )
 from flet_cli.commands.options import PassThroughArgsAction
 from flet_cli.utils.android import (
@@ -809,8 +812,10 @@ class BaseBuildCommand(BaseFlutterCommand):
             "--appauth-redirect-scheme",
             dest="appauth_redirect_scheme",
             help="OAuth AppAuth redirect URL scheme for Android/iOS "
-            "(e.g. `myapp`). Defaults to `flet` when flet-appauth is a "
-            "dependency. Config: tool.flet.appauth.redirect_scheme",
+            "(e.g. `myapp`). When omitted and flet-appauth is a dependency, "
+            "defaults to a sanitized app name from pyproject "
+            "(tool.flet.project / artifact / product / project.name), "
+            "else `flet`. Config: tool.flet.appauth.redirect_scheme",
         )
         parser.add_argument(
             "--android-signing-key-store",
@@ -1248,20 +1253,26 @@ class BaseBuildCommand(BaseFlutterCommand):
 
         assert self.flutter_dir
         from flet_cli.utils.appauth_redirect import (
-            DEFAULT_APPAUTH_REDIRECT_SCHEME,
-            resolve_appauth_redirect_scheme,
+            resolve_appauth_redirect_scheme_info,
         )
 
-        uses_appauth = (
-            isinstance(self.flutter_dependencies, dict)
-            and "flet_appauth" in self.flutter_dependencies
-        )
-        appauth_redirect_scheme = resolve_appauth_redirect_scheme(
+        # Prefer pyproject / CLI here; flutter_dependencies is still empty until
+        # extensions are registered (refreshed again after that).
+        appauth_resolved = resolve_appauth_redirect_scheme_info(
             cli_scheme=self.options.appauth_redirect_scheme,
             get_pyproject=self.get_pyproject,
             config_platform=self.config_platform,
-            default=DEFAULT_APPAUTH_REDIRECT_SCHEME if uses_appauth else None,
+            default=None,
+            use_app_name_default=self.project_uses_appauth(),
         )
+        appauth_redirect_scheme = appauth_resolved.scheme
+        if appauth_redirect_scheme:
+            console.log(
+                f"AppAuth redirect scheme: {appauth_redirect_scheme} "
+                f"(from {appauth_resolved.source})",
+                style=verbose1_style,
+                markup=False,
+            )
         project_description = (
             self.options.description
             or self.get_pyproject("project.description")
@@ -1875,6 +1886,11 @@ class BaseBuildCommand(BaseFlutterCommand):
                     f"Registered app user extensions {self.emojis['checkmark']}"
                 )
 
+        # Extensions are known only after packaging; refresh AppAuth scheme so
+        # the second cookiecutter pass can bake appAuthRedirectScheme into
+        # Android/iOS project files.
+        self.refresh_appauth_template_scheme()
+
         self.apply_extension_settings()
 
     def apply_extension_settings(self):
@@ -1954,19 +1970,101 @@ class BaseBuildCommand(BaseFlutterCommand):
 
         self.save_yaml(self.pubspec_path, pubspec)
 
+    def project_uses_appauth(self) -> bool:
+        """
+        Whether this build needs an AppAuth redirect scheme.
+
+        True when `flet_appauth` is already registered as a Flutter dependency,
+        present under `build/flutter-packages`, listed in `pubspec.yaml`, or
+        declared as a Python dependency (`flet-appauth` / `flet[appauth]`).
+        """
+        assert self.get_pyproject
+
+        if (
+            isinstance(self.flutter_dependencies, dict)
+            and "flet_appauth" in self.flutter_dependencies
+        ):
+            return True
+
+        if self.flutter_packages_dir and (
+            self.flutter_packages_dir / "flet_appauth" / "pubspec.yaml"
+        ).is_file():
+            return True
+
+        if self.pubspec_path and self.pubspec_path.is_file():
+            try:
+                pubspec = self.load_yaml(self.pubspec_path)
+                deps = pubspec.get("dependencies") or {}
+                if isinstance(deps, dict) and "flet_appauth" in deps:
+                    return True
+            except Exception:
+                pass
+
+        for raw in get_project_dependencies(
+            self.get_pyproject("project.dependencies")
+        ) or []:
+            try:
+                req = Requirement(raw)
+            except InvalidRequirement:
+                continue
+            name = canonicalize_name(req.name)
+            if name == "flet-appauth":
+                return True
+            if name == "flet" and "appauth" in {
+                canonicalize_name(e) for e in req.extras
+            }:
+                return True
+        return False
+
+    def refresh_appauth_template_scheme(self, log_style=None) -> Optional[str]:
+        """
+        Resolve AppAuth redirect scheme into `template_data` for cookiecutter.
+
+        Returns:
+            The scheme string, or ``None`` when AppAuth is unused and no scheme
+            was configured explicitly.
+        """
+        from flet_cli.utils.appauth_redirect import (
+            resolve_appauth_redirect_scheme_info,
+        )
+
+        assert self.options
+        assert self.get_pyproject
+        assert self.template_data is not None
+
+        uses_appauth = self.project_uses_appauth()
+        resolved = resolve_appauth_redirect_scheme_info(
+            cli_scheme=getattr(self.options, "appauth_redirect_scheme", None),
+            get_pyproject=self.get_pyproject,
+            config_platform=self.config_platform,
+            default=None,
+            use_app_name_default=uses_appauth,
+        )
+        scheme = resolved.scheme
+        self.template_data.setdefault("appauth", {})["redirect_scheme"] = scheme
+        if scheme and log_style is not None:
+            console.log(
+                f"AppAuth redirect scheme: {scheme} (from {resolved.source})",
+                style=log_style,
+                markup=False,
+            )
+        return scheme
+
     def ensure_appauth_redirect_config(self):
         """
         Wire AppAuth OAuth redirect scheme into Android/iOS project files.
 
         Uses AppAuth-specific config (`tool.flet.appauth.redirect_scheme` /
         `--appauth-redirect-scheme`), not deep linking. When `flet-appauth`
-        is a dependency and no scheme is configured, defaults to ``flet``.
+        is a dependency and no scheme is configured, defaults to a sanitized
+        app name from pyproject (project/artifact/product), else ``flet``.
+
+        Patches project files even when the cookiecutter template already
+        included the scheme (idempotent), and logs the resolved value.
         """
         from flet_cli.utils.appauth_redirect import (
-            DEFAULT_APPAUTH_REDIRECT_SCHEME,
             patch_android_appauth_scheme,
             patch_ios_appauth_scheme,
-            resolve_appauth_redirect_scheme,
         )
 
         assert self.options
@@ -1974,16 +2072,31 @@ class BaseBuildCommand(BaseFlutterCommand):
         assert self.get_pyproject
         assert isinstance(self.flutter_dependencies, dict)
 
-        uses_appauth = "flet_appauth" in self.flutter_dependencies
-        scheme = resolve_appauth_redirect_scheme(
+        from flet_cli.utils.appauth_redirect import (
+            resolve_appauth_redirect_scheme_info,
+        )
+
+        # Resolve after extensions are registered; patch runs after any
+        # cookiecutter re-render so a skipped second pass still gets the value.
+        # Source strings are ASCII-only so Windows cp1252 consoles cannot abort
+        # the build before Gradle is patched.
+        resolved = resolve_appauth_redirect_scheme_info(
             cli_scheme=getattr(self.options, "appauth_redirect_scheme", None),
             get_pyproject=self.get_pyproject,
             config_platform=self.config_platform,
-            default=DEFAULT_APPAUTH_REDIRECT_SCHEME if uses_appauth else None,
+            default=None,
+            use_app_name_default=self.project_uses_appauth(),
         )
-
+        scheme = resolved.scheme
+        if self.template_data is not None:
+            self.template_data.setdefault("appauth", {})["redirect_scheme"] = scheme
         if not scheme:
             return
+
+        console.log(
+            f"AppAuth redirect scheme: {scheme} (from {resolved.source})",
+            markup=False,
+        )
 
         if self.package_platform in {"Android"}:
             if patch_android_appauth_scheme(self.flutter_dir, scheme):

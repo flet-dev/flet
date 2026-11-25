@@ -5,11 +5,114 @@ from __future__ import annotations
 import plistlib
 import re
 from pathlib import Path
-from typing import Callable, Optional
+from typing import Callable, NamedTuple, Optional
 
-# Used when flet-appauth is a dependency and no scheme is configured.
-# Match OAuthProvider.redirect_url to e.g. flet://oauth-callback, or override.
+# Last-resort fallback when flet-appauth is a dependency and no app name /
+# explicit scheme is configured. Prefer a per-app scheme from pyproject.
 DEFAULT_APPAUTH_REDIRECT_SCHEME = "flet"
+
+# RFC 3986 scheme: ALPHA *( ALPHA / DIGIT / "+" / "-" / "." )
+_SCHEME_SAFE = re.compile(r"[^a-z0-9+.-]+")
+
+
+class ResolvedAppAuthScheme(NamedTuple):
+    scheme: Optional[str]
+    source: str  # human-readable origin for build logs
+
+
+def sanitize_appauth_scheme(name: str) -> Optional[str]:
+    """
+    Turn a product/project/artifact name into a valid URL scheme.
+
+    Returns:
+        Lowercase scheme, or ``None`` if nothing usable remains.
+    """
+    raw = str(name).strip().lower().replace("_", "-").replace(" ", "-")
+    cleaned = _SCHEME_SAFE.sub("", raw).strip(".-+")
+    if not cleaned or not cleaned[0].isalpha():
+        return None
+    return cleaned
+
+
+def default_appauth_scheme_from_pyproject(
+    get_pyproject: Callable[..., Optional[str]],
+) -> ResolvedAppAuthScheme:
+    """
+    Derive a default redirect scheme from pyproject app identity.
+
+    Order: ``tool.flet.project``, ``tool.flet.artifact``, ``tool.flet.product``,
+    ``project.name``. Falls back to :data:`DEFAULT_APPAUTH_REDIRECT_SCHEME`.
+
+    ``page.title`` cannot be used — the scheme is fixed at ``flet build`` time
+    into Android/iOS project files, before the app runs.
+    """
+    candidates = (
+        ("tool.flet.project", get_pyproject("tool.flet.project")),
+        ("tool.flet.artifact", get_pyproject("tool.flet.artifact")),
+        ("tool.flet.product", get_pyproject("tool.flet.product")),
+        ("project.name", get_pyproject("project.name")),
+    )
+    for key, value in candidates:
+        if not value:
+            continue
+        scheme = sanitize_appauth_scheme(str(value))
+        if scheme:
+            return ResolvedAppAuthScheme(
+                # ASCII-only: Windows consoles (cp1252) raise on arrows/etc.
+                scheme, f"app name ({key}={value!r} -> {scheme})"
+            )
+    return ResolvedAppAuthScheme(
+        DEFAULT_APPAUTH_REDIRECT_SCHEME,
+        f"fallback ({DEFAULT_APPAUTH_REDIRECT_SCHEME})",
+    )
+
+
+def resolve_appauth_redirect_scheme_info(
+    *,
+    cli_scheme: Optional[str],
+    get_pyproject: Callable[..., Optional[str]],
+    config_platform: Optional[str] = None,
+    default: Optional[str] = DEFAULT_APPAUTH_REDIRECT_SCHEME,
+    use_app_name_default: bool = False,
+) -> ResolvedAppAuthScheme:
+    """
+    Resolve AppAuth redirect scheme and a short origin string for build logs.
+
+    Precedence:
+    1. CLI ``--appauth-redirect-scheme``
+    2. ``tool.flet.<android|ios>.appauth.redirect_scheme`` for the build platform
+    3. ``tool.flet.appauth.redirect_scheme``
+    4. When ``use_app_name_default`` is true: sanitized app name from pyproject
+       (``tool.flet.project`` / ``artifact`` / ``product`` / ``project.name``),
+       else ``default`` (``flet``), else ``None``
+    """
+    if cli_scheme:
+        scheme = str(cli_scheme).strip().lower() or None
+        return ResolvedAppAuthScheme(
+            scheme, "CLI --appauth-redirect-scheme" if scheme else "CLI (empty)"
+        )
+
+    if config_platform:
+        key = f"tool.flet.{config_platform}.appauth.redirect_scheme"
+        value = get_pyproject(key)
+        if value:
+            scheme = str(value).strip().lower() or None
+            return ResolvedAppAuthScheme(scheme, key)
+
+    key = "tool.flet.appauth.redirect_scheme"
+    value = get_pyproject(key)
+    if value:
+        scheme = str(value).strip().lower() or None
+        return ResolvedAppAuthScheme(scheme, key)
+
+    if use_app_name_default:
+        return default_appauth_scheme_from_pyproject(get_pyproject)
+
+    if default:
+        return ResolvedAppAuthScheme(
+            str(default).strip().lower() or None, f"default ({default})"
+        )
+    return ResolvedAppAuthScheme(None, "none")
 
 
 def resolve_appauth_redirect_scheme(
@@ -18,34 +121,16 @@ def resolve_appauth_redirect_scheme(
     get_pyproject: Callable[..., Optional[str]],
     config_platform: Optional[str] = None,
     default: Optional[str] = DEFAULT_APPAUTH_REDIRECT_SCHEME,
+    use_app_name_default: bool = False,
 ) -> Optional[str]:
-    """
-    Resolve AppAuth redirect scheme (lowercase) from CLI, pyproject, or default.
-
-    Precedence:
-    1. CLI `--appauth-redirect-scheme`
-    2. `tool.flet.<android|ios>.appauth.redirect_scheme` for the build platform
-    3. `tool.flet.appauth.redirect_scheme`
-    4. `default` (``flet`` when building with flet-appauth; pass ``None`` to
-       skip defaulting)
-    """
-    if cli_scheme:
-        return str(cli_scheme).strip().lower() or None
-
-    if config_platform:
-        value = get_pyproject(
-            f"tool.flet.{config_platform}.appauth.redirect_scheme"
-        )
-        if value:
-            return str(value).strip().lower() or None
-
-    value = get_pyproject("tool.flet.appauth.redirect_scheme")
-    if value:
-        return str(value).strip().lower() or None
-
-    if default:
-        return str(default).strip().lower() or None
-    return None
+    """Resolve AppAuth redirect scheme (lowercase). See ``resolve_appauth_redirect_scheme_info``."""
+    return resolve_appauth_redirect_scheme_info(
+        cli_scheme=cli_scheme,
+        get_pyproject=get_pyproject,
+        config_platform=config_platform,
+        default=default,
+        use_app_name_default=use_app_name_default,
+    ).scheme
 
 
 def patch_android_appauth_scheme(flutter_dir: Path, scheme: str) -> bool:

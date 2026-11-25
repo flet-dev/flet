@@ -5,11 +5,20 @@ from flet_cli.utils.appauth_redirect import (
     patch_android_appauth_scheme,
     patch_ios_appauth_scheme,
     resolve_appauth_redirect_scheme,
+    resolve_appauth_redirect_scheme_info,
+    sanitize_appauth_scheme,
 )
 
 
 def test_default_scheme_constant():
     assert DEFAULT_APPAUTH_REDIRECT_SCHEME == "flet"
+
+
+def test_sanitize_appauth_scheme():
+    assert sanitize_appauth_scheme("AppAuth") == "appauth"
+    assert sanitize_appauth_scheme("My Cool App") == "my-cool-app"
+    assert sanitize_appauth_scheme("123bad") is None
+    assert sanitize_appauth_scheme("") is None
 
 
 def test_resolve_prefers_cli_scheme():
@@ -79,6 +88,30 @@ def test_resolve_defaults_to_flet():
         )
         == "flet"
     )
+
+
+def test_resolve_app_name_default_from_project():
+    values = {"tool.flet.project": "AppAuth"}
+    info = resolve_appauth_redirect_scheme_info(
+        cli_scheme=None,
+        get_pyproject=lambda key: values.get(key),
+        default=None,
+        use_app_name_default=True,
+    )
+    assert info.scheme == "appauth"
+    assert "tool.flet.project" in info.source
+    assert "->" in info.source  # ASCII (Windows consoles reject Unicode arrows)
+
+
+def test_resolve_app_name_falls_back_to_flet():
+    info = resolve_appauth_redirect_scheme_info(
+        cli_scheme=None,
+        get_pyproject=lambda key: None,
+        default=None,
+        use_app_name_default=True,
+    )
+    assert info.scheme == "flet"
+    assert "fallback" in info.source
 
 
 def test_resolve_no_default_when_disabled():

@@ -81,6 +81,10 @@ android {
         targetSdk = resolvedTargetSdk
         versionCode = flutterVersionCode
         versionName = flutterVersionName
+{% if cookiecutter.appauth.redirect_scheme %}
+        // flutter_appauth / AppAuth-Android redirect URI scheme
+        manifestPlaceholders.putAll(mapOf("appAuthRedirectScheme" to "{{ cookiecutter.appauth.redirect_scheme }}"))
+{% endif %}
 
         println("Gradle build config:")
         println("  minSdkVersion: $resolvedMinSdk")
