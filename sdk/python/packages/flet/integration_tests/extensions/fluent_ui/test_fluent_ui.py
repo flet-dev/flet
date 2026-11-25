@@ -313,3 +313,122 @@ async def test_date_and_time_set_from_python(flet_app: ftt.FletTestApp):
     assert (await flet_app.tester.find_by_text("2024")).count == 1
     assert (await flet_app.tester.find_by_text("45")).count == 1
     assert (await flet_app.tester.find_by_text("PM")).count == 1
+
+
+@pytest.mark.asyncio(loop_scope="module")
+async def test_flyout_open_close_and_dismiss(flet_app: ftt.FletTestApp):
+    dismissed = []
+    flyout = fluent.Flyout(
+        content=ft.Text("Target"),
+        flyout=ft.Text("Flyout content"),
+        on_dismiss=lambda e: dismissed.append(True),
+    )
+    flet_app.page.controls = [flyout, ft.Text("Elsewhere")]
+    flet_app.page.update()
+    await flet_app.tester.pump_and_settle()
+
+    # Opened and closed from Python: no dismiss event.
+    flyout.open = True
+    flyout.update()
+    await flet_app.tester.pump_and_settle()
+    assert (await flet_app.tester.find_by_text("Flyout content")).count == 1
+    flyout.open = False
+    flyout.update()
+    await flet_app.tester.pump_and_settle()
+    assert (await flet_app.tester.find_by_text("Flyout content")).count == 0
+    assert dismissed == []
+
+    # Closed by the user: `open` is reset and the dismiss event fires, and
+    # the flyout can be opened again.
+    for _ in range(2):
+        flyout.open = True
+        flyout.update()
+        await flet_app.tester.pump_and_settle()
+        assert (await flet_app.tester.find_by_text("Flyout content")).count == 1
+        await flet_app.tester.tap_at(ft.Offset(300, 300))
+        await flet_app.tester.pump_and_settle()
+        assert (await flet_app.tester.find_by_text("Flyout content")).count == 0
+        assert flyout.open is False
+    assert dismissed == [True, True]
+
+
+@pytest.mark.asyncio(loop_scope="module")
+async def test_flyout_uses_enclosing_theme(flet_app: ftt.FletTestApp, request):
+    flet_app.page.theme_mode = ft.ThemeMode.LIGHT
+    flet_app.page.enable_screenshots = True
+    flet_app.resize_page(320, 200)
+    flet_app.page.controls = [
+        fluent.Theme(
+            brightness=ft.Brightness.DARK,
+            accent_color=ft.Colors.PURPLE,
+            content=fluent.Flyout(
+                open=True,
+                content=fluent.FilledButton("Target"),
+                flyout=fluent.ToggleSwitch(label="Dark flyout", value=True),
+            ),
+        )
+    ]
+    flet_app.page.update()
+    await flet_app.tester.pump_and_settle()
+    flet_app.assert_screenshot(
+        request.node.name,
+        await flet_app.page.take_screenshot(
+            pixel_ratio=flet_app.screenshots_pixel_ratio
+        ),
+    )
+    await flet_app.tester.tap_at(ft.Offset(300, 180))
+    await flet_app.tester.pump_and_settle()
+    flet_app.page.enable_screenshots = False
+
+
+@pytest.mark.asyncio(loop_scope="module")
+async def test_menu_items_update_and_toggle(flet_app: ftt.FletTestApp):
+    events = []
+    toggle = fluent.ToggleMenuFlyoutItem(
+        "Word wrap", on_change=lambda e: events.append(e.control.value)
+    )
+    item = fluent.MenuFlyoutItem("Old label")
+    button = fluent.DropDownButton("Options", items=[item, toggle])
+    flet_app.page.controls = [button]
+    flet_app.page.update()
+    await flet_app.tester.pump_and_settle()
+
+    # An item changed from Python shows its new label in the menu.
+    item.content = "New label"
+    item.update()
+    await flet_app.tester.pump_and_settle()
+    await flet_app.tester.tap(await flet_app.tester.find_by_text("Options"))
+    await flet_app.tester.pump_and_settle()
+    assert (await flet_app.tester.find_by_text("New label")).count == 1
+
+    await flet_app.tester.tap(await flet_app.tester.find_by_text("Word wrap"))
+    await flet_app.tester.pump_and_settle()
+    assert toggle.value is True
+    assert events == [True]
+
+    # Without items the button is disabled rather than failing.
+    button.items = []
+    button.update()
+    await flet_app.tester.pump_and_settle()
+    await flet_app.tester.tap(await flet_app.tester.find_by_text("Options"))
+    await flet_app.tester.pump_and_settle()
+    assert (await flet_app.tester.find_by_text("Word wrap")).count == 0
+
+
+@pytest.mark.asyncio(loop_scope="module")
+async def test_toggle_split_button(flet_app: ftt.FletTestApp):
+    events = []
+    button = fluent.SplitButton(
+        "Bold",
+        checked=False,
+        items=[fluent.MenuFlyoutItem("Bold italic")],
+        on_change=lambda e: events.append(e.control.checked),
+    )
+    flet_app.page.controls = [button]
+    flet_app.page.update()
+    await flet_app.tester.pump_and_settle()
+    for _ in range(2):
+        await flet_app.tester.tap(await flet_app.tester.find_by_text("Bold"))
+        await flet_app.tester.pump_and_settle()
+    assert events == [True, False]
+    assert button.checked is False

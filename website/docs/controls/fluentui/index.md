@@ -72,6 +72,13 @@ fluent.Theme(
 
 <Image src={frontMatter.example_images + '/overview/theming.png'} alt="theming" width="20%" caption="A purple accent color" />
 
+Popups follow the `Theme` around the control that opens them, with one
+exception. The lists of [`DatePicker`](datepicker.md) and
+[`TimePicker`](timepicker.md), the calendar of
+[`CalendarDatePicker`](calendardatepicker.md) and the menus of
+[`DropDownButton`](dropdownbutton.md) and [`SplitButton`](splitbutton.md) use
+the default blue accent color and the page's brightness.
+
 ## Icons
 
 [`FluentIcons`](types/fluenticons.md) contains the Fluent icons. It can be used
@@ -103,17 +110,22 @@ ft.Row(
 - [Checkbox](checkbox.md)
 - [ColorPicker](colorpicker.md)
 - [ComboBox](combobox.md)
+- [CommandBar](commandbar.md)
 - [ContentDialog](contentdialog.md)
+- [ContextMenu](contextmenu.md)
 - [DatePicker](datepicker.md)
 - [Divider](divider.md)
+- [DropDownButton](dropdownbutton.md)
 - [Expander](expander.md)
 - [FilledButton](filledbutton.md)
+- [Flyout](flyout.md)
 - [HyperlinkButton](hyperlinkbutton.md)
 - [IconButton](iconbutton.md)
 - [InfoBadge](infobadge.md)
 - [InfoBar](infobar.md)
 - [InfoLabel](infolabel.md)
 - [ListTile](listtile.md)
+- [MenuBar](menubar.md)
 - [NumberBox](numberbox.md)
 - [OutlinedButton](outlinedbutton.md)
 - [PasswordBox](passwordbox.md)
@@ -122,6 +134,8 @@ ft.Row(
 - [RadioGroup](radiogroup.md)
 - [RatingBar](ratingbar.md)
 - [Slider](slider.md)
+- [SplitButton](splitbutton.md)
+- [TeachingTip](teachingtip.md)
 - [TextBox](textbox.md)
 - [TimePicker](timepicker.md)
 - [ToggleButton](togglebutton.md)

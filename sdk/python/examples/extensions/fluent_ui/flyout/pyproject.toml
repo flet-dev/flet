@@ -1,0 +1,26 @@
+[project]
+name = "fluent-ui-flyout"
+version = "1.0.0"
+description = "Confirm emptying a shopping cart in a flyout."
+requires-python = ">=3.10"
+keywords = ["fluent", "flyout", "popup", "confirmation"]
+authors = [{ name = "Flet team", email = "hello@flet.dev" }]
+dependencies = ["flet", "flet-fluent-ui"]
+
+[dependency-groups]
+dev = ["flet-cli", "flet-desktop", "flet-web"]
+
+[tool.flet.gallery]
+categories = ["Fluent"]
+
+[tool.flet.metadata]
+title = "Fluent Flyout"
+controls = ["SafeArea", "Column", "Text", "Flyout", "Button"]
+layout_pattern = "single-control"
+complexity = "basic"
+features = ["open and close", "dismiss handling"]
+
+[tool.flet]
+org = "dev.flet"
+company = "Flet"
+copyright = "Copyright (C) 2023-2026 by Flet"

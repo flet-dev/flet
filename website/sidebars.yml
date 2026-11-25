@@ -348,17 +348,31 @@ docs:
         ComboBox:
           _index: controls/fluentui/combobox.md
           ComboBoxItem: controls/fluentui/comboboxitem.md
+        CommandBar:
+          _index: controls/fluentui/commandbar.md
+          CommandBarButton: controls/fluentui/commandbarbutton.md
+          CommandBarSeparator: controls/fluentui/commandbarseparator.md
         ContentDialog: controls/fluentui/contentdialog.md
+        ContextMenu:
+          _index: controls/fluentui/contextmenu.md
+          MenuFlyoutItem: controls/fluentui/menuflyoutitem.md
+          MenuFlyoutSeparator: controls/fluentui/menuflyoutseparator.md
+          ToggleMenuFlyoutItem: controls/fluentui/togglemenuflyoutitem.md
         DatePicker: controls/fluentui/datepicker.md
         Divider: controls/fluentui/divider.md
+        DropDownButton: controls/fluentui/dropdownbutton.md
         Expander: controls/fluentui/expander.md
         FilledButton: controls/fluentui/filledbutton.md
+        Flyout: controls/fluentui/flyout.md
         HyperlinkButton: controls/fluentui/hyperlinkbutton.md
         IconButton: controls/fluentui/iconbutton.md
         InfoBadge: controls/fluentui/infobadge.md
         InfoBar: controls/fluentui/infobar.md
         InfoLabel: controls/fluentui/infolabel.md
         ListTile: controls/fluentui/listtile.md
+        MenuBar:
+          _index: controls/fluentui/menubar.md
+          MenuBarItem: controls/fluentui/menubaritem.md
         NumberBox: controls/fluentui/numberbox.md
         OutlinedButton: controls/fluentui/outlinedbutton.md
         PasswordBox: controls/fluentui/passwordbox.md
@@ -369,6 +383,8 @@ docs:
           RadioButton: controls/fluentui/radiobutton.md
         RatingBar: controls/fluentui/ratingbar.md
         Slider: controls/fluentui/slider.md
+        SplitButton: controls/fluentui/splitbutton.md
+        TeachingTip: controls/fluentui/teachingtip.md
         TextBox: controls/fluentui/textbox.md
         TimePicker: controls/fluentui/timepicker.md
         ToggleButton: controls/fluentui/togglebutton.md
@@ -651,7 +667,9 @@ docs:
         - controls/fluentui/types/calendarselectionmode.md
         - controls/fluentui/types/calendarviewchangeevent.md
         - controls/fluentui/types/colorspectrumshape.md
+        - controls/fluentui/types/commandbaroverflowbehavior.md
         - controls/fluentui/types/expanderdirection.md
+        - controls/fluentui/types/flyoutplacementmode.md
         - controls/fluentui/types/infobarseverity.md
         - controls/fluentui/types/listtileselectionmode.md
         - controls/fluentui/types/passwordrevealmode.md

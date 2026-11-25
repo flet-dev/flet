@@ -6,15 +6,19 @@ import 'button.dart';
 import 'calendar.dart';
 import 'card.dart';
 import 'color_picker.dart';
+import 'command_bar.dart';
 import 'combo_box.dart';
 import 'content_dialog.dart';
 import 'date_picker.dart';
 import 'divider.dart';
+import 'dropdown_button.dart';
 import 'expander.dart';
+import 'flyout.dart';
 import 'info_badge.dart';
 import 'info_bar.dart';
 import 'info_label.dart';
 import 'list_tile.dart';
+import 'menu_bar.dart';
 import 'number_box.dart';
 import 'password_box.dart';
 import 'progress.dart';
@@ -113,6 +117,24 @@ class Extension extends FletExtension {
         return FluentListTileControl(key: key, control: control);
       case "FluentInfoBadge":
         return FluentInfoBadgeControl(key: key, control: control);
+      case "FluentFlyout":
+        return FluentFlyoutControl(key: key, control: control);
+      case "FluentTeachingTip":
+        return FluentFlyoutControl(
+          key: key,
+          control: control,
+          teachingTip: true,
+        );
+      case "FluentContextMenu":
+        return FluentContextMenuControl(key: key, control: control);
+      case "FluentDropDownButton":
+        return FluentDropDownButtonControl(key: key, control: control);
+      case "FluentSplitButton":
+        return FluentSplitButtonControl(key: key, control: control);
+      case "FluentMenuBar":
+        return FluentMenuBarControl(key: key, control: control);
+      case "FluentCommandBar":
+        return FluentCommandBarControl(key: key, control: control);
       default:
         return null;
     }

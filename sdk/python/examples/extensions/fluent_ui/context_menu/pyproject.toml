@@ -1,0 +1,26 @@
+[project]
+name = "fluent-ui-context-menu"
+version = "1.0.0"
+description = "Right-click a file to open, rename, share or delete it."
+requires-python = ">=3.10"
+keywords = ["fluent", "context menu", "menu", "right click"]
+authors = [{ name = "Flet team", email = "hello@flet.dev" }]
+dependencies = ["flet", "flet-fluent-ui"]
+
+[dependency-groups]
+dev = ["flet-cli", "flet-desktop", "flet-web"]
+
+[tool.flet.gallery]
+categories = ["Fluent"]
+
+[tool.flet.metadata]
+title = "Fluent ContextMenu"
+controls = ["SafeArea", "Column", "Container", "Row", "Icon", "Text", "ContextMenu", "MenuFlyoutItem", "MenuFlyoutSeparator"]
+layout_pattern = "single-control"
+complexity = "basic"
+features = ["right click", "submenu", "click handling"]
+
+[tool.flet]
+org = "dev.flet"
+company = "Flet"
+copyright = "Copyright (C) 2023-2026 by Flet"

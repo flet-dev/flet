@@ -1,0 +1,26 @@
+[project]
+name = "fluent-ui-command-bar"
+version = "1.0.0"
+description = "A mail toolbar with commands and a More menu."
+requires-python = ">=3.10"
+keywords = ["fluent", "command bar", "toolbar"]
+authors = [{ name = "Flet team", email = "hello@flet.dev" }]
+dependencies = ["flet", "flet-fluent-ui"]
+
+[dependency-groups]
+dev = ["flet-cli", "flet-desktop", "flet-web"]
+
+[tool.flet.gallery]
+categories = ["Fluent"]
+
+[tool.flet.metadata]
+title = "Fluent CommandBar"
+controls = ["SafeArea", "Column", "Text", "CommandBar", "CommandBarButton", "CommandBarSeparator"]
+layout_pattern = "toolbar"
+complexity = "basic"
+features = ["commands", "overflow menu", "click handling"]
+
+[tool.flet]
+org = "dev.flet"
+company = "Flet"
+copyright = "Copyright (C) 2023-2026 by Flet"
