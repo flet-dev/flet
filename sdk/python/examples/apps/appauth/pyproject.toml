@@ -6,6 +6,7 @@ requires-python = ">=3.10"
 dependencies = [
     "flet",
     "flet-appauth",
+    "python-dotenv",
 ]
 
 [dependency-groups]

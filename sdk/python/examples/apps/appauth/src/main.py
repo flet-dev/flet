@@ -2,7 +2,17 @@
 Auth0 native OAuth (PKCE, no client secret) via page.login + flet-appauth.
 
 Create a Native application in Auth0 (public client). Register the callback
-URI below. Do not use a Regular Web Application that requires a client secret.
+URI that matches your AppAuth redirect scheme (see below). Do not use a
+Regular Web Application that requires a client secret.
+
+With ``tool.flet.project = "appauth"``, ``flet build`` defaults the scheme to
+``appauth`` (sanitized app name). Register ``appauth://oauth-callback`` in
+Auth0, or set ``AUTH0_REDIRECT_URL`` / ``[tool.flet.appauth] redirect_scheme``.
+
+``.env`` is excluded from the package by default. This project keeps it via
+``[tool.flet.app] include = [".env"]``. Equivalent CLI:
+
+  flet build apk --include .env
 
 Build (from this directory):
 
@@ -14,7 +24,7 @@ Build (from this directory):
   .venv/Scripts/flet.exe build apk -v --yes   # Windows
   # .venv/bin/flet build apk -v --yes         # macOS/Linux
 
-IdP callback URL: flet://oauth-callback
+IdP callback URL (default for this example): appauth://oauth-callback
 """
 
 from __future__ import annotations
@@ -23,27 +33,13 @@ import os
 from pathlib import Path
 
 import flet as ft
+from dotenv import load_dotenv
 from flet.auth.providers import Auth0OAuthProvider
 
-REDIRECT_URL = "flet://oauth-callback"
+# Matches sanitized tool.flet.project / artifact ("appauth") at flet build time.
+REDIRECT_URL = "appauth://oauth-callback"
 
-
-def _load_dotenv() -> None:
-    """Load src/.env into os.environ (packaged via tool.flet.app.include)."""
-    path = Path(__file__).resolve().parent / ".env"
-    if not path.is_file():
-        return
-    for raw in path.read_text(encoding="utf-8").splitlines():
-        line = raw.strip()
-        if not line or line.startswith("#") or "=" not in line:
-            continue
-        key, _, value = line.partition("=")
-        key = key.strip()
-        if key and key not in os.environ:
-            os.environ[key] = value.strip().strip("'").strip('"')
-
-
-_load_dotenv()
+load_dotenv(Path(__file__).resolve().parent / ".env")
 
 
 def build_provider() -> Auth0OAuthProvider:
