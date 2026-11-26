@@ -35,19 +35,30 @@ def main(page: ft.Page):
         audience=os.getenv("AUTH0_AUDIENCE") or None,
     )
 
+    status = ft.Text()
+
     async def on_login(e: ft.LoginEvent):
         if e.error:
-            page.add(ft.Text(f"Login error: {e.error}"))
+            status.value = f"Login error: {e.error}"
         else:
-            page.add(ft.Text(f"Logged in as {page.auth.user}"))
-        page.update()
+            status.value = f"Logged in as {page.auth.user}"
 
     page.on_login = on_login
 
     async def login_click(e):
         await page.login(provider)
 
-    page.add(ft.Button("Sign in with Auth0", on_click=login_click))
+    page.add(
+        ft.SafeArea(
+            content=ft.Column(
+                controls=[
+                    ft.Button("Sign in with Auth0", on_click=login_click),
+                    status,
+                ],
+            ),
+        )
+    )
 
 
-ft.run(main)
+if __name__ == "__main__":
+    ft.run(main)
