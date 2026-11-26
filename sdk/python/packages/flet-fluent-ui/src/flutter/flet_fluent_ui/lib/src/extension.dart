@@ -46,16 +46,6 @@ class Extension extends FletExtension {
 
   @override
   Widget? createWidget(Key? key, Control control) {
-    final widget = _createWidget(key, control);
-    if (widget != null) {
-      // Fluent controls draw FluentIcons glyphs (checkmarks, chevrons, info
-      // bar icons): a web build loads that font on first use.
-      loadDeferredFonts("fluent_ui");
-    }
-    return widget;
-  }
-
-  Widget? _createWidget(Key? key, Control control) {
     switch (control.type) {
       case "FluentTheme":
         return FluentThemeControl(key: key, control: control);
@@ -163,7 +153,8 @@ class Extension extends FletExtension {
     if ((iconCode >> 16) & 0xFF != _fluentIconSetId) return null;
     final index = iconCode & 0xFFFF;
     if (index >= fluentIcons.length) return null;
-    loadDeferredFonts("fluent_ui");
+    // The icon font (1.6 MB) is loaded on first use in a web build.
+    loadDeferredFonts("flet_fluent_ui");
     return fluentIcons[index];
   }
 }

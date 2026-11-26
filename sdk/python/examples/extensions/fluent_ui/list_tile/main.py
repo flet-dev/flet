@@ -3,7 +3,7 @@ import flet_fluent_ui as fluent
 import flet as ft
 
 FOLDERS = [
-    ("Inbox", fluent.FluentIcons.INBOX, "3 unread"),
+    ("Inbox", fluent.FluentIcons.MAIL_INBOX, "3 unread"),
     ("Sent", fluent.FluentIcons.SEND, None),
     ("Archive", fluent.FluentIcons.ARCHIVE, None),
 ]

@@ -109,11 +109,8 @@ class TimePicker(ft.LayoutControl):
 
     minute_increment: int = 1
     """
-    The step between the minutes offered: for example, `15` offers `0`, `15`,
+    The step between the minutes offered: for example, `15` offers `00`, `15`,
     `30` and `45`.
-
-    Minutes are shown without a leading zero (`14 5` for 14:05), which is how
-    fluent_ui formats them.
     """
 
     autofocus: bool = False

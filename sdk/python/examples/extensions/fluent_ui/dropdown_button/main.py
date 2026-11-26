@@ -27,7 +27,7 @@ def main(page: ft.Page):
     sort_button = fluent.DropDownButton(
         "Sort by: Name",
         key="sort",
-        leading=fluent.FluentIcons.SORT,
+        leading=fluent.FluentIcons.ARROW_SORT,
         items=[
             fluent.MenuFlyoutItem(
                 "Name",

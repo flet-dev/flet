@@ -19,7 +19,7 @@ def main(page: ft.Page):
                     fluent.TextBox(
                         key="name",
                         placeholder="Your name",
-                        prefix=fluent.FluentIcons.CONTACT,
+                        prefix=fluent.FluentIcons.PERSON,
                         on_change=handle_change,
                     ),
                     fluent.TextBox(placeholder="Password", password=True),

@@ -19,12 +19,12 @@ def main(page: ft.Page):
                         card=True,
                         primary_items=[
                             fluent.CommandBarButton(
-                                icon=fluent.FluentIcons.MAIL_REPLY,
+                                icon=fluent.FluentIcons.ARROW_REPLY,
                                 content="Reply",
                                 on_click=handle_click,
                             ),
                             fluent.CommandBarButton(
-                                icon=fluent.FluentIcons.MAIL_FORWARD,
+                                icon=fluent.FluentIcons.ARROW_FORWARD,
                                 content="Forward",
                                 on_click=handle_click,
                             ),
@@ -47,7 +47,7 @@ def main(page: ft.Page):
                                 on_click=handle_click,
                             ),
                             fluent.CommandBarButton(
-                                icon=fluent.FluentIcons.READ,
+                                icon=fluent.FluentIcons.MAIL_READ,
                                 content="Mark as read",
                                 on_click=handle_click,
                             ),

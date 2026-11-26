@@ -32,7 +32,7 @@ def main(page: ft.Page):
                         items=[
                             fluent.MenuFlyoutItem(
                                 "Open",
-                                leading=fluent.FluentIcons.OPEN_IN_NEW_WINDOW,
+                                leading=fluent.FluentIcons.WINDOW_NEW,
                                 on_click=handle_click,
                             ),
                             fluent.MenuFlyoutItem(

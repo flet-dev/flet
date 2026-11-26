@@ -11,10 +11,14 @@ dependencies:
   flutter:
     sdk: flutter
 
-  # Exact pin: lib/src/utils/fluent_icons.dart is generated from this release
-  # by .github/scripts/generate_icons.py.
-  fluent_ui: 4.17.0
-  material_ui: ^1.6.0
+  # flet-dev's fork of fluent_ui 4.18.1 (branch `flet`): MIT icon fonts
+  # instead of Microsoft's non-redistributable ones, plus fixes not yet
+  # released upstream. See tool/build_mit_icon_fonts.py in the fork.
+  fluent_ui:
+    git:
+      url: https://github.com/flet-dev/fluent_ui
+      ref: e6221b92d02060b657e841a06c1bedcbdec672ca
+  material_ui: ^1.7.0
 
   flet:
     path: ../../../../../../../packages/flet
@@ -23,3 +27,11 @@ dev_dependencies:
   flutter_test:
     sdk: flutter
   flutter_lints: ^3.0.0
+
+flutter:
+  fonts:
+    # Fluent UI System Icons (MIT, see fonts/LICENSE), drawn by
+    # `flet_fluent_ui.FluentIcons`. Written by .github/scripts/generate_icons.py.
+    - family: FluentIcons
+      fonts:
+        - asset: fonts/FluentSystemIcons-Resizable.ttf

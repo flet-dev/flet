@@ -4,13 +4,13 @@
 
 fluent_ui bundles two Microsoft icon fonts, and its widgets use them, so every app that depends on fluent_ui ships both fonts on every platform. Neither font comes with a license that seems to allow this. The package's BSD-3 license covers fluent_ui's code, but not these fonts.
 
-Microsoft publishes an MIT-licensed icon set, [Fluent UI System Icons](https://github.com/microsoft/fluentui-system-icons). It has an equivalent for every glyph fluent_ui uses internally. A font with only those glyphs is about 10 KB.
+Microsoft publishes an MIT-licensed icon set, [Fluent UI System Icons](https://github.com/microsoft/fluentui-system-icons). It has an equivalent for every glyph fluent_ui uses internally. A font with only those glyphs is under 10 KB.
 
-We found this while wrapping fluent_ui 4.17.0 for [Flet](https://flet.dev). We'd like to know how you'd prefer to handle it, and we're happy to help with a PR. We're not lawyers: this is what the files and Microsoft's public pages say, not a legal opinion.
+We found this while wrapping fluent_ui for [Flet](https://flet.dev). Everything below is checked against 4.18.1. We'd like to know how you'd prefer to handle it, and we're happy to help with a PR. We're not lawyers: this is what the files and Microsoft's public pages say, not a legal opinion.
 
 ## The fonts
 
-Both fonts are declared in `pubspec.yaml`, so Flutter bundles them in every app.
+Both fonts are declared in `pubspec.yaml`, so Flutter bundles them in every app. Since 4.18.0, release builds tree-shake the two fonts down to the glyphs an app uses. That makes them smaller, but every app still ships Microsoft's outlines for the glyphs the widgets use.
 
 | Font family | File | Font metadata | Glyphs | Size |
 |---|---|---|---|---|
@@ -31,13 +31,11 @@ Both fonts are declared in `pubspec.yaml`, so Flutter bundles them in every app.
 
 ## How fluent_ui uses them
 
-**Not counting comments, the widgets use:**
-- **12 glyphs from `FluentIcons`:** `caret_down_solid8`, `caret_up_solid8`, `check_mark`, `chevron_down`, `chevron_left`, `chevron_right`, `chevron_up`, `chrome_close`, `critical_error_solid`, `global_nav_button`, `info_solid`, `radio_bullet`.
-- **27 glyphs from `WindowsIcons`:** `add`, `back`, `calendar`, `camera`, `caret_down_solid8`, `caret_left_solid8`, `caret_right_solid8`, `caret_up_solid8`, `check_mark`, `chevron_down`, `chevron_left`, `chevron_right`, `chevron_up`, `chrome_close`, `clear`, `copy`, `cut`, `delete`, `favorite_star`, `favorite_star_fill`, `global_nav_button`, `more`, `paste`, `red_eye`, `search`, `share`, `undo`.
+**Not counting comments, the widgets in 4.18.1 use:**
+- **21 glyphs from `FluentIcons`:** `add`, `calendar`, `caret_down_solid8`, `caret_left_solid8`, `caret_right_solid8`, `caret_up_solid8`, `check_mark`, `chevron_down`, `chevron_left`, `chevron_right`, `chevron_up`, `chrome_close`, `clear`, `completed_solid`, `critical_error_solid`, `global_nav_button`, `info_solid`, `more`, `radio_bullet`, `red_eye`, `status_error_full`.
+- **30 glyphs from `WindowsIcons`:** `add`, `back`, `calendar`, `camera`, `caret_down_solid8`, `caret_left_solid8`, `caret_right_solid8`, `caret_up_solid8`, `check_mark`, `chevron_down`, `chevron_left`, `chevron_right`, `chevron_up`, `chrome_close`, `clear`, `completed_solid`, `copy`, `cut`, `delete`, `favorite_star`, `favorite_star_fill`, `global_nav_button`, `info_solid`, `more`, `paste`, `red_eye`, `search`, `share`, `status_error_full`, `undo`.
 
-**Two more points:**
-- **Public API:** the `FluentIcons` and `WindowsIcons` classes are part of the public API, so apps also use the full fonts directly.
-- **Material Icons:** `InfoBar` uses two Material icons, `Icons.check_circle` and `Icons.cancel`, for the success and error severities. A `TODO(fluent): Do not use Material Icons` comment is already there. Material Icons are Apache 2.0, so they raise no licensing problem, but this would be a good moment to move them too.
+**Public API:** the `FluentIcons` and `WindowsIcons` classes are part of the public API, so apps also use the fonts directly.
 
 ## The MIT alternative
 
@@ -48,8 +46,8 @@ Both fonts are declared in `pubspec.yaml`, so Flutter bundles them in every app.
 | | Size |
 |---|---|
 | The package as a dependency (it declares only its Regular and Filled fonts, every icon at 10–48 px) | about 4.6 MB |
-| `FluentSystemIcons-Resizable.ttf` from the repo (every icon once, regular and filled, drawn at 20 px and scalable) | 1.4 MB |
-| The Resizable font cut down to the icons the widgets use (regular and filled) | about 10 KB |
+| `FluentSystemIcons-Resizable.ttf` from the repo (every icon once, regular and filled, drawn at 20 px and scalable) | 1.6 MB |
+| The Resizable font cut down to the icons the widgets use | 4–7 KB per font |
 
 Every glyph the widgets use has an equivalent:
 
@@ -61,17 +59,17 @@ Every glyph the widgets use has an equivalent:
 | `check_mark` | `checkmark` |
 | `global_nav_button` | `navigation` |
 | `info_solid` | `info` (filled) |
-| `critical_error_solid` | `error_circle` or `warning` (filled) |
+| `critical_error_solid` | `error_circle` (filled) |
 | `radio_bullet` | `circle` (filled) |
 | `back` | `arrow_left` |
-| `clear` | `dismiss_circle` |
+| `clear` | `dismiss` |
 | `more` | `more_horizontal` |
 | `paste` | `clipboard_paste` |
 | `red_eye` | `eye` |
 | `undo` | `arrow_undo` |
 | `favorite_star` and `favorite_star_fill` | `star` (regular and filled) |
-| `add`, `calendar`, `camera`, `copy`, `cut`, `delete`, `search`, `share` | same names |
-| `Icons.check_circle` and `Icons.cancel` (InfoBar) | `checkmark_circle` and `dismiss_circle` (filled) |
+| `add`, `calendar`, `camera`, `copy`, `cut`, `delete`, `search`, `share` | same names (`calendar` is drawn as `calendar_ltr`) |
+| `completed_solid` and `status_error_full` (InfoBar) | `checkmark_circle` and `dismiss_circle` (filled) |
 
 ## Options
 
@@ -97,4 +95,8 @@ Every glyph the widgets use has an equivalent:
    - *Pros:* no icon font is needed for the widgets.
    - *Cons:* the most work, it doesn't cover the public icon classes, and it still needs one of the options above for those.
 
-Our preference would be option 1 or 2. We can open a PR for either one, including the glyph mapping and a script that rebuilds the small font from Microsoft's repo, if you tell us which direction you prefer.
+Our preference would be option 1 or 2. We can open a PR for either one, if you tell us which direction you prefer.
+
+For Flet we've done a stopgap on our fork, [`fix/mit-icon-fonts`](https://github.com/flet-dev/fluent_ui/tree/fix/mit-icon-fonts), that could be a starting point:
+- `tool/build_mit_icon_fonts.py` (fonttools) finds the glyphs the widgets use and rebuilds `FluentIcons.ttf` and `SegoeIcons.ttf` from the MIT glyphs, at the same codepoints. Each glyph is scaled to the bounding box of the one it replaces, so the widgets look almost the same. It fails if a used glyph has no mapping.
+- No Dart code changes, and all tests pass. The other `FluentIcons` and `WindowsIcons` constants draw nothing, which is why it's a stopgap rather than a PR.

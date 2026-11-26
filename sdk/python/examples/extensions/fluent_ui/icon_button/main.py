@@ -7,11 +7,9 @@ def main(page: ft.Page):
     page.title = "Fluent IconButton"
 
     def toggle_favorite(e: ft.Event[fluent.IconButton]):
-        favorite = e.control.icon == fluent.FluentIcons.FAVORITE_STAR
+        favorite = e.control.icon == fluent.FluentIcons.STAR
         e.control.icon = (
-            fluent.FluentIcons.FAVORITE_STAR_FILL
-            if favorite
-            else fluent.FluentIcons.FAVORITE_STAR
+            fluent.FluentIcons.STAR_FILLED if favorite else fluent.FluentIcons.STAR
         )
         status.value = "Added to favorites" if favorite else "Removed from favorites"
 
@@ -27,7 +25,7 @@ def main(page: ft.Page):
                     ft.Row(
                         controls=[
                             fluent.IconButton(
-                                fluent.FluentIcons.FAVORITE_STAR,
+                                fluent.FluentIcons.STAR,
                                 key="favorite",
                                 tooltip="Favorite",
                                 on_click=toggle_favorite,

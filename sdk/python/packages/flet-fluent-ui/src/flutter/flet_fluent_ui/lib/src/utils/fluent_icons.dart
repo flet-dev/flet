@@ -1,2218 +1,5733 @@
-import 'package:fluent_ui/fluent_ui.dart' show FluentIcons, IconData;
+// GENERATED FILE, DO NOT EDIT. To update it, run from the root of the repository:
+//
+//   uv run .github/scripts/generate_icons.py
+//
+// Fluent UI System Icons (MIT), drawn from fonts/FluentSystemIcons-Resizable.ttf.
+// The Nth entry is the icon whose packed value is `(4 << 16) | N`.
 
-List<IconData> fluentIcons = [
-  FluentIcons.a_a_d_logo,
-  FluentIcons.a_t_p_logo,
-  FluentIcons.accept,
-  FluentIcons.accept_medium,
-  FluentIcons.access_logo,
-  FluentIcons.accessibilty_checker,
-  FluentIcons.account_activity,
-  FluentIcons.account_browser,
-  FluentIcons.account_management,
-  FluentIcons.accounts,
-  FluentIcons.action_center,
-  FluentIcons.activate_orders,
-  FluentIcons.activity_feed,
-  FluentIcons.add,
-  FluentIcons.add_bookmark,
-  FluentIcons.add_connection,
-  FluentIcons.add_event,
-  FluentIcons.add_favorite,
-  FluentIcons.add_favorite_fill,
-  FluentIcons.add_field,
-  FluentIcons.add_friend,
-  FluentIcons.add_group,
-  FluentIcons.add_home,
-  FluentIcons.add_in,
-  FluentIcons.add_link,
-  FluentIcons.add_medium,
-  FluentIcons.add_multiple,
-  FluentIcons.add_notes,
-  FluentIcons.add_online_meeting,
-  FluentIcons.add_phone,
-  FluentIcons.add_reaction,
-  FluentIcons.add_space_after,
-  FluentIcons.add_space_before,
-  FluentIcons.add_table,
-  FluentIcons.add_to,
-  FluentIcons.add_to_shopping_list,
-  FluentIcons.add_work,
-  FluentIcons.admin,
-  FluentIcons.admin_a_logo32,
-  FluentIcons.admin_a_logo_fill32,
-  FluentIcons.admin_a_logo_inverse32,
-  FluentIcons.admin_c_logo_inverse32,
-  FluentIcons.admin_d_logo_inverse32,
-  FluentIcons.admin_e_logo_inverse32,
-  FluentIcons.admin_l_logo_inverse32,
-  FluentIcons.admin_m_logo_inverse32,
-  FluentIcons.admin_o_logo_inverse32,
-  FluentIcons.admin_p_logo_inverse32,
-  FluentIcons.admin_s_logo_inverse32,
-  FluentIcons.admin_y_logo_inverse32,
-  FluentIcons.air_tickets,
-  FluentIcons.airplane,
-  FluentIcons.airplane_solid,
-  FluentIcons.alarm_clock,
-  FluentIcons.album,
-  FluentIcons.album_remove,
-  FluentIcons.alert_settings,
-  FluentIcons.alert_solid,
-  FluentIcons.align_center,
-  FluentIcons.align_horizontal_center,
-  FluentIcons.align_horizontal_left,
-  FluentIcons.align_horizontal_right,
-  FluentIcons.align_justify,
-  FluentIcons.align_left,
-  FluentIcons.align_right,
-  FluentIcons.align_vertical_bottom,
-  FluentIcons.align_vertical_center,
-  FluentIcons.align_vertical_top,
-  FluentIcons.all_apps,
-  FluentIcons.all_apps_mirrored,
-  FluentIcons.all_currency,
-  FluentIcons.alt_text,
-  FluentIcons.analytics_logo,
-  FluentIcons.analytics_query,
-  FluentIcons.analytics_report,
-  FluentIcons.analytics_view,
-  FluentIcons.anchor_lock,
-  FluentIcons.annotation,
-  FluentIcons.app_icon_default,
-  FluentIcons.app_icon_default_add,
-  FluentIcons.app_icon_default_edit,
-  FluentIcons.app_icon_default_list,
-  FluentIcons.app_icon_secure,
-  FluentIcons.apps_content,
-  FluentIcons.archive,
-  FluentIcons.archive_undo,
-  FluentIcons.area_chart,
-  FluentIcons.arrange_bring_forward,
-  FluentIcons.arrange_bring_to_front,
-  FluentIcons.arrange_by_from,
-  FluentIcons.arrange_send_backward,
-  FluentIcons.arrange_send_to_back,
-  FluentIcons.arrivals,
-  FluentIcons.arrow_down_right8,
-  FluentIcons.arrow_down_right_mirrored8,
-  FluentIcons.arrow_tall_down_left,
-  FluentIcons.arrow_tall_down_right,
-  FluentIcons.arrow_tall_up_left,
-  FluentIcons.arrow_tall_up_right,
-  FluentIcons.arrow_up_right,
-  FluentIcons.arrow_up_right8,
-  FluentIcons.arrow_up_right_mirrored8,
-  FluentIcons.articles,
-  FluentIcons.ascending,
-  FluentIcons.aspect_ratio,
-  FluentIcons.assessment_group,
-  FluentIcons.assessment_group_template,
-  FluentIcons.asset_library,
-  FluentIcons.assign,
-  FluentIcons.assign_policy,
-  FluentIcons.asterisk,
-  FluentIcons.asterisk_solid,
-  FluentIcons.attach,
-  FluentIcons.australian_rules,
-  FluentIcons.authenticator_app,
-  FluentIcons.auto_deploy_settings,
-  FluentIcons.auto_enhance_off,
-  FluentIcons.auto_enhance_on,
-  FluentIcons.auto_fill_template,
-  FluentIcons.auto_fit_contents,
-  FluentIcons.auto_fit_window,
-  FluentIcons.auto_height,
-  FluentIcons.auto_racing,
-  FluentIcons.automate_flow,
-  FluentIcons.away_status,
-  FluentIcons.azure_a_p_i_management,
-  FluentIcons.azure_data_explorer,
-  FluentIcons.azure_icon,
-  FluentIcons.azure_key_vault,
-  FluentIcons.azure_service_endpoint,
-  FluentIcons.b_i_dashboard,
-  FluentIcons.back,
-  FluentIcons.back_to_window,
-  FluentIcons.background_color,
-  FluentIcons.backlog,
-  FluentIcons.backlog_board,
-  FluentIcons.backlog_list,
-  FluentIcons.badge,
-  FluentIcons.balloons,
-  FluentIcons.bank,
-  FluentIcons.bank_solid,
-  FluentIcons.bar_chart4,
-  FluentIcons.bar_chart_horizontal,
-  FluentIcons.bar_chart_vertical,
-  FluentIcons.bar_chart_vertical_edit,
-  FluentIcons.bar_chart_vertical_fill,
-  FluentIcons.bar_chart_vertical_filter,
-  FluentIcons.bar_chart_vertical_filter_solid,
-  FluentIcons.baseball,
-  FluentIcons.beer_mug,
-  FluentIcons.bidi_ltr,
-  FluentIcons.bidi_rtl,
-  FluentIcons.bill,
-  FluentIcons.bing_logo,
-  FluentIcons.birthday_cake,
-  FluentIcons.blob_storage,
-  FluentIcons.block_contact,
-  FluentIcons.blocked,
-  FluentIcons.blocked12,
-  FluentIcons.blocked2,
-  FluentIcons.blocked2_solid,
-  FluentIcons.blocked_site,
-  FluentIcons.blocked_site_solid12,
-  FluentIcons.blocked_solid,
-  FluentIcons.blog,
-  FluentIcons.blowing_snow,
-  FluentIcons.bluetooth,
-  FluentIcons.blur,
-  FluentIcons.boards,
-  FluentIcons.bold,
-  FluentIcons.bold_bulgarian,
-  FluentIcons.bold_f,
-  FluentIcons.bold_g,
-  FluentIcons.bold_k,
-  FluentIcons.bold_kazakh,
-  FluentIcons.bold_korean,
-  FluentIcons.bold_n,
-  FluentIcons.bold_p,
-  FluentIcons.bold_russion,
-  FluentIcons.bold_serbian,
-  FluentIcons.bold_t,
-  FluentIcons.book_answers,
-  FluentIcons.bookings_logo,
-  FluentIcons.bookmark_report,
-  FluentIcons.bookmarks,
-  FluentIcons.bookmarks_mirrored,
-  FluentIcons.boolean_data,
-  FluentIcons.border_all,
-  FluentIcons.border_dash,
-  FluentIcons.border_dot,
-  FluentIcons.border_inside,
-  FluentIcons.border_inside_horizontal,
-  FluentIcons.border_inside_vertical,
-  FluentIcons.border_none,
-  FluentIcons.box_addition_solid,
-  FluentIcons.box_checkmark_solid,
-  FluentIcons.box_multiply_solid,
-  FluentIcons.box_play_solid,
-  FluentIcons.box_subtract_solid,
-  FluentIcons.branch_commit,
-  FluentIcons.branch_compare,
-  FluentIcons.branch_fork,
-  FluentIcons.branch_fork2,
-  FluentIcons.branch_locked,
-  FluentIcons.branch_merge,
-  FluentIcons.branch_pull_request,
-  FluentIcons.branch_search,
-  FluentIcons.branch_shelveset,
-  FluentIcons.breadcrumb,
-  FluentIcons.breakfast,
-  FluentIcons.brightness,
-  FluentIcons.broom,
-  FluentIcons.browser_screen_shot,
-  FluentIcons.browser_tab,
-  FluentIcons.browser_tab_screenshot,
-  FluentIcons.brunch,
-  FluentIcons.brush,
-  FluentIcons.bucket_color,
-  FluentIcons.bucket_color_fill,
-  FluentIcons.buffer_time_after,
-  FluentIcons.buffer_time_before,
-  FluentIcons.buffer_time_both,
-  FluentIcons.bug,
-  FluentIcons.bug_action,
-  FluentIcons.bug_block,
-  FluentIcons.bug_solid,
-  FluentIcons.bug_sync,
-  FluentIcons.bug_warning,
-  FluentIcons.build,
-  FluentIcons.build_definition,
-  FluentIcons.build_issue,
-  FluentIcons.build_queue,
-  FluentIcons.build_queue_new,
-  FluentIcons.bulk_page_block,
-  FluentIcons.bulk_upload,
-  FluentIcons.bulleted_list,
-  FluentIcons.bulleted_list2,
-  FluentIcons.bulleted_list2_mirrored,
-  FluentIcons.bulleted_list_bullet,
-  FluentIcons.bulleted_list_bullet_mirrored,
-  FluentIcons.bulleted_list_mirrored,
-  FluentIcons.bulleted_list_text,
-  FluentIcons.bulleted_list_text_mirrored,
-  FluentIcons.bulleted_tree_list,
-  FluentIcons.bullseye,
-  FluentIcons.bullseye_target,
-  FluentIcons.bullseye_target_add,
-  FluentIcons.bullseye_target_delete,
-  FluentIcons.bullseye_target_edit,
-  FluentIcons.bus,
-  FluentIcons.bus_solid,
-  FluentIcons.business_card,
-  FluentIcons.business_center_logo,
-  FluentIcons.business_hours_sign,
-  FluentIcons.business_rule,
-  FluentIcons.button_control,
-  FluentIcons.c_c_solid,
-  FluentIcons.c_plus_plus,
-  FluentIcons.c_plus_plus_language,
-  FluentIcons.c_r_m_lead,
-  FluentIcons.c_r_m_processes,
-  FluentIcons.c_r_m_report,
-  FluentIcons.c_r_m_resource_optimization_app32,
-  FluentIcons.c_r_m_services,
-  FluentIcons.c_sharp,
-  FluentIcons.c_sharp_language,
-  FluentIcons.cafe,
-  FluentIcons.cake,
-  FluentIcons.calculated_table,
-  FluentIcons.calculator,
-  FluentIcons.calculator_addition,
-  FluentIcons.calculator_delta,
-  FluentIcons.calculator_equal_to,
-  FluentIcons.calculator_group,
-  FluentIcons.calculator_multiply,
-  FluentIcons.calculator_not_equal_to,
-  FluentIcons.calculator_percentage,
-  FluentIcons.calculator_subtract,
-  FluentIcons.calendar,
-  FluentIcons.calendar_agenda,
-  FluentIcons.calendar_day,
-  FluentIcons.calendar_mirrored,
-  FluentIcons.calendar_reply,
-  FluentIcons.calendar_settings,
-  FluentIcons.calendar_settings_mirrored,
-  FluentIcons.calendar_week,
-  FluentIcons.calendar_work_week,
-  FluentIcons.calendar_year,
-  FluentIcons.calories,
-  FluentIcons.calories_add,
-  FluentIcons.camera,
-  FluentIcons.campaign_template,
-  FluentIcons.cancel,
-  FluentIcons.canned_chat,
-  FluentIcons.canvas_app_template32,
-  FluentIcons.car,
-  FluentIcons.care_activity,
-  FluentIcons.care_plan,
-  FluentIcons.care_plan_template,
-  FluentIcons.caret_bottom_left_center8,
-  FluentIcons.caret_bottom_left_solid8,
-  FluentIcons.caret_bottom_right_center8,
-  FluentIcons.caret_bottom_right_solid8,
-  FluentIcons.caret_down8,
-  FluentIcons.caret_down_solid8,
-  FluentIcons.caret_hollow,
-  FluentIcons.caret_hollow_mirrored,
-  FluentIcons.caret_left8,
-  FluentIcons.caret_left_solid8,
-  FluentIcons.caret_right,
-  FluentIcons.caret_right8,
-  FluentIcons.caret_right_solid8,
-  FluentIcons.caret_solid,
-  FluentIcons.caret_solid16,
-  FluentIcons.caret_solid_alt,
-  FluentIcons.caret_solid_down,
-  FluentIcons.caret_solid_left,
-  FluentIcons.caret_solid_mirrored,
-  FluentIcons.caret_solid_right,
-  FluentIcons.caret_solid_up,
-  FluentIcons.caret_top_left_center8,
-  FluentIcons.caret_top_left_solid8,
-  FluentIcons.caret_top_right_center8,
-  FluentIcons.caret_top_right_solid8,
-  FluentIcons.caret_up8,
-  FluentIcons.caret_up_solid8,
-  FluentIcons.cat,
-  FluentIcons.category_classification,
-  FluentIcons.cc,
-  FluentIcons.cell_phone,
-  FluentIcons.cell_split_vertical,
-  FluentIcons.certificate,
-  FluentIcons.certified_database,
-  FluentIcons.change_entitlements,
-  FluentIcons.chart,
-  FluentIcons.chart_series,
-  FluentIcons.chart_template,
-  FluentIcons.chart_x_angle,
-  FluentIcons.chart_y_angle,
-  FluentIcons.charticulator_arrange_polar,
-  FluentIcons.charticulator_arrange_polar_angles,
-  FluentIcons.charticulator_band,
-  FluentIcons.charticulator_guide_coordinator,
-  FluentIcons.charticulator_guide_x,
-  FluentIcons.charticulator_guide_y,
-  FluentIcons.charticulator_legend,
-  FluentIcons.charticulator_line,
-  FluentIcons.charticulator_line_style_dashed,
-  FluentIcons.charticulator_line_style_dotted,
-  FluentIcons.charticulator_linking_data,
-  FluentIcons.charticulator_linking_sequence,
-  FluentIcons.charticulator_order_column,
-  FluentIcons.charticulator_order_row,
-  FluentIcons.charticulator_plot_cartesian,
-  FluentIcons.charticulator_plot_curve,
-  FluentIcons.charticulator_polar_coordinates,
-  FluentIcons.charticulator_spiral,
-  FluentIcons.charticulator_stack_radial,
-  FluentIcons.charticulator_stack_y,
-  FluentIcons.chat,
-  FluentIcons.chat_bot,
-  FluentIcons.chat_invite_friend,
-  FluentIcons.chat_settings,
-  FluentIcons.chat_solid,
-  FluentIcons.check_list,
-  FluentIcons.check_list_check,
-  FluentIcons.check_list_check_mirrored,
-  FluentIcons.check_list_text,
-  FluentIcons.check_list_text_mirrored,
-  FluentIcons.check_mark,
-  FluentIcons.checkbox,
-  FluentIcons.checkbox_composite,
-  FluentIcons.checkbox_composite_reversed,
-  FluentIcons.checkbox_fill,
-  FluentIcons.checkbox_indeterminate,
-  FluentIcons.checkbox_indeterminate_combo,
-  FluentIcons.checked_out_by_other12,
-  FluentIcons.checked_out_by_you12,
-  FluentIcons.chevron_down,
-  FluentIcons.chevron_down_end,
-  FluentIcons.chevron_down_end6,
-  FluentIcons.chevron_down_med,
-  FluentIcons.chevron_down_small,
-  FluentIcons.chevron_fold10,
-  FluentIcons.chevron_left,
-  FluentIcons.chevron_left_end6,
-  FluentIcons.chevron_left_med,
-  FluentIcons.chevron_left_small,
-  FluentIcons.chevron_right,
-  FluentIcons.chevron_right_end6,
-  FluentIcons.chevron_right_med,
-  FluentIcons.chevron_right_small,
-  FluentIcons.chevron_unfold10,
-  FluentIcons.chevron_up,
-  FluentIcons.chevron_up_end,
-  FluentIcons.chevron_up_end6,
-  FluentIcons.chevron_up_med,
-  FluentIcons.chevron_up_small,
-  FluentIcons.childof,
-  FluentIcons.choice_column,
-  FluentIcons.chopsticks,
-  FluentIcons.chrome_back,
-  FluentIcons.chrome_back_mirrored,
-  FluentIcons.chrome_close,
-  FluentIcons.chrome_full_screen,
-  FluentIcons.chrome_minimize,
-  FluentIcons.chrome_restore,
-  FluentIcons.circle_addition,
-  FluentIcons.circle_addition_solid,
-  FluentIcons.circle_dollar,
-  FluentIcons.circle_fill,
-  FluentIcons.circle_half_full,
-  FluentIcons.circle_pause,
-  FluentIcons.circle_pause_solid,
-  FluentIcons.circle_plus,
-  FluentIcons.circle_ring,
-  FluentIcons.circle_shape,
-  FluentIcons.circle_shape_solid,
-  FluentIcons.circle_stop,
-  FluentIcons.circle_stop_solid,
-  FluentIcons.city_next,
-  FluentIcons.city_next2,
-  FluentIcons.class_notebook_logo16,
-  FluentIcons.class_notebook_logo32,
-  FluentIcons.class_notebook_logo_fill16,
-  FluentIcons.class_notebook_logo_fill32,
-  FluentIcons.class_notebook_logo_inverse,
-  FluentIcons.class_notebook_logo_inverse16,
-  FluentIcons.class_notebook_logo_inverse32,
-  FluentIcons.classroom_logo,
-  FluentIcons.clear,
-  FluentIcons.clear_filter,
-  FluentIcons.clear_formatting,
-  FluentIcons.clear_formatting_a,
-  FluentIcons.clear_formatting_eraser,
-  FluentIcons.clear_night,
-  FluentIcons.clear_selection,
-  FluentIcons.clear_selection_mirrored,
-  FluentIcons.clicked,
-  FluentIcons.clinical_impression,
-  FluentIcons.clipboard_list,
-  FluentIcons.clipboard_list_add,
-  FluentIcons.clipboard_list_mirrored,
-  FluentIcons.clipboard_list_question,
-  FluentIcons.clipboard_list_reply,
-  FluentIcons.clipboard_solid,
-  FluentIcons.clock,
-  FluentIcons.clone_to_desktop,
-  FluentIcons.close_pane,
-  FluentIcons.close_pane_mirrored,
-  FluentIcons.closed_caption,
-  FluentIcons.cloud,
-  FluentIcons.cloud_add,
-  FluentIcons.cloud_download,
-  FluentIcons.cloud_edit,
-  FluentIcons.cloud_flow,
-  FluentIcons.cloud_import_export,
-  FluentIcons.cloud_link,
-  FluentIcons.cloud_not_synced,
-  FluentIcons.cloud_printer,
-  FluentIcons.cloud_search,
-  FluentIcons.cloud_secure,
-  FluentIcons.cloud_upload,
-  FluentIcons.cloud_weather,
-  FluentIcons.cloudy,
-  FluentIcons.cocktails,
-  FluentIcons.code,
-  FluentIcons.code_edit,
-  FluentIcons.coffee,
-  FluentIcons.coffee_script,
-  FluentIcons.collapse_all,
-  FluentIcons.collapse_content,
-  FluentIcons.collapse_content_single,
-  FluentIcons.collapse_menu,
-  FluentIcons.college_football,
-  FluentIcons.college_hoops,
-  FluentIcons.color,
-  FluentIcons.color_solid,
-  FluentIcons.column,
-  FluentIcons.column_function,
-  FluentIcons.column_left_two_thirds,
-  FluentIcons.column_left_two_thirds_edit,
-  FluentIcons.column_options,
-  FluentIcons.column_question,
-  FluentIcons.column_question_mirrored,
-  FluentIcons.column_right_two_thirds,
-  FluentIcons.column_right_two_thirds_edit,
-  FluentIcons.column_sigma,
-  FluentIcons.column_vertical_section,
-  FluentIcons.column_vertical_section_edit,
-  FluentIcons.combine,
-  FluentIcons.combobox,
-  FluentIcons.command_prompt,
-  FluentIcons.comment,
-  FluentIcons.comment_active,
-  FluentIcons.comment_add,
-  FluentIcons.comment_next,
-  FluentIcons.comment_previous,
-  FluentIcons.comment_solid,
-  FluentIcons.comment_urgent,
-  FluentIcons.commitments,
-  FluentIcons.common_data_service_c_d_s,
-  FluentIcons.communication_details,
-  FluentIcons.communication_details_mirrored,
-  FluentIcons.communications,
-  FluentIcons.company_directory,
-  FluentIcons.company_directory_mirrored,
-  FluentIcons.compare,
-  FluentIcons.compare_uneven,
-  FluentIcons.compass_n_w,
-  FluentIcons.completed,
-  FluentIcons.completed12,
-  FluentIcons.completed_solid,
-  FluentIcons.compliance_audit,
-  FluentIcons.configuration_solid,
-  FluentIcons.confirm_event,
-  FluentIcons.connect_contacts,
-  FluentIcons.connect_virtual_machine,
-  FluentIcons.construction_cone,
-  FluentIcons.construction_cone_solid,
-  FluentIcons.contact,
-  FluentIcons.contact_card,
-  FluentIcons.contact_card_settings,
-  FluentIcons.contact_card_settings_mirrored,
-  FluentIcons.contact_heart,
-  FluentIcons.contact_info,
-  FluentIcons.contact_info_mirrored,
-  FluentIcons.contact_link,
-  FluentIcons.contact_list,
-  FluentIcons.contact_lock,
-  FluentIcons.content_feed,
-  FluentIcons.content_settings,
-  FluentIcons.content_understanding_app,
-  FluentIcons.context_menu,
-  FluentIcons.contrast,
-  FluentIcons.copy,
-  FluentIcons.copy_edit,
-  FluentIcons.cortana_logo_beckon_inner,
-  FluentIcons.cortana_logo_beckon_outer,
-  FluentIcons.cortana_logo_inner,
-  FluentIcons.cortana_logo_outer,
-  FluentIcons.cortana_logo_ready_inner,
-  FluentIcons.cortana_logo_ready_outer,
-  FluentIcons.cost_contral_ledger_admin,
-  FluentIcons.cost_control,
-  FluentIcons.cotton,
-  FluentIcons.count,
-  FluentIcons.coupon,
-  FluentIcons.create_mail_rule,
-  FluentIcons.credit_card_bill,
-  FluentIcons.cricket,
-  FluentIcons.critical_error_solid,
-  FluentIcons.crop,
-  FluentIcons.crown,
-  FluentIcons.crown_solid,
-  FluentIcons.css,
-  FluentIcons.ctrl_button,
-  FluentIcons.cube_shape,
-  FluentIcons.cube_shape_solid,
-  FluentIcons.currency,
-  FluentIcons.custom_activity,
-  FluentIcons.custom_entity,
-  FluentIcons.custom_list,
-  FluentIcons.custom_list_mirrored,
-  FluentIcons.customer_assets,
-  FluentIcons.customize_toolbar,
-  FluentIcons.cut,
-  FluentIcons.cycling,
-  FluentIcons.d365_business_central,
-  FluentIcons.d365_core_h_r,
-  FluentIcons.d365_customer_insights,
-  FluentIcons.d365_customer_voice_app,
-  FluentIcons.d365_project_operations,
-  FluentIcons.d365_talent_insight,
-  FluentIcons.d365_talent_learn,
-  FluentIcons.dashboard_add,
-  FluentIcons.data_connection_library,
-  FluentIcons.data_enrichment,
-  FluentIcons.data_flow,
-  FluentIcons.data_management_settings,
-  FluentIcons.database,
-  FluentIcons.database_activity,
-  FluentIcons.database_block,
-  FluentIcons.database_refresh,
-  FluentIcons.database_source,
-  FluentIcons.database_swap,
-  FluentIcons.database_sync,
-  FluentIcons.database_view,
-  FluentIcons.dataflows,
-  FluentIcons.dataflows_link,
-  FluentIcons.dataverse,
-  FluentIcons.date_time,
-  FluentIcons.date_time12,
-  FluentIcons.date_time2,
-  FluentIcons.date_time_mirrored,
-  FluentIcons.deactivate_orders,
-  FluentIcons.decimals,
-  FluentIcons.decision_solid,
-  FluentIcons.decline_call,
-  FluentIcons.decrease_indent,
-  FluentIcons.decrease_indent_arrow,
-  FluentIcons.decrease_indent_arrow_mirrored,
-  FluentIcons.decrease_indent_mirrored,
-  FluentIcons.decrease_indent_text,
-  FluentIcons.decrease_indent_text_mirrored,
-  FluentIcons.default_ratio,
-  FluentIcons.default_settings,
-  FluentIcons.defect_solid,
-  FluentIcons.defender_app,
-  FluentIcons.defender_badge12,
-  FluentIcons.defender_t_v_m,
-  FluentIcons.delete,
-  FluentIcons.delete_columns,
-  FluentIcons.delete_rows,
-  FluentIcons.delete_rows_mirrored,
-  FluentIcons.delete_table,
-  FluentIcons.delivery_truck,
-  FluentIcons.delve_analytics,
-  FluentIcons.delve_analytics_logo,
-  FluentIcons.delve_logo,
-  FluentIcons.delve_logo_fill,
-  FluentIcons.delve_logo_inverse,
-  FluentIcons.density_comfy,
-  FluentIcons.density_default,
-  FluentIcons.dependency_add,
-  FluentIcons.dependency_remove,
-  FluentIcons.deploy,
-  FluentIcons.descending,
-  FluentIcons.design,
-  FluentIcons.desktop_flow,
-  FluentIcons.desktop_screenshot,
-  FluentIcons.developer_tools,
-  FluentIcons.device_bug,
-  FluentIcons.device_off,
-  FluentIcons.device_run,
-  FluentIcons.devices2,
-  FluentIcons.devices3,
-  FluentIcons.devices4,
-  FluentIcons.diagnostic,
-  FluentIcons.diagnostic_data_bar_tooltip,
-  FluentIcons.diagnostic_data_viewer_app,
-  FluentIcons.dialpad,
-  FluentIcons.diamond,
-  FluentIcons.diamond_solid,
-  FluentIcons.diamond_user,
-  FluentIcons.dictionary,
-  FluentIcons.dictionary_remove,
-  FluentIcons.diet_plan_notebook,
-  FluentIcons.diff_inline,
-  FluentIcons.diff_side_by_side,
-  FluentIcons.diploma,
-  FluentIcons.disable_updates,
-  FluentIcons.disconnect_virtual_machine,
-  FluentIcons.dislike,
-  FluentIcons.dislike_solid,
-  FluentIcons.distribute_down,
-  FluentIcons.doc_library,
-  FluentIcons.dock_left,
-  FluentIcons.dock_left_mirrored,
-  FluentIcons.dock_right,
-  FluentIcons.docs_logo_inverse,
-  FluentIcons.document,
-  FluentIcons.document_approval,
-  FluentIcons.document_management,
-  FluentIcons.document_reply,
-  FluentIcons.document_search,
-  FluentIcons.document_set,
-  FluentIcons.documentation,
-  FluentIcons.dom,
-  FluentIcons.donut_chart,
-  FluentIcons.door,
-  FluentIcons.double_bookmark,
-  FluentIcons.double_chevron_down,
-  FluentIcons.double_chevron_down12,
-  FluentIcons.double_chevron_down8,
-  FluentIcons.double_chevron_left,
-  FluentIcons.double_chevron_left12,
-  FluentIcons.double_chevron_left8,
-  FluentIcons.double_chevron_left_med,
-  FluentIcons.double_chevron_left_med_mirrored,
-  FluentIcons.double_chevron_right,
-  FluentIcons.double_chevron_right12,
-  FluentIcons.double_chevron_right8,
-  FluentIcons.double_chevron_up,
-  FluentIcons.double_chevron_up12,
-  FluentIcons.double_chevron_up8,
-  FluentIcons.double_column,
-  FluentIcons.double_column_edit,
-  FluentIcons.double_down_arrow,
-  FluentIcons.down,
-  FluentIcons.download,
-  FluentIcons.download_document,
-  FluentIcons.drag_object,
-  FluentIcons.drill_down,
-  FluentIcons.drill_down_solid,
-  FluentIcons.drill_expand,
-  FluentIcons.drill_show,
-  FluentIcons.drill_through,
-  FluentIcons.driver_off,
-  FluentIcons.drm,
-  FluentIcons.drop,
-  FluentIcons.drop_shape,
-  FluentIcons.drop_shape_solid,
-  FluentIcons.dropdown,
-  FluentIcons.duplicate_row,
-  FluentIcons.duststorm,
-  FluentIcons.dynamic_list,
-  FluentIcons.dynamic_s_m_b_logo,
-  FluentIcons.dynamics365_logo,
-  FluentIcons.e_discovery,
-  FluentIcons.ease_of_access,
-  FluentIcons.eat_drink,
-  FluentIcons.edge_logo,
-  FluentIcons.edge_logo16,
-  FluentIcons.edge_old_logo,
-  FluentIcons.edit,
-  FluentIcons.edit_contact,
-  FluentIcons.edit_create,
-  FluentIcons.edit_event,
-  FluentIcons.edit_list_pencil,
-  FluentIcons.edit_mail,
-  FluentIcons.edit_mirrored,
-  FluentIcons.edit_note,
-  FluentIcons.edit_photo,
-  FluentIcons.edit_solid12,
-  FluentIcons.edit_solid_mirrored12,
-  FluentIcons.edit_style,
-  FluentIcons.edit_table,
-  FluentIcons.education,
-  FluentIcons.ellipse,
-  FluentIcons.embed,
-  FluentIcons.emi,
-  FluentIcons.emoji,
-  FluentIcons.emoji2,
-  FluentIcons.emoji_disappointed,
-  FluentIcons.emoji_neutral,
-  FluentIcons.emoji_tab_symbols,
-  FluentIcons.employee_self_service,
-  FluentIcons.empty_recycle_bin,
-  FluentIcons.encounter,
-  FluentIcons.encryption,
-  FluentIcons.end_point_solid,
-  FluentIcons.engineering_group,
-  FluentIcons.entitlement_policy,
-  FluentIcons.entitlement_redemption,
-  FluentIcons.entity_extraction,
-  FluentIcons.entry_decline,
-  FluentIcons.entry_view,
-  FluentIcons.equalizer,
-  FluentIcons.erase_tool,
-  FluentIcons.error,
-  FluentIcons.error_badge,
-  FluentIcons.error_badge12,
-  FluentIcons.event,
-  FluentIcons.event12,
-  FluentIcons.event_accepted,
-  FluentIcons.event_date,
-  FluentIcons.event_date_missed12,
-  FluentIcons.event_declined,
-  FluentIcons.event_info,
-  FluentIcons.event_tentative,
-  FluentIcons.event_tentative_mirrored,
-  FluentIcons.event_to_do_logo,
-  FluentIcons.excel_document,
-  FluentIcons.excel_logo,
-  FluentIcons.excel_logo16,
-  FluentIcons.excel_logo_inverse,
-  FluentIcons.excel_logo_inverse16,
-  FluentIcons.exchange_logo,
-  FluentIcons.exchange_logo_inverse,
-  FluentIcons.exercise_tracker,
-  FluentIcons.expand_all,
-  FluentIcons.expand_menu,
-  FluentIcons.explore_content,
-  FluentIcons.explore_content_single,
-  FluentIcons.explore_data,
-  FluentIcons.export,
-  FluentIcons.export_mirrored,
-  FluentIcons.express_route_circuits,
-  FluentIcons.external_build,
-  FluentIcons.external_t_f_v_c,
-  FluentIcons.external_user,
-  FluentIcons.external_x_a_m_l,
-  FluentIcons.eye_shadow,
-  FluentIcons.eyedropper,
-  FluentIcons.f12_dev_tools,
-  FluentIcons.f_sharp,
-  FluentIcons.f_sharp_language,
-  FluentIcons.fabric_asset_library,
-  FluentIcons.fabric_channel_folder,
-  FluentIcons.fabric_data_connection_library,
-  FluentIcons.fabric_doc_library,
-  FluentIcons.fabric_folder,
-  FluentIcons.fabric_folder_confirm,
-  FluentIcons.fabric_folder_fill,
-  FluentIcons.fabric_folder_link,
-  FluentIcons.fabric_folder_search,
-  FluentIcons.fabric_folder_upload,
-  FluentIcons.fabric_form_library,
-  FluentIcons.fabric_form_library_mirrored,
-  FluentIcons.fabric_moveto_folder,
-  FluentIcons.fabric_network_folder,
-  FluentIcons.fabric_new_folder,
-  FluentIcons.fabric_open_folder_horizontal,
-  FluentIcons.fabric_picture_library,
-  FluentIcons.fabric_public_folder,
-  FluentIcons.fabric_report_library,
-  FluentIcons.fabric_report_library_mirrored,
-  FluentIcons.fabric_sync_folder,
-  FluentIcons.fabric_text_highlight,
-  FluentIcons.fabric_text_highlight_composite,
-  FluentIcons.fabric_unsync_folder,
-  FluentIcons.fabric_user_folder,
-  FluentIcons.factory,
-  FluentIcons.family,
-  FluentIcons.fang_body,
-  FluentIcons.fast_forward,
-  FluentIcons.fast_forward_eight_x,
-  FluentIcons.fast_forward_four_x,
-  FluentIcons.fast_forward_one_five_x,
-  FluentIcons.fast_forward_one_x,
-  FluentIcons.fast_forward_point_five_x,
-  FluentIcons.fast_forward_two_x,
-  FluentIcons.fast_mode,
-  FluentIcons.favicon,
-  FluentIcons.favorite_block,
-  FluentIcons.favorite_list,
-  FluentIcons.favorite_star,
-  FluentIcons.favorite_star_fill,
-  FluentIcons.fax,
-  FluentIcons.feedback,
-  FluentIcons.feedback_request_mirrored_solid,
-  FluentIcons.feedback_request_solid,
-  FluentIcons.feedback_response_solid,
-  FluentIcons.ferry,
-  FluentIcons.ferry_solid,
-  FluentIcons.field_changed,
-  FluentIcons.field_empty,
-  FluentIcons.field_filled,
-  FluentIcons.field_not_changed,
-  FluentIcons.field_read_only,
-  FluentIcons.field_required,
-  FluentIcons.file_a_s_p_x,
-  FluentIcons.file_bug,
-  FluentIcons.file_c_s_s,
-  FluentIcons.file_code,
-  FluentIcons.file_comment,
-  FluentIcons.file_h_t_m_l,
-  FluentIcons.file_image,
-  FluentIcons.file_j_a_v_a,
-  FluentIcons.file_less,
-  FluentIcons.file_off,
-  FluentIcons.file_p_d_b,
-  FluentIcons.file_request,
-  FluentIcons.file_s_q_l,
-  FluentIcons.file_sass,
-  FluentIcons.file_symlink,
-  FluentIcons.file_system,
-  FluentIcons.file_template,
-  FluentIcons.file_type_solution,
-  FluentIcons.file_y_m_l,
-  FluentIcons.filter,
-  FluentIcons.filter_ascending,
-  FluentIcons.filter_descending,
-  FluentIcons.filter_settings,
-  FluentIcons.filter_solid,
-  FluentIcons.filters,
-  FluentIcons.filters_solid,
-  FluentIcons.financial,
-  FluentIcons.financial_mirrored_solid,
-  FluentIcons.financial_solid,
-  FluentIcons.fingerprint,
-  FluentIcons.fit_page,
-  FluentIcons.fit_width,
-  FluentIcons.five_tile_grid,
-  FluentIcons.fixed_asset_management,
-  FluentIcons.fixed_column_width,
-  FluentIcons.flag,
-  FluentIcons.flame_solid,
-  FluentIcons.flash_auto,
-  FluentIcons.flash_off,
-  FluentIcons.flashlight,
-  FluentIcons.flick_down,
-  FluentIcons.flick_left,
-  FluentIcons.flick_right,
-  FluentIcons.flick_up,
-  FluentIcons.flow,
-  FluentIcons.flow_chart,
-  FluentIcons.flow_template,
-  FluentIcons.flow_trigger,
-  FluentIcons.flower,
-  FluentIcons.fluid_logo,
-  FluentIcons.focal_point,
-  FluentIcons.focus,
-  FluentIcons.focus_view,
-  FluentIcons.fog,
-  FluentIcons.folder,
-  FluentIcons.folder_fill,
-  FluentIcons.folder_horizontal,
-  FluentIcons.folder_list,
-  FluentIcons.folder_list_mirrored,
-  FluentIcons.folder_open,
-  FluentIcons.folder_query,
-  FluentIcons.folder_search,
-  FluentIcons.follow_user,
-  FluentIcons.font,
-  FluentIcons.font_color,
-  FluentIcons.font_color_a,
-  FluentIcons.font_color_korean,
-  FluentIcons.font_color_swatch,
-  FluentIcons.font_decrease,
-  FluentIcons.font_increase,
-  FluentIcons.font_size,
-  FluentIcons.font_size2,
-  FluentIcons.font_style_korean,
-  FluentIcons.footer,
-  FluentIcons.form_library,
-  FluentIcons.form_library_mirrored,
-  FluentIcons.form_processing,
-  FluentIcons.format_painter,
-  FluentIcons.forum,
-  FluentIcons.forward,
-  FluentIcons.forward_event,
-  FluentIcons.freezing,
-  FluentIcons.freezing_rain,
-  FluentIcons.frigid,
-  FluentIcons.front_camera,
-  FluentIcons.full_circle_mask,
-  FluentIcons.full_history,
-  FluentIcons.full_screen,
-  FluentIcons.full_view,
-  FluentIcons.full_width,
-  FluentIcons.full_width_edit,
-  FluentIcons.functional_manager_dashboard,
-  FluentIcons.funnel_chart,
-  FluentIcons.gallatin_logo,
-  FluentIcons.game,
-  FluentIcons.gather,
-  FluentIcons.generate,
-  FluentIcons.generic_scan,
-  FluentIcons.generic_scan_filled,
-  FluentIcons.gif,
-  FluentIcons.gift_box_solid,
-  FluentIcons.gift_card,
-  FluentIcons.giftbox,
-  FluentIcons.giftbox_open,
-  FluentIcons.git_graph,
-  FluentIcons.glasses,
-  FluentIcons.glimmer,
-  FluentIcons.global_nav_button,
-  FluentIcons.global_nav_button_active,
-  FluentIcons.globe,
-  FluentIcons.globe2,
-  FluentIcons.globe_favorite,
-  FluentIcons.go,
-  FluentIcons.go_mirrored,
-  FluentIcons.go_to_dashboard,
-  FluentIcons.golf,
-  FluentIcons.goto_today,
-  FluentIcons.graph_symbol,
-  FluentIcons.greeting_card,
-  FluentIcons.grid_view_large,
-  FluentIcons.grid_view_medium,
-  FluentIcons.grid_view_small,
-  FluentIcons.gripper_bar_horizontal,
-  FluentIcons.gripper_bar_vertical,
-  FluentIcons.gripper_dots_vertical,
-  FluentIcons.gripper_tool,
-  FluentIcons.group,
-  FluentIcons.group_list,
-  FluentIcons.group_object,
-  FluentIcons.group_remove,
-  FluentIcons.grouped_ascending,
-  FluentIcons.grouped_descending,
-  FluentIcons.grouped_list,
-  FluentIcons.guid,
-  FluentIcons.guitar,
-  FluentIcons.hail_day,
-  FluentIcons.hail_night,
-  FluentIcons.half_alpha,
-  FluentIcons.half_circle,
-  FluentIcons.hands_free,
-  FluentIcons.handwriting,
-  FluentIcons.hard_drive,
-  FluentIcons.hard_drive_group,
-  FluentIcons.hard_drive_lock,
-  FluentIcons.hard_drive_unlock,
-  FluentIcons.hazy_day,
-  FluentIcons.hazy_night,
-  FluentIcons.header,
-  FluentIcons.header1,
-  FluentIcons.header2,
-  FluentIcons.header3,
-  FluentIcons.header4,
-  FluentIcons.headset,
-  FluentIcons.headset_solid,
-  FluentIcons.health,
-  FluentIcons.health_refresh,
-  FluentIcons.health_solid,
-  FluentIcons.heart,
-  FluentIcons.heart_broken,
-  FluentIcons.heart_fill,
-  FluentIcons.help,
-  FluentIcons.help_mirrored,
-  FluentIcons.hexadite_investigation,
-  FluentIcons.hexadite_investigation_cancel,
-  FluentIcons.hexadite_investigation_semi_auto,
-  FluentIcons.hexagon,
-  FluentIcons.hide,
-  FluentIcons.hide2,
-  FluentIcons.hide3,
-  FluentIcons.hide_visual_filter,
-  FluentIcons.highlight,
-  FluentIcons.highlight_mapped_shapes,
-  FluentIcons.hint_text,
-  FluentIcons.historical_weather,
-  FluentIcons.history,
-  FluentIcons.home,
-  FluentIcons.home_dropdown,
-  FluentIcons.home_group,
-  FluentIcons.home_solid,
-  FluentIcons.home_verify,
-  FluentIcons.horizontal_distribute_center,
-  FluentIcons.horizontal_tab_key,
-  FluentIcons.hospital,
-  FluentIcons.hot,
-  FluentIcons.hotel,
-  FluentIcons.hour_glass,
-  FluentIcons.i_d_badge,
-  FluentIcons.i_r_m_forward,
-  FluentIcons.i_r_m_forward_mirrored,
-  FluentIcons.i_r_m_reply,
-  FluentIcons.i_r_m_reply_mirrored,
-  FluentIcons.ice,
-  FluentIcons.icon_sets_flag,
-  FluentIcons.ignore_conversation,
-  FluentIcons.image_crosshair,
-  FluentIcons.image_diff,
-  FluentIcons.image_in_a_r,
-  FluentIcons.image_pixel,
-  FluentIcons.image_search,
-  FluentIcons.import,
-  FluentIcons.import_all_mirrored,
-  FluentIcons.import_mirrored,
-  FluentIcons.important,
-  FluentIcons.inbox,
-  FluentIcons.inbox_active,
-  FluentIcons.inbox_check,
-  FluentIcons.incident_triangle,
-  FluentIcons.incoming_call,
-  FluentIcons.increase_indent,
-  FluentIcons.increase_indent_arrow,
-  FluentIcons.increase_indent_arrow_mirrored,
-  FluentIcons.increase_indent_hanging,
-  FluentIcons.increase_indent_hanging_mirrored,
-  FluentIcons.increase_indent_mirrored,
-  FluentIcons.increase_indent_text,
-  FluentIcons.increase_indent_text_mirrored,
-  FluentIcons.indent_first_line,
-  FluentIcons.info,
-  FluentIcons.info12,
-  FluentIcons.info2,
-  FluentIcons.info_solid,
-  FluentIcons.information_barriers,
-  FluentIcons.inking_tool,
-  FluentIcons.input_address,
-  FluentIcons.insert,
-  FluentIcons.insert_columns_left,
-  FluentIcons.insert_columns_right,
-  FluentIcons.insert_rows_above,
-  FluentIcons.insert_rows_below,
-  FluentIcons.insert_signature_line,
-  FluentIcons.insert_text_box,
-  FluentIcons.insert_text_box_korean,
-  FluentIcons.insights,
-  FluentIcons.install_to_drive,
-  FluentIcons.installation,
-  FluentIcons.intermittent_clouds_day,
-  FluentIcons.intermittent_clouds_night,
-  FluentIcons.internal_investigation,
-  FluentIcons.internet_sharing,
-  FluentIcons.intersect_shape,
-  FluentIcons.invoice,
-  FluentIcons.io_t_secure,
-  FluentIcons.iot,
-  FluentIcons.issue_solid,
-  FluentIcons.issue_tracking,
-  FluentIcons.issue_tracking_mirrored,
-  FluentIcons.italic,
-  FluentIcons.italic_c,
-  FluentIcons.italic_d,
-  FluentIcons.italic_k,
-  FluentIcons.italic_kazakh,
-  FluentIcons.italic_korean,
-  FluentIcons.italic_l,
-  FluentIcons.italic_s,
-  FluentIcons.italic_t,
-  FluentIcons.java_script_language,
-  FluentIcons.join_online_meeting,
-  FluentIcons.js,
-  FluentIcons.kaizala_logo,
-  FluentIcons.key_phrase_extraction,
-  FluentIcons.keyboard_classic,
-  FluentIcons.knowledge_article,
-  FluentIcons.knowledge_management_app,
-  FluentIcons.label,
-  FluentIcons.ladybug_solid,
-  FluentIcons.lamp,
-  FluentIcons.landscape_orientation,
-  FluentIcons.laptop_secure,
-  FluentIcons.laptop_selected,
-  FluentIcons.large_grid,
-  FluentIcons.learning_app,
-  FluentIcons.learning_tools,
-  FluentIcons.leave,
-  FluentIcons.leave_user,
-  FluentIcons.library,
-  FluentIcons.library_add_to,
-  FluentIcons.lifesaver,
-  FluentIcons.lifesaver_lock,
-  FluentIcons.light,
-  FluentIcons.light_snow,
-  FluentIcons.light_weight,
-  FluentIcons.lightbulb,
-  FluentIcons.lightbulb_solid,
-  FluentIcons.lightning_bolt,
-  FluentIcons.lightning_bolt_solid,
-  FluentIcons.lightning_secure,
-  FluentIcons.like,
-  FluentIcons.like_solid,
-  FluentIcons.line,
-  FluentIcons.line_chart,
-  FluentIcons.line_spacing,
-  FluentIcons.line_style,
-  FluentIcons.line_thickness,
-  FluentIcons.link,
-  FluentIcons.link12,
-  FluentIcons.linked_database,
-  FluentIcons.linked_in_logo,
-  FluentIcons.list,
-  FluentIcons.list_mirrored,
-  FluentIcons.live_site,
-  FluentIcons.local_admin,
-  FluentIcons.locale_language,
-  FluentIcons.location,
-  FluentIcons.location_circle,
-  FluentIcons.location_dot,
-  FluentIcons.location_fill,
-  FluentIcons.location_outline,
-  FluentIcons.lock,
-  FluentIcons.lock12,
-  FluentIcons.lock_share,
-  FluentIcons.lock_solid,
-  FluentIcons.log_remove,
-  FluentIcons.lookup_entities,
-  FluentIcons.lower_brightness,
-  FluentIcons.lower_case,
-  FluentIcons.lync_logo,
-  FluentIcons.m365_invoicing_logo,
-  FluentIcons.m_s_lists_connected,
-  FluentIcons.m_s_n_logo,
-  FluentIcons.m_s_n_videos,
-  FluentIcons.m_s_n_videos_solid,
-  FluentIcons.m_s_n_volume,
-  FluentIcons.machine_learning,
-  FluentIcons.mail,
-  FluentIcons.mail_alert,
-  FluentIcons.mail_attached,
-  FluentIcons.mail_check,
-  FluentIcons.mail_fill,
-  FluentIcons.mail_forward,
-  FluentIcons.mail_forward_mirrored,
-  FluentIcons.mail_link,
-  FluentIcons.mail_low_importance,
-  FluentIcons.mail_options,
-  FluentIcons.mail_pause,
-  FluentIcons.mail_reminder,
-  FluentIcons.mail_repeat,
-  FluentIcons.mail_reply,
-  FluentIcons.mail_reply_all,
-  FluentIcons.mail_reply_all_mirrored,
-  FluentIcons.mail_reply_mirrored,
-  FluentIcons.mail_schedule,
-  FluentIcons.mail_secure,
-  FluentIcons.mail_solid,
-  FluentIcons.mail_tentative,
-  FluentIcons.mail_tentative_mirrored,
-  FluentIcons.mail_undelivered,
-  FluentIcons.manager_self_service,
-  FluentIcons.manufacturing,
-  FluentIcons.map_directions,
-  FluentIcons.map_layers,
-  FluentIcons.map_pin,
-  FluentIcons.map_pin12,
-  FluentIcons.map_pin_solid,
-  FluentIcons.mark_as_protected,
-  FluentIcons.mark_down_language,
-  FluentIcons.market,
-  FluentIcons.market_down,
-  FluentIcons.master_database,
-  FluentIcons.maximum_value,
-  FluentIcons.medal,
-  FluentIcons.medal_solid,
-  FluentIcons.media,
-  FluentIcons.media_add,
-  FluentIcons.medical,
-  FluentIcons.medical_care,
-  FluentIcons.medication_admin,
-  FluentIcons.medication_request,
-  FluentIcons.megaphone,
-  FluentIcons.megaphone_solid,
-  FluentIcons.memo,
-  FluentIcons.merge,
-  FluentIcons.merge_case,
-  FluentIcons.merge_duplicate,
-  FluentIcons.message,
-  FluentIcons.message_fill,
-  FluentIcons.message_friend_request,
-  FluentIcons.metrics_failure,
-  FluentIcons.metrics_install,
-  FluentIcons.metrics_usage,
-  FluentIcons.mic_off,
-  FluentIcons.mic_off2,
-  FluentIcons.microphone,
-  FluentIcons.microsoft_staffhub_logo,
-  FluentIcons.microsoft_translator_logo,
-  FluentIcons.microsoft_translator_logo_blue,
-  FluentIcons.microsoft_translator_logo_green,
-  FluentIcons.mini_contract,
-  FluentIcons.mini_contract_mirrored,
-  FluentIcons.mini_expand,
-  FluentIcons.mini_expand_mirrored,
-  FluentIcons.mini_link,
-  FluentIcons.minimum_value,
-  FluentIcons.mobile_angled,
-  FluentIcons.mobile_report,
-  FluentIcons.mobile_selected,
-  FluentIcons.model_app_template32,
-  FluentIcons.modeling_view,
-  FluentIcons.money,
-  FluentIcons.more,
-  FluentIcons.more_sports,
-  FluentIcons.more_vertical,
-  FluentIcons.mosty_clear_night,
-  FluentIcons.mosty_cloudy_flurries_day,
-  FluentIcons.mosty_cloudy_flurries_night,
-  FluentIcons.mosty_cloudy_showers_day,
-  FluentIcons.mosty_cloudy_t_storms_day,
-  FluentIcons.mosty_cloudy_t_storms_night,
-  FluentIcons.mosty_sunny_day,
-  FluentIcons.mountain_climbing,
-  FluentIcons.move,
-  FluentIcons.move_to_folder,
-  FluentIcons.movers,
-  FluentIcons.multi_select,
-  FluentIcons.multi_select_mirrored,
-  FluentIcons.music_in_collection,
-  FluentIcons.music_in_collection_fill,
-  FluentIcons.music_note,
-  FluentIcons.mute_chat,
-  FluentIcons.my_movies_t_v,
-  FluentIcons.my_network,
-  FluentIcons.n_u_i_face,
-  FluentIcons.nav2_d_map_view,
-  FluentIcons.navigate_back,
-  FluentIcons.navigate_back_mirrored,
-  FluentIcons.navigate_external_inline,
-  FluentIcons.navigate_forward,
-  FluentIcons.navigate_forward_mirrored,
-  FluentIcons.navigation_flipper,
-  FluentIcons.network_device_scanning,
-  FluentIcons.network_tower,
-  FluentIcons.new_analytics_query,
-  FluentIcons.new_folder,
-  FluentIcons.new_mail,
-  FluentIcons.new_team_project,
-  FluentIcons.news,
-  FluentIcons.news_search,
-  FluentIcons.next,
-  FluentIcons.normal_weight,
-  FluentIcons.not_executed,
-  FluentIcons.not_impacted_solid,
-  FluentIcons.note_forward,
-  FluentIcons.note_pinned,
-  FluentIcons.note_reply,
-  FluentIcons.nuget_logo,
-  FluentIcons.number,
-  FluentIcons.number_field,
-  FluentIcons.number_sequence,
-  FluentIcons.number_symbol,
-  FluentIcons.numbered_list,
-  FluentIcons.numbered_list_mirrored,
-  FluentIcons.numbered_list_number,
-  FluentIcons.numbered_list_number_mirrored,
-  FluentIcons.numbered_list_text,
-  FluentIcons.numbered_list_text_mirrored,
-  FluentIcons.o_d_link,
-  FluentIcons.o_d_link12,
-  FluentIcons.o_d_shared_channel,
-  FluentIcons.o_d_shared_channel12,
-  FluentIcons.oauth,
-  FluentIcons.object_recognition,
-  FluentIcons.octagon,
-  FluentIcons.oem,
-  FluentIcons.office_addins_logo,
-  FluentIcons.office_assistant_logo,
-  FluentIcons.office_catch_up,
-  FluentIcons.office_chat,
-  FluentIcons.office_chat_solid,
-  FluentIcons.office_forms_logo,
-  FluentIcons.office_forms_logo16,
-  FluentIcons.office_forms_logo24,
-  FluentIcons.office_forms_logo_inverse,
-  FluentIcons.office_forms_logo_inverse16,
-  FluentIcons.office_forms_logo_inverse24,
-  FluentIcons.office_logo,
-  FluentIcons.office_store_logo,
-  FluentIcons.office_video_logo,
-  FluentIcons.office_video_logo_fill,
-  FluentIcons.office_video_logo_inverse,
-  FluentIcons.offline_one_drive_parachute,
-  FluentIcons.offline_one_drive_parachute_disabled,
-  FluentIcons.offline_storage,
-  FluentIcons.offline_storage_solid,
-  FluentIcons.onboarding,
-  FluentIcons.one_drive_add,
-  FluentIcons.one_drive_folder16,
-  FluentIcons.one_drive_logo,
-  FluentIcons.one_note_doc_type,
-  FluentIcons.one_note_edu_logo_inverse,
-  FluentIcons.one_note_logo,
-  FluentIcons.one_note_logo16,
-  FluentIcons.one_note_logo_inverse,
-  FluentIcons.one_note_logo_inverse16,
-  FluentIcons.open_enrollment,
-  FluentIcons.open_file,
-  FluentIcons.open_folder_horizontal,
-  FluentIcons.open_in_new_tab,
-  FluentIcons.open_in_new_window,
-  FluentIcons.open_pane,
-  FluentIcons.open_pane_mirrored,
-  FluentIcons.open_source,
-  FluentIcons.open_with,
-  FluentIcons.open_with_mirrored,
-  FluentIcons.opportunities,
-  FluentIcons.order_lock,
-  FluentIcons.org,
-  FluentIcons.orientation,
-  FluentIcons.orientation2,
-  FluentIcons.out_of_office,
-  FluentIcons.outlook_logo,
-  FluentIcons.outlook_logo16,
-  FluentIcons.outlook_logo_inverse,
-  FluentIcons.outlook_logo_inverse16,
-  FluentIcons.outlook_spaces_bucket,
-  FluentIcons.p_a_action,
-  FluentIcons.p_b_i_anomalies_marker,
-  FluentIcons.p_b_i_anomaly,
-  FluentIcons.p_b_i_column,
-  FluentIcons.p_b_i_connect_points,
-  FluentIcons.p_b_i_direct_query,
-  FluentIcons.p_b_i_dual,
-  FluentIcons.p_b_i_gap,
-  FluentIcons.p_b_i_goal_entry,
-  FluentIcons.p_b_i_goal_entry_add,
-  FluentIcons.p_b_i_home_layout_default,
-  FluentIcons.p_b_i_home_layout_expanded,
-  FluentIcons.p_b_i_import,
-  FluentIcons.p_b_i_live_connect,
-  FluentIcons.p_b_i_perspective,
-  FluentIcons.p_b_i_report_template,
-  FluentIcons.p_b_i_zero,
-  FluentIcons.p_o_i_solid,
-  FluentIcons.package,
-  FluentIcons.packages,
-  FluentIcons.padding,
-  FluentIcons.padding_bottom,
-  FluentIcons.padding_left,
-  FluentIcons.padding_right,
-  FluentIcons.padding_top,
-  FluentIcons.page,
-  FluentIcons.page_add,
-  FluentIcons.page_arrow_right,
-  FluentIcons.page_block,
-  FluentIcons.page_checked_out,
-  FluentIcons.page_checkedin,
-  FluentIcons.page_data,
-  FluentIcons.page_edit,
-  FluentIcons.page_header,
-  FluentIcons.page_header_edit,
-  FluentIcons.page_left,
-  FluentIcons.page_link,
-  FluentIcons.page_list,
-  FluentIcons.page_list_filter,
-  FluentIcons.page_list_mirrored_solid,
-  FluentIcons.page_list_solid,
-  FluentIcons.page_lock,
-  FluentIcons.page_permission,
-  FluentIcons.page_remove,
-  FluentIcons.page_right,
-  FluentIcons.page_shared,
-  FluentIcons.page_solid,
-  FluentIcons.pano_indicator,
-  FluentIcons.parachute,
-  FluentIcons.parachute_solid,
-  FluentIcons.parameter,
-  FluentIcons.parking_location,
-  FluentIcons.parking_location_mirrored,
-  FluentIcons.parking_mirrored_solid,
-  FluentIcons.parking_solid,
-  FluentIcons.partly_clear_night,
-  FluentIcons.partly_cloudy_day,
-  FluentIcons.partly_cloudy_night,
-  FluentIcons.partly_sunny_day,
-  FluentIcons.partly_sunny_flurries_day,
-  FluentIcons.partly_sunny_showers_day,
-  FluentIcons.partly_sunny_showers_night,
-  FluentIcons.partly_sunny_t_storms_day,
-  FluentIcons.partly_sunny_t_storms_night,
-  FluentIcons.party_leader,
-  FluentIcons.passive_authentication,
-  FluentIcons.password_field,
-  FluentIcons.paste,
-  FluentIcons.paste_as_code,
-  FluentIcons.paste_as_text,
-  FluentIcons.pause,
-  FluentIcons.payment_card,
-  FluentIcons.pc1,
-  FluentIcons.pdf,
-  FluentIcons.pen_workspace,
-  FluentIcons.pencil_reply,
-  FluentIcons.pentagon,
-  FluentIcons.people,
-  FluentIcons.people_add,
-  FluentIcons.people_alert,
-  FluentIcons.people_block,
-  FluentIcons.people_external_share,
-  FluentIcons.people_pause,
-  FluentIcons.people_repeat,
-  FluentIcons.permissions,
-  FluentIcons.permissions_solid,
-  FluentIcons.personalize,
-  FluentIcons.phishing,
-  FluentIcons.phishing_campaign,
-  FluentIcons.phishing_hook,
-  FluentIcons.phone,
-  FluentIcons.photo,
-  FluentIcons.photo2,
-  FluentIcons.photo2_add,
-  FluentIcons.photo2_fill,
-  FluentIcons.photo2_remove,
-  FluentIcons.photo_block,
-  FluentIcons.photo_collection,
-  FluentIcons.photo_error,
-  FluentIcons.photo_video_media,
-  FluentIcons.picture,
-  FluentIcons.picture_center,
-  FluentIcons.picture_fill,
-  FluentIcons.picture_library,
-  FluentIcons.picture_position,
-  FluentIcons.picture_stretch,
-  FluentIcons.picture_tile,
-  FluentIcons.pie_double,
-  FluentIcons.pie_single,
-  FluentIcons.pie_single_solid,
-  FluentIcons.pill,
-  FluentIcons.pin,
-  FluentIcons.pin_solid12,
-  FluentIcons.pin_solid_off12,
-  FluentIcons.pin_to_tab,
-  FluentIcons.pinned,
-  FluentIcons.pinned_fill,
-  FluentIcons.pinned_solid,
-  FluentIcons.pivot_chart,
-  FluentIcons.plain_text,
-  FluentIcons.plan_view,
-  FluentIcons.planner_logo,
-  FluentIcons.play,
-  FluentIcons.play_resume,
-  FluentIcons.play_reverse,
-  FluentIcons.play_reverse_resume,
-  FluentIcons.play_solid,
-  FluentIcons.playback_rate1x,
-  FluentIcons.player_settings,
-  FluentIcons.playlist_music,
-  FluentIcons.plug,
-  FluentIcons.plug_connected,
-  FluentIcons.plug_disconnected,
-  FluentIcons.plug_solid,
-  FluentIcons.poi,
-  FluentIcons.poll_results,
-  FluentIcons.pop_expand,
-  FluentIcons.portal_app_template32,
-  FluentIcons.post_update,
-  FluentIcons.power_apps,
-  FluentIcons.power_apps2_logo,
-  FluentIcons.power_apps_logo,
-  FluentIcons.power_apps_template,
-  FluentIcons.power_automate_logo,
-  FluentIcons.power_b_i_logo,
-  FluentIcons.power_b_i_logo16,
-  FluentIcons.power_b_i_logo_backplate16,
-  FluentIcons.power_button,
-  FluentIcons.power_point_document,
-  FluentIcons.power_point_logo,
-  FluentIcons.power_point_logo16,
-  FluentIcons.power_point_logo_inverse,
-  FluentIcons.power_point_logo_inverse16,
-  FluentIcons.power_shell,
-  FluentIcons.power_shell2,
-  FluentIcons.power_standby,
-  FluentIcons.power_virtual_agents_logo,
-  FluentIcons.precipitation,
-  FluentIcons.presence_chicklet_video,
-  FluentIcons.presentation,
-  FluentIcons.presentation12,
-  FluentIcons.preview,
-  FluentIcons.preview_below,
-  FluentIcons.preview_link,
-  FluentIcons.preview_side_by_side,
-  FluentIcons.previous,
-  FluentIcons.primary_calendar,
-  FluentIcons.print,
-  FluentIcons.printfax_printer_file,
-  FluentIcons.priority,
-  FluentIcons.pro_football,
-  FluentIcons.pro_hockey,
-  FluentIcons.process,
-  FluentIcons.process_advisor,
-  FluentIcons.process_map,
-  FluentIcons.process_meta_task,
-  FluentIcons.processing,
-  FluentIcons.processing_cancel,
-  FluentIcons.processing_pause,
-  FluentIcons.processing_run,
-  FluentIcons.product,
-  FluentIcons.product_catalog,
-  FluentIcons.product_list,
-  FluentIcons.product_release,
-  FluentIcons.product_variant,
-  FluentIcons.product_warning,
-  FluentIcons.production_floor_management,
-  FluentIcons.profile_search,
-  FluentIcons.progress_loop_inner,
-  FluentIcons.progress_loop_outer,
-  FluentIcons.progress_ring5,
-  FluentIcons.progress_ring_dots,
-  FluentIcons.project_collection,
-  FluentIcons.project_document,
-  FluentIcons.project_logo16,
-  FluentIcons.project_logo32,
-  FluentIcons.project_logo_inverse,
-  FluentIcons.project_management,
-  FluentIcons.promoted_database,
-  FluentIcons.pronouns,
-  FluentIcons.protect_restrict,
-  FluentIcons.protected_document,
-  FluentIcons.protection_center_logo32,
-  FluentIcons.provisioning_package,
-  FluentIcons.public_calendar,
-  FluentIcons.public_contact_card,
-  FluentIcons.public_contact_card_mirrored,
-  FluentIcons.public_email,
-  FluentIcons.public_folder,
-  FluentIcons.publish_content,
-  FluentIcons.publish_course,
-  FluentIcons.publisher_logo,
-  FluentIcons.publisher_logo16,
-  FluentIcons.publisher_logo_inverse16,
-  FluentIcons.puzzle,
-  FluentIcons.py,
-  FluentIcons.python_language,
-  FluentIcons.q_r_code,
-  FluentIcons.qand_a,
-  FluentIcons.qand_a_mirror,
-  FluentIcons.quad_column,
-  FluentIcons.quantity,
-  FluentIcons.quarter_circle,
-  FluentIcons.query_list,
-  FluentIcons.questionnaire,
-  FluentIcons.questionnaire_mirrored,
-  FluentIcons.queue_advanced,
-  FluentIcons.quick_note,
-  FluentIcons.quick_note_solid,
-  FluentIcons.quotes,
-  FluentIcons.r,
-  FluentIcons.radio_btn_off,
-  FluentIcons.radio_btn_on,
-  FluentIcons.radio_bullet,
-  FluentIcons.rain,
-  FluentIcons.rain_showers_day,
-  FluentIcons.rain_showers_night,
-  FluentIcons.rain_snow,
-  FluentIcons.rate,
-  FluentIcons.raw_source,
-  FluentIcons.read,
-  FluentIcons.read_out_loud,
-  FluentIcons.reading_mode,
-  FluentIcons.reading_mode_solid,
-  FluentIcons.real_estate,
-  FluentIcons.receipt_check,
-  FluentIcons.receipt_forward,
-  FluentIcons.receipt_processing,
-  FluentIcons.receipt_reply,
-  FluentIcons.receipt_tentative,
-  FluentIcons.receipt_tentative_mirrored,
-  FluentIcons.receipt_undelivered,
-  FluentIcons.recent,
-  FluentIcons.record2,
-  FluentIcons.record_routing,
-  FluentIcons.recruitment_management,
-  FluentIcons.rectangle_shape,
-  FluentIcons.rectangle_shape_solid,
-  FluentIcons.rectangular_clipping,
-  FluentIcons.recurring_event,
-  FluentIcons.recurring_task,
-  FluentIcons.recycle_bin,
-  FluentIcons.red_eye,
-  FluentIcons.red_eye12,
-  FluentIcons.redeploy,
-  FluentIcons.redo,
-  FluentIcons.refresh,
-  FluentIcons.registry_editor,
-  FluentIcons.relationship,
-  FluentIcons.release_definition,
-  FluentIcons.release_gate,
-  FluentIcons.release_gate_check,
-  FluentIcons.release_gate_error,
-  FluentIcons.reminder_group,
-  FluentIcons.reminder_person,
-  FluentIcons.reminder_time,
-  FluentIcons.remote,
-  FluentIcons.remote_application,
-  FluentIcons.remove,
-  FluentIcons.remove_content,
-  FluentIcons.remove_event,
-  FluentIcons.remove_filter,
-  FluentIcons.remove_from_shopping_list,
-  FluentIcons.remove_from_trash,
-  FluentIcons.remove_link,
-  FluentIcons.remove_link_chain,
-  FluentIcons.remove_link_x,
-  FluentIcons.remove_occurrence,
-  FluentIcons.rename,
-  FluentIcons.renewal_current,
-  FluentIcons.renewal_future,
-  FluentIcons.reopen_pages,
-  FluentIcons.repair,
-  FluentIcons.repeat_all,
-  FluentIcons.repeat_header_rows,
-  FluentIcons.repeat_one,
-  FluentIcons.reply,
-  FluentIcons.reply_all,
-  FluentIcons.reply_all_alt,
-  FluentIcons.reply_all_mirrored,
-  FluentIcons.reply_alt,
-  FluentIcons.reply_mirrored,
-  FluentIcons.repo,
-  FluentIcons.repo_solid,
-  FluentIcons.report_add,
-  FluentIcons.report_alert,
-  FluentIcons.report_alert_mirrored,
-  FluentIcons.report_document,
-  FluentIcons.report_hacked,
-  FluentIcons.report_library,
-  FluentIcons.report_library_mirrored,
-  FluentIcons.report_lock,
-  FluentIcons.report_trophy,
-  FluentIcons.report_warning,
-  FluentIcons.rerun,
-  FluentIcons.reservation_orders,
-  FluentIcons.reset,
-  FluentIcons.reset_device,
-  FluentIcons.responses_menu,
-  FluentIcons.return_key,
-  FluentIcons.return_to_session,
-  FluentIcons.rev_toggle_key,
-  FluentIcons.revenue_management,
-  FluentIcons.review_request_mirrored_solid,
-  FluentIcons.review_request_solid,
-  FluentIcons.review_response_solid,
-  FluentIcons.review_solid,
-  FluentIcons.rewards_logo,
-  FluentIcons.rewards_logo_art64,
-  FluentIcons.rewards_logo_solid,
-  FluentIcons.rewind,
-  FluentIcons.rewind_eight_x,
-  FluentIcons.rewind_four_x,
-  FluentIcons.rewind_one_five_x,
-  FluentIcons.rewind_one_x,
-  FluentIcons.rewind_point_five_x,
-  FluentIcons.rewind_two_x,
-  FluentIcons.ribbon,
-  FluentIcons.ribbon2,
-  FluentIcons.ribbon_solid,
-  FluentIcons.right_double_quote,
-  FluentIcons.right_triangle,
-  FluentIcons.ringer,
-  FluentIcons.ringer_active,
-  FluentIcons.ringer_off,
-  FluentIcons.ringer_remove,
-  FluentIcons.ringer_solid,
-  FluentIcons.robot,
-  FluentIcons.rocket,
-  FluentIcons.room,
-  FluentIcons.rotate,
-  FluentIcons.rotate90_clockwise,
-  FluentIcons.rotate90_counter_clockwise,
-  FluentIcons.rows_child,
-  FluentIcons.rows_group,
-  FluentIcons.rugby,
-  FluentIcons.running,
-  FluentIcons.s_d_card,
-  FluentIcons.s_i_p_move,
-  FluentIcons.s_q_l_analytics_pool,
-  FluentIcons.s_q_l_server_logo,
-  FluentIcons.sad,
-  FluentIcons.sad_solid,
-  FluentIcons.samsung_gallery,
-  FluentIcons.save,
-  FluentIcons.save_all,
-  FluentIcons.save_and_close,
-  FluentIcons.save_as,
-  FluentIcons.save_template,
-  FluentIcons.save_to_mobile,
-  FluentIcons.saved_offline,
-  FluentIcons.savings,
-  FluentIcons.scale_up,
-  FluentIcons.scale_volume,
-  FluentIcons.scatter_chart,
-  FluentIcons.schedule_event_action,
-  FluentIcons.school_data_sync_logo,
-  FluentIcons.scope_template,
-  FluentIcons.screen,
-  FluentIcons.screen_cast,
-  FluentIcons.screen_preview_on,
-  FluentIcons.screen_time,
-  FluentIcons.script,
-  FluentIcons.scroll_up_down,
-  FluentIcons.search,
-  FluentIcons.search_and_apps,
-  FluentIcons.search_art64,
-  FluentIcons.search_bookmark,
-  FluentIcons.search_calendar,
-  FluentIcons.search_data,
-  FluentIcons.search_issue,
-  FluentIcons.search_issue_mirrored,
-  FluentIcons.search_nearby,
-  FluentIcons.secondary_nav,
-  FluentIcons.section,
-  FluentIcons.sections,
-  FluentIcons.security_camera,
-  FluentIcons.security_group,
-  FluentIcons.security_test,
-  FluentIcons.see_do,
-  FluentIcons.select_all,
-  FluentIcons.sell,
-  FluentIcons.semibold_weight,
-  FluentIcons.send,
-  FluentIcons.send_mirrored,
-  FluentIcons.sentiment_analysis,
-  FluentIcons.separator,
-  FluentIcons.server,
-  FluentIcons.server_enviroment,
-  FluentIcons.server_processes,
-  FluentIcons.service_activity,
-  FluentIcons.service_off,
-  FluentIcons.set_action,
-  FluentIcons.settings,
-  FluentIcons.settings_add,
-  FluentIcons.settings_secure,
-  FluentIcons.settings_sync,
-  FluentIcons.shake_device,
-  FluentIcons.shape_solid,
-  FluentIcons.shapes,
-  FluentIcons.share,
-  FluentIcons.shared_database,
-  FluentIcons.shared_notes,
-  FluentIcons.sharei_o_s,
-  FluentIcons.sharepoint2013_logo_inverse,
-  FluentIcons.sharepoint_app_icon16,
-  FluentIcons.sharepoint_logo,
-  FluentIcons.sharepoint_logo_inverse,
-  FluentIcons.shield,
-  FluentIcons.shield_alert,
-  FluentIcons.shield_solid,
-  FluentIcons.shirt,
-  FluentIcons.shop,
-  FluentIcons.shop_server,
-  FluentIcons.shopping_cart,
-  FluentIcons.shopping_cart_solid,
-  FluentIcons.show_grid,
-  FluentIcons.show_results,
-  FluentIcons.show_results_mirrored,
-  FluentIcons.show_time_as,
-  FluentIcons.show_visual_filter,
-  FluentIcons.showers,
-  FluentIcons.side_panel,
-  FluentIcons.side_panel_mirrored,
-  FluentIcons.sign_out,
-  FluentIcons.signin,
-  FluentIcons.simplified_view,
-  FluentIcons.single_bookmark,
-  FluentIcons.single_bookmark_solid,
-  FluentIcons.single_column,
-  FluentIcons.single_column_edit,
-  FluentIcons.site_scan,
-  FluentIcons.six_point_star,
-  FluentIcons.size_legacy,
-  FluentIcons.ski_resorts,
-  FluentIcons.skip_back10,
-  FluentIcons.skip_forward30,
-  FluentIcons.skype_arrow,
-  FluentIcons.skype_check,
-  FluentIcons.skype_circle_arrow,
-  FluentIcons.skype_circle_check,
-  FluentIcons.skype_circle_clock,
-  FluentIcons.skype_circle_minus,
-  FluentIcons.skype_circle_slash,
-  FluentIcons.skype_clock,
-  FluentIcons.skype_for_business_logo,
-  FluentIcons.skype_for_business_logo16,
-  FluentIcons.skype_for_business_logo_fill,
-  FluentIcons.skype_for_business_logo_fill16,
-  FluentIcons.skype_logo,
-  FluentIcons.skype_logo16,
-  FluentIcons.skype_message,
-  FluentIcons.skype_minus,
-  FluentIcons.skype_slash,
-  FluentIcons.sleet,
-  FluentIcons.slider,
-  FluentIcons.slider_handle_size,
-  FluentIcons.slider_thumb,
-  FluentIcons.slideshow,
-  FluentIcons.smart_glass_remote,
-  FluentIcons.snap_to_grid,
-  FluentIcons.snooze,
-  FluentIcons.snow,
-  FluentIcons.snow_shower_day,
-  FluentIcons.snow_shower_night,
-  FluentIcons.snowflake,
-  FluentIcons.soccer,
-  FluentIcons.social_listening_logo,
-  FluentIcons.sort,
-  FluentIcons.sort_down,
-  FluentIcons.sort_lines,
-  FluentIcons.sort_lines_ascending,
-  FluentIcons.sort_up,
-  FluentIcons.source,
-  FluentIcons.spacer,
-  FluentIcons.speakers,
-  FluentIcons.special_event,
-  FluentIcons.speech,
-  FluentIcons.speech_off,
-  FluentIcons.speed_high,
-  FluentIcons.spelling,
-  FluentIcons.split,
-  FluentIcons.split_object,
-  FluentIcons.sprint,
-  FluentIcons.squalls,
-  FluentIcons.square_shape,
-  FluentIcons.square_shape_solid,
-  FluentIcons.stack,
-  FluentIcons.stack_column_chart,
-  FluentIcons.stack_indicator,
-  FluentIcons.stacked_bar_chart,
-  FluentIcons.stacked_bar_chart_full,
-  FluentIcons.stacked_column_chart2,
-  FluentIcons.stacked_column_chart2_fill,
-  FluentIcons.stacked_line_chart,
-  FluentIcons.staff_notebook_logo16,
-  FluentIcons.staff_notebook_logo32,
-  FluentIcons.staff_notebook_logo_fill16,
-  FluentIcons.staff_notebook_logo_fill32,
-  FluentIcons.staff_notebook_logo_inverted16,
-  FluentIcons.staff_notebook_logo_inverted32,
-  FluentIcons.starburst,
-  FluentIcons.starburst_solid,
-  FluentIcons.status_circle_block,
-  FluentIcons.status_circle_block2,
-  FluentIcons.status_circle_checkmark,
-  FluentIcons.status_circle_error_x,
-  FluentIcons.status_circle_exclamation,
-  FluentIcons.status_circle_info,
-  FluentIcons.status_circle_inner,
-  FluentIcons.status_circle_outer,
-  FluentIcons.status_circle_question_mark,
-  FluentIcons.status_circle_ring,
-  FluentIcons.status_circle_sync,
-  FluentIcons.status_error_full,
-  FluentIcons.status_triangle,
-  FluentIcons.status_triangle_exclamation,
-  FluentIcons.status_triangle_inner,
-  FluentIcons.status_triangle_outer,
-  FluentIcons.step,
-  FluentIcons.step_insert,
-  FluentIcons.step_shared,
-  FluentIcons.step_shared_add,
-  FluentIcons.step_shared_insert,
-  FluentIcons.sticky_notes_outline_app_icon,
-  FluentIcons.sticky_notes_solid_app_icon,
-  FluentIcons.stock_down,
-  FluentIcons.stock_up,
-  FluentIcons.stop,
-  FluentIcons.stop_solid,
-  FluentIcons.stopwatch,
-  FluentIcons.storage_acount,
-  FluentIcons.storage_optical,
-  FluentIcons.store_logo16,
-  FluentIcons.store_logo_med20,
-  FluentIcons.storyboard,
-  FluentIcons.stream_discover,
-  FluentIcons.stream_logo,
-  FluentIcons.stream_playlist,
-  FluentIcons.streaming,
-  FluentIcons.streaming_dataflow,
-  FluentIcons.streaming_dataset,
-  FluentIcons.streaming_off,
-  FluentIcons.street,
-  FluentIcons.streetside_split_minimize,
-  FluentIcons.strikethrough,
-  FluentIcons.strikethrough_korean,
-  FluentIcons.subscribe,
-  FluentIcons.subscript,
-  FluentIcons.substitutions_in,
-  FluentIcons.subtract_shape,
-  FluentIcons.suitcase,
-  FluentIcons.summary_chart,
-  FluentIcons.sun_add,
-  FluentIcons.sun_question_mark,
-  FluentIcons.sunny,
-  FluentIcons.superscript,
-  FluentIcons.survey_question_response,
-  FluentIcons.survey_questions,
-  FluentIcons.sway_logo16,
-  FluentIcons.sway_logo32,
-  FluentIcons.sway_logo_fill16,
-  FluentIcons.sway_logo_fill32,
-  FluentIcons.sway_logo_inverse,
-  FluentIcons.switch_user,
-  FluentIcons.switch_widget,
-  FluentIcons.switcher_start_end,
-  FluentIcons.sync,
-  FluentIcons.sync_error,
-  FluentIcons.sync_folder,
-  FluentIcons.sync_occurence,
-  FluentIcons.sync_occurence_cancel,
-  FluentIcons.sync_status,
-  FluentIcons.sync_status_solid,
-  FluentIcons.sync_to_p_c,
-  FluentIcons.system,
-  FluentIcons.t_f_v_c_logo,
-  FluentIcons.t_v_monitor,
-  FluentIcons.t_v_monitor_selected,
-  FluentIcons.tab,
-  FluentIcons.tab_center,
-  FluentIcons.tab_one_column,
-  FluentIcons.tab_three_column,
-  FluentIcons.tab_two_column,
-  FluentIcons.table,
-  FluentIcons.table_branded_column,
-  FluentIcons.table_branded_row,
-  FluentIcons.table_column,
-  FluentIcons.table_computed,
-  FluentIcons.table_first_column,
-  FluentIcons.table_group,
-  FluentIcons.table_header_row,
-  FluentIcons.table_last_column,
-  FluentIcons.table_link,
-  FluentIcons.table_permission,
-  FluentIcons.table_total_row,
-  FluentIcons.tablet,
-  FluentIcons.tablet_mode,
-  FluentIcons.tablet_selected,
-  FluentIcons.tag,
-  FluentIcons.tag_group,
-  FluentIcons.tag_solid,
-  FluentIcons.tag_unknown,
-  FluentIcons.tag_unknown12,
-  FluentIcons.tag_unknown12_mirror,
-  FluentIcons.tag_unknown_mirror,
-  FluentIcons.task_add,
-  FluentIcons.task_group,
-  FluentIcons.task_group_mirrored,
-  FluentIcons.task_list,
-  FluentIcons.task_logo,
-  FluentIcons.task_manager,
-  FluentIcons.task_manager_mirrored,
-  FluentIcons.task_solid,
-  FluentIcons.taskboard,
-  FluentIcons.taxi,
-  FluentIcons.team_favorite,
-  FluentIcons.teams_logo,
-  FluentIcons.teams_logo16,
-  FluentIcons.teams_logo_inverse,
-  FluentIcons.teamwork,
-  FluentIcons.teeth,
-  FluentIcons.telemarketer,
-  FluentIcons.temporary_access_pass,
-  FluentIcons.temporary_user,
-  FluentIcons.tennis,
-  FluentIcons.test_add,
-  FluentIcons.test_auto_solid,
-  FluentIcons.test_beaker,
-  FluentIcons.test_beaker_solid,
-  FluentIcons.test_case,
-  FluentIcons.test_explore_solid,
-  FluentIcons.test_impact_solid,
-  FluentIcons.test_parameter,
-  FluentIcons.test_plan,
-  FluentIcons.test_remove,
-  FluentIcons.test_step,
-  FluentIcons.test_suite,
-  FluentIcons.test_user_solid,
-  FluentIcons.text_align_bottom,
-  FluentIcons.text_align_middle,
-  FluentIcons.text_align_top,
-  FluentIcons.text_box,
-  FluentIcons.text_callout,
-  FluentIcons.text_document,
-  FluentIcons.text_document_edit,
-  FluentIcons.text_document_settings,
-  FluentIcons.text_document_shared,
-  FluentIcons.text_field,
-  FluentIcons.text_overflow,
-  FluentIcons.text_paragraph_option,
-  FluentIcons.text_recognition,
-  FluentIcons.text_rotate270_degrees,
-  FluentIcons.text_rotate90_degrees,
-  FluentIcons.text_rotate_horizontal,
-  FluentIcons.text_rotation,
-  FluentIcons.this_p_c,
-  FluentIcons.three_quarter_circle,
-  FluentIcons.thumbnail_view,
-  FluentIcons.thumbnail_view_mirrored,
-  FluentIcons.thunderstorms,
-  FluentIcons.ticket,
-  FluentIcons.tiles,
-  FluentIcons.tiles2,
-  FluentIcons.time_entry,
-  FluentIcons.time_picker,
-  FluentIcons.time_sheet,
-  FluentIcons.timeline,
-  FluentIcons.timeline_delivery,
-  FluentIcons.timeline_matrix_view,
-  FluentIcons.timeline_progress,
-  FluentIcons.timer,
-  FluentIcons.title,
-  FluentIcons.title_mirrored,
-  FluentIcons.to_do_logo_bottom,
-  FluentIcons.to_do_logo_inverse,
-  FluentIcons.to_do_logo_outline,
-  FluentIcons.to_do_logo_top,
-  FluentIcons.toggle_border,
-  FluentIcons.toggle_filled,
-  FluentIcons.toggle_left,
-  FluentIcons.toggle_right,
-  FluentIcons.toggle_thumb,
-  FluentIcons.toll,
-  FluentIcons.toolbox,
-  FluentIcons.total,
-  FluentIcons.touch,
-  FluentIcons.touch_pointer,
-  FluentIcons.trackers,
-  FluentIcons.trackers_mirrored,
-  FluentIcons.train,
-  FluentIcons.train_solid,
-  FluentIcons.transfer_call,
-  FluentIcons.transition,
-  FluentIcons.transition_effect,
-  FluentIcons.transition_pop,
-  FluentIcons.transition_push,
-  FluentIcons.translate,
-  FluentIcons.transportation,
-  FluentIcons.trending12,
-  FluentIcons.triangle_down12,
-  FluentIcons.triangle_left12,
-  FluentIcons.triangle_right12,
-  FluentIcons.triangle_shape,
-  FluentIcons.triangle_shape_solid,
-  FluentIcons.triangle_solid,
-  FluentIcons.triangle_solid_down12,
-  FluentIcons.triangle_solid_left12,
-  FluentIcons.triangle_solid_right12,
-  FluentIcons.triangle_solid_up12,
-  FluentIcons.triangle_up12,
-  FluentIcons.trigger_approval,
-  FluentIcons.trigger_auto,
-  FluentIcons.trigger_phrase,
-  FluentIcons.trigger_user,
-  FluentIcons.trim,
-  FluentIcons.trim_end,
-  FluentIcons.trim_start,
-  FluentIcons.triple_column,
-  FluentIcons.triple_column_edit,
-  FluentIcons.triple_column_wide,
-  FluentIcons.trophy,
-  FluentIcons.trophy2,
-  FluentIcons.trophy2_solid,
-  FluentIcons.turn_right,
-  FluentIcons.twelve_point_star,
-  FluentIcons.type_script_language,
-  FluentIcons.u_r_l_block,
-  FluentIcons.umbrella,
-  FluentIcons.un_set_color,
-  FluentIcons.unavailable_offline,
-  FluentIcons.underline,
-  FluentIcons.underline_a,
-  FluentIcons.underline_korean,
-  FluentIcons.underline_p,
-  FluentIcons.underline_russian,
-  FluentIcons.underline_s,
-  FluentIcons.underline_serbian,
-  FluentIcons.undo,
-  FluentIcons.uneditable,
-  FluentIcons.uneditable2,
-  FluentIcons.uneditable2_mirrored,
-  FluentIcons.uneditable_mirrored,
-  FluentIcons.uneditable_solid12,
-  FluentIcons.uneditable_solid_mirrored12,
-  FluentIcons.unfavorite,
-  FluentIcons.ungroup_object,
-  FluentIcons.unite_shape,
-  FluentIcons.unknown,
-  FluentIcons.unknown_call,
-  FluentIcons.unknown_mirrored,
-  FluentIcons.unknown_mirrored_solid,
-  FluentIcons.unknown_solid,
-  FluentIcons.unlock,
-  FluentIcons.unlock_solid,
-  FluentIcons.unpin,
-  FluentIcons.unpublish_content,
-  FluentIcons.unstack_selected,
-  FluentIcons.unsubscribe,
-  FluentIcons.unsync_folder,
-  FluentIcons.unsync_occurence,
-  FluentIcons.untag,
-  FluentIcons.up,
-  FluentIcons.update_restore,
-  FluentIcons.upgrade_analysis,
-  FluentIcons.upload,
-  FluentIcons.upper_case,
-  FluentIcons.usb,
-  FluentIcons.user_clapper,
-  FluentIcons.user_event,
-  FluentIcons.user_followed,
-  FluentIcons.user_gauge,
-  FluentIcons.user_optional,
-  FluentIcons.user_pause,
-  FluentIcons.user_remove,
-  FluentIcons.user_sync,
-  FluentIcons.user_warning,
-  FluentIcons.user_window,
-  FluentIcons.v_s_t_s_alt_logo1,
-  FluentIcons.v_s_t_s_alt_logo2,
-  FluentIcons.v_s_t_s_logo,
-  FluentIcons.vacation,
-  FluentIcons.vaccination,
-  FluentIcons.vaccination_recent,
-  FluentIcons.variable,
-  FluentIcons.variable2,
-  FluentIcons.variable3,
-  FluentIcons.variable_group,
-  FluentIcons.vb,
-  FluentIcons.venn_diagram,
-  FluentIcons.verified_brand,
-  FluentIcons.verified_brand_solid,
-  FluentIcons.version_control_push,
-  FluentIcons.vertical_distribute_center,
-  FluentIcons.video,
-  FluentIcons.video360_generic,
-  FluentIcons.video_add,
-  FluentIcons.video_light_off,
-  FluentIcons.video_off,
-  FluentIcons.video_off2,
-  FluentIcons.video_search,
-  FluentIcons.video_solid,
-  FluentIcons.view,
-  FluentIcons.view_all,
-  FluentIcons.view_all2,
-  FluentIcons.view_dashboard,
-  FluentIcons.view_in_a_r,
-  FluentIcons.view_list,
-  FluentIcons.view_list_group,
-  FluentIcons.view_list_tree,
-  FluentIcons.view_original,
-  FluentIcons.virtual_network,
-  FluentIcons.visio_diagram,
-  FluentIcons.visio_diagram_sync,
-  FluentIcons.visio_document,
-  FluentIcons.visio_logo,
-  FluentIcons.visio_logo16,
-  FluentIcons.visio_logo_inverse,
-  FluentIcons.visio_logo_inverse16,
-  FluentIcons.visual_basic_language,
-  FluentIcons.visual_studio_for_windows,
-  FluentIcons.visual_studio_for_windows_alt,
-  FluentIcons.visually_impaired,
-  FluentIcons.visuals_folder,
-  FluentIcons.visuals_store,
-  FluentIcons.voicemail_forward,
-  FluentIcons.voicemail_i_r_m,
-  FluentIcons.voicemail_reply,
-  FluentIcons.volume0,
-  FluentIcons.volume1,
-  FluentIcons.volume2,
-  FluentIcons.volume3,
-  FluentIcons.volume_disabled,
-  FluentIcons.waffle,
-  FluentIcons.waffle_office365,
-  FluentIcons.waitlist_confirm,
-  FluentIcons.waitlist_confirm_mirrored,
-  FluentIcons.warning,
-  FluentIcons.wifi,
+import 'package:flutter/widgets.dart' show IconData;
+
+const List<IconData> fluentIcons = [
+  IconData(0xe003, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // ACCESSIBILITY
+  IconData(0xe005, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // ACCESSIBILITY_CHECKMARK
+  IconData(0xe004, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // ACCESSIBILITY_CHECKMARK_FILLED
+  IconData(0xe007, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // ACCESSIBILITY_ERROR
+  IconData(0xe006, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // ACCESSIBILITY_ERROR_FILLED
+  IconData(0xe002, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // ACCESSIBILITY_FILLED
+  IconData(0xe009, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // ACCESSIBILITY_MORE
+  IconData(0xe008, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // ACCESSIBILITY_MORE_FILLED
+  IconData(0xe00b, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // ACCESSIBILITY_QUESTION_MARK
+  IconData(0xe00a, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // ACCESSIBILITY_QUESTION_MARK_FILLED
+  IconData(0xe001, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // ACCESS_TIME
+  IconData(0xe000, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // ACCESS_TIME_FILLED
+  IconData(0xe00d, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // ADD
+  IconData(0xe00f, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // ADD_CIRCLE
+  IconData(0xe00e, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // ADD_CIRCLE_FILLED
+  IconData(0xe00c, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // ADD_FILLED
+  IconData(0xe011, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // ADD_SQUARE
+  IconData(0xe010, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // ADD_SQUARE_FILLED
+  IconData(0xe013, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // ADD_SQUARE_MULTIPLE
+  IconData(0xe012, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // ADD_SQUARE_MULTIPLE_FILLED
+  IconData(0xe015, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // ADD_STARBURST
+  IconData(0xe014, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // ADD_STARBURST_FILLED
+  IconData(0xe017, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // ADD_SUBTRACT_CIRCLE
+  IconData(0xe016, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // ADD_SUBTRACT_CIRCLE_FILLED
+  IconData(0xe019, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // AGENTS
+  IconData(0xe01b, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // AGENTS_ADD
+  IconData(0xe01a, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // AGENTS_ADD_FILLED
+  IconData(0xe018, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // AGENTS_FILLED
+  IconData(0xf623, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // AGENTS_PERSON
+  IconData(0xf622, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // AGENTS_PERSON_FILLED
+  IconData(0xe01d, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // AGENTS_SYNC
+  IconData(0xe01c, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // AGENTS_SYNC_FILLED
+  IconData(0xe01f, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // AIRPLANE
+  IconData(0xe01e, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // AIRPLANE_FILLED
+  IconData(0xe021, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // AIRPLANE_LANDING
+  IconData(0xe020, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // AIRPLANE_LANDING_FILLED
+  IconData(0xe023, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // AIRPLANE_TAKE_OFF
+  IconData(0xe022, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // AIRPLANE_TAKE_OFF_FILLED
+  IconData(0xe025, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // ALBUM
+  IconData(0xe027, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // ALBUM_ADD
+  IconData(0xe026, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // ALBUM_ADD_FILLED
+  IconData(0xe024, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // ALBUM_FILLED
+  IconData(0xe029, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // ALBUM_SUBTRACT
+  IconData(0xe028, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // ALBUM_SUBTRACT_FILLED
+  IconData(0xe02b, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // ALERT
+  IconData(0xe02d, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // ALERT_BADGE
+  IconData(0xe02c, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // ALERT_BADGE_FILLED
+  IconData(0xe02a, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // ALERT_FILLED
+  IconData(0xe02f, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // ALERT_OFF
+  IconData(0xe02e, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // ALERT_OFF_FILLED
+  IconData(0xe031, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // ALERT_ON
+  IconData(0xe030, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // ALERT_ON_FILLED
+  IconData(0xe033, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // ALERT_SNOOZE
+  IconData(0xe032, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // ALERT_SNOOZE_FILLED
+  IconData(0xe035, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // ALERT_URGENT
+  IconData(0xe034, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // ALERT_URGENT_FILLED
+  IconData(0xe037, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // ALIGN_BOTTOM
+  IconData(0xe036, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // ALIGN_BOTTOM_FILLED
+  IconData(0xe039, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // ALIGN_CENTER_HORIZONTAL
+  IconData(0xe038, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // ALIGN_CENTER_HORIZONTAL_FILLED
+  IconData(0xe03b, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // ALIGN_CENTER_VERTICAL
+  IconData(0xe03a, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // ALIGN_CENTER_VERTICAL_FILLED
+  IconData(0xe03d, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // ALIGN_END_HORIZONTAL
+  IconData(0xe03c, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // ALIGN_END_HORIZONTAL_FILLED
+  IconData(0xe03f, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // ALIGN_END_VERTICAL
+  IconData(0xe03e, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // ALIGN_END_VERTICAL_FILLED
+  IconData(0xe041, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // ALIGN_LEFT
+  IconData(0xe040, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // ALIGN_LEFT_FILLED
+  IconData(0xe043, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // ALIGN_RIGHT
+  IconData(0xe042, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // ALIGN_RIGHT_FILLED
+  IconData(0xe045, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // ALIGN_SPACE_AROUND_HORIZONTAL
+  IconData(0xe044, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // ALIGN_SPACE_AROUND_HORIZONTAL_FILLED
+  IconData(0xe047, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // ALIGN_SPACE_AROUND_VERTICAL
+  IconData(0xe046, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // ALIGN_SPACE_AROUND_VERTICAL_FILLED
+  IconData(0xe049, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // ALIGN_SPACE_BETWEEN_HORIZONTAL
+  IconData(0xe048, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // ALIGN_SPACE_BETWEEN_HORIZONTAL_FILLED
+  IconData(0xe04b, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // ALIGN_SPACE_BETWEEN_VERTICAL
+  IconData(0xe04a, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // ALIGN_SPACE_BETWEEN_VERTICAL_FILLED
+  IconData(0xe04d, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // ALIGN_SPACE_EVENLY_HORIZONTAL
+  IconData(0xe04c, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // ALIGN_SPACE_EVENLY_HORIZONTAL_FILLED
+  IconData(0xe04f, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // ALIGN_SPACE_EVENLY_VERTICAL
+  IconData(0xe04e, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // ALIGN_SPACE_EVENLY_VERTICAL_FILLED
+  IconData(0xe051, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // ALIGN_SPACE_FIT_VERTICAL
+  IconData(0xe050, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // ALIGN_SPACE_FIT_VERTICAL_FILLED
+  IconData(0xe053, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // ALIGN_START_HORIZONTAL
+  IconData(0xe052, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // ALIGN_START_HORIZONTAL_FILLED
+  IconData(0xe055, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // ALIGN_START_VERTICAL
+  IconData(0xe054, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // ALIGN_START_VERTICAL_FILLED
+  IconData(0xe057, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // ALIGN_STRAIGHTEN
+  IconData(0xe056, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // ALIGN_STRAIGHTEN_FILLED
+  IconData(0xe059, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // ALIGN_STRETCH_HORIZONTAL
+  IconData(0xe058, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // ALIGN_STRETCH_HORIZONTAL_FILLED
+  IconData(0xe05b, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // ALIGN_STRETCH_VERTICAL
+  IconData(0xe05a, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // ALIGN_STRETCH_VERTICAL_FILLED
+  IconData(0xe05d, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // ALIGN_TOP
+  IconData(0xe05c, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // ALIGN_TOP_FILLED
+  IconData(0xe05f, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // ANIMAL_CAT
+  IconData(0xe05e, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // ANIMAL_CAT_FILLED
+  IconData(0xe061, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // ANIMAL_DOG
+  IconData(0xe060, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // ANIMAL_DOG_FILLED
+  IconData(0xe063, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // ANIMAL_PAW_PRINT
+  IconData(0xe062, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // ANIMAL_PAW_PRINT_FILLED
+  IconData(0xe065, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // ANIMAL_RABBIT
+  IconData(0xe064, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // ANIMAL_RABBIT_FILLED
+  IconData(0xe067, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // ANIMAL_RABBIT_OFF
+  IconData(0xe066, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // ANIMAL_RABBIT_OFF_FILLED
+  IconData(0xe069, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // ANIMAL_TURTLE
+  IconData(0xe068, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // ANIMAL_TURTLE_FILLED
+  IconData(0xe073, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // APPROVALS_APP
+  IconData(0xe072, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // APPROVALS_APP_FILLED
+  IconData(0xe075, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // APPS
+  IconData(0xe077, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // APPS_ADD_IN
+  IconData(0xe076, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // APPS_ADD_IN_FILLED
+  IconData(0xe079, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // APPS_ADD_IN_OFF
+  IconData(0xe078, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // APPS_ADD_IN_OFF_FILLED
+  IconData(0xe07b, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // APPS_BULLET_LIST
+  IconData(0xe07a, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // APPS_BULLET_LIST_FILLED
+  IconData(0xe074, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // APPS_FILLED
+  IconData(0xe07d, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // APPS_LIST
+  IconData(0xe07f, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // APPS_LIST_DETAIL
+  IconData(0xe07e, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // APPS_LIST_DETAIL_FILLED
+  IconData(0xe07c, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // APPS_LIST_FILLED
+  IconData(0xe081, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // APPS_SETTINGS
+  IconData(0xe080, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // APPS_SETTINGS_FILLED
+  IconData(0xe083, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // APPS_SHIELD
+  IconData(0xe082, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // APPS_SHIELD_FILLED
+  IconData(0xe06b, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // APP_FOLDER
+  IconData(0xe06a, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // APP_FOLDER_FILLED
+  IconData(0xf757, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // APP_FOLDER_HINT
+  IconData(0xf756, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // APP_FOLDER_HINT_FILLED
+  IconData(0xe06d, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // APP_GENERIC
+  IconData(0xe06c, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // APP_GENERIC_FILLED
+  IconData(0xe06f, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // APP_RECENT
+  IconData(0xe06e, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // APP_RECENT_FILLED
+  IconData(0xe071, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // APP_TITLE
+  IconData(0xe070, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // APP_TITLE_FILLED
+  IconData(0xe085, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // ARCHIVE
+  IconData(0xe087, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // ARCHIVE_ARROW_BACK
+  IconData(0xe086, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // ARCHIVE_ARROW_BACK_FILLED
+  IconData(0xe089, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // ARCHIVE_CLOCK
+  IconData(0xe088, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // ARCHIVE_CLOCK_FILLED
+  IconData(0xe084, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // ARCHIVE_FILLED
+  IconData(0xe08b, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // ARCHIVE_MULTIPLE
+  IconData(0xe08a, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // ARCHIVE_MULTIPLE_FILLED
+  IconData(0xe08d, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // ARCHIVE_SETTINGS
+  IconData(0xe08c, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // ARCHIVE_SETTINGS_FILLED
+  IconData(0xe1b9, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // ARROWS_BIDIRECTIONAL
+  IconData(0xe1b8, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // ARROWS_BIDIRECTIONAL_FILLED
+  IconData(0xe08f, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // ARROW_AUTOFIT_CONTENT
+  IconData(0xe08e, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // ARROW_AUTOFIT_CONTENT_FILLED
+  IconData(0xe091, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // ARROW_AUTOFIT_DOWN
+  IconData(0xe090, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // ARROW_AUTOFIT_DOWN_FILLED
+  IconData(0xe093, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // ARROW_AUTOFIT_HEIGHT
+  IconData(0xe095, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // ARROW_AUTOFIT_HEIGHT_DOTTED
+  IconData(0xe094, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // ARROW_AUTOFIT_HEIGHT_DOTTED_FILLED
+  IconData(0xe092, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // ARROW_AUTOFIT_HEIGHT_FILLED
+  IconData(0xe097, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // ARROW_AUTOFIT_HEIGHT_IN
+  IconData(0xe096, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // ARROW_AUTOFIT_HEIGHT_IN_FILLED
+  IconData(0xe099, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // ARROW_AUTOFIT_UP
+  IconData(0xe098, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // ARROW_AUTOFIT_UP_FILLED
+  IconData(0xe09b, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // ARROW_AUTOFIT_WIDTH
+  IconData(0xe09d, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // ARROW_AUTOFIT_WIDTH_DOTTED
+  IconData(0xe09c, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // ARROW_AUTOFIT_WIDTH_DOTTED_FILLED
+  IconData(0xe09a, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // ARROW_AUTOFIT_WIDTH_FILLED
+  IconData(0xe09f, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // ARROW_BETWEEN_DOWN
+  IconData(0xe09e, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // ARROW_BETWEEN_DOWN_FILLED
+  IconData(0xe0a1, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // ARROW_BETWEEN_UP
+  IconData(0xe0a0, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // ARROW_BETWEEN_UP_FILLED
+  IconData(0xe0a3, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // ARROW_BIDIRECTIONAL_LEFT_RIGHT
+  IconData(0xe0a2, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // ARROW_BIDIRECTIONAL_LEFT_RIGHT_FILLED
+  IconData(0xe0a5, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // ARROW_BIDIRECTIONAL_UP_DOWN
+  IconData(0xe0a4, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // ARROW_BIDIRECTIONAL_UP_DOWN_FILLED
+  IconData(0xe0a7, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // ARROW_BOUNCE
+  IconData(0xe0a6, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // ARROW_BOUNCE_FILLED
+  IconData(0xe0a9, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // ARROW_CIRCLE_DOWN
+  IconData(0xe0ab, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // ARROW_CIRCLE_DOWN_DOUBLE
+  IconData(0xe0aa, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // ARROW_CIRCLE_DOWN_DOUBLE_FILLED
+  IconData(0xe0a8, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // ARROW_CIRCLE_DOWN_FILLED
+  IconData(0xe0ad, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // ARROW_CIRCLE_DOWN_RIGHT
+  IconData(0xe0ac, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // ARROW_CIRCLE_DOWN_RIGHT_FILLED
+  IconData(0xe0af, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // ARROW_CIRCLE_DOWN_SPLIT
+  IconData(0xe0ae, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // ARROW_CIRCLE_DOWN_SPLIT_FILLED
+  IconData(0xe0b1, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // ARROW_CIRCLE_DOWN_UP
+  IconData(0xe0b0, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // ARROW_CIRCLE_DOWN_UP_FILLED
+  IconData(0xe0b3, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // ARROW_CIRCLE_LEFT
+  IconData(0xe0b2, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // ARROW_CIRCLE_LEFT_FILLED
+  IconData(0xe0b5, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // ARROW_CIRCLE_RIGHT
+  IconData(0xe0b4, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // ARROW_CIRCLE_RIGHT_FILLED
+  IconData(0xe0b7, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // ARROW_CIRCLE_UP
+  IconData(0xe0b6, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // ARROW_CIRCLE_UP_FILLED
+  IconData(0xe0b9, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // ARROW_CIRCLE_UP_LEFT
+  IconData(0xe0b8, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // ARROW_CIRCLE_UP_LEFT_FILLED
+  IconData(0xe0bb, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // ARROW_CIRCLE_UP_RIGHT
+  IconData(0xe0ba, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // ARROW_CIRCLE_UP_RIGHT_FILLED
+  IconData(0xe0bd, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // ARROW_CIRCLE_UP_SPARKLE
+  IconData(0xe0bc, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // ARROW_CIRCLE_UP_SPARKLE_FILLED
+  IconData(0xe0bf, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // ARROW_CLOCKWISE
+  IconData(0xe0c1, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // ARROW_CLOCKWISE_DASHES
+  IconData(0xe0c0, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // ARROW_CLOCKWISE_DASHES_FILLED
+  IconData(0xe0c3, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // ARROW_CLOCKWISE_DASHES_SETTINGS
+  IconData(0xe0c2, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // ARROW_CLOCKWISE_DASHES_SETTINGS_FILLED
+  IconData(0xe0be, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // ARROW_CLOCKWISE_FILLED
+  IconData(0xe0c5, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // ARROW_COLLAPSE_ALL
+  IconData(0xe0c4, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // ARROW_COLLAPSE_ALL_FILLED
+  IconData(0xe0c7, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // ARROW_COUNTERCLOCKWISE
+  IconData(0xe0c9, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // ARROW_COUNTERCLOCKWISE_DASHES
+  IconData(0xe0c8, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // ARROW_COUNTERCLOCKWISE_DASHES_FILLED
+  IconData(0xe0c6, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // ARROW_COUNTERCLOCKWISE_FILLED
+  IconData(0xe0cb, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // ARROW_COUNTERCLOCKWISE_INFO
+  IconData(0xe0ca, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // ARROW_COUNTERCLOCKWISE_INFO_FILLED
+  IconData(0xe0cd, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // ARROW_CURVE_DOWN_LEFT
+  IconData(0xe0cc, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // ARROW_CURVE_DOWN_LEFT_FILLED
+  IconData(0xe0cf, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // ARROW_CURVE_DOWN_RIGHT
+  IconData(0xe0ce, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // ARROW_CURVE_DOWN_RIGHT_FILLED
+  IconData(0xe0d1, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // ARROW_CURVE_UP_LEFT
+  IconData(0xe0d0, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // ARROW_CURVE_UP_LEFT_FILLED
+  IconData(0xe0d3, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // ARROW_CURVE_UP_RIGHT
+  IconData(0xe0d2, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // ARROW_CURVE_UP_RIGHT_FILLED
+  IconData(0xe0d5, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // ARROW_DOWN
+  IconData(0xe0dd, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // ARROW_DOWNLOAD
+  IconData(0xe0dc, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // ARROW_DOWNLOAD_FILLED
+  IconData(0xe0df, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // ARROW_DOWNLOAD_OFF
+  IconData(0xe0de, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // ARROW_DOWNLOAD_OFF_FILLED
+  IconData(0xe0d7, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // ARROW_DOWN_EXCLAMATION
+  IconData(0xe0d6, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // ARROW_DOWN_EXCLAMATION_FILLED
+  IconData(0xe0d4, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // ARROW_DOWN_FILLED
+  IconData(0xe0d9, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // ARROW_DOWN_LEFT
+  IconData(0xe0d8, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // ARROW_DOWN_LEFT_FILLED
+  IconData(0xe0db, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // ARROW_DOWN_RIGHT
+  IconData(0xe0da, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // ARROW_DOWN_RIGHT_FILLED
+  IconData(0xe0e1, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // ARROW_EJECT
+  IconData(0xe0e0, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // ARROW_EJECT_FILLED
+  IconData(0xe0e3, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // ARROW_ENTER
+  IconData(0xe0e2, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // ARROW_ENTER_FILLED
+  IconData(0xe0e5, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // ARROW_ENTER_LEFT
+  IconData(0xe0e4, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // ARROW_ENTER_LEFT_FILLED
+  IconData(0xe0e7, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // ARROW_ENTER_UP
+  IconData(0xe0e6, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // ARROW_ENTER_UP_FILLED
+  IconData(0xe0e9, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // ARROW_EXIT
+  IconData(0xe0e8, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // ARROW_EXIT_FILLED
+  IconData(0xe0eb, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // ARROW_EXPAND
+  IconData(0xe0ed, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // ARROW_EXPAND_ALL
+  IconData(0xe0ec, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // ARROW_EXPAND_ALL_FILLED
+  IconData(0xe0ea, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // ARROW_EXPAND_FILLED
+  IconData(0xe0ef, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // ARROW_EXPORT
+  IconData(0xe0ee, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // ARROW_EXPORT_FILLED
+  IconData(0xe0f1, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // ARROW_EXPORT_LTR
+  IconData(0xe0f0, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // ARROW_EXPORT_LTR_FILLED
+  IconData(0xe0f3, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // ARROW_EXPORT_RTL
+  IconData(0xe0f2, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // ARROW_EXPORT_RTL_FILLED
+  IconData(0xe0f5, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // ARROW_EXPORT_UP
+  IconData(0xe0f4, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // ARROW_EXPORT_UP_FILLED
+  IconData(0xe0f7, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // ARROW_FIT
+  IconData(0xe0f6, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // ARROW_FIT_FILLED
+  IconData(0xe0f9, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // ARROW_FIT_IN
+  IconData(0xe0f8, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // ARROW_FIT_IN_FILLED
+  IconData(0xe0fb, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // ARROW_FLOW_DIAGONAL_UP_RIGHT
+  IconData(0xe0fa, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // ARROW_FLOW_DIAGONAL_UP_RIGHT_FILLED
+  IconData(0xe0fd, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // ARROW_FLOW_SQUARE_MULTIPLE
+  IconData(0xe0fc, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // ARROW_FLOW_SQUARE_MULTIPLE_FILLED
+  IconData(0xe0ff, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // ARROW_FLOW_UP_RIGHT
+  IconData(0xe0fe, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // ARROW_FLOW_UP_RIGHT_FILLED
+  IconData(0xe101, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // ARROW_FLOW_UP_RIGHT_RECTANGLE_MULTIPLE
+  IconData(0xe100, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // ARROW_FLOW_UP_RIGHT_RECTANGLE_MULTIPLE_FILLED
+  IconData(0xe103, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // ARROW_FORWARD
+  IconData(0xe105, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // ARROW_FORWARD_DOWN_LIGHTNING
+  IconData(0xe104, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // ARROW_FORWARD_DOWN_LIGHTNING_FILLED
+  IconData(0xe107, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // ARROW_FORWARD_DOWN_PERSON
+  IconData(0xe106, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // ARROW_FORWARD_DOWN_PERSON_FILLED
+  IconData(0xe102, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // ARROW_FORWARD_FILLED
+  IconData(0xe109, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // ARROW_HOOK_DOWN_LEFT
+  IconData(0xe108, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // ARROW_HOOK_DOWN_LEFT_FILLED
+  IconData(0xe10b, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // ARROW_HOOK_DOWN_RIGHT
+  IconData(0xe10a, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // ARROW_HOOK_DOWN_RIGHT_FILLED
+  IconData(0xe10d, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // ARROW_HOOK_UP_LEFT
+  IconData(0xe10c, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // ARROW_HOOK_UP_LEFT_FILLED
+  IconData(0xe10f, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // ARROW_HOOK_UP_RIGHT
+  IconData(0xe10e, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // ARROW_HOOK_UP_RIGHT_FILLED
+  IconData(0xe111, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // ARROW_IMPORT
+  IconData(0xe110, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // ARROW_IMPORT_FILLED
+  IconData(0xe113, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // ARROW_JOIN
+  IconData(0xe112, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // ARROW_JOIN_FILLED
+  IconData(0xe115, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // ARROW_LEFT
+  IconData(0xe114, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // ARROW_LEFT_FILLED
+  IconData(0xe117, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // ARROW_MAXIMIZE
+  IconData(0xe116, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // ARROW_MAXIMIZE_FILLED
+  IconData(0xe119, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // ARROW_MAXIMIZE_TOP_LEFT_BOTTOM_RIGHT
+  IconData(0xe118, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // ARROW_MAXIMIZE_TOP_LEFT_BOTTOM_RIGHT_FILLED
+  IconData(0xe11b, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // ARROW_MAXIMIZE_VERTICAL
+  IconData(0xe11a, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // ARROW_MAXIMIZE_VERTICAL_FILLED
+  IconData(0xe11d, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // ARROW_MINIMIZE
+  IconData(0xe11c, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // ARROW_MINIMIZE_FILLED
+  IconData(0xe11f, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // ARROW_MINIMIZE_TOP_LEFT_BOTTOM_RIGHT
+  IconData(0xe11e, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // ARROW_MINIMIZE_TOP_LEFT_BOTTOM_RIGHT_FILLED
+  IconData(0xe121, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // ARROW_MINIMIZE_VERTICAL
+  IconData(0xe120, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // ARROW_MINIMIZE_VERTICAL_FILLED
+  IconData(0xe123, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // ARROW_MOVE
+  IconData(0xe122, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // ARROW_MOVE_FILLED
+  IconData(0xe125, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // ARROW_MOVE_INWARD
+  IconData(0xe124, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // ARROW_MOVE_INWARD_FILLED
+  IconData(0xe127, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // ARROW_NEXT
+  IconData(0xe126, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // ARROW_NEXT_FILLED
+  IconData(0xe129, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // ARROW_OUTLINE_DOWN_LEFT
+  IconData(0xe128, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // ARROW_OUTLINE_DOWN_LEFT_FILLED
+  IconData(0xe12b, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // ARROW_OUTLINE_UP_RIGHT
+  IconData(0xe12a, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // ARROW_OUTLINE_UP_RIGHT_FILLED
+  IconData(0xe12d, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // ARROW_PARAGRAPH
+  IconData(0xe12c, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // ARROW_PARAGRAPH_FILLED
+  IconData(0xe12f, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // ARROW_PREVIOUS
+  IconData(0xe12e, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // ARROW_PREVIOUS_FILLED
+  IconData(0xe131, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // ARROW_REDO
+  IconData(0xe130, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // ARROW_REDO_FILLED
+  IconData(0xe133, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // ARROW_REPEAT_1
+  IconData(0xe132, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // ARROW_REPEAT_1_FILLED
+  IconData(0xe135, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // ARROW_REPEAT_ALL
+  IconData(0xe134, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // ARROW_REPEAT_ALL_FILLED
+  IconData(0xe137, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // ARROW_REPEAT_ALL_OFF
+  IconData(0xe136, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // ARROW_REPEAT_ALL_OFF_FILLED
+  IconData(0xe139, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // ARROW_REPLY
+  IconData(0xe13b, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // ARROW_REPLY_ALL
+  IconData(0xe13a, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // ARROW_REPLY_ALL_FILLED
+  IconData(0xe13d, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // ARROW_REPLY_DOWN
+  IconData(0xe13c, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // ARROW_REPLY_DOWN_FILLED
+  IconData(0xe138, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // ARROW_REPLY_FILLED
+  IconData(0xe13f, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // ARROW_RESET
+  IconData(0xe13e, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // ARROW_RESET_FILLED
+  IconData(0xe141, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // ARROW_RIGHT
+  IconData(0xe140, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // ARROW_RIGHT_FILLED
+  IconData(0xe143, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // ARROW_ROTATE_CLOCKWISE
+  IconData(0xe142, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // ARROW_ROTATE_CLOCKWISE_FILLED
+  IconData(0xe145, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // ARROW_ROTATE_COUNTERCLOCKWISE
+  IconData(0xe144, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // ARROW_ROTATE_COUNTERCLOCKWISE_FILLED
+  IconData(0xe147, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // ARROW_ROUTING
+  IconData(0xe146, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // ARROW_ROUTING_FILLED
+  IconData(0xe149, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // ARROW_ROUTING_RECTANGLE_MULTIPLE
+  IconData(0xe148, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // ARROW_ROUTING_RECTANGLE_MULTIPLE_FILLED
+  IconData(0xe14b, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // ARROW_SHUFFLE
+  IconData(0xe14a, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // ARROW_SHUFFLE_FILLED
+  IconData(0xe14d, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // ARROW_SHUFFLE_OFF
+  IconData(0xe14c, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // ARROW_SHUFFLE_OFF_FILLED
+  IconData(0xe14f, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // ARROW_SORT
+  IconData(0xe151, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // ARROW_SORT_DOWN
+  IconData(0xe150, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // ARROW_SORT_DOWN_FILLED
+  IconData(0xe153, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // ARROW_SORT_DOWN_LINES
+  IconData(0xe152, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // ARROW_SORT_DOWN_LINES_FILLED
+  IconData(0xe14e, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // ARROW_SORT_FILLED
+  IconData(0xe155, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // ARROW_SORT_UP
+  IconData(0xe154, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // ARROW_SORT_UP_FILLED
+  IconData(0xe157, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // ARROW_SORT_UP_LINES
+  IconData(0xe156, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // ARROW_SORT_UP_LINES_FILLED
+  IconData(0xe159, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // ARROW_SPLIT
+  IconData(0xe158, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // ARROW_SPLIT_FILLED
+  IconData(0xe15b, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // ARROW_SPRINT
+  IconData(0xe15a, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // ARROW_SPRINT_FILLED
+  IconData(0xe15d, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // ARROW_SQUARE_DOWN
+  IconData(0xe15c, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // ARROW_SQUARE_DOWN_FILLED
+  IconData(0xe15f, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // ARROW_SQUARE_UP_RIGHT
+  IconData(0xe15e, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // ARROW_SQUARE_UP_RIGHT_FILLED
+  IconData(0xe161, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // ARROW_STEP_BACK
+  IconData(0xe160, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // ARROW_STEP_BACK_FILLED
+  IconData(0xe163, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // ARROW_STEP_IN
+  IconData(0xe165, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // ARROW_STEP_IN_DIAGONAL_DOWN_LEFT
+  IconData(0xe164, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // ARROW_STEP_IN_DIAGONAL_DOWN_LEFT_FILLED
+  IconData(0xe162, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // ARROW_STEP_IN_FILLED
+  IconData(0xe167, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // ARROW_STEP_IN_LEFT
+  IconData(0xe166, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // ARROW_STEP_IN_LEFT_FILLED
+  IconData(0xe169, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // ARROW_STEP_IN_RIGHT
+  IconData(0xe168, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // ARROW_STEP_IN_RIGHT_FILLED
+  IconData(0xe16b, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // ARROW_STEP_OUT
+  IconData(0xe16a, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // ARROW_STEP_OUT_FILLED
+  IconData(0xe16d, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // ARROW_STEP_OVER
+  IconData(0xe16c, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // ARROW_STEP_OVER_FILLED
+  IconData(0xe16f, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // ARROW_SWAP
+  IconData(0xe16e, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // ARROW_SWAP_FILLED
+  IconData(0xe171, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // ARROW_SYNC
+  IconData(0xe173, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // ARROW_SYNC_CHECKMARK
+  IconData(0xe172, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // ARROW_SYNC_CHECKMARK_FILLED
+  IconData(0xe175, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // ARROW_SYNC_CIRCLE
+  IconData(0xe174, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // ARROW_SYNC_CIRCLE_FILLED
+  IconData(0xe177, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // ARROW_SYNC_DISMISS
+  IconData(0xe176, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // ARROW_SYNC_DISMISS_FILLED
+  IconData(0xe170, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // ARROW_SYNC_FILLED
+  IconData(0xe179, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // ARROW_SYNC_OFF
+  IconData(0xe178, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // ARROW_SYNC_OFF_FILLED
+  IconData(0xe17b, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // ARROW_TRENDING
+  IconData(0xe17d, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // ARROW_TRENDING_CHECKMARK
+  IconData(0xe17c, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // ARROW_TRENDING_CHECKMARK_FILLED
+  IconData(0xe17f, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // ARROW_TRENDING_DOWN
+  IconData(0xe17e, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // ARROW_TRENDING_DOWN_FILLED
+  IconData(0xe17a, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // ARROW_TRENDING_FILLED
+  IconData(0xe181, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // ARROW_TRENDING_LINES
+  IconData(0xe180, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // ARROW_TRENDING_LINES_FILLED
+  IconData(0xe183, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // ARROW_TRENDING_SETTINGS
+  IconData(0xe182, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // ARROW_TRENDING_SETTINGS_FILLED
+  IconData(0xe185, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // ARROW_TRENDING_SPARKLE
+  IconData(0xe184, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // ARROW_TRENDING_SPARKLE_FILLED
+  IconData(0xe187, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // ARROW_TRENDING_TEXT
+  IconData(0xe186, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // ARROW_TRENDING_TEXT_FILLED
+  IconData(0xe189, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // ARROW_TRENDING_WRENCH
+  IconData(0xe188, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // ARROW_TRENDING_WRENCH_FILLED
+  IconData(0xe18b, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // ARROW_TURN_BIDIRECTIONAL_DOWN_RIGHT
+  IconData(0xe18a, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // ARROW_TURN_BIDIRECTIONAL_DOWN_RIGHT_FILLED
+  IconData(0xe18d, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // ARROW_TURN_DOWN_LEFT
+  IconData(0xe18c, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // ARROW_TURN_DOWN_LEFT_FILLED
+  IconData(0xe18f, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // ARROW_TURN_DOWN_RIGHT
+  IconData(0xe18e, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // ARROW_TURN_DOWN_RIGHT_FILLED
+  IconData(0xe191, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // ARROW_TURN_DOWN_UP
+  IconData(0xe190, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // ARROW_TURN_DOWN_UP_FILLED
+  IconData(0xe193, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // ARROW_TURN_LEFT_DOWN
+  IconData(0xe192, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // ARROW_TURN_LEFT_DOWN_FILLED
+  IconData(0xe195, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // ARROW_TURN_LEFT_RIGHT
+  IconData(0xe194, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // ARROW_TURN_LEFT_RIGHT_FILLED
+  IconData(0xe197, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // ARROW_TURN_LEFT_UP
+  IconData(0xe196, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // ARROW_TURN_LEFT_UP_FILLED
+  IconData(0xe199, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // ARROW_TURN_RIGHT
+  IconData(0xe19b, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // ARROW_TURN_RIGHT_DOWN
+  IconData(0xe19a, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // ARROW_TURN_RIGHT_DOWN_FILLED
+  IconData(0xe198, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // ARROW_TURN_RIGHT_FILLED
+  IconData(0xe19d, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // ARROW_TURN_RIGHT_LEFT
+  IconData(0xe19c, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // ARROW_TURN_RIGHT_LEFT_FILLED
+  IconData(0xe19f, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // ARROW_TURN_RIGHT_UP
+  IconData(0xe19e, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // ARROW_TURN_RIGHT_UP_FILLED
+  IconData(0xe1a1, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // ARROW_TURN_UP_DOWN
+  IconData(0xe1a0, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // ARROW_TURN_UP_DOWN_FILLED
+  IconData(0xe1a3, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // ARROW_TURN_UP_LEFT
+  IconData(0xe1a2, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // ARROW_TURN_UP_LEFT_FILLED
+  IconData(0xe1a5, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // ARROW_UNDO
+  IconData(0xe1a4, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // ARROW_UNDO_FILLED
+  IconData(0xe1a7, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // ARROW_UP
+  IconData(0xe1b1, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // ARROW_UPLOAD
+  IconData(0xe1b0, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // ARROW_UPLOAD_FILLED
+  IconData(0xe1a9, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // ARROW_UP_EXCLAMATION
+  IconData(0xe1a8, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // ARROW_UP_EXCLAMATION_FILLED
+  IconData(0xe1a6, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // ARROW_UP_FILLED
+  IconData(0xe1ab, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // ARROW_UP_LEFT
+  IconData(0xe1aa, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // ARROW_UP_LEFT_FILLED
+  IconData(0xe1ad, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // ARROW_UP_RIGHT
+  IconData(0xe1af, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // ARROW_UP_RIGHT_DASHES
+  IconData(0xe1ae, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // ARROW_UP_RIGHT_DASHES_FILLED
+  IconData(0xe1ac, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // ARROW_UP_RIGHT_FILLED
+  IconData(0xe1b3, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // ARROW_WRAP
+  IconData(0xe1b2, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // ARROW_WRAP_FILLED
+  IconData(0xe1b5, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // ARROW_WRAP_OFF
+  IconData(0xe1b4, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // ARROW_WRAP_OFF_FILLED
+  IconData(0xe1b7, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // ARROW_WRAP_UP_TO_DOWN
+  IconData(0xe1b6, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // ARROW_WRAP_UP_TO_DOWN_FILLED
+  IconData(0xe1bb, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // ATTACH
+  IconData(0xe1bd, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // ATTACH_ARROW_RIGHT
+  IconData(0xe1bc, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // ATTACH_ARROW_RIGHT_FILLED
+  IconData(0xe1ba, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // ATTACH_FILLED
+  IconData(0xe1bf, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // ATTACH_TEXT
+  IconData(0xe1be, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // ATTACH_TEXT_FILLED
+  IconData(0xe1c5, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // AUTOCORRECT
+  IconData(0xe1c4, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // AUTOCORRECT_FILLED
+  IconData(0xf625, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // AUTOPILOT
+  IconData(0xf761, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // AUTOPILOT_FACE
+  IconData(0xf760, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // AUTOPILOT_FACE_FILLED
+  IconData(0xf624, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // AUTOPILOT_FILLED
+  IconData(0xe1c7, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // AUTOSUM
+  IconData(0xe1c6, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // AUTOSUM_FILLED
+  IconData(0xe1c1, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // AUTO_FIT_HEIGHT
+  IconData(0xe1c0, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // AUTO_FIT_HEIGHT_FILLED
+  IconData(0xe1c3, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // AUTO_FIT_WIDTH
+  IconData(0xe1c2, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // AUTO_FIT_WIDTH_FILLED
+  IconData(0xe1c9, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // BACKPACK
+  IconData(0xe1cb, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // BACKPACK_ADD
+  IconData(0xe1ca, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // BACKPACK_ADD_FILLED
+  IconData(0xe1c8, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // BACKPACK_FILLED
+  IconData(0xe1cd, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // BACKSPACE
+  IconData(0xe1cc, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // BACKSPACE_FILLED
+  IconData(0xe1cf, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // BADGE
+  IconData(0xe1ce, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // BADGE_FILLED
+  IconData(0xe1d1, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // BALCONY
+  IconData(0xe1d0, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // BALCONY_FILLED
+  IconData(0xe1d3, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // BALLOON
+  IconData(0xe1d2, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // BALLOON_FILLED
+  IconData(0xe1d5, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // BARCODE_SCANNER
+  IconData(0xe1d7, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // BARCODE_SCANNER_ADD
+  IconData(0xe1d6, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // BARCODE_SCANNER_ADD_FILLED
+  IconData(0xe1d9, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // BARCODE_SCANNER_DISMISS
+  IconData(0xe1d8, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // BARCODE_SCANNER_DISMISS_FILLED
+  IconData(0xe1d4, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // BARCODE_SCANNER_FILLED
+  IconData(0xe1db, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // BATTERY_0
+  IconData(0xe1da, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // BATTERY_0_FILLED
+  IconData(0xe1dd, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // BATTERY_1
+  IconData(0xe1df, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // BATTERY_10
+  IconData(0xe1de, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // BATTERY_10_FILLED
+  IconData(0xe1dc, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // BATTERY_1_FILLED
+  IconData(0xe1e1, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // BATTERY_2
+  IconData(0xe1e0, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // BATTERY_2_FILLED
+  IconData(0xe1e3, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // BATTERY_3
+  IconData(0xe1e2, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // BATTERY_3_FILLED
+  IconData(0xe1e5, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // BATTERY_4
+  IconData(0xe1e4, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // BATTERY_4_FILLED
+  IconData(0xe1e7, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // BATTERY_5
+  IconData(0xe1e6, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // BATTERY_5_FILLED
+  IconData(0xe1e9, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // BATTERY_6
+  IconData(0xe1e8, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // BATTERY_6_FILLED
+  IconData(0xe1eb, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // BATTERY_7
+  IconData(0xe1ea, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // BATTERY_7_FILLED
+  IconData(0xe1ed, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // BATTERY_8
+  IconData(0xe1ec, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // BATTERY_8_FILLED
+  IconData(0xe1ef, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // BATTERY_9
+  IconData(0xe1ee, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // BATTERY_9_FILLED
+  IconData(0xe1f9, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // BATTERY_CHARGE
+  IconData(0xe1f1, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // BATTERY_CHARGE_0
+  IconData(0xe1f0, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // BATTERY_CHARGE_0_FILLED
+  IconData(0xe1f3, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // BATTERY_CHARGE_1
+  IconData(0xe1f5, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // BATTERY_CHARGE_10
+  IconData(0xe1f4, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // BATTERY_CHARGE_10_FILLED
+  IconData(0xe1f2, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // BATTERY_CHARGE_1_FILLED
+  IconData(0xe1f7, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // BATTERY_CHARGE_2
+  IconData(0xe1f6, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // BATTERY_CHARGE_2_FILLED
+  IconData(0xe1fb, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // BATTERY_CHARGE_3
+  IconData(0xe1fa, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // BATTERY_CHARGE_3_FILLED
+  IconData(0xe1fd, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // BATTERY_CHARGE_4
+  IconData(0xe1fc, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // BATTERY_CHARGE_4_FILLED
+  IconData(0xe1ff, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // BATTERY_CHARGE_5
+  IconData(0xe1fe, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // BATTERY_CHARGE_5_FILLED
+  IconData(0xe201, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // BATTERY_CHARGE_6
+  IconData(0xe200, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // BATTERY_CHARGE_6_FILLED
+  IconData(0xe203, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // BATTERY_CHARGE_7
+  IconData(0xe202, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // BATTERY_CHARGE_7_FILLED
+  IconData(0xe205, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // BATTERY_CHARGE_8
+  IconData(0xe204, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // BATTERY_CHARGE_8_FILLED
+  IconData(0xe207, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // BATTERY_CHARGE_9
+  IconData(0xe206, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // BATTERY_CHARGE_9_FILLED
+  IconData(0xe1f8, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // BATTERY_CHARGE_FILLED
+  IconData(0xe209, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // BATTERY_CHECKMARK
+  IconData(0xe208, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // BATTERY_CHECKMARK_FILLED
+  IconData(0xe20b, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // BATTERY_SAVER
+  IconData(0xe20a, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // BATTERY_SAVER_FILLED
+  IconData(0xe20d, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // BATTERY_WARNING
+  IconData(0xe20c, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // BATTERY_WARNING_FILLED
+  IconData(0xe20f, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // BEACH
+  IconData(0xe20e, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // BEACH_FILLED
+  IconData(0xe211, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // BEAKER
+  IconData(0xe213, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // BEAKER_ADD
+  IconData(0xe212, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // BEAKER_ADD_FILLED
+  IconData(0xe215, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // BEAKER_DISMISS
+  IconData(0xe214, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // BEAKER_DISMISS_FILLED
+  IconData(0xe217, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // BEAKER_EDIT
+  IconData(0xe216, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // BEAKER_EDIT_FILLED
+  IconData(0xe210, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // BEAKER_FILLED
+  IconData(0xe219, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // BEAKER_OFF
+  IconData(0xe218, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // BEAKER_OFF_FILLED
+  IconData(0xe21b, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // BEAKER_SETTINGS
+  IconData(0xe21a, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // BEAKER_SETTINGS_FILLED
+  IconData(0xe21d, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // BED
+  IconData(0xe21c, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // BED_FILLED
+  IconData(0xe21f, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // BENCH
+  IconData(0xe21e, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // BENCH_FILLED
+  IconData(0xe221, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // BEZIER_CURVE_SQUARE
+  IconData(0xe220, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // BEZIER_CURVE_SQUARE_FILLED
+  IconData(0xe229, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // BINDER_TRIANGLE
+  IconData(0xe228, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // BINDER_TRIANGLE_FILLED
+  IconData(0xe223, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // BIN_FULL
+  IconData(0xe222, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // BIN_FULL_FILLED
+  IconData(0xe225, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // BIN_RECYCLE
+  IconData(0xe224, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // BIN_RECYCLE_FILLED
+  IconData(0xe227, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // BIN_RECYCLE_FULL
+  IconData(0xe226, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // BIN_RECYCLE_FULL_FILLED
+  IconData(0xe22b, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // BLUETOOTH
+  IconData(0xe22d, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // BLUETOOTH_CONNECTED
+  IconData(0xe22c, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // BLUETOOTH_CONNECTED_FILLED
+  IconData(0xe22f, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // BLUETOOTH_DISABLED
+  IconData(0xe22e, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // BLUETOOTH_DISABLED_FILLED
+  IconData(0xe22a, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // BLUETOOTH_FILLED
+  IconData(0xe231, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // BLUETOOTH_SEARCHING
+  IconData(0xe230, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // BLUETOOTH_SEARCHING_FILLED
+  IconData(0xe233, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // BLUR
+  IconData(0xe232, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // BLUR_FILLED
+  IconData(0xe235, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // BOARD
+  IconData(0xe234, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // BOARD_FILLED
+  IconData(0xe237, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // BOARD_GAMES
+  IconData(0xe236, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // BOARD_GAMES_FILLED
+  IconData(0xe239, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // BOARD_HEART
+  IconData(0xe238, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // BOARD_HEART_FILLED
+  IconData(0xe23b, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // BOARD_SPLIT
+  IconData(0xe23a, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // BOARD_SPLIT_FILLED
+  IconData(0xe23d, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // BOOK
+  IconData(0xe272, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // BOOKMARK
+  IconData(0xe274, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // BOOKMARK_ADD
+  IconData(0xe273, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // BOOKMARK_ADD_FILLED
+  IconData(0xe271, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // BOOKMARK_FILLED
+  IconData(0xe276, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // BOOKMARK_MULTIPLE
+  IconData(0xe275, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // BOOKMARK_MULTIPLE_FILLED
+  IconData(0xe278, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // BOOKMARK_OFF
+  IconData(0xe277, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // BOOKMARK_OFF_FILLED
+  IconData(0xe27a, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // BOOKMARK_SEARCH
+  IconData(0xe279, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // BOOKMARK_SEARCH_FILLED
+  IconData(0xe23f, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // BOOK_ADD
+  IconData(0xe23e, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // BOOK_ADD_FILLED
+  IconData(0xe241, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // BOOK_ARROW_CLOCKWISE
+  IconData(0xe240, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // BOOK_ARROW_CLOCKWISE_FILLED
+  IconData(0xe243, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // BOOK_CLOCK
+  IconData(0xe242, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // BOOK_CLOCK_FILLED
+  IconData(0xe245, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // BOOK_COINS
+  IconData(0xe244, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // BOOK_COINS_FILLED
+  IconData(0xe247, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // BOOK_COMPASS
+  IconData(0xe246, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // BOOK_COMPASS_FILLED
+  IconData(0xe249, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // BOOK_CONTACTS
+  IconData(0xe248, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // BOOK_CONTACTS_FILLED
+  IconData(0xe24b, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // BOOK_DATABASE
+  IconData(0xe24a, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // BOOK_DATABASE_FILLED
+  IconData(0xe24c, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // BOOK_DEFAULT_FILLED
+  IconData(0xe24e, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // BOOK_DISMISS
+  IconData(0xe24d, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // BOOK_DISMISS_FILLED
+  IconData(0xe250, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // BOOK_EXCLAMATION_MARK
+  IconData(0xe24f, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // BOOK_EXCLAMATION_MARK_FILLED
+  IconData(0xe23c, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // BOOK_FILLED
+  IconData(0xe252, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // BOOK_GLOBE
+  IconData(0xe251, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // BOOK_GLOBE_FILLED
+  IconData(0xe254, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // BOOK_INFORMATION
+  IconData(0xe253, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // BOOK_INFORMATION_FILLED
+  IconData(0xe256, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // BOOK_LETTER
+  IconData(0xe255, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // BOOK_LETTER_FILLED
+  IconData(0xe258, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // BOOK_NUMBER
+  IconData(0xe257, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // BOOK_NUMBER_FILLED
+  IconData(0xe25a, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // BOOK_OPEN
+  IconData(0xe259, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // BOOK_OPEN_FILLED
+  IconData(0xe25c, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // BOOK_OPEN_GLOBE
+  IconData(0xe25b, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // BOOK_OPEN_GLOBE_FILLED
+  IconData(0xe25e, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // BOOK_OPEN_LIGHTBULB
+  IconData(0xe25d, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // BOOK_OPEN_LIGHTBULB_FILLED
+  IconData(0xe260, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // BOOK_OPEN_MICROPHONE
+  IconData(0xe25f, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // BOOK_OPEN_MICROPHONE_FILLED
+  IconData(0xe262, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // BOOK_PULSE
+  IconData(0xe261, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // BOOK_PULSE_FILLED
+  IconData(0xe264, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // BOOK_QUESTION_MARK
+  IconData(0xe263, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // BOOK_QUESTION_MARK_FILLED
+  IconData(0xe266, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // BOOK_QUESTION_MARK_RTL
+  IconData(0xe265, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // BOOK_QUESTION_MARK_RTL_FILLED
+  IconData(0xe268, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // BOOK_SEARCH
+  IconData(0xe267, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // BOOK_SEARCH_FILLED
+  IconData(0xe26a, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // BOOK_STAR
+  IconData(0xe269, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // BOOK_STAR_FILLED
+  IconData(0xe26c, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // BOOK_TEMPLATE
+  IconData(0xe26b, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // BOOK_TEMPLATE_FILLED
+  IconData(0xe26e, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // BOOK_THETA
+  IconData(0xe26d, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // BOOK_THETA_FILLED
+  IconData(0xe270, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // BOOK_TOOLBOX
+  IconData(0xe26f, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // BOOK_TOOLBOX_FILLED
+  IconData(0xe27c, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // BORDER_ALL
+  IconData(0xe27b, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // BORDER_ALL_FILLED
+  IconData(0xe27e, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // BORDER_BOTTOM
+  IconData(0xe280, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // BORDER_BOTTOM_DOUBLE
+  IconData(0xe27f, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // BORDER_BOTTOM_DOUBLE_FILLED
+  IconData(0xe27d, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // BORDER_BOTTOM_FILLED
+  IconData(0xe282, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // BORDER_BOTTOM_THICK
+  IconData(0xe281, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // BORDER_BOTTOM_THICK_FILLED
+  IconData(0xe284, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // BORDER_INSIDE
+  IconData(0xe283, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // BORDER_INSIDE_FILLED
+  IconData(0xe286, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // BORDER_LEFT
+  IconData(0xe285, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // BORDER_LEFT_FILLED
+  IconData(0xe288, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // BORDER_LEFT_RIGHT
+  IconData(0xe287, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // BORDER_LEFT_RIGHT_FILLED
+  IconData(0xe28a, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // BORDER_NONE
+  IconData(0xe289, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // BORDER_NONE_FILLED
+  IconData(0xe28c, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // BORDER_OUTSIDE
+  IconData(0xe28b, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // BORDER_OUTSIDE_FILLED
+  IconData(0xe28e, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // BORDER_OUTSIDE_THICK
+  IconData(0xe28d, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // BORDER_OUTSIDE_THICK_FILLED
+  IconData(0xe290, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // BORDER_RIGHT
+  IconData(0xe28f, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // BORDER_RIGHT_FILLED
+  IconData(0xe292, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // BORDER_TOP
+  IconData(0xe294, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // BORDER_TOP_BOTTOM
+  IconData(0xe296, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // BORDER_TOP_BOTTOM_DOUBLE
+  IconData(0xe295, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // BORDER_TOP_BOTTOM_DOUBLE_FILLED
+  IconData(0xe293, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // BORDER_TOP_BOTTOM_FILLED
+  IconData(0xe298, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // BORDER_TOP_BOTTOM_THICK
+  IconData(0xe297, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // BORDER_TOP_BOTTOM_THICK_FILLED
+  IconData(0xe291, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // BORDER_TOP_FILLED
+  IconData(0xe29a, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // BOT
+  IconData(0xe29c, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // BOT_ADD
+  IconData(0xe29b, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // BOT_ADD_FILLED
+  IconData(0xe299, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // BOT_FILLED
+  IconData(0xe29e, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // BOT_SPARKLE
+  IconData(0xe29d, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // BOT_SPARKLE_FILLED
+  IconData(0xe2a2, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // BOWL_CHOPSTICKS
+  IconData(0xe2a1, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // BOWL_CHOPSTICKS_FILLED
+  IconData(0xe2a4, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // BOWL_SALAD
+  IconData(0xe2a3, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // BOWL_SALAD_FILLED
+  IconData(0xe2a0, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // BOW_TIE
+  IconData(0xe29f, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // BOW_TIE_FILLED
+  IconData(0xe2a6, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // BOX
+  IconData(0xe2a8, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // BOX_ARROW_LEFT
+  IconData(0xe2a7, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // BOX_ARROW_LEFT_FILLED
+  IconData(0xe2aa, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // BOX_ARROW_UP
+  IconData(0xe2a9, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // BOX_ARROW_UP_FILLED
+  IconData(0xe2ac, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // BOX_CHECKMARK
+  IconData(0xe2ab, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // BOX_CHECKMARK_FILLED
+  IconData(0xe2ae, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // BOX_DISMISS
+  IconData(0xe2ad, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // BOX_DISMISS_FILLED
+  IconData(0xe2b0, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // BOX_EDIT
+  IconData(0xe2af, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // BOX_EDIT_FILLED
+  IconData(0xe2a5, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // BOX_FILLED
+  IconData(0xe2b2, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // BOX_MULTIPLE
+  IconData(0xe2b4, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // BOX_MULTIPLE_ARROW_LEFT
+  IconData(0xe2b3, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // BOX_MULTIPLE_ARROW_LEFT_FILLED
+  IconData(0xe2b6, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // BOX_MULTIPLE_ARROW_RIGHT
+  IconData(0xe2b5, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // BOX_MULTIPLE_ARROW_RIGHT_FILLED
+  IconData(0xe2b8, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // BOX_MULTIPLE_CHECKMARK
+  IconData(0xe2b7, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // BOX_MULTIPLE_CHECKMARK_FILLED
+  IconData(0xe2b1, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // BOX_MULTIPLE_FILLED
+  IconData(0xe2ba, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // BOX_MULTIPLE_SEARCH
+  IconData(0xe2b9, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // BOX_MULTIPLE_SEARCH_FILLED
+  IconData(0xf759, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // BOX_QUESTION_MARK
+  IconData(0xf758, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // BOX_QUESTION_MARK_FILLED
+  IconData(0xe2bc, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // BOX_SEARCH
+  IconData(0xe2bb, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // BOX_SEARCH_FILLED
+  IconData(0xe2be, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // BOX_TOOLBOX
+  IconData(0xe2bd, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // BOX_TOOLBOX_FILLED
+  IconData(0xe2c0, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // BRACES
+  IconData(0xe2bf, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // BRACES_FILLED
+  IconData(0xe2c2, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // BRACES_VARIABLE
+  IconData(0xe2c1, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // BRACES_VARIABLE_FILLED
+  IconData(0xe2c4, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // BRAIN
+  IconData(0xe2c6, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // BRAIN_CIRCUIT
+  IconData(0xe2c5, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // BRAIN_CIRCUIT_FILLED
+  IconData(0xe2c3, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // BRAIN_FILLED
+  IconData(0xe2c8, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // BRAIN_SPARKLE
+  IconData(0xe2c7, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // BRAIN_SPARKLE_FILLED
+  IconData(0xe2ca, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // BRANCH
+  IconData(0xe2cc, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // BRANCH_COMPARE
+  IconData(0xe2cb, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // BRANCH_COMPARE_FILLED
+  IconData(0xe2c9, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // BRANCH_FILLED
+  IconData(0xe2ce, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // BRANCH_FORK
+  IconData(0xe2cd, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // BRANCH_FORK_FILLED
+  IconData(0xe2d0, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // BRANCH_FORK_HINT
+  IconData(0xe2cf, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // BRANCH_FORK_HINT_FILLED
+  IconData(0xe2d2, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // BRANCH_FORK_LINK
+  IconData(0xe2d1, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // BRANCH_FORK_LINK_FILLED
+  IconData(0xe2d4, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // BRANCH_REQUEST
+  IconData(0xe2d6, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // BRANCH_REQUEST_CLOSED
+  IconData(0xe2d5, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // BRANCH_REQUEST_CLOSED_FILLED
+  IconData(0xe2d8, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // BRANCH_REQUEST_DRAFT
+  IconData(0xe2d7, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // BRANCH_REQUEST_DRAFT_FILLED
+  IconData(0xe2d3, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // BRANCH_REQUEST_FILLED
+  IconData(0xe2da, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // BREAKOUT_ROOM
+  IconData(0xe2d9, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // BREAKOUT_ROOM_FILLED
+  IconData(0xe2dc, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // BRIEFCASE
+  IconData(0xe2db, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // BRIEFCASE_FILLED
+  IconData(0xe2de, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // BRIEFCASE_MEDICAL
+  IconData(0xe2dd, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // BRIEFCASE_MEDICAL_FILLED
+  IconData(0xe2e0, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // BRIEFCASE_OFF
+  IconData(0xe2df, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // BRIEFCASE_OFF_FILLED
+  IconData(0xe2e2, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // BRIEFCASE_SEARCH
+  IconData(0xe2e1, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // BRIEFCASE_SEARCH_FILLED
+  IconData(0xe2e4, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // BRIGHTNESS_HIGH
+  IconData(0xe2e3, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // BRIGHTNESS_HIGH_FILLED
+  IconData(0xe2e6, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // BRIGHTNESS_LOW
+  IconData(0xe2e5, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // BRIGHTNESS_LOW_FILLED
+  IconData(0xe2e8, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // BROAD_ACTIVITY_FEED
+  IconData(0xe2e7, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // BROAD_ACTIVITY_FEED_FILLED
+  IconData(0xe2ea, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // BROOM
+  IconData(0xe2e9, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // BROOM_FILLED
+  IconData(0xe2ec, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // BROOM_SPARKLE
+  IconData(0xe2eb, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // BROOM_SPARKLE_FILLED
+  IconData(0xe2ee, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // BUBBLE_MULTIPLE
+  IconData(0xe2ed, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // BUBBLE_MULTIPLE_FILLED
+  IconData(0xe2f0, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // BUG
+  IconData(0xe2f2, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // BUG_ARROW_COUNTERCLOCKWISE
+  IconData(0xe2f1, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // BUG_ARROW_COUNTERCLOCKWISE_FILLED
+  IconData(0xe2ef, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // BUG_FILLED
+  IconData(0xe2f4, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // BUG_PROHIBITED
+  IconData(0xe2f3, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // BUG_PROHIBITED_FILLED
+  IconData(0xe2f6, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // BUILDING
+  IconData(0xe2f8, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // BUILDING_BANK
+  IconData(0xe2f7, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // BUILDING_BANK_FILLED
+  IconData(0xe2fa, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // BUILDING_BANK_LINK
+  IconData(0xe2f9, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // BUILDING_BANK_LINK_FILLED
+  IconData(0xe2fc, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // BUILDING_BANK_TOOLBOX
+  IconData(0xe2fb, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // BUILDING_BANK_TOOLBOX_FILLED
+  IconData(0xe2fe, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // BUILDING_CHECKMARK
+  IconData(0xe2fd, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // BUILDING_CHECKMARK_FILLED
+  IconData(0xe300, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // BUILDING_DESKTOP
+  IconData(0xe2ff, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // BUILDING_DESKTOP_FILLED
+  IconData(0xe302, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // BUILDING_FACTORY
+  IconData(0xe301, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // BUILDING_FACTORY_FILLED
+  IconData(0xe2f5, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // BUILDING_FILLED
+  IconData(0xe304, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // BUILDING_GOVERNMENT
+  IconData(0xe303, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // BUILDING_GOVERNMENT_FILLED
+  IconData(0xe306, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // BUILDING_GOVERNMENT_SEARCH
+  IconData(0xe305, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // BUILDING_GOVERNMENT_SEARCH_FILLED
+  IconData(0xe308, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // BUILDING_HOME
+  IconData(0xe307, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // BUILDING_HOME_FILLED
+  IconData(0xe30a, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // BUILDING_LIGHTHOUSE
+  IconData(0xe309, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // BUILDING_LIGHTHOUSE_FILLED
+  IconData(0xe30c, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // BUILDING_MOSQUE
+  IconData(0xe30b, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // BUILDING_MOSQUE_FILLED
+  IconData(0xe30e, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // BUILDING_MULTIPLE
+  IconData(0xe30d, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // BUILDING_MULTIPLE_FILLED
+  IconData(0xe310, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // BUILDING_PEOPLE
+  IconData(0xe30f, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // BUILDING_PEOPLE_FILLED
+  IconData(0xe312, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // BUILDING_RETAIL
+  IconData(0xe311, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // BUILDING_RETAIL_FILLED
+  IconData(0xe314, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // BUILDING_RETAIL_MONEY
+  IconData(0xe313, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // BUILDING_RETAIL_MONEY_FILLED
+  IconData(0xe316, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // BUILDING_RETAIL_MORE
+  IconData(0xe315, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // BUILDING_RETAIL_MORE_FILLED
+  IconData(0xe318, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // BUILDING_RETAIL_SHIELD
+  IconData(0xe317, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // BUILDING_RETAIL_SHIELD_FILLED
+  IconData(0xe31a, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // BUILDING_RETAIL_TOOLBOX
+  IconData(0xe319, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // BUILDING_RETAIL_TOOLBOX_FILLED
+  IconData(0xe31c, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // BUILDING_SHOP
+  IconData(0xe31b, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // BUILDING_SHOP_FILLED
+  IconData(0xe31e, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // BUILDING_SKYSCRAPER
+  IconData(0xe31d, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // BUILDING_SKYSCRAPER_FILLED
+  IconData(0xe320, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // BUILDING_SWAP
+  IconData(0xe31f, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // BUILDING_SWAP_FILLED
+  IconData(0xe322, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // BUILDING_TOWNHOUSE
+  IconData(0xe321, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // BUILDING_TOWNHOUSE_FILLED
+  IconData(0xe324, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // BUILDING_YURT
+  IconData(0xe323, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // BUILDING_YURT_FILLED
+  IconData(0xe326, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // BUTTON
+  IconData(0xe325, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // BUTTON_FILLED
+  IconData(0xe328, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // CALCULATOR
+  IconData(0xe32a, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // CALCULATOR_ARROW_CLOCKWISE
+  IconData(0xe329, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // CALCULATOR_ARROW_CLOCKWISE_FILLED
+  IconData(0xe327, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // CALCULATOR_FILLED
+  IconData(0xe32c, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // CALCULATOR_MULTIPLE
+  IconData(0xe32b, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // CALCULATOR_MULTIPLE_FILLED
+  IconData(0xe32e, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // CALENDAR
+  IconData(0xe330, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // CALENDAR_3_DAY
+  IconData(0xe32f, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // CALENDAR_3_DAY_FILLED
+  IconData(0xe332, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // CALENDAR_ADD
+  IconData(0xe331, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // CALENDAR_ADD_FILLED
+  IconData(0xe334, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // CALENDAR_AGENDA
+  IconData(0xf61d, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // CALENDAR_AGENDA_CLOCK
+  IconData(0xf61c, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // CALENDAR_AGENDA_CLOCK_FILLED
+  IconData(0xe333, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // CALENDAR_AGENDA_FILLED
+  IconData(0xe336, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // CALENDAR_ARROW_COUNTERCLOCKWISE
+  IconData(0xe335, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // CALENDAR_ARROW_COUNTERCLOCKWISE_FILLED
+  IconData(0xe338, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // CALENDAR_ARROW_DOWN
+  IconData(0xe337, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // CALENDAR_ARROW_DOWN_FILLED
+  IconData(0xe33a, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // CALENDAR_ARROW_REPEAT_ALL
+  IconData(0xe339, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // CALENDAR_ARROW_REPEAT_ALL_FILLED
+  IconData(0xe33c, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // CALENDAR_ARROW_RIGHT
+  IconData(0xe33b, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // CALENDAR_ARROW_RIGHT_FILLED
+  IconData(0xe33e, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // CALENDAR_ASSISTANT
+  IconData(0xe33d, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // CALENDAR_ASSISTANT_FILLED
+  IconData(0xe340, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // CALENDAR_CANCEL
+  IconData(0xe33f, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // CALENDAR_CANCEL_FILLED
+  IconData(0xe342, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // CALENDAR_CHAT
+  IconData(0xe341, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // CALENDAR_CHAT_FILLED
+  IconData(0xe344, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // CALENDAR_CHECKMARK
+  IconData(0xe346, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // CALENDAR_CHECKMARK_CENTER
+  IconData(0xe345, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // CALENDAR_CHECKMARK_CENTER_FILLED
+  IconData(0xe343, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // CALENDAR_CHECKMARK_FILLED
+  IconData(0xe348, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // CALENDAR_CHECKMARK_SPARKLE
+  IconData(0xe347, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // CALENDAR_CHECKMARK_SPARKLE_FILLED
+  IconData(0xe34a, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // CALENDAR_CLOCK
+  IconData(0xe349, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // CALENDAR_CLOCK_FILLED
+  IconData(0xe34c, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // CALENDAR_DATA_BAR
+  IconData(0xe34b, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // CALENDAR_DATA_BAR_FILLED
+  IconData(0xe34e, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // CALENDAR_DATE
+  IconData(0xe34d, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // CALENDAR_DATE_FILLED
+  IconData(0xe350, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // CALENDAR_DAY
+  IconData(0xe34f, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // CALENDAR_DAY_FILLED
+  IconData(0xe352, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // CALENDAR_EDIT
+  IconData(0xe351, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // CALENDAR_EDIT_FILLED
+  IconData(0xe354, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // CALENDAR_EMPTY
+  IconData(0xe353, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // CALENDAR_EMPTY_FILLED
+  IconData(0xe356, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // CALENDAR_ERROR
+  IconData(0xe355, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // CALENDAR_ERROR_FILLED
+  IconData(0xe358, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // CALENDAR_EYE
+  IconData(0xe357, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // CALENDAR_EYE_FILLED
+  IconData(0xe32d, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // CALENDAR_FILLED
+  IconData(0xe35a, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // CALENDAR_INFO
+  IconData(0xe359, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // CALENDAR_INFO_FILLED
+  IconData(0xe35c, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // CALENDAR_LOCK
+  IconData(0xe35b, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // CALENDAR_LOCK_FILLED
+  IconData(0xe35e, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // CALENDAR_LTR
+  IconData(0xe35d, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // CALENDAR_LTR_FILLED
+  IconData(0xe360, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // CALENDAR_MAIL
+  IconData(0xe35f, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // CALENDAR_MAIL_FILLED
+  IconData(0xe362, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // CALENDAR_MENTION
+  IconData(0xe361, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // CALENDAR_MENTION_FILLED
+  IconData(0xe364, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // CALENDAR_MONTH
+  IconData(0xe363, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // CALENDAR_MONTH_FILLED
+  IconData(0xe366, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // CALENDAR_MULTIPLE
+  IconData(0xe365, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // CALENDAR_MULTIPLE_FILLED
+  IconData(0xe368, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // CALENDAR_NOTE
+  IconData(0xe367, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // CALENDAR_NOTE_FILLED
+  IconData(0xe36a, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // CALENDAR_PATTERN
+  IconData(0xe369, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // CALENDAR_PATTERN_FILLED
+  IconData(0xe36c, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // CALENDAR_PERSON
+  IconData(0xe36b, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // CALENDAR_PERSON_FILLED
+  IconData(0xe36e, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // CALENDAR_PHONE
+  IconData(0xe36d, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // CALENDAR_PHONE_FILLED
+  IconData(0xe370, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // CALENDAR_PLAY
+  IconData(0xe36f, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // CALENDAR_PLAY_FILLED
+  IconData(0xe372, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // CALENDAR_QUESTION_MARK
+  IconData(0xe371, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // CALENDAR_QUESTION_MARK_FILLED
+  IconData(0xe374, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // CALENDAR_RECORD
+  IconData(0xe373, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // CALENDAR_RECORD_FILLED
+  IconData(0xe376, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // CALENDAR_REPLY
+  IconData(0xe375, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // CALENDAR_REPLY_FILLED
+  IconData(0xe378, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // CALENDAR_RTL
+  IconData(0xe377, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // CALENDAR_RTL_FILLED
+  IconData(0xe37a, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // CALENDAR_SEARCH
+  IconData(0xe379, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // CALENDAR_SEARCH_FILLED
+  IconData(0xe37c, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // CALENDAR_SETTINGS
+  IconData(0xe37b, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // CALENDAR_SETTINGS_FILLED
+  IconData(0xe37e, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // CALENDAR_SHIELD
+  IconData(0xe37d, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // CALENDAR_SHIELD_FILLED
+  IconData(0xe380, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // CALENDAR_SPARKLE
+  IconData(0xe37f, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // CALENDAR_SPARKLE_FILLED
+  IconData(0xe382, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // CALENDAR_STAR
+  IconData(0xe381, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // CALENDAR_STAR_FILLED
+  IconData(0xe384, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // CALENDAR_SYNC
+  IconData(0xe383, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // CALENDAR_SYNC_FILLED
+  IconData(0xe386, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // CALENDAR_TEMPLATE
+  IconData(0xe385, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // CALENDAR_TEMPLATE_FILLED
+  IconData(0xe388, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // CALENDAR_TODAY
+  IconData(0xe387, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // CALENDAR_TODAY_FILLED
+  IconData(0xe38a, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // CALENDAR_TOOLBOX
+  IconData(0xe389, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // CALENDAR_TOOLBOX_FILLED
+  IconData(0xe38c, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // CALENDAR_VIDEO
+  IconData(0xe38b, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // CALENDAR_VIDEO_FILLED
+  IconData(0xe38e, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // CALENDAR_WEEK_NUMBERS
+  IconData(0xe38d, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // CALENDAR_WEEK_NUMBERS_FILLED
+  IconData(0xe390, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // CALENDAR_WEEK_START
+  IconData(0xe38f, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // CALENDAR_WEEK_START_FILLED
+  IconData(0xe392, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // CALENDAR_WORK_WEEK
+  IconData(0xe391, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // CALENDAR_WORK_WEEK_FILLED
+  IconData(0xe394, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // CALL
+  IconData(0xe3ba, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // CALLIGRAPHY_PEN
+  IconData(0xe3bc, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // CALLIGRAPHY_PEN_CHECKMARK
+  IconData(0xe3bb, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // CALLIGRAPHY_PEN_CHECKMARK_FILLED
+  IconData(0xe3be, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // CALLIGRAPHY_PEN_ERROR
+  IconData(0xe3bd, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // CALLIGRAPHY_PEN_ERROR_FILLED
+  IconData(0xe3b9, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // CALLIGRAPHY_PEN_FILLED
+  IconData(0xe3c0, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // CALLIGRAPHY_PEN_QUESTION_MARK
+  IconData(0xe3bf, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // CALLIGRAPHY_PEN_QUESTION_MARK_FILLED
+  IconData(0xe396, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // CALL_ADD
+  IconData(0xe395, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // CALL_ADD_FILLED
+  IconData(0xe398, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // CALL_CHECKMARK
+  IconData(0xe397, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // CALL_CHECKMARK_FILLED
+  IconData(0xe39a, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // CALL_CHEVRON_DOWN
+  IconData(0xe399, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // CALL_CHEVRON_DOWN_FILLED
+  IconData(0xe39c, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // CALL_CONNECTING
+  IconData(0xe39b, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // CALL_CONNECTING_FILLED
+  IconData(0xe39e, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // CALL_DISMISS
+  IconData(0xe39d, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // CALL_DISMISS_FILLED
+  IconData(0xe3a0, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // CALL_END
+  IconData(0xe39f, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // CALL_END_FILLED
+  IconData(0xe3a2, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // CALL_EXCLAMATION
+  IconData(0xe3a1, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // CALL_EXCLAMATION_FILLED
+  IconData(0xe393, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // CALL_FILLED
+  IconData(0xe3a4, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // CALL_FORWARD
+  IconData(0xe3a3, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // CALL_FORWARD_FILLED
+  IconData(0xe3a6, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // CALL_INBOUND
+  IconData(0xe3a5, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // CALL_INBOUND_FILLED
+  IconData(0xe3a8, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // CALL_MISSED
+  IconData(0xe3a7, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // CALL_MISSED_FILLED
+  IconData(0xe3aa, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // CALL_OUTBOUND
+  IconData(0xe3a9, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // CALL_OUTBOUND_FILLED
+  IconData(0xe3ac, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // CALL_PARK
+  IconData(0xe3ab, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // CALL_PARK_FILLED
+  IconData(0xe3ae, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // CALL_PAUSE
+  IconData(0xe3ad, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // CALL_PAUSE_FILLED
+  IconData(0xe3b0, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // CALL_PROHIBITED
+  IconData(0xe3af, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // CALL_PROHIBITED_FILLED
+  IconData(0xe3b2, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // CALL_RECTANGLE_LANDSCAPE
+  IconData(0xe3b1, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // CALL_RECTANGLE_LANDSCAPE_FILLED
+  IconData(0xe3b4, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // CALL_SQUARE
+  IconData(0xe3b3, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // CALL_SQUARE_FILLED
+  IconData(0xe3b6, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // CALL_TRANSFER
+  IconData(0xe3b5, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // CALL_TRANSFER_FILLED
+  IconData(0xe3b8, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // CALL_WARNING
+  IconData(0xe3b7, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // CALL_WARNING_FILLED
+  IconData(0xe3c2, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // CAMERA
+  IconData(0xe3c4, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // CAMERA_ADD
+  IconData(0xe3c3, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // CAMERA_ADD_FILLED
+  IconData(0xe3c6, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // CAMERA_ARROW_UP
+  IconData(0xe3c5, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // CAMERA_ARROW_UP_FILLED
+  IconData(0xe3c8, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // CAMERA_DOME
+  IconData(0xe3c7, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // CAMERA_DOME_FILLED
+  IconData(0xe3ca, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // CAMERA_EDIT
+  IconData(0xe3c9, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // CAMERA_EDIT_FILLED
+  IconData(0xe3c1, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // CAMERA_FILLED
+  IconData(0xe3cc, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // CAMERA_OFF
+  IconData(0xe3cb, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // CAMERA_OFF_FILLED
+  IconData(0xe3ce, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // CAMERA_SPARKLES
+  IconData(0xe3cd, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // CAMERA_SPARKLES_FILLED
+  IconData(0xe3d0, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // CAMERA_SWITCH
+  IconData(0xe3cf, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // CAMERA_SWITCH_FILLED
+  IconData(0xe3d2, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // CARD_UI
+  IconData(0xe3d1, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // CARD_UI_FILLED
+  IconData(0xe3d4, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // CARD_UI_INFO
+  IconData(0xe3d3, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // CARD_UI_INFO_FILLED
+  IconData(0xe3d6, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // CARD_UI_PORTRAIT_FLIP
+  IconData(0xe3d5, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // CARD_UI_PORTRAIT_FLIP_FILLED
+  IconData(0xf763, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // CARD_UI_SPARKLE
+  IconData(0xf762, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // CARD_UI_SPARKLE_FILLED
+  IconData(0xe3d8, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // CARET_DOWN
+  IconData(0xe3d7, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // CARET_DOWN_FILLED
+  IconData(0xe3da, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // CARET_DOWN_RIGHT
+  IconData(0xe3d9, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // CARET_DOWN_RIGHT_FILLED
+  IconData(0xe3dc, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // CARET_LEFT
+  IconData(0xe3db, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // CARET_LEFT_FILLED
+  IconData(0xe3de, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // CARET_RIGHT
+  IconData(0xe3dd, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // CARET_RIGHT_FILLED
+  IconData(0xe3e0, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // CARET_UP
+  IconData(0xe3df, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // CARET_UP_FILLED
+  IconData(0xe3e2, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // CART
+  IconData(0xe3e1, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // CART_FILLED
+  IconData(0xe3e4, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // CAST
+  IconData(0xe3e3, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // CAST_FILLED
+  IconData(0xe3e6, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // CAST_MULTIPLE
+  IconData(0xe3e5, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // CAST_MULTIPLE_FILLED
+  IconData(0xe3e8, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // CATCH_UP
+  IconData(0xe3e7, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // CATCH_UP_FILLED
+  IconData(0xe3ea, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // CELLULAR_3G
+  IconData(0xe3e9, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // CELLULAR_3G_FILLED
+  IconData(0xe3ec, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // CELLULAR_4G
+  IconData(0xe3eb, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // CELLULAR_4G_FILLED
+  IconData(0xe3ee, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // CELLULAR_5G
+  IconData(0xe3ed, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // CELLULAR_5G_FILLED
+  IconData(0xe3f0, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // CELLULAR_DATA_1
+  IconData(0xe3ef, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // CELLULAR_DATA_1_FILLED
+  IconData(0xe3f2, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // CELLULAR_DATA_2
+  IconData(0xe3f1, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // CELLULAR_DATA_2_FILLED
+  IconData(0xe3f4, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // CELLULAR_DATA_3
+  IconData(0xe3f3, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // CELLULAR_DATA_3_FILLED
+  IconData(0xe3f6, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // CELLULAR_DATA_4
+  IconData(0xe3f5, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // CELLULAR_DATA_4_FILLED
+  IconData(0xe3f8, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // CELLULAR_DATA_5
+  IconData(0xe3f7, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // CELLULAR_DATA_5_FILLED
+  IconData(0xe3fa, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // CELLULAR_OFF
+  IconData(0xe3f9, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // CELLULAR_OFF_FILLED
+  IconData(0xe3fc, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // CELLULAR_WARNING
+  IconData(0xe3fb, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // CELLULAR_WARNING_FILLED
+  IconData(0xe3fe, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // CENTER_HORIZONTAL
+  IconData(0xe3fd, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // CENTER_HORIZONTAL_FILLED
+  IconData(0xe400, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // CENTER_VERTICAL
+  IconData(0xe3ff, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // CENTER_VERTICAL_FILLED
+  IconData(0xe402, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // CERTIFICATE
+  IconData(0xe401, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // CERTIFICATE_FILLED
+  IconData(0xe404, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // CERTIFICATE_OFF
+  IconData(0xe403, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // CERTIFICATE_OFF_FILLED
+  IconData(0xe406, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // CHANNEL
+  IconData(0xe408, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // CHANNEL_ADD
+  IconData(0xe407, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // CHANNEL_ADD_FILLED
+  IconData(0xe40a, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // CHANNEL_ALERT
+  IconData(0xe409, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // CHANNEL_ALERT_FILLED
+  IconData(0xe40c, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // CHANNEL_ARROW_LEFT
+  IconData(0xe40b, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // CHANNEL_ARROW_LEFT_FILLED
+  IconData(0xf62f, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // CHANNEL_ARROW_RIGHT
+  IconData(0xf62e, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // CHANNEL_ARROW_RIGHT_FILLED
+  IconData(0xe40e, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // CHANNEL_DISMISS
+  IconData(0xe40d, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // CHANNEL_DISMISS_FILLED
+  IconData(0xe405, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // CHANNEL_FILLED
+  IconData(0xe410, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // CHANNEL_SHARE
+  IconData(0xe40f, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // CHANNEL_SHARE_FILLED
+  IconData(0xe412, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // CHANNEL_SUBTRACT
+  IconData(0xe411, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // CHANNEL_SUBTRACT_FILLED
+  IconData(0xe414, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // CHART_MULTIPLE
+  IconData(0xe413, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // CHART_MULTIPLE_FILLED
+  IconData(0xe416, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // CHART_PERSON
+  IconData(0xe415, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // CHART_PERSON_FILLED
+  IconData(0xe418, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // CHAT
+  IconData(0xe41a, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // CHAT_ADD
+  IconData(0xe419, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // CHAT_ADD_FILLED
+  IconData(0xe41c, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // CHAT_ARROW_BACK
+  IconData(0xe41e, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // CHAT_ARROW_BACK_DOWN
+  IconData(0xe41d, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // CHAT_ARROW_BACK_DOWN_FILLED
+  IconData(0xe41b, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // CHAT_ARROW_BACK_FILLED
+  IconData(0xe420, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // CHAT_ARROW_DOUBLE_BACK
+  IconData(0xe41f, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // CHAT_ARROW_DOUBLE_BACK_FILLED
+  IconData(0xe422, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // CHAT_BUBBLES_QUESTION
+  IconData(0xe421, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // CHAT_BUBBLES_QUESTION_FILLED
+  IconData(0xe424, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // CHAT_CHECKMARK
+  IconData(0xe423, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // CHAT_CHECKMARK_FILLED
+  IconData(0xe426, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // CHAT_CURSOR
+  IconData(0xe425, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // CHAT_CURSOR_FILLED
+  IconData(0xe428, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // CHAT_DISMISS
+  IconData(0xe427, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // CHAT_DISMISS_FILLED
+  IconData(0xe42a, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // CHAT_EMPTY
+  IconData(0xe429, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // CHAT_EMPTY_FILLED
+  IconData(0xe417, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // CHAT_FILLED
+  IconData(0xe42c, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // CHAT_HELP
+  IconData(0xe42b, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // CHAT_HELP_FILLED
+  IconData(0xe42e, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // CHAT_HINT_HALF
+  IconData(0xe42d, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // CHAT_HINT_HALF_FILLED
+  IconData(0xe430, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // CHAT_HISTORY
+  IconData(0xe42f, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // CHAT_HISTORY_FILLED
+  IconData(0xe432, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // CHAT_LOCK
+  IconData(0xe431, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // CHAT_LOCK_FILLED
+  IconData(0xe434, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // CHAT_MAIL
+  IconData(0xe433, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // CHAT_MAIL_FILLED
+  IconData(0xe436, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // CHAT_MULTIPLE
+  IconData(0xe438, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // CHAT_MULTIPLE_CHECKMARK
+  IconData(0xe437, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // CHAT_MULTIPLE_CHECKMARK_FILLED
+  IconData(0xe435, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // CHAT_MULTIPLE_FILLED
+  IconData(0xe43a, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // CHAT_MULTIPLE_HEART
+  IconData(0xe439, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // CHAT_MULTIPLE_HEART_FILLED
+  IconData(0xe43c, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // CHAT_MULTIPLE_MINUS
+  IconData(0xe43b, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // CHAT_MULTIPLE_MINUS_FILLED
+  IconData(0xe43e, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // CHAT_MULTIPLE_PERSON
+  IconData(0xe43d, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // CHAT_MULTIPLE_PERSON_FILLED
+  IconData(0xe440, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // CHAT_OFF
+  IconData(0xe43f, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // CHAT_OFF_FILLED
+  IconData(0xe442, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // CHAT_PERSON
+  IconData(0xe441, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // CHAT_PERSON_FILLED
+  IconData(0xe444, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // CHAT_SETTINGS
+  IconData(0xe443, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // CHAT_SETTINGS_FILLED
+  IconData(0xe446, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // CHAT_SPARKLE
+  IconData(0xe445, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // CHAT_SPARKLE_FILLED
+  IconData(0xe448, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // CHAT_VIDEO
+  IconData(0xe447, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // CHAT_VIDEO_FILLED
+  IconData(0xe44a, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // CHAT_WARNING
+  IconData(0xe449, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // CHAT_WARNING_FILLED
+  IconData(0xe44c, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // CHECK
+  IconData(0xe44e, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // CHECKBOX_1
+  IconData(0xe44d, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // CHECKBOX_1_FILLED
+  IconData(0xe450, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // CHECKBOX_2
+  IconData(0xe44f, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // CHECKBOX_2_FILLED
+  IconData(0xe452, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // CHECKBOX_ARROW_RIGHT
+  IconData(0xe451, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // CHECKBOX_ARROW_RIGHT_FILLED
+  IconData(0xe454, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // CHECKBOX_CHECKED
+  IconData(0xe453, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // CHECKBOX_CHECKED_FILLED
+  IconData(0xe456, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // CHECKBOX_CHECKED_SYNC
+  IconData(0xe455, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // CHECKBOX_CHECKED_SYNC_FILLED
+  IconData(0xe458, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // CHECKBOX_INDETERMINATE
+  IconData(0xe457, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // CHECKBOX_INDETERMINATE_FILLED
+  IconData(0xe45a, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // CHECKBOX_PERSON
+  IconData(0xe459, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // CHECKBOX_PERSON_FILLED
+  IconData(0xe45c, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // CHECKBOX_UNCHECKED
+  IconData(0xe45b, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // CHECKBOX_UNCHECKED_FILLED
+  IconData(0xe45e, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // CHECKBOX_WARNING
+  IconData(0xe45d, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // CHECKBOX_WARNING_FILLED
+  IconData(0xe460, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // CHECKMARK
+  IconData(0xe462, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // CHECKMARK_CIRCLE
+  IconData(0xe461, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // CHECKMARK_CIRCLE_FILLED
+  IconData(0xe464, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // CHECKMARK_CIRCLE_HINT
+  IconData(0xe463, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // CHECKMARK_CIRCLE_HINT_FILLED
+  IconData(0xe466, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // CHECKMARK_CIRCLE_SPARKLE
+  IconData(0xe465, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // CHECKMARK_CIRCLE_SPARKLE_FILLED
+  IconData(0xe468, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // CHECKMARK_CIRCLE_SQUARE
+  IconData(0xe467, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // CHECKMARK_CIRCLE_SQUARE_FILLED
+  IconData(0xe46a, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // CHECKMARK_CIRCLE_WARNING
+  IconData(0xe469, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // CHECKMARK_CIRCLE_WARNING_FILLED
+  IconData(0xe45f, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // CHECKMARK_FILLED
+  IconData(0xe46c, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // CHECKMARK_LOCK
+  IconData(0xe46b, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // CHECKMARK_LOCK_FILLED
+  IconData(0xe46e, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // CHECKMARK_NOTE
+  IconData(0xe46d, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // CHECKMARK_NOTE_FILLED
+  IconData(0xe470, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // CHECKMARK_SQUARE
+  IconData(0xe46f, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // CHECKMARK_SQUARE_FILLED
+  IconData(0xe472, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // CHECKMARK_STARBURST
+  IconData(0xe471, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // CHECKMARK_STARBURST_FILLED
+  IconData(0xe474, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // CHECKMARK_UNDERLINE_CIRCLE
+  IconData(0xe473, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // CHECKMARK_UNDERLINE_CIRCLE_FILLED
+  IconData(0xe44b, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // CHECK_FILLED
+  IconData(0xe476, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // CHESS
+  IconData(0xe475, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // CHESS_FILLED
+  IconData(0xe478, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // CHEVRON_CIRCLE_DOWN
+  IconData(0xe477, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // CHEVRON_CIRCLE_DOWN_FILLED
+  IconData(0xe47a, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // CHEVRON_CIRCLE_LEFT
+  IconData(0xe479, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // CHEVRON_CIRCLE_LEFT_FILLED
+  IconData(0xe47c, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // CHEVRON_CIRCLE_RIGHT
+  IconData(0xe47b, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // CHEVRON_CIRCLE_RIGHT_FILLED
+  IconData(0xe47e, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // CHEVRON_CIRCLE_UP
+  IconData(0xe47d, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // CHEVRON_CIRCLE_UP_FILLED
+  IconData(0xe480, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // CHEVRON_DOUBLE_DOWN
+  IconData(0xe47f, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // CHEVRON_DOUBLE_DOWN_FILLED
+  IconData(0xe482, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // CHEVRON_DOUBLE_LEFT
+  IconData(0xe481, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // CHEVRON_DOUBLE_LEFT_FILLED
+  IconData(0xe484, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // CHEVRON_DOUBLE_RIGHT
+  IconData(0xe483, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // CHEVRON_DOUBLE_RIGHT_FILLED
+  IconData(0xe486, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // CHEVRON_DOUBLE_UP
+  IconData(0xe485, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // CHEVRON_DOUBLE_UP_FILLED
+  IconData(0xe488, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // CHEVRON_DOWN
+  IconData(0xe487, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // CHEVRON_DOWN_FILLED
+  IconData(0xe48a, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // CHEVRON_DOWN_UP
+  IconData(0xe489, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // CHEVRON_DOWN_UP_FILLED
+  IconData(0xe48c, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // CHEVRON_LEFT
+  IconData(0xe48b, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // CHEVRON_LEFT_FILLED
+  IconData(0xe48e, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // CHEVRON_RIGHT
+  IconData(0xe48d, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // CHEVRON_RIGHT_FILLED
+  IconData(0xe490, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // CHEVRON_UP
+  IconData(0xe492, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // CHEVRON_UP_DOWN
+  IconData(0xe491, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // CHEVRON_UP_DOWN_FILLED
+  IconData(0xe48f, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // CHEVRON_UP_FILLED
+  IconData(0xe494, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // CIRCLE
+  IconData(0xe496, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // CIRCLE_EDIT
+  IconData(0xe495, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // CIRCLE_EDIT_FILLED
+  IconData(0xe498, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // CIRCLE_ERASER
+  IconData(0xe497, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // CIRCLE_ERASER_FILLED
+  IconData(0xe493, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // CIRCLE_FILLED
+  IconData(0xe49a, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // CIRCLE_HALF_FILL
+  IconData(0xe499, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // CIRCLE_HALF_FILL_FILLED
+  IconData(0xe49c, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // CIRCLE_HIGHLIGHT
+  IconData(0xe49b, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // CIRCLE_HIGHLIGHT_FILLED
+  IconData(0xe49e, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // CIRCLE_HINT
+  IconData(0xe4a0, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // CIRCLE_HINT_CURSOR
+  IconData(0xe49f, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // CIRCLE_HINT_CURSOR_FILLED
+  IconData(0xe4a2, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // CIRCLE_HINT_DISMISS
+  IconData(0xe4a1, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // CIRCLE_HINT_DISMISS_FILLED
+  IconData(0xe49d, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // CIRCLE_HINT_FILLED
+  IconData(0xe4a4, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // CIRCLE_HINT_HALF_VERTICAL
+  IconData(0xe4a3, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // CIRCLE_HINT_HALF_VERTICAL_FILLED
+  IconData(0xe4a6, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // CIRCLE_IMAGE
+  IconData(0xe4a5, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // CIRCLE_IMAGE_FILLED
+  IconData(0xf63f, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // CIRCLE_IMAGE_OFF
+  IconData(0xf63e, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // CIRCLE_IMAGE_OFF_FILLED
+  IconData(0xe4a8, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // CIRCLE_LINE
+  IconData(0xe4a7, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // CIRCLE_LINE_FILLED
+  IconData(0xe4aa, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // CIRCLE_MULTIPLE_CONCENTRIC
+  IconData(0xf645, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // CIRCLE_MULTIPLE_CONCENTRIC_DASHES
+  IconData(0xf644, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // CIRCLE_MULTIPLE_CONCENTRIC_DASHES_FILLED
+  IconData(0xe4a9, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // CIRCLE_MULTIPLE_CONCENTRIC_FILLED
+  IconData(0xe4ac, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // CIRCLE_MULTIPLE_HINT_CHECKMARK
+  IconData(0xe4ab, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // CIRCLE_MULTIPLE_HINT_CHECKMARK_FILLED
+  IconData(0xe4ae, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // CIRCLE_MULTIPLE_SUBTRACT_CHECKMARK
+  IconData(0xe4ad, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // CIRCLE_MULTIPLE_SUBTRACT_CHECKMARK_FILLED
+  IconData(0xe4b0, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // CIRCLE_OFF
+  IconData(0xe4af, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // CIRCLE_OFF_FILLED
+  IconData(0xe4b2, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // CIRCLE_SHADOW
+  IconData(0xe4b1, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // CIRCLE_SHADOW_FILLED
+  IconData(0xe4b4, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // CIRCLE_SMALL
+  IconData(0xe4b3, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // CIRCLE_SMALL_FILLED
+  IconData(0xe4b6, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // CIRCLE_SPARKLE
+  IconData(0xe4b5, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // CIRCLE_SPARKLE_FILLED
+  IconData(0xe4b8, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // CITY
+  IconData(0xe4b7, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // CITY_FILLED
+  IconData(0xe4ba, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // CLASS
+  IconData(0xe4bc, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // CLASSIFICATION
+  IconData(0xe4bb, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // CLASSIFICATION_FILLED
+  IconData(0xe4b9, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // CLASS_FILLED
+  IconData(0xe4be, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // CLEAR_FORMATTING
+  IconData(0xe4bd, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // CLEAR_FORMATTING_FILLED
+  IconData(0xe4c0, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // CLIPBOARD
+  IconData(0xe4c2, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // CLIPBOARD_3_DAY
+  IconData(0xe4c1, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // CLIPBOARD_3_DAY_FILLED
+  IconData(0xe4c4, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // CLIPBOARD_ARROW_RIGHT
+  IconData(0xe4c3, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // CLIPBOARD_ARROW_RIGHT_FILLED
+  IconData(0xe4c6, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // CLIPBOARD_BRUSH
+  IconData(0xe4c5, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // CLIPBOARD_BRUSH_FILLED
+  IconData(0xe4c8, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // CLIPBOARD_BULLET_LIST
+  IconData(0xe4c7, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // CLIPBOARD_BULLET_LIST_FILLED
+  IconData(0xe4ca, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // CLIPBOARD_BULLET_LIST_LTR
+  IconData(0xe4c9, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // CLIPBOARD_BULLET_LIST_LTR_FILLED
+  IconData(0xe4cc, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // CLIPBOARD_BULLET_LIST_RTL
+  IconData(0xe4cb, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // CLIPBOARD_BULLET_LIST_RTL_FILLED
+  IconData(0xe4ce, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // CLIPBOARD_CHAT_EMPTY
+  IconData(0xe4cd, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // CLIPBOARD_CHAT_EMPTY_FILLED
+  IconData(0xe4d0, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // CLIPBOARD_CHECKMARK
+  IconData(0xe4cf, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // CLIPBOARD_CHECKMARK_FILLED
+  IconData(0xe4d2, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // CLIPBOARD_CLOCK
+  IconData(0xe4d1, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // CLIPBOARD_CLOCK_FILLED
+  IconData(0xe4d4, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // CLIPBOARD_CODE
+  IconData(0xe4d3, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // CLIPBOARD_CODE_FILLED
+  IconData(0xe4d6, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // CLIPBOARD_DATA_BAR
+  IconData(0xe4d5, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // CLIPBOARD_DATA_BAR_FILLED
+  IconData(0xe4d8, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // CLIPBOARD_DAY
+  IconData(0xe4d7, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // CLIPBOARD_DAY_FILLED
+  IconData(0xe4da, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // CLIPBOARD_EDIT
+  IconData(0xe4d9, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // CLIPBOARD_EDIT_FILLED
+  IconData(0xe4dc, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // CLIPBOARD_ERROR
+  IconData(0xe4db, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // CLIPBOARD_ERROR_FILLED
+  IconData(0xe4bf, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // CLIPBOARD_FILLED
+  IconData(0xe4de, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // CLIPBOARD_HEART
+  IconData(0xe4dd, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // CLIPBOARD_HEART_FILLED
+  IconData(0xe4e0, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // CLIPBOARD_IMAGE
+  IconData(0xe4df, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // CLIPBOARD_IMAGE_FILLED
+  IconData(0xe4e2, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // CLIPBOARD_LETTER
+  IconData(0xe4e1, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // CLIPBOARD_LETTER_FILLED
+  IconData(0xe4e4, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // CLIPBOARD_LINK
+  IconData(0xe4e3, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // CLIPBOARD_LINK_FILLED
+  IconData(0xf613, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // CLIPBOARD_MARKDOWN
+  IconData(0xf612, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // CLIPBOARD_MARKDOWN_FILLED
+  IconData(0xe4e6, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // CLIPBOARD_MATH_FORMULA
+  IconData(0xe4e5, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // CLIPBOARD_MATH_FORMULA_FILLED
+  IconData(0xe4e8, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // CLIPBOARD_MONTH
+  IconData(0xe4e7, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // CLIPBOARD_MONTH_FILLED
+  IconData(0xe4ea, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // CLIPBOARD_MORE
+  IconData(0xe4e9, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // CLIPBOARD_MORE_FILLED
+  IconData(0xe4ec, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // CLIPBOARD_NOTE
+  IconData(0xe4eb, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // CLIPBOARD_NOTE_FILLED
+  IconData(0xe4ee, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // CLIPBOARD_NUMBER_123
+  IconData(0xe4ed, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // CLIPBOARD_NUMBER_123_FILLED
+  IconData(0xe4f0, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // CLIPBOARD_OFF
+  IconData(0xe4ef, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // CLIPBOARD_OFF_FILLED
+  IconData(0xe4f2, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // CLIPBOARD_PASTE
+  IconData(0xe4f1, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // CLIPBOARD_PASTE_FILLED
+  IconData(0xe4f4, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // CLIPBOARD_PULSE
+  IconData(0xe4f3, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // CLIPBOARD_PULSE_FILLED
+  IconData(0xe4f6, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // CLIPBOARD_SEARCH
+  IconData(0xe4f5, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // CLIPBOARD_SEARCH_FILLED
+  IconData(0xe4f8, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // CLIPBOARD_SETTINGS
+  IconData(0xe4f7, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // CLIPBOARD_SETTINGS_FILLED
+  IconData(0xe4fa, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // CLIPBOARD_TASK
+  IconData(0xe4fc, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // CLIPBOARD_TASK_ADD
+  IconData(0xe4fb, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // CLIPBOARD_TASK_ADD_FILLED
+  IconData(0xe4f9, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // CLIPBOARD_TASK_FILLED
+  IconData(0xe4fe, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // CLIPBOARD_TASK_LIST_LTR
+  IconData(0xe4fd, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // CLIPBOARD_TASK_LIST_LTR_FILLED
+  IconData(0xe500, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // CLIPBOARD_TASK_LIST_RTL
+  IconData(0xe4ff, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // CLIPBOARD_TASK_LIST_RTL_FILLED
+  IconData(0xe502, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // CLIPBOARD_TEXT_EDIT
+  IconData(0xe501, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // CLIPBOARD_TEXT_EDIT_FILLED
+  IconData(0xe504, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // CLIPBOARD_TEXT_LTR
+  IconData(0xe503, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // CLIPBOARD_TEXT_LTR_FILLED
+  IconData(0xe506, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // CLIPBOARD_TEXT_RTL
+  IconData(0xe505, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // CLIPBOARD_TEXT_RTL_FILLED
+  IconData(0xe508, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // CLOCK
+  IconData(0xe50a, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // CLOCK_ALARM
+  IconData(0xe509, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // CLOCK_ALARM_FILLED
+  IconData(0xe50c, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // CLOCK_ARROW_DOWNLOAD
+  IconData(0xe50b, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // CLOCK_ARROW_DOWNLOAD_FILLED
+  IconData(0xe50e, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // CLOCK_BILL
+  IconData(0xe50d, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // CLOCK_BILL_FILLED
+  IconData(0xe510, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // CLOCK_DISMISS
+  IconData(0xe50f, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // CLOCK_DISMISS_FILLED
+  IconData(0xe507, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // CLOCK_FILLED
+  IconData(0xe512, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // CLOCK_LOCK
+  IconData(0xe511, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // CLOCK_LOCK_FILLED
+  IconData(0xe514, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // CLOCK_PAUSE
+  IconData(0xe513, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // CLOCK_PAUSE_FILLED
+  IconData(0xe516, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // CLOCK_SPARKLE
+  IconData(0xe515, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // CLOCK_SPARKLE_FILLED
+  IconData(0xe518, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // CLOCK_TOOLBOX
+  IconData(0xe517, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // CLOCK_TOOLBOX_FILLED
+  IconData(0xe51a, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // CLOCK_WARNING
+  IconData(0xe519, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // CLOCK_WARNING_FILLED
+  IconData(0xe51c, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // CLOSED_CAPTION
+  IconData(0xe51b, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // CLOSED_CAPTION_FILLED
+  IconData(0xe51e, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // CLOSED_CAPTION_OFF
+  IconData(0xe51d, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // CLOSED_CAPTION_OFF_FILLED
+  IconData(0xe520, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // CLOTHES_HANGER
+  IconData(0xe51f, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // CLOTHES_HANGER_FILLED
+  IconData(0xe522, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // CLOUD
+  IconData(0xe524, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // CLOUD_ADD
+  IconData(0xe523, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // CLOUD_ADD_FILLED
+  IconData(0xe526, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // CLOUD_ARCHIVE
+  IconData(0xe525, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // CLOUD_ARCHIVE_FILLED
+  IconData(0xe528, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // CLOUD_ARROW_DOWN
+  IconData(0xe527, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // CLOUD_ARROW_DOWN_FILLED
+  IconData(0xe52a, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // CLOUD_ARROW_RIGHT
+  IconData(0xe529, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // CLOUD_ARROW_RIGHT_FILLED
+  IconData(0xe52c, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // CLOUD_ARROW_UP
+  IconData(0xe52b, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // CLOUD_ARROW_UP_FILLED
+  IconData(0xe52e, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // CLOUD_BEAKER
+  IconData(0xe52d, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // CLOUD_BEAKER_FILLED
+  IconData(0xe530, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // CLOUD_BIDIRECTIONAL
+  IconData(0xe52f, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // CLOUD_BIDIRECTIONAL_FILLED
+  IconData(0xe532, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // CLOUD_CHECKMARK
+  IconData(0xe531, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // CLOUD_CHECKMARK_FILLED
+  IconData(0xe534, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // CLOUD_CUBE
+  IconData(0xe533, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // CLOUD_CUBE_FILLED
+  IconData(0xe536, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // CLOUD_DATABASE
+  IconData(0xe535, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // CLOUD_DATABASE_FILLED
+  IconData(0xe538, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // CLOUD_DESKTOP
+  IconData(0xe537, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // CLOUD_DESKTOP_FILLED
+  IconData(0xe53a, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // CLOUD_DISMISS
+  IconData(0xe539, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // CLOUD_DISMISS_FILLED
+  IconData(0xe53c, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // CLOUD_EDIT
+  IconData(0xe53b, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // CLOUD_EDIT_FILLED
+  IconData(0xe53e, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // CLOUD_ERROR
+  IconData(0xe53d, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // CLOUD_ERROR_FILLED
+  IconData(0xe521, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // CLOUD_FILLED
+  IconData(0xe540, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // CLOUD_FLOW
+  IconData(0xe53f, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // CLOUD_FLOW_FILLED
+  IconData(0xe542, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // CLOUD_LINK
+  IconData(0xe541, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // CLOUD_LINK_FILLED
+  IconData(0xe544, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // CLOUD_OFF
+  IconData(0xe543, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // CLOUD_OFF_FILLED
+  IconData(0xe546, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // CLOUD_SWAP
+  IconData(0xe545, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // CLOUD_SWAP_FILLED
+  IconData(0xe548, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // CLOUD_SYNC
+  IconData(0xe547, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // CLOUD_SYNC_FILLED
+  IconData(0xe54a, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // CLOUD_WORDS
+  IconData(0xe549, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // CLOUD_WORDS_FILLED
+  IconData(0xe54c, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // CLOVER
+  IconData(0xe54b, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // CLOVER_FILLED
+  IconData(0xe54e, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // CODE
+  IconData(0xe550, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // CODE_BLOCK
+  IconData(0xe552, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // CODE_BLOCK_EDIT
+  IconData(0xe551, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // CODE_BLOCK_EDIT_FILLED
+  IconData(0xe54f, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // CODE_BLOCK_FILLED
+  IconData(0xe554, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // CODE_CIRCLE
+  IconData(0xe553, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // CODE_CIRCLE_FILLED
+  IconData(0xe54d, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // CODE_FILLED
+  IconData(0xe556, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // CODE_OFF
+  IconData(0xe555, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // CODE_OFF_FILLED
+  IconData(0xe558, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // CODE_TEXT
+  IconData(0xe55a, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // CODE_TEXT_EDIT
+  IconData(0xe559, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // CODE_TEXT_EDIT_FILLED
+  IconData(0xe557, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // CODE_TEXT_FILLED
+  IconData(0xe55c, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // COIN_MULTIPLE
+  IconData(0xe55b, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // COIN_MULTIPLE_FILLED
+  IconData(0xe55e, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // COIN_STACK
+  IconData(0xe55d, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // COIN_STACK_FILLED
+  IconData(0xe560, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // COLLECTIONS
+  IconData(0xe562, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // COLLECTIONS_ADD
+  IconData(0xe561, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // COLLECTIONS_ADD_FILLED
+  IconData(0xe564, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // COLLECTIONS_EMPTY
+  IconData(0xe563, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // COLLECTIONS_EMPTY_FILLED
+  IconData(0xe55f, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // COLLECTIONS_FILLED
+  IconData(0xe566, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // COLOR
+  IconData(0xe568, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // COLOR_BACKGROUND
+  IconData(0xe569, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // COLOR_BACKGROUND_ACCENT
+  IconData(0xe567, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // COLOR_BACKGROUND_FILLED
+  IconData(0xe56b, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // COLOR_FILL
+  IconData(0xe565, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // COLOR_FILLED
+  IconData(0xe56c, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // COLOR_FILL_ACCENT
+  IconData(0xe56a, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // COLOR_FILL_FILLED
+  IconData(0xe56e, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // COLOR_LINE
+  IconData(0xe56f, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // COLOR_LINE_ACCENT
+  IconData(0xe56d, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // COLOR_LINE_FILLED
+  IconData(0xf619, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // COLOR_OFF
+  IconData(0xf618, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // COLOR_OFF_FILLED
+  IconData(0xe571, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // COLUMN
+  IconData(0xe573, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // COLUMN_ARROW_RIGHT
+  IconData(0xe572, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // COLUMN_ARROW_RIGHT_FILLED
+  IconData(0xe575, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // COLUMN_DOUBLE_COMPARE
+  IconData(0xe574, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // COLUMN_DOUBLE_COMPARE_FILLED
+  IconData(0xe577, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // COLUMN_EDIT
+  IconData(0xe576, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // COLUMN_EDIT_FILLED
+  IconData(0xe570, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // COLUMN_FILLED
+  IconData(0xe579, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // COLUMN_SINGLE_COMPARE
+  IconData(0xe578, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // COLUMN_SINGLE_COMPARE_FILLED
+  IconData(0xe57b, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // COLUMN_TRIPLE
+  IconData(0xe57d, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // COLUMN_TRIPLE_EDIT
+  IconData(0xe57c, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // COLUMN_TRIPLE_EDIT_FILLED
+  IconData(0xe57a, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // COLUMN_TRIPLE_FILLED
+  IconData(0xe57f, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // COMMA
+  IconData(0xe57e, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // COMMA_FILLED
+  IconData(0xe581, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // COMMENT
+  IconData(0xe583, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // COMMENT_ADD
+  IconData(0xe582, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // COMMENT_ADD_FILLED
+  IconData(0xe585, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // COMMENT_ARROW_LEFT
+  IconData(0xe584, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // COMMENT_ARROW_LEFT_FILLED
+  IconData(0xe587, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // COMMENT_ARROW_RIGHT
+  IconData(0xe586, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // COMMENT_ARROW_RIGHT_FILLED
+  IconData(0xe589, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // COMMENT_BADGE
+  IconData(0xe588, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // COMMENT_BADGE_FILLED
+  IconData(0xe58b, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // COMMENT_CHECKMARK
+  IconData(0xe58a, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // COMMENT_CHECKMARK_FILLED
+  IconData(0xe58d, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // COMMENT_DISMISS
+  IconData(0xe58c, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // COMMENT_DISMISS_FILLED
+  IconData(0xe58f, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // COMMENT_EDIT
+  IconData(0xe58e, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // COMMENT_EDIT_FILLED
+  IconData(0xe591, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // COMMENT_ERROR
+  IconData(0xe590, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // COMMENT_ERROR_FILLED
+  IconData(0xe580, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // COMMENT_FILLED
+  IconData(0xe593, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // COMMENT_LIGHTNING
+  IconData(0xe592, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // COMMENT_LIGHTNING_FILLED
+  IconData(0xe595, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // COMMENT_LINK
+  IconData(0xe594, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // COMMENT_LINK_FILLED
+  IconData(0xe597, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // COMMENT_MENTION
+  IconData(0xe596, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // COMMENT_MENTION_FILLED
+  IconData(0xe599, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // COMMENT_MULTIPLE
+  IconData(0xe59b, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // COMMENT_MULTIPLE_CHECKMARK
+  IconData(0xe59a, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // COMMENT_MULTIPLE_CHECKMARK_FILLED
+  IconData(0xe598, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // COMMENT_MULTIPLE_FILLED
+  IconData(0xe59d, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // COMMENT_MULTIPLE_LINK
+  IconData(0xe59c, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // COMMENT_MULTIPLE_LINK_FILLED
+  IconData(0xe59f, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // COMMENT_MULTIPLE_MENTION
+  IconData(0xe59e, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // COMMENT_MULTIPLE_MENTION_FILLED
+  IconData(0xe5a1, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // COMMENT_NOTE
+  IconData(0xe5a0, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // COMMENT_NOTE_FILLED
+  IconData(0xe5a3, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // COMMENT_OFF
+  IconData(0xe5a2, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // COMMENT_OFF_FILLED
+  IconData(0xe5a5, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // COMMENT_QUOTE
+  IconData(0xe5a4, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // COMMENT_QUOTE_FILLED
+  IconData(0xe5a7, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // COMMENT_TEXT
+  IconData(0xe5a6, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // COMMENT_TEXT_FILLED
+  IconData(0xe5a9, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // COMMUNICATION
+  IconData(0xe5a8, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // COMMUNICATION_FILLED
+  IconData(0xe5ab, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // COMMUNICATION_PERSON
+  IconData(0xe5aa, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // COMMUNICATION_PERSON_FILLED
+  IconData(0xe5ad, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // COMMUNICATION_SHIELD
+  IconData(0xe5ac, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // COMMUNICATION_SHIELD_FILLED
+  IconData(0xe5af, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // COMPASS_NORTHWEST
+  IconData(0xe5ae, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // COMPASS_NORTHWEST_FILLED
+  IconData(0xe5b1, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // COMPASS_TRUE_NORTH
+  IconData(0xe5b0, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // COMPASS_TRUE_NORTH_FILLED
+  IconData(0xe5b3, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // COMPOSE
+  IconData(0xe5b2, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // COMPOSE_FILLED
+  IconData(0xe5b5, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // CONFERENCE_ROOM
+  IconData(0xe5b4, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // CONFERENCE_ROOM_FILLED
+  IconData(0xf75b, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // CONFERENCE_ROOM_SPARKLE
+  IconData(0xf75a, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // CONFERENCE_ROOM_SPARKLE_FILLED
+  IconData(0xe5b7, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // CONNECTED
+  IconData(0xe5b6, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // CONNECTED_FILLED
+  IconData(0xe5b9, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // CONNECTOR
+  IconData(0xe5b8, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // CONNECTOR_FILLED
+  IconData(0xe5bb, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // CONTACT_CARD
+  IconData(0xe5ba, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // CONTACT_CARD_FILLED
+  IconData(0xe5bd, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // CONTACT_CARD_GENERIC
+  IconData(0xe5bc, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // CONTACT_CARD_GENERIC_FILLED
+  IconData(0xe5bf, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // CONTACT_CARD_GROUP
+  IconData(0xe5be, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // CONTACT_CARD_GROUP_FILLED
+  IconData(0xe5c1, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // CONTACT_CARD_LINK
+  IconData(0xe5c0, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // CONTACT_CARD_LINK_FILLED
+  IconData(0xe5c3, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // CONTACT_CARD_RIBBON
+  IconData(0xe5c2, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // CONTACT_CARD_RIBBON_FILLED
+  IconData(0xe5c5, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // CONTENT_SETTINGS
+  IconData(0xe5c4, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // CONTENT_SETTINGS_FILLED
+  IconData(0xe5c7, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // CONTENT_VIEW
+  IconData(0xe5c6, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // CONTENT_VIEW_FILLED
+  IconData(0xe5c9, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // CONTENT_VIEW_GALLERY
+  IconData(0xe5c8, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // CONTENT_VIEW_GALLERY_FILLED
+  IconData(0xe5cb, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // CONTENT_VIEW_GALLERY_LIGHTNING
+  IconData(0xe5ca, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // CONTENT_VIEW_GALLERY_LIGHTNING_FILLED
+  IconData(0xe5cd, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // CONTRACT_DOWN_LEFT
+  IconData(0xe5cc, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // CONTRACT_DOWN_LEFT_FILLED
+  IconData(0xe5cf, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // CONTRACT_UP_RIGHT
+  IconData(0xe5ce, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // CONTRACT_UP_RIGHT_FILLED
+  IconData(0xe5d1, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // CONTROL_BUTTON
+  IconData(0xe5d0, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // CONTROL_BUTTON_FILLED
+  IconData(0xe5d3, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // CONVERT_RANGE
+  IconData(0xe5d2, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // CONVERT_RANGE_FILLED
+  IconData(0xe5d5, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // COOKIES
+  IconData(0xe5d4, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // COOKIES_FILLED
+  IconData(0xe5d7, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // COPY
+  IconData(0xe5d9, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // COPY_ADD
+  IconData(0xe5d8, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // COPY_ADD_FILLED
+  IconData(0xe5db, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // COPY_ARROW_RIGHT
+  IconData(0xe5da, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // COPY_ARROW_RIGHT_FILLED
+  IconData(0xe5d6, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // COPY_FILLED
+  IconData(0xe5dd, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // COPY_SELECT
+  IconData(0xe5dc, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // COPY_SELECT_FILLED
+  IconData(0xe5df, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // COUCH
+  IconData(0xe5de, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // COUCH_FILLED
+  IconData(0xe5e1, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // COUNTER
+  IconData(0xe5e0, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // COUNTER_FILLED
+  IconData(0xf631, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // COWORK
+  IconData(0xf630, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // COWORK_FILLED
+  IconData(0xe5e3, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // CREDIT_CARD_CLOCK
+  IconData(0xe5e2, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // CREDIT_CARD_CLOCK_FILLED
+  IconData(0xe5e5, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // CREDIT_CARD_PERSON
+  IconData(0xe5e4, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // CREDIT_CARD_PERSON_FILLED
+  IconData(0xe5e7, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // CREDIT_CARD_TOOLBOX
+  IconData(0xe5e6, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // CREDIT_CARD_TOOLBOX_FILLED
+  IconData(0xe5e9, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // CROP
+  IconData(0xe5eb, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // CROP_ARROW_ROTATE
+  IconData(0xe5ea, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // CROP_ARROW_ROTATE_FILLED
+  IconData(0xe5e8, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // CROP_FILLED
+  IconData(0xe5ed, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // CROP_INTERIM
+  IconData(0xe5ec, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // CROP_INTERIM_FILLED
+  IconData(0xe5ef, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // CROP_INTERIM_OFF
+  IconData(0xe5ee, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // CROP_INTERIM_OFF_FILLED
+  IconData(0xe5f1, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // CROWN
+  IconData(0xe5f0, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // CROWN_FILLED
+  IconData(0xe5f3, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // CROWN_SUBTRACT
+  IconData(0xe5f2, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // CROWN_SUBTRACT_FILLED
+  IconData(0xe5f5, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // CUBE
+  IconData(0xe5f7, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // CUBE_ADD
+  IconData(0xe5f6, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // CUBE_ADD_FILLED
+  IconData(0xe5f9, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // CUBE_ARROW_CURVE_DOWN
+  IconData(0xe5f8, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // CUBE_ARROW_CURVE_DOWN_FILLED
+  IconData(0xe5fb, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // CUBE_CHECKMARK
+  IconData(0xe5fa, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // CUBE_CHECKMARK_FILLED
+  IconData(0xe5f4, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // CUBE_FILLED
+  IconData(0xe5fd, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // CUBE_LINK
+  IconData(0xe5fc, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // CUBE_LINK_FILLED
+  IconData(0xe5ff, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // CUBE_MULTIPLE
+  IconData(0xe5fe, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // CUBE_MULTIPLE_FILLED
+  IconData(0xe601, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // CUBE_QUICK
+  IconData(0xe600, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // CUBE_QUICK_FILLED
+  IconData(0xe603, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // CUBE_ROTATE
+  IconData(0xe602, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // CUBE_ROTATE_FILLED
+  IconData(0xe605, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // CUBE_SYNC
+  IconData(0xe604, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // CUBE_SYNC_FILLED
+  IconData(0xe607, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // CUBE_TREE
+  IconData(0xe606, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // CUBE_TREE_FILLED
+  IconData(0xe609, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // CURRENCY_DOLLAR_EURO
+  IconData(0xe608, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // CURRENCY_DOLLAR_EURO_FILLED
+  IconData(0xe60b, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // CURRENCY_DOLLAR_RUPEE
+  IconData(0xe60a, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // CURRENCY_DOLLAR_RUPEE_FILLED
+  IconData(0xe60d, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // CURSOR
+  IconData(0xe60f, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // CURSOR_CLICK
+  IconData(0xe60e, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // CURSOR_CLICK_FILLED
+  IconData(0xe60c, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // CURSOR_FILLED
+  IconData(0xe611, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // CURSOR_HOVER
+  IconData(0xe610, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // CURSOR_HOVER_FILLED
+  IconData(0xe613, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // CURSOR_HOVER_OFF
+  IconData(0xe612, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // CURSOR_HOVER_OFF_FILLED
+  IconData(0xe615, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // CURSOR_PROHIBITED
+  IconData(0xe614, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // CURSOR_PROHIBITED_FILLED
+  IconData(0xe617, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // CUT
+  IconData(0xe616, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // CUT_FILLED
+  IconData(0xe619, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // DARK_THEME
+  IconData(0xe618, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // DARK_THEME_FILLED
+  IconData(0xe61b, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // DASHBOARD
+  IconData(0xe61a, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // DASHBOARD_FILLED
+  IconData(0xe64d, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // DATABASE
+  IconData(0xe64f, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // DATABASE_ARROW_DOWN
+  IconData(0xe64e, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // DATABASE_ARROW_DOWN_FILLED
+  IconData(0xe651, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // DATABASE_ARROW_RIGHT
+  IconData(0xe650, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // DATABASE_ARROW_RIGHT_FILLED
+  IconData(0xe653, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // DATABASE_ARROW_UP
+  IconData(0xe652, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // DATABASE_ARROW_UP_FILLED
+  IconData(0xe655, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // DATABASE_CHECKMARK
+  IconData(0xe654, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // DATABASE_CHECKMARK_FILLED
+  IconData(0xe64c, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // DATABASE_FILLED
+  IconData(0xe657, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // DATABASE_LIGHTNING
+  IconData(0xe656, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // DATABASE_LIGHTNING_FILLED
+  IconData(0xe659, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // DATABASE_LINK
+  IconData(0xe658, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // DATABASE_LINK_FILLED
+  IconData(0xe65b, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // DATABASE_MULTIPLE
+  IconData(0xe65a, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // DATABASE_MULTIPLE_FILLED
+  IconData(0xe65d, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // DATABASE_PERSON
+  IconData(0xe65c, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // DATABASE_PERSON_FILLED
+  IconData(0xe65f, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // DATABASE_PLUG_CONNECTED
+  IconData(0xe65e, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // DATABASE_PLUG_CONNECTED_FILLED
+  IconData(0xe661, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // DATABASE_SEARCH
+  IconData(0xe660, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // DATABASE_SEARCH_FILLED
+  IconData(0xf615, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // DATABASE_SETTINGS
+  IconData(0xf614, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // DATABASE_SETTINGS_FILLED
+  IconData(0xe663, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // DATABASE_SWITCH
+  IconData(0xe662, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // DATABASE_SWITCH_FILLED
+  IconData(0xe665, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // DATABASE_WARNING
+  IconData(0xe664, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // DATABASE_WARNING_FILLED
+  IconData(0xe667, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // DATABASE_WINDOW
+  IconData(0xe666, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // DATABASE_WINDOW_FILLED
+  IconData(0xe61d, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // DATA_AREA
+  IconData(0xe61c, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // DATA_AREA_FILLED
+  IconData(0xe61f, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // DATA_BAR_HORIZONTAL
+  IconData(0xe61e, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // DATA_BAR_HORIZONTAL_FILLED
+  IconData(0xe621, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // DATA_BAR_VERTICAL
+  IconData(0xe623, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // DATA_BAR_VERTICAL_ADD
+  IconData(0xe622, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // DATA_BAR_VERTICAL_ADD_FILLED
+  IconData(0xe625, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // DATA_BAR_VERTICAL_ARROW_DOWN
+  IconData(0xe624, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // DATA_BAR_VERTICAL_ARROW_DOWN_FILLED
+  IconData(0xe627, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // DATA_BAR_VERTICAL_ASCENDING
+  IconData(0xe626, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // DATA_BAR_VERTICAL_ASCENDING_FILLED
+  IconData(0xe629, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // DATA_BAR_VERTICAL_EDIT
+  IconData(0xe628, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // DATA_BAR_VERTICAL_EDIT_FILLED
+  IconData(0xe620, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // DATA_BAR_VERTICAL_FILLED
+  IconData(0xe62b, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // DATA_BAR_VERTICAL_STAR
+  IconData(0xe62a, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // DATA_BAR_VERTICAL_STAR_FILLED
+  IconData(0xe62d, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // DATA_FUNNEL
+  IconData(0xe62c, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // DATA_FUNNEL_FILLED
+  IconData(0xe62f, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // DATA_HISTOGRAM
+  IconData(0xe62e, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // DATA_HISTOGRAM_FILLED
+  IconData(0xe631, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // DATA_LINE
+  IconData(0xe630, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // DATA_LINE_FILLED
+  IconData(0xe633, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // DATA_PIE
+  IconData(0xe632, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // DATA_PIE_FILLED
+  IconData(0xe635, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // DATA_SCATTER
+  IconData(0xe634, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // DATA_SCATTER_FILLED
+  IconData(0xe637, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // DATA_SUNBURST
+  IconData(0xe636, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // DATA_SUNBURST_FILLED
+  IconData(0xe639, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // DATA_TREEMAP
+  IconData(0xe638, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // DATA_TREEMAP_FILLED
+  IconData(0xe63b, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // DATA_TRENDING
+  IconData(0xe63a, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // DATA_TRENDING_FILLED
+  IconData(0xe63d, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // DATA_USAGE
+  IconData(0xe63f, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // DATA_USAGE_CHECKMARK
+  IconData(0xe63e, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // DATA_USAGE_CHECKMARK_FILLED
+  IconData(0xe641, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // DATA_USAGE_EDIT
+  IconData(0xe640, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // DATA_USAGE_EDIT_FILLED
+  IconData(0xe63c, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // DATA_USAGE_FILLED
+  IconData(0xe643, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // DATA_USAGE_SETTINGS
+  IconData(0xe642, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // DATA_USAGE_SETTINGS_FILLED
+  IconData(0xe645, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // DATA_USAGE_SPARKLE
+  IconData(0xe644, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // DATA_USAGE_SPARKLE_FILLED
+  IconData(0xe647, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // DATA_USAGE_TOOLBOX
+  IconData(0xe646, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // DATA_USAGE_TOOLBOX_FILLED
+  IconData(0xe649, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // DATA_WATERFALL
+  IconData(0xe648, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // DATA_WATERFALL_FILLED
+  IconData(0xe64b, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // DATA_WHISKER
+  IconData(0xe64a, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // DATA_WHISKER_FILLED
+  IconData(0xe669, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // DECIMAL_ARROW_LEFT
+  IconData(0xe668, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // DECIMAL_ARROW_LEFT_FILLED
+  IconData(0xe66b, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // DECIMAL_ARROW_RIGHT
+  IconData(0xe66a, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // DECIMAL_ARROW_RIGHT_FILLED
+  IconData(0xe66d, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // DELETE
+  IconData(0xe66f, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // DELETE_ARROW_BACK
+  IconData(0xe66e, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // DELETE_ARROW_BACK_FILLED
+  IconData(0xe671, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // DELETE_DISMISS
+  IconData(0xe670, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // DELETE_DISMISS_FILLED
+  IconData(0xe66c, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // DELETE_FILLED
+  IconData(0xe673, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // DELETE_LINES
+  IconData(0xe672, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // DELETE_LINES_FILLED
+  IconData(0xe675, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // DELETE_OFF
+  IconData(0xe674, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // DELETE_OFF_FILLED
+  IconData(0xe677, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // DENTIST
+  IconData(0xe676, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // DENTIST_FILLED
+  IconData(0xe679, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // DESIGN_IDEAS
+  IconData(0xe678, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // DESIGN_IDEAS_FILLED
+  IconData(0xe67b, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // DESK
+  IconData(0xe685, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // DESKTOP
+  IconData(0xe687, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // DESKTOP_ARROW_DOWN
+  IconData(0xe686, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // DESKTOP_ARROW_DOWN_FILLED
+  IconData(0xe689, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // DESKTOP_ARROW_DOWN_OFF
+  IconData(0xe688, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // DESKTOP_ARROW_DOWN_OFF_FILLED
+  IconData(0xe68b, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // DESKTOP_ARROW_RIGHT
+  IconData(0xe68a, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // DESKTOP_ARROW_RIGHT_FILLED
+  IconData(0xe68d, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // DESKTOP_CHECKMARK
+  IconData(0xe68c, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // DESKTOP_CHECKMARK_FILLED
+  IconData(0xe68f, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // DESKTOP_CURSOR
+  IconData(0xe68e, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // DESKTOP_CURSOR_FILLED
+  IconData(0xe691, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // DESKTOP_EDIT
+  IconData(0xe690, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // DESKTOP_EDIT_FILLED
+  IconData(0xe684, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // DESKTOP_FILLED
+  IconData(0xe693, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // DESKTOP_FLOW
+  IconData(0xe692, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // DESKTOP_FLOW_FILLED
+  IconData(0xe695, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // DESKTOP_KEYBOARD
+  IconData(0xe694, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // DESKTOP_KEYBOARD_FILLED
+  IconData(0xe697, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // DESKTOP_MAC
+  IconData(0xe696, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // DESKTOP_MAC_FILLED
+  IconData(0xe699, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // DESKTOP_OFF
+  IconData(0xe698, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // DESKTOP_OFF_FILLED
+  IconData(0xe69b, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // DESKTOP_PULSE
+  IconData(0xe69a, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // DESKTOP_PULSE_FILLED
+  IconData(0xe69d, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // DESKTOP_SIGNAL
+  IconData(0xe69c, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // DESKTOP_SIGNAL_FILLED
+  IconData(0xe69f, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // DESKTOP_SPEAKER
+  IconData(0xe69e, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // DESKTOP_SPEAKER_FILLED
+  IconData(0xe6a1, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // DESKTOP_SPEAKER_OFF
+  IconData(0xe6a0, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // DESKTOP_SPEAKER_OFF_FILLED
+  IconData(0xe6a3, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // DESKTOP_SYNC
+  IconData(0xe6a2, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // DESKTOP_SYNC_FILLED
+  IconData(0xe6a5, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // DESKTOP_TAG
+  IconData(0xe6a4, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // DESKTOP_TAG_FILLED
+  IconData(0xe6a7, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // DESKTOP_TOOLBOX
+  IconData(0xe6a6, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // DESKTOP_TOOLBOX_FILLED
+  IconData(0xe6a9, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // DESKTOP_TOWER
+  IconData(0xe6a8, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // DESKTOP_TOWER_FILLED
+  IconData(0xe67d, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // DESK_CHECKMARK
+  IconData(0xe67c, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // DESK_CHECKMARK_FILLED
+  IconData(0xe67a, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // DESK_FILLED
+  IconData(0xe67f, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // DESK_MULTIPLE
+  IconData(0xe681, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // DESK_MULTIPLE_CHECKMARK
+  IconData(0xe680, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // DESK_MULTIPLE_CHECKMARK_FILLED
+  IconData(0xe67e, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // DESK_MULTIPLE_FILLED
+  IconData(0xe683, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // DESK_SPARKLE
+  IconData(0xe682, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // DESK_SPARKLE_FILLED
+  IconData(0xe6ab, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // DEVELOPER_BOARD
+  IconData(0xe6aa, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // DEVELOPER_BOARD_FILLED
+  IconData(0xe6ad, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // DEVELOPER_BOARD_LIGHTNING
+  IconData(0xe6ac, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // DEVELOPER_BOARD_LIGHTNING_FILLED
+  IconData(0xe6af, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // DEVELOPER_BOARD_LIGHTNING_TOOLBOX
+  IconData(0xe6ae, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // DEVELOPER_BOARD_LIGHTNING_TOOLBOX_FILLED
+  IconData(0xe6b1, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // DEVELOPER_BOARD_SEARCH
+  IconData(0xe6b0, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // DEVELOPER_BOARD_SEARCH_FILLED
+  IconData(0xe6b3, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // DEVICE_EQ
+  IconData(0xe6b2, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // DEVICE_EQ_FILLED
+  IconData(0xe6b5, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // DEVICE_MEETING_ROOM
+  IconData(0xe6b7, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // DEVICE_MEETING_ROOM_ALL_IN_ONE
+  IconData(0xe6b6, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // DEVICE_MEETING_ROOM_ALL_IN_ONE_FILLED
+  IconData(0xe6b9, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // DEVICE_MEETING_ROOM_BAR
+  IconData(0xe6b8, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // DEVICE_MEETING_ROOM_BAR_FILLED
+  IconData(0xe6b4, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // DEVICE_MEETING_ROOM_FILLED
+  IconData(0xe6bb, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // DEVICE_MEETING_ROOM_MICROPHONE_ABOVE
+  IconData(0xe6ba, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // DEVICE_MEETING_ROOM_MICROPHONE_ABOVE_FILLED
+  IconData(0xe6bd, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // DEVICE_MEETING_ROOM_MICROPHONE_BELOW
+  IconData(0xe6bc, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // DEVICE_MEETING_ROOM_MICROPHONE_BELOW_FILLED
+  IconData(0xe6bf, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // DEVICE_MEETING_ROOM_REMOTE
+  IconData(0xe6be, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // DEVICE_MEETING_ROOM_REMOTE_FILLED
+  IconData(0xe6c1, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // DIAGRAM
+  IconData(0xe6c0, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // DIAGRAM_FILLED
+  IconData(0xe6c3, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // DIALPAD
+  IconData(0xe6c2, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // DIALPAD_FILLED
+  IconData(0xe6c5, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // DIALPAD_OFF
+  IconData(0xe6c4, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // DIALPAD_OFF_FILLED
+  IconData(0xe6c7, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // DIALPAD_QUESTION_MARK
+  IconData(0xe6c6, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // DIALPAD_QUESTION_MARK_FILLED
+  IconData(0xe6c9, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // DIAMOND
+  IconData(0xe6cb, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // DIAMOND_DISMISS
+  IconData(0xe6ca, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // DIAMOND_DISMISS_FILLED
+  IconData(0xe6c8, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // DIAMOND_FILLED
+  IconData(0xe6cd, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // DIAMOND_LINK
+  IconData(0xe6cc, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // DIAMOND_LINK_FILLED
+  IconData(0xe6cf, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // DIRECTIONS
+  IconData(0xe6ce, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // DIRECTIONS_FILLED
+  IconData(0xe6d1, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // DISHWASHER
+  IconData(0xe6d0, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // DISHWASHER_FILLED
+  IconData(0xe6d3, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // DISMISS
+  IconData(0xe6d5, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // DISMISS_CIRCLE
+  IconData(0xe6d4, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // DISMISS_CIRCLE_FILLED
+  IconData(0xe6d2, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // DISMISS_FILLED
+  IconData(0xe6d7, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // DISMISS_SQUARE
+  IconData(0xe6d6, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // DISMISS_SQUARE_FILLED
+  IconData(0xe6d9, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // DISMISS_SQUARE_MULTIPLE
+  IconData(0xe6d8, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // DISMISS_SQUARE_MULTIPLE_FILLED
+  IconData(0xe6db, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // DIVERSITY
+  IconData(0xe6da, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // DIVERSITY_FILLED
+  IconData(0xe6dd, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // DIVIDER_SHORT
+  IconData(0xe6dc, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // DIVIDER_SHORT_FILLED
+  IconData(0xe6df, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // DIVIDER_TALL
+  IconData(0xe6de, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // DIVIDER_TALL_FILLED
+  IconData(0xe6e1, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // DOCK
+  IconData(0xe6e0, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // DOCK_FILLED
+  IconData(0xe6e3, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // DOCK_ROW
+  IconData(0xe6e2, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // DOCK_ROW_FILLED
+  IconData(0xe6e5, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // DOCTOR
+  IconData(0xe6e4, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // DOCTOR_FILLED
+  IconData(0xe6e9, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // DOCUMENT
+  IconData(0xe6e7, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // DOCUMENT_100
+  IconData(0xe6e6, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // DOCUMENT_100_FILLED
+  IconData(0xe6eb, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // DOCUMENT_ADD
+  IconData(0xe6ea, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // DOCUMENT_ADD_FILLED
+  IconData(0xe6ed, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // DOCUMENT_ARROW_DOWN
+  IconData(0xe6ec, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // DOCUMENT_ARROW_DOWN_FILLED
+  IconData(0xe6ef, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // DOCUMENT_ARROW_DOWN_OFF
+  IconData(0xe6ee, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // DOCUMENT_ARROW_DOWN_OFF_FILLED
+  IconData(0xe6f1, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // DOCUMENT_ARROW_LEFT
+  IconData(0xe6f0, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // DOCUMENT_ARROW_LEFT_FILLED
+  IconData(0xe6f3, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // DOCUMENT_ARROW_RIGHT
+  IconData(0xe6f2, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // DOCUMENT_ARROW_RIGHT_FILLED
+  IconData(0xe6f5, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // DOCUMENT_ARROW_UP
+  IconData(0xe6f4, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // DOCUMENT_ARROW_UP_FILLED
+  IconData(0xe6f7, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // DOCUMENT_BORDER
+  IconData(0xe6f6, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // DOCUMENT_BORDER_FILLED
+  IconData(0xe6f9, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // DOCUMENT_BORDER_PRINT
+  IconData(0xe6f8, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // DOCUMENT_BORDER_PRINT_FILLED
+  IconData(0xe6fb, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // DOCUMENT_BRIEFCASE
+  IconData(0xe6fa, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // DOCUMENT_BRIEFCASE_FILLED
+  IconData(0xe6fd, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // DOCUMENT_BROKEN
+  IconData(0xe6fc, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // DOCUMENT_BROKEN_FILLED
+  IconData(0xe6ff, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // DOCUMENT_BULLET_LIST
+  IconData(0xe701, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // DOCUMENT_BULLET_LIST_ARROW_LEFT
+  IconData(0xe700, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // DOCUMENT_BULLET_LIST_ARROW_LEFT_FILLED
+  IconData(0xe703, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // DOCUMENT_BULLET_LIST_CLOCK
+  IconData(0xe702, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // DOCUMENT_BULLET_LIST_CLOCK_FILLED
+  IconData(0xe705, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // DOCUMENT_BULLET_LIST_CUBE
+  IconData(0xe704, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // DOCUMENT_BULLET_LIST_CUBE_FILLED
+  IconData(0xe6fe, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // DOCUMENT_BULLET_LIST_FILLED
+  IconData(0xe707, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // DOCUMENT_BULLET_LIST_MULTIPLE
+  IconData(0xe706, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // DOCUMENT_BULLET_LIST_MULTIPLE_FILLED
+  IconData(0xe709, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // DOCUMENT_BULLET_LIST_OFF
+  IconData(0xe708, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // DOCUMENT_BULLET_LIST_OFF_FILLED
+  IconData(0xe70b, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // DOCUMENT_CATCH_UP
+  IconData(0xe70a, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // DOCUMENT_CATCH_UP_FILLED
+  IconData(0xe70d, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // DOCUMENT_CHECKMARK
+  IconData(0xe70c, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // DOCUMENT_CHECKMARK_FILLED
+  IconData(0xe70f, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // DOCUMENT_CHEVRON_DOUBLE
+  IconData(0xe70e, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // DOCUMENT_CHEVRON_DOUBLE_FILLED
+  IconData(0xe711, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // DOCUMENT_COPY
+  IconData(0xe710, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // DOCUMENT_COPY_FILLED
+  IconData(0xe713, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // DOCUMENT_CSS
+  IconData(0xe712, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // DOCUMENT_CSS_FILLED
+  IconData(0xe715, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // DOCUMENT_CSV
+  IconData(0xe714, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // DOCUMENT_CSV_FILLED
+  IconData(0xe717, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // DOCUMENT_CUBE
+  IconData(0xe716, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // DOCUMENT_CUBE_FILLED
+  IconData(0xe719, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // DOCUMENT_DATA
+  IconData(0xe71f, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // DOCUMENT_DATABASE
+  IconData(0xe71e, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // DOCUMENT_DATABASE_FILLED
+  IconData(0xe718, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // DOCUMENT_DATA_FILLED
+  IconData(0xe71b, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // DOCUMENT_DATA_LINK
+  IconData(0xe71a, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // DOCUMENT_DATA_LINK_FILLED
+  IconData(0xe71d, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // DOCUMENT_DATA_LOCK
+  IconData(0xe71c, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // DOCUMENT_DATA_LOCK_FILLED
+  IconData(0xe721, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // DOCUMENT_DISMISS
+  IconData(0xe720, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // DOCUMENT_DISMISS_FILLED
+  IconData(0xe723, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // DOCUMENT_EDIT
+  IconData(0xe722, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // DOCUMENT_EDIT_FILLED
+  IconData(0xe725, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // DOCUMENT_ENDNOTE
+  IconData(0xe724, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // DOCUMENT_ENDNOTE_FILLED
+  IconData(0xe727, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // DOCUMENT_ERROR
+  IconData(0xe726, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // DOCUMENT_ERROR_FILLED
+  IconData(0xf75d, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // DOCUMENT_EXCEL
+  IconData(0xf75c, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // DOCUMENT_EXCEL_FILLED
+  IconData(0xe6e8, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // DOCUMENT_FILLED
+  IconData(0xe729, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // DOCUMENT_FIT
+  IconData(0xe728, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // DOCUMENT_FIT_FILLED
+  IconData(0xe72b, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // DOCUMENT_FLOWCHART
+  IconData(0xe72a, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // DOCUMENT_FLOWCHART_FILLED
+  IconData(0xe72d, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // DOCUMENT_FOLDER
+  IconData(0xe72c, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // DOCUMENT_FOLDER_FILLED
+  IconData(0xe72f, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // DOCUMENT_FOOTER
+  IconData(0xe731, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // DOCUMENT_FOOTER_DISMISS
+  IconData(0xe730, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // DOCUMENT_FOOTER_DISMISS_FILLED
+  IconData(0xe72e, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // DOCUMENT_FOOTER_FILLED
+  IconData(0xe733, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // DOCUMENT_GLOBE
+  IconData(0xe732, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // DOCUMENT_GLOBE_FILLED
+  IconData(0xe735, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // DOCUMENT_HEADER
+  IconData(0xe737, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // DOCUMENT_HEADER_ARROW_DOWN
+  IconData(0xe736, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // DOCUMENT_HEADER_ARROW_DOWN_FILLED
+  IconData(0xe739, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // DOCUMENT_HEADER_DISMISS
+  IconData(0xe738, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // DOCUMENT_HEADER_DISMISS_FILLED
+  IconData(0xe734, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // DOCUMENT_HEADER_FILLED
+  IconData(0xe73b, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // DOCUMENT_HEADER_FOOTER
+  IconData(0xe73a, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // DOCUMENT_HEADER_FOOTER_FILLED
+  IconData(0xe73d, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // DOCUMENT_HEART
+  IconData(0xe73c, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // DOCUMENT_HEART_FILLED
+  IconData(0xe73f, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // DOCUMENT_HEART_PULSE
+  IconData(0xe73e, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // DOCUMENT_HEART_PULSE_FILLED
+  IconData(0xe741, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // DOCUMENT_IMAGE
+  IconData(0xe740, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // DOCUMENT_IMAGE_FILLED
+  IconData(0xe743, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // DOCUMENT_JAVA
+  IconData(0xe745, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // DOCUMENT_JAVASCRIPT
+  IconData(0xe744, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // DOCUMENT_JAVASCRIPT_FILLED
+  IconData(0xe742, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // DOCUMENT_JAVA_FILLED
+  IconData(0xe747, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // DOCUMENT_KEY
+  IconData(0xe746, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // DOCUMENT_KEY_FILLED
+  IconData(0xe749, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // DOCUMENT_LANDSCAPE
+  IconData(0xe74b, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // DOCUMENT_LANDSCAPE_DATA
+  IconData(0xe74a, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // DOCUMENT_LANDSCAPE_DATA_FILLED
+  IconData(0xe748, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // DOCUMENT_LANDSCAPE_FILLED
+  IconData(0xe74d, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // DOCUMENT_LANDSCAPE_SPLIT
+  IconData(0xe74c, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // DOCUMENT_LANDSCAPE_SPLIT_FILLED
+  IconData(0xe74f, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // DOCUMENT_LANDSCAPE_SPLIT_HINT
+  IconData(0xe74e, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // DOCUMENT_LANDSCAPE_SPLIT_HINT_FILLED
+  IconData(0xe751, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // DOCUMENT_LIGHTNING
+  IconData(0xe750, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // DOCUMENT_LIGHTNING_FILLED
+  IconData(0xe753, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // DOCUMENT_LINK
+  IconData(0xe752, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // DOCUMENT_LINK_FILLED
+  IconData(0xe755, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // DOCUMENT_LOCK
+  IconData(0xe754, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // DOCUMENT_LOCK_FILLED
+  IconData(0xe757, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // DOCUMENT_MARGINS
+  IconData(0xe756, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // DOCUMENT_MARGINS_FILLED
+  IconData(0xe759, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // DOCUMENT_MARKDOWN
+  IconData(0xe758, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // DOCUMENT_MARKDOWN_FILLED
+  IconData(0xe75b, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // DOCUMENT_MENTION
+  IconData(0xe75a, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // DOCUMENT_MENTION_FILLED
+  IconData(0xe75d, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // DOCUMENT_MULTIPLE
+  IconData(0xe75c, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // DOCUMENT_MULTIPLE_FILLED
+  IconData(0xe75f, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // DOCUMENT_MULTIPLE_PERCENT
+  IconData(0xe75e, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // DOCUMENT_MULTIPLE_PERCENT_FILLED
+  IconData(0xe761, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // DOCUMENT_MULTIPLE_PROHIBITED
+  IconData(0xe760, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // DOCUMENT_MULTIPLE_PROHIBITED_FILLED
+  IconData(0xe763, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // DOCUMENT_MULTIPLE_SYNC
+  IconData(0xe762, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // DOCUMENT_MULTIPLE_SYNC_FILLED
+  IconData(0xe765, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // DOCUMENT_ONE_PAGE
+  IconData(0xe767, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // DOCUMENT_ONE_PAGE_ADD
+  IconData(0xe766, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // DOCUMENT_ONE_PAGE_ADD_FILLED
+  IconData(0xe769, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // DOCUMENT_ONE_PAGE_COLUMNS
+  IconData(0xe768, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // DOCUMENT_ONE_PAGE_COLUMNS_FILLED
+  IconData(0xe764, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // DOCUMENT_ONE_PAGE_FILLED
+  IconData(0xe76b, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // DOCUMENT_ONE_PAGE_LINK
+  IconData(0xe76a, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // DOCUMENT_ONE_PAGE_LINK_FILLED
+  IconData(0xe76d, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // DOCUMENT_ONE_PAGE_MULTIPLE
+  IconData(0xe76c, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // DOCUMENT_ONE_PAGE_MULTIPLE_FILLED
+  IconData(0xe76f, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // DOCUMENT_ONE_PAGE_MULTIPLE_SPARKLE
+  IconData(0xe76e, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // DOCUMENT_ONE_PAGE_MULTIPLE_SPARKLE_FILLED
+  IconData(0xe771, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // DOCUMENT_ONE_PAGE_SPARKLE
+  IconData(0xe770, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // DOCUMENT_ONE_PAGE_SPARKLE_FILLED
+  IconData(0xe773, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // DOCUMENT_PAGE_BOTTOM_CENTER
+  IconData(0xe772, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // DOCUMENT_PAGE_BOTTOM_CENTER_FILLED
+  IconData(0xe775, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // DOCUMENT_PAGE_BOTTOM_LEFT
+  IconData(0xe774, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // DOCUMENT_PAGE_BOTTOM_LEFT_FILLED
+  IconData(0xe777, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // DOCUMENT_PAGE_BOTTOM_RIGHT
+  IconData(0xe776, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // DOCUMENT_PAGE_BOTTOM_RIGHT_FILLED
+  IconData(0xe779, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // DOCUMENT_PAGE_BREAK
+  IconData(0xe778, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // DOCUMENT_PAGE_BREAK_FILLED
+  IconData(0xe77b, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // DOCUMENT_PAGE_NUMBER
+  IconData(0xe77a, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // DOCUMENT_PAGE_NUMBER_FILLED
+  IconData(0xe77d, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // DOCUMENT_PAGE_TOP_CENTER
+  IconData(0xe77c, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // DOCUMENT_PAGE_TOP_CENTER_FILLED
+  IconData(0xe77f, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // DOCUMENT_PAGE_TOP_LEFT
+  IconData(0xe77e, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // DOCUMENT_PAGE_TOP_LEFT_FILLED
+  IconData(0xe781, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // DOCUMENT_PAGE_TOP_RIGHT
+  IconData(0xe780, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // DOCUMENT_PAGE_TOP_RIGHT_FILLED
+  IconData(0xe783, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // DOCUMENT_PDF
+  IconData(0xe782, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // DOCUMENT_PDF_FILLED
+  IconData(0xe785, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // DOCUMENT_PERCENT
+  IconData(0xe784, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // DOCUMENT_PERCENT_FILLED
+  IconData(0xe787, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // DOCUMENT_PERSON
+  IconData(0xe786, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // DOCUMENT_PERSON_FILLED
+  IconData(0xe789, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // DOCUMENT_PILL
+  IconData(0xe788, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // DOCUMENT_PILL_FILLED
+  IconData(0xf75f, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // DOCUMENT_POWERPOINT
+  IconData(0xf75e, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // DOCUMENT_POWERPOINT_FILLED
+  IconData(0xe78b, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // DOCUMENT_PRINT
+  IconData(0xe78a, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // DOCUMENT_PRINT_FILLED
+  IconData(0xe78d, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // DOCUMENT_PROHIBITED
+  IconData(0xe78c, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // DOCUMENT_PROHIBITED_FILLED
+  IconData(0xe78f, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // DOCUMENT_QUESTION_MARK
+  IconData(0xe78e, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // DOCUMENT_QUESTION_MARK_FILLED
+  IconData(0xe791, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // DOCUMENT_QUEUE
+  IconData(0xe793, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // DOCUMENT_QUEUE_ADD
+  IconData(0xe792, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // DOCUMENT_QUEUE_ADD_FILLED
+  IconData(0xe790, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // DOCUMENT_QUEUE_FILLED
+  IconData(0xe795, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // DOCUMENT_QUEUE_MULTIPLE
+  IconData(0xe794, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // DOCUMENT_QUEUE_MULTIPLE_FILLED
+  IconData(0xe797, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // DOCUMENT_RIBBON
+  IconData(0xe796, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // DOCUMENT_RIBBON_FILLED
+  IconData(0xe799, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // DOCUMENT_SASS
+  IconData(0xe798, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // DOCUMENT_SASS_FILLED
+  IconData(0xe79b, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // DOCUMENT_SAVE
+  IconData(0xe79a, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // DOCUMENT_SAVE_FILLED
+  IconData(0xe79d, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // DOCUMENT_SEARCH
+  IconData(0xe79c, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // DOCUMENT_SEARCH_FILLED
+  IconData(0xe79f, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // DOCUMENT_SETTINGS
+  IconData(0xe79e, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // DOCUMENT_SETTINGS_FILLED
+  IconData(0xe7a1, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // DOCUMENT_SIGNATURE
+  IconData(0xe7a0, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // DOCUMENT_SIGNATURE_FILLED
+  IconData(0xe7a3, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // DOCUMENT_SPARKLE
+  IconData(0xe7a2, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // DOCUMENT_SPARKLE_FILLED
+  IconData(0xe7a5, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // DOCUMENT_SPLIT_HINT
+  IconData(0xe7a4, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // DOCUMENT_SPLIT_HINT_FILLED
+  IconData(0xe7a7, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // DOCUMENT_SPLIT_HINT_OFF
+  IconData(0xe7a6, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // DOCUMENT_SPLIT_HINT_OFF_FILLED
+  IconData(0xe7a9, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // DOCUMENT_SQUARE
+  IconData(0xe7a8, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // DOCUMENT_SQUARE_FILLED
+  IconData(0xe7ab, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // DOCUMENT_SYNC
+  IconData(0xe7aa, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // DOCUMENT_SYNC_FILLED
+  IconData(0xe7ad, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // DOCUMENT_TABLE
+  IconData(0xe7af, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // DOCUMENT_TABLE_ARROW_RIGHT
+  IconData(0xe7ae, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // DOCUMENT_TABLE_ARROW_RIGHT_FILLED
+  IconData(0xe7b1, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // DOCUMENT_TABLE_CHECKMARK
+  IconData(0xe7b0, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // DOCUMENT_TABLE_CHECKMARK_FILLED
+  IconData(0xe7b3, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // DOCUMENT_TABLE_CUBE
+  IconData(0xe7b2, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // DOCUMENT_TABLE_CUBE_FILLED
+  IconData(0xe7ac, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // DOCUMENT_TABLE_FILLED
+  IconData(0xe7b5, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // DOCUMENT_TABLE_SEARCH
+  IconData(0xe7b4, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // DOCUMENT_TABLE_SEARCH_FILLED
+  IconData(0xe7b7, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // DOCUMENT_TABLE_TRUCK
+  IconData(0xe7b6, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // DOCUMENT_TABLE_TRUCK_FILLED
+  IconData(0xe7b9, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // DOCUMENT_TARGET
+  IconData(0xe7b8, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // DOCUMENT_TARGET_FILLED
+  IconData(0xe7bb, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // DOCUMENT_TEXT
+  IconData(0xe7bd, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // DOCUMENT_TEXT_CLOCK
+  IconData(0xe7bc, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // DOCUMENT_TEXT_CLOCK_FILLED
+  IconData(0xe7bf, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // DOCUMENT_TEXT_EXTRACT
+  IconData(0xe7be, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // DOCUMENT_TEXT_EXTRACT_FILLED
+  IconData(0xe7ba, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // DOCUMENT_TEXT_FILLED
+  IconData(0xe7c1, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // DOCUMENT_TEXT_LINK
+  IconData(0xe7c0, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // DOCUMENT_TEXT_LINK_FILLED
+  IconData(0xe7c3, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // DOCUMENT_TEXT_TOOLBOX
+  IconData(0xe7c2, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // DOCUMENT_TEXT_TOOLBOX_FILLED
+  IconData(0xe7c5, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // DOCUMENT_TOOLBOX
+  IconData(0xe7c4, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // DOCUMENT_TOOLBOX_FILLED
+  IconData(0xe7c7, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // DOCUMENT_WIDTH
+  IconData(0xe7c6, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // DOCUMENT_WIDTH_FILLED
+  IconData(0xe7c9, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // DOCUMENT_WORD
+  IconData(0xe7c8, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // DOCUMENT_WORD_FILLED
+  IconData(0xe7cb, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // DOCUMENT_YML
+  IconData(0xe7ca, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // DOCUMENT_YML_FILLED
+  IconData(0xe7cd, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // DOOR
+  IconData(0xf617, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // DOOR_ADD
+  IconData(0xf616, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // DOOR_ADD_FILLED
+  IconData(0xe7cf, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // DOOR_ARROW_LEFT
+  IconData(0xe7ce, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // DOOR_ARROW_LEFT_FILLED
+  IconData(0xe7d1, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // DOOR_ARROW_RIGHT
+  IconData(0xe7d0, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // DOOR_ARROW_RIGHT_FILLED
+  IconData(0xe7cc, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // DOOR_FILLED
+  IconData(0xe7d3, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // DOOR_TAG
+  IconData(0xe7d2, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // DOOR_TAG_FILLED
+  IconData(0xe7d5, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // DOUBLE_SWIPE_DOWN
+  IconData(0xe7d4, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // DOUBLE_SWIPE_DOWN_FILLED
+  IconData(0xe7d7, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // DOUBLE_SWIPE_UP
+  IconData(0xe7d6, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // DOUBLE_SWIPE_UP_FILLED
+  IconData(0xe7d9, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // DOUBLE_TAP_SWIPE_DOWN
+  IconData(0xe7d8, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // DOUBLE_TAP_SWIPE_DOWN_FILLED
+  IconData(0xe7db, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // DOUBLE_TAP_SWIPE_UP
+  IconData(0xe7da, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // DOUBLE_TAP_SWIPE_UP_FILLED
+  IconData(0xe7dd, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // DRAFTS
+  IconData(0xe7dc, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // DRAFTS_FILLED
+  IconData(0xe7df, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // DRAG
+  IconData(0xe7de, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // DRAG_FILLED
+  IconData(0xe7e7, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // DRAWER
+  IconData(0xe7e9, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // DRAWER_ADD
+  IconData(0xe7e8, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // DRAWER_ADD_FILLED
+  IconData(0xe7eb, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // DRAWER_ARROW_DOWNLOAD
+  IconData(0xe7ea, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // DRAWER_ARROW_DOWNLOAD_FILLED
+  IconData(0xe7ed, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // DRAWER_DISMISS
+  IconData(0xe7ec, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // DRAWER_DISMISS_FILLED
+  IconData(0xe7e6, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // DRAWER_FILLED
+  IconData(0xe7ef, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // DRAWER_PLAY
+  IconData(0xe7ee, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // DRAWER_PLAY_FILLED
+  IconData(0xe7f1, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // DRAWER_SUBTRACT
+  IconData(0xe7f0, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // DRAWER_SUBTRACT_FILLED
+  IconData(0xe7e1, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // DRAW_IMAGE
+  IconData(0xe7e0, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // DRAW_IMAGE_FILLED
+  IconData(0xe7e3, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // DRAW_SHAPE
+  IconData(0xe7e2, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // DRAW_SHAPE_FILLED
+  IconData(0xe7e5, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // DRAW_TEXT
+  IconData(0xe7e4, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // DRAW_TEXT_FILLED
+  IconData(0xe7f3, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // DRINK_BEER
+  IconData(0xe7f2, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // DRINK_BEER_FILLED
+  IconData(0xe7f5, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // DRINK_BOTTLE
+  IconData(0xe7f4, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // DRINK_BOTTLE_FILLED
+  IconData(0xe7f7, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // DRINK_BOTTLE_OFF
+  IconData(0xe7f6, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // DRINK_BOTTLE_OFF_FILLED
+  IconData(0xe7f9, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // DRINK_COFFEE
+  IconData(0xe7f8, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // DRINK_COFFEE_FILLED
+  IconData(0xe7fb, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // DRINK_MARGARITA
+  IconData(0xe7fa, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // DRINK_MARGARITA_FILLED
+  IconData(0xe7fd, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // DRINK_TO_GO
+  IconData(0xe7fc, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // DRINK_TO_GO_FILLED
+  IconData(0xe7ff, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // DRINK_WINE
+  IconData(0xe7fe, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // DRINK_WINE_FILLED
+  IconData(0xe801, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // DRIVE_TRAIN
+  IconData(0xe800, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // DRIVE_TRAIN_FILLED
+  IconData(0xe803, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // DROP
+  IconData(0xe802, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // DROP_FILLED
+  IconData(0xe805, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // DUAL_SCREEN
+  IconData(0xe807, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // DUAL_SCREEN_ADD
+  IconData(0xe806, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // DUAL_SCREEN_ADD_FILLED
+  IconData(0xe809, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // DUAL_SCREEN_ARROW_RIGHT
+  IconData(0xe808, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // DUAL_SCREEN_ARROW_RIGHT_FILLED
+  IconData(0xe80b, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // DUAL_SCREEN_ARROW_UP
+  IconData(0xe80a, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // DUAL_SCREEN_ARROW_UP_FILLED
+  IconData(0xe80d, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // DUAL_SCREEN_CLOCK
+  IconData(0xe80c, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // DUAL_SCREEN_CLOCK_FILLED
+  IconData(0xe80f, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // DUAL_SCREEN_CLOSED_ALERT
+  IconData(0xe80e, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // DUAL_SCREEN_CLOSED_ALERT_FILLED
+  IconData(0xe811, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // DUAL_SCREEN_DESKTOP
+  IconData(0xe810, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // DUAL_SCREEN_DESKTOP_FILLED
+  IconData(0xe813, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // DUAL_SCREEN_DISMISS
+  IconData(0xe812, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // DUAL_SCREEN_DISMISS_FILLED
+  IconData(0xe804, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // DUAL_SCREEN_FILLED
+  IconData(0xe815, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // DUAL_SCREEN_GROUP
+  IconData(0xe814, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // DUAL_SCREEN_GROUP_FILLED
+  IconData(0xe817, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // DUAL_SCREEN_HEADER
+  IconData(0xe816, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // DUAL_SCREEN_HEADER_FILLED
+  IconData(0xe819, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // DUAL_SCREEN_LOCK
+  IconData(0xe818, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // DUAL_SCREEN_LOCK_FILLED
+  IconData(0xe81b, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // DUAL_SCREEN_MIRROR
+  IconData(0xe81a, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // DUAL_SCREEN_MIRROR_FILLED
+  IconData(0xe81d, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // DUAL_SCREEN_PAGINATION
+  IconData(0xe81c, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // DUAL_SCREEN_PAGINATION_FILLED
+  IconData(0xe81f, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // DUAL_SCREEN_SETTINGS
+  IconData(0xe81e, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // DUAL_SCREEN_SETTINGS_FILLED
+  IconData(0xe821, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // DUAL_SCREEN_SPAN
+  IconData(0xe820, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // DUAL_SCREEN_SPAN_FILLED
+  IconData(0xe823, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // DUAL_SCREEN_SPEAKER
+  IconData(0xe822, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // DUAL_SCREEN_SPEAKER_FILLED
+  IconData(0xe825, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // DUAL_SCREEN_STATUS_BAR
+  IconData(0xe824, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // DUAL_SCREEN_STATUS_BAR_FILLED
+  IconData(0xe827, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // DUAL_SCREEN_TABLET
+  IconData(0xe826, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // DUAL_SCREEN_TABLET_FILLED
+  IconData(0xe829, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // DUAL_SCREEN_UPDATE
+  IconData(0xe828, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // DUAL_SCREEN_UPDATE_FILLED
+  IconData(0xe82b, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // DUAL_SCREEN_VERTICAL_SCROLL
+  IconData(0xe82a, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // DUAL_SCREEN_VERTICAL_SCROLL_FILLED
+  IconData(0xe82d, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // DUAL_SCREEN_VIBRATE
+  IconData(0xe82c, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // DUAL_SCREEN_VIBRATE_FILLED
+  IconData(0xe82f, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // DUMBBELL
+  IconData(0xe82e, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // DUMBBELL_FILLED
+  IconData(0xe831, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // DUST
+  IconData(0xe830, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // DUST_FILLED
+  IconData(0xe833, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // EARTH
+  IconData(0xe832, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // EARTH_FILLED
+  IconData(0xe835, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // EARTH_LEAF
+  IconData(0xe834, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // EARTH_LEAF_FILLED
+  IconData(0xe837, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // EDIT
+  IconData(0xe839, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // EDIT_ARROW_BACK
+  IconData(0xe838, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // EDIT_ARROW_BACK_FILLED
+  IconData(0xe836, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // EDIT_FILLED
+  IconData(0xe83b, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // EDIT_LINE_HORIZONTAL_3
+  IconData(0xe83a, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // EDIT_LINE_HORIZONTAL_3_FILLED
+  IconData(0xe83d, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // EDIT_LOCK
+  IconData(0xe83c, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // EDIT_LOCK_FILLED
+  IconData(0xe83f, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // EDIT_OFF
+  IconData(0xe83e, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // EDIT_OFF_FILLED
+  IconData(0xe841, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // EDIT_PERSON
+  IconData(0xe840, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // EDIT_PERSON_FILLED
+  IconData(0xe843, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // EDIT_PROHIBITED
+  IconData(0xe842, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // EDIT_PROHIBITED_FILLED
+  IconData(0xe845, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // EDIT_SETTINGS
+  IconData(0xe844, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // EDIT_SETTINGS_FILLED
+  IconData(0xe847, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // ELEVATOR
+  IconData(0xe846, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // ELEVATOR_FILLED
+  IconData(0xe849, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // EMOJI
+  IconData(0xe84b, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // EMOJI_ADD
+  IconData(0xe84a, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // EMOJI_ADD_FILLED
+  IconData(0xe84d, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // EMOJI_ANGRY
+  IconData(0xe84c, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // EMOJI_ANGRY_FILLED
+  IconData(0xe84f, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // EMOJI_EDIT
+  IconData(0xe84e, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // EMOJI_EDIT_FILLED
+  IconData(0xe848, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // EMOJI_FILLED
+  IconData(0xe851, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // EMOJI_HAND
+  IconData(0xe850, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // EMOJI_HAND_FILLED
+  IconData(0xe853, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // EMOJI_HINT
+  IconData(0xe852, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // EMOJI_HINT_FILLED
+  IconData(0xe855, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // EMOJI_LAUGH
+  IconData(0xe854, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // EMOJI_LAUGH_FILLED
+  IconData(0xe857, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // EMOJI_MEH
+  IconData(0xe856, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // EMOJI_MEH_FILLED
+  IconData(0xe859, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // EMOJI_MEME
+  IconData(0xe858, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // EMOJI_MEME_FILLED
+  IconData(0xe85b, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // EMOJI_MULTIPLE
+  IconData(0xe85a, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // EMOJI_MULTIPLE_FILLED
+  IconData(0xe85d, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // EMOJI_SAD
+  IconData(0xe85c, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // EMOJI_SAD_FILLED
+  IconData(0xe85f, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // EMOJI_SAD_SLIGHT
+  IconData(0xe85e, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // EMOJI_SAD_SLIGHT_FILLED
+  IconData(0xe861, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // EMOJI_SMILE_SLIGHT
+  IconData(0xe860, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // EMOJI_SMILE_SLIGHT_FILLED
+  IconData(0xe863, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // EMOJI_SPARKLE
+  IconData(0xe862, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // EMOJI_SPARKLE_FILLED
+  IconData(0xe865, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // EMOJI_SURPRISE
+  IconData(0xe864, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // EMOJI_SURPRISE_FILLED
+  IconData(0xe867, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // ENGINE
+  IconData(0xe866, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // ENGINE_FILLED
+  IconData(0xe869, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // EQUAL_CIRCLE
+  IconData(0xe868, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // EQUAL_CIRCLE_FILLED
+  IconData(0xe86b, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // EQUAL_OFF
+  IconData(0xe86a, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // EQUAL_OFF_FILLED
+  IconData(0xe86d, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // ERASER
+  IconData(0xe86c, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // ERASER_FILLED
+  IconData(0xe86f, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // ERASER_MEDIUM
+  IconData(0xe86e, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // ERASER_MEDIUM_FILLED
+  IconData(0xe871, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // ERASER_SEGMENT
+  IconData(0xe870, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // ERASER_SEGMENT_FILLED
+  IconData(0xe873, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // ERASER_SMALL
+  IconData(0xe872, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // ERASER_SMALL_FILLED
+  IconData(0xe875, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // ERASER_TOOL
+  IconData(0xe874, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // ERASER_TOOL_FILLED
+  IconData(0xe877, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // ERROR_CIRCLE
+  IconData(0xe876, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // ERROR_CIRCLE_FILLED
+  IconData(0xe879, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // ERROR_CIRCLE_HINT
+  IconData(0xe878, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // ERROR_CIRCLE_HINT_FILLED
+  IconData(0xe87b, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // ERROR_CIRCLE_SETTINGS
+  IconData(0xe87a, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // ERROR_CIRCLE_SETTINGS_FILLED
+  IconData(0xe87d, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // EXPAND_UP_LEFT
+  IconData(0xe87c, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // EXPAND_UP_LEFT_FILLED
+  IconData(0xe87f, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // EXPAND_UP_RIGHT
+  IconData(0xe87e, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // EXPAND_UP_RIGHT_FILLED
+  IconData(0xe881, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // EXTENDED_DOCK
+  IconData(0xe880, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // EXTENDED_DOCK_FILLED
+  IconData(0xe883, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // EYE
+  IconData(0xe88f, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // EYEDROPPER
+  IconData(0xe88e, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // EYEDROPPER_FILLED
+  IconData(0xe891, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // EYEDROPPER_OFF
+  IconData(0xe890, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // EYEDROPPER_OFF_FILLED
+  IconData(0xe885, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // EYE_CIRCLE
+  IconData(0xe884, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // EYE_CIRCLE_FILLED
+  IconData(0xe882, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // EYE_FILLED
+  IconData(0xe887, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // EYE_LINES
+  IconData(0xe886, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // EYE_LINES_FILLED
+  IconData(0xe889, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // EYE_OFF
+  IconData(0xe888, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // EYE_OFF_FILLED
+  IconData(0xe88b, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // EYE_TRACKING
+  IconData(0xe88a, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // EYE_TRACKING_FILLED
+  IconData(0xe88d, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // EYE_TRACKING_OFF
+  IconData(0xe88c, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // EYE_TRACKING_OFF_FILLED
+  IconData(0xe895, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // FAST_ACCELERATION
+  IconData(0xe894, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // FAST_ACCELERATION_FILLED
+  IconData(0xe897, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // FAST_FORWARD
+  IconData(0xe896, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // FAST_FORWARD_FILLED
+  IconData(0xe899, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // FAX
+  IconData(0xe898, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // FAX_FILLED
+  IconData(0xe89b, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // FEED
+  IconData(0xe89a, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // FEED_FILLED
+  IconData(0xe89d, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // FILMSTRIP
+  IconData(0xf627, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // FILMSTRIP_ARROW_UP
+  IconData(0xf626, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // FILMSTRIP_ARROW_UP_FILLED
+  IconData(0xe89c, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // FILMSTRIP_FILLED
+  IconData(0xf629, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // FILMSTRIP_GLOBE
+  IconData(0xf628, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // FILMSTRIP_GLOBE_FILLED
+  IconData(0xe89f, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // FILMSTRIP_IMAGE
+  IconData(0xe89e, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // FILMSTRIP_IMAGE_FILLED
+  IconData(0xe8a1, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // FILMSTRIP_MUSIC_NOTE_2
+  IconData(0xe8a0, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // FILMSTRIP_MUSIC_NOTE_2_FILLED
+  IconData(0xe8a3, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // FILMSTRIP_PLAY
+  IconData(0xe8a2, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // FILMSTRIP_PLAY_FILLED
+  IconData(0xe8a5, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // FILMSTRIP_SPLIT
+  IconData(0xe8a4, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // FILMSTRIP_SPLIT_FILLED
+  IconData(0xe8a7, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // FILTER
+  IconData(0xe8a9, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // FILTER_ADD
+  IconData(0xe8a8, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // FILTER_ADD_FILLED
+  IconData(0xe8ab, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // FILTER_DISMISS
+  IconData(0xe8aa, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // FILTER_DISMISS_FILLED
+  IconData(0xe8a6, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // FILTER_FILLED
+  IconData(0xe8ad, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // FILTER_SYNC
+  IconData(0xe8ac, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // FILTER_SYNC_FILLED
+  IconData(0xe8af, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // FINGERPRINT
+  IconData(0xe8ae, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // FINGERPRINT_FILLED
+  IconData(0xe8b1, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // FIRE
+  IconData(0xe8b3, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // FIREPLACE
+  IconData(0xe8b2, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // FIREPLACE_FILLED
+  IconData(0xe8b0, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // FIRE_FILLED
+  IconData(0xe8b5, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // FIXED_WIDTH
+  IconData(0xe8b4, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // FIXED_WIDTH_FILLED
+  IconData(0xe8b7, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // FLAG
+  IconData(0xe8b9, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // FLAG_CHECKERED
+  IconData(0xe8b8, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // FLAG_CHECKERED_FILLED
+  IconData(0xe8bb, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // FLAG_CLOCK
+  IconData(0xe8ba, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // FLAG_CLOCK_FILLED
+  IconData(0xe8b6, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // FLAG_FILLED
+  IconData(0xe8bd, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // FLAG_OFF
+  IconData(0xe8bc, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // FLAG_OFF_FILLED
+  IconData(0xe8be, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // FLAG_PRIDE_FILLED
+  IconData(0xe8bf, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // FLAG_PRIDE_INTERSEX_INCLUSIVE_PROGRESS_FILLED
+  IconData(0xe8c0, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // FLAG_PRIDE_PHILADELPHIA_FILLED
+  IconData(0xe8c1, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // FLAG_PRIDE_PROGRESS_FILLED
+  IconData(0xe8c3, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // FLASH
+  IconData(0xe8d5, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // FLASHLIGHT
+  IconData(0xe8d4, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // FLASHLIGHT_FILLED
+  IconData(0xe8d7, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // FLASHLIGHT_OFF
+  IconData(0xe8d6, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // FLASHLIGHT_OFF_FILLED
+  IconData(0xe8c5, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // FLASH_ADD
+  IconData(0xe8c4, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // FLASH_ADD_FILLED
+  IconData(0xe8c7, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // FLASH_AUTO
+  IconData(0xe8c6, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // FLASH_AUTO_FILLED
+  IconData(0xe8c9, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // FLASH_CHECKMARK
+  IconData(0xe8c8, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // FLASH_CHECKMARK_FILLED
+  IconData(0xe8c2, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // FLASH_FILLED
+  IconData(0xe8cb, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // FLASH_FLOW
+  IconData(0xe8ca, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // FLASH_FLOW_FILLED
+  IconData(0xe8cd, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // FLASH_OFF
+  IconData(0xe8cc, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // FLASH_OFF_FILLED
+  IconData(0xe8cf, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // FLASH_PLAY
+  IconData(0xe8ce, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // FLASH_PLAY_FILLED
+  IconData(0xe8d1, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // FLASH_SETTINGS
+  IconData(0xe8d0, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // FLASH_SETTINGS_FILLED
+  IconData(0xe8d3, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // FLASH_SPARKLE
+  IconData(0xe8d2, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // FLASH_SPARKLE_FILLED
+  IconData(0xe8d9, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // FLIP_HORIZONTAL
+  IconData(0xe8d8, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // FLIP_HORIZONTAL_FILLED
+  IconData(0xe8db, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // FLIP_VERTICAL
+  IconData(0xe8da, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // FLIP_VERTICAL_FILLED
+  IconData(0xe8dd, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // FLOW
+  IconData(0xe8e3, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // FLOWCHART
+  IconData(0xe8e5, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // FLOWCHART_CIRCLE
+  IconData(0xe8e4, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // FLOWCHART_CIRCLE_FILLED
+  IconData(0xe8e2, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // FLOWCHART_FILLED
+  IconData(0xf633, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // FLOW_ARROW
+  IconData(0xf632, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // FLOW_ARROW_FILLED
+  IconData(0xe8df, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // FLOW_DOT
+  IconData(0xe8de, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // FLOW_DOT_FILLED
+  IconData(0xe8dc, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // FLOW_FILLED
+  IconData(0xe8e1, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // FLOW_SPARKLE
+  IconData(0xe8e0, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // FLOW_SPARKLE_FILLED
+  IconData(0xe8e7, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // FLUENT
+  IconData(0xe8e6, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // FLUENT_FILLED
+  IconData(0xe8e9, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // FLUID
+  IconData(0xe8e8, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // FLUID_FILLED
+  IconData(0xe8eb, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // FOLDER
+  IconData(0xe8ed, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // FOLDER_ADD
+  IconData(0xe8ec, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // FOLDER_ADD_FILLED
+  IconData(0xe8ef, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // FOLDER_ARROW_LEFT
+  IconData(0xe8ee, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // FOLDER_ARROW_LEFT_FILLED
+  IconData(0xe8f1, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // FOLDER_ARROW_RIGHT
+  IconData(0xe8f0, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // FOLDER_ARROW_RIGHT_FILLED
+  IconData(0xe8f3, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // FOLDER_ARROW_UP
+  IconData(0xe8f2, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // FOLDER_ARROW_UP_FILLED
+  IconData(0xe8f5, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // FOLDER_BRIEFCASE
+  IconData(0xe8f4, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // FOLDER_BRIEFCASE_FILLED
+  IconData(0xe8f7, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // FOLDER_DATA_BAR
+  IconData(0xe8f6, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // FOLDER_DATA_BAR_FILLED
+  IconData(0xf61f, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // FOLDER_DISMISS
+  IconData(0xf61e, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // FOLDER_DISMISS_FILLED
+  IconData(0xe8f9, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // FOLDER_DOCUMENT
+  IconData(0xe8f8, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // FOLDER_DOCUMENT_FILLED
+  IconData(0xe8ea, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // FOLDER_FILLED
+  IconData(0xe8fb, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // FOLDER_GLOBE
+  IconData(0xe8fa, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // FOLDER_GLOBE_FILLED
+  IconData(0xe8fd, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // FOLDER_HINT
+  IconData(0xe8fc, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // FOLDER_HINT_FILLED
+  IconData(0xe8ff, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // FOLDER_HOLDER
+  IconData(0xe8fe, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // FOLDER_HOLDER_FILLED
+  IconData(0xe901, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // FOLDER_LIGHTNING
+  IconData(0xe900, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // FOLDER_LIGHTNING_FILLED
+  IconData(0xe903, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // FOLDER_LINK
+  IconData(0xe902, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // FOLDER_LINK_FILLED
+  IconData(0xe905, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // FOLDER_LIST
+  IconData(0xe904, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // FOLDER_LIST_FILLED
+  IconData(0xe907, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // FOLDER_MAIL
+  IconData(0xe906, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // FOLDER_MAIL_FILLED
+  IconData(0xe909, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // FOLDER_MULTIPLE
+  IconData(0xe908, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // FOLDER_MULTIPLE_FILLED
+  IconData(0xe90b, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // FOLDER_OPEN
+  IconData(0xe90d, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // FOLDER_OPEN_DOWN
+  IconData(0xe90c, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // FOLDER_OPEN_DOWN_FILLED
+  IconData(0xe90a, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // FOLDER_OPEN_FILLED
+  IconData(0xe90f, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // FOLDER_OPEN_VERTICAL
+  IconData(0xe90e, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // FOLDER_OPEN_VERTICAL_FILLED
+  IconData(0xe911, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // FOLDER_PEOPLE
+  IconData(0xe910, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // FOLDER_PEOPLE_FILLED
+  IconData(0xe913, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // FOLDER_PERSON
+  IconData(0xe912, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // FOLDER_PERSON_FILLED
+  IconData(0xe915, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // FOLDER_PROHIBITED
+  IconData(0xe914, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // FOLDER_PROHIBITED_FILLED
+  IconData(0xe917, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // FOLDER_SEARCH
+  IconData(0xe916, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // FOLDER_SEARCH_FILLED
+  IconData(0xe919, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // FOLDER_SWAP
+  IconData(0xe918, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // FOLDER_SWAP_FILLED
+  IconData(0xe91b, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // FOLDER_SYNC
+  IconData(0xe91a, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // FOLDER_SYNC_FILLED
+  IconData(0xe91d, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // FOLDER_ZIP
+  IconData(0xe91c, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // FOLDER_ZIP_FILLED
+  IconData(0xe91f, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // FONT_DECREASE
+  IconData(0xe91e, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // FONT_DECREASE_FILLED
+  IconData(0xe921, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // FONT_INCREASE
+  IconData(0xe920, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // FONT_INCREASE_FILLED
+  IconData(0xe923, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // FONT_SPACE_TRACKING_IN
+  IconData(0xe922, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // FONT_SPACE_TRACKING_IN_FILLED
+  IconData(0xe925, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // FONT_SPACE_TRACKING_OUT
+  IconData(0xe924, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // FONT_SPACE_TRACKING_OUT_FILLED
+  IconData(0xe927, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // FOOD
+  IconData(0xe929, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // FOOD_APPLE
+  IconData(0xe928, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // FOOD_APPLE_FILLED
+  IconData(0xe92b, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // FOOD_CAKE
+  IconData(0xe92a, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // FOOD_CAKE_FILLED
+  IconData(0xe92d, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // FOOD_CARROT
+  IconData(0xe92c, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // FOOD_CARROT_FILLED
+  IconData(0xe92f, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // FOOD_CHICKEN_LEG
+  IconData(0xe92e, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // FOOD_CHICKEN_LEG_FILLED
+  IconData(0xe931, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // FOOD_EGG
+  IconData(0xe930, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // FOOD_EGG_FILLED
+  IconData(0xe926, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // FOOD_FILLED
+  IconData(0xe933, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // FOOD_FISH
+  IconData(0xe932, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // FOOD_FISH_FILLED
+  IconData(0xe935, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // FOOD_GRAINS
+  IconData(0xe934, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // FOOD_GRAINS_FILLED
+  IconData(0xe937, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // FOOD_PIZZA
+  IconData(0xe936, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // FOOD_PIZZA_FILLED
+  IconData(0xe939, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // FOOD_TOAST
+  IconData(0xe938, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // FOOD_TOAST_FILLED
+  IconData(0xe93b, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // FORM
+  IconData(0xe93a, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // FORM_FILLED
+  IconData(0xe93d, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // FORM_MULTIPLE
+  IconData(0xe93f, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // FORM_MULTIPLE_COLLECTION
+  IconData(0xe93e, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // FORM_MULTIPLE_COLLECTION_FILLED
+  IconData(0xe93c, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // FORM_MULTIPLE_FILLED
+  IconData(0xe941, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // FORM_NEW
+  IconData(0xe940, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // FORM_NEW_FILLED
+  IconData(0xe943, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // FORM_SPARKLE
+  IconData(0xe942, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // FORM_SPARKLE_FILLED
+  IconData(0xe945, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // FPS_120
+  IconData(0xe944, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // FPS_120_FILLED
+  IconData(0xe947, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // FPS_240
+  IconData(0xe946, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // FPS_240_FILLED
+  IconData(0xe949, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // FPS_30
+  IconData(0xe948, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // FPS_30_FILLED
+  IconData(0xe94b, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // FPS_60
+  IconData(0xe94a, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // FPS_60_FILLED
+  IconData(0xe94d, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // FPS_960
+  IconData(0xe94c, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // FPS_960_FILLED
+  IconData(0xe94f, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // FRAME
+  IconData(0xe94e, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // FRAME_FILLED
+  IconData(0xe951, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // FULL_SCREEN_MAXIMIZE
+  IconData(0xe950, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // FULL_SCREEN_MAXIMIZE_FILLED
+  IconData(0xe953, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // FULL_SCREEN_MINIMIZE
+  IconData(0xe952, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // FULL_SCREEN_MINIMIZE_FILLED
+  IconData(0xe893, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // F_STOP
+  IconData(0xe892, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // F_STOP_FILLED
+  IconData(0xe967, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // GAMES
+  IconData(0xe966, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // GAMES_FILLED
+  IconData(0xe955, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // GAME_CHAT
+  IconData(0xe954, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // GAME_CHAT_FILLED
+  IconData(0xe957, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // GAME_CONTROLLER_BUMPER_LEFT
+  IconData(0xe956, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // GAME_CONTROLLER_BUMPER_LEFT_FILLED
+  IconData(0xe959, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // GAME_CONTROLLER_BUMPER_RIGHT
+  IconData(0xe958, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // GAME_CONTROLLER_BUMPER_RIGHT_FILLED
+  IconData(0xe95b, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // GAME_CONTROLLER_BUTTON_A
+  IconData(0xe95a, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // GAME_CONTROLLER_BUTTON_A_FILLED
+  IconData(0xe95d, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // GAME_CONTROLLER_BUTTON_B
+  IconData(0xe95c, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // GAME_CONTROLLER_BUTTON_B_FILLED
+  IconData(0xe95f, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // GAME_CONTROLLER_BUTTON_X
+  IconData(0xe95e, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // GAME_CONTROLLER_BUTTON_X_FILLED
+  IconData(0xe961, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // GAME_CONTROLLER_BUTTON_Y
+  IconData(0xe960, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // GAME_CONTROLLER_BUTTON_Y_FILLED
+  IconData(0xe963, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // GAME_CONTROLLER_TRIGGER_LEFT
+  IconData(0xe962, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // GAME_CONTROLLER_TRIGGER_LEFT_FILLED
+  IconData(0xe965, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // GAME_CONTROLLER_TRIGGER_RIGHT
+  IconData(0xe964, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // GAME_CONTROLLER_TRIGGER_RIGHT_FILLED
+  IconData(0xe969, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // GANTT_CHART
+  IconData(0xe968, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // GANTT_CHART_FILLED
+  IconData(0xe96b, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // GAS
+  IconData(0xe96a, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // GAS_FILLED
+  IconData(0xe96d, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // GAS_PROPANE
+  IconData(0xe96c, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // GAS_PROPANE_FILLED
+  IconData(0xe96f, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // GAS_PUMP
+  IconData(0xe96e, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // GAS_PUMP_FILLED
+  IconData(0xe971, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // GATHER
+  IconData(0xe970, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // GATHER_FILLED
+  IconData(0xe973, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // GAUGE
+  IconData(0xe975, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // GAUGE_ADD
+  IconData(0xe974, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // GAUGE_ADD_FILLED
+  IconData(0xe972, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // GAUGE_FILLED
+  IconData(0xe977, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // GAUGE_ROTATE_0
+  IconData(0xe976, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // GAUGE_ROTATE_0_FILLED
+  IconData(0xe979, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // GAUGE_ROTATE_315
+  IconData(0xe978, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // GAUGE_ROTATE_315_FILLED
+  IconData(0xe97b, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // GAVEL
+  IconData(0xe97a, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // GAVEL_FILLED
+  IconData(0xe97d, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // GAVEL_PROHIBITED
+  IconData(0xe97c, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // GAVEL_PROHIBITED_FILLED
+  IconData(0xe97f, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // GESTURE
+  IconData(0xe97e, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // GESTURE_FILLED
+  IconData(0xe981, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // GIF
+  IconData(0xe983, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // GIFT
+  IconData(0xe985, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // GIFT_CARD
+  IconData(0xe987, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // GIFT_CARD_ADD
+  IconData(0xe986, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // GIFT_CARD_ADD_FILLED
+  IconData(0xe989, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // GIFT_CARD_ARROW_RIGHT
+  IconData(0xe988, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // GIFT_CARD_ARROW_RIGHT_FILLED
+  IconData(0xe984, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // GIFT_CARD_FILLED
+  IconData(0xe98b, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // GIFT_CARD_MONEY
+  IconData(0xe98a, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // GIFT_CARD_MONEY_FILLED
+  IconData(0xe98d, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // GIFT_CARD_MULTIPLE
+  IconData(0xe98c, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // GIFT_CARD_MULTIPLE_FILLED
+  IconData(0xe982, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // GIFT_FILLED
+  IconData(0xe98f, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // GIFT_OPEN
+  IconData(0xe98e, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // GIFT_OPEN_FILLED
+  IconData(0xe980, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // GIF_FILLED
+  IconData(0xe991, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // GLANCE
+  IconData(0xe990, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // GLANCE_FILLED
+  IconData(0xe993, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // GLANCE_HORIZONTAL
+  IconData(0xe992, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // GLANCE_HORIZONTAL_FILLED
+  IconData(0xe995, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // GLANCE_HORIZONTAL_SPARKLES
+  IconData(0xe994, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // GLANCE_HORIZONTAL_SPARKLES_FILLED
+  IconData(0xe997, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // GLASSES
+  IconData(0xe996, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // GLASSES_FILLED
+  IconData(0xe999, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // GLASSES_OFF
+  IconData(0xe998, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // GLASSES_OFF_FILLED
+  IconData(0xe99b, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // GLOBE
+  IconData(0xe99d, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // GLOBE_ADD
+  IconData(0xe99c, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // GLOBE_ADD_FILLED
+  IconData(0xe99f, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // GLOBE_ARROW_FORWARD
+  IconData(0xe99e, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // GLOBE_ARROW_FORWARD_FILLED
+  IconData(0xe9a1, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // GLOBE_ARROW_UP
+  IconData(0xe9a0, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // GLOBE_ARROW_UP_FILLED
+  IconData(0xe9a3, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // GLOBE_CLOCK
+  IconData(0xe9a2, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // GLOBE_CLOCK_FILLED
+  IconData(0xe9a5, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // GLOBE_DESKTOP
+  IconData(0xe9a4, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // GLOBE_DESKTOP_FILLED
+  IconData(0xe9a7, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // GLOBE_ERROR
+  IconData(0xe9a6, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // GLOBE_ERROR_FILLED
+  IconData(0xe99a, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // GLOBE_FILLED
+  IconData(0xe9a9, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // GLOBE_LOCATION
+  IconData(0xe9a8, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // GLOBE_LOCATION_FILLED
+  IconData(0xe9ab, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // GLOBE_OFF
+  IconData(0xe9aa, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // GLOBE_OFF_FILLED
+  IconData(0xe9ad, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // GLOBE_PERSON
+  IconData(0xe9ac, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // GLOBE_PERSON_FILLED
+  IconData(0xe9af, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // GLOBE_PROHIBITED
+  IconData(0xe9ae, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // GLOBE_PROHIBITED_FILLED
+  IconData(0xe9b1, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // GLOBE_SEARCH
+  IconData(0xe9b0, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // GLOBE_SEARCH_FILLED
+  IconData(0xe9b3, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // GLOBE_SHIELD
+  IconData(0xe9b2, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // GLOBE_SHIELD_FILLED
+  IconData(0xe9b5, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // GLOBE_STAND
+  IconData(0xe9b4, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // GLOBE_STAND_FILLED
+  IconData(0xe9b7, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // GLOBE_STAR
+  IconData(0xe9b6, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // GLOBE_STAR_FILLED
+  IconData(0xe9b9, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // GLOBE_SURFACE
+  IconData(0xe9b8, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // GLOBE_SURFACE_FILLED
+  IconData(0xe9bb, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // GLOBE_SYNC
+  IconData(0xe9ba, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // GLOBE_SYNC_FILLED
+  IconData(0xe9bd, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // GLOBE_VIDEO
+  IconData(0xe9bc, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // GLOBE_VIDEO_FILLED
+  IconData(0xe9bf, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // GLOBE_WARNING
+  IconData(0xe9be, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // GLOBE_WARNING_FILLED
+  IconData(0xe9c1, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // GRID
+  IconData(0xe9c3, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // GRID_DOTS
+  IconData(0xe9c2, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // GRID_DOTS_FILLED
+  IconData(0xe9c0, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // GRID_FILLED
+  IconData(0xe9c5, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // GRID_KANBAN
+  IconData(0xe9c4, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // GRID_KANBAN_FILLED
+  IconData(0xe9c7, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // GROUP
+  IconData(0xe9c9, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // GROUP_DISMISS
+  IconData(0xe9c8, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // GROUP_DISMISS_FILLED
+  IconData(0xe9c6, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // GROUP_FILLED
+  IconData(0xe9cb, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // GROUP_LIST
+  IconData(0xe9ca, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // GROUP_LIST_FILLED
+  IconData(0xe9cd, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // GROUP_RETURN
+  IconData(0xe9cc, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // GROUP_RETURN_FILLED
+  IconData(0xe9cf, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // GUARDIAN
+  IconData(0xe9ce, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // GUARDIAN_FILLED
+  IconData(0xe9d1, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // GUEST
+  IconData(0xe9d3, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // GUEST_ADD
+  IconData(0xe9d2, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // GUEST_ADD_FILLED
+  IconData(0xe9d0, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // GUEST_FILLED
+  IconData(0xe9d5, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // GUITAR
+  IconData(0xe9d4, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // GUITAR_FILLED
+  IconData(0xe9e9, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // HANDSHAKE
+  IconData(0xe9e8, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // HANDSHAKE_FILLED
+  IconData(0xe9d7, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // HAND_DRAW
+  IconData(0xe9d6, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // HAND_DRAW_FILLED
+  IconData(0xe9d9, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // HAND_LEFT
+  IconData(0xe9db, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // HAND_LEFT_CHAT
+  IconData(0xe9da, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // HAND_LEFT_CHAT_FILLED
+  IconData(0xe9d8, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // HAND_LEFT_FILLED
+  IconData(0xe9dd, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // HAND_MULTIPLE
+  IconData(0xe9dc, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // HAND_MULTIPLE_FILLED
+  IconData(0xf635, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // HAND_MULTIPLE_STACK
+  IconData(0xf634, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // HAND_MULTIPLE_STACK_FILLED
+  IconData(0xe9df, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // HAND_OPEN_HEART
+  IconData(0xe9de, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // HAND_OPEN_HEART_FILLED
+  IconData(0xe9e1, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // HAND_POINT
+  IconData(0xe9e0, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // HAND_POINT_FILLED
+  IconData(0xe9e3, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // HAND_RIGHT
+  IconData(0xe9e2, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // HAND_RIGHT_FILLED
+  IconData(0xe9e5, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // HAND_RIGHT_OFF
+  IconData(0xe9e4, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // HAND_RIGHT_OFF_FILLED
+  IconData(0xe9e7, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // HAND_WAVE
+  IconData(0xe9e6, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // HAND_WAVE_FILLED
+  IconData(0xe9eb, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // HAPTIC_STRONG
+  IconData(0xe9ea, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // HAPTIC_STRONG_FILLED
+  IconData(0xe9ed, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // HAPTIC_WEAK
+  IconData(0xe9ec, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // HAPTIC_WEAK_FILLED
+  IconData(0xe9ef, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // HARD_DRIVE
+  IconData(0xe9ee, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // HARD_DRIVE_FILLED
+  IconData(0xe9f1, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // HAT_GRADUATION
+  IconData(0xe9f3, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // HAT_GRADUATION_ADD
+  IconData(0xe9f2, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // HAT_GRADUATION_ADD_FILLED
+  IconData(0xe9f0, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // HAT_GRADUATION_FILLED
+  IconData(0xe9f5, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // HAT_GRADUATION_SPARKLE
+  IconData(0xe9f4, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // HAT_GRADUATION_SPARKLE_FILLED
+  IconData(0xe9f7, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // HD
+  IconData(0xe9fb, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // HDR
+  IconData(0xe9fa, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // HDR_FILLED
+  IconData(0xe9fd, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // HDR_OFF
+  IconData(0xe9fc, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // HDR_OFF_FILLED
+  IconData(0xe9f6, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // HD_FILLED
+  IconData(0xe9f9, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // HD_OFF
+  IconData(0xe9f8, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // HD_OFF_FILLED
+  IconData(0xe9ff, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // HEADPHONES
+  IconData(0xea01, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // HEADPHONES_CONVERTIBLE
+  IconData(0xea00, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // HEADPHONES_CONVERTIBLE_FILLED
+  IconData(0xe9fe, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // HEADPHONES_FILLED
+  IconData(0xea03, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // HEADPHONES_MONOAURAL
+  IconData(0xea02, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // HEADPHONES_MONOAURAL_FILLED
+  IconData(0xea05, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // HEADPHONES_SOUND_WAVE
+  IconData(0xea04, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // HEADPHONES_SOUND_WAVE_FILLED
+  IconData(0xea07, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // HEADSET
+  IconData(0xea09, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // HEADSET_ADD
+  IconData(0xea08, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // HEADSET_ADD_FILLED
+  IconData(0xea06, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // HEADSET_FILLED
+  IconData(0xea0b, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // HEADSET_VR
+  IconData(0xea0a, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // HEADSET_VR_FILLED
+  IconData(0xea0d, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // HEADSET_VR_OFF
+  IconData(0xea0c, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // HEADSET_VR_OFF_FILLED
+  IconData(0xea0f, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // HEART
+  IconData(0xea11, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // HEART_BROKEN
+  IconData(0xea10, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // HEART_BROKEN_FILLED
+  IconData(0xea13, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // HEART_CIRCLE
+  IconData(0xea12, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // HEART_CIRCLE_FILLED
+  IconData(0xea15, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // HEART_CIRCLE_HINT
+  IconData(0xea14, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // HEART_CIRCLE_HINT_FILLED
+  IconData(0xea0e, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // HEART_FILLED
+  IconData(0xea17, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // HEART_OFF
+  IconData(0xea16, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // HEART_OFF_FILLED
+  IconData(0xea19, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // HEART_PULSE
+  IconData(0xea1b, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // HEART_PULSE_CHECKMARK
+  IconData(0xea1a, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // HEART_PULSE_CHECKMARK_FILLED
+  IconData(0xea1d, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // HEART_PULSE_ERROR
+  IconData(0xea1c, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // HEART_PULSE_ERROR_FILLED
+  IconData(0xea18, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // HEART_PULSE_FILLED
+  IconData(0xea1f, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // HEART_PULSE_WARNING
+  IconData(0xea1e, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // HEART_PULSE_WARNING_FILLED
+  IconData(0xea21, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // HEXAGON
+  IconData(0xea20, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // HEXAGON_FILLED
+  IconData(0xea23, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // HEXAGON_SPARKLE
+  IconData(0xea22, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // HEXAGON_SPARKLE_FILLED
+  IconData(0xea25, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // HEXAGON_THREE
+  IconData(0xea24, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // HEXAGON_THREE_FILLED
+  IconData(0xea27, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // HIGHLIGHT
+  IconData(0xea28, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // HIGHLIGHT_ACCENT_FILLED
+  IconData(0xea26, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // HIGHLIGHT_FILLED
+  IconData(0xea2a, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // HIGHLIGHT_LINK
+  IconData(0xea29, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // HIGHLIGHT_LINK_FILLED
+  IconData(0xea2c, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // HIGHWAY
+  IconData(0xea2b, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // HIGHWAY_FILLED
+  IconData(0xea2e, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // HISTORY
+  IconData(0xea30, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // HISTORY_DISMISS
+  IconData(0xea2f, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // HISTORY_DISMISS_FILLED
+  IconData(0xea2d, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // HISTORY_FILLED
+  IconData(0xea32, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // HOME
+  IconData(0xea34, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // HOME_ADD
+  IconData(0xea33, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // HOME_ADD_FILLED
+  IconData(0xea36, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // HOME_CHECKMARK
+  IconData(0xea35, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // HOME_CHECKMARK_FILLED
+  IconData(0xea38, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // HOME_DATABASE
+  IconData(0xea37, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // HOME_DATABASE_FILLED
+  IconData(0xea3a, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // HOME_EMPTY
+  IconData(0xea39, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // HOME_EMPTY_FILLED
+  IconData(0xea31, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // HOME_FILLED
+  IconData(0xea3c, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // HOME_GARAGE
+  IconData(0xea3b, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // HOME_GARAGE_FILLED
+  IconData(0xea3e, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // HOME_HEART
+  IconData(0xea3d, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // HOME_HEART_FILLED
+  IconData(0xea40, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // HOME_MONEY
+  IconData(0xea3f, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // HOME_MONEY_FILLED
+  IconData(0xea42, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // HOME_MORE
+  IconData(0xea41, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // HOME_MORE_FILLED
+  IconData(0xea44, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // HOME_PERSON
+  IconData(0xea43, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // HOME_PERSON_FILLED
+  IconData(0xea46, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // HOME_SPLIT
+  IconData(0xea45, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // HOME_SPLIT_FILLED
+  IconData(0xea48, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // HOURGLASS
+  IconData(0xea47, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // HOURGLASS_FILLED
+  IconData(0xea4a, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // HOURGLASS_HALF
+  IconData(0xea49, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // HOURGLASS_HALF_FILLED
+  IconData(0xea4c, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // HOURGLASS_ONE_QUARTER
+  IconData(0xea4b, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // HOURGLASS_ONE_QUARTER_FILLED
+  IconData(0xea4e, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // HOURGLASS_THREE_QUARTER
+  IconData(0xea4d, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // HOURGLASS_THREE_QUARTER_FILLED
+  IconData(0xea50, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // ICONS
+  IconData(0xea4f, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // ICONS_FILLED
+  IconData(0xea52, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // IMAGE
+  IconData(0xea54, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // IMAGE_ADD
+  IconData(0xea53, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // IMAGE_ADD_FILLED
+  IconData(0xea56, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // IMAGE_ALT_TEXT
+  IconData(0xea55, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // IMAGE_ALT_TEXT_FILLED
+  IconData(0xea58, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // IMAGE_ARROW_BACK
+  IconData(0xea57, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // IMAGE_ARROW_BACK_FILLED
+  IconData(0xea5a, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // IMAGE_ARROW_COUNTERCLOCKWISE
+  IconData(0xea59, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // IMAGE_ARROW_COUNTERCLOCKWISE_FILLED
+  IconData(0xea5c, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // IMAGE_ARROW_FORWARD
+  IconData(0xea5b, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // IMAGE_ARROW_FORWARD_FILLED
+  IconData(0xea5e, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // IMAGE_BORDER
+  IconData(0xea5d, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // IMAGE_BORDER_FILLED
+  IconData(0xea60, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // IMAGE_CIRCLE
+  IconData(0xea5f, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // IMAGE_CIRCLE_FILLED
+  IconData(0xea62, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // IMAGE_COPY
+  IconData(0xea61, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // IMAGE_COPY_FILLED
+  IconData(0xea64, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // IMAGE_DISMISS
+  IconData(0xea63, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // IMAGE_DISMISS_FILLED
+  IconData(0xea66, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // IMAGE_EDIT
+  IconData(0xea65, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // IMAGE_EDIT_FILLED
+  IconData(0xea51, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // IMAGE_FILLED
+  IconData(0xea68, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // IMAGE_GLOBE
+  IconData(0xea67, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // IMAGE_GLOBE_FILLED
+  IconData(0xea6a, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // IMAGE_MULTIPLE
+  IconData(0xea69, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // IMAGE_MULTIPLE_FILLED
+  IconData(0xea6c, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // IMAGE_MULTIPLE_OFF
+  IconData(0xea6b, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // IMAGE_MULTIPLE_OFF_FILLED
+  IconData(0xea6e, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // IMAGE_OFF
+  IconData(0xea6d, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // IMAGE_OFF_FILLED
+  IconData(0xea70, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // IMAGE_PROHIBITED
+  IconData(0xea6f, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // IMAGE_PROHIBITED_FILLED
+  IconData(0xea72, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // IMAGE_REFLECTION
+  IconData(0xea71, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // IMAGE_REFLECTION_FILLED
+  IconData(0xea74, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // IMAGE_SEARCH
+  IconData(0xea73, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // IMAGE_SEARCH_FILLED
+  IconData(0xea76, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // IMAGE_SHADOW
+  IconData(0xea75, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // IMAGE_SHADOW_FILLED
+  IconData(0xea78, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // IMAGE_SPARKLE
+  IconData(0xea77, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // IMAGE_SPARKLE_FILLED
+  IconData(0xea7a, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // IMAGE_SPLIT
+  IconData(0xea79, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // IMAGE_SPLIT_FILLED
+  IconData(0xea7c, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // IMAGE_STACK
+  IconData(0xea7b, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // IMAGE_STACK_FILLED
+  IconData(0xea7e, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // IMAGE_STYLE_GUIDE
+  IconData(0xea7d, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // IMAGE_STYLE_GUIDE_FILLED
+  IconData(0xea80, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // IMAGE_TABLE
+  IconData(0xea7f, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // IMAGE_TABLE_FILLED
+  IconData(0xea82, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // IMMERSIVE_READER
+  IconData(0xea81, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // IMMERSIVE_READER_FILLED
+  IconData(0xea84, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // IMPORTANT
+  IconData(0xea83, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // IMPORTANT_FILLED
+  IconData(0xea86, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // INCOGNITO
+  IconData(0xea85, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // INCOGNITO_FILLED
+  IconData(0xea88, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // INFO
+  IconData(0xea87, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // INFO_FILLED
+  IconData(0xea8a, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // INFO_SHIELD
+  IconData(0xea89, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // INFO_SHIELD_FILLED
+  IconData(0xea8c, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // INFO_SPARKLE
+  IconData(0xea8b, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // INFO_SPARKLE_FILLED
+  IconData(0xea94, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // INKING_TOOL
+  IconData(0xea95, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // INKING_TOOL_ACCENT_FILLED
+  IconData(0xea93, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // INKING_TOOL_FILLED
+  IconData(0xea8e, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // INK_STROKE
+  IconData(0xea90, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // INK_STROKE_ARROW_DOWN
+  IconData(0xea8f, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // INK_STROKE_ARROW_DOWN_FILLED
+  IconData(0xea92, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // INK_STROKE_ARROW_UP_DOWN
+  IconData(0xea91, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // INK_STROKE_ARROW_UP_DOWN_FILLED
+  IconData(0xea8d, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // INK_STROKE_FILLED
+  IconData(0xea97, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // INPRIVATE_ACCOUNT
+  IconData(0xea96, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // INPRIVATE_ACCOUNT_FILLED
+  IconData(0xea99, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // INSERT
+  IconData(0xea98, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // INSERT_FILLED
+  IconData(0xea9b, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // IOS_CHEVRON_RIGHT
+  IconData(0xea9a, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // IOS_CHEVRON_RIGHT_FILLED
+  IconData(0xea9d, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // IOT
+  IconData(0xea9f, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // IOT_ALERT
+  IconData(0xea9e, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // IOT_ALERT_FILLED
+  IconData(0xea9c, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // IOT_FILLED
+  IconData(0xeaa1, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // ITEM_COMPARE
+  IconData(0xeaa0, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // ITEM_COMPARE_FILLED
+  IconData(0xeaa3, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // JAVASCRIPT
+  IconData(0xeaa2, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // JAVASCRIPT_FILLED
+  IconData(0xeaa5, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // JOYSTICK
+  IconData(0xeaa4, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // JOYSTICK_FILLED
+  IconData(0xeaa7, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // KEY
+  IconData(0xeab1, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // KEYBOARD
+  IconData(0xeaaf, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // KEYBOARD_123
+  IconData(0xeaae, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // KEYBOARD_123_FILLED
+  IconData(0xeab3, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // KEYBOARD_DOCK
+  IconData(0xeab2, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // KEYBOARD_DOCK_FILLED
+  IconData(0xeab0, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // KEYBOARD_FILLED
+  IconData(0xeab5, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // KEYBOARD_LAYOUT_FLOAT
+  IconData(0xeab4, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // KEYBOARD_LAYOUT_FLOAT_FILLED
+  IconData(0xeab7, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // KEYBOARD_LAYOUT_ONE_HANDED_LEFT
+  IconData(0xeab6, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // KEYBOARD_LAYOUT_ONE_HANDED_LEFT_FILLED
+  IconData(0xeab9, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // KEYBOARD_LAYOUT_RESIZE
+  IconData(0xeab8, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // KEYBOARD_LAYOUT_RESIZE_FILLED
+  IconData(0xeabb, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // KEYBOARD_LAYOUT_SPLIT
+  IconData(0xeaba, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // KEYBOARD_LAYOUT_SPLIT_FILLED
+  IconData(0xf641, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // KEYBOARD_MOUSE
+  IconData(0xf640, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // KEYBOARD_MOUSE_FILLED
+  IconData(0xf643, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // KEYBOARD_MOUSE_OFF
+  IconData(0xf642, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // KEYBOARD_MOUSE_OFF_FILLED
+  IconData(0xeabd, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // KEYBOARD_OFF
+  IconData(0xeabc, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // KEYBOARD_OFF_FILLED
+  IconData(0xeabf, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // KEYBOARD_SHIFT
+  IconData(0xeabe, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // KEYBOARD_SHIFT_FILLED
+  IconData(0xeac1, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // KEYBOARD_SHIFT_UPPERCASE
+  IconData(0xeac0, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // KEYBOARD_SHIFT_UPPERCASE_FILLED
+  IconData(0xeac3, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // KEYBOARD_TAB
+  IconData(0xeac2, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // KEYBOARD_TAB_FILLED
+  IconData(0xeaa9, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // KEY_COMMAND
+  IconData(0xeaa8, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // KEY_COMMAND_FILLED
+  IconData(0xeaa6, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // KEY_FILLED
+  IconData(0xeaab, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // KEY_MULTIPLE
+  IconData(0xeaaa, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // KEY_MULTIPLE_FILLED
+  IconData(0xeaad, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // KEY_RESET
+  IconData(0xeaac, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // KEY_RESET_FILLED
+  IconData(0xeac5, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // LAPTOP
+  IconData(0xeac7, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // LAPTOP_BRIEFCASE
+  IconData(0xeac6, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // LAPTOP_BRIEFCASE_FILLED
+  IconData(0xeac9, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // LAPTOP_CHECKMARK
+  IconData(0xeac8, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // LAPTOP_CHECKMARK_FILLED
+  IconData(0xeacb, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // LAPTOP_DISMISS
+  IconData(0xeaca, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // LAPTOP_DISMISS_FILLED
+  IconData(0xeac4, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // LAPTOP_FILLED
+  IconData(0xeacd, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // LAPTOP_OFF
+  IconData(0xeacc, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // LAPTOP_OFF_FILLED
+  IconData(0xeacf, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // LAPTOP_PERSON
+  IconData(0xeace, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // LAPTOP_PERSON_FILLED
+  IconData(0xead1, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // LAPTOP_SETTINGS
+  IconData(0xead0, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // LAPTOP_SETTINGS_FILLED
+  IconData(0xead3, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // LAPTOP_SHIELD
+  IconData(0xead2, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // LAPTOP_SHIELD_FILLED
+  IconData(0xead5, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // LASER_TOOL
+  IconData(0xead4, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // LASER_TOOL_FILLED
+  IconData(0xead7, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // LASSO
+  IconData(0xead6, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // LASSO_FILLED
+  IconData(0xead9, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // LAUNCHER_SETTINGS
+  IconData(0xead8, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // LAUNCHER_SETTINGS_FILLED
+  IconData(0xeadb, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // LAYER
+  IconData(0xeadd, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // LAYER_DIAGONAL
+  IconData(0xeadf, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // LAYER_DIAGONAL_ADD
+  IconData(0xeade, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // LAYER_DIAGONAL_ADD_FILLED
+  IconData(0xeadc, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // LAYER_DIAGONAL_FILLED
+  IconData(0xeae1, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // LAYER_DIAGONAL_PERSON
+  IconData(0xeae0, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // LAYER_DIAGONAL_PERSON_FILLED
+  IconData(0xeae3, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // LAYER_DIAGONAL_SPARKLE
+  IconData(0xeae2, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // LAYER_DIAGONAL_SPARKLE_FILLED
+  IconData(0xeada, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // LAYER_FILLED
+  IconData(0xeae5, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // LAYOUT_ADD_ABOVE
+  IconData(0xeae4, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // LAYOUT_ADD_ABOVE_FILLED
+  IconData(0xeae7, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // LAYOUT_ADD_BELOW
+  IconData(0xeae6, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // LAYOUT_ADD_BELOW_FILLED
+  IconData(0xeae9, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // LAYOUT_CELL_FOUR
+  IconData(0xeae8, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // LAYOUT_CELL_FOUR_FILLED
+  IconData(0xeaea, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // LAYOUT_CELL_FOUR_FOCUS_BOTTOM_LEFT_FILLED
+  IconData(0xeaeb, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // LAYOUT_CELL_FOUR_FOCUS_BOTTOM_RIGHT_FILLED
+  IconData(0xeaec, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // LAYOUT_CELL_FOUR_FOCUS_TOP_LEFT_FILLED
+  IconData(0xeaed, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // LAYOUT_CELL_FOUR_FOCUS_TOP_RIGHT_FILLED
+  IconData(0xeaef, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // LAYOUT_COLUMN_FOUR
+  IconData(0xeaee, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // LAYOUT_COLUMN_FOUR_FILLED
+  IconData(0xeaf0, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // LAYOUT_COLUMN_FOUR_FOCUS_CENTER_LEFT_FILLED
+  IconData(0xeaf1, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // LAYOUT_COLUMN_FOUR_FOCUS_CENTER_RIGHT_FILLED
+  IconData(0xeaf2, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // LAYOUT_COLUMN_FOUR_FOCUS_LEFT_FILLED
+  IconData(0xeaf3, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // LAYOUT_COLUMN_FOUR_FOCUS_RIGHT_FILLED
+  IconData(0xeaf5, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // LAYOUT_COLUMN_ONE_THIRD_LEFT
+  IconData(0xeaf4, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // LAYOUT_COLUMN_ONE_THIRD_LEFT_FILLED
+  IconData(0xeaf7, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // LAYOUT_COLUMN_ONE_THIRD_RIGHT
+  IconData(0xeaf6, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // LAYOUT_COLUMN_ONE_THIRD_RIGHT_FILLED
+  IconData(0xeaf9, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // LAYOUT_COLUMN_ONE_THIRD_RIGHT_HINT
+  IconData(0xeaf8, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // LAYOUT_COLUMN_ONE_THIRD_RIGHT_HINT_FILLED
+  IconData(0xeafb, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // LAYOUT_COLUMN_THREE
+  IconData(0xeafa, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // LAYOUT_COLUMN_THREE_FILLED
+  IconData(0xeafc, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // LAYOUT_COLUMN_THREE_FOCUS_CENTER_FILLED
+  IconData(0xeafd, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // LAYOUT_COLUMN_THREE_FOCUS_LEFT_FILLED
+  IconData(0xeafe, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // LAYOUT_COLUMN_THREE_FOCUS_RIGHT_FILLED
+  IconData(0xeb00, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // LAYOUT_COLUMN_TWO
+  IconData(0xeb02, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // LAYOUT_COLUMN_TWO_EDIT
+  IconData(0xeb01, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // LAYOUT_COLUMN_TWO_EDIT_FILLED
+  IconData(0xeaff, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // LAYOUT_COLUMN_TWO_FILLED
+  IconData(0xeb03, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // LAYOUT_COLUMN_TWO_FOCUS_LEFT_FILLED
+  IconData(0xeb04, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // LAYOUT_COLUMN_TWO_FOCUS_RIGHT_FILLED
+  IconData(0xeb06, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // LAYOUT_COLUMN_TWO_SPLIT_LEFT
+  IconData(0xeb05, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // LAYOUT_COLUMN_TWO_SPLIT_LEFT_FILLED
+  IconData(0xeb07, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // LAYOUT_COLUMN_TWO_SPLIT_LEFT_FOCUS_BOTTOM_LEFT_FILLED
+  IconData(0xeb08, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // LAYOUT_COLUMN_TWO_SPLIT_LEFT_FOCUS_RIGHT_FILLED
+  IconData(0xeb09, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // LAYOUT_COLUMN_TWO_SPLIT_LEFT_FOCUS_TOP_LEFT_FILLED
+  IconData(0xeb0b, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // LAYOUT_COLUMN_TWO_SPLIT_RIGHT
+  IconData(0xeb0a, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // LAYOUT_COLUMN_TWO_SPLIT_RIGHT_FILLED
+  IconData(0xeb0c, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // LAYOUT_COLUMN_TWO_SPLIT_RIGHT_FOCUS_BOTTOM_RIGHT_FILLED
+  IconData(0xeb0d, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // LAYOUT_COLUMN_TWO_SPLIT_RIGHT_FOCUS_LEFT_FILLED
+  IconData(0xeb0e, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // LAYOUT_COLUMN_TWO_SPLIT_RIGHT_FOCUS_TOP_RIGHT_FILLED
+  IconData(0xeb10, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // LAYOUT_DYNAMIC
+  IconData(0xeb0f, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // LAYOUT_DYNAMIC_FILLED
+  IconData(0xeb12, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // LAYOUT_INFOGRAPHIC
+  IconData(0xeb11, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // LAYOUT_INFOGRAPHIC_FILLED
+  IconData(0xf647, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // LAYOUT_INFOGRAPHIC_TWO_SPARKLE
+  IconData(0xf646, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // LAYOUT_INFOGRAPHIC_TWO_SPARKLE_FILLED
+  IconData(0xeb14, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // LAYOUT_ROW_FOUR
+  IconData(0xeb13, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // LAYOUT_ROW_FOUR_FILLED
+  IconData(0xeb15, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // LAYOUT_ROW_FOUR_FOCUS_BOTTOM_FILLED
+  IconData(0xeb16, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // LAYOUT_ROW_FOUR_FOCUS_CENTER_BOTTOM_FILLED
+  IconData(0xeb17, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // LAYOUT_ROW_FOUR_FOCUS_CENTER_TOP_FILLED
+  IconData(0xeb18, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // LAYOUT_ROW_FOUR_FOCUS_TOP_FILLED
+  IconData(0xeb1a, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // LAYOUT_ROW_THREE
+  IconData(0xeb19, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // LAYOUT_ROW_THREE_FILLED
+  IconData(0xeb1b, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // LAYOUT_ROW_THREE_FOCUS_BOTTOM_FILLED
+  IconData(0xeb1c, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // LAYOUT_ROW_THREE_FOCUS_CENTER_FILLED
+  IconData(0xeb1d, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // LAYOUT_ROW_THREE_FOCUS_TOP_FILLED
+  IconData(0xeb1f, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // LAYOUT_ROW_TWO
+  IconData(0xeb1e, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // LAYOUT_ROW_TWO_FILLED
+  IconData(0xeb20, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // LAYOUT_ROW_TWO_FOCUS_BOTTOM_FILLED
+  IconData(0xeb21, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // LAYOUT_ROW_TWO_FOCUS_TOP_FILLED
+  IconData(0xeb22, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // LAYOUT_ROW_TWO_FOCUS_TOP_SETTINGS_FILLED
+  IconData(0xeb24, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // LAYOUT_ROW_TWO_SETTINGS
+  IconData(0xeb23, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // LAYOUT_ROW_TWO_SETTINGS_FILLED
+  IconData(0xeb26, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // LAYOUT_ROW_TWO_SPLIT_BOTTOM
+  IconData(0xeb25, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // LAYOUT_ROW_TWO_SPLIT_BOTTOM_FILLED
+  IconData(0xeb27, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // LAYOUT_ROW_TWO_SPLIT_BOTTOM_FOCUS_BOTTOM_LEFT_FILLED
+  IconData(0xeb28, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // LAYOUT_ROW_TWO_SPLIT_BOTTOM_FOCUS_BOTTOM_RIGHT_FILLED
+  IconData(0xeb29, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // LAYOUT_ROW_TWO_SPLIT_BOTTOM_FOCUS_TOP_FILLED
+  IconData(0xeb2b, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // LAYOUT_ROW_TWO_SPLIT_TOP
+  IconData(0xeb2a, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // LAYOUT_ROW_TWO_SPLIT_TOP_FILLED
+  IconData(0xeb2c, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // LAYOUT_ROW_TWO_SPLIT_TOP_FOCUS_BOTTOM_FILLED
+  IconData(0xeb2d, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // LAYOUT_ROW_TWO_SPLIT_TOP_FOCUS_TOP_LEFT_FILLED
+  IconData(0xeb2e, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // LAYOUT_ROW_TWO_SPLIT_TOP_FOCUS_TOP_RIGHT_FILLED
+  IconData(0xeb30, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // LEAF_ONE
+  IconData(0xeb2f, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // LEAF_ONE_FILLED
+  IconData(0xeb32, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // LEAF_THREE
+  IconData(0xeb31, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // LEAF_THREE_FILLED
+  IconData(0xeb34, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // LEAF_TWO
+  IconData(0xeb33, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // LEAF_TWO_FILLED
+  IconData(0xeb36, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // LEARNING_APP
+  IconData(0xeb35, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // LEARNING_APP_FILLED
+  IconData(0xeb38, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // LIBRARY
+  IconData(0xeb37, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // LIBRARY_FILLED
+  IconData(0xeb3a, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // LIGHTBULB
+  IconData(0xeb3c, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // LIGHTBULB_CHECKMARK
+  IconData(0xeb3b, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // LIGHTBULB_CHECKMARK_FILLED
+  IconData(0xeb3e, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // LIGHTBULB_CIRCLE
+  IconData(0xeb3d, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // LIGHTBULB_CIRCLE_FILLED
+  IconData(0xeb40, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // LIGHTBULB_FILAMENT
+  IconData(0xeb3f, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // LIGHTBULB_FILAMENT_FILLED
+  IconData(0xeb39, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // LIGHTBULB_FILLED
+  IconData(0xeb42, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // LIGHTBULB_PERSON
+  IconData(0xeb41, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // LIGHTBULB_PERSON_FILLED
+  IconData(0xeb44, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // LIGHTBULB_PULSE
+  IconData(0xeb43, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // LIGHTBULB_PULSE_FILLED
+  IconData(0xf637, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // LIGHTBULB_SPARKLE
+  IconData(0xf636, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // LIGHTBULB_SPARKLE_FILLED
+  IconData(0xeb46, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // LIKERT
+  IconData(0xeb45, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // LIKERT_FILLED
+  IconData(0xeb48, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // LINE
+  IconData(0xeb4a, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // LINE_DASHES
+  IconData(0xeb49, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // LINE_DASHES_FILLED
+  IconData(0xeb47, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // LINE_FILLED
+  IconData(0xeb4c, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // LINE_FLOW_DIAGONAL_UP_RIGHT
+  IconData(0xeb4b, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // LINE_FLOW_DIAGONAL_UP_RIGHT_FILLED
+  IconData(0xeb4e, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // LINE_HORIZONTAL_1
+  IconData(0xeb52, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // LINE_HORIZONTAL_1_DASHES
+  IconData(0xeb51, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // LINE_HORIZONTAL_1_DASHES_FILLED
+  IconData(0xeb50, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // LINE_HORIZONTAL_1_DASH_DOT_DASH
+  IconData(0xeb4f, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // LINE_HORIZONTAL_1_DASH_DOT_DASH_FILLED
+  IconData(0xeb54, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // LINE_HORIZONTAL_1_DOT
+  IconData(0xeb53, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // LINE_HORIZONTAL_1_DOT_FILLED
+  IconData(0xeb4d, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // LINE_HORIZONTAL_1_FILLED
+  IconData(0xeb56, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // LINE_HORIZONTAL_2_DASHES_SOLID
+  IconData(0xeb55, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // LINE_HORIZONTAL_2_DASHES_SOLID_FILLED
+  IconData(0xeb58, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // LINE_HORIZONTAL_3
+  IconData(0xeb57, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // LINE_HORIZONTAL_3_FILLED
+  IconData(0xeb5a, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // LINE_HORIZONTAL_4
+  IconData(0xeb59, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // LINE_HORIZONTAL_4_FILLED
+  IconData(0xeb5c, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // LINE_HORIZONTAL_4_SEARCH
+  IconData(0xeb5b, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // LINE_HORIZONTAL_4_SEARCH_FILLED
+  IconData(0xeb5e, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // LINE_HORIZONTAL_5
+  IconData(0xeb60, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // LINE_HORIZONTAL_5_ERROR
+  IconData(0xeb5f, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // LINE_HORIZONTAL_5_ERROR_FILLED
+  IconData(0xeb5d, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // LINE_HORIZONTAL_5_FILLED
+  IconData(0xeb62, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // LINE_STYLE
+  IconData(0xeb61, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // LINE_STYLE_FILLED
+  IconData(0xeb64, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // LINE_STYLE_SKETCH
+  IconData(0xeb63, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // LINE_STYLE_SKETCH_FILLED
+  IconData(0xeb66, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // LINE_THICKNESS
+  IconData(0xeb65, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // LINE_THICKNESS_FILLED
+  IconData(0xeb68, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // LINK
+  IconData(0xeb6a, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // LINK_ADD
+  IconData(0xeb69, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // LINK_ADD_FILLED
+  IconData(0xeb6c, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // LINK_DISMISS
+  IconData(0xeb6b, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // LINK_DISMISS_FILLED
+  IconData(0xeb6e, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // LINK_EDIT
+  IconData(0xeb6d, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // LINK_EDIT_FILLED
+  IconData(0xeb67, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // LINK_FILLED
+  IconData(0xeb70, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // LINK_MULTIPLE
+  IconData(0xeb6f, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // LINK_MULTIPLE_FILLED
+  IconData(0xf61b, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // LINK_OFF
+  IconData(0xf61a, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // LINK_OFF_FILLED
+  IconData(0xeb72, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // LINK_PERSON
+  IconData(0xeb71, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // LINK_PERSON_FILLED
+  IconData(0xeb74, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // LINK_SETTINGS
+  IconData(0xeb73, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // LINK_SETTINGS_FILLED
+  IconData(0xeb76, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // LINK_SQUARE
+  IconData(0xeb75, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // LINK_SQUARE_FILLED
+  IconData(0xeb78, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // LINK_TOOLBOX
+  IconData(0xeb77, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // LINK_TOOLBOX_FILLED
+  IconData(0xeb7a, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // LIST
+  IconData(0xeb7c, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // LIST_BAR
+  IconData(0xeb7b, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // LIST_BAR_FILLED
+  IconData(0xeb7e, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // LIST_BAR_TREE
+  IconData(0xeb7d, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // LIST_BAR_TREE_FILLED
+  IconData(0xeb80, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // LIST_BAR_TREE_OFFSET
+  IconData(0xeb7f, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // LIST_BAR_TREE_OFFSET_FILLED
+  IconData(0xeb79, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // LIST_FILLED
+  IconData(0xeb82, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // LIST_RTL
+  IconData(0xeb81, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // LIST_RTL_FILLED
+  IconData(0xeb84, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // LIVE
+  IconData(0xeb83, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // LIVE_FILLED
+  IconData(0xeb86, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // LIVE_OFF
+  IconData(0xeb85, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // LIVE_OFF_FILLED
+  IconData(0xeb88, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // LOCAL_LANGUAGE
+  IconData(0xeb87, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // LOCAL_LANGUAGE_FILLED
+  IconData(0xeb8a, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // LOCAL_LANGUAGE_GLOBE
+  IconData(0xeb89, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // LOCAL_LANGUAGE_GLOBE_FILLED
+  IconData(0xeb8c, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // LOCATION
+  IconData(0xeb8e, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // LOCATION_ADD
+  IconData(0xeb8d, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // LOCATION_ADD_FILLED
+  IconData(0xeb90, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // LOCATION_ADD_LEFT
+  IconData(0xeb8f, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // LOCATION_ADD_LEFT_FILLED
+  IconData(0xeb92, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // LOCATION_ADD_RIGHT
+  IconData(0xeb91, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // LOCATION_ADD_RIGHT_FILLED
+  IconData(0xeb94, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // LOCATION_ADD_UP
+  IconData(0xeb93, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // LOCATION_ADD_UP_FILLED
+  IconData(0xeb96, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // LOCATION_ARROW
+  IconData(0xeb95, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // LOCATION_ARROW_FILLED
+  IconData(0xeb98, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // LOCATION_ARROW_LEFT
+  IconData(0xeb97, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // LOCATION_ARROW_LEFT_FILLED
+  IconData(0xeb9a, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // LOCATION_ARROW_RIGHT
+  IconData(0xeb99, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // LOCATION_ARROW_RIGHT_FILLED
+  IconData(0xeb9c, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // LOCATION_ARROW_UP
+  IconData(0xeb9b, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // LOCATION_ARROW_UP_FILLED
+  IconData(0xeb9e, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // LOCATION_CHECKMARK
+  IconData(0xeb9d, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // LOCATION_CHECKMARK_FILLED
+  IconData(0xeba0, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // LOCATION_DISMISS
+  IconData(0xeb9f, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // LOCATION_DISMISS_FILLED
+  IconData(0xeb8b, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // LOCATION_FILLED
+  IconData(0xeba2, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // LOCATION_LIVE
+  IconData(0xeba1, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // LOCATION_LIVE_FILLED
+  IconData(0xeba4, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // LOCATION_OFF
+  IconData(0xeba3, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // LOCATION_OFF_FILLED
+  IconData(0xeba6, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // LOCATION_RIPPLE
+  IconData(0xeba5, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // LOCATION_RIPPLE_FILLED
+  IconData(0xeba8, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // LOCATION_SETTINGS
+  IconData(0xeba7, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // LOCATION_SETTINGS_FILLED
+  IconData(0xebaa, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // LOCATION_TARGET_SQUARE
+  IconData(0xeba9, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // LOCATION_TARGET_SQUARE_FILLED
+  IconData(0xebac, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // LOCK_CLOSED
+  IconData(0xebab, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // LOCK_CLOSED_FILLED
+  IconData(0xebae, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // LOCK_CLOSED_KEY
+  IconData(0xebad, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // LOCK_CLOSED_KEY_FILLED
+  IconData(0xebb0, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // LOCK_CLOSED_RIBBON
+  IconData(0xebaf, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // LOCK_CLOSED_RIBBON_FILLED
+  IconData(0xebb2, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // LOCK_MULTIPLE
+  IconData(0xebb1, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // LOCK_MULTIPLE_FILLED
+  IconData(0xebb4, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // LOCK_OPEN
+  IconData(0xebb3, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // LOCK_OPEN_FILLED
+  IconData(0xebb6, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // LOCK_SHIELD
+  IconData(0xebb5, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // LOCK_SHIELD_FILLED
+  IconData(0xebb8, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // LOTTERY
+  IconData(0xebb7, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // LOTTERY_FILLED
+  IconData(0xebba, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // LUGGAGE
+  IconData(0xebb9, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // LUGGAGE_FILLED
+  IconData(0xebbc, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // MAIL
+  IconData(0xec14, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // MAILBOX
+  IconData(0xec13, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // MAILBOX_FILLED
+  IconData(0xebbe, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // MAIL_ADD
+  IconData(0xebbd, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // MAIL_ADD_FILLED
+  IconData(0xebc0, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // MAIL_ALERT
+  IconData(0xebbf, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // MAIL_ALERT_FILLED
+  IconData(0xebc2, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // MAIL_ALL_READ
+  IconData(0xebc1, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // MAIL_ALL_READ_FILLED
+  IconData(0xebc4, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // MAIL_ALL_UNREAD
+  IconData(0xebc3, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // MAIL_ALL_UNREAD_FILLED
+  IconData(0xebc6, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // MAIL_ARROW_CLOCKWISE
+  IconData(0xebc5, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // MAIL_ARROW_CLOCKWISE_FILLED
+  IconData(0xebc8, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // MAIL_ARROW_DOUBLE_BACK
+  IconData(0xebc7, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // MAIL_ARROW_DOUBLE_BACK_FILLED
+  IconData(0xebca, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // MAIL_ARROW_DOWN
+  IconData(0xebc9, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // MAIL_ARROW_DOWN_FILLED
+  IconData(0xebcc, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // MAIL_ARROW_FORWARD
+  IconData(0xebcb, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // MAIL_ARROW_FORWARD_FILLED
+  IconData(0xebce, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // MAIL_ARROW_UP
+  IconData(0xebcd, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // MAIL_ARROW_UP_FILLED
+  IconData(0xebd0, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // MAIL_ATTACH
+  IconData(0xebcf, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // MAIL_ATTACH_FILLED
+  IconData(0xebd2, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // MAIL_CHECKMARK
+  IconData(0xebd1, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // MAIL_CHECKMARK_FILLED
+  IconData(0xebd4, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // MAIL_CLOCK
+  IconData(0xebd3, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // MAIL_CLOCK_FILLED
+  IconData(0xebd6, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // MAIL_COPY
+  IconData(0xebd5, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // MAIL_COPY_FILLED
+  IconData(0xebd8, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // MAIL_DATA_BAR
+  IconData(0xebd7, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // MAIL_DATA_BAR_FILLED
+  IconData(0xebda, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // MAIL_DISMISS
+  IconData(0xebd9, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // MAIL_DISMISS_FILLED
+  IconData(0xebdc, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // MAIL_EDIT
+  IconData(0xebdb, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // MAIL_EDIT_FILLED
+  IconData(0xebde, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // MAIL_ERROR
+  IconData(0xebdd, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // MAIL_ERROR_FILLED
+  IconData(0xebbb, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // MAIL_FILLED
+  IconData(0xebe0, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // MAIL_FISH_HOOK
+  IconData(0xebdf, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // MAIL_FISH_HOOK_FILLED
+  IconData(0xebe2, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // MAIL_INBOX
+  IconData(0xebe4, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // MAIL_INBOX_ADD
+  IconData(0xebe3, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // MAIL_INBOX_ADD_FILLED
+  IconData(0xebe6, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // MAIL_INBOX_ALL
+  IconData(0xebe5, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // MAIL_INBOX_ALL_FILLED
+  IconData(0xebe8, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // MAIL_INBOX_ARROW_DOWN
+  IconData(0xebe7, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // MAIL_INBOX_ARROW_DOWN_FILLED
+  IconData(0xebea, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // MAIL_INBOX_ARROW_RIGHT
+  IconData(0xebe9, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // MAIL_INBOX_ARROW_RIGHT_FILLED
+  IconData(0xebec, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // MAIL_INBOX_ARROW_UP
+  IconData(0xebeb, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // MAIL_INBOX_ARROW_UP_FILLED
+  IconData(0xebee, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // MAIL_INBOX_CHECKMARK
+  IconData(0xebed, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // MAIL_INBOX_CHECKMARK_FILLED
+  IconData(0xebf0, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // MAIL_INBOX_DISMISS
+  IconData(0xebef, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // MAIL_INBOX_DISMISS_FILLED
+  IconData(0xebe1, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // MAIL_INBOX_FILLED
+  IconData(0xebf2, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // MAIL_INBOX_PERSON
+  IconData(0xebf1, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // MAIL_INBOX_PERSON_FILLED
+  IconData(0xebf4, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // MAIL_LINK
+  IconData(0xebf3, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // MAIL_LINK_FILLED
+  IconData(0xebf6, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // MAIL_LIST
+  IconData(0xebf5, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // MAIL_LIST_FILLED
+  IconData(0xebf8, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // MAIL_MULTIPLE
+  IconData(0xebf7, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // MAIL_MULTIPLE_FILLED
+  IconData(0xebfa, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // MAIL_OFF
+  IconData(0xebf9, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // MAIL_OFF_FILLED
+  IconData(0xebfc, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // MAIL_OPEN_PERSON
+  IconData(0xebfb, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // MAIL_OPEN_PERSON_FILLED
+  IconData(0xebfe, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // MAIL_PAUSE
+  IconData(0xebfd, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // MAIL_PAUSE_FILLED
+  IconData(0xec00, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // MAIL_PROHIBITED
+  IconData(0xebff, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // MAIL_PROHIBITED_FILLED
+  IconData(0xec02, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // MAIL_READ
+  IconData(0xec04, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // MAIL_READ_BRIEFCASE
+  IconData(0xec03, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // MAIL_READ_BRIEFCASE_FILLED
+  IconData(0xec01, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // MAIL_READ_FILLED
+  IconData(0xec06, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // MAIL_READ_MULTIPLE
+  IconData(0xec05, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // MAIL_READ_MULTIPLE_FILLED
+  IconData(0xec08, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // MAIL_REWIND
+  IconData(0xec07, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // MAIL_REWIND_FILLED
+  IconData(0xec0a, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // MAIL_SETTINGS
+  IconData(0xec09, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // MAIL_SETTINGS_FILLED
+  IconData(0xec0c, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // MAIL_SHIELD
+  IconData(0xec0b, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // MAIL_SHIELD_FILLED
+  IconData(0xec0e, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // MAIL_TEMPLATE
+  IconData(0xec0d, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // MAIL_TEMPLATE_FILLED
+  IconData(0xec10, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // MAIL_UNREAD
+  IconData(0xec0f, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // MAIL_UNREAD_FILLED
+  IconData(0xec12, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // MAIL_WARNING
+  IconData(0xec11, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // MAIL_WARNING_FILLED
+  IconData(0xec16, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // MAP
+  IconData(0xec18, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // MAP_DRIVE
+  IconData(0xec17, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // MAP_DRIVE_FILLED
+  IconData(0xec15, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // MAP_FILLED
+  IconData(0xec1a, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // MAP_PIN
+  IconData(0xec19, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // MAP_PIN_FILLED
+  IconData(0xec1c, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // MARKDOWN
+  IconData(0xec1b, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // MARKDOWN_FILLED
+  IconData(0xec1e, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // MATCH_APP_LAYOUT
+  IconData(0xec1d, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // MATCH_APP_LAYOUT_FILLED
+  IconData(0xec20, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // MATH_FORMAT_LINEAR
+  IconData(0xec1f, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // MATH_FORMAT_LINEAR_FILLED
+  IconData(0xec22, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // MATH_FORMAT_PROFESSIONAL
+  IconData(0xec21, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // MATH_FORMAT_PROFESSIONAL_FILLED
+  IconData(0xec24, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // MATH_FORMULA
+  IconData(0xec23, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // MATH_FORMULA_FILLED
+  IconData(0xec26, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // MATH_FORMULA_SPARKLE
+  IconData(0xec25, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // MATH_FORMULA_SPARKLE_FILLED
+  IconData(0xec28, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // MATH_SYMBOLS
+  IconData(0xec27, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // MATH_SYMBOLS_FILLED
+  IconData(0xec2a, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // MAXIMIZE
+  IconData(0xec29, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // MAXIMIZE_FILLED
+  IconData(0xec2c, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // MEDAL
+  IconData(0xec2b, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // MEDAL_FILLED
+  IconData(0xec2e, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // MEET_NOW
+  IconData(0xec2d, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // MEET_NOW_FILLED
+  IconData(0xec30, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // MEGAPHONE
+  IconData(0xec32, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // MEGAPHONE_CIRCLE
+  IconData(0xec31, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // MEGAPHONE_CIRCLE_FILLED
+  IconData(0xec2f, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // MEGAPHONE_FILLED
+  IconData(0xec34, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // MEGAPHONE_LOUD
+  IconData(0xec33, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // MEGAPHONE_LOUD_FILLED
+  IconData(0xec36, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // MEGAPHONE_OFF
+  IconData(0xec35, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // MEGAPHONE_OFF_FILLED
+  IconData(0xec38, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // MENTION
+  IconData(0xec3a, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // MENTION_ARROW_DOWN
+  IconData(0xec39, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // MENTION_ARROW_DOWN_FILLED
+  IconData(0xec3c, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // MENTION_BRACKETS
+  IconData(0xec3b, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // MENTION_BRACKETS_FILLED
+  IconData(0xec37, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // MENTION_FILLED
+  IconData(0xec3e, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // MERGE
+  IconData(0xec3d, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // MERGE_FILLED
+  IconData(0xec40, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // MIC
+  IconData(0xec54, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // MICROPHONE_CHAT
+  IconData(0xec53, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // MICROPHONE_CHAT_FILLED
+  IconData(0xec56, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // MICROSCOPE
+  IconData(0xec55, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // MICROSCOPE_FILLED
+  IconData(0xec58, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // MICROWAVE
+  IconData(0xec57, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // MICROWAVE_FILLED
+  IconData(0xec3f, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // MIC_FILLED
+  IconData(0xec42, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // MIC_LINK
+  IconData(0xec41, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // MIC_LINK_FILLED
+  IconData(0xec44, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // MIC_OFF
+  IconData(0xec43, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // MIC_OFF_FILLED
+  IconData(0xec46, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // MIC_PROHIBITED
+  IconData(0xec45, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // MIC_PROHIBITED_FILLED
+  IconData(0xec48, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // MIC_PULSE
+  IconData(0xec47, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // MIC_PULSE_FILLED
+  IconData(0xec4a, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // MIC_PULSE_OFF
+  IconData(0xec49, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // MIC_PULSE_OFF_FILLED
+  IconData(0xec4c, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // MIC_RECORD
+  IconData(0xec4b, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // MIC_RECORD_FILLED
+  IconData(0xec4e, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // MIC_SETTINGS
+  IconData(0xec4d, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // MIC_SETTINGS_FILLED
+  IconData(0xec50, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // MIC_SPARKLE
+  IconData(0xec4f, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // MIC_SPARKLE_FILLED
+  IconData(0xec52, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // MIC_SYNC
+  IconData(0xec51, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // MIC_SYNC_FILLED
+  IconData(0xec5a, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // MIDI
+  IconData(0xec59, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // MIDI_FILLED
+  IconData(0xec5c, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // MIDI_OFF
+  IconData(0xec5b, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // MIDI_OFF_FILLED
+  IconData(0xec5e, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // MOBILE_OPTIMIZED
+  IconData(0xec5d, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // MOBILE_OPTIMIZED_FILLED
+  IconData(0xec60, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // MOLD
+  IconData(0xec5f, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // MOLD_FILLED
+  IconData(0xec62, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // MOLECULE
+  IconData(0xec61, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // MOLECULE_FILLED
+  IconData(0xec64, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // MONEY
+  IconData(0xec66, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // MONEY_CALCULATOR
+  IconData(0xec65, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // MONEY_CALCULATOR_FILLED
+  IconData(0xec68, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // MONEY_DISMISS
+  IconData(0xec67, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // MONEY_DISMISS_FILLED
+  IconData(0xec63, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // MONEY_FILLED
+  IconData(0xec6a, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // MONEY_HAND
+  IconData(0xec69, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // MONEY_HAND_FILLED
+  IconData(0xec6c, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // MONEY_OFF
+  IconData(0xec6b, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // MONEY_OFF_FILLED
+  IconData(0xec6e, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // MONEY_SETTINGS
+  IconData(0xec6d, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // MONEY_SETTINGS_FILLED
+  IconData(0xec70, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // MORE_CIRCLE
+  IconData(0xec6f, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // MORE_CIRCLE_FILLED
+  IconData(0xec72, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // MORE_HORIZONTAL
+  IconData(0xec71, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // MORE_HORIZONTAL_FILLED
+  IconData(0xec74, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // MORE_VERTICAL
+  IconData(0xec73, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // MORE_VERTICAL_FILLED
+  IconData(0xec76, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // MOUNTAIN_LOCATION_BOTTOM
+  IconData(0xec75, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // MOUNTAIN_LOCATION_BOTTOM_FILLED
+  IconData(0xec78, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // MOUNTAIN_LOCATION_TOP
+  IconData(0xec77, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // MOUNTAIN_LOCATION_TOP_FILLED
+  IconData(0xec7a, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // MOUNTAIN_TRAIL
+  IconData(0xec79, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // MOUNTAIN_TRAIL_FILLED
+  IconData(0xec7c, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // MOVIES_AND_TV
+  IconData(0xec7b, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // MOVIES_AND_TV_FILLED
+  IconData(0xec84, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // MULTIPLIER_1X
+  IconData(0xec83, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // MULTIPLIER_1X_FILLED
+  IconData(0xec7e, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // MULTIPLIER_1_2X
+  IconData(0xec7d, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // MULTIPLIER_1_2X_FILLED
+  IconData(0xec80, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // MULTIPLIER_1_5X
+  IconData(0xec7f, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // MULTIPLIER_1_5X_FILLED
+  IconData(0xec82, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // MULTIPLIER_1_8X
+  IconData(0xec81, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // MULTIPLIER_1_8X_FILLED
+  IconData(0xec86, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // MULTIPLIER_2X
+  IconData(0xec85, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // MULTIPLIER_2X_FILLED
+  IconData(0xec88, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // MULTIPLIER_5X
+  IconData(0xec87, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // MULTIPLIER_5X_FILLED
+  IconData(0xec8a, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // MULTISELECT_LTR
+  IconData(0xec89, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // MULTISELECT_LTR_FILLED
+  IconData(0xec8c, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // MULTISELECT_RTL
+  IconData(0xec8b, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // MULTISELECT_RTL_FILLED
+  IconData(0xec8e, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // MUSIC_NOTE_1
+  IconData(0xec8d, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // MUSIC_NOTE_1_FILLED
+  IconData(0xec90, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // MUSIC_NOTE_2
+  IconData(0xec8f, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // MUSIC_NOTE_2_FILLED
+  IconData(0xec92, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // MUSIC_NOTE_2_PLAY
+  IconData(0xec91, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // MUSIC_NOTE_2_PLAY_FILLED
+  IconData(0xec94, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // MUSIC_NOTE_OFF_1
+  IconData(0xec93, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // MUSIC_NOTE_OFF_1_FILLED
+  IconData(0xec96, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // MUSIC_NOTE_OFF_2
+  IconData(0xec95, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // MUSIC_NOTE_OFF_2_FILLED
+  IconData(0xec98, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // MY_LOCATION
+  IconData(0xec97, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // MY_LOCATION_FILLED
+  IconData(0xec9a, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // NAVIGATION
+  IconData(0xec9c, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // NAVIGATION_BRIEFCASE
+  IconData(0xec9b, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // NAVIGATION_BRIEFCASE_FILLED
+  IconData(0xec99, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // NAVIGATION_FILLED
+  IconData(0xec9e, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // NAVIGATION_LOCATION_TARGET
+  IconData(0xec9d, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // NAVIGATION_LOCATION_TARGET_FILLED
+  IconData(0xeca0, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // NAVIGATION_PERSON
+  IconData(0xec9f, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // NAVIGATION_PERSON_FILLED
+  IconData(0xeca2, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // NAVIGATION_PLAY
+  IconData(0xeca1, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // NAVIGATION_PLAY_FILLED
+  IconData(0xeca4, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // NAVIGATION_UNREAD
+  IconData(0xeca3, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // NAVIGATION_UNREAD_FILLED
+  IconData(0xeca6, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // NETWORK_CHECK
+  IconData(0xeca5, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // NETWORK_CHECK_FILLED
+  IconData(0xeca8, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // NEW
+  IconData(0xecaa, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // NEWS
+  IconData(0xeca9, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // NEWS_FILLED
+  IconData(0xeca7, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // NEW_FILLED
+  IconData(0xecac, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // NEXT
+  IconData(0xecab, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // NEXT_FILLED
+  IconData(0xecae, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // NEXT_FRAME
+  IconData(0xecad, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // NEXT_FRAME_FILLED
+  IconData(0xecb0, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // NOTE
+  IconData(0xecb8, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // NOTEBOOK
+  IconData(0xecba, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // NOTEBOOK_ADD
+  IconData(0xecb9, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // NOTEBOOK_ADD_FILLED
+  IconData(0xecbc, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // NOTEBOOK_ARROW_CURVE_DOWN
+  IconData(0xecbb, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // NOTEBOOK_ARROW_CURVE_DOWN_FILLED
+  IconData(0xecbe, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // NOTEBOOK_ERROR
+  IconData(0xecbd, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // NOTEBOOK_ERROR_FILLED
+  IconData(0xecc0, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // NOTEBOOK_EYE
+  IconData(0xecbf, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // NOTEBOOK_EYE_FILLED
+  IconData(0xecb7, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // NOTEBOOK_FILLED
+  IconData(0xecc2, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // NOTEBOOK_LIGHTNING
+  IconData(0xecc1, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // NOTEBOOK_LIGHTNING_FILLED
+  IconData(0xecc4, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // NOTEBOOK_QUESTION_MARK
+  IconData(0xecc3, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // NOTEBOOK_QUESTION_MARK_FILLED
+  IconData(0xecc6, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // NOTEBOOK_SECTION
+  IconData(0xecc8, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // NOTEBOOK_SECTION_ARROW_RIGHT
+  IconData(0xecc7, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // NOTEBOOK_SECTION_ARROW_RIGHT_FILLED
+  IconData(0xecc5, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // NOTEBOOK_SECTION_FILLED
+  IconData(0xecca, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // NOTEBOOK_SUBSECTION
+  IconData(0xecc9, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // NOTEBOOK_SUBSECTION_FILLED
+  IconData(0xeccc, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // NOTEBOOK_SYNC
+  IconData(0xeccb, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // NOTEBOOK_SYNC_FILLED
+  IconData(0xecce, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // NOTEPAD
+  IconData(0xecd0, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // NOTEPAD_EDIT
+  IconData(0xeccf, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // NOTEPAD_EDIT_FILLED
+  IconData(0xeccd, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // NOTEPAD_FILLED
+  IconData(0xecd2, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // NOTEPAD_PERSON
+  IconData(0xecd1, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // NOTEPAD_PERSON_FILLED
+  IconData(0xecd4, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // NOTEPAD_PERSON_OFF
+  IconData(0xecd3, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // NOTEPAD_PERSON_OFF_FILLED
+  IconData(0xecd6, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // NOTEPAD_SPARKLE
+  IconData(0xecd5, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // NOTEPAD_SPARKLE_FILLED
+  IconData(0xecb2, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // NOTE_ADD
+  IconData(0xecb1, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // NOTE_ADD_FILLED
+  IconData(0xecb4, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // NOTE_EDIT
+  IconData(0xecb3, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // NOTE_EDIT_FILLED
+  IconData(0xecaf, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // NOTE_FILLED
+  IconData(0xecb6, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // NOTE_PIN
+  IconData(0xecb5, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // NOTE_PIN_FILLED
+  IconData(0xecd8, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // NUMBER_CIRCLE_0
+  IconData(0xecd7, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // NUMBER_CIRCLE_0_FILLED
+  IconData(0xecda, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // NUMBER_CIRCLE_1
+  IconData(0xecd9, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // NUMBER_CIRCLE_1_FILLED
+  IconData(0xecdc, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // NUMBER_CIRCLE_2
+  IconData(0xecdb, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // NUMBER_CIRCLE_2_FILLED
+  IconData(0xecde, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // NUMBER_CIRCLE_3
+  IconData(0xecdd, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // NUMBER_CIRCLE_3_FILLED
+  IconData(0xece0, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // NUMBER_CIRCLE_4
+  IconData(0xecdf, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // NUMBER_CIRCLE_4_FILLED
+  IconData(0xece2, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // NUMBER_CIRCLE_5
+  IconData(0xece1, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // NUMBER_CIRCLE_5_FILLED
+  IconData(0xece4, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // NUMBER_CIRCLE_6
+  IconData(0xece3, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // NUMBER_CIRCLE_6_FILLED
+  IconData(0xece6, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // NUMBER_CIRCLE_7
+  IconData(0xece5, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // NUMBER_CIRCLE_7_FILLED
+  IconData(0xece8, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // NUMBER_CIRCLE_8
+  IconData(0xece7, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // NUMBER_CIRCLE_8_FILLED
+  IconData(0xecea, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // NUMBER_CIRCLE_9
+  IconData(0xece9, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // NUMBER_CIRCLE_9_FILLED
+  IconData(0xecec, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // NUMBER_ROW
+  IconData(0xeceb, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // NUMBER_ROW_FILLED
+  IconData(0xecee, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // NUMBER_SYMBOL
+  IconData(0xecf0, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // NUMBER_SYMBOL_DISMISS
+  IconData(0xecef, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // NUMBER_SYMBOL_DISMISS_FILLED
+  IconData(0xeced, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // NUMBER_SYMBOL_FILLED
+  IconData(0xecf2, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // NUMBER_SYMBOL_SQUARE
+  IconData(0xecf1, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // NUMBER_SYMBOL_SQUARE_FILLED
+  IconData(0xf639, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // OMEGA
+  IconData(0xf638, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // OMEGA_FILLED
+  IconData(0xecf4, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // OPEN
+  IconData(0xecf3, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // OPEN_FILLED
+  IconData(0xecf6, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // OPEN_FOLDER
+  IconData(0xecf5, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // OPEN_FOLDER_FILLED
+  IconData(0xecf8, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // OPEN_OFF
+  IconData(0xecf7, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // OPEN_OFF_FILLED
+  IconData(0xecfa, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // OPTIONS
+  IconData(0xecf9, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // OPTIONS_FILLED
+  IconData(0xf63b, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // OPTIONS_SPEAKER
+  IconData(0xf63a, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // OPTIONS_SPEAKER_FILLED
+  IconData(0xecfc, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // ORGANIZATION
+  IconData(0xecfe, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // ORGANIZATION_ADD
+  IconData(0xecfd, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // ORGANIZATION_ADD_FILLED
+  IconData(0xecfb, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // ORGANIZATION_FILLED
+  IconData(0xed00, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // ORGANIZATION_HORIZONTAL
+  IconData(0xecff, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // ORGANIZATION_HORIZONTAL_FILLED
+  IconData(0xed02, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // ORIENTATION
+  IconData(0xed01, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // ORIENTATION_FILLED
+  IconData(0xf621, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // ORIENTATION_PORTRAIT
+  IconData(0xf620, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // ORIENTATION_PORTRAIT_FILLED
+  IconData(0xed04, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // OVAL
+  IconData(0xed03, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // OVAL_FILLED
+  IconData(0xed06, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // OVEN
+  IconData(0xed05, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // OVEN_FILLED
+  IconData(0xed08, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // PADDING_DOWN
+  IconData(0xed07, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // PADDING_DOWN_FILLED
+  IconData(0xed0a, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // PADDING_LEFT
+  IconData(0xed09, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // PADDING_LEFT_FILLED
+  IconData(0xed0c, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // PADDING_RIGHT
+  IconData(0xed0b, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // PADDING_RIGHT_FILLED
+  IconData(0xed0e, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // PADDING_TOP
+  IconData(0xed0d, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // PADDING_TOP_FILLED
+  IconData(0xed10, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // PAGE_FIT
+  IconData(0xed0f, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // PAGE_FIT_FILLED
+  IconData(0xed12, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // PAINT_BRUSH
+  IconData(0xed14, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // PAINT_BRUSH_ARROW_DOWN
+  IconData(0xed13, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // PAINT_BRUSH_ARROW_DOWN_FILLED
+  IconData(0xed16, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // PAINT_BRUSH_ARROW_UP
+  IconData(0xed15, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // PAINT_BRUSH_ARROW_UP_FILLED
+  IconData(0xed11, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // PAINT_BRUSH_FILLED
+  IconData(0xed18, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // PAINT_BRUSH_SPARKLE
+  IconData(0xed17, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // PAINT_BRUSH_SPARKLE_FILLED
+  IconData(0xed1a, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // PAINT_BRUSH_SUBTRACT
+  IconData(0xed19, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // PAINT_BRUSH_SUBTRACT_FILLED
+  IconData(0xed1c, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // PAINT_BUCKET
+  IconData(0xed1e, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // PAINT_BUCKET_BRUSH
+  IconData(0xed1d, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // PAINT_BUCKET_BRUSH_FILLED
+  IconData(0xed1b, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // PAINT_BUCKET_FILLED
+  IconData(0xed20, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // PAIR
+  IconData(0xed1f, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // PAIR_FILLED
+  IconData(0xed22, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // PANEL_BOTTOM
+  IconData(0xed24, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // PANEL_BOTTOM_CONTRACT
+  IconData(0xed23, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // PANEL_BOTTOM_CONTRACT_FILLED
+  IconData(0xed26, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // PANEL_BOTTOM_EXPAND
+  IconData(0xed25, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // PANEL_BOTTOM_EXPAND_FILLED
+  IconData(0xed21, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // PANEL_BOTTOM_FILLED
+  IconData(0xed28, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // PANEL_LEFT
+  IconData(0xed2a, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // PANEL_LEFT_ADD
+  IconData(0xed29, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // PANEL_LEFT_ADD_FILLED
+  IconData(0xed2c, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // PANEL_LEFT_CONTRACT
+  IconData(0xed2b, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // PANEL_LEFT_CONTRACT_FILLED
+  IconData(0xed2e, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // PANEL_LEFT_EXPAND
+  IconData(0xed2d, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // PANEL_LEFT_EXPAND_FILLED
+  IconData(0xed27, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // PANEL_LEFT_FILLED
+  IconData(0xed2f, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // PANEL_LEFT_FOCUS_RIGHT_FILLED
+  IconData(0xed31, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // PANEL_LEFT_HEADER
+  IconData(0xed33, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // PANEL_LEFT_HEADER_ADD
+  IconData(0xed32, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // PANEL_LEFT_HEADER_ADD_FILLED
+  IconData(0xed30, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // PANEL_LEFT_HEADER_FILLED
+  IconData(0xed35, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // PANEL_LEFT_HEADER_KEY
+  IconData(0xed34, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // PANEL_LEFT_HEADER_KEY_FILLED
+  IconData(0xed37, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // PANEL_LEFT_KEY
+  IconData(0xed36, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // PANEL_LEFT_KEY_FILLED
+  IconData(0xf62b, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // PANEL_LEFT_TALL
+  IconData(0xf62a, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // PANEL_LEFT_TALL_FILLED
+  IconData(0xed39, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // PANEL_LEFT_TEXT
+  IconData(0xed3b, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // PANEL_LEFT_TEXT_ADD
+  IconData(0xed3a, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // PANEL_LEFT_TEXT_ADD_FILLED
+  IconData(0xed3d, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // PANEL_LEFT_TEXT_DISMISS
+  IconData(0xed3c, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // PANEL_LEFT_TEXT_DISMISS_FILLED
+  IconData(0xed38, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // PANEL_LEFT_TEXT_FILLED
+  IconData(0xed3f, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // PANEL_RIGHT
+  IconData(0xed41, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // PANEL_RIGHT_ADD
+  IconData(0xed40, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // PANEL_RIGHT_ADD_FILLED
+  IconData(0xed43, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // PANEL_RIGHT_CONTRACT
+  IconData(0xed42, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // PANEL_RIGHT_CONTRACT_FILLED
+  IconData(0xed45, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // PANEL_RIGHT_CURSOR
+  IconData(0xed44, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // PANEL_RIGHT_CURSOR_FILLED
+  IconData(0xed47, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // PANEL_RIGHT_EXPAND
+  IconData(0xed46, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // PANEL_RIGHT_EXPAND_FILLED
+  IconData(0xed3e, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // PANEL_RIGHT_FILLED
+  IconData(0xed49, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // PANEL_RIGHT_GALLERY
+  IconData(0xed48, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // PANEL_RIGHT_GALLERY_FILLED
+  IconData(0xed4b, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // PANEL_SEPARATE_WINDOW
+  IconData(0xed4a, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // PANEL_SEPARATE_WINDOW_FILLED
+  IconData(0xed4d, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // PANEL_TOP_CONTRACT
+  IconData(0xed4c, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // PANEL_TOP_CONTRACT_FILLED
+  IconData(0xed4f, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // PANEL_TOP_EXPAND
+  IconData(0xed4e, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // PANEL_TOP_EXPAND_FILLED
+  IconData(0xed51, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // PANEL_TOP_GALLERY
+  IconData(0xed50, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // PANEL_TOP_GALLERY_FILLED
+  IconData(0xed53, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // PASSWORD
+  IconData(0xed55, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // PASSWORD_CLOCK
+  IconData(0xed54, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // PASSWORD_CLOCK_FILLED
+  IconData(0xed52, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // PASSWORD_FILLED
+  IconData(0xed57, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // PATCH
+  IconData(0xed56, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // PATCH_FILLED
+  IconData(0xed59, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // PATIENT
+  IconData(0xed58, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // PATIENT_FILLED
+  IconData(0xed5b, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // PAUSE
+  IconData(0xed5d, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // PAUSE_CIRCLE
+  IconData(0xed5c, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // PAUSE_CIRCLE_FILLED
+  IconData(0xed5a, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // PAUSE_FILLED
+  IconData(0xed5f, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // PAUSE_OFF
+  IconData(0xed5e, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // PAUSE_OFF_FILLED
+  IconData(0xed61, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // PAUSE_SETTINGS
+  IconData(0xed60, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // PAUSE_SETTINGS_FILLED
+  IconData(0xed63, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // PAYMENT
+  IconData(0xed62, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // PAYMENT_FILLED
+  IconData(0xed65, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // PAYMENT_WIRELESS
+  IconData(0xed64, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // PAYMENT_WIRELESS_FILLED
+  IconData(0xed67, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // PEN
+  IconData(0xed73, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // PENTAGON
+  IconData(0xed72, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // PENTAGON_FILLED
+  IconData(0xed69, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // PEN_DISMISS
+  IconData(0xed68, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // PEN_DISMISS_FILLED
+  IconData(0xed66, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // PEN_FILLED
+  IconData(0xed6b, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // PEN_OFF
+  IconData(0xed6a, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // PEN_OFF_FILLED
+  IconData(0xed6d, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // PEN_PROHIBITED
+  IconData(0xed6c, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // PEN_PROHIBITED_FILLED
+  IconData(0xed6f, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // PEN_SPARKLE
+  IconData(0xed6e, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // PEN_SPARKLE_FILLED
+  IconData(0xed71, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // PEN_SYNC
+  IconData(0xed70, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // PEN_SYNC_FILLED
+  IconData(0xed75, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // PEOPLE
+  IconData(0xed77, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // PEOPLE_ADD
+  IconData(0xed76, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // PEOPLE_ADD_FILLED
+  IconData(0xed79, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // PEOPLE_AUDIENCE
+  IconData(0xed78, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // PEOPLE_AUDIENCE_FILLED
+  IconData(0xed7b, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // PEOPLE_CALL
+  IconData(0xed7a, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // PEOPLE_CALL_FILLED
+  IconData(0xed7d, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // PEOPLE_CHAT
+  IconData(0xed7c, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // PEOPLE_CHAT_FILLED
+  IconData(0xed7f, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // PEOPLE_CHECKMARK
+  IconData(0xed7e, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // PEOPLE_CHECKMARK_FILLED
+  IconData(0xed81, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // PEOPLE_COMMUNICATION
+  IconData(0xed80, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // PEOPLE_COMMUNICATION_FILLED
+  IconData(0xed83, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // PEOPLE_COMMUNITY
+  IconData(0xed85, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // PEOPLE_COMMUNITY_ADD
+  IconData(0xed84, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // PEOPLE_COMMUNITY_ADD_FILLED
+  IconData(0xed82, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // PEOPLE_COMMUNITY_FILLED
+  IconData(0xed87, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // PEOPLE_EDIT
+  IconData(0xed86, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // PEOPLE_EDIT_FILLED
+  IconData(0xed89, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // PEOPLE_ERROR
+  IconData(0xed88, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // PEOPLE_ERROR_FILLED
+  IconData(0xed8b, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // PEOPLE_EYE
+  IconData(0xed8a, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // PEOPLE_EYE_FILLED
+  IconData(0xed74, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // PEOPLE_FILLED
+  IconData(0xed8d, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // PEOPLE_GAME_CONTROLLER
+  IconData(0xed8c, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // PEOPLE_GAME_CONTROLLER_FILLED
+  IconData(0xed8f, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // PEOPLE_INTERWOVEN
+  IconData(0xed8e, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // PEOPLE_INTERWOVEN_FILLED
+  IconData(0xed91, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // PEOPLE_LINK
+  IconData(0xed90, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // PEOPLE_LINK_FILLED
+  IconData(0xed93, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // PEOPLE_LIST
+  IconData(0xed92, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // PEOPLE_LIST_FILLED
+  IconData(0xed95, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // PEOPLE_LOCK
+  IconData(0xed94, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // PEOPLE_LOCK_FILLED
+  IconData(0xed97, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // PEOPLE_MONEY
+  IconData(0xed96, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // PEOPLE_MONEY_FILLED
+  IconData(0xed99, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // PEOPLE_PROHIBITED
+  IconData(0xed98, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // PEOPLE_PROHIBITED_FILLED
+  IconData(0xed9b, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // PEOPLE_QUEUE
+  IconData(0xed9a, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // PEOPLE_QUEUE_FILLED
+  IconData(0xed9d, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // PEOPLE_SEARCH
+  IconData(0xed9c, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // PEOPLE_SEARCH_FILLED
+  IconData(0xed9f, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // PEOPLE_SETTINGS
+  IconData(0xed9e, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // PEOPLE_SETTINGS_FILLED
+  IconData(0xeda1, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // PEOPLE_STAR
+  IconData(0xeda0, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // PEOPLE_STAR_FILLED
+  IconData(0xeda3, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // PEOPLE_SUBTRACT
+  IconData(0xeda2, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // PEOPLE_SUBTRACT_FILLED
+  IconData(0xeda5, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // PEOPLE_SWAP
+  IconData(0xeda4, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // PEOPLE_SWAP_FILLED
+  IconData(0xeda7, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // PEOPLE_SYNC
+  IconData(0xeda6, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // PEOPLE_SYNC_FILLED
+  IconData(0xeda9, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // PEOPLE_TEAM
+  IconData(0xedab, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // PEOPLE_TEAM_ADD
+  IconData(0xedaa, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // PEOPLE_TEAM_ADD_FILLED
+  IconData(0xedad, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // PEOPLE_TEAM_DELETE
+  IconData(0xedac, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // PEOPLE_TEAM_DELETE_FILLED
+  IconData(0xeda8, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // PEOPLE_TEAM_FILLED
+  IconData(0xedaf, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // PEOPLE_TEAM_TOOLBOX
+  IconData(0xedae, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // PEOPLE_TEAM_TOOLBOX_FILLED
+  IconData(0xedb1, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // PEOPLE_TOOLBOX
+  IconData(0xedb0, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // PEOPLE_TOOLBOX_FILLED
+  IconData(0xedb3, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // PERSON
+  IconData(0xedb5, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // PERSON_5
+  IconData(0xedb4, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // PERSON_5_FILLED
+  IconData(0xedb7, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // PERSON_6
+  IconData(0xedb6, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // PERSON_6_FILLED
+  IconData(0xedb9, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // PERSON_ACCOUNTS
+  IconData(0xedb8, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // PERSON_ACCOUNTS_FILLED
+  IconData(0xedbb, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // PERSON_ADD
+  IconData(0xedba, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // PERSON_ADD_FILLED
+  IconData(0xedbd, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // PERSON_ALERT
+  IconData(0xedbc, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // PERSON_ALERT_FILLED
+  IconData(0xedbf, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // PERSON_ALERT_OFF
+  IconData(0xedbe, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // PERSON_ALERT_OFF_FILLED
+  IconData(0xedc1, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // PERSON_ARROW_BACK
+  IconData(0xedc0, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // PERSON_ARROW_BACK_FILLED
+  IconData(0xedc3, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // PERSON_ARROW_LEFT
+  IconData(0xedc2, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // PERSON_ARROW_LEFT_FILLED
+  IconData(0xedc5, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // PERSON_ARROW_RIGHT
+  IconData(0xedc4, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // PERSON_ARROW_RIGHT_FILLED
+  IconData(0xedc7, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // PERSON_AVAILABLE
+  IconData(0xedc6, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // PERSON_AVAILABLE_FILLED
+  IconData(0xedc9, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // PERSON_BOARD
+  IconData(0xedcb, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // PERSON_BOARD_ADD
+  IconData(0xedca, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // PERSON_BOARD_ADD_FILLED
+  IconData(0xedc8, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // PERSON_BOARD_FILLED
+  IconData(0xedcd, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // PERSON_BRIEFCASE
+  IconData(0xedcc, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // PERSON_BRIEFCASE_FILLED
+  IconData(0xedcf, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // PERSON_CALL
+  IconData(0xedce, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // PERSON_CALL_FILLED
+  IconData(0xedd1, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // PERSON_CHAT
+  IconData(0xedd0, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // PERSON_CHAT_FILLED
+  IconData(0xedd3, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // PERSON_CIRCLE
+  IconData(0xedd2, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // PERSON_CIRCLE_FILLED
+  IconData(0xedd5, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // PERSON_CIRCLE_OFF
+  IconData(0xedd4, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // PERSON_CIRCLE_OFF_FILLED
+  IconData(0xedd7, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // PERSON_CLOCK
+  IconData(0xedd6, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // PERSON_CLOCK_FILLED
+  IconData(0xedd9, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // PERSON_DELETE
+  IconData(0xedd8, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // PERSON_DELETE_FILLED
+  IconData(0xeddb, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // PERSON_DESKTOP
+  IconData(0xedda, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // PERSON_DESKTOP_FILLED
+  IconData(0xeddd, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // PERSON_EDIT
+  IconData(0xeddc, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // PERSON_EDIT_FILLED
+  IconData(0xeddf, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // PERSON_ERROR
+  IconData(0xedde, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // PERSON_ERROR_FILLED
+  IconData(0xede1, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // PERSON_FEEDBACK
+  IconData(0xede0, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // PERSON_FEEDBACK_FILLED
+  IconData(0xedb2, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // PERSON_FILLED
+  IconData(0xede3, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // PERSON_GUEST
+  IconData(0xede2, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // PERSON_GUEST_FILLED
+  IconData(0xede5, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // PERSON_HEAD_HINT
+  IconData(0xede4, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // PERSON_HEAD_HINT_FILLED
+  IconData(0xede7, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // PERSON_HEART
+  IconData(0xede6, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // PERSON_HEART_FILLED
+  IconData(0xede9, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // PERSON_HOME
+  IconData(0xede8, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // PERSON_HOME_FILLED
+  IconData(0xedeb, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // PERSON_INFO
+  IconData(0xedea, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // PERSON_INFO_FILLED
+  IconData(0xeded, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // PERSON_KEY
+  IconData(0xedec, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // PERSON_KEY_FILLED
+  IconData(0xedef, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // PERSON_LIGHTBULB
+  IconData(0xedee, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // PERSON_LIGHTBULB_FILLED
+  IconData(0xedf1, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // PERSON_LIGHTNING
+  IconData(0xedf0, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // PERSON_LIGHTNING_FILLED
+  IconData(0xedf3, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // PERSON_LINK
+  IconData(0xedf2, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // PERSON_LINK_FILLED
+  IconData(0xedf5, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // PERSON_LOCK
+  IconData(0xedf4, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // PERSON_LOCK_FILLED
+  IconData(0xedf7, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // PERSON_MAIL
+  IconData(0xedf6, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // PERSON_MAIL_FILLED
+  IconData(0xedf9, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // PERSON_MONEY
+  IconData(0xedf8, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // PERSON_MONEY_FILLED
+  IconData(0xedfb, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // PERSON_NOTE
+  IconData(0xedfa, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // PERSON_NOTE_FILLED
+  IconData(0xedfd, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // PERSON_PASSKEY
+  IconData(0xedfc, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // PERSON_PASSKEY_FILLED
+  IconData(0xedff, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // PERSON_PILL
+  IconData(0xedfe, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // PERSON_PILL_FILLED
+  IconData(0xee01, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // PERSON_PROHIBITED
+  IconData(0xee00, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // PERSON_PROHIBITED_FILLED
+  IconData(0xee03, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // PERSON_QUESTION_MARK
+  IconData(0xee02, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // PERSON_QUESTION_MARK_FILLED
+  IconData(0xee05, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // PERSON_RIBBON
+  IconData(0xee04, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // PERSON_RIBBON_FILLED
+  IconData(0xee07, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // PERSON_RUNNING
+  IconData(0xee06, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // PERSON_RUNNING_FILLED
+  IconData(0xee09, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // PERSON_SEARCH
+  IconData(0xee08, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // PERSON_SEARCH_FILLED
+  IconData(0xee0b, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // PERSON_SETTINGS
+  IconData(0xee0a, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // PERSON_SETTINGS_FILLED
+  IconData(0xee0d, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // PERSON_SHIELD
+  IconData(0xee0c, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // PERSON_SHIELD_FILLED
+  IconData(0xee0f, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // PERSON_SOUND_SPATIAL
+  IconData(0xee0e, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // PERSON_SOUND_SPATIAL_FILLED
+  IconData(0xee11, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // PERSON_SQUARE
+  IconData(0xee13, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // PERSON_SQUARE_ADD
+  IconData(0xee12, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // PERSON_SQUARE_ADD_FILLED
+  IconData(0xee15, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // PERSON_SQUARE_CHECKMARK
+  IconData(0xee14, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // PERSON_SQUARE_CHECKMARK_FILLED
+  IconData(0xee10, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // PERSON_SQUARE_FILLED
+  IconData(0xee17, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // PERSON_STAR
+  IconData(0xee19, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // PERSON_STARBURST
+  IconData(0xee18, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // PERSON_STARBURST_FILLED
+  IconData(0xee16, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // PERSON_STAR_FILLED
+  IconData(0xee1b, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // PERSON_SUBTRACT
+  IconData(0xee1a, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // PERSON_SUBTRACT_FILLED
+  IconData(0xee1d, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // PERSON_SUPPORT
+  IconData(0xee1c, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // PERSON_SUPPORT_FILLED
+  IconData(0xee1f, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // PERSON_SWAP
+  IconData(0xee1e, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // PERSON_SWAP_FILLED
+  IconData(0xee21, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // PERSON_SYNC
+  IconData(0xee20, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // PERSON_SYNC_FILLED
+  IconData(0xee23, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // PERSON_TAG
+  IconData(0xee22, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // PERSON_TAG_FILLED
+  IconData(0xee25, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // PERSON_TENTATIVE
+  IconData(0xee24, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // PERSON_TENTATIVE_FILLED
+  IconData(0xee27, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // PERSON_VOICE
+  IconData(0xee26, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // PERSON_VOICE_FILLED
+  IconData(0xee29, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // PERSON_WALKING
+  IconData(0xee28, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // PERSON_WALKING_FILLED
+  IconData(0xee2b, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // PERSON_WARNING
+  IconData(0xee2a, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // PERSON_WARNING_FILLED
+  IconData(0xee2d, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // PERSON_WRENCH
+  IconData(0xee2c, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // PERSON_WRENCH_FILLED
+  IconData(0xee2f, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // PHONE
+  IconData(0xee31, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // PHONE_ADD
+  IconData(0xee30, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // PHONE_ADD_FILLED
+  IconData(0xee33, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // PHONE_ARROW_RIGHT
+  IconData(0xee32, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // PHONE_ARROW_RIGHT_FILLED
+  IconData(0xee35, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // PHONE_CHAT
+  IconData(0xee34, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // PHONE_CHAT_FILLED
+  IconData(0xee37, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // PHONE_CHECKMARK
+  IconData(0xee36, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // PHONE_CHECKMARK_FILLED
+  IconData(0xee39, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // PHONE_DESKTOP
+  IconData(0xee3b, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // PHONE_DESKTOP_ADD
+  IconData(0xee3a, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // PHONE_DESKTOP_ADD_FILLED
+  IconData(0xee38, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // PHONE_DESKTOP_FILLED
+  IconData(0xee3d, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // PHONE_DISMISS
+  IconData(0xee3c, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // PHONE_DISMISS_FILLED
+  IconData(0xee3f, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // PHONE_EDIT
+  IconData(0xee3e, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // PHONE_EDIT_FILLED
+  IconData(0xee41, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // PHONE_ERASER
+  IconData(0xee40, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // PHONE_ERASER_FILLED
+  IconData(0xee2e, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // PHONE_FILLED
+  IconData(0xee43, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // PHONE_FOOTER_ARROW_DOWN
+  IconData(0xee42, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // PHONE_FOOTER_ARROW_DOWN_FILLED
+  IconData(0xee45, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // PHONE_HEADER_ARROW_UP
+  IconData(0xee44, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // PHONE_HEADER_ARROW_UP_FILLED
+  IconData(0xee47, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // PHONE_KEY
+  IconData(0xee46, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // PHONE_KEY_FILLED
+  IconData(0xee49, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // PHONE_LAPTOP
+  IconData(0xee48, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // PHONE_LAPTOP_FILLED
+  IconData(0xee4b, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // PHONE_LINK_SETUP
+  IconData(0xee4a, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // PHONE_LINK_SETUP_FILLED
+  IconData(0xee4d, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // PHONE_LOCK
+  IconData(0xee4c, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // PHONE_LOCK_FILLED
+  IconData(0xee4f, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // PHONE_PAGE_HEADER
+  IconData(0xee4e, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // PHONE_PAGE_HEADER_FILLED
+  IconData(0xee51, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // PHONE_PAGINATION
+  IconData(0xee50, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // PHONE_PAGINATION_FILLED
+  IconData(0xee53, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // PHONE_SCREEN_TIME
+  IconData(0xee52, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // PHONE_SCREEN_TIME_FILLED
+  IconData(0xee55, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // PHONE_SHAKE
+  IconData(0xee54, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // PHONE_SHAKE_FILLED
+  IconData(0xee57, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // PHONE_SPAN_IN
+  IconData(0xee56, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // PHONE_SPAN_IN_FILLED
+  IconData(0xee59, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // PHONE_SPAN_OUT
+  IconData(0xee58, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // PHONE_SPAN_OUT_FILLED
+  IconData(0xee5b, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // PHONE_SPEAKER
+  IconData(0xee5a, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // PHONE_SPEAKER_FILLED
+  IconData(0xee5d, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // PHONE_STATUS_BAR
+  IconData(0xee5c, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // PHONE_STATUS_BAR_FILLED
+  IconData(0xee5f, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // PHONE_TABLET
+  IconData(0xee5e, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // PHONE_TABLET_FILLED
+  IconData(0xee61, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // PHONE_UPDATE
+  IconData(0xee63, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // PHONE_UPDATE_CHECKMARK
+  IconData(0xee62, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // PHONE_UPDATE_CHECKMARK_FILLED
+  IconData(0xee60, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // PHONE_UPDATE_FILLED
+  IconData(0xee65, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // PHONE_VERTICAL_SCROLL
+  IconData(0xee64, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // PHONE_VERTICAL_SCROLL_FILLED
+  IconData(0xee67, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // PHONE_VIBRATE
+  IconData(0xee66, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // PHONE_VIBRATE_FILLED
+  IconData(0xee69, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // PHOTO_FILTER
+  IconData(0xee68, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // PHOTO_FILTER_FILLED
+  IconData(0xee6b, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // PI
+  IconData(0xee6d, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // PICTURE_IN_PICTURE
+  IconData(0xee6f, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // PICTURE_IN_PICTURE_ENTER
+  IconData(0xee6e, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // PICTURE_IN_PICTURE_ENTER_FILLED
+  IconData(0xee71, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // PICTURE_IN_PICTURE_EXIT
+  IconData(0xee70, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // PICTURE_IN_PICTURE_EXIT_FILLED
+  IconData(0xee6c, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // PICTURE_IN_PICTURE_FILLED
+  IconData(0xee73, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // PILL
+  IconData(0xee72, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // PILL_FILLED
+  IconData(0xee75, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // PIN
+  IconData(0xee74, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // PIN_FILLED
+  IconData(0xee77, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // PIN_GLOBE
+  IconData(0xee76, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // PIN_GLOBE_FILLED
+  IconData(0xee79, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // PIN_OFF
+  IconData(0xee78, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // PIN_OFF_FILLED
+  IconData(0xee7b, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // PIPELINE
+  IconData(0xee7d, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // PIPELINE_ADD
+  IconData(0xee7c, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // PIPELINE_ADD_FILLED
+  IconData(0xee7f, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // PIPELINE_ARROW_CURVE_DOWN
+  IconData(0xee7e, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // PIPELINE_ARROW_CURVE_DOWN_FILLED
+  IconData(0xee7a, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // PIPELINE_FILLED
+  IconData(0xee81, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // PIPELINE_PLAY
+  IconData(0xee80, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // PIPELINE_PLAY_FILLED
+  IconData(0xee83, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // PIVOT
+  IconData(0xee82, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // PIVOT_FILLED
+  IconData(0xee6a, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // PI_FILLED
+  IconData(0xee85, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // PLANET
+  IconData(0xee84, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // PLANET_FILLED
+  IconData(0xee87, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // PLANT_CATTAIL
+  IconData(0xee86, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // PLANT_CATTAIL_FILLED
+  IconData(0xee89, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // PLANT_GRASS
+  IconData(0xee88, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // PLANT_GRASS_FILLED
+  IconData(0xee8b, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // PLANT_RAGWEED
+  IconData(0xee8a, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // PLANT_RAGWEED_FILLED
+  IconData(0xee8d, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // PLAY
+  IconData(0xee99, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // PLAYING_CARDS
+  IconData(0xee98, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // PLAYING_CARDS_FILLED
+  IconData(0xee8f, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // PLAY_CIRCLE
+  IconData(0xee8e, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // PLAY_CIRCLE_FILLED
+  IconData(0xee91, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // PLAY_CIRCLE_HINT
+  IconData(0xee90, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // PLAY_CIRCLE_HINT_FILLED
+  IconData(0xee93, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // PLAY_CIRCLE_HINT_HALF
+  IconData(0xee92, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // PLAY_CIRCLE_HINT_HALF_FILLED
+  IconData(0xee95, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // PLAY_CIRCLE_SPARKLE
+  IconData(0xee94, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // PLAY_CIRCLE_SPARKLE_FILLED
+  IconData(0xee8c, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // PLAY_FILLED
+  IconData(0xee97, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // PLAY_SETTINGS
+  IconData(0xee96, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // PLAY_SETTINGS_FILLED
+  IconData(0xee9b, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // PLUG_CONNECTED
+  IconData(0xee9d, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // PLUG_CONNECTED_ADD
+  IconData(0xee9c, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // PLUG_CONNECTED_ADD_FILLED
+  IconData(0xee9f, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // PLUG_CONNECTED_CHECKMARK
+  IconData(0xee9e, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // PLUG_CONNECTED_CHECKMARK_FILLED
+  IconData(0xee9a, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // PLUG_CONNECTED_FILLED
+  IconData(0xeea1, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // PLUG_CONNECTED_SETTINGS
+  IconData(0xeea0, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // PLUG_CONNECTED_SETTINGS_FILLED
+  IconData(0xeea3, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // PLUG_DISCONNECTED
+  IconData(0xeea2, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // PLUG_DISCONNECTED_FILLED
+  IconData(0xf649, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // PLUG_PUZZLE
+  IconData(0xf648, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // PLUG_PUZZLE_FILLED
+  IconData(0xeea5, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // POINT_SCAN
+  IconData(0xeea4, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // POINT_SCAN_FILLED
+  IconData(0xeea7, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // POLL
+  IconData(0xeea6, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // POLL_FILLED
+  IconData(0xeea9, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // POLL_HORIZONTAL
+  IconData(0xeea8, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // POLL_HORIZONTAL_FILLED
+  IconData(0xeeab, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // POLL_OFF
+  IconData(0xeeaa, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // POLL_OFF_FILLED
+  IconData(0xeead, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // PORT_HDMI
+  IconData(0xeeac, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // PORT_HDMI_FILLED
+  IconData(0xeeaf, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // PORT_MICRO_USB
+  IconData(0xeeae, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // PORT_MICRO_USB_FILLED
+  IconData(0xeeb1, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // PORT_USB_A
+  IconData(0xeeb0, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // PORT_USB_A_FILLED
+  IconData(0xeeb3, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // PORT_USB_C
+  IconData(0xeeb2, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // PORT_USB_C_FILLED
+  IconData(0xeeb5, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // POSITION_BACKWARD
+  IconData(0xeeb4, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // POSITION_BACKWARD_FILLED
+  IconData(0xeeb7, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // POSITION_FORWARD
+  IconData(0xeeb6, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // POSITION_FORWARD_FILLED
+  IconData(0xeeb9, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // POSITION_TO_BACK
+  IconData(0xeeb8, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // POSITION_TO_BACK_FILLED
+  IconData(0xeebb, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // POSITION_TO_FRONT
+  IconData(0xeeba, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // POSITION_TO_FRONT_FILLED
+  IconData(0xeebd, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // POWER
+  IconData(0xeebc, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // POWER_FILLED
+  IconData(0xeebf, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // PREDICTIONS
+  IconData(0xeebe, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // PREDICTIONS_FILLED
+  IconData(0xeec1, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // PREMIUM
+  IconData(0xeec0, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // PREMIUM_FILLED
+  IconData(0xeec3, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // PREMIUM_PERSON
+  IconData(0xeec2, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // PREMIUM_PERSON_FILLED
+  IconData(0xeec5, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // PRESENCE_AVAILABLE
+  IconData(0xeec4, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // PRESENCE_AVAILABLE_FILLED
+  IconData(0xeec7, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // PRESENCE_AWAY
+  IconData(0xeec6, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // PRESENCE_AWAY_FILLED
+  IconData(0xeec8, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // PRESENCE_BLOCKED
+  IconData(0xeec9, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // PRESENCE_BUSY_FILLED
+  IconData(0xeecb, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // PRESENCE_DND
+  IconData(0xeeca, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // PRESENCE_DND_FILLED
+  IconData(0xeecc, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // PRESENCE_OFFLINE
+  IconData(0xeecd, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // PRESENCE_OOF
+  IconData(0xeece, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // PRESENCE_TENTATIVE
+  IconData(0xeecf, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // PRESENCE_UNKNOWN
+  IconData(0xeed1, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // PRESENTER
+  IconData(0xeed0, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // PRESENTER_FILLED
+  IconData(0xeed3, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // PRESENTER_OFF
+  IconData(0xeed2, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // PRESENTER_OFF_FILLED
+  IconData(0xeed5, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // PREVIEW_LINK
+  IconData(0xeed4, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // PREVIEW_LINK_FILLED
+  IconData(0xeed7, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // PREVIOUS
+  IconData(0xeed6, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // PREVIOUS_FILLED
+  IconData(0xeed9, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // PREVIOUS_FRAME
+  IconData(0xeed8, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // PREVIOUS_FRAME_FILLED
+  IconData(0xeedb, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // PRINT
+  IconData(0xeedd, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // PRINT_ADD
+  IconData(0xeedc, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // PRINT_ADD_FILLED
+  IconData(0xeeda, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // PRINT_FILLED
+  IconData(0xeedf, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // PRODUCTION
+  IconData(0xeee1, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // PRODUCTION_CHECKMARK
+  IconData(0xeee0, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // PRODUCTION_CHECKMARK_FILLED
+  IconData(0xeede, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // PRODUCTION_FILLED
+  IconData(0xeee3, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // PROHIBITED
+  IconData(0xeee2, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // PROHIBITED_FILLED
+  IconData(0xeee5, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // PROHIBITED_MULTIPLE
+  IconData(0xeee4, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // PROHIBITED_MULTIPLE_FILLED
+  IconData(0xeee7, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // PROHIBITED_NOTE
+  IconData(0xeee6, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // PROHIBITED_NOTE_FILLED
+  IconData(0xeee9, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // PROHIBITED_SMOKING
+  IconData(0xeee8, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // PROHIBITED_SMOKING_FILLED
+  IconData(0xeeeb, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // PROJECTION_SCREEN
+  IconData(0xeeed, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // PROJECTION_SCREEN_DISMISS
+  IconData(0xeeec, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // PROJECTION_SCREEN_DISMISS_FILLED
+  IconData(0xeeea, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // PROJECTION_SCREEN_FILLED
+  IconData(0xeeef, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // PROJECTION_SCREEN_TEXT
+  IconData(0xeeee, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // PROJECTION_SCREEN_TEXT_FILLED
+  IconData(0xeef1, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // PROJECTION_SCREEN_TEXT_SPARKLE
+  IconData(0xeef0, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // PROJECTION_SCREEN_TEXT_SPARKLE_FILLED
+  IconData(0xeef3, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // PROMPT
+  IconData(0xeef2, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // PROMPT_FILLED
+  IconData(0xeef5, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // PROTOCOL_HANDLER
+  IconData(0xeef4, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // PROTOCOL_HANDLER_FILLED
+  IconData(0xeef7, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // PULSE
+  IconData(0xeef6, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // PULSE_FILLED
+  IconData(0xeef9, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // PULSE_SQUARE
+  IconData(0xeef8, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // PULSE_SQUARE_FILLED
+  IconData(0xeefb, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // PUZZLE_CUBE
+  IconData(0xeefa, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // PUZZLE_CUBE_FILLED
+  IconData(0xeefd, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // PUZZLE_CUBE_PIECE
+  IconData(0xeefc, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // PUZZLE_CUBE_PIECE_FILLED
+  IconData(0xeeff, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // PUZZLE_PIECE
+  IconData(0xeefe, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // PUZZLE_PIECE_FILLED
+  IconData(0xef01, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // PUZZLE_PIECE_SHIELD
+  IconData(0xef00, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // PUZZLE_PIECE_SHIELD_FILLED
+  IconData(0xef03, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // QR_CODE
+  IconData(0xef02, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // QR_CODE_FILLED
+  IconData(0xef05, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // QUESTION
+  IconData(0xef07, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // QUESTION_CIRCLE
+  IconData(0xef06, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // QUESTION_CIRCLE_FILLED
+  IconData(0xef04, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // QUESTION_FILLED
+  IconData(0xef09, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // QUIZ
+  IconData(0xef08, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // QUIZ_FILLED
+  IconData(0xef0b, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // QUIZ_NEW
+  IconData(0xef0a, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // QUIZ_NEW_FILLED
+  IconData(0xef0d, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // RADAR
+  IconData(0xef0f, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // RADAR_CHECKMARK
+  IconData(0xef0e, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // RADAR_CHECKMARK_FILLED
+  IconData(0xef0c, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // RADAR_FILLED
+  IconData(0xef11, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // RADAR_RECTANGLE_MULTIPLE
+  IconData(0xef10, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // RADAR_RECTANGLE_MULTIPLE_FILLED
+  IconData(0xef13, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // RADIO_BUTTON
+  IconData(0xef12, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // RADIO_BUTTON_FILLED
+  IconData(0xef15, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // RAM
+  IconData(0xef14, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // RAM_FILLED
+  IconData(0xef17, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // RATING_MATURE
+  IconData(0xef16, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // RATING_MATURE_FILLED
+  IconData(0xef19, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // RATIO_ONE_TO_ONE
+  IconData(0xef18, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // RATIO_ONE_TO_ONE_FILLED
+  IconData(0xef25, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // READING_LIST
+  IconData(0xef27, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // READING_LIST_ADD
+  IconData(0xef26, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // READING_LIST_ADD_FILLED
+  IconData(0xef24, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // READING_LIST_FILLED
+  IconData(0xef29, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // READING_MODE_MOBILE
+  IconData(0xef28, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // READING_MODE_MOBILE_FILLED
+  IconData(0xef23, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // READ_ALOUD
+  IconData(0xef22, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // READ_ALOUD_FILLED
+  IconData(0xef2b, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // REAL_ESTATE
+  IconData(0xef2a, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // REAL_ESTATE_FILLED
+  IconData(0xef2d, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // RECEIPT
+  IconData(0xef2f, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // RECEIPT_ADD
+  IconData(0xef2e, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // RECEIPT_ADD_FILLED
+  IconData(0xef31, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // RECEIPT_BAG
+  IconData(0xef30, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // RECEIPT_BAG_FILLED
+  IconData(0xef33, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // RECEIPT_CUBE
+  IconData(0xef32, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // RECEIPT_CUBE_FILLED
+  IconData(0xef2c, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // RECEIPT_FILLED
+  IconData(0xef35, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // RECEIPT_MONEY
+  IconData(0xef34, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // RECEIPT_MONEY_FILLED
+  IconData(0xef37, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // RECEIPT_PLAY
+  IconData(0xef36, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // RECEIPT_PLAY_FILLED
+  IconData(0xef39, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // RECEIPT_SEARCH
+  IconData(0xef38, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // RECEIPT_SEARCH_FILLED
+  IconData(0xef3b, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // RECEIPT_SPARKLES
+  IconData(0xef3a, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // RECEIPT_SPARKLES_FILLED
+  IconData(0xef3d, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // RECORD
+  IconData(0xef3c, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // RECORD_FILLED
+  IconData(0xef3f, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // RECORD_STOP
+  IconData(0xef3e, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // RECORD_STOP_FILLED
+  IconData(0xef41, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // RECTANGLE_LANDSCAPE
+  IconData(0xef43, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // RECTANGLE_LANDSCAPE_CLOCK
+  IconData(0xef42, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // RECTANGLE_LANDSCAPE_CLOCK_FILLED
+  IconData(0xef40, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // RECTANGLE_LANDSCAPE_FILLED
+  IconData(0xef45, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // RECTANGLE_LANDSCAPE_HINT_COPY
+  IconData(0xef44, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // RECTANGLE_LANDSCAPE_HINT_COPY_FILLED
+  IconData(0xef47, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // RECTANGLE_LANDSCAPE_LINE_HORIZONTAL
+  IconData(0xef46, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // RECTANGLE_LANDSCAPE_LINE_HORIZONTAL_FILLED
+  IconData(0xef49, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // RECTANGLE_LANDSCAPE_OFF
+  IconData(0xef48, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // RECTANGLE_LANDSCAPE_OFF_FILLED
+  IconData(0xef4b, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // RECTANGLE_LANDSCAPE_SPARKLE
+  IconData(0xef4a, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // RECTANGLE_LANDSCAPE_SPARKLE_FILLED
+  IconData(0xef4d, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // RECTANGLE_LANDSCAPE_SYNC
+  IconData(0xef4c, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // RECTANGLE_LANDSCAPE_SYNC_FILLED
+  IconData(0xef4f, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // RECTANGLE_LANDSCAPE_SYNC_OFF
+  IconData(0xef4e, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // RECTANGLE_LANDSCAPE_SYNC_OFF_FILLED
+  IconData(0xef51, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // RECTANGLE_PORTRAIT
+  IconData(0xef50, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // RECTANGLE_PORTRAIT_FILLED
+  IconData(0xef53, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // RECTANGLE_PORTRAIT_LOCATION_TARGET
+  IconData(0xef52, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // RECTANGLE_PORTRAIT_LOCATION_TARGET_FILLED
+  IconData(0xef55, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // RECYCLE
+  IconData(0xef54, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // RECYCLE_FILLED
+  IconData(0xef57, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // REFRIGERATOR
+  IconData(0xef56, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // REFRIGERATOR_FILLED
+  IconData(0xef59, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // REMIX_ADD
+  IconData(0xef58, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // REMIX_ADD_FILLED
+  IconData(0xef5b, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // REMOTE
+  IconData(0xef5a, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // REMOTE_FILLED
+  IconData(0xef5d, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // RENAME
+  IconData(0xef5f, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // RENAME_A
+  IconData(0xef5e, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // RENAME_A_FILLED
+  IconData(0xef5c, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // RENAME_FILLED
+  IconData(0xef61, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // REORDER
+  IconData(0xef60, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // REORDER_FILLED
+  IconData(0xef63, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // REPLAY
+  IconData(0xef62, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // REPLAY_FILLED
+  IconData(0xef65, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // RESIZE
+  IconData(0xef64, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // RESIZE_FILLED
+  IconData(0xef67, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // RESIZE_IMAGE
+  IconData(0xef66, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // RESIZE_IMAGE_FILLED
+  IconData(0xef69, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // RESIZE_LARGE
+  IconData(0xef68, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // RESIZE_LARGE_FILLED
+  IconData(0xef6b, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // RESIZE_SMALL
+  IconData(0xef6a, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // RESIZE_SMALL_FILLED
+  IconData(0xef6d, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // RESIZE_TABLE
+  IconData(0xef6c, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // RESIZE_TABLE_FILLED
+  IconData(0xef6f, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // RESIZE_VIDEO
+  IconData(0xef6e, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // RESIZE_VIDEO_FILLED
+  IconData(0xef71, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // REWARD
+  IconData(0xef70, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // REWARD_FILLED
+  IconData(0xef73, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // REWIND
+  IconData(0xef72, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // REWIND_FILLED
+  IconData(0xef1b, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // RE_ORDER
+  IconData(0xef1d, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // RE_ORDER_DOTS_HORIZONTAL
+  IconData(0xef1c, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // RE_ORDER_DOTS_HORIZONTAL_FILLED
+  IconData(0xef1f, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // RE_ORDER_DOTS_VERTICAL
+  IconData(0xef1e, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // RE_ORDER_DOTS_VERTICAL_FILLED
+  IconData(0xef1a, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // RE_ORDER_FILLED
+  IconData(0xef21, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // RE_ORDER_VERTICAL
+  IconData(0xef20, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // RE_ORDER_VERTICAL_FILLED
+  IconData(0xef75, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // RHOMBUS
+  IconData(0xef74, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // RHOMBUS_FILLED
+  IconData(0xef77, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // RIBBON
+  IconData(0xef79, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // RIBBON_ADD
+  IconData(0xef78, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // RIBBON_ADD_FILLED
+  IconData(0xef76, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // RIBBON_FILLED
+  IconData(0xef7b, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // RIBBON_OFF
+  IconData(0xef7a, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // RIBBON_OFF_FILLED
+  IconData(0xef7d, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // RIBBON_STAR
+  IconData(0xef7c, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // RIBBON_STAR_FILLED
+  IconData(0xef7f, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // ROAD
+  IconData(0xef81, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // ROAD_CONE
+  IconData(0xef80, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // ROAD_CONE_FILLED
+  IconData(0xef7e, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // ROAD_FILLED
+  IconData(0xef83, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // ROCKET
+  IconData(0xef82, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // ROCKET_FILLED
+  IconData(0xef85, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // ROTATE_LEFT
+  IconData(0xef84, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // ROTATE_LEFT_FILLED
+  IconData(0xef87, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // ROTATE_RIGHT
+  IconData(0xef86, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // ROTATE_RIGHT_FILLED
+  IconData(0xef89, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // ROUTER
+  IconData(0xef88, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // ROUTER_FILLED
+  IconData(0xef8b, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // ROUTER_OFF
+  IconData(0xef8a, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // ROUTER_OFF_FILLED
+  IconData(0xef8d, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // ROW_CHILD
+  IconData(0xef8c, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // ROW_CHILD_FILLED
+  IconData(0xef8f, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // ROW_TRIPLE
+  IconData(0xef8e, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // ROW_TRIPLE_FILLED
+  IconData(0xef91, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // RSS
+  IconData(0xef90, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // RSS_FILLED
+  IconData(0xef93, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // RULER
+  IconData(0xef92, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // RULER_FILLED
+  IconData(0xef95, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // RUN
+  IconData(0xef94, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // RUN_FILLED
+  IconData(0xef97, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // SANITIZE
+  IconData(0xef96, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // SANITIZE_FILLED
+  IconData(0xef99, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // SAVE
+  IconData(0xef9b, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // SAVE_ARROW_RIGHT
+  IconData(0xef9a, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // SAVE_ARROW_RIGHT_FILLED
+  IconData(0xef9d, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // SAVE_COPY
+  IconData(0xef9c, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // SAVE_COPY_FILLED
+  IconData(0xef9f, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // SAVE_EDIT
+  IconData(0xef9e, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // SAVE_EDIT_FILLED
+  IconData(0xef98, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // SAVE_FILLED
+  IconData(0xefa1, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // SAVE_IMAGE
+  IconData(0xefa0, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // SAVE_IMAGE_FILLED
+  IconData(0xefa3, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // SAVE_MULTIPLE
+  IconData(0xefa2, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // SAVE_MULTIPLE_FILLED
+  IconData(0xefa5, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // SAVE_SEARCH
+  IconData(0xefa4, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // SAVE_SEARCH_FILLED
+  IconData(0xefa7, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // SAVE_SYNC
+  IconData(0xefa6, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // SAVE_SYNC_FILLED
+  IconData(0xefa9, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // SAVINGS
+  IconData(0xefa8, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // SAVINGS_FILLED
+  IconData(0xefaf, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // SCALES
+  IconData(0xefae, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // SCALES_FILLED
+  IconData(0xefab, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // SCALE_FILL
+  IconData(0xefaa, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // SCALE_FILL_FILLED
+  IconData(0xefad, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // SCALE_FIT
+  IconData(0xefac, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // SCALE_FIT_FILLED
+  IconData(0xefb1, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // SCAN
+  IconData(0xefb3, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // SCAN_CAMERA
+  IconData(0xefb2, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // SCAN_CAMERA_FILLED
+  IconData(0xefb5, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // SCAN_DASH
+  IconData(0xefb4, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // SCAN_DASH_FILLED
+  IconData(0xefb0, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // SCAN_FILLED
+  IconData(0xefb7, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // SCAN_OBJECT
+  IconData(0xefb6, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // SCAN_OBJECT_FILLED
+  IconData(0xefb9, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // SCAN_PERSON
+  IconData(0xefb8, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // SCAN_PERSON_FILLED
+  IconData(0xefbb, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // SCAN_TABLE
+  IconData(0xefba, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // SCAN_TABLE_FILLED
+  IconData(0xefbd, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // SCAN_TEXT
+  IconData(0xefbc, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // SCAN_TEXT_FILLED
+  IconData(0xefbf, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // SCAN_THUMB_UP
+  IconData(0xefbe, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // SCAN_THUMB_UP_FILLED
+  IconData(0xefc1, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // SCAN_THUMB_UP_OFF
+  IconData(0xefc0, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // SCAN_THUMB_UP_OFF_FILLED
+  IconData(0xefc3, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // SCAN_TYPE
+  IconData(0xefc5, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // SCAN_TYPE_CHECKMARK
+  IconData(0xefc4, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // SCAN_TYPE_CHECKMARK_FILLED
+  IconData(0xefc2, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // SCAN_TYPE_FILLED
+  IconData(0xefc7, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // SCAN_TYPE_OFF
+  IconData(0xefc6, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // SCAN_TYPE_OFF_FILLED
+  IconData(0xefc9, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // SCRATCHPAD
+  IconData(0xefc8, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // SCRATCHPAD_FILLED
+  IconData(0xefd1, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // SCREENSHOT
+  IconData(0xefd0, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // SCREENSHOT_FILLED
+  IconData(0xefd3, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // SCREENSHOT_RECORD
+  IconData(0xefd2, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // SCREENSHOT_RECORD_FILLED
+  IconData(0xefcb, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // SCREEN_CUT
+  IconData(0xefca, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // SCREEN_CUT_FILLED
+  IconData(0xefcd, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // SCREEN_PERSON
+  IconData(0xefcc, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // SCREEN_PERSON_FILLED
+  IconData(0xefcf, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // SCREEN_SEARCH
+  IconData(0xefce, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // SCREEN_SEARCH_FILLED
+  IconData(0xefd5, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // SCRIPT
+  IconData(0xefd4, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // SCRIPT_FILLED
+  IconData(0xefd7, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // SEARCH
+  IconData(0xefd6, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // SEARCH_FILLED
+  IconData(0xefd9, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // SEARCH_INFO
+  IconData(0xefd8, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // SEARCH_INFO_FILLED
+  IconData(0xefdb, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // SEARCH_SETTINGS
+  IconData(0xefda, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // SEARCH_SETTINGS_FILLED
+  IconData(0xefdd, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // SEARCH_SHIELD
+  IconData(0xefdc, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // SEARCH_SHIELD_FILLED
+  IconData(0xefdf, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // SEARCH_SPARKLE
+  IconData(0xefde, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // SEARCH_SPARKLE_FILLED
+  IconData(0xefe1, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // SEARCH_SQUARE
+  IconData(0xefe0, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // SEARCH_SQUARE_FILLED
+  IconData(0xefe3, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // SEARCH_VISUAL
+  IconData(0xefe2, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // SEARCH_VISUAL_FILLED
+  IconData(0xefe5, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // SEAT
+  IconData(0xefe7, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // SEAT_ADD
+  IconData(0xefe6, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // SEAT_ADD_FILLED
+  IconData(0xefe4, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // SEAT_FILLED
+  IconData(0xefe9, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // SEAT_MULTIPLE_STADIUM
+  IconData(0xefe8, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // SEAT_MULTIPLE_STADIUM_FILLED
+  IconData(0xefeb, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // SELECT_ALL_OFF
+  IconData(0xefea, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // SELECT_ALL_OFF_FILLED
+  IconData(0xefed, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // SELECT_ALL_ON
+  IconData(0xefec, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // SELECT_ALL_ON_FILLED
+  IconData(0xefef, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // SELECT_OBJECT
+  IconData(0xefee, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // SELECT_OBJECT_FILLED
+  IconData(0xeff1, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // SELECT_OBJECT_SKEW
+  IconData(0xeff3, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // SELECT_OBJECT_SKEW_DISMISS
+  IconData(0xeff2, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // SELECT_OBJECT_SKEW_DISMISS_FILLED
+  IconData(0xeff5, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // SELECT_OBJECT_SKEW_EDIT
+  IconData(0xeff4, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // SELECT_OBJECT_SKEW_EDIT_FILLED
+  IconData(0xeff0, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // SELECT_OBJECT_SKEW_FILLED
+  IconData(0xeff7, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // SEND
+  IconData(0xeff9, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // SEND_BEAKER
+  IconData(0xeff8, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // SEND_BEAKER_FILLED
+  IconData(0xeffb, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // SEND_CLOCK
+  IconData(0xeffa, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // SEND_CLOCK_FILLED
+  IconData(0xeffd, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // SEND_COPY
+  IconData(0xeffc, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // SEND_COPY_FILLED
+  IconData(0xeff6, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // SEND_FILLED
+  IconData(0xefff, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // SEND_PERSON
+  IconData(0xeffe, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // SEND_PERSON_FILLED
+  IconData(0xf001, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // SERIAL_PORT
+  IconData(0xf000, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // SERIAL_PORT_FILLED
+  IconData(0xf003, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // SERIAL_PORT_OFF
+  IconData(0xf002, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // SERIAL_PORT_OFF_FILLED
+  IconData(0xf005, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // SERVER
+  IconData(0xf004, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // SERVER_FILLED
+  IconData(0xf007, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // SERVER_LINK
+  IconData(0xf006, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // SERVER_LINK_FILLED
+  IconData(0xf009, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // SERVER_MULTIPLE
+  IconData(0xf008, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // SERVER_MULTIPLE_FILLED
+  IconData(0xf00b, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // SERVER_PLAY
+  IconData(0xf00a, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // SERVER_PLAY_FILLED
+  IconData(0xf00d, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // SERVICE_BELL
+  IconData(0xf00c, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // SERVICE_BELL_FILLED
+  IconData(0xf00f, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // SETTINGS
+  IconData(0xf011, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // SETTINGS_CHAT
+  IconData(0xf010, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // SETTINGS_CHAT_FILLED
+  IconData(0xf013, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // SETTINGS_COG_MULTIPLE
+  IconData(0xf012, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // SETTINGS_COG_MULTIPLE_FILLED
+  IconData(0xf00e, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // SETTINGS_FILLED
+  IconData(0xf015, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // SETTINGS_SYNC
+  IconData(0xf014, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // SETTINGS_SYNC_FILLED
+  IconData(0xf021, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // SHAPES
+  IconData(0xf020, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // SHAPES_FILLED
+  IconData(0xf017, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // SHAPE_EXCLUDE
+  IconData(0xf016, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // SHAPE_EXCLUDE_FILLED
+  IconData(0xf019, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // SHAPE_INTERSECT
+  IconData(0xf018, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // SHAPE_INTERSECT_FILLED
+  IconData(0xf01b, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // SHAPE_ORGANIC
+  IconData(0xf01a, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // SHAPE_ORGANIC_FILLED
+  IconData(0xf01d, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // SHAPE_SUBTRACT
+  IconData(0xf01c, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // SHAPE_SUBTRACT_FILLED
+  IconData(0xf01f, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // SHAPE_UNION
+  IconData(0xf01e, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // SHAPE_UNION_FILLED
+  IconData(0xf023, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // SHARE
+  IconData(0xf025, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // SHARE_ANDROID
+  IconData(0xf024, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // SHARE_ANDROID_FILLED
+  IconData(0xf027, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // SHARE_CLOSE_TRAY
+  IconData(0xf026, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // SHARE_CLOSE_TRAY_FILLED
+  IconData(0xf022, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // SHARE_FILLED
+  IconData(0xf029, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // SHARE_IOS
+  IconData(0xf028, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // SHARE_IOS_FILLED
+  IconData(0xf02b, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // SHARE_MULTIPLE
+  IconData(0xf02a, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // SHARE_MULTIPLE_FILLED
+  IconData(0xf02d, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // SHARE_SCREEN_PERSON
+  IconData(0xf02c, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // SHARE_SCREEN_PERSON_FILLED
+  IconData(0xf02f, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // SHARE_SCREEN_PERSON_OVERLAY
+  IconData(0xf02e, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // SHARE_SCREEN_PERSON_OVERLAY_FILLED
+  IconData(0xf031, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // SHARE_SCREEN_PERSON_OVERLAY_INSIDE
+  IconData(0xf030, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // SHARE_SCREEN_PERSON_OVERLAY_INSIDE_FILLED
+  IconData(0xf033, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // SHARE_SCREEN_PERSON_P
+  IconData(0xf032, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // SHARE_SCREEN_PERSON_P_FILLED
+  IconData(0xf035, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // SHARE_SCREEN_START
+  IconData(0xf034, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // SHARE_SCREEN_START_FILLED
+  IconData(0xf037, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // SHARE_SCREEN_STOP
+  IconData(0xf036, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // SHARE_SCREEN_STOP_FILLED
+  IconData(0xf039, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // SHIELD
+  IconData(0xf03b, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // SHIELD_ADD
+  IconData(0xf03a, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // SHIELD_ADD_FILLED
+  IconData(0xf03d, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // SHIELD_ARROW_RIGHT
+  IconData(0xf03c, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // SHIELD_ARROW_RIGHT_FILLED
+  IconData(0xf03f, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // SHIELD_BADGE
+  IconData(0xf03e, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // SHIELD_BADGE_FILLED
+  IconData(0xf041, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // SHIELD_CHECKMARK
+  IconData(0xf040, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // SHIELD_CHECKMARK_FILLED
+  IconData(0xf043, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // SHIELD_DISMISS
+  IconData(0xf042, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // SHIELD_DISMISS_FILLED
+  IconData(0xf045, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // SHIELD_DISMISS_SHIELD
+  IconData(0xf044, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // SHIELD_DISMISS_SHIELD_FILLED
+  IconData(0xf047, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // SHIELD_ERROR
+  IconData(0xf046, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // SHIELD_ERROR_FILLED
+  IconData(0xf038, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // SHIELD_FILLED
+  IconData(0xf049, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // SHIELD_GLOBE
+  IconData(0xf048, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // SHIELD_GLOBE_FILLED
+  IconData(0xf04b, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // SHIELD_KEYHOLE
+  IconData(0xf04a, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // SHIELD_KEYHOLE_FILLED
+  IconData(0xf04d, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // SHIELD_LOCK
+  IconData(0xf04c, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // SHIELD_LOCK_FILLED
+  IconData(0xf04f, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // SHIELD_PERSON
+  IconData(0xf051, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // SHIELD_PERSON_ADD
+  IconData(0xf050, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // SHIELD_PERSON_ADD_FILLED
+  IconData(0xf04e, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // SHIELD_PERSON_FILLED
+  IconData(0xf053, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // SHIELD_PROHIBITED
+  IconData(0xf052, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // SHIELD_PROHIBITED_FILLED
+  IconData(0xf055, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // SHIELD_QUESTION
+  IconData(0xf054, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // SHIELD_QUESTION_FILLED
+  IconData(0xf057, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // SHIELD_SETTINGS
+  IconData(0xf056, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // SHIELD_SETTINGS_FILLED
+  IconData(0xf059, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // SHIELD_TASK
+  IconData(0xf058, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // SHIELD_TASK_FILLED
+  IconData(0xf05b, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // SHIFTS
+  IconData(0xf05d, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // SHIFTS_30_MINUTES
+  IconData(0xf05c, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // SHIFTS_30_MINUTES_FILLED
+  IconData(0xf05f, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // SHIFTS_ACTIVITY
+  IconData(0xf05e, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // SHIFTS_ACTIVITY_FILLED
+  IconData(0xf061, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // SHIFTS_ADD
+  IconData(0xf060, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // SHIFTS_ADD_FILLED
+  IconData(0xf063, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // SHIFTS_AVAILABILITY
+  IconData(0xf062, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // SHIFTS_AVAILABILITY_FILLED
+  IconData(0xf065, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // SHIFTS_CHECKMARK
+  IconData(0xf064, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // SHIFTS_CHECKMARK_FILLED
+  IconData(0xf067, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // SHIFTS_DAY
+  IconData(0xf066, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // SHIFTS_DAY_FILLED
+  IconData(0xf05a, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // SHIFTS_FILLED
+  IconData(0xf069, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // SHIFTS_OPEN
+  IconData(0xf068, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // SHIFTS_OPEN_FILLED
+  IconData(0xf06b, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // SHIFTS_PROHIBITED
+  IconData(0xf06a, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // SHIFTS_PROHIBITED_FILLED
+  IconData(0xf06d, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // SHIFTS_QUESTION_MARK
+  IconData(0xf06c, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // SHIFTS_QUESTION_MARK_FILLED
+  IconData(0xf06f, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // SHIFTS_TEAM
+  IconData(0xf06e, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // SHIFTS_TEAM_FILLED
+  IconData(0xf071, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // SHIRT
+  IconData(0xf070, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // SHIRT_FILLED
+  IconData(0xf073, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // SHOPPING_BAG
+  IconData(0xf075, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // SHOPPING_BAG_ADD
+  IconData(0xf074, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // SHOPPING_BAG_ADD_FILLED
+  IconData(0xf077, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // SHOPPING_BAG_ARROW_LEFT
+  IconData(0xf076, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // SHOPPING_BAG_ARROW_LEFT_FILLED
+  IconData(0xf079, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // SHOPPING_BAG_CHECKMARK
+  IconData(0xf078, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // SHOPPING_BAG_CHECKMARK_FILLED
+  IconData(0xf07b, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // SHOPPING_BAG_DISMISS
+  IconData(0xf07a, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // SHOPPING_BAG_DISMISS_FILLED
+  IconData(0xf072, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // SHOPPING_BAG_FILLED
+  IconData(0xf07d, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // SHOPPING_BAG_PAUSE
+  IconData(0xf07c, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // SHOPPING_BAG_PAUSE_FILLED
+  IconData(0xf07f, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // SHOPPING_BAG_PERCENT
+  IconData(0xf07e, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // SHOPPING_BAG_PERCENT_FILLED
+  IconData(0xf081, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // SHOPPING_BAG_PLAY
+  IconData(0xf080, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // SHOPPING_BAG_PLAY_FILLED
+  IconData(0xf083, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // SHOPPING_BAG_TAG
+  IconData(0xf082, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // SHOPPING_BAG_TAG_FILLED
+  IconData(0xf085, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // SHORTPICK
+  IconData(0xf084, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // SHORTPICK_FILLED
+  IconData(0xf087, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // SHOWERHEAD
+  IconData(0xf086, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // SHOWERHEAD_FILLED
+  IconData(0xf089, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // SIDEBAR_SEARCH_LTR
+  IconData(0xf088, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // SIDEBAR_SEARCH_LTR_FILLED
+  IconData(0xf08b, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // SIDEBAR_SEARCH_RTL
+  IconData(0xf08a, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // SIDEBAR_SEARCH_RTL_FILLED
+  IconData(0xf08f, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // SIGNATURE
+  IconData(0xf08e, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // SIGNATURE_FILLED
+  IconData(0xf08d, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // SIGN_OUT
+  IconData(0xf08c, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // SIGN_OUT_FILLED
+  IconData(0xf091, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // SIM
+  IconData(0xf090, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // SIM_FILLED
+  IconData(0xf093, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // SINE_WAVE_DOTS
+  IconData(0xf092, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // SINE_WAVE_DOTS_FILLED
+  IconData(0xf095, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // SKIP_BACK_10
+  IconData(0xf094, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // SKIP_BACK_10_FILLED
+  IconData(0xf097, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // SKIP_BACK_15
+  IconData(0xf096, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // SKIP_BACK_15_FILLED
+  IconData(0xf099, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // SKIP_FORWARD_10
+  IconData(0xf098, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // SKIP_FORWARD_10_FILLED
+  IconData(0xf09b, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // SKIP_FORWARD_15
+  IconData(0xf09a, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // SKIP_FORWARD_15_FILLED
+  IconData(0xf09d, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // SKIP_FORWARD_30
+  IconData(0xf09c, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // SKIP_FORWARD_30_FILLED
+  IconData(0xf09f, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // SKIP_FORWARD_TAB
+  IconData(0xf09e, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // SKIP_FORWARD_TAB_FILLED
+  IconData(0xf0a1, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // SLASH_FORWARD
+  IconData(0xf0a0, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // SLASH_FORWARD_FILLED
+  IconData(0xf0a3, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // SLEEP
+  IconData(0xf0a2, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // SLEEP_FILLED
+  IconData(0xf0a5, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // SLIDE_ADD
+  IconData(0xf0a4, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // SLIDE_ADD_FILLED
+  IconData(0xf63d, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // SLIDE_ARROW_FORWARD
+  IconData(0xf63c, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // SLIDE_ARROW_FORWARD_FILLED
+  IconData(0xf0a7, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // SLIDE_ARROW_RIGHT
+  IconData(0xf0a6, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // SLIDE_ARROW_RIGHT_FILLED
+  IconData(0xf0a9, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // SLIDE_CONTENT
+  IconData(0xf0a8, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // SLIDE_CONTENT_FILLED
+  IconData(0xf0ab, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // SLIDE_ERASER
+  IconData(0xf0aa, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // SLIDE_ERASER_FILLED
+  IconData(0xf0ad, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // SLIDE_GRID
+  IconData(0xf0ac, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // SLIDE_GRID_FILLED
+  IconData(0xf0af, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // SLIDE_HIDE
+  IconData(0xf0ae, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // SLIDE_HIDE_FILLED
+  IconData(0xf0b1, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // SLIDE_LAYOUT
+  IconData(0xf0b0, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // SLIDE_LAYOUT_FILLED
+  IconData(0xf0b3, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // SLIDE_LINK
+  IconData(0xf0b2, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // SLIDE_LINK_FILLED
+  IconData(0xf0b5, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // SLIDE_MICROPHONE
+  IconData(0xf0b4, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // SLIDE_MICROPHONE_FILLED
+  IconData(0xf0b7, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // SLIDE_MULTIPLE
+  IconData(0xf0b9, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // SLIDE_MULTIPLE_ARROW_RIGHT
+  IconData(0xf0b8, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // SLIDE_MULTIPLE_ARROW_RIGHT_FILLED
+  IconData(0xf0b6, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // SLIDE_MULTIPLE_FILLED
+  IconData(0xf0bb, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // SLIDE_MULTIPLE_SEARCH
+  IconData(0xf0ba, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // SLIDE_MULTIPLE_SEARCH_FILLED
+  IconData(0xf0bd, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // SLIDE_PLAY
+  IconData(0xf0bc, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // SLIDE_PLAY_FILLED
+  IconData(0xf0bf, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // SLIDE_RECORD
+  IconData(0xf0be, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // SLIDE_RECORD_FILLED
+  IconData(0xf0c1, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // SLIDE_SEARCH
+  IconData(0xf0c0, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // SLIDE_SEARCH_FILLED
+  IconData(0xf0c3, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // SLIDE_SETTINGS
+  IconData(0xf0c2, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // SLIDE_SETTINGS_FILLED
+  IconData(0xf0c5, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // SLIDE_SIZE
+  IconData(0xf0c4, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // SLIDE_SIZE_FILLED
+  IconData(0xf0c7, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // SLIDE_TEXT
+  IconData(0xf0c9, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // SLIDE_TEXT_CALL
+  IconData(0xf0c8, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // SLIDE_TEXT_CALL_FILLED
+  IconData(0xf0cb, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // SLIDE_TEXT_CURSOR
+  IconData(0xf0ca, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // SLIDE_TEXT_CURSOR_FILLED
+  IconData(0xf0cd, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // SLIDE_TEXT_EDIT
+  IconData(0xf0cc, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // SLIDE_TEXT_EDIT_FILLED
+  IconData(0xf0c6, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // SLIDE_TEXT_FILLED
+  IconData(0xf0cf, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // SLIDE_TEXT_MULTIPLE
+  IconData(0xf0ce, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // SLIDE_TEXT_MULTIPLE_FILLED
+  IconData(0xf0d1, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // SLIDE_TEXT_PERSON
+  IconData(0xf0d0, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // SLIDE_TEXT_PERSON_FILLED
+  IconData(0xf0d3, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // SLIDE_TEXT_SPARKLE
+  IconData(0xf0d2, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // SLIDE_TEXT_SPARKLE_FILLED
+  IconData(0xf0d5, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // SLIDE_TEXT_TITLE
+  IconData(0xf0d7, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // SLIDE_TEXT_TITLE_ADD
+  IconData(0xf0d6, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // SLIDE_TEXT_TITLE_ADD_FILLED
+  IconData(0xf0d9, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // SLIDE_TEXT_TITLE_CHECKMARK
+  IconData(0xf0d8, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // SLIDE_TEXT_TITLE_CHECKMARK_FILLED
+  IconData(0xf0db, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // SLIDE_TEXT_TITLE_EDIT
+  IconData(0xf0da, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // SLIDE_TEXT_TITLE_EDIT_FILLED
+  IconData(0xf0d4, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // SLIDE_TEXT_TITLE_FILLED
+  IconData(0xf0dd, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // SLIDE_TOPIC_ADD
+  IconData(0xf0dc, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // SLIDE_TOPIC_ADD_FILLED
+  IconData(0xf0df, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // SLIDE_TRANSITION
+  IconData(0xf0de, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // SLIDE_TRANSITION_FILLED
+  IconData(0xf0e1, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // SMARTWATCH
+  IconData(0xf0e3, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // SMARTWATCH_DOT
+  IconData(0xf0e2, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // SMARTWATCH_DOT_FILLED
+  IconData(0xf0e0, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // SMARTWATCH_FILLED
+  IconData(0xf0e5, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // SNOOZE
+  IconData(0xf0e4, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // SNOOZE_FILLED
+  IconData(0xf0e7, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // SOUND_SOURCE
+  IconData(0xf0e6, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // SOUND_SOURCE_FILLED
+  IconData(0xf0e9, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // SOUND_WAVE_CIRCLE
+  IconData(0xf0eb, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // SOUND_WAVE_CIRCLE_ADD
+  IconData(0xf0ea, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // SOUND_WAVE_CIRCLE_ADD_FILLED
+  IconData(0xf0e8, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // SOUND_WAVE_CIRCLE_FILLED
+  IconData(0xf0ed, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // SOUND_WAVE_CIRCLE_SPARKLE
+  IconData(0xf0ec, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // SOUND_WAVE_CIRCLE_SPARKLE_FILLED
+  IconData(0xf0ef, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // SOUND_WAVE_CIRCLE_SPARKLE_OFF
+  IconData(0xf0ee, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // SOUND_WAVE_CIRCLE_SPARKLE_OFF_FILLED
+  IconData(0xf0f1, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // SOUND_WAVE_CIRCLE_SUBTRACT
+  IconData(0xf0f0, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // SOUND_WAVE_CIRCLE_SUBTRACT_FILLED
+  IconData(0xf0f5, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // SPACEBAR
+  IconData(0xf0f4, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // SPACEBAR_FILLED
+  IconData(0xf0f3, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // SPACE_3D
+  IconData(0xf0f2, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // SPACE_3D_FILLED
+  IconData(0xf0f7, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // SPARKLE
+  IconData(0xf0f9, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // SPARKLE_ACTION
+  IconData(0xf0f8, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // SPARKLE_ACTION_FILLED
+  IconData(0xf0fb, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // SPARKLE_CIRCLE
+  IconData(0xf0fa, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // SPARKLE_CIRCLE_FILLED
+  IconData(0xf0fd, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // SPARKLE_CIRCLE_OFF
+  IconData(0xf0fc, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // SPARKLE_CIRCLE_OFF_FILLED
+  IconData(0xf0f6, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // SPARKLE_FILLED
+  IconData(0xf0ff, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // SPARKLE_INFO
+  IconData(0xf0fe, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // SPARKLE_INFO_FILLED
+  IconData(0xf101, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // SPARKLE_OFF
+  IconData(0xf100, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // SPARKLE_OFF_FILLED
+  IconData(0xf103, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // SPATULA_SPOON
+  IconData(0xf102, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // SPATULA_SPOON_FILLED
+  IconData(0xf105, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // SPEAKER_0
+  IconData(0xf104, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // SPEAKER_0_FILLED
+  IconData(0xf107, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // SPEAKER_1
+  IconData(0xf106, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // SPEAKER_1_FILLED
+  IconData(0xf109, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // SPEAKER_2
+  IconData(0xf108, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // SPEAKER_2_FILLED
+  IconData(0xf10b, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // SPEAKER_BLUETOOTH
+  IconData(0xf10a, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // SPEAKER_BLUETOOTH_FILLED
+  IconData(0xf10d, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // SPEAKER_BOX
+  IconData(0xf10c, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // SPEAKER_BOX_FILLED
+  IconData(0xf10f, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // SPEAKER_BOX_KEYBOARD
+  IconData(0xf10e, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // SPEAKER_BOX_KEYBOARD_FILLED
+  IconData(0xf111, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // SPEAKER_EDIT
+  IconData(0xf110, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // SPEAKER_EDIT_FILLED
+  IconData(0xf113, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // SPEAKER_MUTE
+  IconData(0xf112, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // SPEAKER_MUTE_FILLED
+  IconData(0xf115, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // SPEAKER_OFF
+  IconData(0xf114, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // SPEAKER_OFF_FILLED
+  IconData(0xf117, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // SPEAKER_SETTINGS
+  IconData(0xf116, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // SPEAKER_SETTINGS_FILLED
+  IconData(0xf119, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // SPEAKER_USB
+  IconData(0xf118, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // SPEAKER_USB_FILLED
+  IconData(0xf11b, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // SPINNER_IOS
+  IconData(0xf11a, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // SPINNER_IOS_FILLED
+  IconData(0xf11d, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // SPLIT_HINT
+  IconData(0xf11c, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // SPLIT_HINT_FILLED
+  IconData(0xf11f, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // SPLIT_HORIZONTAL
+  IconData(0xf11e, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // SPLIT_HORIZONTAL_FILLED
+  IconData(0xf121, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // SPLIT_VERTICAL
+  IconData(0xf120, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // SPLIT_VERTICAL_FILLED
+  IconData(0xf123, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // SPORT
+  IconData(0xf125, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // SPORT_AMERICAN_FOOTBALL
+  IconData(0xf124, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // SPORT_AMERICAN_FOOTBALL_FILLED
+  IconData(0xf127, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // SPORT_BASEBALL
+  IconData(0xf126, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // SPORT_BASEBALL_FILLED
+  IconData(0xf129, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // SPORT_BASKETBALL
+  IconData(0xf128, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // SPORT_BASKETBALL_FILLED
+  IconData(0xf12b, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // SPORT_CRICKET_BALL
+  IconData(0xf12a, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // SPORT_CRICKET_BALL_FILLED
+  IconData(0xf12d, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // SPORT_CRICKET_BAT
+  IconData(0xf12c, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // SPORT_CRICKET_BAT_FILLED
+  IconData(0xf122, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // SPORT_FILLED
+  IconData(0xf12f, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // SPORT_HOCKEY
+  IconData(0xf12e, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // SPORT_HOCKEY_FILLED
+  IconData(0xf131, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // SPORT_SOCCER
+  IconData(0xf130, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // SPORT_SOCCER_FILLED
+  IconData(0xf133, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // SQUARE
+  IconData(0xf14f, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // SQUARES_NESTED
+  IconData(0xf14e, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // SQUARES_NESTED_FILLED
+  IconData(0xf135, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // SQUARE_ADD
+  IconData(0xf134, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // SQUARE_ADD_FILLED
+  IconData(0xf137, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // SQUARE_ARROW_FORWARD
+  IconData(0xf136, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // SQUARE_ARROW_FORWARD_FILLED
+  IconData(0xf139, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // SQUARE_DISMISS
+  IconData(0xf138, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // SQUARE_DISMISS_FILLED
+  IconData(0xf13b, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // SQUARE_DOVETAIL_JOINT
+  IconData(0xf13a, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // SQUARE_DOVETAIL_JOINT_FILLED
+  IconData(0xf13d, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // SQUARE_ERASER
+  IconData(0xf13c, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // SQUARE_ERASER_FILLED
+  IconData(0xf132, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // SQUARE_FILLED
+  IconData(0xf13f, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // SQUARE_HINT
+  IconData(0xf141, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // SQUARE_HINT_APPS
+  IconData(0xf140, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // SQUARE_HINT_APPS_FILLED
+  IconData(0xf143, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // SQUARE_HINT_ARROW_BACK
+  IconData(0xf142, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // SQUARE_HINT_ARROW_BACK_FILLED
+  IconData(0xf13e, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // SQUARE_HINT_FILLED
+  IconData(0xf145, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // SQUARE_HINT_HEXAGON
+  IconData(0xf144, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // SQUARE_HINT_HEXAGON_FILLED
+  IconData(0xf147, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // SQUARE_HINT_SPARKLES
+  IconData(0xf146, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // SQUARE_HINT_SPARKLES_FILLED
+  IconData(0xf149, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // SQUARE_MULTIPLE
+  IconData(0xf148, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // SQUARE_MULTIPLE_FILLED
+  IconData(0xf14b, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // SQUARE_SHADOW
+  IconData(0xf14a, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // SQUARE_SHADOW_FILLED
+  IconData(0xf14d, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // SQUARE_TEXT_ARROW_REPEAT_ALL
+  IconData(0xf14c, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // SQUARE_TEXT_ARROW_REPEAT_ALL_FILLED
+  IconData(0xf151, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // STACK
+  IconData(0xf153, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // STACK_ADD
+  IconData(0xf152, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // STACK_ADD_FILLED
+  IconData(0xf155, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // STACK_ARROW_FORWARD
+  IconData(0xf154, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // STACK_ARROW_FORWARD_FILLED
+  IconData(0xf150, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // STACK_FILLED
+  IconData(0xf157, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // STACK_OFF
+  IconData(0xf156, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // STACK_OFF_FILLED
+  IconData(0xf159, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // STACK_STAR
+  IconData(0xf158, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // STACK_STAR_FILLED
+  IconData(0xf15b, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // STACK_VERTICAL
+  IconData(0xf15a, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // STACK_VERTICAL_FILLED
+  IconData(0xf15d, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // STAR
+  IconData(0xf15f, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // STAR_ADD
+  IconData(0xf15e, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // STAR_ADD_FILLED
+  IconData(0xf161, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // STAR_ARROW_BACK
+  IconData(0xf160, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // STAR_ARROW_BACK_FILLED
+  IconData(0xf163, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // STAR_ARROW_RIGHT_END
+  IconData(0xf162, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // STAR_ARROW_RIGHT_END_FILLED
+  IconData(0xf165, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // STAR_ARROW_RIGHT_START
+  IconData(0xf164, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // STAR_ARROW_RIGHT_START_FILLED
+  IconData(0xf167, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // STAR_CHECKMARK
+  IconData(0xf166, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // STAR_CHECKMARK_FILLED
+  IconData(0xf169, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // STAR_DISMISS
+  IconData(0xf168, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // STAR_DISMISS_FILLED
+  IconData(0xf16b, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // STAR_EDIT
+  IconData(0xf16a, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // STAR_EDIT_FILLED
+  IconData(0xf16d, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // STAR_EMPHASIS
+  IconData(0xf16c, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // STAR_EMPHASIS_FILLED
+  IconData(0xf15c, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // STAR_FILLED
+  IconData(0xf16f, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // STAR_HALF
+  IconData(0xf16e, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // STAR_HALF_FILLED
+  IconData(0xf171, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // STAR_LINE_HORIZONTAL_3
+  IconData(0xf170, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // STAR_LINE_HORIZONTAL_3_FILLED
+  IconData(0xf173, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // STAR_OFF
+  IconData(0xf172, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // STAR_OFF_FILLED
+  IconData(0xf175, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // STAR_ONE_QUARTER
+  IconData(0xf174, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // STAR_ONE_QUARTER_FILLED
+  IconData(0xf177, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // STAR_PROHIBITED
+  IconData(0xf176, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // STAR_PROHIBITED_FILLED
+  IconData(0xf179, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // STAR_SETTINGS
+  IconData(0xf178, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // STAR_SETTINGS_FILLED
+  IconData(0xf17b, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // STAR_THREE_QUARTER
+  IconData(0xf17a, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // STAR_THREE_QUARTER_FILLED
+  IconData(0xf17d, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // STATUS
+  IconData(0xf17c, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // STATUS_FILLED
+  IconData(0xf17f, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // STEP
+  IconData(0xf181, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // STEPS
+  IconData(0xf180, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // STEPS_FILLED
+  IconData(0xf17e, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // STEP_FILLED
+  IconData(0xf183, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // STETHOSCOPE
+  IconData(0xf182, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // STETHOSCOPE_FILLED
+  IconData(0xf185, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // STICKER
+  IconData(0xf187, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // STICKER_ADD
+  IconData(0xf186, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // STICKER_ADD_FILLED
+  IconData(0xf184, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // STICKER_FILLED
+  IconData(0xf189, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // STOP
+  IconData(0xf188, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // STOP_FILLED
+  IconData(0xf18b, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // STORAGE
+  IconData(0xf18a, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // STORAGE_FILLED
+  IconData(0xf18d, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // STORE_MICROSOFT
+  IconData(0xf18c, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // STORE_MICROSOFT_FILLED
+  IconData(0xf18f, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // STOVE
+  IconData(0xf18e, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // STOVE_FILLED
+  IconData(0xf191, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // STREAM
+  IconData(0xf190, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // STREAM_FILLED
+  IconData(0xf193, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // STREAM_INPUT
+  IconData(0xf192, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // STREAM_INPUT_FILLED
+  IconData(0xf195, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // STREAM_INPUT_OUTPUT
+  IconData(0xf194, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // STREAM_INPUT_OUTPUT_FILLED
+  IconData(0xf197, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // STREAM_OUTPUT
+  IconData(0xf196, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // STREAM_OUTPUT_FILLED
+  IconData(0xf199, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // STREET_HOME
+  IconData(0xf198, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // STREET_HOME_FILLED
+  IconData(0xf19b, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // STREET_SIGN
+  IconData(0xf19a, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // STREET_SIGN_FILLED
+  IconData(0xf19d, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // STYLE_GUIDE
+  IconData(0xf19c, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // STYLE_GUIDE_FILLED
+  IconData(0xf1a1, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // SUBTITLES
+  IconData(0xf1a0, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // SUBTITLES_FILLED
+  IconData(0xf1a3, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // SUBTRACT
+  IconData(0xf1a5, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // SUBTRACT_CIRCLE
+  IconData(0xf1a7, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // SUBTRACT_CIRCLE_ARROW_BACK
+  IconData(0xf1a6, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // SUBTRACT_CIRCLE_ARROW_BACK_FILLED
+  IconData(0xf1a9, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // SUBTRACT_CIRCLE_ARROW_FORWARD
+  IconData(0xf1a8, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // SUBTRACT_CIRCLE_ARROW_FORWARD_FILLED
+  IconData(0xf1a4, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // SUBTRACT_CIRCLE_FILLED
+  IconData(0xf1a2, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // SUBTRACT_FILLED
+  IconData(0xf1ab, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // SUBTRACT_PARENTHESES
+  IconData(0xf1aa, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // SUBTRACT_PARENTHESES_FILLED
+  IconData(0xf1ad, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // SUBTRACT_SQUARE
+  IconData(0xf1ac, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // SUBTRACT_SQUARE_FILLED
+  IconData(0xf1af, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // SUBTRACT_SQUARE_MULTIPLE
+  IconData(0xf1ae, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // SUBTRACT_SQUARE_MULTIPLE_FILLED
+  IconData(0xf19f, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // SUB_GRID
+  IconData(0xf19e, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // SUB_GRID_FILLED
+  IconData(0xf1b1, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // SURFACE_EARBUDS
+  IconData(0xf1b0, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // SURFACE_EARBUDS_FILLED
+  IconData(0xf1b3, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // SURFACE_HUB
+  IconData(0xf1b2, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // SURFACE_HUB_FILLED
+  IconData(0xf1b5, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // SWIMMING_POOL
+  IconData(0xf1b4, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // SWIMMING_POOL_FILLED
+  IconData(0xf1b7, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // SWIPE_DOWN
+  IconData(0xf1b6, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // SWIPE_DOWN_FILLED
+  IconData(0xf1b9, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // SWIPE_RIGHT
+  IconData(0xf1b8, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // SWIPE_RIGHT_FILLED
+  IconData(0xf1bb, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // SWIPE_UP
+  IconData(0xf1ba, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // SWIPE_UP_FILLED
+  IconData(0xf1bd, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // SYMBOLS
+  IconData(0xf1bc, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // SYMBOLS_FILLED
+  IconData(0xf1bf, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // SYNC_OFF
+  IconData(0xf1be, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // SYNC_OFF_FILLED
+  IconData(0xf1c1, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // SYRINGE
+  IconData(0xf1c0, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // SYRINGE_FILLED
+  IconData(0xf1c3, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // SYSTEM
+  IconData(0xf1c2, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // SYSTEM_FILLED
+  IconData(0xf1c5, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // TAB
+  IconData(0xf1f1, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // TABLE
+  IconData(0xf279, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // TABLET
+  IconData(0xf278, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // TABLET_FILLED
+  IconData(0xf27b, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // TABLET_LAPTOP
+  IconData(0xf27a, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // TABLET_LAPTOP_FILLED
+  IconData(0xf27d, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // TABLET_PHONE_DESKTOP
+  IconData(0xf27c, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // TABLET_PHONE_DESKTOP_FILLED
+  IconData(0xf27f, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // TABLET_SPEAKER
+  IconData(0xf27e, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // TABLET_SPEAKER_FILLED
+  IconData(0xf1f3, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // TABLE_ADD
+  IconData(0xf1f2, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // TABLE_ADD_FILLED
+  IconData(0xf1f5, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // TABLE_ALT_TEXT
+  IconData(0xf1f4, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // TABLE_ALT_TEXT_FILLED
+  IconData(0xf1f7, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // TABLE_ARROW_REPEAT_ALL
+  IconData(0xf1f6, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // TABLE_ARROW_REPEAT_ALL_FILLED
+  IconData(0xf1f9, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // TABLE_ARROW_UP
+  IconData(0xf1f8, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // TABLE_ARROW_UP_FILLED
+  IconData(0xf1fb, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // TABLE_BOTTOM_ROW
+  IconData(0xf1fa, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // TABLE_BOTTOM_ROW_FILLED
+  IconData(0xf1fd, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // TABLE_CALCULATOR
+  IconData(0xf1fc, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // TABLE_CALCULATOR_FILLED
+  IconData(0xf211, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // TABLE_CELLS_MERGE
+  IconData(0xf210, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // TABLE_CELLS_MERGE_FILLED
+  IconData(0xf213, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // TABLE_CELLS_SPLIT
+  IconData(0xf212, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // TABLE_CELLS_SPLIT_FILLED
+  IconData(0xf1ff, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // TABLE_CELL_ADD
+  IconData(0xf1fe, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // TABLE_CELL_ADD_FILLED
+  IconData(0xf201, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // TABLE_CELL_CENTER
+  IconData(0xf203, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // TABLE_CELL_CENTER_ARROW_REPEAT_ALL
+  IconData(0xf202, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // TABLE_CELL_CENTER_ARROW_REPEAT_ALL_FILLED
+  IconData(0xf205, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // TABLE_CELL_CENTER_EDIT
+  IconData(0xf204, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // TABLE_CELL_CENTER_EDIT_FILLED
+  IconData(0xf200, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // TABLE_CELL_CENTER_FILLED
+  IconData(0xf207, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // TABLE_CELL_CENTER_LINK
+  IconData(0xf206, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // TABLE_CELL_CENTER_LINK_FILLED
+  IconData(0xf209, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // TABLE_CELL_CENTER_SEARCH
+  IconData(0xf208, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // TABLE_CELL_CENTER_SEARCH_FILLED
+  IconData(0xf20b, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // TABLE_CELL_CROSS
+  IconData(0xf20d, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // TABLE_CELL_CROSS_BRUSH
+  IconData(0xf20c, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // TABLE_CELL_CROSS_BRUSH_FILLED
+  IconData(0xf20a, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // TABLE_CELL_CROSS_FILLED
+  IconData(0xf20f, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // TABLE_CELL_EDIT
+  IconData(0xf20e, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // TABLE_CELL_EDIT_FILLED
+  IconData(0xf215, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // TABLE_CHECKER
+  IconData(0xf214, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // TABLE_CHECKER_FILLED
+  IconData(0xf217, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // TABLE_COLUMN_TOP_BOTTOM
+  IconData(0xf219, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // TABLE_COLUMN_TOP_BOTTOM_ARROW_REPEAT_ALL
+  IconData(0xf218, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // TABLE_COLUMN_TOP_BOTTOM_ARROW_REPEAT_ALL_FILLED
+  IconData(0xf21b, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // TABLE_COLUMN_TOP_BOTTOM_EDIT
+  IconData(0xf21a, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // TABLE_COLUMN_TOP_BOTTOM_EDIT_FILLED
+  IconData(0xf216, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // TABLE_COLUMN_TOP_BOTTOM_FILLED
+  IconData(0xf21d, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // TABLE_COLUMN_TOP_BOTTOM_LINK
+  IconData(0xf21c, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // TABLE_COLUMN_TOP_BOTTOM_LINK_FILLED
+  IconData(0xf21f, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // TABLE_COLUMN_TOP_BOTTOM_SEARCH
+  IconData(0xf21e, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // TABLE_COLUMN_TOP_BOTTOM_SEARCH_FILLED
+  IconData(0xf221, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // TABLE_COPY
+  IconData(0xf220, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // TABLE_COPY_FILLED
+  IconData(0xf223, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // TABLE_CURSOR
+  IconData(0xf222, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // TABLE_CURSOR_FILLED
+  IconData(0xf225, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // TABLE_DELETE_COLUMN
+  IconData(0xf224, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // TABLE_DELETE_COLUMN_FILLED
+  IconData(0xf227, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // TABLE_DELETE_ROW
+  IconData(0xf226, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // TABLE_DELETE_ROW_FILLED
+  IconData(0xf229, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // TABLE_DISMISS
+  IconData(0xf228, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // TABLE_DISMISS_FILLED
+  IconData(0xf22b, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // TABLE_EDIT
+  IconData(0xf22a, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // TABLE_EDIT_FILLED
+  IconData(0xf1f0, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // TABLE_FILLED
+  IconData(0xf22d, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // TABLE_FREEZE_COLUMN
+  IconData(0xf22f, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // TABLE_FREEZE_COLUMN_AND_ROW
+  IconData(0xf231, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // TABLE_FREEZE_COLUMN_AND_ROW_DISMISS
+  IconData(0xf230, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // TABLE_FREEZE_COLUMN_AND_ROW_DISMISS_FILLED
+  IconData(0xf22e, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // TABLE_FREEZE_COLUMN_AND_ROW_FILLED
+  IconData(0xf233, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // TABLE_FREEZE_COLUMN_DISMISS
+  IconData(0xf232, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // TABLE_FREEZE_COLUMN_DISMISS_FILLED
+  IconData(0xf22c, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // TABLE_FREEZE_COLUMN_FILLED
+  IconData(0xf235, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // TABLE_FREEZE_ROW
+  IconData(0xf237, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // TABLE_FREEZE_ROW_DISMISS
+  IconData(0xf236, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // TABLE_FREEZE_ROW_DISMISS_FILLED
+  IconData(0xf234, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // TABLE_FREEZE_ROW_FILLED
+  IconData(0xf239, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // TABLE_IMAGE
+  IconData(0xf238, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // TABLE_IMAGE_FILLED
+  IconData(0xf23b, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // TABLE_INSERT_COLUMN
+  IconData(0xf23a, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // TABLE_INSERT_COLUMN_FILLED
+  IconData(0xf23d, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // TABLE_INSERT_ROW
+  IconData(0xf23c, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // TABLE_INSERT_ROW_FILLED
+  IconData(0xf23f, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // TABLE_LIGHTNING
+  IconData(0xf23e, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // TABLE_LIGHTNING_FILLED
+  IconData(0xf241, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // TABLE_LINK
+  IconData(0xf240, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // TABLE_LINK_FILLED
+  IconData(0xf243, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // TABLE_LOCK
+  IconData(0xf242, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // TABLE_LOCK_FILLED
+  IconData(0xf245, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // TABLE_MOVE_ABOVE
+  IconData(0xf244, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // TABLE_MOVE_ABOVE_FILLED
+  IconData(0xf247, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // TABLE_MOVE_BELOW
+  IconData(0xf246, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // TABLE_MOVE_BELOW_FILLED
+  IconData(0xf249, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // TABLE_MOVE_LEFT
+  IconData(0xf248, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // TABLE_MOVE_LEFT_FILLED
+  IconData(0xf24b, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // TABLE_MOVE_RIGHT
+  IconData(0xf24a, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // TABLE_MOVE_RIGHT_FILLED
+  IconData(0xf24d, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // TABLE_MULTIPLE
+  IconData(0xf24c, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // TABLE_MULTIPLE_FILLED
+  IconData(0xf24f, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // TABLE_OFFSET
+  IconData(0xf251, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // TABLE_OFFSET_ADD
+  IconData(0xf250, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // TABLE_OFFSET_ADD_FILLED
+  IconData(0xf24e, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // TABLE_OFFSET_FILLED
+  IconData(0xf253, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // TABLE_OFFSET_LESS_THAN_OR_EQUAL_TO
+  IconData(0xf252, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // TABLE_OFFSET_LESS_THAN_OR_EQUAL_TO_FILLED
+  IconData(0xf255, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // TABLE_OFFSET_SETTINGS
+  IconData(0xf254, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // TABLE_OFFSET_SETTINGS_FILLED
+  IconData(0xf257, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // TABLE_PICNIC
+  IconData(0xf256, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // TABLE_PICNIC_FILLED
+  IconData(0xf259, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // TABLE_RESIZE_COLUMN
+  IconData(0xf258, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // TABLE_RESIZE_COLUMN_FILLED
+  IconData(0xf25b, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // TABLE_RESIZE_ROW
+  IconData(0xf25a, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // TABLE_RESIZE_ROW_FILLED
+  IconData(0xf25d, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // TABLE_SEARCH
+  IconData(0xf25c, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // TABLE_SEARCH_FILLED
+  IconData(0xf62d, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // TABLE_SELECT_RANGE
+  IconData(0xf62c, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // TABLE_SELECT_RANGE_FILLED
+  IconData(0xf25f, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // TABLE_SETTINGS
+  IconData(0xf25e, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // TABLE_SETTINGS_FILLED
+  IconData(0xf261, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // TABLE_SIMPLE
+  IconData(0xf263, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // TABLE_SIMPLE_CHECKMARK
+  IconData(0xf262, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // TABLE_SIMPLE_CHECKMARK_FILLED
+  IconData(0xf265, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // TABLE_SIMPLE_EXCLUDE
+  IconData(0xf264, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // TABLE_SIMPLE_EXCLUDE_FILLED
+  IconData(0xf260, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // TABLE_SIMPLE_FILLED
+  IconData(0xf267, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // TABLE_SIMPLE_INCLUDE
+  IconData(0xf266, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // TABLE_SIMPLE_INCLUDE_FILLED
+  IconData(0xf269, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // TABLE_SIMPLE_MULTIPLE
+  IconData(0xf268, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // TABLE_SIMPLE_MULTIPLE_FILLED
+  IconData(0xf26b, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // TABLE_SPARKLE
+  IconData(0xf26a, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // TABLE_SPARKLE_FILLED
+  IconData(0xf26d, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // TABLE_SPLIT
+  IconData(0xf26c, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // TABLE_SPLIT_FILLED
+  IconData(0xf26f, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // TABLE_STACK_ABOVE
+  IconData(0xf26e, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // TABLE_STACK_ABOVE_FILLED
+  IconData(0xf271, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // TABLE_STACK_BELOW
+  IconData(0xf270, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // TABLE_STACK_BELOW_FILLED
+  IconData(0xf273, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // TABLE_STACK_LEFT
+  IconData(0xf272, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // TABLE_STACK_LEFT_FILLED
+  IconData(0xf275, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // TABLE_STACK_RIGHT
+  IconData(0xf274, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // TABLE_STACK_RIGHT_FILLED
+  IconData(0xf277, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // TABLE_SWITCH
+  IconData(0xf276, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // TABLE_SWITCH_FILLED
+  IconData(0xf281, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // TABS
+  IconData(0xf280, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // TABS_FILLED
+  IconData(0xf1c7, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // TAB_ADD
+  IconData(0xf1c6, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // TAB_ADD_FILLED
+  IconData(0xf1c9, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // TAB_ARROW_LEFT
+  IconData(0xf1c8, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // TAB_ARROW_LEFT_FILLED
+  IconData(0xf1cb, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // TAB_DESKTOP
+  IconData(0xf1cd, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // TAB_DESKTOP_ARROW_CLOCKWISE
+  IconData(0xf1cc, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // TAB_DESKTOP_ARROW_CLOCKWISE_FILLED
+  IconData(0xf1cf, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // TAB_DESKTOP_ARROW_LEFT
+  IconData(0xf1ce, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // TAB_DESKTOP_ARROW_LEFT_FILLED
+  IconData(0xf1d1, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // TAB_DESKTOP_BOTTOM
+  IconData(0xf1d0, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // TAB_DESKTOP_BOTTOM_FILLED
+  IconData(0xf1d3, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // TAB_DESKTOP_CLOCK
+  IconData(0xf1d2, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // TAB_DESKTOP_CLOCK_FILLED
+  IconData(0xf1d5, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // TAB_DESKTOP_COPY
+  IconData(0xf1d4, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // TAB_DESKTOP_COPY_FILLED
+  IconData(0xf1ca, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // TAB_DESKTOP_FILLED
+  IconData(0xf1d7, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // TAB_DESKTOP_IMAGE
+  IconData(0xf1d6, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // TAB_DESKTOP_IMAGE_FILLED
+  IconData(0xf1d9, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // TAB_DESKTOP_LINK
+  IconData(0xf1d8, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // TAB_DESKTOP_LINK_FILLED
+  IconData(0xf1db, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // TAB_DESKTOP_MULTIPLE
+  IconData(0xf1dd, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // TAB_DESKTOP_MULTIPLE_ADD
+  IconData(0xf1dc, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // TAB_DESKTOP_MULTIPLE_ADD_FILLED
+  IconData(0xf1df, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // TAB_DESKTOP_MULTIPLE_BOTTOM
+  IconData(0xf1de, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // TAB_DESKTOP_MULTIPLE_BOTTOM_FILLED
+  IconData(0xf1da, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // TAB_DESKTOP_MULTIPLE_FILLED
+  IconData(0xf1e1, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // TAB_DESKTOP_MULTIPLE_SPARKLE
+  IconData(0xf1e0, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // TAB_DESKTOP_MULTIPLE_SPARKLE_FILLED
+  IconData(0xf1e3, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // TAB_DESKTOP_NEW_PAGE
+  IconData(0xf1e2, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // TAB_DESKTOP_NEW_PAGE_FILLED
+  IconData(0xf1e5, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // TAB_DESKTOP_SEARCH
+  IconData(0xf1e4, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // TAB_DESKTOP_SEARCH_FILLED
+  IconData(0xf1c4, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // TAB_FILLED
+  IconData(0xf1e7, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // TAB_GROUP
+  IconData(0xf1e6, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // TAB_GROUP_FILLED
+  IconData(0xf1eb, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // TAB_INPRIVATE_ACCOUNT
+  IconData(0xf1ea, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // TAB_INPRIVATE_ACCOUNT_FILLED
+  IconData(0xf1e9, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // TAB_IN_PRIVATE
+  IconData(0xf1e8, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // TAB_IN_PRIVATE_FILLED
+  IconData(0xf1ed, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // TAB_PROHIBITED
+  IconData(0xf1ec, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // TAB_PROHIBITED_FILLED
+  IconData(0xf1ef, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // TAB_SHIELD_DISMISS
+  IconData(0xf1ee, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // TAB_SHIELD_DISMISS_FILLED
+  IconData(0xf283, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // TAG
+  IconData(0xf285, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // TAG_ADD
+  IconData(0xf284, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // TAG_ADD_FILLED
+  IconData(0xf287, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // TAG_CIRCLE
+  IconData(0xf286, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // TAG_CIRCLE_FILLED
+  IconData(0xf289, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // TAG_DISMISS
+  IconData(0xf288, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // TAG_DISMISS_FILLED
+  IconData(0xf28b, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // TAG_EDIT
+  IconData(0xf28a, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // TAG_EDIT_FILLED
+  IconData(0xf28d, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // TAG_ERROR
+  IconData(0xf28c, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // TAG_ERROR_FILLED
+  IconData(0xf282, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // TAG_FILLED
+  IconData(0xf28f, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // TAG_LOCK
+  IconData(0xf290, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // TAG_LOCK_ACCENT_FILLED
+  IconData(0xf28e, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // TAG_LOCK_FILLED
+  IconData(0xf292, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // TAG_MULTIPLE
+  IconData(0xf291, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // TAG_MULTIPLE_FILLED
+  IconData(0xf294, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // TAG_OFF
+  IconData(0xf293, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // TAG_OFF_FILLED
+  IconData(0xf296, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // TAG_PERCENT
+  IconData(0xf295, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // TAG_PERCENT_FILLED
+  IconData(0xf298, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // TAG_QUESTION_MARK
+  IconData(0xf297, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // TAG_QUESTION_MARK_FILLED
+  IconData(0xf29a, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // TAG_RESET
+  IconData(0xf299, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // TAG_RESET_FILLED
+  IconData(0xf29c, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // TAG_SEARCH
+  IconData(0xf29b, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // TAG_SEARCH_FILLED
+  IconData(0xf29e, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // TAP_DOUBLE
+  IconData(0xf29d, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // TAP_DOUBLE_FILLED
+  IconData(0xf2a0, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // TAP_SINGLE
+  IconData(0xf29f, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // TAP_SINGLE_FILLED
+  IconData(0xf2a2, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // TARGET
+  IconData(0xf2a4, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // TARGET_ADD
+  IconData(0xf2a3, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // TARGET_ADD_FILLED
+  IconData(0xf2a6, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // TARGET_ARROW
+  IconData(0xf2a5, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // TARGET_ARROW_FILLED
+  IconData(0xf2a8, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // TARGET_DISMISS
+  IconData(0xf2a7, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // TARGET_DISMISS_FILLED
+  IconData(0xf2aa, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // TARGET_EDIT
+  IconData(0xf2a9, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // TARGET_EDIT_FILLED
+  IconData(0xf2a1, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // TARGET_FILLED
+  IconData(0xf2ac, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // TARGET_SPARKLE
+  IconData(0xf2ab, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // TARGET_SPARKLE_FILLED
+  IconData(0xf2c2, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // TASKS_APP
+  IconData(0xf2c1, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // TASKS_APP_FILLED
+  IconData(0xf2ae, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // TASK_LIST_ADD
+  IconData(0xf2ad, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // TASK_LIST_ADD_FILLED
+  IconData(0xf2b0, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // TASK_LIST_LTR
+  IconData(0xf2af, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // TASK_LIST_LTR_FILLED
+  IconData(0xf2b2, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // TASK_LIST_RTL
+  IconData(0xf2b1, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // TASK_LIST_RTL_FILLED
+  IconData(0xf2b4, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // TASK_LIST_SQUARE_ADD
+  IconData(0xf2b3, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // TASK_LIST_SQUARE_ADD_FILLED
+  IconData(0xf2b6, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // TASK_LIST_SQUARE_DATABASE
+  IconData(0xf2b5, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // TASK_LIST_SQUARE_DATABASE_FILLED
+  IconData(0xf2b8, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // TASK_LIST_SQUARE_LTR
+  IconData(0xf2b7, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // TASK_LIST_SQUARE_LTR_FILLED
+  IconData(0xf2ba, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // TASK_LIST_SQUARE_PERSON
+  IconData(0xf2b9, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // TASK_LIST_SQUARE_PERSON_FILLED
+  IconData(0xf2bc, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // TASK_LIST_SQUARE_RTL
+  IconData(0xf2bb, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // TASK_LIST_SQUARE_RTL_FILLED
+  IconData(0xf2be, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // TASK_LIST_SQUARE_SETTINGS
+  IconData(0xf2bd, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // TASK_LIST_SQUARE_SETTINGS_FILLED
+  IconData(0xf2c0, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // TASK_LIST_SQUARE_SPARKLE
+  IconData(0xf2bf, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // TASK_LIST_SQUARE_SPARKLE_FILLED
+  IconData(0xf2c4, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // TEACHING
+  IconData(0xf2c3, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // TEACHING_FILLED
+  IconData(0xf2c6, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // TEARDROP_BOTTOM_RIGHT
+  IconData(0xf2c5, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // TEARDROP_BOTTOM_RIGHT_FILLED
+  IconData(0xf2c8, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // TEDDY
+  IconData(0xf2c7, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // TEDDY_FILLED
+  IconData(0xf2ca, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // TEMPERATURE
+  IconData(0xf2cc, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // TEMPERATURE_DEGREE_CELSIUS
+  IconData(0xf2cb, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // TEMPERATURE_DEGREE_CELSIUS_FILLED
+  IconData(0xf2ce, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // TEMPERATURE_DEGREE_FAHRENHEIT
+  IconData(0xf2cd, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // TEMPERATURE_DEGREE_FAHRENHEIT_FILLED
+  IconData(0xf2c9, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // TEMPERATURE_FILLED
+  IconData(0xf2d0, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // TENT
+  IconData(0xf2cf, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // TENT_FILLED
+  IconData(0xf2d2, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // TETRIS_APP
+  IconData(0xf2d1, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // TETRIS_APP_FILLED
+  IconData(0xf43f, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // TEXTBOX
+  IconData(0xf441, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // TEXTBOX_ALIGN_BOTTOM
+  IconData(0xf443, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // TEXTBOX_ALIGN_BOTTOM_CENTER
+  IconData(0xf442, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // TEXTBOX_ALIGN_BOTTOM_CENTER_FILLED
+  IconData(0xf440, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // TEXTBOX_ALIGN_BOTTOM_FILLED
+  IconData(0xf445, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // TEXTBOX_ALIGN_BOTTOM_LEFT
+  IconData(0xf444, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // TEXTBOX_ALIGN_BOTTOM_LEFT_FILLED
+  IconData(0xf447, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // TEXTBOX_ALIGN_BOTTOM_RIGHT
+  IconData(0xf446, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // TEXTBOX_ALIGN_BOTTOM_RIGHT_FILLED
+  IconData(0xf449, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // TEXTBOX_ALIGN_BOTTOM_ROTATE_90
+  IconData(0xf448, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // TEXTBOX_ALIGN_BOTTOM_ROTATE_90_FILLED
+  IconData(0xf44b, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // TEXTBOX_ALIGN_CENTER
+  IconData(0xf44a, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // TEXTBOX_ALIGN_CENTER_FILLED
+  IconData(0xf44d, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // TEXTBOX_ALIGN_MIDDLE
+  IconData(0xf44c, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // TEXTBOX_ALIGN_MIDDLE_FILLED
+  IconData(0xf44f, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // TEXTBOX_ALIGN_MIDDLE_LEFT
+  IconData(0xf44e, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // TEXTBOX_ALIGN_MIDDLE_LEFT_FILLED
+  IconData(0xf451, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // TEXTBOX_ALIGN_MIDDLE_RIGHT
+  IconData(0xf450, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // TEXTBOX_ALIGN_MIDDLE_RIGHT_FILLED
+  IconData(0xf453, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // TEXTBOX_ALIGN_MIDDLE_ROTATE_90
+  IconData(0xf452, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // TEXTBOX_ALIGN_MIDDLE_ROTATE_90_FILLED
+  IconData(0xf455, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // TEXTBOX_ALIGN_TOP
+  IconData(0xf457, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // TEXTBOX_ALIGN_TOP_ARROW_CLOCKWISE
+  IconData(0xf456, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // TEXTBOX_ALIGN_TOP_ARROW_CLOCKWISE_FILLED
+  IconData(0xf459, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // TEXTBOX_ALIGN_TOP_CENTER
+  IconData(0xf458, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // TEXTBOX_ALIGN_TOP_CENTER_FILLED
+  IconData(0xf454, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // TEXTBOX_ALIGN_TOP_FILLED
+  IconData(0xf45b, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // TEXTBOX_ALIGN_TOP_LEFT
+  IconData(0xf45a, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // TEXTBOX_ALIGN_TOP_LEFT_FILLED
+  IconData(0xf45d, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // TEXTBOX_ALIGN_TOP_RIGHT
+  IconData(0xf45c, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // TEXTBOX_ALIGN_TOP_RIGHT_FILLED
+  IconData(0xf45f, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // TEXTBOX_ALIGN_TOP_ROTATE_90
+  IconData(0xf45e, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // TEXTBOX_ALIGN_TOP_ROTATE_90_FILLED
+  IconData(0xf461, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // TEXTBOX_CHECKMARK
+  IconData(0xf460, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // TEXTBOX_CHECKMARK_FILLED
+  IconData(0xf43e, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // TEXTBOX_FILLED
+  IconData(0xf463, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // TEXTBOX_MORE
+  IconData(0xf462, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // TEXTBOX_MORE_FILLED
+  IconData(0xf465, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // TEXTBOX_ROTATE_90
+  IconData(0xf464, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // TEXTBOX_ROTATE_90_FILLED
+  IconData(0xf467, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // TEXTBOX_SETTINGS
+  IconData(0xf466, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // TEXTBOX_SETTINGS_FILLED
+  IconData(0xf2d4, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // TEXT_ADD
+  IconData(0xf2d3, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // TEXT_ADD_FILLED
+  IconData(0xf2d6, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // TEXT_ADD_SPACE_AFTER
+  IconData(0xf2d5, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // TEXT_ADD_SPACE_AFTER_FILLED
+  IconData(0xf2d8, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // TEXT_ADD_SPACE_BEFORE
+  IconData(0xf2d7, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // TEXT_ADD_SPACE_BEFORE_FILLED
+  IconData(0xf2da, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // TEXT_ADD_T
+  IconData(0xf2d9, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // TEXT_ADD_T_FILLED
+  IconData(0xf2dc, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // TEXT_ALIGN_CENTER
+  IconData(0xf2db, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // TEXT_ALIGN_CENTER_FILLED
+  IconData(0xf2de, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // TEXT_ALIGN_CENTER_ROTATE_270
+  IconData(0xf2dd, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // TEXT_ALIGN_CENTER_ROTATE_270_FILLED
+  IconData(0xf2e0, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // TEXT_ALIGN_CENTER_ROTATE_90
+  IconData(0xf2df, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // TEXT_ALIGN_CENTER_ROTATE_90_FILLED
+  IconData(0xf2e2, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // TEXT_ALIGN_DISTRIBUTED
+  IconData(0xf2e4, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // TEXT_ALIGN_DISTRIBUTED_EVENLY
+  IconData(0xf2e3, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // TEXT_ALIGN_DISTRIBUTED_EVENLY_FILLED
+  IconData(0xf2e1, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // TEXT_ALIGN_DISTRIBUTED_FILLED
+  IconData(0xf2e6, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // TEXT_ALIGN_DISTRIBUTED_VERTICAL
+  IconData(0xf2e5, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // TEXT_ALIGN_DISTRIBUTED_VERTICAL_FILLED
+  IconData(0xf2e8, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // TEXT_ALIGN_JUSTIFY
+  IconData(0xf2e7, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // TEXT_ALIGN_JUSTIFY_FILLED
+  IconData(0xf2ea, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // TEXT_ALIGN_JUSTIFY_LOW
+  IconData(0xf2ec, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // TEXT_ALIGN_JUSTIFY_LOW_90
+  IconData(0xf2eb, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // TEXT_ALIGN_JUSTIFY_LOW_90_FILLED
+  IconData(0xf2e9, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // TEXT_ALIGN_JUSTIFY_LOW_FILLED
+  IconData(0xf2ee, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // TEXT_ALIGN_JUSTIFY_LOW_ROTATE_270
+  IconData(0xf2ed, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // TEXT_ALIGN_JUSTIFY_LOW_ROTATE_270_FILLED
+  IconData(0xf2f0, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // TEXT_ALIGN_JUSTIFY_LOW_ROTATE_90
+  IconData(0xf2ef, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // TEXT_ALIGN_JUSTIFY_LOW_ROTATE_90_FILLED
+  IconData(0xf2f2, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // TEXT_ALIGN_JUSTIFY_ROTATE_270
+  IconData(0xf2f1, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // TEXT_ALIGN_JUSTIFY_ROTATE_270_FILLED
+  IconData(0xf2f4, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // TEXT_ALIGN_JUSTIFY_ROTATE_90
+  IconData(0xf2f3, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // TEXT_ALIGN_JUSTIFY_ROTATE_90_FILLED
+  IconData(0xf2f6, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // TEXT_ALIGN_LEFT
+  IconData(0xf2f5, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // TEXT_ALIGN_LEFT_FILLED
+  IconData(0xf2f8, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // TEXT_ALIGN_LEFT_ROTATE_270
+  IconData(0xf2f7, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // TEXT_ALIGN_LEFT_ROTATE_270_FILLED
+  IconData(0xf2fa, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // TEXT_ALIGN_LEFT_ROTATE_90
+  IconData(0xf2f9, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // TEXT_ALIGN_LEFT_ROTATE_90_FILLED
+  IconData(0xf2fc, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // TEXT_ALIGN_RIGHT
+  IconData(0xf2fb, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // TEXT_ALIGN_RIGHT_FILLED
+  IconData(0xf2fe, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // TEXT_ALIGN_RIGHT_ROTATE_270
+  IconData(0xf2fd, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // TEXT_ALIGN_RIGHT_ROTATE_270_FILLED
+  IconData(0xf300, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // TEXT_ALIGN_RIGHT_ROTATE_90
+  IconData(0xf2ff, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // TEXT_ALIGN_RIGHT_ROTATE_90_FILLED
+  IconData(0xf302, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // TEXT_ARROW_DOWN_RIGHT_COLUMN
+  IconData(0xf301, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // TEXT_ARROW_DOWN_RIGHT_COLUMN_FILLED
+  IconData(0xf304, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // TEXT_ASTERISK
+  IconData(0xf303, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // TEXT_ASTERISK_FILLED
+  IconData(0xf306, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // TEXT_BASELINE
+  IconData(0xf305, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // TEXT_BASELINE_FILLED
+  IconData(0xf308, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // TEXT_BOLD
+  IconData(0xf307, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // TEXT_BOLD_FILLED
+  IconData(0xf30a, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // TEXT_BOX_SETTINGS
+  IconData(0xf309, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // TEXT_BOX_SETTINGS_FILLED
+  IconData(0xf30c, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // TEXT_BULLET_LIST
+  IconData(0xf30e, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // TEXT_BULLET_LIST_90
+  IconData(0xf30d, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // TEXT_BULLET_LIST_90_FILLED
+  IconData(0xf310, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // TEXT_BULLET_LIST_ADD
+  IconData(0xf30f, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // TEXT_BULLET_LIST_ADD_FILLED
+  IconData(0xf312, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // TEXT_BULLET_LIST_CHECKMARK
+  IconData(0xf311, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // TEXT_BULLET_LIST_CHECKMARK_FILLED
+  IconData(0xf314, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // TEXT_BULLET_LIST_DISMISS
+  IconData(0xf313, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // TEXT_BULLET_LIST_DISMISS_FILLED
+  IconData(0xf316, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // TEXT_BULLET_LIST_EDIT
+  IconData(0xf315, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // TEXT_BULLET_LIST_EDIT_FILLED
+  IconData(0xf30b, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // TEXT_BULLET_LIST_FILLED
+  IconData(0xf318, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // TEXT_BULLET_LIST_LTR
+  IconData(0xf31a, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // TEXT_BULLET_LIST_LTR_90
+  IconData(0xf319, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // TEXT_BULLET_LIST_LTR_90_FILLED
+  IconData(0xf317, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // TEXT_BULLET_LIST_LTR_FILLED
+  IconData(0xf31c, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // TEXT_BULLET_LIST_RTL
+  IconData(0xf31e, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // TEXT_BULLET_LIST_RTL_90
+  IconData(0xf31d, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // TEXT_BULLET_LIST_RTL_90_FILLED
+  IconData(0xf31b, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // TEXT_BULLET_LIST_RTL_FILLED
+  IconData(0xf320, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // TEXT_BULLET_LIST_SQUARE
+  IconData(0xf322, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // TEXT_BULLET_LIST_SQUARE_CLOCK
+  IconData(0xf321, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // TEXT_BULLET_LIST_SQUARE_CLOCK_FILLED
+  IconData(0xf324, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // TEXT_BULLET_LIST_SQUARE_EDIT
+  IconData(0xf323, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // TEXT_BULLET_LIST_SQUARE_EDIT_FILLED
+  IconData(0xf31f, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // TEXT_BULLET_LIST_SQUARE_FILLED
+  IconData(0xf326, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // TEXT_BULLET_LIST_SQUARE_PERSON
+  IconData(0xf325, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // TEXT_BULLET_LIST_SQUARE_PERSON_FILLED
+  IconData(0xf328, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // TEXT_BULLET_LIST_SQUARE_SEARCH
+  IconData(0xf327, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // TEXT_BULLET_LIST_SQUARE_SEARCH_FILLED
+  IconData(0xf32a, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // TEXT_BULLET_LIST_SQUARE_SETTINGS
+  IconData(0xf329, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // TEXT_BULLET_LIST_SQUARE_SETTINGS_FILLED
+  IconData(0xf32c, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // TEXT_BULLET_LIST_SQUARE_SHIELD
+  IconData(0xf32b, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // TEXT_BULLET_LIST_SQUARE_SHIELD_FILLED
+  IconData(0xf32e, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // TEXT_BULLET_LIST_SQUARE_SPARKLE
+  IconData(0xf32d, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // TEXT_BULLET_LIST_SQUARE_SPARKLE_FILLED
+  IconData(0xf330, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // TEXT_BULLET_LIST_SQUARE_TOOLBOX
+  IconData(0xf32f, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // TEXT_BULLET_LIST_SQUARE_TOOLBOX_FILLED
+  IconData(0xf332, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // TEXT_BULLET_LIST_SQUARE_WARNING
+  IconData(0xf331, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // TEXT_BULLET_LIST_SQUARE_WARNING_FILLED
+  IconData(0xf334, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // TEXT_BULLET_LIST_TREE
+  IconData(0xf333, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // TEXT_BULLET_LIST_TREE_FILLED
+  IconData(0xf336, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // TEXT_CASE_LOWERCASE
+  IconData(0xf335, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // TEXT_CASE_LOWERCASE_FILLED
+  IconData(0xf338, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // TEXT_CASE_TITLE
+  IconData(0xf337, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // TEXT_CASE_TITLE_FILLED
+  IconData(0xf33a, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // TEXT_CASE_UPPERCASE
+  IconData(0xf339, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // TEXT_CASE_UPPERCASE_FILLED
+  IconData(0xf33c, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // TEXT_CHANGE_CASE
+  IconData(0xf33b, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // TEXT_CHANGE_CASE_FILLED
+  IconData(0xf33e, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // TEXT_CLEAR_FORMATTING
+  IconData(0xf33d, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // TEXT_CLEAR_FORMATTING_FILLED
+  IconData(0xf340, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // TEXT_COLLAPSE
+  IconData(0xf33f, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // TEXT_COLLAPSE_FILLED
+  IconData(0xf342, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // TEXT_COLOR
+  IconData(0xf343, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // TEXT_COLOR_ACCENT_FILLED
+  IconData(0xf341, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // TEXT_COLOR_FILLED
+  IconData(0xf345, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // TEXT_COLUMN_ONE
+  IconData(0xf344, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // TEXT_COLUMN_ONE_FILLED
+  IconData(0xf347, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // TEXT_COLUMN_ONE_NARROW
+  IconData(0xf346, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // TEXT_COLUMN_ONE_NARROW_FILLED
+  IconData(0xf349, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // TEXT_COLUMN_ONE_SEMI_NARROW
+  IconData(0xf348, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // TEXT_COLUMN_ONE_SEMI_NARROW_FILLED
+  IconData(0xf34b, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // TEXT_COLUMN_ONE_WIDE
+  IconData(0xf34a, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // TEXT_COLUMN_ONE_WIDE_FILLED
+  IconData(0xf34d, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // TEXT_COLUMN_ONE_WIDE_LIGHTNING
+  IconData(0xf34c, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // TEXT_COLUMN_ONE_WIDE_LIGHTNING_FILLED
+  IconData(0xf34f, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // TEXT_COLUMN_THREE
+  IconData(0xf34e, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // TEXT_COLUMN_THREE_FILLED
+  IconData(0xf351, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // TEXT_COLUMN_TWO
+  IconData(0xf350, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // TEXT_COLUMN_TWO_FILLED
+  IconData(0xf353, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // TEXT_COLUMN_TWO_LEFT
+  IconData(0xf352, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // TEXT_COLUMN_TWO_LEFT_FILLED
+  IconData(0xf355, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // TEXT_COLUMN_TWO_RIGHT
+  IconData(0xf354, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // TEXT_COLUMN_TWO_RIGHT_FILLED
+  IconData(0xf357, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // TEXT_COLUMN_WIDE
+  IconData(0xf356, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // TEXT_COLUMN_WIDE_FILLED
+  IconData(0xf359, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // TEXT_CONTINUOUS
+  IconData(0xf358, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // TEXT_CONTINUOUS_FILLED
+  IconData(0xf35b, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // TEXT_DENSITY
+  IconData(0xf35a, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // TEXT_DENSITY_FILLED
+  IconData(0xf35d, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // TEXT_DESCRIPTION
+  IconData(0xf35c, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // TEXT_DESCRIPTION_FILLED
+  IconData(0xf35f, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // TEXT_DESCRIPTION_LTR
+  IconData(0xf35e, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // TEXT_DESCRIPTION_LTR_FILLED
+  IconData(0xf361, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // TEXT_DESCRIPTION_RTL
+  IconData(0xf360, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // TEXT_DESCRIPTION_RTL_FILLED
+  IconData(0xf363, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // TEXT_DIRECTION_HORIZONTAL_LEFT
+  IconData(0xf362, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // TEXT_DIRECTION_HORIZONTAL_LEFT_FILLED
+  IconData(0xf365, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // TEXT_DIRECTION_HORIZONTAL_LTR
+  IconData(0xf364, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // TEXT_DIRECTION_HORIZONTAL_LTR_FILLED
+  IconData(0xf367, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // TEXT_DIRECTION_HORIZONTAL_RIGHT
+  IconData(0xf366, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // TEXT_DIRECTION_HORIZONTAL_RIGHT_FILLED
+  IconData(0xf369, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // TEXT_DIRECTION_HORIZONTAL_RTL
+  IconData(0xf368, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // TEXT_DIRECTION_HORIZONTAL_RTL_FILLED
+  IconData(0xf36b, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // TEXT_DIRECTION_ROTATE_270_RIGHT
+  IconData(0xf36a, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // TEXT_DIRECTION_ROTATE_270_RIGHT_FILLED
+  IconData(0xf36d, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // TEXT_DIRECTION_ROTATE_315_RIGHT
+  IconData(0xf36c, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // TEXT_DIRECTION_ROTATE_315_RIGHT_FILLED
+  IconData(0xf36f, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // TEXT_DIRECTION_ROTATE_45_RIGHT
+  IconData(0xf36e, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // TEXT_DIRECTION_ROTATE_45_RIGHT_FILLED
+  IconData(0xf371, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // TEXT_DIRECTION_ROTATE_90_LEFT
+  IconData(0xf370, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // TEXT_DIRECTION_ROTATE_90_LEFT_FILLED
+  IconData(0xf373, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // TEXT_DIRECTION_ROTATE_90_LTR
+  IconData(0xf372, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // TEXT_DIRECTION_ROTATE_90_LTR_FILLED
+  IconData(0xf375, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // TEXT_DIRECTION_ROTATE_90_RIGHT
+  IconData(0xf374, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // TEXT_DIRECTION_ROTATE_90_RIGHT_FILLED
+  IconData(0xf377, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // TEXT_DIRECTION_ROTATE_90_RTL
+  IconData(0xf376, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // TEXT_DIRECTION_ROTATE_90_RTL_FILLED
+  IconData(0xf379, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // TEXT_DIRECTION_VERTICAL
+  IconData(0xf378, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // TEXT_DIRECTION_VERTICAL_FILLED
+  IconData(0xf37b, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // TEXT_EDIT_STYLE
+  IconData(0xf37a, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // TEXT_EDIT_STYLE_FILLED
+  IconData(0xf37d, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // TEXT_EFFECTS
+  IconData(0xf37c, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // TEXT_EFFECTS_FILLED
+  IconData(0xf37f, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // TEXT_EFFECTS_SPARKLE
+  IconData(0xf37e, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // TEXT_EFFECTS_SPARKLE_FILLED
+  IconData(0xf381, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // TEXT_EXPAND
+  IconData(0xf380, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // TEXT_EXPAND_FILLED
+  IconData(0xf383, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // TEXT_FIELD
+  IconData(0xf382, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // TEXT_FIELD_FILLED
+  IconData(0xf385, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // TEXT_FIRST_LINE
+  IconData(0xf384, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // TEXT_FIRST_LINE_FILLED
+  IconData(0xf387, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // TEXT_FONT
+  IconData(0xf386, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // TEXT_FONT_FILLED
+  IconData(0xf389, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // TEXT_FONT_INFO
+  IconData(0xf388, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // TEXT_FONT_INFO_FILLED
+  IconData(0xf38b, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // TEXT_FONT_SIZE
+  IconData(0xf38a, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // TEXT_FONT_SIZE_FILLED
+  IconData(0xf38d, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // TEXT_FONT_SIZE_OFF
+  IconData(0xf38c, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // TEXT_FONT_SIZE_OFF_FILLED
+  IconData(0xf38f, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // TEXT_FOOTNOTE
+  IconData(0xf38e, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // TEXT_FOOTNOTE_FILLED
+  IconData(0xf391, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // TEXT_GRAMMAR_ARROW_LEFT
+  IconData(0xf390, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // TEXT_GRAMMAR_ARROW_LEFT_FILLED
+  IconData(0xf393, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // TEXT_GRAMMAR_ARROW_RIGHT
+  IconData(0xf392, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // TEXT_GRAMMAR_ARROW_RIGHT_FILLED
+  IconData(0xf395, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // TEXT_GRAMMAR_CHECKMARK
+  IconData(0xf394, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // TEXT_GRAMMAR_CHECKMARK_FILLED
+  IconData(0xf397, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // TEXT_GRAMMAR_DISMISS
+  IconData(0xf396, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // TEXT_GRAMMAR_DISMISS_FILLED
+  IconData(0xf399, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // TEXT_GRAMMAR_ERROR
+  IconData(0xf398, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // TEXT_GRAMMAR_ERROR_FILLED
+  IconData(0xf39b, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // TEXT_GRAMMAR_LIGHTNING
+  IconData(0xf39a, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // TEXT_GRAMMAR_LIGHTNING_FILLED
+  IconData(0xf39d, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // TEXT_GRAMMAR_SETTINGS
+  IconData(0xf39c, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // TEXT_GRAMMAR_SETTINGS_FILLED
+  IconData(0xf39f, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // TEXT_GRAMMAR_WAND
+  IconData(0xf39e, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // TEXT_GRAMMAR_WAND_FILLED
+  IconData(0xf3a1, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // TEXT_HANGING
+  IconData(0xf3a0, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // TEXT_HANGING_FILLED
+  IconData(0xf3a3, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // TEXT_HEADER_1
+  IconData(0xf3a2, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // TEXT_HEADER_1_FILLED
+  IconData(0xf3a5, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // TEXT_HEADER_1_LINES
+  IconData(0xf3a7, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // TEXT_HEADER_1_LINES_CARET
+  IconData(0xf3a6, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // TEXT_HEADER_1_LINES_CARET_FILLED
+  IconData(0xf3a4, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // TEXT_HEADER_1_LINES_FILLED
+  IconData(0xf3a9, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // TEXT_HEADER_2
+  IconData(0xf3a8, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // TEXT_HEADER_2_FILLED
+  IconData(0xf3ab, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // TEXT_HEADER_2_LINES
+  IconData(0xf3ad, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // TEXT_HEADER_2_LINES_CARET
+  IconData(0xf3ac, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // TEXT_HEADER_2_LINES_CARET_FILLED
+  IconData(0xf3aa, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // TEXT_HEADER_2_LINES_FILLED
+  IconData(0xf3af, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // TEXT_HEADER_3
+  IconData(0xf3ae, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // TEXT_HEADER_3_FILLED
+  IconData(0xf3b1, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // TEXT_HEADER_3_LINES
+  IconData(0xf3b3, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // TEXT_HEADER_3_LINES_CARET
+  IconData(0xf3b2, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // TEXT_HEADER_3_LINES_CARET_FILLED
+  IconData(0xf3b0, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // TEXT_HEADER_3_LINES_FILLED
+  IconData(0xf3b5, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // TEXT_HEADER_4
+  IconData(0xf3b4, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // TEXT_HEADER_4_FILLED
+  IconData(0xf3b7, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // TEXT_HEADER_4_LINES_CARET
+  IconData(0xf3b6, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // TEXT_HEADER_4_LINES_CARET_FILLED
+  IconData(0xf3b9, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // TEXT_HEADER_5
+  IconData(0xf3b8, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // TEXT_HEADER_5_FILLED
+  IconData(0xf3bb, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // TEXT_HEADER_6
+  IconData(0xf3ba, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // TEXT_HEADER_6_FILLED
+  IconData(0xf3bd, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // TEXT_INDENT_DECREASE
+  IconData(0xf3bc, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // TEXT_INDENT_DECREASE_FILLED
+  IconData(0xf3bf, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // TEXT_INDENT_DECREASE_LTR
+  IconData(0xf3c1, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // TEXT_INDENT_DECREASE_LTR_90
+  IconData(0xf3c0, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // TEXT_INDENT_DECREASE_LTR_90_FILLED
+  IconData(0xf3be, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // TEXT_INDENT_DECREASE_LTR_FILLED
+  IconData(0xf3c3, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // TEXT_INDENT_DECREASE_LTR_ROTATE_270
+  IconData(0xf3c2, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // TEXT_INDENT_DECREASE_LTR_ROTATE_270_FILLED
+  IconData(0xf3c5, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // TEXT_INDENT_DECREASE_ROTATE_270
+  IconData(0xf3c4, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // TEXT_INDENT_DECREASE_ROTATE_270_FILLED
+  IconData(0xf3c7, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // TEXT_INDENT_DECREASE_ROTATE_90
+  IconData(0xf3c6, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // TEXT_INDENT_DECREASE_ROTATE_90_FILLED
+  IconData(0xf3c9, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // TEXT_INDENT_DECREASE_RTL
+  IconData(0xf3cb, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // TEXT_INDENT_DECREASE_RTL_90
+  IconData(0xf3ca, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // TEXT_INDENT_DECREASE_RTL_90_FILLED
+  IconData(0xf3c8, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // TEXT_INDENT_DECREASE_RTL_FILLED
+  IconData(0xf3cd, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // TEXT_INDENT_DECREASE_RTL_ROTATE_270
+  IconData(0xf3cc, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // TEXT_INDENT_DECREASE_RTL_ROTATE_270_FILLED
+  IconData(0xf3cf, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // TEXT_INDENT_INCREASE
+  IconData(0xf3ce, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // TEXT_INDENT_INCREASE_FILLED
+  IconData(0xf3d1, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // TEXT_INDENT_INCREASE_LTR
+  IconData(0xf3d3, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // TEXT_INDENT_INCREASE_LTR_90
+  IconData(0xf3d2, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // TEXT_INDENT_INCREASE_LTR_90_FILLED
+  IconData(0xf3d0, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // TEXT_INDENT_INCREASE_LTR_FILLED
+  IconData(0xf3d5, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // TEXT_INDENT_INCREASE_LTR_ROTATE_270
+  IconData(0xf3d4, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // TEXT_INDENT_INCREASE_LTR_ROTATE_270_FILLED
+  IconData(0xf3d7, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // TEXT_INDENT_INCREASE_ROTATE_270
+  IconData(0xf3d6, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // TEXT_INDENT_INCREASE_ROTATE_270_FILLED
+  IconData(0xf3d9, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // TEXT_INDENT_INCREASE_ROTATE_90
+  IconData(0xf3d8, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // TEXT_INDENT_INCREASE_ROTATE_90_FILLED
+  IconData(0xf3db, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // TEXT_INDENT_INCREASE_RTL
+  IconData(0xf3dd, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // TEXT_INDENT_INCREASE_RTL_90
+  IconData(0xf3dc, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // TEXT_INDENT_INCREASE_RTL_90_FILLED
+  IconData(0xf3da, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // TEXT_INDENT_INCREASE_RTL_FILLED
+  IconData(0xf3df, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // TEXT_INDENT_INCREASE_RTL_ROTATE_270
+  IconData(0xf3de, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // TEXT_INDENT_INCREASE_RTL_ROTATE_270_FILLED
+  IconData(0xf3e1, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // TEXT_ITALIC
+  IconData(0xf3e0, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // TEXT_ITALIC_FILLED
+  IconData(0xf3e3, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // TEXT_LINE_SPACING
+  IconData(0xf3e2, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // TEXT_LINE_SPACING_FILLED
+  IconData(0xf3e5, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // TEXT_LIST_ABC_LOWERCASE_LTR
+  IconData(0xf3e4, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // TEXT_LIST_ABC_LOWERCASE_LTR_FILLED
+  IconData(0xf3e7, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // TEXT_LIST_ABC_UPPERCASE_LTR
+  IconData(0xf3e6, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // TEXT_LIST_ABC_UPPERCASE_LTR_FILLED
+  IconData(0xf3e9, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // TEXT_LIST_ROMAN_NUMERAL_LOWERCASE
+  IconData(0xf3e8, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // TEXT_LIST_ROMAN_NUMERAL_LOWERCASE_FILLED
+  IconData(0xf3eb, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // TEXT_LIST_ROMAN_NUMERAL_UPPERCASE
+  IconData(0xf3ea, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // TEXT_LIST_ROMAN_NUMERAL_UPPERCASE_FILLED
+  IconData(0xf3ed, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // TEXT_MORE
+  IconData(0xf3ec, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // TEXT_MORE_FILLED
+  IconData(0xf3ef, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // TEXT_NUMBER_FORMAT
+  IconData(0xf3ee, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // TEXT_NUMBER_FORMAT_FILLED
+  IconData(0xf3f1, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // TEXT_NUMBER_LIST_LTR
+  IconData(0xf3f3, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // TEXT_NUMBER_LIST_LTR_90
+  IconData(0xf3f2, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // TEXT_NUMBER_LIST_LTR_90_FILLED
+  IconData(0xf3f0, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // TEXT_NUMBER_LIST_LTR_FILLED
+  IconData(0xf3f5, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // TEXT_NUMBER_LIST_LTR_ROTATE_270
+  IconData(0xf3f4, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // TEXT_NUMBER_LIST_LTR_ROTATE_270_FILLED
+  IconData(0xf3f7, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // TEXT_NUMBER_LIST_ROTATE_270
+  IconData(0xf3f6, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // TEXT_NUMBER_LIST_ROTATE_270_FILLED
+  IconData(0xf3f9, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // TEXT_NUMBER_LIST_ROTATE_90
+  IconData(0xf3f8, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // TEXT_NUMBER_LIST_ROTATE_90_FILLED
+  IconData(0xf3fb, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // TEXT_NUMBER_LIST_RTL
+  IconData(0xf3fd, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // TEXT_NUMBER_LIST_RTL_90
+  IconData(0xf3fc, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // TEXT_NUMBER_LIST_RTL_90_FILLED
+  IconData(0xf3fa, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // TEXT_NUMBER_LIST_RTL_FILLED
+  IconData(0xf3ff, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // TEXT_NUMBER_LIST_RTL_ROTATE_270
+  IconData(0xf3fe, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // TEXT_NUMBER_LIST_RTL_ROTATE_270_FILLED
+  IconData(0xf401, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // TEXT_PARAGRAPH
+  IconData(0xf403, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // TEXT_PARAGRAPH_DIRECTION
+  IconData(0xf402, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // TEXT_PARAGRAPH_DIRECTION_FILLED
+  IconData(0xf405, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // TEXT_PARAGRAPH_DIRECTION_LEFT
+  IconData(0xf404, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // TEXT_PARAGRAPH_DIRECTION_LEFT_FILLED
+  IconData(0xf407, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // TEXT_PARAGRAPH_DIRECTION_RIGHT
+  IconData(0xf406, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // TEXT_PARAGRAPH_DIRECTION_RIGHT_FILLED
+  IconData(0xf400, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // TEXT_PARAGRAPH_FILLED
+  IconData(0xf409, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // TEXT_PERCENT
+  IconData(0xf408, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // TEXT_PERCENT_FILLED
+  IconData(0xf40b, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // TEXT_PERIOD_ASTERISK
+  IconData(0xf40a, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // TEXT_PERIOD_ASTERISK_FILLED
+  IconData(0xf40d, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // TEXT_POSITION_BEHIND
+  IconData(0xf40c, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // TEXT_POSITION_BEHIND_FILLED
+  IconData(0xf40f, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // TEXT_POSITION_FRONT
+  IconData(0xf40e, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // TEXT_POSITION_FRONT_FILLED
+  IconData(0xf411, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // TEXT_POSITION_LINE
+  IconData(0xf410, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // TEXT_POSITION_LINE_FILLED
+  IconData(0xf413, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // TEXT_POSITION_SQUARE
+  IconData(0xf412, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // TEXT_POSITION_SQUARE_FILLED
+  IconData(0xf415, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // TEXT_POSITION_SQUARE_LEFT
+  IconData(0xf414, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // TEXT_POSITION_SQUARE_LEFT_FILLED
+  IconData(0xf417, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // TEXT_POSITION_SQUARE_RIGHT
+  IconData(0xf416, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // TEXT_POSITION_SQUARE_RIGHT_FILLED
+  IconData(0xf419, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // TEXT_POSITION_THROUGH
+  IconData(0xf418, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // TEXT_POSITION_THROUGH_FILLED
+  IconData(0xf41b, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // TEXT_POSITION_TIGHT
+  IconData(0xf41a, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // TEXT_POSITION_TIGHT_FILLED
+  IconData(0xf41d, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // TEXT_POSITION_TOP_BOTTOM
+  IconData(0xf41c, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // TEXT_POSITION_TOP_BOTTOM_FILLED
+  IconData(0xf41f, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // TEXT_PROOFING_TOOLS
+  IconData(0xf41e, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // TEXT_PROOFING_TOOLS_FILLED
+  IconData(0xf421, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // TEXT_QUOTE
+  IconData(0xf420, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // TEXT_QUOTE_FILLED
+  IconData(0xf423, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // TEXT_QUOTE_OPENING
+  IconData(0xf422, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // TEXT_QUOTE_OPENING_FILLED
+  IconData(0xf425, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // TEXT_SORT_ASCENDING
+  IconData(0xf424, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // TEXT_SORT_ASCENDING_FILLED
+  IconData(0xf427, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // TEXT_SORT_DESCENDING
+  IconData(0xf426, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // TEXT_SORT_DESCENDING_FILLED
+  IconData(0xf429, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // TEXT_STRIKETHROUGH
+  IconData(0xf428, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // TEXT_STRIKETHROUGH_FILLED
+  IconData(0xf42b, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // TEXT_SUBSCRIPT
+  IconData(0xf42a, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // TEXT_SUBSCRIPT_FILLED
+  IconData(0xf42d, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // TEXT_SUPERSCRIPT
+  IconData(0xf42c, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // TEXT_SUPERSCRIPT_FILLED
+  IconData(0xf42f, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // TEXT_T
+  IconData(0xf42e, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // TEXT_T_FILLED
+  IconData(0xf431, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // TEXT_UNDERLINE
+  IconData(0xf433, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // TEXT_UNDERLINE_CHARACTER_U
+  IconData(0xf432, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // TEXT_UNDERLINE_CHARACTER_U_FILLED
+  IconData(0xf435, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // TEXT_UNDERLINE_DOUBLE
+  IconData(0xf434, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // TEXT_UNDERLINE_DOUBLE_FILLED
+  IconData(0xf430, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // TEXT_UNDERLINE_FILLED
+  IconData(0xf437, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // TEXT_WHOLE_WORD
+  IconData(0xf436, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // TEXT_WHOLE_WORD_FILLED
+  IconData(0xf439, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // TEXT_WORD_COUNT
+  IconData(0xf438, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // TEXT_WORD_COUNT_FILLED
+  IconData(0xf43b, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // TEXT_WRAP
+  IconData(0xf43a, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // TEXT_WRAP_FILLED
+  IconData(0xf43d, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // TEXT_WRAP_OFF
+  IconData(0xf43c, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // TEXT_WRAP_OFF_FILLED
+  IconData(0xf469, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // THINKING
+  IconData(0xf468, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // THINKING_FILLED
+  IconData(0xf765, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // THREAT_ACTOR
+  IconData(0xf764, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // THREAT_ACTOR_FILLED
+  IconData(0xf46b, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // THUMB_DISLIKE
+  IconData(0xf46a, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // THUMB_DISLIKE_FILLED
+  IconData(0xf46d, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // THUMB_LIKE
+  IconData(0xf46f, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // THUMB_LIKE_DISLIKE
+  IconData(0xf46e, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // THUMB_LIKE_DISLIKE_FILLED
+  IconData(0xf46c, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // THUMB_LIKE_FILLED
+  IconData(0xf471, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // TICKET_DIAGONAL
+  IconData(0xf470, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // TICKET_DIAGONAL_FILLED
+  IconData(0xf473, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // TICKET_HORIZONTAL
+  IconData(0xf472, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // TICKET_HORIZONTAL_FILLED
+  IconData(0xf479, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // TIMELINE
+  IconData(0xf478, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // TIMELINE_FILLED
+  IconData(0xf47f, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // TIMER
+  IconData(0xf47b, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // TIMER_10
+  IconData(0xf47a, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // TIMER_10_FILLED
+  IconData(0xf47d, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // TIMER_2
+  IconData(0xf47c, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // TIMER_2_FILLED
+  IconData(0xf481, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // TIMER_3
+  IconData(0xf480, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // TIMER_3_FILLED
+  IconData(0xf47e, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // TIMER_FILLED
+  IconData(0xf483, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // TIMER_OFF
+  IconData(0xf482, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // TIMER_OFF_FILLED
+  IconData(0xf475, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // TIME_AND_WEATHER
+  IconData(0xf474, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // TIME_AND_WEATHER_FILLED
+  IconData(0xf477, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // TIME_PICKER
+  IconData(0xf476, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // TIME_PICKER_FILLED
+  IconData(0xf485, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // TOGGLE_LEFT
+  IconData(0xf484, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // TOGGLE_LEFT_FILLED
+  IconData(0xf487, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // TOGGLE_MULTIPLE
+  IconData(0xf486, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // TOGGLE_MULTIPLE_FILLED
+  IconData(0xf489, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // TOGGLE_RIGHT
+  IconData(0xf488, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // TOGGLE_RIGHT_FILLED
+  IconData(0xf48b, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // TOILET
+  IconData(0xf48a, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // TOILET_FILLED
+  IconData(0xf48d, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // TOOLBOX
+  IconData(0xf48c, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // TOOLBOX_FILLED
+  IconData(0xf48f, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // TOOLTIP_QUOTE
+  IconData(0xf48e, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // TOOLTIP_QUOTE_FILLED
+  IconData(0xf491, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // TOOLTIP_QUOTE_OFF
+  IconData(0xf490, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // TOOLTIP_QUOTE_OFF_FILLED
+  IconData(0xf493, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // TOP_SPEED
+  IconData(0xf492, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // TOP_SPEED_FILLED
+  IconData(0xf495, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // TRANSLATE
+  IconData(0xf497, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // TRANSLATE_AUTO
+  IconData(0xf496, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // TRANSLATE_AUTO_FILLED
+  IconData(0xf494, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // TRANSLATE_FILLED
+  IconData(0xf499, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // TRANSLATE_OFF
+  IconData(0xf498, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // TRANSLATE_OFF_FILLED
+  IconData(0xf49b, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // TRANSMISSION
+  IconData(0xf49a, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // TRANSMISSION_FILLED
+  IconData(0xf49d, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // TRANSPARENCY_SQUARE
+  IconData(0xf49c, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // TRANSPARENCY_SQUARE_FILLED
+  IconData(0xf49f, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // TRAY_ITEM_ADD
+  IconData(0xf49e, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // TRAY_ITEM_ADD_FILLED
+  IconData(0xf4a1, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // TRAY_ITEM_REMOVE
+  IconData(0xf4a0, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // TRAY_ITEM_REMOVE_FILLED
+  IconData(0xf4a3, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // TREE_DECIDUOUS
+  IconData(0xf4a2, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // TREE_DECIDUOUS_FILLED
+  IconData(0xf4a5, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // TREE_EVERGREEN
+  IconData(0xf4a4, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // TREE_EVERGREEN_FILLED
+  IconData(0xf4a7, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // TRIANGLE
+  IconData(0xf4a9, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // TRIANGLE_DOWN
+  IconData(0xf4a8, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // TRIANGLE_DOWN_FILLED
+  IconData(0xf4a6, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // TRIANGLE_FILLED
+  IconData(0xf4ab, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // TRIANGLE_LEFT
+  IconData(0xf4aa, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // TRIANGLE_LEFT_FILLED
+  IconData(0xf4ad, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // TRIANGLE_RIGHT
+  IconData(0xf4ac, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // TRIANGLE_RIGHT_FILLED
+  IconData(0xf4af, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // TRIANGLE_UP
+  IconData(0xf4ae, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // TRIANGLE_UP_FILLED
+  IconData(0xf4b1, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // TROPHY
+  IconData(0xf4b0, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // TROPHY_FILLED
+  IconData(0xf4b3, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // TROPHY_LOCK
+  IconData(0xf4b2, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // TROPHY_LOCK_FILLED
+  IconData(0xf4b5, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // TROPHY_OFF
+  IconData(0xf4b4, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // TROPHY_OFF_FILLED
+  IconData(0xf4b7, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // TV
+  IconData(0xf4b9, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // TV_ARROW_RIGHT
+  IconData(0xf4b8, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // TV_ARROW_RIGHT_FILLED
+  IconData(0xf4b6, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // TV_FILLED
+  IconData(0xf4bb, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // TV_USB
+  IconData(0xf4ba, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // TV_USB_FILLED
+  IconData(0xf4bd, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // UMBRELLA
+  IconData(0xf4bc, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // UMBRELLA_FILLED
+  IconData(0xf4bf, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // UNINSTALL_APP
+  IconData(0xf4be, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // UNINSTALL_APP_FILLED
+  IconData(0xf4c1, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // USB
+  IconData(0xf4c0, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // USB_FILLED
+  IconData(0xf4c3, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // USB_OFF
+  IconData(0xf4c2, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // USB_OFF_FILLED
+  IconData(0xf4c5, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // USB_PLUG
+  IconData(0xf4c4, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // USB_PLUG_FILLED
+  IconData(0xf4c7, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // USB_STICK
+  IconData(0xf4c6, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // USB_STICK_FILLED
+  IconData(0xf4c9, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // VAULT
+  IconData(0xf4c8, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // VAULT_FILLED
+  IconData(0xf4cb, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // VEHICLE_BICYCLE
+  IconData(0xf4ca, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // VEHICLE_BICYCLE_FILLED
+  IconData(0xf4cd, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // VEHICLE_BUS
+  IconData(0xf4cc, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // VEHICLE_BUS_FILLED
+  IconData(0xf4cf, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // VEHICLE_CAB
+  IconData(0xf4d1, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // VEHICLE_CABLE_CAR
+  IconData(0xf4d0, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // VEHICLE_CABLE_CAR_FILLED
+  IconData(0xf4ce, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // VEHICLE_CAB_FILLED
+  IconData(0xf4d3, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // VEHICLE_CAR
+  IconData(0xf4d5, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // VEHICLE_CAR_COLLISION
+  IconData(0xf4d4, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // VEHICLE_CAR_COLLISION_FILLED
+  IconData(0xf4d2, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // VEHICLE_CAR_FILLED
+  IconData(0xf4d7, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // VEHICLE_CAR_PARKING
+  IconData(0xf4d6, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // VEHICLE_CAR_PARKING_FILLED
+  IconData(0xf4d9, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // VEHICLE_CAR_PROFILE
+  IconData(0xf4d8, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // VEHICLE_CAR_PROFILE_FILLED
+  IconData(0xf4db, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // VEHICLE_CAR_PROFILE_LTR
+  IconData(0xf4dd, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // VEHICLE_CAR_PROFILE_LTR_CLOCK
+  IconData(0xf4dc, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // VEHICLE_CAR_PROFILE_LTR_CLOCK_FILLED
+  IconData(0xf4da, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // VEHICLE_CAR_PROFILE_LTR_FILLED
+  IconData(0xf4df, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // VEHICLE_CAR_PROFILE_RTL
+  IconData(0xf4de, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // VEHICLE_CAR_PROFILE_RTL_FILLED
+  IconData(0xf4e1, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // VEHICLE_MOTORCYCLE
+  IconData(0xf4e0, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // VEHICLE_MOTORCYCLE_FILLED
+  IconData(0xf4e3, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // VEHICLE_RV
+  IconData(0xf4e2, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // VEHICLE_RV_FILLED
+  IconData(0xf4e5, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // VEHICLE_SHIP
+  IconData(0xf4e4, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // VEHICLE_SHIP_FILLED
+  IconData(0xf4e7, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // VEHICLE_SUBWAY
+  IconData(0xf4e9, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // VEHICLE_SUBWAY_CLOCK
+  IconData(0xf4e8, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // VEHICLE_SUBWAY_CLOCK_FILLED
+  IconData(0xf4e6, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // VEHICLE_SUBWAY_FILLED
+  IconData(0xf4eb, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // VEHICLE_TRACTOR
+  IconData(0xf4ea, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // VEHICLE_TRACTOR_FILLED
+  IconData(0xf4ed, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // VEHICLE_TRAILER
+  IconData(0xf4ef, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // VEHICLE_TRAILER_ARROW_DOWN
+  IconData(0xf4ee, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // VEHICLE_TRAILER_ARROW_DOWN_FILLED
+  IconData(0xf4ec, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // VEHICLE_TRAILER_FILLED
+  IconData(0xf4f1, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // VEHICLE_TRUCK
+  IconData(0xf4f3, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // VEHICLE_TRUCK_BAG
+  IconData(0xf4f2, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // VEHICLE_TRUCK_BAG_FILLED
+  IconData(0xf4f5, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // VEHICLE_TRUCK_CHECKMARK
+  IconData(0xf4f4, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // VEHICLE_TRUCK_CHECKMARK_FILLED
+  IconData(0xf4f7, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // VEHICLE_TRUCK_CUBE
+  IconData(0xf4f6, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // VEHICLE_TRUCK_CUBE_FILLED
+  IconData(0xf4f0, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // VEHICLE_TRUCK_FILLED
+  IconData(0xf4f9, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // VEHICLE_TRUCK_PROFILE
+  IconData(0xf4f8, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // VEHICLE_TRUCK_PROFILE_FILLED
+  IconData(0xf4fb, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // VIDEO
+  IconData(0xf4fd, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // VIDEO_360
+  IconData(0xf4fc, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // VIDEO_360_FILLED
+  IconData(0xf4ff, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // VIDEO_360_OFF
+  IconData(0xf4fe, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // VIDEO_360_OFF_FILLED
+  IconData(0xf501, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // VIDEO_ADD
+  IconData(0xf500, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // VIDEO_ADD_FILLED
+  IconData(0xf503, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // VIDEO_BACKGROUND_EFFECT
+  IconData(0xf502, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // VIDEO_BACKGROUND_EFFECT_FILLED
+  IconData(0xf505, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // VIDEO_BACKGROUND_EFFECT_HORIZONTAL
+  IconData(0xf504, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // VIDEO_BACKGROUND_EFFECT_HORIZONTAL_FILLED
+  IconData(0xf507, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // VIDEO_BLUETOOTH
+  IconData(0xf506, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // VIDEO_BLUETOOTH_FILLED
+  IconData(0xf509, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // VIDEO_CHAT
+  IconData(0xf508, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // VIDEO_CHAT_FILLED
+  IconData(0xf50b, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // VIDEO_CLIP
+  IconData(0xf50a, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // VIDEO_CLIP_FILLED
+  IconData(0xf50d, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // VIDEO_CLIP_MULTIPLE
+  IconData(0xf50c, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // VIDEO_CLIP_MULTIPLE_FILLED
+  IconData(0xf50f, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // VIDEO_CLIP_OFF
+  IconData(0xf50e, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // VIDEO_CLIP_OFF_FILLED
+  IconData(0xf511, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // VIDEO_CLIP_OPTIMIZE
+  IconData(0xf510, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // VIDEO_CLIP_OPTIMIZE_FILLED
+  IconData(0xf513, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // VIDEO_CLIP_WAND
+  IconData(0xf512, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // VIDEO_CLIP_WAND_FILLED
+  IconData(0xf4fa, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // VIDEO_FILLED
+  IconData(0xf515, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // VIDEO_MULTIPLE
+  IconData(0xf514, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // VIDEO_MULTIPLE_FILLED
+  IconData(0xf517, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // VIDEO_OFF
+  IconData(0xf516, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // VIDEO_OFF_FILLED
+  IconData(0xf519, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // VIDEO_PERSON
+  IconData(0xf51b, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // VIDEO_PERSON_CALL
+  IconData(0xf51a, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // VIDEO_PERSON_CALL_FILLED
+  IconData(0xf51d, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // VIDEO_PERSON_CLOCK
+  IconData(0xf51c, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // VIDEO_PERSON_CLOCK_FILLED
+  IconData(0xf518, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // VIDEO_PERSON_FILLED
+  IconData(0xf51f, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // VIDEO_PERSON_OFF
+  IconData(0xf51e, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // VIDEO_PERSON_OFF_FILLED
+  IconData(0xf521, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // VIDEO_PERSON_PULSE
+  IconData(0xf520, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // VIDEO_PERSON_PULSE_FILLED
+  IconData(0xf523, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // VIDEO_PERSON_SPARKLE
+  IconData(0xf522, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // VIDEO_PERSON_SPARKLE_FILLED
+  IconData(0xf525, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // VIDEO_PERSON_SPARKLE_OFF
+  IconData(0xf524, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // VIDEO_PERSON_SPARKLE_OFF_FILLED
+  IconData(0xf527, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // VIDEO_PERSON_STAR
+  IconData(0xf526, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // VIDEO_PERSON_STAR_FILLED
+  IconData(0xf529, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // VIDEO_PERSON_STAR_OFF
+  IconData(0xf528, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // VIDEO_PERSON_STAR_OFF_FILLED
+  IconData(0xf52b, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // VIDEO_PLAY_PAUSE
+  IconData(0xf52a, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // VIDEO_PLAY_PAUSE_FILLED
+  IconData(0xf52d, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // VIDEO_PROHIBITED
+  IconData(0xf52c, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // VIDEO_PROHIBITED_FILLED
+  IconData(0xf52f, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // VIDEO_RECORDING
+  IconData(0xf52e, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // VIDEO_RECORDING_FILLED
+  IconData(0xf531, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // VIDEO_SECURITY
+  IconData(0xf530, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // VIDEO_SECURITY_FILLED
+  IconData(0xf533, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // VIDEO_SETTINGS
+  IconData(0xf532, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // VIDEO_SETTINGS_FILLED
+  IconData(0xf535, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // VIDEO_SHORT
+  IconData(0xf534, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // VIDEO_SHORT_FILLED
+  IconData(0xf537, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // VIDEO_SHORT_MULTIPLE
+  IconData(0xf536, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // VIDEO_SHORT_MULTIPLE_FILLED
+  IconData(0xf539, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // VIDEO_SWITCH
+  IconData(0xf538, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // VIDEO_SWITCH_FILLED
+  IconData(0xf53b, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // VIDEO_SYNC
+  IconData(0xf53a, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // VIDEO_SYNC_FILLED
+  IconData(0xf53d, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // VIDEO_USB
+  IconData(0xf53c, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // VIDEO_USB_FILLED
+  IconData(0xf53f, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // VIEW_DESKTOP
+  IconData(0xf53e, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // VIEW_DESKTOP_FILLED
+  IconData(0xf541, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // VIEW_DESKTOP_MOBILE
+  IconData(0xf540, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // VIEW_DESKTOP_MOBILE_FILLED
+  IconData(0xf543, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // VIP
+  IconData(0xf542, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // VIP_FILLED
+  IconData(0xf545, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // VIRTUAL_NETWORK
+  IconData(0xf544, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // VIRTUAL_NETWORK_FILLED
+  IconData(0xf547, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // VIRTUAL_NETWORK_TOOLBOX
+  IconData(0xf546, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // VIRTUAL_NETWORK_TOOLBOX_FILLED
+  IconData(0xf549, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // VOICEMAIL
+  IconData(0xf54b, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // VOICEMAIL_ARROW_BACK
+  IconData(0xf54a, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // VOICEMAIL_ARROW_BACK_FILLED
+  IconData(0xf54d, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // VOICEMAIL_ARROW_FORWARD
+  IconData(0xf54c, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // VOICEMAIL_ARROW_FORWARD_FILLED
+  IconData(0xf54f, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // VOICEMAIL_ARROW_SUBTRACT
+  IconData(0xf54e, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // VOICEMAIL_ARROW_SUBTRACT_FILLED
+  IconData(0xf548, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // VOICEMAIL_FILLED
+  IconData(0xf551, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // VOICEMAIL_SHIELD
+  IconData(0xf550, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // VOICEMAIL_SHIELD_FILLED
+  IconData(0xf553, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // VOICEMAIL_SUBTRACT
+  IconData(0xf552, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // VOICEMAIL_SUBTRACT_FILLED
+  IconData(0xf555, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // VOTE
+  IconData(0xf554, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // VOTE_FILLED
+  IconData(0xf557, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // WALKIE_TALKIE
+  IconData(0xf556, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // WALKIE_TALKIE_FILLED
+  IconData(0xf559, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // WALLET
+  IconData(0xf55b, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // WALLET_CREDIT_CARD
+  IconData(0xf55a, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // WALLET_CREDIT_CARD_FILLED
+  IconData(0xf558, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // WALLET_FILLED
+  IconData(0xf55d, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // WALLPAPER
+  IconData(0xf55c, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // WALLPAPER_FILLED
+  IconData(0xf55f, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // WAND
+  IconData(0xf55e, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // WAND_FILLED
+  IconData(0xf561, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // WARNING
+  IconData(0xf560, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // WARNING_FILLED
+  IconData(0xf563, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // WARNING_LOCK_OPEN
+  IconData(0xf562, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // WARNING_LOCK_OPEN_FILLED
+  IconData(0xf565, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // WARNING_SHIELD
+  IconData(0xf564, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // WARNING_SHIELD_FILLED
+  IconData(0xf567, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // WASHER
+  IconData(0xf566, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // WASHER_FILLED
+  IconData(0xf569, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // WATER
+  IconData(0xf568, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // WATER_FILLED
+  IconData(0xf56b, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // WEATHER_BLOWING_SNOW
+  IconData(0xf56a, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // WEATHER_BLOWING_SNOW_FILLED
+  IconData(0xf56d, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // WEATHER_CLOUDY
+  IconData(0xf56c, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // WEATHER_CLOUDY_FILLED
+  IconData(0xf56f, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // WEATHER_DRIZZLE
+  IconData(0xf56e, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // WEATHER_DRIZZLE_FILLED
+  IconData(0xf571, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // WEATHER_DUSTSTORM
+  IconData(0xf570, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // WEATHER_DUSTSTORM_FILLED
+  IconData(0xf573, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // WEATHER_FOG
+  IconData(0xf572, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // WEATHER_FOG_FILLED
+  IconData(0xf575, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // WEATHER_HAIL_DAY
+  IconData(0xf574, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // WEATHER_HAIL_DAY_FILLED
+  IconData(0xf577, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // WEATHER_HAIL_NIGHT
+  IconData(0xf576, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // WEATHER_HAIL_NIGHT_FILLED
+  IconData(0xf579, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // WEATHER_HAZE
+  IconData(0xf578, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // WEATHER_HAZE_FILLED
+  IconData(0xf57b, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // WEATHER_HUMIDITY
+  IconData(0xf57a, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // WEATHER_HUMIDITY_FILLED
+  IconData(0xf57d, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // WEATHER_MOON
+  IconData(0xf57c, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // WEATHER_MOON_FILLED
+  IconData(0xf57f, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // WEATHER_MOON_OFF
+  IconData(0xf57e, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // WEATHER_MOON_OFF_FILLED
+  IconData(0xf581, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // WEATHER_PARTLY_CLOUDY_DAY
+  IconData(0xf580, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // WEATHER_PARTLY_CLOUDY_DAY_FILLED
+  IconData(0xf583, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // WEATHER_PARTLY_CLOUDY_NIGHT
+  IconData(0xf582, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // WEATHER_PARTLY_CLOUDY_NIGHT_FILLED
+  IconData(0xf585, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // WEATHER_RAIN
+  IconData(0xf584, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // WEATHER_RAIN_FILLED
+  IconData(0xf587, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // WEATHER_RAIN_SHOWERS_DAY
+  IconData(0xf586, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // WEATHER_RAIN_SHOWERS_DAY_FILLED
+  IconData(0xf589, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // WEATHER_RAIN_SHOWERS_NIGHT
+  IconData(0xf588, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // WEATHER_RAIN_SHOWERS_NIGHT_FILLED
+  IconData(0xf58b, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // WEATHER_RAIN_SNOW
+  IconData(0xf58a, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // WEATHER_RAIN_SNOW_FILLED
+  IconData(0xf58d, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // WEATHER_SNOW
+  IconData(0xf593, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // WEATHER_SNOWFLAKE
+  IconData(0xf592, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // WEATHER_SNOWFLAKE_FILLED
+  IconData(0xf58c, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // WEATHER_SNOW_FILLED
+  IconData(0xf58f, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // WEATHER_SNOW_SHOWER_DAY
+  IconData(0xf58e, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // WEATHER_SNOW_SHOWER_DAY_FILLED
+  IconData(0xf591, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // WEATHER_SNOW_SHOWER_NIGHT
+  IconData(0xf590, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // WEATHER_SNOW_SHOWER_NIGHT_FILLED
+  IconData(0xf595, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // WEATHER_SQUALLS
+  IconData(0xf594, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // WEATHER_SQUALLS_FILLED
+  IconData(0xf597, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // WEATHER_SUNNY
+  IconData(0xf596, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // WEATHER_SUNNY_FILLED
+  IconData(0xf599, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // WEATHER_SUNNY_HIGH
+  IconData(0xf598, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // WEATHER_SUNNY_HIGH_FILLED
+  IconData(0xf59b, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // WEATHER_SUNNY_LOW
+  IconData(0xf59a, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // WEATHER_SUNNY_LOW_FILLED
+  IconData(0xf59d, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // WEATHER_THUNDERSTORM
+  IconData(0xf59c, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // WEATHER_THUNDERSTORM_FILLED
+  IconData(0xf59f, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // WEB_ASSET
+  IconData(0xf59e, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // WEB_ASSET_FILLED
+  IconData(0xf5a1, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // WHEELCHAIR_ACCESS
+  IconData(0xf5a0, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // WHEELCHAIR_ACCESS_FILLED
+  IconData(0xf5a3, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // WHITEBOARD
+  IconData(0xf5a2, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // WHITEBOARD_FILLED
+  IconData(0xf5a5, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // WHITEBOARD_OFF
+  IconData(0xf5a4, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // WHITEBOARD_OFF_FILLED
+  IconData(0xf5a7, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // WIFI_1
+  IconData(0xf5a6, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // WIFI_1_FILLED
+  IconData(0xf5a9, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // WIFI_2
+  IconData(0xf5a8, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // WIFI_2_FILLED
+  IconData(0xf5ab, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // WIFI_3
+  IconData(0xf5aa, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // WIFI_3_FILLED
+  IconData(0xf5ad, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // WIFI_4
+  IconData(0xf5ac, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // WIFI_4_FILLED
+  IconData(0xf5af, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // WIFI_LOCK
+  IconData(0xf5ae, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // WIFI_LOCK_FILLED
+  IconData(0xf5b1, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // WIFI_OFF
+  IconData(0xf5b0, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // WIFI_OFF_FILLED
+  IconData(0xf5b3, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // WIFI_SETTINGS
+  IconData(0xf5b2, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // WIFI_SETTINGS_FILLED
+  IconData(0xf5b5, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // WIFI_WARNING
+  IconData(0xf5b4, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // WIFI_WARNING_FILLED
+  IconData(0xf5b7, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // WINDOW
+  IconData(0xf5b9, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // WINDOW_AD
+  IconData(0xf5b8, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // WINDOW_AD_FILLED
+  IconData(0xf5bb, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // WINDOW_AD_OFF
+  IconData(0xf5ba, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // WINDOW_AD_OFF_FILLED
+  IconData(0xf5bd, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // WINDOW_AD_PERSON
+  IconData(0xf5bc, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // WINDOW_AD_PERSON_FILLED
+  IconData(0xf5bf, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // WINDOW_APPS
+  IconData(0xf5be, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // WINDOW_APPS_FILLED
+  IconData(0xf5c1, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // WINDOW_ARROW_UP
+  IconData(0xf5c0, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // WINDOW_ARROW_UP_FILLED
+  IconData(0xf5c3, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // WINDOW_BRUSH
+  IconData(0xf5c2, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // WINDOW_BRUSH_FILLED
+  IconData(0xf5c5, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // WINDOW_BULLET_LIST
+  IconData(0xf5c7, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // WINDOW_BULLET_LIST_ADD
+  IconData(0xf5c6, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // WINDOW_BULLET_LIST_ADD_FILLED
+  IconData(0xf5c4, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // WINDOW_BULLET_LIST_FILLED
+  IconData(0xf5c9, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // WINDOW_COLUMN_ONE_FOURTH_LEFT
+  IconData(0xf5c8, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // WINDOW_COLUMN_ONE_FOURTH_LEFT_FILLED
+  IconData(0xf5ca, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // WINDOW_COLUMN_ONE_FOURTH_LEFT_FOCUS_LEFT_FILLED
+  IconData(0xf5cb, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // WINDOW_COLUMN_ONE_FOURTH_LEFT_FOCUS_TOP_FILLED
+  IconData(0xf5cd, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // WINDOW_CONSOLE
+  IconData(0xf5cc, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // WINDOW_CONSOLE_FILLED
+  IconData(0xf5cf, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // WINDOW_DATABASE
+  IconData(0xf5ce, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // WINDOW_DATABASE_FILLED
+  IconData(0xf5d1, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // WINDOW_DEV_EDIT
+  IconData(0xf5d0, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // WINDOW_DEV_EDIT_FILLED
+  IconData(0xf5d3, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // WINDOW_DEV_TOOLS
+  IconData(0xf5d2, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // WINDOW_DEV_TOOLS_FILLED
+  IconData(0xf5d5, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // WINDOW_EDIT
+  IconData(0xf5d4, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // WINDOW_EDIT_FILLED
+  IconData(0xf5b6, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // WINDOW_FILLED
+  IconData(0xf5d7, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // WINDOW_FINGERPRINT
+  IconData(0xf5d6, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // WINDOW_FINGERPRINT_FILLED
+  IconData(0xf5d9, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // WINDOW_HEADER_HORIZONTAL
+  IconData(0xf5d8, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // WINDOW_HEADER_HORIZONTAL_FILLED
+  IconData(0xf5db, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // WINDOW_HEADER_HORIZONTAL_OFF
+  IconData(0xf5da, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // WINDOW_HEADER_HORIZONTAL_OFF_FILLED
+  IconData(0xf5dd, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // WINDOW_HEADER_VERTICAL
+  IconData(0xf5dc, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // WINDOW_HEADER_VERTICAL_FILLED
+  IconData(0xf5df, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // WINDOW_INPRIVATE
+  IconData(0xf5e1, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // WINDOW_INPRIVATE_ACCOUNT
+  IconData(0xf5e0, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // WINDOW_INPRIVATE_ACCOUNT_FILLED
+  IconData(0xf5de, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // WINDOW_INPRIVATE_FILLED
+  IconData(0xf5e3, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // WINDOW_LOCATION_TARGET
+  IconData(0xf5e2, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // WINDOW_LOCATION_TARGET_FILLED
+  IconData(0xf5e5, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // WINDOW_MULTIPLE
+  IconData(0xf5e4, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // WINDOW_MULTIPLE_FILLED
+  IconData(0xf5e7, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // WINDOW_MULTIPLE_OFF
+  IconData(0xf5e6, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // WINDOW_MULTIPLE_OFF_FILLED
+  IconData(0xf5e9, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // WINDOW_MULTIPLE_SWAP
+  IconData(0xf5e8, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // WINDOW_MULTIPLE_SWAP_FILLED
+  IconData(0xf5eb, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // WINDOW_NEW
+  IconData(0xf5ea, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // WINDOW_NEW_FILLED
+  IconData(0xf5ed, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // WINDOW_NEW_ROTATE_180
+  IconData(0xf5ec, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // WINDOW_NEW_ROTATE_180_FILLED
+  IconData(0xf5ef, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // WINDOW_PLAY
+  IconData(0xf5ee, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // WINDOW_PLAY_FILLED
+  IconData(0xf5f1, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // WINDOW_SETTINGS
+  IconData(0xf5f0, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // WINDOW_SETTINGS_FILLED
+  IconData(0xf5f3, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // WINDOW_SHIELD
+  IconData(0xf5f2, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // WINDOW_SHIELD_FILLED
+  IconData(0xf5f5, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // WINDOW_TEXT
+  IconData(0xf5f4, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // WINDOW_TEXT_FILLED
+  IconData(0xf5f7, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // WINDOW_TOOLBOX
+  IconData(0xf5f6, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // WINDOW_TOOLBOX_FILLED
+  IconData(0xf5f9, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // WINDOW_WRENCH
+  IconData(0xf5f8, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // WINDOW_WRENCH_FILLED
+  IconData(0xf5fb, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // WORK_IQ
+  IconData(0xf5fa, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // WORK_IQ_FILLED
+  IconData(0xf5fd, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // WRENCH
+  IconData(0xf5fc, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // WRENCH_FILLED
+  IconData(0xf5ff, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // WRENCH_SCREWDRIVER
+  IconData(0xf5fe, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // WRENCH_SCREWDRIVER_FILLED
+  IconData(0xf601, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // WRENCH_SETTINGS
+  IconData(0xf600, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // WRENCH_SETTINGS_FILLED
+  IconData(0xf603, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // XBOX_CONSOLE
+  IconData(0xf602, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // XBOX_CONSOLE_FILLED
+  IconData(0xf605, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // XBOX_CONTROLLER
+  IconData(0xf607, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // XBOX_CONTROLLER_ERROR
+  IconData(0xf606, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // XBOX_CONTROLLER_ERROR_FILLED
+  IconData(0xf604, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // XBOX_CONTROLLER_FILLED
+  IconData(0xf609, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // XBOX_ONE_CONSOLE
+  IconData(0xf608, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // XBOX_ONE_CONSOLE_FILLED
+  IconData(0xf60b, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // XRAY
+  IconData(0xf60a, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // XRAY_FILLED
+  IconData(0xf60d, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // ZOOM_FIT
+  IconData(0xf60c, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // ZOOM_FIT_FILLED
+  IconData(0xf60f, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // ZOOM_IN
+  IconData(0xf60e, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // ZOOM_IN_FILLED
+  IconData(0xf611, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // ZOOM_OUT
+  IconData(0xf610, fontFamily: 'FluentIcons', fontPackage: 'flet_fluent_ui'), // ZOOM_OUT_FILLED
   ];

@@ -4,16 +4,6 @@ import 'package:fluent_ui/fluent_ui.dart';
 import 'utils/menu.dart';
 import 'utils/theme.dart';
 
-/// Wraps [child], built on the navigator, in the [FluentTheme] of
-/// [targetContext].
-///
-/// fluent_ui builds flyouts on the app's navigator, where only the app-level
-/// fallback theme is (see `wrapAppWithFluentTheme`); this keeps the accent
-/// color and brightness of a `Theme` around the control that opens them.
-Widget _withThemeOf(BuildContext targetContext, Widget child) {
-  return FluentTheme(data: FluentTheme.of(targetContext), child: child);
-}
-
 /// A `flet_fluent_ui.Flyout`, or a `flet_fluent_ui.TeachingTip` when
 /// [teachingTip] is true: [content] with a popup opened and closed by the
 /// `open` property.
@@ -45,7 +35,7 @@ class _FluentFlyoutControlState extends State<FluentFlyoutControl> {
     super.dispose();
   }
 
-  Future<void> _show(BuildContext targetContext) async {
+  Future<void> _show() async {
     final placement = parseEnum(
       FlyoutPlacementMode.values,
       control.getString("placement"),
@@ -53,14 +43,12 @@ class _FluentFlyoutControlState extends State<FluentFlyoutControl> {
     )!;
     final dismissible = control.getBool("dismissible", true)!;
 
-    // The popup rebuilds itself when the control changes.
-    Widget builder(BuildContext context) => _withThemeOf(
-      targetContext,
-      ListenableBuilder(
-        listenable: control,
-        builder: (context, _) =>
-            widget.teachingTip ? _buildTeachingTip() : _buildFlyout(),
-      ),
+    // The popup rebuilds itself when the control changes. fluent_ui gives it
+    // the themes around the target, such as a `Theme` control.
+    Widget builder(BuildContext context) => ListenableBuilder(
+      listenable: control,
+      builder: (context, _) =>
+          widget.teachingTip ? _buildTeachingTip() : _buildFlyout(),
     );
 
     // Not fluent_ui's showTeachingTip, which can't change the preferred side
@@ -119,28 +107,25 @@ class _FluentFlyoutControlState extends State<FluentFlyoutControl> {
 
     final open = control.getBool("open", false)!;
 
+    if (open && !_showing) {
+      _showing = true;
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        if (mounted) _show();
+      });
+    } else if (!open && _showing) {
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        if (_controller.isOpen) _controller.close<void>();
+      });
+    }
+
     return LayoutControl(
       control: control,
+      // The flyout takes its theme from the FlyoutTarget, below this one.
       child: withFluentTheme(
         context,
-        // The flyout is shown from a context below the theme, which it reads.
-        Builder(
-          builder: (targetContext) {
-            if (open && !_showing) {
-              _showing = true;
-              WidgetsBinding.instance.addPostFrameCallback((_) {
-                if (mounted) _show(targetContext);
-              });
-            } else if (!open && _showing) {
-              WidgetsBinding.instance.addPostFrameCallback((_) {
-                if (_controller.isOpen) _controller.close<void>();
-              });
-            }
-            return FlyoutTarget(
-              controller: _controller,
-              child: control.buildWidget("content") ?? const SizedBox.shrink(),
-            );
-          },
+        FlyoutTarget(
+          controller: _controller,
+          child: control.buildWidget("content") ?? const SizedBox.shrink(),
         ),
       ),
     );
@@ -179,13 +164,10 @@ class _FluentContextMenuControlState extends State<FluentContextMenuControl> {
     await _controller.showFlyout<void>(
       position: navigatorBox.globalToLocal(globalPosition),
       barrierColor: Colors.transparent,
-      builder: (context) => _withThemeOf(
-        targetContext,
-        ListenableBuilder(
-          listenable: control,
-          builder: (context, _) =>
-              MenuFlyout(items: buildMenuFlyoutItems(control, "items")),
-        ),
+      builder: (context) => ListenableBuilder(
+        listenable: control,
+        builder: (context, _) =>
+            MenuFlyout(items: buildMenuFlyoutItems(control, "items")),
       ),
     );
     if (mounted) control.triggerEvent("dismiss");

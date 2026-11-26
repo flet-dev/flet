@@ -20,8 +20,14 @@ DEFERRED_FONT_MANIFEST = "DeferredFontManifest.json"
 # Dart packages whose fonts are loaded on first use:
 # - flutter_math_fork: KaTeX, for math in `Markdown`;
 # - lucide_icons_flutter: Lucide, for flet-shadcn-ui's icons;
-# - shadcn_ui: Geist and Geist Mono, for flet-shadcn-ui's text.
-DEFERRED_FONT_PACKAGES = ("flutter_math_fork", "lucide_icons_flutter", "shadcn_ui")
+# - shadcn_ui: Geist and Geist Mono, for flet-shadcn-ui's text;
+# - flet_fluent_ui: Fluent UI System Icons, for flet-fluent-ui's `FluentIcons`.
+DEFERRED_FONT_PACKAGES = (
+    "flutter_math_fork",
+    "lucide_icons_flutter",
+    "shadcn_ui",
+    "flet_fluent_ui",
+)
 
 # lucide_icons_flutter's weight variants (2.9 MB): flet-shadcn-ui maps every
 # icon to the regular `Lucide` family.

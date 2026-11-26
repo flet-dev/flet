@@ -2,9 +2,11 @@
 # dependencies = [
 #   "requests",
 #   "Jinja2",
+#   "fonttools",
 # ]
 # ///
-"""Generate the Material and Cupertino icon sets from Flutter's own sources.
+"""Generate Flet's icon sets: Material and Cupertino from Flutter's own sources,
+Lucide (flet-shadcn-ui) and Fluent (flet-fluent-ui) from their upstream sources.
 
 Run from the root of the repository:
 
@@ -63,18 +65,24 @@ LUCIDE_PUBSPEC = (
     "sdk/python/packages/flet-shadcn-ui/src/flutter/flet_shadcn_ui/pubspec.yaml"
 )
 
-# fluent_ui's `FluentIcons` declares every icon as
-# `static const IconData name = IconData(0x..., fontFamily: 'FluentIcons',
-# fontPackage: 'fluent_ui');`, with the arguments wrapped onto following lines.
-FLUENT_ICON_PATTERN = re.compile(
-    r"""static const IconData\s+(\w+)\s*=\s*IconData\(\s*(0x[0-9a-fA-F]+),\s*"""
-    r"""fontFamily:\s*'FluentIcons'\s*,\s*fontPackage:\s*'fluent_ui'\s*,?\s*\)""",
+# flet-fluent-ui's `FluentIcons` are Microsoft's MIT-licensed Fluent UI System
+# Icons, from the font that draws every icon once at 20 px and scales it. The
+# font and its name -> codepoint map are taken from the same commit, and the
+# font is bundled in the extension, so names and glyphs can't drift apart.
+# Keep FLUENT_COMMIT in step with FSI_COMMIT in flet-dev/fluent_ui's
+# tool/build_mit_icon_fonts.py, which cuts fluent_ui's widget icons from it.
+FLUENT_COMMIT = "a3de63245b4fa49c30e20d9838593a105affe774"
+FLUENT_URL = (
+    "https://raw.githubusercontent.com/microsoft/fluentui-system-icons/"
+    f"{FLUENT_COMMIT}"
 )
-
 FLUENT_SET_ID = 4
-FLUENT_PUBSPEC = (
-    "sdk/python/packages/flet-fluent-ui/src/flutter/flet_fluent_ui/pubspec.yaml"
+FLUENT_FLUTTER_DIR = (
+    "sdk/python/packages/flet-fluent-ui/src/flutter/flet_fluent_ui"
 )
+# Only the regular and filled styles of each icon; this also leaves out the
+# language-specific variants, such as `ic_fluent_text_bold_20_regular_fr`.
+FLUENT_NAME_PATTERN = re.compile(r"^ic_fluent_(\w+)_20_(regular|filled)$")
 
 file_loader = FileSystemLoader(Path(__file__).parent / "templates")
 templates = Environment(loader=file_loader)
@@ -251,52 +259,60 @@ def parse_lucide_icons(dart_content: str):
     return icons, python_names
 
 
-def fluent_version() -> str:
-    """Return the exact `fluent_ui` version pinned by flet-fluent-ui.
-
-    The generated Dart list names every icon, so the list has to be built from
-    the same release the client compiles against.
-    """
-    pubspec = (REPO / FLUENT_PUBSPEC).read_text(encoding="utf-8")
-    match = re.search(r"^\s*fluent_ui:\s*([0-9.]+)\s*$", pubspec, re.M)
-    if not match:
-        raise SystemExit(f"exact fluent_ui version not found in {FLUENT_PUBSPEC}")
-    return match.group(1)
-
-
-def download_fluent_icons() -> str:
-    """Return `lib/src/icons.dart` from the pinned fluent_ui pub.dev archive."""
-    url = f"https://pub.dev/api/archives/fluent_ui-{fluent_version()}.tar.gz"
+def download_fluent(path: str) -> bytes:
+    """Return a file from microsoft/fluentui-system-icons at FLUENT_COMMIT."""
+    url = f"{FLUENT_URL}/{path}"
     print(f"Downloading Fluent icons from: {url}")
     response = requests.get(url)
     response.raise_for_status()
-    with tarfile.open(fileobj=io.BytesIO(response.content), mode="r:gz") as archive:
-        member = archive.extractfile("lib/src/icons.dart")
-        if member is None:
-            raise SystemExit("lib/src/icons.dart not found in the archive")
-        return member.read().decode("utf-8")
+    return response.content
 
 
-def parse_fluent_icons(dart_content: str):
+def parse_fluent_icons(codepoints: dict[str, int], font: bytes):
     """Return `(icons, python_names)` for the Fluent set.
 
-    Like `parse_dart_icons`, the packed value is the alphabetical index of the
-    Dart member name. Member names are lower snake case, so the Python name is
-    the upper-cased member name.
+    `icons` holds `(python_name, codepoint)` pairs for the Dart list and
+    `python_names` the upper snake case names. The regular style is the
+    default and has no suffix, like `Icons.HOME` next to `Icons.HOME_OUTLINED`:
+    `ic_fluent_add_20_regular` becomes `ADD` and `ic_fluent_add_20_filled`
+    becomes `ADD_FILLED`. Like `parse_dart_icons`, the packed value is the
+    alphabetical index of the name.
+
+    Some names are aliases drawn by another icon's glyph; they keep their own
+    codepoint. Every codepoint has to have a glyph in the font.
     """
-    matches = FLUENT_ICON_PATTERN.findall(dart_content)
-    names = sorted(dict(matches))
-    if len(names) != len(matches):
-        raise SystemExit("duplicate Fluent icon names")
-    declared = len(re.findall(r"static const IconData\s+\w+", dart_content))
-    if declared != len(names):
-        raise SystemExit(
-            f"matched {len(names)} of {declared} Fluent icon declarations"
-        )
-    icons = [(name, (FLUENT_SET_ID << 16) | i) for i, name in enumerate(names)]
-    python_names = [name.upper() for name in names]
+    from fontTools.ttLib import TTFont
+
+    cmap = TTFont(io.BytesIO(font)).getBestCmap()
+    by_name = {}
+    for key, code in codepoints.items():
+        match = FLUENT_NAME_PATTERN.match(key)
+        if match:
+            base, style = match.groups()
+            name = base if style == "regular" else f"{base}_{style}"
+            by_name[name.upper()] = code
+    missing = sorted(name for name, code in by_name.items() if code not in cmap)
+    if missing:
+        raise SystemExit(f"no glyph in the font for: {', '.join(missing)}")
+
+    names = sorted(by_name)
+    icons = [(name, by_name[name]) for name in names]
     print(f"🔍 Found {len(icons)} icons for set ID {FLUENT_SET_ID} (sorted).")
-    return icons, python_names
+    return icons, names
+
+
+def emit_bytes(content: bytes, output_file: str, verify: bool) -> int:
+    """Like `emit`, for a binary file."""
+    path = (REPO / output_file).resolve()
+    if verify:
+        if not path.is_file() or path.read_bytes() != content:
+            print(f"stale: {output_file}")
+            return 1
+        return 0
+    path.parent.mkdir(parents=True, exist_ok=True)
+    path.write_bytes(content)
+    print(f"✅ File written to {output_file}")
+    return 0
 
 
 def main() -> int:
@@ -349,11 +365,15 @@ def main() -> int:
         args.verify,
     )
 
-    fluent_icons, fluent_names = parse_fluent_icons(download_fluent_icons())
+    fluent_font = download_fluent("fonts/FluentSystemIcons-Resizable.ttf")
+    fluent_icons, fluent_names = parse_fluent_icons(
+        json.loads(download_fluent("fonts/FluentSystemIcons-Resizable.json")),
+        fluent_font,
+    )
     fluent_dir = "sdk/python/packages/flet-fluent-ui/src"
     failures += emit(
         render_file(fluent_icons, "fluent_icons.dart"),
-        f"{fluent_dir}/flutter/flet_fluent_ui/lib/src/utils/fluent_icons.dart",
+        f"{FLUENT_FLUTTER_DIR}/lib/src/utils/fluent_icons.dart",
         args.verify,
     )
     failures += emit(
@@ -363,9 +383,19 @@ def main() -> int:
     )
     failures += emit(
         render_json(
-            {py: value for py, (_, value) in zip(fluent_names, fluent_icons)}
+            {name: (FLUENT_SET_ID << 16) | i for i, name in enumerate(fluent_names)}
         ),
         f"{fluent_dir}/flet_fluent_ui/fluent_icons.json",
+        args.verify,
+    )
+    failures += emit_bytes(
+        fluent_font,
+        f"{FLUENT_FLUTTER_DIR}/fonts/FluentSystemIcons-Resizable.ttf",
+        args.verify,
+    )
+    failures += emit_bytes(
+        download_fluent("LICENSE"),
+        f"{FLUENT_FLUTTER_DIR}/fonts/LICENSE",
         args.verify,
     )
 

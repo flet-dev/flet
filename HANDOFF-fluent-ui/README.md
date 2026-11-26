@@ -1,18 +1,20 @@
 # Handoff: flet-fluent-ui (temporary — delete this folder before merging)
 
 Branch `fluent-ui`. The `flet-fluent-ui` extension wraps the Flutter package
-[fluent_ui](https://pub.dev/packages/fluent_ui) 4.17.0 (exact pin), modelled on
-`flet-shadcn-ui`. Python classes have no prefix (`fluent.Button`); Dart control
+[fluent_ui](https://pub.dev/packages/fluent_ui), through flet-dev's fork
+[flet-dev/fluent_ui](https://github.com/flet-dev/fluent_ui) (4.18.1 plus fixes, see section 1),
+modelled on `flet-shadcn-ui`. Python classes have no prefix (`fluent.Button`); Dart control
 types do (`@ft.control("FluentButton")`).
 
-Every control is implemented, and the full Fluent integration suite passes (118 tests).
-The blocker before merging is **icon font licensing** (section 1).
+Every control is implemented. The icon font licensing blocker is fixed in the fork, but the
+fork isn't pushed yet, so flet still builds against a local clone (section 1, "Still to do").
 
 Files in this folder:
-- `icon-license-issue-draft.md`: a draft GitHub issue for the fluent_ui maintainers
-  (bdlukaa/fluent_ui). **Not posted.** Post only with the user's approval.
-- `subset_internal_icons.py`: a fonttools script that cuts the MIT Fluent UI System Icons
-  Resizable font down to the glyphs fluent_ui uses internally.
+- `icon-license-issue-draft.md`: the GitHub issue for the fluent_ui maintainers, **posted** as
+  https://github.com/bdlukaa/fluent_ui/issues/1383 (the original 4.17.0 version). The file
+  now holds the 4.18.1 refresh; a follow-up comment with those updates, the full-set option
+  and the fork link is posted too (#issuecomment-7180724666). Waiting for the maintainers.
+- `subset_internal_icons.py`: superseded by `tool/build_mit_icon_fonts.py` in the fork.
 
 ## Where things are
 
@@ -54,126 +56,90 @@ Two environment variables help:
 
 If a run hangs, kill the orphaned Flet.app **by PID**, not by name pattern.
 
+Long runs (about 11 minutes) sometimes fail a few tests with "Timed out during start:
+tester.pump_and_settle() did not complete", in different tests each run; they pass when re-run.
+The test window opens unfocused (often on a secondary display), and macOS throttles frames for
+background or occluded windows and during display sleep. Run under
+`caffeinate -d -i uv run pytest ...`, leave the machine alone while it runs, and re-run the
+modules that timed out.
+
 ---
 
-## 1. Icon font licensing (blocker)
+## 1. The fluent_ui fork
 
-### The problem
+fluent_ui bundles two Microsoft icon fonts that may not be redistributed (Fabric MDL2 Assets
+and Segoe Fluent Icons), and Flutter bundles a dependency's fonts into every app. The full
+analysis is in `icon-license-issue-draft.md`.
 
-fluent_ui declares two Microsoft icon fonts in its `pubspec.yaml`. Flutter bundles fonts
-declared by a dependency into every app, and there is no way to exclude them. So every Flet
-app that uses flet-fluent-ui ships both fonts on every platform.
+### The fork: flet-dev/fluent_ui
 
-| Family | File | What it is | Glyphs | Size | License |
-|---|---|---|---|---|---|
-| `FluentIcons` | `fonts/FluentIcons.ttf` | Fabric MDL2 Assets 4.46 | 2,214 | 500 KB | Microsoft Fabric Assets License: use limited to developing for Microsoft products |
-| `SegoeIcons` | `fonts/SegoeIcons.ttf` | Segoe Fluent Icons 1.34 | 1,374 | 452 KB | Windows font. Microsoft's page says: "you may not ship it to another platform" |
+Local clone: `../fluent_ui` (next to this repo), remote `upstream` = bdlukaa/fluent_ui.
+`master` tracks upstream (4.18.1). One branch per fix, each meant as its own upstream PR:
 
-fluent_ui's BSD-3 license covers its code, but not these fonts. fluent_ui bundles no text
-font, so text is not affected.
+| Branch | What | Upstream |
+|---|---|---|
+| `fix/mit-icon-fonts` | Rebuilds `fonts/FluentIcons.ttf` and `fonts/SegoeIcons.ttf` (4–7 KB each) from MIT Fluent UI System Icons glyphs, at the codepoints the widgets use, each scaled to the bounding box of the glyph it replaces. Script: `tool/build_mit_icon_fonts.py` (run with `uvx --with fonttools python tool/build_mit_icon_fonts.py`); MIT notice in `fonts/LICENSE`. No Dart changes. | A stopgap: the upstream PR waits for the maintainers' answer to the issue. |
+| `fix/time-picker-minute-padding` | `_formatMinute` uses `DateFormat('mm', locale)`: "05", not "5". Test added. | [#1384](https://github.com/bdlukaa/fluent_ui/pull/1384) |
+| `fix/flyout-inherit-theme` | `FlyoutController.showFlyout` re-applies the target's themes (`InheritedTheme.capture`), so DropDownButton, SplitButton and every other flyout follow a nested `FluentTheme`. Tests added. | [#1385](https://github.com/bdlukaa/fluent_ui/pull/1385) |
+| `flet` | `master` + the three branches above. **flet pins this branch's commit SHA.** | — |
 
-The fonts are used in two ways:
-- **Internally:** the widgets use 12 `FluentIcons` glyphs and 27 `WindowsIcons` glyphs
-  (WindowsIcons maps to the SegoeIcons font). InfoBar also uses two Material icons, which are
-  Apache 2.0 and fine. The full list and a mapping table are in `icon-license-issue-draft.md`.
-- **In flet-fluent-ui's Python API:** `fluent.FluentIcons` exposes all 2,214 MDL2 glyphs. It is
-  used in about 23 files across examples, docs and tests.
+Each branch passes the fork's full `flutter test` (445+ tests). To refresh after an upstream
+release or merge: rebuild `flet` from the new `master` plus the still-open fix branches, re-run
+the font script if the widgets' icons changed, push, and bump the SHA in
+`flet_fluent_ui/pubspec.yaml`.
 
-### The MIT alternative
+Known limit, not fixed: with a short minute list (for example 15-minute steps) the looping
+copies of the selected minute are drawn with the selected (white) text style. Different cause
+from the padding; note it in the TimePicker PR.
 
-Microsoft's [Fluent UI System Icons](https://github.com/microsoft/fluentui-system-icons) are
-MIT-licensed, and are on pub.dev as `fluentui_system_icons`. Every internally used glyph has an
-equivalent, for example:
-- `chrome_close` → `dismiss`
-- `global_nav_button` → `navigation`
-- `caret_*_solid8` → `caret_*` (filled)
+### flet side
 
-Sizes:
+- `flet_fluent_ui/pubspec.yaml`: `fluent_ui` is a git dependency on the fork, pinned to the
+  `flet` branch SHA. `material_ui` is `^1.7.0` (4.18.1 needs it).
+- `fluent.FluentIcons` is now Microsoft's MIT Fluent UI System Icons: 5,722 members
+  (`<NAME>` for the regular style, `<NAME>_FILLED` for filled), drawn from `flet_fluent_ui/fonts/FluentSystemIcons-Resizable.ttf`
+  (1.6 MB, MIT notice in `fonts/LICENSE`). `generate_icons.py` downloads the font and its
+  name -> codepoint JSON at one pinned commit (`FLUENT_COMMIT`, keep it equal to `FSI_COMMIT`
+  in the fork's script) and writes the font, its LICENSE, and the generated lists.
+- Web: `flet_fluent_ui` is in `DEFERRED_FONT_PACKAGES` (flet-cli `web_fonts.py`), and
+  `createIconData` calls `loadDeferredFonts("flet_fluent_ui")`, so the 1.6 MB font downloads
+  only when an icon is drawn. fluent_ui's own fonts are now tiny and load up front.
+- TabView uses fluent_ui 4.18's `TabViewController` (`tab_view.dart`). 4.18 makes every tab
+  draggable; without an `on_reorder` handler the wrapper moves the tab back. With one, it
+  records the moved `selected_index` without rebuilding, then sends `reorder`.
+- `_withThemeOf` is gone from `flyout.dart`: the fork's flyout fix covers it.
+- All examples, docs and tests use the new icon names. Renamed: CONTACT -> PERSON,
+  FAVORITE_STAR(_FILL) -> STAR/STAR_FILLED, FOLDER_HORIZONTAL -> FOLDER, INBOX ->
+  MAIL_INBOX, MAIL_FORWARD/REPLY -> ARROW_FORWARD/REPLY, OPEN_IN_NEW_WINDOW -> WINDOW_NEW,
+  READ -> MAIL_READ, RINGER -> ALERT, SORT -> ARROW_SORT. The other 18 icons the examples
+  use kept their names (HOME, SETTINGS, SAVE...).
 
-| Option | Size |
-|---|---|
-| `fluentui_system_icons` package as a dependency | about 4.6 MB (it bundles Regular and Filled fonts at 10–48 px) |
-| `FluentSystemIcons-Resizable.ttf` from the repo (all icons, regular and filled, scalable) | 1.34 MB |
-| Resizable font cut down to the internal glyphs | about 10 KB (made by `subset_internal_icons.py`) |
+### Still to do
 
-### Why a runtime override isn't enough
-
-We could register a font at runtime under fluent_ui's family names with `FontLoader`. That only
-changes how the icons look: the original `.ttf` files are still bundled, because they are
-declared in fluent_ui's pubspec, and bundling them is the licensing problem.
-
-### Suggested solution
-
-1. **File the upstream issue first.** The draft is in this folder.
-   - It proposes switching the widgets to a small MIT font and deprecating or moving the
-     MDL2/Segoe classes.
-   - It offers a PR from us.
-   - Wait for the user's go-ahead before posting.
-2. **Meanwhile, or if upstream declines, fork fluent_ui 4.17.0 and change only its fonts:**
-   - Replace `fonts/FluentIcons.ttf` and `fonts/SegoeIcons.ttf` with MIT-glyph fonts.
-   - Keep the **same family names and the same codepoints** for the internally used glyphs.
-     For example, the MIT `chevron_down` goes at MDL2 `chevron_down`'s codepoint. With fonttools
-     this is a cmap remap on a subset of the Resizable font: each font is about 10 KB.
-   - Add the MIT notice. No Dart code changes, so rebasing means copying a new release and
-     re-running the script.
-   - Point `flet_fluent_ui/pubspec.yaml` at the fork. Either:
-     - a git dependency, for example `flet-dev/fluent_ui`, pinned to a commit; or
-     - a vendored path.
-
-     Either works because Flet extensions are path-dependent and never published to pub.dev.
-   - The same fork could also fix the TimePicker minute padding (section 2).
-3. **Replace `fluent.FluentIcons` with `fluent.FluentSystemIcons` in Python.** This is needed
-   whatever upstream does.
-   - Generate it from the MIT Resizable font: about 1.34 MB, 5,192 icons, regular and filled.
-   - Update `generate_icons.py`, the templates, the generated files, the docs
-     (`types/fluenticons.md`), and every example and test that uses `fluent.FluentIcons.*`.
-   - Bundle the font in the extension's Flutter package with its MIT notice.
-4. **Regenerate and review all goldens.** Small control icons such as chevrons, close,
-   checkmark, the radio dot and the InfoBar icons will look slightly different. Check the
-   sizing of the 8 px `caret_*_solid8` replacements in particular.
-
-**Net app size:** about +0.4 MB. Two fonts of about 10 KB plus a 1.34 MB MIT font replace
-950 KB.
-
-**Suggested first step:** a proof of concept.
-- Write the remap script that builds both replacement fonts.
-- Override fluent_ui's fonts locally, for example with `dependency_overrides` pointing to a
-  local copy.
-- Screenshot-compare the affected controls against the current goldens:
-  - ComboBox
-  - Expander
-  - NavigationView
-  - TreeView
-  - Menus
-  - InfoBar
-  - NumberBox
-  - PasswordBox
-  - AutoSuggestBox
-  - DatePicker / TimePicker
-  - TabView
-  - BreadcrumbBar
+1. ~~Push the fork branches~~ Done: all four are on flet-dev/fluent_ui.
+2. ~~Remove the temporary override~~ Done: `client/pubspec.lock` resolves `fluent_ui` from
+   git at `e6221b92`.
+3. ~~Integration tests and goldens~~ Done against the local fork: all 118 Fluent tests pass.
+   74 goldens were refreshed and reviewed (new MIT icons; 4.18's flyout padding and acrylic,
+   CommandBar overflow sizing, compact NavigationView spacing). Re-run against the git
+   dependency: everything passes (8 start timeouts in the full run passed when re-run).
+4. Check a built app: `flet build macos` and `flet build web` on an example; the bundled
+   `fluent_ui/fonts/*.ttf` must be the small MIT fonts, and the web build must list
+   `packages/flet_fluent_ui/FluentIcons` in `DeferredFontManifest.json`.
+5. ~~Follow-up comment on #1383~~ Posted. ~~Upstream PRs~~ Opened:
+   https://github.com/bdlukaa/fluent_ui/pull/1384 (TimePicker) and
+   https://github.com/bdlukaa/fluent_ui/pull/1385 (flyout theme). When they merge and release,
+   drop those branches from `flet` (or move to the release) and bump the pin.
 
 ---
 
 ## 2. Other outstanding issues
 
-1. **TimePicker shows minutes as "5", not "05".** This comes from fluent_ui's private
-   `_formatMinute` (`DateFormat.m()` with no padding), which can't be overridden from outside.
-   - It needs an upstream fix or the fork from section 1.
-   - It is documented in the TimePicker docstring (`date_picker.py`).
-   - Related: with a short minute list, such as 15-minute steps, the repeated rows of the
-     selected minute are drawn white. The example uses 5-minute steps, where this doesn't show.
-   - The user excluded this from the last batch.
-2. **DropDownButton and SplitButton menus don't follow an enclosing `fluent.Theme`.** They use
-   the app-level theme instead. ContextMenu, MenuBar and CommandBar re-apply the target's theme
-   in the flyout route (`_withThemeOf(targetContext)` in `flyout.dart`); these two build their
-   flyouts inside fluent_ui and don't.
-3. **EditableComboBox shows no red underline when `error_text` is set.** The error text itself
-   is shown. fluent_ui's EditableComboBox doesn't expose the highlight color. This is **not yet
-   mentioned** in the `error_text` docstring in `combo_box.py`; add a note there (the
-   underline is described in `text_box.py`).
-4. **Possible flake:** `test_radio_group` errored once, then passed on rerun.
-5. **Before merging:**
+1. **EditableComboBox shows no red underline when `error_text` is set.** The error text itself
+   is shown; fluent_ui's EditableComboBox doesn't expose the highlight color. Now documented in
+   the `error_text` docstring in `combo_box.py`.
+2. **Possible flake:** `test_radio_group` errored once, then passed on rerun.
+3. **Before merging:**
    - Delete this `HANDOFF-fluent-ui/` folder.
    - Check that CI workflow changes are limited to the `flet-fluent-ui` additions in `ci.yml`
      (`git diff main...HEAD -- .github`). The `macos-integration-tests.yml` workflow is not

@@ -145,8 +145,10 @@ def test_fluent_packed_value_indexes_the_dart_list():
     packed = json.loads(
         (package / "flet_fluent_ui/fluent_icons.json").read_text(encoding="utf-8")
     )
+    # Each entry is `IconData(0x..., ...), // NAME`.
     dart_names = re.findall(
-        r"^\s*FluentIcons\.(\w+),$",
+        r"^\s*IconData\(0x[0-9a-f]+, fontFamily: 'FluentIcons', "
+        r"fontPackage: 'flet_fluent_ui'\), // (\w+)$",
         (package / "flutter/flet_fluent_ui/lib/src/utils/fluent_icons.dart").read_text(
             encoding="utf-8"
         ),
@@ -156,6 +158,9 @@ def test_fluent_packed_value_indexes_the_dart_list():
     assert len(packed) == len(dart_names) == len(fluent.FluentIcons)
     for name, value in packed.items():
         assert value >> 16 == 4
-        assert dart_names[value & 0xFFFF].upper() == name
+        assert dart_names[value & 0xFFFF] == name
     assert isinstance(fluent.FluentIcons.SETTINGS, ft.IconData)
     assert packed["SETTINGS"] == fluent.FluentIcons.SETTINGS
+    assert (
+        package / "flutter/flet_fluent_ui/fonts/FluentSystemIcons-Resizable.ttf"
+    ).is_file()

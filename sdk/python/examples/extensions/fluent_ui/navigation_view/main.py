@@ -22,7 +22,7 @@ def main(page: ft.Page):
             items=[
                 fluent.PaneItem(
                     "Inbox",
-                    icon=fluent.FluentIcons.INBOX,
+                    icon=fluent.FluentIcons.MAIL_INBOX,
                     info_badge=fluent.InfoBadge("3"),
                     content=page_for("Inbox", "You have 3 unread messages."),
                 ),

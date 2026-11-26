@@ -90,7 +90,7 @@ ft.Row(
     tight=True,
     controls=[
         ft.Icon(fluent.FluentIcons.HOME),
-        ft.Icon(fluent.FluentIcons.RINGER, color=ft.Colors.AMBER),
+        ft.Icon(fluent.FluentIcons.ALERT, color=ft.Colors.AMBER),
         ft.IconButton(fluent.FluentIcons.SETTINGS),
         fluent.IconButton(fluent.FluentIcons.HEART),
     ],

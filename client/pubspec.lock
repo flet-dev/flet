@@ -604,11 +604,12 @@ packages:
   fluent_ui:
     dependency: transitive
     description:
-      name: fluent_ui
-      sha256: "4482326e3d4881f59b4a42e9c608b2be3171cd00fa181f51b6b0dd63bd786a0f"
-      url: "https://pub.dev"
-    source: hosted
-    version: "4.17.0"
+      path: "."
+      ref: e6221b92d02060b657e841a06c1bedcbdec672ca
+      resolved-ref: e6221b92d02060b657e841a06c1bedcbdec672ca
+      url: "https://github.com/flet-dev/fluent_ui"
+    source: git
+    version: "4.18.1"
   flutter:
     dependency: "direct main"
     description: flutter

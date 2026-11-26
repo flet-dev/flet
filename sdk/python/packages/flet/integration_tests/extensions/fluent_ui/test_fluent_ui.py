@@ -214,7 +214,10 @@ async def test_fluent_icons(flet_app: ftt.FletTestApp, request):
                 fluent.Button(
                     content=ft.Row(
                         tight=True,
-                        controls=[ft.Icon(fluent.FluentIcons.SAVE), ft.Text("Save")],
+                        controls=[
+                            ft.Icon(fluent.FluentIcons.SAVE),
+                            ft.Text("Save"),
+                        ],
                     )
                 ),
             ]

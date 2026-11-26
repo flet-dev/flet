@@ -16,7 +16,7 @@ class TreeViewItem(ft.Control):
     ```python
     fluent.TreeViewItem(
         "Documents",
-        leading=fluent.FluentIcons.FOLDER_HORIZONTAL,
+        leading=fluent.FluentIcons.FOLDER,
         items=[fluent.TreeViewItem("Report.docx")],
     )
     ```

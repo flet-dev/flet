@@ -22,7 +22,7 @@ def main(page: ft.Page):
         items=[
             fluent.TreeViewItem(
                 "Documents",
-                leading=fluent.FluentIcons.FOLDER_HORIZONTAL,
+                leading=fluent.FluentIcons.FOLDER,
                 expanded=True,
                 items=[
                     fluent.TreeViewItem("Budget.xlsx"),
@@ -31,7 +31,7 @@ def main(page: ft.Page):
             ),
             fluent.TreeViewItem(
                 "Pictures",
-                leading=fluent.FluentIcons.FOLDER_HORIZONTAL,
+                leading=fluent.FluentIcons.FOLDER,
                 items=[
                     fluent.TreeViewItem("Beach.png"),
                     fluent.TreeViewItem("Mountains.png"),

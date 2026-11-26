@@ -148,7 +148,8 @@ class EditableComboBox(ft.LayoutControl):
     An error message shown in red below the box.
 
     Set it to tell the user that the value is not valid, and set it to `None`
-    to hide it.
+    to hide it. Unlike :attr:`~flet_fluent_ui.TextBox.error_text`, the box
+    doesn't get a red underline.
     """
 
     on_change: Optional[ft.ControlEventHandler["EditableComboBox"]] = None
