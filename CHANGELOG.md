@@ -2,8 +2,8 @@
 
 ### Improvements
 
-* On web, don't open `javascript:`, `blob:` or `filesystem:` URLs from `UrlLauncher.launch_url()`, `UrlLauncher.open_window()`, a control's `url` or a `Markdown` link, and don't load them in a `WebView`; a scheme hidden behind leading spaces or tabs (`" java\tscript:"`) is recognized as the browser would. An `open_window()` `title` starting with `_` no longer acts as a browser target such as `_self` ([#TBD](https://github.com/flet-dev/flet/pull/TBD)) by @FeodorFitsner.
-* An app embedded with `FletApp` opens a `_self`, `_parent` or `_top` link in a new tab instead of replacing its host's page, and on web its `WebView` (flet-webview) shows the page in a sandboxed frame, apart from the host's page ([#TBD](https://github.com/flet-dev/flet/pull/TBD)) by @FeodorFitsner.
+* On web, don't open `javascript:`, `blob:` or `filesystem:` URLs from `UrlLauncher.launch_url()`, `UrlLauncher.open_window()`, a control's `url` or a `Markdown` link, and don't load them in a `WebView`; a scheme hidden behind leading spaces or tabs (`" java\tscript:"`) is recognized as the browser would. An `open_window()` `title` starting with `_` no longer acts as a browser target such as `_self` ([#7136](https://github.com/flet-dev/flet/pull/7136)) by @FeodorFitsner.
+* An app embedded with `FletApp` opens a `_self`, `_parent` or `_top` link in a new tab instead of replacing its host's page, and on web its `WebView` (flet-webview) shows the page in a sandboxed frame, apart from the host's page ([#7136](https://github.com/flet-dev/flet/pull/7136)) by @FeodorFitsner.
 
 ## 1.1.3
 
