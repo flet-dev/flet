@@ -260,6 +260,11 @@ class FletBackend extends ChangeNotifier {
 
   bool get _isEmbedded => controlId != null && _parentFletBackend != null;
 
+  /// Whether this app is shown inside another with a `FletApp` control. An
+  /// embedded app can't replace its host's page (`openWebBrowser`), and on web
+  /// its `WebView` content runs in a sandboxed frame.
+  bool get isEmbedded => _isEmbedded;
+
   /// Waits until this embedded app has rendered its UI and stayed quiet.
   ///
   /// Resolves `{"status": "idle"}` once at least one page update arrived and
