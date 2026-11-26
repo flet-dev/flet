@@ -66,11 +66,6 @@ derives one from your app name in `pyproject.toml` (first match wins):
 The value is sanitized to a URL scheme (lowercase; letters, digits, `+`, `-`,
 `.`). If nothing usable remains, the fallback is **`flet`**.
 
-:::note
-[`page.title`][flet.Page.title] cannot drive the scheme. The Android/iOS
-project files are patched at **build** time, before the app runs.
-:::
-
 `flet build` / `flet debug` always logs the chosen value, for example:
 
 ```text
@@ -167,7 +162,7 @@ flet build apk --include .env
 Packaged example: `sdk/python/examples/apps/appauth` (Auth0 + `python-dotenv`
 + `include = [".env"]`). Gallery snippet:
 
-<CodeExample path="services/appauth/auth0_mobile.py" language="python" />
+<CodeExample path="services/appauth/main.py" language="python" />
 
 ## Description
 

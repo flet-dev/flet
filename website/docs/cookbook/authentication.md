@@ -18,7 +18,6 @@ Flet authentication features:
 
 * **Web:** full OAuth authorization-code flow via `/oauth_callback`.
 * **Android/iOS:** native AppAuth via [`flet-appauth`](../services/appauth/index.md) (required for `page.login` on mobile).
-* **Desktop:** `page.login` callback completion is **not** supported in this release.
 * Using multiple authentication providers in one app.
 * Built-in OAuth providers with automatic user details fetching:
   * GitHub
@@ -44,7 +43,7 @@ Flet authentication features:
 
 ### Android / iOS (AppAuth)
 
-* Install `flet-appauth` (`pip install flet-appauth` or `pip install 'flet[appauth]'`).
+* Install `flet-appauth` (`pip install flet-appauth`).
 * Pack the app with `flet build apk` / `ipa` (the stock `flet run` mobile client
   does not ship `flet-appauth`).
 * Redirect scheme at build time: sanitized app name from `pyproject.toml`

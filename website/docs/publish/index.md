@@ -1570,8 +1570,7 @@ sanitized app name from `pyproject.toml` — first of `tool.flet.project`,
 `tool.flet.artifact`, `tool.flet.product`, `project.name`. If none yields a
 valid scheme, fallback is `flet`.
 
-[`page.title`][flet.Page.title] is **not** used: the scheme is written into
-Android/iOS project files at build time. `flet build` / `flet debug` logs the
+`flet build` / `flet debug` logs the
 chosen scheme and its source, e.g.
 `AppAuth redirect scheme: appauth (from app name (tool.flet.project=…))`.
 
