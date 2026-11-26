@@ -32,7 +32,6 @@ desktop = [
     "flet-desktop",
 ]
 web = ["flet-web"]
-appauth = ["flet-appauth"]
 # Dependencies needed to run integration tests written with `flet.testing`
 # (the `flet test` command / the pytest plugin). Pillow/numpy/scikit-image
 # back screenshot and GIF comparison.
