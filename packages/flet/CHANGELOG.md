@@ -1,6 +1,6 @@
 ## 1.2.0
 
-* `FletBackend.isolated` (from `FletApp.isolated` for an embedded app, `window.flet.isolated` via `getIsolatedPython()` for a top-level one) is passed to `jsConnect(appId, args, onMessage, {isolated})`; `python.js` then starts the worker as a classic `blob:` worker inside a hidden `<iframe sandbox="allow-scripts">`, relays messages both ways, and runs a fetch proxy for plain GETs (cross-origin, or the page-designated app package and runtime URLs) with `credentials: "omit"` ([#TBD](https://github.com/flet-dev/flet/pull/TBD)) by @FeodorFitsner.
+* `FletBackend.isolated` (from `FletApp.isolated` for an embedded app, `window.flet.isolated` via `getIsolatedPython()` for a top-level one) is passed to `jsConnect(appId, args, onMessage, {isolated})`; `python.js` then starts the worker as a classic `blob:` worker inside a hidden `<iframe sandbox="allow-scripts">`, relays messages both ways, and runs a fetch proxy for plain GETs (cross-origin, or the page-designated app package and runtime URLs) with `credentials: "omit"` ([#7139](https://github.com/flet-dev/flet/pull/7139)) by @FeodorFitsner.
 
 ## 1.1.4
 
