@@ -1,4 +1,4 @@
-## 1.1.4
+## 1.2.0
 
 * Add `flet-appauth` service (`flutter_appauth`) and Android/iOS `page.login()` path with native AppAuth + PKCE.
 * Add `flet build --appauth-redirect-scheme` / `tool.flet.appauth.redirect_scheme` for mobile OAuth redirects (defaults to `flet` when `flet-appauth` is present).
