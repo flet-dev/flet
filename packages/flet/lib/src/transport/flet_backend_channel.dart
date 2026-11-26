@@ -57,6 +57,7 @@ abstract class FletBackendChannel {
       {required String address,
       required Map<String, dynamic> args,
       required bool forcePyodide,
+      bool isolated = false,
       bool embedded = false,
       required FletBackendChannelOnDisconnectCallback onDisconnect,
       required FletBackendChannelOnPacketCallback onPacket}) {
@@ -65,6 +66,7 @@ abstract class FletBackendChannel {
       return FletJavaScriptBackendChannel(
           address: address,
           args: args,
+          isolated: isolated,
           onDisconnect: onDisconnect,
           onPacket: onPacket);
     } else if (address.startsWith("http://") ||

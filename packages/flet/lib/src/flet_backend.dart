@@ -76,6 +76,18 @@ class FletBackend extends ChangeNotifier {
   /// embedded app can never reach keys outside its host's space.
   final String storagePrefix;
 
+  /// Whether this app's Python runs isolated from the page (web, Pyodide
+  /// only): in a worker inside a hidden sandboxed frame with an opaque origin,
+  /// so it has no cookies, no storage and no same-origin `blob:` URLs of the
+  /// page's origin, and reaches the page only through Flet's protocol. Its
+  /// downloads go through the page (a fetch proxy), so they still use the
+  /// page's HTTP cache.
+  ///
+  /// A top-level app takes it from `window.flet.isolated`; an embedded app from
+  /// its `FletApp.isolated`. Off the web, and for an app whose Python doesn't
+  /// run in the browser, it has no effect.
+  final bool isolated;
+
   /// Notifies the boot screen of the current [BootStatus] (stage, any startup
   /// error, and whether boot is done). Kept in sync with [isLoading]/[error].
   ///
@@ -157,9 +169,11 @@ class FletBackend extends ChangeNotifier {
       FletBackendChannelBuilder? channelBuilder,
       DataChannelFactory? dataChannelFactory,
       String? storagePrefix,
+      bool? isolated,
       FletBackend? parentFletBackend})
       : _parentFletBackend =
             parentFletBackend != null ? WeakReference(parentFletBackend) : null,
+        isolated = isolated ?? (parentFletBackend == null && getIsolatedPython()),
         storagePrefix = resolveStoragePrefix(
             storagePrefix: storagePrefix,
             parentPrefix: parentFletBackend?.storagePrefix,
@@ -367,6 +381,7 @@ class FletBackend extends ChangeNotifier {
             address: pageUri.toString(),
             args: args ?? {},
             forcePyodide: forcePyodide == true,
+            isolated: isolated,
             embedded: controlId != null,
             onDisconnect: onChannelDisconnect,
             onPacket: _onPacket);

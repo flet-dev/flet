@@ -1,3 +1,9 @@
+## 1.2.0
+
+### New features
+
+* Add `FletApp.isolated`, to run an embedded app's Python isolated from its host's page on web: its Pyodide worker runs inside a hidden sandboxed frame with an opaque origin, so it can't use the page's cookies when it calls the host's server, open the origin's IndexedDB, Cache Storage or private file system, or make `blob:` URLs with the page's origin; it reaches the host only through Flet. Its plain downloads (the Python runtime, packages, the app package) go through the host page, so they still come from the browser's cache; requests with headers of their own, such as an `Authorization` header, go out from the worker with `Origin: null`. A page can isolate its top-level app with `window.flet.isolated = true`. With a self-hosted Python runtime (`--no-cdn`), the page must serve `pyodide/*.mjs` with `Access-Control-Allow-Origin` for an isolated app to start ([#7139](https://github.com/flet-dev/flet/pull/7139)) by @FeodorFitsner.
+
 ## 1.1.4
 
 ### Improvements

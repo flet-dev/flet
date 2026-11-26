@@ -133,3 +133,10 @@ def test_storage_prefix_defaults_to_none():
     encoder = configure_encode_object_for_msgpack(BaseControl)
     encoded = encoder(ft.FletApp(url="dartbridge://"))
     assert encoded.get("storage_prefix") is None
+
+
+def test_isolated_is_encoded_for_the_client():
+    encoder = configure_encode_object_for_msgpack(BaseControl)
+    assert encoder(ft.FletApp(url="dartbridge://", isolated=True))["isolated"] is True
+    # The default isn't sent; the client reads a missing value as False.
+    assert not encoder(ft.FletApp(url="dartbridge://")).get("isolated")

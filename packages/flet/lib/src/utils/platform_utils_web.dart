@@ -24,6 +24,12 @@ String getAssetsDir() {
   return fletJS?.assetsDir ?? "";
 }
 
+/// Whether the page asks for the top-level app's Python to run isolated
+/// (`window.flet.isolated`); see [FletBackend.isolated].
+bool getIsolatedPython() {
+  return fletJS?.isolated ?? false;
+}
+
 /// The top-level app's SharedPreferences key prefix, from
 /// `window.flet.storagePrefix`. Set by the page that hosts the app (the app's
 /// own Python runs in a worker and can't change it).
@@ -78,6 +84,7 @@ extension FletJSExtension on FletJS {
   external String? get appPackageUrl;
   external String? get assetsDir;
   external String? get storagePrefix;
+  external bool? get isolated;
 }
 
 @JS('flet')

@@ -5,8 +5,8 @@ import 'package:flutter/foundation.dart';
 import 'flet_backend_channel.dart';
 
 @JS()
-external JSPromise jsConnect(
-    String appId, JSAny args, JSExportedDartFunction onMessage);
+external JSPromise jsConnect(String appId, JSAny args,
+    JSExportedDartFunction onMessage, JSAny options);
 
 /// Transfers `data`'s JavaScript buffer to the Python worker without copying it
 /// across the worker boundary. Callers must not access the packet after sending:
@@ -40,12 +40,17 @@ String _stripNoUiSentinel(String error) {
 class FletJavaScriptBackendChannel implements FletBackendChannel {
   final String address;
   final Map<String, dynamic> args;
+
+  /// Run the Python worker isolated from the page; see
+  /// [FletBackend.isolated].
+  final bool isolated;
   final FletBackendChannelOnPacketCallback onPacket;
   final FletBackendChannelOnDisconnectCallback onDisconnect;
 
   FletJavaScriptBackendChannel(
       {required this.address,
       required this.args,
+      this.isolated = false,
       required this.onDisconnect,
       required this.onPacket});
 
@@ -53,7 +58,9 @@ class FletJavaScriptBackendChannel implements FletBackendChannel {
   connect() async {
     debugPrint("Connecting to Flet JavaScript channel $address...");
     try {
-      await jsConnect(address, args.jsify()!, _onMessage.toJS).toDart;
+      await jsConnect(address, args.jsify()!, _onMessage.toJS,
+              {"isolated": isolated}.jsify()!)
+          .toDart;
     } catch (e) {
       // `jsConnect` resolves as soon as the worker reports back, and rejects
       // only when that report is an error — meaning Python already ran and
