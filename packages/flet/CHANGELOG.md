@@ -1,3 +1,7 @@
+## 1.1.4
+
+* `openWebBrowser()` and `openWindow()` return whether they opened the URL: on web they refuse a URL whose scheme is in `blockedWebUrlSchemes` (`javascript`, `blob`, `filesystem`), read by `webUrlScheme()` the way a browser reads it; `isOpenableWebUrl()` is the check. `openWebBrowser(embedded: true)` turns a `_self`/`_parent`/`_top` target into `_blank` (`launchTarget()`), and every caller (`UrlLauncherService`, `runControlActions()`, text spans, `Markdown` links) passes `control.backend.isEmbedded`, a new public getter on `FletBackend`. `openWindow()` prefixes a window name starting with `_` with `flet` (`popupWindowName()`) ([#TBD](https://github.com/flet-dev/flet/pull/TBD)) by @FeodorFitsner.
+
 ## 1.1.3
 
 * `parseAnimation(false)` returns `null`. When the caller supplies a default animation, it returns a zero-duration animation with the default curve ([#7091](https://github.com/flet-dev/flet/pull/7091)) by @ndonkoHenri.
