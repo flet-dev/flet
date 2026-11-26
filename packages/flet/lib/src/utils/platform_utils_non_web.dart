@@ -20,6 +20,8 @@ String getStoragePrefix() {
   return "";
 }
 
+bool getIsolatedPython() => false;
+
 String? getWebAppBaseUrl() => null;
 
 bool isPyodideMode() {

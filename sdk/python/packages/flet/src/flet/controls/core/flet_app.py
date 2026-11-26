@@ -162,6 +162,30 @@ class FletApp(LayoutControl):
     `"app.1.preview."`, so it can never reach outside its host's space.
     """
 
+    isolated: bool = False
+    """
+    Whether to run the embedded app's Python isolated from the host's page.
+
+    On web, an embedded app's Python runs in a worker on the host page's
+    origin. There it can use the page's cookies when it calls the host's own
+    server, open the origin's IndexedDB, Cache Storage and private file system,
+    and make `blob:` URLs with the page's origin. With `isolated=True` the worker
+    runs inside a hidden sandboxed frame with an opaque origin instead, so it
+    can do none of that: it reaches the host only through Flet, where
+    [`storage_prefix`][(c).] and the host's other limits apply.
+
+    The app runs as before otherwise. Its downloads (the Python runtime,
+    packages, the app itself) go through the host page, so they still use the
+    browser's cache. Requests the app makes with headers of its own, such as an
+    `Authorization` header, go straight from the worker and arrive with
+    `Origin: null`.
+
+    Use it for apps you don't control, such as user code in an online editor.
+    It applies only when the embedded app's Python runs in the browser
+    (Pyodide); elsewhere it has no effect. A web page can isolate its
+    top-level app with `window.flet.isolated = true`.
+    """
+
     reconnect_interval_ms: Optional[int] = None
     """
     Delay, in milliseconds, between reconnection attempts.

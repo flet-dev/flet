@@ -1,3 +1,7 @@
+## 1.2.0
+
+* `FletBackend.isolated` (from `FletApp.isolated` for an embedded app, `window.flet.isolated` via `getIsolatedPython()` for a top-level one) is passed to `jsConnect(appId, args, onMessage, {isolated})`; `python.js` then starts the worker as a classic `blob:` worker inside a hidden `<iframe sandbox="allow-scripts">`, relays messages both ways, and runs a fetch proxy for plain GETs (cross-origin, or the page-designated app package and runtime URLs) with `credentials: "omit"` ([#TBD](https://github.com/flet-dev/flet/pull/TBD)) by @FeodorFitsner.
+
 ## 1.1.4
 
 * `openWebBrowser()` and `openWindow()` return whether they opened the URL: on web they refuse a URL whose scheme is in `blockedWebUrlSchemes` (`javascript`, `blob`, `filesystem`), read by `webUrlScheme()` the way a browser reads it; `isOpenableWebUrl()` is the check. `openWebBrowser(embedded: true)` turns a `_self`/`_parent`/`_top` target into `_blank` (`launchTarget()`), and every caller (`UrlLauncherService`, `runControlActions()`, text spans, `Markdown` links) passes `control.backend.isEmbedded`, a new public getter on `FletBackend`. `openWindow()` prefixes a window name starting with `_` with `flet` (`popupWindowName()`) ([#7136](https://github.com/flet-dev/flet/pull/7136)) by @FeodorFitsner.

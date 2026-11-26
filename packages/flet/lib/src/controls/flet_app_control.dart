@@ -106,6 +106,7 @@ class _FletAppControlState extends State<FletAppControl> {
         pageUrl: url,
         assetsDir: assetsDir,
         storagePrefix: storagePrefix,
+        isolated: widget.control.getBool("isolated"),
         errorsHandler: _errorsHandler,
         extensions: FletBackend.of(context).extensions,
         // In-process dart_bridge transport for `dartbridge://` embedded apps;
