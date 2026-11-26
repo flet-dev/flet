@@ -66,6 +66,16 @@ class FletBackend extends ChangeNotifier {
   final String? appErrorMessage;
   final int? controlId;
 
+  /// Prefix this app's [SharedPreferencesService] puts in front of every key,
+  /// so apps that share one browser origin or device store don't see each
+  /// other's keys.
+  ///
+  /// A top-level app takes it from `window.flet.storagePrefix` on web (empty
+  /// elsewhere). An embedded app (a `FletApp` control) nests its own prefix
+  /// under its host's: host `app.1.` + embedded `x.` gives `app.1.x.`, so an
+  /// embedded app can never reach keys outside its host's space.
+  final String storagePrefix;
+
   /// Notifies the boot screen of the current [BootStatus] (stage, any startup
   /// error, and whether boot is done). Kept in sync with [isLoading]/[error].
   ///
@@ -146,9 +156,14 @@ class FletBackend extends ChangeNotifier {
       ValueNotifier<BootStatus>? bootStatus,
       FletBackendChannelBuilder? channelBuilder,
       DataChannelFactory? dataChannelFactory,
+      String? storagePrefix,
       FletBackend? parentFletBackend})
       : _parentFletBackend =
             parentFletBackend != null ? WeakReference(parentFletBackend) : null,
+        storagePrefix = resolveStoragePrefix(
+            storagePrefix: storagePrefix,
+            parentPrefix: parentFletBackend?.storagePrefix,
+            pageUri: pageUri),
         _reconnectTimeoutMs = reconnectTimeoutMs,
         _reconnectIntervalMs = reconnectIntervalMs,
         _channelBuilder = channelBuilder,
@@ -195,6 +210,36 @@ class FletBackend extends ChangeNotifier {
         });
       }
     }
+  }
+
+  /// The [storagePrefix] for a backend.
+  ///
+  /// Top-level ([parentPrefix] is null): [storagePrefix] if given, else
+  /// `window.flet.storagePrefix` on web, else empty.
+  ///
+  /// Embedded: [parentPrefix] followed by [storagePrefix], or by
+  /// [defaultEmbeddedStoragePrefix] of [pageUri] when none was given - an
+  /// embedded app is isolated from its host unless the host passes `""`.
+  static String resolveStoragePrefix(
+      {String? storagePrefix, String? parentPrefix, required Uri pageUri}) {
+    if (parentPrefix == null) {
+      return storagePrefix ?? getStoragePrefix();
+    }
+    return parentPrefix +
+        (storagePrefix ?? defaultEmbeddedStoragePrefix(pageUri.toString()));
+  }
+
+  /// `fletapp.<8 hex digits>.`: a stable FNV-1a hash of [source] (the
+  /// embedded app's URL), the same on every platform and every run.
+  static String defaultEmbeddedStoragePrefix(String source) {
+    var hash = 0x811c9dc5;
+    for (final unit in source.codeUnits) {
+      hash ^= unit;
+      // hash * 0x01000193 split as (hash << 24) + hash * 0x193, so every
+      // intermediate stays below 2^53 and web (JS numbers) matches native.
+      hash = (((hash << 24) & 0xffffffff) + hash * 0x193) & 0xffffffff;
+    }
+    return "fletapp.${hash.toRadixString(16).padLeft(8, '0')}.";
   }
 
   static FletBackend of(BuildContext context) {

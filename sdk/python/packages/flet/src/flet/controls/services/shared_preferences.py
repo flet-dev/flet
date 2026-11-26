@@ -13,6 +13,14 @@ SharedPreferencesValueType: TypeAlias = Union[str, int, float, bool, list[str]]
 class SharedPreferences(Service):
     """
     Provides access to persistent key-value storage.
+
+    Note:
+        An app embedded in another with [`FletApp`][flet.FletApp] gets its own
+        space in the store: its keys are stored under a prefix the host sets
+        with [`FletApp.storage_prefix`][flet.FletApp.storage_prefix], so it
+        can't read, list or clear the host's keys. The app uses plain key
+        names and never sees the prefix. A web page can set the prefix for the
+        top-level app too, with `window.flet.storagePrefix`.
     """
 
     async def set(self, key: str, value: SharedPreferencesValueType) -> bool:
