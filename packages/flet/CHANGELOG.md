@@ -1,3 +1,7 @@
+## 1.1.4
+
+* `FletBackend.storagePrefix`: the key prefix `SharedPreferencesService` applies to every method (`set`, `get`, `contains_key`, `remove`; `get_keys` lists keys without it; `clear` removes only keys under it, never `prefs.clear()`). A top-level backend takes it from `FletApp.storagePrefix`, else `window.flet.storagePrefix` on web (`getStoragePrefix()`), else empty. An embedded backend nests its prefix under its parent's; `FletAppControl` passes the `storage_prefix` property, or `fletapp.<FNV-1a hash>.` of the app's `url` (else `assets_dir`) when unset. Added `FletBackend.resolveStoragePrefix()` and `defaultEmbeddedStoragePrefix()` ([#TBD](https://github.com/flet-dev/flet/pull/TBD)) by @FeodorFitsner.
+
 ## 1.1.3
 
 * `parseAnimation(false)` returns `null`. When the caller supplies a default animation, it returns a zero-duration animation with the default curve ([#7091](https://github.com/flet-dev/flet/pull/7091)) by @ndonkoHenri.
