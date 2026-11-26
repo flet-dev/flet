@@ -162,6 +162,27 @@ class FletApp(LayoutControl):
     `"app.1.preview."`, so it can never reach outside its host's space.
     """
 
+    file_storage_quota: Optional[int] = None
+    """
+    Most bytes the embedded app may keep in
+    [`FileStorage`][flet.FileStorage]: a write that would go past it fails.
+
+    `None` (default) allows 50 MB. The limit covers only the embedded app's
+    own folder; the host's files don't count.
+    """
+
+    shared_preferences_quota: Optional[int] = None
+    """
+    Most bytes the embedded app's
+    [`SharedPreferences`][flet.SharedPreferences] keys and values may take: a
+    `set()` that would go past it fails.
+
+    `None` (default) allows 1 MB. On web the host and every embedded app share
+    the browser's `localStorage` for the page's origin, about 5 MB in all, so
+    this keeps an embedded app from filling it and breaking the host's own
+    writes.
+    """
+
     reconnect_interval_ms: Optional[int] = None
     """
     Delay, in milliseconds, between reconnection attempts.

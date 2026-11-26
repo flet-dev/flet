@@ -1,3 +1,7 @@
+## 1.2.0
+
+* `FileStorageService` (`"FileStorage"`): the file work runs in `FileStorageSpace`, which validates names (`fileStorageSegments()`), keeps each app in `flet/<fileStorageFolder(storagePrefix)>/`, enforces `FletBackend.fileStorageQuota` and scopes locks to the app, releasing them on dispose. Backends: OPFS on web (`createWritable()`, Web Locks), a folder under the app support directory elsewhere (temp file + rename, in-process locks). `FletBackend` gains `fileStorageQuota` and `sharedPreferencesQuota` (embedded defaults 50 MB and 1 MB, top-level unlimited), passed from `FletApp`/`FletAppControl` (`file_storage_quota`, `shared_preferences_quota`); `invokeSharedPreferencesMethod(quota:)` refuses a `set` past it ([#7138](https://github.com/flet-dev/flet/pull/7138)) by @FeodorFitsner.
+
 ## 1.1.4
 
 * `openWebBrowser()` and `openWindow()` return whether they opened the URL: on web they refuse a URL whose scheme is in `blockedWebUrlSchemes` (`javascript`, `blob`, `filesystem`), read by `webUrlScheme()` the way a browser reads it; `isOpenableWebUrl()` is the check. `openWebBrowser(embedded: true)` turns a `_self`/`_parent`/`_top` target into `_blank` (`launchTarget()`), and every caller (`UrlLauncherService`, `runControlActions()`, text spans, `Markdown` links) passes `control.backend.isEmbedded`, a new public getter on `FletBackend`. `openWindow()` prefixes a window name starting with `_` with `flet` (`popupWindowName()`) ([#7136](https://github.com/flet-dev/flet/pull/7136)) by @FeodorFitsner.

@@ -106,4 +106,36 @@ void main() {
           "fletapp.bf9cf968.");
     });
   });
+
+  group("quota", () {
+    Future<dynamic> set(String prefix, String key, Object value, int quota) =>
+        invokeSharedPreferencesMethod(
+            prefs, prefix, "set", {"key": key, "value": value},
+            quota: quota);
+
+    test("a set past it fails and stores nothing", () async {
+      // "app.1.todo" + "\"guest one\"" already takes 21 bytes.
+      await expectLater(set("app.1.", "big", "x" * 100, 100),
+          throwsA(isA<StateError>()));
+      expect(prefs.containsKey("app.1.big"), isFalse);
+      await set("app.1.", "small", "x" * 50, 100);
+      expect(prefs.getString("app.1.small"), "x" * 50);
+    });
+
+    test("replacing a value counts only the new one", () async {
+      await set("app.1.", "todo", "y" * 70, 100);
+      await set("app.1.", "todo", "z" * 75, 100);
+      expect(prefs.getString("app.1.todo"), "z" * 75);
+    });
+
+    test("other prefixes' keys don't count", () async {
+      await set("app.12.", "note", "x" * 50, 100);
+    });
+
+    test("no quota, no limit", () async {
+      await invokeSharedPreferencesMethod(
+          prefs, "app.1.", "set", {"key": "big", "value": "x" * 100000});
+      expect(prefs.getString("app.1.big")!.length, 100000);
+    });
+  });
 }

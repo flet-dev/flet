@@ -446,6 +446,7 @@ docs:
       Clipboard: services/clipboard.md
       Connectivity: services/connectivity.md
       FilePicker: services/filepicker.md
+      FileStorage: services/filestorage.md
       Flashlight: services/flashlight/index.md
       Geolocator: services/geolocator/index.md
       Gyroscope: services/gyroscope.md

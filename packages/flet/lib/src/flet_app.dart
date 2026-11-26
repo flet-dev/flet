@@ -38,6 +38,12 @@ class FletApp extends StatefulWidget {
   /// for a top-level app, isolated for an embedded one.
   final String? storagePrefix;
 
+  /// See [FletBackend.fileStorageQuota]; `null` means the default.
+  final int? fileStorageQuota;
+
+  /// See [FletBackend.sharedPreferencesQuota]; `null` means the default.
+  final int? sharedPreferencesQuota;
+
   /// Optional escape hatch for embedders that bring their own transport
   /// (e.g. `serious_python`'s in-process FFI bridge). When set, this builder
   /// is invoked from [FletBackend.connect] in place of the URL-scheme
@@ -74,6 +80,8 @@ class FletApp extends StatefulWidget {
       this.tester,
       this.multiView = false,
       this.storagePrefix,
+      this.fileStorageQuota,
+      this.sharedPreferencesQuota,
       this.channelBuilder,
       this.dataChannelFactory,
       this.onBackendCreated});
@@ -114,6 +122,8 @@ class _FletAppState extends State<FletApp> {
             channelBuilder: widget.channelBuilder,
             dataChannelFactory: widget.dataChannelFactory,
             storagePrefix: widget.storagePrefix,
+            fileStorageQuota: widget.fileStorageQuota,
+            sharedPreferencesQuota: widget.sharedPreferencesQuota,
             parentFletBackend:
                 Provider.of<FletBackend?>(context, listen: false));
         widget.onBackendCreated?.call(created);

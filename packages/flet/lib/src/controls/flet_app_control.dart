@@ -106,6 +106,9 @@ class _FletAppControlState extends State<FletAppControl> {
         pageUrl: url,
         assetsDir: assetsDir,
         storagePrefix: storagePrefix,
+        fileStorageQuota: widget.control.getInt("file_storage_quota"),
+        sharedPreferencesQuota:
+            widget.control.getInt("shared_preferences_quota"),
         errorsHandler: _errorsHandler,
         extensions: FletBackend.of(context).extensions,
         // In-process dart_bridge transport for `dartbridge://` embedded apps;

@@ -133,3 +133,24 @@ def test_storage_prefix_defaults_to_none():
     encoder = configure_encode_object_for_msgpack(BaseControl)
     encoded = encoder(ft.FletApp(url="dartbridge://"))
     assert encoded.get("storage_prefix") is None
+
+
+def test_storage_quotas_are_encoded_for_the_client():
+    encoder = configure_encode_object_for_msgpack(BaseControl)
+    encoded = encoder(
+        ft.FletApp(
+            url="dartbridge://",
+            file_storage_quota=10_000_000,
+            shared_preferences_quota=200_000,
+        )
+    )
+    assert encoded["file_storage_quota"] == 10_000_000
+    assert encoded["shared_preferences_quota"] == 200_000
+
+
+def test_storage_quotas_default_to_none():
+    # None: the client applies its defaults for an embedded app.
+    encoder = configure_encode_object_for_msgpack(BaseControl)
+    encoded = encoder(ft.FletApp(url="dartbridge://"))
+    assert encoded.get("file_storage_quota") is None
+    assert encoded.get("shared_preferences_quota") is None

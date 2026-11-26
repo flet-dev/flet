@@ -76,6 +76,21 @@ class FletBackend extends ChangeNotifier {
   /// embedded app can never reach keys outside its host's space.
   final String storagePrefix;
 
+  /// Most bytes this app may keep in `ft.FileStorage`, or `null` for no limit.
+  /// A top-level app has none; an embedded one gets
+  /// [defaultEmbeddedFileStorageQuota] unless its host sets one.
+  final int? fileStorageQuota;
+
+  /// Most bytes this app may keep in `ft.SharedPreferences` (keys and values
+  /// under its [storagePrefix]), or `null` for no limit. A top-level app has
+  /// none; an embedded one gets [defaultEmbeddedSharedPreferencesQuota]
+  /// unless its host sets one, so it can't fill the store its host shares
+  /// (on web, the origin's `localStorage`, about 5 MB).
+  final int? sharedPreferencesQuota;
+
+  static const defaultEmbeddedFileStorageQuota = 50 * 1024 * 1024;
+  static const defaultEmbeddedSharedPreferencesQuota = 1024 * 1024;
+
   /// Notifies the boot screen of the current [BootStatus] (stage, any startup
   /// error, and whether boot is done). Kept in sync with [isLoading]/[error].
   ///
@@ -157,6 +172,8 @@ class FletBackend extends ChangeNotifier {
       FletBackendChannelBuilder? channelBuilder,
       DataChannelFactory? dataChannelFactory,
       String? storagePrefix,
+      int? fileStorageQuota,
+      int? sharedPreferencesQuota,
       FletBackend? parentFletBackend})
       : _parentFletBackend =
             parentFletBackend != null ? WeakReference(parentFletBackend) : null,
@@ -164,6 +181,12 @@ class FletBackend extends ChangeNotifier {
             storagePrefix: storagePrefix,
             parentPrefix: parentFletBackend?.storagePrefix,
             pageUri: pageUri),
+        fileStorageQuota = fileStorageQuota ??
+            (parentFletBackend != null ? defaultEmbeddedFileStorageQuota : null),
+        sharedPreferencesQuota = sharedPreferencesQuota ??
+            (parentFletBackend != null
+                ? defaultEmbeddedSharedPreferencesQuota
+                : null),
         _reconnectTimeoutMs = reconnectTimeoutMs,
         _reconnectIntervalMs = reconnectIntervalMs,
         _channelBuilder = channelBuilder,

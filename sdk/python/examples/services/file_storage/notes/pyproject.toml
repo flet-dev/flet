@@ -1,0 +1,26 @@
+[project]
+name = "file-storage-notes"
+version = "1.0.0"
+description = "Keeps notes in a JSON file that survives restarts, with FileStorage."
+requires-python = ">=3.10"
+keywords = ["filestorage", "files", "persistence", "services", "async"]
+authors = [{ name = "Flet team", email = "hello@flet.dev" }]
+dependencies = ["flet"]
+
+[dependency-groups]
+dev = ["flet-cli", "flet-desktop", "flet-web"]
+
+[tool.flet.gallery]
+categories = ["Utility/FileStorage"]
+
+[tool.flet.metadata]
+title = "File storage notes"
+controls = ["SafeArea", "Column", "Page", "FileStorage", "Text", "Row", "TextField", "Button", "OutlinedButton"]
+layout_pattern = "inline-actions"
+complexity = "basic"
+features = ["file storage", "persistence"]
+
+[tool.flet]
+org = "dev.flet"
+company = "Flet"
+copyright = "Copyright (C) 2023-2026 by Flet"
