@@ -39,5 +39,3 @@ client/devtools_options.yaml
 # Files uploaded while running the file_picker examples, which pass
 # upload_dir="examples" to ft.run() and so write under the example's own folder
 sdk/python/examples/**/examples/
-/agent-output
-/.agents
