@@ -3,7 +3,7 @@
 ### Improvements
 
 * Give each app embedded with `FletApp` its own `SharedPreferences` space: its keys go under a prefix set with the new `FletApp.storage_prefix`, by default one derived from its URL, so an embedded app and its host, or two embedded apps, keep separate keys; `get_keys()` and `clear()` only see the embedded app's own. `""` shares the host's keys as before. On web, a page can set the top-level app's prefix with `window.flet.storagePrefix`, and an embedded app's prefix nests under its host's. Data an embedded app saved before this change stays under the old, unprefixed keys ([#7135](https://github.com/flet-dev/flet/pull/7135)) by @FeodorFitsner.
-* flet-secure-storage: an app embedded with `FletApp` gets its own `SecureStorage` space too, under the same prefix as its `SharedPreferences`: `get()`, `set()`, `contains_key()` and `remove()` use its own keys, `get_all()` lists only those, without the prefix, and `clear()` removes only those ([#TBD](https://github.com/flet-dev/flet/pull/TBD)) by @FeodorFitsner.
+* flet-secure-storage: an app embedded with `FletApp` gets its own `SecureStorage` space too, under the same prefix as its `SharedPreferences`: `get()`, `set()`, `contains_key()` and `remove()` use its own keys, `get_all()` lists only those, without the prefix, and `clear()` removes only those ([#7137](https://github.com/flet-dev/flet/pull/7137)) by @FeodorFitsner.
 
 ## 1.1.3
 
