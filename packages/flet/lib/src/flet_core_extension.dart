@@ -115,6 +115,7 @@ import 'services/browser_context_menu.dart';
 import 'services/battery.dart';
 import 'services/accelerometer.dart';
 import 'services/clipboard.dart';
+import 'services/file_storage.dart';
 import 'services/connectivity.dart';
 import 'services/file_picker.dart';
 import 'services/barometer.dart';
@@ -417,6 +418,8 @@ class FletCoreExtension extends FletExtension {
         return ShakeDetectorService(control: control);
       case "SharedPreferences":
         return SharedPreferencesService(control: control);
+      case "FileStorage":
+        return FileStorageService(control: control);
       case "SemanticsService":
         return SemanticsServiceControl(control: control);
       case "Magnetometer":

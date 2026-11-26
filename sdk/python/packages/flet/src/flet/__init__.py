@@ -588,6 +588,7 @@ if TYPE_CHECKING:
         FilePickerUploadFile,
         PickFiles,
     )
+    from flet.controls.services.file_storage import FileStorage
     from flet.controls.services.gyroscope import (
         Gyroscope,
         GyroscopeReadingEvent,
@@ -943,6 +944,7 @@ __all__ = [
     "FilePickerResultEvent",
     "FilePickerUploadEvent",
     "FilePickerUploadFile",
+    "FileStorage",
     "FilledButton",
     "FilledButtonTheme",
     "FilledIconButton",
@@ -1498,6 +1500,7 @@ _LAZY = {
     "FilePickerResultEvent": "flet.controls.services.file_picker",
     "FilePickerUploadEvent": "flet.controls.services.file_picker",
     "FilePickerUploadFile": "flet.controls.services.file_picker",
+    "FileStorage": "flet.controls.services.file_storage",
     "FilledButton": "flet.controls.material.filled_button",
     "FilledButtonTheme": "flet.controls.theme",
     "FilledIconButton": "flet.controls.material.icon_button",
