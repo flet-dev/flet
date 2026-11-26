@@ -1991,7 +1991,7 @@ class BaseBuildCommand(BaseFlutterCommand):
         ).is_file():
             return True
 
-        if self.pubspec_path and self.pubspec_path.is_file():
+        if self.pubspec_path and os.path.isfile(self.pubspec_path):
             try:
                 pubspec = self.load_yaml(self.pubspec_path)
                 deps = pubspec.get("dependencies") or {}
