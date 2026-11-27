@@ -118,7 +118,7 @@ from the padding; note it in the TimePicker PR.
 
 1. ~~Push the fork branches~~ Done: all four are on flet-dev/fluent_ui.
 2. ~~Remove the temporary override~~ Done: `client/pubspec.lock` resolves `fluent_ui` from
-   git at `e6221b92`.
+   git at `a3d5e2f4` (includes the glyph-centering fix: each glyph's left side bearing is its xMin).
 3. ~~Integration tests and goldens~~ Done against the local fork: all 118 Fluent tests pass.
    74 goldens were refreshed and reviewed (new MIT icons; 4.18's flyout padding and acrylic,
    CommandBar overflow sizing, compact NavigationView spacing). Re-run against the git

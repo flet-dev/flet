@@ -605,8 +605,8 @@ packages:
     dependency: transitive
     description:
       path: "."
-      ref: e6221b92d02060b657e841a06c1bedcbdec672ca
-      resolved-ref: e6221b92d02060b657e841a06c1bedcbdec672ca
+      ref: a3d5e2f409b25704dfa570f8c219901a7e514714
+      resolved-ref: a3d5e2f409b25704dfa570f8c219901a7e514714
       url: "https://github.com/flet-dev/fluent_ui"
     source: git
     version: "4.18.1"

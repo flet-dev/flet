@@ -17,7 +17,7 @@ dependencies:
   fluent_ui:
     git:
       url: https://github.com/flet-dev/fluent_ui
-      ref: e6221b92d02060b657e841a06c1bedcbdec672ca
+      ref: a3d5e2f409b25704dfa570f8c219901a7e514714
   material_ui: ^1.7.0
 
   flet:
