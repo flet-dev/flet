@@ -1,6 +1,8 @@
 import asyncio
 import gc
+import inspect
 import sys
+import types
 import weakref
 from datetime import datetime, timezone
 
@@ -779,3 +781,102 @@ class TestEffectLoop:
         await runner.unmount()
 
         assert log == ["cancelled"]
+
+    @pytest.mark.asyncio
+    async def test_coroutine_returned_by_a_plain_setup_runs(self, runner):
+        """A plain setup that returns a coroutine (`lambda: load(1)`) runs it."""
+        log: list[str] = []
+
+        async def load(item_id: int):
+            await asyncio.sleep(0)
+            log.append(f"loaded {item_id}")
+
+        def body():
+            use_effect_module.use_effect(lambda: load(1), [])
+
+        await runner.mount(body)
+
+        assert log == ["loaded 1"]
+        assert runner.errors == []
+
+    @pytest.mark.asyncio
+    @pytest.mark.parametrize("marked", [False, True], ids=["plain", "marked"])
+    async def test_setup_advances_async_generator(self, runner, marked):
+        advanced = asyncio.Event()
+
+        async def values():
+            advanced.set()
+            yield
+
+        stream = values()
+
+        def advance():
+            return stream.__anext__()
+
+        if marked:
+            if not hasattr(inspect, "markcoroutinefunction"):
+                pytest.skip("markcoroutinefunction requires Python 3.12")
+            advance = inspect.markcoroutinefunction(advance)
+
+        try:
+            await runner.mount(lambda: use_effect_module.use_effect(advance, []))
+            assert advanced.is_set()
+            assert runner.errors == []
+        finally:
+            await stream.aclose()
+
+    @pytest.mark.asyncio
+    async def test_generator_based_setup_is_cancelled_on_unmount(self, runner):
+        ready = asyncio.get_running_loop().create_future()
+
+        @types.coroutine
+        def watch():
+            yield from ready
+
+        await runner.mount(lambda: use_effect_module.use_effect(lambda: watch(), []))
+        await runner.unmount()
+
+        assert ready.cancelled()
+        assert runner.errors == []
+
+    @pytest.mark.asyncio
+    async def test_coroutine_returned_by_a_plain_setup_is_cancelled_on_unmount(
+        self, runner
+    ):
+        """The returned coroutine runs as the effect's task: unmounting cancels it."""
+        log: list[str] = []
+
+        async def watch():
+            try:
+                await asyncio.sleep(10)
+            except asyncio.CancelledError:
+                log.append("cancelled")
+                raise
+
+        def body():
+            use_effect_module.use_effect(lambda: watch(), [])
+
+        await runner.mount(body)
+        await runner.unmount()
+
+        assert log == ["cancelled"]
+
+    @pytest.mark.asyncio
+    async def test_task_returned_by_a_plain_setup_is_left_alone(self, runner):
+        """A setup that starts a task and returns it keeps owning it: it isn't
+        taken for the effect's task or its cleanup."""
+        release = asyncio.Event()
+        task = None
+
+        def setup():
+            nonlocal task
+            task = asyncio.create_task(release.wait())
+            return task
+
+        await runner.mount(lambda: use_effect_module.use_effect(setup, []))
+        assert task is not None
+        await runner.unmount()
+        release.set()
+
+        assert await asyncio.wait_for(task, timeout=1)
+        assert runner.errors == []

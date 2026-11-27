@@ -12,7 +12,11 @@ from flet.controls.icon_data import IconData
 
 __all__ = ["Icons"]
 
-class Icons:
+class _IconsMeta(type):
+    def __getitem__(cls, name: str) -> IconData: ...
+    def __contains__(cls, item: object) -> bool: ...
+
+class Icons(metaclass=_IconsMeta):
     ABC: IconData
     ABC_OUTLINED: IconData
     ABC_ROUNDED: IconData

@@ -4,6 +4,7 @@ from dataclasses import dataclass, field
 from typing import Any
 
 from flet.components.hooks.hook import Hook
+from flet.components.observable import capture_dependencies
 from flet.components.utils import current_component
 
 
@@ -140,14 +141,18 @@ def use_effect(
     you want.
 
     Args:
-        setup: A function that performs the side effect. It may be `async`. A
-            non-`async` setup may return a cleanup function. An `async` setup's
+        setup: A function that performs the side effect. It may be `async`, or a
+            plain function that returns a coroutine (`lambda: load(item_id)`),
+            which runs as an `async` setup would. A non-`async` setup may return a
+            cleanup function. An `async` setup's
             return value is not used: pass `cleanup` instead. An `async` setup still
             running when the effect re-runs or the component unmounts is cancelled.
         dependencies: Values the effect depends on. The effect always runs after the
             component mounts. If absent, it also re-runs after every render. If
             empty, it runs only on mount. Otherwise, it re-runs only when one of the
-            dependencies has changed.
+            dependencies has changed. A list or dict field of an
+            :func:`~flet.observable` counts as changed when it is changed in place,
+            such as by `items.append(x)`.
         cleanup: A function that cleans up after the effect, run after the cleanup
             the setup returned. It may be `async`.
 
@@ -177,7 +182,7 @@ def use_effect(
         ```
     """
     component = current_component()
-    deps = list(dependencies) if dependencies is not None else None
+    deps = capture_dependencies(dependencies) if dependencies is not None else None
 
     # get or create effect hook
     hook = component.use_hook(

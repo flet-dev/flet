@@ -146,6 +146,7 @@ categories:
     _description: Plotting and data viz
     BarChart:
     CandlestickChart:
+    GaugeChart:
     LineChart:
     MatplotlibChart:
     PieChart:
