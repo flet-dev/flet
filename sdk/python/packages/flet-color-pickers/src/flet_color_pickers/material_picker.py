@@ -1,18 +1,18 @@
-from typing import Optional
+from typing import Annotated, Optional
 
 import flet as ft
 
 __all__ = ["MaterialPicker"]
 
 
-@ft.control("MaterialPicker", client_writable=("color",))
+@ft.control("MaterialPicker")
 class MaterialPicker(ft.LayoutControl):
     """
     A material palette picker for selecting primary and shade colors, with
     optional shade labels.
     """
 
-    color: Optional[ft.ColorValue] = None
+    color: Annotated[Optional[ft.ColorValue], ft.ClientWritable] = None
     """
     The currently selected color.
     """

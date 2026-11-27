@@ -5,12 +5,15 @@ import sys
 from dataclasses import InitVar, dataclass, field, fields
 from typing import (
     TYPE_CHECKING,
+    Annotated,
     Any,
     Callable,
     ClassVar,
     Optional,
     TypeVar,
     Union,
+    get_args,
+    get_origin,
     overload,
 )
 
@@ -21,6 +24,7 @@ from flet.controls.ref import Ref
 from flet.controls.value_types import Prop, Value, _install_props, value
 from flet.utils.from_dict import from_dict
 from flet.utils.object_model import get_param_count, is_coroutine_result
+from flet.utils.typing_utils import field_annotation
 from flet.utils.validation import validate
 
 logger = logging.getLogger("flet")
@@ -38,6 +42,7 @@ if TYPE_CHECKING:
 
 __all__ = [
     "BaseControl",
+    "ClientWritable",
     "Prop",
     "Value",
     "control",
@@ -52,6 +57,12 @@ __all__ = [
 # Prop, Value, _install_props and value are re-exported from here
 # for backwards compatibility.
 # ---------------------------------------------------------------------------
+
+
+class ClientWritable:
+    """Mark a control field with `Annotated[T, ClientWritable]` to accept values
+    from its Dart widget. Treat those values as client input.
+    """
 
 
 def skip_field():
@@ -86,7 +97,6 @@ def control(
     post_init_args: int = 1,
     categories: Optional[tuple[str, ...]] = None,
     tags: Optional[tuple[str, ...]] = None,
-    client_writable: tuple[str, ...] = (),
     enabled_only: tuple[str, ...] = (),
     server_events: tuple[str, ...] = (),
     **dataclass_kwargs: Any,
@@ -108,7 +118,6 @@ def control(
     post_init_args: int = 1,
     categories: Optional[tuple[str, ...]] = None,
     tags: Optional[tuple[str, ...]] = None,
-    client_writable: tuple[str, ...] = (),
     enabled_only: tuple[str, ...] = (),
     server_events: tuple[str, ...] = (),
     **dataclass_kwargs: Any,
@@ -124,14 +133,10 @@ def control(
         post_init_args: Number of InitVar arguments to pass to __post_init__.
         categories: MCP metadata — control categories (e.g. `("input", "form")`).
         tags: MCP metadata — descriptive tags (e.g. `("text", "editable")`).
-        client_writable: Names of the fields a client may change. List every field the
-            control's Dart code sends to Python with `updateProperties()`: the server
-            ignores any other property it receives, because a client can send anything.
-            Inherited by subclasses and merged with their own.
         enabled_only: Names of the events, without the `on_` prefix, and of the
-            `client_writable` fields that the control's Dart code only sends while the
-            control is enabled. The server ignores them while the control or one of its
-            ancestors is disabled, so list only what the Dart code really holds back.
+            fields marked with `ClientWritable` that Dart only sends while the control
+            is enabled. The server ignores them while the control or an ancestor is
+            disabled.
             Inherited by subclasses and merged with their own.
         server_events: Names of the events, without the `on_` prefix, that only Python
             code triggers. The server ignores these events when they come from a client.
@@ -139,8 +144,6 @@ def control(
         dataclass_kwargs: Additional keyword arguments passed to `@dataclass`.
 
     Raises:
-        ValueError: If `client_writable` names something that isn't a field of the
-            control, as a client could never change it.
         ValueError: If `enabled_only` names something that isn't a field or an event of
             the control, as the server would never apply the rule.
         ValueError: If `server_events` names an event the control has no `on_` field
@@ -153,8 +156,6 @@ def control(
             specify the number of `InitVar` arguments and isolation
         - Supports `@control("WidgetName", categories=("input",), tags=("text",))`
             to add MCP metadata for discovery
-        - Supports `@control("WidgetName", client_writable=("value",))` to accept the
-            values the control's Dart code sends to Python
     """
 
     # Case 1: If used as `@control` (without parentheses)
@@ -166,7 +167,6 @@ def control(
             post_init_args,
             categories=categories,
             tags=tags,
-            client_writable=client_writable,
             enabled_only=enabled_only,
             server_events=server_events,
             **dataclass_kwargs,
@@ -181,7 +181,6 @@ def control(
             post_init_args,
             categories=categories,
             tags=tags,
-            client_writable=client_writable,
             enabled_only=enabled_only,
             server_events=server_events,
             **dataclass_kwargs,
@@ -208,7 +207,6 @@ def _apply_control(
     post_init_args: int,
     categories: Optional[tuple[str, ...]] = None,
     tags: Optional[tuple[str, ...]] = None,
-    client_writable: tuple[str, ...] = (),
     enabled_only: tuple[str, ...] = (),
     server_events: tuple[str, ...] = (),
     **dataclass_kwargs,
@@ -218,11 +216,6 @@ def _apply_control(
     _install_props(cls)  # Install Prop descriptors for sparse tracking
 
     field_names = {f.name for f in fields(cls)}
-    if unknown := set(client_writable) - field_names:
-        raise ValueError(
-            f"{cls.__qualname__} lists client_writable names that aren't fields: "
-            f"{sorted(unknown)}"
-        )
     if unknown := {
         name
         for name in enabled_only
@@ -237,7 +230,12 @@ def _apply_control(
             f"{cls.__qualname__} lists server_events it has no on_ field for: "
             f"{sorted(unknown)}"
         )
-    cls._client_writable = _merge_inherited(cls, "_client_writable", client_writable)
+    cls._client_writable = frozenset(
+        f.name
+        for f in fields(cls)
+        if get_origin(hint := field_annotation(cls, f)) is Annotated
+        and any(extra is ClientWritable for extra in get_args(hint)[1:])
+    )
     cls._enabled_only = _merge_inherited(cls, "_enabled_only", enabled_only)
     cls._server_events = _merge_inherited(cls, "_server_events", server_events)
 
@@ -272,8 +270,7 @@ class BaseControl:
 
     _client_writable: ClassVar[frozenset[str]] = frozenset()
     """
-    Names of the fields a client may change, set by the `client_writable` argument of
-    the `@control` decorator.
+    Names of the effective dataclass fields marked with `ClientWritable`.
     """
 
     _enabled_only: ClassVar[frozenset[str]] = frozenset()

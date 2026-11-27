@@ -1,13 +1,11 @@
-from typing import Optional
+from typing import Annotated, Optional
 
 import flet as ft
 
 __all__ = ["Checkbox"]
 
 
-@ft.control(
-    "ShadCheckbox", client_writable=("value",), enabled_only=("change", "value")
-)
+@ft.control("ShadCheckbox", enabled_only=("change", "value"))
 class Checkbox(ft.LayoutControl):
     """
     A Shadcn checkbox.
@@ -21,7 +19,7 @@ class Checkbox(ft.LayoutControl):
     ```
     """
 
-    value: bool = False
+    value: Annotated[bool, ft.ClientWritable] = False
     """
     Whether this checkbox is checked.
     """

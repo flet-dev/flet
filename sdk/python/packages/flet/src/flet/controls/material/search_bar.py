@@ -1,7 +1,7 @@
 from dataclasses import field
-from typing import Optional
+from typing import Annotated, Optional
 
-from flet.controls.base_control import control
+from flet.controls.base_control import ClientWritable, control
 from flet.controls.border import BorderSide
 from flet.controls.box import BoxConstraints
 from flet.controls.buttons import OutlinedBorder
@@ -20,7 +20,7 @@ from flet.controls.types import (
 __all__ = ["SearchBar"]
 
 
-@control("SearchBar", client_writable=("value",))
+@control("SearchBar")
 class SearchBar(LayoutControl):
     """
     Manages a "search view" route that allows the user to select one of the suggested \
@@ -40,7 +40,7 @@ class SearchBar(LayoutControl):
     in a :class:`~flet.ListView`.
     """
 
-    value: str = ""
+    value: Annotated[str, ClientWritable] = ""
     """
     The text in the search bar.
     """

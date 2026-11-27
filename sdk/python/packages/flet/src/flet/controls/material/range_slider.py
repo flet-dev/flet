@@ -1,6 +1,6 @@
 from typing import Annotated, Optional
 
-from flet.controls.base_control import control
+from flet.controls.base_control import ClientWritable, control
 from flet.controls.control_event import ControlEventHandler
 from flet.controls.control_state import ControlStateValue
 from flet.controls.layout_control import LayoutControl
@@ -16,7 +16,6 @@ __all__ = ["RangeSlider"]
 
 @control(
     "RangeSlider",
-    client_writable=("end_value", "start_value"),
     enabled_only=("change", "change_end", "change_start", "end_value", "start_value"),
 )
 class RangeSlider(LayoutControl):
@@ -41,6 +40,7 @@ class RangeSlider(LayoutControl):
 
     start_value: Annotated[
         Number,
+        ClientWritable,
         V.ge_field("min"),
         V.le_field("end_value"),
     ]
@@ -57,6 +57,7 @@ class RangeSlider(LayoutControl):
 
     end_value: Annotated[
         Number,
+        ClientWritable,
         V.le_field("max"),
         V.ge_field("start_value"),
     ]

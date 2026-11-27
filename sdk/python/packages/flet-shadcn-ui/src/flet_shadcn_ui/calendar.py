@@ -6,9 +6,7 @@ from flet.utils.validation import V
 __all__ = ["Calendar"]
 
 
-@ft.control(
-    "ShadCalendar", client_writable=("value",), enabled_only=("change", "value")
-)
+@ft.control("ShadCalendar", enabled_only=("change", "value"))
 class Calendar(ft.LayoutControl):
     """
     A Shadcn calendar for picking one day.
@@ -23,7 +21,7 @@ class Calendar(ft.LayoutControl):
     ```
     """
 
-    value: Optional[ft.DateTimeValue] = None
+    value: Annotated[Optional[ft.DateTimeValue], ft.ClientWritable] = None
     """
     The selected day.
 

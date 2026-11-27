@@ -1,8 +1,8 @@
 from dataclasses import field
-from typing import Optional
+from typing import Annotated, Optional
 
 from flet.controls.animation import Animation, AnimationCurve
-from flet.controls.base_control import control
+from flet.controls.base_control import ClientWritable, control
 from flet.controls.control import Control
 from flet.controls.dialog_control import DialogControl
 from flet.controls.duration import Duration
@@ -12,7 +12,7 @@ from flet.utils.validation import V, ValidationRules
 __all__ = ["CupertinoAlertDialog"]
 
 
-@control("CupertinoAlertDialog", client_writable=("open",))
+@control("CupertinoAlertDialog")
 class CupertinoAlertDialog(DialogControl):
     """
     An iOS-style alert dialog.
@@ -21,6 +21,8 @@ class CupertinoAlertDialog(DialogControl):
     alert dialog has an optional title and an optional list of actions. The title is
     displayed above the content and the actions are displayed below the content.
     """
+
+    open: Annotated[bool, ClientWritable] = field(default=False, kw_only=True)
 
     modal: bool = False
     """

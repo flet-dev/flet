@@ -2,7 +2,7 @@ from enum import Enum
 from typing import Annotated, Optional
 
 from flet.controls.adaptive_control import AdaptiveControl
-from flet.controls.base_control import control
+from flet.controls.base_control import ClientWritable, control
 from flet.controls.control_event import ControlEventHandler
 from flet.controls.control_state import ControlStateValue
 from flet.controls.layout_control import LayoutControl
@@ -61,7 +61,6 @@ class SliderInteraction(Enum):
 
 @control(
     "Slider",
-    client_writable=("value",),
     enabled_only=("change", "change_end", "change_start", "value"),
 )
 class Slider(LayoutControl, AdaptiveControl):
@@ -81,6 +80,7 @@ class Slider(LayoutControl, AdaptiveControl):
 
     value: Annotated[
         Optional[Number],
+        ClientWritable,
         V.ge_field("min"),
         V.le_field("max"),
     ] = None

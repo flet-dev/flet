@@ -1,14 +1,12 @@
 import datetime
-from typing import Optional
+from typing import Annotated, Optional
 
 import flet as ft
 
 __all__ = ["TimePicker"]
 
 
-@ft.control(
-    "ShadTimePicker", client_writable=("value",), enabled_only=("change", "value")
-)
+@ft.control("ShadTimePicker", enabled_only=("change", "value"))
 class TimePicker(ft.LayoutControl):
     """
     A Shadcn time picker with hour and minute fields.
@@ -19,7 +17,7 @@ class TimePicker(ft.LayoutControl):
     ```
     """
 
-    value: Optional[datetime.time] = None
+    value: Annotated[Optional[datetime.time], ft.ClientWritable] = None
     """
     The selected time. Only hours and minutes are used.
 

@@ -3,7 +3,7 @@ Video control definition for the flet-video package.
 """
 
 from dataclasses import field
-from typing import Optional, Union
+from typing import Annotated, Optional, Union
 
 import flet as ft
 from flet_video.types import (
@@ -20,7 +20,7 @@ from flet_video.types import (
 __all__ = ["Video"]
 
 
-@ft.control("Video", client_writable=("fullscreen",))
+@ft.control("Video")
 class Video(ft.LayoutControl):
     """
     A control that displays a video from a playlist.
@@ -83,7 +83,7 @@ class Video(ft.LayoutControl):
     `None` hides controls for that mode only.
     """
 
-    fullscreen: bool = False
+    fullscreen: Annotated[bool, ft.ClientWritable] = False
     """
     Whether the video player is presented in fullscreen mode.
 

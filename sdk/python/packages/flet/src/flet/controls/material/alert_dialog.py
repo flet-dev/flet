@@ -1,8 +1,8 @@
 from dataclasses import field
-from typing import Optional
+from typing import Annotated, Optional
 
 from flet.controls.alignment import Alignment
-from flet.controls.base_control import control
+from flet.controls.base_control import ClientWritable, control
 from flet.controls.buttons import OutlinedBorder
 from flet.controls.control import Control
 from flet.controls.dialog_control import DialogControl
@@ -20,7 +20,7 @@ from flet.utils.validation import V, ValidationRules
 __all__ = ["AlertDialog"]
 
 
-@control("AlertDialog", client_writable=("open",))
+@control("AlertDialog")
 class AlertDialog(DialogControl):
     """
     Can be used to inform the user about situations that require acknowledgement.
@@ -39,6 +39,8 @@ class AlertDialog(DialogControl):
     )
     ```
     """
+
+    open: Annotated[bool, ClientWritable] = field(default=False, kw_only=True)
 
     content: Optional[Control] = None
     """

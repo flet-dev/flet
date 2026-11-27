@@ -3,7 +3,7 @@ from enum import Enum
 from typing import Annotated, Optional
 
 from flet.controls.adaptive_control import AdaptiveControl
-from flet.controls.base_control import control
+from flet.controls.base_control import ClientWritable, control
 from flet.controls.border import Border
 from flet.controls.buttons import OutlinedBorder
 from flet.controls.control_event import ControlEventHandler
@@ -106,7 +106,6 @@ class NavigationBarDestination(AdaptiveControl):
 
 @control(
     "NavigationBar",
-    client_writable=("selected_index",),
     enabled_only=("change", "selected_index"),
 )
 class NavigationBar(LayoutControl, AdaptiveControl):
@@ -140,7 +139,7 @@ class NavigationBar(LayoutControl, AdaptiveControl):
         ValueError: If it does not contain at least two visible destinations.
     """
 
-    selected_index: int = 0
+    selected_index: Annotated[int, ClientWritable] = 0
     """
     The index into `destinations` for the current selected `NavigationBarDestination` \
     or `None` if no destination is selected.

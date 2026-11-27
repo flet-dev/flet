@@ -1,5 +1,5 @@
 from enum import Enum
-from typing import Optional
+from typing import Annotated, Optional
 
 import flet as ft
 
@@ -85,7 +85,7 @@ class HsvColor:
     """Value/brightness component in range `0.0..1.0`."""
 
 
-@ft.control("ColorPicker", client_writable=("color_history", "hsv_color"))
+@ft.control("ColorPicker")
 class ColorPicker(ft.LayoutControl):
     """
     A full-featured color picker with palette, sliders, labels, and optional
@@ -102,7 +102,7 @@ class ColorPicker(ft.LayoutControl):
     Width of the color picker in virtual pixels.
     """
 
-    color_history: Optional[list[ft.ColorValue]] = None
+    color_history: Annotated[Optional[list[ft.ColorValue]], ft.ClientWritable] = None
     """
     A list of colors to display as a history palette.
 
@@ -149,7 +149,7 @@ class ColorPicker(ft.LayoutControl):
     Height of the picker area as a percentage of the picker width.
     """
 
-    hsv_color: Optional[HsvColor] = None
+    hsv_color: Annotated[Optional[HsvColor], ft.ClientWritable] = None
     """
     The currently selected HSV color.
 

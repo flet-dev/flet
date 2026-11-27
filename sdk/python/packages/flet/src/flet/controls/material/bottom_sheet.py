@@ -1,7 +1,8 @@
+from dataclasses import field
 from typing import Annotated, Optional
 
 from flet.controls.animation import AnimationStyle
-from flet.controls.base_control import control
+from flet.controls.base_control import ClientWritable, control
 from flet.controls.box import BoxConstraints
 from flet.controls.buttons import OutlinedBorder
 from flet.controls.control import Control
@@ -12,7 +13,7 @@ from flet.utils.validation import V
 __all__ = ["BottomSheet"]
 
 
-@control("BottomSheet", client_writable=("open",))
+@control("BottomSheet")
 class BottomSheet(DialogControl):
     """
     A modal bottom sheet.
@@ -37,6 +38,8 @@ class BottomSheet(DialogControl):
     page.show_dialog(sheet)
     ```
     """
+
+    open: Annotated[bool, ClientWritable] = field(default=False, kw_only=True)
 
     content: Control
     """

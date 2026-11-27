@@ -1,5 +1,5 @@
 from dataclasses import field
-from typing import Optional
+from typing import Annotated, Optional
 
 import flet as ft
 
@@ -35,9 +35,7 @@ class Radio(ft.Control):
     """
 
 
-@ft.control(
-    "ShadRadioGroup", client_writable=("value",), enabled_only=("change", "value")
-)
+@ft.control("ShadRadioGroup", enabled_only=("change", "value"))
 class RadioGroup(ft.LayoutControl):
     """
     A Shadcn radio group: a set of options where only one can be selected.
@@ -60,7 +58,7 @@ class RadioGroup(ft.LayoutControl):
     The options of this group.
     """
 
-    value: Optional[str] = None
+    value: Annotated[Optional[str], ft.ClientWritable] = None
     """
     The :attr:`~flet_shadcn_ui.Radio.value` of the selected option.
 

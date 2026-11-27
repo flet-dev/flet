@@ -11,6 +11,7 @@ from dataclasses import InitVar, dataclass, field, fields, is_dataclass
 from functools import partial
 from typing import (
     TYPE_CHECKING,
+    Annotated,
     Any,
     Callable,
     ClassVar,
@@ -22,7 +23,7 @@ from typing import (
 from urllib.parse import urlparse
 
 from flet.components.public_utils import unwrap_component
-from flet.controls.base_control import BaseControl, control
+from flet.controls.base_control import BaseControl, ClientWritable, control
 from flet.controls.base_page import BasePage
 from flet.controls.context import _context_page, context
 from flet.controls.control import Control
@@ -553,7 +554,6 @@ class MultiViewRemoveEvent(Event["Page"]):
     "Page",
     isolated=True,
     post_init_args=2,
-    client_writable=("platform_brightness", "route"),
     server_events=(
         "close",
         "connect",
@@ -587,7 +587,7 @@ class Page(BasePage):
     window.
     """
 
-    route: str = "/"
+    route: Annotated[str, ClientWritable] = "/"
     """
     Gets current app route.
 
@@ -663,7 +663,7 @@ class Page(BasePage):
         This property is read-only.
     """
 
-    platform_brightness: Optional[Brightness] = None
+    platform_brightness: Annotated[Optional[Brightness], ClientWritable] = None
     """
     The current brightness mode of the host platform.
 

@@ -6,9 +6,7 @@ from flet.utils.validation import V
 __all__ = ["DatePicker", "DateRangePicker"]
 
 
-@ft.control(
-    "ShadDatePicker", client_writable=("value",), enabled_only=("change", "value")
-)
+@ft.control("ShadDatePicker", enabled_only=("change", "value"))
 class DatePicker(ft.LayoutControl):
     """
     A Shadcn date picker: a button that opens a calendar in a popover.
@@ -23,7 +21,7 @@ class DatePicker(ft.LayoutControl):
     ```
     """
 
-    value: Optional[ft.DateTimeValue] = None
+    value: Annotated[Optional[ft.DateTimeValue], ft.ClientWritable] = None
     """
     The selected day.
 
@@ -94,7 +92,6 @@ class DatePicker(ft.LayoutControl):
 
 @ft.control(
     "ShadDateRangePicker",
-    client_writable=("end_value", "start_value"),
     enabled_only=("change", "end_value", "start_value"),
 )
 class DateRangePicker(ft.LayoutControl):
@@ -119,12 +116,12 @@ class DateRangePicker(ft.LayoutControl):
     ```
     """
 
-    start_value: Optional[ft.DateTimeValue] = None
+    start_value: Annotated[Optional[ft.DateTimeValue], ft.ClientWritable] = None
     """
     The first day of the selected range.
     """
 
-    end_value: Optional[ft.DateTimeValue] = None
+    end_value: Annotated[Optional[ft.DateTimeValue], ft.ClientWritable] = None
     """
     The last day of the selected range.
 

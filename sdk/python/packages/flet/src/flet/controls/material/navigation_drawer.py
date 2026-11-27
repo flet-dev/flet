@@ -1,8 +1,8 @@
 from dataclasses import field
-from typing import Optional
+from typing import Annotated, Optional
 
 from flet.controls.adaptive_control import AdaptiveControl
-from flet.controls.base_control import control
+from flet.controls.base_control import ClientWritable, control
 from flet.controls.buttons import OutlinedBorder
 from flet.controls.control import Control
 from flet.controls.control_event import ControlEventHandler
@@ -73,7 +73,6 @@ class NavigationDrawerDestination(Control):
 
 @control(
     "NavigationDrawer",
-    client_writable=("selected_index",),
     enabled_only=("change", "selected_index"),
 )
 class NavigationDrawer(AdaptiveControl):
@@ -113,7 +112,7 @@ class NavigationDrawer(AdaptiveControl):
     items and/or other controls such as headlines, padding containers, and dividers.
     """
 
-    selected_index: int = 0
+    selected_index: Annotated[int, ClientWritable] = 0
     """
     The index for the currently selected :class:`~flet.NavigationDrawerDestination`.
 

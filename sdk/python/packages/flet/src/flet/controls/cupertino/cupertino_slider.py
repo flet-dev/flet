@@ -1,6 +1,6 @@
 from typing import Annotated, Optional
 
-from flet.controls.base_control import control
+from flet.controls.base_control import ClientWritable, control
 from flet.controls.control_event import ControlEventHandler
 from flet.controls.layout_control import LayoutControl
 from flet.controls.types import (
@@ -14,7 +14,6 @@ __all__ = ["CupertinoSlider"]
 
 @control(
     "CupertinoSlider",
-    client_writable=("value",),
     enabled_only=("change", "change_end", "change_start", "value"),
 )
 class CupertinoSlider(LayoutControl):
@@ -36,6 +35,7 @@ class CupertinoSlider(LayoutControl):
 
     value: Annotated[
         Optional[Number],
+        ClientWritable,
         V.ge_field("min"),
         V.le_field("max"),
     ] = None

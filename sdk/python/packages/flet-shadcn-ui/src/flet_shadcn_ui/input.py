@@ -1,4 +1,4 @@
-from typing import Optional
+from typing import Annotated, Optional
 
 import flet as ft
 
@@ -7,7 +7,6 @@ __all__ = ["Input"]
 
 @ft.control(
     "ShadInput",
-    client_writable=("value",),
     enabled_only=("change", "click", "submit", "value"),
 )
 class Input(ft.LayoutControl):
@@ -21,7 +20,7 @@ class Input(ft.LayoutControl):
     ```
     """
 
-    value: str = ""
+    value: Annotated[str, ft.ClientWritable] = ""
     """
     The current text of this input.
     """

@@ -1,7 +1,7 @@
 from dataclasses import field
 from typing import Annotated, Optional
 
-from flet.controls.base_control import control
+from flet.controls.base_control import ClientWritable, control
 from flet.controls.border_radius import BorderRadiusValue
 from flet.controls.buttons import ButtonStyle
 from flet.controls.control import Control
@@ -85,7 +85,6 @@ Option = DropdownOption
 
 @control(
     "Dropdown",
-    client_writable=("text", "value"),
     enabled_only=("select", "value"),
 )
 class Dropdown(LayoutControl):
@@ -112,7 +111,7 @@ class Dropdown(LayoutControl):
     ```
     """
 
-    value: Optional[str] = None
+    value: Annotated[Optional[str], ClientWritable] = None
     """
     The :attr:`flet.DropdownOption.key` of the dropdown :attr:`options`
     corresponding to the selected option.
@@ -123,7 +122,7 @@ class Dropdown(LayoutControl):
     A list of options to display in the dropdown.
     """
 
-    text: Optional[str] = None
+    text: Annotated[Optional[str], ClientWritable] = None
     """
     The text entered in the text field.
     """

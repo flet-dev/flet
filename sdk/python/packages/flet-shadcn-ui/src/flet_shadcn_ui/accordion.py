@@ -1,5 +1,5 @@
 from dataclasses import field
-from typing import Optional
+from typing import Annotated, Optional
 
 import flet as ft
 
@@ -28,7 +28,7 @@ class AccordionItem(ft.Control):
     """
 
 
-@ft.control("ShadAccordion", client_writable=("value",))
+@ft.control("ShadAccordion")
 class Accordion(ft.LayoutControl):
     """
     A Shadcn accordion: a vertical list of sections that expand to show their
@@ -53,7 +53,7 @@ class Accordion(ft.LayoutControl):
     The sections of this accordion.
     """
 
-    value: list[str] = field(default_factory=list)
+    value: Annotated[list[str], ft.ClientWritable] = field(default_factory=list)
     """
     The :attr:`~flet_shadcn_ui.AccordionItem.value` of each expanded item.
 

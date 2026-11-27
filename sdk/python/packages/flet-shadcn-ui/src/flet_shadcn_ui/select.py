@@ -1,5 +1,5 @@
 from dataclasses import field
-from typing import Optional
+from typing import Annotated, Optional
 
 import flet as ft
 
@@ -30,7 +30,7 @@ class SelectOption(ft.Control):
     """
 
 
-@ft.control("ShadSelect", client_writable=("value",), enabled_only=("change", "value"))
+@ft.control("ShadSelect", enabled_only=("change", "value"))
 class Select(ft.LayoutControl):
     """
     A Shadcn select: a button that opens a list of options to choose one from.
@@ -52,7 +52,7 @@ class Select(ft.LayoutControl):
     The options to choose from.
     """
 
-    value: Optional[str] = None
+    value: Annotated[Optional[str], ft.ClientWritable] = None
     """
     The :attr:`~flet_shadcn_ui.SelectOption.value` of the chosen option.
 

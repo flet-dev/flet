@@ -1,6 +1,7 @@
+from dataclasses import field
 from typing import Annotated, Optional
 
-from flet.controls.base_control import control
+from flet.controls.base_control import ClientWritable, control
 from flet.controls.control import Control
 from flet.controls.control_event import ControlEventHandler
 from flet.controls.dialog_control import DialogControl
@@ -18,7 +19,7 @@ from flet.utils.validation import V
 __all__ = ["Banner"]
 
 
-@control("Banner", client_writable=("open",))
+@control("Banner")
 class Banner(DialogControl):
     """
     A banner displays an important, succinct message, and provides actions for users \
@@ -41,6 +42,8 @@ class Banner(DialogControl):
     page.show_dialog(banner)
     ```
     """
+
+    open: Annotated[bool, ClientWritable] = field(default=False, kw_only=True)
 
     content: Annotated[
         StrOrControl,

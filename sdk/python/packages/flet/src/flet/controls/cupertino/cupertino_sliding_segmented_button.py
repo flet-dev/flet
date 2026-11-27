@@ -1,7 +1,7 @@
 from dataclasses import field
 from typing import Annotated, Optional
 
-from flet.controls.base_control import control
+from flet.controls.base_control import ClientWritable, control
 from flet.controls.control import Control
 from flet.controls.control_event import ControlEventHandler
 from flet.controls.cupertino.cupertino_colors import CupertinoColors
@@ -17,7 +17,6 @@ __all__ = ["CupertinoSlidingSegmentedButton"]
 
 @control(
     "CupertinoSlidingSegmentedButton",
-    client_writable=("selected_index",),
     enabled_only=("change", "selected_index"),
 )
 class CupertinoSlidingSegmentedButton(LayoutControl):
@@ -48,7 +47,7 @@ class CupertinoSlidingSegmentedButton(LayoutControl):
         ValueError: If it does not contain at least two visible `Control`s.
     """
 
-    selected_index: int = 0
+    selected_index: Annotated[int, ClientWritable] = 0
     """
     The index (starting from 0) of the selected segment in the :attr:`controls` list.
 

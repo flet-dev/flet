@@ -8,7 +8,6 @@ __all__ = ["Slider"]
 
 @ft.control(
     "ShadSlider",
-    client_writable=("value",),
     enabled_only=("change", "change_end", "change_start", "value"),
 )
 class Slider(ft.LayoutControl):
@@ -27,6 +26,7 @@ class Slider(ft.LayoutControl):
 
     value: Annotated[
         ft.Number,
+        ft.ClientWritable,
         V.ge_field("min"),
         V.le_field("max"),
     ] = 0.0

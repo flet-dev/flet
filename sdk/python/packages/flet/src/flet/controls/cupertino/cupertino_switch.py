@@ -1,6 +1,6 @@
-from typing import Optional, Union
+from typing import Annotated, Optional, Union
 
-from flet.controls.base_control import control
+from flet.controls.base_control import ClientWritable, control
 from flet.controls.control_event import ControlEventHandler
 from flet.controls.control_state import ControlStateValue
 from flet.controls.layout_control import LayoutControl
@@ -14,9 +14,7 @@ from flet.controls.types import (
 __all__ = ["CupertinoSwitch"]
 
 
-@control(
-    "CupertinoSwitch", client_writable=("value",), enabled_only=("change", "value")
-)
+@control("CupertinoSwitch", enabled_only=("change", "value"))
 class CupertinoSwitch(LayoutControl):
     """
     An iOS-style switch.
@@ -34,7 +32,7 @@ class CupertinoSwitch(LayoutControl):
     The clickable label to display on the right of this switch.
     """
 
-    value: bool = False
+    value: Annotated[bool, ClientWritable] = False
     """
     The current value of this switch.
     """

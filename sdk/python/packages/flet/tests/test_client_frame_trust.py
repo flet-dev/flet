@@ -4,7 +4,7 @@ import asyncio
 import datetime
 import logging
 import weakref
-from typing import ClassVar, Optional
+from typing import Annotated, ClassVar, Optional
 
 import msgpack
 import pytest
@@ -24,6 +24,7 @@ from flet.messaging.session import (
     _warned_client_fields,
 )
 from flet.pubsub.pubsub_hub import PubSubHub
+from flet.utils.validation import V, validate
 
 SHARED_STYLE = ft.TextStyle(size=10)
 
@@ -833,9 +834,9 @@ class TestNestedDeclarations:
             label: Optional[ft.Text] = None
             size: int = 0
 
-        @ft.control("HolderView", client_writable=("holder",))
+        @ft.control("HolderView")
         class HolderView(ft.LayoutControl):
-            holder: Optional[Holder] = None
+            holder: Annotated[Optional[Holder], ft.ClientWritable] = None
 
         inner = ft.Text("kept", data="server")
         view = HolderView(holder=Holder(label=inner))
@@ -857,9 +858,9 @@ class TestNestedDeclarations:
         class Holder:
             label: Optional[ft.Text] = None
 
-        @ft.control("HolderField", client_writable=("label",))
+        @ft.control("HolderField")
         class HolderField(ft.LayoutControl):
-            label: Optional[ft.Text] = None
+            label: Annotated[Optional[ft.Text], ft.ClientWritable] = None
 
         control = HolderField()
         _mount(session, control)
@@ -874,9 +875,9 @@ class TestNestedDeclarations:
             KIND: ClassVar[str] = "server"
             size: int = 0
 
-        @ft.control("ClassVarView", client_writable=("holder",))
+        @ft.control("ClassVarView")
         class ClassVarView(ft.LayoutControl):
-            holder: Optional[Holder] = None
+            holder: Annotated[Optional[Holder], ft.ClientWritable] = None
 
         view = ClassVarView(holder=Holder())
         _mount(session, view)
@@ -884,12 +885,13 @@ class TestNestedDeclarations:
         assert view.holder.size == 3
         assert view.holder.KIND == "server"
 
-    def test_field_with_an_unresolved_annotation_is_applied(self, session):
-        """A listed field is written even if its annotation is only a string."""
+    def test_postponed_field_annotation_is_applied(self, session):
+        """An unrelated forward reference leaves the field marker intact."""
 
-        @ft.control("LazyField", client_writable=("stars",))
+        @ft.control("LazyField")
         class LazyField(ft.LayoutControl):
-            stars: "int" = 0
+            stars: "Annotated[int, ft.ClientWritable]" = 0
+            other: "UnavailableType" = None  # noqa: F821
 
         control = LazyField()
         _mount(session, control)
@@ -1399,11 +1401,11 @@ class TestClientEvents:
 
 class TestControlDeclarations:
     def test_custom_control_with_a_declaration_receives_values(self, session):
-        """A control lists what its Dart code sends with `client_writable`."""
+        """Only marked fields receive updates from the widget."""
 
-        @ft.control("Rating", client_writable=("stars",))
+        @ft.control("Rating")
         class Rating(ft.LayoutControl):
-            stars: int = 0
+            stars: Annotated[int, ft.ClientWritable] = 0
             secret: str = "kept"
 
         rating = Rating()
@@ -1426,7 +1428,7 @@ class TestControlDeclarations:
             session.apply_patch(terminal._i, {"ctrl_active": True})
         assert terminal.ctrl_active is False
         assert len(caplog.records) == 1
-        assert "client_writable" in caplog.text
+        assert "Annotated[..., ft.ClientWritable]" in caplog.text
         assert "Terminal.ctrl_active" in caplog.text
 
     def test_unknown_names_are_never_logged(self, session, caplog):
@@ -1443,9 +1445,9 @@ class TestControlDeclarations:
     def test_subclass_inherits_and_extends_the_declaration(self):
         """A subclass keeps the fields of its parent and can add its own."""
 
-        @ft.control("CodeField", client_writable=("language",))
+        @ft.control("CodeField")
         class CodeField(ft.TextField):
-            language: str = "python"
+            language: Annotated[str, ft.ClientWritable] = "python"
 
         @ft.control()
         class PlainSubclass(CodeField):
@@ -1463,13 +1465,35 @@ class TestControlDeclarations:
 
         assert AdminPanel._client_writable == frozenset()
 
-    def test_unknown_client_writable_name_raises(self):
-        """A typo in `client_writable` fails when the class is declared."""
-        with pytest.raises(ValueError, match="client_writable"):
+    def test_subclass_can_remove_marker_by_redeclaring_the_field(self, session):
+        @ft.control("DisplayField")
+        class DisplayField(ft.TextField):
+            value: str = ""
 
-            @ft.control("Bad", client_writable=("missing",))
-            class Bad(ft.LayoutControl):
-                pass
+        field = DisplayField(value="initial")
+        _mount(session, field)
+        session.apply_patch(field._i, {"value": "new"})
+        assert field.value == "initial"
+        assert field._client_writable == {"selection"}
+        assert ft.TextField._client_writable == {"selection", "value"}
+
+    def test_dialog_field_is_writable_only_for_opted_in_subclasses(self):
+        @ft.control("CustomDialog")
+        class CustomDialog(ft.DialogControl):
+            pass
+
+        assert "open" not in CustomDialog._client_writable
+        assert "open" in ft.SnackBar._client_writable
+
+    def test_client_writable_coexists_with_validation_metadata(self):
+        @ft.control("Rating")
+        class Rating(ft.LayoutControl):
+            stars: Annotated[int, V.ge(0), ft.ClientWritable] = 0
+
+        assert Rating._client_writable == {"stars"}
+        validate(Rating(stars=1))
+        with pytest.raises(ValueError, match="stars"):
+            validate(Rating(stars=-1))
 
     def test_unknown_enabled_only_name_raises(self):
         """A typo in `enabled_only` fails when the class is declared."""
@@ -1485,11 +1509,10 @@ class TestControlDeclarations:
 
         @ft.control(
             "Rating",
-            client_writable=("stars",),
             enabled_only=("stars", "rate"),
         )
         class Rating(ft.LayoutControl):
-            stars: int = 0
+            stars: Annotated[int, ft.ClientWritable] = 0
             on_rate: Optional[ft.ControlEventHandler["Rating"]] = None
 
         rating = Rating(disabled=True, on_rate=lambda e: calls.append(e))
@@ -1500,9 +1523,9 @@ class TestControlDeclarations:
     def test_undeclared_control_is_not_gated_on_disabled(self, session):
         """A control that lists nothing keeps its values and events while disabled."""
 
-        @ft.control("Meter", client_writable=("level",))
+        @ft.control("Meter")
         class Meter(ft.LayoutControl):
-            level: int = 0
+            level: Annotated[int, ft.ClientWritable] = 0
 
         meter = Meter(disabled=True)
         _mount(session, meter)

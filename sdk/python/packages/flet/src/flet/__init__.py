@@ -69,6 +69,7 @@ if TYPE_CHECKING:
     )
     from flet.controls.base_control import (
         BaseControl,
+        ClientWritable,
         Value,
         control,
         value,
@@ -833,6 +834,7 @@ __all__ = [
     "CircleBorder",
     "CircularRectangleNotchShape",
     "ClientAction",
+    "ClientWritable",
     "ClipBehavior",
     "Clipboard",
     "ColorFilter",
@@ -1387,6 +1389,7 @@ _LAZY = {
     "CircleBorder": "flet.controls.buttons",
     "CircularRectangleNotchShape": "flet.controls.types",
     "ClientAction": "flet.controls.client_action",
+    "ClientWritable": "flet.controls.base_control",
     "ClipBehavior": "flet.controls.types",
     "Clipboard": "flet.controls.services.clipboard",
     "ColorFilter": "flet.controls.box",

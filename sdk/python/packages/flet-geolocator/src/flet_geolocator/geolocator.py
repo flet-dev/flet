@@ -1,5 +1,5 @@
 from dataclasses import field
-from typing import Optional
+from typing import Annotated, Optional
 
 import flet as ft
 from flet_geolocator.types import (
@@ -12,7 +12,7 @@ from flet_geolocator.types import (
 __all__ = ["Geolocator"]
 
 
-@ft.control("Geolocator", client_writable=("position",))
+@ft.control("Geolocator")
 class Geolocator(ft.Service):
     """
     A control that allows you to fetch GPS data from your device.
@@ -36,7 +36,7 @@ class Geolocator(ft.Service):
     handler argument contains information on the error.
     """
 
-    position: Optional[GeolocatorPosition] = field(
+    position: Annotated[Optional[GeolocatorPosition], ft.ClientWritable] = field(
         default=None, init=False
     )  # TODO: make this property readonly
     """

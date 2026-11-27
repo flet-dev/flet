@@ -1,7 +1,7 @@
 from typing import Annotated, Optional
 
 from flet.controls.adaptive_control import AdaptiveControl
-from flet.controls.base_control import control
+from flet.controls.base_control import ClientWritable, control
 from flet.controls.control_event import ControlEventHandler
 from flet.controls.control_state import ControlStateValue
 from flet.controls.layout_control import LayoutControl
@@ -21,7 +21,7 @@ from flet.utils.validation import V
 __all__ = ["Switch"]
 
 
-@control("Switch", client_writable=("value",), enabled_only=("change", "value"))
+@control("Switch", enabled_only=("change", "value"))
 class Switch(LayoutControl, AdaptiveControl):
     """
     A toggle represents a physical switch that allows someone to choose between two \
@@ -50,7 +50,7 @@ class Switch(LayoutControl, AdaptiveControl):
     The :attr:`label`'s text style, when it is a string.
     """
 
-    value: bool = False
+    value: Annotated[bool, ClientWritable] = False
     """
     Current value of this switch.
     """

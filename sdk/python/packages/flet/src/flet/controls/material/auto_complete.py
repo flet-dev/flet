@@ -1,8 +1,8 @@
 from dataclasses import dataclass, field
-from typing import Optional
+from typing import Annotated, Optional
 
 from flet import LayoutControl
-from flet.controls.base_control import control, value
+from flet.controls.base_control import ClientWritable, control, value
 from flet.controls.control_event import ControlEventHandler, Event, EventHandler
 from flet.controls.types import Number
 
@@ -36,14 +36,14 @@ class AutoCompleteSelectEvent(Event["AutoComplete"]):
     """The selected suggestion."""
 
 
-@control("AutoComplete", client_writable=("_selected_index", "value"))
+@control("AutoComplete")
 class AutoComplete(LayoutControl):
     """
     Helps the user make a selection by entering some text and choosing from among a \
     list of displayed options.
     """
 
-    value: str = ""
+    value: Annotated[str, ClientWritable] = ""
     """
     Current text displayed in the input field.
 
@@ -81,7 +81,7 @@ class AutoComplete(LayoutControl):
     Called when the input text changes.
     """
 
-    _selected_index: Optional[int] = field(
+    _selected_index: Annotated[Optional[int], ClientWritable] = field(
         default=None, init=False, repr=False, compare=False, metadata={"skip": True}
     )
     """

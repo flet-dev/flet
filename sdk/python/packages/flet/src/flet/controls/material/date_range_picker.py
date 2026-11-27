@@ -1,8 +1,8 @@
 from dataclasses import field
 from datetime import datetime
-from typing import Optional
+from typing import Annotated, Optional
 
-from flet.controls.base_control import control
+from flet.controls.base_control import ClientWritable, control
 from flet.controls.control_event import (
     ControlEventHandler,
 )
@@ -21,7 +21,7 @@ __all__ = [
 ]
 
 
-@control("DateRangePicker", client_writable=("end_value", "open", "start_value"))
+@control("DateRangePicker")
 class DateRangePicker(DialogControl):
     """
     A Material-style date range picker dialog.
@@ -43,14 +43,16 @@ class DateRangePicker(DialogControl):
     ```
     """
 
-    start_value: Optional[DateTimeValue] = None
+    open: Annotated[bool, ClientWritable] = field(default=False, kw_only=True)
+
+    start_value: Annotated[Optional[DateTimeValue], ClientWritable] = None
     """
     The selected start date that the picker should display.
 
     Defaults to :attr:`current_date`.
     """
 
-    end_value: Optional[DateTimeValue] = None
+    end_value: Annotated[Optional[DateTimeValue], ClientWritable] = None
     """
     The selected end date that the picker should display.
 

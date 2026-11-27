@@ -2,7 +2,7 @@
 
 ### Breaking changes
 
-* A control's Python class must list the fields its Dart code sends with `updateProperties()` in `client_writable` of `@ft.control`, as Python ignores any other property a client sends. All controls that ship with Flet do; extensions whose Dart code sends values to Python need the same one-line change. See the [Extensions: properties sent from Dart must be declared](/docs/updates/breaking-changes/v1-2-0/client-writable-properties) guide by @ndonkoHenri.
+* Extensions must mark each Python field their Dart widget updates with `Annotated[..., ft.ClientWritable]` so the field receives updates from the client. See the [Extensions: properties sent from Dart must be declared](/docs/updates/breaking-changes/v1-2-0/client-writable-properties) guide by @ndonkoHenri.
 
 ### New features
 

@@ -2,7 +2,7 @@ from dataclasses import field
 from typing import Annotated, Optional
 
 from flet.controls.animation import AnimationCurve
-from flet.controls.base_control import control
+from flet.controls.base_control import ClientWritable, control
 from flet.controls.control import Control
 from flet.controls.control_event import ControlEventHandler
 from flet.controls.duration import Duration, DurationValue
@@ -17,7 +17,7 @@ DEFAULT_ANIMATION_DURATION = Duration(seconds=1)
 DEFAULT_ANIMATION_CURVE = AnimationCurve.LINEAR
 
 
-@control("PageView", client_writable=("selected_index",))
+@control("PageView")
 class PageView(LayoutControl):
     """
     Displays its child :attr:`controls` one page at a time and lets users swipe
@@ -34,6 +34,7 @@ class PageView(LayoutControl):
 
     selected_index: Annotated[
         int,
+        ClientWritable,
         V.ge(0),
     ] = 0
     """

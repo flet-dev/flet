@@ -1,9 +1,9 @@
 from dataclasses import dataclass, field
 from datetime import datetime, time
 from enum import Enum
-from typing import Optional
+from typing import Annotated, Optional
 
-from flet.controls.base_control import control
+from flet.controls.base_control import ClientWritable, control
 from flet.controls.control_event import (
     ControlEventHandler,
     Event,
@@ -89,7 +89,7 @@ class TimePickerEntryModeChangeEvent(Event["TimePicker"]):
     """The new entry mode."""
 
 
-@control("TimePicker", client_writable=("entry_mode", "open", "value"))
+@control("TimePicker")
 class TimePicker(DialogControl):
     """
     A Material-style time picker dialog.
@@ -110,7 +110,11 @@ class TimePicker(DialogControl):
     ```
     """
 
-    value: Optional[time] = field(default_factory=lambda: datetime.now().time())
+    open: Annotated[bool, ClientWritable] = field(default=False, kw_only=True)
+
+    value: Annotated[Optional[time], ClientWritable] = field(
+        default_factory=lambda: datetime.now().time()
+    )
     """
     The selected time that this picker should display.
 
@@ -136,7 +140,9 @@ class TimePicker(DialogControl):
     Whether this picker cannot be dismissed by clicking the area outside of it.
     """
 
-    entry_mode: TimePickerEntryMode = TimePickerEntryMode.DIAL
+    entry_mode: Annotated[TimePickerEntryMode, ClientWritable] = (
+        TimePickerEntryMode.DIAL
+    )
     """
     The initial mode of time entry method for this picker.
 

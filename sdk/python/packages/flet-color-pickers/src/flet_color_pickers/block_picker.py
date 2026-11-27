@@ -1,18 +1,18 @@
-from typing import Optional
+from typing import Annotated, Optional
 
 import flet as ft
 
 __all__ = ["BlockPicker"]
 
 
-@ft.control("BlockPicker", client_writable=("color",))
+@ft.control("BlockPicker")
 class BlockPicker(ft.LayoutControl):
     """
     A color picker that lets users choose a color from a grid of available
     colors.
     """
 
-    color: Optional[ft.ColorValue] = None
+    color: Annotated[Optional[ft.ColorValue], ft.ClientWritable] = None
     """
     The currently selected color.
     """

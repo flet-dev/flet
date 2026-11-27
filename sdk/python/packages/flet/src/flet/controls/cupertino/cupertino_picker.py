@@ -1,7 +1,7 @@
 from dataclasses import field
 from typing import Annotated, Optional
 
-from flet.controls.base_control import control
+from flet.controls.base_control import ClientWritable, control
 from flet.controls.control import Control
 from flet.controls.control_event import ControlEventHandler
 from flet.controls.cupertino.cupertino_colors import CupertinoColors
@@ -15,7 +15,7 @@ from flet.utils.validation import V
 __all__ = ["CupertinoPicker"]
 
 
-@control("CupertinoPicker", client_writable=("selected_index",))
+@control("CupertinoPicker")
 class CupertinoPicker(LayoutControl):
     """
     An iOS-styled picker.
@@ -37,7 +37,7 @@ class CupertinoPicker(LayoutControl):
         ValueError: If it is not strictly greater than `0.0`.
     """
 
-    selected_index: int = 0
+    selected_index: Annotated[int, ClientWritable] = 0
     """
     The index (starting from `0`) of the selected item in the :attr:`controls` list.
     """

@@ -8,7 +8,6 @@ __all__ = ["InputOTP"]
 
 @ft.control(
     "ShadInputOTP",
-    client_writable=("value",),
     enabled_only=("change", "complete", "value"),
 )
 class InputOTP(ft.LayoutControl):
@@ -28,7 +27,7 @@ class InputOTP(ft.LayoutControl):
         ),
     )
 
-    value: str = ""
+    value: Annotated[str, ft.ClientWritable] = ""
     """
     The characters entered so far.
     """

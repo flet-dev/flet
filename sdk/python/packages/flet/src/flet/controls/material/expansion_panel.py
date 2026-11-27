@@ -2,7 +2,7 @@ from dataclasses import dataclass, field
 from typing import Annotated, Optional
 
 from flet.controls.adaptive_control import AdaptiveControl
-from flet.controls.base_control import control
+from flet.controls.base_control import ClientWritable, control
 from flet.controls.control import Control
 from flet.controls.control_event import (
     Event,
@@ -44,7 +44,7 @@ class ExpansionPanelListChangeEvent(Event["ExpansionPanelList"]):
     """
 
 
-@control("ExpansionPanel", client_writable=("expanded",))
+@control("ExpansionPanel")
 class ExpansionPanel(LayoutControl, AdaptiveControl):
     """
     A material expansion panel. It can either be expanded or collapsed. Its body is \
@@ -96,7 +96,7 @@ class ExpansionPanel(LayoutControl, AdaptiveControl):
     The background color of this panel.
     """
 
-    expanded: bool = False
+    expanded: Annotated[bool, ClientWritable] = False
     """
     Whether this panel is in expanded (`True`) or collapsed (`False`) state.
     """

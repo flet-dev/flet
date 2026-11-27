@@ -1,7 +1,7 @@
 from typing import Annotated, Optional
 
 from flet.controls.animation import AnimationStyle
-from flet.controls.base_control import control
+from flet.controls.base_control import ClientWritable, control
 from flet.controls.border import BorderSide
 from flet.controls.box import BoxConstraints
 from flet.controls.buttons import OutlinedBorder
@@ -25,7 +25,6 @@ __all__ = ["Chip"]
 
 @control(
     "Chip",
-    client_writable=("selected",),
     enabled_only=("click", "delete", "select", "selected"),
 )
 class Chip(LayoutControl):
@@ -56,7 +55,7 @@ class Chip(LayoutControl):
     :class:`~flet.CircleAvatar`.
     """
 
-    selected: bool = False
+    selected: Annotated[bool, ClientWritable] = False
     """
     If :attr:`on_select` event is specified, `selected` property is used to determine \
     whether this chip is selected or not.

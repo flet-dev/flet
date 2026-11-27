@@ -11,6 +11,7 @@ from enum import Enum
 from typing import Annotated, Any, Union, get_args, get_origin, get_type_hints
 
 from flet.utils.from_dict import from_dict
+from flet.utils.typing_utils import field_annotation
 
 logger = logging.getLogger("flet")
 
@@ -39,7 +40,7 @@ def patch_dataclass(obj: Any, patch: dict):
 
     A nested value object is replaced with a patched copy, because one object is often
     shared by many controls and sessions. A nested control is patched in place, limited
-    to its `client_writable` fields. Private keys are ignored in nested objects.
+    to fields marked with `ClientWritable`. Private keys are ignored in nested objects.
 
     For `@control` / `@value` objects (those with `_values` and
     `_prop_defaults`), Prop fields are written directly into `_values` rather
@@ -60,8 +61,7 @@ def patch_dataclass(obj: Any, patch: dict):
         localns.update(frame.f_locals)
         hints = get_type_hints(cls, globalns=globalns, localns=localns)
     except Exception:
-        hints = {f.name: f.type for f in dataclasses.fields(cls)}  # fallback
-        # print("ERROR: ", cls.__name__, e)
+        hints = {f.name: field_annotation(cls, f) for f in dataclasses.fields(cls)}
 
     # For @control / @value objects write Prop fields directly into _values,
     # bypassing dirty-tracking and other Prop.__set__ side-effects.
@@ -96,6 +96,8 @@ def patch_dataclass(obj: Any, patch: dict):
             continue
 
         field_type = hints[field_name]
+        if get_origin(field_type) is Annotated:
+            field_type = get_args(field_type)[0]
         current_value = getattr(obj, field_name, None)
         actual_type = resolve_actual_type(field_type)
         is_optional = actual_type is not field_type

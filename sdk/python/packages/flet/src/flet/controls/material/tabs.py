@@ -4,7 +4,7 @@ from typing import Annotated, Optional
 
 from flet.controls.adaptive_control import AdaptiveControl
 from flet.controls.animation import AnimationCurve
-from flet.controls.base_control import control, value
+from flet.controls.base_control import ClientWritable, control, value
 from flet.controls.border import BorderSide
 from flet.controls.border_radius import BorderRadiusValue
 from flet.controls.colors import Colors
@@ -166,7 +166,6 @@ class UnderlineTabIndicator:
     "Tabs",
     categories=("navigation", "layout"),
     tags=("tabbed", "switcher"),
-    client_writable=("selected_index",),
 )
 class Tabs(LayoutControl, AdaptiveControl):
     """
@@ -230,7 +229,7 @@ class Tabs(LayoutControl, AdaptiveControl):
         ValueError: If it is not greater than or equal to `0`.
     """
 
-    selected_index: int = 0
+    selected_index: Annotated[int, ClientWritable] = 0
     """
     The index of the currently selected tab.
 

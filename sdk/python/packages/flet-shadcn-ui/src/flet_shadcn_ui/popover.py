@@ -1,11 +1,11 @@
-from typing import Optional
+from typing import Annotated, Optional
 
 import flet as ft
 
 __all__ = ["Popover"]
 
 
-@ft.control("ShadPopover", client_writable=("open",))
+@ft.control("ShadPopover")
 class Popover(ft.LayoutControl):
     """
     A Shadcn popover: a floating panel attached to :attr:`content`, opened and
@@ -34,7 +34,7 @@ class Popover(ft.LayoutControl):
     The control shown in the floating panel.
     """
 
-    open: bool = False
+    open: Annotated[bool, ft.ClientWritable] = False
     """
     Whether the popover is shown.
     """

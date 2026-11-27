@@ -3,7 +3,7 @@ from enum import Enum
 from typing import Annotated, Optional, Union
 
 from flet.controls.adaptive_control import AdaptiveControl
-from flet.controls.base_control import BaseControl, control, value
+from flet.controls.base_control import BaseControl, ClientWritable, control, value
 from flet.controls.control_event import ControlEventHandler, Event, EventHandler
 from flet.controls.core.autofill_group import AutofillHint
 from flet.controls.core.text import TextSelection, TextSelectionChangeEvent
@@ -442,7 +442,6 @@ class TextOnlyInputFilter(InputFilter):
     "TextField",
     categories=("input", "form"),
     tags=("text", "editable", "validation"),
-    client_writable=("selection", "value"),
     enabled_only=("change", "click", "submit", "value"),
 )
 class TextField(FormFieldControl, AdaptiveControl):
@@ -456,12 +455,12 @@ class TextField(FormFieldControl, AdaptiveControl):
     ```
     """
 
-    value: str = ""
+    value: Annotated[str, ClientWritable] = ""
     """
     Current value of this text field.
     """
 
-    selection: Optional[TextSelection] = None
+    selection: Annotated[Optional[TextSelection], ClientWritable] = None
     """
     Represents the current text selection or caret position in the field.
 

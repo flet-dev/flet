@@ -2,7 +2,7 @@ from dataclasses import field
 from enum import Enum
 from typing import Annotated, Optional, Union
 
-from flet.controls.base_control import control
+from flet.controls.base_control import ClientWritable, control
 from flet.controls.buttons import OutlinedBorder
 from flet.controls.control import Control
 from flet.controls.control_event import ControlEventHandler
@@ -151,7 +151,7 @@ class SnackBarAction(Control):
     """
 
 
-@control("SnackBar", client_writable=("open",))
+@control("SnackBar")
 class SnackBar(DialogControl):
     """
     A lightweight message with an optional action which briefly displays at the bottom \
@@ -162,6 +162,8 @@ class SnackBar(DialogControl):
     page.show_dialog(ft.SnackBar(ft.Text("Opened snack bar")))
     ```
     """
+
+    open: Annotated[bool, ClientWritable] = field(default=False, kw_only=True)
 
     content: Annotated[
         StrOrControl,

@@ -1,5 +1,5 @@
 from dataclasses import field
-from typing import Optional
+from typing import Annotated, Optional
 
 import flet as ft
 
@@ -33,7 +33,7 @@ class Tab(ft.Control):
     """
 
 
-@ft.control("ShadTabs", client_writable=("value",), enabled_only=("change", "value"))
+@ft.control("ShadTabs", enabled_only=("change", "value"))
 class Tabs(ft.LayoutControl):
     """
     Shadcn tabs: a bar of tab buttons, showing the content of the selected tab
@@ -56,7 +56,7 @@ class Tabs(ft.LayoutControl):
     The tabs.
     """
 
-    value: Optional[str] = None
+    value: Annotated[Optional[str], ft.ClientWritable] = None
     """
     The :attr:`~flet_shadcn_ui.Tab.value` of the selected tab.
 

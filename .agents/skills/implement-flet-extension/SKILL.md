@@ -68,7 +68,7 @@ Without matching defaults, Dart receives `null` and either crashes or silently u
 
 ## Sending values from Dart to Python
 
-List every field the Dart code sends with `updateProperties()` in the `client_writable` argument of the Python control's `@ft.control` decorator: Python ignores any other property, so the widget and the Python field drift apart with only one log warning. Use the `enabled_only` argument for the values and events the widget holds back while disabled, and `server_events` for events that only Python code triggers.
+Mark every Python field its Dart widget sends with `updateProperties()` using `Annotated[..., ft.ClientWritable]`. Keep the field's existing type, validation metadata, and default. Use the `enabled_only` argument for the values and events the widget holds back while disabled, and `server_events` for events that only Python code triggers.
 
 ## Integration Checklist
 

@@ -505,19 +505,24 @@ widget.control.updateProperties({"stars": stars});
 widget.control.triggerEvent("change", stars);
 ```
 
-List each field the Dart code sends in the `client_writable` argument of the `@ft.control`
-decorator. If the widget holds back a value or an event while the control is disabled, list
-it in `enabled_only` too:
+Mark each field the Dart code sends with `Annotated[..., ft.ClientWritable]`.
+If the widget holds back a value or an event while the control is disabled, include it
+in `enabled_only` too:
 
 ```python
-@ft.control("Rating", client_writable=("stars",), enabled_only=("change", "stars"))
+from typing import Annotated, Optional
+
+import flet as ft
+
+
+@ft.control("Rating", enabled_only=("change", "stars"))
 class Rating(ft.LayoutControl):
-    stars: int = 0
+    stars: Annotated[int, ft.ClientWritable] = 0
     on_change: Optional[ft.ControlEventHandler["Rating"]] = None
 ```
 
 Python ignores any other property it receives, because a client can send anything. Treat
-a listed field as user input in the same way as the data of an event: it can hold any
+a marked field as user input in the same way as the data of an event: it can hold any
 value, not only the ones the widget produces.
 
 ## Dedicated data channels

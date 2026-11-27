@@ -98,10 +98,9 @@ def _warn_ignored_field(control: BaseControl, name: str) -> None:
     """
     Logs once that a client's value for a field of a control was ignored.
 
-    A field the control's Dart code updates but `client_writable` doesn't list ends up
-    here, so a third-party control gets a message on how to fix it. Only names that are
-    fields of the control are reported, which bounds what a client can make the server
-    log.
+    If Dart updates a field without a `ClientWritable` marker, the warning shows
+    the extension author how to declare it. Reporting only declared field names
+    bounds what a client can make the server log.
 
     Args:
         control: The control the value was sent for.
@@ -113,7 +112,7 @@ def _warn_ignored_field(control: BaseControl, name: str) -> None:
     _warned_client_fields.add((cls, name))
     logger.warning(
         "Ignored a value a client sent for %s.%s. If the control's Dart code updates "
-        "this property, add it to `client_writable` in the @control decorator.",
+        "this property, mark its Python field with Annotated[..., ft.ClientWritable].",
         cls.__qualname__,
         name,
     )
@@ -468,10 +467,9 @@ class Session:
         Applies a partial property patch received from the client to a control in the
         session index.
 
-        A client can send anything, so only the fields listed in `client_writable` of
-        the control's `@control` decorator are applied, and only if a real client could
-        change them in the control's current state. The rest of `patch` is ignored, and
-        the client gets back the value of a listed field it wasn't allowed to change.
+        Only fields marked with `ClientWritable` receive updates, and only if a real
+        client could change them in the control's current state. If the state blocks
+        an update to a marked field, the client receives its current value.
 
         Args:
             control_id: Target control ID.
@@ -482,8 +480,8 @@ class Session:
 
     def apply_page_patch(self, patch: dict[str, Any]):
         """
-        Applies the page state a client sends when it registers: the fields listed in
-        `client_writable` of `Page`, and `window`.
+        Applies the page state a client sends when it registers: the fields marked
+        with `ClientWritable` on `Page`, and `window`.
 
         The fields describing the client's environment, such as `web` and `platform`,
         are applied only the first time a client registers with this session. The rest

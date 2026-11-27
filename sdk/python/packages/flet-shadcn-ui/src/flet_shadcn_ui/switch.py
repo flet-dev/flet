@@ -1,11 +1,11 @@
-from typing import Optional
+from typing import Annotated, Optional
 
 import flet as ft
 
 __all__ = ["Switch"]
 
 
-@ft.control("ShadSwitch", client_writable=("value",), enabled_only=("change", "value"))
+@ft.control("ShadSwitch", enabled_only=("change", "value"))
 class Switch(ft.LayoutControl):
     """
     A Shadcn switch.
@@ -16,7 +16,7 @@ class Switch(ft.LayoutControl):
     ```
     """
 
-    value: bool = False
+    value: Annotated[bool, ft.ClientWritable] = False
     """
     Whether this switch is on.
     """

@@ -1,6 +1,6 @@
 from typing import Annotated, Optional
 
-from flet.controls.base_control import control
+from flet.controls.base_control import ClientWritable, control
 from flet.controls.border import Border
 from flet.controls.control_event import ControlEventHandler
 from flet.controls.cupertino.cupertino_colors import CupertinoColors
@@ -17,7 +17,6 @@ __all__ = ["CupertinoNavigationBar"]
 
 @control(
     "CupertinoNavigationBar",
-    client_writable=("selected_index",),
     enabled_only=("change", "selected_index"),
 )
 class CupertinoNavigationBar(LayoutControl):
@@ -40,7 +39,7 @@ class CupertinoNavigationBar(LayoutControl):
             two visible `NavigationBarDestination`s.
     """
 
-    selected_index: int = 0
+    selected_index: Annotated[int, ClientWritable] = 0
     """
     The index into :attr:`destinations` for the currently selected \
     :class:`~flet.NavigationBarDestination`.

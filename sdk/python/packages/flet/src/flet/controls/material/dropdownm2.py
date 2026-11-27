@@ -1,7 +1,7 @@
 from typing import Annotated, Optional
 
 from flet.controls.alignment import Alignment
-from flet.controls.base_control import control
+from flet.controls.base_control import ClientWritable, control
 from flet.controls.border_radius import BorderRadiusValue
 from flet.controls.control import Control
 from flet.controls.control_event import ControlEventHandler
@@ -75,9 +75,7 @@ class Option(Control):
     )
 
 
-@control(
-    "DropdownM2", client_writable=("value",), enabled_only=("change", "click", "value")
-)
+@control("DropdownM2", enabled_only=("change", "click", "value"))
 class DropdownM2(FormFieldControl):
     """
     A dropdown lets the user select from a number of items. The dropdown shows the \
@@ -97,7 +95,7 @@ class DropdownM2(FormFieldControl):
     ```
     """
 
-    value: Optional[str] = None
+    value: Annotated[Optional[str], ClientWritable] = None
     """
     `key` value of the selected option.
     """

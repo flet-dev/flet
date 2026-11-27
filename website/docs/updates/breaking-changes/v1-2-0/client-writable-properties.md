@@ -14,8 +14,8 @@ The [breaking changes and deprecations index](../index.md) lists the guides crea
 ## Summary
 
 Starting with Flet 1.2.0, Python applies a property that a control's Dart code sends
-with `updateProperties()` only if the control lists it in the `client_writable` argument
-of its `@ft.control` decorator. Every other property sent by a client is ignored.
+with `updateProperties()` only if its Python field is marked with
+`Annotated[..., ft.ClientWritable]`. Every other property sent by a client is ignored.
 
 All controls that ship with Flet declare theirs. A control from an extension has to do
 the same if its Dart code sends values to Python. Without the declaration, the widget
@@ -23,10 +23,10 @@ shows the new value, but the Python field keeps the old one. For example,
 `e.control.value` is out of date in an event handler.
 
 Flet logs a warning, once per control class and field, when it ignores a value for a field
-that the control has but doesn't list in `client_writable`:
+whose annotation omits `ft.ClientWritable`. For example:
 
 ```text
-Ignored a value a client sent for Rating.stars. If the control's Dart code updates this property, add it to `client_writable` in the @control decorator.
+Ignored a value a client sent for Rating.stars. If the control's Dart code updates this property, mark its Python field with Annotated[..., ft.ClientWritable].
 ```
 
 Events need no declaration: an extension's `on_*` handlers receive the events its Dart
@@ -43,41 +43,50 @@ client.
 
 ## Migration guide
 
-List the fields your Dart code sends in `client_writable`. For example, with this widget:
+For a widget that reports the selected rating, keep the existing Dart call:
 
 ```dart
 widget.control.updateProperties({"stars": stars});
 ```
 
-declare `stars` on the Python control:
+Mark the corresponding Python field and keep its existing type and default:
 
 ```python
-@ft.control("Rating", client_writable=("stars",))
+from typing import Annotated
+
+import flet as ft
+
+
+@ft.control("Rating")
 class Rating(ft.LayoutControl):
-    stars: int = 0
+    stars: Annotated[int, ft.ClientWritable] = 0
 ```
 
-Subclasses inherit the lists and can extend them. A `client_writable` name that isn't a
-field of the control, an `enabled_only` name that is neither a field nor an event, or a
-`server_events` name without a matching `on_` field raises `ValueError` when the class is
-defined.
+Use the marker itself, without parentheses. If the field already uses `Annotated`, add
+`ft.ClientWritable` alongside its existing metadata. Keep any validation rules and
+`field(...)` options.
+
+Subclasses inherit the marker with the field. If a subclass redeclares the field, its
+new annotation determines whether the client can write it. To accept updates in just
+one widget, mark the field on that subclass and preserve the inherited default and
+constructor options.
 
 If your Dart code holds back a value or an event while the control is disabled, list it in
 `enabled_only` as well, and Python ignores it from a client in that state:
 
 ```python
-from typing import Optional
+from typing import Annotated, Optional
 
 import flet as ft
 
 
-@ft.control("Rating", client_writable=("stars",), enabled_only=("change", "stars"))
+@ft.control("Rating", enabled_only=("change", "stars"))
 class Rating(ft.LayoutControl):
-    stars: int = 0
+    stars: Annotated[int, ft.ClientWritable] = 0
     on_change: Optional[ft.ControlEventHandler["Rating"]] = None
 ```
 
-An extension using these arguments needs `flet>=1.2.0`.
+An extension using this marker needs `flet>=1.2.0`.
 
 Controls written only in Python need no change.
 

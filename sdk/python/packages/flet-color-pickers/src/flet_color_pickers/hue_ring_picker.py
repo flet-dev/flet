@@ -1,18 +1,18 @@
-from typing import Optional
+from typing import Annotated, Optional
 
 import flet as ft
 
 __all__ = ["HueRingPicker"]
 
 
-@ft.control("HueRingPicker", client_writable=("color",))
+@ft.control("HueRingPicker")
 class HueRingPicker(ft.LayoutControl):
     """
     A hue ring color picker that lets users select a hue on a circular ring,
     with an optional alpha slider.
     """
 
-    color: Optional[ft.ColorValue] = None
+    color: Annotated[Optional[ft.ColorValue], ft.ClientWritable] = None
     """
     The currently selected color.
     """
