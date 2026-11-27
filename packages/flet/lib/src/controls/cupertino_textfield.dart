@@ -45,6 +45,11 @@ class _CupertinoTextFieldControlState extends State<CupertinoTextFieldControl> {
 
   KeyEventResult _handleTextFieldKeyEvent(KeyEvent event,
       {required bool submitOnEnter}) {
+    // Keys typed while an input method composes text belong to it.
+    if (_controller.value.composing.isValid) {
+      return KeyEventResult.ignored;
+    }
+
     // ignore up/down arrow keys if flag is set
     if ((event is KeyDownEvent || event is KeyRepeatEvent) &&
         widget.control.getBool("ignore_up_down_keys", false)! &&
@@ -53,11 +58,10 @@ class _CupertinoTextFieldControlState extends State<CupertinoTextFieldControl> {
       return KeyEventResult.handled;
     }
 
-    // submit on Enter if flag is set, shift is not pressed, and no IME is composing
+    // submit on Enter if flag is set and shift is not pressed
     if (submitOnEnter &&
         event is KeyDownEvent &&
         !HardwareKeyboard.instance.isShiftPressed &&
-        !_controller.value.composing.isValid &&
         (event.logicalKey == LogicalKeyboardKey.enter ||
             event.logicalKey == LogicalKeyboardKey.numpadEnter)) {
       widget.control.triggerEvent("submit");
