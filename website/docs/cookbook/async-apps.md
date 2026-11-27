@@ -321,6 +321,7 @@ Where an unhandled exception ends up depends on where it is raised:
 | A [`page.run_task()`][flet.Page.run_task] coroutine | Awaiting the future raises the exception. If nobody is awaiting it when the task fails, Flet also logs the traceback on the `flet` logger. |
 | `asyncio.to_thread()` or `page.loop.run_in_executor()` | It is raised where the call is awaited, so a handler that awaits it reports it as above. |
 | A [`page.run_thread()`][flet.Page.run_thread] function | Flet catches the exception and logs the traceback on the `flet` logger, including on Pyodide. |
+| A [PubSub](pub-sub.md) subscriber | Flet catches the exception and logs the traceback on the `flet` logger. The other subscribers still get the message. |
 | A [`threading.Thread`](https://docs.python.org/3/library/threading.html#threading.Thread) you start | It goes to [`threading.excepthook`](https://docs.python.org/3/library/threading.html#threading.excepthook), which prints it to stderr. |
 
 So catch exceptions inside a function you run in your own thread, and handle or
