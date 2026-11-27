@@ -41,6 +41,17 @@ class WebView(ft.LayoutControl):
           from another origin, so JavaScript, the page title, scrolling, console
           messages and alerts are available only for same-origin pages and for
           HTML loaded with :meth:`load_html`.
+        - On web `javascript:`, `blob:` and `filesystem:` URLs are not loaded:
+          they fire :attr:`on_web_resource_error`, or make :meth:`load_request`
+          raise an error.
+        - On web, in an app embedded in another with
+          [`FletApp`][flet.FletApp], or on a page that gives the app a storage
+          space of its own (`window.flet.storagePrefix`), the page runs in a
+          sandboxed iframe, apart from the page around it: it can run scripts,
+          submit forms and open popups, but it doesn't get its own site's
+          cookies or storage, and it can't navigate the page around it.
+          JavaScript, the page title, scrolling, console messages and alerts
+          are then available only for HTML loaded with :meth:`load_html`.
     """
 
     url: Optional[str] = None
@@ -389,7 +400,8 @@ class WebView(ft.LayoutControl):
               :attr:`on_web_resource_error`.
             - On web a :attr:`~flet_webview.RequestMethod.POST` request is sent
               by the app itself, so the browser's cross-origin (CORS) rules apply
-              to it.
+              to it. Where the WebView is sandboxed (see the notes on
+              [`WebView`][flet_webview.WebView]), it raises an error instead.
             - On Windows a :attr:`~flet_webview.RequestMethod.POST` request fails
               and fires :attr:`on_web_resource_error`, because it is sent without
               a body.
@@ -421,7 +433,9 @@ class WebView(ft.LayoutControl):
         Note:
             On web the HTML runs with the app's own origin, so its scripts can
             read and change the app's storage and cookies. Load only HTML you
-            trust there.
+            trust there. Where the WebView is sandboxed (see the notes on
+            [`WebView`][flet_webview.WebView]), it runs with an opaque origin
+            instead.
 
         Args:
             value: The HTML string to load.

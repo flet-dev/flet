@@ -14,7 +14,11 @@ import 'package:webview_all_windows/webview_all_windows.dart';
 /// `localStorage` fail because its origin serialises as "null".
 /// `allowUniversalAccessFromFileUrls` stays off: it would give local pages
 /// access to every origin.
-PlatformWebViewControllerCreationParams createPlatformCreationParams() {
+///
+/// [sandboxed] applies to the web only.
+PlatformWebViewControllerCreationParams createPlatformCreationParams({
+  bool sandboxed = false,
+}) {
   if (WebViewPlatform.instance is LinuxWebViewPlatform) {
     return const LinuxWebViewControllerCreationParams(
       allowFileAccessFromFileUrls: true,

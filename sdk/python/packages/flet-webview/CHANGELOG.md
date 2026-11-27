@@ -12,6 +12,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 - Windows and Linux support. On web, the methods and events now work for same-origin pages and HTML loaded with `load_html()` ([#6530](https://github.com/flet-dev/flet/issues/6530), [#5934](https://github.com/flet-dev/flet/issues/5934), [#7124](https://github.com/flet-dev/flet/pull/7124)) by @ndonkoHenri.
 - Changing `url` loads the new URL ([#7124](https://github.com/flet-dev/flet/pull/7124)) by @ndonkoHenri.
 - `on_web_resource_error` also fires for a `url` that can't be loaded and for a certificate error, which cancels the load ([#7124](https://github.com/flet-dev/flet/pull/7124)) by @ndonkoHenri.
+- On web, in an app embedded with `FletApp` or on a page that gives the app its own storage space (`window.flet.storagePrefix`), the page and HTML loaded with `load_html()` run in a sandboxed frame with an opaque origin, and a `POST` `load_request()` is refused; `javascript:`, `blob:` and `filesystem:` URLs fire `on_web_resource_error`, and `clear_cache()` and `clear_local_storage()` are refused on web, where they would clear the app's page rather than the WebView ([#7124](https://github.com/flet-dev/flet/pull/7124)) by @FeodorFitsner.
 
 ### Changed
 

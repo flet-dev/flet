@@ -48,6 +48,17 @@ class _WebViewControlState extends State<WebViewControl> {
   bool _alertHandlerRegistered = false;
   Color? _bgcolor;
 
+  /// On web, whether the app runs on a page it doesn't own: it is embedded
+  /// with `FletApp`, or the page gave it a storage space of its own
+  /// (`window.flet.storagePrefix`).
+  ///
+  /// The `<iframe>` is then sandboxed (see `createPlatformCreationParams`),
+  /// and a load that the page itself would send, a POST, is refused.
+  bool get _onSharedPage {
+    final backend = widget.control.backend;
+    return kIsWeb && (backend.isEmbedded || backend.storagePrefix.isNotEmpty);
+  }
+
   List<String> get _preventLinks =>
       widget.control.get<List>("prevent_links")?.whereType<String>().toList() ??
       const [];
@@ -59,7 +70,7 @@ class _WebViewControlState extends State<WebViewControl> {
     if (WebViewPlatform.instance == null) return;
 
     final controller = WebViewController.fromPlatformCreationParams(
-      createPlatformCreationParams(),
+      createPlatformCreationParams(sandboxed: _onSharedPage),
     );
     _controller = controller;
     _ready = _initialize(controller)
@@ -268,11 +279,26 @@ class _WebViewControlState extends State<WebViewControl> {
   /// A [url] matching `prevent_links` is not loaded. The navigation delegate
   /// does not see these loads on Android, where `loadUrl` skips
   /// `shouldOverrideUrlLoading`.
+  ///
+  /// On web, a URL whose scheme [isOpenableWebUrl] rejects throws: a
+  /// `javascript:` URL, or a `blob:` URL the app made, would run with the
+  /// page's own origin. On a page the app doesn't own ([_onSharedPage]), a
+  /// method other than GET throws too: the browser would send it from the
+  /// page, with the page's origin and cookies.
   Future<void> _load(
     WebViewController controller,
     String url,
     LoadRequestMethod method,
   ) async {
+    if (kIsWeb && !isOpenableWebUrl(url)) {
+      throw Exception("this URL scheme can't be loaded on web");
+    }
+    if (_onSharedPage && method != LoadRequestMethod.get) {
+      throw Exception(
+        "a ${method.name.toUpperCase()} request can't be loaded by an app "
+        "embedded in another page on web",
+      );
+    }
     if (_preventLinks.any(url.startsWith)) return;
     final uri = Uri.parse(url);
     if (uri.scheme == "file" && !kIsWeb) {
@@ -323,10 +349,16 @@ class _WebViewControlState extends State<WebViewControl> {
       case "disable_zoom":
         await controller.enableZoom(false);
         break;
+      // On web these would clear the page's own caches and storage, not the
+      // frame's.
       case "clear_cache":
+        if (kIsWeb) throw Exception("clear_cache is not supported on web");
         await controller.clearCache();
         break;
       case "clear_local_storage":
+        if (kIsWeb) {
+          throw Exception("clear_local_storage is not supported on web");
+        }
         await controller.clearLocalStorage();
         break;
       case "get_current_url":
