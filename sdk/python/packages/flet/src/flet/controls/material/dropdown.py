@@ -89,9 +89,9 @@ class Dropdown(LayoutControl):
     A dropdown control that allows users to select a single option from a list of \
     :attr:`options`.
 
-    Without a :attr:`width`, a dropdown is as wide as its widest option, except
-    when its parent stretches it. It fills the width of a non-wrapping
-    :class:`~flet.Column` or a :class:`~flet.View` with
+    Without a :attr:`~flet.LayoutControl.width`, a dropdown is as wide as its
+    widest option, except when its parent stretches it. It fills the width of a
+    non-wrapping :class:`~flet.Column` or a :class:`~flet.View` with
     `horizontal_alignment=CrossAxisAlignment.STRETCH`, and the width of a
     vertical :class:`~flet.ListView`.
 
@@ -187,7 +187,7 @@ class Dropdown(LayoutControl):
     expanded_insets: Optional[PaddingValue] = None
     """
     The insets for the expanded dropdown menu: the horizontal space it leaves
-    on each side when :attr:`expand` is set.
+    on each side when :attr:`~flet.Control.expand` is set.
     """
 
     selected_suffix: Optional[Control] = None

@@ -1,7 +1,7 @@
 ---
 class_name: "flet_charts.gauge_chart.GaugeChart"
 examples: "extensions/charts/gauge_chart"
-example_images: "test-images-charts/examples/golden/macos/gauge_chart"
+example_images: "test-images/examples/extensions/charts/golden/macos/gauge_chart"
 title: "GaugeChart"
 ---
 
