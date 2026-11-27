@@ -29,6 +29,24 @@ from flet_cli.utils.python_versions import (
 )
 
 
+def resolve_app_short_name(options, get_pyproject, project_dir: Path) -> str:
+    """Resolve the PWA `short_name` written by `flet publish`.
+
+    Precedence matches `flet build`: `--app-short-name`, then
+    `tool.flet.web.pwa_short_name`, then the project name. The pyproject
+    setting used to be ignored, so `dist/manifest.json` got `project.name`
+    even when a short name was configured.
+    """
+
+    return (
+        options.app_short_name
+        or get_pyproject("tool.flet.web.pwa_short_name")
+        or get_pyproject("project.name")
+        or get_pyproject("tool.poetry.name")
+        or project_dir.name
+    )
+
+
 class Command(BaseCommand):
     """
     Compile and package a Flet app as a standalone static web application.
@@ -338,12 +356,7 @@ class Command(BaseCommand):
             .strip()
         )
 
-        app_short_name = (
-            options.app_short_name
-            or get_pyproject("project.name")
-            or get_pyproject("tool.poetry.name")
-            or project_dir.name
-        )
+        app_short_name = resolve_app_short_name(options, get_pyproject, project_dir)
 
         app_name = (
             options.app_name or get_pyproject("tool.flet.product") or app_short_name
