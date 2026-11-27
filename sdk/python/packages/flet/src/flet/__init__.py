@@ -157,8 +157,10 @@ if TYPE_CHECKING:
     from flet.controls.core.draggable import Draggable
     from flet.controls.core.flet_app import (
         FletApp,
+        FletAppGuestRequestEvent,
         FletAppOutputEvent,
         FletAppWindowEvent,
+        HostRequest,
     )
     from flet.controls.core.gesture_detector import GestureDetector
     from flet.controls.core.grid_view import GridView
@@ -318,6 +320,8 @@ if TYPE_CHECKING:
         FletPageDisconnectedException,
         FletUnimplementedPlatformException,
         FletUnsupportedPlatformException,
+        HostRequestError,
+        HostRequestRefused,
     )
     from flet.controls.geometry import (
         Rect,
@@ -950,6 +954,7 @@ __all__ = [
     "FilledTonalIconButton",
     "FilterQuality",
     "FletApp",
+    "FletAppGuestRequestEvent",
     "FletAppOutputEvent",
     "FletAppWindowEvent",
     "FletException",
@@ -971,6 +976,9 @@ __all__ = [
     "GyroscopeReadingEvent",
     "HapticFeedback",
     "Hero",
+    "HostRequest",
+    "HostRequestError",
+    "HostRequestRefused",
     "HoverEvent",
     "Icon",
     "IconButton",
@@ -1505,12 +1513,16 @@ _LAZY = {
     "FilledTonalIconButton": "flet.controls.material.icon_button",
     "FilterQuality": "flet.controls.box",
     "FletApp": "flet.controls.core.flet_app",
+    "FletAppGuestRequestEvent": "flet.controls.core.flet_app",
     "FletAppOutputEvent": "flet.controls.core.flet_app",
     "FletAppWindowEvent": "flet.controls.core.flet_app",
     "FletException": "flet.controls.exceptions",
     "FletPageDisconnectedException": "flet.controls.exceptions",
     "FletUnimplementedPlatformException": "flet.controls.exceptions",
     "FletUnsupportedPlatformException": "flet.controls.exceptions",
+    "HostRequest": "flet.controls.core.flet_app",
+    "HostRequestError": "flet.controls.exceptions",
+    "HostRequestRefused": "flet.controls.exceptions",
     "Flip": "flet.controls.transform",
     "FloatingActionButton": "flet.controls.material.floating_action_button",
     "FloatingActionButtonLocation": "flet.controls.types",

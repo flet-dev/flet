@@ -926,6 +926,7 @@ docs:
       - types/floatingactionbuttonlocation.md
       - types/fontweight.md
       - types/gradienttilemode.md
+      - types/hostrequest.md
       - types/icons.md
       - types/imagerepeat.md
       - types/keyboardtype.md
@@ -1017,6 +1018,7 @@ docs:
       - types/expansionpanellistchangeevent.md
       - types/filepickerresultevent.md
       - types/filepickeruploadevent.md
+      - types/fletappguestrequestevent.md
       - types/gyroscopereadingevent.md
       - types/hoverevent.md
       - types/keyboardevent.md
@@ -1061,6 +1063,8 @@ docs:
         FletPageDisconnectedException: types/fletpagedisconnectedexception.md
         FletUnimplementedPlatformException: types/fletunimplementedplatformexception.md
         FletUnsupportedPlatformException: types/fletunsupportedplatformexception.md
+        HostRequestError: types/hostrequesterror.md
+        HostRequestRefused: types/hostrequestrefused.md
         LocalAuthException: services/localauthentication/types/localauthexception.md
       FastAPI:
       - fastapi/app.md

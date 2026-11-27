@@ -1,3 +1,7 @@
+## 1.2.0
+
+* `FletBackend.requestHost()` sends an embedded app's request (`Page` method `request_host`) to its host as a `guest_request` event of the host's `FletApp` control, and `completeHostRequest()` completes it with the host's answer (`FletApp` method `reply_guest_request`). Pending requests live in `HostRequests`: ids unique in the process, so an answer for an earlier run of the app is dropped, an optional timeout, at most 16 pending and about 64 KB of args (`approximateSize()`). A request fails at once with `not_embedded` outside an embedded app, and with `unhandled` when the host's `FletApp` has no `on_guest_request` or the app closes ([#7141](https://github.com/flet-dev/flet/pull/7141)) by @FeodorFitsner.
+
 ## 1.1.4
 
 * `openWebBrowser()` and `openWindow()` return whether they opened the URL: on web they refuse a URL whose scheme is in `blockedWebUrlSchemes` (`javascript`, `blob`, `filesystem`), read by `webUrlScheme()` the way a browser reads it; `isOpenableWebUrl()` is the check. `openWebBrowser(embedded: true)` turns a `_self`/`_parent`/`_top` target into `_blank` (`launchTarget()`), and every caller (`UrlLauncherService`, `runControlActions()`, text spans, `Markdown` links) passes `control.backend.isEmbedded`, a new public getter on `FletBackend`. `openWindow()` prefixes a window name starting with `_` with `flet` (`popupWindowName()`) ([#7136](https://github.com/flet-dev/flet/pull/7136)) by @FeodorFitsner.
