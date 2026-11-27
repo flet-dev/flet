@@ -21,6 +21,8 @@
 
 ### Bug fixes
 
+* Restore `blur()` on `TextField`, `CupertinoTextField` and `SearchBar`, and add it to `Dropdown` and `DropdownM2`, to remove focus from code, which also hides the on-screen keyboard on mobile ([#6249](https://github.com/flet-dev/flet/issues/6249)) by @ndonkoHenri.
+* Fix an editable `Dropdown` with `autofocus=True` taking focus back right after being unfocused, e.g. by `blur()` or a click outside it on desktop, by @ndonkoHenri.
 * Fix `View.on_size_change` never firing; it reports the size of the view's body, the area between the app bar and the bottom navigation bar ([#6363](https://github.com/flet-dev/flet/issues/6363), [#7088](https://github.com/flet-dev/flet/pull/7088)) by @ndonkoHenri.
 
 ## 1.1.4
