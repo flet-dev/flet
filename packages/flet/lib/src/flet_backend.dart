@@ -277,8 +277,11 @@ class FletBackend extends ChangeNotifier {
   /// Only for embedded apps (a [FletApp] control inside another Flet app):
   /// it lets the host know when the embedded app is ready, e.g. before a
   /// screenshot. Costs nothing unless a call is pending.
+  ///
+  /// With [requireUpdate] `false`, the app also counts as idle when it sends
+  /// no update at all for [idleMs], e.g. after a tap that changes nothing.
   Future<Map<String, dynamic>> waitIdle(
-      {int idleMs = 300, int timeoutMs = 30000}) {
+      {int idleMs = 300, int timeoutMs = 30000, bool requireUpdate = true}) {
     if (!_isEmbedded) {
       return Future.value({
         "status": "error",
@@ -295,6 +298,8 @@ class FletBackend extends ChangeNotifier {
         Duration(milliseconds: timeoutMs), () => _completeIdle(waiter, "timeout"));
     if (!isLoading && error.isNotEmpty) {
       _completeIdle(waiter, "error", error);
+    } else if (!requireUpdate) {
+      _restartIdleTimer(waiter);
     }
     return waiter.completer.future;
   }

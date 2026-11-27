@@ -1,3 +1,7 @@
+## 1.2.0
+
+* Add `AppDriver`, which lists the `ControlWidget`s on screen under an element (skipping offstage routes, clipped to scrolling viewports, `covered` by a hit test at their centre) and runs steps against them: taps and long presses as synthetic `PointerEvent`s through `GestureBinding.handlePointerEvent`, text through `EditableTextState.userUpdateTextEditingValue`, and points in the element's coordinates. `FletAppControl` serves it as the `describe` and `act` methods, `act` followed by `FletBackend.waitIdle(requireUpdate: false)`, which counts a quiet period without any update as idle ([#7131](https://github.com/flet-dev/flet/pull/7131)) by @FeodorFitsner.
+
 ## 1.1.4
 
 * `openWebBrowser()` and `openWindow()` return whether they opened the URL: on web they refuse a URL whose scheme is in `blockedWebUrlSchemes` (`javascript`, `blob`, `filesystem`), read by `webUrlScheme()` the way a browser reads it; `isOpenableWebUrl()` is the check. `openWebBrowser(embedded: true)` turns a `_self`/`_parent`/`_top` target into `_blank` (`launchTarget()`), and every caller (`UrlLauncherService`, `runControlActions()`, text spans, `Markdown` links) passes `control.backend.isEmbedded`, a new public getter on `FletBackend`. `openWindow()` prefixes a window name starting with `_` with `flet` (`popupWindowName()`) ([#7136](https://github.com/flet-dev/flet/pull/7136)) by @FeodorFitsner.

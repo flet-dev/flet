@@ -2,6 +2,7 @@
 
 ### New features
 
+* Add `FletApp.describe()` and `FletApp.act()`, so a host can see and use the app it embeds the way a person would: `describe()` lists the controls on screen (type, `key`, text, value, events, position, and whether a dialog covers them), and `act()` taps them by key, text, tooltip or type, types into text fields (firing `on_change`, and `on_submit` with `submit`), long-presses, taps a point, then waits until the app has reacted. A disabled or covered control fails the step instead of tapping whatever is on top. For previews and galleries, for example an AI agent checking an app it just built ([#7131](https://github.com/flet-dev/flet/pull/7131)) by @FeodorFitsner.
 * flet-charts: Add `GaugeChart` for progress gauges, activity rings and speedometers, built from progress and zone rings with ticks, labels, markers and needle or circle pointers. See [GaugeChart](https://flet.dev/docs/controls/charts/gaugechart) ([#7066](https://github.com/flet-dev/flet/pull/7066)) by @ndonkoHenri.
 * Add `ft.use_page_size()`, a hook that returns the page size and re-renders the component when it changes; `ft.use_page_size(lambda size: size.width < 600)` re-renders only when the selected value changes, for layouts that switch at a breakpoint. Any number of components can use it, and `page.on_resize` stays free for the app ([#7115](https://github.com/flet-dev/flet/pull/7115)) by @FeodorFitsner.
 
