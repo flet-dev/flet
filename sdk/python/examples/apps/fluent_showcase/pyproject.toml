@@ -1,0 +1,66 @@
+[project]
+name = "fluent-showcase"
+version = "1.0.0"
+description = "Dashboard showcasing Fluent UI controls: navigation pane, cards, forms, calendar and more."
+requires-python = ">=3.10"
+keywords = ["apps", "fluent", "dashboard", "showcase"]
+authors = [{ name = "Flet team", email = "hello@flet.dev" }]
+dependencies = ["flet", "flet-fluent-ui"]
+
+[dependency-groups]
+dev = ["flet-cli", "flet-desktop", "flet-web"]
+
+[tool.flet.gallery]
+categories = ["Fluent"]
+
+[tool.flet.metadata]
+title = "Fluent Showcase"
+controls = [
+    "SafeArea",
+    "Column",
+    "Row",
+    "ResponsiveRow",
+    "Container",
+    "Text",
+    "Icon",
+    "CircleAvatar",
+    "Theme",
+    "NavigationView",
+    "PaneItem",
+    "PaneItemHeader",
+    "PaneItemSeparator",
+    "ScaffoldPage",
+    "PageHeader",
+    "Card",
+    "InfoBar",
+    "InfoBadge",
+    "InfoLabel",
+    "TextBox",
+    "PasswordBox",
+    "NumberBox",
+    "ComboBox",
+    "ToggleSwitch",
+    "Checkbox",
+    "Button",
+    "FilledButton",
+    "IconButton",
+    "ListTile",
+    "CalendarView",
+    "ProgressRing",
+    "ProgressBar",
+    "Expander",
+]
+layout_pattern = "dashboard"
+complexity = "intermediate"
+features = [
+    "Fluent accent colors",
+    "light and dark mode",
+    "navigation pane",
+    "responsive card grid",
+    "Fluent UI System Icons",
+]
+
+[tool.flet]
+org = "dev.flet"
+company = "Flet"
+copyright = "Copyright (C) 2023-2026 by Flet"

@@ -15,6 +15,10 @@ the design system of Windows, built on the Flutter
 [`fluent_ui`](https://pub.dev/packages/fluent_ui) package, plus the
 [`FluentIcons`](types/fluenticons.md) icon set.
 
+<img src="/img/docs/controls/fluentui/showcase.png" className="screenshot" style={{borderRadius: '7px'}} alt="A dashboard built with Fluent controls: a navigation pane, an info bar, cards with text boxes, a combo box, toggle switches, a calendar, progress indicators, list tiles and a number box" />
+
+See the [full source](https://github.com/flet-dev/flet/tree/main/sdk/python/examples/apps/fluent_showcase/main.py) of this dashboard.
+
 ## Usage
 
 Add `flet-fluent-ui` to your project dependencies:
