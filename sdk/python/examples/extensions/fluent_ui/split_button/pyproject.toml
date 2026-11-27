@@ -1,0 +1,26 @@
+[project]
+name = "fluent-ui-split-button"
+version = "1.0.0"
+description = "Highlight text with a split button that also picks the color."
+requires-python = ">=3.10"
+keywords = ["fluent", "split button", "button", "menu"]
+authors = [{ name = "Flet team", email = "hello@flet.dev" }]
+dependencies = ["flet", "flet-fluent-ui"]
+
+[dependency-groups]
+dev = ["flet-cli", "flet-desktop", "flet-web"]
+
+[tool.flet.gallery]
+categories = ["Fluent"]
+
+[tool.flet.metadata]
+title = "Fluent SplitButton"
+controls = ["SafeArea", "Column", "Container", "Text", "SplitButton", "MenuFlyoutItem"]
+layout_pattern = "single-control"
+complexity = "basic"
+features = ["menu", "click handling"]
+
+[tool.flet]
+org = "dev.flet"
+company = "Flet"
+copyright = "Copyright (C) 2023-2026 by Flet"

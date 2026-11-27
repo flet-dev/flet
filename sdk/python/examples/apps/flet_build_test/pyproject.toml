@@ -18,6 +18,7 @@ dependencies = [
     "flet-color-pickers",
     "flet-datatable2",
     "flet-flashlight",
+    "flet-fluent-ui",
     "flet-geolocator",
     "flet-lottie",
     "flet-local-auth",
@@ -53,6 +54,7 @@ flet-code-editor = { path = "../../../packages/flet-code-editor", editable = tru
 flet-color-pickers = { path = "../../../packages/flet-color-pickers", editable = true }
 flet-datatable2 = { path = "../../../packages/flet-datatable2", editable = true }
 flet-flashlight = { path = "../../../packages/flet-flashlight", editable = true }
+flet-fluent-ui = { path = "../../../packages/flet-fluent-ui", editable = true }
 flet-geolocator = { path = "../../../packages/flet-geolocator", editable = true }
 flet-lottie = { path = "../../../packages/flet-lottie", editable = true }
 flet-local-auth = { path = "../../../packages/flet-local-auth", editable = true }
@@ -77,6 +79,7 @@ flet-code-editor = "../../../packages/flet-code-editor"
 flet-color-pickers = "../../../packages/flet-color-pickers"
 flet-datatable2 = "../../../packages/flet-datatable2"
 flet-flashlight = "../../../packages/flet-flashlight"
+flet-fluent-ui = "../../../packages/flet-fluent-ui"
 flet-geolocator = "../../../packages/flet-geolocator"
 flet-lottie = "../../../packages/flet-lottie"
 flet-local-auth = "../../../packages/flet-local-auth"

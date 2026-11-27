@@ -849,6 +849,7 @@ jobs:
             flet-color-pickers
             flet-datatable2
             flet-flashlight
+            flet-fluent-ui
             flet-geolocator
             flet-lottie
             flet-local-auth
@@ -1133,6 +1134,7 @@ jobs:
             flet_color_pickers \
             flet_datatable2 \
             flet_flashlight \
+            flet_fluent_ui \
             flet_geolocator \
             flet_lottie \
             flet_local_auth \

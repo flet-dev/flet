@@ -1,0 +1,26 @@
+[project]
+name = "fluent-ui-content-dialog"
+version = "1.0.0"
+description = "Delete confirmation dialog with filled and default buttons."
+requires-python = ">=3.10"
+keywords = ["fluent", "dialog", "confirmation", "modal"]
+authors = [{ name = "Flet team", email = "hello@flet.dev" }]
+dependencies = ["flet", "flet-fluent-ui"]
+
+[dependency-groups]
+dev = ["flet-cli", "flet-desktop", "flet-web"]
+
+[tool.flet.gallery]
+categories = ["Fluent"]
+
+[tool.flet.metadata]
+title = "Fluent ContentDialog"
+controls = ["SafeArea", "Column", "Text", "ContentDialog", "Button", "FilledButton"]
+layout_pattern = "dialog-flow"
+complexity = "basic"
+features = ["dialog", "click handling"]
+
+[tool.flet]
+org = "dev.flet"
+company = "Flet"
+copyright = "Copyright (C) 2023-2026 by Flet"

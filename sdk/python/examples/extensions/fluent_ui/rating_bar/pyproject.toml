@@ -1,0 +1,26 @@
+[project]
+name = "fluent-ui-rating-bar"
+version = "1.0.0"
+description = "Read-only average rating and an interactive rating bar."
+requires-python = ">=3.10"
+keywords = ["fluent", "rating", "stars"]
+authors = [{ name = "Flet team", email = "hello@flet.dev" }]
+dependencies = ["flet", "flet-fluent-ui"]
+
+[dependency-groups]
+dev = ["flet-cli", "flet-desktop", "flet-web"]
+
+[tool.flet.gallery]
+categories = ["Fluent"]
+
+[tool.flet.metadata]
+title = "Fluent RatingBar"
+controls = ["SafeArea", "Column", "Row", "Text", "RatingBar"]
+layout_pattern = "form"
+complexity = "basic"
+features = ["change handling", "read-only"]
+
+[tool.flet]
+org = "dev.flet"
+company = "Flet"
+copyright = "Copyright (C) 2023-2026 by Flet"

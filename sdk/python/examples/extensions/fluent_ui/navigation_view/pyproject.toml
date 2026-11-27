@@ -1,0 +1,26 @@
+[project]
+name = "fluent-ui-navigation-view"
+version = "1.0.0"
+description = "A mail app shell with a navigation pane."
+requires-python = ">=3.10"
+keywords = ["fluent", "navigation view", "navigation", "pane"]
+authors = [{ name = "Flet team", email = "hello@flet.dev" }]
+dependencies = ["flet", "flet-fluent-ui"]
+
+[dependency-groups]
+dev = ["flet-cli", "flet-desktop", "flet-web"]
+
+[tool.flet.gallery]
+categories = ["Fluent"]
+
+[tool.flet.metadata]
+title = "Fluent NavigationView"
+controls = ["NavigationView", "PaneItem", "PaneItemHeader", "PaneItemSeparator", "InfoBadge", "ScaffoldPage", "PageHeader", "Text"]
+layout_pattern = "list-detail"
+complexity = "basic"
+features = ["navigation", "badges", "footer items"]
+
+[tool.flet]
+org = "dev.flet"
+company = "Flet"
+copyright = "Copyright (C) 2023-2026 by Flet"

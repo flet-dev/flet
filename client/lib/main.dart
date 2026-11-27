@@ -12,6 +12,7 @@ import 'package:flet_color_pickers/flet_color_pickers.dart'
     as flet_color_picker;
 import 'package:flet_datatable2/flet_datatable2.dart' as flet_datatable2;
 import "package:flet_flashlight/flet_flashlight.dart" as flet_flashlight;
+import "package:flet_fluent_ui/flet_fluent_ui.dart" as flet_fluent_ui;
 import 'package:flet_geolocator/flet_geolocator.dart' as flet_geolocator;
 import 'package:flet_lottie/flet_lottie.dart' as flet_lottie;
 import 'package:flet_local_auth/flet_local_auth.dart' as flet_local_auth;
@@ -59,6 +60,7 @@ void main([List<String>? args]) async {
     flet_color_picker.Extension(),
     flet_datatable2.Extension(),
     flet_flashlight.Extension(),
+    flet_fluent_ui.Extension(),
     flet_geolocator.Extension(),
     flet_lottie.Extension(),
     flet_local_auth.Extension(),

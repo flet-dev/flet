@@ -1,0 +1,26 @@
+[project]
+name = "fluent-ui-number-box"
+version = "1.0.0"
+description = "Quantity picker with min and max that updates an order total."
+requires-python = ">=3.10"
+keywords = ["fluent", "number box", "numeric input", "spin buttons"]
+authors = [{ name = "Flet team", email = "hello@flet.dev" }]
+dependencies = ["flet", "flet-fluent-ui"]
+
+[dependency-groups]
+dev = ["flet-cli", "flet-desktop", "flet-web"]
+
+[tool.flet.gallery]
+categories = ["Fluent"]
+
+[tool.flet.metadata]
+title = "Fluent NumberBox"
+controls = ["SafeArea", "Column", "Text", "NumberBox"]
+layout_pattern = "form"
+complexity = "basic"
+features = ["change handling", "min/max", "spin buttons"]
+
+[tool.flet]
+org = "dev.flet"
+company = "Flet"
+copyright = "Copyright (C) 2023-2026 by Flet"

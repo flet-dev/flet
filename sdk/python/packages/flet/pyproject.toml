@@ -60,6 +60,7 @@ extensions = [
     "flet-color-pickers",
     "flet-datatable2",
     "flet-flashlight",
+    "flet-fluent-ui",
     "flet-geolocator",
     "flet-lottie",
     "flet-local-auth",

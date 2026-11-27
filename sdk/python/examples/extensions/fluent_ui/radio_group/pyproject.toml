@@ -1,0 +1,26 @@
+[project]
+name = "fluent-ui-radio-group"
+version = "1.0.0"
+description = "Size picker made of radio buttons."
+requires-python = ">=3.10"
+keywords = ["fluent", "radio", "radio group"]
+authors = [{ name = "Flet team", email = "hello@flet.dev" }]
+dependencies = ["flet", "flet-fluent-ui"]
+
+[dependency-groups]
+dev = ["flet-cli", "flet-desktop", "flet-web"]
+
+[tool.flet.gallery]
+categories = ["Fluent"]
+
+[tool.flet.metadata]
+title = "Fluent RadioGroup"
+controls = ["SafeArea", "Column", "Text", "RadioGroup", "RadioButton"]
+layout_pattern = "form"
+complexity = "basic"
+features = ["change handling"]
+
+[tool.flet]
+org = "dev.flet"
+company = "Flet"
+copyright = "Copyright (C) 2023-2026 by Flet"

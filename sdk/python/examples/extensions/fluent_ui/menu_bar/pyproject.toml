@@ -1,0 +1,26 @@
+[project]
+name = "fluent-ui-menu-bar"
+version = "1.0.0"
+description = "A File, Edit and View menu bar for a text editor."
+requires-python = ">=3.10"
+keywords = ["fluent", "menu bar", "menu"]
+authors = [{ name = "Flet team", email = "hello@flet.dev" }]
+dependencies = ["flet", "flet-fluent-ui"]
+
+[dependency-groups]
+dev = ["flet-cli", "flet-desktop", "flet-web"]
+
+[tool.flet.gallery]
+categories = ["Fluent"]
+
+[tool.flet.metadata]
+title = "Fluent MenuBar"
+controls = ["SafeArea", "Column", "Text", "MenuBar", "MenuBarItem", "MenuFlyoutItem", "ToggleMenuFlyoutItem", "MenuFlyoutSeparator", "RadioMenuFlyoutItem"]
+layout_pattern = "toolbar"
+complexity = "basic"
+features = ["menus", "toggle items", "radio items", "click handling"]
+
+[tool.flet]
+org = "dev.flet"
+company = "Flet"
+copyright = "Copyright (C) 2023-2026 by Flet"

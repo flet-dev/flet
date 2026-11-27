@@ -1,0 +1,26 @@
+[project]
+name = "fluent-ui-checkbox"
+version = "1.0.0"
+description = "Terms checkbox, a tristate checkbox and a disabled one."
+requires-python = ">=3.10"
+keywords = ["fluent", "checkbox", "tristate"]
+authors = [{ name = "Flet team", email = "hello@flet.dev" }]
+dependencies = ["flet", "flet-fluent-ui"]
+
+[dependency-groups]
+dev = ["flet-cli", "flet-desktop", "flet-web"]
+
+[tool.flet.gallery]
+categories = ["Fluent"]
+
+[tool.flet.metadata]
+title = "Fluent Checkbox"
+controls = ["SafeArea", "Column", "Text", "Checkbox"]
+layout_pattern = "form"
+complexity = "basic"
+features = ["change handling", "tristate", "disabled state"]
+
+[tool.flet]
+org = "dev.flet"
+company = "Flet"
+copyright = "Copyright (C) 2023-2026 by Flet"

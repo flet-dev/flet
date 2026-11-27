@@ -1,0 +1,26 @@
+[project]
+name = "fluent-ui-outlined-button"
+version = "1.0.0"
+description = "Outlined Preview button as a secondary action next to Publish."
+requires-python = ">=3.10"
+keywords = ["fluent", "outlined button", "secondary action"]
+authors = [{ name = "Flet team", email = "hello@flet.dev" }]
+dependencies = ["flet", "flet-fluent-ui"]
+
+[dependency-groups]
+dev = ["flet-cli", "flet-desktop", "flet-web"]
+
+[tool.flet.gallery]
+categories = ["Fluent"]
+
+[tool.flet.metadata]
+title = "Fluent OutlinedButton"
+controls = ["SafeArea", "Column", "Row", "Text", "OutlinedButton", "FilledButton"]
+layout_pattern = "inline-actions"
+complexity = "basic"
+features = ["click handling", "secondary action"]
+
+[tool.flet]
+org = "dev.flet"
+company = "Flet"
+copyright = "Copyright (C) 2023-2026 by Flet"

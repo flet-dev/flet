@@ -1,0 +1,26 @@
+[project]
+name = "fluent-ui-info-label"
+version = "1.0.0"
+description = "Sign-up fields labelled with InfoLabel, above and beside the input."
+requires-python = ">=3.10"
+keywords = ["fluent", "label", "form"]
+authors = [{ name = "Flet team", email = "hello@flet.dev" }]
+dependencies = ["flet", "flet-fluent-ui"]
+
+[dependency-groups]
+dev = ["flet-cli", "flet-desktop", "flet-web"]
+
+[tool.flet.gallery]
+categories = ["Fluent"]
+
+[tool.flet.metadata]
+title = "Fluent InfoLabel"
+controls = ["SafeArea", "Column", "InfoLabel", "TextBox", "ToggleSwitch"]
+layout_pattern = "form"
+complexity = "basic"
+features = ["labels", "horizontal label"]
+
+[tool.flet]
+org = "dev.flet"
+company = "Flet"
+copyright = "Copyright (C) 2023-2026 by Flet"

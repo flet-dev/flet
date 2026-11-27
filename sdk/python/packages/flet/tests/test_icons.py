@@ -137,6 +137,35 @@ def test_lucide_packed_value_indexes_the_dart_list():
     assert packed["HOUSE"] == shad.LucideIcons.HOUSE
 
 
+def test_fluent_packed_value_indexes_the_dart_list():
+    """Same guarantee as above for the Fluent set shipped by flet-fluent-ui."""
+    import flet_fluent_ui as fluent
+
+    package = REPO / "sdk/python/packages/flet-fluent-ui/src"
+    packed = json.loads(
+        (package / "flet_fluent_ui/fluent_icons.json").read_text(encoding="utf-8")
+    )
+    # Each entry is `IconData(0x..., ...), // NAME`.
+    dart_names = re.findall(
+        r"^\s*IconData\(0x[0-9a-f]+, fontFamily: 'FluentIcons', "
+        r"fontPackage: 'flet_fluent_ui'\), // (\w+)$",
+        (package / "flutter/flet_fluent_ui/lib/src/utils/fluent_icons.dart").read_text(
+            encoding="utf-8"
+        ),
+        re.MULTILINE,
+    )
+
+    assert len(packed) == len(dart_names) == len(fluent.FluentIcons)
+    for name, value in packed.items():
+        assert value >> 16 == 4
+        assert dart_names[value & 0xFFFF] == name
+    assert isinstance(fluent.FluentIcons.SETTINGS, ft.IconData)
+    assert packed["SETTINGS"] == fluent.FluentIcons.SETTINGS
+    assert (
+        package / "flutter/flet_fluent_ui/fonts/FluentSystemIcons-Resizable.ttf"
+    ).is_file()
+
+
 def test_icons_lookup_by_name():
     """Icons can be looked up by name, like enum members."""
     assert ft.Icons["HOME"] is ft.Icons.HOME
@@ -154,12 +183,14 @@ def test_icons_membership_by_name_and_value():
 
 
 def test_icon_lookup_requires_a_published_name():
+    from flet_fluent_ui import FluentIcons
     from flet_shadcn_ui import LucideIcons
 
     for icons, name in [
         (ft.Icons, "HOME"),
         (ft.CupertinoIcons, "ADD"),
         (LucideIcons, "HOUSE"),
+        (FluentIcons, "SETTINGS"),
     ]:
         assert name in icons
         assert icons[name] is getattr(icons, name)

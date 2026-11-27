@@ -67,6 +67,9 @@ dependencies:
   flet_flashlight:
     path: ../sdk/python/packages/flet-flashlight/src/flutter/flet_flashlight
 
+  flet_fluent_ui:
+    path: ../sdk/python/packages/flet-fluent-ui/src/flutter/flet_fluent_ui
+
   flet_geolocator:
     path: ../sdk/python/packages/flet-geolocator/src/flutter/flet_geolocator
 

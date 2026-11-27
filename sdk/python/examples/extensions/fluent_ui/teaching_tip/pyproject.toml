@@ -1,0 +1,26 @@
+[project]
+name = "fluent-ui-teaching-tip"
+version = "1.0.0"
+description = "Point new users at the Save button with a teaching tip."
+requires-python = ">=3.10"
+keywords = ["fluent", "teaching tip", "onboarding", "callout"]
+authors = [{ name = "Flet team", email = "hello@flet.dev" }]
+dependencies = ["flet", "flet-fluent-ui"]
+
+[dependency-groups]
+dev = ["flet-cli", "flet-desktop", "flet-web"]
+
+[tool.flet.gallery]
+categories = ["Fluent"]
+
+[tool.flet.metadata]
+title = "Fluent TeachingTip"
+controls = ["SafeArea", "Row", "TeachingTip", "Button", "FilledButton", "HyperlinkButton"]
+layout_pattern = "single-control"
+complexity = "basic"
+features = ["onboarding", "open and close"]
+
+[tool.flet]
+org = "dev.flet"
+company = "Flet"
+copyright = "Copyright (C) 2023-2026 by Flet"

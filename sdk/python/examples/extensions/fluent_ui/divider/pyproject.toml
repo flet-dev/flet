@@ -1,0 +1,26 @@
+[project]
+name = "fluent-ui-divider"
+version = "1.0.0"
+description = "Settings sections separated by horizontal and vertical dividers."
+requires-python = ">=3.10"
+keywords = ["fluent", "divider", "separator"]
+authors = [{ name = "Flet team", email = "hello@flet.dev" }]
+dependencies = ["flet", "flet-fluent-ui"]
+
+[dependency-groups]
+dev = ["flet-cli", "flet-desktop", "flet-web"]
+
+[tool.flet.gallery]
+categories = ["Fluent"]
+
+[tool.flet.metadata]
+title = "Fluent Divider"
+controls = ["SafeArea", "Column", "Row", "Text", "Divider"]
+layout_pattern = "sections"
+complexity = "basic"
+features = ["horizontal divider", "vertical divider"]
+
+[tool.flet]
+org = "dev.flet"
+company = "Flet"
+copyright = "Copyright (C) 2023-2026 by Flet"

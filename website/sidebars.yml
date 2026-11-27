@@ -333,6 +333,82 @@ docs:
         TimePicker: controls/shadcnui/timepicker.md
         Toast: controls/shadcnui/toast.md
         Tooltip: controls/shadcnui/tooltip.md
+      Fluent:
+        _index: controls/fluentui/index.md
+        Theme: controls/fluentui/theme.md
+        AutoSuggestBox:
+          _index: controls/fluentui/autosuggestbox.md
+          AutoSuggestBoxItem: controls/fluentui/autosuggestboxitem.md
+        BreadcrumbBar:
+          _index: controls/fluentui/breadcrumbbar.md
+          BreadcrumbItem: controls/fluentui/breadcrumbitem.md
+        Button: controls/fluentui/button.md
+        CalendarDatePicker: controls/fluentui/calendardatepicker.md
+        CalendarView: controls/fluentui/calendarview.md
+        Card: controls/fluentui/card.md
+        Checkbox: controls/fluentui/checkbox.md
+        ColorPicker: controls/fluentui/colorpicker.md
+        ComboBox:
+          _index: controls/fluentui/combobox.md
+          ComboBoxItem: controls/fluentui/comboboxitem.md
+        CommandBar:
+          _index: controls/fluentui/commandbar.md
+          CommandBarButton: controls/fluentui/commandbarbutton.md
+          CommandBarSeparator: controls/fluentui/commandbarseparator.md
+        ContentDialog: controls/fluentui/contentdialog.md
+        ContextMenu:
+          _index: controls/fluentui/contextmenu.md
+          MenuFlyoutItem: controls/fluentui/menuflyoutitem.md
+          MenuFlyoutSeparator: controls/fluentui/menuflyoutseparator.md
+          RadioMenuFlyoutItem: controls/fluentui/radiomenuflyoutitem.md
+          ToggleMenuFlyoutItem: controls/fluentui/togglemenuflyoutitem.md
+        DatePicker: controls/fluentui/datepicker.md
+        Divider: controls/fluentui/divider.md
+        DropDownButton: controls/fluentui/dropdownbutton.md
+        EditableComboBox: controls/fluentui/editablecombobox.md
+        Expander: controls/fluentui/expander.md
+        FilledButton: controls/fluentui/filledbutton.md
+        Flyout: controls/fluentui/flyout.md
+        HyperlinkButton: controls/fluentui/hyperlinkbutton.md
+        IconButton: controls/fluentui/iconbutton.md
+        InfoBadge: controls/fluentui/infobadge.md
+        InfoBar: controls/fluentui/infobar.md
+        InfoLabel: controls/fluentui/infolabel.md
+        ListTile: controls/fluentui/listtile.md
+        MenuBar:
+          _index: controls/fluentui/menubar.md
+          MenuBarItem: controls/fluentui/menubaritem.md
+        NavigationView:
+          _index: controls/fluentui/navigationview.md
+          PaneItem: controls/fluentui/paneitem.md
+          PaneItemHeader: controls/fluentui/paneitemheader.md
+          PaneItemSeparator: controls/fluentui/paneitemseparator.md
+        NumberBox: controls/fluentui/numberbox.md
+        OutlinedButton: controls/fluentui/outlinedbutton.md
+        PasswordBox: controls/fluentui/passwordbox.md
+        ProgressBar: controls/fluentui/progressbar.md
+        ProgressRing: controls/fluentui/progressring.md
+        RadioGroup:
+          _index: controls/fluentui/radiogroup.md
+          RadioButton: controls/fluentui/radiobutton.md
+        RatingBar: controls/fluentui/ratingbar.md
+        ScaffoldPage:
+          _index: controls/fluentui/scaffoldpage.md
+          PageHeader: controls/fluentui/pageheader.md
+        Slider: controls/fluentui/slider.md
+        SplitButton: controls/fluentui/splitbutton.md
+        TabView:
+          _index: controls/fluentui/tabview.md
+          Tab: controls/fluentui/tab.md
+        TeachingTip: controls/fluentui/teachingtip.md
+        TextBox: controls/fluentui/textbox.md
+        TimePicker: controls/fluentui/timepicker.md
+        ToggleButton: controls/fluentui/togglebutton.md
+        ToggleSwitch: controls/fluentui/toggleswitch.md
+        Tooltip: controls/fluentui/tooltip.md
+        TreeView:
+          _index: controls/fluentui/treeview.md
+          TreeViewItem: controls/fluentui/treeviewitem.md
       Extensions:
         _generated_index:
           title: Extension controls
@@ -605,6 +681,22 @@ docs:
       - types/filepickerfile.md
       - types/filepickeruploadfile.md
       - types/flip.md
+      - Fluent:
+        - controls/fluentui/types/calendardisplaymode.md
+        - controls/fluentui/types/calendarselectionmode.md
+        - controls/fluentui/types/calendarviewchangeevent.md
+        - controls/fluentui/types/closebuttonvisibilitymode.md
+        - controls/fluentui/types/colorspectrumshape.md
+        - controls/fluentui/types/commandbaroverflowbehavior.md
+        - controls/fluentui/types/expanderdirection.md
+        - controls/fluentui/types/flyoutplacementmode.md
+        - controls/fluentui/types/infobarseverity.md
+        - controls/fluentui/types/listtileselectionmode.md
+        - controls/fluentui/types/panedisplaymode.md
+        - controls/fluentui/types/passwordrevealmode.md
+        - controls/fluentui/types/tabwidthbehavior.md
+        - controls/fluentui/types/treeviewselectionmode.md
+        - controls/fluentui/types/fluenticons.md
       - Geolocator:
         - services/geolocator/types/foregroundnotificationconfiguration.md
         - services/geolocator/types/geolocatorandroidconfiguration.md

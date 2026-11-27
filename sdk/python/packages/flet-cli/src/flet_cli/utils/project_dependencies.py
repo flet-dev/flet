@@ -30,6 +30,7 @@ FLET_PACKAGES = frozenset(
         "flet-datatable2",
         "flet-desktop",
         "flet-flashlight",
+        "flet-fluent-ui",
         "flet-geolocator",
         "flet-local-auth",
         "flet-lottie",

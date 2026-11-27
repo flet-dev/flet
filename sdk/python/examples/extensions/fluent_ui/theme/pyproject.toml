@@ -1,0 +1,26 @@
+[project]
+name = "fluent-ui-theme"
+version = "1.0.0"
+description = "The same controls with the default, purple and green accent colors."
+requires-python = ">=3.10"
+keywords = ["fluent", "theme", "accent color"]
+authors = [{ name = "Flet team", email = "hello@flet.dev" }]
+dependencies = ["flet", "flet-fluent-ui"]
+
+[dependency-groups]
+dev = ["flet-cli", "flet-desktop", "flet-web"]
+
+[tool.flet.gallery]
+categories = ["Fluent"]
+
+[tool.flet.metadata]
+title = "Fluent Theme"
+controls = ["SafeArea", "Row", "Column", "Theme", "FilledButton", "Checkbox", "ToggleSwitch", "ProgressBar"]
+layout_pattern = "comparison-grid"
+complexity = "basic"
+features = ["theming", "accent color"]
+
+[tool.flet]
+org = "dev.flet"
+company = "Flet"
+copyright = "Copyright (C) 2023-2026 by Flet"

@@ -1,0 +1,26 @@
+[project]
+name = "fluent-ui-calendar-date-picker"
+version = "1.0.0"
+description = "Pick a delivery date from a calendar that opens from a button."
+requires-python = ">=3.10"
+keywords = ["fluent", "calendar", "date", "picker"]
+authors = [{ name = "Flet team", email = "hello@flet.dev" }]
+dependencies = ["flet", "flet-fluent-ui"]
+
+[dependency-groups]
+dev = ["flet-cli", "flet-desktop", "flet-web"]
+
+[tool.flet.gallery]
+categories = ["Fluent"]
+
+[tool.flet.metadata]
+title = "Fluent CalendarDatePicker"
+controls = ["SafeArea", "Column", "Text", "CalendarDatePicker"]
+layout_pattern = "form"
+complexity = "basic"
+features = ["change handling", "blackout dates"]
+
+[tool.flet]
+org = "dev.flet"
+company = "Flet"
+copyright = "Copyright (C) 2023-2026 by Flet"

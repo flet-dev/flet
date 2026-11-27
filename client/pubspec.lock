@@ -495,6 +495,13 @@ packages:
       relative: true
     source: path
     version: "0.1.0"
+  flet_fluent_ui:
+    dependency: "direct main"
+    description:
+      path: "../sdk/python/packages/flet-fluent-ui/src/flutter/flet_fluent_ui"
+      relative: true
+    source: path
+    version: "0.1.0"
   flet_geolocator:
     dependency: "direct main"
     description:
@@ -586,6 +593,15 @@ packages:
       relative: true
     source: path
     version: "0.1.0"
+  fluent_ui:
+    dependency: transitive
+    description:
+      path: "."
+      ref: a3d5e2f409b25704dfa570f8c219901a7e514714
+      resolved-ref: a3d5e2f409b25704dfa570f8c219901a7e514714
+      url: "https://github.com/flet-dev/fluent_ui"
+    source: git
+    version: "4.18.1"
   flutter:
     dependency: "direct main"
     description: flutter
@@ -1163,10 +1179,18 @@ packages:
     dependency: transitive
     description:
       name: material_ui
-      sha256: "98ab9eda579ecae623e4b376c603035c5def78ce706f735f30bd632af5814695"
+      sha256: "27ea1af251a79728ee63068417f2ab469d294931a9bb8366ba8b85b0ef839060"
       url: "https://pub.dev"
     source: hosted
-    version: "1.6.0"
+    version: "1.7.0"
+  math_expressions:
+    dependency: transitive
+    description:
+      name: math_expressions
+      sha256: "22aca3a24e445be5f42ecf186cbded1f9951bf9ec5eb48fcddbd55e102bb11f5"
+      url: "https://pub.dev"
+    source: hosted
+    version: "3.2.0"
   media_kit:
     dependency: transitive
     description:
@@ -1503,6 +1527,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "2.2.1"
+  recase:
+    dependency: transitive
+    description:
+      name: recase
+      sha256: e4eb4ec2dcdee52dcf99cb4ceabaffc631d7424ee55e56f280bc039737f89213
+      url: "https://pub.dev"
+    source: hosted
+    version: "4.1.0"
   record:
     dependency: transitive
     description:
@@ -1671,6 +1703,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "3.0.0"
+  scroll_pos:
+    dependency: transitive
+    description:
+      name: scroll_pos
+      sha256: cebf602b2dd939de6832bb902ffefb574608d1b84f420b82b381a4007d3c1e1b
+      url: "https://pub.dev"
+    source: hosted
+    version: "0.5.0"
   scrollable_positioned_list:
     dependency: transitive
     description:

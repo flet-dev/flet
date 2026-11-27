@@ -29,6 +29,7 @@ DEFAULT_PACKAGES: list[str] = [
     "flet_color_pickers",
     "flet_datatable2",
     "flet_flashlight",
+    "flet_fluent_ui",
     "flet_geolocator",
     "flet_local_auth",
     "flet_lottie",

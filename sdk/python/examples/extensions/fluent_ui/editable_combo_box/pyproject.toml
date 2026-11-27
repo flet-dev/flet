@@ -1,0 +1,26 @@
+[project]
+name = "fluent-ui-editable-combo-box"
+version = "1.0.0"
+description = "Pick or type a font and size, with an error for sizes out of range."
+requires-python = ">=3.10"
+keywords = ["fluent", "combo box", "editable", "validation"]
+authors = [{ name = "Flet team", email = "hello@flet.dev" }]
+dependencies = ["flet", "flet-fluent-ui"]
+
+[dependency-groups]
+dev = ["flet-cli", "flet-desktop", "flet-web"]
+
+[tool.flet.gallery]
+categories = ["Fluent"]
+
+[tool.flet.metadata]
+title = "Fluent EditableComboBox"
+controls = ["SafeArea", "Column", "Row", "Text", "EditableComboBox", "ComboBoxItem"]
+layout_pattern = "toolbar"
+complexity = "basic"
+features = ["typed values", "validation", "error text"]
+
+[tool.flet]
+org = "dev.flet"
+company = "Flet"
+copyright = "Copyright (C) 2023-2026 by Flet"
