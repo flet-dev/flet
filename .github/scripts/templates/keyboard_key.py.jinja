@@ -1,0 +1,30 @@
+"""
+To generate/update this file run from the root of the repository:
+
+    uv run .github/scripts/generate_keyboard_keys.py
+"""
+
+from enum import Enum
+
+__all__ = ["KeyboardKey"]
+
+
+class KeyboardKey(str, Enum):
+    """
+    Keys reported by keyboard events, such as :attr:`flet.KeyboardEvent.key`
+    and :attr:`flet.KeyDownEvent.key`.
+
+    Each member is also a string equal to the key's label, such as
+    `"Arrow Right"` for :attr:`ARROW_RIGHT`, so it compares equal to that
+    string, and `str()` and f-strings give the label.
+
+    Letter keys are reported in upper case, whether or not Shift is pressed:
+    pressing <kbd>a</kbd> gives :attr:`A`. A key that has no member here, such
+    as a letter of a non-English keyboard layout, is reported as a plain string.
+    """
+
+    def __str__(self) -> str:
+        return self.value
+
+{% for name, value in keys %}    {{ name }} = {{ value }}
+{% endfor -%}

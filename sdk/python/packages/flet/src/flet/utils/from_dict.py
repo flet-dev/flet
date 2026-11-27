@@ -1,5 +1,6 @@
 import dataclasses
 import sys
+import types
 from enum import Enum
 from typing import (
     Any,
@@ -84,7 +85,8 @@ def from_dict(cls: type[T], data: Any) -> T:
 def convert_value(field_type: type, value: Any) -> Any:
     """
     Converts a value to its appropriate type based on the field_type.
-    Handles nested dataclasses, enums, lists, dicts, and optionals.
+    Handles nested dataclasses, enums, lists, dicts, optionals and unions,
+    written with `Union`/`Optional` or with `|`.
 
     Args:
         field_type: The type to convert the value to.
@@ -96,12 +98,42 @@ def convert_value(field_type: type, value: Any) -> Any:
     origin = get_origin(field_type)
     args = get_args(field_type)
 
-    # Optional[T]
-    if origin is Union and type(None) in args:
-        inner_type = [arg for arg in args if arg is not type(None)][0]
-        if value is None:
-            return None
-        return convert_value(inner_type, value)
+    if origin is Union or origin is types.UnionType:
+        nullable = type(None) in args
+        if nullable:
+            if value is None:
+                return None
+            args = tuple(arg for arg in args if arg is not type(None))
+            # Optional[T] uses T's normal conversion, including enum validation.
+            if len(args) == 1:
+                return convert_value(args[0], value)
+
+        # In KeyboardKey | str, known labels become enum members and
+        # layout-specific labels fall through as strings.
+        for arg in args:
+            if isinstance(arg, type) and issubclass(arg, Enum):
+                try:
+                    return arg(value)
+                except ValueError:
+                    pass
+
+        if nullable and isinstance(value, (list, dict)):
+            # The payload shape can identify a union member. For example, a
+            # dict in Offset | str | None carries the fields of an Offset.
+            wire_type = list if isinstance(value, list) else dict
+            candidates = [
+                arg
+                for arg in args
+                if (get_origin(arg) or arg) is wire_type
+                or (wire_type is dict and dataclasses.is_dataclass(arg))
+            ]
+            if len(candidates) == 1:
+                return convert_value(candidates[0], value)
+            # A dict can represent either a dataclass or a mapping. If several
+            # members fit, honor the legacy first non-None member when it fits.
+            if args[0] in candidates:
+                return convert_value(args[0], value)
+        return value
 
     # Enum
     if isinstance(field_type, type) and issubclass(field_type, Enum):

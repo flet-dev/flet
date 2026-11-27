@@ -951,6 +951,7 @@ docs:
       - types/gradienttilemode.md
       - types/icons.md
       - types/imagerepeat.md
+      - types/keyboardkey.md
       - types/keyboardtype.md
       - types/labelposition.md
       - types/listtilestyle.md

@@ -6,7 +6,7 @@ def main(page: ft.Page):
     page.horizontal_alignment = ft.CrossAxisAlignment.CENTER
 
     def on_keyboard(e: ft.KeyboardEvent):
-        if e.shift and e.key == "S":
+        if e.shift and e.key == ft.KeyboardKey.S:
             page.show_semantics_debugger = not page.show_semantics_debugger
             page.update()
 

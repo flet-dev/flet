@@ -1,9 +1,10 @@
 from dataclasses import dataclass
-from typing import Optional
+from typing import Optional, Union
 
 from flet.controls.base_control import control
 from flet.controls.control import Control
 from flet.controls.control_event import Event, EventHandler
+from flet.controls.keyboard_key import KeyboardKey
 
 __all__ = [
     "KeyDownEvent",
@@ -22,12 +23,13 @@ class KeyDownEvent(Event["KeyboardListener"]):
     or repeated.
     """
 
-    key: str
+    key: Union[KeyboardKey, str]
     """
-    The key that was pressed down.
+    The key that was pressed down, such as :attr:`~flet.KeyboardKey.A`,
+    :attr:`~flet.KeyboardKey.ENTER` or :attr:`~flet.KeyboardKey.SHIFT_LEFT`.
 
-    Represents the physical key (e.g., <kbd>A</kbd>, <kbd>Enter</kbd>,
-    <kbd>Shift</kbd>) that triggered the key down event.
+    A key that has no :class:`~flet.KeyboardKey` member is a plain string,
+    such as `"Ü"`.
     """
 
 
@@ -40,11 +42,12 @@ class KeyUpEvent(Event["KeyboardListener"]):
     a key down or repeat event.
     """
 
-    key: str
+    key: Union[KeyboardKey, str]
     """
     The key that was released.
 
-    Indicates which key was previously pressed and has now been lifted.
+    A key that has no :class:`~flet.KeyboardKey` member is a plain string,
+    such as `"Ü"`.
     """
 
 
@@ -57,12 +60,13 @@ class KeyRepeatEvent(Event["KeyboardListener"]):
     depending on the system's key repeat rate.
     """
 
-    key: str
+    key: Union[KeyboardKey, str]
     """
-    The key that is being held down and repeating.
+    The key that is being held down and repeating, such as
+    :attr:`~flet.KeyboardKey.ARROW_DOWN` or :attr:`~flet.KeyboardKey.BACKSPACE`.
 
-    Represents the physical key that is generating repeat events (e.g.,
-    <kbd>ArrowDown</kbd>, <kbd>Backspace</kbd>).
+    A key that has no :class:`~flet.KeyboardKey` member is a plain string,
+    such as `"Ü"`.
     """
 
 
