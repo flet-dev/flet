@@ -35,12 +35,12 @@ Future<_EventBackend> _pump(WidgetTester tester, Map<String, dynamic> control,
       value: backend,
       child: MaterialApp(
           home: Scaffold(
-              body: KeyedSubtree(
-                  key: _appKey,
-                  child: Stack(children: [
-                    Positioned.fill(child: ControlWidget(control: c)),
-                    if (overlay != null) Positioned.fill(child: overlay),
-                  ]))))));
+              body: Stack(children: [
+        Positioned.fill(
+            child:
+                KeyedSubtree(key: _appKey, child: ControlWidget(control: c))),
+        if (overlay != null) Positioned.fill(child: overlay),
+      ])))));
   return backend;
 }
 
@@ -221,6 +221,110 @@ void main() {
     expect(steps.first['status'], 'ok');
     expect(steps.last['status'], 'error');
     expect(backend.events.map((e) => (e.$1, e.$2)), contains((3, 'click')));
+  });
+
+  for (final behavior in [
+    HitTestBehavior.opaque,
+    HitTestBehavior.translucent
+  ]) {
+    testWidgets('tap_at refuses a point under a $behavior host overlay',
+        (tester) async {
+      var hostReceivedPointer = false;
+      final backend = await _pump(tester, _form(),
+          overlay: Listener(
+              behavior: behavior,
+              onPointerDown: (_) => hostReceivedPointer = true));
+      final center = tester.getCenter(find.text('Add'));
+      final point = center - tester.getTopLeft(find.byKey(_appKey));
+      final result = await _run(
+          tester,
+          _driver().act([
+            {'action': 'tap_at', 'x': point.dx, 'y': point.dy}
+          ]));
+      expect((result['steps'] as List).single['status'], 'covered');
+      expect(hostReceivedPointer, isFalse);
+      expect(backend.events, isEmpty);
+    });
+  }
+
+  for (final status in ['covered', 'read_only']) {
+    testWidgets('enter_text leaves a $status field untouched', (tester) async {
+      final backend = await _pump(
+          tester,
+          {
+            '_c': 'TextField',
+            '_i': 1,
+            'value': 'Original',
+            'read_only': status == 'read_only',
+            'on_change': true,
+            'on_submit': true,
+          },
+          overlay: status == 'covered' ? const ModalBarrier() : null);
+      final result = await _run(
+          tester,
+          _driver().act([
+            {
+              'action': 'enter_text',
+              'target': {'id': 1},
+              'text': 'Changed',
+              'submit': true,
+            }
+          ]));
+      expect((result['steps'] as List).single['status'], status);
+      final editable = tester.widget<EditableText>(find.byType(EditableText));
+      expect(editable.controller.text, 'Original');
+      expect(editable.focusNode.hasFocus, isFalse);
+      expect(backend.events, isEmpty);
+    });
+  }
+
+  testWidgets('a dependent tap waits for the guest to update', (tester) async {
+    final backend = await _pump(tester, _form());
+    final batch = _driver().act([
+      {
+        'action': 'tap',
+        'target': {'text': 'Add'}
+      },
+      {
+        'action': 'tap',
+        'target': {'text': 'Continue'}
+      },
+    ]);
+    await tester.pump(const Duration(milliseconds: 50));
+    await tester.pump();
+    await tester.pump(const Duration(milliseconds: 200));
+    expect(backend.events.where((e) => e.$2 == 'click'), hasLength(1));
+    backend.updateControl(6, {'content': 'Continue', 'disabled': false},
+        python: false, notify: true);
+    final result = await _run(tester, batch);
+    expect((result['steps'] as List).map((s) => s['status']), ['ok', 'ok']);
+    expect(
+        backend.events.where((e) => e.$2 == 'click').map((e) => e.$1), [3, 6]);
+  });
+
+  testWidgets('a missing dependent target times out and stops the batch',
+      (tester) async {
+    final backend = await _pump(tester, _form());
+    final result = await _run(
+        tester,
+        _driver().act([
+          {
+            'action': 'tap',
+            'target': {'text': 'Add'}
+          },
+          {
+            'action': 'tap',
+            'target': {'text': 'Count: 99'}
+          },
+          {
+            'action': 'tap',
+            'target': {'text': 'Add'}
+          },
+        ], targetTimeout: const Duration(milliseconds: 100)));
+    final steps = result['steps'] as List;
+    expect(steps.map((s) => s['status']), ['ok', 'not_found']);
+    expect(steps.last['candidates'].first['text'], 'Count: 0');
+    expect(backend.events.where((e) => e.$2 == 'click'), hasLength(1));
   });
 
   testWidgets('text drawn without its own control is listed as a label',

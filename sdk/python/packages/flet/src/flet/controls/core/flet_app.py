@@ -255,8 +255,7 @@ class FletApp(LayoutControl):
         Lists the controls the embedded app shows right now.
 
         For a host that lets someone (for example an AI agent) see and use the
-        embedded app without a screenshot. Use [`act()`][(c).act] to tap and
-        type.
+        embedded app without a screenshot. Use :meth:`act` to tap and type.
 
         Only controls a person can see or use are listed: text, inputs, and
         controls with event handlers, a `key` or a tooltip. Layout controls
@@ -268,18 +267,18 @@ class FletApp(LayoutControl):
 
         Returns:
             A dict with `status` (`"ok"` or `"error"`), `width` and `height`
-            (the embedded page's size in logical pixels), `controls` and
-            `truncated`. Each control has `id`, `type`, `key`, `text` (its
-            label or the first `Text` in it), `value` (a field's text or a
-            checkbox's state; never a password), `tooltip`, `disabled`,
-            `events` (its `on_*` handlers, without the prefix), `rect`
-            (`[x, y, width, height]` of its visible part, in the embedded
-            page's logical pixels), `covered` (something such as a dialog is
-            on top of its centre) and `layer` (`"dialog"` for dialogs, sheets
-            and snack bars). Keys without a value are left out. Text drawn by
-            a control without a `Text` control of its own, such as a
-            navigation bar's labels, is listed with `type` `"label"` and `in`,
-            the id of the control around it.
+                (the embedded page's size in logical pixels), `controls` and
+                `truncated`. Each control has `id`, `type`, `key`, `text` (its
+                label or the first `Text` in it), `value` (a field's text or a
+                checkbox's state; never a password), `tooltip`, `disabled`,
+                `events` (its `on_*` handlers, without the prefix), `rect`
+                (`[x, y, width, height]` of its visible part, in the embedded
+                page's logical pixels), `covered` (something such as a dialog is
+                on top of its centre) and `layer` (`"dialog"` for dialogs, sheets
+                and snack bars). Keys without a value are left out. Text drawn by
+                a control without a `Text` control of its own, such as a
+                navigation bar's labels, is listed with `type` `"label"` and `in`,
+                the id of the control around it.
         """
         return await self._invoke_method("describe", arguments={"max_items": max_items})
 
@@ -303,32 +302,40 @@ class FletApp(LayoutControl):
           embedded page's logical pixels. For games and drawing.
         - `{"action": "wait", "ms": 500}`.
 
-        A target picks a control the way [`describe()`][(c).describe]
+        A target picks a control the way :meth:`describe`
         reports it: `{"key": "email"}`, `{"text": "Save"}` (exact, then
         case-insensitive containing), `{"tooltip": "Delete"}`,
         `{"type": "Checkbox"}` or `{"id": 42}`, with an optional `"index"`
         among the matches. Dialogs come first, so with one open,
         `{"text": "OK"}` is its button.
 
-        A tap on a control that is disabled or covered (by a dialog, say)
-        fails instead of tapping whatever is on top. Steps stop at the first
-        failure.
+        A disabled or covered target fails the step. Coordinate taps also fail
+        if the host covers the point. Read-only fields reject text entry.
+        After the first step, a missing target can appear in a later frame
+        while the embedded app processes the preceding action. Steps stop
+        at the first failure.
 
         Args:
             steps: The steps, run in order.
             pointer: `"touch"` or `"mouse"`. Mouse also sends hover events.
             idle_ms: After the last step, wait until the app sent no UI
                 update for this long, so the result shows the app's reaction.
-            timeout_ms: Stop waiting after this long.
+            timeout_ms: Maximum time to wait for each missing target after the
+                first step, and separately for the final idle period, in
+                milliseconds.
 
         Returns:
             A dict with `status` (`"idle"`, `"timeout"` or `"error"`, from
-            the wait after the steps; `error` holds the message) and `steps`:
-            one result per step that ran, with `action`, `status` (`"ok"`,
-            `"not_found"`, `"covered"`, `"disabled"`, `"not_a_text_field"` or
-            `"error"`), the `target` used, the tap `point` and, when nothing
-            matched, a few `candidates`.
+                the wait after the steps; `error` holds the message) and `steps`:
+                one result per step that ran, with `action`, `status` (`"ok"`,
+                `"not_found"`, `"covered"`, `"disabled"`, `"read_only"`,
+                `"not_a_text_field"` or `"error"`), the `target` used, the tap
+                `point` and, when nothing matched, a few `candidates`.
         """
+        # A step can wait up to 10 seconds, or wait for a target and then
+        # long-press it. Allow for every step before the separate idle wait.
+        timeout_seconds = max(timeout_ms, 0) / 1000
+        step_budget = max(10, timeout_seconds + 1)
         return await self._invoke_method(
             "act",
             arguments={
@@ -337,5 +344,5 @@ class FletApp(LayoutControl):
                 "idle_ms": idle_ms,
                 "timeout_ms": timeout_ms,
             },
-            timeout=timeout_ms / 1000 + 30,
+            timeout=timeout_seconds + max(30, len(steps) * step_budget + 5),
         )

@@ -112,11 +112,12 @@ class AppDriver {
   ///
   /// [pointer] is `touch` or `mouse`. Returns `steps`, one result per step
   /// that ran: `status` (`ok`, `not_found`, `covered`, `disabled`,
-  /// `not_a_text_field` or `error`), the tap `point`, the `target` that was
+  /// `read_only`, `not_a_text_field` or `error`), the tap `point`, the `target` that was
   /// used and, when nothing matched, `candidates`.
   Future<Map<String, dynamic>> act(
     List steps, {
     String pointer = "touch",
+    Duration targetTimeout = const Duration(seconds: 5),
   }) async {
     final kind =
         pointer == "mouse" ? PointerDeviceKind.mouse : PointerDeviceKind.touch;
@@ -126,7 +127,11 @@ class AppDriver {
           raw is Map ? Map<String, dynamic>.from(raw) : <String, dynamic>{};
       Map<String, dynamic> result;
       try {
-        result = await _runStep(step, kind);
+        result = await _runStep(
+          step,
+          kind,
+          results.isEmpty ? Duration.zero : targetTimeout,
+        );
       } catch (e) {
         result = {"status": "error", "error": e.toString()};
       }
@@ -140,6 +145,7 @@ class AppDriver {
   Future<Map<String, dynamic>> _runStep(
     Map<String, dynamic> step,
     PointerDeviceKind kind,
+    Duration targetTimeout,
   ) async {
     final action = step["action"];
     switch (action) {
@@ -165,7 +171,14 @@ class AppDriver {
                 "x${box.size.height.round()}).",
           };
         }
-        await _tap(box.localToGlobal(point), kind);
+        final global = box.localToGlobal(point);
+        if (!_hits(box, global, guest: box)) {
+          return {
+            "status": "covered",
+            "point": [x, y]
+          };
+        }
+        await _tap(global, kind);
         return {
           "status": "ok",
           "point": [x, y],
@@ -173,19 +186,24 @@ class AppDriver {
       case "tap":
       case "long_press":
       case "enter_text":
-        final found = _find(step["target"]);
+        var found = _find(step["target"]);
+        if (found.failure?["status"] == "not_found" &&
+            targetTimeout > Duration.zero) {
+          found = await _waitForTarget(step["target"], found, targetTimeout);
+        }
         if (found.item == null) return found.failure!;
         final item = found.item!;
         if (item.disabled) {
           return {"status": "disabled", "target": item.summary()};
         }
+        final local = item.rect.center;
+        final guest = _rootBox!;
+        final global = guest.localToGlobal(local);
+        if (!_hits(item.hitBox, global, guest: guest)) {
+          return {"status": "covered", "target": item.summary()};
+        }
         if (action == "enter_text") {
           return _enterText(item, step);
-        }
-        final local = item.rect.center;
-        final global = _rootBox!.localToGlobal(local);
-        if (!_hits(item.hitBox, global)) {
-          return {"status": "covered", "target": item.summary()};
         }
         await _tap(
           global,
@@ -212,9 +230,11 @@ class AppDriver {
     if (editable == null) {
       return {"status": "not_a_text_field", "target": item.summary()};
     }
+    if (editable.widget.readOnly) {
+      return {"status": "read_only", "target": item.summary()};
+    }
     final text = (step["text"] ?? "").toString();
     editable.requestKeyboard();
-    await _frame();
     editable.userUpdateTextEditingValue(
       TextEditingValue(
         text: text,
@@ -357,17 +377,37 @@ class AppDriver {
       // hit-testable itself: it's covered when its control is.
       hitBox: control == null ? aroundBox ?? r : r,
     );
-    item.covered =
-        !_hits(item.hitBox, rootBox.localToGlobal(rect.center), view);
+    item.covered = !_hits(item.hitBox, rootBox.localToGlobal(rect.center),
+        guest: rootBox, view: view);
     return item;
   }
 
-  bool _hits(RenderBox box, Offset global, [_View? view]) {
-    view ??= _viewOf(box);
-    if (view == null) return true;
+  bool _hits(RenderBox box, Offset global,
+      {required RenderBox guest, _View? view}) {
+    view ??= _viewOf(guest);
+    if (view == null) return false;
     final result = HitTestResult();
     RendererBinding.instance.hitTestInView(result, global, view.id);
-    return result.path.any((entry) => entry.target == box);
+    if (!result.path.any((entry) => entry.target == box)) return false;
+    // A translucent host overlay can receive the same pointer as the guest.
+    // Every render target must belong to the guest or be one of its ancestors.
+    for (final entry in result.path) {
+      final target = entry.target;
+      if (target is RenderObject &&
+          !_inSubtree(target, guest) &&
+          !_inSubtree(guest, target)) {
+        return false;
+      }
+    }
+    return true;
+  }
+
+  bool _inSubtree(RenderObject node, RenderObject ancestor) {
+    RenderObject? current = node;
+    while (current != null && current.depth > ancestor.depth) {
+      current = current.parent;
+    }
+    return current == ancestor;
   }
 
   _FoundItem _find(dynamic target) {
@@ -426,6 +466,30 @@ class AppDriver {
       });
     }
     return _FoundItem(matches[index]);
+  }
+
+  // A previous step's Python handler can add the target after the next frame.
+  // Inspect frames the guest actually renders, even if the first arrives late.
+  Future<_FoundItem> _waitForTarget(
+      dynamic target, _FoundItem last, Duration timeout) {
+    final result = Completer<_FoundItem>();
+    final timer = Timer(timeout, () => result.complete(last));
+    void afterFrame(Duration _) {
+      if (result.isCompleted) return;
+      try {
+        if (root.mounted) last = _find(target);
+        if (root.mounted && last.failure?["status"] == "not_found") {
+          SchedulerBinding.instance.addPostFrameCallback(afterFrame);
+        } else {
+          result.complete(last);
+        }
+      } catch (error, stack) {
+        result.completeError(error, stack);
+      }
+    }
+
+    SchedulerBinding.instance.addPostFrameCallback(afterFrame);
+    return result.future.whenComplete(timer.cancel);
   }
 
   List<Map<String, dynamic>> _candidates(List<_Item> items, Map target) {

@@ -81,15 +81,17 @@ class _FletAppControlState extends State<FletAppControl> {
         if (app == null || backend == null) {
           return {"status": "error", "error": "The embedded app isn't running."};
         }
+        final timeoutMs = parseInt(args["timeout_ms"], 5000)!;
         final result = await AppDriver(app).act(
             args["steps"] is List ? args["steps"] : const [],
-            pointer: args["pointer"] == "mouse" ? "mouse" : "touch");
+            pointer: args["pointer"] == "mouse" ? "mouse" : "touch",
+            targetTimeout: Duration(milliseconds: timeoutMs));
         // Then wait for the app to react: the handlers run in Python and
         // their UI updates arrive afterwards. A tap that changes nothing
         // counts as idle too.
         final idle = await backend.waitIdle(
             idleMs: parseInt(args["idle_ms"], 500)!,
-            timeoutMs: parseInt(args["timeout_ms"], 5000)!,
+            timeoutMs: timeoutMs,
             requireUpdate: false);
         return {
           "status": idle["status"],
