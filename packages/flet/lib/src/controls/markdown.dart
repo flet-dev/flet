@@ -104,7 +104,8 @@ class MarkdownControl extends StatelessWidget {
         onTapText: () => control.triggerEvent("tap_text"),
         onTapLink: (String text, String? href, String title) {
           if (autoFollowLinks && href != null) {
-            openWebBrowser(Url(href, autoFollowLinksTarget));
+            openWebBrowser(Url(href, autoFollowLinksTarget),
+                embedded: control.backend.isEmbedded);
           }
           control.triggerEvent("tap_link", href);
         });

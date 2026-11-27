@@ -16,6 +16,10 @@ String getAssetsDir() {
   return "";
 }
 
+String getStoragePrefix() {
+  return "";
+}
+
 String? getWebAppBaseUrl() => null;
 
 bool isPyodideMode() {

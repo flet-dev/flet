@@ -661,3 +661,31 @@ def test_prepare_dialog_does_not_store_callbacks_in_serialized_fields():
 
     assert encoded["on_dismiss"] is True
     assert "_internals" not in encoded
+
+
+def test_use_dialog_rejects_component_dialog():
+    """A dialog returned from an @ft.component can't be opened: fail loudly."""
+    page, _ = create_page()
+
+    @ft.component
+    def ConfirmDialog():
+        return ft.AlertDialog(title=ft.Text("Delete?"))
+
+    def body():
+        ft.use_dialog(ConfirmDialog())
+
+    component = Component(fn=body, args=(), kwargs={})
+    with pytest.raises(TypeError, match=r"component ConfirmDialog\(\)"):
+        render_component(component, page)
+    assert page._dialogs.controls == []
+
+
+def test_use_dialog_rejects_non_dialog_control():
+    page, _ = create_page()
+
+    def body():
+        ft.use_dialog(ft.Container())
+
+    component = Component(fn=body, args=(), kwargs={})
+    with pytest.raises(TypeError, match="got Container"):
+        render_component(component, page)

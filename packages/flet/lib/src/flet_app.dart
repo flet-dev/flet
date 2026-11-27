@@ -33,6 +33,11 @@ class FletApp extends StatefulWidget {
   final Tester? tester;
   final bool multiView;
 
+  /// SharedPreferences key prefix for this app; see
+  /// [FletBackend.storagePrefix]. `null` means the default: from the page
+  /// for a top-level app, isolated for an embedded one.
+  final String? storagePrefix;
+
   /// Optional escape hatch for embedders that bring their own transport
   /// (e.g. `serious_python`'s in-process FFI bridge). When set, this builder
   /// is invoked from [FletBackend.connect] in place of the URL-scheme
@@ -68,6 +73,7 @@ class FletApp extends StatefulWidget {
       this.forcePyodide,
       this.tester,
       this.multiView = false,
+      this.storagePrefix,
       this.channelBuilder,
       this.dataChannelFactory,
       this.onBackendCreated});
@@ -107,6 +113,7 @@ class _FletAppState extends State<FletApp> {
             multiView: widget.multiView,
             channelBuilder: widget.channelBuilder,
             dataChannelFactory: widget.dataChannelFactory,
+            storagePrefix: widget.storagePrefix,
             parentFletBackend:
                 Provider.of<FletBackend?>(context, listen: false));
         widget.onBackendCreated?.call(created);

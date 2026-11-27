@@ -113,3 +113,23 @@ def test_media_padding_change_produces_a_property_patch():
     ops = _property_patch(app, media_padding=ft.Padding.only(top=59))
     assert ops, "changing media_padding must reach the client"
     assert ops[0][2] == "media_padding"
+
+
+def test_storage_prefix_is_encoded_for_the_client():
+    encoder = configure_encode_object_for_msgpack(BaseControl)
+    encoded = encoder(ft.FletApp(url="dartbridge://", storage_prefix="app.42."))
+    assert encoded["storage_prefix"] == "app.42."
+
+
+def test_empty_storage_prefix_is_sent_not_dropped():
+    # `""` (share the host's keys) must reach the client as `""`: dropping it
+    # would turn it into `None`, which isolates the embedded app instead.
+    encoder = configure_encode_object_for_msgpack(BaseControl)
+    encoded = encoder(ft.FletApp(url="dartbridge://", storage_prefix=""))
+    assert encoded["storage_prefix"] == ""
+
+
+def test_storage_prefix_defaults_to_none():
+    encoder = configure_encode_object_for_msgpack(BaseControl)
+    encoded = encoder(ft.FletApp(url="dartbridge://"))
+    assert encoded.get("storage_prefix") is None

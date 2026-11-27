@@ -1,5 +1,5 @@
 import 'package:collection/collection.dart';
-import 'package:data_table_2/data_table_2.dart';
+import '../data_table_2/data_table_2.dart';
 
 ColumnSize? parseColumnSize(String? size, [ColumnSize? defValue]) {
   if (size == null) {
