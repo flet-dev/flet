@@ -251,6 +251,49 @@ class TestNestedValues:
 
         assert len(_patch_ops(session)) == 1
 
+    def test_partial_selection_patch_preserves_pending_python_change(self, session):
+        field = ft.TextField(selection=ft.TextSelection(0, 0))
+        _mount(session, field)
+        original = field.selection
+        original.base_offset = 2
+        original.extent_offset = 3
+
+        session.apply_patch(field._i, {"selection": {"extent_offset": 5}})
+
+        assert field.selection == ft.TextSelection(2, 5)
+        assert original == ft.TextSelection(2, 3)
+        (message,) = _patch_ops(session)
+        (operation,) = message.body.patch[1:]
+        assert operation[2:] == ["base_offset", 2]
+        assert _patch_ops(session) == []
+
+    def test_partial_patch_of_reassigned_selection_sends_python_value(self, session):
+        field = ft.TextField(selection=ft.TextSelection(0, 0))
+        _mount(session, field)
+        field.selection = ft.TextSelection(2, 3)
+
+        session.apply_patch(field._i, {"selection": {"extent_offset": 5}})
+
+        (message,) = _patch_ops(session)
+        (operation,) = message.body.patch[1:]
+        assert operation[2:] == ["selection", ft.TextSelection(2, 5)]
+        assert _patch_ops(session) == []
+
+    def test_partial_padding_patch_preserves_pending_python_change(self, session):
+        _mount(session)
+        padding = session.page.media.padding
+        padding.left = 2
+        padding.top = 3
+
+        session.apply_page_patch({"media": {"padding": {"top": 5}}})
+
+        assert session.page.media.padding.left == 2
+        assert session.page.media.padding.top == 5
+        (message,) = _patch_ops(session)
+        (operation,) = message.body.patch[1:]
+        assert operation[2:] == ["left", 2]
+        assert _patch_ops(session) == []
+
     def test_text_style_is_not_client_writable(self, session):
         """A style shared by many controls can't be changed by a client."""
         text = ft.Text("x", style=SHARED_STYLE)

@@ -5,7 +5,7 @@ title: "Extensions: properties sent from Dart must be declared"
 # Extensions: properties sent from Dart must be declared
 
 :::note
-This guide is accurate as of Flet 1.1.3. Later releases might add new APIs or
+This guide is accurate as of Flet 1.2.0. Later releases might add new APIs or
 additional migration paths.
 
 The [breaking changes and deprecations index](../index.md) lists the guides created for each release.
@@ -13,7 +13,7 @@ The [breaking changes and deprecations index](../index.md) lists the guides crea
 
 ## Summary
 
-Starting with Flet 1.1.3, Python applies a property that a control's Dart code sends
+Starting with Flet 1.2.0, Python applies a property that a control's Dart code sends
 with `updateProperties()` only if the control lists it in the `client_writable` argument
 of its `@ft.control` decorator. Every other property sent by a client is ignored.
 
@@ -77,7 +77,7 @@ class Rating(ft.LayoutControl):
     on_change: Optional[ft.ControlEventHandler["Rating"]] = None
 ```
 
-An extension using these arguments needs `flet>=1.1.3`.
+An extension using these arguments needs `flet>=1.2.0`.
 
 Controls written only in Python need no change.
 
@@ -122,9 +122,9 @@ app. See [Security](../../../publish/web/dynamic-website/index.md#security).
 
 ## Timeline
 
-- Changed in: `1.1.3`
+- Changed in: `1.2.0`
 
 ## References
 
 - Docs: [Sending values to Python](../../../extend/user-extensions.md#sending-values-to-python)
-- Release notes: [Flet 1.1.3](../../release-notes.md)
+- Release notes: [Flet 1.2.0](../../release-notes.md)

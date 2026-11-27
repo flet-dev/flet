@@ -66,7 +66,7 @@ def patch_dataclass(obj: Any, patch: dict):
     _values = getattr(obj, "_values", None)
     _prop_defaults = getattr(type(obj), "_prop_defaults", None)
 
-    def _write(field_name: str, value: Any) -> None:
+    def _write(field_name: str, value: Any, *, partial: bool = False) -> None:
         if (
             _values is not None
             and _prop_defaults is not None
@@ -79,6 +79,13 @@ def patch_dataclass(obj: Any, patch: dict):
                 _values[field_name] = value
         else:
             object.__setattr__(obj, field_name, value)
+        if not partial:
+            # The client already has this field. Other pending Python edits still
+            # belong in the next outgoing patch.
+            for log_name in ("_dirty", "__changes"):
+                changes = getattr(obj, log_name, None)
+                if changes:
+                    changes.pop(field_name, None)
 
     field_names = {f.name for f in dataclasses.fields(cls)}
 
@@ -108,10 +115,11 @@ def patch_dataclass(obj: Any, patch: dict):
                     elif current_value is not None:
                         patched_copy = _copy_value(current_value)
                         patch_dataclass(patched_copy, nested_patch)
-                        _write(field_name, patched_copy)
-                        # The client already has this value: nothing to diff.
+                        _write(field_name, patched_copy, partial=True)
+                        # Keep an unsent Python replacement distinct from its
+                        # snapshot. An in-place edit follows the copy's change log.
                         prev_classes = getattr(obj, "__prev_classes", {})
-                        if field_name in prev_classes:
+                        if prev_classes.get(field_name) is current_value:
                             prev_classes[field_name] = patched_copy
                     elif not _is_control(actual_type):
                         _write(
@@ -227,8 +235,7 @@ def _copy_value(value: Any) -> Any:
     """
     Returns a copy of a value object that can be changed without affecting `value`.
 
-    The copy gets its own property storage and diff snapshots, and has no pending
-    changes.
+    The copy gets its own property storage, pending changes, and diff snapshots.
 
     Args:
         value: The `@value` or plain dataclass instance to copy.
@@ -237,15 +244,17 @@ def _copy_value(value: Any) -> Any:
         A shallow copy of `value`.
     """
     copied = copy.copy(value)
-    state = vars(copied)
-    if "_values" in state:
-        state["_values"] = dict(state["_values"])
-        state["_dirty"] = {}
-    if "__changes" in state:
-        state["__changes"] = {}
-    for snapshot in ("__prev_lists", "__prev_dicts", "__prev_classes"):
-        if snapshot in state:
-            state[snapshot] = dict(state[snapshot])
+    state = getattr(copied, "__dict__", {})
+    for name in (
+        "_values",
+        "_dirty",
+        "__changes",
+        "__prev_lists",
+        "__prev_dicts",
+        "__prev_classes",
+    ):
+        if name in state:
+            state[name] = dict(state[name])
     return copied
 
 

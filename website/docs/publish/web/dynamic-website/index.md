@@ -249,7 +249,7 @@ client, such as `TextField.value`.
 
 Flet stops a client from doing much of what a real client can't. For example, it can't
 change `Control.data`, private attributes or `Page.client_ip`, or click a hidden or
-disabled button. See [the list of rules](../../../updates/breaking-changes/v1-1-3/client-writable-properties.md#other-changes).
+disabled button. See [the list of rules](../../../updates/breaking-changes/v1-2-0/client-writable-properties.md#other-changes).
 
 These rules don't cover what your app means by a value, so:
 

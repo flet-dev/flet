@@ -1,4 +1,4 @@
-## 1.1.3
+## 1.2.0
 
 * Python ignores a property sent by `Control.updateProperties()` unless the Python control lists it in `client_writable` of `@ft.control` by @ndonkoHenri.
 
