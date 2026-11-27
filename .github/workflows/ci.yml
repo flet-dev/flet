@@ -3,7 +3,7 @@ name: Build & Publish
 on:
   push:
     branches:
-      - '**'
+      - main
     tags:
       - 'v[0-9]+.[0-9]+.[0-9]+'
       - 'v[0-9]+.[0-9]+.[0-9]+.dev[0-9]+'
@@ -12,10 +12,15 @@ on:
       - '.github/scripts/**'
       - 'client/**'
       - 'sdk/python/packages/**'
+      - '!sdk/python/packages/*/integration_tests/**'
+      - 'sdk/python/packages/flet/integration_tests/assets/**'
       - 'sdk/python/templates/**'
+      - 'website/static/img/**'
+      - 'website/static/fonts/**'
+      - 'website/src/fonts/**'
+      - 'website/src/data/*-icon-codepoints.json'
       - 'packages/flet/**'
-      - 'tools/crocodocs/**'
-      - 'website/**'
+      - 'media/logo/**'
       - '.fvmrc'
   pull_request:
     paths:
@@ -23,10 +28,15 @@ on:
       - '.github/scripts/**'
       - 'client/**'
       - 'sdk/python/packages/**'
+      - '!sdk/python/packages/*/integration_tests/**'
+      - 'sdk/python/packages/flet/integration_tests/assets/**'
       - 'sdk/python/templates/**'
+      - 'website/static/img/**'
+      - 'website/static/fonts/**'
+      - 'website/src/fonts/**'
+      - 'website/src/data/*-icon-codepoints.json'
       - 'packages/flet/**'
-      - 'tools/crocodocs/**'
-      - 'website/**'
+      - 'media/logo/**'
       - '.fvmrc'
   workflow_dispatch:
 
@@ -129,35 +139,11 @@ jobs:
   # Docs build
   # ==========
   docs_build:
-    name: Build Documentation
-    runs-on: ubuntu-latest
+    name: Build Docs
+    if: ${{ github.event_name != 'pull_request' }}
     permissions:
       contents: read
-    steps:
-      - name: Checkout repository
-        uses: actions/checkout@df4cb1c069e1874edd31b4311f1884172cec0e10 # v6.0.3
-        with:
-          persist-credentials: false
-
-      - name: Setup Node.js
-        uses: actions/setup-node@48b55a011bda9f5d6aeb4c2d9c7362e8dae4041e # v6.4.0
-        with:
-          node-version: 24
-          package-manager-cache: ${{ !startsWith(github.ref, 'refs/tags/') }}
-
-      - name: Enable Corepack
-        run: corepack enable
-
-      - name: Setup uv
-        uses: astral-sh/setup-uv@fac544c07dec837d0ccb6301d7b5580bf5edae39 # v8.2.0
-        with:
-          enable-cache: ${{ !startsWith(github.ref, 'refs/tags/') }}
-
-      - name: Build website
-        run: |
-          cd website
-          yarn install
-          yarn build
+    uses: ./.github/workflows/docs.yml
 
   # ===========================
   # Build Flet Flutter package
@@ -590,9 +576,23 @@ jobs:
               'deb mirror+file:/etc/apt/mirrors-debian-security.txt buster/updates main' \
               > /etc/apt/sources.list
             echo 'Acquire::Check-Valid-Until "false";' > /etc/apt/apt.conf.d/99no-check-valid-until
+            # Archive mirrors sometimes serve a truncated file or stall
+            # mid-download. Give up on a stalled download after 30 s and retry
+            # failed files, so apt moves on to the next mirror instead of
+            # hanging until the step times out.
+            printf '%s\n' 'Acquire::Retries "5";' 'Acquire::http::Timeout "30";' \
+              > /etc/apt/apt.conf.d/99retries
           fi
-          apt-get update
-          apt-get install -y git curl unzip xz-utils zip ca-certificates jq tzdata
+          retry() {
+            for attempt in 1 2 3; do
+              "$@" && return
+              echo "::warning::'$*' failed (attempt $attempt of 3)"
+              sleep 10
+            done
+            return 1
+          }
+          retry apt-get update
+          retry apt-get install -y git curl unzip xz-utils zip ca-certificates jq tzdata
 
       - name: Checkout repository
         uses: actions/checkout@df4cb1c069e1874edd31b4311f1884172cec0e10 # v6.0.3
@@ -632,10 +632,19 @@ jobs:
           if [[ -f /etc/apt/sources.list ]]; then
             sed -i.bak '/apt.postgresql.org/s/^/# /' /etc/apt/sources.list
           fi
-          apt-get update --allow-releaseinfo-change
+          # A flaky mirror can fail a run of hundreds of downloads; try again.
+          retry() {
+            for attempt in 1 2 3; do
+              "$@" && return
+              echo "::warning::'$*' failed (attempt $attempt of 3)"
+              sleep 10
+            done
+            return 1
+          }
+          retry apt-get update --allow-releaseinfo-change
           LINUX_DEPS="$(uv run --project sdk/python/packages/flet-cli flet --version --json | jq -r '.linux_dependencies | join(" ")')"
           read -r -a linux_deps <<< "$LINUX_DEPS"
-          apt-get install -y "${linux_deps[@]}"
+          retry apt-get install -y "${linux_deps[@]}"
 
       - name: Build Flutter Linux clients
         shell: bash

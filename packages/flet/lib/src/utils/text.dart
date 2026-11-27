@@ -84,7 +84,9 @@ TextSpan? parseInlineSpan(Control span, ThemeData theme,
             sendControlEvent != null
         ? (TapGestureRecognizer()
           ..onTap = () {
-            if (url != null) openWebBrowser(url);
+            if (url != null) {
+              openWebBrowser(url, embedded: span.backend.isEmbedded);
+            }
             // Spans rendered outside a widget tree (e.g. on a Canvas) have no
             // context to resolve the target service from; only `url` works there.
             if (context != null) {

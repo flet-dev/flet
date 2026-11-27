@@ -3,6 +3,7 @@ from dataclasses import dataclass
 from typing import Any, Callable, Generic, TypeVar
 
 from flet.components.hooks.hook import Hook
+from flet.components.observable import capture_dependencies
 from flet.components.utils import current_component, shallow_compare_args
 
 MemoValueT = TypeVar("MemoValueT")
@@ -33,7 +34,9 @@ def use_memo(
         dependencies: Values the computation depends on. If absent, the value is
             recomputed on every render. If empty, it is computed only on the first
             render. Otherwise, it is recomputed only when one of the dependencies
-            has changed.
+            has changed. A list or dict field of an :func:`~flet.observable`
+            counts as changed when it is changed in place, such as by
+            `items.append(x)`.
 
     Returns:
         The memoized value. The same object is returned on every render until the
@@ -61,8 +64,9 @@ def use_memo(
         hook.value = calculate_value()
         return hook.value  # type: ignore[return-value]
 
-    if hook.prev_deps is None or not shallow_compare_args(hook.prev_deps, dependencies):
+    deps = capture_dependencies(dependencies)
+    if hook.prev_deps is None or not shallow_compare_args(hook.prev_deps, deps):
         hook.value = calculate_value()
-        hook.prev_deps = list(dependencies)
+    hook.prev_deps = deps
 
     return hook.value  # type: ignore[return-value]

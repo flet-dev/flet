@@ -178,13 +178,15 @@ BarChartRodData parseBarChartRodData(
   var bgToY = rod.getDouble("bg_to_y");
   var bgcolor = rod.getColor("bgcolor", context);
   var backgroundGradient = rod.getGradient("background_gradient", theme);
+  var color = rod.getColor("color", context);
+  var gradient = rod.getGradient("gradient", theme);
 
   return BarChartRodData(
     fromY: rod.getDouble("from_y"),
     toY: rod.getDouble("to_y", 0)!,
     width: rod.getDouble("width"),
-    color: rod.getColor("color", context),
-    gradient: rod.getGradient("gradient", theme),
+    color: color,
+    gradient: gradient,
     borderRadius: rod.getBorderRadius("border_radius"),
     borderSide: rod.getBorderSide(
       "border_side",
@@ -201,6 +203,7 @@ BarChartRodData parseBarChartRodData(
       color: bgcolor,
       gradient: backgroundGradient,
     ),
+    label: parseBarChartRodLabel(rod.get("label"), theme),
     rodStackItems: rod
         .children("stack_items")
         .map(
@@ -208,34 +211,56 @@ BarChartRodData parseBarChartRodData(
             rodStackItem,
             interactiveChart,
             context,
+            // Same fallback BarChartRodData uses for a rod without a color.
+            defaultColor: color ?? gradient?.colors.first ?? Colors.cyan,
           ),
         )
         .toList(),
   );
 }
 
+BarChartRodLabel parseBarChartRodLabel(dynamic value, ThemeData theme) {
+  if (value == null) return const BarChartRodLabel(show: false);
+  if (value is String) return BarChartRodLabel(text: value);
+  return BarChartRodLabel(
+    text: value["text"] ?? "",
+    style: parseTextStyle(value["text_style"], theme),
+    angle: parseDouble(value["angle"], 0)!,
+    offset: parseOffset(value["offset"], const Offset(0, 8))!,
+  );
+}
+
 BarChartRodStackItem parseBarChartRodStackItem(
   Control rodStackItem,
   bool interactiveChart,
-  BuildContext context,
-) {
+  BuildContext context, {
+  Color? defaultColor,
+}) {
   rodStackItem.notifyParent = true;
+  final theme = Theme.of(context);
   return BarChartRodStackItem(
-    rodStackItem.getDouble("from_y")!,
+    rodStackItem.getDouble("from_y", 0)!,
     rodStackItem.getDouble("to_y", 0)!,
-    rodStackItem.getColor("color", context)!,
+    // A gradient, when set, takes precedence over the color.
+    rodStackItem.getColor("color", context, defaultColor),
+    gradient: rodStackItem.getGradient("gradient", theme),
+    label: rodStackItem.getString("label"),
+    labelStyle: rodStackItem.getTextStyle("label_style", theme),
     borderSide: rodStackItem.getBorderSide(
       "border_side",
-      Theme.of(context),
+      theme,
       defaultValue: BorderSide.none,
     )!,
   );
 }
 
-BarChartAlignment? parseBarChartAlignment(String? value,
-    [BarChartAlignment? defaultValue]) {
+BarChartAlignment? parseBarChartAlignment(
+  String? value, [
+  BarChartAlignment? defaultValue,
+]) {
   if (value == null) return defaultValue;
   return BarChartAlignment.values.firstWhereOrNull(
-          (e) => e.name.toLowerCase() == value.toLowerCase()) ??
+        (e) => e.name.toLowerCase() == value.toLowerCase(),
+      ) ??
       defaultValue;
 }

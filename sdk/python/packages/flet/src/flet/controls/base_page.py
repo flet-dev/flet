@@ -1,5 +1,6 @@
 import logging
 import weakref
+from collections.abc import Callable
 from dataclasses import dataclass, field
 from typing import (
     TYPE_CHECKING,
@@ -14,12 +15,14 @@ from flet.controls.base_control import BaseControl, control
 from flet.controls.box import BoxDecoration
 from flet.controls.control import Control
 from flet.controls.control_event import (
+    ControlEvent,
     Event,
     EventHandler,
 )
 from flet.controls.core.view import View
 from flet.controls.dialog_control import DialogControl
 from flet.controls.duration import DurationValue
+from flet.controls.geometry import Size
 from flet.controls.keys import ScrollKey
 from flet.controls.material.app_bar import AppBar
 from flet.controls.material.bottom_app_bar import BottomAppBar
@@ -835,6 +838,36 @@ class BasePage(AdaptiveControl):
     @services.setter
     def services(self, value: list[Service]):
         self.__root_view().services = value
+
+    # size listeners (used by `use_page_size()`)
+    def _add_resize_listener(
+        self, listener: Callable[[Size], None]
+    ) -> Callable[[], None]:
+        """
+        Call `listener` with the new size whenever the page is resized, whether
+        or not :attr:`on_resize` is set.
+
+        Returns:
+            A function that removes the listener.
+        """
+
+        listeners: list[Callable[[Size], None]] = vars(self).setdefault(
+            "_resize_listeners", []
+        )
+        listeners.append(listener)
+
+        def remove():
+            if listener in listeners:
+                listeners.remove(listener)
+
+        return remove
+
+    def before_event(self, e: ControlEvent):
+        if isinstance(e, PageResizeEvent):
+            size = Size(e.width, e.height)
+            for listener in list(vars(self).get("_resize_listeners", ())):
+                listener(size)
+        return super().before_event(e)
 
     # Magic methods
     def __contains__(self, item: Control) -> bool:

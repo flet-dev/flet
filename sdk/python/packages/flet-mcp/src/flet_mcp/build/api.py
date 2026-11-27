@@ -14,6 +14,8 @@ from typing import Any
 
 import griffe
 
+from flet_mcp.build.exports import build_exports
+
 logger = logging.getLogger(__name__)
 
 DEFAULT_PACKAGES: list[str] = [
@@ -28,12 +30,15 @@ DEFAULT_PACKAGES: list[str] = [
     "flet_datatable2",
     "flet_flashlight",
     "flet_geolocator",
+    "flet_local_auth",
     "flet_lottie",
     "flet_map",
+    "flet_notifications",
     "flet_permission_handler",
     "flet_rive",
     "flet_secure_storage",
     "flet_shadcn_ui",
+    "flet_spinkit",
     "flet_video",
     "flet_webview",
 ]
@@ -544,7 +549,8 @@ def _extract_cli_help() -> dict[str, Any]:
 
 
 def _inject_icon_enums(enums: list[dict]) -> None:
-    """Add Icons and CupertinoIcons as large_enum entries from JSON files."""
+    """Add Icons, CupertinoIcons and flet-shadcn-ui's LucideIcons as large_enum
+    entries from their JSON files."""
     try:
         import importlib.resources
 
@@ -596,6 +602,30 @@ def _inject_icon_enums(enums: list[dict]) -> None:
         )
     except Exception as exc:
         logger.warning("Could not inject icon enums: %s", exc)
+
+    # flet-shadcn-ui's Lucide icons (`shad.LucideIcons.MAIL`), the same way.
+    try:
+        import importlib.resources
+
+        lucide_path = importlib.resources.files("flet_shadcn_ui") / "lucide_icons.json"
+        with importlib.resources.as_file(lucide_path) as p:
+            lucide_icons: dict[str, int] = json.loads(p.read_text("utf-8"))
+        enums.append(
+            {
+                "name": "LucideIcons",
+                "module": "flet_shadcn_ui.lucide_icons",
+                "package": "flet-shadcn-ui",
+                "docstring": "Lucide icon constants, the icon set of flet-shadcn-ui.",
+                "kind": "large_enum",
+                "members": [
+                    {"name": name, "value": str(val)}
+                    for name, val in lucide_icons.items()
+                ],
+            }
+        )
+        logger.info("Injected LucideIcons (%d members)", len(lucide_icons))
+    except Exception as exc:
+        logger.warning("Could not inject LucideIcons: %s", exc)
 
 
 # ---------------------------------------------------------------------------
@@ -649,6 +679,9 @@ def build_api(output_path: Path, packages: list[str] | None = None) -> dict[str,
 
     cli_help = _extract_cli_help()
 
+    # Pass 4: exactly what each module exports, introspected (exports.py).
+    exports = build_exports(packages)
+
     api_data: dict[str, Any] = {
         "controls": controls,
         "events": events,
@@ -656,6 +689,7 @@ def build_api(output_path: Path, packages: list[str] | None = None) -> dict[str,
         "enums": enums,
         "functions": functions,
         "cli": cli_help,
+        "exports": exports,
     }
 
     output_path.parent.mkdir(parents=True, exist_ok=True)
@@ -668,6 +702,7 @@ def build_api(output_path: Path, packages: list[str] | None = None) -> dict[str,
         "enums": len(enums),
         "functions": len(functions),
         "cli_commands": len(cli_help),
+        "export_modules": len(exports),
     }
     logger.info("API build stats: %s", stats)
     return stats

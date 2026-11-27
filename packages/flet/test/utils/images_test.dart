@@ -157,4 +157,22 @@ void main() {
           "/assets/images/a.png");
     });
   });
+
+  group("isSvgSource", () {
+    test("URLs: the path decides, not a query or fragment", () {
+      expect(isSvgSource("https://x.dev/icon.svg", isUrl: true), isTrue);
+      expect(isSvgSource("https://x.dev/icon.svg?v=2", isUrl: true), isTrue);
+      expect(isSvgSource("https://x.dev/icon.svg#top", isUrl: true), isTrue);
+      expect(isSvgSource("/assets/icon.svg?v=abc", isUrl: true), isTrue);
+      expect(isSvgSource("https://x.dev/ICON.SVG", isUrl: true), isTrue);
+      expect(isSvgSource("https://x.dev/icon.png?f=a.svg", isUrl: true), isFalse);
+      expect(isSvgSource("https://x.dev/icon.png", isUrl: true), isFalse);
+    });
+
+    test("files", () {
+      expect(isSvgSource("/tmp/logo.svg"), isTrue);
+      expect(isSvgSource("C:\\app\\Logo.SVG"), isTrue);
+      expect(isSvgSource("/tmp/logo.png"), isFalse);
+    });
+  });
 }

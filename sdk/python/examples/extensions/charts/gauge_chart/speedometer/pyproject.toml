@@ -1,0 +1,27 @@
+[project]
+name = "charts-gauge-chart-speedometer"
+version = "1.0.0"
+description = "Speedometer gauge with colored zones, labeled ticks, a limit marker and a needle driven by a slider."
+requires-python = ">=3.10"
+keywords = ["charts", "gauge-chart", "speedometer", "flet"]
+authors = [{ name = "Flet team", email = "hello@flet.dev" }]
+dependencies = ["flet", "flet-charts"]
+
+[dependency-groups]
+dev = ["flet-cli", "flet-desktop", "flet-web"]
+
+[tool.flet.gallery]
+categories = ["Charts/GaugeChart"]
+
+[tool.flet.metadata]
+title = "Speedometer"
+docs_intro = "A progress ring and a needle follow the slider, over a ring of speed zones, labeled ticks and a marker at the speed limit."
+controls = ["SafeArea", "Column", "Stack", "GaugeChart", "Text", "Slider"]
+layout_pattern = "single-chart"
+complexity = "basic"
+features = ["chart visualization", "live updates"]
+
+[tool.flet]
+org = "dev.flet"
+company = "Flet"
+copyright = "Copyright (C) 2023-2026 by Flet"

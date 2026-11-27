@@ -2,7 +2,7 @@
 
 MCP (Model Context Protocol) server that gives LLM agents access to Flet examples, documentation, and API reference.
 
-> **[Try Flet online in Flet Studio](https://studio.flet.dev)**
+> **[Try Flet online in Flet Studio](https://studio.flet.dev/?utm_source=pypi&utm_medium=readme&utm_campaign=flet-mcp)**
 >
 > Explore runnable Flet examples and edit their Python code in your browser. No installation required. Write your own Python code or get help from the AI agent.
 
@@ -47,6 +47,31 @@ Running the build from elsewhere (a downstream project's venv that only
 installs core `flet`) works too, but the resulting `api.json` will be missing
 controls from every extension package not installed in that venv — the
 indexer logs a "Failed to load" line per missing package and skips it.
+
+## Checking app code against the API
+
+Besides the Griffe reference, the build imports each package and records in
+`api.json` exactly what code can use from it: every public name a module
+exports, the keyword arguments each class takes and, for each enum, its members.
+A code checker can then catch mistakes that only fail when that code runs, such
+as `ft.PieChart` (it's `flet_charts.PieChart`), `ft.TextField(helper_text=...)`
+(the parameter is `helper`) or `field.error_text = ...` (Flet keeps the
+attribute and shows nothing):
+
+```python
+from flet_mcp.api_store import shared_api_store
+
+api = shared_api_store()  # the MCP server's store: api.json is loaded once
+api.module_exports("flet")  # every name `ft.X` can use
+api.modules_exporting("PieChart")  # ["flet_charts"]
+api.init_params("flet", "TextField")  # keyword arguments it takes
+api.settable_attrs("flet", "TextField")  # attributes that do something when set
+api.module_enum_members("flet", "Colors")  # Icons and CupertinoIcons included
+```
+
+Each returns `None` when it can't tell (an `api.json` built before these were
+recorded, a class that takes `**kwargs`), so a checker stays quiet rather than
+flag valid code.
 
 ## Usage
 
@@ -126,10 +151,12 @@ import asyncio
 from fastmcp import Client
 from flet_mcp import mcp
 
+
 async def main():
     async with Client(mcp) as client:
         api = (await client.call_tool("get_api", {"name": "TextField"})).data
         print(api["kind"], api["package"], len(api["properties"]))
+
 
 asyncio.run(main())
 ```
@@ -155,7 +182,7 @@ focus on the hallucination-reduction starter set: **API** and **icons** are on;
 | `get_enum` | Get enum members |
 | `search_enum_members` | Search large enums (Icons, CupertinoIcons) |
 | `enum_has_member` | Check if an enum value exists |
-| `find_icon` | Search Material and Cupertino icons by keyword |
+| `find_icon` | Search Material and Cupertino icons by keyword; `family="lucide"` searches flet-shadcn-ui's Lucide icons |
 | `search_examples` | Search example projects by keyword |
 | `get_example` | Get full source code for an example |
 | `search_docs` | Search documentation by keyword |

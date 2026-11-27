@@ -32,7 +32,8 @@ class UrlLauncherService extends FletService {
                 _parseWebViewConfiguration(args["web_view_configuration"]),
             browserConfiguration:
                 _parseBrowserConfiguration(args["browser_configuration"]),
-            webOnlyWindowName: args["web_only_window_name"]);
+            webOnlyWindowName: args["web_only_window_name"],
+            embedded: control.backend.isEmbedded);
       case "can_launch_url":
         return canLaunchUrl(Uri.parse(parseUrl(args["url"]!)!.url));
       case "close_in_app_web_view":

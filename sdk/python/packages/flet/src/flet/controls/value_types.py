@@ -156,7 +156,7 @@ class Value(metaclass=_ValueMeta):
     """
 
 
-@dataclass_transform()
+@dataclass_transform(field_specifiers=(dataclasses.field,))
 def value(
     cls: Optional[type] = None,
     **dataclass_kwargs: Any,

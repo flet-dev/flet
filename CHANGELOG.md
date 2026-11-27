@@ -4,11 +4,95 @@
 
 * A control's Python class must list the fields its Dart code sends with `updateProperties()` in `client_writable` of `@ft.control`, as Python ignores any other property a client sends. All controls that ship with Flet do; extensions whose Dart code sends values to Python need the same one-line change. See the [Extensions: properties sent from Dart must be declared](/docs/updates/breaking-changes/v1-2-0/client-writable-properties) guide by @ndonkoHenri.
 
+### New features
+
+* flet-charts: Add `GaugeChart` for progress gauges, activity rings and speedometers, built from progress and zone rings with ticks, labels, markers and needle or circle pointers. See [GaugeChart](https://flet.dev/docs/controls/charts/gaugechart) ([#7066](https://github.com/flet-dev/flet/pull/7066)) by @ndonkoHenri.
+* Add `ft.use_page_size()`, a hook that returns the page size and re-renders the component when it changes; `ft.use_page_size(lambda size: size.width < 600)` re-renders only when the selected value changes, for layouts that switch at a breakpoint. Any number of components can use it, and `page.on_resize` stays free for the app ([#7115](https://github.com/flet-dev/flet/pull/7115)) by @FeodorFitsner.
+
+### Improvements
+
+* A `Dropdown` without a `width` fills a non-wrapping `Column` or a `View` with `horizontal_alignment=STRETCH`. It also fills a vertical `ListView` ([#7115](https://github.com/flet-dev/flet/pull/7115)) by @FeodorFitsner.
+* flet-charts: Add fl_chart features to the existing charts ([#7066](https://github.com/flet-dev/flet/pull/7066)) by @ndonkoHenri:
+  * `PieChart`: `PieChartSection.corner_radius` and stacked `PieChartSection.segments`.
+  * `BarChart`: `BarChartRod.label`, and `label`, `label_style` and `gradient` on `BarChartRodStackItem`.
+  * `LineChart`: `LineChartData.gradient_area`.
+  * Axes: `ChartAxis.label_alignment`.
+  * Events: `ChartEventType` values for secondary-button (right-click) taps and long presses.
+
+### Deprecations
+
+* The layout properties `View` inherited from `LayoutControl`, such as `width`, `left`, `align`, `margin` and the transforms, are deprecated: a view always fills its page, so they never had an effect. `View` keeps `on_size_change` and `size_change_interval` ([#6363](https://github.com/flet-dev/flet/issues/6363), [#7088](https://github.com/flet-dev/flet/pull/7088)) by @ndonkoHenri.
+
 ### Bug fixes
 
 * Fix a connected client being able to change control state that only Python should set, and to trigger events a real client can't send by @ndonkoHenri.
 * Fix a disabled `Checkbox`, `Switch`, `CupertinoCheckbox` or `CupertinoSwitch` toggling when its `ListTile` with `toggle_inputs=True` is clicked by @ndonkoHenri.
 * Fix `SnackBarAction` showing despite `visible=False` by @ndonkoHenri.
+* Fix `View.on_size_change` never firing; it reports the size of the view's body, the area between the app bar and the bottom navigation bar ([#6363](https://github.com/flet-dev/flet/issues/6363), [#7088](https://github.com/flet-dev/flet/pull/7088)) by @ndonkoHenri.
+
+## 1.1.4
+
+### Improvements
+
+* Give each app embedded with `FletApp` its own `SharedPreferences` space: its keys go under a prefix set with the new `FletApp.storage_prefix`, by default one derived from its URL, so an embedded app and its host, or two embedded apps, keep separate keys; `get_keys()` and `clear()` only see the embedded app's own. `""` shares the host's keys as before. On web, a page can set the top-level app's prefix with `window.flet.storagePrefix`, and an embedded app's prefix nests under its host's. Data an embedded app saved before this change stays under the old, unprefixed keys ([#7135](https://github.com/flet-dev/flet/pull/7135)) by @FeodorFitsner.
+* flet-secure-storage: an app embedded with `FletApp` gets its own `SecureStorage` space too, under the same prefix as its `SharedPreferences`: `get()`, `set()`, `contains_key()` and `remove()` use its own keys, `get_all()` lists only those, without the prefix, and `clear()` removes only those ([#7137](https://github.com/flet-dev/flet/pull/7137)) by @FeodorFitsner.
+* On web, don't open `javascript:`, `blob:` or `filesystem:` URLs from `UrlLauncher.launch_url()`, `UrlLauncher.open_window()`, a control's `url` or a `Markdown` link, and don't load them in a `WebView`; a scheme hidden behind leading spaces or tabs (`" java\tscript:"`) is recognized as the browser would. An `open_window()` `title` starting with `_` no longer acts as a browser target such as `_self` ([#7136](https://github.com/flet-dev/flet/pull/7136)) by @FeodorFitsner.
+* An app embedded with `FletApp` opens a `_self`, `_parent` or `_top` link in a new tab instead of replacing its host's page, and on web its `WebView` (flet-webview) shows the page in a sandboxed frame, apart from the host's page ([#7136](https://github.com/flet-dev/flet/pull/7136)) by @FeodorFitsner.
+* Give each app embedded with `FletApp` its own `SharedPreferences` space: its keys go under a prefix set with the new `FletApp.storage_prefix`, by default one derived from its URL, so an embedded app and its host, or two embedded apps, keep separate keys; `get_keys()` and `clear()` only see the embedded app's own. `""` shares the host's keys as before. On web, a page can set the top-level app's prefix with `window.flet.storagePrefix`, and an embedded app's prefix nests under its host's. Data an embedded app saved before this change stays under the old, unprefixed keys ([#7135](https://github.com/flet-dev/flet/pull/7135)) by @FeodorFitsner.
+
+## 1.1.3
+
+### Documentation
+
+* flet-notifications: Document how to update a notification after an inline reply on Android, and fix the "Action buttons and replies" example's notification staying stuck with a spinner after a reply ([#7058](https://github.com/flet-dev/flet/discussions/7058), [#7060](https://github.com/flet-dev/flet/pull/7060)) by @ItsRenjiii.
+* Document how to show a loading screen while `main()` starts up, and where unhandled exceptions from handlers, tasks and threads end up, in the Async apps guide ([#7100](https://github.com/flet-dev/flet/issues/7100), [#7101](https://github.com/flet-dev/flet/pull/7101)) by @daneeller.
+
+### Improvements
+
+* flet-mcp knows flet-shadcn-ui's Lucide icons: `get_enum("LucideIcons")` and `enum_has_member()` list them, and `find_icon(query, family="lucide")` searches them (a search without a family still returns only Material and Cupertino icons). Its API reference now also covers flet-local-auth, flet-notifications and flet-spinkit ([#7118](https://github.com/flet-dev/flet/pull/7118)) by @FeodorFitsner.
+* flet-mcp records what each Flet module exports, the keyword arguments each class takes and each enum's members, introspected from the installed packages, so code checkers can catch `ft.PieChart` (it's `flet_charts.PieChart`), `ft.TextField(helper_text=...)` or `ft.Colors.BLACK45` before the code runs: `ApiStore.module_exports()`, `modules_exporting()`, `init_params()`, `settable_attrs()` and `module_enum_members()`, on the store the MCP server shares through `shared_api_store()` ([#7118](https://github.com/flet-dev/flet/pull/7118)) by @FeodorFitsner.
+* Load a `DataTable` of thousands of rows without freezing the app: a table with 100 or more rows of one height builds only the rows near the visible part of the page, so a 3,470-row table loads in one 0.2 s frame instead of a 4 s freeze, and selecting a row no longer freezes the app for a second; set the new `build_rows_on_demand` to `False` to build every row ([#7076](https://github.com/flet-dev/flet/pull/7076)) by @FeodorFitsner.
+* Load a `DataTable2` (`flet-datatable2`) of thousands of rows without freezing the app: a table with 100 or more rows builds only the rows near the visible part of the table, so a 3,470-row table loads in one 0.3 s frame instead of a 2.5 s freeze. `flet-datatable2` now carries its own copy of `data_table_2`'s `DataTable2` to do this, and honors `build_rows_on_demand` too ([#7076](https://github.com/flet-dev/flet/pull/7076)) by @FeodorFitsner.
+* Scroll long pages and tables smoothly: every control used to get its own compositing layer, so a page of thousands of controls, like a `DataTable` with thousands of rows, stuttered on every scroll frame; controls now add a layer only while their `opacity` is between 0 and 1, and a `DataTable` no longer repaints all of its rows as it scrolls ([#7076](https://github.com/flet-dev/flet/pull/7076)) by @FeodorFitsner.
+* Look up icons by name, as with enum members: `ft.Icons["HOME"]`, `ft.CupertinoIcons["ADD"]` and `LucideIcons[...]`, and check a name with `"HOME" in ft.Icons` ([#7114](https://github.com/flet-dev/flet/pull/7114)) by @FeodorFitsner.
+* `ft.use_dialog()` raises a `TypeError` for a dialog returned from an `@ft.component` function, or any other control that isn't a dialog, instead of silently never opening it ([#7114](https://github.com/flet-dev/flet/pull/7114)) by @FeodorFitsner.
+* Start web apps that use `flet-rive` 1 MB lighter when they don't show a `Rive` control: the Rive engine (`rive_native.wasm`) now loads when the first `Rive` control loads its file, instead of at startup ([#7057](https://github.com/flet-dev/flet/pull/7057)) by @FeodorFitsner.
+
+### Bug fixes
+
+* Fix `DataTable.horizontal_lines` having no effect ([#7076](https://github.com/flet-dev/flet/pull/7076)) by @FeodorFitsner.
+* Fix event handlers and `use_effect` setups that call an async function from a plain function, such as `on_click=lambda: save(item)` or `ft.use_effect(lambda: load(item_id), [item_id])`, silently doing nothing: Flet now awaits the coroutine they return as it would an `async def` handler or setup, and runs a returned generator as a generator handler. A task or future they start is still left to run on its own ([#7117](https://github.com/flet-dev/flet/pull/7117)) by @FeodorFitsner.
+* Fix `ft.use_memo()` and `ft.use_effect()` ignoring in-place changes to an observable's list or dict passed as a dependency, such as `state.items.append(x)`: the value is now recomputed and the effect re-run ([#7114](https://github.com/flet-dev/flet/pull/7114)) by @FeodorFitsner.
+* Fix SVG images drawing blank when their URL has a query string or fragment, such as a cache-busting `icon.svg?v=2`: `Image` now recognizes an SVG by the URL's path, in any letter case ([#7057](https://github.com/flet-dev/flet/pull/7057)) by @FeodorFitsner.
+* Fix `Text` with `spans` ignoring `overflow`: a rich text cut off by `max_lines` now ends in an ellipsis with `overflow=TextOverflow.ELLIPSIS`, as plain text does, instead of being clipped at a word ([#7057](https://github.com/flet-dev/flet/pull/7057)) by @FeodorFitsner.
+* Fix mypy inferring `type[Never]` for classes decorated with `@control("Name")`: the overload that takes arguments now accepts only a string `dart_widget_name` ([#7085](https://github.com/flet-dev/flet/issues/7085), [#7087](https://github.com/flet-dev/flet/pull/7087)) by @joaoaracheski.
+* Fix type checkers ignoring `dataclasses.field()` arguments such as `init=False` on `@control` and `@value` classes, by declaring `dataclasses.field` as a field specifier ([#6377](https://github.com/flet-dev/flet/issues/6377), [#7084](https://github.com/flet-dev/flet/pull/7084)) by @joaoaracheski.
+* Fix macOS apps playing the system alert sound for key presses that no control handles, such as keys handled only by `page.on_keyboard_event` ([#1282](https://github.com/flet-dev/flet/issues/1282), [#7092](https://github.com/flet-dev/flet/pull/7092)) by @ndonkoHenri.
+* Fix `page.window.resizable = False` locking the window at 1280×720 instead of the set `width` and `height` on Linux ([#1375](https://github.com/flet-dev/flet/issues/1375), [#7062](https://github.com/flet-dev/flet/pull/7062)) by @ndonkoHenri.
+* Fix `page.window.min_width`, `min_height`, `max_width` and `max_height` not limiting the window size on Linux ([#1735](https://github.com/flet-dev/flet/issues/1735), [#7063](https://github.com/flet-dev/flet/pull/7063)) by @ndonkoHenri.
+* Fix `page.window` size limits that are cleared by setting them to `None`, or a `max_width` or `max_height` set without the other, being ignored on Windows and Linux ([#7063](https://github.com/flet-dev/flet/pull/7063)) by @ndonkoHenri.
+* flet-charts: Fix `BarChart` failing to render when a `BarChartRodStackItem` has no `from_y` or `color`; an item without a color now uses its rod's color ([#7064](https://github.com/flet-dev/flet/pull/7064)) by @ndonkoHenri.
+* flet-charts: Fix `LineChart` jumping instead of animating when the points of a data series change ([flet-charts#8](https://github.com/flet-dev/flet-charts/issues/8), [#7064](https://github.com/flet-dev/flet/pull/7064)) by @ndonkoHenri.
+* Fix cancelled client method calls keeping their responses in memory for the rest of the session, and client method calls made after the session closed waiting forever instead of failing with "Session closed" ([#7065](https://github.com/flet-dev/flet/pull/7065)) by @remote-controlled-man.
+* Fix `flet pack` failing on Windows with `ValueError: binary mode doesn't take an encoding argument`, and leaving a client that signing tools reject, since the desktop client is signed (1.1.0) ([#7067](https://github.com/flet-dev/flet/pull/7067)) by @ndonkoHenri.
+* Fix apps packaged with plain `pyinstaller` downloading the Flet desktop client on their first start, or after a rebuild, and failing to build on macOS, and apps made with `flet pack` from a `FLET_VIEW_PATH` that holds the client itself downloading it too ([#7053](https://github.com/flet-dev/flet/issues/7053), [#7068](https://github.com/flet-dev/flet/pull/7068)) by @ndonkoHenri.
+* Fix Linux apps made with `flet pack` or `pyinstaller` that run on a newer distro than they were built on downloading the light client instead of using the bundled one, and switching from the full to the light client ([#7068](https://github.com/flet-dev/flet/pull/7068)) by @ndonkoHenri.
+* Fix `flet build windows` replacing the images in a supplied `.ico` app icon with ones resampled from its largest image; the file is now copied into the app unchanged, and is used over a `.png` of the same name ([#6007](https://github.com/flet-dev/flet/issues/6007), [#7074](https://github.com/flet-dev/flet/pull/7074)) by @arthur-tacca.
+* Fix `ShakeDetector` never calling `on_shake` with its default settings, and missing most shakes because it sampled the accelerometer only every 200 ms; on desktop it now raises `FletUnsupportedPlatformException`, like `Accelerometer` ([#6456](https://github.com/flet-dev/flet/issues/6456), [#7093](https://github.com/flet-dev/flet/pull/7093)) by @ndonkoHenri.
+* Fix `@ft.observable` not refreshing the UI after in-place changes such as `+=` on a list field ([#6293](https://github.com/flet-dev/flet/issues/6293), [#7086](https://github.com/flet-dev/flet/pull/7086)) by @joaoaracheski.
+* Fix web apps freezing every session while sending a large page update, such as a theme switch on a page with a big `DataTable`: the transport no longer turns each message into debug text when debug logging is off ([#7097](https://github.com/flet-dev/flet/pull/7097)) by @joaoaracheski.
+* Fix web apps serving FastAPI's `/docs`, `/redoc` and `/openapi.json`, which took those routes from the app and loaded Swagger UI and ReDoc from a CDN even with `no_cdn=True`: apps made by `flet_web.fastapi.app()` and `flet run --web` no longer register them ([#7111](https://github.com/flet-dev/flet/issues/7111), [#7112](https://github.com/flet-dev/flet/pull/7112)) by @joaoaracheski.
+* Fix component state changed from a worker thread, such as by `set_state` in a `page.run_thread()` handler, not reaching the screen until something else woke the app, stopping all later updates of the session when asyncio debug mode is on, and possibly racing a re-render of the component ([#7108](https://github.com/flet-dev/flet/issues/7108), [#7113](https://github.com/flet-dev/flet/pull/7113)) by @joaoaracheski.
+* Fix `flet --version --json` printing invalid JSON when `flet-cli` is not installed yet: the on-the-fly install's progress messages now go to stderr ([flet-build-action#2](https://github.com/flet-dev/flet-build-action/issues/2), [#7099](https://github.com/flet-dev/flet/pull/7099)) by @ndonkoHenri.
+* Fix changes to a control's `theme`, `dark_theme` or `theme_mode`, such as toggling `Container.theme_mode`, not being applied until its parent was updated ([#7090](https://github.com/flet-dev/flet/pull/7090)) by @ndonkoHenri.
+* Fix `Screenshot.capture()` failing with a type error when `pixel_ratio` is a whole number, such as `pixel_ratio=1` ([#7090](https://github.com/flet-dev/flet/pull/7090)) by @ndonkoHenri.
+* Fix `animate_size` on `Container` and `Image` and emit `on_animation_end` with `e.data == "size"` when their size animation completes ([#5766](https://github.com/flet-dev/flet/issues/5766), [#7091](https://github.com/flet-dev/flet/pull/7091)) by @ndonkoHenri.
+* Report the final size for each frame in `on_size_change` when a control is laid out multiple times in that frame ([#7091](https://github.com/flet-dev/flet/pull/7091)) by @ndonkoHenri.
+* Fix controls failing to render when an animation property such as `animate`, `animate_opacity` or `animate_scale` is `False`: `False` now turns that animation off ([#7091](https://github.com/flet-dev/flet/pull/7091)) by @ndonkoHenri.
+* Fix controls with a `badge` losing their state when the badge's `label_visible` changes or the badge is replaced, such as an open `PopupMenuButton` never calling `on_cancel` or `on_select` ([#7080](https://github.com/flet-dev/flet/issues/7080), [#7089](https://github.com/flet-dev/flet/pull/7089)) by @ndonkoHenri.
+* Fix the `badge` of a control positioned with `left`/`top`/`right`/`bottom` in a `Stack` being drawn away from the control ([#7089](https://github.com/flet-dev/flet/pull/7089)) by @ndonkoHenri.
+* Fix a generator `main()` not showing the updates made before a `yield`, such as a splash screen, until the blocking work after it finished ([#7100](https://github.com/flet-dev/flet/issues/7100), [#7106](https://github.com/flet-dev/flet/pull/7106)) by @ndonkoHenri.
+* Fix unhandled exceptions in `page.run_thread()` functions and PubSub subscribers not being reported, and in `page.run_task()` tasks being logged under `concurrent.futures` even when awaited; all are now logged on the `flet` logger, a task's only when nothing awaits it ([#7109](https://github.com/flet-dev/flet/issues/7109), [#7110](https://github.com/flet-dev/flet/pull/7110)) by @ndonkoHenri.
 
 ## 1.1.2
 
@@ -34,6 +118,7 @@
 * Fix `flet build`, `flet debug` and `flet publish` installing the newest `flet` and Flet extensions instead of the Flet CLI's version when the app's dependencies allow a range such as `flet>=1.0.5`; a requirement that excludes the CLI's version now stops the command ([#6894](https://github.com/flet-dev/flet/issues/6894), [#7047](https://github.com/flet-dev/flet/pull/7047)) by @ndonkoHenri.
 * Fix `flet publish` not installing `[tool.flet.web].dependencies` when the app's code is in a subdirectory set by `[tool.flet.app].path` ([#7047](https://github.com/flet-dev/flet/pull/7047)) by @ndonkoHenri.
 * Fix `flet build web` apps not loading the fonts of Dart packages, so the icons of `flet-shadcn-ui` drew as empty boxes ([#7050](https://github.com/flet-dev/flet/pull/7050)) by @FeodorFitsner.
+
 ## 1.1.0
 
 ### Breaking changes
