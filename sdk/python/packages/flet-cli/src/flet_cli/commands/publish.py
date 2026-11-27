@@ -90,15 +90,17 @@ class Command(BaseCommand):
             type=str,
             default=None,
             help="Full name of the application. "
-            "This is used in PWA metadata and may appear in the install prompt",
+            "This is used in PWA metadata and may appear in the install prompt. "
+            "Defaults to [tool.flet].product, then the project name",
         )
         parser.add_argument(
             "--app-short-name",
             dest="app_short_name",
             type=str,
             default=None,
-            help="A shorter version of the application name, "
-            "often used in homescreen icons or install prompts",
+            help="Short name of the application, shown under its icon when "
+            "installed, e.g. on the iOS Home Screen. Defaults to "
+            "[tool.flet.web].pwa_short_name, then the application name",
         )
         parser.add_argument(
             "--app-description",
@@ -338,15 +340,18 @@ class Command(BaseCommand):
             .strip()
         )
 
-        app_short_name = (
-            options.app_short_name
+        app_name = (
+            options.app_name
+            or get_pyproject("tool.flet.product")
             or get_pyproject("project.name")
             or get_pyproject("tool.poetry.name")
             or project_dir.name
         )
 
-        app_name = (
-            options.app_name or get_pyproject("tool.flet.product") or app_short_name
+        app_short_name = (
+            options.app_short_name
+            or get_pyproject("tool.flet.web.pwa_short_name")
+            or app_name
         )
 
         app_description = (
