@@ -319,9 +319,9 @@ when the PWA is installed, for example on the iOS Home Screen.
 
 #### Resolution order
 
-1. [`--pwa-short-name`](../../../cli/flet-build.md#--pwa-short-name)
+1. [`--pwa-short-name`](../../../cli/flet-build.md#--pwa-short-name) with `flet build web`, [`--app-short-name`](../../../cli/flet-publish.md#--app-short-name) with `flet publish`
 2. `[tool.flet.web].pwa_short_name`
-3. the product name ([`--product`](../../../cli/flet-build.md#--product) / `[tool.flet].product`)
+3. the product name: [`--product`](../../../cli/flet-build.md#--product) with `flet build web`, [`--app-name`](../../../cli/flet-publish.md#--app-name) with `flet publish`, or `[tool.flet].product`, then the project name
 
 #### Example
 

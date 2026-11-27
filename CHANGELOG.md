@@ -1,3 +1,9 @@
+## 1.1.5
+
+### Bug fixes
+
+* Fix `flet publish` ignoring `[tool.flet.web].pwa_short_name`: the web app manifest's `short_name` now follows the same order as `flet build web`, `--app-short-name`, then `pwa_short_name`, then the product name ([#7140](https://github.com/flet-dev/flet/issues/7140), [#7142](https://github.com/flet-dev/flet/pull/7142)) by @ZYZ666-RGB.
+
 ## 1.1.4
 
 ### Improvements
