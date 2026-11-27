@@ -21,6 +21,13 @@ class DataTable2(ft.DataTable):
         and :attr:`flet.DataTable.data_row_max_height`
         properties present in the parent :class:`~flet.DataTable`.
         Use :attr:`data_row_height` instead.
+
+    Note:
+        A table with 100 or more rows builds only the rows near the visible part
+        of the table, so it loads and scrolls quickly with thousands of rows. This
+        needs the heading row fixed (:attr:`fixed_top_rows` of 1 or more, the
+        default). Set :attr:`~flet.DataTable.build_rows_on_demand` to `False` to
+        build every row, so that controls in rows out of view have a widget too.
     """
 
     columns: list[Union[DataColumn2, ft.DataColumn]]

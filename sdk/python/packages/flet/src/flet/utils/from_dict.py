@@ -98,28 +98,41 @@ def convert_value(field_type: type, value: Any) -> Any:
     origin = get_origin(field_type)
     args = get_args(field_type)
 
-    # `Union[A, B]` and `A | B` have different origins
-    is_union = origin is Union or origin is types.UnionType
+    if origin is Union or origin is types.UnionType:
+        nullable = type(None) in args
+        if nullable:
+            if value is None:
+                return None
+            args = tuple(arg for arg in args if arg is not type(None))
+            # Optional[T] uses T's normal conversion, including enum validation.
+            if len(args) == 1:
+                return convert_value(args[0], value)
 
-    # Optional[T], T | None
-    if is_union and type(None) in args:
-        inner_types = tuple(arg for arg in args if arg is not type(None))
-        inner_type = (
-            inner_types[0] if len(inner_types) == 1 else Union[inner_types]  # noqa: UP007
-        )
-        if value is None:
-            return None
-        return convert_value(inner_type, value)
-
-    # Union[SomeEnum, T], SomeEnum | T: the enum member when one has this value,
-    # else the value
-    if is_union:
+        # In KeyboardKey | str, known labels become enum members and
+        # layout-specific labels fall through as strings.
         for arg in args:
             if isinstance(arg, type) and issubclass(arg, Enum):
                 try:
                     return arg(value)
                 except ValueError:
                     pass
+
+        if nullable and isinstance(value, (list, dict)):
+            # The payload shape can identify a union member. For example, a
+            # dict in Offset | str | None carries the fields of an Offset.
+            wire_type = list if isinstance(value, list) else dict
+            candidates = [
+                arg
+                for arg in args
+                if (get_origin(arg) or arg) is wire_type
+                or (wire_type is dict and dataclasses.is_dataclass(arg))
+            ]
+            if len(candidates) == 1:
+                return convert_value(candidates[0], value)
+            # A dict can represent either a dataclass or a mapping. If several
+            # members fit, honor the legacy first non-None member when it fits.
+            if args[0] in candidates:
+                return convert_value(args[0], value)
         return value
 
     # Enum

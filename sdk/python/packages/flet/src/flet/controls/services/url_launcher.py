@@ -81,6 +81,11 @@ class UrlLauncher(Service):
         """
         Opens a web browser or in-app view to a given `url`.
 
+        On web, `javascript:`, `blob:` and `filesystem:` URLs are not opened.
+        In an app embedded in another with [`FletApp`][flet.FletApp], a
+        `"_self"`, `"_parent"` or `"_top"` window name opens a new tab instead,
+        so the embedded app can't replace its host's page.
+
         Args:
             url: The URL to open.
             mode: Preferred launch mode for opening the URL.
@@ -143,9 +148,14 @@ class UrlLauncher(Service):
         """
         Opens a popup browser window in web environments.
 
+        `javascript:`, `blob:` and `filesystem:` URLs are not opened.
+
         Args:
             url: The URL to open in the popup window.
-            title: The popup window title.
+            title: The popup window's name: opening another URL with the same
+                `title` reuses the window. A name starting with `_`, which the
+                browser would read as a target such as `_self`, gets a `flet`
+                prefix, so the popup never replaces the page.
             width: Desired popup width in logical pixels.
             height: Desired popup height in logical pixels.
         """

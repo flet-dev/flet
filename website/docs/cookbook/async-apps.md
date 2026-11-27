@@ -10,9 +10,9 @@ That single loop is also what sends UI updates to the client, which leads to the
 one rule that matters most:
 
 :::warning[Never block the event loop]
-While your handler runs, nothing else does - no other events are dispatched, and
-no updates reach the screen. A blocking call such as `time.sleep()` or
-`requests.get()` freezes the UI for as long as it takes.
+While a handler or `main()` runs, nothing else does - no other events are
+dispatched, and no updates reach the screen. A blocking call such as
+`time.sleep()` or `requests.get()` freezes the UI for as long as it takes.
 
 This applies on every platform, not just the web.
 :::
@@ -84,9 +84,20 @@ work:
 page.on_error = lambda e: print("Page error:", e.data)
 ```
 
-A lambda can still *start* async work. Handlers run on the event loop, so there is
-always a running loop to schedule a task on - the lambda kicks the coroutine off
-instead of awaiting it:
+A lambda can call an async function, too. It returns the coroutine, and Flet
+awaits it as it would an `async def` handler, so the automatic update includes
+what the coroutine changes:
+
+```python
+ft.Button(content="Delete", on_click=lambda: delete_item(item.id))
+```
+
+The same goes for [`use_effect`](../types/useeffect.md): `ft.use_effect(lambda:
+load(item_id), [item_id])` runs `load` as an async setup.
+
+A lambda can also *start* async work without waiting for it. Handlers run on the
+event loop, so there is always a running loop to schedule a task on - the lambda
+kicks the coroutine off instead of awaiting it:
 
 ```python
 ft.Button(content="Reload", on_click=lambda e: asyncio.create_task(reload(e)))
@@ -95,8 +106,8 @@ ft.Button(content="Reload", on_click=lambda e: asyncio.create_task(reload(e)))
 [`page.run_task()`][flet.Page.run_task] is usually the better version of this
 trick. It takes the coroutine function and its arguments rather than a called
 coroutine, keeps a reference to the task so it cannot be garbage-collected
-mid-flight, and reports exceptions through Flet's error handling instead of
-discarding them:
+mid-flight, and logs the traceback on the `flet` logger if the task fails
+while nobody is awaiting its future:
 
 ```python
 ft.Button(content="Reload", on_click=lambda e: page.run_task(reload, e))
@@ -138,9 +149,10 @@ ft.run(main)
 
 ### Yielding for intermediate updates
 
-Updates are sent after a handler finishes. To show progress part-way through, make
-the handler a generator - each `yield` flushes pending updates and gives the loop
-a chance to run:
+Flet updates the page automatically when a handler returns. Changing a property,
+such as `progress.value`, does not send anything by itself, even if the handler
+then awaits something. To show progress part-way through, make the handler a
+generator - each `yield` sends pending updates and gives the loop a chance to run:
 
 ```python
 def handle_click(e):
@@ -152,6 +164,50 @@ def handle_click(e):
 
 The work still runs on the event loop, so keep each chunk short. For heavy chunks,
 offload them instead (see below).
+
+In an `async` handler, call `update()` before an `await` instead. `update()` queues
+the change, and the `await` gives the loop a turn to send it. A handler that calls
+`update()` is not updated automatically when it returns, so call it again for the
+final value:
+
+```python
+async def handle_click(e):
+    status.value = "Loading..."
+    status.update()  # sent while fetch_status() runs
+    status.value = await fetch_status()
+    status.update()
+```
+
+### Showing a first screen at startup
+
+`main()` follows the same rule. If it does slow work, such as loading data or
+building a large UI, nothing reaches the screen until that work is done. To show
+a loading screen first, `yield` before the slow part:
+
+```python
+def main(page: ft.Page):
+    loading = ft.ProgressRing()
+    page.add(loading)
+    yield  # sends the loading screen
+
+    data = load_data()  # slow
+    page.controls.remove(loading)
+    page.add(build_ui(data))
+```
+
+The app does not respond to events while `load_data()` runs. In an async `main()`,
+run the slow work in a thread instead (see [Threading](#threading)): awaiting it
+sends the loading screen and keeps the app responsive:
+
+```python
+async def main(page: ft.Page):
+    loading = ft.ProgressRing()
+    page.add(loading)
+
+    data = await asyncio.to_thread(load_data)
+    page.controls.remove(loading)
+    page.add(build_ui(data))
+```
 
 ## Background tasks
 
@@ -208,9 +264,11 @@ The future keeps the outcome after you await it, so keep a reference to it if yo
 also need to cancel the task or check it later. As with `asyncio` tasks,
 cancelling the coroutine that awaits the future also cancels the task.
 
-If nobody awaits the future, an exception raised by the task is logged, in your
-terminal or in the [console log](../publish/index.md#console-output) of a built
-app, rather than lost.
+If you are already awaiting the future when the task fails, you can catch the
+exception at the `await` without a duplicate log entry from `run_task()`.
+If nobody is awaiting the future when the task fails, Flet immediately logs
+the traceback on the `flet` logger. Awaiting the future later still raises
+the same exception.
 
 ## Threading
 
@@ -231,9 +289,10 @@ async def handle_click(e):
     output.value = response.text
 ```
 
-[`page.run_thread()`][flet.Page.run_thread] does not return a result, but it
-re-establishes the page context inside the thread and runs its callable inline on
-the web, where there are no threads:
+[`page.run_thread()`][flet.Page.run_thread] runs the function with the current
+page context and discards its return value. Flet catches exceptions from the
+function and logs their tracebacks on the `flet` logger. This also applies
+on static websites, where Pyodide runs the function inline.
 
 ```python
 def handle_click(e):
@@ -251,6 +310,40 @@ async def handle_click(e):
 ```
 
 Flet's own shared pool is available as [`page.executor`][flet.Page.executor].
+
+## Exceptions
+
+Where an unhandled exception ends up depends on where it is raised:
+
+| Raised in | What happens |
+|---|---|
+| `main()` or an event handler | Flet logs it with its traceback and shows the error in the app. |
+| A [`page.run_task()`][flet.Page.run_task] coroutine | Awaiting the future raises the exception. If nobody is awaiting it when the task fails, Flet also logs the traceback on the `flet` logger. |
+| `asyncio.to_thread()` or `page.loop.run_in_executor()` | It is raised where the call is awaited, so a handler that awaits it reports it as above. |
+| A [`page.run_thread()`][flet.Page.run_thread] function | Flet catches the exception and logs the traceback on the `flet` logger, including on Pyodide. |
+| A [`threading.Thread`](https://docs.python.org/3/library/threading.html#threading.Thread) you start | It goes to [`threading.excepthook`](https://docs.python.org/3/library/threading.html#threading.excepthook), which prints it to stderr. |
+
+So catch exceptions inside a function you run in your own thread, and handle or
+log them there:
+
+```python
+def poll_device():
+    try:
+        ...
+    except Exception:
+        logging.exception("Polling the device failed")
+```
+
+Logged messages and stderr go to your terminal, or to the
+[console log](../publish/index.md#console-output) of an app built with
+[`flet build`](../cli/flet-build.md). An app packaged with
+[`flet pack`](../publish/using-pyinstaller.md) or PyInstaller as a windowed app -
+the default for `flet pack` unless you pass `--debug-console` - has no console, so
+log to a file to keep them:
+
+```python
+logging.basicConfig(filename="app.log", level=logging.INFO)
+```
 
 ## CPU-bound work
 

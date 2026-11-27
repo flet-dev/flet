@@ -203,6 +203,7 @@ BarChartRodData parseBarChartRodData(
       color: bgcolor,
       gradient: backgroundGradient,
     ),
+    label: parseBarChartRodLabel(rod.get("label"), theme),
     rodStackItems: rod
         .children("stack_items")
         .map(
@@ -218,6 +219,17 @@ BarChartRodData parseBarChartRodData(
   );
 }
 
+BarChartRodLabel parseBarChartRodLabel(dynamic value, ThemeData theme) {
+  if (value == null) return const BarChartRodLabel(show: false);
+  if (value is String) return BarChartRodLabel(text: value);
+  return BarChartRodLabel(
+    text: value["text"] ?? "",
+    style: parseTextStyle(value["text_style"], theme),
+    angle: parseDouble(value["angle"], 0)!,
+    offset: parseOffset(value["offset"], const Offset(0, 8))!,
+  );
+}
+
 BarChartRodStackItem parseBarChartRodStackItem(
   Control rodStackItem,
   bool interactiveChart,
@@ -225,13 +237,18 @@ BarChartRodStackItem parseBarChartRodStackItem(
   Color? defaultColor,
 }) {
   rodStackItem.notifyParent = true;
+  final theme = Theme.of(context);
   return BarChartRodStackItem(
     rodStackItem.getDouble("from_y", 0)!,
     rodStackItem.getDouble("to_y", 0)!,
-    rodStackItem.getColor("color", context, defaultColor)!,
+    // A gradient, when set, takes precedence over the color.
+    rodStackItem.getColor("color", context, defaultColor),
+    gradient: rodStackItem.getGradient("gradient", theme),
+    label: rodStackItem.getString("label"),
+    labelStyle: rodStackItem.getTextStyle("label_style", theme),
     borderSide: rodStackItem.getBorderSide(
       "border_side",
-      Theme.of(context),
+      theme,
       defaultValue: BorderSide.none,
     )!,
   );

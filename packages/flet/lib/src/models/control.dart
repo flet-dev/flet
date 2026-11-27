@@ -67,6 +67,11 @@ class Control extends ChangeNotifier {
   final Map<String, dynamic> properties;
   bool notifyParent = false;
 
+  /// How many times this control has notified of a change, whether to its
+  /// listeners or its parent. Lets a parent tell if a child changed since it
+  /// last looked, even while the child has no widget.
+  int changeCount = 0;
+
   /// Properties whose change also notifies the parent, because the parent
   /// reads them when it builds: `visible` (hidden children are skipped) and
   /// `col` (`ResponsiveRow` sizes its children from it).
@@ -469,6 +474,7 @@ class Control extends ChangeNotifier {
 
   void notify() {
     debugPrint("Notify $type($id)");
+    changeCount++;
     if (notifyParent) {
       _parent?.target?.notify();
     } else {

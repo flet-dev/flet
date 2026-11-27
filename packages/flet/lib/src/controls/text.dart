@@ -9,7 +9,11 @@ import 'base_controls.dart';
 class TextControl extends StatelessWidget {
   final Control control;
 
-  const TextControl({super.key, required this.control});
+  const TextControl({super.key, required this.control}) : _measureOnly = false;
+  const TextControl.forMeasurement({super.key, required this.control})
+      : _measureOnly = true;
+
+  final bool _measureOnly;
 
   @override
   Widget build(BuildContext context) {
@@ -29,9 +33,11 @@ class TextControl extends StatelessWidget {
     List<TextSpan>? spans = parseTextSpans(
       control.children("spans"),
       theme,
-      (Control control, String eventName, [dynamic eventData]) {
-        control.triggerEvent(eventName, eventData);
-      },
+      _measureOnly
+          ? null
+          : (Control control, String eventName, [dynamic eventData]) {
+              control.triggerEvent(eventName, eventData);
+            },
       context,
     );
     var semanticsLabel = control.getString("semantics_label");
@@ -82,7 +88,7 @@ class TextControl extends StatelessWidget {
       control.triggerEvent("tap");
     }
 
-    var textWidget = control.getBool("selectable", false)!
+    var textWidget = !_measureOnly && control.getBool("selectable", false)!
         ? (spans.isNotEmpty)
             ? SelectableText.rich(
                 TextSpan(text: text, style: style, children: spans),
@@ -131,6 +137,7 @@ class TextControl extends StatelessWidget {
                 textAlign: textAlign,
               );
 
+    if (_measureOnly) return LayoutControl.measure(control, textWidget);
     return LayoutControl(control: control, child: textWidget);
   }
 }

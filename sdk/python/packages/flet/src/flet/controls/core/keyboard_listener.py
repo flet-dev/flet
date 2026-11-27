@@ -32,13 +32,13 @@ class KeyDownEvent(Event["KeyboardListener"]):
     such as `"Ü"`.
     """
 
-    physical_key: Union[PhysicalKeyboardKey, int]
+    physical_key: Union[PhysicalKeyboardKey, int, None] = None
     """
     The position of the key that was pressed down on the keyboard, such as
-    :attr:`~flet.PhysicalKeyboardKey.W`, whatever the active layout.
+    :attr:`flet.PhysicalKeyboardKey.W`, whatever the active layout.
 
     A key that has no :class:`~flet.PhysicalKeyboardKey` member is its USB HID
-    usage code.
+    usage code. Older clients that omit the physical key leave this as `None`.
     """
 
 
@@ -59,13 +59,13 @@ class KeyUpEvent(Event["KeyboardListener"]):
     such as `"Ü"`.
     """
 
-    physical_key: Union[PhysicalKeyboardKey, int]
+    physical_key: Union[PhysicalKeyboardKey, int, None] = None
     """
     The position of the key that was released on the keyboard, such as
-    :attr:`~flet.PhysicalKeyboardKey.W`, whatever the active layout.
+    :attr:`flet.PhysicalKeyboardKey.W`, whatever the active layout.
 
     A key that has no :class:`~flet.PhysicalKeyboardKey` member is its USB HID
-    usage code.
+    usage code. Older clients that omit the physical key leave this as `None`.
     """
 
 
@@ -87,13 +87,13 @@ class KeyRepeatEvent(Event["KeyboardListener"]):
     such as `"Ü"`.
     """
 
-    physical_key: Union[PhysicalKeyboardKey, int]
+    physical_key: Union[PhysicalKeyboardKey, int, None] = None
     """
     The position of the key being held down on the keyboard, such as
-    :attr:`~flet.PhysicalKeyboardKey.W`, whatever the active layout.
+    :attr:`flet.PhysicalKeyboardKey.W`, whatever the active layout.
 
     A key that has no :class:`~flet.PhysicalKeyboardKey` member is its USB HID
-    usage code.
+    usage code. Older clients that omit the physical key leave this as `None`.
     """
 
 

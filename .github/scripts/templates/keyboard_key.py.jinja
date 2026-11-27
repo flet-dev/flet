@@ -55,4 +55,4 @@ class PhysicalKeyboardKey(int, Enum):
         return self.name
 
 {% for name, value in physical_keys %}    {{ name }} = {{ value }}
-{% endfor %}
+{% endfor -%}
