@@ -8,6 +8,10 @@ This page links release announcements, changelogs, and migration notes for Flet 
 
 ## Stable releases
 
+### 1.2.x
+
+- 1.2.0: [Changelog](https://github.com/flet-dev/flet/blob/main/CHANGELOG.md#120), [Breaking changes and deprecations](breaking-changes/index.md#released-in-flet-120)
+
 ### 1.1.x
 
 - 1.1.0: [Changelog](https://github.com/flet-dev/flet/blob/main/CHANGELOG.md#110), [Breaking changes and deprecations](breaking-changes/index.md#released-in-flet-110)

@@ -12,6 +12,26 @@
 * Add `WebView` support on Windows (Edge WebView2) and Linux (WebKitGTK), and make its methods and events work on web for same-origin pages and HTML loaded with `load_html()` ([#6530](https://github.com/flet-dev/flet/issues/6530), [#5934](https://github.com/flet-dev/flet/issues/5934), [#7124](https://github.com/flet-dev/flet/pull/7124)) by @ndonkoHenri.
 * `WebView`: changing `url` loads the new URL, and a page that can't be loaded because of its `url` or a certificate error fires `on_web_resource_error` ([#7124](https://github.com/flet-dev/flet/pull/7124)) by @ndonkoHenri.
 * flet-webview: on web, in an app embedded with `FletApp` or on a page that gives the app its own storage space (`window.flet.storagePrefix`), `WebView` pages and HTML loaded with `load_html()` run in a sandboxed frame with an opaque origin, and a `POST` `load_request()` is refused; `javascript:`, `blob:` and `filesystem:` URLs fire `on_web_resource_error`, and `clear_cache()` and `clear_local_storage()` are refused on web ([#7124](https://github.com/flet-dev/flet/pull/7124)) by @FeodorFitsner.
+* flet-charts: Add `GaugeChart` for progress gauges, activity rings and speedometers, built from progress and zone rings with ticks, labels, markers and needle or circle pointers. See [GaugeChart](https://flet.dev/docs/controls/charts/gaugechart) ([#7066](https://github.com/flet-dev/flet/pull/7066)) by @ndonkoHenri.
+* Add `ft.use_page_size()`, a hook that returns the page size and re-renders the component when it changes; `ft.use_page_size(lambda size: size.width < 600)` re-renders only when the selected value changes, for layouts that switch at a breakpoint. Any number of components can use it, and `page.on_resize` stays free for the app ([#7115](https://github.com/flet-dev/flet/pull/7115)) by @FeodorFitsner.
+
+### Improvements
+
+* A `Dropdown` without a `width` fills a non-wrapping `Column` or a `View` with `horizontal_alignment=STRETCH`. It also fills a vertical `ListView` ([#7115](https://github.com/flet-dev/flet/pull/7115)) by @FeodorFitsner.
+* flet-charts: Add fl_chart features to the existing charts ([#7066](https://github.com/flet-dev/flet/pull/7066)) by @ndonkoHenri:
+  * `PieChart`: `PieChartSection.corner_radius` and stacked `PieChartSection.segments`.
+  * `BarChart`: `BarChartRod.label`, and `label`, `label_style` and `gradient` on `BarChartRodStackItem`.
+  * `LineChart`: `LineChartData.gradient_area`.
+  * Axes: `ChartAxis.label_alignment`.
+  * Events: `ChartEventType` values for secondary-button (right-click) taps and long presses.
+
+### Deprecations
+
+* The layout properties `View` inherited from `LayoutControl`, such as `width`, `left`, `align`, `margin` and the transforms, are deprecated: a view always fills its page, so they never had an effect. `View` keeps `on_size_change` and `size_change_interval` ([#6363](https://github.com/flet-dev/flet/issues/6363), [#7088](https://github.com/flet-dev/flet/pull/7088)) by @ndonkoHenri.
+
+### Bug fixes
+
+* Fix `View.on_size_change` never firing; it reports the size of the view's body, the area between the app bar and the bottom navigation bar ([#6363](https://github.com/flet-dev/flet/issues/6363), [#7088](https://github.com/flet-dev/flet/pull/7088)) by @ndonkoHenri.
 
 ### Documentation
 

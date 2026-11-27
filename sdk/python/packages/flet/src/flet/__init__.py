@@ -28,6 +28,7 @@ if TYPE_CHECKING:
         use_effect,
     )
     from flet.components.hooks.use_memo import use_memo
+    from flet.components.hooks.use_page_size import use_page_size
     from flet.components.hooks.use_ref import use_ref
     from flet.components.hooks.use_state import use_state
     from flet.components.memo import memo
@@ -1292,6 +1293,7 @@ __all__ = [
     "use_dialog",
     "use_effect",
     "use_memo",
+    "use_page_size",
     "use_ref",
     "use_route_loader_data",
     "use_route_location",
@@ -1844,6 +1846,7 @@ _LAZY = {
     "use_dialog": "flet.components.hooks.use_dialog",
     "use_effect": "flet.components.hooks.use_effect",
     "use_memo": "flet.components.hooks.use_memo",
+    "use_page_size": "flet.components.hooks.use_page_size",
     "use_ref": "flet.components.hooks.use_ref",
     "use_route_loader_data": "flet.components.router",
     "use_route_location": "flet.components.router",
