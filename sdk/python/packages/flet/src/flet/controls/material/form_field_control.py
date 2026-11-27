@@ -563,13 +563,6 @@ class FormFieldControl(LayoutControl):
     async def focus(self):
         """
         Request focus for this control.
-
-        Example:
-            ```python
-            async def main(page: ft.Page):
-                page.add(ctf := ft.TextField())
-                await ctf.focus()
-            ```
         """
         await self._invoke_method("focus")
 
@@ -578,17 +571,5 @@ class FormFieldControl(LayoutControl):
         Remove focus from this control.
 
         On mobile, this also hides the on-screen keyboard.
-
-        Example:
-            ```python
-            async def main(page: ft.Page):
-                async def search(e: ft.Event[ft.Button]):
-                    await ctf.blur()
-
-                page.add(
-                    ctf := ft.TextField(),
-                    ft.Button("Search", on_click=search),
-                )
-            ```
         """
         await self._invoke_method("blur")
