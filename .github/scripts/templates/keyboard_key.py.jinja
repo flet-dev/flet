@@ -27,4 +27,4 @@ class KeyboardKey(str, Enum):
         return self.value
 
 {% for name, value in keys %}    {{ name }} = {{ value }}
-{% endfor %}
+{% endfor -%}
