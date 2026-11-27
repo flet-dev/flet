@@ -1,6 +1,6 @@
 ## 1.2.0
 
-* `FletBackend.requestHost()` sends an embedded app's request (`Page` method `request_host`) to its host as a `guest_request` event of the host's `FletApp` control, and `completeHostRequest()` completes it with the host's answer (`FletApp` method `reply_guest_request`). Pending requests live in `HostRequests`: ids unique in the process, so an answer for an earlier run of the app is dropped, an optional timeout, at most 16 pending and about 64 KB of args (`approximateSize()`). A request fails at once with `not_embedded` outside an embedded app, and with `unhandled` when the host's `FletApp` has no `on_guest_request` or the app closes, by @FeodorFitsner.
+* `FletBackend.requestHost()` sends an embedded app's request (`Page` method `request_host`) to its host as a `guest_request` event of the host's `FletApp` control, and `completeHostRequest()` completes it with the host's answer (`FletApp` method `reply_guest_request`). Pending requests live in `HostRequests`: ids unique in the process, so an answer for an earlier run of the app is dropped, an optional timeout, at most 16 pending and about 64 KB of args (`approximateSize()`). A request fails at once with `not_embedded` outside an embedded app, and with `unhandled` when the host's `FletApp` has no `on_guest_request` or the app closes, ([#7141](https://github.com/flet-dev/flet/pull/7141)) by @FeodorFitsner.
 
 ## 1.1.4
 
