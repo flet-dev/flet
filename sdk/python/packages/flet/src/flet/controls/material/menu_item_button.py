@@ -1,7 +1,7 @@
-from typing import Optional
+from typing import Annotated, Optional
 
 from flet.controls.alignment import Axis
-from flet.controls.base_control import control
+from flet.controls.base_control import EnabledOnly, control
 from flet.controls.buttons import ButtonStyle
 from flet.controls.control import Control
 from flet.controls.control_event import ControlEventHandler
@@ -11,7 +11,7 @@ from flet.controls.types import ClipBehavior, StrOrControl
 __all__ = ["MenuItemButton"]
 
 
-@control("MenuItemButton", enabled_only=("click",))
+@control("MenuItemButton")
 class MenuItemButton(LayoutControl):
     """
     A button for use in a MenuBar or on its own, that can be activated by click or \
@@ -98,7 +98,9 @@ class MenuItemButton(LayoutControl):
     If the menu item button is a descendent of `MenuBar`, then this property is ignored.
     """
 
-    on_click: Optional[ControlEventHandler["MenuItemButton"]] = None
+    on_click: Annotated[
+        Optional[ControlEventHandler["MenuItemButton"]], EnabledOnly
+    ] = None
     """
     Called when the button is clicked.If not defined the button will be disabled.
     """

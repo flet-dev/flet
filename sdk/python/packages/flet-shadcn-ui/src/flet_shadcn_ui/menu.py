@@ -1,12 +1,12 @@
 from dataclasses import field
-from typing import Optional
+from typing import Annotated, Optional
 
 import flet as ft
 
 __all__ = ["ContextMenu", "MenuItem", "Menubar", "MenubarItem"]
 
 
-@ft.control("ShadMenuItem", enabled_only=("click",))
+@ft.control("ShadMenuItem")
 class MenuItem(ft.Control):
     """
     An item in a :class:`~flet_shadcn_ui.ContextMenu` or a
@@ -56,7 +56,9 @@ class MenuItem(ft.Control):
     Whether clicking this item closes the menu.
     """
 
-    on_click: Optional[ft.ControlEventHandler["MenuItem"]] = None
+    on_click: Annotated[
+        Optional[ft.ControlEventHandler["MenuItem"]], ft.EnabledOnly
+    ] = None
     """
     Called when this item is clicked.
     """

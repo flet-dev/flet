@@ -6,7 +6,7 @@ from flet.utils.validation import V
 __all__ = ["DatePicker", "DateRangePicker"]
 
 
-@ft.control("ShadDatePicker", enabled_only=("change", "value"))
+@ft.control("ShadDatePicker")
 class DatePicker(ft.LayoutControl):
     """
     A Shadcn date picker: a button that opens a calendar in a popover.
@@ -21,7 +21,9 @@ class DatePicker(ft.LayoutControl):
     ```
     """
 
-    value: Annotated[Optional[ft.DateTimeValue], ft.ClientWritable] = None
+    value: Annotated[Optional[ft.DateTimeValue], ft.ClientWritable, ft.EnabledOnly] = (
+        None
+    )
     """
     The selected day.
 
@@ -84,16 +86,15 @@ class DatePicker(ft.LayoutControl):
     string) to clear the error.
     """
 
-    on_change: Optional[ft.ControlEventHandler["DatePicker"]] = None
+    on_change: Annotated[
+        Optional[ft.ControlEventHandler["DatePicker"]], ft.EnabledOnly
+    ] = None
     """
     Called when the user picks or clears a day.
     """
 
 
-@ft.control(
-    "ShadDateRangePicker",
-    enabled_only=("change", "end_value", "start_value"),
-)
+@ft.control("ShadDateRangePicker")
 class DateRangePicker(ft.LayoutControl):
     """
     A Shadcn date range picker: a button that opens a two-month calendar in a
@@ -116,12 +117,16 @@ class DateRangePicker(ft.LayoutControl):
     ```
     """
 
-    start_value: Annotated[Optional[ft.DateTimeValue], ft.ClientWritable] = None
+    start_value: Annotated[
+        Optional[ft.DateTimeValue], ft.ClientWritable, ft.EnabledOnly
+    ] = None
     """
     The first day of the selected range.
     """
 
-    end_value: Annotated[Optional[ft.DateTimeValue], ft.ClientWritable] = None
+    end_value: Annotated[
+        Optional[ft.DateTimeValue], ft.ClientWritable, ft.EnabledOnly
+    ] = None
     """
     The last day of the selected range.
 
@@ -179,7 +184,9 @@ class DateRangePicker(ft.LayoutControl):
     string) to clear the error.
     """
 
-    on_change: Optional[ft.ControlEventHandler["DateRangePicker"]] = None
+    on_change: Annotated[
+        Optional[ft.ControlEventHandler["DateRangePicker"]], ft.EnabledOnly
+    ] = None
     """
     Called when the user changes the range.
     """

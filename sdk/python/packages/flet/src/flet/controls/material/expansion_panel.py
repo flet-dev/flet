@@ -2,7 +2,7 @@ from dataclasses import dataclass, field
 from typing import Annotated, Optional
 
 from flet.controls.adaptive_control import AdaptiveControl
-from flet.controls.base_control import ClientWritable, control
+from flet.controls.base_control import ClientWritable, EnabledOnly, control
 from flet.controls.control import Control
 from flet.controls.control_event import (
     Event,
@@ -133,7 +133,7 @@ class ExpansionPanel(LayoutControl, AdaptiveControl):
     """
 
 
-@control("ExpansionPanelList", enabled_only=("change",))
+@control("ExpansionPanelList")
 class ExpansionPanelList(LayoutControl, ScrollableControl):
     """
     A material expansion panel list that lays out its children and animates \
@@ -199,7 +199,9 @@ class ExpansionPanelList(LayoutControl, ScrollableControl):
     The size of the gap between the :attr:`controls`s when expanded.
     """
 
-    on_change: Optional[EventHandler[ExpansionPanelListChangeEvent]] = None
+    on_change: Annotated[
+        Optional[EventHandler[ExpansionPanelListChangeEvent]], EnabledOnly
+    ] = None
     """
     Called when an item of :attr:`controls` is expanded or collapsed.
     """

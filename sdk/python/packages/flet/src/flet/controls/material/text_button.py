@@ -1,8 +1,8 @@
-from typing import Optional, Union
+from typing import Annotated, Optional, Union
 
 from flet.controls.action_control import ActionControl
 from flet.controls.adaptive_control import AdaptiveControl
-from flet.controls.base_control import control
+from flet.controls.base_control import EnabledOnly, control
 from flet.controls.buttons import ButtonStyle
 from flet.controls.control_event import ControlEventHandler
 from flet.controls.layout_control import LayoutControl
@@ -17,7 +17,7 @@ from flet.controls.types import (
 __all__ = ["TextButton"]
 
 
-@control("TextButton", enabled_only=("click", "long_press"))
+@control("TextButton")
 class TextButton(LayoutControl, AdaptiveControl, ActionControl):
     """
     Text buttons are used for the lowest priority actions, especially when presenting \
@@ -74,12 +74,14 @@ class TextButton(LayoutControl, AdaptiveControl, ActionControl):
     Defines how the content of this button is clipped.
     """
 
-    on_click: Optional[ControlEventHandler["TextButton"]] = None
+    on_click: Annotated[Optional[ControlEventHandler["TextButton"]], EnabledOnly] = None
     """
     Called when a user clicks this button.
     """
 
-    on_long_press: Optional[ControlEventHandler["TextButton"]] = None
+    on_long_press: Annotated[
+        Optional[ControlEventHandler["TextButton"]], EnabledOnly
+    ] = None
     """
     Called when this button is long-pressed.
     """

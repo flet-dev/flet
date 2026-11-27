@@ -1,6 +1,6 @@
 from typing import Annotated, Optional
 
-from flet.controls.base_control import ClientWritable, control
+from flet.controls.base_control import ClientWritable, EnabledOnly, control
 from flet.controls.border import Border
 from flet.controls.control_event import ControlEventHandler
 from flet.controls.cupertino.cupertino_colors import CupertinoColors
@@ -15,10 +15,7 @@ from flet.utils.validation import V
 __all__ = ["CupertinoNavigationBar"]
 
 
-@control(
-    "CupertinoNavigationBar",
-    enabled_only=("change", "selected_index"),
-)
+@control("CupertinoNavigationBar")
 class CupertinoNavigationBar(LayoutControl):
     """
     An iOS-styled bottom navigation tab bar.
@@ -39,7 +36,7 @@ class CupertinoNavigationBar(LayoutControl):
             two visible `NavigationBarDestination`s.
     """
 
-    selected_index: Annotated[int, ClientWritable] = 0
+    selected_index: Annotated[int, ClientWritable, EnabledOnly] = 0
     """
     The index into :attr:`destinations` for the currently selected \
     :class:`~flet.NavigationBarDestination`.
@@ -75,7 +72,9 @@ class CupertinoNavigationBar(LayoutControl):
     The size of all destination icons.
     """
 
-    on_change: Optional[ControlEventHandler["CupertinoNavigationBar"]] = None
+    on_change: Annotated[
+        Optional[ControlEventHandler["CupertinoNavigationBar"]], EnabledOnly
+    ] = None
     """
     Called when selected destination changed.
     """

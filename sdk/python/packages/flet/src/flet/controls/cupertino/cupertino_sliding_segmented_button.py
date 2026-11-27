@@ -1,7 +1,7 @@
 from dataclasses import field
 from typing import Annotated, Optional
 
-from flet.controls.base_control import ClientWritable, control
+from flet.controls.base_control import ClientWritable, EnabledOnly, control
 from flet.controls.control import Control
 from flet.controls.control_event import ControlEventHandler
 from flet.controls.cupertino.cupertino_colors import CupertinoColors
@@ -15,10 +15,7 @@ from flet.utils.validation import V
 __all__ = ["CupertinoSlidingSegmentedButton"]
 
 
-@control(
-    "CupertinoSlidingSegmentedButton",
-    enabled_only=("change", "selected_index"),
-)
+@control("CupertinoSlidingSegmentedButton")
 class CupertinoSlidingSegmentedButton(LayoutControl):
     """
     A cupertino sliding segmented button.
@@ -47,7 +44,7 @@ class CupertinoSlidingSegmentedButton(LayoutControl):
         ValueError: If it does not contain at least two visible `Control`s.
     """
 
-    selected_index: Annotated[int, ClientWritable] = 0
+    selected_index: Annotated[int, ClientWritable, EnabledOnly] = 0
     """
     The index (starting from 0) of the selected segment in the :attr:`controls` list.
 
@@ -87,7 +84,9 @@ class CupertinoSlidingSegmentedButton(LayoutControl):
     larger, the segment width will scales up to meet the min width requirement.
     """
 
-    on_change: Optional[ControlEventHandler["CupertinoSlidingSegmentedButton"]] = None
+    on_change: Annotated[
+        Optional[ControlEventHandler["CupertinoSlidingSegmentedButton"]], EnabledOnly
+    ] = None
     """
     Called when the state of the button is changed - when one of the :attr:`controls` \
     is clicked.

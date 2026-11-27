@@ -1495,30 +1495,43 @@ class TestControlDeclarations:
         with pytest.raises(ValueError, match="stars"):
             validate(Rating(stars=-1))
 
-    def test_unknown_enabled_only_name_raises(self):
-        """A typo in `enabled_only` fails when the class is declared."""
-        with pytest.raises(ValueError, match="enabled_only"):
-
-            @ft.control("Bad", enabled_only=("missing",))
-            class Bad(ft.LayoutControl):
-                pass
-
-    def test_enabled_only_of_a_custom_control_is_applied(self, session):
-        """A control lists what its Dart code holds back while disabled."""
-        calls = []
-
-        @ft.control(
-            "Rating",
-            enabled_only=("stars", "rate"),
-        )
+    def test_subclass_redeclaration_preserves_inherited_restrictions(self):
+        @ft.control("Rating")
         class Rating(ft.LayoutControl):
-            stars: Annotated[int, ft.ClientWritable] = 0
-            on_rate: Optional[ft.ControlEventHandler["Rating"]] = None
+            stars: Annotated[int, ft.ClientWritable, ft.EnabledOnly] = 0
+            on_reset: Annotated[
+                Optional[ft.ControlEventHandler["Rating"]], ft.ServerOnlyEvent
+            ] = None
 
-        rating = Rating(disabled=True, on_rate=lambda e: calls.append(e))
-        _mount(session, rating)
-        session.apply_patch(rating._i, {"stars": 4})
-        assert rating.stars == 0
+        @ft.control("CustomRating")
+        class CustomRating(Rating):
+            stars: Annotated[int, ft.ClientWritable] = 1
+            on_reset: Optional[ft.ControlEventHandler["CustomRating"]] = None
+
+        assert CustomRating._enabled_only == {"stars"}
+        assert CustomRating._server_events == {"reset"}
+
+    @pytest.mark.asyncio
+    async def test_enabled_only_event_with_a_same_named_property(self, session):
+        @ft.control("ResizeInput")
+        class ResizeInput(ft.LayoutControl):
+            on_resize: "Annotated[ft.EventHandler[ft.PageResizeEvent], ft.EnabledOnly]"
+            resize: Annotated[int, ft.ClientWritable] = 0
+
+        events = []
+        control = ResizeInput(disabled=True, on_resize=events.append)
+        _mount(session, control)
+        session.apply_patch(control._i, {"resize": 1})
+        assert control.resize == 1
+        size = {"width": 10, "height": 20}
+        await session.dispatch_event(control._i, "resize", size)
+        assert events == []
+
+        control.disabled = False
+        await session.dispatch_event(control._i, "resize", size)
+        (event,) = events
+        assert isinstance(event, ft.PageResizeEvent)
+        assert (event.width, event.height) == (10, 20)
 
     def test_undeclared_control_is_not_gated_on_disabled(self, session):
         """A control that lists nothing keeps its values and events while disabled."""
@@ -1532,10 +1545,9 @@ class TestControlDeclarations:
         session.apply_patch(meter._i, {"level": 4})
         assert meter.level == 4
 
-    def test_unknown_server_event_raises(self):
-        """A typo in `server_events` fails when the class is declared."""
-        with pytest.raises(ValueError, match="server_events"):
+    def test_server_only_event_requires_a_handler_field(self):
+        with pytest.raises(ValueError, match="Bad.value: ServerOnlyEvent"):
 
-            @ft.control("Bad", server_events=("missing",))
+            @ft.control("Bad")
             class Bad(ft.LayoutControl):
-                pass
+                value: Annotated[int, ft.ServerOnlyEvent] = 0

@@ -5,7 +5,7 @@ import flet as ft
 __all__ = ["Checkbox"]
 
 
-@ft.control("ShadCheckbox", enabled_only=("change", "value"))
+@ft.control("ShadCheckbox")
 class Checkbox(ft.LayoutControl):
     """
     A Shadcn checkbox.
@@ -19,7 +19,7 @@ class Checkbox(ft.LayoutControl):
     ```
     """
 
-    value: Annotated[bool, ft.ClientWritable] = False
+    value: Annotated[bool, ft.ClientWritable, ft.EnabledOnly] = False
     """
     Whether this checkbox is checked.
     """
@@ -61,7 +61,9 @@ class Checkbox(ft.LayoutControl):
     string) to clear the error.
     """
 
-    on_change: Optional[ft.ControlEventHandler["Checkbox"]] = None
+    on_change: Annotated[
+        Optional[ft.ControlEventHandler["Checkbox"]], ft.EnabledOnly
+    ] = None
     """
     Called when :attr:`value` changes.
 

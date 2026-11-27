@@ -1,4 +1,4 @@
-from typing import Optional
+from typing import Annotated, Optional
 
 import flet as ft
 from flet_shadcn_ui.types import BadgeVariant
@@ -6,7 +6,7 @@ from flet_shadcn_ui.types import BadgeVariant
 __all__ = ["Badge"]
 
 
-@ft.control("ShadBadge", enabled_only=("click",))
+@ft.control("ShadBadge")
 class Badge(ft.LayoutControl):
     """
     A Shadcn badge: a small label for a status, a tag or a count.
@@ -49,7 +49,10 @@ class Badge(ft.LayoutControl):
     If `None`, the color is taken from :attr:`variant`.
     """
 
-    on_click: Optional[ft.ControlEventHandler["Badge"]] = None
+    on_click: Annotated[
+        Optional[ft.ControlEventHandler["Badge"]],
+        ft.EnabledOnly,
+    ] = None
     """
     Called when this badge is clicked.
     """

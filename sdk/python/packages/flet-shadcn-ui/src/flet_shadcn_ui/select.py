@@ -30,7 +30,7 @@ class SelectOption(ft.Control):
     """
 
 
-@ft.control("ShadSelect", enabled_only=("change", "value"))
+@ft.control("ShadSelect")
 class Select(ft.LayoutControl):
     """
     A Shadcn select: a button that opens a list of options to choose one from.
@@ -52,7 +52,7 @@ class Select(ft.LayoutControl):
     The options to choose from.
     """
 
-    value: Annotated[Optional[str], ft.ClientWritable] = None
+    value: Annotated[Optional[str], ft.ClientWritable, ft.EnabledOnly] = None
     """
     The :attr:`~flet_shadcn_ui.SelectOption.value` of the chosen option.
 
@@ -103,7 +103,10 @@ class Select(ft.LayoutControl):
     string) to clear the error.
     """
 
-    on_change: Optional[ft.ControlEventHandler["Select"]] = None
+    on_change: Annotated[
+        Optional[ft.ControlEventHandler["Select"]],
+        ft.EnabledOnly,
+    ] = None
     """
     Called when the chosen option changes.
 

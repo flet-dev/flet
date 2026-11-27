@@ -5,10 +5,7 @@ import flet as ft
 __all__ = ["Input"]
 
 
-@ft.control(
-    "ShadInput",
-    enabled_only=("change", "click", "submit", "value"),
-)
+@ft.control("ShadInput")
 class Input(ft.LayoutControl):
     """
     A Shadcn text input.
@@ -20,7 +17,7 @@ class Input(ft.LayoutControl):
     ```
     """
 
-    value: Annotated[str, ft.ClientWritable] = ""
+    value: Annotated[str, ft.ClientWritable, ft.EnabledOnly] = ""
     """
     The current text of this input.
     """
@@ -107,7 +104,10 @@ class Input(ft.LayoutControl):
     string) to clear the error.
     """
 
-    on_change: Optional[ft.ControlEventHandler["Input"]] = None
+    on_change: Annotated[
+        Optional[ft.ControlEventHandler["Input"]],
+        ft.EnabledOnly,
+    ] = None
     """
     Called when the text changes.
 
@@ -115,12 +115,18 @@ class Input(ft.LayoutControl):
     contains the new text.
     """
 
-    on_submit: Optional[ft.ControlEventHandler["Input"]] = None
+    on_submit: Annotated[
+        Optional[ft.ControlEventHandler["Input"]],
+        ft.EnabledOnly,
+    ] = None
     """
     Called when the user submits the text, for example by pressing `Enter`.
     """
 
-    on_click: Optional[ft.ControlEventHandler["Input"]] = None
+    on_click: Annotated[
+        Optional[ft.ControlEventHandler["Input"]],
+        ft.EnabledOnly,
+    ] = None
     """
     Called when this input is clicked.
     """

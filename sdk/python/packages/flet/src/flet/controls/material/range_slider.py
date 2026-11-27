@@ -1,6 +1,6 @@
 from typing import Annotated, Optional
 
-from flet.controls.base_control import ClientWritable, control
+from flet.controls.base_control import ClientWritable, EnabledOnly, control
 from flet.controls.control_event import ControlEventHandler
 from flet.controls.control_state import ControlStateValue
 from flet.controls.layout_control import LayoutControl
@@ -14,10 +14,7 @@ from flet.utils.validation import V
 __all__ = ["RangeSlider"]
 
 
-@control(
-    "RangeSlider",
-    enabled_only=("change", "change_end", "change_start", "end_value", "start_value"),
-)
+@control("RangeSlider")
 class RangeSlider(LayoutControl):
     """
     A Material Design range slider. Used to select a range from a range of values.
@@ -41,6 +38,7 @@ class RangeSlider(LayoutControl):
     start_value: Annotated[
         Number,
         ClientWritable,
+        EnabledOnly,
         V.ge_field("min"),
         V.le_field("end_value"),
     ]
@@ -58,6 +56,7 @@ class RangeSlider(LayoutControl):
     end_value: Annotated[
         Number,
         ClientWritable,
+        EnabledOnly,
         V.le_field("max"),
         V.ge_field("start_value"),
     ]
@@ -169,17 +168,24 @@ class RangeSlider(LayoutControl):
     The cursor for a mouse pointer entering or hovering over this control.
     """
 
-    on_change: Optional[ControlEventHandler["RangeSlider"]] = None
+    on_change: Annotated[
+        Optional[ControlEventHandler["RangeSlider"]],
+        EnabledOnly,
+    ] = None
     """
     Called when the state of this slider is changed.
     """
 
-    on_change_start: Optional[ControlEventHandler["RangeSlider"]] = None
+    on_change_start: Annotated[
+        Optional[ControlEventHandler["RangeSlider"]], EnabledOnly
+    ] = None
     """
     Called when the user starts selecting a new value for this slider.
     """
 
-    on_change_end: Optional[ControlEventHandler["RangeSlider"]] = None
+    on_change_end: Annotated[
+        Optional[ControlEventHandler["RangeSlider"]], EnabledOnly
+    ] = None
     """
     Called when the user is done selecting a new value for this slider.
     """

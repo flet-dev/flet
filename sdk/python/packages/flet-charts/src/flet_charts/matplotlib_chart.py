@@ -2,7 +2,7 @@ import asyncio
 import logging
 from dataclasses import dataclass, field
 from io import BytesIO
-from typing import Any, Optional
+from typing import Annotated, Any, Optional
 
 import flet as ft
 from flet_charts.matplotlib_chart_canvas import (
@@ -88,7 +88,6 @@ class MatplotlibChartToolbarButtonsUpdateEvent(ft.Event["MatplotlibChart"]):
 @ft.control(
     kw_only=True,
     isolated=True,
-    server_events=("message", "toolbar_buttons_update"),
 )
 class MatplotlibChart(ft.GestureDetector):
     """
@@ -110,13 +109,16 @@ class MatplotlibChart(ft.GestureDetector):
     [`matplotlib.figure.Figure`](https://matplotlib.org/stable/api/_as_gen/matplotlib.figure.Figure.html#matplotlib.figure.Figure).
     """
 
-    on_message: Optional[ft.EventHandler[MatplotlibChartMessageEvent]] = None
+    on_message: Annotated[
+        Optional[ft.EventHandler[MatplotlibChartMessageEvent]], ft.ServerOnlyEvent
+    ] = None
     """
     The event is triggered on figure message update.
     """
 
-    on_toolbar_buttons_update: Optional[
-        ft.EventHandler[MatplotlibChartToolbarButtonsUpdateEvent]
+    on_toolbar_buttons_update: Annotated[
+        Optional[ft.EventHandler[MatplotlibChartToolbarButtonsUpdateEvent]],
+        ft.ServerOnlyEvent,
     ] = None
     """
     Triggers when toolbar buttons status is updated.

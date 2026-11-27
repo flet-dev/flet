@@ -150,26 +150,30 @@ def _is_disabled(control: BaseControl) -> bool:
     return False
 
 
-def _rendering_blocks_input(control: BaseControl, name: str, kept: frozenset) -> bool:
+def _rendering_blocks_input(
+    control: BaseControl, name: str, *, event: bool = False
+) -> bool:
     """
     Whether the state of a control rules out a client's event or value.
 
     Args:
         control: The target control.
         name: The event or field name sent by the client.
-        kept: The names a hidden control can receive.
+        event: Whether this is an event sent to the corresponding `on_*` field.
 
     Returns:
         `True` if the name can't come from a real client in the control's state: it is
-            hidden, it is disabled and the control lists the name in `enabled_only`, or
+            hidden, it is disabled and the field is marked with `EnabledOnly`, or
             it is read-only and the name is an edit. A service and the `Window` render
             nothing of their own, so their state rules out nothing.
     """
     if isinstance(control, (Service, Window)):
         return False
+    kept = _HIDDEN_CONTROL_EVENTS if event else _PATCHABLE_WHEN_HIDDEN
     if name not in kept and _is_hidden(control):
         return True
-    if name in control._enabled_only and _is_disabled(control):
+    field_name = f"on_{name}" if event else name
+    if field_name in control._enabled_only and _is_disabled(control):
         return True
     return name in _READ_ONLY_INPUTS and getattr(control, "read_only", False) is True
 
@@ -524,7 +528,7 @@ class Session:
             if name not in writable:
                 if warn:
                     _warn_ignored_field(control, name)
-            elif _rendering_blocks_input(control, name, _PATCHABLE_WHEN_HIDDEN) or (
+            elif _rendering_blocks_input(control, name) or (
                 name == "open"
                 and value is not False
                 and isinstance(control, DialogControl)
@@ -757,7 +761,7 @@ class Session:
         if (
             not isinstance(event_name, str)
             or event_name in control._server_events
-            or _rendering_blocks_input(control, event_name, _HIDDEN_CONTROL_EVENTS)
+            or _rendering_blocks_input(control, event_name, event=True)
         ):
             logger.debug("Ignored client event %s of %s", event_name, control)
             return

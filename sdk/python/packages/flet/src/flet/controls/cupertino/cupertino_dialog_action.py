@@ -1,6 +1,6 @@
 from typing import Annotated, Optional
 
-from flet.controls.base_control import control
+from flet.controls.base_control import EnabledOnly, control
 from flet.controls.control import Control
 from flet.controls.control_event import ControlEventHandler
 from flet.controls.text_style import TextStyle
@@ -10,7 +10,7 @@ from flet.utils.validation import V
 __all__ = ["CupertinoDialogAction"]
 
 
-@control("CupertinoDialogAction", enabled_only=("click",))
+@control("CupertinoDialogAction")
 class CupertinoDialogAction(Control):
     """
     A dialog action button.
@@ -54,7 +54,9 @@ class CupertinoDialogAction(Control):
     Can be useful when :attr:`content` is a string.
     """
 
-    on_click: Optional[ControlEventHandler["CupertinoDialogAction"]] = None
+    on_click: Annotated[
+        Optional[ControlEventHandler["CupertinoDialogAction"]], EnabledOnly
+    ] = None
     """
     Called when a user clicks this button.
     """

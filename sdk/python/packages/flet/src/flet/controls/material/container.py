@@ -1,10 +1,10 @@
-from typing import TYPE_CHECKING, Optional, Union
+from typing import TYPE_CHECKING, Annotated, Optional, Union
 
 from flet.controls.action_control import ActionControl
 from flet.controls.adaptive_control import AdaptiveControl
 from flet.controls.alignment import Alignment
 from flet.controls.animation import AnimationValue
-from flet.controls.base_control import control
+from flet.controls.base_control import EnabledOnly, control
 from flet.controls.blur import BlurValue
 from flet.controls.border import Border
 from flet.controls.border_radius import BorderRadiusValue
@@ -35,7 +35,7 @@ if TYPE_CHECKING:
     from flet.controls.theme import Theme
 
 
-@control("Container", enabled_only=("click", "long_press", "tap_down"))
+@control("Container")
 class Container(LayoutControl, AdaptiveControl, ActionControl):
     """
     Allows to decorate a control with background color and border and position it with \
@@ -219,19 +219,23 @@ class Container(LayoutControl, AdaptiveControl, ActionControl):
     The foreground decoration of this container.
     """
 
-    on_click: Optional[ControlEventHandler["Container"]] = None
+    on_click: Annotated[Optional[ControlEventHandler["Container"]], EnabledOnly] = None
     """
     Called when a user clicks the container.
 
     It will not be called if this container is long pressed.
     """
 
-    on_tap_down: Optional[EventHandler[TapEvent["Container"]]] = None
+    on_tap_down: Annotated[
+        Optional[EventHandler[TapEvent["Container"]]], EnabledOnly
+    ] = None
     """
     Called when a user clicks the container with or without a long press.
     """
 
-    on_long_press: Optional[ControlEventHandler["Container"]] = None
+    on_long_press: Annotated[
+        Optional[ControlEventHandler["Container"]], EnabledOnly
+    ] = None
     """
     Called when this container is long-pressed.
     """

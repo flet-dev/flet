@@ -1,6 +1,6 @@
 from typing import Annotated, Optional
 
-from flet.controls.base_control import ClientWritable, control
+from flet.controls.base_control import ClientWritable, EnabledOnly, control
 from flet.controls.control_event import ControlEventHandler
 from flet.controls.layout_control import LayoutControl
 from flet.controls.types import (
@@ -12,10 +12,7 @@ from flet.utils.validation import V
 __all__ = ["CupertinoSlider"]
 
 
-@control(
-    "CupertinoSlider",
-    enabled_only=("change", "change_end", "change_start", "value"),
-)
+@control("CupertinoSlider")
 class CupertinoSlider(LayoutControl):
     """
     An iOS-type slider.
@@ -36,6 +33,7 @@ class CupertinoSlider(LayoutControl):
     value: Annotated[
         Optional[Number],
         ClientWritable,
+        EnabledOnly,
         V.ge_field("min"),
         V.le_field("max"),
     ] = None
@@ -101,17 +99,23 @@ class CupertinoSlider(LayoutControl):
     The color of this slider's thumb.
     """
 
-    on_change: Optional[ControlEventHandler["CupertinoSlider"]] = None
+    on_change: Annotated[
+        Optional[ControlEventHandler["CupertinoSlider"]], EnabledOnly
+    ] = None
     """
     Called when the state of this slider changed.
     """
 
-    on_change_start: Optional[ControlEventHandler["CupertinoSlider"]] = None
+    on_change_start: Annotated[
+        Optional[ControlEventHandler["CupertinoSlider"]], EnabledOnly
+    ] = None
     """
     Called when the user starts selecting a new value for this slider.
     """
 
-    on_change_end: Optional[ControlEventHandler["CupertinoSlider"]] = None
+    on_change_end: Annotated[
+        Optional[ControlEventHandler["CupertinoSlider"]], EnabledOnly
+    ] = None
     """
     Called when the user is done selecting a new value for this slider.
     """

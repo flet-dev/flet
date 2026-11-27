@@ -1,4 +1,4 @@
-from typing import Optional
+from typing import Annotated, Optional
 
 import flet as ft
 from flet_shadcn_ui.types import ButtonVariant
@@ -6,7 +6,7 @@ from flet_shadcn_ui.types import ButtonVariant
 __all__ = ["IconButton"]
 
 
-@ft.control("ShadIconButton", enabled_only=("click", "long_press"))
+@ft.control("ShadIconButton")
 class IconButton(ft.LayoutControl):
     """
     A Shadcn button that shows only an icon.
@@ -69,12 +69,16 @@ class IconButton(ft.LayoutControl):
     Whether this button should be focused on initial display.
     """
 
-    on_click: Optional[ft.ControlEventHandler["IconButton"]] = None
+    on_click: Annotated[
+        Optional[ft.ControlEventHandler["IconButton"]], ft.EnabledOnly
+    ] = None
     """
     Called when this button is clicked.
     """
 
-    on_long_press: Optional[ft.ControlEventHandler["IconButton"]] = None
+    on_long_press: Annotated[
+        Optional[ft.ControlEventHandler["IconButton"]], ft.EnabledOnly
+    ] = None
     """
     Called when this button is long-pressed.
     """

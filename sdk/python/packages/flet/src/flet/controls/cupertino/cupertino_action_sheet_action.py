@@ -1,6 +1,6 @@
 from typing import Annotated, Optional
 
-from flet.controls.base_control import control
+from flet.controls.base_control import EnabledOnly, control
 from flet.controls.control_event import ControlEventHandler
 from flet.controls.layout_control import LayoutControl
 from flet.controls.types import MouseCursor, StrOrControl
@@ -9,7 +9,7 @@ from flet.utils.validation import V
 __all__ = ["CupertinoActionSheetAction"]
 
 
-@control("CupertinoActionSheetAction", enabled_only=("click",))
+@control("CupertinoActionSheetAction")
 class CupertinoActionSheetAction(LayoutControl):
     """
     An action button typically used in a CupertinoActionSheet.
@@ -41,7 +41,9 @@ class CupertinoActionSheetAction(LayoutControl):
     Defines the mouse cursor for this action button.
     """
 
-    on_click: Optional[ControlEventHandler["CupertinoActionSheetAction"]] = None
+    on_click: Annotated[
+        Optional[ControlEventHandler["CupertinoActionSheetAction"]], EnabledOnly
+    ] = None
     """
     Called when this action button is clicked.
     """

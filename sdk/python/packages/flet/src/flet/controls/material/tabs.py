@@ -4,7 +4,7 @@ from typing import Annotated, Optional
 
 from flet.controls.adaptive_control import AdaptiveControl
 from flet.controls.animation import AnimationCurve
-from flet.controls.base_control import ClientWritable, control, value
+from flet.controls.base_control import ClientWritable, EnabledOnly, control, value
 from flet.controls.border import BorderSide
 from flet.controls.border_radius import BorderRadiusValue
 from flet.controls.colors import Colors
@@ -359,7 +359,7 @@ class TabBarView(LayoutControl, AdaptiveControl):
     """
 
 
-@control("TabBar", enabled_only=("click",))
+@control("TabBar")
 class TabBar(LayoutControl, AdaptiveControl):
     """
     Used for navigating frequently accessed, distinct content categories. Tabs allow \
@@ -564,7 +564,7 @@ class TabBar(LayoutControl, AdaptiveControl):
     Defines the clipping radius of splashes that extend outside the bounds of the tab.
     """
 
-    on_click: Optional[ControlEventHandler["TabBar"]] = None
+    on_click: Annotated[Optional[ControlEventHandler["TabBar"]], EnabledOnly] = None
     """
     Called when a tab is clicked.
 

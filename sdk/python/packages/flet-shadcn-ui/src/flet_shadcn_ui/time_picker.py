@@ -6,7 +6,7 @@ import flet as ft
 __all__ = ["TimePicker"]
 
 
-@ft.control("ShadTimePicker", enabled_only=("change", "value"))
+@ft.control("ShadTimePicker")
 class TimePicker(ft.LayoutControl):
     """
     A Shadcn time picker with hour and minute fields.
@@ -17,7 +17,7 @@ class TimePicker(ft.LayoutControl):
     ```
     """
 
-    value: Annotated[Optional[datetime.time], ft.ClientWritable] = None
+    value: Annotated[Optional[datetime.time], ft.ClientWritable, ft.EnabledOnly] = None
     """
     The selected time. Only hours and minutes are used.
 
@@ -65,7 +65,9 @@ class TimePicker(ft.LayoutControl):
     string) to clear the error.
     """
 
-    on_change: Optional[ft.ControlEventHandler["TimePicker"]] = None
+    on_change: Annotated[
+        Optional[ft.ControlEventHandler["TimePicker"]], ft.EnabledOnly
+    ] = None
     """
     Called when the user changes the time.
     """

@@ -1,10 +1,10 @@
 from dataclasses import field
 from enum import Enum
-from typing import Optional, Union
+from typing import Annotated, Optional, Union
 
 from flet.controls.action_control import ActionControl
 from flet.controls.adaptive_control import AdaptiveControl
-from flet.controls.base_control import control
+from flet.controls.base_control import EnabledOnly, control
 from flet.controls.buttons import OutlinedBorder
 from flet.controls.control_event import ControlEventHandler
 from flet.controls.layout_control import LayoutControl
@@ -91,7 +91,7 @@ class ListTileStyle(Enum):
     """
 
 
-@control("ListTile", enabled_only=("click", "long_press"))
+@control("ListTile")
 class ListTile(LayoutControl, AdaptiveControl, ActionControl):
     """
     A single fixed-height row that typically contains some text as well as a leading \
@@ -322,12 +322,15 @@ class ListTile(LayoutControl, AdaptiveControl, ActionControl):
     tile heights.
     """
 
-    on_click: Optional[ControlEventHandler["ListTile"]] = None
+    on_click: Annotated[Optional[ControlEventHandler["ListTile"]], EnabledOnly] = None
     """
     Called when a user clicks or taps the list tile.
     """
 
-    on_long_press: Optional[ControlEventHandler["ListTile"]] = None
+    on_long_press: Annotated[
+        Optional[ControlEventHandler["ListTile"]],
+        EnabledOnly,
+    ] = None
     """
     Called when the user long-presses on this list tile.
     """

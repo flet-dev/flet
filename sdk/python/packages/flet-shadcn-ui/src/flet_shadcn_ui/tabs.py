@@ -33,7 +33,7 @@ class Tab(ft.Control):
     """
 
 
-@ft.control("ShadTabs", enabled_only=("change", "value"))
+@ft.control("ShadTabs")
 class Tabs(ft.LayoutControl):
     """
     Shadcn tabs: a bar of tab buttons, showing the content of the selected tab
@@ -56,7 +56,7 @@ class Tabs(ft.LayoutControl):
     The tabs.
     """
 
-    value: Annotated[Optional[str], ft.ClientWritable] = None
+    value: Annotated[Optional[str], ft.ClientWritable, ft.EnabledOnly] = None
     """
     The :attr:`~flet_shadcn_ui.Tab.value` of the selected tab.
 
@@ -70,7 +70,10 @@ class Tabs(ft.LayoutControl):
     If `None`, defaults to `8`.
     """
 
-    on_change: Optional[ft.ControlEventHandler["Tabs"]] = None
+    on_change: Annotated[
+        Optional[ft.ControlEventHandler["Tabs"]],
+        ft.EnabledOnly,
+    ] = None
     """
     Called when the selected tab changes.
 

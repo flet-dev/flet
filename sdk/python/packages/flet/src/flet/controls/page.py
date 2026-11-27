@@ -23,7 +23,12 @@ from typing import (
 from urllib.parse import urlparse
 
 from flet.components.public_utils import unwrap_component
-from flet.controls.base_control import BaseControl, ClientWritable, control
+from flet.controls.base_control import (
+    BaseControl,
+    ClientWritable,
+    ServerOnlyEvent,
+    control,
+)
 from flet.controls.base_page import BasePage
 from flet.controls.context import _context_page, context
 from flet.controls.control import Control
@@ -554,14 +559,6 @@ class MultiViewRemoveEvent(Event["Page"]):
     "Page",
     isolated=True,
     post_init_args=2,
-    server_events=(
-        "close",
-        "connect",
-        "disconnect",
-        "login",
-        "logout",
-        "views_pop_until",
-    ),
 )
 class Page(BasePage):
     """
@@ -741,7 +738,9 @@ class Page(BasePage):
     control.
     """
 
-    on_views_pop_until: Optional[EventHandler[ViewsPopUntilEvent]] = None
+    on_views_pop_until: Annotated[
+        Optional[EventHandler[ViewsPopUntilEvent]], ServerOnlyEvent
+    ] = None
     """
     Called when :meth:`pop_views_until` reaches the destination view.
 
@@ -753,7 +752,7 @@ class Page(BasePage):
     Called when a keyboard key is pressed.
     """
 
-    on_connect: Optional[ControlEventHandler["Page"]] = None
+    on_connect: Annotated[Optional[ControlEventHandler["Page"]], ServerOnlyEvent] = None
     """
     Called when a web user (re-)connects to a page session.
 
@@ -763,19 +762,22 @@ class Page(BasePage):
     "online".
     """
 
-    on_disconnect: Optional[ControlEventHandler["Page"]] = None
+    on_disconnect: Annotated[
+        Optional[ControlEventHandler["Page"]],
+        ServerOnlyEvent,
+    ] = None
     """
     Called when a web user disconnects from a page session, i.e. closes browser \
     tab/window.
     """
 
-    on_close: Optional[ControlEventHandler["Page"]] = None
+    on_close: Annotated[Optional[ControlEventHandler["Page"]], ServerOnlyEvent] = None
     """
     Called when a session has expired after configured amount of time (60 minutes by \
     default).
     """
 
-    on_login: Optional[EventHandler[LoginEvent]] = None
+    on_login: Annotated[Optional[EventHandler[LoginEvent]], ServerOnlyEvent] = None
     """
     Called upon successful or failed OAuth authorization flow.
 
@@ -783,7 +785,7 @@ class Page(BasePage):
     guide for more information and examples.
     """  # noqa: E501
 
-    on_logout: Optional[ControlEventHandler["Page"]] = None
+    on_logout: Annotated[Optional[ControlEventHandler["Page"]], ServerOnlyEvent] = None
     """
     Called after `page.logout()` call.
     """

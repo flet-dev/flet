@@ -6,10 +6,7 @@ from flet.utils.validation import V, ValidationRules
 __all__ = ["InputOTP"]
 
 
-@ft.control(
-    "ShadInputOTP",
-    enabled_only=("change", "complete", "value"),
-)
+@ft.control("ShadInputOTP")
 class InputOTP(ft.LayoutControl):
     """
     A Shadcn one-time password input: a row of single-character boxes.
@@ -27,7 +24,7 @@ class InputOTP(ft.LayoutControl):
         ),
     )
 
-    value: Annotated[str, ft.ClientWritable] = ""
+    value: Annotated[str, ft.ClientWritable, ft.EnabledOnly] = ""
     """
     The characters entered so far.
     """
@@ -86,7 +83,9 @@ class InputOTP(ft.LayoutControl):
     string) to clear the error.
     """
 
-    on_change: Optional[ft.ControlEventHandler["InputOTP"]] = None
+    on_change: Annotated[
+        Optional[ft.ControlEventHandler["InputOTP"]], ft.EnabledOnly
+    ] = None
     """
     Called when the characters change.
 
@@ -94,7 +93,9 @@ class InputOTP(ft.LayoutControl):
     contains the new :attr:`value`.
     """
 
-    on_complete: Optional[ft.ControlEventHandler["InputOTP"]] = None
+    on_complete: Annotated[
+        Optional[ft.ControlEventHandler["InputOTP"]], ft.EnabledOnly
+    ] = None
     """
     Called when every box is filled.
 

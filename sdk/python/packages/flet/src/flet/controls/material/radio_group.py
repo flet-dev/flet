@@ -1,6 +1,6 @@
 from typing import Annotated, Optional
 
-from flet.controls.base_control import ClientWritable, control
+from flet.controls.base_control import ClientWritable, EnabledOnly, control
 from flet.controls.control import Control
 from flet.controls.control_event import ControlEventHandler
 from flet.utils.validation import V
@@ -8,7 +8,7 @@ from flet.utils.validation import V
 __all__ = ["RadioGroup"]
 
 
-@control("RadioGroup", enabled_only=("change", "value"))
+@control("RadioGroup")
 class RadioGroup(Control):
     """
     Radio buttons let people select a single option from two or more choices.
@@ -28,12 +28,15 @@ class RadioGroup(Control):
         ValueError: If :attr:`content` is not visible.
     """
 
-    value: Annotated[Optional[str], ClientWritable] = None
+    value: Annotated[Optional[str], ClientWritable, EnabledOnly] = None
     """
     Current value of the RadioGroup.
     """
 
-    on_change: Optional[ControlEventHandler["RadioGroup"]] = None
+    on_change: Annotated[
+        Optional[ControlEventHandler["RadioGroup"]],
+        EnabledOnly,
+    ] = None
     """
     Called when the state of the RadioGroup is changed.
     """

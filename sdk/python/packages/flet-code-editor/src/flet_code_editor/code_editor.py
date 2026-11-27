@@ -13,10 +13,7 @@ from flet_code_editor.types import (
 __all__ = ["CodeEditor"]
 
 
-@ft.control(
-    "CodeEditor",
-    enabled_only=("change", "value"),
-)
+@ft.control("CodeEditor")
 class CodeEditor(ft.LayoutControl):
     """Edit and highlight source code."""
 
@@ -36,7 +33,7 @@ class CodeEditor(ft.LayoutControl):
     padding: Optional[ft.PaddingValue] = None
     """Padding around the editor."""
 
-    value: Annotated[Optional[str], ft.ClientWritable] = None
+    value: Annotated[Optional[str], ft.ClientWritable, ft.EnabledOnly] = None
     """Full text including folded sections and service comments."""
 
     selection: Annotated[Optional[ft.TextSelection], ft.ClientWritable] = None
@@ -65,7 +62,9 @@ class CodeEditor(ft.LayoutControl):
     autofocus: Optional[bool] = False
     """Whether this editor should focus itself if nothing else is focused."""
 
-    on_change: Optional[ft.ControlEventHandler["CodeEditor"]] = None
+    on_change: Annotated[
+        Optional[ft.ControlEventHandler["CodeEditor"]], ft.EnabledOnly
+    ] = None
     """Called when the editor text changes."""
 
     on_selection_change: Optional[

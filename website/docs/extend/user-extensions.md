@@ -506,8 +506,8 @@ widget.control.triggerEvent("change", stars);
 ```
 
 Mark each field the Dart code sends with `Annotated[..., ft.ClientWritable]`.
-If the widget holds back a value or an event while the control is disabled, include it
-in `enabled_only` too:
+Add `ft.EnabledOnly` to each field or handler that the widget updates or calls
+only while enabled.
 
 ```python
 from typing import Annotated, Optional
@@ -515,11 +515,16 @@ from typing import Annotated, Optional
 import flet as ft
 
 
-@ft.control("Rating", enabled_only=("change", "stars"))
+@ft.control("Rating")
 class Rating(ft.LayoutControl):
-    stars: Annotated[int, ft.ClientWritable] = 0
-    on_change: Optional[ft.ControlEventHandler["Rating"]] = None
+    stars: Annotated[int, ft.ClientWritable, ft.EnabledOnly] = 0
+    on_change: Annotated[
+        Optional[ft.ControlEventHandler["Rating"]], ft.EnabledOnly
+    ] = None
 ```
+
+For events that only Python dispatches, mark the `on_*` handler with
+`ft.ServerOnlyEvent`. Subclasses inherit both restrictions.
 
 Python ignores any other property it receives, because a client can send anything. Treat
 a marked field as user input in the same way as the data of an event: it can hold any

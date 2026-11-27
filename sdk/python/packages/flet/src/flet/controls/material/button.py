@@ -1,9 +1,9 @@
 from dataclasses import field
-from typing import Optional, Union
+from typing import Annotated, Optional, Union
 
 from flet.controls.action_control import ActionControl
 from flet.controls.adaptive_control import AdaptiveControl
-from flet.controls.base_control import control
+from flet.controls.base_control import EnabledOnly, control
 from flet.controls.buttons import ButtonStyle
 from flet.controls.control import Control
 from flet.controls.control_event import ControlEventHandler
@@ -22,7 +22,7 @@ from flet.utils.validation import V, ValidationRules
 __all__ = ["Button"]
 
 
-@control("Button", enabled_only=("click", "long_press"))
+@control("Button")
 class Button(LayoutControl, AdaptiveControl, ActionControl):
     """
     A material button.
@@ -102,12 +102,15 @@ class Button(LayoutControl, AdaptiveControl, ActionControl):
     The URL to open when the button is clicked.
     """
 
-    on_click: Optional[ControlEventHandler["Button"]] = None
+    on_click: Annotated[Optional[ControlEventHandler["Button"]], EnabledOnly] = None
     """
     Called when the button is clicked.
     """
 
-    on_long_press: Optional[ControlEventHandler["Button"]] = None
+    on_long_press: Annotated[
+        Optional[ControlEventHandler["Button"]],
+        EnabledOnly,
+    ] = None
     """
     Called when the button is long-pressed.
     """

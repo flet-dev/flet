@@ -3,7 +3,7 @@ from enum import Enum
 from typing import Annotated, Optional
 
 from flet.controls.adaptive_control import AdaptiveControl
-from flet.controls.base_control import ClientWritable, control
+from flet.controls.base_control import ClientWritable, EnabledOnly, control
 from flet.controls.border import Border
 from flet.controls.buttons import OutlinedBorder
 from flet.controls.control_event import ControlEventHandler
@@ -104,10 +104,7 @@ class NavigationBarDestination(AdaptiveControl):
     """
 
 
-@control(
-    "NavigationBar",
-    enabled_only=("change", "selected_index"),
-)
+@control("NavigationBar")
 class NavigationBar(LayoutControl, AdaptiveControl):
     """
     Material 3 Navigation Bar component.
@@ -139,7 +136,7 @@ class NavigationBar(LayoutControl, AdaptiveControl):
         ValueError: If it does not contain at least two visible destinations.
     """
 
-    selected_index: Annotated[int, ClientWritable] = 0
+    selected_index: Annotated[int, ClientWritable, EnabledOnly] = 0
     """
     The index into `destinations` for the current selected `NavigationBarDestination` \
     or `None` if no destination is selected.
@@ -208,7 +205,9 @@ class NavigationBar(LayoutControl, AdaptiveControl):
     values are supported: `PRESSED`, `HOVERED` and `FOCUSED`.
     """
 
-    on_change: Optional[ControlEventHandler["NavigationBar"]] = None
+    on_change: Annotated[
+        Optional[ControlEventHandler["NavigationBar"]], EnabledOnly
+    ] = None
     """
     Called when selected destination changed.
     """

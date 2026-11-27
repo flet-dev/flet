@@ -1,9 +1,9 @@
 from dataclasses import field
 from enum import Enum
-from typing import Optional
+from typing import Annotated, Optional
 
 from flet.controls.animation import AnimationStyle
-from flet.controls.base_control import control
+from flet.controls.base_control import EnabledOnly, control
 from flet.controls.border_radius import BorderRadiusValue
 from flet.controls.box import BoxConstraints
 from flet.controls.buttons import ButtonStyle, OutlinedBorder
@@ -38,7 +38,7 @@ class PopupMenuPosition(Enum):
     """
 
 
-@control("PopupMenuItem", enabled_only=("click",))
+@control("PopupMenuItem")
 class PopupMenuItem(Control):
     """
     A popup menu item.
@@ -92,13 +92,16 @@ class PopupMenuItem(Control):
     item.
     """
 
-    on_click: Optional[ControlEventHandler["PopupMenuItem"]] = None
+    on_click: Annotated[
+        Optional[ControlEventHandler["PopupMenuItem"]],
+        EnabledOnly,
+    ] = None
     """
     Called when a user clicks on this menu item.
     """
 
 
-@control("PopupMenuButton", enabled_only=("select",))
+@control("PopupMenuButton")
 class PopupMenuButton(LayoutControl):
     """
     An icon button which displays a menu when clicked.
@@ -248,7 +251,9 @@ class PopupMenuButton(LayoutControl):
     Called when the user dismisses/cancels the popup menu without selecting an item.
     """
 
-    on_select: Optional[ControlEventHandler["PopupMenuButton"]] = None
+    on_select: Annotated[
+        Optional[ControlEventHandler["PopupMenuButton"]], EnabledOnly
+    ] = None
     """
     Called when the user selects a popup menu item.
 

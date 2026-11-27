@@ -1,6 +1,6 @@
 from typing import Annotated, Optional
 
-from flet.controls.base_control import ClientWritable, control
+from flet.controls.base_control import ClientWritable, EnabledOnly, control
 from flet.controls.control import Control
 from flet.controls.control_event import ControlEventHandler
 from flet.controls.layout_control import LayoutControl
@@ -11,10 +11,7 @@ from flet.utils.validation import V
 __all__ = ["CupertinoSegmentedButton"]
 
 
-@control(
-    "CupertinoSegmentedButton",
-    enabled_only=("change", "selected_index"),
-)
+@control("CupertinoSegmentedButton")
 class CupertinoSegmentedButton(LayoutControl):
     """
     An iOS-style segmented button.
@@ -43,7 +40,7 @@ class CupertinoSegmentedButton(LayoutControl):
         ValueError: If it does not contain at least two visible `Control`s.
     """
 
-    selected_index: Annotated[int, ClientWritable] = 0
+    selected_index: Annotated[int, ClientWritable, EnabledOnly] = 0
     """
     The index (starting from 0) of the selected segment in the :attr:`controls` list.
 
@@ -96,7 +93,9 @@ class CupertinoSegmentedButton(LayoutControl):
     The color used for the text of the segment when it is disabled.
     """
 
-    on_change: Optional[ControlEventHandler["CupertinoSegmentedButton"]] = None
+    on_change: Annotated[
+        Optional[ControlEventHandler["CupertinoSegmentedButton"]], EnabledOnly
+    ] = None
     """
     Called when the state of the button is changed - when one of the `controls` is \
     clicked.

@@ -4,7 +4,7 @@ from typing import Annotated, Optional, Union
 from flet.controls.action_control import ActionControl
 from flet.controls.adaptive_control import AdaptiveControl
 from flet.controls.alignment import Alignment
-from flet.controls.base_control import control
+from flet.controls.base_control import EnabledOnly, control
 from flet.controls.box import BoxConstraints
 from flet.controls.buttons import ButtonStyle
 from flet.controls.control_event import ControlEventHandler
@@ -28,7 +28,7 @@ __all__ = [
 ]
 
 
-@control("IconButton", enabled_only=("click", "long_press"))
+@control("IconButton")
 class IconButton(LayoutControl, AdaptiveControl, ActionControl):
     """
     An icon button is a round button with an icon in the middle that reacts to touches \
@@ -197,12 +197,14 @@ class IconButton(LayoutControl, AdaptiveControl, ActionControl):
     Size constraints for this button.
     """
 
-    on_click: Optional[ControlEventHandler["IconButton"]] = None
+    on_click: Annotated[Optional[ControlEventHandler["IconButton"]], EnabledOnly] = None
     """
     Called when a user clicks this button.
     """
 
-    on_long_press: Optional[ControlEventHandler["IconButton"]] = None
+    on_long_press: Annotated[
+        Optional[ControlEventHandler["IconButton"]], EnabledOnly
+    ] = None
     """
     Called when the button is long-pressed.
     """

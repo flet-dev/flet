@@ -2,7 +2,7 @@ from enum import Enum
 from typing import Annotated, Optional
 
 from flet.controls.adaptive_control import AdaptiveControl
-from flet.controls.base_control import ClientWritable, control
+from flet.controls.base_control import ClientWritable, EnabledOnly, control
 from flet.controls.control_event import ControlEventHandler
 from flet.controls.control_state import ControlStateValue
 from flet.controls.layout_control import LayoutControl
@@ -59,10 +59,7 @@ class SliderInteraction(Enum):
     """
 
 
-@control(
-    "Slider",
-    enabled_only=("change", "change_end", "change_start", "value"),
-)
+@control("Slider")
 class Slider(LayoutControl, AdaptiveControl):
     """
     A slider provides a visual indication of adjustable content, as well as the \
@@ -81,6 +78,7 @@ class Slider(LayoutControl, AdaptiveControl):
     value: Annotated[
         Optional[Number],
         ClientWritable,
+        EnabledOnly,
         V.ge_field("min"),
         V.le_field("max"),
     ] = None
@@ -242,17 +240,23 @@ class Slider(LayoutControl, AdaptiveControl):
     If :attr:`flet.Theme.use_material3` is `False`, then this property is ignored.
     """
 
-    on_change: Optional[ControlEventHandler["Slider"]] = None
+    on_change: Annotated[Optional[ControlEventHandler["Slider"]], EnabledOnly] = None
     """
     Called when the state of this slider is changed.
     """
 
-    on_change_start: Optional[ControlEventHandler["Slider"]] = None
+    on_change_start: Annotated[
+        Optional[ControlEventHandler["Slider"]],
+        EnabledOnly,
+    ] = None
     """
     Called when the user starts selecting a new value for this slider.
     """
 
-    on_change_end: Optional[ControlEventHandler["Slider"]] = None
+    on_change_end: Annotated[
+        Optional[ControlEventHandler["Slider"]],
+        EnabledOnly,
+    ] = None
     """
     Called when the user is done selecting a new value for this slider.
     """

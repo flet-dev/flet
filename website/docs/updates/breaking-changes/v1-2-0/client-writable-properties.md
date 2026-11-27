@@ -29,8 +29,9 @@ whose annotation omits `ft.ClientWritable`. For example:
 Ignored a value a client sent for Rating.stars. If the control's Dart code updates this property, mark its Python field with Annotated[..., ft.ClientWritable].
 ```
 
-Events need no declaration: an extension's `on_*` handlers receive the events its Dart
-code triggers, except in the cases listed under [Other changes](#other-changes).
+An extension's `on_*` handlers receive ordinary Dart events by default. Use
+`ft.EnabledOnly` or `ft.ServerOnlyEvent` on handlers with the restrictions described
+in the [migration guide](#migration-guide).
 
 ## Background
 
@@ -71,8 +72,8 @@ new annotation determines whether the client can write it. To accept updates in 
 one widget, mark the field on that subclass and preserve the inherited default and
 constructor options.
 
-If your Dart code holds back a value or an event while the control is disabled, list it in
-`enabled_only` as well, and Python ignores it from a client in that state:
+Add `ft.EnabledOnly` to the fields and handlers that your widget updates or calls
+only while enabled. Flet checks the control and its ancestors on incoming updates.
 
 ```python
 from typing import Annotated, Optional
@@ -80,13 +81,23 @@ from typing import Annotated, Optional
 import flet as ft
 
 
-@ft.control("Rating", enabled_only=("change", "stars"))
+@ft.control("Rating")
 class Rating(ft.LayoutControl):
-    stars: Annotated[int, ft.ClientWritable] = 0
-    on_change: Optional[ft.ControlEventHandler["Rating"]] = None
+    stars: Annotated[int, ft.ClientWritable, ft.EnabledOnly] = 0
+    on_change: Annotated[
+        Optional[ft.ControlEventHandler["Rating"]], ft.EnabledOnly
+    ] = None
 ```
 
-An extension using this marker needs `flet>=1.2.0`.
+For an event dispatched exclusively by Python, mark the handler with
+`ft.ServerOnlyEvent`. For example, a rating saved to the server could declare
+`on_saved: Annotated[Optional[ft.ControlEventHandler["Rating"]], ft.ServerOnlyEvent] = None`.
+Python can dispatch the event, and Flet ignores client requests to trigger it.
+
+Subclasses retain inherited `EnabledOnly` and `ServerOnlyEvent` restrictions even
+when they redeclare a field to change its default or refine its handler type.
+
+An extension using these markers needs `flet>=1.2.0`.
 
 Controls written only in Python need no change.
 
@@ -109,7 +120,7 @@ These affect what a client can do, and may matter to an app:
 - **Dialogs.** A client can close a dialog, but not open one.
 - **Events only Python triggers.** Python ignores `connect`, `disconnect`, `close`,
   `login`, `logout` and `views_pop_until` on the page when they come from a client. An
-  extension can list its own with the `server_events` argument of `@ft.control`.
+  extension can mark its own Python-originated event handlers with `ft.ServerOnlyEvent`.
 - **Values of the wrong type.** Python ignores a `dict` or `list` sent for a field that
   holds a single value.
 - **Values and events on their way.** A click or a value already on its way when a handler

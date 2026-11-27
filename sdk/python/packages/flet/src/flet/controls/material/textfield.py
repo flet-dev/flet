@@ -3,7 +3,13 @@ from enum import Enum
 from typing import Annotated, Optional, Union
 
 from flet.controls.adaptive_control import AdaptiveControl
-from flet.controls.base_control import BaseControl, ClientWritable, control, value
+from flet.controls.base_control import (
+    BaseControl,
+    ClientWritable,
+    EnabledOnly,
+    control,
+    value,
+)
 from flet.controls.control_event import ControlEventHandler, Event, EventHandler
 from flet.controls.core.autofill_group import AutofillHint
 from flet.controls.core.text import TextSelection, TextSelectionChangeEvent
@@ -442,7 +448,6 @@ class TextOnlyInputFilter(InputFilter):
     "TextField",
     categories=("input", "form"),
     tags=("text", "editable", "validation"),
-    enabled_only=("change", "click", "submit", "value"),
 )
 class TextField(FormFieldControl, AdaptiveControl):
     """
@@ -455,7 +460,7 @@ class TextField(FormFieldControl, AdaptiveControl):
     ```
     """
 
-    value: Annotated[str, ClientWritable] = ""
+    value: Annotated[str, ClientWritable, EnabledOnly] = ""
     """
     Current value of this text field.
     """
@@ -779,7 +784,7 @@ class TextField(FormFieldControl, AdaptiveControl):
     [here](https://api.flutter.dev/flutter/material/TextField/autofillHints.html).
     """
 
-    on_change: Optional[ControlEventHandler["TextField"]] = None
+    on_change: Annotated[Optional[ControlEventHandler["TextField"]], EnabledOnly] = None
     """
     Called when the typed input for the TextField has changed.
     """
@@ -808,7 +813,7 @@ class TextField(FormFieldControl, AdaptiveControl):
     receives pasted files.
     """
 
-    on_click: Optional[ControlEventHandler["TextField"]] = None
+    on_click: Annotated[Optional[ControlEventHandler["TextField"]], EnabledOnly] = None
     """
     Called when the field is tapped.
 
@@ -816,7 +821,7 @@ class TextField(FormFieldControl, AdaptiveControl):
     consecutive taps.
     """
 
-    on_submit: Optional[ControlEventHandler["TextField"]] = None
+    on_submit: Annotated[Optional[ControlEventHandler["TextField"]], EnabledOnly] = None
     """
     Called when user presses ENTER while focus is on TextField.
     """

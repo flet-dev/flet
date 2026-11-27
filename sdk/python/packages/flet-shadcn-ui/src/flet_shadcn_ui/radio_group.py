@@ -35,7 +35,7 @@ class Radio(ft.Control):
     """
 
 
-@ft.control("ShadRadioGroup", enabled_only=("change", "value"))
+@ft.control("ShadRadioGroup")
 class RadioGroup(ft.LayoutControl):
     """
     A Shadcn radio group: a set of options where only one can be selected.
@@ -58,7 +58,7 @@ class RadioGroup(ft.LayoutControl):
     The options of this group.
     """
 
-    value: Annotated[Optional[str], ft.ClientWritable] = None
+    value: Annotated[Optional[str], ft.ClientWritable, ft.EnabledOnly] = None
     """
     The :attr:`~flet_shadcn_ui.Radio.value` of the selected option.
 
@@ -97,7 +97,9 @@ class RadioGroup(ft.LayoutControl):
     string) to clear the error.
     """
 
-    on_change: Optional[ft.ControlEventHandler["RadioGroup"]] = None
+    on_change: Annotated[
+        Optional[ft.ControlEventHandler["RadioGroup"]], ft.EnabledOnly
+    ] = None
     """
     Called when the selected option changes.
 

@@ -6,7 +6,7 @@ from flet.utils.validation import V
 __all__ = ["Textarea"]
 
 
-@ft.control("ShadTextarea", enabled_only=("change", "value"))
+@ft.control("ShadTextarea")
 class Textarea(ft.LayoutControl):
     """
     A Shadcn multi-line text input.
@@ -20,7 +20,7 @@ class Textarea(ft.LayoutControl):
     ```
     """
 
-    value: Annotated[str, ft.ClientWritable] = ""
+    value: Annotated[str, ft.ClientWritable, ft.EnabledOnly] = ""
     """
     The current text of this textarea.
     """
@@ -100,7 +100,9 @@ class Textarea(ft.LayoutControl):
     string) to clear the error.
     """
 
-    on_change: Optional[ft.ControlEventHandler["Textarea"]] = None
+    on_change: Annotated[
+        Optional[ft.ControlEventHandler["Textarea"]], ft.EnabledOnly
+    ] = None
     """
     Called when the text changes.
 

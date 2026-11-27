@@ -6,7 +6,7 @@ from flet.utils.validation import V
 __all__ = ["Calendar"]
 
 
-@ft.control("ShadCalendar", enabled_only=("change", "value"))
+@ft.control("ShadCalendar")
 class Calendar(ft.LayoutControl):
     """
     A Shadcn calendar for picking one day.
@@ -21,7 +21,9 @@ class Calendar(ft.LayoutControl):
     ```
     """
 
-    value: Annotated[Optional[ft.DateTimeValue], ft.ClientWritable] = None
+    value: Annotated[Optional[ft.DateTimeValue], ft.ClientWritable, ft.EnabledOnly] = (
+        None
+    )
     """
     The selected day.
 
@@ -74,7 +76,9 @@ class Calendar(ft.LayoutControl):
     Whether to show the week number at the start of each week.
     """
 
-    on_change: Optional[ft.ControlEventHandler["Calendar"]] = None
+    on_change: Annotated[
+        Optional[ft.ControlEventHandler["Calendar"]], ft.EnabledOnly
+    ] = None
     """
     Called when the user picks or clears a day.
     """
