@@ -3,7 +3,7 @@ from enum import Enum
 from typing import Annotated, Optional
 
 from flet.controls.animation import AnimationStyle
-from flet.controls.base_control import EnabledOnly, control
+from flet.controls.base_control import ClientPolicy, control
 from flet.controls.border_radius import BorderRadiusValue
 from flet.controls.box import BoxConstraints
 from flet.controls.buttons import ButtonStyle, OutlinedBorder
@@ -94,7 +94,7 @@ class PopupMenuItem(Control):
 
     on_click: Annotated[
         Optional[ControlEventHandler["PopupMenuItem"]],
-        EnabledOnly,
+        ClientPolicy.ENABLED_ONLY,
     ] = None
     """
     Called when a user clicks on this menu item.
@@ -252,7 +252,7 @@ class PopupMenuButton(LayoutControl):
     """
 
     on_select: Annotated[
-        Optional[ControlEventHandler["PopupMenuButton"]], EnabledOnly
+        Optional[ControlEventHandler["PopupMenuButton"]], ClientPolicy.ENABLED_ONLY
     ] = None
     """
     Called when the user selects a popup menu item.

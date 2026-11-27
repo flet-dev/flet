@@ -17,7 +17,7 @@ class Input(ft.LayoutControl):
     ```
     """
 
-    value: Annotated[str, ft.ClientWritable, ft.EnabledOnly] = ""
+    value: Annotated[str, ft.ClientPolicy.WRITABLE, ft.ClientPolicy.ENABLED_ONLY] = ""
     """
     The current text of this input.
     """
@@ -106,7 +106,7 @@ class Input(ft.LayoutControl):
 
     on_change: Annotated[
         Optional[ft.ControlEventHandler["Input"]],
-        ft.EnabledOnly,
+        ft.ClientPolicy.ENABLED_ONLY,
     ] = None
     """
     Called when the text changes.
@@ -117,7 +117,7 @@ class Input(ft.LayoutControl):
 
     on_submit: Annotated[
         Optional[ft.ControlEventHandler["Input"]],
-        ft.EnabledOnly,
+        ft.ClientPolicy.ENABLED_ONLY,
     ] = None
     """
     Called when the user submits the text, for example by pressing `Enter`.
@@ -125,7 +125,7 @@ class Input(ft.LayoutControl):
 
     on_click: Annotated[
         Optional[ft.ControlEventHandler["Input"]],
-        ft.EnabledOnly,
+        ft.ClientPolicy.ENABLED_ONLY,
     ] = None
     """
     Called when this input is clicked.

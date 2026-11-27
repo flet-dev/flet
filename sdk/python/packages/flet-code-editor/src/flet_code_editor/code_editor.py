@@ -33,10 +33,12 @@ class CodeEditor(ft.LayoutControl):
     padding: Optional[ft.PaddingValue] = None
     """Padding around the editor."""
 
-    value: Annotated[Optional[str], ft.ClientWritable, ft.EnabledOnly] = None
+    value: Annotated[
+        Optional[str], ft.ClientPolicy.WRITABLE, ft.ClientPolicy.ENABLED_ONLY
+    ] = None
     """Full text including folded sections and service comments."""
 
-    selection: Annotated[Optional[ft.TextSelection], ft.ClientWritable] = None
+    selection: Annotated[Optional[ft.TextSelection], ft.ClientPolicy.WRITABLE] = None
     """
     Represents the current text selection or caret position in the editor.
 
@@ -63,7 +65,7 @@ class CodeEditor(ft.LayoutControl):
     """Whether this editor should focus itself if nothing else is focused."""
 
     on_change: Annotated[
-        Optional[ft.ControlEventHandler["CodeEditor"]], ft.EnabledOnly
+        Optional[ft.ControlEventHandler["CodeEditor"]], ft.ClientPolicy.ENABLED_ONLY
     ] = None
     """Called when the editor text changes."""
 

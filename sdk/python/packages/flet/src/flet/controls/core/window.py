@@ -3,7 +3,7 @@ from enum import Enum
 from typing import Annotated, Optional
 
 from flet.controls.alignment import Alignment
-from flet.controls.base_control import BaseControl, ClientWritable, control
+from flet.controls.base_control import BaseControl, ClientPolicy, control
 from flet.controls.control_event import Event, EventControlType, EventHandler
 from flet.controls.types import (
     Brightness,
@@ -141,29 +141,29 @@ class Window(BaseControl):
         compositor stays opaque until it is restarted.
     """
 
-    width: Annotated[Optional[Number], ClientWritable] = None
+    width: Annotated[Optional[Number], ClientPolicy.WRITABLE] = None
     """
     Defines the width of the app window.
     """
 
-    height: Annotated[Optional[Number], ClientWritable] = None
+    height: Annotated[Optional[Number], ClientPolicy.WRITABLE] = None
     """
     Defines the height of the app window.
     """
 
-    top: Annotated[Optional[Number], ClientWritable] = None
+    top: Annotated[Optional[Number], ClientPolicy.WRITABLE] = None
     """
     Defines the vertical position of a native OS window - a distance in virtual pixels \
     from the top edge of the screen.
     """
 
-    left: Annotated[Optional[Number], ClientWritable] = None
+    left: Annotated[Optional[Number], ClientPolicy.WRITABLE] = None
     """
     Defines the horizontal position of the app window - a distance in virtual pixels \
     from the left edge of the screen.
     """
 
-    max_width: Annotated[Optional[Number], ClientWritable] = None
+    max_width: Annotated[Optional[Number], ClientPolicy.WRITABLE] = None
     """
     Defines the maximum width of the app window, measured like
     :attr:`flet.Window.width`.
@@ -171,7 +171,7 @@ class Window(BaseControl):
     `None` means no limit.
     """
 
-    max_height: Annotated[Optional[Number], ClientWritable] = None
+    max_height: Annotated[Optional[Number], ClientPolicy.WRITABLE] = None
     """
     Defines the maximum height of the app window, measured like
     :attr:`flet.Window.height`.
@@ -179,7 +179,7 @@ class Window(BaseControl):
     `None` means no limit.
     """
 
-    min_width: Annotated[Optional[Number], ClientWritable] = None
+    min_width: Annotated[Optional[Number], ClientPolicy.WRITABLE] = None
     """
     Defines the minimum width of the app window, measured like
     :attr:`flet.Window.width`.
@@ -187,7 +187,7 @@ class Window(BaseControl):
     `None` means no limit.
     """
 
-    min_height: Annotated[Optional[Number], ClientWritable] = None
+    min_height: Annotated[Optional[Number], ClientPolicy.WRITABLE] = None
     """
     Defines the minimum height of the app window, measured like
     :attr:`flet.Window.height`.
@@ -195,7 +195,7 @@ class Window(BaseControl):
     `None` means no limit.
     """
 
-    opacity: Annotated[Number, ClientWritable] = 1.0
+    opacity: Annotated[Number, ClientPolicy.WRITABLE] = 1.0
     """
     Defines the opacity of the app window.
 
@@ -213,36 +213,36 @@ class Window(BaseControl):
     The brightness of a app window.
     """
 
-    maximized: Annotated[bool, ClientWritable] = False
+    maximized: Annotated[bool, ClientPolicy.WRITABLE] = False
     """
     Whether the app window is maximized.
 
     Set to `True` to maximize programmatically.
     """
 
-    minimized: Annotated[bool, ClientWritable] = False
+    minimized: Annotated[bool, ClientPolicy.WRITABLE] = False
     """
     Whether the app window is minimized.
 
     Set to `True` to minimize programmatically.
     """
 
-    minimizable: Annotated[bool, ClientWritable] = True
+    minimizable: Annotated[bool, ClientPolicy.WRITABLE] = True
     """
     Whether the app window can be minimized through the window's "Minimize" button.
     """
 
-    maximizable: Annotated[bool, ClientWritable] = True
+    maximizable: Annotated[bool, ClientPolicy.WRITABLE] = True
     """
     Whether to hide/disable app window's "Maximize" button.
     """
 
-    resizable: Annotated[bool, ClientWritable] = True
+    resizable: Annotated[bool, ClientPolicy.WRITABLE] = True
     """
     Whether the app window can be resized.
     """
 
-    movable: Annotated[bool, ClientWritable] = True
+    movable: Annotated[bool, ClientPolicy.WRITABLE] = True
     """
     Whether the app window can be moved.
 
@@ -250,12 +250,12 @@ class Window(BaseControl):
         Has effect on macOS only.
     """
 
-    full_screen: Annotated[bool, ClientWritable] = False
+    full_screen: Annotated[bool, ClientPolicy.WRITABLE] = False
     """
     Whether to switch the app's window to fullscreen mode.
     """
 
-    always_on_top: Annotated[bool, ClientWritable] = False
+    always_on_top: Annotated[bool, ClientPolicy.WRITABLE] = False
     """
     Whether the app window should always be displayed on top of other windows/apps.
     """
@@ -268,7 +268,7 @@ class Window(BaseControl):
         Has effect on Linux and Windows only.
     """
 
-    prevent_close: Annotated[bool, ClientWritable] = False
+    prevent_close: Annotated[bool, ClientPolicy.WRITABLE] = False
     """
     Set to `True` to intercept the native close signal.
 
@@ -286,12 +286,12 @@ class Window(BaseControl):
         Keep a way to bring it back, such as a tray icon.
     """
 
-    title_bar_hidden: Annotated[bool, ClientWritable] = False
+    title_bar_hidden: Annotated[bool, ClientPolicy.WRITABLE] = False
     """
     Whether to hide the app window's title bar.
     """
 
-    title_bar_buttons_hidden: Annotated[bool, ClientWritable] = False
+    title_bar_buttons_hidden: Annotated[bool, ClientPolicy.WRITABLE] = False
     """
     Whether to hide the app window's title bar buttons.
 
@@ -299,7 +299,7 @@ class Window(BaseControl):
         Has effect on macOS only.
     """
 
-    frameless: Annotated[bool, ClientWritable] = False
+    frameless: Annotated[bool, ClientPolicy.WRITABLE] = False
     """
     Whether the app window should be frameless.
     """
@@ -309,14 +309,14 @@ class Window(BaseControl):
     The value from `0.0` to `1.0` to display a progress bar on Task Bar or Dock.
     """
 
-    focused: Annotated[bool, ClientWritable] = True
+    focused: Annotated[bool, ClientPolicy.WRITABLE] = True
     """
     Whether the app window should be focused.
 
     Set to `True` to focus programmatically.
     """
 
-    visible: Annotated[bool, ClientWritable] = True
+    visible: Annotated[bool, ClientPolicy.WRITABLE] = True
     """
     Whether to make the app window visible.
 

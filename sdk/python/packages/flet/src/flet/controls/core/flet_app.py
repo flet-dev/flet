@@ -1,7 +1,7 @@
 from dataclasses import dataclass, field
 from typing import Annotated, Any, Optional
 
-from flet.controls.base_control import ClientWritable, control
+from flet.controls.base_control import ClientPolicy, control
 from flet.controls.control_event import ControlEventHandler, Event, EventHandler
 from flet.controls.layout_control import LayoutControl
 from flet.controls.padding import PaddingValue
@@ -54,7 +54,7 @@ class FletApp(LayoutControl):
     Optional dictionary of arguments to pass to the Flet app.
     """
 
-    route: Annotated[Optional[str], ClientWritable] = None
+    route: Annotated[Optional[str], ClientPolicy.WRITABLE] = None
     """
     The embedded app's current route.
 
@@ -68,7 +68,7 @@ class FletApp(LayoutControl):
         bar or the platform's deep links, both of which belong to the host app.
     """
 
-    title: Annotated[Optional[str], ClientWritable] = None
+    title: Annotated[Optional[str], ClientPolicy.WRITABLE] = None
     """
     The embedded app's `page.title`.
 

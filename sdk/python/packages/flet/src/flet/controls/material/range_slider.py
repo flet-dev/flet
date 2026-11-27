@@ -1,6 +1,6 @@
 from typing import Annotated, Optional
 
-from flet.controls.base_control import ClientWritable, EnabledOnly, control
+from flet.controls.base_control import ClientPolicy, control
 from flet.controls.control_event import ControlEventHandler
 from flet.controls.control_state import ControlStateValue
 from flet.controls.layout_control import LayoutControl
@@ -37,8 +37,8 @@ class RangeSlider(LayoutControl):
 
     start_value: Annotated[
         Number,
-        ClientWritable,
-        EnabledOnly,
+        ClientPolicy.WRITABLE,
+        ClientPolicy.ENABLED_ONLY,
         V.ge_field("min"),
         V.le_field("end_value"),
     ]
@@ -55,8 +55,8 @@ class RangeSlider(LayoutControl):
 
     end_value: Annotated[
         Number,
-        ClientWritable,
-        EnabledOnly,
+        ClientPolicy.WRITABLE,
+        ClientPolicy.ENABLED_ONLY,
         V.le_field("max"),
         V.ge_field("start_value"),
     ]
@@ -170,21 +170,21 @@ class RangeSlider(LayoutControl):
 
     on_change: Annotated[
         Optional[ControlEventHandler["RangeSlider"]],
-        EnabledOnly,
+        ClientPolicy.ENABLED_ONLY,
     ] = None
     """
     Called when the state of this slider is changed.
     """
 
     on_change_start: Annotated[
-        Optional[ControlEventHandler["RangeSlider"]], EnabledOnly
+        Optional[ControlEventHandler["RangeSlider"]], ClientPolicy.ENABLED_ONLY
     ] = None
     """
     Called when the user starts selecting a new value for this slider.
     """
 
     on_change_end: Annotated[
-        Optional[ControlEventHandler["RangeSlider"]], EnabledOnly
+        Optional[ControlEventHandler["RangeSlider"]], ClientPolicy.ENABLED_ONLY
     ] = None
     """
     Called when the user is done selecting a new value for this slider.

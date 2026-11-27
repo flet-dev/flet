@@ -1,7 +1,7 @@
 from typing import Annotated, Optional
 
 from flet.controls.alignment import Axis
-from flet.controls.base_control import EnabledOnly, control
+from flet.controls.base_control import ClientPolicy, control
 from flet.controls.buttons import ButtonStyle
 from flet.controls.control import Control
 from flet.controls.control_event import ControlEventHandler
@@ -99,7 +99,7 @@ class MenuItemButton(LayoutControl):
     """
 
     on_click: Annotated[
-        Optional[ControlEventHandler["MenuItemButton"]], EnabledOnly
+        Optional[ControlEventHandler["MenuItemButton"]], ClientPolicy.ENABLED_ONLY
     ] = None
     """
     Called when the button is clicked.If not defined the button will be disabled.

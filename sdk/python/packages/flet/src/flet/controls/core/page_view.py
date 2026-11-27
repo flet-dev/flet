@@ -2,7 +2,7 @@ from dataclasses import field
 from typing import Annotated, Optional
 
 from flet.controls.animation import AnimationCurve
-from flet.controls.base_control import ClientWritable, control
+from flet.controls.base_control import ClientPolicy, control
 from flet.controls.control import Control
 from flet.controls.control_event import ControlEventHandler
 from flet.controls.duration import Duration, DurationValue
@@ -34,7 +34,7 @@ class PageView(LayoutControl):
 
     selected_index: Annotated[
         int,
-        ClientWritable,
+        ClientPolicy.WRITABLE,
         V.ge(0),
     ] = 0
     """

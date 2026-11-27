@@ -29,7 +29,7 @@ class Dialog(ft.DialogControl):
     ```
     """
 
-    open: Annotated[bool, ft.ClientWritable] = field(default=False, kw_only=True)
+    open: Annotated[bool, ft.ClientPolicy.WRITABLE] = field(default=False, kw_only=True)
 
     title: Optional[ft.StrOrControl] = None
     """
@@ -83,7 +83,7 @@ class Sheet(ft.DialogControl):
     ```
     """
 
-    open: Annotated[bool, ft.ClientWritable] = field(default=False, kw_only=True)
+    open: Annotated[bool, ft.ClientPolicy.WRITABLE] = field(default=False, kw_only=True)
 
     side: SheetSide = SheetSide.BOTTOM
     """
@@ -141,7 +141,7 @@ class Toast(ft.DialogControl):
     ```
     """
 
-    open: Annotated[bool, ft.ClientWritable] = field(default=False, kw_only=True)
+    open: Annotated[bool, ft.ClientPolicy.WRITABLE] = field(default=False, kw_only=True)
 
     title: Optional[ft.StrOrControl] = None
     """
@@ -193,7 +193,7 @@ class Sonner(ft.DialogControl):
     ```
     """
 
-    open: Annotated[bool, ft.ClientWritable] = field(default=False, kw_only=True)
+    open: Annotated[bool, ft.ClientPolicy.WRITABLE] = field(default=False, kw_only=True)
 
     title: Optional[ft.StrOrControl] = None
     """

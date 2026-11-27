@@ -1,7 +1,7 @@
 from dataclasses import field
 from typing import Annotated, Optional
 
-from flet.controls.base_control import ClientWritable, control
+from flet.controls.base_control import ClientPolicy, control
 from flet.controls.border import BorderSide
 from flet.controls.box import BoxConstraints
 from flet.controls.buttons import OutlinedBorder
@@ -40,7 +40,7 @@ class SearchBar(LayoutControl):
     in a :class:`~flet.ListView`.
     """
 
-    value: Annotated[str, ClientWritable] = ""
+    value: Annotated[str, ClientPolicy.WRITABLE] = ""
     """
     The text in the search bar.
     """

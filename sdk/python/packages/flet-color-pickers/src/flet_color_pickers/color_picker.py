@@ -102,7 +102,9 @@ class ColorPicker(ft.LayoutControl):
     Width of the color picker in virtual pixels.
     """
 
-    color_history: Annotated[Optional[list[ft.ColorValue]], ft.ClientWritable] = None
+    color_history: Annotated[
+        Optional[list[ft.ColorValue]], ft.ClientPolicy.WRITABLE
+    ] = None
     """
     A list of colors to display as a history palette.
 
@@ -149,7 +151,7 @@ class ColorPicker(ft.LayoutControl):
     Height of the picker area as a percentage of the picker width.
     """
 
-    hsv_color: Annotated[Optional[HsvColor], ft.ClientWritable] = None
+    hsv_color: Annotated[Optional[HsvColor], ft.ClientPolicy.WRITABLE] = None
     """
     The currently selected HSV color.
 

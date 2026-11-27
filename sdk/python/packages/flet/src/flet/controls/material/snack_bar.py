@@ -2,7 +2,7 @@ from dataclasses import field
 from enum import Enum
 from typing import Annotated, Optional, Union
 
-from flet.controls.base_control import ClientWritable, control
+from flet.controls.base_control import ClientPolicy, control
 from flet.controls.buttons import OutlinedBorder
 from flet.controls.control import Control
 from flet.controls.control_event import ControlEventHandler
@@ -163,7 +163,7 @@ class SnackBar(DialogControl):
     ```
     """
 
-    open: Annotated[bool, ClientWritable] = field(default=False, kw_only=True)
+    open: Annotated[bool, ClientPolicy.WRITABLE] = field(default=False, kw_only=True)
 
     content: Annotated[
         StrOrControl,

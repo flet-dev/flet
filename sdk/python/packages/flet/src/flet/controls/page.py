@@ -25,8 +25,7 @@ from urllib.parse import urlparse
 from flet.components.public_utils import unwrap_component
 from flet.controls.base_control import (
     BaseControl,
-    ClientWritable,
-    ServerOnlyEvent,
+    ClientPolicy,
     control,
 )
 from flet.controls.base_page import BasePage
@@ -584,7 +583,7 @@ class Page(BasePage):
     window.
     """
 
-    route: Annotated[str, ClientWritable] = "/"
+    route: Annotated[str, ClientPolicy.WRITABLE] = "/"
     """
     Gets current app route.
 
@@ -660,7 +659,7 @@ class Page(BasePage):
         This property is read-only.
     """
 
-    platform_brightness: Annotated[Optional[Brightness], ClientWritable] = None
+    platform_brightness: Annotated[Optional[Brightness], ClientPolicy.WRITABLE] = None
     """
     The current brightness mode of the host platform.
 
@@ -739,7 +738,7 @@ class Page(BasePage):
     """
 
     on_views_pop_until: Annotated[
-        Optional[EventHandler[ViewsPopUntilEvent]], ServerOnlyEvent
+        Optional[EventHandler[ViewsPopUntilEvent]], ClientPolicy.SERVER_ONLY_EVENT
     ] = None
     """
     Called when :meth:`pop_views_until` reaches the destination view.
@@ -752,7 +751,9 @@ class Page(BasePage):
     Called when a keyboard key is pressed.
     """
 
-    on_connect: Annotated[Optional[ControlEventHandler["Page"]], ServerOnlyEvent] = None
+    on_connect: Annotated[
+        Optional[ControlEventHandler["Page"]], ClientPolicy.SERVER_ONLY_EVENT
+    ] = None
     """
     Called when a web user (re-)connects to a page session.
 
@@ -764,20 +765,24 @@ class Page(BasePage):
 
     on_disconnect: Annotated[
         Optional[ControlEventHandler["Page"]],
-        ServerOnlyEvent,
+        ClientPolicy.SERVER_ONLY_EVENT,
     ] = None
     """
     Called when a web user disconnects from a page session, i.e. closes browser \
     tab/window.
     """
 
-    on_close: Annotated[Optional[ControlEventHandler["Page"]], ServerOnlyEvent] = None
+    on_close: Annotated[
+        Optional[ControlEventHandler["Page"]], ClientPolicy.SERVER_ONLY_EVENT
+    ] = None
     """
     Called when a session has expired after configured amount of time (60 minutes by \
     default).
     """
 
-    on_login: Annotated[Optional[EventHandler[LoginEvent]], ServerOnlyEvent] = None
+    on_login: Annotated[
+        Optional[EventHandler[LoginEvent]], ClientPolicy.SERVER_ONLY_EVENT
+    ] = None
     """
     Called upon successful or failed OAuth authorization flow.
 
@@ -785,7 +790,9 @@ class Page(BasePage):
     guide for more information and examples.
     """  # noqa: E501
 
-    on_logout: Annotated[Optional[ControlEventHandler["Page"]], ServerOnlyEvent] = None
+    on_logout: Annotated[
+        Optional[ControlEventHandler["Page"]], ClientPolicy.SERVER_ONLY_EVENT
+    ] = None
     """
     Called after `page.logout()` call.
     """

@@ -4,7 +4,7 @@ from flet.controls.action_control import ActionControl
 from flet.controls.adaptive_control import AdaptiveControl
 from flet.controls.alignment import Alignment
 from flet.controls.animation import AnimationValue
-from flet.controls.base_control import EnabledOnly, control
+from flet.controls.base_control import ClientPolicy, control
 from flet.controls.blur import BlurValue
 from flet.controls.border import Border
 from flet.controls.border_radius import BorderRadiusValue
@@ -219,7 +219,9 @@ class Container(LayoutControl, AdaptiveControl, ActionControl):
     The foreground decoration of this container.
     """
 
-    on_click: Annotated[Optional[ControlEventHandler["Container"]], EnabledOnly] = None
+    on_click: Annotated[
+        Optional[ControlEventHandler["Container"]], ClientPolicy.ENABLED_ONLY
+    ] = None
     """
     Called when a user clicks the container.
 
@@ -227,14 +229,14 @@ class Container(LayoutControl, AdaptiveControl, ActionControl):
     """
 
     on_tap_down: Annotated[
-        Optional[EventHandler[TapEvent["Container"]]], EnabledOnly
+        Optional[EventHandler[TapEvent["Container"]]], ClientPolicy.ENABLED_ONLY
     ] = None
     """
     Called when a user clicks the container with or without a long press.
     """
 
     on_long_press: Annotated[
-        Optional[ControlEventHandler["Container"]], EnabledOnly
+        Optional[ControlEventHandler["Container"]], ClientPolicy.ENABLED_ONLY
     ] = None
     """
     Called when this container is long-pressed.

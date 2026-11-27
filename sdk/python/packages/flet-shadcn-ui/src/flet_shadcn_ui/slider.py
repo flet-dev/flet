@@ -23,8 +23,8 @@ class Slider(ft.LayoutControl):
 
     value: Annotated[
         ft.Number,
-        ft.ClientWritable,
-        ft.EnabledOnly,
+        ft.ClientPolicy.WRITABLE,
+        ft.ClientPolicy.ENABLED_ONLY,
         V.ge_field("min"),
         V.le_field("max"),
     ] = 0.0
@@ -94,7 +94,7 @@ class Slider(ft.LayoutControl):
 
     on_change: Annotated[
         Optional[ft.ControlEventHandler["Slider"]],
-        ft.EnabledOnly,
+        ft.ClientPolicy.ENABLED_ONLY,
     ] = None
     """
     Called continuously while the user drags the thumb.
@@ -104,14 +104,14 @@ class Slider(ft.LayoutControl):
     """
 
     on_change_start: Annotated[
-        Optional[ft.ControlEventHandler["Slider"]], ft.EnabledOnly
+        Optional[ft.ControlEventHandler["Slider"]], ft.ClientPolicy.ENABLED_ONLY
     ] = None
     """
     Called when the user starts dragging the thumb.
     """
 
     on_change_end: Annotated[
-        Optional[ft.ControlEventHandler["Slider"]], ft.EnabledOnly
+        Optional[ft.ControlEventHandler["Slider"]], ft.ClientPolicy.ENABLED_ONLY
     ] = None
     """
     Called when the user releases the thumb.

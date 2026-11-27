@@ -12,7 +12,7 @@ from typing import (
 from flet.components.public_utils import unwrap_component
 from flet.controls.adaptive_control import AdaptiveControl
 from flet.controls.animation import AnimationCurve, AnimationStyle
-from flet.controls.base_control import BaseControl, ClientWritable, control
+from flet.controls.base_control import BaseControl, ClientPolicy, control
 from flet.controls.box import BoxDecoration
 from flet.controls.control import Control
 from flet.controls.control_event import (
@@ -242,7 +242,7 @@ class BasePage(AdaptiveControl):
     Called when :attr:`media` has changed.
     """
 
-    media: Annotated[PageMediaData, ClientWritable] = field(
+    media: Annotated[PageMediaData, ClientPolicy.WRITABLE] = field(
         default_factory=lambda: PageMediaData(
             padding=Padding.zero(),
             view_padding=Padding.zero(),
@@ -260,7 +260,7 @@ class BasePage(AdaptiveControl):
     system UI elements like the keyboard or safe areas.
     """
 
-    width: Annotated[Optional[Number], ClientWritable] = None
+    width: Annotated[Optional[Number], ClientPolicy.WRITABLE] = None
     """
     Page width in logical pixels.
 
@@ -272,7 +272,7 @@ class BasePage(AdaptiveControl):
             instead.
     """
 
-    height: Annotated[Optional[Number], ClientWritable] = None
+    height: Annotated[Optional[Number], ClientPolicy.WRITABLE] = None
     """
     Page height in logical pixels.
 

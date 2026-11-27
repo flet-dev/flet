@@ -5,8 +5,7 @@ from typing import Annotated, Optional, Union
 from flet.controls.adaptive_control import AdaptiveControl
 from flet.controls.base_control import (
     BaseControl,
-    ClientWritable,
-    EnabledOnly,
+    ClientPolicy,
     control,
     value,
 )
@@ -460,12 +459,12 @@ class TextField(FormFieldControl, AdaptiveControl):
     ```
     """
 
-    value: Annotated[str, ClientWritable, EnabledOnly] = ""
+    value: Annotated[str, ClientPolicy.WRITABLE, ClientPolicy.ENABLED_ONLY] = ""
     """
     Current value of this text field.
     """
 
-    selection: Annotated[Optional[TextSelection], ClientWritable] = None
+    selection: Annotated[Optional[TextSelection], ClientPolicy.WRITABLE] = None
     """
     Represents the current text selection or caret position in the field.
 
@@ -784,7 +783,9 @@ class TextField(FormFieldControl, AdaptiveControl):
     [here](https://api.flutter.dev/flutter/material/TextField/autofillHints.html).
     """
 
-    on_change: Annotated[Optional[ControlEventHandler["TextField"]], EnabledOnly] = None
+    on_change: Annotated[
+        Optional[ControlEventHandler["TextField"]], ClientPolicy.ENABLED_ONLY
+    ] = None
     """
     Called when the typed input for the TextField has changed.
     """
@@ -813,7 +814,9 @@ class TextField(FormFieldControl, AdaptiveControl):
     receives pasted files.
     """
 
-    on_click: Annotated[Optional[ControlEventHandler["TextField"]], EnabledOnly] = None
+    on_click: Annotated[
+        Optional[ControlEventHandler["TextField"]], ClientPolicy.ENABLED_ONLY
+    ] = None
     """
     Called when the field is tapped.
 
@@ -821,7 +824,9 @@ class TextField(FormFieldControl, AdaptiveControl):
     consecutive taps.
     """
 
-    on_submit: Annotated[Optional[ControlEventHandler["TextField"]], EnabledOnly] = None
+    on_submit: Annotated[
+        Optional[ControlEventHandler["TextField"]], ClientPolicy.ENABLED_ONLY
+    ] = None
     """
     Called when user presses ENTER while focus is on TextField.
     """

@@ -12,7 +12,7 @@ class BlockPicker(ft.LayoutControl):
     colors.
     """
 
-    color: Annotated[Optional[ft.ColorValue], ft.ClientWritable] = None
+    color: Annotated[Optional[ft.ColorValue], ft.ClientPolicy.WRITABLE] = None
     """
     The currently selected color.
     """

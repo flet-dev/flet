@@ -36,7 +36,7 @@ class Geolocator(ft.Service):
     handler argument contains information on the error.
     """
 
-    position: Annotated[Optional[GeolocatorPosition], ft.ClientWritable] = field(
+    position: Annotated[Optional[GeolocatorPosition], ft.ClientPolicy.WRITABLE] = field(
         default=None, init=False
     )  # TODO: make this property readonly
     """

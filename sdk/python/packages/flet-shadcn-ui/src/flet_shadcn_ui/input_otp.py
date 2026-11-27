@@ -24,7 +24,7 @@ class InputOTP(ft.LayoutControl):
         ),
     )
 
-    value: Annotated[str, ft.ClientWritable, ft.EnabledOnly] = ""
+    value: Annotated[str, ft.ClientPolicy.WRITABLE, ft.ClientPolicy.ENABLED_ONLY] = ""
     """
     The characters entered so far.
     """
@@ -84,7 +84,7 @@ class InputOTP(ft.LayoutControl):
     """
 
     on_change: Annotated[
-        Optional[ft.ControlEventHandler["InputOTP"]], ft.EnabledOnly
+        Optional[ft.ControlEventHandler["InputOTP"]], ft.ClientPolicy.ENABLED_ONLY
     ] = None
     """
     Called when the characters change.
@@ -94,7 +94,7 @@ class InputOTP(ft.LayoutControl):
     """
 
     on_complete: Annotated[
-        Optional[ft.ControlEventHandler["InputOTP"]], ft.EnabledOnly
+        Optional[ft.ControlEventHandler["InputOTP"]], ft.ClientPolicy.ENABLED_ONLY
     ] = None
     """
     Called when every box is filled.

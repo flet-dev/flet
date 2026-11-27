@@ -2,7 +2,7 @@ from dataclasses import field
 from typing import Annotated, Optional
 
 from flet.controls.animation import AnimationStyle
-from flet.controls.base_control import ClientWritable, control
+from flet.controls.base_control import ClientPolicy, control
 from flet.controls.box import BoxConstraints
 from flet.controls.buttons import OutlinedBorder
 from flet.controls.control import Control
@@ -39,7 +39,7 @@ class BottomSheet(DialogControl):
     ```
     """
 
-    open: Annotated[bool, ClientWritable] = field(default=False, kw_only=True)
+    open: Annotated[bool, ClientPolicy.WRITABLE] = field(default=False, kw_only=True)
 
     content: Control
     """

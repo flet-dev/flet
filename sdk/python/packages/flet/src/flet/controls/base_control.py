@@ -3,6 +3,7 @@ import inspect
 import logging
 import sys
 from dataclasses import InitVar, dataclass, field, fields
+from enum import Enum
 from typing import (
     TYPE_CHECKING,
     Annotated,
@@ -42,10 +43,8 @@ if TYPE_CHECKING:
 
 __all__ = [
     "BaseControl",
-    "ClientWritable",
-    "EnabledOnly",
+    "ClientPolicy",
     "Prop",
-    "ServerOnlyEvent",
     "Value",
     "control",
     "skip_field",
@@ -61,20 +60,18 @@ __all__ = [
 # ---------------------------------------------------------------------------
 
 
-class ClientWritable:
-    """Mark a control field with `Annotated[T, ClientWritable]` to accept values
-    from its Dart widget. Treat those values as client input.
-    """
+class ClientPolicy(Enum):
+    """Field metadata for client property updates and event dispatch."""
 
+    WRITABLE = "writable"
+    """Accept values reported by the Dart widget for this field."""
 
-class EnabledOnly:
-    """Accept client updates to this field or calls to this event handler only
-    while the control and its ancestors are enabled.
-    """
+    ENABLED_ONLY = "enabled_only"
+    """Accept client input for this field or handler only while the control and its
+    ancestors are enabled."""
 
-
-class ServerOnlyEvent:
-    """Mark an `on_*` handler for an event dispatched exclusively by Python."""
+    SERVER_ONLY_EVENT = "server_only_event"
+    """Reserve this `on_*` handler for events dispatched by Python."""
 
 
 def skip_field():
@@ -144,7 +141,8 @@ def control(
         dataclass_kwargs: Additional keyword arguments passed to `@dataclass`.
 
     Raises:
-        ValueError: If `ServerOnlyEvent` marks a field other than an `on_*` handler.
+        ValueError: If `ClientPolicy.SERVER_ONLY_EVENT` is used outside an
+            `on_*` handler.
 
     Usage:
         - Supports `@control` (without parentheses)
@@ -201,15 +199,15 @@ def _collect_client_rules(cls: type) -> None:
         if get_origin(hint) is not Annotated:
             continue
         for marker in get_args(hint)[1:]:
-            if marker is ClientWritable:
+            if marker is ClientPolicy.WRITABLE:
                 writable.add(f.name)
-            elif marker is EnabledOnly:
+            elif marker is ClientPolicy.ENABLED_ONLY:
                 enabled_only.add(f.name)
-            elif marker is ServerOnlyEvent:
+            elif marker is ClientPolicy.SERVER_ONLY_EVENT:
                 if not f.name.startswith("on_"):
                     raise ValueError(
-                        f"{cls.__qualname__}.{f.name}: ServerOnlyEvent requires "
-                        "an on_* handler"
+                        f"{cls.__qualname__}.{f.name}: "
+                        "ClientPolicy.SERVER_ONLY_EVENT requires an on_* handler"
                     )
                 server_events.add(f.name.removeprefix("on_"))
 
@@ -264,17 +262,17 @@ class BaseControl:
 
     _client_writable: ClassVar[frozenset[str]] = frozenset()
     """
-    Names of the effective dataclass fields marked with `ClientWritable`.
+    Names of the effective dataclass fields marked with `ClientPolicy.WRITABLE`.
     """
 
     _enabled_only: ClassVar[frozenset[str]] = frozenset()
     """
-    Field names marked with `EnabledOnly`, including the `on_` prefix for handlers.
+    Field names marked with `ClientPolicy.ENABLED_ONLY`. Handlers keep the `on_` prefix.
     """
 
     _server_events: ClassVar[frozenset[str]] = frozenset()
     """
-    Wire names of events whose handlers are marked with `ServerOnlyEvent`.
+    Wire names of events marked with `ClientPolicy.SERVER_ONLY_EVENT`.
     """
 
     # ------------------------------------------------------------------

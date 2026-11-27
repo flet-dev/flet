@@ -3,7 +3,7 @@ from datetime import datetime, time
 from enum import Enum
 from typing import Annotated, Optional
 
-from flet.controls.base_control import ClientWritable, control
+from flet.controls.base_control import ClientPolicy, control
 from flet.controls.control_event import (
     ControlEventHandler,
     Event,
@@ -110,9 +110,9 @@ class TimePicker(DialogControl):
     ```
     """
 
-    open: Annotated[bool, ClientWritable] = field(default=False, kw_only=True)
+    open: Annotated[bool, ClientPolicy.WRITABLE] = field(default=False, kw_only=True)
 
-    value: Annotated[Optional[time], ClientWritable] = field(
+    value: Annotated[Optional[time], ClientPolicy.WRITABLE] = field(
         default_factory=lambda: datetime.now().time()
     )
     """
@@ -140,7 +140,7 @@ class TimePicker(DialogControl):
     Whether this picker cannot be dismissed by clicking the area outside of it.
     """
 
-    entry_mode: Annotated[TimePickerEntryMode, ClientWritable] = (
+    entry_mode: Annotated[TimePickerEntryMode, ClientPolicy.WRITABLE] = (
         TimePickerEntryMode.DIAL
     )
     """

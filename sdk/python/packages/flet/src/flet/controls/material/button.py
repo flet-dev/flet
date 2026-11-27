@@ -3,7 +3,7 @@ from typing import Annotated, Optional, Union
 
 from flet.controls.action_control import ActionControl
 from flet.controls.adaptive_control import AdaptiveControl
-from flet.controls.base_control import EnabledOnly, control
+from flet.controls.base_control import ClientPolicy, control
 from flet.controls.buttons import ButtonStyle
 from flet.controls.control import Control
 from flet.controls.control_event import ControlEventHandler
@@ -102,14 +102,16 @@ class Button(LayoutControl, AdaptiveControl, ActionControl):
     The URL to open when the button is clicked.
     """
 
-    on_click: Annotated[Optional[ControlEventHandler["Button"]], EnabledOnly] = None
+    on_click: Annotated[
+        Optional[ControlEventHandler["Button"]], ClientPolicy.ENABLED_ONLY
+    ] = None
     """
     Called when the button is clicked.
     """
 
     on_long_press: Annotated[
         Optional[ControlEventHandler["Button"]],
-        EnabledOnly,
+        ClientPolicy.ENABLED_ONLY,
     ] = None
     """
     Called when the button is long-pressed.

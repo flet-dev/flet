@@ -2,7 +2,7 @@ from dataclasses import dataclass, field
 from typing import Annotated, Optional
 
 from flet import LayoutControl
-from flet.controls.base_control import ClientWritable, control, value
+from flet.controls.base_control import ClientPolicy, control, value
 from flet.controls.control_event import ControlEventHandler, Event, EventHandler
 from flet.controls.types import Number
 
@@ -43,7 +43,7 @@ class AutoComplete(LayoutControl):
     list of displayed options.
     """
 
-    value: Annotated[str, ClientWritable] = ""
+    value: Annotated[str, ClientPolicy.WRITABLE] = ""
     """
     Current text displayed in the input field.
 
@@ -81,7 +81,7 @@ class AutoComplete(LayoutControl):
     Called when the input text changes.
     """
 
-    _selected_index: Annotated[Optional[int], ClientWritable] = field(
+    _selected_index: Annotated[Optional[int], ClientPolicy.WRITABLE] = field(
         default=None, init=False, repr=False, compare=False, metadata={"skip": True}
     )
     """

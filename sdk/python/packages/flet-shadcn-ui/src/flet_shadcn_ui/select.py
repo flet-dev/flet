@@ -52,7 +52,9 @@ class Select(ft.LayoutControl):
     The options to choose from.
     """
 
-    value: Annotated[Optional[str], ft.ClientWritable, ft.EnabledOnly] = None
+    value: Annotated[
+        Optional[str], ft.ClientPolicy.WRITABLE, ft.ClientPolicy.ENABLED_ONLY
+    ] = None
     """
     The :attr:`~flet_shadcn_ui.SelectOption.value` of the chosen option.
 
@@ -105,7 +107,7 @@ class Select(ft.LayoutControl):
 
     on_change: Annotated[
         Optional[ft.ControlEventHandler["Select"]],
-        ft.EnabledOnly,
+        ft.ClientPolicy.ENABLED_ONLY,
     ] = None
     """
     Called when the chosen option changes.

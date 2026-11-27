@@ -21,9 +21,11 @@ class DatePicker(ft.LayoutControl):
     ```
     """
 
-    value: Annotated[Optional[ft.DateTimeValue], ft.ClientWritable, ft.EnabledOnly] = (
-        None
-    )
+    value: Annotated[
+        Optional[ft.DateTimeValue],
+        ft.ClientPolicy.WRITABLE,
+        ft.ClientPolicy.ENABLED_ONLY,
+    ] = None
     """
     The selected day.
 
@@ -87,7 +89,7 @@ class DatePicker(ft.LayoutControl):
     """
 
     on_change: Annotated[
-        Optional[ft.ControlEventHandler["DatePicker"]], ft.EnabledOnly
+        Optional[ft.ControlEventHandler["DatePicker"]], ft.ClientPolicy.ENABLED_ONLY
     ] = None
     """
     Called when the user picks or clears a day.
@@ -118,14 +120,18 @@ class DateRangePicker(ft.LayoutControl):
     """
 
     start_value: Annotated[
-        Optional[ft.DateTimeValue], ft.ClientWritable, ft.EnabledOnly
+        Optional[ft.DateTimeValue],
+        ft.ClientPolicy.WRITABLE,
+        ft.ClientPolicy.ENABLED_ONLY,
     ] = None
     """
     The first day of the selected range.
     """
 
     end_value: Annotated[
-        Optional[ft.DateTimeValue], ft.ClientWritable, ft.EnabledOnly
+        Optional[ft.DateTimeValue],
+        ft.ClientPolicy.WRITABLE,
+        ft.ClientPolicy.ENABLED_ONLY,
     ] = None
     """
     The last day of the selected range.
@@ -185,7 +191,8 @@ class DateRangePicker(ft.LayoutControl):
     """
 
     on_change: Annotated[
-        Optional[ft.ControlEventHandler["DateRangePicker"]], ft.EnabledOnly
+        Optional[ft.ControlEventHandler["DateRangePicker"]],
+        ft.ClientPolicy.ENABLED_ONLY,
     ] = None
     """
     Called when the user changes the range.

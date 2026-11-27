@@ -19,7 +19,9 @@ class Checkbox(ft.LayoutControl):
     ```
     """
 
-    value: Annotated[bool, ft.ClientWritable, ft.EnabledOnly] = False
+    value: Annotated[bool, ft.ClientPolicy.WRITABLE, ft.ClientPolicy.ENABLED_ONLY] = (
+        False
+    )
     """
     Whether this checkbox is checked.
     """
@@ -62,7 +64,7 @@ class Checkbox(ft.LayoutControl):
     """
 
     on_change: Annotated[
-        Optional[ft.ControlEventHandler["Checkbox"]], ft.EnabledOnly
+        Optional[ft.ControlEventHandler["Checkbox"]], ft.ClientPolicy.ENABLED_ONLY
     ] = None
     """
     Called when :attr:`value` changes.

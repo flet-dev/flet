@@ -2,7 +2,7 @@ from typing import Annotated, Optional, Union
 
 from flet.controls.action_control import ActionControl
 from flet.controls.adaptive_control import AdaptiveControl
-from flet.controls.base_control import EnabledOnly, control
+from flet.controls.base_control import ClientPolicy, control
 from flet.controls.buttons import ButtonStyle
 from flet.controls.control_event import ControlEventHandler
 from flet.controls.layout_control import LayoutControl
@@ -74,13 +74,15 @@ class TextButton(LayoutControl, AdaptiveControl, ActionControl):
     Defines how the content of this button is clipped.
     """
 
-    on_click: Annotated[Optional[ControlEventHandler["TextButton"]], EnabledOnly] = None
+    on_click: Annotated[
+        Optional[ControlEventHandler["TextButton"]], ClientPolicy.ENABLED_ONLY
+    ] = None
     """
     Called when a user clicks this button.
     """
 
     on_long_press: Annotated[
-        Optional[ControlEventHandler["TextButton"]], EnabledOnly
+        Optional[ControlEventHandler["TextButton"]], ClientPolicy.ENABLED_ONLY
     ] = None
     """
     Called when this button is long-pressed.

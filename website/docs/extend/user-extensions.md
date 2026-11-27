@@ -505,8 +505,8 @@ widget.control.updateProperties({"stars": stars});
 widget.control.triggerEvent("change", stars);
 ```
 
-Mark each field the Dart code sends with `Annotated[..., ft.ClientWritable]`.
-Add `ft.EnabledOnly` to each field or handler that the widget updates or calls
+Mark each field the Dart code sends with `Annotated[..., ft.ClientPolicy.WRITABLE]`.
+Add `ft.ClientPolicy.ENABLED_ONLY` to each field or handler that the widget updates or calls
 only while enabled.
 
 ```python
@@ -517,14 +517,14 @@ import flet as ft
 
 @ft.control("Rating")
 class Rating(ft.LayoutControl):
-    stars: Annotated[int, ft.ClientWritable, ft.EnabledOnly] = 0
+    stars: Annotated[int, ft.ClientPolicy.WRITABLE, ft.ClientPolicy.ENABLED_ONLY] = 0
     on_change: Annotated[
-        Optional[ft.ControlEventHandler["Rating"]], ft.EnabledOnly
+        Optional[ft.ControlEventHandler["Rating"]], ft.ClientPolicy.ENABLED_ONLY
     ] = None
 ```
 
 For events that only Python dispatches, mark the `on_*` handler with
-`ft.ServerOnlyEvent`. Subclasses inherit both restrictions.
+`ft.ClientPolicy.SERVER_ONLY_EVENT`. Subclasses inherit both restrictions.
 
 Python ignores any other property it receives, because a client can send anything. Treat
 a marked field as user input in the same way as the data of an event: it can hold any

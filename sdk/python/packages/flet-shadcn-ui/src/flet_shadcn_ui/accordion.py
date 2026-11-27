@@ -53,7 +53,7 @@ class Accordion(ft.LayoutControl):
     The sections of this accordion.
     """
 
-    value: Annotated[list[str], ft.ClientWritable] = field(default_factory=list)
+    value: Annotated[list[str], ft.ClientPolicy.WRITABLE] = field(default_factory=list)
     """
     The :attr:`~flet_shadcn_ui.AccordionItem.value` of each expanded item.
 

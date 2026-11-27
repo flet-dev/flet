@@ -2,7 +2,7 @@
 
 ### Breaking changes
 
-* Extensions must mark each Python field their Dart widget updates with `Annotated[..., ft.ClientWritable]` so the field receives updates from the client. See the [Extensions: properties sent from Dart must be declared](/docs/updates/breaking-changes/v1-2-0/client-writable-properties) guide by @ndonkoHenri.
+* Extensions must mark each Python field their Dart widget updates with `Annotated[..., ft.ClientPolicy.WRITABLE]` so the field receives updates from the client. See the [Extensions: properties sent from Dart must be declared](/docs/updates/breaking-changes/v1-2-0/client-writable-properties) guide by @ndonkoHenri.
 
 ### New features
 

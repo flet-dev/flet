@@ -12,7 +12,7 @@ class MultipleChoiceBlockPicker(ft.LayoutControl):
     colors.
     """
 
-    colors: Annotated[Optional[list[ft.ColorValue]], ft.ClientWritable] = None
+    colors: Annotated[Optional[list[ft.ColorValue]], ft.ClientPolicy.WRITABLE] = None
     """
     The currently selected colors.
     """

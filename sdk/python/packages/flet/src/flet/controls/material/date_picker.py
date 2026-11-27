@@ -3,7 +3,7 @@ from datetime import datetime
 from enum import Enum
 from typing import Annotated, Optional
 
-from flet.controls.base_control import ClientWritable, control
+from flet.controls.base_control import ClientPolicy, control
 from flet.controls.control_event import (
     ControlEventHandler,
     Event,
@@ -99,9 +99,9 @@ class DatePicker(DialogControl):
     ```
     """
 
-    open: Annotated[bool, ClientWritable] = field(default=False, kw_only=True)
+    open: Annotated[bool, ClientPolicy.WRITABLE] = field(default=False, kw_only=True)
 
-    value: Annotated[Optional[DateTimeValue], ClientWritable] = None
+    value: Annotated[Optional[DateTimeValue], ClientPolicy.WRITABLE] = None
     """
     The selected date that the picker should display.
 
@@ -160,7 +160,7 @@ class DatePicker(DialogControl):
     Initial display mode of this picker.
     """
 
-    entry_mode: Annotated[DatePickerEntryMode, ClientWritable] = (
+    entry_mode: Annotated[DatePickerEntryMode, ClientPolicy.WRITABLE] = (
         DatePickerEntryMode.CALENDAR
     )
     """

@@ -1,7 +1,7 @@
 from typing import Annotated, Optional
 
 from flet.controls.alignment import Alignment
-from flet.controls.base_control import ClientWritable, EnabledOnly, control
+from flet.controls.base_control import ClientPolicy, control
 from flet.controls.border_radius import BorderRadiusValue
 from flet.controls.control import Control
 from flet.controls.control_event import ControlEventHandler
@@ -62,7 +62,9 @@ class Option(Control):
     Defines the style of the `text`.
     """
 
-    on_click: Annotated[Optional[ControlEventHandler["Option"]], EnabledOnly] = None
+    on_click: Annotated[
+        Optional[ControlEventHandler["Option"]], ClientPolicy.ENABLED_ONLY
+    ] = None
     """
     Called when this option is clicked.
     """
@@ -95,7 +97,9 @@ class DropdownM2(FormFieldControl):
     ```
     """
 
-    value: Annotated[Optional[str], ClientWritable, EnabledOnly] = None
+    value: Annotated[
+        Optional[str], ClientPolicy.WRITABLE, ClientPolicy.ENABLED_ONLY
+    ] = None
     """
     `key` value of the selected option.
     """
@@ -215,7 +219,7 @@ class DropdownM2(FormFieldControl):
 
     on_change: Annotated[
         Optional[ControlEventHandler["DropdownM2"]],
-        EnabledOnly,
+        ClientPolicy.ENABLED_ONLY,
     ] = None
     """
     Called when the selected item of this dropdown has changed.
@@ -231,7 +235,9 @@ class DropdownM2(FormFieldControl):
     Called when the control has lost focus.
     """
 
-    on_click: Annotated[Optional[ControlEventHandler["DropdownM2"]], EnabledOnly] = None
+    on_click: Annotated[
+        Optional[ControlEventHandler["DropdownM2"]], ClientPolicy.ENABLED_ONLY
+    ] = None
     """
     Called when this dropdown is clicked.
     """

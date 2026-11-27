@@ -2,7 +2,7 @@ from dataclasses import field
 from typing import Annotated, Optional
 
 from flet.controls.alignment import Axis
-from flet.controls.base_control import ClientWritable, EnabledOnly, control
+from flet.controls.base_control import ClientPolicy, control
 from flet.controls.buttons import ButtonStyle
 from flet.controls.control import Control
 from flet.controls.control_event import ControlEventHandler
@@ -118,8 +118,8 @@ class SegmentedButton(LayoutControl):
             :attr:`allow_multiple_selection` is `False`.
     """
 
-    selected: Annotated[list[str], ClientWritable, EnabledOnly] = field(
-        default_factory=list
+    selected: Annotated[list[str], ClientPolicy.WRITABLE, ClientPolicy.ENABLED_ONLY] = (
+        field(default_factory=list)
     )
     """
     A set of `Segment.value`s that indicate which segments are selected. It is updated \
@@ -170,7 +170,7 @@ class SegmentedButton(LayoutControl):
     """
 
     on_change: Annotated[
-        Optional[ControlEventHandler["SegmentedButton"]], EnabledOnly
+        Optional[ControlEventHandler["SegmentedButton"]], ClientPolicy.ENABLED_ONLY
     ] = None
     """
     Called when the selection changes.

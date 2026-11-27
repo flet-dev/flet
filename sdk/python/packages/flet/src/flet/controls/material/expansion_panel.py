@@ -2,7 +2,7 @@ from dataclasses import dataclass, field
 from typing import Annotated, Optional
 
 from flet.controls.adaptive_control import AdaptiveControl
-from flet.controls.base_control import ClientWritable, EnabledOnly, control
+from flet.controls.base_control import ClientPolicy, control
 from flet.controls.control import Control
 from flet.controls.control_event import (
     Event,
@@ -96,7 +96,7 @@ class ExpansionPanel(LayoutControl, AdaptiveControl):
     The background color of this panel.
     """
 
-    expanded: Annotated[bool, ClientWritable] = False
+    expanded: Annotated[bool, ClientPolicy.WRITABLE] = False
     """
     Whether this panel is in expanded (`True`) or collapsed (`False`) state.
     """
@@ -200,7 +200,7 @@ class ExpansionPanelList(LayoutControl, ScrollableControl):
     """
 
     on_change: Annotated[
-        Optional[EventHandler[ExpansionPanelListChangeEvent]], EnabledOnly
+        Optional[EventHandler[ExpansionPanelListChangeEvent]], ClientPolicy.ENABLED_ONLY
     ] = None
     """
     Called when an item of :attr:`controls` is expanded or collapsed.

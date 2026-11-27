@@ -12,7 +12,7 @@ class MaterialPicker(ft.LayoutControl):
     optional shade labels.
     """
 
-    color: Annotated[Optional[ft.ColorValue], ft.ClientWritable] = None
+    color: Annotated[Optional[ft.ColorValue], ft.ClientPolicy.WRITABLE] = None
     """
     The currently selected color.
     """

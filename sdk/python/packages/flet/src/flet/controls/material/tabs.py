@@ -4,7 +4,7 @@ from typing import Annotated, Optional
 
 from flet.controls.adaptive_control import AdaptiveControl
 from flet.controls.animation import AnimationCurve
-from flet.controls.base_control import ClientWritable, EnabledOnly, control, value
+from flet.controls.base_control import ClientPolicy, control, value
 from flet.controls.border import BorderSide
 from flet.controls.border_radius import BorderRadiusValue
 from flet.controls.colors import Colors
@@ -229,7 +229,7 @@ class Tabs(LayoutControl, AdaptiveControl):
         ValueError: If it is not greater than or equal to `0`.
     """
 
-    selected_index: Annotated[int, ClientWritable] = 0
+    selected_index: Annotated[int, ClientPolicy.WRITABLE] = 0
     """
     The index of the currently selected tab.
 
@@ -564,7 +564,9 @@ class TabBar(LayoutControl, AdaptiveControl):
     Defines the clipping radius of splashes that extend outside the bounds of the tab.
     """
 
-    on_click: Annotated[Optional[ControlEventHandler["TabBar"]], EnabledOnly] = None
+    on_click: Annotated[
+        Optional[ControlEventHandler["TabBar"]], ClientPolicy.ENABLED_ONLY
+    ] = None
     """
     Called when a tab is clicked.
 

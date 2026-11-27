@@ -3,7 +3,7 @@ from datetime import date, datetime
 from enum import Enum
 from typing import Annotated, Optional
 
-from flet.controls.base_control import ClientWritable, control
+from flet.controls.base_control import ClientPolicy, control
 from flet.controls.control_event import ControlEventHandler
 from flet.controls.duration import DateTimeValue
 from flet.controls.layout_control import LayoutControl
@@ -103,7 +103,7 @@ class CupertinoDatePicker(LayoutControl):
     An iOS-styled date picker.
     """
 
-    value: Annotated[DateTimeValue, ClientWritable] = field(
+    value: Annotated[DateTimeValue, ClientPolicy.WRITABLE] = field(
         default_factory=lambda: datetime.now()
     )
     """

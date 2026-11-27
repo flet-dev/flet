@@ -57,7 +57,7 @@ class MenuItem(ft.Control):
     """
 
     on_click: Annotated[
-        Optional[ft.ControlEventHandler["MenuItem"]], ft.EnabledOnly
+        Optional[ft.ControlEventHandler["MenuItem"]], ft.ClientPolicy.ENABLED_ONLY
     ] = None
     """
     Called when this item is clicked.

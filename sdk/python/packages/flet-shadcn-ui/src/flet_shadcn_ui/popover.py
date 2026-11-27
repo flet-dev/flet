@@ -34,7 +34,7 @@ class Popover(ft.LayoutControl):
     The control shown in the floating panel.
     """
 
-    open: Annotated[bool, ft.ClientWritable] = False
+    open: Annotated[bool, ft.ClientPolicy.WRITABLE] = False
     """
     Whether the popover is shown.
     """

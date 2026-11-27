@@ -1,7 +1,7 @@
 from typing import Annotated, Optional
 
 from flet.controls.adaptive_control import AdaptiveControl
-from flet.controls.base_control import EnabledOnly, control
+from flet.controls.base_control import ClientPolicy, control
 from flet.controls.control_event import ControlEventHandler
 from flet.controls.types import IconData, StrOrControl
 from flet.utils.validation import V
@@ -44,7 +44,8 @@ class CupertinoContextMenuAction(AdaptiveControl):
     """
 
     on_click: Annotated[
-        Optional[ControlEventHandler["CupertinoContextMenuAction"]], EnabledOnly
+        Optional[ControlEventHandler["CupertinoContextMenuAction"]],
+        ClientPolicy.ENABLED_ONLY,
     ] = None
     """
     Called when this action button is clicked.

@@ -83,14 +83,14 @@ class Button(ft.LayoutControl):
 
     on_click: Annotated[
         Optional[ft.ControlEventHandler["Button"]],
-        ft.EnabledOnly,
+        ft.ClientPolicy.ENABLED_ONLY,
     ] = None
     """
     Called when this button is clicked.
     """
 
     on_long_press: Annotated[
-        Optional[ft.ControlEventHandler["Button"]], ft.EnabledOnly
+        Optional[ft.ControlEventHandler["Button"]], ft.ClientPolicy.ENABLED_ONLY
     ] = None
     """
     Called when this button is long-pressed.

@@ -40,7 +40,7 @@ def patch_dataclass(obj: Any, patch: dict):
 
     A nested value object is replaced with a patched copy, because one object is often
     shared by many controls and sessions. A nested control is patched in place, limited
-    to fields marked with `ClientWritable`. Private keys are ignored in nested objects.
+    to fields marked with `ClientPolicy.WRITABLE`. Nested objects ignore private keys.
 
     For `@control` / `@value` objects (those with `_values` and
     `_prop_defaults`), Prop fields are written directly into `_values` rather

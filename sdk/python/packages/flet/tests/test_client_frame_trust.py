@@ -836,7 +836,7 @@ class TestNestedDeclarations:
 
         @ft.control("HolderView")
         class HolderView(ft.LayoutControl):
-            holder: Annotated[Optional[Holder], ft.ClientWritable] = None
+            holder: Annotated[Optional[Holder], ft.ClientPolicy.WRITABLE] = None
 
         inner = ft.Text("kept", data="server")
         view = HolderView(holder=Holder(label=inner))
@@ -860,7 +860,7 @@ class TestNestedDeclarations:
 
         @ft.control("HolderField")
         class HolderField(ft.LayoutControl):
-            label: Annotated[Optional[ft.Text], ft.ClientWritable] = None
+            label: Annotated[Optional[ft.Text], ft.ClientPolicy.WRITABLE] = None
 
         control = HolderField()
         _mount(session, control)
@@ -877,7 +877,7 @@ class TestNestedDeclarations:
 
         @ft.control("ClassVarView")
         class ClassVarView(ft.LayoutControl):
-            holder: Annotated[Optional[Holder], ft.ClientWritable] = None
+            holder: Annotated[Optional[Holder], ft.ClientPolicy.WRITABLE] = None
 
         view = ClassVarView(holder=Holder())
         _mount(session, view)
@@ -890,7 +890,7 @@ class TestNestedDeclarations:
 
         @ft.control("LazyField")
         class LazyField(ft.LayoutControl):
-            stars: "Annotated[int, ft.ClientWritable]" = 0
+            stars: "Annotated[int, ft.ClientPolicy.WRITABLE]" = 0
             other: "UnavailableType" = None  # noqa: F821
 
         control = LazyField()
@@ -1405,7 +1405,7 @@ class TestControlDeclarations:
 
         @ft.control("Rating")
         class Rating(ft.LayoutControl):
-            stars: Annotated[int, ft.ClientWritable] = 0
+            stars: Annotated[int, ft.ClientPolicy.WRITABLE] = 0
             secret: str = "kept"
 
         rating = Rating()
@@ -1428,7 +1428,7 @@ class TestControlDeclarations:
             session.apply_patch(terminal._i, {"ctrl_active": True})
         assert terminal.ctrl_active is False
         assert len(caplog.records) == 1
-        assert "Annotated[..., ft.ClientWritable]" in caplog.text
+        assert "Annotated[..., ft.ClientPolicy.WRITABLE]" in caplog.text
         assert "Terminal.ctrl_active" in caplog.text
 
     def test_unknown_names_are_never_logged(self, session, caplog):
@@ -1447,7 +1447,7 @@ class TestControlDeclarations:
 
         @ft.control("CodeField")
         class CodeField(ft.TextField):
-            language: Annotated[str, ft.ClientWritable] = "python"
+            language: Annotated[str, ft.ClientPolicy.WRITABLE] = "python"
 
         @ft.control()
         class PlainSubclass(CodeField):
@@ -1488,7 +1488,7 @@ class TestControlDeclarations:
     def test_client_writable_coexists_with_validation_metadata(self):
         @ft.control("Rating")
         class Rating(ft.LayoutControl):
-            stars: Annotated[int, V.ge(0), ft.ClientWritable] = 0
+            stars: Annotated[int, V.ge(0), ft.ClientPolicy.WRITABLE] = 0
 
         assert Rating._client_writable == {"stars"}
         validate(Rating(stars=1))
@@ -1498,14 +1498,17 @@ class TestControlDeclarations:
     def test_subclass_redeclaration_preserves_inherited_restrictions(self):
         @ft.control("Rating")
         class Rating(ft.LayoutControl):
-            stars: Annotated[int, ft.ClientWritable, ft.EnabledOnly] = 0
+            stars: Annotated[
+                int, ft.ClientPolicy.WRITABLE, ft.ClientPolicy.ENABLED_ONLY
+            ] = 0
             on_reset: Annotated[
-                Optional[ft.ControlEventHandler["Rating"]], ft.ServerOnlyEvent
+                Optional[ft.ControlEventHandler["Rating"]],
+                ft.ClientPolicy.SERVER_ONLY_EVENT,
             ] = None
 
         @ft.control("CustomRating")
         class CustomRating(Rating):
-            stars: Annotated[int, ft.ClientWritable] = 1
+            stars: Annotated[int, ft.ClientPolicy.WRITABLE] = 1
             on_reset: Optional[ft.ControlEventHandler["CustomRating"]] = None
 
         assert CustomRating._enabled_only == {"stars"}
@@ -1515,8 +1518,11 @@ class TestControlDeclarations:
     async def test_enabled_only_event_with_a_same_named_property(self, session):
         @ft.control("ResizeInput")
         class ResizeInput(ft.LayoutControl):
-            on_resize: "Annotated[ft.EventHandler[ft.PageResizeEvent], ft.EnabledOnly]"
-            resize: Annotated[int, ft.ClientWritable] = 0
+            on_resize: (
+                "Annotated[ft.EventHandler[ft.PageResizeEvent], "
+                "ft.ClientPolicy.ENABLED_ONLY]"
+            )
+            resize: Annotated[int, ft.ClientPolicy.WRITABLE] = 0
 
         events = []
         control = ResizeInput(disabled=True, on_resize=events.append)
@@ -1538,7 +1544,7 @@ class TestControlDeclarations:
 
         @ft.control("Meter")
         class Meter(ft.LayoutControl):
-            level: Annotated[int, ft.ClientWritable] = 0
+            level: Annotated[int, ft.ClientPolicy.WRITABLE] = 0
 
         meter = Meter(disabled=True)
         _mount(session, meter)
@@ -1546,8 +1552,10 @@ class TestControlDeclarations:
         assert meter.level == 4
 
     def test_server_only_event_requires_a_handler_field(self):
-        with pytest.raises(ValueError, match="Bad.value: ServerOnlyEvent"):
+        with pytest.raises(
+            ValueError, match=r"Bad\.value: ClientPolicy\.SERVER_ONLY_EVENT"
+        ):
 
             @ft.control("Bad")
             class Bad(ft.LayoutControl):
-                value: Annotated[int, ft.ServerOnlyEvent] = 0
+                value: Annotated[int, ft.ClientPolicy.SERVER_ONLY_EVENT] = 0

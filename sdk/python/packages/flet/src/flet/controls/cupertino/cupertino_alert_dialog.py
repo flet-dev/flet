@@ -2,7 +2,7 @@ from dataclasses import field
 from typing import Annotated, Optional
 
 from flet.controls.animation import Animation, AnimationCurve
-from flet.controls.base_control import ClientWritable, control
+from flet.controls.base_control import ClientPolicy, control
 from flet.controls.control import Control
 from flet.controls.dialog_control import DialogControl
 from flet.controls.duration import Duration
@@ -22,7 +22,7 @@ class CupertinoAlertDialog(DialogControl):
     displayed above the content and the actions are displayed below the content.
     """
 
-    open: Annotated[bool, ClientWritable] = field(default=False, kw_only=True)
+    open: Annotated[bool, ClientPolicy.WRITABLE] = field(default=False, kw_only=True)
 
     modal: bool = False
     """

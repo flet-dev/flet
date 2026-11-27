@@ -58,7 +58,9 @@ class RadioGroup(ft.LayoutControl):
     The options of this group.
     """
 
-    value: Annotated[Optional[str], ft.ClientWritable, ft.EnabledOnly] = None
+    value: Annotated[
+        Optional[str], ft.ClientPolicy.WRITABLE, ft.ClientPolicy.ENABLED_ONLY
+    ] = None
     """
     The :attr:`~flet_shadcn_ui.Radio.value` of the selected option.
 
@@ -98,7 +100,7 @@ class RadioGroup(ft.LayoutControl):
     """
 
     on_change: Annotated[
-        Optional[ft.ControlEventHandler["RadioGroup"]], ft.EnabledOnly
+        Optional[ft.ControlEventHandler["RadioGroup"]], ft.ClientPolicy.ENABLED_ONLY
     ] = None
     """
     Called when the selected option changes.

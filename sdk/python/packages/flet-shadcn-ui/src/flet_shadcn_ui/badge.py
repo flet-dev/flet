@@ -51,7 +51,7 @@ class Badge(ft.LayoutControl):
 
     on_click: Annotated[
         Optional[ft.ControlEventHandler["Badge"]],
-        ft.EnabledOnly,
+        ft.ClientPolicy.ENABLED_ONLY,
     ] = None
     """
     Called when this badge is clicked.

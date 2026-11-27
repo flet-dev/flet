@@ -1,6 +1,6 @@
 ## 1.2.0
 
-* Python ignores a property sent by `Control.updateProperties()` unless the Python field is marked with `Annotated[..., ft.ClientWritable]` by @ndonkoHenri.
+* Python ignores a property sent by `Control.updateProperties()` unless the Python field is marked with `Annotated[..., ft.ClientPolicy.WRITABLE]` by @ndonkoHenri.
 
 ## 1.1.4
 

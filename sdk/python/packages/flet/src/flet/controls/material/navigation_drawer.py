@@ -2,7 +2,7 @@ from dataclasses import field
 from typing import Annotated, Optional
 
 from flet.controls.adaptive_control import AdaptiveControl
-from flet.controls.base_control import ClientWritable, EnabledOnly, control
+from flet.controls.base_control import ClientPolicy, control
 from flet.controls.buttons import OutlinedBorder
 from flet.controls.control import Control
 from flet.controls.control_event import ControlEventHandler
@@ -109,7 +109,7 @@ class NavigationDrawer(AdaptiveControl):
     items and/or other controls such as headlines, padding containers, and dividers.
     """
 
-    selected_index: Annotated[int, ClientWritable, EnabledOnly] = 0
+    selected_index: Annotated[int, ClientPolicy.WRITABLE, ClientPolicy.ENABLED_ONLY] = 0
     """
     The index for the currently selected :class:`~flet.NavigationDrawerDestination`.
 
@@ -157,7 +157,7 @@ class NavigationDrawer(AdaptiveControl):
     """
 
     on_change: Annotated[
-        Optional[ControlEventHandler["NavigationDrawer"]], EnabledOnly
+        Optional[ControlEventHandler["NavigationDrawer"]], ClientPolicy.ENABLED_ONLY
     ] = None
     """
     Called when the selected destination changed.

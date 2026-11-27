@@ -1,6 +1,6 @@
 from typing import Annotated, Optional
 
-from flet.controls.base_control import EnabledOnly, control
+from flet.controls.base_control import ClientPolicy, control
 from flet.controls.control import Control
 from flet.controls.control_event import ControlEventHandler
 from flet.controls.text_style import TextStyle
@@ -55,7 +55,8 @@ class CupertinoDialogAction(Control):
     """
 
     on_click: Annotated[
-        Optional[ControlEventHandler["CupertinoDialogAction"]], EnabledOnly
+        Optional[ControlEventHandler["CupertinoDialogAction"]],
+        ClientPolicy.ENABLED_ONLY,
     ] = None
     """
     Called when a user clicks this button.

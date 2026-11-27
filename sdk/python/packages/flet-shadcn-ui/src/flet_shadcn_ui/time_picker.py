@@ -17,7 +17,9 @@ class TimePicker(ft.LayoutControl):
     ```
     """
 
-    value: Annotated[Optional[datetime.time], ft.ClientWritable, ft.EnabledOnly] = None
+    value: Annotated[
+        Optional[datetime.time], ft.ClientPolicy.WRITABLE, ft.ClientPolicy.ENABLED_ONLY
+    ] = None
     """
     The selected time. Only hours and minutes are used.
 
@@ -66,7 +68,7 @@ class TimePicker(ft.LayoutControl):
     """
 
     on_change: Annotated[
-        Optional[ft.ControlEventHandler["TimePicker"]], ft.EnabledOnly
+        Optional[ft.ControlEventHandler["TimePicker"]], ft.ClientPolicy.ENABLED_ONLY
     ] = None
     """
     Called when the user changes the time.

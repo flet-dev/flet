@@ -16,7 +16,9 @@ class Switch(ft.LayoutControl):
     ```
     """
 
-    value: Annotated[bool, ft.ClientWritable, ft.EnabledOnly] = False
+    value: Annotated[bool, ft.ClientPolicy.WRITABLE, ft.ClientPolicy.ENABLED_ONLY] = (
+        False
+    )
     """
     Whether this switch is on.
     """
@@ -62,7 +64,7 @@ class Switch(ft.LayoutControl):
 
     on_change: Annotated[
         Optional[ft.ControlEventHandler["Switch"]],
-        ft.EnabledOnly,
+        ft.ClientPolicy.ENABLED_ONLY,
     ] = None
     """
     Called when :attr:`value` changes.

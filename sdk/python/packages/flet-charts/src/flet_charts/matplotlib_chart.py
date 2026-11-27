@@ -110,7 +110,8 @@ class MatplotlibChart(ft.GestureDetector):
     """
 
     on_message: Annotated[
-        Optional[ft.EventHandler[MatplotlibChartMessageEvent]], ft.ServerOnlyEvent
+        Optional[ft.EventHandler[MatplotlibChartMessageEvent]],
+        ft.ClientPolicy.SERVER_ONLY_EVENT,
     ] = None
     """
     The event is triggered on figure message update.
@@ -118,7 +119,7 @@ class MatplotlibChart(ft.GestureDetector):
 
     on_toolbar_buttons_update: Annotated[
         Optional[ft.EventHandler[MatplotlibChartToolbarButtonsUpdateEvent]],
-        ft.ServerOnlyEvent,
+        ft.ClientPolicy.SERVER_ONLY_EVENT,
     ] = None
     """
     Triggers when toolbar buttons status is updated.

@@ -56,7 +56,9 @@ class Tabs(ft.LayoutControl):
     The tabs.
     """
 
-    value: Annotated[Optional[str], ft.ClientWritable, ft.EnabledOnly] = None
+    value: Annotated[
+        Optional[str], ft.ClientPolicy.WRITABLE, ft.ClientPolicy.ENABLED_ONLY
+    ] = None
     """
     The :attr:`~flet_shadcn_ui.Tab.value` of the selected tab.
 
@@ -72,7 +74,7 @@ class Tabs(ft.LayoutControl):
 
     on_change: Annotated[
         Optional[ft.ControlEventHandler["Tabs"]],
-        ft.EnabledOnly,
+        ft.ClientPolicy.ENABLED_ONLY,
     ] = None
     """
     Called when the selected tab changes.

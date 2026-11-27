@@ -1,6 +1,6 @@
 from typing import Annotated, Optional
 
-from flet.controls.base_control import ClientWritable, EnabledOnly, control
+from flet.controls.base_control import ClientPolicy, control
 from flet.controls.border import BorderSide
 from flet.controls.buttons import OutlinedBorder
 from flet.controls.control_event import ControlEventHandler
@@ -52,7 +52,9 @@ class CupertinoCheckbox(LayoutControl):
     The space between this checkbox and the :attr:`label`.
     """
 
-    value: Annotated[Optional[bool], ClientWritable, EnabledOnly] = False
+    value: Annotated[
+        Optional[bool], ClientPolicy.WRITABLE, ClientPolicy.ENABLED_ONLY
+    ] = False
     """
     The value of this checkbox.
 
@@ -142,7 +144,7 @@ class CupertinoCheckbox(LayoutControl):
     """
 
     on_change: Annotated[
-        Optional[ControlEventHandler["CupertinoCheckbox"]], EnabledOnly
+        Optional[ControlEventHandler["CupertinoCheckbox"]], ClientPolicy.ENABLED_ONLY
     ] = None
     """
     Called when the state of this checkbox is changed.

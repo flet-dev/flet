@@ -83,7 +83,7 @@ class Video(ft.LayoutControl):
     `None` hides controls for that mode only.
     """
 
-    fullscreen: Annotated[bool, ft.ClientWritable] = False
+    fullscreen: Annotated[bool, ft.ClientPolicy.WRITABLE] = False
     """
     Whether the video player is presented in fullscreen mode.
 

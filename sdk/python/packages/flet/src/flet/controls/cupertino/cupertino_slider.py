@@ -1,6 +1,6 @@
 from typing import Annotated, Optional
 
-from flet.controls.base_control import ClientWritable, EnabledOnly, control
+from flet.controls.base_control import ClientPolicy, control
 from flet.controls.control_event import ControlEventHandler
 from flet.controls.layout_control import LayoutControl
 from flet.controls.types import (
@@ -32,8 +32,8 @@ class CupertinoSlider(LayoutControl):
 
     value: Annotated[
         Optional[Number],
-        ClientWritable,
-        EnabledOnly,
+        ClientPolicy.WRITABLE,
+        ClientPolicy.ENABLED_ONLY,
         V.ge_field("min"),
         V.le_field("max"),
     ] = None
@@ -100,21 +100,21 @@ class CupertinoSlider(LayoutControl):
     """
 
     on_change: Annotated[
-        Optional[ControlEventHandler["CupertinoSlider"]], EnabledOnly
+        Optional[ControlEventHandler["CupertinoSlider"]], ClientPolicy.ENABLED_ONLY
     ] = None
     """
     Called when the state of this slider changed.
     """
 
     on_change_start: Annotated[
-        Optional[ControlEventHandler["CupertinoSlider"]], EnabledOnly
+        Optional[ControlEventHandler["CupertinoSlider"]], ClientPolicy.ENABLED_ONLY
     ] = None
     """
     Called when the user starts selecting a new value for this slider.
     """
 
     on_change_end: Annotated[
-        Optional[ControlEventHandler["CupertinoSlider"]], EnabledOnly
+        Optional[ControlEventHandler["CupertinoSlider"]], ClientPolicy.ENABLED_ONLY
     ] = None
     """
     Called when the user is done selecting a new value for this slider.

@@ -98,7 +98,7 @@ def _warn_ignored_field(control: BaseControl, name: str) -> None:
     """
     Logs once that a client's value for a field of a control was ignored.
 
-    If Dart updates a field without a `ClientWritable` marker, the warning shows
+    If Dart updates a field without a `ClientPolicy.WRITABLE` marker, the warning shows
     the extension author how to declare it. Reporting only declared field names
     bounds what a client can make the server log.
 
@@ -112,7 +112,8 @@ def _warn_ignored_field(control: BaseControl, name: str) -> None:
     _warned_client_fields.add((cls, name))
     logger.warning(
         "Ignored a value a client sent for %s.%s. If the control's Dart code updates "
-        "this property, mark its Python field with Annotated[..., ft.ClientWritable].",
+        "this property, mark its Python field with "
+        "Annotated[..., ft.ClientPolicy.WRITABLE].",
         cls.__qualname__,
         name,
     )
@@ -163,9 +164,9 @@ def _rendering_blocks_input(
 
     Returns:
         `True` if the name can't come from a real client in the control's state: it is
-            hidden, it is disabled and the field is marked with `EnabledOnly`, or
-            it is read-only and the name is an edit. A service and the `Window` render
-            nothing of their own, so their state rules out nothing.
+            hidden, it is disabled and the field requires `ClientPolicy.ENABLED_ONLY`,
+            or it is read-only and the name is an edit. Services and windows render
+            no widget of their own.
     """
     if isinstance(control, (Service, Window)):
         return False
@@ -471,8 +472,8 @@ class Session:
         Applies a partial property patch received from the client to a control in the
         session index.
 
-        Only fields marked with `ClientWritable` receive updates, and only if a real
-        client could change them in the control's current state. If the state blocks
+        Only fields marked with `ClientPolicy.WRITABLE` receive updates, and only when
+        the widget could change them in its current state. If the state blocks
         an update to a marked field, the client receives its current value.
 
         Args:
@@ -485,7 +486,7 @@ class Session:
     def apply_page_patch(self, patch: dict[str, Any]):
         """
         Applies the page state a client sends when it registers: the fields marked
-        with `ClientWritable` on `Page`, and `window`.
+        with `ClientPolicy.WRITABLE` on `Page`, and `window`.
 
         The fields describing the client's environment, such as `web` and `platform`,
         are applied only the first time a client registers with this session. The rest
