@@ -7,6 +7,7 @@
 
 ### Improvements
 
+* Add `blur()` to `TextField`, `CupertinoTextField`, `SearchBar`, `Dropdown` and `DropdownM2` to remove focus from code, which also hides the on-screen keyboard on mobile ([#6249](https://github.com/flet-dev/flet/issues/6249), [#7148](https://github.com/flet-dev/flet/pull/7148)) by @ndonkoHenri.
 * A `Dropdown` without a `width` fills a non-wrapping `Column` or a `View` with `horizontal_alignment=STRETCH`. It also fills a vertical `ListView` ([#7115](https://github.com/flet-dev/flet/pull/7115)) by @FeodorFitsner.
 * flet-charts: Add fl_chart features to the existing charts ([#7066](https://github.com/flet-dev/flet/pull/7066)) by @ndonkoHenri:
   * `PieChart`: `PieChartSection.corner_radius` and stacked `PieChartSection.segments`.
@@ -21,6 +22,7 @@
 
 ### Bug fixes
 
+* Fix an editable `Dropdown` with `autofocus=True` taking focus back right after being unfocused, e.g. by `blur()` or a click outside it on desktop ([#7148](https://github.com/flet-dev/flet/pull/7148)) by @ndonkoHenri.
 * Fix `View.on_size_change` never firing; it reports the size of the view's body, the area between the app bar and the bottom navigation bar ([#6363](https://github.com/flet-dev/flet/issues/6363), [#7088](https://github.com/flet-dev/flet/pull/7088)) by @ndonkoHenri.
 
 ## 1.1.4

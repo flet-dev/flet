@@ -454,3 +454,11 @@ class Dropdown(LayoutControl):
     async def focus(self):
         """Requests focus for this control."""
         await self._invoke_method("focus")
+
+    async def blur(self):
+        """
+        Removes focus from this control.
+
+        On mobile, this also hides the on-screen keyboard.
+        """
+        await self._invoke_method("blur")

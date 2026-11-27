@@ -32,6 +32,14 @@ class _DropdownControlState extends State<DropdownControl> {
   String? _value;
   bool _suppressTextChange = false;
 
+  /// Whether `autofocus` has already been applied, so the dropdown takes focus
+  /// only when it is first shown and not again when it rebuilds after losing
+  /// focus.
+  ///
+  /// The focus scope is looked up without depending on it, so the dropdown
+  /// does not rebuild each time focus moves elsewhere.
+  bool _didAutoFocus = false;
+
   @override
   void initState() {
     super.initState();
@@ -85,6 +93,8 @@ class _DropdownControlState extends State<DropdownControl> {
     switch (name) {
       case "focus":
         _focusNode.requestFocus();
+      case "blur":
+        _focusNode.unfocus();
       default:
         throw Exception("Unknown Dropdown method: $name");
     }
@@ -301,11 +311,11 @@ class _DropdownControlState extends State<DropdownControl> {
       dropdownMenuEntries: options,
     );
 
-    var didAutoFocus = false;
-    if (!didAutoFocus && autofocus) {
-      didAutoFocus = true;
+    if (!_didAutoFocus && autofocus) {
+      _didAutoFocus = true;
       SchedulerBinding.instance.addPostFrameCallback((_) {
-        FocusScope.of(context).autofocus(_focusNode);
+        if (!mounted) return;
+        FocusScope.of(context, createDependency: false).autofocus(_focusNode);
       });
     }
 

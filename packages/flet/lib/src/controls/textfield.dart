@@ -115,6 +115,9 @@ class _TextFieldControlState extends State<TextFieldControl> {
     switch (name) {
       case "focus":
         _focusNode.requestFocus();
+      case "blur":
+        _focusNode.unfocus();
+        _shiftEnterfocusNode.unfocus();
       default:
         throw Exception("Unknown TextField method: $name");
     }

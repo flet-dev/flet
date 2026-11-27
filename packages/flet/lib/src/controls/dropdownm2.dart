@@ -47,6 +47,8 @@ class _DropdownM2ControlState extends State<DropdownM2Control> {
     switch (name) {
       case "focus":
         _focusNode.requestFocus();
+      case "blur":
+        _focusNode.unfocus();
       default:
         throw Exception("Unknown DropdownM2 method: $name");
     }
