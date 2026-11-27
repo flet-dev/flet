@@ -13,6 +13,14 @@
   * Axes: `ChartAxis.label_alignment`.
   * Events: `ChartEventType` values for secondary-button (right-click) taps and long presses.
 
+### Deprecations
+
+* The layout properties `View` inherited from `LayoutControl`, such as `width`, `left`, `align`, `margin` and the transforms, are deprecated: a view always fills its page, so they never had an effect. `View` keeps `on_size_change` and `size_change_interval` ([#6363](https://github.com/flet-dev/flet/issues/6363), [#7088](https://github.com/flet-dev/flet/pull/7088)) by @ndonkoHenri.
+
+### Bug fixes
+
+* Fix `View.on_size_change` never firing; it reports the size of the view's body, the area between the app bar and the bottom navigation bar ([#6363](https://github.com/flet-dev/flet/issues/6363), [#7088](https://github.com/flet-dev/flet/pull/7088)) by @ndonkoHenri.
+
 ## 1.1.4
 
 ### Improvements
