@@ -11,6 +11,8 @@ extend-exclude = [
     "*icon-codepoints.json",
     "*/controls/material/icons.json",
     "*/controls/cupertino/cupertino_icons.json",
+    "*/controls/material/icons.pyi",
+    "*/controls/cupertino/cupertino_icons.pyi",
     "packages/flet/lib/src/utils/material_icons.dart",
     "packages/flet/lib/src/utils/cupertino_icons.dart",
     # Generated from lucide_icons_flutter; keeps Lucide's legacy aliases such

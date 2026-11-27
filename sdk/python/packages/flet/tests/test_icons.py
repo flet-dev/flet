@@ -164,3 +164,36 @@ def test_fluent_packed_value_indexes_the_dart_list():
     assert (
         package / "flutter/flet_fluent_ui/fonts/FluentSystemIcons-Resizable.ttf"
     ).is_file()
+
+
+def test_icons_lookup_by_name():
+    """Icons can be looked up by name, like enum members."""
+    assert ft.Icons["HOME"] is ft.Icons.HOME
+    assert ft.CupertinoIcons["ADD"] is ft.CupertinoIcons.ADD
+    with pytest.raises(KeyError):
+        ft.Icons["NOT_AN_ICON"]
+
+
+def test_icons_membership_by_name_and_value():
+    """`in` accepts an icon name or an icon."""
+    assert "HOME" in ft.Icons
+    assert "NOT_AN_ICON" not in ft.Icons
+    assert ft.Icons.HOME in ft.Icons
+    assert "ADD" in ft.CupertinoIcons
+
+
+def test_icon_lookup_requires_a_published_name():
+    from flet_fluent_ui import FluentIcons
+    from flet_shadcn_ui import LucideIcons
+
+    for icons, name in [
+        (ft.Icons, "HOME"),
+        (ft.CupertinoIcons, "ADD"),
+        (LucideIcons, "HOUSE"),
+        (FluentIcons, "SETTINGS"),
+    ]:
+        assert name in icons
+        assert icons[name] is getattr(icons, name)
+        assert "_DUMMY" not in icons
+        with pytest.raises(KeyError):
+            icons["_DUMMY"]
