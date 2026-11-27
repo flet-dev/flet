@@ -21,6 +21,7 @@
 
 ### Bug fixes
 
+* Fix Enter submitting a `TextField` or `CupertinoTextField` with `shift_enter=True` while an input method (IME) is still composing text, such as pinyin not yet turned into Chinese characters; while it composes, Enter, and the up and down keys with `ignore_up_down_keys=True`, go to the input method ([#7128](https://github.com/flet-dev/flet/pull/7128)) by @cqxbj.
 * Fix `View.on_size_change` never firing; it reports the size of the view's body, the area between the app bar and the bottom navigation bar ([#6363](https://github.com/flet-dev/flet/issues/6363), [#7088](https://github.com/flet-dev/flet/pull/7088)) by @ndonkoHenri.
 
 ## 1.1.4

@@ -45,6 +45,11 @@ class _TextFieldControlState extends State<TextFieldControl> {
 
   KeyEventResult _handleTextFieldKeyEvent(KeyEvent event,
       {required bool submitOnEnter}) {
+    // Keys typed while an input method composes text belong to it.
+    if (_controller.value.composing.isValid) {
+      return KeyEventResult.ignored;
+    }
+
     // ignore up/down arrow keys if flag is set
     if ((event is KeyDownEvent || event is KeyRepeatEvent) &&
         widget.control.getBool("ignore_up_down_keys", false)! &&
