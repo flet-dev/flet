@@ -299,6 +299,25 @@ def handle_click(e):
     page.run_thread(write_log_file, "clicked")
 ```
 
+Changing a control property or setting reactive `Component` state from a worker
+is fine - Flet schedules the resulting update on the event loop for you. An
+explicit [`update()`][flet.Control.update] call is different: it sends its patch
+synchronously on the calling thread, so call it from the event-loop thread only.
+When a worker needs to push a change immediately, marshal the update back to the
+loop with [`page.run_task()`][flet.Page.run_task] rather than calling `update()`
+on the worker thread:
+
+```python
+async def refresh():
+    status.update()
+
+def worker(result):
+    status.value = result
+    page.run_task(refresh)  # pass the coroutine function, not refresh()
+```
+
+Here the property is written on the worker, while `update()` runs on the loop.
+
 For your own pool - to bound how many operations run at once, for example - use
 [`page.loop`][flet.Page.loop] with an executor you control:
 
