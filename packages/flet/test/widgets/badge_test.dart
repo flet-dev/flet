@@ -36,7 +36,7 @@ Future<void> _pump(WidgetTester tester, FletBackend backend, Control control) =>
 /// its item or tapping outside, and returns the events the button sent.
 Future<List<String>> _openChangeAndClose(
   WidgetTester tester, {
-  required Map<String, dynamic> badge,
+  required Map<String, dynamic>? badge,
   required void Function(Control popup) changeBadge,
   required bool select,
 }) async {
@@ -47,7 +47,7 @@ Future<List<String>> _openChangeAndClose(
     'on_open': true,
     'on_cancel': true,
     'on_select': true,
-    'badge': {'_c': 'Badge', '_i': 2, ...badge},
+    if (badge != null) 'badge': {'_c': 'Badge', '_i': 2, ...badge},
     'items': [
       {'_c': 'PopupMenuItem', '_i': 3, 'content': 'Item'}
     ],
@@ -108,6 +108,34 @@ void main() {
       }, select: false);
       expect(events, ['open', 'cancel']);
     });
+
+    for (final select in [false, true]) {
+      final closing = select ? 'select' : 'cancel';
+      final expected =
+          select ? ['open', 'click', 'select'] : ['open', 'cancel'];
+
+      testWidgets('PopupMenuButton reports $closing after its badge is removed',
+          (tester) async {
+        final events = await _openChangeAndClose(tester,
+            badge: {'label_visible': true},
+            changeBadge: (popup) =>
+                popup.update({'badge': null}, shouldNotify: true),
+            select: select);
+        expect(events, expected);
+      });
+
+      testWidgets('PopupMenuButton reports $closing after a badge is added',
+          (tester) async {
+        final events = await _openChangeAndClose(tester, badge: null,
+            changeBadge: (popup) {
+          popup.properties['badge'] = Control.fromMap(
+              {'_c': 'Badge', '_i': 4}, popup.backend,
+              parent: popup);
+          popup.notify();
+        }, select: select);
+        expect(events, expected);
+      });
+    }
 
     testWidgets('PopupMenuButton reports cancel after its badge color changes',
         (tester) async {
