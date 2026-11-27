@@ -10,6 +10,7 @@ import 'package:provider/provider.dart';
 import 'flet_app_errors_handler.dart';
 import 'flet_core_extension.dart';
 import 'flet_extension.dart';
+import 'host_requests.dart';
 import 'models/asset_source.dart';
 import 'models/boot_status.dart';
 import 'models/control.dart';
@@ -265,6 +266,38 @@ class FletBackend extends ChangeNotifier {
   /// its `WebView` content runs in a sandboxed frame.
   bool get isEmbedded => _isEmbedded;
 
+  late final HostRequests _hostRequests = HostRequests(
+      send: (id, name, args) => _parentFletBackend?.target
+          ?.triggerControlEventById(controlId!, "guest_request",
+              {"request_id": id, "request": name, "args": args}));
+
+  /// Asks the host app to do [name] with [args] (`page.request_host()`).
+  ///
+  /// The host answers with `FletApp.on_guest_request`, or the request fails
+  /// at once when the app isn't embedded or its host has no handler. Returns
+  /// the reply: see [HostRequests].
+  Future<Map<String, dynamic>> requestHost(String name, dynamic args,
+      {Duration? timeout}) {
+    if (!_isEmbedded) {
+      return Future.value(hostRequestError(
+          "not_embedded", "The app isn't embedded in another app."));
+    }
+    final parent = _parentFletBackend?.target;
+    final control = parent == null || parent._disposed
+        ? null
+        : parent.controlsIndex.get(controlId!);
+    if (control == null || !control.hasEventHandler("guest_request")) {
+      return Future.value(hostRequestError(
+          "unhandled", "The host app doesn't handle requests."));
+    }
+    return _hostRequests.request(name, args, timeout: timeout);
+  }
+
+  /// Completes this embedded app's request [id] with its host's [reply]
+  /// (`FletApp` `reply_guest_request`). Returns `false` if it isn't waiting.
+  bool completeHostRequest(int id, Map reply) =>
+      _hostRequests.complete(id, reply);
+
   /// Waits until this embedded app has rendered its UI and stayed quiet.
   ///
   /// Resolves `{"status": "idle"}` once at least one page update arrived and
@@ -334,6 +367,7 @@ class FletBackend extends ChangeNotifier {
   void dispose() {
     debugPrint("Disposing Flet backend.");
     _failIdle("The embedded app was closed.");
+    _hostRequests.cancelAll("unhandled", "The app was closed.");
     _disposed = true;
     _page.removeListener(_onPageUpdated);
     _page.dispose();

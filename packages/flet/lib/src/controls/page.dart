@@ -397,6 +397,12 @@ class _PageControlState extends State<PageControl> with WidgetsBindingObserver {
         return await getDeviceInfo();
       case "get_package_info":
         return await getPackageInfo();
+      case "request_host":
+        var timeoutMs = parseInt(args["timeout_ms"]);
+        return widget.control.backend.requestHost(
+            args["name"]?.toString() ?? "", args["args"],
+            timeout:
+                timeoutMs != null ? Duration(milliseconds: timeoutMs) : null);
       case "set_allowed_device_orientations":
         if (isMobilePlatform()) {
           var orientations = args["orientations"]

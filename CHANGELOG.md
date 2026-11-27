@@ -1,3 +1,9 @@
+## 1.2.0
+
+### New features
+
+* An app embedded with `FletApp` can ask its host to do something for it with the new `page.request_host(name, args)`, and the host answers in `FletApp.on_guest_request`: its handler's return value comes back to the app, `ft.HostRequest.UNHANDLED` or a handler without one declines it, and `ft.HostRequestRefused` refuses it; the app gets `ft.HostRequestError` with a `kind` (`not_embedded`, `unhandled`, `refused`, `failed`, `timeout`). The host decides on every request by its name; nothing is allowed by default. A handler may take as long as it needs without holding up the host's other events, and an app may have at most 16 requests waiting, of about 64 KB each, by @FeodorFitsner.
+
 ## 1.1.4
 
 ### Improvements

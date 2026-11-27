@@ -62,6 +62,12 @@ class _FletAppControlState extends State<FletAppControl> {
         return backend.waitIdle(
             idleMs: parseInt(args["idle_ms"], 300)!,
             timeoutMs: parseInt(args["timeout_ms"], 30000)!);
+      case "reply_guest_request":
+        // A reply to a request of an earlier run of the embedded app, or to
+        // one that timed out, is dropped.
+        _backend?.completeHostRequest(
+            parseInt(args["request_id"], 0)!, Map.from(args));
+        return null;
       default:
         throw Exception("Unknown FletApp method: $name");
     }

@@ -43,7 +43,10 @@ from flet.controls.device_info import (
     WebDeviceInfo,
     WindowsDeviceInfo,
 )
-from flet.controls.exceptions import FletUnsupportedPlatformException
+from flet.controls.exceptions import (
+    FletUnsupportedPlatformException,
+    HostRequestError,
+)
 from flet.controls.multi_view import MultiView
 from flet.controls.package_info import PackageInfo
 from flet.controls.query_string import QueryString
@@ -1579,6 +1582,71 @@ class Page(BasePage):
             The application's package information.
         """
         return from_dict(PackageInfo, await self._invoke_method("get_package_info"))
+
+    async def request_host(
+        self,
+        name: str,
+        args: Optional[dict[str, Any]] = None,
+        timeout: Optional[float] = None,
+    ) -> Any:
+        """
+        Asks the host app to do something for this app, when this app is
+        embedded in it with [`FletApp`][flet.FletApp].
+
+        An embedded app can't do some things itself, such as sign in through
+        a redirect or open the host's own dialogs. Its host can do them for it
+        if it handles the request, in
+        [`FletApp.on_guest_request`][flet.FletApp.on_guest_request]. The host
+        decides on every request; nothing is allowed by default.
+
+        Args:
+            name: The request's name. By convention `package.action`, for
+                example `"fletbase.oauth"`; the host reads it to decide what
+                to do.
+            args: The request's arguments, at most about 64 KB.
+            timeout: Seconds to wait for the host's answer. `None` waits as
+                long as it takes: the host may need the user to do something
+                first.
+
+        Returns:
+            The host's answer: whatever its handler returned.
+
+        Raises:
+            HostRequestError: If the host doesn't answer with a result; its
+                `kind` says why: `"not_embedded"`, `"unhandled"`, `"refused"`,
+                `"failed"` or `"timeout"`.
+
+        Example:
+            ```python
+            try:
+                result = await page.request_host("share", {"title": "Notes"})
+            except ft.HostRequestError as e:
+                if e.kind != "unhandled":
+                    raise
+                ...  # the host doesn't do this; carry on without it
+            ```
+        """
+        if not self.embedded:
+            raise HostRequestError(
+                "not_embedded", "The app isn't embedded in another app."
+            )
+        reply = await self._invoke_method(
+            "request_host",
+            arguments={
+                "name": name,
+                "args": args,
+                "timeout_ms": round(timeout * 1000) if timeout is not None else None,
+            },
+            # The client times the request out itself; this only covers a
+            # client that never answers.
+            timeout=timeout + 5 if timeout is not None else None,
+        )
+        error = reply.get("error") if isinstance(reply, dict) else None
+        if error:
+            raise HostRequestError(
+                str(error.get("kind") or "failed"), str(error.get("message") or "")
+            )
+        return reply.get("result") if isinstance(reply, dict) else None
 
     async def set_allowed_device_orientations(
         self, orientations: list[DeviceOrientation]

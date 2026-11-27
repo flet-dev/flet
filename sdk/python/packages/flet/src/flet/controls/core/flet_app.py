@@ -1,13 +1,32 @@
+import inspect
+import logging
 from dataclasses import dataclass, field
+from enum import Enum
 from typing import Any, Optional
 
 from flet.controls.base_control import control
-from flet.controls.control_event import ControlEventHandler, Event, EventHandler
+from flet.controls.context import _context_page, context
+from flet.controls.control_event import (
+    ControlEvent,
+    ControlEventHandler,
+    Event,
+    EventHandler,
+)
+from flet.controls.exceptions import HostRequestRefused
 from flet.controls.layout_control import LayoutControl
 from flet.controls.padding import PaddingValue
 from flet.controls.types import Brightness
+from flet.utils.object_model import get_param_count
 
-__all__ = ["FletApp", "FletAppOutputEvent", "FletAppWindowEvent"]
+__all__ = [
+    "FletApp",
+    "FletAppGuestRequestEvent",
+    "FletAppOutputEvent",
+    "FletAppWindowEvent",
+    "HostRequest",
+]
+
+logger = logging.getLogger("flet")
 
 
 @dataclass
@@ -36,6 +55,39 @@ class FletAppWindowEvent(Event["FletApp"]):
     # it with a default reorders the base's own non-default fields.
     args: dict[str, Any] = field(default_factory=dict, metadata={"data_field": "data"})
     """Method arguments, or the properties written when `action` is `"set"`."""
+
+
+@dataclass
+class FletAppGuestRequestEvent(Event["FletApp"]):
+    """
+    The embedded app asked its host to do something, with
+    :meth:`Page.request_host() <flet.Page.request_host>`.
+
+    `control` is the [`FletApp`][flet.FletApp] that runs the app that asked.
+    """
+
+    request: str
+    """The request's name, for example `"fletbase.oauth"`. Names are chosen by
+    the embedded app; by convention `package.action`."""
+
+    args: Optional[dict[str, Any]] = None
+    """The request's arguments. They come from the embedded app: treat them as
+    untrusted input."""
+
+    request_id: int = field(default=0, repr=False)
+    """Identifies the request between the host and the embedded app."""
+
+
+class HostRequest(Enum):
+    """
+    Special answers of a [`FletApp.on_guest_request`][flet.FletApp.on_guest_request]
+    handler.
+    """
+
+    UNHANDLED = "unhandled"
+    """The host doesn't handle this request: the embedded app's
+    :meth:`Page.request_host() <flet.Page.request_host>` raises
+    :class:`~flet.HostRequestError` with `kind` `"unhandled"`."""
 
 
 @control("FletApp")
@@ -247,6 +299,107 @@ class FletApp(LayoutControl):
     bubble the event.
     """
 
+    on_guest_request: Optional[EventHandler[FletAppGuestRequestEvent]] = None
+    """
+    Called when the embedded app asks its host to do something, with
+    :meth:`Page.request_host() <flet.Page.request_host>`.
+
+    The handler's return value is the reply, which the embedded app gets back
+    from `request_host()`. It can be anything Flet can send: `None`, numbers,
+    strings, bytes, lists and dicts of them. The handler may be async and may
+    take as long as it needs, for example while the user signs in.
+
+    - Return [`HostRequest.UNHANDLED`][flet.HostRequest.UNHANDLED] for a
+      request this host doesn't handle.
+    - Raise :class:`~flet.HostRequestRefused` to decline it, for example when
+      the user said no.
+    - Any other exception fails the request; the embedded app gets its message,
+      never the traceback.
+
+    While this is not set, every request of the embedded app fails with
+    `"unhandled"`, without reaching the host. Nothing is allowed by default:
+    decide on each request by its name, and treat its `args` as untrusted
+    input. Never let them choose what the host acts on.
+
+    Example:
+        ```python
+        async def on_request(e: ft.FletAppGuestRequestEvent):
+            if e.request != "share":
+                return ft.HostRequest.UNHANDLED
+            if not await confirm(f"Share {e.args.get('title')!r}?"):
+                raise ft.HostRequestRefused("The user said no.")
+            return {"shared": True}
+
+        ft.FletApp(url=..., on_guest_request=on_request)
+        ```
+    """
+
+    async def _trigger_event(
+        self, event_name: str, event_data: Any, e: Optional[ControlEvent] = None
+    ):
+        if event_name != "guest_request" or not isinstance(event_data, dict):
+            return await super()._trigger_event(event_name, event_data, e)
+        event = FletAppGuestRequestEvent(
+            control=self,
+            name=event_name,
+            request=str(event_data.get("request") or ""),
+            args=event_data.get("args"),
+            request_id=int(event_data.get("request_id") or 0),
+        )
+        # Answered in a task of its own, so a handler that takes minutes
+        # doesn't hold up the host's other events.
+        self.page.run_task(self._answer_guest_request, event)
+
+    async def _answer_guest_request(self, e: FletAppGuestRequestEvent):
+        """Runs `on_guest_request` for request `e` and sends its reply."""
+        handler = self.on_guest_request
+        session = self.page.session
+        reply: dict[str, Any]
+        try:
+            if not callable(handler):
+                result = HostRequest.UNHANDLED
+            else:
+                _context_page.set(self.page)
+                context.reset_auto_update()
+                result = handler() if get_param_count(handler) == 0 else handler(e)
+                if inspect.isawaitable(result):
+                    result = await result
+            if result is HostRequest.UNHANDLED:
+                reply = _guest_request_error(
+                    "unhandled", f"The host app doesn't handle {e.request!r}."
+                )
+            else:
+                reply = {"result": result}
+        except HostRequestRefused as ex:
+            reply = _guest_request_error("refused", str(ex))
+        except Exception as ex:
+            logger.error("Unhandled error in 'on_guest_request' handler", exc_info=True)
+            reply = _guest_request_error(
+                "failed", str(ex) or "The host app failed to answer."
+            )
+        await session.after_event(self)
+
+        try:
+            await self._send_guest_reply(e.request_id, reply)
+        except (TypeError, ValueError):
+            # The result can't be sent; the embedded app should still hear back.
+            await self._send_guest_reply(
+                e.request_id,
+                _guest_request_error(
+                    "failed", "The host app's answer can't be sent to the app."
+                ),
+            )
+
+    async def _send_guest_reply(self, request_id: int, reply: dict[str, Any]):
+        try:
+            await self._invoke_method(
+                "reply_guest_request", arguments={"request_id": request_id, **reply}
+            )
+        except RuntimeError:
+            # Removed, or the session closed, while answering: the embedded
+            # app has gone with it.
+            logger.debug("FletApp: no one to answer guest request %s", request_id)
+
     async def wait_idle(
         self, idle_ms: int = 300, timeout_ms: int = 30000
     ) -> dict[str, Any]:
@@ -276,3 +429,7 @@ class FletApp(LayoutControl):
             arguments={"idle_ms": idle_ms, "timeout_ms": timeout_ms},
             timeout=timeout_ms / 1000 + 5,
         )
+
+
+def _guest_request_error(kind: str, message: str) -> dict[str, Any]:
+    return {"error": {"kind": kind, "message": message}}
