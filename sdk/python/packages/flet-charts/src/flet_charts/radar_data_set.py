@@ -38,6 +38,9 @@ class RadarDataSet(ft.BaseControl):
     ] = field(default_factory=list)
     """
     The data points that compose this set.
+
+    Raises:
+        ValueError: If it contains 1 or 2 items.
     """
 
     fill_color: ft.ColorValue = ft.Colors.CYAN
