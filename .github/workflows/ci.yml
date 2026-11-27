@@ -461,15 +461,6 @@ jobs:
     strategy:
       matrix:
         include:
-          - distro_id: debian10
-            container: debian:10
-            manylinux_tag: manylinux_2_28
-            arch: amd64
-            runner: ubuntu-24.04
-            build_arch: x64
-            platform_arch: x86_64
-            rive_enabled: false
-            title: Debian 10 AMD64
           - distro_id: debian12
             container: debian:12
             manylinux_tag: manylinux_2_36
@@ -478,6 +469,7 @@ jobs:
             build_arch: x64
             platform_arch: x86_64
             rive_enabled: false
+            webview_enabled: true
             title: Debian 12 AMD64
           - distro_id: debian12
             container: debian:12
@@ -487,6 +479,7 @@ jobs:
             build_arch: arm64
             platform_arch: aarch64
             rive_enabled: false
+            webview_enabled: true
             title: Debian 12 ARM64
           - distro_id: ubuntu20.04
             container: ubuntu:20.04
@@ -496,6 +489,7 @@ jobs:
             build_arch: x64
             platform_arch: x86_64
             rive_enabled: false
+            webview_enabled: false
             title: Ubuntu 20.04 AMD64
           - distro_id: ubuntu20.04
             container: ubuntu:20.04
@@ -505,6 +499,7 @@ jobs:
             build_arch: arm64
             platform_arch: aarch64
             rive_enabled: false
+            webview_enabled: false
             title: Ubuntu 20.04 ARM64
           - distro_id: ubuntu22.04
             container: ubuntu:22.04
@@ -514,6 +509,7 @@ jobs:
             build_arch: x64
             platform_arch: x86_64
             rive_enabled: false
+            webview_enabled: true
             title: Ubuntu 22.04 AMD64
           - distro_id: ubuntu22.04
             container: ubuntu:22.04
@@ -523,6 +519,7 @@ jobs:
             build_arch: arm64
             platform_arch: aarch64
             rive_enabled: false
+            webview_enabled: true
             title: Ubuntu 22.04 ARM64
           - distro_id: ubuntu24.04
             container: ubuntu:24.04
@@ -532,6 +529,7 @@ jobs:
             build_arch: x64
             platform_arch: x86_64
             rive_enabled: true
+            webview_enabled: true
             title: Ubuntu 24.04 AMD64
           - distro_id: ubuntu24.04
             container: ubuntu:24.04
@@ -541,6 +539,7 @@ jobs:
             build_arch: arm64
             platform_arch: aarch64
             rive_enabled: false
+            webview_enabled: true
             title: Ubuntu 24.04 ARM64
     env:
       PKG_VER: ${{ needs.build_flet_package.outputs.PKG_VER }}
@@ -552,6 +551,7 @@ jobs:
       DISTRO_ID: ${{ matrix.distro_id }}
       MANYLINUX_TAG: ${{ matrix.manylinux_tag }}
       RIVE_ENABLED: ${{ matrix.rive_enabled }}
+      WEBVIEW_ENABLED: ${{ matrix.webview_enabled }}
     steps:
       - name: Install base packages
         timeout-minutes: 15
@@ -559,30 +559,6 @@ jobs:
         run: |
           export DEBIAN_FRONTEND=noninteractive
           export TZ=Etc/UTC
-          if [[ "$DISTRO_ID" == "debian10" ]]; then
-            # Some archive.debian.org CDN edges persistently return 404 for
-            # packages the archive has. apt's mirror method fetches any file
-            # that fails from the next mirror: ftp.de.debian.org carries an
-            # identical copy of the archive.
-            for repo in debian debian-security; do
-              printf '%s\tpriority:1\n%s\tpriority:2\n' \
-                "http://archive.debian.org/$repo" \
-                "http://ftp.de.debian.org/debian-archive/$repo" \
-                > "/etc/apt/mirrors-$repo.txt"
-            done
-            printf '%s\n' \
-              'deb mirror+file:/etc/apt/mirrors-debian.txt buster main' \
-              'deb mirror+file:/etc/apt/mirrors-debian.txt buster-updates main' \
-              'deb mirror+file:/etc/apt/mirrors-debian-security.txt buster/updates main' \
-              > /etc/apt/sources.list
-            echo 'Acquire::Check-Valid-Until "false";' > /etc/apt/apt.conf.d/99no-check-valid-until
-            # Archive mirrors sometimes serve a truncated file or stall
-            # mid-download. Give up on a stalled download after 30 s and retry
-            # failed files, so apt moves on to the next mirror instead of
-            # hanging until the step times out.
-            printf '%s\n' 'Acquire::Retries "5";' 'Acquire::http::Timeout "30";' \
-              > /etc/apt/apt.conf.d/99retries
-          fi
           retry() {
             for attempt in 1 2 3; do
               "$@" && return
@@ -643,6 +619,10 @@ jobs:
           }
           retry apt-get update --allow-releaseinfo-change
           LINUX_DEPS="$(uv run --project sdk/python/packages/flet-cli flet --version --json | jq -r '.linux_dependencies | join(" ")')"
+          if [[ "$WEBVIEW_ENABLED" == "true" ]]; then
+            # For flet_webview; webkit2gtk-4.1 is absent before Debian 12 / Ubuntu 22.04
+            LINUX_DEPS="$LINUX_DEPS libwebkit2gtk-4.1-dev"
+          fi
           read -r -a linux_deps <<< "$LINUX_DEPS"
           retry apt-get install -y "${linux_deps[@]}"
 
@@ -679,6 +659,13 @@ jobs:
               sed -i '/--RIVE_CLIENT_START--/,/--RIVE_CLIENT_END--/d' pubspec.yaml
               sed -i '/--RIVE_IMPORT_START--/,/--RIVE_IMPORT_END--/d' lib/main.dart
               sed -i '/--RIVE_EXTENSION_START--/,/--RIVE_EXTENSION_END--/d' lib/main.dart
+            fi
+
+            if [[ "$WEBVIEW_ENABLED" != "true" || "$FLAVOR" == "light" ]]; then
+              # flet_webview links webkit2gtk-4.1 into the whole client, so it is kept out of light builds
+              sed -i '/--WEBVIEW_CLIENT_START--/,/--WEBVIEW_CLIENT_END--/d' pubspec.yaml
+              sed -i '/--WEBVIEW_IMPORT_START--/,/--WEBVIEW_IMPORT_END--/d' lib/main.dart
+              sed -i '/--WEBVIEW_EXTENSION_START--/,/--WEBVIEW_EXTENSION_END--/d' lib/main.dart
             fi
             echo "::endgroup::"
 

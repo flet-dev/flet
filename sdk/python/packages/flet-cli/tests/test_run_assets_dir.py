@@ -119,6 +119,7 @@ def handler_kwargs(monkeypatch, tmp_path):
                 real_signature.bind(self, **kwargs)
                 captured.update(kwargs)
                 self.pid_file = None
+                self.error = None
                 self.terminate = threading.Event()
                 self.terminate.set()
 

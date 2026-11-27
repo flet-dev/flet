@@ -2325,6 +2325,13 @@ as an artifact. You can further customize the workflow for your specific needs,
 for example, restricting the build targets or adding signing, notarization,
 store upload, or deployment steps.
 
+:::note[Linux apps using `WebView`]
+The Linux build dependencies installed by both variants do not include
+`libwebkit2gtk-4.1-dev`, which the [`WebView`](../controls/webview/index.md#linux)
+control needs. If your app uses it, install that package in a step before the
+build on Linux targets.
+:::
+
 ## Troubleshooting
 
 ### Prerelease compatibility

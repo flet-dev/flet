@@ -42,40 +42,15 @@ client, calls such as [`play()`][flet_audio.Audio.play] fail with `Timeout waiti
 [`FLET_DESKTOP_FLAVOR=full`](../../reference/environment-variables.md#flet_desktop_flavor) or `desktop_flavor = "full"` in `pyproject.toml`, as described in
 [Installation](../../getting-started/installation.md#linux).
 
-To play audio on Linux (or [WSL](https://docs.microsoft.com/en-us/windows/wsl/about)) you need to
-install [`GStreamer`](https://github.com/GStreamer/gstreamer) library. The full client also contains
-the [`Video`](../../controls/video/index.md#linux) control, so it needs `libmpv` too. On Debian 12+
-and Ubuntu 24.04+:
+The full client and apps built with `flet build linux` play audio through
+[GStreamer](https://gstreamer.freedesktop.org), loaded from the system, and the full
+client doesn't start without the libraries of the other extensions it includes either.
+See [Linux system libraries](../../reference/linux-system-libraries.md) for the packages
+to install, both to run and to build apps. The same applies on
+[WSL](https://docs.microsoft.com/en-us/windows/wsl/about).
 
-```bash
-sudo apt install libmpv2
-```
-
-On older releases, install `libmpv1` instead.
-
-To install the minimal set of GStreamer libs on Ubuntu/Debian, run:
-
-```bash
-sudo apt install libgtk-3-dev libgstreamer1.0-dev libgstreamer-plugins-base1.0-dev
-```
-
-To install the full set:
-
-```bash
-sudo apt install \
-  libgstreamer1.0-dev libgstreamer-plugins-base1.0-dev libgstreamer-plugins-bad1.0-dev \
-  gstreamer1.0-plugins-base gstreamer1.0-plugins-good gstreamer1.0-plugins-bad \
-  gstreamer1.0-plugins-ugly gstreamer1.0-libav gstreamer1.0-doc gstreamer1.0-tools \
-  gstreamer1.0-x gstreamer1.0-alsa gstreamer1.0-gl gstreamer1.0-gtk3 \
-  gstreamer1.0-qt5 gstreamer1.0-pulseaudio
-```
-
-If you receive `error while loading shared libraries: libgstapp-1.0.so.0`,
-it means `GStreamer` is not installed in your WSL environment.
-Install the full set of GStreamer libs, as shown above.
-
-See [this guide](https://gstreamer.freedesktop.org/documentation/installing/on-linux.html?gi-language=c)
-for installing on other Linux distributions.
+Each audio format also needs the GStreamer plugin that decodes it, such as
+`gstreamer1.0-plugins-good` or `gstreamer1.0-libav`.
 :::
 
 ## Examples

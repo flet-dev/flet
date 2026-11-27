@@ -8,7 +8,12 @@ class Extension extends FletExtension {
   Widget? createWidget(Key? key, Control control) {
     switch (control.type) {
       case "WebView":
-        return WebViewControl(control: control);
+        // Keyed by control id so that another WebView put in the same place
+        // gets its own state and native webview instead of reusing these.
+        return WebViewControl(
+          key: key ?? ValueKey(control.id),
+          control: control,
+        );
       default:
         return null;
     }

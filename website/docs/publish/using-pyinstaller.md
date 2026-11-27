@@ -173,11 +173,16 @@ packaging handled than assemble it yourself.
 
 On Linux, `flet pack` bundles the [desktop client flavor](../getting-started/installation.md#linux)
 selected where you run it: the light one by default, which leaves out the
-[Audio](../services/audio/index.md), [Video](../controls/video/index.md) and
-[Rive](../controls/rive/index.md) extensions. `flet pack` warns when your app
-imports one of them. It reads `desktop_flavor` from the `pyproject.toml` of the
-folder you run it from, or
-[`FLET_DESKTOP_FLAVOR`](../reference/environment-variables.md#flet_desktop_flavor).
+[`flet-audio`](../services/audio/index.md), [`flet-video`](../controls/video/index.md),
+[`flet-rive`](../controls/rive/index.md) and [`flet-webview`](../controls/webview/index.md)
+extensions. It reads `desktop_flavor` from the `pyproject.toml` of the folder you run
+it from, or [`FLET_DESKTOP_FLAVOR`](../reference/environment-variables.md#flet_desktop_flavor).
+`flet pack` warns when your app imports an extension the bundled client leaves out.
+
+The bundled client needs glibc 2.31 or newer
+([supported distributions](../getting-started/installation.md#linux)) on every
+machine the app runs on, and with the full flavor, the client's
+[system libraries](../reference/linux-system-libraries.md#full-desktop-client) too.
 
 ## Including assets
 

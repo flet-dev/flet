@@ -1,7 +1,17 @@
 ## 1.2.0
 
+### Breaking changes
+
+* The prebuilt Linux desktop client needs glibc 2.31 or newer (Debian 11, Ubuntu 20.04): it is no longer built for Debian 10 ([#7124](https://github.com/flet-dev/flet/pull/7124)) by @ndonkoHenri.
+* On Debian 12, Ubuntu 22.04 and newer, the `full` flavor of the prebuilt Linux desktop client now needs `libwebkit2gtk-4.1-0` to start, even for apps that don't use `WebView`: install it with `sudo apt install libwebkit2gtk-4.1-0`. The default `light` flavor has no `WebView` and doesn't need it ([#6530](https://github.com/flet-dev/flet/issues/6530), [#7124](https://github.com/flet-dev/flet/pull/7124)) by @ndonkoHenri.
+* Linux apps built with `flet build linux` that include `flet-webview` need `libwebkit2gtk-4.1-dev` to build and `libwebkit2gtk-4.1-0` to run, so they no longer run before Debian 12 and Ubuntu 22.04, even when they show a `WebView` only on other platforms ([#6530](https://github.com/flet-dev/flet/issues/6530), [#7124](https://github.com/flet-dev/flet/pull/7124)) by @ndonkoHenri.
+* `WebView.scroll_to()` and `WebView.scroll_by()` raise `FletUnsupportedPlatformException` on macOS, which doesn't support them ([#6530](https://github.com/flet-dev/flet/issues/6530), [#7124](https://github.com/flet-dev/flet/pull/7124)) by @ndonkoHenri.
+
 ### New features
 
+* Add `WebView` support on Windows (Edge WebView2) and Linux (WebKitGTK), and make its methods and events work on web for same-origin pages and HTML loaded with `load_html()` ([#6530](https://github.com/flet-dev/flet/issues/6530), [#5934](https://github.com/flet-dev/flet/issues/5934), [#7124](https://github.com/flet-dev/flet/pull/7124)) by @ndonkoHenri.
+* `WebView`: changing `url` loads the new URL, and a page that can't be loaded because of its `url` or a certificate error fires `on_web_resource_error` ([#7124](https://github.com/flet-dev/flet/pull/7124)) by @ndonkoHenri.
+* flet-webview: on web, in an app embedded with `FletApp` or on a page that gives the app its own storage space (`window.flet.storagePrefix`), `WebView` pages and HTML loaded with `load_html()` run in a sandboxed frame with an opaque origin, and a `POST` `load_request()` is refused; `javascript:`, `blob:` and `filesystem:` URLs fire `on_web_resource_error`, and `clear_cache()` and `clear_local_storage()` are refused on web ([#7124](https://github.com/flet-dev/flet/pull/7124)) by @FeodorFitsner.
 * flet-charts: Add `GaugeChart` for progress gauges, activity rings and speedometers, built from progress and zone rings with ticks, labels, markers and needle or circle pointers. See [GaugeChart](https://flet.dev/docs/controls/charts/gaugechart) ([#7066](https://github.com/flet-dev/flet/pull/7066)) by @ndonkoHenri.
 * Add `ft.use_page_size()`, a hook that returns the page size and re-renders the component when it changes; `ft.use_page_size(lambda size: size.width < 600)` re-renders only when the selected value changes, for layouts that switch at a breakpoint. Any number of components can use it, and `page.on_resize` stays free for the app ([#7115](https://github.com/flet-dev/flet/pull/7115)) by @FeodorFitsner.
 
@@ -22,6 +32,10 @@
 ### Bug fixes
 
 * Fix `View.on_size_change` never firing; it reports the size of the view's body, the area between the app bar and the bottom navigation bar ([#6363](https://github.com/flet-dev/flet/issues/6363), [#7088](https://github.com/flet-dev/flet/pull/7088)) by @ndonkoHenri.
+
+### Documentation
+
+* Add a [Linux system libraries](https://flet.dev/docs/reference/linux-system-libraries) page listing the packages each extension needs to build and run on Linux, and the ones the full desktop client needs on each distribution ([#6530](https://github.com/flet-dev/flet/issues/6530), [#7124](https://github.com/flet-dev/flet/pull/7124)) by @ndonkoHenri.
 
 ## 1.1.4
 
