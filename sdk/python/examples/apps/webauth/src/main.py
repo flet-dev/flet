@@ -20,6 +20,9 @@ Build (from this directory):
     -e ../../../packages/flet-desktop -e ../../../packages/flet-platform-assets
   # Copy .env.example → .env and fill AUTH0_DOMAIN / AUTH0_CLIENT_ID
   .venv/Scripts/flet.exe build apk -v --yes   # Windows
+
+Note: ``flet run`` / ``flet run --web`` on desktop are not the mobile WebAuth
+path yet — pack with ``flet build apk`` / ``ipa`` to exercise native sign-in.
 """
 
 from __future__ import annotations
@@ -29,7 +32,7 @@ from pathlib import Path
 
 import flet as ft
 from dotenv import load_dotenv
-from flet.auth.oauth_provider import OAuthProvider
+from flet.auth.providers import Auth0OAuthProvider
 
 # Must match tool.flet.web_auth.callback_scheme / --web-auth-callback-scheme
 # and the URI registered in Auth0 (scheme://callback).
@@ -38,7 +41,7 @@ CALLBACK_SCHEME = os.environ.get("WEBAUTH_CALLBACK_SCHEME", "com.flet.webauth.au
 load_dotenv(Path(__file__).resolve().parent / ".env")
 
 
-async def build_provider() -> OAuthProvider:
+def build_provider() -> Auth0OAuthProvider:
     domain = os.environ.get("AUTH0_DOMAIN", "").strip().removeprefix("https://").rstrip("/")
     client_id = os.environ.get("AUTH0_CLIENT_ID", "").strip()
     if not domain or not client_id:
@@ -47,16 +50,13 @@ async def build_provider() -> OAuthProvider:
             "(Auth0 Native app; no client secret)."
         )
     audience = os.environ.get("AUTH0_AUDIENCE", "").strip() or None
-    provider = await OAuthProvider.discover(
-        f"https://{domain}/",
+    return Auth0OAuthProvider(
+        domain=domain,
         client_id=client_id,
         client_secret="",  # public native client + PKCE
-        scopes=["offline_access"],
-        user_scopes=["openid", "profile", "email"],
-        user_id_fn=lambda u: u["sub"],
-        authorization_params=({"audience": audience} if audience else None),
+        redirect_url=f"{CALLBACK_SCHEME}://callback",
+        audience=audience,
     )
-    return provider
 
 
 async def main(page: ft.Page) -> None:
@@ -85,7 +85,7 @@ async def main(page: ft.Page) -> None:
         error.value = ""
         page.update()
         try:
-            provider = await build_provider()
+            provider = build_provider()
         except Exception as ex:
             error.value = str(ex)
             page.update()

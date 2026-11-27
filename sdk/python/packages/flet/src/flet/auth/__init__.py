@@ -4,6 +4,7 @@ from flet.auth.authorization import Authorization
 from flet.auth.group import Group
 from flet.auth.oauth_provider import OAuthProvider
 from flet.auth.oauth_token import OAuthToken
+from flet.auth.oidc_provider import OIDCProvider
 from flet.auth.user import User
 
 if TYPE_CHECKING:
@@ -24,6 +25,7 @@ __all__ = [
     "GoogleOAuthProvider",
     "Group",
     "OAuthProvider",
+    "OIDCProvider",
     "OAuthToken",
     "User",
 ]

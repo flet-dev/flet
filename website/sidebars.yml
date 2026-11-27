@@ -479,6 +479,7 @@ docs:
           AzureOAuthProvider: types/auth/azureoauthprovider.md
           GitHubOAuthProvider: types/auth/githuboauthprovider.md
           GoogleOAuthProvider: types/auth/googleoauthprovider.md
+      - types/auth/oidcprovider.md
       - types/auth/user.md
       Testing:
       - types/testing/flettestapp.md

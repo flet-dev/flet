@@ -58,8 +58,9 @@ Flet authentication features:
 * Call `page.login(provider, callback_scheme=...)` — Flet uses core
   [`WebAuth`](../services/webauth/index.md) for the browser + redirect; Python
   builds the authorize URL (PKCE + state) and exchanges the code.
-* You can bootstrap endpoints with `OAuthProvider.discover(issuer)` (redirect
-  still comes from the WebAuth session).
+* For arbitrary OIDC issuers only, bootstrap endpoints with
+  `OIDCProvider.discover(issuer)` (redirect still comes from the WebAuth
+  session). Prefer presets like `Auth0OAuthProvider` when endpoints are known.
 * `on_open_authorization_url`, `complete_page_html`, and `redirect_to_page` are
   **web only** (ignored on mobile).
 * See [WebAuth](../services/webauth/index.md) for build and API details.

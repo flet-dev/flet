@@ -1,4 +1,4 @@
-"""OIDC discovery for OAuthProvider — TDD (red first)."""
+"""OIDCProvider.discover — OIDC issuer discovery only."""
 
 from __future__ import annotations
 
@@ -8,7 +8,7 @@ from unittest.mock import AsyncMock, MagicMock, patch
 import httpx
 import pytest
 
-from flet.auth.oauth_provider import OAuthProvider
+from flet.auth.oidc_provider import OIDCProvider
 
 
 DISCOVERY_DOC = {
@@ -47,13 +47,14 @@ async def test_discover_populates_endpoints_not_redirect():
         client.get = mock_get
         client_cls.return_value = client
 
-        provider = await OAuthProvider.discover(
+        provider = await OIDCProvider.discover(
             "https://example.auth0.com",
             client_id="cid",
             client_secret="",
             scopes=["openid", "profile"],
         )
 
+    assert isinstance(provider, OIDCProvider)
     assert provider.client_id == "cid"
     assert provider.client_secret == ""
     assert provider.authorization_endpoint == DISCOVERY_DOC["authorization_endpoint"]
@@ -61,6 +62,9 @@ async def test_discover_populates_endpoints_not_redirect():
     assert provider.user_endpoint == DISCOVERY_DOC["userinfo_endpoint"]
     assert provider.redirect_url in (None, "")
     assert provider.scopes == ["openid", "profile"]
+    assert provider.issuer == DISCOVERY_DOC["issuer"]
+    assert provider.jwks_uri == DISCOVERY_DOC["jwks_uri"]
+    assert provider.end_session_endpoint == DISCOVERY_DOC["end_session_endpoint"]
     called_url = mock_get.await_args.args[0]
     assert called_url == "https://example.auth0.com/.well-known/openid-configuration"
 
@@ -75,7 +79,7 @@ async def test_discover_strips_trailing_slash_on_issuer():
         client.get = mock_get
         client_cls.return_value = client
 
-        await OAuthProvider.discover(
+        await OIDCProvider.discover(
             "https://example.auth0.com/",
             client_id="cid",
         )
@@ -99,7 +103,7 @@ async def test_discover_missing_authorization_endpoint_raises():
         client_cls.return_value = client
 
         with pytest.raises(ValueError, match="authorization_endpoint"):
-            await OAuthProvider.discover("https://example.auth0.com", client_id="cid")
+            await OIDCProvider.discover("https://example.auth0.com", client_id="cid")
 
 
 @pytest.mark.asyncio
@@ -113,4 +117,4 @@ async def test_discover_http_error_raises():
         client_cls.return_value = client
 
         with pytest.raises(httpx.HTTPStatusError):
-            await OAuthProvider.discover("https://example.auth0.com", client_id="cid")
+            await OIDCProvider.discover("https://example.auth0.com", client_id="cid")

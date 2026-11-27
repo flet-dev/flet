@@ -3,7 +3,7 @@
 ### New features
 
 * Add core `WebAuth` service (Android Auth Tab / iOS `ASWebAuthenticationSession`) and route Android/iOS `page.login()` through it with Python-owned PKCE, state, and token exchange (P0; desktop/web WebAuth follow later).
-* Add `OAuthProvider.discover()` for OIDC issuer discovery (endpoints only; redirect comes from the WebAuth session).
+* Add `OIDCProvider` with `discover()` for OIDC issuer discovery (endpoints only; redirect comes from the WebAuth session). Keep `OAuthProvider` for explicit endpoint configuration.
 * Add `flet build --web-auth-callback-scheme` / `tool.flet.web_auth.callback_scheme` (default `<bundle id>.auth`) for mobile OAuth callback registration.
 
 ### Improvements

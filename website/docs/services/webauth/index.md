@@ -109,9 +109,10 @@ AUTH0_CLIENT_ID=your-native-app-client-id
 WEBAUTH_CALLBACK_SCHEME=com.example.myapp.auth
 ```
 
-You can bootstrap endpoints with
-[`OAuthProvider.discover`](../../types/auth/oauthprovider.md) from the Auth0
-issuer URL.
+Prefer [`Auth0OAuthProvider`](../../types/auth/auth0oauthprovider.md) for
+Auth0 (fixed endpoints). Use
+[`OIDCProvider.discover`](../../types/auth/oidcprovider.md) only when you
+have an OIDC issuer discovery URL and no preset.
 
 Package `.env` with `include` or `--include` if you use one (dotfiles are
 excluded by default — [Publishing](../../publish/index.md#default-exclusions)).
