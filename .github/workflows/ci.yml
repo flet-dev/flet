@@ -848,7 +848,6 @@ jobs:
             flet-code-editor
             flet-color-pickers
             flet-datatable2
-            flet-appauth
             flet-flashlight
             flet-geolocator
             flet-lottie
@@ -1133,7 +1132,6 @@ jobs:
             flet_code_editor \
             flet_color_pickers \
             flet_datatable2 \
-            flet_appauth \
             flet_flashlight \
             flet_geolocator \
             flet_lottie \

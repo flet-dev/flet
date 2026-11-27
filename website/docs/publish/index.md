@@ -1559,43 +1559,41 @@ iOS matches links on the scheme only, so on iOS any `myapp://` link opens the
 app, whatever its host.
 </details>
 
-### AppAuth redirect scheme (OAuth / `flet-appauth`)
+### WebAuth callback scheme {#webauth-callback-scheme}
 
-For native mobile OAuth (`page.login` + [`flet-appauth`](../services/appauth/index.md)),
-Flet registers an **AppAuth-specific** redirect scheme (separate from
+For native mobile OAuth (`page.login` + core [`WebAuth`](../services/webauth/index.md)),
+Flet registers a **WebAuth callback scheme** (separate from
 [Deep linking](#deep-linking)).
 
-**Default** (when `flet-appauth` is a dependency and you set no scheme): a
-sanitized app name from `pyproject.toml` — first of `tool.flet.project`,
-`tool.flet.artifact`, `tool.flet.product`, `project.name`. If none yields a
-valid scheme, fallback is `flet`.
+**Default:** `<bundle id>.auth` derived from `tool.flet.bundle_id` /
+`tool.flet.<platform>.bundle_id`, or `tool.flet.org` + app name. If none
+yields a valid scheme, fallback is `flet.auth`.
 
-`flet build` / `flet debug` logs the
-chosen scheme and its source, e.g.
-`AppAuth redirect scheme: appauth (from app name (tool.flet.project=…))`.
+`flet build` / `flet debug` logs the chosen scheme and its source, e.g.
+`WebAuth callback scheme: com.example.myapp.auth (from bundle id (…))`.
 
-Use that scheme in `OAuthProvider.redirect_url` and your IdP
-(e.g. `appauth://oauth-callback`).
+Pass the same scheme to `page.login(..., callback_scheme=...)` and register
+`<scheme>://callback` with your IdP.
 
 #### Resolution order
 
-1. `--appauth-redirect-scheme` on `flet build` / `flet debug`
-2. `[tool.flet.<PLATFORM>.appauth].redirect_scheme` (`android` or `ios`)
-3. `[tool.flet.appauth].redirect_scheme`
-4. Sanitized app name from pyproject (only when `flet-appauth` is a dependency)
-5. Fallback `flet` (only when `flet-appauth` is a dependency)
+1. `--web-auth-callback-scheme` on `flet build` / `flet debug`
+2. `[tool.flet.<PLATFORM>.web_auth].callback_scheme` (`android` or `ios`)
+3. `[tool.flet.web_auth].callback_scheme`
+4. Default `<bundle id>.auth`
 
 #### Optional override
 
 ```toml
-[tool.flet.appauth]
-redirect_scheme = "myapp"
+[tool.flet.web_auth]
+callback_scheme = "com.example.myapp.auth"
 ```
 
-Then match `OAuthProvider.redirect_url` (e.g. `myapp://oauth-callback`).
+Then match `page.login(callback_scheme=...)` and the IdP callback URI
+(e.g. `com.example.myapp.auth://callback`).
 
 Auth0 Native + PKCE walkthrough:
-[AppAuth — Auth0 native](../services/appauth/index.md#auth0-native-pkce-on-android--ios).
+[WebAuth — Auth0 native](../services/webauth/index.md#auth0-native-pkce-on-android--ios).
 
 ### Target Architecture
 

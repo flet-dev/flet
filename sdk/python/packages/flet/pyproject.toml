@@ -59,7 +59,6 @@ extensions = [
     "flet-code-editor",
     "flet-color-pickers",
     "flet-datatable2",
-    "flet-appauth",
     "flet-flashlight",
     "flet-geolocator",
     "flet-lottie",

@@ -438,7 +438,6 @@ docs:
         slug: /services
         description: Browse the complete catalog of services available in Flet.
       Accelerometer: services/accelerometer.md
-      AppAuth: services/appauth/index.md
       Audio: services/audio/index.md
       AudioRecorder: services/audiorecorder/index.md
       Barometer: services/barometer.md
@@ -465,6 +464,7 @@ docs:
       UrlLauncher: services/urllauncher.md
       UserAccelerometer: services/useraccelerometer.md
       Wakelock: services/wakelock.md
+      WebAuth: services/webauth/index.md
     Types:
       _index: types/index.md
       Aliases: types/aliases.md

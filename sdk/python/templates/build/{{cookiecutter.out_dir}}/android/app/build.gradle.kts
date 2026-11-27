@@ -81,9 +81,9 @@ android {
         targetSdk = resolvedTargetSdk
         versionCode = flutterVersionCode
         versionName = flutterVersionName
-{% if cookiecutter.appauth.redirect_scheme %}
-        // flutter_appauth / AppAuth-Android redirect URI scheme
-        manifestPlaceholders.putAll(mapOf("appAuthRedirectScheme" to "{{ cookiecutter.appauth.redirect_scheme }}"))
+{% if cookiecutter.web_auth.callback_scheme %}
+        // WebAuth callback URI scheme (Auth Tab / custom-scheme redirect)
+        manifestPlaceholders.putAll(mapOf("webAuthCallbackScheme" to "{{ cookiecutter.web_auth.callback_scheme }}"))
 {% endif %}
 
         println("Gradle build config:")

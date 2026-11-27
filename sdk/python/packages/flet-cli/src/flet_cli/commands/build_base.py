@@ -809,13 +809,12 @@ class BaseBuildCommand(BaseFlutterCommand):
             "for `http` and `https` schemes. Requires --deep-linking-scheme",
         )
         parser.add_argument(
-            "--appauth-redirect-scheme",
-            dest="appauth_redirect_scheme",
-            help="OAuth AppAuth redirect URL scheme for Android/iOS "
-            "(e.g. `myapp`). When omitted and flet-appauth is a dependency, "
-            "defaults to a sanitized app name from pyproject "
-            "(tool.flet.project / artifact / product / project.name), "
-            "else `flet`. Config: tool.flet.appauth.redirect_scheme",
+            "--web-auth-callback-scheme",
+            dest="web_auth_callback_scheme",
+            help="WebAuth OAuth callback URI scheme for Android/iOS "
+            "(e.g. `com.example.myapp.auth`). Defaults to `<bundle id>.auth`. "
+            "Config: tool.flet.web_auth.callback_scheme. "
+            "Must match the scheme passed to page.login(callback_scheme=...).",
         )
         parser.add_argument(
             "--android-signing-key-store",
@@ -1252,24 +1251,21 @@ class BaseBuildCommand(BaseFlutterCommand):
             )
 
         assert self.flutter_dir
-        from flet_cli.utils.appauth_redirect import (
-            resolve_appauth_redirect_scheme_info,
+        from flet_cli.utils.web_auth_callback import (
+            resolve_web_auth_callback_scheme_info,
         )
 
-        # Prefer pyproject / CLI here; flutter_dependencies is still empty until
-        # extensions are registered (refreshed again after that).
-        appauth_resolved = resolve_appauth_redirect_scheme_info(
-            cli_scheme=self.options.appauth_redirect_scheme,
+        # Prefer pyproject / CLI here; refreshed again after extensions register.
+        web_auth_resolved = resolve_web_auth_callback_scheme_info(
+            cli_scheme=getattr(self.options, "web_auth_callback_scheme", None),
             get_pyproject=self.get_pyproject,
             config_platform=self.config_platform,
-            default=None,
-            use_app_name_default=self.project_uses_appauth(),
         )
-        appauth_redirect_scheme = appauth_resolved.scheme
-        if appauth_redirect_scheme:
+        web_auth_callback_scheme = web_auth_resolved.scheme
+        if web_auth_callback_scheme:
             console.log(
-                f"AppAuth redirect scheme: {appauth_redirect_scheme} "
-                f"(from {appauth_resolved.source})",
+                f"WebAuth callback scheme: {web_auth_callback_scheme} "
+                f"(from {web_auth_resolved.source})",
                 style=verbose1_style,
                 markup=False,
             )
@@ -1420,8 +1416,8 @@ class BaseBuildCommand(BaseFlutterCommand):
                 "android_receivers": self.get_android_receivers(),
                 "android_services": self.get_android_services(),
                 "deep_linking": deep_linking,
-                "appauth": {
-                    "redirect_scheme": appauth_redirect_scheme,
+                "web_auth": {
+                    "callback_scheme": web_auth_callback_scheme,
                 },
                 "android_signing": bool(
                     self.options.android_signing_key_store
@@ -1886,10 +1882,10 @@ class BaseBuildCommand(BaseFlutterCommand):
                     f"Registered app user extensions {self.emojis['checkmark']}"
                 )
 
-        # Extensions are known only after packaging; refresh AppAuth scheme so
-        # the second cookiecutter pass can bake appAuthRedirectScheme into
+        # Extensions are known only after packaging; refresh WebAuth scheme so
+        # the second cookiecutter pass can bake callback scheme into
         # Android/iOS project files.
-        self.refresh_appauth_template_scheme()
+        self.refresh_web_auth_template_scheme()
 
         self.apply_extension_settings()
 
@@ -1970,165 +1966,84 @@ class BaseBuildCommand(BaseFlutterCommand):
 
         self.save_yaml(self.pubspec_path, pubspec)
 
-    def project_uses_appauth(self) -> bool:
+    def refresh_web_auth_template_scheme(self, log_style=None) -> Optional[str]:
         """
-        Whether this build needs an AppAuth redirect scheme.
-
-        True when `flet_appauth` is already registered as a Flutter dependency,
-        present under `build/flutter-packages`, listed in `pubspec.yaml`, or
-        declared as a Python dependency (`flet-appauth` / `flet[appauth]`).
-        """
-        assert self.get_pyproject
-
-        if (
-            isinstance(self.flutter_dependencies, dict)
-            and "flet_appauth" in self.flutter_dependencies
-        ):
-            return True
-
-        if self.flutter_packages_dir and (
-            self.flutter_packages_dir / "flet_appauth" / "pubspec.yaml"
-        ).is_file():
-            return True
-
-        if self.pubspec_path and os.path.isfile(self.pubspec_path):
-            try:
-                pubspec = self.load_yaml(self.pubspec_path)
-                deps = pubspec.get("dependencies") or {}
-                if isinstance(deps, dict) and "flet_appauth" in deps:
-                    return True
-            except Exception:
-                pass
-
-        for raw in get_project_dependencies(
-            self.get_pyproject("project.dependencies")
-        ) or []:
-            try:
-                req = Requirement(raw)
-            except InvalidRequirement:
-                continue
-            name = canonicalize_name(req.name)
-            if name == "flet-appauth":
-                return True
-            if name == "flet" and "appauth" in {
-                canonicalize_name(e) for e in req.extras
-            }:
-                return True
-        return False
-
-    def refresh_appauth_template_scheme(self, log_style=None) -> Optional[str]:
-        """
-        Resolve AppAuth redirect scheme into `template_data` for cookiecutter.
+        Resolve WebAuth callback scheme into `template_data` for cookiecutter.
 
         Returns:
-            The scheme string, or ``None`` when AppAuth is unused and no scheme
-            was configured explicitly.
+            The scheme string (default ``<bundle id>.auth``).
         """
-        from flet_cli.utils.appauth_redirect import (
-            resolve_appauth_redirect_scheme_info,
+        from flet_cli.utils.web_auth_callback import (
+            resolve_web_auth_callback_scheme_info,
         )
 
         assert self.options
         assert self.get_pyproject
         assert self.template_data is not None
 
-        uses_appauth = self.project_uses_appauth()
-        resolved = resolve_appauth_redirect_scheme_info(
-            cli_scheme=getattr(self.options, "appauth_redirect_scheme", None),
+        resolved = resolve_web_auth_callback_scheme_info(
+            cli_scheme=getattr(self.options, "web_auth_callback_scheme", None),
             get_pyproject=self.get_pyproject,
             config_platform=self.config_platform,
-            default=None,
-            use_app_name_default=uses_appauth,
         )
         scheme = resolved.scheme
-        self.template_data.setdefault("appauth", {})["redirect_scheme"] = scheme
+        self.template_data.setdefault("web_auth", {})["callback_scheme"] = scheme
         if scheme and log_style is not None:
             console.log(
-                f"AppAuth redirect scheme: {scheme} (from {resolved.source})",
+                f"WebAuth callback scheme: {scheme} (from {resolved.source})",
                 style=log_style,
                 markup=False,
             )
         return scheme
 
-    def ensure_appauth_redirect_config(self):
+    def ensure_web_auth_callback_config(self):
         """
-        Wire AppAuth OAuth redirect scheme into Android/iOS project files.
+        Wire WebAuth callback scheme into Android project files.
 
-        Uses AppAuth-specific config (`tool.flet.appauth.redirect_scheme` /
-        `--appauth-redirect-scheme`), not deep linking. When `flet-appauth`
-        is a dependency and no scheme is configured, defaults to a sanitized
-        app name from pyproject (project/artifact/product), else ``flet``.
-
-        Patches project files even when the cookiecutter template already
-        included the scheme (idempotent), and logs the resolved value.
+        Uses ``tool.flet.web_auth.callback_scheme`` /
+        ``--web-auth-callback-scheme``, defaulting to ``<bundle id>.auth``.
+        Separate from ``deep_linking.scheme``. iOS ASWebAuthenticationSession
+        does not require Info.plist URL types for custom schemes.
         """
-        from flet_cli.utils.appauth_redirect import (
-            patch_android_appauth_scheme,
-            patch_ios_appauth_scheme,
+        from flet_cli.utils.web_auth_callback import (
+            patch_android_web_auth_scheme,
+            resolve_web_auth_callback_scheme_info,
         )
 
         assert self.options
         assert self.flutter_dir
         assert self.get_pyproject
-        assert isinstance(self.flutter_dependencies, dict)
 
-        from flet_cli.utils.appauth_redirect import (
-            resolve_appauth_redirect_scheme_info,
-        )
-
-        # Resolve after extensions are registered; patch runs after any
-        # cookiecutter re-render so a skipped second pass still gets the value.
-        # Source strings are ASCII-only so Windows cp1252 consoles cannot abort
-        # the build before Gradle is patched.
-        resolved = resolve_appauth_redirect_scheme_info(
-            cli_scheme=getattr(self.options, "appauth_redirect_scheme", None),
+        resolved = resolve_web_auth_callback_scheme_info(
+            cli_scheme=getattr(self.options, "web_auth_callback_scheme", None),
             get_pyproject=self.get_pyproject,
             config_platform=self.config_platform,
-            default=None,
-            use_app_name_default=self.project_uses_appauth(),
         )
         scheme = resolved.scheme
         if self.template_data is not None:
-            self.template_data.setdefault("appauth", {})["redirect_scheme"] = scheme
+            self.template_data.setdefault("web_auth", {})["callback_scheme"] = scheme
         if not scheme:
             return
 
         console.log(
-            f"AppAuth redirect scheme: {scheme} (from {resolved.source})",
+            f"WebAuth callback scheme: {scheme} (from {resolved.source})",
             markup=False,
         )
 
         if self.package_platform in {"Android"}:
-            if patch_android_appauth_scheme(self.flutter_dir, scheme):
+            if patch_android_web_auth_scheme(self.flutter_dir, scheme):
                 console.log(
-                    f"Configured Android appAuthRedirectScheme={scheme}",
+                    f"Configured Android webAuthCallbackScheme={scheme}",
                     style=verbose1_style,
                 )
             else:
                 console.print(
                     Panel(
-                        "Could not set [cyan]appAuthRedirectScheme[/cyan] in "
+                        "Could not set [cyan]webAuthCallbackScheme[/cyan] in "
                         "android/app/build.gradle(.kts). Add "
-                        f'manifestPlaceholders += [appAuthRedirectScheme: "{scheme}"] '
+                        f'manifestPlaceholders += [webAuthCallbackScheme: "{scheme}"] '
                         "under defaultConfig, or ensure the file exists after "
                         "flutter create.",
-                        style=warning_style,
-                        expand=False,
-                    )
-                )
-        if self.package_platform in {"iOS"}:
-            if patch_ios_appauth_scheme(self.flutter_dir, scheme):
-                console.log(
-                    f"Configured iOS AppAuth URL scheme={scheme}",
-                    style=verbose1_style,
-                )
-            else:
-                console.print(
-                    Panel(
-                        "Could not set AppAuth URL scheme in "
-                        "ios/Runner/Info.plist. Add a CFBundleURLTypes entry "
-                        f"for scheme [cyan]{scheme}[/cyan], or ensure the "
-                        "plist exists after flutter create.",
                         style=warning_style,
                         expand=False,
                     )

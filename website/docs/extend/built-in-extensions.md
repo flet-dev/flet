@@ -13,7 +13,6 @@ Flet controls based on 3rd-party Flutter packages are published on PyPI as separ
 * [flet-color-pickers](https://pypi.org/project/flet-color-pickers/)
 * [flet-datatable2](https://pypi.org/project/flet-datatable2/)
 * [flet-flashlight](https://pypi.org/project/flet-flashlight/)
-* [flet-appauth](https://pypi.org/project/flet-appauth/)
 * [flet-geolocator](https://pypi.org/project/flet-geolocator/)
 * [flet-lottie](https://pypi.org/project/flet-lottie/)
 * [flet-local-auth](https://pypi.org/project/flet-local-auth/)

@@ -1,0 +1,30 @@
+[project]
+name = "auth0-mobile"
+version = "1.0.0"
+description = "Signs in with Auth0 on Android/iOS via page.login and core WebAuth (PKCE, no client secret)."
+requires-python = ">=3.10"
+keywords = ["webauth", "auth0", "oauth", "pkce", "basic", "services", "async"]
+authors = [{ name = "Flet team", email = "hello@flet.dev" }]
+dependencies = ["flet"]
+
+[dependency-groups]
+dev = ["flet-cli", "flet-desktop", "flet-web"]
+
+[tool.flet.gallery]
+categories = ["Utility/WebAuth"]
+platforms = ["android", "ios"]
+
+[tool.flet.metadata]
+title = "Auth0 mobile"
+controls = ["SafeArea", "Column", "Page", "Button", "Text"]
+layout_pattern = "inline-actions"
+complexity = "basic"
+features = ["OAuth login", "PKCE", "Auth0", "WebAuth"]
+
+[tool.flet]
+org = "dev.flet"
+company = "Flet"
+copyright = "Copyright (C) 2023-2026 by Flet"
+
+[tool.flet.web_auth]
+callback_scheme = "dev.flet.auth0-mobile.auth"

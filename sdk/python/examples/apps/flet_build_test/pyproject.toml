@@ -17,7 +17,6 @@ dependencies = [
     "flet-code-editor",
     "flet-color-pickers",
     "flet-datatable2",
-    "flet-appauth",
     "flet-flashlight",
     "flet-geolocator",
     "flet-lottie",
@@ -53,7 +52,6 @@ flet-charts = { path = "../../../packages/flet-charts", editable = true }
 flet-code-editor = { path = "../../../packages/flet-code-editor", editable = true }
 flet-color-pickers = { path = "../../../packages/flet-color-pickers", editable = true }
 flet-datatable2 = { path = "../../../packages/flet-datatable2", editable = true }
-flet-appauth = { path = "../../../packages/flet-appauth", editable = true }
 flet-flashlight = { path = "../../../packages/flet-flashlight", editable = true }
 flet-geolocator = { path = "../../../packages/flet-geolocator", editable = true }
 flet-lottie = { path = "../../../packages/flet-lottie", editable = true }
@@ -78,7 +76,6 @@ flet-charts = "../../../packages/flet-charts"
 flet-code-editor = "../../../packages/flet-code-editor"
 flet-color-pickers = "../../../packages/flet-color-pickers"
 flet-datatable2 = "../../../packages/flet-datatable2"
-flet-appauth = "../../../packages/flet-appauth"
 flet-flashlight = "../../../packages/flet-flashlight"
 flet-geolocator = "../../../packages/flet-geolocator"
 flet-lottie = "../../../packages/flet-lottie"
@@ -136,3 +133,4 @@ GADApplicationIdentifier = "ca-app-pub-3940256099942544~3347511713"
 
 [tool.flet.flutter.pubspec.dependency_overrides]
 flet = { path = "../../../../../../../packages/flet" }
+

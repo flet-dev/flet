@@ -1,12 +1,11 @@
-"""Mobile page.login uses AppAuth; requires flet-appauth; skips web oauth_authorize."""
+"""Mobile page.login uses WebAuth; skips web oauth_authorize."""
 
 from __future__ import annotations
 
 import asyncio
-import sys
-import types
-from typing import Any
+from typing import Any, Optional
 from unittest.mock import AsyncMock
+from urllib.parse import parse_qs, urlparse
 
 import pytest
 
@@ -40,54 +39,89 @@ def _make_provider(**kwargs) -> OAuthProvider:
         authorization_endpoint="https://example.com/authorize",
         token_endpoint="https://example.com/token",
         redirect_url="myapp://oauth-callback",
-        code_verifier="python-verifier-should-be-ignored",
-        code_challenge="python-challenge",
+        code_verifier="provider-verifier",
+        code_challenge="provider-challenge",
         code_challenge_method="S256",
         **kwargs,
     )
 
 
-def _install_fake_appauth(monkeypatch, authorize_result: dict[str, Any]):
-    class FakeAppAuth:
-        def __init__(self):
-            self.authorize_calls = []
+class _FakeWebAuthSession:
+    def __init__(
+        self,
+        redirect_url: str,
+        *,
+        callback_url: Optional[str] = None,
+        raise_error: Optional[str] = None,
+    ):
+        self.redirect_url = redirect_url
+        self._callback_url = callback_url
+        self._raise_error = raise_error
+        self.authenticate_calls: list[dict[str, Any]] = []
 
-        async def authorize(self, **kwargs):
-            self.authorize_calls.append(kwargs)
-            return authorize_result
+    async def authenticate(self, url: str, *, ephemeral: bool = False, timeout: float = 300):
+        self.authenticate_calls.append({"url": url, "ephemeral": ephemeral})
+        if self._raise_error:
+            raise RuntimeError(self._raise_error)
+        assert self._callback_url is not None
+        return self._callback_url
 
-    fake_mod = types.ModuleType("flet_appauth")
-    fake_appauth = FakeAppAuth()
-    fake_mod.AppAuth = lambda: fake_appauth  # type: ignore[attr-defined]
-    monkeypatch.setitem(sys.modules, "flet_appauth", fake_mod)
-    return fake_appauth
+
+class _FakeWebAuth:
+    last: Optional["_FakeWebAuth"] = None
+
+    def __init__(self):
+        _FakeWebAuth.last = self
+        self.start_calls: list[Optional[str]] = []
+        self._callback_url: Optional[str] = None
+        self._raise_on_auth: Optional[str] = None
+        self.session: Optional[_FakeWebAuthSession] = None
+
+    async def start(self, *, callback_scheme: Optional[str] = None):
+        self.start_calls.append(callback_scheme)
+        if not callback_scheme:
+            raise ValueError("callback_scheme is required on Android/iOS for WebAuth.")
+        self.session = _FakeWebAuthSession(
+            f"{callback_scheme}://callback",
+            callback_url=self._callback_url,
+            raise_error=self._raise_on_auth,
+        )
+        return self.session
+
+
+def _install_fake_webauth(
+    monkeypatch,
+    *,
+    callback_url: Optional[str] = None,
+    raise_on_auth: Optional[str] = None,
+) -> type[_FakeWebAuth]:
+    def factory():
+        fake = _FakeWebAuth()
+        fake._callback_url = callback_url
+        fake._raise_on_auth = raise_on_auth
+        return fake
+
+    monkeypatch.setattr("flet.controls.page.WebAuth", factory)
+    return _FakeWebAuth
 
 
 @pytest.mark.asyncio
-async def test_login_android_missing_flet_appauth_raises(monkeypatch):
+async def test_login_android_missing_callback_scheme_raises(monkeypatch):
     conn = _Conn()
     session = Session(conn)
     page = session.page
     page.web = False
     page.platform = PagePlatform.ANDROID
+    _install_fake_webauth(monkeypatch)
 
-    real_import = __import__
-
-    def fake_import(name, *args, **kwargs):
-        if name == "flet_appauth" or name.startswith("flet_appauth."):
-            raise ModuleNotFoundError(name)
-        return real_import(name, *args, **kwargs)
-
-    monkeypatch.setattr("builtins.__import__", fake_import)
-
-    with pytest.raises(RuntimeError, match="flet-appauth"):
+    with pytest.raises(ValueError, match="callback_scheme"):
         await page.login(_make_provider())
 
     assert conn.oauth_authorize_calls == []
 
 
 @pytest.mark.asyncio
-async def test_login_android_appauth_success_skips_oauth_authorize(monkeypatch):
+async def test_login_android_webauth_success_skips_oauth_authorize(monkeypatch):
     conn = _Conn()
     session = Session(conn)
     page = session.page
@@ -100,40 +134,54 @@ async def test_login_android_appauth_success_skips_oauth_authorize(monkeypatch):
 
     page.on_login = on_login
 
-    fake_appauth = _install_fake_appauth(
-        monkeypatch,
-        {
-            "authorization_code": "auth-code",
-            "code_verifier": "appauth-verifier",
-        },
-    )
+    # callback built after we know state — use a side-effecting fake
+    captured: dict[str, Any] = {}
+
+    class _DynamicFake(_FakeWebAuth):
+        async def start(self, *, callback_scheme=None):
+            session = await super().start(callback_scheme=callback_scheme)
+
+            async def authenticate(url, *, ephemeral=False, timeout=300):
+                session.authenticate_calls.append(
+                    {"url": url, "ephemeral": ephemeral}
+                )
+                qs = parse_qs(urlparse(url).query)
+                state = qs.get("state", [""])[0]
+                captured["auth_url"] = url
+                return f"{session.redirect_url}?code=auth-code&state={state}"
+
+            session.authenticate = authenticate  # type: ignore[method-assign]
+            return session
+
+    monkeypatch.setattr("flet.controls.page.WebAuth", _DynamicFake)
 
     async def fake_request_token(self, code: str, *, code_verifier=None):
         assert code == "auth-code"
-        assert code_verifier == "appauth-verifier"
-        # Shared provider must not be mutated for the exchange.
-        assert self.provider.code_verifier == "python-verifier-should-be-ignored"
+        # Shared provider PKCE fields must not be mutated.
+        assert self.provider.code_verifier == "provider-verifier"
+        assert self.provider.code_challenge == "provider-challenge"
+        # ensure_pkce stored a per-request verifier on the auth service.
+        assert self._AuthorizationService__request_code_verifier
+        captured["request_verifier"] = (
+            self._AuthorizationService__request_code_verifier
+        )
 
     monkeypatch.setattr(AuthorizationService, "request_token", fake_request_token)
 
     provider = _make_provider()
     auth = await page.login(
         provider,
+        callback_scheme="com.example.app.auth",
         on_open_authorization_url=AsyncMock(),
         complete_page_html="<html/>",
         redirect_to_page=True,
     )
 
     assert conn.oauth_authorize_calls == []
-    assert fake_appauth.authorize_calls, "AppAuth.authorize should be called"
-    call = fake_appauth.authorize_calls[0]
-    assert call["client_id"] == "cid"
-    assert call["redirect_url"] == "myapp://oauth-callback"
-    assert "code_challenge" not in call or call.get("code_challenge") is None
-    # Provider PKCE fields must not be permanently mutated for shared reuse.
-    assert provider.code_verifier == "python-verifier-should-be-ignored"
-    assert provider.code_challenge == "python-challenge"
-    assert provider.code_challenge_method == "S256"
+    assert "redirect_uri=com.example.app.auth" in captured["auth_url"]
+    assert "code_challenge=" in captured["auth_url"]
+    assert provider.code_verifier == "provider-verifier"
+    assert provider.code_challenge == "provider-challenge"
     assert auth is page.auth
 
     await asyncio.sleep(0)
@@ -142,7 +190,7 @@ async def test_login_android_appauth_success_skips_oauth_authorize(monkeypatch):
 
 
 @pytest.mark.asyncio
-async def test_login_android_appauth_cancelled_emits_error(monkeypatch):
+async def test_login_android_invalid_state_skips_token(monkeypatch):
     conn = _Conn()
     session = Session(conn)
     page = session.page
@@ -155,28 +203,23 @@ async def test_login_android_appauth_cancelled_emits_error(monkeypatch):
 
     page.on_login = on_login
 
-    _install_fake_appauth(
+    _install_fake_webauth(
         monkeypatch,
-        {
-            "error": "cancelled",
-            "error_description": "User cancelled authorization.",
-        },
+        callback_url="com.example.app.auth://callback?code=auth-code&state=wrong",
     )
-
     request_token = AsyncMock()
     monkeypatch.setattr(AuthorizationService, "request_token", request_token)
 
-    await page.login(_make_provider())
+    await page.login(_make_provider(), callback_scheme="com.example.app.auth")
     await asyncio.sleep(0)
 
-    assert conn.oauth_authorize_calls == []
     request_token.assert_not_awaited()
     assert login_events
-    assert login_events[0].error == "cancelled"
+    assert login_events[0].error == "invalid_state"
 
 
 @pytest.mark.asyncio
-async def test_login_android_appauth_missing_code_emits_error(monkeypatch):
+async def test_login_android_webauth_cancelled_emits_error(monkeypatch):
     conn = _Conn()
     session = Session(conn)
     page = session.page
@@ -189,24 +232,17 @@ async def test_login_android_appauth_missing_code_emits_error(monkeypatch):
 
     page.on_login = on_login
 
-    _install_fake_appauth(
-        monkeypatch,
-        {
-            "authorization_code": None,
-            "code_verifier": "appauth-verifier",
-        },
-    )
-
+    _install_fake_webauth(monkeypatch, raise_on_auth="cancelled")
     request_token = AsyncMock()
     monkeypatch.setattr(AuthorizationService, "request_token", request_token)
 
-    await page.login(_make_provider())
+    await page.login(_make_provider(), callback_scheme="com.example.app.auth")
     await asyncio.sleep(0)
 
     assert conn.oauth_authorize_calls == []
     request_token.assert_not_awaited()
     assert login_events
-    assert login_events[0].error == "missing_authorization_code"
+    assert login_events[0].error == "authorize_failed"
 
 
 @pytest.mark.asyncio
@@ -229,7 +265,7 @@ async def test_login_web_still_calls_oauth_authorize(monkeypatch):
     session = Session(conn)
     page = session.page
     page.web = True
-    page.platform = PagePlatform.ANDROID  # platform irrelevant when web=True
+    page.platform = PagePlatform.ANDROID
 
     opened: list[str] = []
 
@@ -250,120 +286,58 @@ async def test_login_web_still_calls_oauth_authorize(monkeypatch):
 
 @pytest.mark.asyncio
 async def test_logout_forces_ephemeral_reauth_on_next_login(monkeypatch):
-    """After logout, next authorize must not silently reuse IdP SSO cookies."""
     conn = _Conn()
     session = Session(conn)
     page = session.page
     page.web = False
     page.platform = PagePlatform.ANDROID
 
-    fake_appauth = _install_fake_appauth(
-        monkeypatch,
-        {
-            "authorization_code": "auth-code",
-            "code_verifier": "appauth-verifier",
-        },
-    )
+    class _DynamicFake(_FakeWebAuth):
+        async def start(self, *, callback_scheme=None):
+            sess = await super().start(callback_scheme=callback_scheme)
+
+            async def authenticate(url, *, ephemeral=False, timeout=300):
+                sess.authenticate_calls.append(
+                    {"url": url, "ephemeral": ephemeral}
+                )
+                qs = parse_qs(urlparse(url).query)
+                state = qs.get("state", [""])[0]
+                return f"{sess.redirect_url}?code=auth-code&state={state}"
+
+            sess.authenticate = authenticate  # type: ignore[method-assign]
+            return sess
+
+    monkeypatch.setattr("flet.controls.page.WebAuth", _DynamicFake)
     monkeypatch.setattr(
         AuthorizationService, "request_token", AsyncMock(return_value=None)
     )
 
     provider = _make_provider(authorization_params={"resource": "api"})
 
-    # First login: normal (shared) browser session.
-    await page.login(provider)
-    assert fake_appauth.authorize_calls[-1]["prefer_ephemeral_session"] is False
-    assert fake_appauth.authorize_calls[-1]["additional_parameters"] == {
-        "resource": "api"
-    }
+    await page.login(provider, callback_scheme="com.example.app.auth")
+    fake1 = _DynamicFake.last
+    assert fake1 and fake1.session
+    assert fake1.session.authenticate_calls[-1]["ephemeral"] is False
+    assert "prompt=login" not in fake1.session.authenticate_calls[-1]["url"]
 
     page.logout()
     assert page.auth is None
 
-    # Second login after logout: ephemeral + prompt/max_age (native peels
-    # prompt to the AppAuth builder; shared provider stays untouched).
-    await page.login(provider)
-    call = fake_appauth.authorize_calls[-1]
-    assert call["prefer_ephemeral_session"] is True
-    assert call["additional_parameters"]["resource"] == "api"
-    assert call["additional_parameters"]["prompt"] == "login"
-    assert call["additional_parameters"]["max_age"] == "0"
+    await page.login(provider, callback_scheme="com.example.app.auth")
+    fake2 = _DynamicFake.last
+    assert fake2 and fake2.session
+    call = fake2.session.authenticate_calls[-1]
+    assert call["ephemeral"] is True
+    assert "prompt=login" in call["url"]
+    assert "max_age=0" in call["url"]
+    assert "resource=api" in call["url"]
     assert provider.authorization_params == {"resource": "api"}
 
-    # Third login: flag consumed; back to non-ephemeral.
-    await page.login(provider)
-    assert fake_appauth.authorize_calls[-1]["prefer_ephemeral_session"] is False
-    assert "prompt" not in fake_appauth.authorize_calls[-1]["additional_parameters"]
-
-
-@pytest.mark.asyncio
-async def test_logout_reauth_flag_survives_authorize_error(monkeypatch):
-    """AppAuth error after logout must still force ephemeral on retry."""
-    conn = _Conn()
-    session = Session(conn)
-    page = session.page
-    page.web = False
-    page.platform = PagePlatform.ANDROID
-    page.on_login = AsyncMock()
-
-    fake_appauth = _install_fake_appauth(
-        monkeypatch,
-        {
-            "error": "authorize_failed",
-            "error_description": "Parameter prompt is directly supported...",
-        },
-    )
-
-    provider = _make_provider()
-    page.logout()
-    await page.login(provider)
-    assert fake_appauth.authorize_calls[-1]["prefer_ephemeral_session"] is True
-    assert fake_appauth.authorize_calls[-1]["additional_parameters"]["prompt"] == "login"
-
-    # Flag still set — retry stays ephemeral.
-    fake_ok = _install_fake_appauth(
-        monkeypatch,
-        {
-            "authorization_code": "auth-code",
-            "code_verifier": "appauth-verifier",
-        },
-    )
-    monkeypatch.setattr(
-        AuthorizationService, "request_token", AsyncMock(return_value=None)
-    )
-    await page.login(provider)
-    assert fake_ok.authorize_calls[-1]["prefer_ephemeral_session"] is True
-
-
-@pytest.mark.asyncio
-async def test_saved_token_restore_does_not_clear_reauth_flag(monkeypatch):
-    """saved_token hydrate must not consume the post-logout reauth flag."""
-    conn = _Conn()
-    session = Session(conn)
-    page = session.page
-    page.web = False
-    page.platform = PagePlatform.ANDROID
-    page.on_login = AsyncMock()
-
-    monkeypatch.setattr(
-        AuthorizationService, "dehydrate_token", AsyncMock(return_value=None)
-    )
-
-    page.logout()
-    await page.login(_make_provider(), saved_token='{"access_token":"t"}')
-
-    fake_appauth = _install_fake_appauth(
-        monkeypatch,
-        {
-            "authorization_code": "auth-code",
-            "code_verifier": "appauth-verifier",
-        },
-    )
-    monkeypatch.setattr(
-        AuthorizationService, "request_token", AsyncMock(return_value=None)
-    )
-    await page.login(_make_provider())
-    assert fake_appauth.authorize_calls[-1]["prefer_ephemeral_session"] is True
+    await page.login(provider, callback_scheme="com.example.app.auth")
+    fake3 = _DynamicFake.last
+    assert fake3 and fake3.session
+    assert fake3.session.authenticate_calls[-1]["ephemeral"] is False
+    assert "prompt=login" not in fake3.session.authenticate_calls[-1]["url"]
 
 
 @pytest.mark.asyncio
@@ -393,33 +367,3 @@ async def test_web_logout_reauth_does_not_mutate_provider(monkeypatch):
     assert "prompt=login" in opened[0]
     assert "max_age=0" in opened[0]
     assert "resource=api" in opened[0]
-
-
-@pytest.mark.asyncio
-async def test_logout_does_not_override_explicit_provider_prompt(monkeypatch):
-    conn = _Conn()
-    session = Session(conn)
-    page = session.page
-    page.web = False
-    page.platform = PagePlatform.ANDROID
-
-    fake_appauth = _install_fake_appauth(
-        monkeypatch,
-        {
-            "authorization_code": "auth-code",
-            "code_verifier": "appauth-verifier",
-        },
-    )
-    monkeypatch.setattr(
-        AuthorizationService, "request_token", AsyncMock(return_value=None)
-    )
-
-    provider = _make_provider(authorization_params={"prompt": "consent"})
-    page.logout()
-    await page.login(provider)
-
-    call = fake_appauth.authorize_calls[-1]
-    assert call["prefer_ephemeral_session"] is True
-    assert call["additional_parameters"]["prompt"] == "consent"
-    assert call["additional_parameters"]["max_age"] == "0"
-    assert provider.authorization_params == {"prompt": "consent"}

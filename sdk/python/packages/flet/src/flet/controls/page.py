@@ -19,7 +19,7 @@ from typing import (
     TypeVar,
     cast,
 )
-from urllib.parse import urlparse
+from urllib.parse import parse_qs, urlparse
 
 from flet.components.public_utils import unwrap_component
 from flet.controls.base_control import BaseControl, control
@@ -50,6 +50,7 @@ from flet.controls.query_string import QueryString
 from flet.controls.ref import Ref
 from flet.controls.services.service import Service
 from flet.controls.services.url_launcher import UrlLauncher
+from flet.controls.services.web_auth import WebAuth
 from flet.controls.types import (
     AppLifecycleState,
     Brightness,
@@ -1314,9 +1315,9 @@ class Page(BasePage):
         """
         return self.session.connection.get_upload_url(file_name, expires)
 
-    def _is_appauth_login_platform(self) -> bool:
+    def _is_webauth_login_platform(self) -> bool:
         """
-        Whether this page should complete OAuth via native AppAuth (Android/iOS).
+        Whether this page should complete OAuth via core WebAuth (Android/iOS).
         """
         if self.web:
             return False
@@ -1340,6 +1341,8 @@ class Page(BasePage):
         complete_page_html: Optional[str] = None,
         redirect_to_page: Optional[bool] = False,
         authorization: "Optional[type[AT]]" = None,
+        *,
+        callback_scheme: Optional[str] = None,
     ) -> "AT":
         """
         Signs the user in with an OAuth provider.
@@ -1353,13 +1356,13 @@ class Page(BasePage):
         [`on_login`][flet.Page.on_login]. Handling that redirect needs the app
         to be served by Flet's web server.
 
-        On **Android/iOS**, requires
-        [`flet-appauth`](https://pypi.org/project/flet-appauth/) and completes
-        authorization via native AppAuth (Custom Tabs /
-        ASWebAuthenticationSession). Parameters `on_open_authorization_url`,
-        `complete_page_html`, and `redirect_to_page` apply to **web only** and
-        are ignored on Android/iOS. Desktop `page.login()` OAuth is not
-        supported.
+        On **Android/iOS**, completes authorization via core
+        [`WebAuth`][flet.WebAuth] (Auth Tab / ASWebAuthenticationSession).
+        Pass `callback_scheme` (or rely on a documented default once build
+        auto-registration is configured). Parameters
+        `on_open_authorization_url`, `complete_page_html`, and
+        `redirect_to_page` apply to **web only** and are ignored on
+        Android/iOS. Desktop `page.login()` OAuth is not supported yet.
 
         With `saved_token`, this restores an earlier sign-in instead, without
         opening any page: it refreshes the token if it has expired and can be
@@ -1397,6 +1400,8 @@ class Page(BasePage):
                 as `authorization(provider, fetch_user=..., fetch_groups=...,
                 scope=...)`. Defaults to
                 [`AuthorizationService`][flet.auth.AuthorizationService].
+            callback_scheme: Custom URI scheme for mobile WebAuth redirects
+                (e.g. ``com.example.myapp.auth``). Required on Android/iOS.
 
         Returns:
             The authorization, also available as [`auth`][flet.Page.auth].
@@ -1413,19 +1418,18 @@ class Page(BasePage):
         )
         if saved_token is None:
             # After logout, force interactive re-auth for any IdP.
-            # Mobile: ephemeral session + prompt=login (native peels prompt to
-            # the AppAuth builder; covers browsers that ignore ephemeral).
+            # Mobile: ephemeral WebAuth session + prompt=login on the URL.
             # Web: prompt=login / max_age=0 on the authorize URL only (no
             # mutation of the shared OAuthProvider).
             prefer_ephemeral = bool(self.__reauth_after_logout)
             reauth_params: dict[str, str] = {}
             if prefer_ephemeral:
                 reauth_params = {"prompt": "login", "max_age": "0"}
-            if self._is_appauth_login_platform():
-                await self.__login_with_appauth(
-                    provider,
+            if self._is_webauth_login_platform():
+                await self.__login_with_webauth(
                     prefer_ephemeral_session=prefer_ephemeral,
                     reauth_params=reauth_params,
+                    callback_scheme=callback_scheme,
                 )
             elif self.web:
                 # The server keeps the state and completion options until the
@@ -1462,9 +1466,8 @@ class Page(BasePage):
                     )
             else:
                 raise RuntimeError(
-                    "page.login() OAuth is not supported on this platform. "
-                    "Use web, or Android/iOS with flet-appauth "
-                    "(pip install 'flet[appauth]')."
+                    "page.login() OAuth is not supported on this platform yet. "
+                    "Use web, or Android/iOS with WebAuth (pass callback_scheme)."
                 )
         else:
             # Restore the saved sign-in; there is no redirect to wait for.
@@ -1476,43 +1479,42 @@ class Page(BasePage):
 
         return self.__authorization
 
-    async def __login_with_appauth(
+    async def __login_with_webauth(
         self,
-        provider: "OAuthProvider",
         *,
         prefer_ephemeral_session: bool = False,
         reauth_params: Optional[dict[str, str]] = None,
+        callback_scheme: Optional[str] = None,
     ) -> None:
         """
-        Complete mobile OAuth using the flet-appauth AppAuth service.
+        Complete mobile OAuth using core WebAuth + Python AuthorizationService.
         """
-        try:
-            import flet_appauth
-        except ModuleNotFoundError as ex:
-            raise RuntimeError(
-                "Mobile OAuth via page.login() requires the flet-appauth package. "
-                "Install with: pip install flet-appauth  "
-                "or: pip install 'flet[appauth]'"
-            ) from ex
+        assert self.__authorization
+        # on_open_authorization_url / complete_page_html / redirect_to_page
+        # are web-only and intentionally ignored here.
 
-        # Per-call param copy — never mutate a shared OAuthProvider.
-        additional = dict(provider.authorization_params or {})
-        if reauth_params:
-            for key, value in reauth_params.items():
-                additional.setdefault(key, value)
-
-        # AppAuth owns PKCE on native; pass AppAuth's verifier into request_token
-        # without writing it onto the shared provider.
-        app_auth = flet_appauth.AppAuth()
+        web_auth = WebAuth()
         try:
-            result = await app_auth.authorize(
-                client_id=provider.client_id,
-                redirect_url=provider.redirect_url,
-                authorization_endpoint=provider.authorization_endpoint,
-                token_endpoint=provider.token_endpoint,
-                scopes=list(self.__authorization.scope),
-                additional_parameters=additional,
-                prefer_ephemeral_session=prefer_ephemeral_session,
+            session = await web_auth.start(callback_scheme=callback_scheme)
+        except (ValueError, FletUnsupportedPlatformException):
+            raise
+        except Exception as ex:
+            await self._emit_login_event(
+                error="webauth_start_failed",
+                error_description=str(ex),
+            )
+            return
+
+        authorization_url, state = self.__authorization.get_authorization_data(
+            extra_authorization_params=reauth_params or None,
+            redirect_url=session.redirect_url,
+            ensure_pkce=True,
+        )
+
+        try:
+            callback_url = await session.authenticate(
+                authorization_url,
+                ephemeral=prefer_ephemeral_session,
             )
         except Exception as ex:
             await self._emit_login_event(
@@ -1521,20 +1523,31 @@ class Page(BasePage):
             )
             return
 
-        if isinstance(result, dict):
-            error = result.get("error")
-            error_description = result.get("error_description")
-            code = result.get("authorization_code")
-            code_verifier = result.get("code_verifier")
-        else:
-            error = getattr(result, "error", None)
-            error_description = getattr(result, "error_description", None)
-            code = getattr(result, "authorization_code", None)
-            code_verifier = getattr(result, "code_verifier", None)
+        parsed = urlparse(callback_url)
+        params = parse_qs(parsed.query)
+        # Also support fragment-style callbacks if an IdP uses them.
+        if not params and parsed.fragment:
+            params = parse_qs(parsed.fragment)
+
+        def _first(name: str) -> Optional[str]:
+            values = params.get(name)
+            return values[0] if values else None
+
+        error = _first("error")
+        error_description = _first("error_description")
+        code = _first("code")
+        returned_state = _first("state")
 
         if error:
             await self._emit_login_event(
                 error=error, error_description=error_description
+            )
+            return
+
+        if returned_state != state:
+            await self._emit_login_event(
+                error="invalid_state",
+                error_description="OAuth state mismatch; possible CSRF.",
             )
             return
 
@@ -1550,7 +1563,6 @@ class Page(BasePage):
             error=None,
             error_description=None,
             code=code,
-            code_verifier=code_verifier if code_verifier else None,
         )
 
     async def _emit_login_event(
@@ -1626,7 +1638,7 @@ class Page(BasePage):
 
         Also marks the next interactive [`login`][flet.Page.login] so it cannot
         silently reuse an identity-provider browser SSO session: on Android/iOS
-        the next authorize uses an ephemeral AppAuth/Auth Tab session and
+        the next authorize uses an ephemeral WebAuth session and
         ``prompt=login``; on web it adds OIDC ``prompt=login`` / ``max_age=0``.
         Clear any tokens you persisted yourself (for example with
         SharedPreferences) before or after calling this.

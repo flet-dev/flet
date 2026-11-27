@@ -1,3 +1,5 @@
+import base64
+import hashlib
 import secrets
 import time
 from collections.abc import Mapping
@@ -10,6 +12,14 @@ from flet.auth.user import User
 from flet.version import flet_version
 
 __all__ = ["AuthorizationService"]
+
+
+def _generate_pkce_pair() -> tuple[str, str]:
+    """Return ``(code_verifier, S256 code_challenge)`` for one auth request."""
+    verifier = secrets.token_urlsafe(64)
+    digest = hashlib.sha256(verifier.encode("ascii")).digest()
+    challenge = base64.urlsafe_b64encode(digest).rstrip(b"=").decode("ascii")
+    return verifier, challenge
 
 
 class AuthorizationService(Authorization):
@@ -43,6 +53,9 @@ class AuthorizationService(Authorization):
         self.provider = provider
         self.__token: Optional[OAuthToken] = None
         self.user: Optional[User] = None
+        self.state: Optional[str] = None
+        self.__request_code_verifier: Optional[str] = None
+        self.__request_redirect_url: Optional[str] = None
 
         # fix scopes
         self.scope.extend(self.provider.scopes)
@@ -86,6 +99,9 @@ class AuthorizationService(Authorization):
     def get_authorization_data(
         self,
         extra_authorization_params: Optional[Mapping[str, str]] = None,
+        *,
+        redirect_url: Optional[str] = None,
+        ensure_pkce: bool = False,
     ) -> tuple[str, str]:
         """
         Generate authorization URL and CSRF state for OAuth redirect flow.
@@ -96,6 +112,12 @@ class AuthorizationService(Authorization):
                 mutate the shared provider). Existing provider keys win over
                 extras when both set the same name — pass extras that should
                 only fill gaps via the caller's own merge.
+            redirect_url: Effective redirect URI for this request (e.g. from
+                a :class:`~flet.WebAuth` session). When set, overrides
+                ``provider.redirect_url`` for authorize and later token exchange.
+            ensure_pkce: When ``True``, generate a fresh S256 PKCE pair for this
+                request if the provider does not already supply one. Does not
+                mutate the shared provider.
 
         Returns:
             A tuple of `(authorization_url, state)`.
@@ -103,6 +125,28 @@ class AuthorizationService(Authorization):
         from oauthlib.oauth2 import WebApplicationClient
 
         self.state = secrets.token_urlsafe(16)
+        effective_redirect = redirect_url or self.provider.redirect_url
+        if not effective_redirect:
+            raise ValueError(
+                "redirect_url is required: pass it to get_authorization_data() "
+                "(e.g. from WebAuth session.redirect_url) or set "
+                "OAuthProvider.redirect_url."
+            )
+        self.__request_redirect_url = effective_redirect
+
+        self.__request_code_verifier = None
+        if ensure_pkce:
+            # Fresh pair for this request; do not mutate shared provider fields.
+            verifier, challenge = _generate_pkce_pair()
+            self.__request_code_verifier = verifier
+            code_challenge = challenge
+            code_challenge_method = "S256"
+        else:
+            code_challenge = self.provider.code_challenge
+            code_challenge_method = self.provider.code_challenge_method
+            if self.provider.code_verifier:
+                self.__request_code_verifier = self.provider.code_verifier
+
         client = WebApplicationClient(self.provider.client_id)
         params = dict(self.provider.authorization_params or {})
         if extra_authorization_params:
@@ -111,11 +155,11 @@ class AuthorizationService(Authorization):
                 params.setdefault(key, value)
         authorization_url = client.prepare_request_uri(
             self.provider.authorization_endpoint,
-            self.provider.redirect_url,
+            effective_redirect,
             scope=self.scope,
             state=self.state,
-            code_challenge=self.provider.code_challenge,
-            code_challenge_method=self.provider.code_challenge_method,
+            code_challenge=code_challenge,
+            code_challenge_method=code_challenge_method,
             **params,
         )
         return authorization_url, self.state
@@ -129,8 +173,9 @@ class AuthorizationService(Authorization):
         Args:
             code: Provider-issued authorization code returned to redirect URL.
             code_verifier: Optional PKCE verifier for this exchange. When set,
-                used instead of `provider.code_verifier` so a shared provider
-                is not mutated across concurrent logins.
+                used instead of the verifier from the last
+                :meth:`get_authorization_data` / ``provider.code_verifier`` so a
+                shared provider is not mutated across concurrent logins.
 
         Raises:
             httpx.HTTPStatusError: If token endpoint returns a non-success status.
@@ -142,12 +187,13 @@ class AuthorizationService(Authorization):
         verifier = (
             code_verifier
             if code_verifier is not None
-            else self.provider.code_verifier
+            else self.__request_code_verifier or self.provider.code_verifier
         )
+        redirect_uri = self.__request_redirect_url or self.provider.redirect_url
         client = WebApplicationClient(self.provider.client_id)
         data = client.prepare_request_body(
             code=code,
-            redirect_uri=self.provider.redirect_url,
+            redirect_uri=redirect_uri,
             client_secret=self.provider.client_secret,
             include_client_id=True,
             code_verifier=verifier,

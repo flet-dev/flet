@@ -625,6 +625,7 @@ if TYPE_CHECKING:
         UrlLauncher,
         WebViewConfiguration,
     )
+    from flet.controls.services.web_auth import WebAuth, WebAuthSession
     from flet.controls.services.user_accelerometer import (
         UserAccelerometer,
         UserAccelerometerReadingEvent,
@@ -1243,6 +1244,8 @@ __all__ = [
     "UrlLauncher",
     "UrlTarget",
     "UserAccelerometer",
+    "WebAuth",
+    "WebAuthSession",
     "UserAccelerometerReadingEvent",
     "Value",
     "ValueKey",
@@ -1796,6 +1799,8 @@ _LAZY = {
     "UrlTarget": "flet.controls.types",
     "UserAccelerometer": "flet.controls.services.user_accelerometer",
     "UserAccelerometerReadingEvent": "flet.controls.services.user_accelerometer",
+    "WebAuth": "flet.controls.services.web_auth",
+    "WebAuthSession": "flet.controls.services.web_auth",
     "Value": "flet.controls.base_control",
     "ValueKey": "flet.controls.keys",
     "VerticalAlignment": "flet.controls.types",

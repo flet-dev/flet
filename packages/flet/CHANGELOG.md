@@ -1,7 +1,8 @@
 ## 1.2.0
 
-* Add `flet-appauth` service (`flutter_appauth`) and Android/iOS `page.login()` path with native AppAuth + PKCE.
-* Add `flet build --appauth-redirect-scheme` / `tool.flet.appauth.redirect_scheme` for mobile OAuth redirects (defaults to `flet` when `flet-appauth` is present).
+* Add core `WebAuth` service (Android Auth Tab / iOS `ASWebAuthenticationSession`) and route Android/iOS `page.login()` through it with Python-owned PKCE, state, and token exchange.
+* Add `OAuthProvider.discover()` for OIDC issuer discovery (endpoints only; redirect comes from the WebAuth session).
+* Add `flet build --web-auth-callback-scheme` / `tool.flet.web_auth.callback_scheme` (default `<bundle id>.auth`) for mobile OAuth callback registration.
 
 ## 1.1.3
 

@@ -130,6 +130,7 @@ import 'services/storage_paths.dart';
 import 'services/tester.dart';
 import 'services/url_launcher.dart';
 import 'services/wakelock.dart';
+import 'services/web_auth.dart';
 import 'services/window.dart';
 import 'services/user_accelerometer.dart';
 import 'utils/cupertino_icons.dart';
@@ -435,6 +436,8 @@ class FletCoreExtension extends FletExtension {
         return UrlLauncherService(control: control);
       case "Wakelock":
         return WakelockService(control: control);
+      case "WebAuth":
+        return WebAuthService(control: control);
       default:
         return null;
     }

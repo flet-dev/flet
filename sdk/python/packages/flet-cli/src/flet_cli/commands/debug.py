@@ -114,7 +114,7 @@ class Command(BaseBuildCommand):
             self.register_flutter_extensions()
             if self.create_flutter_project(second_pass=True):
                 self.update_flutter_dependencies()
-            self.ensure_appauth_redirect_config()
+            self.ensure_web_auth_callback_config()
             self.customize_icons()
             self.customize_splash_images()
             self.copy_android_resources()
