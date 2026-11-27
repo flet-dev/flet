@@ -108,6 +108,14 @@ class _FletAppControlState extends State<FletAppControl> {
     debugPrint("FletApp build: ${widget.control.id}");
 
     var url = widget.control.getString("url", "")!;
+    var assetsDir = widget.control.getString("assets_dir", "")!;
+    // `null` (not set) isolates the embedded app from its host under a prefix
+    // derived from what it runs - its URL, else its assets location - which is
+    // stable across reloads, unlike the synthesized address below. `""` shares
+    // the host's keys. FletBackend nests either under the host's own prefix.
+    var storagePrefix = widget.control.getString("storage_prefix") ??
+        FletBackend.defaultEmbeddedStoragePrefix(
+            url.isNotEmpty ? url : (assetsDir.isNotEmpty ? assetsDir : "embedded"));
     // Multiple embedded FletApps on the same page (e.g. a Preview inside
     // another Flet app) each leave `url` empty, which collides in the
     // JS-side worker registry keyed on `address`. Synthesize a unique
@@ -133,7 +141,8 @@ class _FletAppControlState extends State<FletAppControl> {
         bootScreenOptions: bootScreenOptions,
         appErrorMessage: appErrorMessage,
         pageUrl: url,
-        assetsDir: widget.control.getString("assets_dir", "")!,
+        assetsDir: assetsDir,
+        storagePrefix: storagePrefix,
         errorsHandler: _errorsHandler,
         extensions: FletBackend.of(context).extensions,
         // In-process dart_bridge transport for `dartbridge://` embedded apps;

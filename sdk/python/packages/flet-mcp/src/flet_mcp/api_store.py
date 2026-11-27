@@ -355,7 +355,7 @@ class ApiStore:
         """Look up `name` across controls, services, types, events, and enums.
 
         Every match carries a `kind` field — `"control"`, `"service"`, `"type"`,
-        `"event"`, or `"enum"` (`"large_enum"` for Icons/CupertinoIcons) — so the
+        `"event"`, or `"enum"` (`"large_enum"` for the icon sets) — so the
         caller can distinguish them without inspecting the response shape.
         Controls and services already carry `kind`; the other buckets are
         augmented here. Returns `None` only when the name matches nothing.
@@ -563,8 +563,9 @@ class ApiStore:
                 "total_members": len(members),
                 "sample_members": members[:10],
                 "note": (
-                    f"This enum has {len(members)} members. Use find_icon() "
-                    "to search icons by concept, or search_enum_members() "
+                    f"This enum has {len(members)} members. Use find_icon("
+                    + ('family="lucide"' if name == "LucideIcons" else "")
+                    + ") to search icons by concept, or search_enum_members() "
                     "for literal name lookup."
                 ),
             }
@@ -636,6 +637,73 @@ class ApiStore:
         )
 
     # ------------------------------------------------------------------
+    # Exports: what code can use (build/exports.py), for checking app code
+    # ------------------------------------------------------------------
+    #
+    # Each returns None when it can't tell, so a checker stays quiet rather
+    # than flag valid code: api.json from before exports were recorded, a
+    # module that isn't indexed, a class that takes **kwargs.
+
+    def _exports(self, module: str) -> dict[str, Any] | None:
+        return self._load().get("exports", {}).get(module)
+
+    def export_modules(self) -> list[str]:
+        """Modules with recorded exports: `flet`, `flet.canvas`, `flet_charts`, ..."""
+        return list(self._load().get("exports", {}))
+
+    def module_exports(self, module: str) -> frozenset[str] | None:
+        """Every public name `module` exports, submodules included."""
+        exports = self._exports(module)
+        return frozenset(exports["names"]) if exports else None
+
+    def modules_exporting(self, name: str) -> list[str]:
+        """Modules that export `name`: `PieChart` -> ["flet_charts"]."""
+        return [
+            module
+            for module, exports in self._load().get("exports", {}).items()
+            if name in exports["names"]
+        ]
+
+    def init_params(self, module: str, cls: str) -> frozenset[str] | None:
+        """Keyword arguments `module.cls(...)` takes; None if it also takes
+        **kwargs or isn't a class `module` exports."""
+        exports = self._exports(module)
+        entry = exports["classes"].get(cls) if exports else None
+        params = entry.get("params") if entry else None
+        return frozenset(params) if params is not None else None
+
+    def settable_attrs(self, module: str, cls: str) -> frozenset[str] | None:
+        """Attributes of a `module.cls` dataclass (every control) that do
+        something when set: its keyword arguments plus `init=False` fields and
+        settable properties. None for other classes."""
+        exports = self._exports(module)
+        entry = exports["classes"].get(cls) if exports else None
+        if not entry or entry.get("params") is None or "attrs" not in entry:
+            return None
+        return frozenset(entry["params"]) | frozenset(entry["attrs"])
+
+    def module_enum_members(self, module: str, enum: str) -> frozenset[str] | None:
+        """Member names of enum `module.enum`, the icon sets included (`Icons`,
+        `CupertinoIcons`, flet_shadcn_ui's `LucideIcons`)."""
+        exports = self._exports(module)
+        if exports is None:
+            return None
+        members = exports["enums"].get(enum)
+        if members is not None:
+            return frozenset(members)
+        if enum in exports["names"]:
+            entry = (self._enums or {}).get(enum)
+            if (
+                entry
+                and entry.get("kind") == "large_enum"
+                # LucideIcons ("flet_shadcn_ui.lucide_icons", package
+                # "flet-shadcn-ui") belongs to module flet_shadcn_ui.
+                and _top_module(entry) == module.split(".")[0]
+            ):
+                return frozenset(self.enum_member_names(enum))
+        return None
+
+    # ------------------------------------------------------------------
     # CLI
     # ------------------------------------------------------------------
 
@@ -646,3 +714,23 @@ class ApiStore:
         if command is None:
             return list(cli.keys())
         return cli.get(command)
+
+
+def _top_module(entry: dict[str, Any]) -> str:
+    """The import name an api.json entry belongs to: from its module, else its
+    package (`flet-shadcn-ui` -> `flet_shadcn_ui`)."""
+    source = entry.get("module") or entry.get("package") or ""
+    return source.split(".")[0].replace("-", "_")
+
+
+_shared_store: ApiStore | None = None
+
+
+def shared_api_store() -> ApiStore:
+    """The process-wide store the MCP server uses. Other code in the same process
+    (a code checker reading `module_exports()`, say) shares its loaded data
+    instead of parsing api.json again."""
+    global _shared_store
+    if _shared_store is None:
+        _shared_store = ApiStore()
+    return _shared_store
