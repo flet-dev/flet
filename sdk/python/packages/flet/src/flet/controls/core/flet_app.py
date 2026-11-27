@@ -135,6 +135,33 @@ class FletApp(LayoutControl):
     Whether to force the use of Pyodide.
     """
 
+    storage_prefix: Optional[str] = None
+    """
+    Prefix put in front of every key the embedded app stores with
+    [`SharedPreferences`][flet.SharedPreferences].
+
+    The embedded app runs in the host's process (on web, the host's browser
+    origin), so without a prefix the two would share one store, and see and
+    overwrite each other's keys. The prefix is applied on the client; the app
+    itself uses plain key names and never sees it.
+
+    - `None` (default): the embedded app is isolated under a prefix derived
+      from its [`url`][(c).] (or [`assets_dir`][(c).] when `url` is empty),
+      `fletapp.<hash>.`. Its data is kept for as long as that location stays
+      the same.
+    - A string such as `"app.42."`: use that prefix. Set this when the
+      embedded app's URL changes between runs (a cache-busting query, say)
+      but its saved data should stay, or to give each embedded app a
+      readable namespace. End it with a separator so `"app.1."` and
+      `"app.12."` don't overlap.
+    - `""`: share the host's keys. Only for an embedded app you trust as
+      much as the host.
+
+    The prefix nests under the host's own: if the host app itself runs under
+    `"app.1."`, an embedded app with `"preview."` stores keys under
+    `"app.1.preview."`, so it can never reach outside its host's space.
+    """
+
     reconnect_interval_ms: Optional[int] = None
     """
     Delay, in milliseconds, between reconnection attempts.

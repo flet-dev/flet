@@ -29,6 +29,27 @@ class BarChartRodStackItem(ft.BaseControl):
     Defaults to the color of the parent rod.
     """
 
+    gradient: Optional[ft.Gradient] = None
+    """
+    The gradient this item is filled with.
+
+    Takes precedence over :attr:`color`.
+    """
+
+    label: Optional[str] = None
+    """
+    The text drawn in the middle of this item.
+
+    It is drawn only if it fits within the item's height.
+    """
+
+    label_style: Optional[ft.TextStyle] = None
+    """
+    The text style of the :attr:`label`.
+
+    Defaults to bold, 12-pixel white text.
+    """
+
     border_side: ft.BorderSide = field(default_factory=lambda: ft.BorderSide.none())
     """
     A border around this item.

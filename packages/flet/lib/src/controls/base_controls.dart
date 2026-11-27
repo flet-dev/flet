@@ -40,6 +40,14 @@ class LayoutControl extends StatelessWidget {
     required this.child,
   });
 
+  /// Applies the size-affecting properties to an offstage measurement copy.
+  static Widget measure(Control control, Widget child) {
+    var widget = _directionality(child, control);
+    widget = _sizedControl(widget, control, animate: false);
+    widget = _aspectRatio(widget, control);
+    return _marginControl(widget, control, animate: false);
+  }
+
   @override
   Widget build(BuildContext context) {
     Widget w = _opacity(context, child, control);
@@ -53,7 +61,7 @@ class LayoutControl extends StatelessWidget {
     w = _transformedControl(w, control);
     w = _aspectRatio(w, control);
     w = _alignedControl(context, w, control);
-    w = _marginControl(context, w, control);
+    w = _marginControl(w, control);
     // Inside the positioning: `Positioned` must be the direct child of the
     // parent `Stack`, not of the badge's own one.
     w = _badge(w, Theme.of(context), control);
@@ -131,12 +139,81 @@ Widget _opacity(BuildContext context, Widget widget, Control control) {
   // Always wrapped, also at the default 1.0 (not sent from Python): adding
   // or removing the wrapper when opacity flips between 1 and something else
   // changed the tree's shape, and Flutter rebuilt the whole subtree - an
-  // embedded app restarted, a text field lost its focus. Opacity at 1.0
-  // paints its child directly, without a layer.
-  return Opacity(
+  // embedded app restarted, a text field lost its focus.
+  return _ControlOpacity(
     opacity: opacity ?? 1.0,
     child: widget,
   );
+}
+
+/// [Opacity] without a layer at 1.0 or 0.0.
+///
+/// Flutter's [RenderOpacity] is a repaint boundary with its own
+/// [OpacityLayer] at any opacity above 0, 1.0 included. Wrapping every
+/// control in one gave each control a layer: a page of thousands of controls
+/// (a long DataTable) had thousands of layers, and the web engine walks all
+/// of them on every frame, so scrolling stuttered.
+class _ControlOpacity extends SingleChildRenderObjectWidget {
+  const _ControlOpacity({required this.opacity, super.child});
+
+  final double opacity;
+
+  @override
+  RenderObject createRenderObject(BuildContext context) =>
+      _RenderControlOpacity(opacity);
+
+  @override
+  void updateRenderObject(
+      BuildContext context, _RenderControlOpacity renderObject) {
+    renderObject.opacity = opacity;
+  }
+}
+
+class _RenderControlOpacity extends RenderProxyBox {
+  _RenderControlOpacity(double opacity)
+      : _alpha = Color.getAlphaFromOpacity(opacity);
+
+  int _alpha;
+
+  set opacity(double value) {
+    final alpha = Color.getAlphaFromOpacity(value);
+    if (alpha == _alpha) return;
+    final didNeedCompositing = alwaysNeedsCompositing;
+    final wasVisible = _alpha != 0;
+    _alpha = alpha;
+    if (didNeedCompositing != alwaysNeedsCompositing) {
+      markNeedsCompositingBitsUpdate();
+    }
+    markNeedsPaint();
+    if (wasVisible != (_alpha != 0)) markNeedsSemanticsUpdate();
+  }
+
+  @override
+  bool get alwaysNeedsCompositing =>
+      child != null && _alpha != 0 && _alpha != 255;
+
+  @override
+  bool paintsChild(RenderBox child) => _alpha != 0;
+
+  @override
+  void paint(PaintingContext context, Offset offset) {
+    if (child == null || _alpha == 0) {
+      layer = null;
+      return;
+    }
+    if (_alpha == 255) {
+      layer = null;
+      context.paintChild(child!, offset);
+      return;
+    }
+    layer = context.pushOpacity(offset, _alpha, super.paint,
+        oldLayer: layer as OpacityLayer?);
+  }
+
+  @override
+  void visitChildrenForSemantics(RenderObjectVisitor visitor) {
+    if (child != null && _alpha != 0) visitor(child!);
+  }
 }
 
 Widget _rotatedControl(BuildContext context, Widget widget, Control control) {
@@ -317,13 +394,13 @@ Widget _alignedControl(BuildContext context, Widget widget, Control control) {
   return widget;
 }
 
-Widget _marginControl(BuildContext context, Widget widget, Control control) {
+Widget _marginControl(Widget widget, Control control, {bool animate = true}) {
   final skipProps = control.internals?["skip_properties"] as List?;
   if (skipProps?.contains("margin") == true) return widget;
 
   var margin = control.getEdgeInsets("margin");
   var animation = control.getAnimation("animate_margin");
-  if (margin != null && animation != null) {
+  if (animate && margin != null && animation != null) {
     return AnimatedContainer(
       margin: margin,
       duration: animation.duration,
@@ -390,11 +467,13 @@ Widget _positionedControl(
   return widget;
 }
 
-Widget _sizedControl(Widget widget, Control control) {
+/// Applies the control's size, its size animation and its min/max constraints
+/// to [widget].
+Widget _sizedControl(Widget widget, Control control, {bool animate = true}) {
   final skipProps =
       (control.internals?['skip_properties'] as List?) ?? const [];
   if (!['width', 'height'].any(skipProps.contains)) {
-    widget = _fixedSizeControl(widget, control);
+    widget = _fixedSizeControl(widget, control, animate: animate);
   }
   return _constrainedControl(widget, control, skipProps);
 }
@@ -438,14 +517,15 @@ Widget _constrainedControl(Widget widget, Control control, List skipProps) {
   );
 }
 
-Widget _fixedSizeControl(Widget widget, Control control) {
+Widget _fixedSizeControl(Widget widget, Control control,
+    {required bool animate}) {
   final width = control.getDouble("width");
   final height = control.getDouble("height");
   final animationSize = control.getAnimation("animate_size");
 
   final hasFixedSize = width != null || height != null;
 
-  if (animationSize != null) {
+  if (animate && animationSize != null) {
     return hasFixedSize
         ? AnimatedContainer(
             duration: animationSize.duration,
@@ -589,21 +669,23 @@ class MeasureSize extends SingleChildRenderObjectWidget {
 
 class _MeasureSizeRenderObject extends RenderProxyBox {
   ValueChanged<Size> onChange;
-  Size? _lastSize;
+  Size? _reportedSize;
+  bool _reportScheduled = false;
 
   _MeasureSizeRenderObject(this.onChange);
 
   @override
   void performLayout() {
     super.performLayout();
-    // Post-frame to avoid re-entrant layout callbacks.
-    final newSize = child?.size ?? size;
-    if (_lastSize == newSize) {
-      return;
-    }
-    _lastSize = newSize;
+    // A parent can measure the child and lay it out again in the same frame.
+    // Report the size that was actually painted.
+    if (_reportScheduled || size == _reportedSize) return;
+    _reportScheduled = true;
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      onChange(newSize);
+      _reportScheduled = false;
+      if (!attached || size == _reportedSize) return;
+      _reportedSize = size;
+      onChange(size);
     });
   }
 }

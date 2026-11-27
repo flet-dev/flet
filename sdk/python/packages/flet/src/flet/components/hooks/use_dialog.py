@@ -3,6 +3,7 @@ from __future__ import annotations
 import dataclasses
 import weakref
 
+from flet.components.component import Component
 from flet.components.hooks.use_effect import use_effect
 from flet.components.hooks.use_ref import use_ref
 from flet.controls.context import context
@@ -49,6 +50,23 @@ def _bind_dialog_subtree(value, parent):
             _bind_dialog_subtree(item, parent)
 
 
+def _not_a_dialog_message(value) -> str:
+    fn = getattr(value, "fn", None)
+    if isinstance(value, Component) and fn is not None:
+        name = getattr(fn, "__name__", "component")
+        return (
+            f"use_dialog() needs a dialog control such as ft.AlertDialog, "
+            f"got the component {name}(). A dialog returned from an "
+            f"@ft.component function can't be opened: build the dialog inline, "
+            f"or in a plain function without @ft.component, and pass it to "
+            f"use_dialog()."
+        )
+    return (
+        f"use_dialog() needs a dialog control such as ft.AlertDialog, "
+        f"ft.BottomSheet or ft.DatePicker, got {type(value).__name__}."
+    )
+
+
 def use_dialog(dialog: DialogControl | None = None):
     """
     Portal a :class:`~flet.DialogControl` to the page's dialog overlay.
@@ -64,7 +82,14 @@ def use_dialog(dialog: DialogControl | None = None):
     Args:
         dialog: A :class:`~flet.DialogControl` to display, or `None`
             to hide it.
+
+    Raises:
+        TypeError: If `dialog` is not a :class:`~flet.DialogControl`, such as
+            a dialog returned from a :func:`~flet.component` function.
     """
+    if dialog is not None and not isinstance(dialog, DialogControl):
+        raise TypeError(_not_a_dialog_message(dialog))
+
     ref = use_ref(None)
     page = context.page
 

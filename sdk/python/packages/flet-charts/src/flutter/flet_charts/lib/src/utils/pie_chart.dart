@@ -53,5 +53,15 @@ PieChartSectionData parsePieChartSectionData(
     titlePositionPercentageOffset: section.getDouble("title_position"),
     badgeWidget: section.buildWidget("badge"),
     badgePositionPercentageOffset: section.getDouble("badge_position"),
+    cornerRadius: section.getDouble("corner_radius", 0)!,
+    segments: section.children("segments").map((segment) {
+      segment.notifyParent = true;
+      return PieChartStackSegmentData(
+        fromRadius: segment.getDouble("from_radius", 0)!,
+        toRadius: segment.getDouble("to_radius", 0)!,
+        color: segment.getColor("color", context, Colors.purple)!,
+        gradient: segment.getGradient("gradient", theme),
+      );
+    }).toList(),
   );
 }

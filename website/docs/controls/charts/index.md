@@ -8,7 +8,7 @@ import Tabs from '@theme/Tabs';
 
 # Charts
 
-Interactive chart controls powered by [flet-charts](https://pypi.org/project/flet-charts/) let you display data as bar, line, pie, scatter and plotly visualisations directly in your Flet apps.
+Interactive chart controls powered by [flet-charts](https://pypi.org/project/flet-charts/) let you display data as bar, line, pie, scatter, gauge and plotly visualisations directly in your Flet apps.
 
 It is built on top of the [fl_chart](https://pub.dev/packages/fl_chart) Flutter package and ships with helper classes for axis labels, tooltips and more.
 
@@ -41,6 +41,7 @@ pip install flet-charts  # (1)!
 
 - [`BarChart`](barchart.md)
 - [`CandlestickChart`](candlestickchart.md)
+- [`GaugeChart`](gaugechart.md)
 - [`LineChart`](linechart.md)
 - [`MatplotlibChart`](matplotlibchart.md)
 - [`PieChart`](piechart.md)

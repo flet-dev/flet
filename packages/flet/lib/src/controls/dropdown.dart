@@ -256,9 +256,15 @@ class _DropdownControlState extends State<DropdownControl> {
     _focusNode.canRequestFocus = editable;
 
     int expand = widget.control.getExpand("expand", 0)!;
+    var width = widget.control.getDouble("width");
+    // `DropdownMenu` keeps its own width under a tight width constraint, so
+    // fill the width when the parent stretches its children, as `TextField`
+    // does there.
     EdgeInsets? expandedInsets = expand > 0
         ? widget.control.getPadding("expanded_insets", EdgeInsets.zero)
-        : null;
+        : width == null && _parentStretchesWidth(widget.control)
+            ? EdgeInsets.zero
+            : null;
 
     Widget dropDown = DropdownMenu<String>(
       key: dropdownMenuKey,
@@ -277,7 +283,7 @@ class _DropdownControlState extends State<DropdownControl> {
           widget.control.buildIconOrWidget("selected_trailing_icon"),
       textStyle: textStyle,
       textAlign: textAlign,
-      width: widget.control.getDouble("width"),
+      width: width,
       errorText: widget.control.getString("error_text"),
       hintText: widget.control.getString("hint_text"),
       helperText: widget.control.getString("helper_text"),
@@ -304,5 +310,20 @@ class _DropdownControlState extends State<DropdownControl> {
     }
 
     return LayoutControl(control: widget.control, child: dropDown);
+  }
+}
+
+/// A vertical ListView and a stretch-aligned View or non-wrapping Column
+/// give their children the full width.
+bool _parentStretchesWidth(Control control) {
+  var parent = control.parent;
+  switch (parent?.type) {
+    case "Column" when !parent!.getBool("wrap", false)!:
+    case "View":
+      return parent!.getString("horizontal_alignment") == "stretch";
+    case "ListView":
+      return !parent!.getBool("horizontal", false)!;
+    default:
+      return false;
   }
 }
