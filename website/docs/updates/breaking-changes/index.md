@@ -30,6 +30,10 @@ Each guide explains the change, the reason for it, and how to migrate your code.
 
 ### Released in Flet 1.2.0
 
+#### Breaking changes
+
+- [Extensions: properties sent from Dart must be declared](/docs/updates/breaking-changes/v1-2-0/client-writable-properties)
+
 #### Deprecations
 
 - [`View`: layout properties are deprecated](/docs/updates/breaking-changes/v1-2-0/view-layout-properties)

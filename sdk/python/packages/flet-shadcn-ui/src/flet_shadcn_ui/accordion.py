@@ -1,5 +1,5 @@
 from dataclasses import field
-from typing import Optional
+from typing import Annotated, Optional
 
 import flet as ft
 
@@ -53,7 +53,7 @@ class Accordion(ft.LayoutControl):
     The sections of this accordion.
     """
 
-    value: list[str] = field(default_factory=list)
+    value: Annotated[list[str], ft.ClientPolicy.WRITABLE] = field(default_factory=list)
     """
     The :attr:`~flet_shadcn_ui.AccordionItem.value` of each expanded item.
 

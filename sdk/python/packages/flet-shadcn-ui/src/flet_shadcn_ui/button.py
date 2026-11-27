@@ -1,4 +1,4 @@
-from typing import Optional
+from typing import Annotated, Optional
 
 import flet as ft
 from flet_shadcn_ui.types import ButtonSize, ButtonVariant
@@ -81,12 +81,17 @@ class Button(ft.LayoutControl):
     Whether this button should be focused on initial display.
     """
 
-    on_click: Optional[ft.ControlEventHandler["Button"]] = None
+    on_click: Annotated[
+        Optional[ft.ControlEventHandler["Button"]],
+        ft.ClientPolicy.ENABLED_ONLY,
+    ] = None
     """
     Called when this button is clicked.
     """
 
-    on_long_press: Optional[ft.ControlEventHandler["Button"]] = None
+    on_long_press: Annotated[
+        Optional[ft.ControlEventHandler["Button"]], ft.ClientPolicy.ENABLED_ONLY
+    ] = None
     """
     Called when this button is long-pressed.
     """

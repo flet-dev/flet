@@ -85,6 +85,8 @@ class FletApp(Connection):
         logger.info(f"New FletApp: {self.__id}")
 
         self.__session = None
+        self.__registered = False
+        """Whether the client has registered on this connection, which it does once."""
         self.loop = loop
         self.executor = executor
         self.__main = main
@@ -291,6 +293,11 @@ class FletApp(Connection):
         transport_log.debug("_on_message: %s %s", action, body)
         task = None
         if action == MessageAction.REGISTER_CLIENT:
+            if self.__registered:
+                logger.debug("Ignored a repeated registration on the same connection.")
+                return
+            self.__registered = True
+
             req = RegisterClientRequestBody(**body)
 
             new_session = False

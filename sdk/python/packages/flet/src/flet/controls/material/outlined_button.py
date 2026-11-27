@@ -1,8 +1,8 @@
-from typing import Optional, Union
+from typing import Annotated, Optional, Union
 
 from flet.controls.action_control import ActionControl
 from flet.controls.adaptive_control import AdaptiveControl
-from flet.controls.base_control import control
+from flet.controls.base_control import ClientPolicy, control
 from flet.controls.buttons import ButtonStyle
 from flet.controls.control import Control
 from flet.controls.control_event import ControlEventHandler
@@ -82,12 +82,16 @@ class OutlinedButton(LayoutControl, AdaptiveControl, ActionControl):
     provided, it is fired after that.
     """
 
-    on_click: Optional[ControlEventHandler["OutlinedButton"]] = None
+    on_click: Annotated[
+        Optional[ControlEventHandler["OutlinedButton"]], ClientPolicy.ENABLED_ONLY
+    ] = None
     """
     Called when a user clicks this button.
     """
 
-    on_long_press: Optional[ControlEventHandler["OutlinedButton"]] = None
+    on_long_press: Annotated[
+        Optional[ControlEventHandler["OutlinedButton"]], ClientPolicy.ENABLED_ONLY
+    ] = None
     """
     Called when this button is long-pressed.
     """

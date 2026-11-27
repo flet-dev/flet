@@ -21,7 +21,11 @@ class Calendar(ft.LayoutControl):
     ```
     """
 
-    value: Optional[ft.DateTimeValue] = None
+    value: Annotated[
+        Optional[ft.DateTimeValue],
+        ft.ClientPolicy.WRITABLE,
+        ft.ClientPolicy.ENABLED_ONLY,
+    ] = None
     """
     The selected day.
 
@@ -74,7 +78,9 @@ class Calendar(ft.LayoutControl):
     Whether to show the week number at the start of each week.
     """
 
-    on_change: Optional[ft.ControlEventHandler["Calendar"]] = None
+    on_change: Annotated[
+        Optional[ft.ControlEventHandler["Calendar"]], ft.ClientPolicy.ENABLED_ONLY
+    ] = None
     """
     Called when the user picks or clears a day.
     """

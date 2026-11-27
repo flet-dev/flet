@@ -1,3 +1,7 @@
+## 1.2.0
+
+* Python ignores a property sent by `Control.updateProperties()` unless the Python field is marked with `Annotated[..., ft.ClientPolicy.WRITABLE]` by @ndonkoHenri.
+
 ## 1.1.4
 
 * `openWebBrowser()` and `openWindow()` return whether they opened the URL: on web they refuse a URL whose scheme is in `blockedWebUrlSchemes` (`javascript`, `blob`, `filesystem`), read by `webUrlScheme()` the way a browser reads it; `isOpenableWebUrl()` is the check. `openWebBrowser(embedded: true)` turns a `_self`/`_parent`/`_top` target into `_blank` (`launchTarget()`), and every caller (`UrlLauncherService`, `runControlActions()`, text spans, `Markdown` links) passes `control.backend.isEmbedded`, a new public getter on `FletBackend`. `openWindow()` prefixes a window name starting with `_` with `flet` (`popupWindowName()`) ([#7136](https://github.com/flet-dev/flet/pull/7136)) by @FeodorFitsner.
@@ -20,7 +24,6 @@
 
 * Normalize byte views into independent buffers for Safari image decoding. `ResolvedAssetSource` reuses the normalized buffer for the same immutable source across rebuilds, preserving image and Lottie cache keys; direct `convertToUint8List()` calls, including clipboard writes, read the current input ([#7049](https://github.com/flet-dev/flet/pull/7049)) by @FeodorFitsner.
 * Pass `package_info_plus` the web app's absolute base URL, so `get_package_info` finds `version.json` instead of throwing for a path-only `assetBase`; a web app without `version.json` gets empty values ([#7052](https://github.com/flet-dev/flet/pull/7052)) by @FeodorFitsner.
-
 ## 1.1.0
 
 * Flutter updated to [3.47.9](https://github.com/flutter/flutter/blob/stable/CHANGELOG.md#3479).

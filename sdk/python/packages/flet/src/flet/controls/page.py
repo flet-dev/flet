@@ -11,6 +11,7 @@ from dataclasses import InitVar, dataclass, field, fields, is_dataclass
 from functools import partial
 from typing import (
     TYPE_CHECKING,
+    Annotated,
     Any,
     Callable,
     ClassVar,
@@ -22,7 +23,11 @@ from typing import (
 from urllib.parse import urlparse
 
 from flet.components.public_utils import unwrap_component
-from flet.controls.base_control import BaseControl, control
+from flet.controls.base_control import (
+    BaseControl,
+    ClientPolicy,
+    control,
+)
 from flet.controls.base_page import BasePage
 from flet.controls.context import _context_page, context
 from flet.controls.control import Control
@@ -549,7 +554,11 @@ class MultiViewRemoveEvent(Event["Page"]):
     """
 
 
-@control("Page", isolated=True, post_init_args=2)
+@control(
+    "Page",
+    isolated=True,
+    post_init_args=2,
+)
 class Page(BasePage):
     """
     Page is a container for :class:`~flet.View` controls.
@@ -574,7 +583,7 @@ class Page(BasePage):
     window.
     """
 
-    route: str = "/"
+    route: Annotated[str, ClientPolicy.WRITABLE] = "/"
     """
     Gets current app route.
 
@@ -650,7 +659,7 @@ class Page(BasePage):
         This property is read-only.
     """
 
-    platform_brightness: Optional[Brightness] = None
+    platform_brightness: Annotated[Optional[Brightness], ClientPolicy.WRITABLE] = None
     """
     The current brightness mode of the host platform.
 
@@ -728,7 +737,9 @@ class Page(BasePage):
     control.
     """
 
-    on_views_pop_until: Optional[EventHandler[ViewsPopUntilEvent]] = None
+    on_views_pop_until: Annotated[
+        Optional[EventHandler[ViewsPopUntilEvent]], ClientPolicy.SERVER_ONLY_EVENT
+    ] = None
     """
     Called when :meth:`pop_views_until` reaches the destination view.
 
@@ -740,7 +751,9 @@ class Page(BasePage):
     Called when a keyboard key is pressed.
     """
 
-    on_connect: Optional[ControlEventHandler["Page"]] = None
+    on_connect: Annotated[
+        Optional[ControlEventHandler["Page"]], ClientPolicy.SERVER_ONLY_EVENT
+    ] = None
     """
     Called when a web user (re-)connects to a page session.
 
@@ -750,19 +763,26 @@ class Page(BasePage):
     "online".
     """
 
-    on_disconnect: Optional[ControlEventHandler["Page"]] = None
+    on_disconnect: Annotated[
+        Optional[ControlEventHandler["Page"]],
+        ClientPolicy.SERVER_ONLY_EVENT,
+    ] = None
     """
     Called when a web user disconnects from a page session, i.e. closes browser \
     tab/window.
     """
 
-    on_close: Optional[ControlEventHandler["Page"]] = None
+    on_close: Annotated[
+        Optional[ControlEventHandler["Page"]], ClientPolicy.SERVER_ONLY_EVENT
+    ] = None
     """
     Called when a session has expired after configured amount of time (60 minutes by \
     default).
     """
 
-    on_login: Optional[EventHandler[LoginEvent]] = None
+    on_login: Annotated[
+        Optional[EventHandler[LoginEvent]], ClientPolicy.SERVER_ONLY_EVENT
+    ] = None
     """
     Called upon successful or failed OAuth authorization flow.
 
@@ -770,7 +790,9 @@ class Page(BasePage):
     guide for more information and examples.
     """  # noqa: E501
 
-    on_logout: Optional[ControlEventHandler["Page"]] = None
+    on_logout: Annotated[
+        Optional[ControlEventHandler["Page"]], ClientPolicy.SERVER_ONLY_EVENT
+    ] = None
     """
     Called after `page.logout()` call.
     """
@@ -953,6 +975,7 @@ class Page(BasePage):
             self.__last_route = e.route
 
         elif isinstance(e, ViewPopEvent | ViewsPopUntilEvent):
+            e.view = None
             for v in unwrap_component(self.views):
                 v = unwrap_component(v)
                 if v.route == e.route:

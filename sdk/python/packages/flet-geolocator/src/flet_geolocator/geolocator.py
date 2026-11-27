@@ -1,5 +1,5 @@
 from dataclasses import field
-from typing import Optional
+from typing import Annotated, Optional
 
 import flet as ft
 from flet_geolocator.types import (
@@ -36,7 +36,7 @@ class Geolocator(ft.Service):
     handler argument contains information on the error.
     """
 
-    position: Optional[GeolocatorPosition] = field(
+    position: Annotated[Optional[GeolocatorPosition], ft.ClientPolicy.WRITABLE] = field(
         default=None, init=False
     )  # TODO: make this property readonly
     """

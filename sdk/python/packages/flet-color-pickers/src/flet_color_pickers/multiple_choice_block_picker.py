@@ -1,4 +1,4 @@
-from typing import Optional
+from typing import Annotated, Optional
 
 import flet as ft
 
@@ -12,7 +12,7 @@ class MultipleChoiceBlockPicker(ft.LayoutControl):
     colors.
     """
 
-    colors: Optional[list[ft.ColorValue]] = None
+    colors: Annotated[Optional[list[ft.ColorValue]], ft.ClientPolicy.WRITABLE] = None
     """
     The currently selected colors.
     """

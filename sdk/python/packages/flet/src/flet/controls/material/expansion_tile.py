@@ -4,7 +4,7 @@ from typing import Annotated, Optional
 from flet.controls.adaptive_control import AdaptiveControl
 from flet.controls.alignment import Alignment
 from flet.controls.animation import AnimationStyle
-from flet.controls.base_control import control
+from flet.controls.base_control import ClientPolicy, control
 from flet.controls.buttons import OutlinedBorder
 from flet.controls.control import Control
 from flet.controls.control_event import ControlEventHandler
@@ -295,7 +295,7 @@ class ExpansionTile(LayoutControl, AdaptiveControl):
     will also adjust the default tile heights.
     """
 
-    expanded: bool = False
+    expanded: Annotated[bool, ClientPolicy.WRITABLE] = False
     """
     The expansion state of this tile.
 

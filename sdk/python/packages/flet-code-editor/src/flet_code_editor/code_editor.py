@@ -1,5 +1,5 @@
 from dataclasses import field
-from typing import Optional, Union
+from typing import Annotated, Optional, Union
 
 import flet as ft
 from flet_code_editor.types import (
@@ -33,10 +33,12 @@ class CodeEditor(ft.LayoutControl):
     padding: Optional[ft.PaddingValue] = None
     """Padding around the editor."""
 
-    value: Optional[str] = None
+    value: Annotated[
+        Optional[str], ft.ClientPolicy.WRITABLE, ft.ClientPolicy.ENABLED_ONLY
+    ] = None
     """Full text including folded sections and service comments."""
 
-    selection: Optional[ft.TextSelection] = None
+    selection: Annotated[Optional[ft.TextSelection], ft.ClientPolicy.WRITABLE] = None
     """
     Represents the current text selection or caret position in the editor.
 
@@ -62,7 +64,9 @@ class CodeEditor(ft.LayoutControl):
     autofocus: Optional[bool] = False
     """Whether this editor should focus itself if nothing else is focused."""
 
-    on_change: Optional[ft.ControlEventHandler["CodeEditor"]] = None
+    on_change: Annotated[
+        Optional[ft.ControlEventHandler["CodeEditor"]], ft.ClientPolicy.ENABLED_ONLY
+    ] = None
     """Called when the editor text changes."""
 
     on_selection_change: Optional[

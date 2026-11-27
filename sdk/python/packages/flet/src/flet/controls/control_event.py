@@ -1,8 +1,10 @@
 import inspect
 import sys
+from collections.abc import Callable as CallableABC
 from dataclasses import InitVar, dataclass, field
 from typing import (
     TYPE_CHECKING,
+    Annotated,
     Any,
     Callable,
     ForwardRef,
@@ -14,7 +16,7 @@ from typing import (
     get_origin,
 )
 
-from flet.utils.typing_utils import eval_type
+from flet.utils.typing_utils import eval_type, field_annotation
 
 if TYPE_CHECKING:
     from .base_control import BaseControl  # noqa
@@ -81,15 +83,33 @@ def get_event_field_type(control: Any, field_name: str):
     type_params = getattr(control.__class__, "__type_params__", ())
 
     try:
+        if isinstance(annotation, str) and field_name in control.__dataclass_fields__:
+            annotation = field_annotation(
+                type(control), control.__dataclass_fields__[field_name]
+            )
         # Resolve forward refs manually
         if isinstance(annotation, ForwardRef):
             annotation = eval_type(
                 annotation, globalns, localns, type_params=type_params
             )
 
-        clbs = get_args(annotation)  # callable(s)
-        clb = clbs[1] if len(clbs) > 2 else clbs[0]
-        event_type = get_args(clb)[0][0]
+        if get_origin(annotation) is Annotated:
+            annotation = get_args(annotation)[0]
+        # Handler aliases allow both a no-argument callback and one receiving
+        # the event. Optional handlers also include None in the union.
+        callbacks = (
+            (annotation,)
+            if get_origin(annotation) is CallableABC
+            else get_args(annotation)
+        )
+        for callback in callbacks:
+            if get_origin(callback) is CallableABC:
+                params, _ = get_args(callback)
+                if isinstance(params, list) and len(params) == 1:
+                    event_type = params[0]
+                    break
+        else:
+            raise TypeError("expected a callback accepting an event")
 
         if isinstance(event_type, ForwardRef):
             event_type = eval_type(

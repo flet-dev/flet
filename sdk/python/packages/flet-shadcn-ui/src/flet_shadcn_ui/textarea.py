@@ -20,7 +20,7 @@ class Textarea(ft.LayoutControl):
     ```
     """
 
-    value: str = ""
+    value: Annotated[str, ft.ClientPolicy.WRITABLE, ft.ClientPolicy.ENABLED_ONLY] = ""
     """
     The current text of this textarea.
     """
@@ -100,7 +100,9 @@ class Textarea(ft.LayoutControl):
     string) to clear the error.
     """
 
-    on_change: Optional[ft.ControlEventHandler["Textarea"]] = None
+    on_change: Annotated[
+        Optional[ft.ControlEventHandler["Textarea"]], ft.ClientPolicy.ENABLED_ONLY
+    ] = None
     """
     Called when the text changes.
 

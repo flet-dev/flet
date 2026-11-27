@@ -1,5 +1,5 @@
 from dataclasses import field
-from typing import Optional
+from typing import Annotated, Optional
 
 import flet as ft
 
@@ -56,7 +56,9 @@ class Tabs(ft.LayoutControl):
     The tabs.
     """
 
-    value: Optional[str] = None
+    value: Annotated[
+        Optional[str], ft.ClientPolicy.WRITABLE, ft.ClientPolicy.ENABLED_ONLY
+    ] = None
     """
     The :attr:`~flet_shadcn_ui.Tab.value` of the selected tab.
 
@@ -70,7 +72,10 @@ class Tabs(ft.LayoutControl):
     If `None`, defaults to `8`.
     """
 
-    on_change: Optional[ft.ControlEventHandler["Tabs"]] = None
+    on_change: Annotated[
+        Optional[ft.ControlEventHandler["Tabs"]],
+        ft.ClientPolicy.ENABLED_ONLY,
+    ] = None
     """
     Called when the selected tab changes.
 

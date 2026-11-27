@@ -1,7 +1,7 @@
-from typing import Optional, Union
+from typing import Annotated, Optional, Union
 
 from flet.controls.action_control import ActionControl
-from flet.controls.base_control import control
+from flet.controls.base_control import ClientPolicy, control
 from flet.controls.control_event import ControlEventHandler
 from flet.controls.text_style import TextStyle
 from flet.controls.types import Url
@@ -81,7 +81,9 @@ class TextSpan(ActionControl):
     not have a spell out setting, this text span does not spell out the text by default.
     """
 
-    on_click: Optional[ControlEventHandler["TextSpan"]] = None
+    on_click: Annotated[
+        Optional[ControlEventHandler["TextSpan"]], ClientPolicy.ENABLED_ONLY
+    ] = None
     """
     Called when this span is clicked.
     """

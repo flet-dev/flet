@@ -1,7 +1,7 @@
 from typing import Annotated, Optional
 
 from flet.controls.animation import AnimationStyle
-from flet.controls.base_control import control
+from flet.controls.base_control import ClientPolicy, control
 from flet.controls.border import BorderSide
 from flet.controls.box import BoxConstraints
 from flet.controls.buttons import OutlinedBorder
@@ -52,7 +52,7 @@ class Chip(LayoutControl):
     :class:`~flet.CircleAvatar`.
     """
 
-    selected: bool = False
+    selected: Annotated[bool, ClientPolicy.WRITABLE, ClientPolicy.ENABLED_ONLY] = False
     """
     If :attr:`on_select` event is specified, `selected` property is used to determine \
     whether this chip is selected or not.
@@ -236,7 +236,9 @@ class Chip(LayoutControl):
     The animation style for the :attr:`delete_icon`'s animations.
     """
 
-    on_click: Optional[ControlEventHandler["Chip"]] = None
+    on_click: Annotated[
+        Optional[ControlEventHandler["Chip"]], ClientPolicy.ENABLED_ONLY
+    ] = None
     """
     Called when the user clicks on this chip.
 
@@ -244,12 +246,16 @@ class Chip(LayoutControl):
         ValueError: If specified together with :attr:`on_select`.
     """
 
-    on_delete: Optional[ControlEventHandler["Chip"]] = None
+    on_delete: Annotated[
+        Optional[ControlEventHandler["Chip"]], ClientPolicy.ENABLED_ONLY
+    ] = None
     """
     Called when the user clicks on the :attr:`delete_icon`.
     """
 
-    on_select: Optional[ControlEventHandler["Chip"]] = None
+    on_select: Annotated[
+        Optional[ControlEventHandler["Chip"]], ClientPolicy.ENABLED_ONLY
+    ] = None
     """
     Called when the user clicks on this chip.
 

@@ -28,7 +28,7 @@ class SnackBarControl extends StatelessWidget {
 
     final actionControl = control.get("action");
     SnackBarAction? action;
-    if (actionControl is Control) {
+    if (actionControl is Control && actionControl.visible) {
       action = SnackBarAction(
         label: actionControl.getString("label", "Action")!,
         backgroundColor: actionControl.getColor("bgcolor", context),

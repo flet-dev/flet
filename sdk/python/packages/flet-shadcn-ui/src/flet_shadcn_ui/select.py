@@ -1,5 +1,5 @@
 from dataclasses import field
-from typing import Optional
+from typing import Annotated, Optional
 
 import flet as ft
 
@@ -52,7 +52,9 @@ class Select(ft.LayoutControl):
     The options to choose from.
     """
 
-    value: Optional[str] = None
+    value: Annotated[
+        Optional[str], ft.ClientPolicy.WRITABLE, ft.ClientPolicy.ENABLED_ONLY
+    ] = None
     """
     The :attr:`~flet_shadcn_ui.SelectOption.value` of the chosen option.
 
@@ -103,7 +105,10 @@ class Select(ft.LayoutControl):
     string) to clear the error.
     """
 
-    on_change: Optional[ft.ControlEventHandler["Select"]] = None
+    on_change: Annotated[
+        Optional[ft.ControlEventHandler["Select"]],
+        ft.ClientPolicy.ENABLED_ONLY,
+    ] = None
     """
     Called when the chosen option changes.
 

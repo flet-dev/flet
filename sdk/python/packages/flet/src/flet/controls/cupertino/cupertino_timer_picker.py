@@ -3,7 +3,7 @@ from enum import Enum
 from typing import Annotated, Optional
 
 from flet.controls.alignment import Alignment
-from flet.controls.base_control import control
+from flet.controls.base_control import ClientPolicy, control
 from flet.controls.control_event import ControlEventHandler
 from flet.controls.duration import Duration, DurationValue
 from flet.controls.layout_control import LayoutControl
@@ -55,7 +55,9 @@ class CupertinoTimerPicker(LayoutControl):
 
     """
 
-    value: DurationValue = field(default_factory=lambda: Duration())
+    value: Annotated[DurationValue, ClientPolicy.WRITABLE] = field(
+        default_factory=lambda: Duration()
+    )
     """
     The initial duration of the countdown timer.
 

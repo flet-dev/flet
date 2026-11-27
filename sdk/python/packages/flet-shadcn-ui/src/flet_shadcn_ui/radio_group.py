@@ -1,5 +1,5 @@
 from dataclasses import field
-from typing import Optional
+from typing import Annotated, Optional
 
 import flet as ft
 
@@ -58,7 +58,9 @@ class RadioGroup(ft.LayoutControl):
     The options of this group.
     """
 
-    value: Optional[str] = None
+    value: Annotated[
+        Optional[str], ft.ClientPolicy.WRITABLE, ft.ClientPolicy.ENABLED_ONLY
+    ] = None
     """
     The :attr:`~flet_shadcn_ui.Radio.value` of the selected option.
 
@@ -97,7 +99,9 @@ class RadioGroup(ft.LayoutControl):
     string) to clear the error.
     """
 
-    on_change: Optional[ft.ControlEventHandler["RadioGroup"]] = None
+    on_change: Annotated[
+        Optional[ft.ControlEventHandler["RadioGroup"]], ft.ClientPolicy.ENABLED_ONLY
+    ] = None
     """
     Called when the selected option changes.
 

@@ -1,7 +1,7 @@
 from typing import Annotated, Optional, Union
 
 from flet.controls.action_control import ActionControl
-from flet.controls.base_control import control
+from flet.controls.base_control import ClientPolicy, control
 from flet.controls.control_event import ControlEventHandler
 from flet.controls.layout_control import LayoutControl
 from flet.controls.padding import PaddingValue
@@ -131,7 +131,9 @@ class CupertinoListTile(LayoutControl, ActionControl):
     either iOS Notes or Reminders app.
     """
 
-    on_click: Optional[ControlEventHandler["CupertinoListTile"]] = None
+    on_click: Annotated[
+        Optional[ControlEventHandler["CupertinoListTile"]], ClientPolicy.ENABLED_ONLY
+    ] = None
     """
     Called when a user clicks/taps the list tile.
     """

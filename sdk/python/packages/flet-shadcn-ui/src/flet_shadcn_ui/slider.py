@@ -23,6 +23,8 @@ class Slider(ft.LayoutControl):
 
     value: Annotated[
         ft.Number,
+        ft.ClientPolicy.WRITABLE,
+        ft.ClientPolicy.ENABLED_ONLY,
         V.ge_field("min"),
         V.le_field("max"),
     ] = 0.0
@@ -90,7 +92,10 @@ class Slider(ft.LayoutControl):
     If `None`, the secondary color of the theme is used.
     """
 
-    on_change: Optional[ft.ControlEventHandler["Slider"]] = None
+    on_change: Annotated[
+        Optional[ft.ControlEventHandler["Slider"]],
+        ft.ClientPolicy.ENABLED_ONLY,
+    ] = None
     """
     Called continuously while the user drags the thumb.
 
@@ -98,12 +103,16 @@ class Slider(ft.LayoutControl):
     contains the new value.
     """
 
-    on_change_start: Optional[ft.ControlEventHandler["Slider"]] = None
+    on_change_start: Annotated[
+        Optional[ft.ControlEventHandler["Slider"]], ft.ClientPolicy.ENABLED_ONLY
+    ] = None
     """
     Called when the user starts dragging the thumb.
     """
 
-    on_change_end: Optional[ft.ControlEventHandler["Slider"]] = None
+    on_change_end: Annotated[
+        Optional[ft.ControlEventHandler["Slider"]], ft.ClientPolicy.ENABLED_ONLY
+    ] = None
     """
     Called when the user releases the thumb.
 

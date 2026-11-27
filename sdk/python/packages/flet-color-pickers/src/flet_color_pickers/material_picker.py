@@ -1,4 +1,4 @@
-from typing import Optional
+from typing import Annotated, Optional
 
 import flet as ft
 
@@ -12,7 +12,7 @@ class MaterialPicker(ft.LayoutControl):
     optional shade labels.
     """
 
-    color: Optional[ft.ColorValue] = None
+    color: Annotated[Optional[ft.ColorValue], ft.ClientPolicy.WRITABLE] = None
     """
     The currently selected color.
     """

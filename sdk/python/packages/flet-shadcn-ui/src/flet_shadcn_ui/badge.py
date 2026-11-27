@@ -1,4 +1,4 @@
-from typing import Optional
+from typing import Annotated, Optional
 
 import flet as ft
 from flet_shadcn_ui.types import BadgeVariant
@@ -49,7 +49,10 @@ class Badge(ft.LayoutControl):
     If `None`, the color is taken from :attr:`variant`.
     """
 
-    on_click: Optional[ft.ControlEventHandler["Badge"]] = None
+    on_click: Annotated[
+        Optional[ft.ControlEventHandler["Badge"]],
+        ft.ClientPolicy.ENABLED_ONLY,
+    ] = None
     """
     Called when this badge is clicked.
     """

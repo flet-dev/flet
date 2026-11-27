@@ -60,6 +60,9 @@ class _CheckboxControlState extends State<CupertinoCheckboxControl> {
   }
 
   void _toggleValue() {
+    if (widget.control.disabled) {
+      return;
+    }
     bool? newValue;
     if (!_tristate) {
       newValue = !_value!;

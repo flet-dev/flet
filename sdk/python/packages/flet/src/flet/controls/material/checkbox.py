@@ -1,7 +1,7 @@
-from typing import Optional
+from typing import Annotated, Optional
 
 from flet.controls.adaptive_control import AdaptiveControl
-from flet.controls.base_control import control
+from flet.controls.base_control import ClientPolicy, control
 from flet.controls.border import BorderSide
 from flet.controls.buttons import OutlinedBorder
 from flet.controls.control_event import ControlEventHandler
@@ -20,7 +20,11 @@ from flet.controls.types import (
 __all__ = ["Checkbox"]
 
 
-@control("Checkbox", categories=("input", "selection"), tags=("form", "toggle"))
+@control(
+    "Checkbox",
+    categories=("input", "selection"),
+    tags=("form", "toggle"),
+)
 class Checkbox(LayoutControl, AdaptiveControl):
     """
     Checkbox allows to select one or more items from a group, or switch between two \
@@ -38,7 +42,9 @@ class Checkbox(LayoutControl, AdaptiveControl):
     The clickable label to display on the right of a checkbox.
     """
 
-    value: Optional[bool] = False
+    value: Annotated[
+        Optional[bool], ClientPolicy.WRITABLE, ClientPolicy.ENABLED_ONLY
+    ] = False
     """
     The value of this checkbox.
 
@@ -175,7 +181,9 @@ class Checkbox(LayoutControl, AdaptiveControl):
     or if that is `None`, falls back to `MouseCursor.CLICK`.
     """
 
-    on_change: Optional[ControlEventHandler["Checkbox"]] = None
+    on_change: Annotated[
+        Optional[ControlEventHandler["Checkbox"]], ClientPolicy.ENABLED_ONLY
+    ] = None
     """
     Called when the state of this checkbox is changed.
     """

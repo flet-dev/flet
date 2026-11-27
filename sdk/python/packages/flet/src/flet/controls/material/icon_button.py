@@ -4,7 +4,7 @@ from typing import Annotated, Optional, Union
 from flet.controls.action_control import ActionControl
 from flet.controls.adaptive_control import AdaptiveControl
 from flet.controls.alignment import Alignment
-from flet.controls.base_control import control
+from flet.controls.base_control import ClientPolicy, control
 from flet.controls.box import BoxConstraints
 from flet.controls.buttons import ButtonStyle
 from flet.controls.control_event import ControlEventHandler
@@ -197,12 +197,16 @@ class IconButton(LayoutControl, AdaptiveControl, ActionControl):
     Size constraints for this button.
     """
 
-    on_click: Optional[ControlEventHandler["IconButton"]] = None
+    on_click: Annotated[
+        Optional[ControlEventHandler["IconButton"]], ClientPolicy.ENABLED_ONLY
+    ] = None
     """
     Called when a user clicks this button.
     """
 
-    on_long_press: Optional[ControlEventHandler["IconButton"]] = None
+    on_long_press: Annotated[
+        Optional[ControlEventHandler["IconButton"]], ClientPolicy.ENABLED_ONLY
+    ] = None
     """
     Called when the button is long-pressed.
     """

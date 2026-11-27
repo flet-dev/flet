@@ -1,5 +1,5 @@
 from enum import Enum
-from typing import Optional
+from typing import Annotated, Optional
 
 import flet as ft
 
@@ -102,7 +102,9 @@ class ColorPicker(ft.LayoutControl):
     Width of the color picker in virtual pixels.
     """
 
-    color_history: Optional[list[ft.ColorValue]] = None
+    color_history: Annotated[
+        Optional[list[ft.ColorValue]], ft.ClientPolicy.WRITABLE
+    ] = None
     """
     A list of colors to display as a history palette.
 
@@ -149,7 +151,7 @@ class ColorPicker(ft.LayoutControl):
     Height of the picker area as a percentage of the picker width.
     """
 
-    hsv_color: Optional[HsvColor] = None
+    hsv_color: Annotated[Optional[HsvColor], ft.ClientPolicy.WRITABLE] = None
     """
     The currently selected HSV color.
 

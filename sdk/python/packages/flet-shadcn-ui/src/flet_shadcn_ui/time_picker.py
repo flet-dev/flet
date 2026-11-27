@@ -1,5 +1,5 @@
 import datetime
-from typing import Optional
+from typing import Annotated, Optional
 
 import flet as ft
 
@@ -17,7 +17,9 @@ class TimePicker(ft.LayoutControl):
     ```
     """
 
-    value: Optional[datetime.time] = None
+    value: Annotated[
+        Optional[datetime.time], ft.ClientPolicy.WRITABLE, ft.ClientPolicy.ENABLED_ONLY
+    ] = None
     """
     The selected time. Only hours and minutes are used.
 
@@ -65,7 +67,9 @@ class TimePicker(ft.LayoutControl):
     string) to clear the error.
     """
 
-    on_change: Optional[ft.ControlEventHandler["TimePicker"]] = None
+    on_change: Annotated[
+        Optional[ft.ControlEventHandler["TimePicker"]], ft.ClientPolicy.ENABLED_ONLY
+    ] = None
     """
     Called when the user changes the time.
     """

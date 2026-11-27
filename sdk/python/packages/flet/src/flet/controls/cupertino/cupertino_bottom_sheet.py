@@ -1,6 +1,7 @@
-from typing import Optional
+from dataclasses import field
+from typing import Annotated, Optional
 
-from flet.controls.base_control import control
+from flet.controls.base_control import ClientPolicy, control
 from flet.controls.control import Control
 from flet.controls.dialog_control import DialogControl
 from flet.controls.padding import PaddingValue
@@ -14,6 +15,8 @@ class CupertinoBottomSheet(DialogControl):
     """
     A Cupertino bottom sheet.
     """
+
+    open: Annotated[bool, ClientPolicy.WRITABLE] = field(default=False, kw_only=True)
 
     content: Control
     """

@@ -1,4 +1,4 @@
-from typing import Optional
+from typing import Annotated, Optional
 
 import flet as ft
 
@@ -17,7 +17,7 @@ class Input(ft.LayoutControl):
     ```
     """
 
-    value: str = ""
+    value: Annotated[str, ft.ClientPolicy.WRITABLE, ft.ClientPolicy.ENABLED_ONLY] = ""
     """
     The current text of this input.
     """
@@ -104,7 +104,10 @@ class Input(ft.LayoutControl):
     string) to clear the error.
     """
 
-    on_change: Optional[ft.ControlEventHandler["Input"]] = None
+    on_change: Annotated[
+        Optional[ft.ControlEventHandler["Input"]],
+        ft.ClientPolicy.ENABLED_ONLY,
+    ] = None
     """
     Called when the text changes.
 
@@ -112,12 +115,18 @@ class Input(ft.LayoutControl):
     contains the new text.
     """
 
-    on_submit: Optional[ft.ControlEventHandler["Input"]] = None
+    on_submit: Annotated[
+        Optional[ft.ControlEventHandler["Input"]],
+        ft.ClientPolicy.ENABLED_ONLY,
+    ] = None
     """
     Called when the user submits the text, for example by pressing `Enter`.
     """
 
-    on_click: Optional[ft.ControlEventHandler["Input"]] = None
+    on_click: Annotated[
+        Optional[ft.ControlEventHandler["Input"]],
+        ft.ClientPolicy.ENABLED_ONLY,
+    ] = None
     """
     Called when this input is clicked.
     """

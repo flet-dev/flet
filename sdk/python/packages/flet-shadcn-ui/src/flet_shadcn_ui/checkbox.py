@@ -1,4 +1,4 @@
-from typing import Optional
+from typing import Annotated, Optional
 
 import flet as ft
 
@@ -19,7 +19,9 @@ class Checkbox(ft.LayoutControl):
     ```
     """
 
-    value: bool = False
+    value: Annotated[bool, ft.ClientPolicy.WRITABLE, ft.ClientPolicy.ENABLED_ONLY] = (
+        False
+    )
     """
     Whether this checkbox is checked.
     """
@@ -61,7 +63,9 @@ class Checkbox(ft.LayoutControl):
     string) to clear the error.
     """
 
-    on_change: Optional[ft.ControlEventHandler["Checkbox"]] = None
+    on_change: Annotated[
+        Optional[ft.ControlEventHandler["Checkbox"]], ft.ClientPolicy.ENABLED_ONLY
+    ] = None
     """
     Called when :attr:`value` changes.
 

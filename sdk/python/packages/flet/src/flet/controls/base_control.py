@@ -2,8 +2,21 @@ import asyncio
 import inspect
 import logging
 import sys
-from dataclasses import InitVar, dataclass, field
-from typing import TYPE_CHECKING, Any, Callable, Optional, TypeVar, Union, overload
+from dataclasses import InitVar, dataclass, field, fields
+from enum import Enum
+from typing import (
+    TYPE_CHECKING,
+    Annotated,
+    Any,
+    Callable,
+    ClassVar,
+    Optional,
+    TypeVar,
+    Union,
+    get_args,
+    get_origin,
+    overload,
+)
 
 from flet.controls.context import _context_page, context
 from flet.controls.control_event import ControlEvent, get_event_field_type
@@ -12,6 +25,7 @@ from flet.controls.ref import Ref
 from flet.controls.value_types import Prop, Value, _install_props, value
 from flet.utils.from_dict import from_dict
 from flet.utils.object_model import get_param_count, is_coroutine_result
+from flet.utils.typing_utils import field_annotation
 from flet.utils.validation import validate
 
 logger = logging.getLogger("flet")
@@ -29,6 +43,7 @@ if TYPE_CHECKING:
 
 __all__ = [
     "BaseControl",
+    "ClientPolicy",
     "Prop",
     "Value",
     "control",
@@ -43,6 +58,20 @@ __all__ = [
 # Prop, Value, _install_props and value are re-exported from here
 # for backwards compatibility.
 # ---------------------------------------------------------------------------
+
+
+class ClientPolicy(Enum):
+    """Field metadata for client property updates and event dispatch."""
+
+    WRITABLE = "writable"
+    """Accept values reported by the Dart widget for this field."""
+
+    ENABLED_ONLY = "enabled_only"
+    """Accept client input for this field or handler only while the control and its
+    ancestors are enabled."""
+
+    SERVER_ONLY_EVENT = "server_only_event"
+    """Reserve this `on_*` handler for events dispatched by Python."""
 
 
 def skip_field():
@@ -111,6 +140,10 @@ def control(
         tags: MCP metadata — descriptive tags (e.g. `("text", "editable")`).
         dataclass_kwargs: Additional keyword arguments passed to `@dataclass`.
 
+    Raises:
+        ValueError: If `ClientPolicy.SERVER_ONLY_EVENT` is used outside an
+            `on_*` handler.
+
     Usage:
         - Supports `@control` (without parentheses)
         - Supports `@control("WidgetName")` (with optional arguments)
@@ -147,6 +180,42 @@ def control(
     return wrapper
 
 
+def _merge_inherited(cls: type, attribute: str, names: set[str]) -> frozenset[str]:
+    """
+    Merges `names` with the values the classes in the MRO of `cls` set for a class
+    `attribute`, keeping a declaration inherited through any base.
+    """
+    inherited = (vars(base).get(attribute, ()) for base in cls.__mro__[1:])
+    return frozenset(names).union(*inherited)
+
+
+def _collect_client_rules(cls: type) -> None:
+    """Read field markers and retain restrictions when a subclass redeclares a field."""
+    writable = set()
+    enabled_only = set()
+    server_events = set()
+    for f in fields(cls):
+        hint = field_annotation(cls, f)
+        if get_origin(hint) is not Annotated:
+            continue
+        for marker in get_args(hint)[1:]:
+            if marker is ClientPolicy.WRITABLE:
+                writable.add(f.name)
+            elif marker is ClientPolicy.ENABLED_ONLY:
+                enabled_only.add(f.name)
+            elif marker is ClientPolicy.SERVER_ONLY_EVENT:
+                if not f.name.startswith("on_"):
+                    raise ValueError(
+                        f"{cls.__qualname__}.{f.name}: "
+                        "ClientPolicy.SERVER_ONLY_EVENT requires an on_* handler"
+                    )
+                server_events.add(f.name.removeprefix("on_"))
+
+    cls._client_writable = frozenset(writable)
+    cls._enabled_only = _merge_inherited(cls, "_enabled_only", enabled_only)
+    cls._server_events = _merge_inherited(cls, "_server_events", server_events)
+
+
 def _apply_control(
     cls: type[T],
     type_name: Optional[str],
@@ -159,6 +228,8 @@ def _apply_control(
     """Applies @control logic, ensuring compatibility with @dataclass."""
     cls = dataclass(**dataclass_kwargs)(cls)  # Apply @dataclass first
     _install_props(cls)  # Install Prop descriptors for sparse tracking
+
+    _collect_client_rules(cls)
 
     # Store MCP metadata for discovery by Flet MCP server
     cls.__control_meta__ = {
@@ -187,6 +258,21 @@ def _apply_control(
 class BaseControl:
     """
     Base class for all Flet controls and services.
+    """
+
+    _client_writable: ClassVar[frozenset[str]] = frozenset()
+    """
+    Names of the effective dataclass fields marked with `ClientPolicy.WRITABLE`.
+    """
+
+    _enabled_only: ClassVar[frozenset[str]] = frozenset()
+    """
+    Field names marked with `ClientPolicy.ENABLED_ONLY`. Handlers keep the `on_` prefix.
+    """
+
+    _server_events: ClassVar[frozenset[str]] = frozenset()
+    """
+    Wire names of events marked with `ClientPolicy.SERVER_ONLY_EVENT`.
     """
 
     # ------------------------------------------------------------------
@@ -490,9 +576,9 @@ class BaseControl:
             else:
                 # custom ControlEvent
                 args = {
+                    **(event_data or {}),
                     "control": self,
                     "name": event_name,
-                    **(event_data or {}),
                 }
                 e = from_dict(event_type, args)
 

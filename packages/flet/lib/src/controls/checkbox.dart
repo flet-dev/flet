@@ -60,6 +60,9 @@ class _CheckboxControlState extends State<CheckboxControl> {
   }
 
   void _toggleValue() {
+    if (widget.control.disabled) {
+      return;
+    }
     bool? newValue;
     if (!_tristate) {
       newValue = !_value!;

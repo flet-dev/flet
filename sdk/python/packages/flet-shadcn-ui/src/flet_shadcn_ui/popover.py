@@ -1,4 +1,4 @@
-from typing import Optional
+from typing import Annotated, Optional
 
 import flet as ft
 
@@ -34,7 +34,7 @@ class Popover(ft.LayoutControl):
     The control shown in the floating panel.
     """
 
-    open: bool = False
+    open: Annotated[bool, ft.ClientPolicy.WRITABLE] = False
     """
     Whether the popover is shown.
     """

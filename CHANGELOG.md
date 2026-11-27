@@ -1,5 +1,9 @@
 ## 1.2.0
 
+### Breaking changes
+
+* Extensions must mark each Python field their Dart widget updates with `Annotated[..., ft.ClientPolicy.WRITABLE]` so the field receives updates from the client. See the [Extensions: properties sent from Dart must be declared](/docs/updates/breaking-changes/v1-2-0/client-writable-properties) guide by @ndonkoHenri.
+
 ### New features
 
 * flet-charts: Add `GaugeChart` for progress gauges, activity rings and speedometers, built from progress and zone rings with ticks, labels, markers and needle or circle pointers. See [GaugeChart](https://flet.dev/docs/controls/charts/gaugechart) ([#7066](https://github.com/flet-dev/flet/pull/7066)) by @ndonkoHenri.
@@ -21,6 +25,9 @@
 
 ### Bug fixes
 
+* Fix a connected client being able to change control state that only Python should set, and to trigger events a real client can't send by @ndonkoHenri.
+* Fix a disabled `Checkbox`, `Switch`, `CupertinoCheckbox` or `CupertinoSwitch` toggling when its `ListTile` with `toggle_inputs=True` is clicked by @ndonkoHenri.
+* Fix `SnackBarAction` showing despite `visible=False` by @ndonkoHenri.
 * Fix `View.on_size_change` never firing; it reports the size of the view's body, the area between the app bar and the bottom navigation bar ([#6363](https://github.com/flet-dev/flet/issues/6363), [#7088](https://github.com/flet-dev/flet/pull/7088)) by @ndonkoHenri.
 
 ## 1.1.4

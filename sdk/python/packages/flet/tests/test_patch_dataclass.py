@@ -38,6 +38,24 @@ def test_simple_patch_dataclass():
     assert settings.config.timeout == 2.5
 
 
+def test_patch_existing_slotted_dataclass():
+    @dataclass(slots=True)
+    class Point:
+        x: int
+        y: int
+
+    @dataclass
+    class Marker:
+        point: Point
+
+    shared = Point(1, 2)
+    marker = Marker(shared)
+    patch_dataclass(marker, {"point": {"x": 3}})
+
+    assert marker.point == Point(3, 2)
+    assert shared == Point(1, 2)
+
+
 def test_encode_emits_overridden_defaults():
     @control("BaseTestControl")
     class BaseTestControl(BaseControl):

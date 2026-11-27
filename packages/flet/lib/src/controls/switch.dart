@@ -55,6 +55,9 @@ class _SwitchControlState extends State<SwitchControl> {
   }
 
   void _toggleValue() {
+    if (widget.control.disabled) {
+      return;
+    }
     _onChange(!_value);
   }
 

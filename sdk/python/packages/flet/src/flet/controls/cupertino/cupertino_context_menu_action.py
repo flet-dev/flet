@@ -1,7 +1,7 @@
 from typing import Annotated, Optional
 
 from flet.controls.adaptive_control import AdaptiveControl
-from flet.controls.base_control import control
+from flet.controls.base_control import ClientPolicy, control
 from flet.controls.control_event import ControlEventHandler
 from flet.controls.types import IconData, StrOrControl
 from flet.utils.validation import V
@@ -43,7 +43,10 @@ class CupertinoContextMenuAction(AdaptiveControl):
     An icon to display at the right of the :attr:`content` control.
     """
 
-    on_click: Optional[ControlEventHandler["CupertinoContextMenuAction"]] = None
+    on_click: Annotated[
+        Optional[ControlEventHandler["CupertinoContextMenuAction"]],
+        ClientPolicy.ENABLED_ONLY,
+    ] = None
     """
     Called when this action button is clicked.
     """

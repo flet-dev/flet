@@ -1,6 +1,6 @@
 from typing import Annotated, Optional
 
-from flet.controls.base_control import control
+from flet.controls.base_control import ClientPolicy, control
 from flet.controls.control import Control
 from flet.controls.control_event import ControlEventHandler
 from flet.utils.validation import V
@@ -28,12 +28,17 @@ class RadioGroup(Control):
         ValueError: If :attr:`content` is not visible.
     """
 
-    value: Optional[str] = None
+    value: Annotated[
+        Optional[str], ClientPolicy.WRITABLE, ClientPolicy.ENABLED_ONLY
+    ] = None
     """
     Current value of the RadioGroup.
     """
 
-    on_change: Optional[ControlEventHandler["RadioGroup"]] = None
+    on_change: Annotated[
+        Optional[ControlEventHandler["RadioGroup"]],
+        ClientPolicy.ENABLED_ONLY,
+    ] = None
     """
     Called when the state of the RadioGroup is changed.
     """

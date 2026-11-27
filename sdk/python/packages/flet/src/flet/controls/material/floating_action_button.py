@@ -1,7 +1,7 @@
 from typing import Annotated, Optional, Union
 
 from flet.controls.action_control import ActionControl
-from flet.controls.base_control import control
+from flet.controls.base_control import ClientPolicy, control
 from flet.controls.buttons import OutlinedBorder
 from flet.controls.control import Control
 from flet.controls.control_event import ControlEventHandler
@@ -186,7 +186,9 @@ class FloatingActionButton(LayoutControl, ActionControl):
     control.
     """
 
-    on_click: Optional[ControlEventHandler["FloatingActionButton"]] = None
+    on_click: Annotated[
+        Optional[ControlEventHandler["FloatingActionButton"]], ClientPolicy.ENABLED_ONLY
+    ] = None
     """
     Called when a user clicks this button.
     """

@@ -1,6 +1,6 @@
-from typing import Optional, Union
+from typing import Annotated, Optional, Union
 
-from flet.controls.base_control import control
+from flet.controls.base_control import ClientPolicy, control
 from flet.controls.control_event import ControlEventHandler
 from flet.controls.control_state import ControlStateValue
 from flet.controls.layout_control import LayoutControl
@@ -32,7 +32,7 @@ class CupertinoSwitch(LayoutControl):
     The clickable label to display on the right of this switch.
     """
 
-    value: bool = False
+    value: Annotated[bool, ClientPolicy.WRITABLE, ClientPolicy.ENABLED_ONLY] = False
     """
     The current value of this switch.
     """
@@ -136,7 +136,9 @@ class CupertinoSwitch(LayoutControl):
     :attr:`flet.ControlState.FOCUSED`, and :attr:`flet.ControlState.DEFAULT`.
     """
 
-    on_change: Optional[ControlEventHandler["CupertinoSwitch"]] = None
+    on_change: Annotated[
+        Optional[ControlEventHandler["CupertinoSwitch"]], ClientPolicy.ENABLED_ONLY
+    ] = None
     """
     Called when the state of this switch is changed.
     """

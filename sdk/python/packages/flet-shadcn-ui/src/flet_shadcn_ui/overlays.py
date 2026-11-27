@@ -1,5 +1,5 @@
 from dataclasses import field
-from typing import Optional
+from typing import Annotated, Optional
 
 import flet as ft
 from flet_shadcn_ui.types import DialogVariant, SheetSide, ToastVariant
@@ -28,6 +28,8 @@ class Dialog(ft.DialogControl):
     )
     ```
     """
+
+    open: Annotated[bool, ft.ClientPolicy.WRITABLE] = field(default=False, kw_only=True)
 
     title: Optional[ft.StrOrControl] = None
     """
@@ -80,6 +82,8 @@ class Sheet(ft.DialogControl):
     )
     ```
     """
+
+    open: Annotated[bool, ft.ClientPolicy.WRITABLE] = field(default=False, kw_only=True)
 
     side: SheetSide = SheetSide.BOTTOM
     """
@@ -137,6 +141,8 @@ class Toast(ft.DialogControl):
     ```
     """
 
+    open: Annotated[bool, ft.ClientPolicy.WRITABLE] = field(default=False, kw_only=True)
+
     title: Optional[ft.StrOrControl] = None
     """
     The title of this toast.
@@ -186,6 +192,8 @@ class Sonner(ft.DialogControl):
     )
     ```
     """
+
+    open: Annotated[bool, ft.ClientPolicy.WRITABLE] = field(default=False, kw_only=True)
 
     title: Optional[ft.StrOrControl] = None
     """

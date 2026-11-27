@@ -1,5 +1,5 @@
 from dataclasses import dataclass, field
-from typing import Annotated, Optional, cast
+from typing import Annotated, Optional
 
 from flet.controls.base_control import control
 from flet.controls.control import Control
@@ -16,6 +16,12 @@ __all__ = [
 ]
 
 
+def _resolve_source(event: Event["DragTarget"]) -> Optional[Draggable]:
+    """Returns the `Draggable` that `event.src_id` identifies in the page, if any."""
+    source = event.page.get_control(event.src_id)
+    return source if isinstance(source, Draggable) else None
+
+
 @dataclass
 class DragWillAcceptEvent(Event["DragTarget"]):
     """
@@ -27,9 +33,12 @@ class DragWillAcceptEvent(Event["DragTarget"]):
     ID of the :class:`~flet.Draggable` source control, if available.
     """
 
-    src: Draggable = field(init=False)
+    src: Optional[Draggable] = field(init=False)
     """
     Source :class:`~flet.Draggable` control resolved from :attr:`src_id`.
+
+    It is `None` if :attr:`src_id` doesn't identify a :class:`flet.Draggable` in the
+    page.
     """
 
     accept: bool
@@ -38,8 +47,7 @@ class DragWillAcceptEvent(Event["DragTarget"]):
     """
 
     def __post_init__(self):
-        if self.src_id is not None:
-            self.src = cast(Draggable, self.page.get_control(self.src_id))
+        self.src = _resolve_source(self)
 
 
 @dataclass
@@ -53,9 +61,13 @@ class DragTargetEvent(Event["DragTarget"]):
     ID of the :class:`~flet.Draggable` source control, if available.
     """
 
-    src: Draggable = field(init=False)
+    src: Optional[Draggable] = field(init=False)
     """
     Source :class:`~flet.Draggable` control resolved from :attr:`src_id`.
+
+    It is `None` if :attr:`src_id` doesn't identify a :class:`flet.Draggable` in the
+    page, or if the event is an accepted drop and the source isn't in the same
+    :attr:`flet.DragTarget.group`.
     """
 
     local_position: Offset = field(metadata={"data_field": "l"})
@@ -69,8 +81,9 @@ class DragTargetEvent(Event["DragTarget"]):
     """
 
     def __post_init__(self):
-        if self.src_id is not None:
-            self.src = cast(Draggable, self.page.get_control(self.src_id))
+        self.src = _resolve_source(self)
+        if self.name == "accept" and self.src and self.src.group != self.control.group:
+            self.src = None
 
 
 @dataclass
@@ -84,14 +97,16 @@ class DragTargetLeaveEvent(Event["DragTarget"]):
     ID of the :class:`~flet.Draggable` source control, if available.
     """
 
-    src: Draggable = field(init=False)
+    src: Optional[Draggable] = field(init=False)
     """
     Source :class:`~flet.Draggable` control resolved from :attr:`src_id`.
+
+    It is `None` if :attr:`src_id` doesn't identify a :class:`flet.Draggable` in the
+    page.
     """
 
     def __post_init__(self):
-        if self.src_id is not None:
-            self.src = cast(Draggable, self.page.get_control(self.src_id))
+        self.src = _resolve_source(self)
 
 
 @control("DragTarget")

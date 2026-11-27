@@ -1,9 +1,9 @@
 from dataclasses import field
 from enum import Enum
-from typing import Optional
+from typing import Annotated, Optional
 
 from flet.controls.animation import AnimationStyle
-from flet.controls.base_control import control
+from flet.controls.base_control import ClientPolicy, control
 from flet.controls.border_radius import BorderRadiusValue
 from flet.controls.box import BoxConstraints
 from flet.controls.buttons import ButtonStyle, OutlinedBorder
@@ -92,7 +92,10 @@ class PopupMenuItem(Control):
     item.
     """
 
-    on_click: Optional[ControlEventHandler["PopupMenuItem"]] = None
+    on_click: Annotated[
+        Optional[ControlEventHandler["PopupMenuItem"]],
+        ClientPolicy.ENABLED_ONLY,
+    ] = None
     """
     Called when a user clicks on this menu item.
     """
@@ -248,7 +251,9 @@ class PopupMenuButton(LayoutControl):
     Called when the user dismisses/cancels the popup menu without selecting an item.
     """
 
-    on_select: Optional[ControlEventHandler["PopupMenuButton"]] = None
+    on_select: Annotated[
+        Optional[ControlEventHandler["PopupMenuButton"]], ClientPolicy.ENABLED_ONLY
+    ] = None
     """
     Called when the user selects a popup menu item.
 

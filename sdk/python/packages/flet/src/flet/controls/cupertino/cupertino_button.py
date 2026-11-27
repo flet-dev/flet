@@ -4,7 +4,7 @@ from typing import Annotated, Optional, Union
 
 from flet.controls.action_control import ActionControl
 from flet.controls.alignment import Alignment
-from flet.controls.base_control import control
+from flet.controls.base_control import ClientPolicy, control
 from flet.controls.border_radius import BorderRadius, BorderRadiusValue
 from flet.controls.control_event import ControlEventHandler
 from flet.controls.geometry import Size
@@ -162,12 +162,16 @@ class CupertinoButton(LayoutControl, ActionControl):
     The cursor for a mouse pointer when it enters or is hovering over this button.
     """
 
-    on_click: Optional[ControlEventHandler["CupertinoButton"]] = None
+    on_click: Annotated[
+        Optional[ControlEventHandler["CupertinoButton"]], ClientPolicy.ENABLED_ONLY
+    ] = None
     """
     Called when a user clicks this button.
     """
 
-    on_long_press: Optional[ControlEventHandler["CupertinoButton"]] = None
+    on_long_press: Annotated[
+        Optional[ControlEventHandler["CupertinoButton"]], ClientPolicy.ENABLED_ONLY
+    ] = None
     """
     Called when a user long-presses this button.
     """

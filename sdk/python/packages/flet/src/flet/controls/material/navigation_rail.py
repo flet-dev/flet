@@ -2,7 +2,7 @@ from dataclasses import field
 from enum import Enum
 from typing import Annotated, Optional
 
-from flet.controls.base_control import control
+from flet.controls.base_control import ClientPolicy, control
 from flet.controls.buttons import OutlinedBorder
 from flet.controls.control import Control
 from flet.controls.control_event import ControlEventHandler
@@ -142,7 +142,9 @@ class NavigationRail(LayoutControl):
         ValueError: If it is not greater than or equal to `0`.
     """
 
-    selected_index: Optional[int] = None
+    selected_index: Annotated[
+        Optional[int], ClientPolicy.WRITABLE, ClientPolicy.ENABLED_ONLY
+    ] = None
     """
     The index into `destinations` for the current selected `NavigationRailDestination` \
     or `None` if no destination is selected.
@@ -312,7 +314,9 @@ class NavigationRail(LayoutControl):
     If that is also `None`, defaults to :attr:`flet.Theme.use_material3`.
     """  # noqa: E501
 
-    on_change: Optional[ControlEventHandler["NavigationRail"]] = None
+    on_change: Annotated[
+        Optional[ControlEventHandler["NavigationRail"]], ClientPolicy.ENABLED_ONLY
+    ] = None
     """
     Called when selected destination changed.
     """

@@ -1,5 +1,5 @@
 from dataclasses import field
-from typing import Optional
+from typing import Annotated, Optional
 
 import flet as ft
 
@@ -56,7 +56,9 @@ class MenuItem(ft.Control):
     Whether clicking this item closes the menu.
     """
 
-    on_click: Optional[ft.ControlEventHandler["MenuItem"]] = None
+    on_click: Annotated[
+        Optional[ft.ControlEventHandler["MenuItem"]], ft.ClientPolicy.ENABLED_ONLY
+    ] = None
     """
     Called when this item is clicked.
     """

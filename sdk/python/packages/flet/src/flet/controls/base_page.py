@@ -4,6 +4,7 @@ from collections.abc import Callable
 from dataclasses import dataclass, field
 from typing import (
     TYPE_CHECKING,
+    Annotated,
     Optional,
     Union,
 )
@@ -11,7 +12,7 @@ from typing import (
 from flet.components.public_utils import unwrap_component
 from flet.controls.adaptive_control import AdaptiveControl
 from flet.controls.animation import AnimationCurve, AnimationStyle
-from flet.controls.base_control import BaseControl, control
+from flet.controls.base_control import BaseControl, ClientPolicy, control
 from flet.controls.box import BoxDecoration
 from flet.controls.control import Control
 from flet.controls.control_event import (
@@ -135,7 +136,11 @@ class PageResizeEvent(Event["BasePage"]):
     """
 
 
-@control("BasePage", isolated=True, kw_only=True)
+@control(
+    "BasePage",
+    isolated=True,
+    kw_only=True,
+)
 class BasePage(AdaptiveControl):
     """
     A visual container representing a top-level view in a Flet application.
@@ -237,7 +242,7 @@ class BasePage(AdaptiveControl):
     Called when :attr:`media` has changed.
     """
 
-    media: PageMediaData = field(
+    media: Annotated[PageMediaData, ClientPolicy.WRITABLE] = field(
         default_factory=lambda: PageMediaData(
             padding=Padding.zero(),
             view_padding=Padding.zero(),
@@ -255,7 +260,7 @@ class BasePage(AdaptiveControl):
     system UI elements like the keyboard or safe areas.
     """
 
-    width: Optional[Number] = None
+    width: Annotated[Optional[Number], ClientPolicy.WRITABLE] = None
     """
     Page width in logical pixels.
 
@@ -267,7 +272,7 @@ class BasePage(AdaptiveControl):
             instead.
     """
 
-    height: Optional[Number] = None
+    height: Annotated[Optional[Number], ClientPolicy.WRITABLE] = None
     """
     Page height in logical pixels.
 

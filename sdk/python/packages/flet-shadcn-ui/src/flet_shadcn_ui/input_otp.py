@@ -24,7 +24,7 @@ class InputOTP(ft.LayoutControl):
         ),
     )
 
-    value: str = ""
+    value: Annotated[str, ft.ClientPolicy.WRITABLE, ft.ClientPolicy.ENABLED_ONLY] = ""
     """
     The characters entered so far.
     """
@@ -83,7 +83,9 @@ class InputOTP(ft.LayoutControl):
     string) to clear the error.
     """
 
-    on_change: Optional[ft.ControlEventHandler["InputOTP"]] = None
+    on_change: Annotated[
+        Optional[ft.ControlEventHandler["InputOTP"]], ft.ClientPolicy.ENABLED_ONLY
+    ] = None
     """
     Called when the characters change.
 
@@ -91,7 +93,9 @@ class InputOTP(ft.LayoutControl):
     contains the new :attr:`value`.
     """
 
-    on_complete: Optional[ft.ControlEventHandler["InputOTP"]] = None
+    on_complete: Annotated[
+        Optional[ft.ControlEventHandler["InputOTP"]], ft.ClientPolicy.ENABLED_ONLY
+    ] = None
     """
     Called when every box is filled.
 
