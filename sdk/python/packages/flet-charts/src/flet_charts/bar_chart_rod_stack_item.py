@@ -2,7 +2,6 @@ from dataclasses import field
 from typing import Optional
 
 import flet as ft
-from flet.utils.validation import V, ValidationRules
 
 __all__ = ["BarChartRodStackItem"]
 
@@ -13,7 +12,7 @@ class BarChartRodStackItem(ft.BaseControl):
     Colored segment used to build a stacked bar rod.
     """
 
-    from_y: Optional[ft.Number] = None
+    from_y: ft.Number = 0
     """
     The starting position of this item inside a bar rod.
     """
@@ -27,8 +26,7 @@ class BarChartRodStackItem(ft.BaseControl):
     """
     The color of this item.
 
-    Raises:
-        ValueError: If neither it nor :attr:`gradient` is set.
+    Defaults to the color of the parent rod.
     """
 
     gradient: Optional[ft.Gradient] = None
@@ -56,10 +54,3 @@ class BarChartRodStackItem(ft.BaseControl):
     """
     A border around this item.
     """
-
-    __validation_rules__: ValidationRules = (
-        V.ensure(
-            lambda item: item.color is not None or item.gradient is not None,
-            message="either color or gradient must be set",
-        ),
-    )

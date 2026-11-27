@@ -90,7 +90,9 @@ def app(
         else env_oauth_callback_endpoint.strip("/")
     )
 
-    fastapi_app = FastAPI()
+    # No interactive docs: their routes would be matched before the static files
+    # mounted at "/" below, taking app routes like "/docs" away from the app.
+    fastapi_app = FastAPI(docs_url=None, redoc_url=None, openapi_url=None)
 
     static_files = FletStaticFiles(
         proxy_path=proxy_path,

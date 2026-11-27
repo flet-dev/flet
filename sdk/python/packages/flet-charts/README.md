@@ -8,7 +8,7 @@
 
 A [Flet](https://flet.dev) extension for creating interactive charts and graphs.
 
-> **[Try flet-charts in Flet Studio](https://studio.flet.dev/gallery/charts/barchart/example/extensions/charts/bar_chart/interactive_bar_chart)**
+> **[Try flet-charts in Flet Studio](https://studio.flet.dev/gallery/charts/barchart/example/extensions/charts/bar_chart/interactive_bar_chart?utm_source=pypi&utm_medium=readme&utm_campaign=flet-charts)**
 >
 > Create, run, and share Python apps in your browser. Start from an example, write your own code, or get help from the AI agent. No installation required.
 

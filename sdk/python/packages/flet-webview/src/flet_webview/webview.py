@@ -38,7 +38,12 @@ class WebView(ft.LayoutControl):
         platforms only: iOS, Android, and macOS. It loads that file's sibling
         assets (scripts, stylesheets, images) as well, and is equivalent to
         calling :meth:`load_file` with the same file once this control is
-        mounted. On web, only URLs the browser can load in an iframe work.
+        mounted. On web, only URLs the browser can load in an iframe work,
+        and `javascript:`, `blob:` and `filesystem:` URLs are not loaded. In an
+        app embedded in another with [`FletApp`][flet.FletApp], the web page
+        runs in a sandboxed iframe, apart from the host's page: it can run
+        scripts, submit forms and open popups, but it doesn't get its own
+        site's cookies or storage, and it can't navigate the host's page.
     """
 
     prevent_links: Optional[list[str]] = None

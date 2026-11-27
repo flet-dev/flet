@@ -1,4 +1,5 @@
 import asyncio
+import contextlib
 import inspect
 import logging
 import sys
@@ -60,6 +61,7 @@ from flet.controls.types import (
 )
 from flet.utils import is_pyodide
 from flet.utils.from_dict import from_dict
+from flet.utils.object_model import callable_name
 from flet.utils.strings import random_string
 
 if TYPE_CHECKING:
@@ -105,11 +107,55 @@ class TaskFuture(Future[RetT]):
     `asyncio.Task`; await `asyncio.shield()` of it to keep the task running.
     `result()` blocks, so call it on the page's event loop thread only once the
     task is done.
+
+    An exception the task raises while nothing awaits the future is logged on
+    the `flet` logger right away, even if the future is awaited later; await the
+    future itself, before the task can fail, to handle the exception instead. An
+    exception that an awaiter never gets, for example because the awaiter was
+    cancelled as the task failed, is logged when the future is discarded.
     """
+
+    _awaited: bool = False
+    """Whether something awaits the future."""
+
+    _handled: bool = False
+    """Whether the outcome reached an awaiter, or the exception was logged."""
+
+    _task_name: str = ""
+    """Name of the coroutine function, for log messages."""
 
     def __await__(self) -> Generator[Any, None, RetT]:
         """Wait for the task to finish without blocking the event loop."""
-        return asyncio.wrap_future(self).__await__()
+        self._awaited = True
+        return self.__wait().__await__()
+
+    async def __wait(self) -> RetT:
+        """Wait for the outcome, and record it as handled once it's delivered."""
+        try:
+            value = await asyncio.wrap_future(self)
+        except asyncio.CancelledError:
+            raise
+        except BaseException:
+            self._handled = True
+            raise
+        self._handled = True
+        return value
+
+    def _log_exception(self) -> None:
+        """Log the task's exception, if any, on the `flet` logger."""
+        if (exception := self.exception(0)) is not None:
+            self._handled = True
+            logger.error(
+                "Unhandled error in run_task() task %s",
+                self._task_name,
+                exc_info=exception,
+            )
+
+    def __del__(self):
+        if self._awaited and not self._handled and self.done() and not self.cancelled():
+            # Logging may already be torn down at interpreter shutdown.
+            with contextlib.suppress(Exception):
+                self._log_exception()
 
 
 @control("ServiceRegistry")
@@ -1003,26 +1049,17 @@ class Page(BasePage):
             handler(*args, **kwargs), self.session.connection.loop
         )
         future.__class__ = TaskFuture
+        future._task_name = callable_name(handler)
 
-        def _on_completion(f):
+        def _on_completion(f: TaskFuture[RetT]):
             """
-            Log the exception of a task nobody awaits.
-
-            `concurrent.futures` logs an `Exception` raised from a done callback
-            and runs the next one. The task's outcome is stored on the future
-            and reaches awaiters through their own callback, so raising here is
-            only for the log. A `BaseException` is not re-raised: it would skip
-            the remaining callbacks and leave awaiters waiting forever.
+            Log the exception of a task nothing is awaiting.
 
             Args:
                 f: Completed future returned by `run_coroutine_threadsafe()`.
             """
-
-            if f.cancelled():
-                return
-            exception = f.exception()
-            if isinstance(exception, Exception):
-                raise exception
+            if not f._awaited and not f.cancelled():
+                f._log_exception()
 
         future.add_done_callback(_on_completion)
 
@@ -1049,7 +1086,14 @@ class Page(BasePage):
             """
 
             _context_page.set(self)
-            handler(*args, **kwargs)
+            try:
+                handler(*args, **kwargs)
+            except Exception:
+                logger.error(
+                    "Unhandled error in run_thread() function %s",
+                    callable_name(handler),
+                    exc_info=True,
+                )
 
         return wrapper
 
@@ -1060,8 +1104,20 @@ class Page(BasePage):
         **kwargs: InputT.kwargs,
     ) -> None:
         """
-        Run `handler` function as a new Thread in the executor associated with the \
-        current page.
+        Run `handler` in a thread of [`executor`][flet.Page.executor], with this page
+        as the current page.
+
+        In a static website, which runs on Pyodide and has no threads, `handler`
+        runs before this method returns.
+
+        Args:
+            handler: The function to run.
+            *args: Positional arguments to call `handler` with.
+            **kwargs: Keyword arguments to call `handler` with.
+
+        Note:
+            The value `handler` returns is discarded. To get the value or the
+            exception back, await `asyncio.to_thread()` instead.
         """
         handler_with_context = self.__context_wrapper(handler)
         if is_pyodide():

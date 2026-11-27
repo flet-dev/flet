@@ -5,7 +5,7 @@ from typing import Optional, Union
 
 from fastmcp import FastMCP
 
-from flet_mcp.api_store import ApiStore, render_text
+from flet_mcp.api_store import ApiStore, render_text, shared_api_store
 from flet_mcp.db import get_db_path
 from flet_mcp.icons_store import IconStore
 
@@ -63,15 +63,11 @@ mcp = FastMCP(
     ),
 )
 
-_api_store: Optional[ApiStore] = None
 _icon_store: Optional[IconStore] = None
 
 
 def _get_api_store() -> ApiStore:
-    global _api_store
-    if _api_store is None:
-        _api_store = ApiStore()
-    return _api_store
+    return shared_api_store()
 
 
 def _get_icon_store() -> IconStore:
@@ -95,6 +91,7 @@ def _get_icon_store() -> IconStore:
             material=api.enum_member_names("Icons"),
             cupertino=api.enum_member_names("CupertinoIcons"),
             material_meta=meta,
+            lucide=api.enum_member_names("LucideIcons"),
         )
     return _icon_store
 
@@ -507,13 +504,16 @@ if _ICONS_ON:
 
     @mcp.tool()
     def find_icon(query: str, family: Optional[str] = None, limit: int = 10) -> dict:
-        """Search Material and Cupertino icons by keyword.
+        """Search Material and Cupertino icons, or flet-shadcn-ui's Lucide icons,
+        by keyword.
 
-        Supports synonym matching (e.g. "user" finds "account_circle").
+        Supports synonym matching for Material icons (e.g. "user" finds
+        "account_circle").
 
         Args:
             query: Descriptive keywords (e.g. "back arrow", "settings", "user profile").
-            family: Optional icon family filter - "material" or "cupertino".
+            family: Optional icon family filter - "material", "cupertino" or
+                "lucide" (`shad.LucideIcons`, only searched when asked for).
             limit: Maximum number of results to return.
         """
         store = _get_icon_store()

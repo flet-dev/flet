@@ -173,7 +173,7 @@ export default function CodeExample({path, language = "python", title}) {
   }
 
   const showTryOnline = getExampleWebSupported(exampleDir);
-  const studioUrl = `${FLET_STUDIO_BASE}/${exampleDir}`;
+  const studioUrl = `${FLET_STUDIO_BASE}/${exampleDir}?utm_source=flet.dev&utm_medium=docs&utm_campaign=code-example`;
   const sourceUrl = `${EXAMPLES_SOURCE_BASE}/${exampleDir}`;
 
   const selectFile = (name) => {

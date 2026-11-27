@@ -4,8 +4,11 @@ These cover the awkward inputs a real user supplies - an EXIF-rotated phone
 photo, a palette PNG, an animated GIF, a banner that is not square.
 """
 
+import struct
+from io import BytesIO
+
 import pytest
-from flet_platform_assets import SourceError, load_source, square
+from flet_platform_assets import SourceError, ico_sizes, load_source, square
 from flet_platform_assets._source import MAX_SOURCE_SIZE
 from PIL import Image
 
@@ -13,6 +16,65 @@ from PIL import Image
 def save(img: Image.Image, path, **kwargs) -> str:
     img.save(path, **kwargs)
     return str(path)
+
+
+class TestIcoSizes:
+    """`ico_sizes` reports the sizes only of a `.ico` that decodes in full."""
+
+    def _ico(self, tmp_path, sizes):
+        path = tmp_path / "i.ico"
+        save(
+            Image.new("RGBA", (256, 256), (255, 0, 85, 255)),
+            path,
+            sizes=[(size, size) for size in sizes],
+        )
+        return path
+
+    def test_reports_the_sizes_of_a_whole_file(self, tmp_path):
+        """A whole file gives its square sizes in ascending order."""
+        assert ico_sizes(self._ico(tmp_path, (48, 16, 256))) == (16, 48, 256)
+
+    def test_truncated_file_is_empty(self, tmp_path):
+        """A file with an intact directory but truncated images gives nothing."""
+        path = self._ico(tmp_path, (16, 256))
+        data = path.read_bytes()
+        path.write_bytes(data[: len(data) // 2])
+        assert ico_sizes(path) == ()
+
+    def test_damaged_image_sharing_a_size_is_empty(self, tmp_path):
+        """A damaged image next to a whole one of the same size gives nothing."""
+        whole = BytesIO()
+        Image.new("RGBA", (32, 32), (255, 0, 85, 255)).save(whole, "PNG")
+        images = [whole.getvalue(), whole.getvalue()[:20] + bytes(40)]
+        offset = 6 + 16 * len(images)
+        header = struct.pack("<HHH", 0, 1, len(images))
+        for data in images:
+            header += struct.pack("<BBBBHHII", 32, 32, 0, 0, 1, 32, len(data), offset)
+            offset += len(data)
+        path = tmp_path / "i.ico"
+        path.write_bytes(header + b"".join(images))
+        assert ico_sizes(path) == ()
+
+    def test_damaged_png_image_is_empty(self, tmp_path):
+        """A PNG image with an intact header but damaged pixels gives nothing."""
+        path = tmp_path / "i.ico"
+        images = [Image.effect_noise((s, s), 60).convert("RGBA") for s in (48, 256)]
+        images[1].save(path, sizes=[(48, 48), (256, 256)], append_images=images[:1])
+        with Image.open(path) as ico:
+            entry = next(e for e in ico.ico.entry if e.width == 48)
+        data = bytearray(path.read_bytes())
+        start = entry.offset + entry.size // 2
+        data[start : start + 100] = bytes(100)
+        path.write_bytes(bytes(data))
+        assert ico_sizes(path) == ()
+
+    def test_not_an_icon_is_empty(self, tmp_path):
+        """Garbage bytes in a `.ico` and a PNG give nothing."""
+        garbage = tmp_path / "i.ico"
+        garbage.write_bytes(b"not-actually-an-ico")
+        assert ico_sizes(garbage) == ()
+        png = save(Image.new("RGBA", (64, 64), (255, 0, 85, 255)), tmp_path / "p.png")
+        assert ico_sizes(png) == ()
 
 
 class TestLoadSource:

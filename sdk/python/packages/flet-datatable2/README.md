@@ -9,7 +9,7 @@
 An enhanced data table for [Flet](https://flet.dev) apps that builds on the built-in component by adding sticky headers,
 fixed top rows, and fixed left columns while preserving all core features.
 
-> **[Try flet-datatable2 in Flet Studio](https://studio.flet.dev/gallery/layout/datatable2/example/extensions/datatable2/sortable_and_selectable)**
+> **[Try flet-datatable2 in Flet Studio](https://studio.flet.dev/gallery/layout/datatable2/example/extensions/datatable2/sortable_and_selectable?utm_source=pypi&utm_medium=readme&utm_campaign=flet-datatable2)**
 >
 > Create, run, and share Python apps in your browser. Start from an example, write your own code, or get help from the AI agent. No installation required.
 

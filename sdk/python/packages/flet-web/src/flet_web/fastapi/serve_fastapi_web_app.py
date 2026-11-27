@@ -61,7 +61,7 @@ def get_fastapi_web_app(
     """
 
     web_path = f"/{page_name.strip('/')}"
-    app = flet_web.fastapi.FastAPI()
+    app = flet_web.fastapi.FastAPI(docs_url=None, redoc_url=None, openapi_url=None)
     app.mount(
         web_path,
         flet_web.fastapi.app(
@@ -126,7 +126,9 @@ async def serve_fastapi_web_app(
         if on_startup:
             on_startup(page_url)
 
-    app = flet_web.fastapi.FastAPI(on_startup=[startup])
+    app = flet_web.fastapi.FastAPI(
+        on_startup=[startup], docs_url=None, redoc_url=None, openapi_url=None
+    )
 
     app.mount(
         web_path,

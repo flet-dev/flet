@@ -5,6 +5,6 @@
 
 This package contains a compiled Flutter Flet web client.
 
-> **[Try Flet online in Flet Studio](https://studio.flet.dev)**
+> **[Try Flet online in Flet Studio](https://studio.flet.dev/?utm_source=pypi&utm_medium=readme&utm_campaign=flet-web)**
 >
 > Write, run, and share Flet web apps right in your browser. No local setup required. Write your own Python code or get help from the AI agent.

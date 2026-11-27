@@ -60,7 +60,7 @@ void runClientActions(BuildContext context, dynamic actions) {
 void runControlActions(BuildContext context, Control control) {
   var url = control.getUrl("url");
   if (url != null) {
-    openWebBrowser(url);
+    openWebBrowser(url, embedded: control.backend.isEmbedded);
   }
   runClientActions(context, control.get("action"));
 }
